@@ -1337,6 +1337,46 @@ fn classic_for_loop_with_multiple_update_expressions_is_unsupported() {
     assert!(!err.message.is_empty());
 }
 
+#[test]
+fn classic_for_loop_update_target_shadowed_by_a_body_local_is_an_error() {
+    // Caught by /security-review: `update` is spliced onto the *end* of
+    // `body.stmts`, sharing one flat scope with whatever `body` itself
+    // already declared at its own top level -- by that point,
+    // `lower_body` has already pushed and popped `body`'s own scope, so
+    // there was no check that would notice `body` redeclaring the exact
+    // name `update` assigns to. Under any backend with real block
+    // scoping, that redeclaration would shadow the real loop control
+    // variable for the appended update, silently mutating the body's own
+    // local instead -- leaving the real loop variable permanently
+    // unincremented (an infinite loop), the exact non-termination DoS
+    // class `lower_do_while_statement` already needed two rounds of
+    // fixes for elsewhere in this same file. Real `javac` rejects this
+    // source outright (`variable i is already defined`), so rejecting it
+    // here loses no real program's ability to compile.
+    let err = compile_source(
+        &wrap("int sum = 0; for (int i = 0; i < 3; i++) { int i = 999; sum = sum + 1; }"),
+        "prog",
+    )
+    .unwrap_err();
+    assert!(
+        err.message.contains("shadowed"),
+        "unexpected message: {}",
+        err.message
+    );
+}
+
+#[test]
+fn classic_for_loop_update_target_not_shadowed_by_a_sibling_variable_is_fine() {
+    // A body-declared variable with a *different* name from the loop
+    // control variable must not trip the collision check above -- this
+    // guards against an overly-broad fix that rejects every declaration
+    // inside a `for` body, not just an actual name collision.
+    let m = compile_ok(&wrap(
+        "int sum = 0; for (int i = 0; i < 3; i++) { int j = i * 2; sum = sum + j; } sum;",
+    ));
+    assert!(!main_fn(&m).body.stmts.is_empty());
+}
+
 // ── M2b: enhanced for-loop ───────────────────────────────────────────────
 
 #[test]

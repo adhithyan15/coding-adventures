@@ -42,12 +42,14 @@ All notable changes to the `java-to-semantic-ir` crate will be documented in thi
   structurally identical (`local_var_type` + `variable_declarators`)
   minus the wrapping node, so this is a refactor of M1's existing code,
   not new logic duplicated a second time.
-- 12 new tests in `tests/test_lower.rs` (classic `for` desugaring shape,
+- 14 new tests in `tests/test_lower.rs` (classic `for` desugaring shape,
   init-variable scope leak prevention in both directions, the no-
   declaration init form, empty-clauses defaulting to an unconditional
   loop, boolean-condition requirement, multiple-declarator/multiple-
-  update rejection, enhanced `for`'s `Stmt::ForEach` shape, its own scope
-  leak prevention, and `var`-as-element-type rejection) plus 2 new
+  update rejection, the update/body-local collision rejection below (and
+  its negative case — a body-declared variable with a *different* name
+  must not trip it), enhanced `for`'s `Stmt::ForEach` shape, its own
+  scope leak prevention, and `var`-as-element-type rejection) plus 2 new
   execution-proof tests in `tests/e2e_python.rs` (a classic `for` summing
   0..4, and the same with the loop variable reusing an already-declared
   local rather than a fresh declaration). No execution-proof test exists
@@ -57,6 +59,29 @@ All notable changes to the `java-to-semantic-ir` crate will be documented in thi
   primitive — an execution proof would just hang forever); both are
   covered structurally instead, honestly reflecting what's provable at
   this milestone rather than fabricating a misleading green check.
+- **Caught by `/security-review` before push (HIGH, silent miscompilation
+  / non-termination DoS)**: classic `for`'s `update` clause is spliced
+  onto the *end* of the loop body's own `body.stmts`, sharing one flat
+  scope with whatever the body itself already declared at its own top
+  level — but by the time that splice runs, `lower_body` has already
+  pushed *and popped* the body's own scope (the correct real Java scope
+  boundary), so there was no check that would notice the body
+  redeclaring the exact name `update` assigns to. Confirmed with a live
+  repro: `int sum = 0; for (int i = 0; i < 3; i++) { int i = 999; sum =
+  sum + 1; }` lowered cleanly and passed `semantic_ir::validate()`, but
+  under any backend with real block scoping the appended `i++` would
+  resolve to the body's own shadowing `i` instead of the real loop
+  control variable — silently leaving the real loop variable permanently
+  unincremented, an infinite loop (the exact non-termination DoS class
+  `lower_do_while_statement` already needed two rounds of fixes for
+  elsewhere in this same file, discovered here via yet another
+  manifestation of "collision checked only after the colliding scope
+  already existed"). Fixed by checking the update's assignment target
+  against the already-lowered body's own top-level declarations
+  (`body_declares_name`, shared with the do-while fix) and rejecting
+  with a clear error rather than silently mis-lowering — real `javac`
+  rejects this exact source outright (`variable i is already defined`),
+  so rejecting it here loses no real program's ability to compile.
 
 ## [0.3.0] - 2026-08-25
 

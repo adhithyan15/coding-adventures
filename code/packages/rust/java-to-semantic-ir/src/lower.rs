@@ -878,6 +878,42 @@ impl Lowerer {
             .ok_or_else(|| self.err_at(node, "malformed `for` (missing body)".to_string()))?;
         let mut body = self.lower_body(body_stmt, depth + 1)?;
         if let Some(u) = update_stmt {
+            // `update` is spliced onto the *end* of `body.stmts`, sharing
+            // one flat scope with whatever `body` itself already declared
+            // at its own top level — by the time we're here, `lower_body`
+            // has already pushed and popped `body`'s own scope (the
+            // correct real Java scope boundary), so `self.lookup_local`
+            // can no longer see anything `body` declared. If `body`
+            // redeclares the exact name `update` assigns to (e.g. `for
+            // (int i = 0; i < 3; i++) { int i = 999; ... }`), that
+            // redeclaration would shadow the real loop control variable
+            // for the appended update under any backend with real block
+            // scoping — the update would silently mutate the *body's own*
+            // local instead, leaving the real loop variable permanently
+            // unincremented (an infinite loop) — caught by
+            // `/security-review`, the same "collision checked before the
+            // colliding scope existed" bug class `lower_do_while_statement`
+            // already needed two rounds of fixes for. Real Java rejects
+            // this exact source outright (`variable i is already
+            // defined`), so rejecting it here loses no real program's
+            // ability to compile; `Stmt::Assign` is the only shape
+            // `update_stmt` collision-checking needs to cover, since
+            // that's the only shape `lower_for_update`
+            // (`lower_expr_statement`) ever produces for an assignment/
+            // compound-assignment/increment-decrement update clause — an
+            // update clause that's just a bare value expression
+            // (`Stmt::ExprStmt`, e.g. a pointless `for (...; ...; 5)`)
+            // assigns to no name at all, so there is nothing to collide.
+            if let Stmt::Assign { name, .. } = &u {
+                if body_declares_name(&body, name) {
+                    return Err(self.err_at(
+                        node,
+                        format!(
+                            "the `for` loop's own update clause target `{name}` is shadowed by a variable the loop body declares directly — rename one of them"
+                        ),
+                    ));
+                }
+            }
             body.stmts.push(u);
         }
         self.observed.add(Feature::Loops);
