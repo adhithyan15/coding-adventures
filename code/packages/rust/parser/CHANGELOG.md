@@ -2,6 +2,90 @@
 
 All notable changes to the `parser` crate will be documented in this file.
 
+## [0.4.5] - 2026-08-25
+
+### Fixed — `find_nodes`/`collect_tokens` uncontrolled recursion (CWE-674)
+
+Both `find_nodes` and `collect_tokens` are public entry points that accept
+any caller-constructed `GrammarASTNode` — not only trees produced by
+`GrammarParser::parse`'s own depth-capped recursion (e.g. at least one
+`-to-semantic-ir` frontend's `compile()` works directly with a raw
+`GrammarASTNode`). Their previous recursive implementations had no depth
+limit of their own: a pathologically deep hand-built tree handed straight
+to either function could overflow the *native* call stack, an
+uncatchable crash no `Result` could report — flagged during
+`/security-review` on the `java-to-semantic-ir` crate (which worked
+around the gap locally with its own depth-guarded `collect_bounded`
+rather than fixing the shared helper, since a signature/behavior change
+here needed its own separately-considered PR).
+
+Rewrote both as iterative traversals using an explicit heap-allocated
+stack instead of the native call stack, with no depth limit needed at
+all — the stack is bounded only by available memory, not the fixed
+native thread stack size. `find_nodes` uses a plain stack of node
+references (matching order doesn't depend on interleaving with token
+siblings); `collect_tokens` uses a stack of child-slice iterators instead,
+since token results must interleave correctly with descending into
+nested nodes — a `children` list mixes `Token` and `Node` entries in
+source order, so each node's remaining children need to resume exactly
+where they left off after a nested node's own subtree is fully drained.
+Both preserve the exact traversal order (and therefore output) of the
+original recursive versions.
+
+**Public API unchanged**: both functions keep their existing
+`Vec<T>`-returning signatures — no `Result`, no new depth-cap parameter,
+no breaking change for any of this shared engine's ~100 downstream
+consumers. This was the deciding factor over an arbitrary depth-cap
+approach (which would need a signature change to report "gave up").
+
+**Caught by `/security-review`, fixed before this landed**: the first
+version of this fix made the *traversal* iterative but left
+`find_nodes`'s own `results.push(current.clone())` calling
+`GrammarASTNode`'s derived `Clone` — which is itself exactly as
+recursive as the traversal just fixed, walking the same nested
+`Vec<ASTNodeOrToken>` structure. Matching a rule name near the *root* of
+a deep tree (an ordinary usage pattern — searching for an ancestor or
+wrapper rule, not only a deeply-buried leaf) silently reopened the same
+native-stack-overflow the rewrite exists to close, just moved from the
+traversal into the clone. Fixed with a new `clone_node_iterative` helper:
+a post-order deep clone using an explicit stack of "still assembling
+this node's cloned children" frames instead of the native call stack, so
+depth is bounded only by available memory here too. `collect_tokens`
+needed no equivalent fix — it only ever clones `Token`, a flat struct
+with no nested `GrammarASTNode`, so its clones are already O(1)
+regardless of tree depth.
+
+New tests: traversal-order correctness (pre-order for `find_nodes`,
+source-order-preserving-across-nested-nodes for `collect_tokens`), type
+filtering, and a regression guard building a 50,000-level-deep hand-built
+tree on a default-stack thread that specifically matches the *root* (not
+just a shallow leaf, which the first version of this test did and which
+would have silently passed despite the clone-recursion gap above) —
+proving both functions, and the clone they now produce, are correct and
+complete without overflowing.
+
+**Found while writing that regression test, not fixed here**: merely
+*dropping* a tree this deep also overflows the native stack, via
+`GrammarASTNode`'s own compiler-generated recursive `Drop` glue —
+entirely independent of `find_nodes`/`collect_tokens`. This is a real,
+separate CWE-674-shaped gap (any public entry point that ends up holding
+a caller-constructed deep tree is exposed, not just these two functions),
+logged as its own follow-up rather than bundled into this fix or
+silently hidden by shrinking the regression test's depth. The test works
+around it with `std::mem::forget` on the trees it builds.
+
+**Also found by `/security-review` (round 2), also not fixed here**:
+`walk_ast`/`walk_node` — a third public traversal over the same untrusted
+`GrammarASTNode` trust boundary, used by language packages for cover-
+grammar rewriting and desugaring — is still fully recursive, three ways
+over (direct self-recursion, the same recursive-`Clone` pattern this
+change fixed in `find_nodes`, and a recursive `PartialEq` comparison to
+detect whether a subtree changed). Reproduced empirically with a
+200,000-level tree. Not fixed here: it's untouched by this diff and its
+fix is architecturally larger — an iterative rewrite needs to preserve
+visitor `enter`/`leave` call ordering and node-replacement semantics, not
+just re-derive a `Vec<T>`. Logged as its own follow-up.
+
 ## [0.4.4] - 2026-08-25
 
 ### Added — contextual `>>`/`>>>` token-splitting for nested generic-argument-list closers
