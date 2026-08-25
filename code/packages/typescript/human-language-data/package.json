@@ -18,6 +18,8 @@
     "check:progress": "node dist/track-progress-cli.js --check",
     "generate:gentle-snapshots": "node dist/gentle-ramp-snapshot-cli.js --write",
     "check:gentle-snapshots": "node dist/gentle-ramp-snapshot-cli.js --check",
+    "generate:level-snapshots": "node dist/level-snapshot-cli.js --write",
+    "check:level-snapshots": "node dist/level-snapshot-cli.js --check",
     "shard": "node dist/shard-cli.js --shard",
     "unshard": "node dist/shard-cli.js --unshard",
     "check:shards": "node dist/shard-cli.js --check",

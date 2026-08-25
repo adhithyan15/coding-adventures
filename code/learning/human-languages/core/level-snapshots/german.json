@@ -1,0 +1,15 @@
+{
+  "language": "german",
+  "lessonCount": 107,
+  "byLevel": {
+    "pre-A1": 48,
+    "A1": 20,
+    "A2": 24,
+    "B1": 0,
+    "B2": 0,
+    "C1": 0,
+    "C2": 0
+  },
+  "unmapped": 15,
+  "reach": "A2"
+}
