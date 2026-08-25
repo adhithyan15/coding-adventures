@@ -2,6 +2,34 @@
 
 All notable changes to this package will be documented in this file.
 
+## [0.9.60] - 2026-08-25 (Relaxed SIMD epic PR3: f32x4/f64x2 relaxed_min/relaxed_max)
+
+### Added
+
+- `SimdOpKind::RelaxedMinF32x4`/`RelaxedMaxF32x4` execution arm
+  (sub-opcodes `0x10d`/`0x10e`) and `SimdOpKind::RelaxedMinF64x2`/
+  `RelaxedMaxF64x2` execution arm (sub-opcodes `0x10f`/`0x110`) -- the
+  THIRD/FOURTH/FIFTH/SIXTH relaxed-simd opcodes (see `code/specs/
+  W19-wasm-relaxed-simd-first-slice.md`): byte-for-byte copies of the
+  existing `PminF32x4`/`PmaxF32x4`/`PminF64x2`/`PmaxF64x2` arms' bodies
+  (`lane_b < lane_a ? lane_b : lane_a` for min, `lane_a < lane_b ?
+  lane_b : lane_a` for max -- IEEE-754 `<` directly, always `false` when
+  either operand is NaN, so the result is the first/lower-pushed
+  operand UNCHANGED on a NaN or a signed-zero tie). The relaxed-simd
+  spec permits EITHER this behavior OR the stricter NaN-propagating/
+  signed-zero-canonicalizing `MinF32x4`/`MaxF32x4`/`MinF64x2`/
+  `MaxF64x2` behavior; hand-verified against the real upstream
+  `relaxed_min_max.wast` corpus's own `either` groups (the FIRST
+  relaxed-simd file whose `either` groups carry FOUR alternatives, not
+  two): this repo's chosen `pmin`/`pmax`-style behavior computes, for
+  every test case in that file, an EXACT, literal match to the corpus's
+  second `either` alternative -- not merely "a member of some looser
+  equivalence" -- so no new numeric logic was needed, only reuse of the
+  existing `Pmin`/`Pmax` bodies.
+- New unit tests: `f32x4_relaxed_min_max_return_the_first_operand_
+  unchanged_when_either_operand_is_nan`, `f32x4_relaxed_min_max_normal_
+  case_matches_plain_less_than_select`, and their `f64x2` mirrors.
+
 ## [0.9.59] - 2026-08-25 (Relaxed SIMD epic PR2: i16x8.relaxed_q15mulr_s)
 
 ### Added

@@ -2,6 +2,24 @@
 
 All notable changes to this package will be documented in this file.
 
+## [0.2.61] - 2026-08-25 (Relaxed SIMD epic PR3: f32x4/f64x2 relaxed_min/relaxed_max)
+
+### Added
+
+- Type-check coverage for `f32x4.relaxed_min`/`relaxed_max` and
+  `f64x2.relaxed_min`/`relaxed_max` (`SimdOpKind::RelaxedMinF32x4`/
+  `RelaxedMaxF32x4`/`RelaxedMinF64x2`/`RelaxedMaxF64x2`): join the
+  existing shared `(v128, v128) -> v128` binary-shape arm right
+  alongside `PminF32x4`/`PmaxF32x4`/`PminF64x2`/`PmaxF64x2` -- identical
+  type rule (pop two `V128`, push one `V128`); their implementation-
+  defined NaN/signed-zero handling is entirely a runtime concern,
+  invisible at this layer. Third/fourth/fifth/sixth opcodes of the
+  relaxed-simd epic -- see `code/specs/
+  W19-wasm-relaxed-simd-first-slice.md`.
+- New tests: `valid_f32x4_relaxed_min_max_pop_two_v128_push_v128`,
+  `invalid_f32x4_relaxed_min_max_given_an_i32_operand_instead_of_v128`,
+  and their `f64x2` mirrors.
+
 ## [0.2.60] - 2026-08-25 (Relaxed SIMD epic PR2: i16x8.relaxed_q15mulr_s)
 
 ### Added
