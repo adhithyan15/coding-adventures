@@ -6,6 +6,11 @@ All notable changes to the TypeScript build tool will be documented in this file
 
 ### Added
 
+- Add a pure `validateOrphanCrateSnapshot()` API that independently consumes
+  all four language-neutral orphan fixtures, derives exact direct and ancestor
+  BUILD coverage, validates and redacts exemption policy, reports stale debt
+  and active `PENDING` counts, and uses pinned Unicode 17 identities without
+  adding filesystem, Git, process, environment, or network authority.
 - Add a pure `validateTrackedArtifactSnapshot()` API that independently
   consumes all five language-neutral tracked-artifact fixtures, redacts unsafe
   input, normalizes separators, detects exact/case/compatibility aliases of

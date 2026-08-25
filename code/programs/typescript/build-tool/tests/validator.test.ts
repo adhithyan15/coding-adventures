@@ -3,11 +3,14 @@ import * as fs from "node:fs";
 import * as os from "node:os";
 import * as path from "node:path";
 import {
+  type OrphanCrateSnapshot,
+  type OrphanCrateValidationResult,
   TRACKED_ARTIFACT_UNICODE_VERSION,
   type TrackedArtifactDiagnostic,
   type TrackedArtifactEntry,
   validateBuildContracts,
   validateCIFullBuildToolchains,
+  validateOrphanCrateSnapshot,
   validateTrackedArtifactSnapshot,
 } from "../src/validator.js";
 import {
@@ -27,6 +30,13 @@ const trackedArtifactCases = [
   "validation-tracked-artifacts-aliases.json",
   "validation-tracked-artifacts-invalid.json",
   "validation-tracked-artifacts-unicode-boundaries.json",
+] as const;
+
+const orphanCrateCases = [
+  "validation-orphan-crates-clean.json",
+  "validation-orphan-crates-unlisted.json",
+  "validation-orphan-exemptions-invalid.json",
+  "validation-orphan-exemptions-stale.json",
 ] as const;
 
 function makeTempDir(): string {
@@ -290,6 +300,213 @@ luarocks make --local --deps-mode=none coding-adventures-safe-pkg-0.1.0-1.rocksp
         { language: "lua", path: safePath },
       ]),
     ).toBeNull();
+  });
+});
+
+describe("validateOrphanCrateSnapshot", () => {
+  for (const fixtureName of orphanCrateCases) {
+    it(`matches the shared ${fixtureName} fixture`, () => {
+      const fixture = JSON.parse(
+        fs.readFileSync(new URL(fixtureName, conformanceCases), "utf-8"),
+      ) as {
+        input: { options: { orphan_snapshot: OrphanCrateSnapshot } };
+        expected: {
+          result: Omit<OrphanCrateValidationResult, "diagnostics">;
+          diagnostics: OrphanCrateValidationResult["diagnostics"];
+        };
+      };
+
+      expect(
+        validateOrphanCrateSnapshot(fixture.input.options.orphan_snapshot),
+      ).toEqual({
+        ...fixture.expected.result,
+        diagnostics: fixture.expected.diagnostics,
+      });
+    });
+  }
+
+  const unsafeExemptionPaths = [
+    "",
+    "a".repeat(513),
+    "😀".repeat(513),
+    "/absolute/secret-project",
+    "C:/host/secret-project",
+    "code/packages/rust/bad<name>",
+    "code/packages/rust/trailing.",
+    "code/packages/rust/CON",
+  ] as const;
+
+  for (const unsafePath of unsafeExemptionPaths) {
+    it(`redacts unsafe exemption path ${JSON.stringify(unsafePath.slice(0, 20))}`, () => {
+      const result = validateOrphanCrateSnapshot({
+        directories: ["code/packages/rust/demo"],
+        manifests: [{ path: "code/packages/rust/demo", kind: "package" }],
+        build_files: [],
+        exemptions: [
+          {
+            line: 7,
+            kind: "PENDING",
+            path: unsafePath,
+            reason: "not allowed",
+          },
+        ],
+      });
+
+      expect(
+        result.diagnostics.find(
+          (diagnostic) => diagnostic.code === "ORPHAN_EXEMPTION_INVALID",
+        ),
+      ).toEqual({
+        code: "ORPHAN_EXEMPTION_INVALID",
+        severity: "error",
+        path: "code/BUILD-EXEMPTIONS",
+        details: { line: 7, problem: "PATH_UNSAFE" },
+      });
+      if (unsafePath.length > 0) {
+        expect(JSON.stringify(result)).not.toContain(unsafePath);
+      }
+    });
+  }
+
+  it("uses Python whitespace semantics for exemption reasons", () => {
+    const result = validateOrphanCrateSnapshot({
+      directories: ["code/packages/rust/demo"],
+      manifests: [{ path: "code/packages/rust/demo", kind: "package" }],
+      build_files: [],
+      exemptions: [
+        {
+          line: 7,
+          kind: "PENDING",
+          path: "code/packages/rust/demo",
+          reason: "\u001c",
+        },
+      ],
+    });
+
+    expect(result.pending_exemption_count).toBe(0);
+    expect(result.diagnostic_codes).toEqual([
+      "ORPHAN_CRATE_UNLISTED",
+      "ORPHAN_EXEMPTION_INVALID",
+    ]);
+    expect(result.diagnostics[1]?.details.problem).toBe("REASON_MISSING");
+
+    const nextLine = (reason: string) =>
+      validateOrphanCrateSnapshot({
+        directories: ["code/packages/rust/demo"],
+        manifests: [{ path: "code/packages/rust/demo", kind: "package" }],
+        build_files: [],
+        exemptions: [
+          {
+            line: 8,
+            kind: "PENDING",
+            path: "code/packages/rust/demo",
+            reason,
+          },
+        ],
+      });
+    expect(nextLine("\u0085").diagnostics[1]?.details.problem).toBe(
+      "REASON_MISSING",
+    );
+    expect(nextLine("\ufeff")).toEqual({
+      valid: true,
+      diagnostic_codes: [],
+      pending_exemption_count: 1,
+      diagnostics: [],
+    });
+  });
+
+  it("chooses the closest empty BUILD and fixed filename order", () => {
+    const result = validateOrphanCrateSnapshot({
+      directories: ["code/packages/rust/demo/child"],
+      manifests: [
+        { path: "code/packages/rust/demo/child", kind: "package" },
+      ],
+      build_files: [
+        { path: "code/packages/rust/BUILD", state: "empty" },
+        { path: "code/packages/rust/demo/BUILD_linux", state: "empty" },
+        { path: "code/packages/rust/demo/BUILD", state: "empty" },
+      ],
+      exemptions: [],
+    });
+
+    expect(result.diagnostics).toEqual([
+      {
+        code: "ORPHAN_CRATE_EMPTY_BUILD",
+        severity: "error",
+        path: "code/packages/rust/demo/child",
+        details: {
+          build_path: "code/packages/rust/demo/BUILD",
+          manifest_kind: "package",
+        },
+      },
+    ]);
+  });
+
+  it("uses NFC plus full case folding for duplicate exemption identity", () => {
+    const result = validateOrphanCrateSnapshot({
+      directories: ["code/packages/rust/Straße"],
+      manifests: [{ path: "code/packages/rust/Straße", kind: "package" }],
+      build_files: [],
+      exemptions: [
+        {
+          line: 7,
+          kind: "EXCLUDED",
+          path: "code/packages/rust/Straße",
+          reason: "first",
+        },
+        {
+          line: 8,
+          kind: "PENDING",
+          path: "CODE/PACKAGES/RUST/STRASSE",
+          reason: "duplicate",
+        },
+      ],
+    });
+
+    expect(result.diagnostics).toEqual([
+      {
+        code: "ORPHAN_EXEMPTION_INVALID",
+        severity: "error",
+        path: "code/BUILD-EXEMPTIONS",
+        details: { line: 8, problem: "DUPLICATE_PATH" },
+      },
+    ]);
+  });
+
+  it("uses Python-compatible ASCII JSON ordering for Unicode details", () => {
+    const result = validateOrphanCrateSnapshot({
+      directories: [],
+      manifests: [],
+      build_files: [],
+      exemptions: [
+        {
+          line: 9,
+          kind: "EXCLUDED",
+          path: "code/packages/rust/z",
+          reason: "removed",
+        },
+        {
+          line: 8,
+          kind: "EXCLUDED",
+          path: "code/packages/rust/😀",
+          reason: "removed",
+        },
+        {
+          line: 7,
+          kind: "EXCLUDED",
+          path: "code/packages/rust/é",
+          reason: "removed",
+        },
+      ],
+    });
+
+    expect(
+      result.diagnostics.map((diagnostic) => diagnostic.details.entry_path),
+    ).toEqual([
+      "code/packages/rust/é",
+      "code/packages/rust/😀",
+      "code/packages/rust/z",
+    ]);
   });
 });
 
