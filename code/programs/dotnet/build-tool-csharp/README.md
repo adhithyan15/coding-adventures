@@ -13,8 +13,8 @@ the repo:
 4. Fall back to content hashing plus `.build-cache.json` when git metadata is unavailable
 5. Execute independent packages in parallel topological batches
 6. Emit build plans and CI toolchain flags when requested
-7. Validate caller-supplied tracked-artifact snapshots without consulting Git
-   or the filesystem
+7. Validate caller-supplied orphan-crate and tracked-artifact snapshots without
+   consulting Git or the filesystem
 
 ## Usage
 
@@ -44,6 +44,12 @@ dotnet run -- --emit-plan --plan-file build-plan.json
   path components. The snapshot pins Unicode 17.0.0, and all four Unicode
   operations use source-embedded tables rather than host or operating-system
   globalization data.
+- `Validator.ValidateOrphanCrateSnapshot` consumes the closed normalized
+  directory, Cargo-manifest, BUILD-state, and exemption-ledger records from the
+  shared corpus. It applies exact artifact-component exclusions, ancestor BUILD
+  coverage, redacted invalid-exemption diagnostics, stale-ledger detection,
+  and deterministic pending-debt accounting without walking a checkout or
+  invoking Git, a process, the environment, or the network.
 - Declares the mixed MIT and Unicode-3.0 licensing of the engine and derived
   tables and copies the full `UNICODE-LICENSE.txt` notice beside build,
   publish, and package outputs.

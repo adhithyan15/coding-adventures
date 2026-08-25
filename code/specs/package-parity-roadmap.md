@@ -6734,6 +6734,88 @@ exact overlap with the live open-PR set. Auto-merge remains disabled until all
 required checks are terminal and acceptable and GitHub reports no merge
 conflict.
 
+PR #12683 subsequently completed all 30 reported checks: 24 successes, five
+expected skips, and one neutral CodeQL aggregate. GitHub reported the branch
+clean and mergeable, so the loop enabled squash auto-merge; GitHub merged it as
+`8bda602ea0546ae6c078faa1f833f835d43fb233` at
+`2026-08-25T05:38:14Z` without a manual merge command. The required post-merge
+collision report at that exact revision is unchanged: schema 3, 15 established
+lanes, 1,372 implementation identities, 4,565 package slots, 175 high-consensus
+packages with 276 gaps, 909 singleton packages with 12,726 gaps, 720 Rust
+singletons, and zero canonical collisions or unknown language buckets. OCaml
+remains correctly emerging at zero packages. Exact comparison with the stored
+`59b34f88ca0e1b4882c966374bb4bd53a2b9defa` inventory finds no identity or slot
+addition or removal.
+
+The post-merge source audit found one additional owned gap before selection.
+The language-neutral hashing contract requires generated, dependency, VCS,
+cache, and temporary directories to be excluded, while both Ruby hasher
+collection paths recursively visit all descendant files without pruning any
+directory component. The new pending
+`build-tool-ruby-generated-directory-hashing-exclusion` owner records that
+bounded repair and depends on the now-merged Ruby discovery owner. This raises
+the complete acyclic graph to 489 owners and 746 edges; there are no duplicate
+IDs, missing prerequisites, cycles, or eligible unowned gaps.
+
+The selected next owner is
+`build-tool-csharp-orphan-crate-validation-conformance` on exact base
+`8bda602ea0546ae6c078faa1f833f835d43fb233`. Its neutral corpus prerequisite is
+merged. This process-free one-engine consumer has the highest immediate
+build-tool leverage because it directly unlocks the separately reviewed F#
+facade and contributes to the orphan-validation completion umbrella. Live open
+PRs and the target remote branch have zero exact overlap on the C# build-tool,
+state, or roadmap surfaces. The strategically larger OCaml process-free core
+remains collision-unsafe while existing PRs own the exact Go validator and
+entry-point files it must change.
+
+Before the first push, `origin/main` advanced without path conflict through ADJ
+facts PR #12684, Go build-tool PR #12687, Persian ductus PR #12688, vault-auth
+PR #12685, Rust html-parser PR #12689, and ADJ loop-state PR #12691 to
+`48c0096df92b73c66ba116e9f7023de2e8701e39`; the selected branch rebased there
+normally. The refreshed schema-3 collision report remains unchanged in
+topology and counts. PR #12687 also exposes a new portable build-tool contract
+gap: Go alone now parses `# needs-toolchain: NAME` BUILD comments and applies
+them to affected-package CI detection. The state therefore registers a neutral
+toolchain-detection corpus/Go-normalization owner and a selection-blocked
+remaining-engines umbrella before publication. The corpus must close directive
+syntax, canonical names, duplicates, invalid values, platform BUILD precedence,
+affected-only behavior, forced-full behavior, and deterministic results before
+the umbrella is decomposed into engine children. The complete graph is now 491
+owners and 749 edges, and no eligible behavior from that main advance remains
+unowned.
+
+Validated implementation head `4dd44395b2a508c51045d10ea8d4ef8342f76819`
+exposes one process-free orphan-crate snapshot
+validator and exactly consumes all four neutral fixtures. It covers direct and
+ancestor BUILD ownership, closer empty BUILD precedence, fixed platform
+filename ranking, exact artifact exclusions, invalid and stale exemptions,
+pending counting, hostile-path redaction, deterministic Unicode ordering, and
+Python-compatible blank reasons including the U+001C through U+001F controls.
+The focused family passes 13 tests and both repeated canonical C# BUILD fronts
+pass all 43 tests; Release coverage is 94.6% line, 42.89% branch, and 76.54%
+method, with a clean warnings-as-errors build and publish. The F# downstream
+facade passes seven tests. The neutral corpus validates 111 cases and 269 files,
+and 146 focused repository tests plus 928 subtests pass with two expected
+Windows skips. The rebased Go oracle passes all packages, vet, and trimpath
+compilation; a real forced C# plan evaluates 45 Starlark BUILD files, discovers
+200 packages, preserves the five reviewed orphan exemptions, and reports all
+200 as `WOULD-BUILD`. NuGet vulnerability, collision, strict-JSON, acyclic
+491-owner/749-edge state, diff, dependency-scope, and production-authority
+checks pass. Source-wide `dotnet format` reproduces only the exact pre-existing
+whitespace baseline outside changed lines. Independent implementation,
+fixture/inventory, state/roadmap, and security reviews found no remaining
+publication blocker after the identified Python-whitespace, closest-empty
+filename-rank, Go-oracle dependency, generated-artifact, and rebase gaps were
+closed.
+
+Ready-for-review PR #12700 opened from clean validated head
+`29b203f905a4982dfcdf60dee340b273ca635643` after a normal first push. At
+publication, `origin/main` and the branch merge base both equaled
+`48c0096df92b73c66ba116e9f7023de2e8701e39`; the six-path diff had zero exact
+overlap with live open PRs. GitHub reports the PR non-draft and mergeable,
+blocked only by queued checks, so auto-merge remains disabled until every
+required check is terminal and acceptable and GitHub reports no conflict.
+
 ## Autonomous Loop Protocol
 
 Only one parity PR should be active at a time.

@@ -181,6 +181,136 @@ public sealed class BuildToolTests : IDisposable
     }
 
     [Theory]
+    [InlineData("validation-orphan-crates-clean.json")]
+    [InlineData("validation-orphan-crates-unlisted.json")]
+    [InlineData("validation-orphan-exemptions-invalid.json")]
+    [InlineData("validation-orphan-exemptions-stale.json")]
+    public void OrphanCrateValidationMatchesSharedConformanceFixtures(string fixtureName)
+    {
+        var fixturePath = Path.Combine(
+            RepositoryRoot,
+            "code",
+            "specs",
+            "fixtures",
+            "build-tool-v1",
+            "cases",
+            fixtureName);
+        using var fixture = JsonDocument.Parse(File.ReadAllText(fixturePath));
+        var snapshot = fixture.RootElement
+            .GetProperty("input")
+            .GetProperty("options")
+            .GetProperty("orphan_snapshot");
+        var directories = snapshot
+            .GetProperty("directories")
+            .EnumerateArray()
+            .Select(path => path.GetString()!)
+            .ToArray();
+        var manifests = snapshot
+            .GetProperty("manifests")
+            .EnumerateArray()
+            .Select(manifest => new OrphanManifest(
+                manifest.GetProperty("path").GetString()!,
+                manifest.GetProperty("kind").GetString()!))
+            .ToArray();
+        var buildFiles = snapshot
+            .GetProperty("build_files")
+            .EnumerateArray()
+            .Select(buildFile => new OrphanBuildFile(
+                buildFile.GetProperty("path").GetString()!,
+                buildFile.GetProperty("state").GetString()!))
+            .ToArray();
+        var exemptions = snapshot
+            .GetProperty("exemptions")
+            .EnumerateArray()
+            .Select(exemption => new OrphanExemption(
+                exemption.GetProperty("line").GetInt32(),
+                exemption.GetProperty("kind").GetString()!,
+                exemption.GetProperty("path").GetString()!,
+                exemption.GetProperty("reason").GetString()!))
+            .ToArray();
+
+        var actual = Validator.ValidateOrphanCrateSnapshot(
+            new OrphanCrateSnapshot(directories, manifests, buildFiles, exemptions));
+        var actualDiagnostics = JsonSerializer.SerializeToElement(actual.Diagnostics);
+        var expected = fixture.RootElement.GetProperty("expected");
+        var expectedDiagnostics = expected.GetProperty("diagnostics");
+        var expectedPendingCount = expected
+            .GetProperty("result")
+            .GetProperty("pending_exemption_count")
+            .GetInt32();
+
+        Assert.True(
+            JsonElement.DeepEquals(expectedDiagnostics, actualDiagnostics),
+            $"Expected {expectedDiagnostics.GetRawText()}, but received {actualDiagnostics.GetRawText()}.");
+        Assert.Equal(expectedPendingCount, actual.PendingExemptionCount);
+    }
+
+    public static TheoryData<string> InvalidOrphanExemptionPaths => new()
+    {
+        string.Empty,
+        new string('a', 513),
+        "/absolute/secret-project",
+        "C:/host/secret-project",
+        "code/packages/rust/bad<name>",
+        "code/packages/rust/trailing.",
+        "code/packages/rust/CON",
+    };
+
+    [Theory]
+    [MemberData(nameof(InvalidOrphanExemptionPaths))]
+    public void OrphanCrateValidationDoesNotEchoUnsafeExemptionPaths(string unsafePath)
+    {
+        var result = Validator.ValidateOrphanCrateSnapshot(new OrphanCrateSnapshot(
+            ["code/packages/rust/demo"],
+            [new OrphanManifest("code/packages/rust/demo", "package")],
+            [],
+            [new OrphanExemption(7, "PENDING", unsafePath, "not allowed")]));
+
+        var invalid = Assert.Single(result.Diagnostics, diagnostic =>
+            diagnostic.Code == "ORPHAN_EXEMPTION_INVALID");
+        Assert.Equal("code/BUILD-EXEMPTIONS", invalid.Path);
+        Assert.Equal("PATH_UNSAFE", invalid.Details.Problem);
+        if (unsafePath.Length > 0)
+        {
+            Assert.DoesNotContain(unsafePath, JsonSerializer.Serialize(result), StringComparison.Ordinal);
+        }
+    }
+
+    [Fact]
+    public void OrphanCrateValidationUsesPythonWhitespaceForReasons()
+    {
+        var result = Validator.ValidateOrphanCrateSnapshot(new OrphanCrateSnapshot(
+            ["code/packages/rust/demo"],
+            [new OrphanManifest("code/packages/rust/demo", "package")],
+            [],
+            [new OrphanExemption(7, "PENDING", "code/packages/rust/demo", "\u001c")]));
+
+        Assert.Equal(0, result.PendingExemptionCount);
+        Assert.Equal(
+            ["ORPHAN_CRATE_UNLISTED", "ORPHAN_EXEMPTION_INVALID"],
+            result.Diagnostics.Select(diagnostic => diagnostic.Code));
+        Assert.Equal("REASON_MISSING", result.Diagnostics[1].Details.Problem);
+    }
+
+    [Fact]
+    public void OrphanCrateValidationChoosesClosestEmptyBuildThenFixedNameOrder()
+    {
+        var result = Validator.ValidateOrphanCrateSnapshot(new OrphanCrateSnapshot(
+            ["code/packages/rust/demo/child"],
+            [new OrphanManifest("code/packages/rust/demo/child", "package")],
+            [
+                new OrphanBuildFile("code/packages/rust/BUILD", "empty"),
+                new OrphanBuildFile("code/packages/rust/demo/BUILD_linux", "empty"),
+                new OrphanBuildFile("code/packages/rust/demo/BUILD", "empty"),
+            ],
+            []));
+
+        var diagnostic = Assert.Single(result.Diagnostics);
+        Assert.Equal("ORPHAN_CRATE_EMPTY_BUILD", diagnostic.Code);
+        Assert.Equal("code/packages/rust/demo/BUILD", diagnostic.Details.BuildPath);
+    }
+
+    [Theory]
     [InlineData("validation-tracked-artifacts-clean.json")]
     [InlineData("validation-tracked-artifacts-forbidden.json")]
     [InlineData("validation-tracked-artifacts-aliases.json")]

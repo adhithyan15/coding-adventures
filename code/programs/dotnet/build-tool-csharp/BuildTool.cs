@@ -1847,6 +1847,58 @@ public static class CiWorkflow
     }
 }
 
+public sealed record OrphanManifest(
+    string Path,
+    string Kind);
+
+public sealed record OrphanBuildFile(
+    string Path,
+    string State);
+
+public sealed record OrphanExemption(
+    int Line,
+    string Kind,
+    string Path,
+    string Reason);
+
+public sealed record OrphanCrateSnapshot(
+    IReadOnlyList<string> Directories,
+    IReadOnlyList<OrphanManifest> Manifests,
+    IReadOnlyList<OrphanBuildFile> BuildFiles,
+    IReadOnlyList<OrphanExemption> Exemptions);
+
+public sealed record OrphanCrateDiagnosticDetails(
+    [property: JsonPropertyName("build_path")]
+    [property: JsonIgnore(Condition = JsonIgnoreCondition.WhenWritingNull)]
+    string? BuildPath = null,
+    [property: JsonPropertyName("manifest_kind")]
+    [property: JsonIgnore(Condition = JsonIgnoreCondition.WhenWritingNull)]
+    string? ManifestKind = null,
+    [property: JsonPropertyName("entry_path")]
+    [property: JsonIgnore(Condition = JsonIgnoreCondition.WhenWritingNull)]
+    string? EntryPath = null,
+    [property: JsonPropertyName("kind")]
+    [property: JsonIgnore(Condition = JsonIgnoreCondition.WhenWritingNull)]
+    string? Kind = null,
+    [property: JsonPropertyName("line")]
+    [property: JsonIgnore(Condition = JsonIgnoreCondition.WhenWritingNull)]
+    int? Line = null,
+    [property: JsonPropertyName("problem")]
+    [property: JsonIgnore(Condition = JsonIgnoreCondition.WhenWritingNull)]
+    string? Problem = null);
+
+public sealed record OrphanCrateDiagnostic(
+    [property: JsonPropertyName("code")] string Code,
+    [property: JsonPropertyName("severity")] string Severity,
+    [property: JsonPropertyName("path")] string Path,
+    [property: JsonPropertyName("details")] OrphanCrateDiagnosticDetails Details);
+
+public sealed record OrphanCrateValidationResult(
+    [property: JsonPropertyName("diagnostics")]
+    IReadOnlyList<OrphanCrateDiagnostic> Diagnostics,
+    [property: JsonPropertyName("pending_exemption_count")]
+    int PendingExemptionCount);
+
 public sealed record TrackedArtifactEntry(
     int Ordinal,
     string Path,
@@ -1869,8 +1921,26 @@ public static class Validator
 {
     public const string TrackedArtifactUnicodeVersion = TrackedArtifactUnicode17.Version;
 
+    private const string OrphanScanRoot = "code";
+    private const string OrphanLedgerPath = "code/BUILD-EXEMPTIONS";
     private const string ForbiddenTrackedArtifactComponent = "node_modules";
     private const string RedactedTrackedArtifactPath = "repository";
+
+    private static readonly IReadOnlyDictionary<string, int> OrphanBuildNameRank =
+        new Dictionary<string, int>(StringComparer.Ordinal)
+        {
+            ["BUILD"] = 0,
+            ["BUILD_windows"] = 1,
+            ["BUILD_mac"] = 2,
+            ["BUILD_linux"] = 3,
+            ["BUILD_mac_and_linux"] = 4,
+        };
+
+    private static readonly HashSet<string> OrphanSkipComponents = new(StringComparer.Ordinal)
+    {
+        ".git", "target", "node_modules", "vendor", ".venv", "_build",
+        "deps", ".build", "dist-newstyle", ".cargo",
+    };
 
     private static readonly IComparer<string> UnicodeScalarOrdinalComparer =
         Comparer<string>.Create(CompareUnicodeScalars);
@@ -1891,6 +1961,141 @@ public static class Validator
     public static string? ValidateBuildContracts(string repoRoot, IReadOnlyList<PackageSpec> packages)
     {
         return ValidateCiFullBuildToolchains(repoRoot, packages);
+    }
+
+    public static OrphanCrateValidationResult ValidateOrphanCrateSnapshot(
+        OrphanCrateSnapshot snapshot)
+    {
+        var manifests = snapshot.Manifests
+            .Where(manifest => !IsOrphanArtifactPath(manifest.Path))
+            .ToArray();
+        var directories = snapshot.Directories.ToHashSet(StringComparer.Ordinal);
+        var manifestByPath = manifests.ToDictionary(manifest => manifest.Path, StringComparer.Ordinal);
+        var coverage = manifests.ToDictionary(
+            manifest => manifest.Path,
+            manifest => FindCoveringBuild(snapshot.BuildFiles, manifest.Path, "runnable"),
+            StringComparer.Ordinal);
+        var emptyBuilds = manifests.ToDictionary(
+            manifest => manifest.Path,
+            manifest => FindCoveringBuild(snapshot.BuildFiles, manifest.Path, "empty"),
+            StringComparer.Ordinal);
+
+        var diagnostics = new List<OrphanCrateDiagnostic>();
+        var seenExemptionPaths = new HashSet<string>(StringComparer.Ordinal);
+        var validExemptions = new List<OrphanExemption>();
+        foreach (var exemption in snapshot.Exemptions)
+        {
+            string? identity = null;
+            string? pathProblem = null;
+            if (!IsPortableOrphanPath(exemption.Path))
+            {
+                pathProblem = "PATH_UNSAFE";
+            }
+            else
+            {
+                identity = OrphanPathIdentity(exemption.Path);
+                if (!IsUnderOrphanScanRoot(exemption.Path))
+                {
+                    pathProblem = "PATH_OUTSIDE_SCAN";
+                }
+                else if (IsOrphanArtifactPath(exemption.Path))
+                {
+                    pathProblem = "PATH_ARTIFACT";
+                }
+            }
+
+            var duplicate = identity is not null && !seenExemptionPaths.Add(identity);
+            var problem = exemption.Kind is not ("EXCLUDED" or "PENDING")
+                ? "UNKNOWN_KIND"
+                : IsBlankOrphanReason(exemption.Reason)
+                    ? "REASON_MISSING"
+                    : duplicate
+                        ? "DUPLICATE_PATH"
+                        : pathProblem;
+
+            if (problem is not null)
+            {
+                diagnostics.Add(new OrphanCrateDiagnostic(
+                    "ORPHAN_EXEMPTION_INVALID",
+                    "error",
+                    OrphanLedgerPath,
+                    new OrphanCrateDiagnosticDetails(
+                        Line: exemption.Line,
+                        Problem: problem)));
+                continue;
+            }
+
+            validExemptions.Add(exemption);
+        }
+
+        var activeExemptions = new Dictionary<string, OrphanExemption>(StringComparer.Ordinal);
+        var pendingExemptionCount = 0;
+        foreach (var exemption in validExemptions)
+        {
+            string? staleProblem = null;
+            if (!directories.Contains(exemption.Path))
+            {
+                staleProblem = "MISSING_DIRECTORY";
+            }
+            else if (!manifestByPath.ContainsKey(exemption.Path))
+            {
+                staleProblem = "NO_MANIFEST";
+            }
+            else if (coverage[exemption.Path] is not null)
+            {
+                staleProblem = "COVERED";
+            }
+
+            if (staleProblem is not null)
+            {
+                diagnostics.Add(new OrphanCrateDiagnostic(
+                    "ORPHAN_EXEMPTION_STALE",
+                    "error",
+                    OrphanLedgerPath,
+                    new OrphanCrateDiagnosticDetails(
+                        EntryPath: exemption.Path,
+                        Kind: exemption.Kind,
+                        Line: exemption.Line,
+                        Problem: staleProblem)));
+                continue;
+            }
+
+            activeExemptions[exemption.Path] = exemption;
+            if (string.Equals(exemption.Kind, "PENDING", StringComparison.Ordinal))
+            {
+                pendingExemptionCount += 1;
+            }
+        }
+
+        foreach (var manifest in manifests)
+        {
+            if (coverage[manifest.Path] is not null || activeExemptions.ContainsKey(manifest.Path))
+            {
+                continue;
+            }
+
+            var emptyBuild = emptyBuilds[manifest.Path];
+            diagnostics.Add(emptyBuild is null
+                ? new OrphanCrateDiagnostic(
+                    "ORPHAN_CRATE_UNLISTED",
+                    "error",
+                    manifest.Path,
+                    new OrphanCrateDiagnosticDetails(ManifestKind: manifest.Kind))
+                : new OrphanCrateDiagnostic(
+                    "ORPHAN_CRATE_EMPTY_BUILD",
+                    "error",
+                    manifest.Path,
+                    new OrphanCrateDiagnosticDetails(
+                        BuildPath: emptyBuild.Path,
+                        ManifestKind: manifest.Kind)));
+        }
+
+        var orderedDiagnostics = diagnostics
+            .OrderBy(diagnostic => diagnostic.Code, StringComparer.Ordinal)
+            .ThenBy(diagnostic => diagnostic.Path, UnicodeScalarOrdinalComparer)
+            .ThenBy(diagnostic => CanonicalDetails(diagnostic.Details), StringComparer.Ordinal)
+            .ToArray();
+        return new OrphanCrateValidationResult(orderedDiagnostics, pendingExemptionCount);
     }
 
     public static IReadOnlyList<TrackedArtifactDiagnostic> ValidateTrackedArtifactSnapshot(
@@ -2066,6 +2271,107 @@ public static class Validator
         return (normalized, null);
     }
 
+    private static OrphanBuildFile? FindCoveringBuild(
+        IReadOnlyList<OrphanBuildFile> buildFiles,
+        string manifestPath,
+        string state)
+    {
+        return buildFiles
+            .Where(buildFile => string.Equals(buildFile.State, state, StringComparison.Ordinal))
+            .Select(buildFile => new
+            {
+                BuildFile = buildFile,
+                Parent = PortableParentPath(buildFile.Path),
+                Name = PortableBaseName(buildFile.Path),
+            })
+            .Where(candidate =>
+                IsUnderOrphanScanRoot(candidate.Parent) &&
+                (string.Equals(manifestPath, candidate.Parent, StringComparison.Ordinal) ||
+                 manifestPath.StartsWith($"{candidate.Parent}/", StringComparison.Ordinal)))
+            .OrderByDescending(candidate => candidate.Parent.Count(character => character == '/') + 1)
+            .ThenBy(candidate => OrphanBuildNameRank[candidate.Name])
+            .ThenBy(candidate => candidate.BuildFile.Path, UnicodeScalarOrdinalComparer)
+            .Select(candidate => candidate.BuildFile)
+            .FirstOrDefault();
+    }
+
+    private static bool IsPortableOrphanPath(string path)
+    {
+        if (path.Length == 0 || path.EnumerateRunes().Count() > 512)
+        {
+            return false;
+        }
+        if (!string.Equals(path, TrackedArtifactUnicode17.Nfc(path), StringComparison.Ordinal))
+        {
+            return false;
+        }
+        if (path.StartsWith('/') || path.Contains('\\') || path.Contains("//", StringComparison.Ordinal))
+        {
+            return false;
+        }
+        if (path.Length >= 2 && char.IsAsciiLetter(path[0]) && path[1] == ':')
+        {
+            return false;
+        }
+        if (path.Any(character => character < 32 || "<>:\"|?*".Contains(character)))
+        {
+            return false;
+        }
+
+        foreach (var segment in path.Split('/'))
+        {
+            if (segment is "" or "." or ".." || segment.EndsWith(' ') || segment.EndsWith('.'))
+            {
+                return false;
+            }
+            var basename = TrackedArtifactUnicode17.FullUppercase(segment.Split('.', 2)[0]);
+            if (WindowsReservedBasenames.Contains(basename))
+            {
+                return false;
+            }
+        }
+        return true;
+    }
+
+    private static bool IsBlankOrphanReason(string reason)
+    {
+        // Python str.strip(), used by the independent fixture oracle, follows
+        // the Unicode whitespace property plus the four information separators
+        // U+001C..U+001F. .NET's Rune.IsWhiteSpace omits those separators, so
+        // include them explicitly instead of inheriting a cross-runtime drift
+        // that could let a reasonless exemption suppress a real orphan.
+        return reason.Length == 0 || reason.EnumerateRunes().All(rune =>
+            Rune.IsWhiteSpace(rune) || rune.Value is >= 0x1c and <= 0x1f);
+    }
+
+    private static string OrphanPathIdentity(string path)
+    {
+        return TrackedArtifactUnicode17.CaseFold(TrackedArtifactUnicode17.Nfc(path));
+    }
+
+    private static bool IsUnderOrphanScanRoot(string path)
+    {
+        return string.Equals(path, OrphanScanRoot, StringComparison.Ordinal) ||
+               path.StartsWith($"{OrphanScanRoot}/", StringComparison.Ordinal);
+    }
+
+    private static bool IsOrphanArtifactPath(string path)
+    {
+        return path.Split('/').Any(OrphanSkipComponents.Contains);
+    }
+
+    private static string PortableParentPath(string path)
+    {
+        var separator = path.LastIndexOf('/');
+        return separator < 0 ? string.Empty : path[..separator];
+    }
+
+    private static string PortableBaseName(string path)
+    {
+        var separator = path.LastIndexOf('/');
+        return separator < 0 ? path : path[(separator + 1)..];
+    }
+
     private static bool IsForbiddenTrackedArtifactComponent(string component)
     {
         // NFKC resolves compatibility characters such as full-width letters,
@@ -2117,6 +2423,36 @@ public static class Validator
             canonical["problem"] = details.Problem;
         }
 
+        return JsonSerializer.Serialize(canonical);
+    }
+
+    private static string CanonicalDetails(OrphanCrateDiagnosticDetails details)
+    {
+        var canonical = new SortedDictionary<string, object>(StringComparer.Ordinal);
+        if (details.BuildPath is not null)
+        {
+            canonical["build_path"] = details.BuildPath;
+        }
+        if (details.EntryPath is not null)
+        {
+            canonical["entry_path"] = details.EntryPath;
+        }
+        if (details.Kind is not null)
+        {
+            canonical["kind"] = details.Kind;
+        }
+        if (details.Line is not null)
+        {
+            canonical["line"] = details.Line.Value;
+        }
+        if (details.ManifestKind is not null)
+        {
+            canonical["manifest_kind"] = details.ManifestKind;
+        }
+        if (details.Problem is not null)
+        {
+            canonical["problem"] = details.Problem;
+        }
         return JsonSerializer.Serialize(canonical);
     }
 }
