@@ -6623,7 +6623,7 @@ The next selected owner is
 `build-tool-swift-dist-newstyle-discovery-exclusion`. It is the highest-
 leverage collision-free tranche: the bounded exact-component repair unlocks
 three direct owners and five unfinished descendants, versus two and four for
-Ruby. Six live open PRs have zero exact path overlap, the remote target
+Ruby. Seven live open PRs have zero exact path overlap, the remote target
 branch was absent, and the fresh worktree starts at the merged PR #12669
 revision. OCaml remains a stronger strategic chain but collision-unsafe while
 PRs #12149 and #12162 own its exact Go validator and entry-point surfaces.
