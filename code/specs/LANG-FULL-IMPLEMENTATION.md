@@ -951,7 +951,9 @@ backend immediately) come before the enabler-dependent items.
   likewise preserving because lowering returns its operand unchanged; unary
   minus remains conservative. Parentheses are transparent around exact scalar
   self-references and boolean, integer, or real neutral literals; wrapping a
-  changing expression does not make it preserving. For finite real
+  changing expression does not make it preserving. Unary-plus neutral literals
+  and signed integer zero are also exact identities; negative one and other
+  signed changing expressions remain conservative. For finite real
   selectors, multiplication and division by exact positive one are likewise
   preserving, including left-associative chains of those operations; additive
   zero remains conservative because it can change the sign bit of negative

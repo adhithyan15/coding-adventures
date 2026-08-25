@@ -1,0 +1,143 @@
+% ============================================================================
+% long-vowel-team-sound — common long-vowel TEAM spellings and the single
+% long vowel sound each one represents (adj-facts-stdlib, LANGUAGE). A K-2
+% phonics library, grounding ADJ-STDLIB-COVERAGE.md §5.1's "phonics,
+% decoding" Major Gap with a THIRD fresh-WebFetch UFLI literacy angle,
+% genuinely distinct from `digraph-sound.adj` (a consonant digraph's single
+% un-glided consonant sound) and `diphthong-sound.adj` (a glided vowel sound
+% that moves between two positions within one syllable).
+% ============================================================================
+% A long-vowel TEAM is two (or more) letters that together spell the LONG
+% sound of the FIRST vowel in the pair — "ai" in "rain" is not a glide like a
+% diphthong, it is a single steady long-/a/ sound, spelled with a silent
+% "helper" second letter. This is categorically distinct from every other
+% vowel-pattern table already shipped: `diphthong-sound.adj` names a GLIDED
+% vowel sound that moves between two tongue positions inside one syllable
+% (oi/oy/ou/ow); `r-controlled-vowel-word.adj` names a vowel-plus-r pattern;
+% `silent-e-word.adj`/`syllable-type-alias.adj` name a SYLLABLE structure.
+% None of them tables a plain two-or-more-letter spelling of an un-glided
+% LONG vowel sound. Recall is a binding query:
+%
+%     ? long_vowel_team_sound(ai, $Sound)
+%       % long_a_sound
+%
+% This is a native `table` (ADJ-TABLES RS-5): each `row` lowers to a ground
+% relation `long_vowel_team_sound(spelling, sound)` carrying the source
+% citation, so the lookup above is the ordinary SLD binding query — the
+% engine returns the sound WITH its source, on the CPU, with zero model
+% calls, and abstains on any spelling not one of these ten source-cited
+% lessons. The query also runs BACKWARD — bind a sound and recall EVERY
+% spelling that carries it:
+%
+%     ? long_vowel_team_sound($Sp, long_o_sound)
+%       % oa, ow_long_o, oe  (all three -- see design note)
+%
+% DESIGN NOTE — a genuine `ow` HETERONYM-IN-SPELLING collision with
+% `diphthong-sound.adj`, and why this table's own "ow" row is the atom
+% `ow_long_o`, NOT a bare `ow`: UFLI's cited Long Vowel Teams page tables
+% lesson 86 as "oa /ō/, ow /ō/, oe /ō/" — the SAME two-letter
+% spelling "ow" that `diphthong-sound.adj` already tables (lesson 96 of a
+% DIFFERENT UFLI unit, "Diphthongs and Silent Letters") as the glided /ow/
+% diphthong sound in "cow"/"how". Both are real, independently source-cited
+% English facts about the identical two letters — "ow" genuinely IS
+% pronounced two different ways depending on the word ("know"/"grow" vs.
+% "cow"/"how"), and UFLI itself teaches them as two separate lessons in two
+% separate units. Because these are two DIFFERENT predicates
+% (`long_vowel_team_sound/2` here, `diphthong_sound/2` there), a bare `ow`
+% key in each would not actually conflict at the logic-engine level — SLD
+% resolution scopes ground facts by predicate name, not by atom alone — but
+% a human or LLM reader scanning row values across the stdlib could easily
+% mistake one table's `ow` for the other's without checking which predicate
+% governs it, silently attributing the wrong lesson's sound. Rather than
+% risk that silent misread, this table disambiguates the one genuinely
+% overlapping spelling with an explicit `_long_o` suffix on the atom itself,
+% naming which of the two source-cited senses it stands for right in the key
+% — the SAME kind of new, source-driven atom-label convention
+% `prefix-meaning.adj`'s trailing-underscore `un_`/`re_`/`dis_` labels
+% already established for this stdlib when the plain punctuated form wasn't
+% representable. A query on the bare atom `ow` against THIS table's
+% predicate honestly ABSTAINS — this table asserts nothing about a bare
+% `ow`, so no answer is fabricated by accident — while `diphthong_sound(ow,
+% $S)` against the OTHER already-shipped table still correctly answers
+% `ow_sound`, exactly as it always has. The other nine rows in this table
+% keep the plain bare-literal-spelling atom convention `digraph-sound.adj`/
+% `diphthong-sound.adj` already established, since a full-tree grep (the
+% mandatory duplication check before scoping) confirmed none of them — ai,
+% ay, ee, ea, ey, oa, oe, ie, igh — collides with any `row` anywhere else in
+% this stdlib; only "ow" needed special-casing.
+%
+% DESIGN NOTE — why lesson 88 ("Vowel Teams Review 1") is NOT a row here:
+% the page's own lesson table names it a cumulative review lesson, not a new
+% spelling-to-sound pairing — the SAME review-lesson exclusion
+% `digraph-sound.adj` (lessons 49/53) and `diphthong-sound.adj` (its own
+% lesson 97) already established for this stdlib.
+%
+% Provenance: quoted verbatim from the University of Florida Literacy
+% Institute (UFLI)'s Foundations Toolbox, "Long Vowel Teams Unit Resources
+% (Lessons 84-88)" page — the same source family as `digraph-sound.adj`/
+% `diphthong-sound.adj`, a different page. curl-fetched directly (not just
+% an AI-summarized WebFetch) and confirmed byte-for-byte before writing this
+% file — the raw HTML's own opening definition reads, verbatim: "A vowel
+% team is a combination of letters that represents a vowel sound. These
+% lessons focus on vowel teams that represent the sound of the first vowel
+% (e.g., team, rain)." Its own lesson table reads, verbatim: "84 ai /ā/, ay
+% /ā/ ... 85 ee /ē/, ea /ē/, ey /ē/ ... 86 oa /ō/, ow /ō/, oe /ō/ ... 87 ie
+% /ī/, igh /ī/" (macron-marked long-vowel symbols, the source's own notation
+% — not IPA slash symbols).
+%
+%     spelling (atom label)   sound (atom label)   lesson concept (verbatim)
+%     -----------------------  --------------------  --------------------------
+%     ai                       long_a_sound           "ai /ā/" (lesson 84)
+%     ay                       long_a_sound           "ay /ā/" (lesson 84)
+%     ee                       long_e_sound           "ee /ē/" (lesson 85)
+%     ea                       long_e_sound           "ea /ē/" (lesson 85)
+%     ey                       long_e_sound           "ey /ē/" (lesson 85)
+%     oa                       long_o_sound           "oa /ō/" (lesson 86)
+%     ow_long_o                long_o_sound           "ow /ō/" (lesson 86 -- disambiguated, see design note)
+%     oe                       long_o_sound           "oe /ō/" (lesson 86)
+%     ie                       long_i_sound           "ie /ī/" (lesson 87)
+%     igh                      long_i_sound           "igh /ī/" (lesson 87)
+%
+% `trust authoritative` — UFLI is a university literacy research center
+% (University of Florida, .edu), the same tier and same source family
+% `digraph-sound.adj`/`diphthong-sound.adj` already established for this
+% stdlib. A full-tree grep for `row (ai,`/`row (ay,`/`row (ee,`/`row (ea,`/
+% `row (ey,`/`row (oa,`/`row (ow,`/`row (oe,`/`row (ie,`/`row (igh,` across
+% the whole shipped stdlib (the mandatory duplication check before scoping)
+% found zero hits except `diphthong-sound.adj`'s own `row (ow, ow_sound)` —
+% confirming this is the FIRST long-vowel-team content in this stdlib, with
+% exactly the one already-documented `ow` collision, handled above. A
+% spelling not one of these ten — e.g. `au`/`aw` (real vowel-team spellings,
+% but WebFetch-confirmed tabled by UFLI under a DIFFERENT, separately
+% numbered unit, "Other Vowel Teams" lesson 93: "au /aw/, aw /aw/, augh
+% /aw/" — the same lesson `diphthong-sound.adj`'s own design note already
+% excludes for the same reason) — is deliberately NOT a row, so a recall
+% ABSTAINS on it rather than inventing a sound. NOTE for a future round: the
+% SAME "Other Vowel Teams" page's lesson 94 tables "ea /ĕ/, a /ŏ/" — a
+% SHORT-vowel reading of "ea" (e.g. "bread"), a genuine second sense of the
+% "ea" spelling this table's own lesson-85 row does NOT cover (this table
+% only asserts the LONG-e reading). Not a present collision — no table in
+% this stdlib currently ships lesson 94's content — but a future
+% "Other Vowel Teams" table would need the same disambiguation discipline
+% this file's `ow`/`ow_long_o` design note establishes. (See ../README.md;
+% feedback_nothing_human_authored, feedback_adj_only_shipped_artifacts.)
+% ============================================================================
+
+table long_vowel_team_sound {
+    columns spelling, sound
+
+    row (ai, long_a_sound)
+    row (ay, long_a_sound)
+    row (ee, long_e_sound)
+    row (ea, long_e_sound)
+    row (ey, long_e_sound)
+    row (oa, long_o_sound)
+    row (ow_long_o, long_o_sound)
+    row (oe, long_o_sound)
+    row (ie, long_i_sound)
+    row (igh, long_i_sound)
+
+    source "A vowel team is a combination of letters that represents a vowel sound. These lessons focus on vowel teams that represent the sound of the first vowel (e.g., team, rain). Long Vowel Teams Unit Resources (Lessons 84-88): 84 ai /ā/, ay /ā/, 85 ee /ē/, ea /ē/, ey /ē/, 86 oa /ō/, ow /ō/, oe /ō/, 87 ie /ī/, igh /ī/."
+    locator "https://ufli.education.ufl.edu/foundations/toolbox/84-88/"
+    trust authoritative
+}

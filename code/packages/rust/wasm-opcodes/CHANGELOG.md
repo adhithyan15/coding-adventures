@@ -2,6 +2,32 @@
 
 All notable changes to this package will be documented in this file.
 
+## [0.2.51] - 2026-08-25 - Relaxed SIMD epic PR2: i16x8.relaxed_q15mulr_s
+
+### Added
+
+- 1 new `SIMD_OPS` entry, the SECOND relaxed-simd opcode (see
+  `code/specs/W19-wasm-relaxed-simd-first-slice.md`): `i16x8.relaxed_
+  q15mulr_s` (`0x111`) -- 238 SIMD opcodes total, up from 237.
+- Sub-opcode value confirmed against the same relaxed-simd Overview.md
+  encoding table `relaxed_swizzle` cites. `0x111` (273 decimal) LEB128-
+  encodes as `[0x91, 0x02]` (low 7 bits `0x11` with the continuation bit
+  set, remaining bits `0x02`).
+- 1 new `SimdOpKind` variant: `RelaxedQ15mulrI16x8S`. Same `(v128,
+  v128) -> v128` binary shape and Q15 rounding fixed-point multiply as
+  `Q15mulrSatI16x8S`; the only spec-permitted difference is the SINGLE
+  overflow lane pattern (both operand lanes `i16::MIN`), which the
+  relaxed op may saturate to `i16::MAX` OR wrap to `i16::MIN`. Hand-
+  verified against the real upstream `i16x8_relaxed_q15mulr_s.wast`
+  corpus's own `either`-wrapped expected values that `Q15mulrSatI16x8S`'s
+  existing saturating body computes the file's overflow test case's
+  EXACT expected vector, `[32767, 32767, 32766, 0,0,0,0,0]` -- a literal
+  match to that `either` pair's second alternative, not merely a looser
+  equivalence -- so this opcode reuses that body verbatim, no new
+  numeric semantics needed.
+- New tests: `simd_relaxed_q15mulr_s_has_the_real_verified_sub_opcode_
+  value`.
+
 ## [0.2.50] - 2026-08-25 - Relaxed SIMD epic PR1: i8x16.relaxed_swizzle
 
 ### Added

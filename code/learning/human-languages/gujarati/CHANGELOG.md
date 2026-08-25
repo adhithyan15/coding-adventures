@@ -2,6 +2,22 @@
 
 ## [Unreleased]
 
+### Added — exact Gujarati R4 bridge A (#12857)
+
+- Add six zero-new-atom, four-minute-or-shorter Chapter 15 lessons at track
+  positions 91–96. The first five return short-u, chha, ka, retroflex nna, and
+  sha exactly 61 lessons after introduction, closing each R4 window as it opens.
+- Use the sixth position, whose matching source position is itself a zero-atom
+  checkpoint, for independent reading and written production of the name
+  exchange. Recognition and model-free writing keep separate mastery scores.
+
+### Added — durable doorway retrieval closes R3 (#12835)
+
+- Add one zero-new-atom, four-minute checkpoint after Chapter 13's meaning
+  lessons, where all nine doorway forms are at the measured R3 distance.
+- Shuffle reading and dictation independently so serial memory cannot replace
+  recognition or model-free writing, and keep the two scores separate.
+
 ### Added — doorway retrieval earns R1 and R2 (#12834)
 
 - Add two zero-new-atom micro-lessons at the exact expanding intervals: the

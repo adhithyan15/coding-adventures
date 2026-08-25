@@ -2067,7 +2067,8 @@ fn encode_stream_instr(
             | wasm_opcodes::SimdOpKind::FloorF64x2
             | wasm_opcodes::SimdOpKind::TruncF64x2
             | wasm_opcodes::SimdOpKind::NearestF64x2
-            | wasm_opcodes::SimdOpKind::RelaxedSwizzle => {
+            | wasm_opcodes::SimdOpKind::RelaxedSwizzle
+            | wasm_opcodes::SimdOpKind::RelaxedQ15mulrI16x8S => {
                 // `i8x16.add_sat_s`/`_u`/`.sub_sat_s`/`_u`/
                 // `i16x8.add_sat_s`/`_u`/`.sub_sat_s`/`_u` (SIMD widen
                 // PR33) join too: same BINARY (pop two v128s, push one),
@@ -3046,7 +3047,8 @@ fn encode_flat_instr(
             | wasm_opcodes::SimdOpKind::FloorF64x2
             | wasm_opcodes::SimdOpKind::TruncF64x2
             | wasm_opcodes::SimdOpKind::NearestF64x2
-            | wasm_opcodes::SimdOpKind::RelaxedSwizzle => {
+            | wasm_opcodes::SimdOpKind::RelaxedSwizzle
+            | wasm_opcodes::SimdOpKind::RelaxedQ15mulrI16x8S => {
                 // `i8x16.add_sat_s`/`_u`/`.sub_sat_s`/`_u`/
                 // `i16x8.add_sat_s`/`_u`/`.sub_sat_s`/`_u` (SIMD widen
                 // PR33) join too, same reasoning as `NarrowI16x8S/_U`

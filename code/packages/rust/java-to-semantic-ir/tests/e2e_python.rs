@@ -141,6 +141,14 @@ fn wrap(body: &str) -> String {
     format!("class Main {{ public static void main(String[] args) {{ {body} }} }}")
 }
 
+/// M3a: a full class body with extra methods alongside `main`, unlike
+/// [`wrap`] which only ever wraps `main`'s own body.
+fn wrap_with_methods(extra_methods: &str, main_body: &str) -> String {
+    format!(
+        "class Main {{ {extra_methods} public static void main(String[] args) {{ {main_body} }} }}"
+    )
+}
+
 #[test]
 fn arithmetic_composition_runs_in_python() {
     if !python_available() {
@@ -386,3 +394,77 @@ fn classic_for_loop_with_no_declaration_runs_in_python() {
 // in `tests/test_lower.rs` covers what's honestly provable at this
 // milestone (the lowering shape itself: `Stmt::ForEach`'s `var`/`iter`/
 // `body` fields and scoping), not real execution.
+
+// ── M3a: method declarations + calls ─────────────────────────────────────
+
+#[test]
+fn method_call_runs_in_python() {
+    if !python_available() {
+        eprintln!("skipping method_call_runs_in_python: `python3` not available");
+        return;
+    }
+    let out = run_via_python(
+        "method_call",
+        &wrap_with_methods(
+            "static int add(int a, int b) { return a + b; }",
+            "int r = add(3, 4); r;",
+        ),
+    );
+    assert_eq!(out, "7");
+}
+
+#[test]
+fn call_to_a_method_declared_after_main_runs_in_python() {
+    if !python_available() {
+        eprintln!(
+            "skipping call_to_a_method_declared_after_main_runs_in_python: `python3` not available"
+        );
+        return;
+    }
+    // `main`'s own call to `helper` resolves regardless of textual order
+    // (pass 1 registers every method's signature before any body is
+    // lowered) -- proven here by actually running it, not just checking
+    // the lowered shape.
+    let out = run_via_python(
+        "forward_reference_call",
+        &wrap_with_methods(
+            "static int helper(int x) { return x * 2; }",
+            "int r = helper(10); r;",
+        ),
+    );
+    assert_eq!(out, "20");
+}
+
+#[test]
+fn void_method_call_runs_without_crashing_in_python() {
+    if !python_available() {
+        eprintln!(
+            "skipping void_method_call_runs_without_crashing_in_python: `python3` not available"
+        );
+        return;
+    }
+    // A void method call has no observable effect this milestone can
+    // produce (no I/O, no shared mutable state between functions --
+    // parameters are pass-by-value copies of primitives), so this proves
+    // only what M3a can honestly prove: the call itself compiles and
+    // executes cleanly (a Python function returning `None`, called and
+    // discarded as a bare statement) without crashing, and the real
+    // trailing value (`42`) still comes through unaffected.
+    let out = run_via_python(
+        "void_method_call",
+        &wrap_with_methods("static void noop(int x) { }", "noop(5); 42;"),
+    );
+    assert_eq!(out, "42");
+}
+
+// No execution-proof test for recursion (plain or mutual): a genuinely
+// *terminating* recursive call needs a base case, which needs branching
+// (an `if`-guarded early `return`) -- out of scope for JV02 M3a (`return`
+// is accepted only as the literal last top-level statement of a method
+// body; see `lower.rs`'s own module doc comment). Without that, any
+// recursive call this milestone can express would recurse forever if
+// actually run. `plain_self_recursion_lowers_without_error_and_is_not_
+// mutual_recursion`/`mutual_recursion_between_two_methods_sets_the_
+// manifest_feature` in `tests/test_lower.rs` cover the structural lowering
+// claim (the call resolves, `Feature::MutualRecursion` is set correctly)
+// without ever actually running the loop.

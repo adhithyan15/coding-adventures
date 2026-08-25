@@ -502,6 +502,8 @@ const URDU_SIN = ductusFor("س", "urdu-nastaliq")!;
 const urduSinOutline = naskhOutline("س");
 const URDU_SHIN = ductusFor("ش", "urdu-nastaliq")!;
 const urduShinOutline = naskhOutline("ش");
+const URDU_FE = ductusFor("ف", "urdu-nastaliq")!;
+const urduFeOutline = naskhOutline("ف");
 const URDU_KAF = ductusFor("ک", "urdu-nastaliq")!;
 const urduKafOutline = naskhOutline("ک");
 const URDU_LAM = ductusFor("ل", "urdu-nastaliq")!;
@@ -530,6 +532,8 @@ const PERSIAN_RA = ductusFor("ر", "perso-arabic")!;
 const persianRaOutline = naskhOutline("ر");
 const PERSIAN_SIN = DUCTUS["س"];
 const persianSinOutline = naskhOutline("س");
+const PERSIAN_FEH = ductusFor("ف", "perso-arabic")!;
+const persianFehOutline = naskhOutline("ف");
 const PERSIAN_LAM = DUCTUS["ل"];
 const persianLamOutline = naskhOutline("ل");
 const PERSIAN_MIM = DUCTUS["م"];
@@ -6602,6 +6606,33 @@ describe("Urdu ش — a complete س body followed by three dots", () => {
       penPathD(URDU_SHIN.strokes[3], 1),
     );
   });
+});
+
+describe("Persian and Urdu ف — joined head and body before the upper dot", () => {
+  for (const [name, ductus, glyphOutline] of [
+    ["Persian", PERSIAN_FEH, persianFehOutline],
+    ["Urdu", URDU_FE, urduFeOutline],
+  ] as const) {
+    it(`${name} renders two joined body movements before the lifted dot`, () => {
+      const steps = ductusSteps(ductus);
+      const strip = ductusFilmstrip(ductus, glyphOutline);
+      expect(steps.map((step) => step.startsAfterLift)).toEqual([false, false, true]);
+      expect(steps.map((step) => step.strokeIndex)).toEqual([0, 0, 1]);
+      expect(strip.frames).toHaveLength(3);
+      expect(strip.penLifts).toBe(1);
+      expect(strip.summary).toBe("2 strokes · 1 pen lift · 3 movements");
+      const paths = byTag(strip.frames[2], "path");
+      expect(paths.find((path) => path.attrs.class === "ductus__glyph")!.attrs.d).toBe(
+        glyphOutline.path,
+      );
+      expect(paths.filter((path) => path.attrs.class === "ductus__done")[0].attrs.d).toBe(
+        penPathD(ductus.strokes[0], 1),
+      );
+      expect(paths.find((path) => path.attrs.class === "ductus__pen")!.attrs.d).toBe(
+        penPathD(ductus.strokes[1], 1),
+      );
+    });
+  }
 });
 
 describe("Urdu ک — a main-line body followed by its long slash", () => {

@@ -1902,6 +1902,44 @@ unchanged at 545). No other already-vendored file's stats changed --
 zero regressions. This is the FIRST file of a new epic (relaxed SIMD),
 following the now-complete base SIMD epic (PR1-PR47).
 
+extended 2026-08-25 (relaxed SIMD epic PR2 -- see code/specs/
+               W19-wasm-relaxed-simd-first-slice.md -- i16x8_relaxed_
+               q15mulr_s.wast, `i16x8.relaxed_q15mulr_s` (sub-opcode
+               0x111), same pinned commit, no re-pin): the SECOND file
+               from the relaxed-simd proposal, byte-identical (1264
+               bytes) against a fresh re-fetch at this pinned SHA.
+               Lives at the testsuite repo ROOT like every other file
+               above, no `PROPOSAL_FILES` entry needed. Grades 1/1
+               `module` and 2/2 `assert_return`, ALL REAL passes -- both
+               `assert_return` directives reuse PR1's `either A B`
+               grading machinery unchanged (one case tests the single
+               spec-permitted implementation-defined overflow lane --
+               both operand lanes at `i16::MIN` -- the other confirms
+               repeated calls with identical inputs return identical
+               results). Confirmed BY HAND that this repo's chosen
+               `i16x8.relaxed_q15mulr_s` behavior (identical to its
+               non-relaxed `i16x8.q15mulr_sat_s` sibling: saturate the
+               one overflow lane to `i16::MAX` rather than wrap to
+               `i16::MIN`) computes the file's overflow test case's
+               EXACT expected vector, a literal (not merely "a member
+               of a looser equivalence") match to that `either` pair's
+               second alternative -- so, same as PR1, no new numeric
+               semantics were needed for this specific opcode, only
+               reuse of the existing grading machinery. The remaining 5
+               relaxed-simd files at this pinned SHA
+               (`i32x4_relaxed_trunc.wast` -- flagged as having ZERO
+               real assert_return directives, weaker coverage than
+               every other relaxed-simd file -- `relaxed_dot_product.
+               wast`, `relaxed_laneselect.wast`, `relaxed_madd_nmadd.
+               wast`, `relaxed_min_max.wast`) remain unvendored, each
+               its own future PR's scope.
+
+Aggregate `module` rose from 1269/1270 to 1270/1271 (+1 pass, +1
+gradeable, `NotYetSupported` unchanged at 67); `assert_return` rose from
+44629/44646 to 44631/44648 (+2 pass, +2 gradeable, `NotYetSupported`
+unchanged at 545). No other already-vendored file's stats changed --
+zero regressions.
+
 The vendored files are licensed under the Apache License, Version 2.0 --
 see the accompanying LICENSE file, itself vendored verbatim from the same
 pinned commit.

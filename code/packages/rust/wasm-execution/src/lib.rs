@@ -7027,6 +7027,54 @@ fn register_simd(vm: &mut GenericVM) {
                 let handle = push_v128(ctx, result)?;
                 push_wasm(vm, WasmValue::V128(handle));
             }
+            SimdOpKind::RelaxedQ15mulrI16x8S => {
+                // i16x8.relaxed_q15mulr_s (relaxed SIMD epic PR2 -- see
+                // `code/specs/W19-wasm-relaxed-simd-first-slice.md`): the
+                // relaxed-simd spec deliberately leaves the single
+                // overflow-bearing lane pattern (both operand lanes ==
+                // `i16::MIN`) implementation-defined -- an engine MAY
+                // saturate to `i16::MAX` (this repo's plain
+                // `Q15mulrSatI16x8S` behavior, above) OR wrap to
+                // `i16::MIN` instead. Verified BY HAND against the real
+                // upstream `i16x8_relaxed_q15mulr_s.wast` corpus's own
+                // `either` expected-value pairs (not assumed from spec
+                // prose alone): for that file's one overflow-bearing test
+                // case, `Q15mulrSatI16x8S`'s existing saturating body
+                // computes `[32767, 32767, 32766, 0,0,0,0,0]` lane-for-
+                // lane -- an EXACT, literal match to the corpus's second
+                // `either` alternative, not merely a looser equivalence.
+                // So this arm is intentionally a byte-for-byte copy of
+                // `Q15mulrSatI16x8S`'s body just above -- same shape, same
+                // deterministic choice, no new numeric logic needed for
+                // this specific opcode. Own arm rather than folding into
+                // `Q15mulrSatI16x8S`'s pattern above, matching this
+                // match's existing convention of one arm per `SimdOpKind`
+                // even when two kinds share identical bodies (e.g.
+                // `RelaxedSwizzle`/`Swizzle` above don't merge either).
+                let rhs_handle = pop_wasm(vm)?.as_v128_handle().map_err(VMError::from)?;
+                let lhs_handle = pop_wasm(vm)?.as_v128_handle().map_err(VMError::from)?;
+                let rhs = *ctx
+                    .v128_heap
+                    .get(rhs_handle as usize)
+                    .ok_or_else(|| VMError::GenericError("v128 operand: heap handle out of range".into()))?;
+                let lhs = *ctx
+                    .v128_heap
+                    .get(lhs_handle as usize)
+                    .ok_or_else(|| VMError::GenericError("v128 operand: heap handle out of range".into()))?;
+
+                let mut result = [0u8; 16];
+                for i in 0..8 {
+                    let l = i16::from_le_bytes(lhs[i * 2..i * 2 + 2].try_into().unwrap());
+                    let r = i16::from_le_bytes(rhs[i * 2..i * 2 + 2].try_into().unwrap());
+                    let product = (l as i32) * (r as i32);
+                    let rounded = (product + 0x4000) >> 15;
+                    let out = rounded.clamp(i16::MIN as i32, i16::MAX as i32) as i16;
+                    result[i * 2..i * 2 + 2].copy_from_slice(&out.to_le_bytes());
+                }
+
+                let handle = push_v128(ctx, result)?;
+                push_wasm(vm, WasmValue::V128(handle));
+            }
             SimdOpKind::ExtractLaneI8x16S | SimdOpKind::ExtractLaneI8x16U => {
                 // i8x16.extract_lane_s/_u (SIMD widen PR18): pop a v128,
                 // read the `aux`-selected `i8` lane back out as a plain
@@ -17931,6 +17979,80 @@ mod tests {
             results[0],
             Some(V128Bytes([0u8; 16])),
             "every index lane here is >= 16 (as an unsigned byte), so every result lane must be 0, same as plain swizzle"
+        );
+    }
+
+    // ── Relaxed SIMD epic PR2: i16x8.relaxed_q15mulr_s -- see code/specs/
+    // W19-wasm-relaxed-simd-first-slice.md ──────────────────────────────
+
+    /// `i16x8.relaxed_q15mulr_s`'s sub-opcode is `0x111` (273 decimal) --
+    /// LEB128-encodes as the 2-byte sequence `[0x91, 0x02]` (low 7 bits
+    /// `0x11` with the continuation bit set = `0x91`, remaining bits
+    /// `0x02`). This test exists specifically to confirm that 2-byte
+    /// encoding decodes correctly (not just that the opcode dispatches
+    /// once decoded) -- same non-overflowing lane values as
+    /// `i16x8_q15mulr_sat_s_computes_real_rounding_saturating_fixed_
+    /// point_multiply`'s first two single-lane cases above, reused here
+    /// so the two ops are directly comparable in the non-overflow case
+    /// where the relaxed and strict ops must agree exactly (only the
+    /// `MIN, MIN` overflow lane is spec-permitted to differ).
+    #[test]
+    fn i16x8_relaxed_q15mulr_s_matches_strict_op_in_the_non_overflow_case() {
+        let run = |a: i16, b: i16| -> i16 {
+            let mut code = vec![0xFD, 0x0C];
+            code.extend(v128_const_bytes_i16x8([a; 8]));
+            code.extend([0xFD, 0x0C]);
+            code.extend(v128_const_bytes_i16x8([b; 8]));
+            code.extend([0xFD, 0x91, 0x02]); // i16x8.relaxed_q15mulr_s (sub-opcode 0x111, 2-byte LEB128)
+            code.push(0x0B);
+            let mut engine = simd_engine_returning_v128(code);
+            let (_, bytes) = engine.call_function_with_v128(0, &[]).unwrap();
+            let V128Bytes(raw) = bytes[0].expect("result must be a v128");
+            i16::from_le_bytes(raw[0..2].try_into().unwrap())
+        };
+
+        assert_eq!(run(0, 0), 0, "relaxed_q15mulr_s(0, 0) must be 0, same as the strict op");
+        assert_eq!(
+            run(32767, 32767),
+            32766,
+            "relaxed_q15mulr_s(32767, 32767) must be 32766, same as the strict op (no overflow here)"
+        );
+        assert_eq!(
+            run(i16::MIN, i16::MAX),
+            -32767,
+            "relaxed_q15mulr_s(MIN, MAX) must be -32767, same as the strict op (no overflow here)"
+        );
+    }
+
+    /// `i16x8.relaxed_q15mulr_s`'s ONLY spec-permitted deviation from the
+    /// strict `q15mulr_sat_s` op is the single overflow-bearing lane
+    /// pattern (`MIN, MIN`), where the relaxed op may return EITHER
+    /// `i16::MAX` (saturate) OR `i16::MIN` (wrap). This repo picks the
+    /// same deterministic saturating behavior the strict op already uses
+    /// (verified by hand against the real upstream
+    /// `i16x8_relaxed_q15mulr_s.wast` corpus's own `either` pairs -- see
+    /// `SimdOpKind::RelaxedQ15mulrI16x8S`'s doc comment: this repo's
+    /// computed vector for the corpus's overflow test case,
+    /// `[32767, 32767, 32766, 0,0,0,0,0]`, is a literal, exact match to
+    /// that file's second `either` alternative) -- so this repo's own
+    /// result for the `MIN, MIN` lane is unconditionally `i16::MAX`,
+    /// exactly mirroring the strict op's own saturating behavior.
+    #[test]
+    fn i16x8_relaxed_q15mulr_s_saturates_the_min_min_overflow_lane_to_i16_max() {
+        // Full-vector case lifted directly from the real upstream
+        // `i16x8_relaxed_q15mulr_s.wast` corpus's first `assert_return`.
+        let mut code = vec![0xFD, 0x0C];
+        code.extend(v128_const_bytes_i16x8([-32768, -32767, 32767, 0, 0, 0, 0, 0]));
+        code.extend([0xFD, 0x0C]);
+        code.extend(v128_const_bytes_i16x8([-32768, -32768, 32767, 0, 0, 0, 0, 0]));
+        code.extend([0xFD, 0x91, 0x02]); // i16x8.relaxed_q15mulr_s
+        code.push(0x0B);
+        let mut engine = simd_engine_returning_v128(code);
+        let (_, results) = engine.call_function_with_v128(0, &[]).unwrap();
+        assert_eq!(
+            results[0],
+            Some(V128Bytes(v128_const_bytes_i16x8([32767, 32767, 32766, 0, 0, 0, 0, 0]).try_into().unwrap())),
+            "must exactly match the corpus's second `either` alternative -- lane 0 (MIN, MIN) saturates to i16::MAX"
         );
     }
 

@@ -714,14 +714,23 @@ TESTSUITE_FILES = [
     # relaxed-simd `.wast` file at this pinned SHA uses it at least once,
     # confirmed by inspection, so it's a genuine prerequisite for
     # vendoring ANY relaxed-simd fixture, not opcode-specific). The other
-    # 6 relaxed-simd files (`i16x8_relaxed_q15mulr_s.wast`,
-    # `i32x4_relaxed_trunc.wast` -- flagged as having ZERO real
-    # `assert_return` directives, weaker coverage than every other file
-    # here -- `relaxed_dot_product.wast`, `relaxed_laneselect.wast`,
-    # `relaxed_madd_nmadd.wast`, `relaxed_min_max.wast`) are each a later
-    # PR's scope, same one-opcode-family-per-PR cadence the base SIMD
-    # epic (PR1-PR47) established.
+    # 5 remaining relaxed-simd files (`i32x4_relaxed_trunc.wast` --
+    # flagged as having ZERO real `assert_return` directives, weaker
+    # coverage than every other file here -- `relaxed_dot_product.wast`,
+    # `relaxed_laneselect.wast`, `relaxed_madd_nmadd.wast`,
+    # `relaxed_min_max.wast`) are each a later PR's scope, same
+    # one-opcode-family-per-PR cadence the base SIMD epic (PR1-PR47)
+    # established.
     "i8x16_relaxed_swizzle.wast",
+    # Relaxed SIMD epic PR2 (see code/specs/
+    # W19-wasm-relaxed-simd-first-slice.md): i16x8_relaxed_q15mulr_s.wast
+    # -- `i16x8.relaxed_q15mulr_s` (sub-opcode 0x111), the SECOND
+    # relaxed-simd opcode, the smallest remaining REAL-assertion-bearing
+    # file (1264 bytes, 2 `assert_return` cases, both using `either` --
+    # confirmed byte-identical against the same pinned SHA). Reuses the
+    # `either` grading infrastructure PR1 added unchanged -- no new
+    # harness work needed for this PR.
+    "i16x8_relaxed_q15mulr_s.wast",
 ]
 
 # Reference-types/threads-proposal files whose UPSTREAM path lives under

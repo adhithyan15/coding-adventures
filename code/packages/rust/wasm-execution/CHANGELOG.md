@@ -2,6 +2,34 @@
 
 All notable changes to this package will be documented in this file.
 
+## [0.9.59] - 2026-08-25 (Relaxed SIMD epic PR2: i16x8.relaxed_q15mulr_s)
+
+### Added
+
+- `SimdOpKind::RelaxedQ15mulrI16x8S` execution arm (sub-opcode `0x111`,
+  the SECOND relaxed-simd opcode -- see `code/specs/
+  W19-wasm-relaxed-simd-first-slice.md`): a byte-for-byte copy of the
+  existing `Q15mulrSatI16x8S` arm's body (per-lane Q15 rounding fixed-
+  point multiply: sign-extend both `i16`s to `i32`, add the rounding
+  constant `0x4000`, arithmetic-shift right by 15, clamp to `i16::MIN..
+  =i16::MAX`). The relaxed-simd spec permits EITHER saturating OR
+  wrapping for the single overflow lane pattern (both operand lanes
+  `i16::MIN`); hand-verified against the real upstream
+  `i16x8_relaxed_q15mulr_s.wast` corpus's own `either`-wrapped expected
+  values that this repo's existing saturating body computes the file's
+  overflow test case's EXACT expected vector, `[32767, 32767, 32766,
+  0,0,0,0,0]` -- a literal match to that `either` pair's second
+  alternative -- so no new numeric semantics were needed. Own match arm
+  rather than merging into `Q15mulrSatI16x8S`'s pattern, matching this
+  match's existing convention of one arm per `SimdOpKind`.
+- Confirms no new decoder infrastructure was needed for this opcode:
+  `0x111` LEB128-encodes as the 2-byte sequence `[0x91, 0x02]`, the same
+  2-byte-continuation shape this crate already decodes for
+  `RelaxedSwizzle`/base-SIMD values `>= 0x80`.
+- New tests: `i16x8_relaxed_q15mulr_s_matches_strict_op_in_the_non_
+  overflow_case`, `i16x8_relaxed_q15mulr_s_saturates_the_min_min_
+  overflow_lane_to_i16_max`.
+
 ## [0.9.58] - 2026-08-25 (Relaxed SIMD epic PR1: i8x16.relaxed_swizzle)
 
 ### Added

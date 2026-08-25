@@ -1,6 +1,6 @@
 //! The lowering pass from `coding_adventures_java_parser`'s generic
-//! [`GrammarASTNode`] CST → [`semantic_ir::Module`], **v0.4.0 (JV02
-//! milestone M2b)**.
+//! [`GrammarASTNode`] CST → [`semantic_ir::Module`], **v0.5.0 (JV02
+//! milestone M3a)**.
 //!
 //! # Scope
 //!
@@ -10,8 +10,9 @@
 //! mis-lowering:
 //!
 //! **Supported (M0, unchanged):**
-//! - Exactly one top-level `class` declaration, containing exactly one
-//!   `public static void main(String[] args) { ... }` method.
+//! - Exactly one top-level `class` declaration, containing a
+//!   `public static void main(String[] args) { ... }` method (M3a lifts
+//!   the original "exactly one method total" restriction — see below).
 //! - Literal expressions: integer (`42`), floating-point (`3.14`), boolean
 //!   (`true`/`false`), `null`, and string (`"str"`) literals.
 //!
@@ -73,14 +74,42 @@
 //! spans its condition/update/body (but not beyond the loop), matching
 //! Java's own for-loop scoping exactly.
 //!
-//! **Deliberately out of scope for v0.4.0** (each rejected with an
+//! **Supported (M3a, new):**
+//! - Every `method_declaration` in the class body — static or instance
+//!   (both lower identically to a flat top-level [`Function`]; there is
+//!   no real object/receiver model until a later milestone, so "instance"
+//!   here just means "lacks the `static` modifier") — with a typed
+//!   parameter list (`int add(int a, int b)`), lowered in a first pass
+//!   that registers every method's *name* and call signature before any
+//!   body is lowered, so forward references and mutual recursion between
+//!   methods resolve regardless of textual order (mirrors
+//!   `python-to-semantic-ir`'s/`javascript-to-semantic-ir`'s own two-pass
+//!   precedent).
+//! - Bare unqualified calls, `foo(a, b)`, to a method declared elsewhere
+//!   in the same class (including the calling method itself — plain and
+//!   mutual recursion both work) → [`Expr::DirectCall`]. A *qualified*
+//!   call (`x.foo(...)`) remains out of scope — there is no receiver/
+//!   object model yet.
+//! - `return`, but **only** as the literal last top-level statement of a
+//!   method body (SIR has no `Stmt::Return` primitive at all — a
+//!   function's value is always its own body `Block`'s trailing `.value`
+//!   — confirmed by an exhaustive grep of the `Stmt` enum) — an early or
+//!   branched `return` is a clean, disclosed rejection, not a silent
+//!   mis-lowering. `void` methods may end with a bare `return;` or simply
+//!   fall off the end (both become an empty, nil-valued body tail).
+//!
+//! **Deliberately out of scope for v0.5.0** (each rejected with an
 //! explicit [`JavaLowerError`], tracked in
 //! [JV02](../../../specs/JV02-java-to-semantic-ir.md)'s own milestone
 //! table): `switch` (SIR has no `Switch`/`Match`/`Case` IR node at all —
 //! confirmed by a repo-wide grep, not assumed — so this needs its own
 //! spec-level design decision before any frontend can target it, tracked
-//! as a separate backlog item, not silently dropped), method calls,
-//! field/array access, lambdas, casts, `instanceof`, the ternary
+//! as a separate backlog item, not silently dropped), qualified/method-
+//! reference calls, method overloading (only one method per name is
+//! supported — this frontend has no type-based overload resolution),
+//! varargs parameters, fields, constructors, static/instance
+//! initializers, nested types, an early or branched `return`, lambdas
+//! (JV02 M3b), field/array access, casts, `instanceof`, the ternary
 //! conditional, bitwise operators (`& | ^ ~ << >> >>>`), increment/
 //! decrement or compound assignment used as a *value* rather than a bare
 //! statement, `break`/`continue` (SIR has no IR primitive for either —
@@ -91,7 +120,8 @@
 //! limitation until `break` exists), multiple comma-separated expressions
 //! in one `for` init/update clause, `var` as an enhanced-`for` element
 //! type, uninitialized declarations, multiple declarators per statement,
-//! C-style array-bracket declarators, array initializers, and reference
+//! C-style array-bracket declarators (on a variable, a method parameter,
+//! or a method's own return type), array initializers, and reference
 //! types other than `String`.
 //!
 //! ## The `var` ambiguity
@@ -112,9 +142,10 @@
 
 use parser::grammar_parser::{ASTNodeOrToken, GrammarASTNode};
 use semantic_ir::{
-    Block, EffectSet, Expr, Feature, FeatureManifest, Function, Metadata, Module, Scope, Span, Stmt,
+    Block, EffectSet, Expr, Feature, FeatureManifest, Function, Metadata, Module, Param, ParamKind,
+    Scope, Span, Stmt,
 };
-use std::collections::HashMap;
+use std::collections::{HashMap, HashSet};
 
 /// Maximum descent depth through the Java grammar's expression-precedence
 /// chain (`assignment_expression` → `conditional_expression` → … →
@@ -131,14 +162,16 @@ use std::collections::HashMap;
 /// like M0's `descend_to_literal` did.
 const MAX_EXPR_DEPTH: usize = 64;
 
-/// Maximum recursion depth for `find_main_method`'s class-body search — a
-/// separate budget from [`MAX_EXPR_DEPTH`] (that one bounds the
-/// expression-precedence chain specifically; this one bounds an arbitrary
-/// class-body tree walk, a conceptually different traversal even though
-/// both currently use the same numeric value). Exists for the same
-/// reason: `compile()` is a public entry point accepting a raw
-/// `GrammarASTNode`, not guaranteed to have come from a depth-capped
-/// parser.
+/// Maximum recursion depth for [`collect_bounded`]'s own raw-CST tree
+/// walk (finding the top-level `class_declaration`) — a separate budget
+/// from [`MAX_EXPR_DEPTH`] (that one bounds the expression-precedence
+/// chain specifically; this one bounds an arbitrary tree walk, a
+/// conceptually different traversal even though both currently use the
+/// same numeric value). Exists for the same reason: `compile()` is a
+/// public entry point accepting a raw `GrammarASTNode`, not guaranteed to
+/// have come from a depth-capped parser. (`collect_class_methods`, M3a's
+/// replacement for the old `find_main_method`, needs no such guard of its
+/// own — see that function's own doc comment for why.)
 const MAX_TREE_DEPTH: usize = 64;
 
 /// Maximum nesting depth through the *statement*/block-lowering chain
@@ -147,7 +180,7 @@ const MAX_TREE_DEPTH: usize = 64;
 /// `lower_block_statement` → `lower_statement` → …) — a third,
 /// conceptually distinct recursion budget from [`MAX_EXPR_DEPTH`]
 /// (expression-precedence chain) and [`MAX_TREE_DEPTH`] (raw CST
-/// tree-walking in `find_main_method`/`collect_bounded`). Real Java source
+/// tree-walking in `collect_bounded`). Real Java source
 /// can nest `if`/`while`/`do`-`while` bodies arbitrarily deep
 /// (`if (a) if (b) if (c) …`), and `compile()` is a public entry point
 /// accepting a raw `GrammarASTNode`, not only one produced by
@@ -181,6 +214,18 @@ enum Kind {
     Bool,
     Str,
     Null,
+    /// The "kind" of a call to a `void` method, or of a bare `return;` in
+    /// one — M3a's addition. Not a real value kind (Java itself forbids
+    /// using a void call as a value: `int x = voidMethod();` is a compile
+    /// error) — this exists purely so `lower_expr`'s uniform `(Expr,
+    /// Kind)` return shape has *something* to produce for a void call
+    /// used as a bare statement (`voidMethod();`, whose result `Kind` is
+    /// simply discarded by `lower_expr_statement`'s fallback path). Any
+    /// attempt to use it as a real operand falls through to an ordinary
+    /// "operands must be ..." rejection at whichever operator tried to
+    /// consume it — the same "reject rather than mis-lower" discipline
+    /// this crate uses everywhere else, not a dedicated special case.
+    Void,
 }
 
 /// An error encountered during Java → SIR lowering.
@@ -223,12 +268,64 @@ struct Lowerer {
     /// frontend is not a full type-checker — see [`Kind`]'s own doc
     /// comment — so a real lookup, not just presence-tracking, is what
     /// this needs).
-    locals: Vec<HashMap<String, Kind>>,
+    ///
+    /// Each entry also carries the declaration's `Scope` tag (`Local` for
+    /// an ordinary let/loop-variable binding, `Param` for a method
+    /// parameter -- added in M3a) alongside its `Kind`: the SIR
+    /// validator's own `check_varref` distinguishes the two
+    /// (`Scope::Local` checks only against `let`-bound names,
+    /// `Scope::Param` only against the function's own parameter list),
+    /// so every `VarRef`/`Assign` this crate emits must carry the scope
+    /// tag matching how the name was actually declared, not a blanket
+    /// `Scope::Local`.
+    locals: Vec<HashMap<String, (Kind, Scope)>>,
     /// Counter for the synthetic flag variable each `do`-`while` lowers
     /// (`__do_while_0`, `__do_while_1`, …) — see `lower_do_while_statement`'s
     /// own doc comment. Guarantees uniqueness across sibling do-while
     /// statements in the same function; never consulted by name lookup.
     do_while_counter: usize,
+    /// Every method's resolved call signature (parameter kinds + return
+    /// kind), computed in a first pass over the class body before *any*
+    /// method body is lowered — mirrors `python-to-semantic-ir`'s/
+    /// `javascript-to-semantic-ir`'s own two-pass precedent, so a call to
+    /// a method declared later in the source (or to the enclosing method
+    /// itself, i.e. recursion) resolves regardless of textual order.
+    /// Keyed by method name; JV02 M3a supports at most one method per
+    /// name (see `lower_program`'s own duplicate-name rejection —
+    /// overload resolution is out of scope).
+    method_signatures: HashMap<String, MethodSig>,
+    /// Name of the method currently being lowered. Consulted only by
+    /// `lower_call_expression` to record a `call_graph` edge — never used
+    /// for scoping or name resolution.
+    current_method: String,
+    /// Call graph among top-level methods (`caller -> callees` by name),
+    /// accumulated while lowering method bodies. Used once, after every
+    /// method has been lowered, to detect `Feature::MutualRecursion` (a
+    /// cycle of length ≥ 2) via `has_mutual_recursion` below.
+    ///
+    /// `HashMap`, not `Vec<(String, HashSet<String>)>`: an earlier
+    /// version used a `Vec` and inserted a new call-graph edge with a
+    /// linear `iter_mut().find(...)` scan over every method on *every*
+    /// lowered call expression, making graph *construction* itself
+    /// `O(V·E)` — reintroducing, in a different spot, the same class of
+    /// algorithmic-complexity blowup `has_mutual_recursion`'s own
+    /// `O(V+E)` DFS was written to eliminate (found by a second round of
+    /// `/security-review`, on the first round's own fix). A `HashMap`
+    /// gives `O(1)`-average insertion instead.
+    call_graph: HashMap<String, HashSet<String>>,
+}
+
+/// A method's call-site-relevant signature: what `lower_call_expression`
+/// needs to type-check a call and select its result `Kind`, computed
+/// before any method body is lowered (see `method_signatures`'s own doc
+/// comment). Deliberately *not* the same shape as a lowered `Function`'s
+/// own `params: Vec<Param>` — this only needs each parameter's `Kind`,
+/// not its name or span.
+#[derive(Debug, Clone)]
+struct MethodSig {
+    param_kinds: Vec<Kind>,
+    /// `Kind::Void` for a method with no return value.
+    return_kind: Kind,
 }
 
 impl Lowerer {
@@ -238,6 +335,9 @@ impl Lowerer {
             observed: FeatureManifest::new(),
             locals: Vec::new(),
             do_while_counter: 0,
+            method_signatures: HashMap::new(),
+            current_method: String::new(),
+            call_graph: HashMap::new(),
         }
     }
 
@@ -259,12 +359,28 @@ impl Lowerer {
         self.locals
             .last_mut()
             .expect("declare_local called with no active scope (push_scope was not called)")
-            .insert(name, kind);
+            .insert(name, (kind, Scope::Local));
+    }
+
+    /// Like `declare_local`, but tags the entry `Scope::Param` — used
+    /// only by `lower_formal_parameters` (M3a). A method's parameters
+    /// live in the very same scope frame as its body's own top-level
+    /// locals (see `lower_method_declaration`'s own doc comment for why
+    /// that is the *correct* shape, not a shortcut), so this shares
+    /// `declare_local`'s storage; only the recorded `Scope` differs.
+    fn declare_param(&mut self, name: String, kind: Kind) {
+        self.locals
+            .last_mut()
+            .expect("declare_param called with no active scope (push_scope was not called)")
+            .insert(name, (kind, Scope::Param));
     }
 
     /// Look up `name`, searching from the innermost scope outward —
     /// exactly the lexical-shadowing order a real name lookup needs.
-    fn lookup_local(&self, name: &str) -> Option<Kind> {
+    /// Returns the declaration's `Kind` *and* its `Scope` tag (`Local` or
+    /// `Param`) — see the `locals` field's own doc comment for why both
+    /// matter to every caller that goes on to build a `VarRef`/`Assign`.
+    fn lookup_local(&self, name: &str) -> Option<(Kind, Scope)> {
         self.locals
             .iter()
             .rev()
@@ -287,28 +403,52 @@ impl Lowerer {
             _ => return Err(self.err_at(program, format!("expected exactly one top-level class declaration, found {} (JV02 M0 supports exactly one)", class_decls.len()))),
         };
 
-        let main_method = self.find_main_method(class_decl)?;
-        let method_body = self
-            .first_child_named(main_method, "method_body")
-            .ok_or_else(|| self.err_at(main_method, "main method has no body".to_string()))?;
-        let block = self
-            .first_child_named(method_body, "block")
-            .ok_or_else(|| self.err_at(method_body, "main method body has no block".to_string()))?;
+        let method_decls = self.collect_class_methods(class_decl)?;
 
-        let body = self.lower_block_node(block, 0)?;
+        // Pass 1: register every method's name + call signature before
+        // any method body is lowered, so a call to a method declared
+        // later in the source (or to the enclosing method itself, i.e.
+        // recursion) resolves regardless of textual order — mirrors
+        // python-to-semantic-ir's/javascript-to-semantic-ir's own
+        // two-pass precedent.
+        let mut order: Vec<(String, &GrammarASTNode)> = Vec::with_capacity(method_decls.len());
+        for decl in &method_decls {
+            let name = self.method_name(decl).ok_or_else(|| {
+                self.err_at(
+                    decl,
+                    "malformed method declaration (missing name)".to_string(),
+                )
+            })?;
+            if self.method_signatures.contains_key(&name) {
+                return Err(self.err_at(
+                    decl,
+                    format!("duplicate method name `{name}` (JV02 M3a does not support overloading — only one method per name is supported so far)"),
+                ));
+            }
+            let sig = self.compute_method_signature(&name, decl)?;
+            self.method_signatures.insert(name.clone(), sig);
+            order.push((name, decl));
+        }
+        if !self.method_signatures.contains_key("main") {
+            return Err(self.err_at(
+                class_decl,
+                "expected a `main` method (JV02 M0 requires `public static void main(String[] args)`)"
+                    .to_string(),
+            ));
+        }
+
+        // Pass 2: lower each method's body into a `Function`, now that
+        // every method's signature is already known.
+        let mut functions = Vec::with_capacity(order.len());
+        for (name, decl) in &order {
+            functions.push(self.lower_method_declaration(name, decl)?);
+        }
+
+        if self.has_mutual_recursion() {
+            self.observed.add(Feature::MutualRecursion);
+        }
 
         let span = Span::point(FILE, 1, 1);
-        let main = Function {
-            name: "main".to_string(),
-            params: vec![],
-            return_type: None,
-            captures: vec![],
-            body,
-            effects: EffectSet::PURE,
-            metadata: Metadata::new(),
-            span: span.clone(),
-        };
-
         let metadata = Metadata::new()
             .with_source_language("java")
             .with_sir_version(semantic_ir::CURRENT_SIR_VERSION);
@@ -318,70 +458,60 @@ impl Lowerer {
             manifest: self.observed.clone(),
             imports: vec![],
             exports: vec![],
-            functions: vec![main],
+            functions,
             globals: vec![],
             metadata,
             span,
         })
     }
 
-    /// Find the single `public static void main(String[] args)` method
-    /// inside `class_decl`'s body. Any other method-name/modifier shape
-    /// (including a genuinely absent `main`) is rejected — JV02 M0's
-    /// scope is exactly this one entry-point shape.
+    /// Collect every `method_declaration` directly inside `class_decl`'s
+    /// own `class_body`, rejecting any other class-member shape (field,
+    /// constructor, static/instance initializer, nested type) with a
+    /// clear, explicit error rather than silently skipping it — JV02
+    /// M3a lowers methods only, and this crate's own standing discipline
+    /// is to reject unsupported input loudly rather than mis-lower or
+    /// drop it (see this module's own doc comment).
     ///
-    /// Hand-written recursive search rather than
-    /// `parser::grammar_parser::find_nodes` (that shared helper is
-    /// unguarded — see [`collect_bounded`]'s own doc comment for why this
-    /// crate cannot use it on a raw, possibly-adversarial tree — and
-    /// returns owned `GrammarASTNode` clones besides, which can't be
-    /// borrowed back into `class_decl`'s own tree): this search instead
-    /// walks `class_decl` directly, depth-guarded, and returns a real
-    /// borrow.
-    ///
-    /// Depth-guarded like the expression-lowering chain below: `compile()`
-    /// is a public entry point that accepts a raw `GrammarASTNode`
-    /// directly, not only one produced by `parse_java`'s depth-capped
-    /// parser — a caller could hand it a tree built some other, unbounded
-    /// way. Without its own cap this recursive walk over a class body
-    /// would be a CWE-674 uncontrolled-recursion DoS on adversarially
-    /// deep input; found by `/security-review` before this crate shipped.
-    fn find_main_method<'a>(
+    /// Unlike M0's now-removed `find_main_method`, this needs no depth
+    /// guard of its own: `class_body`'s grammar production (`LBRACE {
+    /// class_body_declaration } RBRACE`) makes every relevant node a
+    /// *direct* child of `class_body`, and `class_body_declaration`
+    /// itself is a flat, single-level PEG alternation (`static_initializer
+    /// | ... | method_declaration | ... | SEMICOLON`) — so this walk is
+    /// two levels deep by construction, not by a runtime check. (A
+    /// method's own *body* can of course still nest arbitrarily —
+    /// `lower_method_body_block`'s `MAX_STMT_DEPTH` guard covers that,
+    /// exactly as it already does for `main`.)
+    fn collect_class_methods<'a>(
         &self,
         class_decl: &'a GrammarASTNode,
-    ) -> Result<&'a GrammarASTNode, JavaLowerError> {
-        fn search<'a>(
-            node: &'a GrammarASTNode,
-            lowerer: &Lowerer,
-            depth: usize,
-        ) -> Result<Option<&'a GrammarASTNode>, JavaLowerError> {
-            if depth >= MAX_TREE_DEPTH {
-                return Err(lowerer.err_at(
-                    node,
-                    format!("class body nesting exceeds {MAX_TREE_DEPTH} levels"),
-                ));
+    ) -> Result<Vec<&'a GrammarASTNode>, JavaLowerError> {
+        let class_body = self
+            .first_child_named(class_decl, "class_body")
+            .ok_or_else(|| {
+                self.err_at(
+                    class_decl,
+                    "malformed class declaration (missing body)".to_string(),
+                )
+            })?;
+        let mut methods = Vec::new();
+        for cbd in child_nodes(class_body) {
+            if let Some(m) = self.first_child_named(cbd, "method_declaration") {
+                methods.push(m);
+                continue;
             }
-            if node.rule_name == "method_declaration"
-                && lowerer.method_name(node).as_deref() == Some("main")
-            {
-                return Ok(Some(node));
+            let is_bare_semicolon =
+                matches!(cbd.children.as_slice(), [ASTNodeOrToken::Token(t)] if t.value == ";");
+            if is_bare_semicolon {
+                continue;
             }
-            for child in &node.children {
-                if let ASTNodeOrToken::Node(n) = child {
-                    if let Some(found) = search(n, lowerer, depth + 1)? {
-                        return Ok(Some(found));
-                    }
-                }
-            }
-            Ok(None)
+            return Err(self.err_at(
+                cbd,
+                "only method declarations are supported inside a class body so far (fields, constructors, static/instance initializers, and nested types are deferred to later JV02 milestones)".to_string(),
+            ));
         }
-        search(class_decl, self, 0)?.ok_or_else(|| {
-            self.err_at(
-                class_decl,
-                "expected a `main` method (JV02 M0 requires `public static void main(String[] args)`)"
-                    .to_string(),
-            )
-        })
+        Ok(methods)
     }
 
     fn method_name(&self, method_decl: &GrammarASTNode) -> Option<String> {
@@ -394,6 +524,403 @@ impl Lowerer {
             }
         }
         None
+    }
+
+    /// Compute `name`'s call-site signature (parameter kinds + return
+    /// kind) without lowering (or scoping) anything — called from pass 1,
+    /// before any method body exists to reference it. `main` is special-
+    /// cased: its own `String[] args` parameter is never lowered as a
+    /// real SIR parameter (M0's own established convention — array types
+    /// are out of scope, and nothing in this milestone can call `main`
+    /// meaningfully anyway), so its signature is simply "zero parameters,
+    /// void".
+    fn compute_method_signature(
+        &self,
+        name: &str,
+        decl: &GrammarASTNode,
+    ) -> Result<MethodSig, JavaLowerError> {
+        if name == "main" {
+            return Ok(MethodSig {
+                param_kinds: vec![],
+                return_kind: Kind::Void,
+            });
+        }
+        let declarator = self
+            .first_child_named(decl, "method_declarator")
+            .ok_or_else(|| {
+                self.err_at(
+                    decl,
+                    "malformed method declaration (missing declarator)".to_string(),
+                )
+            })?;
+        let param_kinds = self
+            .formal_parameter_kind_name_pairs(declarator)?
+            .into_iter()
+            .map(|(_, kind)| kind)
+            .collect();
+        let return_kind = self.method_return_kind(decl)?;
+        Ok(MethodSig {
+            param_kinds,
+            return_kind,
+        })
+    }
+
+    /// Resolve `method_declaration`'s own `result_type` (`"void" |
+    /// type`) to a [`Kind`], reusing `kind_of_type_node` for the non-void
+    /// case (identical rejection rules: no array types, only `String`
+    /// among reference types).
+    fn method_return_kind(&self, decl: &GrammarASTNode) -> Result<Kind, JavaLowerError> {
+        let result_type = self.first_child_named(decl, "result_type").ok_or_else(|| {
+            self.err_at(
+                decl,
+                "malformed method declaration (missing result type)".to_string(),
+            )
+        })?;
+        let is_void = result_type
+            .children
+            .iter()
+            .any(|c| matches!(c, ASTNodeOrToken::Token(t) if t.value == "void"));
+        if is_void {
+            return Ok(Kind::Void);
+        }
+        let ty = self
+            .first_child_named(result_type, "type")
+            .ok_or_else(|| self.err_at(result_type, "malformed result type".to_string()))?;
+        self.kind_of_type_node(ty)
+    }
+
+    /// Extract each parameter's `(name, Kind)` pair from a
+    /// `method_declarator`'s optional `formal_parameter_list`, without
+    /// declaring anything in scope — the read-only half shared by
+    /// `compute_method_signature` (pass 1, kinds only) and
+    /// `lower_formal_parameters` (pass 2, which additionally calls
+    /// `declare_local` and builds real `Param`s). Rejects varargs and
+    /// C-style array-bracket parameter declarators (`int x[]`) — both
+    /// deferred, matching this crate's existing array-type scope
+    /// boundary.
+    fn formal_parameter_kind_name_pairs(
+        &self,
+        declarator: &GrammarASTNode,
+    ) -> Result<Vec<(String, Kind)>, JavaLowerError> {
+        let Some(list) = self.first_child_named(declarator, "formal_parameter_list") else {
+            return Ok(vec![]);
+        };
+        if child_nodes(list)
+            .into_iter()
+            .any(|n| n.rule_name == "varargs_parameter")
+        {
+            return Err(self.err_at(
+                list,
+                "varargs parameters (`...`) are not supported yet (deferred to a later JV02 milestone)".to_string(),
+            ));
+        }
+        let mut out = Vec::new();
+        for fp in child_nodes(list)
+            .into_iter()
+            .filter(|n| n.rule_name == "formal_parameter")
+        {
+            let has_array_brackets = fp
+                .children
+                .iter()
+                .any(|c| matches!(c, ASTNodeOrToken::Token(t) if t.value == "["));
+            if has_array_brackets {
+                return Err(self.err_at(
+                    fp,
+                    "C-style array parameter brackets (`int x[]`) are not supported yet (deferred to JV02 M4)".to_string(),
+                ));
+            }
+            let ty = self
+                .first_child_named(fp, "type")
+                .ok_or_else(|| self.err_at(fp, "malformed parameter (missing type)".to_string()))?;
+            let kind = self.kind_of_type_node(ty)?;
+            let name_tok = fp
+                .children
+                .iter()
+                .find_map(|c| match c {
+                    ASTNodeOrToken::Token(t) if t.type_ == lexer::token::TokenType::Name => Some(t),
+                    _ => None,
+                })
+                .ok_or_else(|| self.err_at(fp, "malformed parameter (missing name)".to_string()))?;
+            out.push((name_tok.value.clone(), kind));
+        }
+        Ok(out)
+    }
+
+    /// Lower one `method_declaration` (already registered in
+    /// `method_signatures` by pass 1) into a [`Function`]. Params and the
+    /// body share one flat scope (params declared, then the body's own
+    /// top-level statements lowered into the *same* frame — not a nested
+    /// scope of their own) because that is Java's actual rule: a method
+    /// body may not redeclare a parameter name, so there is no shadowing
+    /// case for a separate frame to model.
+    fn lower_method_declaration(
+        &mut self,
+        name: &str,
+        decl: &GrammarASTNode,
+    ) -> Result<Function, JavaLowerError> {
+        let span = self.span_of(decl);
+        let is_main = name == "main";
+        let declarator = self
+            .first_child_named(decl, "method_declarator")
+            .ok_or_else(|| {
+                self.err_at(
+                    decl,
+                    "malformed method declaration (missing declarator)".to_string(),
+                )
+            })?;
+        let has_trailing_array_brackets = declarator
+            .children
+            .iter()
+            .any(|c| matches!(c, ASTNodeOrToken::Token(t) if t.value == "["));
+        if has_trailing_array_brackets {
+            return Err(self.err_at(
+                declarator,
+                "C-style array-return-type declarators (`int foo()[]`) are not supported yet (deferred to JV02 M4)".to_string(),
+            ));
+        }
+
+        self.current_method = name.to_string();
+        self.call_graph.insert(name.to_string(), HashSet::new());
+
+        self.push_scope();
+        let params = if is_main {
+            vec![]
+        } else {
+            match self.lower_formal_parameters(declarator) {
+                Ok(p) => p,
+                Err(e) => {
+                    self.pop_scope();
+                    return Err(e);
+                }
+            }
+        };
+
+        let method_body = self.first_child_named(decl, "method_body").ok_or_else(|| {
+            self.err_at(
+                decl,
+                "malformed method declaration (missing body)".to_string(),
+            )
+        })?;
+        let block = match self.first_child_named(method_body, "block") {
+            Some(b) => b,
+            None => {
+                self.pop_scope();
+                return Err(self.err_at(
+                    method_body,
+                    format!(
+                        "method `{name}` has no body (abstract/native methods are not supported)"
+                    ),
+                ));
+            }
+        };
+        let return_kind = self
+            .method_signatures
+            .get(name)
+            .expect("signature already computed in pass 1")
+            .return_kind;
+        let body = match self.lower_method_body_block(block, return_kind, 0) {
+            Ok(b) => b,
+            Err(e) => {
+                self.pop_scope();
+                return Err(e);
+            }
+        };
+        self.pop_scope();
+
+        Ok(Function {
+            name: name.to_string(),
+            params,
+            return_type: None,
+            captures: vec![],
+            body,
+            effects: EffectSet::PURE,
+            metadata: Metadata::new(),
+            span,
+        })
+    }
+
+    /// Lower a `method_declarator`'s own `formal_parameter_list` into
+    /// real [`Param`]s, declaring each one in the *current* (already-
+    /// pushed, by the caller) innermost scope as it goes — the mutating
+    /// counterpart of `formal_parameter_kind_name_pairs`.
+    fn lower_formal_parameters(
+        &mut self,
+        declarator: &GrammarASTNode,
+    ) -> Result<Vec<Param>, JavaLowerError> {
+        let pairs = self.formal_parameter_kind_name_pairs(declarator)?;
+        let span = self.span_of(declarator);
+        let mut params = Vec::with_capacity(pairs.len());
+        for (name, kind) in pairs {
+            self.declare_param(name.clone(), kind);
+            self.observed.add(Feature::DynamicTyping);
+            params.push(Param {
+                name,
+                sir_type: None,
+                kind: ParamKind::Required,
+                default: None,
+                span: span.clone(),
+            });
+        }
+        Ok(params)
+    }
+
+    /// Lower a method body's `block` node directly into that method's
+    /// own [`Block`] value (unlike `lower_block_node`, this does *not*
+    /// push its own scope — see `lower_method_declaration`'s own doc
+    /// comment for why params and the body share one flat frame), while
+    /// also handling `return`: SIR has no `Stmt::Return` primitive at all
+    /// (a function's value is always its own body `Block.value` —
+    /// confirmed by an exhaustive grep of the `Stmt` enum) so a Java
+    /// `return` is accepted *only* as the literal last top-level
+    /// statement of the method body, becoming that `Block`'s own
+    /// `value`. A `return` appearing anywhere else — nested inside an
+    /// `if`/`while`/`for`/etc. body, or textually followed by more
+    /// statements — falls straight through to `lower_statement`'s own
+    /// existing "unsupported statement kind" rejection (a `return` is
+    /// simply not one of the alternatives that dispatcher recognizes),
+    /// cleanly rejecting genuine early/branched returns as a real,
+    /// disclosed JV02 M3a scope limit rather than silently mis-lowering
+    /// them.
+    fn lower_method_body_block(
+        &mut self,
+        block: &GrammarASTNode,
+        return_kind: Kind,
+        depth: usize,
+    ) -> Result<Block, JavaLowerError> {
+        if depth >= MAX_STMT_DEPTH {
+            return Err(self.err_at(
+                block,
+                format!("statement/block nesting exceeds {MAX_STMT_DEPTH} levels"),
+            ));
+        }
+        let span = self.span_of(block);
+        let block_stmts: Vec<&GrammarASTNode> = child_nodes(block)
+            .into_iter()
+            .filter(|n| n.rule_name == "block_statement")
+            .collect();
+        let mut stmts = Vec::with_capacity(block_stmts.len());
+        let mut value = Expr::NilLit { span: span.clone() };
+        for (i, block_stmt) in block_stmts.iter().enumerate() {
+            let is_last = i + 1 == block_stmts.len();
+            if let Some(ret) = self.find_return_statement_direct(block_stmt) {
+                if !is_last {
+                    return Err(self.err_at(
+                        ret,
+                        "`return` is only supported as the last statement of a method body (an early or branched return is deferred to a later JV02 milestone)".to_string(),
+                    ));
+                }
+                let ret_expr_node = self.first_child_named(ret, "expression");
+                match (ret_expr_node, return_kind) {
+                    (Some(_), Kind::Void) => {
+                        return Err(self.err_at(
+                            ret,
+                            "`return <expr>;` is not supported in a `void` method".to_string(),
+                        ));
+                    }
+                    (None, Kind::Void) => {}
+                    (None, _) => {
+                        return Err(self.err_at(
+                            ret,
+                            "`return;` requires an expression in a non-`void` method".to_string(),
+                        ));
+                    }
+                    (Some(expr_node), expected_kind) => {
+                        let (expr, kind) = self.lower_expr(expr_node, 0)?;
+                        if kind != expected_kind {
+                            return Err(self.err_at(
+                                expr_node,
+                                "returned expression's kind does not match the method's declared return type".to_string(),
+                            ));
+                        }
+                        value = expr;
+                    }
+                }
+                break;
+            }
+            stmts.push(self.lower_block_statement(block_stmt, depth + 1)?);
+        }
+        Ok(Block { stmts, value, span })
+    }
+
+    /// If `block_stmt` (a `block_statement`) directly wraps a `statement
+    /// -> return_statement`, return that `return_statement` node.
+    /// Deliberately shallow (does not look inside a nested `if`/`while`/
+    /// etc. body) — `lower_method_body_block` only ever calls this on a
+    /// method body's own *top-level* statements, by construction.
+    fn find_return_statement_direct<'a>(
+        &self,
+        block_stmt: &'a GrammarASTNode,
+    ) -> Option<&'a GrammarASTNode> {
+        let statement = self.first_child_named(block_stmt, "statement")?;
+        self.first_child_named(statement, "return_statement")
+    }
+
+    /// Does the call graph contain a cycle of length ≥ 2 (two or more
+    /// methods that call each other, however indirectly)? Plain self-
+    /// recursion (`f` calling `f` directly) does not count.
+    ///
+    /// A single linear-time (`O(V+E)`) three-color DFS, not the naive
+    /// "probe every edge with its own reachability search" approach
+    /// (`O(E·(V+E))`, which `python-to-semantic-ir`'s otherwise-
+    /// identically-purposed `has_mutual_recursion`/`reaches` pair uses):
+    /// found by `/security-review` as a real algorithmic-complexity DoS
+    /// risk (CWE-407) on a large, densely-interconnected call graph (many
+    /// methods each calling many others) — unlike this crate's other
+    /// guarded traversals, nothing bounds the number of *sibling* methods
+    /// in one class body, so the naive approach's edge-count-squared
+    /// blowup was reachable from ordinary (if very large) valid Java
+    /// source, not just an adversarial hand-built tree. A back edge to a
+    /// node still `Gray` (on the current DFS path) is exactly a cycle;
+    /// skipping an edge from a node to itself is what excludes plain
+    /// self-recursion. Implemented with an explicit work-stack, not real
+    /// recursion — the number of methods in one class is not otherwise
+    /// bounded, so a real call stack here would reintroduce the same
+    /// class of uncontrolled-recursion risk this crate's other depth
+    /// guards exist to prevent.
+    fn has_mutual_recursion(&self) -> bool {
+        #[derive(Clone, Copy, PartialEq)]
+        enum Color {
+            White,
+            Gray,
+            Black,
+        }
+
+        let graph: HashMap<&str, Vec<&str>> = self
+            .call_graph
+            .iter()
+            .map(|(n, callees)| (n.as_str(), callees.iter().map(|c| c.as_str()).collect()))
+            .collect();
+        let mut color: HashMap<&str, Color> = graph.keys().map(|k| (*k, Color::White)).collect();
+
+        for &start in graph.keys() {
+            if color[start] != Color::White {
+                continue;
+            }
+            let mut stack: Vec<(&str, usize)> = vec![(start, 0)];
+            color.insert(start, Color::Gray);
+            while let Some(&(node, idx)) = stack.last() {
+                let children = &graph[node];
+                if idx < children.len() {
+                    let child = children[idx];
+                    stack.last_mut().expect("just matched Some above").1 += 1;
+                    if child == node {
+                        continue; // self-loop -- plain self-recursion, not mutual
+                    }
+                    match color.get(child).copied().unwrap_or(Color::White) {
+                        Color::White => {
+                            color.insert(child, Color::Gray);
+                            stack.push((child, 0));
+                        }
+                        Color::Gray => return true, // back edge to a distinct on-stack node -> real cycle
+                        Color::Black => {}
+                    }
+                } else {
+                    color.insert(node, Color::Black);
+                    stack.pop();
+                }
+            }
+        }
+        false
     }
 
     // ── statement/block-level lowering ──────────────────────────────
@@ -1317,7 +1844,7 @@ impl Lowerer {
         if inner.rule_name == "lambda_expression" {
             return Err(self.err_at(
                 inner,
-                "lambda expressions are not supported yet (deferred to JV02 M3)".to_string(),
+                "lambda expressions are not supported yet (deferred to JV02 M3b)".to_string(),
             ));
         }
         if inner.rule_name == "assignment_expression" {
@@ -1335,19 +1862,20 @@ impl Lowerer {
                         self.err_at(op_node, "malformed assignment operator".to_string())
                     })?;
                 let name = self.extract_bare_name(lvalue_node, 0)?;
-                let declared_kind = self.lookup_local(&name).ok_or_else(|| {
-                    self.err_at(
-                        lvalue_node,
-                        format!("assignment to undeclared local variable `{name}`"),
-                    )
-                })?;
+                let (declared_kind, declared_scope) =
+                    self.lookup_local(&name).ok_or_else(|| {
+                        self.err_at(
+                            lvalue_node,
+                            format!("assignment to undeclared local variable `{name}`"),
+                        )
+                    })?;
                 let span = self.span_of(inner);
                 let value = match op_tok.value.as_str() {
                     "=" => self.lower_expr(rhs_node, 0)?.0,
                     "+=" | "-=" | "*=" | "/=" | "%=" => {
                         let (rhs, rhs_kind) = self.lower_expr(rhs_node, 0)?;
                         let lhs_span = self.span_of(lvalue_node);
-                        let lhs_expr = Expr::VarRef { name: name.clone(), scope: Scope::Local, span: lhs_span };
+                        let lhs_expr = Expr::VarRef { name: name.clone(), scope: declared_scope, span: lhs_span };
                         let op_char = op_tok.value.chars().next().expect("non-empty operator token");
                         match op_char {
                             '+' | '-' => self.combine_additive(lhs_expr, declared_kind, rhs, rhs_kind, op_char, op_node)?.0,
@@ -1367,7 +1895,7 @@ impl Lowerer {
                 self.observed.add(Feature::MutableBindings);
                 return Ok(Stmt::Assign {
                     name,
-                    scope: Scope::Local,
+                    scope: declared_scope,
                     value,
                     span,
                 });
@@ -1375,7 +1903,7 @@ impl Lowerer {
         }
         if let Some((target_node, op)) = self.bare_incdec_target(inner, 0)? {
             let name = self.extract_bare_name(target_node, 0)?;
-            let declared_kind = self.lookup_local(&name).ok_or_else(|| {
+            let (declared_kind, declared_scope) = self.lookup_local(&name).ok_or_else(|| {
                 self.err_at(
                     target_node,
                     format!("`{op}{op}` on undeclared local variable `{name}`"),
@@ -1390,7 +1918,7 @@ impl Lowerer {
             let span = self.span_of(inner);
             let lhs_expr = Expr::VarRef {
                 name: name.clone(),
-                scope: Scope::Local,
+                scope: declared_scope,
                 span: span.clone(),
             };
             let one = if declared_kind == Kind::Float {
@@ -1409,7 +1937,7 @@ impl Lowerer {
             self.observed.add(Feature::MutableBindings);
             return Ok(Stmt::Assign {
                 name,
-                scope: Scope::Local,
+                scope: declared_scope,
                 value,
                 span,
             });
@@ -1586,7 +2114,7 @@ impl Lowerer {
             [ASTNodeOrToken::Node(only)] if only.rule_name == "lambda_expression" => Err(self
                 .err_at(
                     only,
-                    "lambda expressions are not supported yet (deferred to JV02 M3)".to_string(),
+                    "lambda expressions are not supported yet (deferred to JV02 M3b)".to_string(),
                 )),
             [ASTNodeOrToken::Node(only)] => self.lower_expr(only, depth + 1),
             _ => Err(self.err_at(node, "malformed `expression` node".to_string())),
@@ -2115,24 +2643,122 @@ impl Lowerer {
         }
     }
 
-    /// `primary_expression = primary { primary_suffix } ;` — any suffix
-    /// (`.field`, `.method(...)`, `::ref`, etc.) is field/method-access
-    /// surface, out of scope until JV02 M3+.
+    /// `primary_expression = primary { primary_suffix } ;` — M3a adds
+    /// exactly one new shape: a *bare* unqualified call, `NAME(args)`,
+    /// which parses as `primary_expression(primary=NAME, primary_suffix=
+    /// LPAREN [argument_list] RPAREN)` — a `primary` that is a single bare
+    /// `NAME` token followed by exactly *one* suffix, itself starting
+    /// with `(` (confirmed by direct CST inspection, not assumed from the
+    /// grammar text alone). Every other suffix shape — field access
+    /// (`.field`), a *qualified* call (`x.foo(...)`, which chains a
+    /// `.foo` suffix *then* a separate `(...)` suffix — i.e. two
+    /// suffixes, not one), `::` method references, and so on — remains
+    /// out of scope, rejected exactly as before.
     fn lower_primary_expression(
         &mut self,
         node: &GrammarASTNode,
         depth: usize,
     ) -> Result<(Expr, Kind), JavaLowerError> {
-        if node.children.len() > 1 {
+        match node.children.as_slice() {
+            [ASTNodeOrToken::Node(primary)] => self.lower_expr(primary, depth + 1),
+            [ASTNodeOrToken::Node(primary), ASTNodeOrToken::Node(suffix)]
+                if suffix.rule_name == "primary_suffix" =>
+            {
+                self.lower_call_expression(primary, suffix, node, depth)
+            }
+            _ => Err(self.err_at(
+                node,
+                "field access, method calls with more than one suffix, and other primary suffixes are not supported yet (deferred to a later JV02 milestone)".to_string(),
+            )),
+        }
+    }
+
+    /// Lower a bare unqualified call `NAME(args)` — see
+    /// `lower_primary_expression`'s own doc comment for the exact CST
+    /// shape this expects. `primary` must be a single bare `NAME` token
+    /// (a *qualified* callee, e.g. `x.foo`, never reaches this function —
+    /// it fails `lower_primary_expression`'s own suffix-count match arm
+    /// first, since a qualified call chains two suffixes); `suffix` must
+    /// itself start with `(` (an *unparenthesized* suffix, e.g. `.field`
+    /// with no call, is rejected here rather than silently mis-lowered as
+    /// a call).
+    fn lower_call_expression(
+        &mut self,
+        primary: &GrammarASTNode,
+        suffix: &GrammarASTNode,
+        node: &GrammarASTNode,
+        depth: usize,
+    ) -> Result<(Expr, Kind), JavaLowerError> {
+        let is_call_suffix =
+            matches!(suffix.children.first(), Some(ASTNodeOrToken::Token(t)) if t.value == "(");
+        if !is_call_suffix {
             return Err(self.err_at(
                 node,
-                "field access, method calls, and other primary suffixes are not supported yet (deferred to a later JV02 milestone)".to_string(),
+                "field access and other primary suffixes are not supported yet (deferred to a later JV02 milestone)".to_string(),
             ));
         }
-        match node.children.first() {
-            Some(ASTNodeOrToken::Node(primary)) => self.lower_expr(primary, depth + 1),
-            _ => Err(self.err_at(node, "malformed `primary_expression` node".to_string())),
+        let callee = match primary.children.as_slice() {
+            [ASTNodeOrToken::Token(t)] if t.type_ == lexer::token::TokenType::Name => {
+                t.value.clone()
+            }
+            _ => {
+                return Err(self.err_at(
+                    node,
+                    "method calls are only supported on a bare method name so far (a qualified receiver, e.g. `x.foo(...)`, is deferred to a later JV02 milestone)".to_string(),
+                ))
+            }
+        };
+        let sig = self.method_signatures.get(&callee).cloned().ok_or_else(|| {
+            self.err_at(
+                node,
+                format!("call to unknown method `{callee}` (JV02 M3a can only call a method declared in the same class)"),
+            )
+        })?;
+
+        let arg_nodes: Vec<&GrammarASTNode> = match self.first_child_named(suffix, "argument_list")
+        {
+            Some(al) => child_nodes(al)
+                .into_iter()
+                .filter(|n| n.rule_name == "expression")
+                .collect(),
+            None => vec![],
+        };
+        if arg_nodes.len() != sig.param_kinds.len() {
+            return Err(self.err_at(
+                node,
+                format!(
+                    "`{callee}` expects {} argument(s), found {}",
+                    sig.param_kinds.len(),
+                    arg_nodes.len()
+                ),
+            ));
         }
+        let mut args = Vec::with_capacity(arg_nodes.len());
+        for (arg_node, expected_kind) in arg_nodes.iter().zip(sig.param_kinds.iter()) {
+            let (arg_expr, arg_kind) = self.lower_expr(arg_node, depth + 1)?;
+            if arg_kind != *expected_kind {
+                return Err(self.err_at(
+                    arg_node,
+                    format!("argument to `{callee}` has the wrong kind"),
+                ));
+            }
+            args.push(arg_expr);
+        }
+
+        if let Some(callees) = self.call_graph.get_mut(&self.current_method) {
+            callees.insert(callee.clone());
+        }
+
+        let span = self.span_of(node);
+        Ok((
+            Expr::DirectCall {
+                fn_name: callee,
+                args,
+                effects: EffectSet::PURE,
+                span,
+            },
+            sig.return_kind,
+        ))
     }
 
     /// `primary = literal | "this" | ... | LPAREN expression RPAREN |
@@ -2161,11 +2787,11 @@ impl Lowerer {
             // lexeme here.
             [ASTNodeOrToken::Token(t)] if t.type_ == lexer::token::TokenType::Name => {
                 let name = t.value.clone();
-                let kind = self.lookup_local(&name).ok_or_else(|| {
+                let (kind, scope) = self.lookup_local(&name).ok_or_else(|| {
                     self.err_at(node, format!("reference to undeclared local variable `{name}`"))
                 })?;
                 let span = self.span_of(node);
-                Ok((Expr::VarRef { name, scope: Scope::Local, span }, kind))
+                Ok((Expr::VarRef { name, scope, span }, kind))
             }
             [ASTNodeOrToken::Token(open), ASTNodeOrToken::Node(inner), ASTNodeOrToken::Token(_close)]
                 if open.value == "(" =>
@@ -2376,9 +3002,8 @@ fn child_nodes(node: &GrammarASTNode) -> Vec<&GrammarASTNode> {
 /// `MAX_RULE_DEPTH`-capped parser. Calling the unguarded shared helper on
 /// a possibly-adversarial tree would reintroduce the exact CWE-674
 /// uncontrolled-recursion DoS this crate's own `MAX_TREE_DEPTH` guard
-/// (see `find_main_method`'s identically-reasoned `search` helper) exists
-/// to prevent — found by `/security-review` as a second, earlier-executing
-/// instance of the same gap before this crate shipped.
+/// exists to prevent — found by `/security-review` before this crate
+/// shipped.
 fn collect_bounded<'a>(
     node: &'a GrammarASTNode,
     rule_name: &str,

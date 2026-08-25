@@ -2010,16 +2010,13 @@ fn parse_xychart_axis_config(source: &str, key: &str) -> XyAxisConfig {
 fn parse_xychart_axis(token: &Token, is_x: bool) -> Result<Axis, ParseError> {
     let keyword_len = "x-axis".len();
     let rest = token.value[keyword_len..].trim();
-    if let Some(open) = rest.find('[') {
+    if let Some((open, close)) = xychart_bracket_bounds(token, rest)? {
         if !is_x {
             return Err(token_error(
                 token,
                 "Mermaid XY y-axis cannot be categorical",
             ));
         }
-        let close = rest
-            .rfind(']')
-            .ok_or_else(|| token_error(token, "expected ']'"))?;
         if !rest[close + 1..].trim().is_empty() {
             return Err(token_error(
                 token,
@@ -2090,12 +2087,8 @@ fn parse_xychart_series(token: &Token, kind: SeriesKind) -> Result<ChartSeries, 
         SeriesKind::Line => "line".len(),
     };
     let rest = token.value[keyword_len..].trim();
-    let open = rest
-        .find('[')
-        .ok_or_else(|| token_error(token, "expected '['"))?;
-    let close = rest
-        .rfind(']')
-        .ok_or_else(|| token_error(token, "expected ']'"))?;
+    let (open, close) =
+        xychart_bracket_bounds(token, rest)?.ok_or_else(|| token_error(token, "expected '['"))?;
     if !rest[close + 1..].trim().is_empty() {
         return Err(token_error(token, "unexpected content after XY-chart data"));
     }
@@ -2108,6 +2101,39 @@ fn parse_xychart_series(token: &Token, kind: SeriesKind) -> Result<ChartSeries, 
         label: xychart_optional_text(&rest[..open]),
         data,
     })
+}
+
+fn xychart_bracket_bounds(
+    token: &Token,
+    source: &str,
+) -> Result<Option<(usize, usize)>, ParseError> {
+    let mut quoted = false;
+    let mut open = None;
+    let mut close = None;
+    for (index, ch) in source.char_indices() {
+        match ch {
+            '"' => quoted = !quoted,
+            '[' if !quoted && open.is_some() => {
+                return Err(token_error(token, "unexpected '['"));
+            }
+            '[' if !quoted => open = Some(index),
+            ']' if !quoted && close.is_some() => {
+                return Err(token_error(token, "unexpected ']'"));
+            }
+            ']' if !quoted => close = Some(index),
+            _ => {}
+        }
+    }
+    if quoted {
+        return Err(token_error(token, "unterminated XY-chart string"));
+    }
+    match (open, close) {
+        (None, None) => Ok(None),
+        (Some(_), None) => Err(token_error(token, "expected ']'")),
+        (None, Some(_)) => Err(token_error(token, "unexpected ']'")),
+        (Some(open), Some(close)) if open < close => Ok(Some((open, close))),
+        _ => Err(token_error(token, "unexpected ']' before '['")),
+    }
 }
 
 fn parse_xychart_data_points(

@@ -15,19 +15,25 @@ end-to-end.
 (local variable declarations, re-assignment, arithmetic/comparison/
 logical operators, `+`-based string concatenation), M2a (`if`/`else`,
 `while`, `do`/`while`, compound-assignment/increment/decrement as bare
-statements), and M2b (classic `for`, desugared to `while`; enhanced
-`for`, → `Stmt::ForEach` directly) are merged — see `code/packages/rust/
-java-to-semantic-ir`'s own `CHANGELOG.md` for the exact per-milestone
-construct list and the real correctness bugs each milestone's own test
-suite caught before shipping. M2's own scope split into two PRs (M2a;
-M2b) once implementation revealed how much scope-stack infrastructure
-`if`/`while`/`do`-`while` alone already needed. `switch` was also
-discovered, during M2a, to have no corresponding SIR IR node at all
-(confirmed by a repo-wide grep, not assumed) — it needs its own
-spec-level design decision (Java's fall-through semantics in particular)
-before any frontend can target it, tracked as a separate backlog item
-rather than folded into "M2" implicitly; `break`/`continue` have the
-identical gap. M3 onward are pending.
+statements), M2b (classic `for`, desugared to `while`; enhanced `for`, →
+`Stmt::ForEach` directly), and M3a (every method in the class body,
+typed parameters, two-pass forward-reference/recursion resolution, bare
+unqualified calls → `Expr::DirectCall`, `return` in tail position only)
+are merged — see `code/packages/rust/java-to-semantic-ir`'s own
+`CHANGELOG.md` for the exact per-milestone construct list and the real
+correctness bugs each milestone's own test suite caught before shipping.
+M2's own scope split into two PRs (M2a; M2b) once implementation
+revealed how much scope-stack infrastructure `if`/`while`/`do`-`while`
+alone already needed; M3 similarly split into M3a (this section) and
+M3b (lambdas, pending) once research showed M3's combined scope —
+multi-function tables, typed params, tail-position return, *and* lambda
+capture analysis — was comparably large to M2's own combined scope.
+`switch` was also discovered, during M2a, to have no corresponding SIR
+IR node at all (confirmed by a repo-wide grep, not assumed) — it needs
+its own spec-level design decision (Java's fall-through semantics in
+particular) before any frontend can target it, tracked as a separate
+backlog item rather than folded into "M2"/"M3" implicitly; `break`/
+`continue` have the identical gap. M3b onward are pending.
 
 ## Motivation
 
@@ -164,7 +170,42 @@ gap (no IR primitive) and the identical "own design decision" status.
 **M3 — methods / calls / lambdas.** Static and instance top-level-
 function-shaped methods (still not class-nested — that's M6), calls,
 Java lambdas (`(a, b) -> body`) → `MakeClosure`, matching how every other
-frontend's own arrow/lambda syntax lowers.
+frontend's own arrow/lambda syntax lowers. Split into two PRs, mirroring
+M2's own split, once research showed M3's combined scope (multi-function
+tables, typed params, tail-position return, *and* lambda capture
+analysis) was comparably large to M2's combined scope: **M3a** — every
+`method_declaration` in the class body (static or instance; both lower
+identically to a flat top-level `Function` since there's no real
+object/receiver model until M6) with typed parameters, resolved via a
+two-pass scheme (register every method's name + call signature before
+any body is lowered, mirroring `python-to-semantic-ir`'s/`javascript-to-
+semantic-ir`'s own precedent) so forward references and mutual
+recursion between methods work regardless of textual order; bare
+unqualified calls (`foo(a, b)`, confirmed via direct CST inspection to
+be `primary_expression(primary=NAME, primary_suffix=LPAREN
+[argument_list] RPAREN)`) → `Expr::DirectCall`; `return`, accepted only
+as the literal last top-level statement of a method body (SIR has no
+`Stmt::Return` primitive at all — a function's value is always its own
+body `Block`'s trailing value, confirmed by an exhaustive grep of the
+`Stmt` enum — so an early or branched return is a clean, disclosed
+rejection, not a mis-lowering; real branching-return support needs the
+same kind of design work `switch`/`break`/`continue` already need, and
+is deferred alongside them). Qualified calls (`x.foo(...)`, which the
+grammar distinguishes from a bare call by chaining *two* `primary_suffix`
+nodes rather than one) and method overloading (this frontend has no
+type-based overload resolution — only one method per name is supported)
+are explicitly out of scope. **M3b** — Java lambdas
+(`lambda_expression`, all three `lambda_parameters` shapes — bare name,
+untyped-parenthesized, typed-parenthesized — and both `lambda_body`
+shapes — expression and block) → `Expr::MakeClosure`, reusing
+`javascript-to-semantic-ir`'s on-resolve capture-discovery approach
+(captures fall out of ordinary name resolution walking the scope-frame
+stack outward, no separate free-variable pre-scan needed) rather than
+`python-to-semantic-ir`'s separate AST pre-scan, since this crate's
+existing M1/M2 scope-stack machinery (`Lowerer.locals`) is
+architecturally closer to JS's per-frame model; the lambda body hoists
+to a synthesized top-level `Function` (`__lambda_N`, mirroring how
+`main` itself is already synthesized).
 
 **M4 — arrays / collections / strings / indexing.** Java arrays (`int[]
 xs = {1, 2, 3};`, `xs[0]`, `xs.length`), `String` method surface

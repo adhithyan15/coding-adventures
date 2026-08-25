@@ -569,6 +569,60 @@ const independentKhehStrokes = (): Stroke[] => [
   },
 ];
 
+const independentFehStrokes = (headLabel: string, bodyLabel: string): Stroke[] => [
+  {
+    segments: [
+      {
+        label: headLabel,
+        path: [
+          { x: 735, y: 250 },
+          { x: 750, y: 330 },
+          { x: 710, y: 400 },
+          { x: 640, y: 435 },
+          { x: 570, y: 410 },
+          { x: 520, y: 350 },
+          { x: 520, y: 285 },
+          { x: 560, y: 230 },
+          { x: 640, y: 215 },
+          { x: 715, y: 240 },
+          { x: 735, y: 250 },
+        ],
+      },
+      {
+        label: bodyLabel,
+        path: [
+          { x: 735, y: 250 },
+          { x: 775, y: 230 },
+          { x: 785, y: 180 },
+          { x: 760, y: 110 },
+          { x: 700, y: 80 },
+          { x: 600, y: 60 },
+          { x: 480, y: 55 },
+          { x: 350, y: 40 },
+          { x: 230, y: 55 },
+          { x: 140, y: 105 },
+          { x: 95, y: 170 },
+          { x: 90, y: 240 },
+        ],
+      },
+    ],
+  },
+  {
+    segments: [
+      {
+        label: "lift once, then place the upper dot last",
+        path: [
+          { x: 615, y: 550 },
+          { x: 560, y: 607 },
+          { x: 615, y: 664 },
+          { x: 670, y: 607 },
+          { x: 615, y: 550 },
+        ],
+      },
+    ],
+  },
+];
+
 export const DUCTUS: Record<string, LetterDuctus> = {
   // Hanzi Writer Data's ordered medians draw 人 with the left-falling stroke
   // first, then restart at the central junction for the right-falling stroke.
@@ -9981,6 +10035,24 @@ export const DUCTUS: Record<string, LetterDuctus> = {
       },
     ],
     source: arabicAlphabetSource("ف"),
+  },
+  [ductusKey("perso-arabic", "ف")]: {
+    script: "perso-arabic",
+    glyph: "ف",
+    strokes: independentFehStrokes(
+      "loop clockwise around the small closed head",
+      "continue left through the broad bowl without lifting",
+    ),
+    source: persianAlphabetSource("ف"),
+  },
+  [ductusKey("urdu-nastaliq", "ف")]: {
+    script: "urdu-nastaliq",
+    glyph: "ف",
+    strokes: independentFehStrokes(
+      "loop clockwise around the rounded head above the main line",
+      "continue left through the shallow curved tail without lifting",
+    ),
+    source: urduAlphabetSource("ف"),
   },
   [ductusKey("arabic", "ق")]: {
     script: "arabic",

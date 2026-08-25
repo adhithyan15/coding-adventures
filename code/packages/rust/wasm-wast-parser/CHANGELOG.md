@@ -1,5 +1,19 @@
 # Changelog — wasm-wast-parser
 
+## 0.1.70 — 2026-08-25 — Relaxed SIMD epic PR2: i16x8.relaxed_q15mulr_s
+
+### Added
+
+- `SimdOpKind::RelaxedQ15mulrI16x8S` joined the existing no-immediate
+  SIMD match arm (same list `RelaxedSwizzle`/`Q15mulrSatI16x8S` are
+  already in) in both `encode_stream_instr` and `encode_flat_instr` --
+  `i16x8.relaxed_q15mulr_s` takes no immediate beyond the opcode itself,
+  identical encoding shape to `i16x8.q15mulr_sat_s`. Second opcode of
+  the relaxed-simd epic -- see `code/specs/
+  W19-wasm-relaxed-simd-first-slice.md`.
+- Reuses the `Expected::Either` combinator PR1 added, unchanged -- no
+  new parsing infrastructure needed for this opcode.
+
 ## 0.1.69 — 2026-08-25 — Relaxed SIMD epic PR1: i8x16.relaxed_swizzle + the `either` assert_return combinator
 
 ### Added

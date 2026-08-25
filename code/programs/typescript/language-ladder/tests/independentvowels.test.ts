@@ -128,3 +128,17 @@ describe("Tamil independent vowels in the starter inventory", () => {
     );
   });
 });
+
+describe("shared Perso-Arabic letters retain script-owned provenance", () => {
+  it("keeps Persian and Urdu ف separate while both use one lifted upper dot", () => {
+    const persian = SCRIPTS.find((script) => script.script === "perso-arabic")!
+      .letters.find((entry) => entry.glyph === "ف")!;
+    const urdu = SCRIPTS.find((script) => script.script === "urdu-nastaliq")!
+      .letters.find((entry) => entry.glyph === "ف")!;
+    expect(persian.penLifts).toBe(1);
+    expect(urdu.penLifts).toBe(1);
+    expect(persian.strokeOrder).toHaveLength(3);
+    expect(urdu.strokeOrder).toHaveLength(3);
+    expect(persian.strokeOrderSource?.url).not.toBe(urdu.strokeOrderSource?.url);
+  });
+});

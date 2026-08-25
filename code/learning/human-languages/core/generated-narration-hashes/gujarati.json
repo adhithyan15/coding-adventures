@@ -244,19 +244,20 @@
     {
       "language": "gujarati",
       "chapter": 13,
-      "sourceHash": "fnv1a64:a6263a0357f8706d",
+      "sourceHash": "fnv1a64:10370952859476cb",
       "lessonIds": [
         "GU-C11-mitra",
         "GU-C11-kutumb",
         "GU-C11-bhai",
-        "GU-C11-bahen"
+        "GU-C11-bahen",
+        "GU-R13-doorway-nine-r3"
       ],
       "voiceLessons": 0,
       "drivablePrefix": 0,
       "text": "gujarati/narration/ch13.txt",
       "json": "gujarati/narration/ch13.json",
-      "textHash": "fnv1a64:aed0e17637eb57d6",
-      "jsonHash": "fnv1a64:488f2c3495cf46b0"
+      "textHash": "fnv1a64:a625389ad10e55bb",
+      "jsonHash": "fnv1a64:23c7bc21f98e372c"
     },
     {
       "language": "gujarati",
@@ -274,6 +275,25 @@
       "json": "gujarati/narration/ch14.json",
       "textHash": "fnv1a64:b706142c848f6319",
       "jsonHash": "fnv1a64:eb5945e50fd64d98"
+    },
+    {
+      "language": "gujarati",
+      "chapter": 15,
+      "sourceHash": "fnv1a64:659a1320eee45603",
+      "lessonIds": [
+        "GU-R15-u-matra-r4",
+        "GU-R15-chha-r4",
+        "GU-R15-ka-r4",
+        "GU-R15-nna-r4",
+        "GU-R15-sha-r4",
+        "GU-R15-name-exchange-r3"
+      ],
+      "voiceLessons": 0,
+      "drivablePrefix": 0,
+      "text": "gujarati/narration/ch15.txt",
+      "json": "gujarati/narration/ch15.json",
+      "textHash": "fnv1a64:98d0a6d84e45fffe",
+      "jsonHash": "fnv1a64:f66f2a3d08e5fb98"
     }
   ],
   "findings": []

@@ -1,0 +1,13 @@
+{
+  "id": "GU-EXT-020-DOORWAY-DURABLE-RETRIEVAL",
+  "stage": "pre-A1",
+  "kind": "required",
+  "category": "script",
+  "canDo": "I can retrieve the nine Gujarati doorway forms after a long interval, first by reading a shuffled row and then by writing a different shuffled row from sound.",
+  "prerequisites": [
+    "GU-EXT-019-DOORWAY-RETRIEVAL"
+  ],
+  "lessons": [
+    "GU-R13-doorway-nine-r3"
+  ]
+}

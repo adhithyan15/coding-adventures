@@ -1,0 +1,17 @@
+{
+  "id": "GU-PATH-017",
+  "spine_node": "SPINE-EXCHANGE-NAMES",
+  "lessons": [
+    "GU-R15-u-matra-r4",
+    "GU-R15-chha-r4",
+    "GU-R15-ka-r4",
+    "GU-R15-nna-r4",
+    "GU-R15-sha-r4",
+    "GU-R15-name-exchange-r3"
+  ],
+  "before": [],
+  "inline": [
+    "GU-EXT-021-R4-BRIDGE-A"
+  ],
+  "after": []
+}
