@@ -2366,14 +2366,6 @@ fn new_array_creation_expression_is_deferred() {
 }
 
 #[test]
-fn indexed_assignment_is_deferred() {
-    // `xs[0] = 5;` -- deferred to task #56 (M4b); this milestone only
-    // supports indexing as a *read*.
-    let err = compile_source(&wrap("int[] xs = {1, 2, 3}; xs[0] = 5;"), "prog").unwrap_err();
-    assert!(!err.message.is_empty());
-}
-
-#[test]
 fn c_style_array_declarator_still_rejected() {
     // `int xs[] = {1, 2, 3};` -- the C-style declarator-suffix form
     // remains out of scope regardless of M4a (only the `int[] xs`
@@ -2381,6 +2373,110 @@ fn c_style_array_declarator_still_rejected() {
     // pre-existing rejection, re-verified here since M4a touched the
     // surrounding code.
     let err = compile_source(&wrap("int xs[] = {1, 2, 3};"), "prog").unwrap_err();
+    assert!(!err.message.is_empty());
+}
+
+// ── M4b: indexed array assignment ───────────────────────────────────────
+
+#[test]
+fn indexed_assignment_lowers_to_seqset() {
+    let m = compile_ok(&wrap("int[] xs = {1, 2, 3}; xs[0] = 5;"));
+    match &main_fn(&m).body.stmts[1] {
+        Stmt::SeqSet {
+            seq, index, value, ..
+        } => {
+            assert!(matches!(seq, Expr::VarRef { .. }));
+            assert!(matches!(index, Expr::IntLit { value: 0, .. }));
+            assert!(matches!(value, Expr::IntLit { value: 5, .. }));
+        }
+        other => panic!("expected Stmt::SeqSet, got {other:?}"),
+    }
+}
+
+#[test]
+fn indexed_assignment_with_a_non_constant_index_lowers_correctly() {
+    let m = compile_ok(&wrap("int[] xs = {1, 2, 3}; int i = 1; xs[i] = 9;"));
+    assert!(matches!(&main_fn(&m).body.stmts[2], Stmt::SeqSet { .. }));
+}
+
+#[test]
+fn indexed_assignment_in_a_classic_for_loop_update_clause_lowers_correctly() {
+    // `for_update` reuses this same expression-statement desugaring path
+    // (see M2b's own doc comment) -- proves indexed assignment works
+    // there too, not just as a standalone statement.
+    let m = compile_ok(&wrap(
+        "int[] xs = {0, 0, 0}; for (int i = 0; i < 3; xs[i] = i) { i = i + 1; }",
+    ));
+    assert_eq!(main_fn(&m).body.stmts.len(), 2);
+}
+
+#[test]
+fn indexed_assignment_on_a_string_array_lowers_correctly() {
+    let m = compile_ok(&wrap("String[] names = {\"a\", \"b\"}; names[0] = \"c\";"));
+    assert!(matches!(&main_fn(&m).body.stmts[1], Stmt::SeqSet { .. }));
+}
+
+#[test]
+fn feature_sequences_is_declared_when_indexed_assignment_is_lowered() {
+    let m = compile_ok(&wrap("int[] xs = {1}; xs[0] = 2;"));
+    assert!(m.manifest.contains(Feature::Sequences));
+}
+
+#[test]
+fn indexed_assignment_on_a_non_array_value_is_an_error() {
+    let err = compile_source(&wrap("int x = 1; x[0] = 5;"), "prog").unwrap_err();
+    assert!(!err.message.is_empty());
+}
+
+#[test]
+fn plain_assignment_to_a_simple_local_still_works_alongside_indexed_assignment() {
+    // Regression check: adding `indexed_assign_target`'s new detour ahead
+    // of `extract_bare_name` in `lower_expr_statement` must not disturb
+    // the ordinary bare-name assignment path it still falls through to.
+    let m = compile_ok(&wrap("int x = 1; x = 2;"));
+    assert!(matches!(main_fn(&m).body.stmts[1], Stmt::Assign { .. }));
+}
+
+#[test]
+fn indexed_assignment_target_index_must_be_an_int() {
+    let err = compile_source(&wrap("int[] xs = {1, 2, 3}; xs[true] = 5;"), "prog").unwrap_err();
+    assert!(!err.message.is_empty());
+}
+
+#[test]
+fn indexed_assignment_value_kind_must_match_element_kind() {
+    let err = compile_source(&wrap("int[] xs = {1, 2, 3}; xs[0] = \"nope\";"), "prog").unwrap_err();
+    assert!(!err.message.is_empty());
+}
+
+#[test]
+fn field_target_assignment_remains_unsupported() {
+    // `extract_bare_name`'s own remaining rejection surface, re-verified
+    // after M4b's `indexed_assign_target` detour was inserted ahead of
+    // it: `xs.length = 5;` still isn't a valid assignment target -- it's
+    // both syntactically not a simple name and not an indexed target.
+    let err = compile_source(&wrap("int[] xs = {1}; xs.length = 5;"), "prog").unwrap_err();
+    assert!(!err.message.is_empty());
+}
+
+#[test]
+fn compound_assignment_on_an_indexed_target_is_still_deferred() {
+    let err = compile_source(&wrap("int[] xs = {1, 2, 3}; xs[0] += 1;"), "prog").unwrap_err();
+    assert!(!err.message.is_empty());
+}
+
+#[test]
+fn increment_of_an_indexed_target_is_still_deferred() {
+    let err = compile_source(&wrap("int[] xs = {1, 2, 3}; xs[0]++;"), "prog").unwrap_err();
+    assert!(!err.message.is_empty());
+}
+
+#[test]
+fn new_array_creation_expression_remains_deferred() {
+    // `new int[5]` / `new int[]{1,2,3}` remain deferred to a follow-up
+    // milestone (M4c) -- only the bare `{1,2,3}` literal-as-declarator-
+    // initializer form is supported.
+    let err = compile_source(&wrap("int[] xs = new int[5];"), "prog").unwrap_err();
     assert!(!err.message.is_empty());
 }
 

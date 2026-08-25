@@ -2,6 +2,65 @@
 
 All notable changes to the `java-to-semantic-ir` crate will be documented in this file.
 
+## [0.8.0] - 2026-08-25
+
+### Added
+
+- JV02 milestone M4b: indexed array assignment.
+- Plain indexed assignment (`xs[i] = v;`) lowers to `Stmt::SeqSet`, via a
+  new `indexed_assign_target` check that runs ahead of the existing
+  bare-name-only assignment-target resolution in `lower_expr_statement` —
+  it walks the same `unary_expression` chain `extract_bare_name` already
+  walks, but stops at a `primary_expression` with exactly one `[...]`
+  suffix (rather than requiring a bare `primary` NAME) and returns that
+  shape instead. A plain-name target (`x = v;`, unchanged since M1) and
+  an indexed target (`xs[i] = v;`, new) are told apart before either is
+  lowered, so every other assignment-target shape (a field target, a
+  qualified target) still falls through to `extract_bare_name`'s existing
+  "reject rather than mis-lower" catch-all, unchanged and re-verified by
+  a new regression test. A new `lower_indexed_assignment` helper lowers
+  the array target (requiring `Kind::Array`), the index (requiring
+  `Kind::Int`), and the assigned value (requiring exactly the array's own
+  element kind — no implicit widening), then emits `Stmt::SeqSet`, which
+  needs only `Feature::Sequences` (already declared since M4a) — SIR16's
+  `seq: Expr` field is an arbitrary expression, not a bound name, so
+  unlike `Stmt::Assign` there's no `check_varref` involved.
+- Reuses `for_update`'s own existing desugaring path (`lower_expr_
+  statement`, per M2b's own doc comment) for free: `for (...; ...;
+  xs[i] = ...)` in a classic `for` loop's update clause now works too,
+  not just as a standalone statement — covered by its own test.
+- **Narrowed during implementation, mirroring the earlier M2→M2a/M2b and
+  M3→M3a/M3b splits**: task #56's original combined scope (indexed
+  assignment + `new`-based array creation + multi-dimensional arrays)
+  turned out comparably sized to M4a's own single-focus milestone once
+  research began. Compound assignment and increment/decrement on an
+  indexed target (`xs[i] += v;`, `xs[i]++;`) are *not* supported this
+  milestone either, deferred alongside the other two: naively lowering
+  either would evaluate the index expression twice (once to read the
+  current element, once to write the new one), silently double-
+  evaluating any side effect a non-constant index expression carries
+  (e.g. a method call used as the index) — exactly the class of bug this
+  crate's own `/security-review` history has caught before (see the
+  `[0.3.0]`/`[0.4.0]` do-while and for-update entries below). `new`-based
+  array-creation expressions and multi-dimensional arrays are logged as
+  their own follow-up tasks (#57, #58) rather than attempted here; both
+  already fall through cleanly to existing rejection paths
+  (`lower_primary`'s catch-all, and `kind_of_type_node`'s existing
+  `bracket_pairs > 1` check respectively), so nothing is silently
+  mis-lowered by deferring them.
+- 11 new tests in `tests/test_lower.rs` (plain indexed assignment with a
+  constant and a variable index, inside a classic `for` loop's own
+  update clause, on a `String` array, `Feature::Sequences` re-
+  declaration, index-kind and value-kind mismatch rejection, indexing on
+  a non-array value rejection, a plain-name-assignment regression check
+  alongside the new indexed path, a field-target rejection re-check, and
+  the still-deferred compound-assignment/increment-decrement-on-an-
+  indexed-target and `new`-array-creation rejections) plus 3 new
+  execution-proof tests in `tests/e2e_python.rs` (a plain indexed
+  assignment, one with a variable index, and a full indexed `for`-loop
+  that fills each element by its own index then sums them — exercising
+  `.length`, indexed reads, and indexed *writes* together).
+
 ## [0.7.0] - 2026-08-25
 
 ### Added
