@@ -5,6 +5,36 @@ Findings from the pre-A1 tranche work were recorded in commit messages and PR
 bodies, which are durable and searchable, but a reader opening this file found
 nothing. The entries below are the ones that change how the work is done.
 
+## HL-C10T — Telugu ఎ closes the leading independent short-e gap
+
+After Tamil dependent **ீ** landed, Telugu independent short-e **ఎ** led the
+measured queue at **10 affected realizations**. Sathish Shanmugam's *Write
+Telugu Alphabets* 2.6 package includes the numbered tracing guide
+`res/drawable/dot_stroke_v_9_e.png`: movements 1–2 stay joined around the
+compact lower loop, then movement 3 restarts after one lift and follows the
+broad outer arch.
+
+The authored order is fitted to the bundled Noto Sans Telugu outline, exposed
+through both data and the Language Ladder filmstrip, and now replaces
+`TE-S124`'s provisional copy-only disclaimer. All 10 gaps close. Urdu **پ** is
+the next measured glyph at **10 affected realizations**.
+
+## HL-C10U — regeneration must preserve every verified script exception
+
+While adding **ఎ**, a direct run of `generate_syllabary.py` exposed a fail-open
+generator boundary: it preserved only the exceptions hard-coded in its own
+small map and erased newer verified Kannada, Malayalam, and Telugu rows from
+the generated JSON. Script-ductus immediately failed because Kannada **ಅ** no
+longer had a verified source. The generated files were restored before this
+change, and **ఎ** is now represented in both generator intent and committed
+data, but the wider preservation gap remains.
+
+Before treating that generator as a safe whole-file rewrite, move every
+verified exception behind one authoritative merge boundary or make the script
+fail closed when regeneration would remove sourced rows. This infrastructure
+repair outranks the next measured glyph because an innocent regeneration can
+silently reopen already closed provenance work.
+
 ## HL-C10S — Tamil ீ closes the leading dependent long-i gap
 
 After shared Persian/Urdu **ف** landed, Tamil dependent long-i sign **ீ** led

@@ -39,7 +39,7 @@ describe("real curriculum", () => {
     expect(scripts.devanagari!.complete).toBe(true);
   });
 
-  it("keeps the cross-script closure queue measured after Tamil dependent ீ", () => {
+  it("keeps the cross-script closure queue measured after Telugu independent ఎ", () => {
     const candrakkala = scripts.malayalam!.marks!.find((mark) => mark.mark === "്")!;
     expect(candrakkala.role).toBe("virama");
     expect(candrakkala.compositionOrder).toEqual([
@@ -172,6 +172,25 @@ describe("real curriculum", () => {
     );
     expect(teluguA.strokeOrderSource?.variation).toMatch(
       /four directional movements.*two pen-down starts.*1.?2.*3.?4.*not uniform.*Noto Sans Telugu/i,
+    );
+
+    const teluguE = scripts.telugu!.independentVowels!.find((entry) => entry.glyph === "ఎ")!;
+    expect(teluguE.sound).toBe("e");
+    expect(teluguE.penLifts).toBe(1);
+    expect(teluguE.strokeOrder).toEqual([
+      "turn down and left around the compact lower loop",
+      "continue around its base and return to the central junction",
+      "restart at the junction and sweep up through the broad outer arch",
+    ]);
+    expect(teluguE.strokeOrderNote).toMatch(/three numbered movements.*two pen-down runs.*1.?2.*movement 3/i);
+    expect(teluguE.strokeOrderSource?.url).toBe(
+      "https://write-telugu-alphabets.en.aptoide.com/app",
+    );
+    expect(teluguE.strokeOrderSource?.citation).toMatch(
+      /Sathish Shanmugam.*Write Telugu Alphabets.*ఎ.*dot_stroke_v_9_e\.png.*movements 1.?3.*version 2\.6/i,
+    );
+    expect(teluguE.strokeOrderSource?.variation).toMatch(
+      /three directional movements.*two pen-down runs.*1.?2.*movement 3.*not uniform.*Noto Sans Telugu/i,
     );
 
     const kannadaA = scripts.kannada!.independentVowels!.find((entry) => entry.glyph === "ಅ")!;
@@ -660,6 +679,8 @@ describe("real curriculum", () => {
     expect(affected.get("ள") ?? 0).toBe(0);
     expect(missingByScript.get("telugu.json")?.has("అ")).toBe(false);
     expect(affected.get("అ") ?? 0).toBe(0);
+    expect(missingByScript.get("telugu.json")?.has("ఎ")).toBe(false);
+    expect(affected.get("ఎ") ?? 0).toBe(0);
     expect(missingByScript.get("malayalam.json")?.has("അ")).toBe(false);
     expect(affected.get("അ") ?? 0).toBe(0);
     expect(missingByScript.get("perso-arabic.json")?.has("خ")).toBe(false);
@@ -683,7 +704,7 @@ describe("real curriculum", () => {
     expect(affected.get("ಅ") ?? 0).toBe(0);
     expect(
       [...affected.entries()].sort((left, right) => right[1] - left[1])[0],
-    ).toEqual(["ఎ", 10]);
+    ).toEqual(["پ", 10]);
   });
 
   it("loaded every track (17+ and growing)", () => {
