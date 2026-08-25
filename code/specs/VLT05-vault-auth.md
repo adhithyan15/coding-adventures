@@ -147,14 +147,16 @@ up to 10 and `10^10` exceeds `u32::MAX`.
 ## `WebAuthnPrfAuthenticator`
 
 Added by `VLT-PM51-hardware-security-keys.md` (slice 1); real CTAP2
-hardware I/O added by that same document's slice 2. Bind-mode: a
-FIDO2 hardware security key (YubiKey and other CTAP2-compliant
+hardware I/O added by slice 2; real ECDSA P-256 assertion-signature
+verification added by slice 3 — the piece that makes this factor
+actually work end-to-end for the first time. Bind-mode: a FIDO2
+hardware security key (YubiKey and other CTAP2-compliant
 authenticators — a standards-based factor, not vendor-specific)
 contributes key material via the CTAP2 `hmac-secret` extension
 (WebAuthn's `prf` extension).
 
 ```rust
-pub struct WebAuthnPrfAuthenticator { /* relying_party_id, credential_id, public_key_cose, transport, touch_timeout */ }
+pub struct WebAuthnPrfAuthenticator { /* relying_party_id, credential_id, public_key_cose, p256_public_key, transport, touch_timeout */ }
 
 impl WebAuthnPrfAuthenticator {
     pub fn new(relying_party_id: impl Into<String>,
@@ -165,18 +167,33 @@ impl WebAuthnPrfAuthenticator {
 }
 ```
 
-`kind()` is `"webauthn-prf"`, `mode()` is `Mode::Bind`. `verify()`
-performs a real CTAP2 `GetAssertion` (with `hmac-secret`) through the
-`Ctap2Transport` this instance was built with, checks the response's
-rpId hash, credential id, user-presence flag, and `hmac-secret`
-presence, and *only after all of that passes* still returns
-`AuthError::Unimplemented { backend: "ECDSA P-256 assertion-signature
-verification (WebAuthn PRF)" }` — the one remaining piece is an ECDSA
-P-256 signature verifier, which no primitive in this workspace
-implements yet. `VLT-PM51` §13 covers the full check sequence; §6/§7
-(slice 1) explain the original reasoning for never partially
-validating an assertion, which still holds — this slice moved *where*
-the refusal happens, not *whether* it happens.
+`kind()` is `"webauthn-prf"`, `mode()` is `Mode::Bind`. `new`/
+`with_touch_timeout` now decode and validate `public_key_cose` at
+construction time — it must be a canonical-CBOR EC2/P-256 COSE_Key
+(RFC 9053 §7) with 32-byte `x`/`y` coordinates, or construction fails
+with `AuthError::InvalidParameter` (malformed) or
+`AuthError::Unimplemented` (a real COSE key, just of an unsupported
+type/curve) — and stores the parsed 65-byte uncompressed SEC1 point
+for `verify()` to use (`VLT-PM51` §20).
+
+`verify()` performs a real CTAP2 `GetAssertion` (with `hmac-secret`)
+through the `Ctap2Transport` this instance was built with, checks the
+response's rpId hash, credential id, user-presence flag, and
+`hmac-secret` presence, and — as of slice 3 — cryptographically
+verifies `response.signature` (ASN.1 DER-encoded ECDSA) over
+`response.auth_data || SHA-256(request.challenge)` against the
+registered P-256 public key, using `ring`
+(`ring::signature::ECDSA_P256_SHA256_ASN1`). Only once every one of
+those checks passes — including the signature — does `verify()`
+return `Ok(AuthAssertion { kind: "webauthn-prf", mode: Mode::Bind,
+key_contribution: Some(hmac_secret_output) })`: the first `Ok` this
+authenticator has produced across all three slices. `VLT-PM51` §21
+covers the full check sequence and the exact signed-bytes derivation
+(confirmed against `ctap-hid-fido2`'s own source); §6/§7 (slice 1)
+explain the original reasoning for never partially validating an
+assertion, which still holds throughout — slices 2 and 3 each moved
+*where* the last check sits, never *whether* every earlier one still
+runs.
 
 `Ctap2Transport`, `Ctap2AssertionRequest`, `Ctap2AssertionResponse`,
 and `Ctap2TransportError` are the transport-agnostic types this
@@ -184,22 +201,31 @@ authenticator is built against; the real, `ctap-hid-fido2`/`hidapi`-
 backed implementation (`HidCtap2Transport`) lives in the sibling crate
 `coding_adventures_vault_webauthn_ctap2_hid`, kept separate so this
 crate never gains a native/hardware dependency (`VLT-PM51` §12).
-Unit tests exercise `verify()`'s full logic against an in-process fake
-transport; `vault-webauthn-ctap2-hid`'s own tests exercise the real
-dependency for real, with no hardware attached (`VLT-PM51` §15).
+`ring`, by contrast, *is* a direct dependency of this crate as of
+slice 3 — deliberately, because it carries no native FFI or hardware
+capability and was already resolved transitively into this workspace's
+build graph via `vault-webauthn-ctap2-hid`'s own dependency on
+`ctap-hid-fido2` (`VLT-PM51` §19). Unit tests exercise `verify()`'s
+full logic against an in-process fake transport — including, as of
+slice 3, one that signs with a real `ring`-generated key pair, so the
+signature check is exercised against genuine cryptography, not only
+structurally; `vault-webauthn-ctap2-hid`'s own tests exercise the real
+dependency for real, with no hardware attached (`VLT-PM51` §15/§23).
 
 This lets:
 
 - Code that composes authenticators (a future VLT06 policy, e.g.
-  `all_of { password, webauthn_prf }`) be written against a real type
-  today.
+  `all_of { password, webauthn_prf }`) be written against a real,
+  now-actually-working type.
 - `combine_key_contributions` and `summarize_auth_assertions` be
-  exercised against a real bind-mode `"webauthn-prf"` assertion now
-  (both dispatch on `Mode`, not `kind`, so neither needs a change once
-  `verify()` is real).
+  exercised against a real bind-mode `"webauthn-prf"` assertion
+  produced by a genuine `Ok(...)` (both dispatch on `Mode`, not `kind`,
+  so neither needed a change once `verify()` became real).
 
-Still deferred: ECDSA P-256 verification itself — `VLT-PM51` §16 has
-the full list of what remains after slice 2.
+Still deferred: signature-counter / cloned-authenticator detection —
+`VLT-PM51` §22 has the full list of what remains after slice 3, and
+the specific reasons that check needs its own design pass rather than
+a few added lines.
 
 ## `AuthError`
 
@@ -237,7 +263,10 @@ authenticator that affirmatively declines the request.
 | Caller forgets to supply any bind factor                   | `NoBindFactors`                                                     | `combine_no_factors_rejected`                                     |
 | Argon2id timing leak on tag compare                        | `ct_eq` constant-time                                               | implicit via the upstream `ct-compare` crate's tests              |
 | Attacker-controlled bytes in error logs                    | All `Display` strings are static literals                           | `error_messages_are_static_literals`                              |
-| A `webauthn-prf` assertion accepted on partial (non-cryptographic) validation alone | `verify()` still refuses (`Unimplemented`) even after a real hardware round trip passes every structural check | `webauthn_prf_verify_still_refuses_after_a_correct_hardware_round_trip` |
+| A `webauthn-prf` assertion accepted on structural checks alone, without a real signature | `verify()` cryptographically verifies the ECDSA P-256 assertion signature before ever returning `Ok`; every earlier structural check still runs first and still fails closed | `webauthn_prf_verify_succeeds_with_a_genuine_signature_and_yields_key_contribution` (happy path); `webauthn_prf_verify_rejects_signature_from_the_wrong_signing_key`, `webauthn_prf_verify_rejects_corrupted_signature_bytes`, `webauthn_prf_verify_rejects_auth_data_tampered_after_signing`, `webauthn_prf_verify_rejects_a_signature_valid_for_a_different_challenge` |
+| A registered public key of an unsupported COSE type/curve silently mistreated as valid or as a forged signature | `AuthError::Unimplemented` from the constructor, distinct from `InvalidParameter` (malformed) and `InvalidCredential` (forged) | `webauthn_prf_construction_reports_unsupported_cose_key_as_unimplemented`, `parse_es256_cose_public_key_reports_unsupported_key_type_as_unimplemented`, `parse_es256_cose_public_key_reports_unsupported_curve_as_unimplemented` |
+| A malformed registered public key accepted at construction | Canonical-CBOR decode + COSE_Key structural validation at construction time | `webauthn_prf_construction_rejects_malformed_cose_public_key`, `parse_es256_cose_public_key_rejects_non_canonical_cbor`, `parse_es256_cose_public_key_rejects_non_map_values`, `parse_es256_cose_public_key_rejects_missing_coordinates`, `parse_es256_cose_public_key_rejects_wrong_length_coordinates` |
+| A corrupted or off-curve public key crashing the verifier instead of failing closed | `ring`'s own non-panicking curve-membership check, exercised deliberately | `verify_es256_signature_rejects_corrupted_public_key_without_panicking`, `verify_es256_signature_rejects_garbage_signature_bytes_without_panicking` |
 | Hardware key answering for the wrong relying party / wrong credential | rpId hash and credential id compared against the registered values | `webauthn_prf_verify_rejects_wrong_relying_party_hash`, `webauthn_prf_verify_rejects_credential_id_mismatch` |
 | Hardware key assertion without a physical touch | `user_present` flag checked | `webauthn_prf_verify_rejects_missing_user_presence` |
 | Hardware key without `hmac-secret` support | Extension-output presence checked | `webauthn_prf_verify_rejects_missing_hmac_secret_extension` |
@@ -255,12 +284,11 @@ authenticator that affirmatively declines the request.
 - Replay-cache integration: this crate exposes `verify_at_time`
   returning the matched step; persisting last-used-step per
   secret and rejecting replays is the caller's job.
-- ECDSA P-256 signature verification — the one piece still standing
-  between `WebAuthnPrfAuthenticator::verify()`'s current final `Err`
-  and a real `Ok(...)`; no elliptic-curve signature primitive exists
-  anywhere in this workspace yet. `VLT-PM51-hardware-security-keys.md`
-  §16 covers the full list of what remains after real CTAP2 hardware
-  I/O landed in that document's slice 2.
+- ~~ECDSA P-256 signature verification~~ — **shipped**;
+  `WebAuthnPrfAuthenticator::verify()` can now return `Ok(...)`.
+  `VLT-PM51-hardware-security-keys.md` §19–§21 covers the design;
+  §22 covers what remains after this slice (chiefly signature-counter
+  / cloned-authenticator detection).
 - Plain-signature (gate-mode) `WebAuthnAuthenticator` — not needed
   until a factor without `hmac-secret` support is required.
 
@@ -276,4 +304,7 @@ authenticator that affirmatively declines the request.
 - FIDO Alliance CTAP2 `hmac-secret` extension / W3C WebAuthn `prf`
   extension — used by `WebAuthnPrfAuthenticator`. See
   `VLT-PM51-hardware-security-keys.md` for the full protocol survey.
+- RFC 9053 — *CBOR Object Signing and Encryption (COSE): Structures
+  and Process*, §7 (COSE Key). The `kty`/`crv`/`x`/`y` labels
+  `parse_es256_cose_public_key` decodes.
 - VLT00-vault-roadmap.md — VLT05 layer purpose.

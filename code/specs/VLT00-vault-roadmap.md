@@ -323,7 +323,7 @@ DEK under a new KEK and append; old KEK's wrap is retired.
 Depends on: VLT01, VLT03 (custodians can be recipients), VLT02
 (so recipient lists can themselves be records).
 
-### VLT05 — Authentication ✅ shipped (Password + TOTP + WebAuthnPrfAuthenticator w/ real CTAP2 hardware I/O)
+### VLT05 — Authentication ✅ shipped (Password + TOTP + WebAuthnPrfAuthenticator w/ real CTAP2 hardware I/O + real ECDSA P-256 verification)
 
 Both reference classes need pluggable authentication, and the set
 of factors is **wide**. Bitwarden alone supports password +
@@ -368,7 +368,7 @@ First-party authenticators (in rough buildout order):
 | `EmailOtpAuthenticator`     | gate      | Pluggable mailer transport                                            |
 | `SmsOtpAuthenticator`       | gate      | Pluggable SMS transport                                               |
 | `WebAuthnAuthenticator`     | gate      | RFC 9580 / WebAuthn L3 — signature on challenge                       |
-| `WebAuthnPrfAuthenticator`  | bind      | FIDO2 hmac-secret / PRF — real CTAP2 hardware I/O shipped (`vault-webauthn-ctap2-hid`); still refuses at the final step pending an ECDSA P-256 verifier, `VLT-PM51` |
+| `WebAuthnPrfAuthenticator`  | bind      | FIDO2 hmac-secret / PRF — real CTAP2 hardware I/O (`vault-webauthn-ctap2-hid`) and real ECDSA P-256 assertion-signature verification (`ring`) both shipped; `verify()` can succeed for a genuine hardware assertion. Signature-counter / clone-detection still deferred, `VLT-PM51` |
 | `PasskeyAuthenticator`      | gate+bind | Resident credential; passwordless flow                                |
 | `OidcAuthenticator`         | gate      | OIDC / JWT, JWKS-verified                                             |
 | `MtlsAuthenticator`         | gate      | Client X.509 cert validated against trust anchor                      |

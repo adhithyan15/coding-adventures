@@ -9,6 +9,55 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Added
 
+- **VLT-PM51 slice 3 — real ECDSA P-256 assertion-signature
+  verification.** `WebAuthnPrfAuthenticator::verify()` can now return
+  `Ok(...)` for the first time: after the existing rpId-hash,
+  credential-id, and user-presence checks pass, `verify()`
+  cryptographically verifies the CTAP2 assertion signature
+  (`response.signature`, ASN.1 DER-encoded ECDSA) over
+  `response.auth_data || SHA-256(request.challenge)` against the
+  credential's registered P-256 public key, using `ring`
+  (`ring::signature::ECDSA_P256_SHA256_ASN1`). Only after that
+  signature genuinely verifies does the assertion's `hmac-secret`
+  output become the returned `AuthAssertion`'s `key_contribution` —
+  the whole point of this factor being bind-mode. `ring` is a new
+  direct dependency of this crate, but not a new one in this
+  workspace's build: `vault-webauthn-ctap2-hid` already pulls it in
+  transitively via `ctap-hid-fido2`'s own "ring" feature, so this
+  promotes an already-resolved, already-audited dependency rather than
+  adding a new crate to the tree. Full design, the re-verified
+  dependency survey (`ring` vs. `p256`), and the exact check sequence
+  in `code/specs/VLT-PM51-hardware-security-keys.md` §19–§22.
+- `parse_es256_cose_public_key` (private) — decodes a COSE_Key
+  (RFC 9053 §7) via `coding_adventures_canonical_cbor`, accepting only
+  EC2/P-256 keys. A COSE key naming a different key type or curve is
+  reported via `AuthError::Unimplemented` (a capability gap), not
+  `AuthError::InvalidParameter` (malformed input) — the two are kept
+  distinguishable the way every other refusal in this crate already
+  keeps them. Parsed once, at `WebAuthnPrfAuthenticator`
+  construction time, not on every `verify()` call.
+- `verify_es256_signature` (private) — the ECDSA verification itself,
+  via `ring::signature::UnparsedPublicKey`. Every failure mode (wrong
+  key, wrong message, corrupted signature, an off-curve or otherwise
+  malformed public key) collapses to the same
+  `AuthError::InvalidCredential`, matching every other check in
+  `WebAuthnPrfAuthenticator::verify`.
+- `coding_adventures_canonical_cbor` is now a (path) dependency of this
+  crate, used only for COSE_Key decoding above.
+- 24 new tests: `parse_es256_cose_public_key` (valid key, non-canonical
+  CBOR, non-map value, unsupported key type, unsupported curve, missing
+  coordinates, wrong-length coordinates); `verify_es256_signature`
+  against real `ring`-generated P-256 test vectors (genuine signature
+  accepted; tampered message, tampered signature, signature from a
+  different key, valid signature for different data, corrupted public
+  key, and garbage signature bytes all rejected without panicking); and
+  `WebAuthnPrfAuthenticator::verify` end-to-end (a genuinely signed
+  assertion now succeeds and yields the `hmac-secret` output as
+  `key_contribution`; wrong signing key, corrupted signature bytes,
+  `authData` tampered after signing, and a signature valid for a
+  different per-attempt challenge are all rejected; an unsupported
+  registered COSE key is `Unimplemented` at construction; a malformed
+  one is `InvalidParameter`).
 - **VLT-PM51 slice 2 — real CTAP2 hardware I/O behind
   `WebAuthnPrfAuthenticator::verify()`.** `verify()` now performs a
   live CTAP2 `GetAssertion` (with the `hmac-secret` extension)
@@ -18,13 +67,15 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
   and that `hmac-secret` actually fired. Only after all of that
   passes does `verify()` reach its final, still-unconditional
   `AuthError::Unimplemented` — because ECDSA P-256 verification still
-  doesn't exist anywhere in this workspace. `Ctap2Transport` is
-  defined here (protocol boundary only, zero native dependency); the
-  real `ctap-hid-fido2`/`hidapi`-backed implementation is the new
-  sibling crate `coding_adventures_vault_webauthn_ctap2_hid`, kept
-  separate so this trust-sensitive crate never gains a native/
-  hardware dependency. Full design in
-  `code/specs/VLT-PM51-hardware-security-keys.md`.
+  doesn't exist anywhere in this workspace. **Superseded above by
+  slice 3**, which adds that ECDSA verifier and turns this same final
+  step into a real `Ok(...)` for a genuinely valid assertion.
+  `Ctap2Transport` is defined here (protocol boundary only, zero
+  native dependency); the real `ctap-hid-fido2`/`hidapi`-backed
+  implementation is the new sibling crate
+  `coding_adventures_vault_webauthn_ctap2_hid`, kept separate so this
+  trust-sensitive crate never gains a native/hardware dependency. Full
+  design in `code/specs/VLT-PM51-hardware-security-keys.md`.
 - `Ctap2AssertionRequest`, `Ctap2AssertionResponse`,
   `Ctap2TransportError`, `Ctap2Transport` — the transport-agnostic
   CTAP2 request/response/error/trait types `WebAuthnPrfAuthenticator`
@@ -76,12 +127,45 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Changed
 
+- **Breaking (in effect, not in signature).**
+  `WebAuthnPrfAuthenticator::new`/`with_touch_timeout` now decode and
+  validate `public_key_cose` at construction time (must be a canonical
+  CBOR EC2/P-256 COSE_Key with 32-byte `x`/`y`), returning
+  `AuthError::InvalidParameter` or `AuthError::Unimplemented` for
+  anything else, instead of accepting any non-empty byte string and
+  deferring all validation to a `verify()` call that could never
+  succeed anyway. No external callers existed at the time of this
+  change (confirmed by search) — nothing has ever registered a real
+  `WebAuthnPrfAuthenticator`, since `verify()` could not return `Ok`
+  until this slice.
+- `AuthError::Unimplemented`'s doc comment updated: it is now reachable
+  from `WebAuthnPrfAuthenticator::new`/`with_touch_timeout` (an
+  unsupported COSE key type/curve) as well as from other still-fully-
+  unimplemented backends (`vault-key-custody::TpmCustodian`), not only
+  from `verify()`.
 - **Breaking.** `TotpAuthenticator::new` now takes the algorithm as its
   second argument: `new(secret, algorithm, period, digits, window)`.
   The type was hard-wired to HMAC-SHA-1; a stored seed carries its own
   algorithm, so a generator or verifier that assumed SHA-1 would
   silently produce plausible, wrong digits for the other two. This
   crate had no external callers at the time of the change.
+
+### Deferred
+
+See `code/specs/VLT-PM51-hardware-security-keys.md` §22 for the full
+reasoning.
+
+- Signature-counter / cloned-authenticator detection. CTAP2's raw
+  `sign_count` is not even plumbed through `Ctap2AssertionResponse`
+  today (`vault-webauthn-ctap2-hid`'s `map_assertion` doesn't copy it),
+  and this crate has no per-credential persistence story for any
+  authenticator to compare against — the identical shape
+  `TotpAuthenticator`'s own module doc already describes for
+  replay-window state ("the caller's responsibility"). Real design
+  work, not a few added lines: many resident-credential authenticators
+  always report `sign_count == 0`, so a correct implementation needs
+  "always zero" tracked per credential too, not just "did it go
+  backwards."
 
 ### Fixed
 

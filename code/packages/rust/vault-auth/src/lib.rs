@@ -53,17 +53,21 @@
 //! - `WebAuthnPrfAuthenticator` (bind-mode), per
 //!   `code/specs/VLT-PM51-hardware-security-keys.md`. Wires the
 //!   registration-time shape (relying-party id, credential id,
-//!   stored COSE public key) and, as of VLT-PM51's second slice, a
-//!   real `Ctap2Transport` boundary: `verify()` performs a live
-//!   CTAP2 `GetAssertion` with the `hmac-secret` extension against
-//!   whatever transport it was built with, checks everything about
-//!   the response that doesn't require an ECDSA P-256 signature
-//!   verifier (rpId hash, credential id, user-presence flag,
-//!   `hmac-secret` output present), and only then still refuses —
-//!   via `AuthError::Unimplemented` — because that one remaining
-//!   primitive doesn't exist anywhere in this workspace yet. See
-//!   VLT-PM51 §6/§7 (slice 1) and its hardware-transport section
-//!   (slice 2) for the full reasoning.
+//!   stored COSE public key), a real `Ctap2Transport` boundary (VLT-
+//!   PM51 slice 2), and, as of slice 3, real ECDSA P-256 assertion-
+//!   signature verification: `verify()` performs a live CTAP2
+//!   `GetAssertion` with the `hmac-secret` extension against whatever
+//!   transport it was built with, checks the response's rpId hash,
+//!   credential id, and user-presence flag, and cryptographically
+//!   verifies the assertion signature over `authData ||
+//!   SHA-256(challenge)` against the credential's registered P-256
+//!   public key (via `ring`) before ever returning `Ok`. A COSE key
+//!   naming an unsupported type/curve is reported via
+//!   `AuthError::Unimplemented` at construction time — the only
+//!   remaining case where this authenticator admits a real capability
+//!   gap rather than a verification failure. See VLT-PM51 §6/§7
+//!   (slice 1), its hardware-transport section (slice 2), and its
+//!   ECDSA section (slice 3) for the full reasoning.
 //! - `combine_key_contributions(vault_id, factors)` —
 //!   HKDF-Extract(salt = vault_id, ikm = ordered concat of bind-
 //!   mode factor outputs, info = "VLT05/key/v1") → 32-byte unlock
@@ -73,6 +77,7 @@
 #![deny(missing_docs)]
 
 use coding_adventures_argon2id::{argon2id, Options as ArgonOptions};
+use coding_adventures_canonical_cbor::CborValue;
 use coding_adventures_ct_compare::ct_eq;
 use coding_adventures_hkdf::{hkdf, HashAlgorithm};
 use coding_adventures_hmac::{hmac_sha1, hmac_sha256, hmac_sha512};
@@ -221,13 +226,22 @@ pub enum AuthError {
     Crypto,
     /// `combine_key_contributions` got an empty factor list.
     NoBindFactors,
-    /// A cryptographic primitive this backend needs doesn't exist in
-    /// this workspace yet. Returned by [`WebAuthnPrfAuthenticator`]
-    /// once a live CTAP2 assertion has already been obtained and
-    /// checked in every way that doesn't require the missing
-    /// primitive — see the module comment above
-    /// [`WebAuthnPrfAuthenticator`] (`vault-key-custody::TpmCustodian`
-    /// uses the identical pattern for a hardware-bound key custodian).
+    /// A capability this backend needs doesn't exist in this
+    /// workspace yet. As of VLT-PM51 slice 3, `WebAuthnPrfAuthenticator`
+    /// returns this only when the *registered* COSE public key names a
+    /// key type or curve this crate has no verifier for (e.g. OKP/
+    /// Ed25519, or an EC2 curve other than P-256) — reported at
+    /// construction time, from `WebAuthnPrfAuthenticator::new`/
+    /// `with_touch_timeout`, not from `verify()`. This is deliberately
+    /// distinct from a forged or malformed assertion
+    /// ([`AuthError::InvalidCredential`]): "this crate cannot verify
+    /// this credential's algorithm at all" and "this signature is
+    /// wrong" are different failures, and conflating them under one
+    /// variant would hide a real capability gap behind what looks like
+    /// a routine authentication failure (`vault-key-custody::
+    /// TpmCustodian` uses the identical variant shape for a
+    /// hardware-bound key custodian that is unconditionally
+    /// unimplemented).
     Unimplemented {
         /// Static name of the backend that needs implementing.
         backend: &'static str,
@@ -875,6 +889,202 @@ pub trait Ctap2Transport {
 }
 
 // ─────────────────────────────────────────────────────────────────────
+// 4.5. ECDSA P-256 assertion-signature verification (VLT-PM51 slice 3)
+// ─────────────────────────────────────────────────────────────────────
+//
+// The one primitive slices 1 and 2 both named as missing:
+// `WebAuthnPrfAuthenticator::verify()` can obtain a real CTAP2
+// assertion and check every structural property of the response, but
+// cannot yet prove the assertion was actually produced by the
+// registered credential's private key. That proof is an ECDSA
+// signature over `authenticatorData || SHA-256(clientDataHash-
+// equivalent)` under the credential's registered P-256 public key —
+// see `code/specs/VLT-PM51-hardware-security-keys.md` §19/§20 for the
+// full survey (which library, why `ring` over `p256`, exactly what
+// bytes are signed — confirmed by reading `ctap-hid-fido2`'s own
+// source rather than assumed) and §21 for the check-by-check design
+// this section implements.
+//
+// Two pieces, kept as separate functions because they answer separate
+// questions and fail in separate ways:
+//
+// 1. `parse_es256_cose_public_key` — decode the COSE_Key bytes
+//    recorded at registration into the raw point `ring` verifies
+//    against. Fails on malformed input (`InvalidParameter`) or on an
+//    unsupported key type/curve (`Unimplemented` — a capability gap,
+//    not bad input).
+// 2. `verify_es256_signature` — the actual cryptographic check, via
+//    `ring::signature::ECDSA_P256_SHA256_ASN1`. Fails exactly one way
+//    (`InvalidCredential`) no matter *why* the signature doesn't
+//    check out, for the same reason every other assertion check in
+//    this file collapses its failures into one answer.
+
+/// COSE key type (label `1`) value for "EC2" — an elliptic-curve key
+/// carrying explicit `x`/`y` coordinates, per RFC 9053 §7.1.1. The
+/// only key type [`parse_es256_cose_public_key`] accepts.
+const COSE_KTY_EC2: u64 = 2;
+
+/// COSE EC curve identifier (label `-1`) for P-256, per RFC 9053
+/// §7.1.1 Table 20 / the IANA COSE Elliptic Curves registry. The only
+/// curve [`parse_es256_cose_public_key`] accepts.
+const COSE_CRV_P256: u64 = 1;
+
+/// Uncompressed SEC1 point encoding of a P-256 public key —
+/// `0x04 || X (32 bytes) || Y (32 bytes)` — the format `ring`'s ECDSA
+/// verification expects its public key argument in.
+type P256UncompressedPoint = [u8; 65];
+
+/// Decode a COSE_Key (RFC 9053 §7) into the raw uncompressed SEC1
+/// point [`verify_es256_signature`] checks a signature against,
+/// accepting only an EC2/P-256 key — the only shape this
+/// authenticator's registered credentials are expected to have.
+///
+/// ## Why this lives here and not in `canonical-cbor`
+///
+/// `canonical-cbor` decodes generic canonical CBOR; it has no notion
+/// of COSE's key-type registry or of what any particular integer
+/// label *means* once decoded (RFC 9053 §7's label assignments are
+/// this crate's business, not a generic CBOR decoder's). Keeping the
+/// interpretation here also means the one place that ever needs to
+/// answer "is this a COSE key my ECDSA verifier understands" sits
+/// right next to the verifier that consumes its answer.
+///
+/// ## What is checked, in order, and why each answer is what it is
+///
+/// - The bytes must decode as valid canonical CBOR (RFC 8949 §4.2.3).
+///   Real CTAP2 authenticators emit COSE_Key structures in exactly
+///   this canonical form — `canonical-cbor`'s own module doc already
+///   names CTAP2/COSE/WebAuthn as its target ordering — so this is not
+///   an extra restriction beyond what a real device would ever
+///   produce; a failure here is genuinely malformed registration data
+///   (`InvalidParameter`).
+/// - The decoded value must be a CBOR map (`InvalidParameter` if not).
+/// - `kty` (label `1`) must be `2` (EC2). Anything else — most
+///   plausibly an OKP/Ed25519 key, which some CTAP2 authenticators
+///   also support — is a capability gap, not malformed input: this
+///   authenticator has never claimed to verify a key type other than
+///   EC2, so it says so via [`AuthError::Unimplemented`], distinct
+///   from [`AuthError::InvalidParameter`], the same way every other
+///   refusal in this crate keeps "I cannot do this" separate from "you
+///   gave me garbage."
+/// - `crv` (label `-1`) must be `1` (P-256), for the identical reason
+///   (`Unimplemented`, not `InvalidParameter`, for e.g. P-384/P-521).
+/// - `x` (label `-2`) and `y` (label `-3`) must both be present and
+///   each exactly 32 bytes. A P-256 EC2 key missing either coordinate,
+///   or with a coordinate of the wrong length, is not a different
+///   curve or key type — it is malformed data claiming to be a P-256
+///   key (`InvalidParameter`).
+///
+/// ## What this function deliberately does not check
+///
+/// Whether `(x, y)` is actually a point on the P-256 curve. `ring`'s
+/// own ECDSA verification path performs that check
+/// (`verify_jacobian_point_is_on_the_curve`, confirmed by reading
+/// `ring` 0.17.14's own source before relying on it, not assumed from
+/// its docs) as an integral, non-panicking part of every `verify()`
+/// call. Re-checking curve membership here would be exactly the kind
+/// of hand-rolled elliptic-curve arithmetic this design avoided by
+/// choosing an audited library in the first place — see VLT-PM51 §19.
+fn parse_es256_cose_public_key(cose: &[u8]) -> Result<P256UncompressedPoint, AuthError> {
+    let value = coding_adventures_canonical_cbor::decode(cose).map_err(|_| {
+        AuthError::InvalidParameter {
+            what: "public_key_cose is not valid canonical CBOR",
+        }
+    })?;
+    let CborValue::Map(entries) = value else {
+        return Err(AuthError::InvalidParameter {
+            what: "public_key_cose is not a CBOR map (COSE_Key, RFC 9053 §7)",
+        });
+    };
+
+    let mut kty: Option<u64> = None;
+    let mut crv: Option<u64> = None;
+    let mut x: Option<Vec<u8>> = None;
+    let mut y: Option<Vec<u8>> = None;
+
+    for (key, val) in entries {
+        match (key, val) {
+            (CborValue::Unsigned(1), CborValue::Unsigned(k)) => kty = Some(k),
+            (CborValue::Negative(0), CborValue::Unsigned(c)) => crv = Some(c),
+            (CborValue::Negative(1), CborValue::Bytes(b)) => x = Some(b),
+            (CborValue::Negative(2), CborValue::Bytes(b)) => y = Some(b),
+            // alg (label 3), kid (label 2), and any other COSE label
+            // this authenticator has no use for. Ignored, not
+            // rejected — a well-formed COSE key legitimately carries
+            // more than the four labels this function needs.
+            _ => {}
+        }
+    }
+
+    if kty != Some(COSE_KTY_EC2) {
+        return Err(AuthError::Unimplemented {
+            backend: "COSE key type other than EC2 (WebAuthn PRF public key)",
+        });
+    }
+    if crv != Some(COSE_CRV_P256) {
+        return Err(AuthError::Unimplemented {
+            backend: "COSE EC curve other than P-256 (WebAuthn PRF public key)",
+        });
+    }
+
+    let x = x.ok_or(AuthError::InvalidParameter {
+        what: "COSE key missing EC x-coordinate (label -2)",
+    })?;
+    let y = y.ok_or(AuthError::InvalidParameter {
+        what: "COSE key missing EC y-coordinate (label -3)",
+    })?;
+    if x.len() != 32 || y.len() != 32 {
+        return Err(AuthError::InvalidParameter {
+            what: "COSE key x/y coordinate is not 32 bytes",
+        });
+    }
+
+    let mut point = [0u8; 65];
+    point[0] = 0x04;
+    point[1..33].copy_from_slice(&x);
+    point[33..65].copy_from_slice(&y);
+    Ok(point)
+}
+
+/// Verify a WebAuthn/CTAP2 assertion signature — `der_signature`,
+/// ASN.1 DER-encoded ECDSA, exactly the form CTAP2 authenticators
+/// produce and `ctap-hid-fido2` passes through unmodified (confirmed
+/// by reading its response-parsing source: the signature field is
+/// copied through as opaque bytes, never reformatted) — over `message`
+/// (`authenticatorData || clientDataHash-equivalent`), under the
+/// registered credential's P-256 public key.
+///
+/// Uses `ring::signature::ECDSA_P256_SHA256_ASN1`: `ring` hashes
+/// `message` with SHA-256 itself as part of verification (confirmed by
+/// reading `ring`'s own source — `EcdsaVerificationAlgorithm::verify`
+/// computes `digest::digest(self.digest_alg, msg)` before checking the
+/// signature), so callers must pass the raw concatenation, never a
+/// pre-hashed digest — hashing it again here would verify the wrong
+/// message against a real signature and silently accept a signature
+/// over a *different* wrong message, which is exactly the kind of bug
+/// this crate's own design principles call out as worth getting
+/// right rather than assuming.
+///
+/// Returns `Ok(())` only when the signature is valid for exactly this
+/// message under exactly this public key. Every failure mode — wrong
+/// key, wrong message, corrupted signature bytes, a public key that
+/// isn't a valid curve point — comes back as the same
+/// `Err(AuthError::InvalidCredential)`, deliberately not distinguished,
+/// matching every other check in [`WebAuthnPrfAuthenticator::verify`].
+fn verify_es256_signature(
+    public_key_point: &P256UncompressedPoint,
+    message: &[u8],
+    der_signature: &[u8],
+) -> Result<(), AuthError> {
+    let key = ring::signature::UnparsedPublicKey::new(
+        &ring::signature::ECDSA_P256_SHA256_ASN1,
+        public_key_point.as_slice(),
+    );
+    key.verify(message, der_signature)
+        .map_err(|_| AuthError::InvalidCredential)
+}
+
+// ─────────────────────────────────────────────────────────────────────
 // 5. WebAuthnPrfAuthenticator (VLT-PM51)
 // ─────────────────────────────────────────────────────────────────────
 //
@@ -893,21 +1103,25 @@ pub trait Ctap2Transport {
 //   hardware requirement without a software fallback would violate
 //   this product's existing "the CLI always works without the agent /
 //   without a keychain" design language.
-// * `verify()` now performs real CTAP2 hardware I/O through whatever
-//   `Ctap2Transport` this instance was built with, and checks
-//   everything about the response that doesn't need an ECDSA P-256
-//   signature verifier: the rpId hash, the credential id, the
-//   user-presence flag, and that the `hmac-secret` extension actually
-//   fired. No primitive for ECDSA P-256 exists anywhere in this
-//   workspace yet, so `verify()` still refuses at the very last step
-//   — via `AuthError::Unimplemented` — rather than trust
-//   `hmac_secret_output` as key material without being able to prove
-//   the assertion was signed by the registered credential. Answering
-//   "is this shaped like a valid credential, and did real hardware
-//   answer for it" is a different question from "is this a valid
-//   credential," and this type refuses to conflate them under the
-//   same `Ok(...)` — `vault-key-custody::TpmCustodian` makes the
-//   identical call for the identical reason.
+// * `verify()` performs real CTAP2 hardware I/O through whatever
+//   `Ctap2Transport` this instance was built with, checks the rpId
+//   hash, the credential id, and the user-presence flag, and then
+//   cryptographically verifies the assertion signature (ECDSA P-256,
+//   via `ring`) over `authData || SHA-256(challenge)` against the
+//   credential's registered public key — see §4.5 above for the
+//   verifier itself. Only a credential that passes every one of those
+//   checks, including the signature, ever produces `Ok(...)`.
+//   `hmac_secret_output` becomes the assertion's `key_contribution`
+//   only once the signature has been proven to come from the
+//   registered credential's private key — trusting it any earlier
+//   would mean "a device plugged in, this credential id, physical
+//   touch, and it returned *something*" stood in for a real proof,
+//   which is exactly the shortcut slices 1 and 2 both refused to take.
+//   A registered COSE key naming an unsupported type/curve is the one
+//   remaining honest capability gap, reported via
+//   `AuthError::Unimplemented` — `vault-key-custody::TpmCustodian`
+//   makes the identical "say what's actually missing" call for a
+//   still-fully-deferred custody provider.
 
 /// FIDO2/WebAuthn hardware security key authenticator using the CTAP2
 /// `hmac-secret` extension (WebAuthn's `prf` extension) as a bind-mode
@@ -916,11 +1130,13 @@ pub trait Ctap2Transport {
 /// vendor-specific integration.
 ///
 /// See the module-level comment above and
-/// `code/specs/VLT-PM51-hardware-security-keys.md`. `verify()`
-/// performs real hardware I/O through its `Ctap2Transport` but still
-/// always returns [`AuthError::Unimplemented`] as its final answer,
-/// because ECDSA P-256 assertion-signature verification doesn't exist
-/// in this workspace yet.
+/// `code/specs/VLT-PM51-hardware-security-keys.md`. `verify()` performs
+/// real hardware I/O through its `Ctap2Transport`, checks the rpId
+/// hash, credential id, and user-presence flag, and cryptographically
+/// verifies the assertion signature (ECDSA P-256) against the
+/// credential's registered public key before ever returning `Ok`. A
+/// registered public key of an unsupported COSE key type/curve is
+/// reported via [`AuthError::Unimplemented`] at construction time.
 pub struct WebAuthnPrfAuthenticator {
     /// Relying-party id this credential was registered under (e.g.
     /// `"vault-pm"`). Bound into every real assertion's `authData` as
@@ -932,10 +1148,20 @@ pub struct WebAuthnPrfAuthenticator {
     /// which resident/non-resident credential to assert with.
     credential_id: Vec<u8>,
     /// COSE-encoded public key (`canonical-cbor`-shaped, RFC 8949
-    /// §4.2.3) recorded at registration. Retained now; consumed once
-    /// signature verification lands, so the wrapping type stops taking
-    /// registration data it can't yet fully validate.
+    /// §4.2.3) recorded at registration, kept verbatim so
+    /// [`public_key_cose`](Self::public_key_cose) can hand back exactly
+    /// what was stored. [`p256_public_key`](Self field, private) is the
+    /// value actually used for verification, parsed from this once at
+    /// construction time.
     public_key_cose: Vec<u8>,
+    /// The registered credential's P-256 public key, as the
+    /// uncompressed SEC1 point `ring`'s ECDSA verifier expects —
+    /// parsed from `public_key_cose` once, at construction time, by
+    /// [`parse_es256_cose_public_key`], so a malformed or unsupported
+    /// registered key is rejected up front rather than on the first
+    /// `verify()` call (and so `verify()` itself never re-parses CBOR
+    /// on every attempt).
+    p256_public_key: P256UncompressedPoint,
     /// However this instance talks to a physical authenticator. Real
     /// callers pass a `coding_adventures_vault_webauthn_ctap2_hid`
     /// transport; tests pass a small in-process fake.
@@ -1011,6 +1237,13 @@ impl WebAuthnPrfAuthenticator {
                 what: "public_key_cose is empty",
             });
         }
+        // Parsed once, here, rather than on every `verify()` call: a
+        // registered key this authenticator cannot verify (malformed
+        // COSE, or a key type/curve other than EC2/P-256) is a
+        // property of the registration, not of any particular unlock
+        // attempt, so it belongs in constructor validation alongside
+        // the empty-field checks above.
+        let p256_public_key = parse_es256_cose_public_key(&public_key_cose)?;
         if touch_timeout < MIN_TOUCH_TIMEOUT || touch_timeout > MAX_TOUCH_TIMEOUT {
             return Err(AuthError::InvalidParameter {
                 what: "touch_timeout outside MIN_TOUCH_TIMEOUT..=MAX_TOUCH_TIMEOUT",
@@ -1020,6 +1253,7 @@ impl WebAuthnPrfAuthenticator {
             relying_party_id,
             credential_id,
             public_key_cose,
+            p256_public_key,
             transport: Box::new(transport),
             touch_timeout,
         })
@@ -1084,12 +1318,17 @@ impl Authenticator for WebAuthnPrfAuthenticator {
     /// configured touch timeout; the response's rpId hash matches
     /// `SHA-256(relying_party_id)`; the response's credential id
     /// matches the registered one; the response reports user
-    /// presence; the response carries an `hmac-secret` output. Only
-    /// after every one of those passes does `verify()` reach the
-    /// final, still-unconditional refusal — seeing real hardware
-    /// answer correctly for the registered credential is not the same
-    /// as cryptographically proving it, and this type does not treat
-    /// them as the same thing.
+    /// presence; the response carries an `hmac-secret` output; and,
+    /// finally, `response.signature` is a valid ECDSA P-256 signature
+    /// over `response.auth_data || SHA-256(request.challenge)` under
+    /// the registered credential's public key. Only a credential that
+    /// passes every one of those — including the signature — ever
+    /// produces `Ok(...)`; every failure among them (other than the
+    /// transport-level and empty-credential cases, which get their own
+    /// distinct variants) reports the same
+    /// [`AuthError::InvalidCredential`], so a caller cannot learn from
+    /// the error alone which specific check a forged or malformed
+    /// response failed.
     fn verify(&self, credential: &[u8]) -> Result<AuthAssertion, AuthError> {
         if credential.is_empty() {
             return Err(AuthError::MalformedCredential);
@@ -1131,19 +1370,40 @@ impl Authenticator for WebAuthnPrfAuthenticator {
             .hmac_secret_output
             .ok_or(AuthError::InvalidCredential)?;
 
-        // Every structural check above passed against a real hardware
-        // response, and `hmac_secret_output` (about to be dropped —
-        // `Zeroizing` wipes it) is exactly the bytes a real
-        // `key_contribution` would use. What's still missing is the
-        // one piece that turns "a device answered for this
+        // The one piece that turns "a device answered for this
         // credential id" into "the registered credential's private
         // key produced this": ECDSA P-256 verification of
         // `response.signature` over `response.auth_data ||
-        // SHA-256(request.challenge)`. Refuse rather than trust it
-        // anyway.
-        drop(hmac_secret_output);
-        Err(AuthError::Unimplemented {
-            backend: "ECDSA P-256 assertion-signature verification (WebAuthn PRF)",
+        // SHA-256(request.challenge)` — exactly the bytes a CTAP2
+        // authenticator signs (confirmed against `ctap-hid-fido2`'s
+        // own source, not assumed: it forms `clientDataHash` as
+        // `SHA-256(challenge)` and signs `authData || clientDataHash`,
+        // see VLT-PM51 §19/§21). `request.challenge` — not
+        // `response`'s own bytes — is what's re-hashed here, because
+        // it is this call's request, not anything the transport could
+        // have substituted.
+        let client_data_hash = sha256(&request.challenge);
+        let mut signed_message =
+            Vec::with_capacity(response.auth_data.len() + client_data_hash.len());
+        signed_message.extend_from_slice(&response.auth_data);
+        signed_message.extend_from_slice(&client_data_hash);
+        verify_es256_signature(&self.p256_public_key, &signed_message, &response.signature)?;
+
+        // Only now — after rpId, credential id, user presence, the
+        // `hmac-secret` extension, and a real cryptographic signature
+        // check have all passed — is `hmac_secret_output` trustworthy
+        // enough to become key material. A defensive non-empty check
+        // mirrors `PasswordAuthenticator::verify`'s identical guard on
+        // its own tag: an empty contribution would silently widen
+        // `combine_key_contributions`'s input by zero bytes rather
+        // than failing loudly.
+        if hmac_secret_output.is_empty() {
+            return Err(AuthError::Crypto);
+        }
+        Ok(AuthAssertion {
+            kind: "webauthn-prf",
+            mode: Mode::Bind,
+            key_contribution: Some(hmac_secret_output),
         })
     }
 }
@@ -1656,7 +1916,335 @@ mod tests {
 
     const RP_ID: &str = "vault-pm";
     const CRED_ID: &[u8] = b"credential-id-bytes";
-    const PUBKEY: &[u8] = b"cose-public-key-bytes";
+
+    /// Build a canonical COSE_Key (RFC 9053 §7, EC2/P-256) map from raw
+    /// 32-byte `x`/`y` coordinates. Shared by every test in this module
+    /// that needs a *structurally* valid registered public key —
+    /// including tests that hand it deliberately arbitrary (i.e. not
+    /// necessarily on-curve) coordinates, since
+    /// `WebAuthnPrfAuthenticator`'s constructor never checks curve
+    /// membership itself (`ring` does, only at `verify()` time — see
+    /// `parse_es256_cose_public_key`'s own doc for why).
+    fn cose_p256_public_key(x: &[u8; 32], y: &[u8; 32]) -> Vec<u8> {
+        let map = CborValue::Map(vec![
+            (CborValue::Unsigned(1), CborValue::Unsigned(2)), // kty: EC2
+            (CborValue::Negative(0), CborValue::Unsigned(1)), // crv: P-256
+            (CborValue::Negative(1), CborValue::Bytes(x.to_vec())), // x
+            (CborValue::Negative(2), CborValue::Bytes(y.to_vec())), // y
+        ]);
+        coding_adventures_canonical_cbor::encode(&map)
+    }
+
+    /// A structurally valid COSE EC2/P-256 key for tests that only need
+    /// *construction* to succeed and never reach signature verification
+    /// (or that verify `verify()` fails for a reason that short-circuits
+    /// before the signature check). The coordinates are arbitrary and
+    /// almost certainly not a real point on the P-256 curve — fine here,
+    /// since nothing in this module ever asks `ring` to verify a real
+    /// signature against it.
+    fn placeholder_cose_public_key() -> Vec<u8> {
+        cose_p256_public_key(&[0x11; 32], &[0x22; 32])
+    }
+
+    // --- parse_es256_cose_public_key ---
+
+    #[test]
+    fn parse_es256_cose_public_key_accepts_a_valid_ec2_p256_key() {
+        let x = [0x01; 32];
+        let y = [0x02; 32];
+        let cose = cose_p256_public_key(&x, &y);
+        let point = parse_es256_cose_public_key(&cose).unwrap();
+        assert_eq!(point.len(), 65);
+        assert_eq!(point[0], 0x04);
+        assert_eq!(&point[1..33], &x[..]);
+        assert_eq!(&point[33..65], &y[..]);
+    }
+
+    #[test]
+    fn parse_es256_cose_public_key_rejects_non_canonical_cbor() {
+        // A hand-built map with keys in the WRONG order — canonical
+        // CBOR requires length-first-then-bytewise key order, and
+        // `canonical-cbor`'s decoder rejects anything else outright.
+        // Real CTAP2 authenticators never emit this shape; a value
+        // that arrived pre-corrupted (or was never really CBOR) must
+        // not be silently accepted.
+        let garbage = b"not cbor at all, just english text".to_vec();
+        match parse_es256_cose_public_key(&garbage) {
+            Err(AuthError::InvalidParameter { .. }) => {}
+            other => panic!(
+                "expected InvalidParameter, got {}",
+                if other.is_ok() { "Ok" } else { "different Err" }
+            ),
+        }
+    }
+
+    #[test]
+    fn parse_es256_cose_public_key_rejects_non_map_values() {
+        let array = CborValue::Array(vec![CborValue::Unsigned(1), CborValue::Unsigned(2)]);
+        let encoded = coding_adventures_canonical_cbor::encode(&array);
+        match parse_es256_cose_public_key(&encoded) {
+            Err(AuthError::InvalidParameter { .. }) => {}
+            other => panic!(
+                "expected InvalidParameter, got {}",
+                if other.is_ok() { "Ok" } else { "different Err" }
+            ),
+        }
+    }
+
+    #[test]
+    fn parse_es256_cose_public_key_reports_unsupported_key_type_as_unimplemented() {
+        // kty = 1 (OKP, e.g. Ed25519) instead of 2 (EC2). A capability
+        // gap, not malformed data — this authenticator has never
+        // claimed to verify anything but EC2/P-256.
+        let map = CborValue::Map(vec![
+            (CborValue::Unsigned(1), CborValue::Unsigned(1)), // kty: OKP
+            (CborValue::Negative(0), CborValue::Unsigned(6)), // crv: Ed25519
+            (CborValue::Negative(1), CborValue::Bytes(vec![0x01; 32])),
+        ]);
+        let encoded = coding_adventures_canonical_cbor::encode(&map);
+        match parse_es256_cose_public_key(&encoded) {
+            Err(AuthError::Unimplemented { backend }) => {
+                assert!(backend.contains("key type"));
+            }
+            other => panic!(
+                "expected Unimplemented, got {}",
+                if other.is_ok() { "Ok" } else { "different Err" }
+            ),
+        }
+    }
+
+    #[test]
+    fn parse_es256_cose_public_key_reports_unsupported_curve_as_unimplemented() {
+        // kty = 2 (EC2, correct) but crv = 2 (P-384) — a real EC2 key,
+        // just not the one curve this authenticator can verify.
+        let map = CborValue::Map(vec![
+            (CborValue::Unsigned(1), CborValue::Unsigned(2)), // kty: EC2
+            (CborValue::Negative(0), CborValue::Unsigned(2)), // crv: P-384
+            (CborValue::Negative(1), CborValue::Bytes(vec![0x01; 48])),
+            (CborValue::Negative(2), CborValue::Bytes(vec![0x02; 48])),
+        ]);
+        let encoded = coding_adventures_canonical_cbor::encode(&map);
+        match parse_es256_cose_public_key(&encoded) {
+            Err(AuthError::Unimplemented { backend }) => {
+                assert!(backend.contains("curve"));
+            }
+            other => panic!(
+                "expected Unimplemented, got {}",
+                if other.is_ok() { "Ok" } else { "different Err" }
+            ),
+        }
+    }
+
+    #[test]
+    fn parse_es256_cose_public_key_rejects_missing_coordinates() {
+        // Correct kty/crv, but no x or y at all.
+        let map = CborValue::Map(vec![
+            (CborValue::Unsigned(1), CborValue::Unsigned(2)),
+            (CborValue::Negative(0), CborValue::Unsigned(1)),
+        ]);
+        let encoded = coding_adventures_canonical_cbor::encode(&map);
+        match parse_es256_cose_public_key(&encoded) {
+            Err(AuthError::InvalidParameter { .. }) => {}
+            other => panic!(
+                "expected InvalidParameter, got {}",
+                if other.is_ok() { "Ok" } else { "different Err" }
+            ),
+        }
+    }
+
+    #[test]
+    fn parse_es256_cose_public_key_rejects_wrong_length_coordinates() {
+        let map = CborValue::Map(vec![
+            (CborValue::Unsigned(1), CborValue::Unsigned(2)),
+            (CborValue::Negative(0), CborValue::Unsigned(1)),
+            (CborValue::Negative(1), CborValue::Bytes(vec![0x01; 16])), // wrong length
+            (CborValue::Negative(2), CborValue::Bytes(vec![0x02; 32])),
+        ]);
+        let encoded = coding_adventures_canonical_cbor::encode(&map);
+        match parse_es256_cose_public_key(&encoded) {
+            Err(AuthError::InvalidParameter { .. }) => {}
+            other => panic!(
+                "expected InvalidParameter, got {}",
+                if other.is_ok() { "Ok" } else { "different Err" }
+            ),
+        }
+    }
+
+    // --- verify_es256_signature — real ring-generated test vectors ---
+    //
+    // No hard-coded key material and no externally-published test
+    // vectors were used here: `ring`'s own CSPRNG-backed key generation
+    // (`EcdsaKeyPair::generate_pkcs8` + `SystemRandom`) produces a fresh
+    // P-256 key pair, and `ring`'s own signing path
+    // (`ECDSA_P256_SHA256_ASN1_SIGNING`) produces the DER-encoded
+    // signature under test. This is deliberately the *same* library on
+    // both sides of the equals sign — the property under test is
+    // "`vault-auth`'s wiring into `ring`'s verifier is correct," not
+    // "`ring`'s ECDSA implementation is correct" (which is exactly what
+    // choosing an audited, widely-used library was supposed to let this
+    // crate stop worrying about).
+
+    /// A real P-256 key pair, generated fresh by `ring` for one test,
+    /// plus the COSE-encoding of its public key that a
+    /// `WebAuthnPrfAuthenticator` would be registered with.
+    struct TestKeypair {
+        keypair: ring::signature::EcdsaKeyPair,
+        rng: ring::rand::SystemRandom,
+        cose_public_key: Vec<u8>,
+    }
+
+    impl TestKeypair {
+        fn generate() -> Self {
+            let rng = ring::rand::SystemRandom::new();
+            let pkcs8 = ring::signature::EcdsaKeyPair::generate_pkcs8(
+                &ring::signature::ECDSA_P256_SHA256_ASN1_SIGNING,
+                &rng,
+            )
+            .unwrap();
+            let keypair = ring::signature::EcdsaKeyPair::from_pkcs8(
+                &ring::signature::ECDSA_P256_SHA256_ASN1_SIGNING,
+                pkcs8.as_ref(),
+                &rng,
+            )
+            .unwrap();
+            let point = {
+                use ring::signature::KeyPair;
+                keypair.public_key().as_ref().to_vec()
+            };
+            assert_eq!(point.len(), 65, "P-256 uncompressed point is 65 bytes");
+            assert_eq!(point[0], 0x04, "P-256 uncompressed point tag");
+            let mut x = [0u8; 32];
+            let mut y = [0u8; 32];
+            x.copy_from_slice(&point[1..33]);
+            y.copy_from_slice(&point[33..65]);
+            let cose_public_key = cose_p256_public_key(&x, &y);
+            Self {
+                keypair,
+                rng,
+                cose_public_key,
+            }
+        }
+
+        /// Sign `message` with this key pair's private key, returning
+        /// an ASN.1 DER-encoded ECDSA signature — the same wire shape
+        /// `ctap-hid-fido2` passes through from a real CTAP2 device
+        /// (confirmed by reading its source, VLT-PM51 §19).
+        fn sign(&self, message: &[u8]) -> Vec<u8> {
+            self.keypair
+                .sign(&self.rng, message)
+                .unwrap()
+                .as_ref()
+                .to_vec()
+        }
+
+        fn point(&self) -> P256UncompressedPoint {
+            parse_es256_cose_public_key(&self.cose_public_key).unwrap()
+        }
+    }
+
+    #[test]
+    fn verify_es256_signature_accepts_a_genuine_signature() {
+        let keypair = TestKeypair::generate();
+        let message = b"authData-placeholder || clientDataHash-placeholder";
+        let signature = keypair.sign(message);
+        assert!(verify_es256_signature(&keypair.point(), message, &signature).is_ok());
+    }
+
+    #[test]
+    fn verify_es256_signature_rejects_a_tampered_message() {
+        let keypair = TestKeypair::generate();
+        let signature = keypair.sign(b"the real message");
+        match verify_es256_signature(&keypair.point(), b"a different message", &signature) {
+            Err(AuthError::InvalidCredential) => {}
+            other => panic!(
+                "expected InvalidCredential, got {}",
+                if other.is_ok() { "Ok" } else { "different Err" }
+            ),
+        }
+    }
+
+    #[test]
+    fn verify_es256_signature_rejects_a_tampered_signature() {
+        let keypair = TestKeypair::generate();
+        let message = b"a message to sign";
+        let mut signature = keypair.sign(message);
+        let last = signature.len() - 1;
+        signature[last] ^= 0xFF;
+        match verify_es256_signature(&keypair.point(), message, &signature) {
+            Err(AuthError::InvalidCredential) => {}
+            other => panic!(
+                "expected InvalidCredential, got {}",
+                if other.is_ok() { "Ok" } else { "different Err" }
+            ),
+        }
+    }
+
+    #[test]
+    fn verify_es256_signature_rejects_a_signature_from_a_different_key() {
+        let signer = TestKeypair::generate();
+        let other = TestKeypair::generate();
+        let message = b"a message signed by one key, checked against another";
+        let signature = signer.sign(message);
+        match verify_es256_signature(&other.point(), message, &signature) {
+            Err(AuthError::InvalidCredential) => {}
+            other => panic!(
+                "expected InvalidCredential, got {}",
+                if other.is_ok() { "Ok" } else { "different Err" }
+            ),
+        }
+    }
+
+    #[test]
+    fn verify_es256_signature_rejects_valid_signature_for_different_data() {
+        // The signature IS genuinely valid — just for a different
+        // message than the one being checked. Distinct from "tampered
+        // signature bytes": this proves the verifier binds the
+        // signature to *this* message, not merely to *a* message this
+        // key ever signed.
+        let keypair = TestKeypair::generate();
+        let signature = keypair.sign(b"message A");
+        match verify_es256_signature(&keypair.point(), b"message B", &signature) {
+            Err(AuthError::InvalidCredential) => {}
+            other => panic!(
+                "expected InvalidCredential, got {}",
+                if other.is_ok() { "Ok" } else { "different Err" }
+            ),
+        }
+    }
+
+    #[test]
+    fn verify_es256_signature_rejects_corrupted_public_key_without_panicking() {
+        let keypair = TestKeypair::generate();
+        let message = b"a message";
+        let signature = keypair.sign(message);
+        // All-zero point: not `0x04`-tagged, not on the curve, not
+        // anything real. `ring` must answer with `Err`, never panic —
+        // this is precisely the adversarial-input property an audited
+        // library buys over hand-rolled curve arithmetic.
+        let corrupted: P256UncompressedPoint = [0u8; 65];
+        match verify_es256_signature(&corrupted, message, &signature) {
+            Err(AuthError::InvalidCredential) => {}
+            other => panic!(
+                "expected InvalidCredential, got {}",
+                if other.is_ok() { "Ok" } else { "different Err" }
+            ),
+        }
+    }
+
+    #[test]
+    fn verify_es256_signature_rejects_garbage_signature_bytes_without_panicking() {
+        let keypair = TestKeypair::generate();
+        // Not valid ASN.1 DER at all — must be rejected as a decode
+        // failure inside `ring`, not panic this crate.
+        let garbage_signature = vec![0xFFu8; 8];
+        match verify_es256_signature(&keypair.point(), b"a message", &garbage_signature) {
+            Err(AuthError::InvalidCredential) => {}
+            other => panic!(
+                "expected InvalidCredential, got {}",
+                if other.is_ok() { "Ok" } else { "different Err" }
+            ),
+        }
+    }
 
     /// What the fake transport should hand back for one test.
     #[derive(Clone, Copy)]
@@ -1789,10 +2377,102 @@ mod tests {
         WebAuthnPrfAuthenticator::new(
             RP_ID,
             CRED_ID.to_vec(),
-            PUBKEY.to_vec(),
+            placeholder_cose_public_key(),
             FakeTransport::new(outcome),
         )
         .unwrap()
+    }
+
+    // --- SignedFakeTransport — genuine ECDSA signatures, no hardware ---
+    //
+    // `FakeTransport` above exercises the structural checks (rpId,
+    // credential id, user presence, extension presence) with
+    // placeholder signature bytes that never need to verify, because
+    // every non-`Correct` outcome fails before `verify()` ever reaches
+    // the signature step. `SignedFakeTransport` is the complementary
+    // fixture for exercising *that* step for real: it holds an actual
+    // `TestKeypair` and computes a genuine `authData` + ECDSA signature
+    // fresh on every call, from whatever request it actually receives,
+    // optionally broken in one specific way per `Tamper`.
+
+    /// How one `SignedFakeTransport` call should misbehave, if at all.
+    #[derive(Clone, Copy)]
+    enum Tamper {
+        /// Sign correctly; the assertion should verify.
+        None,
+        /// Flip a bit in the signature after computing it correctly.
+        CorruptSignatureBytes,
+        /// Sign the real `authData`, then mutate the `authData` actually
+        /// returned in the response — a signature that's valid, just not
+        /// for the bytes the response claims to carry.
+        MutateAuthDataAfterSigning,
+        /// Sign over a different (still 32-byte) "challenge" than the
+        /// one the request actually asked about — a signature that's
+        /// genuinely valid, just for the wrong per-attempt challenge.
+        SignDifferentChallenge,
+    }
+
+    /// In-process CTAP2 stand-in that produces a **genuine** ECDSA
+    /// signature (or a deliberately broken one, per `tamper`), so
+    /// `WebAuthnPrfAuthenticator::verify`'s real cryptographic check can
+    /// be exercised end-to-end without physical hardware. `auth_data`
+    /// and the signature are computed fresh from the request each call
+    /// actually receives, so this stays correct regardless of what
+    /// per-attempt `credential` bytes a test passes to `verify()`.
+    struct SignedFakeTransport {
+        signing_keypair: TestKeypair,
+        tamper: Tamper,
+    }
+
+    impl SignedFakeTransport {
+        fn new(signing_keypair: TestKeypair, tamper: Tamper) -> Self {
+            Self {
+                signing_keypair,
+                tamper,
+            }
+        }
+    }
+
+    impl Ctap2Transport for SignedFakeTransport {
+        fn get_hmac_secret_assertion(
+            &self,
+            request: &Ctap2AssertionRequest<'_>,
+        ) -> Result<Ctap2AssertionResponse, Ctap2TransportError> {
+            // A minimal, but structurally real, `authData`: rpIdHash
+            // (32) || flags (1, user-present bit set) || signCount (4,
+            // left zero — not checked by this slice, see VLT-PM51 §22).
+            let mut auth_data = vec![0u8; 37];
+            auth_data[..32].copy_from_slice(&sha256(request.relying_party_id.as_bytes()));
+            auth_data[32] = 0x01; // bit 0: user present
+
+            let signed_challenge = if matches!(self.tamper, Tamper::SignDifferentChallenge) {
+                sha256(b"a challenge this request never actually asked about")
+            } else {
+                sha256(&request.challenge)
+            };
+            let mut signed_message = auth_data.clone();
+            signed_message.extend_from_slice(&signed_challenge);
+            let mut signature = self.signing_keypair.sign(&signed_message);
+            if matches!(self.tamper, Tamper::CorruptSignatureBytes) {
+                let last = signature.len() - 1;
+                signature[last] ^= 0xFF;
+            }
+
+            let mut returned_auth_data = auth_data;
+            if matches!(self.tamper, Tamper::MutateAuthDataAfterSigning) {
+                let last = returned_auth_data.len() - 1;
+                returned_auth_data[last] ^= 0xFF;
+            }
+
+            Ok(Ctap2AssertionResponse {
+                rpid_hash: sha256(request.relying_party_id.as_bytes()),
+                credential_id: request.credential_id.to_vec(),
+                user_present: true,
+                signature,
+                auth_data: returned_auth_data,
+                hmac_secret_output: Some(Zeroizing::new(vec![0x55; 32])),
+            })
+        }
     }
 
     #[test]
@@ -1807,23 +2487,157 @@ mod tests {
         let auth = webauthn_prf_with(FakeOutcome::Correct);
         assert_eq!(auth.relying_party_id(), "vault-pm");
         assert_eq!(auth.credential_id(), CRED_ID);
-        assert_eq!(auth.public_key_cose(), PUBKEY);
+        assert_eq!(
+            auth.public_key_cose(),
+            placeholder_cose_public_key().as_slice()
+        );
         assert_eq!(auth.touch_timeout(), DEFAULT_TOUCH_TIMEOUT);
     }
 
+    /// The load-bearing test for this whole slice: a genuine hardware
+    /// round trip, genuinely signed by the registered credential's
+    /// private key, must now actually succeed — not merely pass every
+    /// structural check and still refuse, which is what slices 1 and 2
+    /// each pinned as their own load-bearing test. `key_contribution`
+    /// must be exactly the `hmac-secret` output the (fake) hardware
+    /// returned, since that is the whole point of this factor being
+    /// bind-mode.
     #[test]
-    fn webauthn_prf_verify_still_refuses_after_a_correct_hardware_round_trip() {
-        // Real (fake) hardware answered correctly for the registered
-        // credential — every structural check passes — and `verify()`
-        // still refuses, because ECDSA P-256 verification doesn't
-        // exist in this workspace yet. This is the load-bearing test:
-        // it proves the refusal is scoped to the missing primitive,
-        // not to "the transport never got called."
-        let auth = webauthn_prf_with(FakeOutcome::Correct);
-        match auth.verify(b"a fresh per-attempt challenge nonce") {
-            Err(AuthError::Unimplemented { backend }) => {
-                assert!(backend.contains("ECDSA"));
-            }
+    fn webauthn_prf_verify_succeeds_with_a_genuine_signature_and_yields_key_contribution() {
+        let keypair = TestKeypair::generate();
+        let auth = WebAuthnPrfAuthenticator::new(
+            RP_ID,
+            CRED_ID.to_vec(),
+            keypair.cose_public_key.clone(),
+            SignedFakeTransport::new(keypair, Tamper::None),
+        )
+        .unwrap();
+
+        let assertion = auth
+            .verify(b"a fresh per-attempt challenge nonce")
+            .expect("a genuinely signed assertion must verify");
+        assert_eq!(assertion.kind, "webauthn-prf");
+        assert_eq!(assertion.mode, Mode::Bind);
+        let key_contribution = assertion
+            .key_contribution
+            .as_ref()
+            .expect("bind-mode contribution");
+        assert_eq!(&key_contribution[..], &[0x55; 32]);
+    }
+
+    #[test]
+    fn webauthn_prf_verify_rejects_signature_from_the_wrong_signing_key() {
+        // The registered public key belongs to `registered`, but the
+        // (fake) hardware actually signs with a completely different
+        // key — the "hardware answered, but it isn't the one this
+        // credential was registered for" attack `verify()`'s signature
+        // check exists to catch.
+        let registered = TestKeypair::generate();
+        let attacker = TestKeypair::generate();
+        let auth = WebAuthnPrfAuthenticator::new(
+            RP_ID,
+            CRED_ID.to_vec(),
+            registered.cose_public_key.clone(),
+            SignedFakeTransport::new(attacker, Tamper::None),
+        )
+        .unwrap();
+        match auth.verify(b"challenge") {
+            Err(AuthError::InvalidCredential) => {}
+            other => panic!(
+                "expected InvalidCredential, got {}",
+                if other.is_ok() { "Ok" } else { "different Err" }
+            ),
+        }
+    }
+
+    #[test]
+    fn webauthn_prf_verify_rejects_corrupted_signature_bytes() {
+        let keypair = TestKeypair::generate();
+        let cose_public_key = keypair.cose_public_key.clone();
+        let auth = WebAuthnPrfAuthenticator::new(
+            RP_ID,
+            CRED_ID.to_vec(),
+            cose_public_key,
+            SignedFakeTransport::new(keypair, Tamper::CorruptSignatureBytes),
+        )
+        .unwrap();
+        match auth.verify(b"challenge") {
+            Err(AuthError::InvalidCredential) => {}
+            other => panic!(
+                "expected InvalidCredential, got {}",
+                if other.is_ok() { "Ok" } else { "different Err" }
+            ),
+        }
+    }
+
+    #[test]
+    fn webauthn_prf_verify_rejects_auth_data_tampered_after_signing() {
+        let keypair = TestKeypair::generate();
+        let cose_public_key = keypair.cose_public_key.clone();
+        let auth = WebAuthnPrfAuthenticator::new(
+            RP_ID,
+            CRED_ID.to_vec(),
+            cose_public_key,
+            SignedFakeTransport::new(keypair, Tamper::MutateAuthDataAfterSigning),
+        )
+        .unwrap();
+        match auth.verify(b"challenge") {
+            Err(AuthError::InvalidCredential) => {}
+            other => panic!(
+                "expected InvalidCredential, got {}",
+                if other.is_ok() { "Ok" } else { "different Err" }
+            ),
+        }
+    }
+
+    #[test]
+    fn webauthn_prf_verify_rejects_a_signature_valid_for_a_different_challenge() {
+        // The signature is genuinely valid — over a different
+        // per-attempt challenge than the one this specific `verify()`
+        // call actually issued. Distinct from a corrupted signature:
+        // this proves the check binds to *this* attempt's challenge,
+        // not merely to *some* challenge the credential once answered.
+        let keypair = TestKeypair::generate();
+        let cose_public_key = keypair.cose_public_key.clone();
+        let auth = WebAuthnPrfAuthenticator::new(
+            RP_ID,
+            CRED_ID.to_vec(),
+            cose_public_key,
+            SignedFakeTransport::new(keypair, Tamper::SignDifferentChallenge),
+        )
+        .unwrap();
+        match auth.verify(b"challenge") {
+            Err(AuthError::InvalidCredential) => {}
+            other => panic!(
+                "expected InvalidCredential, got {}",
+                if other.is_ok() { "Ok" } else { "different Err" }
+            ),
+        }
+    }
+
+    #[test]
+    fn webauthn_prf_construction_reports_unsupported_cose_key_as_unimplemented() {
+        // crv (label -1) names P-384 instead of P-256 — a real EC2 key,
+        // just not the one curve this authenticator can verify, exactly
+        // mirroring
+        // `parse_es256_cose_public_key_reports_unsupported_curve_as_unimplemented`
+        // but through the public constructor rather than the parser
+        // directly.
+        let map = CborValue::Map(vec![
+            (CborValue::Unsigned(1), CborValue::Unsigned(2)),
+            (CborValue::Negative(0), CborValue::Unsigned(2)), // P-384
+            (CborValue::Negative(1), CborValue::Bytes(vec![0x01; 48])),
+            (CborValue::Negative(2), CborValue::Bytes(vec![0x02; 48])),
+        ]);
+        let unsupported_curve_cose = coding_adventures_canonical_cbor::encode(&map);
+
+        match WebAuthnPrfAuthenticator::new(
+            RP_ID,
+            CRED_ID.to_vec(),
+            unsupported_curve_cose,
+            FakeTransport::new(FakeOutcome::Correct),
+        ) {
+            Err(AuthError::Unimplemented { .. }) => {}
             other => panic!(
                 "expected Unimplemented, got {}",
                 if other.is_ok() { "Ok" } else { "different Err" }
@@ -1832,11 +2646,31 @@ mod tests {
     }
 
     #[test]
+    fn webauthn_prf_construction_rejects_malformed_cose_public_key() {
+        match WebAuthnPrfAuthenticator::new(
+            RP_ID,
+            CRED_ID.to_vec(),
+            b"definitely not canonical cbor".to_vec(),
+            FakeTransport::new(FakeOutcome::Correct),
+        ) {
+            Err(AuthError::InvalidParameter { .. }) => {}
+            other => panic!(
+                "expected InvalidParameter, got {}",
+                if other.is_ok() { "Ok" } else { "different Err" }
+            ),
+        }
+    }
+
+    #[test]
     fn webauthn_prf_verify_sends_the_registered_rp_and_credential_id() {
         let (transport, seen) = FakeTransport::new_with_handle(FakeOutcome::Correct);
-        let auth =
-            WebAuthnPrfAuthenticator::new(RP_ID, CRED_ID.to_vec(), PUBKEY.to_vec(), transport)
-                .unwrap();
+        let auth = WebAuthnPrfAuthenticator::new(
+            RP_ID,
+            CRED_ID.to_vec(),
+            placeholder_cose_public_key(),
+            transport,
+        )
+        .unwrap();
         assert!(seen.lock().unwrap().is_none());
         let _ = auth.verify(b"a fresh per-attempt challenge");
         let (seen_rp, seen_cred) = seen.lock().unwrap().clone().expect("transport was called");
@@ -1946,7 +2780,7 @@ mod tests {
         let auth = WebAuthnPrfAuthenticator::new(
             RP_ID,
             CRED_ID.to_vec(),
-            PUBKEY.to_vec(),
+            placeholder_cose_public_key(),
             UnreachableTransport,
         )
         .unwrap();
@@ -1976,7 +2810,7 @@ mod tests {
         let other = WebAuthnPrfAuthenticator::new(
             RP_ID,
             b"a-completely-different-credential-id".to_vec(),
-            PUBKEY.to_vec(),
+            placeholder_cose_public_key(),
             FakeTransport::new(FakeOutcome::Correct),
         )
         .unwrap();
@@ -2036,7 +2870,7 @@ mod tests {
         match WebAuthnPrfAuthenticator::with_touch_timeout(
             RP_ID,
             CRED_ID.to_vec(),
-            PUBKEY.to_vec(),
+            placeholder_cose_public_key(),
             FakeTransport::new(FakeOutcome::Correct),
             Duration::from_millis(500),
         ) {
@@ -2053,7 +2887,7 @@ mod tests {
         match WebAuthnPrfAuthenticator::with_touch_timeout(
             RP_ID,
             CRED_ID.to_vec(),
-            PUBKEY.to_vec(),
+            placeholder_cose_public_key(),
             FakeTransport::new(FakeOutcome::Correct),
             Duration::from_secs(600),
         ) {
@@ -2070,7 +2904,7 @@ mod tests {
         assert!(WebAuthnPrfAuthenticator::with_touch_timeout(
             RP_ID,
             CRED_ID.to_vec(),
-            PUBKEY.to_vec(),
+            placeholder_cose_public_key(),
             FakeTransport::new(FakeOutcome::Correct),
             MIN_TOUCH_TIMEOUT,
         )
@@ -2078,7 +2912,7 @@ mod tests {
         assert!(WebAuthnPrfAuthenticator::with_touch_timeout(
             RP_ID,
             CRED_ID.to_vec(),
-            PUBKEY.to_vec(),
+            placeholder_cose_public_key(),
             FakeTransport::new(FakeOutcome::Correct),
             MAX_TOUCH_TIMEOUT,
         )
