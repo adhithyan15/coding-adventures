@@ -1,4 +1,4 @@
-use std::collections::BTreeSet;
+use std::collections::{BTreeMap, BTreeSet};
 use std::fs;
 use std::path::Path;
 
@@ -23,6 +23,28 @@ const CI_MANAGED_TOOLCHAIN_LANGUAGES: &[&str] = &[
 const TRACKED_ARTIFACT_COMPONENT_IDENTITY: &str = "node_modules";
 const TRACKED_ARTIFACT_REDACTED_PATH: &str = "repository";
 pub const TRACKED_ARTIFACT_UNICODE_VERSION: &str = oxixml_unicode::UNICODE_VERSION;
+
+const ORPHAN_SCAN_ROOT: &str = "code";
+const ORPHAN_LEDGER_PATH: &str = "code/BUILD-EXEMPTIONS";
+const ORPHAN_BUILD_NAMES: &[&str] = &[
+    "BUILD",
+    "BUILD_windows",
+    "BUILD_mac",
+    "BUILD_linux",
+    "BUILD_mac_and_linux",
+];
+const ORPHAN_SKIP_COMPONENTS: &[&str] = &[
+    ".git",
+    "target",
+    "node_modules",
+    "vendor",
+    ".venv",
+    "_build",
+    "deps",
+    ".build",
+    "dist-newstyle",
+    ".cargo",
+];
 
 #[derive(Debug, Clone, PartialEq, Eq, Serialize, Deserialize)]
 pub struct TrackedArtifactEntry {
@@ -195,6 +217,376 @@ fn canonical_details_key(details: &TrackedArtifactDiagnosticDetails) -> String {
         );
     }
     serde_json::to_string(&object).expect("tracked-artifact details are JSON-safe")
+}
+
+#[derive(Debug, Clone, PartialEq, Eq, Serialize, Deserialize)]
+pub struct OrphanManifest {
+    pub path: String,
+    pub kind: String,
+}
+
+#[derive(Debug, Clone, PartialEq, Eq, Serialize, Deserialize)]
+pub struct OrphanBuildFile {
+    pub path: String,
+    pub state: String,
+}
+
+#[derive(Debug, Clone, PartialEq, Eq, Serialize, Deserialize)]
+pub struct OrphanExemption {
+    pub line: u32,
+    pub kind: String,
+    pub path: String,
+    pub reason: String,
+}
+
+#[derive(Debug, Clone, PartialEq, Eq, Serialize, Deserialize)]
+pub struct OrphanCrateSnapshot {
+    pub directories: Vec<String>,
+    pub manifests: Vec<OrphanManifest>,
+    pub build_files: Vec<OrphanBuildFile>,
+    pub exemptions: Vec<OrphanExemption>,
+}
+
+#[derive(Debug, Clone, Default, PartialEq, Eq, Serialize, Deserialize)]
+pub struct OrphanCrateDiagnosticDetails {
+    #[serde(default, skip_serializing_if = "Option::is_none")]
+    pub build_path: Option<String>,
+    #[serde(default, skip_serializing_if = "Option::is_none")]
+    pub manifest_kind: Option<String>,
+    #[serde(default, skip_serializing_if = "Option::is_none")]
+    pub entry_path: Option<String>,
+    #[serde(default, skip_serializing_if = "Option::is_none")]
+    pub kind: Option<String>,
+    #[serde(default, skip_serializing_if = "Option::is_none")]
+    pub line: Option<u32>,
+    #[serde(default, skip_serializing_if = "Option::is_none")]
+    pub problem: Option<String>,
+}
+
+#[derive(Debug, Clone, PartialEq, Eq, Serialize, Deserialize)]
+pub struct OrphanCrateDiagnostic {
+    pub code: String,
+    pub severity: String,
+    pub path: String,
+    pub details: OrphanCrateDiagnosticDetails,
+}
+
+#[derive(Debug, Clone, PartialEq, Eq, Serialize, Deserialize)]
+pub struct OrphanCrateValidationResult {
+    pub valid: bool,
+    pub diagnostic_codes: Vec<String>,
+    pub pending_exemption_count: usize,
+    pub diagnostics: Vec<OrphanCrateDiagnostic>,
+}
+
+/// Validate a caller-supplied, closed orphan-crate snapshot.
+///
+/// The function is deliberately inert: it performs no filesystem, Git,
+/// process, environment, or network access. Snapshot construction remains an
+/// adapter responsibility so every implementation language can consume the
+/// same language-neutral fixtures.
+pub fn validate_orphan_crate_snapshot(
+    snapshot: &OrphanCrateSnapshot,
+) -> OrphanCrateValidationResult {
+    let manifests: Vec<&OrphanManifest> = snapshot
+        .manifests
+        .iter()
+        .filter(|manifest| !is_orphan_artifact_path(&manifest.path))
+        .collect();
+    let directories: BTreeSet<&str> = snapshot.directories.iter().map(String::as_str).collect();
+    let manifest_paths: BTreeSet<&str> = manifests
+        .iter()
+        .map(|manifest| manifest.path.as_str())
+        .collect();
+    let coverage: BTreeMap<&str, Option<&OrphanBuildFile>> = manifests
+        .iter()
+        .map(|manifest| {
+            (
+                manifest.path.as_str(),
+                find_covering_build(&snapshot.build_files, &manifest.path, "runnable"),
+            )
+        })
+        .collect();
+    let empty_builds: BTreeMap<&str, Option<&OrphanBuildFile>> = manifests
+        .iter()
+        .map(|manifest| {
+            (
+                manifest.path.as_str(),
+                find_covering_build(&snapshot.build_files, &manifest.path, "empty"),
+            )
+        })
+        .collect();
+
+    let mut diagnostics = Vec::new();
+    let mut seen_exemption_paths = BTreeSet::new();
+    let mut valid_exemptions = Vec::new();
+
+    for exemption in &snapshot.exemptions {
+        let (identity, path_problem) = if !is_portable_orphan_path(&exemption.path) {
+            (None, Some("PATH_UNSAFE"))
+        } else {
+            let identity = orphan_path_identity(&exemption.path);
+            let problem = if !is_under_orphan_scan_root(&exemption.path) {
+                Some("PATH_OUTSIDE_SCAN")
+            } else if is_orphan_artifact_path(&exemption.path) {
+                Some("PATH_ARTIFACT")
+            } else {
+                None
+            };
+            (Some(identity), problem)
+        };
+
+        let duplicate = identity
+            .as_ref()
+            .is_some_and(|identity| !seen_exemption_paths.insert(identity.clone()));
+        let problem = if !matches!(exemption.kind.as_str(), "EXCLUDED" | "PENDING") {
+            Some("UNKNOWN_KIND")
+        } else if is_blank_orphan_reason(&exemption.reason) {
+            Some("REASON_MISSING")
+        } else if duplicate {
+            Some("DUPLICATE_PATH")
+        } else {
+            path_problem
+        };
+
+        if let Some(problem) = problem {
+            diagnostics.push(OrphanCrateDiagnostic {
+                code: "ORPHAN_EXEMPTION_INVALID".to_string(),
+                severity: "error".to_string(),
+                path: ORPHAN_LEDGER_PATH.to_string(),
+                details: OrphanCrateDiagnosticDetails {
+                    line: Some(exemption.line),
+                    problem: Some(problem.to_string()),
+                    ..OrphanCrateDiagnosticDetails::default()
+                },
+            });
+        } else {
+            valid_exemptions.push(exemption);
+        }
+    }
+
+    let mut active_exemptions = BTreeSet::new();
+    let mut pending_exemption_count = 0;
+    for exemption in valid_exemptions {
+        let stale_problem = if !directories.contains(exemption.path.as_str()) {
+            Some("MISSING_DIRECTORY")
+        } else if !manifest_paths.contains(exemption.path.as_str()) {
+            Some("NO_MANIFEST")
+        } else if coverage
+            .get(exemption.path.as_str())
+            .and_then(|build| *build)
+            .is_some()
+        {
+            Some("COVERED")
+        } else {
+            None
+        };
+
+        if let Some(problem) = stale_problem {
+            diagnostics.push(OrphanCrateDiagnostic {
+                code: "ORPHAN_EXEMPTION_STALE".to_string(),
+                severity: "error".to_string(),
+                path: ORPHAN_LEDGER_PATH.to_string(),
+                details: OrphanCrateDiagnosticDetails {
+                    entry_path: Some(exemption.path.clone()),
+                    kind: Some(exemption.kind.clone()),
+                    line: Some(exemption.line),
+                    problem: Some(problem.to_string()),
+                    ..OrphanCrateDiagnosticDetails::default()
+                },
+            });
+            continue;
+        }
+
+        active_exemptions.insert(exemption.path.as_str());
+        if exemption.kind == "PENDING" {
+            pending_exemption_count += 1;
+        }
+    }
+
+    for manifest in manifests {
+        if coverage
+            .get(manifest.path.as_str())
+            .and_then(|build| *build)
+            .is_some()
+            || active_exemptions.contains(manifest.path.as_str())
+        {
+            continue;
+        }
+
+        let empty_build = empty_builds
+            .get(manifest.path.as_str())
+            .and_then(|build| *build);
+        diagnostics.push(match empty_build {
+            Some(build) => OrphanCrateDiagnostic {
+                code: "ORPHAN_CRATE_EMPTY_BUILD".to_string(),
+                severity: "error".to_string(),
+                path: manifest.path.clone(),
+                details: OrphanCrateDiagnosticDetails {
+                    build_path: Some(build.path.clone()),
+                    manifest_kind: Some(manifest.kind.clone()),
+                    ..OrphanCrateDiagnosticDetails::default()
+                },
+            },
+            None => OrphanCrateDiagnostic {
+                code: "ORPHAN_CRATE_UNLISTED".to_string(),
+                severity: "error".to_string(),
+                path: manifest.path.clone(),
+                details: OrphanCrateDiagnosticDetails {
+                    manifest_kind: Some(manifest.kind.clone()),
+                    ..OrphanCrateDiagnosticDetails::default()
+                },
+            },
+        });
+    }
+
+    diagnostics.sort_by(|left, right| {
+        left.code
+            .cmp(&right.code)
+            .then_with(|| left.path.chars().cmp(right.path.chars()))
+            .then_with(|| {
+                canonical_orphan_details_key(&left.details)
+                    .cmp(&canonical_orphan_details_key(&right.details))
+            })
+    });
+    let diagnostic_codes: Vec<String> = diagnostics
+        .iter()
+        .map(|diagnostic| diagnostic.code.clone())
+        .collect::<BTreeSet<_>>()
+        .into_iter()
+        .collect();
+
+    OrphanCrateValidationResult {
+        valid: diagnostics.is_empty(),
+        diagnostic_codes,
+        pending_exemption_count,
+        diagnostics,
+    }
+}
+
+fn find_covering_build<'a>(
+    build_files: &'a [OrphanBuildFile],
+    manifest_path: &str,
+    state: &str,
+) -> Option<&'a OrphanBuildFile> {
+    build_files
+        .iter()
+        .filter(|build| build.state == state)
+        .filter_map(|build| {
+            let parent = portable_parent_path(&build.path);
+            let name = portable_basename(&build.path);
+            if !is_under_orphan_scan_root(parent)
+                || (manifest_path != parent && !manifest_path.starts_with(&format!("{parent}/")))
+            {
+                return None;
+            }
+            let rank = ORPHAN_BUILD_NAMES
+                .iter()
+                .position(|candidate| *candidate == name)?;
+            Some((build, parent.matches('/').count() + 1, rank))
+        })
+        .min_by(|left, right| {
+            right
+                .1
+                .cmp(&left.1)
+                .then_with(|| left.2.cmp(&right.2))
+                .then_with(|| left.0.path.chars().cmp(right.0.path.chars()))
+        })
+        .map(|candidate| candidate.0)
+}
+
+fn is_portable_orphan_path(path: &str) -> bool {
+    if path.is_empty() || path.chars().count() > 512 || norm::nfc(path) != path {
+        return false;
+    }
+    if path.starts_with('/') || path.contains('\\') || path.contains("//") {
+        return false;
+    }
+    if path.as_bytes().get(1) == Some(&b':') && path.as_bytes()[0].is_ascii_alphabetic() {
+        return false;
+    }
+    if path.chars().any(|character| {
+        character < '\u{20}' || matches!(character, '<' | '>' | ':' | '"' | '|' | '?' | '*')
+    }) {
+        return false;
+    }
+
+    for component in path.split('/') {
+        if component.is_empty()
+            || matches!(component, "." | "..")
+            || component.ends_with([' ', '.'])
+        {
+            return false;
+        }
+        let basename = component.split('.').next().unwrap_or_default();
+        if is_windows_reserved_basename(&case::full_uppercase(basename)) {
+            return false;
+        }
+    }
+    true
+}
+
+fn is_blank_orphan_reason(reason: &str) -> bool {
+    reason.is_empty()
+        || reason.chars().all(|character| {
+            character.is_whitespace() || ('\u{001c}'..='\u{001f}').contains(&character)
+        })
+}
+
+fn orphan_path_identity(path: &str) -> String {
+    case::fold_str(&norm::nfc(path))
+}
+
+fn is_under_orphan_scan_root(path: &str) -> bool {
+    path == ORPHAN_SCAN_ROOT || path.starts_with("code/")
+}
+
+fn is_orphan_artifact_path(path: &str) -> bool {
+    path.split('/')
+        .any(|component| ORPHAN_SKIP_COMPONENTS.contains(&component))
+}
+
+fn portable_parent_path(path: &str) -> &str {
+    path.rsplit_once('/').map_or("", |(parent, _)| parent)
+}
+
+fn portable_basename(path: &str) -> &str {
+    path.rsplit_once('/').map_or(path, |(_, name)| name)
+}
+
+fn canonical_orphan_details_key(details: &OrphanCrateDiagnosticDetails) -> String {
+    let mut object = serde_json::Map::new();
+    if let Some(build_path) = &details.build_path {
+        object.insert(
+            "build_path".to_string(),
+            serde_json::Value::String(build_path.clone()),
+        );
+    }
+    if let Some(entry_path) = &details.entry_path {
+        object.insert(
+            "entry_path".to_string(),
+            serde_json::Value::String(entry_path.clone()),
+        );
+    }
+    if let Some(kind) = &details.kind {
+        object.insert("kind".to_string(), serde_json::Value::String(kind.clone()));
+    }
+    if let Some(line) = details.line {
+        object.insert("line".to_string(), serde_json::Value::Number(line.into()));
+    }
+    if let Some(manifest_kind) = &details.manifest_kind {
+        object.insert(
+            "manifest_kind".to_string(),
+            serde_json::Value::String(manifest_kind.clone()),
+        );
+    }
+    if let Some(problem) = &details.problem {
+        object.insert(
+            "problem".to_string(),
+            serde_json::Value::String(problem.clone()),
+        );
+    }
+    serde_json::to_string(&object).expect("orphan diagnostic details are JSON-safe")
 }
 
 pub fn validate_ci_full_build_toolchains(repo_root: &Path, packages: &[Package]) -> Option<String> {
@@ -492,8 +884,10 @@ fn lua_sibling_install_dirs(lines: &[String]) -> Vec<String> {
 mod tests {
     use super::{
         validate_build_contracts, validate_ci_full_build_toolchains,
-        validate_tracked_artifact_snapshot, validate_tracked_artifact_snapshot_with_version,
-        TrackedArtifactDiagnostic, TrackedArtifactEntry, TRACKED_ARTIFACT_UNICODE_VERSION,
+        validate_orphan_crate_snapshot, validate_tracked_artifact_snapshot,
+        validate_tracked_artifact_snapshot_with_version, OrphanBuildFile, OrphanCrateDiagnostic,
+        OrphanCrateSnapshot, OrphanExemption, OrphanManifest, TrackedArtifactDiagnostic,
+        TrackedArtifactEntry, TRACKED_ARTIFACT_UNICODE_VERSION,
     };
     use crate::discovery::Package;
     use std::fs;
@@ -508,12 +902,193 @@ mod tests {
         "validation-tracked-artifacts-unicode-boundaries.json",
     ];
 
+    const ORPHAN_CRATE_CASES: &[&str] = &[
+        "validation-orphan-crates-clean.json",
+        "validation-orphan-crates-unlisted.json",
+        "validation-orphan-exemptions-invalid.json",
+        "validation-orphan-exemptions-stale.json",
+    ];
+
     fn repository_root() -> PathBuf {
         PathBuf::from(env!("CARGO_MANIFEST_DIR"))
             .ancestors()
             .nth(4)
             .expect("build-tool package must be four levels below the repository root")
             .to_path_buf()
+    }
+
+    #[test]
+    fn orphan_crate_validation_matches_shared_conformance_fixtures() {
+        let cases_root = repository_root().join("code/specs/fixtures/build-tool-v1/cases");
+
+        for fixture_name in ORPHAN_CRATE_CASES {
+            let fixture: serde_json::Value =
+                serde_json::from_str(&fs::read_to_string(cases_root.join(fixture_name)).unwrap())
+                    .unwrap();
+            let snapshot: OrphanCrateSnapshot =
+                serde_json::from_value(fixture["input"]["options"]["orphan_snapshot"].clone())
+                    .unwrap();
+            let expected_diagnostics: Vec<OrphanCrateDiagnostic> =
+                serde_json::from_value(fixture["expected"]["diagnostics"].clone()).unwrap();
+            let expected_result = &fixture["expected"]["result"];
+
+            let actual = validate_orphan_crate_snapshot(&snapshot);
+            assert_eq!(
+                actual.diagnostics, expected_diagnostics,
+                "fixture {fixture_name}"
+            );
+            assert_eq!(
+                actual.valid,
+                expected_result["valid"].as_bool().unwrap(),
+                "fixture {fixture_name}"
+            );
+            assert_eq!(
+                actual.diagnostic_codes,
+                serde_json::from_value::<Vec<String>>(expected_result["diagnostic_codes"].clone())
+                    .unwrap(),
+                "fixture {fixture_name}"
+            );
+            assert_eq!(
+                actual.pending_exemption_count,
+                expected_result["pending_exemption_count"].as_u64().unwrap() as usize,
+                "fixture {fixture_name}"
+            );
+        }
+    }
+
+    #[test]
+    fn orphan_crate_validation_redacts_unsafe_exemption_paths() {
+        for unsafe_path in [
+            String::new(),
+            "a".repeat(513),
+            "/absolute/secret-project".to_string(),
+            "C:/host/secret-project".to_string(),
+            "code/packages/rust/bad<name>".to_string(),
+            "code/packages/rust/trailing.".to_string(),
+            "code/packages/rust/CON".to_string(),
+        ] {
+            let result = validate_orphan_crate_snapshot(&OrphanCrateSnapshot {
+                directories: vec!["code/packages/rust/demo".to_string()],
+                manifests: vec![OrphanManifest {
+                    path: "code/packages/rust/demo".to_string(),
+                    kind: "package".to_string(),
+                }],
+                build_files: vec![],
+                exemptions: vec![OrphanExemption {
+                    line: 7,
+                    kind: "PENDING".to_string(),
+                    path: unsafe_path.clone(),
+                    reason: "not allowed".to_string(),
+                }],
+            });
+
+            let diagnostic = result
+                .diagnostics
+                .iter()
+                .find(|diagnostic| diagnostic.code == "ORPHAN_EXEMPTION_INVALID")
+                .unwrap();
+            assert_eq!(diagnostic.path, "code/BUILD-EXEMPTIONS");
+            assert_eq!(diagnostic.details.problem.as_deref(), Some("PATH_UNSAFE"));
+            if !unsafe_path.is_empty() {
+                assert!(!serde_json::to_string(&result)
+                    .unwrap()
+                    .contains(&unsafe_path));
+            }
+        }
+    }
+
+    #[test]
+    fn orphan_crate_validation_uses_python_whitespace_for_reasons() {
+        let result = validate_orphan_crate_snapshot(&OrphanCrateSnapshot {
+            directories: vec!["code/packages/rust/demo".to_string()],
+            manifests: vec![OrphanManifest {
+                path: "code/packages/rust/demo".to_string(),
+                kind: "package".to_string(),
+            }],
+            build_files: vec![],
+            exemptions: vec![OrphanExemption {
+                line: 7,
+                kind: "PENDING".to_string(),
+                path: "code/packages/rust/demo".to_string(),
+                reason: "\u{001c}".to_string(),
+            }],
+        });
+
+        assert_eq!(result.pending_exemption_count, 0);
+        assert_eq!(
+            result.diagnostic_codes,
+            ["ORPHAN_CRATE_UNLISTED", "ORPHAN_EXEMPTION_INVALID"]
+        );
+        assert_eq!(
+            result.diagnostics[1].details.problem.as_deref(),
+            Some("REASON_MISSING")
+        );
+    }
+
+    #[test]
+    fn orphan_crate_validation_chooses_closest_empty_build_then_fixed_name_order() {
+        let result = validate_orphan_crate_snapshot(&OrphanCrateSnapshot {
+            directories: vec!["code/packages/rust/demo/child".to_string()],
+            manifests: vec![OrphanManifest {
+                path: "code/packages/rust/demo/child".to_string(),
+                kind: "package".to_string(),
+            }],
+            build_files: vec![
+                OrphanBuildFile {
+                    path: "code/packages/rust/BUILD".to_string(),
+                    state: "empty".to_string(),
+                },
+                OrphanBuildFile {
+                    path: "code/packages/rust/demo/BUILD_linux".to_string(),
+                    state: "empty".to_string(),
+                },
+                OrphanBuildFile {
+                    path: "code/packages/rust/demo/BUILD".to_string(),
+                    state: "empty".to_string(),
+                },
+            ],
+            exemptions: vec![],
+        });
+
+        assert_eq!(result.diagnostics.len(), 1);
+        assert_eq!(result.diagnostics[0].code, "ORPHAN_CRATE_EMPTY_BUILD");
+        assert_eq!(
+            result.diagnostics[0].details.build_path.as_deref(),
+            Some("code/packages/rust/demo/BUILD")
+        );
+    }
+
+    #[test]
+    fn orphan_crate_validation_uses_nfc_full_casefold_duplicate_identity() {
+        let result = validate_orphan_crate_snapshot(&OrphanCrateSnapshot {
+            directories: vec!["code/packages/rust/Straße".to_string()],
+            manifests: vec![OrphanManifest {
+                path: "code/packages/rust/Straße".to_string(),
+                kind: "package".to_string(),
+            }],
+            build_files: vec![],
+            exemptions: vec![
+                OrphanExemption {
+                    line: 7,
+                    kind: "EXCLUDED".to_string(),
+                    path: "code/packages/rust/Straße".to_string(),
+                    reason: "first".to_string(),
+                },
+                OrphanExemption {
+                    line: 8,
+                    kind: "PENDING".to_string(),
+                    path: "CODE/PACKAGES/RUST/STRASSE".to_string(),
+                    reason: "duplicate".to_string(),
+                },
+            ],
+        });
+
+        assert_eq!(result.diagnostics.len(), 1);
+        assert_eq!(result.diagnostics[0].code, "ORPHAN_EXEMPTION_INVALID");
+        assert_eq!(
+            result.diagnostics[0].details.problem.as_deref(),
+            Some("DUPLICATE_PATH")
+        );
     }
 
     #[test]

@@ -67,7 +67,7 @@ The tool is organized into focused modules, each responsible for one aspect of t
 6. **executor** — Parallel execution with Rayon thread pool
 7. **gitdiff** — Git-based change detection (default mode)
 8. **reporter** — Terminal-friendly build report formatting
-9. **validator** — Pure build-contract and inert tracked-artifact validation
+9. **validator** — Pure build-contract, orphan-crate, and tracked-artifact validation
 
 Tracked-artifact snapshots explicitly require Unicode 17.0.0. The validator's
 exactly pinned `oxixml-unicode` tables cover NFC, NFKC, full default folding,
@@ -128,6 +128,17 @@ METADATA_INVALID_UTF8: package=lua/pkg manifest=code/packages/lua/pkg/coding-adv
 
 The resolver and real CLI tests materialize the language-neutral
 `resolution/lua-utf8` and `resolution/lua-invalid-utf8` fixtures.
+
+Orphan-crate validation also consumes only caller-supplied inert records. It
+models source directories, Cargo manifests, recognized BUILD files, and the
+reviewed exemption ledger without reading the checkout. Runnable BUILD files
+cover their own directory and descendants through `code/`; a nearer empty BUILD
+does not mask runnable ancestor coverage, while uncovered manifests report the
+closest empty BUILD using the contract's fixed filename order. Exemptions fail
+closed on unsafe, outside-scan, artifact, duplicate, unknown-kind, or blank-
+reason entries, redact hostile paths to `code/BUILD-EXEMPTIONS`, and report
+covered or removed entries as stale. Its tests consume all four shared
+`validation/orphan-*` conformance fixtures and adversarial Unicode/path cases.
 
 Tracked-artifact validation consumes caller-supplied inert records only. It
 slash-normalizes portable paths, rejects unsafe paths at the fixed redacted
