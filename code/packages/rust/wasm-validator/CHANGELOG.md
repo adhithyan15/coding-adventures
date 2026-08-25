@@ -2,6 +2,21 @@
 
 All notable changes to this package will be documented in this file.
 
+## [0.2.60] - 2026-08-25 (Relaxed SIMD epic PR2: i16x8.relaxed_q15mulr_s)
+
+### Added
+
+- Type-check coverage for `i16x8.relaxed_q15mulr_s` (`SimdOpKind::
+  RelaxedQ15mulrI16x8S`): joins the existing shared `(v128, v128) ->
+  v128` binary-shape arm right alongside `Q15mulrSatI16x8S` -- identical
+  type rule (pop two `V128`, push one `V128`); its implementation-
+  defined single-overflow-lane saturate-vs-wrap behavior is entirely a
+  runtime concern, invisible at this layer. Second opcode of the
+  relaxed-simd epic -- see `code/specs/
+  W19-wasm-relaxed-simd-first-slice.md`.
+- New tests: `valid_i16x8_relaxed_q15mulr_s_pops_two_v128_pushes_v128`,
+  `invalid_i16x8_relaxed_q15mulr_s_given_an_i32_operand_instead_of_v128`.
+
 ## [0.2.59] - 2026-08-25 (Relaxed SIMD epic PR1: i8x16.relaxed_swizzle)
 
 ### Added

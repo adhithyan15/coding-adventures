@@ -1341,6 +1341,24 @@ fn invalid_i8x16_relaxed_swizzle_with_an_i32_operand() {
     assert_invalid("(module (func (param i32 v128) (result v128) (i8x16.relaxed_swizzle (local.get 0) (local.get 1))))");
 }
 
+#[test]
+fn valid_i16x8_relaxed_q15mulr_s_pops_two_v128_pushes_v128() {
+    // Relaxed SIMD epic PR2 (see code/specs/
+    // W19-wasm-relaxed-simd-first-slice.md): i16x8.relaxed_q15mulr_s --
+    // same pop-two-push-one v128 shape as plain i16x8.q15mulr_sat_s
+    // above; its implementation-defined single-overflow-lane saturate-
+    // vs-wrap behavior is entirely a runtime concern, invisible to the
+    // type checker.
+    assert_valid("(module (func (param v128 v128) (result v128) (i16x8.relaxed_q15mulr_s (local.get 0) (local.get 1))))");
+}
+
+#[test]
+fn invalid_i16x8_relaxed_q15mulr_s_given_an_i32_operand_instead_of_v128() {
+    // Confirms the type checker actually enforces V128 for both operands,
+    // not just accepting whatever's on the stack.
+    assert_invalid("(module (func (param v128 i32) (result v128) (i16x8.relaxed_q15mulr_s (local.get 0) (local.get 1))))");
+}
+
 // ── SIMD widen PR38 (task #229-231): i8x16.shuffle ───────────────────────
 //
 // The most structurally complex SIMD opcode implemented in this campaign

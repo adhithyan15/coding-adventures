@@ -1575,6 +1575,7 @@ fn type_check_function(ctx: &ModuleContext, func_idx: usize, func_type: &FuncTyp
                     | wasm_opcodes::SimdOpKind::ExtmulLowI64x2U
                     | wasm_opcodes::SimdOpKind::ExtmulHighI64x2U
                     | wasm_opcodes::SimdOpKind::Q15mulrSatI16x8S
+                    | wasm_opcodes::SimdOpKind::RelaxedQ15mulrI16x8S
                     | wasm_opcodes::SimdOpKind::NarrowI16x8S
                     | wasm_opcodes::SimdOpKind::NarrowI16x8U
                     | wasm_opcodes::SimdOpKind::NarrowI32x4S
@@ -1664,6 +1665,14 @@ fn type_check_function(ctx: &ModuleContext, func_idx: usize, func_type: &FuncTyp
                         // sanctioned as implementation-defined at RUNTIME
                         // -- entirely invisible here, still just two V128
                         // pops, one V128 push.
+                        // `i16x8.relaxed_q15mulr_s` (relaxed SIMD epic PR2)
+                        // joins too: same `(v128, v128) -> v128` shape as
+                        // `Q15mulrSatI16x8S` above, its only difference
+                        // being that the single `MIN, MIN` overflow lane's
+                        // saturate-vs-wrap choice is spec-sanctioned as
+                        // implementation-defined at RUNTIME -- entirely
+                        // invisible here, still just two V128 pops, one
+                        // V128 push.
                         pop_expect(&mut stack, frame!(), ValueType::V128)?;
                         pop_expect(&mut stack, frame!(), ValueType::V128)?;
                         push_val(&mut stack, ValueType::V128);

@@ -1624,6 +1624,62 @@
         "not_yet_supported": 0
       }
     },
+    "i16x8_relaxed_q15mulr_s.wast": {
+      "action": {
+        "pass": 0,
+        "fail": 0,
+        "trap": 0,
+        "not_yet_supported": 0
+      },
+      "assert_exhaustion": {
+        "pass": 0,
+        "fail": 0,
+        "trap": 0,
+        "not_yet_supported": 0
+      },
+      "assert_invalid": {
+        "pass": 0,
+        "fail": 0,
+        "trap": 0,
+        "not_yet_supported": 0
+      },
+      "assert_malformed": {
+        "pass": 0,
+        "fail": 0,
+        "trap": 0,
+        "not_yet_supported": 0
+      },
+      "assert_return": {
+        "pass": 2,
+        "fail": 0,
+        "trap": 0,
+        "not_yet_supported": 0
+      },
+      "assert_trap": {
+        "pass": 0,
+        "fail": 0,
+        "trap": 0,
+        "not_yet_supported": 0
+      },
+      "assert_unlinkable": {
+        "pass": 0,
+        "fail": 0,
+        "trap": 0,
+        "not_yet_supported": 0
+      },
+      "module": {
+        "pass": 1,
+        "fail": 0,
+        "trap": 0,
+        "not_yet_supported": 0
+      },
+      "register": {
+        "pass": 0,
+        "fail": 0,
+        "trap": 0,
+        "not_yet_supported": 0
+      }
+    },
     "i32.wast": {
       "action": {
         "pass": 0,
@@ -7307,7 +7363,7 @@
       "not_yet_supported": 538
     },
     "assert_return": {
-      "pass": 44629,
+      "pass": 44631,
       "fail": 17,
       "trap": 0,
       "not_yet_supported": 545
@@ -7325,7 +7381,7 @@
       "not_yet_supported": 0
     },
     "module": {
-      "pass": 1269,
+      "pass": 1270,
       "fail": 1,
       "trap": 0,
       "not_yet_supported": 67
