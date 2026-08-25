@@ -5094,6 +5094,34 @@
       "json": "spanish/narration/ch334.json",
       "textHash": "fnv1a64:1cbd42dce4c16d13",
       "jsonHash": "fnv1a64:7736d969d39d3317"
+    },
+    {
+      "language": "spanish",
+      "chapter": 335,
+      "sourceHash": "fnv1a64:2b5e2d27736de6a7",
+      "lessonIds": [
+        "ES-C335-repaso-seis-palabras"
+      ],
+      "voiceLessons": 1,
+      "drivablePrefix": 1,
+      "text": "spanish/narration/ch335.txt",
+      "json": "spanish/narration/ch335.json",
+      "textHash": "fnv1a64:6ebfd73de50235c4",
+      "jsonHash": "fnv1a64:f1a00792e98c49f7"
+    },
+    {
+      "language": "spanish",
+      "chapter": 336,
+      "sourceHash": "fnv1a64:bef83402f1babca3",
+      "lessonIds": [
+        "ES-C336-repaso-seis-en-uso"
+      ],
+      "voiceLessons": 1,
+      "drivablePrefix": 1,
+      "text": "spanish/narration/ch336.txt",
+      "json": "spanish/narration/ch336.json",
+      "textHash": "fnv1a64:9facf9c92a5dbc7e",
+      "jsonHash": "fnv1a64:34d0a5009112e9fd"
     }
   ],
   "findings": []

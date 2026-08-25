@@ -1,7 +1,7 @@
 {
   "language": "spanish",
-  "lessonCount": 750,
-  "atomMeasurableLessons": 746,
+  "lessonCount": 752,
+  "atomMeasurableLessons": 748,
   "atomMeasurementBlindLessons": 4,
   "durationViolations": 0,
   "atomLessonSpikes": 6,
@@ -17,13 +17,13 @@
   "forwardReviews": 0,
   "forwardReferences": 271,
   "atomsTaught": 1027,
-  "atomsNeverRevisited": 122,
+  "atomsNeverRevisited": 119,
   "reinforcementWindowMisses": 2765,
   "reinforcementMissesByWindow": {
     "R1": 223,
-    "R2": 853,
-    "R3": 881,
-    "R4": 808
+    "R2": 855,
+    "R3": 883,
+    "R4": 804
   },
   "payoffSurprises": 26,
   "writingPracticeLessons": 11,
