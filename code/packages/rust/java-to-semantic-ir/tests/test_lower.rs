@@ -12,7 +12,7 @@
 use java_to_semantic_ir::{compile, compile_source};
 use lexer::token::{Token, TokenType};
 use parser::grammar_parser::{ASTNodeOrToken, GrammarASTNode};
-use semantic_ir::{Expr, Function, Module, Stmt};
+use semantic_ir::{Expr, Feature, Function, Module, ParamKind, Stmt};
 
 fn compile_ok(src: &str) -> Module {
     let module = compile_source(src, "prog")
@@ -35,6 +35,24 @@ fn main_fn(m: &Module) -> &Function {
 
 fn wrap(body: &str) -> String {
     format!("class Main {{ public static void main(String[] args) {{ {body} }} }}")
+}
+
+/// M3a: a full class body (multiple `method_declaration`s), unlike
+/// [`wrap`] which only ever wraps `main`'s own body.
+fn class_src(class_body: &str) -> String {
+    format!("class Main {{ {class_body} }}")
+}
+
+fn find_fn<'a>(m: &'a Module, name: &str) -> &'a Function {
+    m.functions
+        .iter()
+        .find(|f| f.name == name)
+        .unwrap_or_else(|| {
+            panic!(
+                "expected a `{name}` function, found {:?}",
+                m.functions.iter().map(|f| &f.name).collect::<Vec<_>>()
+            )
+        })
 }
 
 // ── literals ─────────────────────────────────────────────────────────────
@@ -1437,6 +1455,333 @@ fn break_inside_a_while_loop_is_an_error() {
 #[test]
 fn continue_inside_a_while_loop_is_an_error() {
     let err = compile_source(&wrap("while (true) { continue; }"), "prog").unwrap_err();
+    assert!(!err.message.is_empty());
+}
+
+// ── M3a: method declarations + calls ─────────────────────────────────────
+
+#[test]
+fn every_method_becomes_its_own_function_in_the_module() {
+    let m = compile_ok(&class_src(
+        "public static void main(String[] args) { } \
+         static int add(int a, int b) { return a + b; } \
+         static int square(int x) { return x * x; }",
+    ));
+    let mut names: Vec<&str> = m.functions.iter().map(|f| f.name.as_str()).collect();
+    names.sort_unstable();
+    assert_eq!(names, ["add", "main", "square"]);
+}
+
+#[test]
+fn method_params_are_typed_and_declared_in_order() {
+    let m = compile_ok(&class_src(
+        "public static void main(String[] args) { } \
+         static int add(int a, int b) { return a + b; }",
+    ));
+    let add = find_fn(&m, "add");
+    assert_eq!(add.params.len(), 2);
+    assert_eq!(add.params[0].name, "a");
+    assert_eq!(add.params[1].name, "b");
+    assert!(add
+        .params
+        .iter()
+        .all(|p| p.kind == ParamKind::Required && p.default.is_none()));
+}
+
+#[test]
+fn call_to_a_method_declared_earlier_lowers_to_direct_call() {
+    let m = compile_ok(&class_src(
+        "static int add(int a, int b) { return a + b; } \
+         public static void main(String[] args) { int r = add(1, 2); }",
+    ));
+    match &main_fn(&m).body.stmts[0] {
+        Stmt::LetStarBinding { name, value, .. } => {
+            assert_eq!(name, "r");
+            match value {
+                Expr::DirectCall { fn_name, args, .. } => {
+                    assert_eq!(fn_name, "add");
+                    assert_eq!(args.len(), 2);
+                }
+                other => panic!("expected DirectCall, got {other:?}"),
+            }
+        }
+        other => panic!("expected LetStarBinding, got {other:?}"),
+    }
+}
+
+#[test]
+fn call_to_a_method_declared_later_still_resolves_forward_reference() {
+    // Pass 1 registers every method's name+signature before any body is
+    // lowered, so `main` (declared first) can call `helper` (declared
+    // after it) exactly as real Java allows.
+    let m = compile_ok(&class_src(
+        "public static void main(String[] args) { int r = helper(5); } \
+         static int helper(int x) { return x; }",
+    ));
+    match &main_fn(&m).body.stmts[0] {
+        Stmt::LetStarBinding {
+            value: Expr::DirectCall { fn_name, .. },
+            ..
+        } => {
+            assert_eq!(fn_name, "helper");
+        }
+        other => panic!("expected a DirectCall-valued LetStarBinding, got {other:?}"),
+    }
+}
+
+#[test]
+fn plain_self_recursion_lowers_without_error_and_is_not_mutual_recursion() {
+    let m = compile_ok(&class_src(
+        "public static void main(String[] args) { } \
+         static int loop(int n) { return loop(n); }",
+    ));
+    assert!(!m.manifest.contains(Feature::MutualRecursion));
+}
+
+#[test]
+fn mutual_recursion_between_two_methods_sets_the_manifest_feature() {
+    let m = compile_ok(&class_src(
+        "public static void main(String[] args) { } \
+         static boolean isEven(int n) { return isOdd(n); } \
+         static boolean isOdd(int n) { return isEven(n); }",
+    ));
+    assert!(m.manifest.contains(Feature::MutualRecursion));
+}
+
+#[test]
+fn void_method_call_as_a_bare_statement_lowers_to_expr_stmt() {
+    let m = compile_ok(&class_src(
+        "static void noop(int x) { } \
+         public static void main(String[] args) { noop(1); }",
+    ));
+    match &main_fn(&m).body.stmts[0] {
+        Stmt::ExprStmt {
+            expr: Expr::DirectCall { fn_name, .. },
+            ..
+        } => {
+            assert_eq!(fn_name, "noop");
+        }
+        other => panic!("expected an ExprStmt-wrapped DirectCall, got {other:?}"),
+    }
+}
+
+#[test]
+fn return_expression_as_the_last_statement_becomes_the_block_value() {
+    let m = compile_ok(&class_src(
+        "public static void main(String[] args) { } \
+         static int square(int x) { return x * x; }",
+    ));
+    let square = find_fn(&m, "square");
+    assert!(square.body.stmts.is_empty());
+    assert!(!matches!(square.body.value, Expr::NilLit { .. }));
+}
+
+#[test]
+fn void_method_with_bare_return_has_a_nil_block_value() {
+    let m = compile_ok(&class_src(
+        "public static void main(String[] args) { } \
+         static void greet() { return; }",
+    ));
+    let greet = find_fn(&m, "greet");
+    assert!(matches!(greet.body.value, Expr::NilLit { .. }));
+}
+
+#[test]
+fn void_method_falling_off_the_end_has_a_nil_block_value() {
+    let m = compile_ok(&class_src(
+        "public static void main(String[] args) { } \
+         static void greet() { int x = 1; }",
+    ));
+    let greet = find_fn(&m, "greet");
+    assert_eq!(greet.body.stmts.len(), 1);
+    assert!(matches!(greet.body.value, Expr::NilLit { .. }));
+}
+
+#[test]
+fn call_to_unknown_method_is_an_error() {
+    let err = compile_source(&wrap("mystery(1);"), "prog").unwrap_err();
+    assert!(!err.message.is_empty());
+}
+
+#[test]
+fn call_with_wrong_argument_count_is_an_error() {
+    let err = compile_source(
+        &class_src(
+            "static int add(int a, int b) { return a + b; } \
+             public static void main(String[] args) { add(1); }",
+        ),
+        "prog",
+    )
+    .unwrap_err();
+    assert!(!err.message.is_empty());
+}
+
+#[test]
+fn call_with_wrong_argument_kind_is_an_error() {
+    let err = compile_source(
+        &class_src(
+            "static int add(int a, int b) { return a + b; } \
+             public static void main(String[] args) { add(true, 2); }",
+        ),
+        "prog",
+    )
+    .unwrap_err();
+    assert!(!err.message.is_empty());
+}
+
+#[test]
+fn duplicate_method_name_is_an_error() {
+    let err = compile_source(
+        &class_src(
+            "public static void main(String[] args) { } \
+             static int add(int a, int b) { return a + b; } \
+             static int add(int a) { return a; }",
+        ),
+        "prog",
+    )
+    .unwrap_err();
+    assert!(
+        err.message.contains("duplicate"),
+        "unexpected message: {}",
+        err.message
+    );
+}
+
+#[test]
+fn return_not_as_the_last_statement_is_an_error() {
+    let err = compile_source(
+        &class_src(
+            "public static void main(String[] args) { } \
+             static int f() { return 1; int y = 2; }",
+        ),
+        "prog",
+    )
+    .unwrap_err();
+    assert!(
+        err.message.contains("return"),
+        "unexpected message: {}",
+        err.message
+    );
+}
+
+#[test]
+fn return_nested_inside_an_if_body_is_rejected_not_mis_lowered() {
+    // The literal-last-top-level-statement rule means a branched/early
+    // return (a `return` inside an `if`'s own body) is not recognized as
+    // the method-body-level return at all -- it falls through to
+    // `lower_statement`'s ordinary "unsupported statement kind"
+    // rejection, since `return_statement` is not one of that
+    // dispatcher's alternatives. A real deferred limitation, not a bug:
+    // see this crate's own module doc comment.
+    let err = compile_source(
+        &class_src(
+            "public static void main(String[] args) { } \
+             static int f(int x) { if (x > 0) { return 1; } return 2; }",
+        ),
+        "prog",
+    )
+    .unwrap_err();
+    assert!(!err.message.is_empty());
+}
+
+#[test]
+fn return_expression_kind_must_match_the_declared_return_type() {
+    let err = compile_source(
+        &class_src(
+            "public static void main(String[] args) { } \
+             static int f() { return true; }",
+        ),
+        "prog",
+    )
+    .unwrap_err();
+    assert!(!err.message.is_empty());
+}
+
+#[test]
+fn return_with_expression_in_a_void_method_is_an_error() {
+    let err = compile_source(
+        &class_src(
+            "public static void main(String[] args) { } \
+             static void f() { return 1; }",
+        ),
+        "prog",
+    )
+    .unwrap_err();
+    assert!(!err.message.is_empty());
+}
+
+#[test]
+fn bare_return_in_a_non_void_method_is_an_error() {
+    let err = compile_source(
+        &class_src(
+            "public static void main(String[] args) { } \
+             static int f() { return; }",
+        ),
+        "prog",
+    )
+    .unwrap_err();
+    assert!(!err.message.is_empty());
+}
+
+#[test]
+fn array_parameter_type_is_still_unsupported() {
+    let err = compile_source(
+        &class_src(
+            "public static void main(String[] args) { } \
+             static void f(int[] x) { }",
+        ),
+        "prog",
+    )
+    .unwrap_err();
+    assert!(!err.message.is_empty());
+}
+
+#[test]
+fn c_style_array_parameter_bracket_is_unsupported() {
+    let err = compile_source(
+        &class_src(
+            "public static void main(String[] args) { } \
+             static void f(int x[]) { }",
+        ),
+        "prog",
+    )
+    .unwrap_err();
+    assert!(!err.message.is_empty());
+}
+
+#[test]
+fn varargs_parameter_is_unsupported() {
+    let err = compile_source(
+        &class_src(
+            "public static void main(String[] args) { } \
+             static void f(int... xs) { }",
+        ),
+        "prog",
+    )
+    .unwrap_err();
+    assert!(!err.message.is_empty());
+}
+
+#[test]
+fn field_declaration_in_class_body_is_an_error() {
+    let err = compile_source(
+        &class_src("int x; public static void main(String[] args) { }"),
+        "prog",
+    )
+    .unwrap_err();
+    assert!(!err.message.is_empty());
+}
+
+#[test]
+fn qualified_call_remains_unsupported() {
+    let err = compile_source(
+        &class_src(
+            "static int add(int a, int b) { return a + b; } \
+             public static void main(String[] args) { Main.add(1, 2); }",
+        ),
+        "prog",
+    )
+    .unwrap_err();
     assert!(!err.message.is_empty());
 }
 

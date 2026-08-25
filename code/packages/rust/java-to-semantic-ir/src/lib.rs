@@ -1,6 +1,6 @@
 //! # java-to-semantic-ir
 //!
-//! Java CST → narrow-waist Semantic IR, **v0.4.0**.
+//! Java CST → narrow-waist Semantic IR, **v0.5.0**.
 //!
 //! This is the first frontend for [SIR29](../../../specs/SIR29-nominal-static-oop-profile.md),
 //! the nominal/static-dispatch OOP profile extension of the SIR10 narrow-waist
@@ -33,7 +33,7 @@
 //! assert!(module.functions.iter().any(|f| f.name == "main"));
 //! ```
 //!
-//! ## Scope (v0.4.0 — JV02 milestones M0 + M1 + M2a + M2b)
+//! ## Scope (v0.5.0 — JV02 milestones M0 + M1 + M2a + M2b + M3a)
 //!
 //! Java requires an explicit `class`/`main`-method wrapper at the source
 //! level (unlike Ruby/Python/JS, which allow bare top-level statements) —
@@ -50,12 +50,16 @@
 //! `for` (→ `Stmt::ForEach` directly, M2b) — every block, including a
 //! classic `for`'s own init-declared variable's scope, is a real lexical
 //! scope, mirroring the SIR validator's own block-scoping contract
-//! exactly. Everything else (`switch`, `break`/`continue` — SIR has no IR
-//! primitive for either — method calls, field/array access, lambdas,
-//! casts, additional classes or methods, non-`main` entry shapes) is out
-//! of scope so far and returns a clean [`JavaLowerError`] rather than
-//! being silently mis-lowered — see `lower.rs`'s own module doc for the
-//! exact boundary and JV02's own milestone table for what comes next.
+//! exactly; every method in the class body (static or instance, typed
+//! parameters, two-pass name resolution so forward references and
+//! recursion work), bare unqualified calls (`Expr::DirectCall`), and
+//! `return` in tail position only (M3a). Everything else (`switch`,
+//! `break`/`continue` — SIR has no IR primitive for either — qualified
+//! calls, method overloading, lambdas, field/array access, casts,
+//! additional classes, non-`main` entry shapes) is out of scope so far
+//! and returns a clean [`JavaLowerError`] rather than being silently
+//! mis-lowered — see `lower.rs`'s own module doc for the exact boundary
+//! and JV02's own milestone table for what comes next.
 
 mod lower;
 pub use lower::{compile, JavaLowerError};

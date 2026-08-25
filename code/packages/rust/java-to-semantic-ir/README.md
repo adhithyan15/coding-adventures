@@ -4,7 +4,7 @@ Java CST → narrow-waist Semantic IR. The first frontend for
 [SIR29](../../../specs/SIR29-nominal-static-oop-profile.md), the
 nominal/static-dispatch OOP profile extension of the SIR10 narrow-waist IR.
 See [JV02](../../../specs/JV02-java-to-semantic-ir.md) for this frontend's
-full milestone plan (M0 + M1 + M2a + M2b here, through M9).
+full milestone plan (M0 + M1 + M2a + M2b + M3a here, through M9).
 
 ## Where this fits
 
@@ -34,7 +34,7 @@ let module = compile_source(
 )?;
 ```
 
-## Scope (v0.4.0 — JV02 milestones M0 + M1 + M2a + M2b)
+## Scope (v0.5.0 — JV02 milestones M0 + M1 + M2a + M2b + M3a)
 
 Java requires an explicit `class`/`main`-method wrapper at the source level
 (unlike Ruby/Python/JS, which allow bare top-level statements) — this crate
@@ -51,49 +51,63 @@ loop too narrow for Java's fully general three-clause form — mirrors
 enhanced `for` (→ `Stmt::ForEach` directly, M2b) — every block, including a
 classic `for`'s own init-declared variable's scope, is a real lexical
 scope, mirroring the SIR validator's own block-scoping contract exactly (a
-name declared inside one does not leak past it). Everything else —
-`switch`/`break`/`continue` (SIR has no IR node for any of the three —
-confirmed by a repo-wide grep, not assumed — so this needs a spec-level
-design decision before any frontend can target it; note a bare `for (;;)`
-loop genuinely cannot terminate without `break`, a real and permanent
-limitation until it exists), method calls, field/array access, lambdas,
-casts, `instanceof`, the ternary conditional, bitwise/shift operators,
-additional classes/methods/fields, and every SIR29 construct
-(`NominalClassDef`/`InterfaceDef`/`MethodDef`/`VirtualCall`) — is out of
-scope so far and returns a clean `JavaLowerError` rather than being
-silently mis-lowered. See `src/lower.rs`'s own module doc comment for the
-exact boundary, and the JV02 spec's milestone table for what comes next.
+name declared inside one does not leak past it); every method in the class
+body — static or instance, both lowering identically to a flat top-level
+`Function` since there's no real object/receiver model yet — with typed
+parameters, resolved via a two-pass scheme so forward references and
+recursion between methods work regardless of textual order; bare
+unqualified calls (`foo(a, b)` → `Expr::DirectCall`); and `return`, but
+only as the literal last top-level statement of a method body (SIR has no
+`Stmt::Return` primitive — a function's value is always its own body
+`Block`'s trailing value) (M3a). Everything else — `switch`/`break`/
+`continue` (SIR has no IR node for any of the three — confirmed by a
+repo-wide grep, not assumed — so this needs a spec-level design decision
+before any frontend can target it; note a bare `for (;;)` loop genuinely
+cannot terminate without `break`, a real and permanent limitation until it
+exists), qualified calls (`x.foo(...)`), method overloading, an early or
+branched `return`, lambdas, field/array access, casts, `instanceof`, the
+ternary conditional, bitwise/shift operators, fields/constructors/nested
+types, and every SIR29 construct (`NominalClassDef`/`InterfaceDef`/
+`MethodDef`/`VirtualCall`) — is out of scope so far and returns a clean
+`JavaLowerError` rather than being silently mis-lowered. See
+`src/lower.rs`'s own module doc comment for the exact boundary, and the
+JV02 spec's milestone table for what comes next.
 
 ### Testing
 
 - `tests/test_lower.rs` — unit tests over every construct this crate
-  supports (all four milestones) and every documented scope-boundary
+  supports (all five milestones) and every documented scope-boundary
   rejection, including block-scope leak prevention in both directions (a
   local declared inside an `if`/`do`-`while`/`for`/enhanced-`for` body is
   invisible after it; the outer scope's own name of the same spelling is
-  unaffected). Every positive test also asserts the lowered `Module`
-  passes `semantic_ir::validate()` — not just that lowering itself didn't
-  error.
+  unaffected) and M3a's own method/call shapes (forward references,
+  self- vs. mutual-recursion, tail-position-return validation,
+  duplicate-method-name/wrong-arity/wrong-kind/unknown-callee rejection).
+  Every positive test also asserts the lowered `Module` passes
+  `semantic_ir::validate()` — not just that lowering itself didn't error.
 - `tests/e2e_python.rs` — execution-proof tests, per JV02's own
   "Verification" section. Real Java source lowers through this crate,
   then through the Python backend (`semantic-ir-to-python`, a dev-
   dependency), then runs under `python3`, asserting on real computed
   output — including the do-while "condition already false on entry, but
   the body still runs once" case a plain pretest `while` would get wrong,
-  and a classic `for` reusing an already-declared loop variable (a
-  different `for_init` grammar alternative from the usual declaration
-  form). No execution-proof test exists for enhanced `for` (M1/M2 have no
-  array/collection construction syntax yet, so there's no real Java
-  expression that lowers to something Python's own `for x in xs:` codegen
-  could actually iterate) or for `for (;;)` with empty clauses (it
-  genuinely cannot terminate without `break` — an execution proof would
-  just hang) — both are covered structurally in `tests/test_lower.rs`
-  instead, honestly reflecting what's actually provable at this milestone.
-  Python, not JavaScript: the JavaScript backend does not accept
-  `Feature::StringInterpolation` yet, and M1's `+`-based string
-  concatenation needs it. Since this crate has no way to produce
-  observable output on its own terms yet (`System.out.println` is a
-  method call, out of scope until M3), the harness redirects `main`'s
+  a classic `for` reusing an already-declared loop variable (a different
+  `for_init` grammar alternative from the usual declaration form), a
+  method call, a call resolving a forward reference, and a void call
+  running harmlessly alongside a real trailing value. No execution-proof
+  test exists for enhanced `for` (M1/M2 have no array/collection
+  construction syntax yet, so there's no real Java expression that lowers
+  to something Python's own `for x in xs:` codegen could actually
+  iterate), `for (;;)` with empty clauses (it genuinely cannot terminate
+  without `break` — an execution proof would just hang), or recursion
+  (plain or mutual — a genuinely *terminating* recursive call needs a
+  base case, which needs a branched/early `return`, out of scope for
+  M3a, so any recursive call this milestone can express would recurse
+  forever if actually run) — all three are covered structurally in
+  `tests/test_lower.rs` instead, honestly reflecting what's actually
+  provable at this milestone. Python, not JavaScript: the JavaScript
+  backend does not accept `Feature::StringInterpolation` yet, and M1's
+  `+`-based string concatenation needs it. The harness redirects `main`'s
   trailing block value to its last statement's expression after lowering
   — a test-harness convenience, not a frontend behavior change — so the
   backend's own unconditional `return <block.value>` epilogue gives it
@@ -102,9 +116,9 @@ exact boundary, and the JV02 spec's milestone table for what comes next.
   fixed, in `code/programs/go/build-tool`) — that gap is about getting a
   JDK for a future milestone's own `javac`/`java` oracle comparison, which
   only becomes meaningful once real Java source can produce output to
-  compare (M3+); `python3` is a toolchain other cross-language backend
-  tests in this repo already depend on. Gracefully skips when `python3` is
-  absent from `PATH`.
+  compare; `python3` is a toolchain other cross-language backend tests in
+  this repo already depend on. Gracefully skips when `python3` is absent
+  from `PATH`.
 
 ## How it fits in the stack
 
