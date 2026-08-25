@@ -1,0 +1,16 @@
+{
+  "id": "ES-PATH-358-01",
+  "spine_node": "SPINE-DEFINITE-REFERENCE",
+  "lessons": [
+    "ES-C358-color",
+    "ES-C358-tamano",
+    "ES-C358-forma",
+    "ES-C358-clase",
+    "ES-C358-marca"
+  ],
+  "before": [],
+  "inline": [
+    "ES-EXT-358-REF"
+  ],
+  "after": []
+}

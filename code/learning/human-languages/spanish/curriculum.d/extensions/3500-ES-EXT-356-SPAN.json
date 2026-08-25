@@ -1,0 +1,15 @@
+{
+  "id": "ES-EXT-356-SPAN",
+  "stage": "A1",
+  "kind": "required",
+  "category": "vocabulary",
+  "canDo": "I can say when something starts, name a fixed time, and say that something happened without warning.",
+  "prerequisites": [],
+  "lessons": [
+    "ES-C356-desde",
+    "ES-C356-cita",
+    "ES-C356-etapa",
+    "ES-C356-ocasion",
+    "ES-C356-repente"
+  ]
+}
