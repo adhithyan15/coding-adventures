@@ -5498,10 +5498,13 @@ impl HtmlParser {
         }
 
         if !in_foreign_content && name == "frame" && !self.current_element_is("frameset") {
-            self.diagnostics.push(ParserDiagnostic::new(
-                "unexpected-frame-start-tag",
-                "start tag `<frame>` outside a frameset was ignored",
-            ));
+            self.diagnostics.push(
+                ParserDiagnostic::new(
+                    "unexpected-frame-start-tag",
+                    "start tag `<frame>` outside a frameset was ignored",
+                )
+                .at_emission(self.current_token_emission_position),
+            );
             return;
         }
 
@@ -27481,6 +27484,14 @@ mod tests {
         .at_emission(Some(start_tag_position_at(source, name, occurrence)))
     }
 
+    fn unexpected_frame_start_tag(source: &str, occurrence: usize) -> ParserDiagnostic {
+        ParserDiagnostic::new(
+            "unexpected-frame-start-tag",
+            "start tag `<frame>` outside a frameset was ignored",
+        )
+        .at_emission(Some(start_tag_position_at(source, "frame", occurrence)))
+    }
+
     fn start_tag_in_template_column_group_recovery(
         source: &str,
         name: &str,
@@ -37907,9 +37918,67 @@ mod tests {
 
     #[test]
     fn ignores_frame_start_tags_outside_framesets() {
-        let document = parse_html("<frame>test").unwrap();
+        let source = "<!doctype html><frame>test";
+        let output = parse_html_with_diagnostics(source).unwrap();
 
-        assert_eq!(body(&document).children, vec![Node::text("test")]);
+        assert_eq!(body(&output.document).children, vec![Node::text("test")]);
+        assert_eq!(
+            output.parser_diagnostics,
+            vec![unexpected_frame_start_tag(source, 0)]
+        );
+    }
+
+    #[test]
+    fn positions_frame_start_tags_ignored_outside_framesets() {
+        let source = "<!doctype html><frame><!--é-->\r\n<frame><table><frame></table>";
+        let output = parse_html_with_diagnostics(source).unwrap();
+        assert_eq!(
+            output
+                .parser_diagnostics
+                .iter()
+                .filter(|diagnostic| diagnostic.code == "unexpected-frame-start-tag")
+                .collect::<Vec<_>>(),
+            vec![
+                &unexpected_frame_start_tag(source, 0),
+                &unexpected_frame_start_tag(source, 1),
+                &unexpected_frame_start_tag(source, 2),
+            ]
+        );
+
+        let fragment_source = "<frame>";
+        let fragment = parse_html_fragment_with_diagnostics(fragment_source).unwrap();
+        assert!(fragment
+            .parser_diagnostics
+            .iter()
+            .any(|diagnostic| diagnostic == &unexpected_frame_start_tag(fragment_source, 0)));
+
+        for excluded in [
+            "<!doctype html><frameset><frame>",
+            "<!doctype html><svg><frame>",
+            "<!doctype html><frame",
+        ] {
+            let output = parse_html_with_diagnostics(excluded).unwrap();
+            assert!(
+                output
+                    .parser_diagnostics
+                    .iter()
+                    .all(|diagnostic| diagnostic.code != "unexpected-frame-start-tag"),
+                "source {excluded:?}"
+            );
+        }
+
+        let mut unpositioned = HtmlParser::new();
+        unpositioned.process_token(Token::StartTag {
+            name: "frame".to_string(),
+            attributes: Vec::new(),
+            self_closing: false,
+        });
+        let diagnostic = unpositioned
+            .diagnostics()
+            .iter()
+            .find(|diagnostic| diagnostic.code == "unexpected-frame-start-tag")
+            .unwrap();
+        assert_eq!(diagnostic.position, None);
     }
 
     #[test]
