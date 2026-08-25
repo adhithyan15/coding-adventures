@@ -2,7 +2,7 @@
 schema_version: 2
 id: ES-C46-les
 spine_node: SPINE-DEFINITE-REFERENCE
-sequence: 1232
+sequence: 1233
 chapter: 94
 type: grammar
 headword: les

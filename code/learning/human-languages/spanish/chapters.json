@@ -6603,6 +6603,72 @@
       }
     },
     {
+      "chapter": 337,
+      "title": "Writing --- Your Own Line",
+      "label": "ch:escribir-frase-propia",
+      "canDo": "I can write a greeting and my name from a closed supply of known words, choosing the greeting the hour asks for.",
+      "spineNodes": [
+        "SPINE-TIME-OF-DAY"
+      ],
+      "payoff": {
+        "lesson": "ES-W01-frase-propia",
+        "kind": "task",
+        "summary": "Complete ES-W01-frase-propia: with no model to copy, choose one of four greetings by the hour and order it in front of me llamo.",
+        "assesses": [
+          "ES-WRITING-CONTROLLED-COMPOSITION",
+          "ES-LEX-BUENOS-DIAS",
+          "ES-LEX-BUENAS-TARDES",
+          "ES-LEX-BUENAS-NOCHES",
+          "ES-LEX-ME-LLAMO"
+        ],
+        "note": "The first writing step with nothing to reach for. Every earlier step supplied a model; this chapter introduces the one atom that names the difference, and the payoff assesses it directly."
+      }
+    },
+    {
+      "chapter": 338,
+      "title": "Writing --- Four Lines About You",
+      "label": "ch:escribir-ficha-personal",
+      "canDo": "I can fill a personal-information form with my name, age, origin and address, using only frames I already hold.",
+      "spineNodes": [
+        "SPINE-TIME-OF-DAY"
+      ],
+      "payoff": {
+        "lesson": "ES-W01-ficha-personal",
+        "kind": "task",
+        "summary": "Complete ES-W01-ficha-personal: write four frames about yourself in the order a form asks for them, and stop when the four facts are down.",
+        "assesses": [
+          "ES-WRITING-CONTROLLED-COMPOSITION",
+          "ES-GRAMMAR-AGE-WITH-TENER",
+          "ES-GRAMMAR-ORIGIN-WITH-SER",
+          "ES-LEX-VIVIR",
+          "ES-LEX-GRACIAS"
+        ],
+        "note": "Introduces nothing, so the HL05 representativeness rule is skipped by its own zero-guard; every atom assessed here is taught far earlier."
+      }
+    },
+    {
+      "chapter": 339,
+      "title": "Writing --- With A Clock",
+      "label": "ch:escribir-con-reloj",
+      "canDo": "I can write the personal-information task inside the published DELE A1 timing and word count, and mark it against the published criteria.",
+      "spineNodes": [
+        "SPINE-TIME-OF-DAY"
+      ],
+      "payoff": {
+        "lesson": "ES-W01-con-reloj",
+        "kind": "task",
+        "summary": "Complete ES-W01-con-reloj: write the four lines in three minutes, count the words against the published 15-25 range, and mark task fulfilment before style.",
+        "assesses": [
+          "ES-WRITING-CONTROLLED-COMPOSITION",
+          "ES-GRAMMAR-AGE-WITH-TENER",
+          "ES-GRAMMAR-ORIGIN-WITH-SER",
+          "ES-LEX-VIVIR",
+          "ES-LEX-GRACIAS"
+        ],
+        "note": "Timing, word count and criteria are the ones already sourced in spanish/task-shapes/a1.json, not invented here."
+      }
+    },
+    {
       "chapter": 340,
       "title": "Near, Far, and Which Side",
       "label": "ch:cerca-y-lejos",

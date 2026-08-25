@@ -1041,7 +1041,8 @@
       "spine_node": "SPINE-DEFINITE-REFERENCE",
       "lessons": [
         "ES-C42-me-objeto",
-        "ES-C42-te"
+        "ES-C42-te",
+        "ES-C42-te-thee"
       ],
       "before": [],
       "inline": [
@@ -1077,7 +1078,8 @@
       "id": "ES-PATH-003-NOS",
       "spine_node": "SPINE-DEFINITE-REFERENCE",
       "lessons": [
-        "ES-C45-nos"
+        "ES-C45-nos",
+        "ES-C45-nosotros"
       ],
       "before": [],
       "inline": [
@@ -2539,7 +2541,8 @@
       "id": "ES-PATH-A1-MAL",
       "spine_node": "SPINE-DEFINITE-REFERENCE",
       "lessons": [
-        "ES-C60-mal"
+        "ES-C60-mal",
+        "ES-C60-apocope"
       ],
       "before": [],
       "inline": [
@@ -2827,7 +2830,8 @@
       "id": "ES-PATH-A1-DEIXIS-TIEMPO",
       "spine_node": "SPINE-DEFINITE-REFERENCE",
       "lessons": [
-        "ES-C65-ahora-hoy"
+        "ES-C65-ahora-hoy",
+        "ES-C65-hoy"
       ],
       "before": [],
       "inline": [
@@ -2863,7 +2867,8 @@
       "id": "ES-PATH-A1-VI-DI",
       "spine_node": "SPINE-DEFINITE-REFERENCE",
       "lessons": [
-        "ES-C65-vi-di"
+        "ES-C65-vi-di",
+        "ES-C65-di"
       ],
       "before": [],
       "inline": [
@@ -2947,7 +2952,8 @@
       "id": "ES-PATH-A1-ORDINALES",
       "spine_node": "SPINE-DEFINITE-REFERENCE",
       "lessons": [
-        "ES-C67-primero"
+        "ES-C67-primero",
+        "ES-C67-primer-libro"
       ],
       "before": [],
       "inline": [
@@ -4400,6 +4406,42 @@
       "after": []
     },
     {
+      "id": "ES-PATH-337-01",
+      "spine_node": "SPINE-TIME-OF-DAY",
+      "lessons": [
+        "ES-W01-frase-propia"
+      ],
+      "before": [],
+      "inline": [
+        "ES-EXT-337-WRITING"
+      ],
+      "after": []
+    },
+    {
+      "id": "ES-PATH-338-01",
+      "spine_node": "SPINE-TIME-OF-DAY",
+      "lessons": [
+        "ES-W01-ficha-personal"
+      ],
+      "before": [],
+      "inline": [
+        "ES-EXT-338-WRITING"
+      ],
+      "after": []
+    },
+    {
+      "id": "ES-PATH-339-01",
+      "spine_node": "SPINE-TIME-OF-DAY",
+      "lessons": [
+        "ES-W01-con-reloj"
+      ],
+      "before": [],
+      "inline": [
+        "ES-EXT-339-WRITING"
+      ],
+      "after": []
+    },
+    {
       "id": "ES-PATH-340-01",
       "spine_node": "SPINE-ASK-LOCATION",
       "lessons": [
@@ -4646,6 +4688,9 @@
         "ES-PATH-019",
         "ES-PATH-023",
         "ES-PATH-025",
+        "ES-PATH-337-01",
+        "ES-PATH-338-01",
+        "ES-PATH-339-01",
         "ES-PATH-342-01",
         "ES-PATH-343-01"
       ],
@@ -6320,7 +6365,8 @@
       "prerequisites": [],
       "lessons": [
         "ES-C42-me-objeto",
-        "ES-C42-te"
+        "ES-C42-te",
+        "ES-C42-te-thee"
       ]
     },
     {
@@ -6408,7 +6454,8 @@
       "canDo": "I can use the additional Spanish material required at this point in the path.",
       "prerequisites": [],
       "lessons": [
-        "ES-C45-nos"
+        "ES-C45-nos",
+        "ES-C45-nosotros"
       ]
     },
     {
@@ -7585,7 +7632,8 @@
       "canDo": "I can use the additional Spanish material required at this point in the path.",
       "prerequisites": [],
       "lessons": [
-        "ES-C60-mal"
+        "ES-C60-mal",
+        "ES-C60-apocope"
       ]
     },
     {
@@ -7849,7 +7897,8 @@
       "canDo": "I can use the additional Spanish material required at this point in the path.",
       "prerequisites": [],
       "lessons": [
-        "ES-C65-ahora-hoy"
+        "ES-C65-ahora-hoy",
+        "ES-C65-hoy"
       ]
     },
     {
@@ -7882,7 +7931,8 @@
       "canDo": "I can use the additional Spanish material required at this point in the path.",
       "prerequisites": [],
       "lessons": [
-        "ES-C65-vi-di"
+        "ES-C65-vi-di",
+        "ES-C65-di"
       ]
     },
     {
@@ -7959,7 +8009,8 @@
       "canDo": "I can use the additional Spanish material required at this point in the path.",
       "prerequisites": [],
       "lessons": [
-        "ES-C67-primero"
+        "ES-C67-primero",
+        "ES-C67-primer-libro"
       ]
     },
     {
@@ -8891,96 +8942,6 @@
       ]
     },
     {
-      "id": "ES-EXT-340-WHERE",
-      "stage": "A1",
-      "kind": "required",
-      "category": "vocabulary",
-      "canDo": "I can place a thing near or far, send somebody to the right or the left, and say that one thing faces another.",
-      "prerequisites": [],
-      "lessons": [
-        "ES-C340-cerca",
-        "ES-C340-lejos",
-        "ES-C340-derecha",
-        "ES-C340-izquierda",
-        "ES-C340-enfrente"
-      ]
-    },
-    {
-      "id": "ES-EXT-341-WHERE",
-      "stage": "A1",
-      "kind": "required",
-      "category": "vocabulary",
-      "canDo": "I can put a thing above or below me, ahead of me or behind me, and inside rather than outside.",
-      "prerequisites": [],
-      "lessons": [
-        "ES-C341-arriba",
-        "ES-C341-abajo",
-        "ES-C341-delante",
-        "ES-C341-detras",
-        "ES-C341-dentro"
-      ]
-    },
-    {
-      "id": "ES-EXT-342-CLOCK",
-      "stage": "A1",
-      "kind": "required",
-      "category": "vocabulary",
-      "canDo": "I can cut an hour into minutes and quarters, give a time on the dot, ask for a timetable, and name the hours before dawn.",
-      "prerequisites": [],
-      "lessons": [
-        "ES-C342-minuto",
-        "ES-C342-cuarto",
-        "ES-C342-punto",
-        "ES-C342-horario",
-        "ES-C342-madrugada"
-      ]
-    },
-    {
-      "id": "ES-EXT-343-CLOCK",
-      "stage": "A1",
-      "kind": "required",
-      "category": "vocabulary",
-      "canDo": "I can name a date, find it on a calendar, point forward to the next one, and name the era it belongs to.",
-      "prerequisites": [],
-      "lessons": [
-        "ES-C343-fecha",
-        "ES-C343-calendario",
-        "ES-C343-proximo",
-        "ES-C343-epoca",
-        "ES-C343-siglo"
-      ]
-    },
-    {
-      "id": "ES-EXT-344-COUNT",
-      "stage": "A1",
-      "kind": "required",
-      "category": "vocabulary",
-      "canDo": "I can count from zero, name a number, take half of a thing, count by dozens, and double an amount.",
-      "prerequisites": [],
-      "lessons": [
-        "ES-C344-cero",
-        "ES-C344-numero",
-        "ES-C344-mitad",
-        "ES-C344-docena",
-        "ES-C344-doble"
-      ]
-    },
-    {
-      "id": "ES-EXT-345-REF",
-      "stage": "A1",
-      "kind": "required",
-      "category": "vocabulary",
-      "canDo": "I can say a thing is the same one, take a set one at a time, name a share of it, and name a single person or object.",
-      "prerequisites": [],
-      "lessons": [
-        "ES-C345-mismo",
-        "ES-C345-cada",
-        "ES-C345-parte",
-        "ES-C345-persona",
-        "ES-C345-objeto"
-      ]
-    },
-    {
       "id": "ES-EXT-310-ASK",
       "stage": "pre-A1",
       "kind": "required",
@@ -9120,6 +9081,129 @@
       "prerequisites": [],
       "lessons": [
         "ES-C336-repaso-seis-en-uso"
+      ]
+    },
+    {
+      "id": "ES-EXT-337-WRITING",
+      "stage": "A1",
+      "kind": "required",
+      "category": "consolidation",
+      "canDo": "I can write an original line with no model in front of me, choosing which known words to use and in what order.",
+      "prerequisites": [],
+      "lessons": [
+        "ES-W01-frase-propia"
+      ]
+    },
+    {
+      "id": "ES-EXT-338-WRITING",
+      "stage": "A1",
+      "kind": "required",
+      "category": "consolidation",
+      "canDo": "I can compose a four-line personal-information answer from frames I already hold, and stop when the asked-for facts are down.",
+      "prerequisites": [],
+      "lessons": [
+        "ES-W01-ficha-personal"
+      ]
+    },
+    {
+      "id": "ES-EXT-339-WRITING",
+      "stage": "A1",
+      "kind": "required",
+      "category": "consolidation",
+      "canDo": "I can produce that same written task inside the published DELE A1 timing and word count, and mark it against the published criteria.",
+      "prerequisites": [],
+      "lessons": [
+        "ES-W01-con-reloj"
+      ]
+    },
+    {
+      "id": "ES-EXT-340-WHERE",
+      "stage": "A1",
+      "kind": "required",
+      "category": "vocabulary",
+      "canDo": "I can place a thing near or far, send somebody to the right or the left, and say that one thing faces another.",
+      "prerequisites": [],
+      "lessons": [
+        "ES-C340-cerca",
+        "ES-C340-lejos",
+        "ES-C340-derecha",
+        "ES-C340-izquierda",
+        "ES-C340-enfrente"
+      ]
+    },
+    {
+      "id": "ES-EXT-341-WHERE",
+      "stage": "A1",
+      "kind": "required",
+      "category": "vocabulary",
+      "canDo": "I can put a thing above or below me, ahead of me or behind me, and inside rather than outside.",
+      "prerequisites": [],
+      "lessons": [
+        "ES-C341-arriba",
+        "ES-C341-abajo",
+        "ES-C341-delante",
+        "ES-C341-detras",
+        "ES-C341-dentro"
+      ]
+    },
+    {
+      "id": "ES-EXT-342-CLOCK",
+      "stage": "A1",
+      "kind": "required",
+      "category": "vocabulary",
+      "canDo": "I can cut an hour into minutes and quarters, give a time on the dot, ask for a timetable, and name the hours before dawn.",
+      "prerequisites": [],
+      "lessons": [
+        "ES-C342-minuto",
+        "ES-C342-cuarto",
+        "ES-C342-punto",
+        "ES-C342-horario",
+        "ES-C342-madrugada"
+      ]
+    },
+    {
+      "id": "ES-EXT-343-CLOCK",
+      "stage": "A1",
+      "kind": "required",
+      "category": "vocabulary",
+      "canDo": "I can name a date, find it on a calendar, point forward to the next one, and name the era it belongs to.",
+      "prerequisites": [],
+      "lessons": [
+        "ES-C343-fecha",
+        "ES-C343-calendario",
+        "ES-C343-proximo",
+        "ES-C343-epoca",
+        "ES-C343-siglo"
+      ]
+    },
+    {
+      "id": "ES-EXT-344-COUNT",
+      "stage": "A1",
+      "kind": "required",
+      "category": "vocabulary",
+      "canDo": "I can count from zero, name a number, take half of a thing, count by dozens, and double an amount.",
+      "prerequisites": [],
+      "lessons": [
+        "ES-C344-cero",
+        "ES-C344-numero",
+        "ES-C344-mitad",
+        "ES-C344-docena",
+        "ES-C344-doble"
+      ]
+    },
+    {
+      "id": "ES-EXT-345-REF",
+      "stage": "A1",
+      "kind": "required",
+      "category": "vocabulary",
+      "canDo": "I can say a thing is the same one, take a set one at a time, name a share of it, and name a single person or object.",
+      "prerequisites": [],
+      "lessons": [
+        "ES-C345-mismo",
+        "ES-C345-cada",
+        "ES-C345-parte",
+        "ES-C345-persona",
+        "ES-C345-objeto"
       ]
     }
   ],

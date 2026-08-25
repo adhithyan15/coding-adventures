@@ -2,7 +2,7 @@
 schema_version: 2
 id: ES-C45-sintesis-sin-repetir
 spine_node: SPINE-DEFINITE-REFERENCE
-sequence: 1230
+sequence: 1231
 chapter: 92
 type: practice-mix
 headword: (synthesis)

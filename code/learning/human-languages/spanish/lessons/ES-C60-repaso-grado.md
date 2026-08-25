@@ -8,7 +8,7 @@ type: review
 headword: (review)
 gloss: one scale and one habit — how much of a thing there is, and why half these words come in two lengths
 concept_tag: ES-DEGREE-REVIEW
-prerequisites: [ES-C60-mal]
+prerequisites: [ES-C60-apocope]
 sounds: []
 roots: []
 teaches_cells: []

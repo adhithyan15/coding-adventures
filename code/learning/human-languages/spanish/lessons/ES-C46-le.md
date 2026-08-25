@@ -2,7 +2,7 @@
 schema_version: 2
 id: ES-C46-le
 spine_node: SPINE-DEFINITE-REFERENCE
-sequence: 1231
+sequence: 1232
 chapter: 93
 type: word
 headword: le

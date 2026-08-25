@@ -5386,6 +5386,21 @@
     },
     {
       "language": "spanish",
+      "chapter": 337,
+      "output": "spanish/book/chapters/ch337-escribir-frase-propia.tex"
+    },
+    {
+      "language": "spanish",
+      "chapter": 338,
+      "output": "spanish/book/chapters/ch338-escribir-ficha-personal.tex"
+    },
+    {
+      "language": "spanish",
+      "chapter": 339,
+      "output": "spanish/book/chapters/ch339-escribir-con-reloj.tex"
+    },
+    {
+      "language": "spanish",
       "chapter": 340,
       "output": "spanish/book/chapters/ch340-cerca-y-lejos.tex"
     },

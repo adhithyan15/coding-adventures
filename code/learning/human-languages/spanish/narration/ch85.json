@@ -3,8 +3,8 @@
   "language": "spanish",
   "chapter": 85,
   "title": "Me and Te --- The Two People Talking",
-  "drivablePrefix": 2,
-  "sourceHash": "fnv1a64:a28330f4a60827ec",
+  "drivablePrefix": 3,
+  "sourceHash": "fnv1a64:53864665d41c747f",
   "lessons": [
     {
       "id": "ES-C42-me-objeto",
@@ -211,7 +211,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:c2ddb9f30cd6e2da",
+      "sourceHash": "fnv1a64:709c94a18968937d",
       "notice": null,
       "blocks": [
         {
@@ -268,21 +268,6 @@
         },
         {
           "index": 2,
-          "type": "etymology",
-          "title": "The word, taken apart",
-          "segments": [
-            {
-              "kind": "speech",
-              "text": "Te is Latin tē — the object form of tū, which you already have."
-            },
-            {
-              "kind": "speech",
-              "text": "English used to do this exactly. Old English had thou for the doer and thee for the one it happened to — and, this is the striking part, those are the same two words. Tú/te and thou/thee are one ancient pair, inherited twice. English later dropped both and let you cover the two jobs; Spanish kept them apart."
-            }
-          ]
-        },
-        {
-          "index": 3,
           "type": "guided-production",
           "title": "Guided Practice",
           "segments": [
@@ -304,11 +289,11 @@
             {
               "kind": "prompt",
               "action": "SAY",
-              "instruction": "\"tú\" then \"te\", and \"thou\" then \"thee\" — the same split twice",
+              "instruction": "\"tú\" then \"te\", and hear which one is doing",
               "spoken": true,
               "scored": false,
               "responseSeconds": 8,
-              "source": "[YOU SAY: \"tú\" then \"te\", and \"thou\" then \"thee\" — the same split twice]"
+              "source": "[YOU SAY: \"tú\" then \"te\", and hear which one is doing]"
             },
             {
               "kind": "activity",
@@ -354,7 +339,142 @@
             {
               "kind": "activity",
               "scored": true,
-              "id": "ES-C42-te-english",
+              "id": "ES-C42-te-doer",
+              "prompt": "Which of tu and te is the one doing, and which is the one it lands on?",
+              "assesses": [
+                "ES-LEX-TU",
+                "ES-LEX-TE-OBJECT"
+              ],
+              "responseSeconds": 10,
+              "acceptedResponses": [
+                "tu does, te receives",
+                "tu is the doer, te is the object",
+                "tu doer te object"
+              ],
+              "feedback": {
+                "correct": "Two shapes, two jobs.",
+                "incorrect": "Tu does the loving; te is the one loved."
+              }
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Say \"I love you.\" (Te quiero.) And \"you love me.\" (Me quieres.) Next: where te came from, and the English word that is the very same one."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "ES-C42-te-thee",
+      "sequence": 1222,
+      "title": "te — the pair English used to have",
+      "headword": "te",
+      "romanization": "te",
+      "gloss": "where te came from — and the English word that is the very same one, inherited twice",
+      "script": "latin",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:70197415289395d2",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Two shapes for one person: tú when they act, te when it lands on them."
+            },
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "speech",
+              "text": "English once had exactly the same two shapes, and they are the same two words."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "Te is Latin tē — the object form of tū, which you already have."
+            },
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Old English had thou for the doer and thee for the one it happened to. Here is the striking part: tú/te and thou/thee are not merely similar. They are one ancient pair, inherited twice — once down the Latin line into Spanish, once down the Germanic line into English."
+            },
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "English later dropped both and let you cover the two jobs. Spanish kept them apart, which is why you have two words to learn where a speaker of English feels there should be one."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "\"tú\" then \"te\", and \"thou\" then \"thee\" — the same split twice",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: \"tú\" then \"te\", and \"thou\" then \"thee\" — the same split twice]"
+            },
+            {
+              "kind": "activity",
+              "scored": true,
+              "id": "ES-C42-te-thee-pair",
               "prompt": "Which old English pair is the same inherited pair as tu and te?",
               "assesses": [
                 "ES-ETYMON-TE-TU",
@@ -370,11 +490,31 @@
                 "correct": "The very same two words, inherited twice.",
                 "incorrect": "Thou and thee — English kept the split until it dropped both."
               }
+            },
+            {
+              "kind": "activity",
+              "scored": true,
+              "id": "ES-C42-te-thee-which",
+              "prompt": "Thee lines up with which Spanish word — tu or te?",
+              "assesses": [
+                "ES-ETYMON-TE-TU",
+                "ES-GRAMMAR-TE-DIRECT-OBJECT",
+                "ES-LEX-TE-OBJECT"
+              ],
+              "responseSeconds": 10,
+              "acceptedResponses": [
+                "te",
+                "te, the object form"
+              ],
+              "feedback": {
+                "correct": "Object form to object form.",
+                "incorrect": "Te. Thee was the one it happened to, and so is te."
+              }
             }
           ]
         },
         {
-          "index": 4,
+          "index": 3,
           "type": "recall",
           "title": "Wrap-up Recall",
           "segments": [
@@ -386,7 +526,7 @@
             },
             {
               "kind": "speech",
-              "text": "Say \"I love you.\" (Te quiero.) And \"you love me.\" (Me quieres.) Which English pair matches tú and te? (Thou and thee.) Next: all four of these in one place, for the first time."
+              "text": "Which English pair matches tú and te? (Thou and thee.) And which of the two means \"the one it happened to\"? (Te — and thee.) Next: all four object pronouns in one place, for the first time."
             }
           ]
         }

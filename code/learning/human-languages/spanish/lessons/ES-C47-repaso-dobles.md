@@ -2,7 +2,7 @@
 schema_version: 2
 id: ES-C47-repaso-dobles
 spine_node: SPINE-DEFINITE-REFERENCE
-sequence: 1239
+sequence: 1240
 chapter: 101
 type: practice-mix
 headword: (review)

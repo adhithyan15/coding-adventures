@@ -8,7 +8,7 @@ type: practice-mix
 headword: (review)
 gloss: review — four pronouns, one slot, and the single question that chooses between them
 concept_tag: ES-REVIEW-DIRECT-OBJECT-SINGULAR
-prerequisites: [ES-C42-te]
+prerequisites: [ES-C42-te-thee]
 sounds: []
 roots: []
 teaches_cells: []

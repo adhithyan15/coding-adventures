@@ -8,7 +8,7 @@ type: review
 headword: (review)
 gloss: five sets the book had taught only half of, now finished — and the one habit that explains why each felt incomplete
 concept_tag: ES-PAIRS-REVIEW
-prerequisites: [ES-C65-vi-di]
+prerequisites: [ES-C65-di]
 sounds: []
 roots: []
 teaches_cells: []

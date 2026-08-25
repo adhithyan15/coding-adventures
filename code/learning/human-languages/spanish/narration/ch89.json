@@ -4,11 +4,11 @@
   "chapter": 89,
   "title": "Los and Las --- Them, Derived",
   "drivablePrefix": 0,
-  "sourceHash": "fnv1a64:c61d2d336f521373",
+  "sourceHash": "fnv1a64:1cb9f2cfa0425c59",
   "lessons": [
     {
       "id": "ES-C45-los-las",
-      "sequence": 1227,
+      "sequence": 1228,
       "title": "los and las — \"them\"",
       "headword": "los, las",
       "romanization": "los, las",
@@ -19,7 +19,7 @@
       "modalityReasons": [
         "sight-cue"
       ],
-      "sourceHash": "fnv1a64:aa09742270651ed2",
+      "sourceHash": "fnv1a64:ce74d91213293776",
       "notice": {
         "modality": "sight",
         "needs": [
