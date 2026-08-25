@@ -5,31 +5,34 @@ the shared human-language spine. Every lesson is written for a fresh learner,
 takes under five minutes, and introduces only the characters the expression on the
 page actually needs.
 
-Two chapters are authored.
+The authored book has grown well beyond its original two-chapter prototype. Its
+canonical inventory is deliberately derived from
+[`chapters.json`](./chapters.json) and [`curriculum.json`](./curriculum.json),
+rather than pinned here to a count that becomes false whenever a bounded tranche
+lands. The current progression has four gentle phases:
 
-**Chapter 1** is the spoken greeting: seven lessons that build **你好** *nǐ hǎo*
-from its two characters, teach what each character is made of, establish that
-pitch is part of a Mandarin word, and end with a two-line meeting the reader can
-use today. It is drivable end to end — none of it needs eyes.
+- **Greeting and script foundations:** hear and use **你好** *nǐ hǎo*, then take
+  its characters apart into reusable components and ordered strokes.
+- **Numbers and first choices:** read and write one through five, reuse box
+  shapes, negate a word, and answer with **是** or **不是**.
+- **Leaving and time of day:** close a conversation with **再见**, then build a
+  morning greeting without pretending its neutral-tone rule always fires.
+- **Identity, repair, and courtesy:** say a name, ask **什么**, recover when a
+  word is missed, thank and answer thanks, and use **请** with Mandarin rather
+  than English pragmatics.
 
-**Chapter 2** is the pen: seven lessons, **one glyph each**, that take the
-greeting apart into the pieces it is built from and then put it back together.
-Five teach a component; two teach nothing new at all and instead show what happens
-when two known pieces share a square. A reader who finishes it can *decode* 你好
-rather than recall its shape, and the same two pieces recur in hundreds of other
-characters.
-
-The split is deliberate. A chapter that taught the sounds and the strokes at once
-would carry eighteen new items against a budget of twelve, which is a cliff with
-a gentle label on it.
+The opening split remains deliberate. Teaching the greeting's sounds, characters,
+components, and strokes in one lesson would create a cliff with a gentle label on
+it. Later chapters keep the same rule: oral meaning first when a new written form
+would otherwise overload the learner, then staged handwriting and active recall.
 
 ## Why this track exists
 
-Mandarin is the twenty-first track, and it was added as a **scale test**. The
-first twenty are all Indo-European or Dravidian. This one shares no ancestry with
-English, is written logographically rather than alphabetically, and is tonal. It
-is here to find out which parts of the method were describing language in general
-and which parts were quietly describing Indo-European.
+Mandarin was added as a **scale test** after the registry had already crossed
+several language families and script systems. It shares no ancestry with English,
+is written logographically rather than alphabetically, and is tonal. It is here
+to find out which parts of the method describe language in general and which
+parts quietly describe alphabetic or Indo-European languages.
 
 Three findings, recorded plainly because a track that hides them is worth less
 than one that reports them:
@@ -107,29 +110,32 @@ types beside `grammar` and `etymology`.
 
 ## Read and practise
 
-- [`roadmap.md`](./roadmap.md) orders the authored and planned chapters toward B1,
-  including the font-subset constraint that shapes chapter order.
-- [`session-map.md`](./session-map.md) composes the six micro-lessons with an
-  exact session-count review ledger through S21, and records why this track's
-  drivable prefix is zero.
+- [`roadmap.md`](./roadmap.md) records the original authored-and-planned path
+  toward B1, including the font-subset constraint that shapes chapter order;
+  the machine-readable curriculum is authoritative as newer tranches land.
+- [`session-map.md`](./session-map.md) is explicitly the opening chapter's exact
+  review ledger, not an inventory of the whole track. It also records why that
+  opening chapter's drivable prefix is one lesson.
 - [`pronunciation-reference.md`](./pronunciation-reference.md) collects the tones,
   the sandhi rules, and the pinyin segments for lookup; it is never a prerequisite.
 - [`chapters.json`](./chapters.json) is the HL05 capability ledger: one
   first-person "I can …" promise per chapter and the payoff lesson that proves it.
-- [`lessons/`](./lessons/) contains the six canonical short practice lessons.
-- [`book/book.tex`](./book/book.tex) builds the free starter edition with XeLaTeX;
-  Chapter 1 is generated from the canonical lessons.
+- [`lessons/`](./lessons/) contains the canonical short lessons referenced by the
+  curriculum; the directory grows with each reviewed tranche.
+- [`book/book.tex`](./book/book.tex) builds the generated book with XeLaTeX from
+  those canonical lessons.
 
 ## A note on the empty `bridges` list
 
-`core/languages.json` gives every track a `bridges` array — the languages whose
-history, vocabulary, or structure gives it a leg up. Persian bridges to Arabic and
-Urdu; German bridges to English. **Mandarin's is empty**, and that is the correct
-value, not an unfinished one. The genuine bridges are Japanese, Korean and
-Vietnamese, which borrowed Chinese vocabulary and, in Japanese, the characters
-themselves — and none of them is a track in this curriculum. Listing English there
-because a handful of loanwords crossed (*tea*, *ketchup*, *typhoon*) would claim a
-bridge no lesson can actually walk across.
+`core/languages.json` gives every track a directed `bridges` array — languages
+whose history, vocabulary, or structure gives that track a leg up. Persian
+bridges to Arabic and Urdu; German bridges to English. **Mandarin's is empty**,
+and that is not an unfinished reciprocal edge. Japanese now has its own track and
+correctly names Chinese as a bridge because Japanese borrowed a large layer of
+Chinese vocabulary and characters. The Mandarin path does not assume Japanese,
+Korean, or Vietnamese knowledge in the other direction. Listing English because
+a handful of loanwords crossed (*tea*, *ketchup*, *typhoon*) would likewise claim
+a teaching bridge no Mandarin lesson actually walks across.
 
 ## Script and font
 
@@ -141,9 +147,9 @@ marks its stroke orders `authoritative`.
 The book sets Chinese in `_fonts/NotoSansSC-Subset.ttf`, a fonttools subset of
 Noto Sans SC. It covers every CJK codepoint appearing **anywhere** in that JSON
 file — not only the inventoried `letters`, but every character named inside
-another entry's components, stroke notes or citations. That is 51 characters
-against 29 inventoried glyphs, so a character can be perfectly printable without
-being taught (夕, 十, 目, 儿, 寸, 身, 青 all are). Only a character mentioned
-nowhere in the file needs an entry plus a re-run of
+another entry's components, stroke notes or citations. The subset therefore
+contains printable component and citation glyphs that are not taught as
+standalone inventory items. Only a character mentioned nowhere in the file needs
+an entry plus a re-run of
 [`_fonts/subset-cjk.sh`](../_fonts/subset-cjk.sh). Check the font's cmap before
 concluding a character is unavailable.

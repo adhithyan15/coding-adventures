@@ -1248,6 +1248,24 @@ pub enum SimdOpKind {
     /// proposal's own semantics, not an implementation guess -- see this
     /// package's own CHANGELOG entry for the PR that added it).
     Swizzle,
+    /// `i8x16.shuffle` -- the most structurally complex SIMD opcode in
+    /// this table so far: pops TWO v128 operands, conceptually
+    /// concatenates them into one 32-lane byte array (lanes 0-15 = the
+    /// FIRST-popped/bottom operand `a`, lanes 16-31 = the SECOND-popped/
+    /// top operand `b`), then reads a 16-byte RAW (non-LEB128) immediate
+    /// -- NOT a runtime operand, unlike [`Self::Swizzle`]'s index vector
+    /// -- carrying one lane index per output lane. Output lane `i` (for
+    /// `i` in `0..16`) is `combined[immediate[i]]`. Every one of those 16
+    /// immediate bytes must be `0..=31` for the module to be valid at
+    /// all (this repo's `wasm-validator` rejects the module at
+    /// VALIDATION time otherwise, mirroring the SIMD proposal's own
+    /// requirement that an out-of-range `laneidx` makes a module
+    /// invalid, not just trapping) -- so unlike `Swizzle`'s runtime
+    /// `s[i] < 16` clamp-to-zero behavior, a validated module's
+    /// `i8x16.shuffle` can NEVER see an out-of-range index at execution
+    /// time; there is no "else 0" branch here, because there is nothing
+    /// left to guard against once validation has run.
+    Shuffle,
     /// `i8x16.extract_lane_s` -- read one `i8` lane back out of a `v128`,
     /// selected by a lane-index immediate (0-15, unlike
     /// [`Self::ExtractLane`]'s 0-3 range), SIGN-extended to `i32`. Same
@@ -2165,6 +2183,15 @@ pub struct SimdOpInfo {
 /// fetch_testsuite.py`.
 pub static SIMD_OPS: &[SimdOpInfo] = &[
     SimdOpInfo { name: "v128.const", sub_opcode: 0x0C, kind: SimdOpKind::Const },
+    // SIMD widen PR38 (task #229-231): i8x16.shuffle, sub-opcode 0x0D --
+    // verified live against the SIMD proposal's own BinarySIMD.md and the
+    // W3C core spec's "Vector Instructions" section (`0xFD 13`, i.e.
+    // decimal 13 = 0x0D), sitting exactly in the gap between `v128.const`
+    // (0x0C, above) and `i8x16.swizzle` (0x0E, below) in the same
+    // contiguous `0x0C`-`0x23` const/shuffle/swizzle/extract_lane
+    // encoding run every earlier PR in this file's history has already
+    // matched exactly.
+    SimdOpInfo { name: "i8x16.shuffle", sub_opcode: 0x0D, kind: SimdOpKind::Shuffle },
     SimdOpInfo { name: "i32x4.extract_lane", sub_opcode: 0x1B, kind: SimdOpKind::ExtractLane },
     SimdOpInfo { name: "i32x4.splat", sub_opcode: 0x11, kind: SimdOpKind::Splat },
     SimdOpInfo { name: "i32x4.eq", sub_opcode: 0x37, kind: SimdOpKind::Eq },
@@ -3025,8 +3052,8 @@ mod tests {
     // ── SIMD (0xFD prefix, v128 first slice) ─────────────────────────────────
 
     #[test]
-    fn simd_ops_table_has_the_expected_207_entries_and_no_duplicates() {
-        assert_eq!(SIMD_OPS.len(), 207);
+    fn simd_ops_table_has_the_expected_208_entries_and_no_duplicates() {
+        assert_eq!(SIMD_OPS.len(), 208);
 
         let mut seen_sub_opcodes = std::collections::HashSet::new();
         let mut seen_names = std::collections::HashSet::new();
@@ -3072,7 +3099,12 @@ mod tests {
     #[test]
     fn simd_op_unknown_sub_opcode_returns_none() {
         assert!(get_simd_op(0xFFFF).is_none());
-        assert!(get_simd_op_by_name("i8x16.shuffle").is_none(), "not yet implemented in this first slice");
+        // `i8x16.shuffle` (0x0D) was the last hold-out in this table --
+        // implemented in SIMD widen PR38 (task #229-231), see
+        // `simd_i8x16_shuffle_has_the_real_verified_sub_opcode_value`
+        // above -- so this test now picks a genuinely still-unknown name
+        // instead.
+        assert!(get_simd_op_by_name("i8x16.definitely_not_a_real_simd_op").is_none());
     }
 
     #[test]
@@ -3512,6 +3544,28 @@ mod tests {
             assert_eq!(op.kind, kind);
             assert_eq!(get_simd_op_by_name(name).map(|o| o.sub_opcode), Some(sub_opcode));
         }
+    }
+
+    #[test]
+    fn simd_i8x16_shuffle_has_the_real_verified_sub_opcode_value() {
+        // SIMD widen PR38 (task #229-231): `i8x16.shuffle` (0x0D) --
+        // fetched live from BinarySIMD.md and the W3C core spec's
+        // "Vector Instructions" section (`0xFD 13`, i.e. decimal 13 =
+        // 0x0D), cross-checked against the already-implemented
+        // `v128.const` (0x0C) and `i8x16.swizzle` (0x0E) entries on
+        // either side -- `shuffle` sits exactly in the one-entry gap
+        // between them, confirming the whole `0x0C`-`0x0E`
+        // const/shuffle/swizzle run is contiguous and self-consistent.
+        let op = get_simd_op(0x0D).expect("0x0D should be i8x16.shuffle");
+        assert_eq!(op.name, "i8x16.shuffle");
+        assert_eq!(op.kind, SimdOpKind::Shuffle);
+        assert_eq!(get_simd_op_by_name("i8x16.shuffle").map(|o| o.sub_opcode), Some(0x0D));
+
+        // Confirm the immediate neighbors on both sides, so a future
+        // table edit can't silently shift this entry without a test
+        // failing here too.
+        assert_eq!(get_simd_op(0x0C).map(|o| o.name), Some("v128.const"));
+        assert_eq!(get_simd_op(0x0E).map(|o| o.name), Some("i8x16.swizzle"));
     }
 
     #[test]

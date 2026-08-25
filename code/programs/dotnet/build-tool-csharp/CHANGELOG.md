@@ -2,6 +2,10 @@
 
 ## Unreleased
 
+- Added process-free orphan-crate snapshot validation with exact artifact
+  exclusion, direct and ancestor BUILD coverage, invalid and stale exemption
+  diagnostics, pending-debt accounting, hostile-path redaction, and direct
+  coverage of all four shared language-neutral fixtures.
 - Pinned tracked-artifact NFC, NFKC, full default folding, and root full
   uppercase to generated source-embedded Unicode 17.0.0 tables, with explicit
   snapshot-version validation and version-delta fixture coverage. Build,
