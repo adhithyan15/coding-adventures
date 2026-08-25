@@ -9,10 +9,13 @@
 //! this is whole-word recognition vocabulary (word -> reading-level band).
 //! Round 2 (extend): completed the Pre-Primer level to its full 40 words
 //! (re-fetched and re-parsed the SAME cited UFLI slide deck). Round 3
-//! (extend): completes the Third Grade level to its full 41 words the same
-//! way -- Primer/First Grade/Second Grade still ship only their first five
-//! words each -- 96 of the full 220-word Dolch list total, mirroring
-//! `food-groups.adj`'s "representative subset" convention for the three
+//! (extend): completed the Third Grade level to its full 41 words the same
+//! way. Round 4 (extend): completes the Primer level to its full 52 words,
+//! the same zero-new-sourcing re-parse -- First Grade/Second Grade still
+//! ship only their first five words each (both still blocked on a
+//! reserved-keyword/apostrophe-atom question noted in the library's own
+//! header) -- 148 of the full 220-word Dolch list total, mirroring
+//! `food-groups.adj`'s "representative subset" convention for the two
 //! still-partial levels. 0 answer-time model calls.
 
 use std::path::{Path, PathBuf};
@@ -192,13 +195,65 @@ fn dolch_sight_word_level_reverse_binds_all_forty_one_third_grade_words() {
 }
 
 #[test]
+fn dolch_sight_word_level_forward_please_recalls_primer() {
+    let dir = scratch("forward_primer_extension");
+    place_lib(&dir);
+    std::fs::write(
+        dir.join("case.adj"),
+        "import \"dolch-sight-word-level.adj\"\n\
+         ? dolch_sight_word_level(please, $Level)\n",
+    )
+    .unwrap();
+
+    let (ok, out) = run(&dir.join("case.adj"));
+    assert!(ok, "cli should succeed: {out}");
+    assert!(
+        out.contains("\"Level\":\"primer\""),
+        "'please' is the 52nd (last) word of the now-completed Primer \
+         level -- confirms this round's extension shipped correctly: {out}"
+    );
+}
+
+#[test]
+fn dolch_sight_word_level_reverse_binds_all_fifty_two_primer_words() {
+    let dir = scratch("reverse_primer");
+    place_lib(&dir);
+    std::fs::write(
+        dir.join("case.adj"),
+        "import \"dolch-sight-word-level.adj\"\n\
+         ? dolch_sight_word_level($W, primer)\n",
+    )
+    .unwrap();
+
+    let (ok, out) = run(&dir.join("case.adj"));
+    assert!(ok, "cli should succeed: {out}");
+    // Primer is now a COMPLETE Dolch level (52/52 words) as of this round's
+    // extension -- a genuine one-to-many reverse recall over the full
+    // level, the same shape the Pre-Primer and Third Grade reverse tests
+    // above already established, just carried to completion for this
+    // third level.
+    for w in [
+        "he", "was", "that", "she", "on", "they", "but", "at", "with", "all", "there", "out",
+        "be", "have", "am", "do", "did", "what", "so", "get", "like", "this", "will", "yes",
+        "went", "are", "now", "no", "came", "ride", "into", "good", "want", "too", "pretty",
+        "four", "saw", "well", "ran", "brown", "eat", "who", "new", "must", "black", "white",
+        "soon", "our", "ate", "say", "under", "please",
+    ] {
+        assert!(
+            out.contains(&format!("\"W\":\"{w}\"")),
+            "{w} should be a bound Primer answer: {out}"
+        );
+    }
+}
+
+#[test]
 fn dolch_sight_word_level_abstains_honestly_on_a_real_dolch_word_outside_the_shipped_subset() {
     let dir = scratch("abstain_scope");
     place_lib(&dir);
     std::fs::write(
         dir.join("case.adj"),
         "import \"dolch-sight-word-level.adj\"\n\
-         ? dolch_sight_word_level(they, $Level)\n",
+         ? dolch_sight_word_level(some, $Level)\n",
     )
     .unwrap();
 
@@ -206,10 +261,10 @@ fn dolch_sight_word_level_abstains_honestly_on_a_real_dolch_word_outside_the_shi
     assert!(ok, "cli should succeed: {out}");
     assert!(
         out.contains("\"abstained\":true"),
-        "'they' is a REAL Dolch Primer word (its sixth), but Primer still \
-         ships only its first-five subset (unlike the now-completed \
-         Pre-Primer level) -- honest abstention on scope, never invented: \
-         {out}"
+        "'some' is a REAL Dolch First Grade word (its sixth), but First \
+         Grade still ships only its first-five subset (unlike the \
+         now-completed Pre-Primer, Primer, and Third Grade levels) -- \
+         honest abstention on scope, never invented: {out}"
     );
 }
 
