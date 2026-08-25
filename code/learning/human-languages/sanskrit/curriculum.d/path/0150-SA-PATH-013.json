@@ -1,0 +1,14 @@
+{
+  "id": "SA-PATH-013",
+  "spine_node": "SPINE-POLITE-REQUEST-REPAIR",
+  "lessons": [
+    "SA-C10-paniyam",
+    "SA-C10-kshiram",
+    "SA-C10-annam"
+  ],
+  "before": [],
+  "inline": [
+    "SA-EXT-013-LANGUAGE-SPECIFIC"
+  ],
+  "after": []
+}

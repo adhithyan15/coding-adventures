@@ -1,0 +1,12 @@
+{
+  "id": "HI-PATH-006A",
+  "spine_node": "SPINE-CHECK-WELLBEING",
+  "lessons": [
+    "HI-C03-practice"
+  ],
+  "before": [],
+  "inline": [
+    "HI-EXT-003-CONSOLIDATION"
+  ],
+  "after": []
+}

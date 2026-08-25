@@ -1,0 +1,15 @@
+{
+  "id": "ES-EXT-330-WAY",
+  "stage": "pre-A1",
+  "kind": "required",
+  "category": "vocabulary",
+  "canDo": "I can talk about a road, a stop, the world, a life and a single occasion.",
+  "prerequisites": [],
+  "lessons": [
+    "ES-C330-camino",
+    "ES-C330-parada",
+    "ES-C330-mundo",
+    "ES-C330-vida",
+    "ES-C330-vez"
+  ]
+}

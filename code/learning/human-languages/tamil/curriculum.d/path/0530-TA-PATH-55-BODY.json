@@ -1,0 +1,16 @@
+{
+  "id": "TA-PATH-55-BODY",
+  "spine_node": "SPINE-CHECK-WELLBEING",
+  "lessons": [
+    "TA-C55-neck",
+    "TA-C55-back",
+    "TA-C55-lip",
+    "TA-C55-nail",
+    "TA-C55-bone"
+  ],
+  "before": [],
+  "inline": [
+    "TA-EXT-55-BODY"
+  ],
+  "after": []
+}

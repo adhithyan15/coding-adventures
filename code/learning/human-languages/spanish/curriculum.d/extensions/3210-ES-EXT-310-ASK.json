@@ -1,0 +1,15 @@
+{
+  "id": "ES-EXT-310-ASK",
+  "stage": "pre-A1",
+  "kind": "required",
+  "category": "vocabulary",
+  "canDo": "I can ask a stranger in Spanish for the key, the shower, the table, the light and the bathroom.",
+  "prerequisites": [],
+  "lessons": [
+    "ES-C310-llave",
+    "ES-C310-ducha",
+    "ES-C310-mesa",
+    "ES-C310-luz",
+    "ES-C310-bano"
+  ]
+}

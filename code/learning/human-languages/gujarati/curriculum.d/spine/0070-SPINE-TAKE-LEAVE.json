@@ -1,0 +1,13 @@
+{
+  "segments": [
+    "GU-PATH-003",
+    "GU-PATH-008",
+    "GU-PATH-C4P"
+  ],
+  "omits": [
+    "FAREWELL-CASUAL",
+    "FAREWELL-SOON",
+    "GREETING-GOODNIGHT"
+  ],
+  "relocates": {}
+}

@@ -1,0 +1,11 @@
+{
+  "id": "GE-EXT-022-ETYMOLOGY",
+  "stage": "pre-A1",
+  "kind": "supporting",
+  "category": "etymology",
+  "canDo": "I can use this German word history as a memory hook without confusing origin and current use.",
+  "prerequisites": [],
+  "lessons": [
+    "GE-C17-kopf-haupt"
+  ]
+}

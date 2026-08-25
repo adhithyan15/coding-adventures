@@ -1,0 +1,17 @@
+{
+  "id": "PA-EXT-016-SCRIPT-FIRST-PIECES",
+  "stage": "pre-A1",
+  "kind": "required",
+  "category": "script",
+  "canDo": "I can add six Gurmukhi pieces to the three learned with ਹਾਂ, then read ਨਹੀਂ and ਨਮਸਤੇ by assembling only known pieces.",
+  "prerequisites": [],
+  "lessons": [
+    "PA-W01-na",
+    "PA-W01-ii-matra",
+    "PA-W01-ma",
+    "PA-W01-sa",
+    "PA-W01-ta",
+    "PA-W01-e-matra",
+    "PA-W01-namaste-read"
+  ]
+}

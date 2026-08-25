@@ -1,0 +1,12 @@
+{
+  "id": "FR-PATH-014",
+  "spine_node": "SPINE-SAY-WHAT-I-DO",
+  "lessons": [
+    "FR-C05-parler",
+    "FR-C05-habiter",
+    "FR-C05-travailler"
+  ],
+  "before": [],
+  "inline": [],
+  "after": []
+}

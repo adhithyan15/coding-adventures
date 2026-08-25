@@ -1,0 +1,16 @@
+{
+  "id": "TE-PATH-72-MARKET",
+  "spine_node": "SPINE-COURTESY-THANK",
+  "lessons": [
+    "TE-C72-shop",
+    "TE-C72-money",
+    "TE-C72-price",
+    "TE-C72-weight",
+    "TE-C72-bargain"
+  ],
+  "before": [],
+  "inline": [
+    "TE-EXT-72-MARKET"
+  ],
+  "after": []
+}

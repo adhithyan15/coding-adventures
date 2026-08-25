@@ -1,0 +1,13 @@
+{
+  "id": "ES-PATH-A1-DEIXIS-TIEMPO",
+  "spine_node": "SPINE-DEFINITE-REFERENCE",
+  "lessons": [
+    "ES-C65-ahora-hoy",
+    "ES-C65-hoy"
+  ],
+  "before": [],
+  "inline": [
+    "ES-EXT-A1-DEIXIS-TIEMPO"
+  ],
+  "after": []
+}

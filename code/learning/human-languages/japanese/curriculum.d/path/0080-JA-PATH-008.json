@@ -1,0 +1,17 @@
+{
+  "id": "JA-PATH-008",
+  "spine_node": "SPINE-TAKE-LEAVE",
+  "lessons": [
+    "JA-C08-hear-sayounara",
+    "JA-W08-yo",
+    "JA-W08-na",
+    "JA-W08-ra",
+    "JA-W08-sayounara-read",
+    "JA-C08-sayounara"
+  ],
+  "before": [],
+  "inline": [
+    "JA-EXT-015-SAYOUNARA-FAREWELL"
+  ],
+  "after": []
+}

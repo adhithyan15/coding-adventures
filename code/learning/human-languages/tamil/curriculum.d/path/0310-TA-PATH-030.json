@@ -1,0 +1,13 @@
+{
+  "id": "TA-PATH-030",
+  "spine_node": "SPINE-SAY-WHAT-I-DO",
+  "lessons": [
+    "TA-C34-edu",
+    "TA-C34-kel",
+    "TA-C34-utavu",
+    "TA-C34-pidi"
+  ],
+  "before": [],
+  "inline": [],
+  "after": []
+}

@@ -1,0 +1,25 @@
+{
+  "id": "ES-PATH-015",
+  "spine_node": "SPINE-ASK-LOCATION",
+  "lessons": [
+    "ES-C07-donde",
+    "ES-C07-practice",
+    "ES-C07-sintesis-preguntar",
+    "ES-C07-hablamos",
+    "ES-C07-hablan",
+    "ES-C07-hablais",
+    "ES-C07-repaso-presente-completo",
+    "ES-C07-sintesis-dos-continentes",
+    "ES-C07-comemos",
+    "ES-C07-vivimos",
+    "ES-C07-comeis-vivis",
+    "ES-C07-comen-viven",
+    "ES-C07-repaso-tres-familias"
+  ],
+  "before": [],
+  "inline": [
+    "ES-EXT-015-CONSOLIDATION",
+    "ES-EXT-015-PRESENT-PLURAL"
+  ],
+  "after": []
+}

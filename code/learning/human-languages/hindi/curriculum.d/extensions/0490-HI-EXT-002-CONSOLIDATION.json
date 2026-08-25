@@ -1,0 +1,13 @@
+{
+  "id": "HI-EXT-002-CONSOLIDATION",
+  "stage": "pre-A1",
+  "kind": "required",
+  "category": "consolidation",
+  "canDo": "I can ask someone's name and give my own in Hindi, holding the verb to the end of the sentence, and I can read every word of the exchange in Devanagari.",
+  "prerequisites": [
+    "HI-EXT-100-SCRIPT-RECOGNITION"
+  ],
+  "lessons": [
+    "HI-C02-practice"
+  ]
+}

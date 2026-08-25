@@ -1,0 +1,16 @@
+{
+  "id": "ES-PATH-321-01",
+  "spine_node": "SPINE-COURTESY-THANK",
+  "lessons": [
+    "ES-C321-placer",
+    "ES-C321-razon",
+    "ES-C321-respeto",
+    "ES-C321-paciencia",
+    "ES-C321-consejo"
+  ],
+  "before": [],
+  "inline": [
+    "ES-EXT-321-COURT"
+  ],
+  "after": []
+}

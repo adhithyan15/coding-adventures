@@ -1,0 +1,23 @@
+{
+  "segments": [
+    "ES-PATH-004",
+    "ES-PATH-006",
+    "ES-PATH-019",
+    "ES-PATH-023",
+    "ES-PATH-025",
+    "ES-PATH-337-01",
+    "ES-PATH-338-01",
+    "ES-PATH-339-01",
+    "ES-PATH-342-01",
+    "ES-PATH-343-01",
+    "ES-PATH-348-01",
+    "ES-PATH-349-01"
+  ],
+  "omits": [
+    "TIME-MORNING",
+    "TIME-EVENING",
+    "GREETING-DAY",
+    "GREETING-EVENING"
+  ],
+  "relocates": {}
+}

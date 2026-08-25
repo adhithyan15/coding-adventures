@@ -1,0 +1,12 @@
+{
+  "id": "ES-PATH-003-REVIEW-8",
+  "spine_node": "SPINE-DEFINITE-REFERENCE",
+  "lessons": [
+    "ES-C45-repaso-ocho"
+  ],
+  "before": [],
+  "inline": [
+    "ES-EXT-003-REVIEW-8"
+  ],
+  "after": []
+}

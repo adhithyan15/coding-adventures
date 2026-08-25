@@ -1,0 +1,16 @@
+{
+  "id": "ES-PATH-333-01",
+  "spine_node": "SPINE-COURTESY-THANK",
+  "lessons": [
+    "ES-C333-ruido",
+    "ES-C333-silencio",
+    "ES-C333-calma",
+    "ES-C333-prisa",
+    "ES-C333-cuidado"
+  ],
+  "before": [],
+  "inline": [
+    "ES-EXT-333-QUIET"
+  ],
+  "after": []
+}

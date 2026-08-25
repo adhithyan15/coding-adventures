@@ -1,0 +1,18 @@
+{
+  "id": "HI-PATH-200",
+  "spine_node": "SPINE-DEFINITE-REFERENCE",
+  "lessons": [
+    "HI-C40-this",
+    "HI-C40-that",
+    "HI-C40-here",
+    "HI-C40-there",
+    "HI-C40-who",
+    "HI-C40-where",
+    "HI-C40-deixis-system"
+  ],
+  "before": [],
+  "inline": [
+    "HI-EXT-200-DEIXIS"
+  ],
+  "after": []
+}

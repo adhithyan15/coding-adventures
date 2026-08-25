@@ -1,0 +1,15 @@
+{
+  "id": "TE-EXT-61-KITCHEN",
+  "stage": "pre-A1",
+  "kind": "required",
+  "category": "vocabulary",
+  "canDo": "I can name five everyday things in a Telugu kitchen, and swap names with the person cooking.",
+  "prerequisites": [],
+  "lessons": [
+    "TE-C61-curd",
+    "TE-C61-ghee",
+    "TE-C61-oil",
+    "TE-C61-sugar",
+    "TE-C61-chilli"
+  ]
+}

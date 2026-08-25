@@ -1,0 +1,14 @@
+{
+  "id": "GE-PATH-013",
+  "spine_node": "SPINE-TAKE-LEAVE",
+  "lessons": [
+    "GE-C04-auf-wiedersehen",
+    "GE-C04-tschuss",
+    "GE-C04-bis-bald",
+    "GE-C04-bis-morgen",
+    "GE-C04-bis-spater"
+  ],
+  "before": [],
+  "inline": [],
+  "after": []
+}

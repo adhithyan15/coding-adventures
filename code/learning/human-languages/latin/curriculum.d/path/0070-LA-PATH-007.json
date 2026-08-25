@@ -1,0 +1,11 @@
+{
+  "id": "LA-PATH-007",
+  "spine_node": "SPINE-POLITE-REQUEST-REPAIR",
+  "lessons": [
+    "LA-C03-quaeso",
+    "LA-C04-ignosce-mihi"
+  ],
+  "before": [],
+  "inline": [],
+  "after": []
+}

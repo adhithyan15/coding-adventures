@@ -1,0 +1,11 @@
+{
+  "id": "ES-EXT-318-MARCAS",
+  "stage": "pre-A1",
+  "kind": "required",
+  "category": "review",
+  "canDo": "I can say when the opening question mark was made official and why the h on hermano was never spoken.",
+  "prerequisites": [],
+  "lessons": [
+    "ES-C318-repaso-marcas"
+  ]
+}

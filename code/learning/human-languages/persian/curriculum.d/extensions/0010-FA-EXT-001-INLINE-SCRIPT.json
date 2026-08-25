@@ -1,0 +1,12 @@
+{
+  "id": "FA-EXT-001-INLINE-SCRIPT",
+  "stage": "pre-A1",
+  "kind": "required",
+  "category": "script",
+  "canDo": "I can recognize right-to-left direction and copy one alef beside a visible model inside a greeting I already understand.",
+  "prerequisites": [],
+  "lessons": [
+    "FA-C01-salam",
+    "FA-W00-alef-guided-copy"
+  ]
+}

@@ -1,0 +1,11 @@
+{
+  "id": "LA-EXT-016-GRAMMAR",
+  "stage": "A1",
+  "kind": "required",
+  "category": "grammar",
+  "canDo": "I can use the Latin-specific grammar needed for this part of the shared ability.",
+  "prerequisites": [],
+  "lessons": [
+    "LA-C15-weather-verbs"
+  ]
+}

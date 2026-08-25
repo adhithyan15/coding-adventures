@@ -1,0 +1,13 @@
+{
+  "id": "PA-PATH-017",
+  "spine_node": "SPINE-CHECK-WELLBEING",
+  "lessons": [
+    "PA-C13-dil",
+    "PA-C13-sir"
+  ],
+  "before": [],
+  "inline": [
+    "PA-EXT-017-LANGUAGE-SPECIFIC"
+  ],
+  "after": []
+}

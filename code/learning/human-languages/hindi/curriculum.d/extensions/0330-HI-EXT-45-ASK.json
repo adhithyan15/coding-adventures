@@ -1,0 +1,15 @@
+{
+  "id": "HI-EXT-45-ASK",
+  "stage": "pre-A1",
+  "kind": "required",
+  "category": "vocabulary",
+  "canDo": "I can name five everyday things I might ask someone for in Hindi.",
+  "prerequisites": [],
+  "lessons": [
+    "HI-C45-fruit",
+    "HI-C45-cloth",
+    "HI-C45-lamp",
+    "HI-C45-salt",
+    "HI-C45-soap"
+  ]
+}

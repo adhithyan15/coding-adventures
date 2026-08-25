@@ -1,0 +1,12 @@
+{
+  "id": "ES-PATH-037-SYNTH-SE",
+  "spine_node": "SPINE-GIVE-REASONS",
+  "lessons": [
+    "ES-C52-sintesis-el-letrero"
+  ],
+  "before": [],
+  "inline": [
+    "ES-EXT-037-SYNTH-SE"
+  ],
+  "after": []
+}

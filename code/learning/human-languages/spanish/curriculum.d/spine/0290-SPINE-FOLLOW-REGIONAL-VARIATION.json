@@ -1,0 +1,9 @@
+{
+  "segments": [],
+  "omits": [
+    "ACCENT-VARIATION",
+    "LEXICAL-VARIANT-REGIONAL",
+    "DIGLOSSIA"
+  ],
+  "relocates": {}
+}

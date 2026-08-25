@@ -1,0 +1,16 @@
+{
+  "id": "TA-PATH-52-TREE",
+  "spine_node": "SPINE-EXCHANGE-NAMES",
+  "lessons": [
+    "TA-C52-tree",
+    "TA-C52-branch",
+    "TA-C52-shoot",
+    "TA-C52-root",
+    "TA-C52-seed"
+  ],
+  "before": [],
+  "inline": [
+    "TA-EXT-52-TREE"
+  ],
+  "after": []
+}

@@ -1,0 +1,14 @@
+{
+  "id": "FA-EXT-019-LANGUAGE-SPECIFIC",
+  "stage": "pre-A1",
+  "kind": "required",
+  "category": "language-specific",
+  "canDo": "I can name my eye, hand, foot, and tongue in Persian, and say zabân for both tongue and language.",
+  "prerequisites": [],
+  "lessons": [
+    "FA-C11-cheshm",
+    "FA-C11-dast",
+    "FA-C11-pa",
+    "FA-C11-zaban"
+  ]
+}

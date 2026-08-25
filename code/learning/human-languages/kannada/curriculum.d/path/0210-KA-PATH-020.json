@@ -1,0 +1,12 @@
+{
+  "id": "KA-PATH-020",
+  "spine_node": "SPINE-EXCHANGE-NAMES",
+  "lessons": [
+    "KA-C19-vayassu"
+  ],
+  "before": [],
+  "inline": [
+    "KA-EXT-020-LANGUAGE-SPECIFIC"
+  ],
+  "after": []
+}

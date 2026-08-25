@@ -1,0 +1,15 @@
+{
+  "id": "KA-EXT-58-REPLY",
+  "stage": "pre-A1",
+  "kind": "required",
+  "category": "vocabulary",
+  "canDo": "I can adjust or decline an offer in Kannada without saying yes or no.",
+  "prerequisites": [],
+  "lessons": [
+    "KA-C58-a-little",
+    "KA-C58-more",
+    "KA-C58-less",
+    "KA-C58-no-thanks",
+    "KA-C58-thats-all"
+  ]
+}

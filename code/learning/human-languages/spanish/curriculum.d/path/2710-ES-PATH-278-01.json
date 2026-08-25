@@ -1,0 +1,15 @@
+{
+  "id": "ES-PATH-278-01",
+  "spine_node": "SPINE-DEFINITE-REFERENCE",
+  "lessons": [
+    "ES-C278-viento",
+    "ES-C278-nieve",
+    "ES-C278-arbol",
+    "ES-C278-flor"
+  ],
+  "before": [],
+  "inline": [
+    "ES-EXT-278-AFUERA"
+  ],
+  "after": []
+}

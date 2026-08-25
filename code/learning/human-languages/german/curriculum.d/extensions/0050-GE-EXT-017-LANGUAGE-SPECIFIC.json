@@ -1,0 +1,14 @@
+{
+  "id": "GE-EXT-017-LANGUAGE-SPECIFIC",
+  "stage": "A1",
+  "kind": "required",
+  "category": "language-specific",
+  "canDo": "I can use the additional German material required at this point in the path.",
+  "prerequisites": [],
+  "lessons": [
+    "GE-C12-elf-zwoelf",
+    "GE-C12-zahlen-13-20",
+    "GE-C13-schwarz-weiss",
+    "GE-C13-rot-blau"
+  ]
+}

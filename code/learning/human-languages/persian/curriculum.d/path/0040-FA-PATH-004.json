@@ -1,0 +1,21 @@
+{
+  "id": "FA-PATH-004",
+  "spine_node": "SPINE-EXCHANGE-NAMES",
+  "lessons": [
+    "FA-C02-esm-e-man",
+    "FA-C03-shoma-to",
+    "FA-C03-chist",
+    "FA-C03-esm-e-shoma-chist",
+    "FA-C03-khoshvaghtam",
+    "FA-C03-practice"
+  ],
+  "before": [],
+  "inline": [
+    "FA-EXT-002-REGISTER",
+    "FA-EXT-003-SCRIPT",
+    "FA-EXT-004-GRAMMAR",
+    "FA-EXT-005-ETYMOLOGY",
+    "FA-EXT-006-CONSOLIDATION"
+  ],
+  "after": []
+}

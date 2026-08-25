@@ -1,0 +1,18 @@
+{
+  "id": "ES-EXT-040-LANGUAGE-SPECIFIC",
+  "stage": "A2",
+  "kind": "required",
+  "category": "language-specific",
+  "canDo": "I can use the Spanish-specific vocabulary and grammar that support this shared ability.",
+  "prerequisites": [],
+  "lessons": [
+    "ES-C16-imperfecto",
+    "ES-C16-comer-imperfecto",
+    "ES-C16-vivir-imperfecto",
+    "ES-C16-ver",
+    "ES-C16-ser-imperfecto",
+    "ES-C16-ir-imperfecto",
+    "ES-C16-ver-imperfecto",
+    "ES-C16-practice"
+  ]
+}

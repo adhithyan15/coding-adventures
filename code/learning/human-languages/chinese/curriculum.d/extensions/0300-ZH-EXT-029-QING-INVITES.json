@@ -1,0 +1,13 @@
+{
+  "id": "ZH-EXT-029-QING-INVITES",
+  "stage": "pre-A1",
+  "kind": "required",
+  "category": "pragmatics",
+  "canDo": "I can say 请 on its own to mean after you, and I know it invites rather than softens -- so Mandarin uses it far less often than English uses please, and leaving it out is not rude.",
+  "prerequisites": [
+    "ZH-EXT-028-PHONETIC-COMPONENT"
+  ],
+  "lessons": [
+    "ZH-C11-qing"
+  ]
+}

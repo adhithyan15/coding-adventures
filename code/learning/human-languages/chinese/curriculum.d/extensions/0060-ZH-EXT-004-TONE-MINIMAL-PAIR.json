@@ -1,0 +1,13 @@
+{
+  "id": "ZH-EXT-004-TONE-MINIMAL-PAIR",
+  "stage": "pre-A1",
+  "kind": "supporting",
+  "category": "phonology",
+  "canDo": "I can recognise that one character read with a different tone is a different word, using 好 hǎo against 好 hào.",
+  "prerequisites": [
+    "ZH-EXT-003-TONE-SANDHI"
+  ],
+  "lessons": [
+    "ZH-C01-hao-fond"
+  ]
+}

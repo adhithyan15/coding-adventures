@@ -1,0 +1,15 @@
+{
+  "id": "TA-EXT-53-LAND",
+  "stage": "pre-A1",
+  "kind": "required",
+  "category": "vocabulary",
+  "canDo": "I can name five things in a stretch of Tamil country.",
+  "prerequisites": [],
+  "lessons": [
+    "TA-C53-river",
+    "TA-C53-hill",
+    "TA-C53-field",
+    "TA-C53-path",
+    "TA-C53-village"
+  ]
+}

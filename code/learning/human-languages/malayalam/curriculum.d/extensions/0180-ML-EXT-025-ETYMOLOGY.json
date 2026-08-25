@@ -1,0 +1,13 @@
+{
+  "id": "ML-EXT-025-ETYMOLOGY",
+  "stage": "A1",
+  "kind": "supporting",
+  "category": "etymology",
+  "canDo": "I can use this Malayalam word history as a memory hook without confusing origin and current use.",
+  "prerequisites": [],
+  "lessons": [
+    "ML-C23-naal",
+    "ML-C24-native-night-words",
+    "ML-C31-afternoon-convergence"
+  ]
+}

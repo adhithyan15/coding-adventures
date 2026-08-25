@@ -1,0 +1,18 @@
+{
+  "id": "LA-PATH-023",
+  "spine_node": "SPINE-CHECK-WELLBEING",
+  "lessons": [
+    "LA-C26-quomodo",
+    "LA-C27-bene",
+    "LA-C45-terra",
+    "LA-C45-ignis",
+    "LA-C45-ventus",
+    "LA-C45-caelum",
+    "LA-C45-mare"
+  ],
+  "before": [],
+  "inline": [],
+  "after": [
+    "LA-EXT-045-WORLD"
+  ]
+}

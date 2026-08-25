@@ -1,0 +1,12 @@
+{
+  "id": "TA-PATH-025",
+  "spine_node": "SPINE-TIME-OF-DAY",
+  "lessons": [
+    "TA-C20-vaanilai"
+  ],
+  "before": [],
+  "inline": [
+    "TA-EXT-025-LANGUAGE-SPECIFIC"
+  ],
+  "after": []
+}

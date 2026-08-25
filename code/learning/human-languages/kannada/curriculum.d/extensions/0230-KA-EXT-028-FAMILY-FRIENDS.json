@@ -1,0 +1,12 @@
+{
+  "id": "KA-EXT-028-FAMILY-FRIENDS",
+  "stage": "pre-A1",
+  "kind": "required",
+  "category": "language-specific",
+  "canDo": "I can name my family as a group and name a friend in Kannada, and say which of the two words is a Sanskrit loan.",
+  "prerequisites": [],
+  "lessons": [
+    "KA-C35-kutumba",
+    "KA-C35-snehita"
+  ]
+}

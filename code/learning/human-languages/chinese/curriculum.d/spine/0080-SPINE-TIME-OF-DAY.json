@@ -1,0 +1,15 @@
+{
+  "segments": [
+    "ZH-PATH-006"
+  ],
+  "omits": [
+    "TIME-DAY",
+    "TIME-AFTERNOON",
+    "TIME-EVENING",
+    "TIME-NIGHT",
+    "GREETING-DAY",
+    "GREETING-AFTERNOON",
+    "GREETING-EVENING"
+  ],
+  "relocates": {}
+}

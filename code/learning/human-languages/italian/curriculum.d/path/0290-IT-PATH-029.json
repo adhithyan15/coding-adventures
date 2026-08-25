@@ -1,0 +1,14 @@
+{
+  "id": "IT-PATH-029",
+  "spine_node": "SPINE-CHECK-WELLBEING",
+  "lessons": [
+    "IT-C25-naso",
+    "IT-C25-stomaco",
+    "IT-C25-gola"
+  ],
+  "before": [],
+  "inline": [
+    "IT-EXT-029-LANGUAGE-SPECIFIC"
+  ],
+  "after": []
+}

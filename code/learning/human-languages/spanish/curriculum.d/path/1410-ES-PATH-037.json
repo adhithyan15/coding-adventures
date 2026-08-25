@@ -1,0 +1,13 @@
+{
+  "id": "ES-PATH-037",
+  "spine_node": "SPINE-GIVE-REASONS",
+  "lessons": [
+    "ES-C41-creer",
+    "ES-C41-asi-que",
+    "ES-C41-deber",
+    "ES-C41-explicar"
+  ],
+  "before": [],
+  "inline": [],
+  "after": []
+}

@@ -1,0 +1,16 @@
+{
+  "id": "SA-PATH-40-FOOD",
+  "spine_node": "SPINE-POLITE-REQUEST-REPAIR",
+  "lessons": [
+    "SA-C40-curd",
+    "SA-C40-sugar",
+    "SA-C40-butter",
+    "SA-C40-vegetable",
+    "SA-C40-sweet"
+  ],
+  "before": [],
+  "inline": [
+    "SA-EXT-40-FOOD"
+  ],
+  "after": []
+}

@@ -1,0 +1,10 @@
+{
+  "segments": [
+    "PA-PATH-014"
+  ],
+  "omits": [
+    "COURTESY-PLEASE",
+    "COURTESY-SORRY"
+  ],
+  "relocates": {}
+}

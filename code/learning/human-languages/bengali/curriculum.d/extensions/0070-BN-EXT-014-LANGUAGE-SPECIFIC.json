@@ -1,0 +1,14 @@
+{
+  "id": "BN-EXT-014-LANGUAGE-SPECIFIC",
+  "stage": "pre-A1",
+  "kind": "required",
+  "category": "language-specific",
+  "canDo": "I can offer or ask for tea, water, milk and rice politely in Bengali by reusing the respectful verb ending Chapter 7 already taught, with no separate word for 'please' required.",
+  "prerequisites": [],
+  "lessons": [
+    "BN-C10-cha",
+    "BN-C10-jol",
+    "BN-C10-dudh",
+    "BN-C10-bhat"
+  ]
+}

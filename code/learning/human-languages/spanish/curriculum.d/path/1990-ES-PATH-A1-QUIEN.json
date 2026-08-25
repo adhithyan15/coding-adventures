@@ -1,0 +1,12 @@
+{
+  "id": "ES-PATH-A1-QUIEN",
+  "spine_node": "SPINE-DEFINITE-REFERENCE",
+  "lessons": [
+    "ES-C61-quien"
+  ],
+  "before": [],
+  "inline": [
+    "ES-EXT-A1-QUIEN"
+  ],
+  "after": []
+}

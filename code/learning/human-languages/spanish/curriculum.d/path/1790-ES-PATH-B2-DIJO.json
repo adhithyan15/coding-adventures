@@ -1,0 +1,12 @@
+{
+  "id": "ES-PATH-B2-DIJO",
+  "spine_node": "SPINE-REPORT-WHAT-OTHERS-SAID",
+  "lessons": [
+    "ES-C57-dijo"
+  ],
+  "before": [],
+  "inline": [
+    "ES-EXT-B2-DIJO"
+  ],
+  "after": []
+}

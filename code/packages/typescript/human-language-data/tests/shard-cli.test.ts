@@ -62,8 +62,7 @@ describe("shard/unshard on a scratch ledger", () => {
 
   const plan: ShardPlan = {
     path: "core/toy.json",
-    listKey: "nodes",
-    idOf: (element) => (element as { id?: unknown }).id as string,
+    sections: [{ key: "nodes", idOf: (element) => (element as { id?: unknown }).id as string }],
     // These fixtures exercise the shard/unshard round trip itself, so they keep
     // the monolith the way `core/spine.json` does. The `"removed"` disposition
     // has its own suite in chapters-shards.test.ts.
@@ -131,7 +130,7 @@ describe("shard/unshard on a scratch ledger", () => {
   });
 
   it("splits every non-list key into _meta", () => {
-    expect(metaOf(document, "nodes")).toEqual({ version: 1, stages: ["one", "two"] });
+    expect(metaOf(document, ["nodes"])).toEqual({ version: 1, stages: ["one", "two"] });
     expect(shardContents(document, plan).get("_meta.json")).toBe(
       `${JSON.stringify({ version: 1, stages: ["one", "two"] }, null, 2)}\n`,
     );
@@ -174,8 +173,7 @@ describe("refusals", () => {
 
   const plan: ShardPlan = {
     path: "core/toy.json",
-    listKey: "nodes",
-    idOf: (element) => (element as { id?: unknown }).id as string,
+    sections: [{ key: "nodes", idOf: (element) => (element as { id?: unknown }).id as string }],
     // These fixtures exercise the shard/unshard round trip itself, so they keep
     // the monolith the way `core/spine.json` does. The `"removed"` disposition
     // has its own suite in chapters-shards.test.ts.
@@ -202,15 +200,53 @@ describe("refusals", () => {
     expect(() => shardLedger(root, plan)).toThrow(/duplicate nodes id 'ALPHA'/);
   });
 
-  it("refuses a ledger whose array is not the last top-level key", () => {
-    // Appending on rebuild would otherwise silently reorder the keys.
-    write({ version: 1, nodes: [{ id: "ALPHA" }], trailing: true });
-    expect(() => shardLedger(root, plan)).toThrow(/must be the last top-level key/);
+  it("ACCEPTS a ledger whose array is not last, recording the key order", () => {
+    // This used to be a refusal, and HL21 §2.5 said so: with no way to record
+    // where the array sat, the rebuild appended it last, so a ledger with a key
+    // AFTER the array could not round-trip and was rejected rather than
+    // silently reordered.
+    //
+    // `<track>/curriculum.json` is the ledger that refusal was waiting for —
+    // `{version, language, path, spine, extensions, conceptAliases}`, with three
+    // sharded keys in the middle — so the position is now written down in
+    // `_meta.json` and the refusal is gone. The property that mattered is
+    // unchanged and is what this test asserts: the rebuild is byte-exact.
+    const document = { version: 1, nodes: [{ id: "ALPHA" }], trailing: true };
+    write(document);
+    const before = readFileSync(join(root, "core", "toy.json"), "utf8");
+    shardLedger(root, plan);
+    expect(unshardContents(root, plan)).toBe(before);
+
+    // And the order really was the interesting kind: `nodes` is not last.
+    expect(Object.keys(document).at(-1)).not.toBe("nodes");
+    const meta = JSON.parse(
+      readFileSync(join(root, "core", "toy.d", "_meta.json"), "utf8"),
+    ) as { _keys?: string[] };
+    expect(meta._keys).toEqual(["version", "nodes", "trailing"]);
+  });
+
+  it("does NOT record a key order when the array is already last", () => {
+    // The 21 shard sets committed before `_keys` existed must not acquire a
+    // line none of them needs. `needsKeyOrder` is what keeps `_meta.json`
+    // byte-identical for the suffix case.
+    write({ version: 1, nodes: [{ id: "ALPHA" }] });
+    shardLedger(root, plan);
+    const meta = JSON.parse(
+      readFileSync(join(root, "core", "toy.d", "_meta.json"), "utf8"),
+    ) as Record<string, unknown>;
+    expect(Object.hasOwn(meta, "_keys")).toBe(false);
   });
 
   it("refuses a ledger with no such array", () => {
     write({ version: 1 });
-    expect(() => shardLedger(root, plan)).toThrow(/no top-level 'nodes' array/);
+    expect(() => shardLedger(root, plan)).toThrow(/no top-level 'nodes'/);
+  });
+
+  it("refuses a ledger that already has a top-level '_keys'", () => {
+    // `_keys` is read as the recorded key order and stripped on rebuild, so a
+    // document with a real one would lose it and come back reordered.
+    write({ version: 1, _keys: ["whatever"], nodes: [{ id: "ALPHA" }] });
+    expect(() => shardLedger(root, plan)).toThrow(/reserves to record/);
   });
 
   it("contains the ledger path inside the curriculum root", () => {
@@ -252,8 +288,7 @@ describe("the writer cannot be walked outside the checkout", () => {
 
   const plan: ShardPlan = {
     path: "core/toy.json",
-    listKey: "nodes",
-    idOf: (element) => (element as { id?: unknown }).id as string,
+    sections: [{ key: "nodes", idOf: (element) => (element as { id?: unknown }).id as string }],
     // These fixtures exercise the shard/unshard round trip itself, so they keep
     // the monolith the way `core/spine.json` does. The `"removed"` disposition
     // has its own suite in chapters-shards.test.ts.
@@ -356,7 +391,7 @@ describe("metaOf cannot be walked through the prototype setter", () => {
     // local object's prototype was swapped. Contained, but a silent data loss
     // on top of being the exact sink the key check exists to close.
     const hostile = JSON.parse('{ "version": 1, "__proto__": { "polluted": "yes" }, "nodes": [] }');
-    const meta = metaOf(hostile, "nodes");
+    const meta = metaOf(hostile, ["nodes"]);
     expect(Object.getPrototypeOf(meta)).toBe(null);
     expect(Object.hasOwn(meta, "__proto__")).toBe(true);
     expect(({} as Record<string, unknown>).polluted).toBeUndefined();
@@ -410,8 +445,9 @@ describe("a plan that names shards by its own ordinal, with no id", () => {
 
   const plan: ShardPlan = {
     path: "core/toy.json",
-    listKey: "chapters",
-    ordinalOf: (element) => (element as { chapter: number }).chapter,
+    sections: [
+      { key: "chapters", ordinalOf: (element) => (element as { chapter: number }).chapter },
+    ],
     monolith: "generated",
   };
 

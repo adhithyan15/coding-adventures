@@ -1,0 +1,12 @@
+{
+  "id": "MR-PATH-018",
+  "spine_node": "SPINE-CHECK-WELLBEING",
+  "lessons": [
+    "MR-C13-hrudaya"
+  ],
+  "before": [],
+  "inline": [
+    "MR-EXT-018-LANGUAGE-SPECIFIC"
+  ],
+  "after": []
+}

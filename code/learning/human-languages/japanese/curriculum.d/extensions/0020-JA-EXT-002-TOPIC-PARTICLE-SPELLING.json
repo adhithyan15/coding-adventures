@@ -1,0 +1,13 @@
+{
+  "id": "JA-EXT-002-TOPIC-PARTICLE-SPELLING",
+  "stage": "pre-A1",
+  "kind": "required",
+  "category": "script",
+  "canDo": "I can read the sign は as ha inside a word and as wa when it is the topic particle, and say why the two spellings survived a spelling reform.",
+  "prerequisites": [
+    "JA-EXT-001-HIRAGANA-MORA"
+  ],
+  "lessons": [
+    "JA-C01-konnichiwa"
+  ]
+}

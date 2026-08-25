@@ -1,0 +1,15 @@
+{
+  "id": "ES-EXT-314-BODY",
+  "stage": "pre-A1",
+  "kind": "required",
+  "category": "vocabulary",
+  "canDo": "I can name the arm, the leg, the foot, the tooth and the hearing in Spanish.",
+  "prerequisites": [],
+  "lessons": [
+    "ES-C314-brazo",
+    "ES-C314-pierna",
+    "ES-C314-pie",
+    "ES-C314-diente",
+    "ES-C314-oido"
+  ]
+}

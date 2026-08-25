@@ -1,0 +1,15 @@
+{
+  "id": "ML-EXT-66-PADDY",
+  "stage": "pre-A1",
+  "kind": "required",
+  "category": "vocabulary",
+  "canDo": "I can name paddy, grass, an ear of grain, a plough and the harvest in Malayalam.",
+  "prerequisites": [],
+  "lessons": [
+    "ML-C66-paddy",
+    "ML-C66-grass",
+    "ML-C66-ear-of-grain",
+    "ML-C66-plough",
+    "ML-C66-harvest"
+  ]
+}

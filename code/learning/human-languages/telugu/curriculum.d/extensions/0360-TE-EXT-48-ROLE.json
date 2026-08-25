@@ -1,0 +1,15 @@
+{
+  "id": "TE-EXT-48-ROLE",
+  "stage": "pre-A1",
+  "kind": "required",
+  "category": "vocabulary",
+  "canDo": "I can say what someone's role is in Telugu.",
+  "prerequisites": [],
+  "lessons": [
+    "TE-C48-teacher",
+    "TE-C48-student",
+    "TE-C48-doctor",
+    "TE-C48-farmer",
+    "TE-C48-guest"
+  ]
+}

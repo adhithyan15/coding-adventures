@@ -1,0 +1,12 @@
+{
+  "id": "ES-PATH-030-SYNTH-OCHO",
+  "spine_node": "SPINE-SAY-WHAT-I-DO",
+  "lessons": [
+    "ES-C09-sintesis-ocho"
+  ],
+  "before": [],
+  "inline": [
+    "ES-EXT-030-SYNTH-OCHO"
+  ],
+  "after": []
+}

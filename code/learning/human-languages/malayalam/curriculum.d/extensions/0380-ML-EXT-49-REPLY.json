@@ -1,0 +1,15 @@
+{
+  "id": "ML-EXT-49-REPLY",
+  "stage": "pre-A1",
+  "kind": "required",
+  "category": "vocabulary",
+  "canDo": "I can give five short replies in Malayalam.",
+  "prerequisites": [],
+  "lessons": [
+    "ML-C49-true",
+    "ML-C49-enough",
+    "ML-C49-certainly",
+    "ML-C49-perhaps",
+    "ML-C49-just-so"
+  ]
+}

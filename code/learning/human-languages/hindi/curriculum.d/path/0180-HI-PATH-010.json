@@ -1,0 +1,15 @@
+{
+  "id": "HI-PATH-010",
+  "spine_node": "SPINE-COUNT-ONE-TO-FIVE",
+  "lessons": [
+    "HI-C06-numbers-1-5",
+    "HI-C06-tin-char-history",
+    "HI-C06-paanch-nasal"
+  ],
+  "before": [],
+  "inline": [
+    "HI-EXT-010-LANGUAGE-SPECIFIC",
+    "HI-EXT-010-ETYMOLOGY"
+  ],
+  "after": []
+}

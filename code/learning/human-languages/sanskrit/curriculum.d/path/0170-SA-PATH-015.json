@@ -1,0 +1,14 @@
+{
+  "id": "SA-PATH-015",
+  "spine_node": "SPINE-CHECK-WELLBEING",
+  "lessons": [
+    "SA-C12-akshi",
+    "SA-C12-karnah",
+    "SA-C12-mukham"
+  ],
+  "before": [],
+  "inline": [
+    "SA-EXT-015-LANGUAGE-SPECIFIC"
+  ],
+  "after": []
+}

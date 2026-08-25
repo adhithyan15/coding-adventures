@@ -1,0 +1,15 @@
+{
+  "id": "SA-EXT-45-DAYTIME",
+  "stage": "pre-A1",
+  "kind": "required",
+  "category": "vocabulary",
+  "canDo": "I can name five stretches of time in Sanskrit.",
+  "prerequisites": [],
+  "lessons": [
+    "SA-C45-morning",
+    "SA-C45-noon",
+    "SA-C45-evening",
+    "SA-C45-month",
+    "SA-C45-year"
+  ]
+}

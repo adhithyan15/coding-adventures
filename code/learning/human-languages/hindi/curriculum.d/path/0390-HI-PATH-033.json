@@ -1,0 +1,15 @@
+{
+  "id": "HI-PATH-033",
+  "spine_node": "SPINE-EXCHANGE-NAMES",
+  "lessons": [
+    "HI-C39-dost",
+    "HI-C39-baccha",
+    "HI-C39-aadmi",
+    "HI-C39-aurat"
+  ],
+  "before": [],
+  "inline": [
+    "HI-EXT-033-LANGUAGE-SPECIFIC"
+  ],
+  "after": []
+}

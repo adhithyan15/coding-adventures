@@ -1,0 +1,15 @@
+{
+  "id": "ES-EXT-286-DUELE",
+  "stage": "pre-A1",
+  "kind": "required",
+  "category": "vocabulary",
+  "canDo": "I can name the eye, the mouth and the throat in Spanish, and say that there is a pain or a fever.",
+  "prerequisites": [],
+  "lessons": [
+    "ES-C286-ojo",
+    "ES-C286-boca",
+    "ES-C286-garganta",
+    "ES-C286-dolor",
+    "ES-C286-fiebre"
+  ]
+}

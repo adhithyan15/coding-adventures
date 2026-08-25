@@ -1,0 +1,11 @@
+{
+  "id": "FR-PATH-019",
+  "spine_node": "SPINE-RESPOND-BASIC",
+  "lessons": [
+    "FR-C18-oui",
+    "FR-C18-non"
+  ],
+  "before": [],
+  "inline": [],
+  "after": []
+}

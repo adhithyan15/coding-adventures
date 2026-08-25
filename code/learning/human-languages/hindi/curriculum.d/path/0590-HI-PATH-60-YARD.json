@@ -1,0 +1,16 @@
+{
+  "id": "HI-PATH-60-YARD",
+  "spine_node": "SPINE-MEET-GREET",
+  "lessons": [
+    "HI-C60-monkey",
+    "HI-C60-snake",
+    "HI-C60-hen",
+    "HI-C60-buffalo",
+    "HI-C60-peacock"
+  ],
+  "before": [],
+  "inline": [
+    "HI-EXT-60-YARD"
+  ],
+  "after": []
+}

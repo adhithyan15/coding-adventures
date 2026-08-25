@@ -1,0 +1,12 @@
+{
+  "id": "TE-PATH-023",
+  "spine_node": "SPINE-TIME-OF-DAY",
+  "lessons": [
+    "TE-C20-vatavaranam"
+  ],
+  "before": [],
+  "inline": [
+    "TE-EXT-023-LANGUAGE-SPECIFIC"
+  ],
+  "after": []
+}

@@ -1,0 +1,12 @@
+{
+  "segments": [
+    "FA-PATH-005",
+    "FA-PATH-012",
+    "FA-PATH-014"
+  ],
+  "omits": [
+    "WORD-WELL",
+    "WORD-SOSO"
+  ],
+  "relocates": {}
+}

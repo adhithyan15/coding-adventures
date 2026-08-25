@@ -1,0 +1,15 @@
+{
+  "id": "ML-EXT-60-ANIMAL",
+  "stage": "pre-A1",
+  "kind": "required",
+  "category": "vocabulary",
+  "canDo": "I can name a cow, a goat, a hen, a crow and an elephant in Malayalam.",
+  "prerequisites": [],
+  "lessons": [
+    "ML-C60-cow",
+    "ML-C60-goat",
+    "ML-C60-hen",
+    "ML-C60-crow",
+    "ML-C60-elephant"
+  ]
+}

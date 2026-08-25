@@ -1,0 +1,14 @@
+{
+  "id": "ZH-EXT-016-CONVERSATION-CLOSE",
+  "stage": "pre-A1",
+  "kind": "required",
+  "category": "discourse",
+  "canDo": "I can carry a short exchange from greeting through an answer to a parting, and say which of its expressions are spoken differently from how they are written.",
+  "prerequisites": [
+    "ZH-EXT-015-ZAIJIAN-LITERAL"
+  ],
+  "lessons": [
+    "ZH-W06-jian",
+    "ZH-C06-practice"
+  ]
+}

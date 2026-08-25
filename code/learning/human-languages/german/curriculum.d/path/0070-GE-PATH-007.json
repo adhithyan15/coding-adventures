@@ -1,0 +1,16 @@
+{
+  "id": "GE-PATH-007",
+  "spine_node": "SPINE-EXCHANGE-NAMES",
+  "lessons": [
+    "GE-C02-ich",
+    "GE-C02-du-sie",
+    "GE-C02-heissen",
+    "GE-C02-ich-heisse",
+    "GE-C02-freut-mich"
+  ],
+  "before": [],
+  "inline": [
+    "GE-EXT-007-LANGUAGE-SPECIFIC"
+  ],
+  "after": []
+}

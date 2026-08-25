@@ -1,0 +1,14 @@
+{
+  "id": "ES-EXT-281-ADJETIVOS",
+  "stage": "A1",
+  "kind": "required",
+  "category": "vocabulary",
+  "canDo": "I can say new, old, clean and dirty in Spanish, and say what each of them meant in Latin before it meant what it means now.",
+  "prerequisites": [],
+  "lessons": [
+    "ES-C281-nuevo",
+    "ES-C281-viejo",
+    "ES-C281-limpio",
+    "ES-C281-sucio"
+  ]
+}

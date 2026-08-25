@@ -1,0 +1,15 @@
+{
+  "id": "ES-EXT-323-WHEN",
+  "stage": "pre-A1",
+  "kind": "required",
+  "category": "vocabulary",
+  "canDo": "I can put two events in order with antes, despues, entonces and mientras, and say that a thing is already done with ya.",
+  "prerequisites": [],
+  "lessons": [
+    "ES-C323-ya",
+    "ES-C323-entonces",
+    "ES-C323-antes",
+    "ES-C323-despues",
+    "ES-C323-mientras"
+  ]
+}

@@ -1,0 +1,16 @@
+{
+  "id": "ES-PATH-320-01",
+  "spine_node": "SPINE-COURTESY-THANK",
+  "lessons": [
+    "ES-C320-favor",
+    "ES-C320-molestia",
+    "ES-C320-pena",
+    "ES-C320-suerte",
+    "ES-C320-culpa"
+  ],
+  "before": [],
+  "inline": [
+    "ES-EXT-320-COURT"
+  ],
+  "after": []
+}

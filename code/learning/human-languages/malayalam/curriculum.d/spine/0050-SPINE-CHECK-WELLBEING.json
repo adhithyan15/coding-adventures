@@ -1,0 +1,17 @@
+{
+  "segments": [
+    "ML-PATH-006",
+    "ML-PATH-009",
+    "ML-PATH-017",
+    "ML-PATH-031",
+    "ML-PATH-032",
+    "ML-PATH-47-BODY",
+    "ML-PATH-57-FRAME",
+    "ML-PATH-63-FEEL"
+  ],
+  "omits": [
+    "WORD-GOOD",
+    "WORD-SOSO"
+  ],
+  "relocates": {}
+}

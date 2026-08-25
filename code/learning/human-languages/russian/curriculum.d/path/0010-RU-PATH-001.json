@@ -1,0 +1,17 @@
+{
+  "id": "RU-PATH-001",
+  "spine_node": "SPINE-MEET-GREET",
+  "lessons": [
+    "RU-C01-privet",
+    "RU-W01-false-friends-v-r",
+    "RU-W02-false-friends-s-n",
+    "RU-W03-new-shapes-b-d",
+    "RU-W04-privet-letters-p-i",
+    "RU-W05-privet-letters-e-t"
+  ],
+  "before": [],
+  "inline": [
+    "RU-EXT-001-INLINE-SCRIPT"
+  ],
+  "after": []
+}

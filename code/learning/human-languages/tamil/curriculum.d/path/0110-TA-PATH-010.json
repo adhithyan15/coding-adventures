@@ -1,0 +1,10 @@
+{
+  "id": "TA-PATH-010",
+  "spine_node": "SPINE-CHECK-WELLBEING",
+  "lessons": [
+    "TA-C03-nalam"
+  ],
+  "before": [],
+  "inline": [],
+  "after": []
+}

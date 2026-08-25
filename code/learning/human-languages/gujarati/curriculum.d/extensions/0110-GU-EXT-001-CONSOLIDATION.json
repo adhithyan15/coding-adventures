@@ -1,0 +1,13 @@
+{
+  "id": "GU-EXT-001-CONSOLIDATION",
+  "stage": "pre-A1",
+  "kind": "required",
+  "category": "consolidation",
+  "canDo": "I can greet, thank, answer yes or no, and take my leave in Gujarati, and read every word of it in the Gujarati script.",
+  "prerequisites": [
+    "GU-EXT-008-LANGUAGE-SPECIFIC"
+  ],
+  "lessons": [
+    "GU-C01-practice"
+  ]
+}

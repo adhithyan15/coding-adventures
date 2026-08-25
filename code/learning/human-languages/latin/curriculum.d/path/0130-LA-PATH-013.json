@@ -1,0 +1,20 @@
+{
+  "id": "LA-PATH-013",
+  "spine_node": "SPINE-POLITE-REQUEST-REPAIR",
+  "lessons": [
+    "LA-C10-aqua-vinum",
+    "LA-C10-panis",
+    "LA-C44-domus",
+    "LA-C44-porta",
+    "LA-C44-murus",
+    "LA-C44-hortus",
+    "LA-C44-focus"
+  ],
+  "before": [],
+  "inline": [
+    "LA-EXT-013-LANGUAGE-SPECIFIC"
+  ],
+  "after": [
+    "LA-EXT-044-HOUSE"
+  ]
+}

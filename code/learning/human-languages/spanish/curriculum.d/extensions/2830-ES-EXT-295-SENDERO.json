@@ -1,0 +1,15 @@
+{
+  "id": "ES-EXT-295-SENDERO",
+  "stage": "pre-A1",
+  "kind": "required",
+  "category": "vocabulary",
+  "canDo": "I can name the path, the bridge, the shore, the island and the mist in Spanish.",
+  "prerequisites": [],
+  "lessons": [
+    "ES-C295-sendero",
+    "ES-C295-puente",
+    "ES-C295-orilla",
+    "ES-C295-isla",
+    "ES-C295-niebla"
+  ]
+}

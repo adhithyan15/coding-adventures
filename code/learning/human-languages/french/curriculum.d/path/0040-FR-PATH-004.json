@@ -1,0 +1,12 @@
+{
+  "id": "FR-PATH-004",
+  "spine_node": "SPINE-TIME-OF-DAY",
+  "lessons": [
+    "FR-C01-jour",
+    "FR-C01-bonjour",
+    "FR-C01-nuit"
+  ],
+  "before": [],
+  "inline": [],
+  "after": []
+}

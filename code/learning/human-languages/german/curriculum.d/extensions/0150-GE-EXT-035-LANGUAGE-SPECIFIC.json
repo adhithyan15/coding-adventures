@@ -1,0 +1,12 @@
+{
+  "id": "GE-EXT-035-LANGUAGE-SPECIFIC",
+  "stage": "A1",
+  "kind": "required",
+  "category": "language-specific",
+  "canDo": "I can use the German-specific vocabulary and grammar that support this shared ability.",
+  "prerequisites": [],
+  "lessons": [
+    "GE-C07-wochentage-1",
+    "GE-C07-wochentage-2"
+  ]
+}

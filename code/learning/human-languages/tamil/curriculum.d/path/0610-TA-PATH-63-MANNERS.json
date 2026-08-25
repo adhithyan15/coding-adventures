@@ -1,0 +1,16 @@
+{
+  "id": "TA-PATH-63-MANNERS",
+  "spine_node": "SPINE-COURTESY-THANK",
+  "lessons": [
+    "TA-C63-request",
+    "TA-C63-permission",
+    "TA-C63-hesitancy",
+    "TA-C63-trust",
+    "TA-C63-humility"
+  ],
+  "before": [],
+  "inline": [
+    "TA-EXT-63-MANNERS"
+  ],
+  "after": []
+}

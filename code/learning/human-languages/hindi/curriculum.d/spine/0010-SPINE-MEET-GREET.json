@@ -1,0 +1,16 @@
+{
+  "segments": [
+    "HI-PATH-001",
+    "HI-PATH-003A",
+    "HI-PATH-100",
+    "HI-PATH-030",
+    "HI-PATH-51-WELCOME",
+    "HI-PATH-58-HOUSE",
+    "HI-PATH-60-YARD"
+  ],
+  "omits": [
+    "GREETING-PEACE",
+    "GREETING-WELCOME"
+  ],
+  "relocates": {}
+}

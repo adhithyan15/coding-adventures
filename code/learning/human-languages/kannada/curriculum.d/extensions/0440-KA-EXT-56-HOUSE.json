@@ -1,0 +1,15 @@
+{
+  "id": "KA-EXT-56-HOUSE",
+  "stage": "pre-A1",
+  "kind": "required",
+  "category": "vocabulary",
+  "canDo": "I can name the five things a Kannada household keeps to hand.",
+  "prerequisites": [],
+  "lessons": [
+    "KA-C56-mat",
+    "KA-C56-basket",
+    "KA-C56-knife",
+    "KA-C56-vessel",
+    "KA-C56-box"
+  ]
+}

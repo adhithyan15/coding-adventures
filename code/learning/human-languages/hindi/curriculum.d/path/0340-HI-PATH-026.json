@@ -1,0 +1,18 @@
+{
+  "id": "HI-PATH-026",
+  "spine_node": "SPINE-TIME-OF-DAY",
+  "lessons": [
+    "HI-C28-subah",
+    "HI-C29-shaam",
+    "HI-C30-dopahar-widened",
+    "HI-C31-suprabhat",
+    "HI-C32-shubh-sandhya",
+    "HI-C32-evening-register",
+    "HI-C33-shubh-dopahar"
+  ],
+  "before": [],
+  "inline": [
+    "HI-EXT-026-REGISTER"
+  ],
+  "after": []
+}

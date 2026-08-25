@@ -1,0 +1,14 @@
+{
+  "id": "UR-EXT-001B-SHUKRIYA-SCRIPT",
+  "stage": "pre-A1",
+  "kind": "required",
+  "category": "script",
+  "canDo": "I can recognize and gently trace the five shapes in shukriyā before copying the joined word from a model.",
+  "prerequisites": [
+    "UR-EXT-001-INLINE-SCRIPT"
+  ],
+  "lessons": [
+    "UR-W01-shukriya-first-three",
+    "UR-C01-shukriya"
+  ]
+}

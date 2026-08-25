@@ -1,0 +1,13 @@
+{
+  "segments": [
+    "TA-PATH-016",
+    "TA-PATH-020",
+    "TA-PATH-022",
+    "TA-PATH-025",
+    "TA-PATH-027"
+  ],
+  "omits": [
+    "GREETING-DAY"
+  ],
+  "relocates": {}
+}

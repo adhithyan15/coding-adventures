@@ -1,0 +1,13 @@
+{
+  "id": "ES-PATH-003",
+  "spine_node": "SPINE-DEFINITE-REFERENCE",
+  "lessons": [
+    "ES-C01-el-la",
+    "ES-C01-genero-gramatical"
+  ],
+  "before": [],
+  "inline": [],
+  "after": [
+    "ES-EXT-003-GRAMMAR"
+  ]
+}

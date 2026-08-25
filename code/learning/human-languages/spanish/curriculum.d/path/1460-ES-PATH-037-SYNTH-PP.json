@@ -1,0 +1,12 @@
+{
+  "id": "ES-PATH-037-SYNTH-PP",
+  "spine_node": "SPINE-GIVE-REASONS",
+  "lessons": [
+    "ES-C51-sintesis-regalo-motivo"
+  ],
+  "before": [],
+  "inline": [
+    "ES-EXT-037-SYNTH-PP"
+  ],
+  "after": []
+}

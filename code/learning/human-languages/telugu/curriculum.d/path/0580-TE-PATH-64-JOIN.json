@@ -1,0 +1,16 @@
+{
+  "id": "TE-PATH-64-JOIN",
+  "spine_node": "SPINE-RESPOND-BASIC",
+  "lessons": [
+    "TE-C64-also",
+    "TE-C64-only",
+    "TE-C64-in-that-case",
+    "TE-C64-after",
+    "TE-C64-still"
+  ],
+  "before": [],
+  "inline": [
+    "TE-EXT-64-JOIN"
+  ],
+  "after": []
+}

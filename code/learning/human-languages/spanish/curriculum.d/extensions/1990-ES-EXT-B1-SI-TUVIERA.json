@@ -1,0 +1,11 @@
+{
+  "id": "ES-EXT-B1-SI-TUVIERA",
+  "stage": "B1",
+  "kind": "required",
+  "category": "grammar",
+  "canDo": "I can use the additional Spanish material required at this point in the path.",
+  "prerequisites": [],
+  "lessons": [
+    "ES-C56-si-tuviera"
+  ]
+}

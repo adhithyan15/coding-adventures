@@ -1,0 +1,12 @@
+{
+  "id": "ES-PATH-A1-INF-SUJETO",
+  "spine_node": "SPINE-DEFINITE-REFERENCE",
+  "lessons": [
+    "ES-C67-comer-es-bueno"
+  ],
+  "before": [],
+  "inline": [
+    "ES-EXT-A1-INF-SUJETO"
+  ],
+  "after": []
+}

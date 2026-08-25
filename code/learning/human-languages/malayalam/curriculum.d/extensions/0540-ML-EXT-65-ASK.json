@@ -1,0 +1,15 @@
+{
+  "id": "ML-EXT-65-ASK",
+  "stage": "pre-A1",
+  "kind": "required",
+  "category": "vocabulary",
+  "canDo": "I can name a request, permission, consent, good manners and trust in Malayalam.",
+  "prerequisites": [],
+  "lessons": [
+    "ML-C65-request",
+    "ML-C65-permission",
+    "ML-C65-consent",
+    "ML-C65-manners",
+    "ML-C65-trust"
+  ]
+}

@@ -1,0 +1,14 @@
+{
+  "id": "HI-EXT-44-FAMILY",
+  "stage": "pre-A1",
+  "kind": "required",
+  "category": "vocabulary",
+  "canDo": "I can name four family and people words.",
+  "prerequisites": [],
+  "lessons": [
+    "HI-C44-son",
+    "HI-C44-daughter",
+    "HI-C44-family",
+    "HI-C44-people"
+  ]
+}

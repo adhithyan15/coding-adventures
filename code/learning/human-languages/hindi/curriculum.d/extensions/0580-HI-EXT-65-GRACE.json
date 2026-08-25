@@ -1,0 +1,15 @@
+{
+  "id": "HI-EXT-65-GRACE",
+  "stage": "pre-A1",
+  "kind": "required",
+  "category": "vocabulary",
+  "canDo": "I can name five words a Hindi speaker reaches for when asking a favour.",
+  "prerequisites": [],
+  "lessons": [
+    "HI-C65-kindness",
+    "HI-C65-entreaty",
+    "HI-C65-permission",
+    "HI-C65-trust",
+    "HI-C65-manners"
+  ]
+}

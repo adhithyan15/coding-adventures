@@ -1,0 +1,10 @@
+{
+  "segments": [],
+  "omits": [
+    "CULTURAL-ALLUSION",
+    "PROVERB",
+    "EUPHEMISM-AND-TABOO",
+    "HUMOR-CONVENTION"
+  ],
+  "relocates": {}
+}

@@ -1,0 +1,13 @@
+{
+  "id": "FR-PATH-018",
+  "spine_node": "SPINE-CHECK-WELLBEING",
+  "lessons": [
+    "FR-C17-tete",
+    "FR-C17-main"
+  ],
+  "before": [],
+  "inline": [
+    "FR-EXT-018-LANGUAGE-SPECIFIC"
+  ],
+  "after": []
+}

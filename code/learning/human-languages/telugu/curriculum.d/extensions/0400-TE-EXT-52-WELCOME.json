@@ -1,0 +1,15 @@
+{
+  "id": "TE-EXT-52-WELCOME",
+  "stage": "pre-A1",
+  "kind": "required",
+  "category": "vocabulary",
+  "canDo": "I can name the five things a Telugu welcome offers a guest.",
+  "prerequisites": [],
+  "lessons": [
+    "TE-C52-door",
+    "TE-C52-chair",
+    "TE-C52-muggu",
+    "TE-C52-flower",
+    "TE-C52-garland"
+  ]
+}

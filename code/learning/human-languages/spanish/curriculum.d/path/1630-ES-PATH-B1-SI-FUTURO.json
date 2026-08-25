@@ -1,0 +1,12 @@
+{
+  "id": "ES-PATH-B1-SI-FUTURO",
+  "spine_node": "SPINE-EXPRESS-CONDITION",
+  "lessons": [
+    "ES-C55-si-futuro"
+  ],
+  "before": [],
+  "inline": [
+    "ES-EXT-B1-SI-FUTURO"
+  ],
+  "after": []
+}

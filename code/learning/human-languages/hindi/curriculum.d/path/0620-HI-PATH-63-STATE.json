@@ -1,0 +1,16 @@
+{
+  "id": "HI-PATH-63-STATE",
+  "spine_node": "SPINE-CHECK-WELLBEING",
+  "lessons": [
+    "HI-C63-hunger",
+    "HI-C63-thirst",
+    "HI-C63-sleep",
+    "HI-C63-fever",
+    "HI-C63-pain"
+  ],
+  "before": [],
+  "inline": [
+    "HI-EXT-63-STATE"
+  ],
+  "after": []
+}

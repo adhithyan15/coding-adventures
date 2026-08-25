@@ -1,0 +1,15 @@
+{
+  "id": "ES-EXT-352-COUNT",
+  "stage": "A1",
+  "kind": "required",
+  "category": "vocabulary",
+  "canDo": "I can name a set, say it is whole, name most of it, name what is left, and say there is not enough.",
+  "prerequisites": [],
+  "lessons": [
+    "ES-C352-conjunto",
+    "ES-C352-entero",
+    "ES-C352-mayoria",
+    "ES-C352-resto",
+    "ES-C352-escaso"
+  ]
+}

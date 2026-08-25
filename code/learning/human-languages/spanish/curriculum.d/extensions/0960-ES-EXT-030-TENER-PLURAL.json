@@ -1,0 +1,12 @@
+{
+  "id": "ES-EXT-030-TENER-PLURAL",
+  "stage": "A2",
+  "kind": "required",
+  "category": "language-specific",
+  "canDo": "I can use the additional Spanish material required at this point in the path.",
+  "prerequisites": [],
+  "lessons": [
+    "ES-C08-tenemos",
+    "ES-C08-tienen"
+  ]
+}

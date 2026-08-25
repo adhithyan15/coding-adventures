@@ -1,0 +1,16 @@
+{
+  "id": "ES-PATH-331-01",
+  "spine_node": "SPINE-MEET-GREET",
+  "lessons": [
+    "ES-C331-rato",
+    "ES-C331-manera",
+    "ES-C331-modo",
+    "ES-C331-cosa",
+    "ES-C331-asunto"
+  ],
+  "before": [],
+  "inline": [
+    "ES-EXT-331-WAY"
+  ],
+  "after": []
+}

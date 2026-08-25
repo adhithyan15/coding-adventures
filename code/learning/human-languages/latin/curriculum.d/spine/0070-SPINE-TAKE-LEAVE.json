@@ -1,0 +1,13 @@
+{
+  "segments": [
+    "LA-PATH-002",
+    "LA-PATH-022"
+  ],
+  "omits": [
+    "FAREWELL-CASUAL",
+    "FAREWELL-SOON"
+  ],
+  "relocates": {
+    "GREETING-GOODNIGHT": "SPINE-TIME-OF-DAY"
+  }
+}

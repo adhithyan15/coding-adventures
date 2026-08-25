@@ -1,0 +1,15 @@
+{
+  "id": "ML-EXT-63-FEEL",
+  "stage": "pre-A1",
+  "kind": "required",
+  "category": "vocabulary",
+  "canDo": "I can name hunger, tiredness, pain, a cough and a fever in Malayalam.",
+  "prerequisites": [],
+  "lessons": [
+    "ML-C63-hunger",
+    "ML-C63-tiredness",
+    "ML-C63-pain",
+    "ML-C63-cough",
+    "ML-C63-fever"
+  ]
+}

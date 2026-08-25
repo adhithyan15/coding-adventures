@@ -1,0 +1,11 @@
+{
+  "id": "ES-EXT-015-SER-ESTAR-CONSOLIDATION",
+  "stage": "A1",
+  "kind": "supporting",
+  "category": "consolidation",
+  "canDo": "I can combine Spanish identity, origin, state, and location frames without adding new forms.",
+  "prerequisites": [],
+  "lessons": [
+    "ES-C09-practice"
+  ]
+}

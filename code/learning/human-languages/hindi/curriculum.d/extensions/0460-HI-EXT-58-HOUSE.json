@@ -1,0 +1,15 @@
+{
+  "id": "HI-EXT-58-HOUSE",
+  "stage": "pre-A1",
+  "kind": "required",
+  "category": "vocabulary",
+  "canDo": "I can name five parts of the house a guest walks through.",
+  "prerequisites": [],
+  "lessons": [
+    "HI-C58-wall",
+    "HI-C58-roof",
+    "HI-C58-window",
+    "HI-C58-stairs",
+    "HI-C58-sheet"
+  ]
+}

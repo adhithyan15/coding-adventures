@@ -1,0 +1,17 @@
+{
+  "id": "PA-EXT-003-HAAN-WRITING",
+  "stage": "pre-A1",
+  "kind": "required",
+  "category": "script",
+  "canDo": "After hearing ਹਾਂ and tracing its three pieces separately, I can assemble, copy, recall, and write the word from a heard cue.",
+  "prerequisites": [],
+  "lessons": [
+    "PA-W01-ha",
+    "PA-W01-aa-matra",
+    "PA-W01-bindi",
+    "PA-W01-haan-assemble",
+    "PA-W01-haan-guided-copy",
+    "PA-W01-haan-delayed-copy",
+    "PA-W01-haan-dictation"
+  ]
+}

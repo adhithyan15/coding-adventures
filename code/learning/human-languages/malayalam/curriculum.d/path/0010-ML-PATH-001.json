@@ -1,0 +1,20 @@
+{
+  "id": "ML-PATH-001",
+  "spine_node": "SPINE-MEET-GREET",
+  "lessons": [
+    "ML-C01-namaskaram",
+    "ML-W01-na-ma-trace",
+    "ML-W01-na-ma-guided-copy",
+    "ML-W01-na-ma-delayed-copy",
+    "ML-W01-na-ma-dictation",
+    "ML-W01-sa-chandrakkala-ka",
+    "ML-W01-aa-ra-anusvaram",
+    "ML-W01-namaskaram-read",
+    "ML-W01-namaskaram-dictation"
+  ],
+  "before": [],
+  "inline": [
+    "ML-EXT-001-INLINE-SCRIPT"
+  ],
+  "after": []
+}

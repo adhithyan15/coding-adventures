@@ -1,0 +1,16 @@
+{
+  "id": "KA-PATH-49-REPLY",
+  "spine_node": "SPINE-RESPOND-BASIC",
+  "lessons": [
+    "KA-C49-true",
+    "KA-C49-enough",
+    "KA-C49-certainly",
+    "KA-C49-perhaps",
+    "KA-C49-just-so"
+  ],
+  "before": [],
+  "inline": [
+    "KA-EXT-49-REPLY"
+  ],
+  "after": []
+}

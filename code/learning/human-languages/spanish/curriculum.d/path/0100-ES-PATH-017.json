@@ -1,0 +1,11 @@
+{
+  "id": "ES-PATH-017",
+  "spine_node": "SPINE-RESPOND-BASIC",
+  "lessons": [
+    "ES-C19-si",
+    "ES-C19-no"
+  ],
+  "before": [],
+  "inline": [],
+  "after": []
+}

@@ -1,0 +1,16 @@
+{
+  "id": "ML-PATH-55-GROUND",
+  "spine_node": "SPINE-POLITE-REQUEST-REPAIR",
+  "lessons": [
+    "ML-C55-river",
+    "ML-C55-rock",
+    "ML-C55-homeland",
+    "ML-C55-path",
+    "ML-C55-field"
+  ],
+  "before": [],
+  "inline": [
+    "ML-EXT-55-GROUND"
+  ],
+  "after": []
+}

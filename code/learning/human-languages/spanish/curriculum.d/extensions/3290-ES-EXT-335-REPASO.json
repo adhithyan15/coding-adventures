@@ -1,0 +1,11 @@
+{
+  "id": "ES-EXT-335-REPASO",
+  "stage": "pre-A1",
+  "kind": "required",
+  "category": "review",
+  "canDo": "I can give six nouns that arrived at the end of their runs back from the English, each with its article.",
+  "prerequisites": [],
+  "lessons": [
+    "ES-C335-repaso-seis-palabras"
+  ]
+}

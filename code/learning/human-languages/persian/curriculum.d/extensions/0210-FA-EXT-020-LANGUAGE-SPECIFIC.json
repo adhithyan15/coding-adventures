@@ -1,0 +1,14 @@
+{
+  "id": "FA-EXT-020-LANGUAGE-SPECIFIC",
+  "stage": "pre-A1",
+  "kind": "required",
+  "category": "language-specific",
+  "canDo": "I can say name, heart, door, and book in Persian, and I can tell which of the four is inherited and which is a later Arabic loan.",
+  "prerequisites": [],
+  "lessons": [
+    "FA-C12-nam",
+    "FA-C12-del",
+    "FA-C12-dar",
+    "FA-C12-ketab"
+  ]
+}

@@ -1,0 +1,13 @@
+{
+  "id": "FA-EXT-010-INHERITED-LEXICON",
+  "stage": "pre-A1",
+  "kind": "supporting",
+  "category": "etymology",
+  "canDo": "I can use khub for good or well and distinguish its inherited Persian layer from the borrowed words around it.",
+  "prerequisites": [
+    "FA-EXT-009-EZAFE-REGISTER"
+  ],
+  "lessons": [
+    "FA-C04-khub"
+  ]
+}

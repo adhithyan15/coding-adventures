@@ -1,0 +1,14 @@
+{
+  "id": "ES-PATH-021",
+  "spine_node": "SPINE-EXCHANGE-NAMES",
+  "lessons": [
+    "ES-C23-padre-madre",
+    "ES-C23-hermano-hermana",
+    "ES-C23-hermano-hache"
+  ],
+  "before": [],
+  "inline": [
+    "ES-EXT-021-LANGUAGE-SPECIFIC"
+  ],
+  "after": []
+}

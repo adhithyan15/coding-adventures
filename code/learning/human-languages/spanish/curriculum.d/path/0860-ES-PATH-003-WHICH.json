@@ -1,0 +1,12 @@
+{
+  "id": "ES-PATH-003-WHICH",
+  "spine_node": "SPINE-DEFINITE-REFERENCE",
+  "lessons": [
+    "ES-C46-cual-pide"
+  ],
+  "before": [],
+  "inline": [
+    "ES-EXT-003-WHICH"
+  ],
+  "after": []
+}

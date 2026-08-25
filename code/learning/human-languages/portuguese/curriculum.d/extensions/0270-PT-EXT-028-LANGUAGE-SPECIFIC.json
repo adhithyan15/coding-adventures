@@ -1,0 +1,13 @@
+{
+  "id": "PT-EXT-028-LANGUAGE-SPECIFIC",
+  "stage": "pre-A1",
+  "kind": "required",
+  "canDo": "I can ask for cheese, egg, rice and sugar, name their gender, and split them by origin -- two plain inherited Latin words and two Arabic loans that made the same al-Andalus crossing as Chapter 13's azul.",
+  "prerequisites": [],
+  "lessons": [
+    "PT-C24-queijo",
+    "PT-C24-ovo",
+    "PT-C24-arroz",
+    "PT-C24-acucar"
+  ]
+}

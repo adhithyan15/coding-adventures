@@ -1,0 +1,16 @@
+{
+  "id": "ES-PATH-287-01",
+  "spine_node": "SPINE-POLITE-REQUEST-REPAIR",
+  "lessons": [
+    "ES-C287-jabon",
+    "ES-C287-toalla",
+    "ES-C287-vaso",
+    "ES-C287-cuchara",
+    "ES-C287-plato"
+  ],
+  "before": [],
+  "inline": [
+    "ES-EXT-287-PEDIR"
+  ],
+  "after": []
+}

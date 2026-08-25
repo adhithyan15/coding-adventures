@@ -1,0 +1,9 @@
+{
+  "segments": [
+    "MR-PATH-011"
+  ],
+  "omits": [
+    "NUMBER-ONE-TO-FIVE"
+  ],
+  "relocates": {}
+}

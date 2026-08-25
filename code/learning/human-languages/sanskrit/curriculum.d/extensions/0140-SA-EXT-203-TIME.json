@@ -1,0 +1,16 @@
+{
+  "id": "SA-EXT-203-TIME",
+  "stage": "pre-A1",
+  "kind": "required",
+  "category": "vocabulary",
+  "canDo": "I can say when something happens in Sanskrit, and I know why the word order is free.",
+  "prerequisites": [],
+  "lessons": [
+    "SA-C17-day",
+    "SA-C17-night",
+    "SA-C17-today",
+    "SA-C17-yesterday",
+    "SA-C17-always",
+    "SA-C17-time-words"
+  ]
+}

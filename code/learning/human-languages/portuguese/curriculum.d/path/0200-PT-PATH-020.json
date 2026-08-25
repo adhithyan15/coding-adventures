@@ -1,0 +1,17 @@
+{
+  "id": "PT-PATH-020",
+  "spine_node": "SPINE-ASK-LOCATION",
+  "lessons": [
+    "PT-C16-ser",
+    "PT-C16-ser-roots",
+    "PT-C16-ser-vs-estar",
+    "PT-C16-ser-estar-meaning"
+  ],
+  "before": [],
+  "inline": [
+    "PT-EXT-020-LANGUAGE-SPECIFIC",
+    "PT-EXT-020-ETYMOLOGY",
+    "PT-EXT-020-GRAMMAR"
+  ],
+  "after": []
+}

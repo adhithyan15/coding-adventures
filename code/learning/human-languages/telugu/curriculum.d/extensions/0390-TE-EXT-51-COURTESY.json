@@ -1,0 +1,15 @@
+{
+  "id": "TE-EXT-51-COURTESY",
+  "stage": "pre-A1",
+  "kind": "required",
+  "category": "vocabulary",
+  "canDo": "I can be polite in Telugu beyond thank you.",
+  "prerequisites": [],
+  "lessons": [
+    "TE-C51-gratitude",
+    "TE-C51-favour",
+    "TE-C51-respect",
+    "TE-C51-blessing",
+    "TE-C51-salutation"
+  ]
+}

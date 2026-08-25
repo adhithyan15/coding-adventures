@@ -1,0 +1,12 @@
+{
+  "segments": [
+    "TA-PATH-002",
+    "TA-PATH-004",
+    "TA-PATH-006",
+    "TA-PATH-47-REPLY",
+    "TA-PATH-56-AMOUNT",
+    "TA-PATH-62-JOIN"
+  ],
+  "omits": [],
+  "relocates": {}
+}

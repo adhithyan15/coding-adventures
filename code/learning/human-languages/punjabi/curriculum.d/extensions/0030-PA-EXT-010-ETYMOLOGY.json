@@ -1,0 +1,11 @@
+{
+  "id": "PA-EXT-010-ETYMOLOGY",
+  "stage": "A1",
+  "kind": "supporting",
+  "category": "etymology",
+  "canDo": "I can use this Punjabi word history as a memory hook without confusing origin and current use.",
+  "prerequisites": [],
+  "lessons": [
+    "PA-C06-panj-convergence"
+  ]
+}

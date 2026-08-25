@@ -1,0 +1,13 @@
+{
+  "id": "PT-EXT-030-LANGUAGE-SPECIFIC",
+  "stage": "pre-A1",
+  "kind": "required",
+  "canDo": "I can name the eye, ear, mouth and heart with the right gender, and say what happened to each Latin root -- kept whole, folded by a sound law, or grown with a suffix.",
+  "prerequisites": [],
+  "lessons": [
+    "PT-C26-olho",
+    "PT-C26-orelha",
+    "PT-C26-boca",
+    "PT-C26-coracao"
+  ]
+}

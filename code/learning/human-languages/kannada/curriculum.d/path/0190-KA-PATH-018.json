@@ -1,0 +1,12 @@
+{
+  "id": "KA-PATH-018",
+  "spine_node": "SPINE-POLITE-REQUEST-REPAIR",
+  "lessons": [
+    "KA-C15-niiru-akki"
+  ],
+  "before": [],
+  "inline": [
+    "KA-EXT-018-LANGUAGE-SPECIFIC"
+  ],
+  "after": []
+}

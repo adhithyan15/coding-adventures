@@ -1,0 +1,12 @@
+{
+  "id": "ES-PATH-028-REVIEW-FR",
+  "spine_node": "SPINE-SAY-WHAT-I-DO",
+  "lessons": [
+    "ES-C56-repaso-amigos"
+  ],
+  "before": [],
+  "inline": [
+    "ES-EXT-028-REVIEW-FR"
+  ],
+  "after": []
+}

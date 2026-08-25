@@ -1,0 +1,14 @@
+{
+  "id": "ES-PATH-010",
+  "spine_node": "SPINE-COURTESY-THANK",
+  "lessons": [
+    "ES-C04-gracias",
+    "ES-C04-de-nada",
+    "ES-C04-repaso-gracias"
+  ],
+  "before": [],
+  "inline": [],
+  "after": [
+    "ES-EXT-010-CONSOLIDATION-GRACIAS"
+  ]
+}

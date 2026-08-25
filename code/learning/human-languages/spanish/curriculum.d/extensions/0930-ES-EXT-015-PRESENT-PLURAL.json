@@ -1,0 +1,20 @@
+{
+  "id": "ES-EXT-015-PRESENT-PLURAL",
+  "stage": "A1",
+  "kind": "required",
+  "category": "language-specific",
+  "canDo": "I can use the additional Spanish material required at this point in the path.",
+  "prerequisites": [],
+  "lessons": [
+    "ES-C07-hablamos",
+    "ES-C07-hablan",
+    "ES-C07-hablais",
+    "ES-C07-repaso-presente-completo",
+    "ES-C07-sintesis-dos-continentes",
+    "ES-C07-comemos",
+    "ES-C07-vivimos",
+    "ES-C07-comeis-vivis",
+    "ES-C07-comen-viven",
+    "ES-C07-repaso-tres-familias"
+  ]
+}

@@ -1,0 +1,16 @@
+{
+  "id": "RU-EXT-007-CORE-VERBS",
+  "stage": "A2",
+  "kind": "required",
+  "category": "language-specific",
+  "canDo": "I can say what I do with six everyday Russian verbs in the present tense, and I know why the verb 'to be' is missing from that list.",
+  "prerequisites": [],
+  "lessons": [
+    "RU-C03-byt",
+    "RU-C03-zhit",
+    "RU-C03-znat",
+    "RU-C03-govorit",
+    "RU-C03-videt",
+    "RU-C03-idti"
+  ]
+}

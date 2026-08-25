@@ -1,0 +1,14 @@
+{
+  "segments": [
+    "TE-PATH-002",
+    "TE-PATH-004",
+    "TE-PATH-49-REPLY",
+    "TE-PATH-58-REPLY",
+    "TE-PATH-64-JOIN",
+    "TE-PATH-70-CREATURE"
+  ],
+  "omits": [
+    "RESPONSE-YESNO"
+  ],
+  "relocates": {}
+}

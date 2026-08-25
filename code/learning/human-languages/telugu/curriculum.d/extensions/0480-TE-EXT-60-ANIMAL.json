@@ -1,0 +1,15 @@
+{
+  "id": "TE-EXT-60-ANIMAL",
+  "stage": "pre-A1",
+  "kind": "required",
+  "category": "vocabulary",
+  "canDo": "I can name five common animals in Telugu, and greet the house that keeps them.",
+  "prerequisites": [],
+  "lessons": [
+    "TE-C60-buffalo",
+    "TE-C60-goat",
+    "TE-C60-hen",
+    "TE-C60-ant",
+    "TE-C60-bird"
+  ]
+}

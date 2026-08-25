@@ -1,0 +1,11 @@
+{
+  "id": "ES-EXT-011-REGISTER",
+  "stage": "pre-A1",
+  "kind": "required",
+  "category": "register",
+  "canDo": "I can choose the Spanish form that fits this relationship and setting.",
+  "prerequisites": [],
+  "lessons": [
+    "ES-C04-como-estas-register"
+  ]
+}

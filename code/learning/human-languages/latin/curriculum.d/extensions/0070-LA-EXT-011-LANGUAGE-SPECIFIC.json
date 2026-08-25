@@ -1,0 +1,12 @@
+{
+  "id": "LA-EXT-011-LANGUAGE-SPECIFIC",
+  "stage": "pre-A1",
+  "kind": "required",
+  "category": "language-specific",
+  "canDo": "I can use the additional Latin material required at this point in the path.",
+  "prerequisites": [],
+  "lessons": [
+    "LA-C08-caput",
+    "LA-C08-manus"
+  ]
+}

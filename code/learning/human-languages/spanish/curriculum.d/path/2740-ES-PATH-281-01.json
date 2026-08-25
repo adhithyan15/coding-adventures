@@ -1,0 +1,15 @@
+{
+  "id": "ES-PATH-281-01",
+  "spine_node": "SPINE-DEFINITE-REFERENCE",
+  "lessons": [
+    "ES-C281-nuevo",
+    "ES-C281-viejo",
+    "ES-C281-limpio",
+    "ES-C281-sucio"
+  ],
+  "before": [],
+  "inline": [
+    "ES-EXT-281-ADJETIVOS"
+  ],
+  "after": []
+}

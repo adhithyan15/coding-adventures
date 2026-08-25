@@ -1,0 +1,18 @@
+{
+  "id": "GE-PATH-016",
+  "spine_node": "SPINE-POLITE-REQUEST-REPAIR",
+  "lessons": [
+    "GE-C08-uhr",
+    "GE-C09-monate",
+    "GE-C09-jahreszeiten",
+    "GE-C10-eltern",
+    "GE-C10-geschwister",
+    "GE-C11-brot",
+    "GE-C11-wasser-wein"
+  ],
+  "before": [],
+  "inline": [
+    "GE-EXT-016-LANGUAGE-SPECIFIC"
+  ],
+  "after": []
+}

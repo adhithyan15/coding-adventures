@@ -1,0 +1,15 @@
+{
+  "id": "TA-EXT-46-ROLE",
+  "stage": "pre-A1",
+  "kind": "required",
+  "category": "vocabulary",
+  "canDo": "I can say what somebody's work is in Tamil.",
+  "prerequisites": [],
+  "lessons": [
+    "TA-C46-teacher",
+    "TA-C46-student",
+    "TA-C46-doctor",
+    "TA-C46-farmer",
+    "TA-C46-guest"
+  ]
+}

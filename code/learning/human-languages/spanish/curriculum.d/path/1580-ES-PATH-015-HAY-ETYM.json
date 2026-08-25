@@ -1,0 +1,12 @@
+{
+  "id": "ES-PATH-015-HAY-ETYM",
+  "spine_node": "SPINE-ASK-LOCATION",
+  "lessons": [
+    "ES-C54-ha-mas-y"
+  ],
+  "before": [],
+  "inline": [
+    "ES-EXT-015-HAY-ETYM"
+  ],
+  "after": []
+}

@@ -1,0 +1,15 @@
+{
+  "id": "ES-EXT-342-CLOCK",
+  "stage": "A1",
+  "kind": "required",
+  "category": "vocabulary",
+  "canDo": "I can cut an hour into minutes and quarters, give a time on the dot, ask for a timetable, and name the hours before dawn.",
+  "prerequisites": [],
+  "lessons": [
+    "ES-C342-minuto",
+    "ES-C342-cuarto",
+    "ES-C342-punto",
+    "ES-C342-horario",
+    "ES-C342-madrugada"
+  ]
+}

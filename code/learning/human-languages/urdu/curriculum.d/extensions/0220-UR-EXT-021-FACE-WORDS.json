@@ -1,0 +1,16 @@
+{
+  "id": "UR-EXT-021-FACE-WORDS",
+  "stage": "pre-A1",
+  "kind": "required",
+  "category": "language-specific",
+  "canDo": "I can name my ear, nose, eye and mouth in Urdu, notice that kān and nāk share the same three letters reversed, and read the nūn that marks a nasal vowel instead of a spoken consonant.",
+  "prerequisites": [
+    "UR-EXT-020-FAMILY-FRIENDS"
+  ],
+  "lessons": [
+    "UR-C10-kaan",
+    "UR-C10-naak",
+    "UR-C10-aankh",
+    "UR-C10-munh"
+  ]
+}

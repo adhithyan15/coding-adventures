@@ -1,0 +1,16 @@
+{
+  "id": "TE-PATH-70-CREATURE",
+  "spine_node": "SPINE-RESPOND-BASIC",
+  "lessons": [
+    "TE-C70-mouse",
+    "TE-C70-frog",
+    "TE-C70-mosquito",
+    "TE-C70-squirrel",
+    "TE-C70-spider"
+  ],
+  "before": [],
+  "inline": [
+    "TE-EXT-70-CREATURE"
+  ],
+  "after": []
+}

@@ -1,0 +1,14 @@
+{
+  "id": "SA-EXT-23-KIN",
+  "stage": "pre-A1",
+  "kind": "required",
+  "category": "vocabulary",
+  "canDo": "I can name four inherited kinship words and say them in order.",
+  "prerequisites": [],
+  "lessons": [
+    "SA-C23-father",
+    "SA-C23-mother",
+    "SA-C23-son",
+    "SA-C23-daughter"
+  ]
+}

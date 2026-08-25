@@ -1,0 +1,11 @@
+{
+  "id": "ES-EXT-339-WRITING",
+  "stage": "A1",
+  "kind": "required",
+  "category": "consolidation",
+  "canDo": "I can produce that same written task inside the published DELE A1 timing and word count, and mark it against the published criteria.",
+  "prerequisites": [],
+  "lessons": [
+    "ES-W01-con-reloj"
+  ]
+}

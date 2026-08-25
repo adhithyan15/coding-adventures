@@ -1,0 +1,14 @@
+{
+  "id": "IT-EXT-028-LANGUAGE-SPECIFIC",
+  "stage": "pre-A1",
+  "kind": "required",
+  "category": "language-specific",
+  "canDo": "I can name my heart, eyes, ears and mouth in Italian and trace the sound-law that built two of them.",
+  "prerequisites": [],
+  "lessons": [
+    "IT-C24-cuore",
+    "IT-C24-occhio",
+    "IT-C24-orecchio",
+    "IT-C24-bocca"
+  ]
+}

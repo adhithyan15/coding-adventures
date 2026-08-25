@@ -1,0 +1,17 @@
+{
+  "id": "HI-EXT-004-SCRIPT",
+  "stage": "pre-A1",
+  "kind": "required",
+  "category": "script",
+  "canDo": "I can recognize and use the Hindi script features introduced inside these words.",
+  "prerequisites": [],
+  "lessons": [
+    "HI-W03-matras-naam",
+    "HI-W03-preposed-i",
+    "HI-W04-ra-sa-mera-naam",
+    "HI-W04-write-mera-naam",
+    "HI-W05-virama-namaste",
+    "HI-W05-conjuncts",
+    "HI-W05-write-namaste"
+  ]
+}

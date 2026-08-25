@@ -1,0 +1,12 @@
+{
+  "id": "KA-PATH-017",
+  "spine_node": "SPINE-TIME-OF-DAY",
+  "lessons": [
+    "KA-C14-kaalagalu"
+  ],
+  "before": [],
+  "inline": [
+    "KA-EXT-017-LANGUAGE-SPECIFIC"
+  ],
+  "after": []
+}

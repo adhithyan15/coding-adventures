@@ -1,0 +1,13 @@
+{
+  "id": "BN-EXT-001-CONSOLIDATION",
+  "stage": "pre-A1",
+  "kind": "required",
+  "category": "consolidation",
+  "canDo": "I can greet, thank, answer yes or no, agree, and take my leave in Bengali, and read every word of it in the Bengali script.",
+  "prerequisites": [
+    "BN-EXT-009-LANGUAGE-SPECIFIC"
+  ],
+  "lessons": [
+    "BN-C01-practice"
+  ]
+}

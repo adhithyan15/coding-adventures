@@ -1,0 +1,16 @@
+{
+  "id": "TA-PATH-62-JOIN",
+  "spine_node": "SPINE-RESPOND-BASIC",
+  "lessons": [
+    "TA-C62-only",
+    "TA-C62-still",
+    "TA-C62-soon",
+    "TA-C62-at-once",
+    "TA-C62-first-of-all"
+  ],
+  "before": [],
+  "inline": [
+    "TA-EXT-62-JOIN"
+  ],
+  "after": []
+}

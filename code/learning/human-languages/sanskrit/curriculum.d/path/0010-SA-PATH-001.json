@@ -1,0 +1,13 @@
+{
+  "id": "SA-PATH-001",
+  "spine_node": "SPINE-MEET-GREET",
+  "lessons": [
+    "SA-C01-namaste",
+    "SA-C01-namaskara"
+  ],
+  "before": [],
+  "inline": [
+    "SA-EXT-001-INLINE-SCRIPT"
+  ],
+  "after": []
+}

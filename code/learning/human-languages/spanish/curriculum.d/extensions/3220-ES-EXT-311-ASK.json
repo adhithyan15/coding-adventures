@@ -1,0 +1,15 @@
+{
+  "id": "ES-EXT-311-ASK",
+  "stage": "pre-A1",
+  "kind": "required",
+  "category": "vocabulary",
+  "canDo": "I can handle a shop counter in Spanish: the shop, the bill, the price, the bag and the seat.",
+  "prerequisites": [],
+  "lessons": [
+    "ES-C311-tienda",
+    "ES-C311-cuenta",
+    "ES-C311-precio",
+    "ES-C311-bolsa",
+    "ES-C311-asiento"
+  ]
+}

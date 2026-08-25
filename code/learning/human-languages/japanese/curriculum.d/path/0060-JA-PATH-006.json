@@ -1,0 +1,16 @@
+{
+  "id": "JA-PATH-006",
+  "spine_node": "SPINE-MEET-GREET",
+  "lessons": [
+    "JA-W06-ko-katakana",
+    "JA-W06-long-mark",
+    "JA-W06-hi-katakana",
+    "JA-C01-koohii"
+  ],
+  "before": [],
+  "inline": [
+    "JA-EXT-014-KOOHII-KATAKANA",
+    "JA-EXT-004-KATAKANA-LOANWORDS"
+  ],
+  "after": []
+}

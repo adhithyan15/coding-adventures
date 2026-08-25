@@ -1,0 +1,16 @@
+{
+  "id": "TA-EXT-201-ADJ",
+  "stage": "pre-A1",
+  "kind": "required",
+  "category": "grammar",
+  "canDo": "I can describe things in Tamil — big, small, good, new, old — and I can see the one pattern the six words are built from.",
+  "prerequisites": [],
+  "lessons": [
+    "TA-C41-big",
+    "TA-C41-small",
+    "TA-C41-good",
+    "TA-C41-new",
+    "TA-C41-old",
+    "TA-C41-adjective-system"
+  ]
+}

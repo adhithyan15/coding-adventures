@@ -1,0 +1,13 @@
+{
+  "id": "UR-EXT-014-HAFIZ-ARABIC-ROOT",
+  "stage": "pre-A1",
+  "kind": "supporting",
+  "category": "etymology",
+  "canDo": "I can read hāfiz and use the Arabic guard-and-preserve root as a memory hook for protector.",
+  "prerequisites": [
+    "UR-EXT-013-KHUDA-PERSIAN-HISTORY"
+  ],
+  "lessons": [
+    "UR-C05-hafiz"
+  ]
+}

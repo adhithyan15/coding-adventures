@@ -1,0 +1,14 @@
+{
+  "id": "GU-PATH-009",
+  "spine_node": "SPINE-COUNT-ONE-TO-FIVE",
+  "lessons": [
+    "GU-C06-numbers-1-5",
+    "GU-C06-number-histories"
+  ],
+  "before": [],
+  "inline": [
+    "GU-EXT-009-LANGUAGE-SPECIFIC",
+    "GU-EXT-009-ETYMOLOGY"
+  ],
+  "after": []
+}

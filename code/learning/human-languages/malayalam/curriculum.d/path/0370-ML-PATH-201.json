@@ -1,0 +1,17 @@
+{
+  "id": "ML-PATH-201",
+  "spine_node": "SPINE-DEFINITE-REFERENCE",
+  "lessons": [
+    "ML-C42-big",
+    "ML-C42-small",
+    "ML-C42-good",
+    "ML-C42-new",
+    "ML-C42-old",
+    "ML-C42-adjective-system"
+  ],
+  "before": [],
+  "inline": [
+    "ML-EXT-201-ADJ"
+  ],
+  "after": []
+}

@@ -1,0 +1,16 @@
+{
+  "id": "KA-PATH-66-FIELD",
+  "spine_node": "SPINE-TAKE-LEAVE",
+  "lessons": [
+    "KA-C66-field",
+    "KA-C66-grass",
+    "KA-C66-paddy",
+    "KA-C66-crop",
+    "KA-C66-harvest"
+  ],
+  "before": [],
+  "inline": [
+    "KA-EXT-66-FIELD"
+  ],
+  "after": []
+}

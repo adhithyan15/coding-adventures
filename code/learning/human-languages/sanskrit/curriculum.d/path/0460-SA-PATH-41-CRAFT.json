@@ -1,0 +1,16 @@
+{
+  "id": "SA-PATH-41-CRAFT",
+  "spine_node": "SPINE-EXCHANGE-NAMES",
+  "lessons": [
+    "SA-C41-wheel",
+    "SA-C41-pot",
+    "SA-C41-boat",
+    "SA-C41-mirror",
+    "SA-C41-parasol"
+  ],
+  "before": [],
+  "inline": [
+    "SA-EXT-41-CRAFT"
+  ],
+  "after": []
+}

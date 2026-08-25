@@ -1,0 +1,16 @@
+{
+  "id": "ES-PATH-306-01",
+  "spine_node": "SPINE-EXCHANGE-NAMES",
+  "lessons": [
+    "ES-C306-hijo",
+    "ES-C306-hija",
+    "ES-C306-abuelo",
+    "ES-C306-abuela",
+    "ES-C306-esposo"
+  ],
+  "before": [],
+  "inline": [
+    "ES-EXT-306-KIN"
+  ],
+  "after": []
+}

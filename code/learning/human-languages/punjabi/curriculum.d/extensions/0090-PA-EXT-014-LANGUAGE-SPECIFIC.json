@@ -1,0 +1,14 @@
+{
+  "id": "PA-EXT-014-LANGUAGE-SPECIFIC",
+  "stage": "pre-A1",
+  "kind": "required",
+  "category": "language-specific",
+  "canDo": "I can politely ask for water, tea, milk, or bread in Punjabi using the request pattern I build in this chapter.",
+  "prerequisites": [],
+  "lessons": [
+    "PA-C10-paani",
+    "PA-C10-chaa",
+    "PA-C10-dudh",
+    "PA-C10-roti"
+  ]
+}

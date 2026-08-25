@@ -1,0 +1,16 @@
+{
+  "id": "ES-PATH-283-01",
+  "spine_node": "SPINE-COURTESY-THANK",
+  "lessons": [
+    "ES-C283-disculpe",
+    "ES-C283-permiso",
+    "ES-C283-amable",
+    "ES-C283-mil-gracias",
+    "ES-C283-no-hay-de-que"
+  ],
+  "before": [],
+  "inline": [
+    "ES-EXT-283-CORTESIA"
+  ],
+  "after": []
+}

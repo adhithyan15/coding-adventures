@@ -1,0 +1,24 @@
+{
+  "id": "JA-EXT-017-REPAIR-SLOWER",
+  "stage": "pre-A1",
+  "kind": "required",
+  "category": "communication",
+  "canDo": "I can ask for slower speech, confirm that I understand, read and write the previous repair lines, and write five new hiragana signs without crossing the earned-script boundary.",
+  "prerequisites": [
+    "JA-EXT-016-REPAIR-REPEAT"
+  ],
+  "lessons": [
+    "JA-W10-se",
+    "JA-W10-o",
+    "JA-W10-ne",
+    "JA-C10-sukoshi",
+    "JA-W10-shi",
+    "JA-C10-yukkuri",
+    "JA-W10-yu",
+    "JA-C10-itte-kudasai",
+    "JA-C10-mou-sukoshi",
+    "JA-C10-wakarimashita",
+    "JA-C10-koko",
+    "JA-C10-slower-please"
+  ]
+}

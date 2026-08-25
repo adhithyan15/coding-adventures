@@ -1,0 +1,16 @@
+{
+  "id": "SA-PATH-017",
+  "spine_node": "SPINE-SAY-WHAT-I-DO",
+  "lessons": [
+    "SA-C05-vadami",
+    "SA-C05-aham-samskritam-vadami",
+    "SA-C05-karomi",
+    "SA-C05-vasami",
+    "SA-C05-practice"
+  ],
+  "before": [],
+  "inline": [
+    "SA-EXT-017-LANGUAGE-SPECIFIC"
+  ],
+  "after": []
+}

@@ -1,0 +1,15 @@
+{
+  "id": "SA-EXT-27-REPLY",
+  "stage": "pre-A1",
+  "kind": "required",
+  "category": "vocabulary",
+  "canDo": "I can answer in Sanskrit with more than yes and no.",
+  "prerequisites": [],
+  "lessons": [
+    "SA-C27-so-be-it",
+    "SA-C27-well-done",
+    "SA-C27-enough",
+    "SA-C27-true",
+    "SA-C27-thus"
+  ]
+}

@@ -1,0 +1,10 @@
+{
+  "id": "ES-PATH-002",
+  "spine_node": "SPINE-CHECK-WELLBEING",
+  "lessons": [
+    "ES-C01-bien"
+  ],
+  "before": [],
+  "inline": [],
+  "after": []
+}

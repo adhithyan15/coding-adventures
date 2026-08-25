@@ -1,0 +1,13 @@
+{
+  "segments": [
+    "KA-PATH-013",
+    "KA-PATH-017",
+    "KA-PATH-019",
+    "KA-PATH-022",
+    "KA-PATH-024"
+  ],
+  "omits": [
+    "GREETING-DAY"
+  ],
+  "relocates": {}
+}

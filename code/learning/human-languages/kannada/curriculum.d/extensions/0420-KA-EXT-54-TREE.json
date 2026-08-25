@@ -1,0 +1,15 @@
+{
+  "id": "KA-EXT-54-TREE",
+  "stage": "pre-A1",
+  "kind": "required",
+  "category": "vocabulary",
+  "canDo": "I can name a Kannada tree and four of its parts.",
+  "prerequisites": [],
+  "lessons": [
+    "KA-C54-tree",
+    "KA-C54-branch",
+    "KA-C54-leaf",
+    "KA-C54-root",
+    "KA-C54-seed"
+  ]
+}

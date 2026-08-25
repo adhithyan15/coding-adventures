@@ -1,0 +1,16 @@
+{
+  "id": "ES-PATH-310-01",
+  "spine_node": "SPINE-POLITE-REQUEST-REPAIR",
+  "lessons": [
+    "ES-C310-llave",
+    "ES-C310-ducha",
+    "ES-C310-mesa",
+    "ES-C310-luz",
+    "ES-C310-bano"
+  ],
+  "before": [],
+  "inline": [
+    "ES-EXT-310-ASK"
+  ],
+  "after": []
+}

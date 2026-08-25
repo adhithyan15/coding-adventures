@@ -1,0 +1,14 @@
+{
+  "id": "TA-PATH-023",
+  "spine_node": "SPINE-EXCHANGE-NAMES",
+  "lessons": [
+    "TA-C19-vayathu",
+    "TA-C19-age-register-grammar"
+  ],
+  "before": [],
+  "inline": [
+    "TA-EXT-023-LANGUAGE-SPECIFIC",
+    "TA-EXT-023-REGISTER"
+  ],
+  "after": []
+}

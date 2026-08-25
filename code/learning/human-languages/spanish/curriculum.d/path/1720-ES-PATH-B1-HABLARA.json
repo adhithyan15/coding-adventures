@@ -1,0 +1,12 @@
+{
+  "id": "ES-PATH-B1-HABLARA",
+  "spine_node": "SPINE-EXPRESS-CONDITION",
+  "lessons": [
+    "ES-C56-hablara"
+  ],
+  "before": [],
+  "inline": [
+    "ES-EXT-B1-HABLARA"
+  ],
+  "after": []
+}

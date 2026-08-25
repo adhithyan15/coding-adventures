@@ -1,0 +1,15 @@
+{
+  "id": "BN-PATH-014",
+  "spine_node": "SPINE-POLITE-REQUEST-REPAIR",
+  "lessons": [
+    "BN-C10-cha",
+    "BN-C10-jol",
+    "BN-C10-dudh",
+    "BN-C10-bhat"
+  ],
+  "before": [],
+  "inline": [
+    "BN-EXT-014-LANGUAGE-SPECIFIC"
+  ],
+  "after": []
+}

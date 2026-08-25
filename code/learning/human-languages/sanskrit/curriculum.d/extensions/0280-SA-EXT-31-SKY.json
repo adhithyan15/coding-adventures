@@ -1,0 +1,15 @@
+{
+  "id": "SA-EXT-31-SKY",
+  "stage": "pre-A1",
+  "kind": "required",
+  "category": "vocabulary",
+  "canDo": "I can name five things overhead in Sanskrit.",
+  "prerequisites": [],
+  "lessons": [
+    "SA-C31-sky",
+    "SA-C31-moon",
+    "SA-C31-star",
+    "SA-C31-wind",
+    "SA-C31-snow"
+  ]
+}

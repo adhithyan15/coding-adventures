@@ -1,0 +1,16 @@
+{
+  "id": "KA-PATH-61-KITCHEN",
+  "spine_node": "SPINE-EXCHANGE-NAMES",
+  "lessons": [
+    "KA-C61-curd",
+    "KA-C61-ghee",
+    "KA-C61-oil",
+    "KA-C61-jaggery",
+    "KA-C61-sugar"
+  ],
+  "before": [],
+  "inline": [
+    "KA-EXT-61-KITCHEN"
+  ],
+  "after": []
+}

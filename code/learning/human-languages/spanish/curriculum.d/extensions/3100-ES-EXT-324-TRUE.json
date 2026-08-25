@@ -1,0 +1,15 @@
+{
+  "id": "ES-EXT-324-TRUE",
+  "stage": "pre-A1",
+  "kind": "required",
+  "category": "vocabulary",
+  "canDo": "I can call a claim la verdad or falso, hedge it with acaso, size it with mas o menos, and empty it out with ni siquiera.",
+  "prerequisites": [],
+  "lessons": [
+    "ES-C324-verdad",
+    "ES-C324-falso",
+    "ES-C324-acaso",
+    "ES-C324-menos",
+    "ES-C324-siquiera"
+  ]
+}

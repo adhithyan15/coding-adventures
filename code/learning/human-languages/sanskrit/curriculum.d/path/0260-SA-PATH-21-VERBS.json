@@ -1,0 +1,15 @@
+{
+  "id": "SA-PATH-21-VERBS",
+  "spine_node": "SPINE-SAY-WHAT-I-DO",
+  "lessons": [
+    "SA-C21-dance",
+    "SA-C21-laugh",
+    "SA-C21-stand",
+    "SA-C21-remember"
+  ],
+  "before": [],
+  "inline": [
+    "SA-EXT-21-VERBS"
+  ],
+  "after": []
+}

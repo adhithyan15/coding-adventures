@@ -1,0 +1,16 @@
+{
+  "id": "ES-PATH-322-01",
+  "spine_node": "SPINE-TAKE-LEAVE",
+  "lessons": [
+    "ES-C322-anoche",
+    "ES-C322-semana",
+    "ES-C322-temprano",
+    "ES-C322-enseguida",
+    "ES-C322-todavia"
+  ],
+  "before": [],
+  "inline": [
+    "ES-EXT-322-WHEN"
+  ],
+  "after": []
+}

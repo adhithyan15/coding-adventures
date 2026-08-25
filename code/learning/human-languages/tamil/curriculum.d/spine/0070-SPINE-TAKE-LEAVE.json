@@ -1,0 +1,16 @@
+{
+  "segments": [
+    "TA-PATH-012",
+    "TA-PATH-035",
+    "TA-PATH-48-LEAVE",
+    "TA-PATH-57-FIRE",
+    "TA-PATH-64-HARVEST"
+  ],
+  "omits": [
+    "FAREWELL-CASUAL",
+    "FAREWELL-SOON"
+  ],
+  "relocates": {
+    "GREETING-GOODNIGHT": "SPINE-TIME-OF-DAY"
+  }
+}

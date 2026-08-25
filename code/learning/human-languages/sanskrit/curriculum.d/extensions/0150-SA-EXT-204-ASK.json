@@ -1,0 +1,15 @@
+{
+  "id": "SA-EXT-204-ASK",
+  "stage": "pre-A1",
+  "kind": "required",
+  "category": "vocabulary",
+  "canDo": "I can ask the seven basic questions in Sanskrit and recognise the k- stem they share.",
+  "prerequisites": [],
+  "lessons": [
+    "SA-C18-when",
+    "SA-C18-why",
+    "SA-C18-how-many",
+    "SA-C18-from-where",
+    "SA-C18-k-words"
+  ]
+}

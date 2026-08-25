@@ -1,0 +1,18 @@
+{
+  "id": "JA-EXT-013-NIHONGO-KANJI",
+  "stage": "pre-A1",
+  "kind": "required",
+  "category": "script",
+  "canDo": "I can write 日 and 本, build 語 from three separately practised components, and join the three signs without treating fourteen strokes as one jump.",
+  "prerequisites": [
+    "JA-EXT-012-POLITE-THANKS-CONSOLIDATION"
+  ],
+  "lessons": [
+    "JA-W05-nichi-kanji",
+    "JA-W05-hon-kanji",
+    "JA-W05-gen-component",
+    "JA-W05-five-component",
+    "JA-W05-mouth-component",
+    "JA-W05-go-kanji"
+  ]
+}

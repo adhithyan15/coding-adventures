@@ -1,0 +1,12 @@
+{
+  "id": "ES-PATH-003-REVIEW-IO",
+  "spine_node": "SPINE-DEFINITE-REFERENCE",
+  "lessons": [
+    "ES-C46-repaso-dos-sistemas"
+  ],
+  "before": [],
+  "inline": [
+    "ES-EXT-003-REVIEW-IO"
+  ],
+  "after": []
+}

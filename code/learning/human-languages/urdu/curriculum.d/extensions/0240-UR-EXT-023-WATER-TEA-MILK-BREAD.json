@@ -1,0 +1,16 @@
+{
+  "id": "UR-EXT-023-WATER-TEA-MILK-BREAD",
+  "stage": "pre-A1",
+  "kind": "required",
+  "category": "language-specific",
+  "canDo": "I can name water, tea, milk and bread in Urdu, say what I like using the frame Chapter 8 built, and sort each word as inherited or Persian.",
+  "prerequisites": [
+    "UR-EXT-022-HEART"
+  ],
+  "lessons": [
+    "UR-C12-pani",
+    "UR-C12-chai",
+    "UR-C12-doodh",
+    "UR-C12-roti"
+  ]
+}

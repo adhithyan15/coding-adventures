@@ -1,0 +1,13 @@
+{
+  "id": "ML-EXT-004-CHECKPOINT",
+  "stage": "pre-A1",
+  "kind": "required",
+  "category": "consolidation",
+  "canDo": "I can greet and respond, read namaskāram, and write the greeting from sound at the Chapter 1 checkpoint.",
+  "prerequisites": [
+    "ML-EXT-001-INLINE-SCRIPT"
+  ],
+  "lessons": [
+    "ML-C01-practice"
+  ]
+}

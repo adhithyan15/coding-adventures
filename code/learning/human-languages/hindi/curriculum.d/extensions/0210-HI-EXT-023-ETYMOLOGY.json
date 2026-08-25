@@ -1,0 +1,12 @@
+{
+  "id": "HI-EXT-023-ETYMOLOGY",
+  "stage": "A1",
+  "kind": "supporting",
+  "category": "etymology",
+  "canDo": "I can use this Hindi word history as a memory hook without confusing origin and current use.",
+  "prerequisites": [],
+  "lessons": [
+    "HI-C23-billi-history",
+    "HI-C24-pila-history"
+  ]
+}

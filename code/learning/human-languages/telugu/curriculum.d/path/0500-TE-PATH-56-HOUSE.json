@@ -1,0 +1,16 @@
+{
+  "id": "TE-PATH-56-HOUSE",
+  "spine_node": "SPINE-COURTESY-THANK",
+  "lessons": [
+    "TE-C56-mat",
+    "TE-C56-basket",
+    "TE-C56-knife",
+    "TE-C56-vessel",
+    "TE-C56-box"
+  ],
+  "before": [],
+  "inline": [
+    "TE-EXT-56-HOUSE"
+  ],
+  "after": []
+}

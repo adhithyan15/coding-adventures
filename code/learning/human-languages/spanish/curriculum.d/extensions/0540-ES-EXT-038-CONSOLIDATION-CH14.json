@@ -1,0 +1,11 @@
+{
+  "id": "ES-EXT-038-CONSOLIDATION-CH14",
+  "stage": "A2",
+  "kind": "supporting",
+  "category": "language-specific",
+  "canDo": "I can distinguish and retrieve the two singular completed-past patterns without new vocabulary.",
+  "prerequisites": [],
+  "lessons": [
+    "ES-C14-practice"
+  ]
+}

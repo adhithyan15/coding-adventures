@@ -1,0 +1,16 @@
+{
+  "id": "FR-PATH-031",
+  "spine_node": "SPINE-SAY-WHAT-I-WANT",
+  "lessons": [
+    "FR-C33-vouloir",
+    "FR-C33-pouvoir",
+    "FR-C33-devoir",
+    "FR-C33-practice"
+  ],
+  "before": [],
+  "inline": [
+    "FR-EXT-030-MODAL-CHAIN",
+    "FR-EXT-031-REQUEST-REGISTER"
+  ],
+  "after": []
+}

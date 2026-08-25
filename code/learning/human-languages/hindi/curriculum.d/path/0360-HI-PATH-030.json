@@ -1,0 +1,15 @@
+{
+  "id": "HI-PATH-030",
+  "spine_node": "SPINE-MEET-GREET",
+  "lessons": [
+    "HI-C36-ghar",
+    "HI-C36-darvaaza",
+    "HI-C36-kamra",
+    "HI-C36-kursi"
+  ],
+  "before": [],
+  "inline": [
+    "HI-EXT-030-LANGUAGE-SPECIFIC"
+  ],
+  "after": []
+}

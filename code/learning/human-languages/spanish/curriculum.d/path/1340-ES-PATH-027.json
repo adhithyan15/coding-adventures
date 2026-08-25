@@ -1,0 +1,17 @@
+{
+  "id": "ES-PATH-027",
+  "spine_node": "SPINE-DEFINITE-REFERENCE",
+  "lessons": [
+    "ES-C32-gato",
+    "ES-C32-perro",
+    "ES-C33-verde",
+    "ES-C33-amarillo",
+    "ES-C40-sintesis-describir"
+  ],
+  "before": [],
+  "inline": [
+    "ES-EXT-027-LANGUAGE-SPECIFIC",
+    "ES-EXT-027-CONSOLIDATION-DESCRIBING"
+  ],
+  "after": []
+}

@@ -1,0 +1,11 @@
+{
+  "id": "HI-PATH-011",
+  "spine_node": "SPINE-RESPOND-BASIC",
+  "lessons": [
+    "HI-C07-haan",
+    "HI-C07-nahin"
+  ],
+  "before": [],
+  "inline": [],
+  "after": []
+}

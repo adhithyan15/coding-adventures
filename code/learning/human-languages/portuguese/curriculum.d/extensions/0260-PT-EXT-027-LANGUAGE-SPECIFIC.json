@@ -1,0 +1,12 @@
+{
+  "id": "PT-EXT-027-LANGUAGE-SPECIFIC",
+  "stage": "pre-A1",
+  "kind": "required",
+  "canDo": "I can ask for coffee, tea and milk, name their gender, and trace each one to a different origin -- Arabic/Turkish, Cantonese, and plain inherited Latin.",
+  "prerequisites": [],
+  "lessons": [
+    "PT-C23-cafe",
+    "PT-C23-cha",
+    "PT-C23-leite"
+  ]
+}

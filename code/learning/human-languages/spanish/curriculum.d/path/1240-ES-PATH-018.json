@@ -1,0 +1,13 @@
+{
+  "id": "ES-PATH-018",
+  "spine_node": "SPINE-POLITE-REQUEST-REPAIR",
+  "lessons": [
+    "ES-C20-lo-siento",
+    "ES-C20-perdon"
+  ],
+  "before": [],
+  "inline": [
+    "ES-EXT-018-LANGUAGE-SPECIFIC"
+  ],
+  "after": []
+}

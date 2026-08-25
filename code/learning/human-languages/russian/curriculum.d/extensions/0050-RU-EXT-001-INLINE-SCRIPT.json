@@ -1,0 +1,16 @@
+{
+  "id": "RU-EXT-001-INLINE-SCRIPT",
+  "stage": "pre-A1",
+  "kind": "required",
+  "category": "script",
+  "canDo": "I can recognize the first Russian script pattern inside a greeting I already understand.",
+  "prerequisites": [],
+  "lessons": [
+    "RU-C01-privet",
+    "RU-W01-false-friends-v-r",
+    "RU-W02-false-friends-s-n",
+    "RU-W03-new-shapes-b-d",
+    "RU-W04-privet-letters-p-i",
+    "RU-W05-privet-letters-e-t"
+  ]
+}

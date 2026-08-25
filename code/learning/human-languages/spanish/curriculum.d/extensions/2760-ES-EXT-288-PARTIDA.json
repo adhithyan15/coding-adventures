@@ -1,0 +1,15 @@
+{
+  "id": "ES-EXT-288-PARTIDA",
+  "stage": "pre-A1",
+  "kind": "required",
+  "category": "vocabulary",
+  "canDo": "I can name the way out, the journey, the return, the arrival and the farewell in Spanish.",
+  "prerequisites": [],
+  "lessons": [
+    "ES-C288-salida",
+    "ES-C288-viaje",
+    "ES-C288-vuelta",
+    "ES-C288-llegada",
+    "ES-C288-despedida"
+  ]
+}

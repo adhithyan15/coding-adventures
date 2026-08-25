@@ -1,0 +1,15 @@
+{
+  "id": "ES-EXT-315-BODY",
+  "stage": "pre-A1",
+  "kind": "required",
+  "category": "vocabulary",
+  "canDo": "I can name the chest, and say strength, rest, fear and laughter in Spanish.",
+  "prerequisites": [],
+  "lessons": [
+    "ES-C315-pecho",
+    "ES-C315-fuerza",
+    "ES-C315-descanso",
+    "ES-C315-miedo",
+    "ES-C315-risa"
+  ]
+}

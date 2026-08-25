@@ -1,0 +1,14 @@
+{
+  "id": "AR-EXT-033-LANGUAGE-SPECIFIC",
+  "stage": "pre-A1",
+  "kind": "required",
+  "category": "language-specific",
+  "canDo": "I can ask for oil, a cup, a plate and a spoon in Arabic, and I can tell a broken plural from a sound one and say which nouns take which.",
+  "prerequisites": [],
+  "lessons": [
+    "AR-C36-zayt",
+    "AR-C36-kub",
+    "AR-C36-tabaq",
+    "AR-C36-milaqa"
+  ]
+}

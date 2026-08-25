@@ -1,0 +1,16 @@
+{
+  "id": "PT-PATH-011",
+  "spine_node": "SPINE-TAKE-LEAVE",
+  "lessons": [
+    "PT-C04-adeus",
+    "PT-C04-ate-logo",
+    "PT-C04-ate-amanha",
+    "PT-C04-ate-breve",
+    "PT-C04-practice"
+  ],
+  "before": [],
+  "inline": [],
+  "after": [
+    "PT-EXT-011-CONSOLIDATION"
+  ]
+}

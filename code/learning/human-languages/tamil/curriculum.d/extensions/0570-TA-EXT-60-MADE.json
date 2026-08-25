@@ -1,0 +1,15 @@
+{
+  "id": "TA-EXT-60-MADE",
+  "stage": "pre-A1",
+  "kind": "required",
+  "category": "vocabulary",
+  "canDo": "I can name five things people make in Tamil.",
+  "prerequisites": [],
+  "lessons": [
+    "TA-C60-needle",
+    "TA-C60-rope",
+    "TA-C60-umbrella",
+    "TA-C60-broom",
+    "TA-C60-comb"
+  ]
+}

@@ -1,0 +1,16 @@
+{
+  "id": "SA-PATH-34-LIMB",
+  "spine_node": "SPINE-CHECK-WELLBEING",
+  "lessons": [
+    "SA-C34-arm",
+    "SA-C34-neck",
+    "SA-C34-bone",
+    "SA-C34-blood",
+    "SA-C34-body"
+  ],
+  "before": [],
+  "inline": [
+    "SA-EXT-34-LIMB"
+  ],
+  "after": []
+}

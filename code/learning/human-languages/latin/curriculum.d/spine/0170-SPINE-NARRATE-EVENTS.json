@@ -1,0 +1,10 @@
+{
+  "segments": [],
+  "omits": [
+    "NARRATIVE-SEQUENCE",
+    "CONNECTIVE-THEN",
+    "CONNECTIVE-BECAUSE",
+    "ASPECT-ONGOING-PAST"
+  ],
+  "relocates": {}
+}

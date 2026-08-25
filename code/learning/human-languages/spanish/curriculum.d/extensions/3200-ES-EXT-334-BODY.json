@@ -1,0 +1,15 @@
+{
+  "id": "ES-EXT-334-BODY",
+  "stage": "pre-A1",
+  "kind": "required",
+  "category": "vocabulary",
+  "canDo": "I can say I am hungry, cold or hot, ask after somebody's health, and give my age.",
+  "prerequisites": [],
+  "lessons": [
+    "ES-C334-salud",
+    "ES-C334-hambre",
+    "ES-C334-frio",
+    "ES-C334-calor",
+    "ES-C334-edad"
+  ]
+}

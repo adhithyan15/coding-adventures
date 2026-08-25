@@ -1,0 +1,16 @@
+{
+  "id": "SA-PATH-206",
+  "spine_node": "SPINE-DEFINITE-REFERENCE",
+  "lessons": [
+    "SA-C20-man",
+    "SA-C20-woman",
+    "SA-C20-child",
+    "SA-C20-old-person",
+    "SA-C20-people"
+  ],
+  "before": [],
+  "inline": [
+    "SA-EXT-206-PEOPLE"
+  ],
+  "after": []
+}

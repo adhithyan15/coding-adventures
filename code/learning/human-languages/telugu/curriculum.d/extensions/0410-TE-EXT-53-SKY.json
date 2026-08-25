@@ -1,0 +1,15 @@
+{
+  "id": "TE-EXT-53-SKY",
+  "stage": "pre-A1",
+  "kind": "required",
+  "category": "vocabulary",
+  "canDo": "I can name five things overhead in Telugu, and say which of them Telugu borrowed and which it has always had.",
+  "prerequisites": [],
+  "lessons": [
+    "TE-C53-sky",
+    "TE-C53-sun",
+    "TE-C53-moon",
+    "TE-C53-star",
+    "TE-C53-cloud"
+  ]
+}

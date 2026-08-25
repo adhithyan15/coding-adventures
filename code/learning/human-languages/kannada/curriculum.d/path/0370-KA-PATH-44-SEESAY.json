@@ -1,0 +1,15 @@
+{
+  "id": "KA-PATH-44-SEESAY",
+  "spine_node": "SPINE-SAY-WHAT-I-DO",
+  "lessons": [
+    "KA-C44-look",
+    "KA-C44-listen",
+    "KA-C44-speak",
+    "KA-C44-write"
+  ],
+  "before": [],
+  "inline": [
+    "KA-EXT-44-SEESAY"
+  ],
+  "after": []
+}

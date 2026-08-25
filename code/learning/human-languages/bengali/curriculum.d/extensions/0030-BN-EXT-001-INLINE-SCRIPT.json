@@ -1,0 +1,11 @@
+{
+  "id": "BN-EXT-001-INLINE-SCRIPT",
+  "stage": "pre-A1",
+  "kind": "required",
+  "category": "script",
+  "canDo": "I can recognize the first Bengali script pattern inside a greeting I already understand.",
+  "prerequisites": [],
+  "lessons": [
+    "BN-C01-nomoshkar"
+  ]
+}

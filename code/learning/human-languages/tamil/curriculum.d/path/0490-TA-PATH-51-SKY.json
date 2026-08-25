@@ -1,0 +1,16 @@
+{
+  "id": "TA-PATH-51-SKY",
+  "spine_node": "SPINE-MEET-GREET",
+  "lessons": [
+    "TA-C51-sky",
+    "TA-C51-sun",
+    "TA-C51-moon",
+    "TA-C51-star",
+    "TA-C51-cloud"
+  ],
+  "before": [],
+  "inline": [
+    "TA-EXT-51-SKY"
+  ],
+  "after": []
+}

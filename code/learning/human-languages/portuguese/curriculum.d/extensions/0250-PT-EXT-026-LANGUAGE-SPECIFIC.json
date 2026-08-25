@@ -1,0 +1,12 @@
+{
+  "id": "PT-EXT-026-LANGUAGE-SPECIFIC",
+  "stage": "A2",
+  "kind": "required",
+  "canDo": "I can say that I answer and meet in Portuguese, split meeting between encontrar and conhecer, and choose among the three verbs Portuguese uses for playing — jogar, brincar and tocar.",
+  "prerequisites": [],
+  "lessons": [
+    "PT-C22-responder",
+    "PT-C22-encontrar",
+    "PT-C22-jogar-brincar-tocar"
+  ]
+}

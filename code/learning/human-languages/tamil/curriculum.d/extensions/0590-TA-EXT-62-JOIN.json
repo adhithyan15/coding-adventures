@@ -1,0 +1,15 @@
+{
+  "id": "TA-EXT-62-JOIN",
+  "stage": "pre-A1",
+  "kind": "required",
+  "category": "vocabulary",
+  "canDo": "I can place five small words that set the pace of a sentence in Tamil.",
+  "prerequisites": [],
+  "lessons": [
+    "TA-C62-only",
+    "TA-C62-still",
+    "TA-C62-soon",
+    "TA-C62-at-once",
+    "TA-C62-first-of-all"
+  ]
+}

@@ -1,0 +1,18 @@
+{
+  "id": "ML-PATH-200",
+  "spine_node": "SPINE-DEFINITE-REFERENCE",
+  "lessons": [
+    "ML-C41-this",
+    "ML-C41-that",
+    "ML-C41-here",
+    "ML-C41-there",
+    "ML-C41-who",
+    "ML-C41-where",
+    "ML-C41-deixis-system"
+  ],
+  "before": [],
+  "inline": [
+    "ML-EXT-200-DEIXIS"
+  ],
+  "after": []
+}

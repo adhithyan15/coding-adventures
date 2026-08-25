@@ -1,0 +1,13 @@
+{
+  "id": "FA-PATH-009",
+  "spine_node": "SPINE-SAY-WHAT-I-DO",
+  "lessons": [
+    "FA-C08-gereftan",
+    "FA-C08-porsidan",
+    "FA-C08-komak-kardan",
+    "FA-C08-dust-dashtan"
+  ],
+  "before": [],
+  "inline": [],
+  "after": []
+}

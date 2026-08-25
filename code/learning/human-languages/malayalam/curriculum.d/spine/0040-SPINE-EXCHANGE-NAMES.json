@@ -1,0 +1,18 @@
+{
+  "segments": [
+    "ML-PATH-005",
+    "ML-PATH-007",
+    "ML-PATH-011",
+    "ML-PATH-016",
+    "ML-PATH-021",
+    "ML-PATH-029",
+    "ML-PATH-030",
+    "ML-PATH-48-ROLE",
+    "ML-PATH-54-TREE",
+    "ML-PATH-61-SHELF"
+  ],
+  "omits": [
+    "PRONOUN-ME"
+  ],
+  "relocates": {}
+}

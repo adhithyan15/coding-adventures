@@ -1,0 +1,16 @@
+{
+  "id": "ES-PATH-346-01",
+  "spine_node": "SPINE-ASK-LOCATION",
+  "lessons": [
+    "ES-C346-escuela",
+    "ES-C346-iglesia",
+    "ES-C346-mercado",
+    "ES-C346-oficina",
+    "ES-C346-estacion"
+  ],
+  "before": [],
+  "inline": [
+    "ES-EXT-346-PLACE"
+  ],
+  "after": []
+}

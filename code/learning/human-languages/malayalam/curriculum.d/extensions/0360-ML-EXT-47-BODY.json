@@ -1,0 +1,15 @@
+{
+  "id": "ML-EXT-47-BODY",
+  "stage": "pre-A1",
+  "kind": "required",
+  "category": "vocabulary",
+  "canDo": "I can name five more parts of the body in Malayalam.",
+  "prerequisites": [],
+  "lessons": [
+    "ML-C47-leg",
+    "ML-C47-tooth",
+    "ML-C47-hair",
+    "ML-C47-finger",
+    "ML-C47-stomach"
+  ]
+}

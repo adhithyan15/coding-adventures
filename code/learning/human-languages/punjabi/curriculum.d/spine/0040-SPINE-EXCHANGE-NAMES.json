@@ -1,0 +1,11 @@
+{
+  "segments": [
+    "PA-PATH-004",
+    "PA-PATH-007",
+    "PA-PATH-015"
+  ],
+  "omits": [
+    "PRONOUN-ME"
+  ],
+  "relocates": {}
+}

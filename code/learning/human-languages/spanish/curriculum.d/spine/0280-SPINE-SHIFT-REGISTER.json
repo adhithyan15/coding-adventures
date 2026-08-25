@@ -1,0 +1,9 @@
+{
+  "segments": [],
+  "omits": [
+    "REGISTER-FORMAL",
+    "REGISTER-COLLOQUIAL",
+    "POLITENESS-STRATEGY"
+  ],
+  "relocates": {}
+}

@@ -1,0 +1,16 @@
+{
+  "id": "KA-PATH-51-COURTESY",
+  "spine_node": "SPINE-COURTESY-THANK",
+  "lessons": [
+    "KA-C51-gratitude",
+    "KA-C51-favour",
+    "KA-C51-respect",
+    "KA-C51-blessing",
+    "KA-C51-salutation"
+  ],
+  "before": [],
+  "inline": [
+    "KA-EXT-51-COURTESY"
+  ],
+  "after": []
+}

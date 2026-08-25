@@ -1,0 +1,14 @@
+{
+  "id": "HI-EXT-43-SEESAY",
+  "stage": "pre-A1",
+  "kind": "required",
+  "category": "vocabulary",
+  "canDo": "I can name four verbs of perceiving and expressing.",
+  "prerequisites": [],
+  "lessons": [
+    "HI-C43-look",
+    "HI-C43-listen",
+    "HI-C43-speak",
+    "HI-C43-write"
+  ]
+}

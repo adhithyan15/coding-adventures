@@ -1,0 +1,14 @@
+{
+  "id": "BN-EXT-021-CLOTHING-AND-ACCESSORIES",
+  "stage": "pre-A1",
+  "kind": "required",
+  "category": "language-specific",
+  "canDo": "I can name cloth, a shirt, a sari and glasses in Bengali, and say which word English borrowed whole and which is built on the same Persian word already met for 'eye'.",
+  "prerequisites": [],
+  "lessons": [
+    "BN-C15-kapor",
+    "BN-C15-jama",
+    "BN-C15-shari",
+    "BN-C15-choshma"
+  ]
+}

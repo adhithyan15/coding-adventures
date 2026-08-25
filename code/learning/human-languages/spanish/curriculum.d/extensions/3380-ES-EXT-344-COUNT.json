@@ -1,0 +1,15 @@
+{
+  "id": "ES-EXT-344-COUNT",
+  "stage": "A1",
+  "kind": "required",
+  "category": "vocabulary",
+  "canDo": "I can count from zero, name a number, take half of a thing, count by dozens, and double an amount.",
+  "prerequisites": [],
+  "lessons": [
+    "ES-C344-cero",
+    "ES-C344-numero",
+    "ES-C344-mitad",
+    "ES-C344-docena",
+    "ES-C344-doble"
+  ]
+}

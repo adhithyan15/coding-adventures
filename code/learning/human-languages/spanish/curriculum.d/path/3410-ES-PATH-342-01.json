@@ -1,0 +1,16 @@
+{
+  "id": "ES-PATH-342-01",
+  "spine_node": "SPINE-TIME-OF-DAY",
+  "lessons": [
+    "ES-C342-minuto",
+    "ES-C342-cuarto",
+    "ES-C342-punto",
+    "ES-C342-horario",
+    "ES-C342-madrugada"
+  ],
+  "before": [],
+  "inline": [
+    "ES-EXT-342-CLOCK"
+  ],
+  "after": []
+}

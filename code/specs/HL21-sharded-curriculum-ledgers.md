@@ -397,43 +397,43 @@ looking sequential. This is the §2.2 trap, live.
 shard mode for `spine`. That is a real but contained generalisation of
 `ShardPlan`.
 
-> **MEASURED, NOT YET BUILT.** Four corrections to the table above, all taken
-> from the committed corpus on 2026-08-24 rather than from reading the schema.
+> **DONE for 22 of 23 tracks.** `marwadi` is left on its monolith: its `lessons`
+> arrays are written inline on one line, so the bytes do not round-trip. Data
+> identical, reported not reformatted, per §8.
 >
-> 1. **`spine` DOES need an ordinal, and the sentence above is wrong.** "An
->    object has no meaningful order" is true of JSON semantics and false of this
->    ledger. `JSON.stringify` emits object keys in insertion order, so
->    `<NODE-ID>.json` shards merged in sorted filename order would rewrite the
->    key order and **break byte-identity in all 23 tracks** — none of them has
->    its spine keys in sorted order. Worse, the order is not arbitrary: every
->    one of the 23 tracks lists its spine keys in exactly `core/spine.d/`'s
->    ladder order, pre-A1 → C2. That is the §2.2 trap again, at the one place
->    this spec said it did not apply. Verified across all 23.
+> The monolith is KEPT as a generated artifact, per §4.3 — `language-ladder`
+> globs `*/curriculum.json` and a glob's key table is eager code. The conflict on
+> `spine[<node>].segments` is downgraded to "regenerate, do not hand-merge",
+> not removed. A deliberate trade: not raising the app's 500 kB debt ceiling,
+> and not weakening the staleness check that the alternative would have cost.
 >
-> 2. **`path` and `extensions` need ordinals, as the spec says.** Confirmed. The
->    first divergence in Spanish is at index 3: authored `ES-PATH-004` against
->    sorted `ES-PATH-003-CASA`, because a bare prefix sorts before the same
->    prefix extended. Ids are unique and `^[A-Z][A-Z0-9-]*$`-safe in every track.
+> **Three corrections to the table above, found by doing it:**
 >
-> 3. **The arrays are NOT the last top-level key.** Every track is
->    `{version, language, path, spine, extensions}` — Spanish adds
->    `conceptAliases` last. §2.5 refuses a ledger whose array is not last and
->    tells whoever migrates it to decide then. This is that moment: the multi-key
->    form needs the top-level key ORDER recorded, because three of the sharded
->    keys sit in the middle of the document. A `_keys` array in `_meta.json` is
->    the obvious home; it is not a conflict point, since key order changes never.
+> 1. **`spine` DOES need an ordinal, and the reasoning above is wrong.** "It is
+>    keyed by node id, so it needs no ordinal: an object has no meaningful
+>    order" is true of JSON semantics and false of this ledger.
+>    `JSON.stringify` emits object keys in INSERTION order; **no** track has its
+>    spine keys in sorted order; and all 23 list them in exactly
+>    `core/spine.d/`'s ladder order, pre-A1 → C2. It is the shared ordered
+>    ladder, mirrored per track. `<NODE-ID>.json` shards merged in sorted order
+>    would have scrambled it in 23 files at once, silently, while still
+>    "round-tripping successfully" — the §2.2 trap, at the one place this spec
+>    said it did not apply.
 >
-> 4. **`marwadi/curriculum.json` does not round-trip byte-exactly.** Its
->    `lessons` arrays are hand-formatted inline on one line. Data identical,
->    bytes not. Per §8.5 it gets reported, not reformatted — the same call made
->    for three `chapters.json` files in §4.1a.
+> 2. **`path`/`extensions` ordinals confirmed needed, but not universally.**
+>    Spanish diverges at index 3: authored `ES-PATH-004` against sorted
+>    `ES-PATH-003-CASA`, because a bare prefix sorts before the same prefix
+>    extended. That holds for 20 of the 22 tracks — `japanese` and `urdu` happen
+>    to have both lists already in sorted order and would coincidentally survive
+>    losing their ordinals. The convention still applies to all 22: those two are
+>    one authored id away from joining the other twenty, and nothing would
+>    announce it.
 >
-> And the disposition question is already answered by §4.3: `language-ladder`
-> globs `*/curriculum.json`, so this ledger **keeps its monolith as a generated
-> artifact** too. Sharding it would put roughly 1,500 keys into the eager glob
-> table against a 500 kB ceiling that `chapters.d/` alone came within 4 kB of
-> breaking with 1,020. The conflict on `spine[<node>].segments` is therefore
-> downgraded to "regenerate, do not hand-merge", not removed.
+> 3. **The arrays are not last, and §2.5's refusal had to go.** Every track is
+>    `{version, language, path, spine, extensions}`, Spanish adding
+>    `conceptAliases`. `_meta.json` now records the top-level key order in
+>    `_keys` — but only when the sharded keys are not already a suffix, so only
+>    `spanish` has one and no previously-committed shard set changed.
 
 ### 5.3 `core/book-generation.json` → `core/book-generation.d/<language>.json`
 
@@ -472,45 +472,40 @@ arrays, and a Spanish tranche touches only that file.
 
 **Difficulty: medium-high**, entirely because of that normalization step.
 
-> **THE BLOCKER ABOVE HAS RESOLVED ITSELF. A DIFFERENT ONE IS IN ITS PLACE.**
-> Re-measured on 2026-08-24, at 1,007 `targets` (the spec was written at 949):
+> **THE BLOCKER ABOVE RESOLVED ITSELF. A DIFFERENT ONE REPLACED IT.**
+> The machinery is built and tested; `BOOK_GENERATION_PLAN` is exported from
+> `shard-cli.ts` and is deliberately **not** in `SHARD_PLANS`, one line from
+> being enabled.
 >
-> | array | n | runs | languages | contiguous? |
-> | --- | ---: | ---: | ---: | --- |
-> | `referenceAppendices` | 6 | 6 | 6 | yes |
-> | `glossaries` | 23 | 23 | 23 | yes |
-> | `answerKeys` | 23 | 23 | 23 | yes |
-> | `indexes` | 23 | 23 | 23 | yes |
-> | **`targets`** | **1,007** | **23** | **23** | **yes** |
-> | `handwritten` | 71 | 14 | 14 | yes |
+> Re-measured at 1,007 `targets` (this spec was written at 949): every one of
+> the six arrays is contiguous by language, and `targets` is **23 runs for 23
+> languages**, not 27. The split runs for hindi, kannada, spanish and telugu
+> closed as later tranches inserted into them. All six arrays are additionally
+> in the same alphabetical language order, which is also sorted `<language>.json`
+> order — so a per-language split reproduces authored order with **no ordinal
+> prefix and no normalization commit**. A test pins that contiguity, so an
+> append to the end of `targets` reopens the question loudly.
 >
-> `targets` is now **contiguous by language** — 23 runs for 23 languages, not the
-> 27 the spec recorded. The split runs for `hindi`, `kannada`, `spanish` and
-> `telugu` closed as later tranches inserted into the existing runs. Every array
-> is additionally in the SAME alphabetical language order, which is also sorted
-> filename order for `<language>.json`, so a per-language split reproduces
-> authored order with no ordinal prefix. **No normalization commit is needed.**
+> What blocks it now is formatting. `core/book-generation.json` does not
+> round-trip through `JSON.stringify(…, null, 2)` at all:
 >
-> What blocks it instead is formatting. `core/book-generation.json` does not
-> round-trip byte-exactly:
+> - 74 differing lines, a contiguous run at **2911–2984**;
+> - identical line count either way (6,658);
+> - **every difference is leading whitespace only** — twelve `marwadi` entries
+>   in `targets` indented two spaces deeper than canonical, a hand-merge artifact;
+> - `JSON.parse` of either form is deep-equal to the other.
 >
-> - 74 differing lines, a contiguous run at **lines 2911–2984**;
-> - identical line COUNT before and after (6,658 either way);
-> - every single difference is **leading whitespace only** — a block of twelve
->   `marwadi` entries in `targets` indented six/eight spaces where the canonical
->   form is four/six. A hand-merge artifact.
-> - `JSON.parse` of the reformatted bytes is deep-equal to the original.
+> Sharding proves it: the rebuilt document is byte-identical to the CANONICAL
+> reserialization and differs from the COMMITTED file by exactly those 74 lines.
 >
-> So §5.3's "one-time normalization commit, landed separately" is still the right
-> shape, but it is a **re-indent**, not a re-sort, and it is 74 lines rather than
-> a reordering of 1,007. It remains a decision for an owner under §8.5 rather
-> than something to fold into the shard commit.
+> Unlike `chapters.json` and `curriculum.json`, this cannot be worked around by
+> skipping a track — it is one file shared by all 23. So the whole ledger waits
+> on a deliberate re-indent commit whose entire content is the reformatting. A
+> test states the blocker as an executable fact and **fails the day the file is
+> re-indented**, which is exactly when the plan should be enabled.
 >
-> `scriptSets` (8 keys, keyed by script set) belongs in `_meta.json` as the spec
-> says — confirmed, it carries no `language`. Every element of the other six
-> arrays does carry one. Also note `src/book-cli.ts:134` reads this file with a
-> bare `readFileSync`, outside the loader; it is the only non-loader `src` read
-> of any of the three ledgers and needs routing through `readMaybeSharded`.
+> `scriptSets` → `_meta.json` confirmed: 8 keys, keyed by script set, carrying no
+> `language`. Every element of the other six arrays carries one.
 
 ### 5.4 `<track>/book/book.tex` → **generated, not sharded**
 

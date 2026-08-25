@@ -1,0 +1,15 @@
+{
+  "id": "HI-EXT-48-REPLY",
+  "stage": "pre-A1",
+  "kind": "required",
+  "category": "vocabulary",
+  "canDo": "I can answer someone in Hindi with a single short word.",
+  "prerequisites": [],
+  "lessons": [
+    "HI-C48-true",
+    "HI-C48-enough",
+    "HI-C48-certainly",
+    "HI-C48-perhaps",
+    "HI-C48-absolutely"
+  ]
+}

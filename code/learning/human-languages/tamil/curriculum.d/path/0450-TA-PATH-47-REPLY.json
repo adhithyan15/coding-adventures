@@ -1,0 +1,16 @@
+{
+  "id": "TA-PATH-47-REPLY",
+  "spine_node": "SPINE-RESPOND-BASIC",
+  "lessons": [
+    "TA-C47-true",
+    "TA-C47-enough",
+    "TA-C47-certainly",
+    "TA-C47-perhaps",
+    "TA-C47-just-so"
+  ],
+  "before": [],
+  "inline": [
+    "TA-EXT-47-REPLY"
+  ],
+  "after": []
+}

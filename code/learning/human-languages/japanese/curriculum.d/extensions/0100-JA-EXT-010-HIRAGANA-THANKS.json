@@ -1,0 +1,19 @@
+{
+  "id": "JA-EXT-010-HIRAGANA-THANKS",
+  "stage": "pre-A1",
+  "kind": "required",
+  "category": "script",
+  "canDo": "I can write eight more hiragana signs from memory, add the dakuten to voice one of them, and read ありがとう from them without leaning on the romanization.",
+  "prerequisites": [
+    "JA-EXT-009-HIRAGANA-GREETING"
+  ],
+  "lessons": [
+    "JA-W03-a",
+    "JA-W03-ri",
+    "JA-W03-ka",
+    "JA-W03-dakuten",
+    "JA-W03-to",
+    "JA-W03-u",
+    "JA-W03-arigatou-read"
+  ]
+}

@@ -1,0 +1,11 @@
+{
+  "segments": [
+    "LA-PATH-001",
+    "LA-PATH-005"
+  ],
+  "omits": [
+    "GREETING-PEACE",
+    "GREETING-WELCOME"
+  ],
+  "relocates": {}
+}

@@ -1,0 +1,15 @@
+{
+  "id": "SA-EXT-40-FOOD",
+  "stage": "pre-A1",
+  "kind": "required",
+  "category": "vocabulary",
+  "canDo": "I can name five things from a kitchen in Sanskrit.",
+  "prerequisites": [],
+  "lessons": [
+    "SA-C40-curd",
+    "SA-C40-sugar",
+    "SA-C40-butter",
+    "SA-C40-vegetable",
+    "SA-C40-sweet"
+  ]
+}

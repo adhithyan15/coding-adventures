@@ -1,0 +1,11 @@
+{
+  "id": "ES-PATH-004",
+  "spine_node": "SPINE-TIME-OF-DAY",
+  "lessons": [
+    "ES-C01-dia",
+    "ES-C01-buenos-dias"
+  ],
+  "before": [],
+  "inline": [],
+  "after": []
+}

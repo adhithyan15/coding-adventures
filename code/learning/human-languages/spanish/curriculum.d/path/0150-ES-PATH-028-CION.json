@@ -1,0 +1,12 @@
+{
+  "id": "ES-PATH-028-CION",
+  "spine_node": "SPINE-SAY-WHAT-I-DO",
+  "lessons": [
+    "ES-C56-cion"
+  ],
+  "before": [],
+  "inline": [
+    "ES-EXT-028-CION"
+  ],
+  "after": []
+}
