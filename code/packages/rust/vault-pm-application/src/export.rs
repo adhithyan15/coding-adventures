@@ -11,7 +11,7 @@ use coding_adventures_vault_pm_domain::{ItemCandidate, ItemId, ItemState, Revisi
 use coding_adventures_vault_pm_format::{Argon2idParametersV1, VaultId, CRYPTO_SUITE_V1};
 use coding_adventures_zeroize::{Zeroize, Zeroizing};
 use core::fmt::{self, Debug, Formatter};
-use std::collections::BTreeMap;
+use std::collections::{BTreeMap, BTreeSet};
 
 const VERSION: u64 = 1;
 const PASSPHRASE_PROTECTION: u64 = 1;
@@ -203,6 +203,76 @@ impl Debug for PortableExportArtifactV1 {
     }
 }
 
+/// Selects how [`export_portable_with_passphrase`] treats a current candidate
+/// it cannot re-encode (VLT-PM05 §13.9).
+///
+/// `Strict` is the original, still-default behavior every existing caller
+/// gets unmodified: the first candidate that cannot be re-encoded (an
+/// oversized first-party, opaque, or quarantined record — `BoundExceeded`,
+/// VLT-PM05 §13.1/§13.3/§13.5) fails the whole export and leaves the vault
+/// untouched, exactly as before this type existed. `BestEffort` is the new,
+/// explicit, opt-in ceremony: an item whose current candidate set includes
+/// one such record is left out of the snapshot in its entirety — every
+/// current candidate of that item, never a subset (see
+/// [`export_portable_with_passphrase`]'s own doc comment for why a subset
+/// would silently misrepresent an unresolved conflict) — and its identity is
+/// recorded in the snapshot's own authenticated `excluded_item_ids` field
+/// instead. Every other item still exports normally. Neither variant ever
+/// mutates the vault; both are read-only, exactly like the export this type
+/// governs always was.
+#[derive(Clone, Copy, Debug, PartialEq, Eq)]
+pub enum PortableExportCompletenessV1 {
+    /// Fail the whole export on the first unencodable candidate (default).
+    Strict,
+    /// Exclude the offending item and continue exporting everything else.
+    BestEffort,
+}
+
+/// One completed [`PortableExportCompletenessV1::BestEffort`] export: the
+/// encrypted artifact plus the items (if any) it excluded.
+///
+/// Every `ItemId` this exposes is already visible to the operator through
+/// this same vault's own `item list` — nothing here discloses anything a
+/// caller with an open session could not already see locally. A `Strict`
+/// export never populates `excluded_item_ids`; it fails outright instead of
+/// reaching this type, which is why the plain [`PortableExportArtifactV1`]
+/// remains the `Strict` caller's return type unchanged.
+pub struct PortableExportOutcomeV1 {
+    artifact: PortableExportArtifactV1,
+    excluded_item_ids: Vec<ItemId>,
+}
+
+impl PortableExportOutcomeV1 {
+    /// Consume the outcome and return only the encrypted artifact.
+    pub fn into_artifact(self) -> PortableExportArtifactV1 {
+        self.artifact
+    }
+
+    /// Borrow the encrypted artifact without consuming the outcome.
+    pub fn artifact(&self) -> &PortableExportArtifactV1 {
+        &self.artifact
+    }
+
+    /// Borrow the identities of every item this export excluded.
+    ///
+    /// Empty unless the export ran under
+    /// [`PortableExportCompletenessV1::BestEffort`] and at least one current
+    /// candidate could not be re-encoded.
+    pub fn excluded_item_ids(&self) -> &[ItemId] {
+        &self.excluded_item_ids
+    }
+}
+
+impl Debug for PortableExportOutcomeV1 {
+    fn fmt(&self, formatter: &mut Formatter<'_>) -> fmt::Result {
+        formatter
+            .debug_struct("PortableExportOutcomeV1")
+            .field("artifact", &self.artifact)
+            .field("excluded_item_count", &self.excluded_item_ids.len())
+            .finish()
+    }
+}
+
 /// Authenticated secret-bearing snapshot retained only inside the application.
 ///
 /// The host can inspect aggregate counts before choosing whether to continue a
@@ -212,6 +282,7 @@ pub struct OpenedPortableSnapshotV1 {
     _exact_bootstrap: Zeroizing<Vec<u8>>,
     source_vault_id: VaultId,
     candidates: BTreeMap<ItemId, Vec<ItemCandidate>>,
+    excluded_item_count: usize,
 }
 
 impl OpenedPortableSnapshotV1 {
@@ -223,6 +294,20 @@ impl OpenedPortableSnapshotV1 {
     /// Return the number of retained current source candidates.
     pub fn candidate_count(&self) -> usize {
         self.candidates.values().map(Vec::len).sum()
+    }
+
+    /// Return how many source items this snapshot's own producer already
+    /// excluded (VLT-PM05 §13.9).
+    ///
+    /// Always zero for an ordinary export. Nonzero only for a
+    /// [`PortableExportCompletenessV1::BestEffort`] export that left at
+    /// least one unencodable item out — an aggregate count, the same
+    /// VLT-PM00 §20-permitted shape as [`Self::attachment_bearing_item_count`],
+    /// not the excluded identities themselves: those were the *source*
+    /// vault's items, not this (importing) operator's, so only their count
+    /// crosses the cross-vault boundary this type exists to narrow.
+    pub fn excluded_item_count(&self) -> usize {
+        self.excluded_item_count
     }
 
     /// Return how many of this snapshot's items carry at least one attachment.
@@ -262,9 +347,9 @@ impl OpenedPortableSnapshotV1 {
 
     pub(crate) fn into_import_parts(self) -> (VaultId, BTreeMap<ItemId, Vec<ItemCandidate>>) {
         let Self {
-            _exact_bootstrap,
             source_vault_id,
             candidates,
+            ..
         } = self;
         (source_vault_id, candidates)
     }
@@ -400,7 +485,19 @@ fn parse_opened_snapshot(plaintext: &[u8]) -> Result<OpenedPortableSnapshotV1, A
     let mut fields =
         SecretCborValue::new(decode(plaintext).map_err(|_| ApplicationError::IntegrityFailure)?)
             .into_map()?;
-    fields.require_keys(&[1, 2, 3, 4, 5])?;
+    // Field 6 (`excluded_item_ids`, VLT-PM05 §13.9) is optional on read: a
+    // snapshot from before this field existed has exactly five fields and
+    // reads exactly as it always did. A writer only ever emits field 6 when
+    // it is non-empty (see `export_portable_with_passphrase`), so an
+    // ordinary export today is still byte-for-byte the five-field shape a
+    // pre-§13.9 reader already understands.
+    let has_excluded = fields.contains_key(6);
+    let required_keys: &[u64] = if has_excluded {
+        &[1, 2, 3, 4, 5, 6]
+    } else {
+        &[1, 2, 3, 4, 5]
+    };
+    fields.require_keys(required_keys)?;
     check_wire_value(fields.take(1)?.into_uint()?, VERSION)?;
     let exact_bootstrap = Zeroizing::new(fields.take(2)?.into_bytes()?);
     let entries_value = fields.take(3)?;
@@ -418,6 +515,16 @@ fn parse_opened_snapshot(plaintext: &[u8]) -> Result<OpenedPortableSnapshotV1, A
         return Err(ApplicationError::IntegrityFailure);
     }
     let source_bootstrap = verify_signed_bootstrap(&exact_bootstrap)?;
+    // `excluded_item_ids` is deliberately outside `snapshot_hash`'s own
+    // domain, the same shape `candidate_count` already has: both are
+    // separately, structurally cross-checked below rather than folded into
+    // the hash, and both are still covered end to end by the outer AEAD
+    // tag over the complete plaintext (`open_portable_with_passphrase`).
+    let excluded_item_ids = if has_excluded {
+        parse_excluded_item_ids(fields.take(6)?)?
+    } else {
+        Vec::new()
+    };
 
     let mut entries = entries_value.into_values()?;
     if entries.len() != candidate_count {
@@ -456,11 +563,47 @@ fn parse_opened_snapshot(plaintext: &[u8]) -> Result<OpenedPortableSnapshotV1, A
         item_candidates.reverse();
     }
 
+    // A producer must not claim an item both present and excluded -- that
+    // has no honest interpretation (VLT-PM05 §13.9's own writer never
+    // produces it, since a poisoned item's candidates are never partially
+    // committed to `entries`; see `export_portable_with_passphrase`).
+    if excluded_item_ids
+        .iter()
+        .any(|item_id| candidates.contains_key(item_id))
+    {
+        return Err(ApplicationError::IntegrityFailure);
+    }
+
     Ok(OpenedPortableSnapshotV1 {
         _exact_bootstrap: exact_bootstrap,
         source_vault_id: source_bootstrap.vault_id,
         candidates,
+        excluded_item_count: excluded_item_ids.len(),
     })
+}
+
+/// Decode field 6's array of excluded source `ItemId`s.
+///
+/// Bounded before allocation the same way `candidate_count` already is
+/// (`MAX_CATALOG_ENTRIES`, since no vault can have more distinct items than
+/// that regardless of how many are excluded) and rejects a duplicate the
+/// same way the candidate loop above rejects an out-of-order identity: a
+/// well-behaved producer never emits one twice.
+fn parse_excluded_item_ids(value: SecretCborValue) -> Result<Vec<ItemId>, ApplicationError> {
+    let mut raw = value.into_values()?;
+    if raw.len() > MAX_CATALOG_ENTRIES {
+        return Err(ApplicationError::BoundExceeded);
+    }
+    let mut seen = BTreeSet::new();
+    let mut ids = Vec::with_capacity(raw.len());
+    while let Some(value) = raw.pop() {
+        let item_id = ItemId::new(value.into_fixed()?);
+        if !seen.insert(item_id) {
+            return Err(ApplicationError::IntegrityFailure);
+        }
+        ids.push(item_id);
+    }
+    Ok(ids)
 }
 
 fn check_wire_value(actual: u64, expected: u64) -> Result<(), ApplicationError> {
@@ -471,6 +614,25 @@ fn check_wire_value(actual: u64, expected: u64) -> Result<(), ApplicationError> 
     }
 }
 
+/// Build one canonical authenticated encrypted snapshot of `candidates`.
+///
+/// Every current live, tombstone, and conflicted candidate is included
+/// under [`PortableExportCompletenessV1::Strict`] — the guarantee this
+/// function has always made — or every candidate this module can re-encode
+/// is included under [`PortableExportCompletenessV1::BestEffort`], with the
+/// remainder named in the returned outcome's `excluded_item_ids` (VLT-PM05
+/// §13.9).
+///
+/// An item is excluded as a whole, never as a partial candidate set: if any
+/// one of an item's current candidates cannot be re-encoded, every candidate
+/// of that item is left out, including ones that individually would have
+/// encoded fine. A conflicted item with one small candidate and one oversized
+/// one is not split into "the small one travels, the large one doesn't" —
+/// that would silently hand the target a single, unconflicted candidate
+/// where the source actually had an unresolved conflict, misrepresenting the
+/// item's own history rather than merely omitting it. Losing an item
+/// entirely is an accounted-for gap; losing only its *conflictedness* would
+/// be a silent correctness defect one layer worse.
 pub(crate) fn export_portable_with_passphrase(
     candidates: &BTreeMap<ItemId, Vec<ItemCandidate>>,
     active: &crate::ActiveStateV1,
@@ -478,7 +640,8 @@ pub(crate) fn export_portable_with_passphrase(
     passphrase: Zeroizing<Vec<u8>>,
     policy: PortableExportPolicyV1,
     randomness: PortableExportRandomnessV1,
-) -> Result<PortableExportArtifactV1, ApplicationError> {
+    completeness: PortableExportCompletenessV1,
+) -> Result<PortableExportOutcomeV1, ApplicationError> {
     if passphrase.is_empty() || passphrase.len() > MAX_PORTABLE_EXPORT_PASSPHRASE_BYTES {
         return Err(ApplicationError::InvalidInput);
     }
@@ -495,6 +658,7 @@ pub(crate) fn export_portable_with_passphrase(
     kdf.validate().map_err(|_| ApplicationError::InvalidInput)?;
 
     let mut entries = SecretCborValues::default();
+    let mut excluded_item_ids = Vec::new();
     let mut estimated_size = exact_bootstrap
         .len()
         .checked_add(SNAPSHOT_ESTIMATE_OVERHEAD)
@@ -502,26 +666,68 @@ pub(crate) fn export_portable_with_passphrase(
     for (item_id, item_candidates) in candidates {
         let mut ordered = item_candidates.iter().collect::<Vec<_>>();
         ordered.sort_unstable_by_key(|candidate| candidate.revision_id());
+        let mut item_entries = Vec::with_capacity(ordered.len());
+        // Tentative running total including this item's own candidates.
+        // Committed to `estimated_size` only once this item is known not
+        // to be excluded (below) -- an item that ends up poisoned must not
+        // have contributed to the ceiling check that decides every other
+        // item's fate.
+        let mut item_size = estimated_size;
+        let mut poisoned = false;
         for candidate in ordered {
             if candidate.item_id() != *item_id {
+                zeroize_cbor_values(&mut item_entries);
                 return Err(ApplicationError::IntegrityFailure);
             }
-            let revision = Zeroizing::new(encode_item_revision(
-                candidate.causal_parents(),
-                candidate.state(),
-            )?);
-            estimated_size = estimated_size
+            let revision = match encode_item_revision(candidate.causal_parents(), candidate.state())
+            {
+                Ok(revision) => Zeroizing::new(revision),
+                Err(ApplicationError::BoundExceeded)
+                    if completeness == PortableExportCompletenessV1::BestEffort =>
+                {
+                    // Strict propagates this Err unmodified below; only
+                    // BestEffort takes this arm and keeps going.
+                    poisoned = true;
+                    break;
+                }
+                Err(error) => {
+                    zeroize_cbor_values(&mut item_entries);
+                    return Err(error);
+                }
+            };
+            item_size = match item_size
                 .checked_add(revision.len())
                 .and_then(|size| size.checked_add(CANDIDATE_ESTIMATE_OVERHEAD))
-                .ok_or(ApplicationError::BoundExceeded)?;
-            if estimated_size > MAX_PORTABLE_EXPORT_PLAINTEXT_BYTES {
-                return Err(ApplicationError::BoundExceeded);
-            }
-            entries.push(CborValue::Map(vec![
+            {
+                Some(size) => size,
+                None => {
+                    // Unreachable in practice (usize overflow would need
+                    // far more than MAX_CANDIDATES_PER_ITEM bounded-length
+                    // revisions), but every other exit from this loop
+                    // zeroizes item_entries before returning, and this one
+                    // should not be the exception that leaves already-
+                    // pushed plaintext candidate bytes unwiped in freed
+                    // heap. Found in security review.
+                    zeroize_cbor_values(&mut item_entries);
+                    return Err(ApplicationError::BoundExceeded);
+                }
+            };
+            item_entries.push(CborValue::Map(vec![
                 field(1, bytes(item_id.as_bytes())),
                 field(2, bytes(candidate.revision_id().as_bytes())),
                 field(3, CborValue::Bytes(revision.into_inner())),
             ]));
+        }
+        if poisoned {
+            zeroize_cbor_values(&mut item_entries);
+            excluded_item_ids.push(*item_id);
+        } else {
+            if item_size > MAX_PORTABLE_EXPORT_PLAINTEXT_BYTES {
+                zeroize_cbor_values(&mut item_entries);
+                return Err(ApplicationError::BoundExceeded);
+            }
+            estimated_size = item_size;
+            entries.extend(item_entries);
         }
     }
 
@@ -534,20 +740,41 @@ pub(crate) fn export_portable_with_passphrase(
     let encoded_entries =
         Zeroizing::new(try_encode(entries_value.get()).map_err(crate::codec::map_encode_error)?);
     let snapshot_hash = snapshot_hash(exact_bootstrap, &encoded_entries)?;
-    let snapshot = SecretCborValue::new(CborValue::Map(vec![
+    let mut snapshot_fields = vec![
         field(1, CborValue::Unsigned(VERSION)),
         field(2, CborValue::Bytes(exact_bootstrap.to_vec())),
         field(3, entries_value.take()),
         field(4, CborValue::Unsigned(candidate_count)),
         field(5, CborValue::Bytes(snapshot_hash.to_vec())),
-    ]));
+    ];
+    // Field 6 is emitted only when non-empty, so an ordinary (or a
+    // BestEffort export that happened not to need to exclude anything)
+    // still produces the exact five-field shape every prior version of
+    // this module already writes and reads -- byte-for-byte unchanged, and
+    // still readable by a `vault-pm` build from before this field existed.
+    if !excluded_item_ids.is_empty() {
+        snapshot_fields.push(field(
+            6,
+            CborValue::Array(
+                excluded_item_ids
+                    .iter()
+                    .map(|item_id| bytes(item_id.as_bytes()))
+                    .collect(),
+            ),
+        ));
+    }
+    let snapshot = SecretCborValue::new(CborValue::Map(snapshot_fields));
     let plaintext =
         Zeroizing::new(try_encode(snapshot.get()).map_err(crate::codec::map_encode_error)?);
     if plaintext.len() > MAX_PORTABLE_EXPORT_PLAINTEXT_BYTES {
         return Err(ApplicationError::BoundExceeded);
     }
 
-    encrypt_portable_plaintext(&plaintext, passphrase, &kdf, nonce)
+    let artifact = encrypt_portable_plaintext(&plaintext, passphrase, &kdf, nonce)?;
+    Ok(PortableExportOutcomeV1 {
+        artifact,
+        excluded_item_ids,
+    })
 }
 
 #[cfg(test)]
@@ -630,8 +857,17 @@ fn zeroize_cbor_values(values: &mut [CborValue]) {
 struct SecretCborValues(Option<Vec<CborValue>>);
 
 impl SecretCborValues {
-    fn push(&mut self, value: CborValue) {
-        self.0.get_or_insert_with(Vec::new).push(value);
+    /// Move every value out of `values` and append it here.
+    ///
+    /// Takes ownership rather than borrowing so an already-built `Vec` of
+    /// one item's successfully-encoded candidates can be folded in without a
+    /// second copy -- used by `export_portable_with_passphrase` once an
+    /// item is known not to be excluded. `values` is a plain `Vec`, not
+    /// another `SecretCborValues`: it is always either moved in here or
+    /// explicitly zeroized by the caller first (the poisoned-item path),
+    /// never dropped un-wiped either way.
+    fn extend(&mut self, values: Vec<CborValue>) {
+        self.0.get_or_insert_with(Vec::new).extend(values);
     }
 
     fn len(&self) -> usize {
@@ -746,6 +982,20 @@ impl SecretCborMap {
             return Err(ApplicationError::IntegrityFailure);
         }
         Ok(())
+    }
+
+    /// Return whether `key` is present, without removing it.
+    ///
+    /// Used to decide *which* `require_keys` shape to demand (VLT-PM05
+    /// §13.9's optional field 6) before that exact-arity check runs --
+    /// `require_keys` itself intentionally has no "optional" mode of its
+    /// own, so the caller resolves the ambiguity first and picks the
+    /// matching fixed key set.
+    fn contains_key(&self, key: u64) -> bool {
+        let entries = self.0.as_ref().expect("secret CBOR map is present");
+        entries
+            .iter()
+            .any(|(candidate, _)| candidate == &CborValue::Unsigned(key))
     }
 
     fn take(&mut self, key: u64) -> Result<SecretCborValue, ApplicationError> {

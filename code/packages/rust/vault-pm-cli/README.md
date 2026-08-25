@@ -298,16 +298,43 @@ the attached console. TOTP seed bytes are first rendered as canonical Base32 in
 a wipe-on-drop buffer. The secret never enters cloneable/debuggable `CliOutput`,
 process stdout/stderr, arguments, stdin, configuration, or audit metadata.
 
-`export FILE` reserves export and audit entropy before unlock, collects and
-constant-time confirms a distinct export passphrase through two hidden fixed
-prompts, and calls the application's canonical portable-export boundary. In an
-active audit epoch, a prompt failure is durably recorded as failed
-`PortableExport`; success publishes its event before releasing the encrypted
-artifact. The native host then creates the explicit destination without
-following or replacing an existing final path, requests mode `0600` on Unix,
-writes and synchronizes the complete artifact, and returns only a path-free
-success line. A destination write failure occurs after artifact release and
-therefore does not rewrite the truthful successful access event.
+`export FILE [--best-effort]` reserves export and audit entropy before
+unlock, collects and constant-time confirms a distinct export passphrase
+through two hidden fixed prompts, and calls the application's canonical
+portable-export boundary. In an active audit epoch, a prompt failure is
+durably recorded as failed `PortableExport`; success publishes its event
+before releasing the encrypted artifact. The native host then creates the
+explicit destination without following or replacing an existing final path,
+requests mode `0600` on Unix, writes and synchronizes the complete artifact,
+and returns only a path-free success line. A destination write failure
+occurs after artifact release and therefore does not rewrite the truthful
+successful access event.
+
+Without `--best-effort`, one item this build cannot re-encode still denies
+the whole export exactly as it always has — no caller's behavior changes
+unless they ask for the flag by name (VLT-PM05 §13.9 closes the backlog item
+that named this the still-open half of "an oversized poisoned record locks
+edit/merge/export... delete still works"). With `--best-effort`, such an
+item is excluded from the artifact instead, and a successful export that
+excluded at least one item appends its count and every excluded item's
+canonical id to standard output:
+
+```text
+Portable export written.
+Excluded (too large to include): 2
+<item id>
+<item id>
+```
+
+Every printed id is already visible through this same vault's own
+`item list`; an operator can `item delete ITEM` any of them and re-export
+for a subsequently complete backup. The flag is recognized only in this
+fixed position (`export FILE --best-effort`); `export --best-effort FILE`
+does not parse, and a bare `export --best-effort` treats `--best-effort` as
+the destination, per this command's pre-existing rule that a path
+beginning with `-` is a path value whenever it is the sole positional
+argument. See `VLT-PM17-cli-portable-export.md`'s amendment and VLT-PM05
+§13.9 for the complete design.
 
 `import portable FILE` requires the configured target to be independently
 initialized, logically empty, and audit-enabled. After target unlock it reads

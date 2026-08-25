@@ -1886,6 +1886,13 @@ impl UnlockedVaultV1 {
     /// destination only after this method returns. Every current live,
     /// tombstone, and conflicted candidate is included; local private state,
     /// provider credentials, pins, and search projections are excluded.
+    ///
+    /// Fails the whole export, unmodified, leaving the vault untouched, the
+    /// instant one current candidate cannot be re-encoded (`BoundExceeded`)
+    /// — the original, still-default behavior this method has always had.
+    /// [`Self::export_portable_with_passphrase_best_effort`] is the new,
+    /// explicit, opt-in alternative that continues past such a candidate
+    /// instead (VLT-PM05 §13.9).
     pub fn export_portable_with_passphrase(
         &self,
         exact_bootstrap: &[u8],
@@ -1900,6 +1907,39 @@ impl UnlockedVaultV1 {
             passphrase,
             policy,
             randomness,
+            crate::PortableExportCompletenessV1::Strict,
+        )
+        .map(crate::PortableExportOutcomeV1::into_artifact)
+    }
+
+    /// Build one canonical authenticated encrypted snapshot, excluding any
+    /// item this build cannot re-encode instead of failing the whole export.
+    ///
+    /// VLT-PM05 §13.9. This is the explicit, opt-in answer to "one poisoned
+    /// record blocks the whole export" (VLT-PM05 §13.2): an item whose
+    /// current candidate set includes one candidate too large, or otherwise
+    /// unable, to re-encode is left out of the snapshot in its entirety and
+    /// named in the returned outcome's `excluded_item_ids`; every other item
+    /// still exports normally. Nothing about the *vault* changes — this is
+    /// exactly as read-only as [`Self::export_portable_with_passphrase`],
+    /// which remains the default an operator gets without asking for this
+    /// one by name, so a caller who does not know about this method sees no
+    /// behavior change at all.
+    pub fn export_portable_with_passphrase_best_effort(
+        &self,
+        exact_bootstrap: &[u8],
+        passphrase: Zeroizing<Vec<u8>>,
+        policy: crate::PortableExportPolicyV1,
+        randomness: crate::PortableExportRandomnessV1,
+    ) -> Result<crate::PortableExportOutcomeV1, ApplicationError> {
+        crate::export::export_portable_with_passphrase(
+            &self.current_catalog.items,
+            &self.active,
+            exact_bootstrap,
+            passphrase,
+            policy,
+            randomness,
+            crate::PortableExportCompletenessV1::BestEffort,
         )
     }
 
@@ -1924,6 +1964,43 @@ impl UnlockedVaultV1 {
     {
         self.require_audit_epoch()?;
         let operation = self.export_portable_with_passphrase(
+            exact_bootstrap,
+            passphrase,
+            policy,
+            export_randomness,
+        );
+        self.finish_audited_access(
+            AuditActionV1::PortableExport,
+            None,
+            None,
+            wall_time_ms,
+            audit_randomness,
+            local_state_store,
+            operation,
+        )
+    }
+
+    /// The [`Self::export_portable_with_passphrase_best_effort`] counterpart
+    /// of [`Self::audited_export_portable_with_passphrase`].
+    ///
+    /// Reuses the identical `PortableExport` audit action — this is the same
+    /// user-visible operation, only with a different completeness policy, so
+    /// VLT-PM49 §4's "no new audit event kind for a new completion mode"
+    /// precedent applies here too.
+    #[allow(clippy::too_many_arguments)]
+    pub fn audited_export_portable_with_passphrase_best_effort(
+        self,
+        exact_bootstrap: &[u8],
+        passphrase: Zeroizing<Vec<u8>>,
+        policy: crate::PortableExportPolicyV1,
+        export_randomness: crate::PortableExportRandomnessV1,
+        wall_time_ms: u64,
+        audit_randomness: AuditedAccessRandomnessV1,
+        local_state_store: &dyn LocalStateStore,
+    ) -> Result<crate::AuditedAccessResultV1<crate::PortableExportOutcomeV1>, ApplicationError>
+    {
+        self.require_audit_epoch()?;
+        let operation = self.export_portable_with_passphrase_best_effort(
             exact_bootstrap,
             passphrase,
             policy,
@@ -16682,6 +16759,303 @@ mod tests {
             candidates[0].causal_parents().iter().copied().collect();
         causal_parents.sort_unstable();
         assert_eq!(causal_parents, revision_ids);
+    }
+
+    // ─────────────────────────────────────────────────────────────────
+    // VLT-PM05 §13.9 -- an explicit, opt-in best-effort export that
+    // excludes a poisoned item instead of failing the whole export.
+    //
+    // §13.2 named this residual and deliberately left it unrepaired at
+    // the time: "one poisoned record blocks the whole export... [because]
+    // the snapshot's candidate_count and its signed snapshot_hash
+    // currently assert completeness... partial export is a format and
+    // verification change, not a local one." These tests pin the format
+    // change that finally closes it.
+    // ─────────────────────────────────────────────────────────────────
+
+    #[test]
+    fn portable_export_best_effort_excludes_a_synced_oversized_item_and_keeps_the_rest() {
+        // Reproduces §13.2's residual directly: one synced oversized-
+        // opaque item, on its own, denies the export of an otherwise
+        // completely ordinary vault.
+        let (locator, local, bootstrap, factory, poisoned_item_id, _) =
+            vault_with_synced_opaque_item(PEER_OPAQUE_PAYLOAD_BYTES);
+
+        let session = active_session(locator, &local, &bootstrap, &factory);
+        let randomness = add_item_randomness(0x70);
+        let healthy_item_id = randomness.item_id();
+        session
+            .add_item(
+                new_login_document(healthy_item_id, "Healthy", "healthy-secret"),
+                760,
+                randomness,
+                &local,
+            )
+            .unwrap();
+
+        let session = active_session(locator, &local, &bootstrap, &factory);
+        let exact_bootstrap = bootstrap.latest_bytes().unwrap();
+        let policy = crate::PortableExportPolicyV1::new(8 * 1024, 1, 1).unwrap();
+
+        // The reproduction: Strict (the unmodified default) still fails
+        // the whole export because of the one poisoned item, exactly as
+        // before this section's fix existed.
+        assert_eq!(
+            session
+                .export_portable_with_passphrase(
+                    &exact_bootstrap,
+                    Zeroizing::new(b"separate export passphrase".to_vec()),
+                    policy,
+                    crate::PortableExportRandomnessV1::new(
+                        [0x71; crate::PORTABLE_EXPORT_RANDOM_BYTES]
+                    ),
+                )
+                .map(|_| ()),
+            Err(ApplicationError::BoundExceeded),
+        );
+
+        // The vault is untouched by the refused Strict export.
+        let session = active_session(locator, &local, &bootstrap, &factory);
+        assert_eq!(session.current_catalog.items.len(), 2);
+
+        // The fix: BestEffort excludes only the poisoned item and still
+        // produces a real, importable artifact for everything else.
+        let outcome = session
+            .export_portable_with_passphrase_best_effort(
+                &exact_bootstrap,
+                Zeroizing::new(b"separate export passphrase".to_vec()),
+                policy,
+                crate::PortableExportRandomnessV1::new([0x72; crate::PORTABLE_EXPORT_RANDOM_BYTES]),
+            )
+            .unwrap();
+        assert_eq!(outcome.excluded_item_ids(), &[poisoned_item_id]);
+
+        // The vault is still untouched -- BestEffort is exactly as
+        // read-only as Strict.
+        let session = active_session(locator, &local, &bootstrap, &factory);
+        assert_eq!(session.current_catalog.items.len(), 2);
+
+        let opened = crate::open_portable_with_passphrase(
+            outcome.artifact().as_bytes(),
+            Zeroizing::new(b"separate export passphrase".to_vec()),
+            crate::PortableOpenPolicyV1::new(8 * 1024, 1, 1).unwrap(),
+        )
+        .unwrap();
+        assert_eq!(opened.item_count(), 1);
+        assert_eq!(opened.candidate_count(), 1);
+        assert_eq!(opened.excluded_item_count(), 1);
+
+        for plaintext in [b"Healthy".as_slice(), b"healthy-secret"] {
+            assert!(!outcome
+                .artifact()
+                .as_bytes()
+                .windows(plaintext.len())
+                .any(|window| window == plaintext));
+        }
+    }
+
+    #[test]
+    fn portable_export_best_effort_excludes_a_whole_mixed_conflict_not_just_its_oversized_half() {
+        // A mixed conflict: one ordinary small live candidate, one
+        // oversized one, both current for the same item. BestEffort must
+        // exclude the whole *item*, not just the candidate it cannot
+        // re-encode -- keeping the small candidate alone would silently
+        // hand the target an unconflicted item where the source actually
+        // had an unresolved conflict.
+        let (locator, local, bootstrap, factory) = initialized();
+        let exact_active = local.0.lock().unwrap().clone().unwrap();
+        let LocalVaultStateV1::Active(active) = LocalVaultStateV1::decode(&exact_active).unwrap()
+        else {
+            panic!("fixture must be active")
+        };
+        let item_id = ItemId::new([0x73; 16]);
+        let fixture = generation_zero_bytes();
+        let root_key: [u8; 32] = fixture[48..80].try_into().unwrap();
+        let keys = V1Keys::derive(active.vault_id(), &root_key).unwrap();
+
+        let small_candidate = ItemCandidate::new(
+            RevisionId::new([0; 32]),
+            [],
+            ItemState::Live(Box::new(new_login_document(
+                item_id,
+                "Keep small",
+                "small-secret",
+            ))),
+        )
+        .unwrap();
+        let small_frame = seal_object(
+            &keys,
+            ObjectKind::ItemRevision,
+            &encode_item_revision(small_candidate.causal_parents(), small_candidate.state())
+                .unwrap(),
+            &ObjectRandomness::new([0xf0; 32], [0xf1; 24], [0xf2; 24]),
+        )
+        .unwrap();
+        let small_revision_id = RevisionId::new(*small_frame.id().unwrap().as_bytes());
+
+        let oversized_frame = seal_object(
+            &keys,
+            ObjectKind::ItemRevision,
+            &peer_opaque_revision_plaintext(item_id, PEER_OPAQUE_PAYLOAD_BYTES),
+            &ObjectRandomness::new([0xf3; 32], [0xf4; 24], [0xf5; 24]),
+        )
+        .unwrap();
+
+        let mut revision_ids = vec![
+            small_revision_id,
+            RevisionId::new(*oversized_frame.id().unwrap().as_bytes()),
+        ];
+        revision_ids.sort_unstable();
+        let catalog = CatalogV1::new(BTreeMap::from([(item_id, revision_ids.clone())])).unwrap();
+        let catalog_frame = seal_object(
+            &keys,
+            ObjectKind::Catalog,
+            &catalog.encode().unwrap(),
+            &ObjectRandomness::new([0xf6; 32], [0xf7; 24], [0xf8; 24]),
+        )
+        .unwrap();
+        let publication =
+            publication_for_catalog(&active, vec![small_frame, oversized_frame], catalog_frame);
+        peer_publishes(locator, &local, &bootstrap, &factory, publication);
+
+        let session = active_session(locator, &local, &bootstrap, &factory);
+        let exact_bootstrap = bootstrap.latest_bytes().unwrap();
+        let outcome = session
+            .export_portable_with_passphrase_best_effort(
+                &exact_bootstrap,
+                Zeroizing::new(b"separate export passphrase".to_vec()),
+                crate::PortableExportPolicyV1::new(8 * 1024, 1, 1).unwrap(),
+                crate::PortableExportRandomnessV1::new([0x74; crate::PORTABLE_EXPORT_RANDOM_BYTES]),
+            )
+            .unwrap();
+        assert_eq!(outcome.excluded_item_ids(), &[item_id]);
+
+        let opened = crate::open_portable_with_passphrase(
+            outcome.artifact().as_bytes(),
+            Zeroizing::new(b"separate export passphrase".to_vec()),
+            crate::PortableOpenPolicyV1::new(8 * 1024, 1, 1).unwrap(),
+        )
+        .unwrap();
+        // The item is excluded whole: not one candidate kept and one
+        // dropped, zero of either.
+        assert_eq!(opened.item_count(), 0);
+        assert_eq!(opened.candidate_count(), 0);
+        assert_eq!(opened.excluded_item_count(), 1);
+
+        for plaintext in [b"Keep small".as_slice(), b"small-secret"] {
+            assert!(!outcome
+                .artifact()
+                .as_bytes()
+                .windows(plaintext.len())
+                .any(|window| window == plaintext));
+        }
+    }
+
+    #[test]
+    fn excluded_item_ids_field_is_optional_and_self_consistency_checked() {
+        // Builds a real, valid Strict export (five fields, no field 6),
+        // then manufactures field 6 by hand to exercise VLT-PM05 §13.9's
+        // new adversarial surface directly -- the same "decode the real
+        // artifact, then hand-edit one field" style the rest of this test
+        // module already uses for fields 1-5.
+        let (locator, local, bootstrap, factory) = initialized();
+        let session = active_session(locator, &local, &bootstrap, &factory);
+        let randomness = add_item_randomness(0x75);
+        let item_id = randomness.item_id();
+        session
+            .add_item(
+                new_login_document(item_id, "Field six", "field-six-secret"),
+                761,
+                randomness,
+                &local,
+            )
+            .unwrap();
+
+        let session = active_session(locator, &local, &bootstrap, &factory);
+        let exact_bootstrap = bootstrap.latest_bytes().unwrap();
+        let artifact = session
+            .export_portable_with_passphrase(
+                &exact_bootstrap,
+                Zeroizing::new(b"separate export passphrase".to_vec()),
+                crate::PortableExportPolicyV1::new(8 * 1024, 1, 1).unwrap(),
+                crate::PortableExportRandomnessV1::new([0x76; crate::PORTABLE_EXPORT_RANDOM_BYTES]),
+            )
+            .unwrap();
+        let plaintext = crate::export::decrypt_portable_for_test(
+            artifact.as_bytes(),
+            Zeroizing::new(b"separate export passphrase".to_vec()),
+        )
+        .unwrap();
+        let CborValue::Map(base_fields) = decode_cbor(&plaintext).unwrap() else {
+            panic!()
+        };
+        assert_eq!(
+            base_fields.len(),
+            5,
+            "an ordinary Strict export stays five fields"
+        );
+
+        // Adversarial: the excluded item is also present among `entries`.
+        // No honest producer emits this -- an item's candidates are never
+        // partially committed (§13.9) -- so a reader must reject it.
+        let mut overlapping = base_fields.clone();
+        overlapping.push((
+            CborValue::Unsigned(6),
+            CborValue::Array(vec![CborValue::Bytes(item_id.as_bytes().to_vec())]),
+        ));
+        let overlapping =
+            authenticate_portable_snapshot(overlapping, b"separate export passphrase", 0x77);
+        assert_eq!(
+            crate::open_portable_with_passphrase(
+                &overlapping,
+                Zeroizing::new(b"separate export passphrase".to_vec()),
+                crate::PortableOpenPolicyV1::new(8 * 1024, 1, 1).unwrap(),
+            )
+            .err(),
+            Some(ApplicationError::IntegrityFailure),
+            "a producer must not claim one item both present and excluded",
+        );
+
+        // Adversarial: field 6 names the same excluded id twice.
+        let mut duplicated = base_fields.clone();
+        duplicated.push((
+            CborValue::Unsigned(6),
+            CborValue::Array(vec![
+                CborValue::Bytes([0xaa; 16].to_vec()),
+                CborValue::Bytes([0xaa; 16].to_vec()),
+            ]),
+        ));
+        let duplicated =
+            authenticate_portable_snapshot(duplicated, b"separate export passphrase", 0x78);
+        assert_eq!(
+            crate::open_portable_with_passphrase(
+                &duplicated,
+                Zeroizing::new(b"separate export passphrase".to_vec()),
+                crate::PortableOpenPolicyV1::new(8 * 1024, 1, 1).unwrap(),
+            )
+            .err(),
+            Some(ApplicationError::IntegrityFailure),
+            "a well-behaved producer never lists the same excluded item twice",
+        );
+
+        // Well-formed: an excluded id disjoint from every entry present
+        // opens fine and is reflected only in the aggregate count.
+        let mut disjoint = base_fields;
+        disjoint.push((
+            CborValue::Unsigned(6),
+            CborValue::Array(vec![CborValue::Bytes([0xbb; 16].to_vec())]),
+        ));
+        let disjoint =
+            authenticate_portable_snapshot(disjoint, b"separate export passphrase", 0x79);
+        let opened = crate::open_portable_with_passphrase(
+            &disjoint,
+            Zeroizing::new(b"separate export passphrase".to_vec()),
+            crate::PortableOpenPolicyV1::new(8 * 1024, 1, 1).unwrap(),
+        )
+        .unwrap();
+        assert_eq!(opened.item_count(), 1);
+        assert_eq!(opened.candidate_count(), 1);
+        assert_eq!(opened.excluded_item_count(), 1);
     }
 
     // ─────────────────────────────────────────────────────────────────
