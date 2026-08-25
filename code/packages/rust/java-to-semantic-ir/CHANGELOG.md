@@ -119,6 +119,23 @@ All notable changes to the `java-to-semantic-ir` crate will be documented in thi
   between them, and a non-cyclic call chain — proving the rewritten
   algorithm still gets both the positive and negative cases right, not
   just the original 2-cycle/self-recursion pair.
+- **Caught by a second round of `/security-review`, on the first
+  round's own fix (MEDIUM, algorithmic-complexity DoS, CWE-407)**: the
+  DFS rewrite above made *checking* the call graph `O(V+E)`, but
+  *building* it was still quadratic — every lowered call expression
+  recorded its edge with `call_graph.iter_mut().find(|(n, _)| *n ==
+  self.current_method)`, a linear scan over all `V` methods, making
+  graph construction `O(V·E)` across a whole class (up to `O(V³)` on a
+  densely-interconnected one, since `E` can approach `O(V²)`) —
+  reintroducing the same complexity class the DFS rewrite was written to
+  eliminate, just moved to a different call site. Fixed by changing
+  `call_graph` from `Vec<(String, HashSet<String>)>` to `HashMap<String,
+  HashSet<String>>`, turning the per-call-site edge insert into an
+  `O(1)`-average `get_mut` (every method's entry is already pushed
+  up front by `lower_method_declaration`, so no `entry()`/`or_default()`
+  is even needed). `has_mutual_recursion`'s own graph-building step
+  needed no change at all — it already iterated `call_graph` generically
+  enough to work unchanged against either container shape.
 
 ## [0.4.0] - 2026-08-25
 

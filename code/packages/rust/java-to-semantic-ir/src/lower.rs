@@ -301,9 +301,18 @@ struct Lowerer {
     /// Call graph among top-level methods (`caller -> callees` by name),
     /// accumulated while lowering method bodies. Used once, after every
     /// method has been lowered, to detect `Feature::MutualRecursion` (a
-    /// cycle of length ≥ 2) — mirrors `python-to-semantic-ir`'s identical
-    /// post-lowering pass (`has_mutual_recursion`/`reaches` below).
-    call_graph: Vec<(String, HashSet<String>)>,
+    /// cycle of length ≥ 2) via `has_mutual_recursion` below.
+    ///
+    /// `HashMap`, not `Vec<(String, HashSet<String>)>`: an earlier
+    /// version used a `Vec` and inserted a new call-graph edge with a
+    /// linear `iter_mut().find(...)` scan over every method on *every*
+    /// lowered call expression, making graph *construction* itself
+    /// `O(V·E)` — reintroducing, in a different spot, the same class of
+    /// algorithmic-complexity blowup `has_mutual_recursion`'s own
+    /// `O(V+E)` DFS was written to eliminate (found by a second round of
+    /// `/security-review`, on the first round's own fix). A `HashMap`
+    /// gives `O(1)`-average insertion instead.
+    call_graph: HashMap<String, HashSet<String>>,
 }
 
 /// A method's call-site-relevant signature: what `lower_call_expression`
@@ -328,7 +337,7 @@ impl Lowerer {
             do_while_counter: 0,
             method_signatures: HashMap::new(),
             current_method: String::new(),
-            call_graph: Vec::new(),
+            call_graph: HashMap::new(),
         }
     }
 
@@ -671,7 +680,7 @@ impl Lowerer {
         }
 
         self.current_method = name.to_string();
-        self.call_graph.push((name.to_string(), HashSet::new()));
+        self.call_graph.insert(name.to_string(), HashSet::new());
 
         self.push_scope();
         let params = if is_main {
@@ -2736,11 +2745,7 @@ impl Lowerer {
             args.push(arg_expr);
         }
 
-        if let Some((_, callees)) = self
-            .call_graph
-            .iter_mut()
-            .find(|(n, _)| *n == self.current_method)
-        {
+        if let Some(callees) = self.call_graph.get_mut(&self.current_method) {
             callees.insert(callee.clone());
         }
 
