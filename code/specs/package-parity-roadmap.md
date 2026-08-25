@@ -6575,6 +6575,23 @@ was absent before the fresh exact-main worktree was created. The strategic
 OCaml process-free substrate remains collision-unsafe while PRs #12149 and
 #12162 own exact Go validator and main paths.
 
+The TypeScript repair now has red-to-green evidence at exact rebased main
+`5a3d0e1a0b4bada6811856b76394933dd6c0c3c6`: the focused regression initially
+failed in all three expected assertions, then all 284 TypeScript build-tool
+tests passed across 12 files. Overall coverage is 89.43% statements, 82.06%
+branches, 92.75% functions, and 89.36% lines; `discovery.ts` is 93.68%, 89.23%,
+100%, and 93.4%, respectively. The neutral corpus validates 111 cases and 269
+files; the focused package-parity, capability, Haskell, and OCaml suite passes
+66 tests plus 806 subtests with two expected Windows symlink skips. The Go
+build tool passes its full test, vet, and trimpath build gates, and a real
+forced TypeScript dry validation evaluates 45 Starlark BUILD files and reports
+476 of 476 packages `WOULD-BUILD`, with the orphan-crate check clean. The
+schema-3 collision report and the complete 486-owner, 739-edge acyclic state
+graph remain unchanged. Production dependency audit reports zero
+vulnerabilities; the full audit exposes one pre-existing development-only
+`nanoid` advisory below Vitest, while this branch changes neither dependency
+metadata nor runtime authority.
+
 ## Autonomous Loop Protocol
 
 Only one parity PR should be active at a time.
