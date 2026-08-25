@@ -94,9 +94,11 @@ SCRIPTS = [
      "Highly rounded and loopy — full circles, hooks and curls, with almost no straight lines."),
 ]
 
-# Hand-authored exceptions are deliberately tiny and exact. Keeping them beside
-# the Unicode generator means regeneration cannot erase a source-verified row or
-# silently promote the other recognition-only placeholders.
+# Hand-authored exceptions are deliberately tiny and exact. This map records
+# generator intent for the rows below, but it is not yet the authoritative merge
+# boundary for every verified row added after the original syllabary. HL-C10U
+# keeps whole-file regeneration blocked until removing any sourced row fails
+# closed rather than silently erasing later work.
 VERIFIED_INDEPENDENT_VOWELS = {
     ("telugu", "A"): {
         "components": [
@@ -131,6 +133,43 @@ VERIFIED_INDEPENDENT_VOWELS = {
         "notes": (
             "Independent short a used when a word or syllable begins with a vowel; "
             "it is distinct from the inherent a carried by an unmarked consonant."
+        ),
+    },
+    ("telugu", "E"): {
+        "components": [
+            "the compact lower-left loop returning to the central junction",
+            "the broad outer arch sweeping up to the high left tip",
+        ],
+        "strokeOrder": [
+            "turn down and left around the compact lower loop",
+            "continue around its base and return to the central junction",
+            "restart at the junction and sweep up through the broad outer arch",
+        ],
+        "strokeOrderNote": (
+            "Three numbered movements in two pen-down runs: movements 1–2 stay joined "
+            "around the compact lower loop and return to the central junction; after "
+            "one lift, movement 3 restarts at that junction and sweeps up through the "
+            "broad outer arch."
+        ),
+        "penLifts": 1,
+        "strokeOrderSource": {
+            "citation": (
+                "Sathish Shanmugam, Write Telugu Alphabets, independent vowel ఎ "
+                "packaged tracing guide res/drawable/dot_stroke_v_9_e.png, movements "
+                "1–3 (version 2.6)"
+            ),
+            "url": "https://write-telugu-alphabets.en.aptoide.com/app",
+            "variation": (
+                "The packaged tracing guide numbers three directional movements and "
+                "marks the compact loop and outer arch as two pen-down runs; the visible "
+                "join groups movements 1–2 before movement 3 restarts. Telugu letter "
+                "direction is not uniform across the script, so this is one attested "
+                "pedagogical order fitted to the bundled Noto Sans Telugu outline."
+            ),
+        },
+        "notes": (
+            "Independent short e used when a word or syllable begins with the vowel; "
+            "contrast dependent short-e sign ె on a consonant carrier."
         ),
     },
 }
