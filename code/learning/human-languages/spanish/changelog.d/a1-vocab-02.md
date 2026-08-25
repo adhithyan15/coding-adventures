@@ -4,15 +4,15 @@
 
 - **Thirty-five A1 vocabulary lessons across seven chapters**, the second
   tranche on the run to the HL09 §3.1 A1 vocabulary floor of **600** distinct
-  headwords taught at or below A1. Measured on `main` at the moment this branch
-  was cut, the track taught **379**; it leaves this tranche at **414**. Stacked
-  on tranche 1's thirty (chapters 340-345), the running total is **444**, and
-  **156** headwords remain.
+  headwords taught at or below A1. With tranche 1 (chapters 340-345) merged,
+  the track entered this tranche at **409** distinct headwords at or below A1;
+  it leaves at **444**, and **156** remain.
 
-  The count rose by exactly thirty-five, which is the check that proves no
-  headword in this tranche duplicates one already taught. `vocabularyOf`
-  compares full strings, so a near-duplicate would have inflated the gate
-  silently rather than failing.
+  The count rose by exactly thirty-five, both against the branch point and
+  again after the rebase onto tranche 1. That is the check that proves no
+  headword here duplicates one already taught: `vocabularyOf` compares full
+  strings, so a near-duplicate would have inflated the gate silently rather
+  than failing.
 
   - **Chapter 346, *Five Places A Town Has*** — `la escuela`, `la iglesia`,
     `el mercado`, `la oficina`, `la estación`. Every one of the five is named
@@ -77,6 +77,14 @@
   noun" and a `resto` sentence that read "is used with *de*". Both were
   rewritten to show the instance rather than assert the rule, rather than
   raising a ceiling that records debt.
+
+- **One collision existed only in the union of the two tranches.**
+  `ES-C349-agenda` was authored with `concept_tag: ES-CLOCK-SCHEDULE`, which
+  tranche 1's `ES-C342-horario` also claims. Both branches were green on their
+  own; the validator's "concept realized twice" error appeared the moment they
+  were rebased together. Renamed here to `ES-CLOCK-DIARY`, which draws the
+  better line anyway — *el horario* is the timetable somebody else publishes,
+  *la agenda* is the book you write your own into.
 
 - **Spanish remains at pre-A1.** Thirty-five more headwords does not move the
   attainment claim, and the report still names Spanish as the only track with
