@@ -2,6 +2,37 @@
 
 All notable changes to this package will be documented in this file.
 
+## [0.2.53] - 2026-08-25 - Relaxed SIMD epic PR4: i8x16/i16x8/i32x4/i64x2.relaxed_laneselect
+
+### Added
+
+- 4 new `SIMD_OPS` entries, the SEVENTH/EIGHTH/NINTH/TENTH relaxed-simd
+  opcodes (see `code/specs/W19-wasm-relaxed-simd-first-slice.md`):
+  `i8x16.relaxed_laneselect` (`0x109`), `i16x8.relaxed_laneselect`
+  (`0x10a`), `i32x4.relaxed_laneselect` (`0x10b`),
+  `i64x2.relaxed_laneselect` (`0x10c`) -- 246 SIMD opcodes total, up
+  from 242.
+- Sub-opcode values re-verified LIVE against the relaxed-simd
+  Overview.md encoding table (this PR's own task brief guessed
+  `0x104`-`0x107`, which was WRONG -- that range actually belongs to
+  `i32x4.relaxed_trunc_f64x2_u_zero`/`f32x4.relaxed_madd`/
+  `relaxed_nmadd`/`f64x2.relaxed_madd`, none implemented yet). `0x109`
+  (265), `0x10a` (266), `0x10b` (267), `0x10c` (268) all LEB128-encode
+  as 2-byte sequences (`[0x89, 0x02]`, `[0x8A, 0x02]`, `[0x8B, 0x02]`,
+  `[0x8C, 0x02]`).
+- 4 new `SimdOpKind` variants: `RelaxedLaneselectI8x16`,
+  `RelaxedLaneselectI16x8`, `RelaxedLaneselectI32x4`,
+  `RelaxedLaneselectI64x2`. TERNARY, same `(v128, v128, v128) -> v128`
+  shape as this crate's existing `Bitselect` -- the first relaxed-simd
+  family to reuse a TERNARY base opcode's body rather than a
+  binary/unary one. Hand-verified against the real upstream
+  `relaxed_laneselect.wast` corpus's own `either` groups (including a
+  THREE-alternative "special case for i16x8 to allow pblendvb" group):
+  `Bitselect`'s existing bytewise `(a AND mask) OR (b AND (NOT mask))`
+  body reproduces the FIRST `either` alternative of EVERY case in that
+  file bit-for-bit, so these 4 opcodes reuse `Bitselect`'s body
+  verbatim -- no new numeric semantics needed.
+
 ## [0.2.52] - 2026-08-25 - Relaxed SIMD epic PR3: f32x4/f64x2 relaxed_min/relaxed_max
 
 ### Added

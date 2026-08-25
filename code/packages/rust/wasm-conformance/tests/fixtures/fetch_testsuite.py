@@ -753,6 +753,27 @@ TESTSUITE_FILES = [
     # later PR's scope, same one-opcode-family-per-PR cadence the base
     # SIMD epic (PR1-PR47) established.
     "relaxed_min_max.wast",
+    # Relaxed SIMD epic PR4 (see code/specs/
+    # W19-wasm-relaxed-simd-first-slice.md): relaxed_laneselect.wast --
+    # `i8x16.relaxed_laneselect`/`i16x8.relaxed_laneselect`/
+    # `i32x4.relaxed_laneselect`/`i64x2.relaxed_laneselect` (sub-opcodes
+    # 0x109-0x10c -- re-verified LIVE against the relaxed-simd Overview.md
+    # table; the task brief's own guessed range, 0x104-0x107, was wrong),
+    # the FOURTH relaxed-simd PR (6517 bytes, confirmed byte-identical
+    # against the same pinned SHA). All 4 opcodes reuse this repo's
+    # existing `Bitselect` body verbatim -- hand-verified against every
+    # `either` group in this file (including the "impure mask"/pblendvb
+    # special case, a THREE-alternative `either`) to be an exact, literal
+    # match to the FIRST alternative in every case (see
+    # `SimdOpKind::RelaxedLaneselectI8x16`'s own doc comment). The first
+    # relaxed-simd family to reuse a TERNARY base opcode's body rather than
+    # a binary/unary one. The other 3 remaining relaxed-simd files
+    # (`i32x4_relaxed_trunc.wast` -- flagged as having ZERO real
+    # `assert_return` directives, weaker coverage than every other file
+    # here -- `relaxed_dot_product.wast`, `relaxed_madd_nmadd.wast`) are
+    # each a later PR's scope, same one-opcode-family-per-PR cadence the
+    # base SIMD epic (PR1-PR47) established.
+    "relaxed_laneselect.wast",
 ]
 
 # Reference-types/threads-proposal files whose UPSTREAM path lives under

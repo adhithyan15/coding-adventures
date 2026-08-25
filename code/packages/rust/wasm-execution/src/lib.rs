@@ -7179,6 +7179,69 @@ fn register_simd(vm: &mut GenericVM) {
                 let handle = push_v128(ctx, result)?;
                 push_wasm(vm, WasmValue::V128(handle));
             }
+            SimdOpKind::RelaxedLaneselectI8x16
+            | SimdOpKind::RelaxedLaneselectI16x8
+            | SimdOpKind::RelaxedLaneselectI32x4
+            | SimdOpKind::RelaxedLaneselectI64x2 => {
+                // i8x16/i16x8/i32x4/i64x2.relaxed_laneselect (relaxed
+                // SIMD epic PR4 -- see `code/specs/
+                // W19-wasm-relaxed-simd-first-slice.md`): the relaxed-simd
+                // spec's own prose says these behave EXACTLY like
+                // `v128.bitselect` whenever each lane-sized mask in the
+                // third operand is either all-1s or all-0s (a precondition
+                // the spec places on the CALLER, not on this
+                // implementation), and is implementation-defined only for
+                // "impure" masks (mixed 1/0 bits within one lane). Verified
+                // BY HAND against the real upstream
+                // `relaxed_laneselect.wast` corpus (pinned
+                // `WebAssembly/testsuite` SHA
+                // `28864811cf03bdbf880733786148feaba339582d`), including
+                // its "impure mask" cases (which exist precisely to
+                // exercise the implementation-defined path): this crate's
+                // existing `Bitselect` body -- bytewise `(a AND mask) OR (b
+                // AND (NOT mask))`, entirely lane-width-agnostic --
+                // reproduces the FIRST `either` alternative of EVERY case
+                // in that file bit-for-bit, e.g. for
+                // `i8x16.relaxed_laneselect(a=[0,1,0x12,0x12,...],
+                // b=[16,17,0x34,0x34,...], m=[0xff,0,0xf0,0x0f,...])`:
+                // `(0x12 & 0xf0) | (0x34 & 0x0f)` = `0x14`,
+                // `(0x12 & 0x0f) | (0x34 & 0xf0)` = `0x32`, matching that
+                // test's first `either` alternative `[0,17,0x14,0x32,...]`
+                // exactly (the second alternative is instead what a
+                // per-lane top-bit-only blend instruction would produce --
+                // this repo's byte-oriented `Bitselect` body naturally
+                // lands on the bitwise alternative, not the blend one). So
+                // all four lane-width variants reuse `Bitselect`'s
+                // execution body verbatim, unchanged by lane width (same
+                // reasoning `Not`/`And`/`AndNot`/`Or`/`Xor`/`Bitselect`
+                // above rely on: bitwise ops never depend on how the 128
+                // bits are interpreted as lanes) -- own match arm, matching
+                // this table's per-kind-duplication convention rather than
+                // folding into `Bitselect`'s arm above.
+                let c_handle = pop_wasm(vm)?.as_v128_handle().map_err(VMError::from)?;
+                let b_handle = pop_wasm(vm)?.as_v128_handle().map_err(VMError::from)?;
+                let a_handle = pop_wasm(vm)?.as_v128_handle().map_err(VMError::from)?;
+                let c = *ctx
+                    .v128_heap
+                    .get(c_handle as usize)
+                    .ok_or_else(|| VMError::GenericError("v128 operand: heap handle out of range".into()))?;
+                let b = *ctx
+                    .v128_heap
+                    .get(b_handle as usize)
+                    .ok_or_else(|| VMError::GenericError("v128 operand: heap handle out of range".into()))?;
+                let a = *ctx
+                    .v128_heap
+                    .get(a_handle as usize)
+                    .ok_or_else(|| VMError::GenericError("v128 operand: heap handle out of range".into()))?;
+
+                let mut result = [0u8; 16];
+                for i in 0..16 {
+                    result[i] = (a[i] & c[i]) | (b[i] & !c[i]);
+                }
+
+                let handle = push_v128(ctx, result)?;
+                push_wasm(vm, WasmValue::V128(handle));
+            }
             SimdOpKind::ExtractLaneI8x16S | SimdOpKind::ExtractLaneI8x16U => {
                 // i8x16.extract_lane_s/_u (SIMD widen PR18): pop a v128,
                 // read the `aux`-selected `i8` lane back out as a plain
@@ -18331,6 +18394,183 @@ mod tests {
         let (_, tie_results) = tie_engine.call_function_with_v128(0, &[]).unwrap();
         let tie_out = f64x2_lanes(tie_results[0].unwrap());
         assert_eq!(tie_out, [0.0, 0.0], "relaxed_min(+0.0, +0.0) must return +0.0 in both lanes");
+    }
+
+    // ── Relaxed SIMD epic, PR4 -- see code/specs/
+    // W19-wasm-relaxed-simd-first-slice.md ──────────────────────────────
+    //
+    // `i8x16/i16x8/i32x4/i64x2.relaxed_laneselect`: reuse `Bitselect`'s
+    // execution body verbatim (bytewise `(a AND mask) OR (b AND (NOT
+    // mask))`), for two reasons verified in these tests: (1) with a "pure"
+    // per-lane mask (each lane-sized group of mask bits all-1 or all-0,
+    // the precondition the spec places on well-defined callers), bitwise
+    // bitselect and lane-wise laneselect necessarily agree everywhere; (2)
+    // even on the corpus's deliberately "impure" mask cases (mixed 1/0
+    // bits within one lane, the implementation-defined case), the plain
+    // bitwise-bitselect result is hand-verified to be a LITERAL member of
+    // the real `relaxed_laneselect.wast` corpus's `either` set (its first
+    // alternative in every case) -- not merely plausible, but the exact
+    // value that file's `assert_return` accepts.
+
+    /// Pure-mask case, mirroring `v128_bitselect_selects_bits_per_mask`
+    /// above exactly: with `a` = all-1s and `b` = all-0s, `laneselect(a,
+    /// b, mask)` collapses to exactly `mask` for EVERY lane width, since
+    /// `Bitselect`'s body is entirely lane-width-agnostic. Confirms all
+    /// four `RelaxedLaneselectI8x16`/`I16x8`/`I32x4`/`I64x2` match arms
+    /// read the `a`/`b`/`c` operands in the correct order (not swapped)
+    /// and don't accidentally diverge from `v128.bitselect`'s own
+    /// behavior when the mask happens to be "pure" per the spec's own
+    /// precondition.
+    #[test]
+    fn relaxed_laneselect_matches_bitselect_on_a_pure_mask_across_all_lane_widths() {
+        let mask = [0x5A5A_5A5Au32 as i32; 4]; // arbitrary non-uniform bit pattern
+        for (name, sub_opcode) in [
+            ("i8x16.relaxed_laneselect", 0x89u8),
+            ("i16x8.relaxed_laneselect", 0x8Au8),
+            ("i32x4.relaxed_laneselect", 0x8Bu8),
+            ("i64x2.relaxed_laneselect", 0x8Cu8),
+        ] {
+            let mut code = vec![0xFD, 0x0C];
+            code.extend(v128_const_bytes([-1; 4])); // a: all-1s
+            code.extend([0xFD, 0x0C]);
+            code.extend(v128_const_bytes([0; 4])); // b: all-0s
+            code.extend([0xFD, 0x0C]);
+            code.extend(v128_const_bytes(mask)); // c: the mask
+            code.extend([0xFD, sub_opcode, 0x02]); // 2-byte LEB128 (sub-opcode is >= 0x100)
+            code.push(0x0B);
+            let mut engine = simd_engine_returning_v128(code);
+            let (_, bytes) = engine.call_function_with_v128(0, &[]).unwrap();
+            assert_eq!(
+                bytes[0],
+                Some(V128Bytes(v128_const_bytes(mask).try_into().unwrap())),
+                "{name}(all-1s, all-0s, mask) must equal the mask exactly"
+            );
+        }
+    }
+
+    /// `i8x16.relaxed_laneselect` (sub-opcode `0x109`, `[0x89, 0x02]`):
+    /// the exact first `assert_return`/`either` case from the real
+    /// vendored `relaxed_laneselect.wast` corpus (pinned
+    /// `WebAssembly/testsuite` SHA
+    /// `28864811cf03bdbf880733786148feaba339582d`), hand-computed against
+    /// `Bitselect`'s bytewise formula: lane 2's mask byte `0xf0` gives
+    /// `(0x12 & 0xf0) | (0x34 & 0x0f)` = `0x14`; lane 3's mask byte
+    /// `0x0f` gives `(0x12 & 0x0f) | (0x34 & 0xf0)` = `0x32` -- matching
+    /// the corpus's first `either` alternative bit-for-bit.
+    #[test]
+    fn i8x16_relaxed_laneselect_matches_the_real_corpus_first_either_alternative() {
+        let a: [i8; 16] = [0, 1, 0x12, 0x12, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15];
+        let b: [i8; 16] = [16, 17, 0x34, 0x34, 20, 21, 22, 23, 24, 25, 26, 27, 28, 29, 30, 31];
+        let mask: [i8; 16] = [-1 /* 0xff */, 0, -16 /* 0xf0 */, 0x0f, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0];
+        let expected: [i8; 16] = [0, 17, 0x14, 0x32, 20, 21, 22, 23, 24, 25, 26, 27, 28, 29, 30, 31];
+
+        let mut code = vec![0xFD, 0x0C];
+        code.extend(v128_const_bytes_i8x16(a));
+        code.extend([0xFD, 0x0C]);
+        code.extend(v128_const_bytes_i8x16(b));
+        code.extend([0xFD, 0x0C]);
+        code.extend(v128_const_bytes_i8x16(mask));
+        code.extend([0xFD, 0x89, 0x02]); // i8x16.relaxed_laneselect (sub-opcode 0x109)
+        code.push(0x0B);
+        let mut engine = simd_engine_returning_v128(code);
+        let (_, bytes) = engine.call_function_with_v128(0, &[]).unwrap();
+        assert_eq!(
+            bytes[0],
+            Some(V128Bytes(v128_const_bytes_i8x16(expected).try_into().unwrap())),
+            "i8x16.relaxed_laneselect must match the real corpus's first either alternative"
+        );
+    }
+
+    /// `i16x8.relaxed_laneselect` (sub-opcode `0x10a`, `[0x8A, 0x02]`):
+    /// the exact first `assert_return`/`either` case from the real
+    /// corpus, hand-computed the same way as the `i8x16` test above --
+    /// lane 2's mask `0xff00` gives `(0x1234 & 0xff00) | (0x5678 &
+    /// 0x00ff)` = `0x1278`; lane 3's mask `0x00ff` gives `(0x1234 &
+    /// 0x00ff) | (0x5678 & 0xff00)` = `0x5634`.
+    #[test]
+    fn i16x8_relaxed_laneselect_matches_the_real_corpus_first_either_alternative() {
+        let a: [i16; 8] = [0, 1, 0x1234, 0x1234, 4, 5, 6, 7];
+        let b: [i16; 8] = [8, 9, 0x5678, 0x5678, 12, 13, 14, 15];
+        let mask: [i16; 8] = [-1 /* 0xffff */, 0, 0xff00u16 as i16, 0x00ff, 0, 0, 0, 0];
+        let expected: [i16; 8] = [0, 9, 0x1278, 0x5634, 12, 13, 14, 15];
+
+        let mut code = vec![0xFD, 0x0C];
+        code.extend(v128_const_bytes_i16x8(a));
+        code.extend([0xFD, 0x0C]);
+        code.extend(v128_const_bytes_i16x8(b));
+        code.extend([0xFD, 0x0C]);
+        code.extend(v128_const_bytes_i16x8(mask));
+        code.extend([0xFD, 0x8A, 0x02]); // i16x8.relaxed_laneselect (sub-opcode 0x10a)
+        code.push(0x0B);
+        let mut engine = simd_engine_returning_v128(code);
+        let (_, bytes) = engine.call_function_with_v128(0, &[]).unwrap();
+        assert_eq!(
+            bytes[0],
+            Some(V128Bytes(v128_const_bytes_i16x8(expected).try_into().unwrap())),
+            "i16x8.relaxed_laneselect must match the real corpus's first either alternative"
+        );
+    }
+
+    /// `i32x4.relaxed_laneselect` (sub-opcode `0x10b`, `[0x8B, 0x02]`):
+    /// the exact `assert_return`/`either` case from the real corpus --
+    /// lane 2's mask `0xffff0000` gives `(0x12341234 & 0xffff0000) |
+    /// (0x56785678 & 0x0000ffff)` = `0x12345678`; lane 3's mask
+    /// `0x0000ffff` gives `(0x12341234 & 0x0000ffff) | (0x56785678 &
+    /// 0xffff0000)` = `0x56781234`.
+    #[test]
+    fn i32x4_relaxed_laneselect_matches_the_real_corpus_first_either_alternative() {
+        let a = [0i32, 1, 0x1234_1234u32 as i32, 0x1234_1234u32 as i32];
+        let b = [4i32, 5, 0x5678_5678u32 as i32, 0x5678_5678u32 as i32];
+        let mask = [-1i32 /* 0xffffffff */, 0, 0xffff_0000u32 as i32, 0x0000_ffffu32 as i32];
+        let expected = [0i32, 5, 0x1234_5678u32 as i32, 0x5678_1234u32 as i32];
+
+        let mut code = vec![0xFD, 0x0C];
+        code.extend(v128_const_bytes(a));
+        code.extend([0xFD, 0x0C]);
+        code.extend(v128_const_bytes(b));
+        code.extend([0xFD, 0x0C]);
+        code.extend(v128_const_bytes(mask));
+        code.extend([0xFD, 0x8B, 0x02]); // i32x4.relaxed_laneselect (sub-opcode 0x10b)
+        code.push(0x0B);
+        let mut engine = simd_engine_returning_v128(code);
+        let (_, bytes) = engine.call_function_with_v128(0, &[]).unwrap();
+        assert_eq!(
+            bytes[0],
+            Some(V128Bytes(v128_const_bytes(expected).try_into().unwrap())),
+            "i32x4.relaxed_laneselect must match the real corpus's first either alternative"
+        );
+    }
+
+    /// `i64x2.relaxed_laneselect` (sub-opcode `0x10c`, `[0x8C, 0x02]`):
+    /// the SECOND `i64x2.relaxed_laneselect` case from the real corpus
+    /// (the impure-mask one, not the trivial all-1/all-0-mask one) --
+    /// lane 0's mask `0xffffffff00000000` gives `(0x1234123412341234 &
+    /// 0xffffffff00000000) | (0x5678567856785678 & 0x00000000ffffffff)`
+    /// = `0x1234123456785678`; lane 1's mask `0x00000000ffffffff` gives
+    /// `(0x1234123412341234 & 0x00000000ffffffff) | (0x5678567856785678
+    /// & 0xffffffff00000000)` = `0x5678567812341234`.
+    #[test]
+    fn i64x2_relaxed_laneselect_matches_the_real_corpus_first_either_alternative() {
+        let a = [0x1234_1234_1234_1234u64 as i64; 2];
+        let b = [0x5678_5678_5678_5678u64 as i64; 2];
+        let mask = [0xffff_ffff_0000_0000u64 as i64, 0x0000_0000_ffff_ffffu64 as i64];
+        let expected = [0x1234_1234_5678_5678u64 as i64, 0x5678_5678_1234_1234u64 as i64];
+
+        let mut code = vec![0xFD, 0x0C];
+        code.extend(v128_const_bytes_i64x2(a));
+        code.extend([0xFD, 0x0C]);
+        code.extend(v128_const_bytes_i64x2(b));
+        code.extend([0xFD, 0x0C]);
+        code.extend(v128_const_bytes_i64x2(mask));
+        code.extend([0xFD, 0x8C, 0x02]); // i64x2.relaxed_laneselect (sub-opcode 0x10c)
+        code.push(0x0B);
+        let mut engine = simd_engine_returning_v128(code);
+        let (_, bytes) = engine.call_function_with_v128(0, &[]).unwrap();
+        assert_eq!(
+            bytes[0],
+            Some(V128Bytes(v128_const_bytes_i64x2(expected).try_into().unwrap())),
+            "i64x2.relaxed_laneselect must match the real corpus's either alternative"
+        );
     }
 
     // ── SIMD widen PR38 (task #229-231): i8x16.shuffle ──────────────────

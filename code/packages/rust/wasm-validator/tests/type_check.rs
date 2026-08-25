@@ -1395,6 +1395,32 @@ fn invalid_f64x2_relaxed_min_max_given_an_i32_operand_instead_of_v128() {
     assert_invalid("(module (func (param i32 v128) (result v128) (f64x2.relaxed_max (local.get 0) (local.get 1))))");
 }
 
+#[test]
+fn valid_relaxed_laneselect_pops_three_v128_pushes_v128() {
+    // Relaxed SIMD epic PR4 (see code/specs/
+    // W19-wasm-relaxed-simd-first-slice.md): i8x16/i16x8/i32x4/
+    // i64x2.relaxed_laneselect -- same TERNARY pop-three-push-one v128
+    // shape as `v128.bitselect` above, whose body they reuse verbatim at
+    // the runtime level. The spec's own implementation-defined-vs-
+    // bitselect distinction for "impure" masks is entirely a runtime
+    // concern, invisible to the type checker.
+    assert_valid("(module (func (param v128 v128 v128) (result v128) (i8x16.relaxed_laneselect (local.get 0) (local.get 1) (local.get 2))))");
+    assert_valid("(module (func (param v128 v128 v128) (result v128) (i16x8.relaxed_laneselect (local.get 0) (local.get 1) (local.get 2))))");
+    assert_valid("(module (func (param v128 v128 v128) (result v128) (i32x4.relaxed_laneselect (local.get 0) (local.get 1) (local.get 2))))");
+    assert_valid("(module (func (param v128 v128 v128) (result v128) (i64x2.relaxed_laneselect (local.get 0) (local.get 1) (local.get 2))))");
+}
+
+#[test]
+fn invalid_relaxed_laneselect_given_an_i32_operand_instead_of_v128() {
+    // Confirms the type checker enforces V128 for all three operands
+    // (`a`, `b`, and the mask), not just accepting whatever's on the
+    // stack -- one invalid case per operand position.
+    assert_invalid("(module (func (param i32 v128 v128) (result v128) (i8x16.relaxed_laneselect (local.get 0) (local.get 1) (local.get 2))))");
+    assert_invalid("(module (func (param v128 i32 v128) (result v128) (i16x8.relaxed_laneselect (local.get 0) (local.get 1) (local.get 2))))");
+    assert_invalid("(module (func (param v128 v128 i32) (result v128) (i32x4.relaxed_laneselect (local.get 0) (local.get 1) (local.get 2))))");
+    assert_invalid("(module (func (param v128 v128 i32) (result v128) (i64x2.relaxed_laneselect (local.get 0) (local.get 1) (local.get 2))))");
+}
+
 // ── SIMD widen PR38 (task #229-231): i8x16.shuffle ───────────────────────
 //
 // The most structurally complex SIMD opcode implemented in this campaign
