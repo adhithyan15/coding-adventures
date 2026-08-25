@@ -265,6 +265,116 @@ describe("safeDocumentPath", () => {
 });
 
 // ---------------------------------------------------------------------------
+// ORDERING, verified independently of the round trip.
+// ---------------------------------------------------------------------------
+//
+// A byte-identical round trip is NECESSARY BUT NOT SUFFICIENT, and HL21 §5.2 is
+// the cautionary tale: it asserted `curriculum.json`'s `spine` needed no ordinal
+// because "an object has no meaningful order". Bare-name shards would have
+// re-sorted the shared ladder across 23 tracks — and a round-trip check run
+// against a track whose keys happened to be ALREADY sorted would have passed
+// while doing it.
+//
+// The trap is not that the round trip is a weak check. It is that verifying it
+// on one instance generalises falsely. Both plans here are covered by the
+// real-document tests below, which is 2 of 2 rather than 1 of 23 — but the
+// numbering MECHANISM deserves its own tests, so the third plan somebody adds is
+// covered before it exists.
+describe("ordering", () => {
+  /** A document of N sections, newest first, each heading distinct. */
+  const doc = (n: number): string =>
+    "# T\n\n" + Array.from({ length: n }, (_, i) => `## S${i}\n\nbody ${i}\n\n`).join("");
+
+  const headingsOf = (text: string): string[] =>
+    text.split("\n").filter((line) => line.startsWith("## "));
+
+  it("zero-padding is LOAD-BEARING past ten sections", () => {
+    // The "10 sorts before 2" bug. Eleven items is enough to expose it, which is
+    // why this is not theoretical: both real documents are far past eleven, and
+    // every one of the 20 chapter tracks hit exactly this.
+    const text = doc(11);
+    const names = [...docShardContents(text, PLAN).keys()].filter((n) => n !== DOC_META_SHARD);
+    const asStrings = [...names].sort((a, b) => (a < b ? -1 : a > b ? 1 : 0));
+    const asNumbers = [...names].sort((a, b) => Number(a.split("-")[0]) - Number(b.split("-")[0]));
+    expect(asStrings).toEqual(asNumbers);
+    expect(joinDocShards(docShardContents(text, PLAN), PLAN)).toBe(text);
+  });
+
+  it("proves the pad is doing the work — the same ranks UNPADDED mis-sort", () => {
+    // The negative control. Without it, the test above also passes for a naming
+    // scheme that never needed padding, and therefore proves nothing.
+    const unpadded = Array.from({ length: 11 }, (_, i) => `${(i + 1) * 10}-S${i}.md`);
+    const asStrings = [...unpadded].sort((a, b) => (a < b ? -1 : a > b ? 1 : 0));
+    const asNumbers = [...unpadded].sort((a, b) => Number(a.split("-")[0]) - Number(b.split("-")[0]));
+    expect(asStrings).not.toEqual(asNumbers);
+    expect(asStrings[0]).toBe("10-S0.md");
+    expect(asStrings[1]).toBe("100-S9.md"); // 100 before 20: the bug, live
+  });
+
+  it("a NEW TOP section lands at the top after regeneration", () => {
+    // The operation every author performs, and the one the recency rank exists
+    // for: add one file at max+stride, rename nothing.
+    const text = doc(5);
+    const shards = docShardContents(text, PLAN);
+    const top = [...shards.keys()].filter((n) => n !== DOC_META_SHARD).sort().at(-1)!;
+    const next = String(Number(top.split("-")[0]) + 10).padStart(5, "0");
+    shards.set(`${next}-NEWEST-aaaaaaaa.md`, "## NEWEST\n\nbrand new\n\n");
+    const rebuilt = joinDocShards(shards, PLAN);
+    expect(headingsOf(rebuilt)[0]).toBe("## NEWEST");
+    expect(headingsOf(rebuilt).slice(1)).toEqual(headingsOf(text));
+  });
+
+  it("a RANK COLLISION is deterministic and LOCALLY CONTAINED", () => {
+    // Two parallel agents both compute max+stride and both write it. The pair's
+    // relative order is then decided by the rest of the filename and is
+    // arbitrary — two entries authored the same day have no true order to lose.
+    //
+    // What must NOT happen is a collision displacing a THIRD section. The padded
+    // rank is a fixed-width prefix, so the colliding pair sorts as a block and
+    // everything else keeps its place. That is the property that makes a tie
+    // acceptable rather than a bug.
+    const text = doc(4);
+    const shards = docShardContents(text, PLAN);
+    const top = [...shards.keys()].filter((n) => n !== DOC_META_SHARD).sort().at(-1)!;
+    const next = String(Number(top.split("-")[0]) + 10).padStart(5, "0");
+    shards.set(`${next}-AGENT-A-11111111.md`, "## AGENT-A\n\na\n\n");
+    shards.set(`${next}-AGENT-B-22222222.md`, "## AGENT-B\n\nb\n\n");
+
+    const headings = headingsOf(joinDocShards(shards, PLAN));
+    expect(headings.slice(0, 2).sort()).toEqual(["## AGENT-A", "## AGENT-B"]);
+    expect(headings.slice(2)).toEqual(headingsOf(text));
+
+    // Deterministic: Map insertion order must not leak into the result.
+    const reversed = new Map([...shards.entries()].reverse());
+    expect(joinDocShards(reversed, PLAN)).toBe(joinDocShards(shards, PLAN));
+  });
+
+  it("REFUSES rather than silently re-ordering when the rank space is exhausted", () => {
+    // 99999 is the last five-digit rank. At 100000 the string sorts BEFORE
+    // 10010, so filename order stops reproducing document order — and `--check`
+    // cannot see it, because both directions use the same broken order.
+    expect(() => docShardFilename(99990, "A", "0f0f0f0f")).not.toThrow();
+    expect(() => docShardFilename(100000, "A", "0f0f0f0f")).toThrow(/outgrown/);
+    // The boundary in the terms an author meets it: 9,999 sections at stride 10.
+    expect(() => docShardFilename(9999 * 10, "A", "0f0f0f0f")).not.toThrow();
+    expect(() => docShardFilename(10000 * 10, "A", "0f0f0f0f")).toThrow(/outgrown/);
+  });
+
+  it("ORDER ORACLE — sorted shard order is the exact reverse of document order", () => {
+    // Stated as a permutation rather than as a byte comparison, so it fails for
+    // an ORDERING reason with an ordering message. This is the assertion HL21
+    // §5.2 needed and did not have.
+    const text = doc(30);
+    const names = [...docShardContents(text, PLAN).keys()]
+      .filter((n) => n !== DOC_META_SHARD)
+      .sort((a, b) => (a < b ? -1 : a > b ? 1 : 0));
+    const documentOrder = headingsOf(text).map((h) => h.slice(3));
+    const shardOrder = names.map((n) => n.split("-")[1]);
+    expect(shardOrder).toEqual([...documentOrder].reverse());
+  });
+});
+
+// ---------------------------------------------------------------------------
 // The test this file exists for.
 // ---------------------------------------------------------------------------
 describe("the real documents", () => {
@@ -278,6 +388,33 @@ describe("the real documents", () => {
       //   document -> shards -> document  must be the identity
       expect(unshardDocContents(root, plan)).toBe(committed);
       expect(joinDocShards(docShardContents(committed, plan), plan)).toBe(committed);
+    });
+
+    it(`${plan.path}: shard order on disk reproduces REAL section order`, () => {
+      // The ordering claim, asserted against the committed shard directory and
+      // stated independently of the byte comparison above. Reading the headings
+      // out of the shard FILES and out of the MONOLITH by two separate paths and
+      // comparing the sequences fails with an ordering message when the ordering
+      // is what broke — which is the diagnostic the byte comparison cannot give.
+      const monolith = safeDocumentPath(root, plan.path);
+      const committed = readFileSync(monolith, "utf8");
+      const level = "#".repeat(plan.headingLevel) + " ";
+
+      const fromMonolith = committed
+        .split("\n")
+        .filter((line) => line.startsWith(level) && !line.startsWith(level + "#"));
+
+      const dir = docShardDirectoryFor(monolith);
+      const names = readdirSync(dir)
+        .filter((n) => n.endsWith(".md") && n !== DOC_META_SHARD)
+        .sort((a, b) => (a < b ? -1 : a > b ? 1 : 0));
+      if (plan.newestFirst) names.reverse();
+      const fromShards = names.map(
+        (n) => readFileSync(join(dir, n), "utf8").split("\n")[0],
+      );
+
+      expect(fromShards).toEqual(fromMonolith);
+      expect(fromShards.length).toBeGreaterThan(100); // both documents are well past the "10 < 2" threshold
     });
 
     it(`${plan.path}: every file in the shard directory is a *.md shard`, () => {

@@ -128,6 +128,7 @@
 import { createHash } from "node:crypto";
 import { lstatSync, readFileSync, readdirSync } from "node:fs";
 import { basename, join } from "node:path";
+import { reportableFilename } from "./constants.js";
 
 /** The suffix that turns a document path into its shard directory. */
 export const DOC_SHARD_DIR_SUFFIX = ".d";
@@ -258,8 +259,16 @@ export function listDocShardNames(documentPath: string): string[] {
   const entries = readdirSync(dir, { withFileTypes: true });
   for (const entry of entries) {
     if (entry.name.endsWith(".md") && entry.isSymbolicLink()) {
+      // `reportableFilename`, not raw interpolation. This throw is reachable
+      // from `--check` -- the one mode CI runs -- and it is reachable BY
+      // DESIGN on hostile input: refusing a symlinked shard is the whole job of
+      // this loop. An uncaught throw reaches stderr through Node's default
+      // handler, so a branch committing `BACKLOG.d/EVIL<ESC>[2K<CR>x.md` as a
+      // link would put raw ANSI on a maintainer's runner and erase the line
+      // above it. Nothing upstream sanitises: the name comes straight off
+      // `readdirSync`.
       throw new Error(
-        `doc shard '${entry.name}' in '${dir}': is a symbolic link — ` +
+        `doc shard ${reportableFilename(entry.name)} in '${dir}': is a symbolic link — ` +
           `a shard must be a real file inside its shard directory`,
       );
     }
@@ -326,9 +335,14 @@ export function readDocShards(documentPath: string): Map<string, string> | null 
     try {
       out.set(name, readFileSync(path, "utf8"));
     } catch (cause) {
-      throw new Error(`doc shard '${name}' in '${dir}': cannot be read — ${describe(cause)}`, {
-        cause,
-      });
+      // Same class as the symlink refusal above, lower reachability: getting
+      // here needs a file that `readdirSync` listed and `readFileSync` then
+      // could not open. Sanitised anyway -- the reachability argument is the
+      // kind that stops being true when somebody adds a caller.
+      throw new Error(
+        `doc shard ${reportableFilename(name)} in '${dir}': cannot be read — ${describe(cause)}`,
+        { cause },
+      );
     }
   }
   return out;
