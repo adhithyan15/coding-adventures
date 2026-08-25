@@ -5790,7 +5790,7 @@ impl Compiler {
         effect_root: &GrammarASTNode,
         remaining_dependency_depth: usize,
     ) -> bool {
-        if exact_bare_variable_expression_name(node).as_deref() == Some(name) {
+        if self.boolean_identity_expression_preserves_name(node, name) {
             return true;
         }
         if !matches!(node.rule_name.as_str(), "expression" | "arith_expr")
@@ -5870,6 +5870,45 @@ impl Compiler {
                 remaining_dependency_depth,
             )
         })
+    }
+
+    fn boolean_identity_expression_preserves_name(
+        &self,
+        node: &GrammarASTNode,
+        name: &str,
+    ) -> bool {
+        if exact_bare_variable_expression_name(node).as_deref() == Some(name) {
+            return true;
+        }
+        let sequence = pieces(node);
+        if let (true, [Piece::Node(child)]) =
+            (direct_tokens(node).is_empty(), sequence.as_slice())
+        {
+            return self.boolean_identity_expression_preserves_name(child, name);
+        }
+        let [Piece::Node(lhs), Piece::Op(op), Piece::Node(rhs)] = sequence.as_slice() else {
+            return false;
+        };
+        let lhs_preserves = self.boolean_identity_expression_preserves_name(lhs, name);
+        let rhs_preserves = self.boolean_identity_expression_preserves_name(rhs, name);
+        let lhs_literal = literal_boolean_value(lhs);
+        let rhs_literal = literal_boolean_value(rhs);
+        match op.as_str() {
+            "and" => {
+                (lhs_preserves && rhs_literal == Some(true))
+                    || (rhs_preserves && lhs_literal == Some(true))
+            }
+            "or" => {
+                (lhs_preserves && rhs_literal == Some(false))
+                    || (rhs_preserves && lhs_literal == Some(false))
+            }
+            "eqv" => {
+                (lhs_preserves && rhs_literal == Some(true))
+                    || (rhs_preserves && lhs_literal == Some(true))
+            }
+            "impl" => lhs_literal == Some(true) && rhs_preserves,
+            _ => false,
+        }
     }
 
     fn collect_static_predicate_dependencies(
@@ -8072,6 +8111,21 @@ fn exact_bare_variable_expression_name(node: &GrammarASTNode) -> Option<String> 
         .flatten()
 }
 
+fn literal_boolean_value(node: &GrammarASTNode) -> Option<bool> {
+    let tokens = direct_tokens(node);
+    if tokens.len() == 1 && tokens[0].effective_type_name() == "KEYWORD" {
+        return match tokens[0].value.as_str() {
+            "true" => Some(true),
+            "false" => Some(false),
+            _ => None,
+        };
+    }
+    let child_nodes = direct_nodes(node);
+    (tokens.is_empty() && child_nodes.len() == 1)
+        .then(|| literal_boolean_value(child_nodes[0]))
+        .flatten()
+}
+
 fn expression_is_bare_self_or_equal_leaf_conditional(
     node: &GrammarASTNode,
     name: &str,
@@ -10249,6 +10303,34 @@ mod tests {
             "test",
         )
         .expect("the tenth bounded selector dependency may choose its preserving leaf");
+    }
+
+    #[test]
+    fn al4_boolean_identity_selector_writes_stay_stable() {
+        for write in [
+            "flag and true",
+            "false or flag",
+            "flag eqv true",
+            "true impl flag",
+        ] {
+            compile_source(
+                &format!(
+                    "begin integer i, n, limit, choose; boolean other, flag; n := 3; limit := 3; choose := 1; other := true; flag := true; i := 0; for i := i + 1 while i < n do begin n := limit; limit := if choose = 1 then limit else limit + 1; choose := if other then choose else 0; other := if flag then other else false; flag := {write} end; print(i + 0.25) end"
+                ),
+                "test",
+            )
+            .unwrap_or_else(|_| panic!("boolean identity write {write:?} must stay stable"));
+        }
+    }
+
+    #[test]
+    fn al4_non_identity_selector_write_remains_conservative() {
+        let err = compile_source(
+            "begin integer i, n, limit, choose; boolean other, flag; n := 3; limit := 3; choose := 1; other := true; flag := true; i := 0; for i := i + 1 while i < n do begin n := limit; limit := if choose = 1 then limit else limit + 1; choose := if other then choose else 0; other := if flag then other else false; flag := flag and false end; print(i + 0.25) end",
+            "test",
+        )
+        .expect_err("a boolean non-identity write may change the selector dependency");
+        assert!(format!("{err:?}").contains("cannot print a real value"));
     }
 
     #[test]
