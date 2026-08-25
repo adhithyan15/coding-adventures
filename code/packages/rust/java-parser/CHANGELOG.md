@@ -16,8 +16,11 @@ resolves the identical gap in `coding-adventures-csharp-parser`) — no
 code change needed in this crate itself, only new tests proving the fix:
 `two_level_nested_generic_closes_from_a_merged_right_shift_token`,
 `three_level_nested_generic_closes_from_a_merged_unsigned_right_shift_token`,
-and two tests confirming a real `>>`/`>>>` shift expression still parses
-correctly, including alongside a nested generic in the same file.
+two tests confirming a real `>>`/`>>>` shift expression still parses
+correctly (including alongside a nested generic in the same file), and
+`many_scattered_nested_generics_in_one_large_file_all_parse_correctly` —
+a regression guard for a `/security-review` finding on the shared-engine
+fix's first draft (see `parser` 0.4.4's own changelog entry).
 
 ## [0.1.1] - 2026-08-24
 

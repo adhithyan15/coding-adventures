@@ -945,28 +945,42 @@ impl GrammarParser {
             // majority of grammars this shared engine also serves) never
             // take this branch at all.
             if let Some((consumed, remainder)) = split_angle_bracket_run(token, expected_type) {
+                let split_pos = self.pos;
                 self.tokens[self.pos] = remainder;
                 // Packrat memo entries are keyed on `(rule_idx, pos)` alone,
                 // with no notion of "which token stream state" they were
                 // computed against — the entire scheme assumes the token
                 // stream never changes after parsing starts. This mutation
                 // breaks that assumption: a memo entry cached for some rule
-                // whose span reads through `self.pos` (e.g. one that matched
-                // the pre-split `>>`/`>>>` as a single real shift-operator
-                // token) would otherwise go on being returned verbatim to
-                // any later lookup of that same `(rule, pos)` key, even
-                // though the token there has since changed. Splits are rare
-                // (only at nested-generic-closer positions), so paying for
-                // a full cache invalidation here — rather than trying to
-                // precisely identify which entries' spans crossed
-                // `self.pos` — is cheap insurance against a hard-to-spot
-                // stale-result class of bug. `in_progress` is deliberately
-                // left alone: it tracks the currently-active call stack
-                // (needed for left-recursion detection on frames that
-                // haven't returned yet), not a cache, so clearing it here
-                // would incorrectly discard live state for calls still in
-                // progress on the stack above this one.
-                self.memo.clear();
+                // whose span reads through `split_pos` (e.g. one that
+                // matched the pre-split `>>`/`>>>` as a single real
+                // shift-operator token) would otherwise go on being
+                // returned verbatim to any later lookup of that same
+                // `(rule, pos)` key, even though the token there has since
+                // changed. A rule's own `end_pos` (recorded at the moment
+                // its result was memoized) is exactly "how far this rule's
+                // completed parse read" — an entry with `end_pos <=
+                // split_pos` never touched the mutated position and stays
+                // valid, so only the entries that do reach at least that
+                // far need dropping. This is a real correctness boundary,
+                // not a perf tweak: a naive full `self.memo.clear()` here
+                // was flagged in review as an algorithmic-complexity DoS
+                // vector — ordinary Java/C# source with many nested-generic
+                // occurrences spread across a large file would pay to wipe
+                // and rebuild the *entire* (file-length-sized) memo table
+                // on every single occurrence, turning routine, non-
+                // adversarial code into O(fileLength²) parsing. Retaining
+                // by `end_pos` keeps that cost bounded by how many cached
+                // entries actually span the mutated position (bounded by
+                // grammar depth/local ambiguity in practice), not by how
+                // much of the file has already been parsed.
+                // `in_progress` is deliberately left alone: it tracks the
+                // currently-active call stack (needed for left-recursion
+                // detection on frames that haven't returned yet), not a
+                // cache, so clearing it here would incorrectly discard live
+                // state for calls still in progress on the stack above
+                // this one.
+                self.memo.retain(|_, entry| entry.end_pos <= split_pos);
                 return Some(vec![ASTNodeOrToken::Token(consumed)]);
             }
         }

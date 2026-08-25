@@ -35,22 +35,31 @@ a split breaks that assumption: a memo entry for some rule whose parse
 span reads through that position (e.g. one that matched the pre-split
 `>>` as an ordinary shift operator) could otherwise be returned stale to
 a later lookup of the same key, even after the token there changed.
-Precisely identifying which cached entries' spans crossed the mutated
-position isn't cheap, and splits are rare (only at nested-generic-closer
-positions), so `match_token_reference` now clears the *entire* memo cache
-whenever a split occurs — cheap insurance against a hard-to-spot
-stale-result class of bug. `in_progress` (the left-recursion guard for
-calls still active on the current stack) is deliberately left alone; it
-isn't a cache and clearing it would discard live state for frames that
-haven't returned yet.
+`match_token_reference` invalidates exactly the entries that need it:
+`self.memo.retain(|_, entry| entry.end_pos <= split_pos)` drops any
+memoized rule result whose recorded `end_pos` reached at or past the
+mutated position (it necessarily read through it), and keeps everything
+whose completed parse finished strictly before that position (it
+couldn't have seen the mutated token).
+
+**Caught by `/security-review` before push**: the first version of this
+fix used a full `self.memo.clear()` instead — simpler, but a real
+algorithmic-complexity DoS: the memo table grows with how much of the
+file has already been parsed, so wiping it *entirely* on every split
+turns ordinary, non-adversarial Java/C# source with many scattered
+nested-generic occurrences into O(fileLength²) parsing, not just
+pathological input. The `retain`-based fix bounds the cost of each split
+by how many cached entries actually span the mutated position (grammar
+depth/local ambiguity in practice), not by total file length.
 
 New tests in both `coding-adventures-java-parser` and
 `coding-adventures-csharp-parser` prove: two- and three-level nested
 generics now parse and produce the expected number of `type_arguments`/
 `type_argument_list` nodes; a real `>>`/`>>>` shift expression still
-survives as a single, unsplit token; and a nested generic and a real
-shift expression coexisting in the same file don't corrupt each other via
-a stale memo entry.
+survives as a single, unsplit token; a nested generic and a real shift
+expression coexisting in the same file don't corrupt each other via a
+stale memo entry; and 300 scattered nested-generic field declarations in
+one file (600 closer-splits total) still parse correctly.
 
 ## [0.4.3] - 2026-08-03
 

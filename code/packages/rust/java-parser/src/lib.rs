@@ -315,4 +315,28 @@ mod tests {
             .collect();
         assert_eq!(shift_tokens, vec![">>", ">>>"]);
     }
+
+    /// Regression guard for a review finding on the fix above: the first
+    /// version of the memo-invalidation logic did a full `self.memo
+    /// .clear()` on every split, which -- since the memo table grows with
+    /// how much of the file has already been parsed -- turns *ordinary*
+    /// Java source with many scattered (non-adversarial, idiomatic)
+    /// nested-generic field declarations into O(fileLength^2) parsing.
+    /// The fix tightened this to `retain`, dropping only entries whose
+    /// recorded `end_pos` actually reached the mutated position. This
+    /// test doesn't assert a specific time bound (flaky on shared CI
+    /// hardware) -- it asserts the parse of a few hundred scattered
+    /// occurrences still completes and is correct, and stands as the
+    /// place a future reader would drop a `#[bench]`/timing check if this
+    /// ever regresses back to a full clear.
+    #[test]
+    fn many_scattered_nested_generics_in_one_large_file_all_parse_correctly() {
+        let mut body = String::new();
+        for i in 0..300 {
+            body.push_str(&format!("Map<String, List<Integer>> field{i};\n"));
+        }
+        let src = format!("class C {{ {body} }}");
+        let ast = parse_java(&src, "21").unwrap();
+        assert_eq!(find_nodes(&ast, "type_arguments").len(), 600);
+    }
 }
