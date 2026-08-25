@@ -588,14 +588,14 @@ describe("handwriting ductus", () => {
     ]);
   });
 
-  it("த joins its left loop, cap, broad bowl, and tail without lifting", () => {
-    expect(penLifts(DUCTUS["த"])).toBe(0);
-    expect(DUCTUS["த"].strokes).toHaveLength(1);
-    expect(DUCTUS["த"].strokes[0].segments.map((segment) => segment.label)).toEqual([
-      "down the short left upright",
-      "around the compact left loop",
-      "up the central upright and across the top",
-      "back through the center and around the broad bowl to the tail",
+  it("த groups seven movements into four source-verified pen-down runs", () => {
+    expect(penLifts(DUCTUS["த"])).toBe(3);
+    expect(DUCTUS["த"].strokes).toHaveLength(4);
+    expect(DUCTUS["த"].strokes.map((stroke) => stroke.segments.map((segment) => segment.label))).toEqual([
+      ["climb the short left upright", "carry the top bar to the right"],
+      ["carry the short upper bar right", "curve down around the broad right bowl"],
+      ["turn around the compact left loop", "curl back to the central crossing"],
+      ["sweep the low tail left"],
     ]);
   });
 
@@ -6041,11 +6041,11 @@ describe("handwriting ductus", () => {
     expect(src.variation).toMatch(/left-to-right.*top-to-bottom.*varies by school.*continuous order.*Noto Sans Tamil/i);
   });
 
-  it("த's continuous order traces to Frame 1 of the UT Austin primer", () => {
+  it("த's four-run order traces to Frame 3 of the UT Austin primer", () => {
     const src = DUCTUS["த"].source;
-    expect(src.url).toContain("tamilscript/category/3-moduals/module-01");
-    expect(src.citation).toMatch(/Tamil Script Learners Manual.*Frame 1.*த/i);
-    expect(src.variation).toMatch(/left-to-right.*top-to-bottom.*varies by school.*continuous order.*Noto Sans Tamil/i);
+    expect(src.url).toContain("tamilscript/files/2009/08/hw_lettersinstructions.pdf");
+    expect(src.citation).toMatch(/Appendix I.*Frame 3.*த.*p\. 192/i);
+    expect(src.variation).toMatch(/Module 3 identifies.*dental stop.*final Frame 3 row.*four separate pen-down runs.*1–2.*upper frame.*3–4.*right bowl.*5–6.*left loop.*movement 7.*leftward tail.*varies by school.*four-run order.*Noto Sans Tamil/i);
   });
 
   it("ட's continuous order traces to Frame 1 of the UT Austin primer", () => {
