@@ -9069,12 +9069,15 @@ impl HtmlParser {
         let current_is_allowed =
             self.current_element_is("ruby") || (preserves_rtc && self.current_element_is("rtc"));
         if !current_is_allowed {
-            self.diagnostics.push(ParserDiagnostic::new(
-                "unexpected-ruby-annotation-start-tag",
-                format!(
-                    "start tag `<{incoming_name}>` was inserted while a non-ruby element remained current"
-                ),
-            ));
+            self.diagnostics.push(
+                ParserDiagnostic::new(
+                    "unexpected-ruby-annotation-start-tag",
+                    format!(
+                        "start tag `<{incoming_name}>` was inserted while a non-ruby element remained current"
+                    ),
+                )
+                .at_emission(self.current_token_emission_position),
+            );
         }
     }
 
@@ -27705,6 +27708,20 @@ mod tests {
         .at_emission(Some(start_tag_position_at(source, "nobr", occurrence)))
     }
 
+    fn unexpected_ruby_annotation_start_tag(
+        source: &str,
+        name: &str,
+        occurrence: usize,
+    ) -> ParserDiagnostic {
+        ParserDiagnostic::new(
+            "unexpected-ruby-annotation-start-tag",
+            format!(
+                "start tag `<{name}>` was inserted while a non-ruby element remained current"
+            ),
+        )
+        .at_emission(Some(start_tag_position_at(source, name, occurrence)))
+    }
+
     fn nested_form_start_tag(source: &str, occurrence: usize) -> ParserDiagnostic {
         ParserDiagnostic::new(
             "nested-form-start-tag",
@@ -35903,11 +35920,8 @@ mod tests {
             let output = parse_html_with_diagnostics(&source).unwrap();
             assert_eq!(
                 output.parser_diagnostics,
-                vec![ParserDiagnostic::new(
-                    "unexpected-ruby-annotation-start-tag",
-                    format!(
-                        "start tag `<{annotation}>` was inserted while a non-ruby element remained current"
-                    )
+                vec![unexpected_ruby_annotation_start_tag(
+                    &source, annotation, 0
                 )],
                 "source {source:?}"
             );
@@ -35956,16 +35970,11 @@ mod tests {
 
     #[test]
     fn ruby_annotation_starts_do_not_cross_non_implied_inline_nodes() {
-        let output = parse_html_with_diagnostics(
-            "<!doctype html><ruby><rb><em>base<rt>text</rt></em></rb></ruby>",
-        )
-        .unwrap();
+        let source = "<!doctype html><ruby><rb><em>base<rt>text</rt></em></rb></ruby>";
+        let output = parse_html_with_diagnostics(source).unwrap();
         assert_eq!(
             output.parser_diagnostics,
-            vec![ParserDiagnostic::new(
-                "unexpected-ruby-annotation-start-tag",
-                "start tag `<rt>` was inserted while a non-ruby element remained current"
-            )]
+            vec![unexpected_ruby_annotation_start_tag(source, "rt", 0)]
         );
 
         let ruby = element(&body(&output.document).children[0]);
@@ -35975,6 +35984,65 @@ mod tests {
         let rt = element(&em.children[1]);
         assert_eq!(rt.name, "rt");
         assert_eq!(rt.children, vec![Node::text("text")]);
+    }
+
+    #[test]
+    fn ruby_annotation_diagnostics_track_authored_token_boundaries() {
+        let source = "<!doctype html><!--é-->\r\n<ruby><div><rt></rt><rt></rt></div></ruby>";
+        let output = parse_html_with_diagnostics(source).unwrap();
+        assert_eq!(
+            output.parser_diagnostics,
+            vec![
+                unexpected_ruby_annotation_start_tag(source, "rt", 0),
+                unexpected_ruby_annotation_start_tag(source, "rt", 1),
+            ]
+        );
+
+        let fragment_source = "<ruby><div><rp></rp></div></ruby>";
+        let fragment =
+            parse_html_fragment_for_context_with_diagnostics(fragment_source, "div").unwrap();
+        assert_eq!(
+            fragment.parser_diagnostics,
+            vec![unexpected_ruby_annotation_start_tag(
+                fragment_source,
+                "rp",
+                0,
+            )]
+        );
+
+        let incomplete = parse_html_with_diagnostics("<!doctype html><ruby><div><rt").unwrap();
+        assert!(incomplete
+            .parser_diagnostics
+            .iter()
+            .all(|diagnostic| diagnostic.code != "unexpected-ruby-annotation-start-tag"));
+
+        let mut unpositioned = HtmlParser::with_body_fragment_options(HtmlParseOptions::default());
+        for token in [
+            Token::StartTag {
+                name: "ruby".to_string(),
+                attributes: Vec::new(),
+                self_closing: false,
+            },
+            Token::StartTag {
+                name: "div".to_string(),
+                attributes: Vec::new(),
+                self_closing: false,
+            },
+            Token::StartTag {
+                name: "rt".to_string(),
+                attributes: Vec::new(),
+                self_closing: false,
+            },
+            Token::Eof,
+        ] {
+            unpositioned.process_token(token);
+        }
+        let diagnostic = unpositioned
+            .diagnostics()
+            .iter()
+            .find(|diagnostic| diagnostic.code == "unexpected-ruby-annotation-start-tag")
+            .unwrap();
+        assert_eq!(diagnostic.position, None);
     }
 
     #[test]
