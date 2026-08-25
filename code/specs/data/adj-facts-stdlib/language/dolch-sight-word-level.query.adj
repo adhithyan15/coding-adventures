@@ -1,0 +1,17 @@
+% ============================================================================
+% dolch-sight-word-level.query.adj — worked recall over the
+% dolch-sight-word-level library.
+% ============================================================================
+% The shape a learner (or an LLM) produces to ANSWER "which Dolch reading
+% level is this sight word taught at?" (direct) or "which words are taught
+% at this Dolch level?" (reverse, many-answer) — it states no fact of its
+% own — it only `import`s the grounded table and asks binding queries.
+% ============================================================================
+
+import "dolch-sight-word-level.adj"
+
+? dolch_sight_word_level(the, $Level)          % expect pre_primer (direct)
+? dolch_sight_word_level($W, pre_primer)       % expect the ; to ; and ; a ; i (reverse, many-answer)
+? dolch_sight_word_level(would, $Level)        % expect second_grade (direct, a different level)
+? dolch_sight_word_level(you, $Level)          % expect abstain -- a REAL Dolch Pre-Primer word, but not one of this table's shipped first-five subset
+? dolch_sight_word_level(elephant, $Level)     % expect abstain -- not a Dolch word at all
