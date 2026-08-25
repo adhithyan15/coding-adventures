@@ -18,7 +18,7 @@ use diagram_ir::{
 };
 use std::collections::{BTreeSet, HashMap};
 
-pub const VERSION: &str = "0.16.0";
+pub const VERSION: &str = "0.17.0";
 
 // ── Constants ─────────────────────────────────────────────────────────────
 
@@ -335,7 +335,9 @@ fn layout_gantt(
 
     LayoutedTemporalDiagram {
         width: cw, height: y + 16.0,
-        accessibility_title: None, accessibility_description: None, items,
+        accessibility_title: diagram.accessibility_title.clone(),
+        accessibility_description: diagram.accessibility_description.clone(),
+        items,
     }
 }
 
@@ -549,6 +551,9 @@ mod tests {
             kind: TemporalKind::Gantt,
             title: Some("Project".into()),
             body: TemporalBody::Gantt(GanttDiagram {
+                title: Some("Project".into()),
+                accessibility_title: None,
+                accessibility_description: None,
                 date_format: "YYYY-MM-DD".into(),
                 sections: vec![GanttSection {
                     label: Some("Phase 1".into()),
@@ -601,7 +606,7 @@ mod tests {
 
     #[test]
     fn version_exists() {
-        assert_eq!(crate::VERSION, "0.16.0");
+        assert_eq!(crate::VERSION, "0.17.0");
     }
 
     #[test]
@@ -645,6 +650,22 @@ mod tests {
                 label == "Phase 1"
             } else { false }
         }));
+    }
+
+    #[test]
+    fn gantt_layout_preserves_accessibility_metadata() {
+        let mut diagram = simple_gantt();
+        let TemporalBody::Gantt(gantt) = &mut diagram.body else {
+            unreachable!();
+        };
+        gantt.accessibility_title = Some("Accessible project".into());
+        gantt.accessibility_description = Some("Two delivery tasks".into());
+        let layout = layout_temporal_diagram(&diagram, 800.0);
+        assert_eq!(layout.accessibility_title.as_deref(), Some("Accessible project"));
+        assert_eq!(
+            layout.accessibility_description.as_deref(),
+            Some("Two delivery tasks")
+        );
     }
 
     #[test]
