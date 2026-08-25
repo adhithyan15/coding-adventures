@@ -6632,6 +6632,29 @@ overlapping Rust WASM, ADJ, and Tamil commits to
 `b7bf7f6b1430de01855ea44831cddd4f767d229a`; the refreshed collision report is
 unchanged.
 
+The Swift repair has red-to-green evidence on that exact base: its focused
+regression first failed on the absent registry member and emitted Cabal decoy,
+then all 27 Swift build-tool tests passed. `Discovery.swift` retains 91.33%
+line coverage, `Hasher.swift` reaches 51.49%, and overall production line
+coverage is 47.24%. Focused cases prove exact lower-case exclusion, case- and
+near-name preservation, and source-hashing reuse. The neutral corpus validates
+111 cases and 269 files; 148 package-parity, capability, Haskell, OCaml, and
+conformance tests pass with two expected Windows symlink skips. The Go build
+tool passes its full test, vet, and trimpath build gates, and a forced Swift dry
+validation evaluates 45 Starlark BUILD files and reports all 165 Swift packages
+`WOULD-BUILD` with the orphan-crate check clean.
+
+Both package build fronts pass repeated clean-status runs, package metadata and
+the normal release build pass, the collision report is unchanged, and the
+487-owner, 744-edge graph remains complete and acyclic. The warnings-as-errors
+release variant reproduces only three pre-existing warnings in untouched
+`BuildTool.swift` and `Executor.swift`; Swift formatting similarly has no
+checked-in configuration and reports the package's existing style baseline.
+There are no external Swift dependencies, capability or runtime-authority
+changes, credential paths, or secret-like diff hits. An independent security
+review found no production blocker after its requested explicit case and
+Hasher assertions were added.
+
 ## Autonomous Loop Protocol
 
 Only one parity PR should be active at a time.
