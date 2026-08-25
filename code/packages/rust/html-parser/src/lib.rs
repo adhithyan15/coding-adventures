@@ -5520,10 +5520,13 @@ impl HtmlParser {
                 || self.document_has_non_frameset_compatible_body_content())
             && self.has_open_element("body")
         {
-            self.diagnostics.push(ParserDiagnostic::new(
-                "unexpected-frameset-start-tag",
-                "start tag `<frameset>` was ignored after body content",
-            ));
+            self.diagnostics.push(
+                ParserDiagnostic::new(
+                    "unexpected-frameset-start-tag",
+                    "start tag `<frameset>` was ignored after body content",
+                )
+                .at_emission(self.current_token_emission_position),
+            );
             return;
         }
 
@@ -27492,6 +27495,14 @@ mod tests {
         .at_emission(Some(start_tag_position_at(source, "frame", occurrence)))
     }
 
+    fn unexpected_frameset_start_tag(source: &str, occurrence: usize) -> ParserDiagnostic {
+        ParserDiagnostic::new(
+            "unexpected-frameset-start-tag",
+            "start tag `<frameset>` was ignored after body content",
+        )
+        .at_emission(Some(start_tag_position_at(source, "frameset", occurrence)))
+    }
+
     fn start_tag_in_template_column_group_recovery(
         source: &str,
         name: &str,
@@ -37903,10 +37914,7 @@ mod tests {
             let output = parse_html_with_diagnostics(source).unwrap();
             assert_eq!(
                 output.parser_diagnostics,
-                vec![ParserDiagnostic::new(
-                    "unexpected-frameset-start-tag",
-                    "start tag `<frameset>` was ignored after body content"
-                )],
+                vec![unexpected_frameset_start_tag(source, 0)],
                 "source {source:?}"
             );
             assert!(body(&output.document)
@@ -37914,6 +37922,69 @@ mod tests {
                 .iter()
                 .all(|node| !matches!(node, Node::Element(element) if element.name == "frameset")));
         }
+    }
+
+    #[test]
+    fn positions_frameset_start_tags_rejected_after_body_content() {
+        let source = "<!doctype html><body><frameset><!--é-->\r\n<frameset>";
+        let output = parse_html_with_diagnostics(source).unwrap();
+        let diagnostics = output
+            .parser_diagnostics
+            .iter()
+            .filter(|diagnostic| diagnostic.code == "unexpected-frameset-start-tag")
+            .collect::<Vec<_>>();
+        assert_eq!(
+            diagnostics,
+            vec![
+                &unexpected_frameset_start_tag(source, 0),
+                &unexpected_frameset_start_tag(source, 1),
+            ]
+        );
+
+        for source in ["X<frameset>", "<table><frameset>"] {
+            let output = parse_html_fragment_with_diagnostics(source).unwrap();
+            let diagnostic = output
+                .parser_diagnostics
+                .iter()
+                .find(|diagnostic| diagnostic.code == "unexpected-frameset-start-tag")
+                .unwrap();
+            assert_eq!(
+                diagnostic.position,
+                Some(start_tag_position(source, "frameset")),
+                "source {source:?}"
+            );
+        }
+
+        for source in [
+            "<!doctype html><frameset>",
+            "<!doctype html><template><frameset>",
+            "<!doctype html><svg><frameset>",
+            "<!doctype html><body><frameset",
+        ] {
+            let output = parse_html_with_diagnostics(source).unwrap();
+            assert!(
+                output
+                    .parser_diagnostics
+                    .iter()
+                    .all(|diagnostic| diagnostic.code != "unexpected-frameset-start-tag"),
+                "source {source:?}"
+            );
+        }
+
+        let mut unpositioned = HtmlParser::new();
+        for name in ["html", "body", "frameset"] {
+            unpositioned.process_token(Token::StartTag {
+                name: name.to_string(),
+                attributes: Vec::new(),
+                self_closing: false,
+            });
+        }
+        let diagnostic = unpositioned
+            .diagnostics()
+            .iter()
+            .find(|diagnostic| diagnostic.code == "unexpected-frameset-start-tag")
+            .unwrap();
+        assert_eq!(diagnostic.position, None);
     }
 
     #[test]
