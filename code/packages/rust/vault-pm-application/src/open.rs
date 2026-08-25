@@ -3228,15 +3228,14 @@ impl UnlockedVaultV1 {
     /// publishing a causal tombstone, and return the resulting durable
     /// active owner state.
     ///
-    /// `expected_revision` must name one of that item's *current*
-    /// candidates and at least one current candidate must be live; a
-    /// revision absent from the current catalog returns `NotFound`, and an
-    /// item with no live candidate at all (a lone tombstone, or every
-    /// candidate of a concurrent double-delete) returns `ConflictRequired`.
-    /// Otherwise this succeeds however many candidates are current: a
-    /// conflicted item is not a precondition failure any more, and the
-    /// resulting tombstone names *every* current candidate — live or
-    /// tombstone — as a causal parent (VLT-PM05 §13.8), the same
+    /// `expected_revision` must name that item's current *live* candidate; a
+    /// revision absent from the current catalog returns `NotFound`, and a
+    /// revision that names an already-tombstoned candidate (a lone
+    /// tombstone, or every candidate of a concurrent double-delete) returns
+    /// `ConflictRequired`. Otherwise this succeeds however many candidates
+    /// are current: a conflicted item is not a precondition failure any
+    /// more, and the resulting tombstone names *every* current candidate —
+    /// live or tombstone — as a causal parent (VLT-PM05 §13.8), the same
     /// multi-parent shape [`Self::resolve_item_conflict`] already uses to
     /// fold a conflict into one outcome. Advisory deletion and commit times
     /// are supplied separately and do not establish causality. The session

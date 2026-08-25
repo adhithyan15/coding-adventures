@@ -1693,15 +1693,21 @@ rather than the fix:
 
 **Fix.** `delete_item` (`mutation.rs`) no longer requires the item it is
 deleting to have exactly one current candidate. It still requires
-`expected_revision` to name a candidate that is current right now (the same
+`expected_revision` to name that item's current *live* candidate — the same
 freshness contract `replace_item`'s and `restore_item`'s own
-`expected_revision` already enforce) and requires at least one current
-candidate to be live — deleting an item with no live candidate at all (a
-lone tombstone, or, reachable only via a concurrent double-delete, every
+`expected_revision` already enforce, and, as a round-1 security review
+pointed out, a check the first draft of this fix accidentally loosened:
+that draft accepted `expected_revision` naming *any* current candidate of
+the item as long as *some other* current candidate was live, which let the
+audit event's recorded `selected_revision` name an already-dead sibling
+instead of the live content actually being destroyed. The corrected check
+requires the exact candidate `expected_revision` names to be live —
+deleting an item via a revision that is not itself a live candidate (a lone
+tombstone, or, reachable only via a concurrent double-delete, every
 candidate of a multi-way conflict) still returns `ConflictRequired`, exactly
-as before, because there is nothing live to delete. Once those two checks
-pass, the resulting tombstone names *every* current candidate — live or
-already-tombstone — as a causal parent:
+as before, because there is nothing live at that revision to delete. Once
+that check passes, the resulting tombstone names *every* current
+candidate — live or already-tombstone — as a causal parent:
 
 ```rust
 let causal_parents = candidates

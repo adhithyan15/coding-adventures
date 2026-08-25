@@ -940,12 +940,14 @@ pub(crate) fn attach_attachment(
 /// Delete the item `expected_revision` currently belongs to, whether it has
 /// one current candidate or several.
 ///
-/// `expected_revision` only has to name *a* candidate that is current right
-/// now — proof the caller observed live state, the same freshness contract
-/// [`replace_item`] and [`restore_item`] use their own `expected_revision`
-/// for. It no longer has to be the item's *only* candidate: every
-/// currently-live candidate becomes eligible, and deleting one deletes the
-/// whole item, closed conflict included.
+/// `expected_revision` must name the item's current *live* candidate — the
+/// same freshness contract [`replace_item`] and [`restore_item`] use their
+/// own `expected_revision` for: proof the caller actually observed the live
+/// revision it is asking to delete, not merely some candidate of an item
+/// that happens to have a live sibling. It no longer has to be the item's
+/// *only* candidate: a conflicted item is eligible too, and deleting it
+/// deletes the whole item, closed conflict included, regardless of which
+/// live candidate the caller named.
 ///
 /// # Why this is safe to relax
 ///
@@ -963,13 +965,14 @@ pub(crate) fn attach_attachment(
 ///
 /// # What still fails closed
 ///
-/// If no current candidate is live — the sole candidate is already a
-/// tombstone, or (reachable only via a concurrent double-delete) every
-/// candidate in a multi-way conflict is — there is nothing live to delete,
-/// and this returns `ConflictRequired` exactly as it always has for a lone
-/// tombstoned candidate. This is unrelated to VLT-PM05 §13.8's fix: that gap
-/// is about a *live* record this crate cannot fully handle, not about a
-/// record that is already gone.
+/// If `expected_revision` does not name a current *live* candidate — it is
+/// absent from the current candidate set entirely, or it names a candidate
+/// that is already a tombstone — this returns `ConflictRequired` exactly as
+/// it always has for a lone tombstoned candidate. This includes the case
+/// where every current candidate is a tombstone (reachable only via a
+/// concurrent double-delete): there is nothing live to delete, and this is
+/// unrelated to VLT-PM05 §13.8's fix, which is about a *live* record this
+/// crate cannot fully handle, not about a record that is already gone.
 #[allow(clippy::too_many_arguments)]
 pub(crate) fn delete_item(
     active: &ActiveStateV1,
@@ -995,10 +998,18 @@ pub(crate) fn delete_item(
                 .any(|candidate| candidate.revision_id() == expected_revision)
         })
         .ok_or(ApplicationError::NotFound)?;
-    if !candidates
-        .iter()
-        .any(|candidate| matches!(candidate.state(), ItemState::Live(_)))
-    {
+    // `expected_revision` itself must be the current *live* candidate it
+    // names — not merely a candidate of an item that happens to have some
+    // other live sibling. This keeps `expected_revision` an honest
+    // freshness token (the caller must have actually observed the live
+    // revision it is asking to delete) and keeps the `ItemDelete` audit
+    // event's `selected_revision` naming the real content being destroyed,
+    // never an already-dead sibling that merely shares the item.
+    let expected_is_live = candidates.iter().any(|candidate| {
+        candidate.revision_id() == expected_revision
+            && matches!(candidate.state(), ItemState::Live(_))
+    });
+    if !expected_is_live {
         return Err(ApplicationError::ConflictRequired);
     }
     let causal_parents = candidates
