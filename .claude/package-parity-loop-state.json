@@ -11,7 +11,12 @@
     "selection_rule": "host-security, credential, native-runtime, and external-approval work may inform classification but is never selected by this parity loop",
     "excluded_delivery_classes": ["onvif", "host-security-hardening", "native-runtime", "external-approval"]
   },
-  "active_pr": null,
+  "active_pr": {
+    "number": 12878,
+    "url": "https://github.com/adhithyan15/coding-adventures/pull/12878",
+    "branch": "codex/build-tool-haskell-tracked-artifact-validation-conformance",
+    "status": "open"
+  },
   "last_inventory": {
     "revision": "0ed3d402a2bf61424032ad34f88223348b915a3c",
     "schema_version": 3,
@@ -5246,7 +5251,7 @@
     {
       "id": "build-tool-haskell-tracked-artifact-validation-conformance",
       "title": "Make the Haskell build tool consume tracked-artifact validation",
-      "status": "in-progress",
+      "status": "pr-open",
       "depends_on": [
         "build-tool-tracked-artifact-validation-corpus",
         "build-tool-tracked-artifact-unicode-cross-runtime-corpus-hardening",
@@ -5254,7 +5259,10 @@
         "build-tool-tracked-artifact-unicode-version-contract"
       ],
       "branch": "codex/build-tool-haskell-tracked-artifact-validation-conformance",
-      "pr_number": null,
+      "pr_number": 12878,
+      "pr_url": "https://github.com/adhithyan15/coding-adventures/pull/12878",
+      "opened_at": "2026-08-25T21:52:43Z",
+      "opened_revision": "af4d907c1832402c71978ee71c52d958dac9662b",
       "selection_revision": "0ed3d402a2bf61424032ad34f88223348b915a3c",
       "selection_notes": "Selected only after PR #12862 completed all 35 terminal acceptable checks and GitHub merged reviewed head e5ba227fc3a58a6ebac8ce08e0b32169ac141079 through squash auto-merge as 0ed3d402a2bf61424032ad34f88223348b915a3c at 2026-08-25T20:44:39Z without a manual merge command. The collision-checked exact-main schema-3 report remains 15 established lanes, 1,373 implementation identities, 4,566 slots, 175 high-consensus packages with 276 gaps, 910 singletons with 12,740 gaps, 721 Rust singletons, zero canonical collisions, and zero unknown buckets; OCaml remains correctly emerging at zero packages. Every intervening commit is classified before selection: Gujarati R3/R4 work remains curriculum and generated TypeScript data; nested-anchor diagnostics remain inside the HTML frontend owner; Java method/call lowering extends the JV02 neutral and lane owners; the long-vowel ADJ corpus extends existing fact and adj-lang-cli harness owners; signed-neutral ALGOL writes remain inside the ALGOL IIR owners; completed Mermaid XY compatibility extends the chart corpus owner; and i16x8 relaxed Q15 multiplication extends the registered relaxed-SIMD neutral/parity owners plus existing WAST/corpus provenance owners. No commit adds or removes a package identity or BUILD/build-tool marker. All four Haskell dependencies are merged. Haskell is the widest remaining tracked-artifact lane at 204 reported packages, ahead of Swift at 161. It directly unlocks the Haskell orphan consumer and advances both tracked-artifact and orphan completion umbrellas, giving it more dependency leverage than any ready orphan-only child. Adding emitted-Haskell verification to the excluded generator-host owner raises that leverage without assigning native authority to the pure validator. The expected 13 Haskell validator, generated Unicode, Cabal/package metadata, generator/test, fixture README, license, tests/docs, CI, state, and roadmap paths have zero exact overlap across all ten live open PRs; the target branch and prior PR were absent locally and remotely before creating the fresh worktree and branch. Perl, Lua, Elixir, and Ruby orphan validation are ready but narrower. The strategically broader OCaml process-free substrate and extra-CI corpus remain collision-unsafe while PRs #12149 and #12162 own required Go entry-point, validator, CI, or Swift surfaces.",
       "implementation_revision": "d9e650fe507a7185dc31d68711fe5b1c0940277b",
@@ -5263,6 +5271,7 @@
       "rebase_notes": "Rebased without conflict onto exact origin/main 89a236a69a925673b734cacf07a1ebca4024205d after classifying every intervening commit. Grouped ALGOL selector identity remains inside the existing ALGOL IIR owner; Tamil dependent long-i, Gujarati R4 bridge B, suffix-meaning ADJ work, and the later suffix-meaning thread-ledger update remain curriculum, generated-language-data, or adjacent automation-state surfaces; relaxed SIMD min/max stays inside the registered relaxed-SIMD, WAST-parser, conformance, and corpus-host owners; both HTML table-position diagnostic commits stay inside html-frontend-portable-conformance. The first Mermaid Gantt grammar/parser/IR/layout/paint pipeline was newly unowned, so mermaid-gantt-chart-portable-conformance and its dependent established-lane parity umbrella were added before publication. No commit adds or removes a package identity or BUILD/build-tool marker, and none overlaps the Haskell tranche. Full Haskell tests, exact emitted-Haskell Unicode vectors, 29 generator tests, neutral corpus, collision report, YAML/JSON, HLint delta, Cabal metadata, diff checks, and a fresh 207-package Go-oracle Haskell plan pass after the rebases and review fix.",
       "final_review_revision": "c10419fb572795a050533ca7b48831172bcb9c0c",
       "final_review_notes": "Independent generator and CI security review passed the exact emitted-vector implementation, pinned action/toolchain objects, package-database and environment isolation, bounded streams, process-tree cleanup, Unicode provenance, license, and read-only gate without a finding. Independent adapter review found that the first resolver fixture repair incorrectly removed ambiguous multi-Cabal and duplicate-Dart-name packages from the graph. The final repair keeps every discovered package node, suppresses only ambiguous manifest aliases and dependencies, preserves Haskell directory aliases, and strengthens node and level assertions in the shared Haskell/Dart resolver tests; all 51 Haskell examples and zero-new-hint HLint comparison pass afterward. The final ownership audit found the new Mermaid Gantt pipeline and its two owners were registered, confirmed zero exact-path overlap across all seven then-live PRs, and found no other unowned or publication defect.",
+      "publication_notes": "Opened ready-for-review PR #12878 from clean validated head af4d907c1832402c71978ee71c52d958dac9662b after a normal first push. Immediately before publication, exact origin/main remained 89a236a69a925673b734cacf07a1ebca4024205d, the target remote branch and prior PR were absent, and all nine live open PRs had zero exact overlap across the 14 changed paths. GitHub reports the PR non-draft and mergeable, currently blocked only by queued or in-progress checks including the new required Unicode 17 generated Haskell conformance job; auto-merge remains disabled until every required check is terminal and acceptable and no merge conflict exists.",
       "notes": "Consume the closed process-free tracked-artifact snapshot and diagnostics in the Haskell engine without adding Git, filesystem, or process authority."
     },
     {
