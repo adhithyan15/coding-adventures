@@ -1,0 +1,18 @@
+{
+  "id": "GU-EXT-021-R4-BRIDGE-A",
+  "stage": "pre-A1",
+  "kind": "required",
+  "category": "consolidation",
+  "canDo": "I can retrieve five doorway forms at their fourth spacing window and independently read and write the name exchange after a long interval.",
+  "prerequisites": [
+    "GU-EXT-020-DOORWAY-DURABLE-RETRIEVAL"
+  ],
+  "lessons": [
+    "GU-R15-u-matra-r4",
+    "GU-R15-chha-r4",
+    "GU-R15-ka-r4",
+    "GU-R15-nna-r4",
+    "GU-R15-sha-r4",
+    "GU-R15-name-exchange-r3"
+  ]
+}

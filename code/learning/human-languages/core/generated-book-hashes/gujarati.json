@@ -204,6 +204,20 @@
         "GU-C12-naak"
       ],
       "tex": "gujarati/book/chapters/ch14-face-parts.tex"
+    },
+    {
+      "language": "gujarati",
+      "chapter": 15,
+      "sourceHash": "fnv1a64:f46f4ccfdc6bc558",
+      "lessonIds": [
+        "GU-R15-u-matra-r4",
+        "GU-R15-chha-r4",
+        "GU-R15-ka-r4",
+        "GU-R15-nna-r4",
+        "GU-R15-sha-r4",
+        "GU-R15-name-exchange-r3"
+      ],
+      "tex": "gujarati/book/chapters/ch15-r4-script-names.tex"
     }
   ]
 }
