@@ -32,15 +32,17 @@ export default defineConfig({
               // to exactly 400 batches -- one over the 399-request ceiling in
               // scripts/check-bundle.mjs. Raising that ceiling would have bought
               // one PR of room and made the app slower; raising the cap fixes the
-              // shape. 48 kB gives 262 batches for the same 8.2 MB, a 35% cut in
-              // requests, with the largest batch at ~47 kB -- still a small lazy
-              // fetch, and now with headroom for a corpus that grows every day.
+              // shape. Keep the grouping cap aligned with the independently
+              // enforced 49 kB emitted-batch ceiling: that lets Rolldown fill the
+              // final batch for each language instead of stranding usable bytes
+              // in undersized tail chunks, without weakening either request or
+              // response-size gates.
               name(moduleId) {
                 const normalized = moduleId.replaceAll("\\", "/");
                 const match = /human-languages\/([^/]+)\/lessons\//.exec(normalized);
                 return match?.[1] ? `lessons-${match[1]}` : null;
               },
-              maxSize: 48_000,
+              maxSize: 49_000,
             },
             {
               name: "script-data",
