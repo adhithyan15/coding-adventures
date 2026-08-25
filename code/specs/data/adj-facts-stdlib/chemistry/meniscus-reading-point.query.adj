@@ -1,0 +1,21 @@
+% ============================================================================
+% meniscus-reading-point.query.adj — worked recall over the chemistry
+% meniscus-reading-point library.
+% ============================================================================
+% The shape a learner (or an LLM) produces to ANSWER "which point of a
+% concave meniscus do you read?" (direct binding) or "which meniscus shape
+% is read at its lowest point?" (reverse binding) — it states no chemistry
+% fact of its own, it only `import`s the grounded table and asks binding
+% queries. The third and fourth queries run the relation BACKWARD. The
+% final query demonstrates honest abstention: a perfectly `flat` liquid
+% surface is never named as a real meniscus shape by the cited NIST
+% document, so recalling it abstains rather than inventing a reading point.
+% ============================================================================
+
+import "meniscus-reading-point.adj"
+
+? meniscus_reading_point(concave, $Point)          % expect lowest_point (direct)
+? meniscus_reading_point(convex, $Point)            % expect highest_point (direct)
+? meniscus_reading_point($Shape, lowest_point)       % expect concave (reverse)
+? meniscus_reading_point($Shape, highest_point)      % expect convex (reverse)
+? meniscus_reading_point(flat, $Point)               % expect abstain -- the source names only concave and convex meniscus shapes

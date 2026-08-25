@@ -1,0 +1,117 @@
+% ============================================================================
+% meniscus-reading-point — for each of the two basic shapes a liquid's
+% meniscus can take inside a laboratory measuring vessel (concave or convex),
+% WHICH point of its curve a scientist actually reads to take the
+% measurement, a fresh WebFetch-sourced NIST table (adj-facts-stdlib,
+% CHEMISTRY). Grounds the "observation and measurement" Major Gap
+% ADJ-STDLIB-COVERAGE.md §5.1/§5.2 names for K-8 science — the SECOND
+% instance of that gap (after `chemistry/measuring-tool-si-unit.adj`), and
+% the first to ground it with a fresh source rather than composing two
+% already-shipped tables (composition was confirmed exhaustively dry for
+% this gap two sessions prior).
+% ============================================================================
+% `chemistry/measuring-tool-si-unit.adj` already tables WHICH internationally
+% standardized SI unit a lab tool's own reading is expressed in (a
+% tool-to-unit mapping); `chemistry/measuring-tools.adj` already tables WHICH
+% quantity a tool measures. Neither touches a genuinely different axis of
+% "observation and measurement": once you have the right tool pointed at the
+% right quantity, HOW do you actually read its scale correctly? For any
+% liquid held in a narrow tube (a graduated cylinder, a burette, a
+% volumetric flask), surface tension pulls the liquid's surface into a
+% curve — a meniscus — and that curve is not flat, so "read the number where
+% the liquid's surface is" is ambiguous until you know WHICH point of the
+% curve counts. NIST's own "Good Measurement Practice for Method of Reading
+% a Meniscus" (GMP 3, a National Institute of Standards and Technology
+% Interagency Report, a source never before cited in this stdlib) states the
+% rule for each of the two shapes directly, in two back-to-back paragraphs:
+%
+%   "The meniscus of most liquids used in volumetric calibrations is
+%    concave-up, with the lowest point in the center that is used to
+%    determine the meniscus reading."
+%
+%   "The meniscus formed by a non-wetting liquid, such as mercury (Hg), is
+%    convex with the highest point in the center and is no longer regularly
+%    used for volumetric calibrations. In the case of a convex meniscus, the
+%    highest point is used to make the reading."
+%
+% Recall is a binding query:
+%
+%     ? meniscus_reading_point(concave, $Point)   % lowest_point
+%     ? meniscus_reading_point(convex, $Point)    % highest_point
+%
+% This is a native `table` (ADJ-TABLES RS-5): each `row` lowers to a ground
+% relation `meniscus_reading_point(meniscus_shape, reading_point)` carrying
+% the citation, so the lookups above are ordinary SLD binding queries — the
+% engine returns the reading point WITH its source, on the CPU, with zero
+% model calls, and abstains on a meniscus shape the source does not name.
+% The query also runs BACKWARD — bind a reading point and recall which shape
+% it belongs to:
+%
+%     ? meniscus_reading_point($Shape, lowest_point)    % concave
+%     ? meniscus_reading_point($Shape, highest_point)   % convex
+%
+% The two meniscus shapes and their reading point, as a little truth table:
+%
+%     meniscus_shape   reading_point    the source's own words
+%     ---------------  ---------------  --------------------------------------
+%     concave          lowest_point     "concave-up, with the lowest point
+%                                        ... used to determine the reading"
+%     convex           highest_point    "convex with the highest point in
+%                                        the center ... the highest point is
+%                                        used to make the reading"
+%
+% WHY this is a genuine "observation and measurement" fact, not a
+% coincidental relabeling of anything already shipped: reading a meniscus
+% wrong (top instead of bottom, or vice versa) is a real, named source of
+% systematic measurement error — the SAME NIST document devotes its later
+% sections to quantifying "Uncertainty and Error Analysis in Meniscus
+% Readings" precisely because this convention is easy to get backwards. That
+% is a different competency than knowing WHICH tool measures WHICH quantity
+% (`measuring-tools.adj`) or WHICH SI unit a tool's reading reduces to
+% (`measuring-tool-si-unit.adj`) — it is the actual reading TECHNIQUE, the
+% step between "the liquid is somewhere near the 50 mL line" and "the volume
+% is 50.0 mL."
+%
+% HONEST ABSTENTION — the crux of why this table is narrow rather than
+% overreaching: the cited document discusses exactly two meniscus shapes,
+% concave and convex, and states no third shape (a "flat" or perfectly level
+% liquid surface is never named as a real case this document covers). A
+% query for a meniscus shape the source does not name — e.g. `flat` —
+% honestly abstains rather than inventing a reading point. The document's
+% own named EXAMPLE of a convex-meniscus liquid, mercury, is deliberately
+% NOT promoted to its own row or column here: the two rows above are keyed
+% on the SHAPE (concave/convex), the axis the source's own two topic
+% sentences state the reading rule against, not on a specific liquid — the
+% document itself notes the convex/mercury case "is no longer regularly
+% used for volumetric calibrations," so a scientist reading a modern
+% graduated cylinder or burette almost always faces the concave case, and
+% the mercury example is kept in this header's prose (and in the `cites`
+% span below, verbatim) rather than turned into unstated new content.
+%
+% Provenance: WebFetch-verified directly against the raw document text
+% (a NIST Interagency Report PDF, not an HTML page) before writing this
+% file, confirming both quoted spans byte-for-byte, including the absence
+% of any third meniscus shape anywhere in the document's seven pages.
+% `https://www.nist.gov/system/files/documents/2019/05/14/gmp-3-reading-meniscus-20190507.pdf`
+% ("GMP 3 – Good Measurement Practice for Method of Reading a Meniscus
+% Using Water or Other Wetting Liquid", NIST Interagency Report
+% NIST.IR.7383-2019, DOI https://doi.org/10.6028/NIST.IR.7383-2019) — a
+% nist.gov (.gov) primary government reference, the same standing this
+% stdlib already gives `metrology/si-base-units.adj`'s NIST citation.
+% `trust authoritative`. Nothing here is asserted from memory. (See
+% ../README.md; feedback_nothing_human_authored,
+% feedback_adj_only_shipped_artifacts, feedback_no_byte_arithmetic_for_llm.)
+% ============================================================================
+
+table meniscus_reading_point {
+    columns meniscus_shape, reading_point
+
+    row (concave, lowest_point)
+    row (convex, highest_point)
+
+    source "The meniscus of most liquids used in volumetric calibrations is concave-up, with the lowest point in the center that is used to determine the meniscus reading."
+    locator "https://www.nist.gov/system/files/documents/2019/05/14/gmp-3-reading-meniscus-20190507.pdf"
+    trust authoritative
+
+    cites "The meniscus formed by a non-wetting liquid, such as mercury (Hg), is convex with the highest point in the center and is no longer regularly used for volumetric calibrations. In the case of a convex meniscus, the highest point is used to make the reading." locator "https://www.nist.gov/system/files/documents/2019/05/14/gmp-3-reading-meniscus-20190507.pdf"
+}
