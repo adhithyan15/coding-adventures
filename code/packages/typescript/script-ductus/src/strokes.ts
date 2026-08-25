@@ -2266,6 +2266,65 @@ export const DUCTUS: Record<string, LetterDuctus> = {
     ],
     source: chineseCharacterSource("小"),
   },
+  [ductusKey("chinese", "中")]: {
+    script: "chinese",
+    glyph: "中",
+    strokes: [
+      simpleStroke("draw the left vertical shù stroke from top to bottom", [
+        { x: 152, y: 616 }, { x: 152, y: 520 }, { x: 152, y: 424 },
+        { x: 152, y: 328 }, { x: 152, y: 232 },
+      ]),
+      simpleStroke("lift, then draw the top horizontal left-to-right and turn down the right side without lifting", [
+        { x: 132, y: 624 }, { x: 320, y: 624 }, { x: 504, y: 624 },
+        { x: 688, y: 624 }, { x: 864, y: 624 }, { x: 864, y: 520 },
+        { x: 864, y: 416 }, { x: 864, y: 312 }, { x: 864, y: 220 },
+      ]),
+      simpleStroke("lift, then close the box with the bottom horizontal héng stroke left-to-right", [
+        { x: 152, y: 284 }, { x: 320, y: 284 }, { x: 488, y: 284 },
+        { x: 656, y: 284 }, { x: 824, y: 284 },
+      ]),
+      simpleStroke("lift, then draw the central vertical shù stroke from top through the box to the base", [
+        { x: 496, y: 824 }, { x: 496, y: 640 }, { x: 496, y: 456 },
+        { x: 496, y: 272 }, { x: 496, y: 88 }, { x: 496, y: -48 },
+      ]),
+    ],
+    source: chineseCharacterSource("中"),
+  },
+  [ductusKey("chinese", "同")]: {
+    script: "chinese",
+    glyph: "同",
+    strokes: [
+      simpleStroke("draw the outer left vertical shù stroke from top to bottom", [
+        { x: 152, y: 744 }, { x: 152, y: 584 }, { x: 152, y: 424 },
+        { x: 152, y: 264 }, { x: 152, y: 104 }, { x: 152, y: -32 },
+      ]),
+      simpleStroke("lift, then draw the outer top horizontal and turn down the right side without lifting", [
+        { x: 124, y: 752 }, { x: 312, y: 752 }, { x: 500, y: 752 },
+        { x: 688, y: 752 }, { x: 877, y: 752 }, { x: 877, y: 584 },
+        { x: 877, y: 416 }, { x: 877, y: 248 }, { x: 877, y: 48 },
+        { x: 870, y: -16 }, { x: 840, y: -38 }, { x: 780, y: -45 },
+        { x: 720, y: -42 },
+      ]),
+      simpleStroke("lift, then draw the short inner horizontal héng stroke left-to-right", [
+        { x: 280, y: 580 }, { x: 392, y: 580 }, { x: 504, y: 580 },
+        { x: 616, y: 580 }, { x: 720, y: 580 },
+      ]),
+      simpleStroke("lift, then draw 口's left vertical", [
+        { x: 336, y: 408 }, { x: 336, y: 312 }, { x: 336, y: 216 },
+        { x: 336, y: 120 },
+      ]),
+      simpleStroke("lift, then draw 口's top horizontal and turn down its right side without lifting", [
+        { x: 352, y: 408 }, { x: 432, y: 408 }, { x: 512, y: 408 },
+        { x: 592, y: 408 }, { x: 672, y: 408 }, { x: 672, y: 312 },
+        { x: 672, y: 216 }, { x: 672, y: 136 },
+      ]),
+      simpleStroke("lift, then close 口 with its bottom horizontal left-to-right", [
+        { x: 336, y: 152 }, { x: 420, y: 152 }, { x: 504, y: 152 },
+        { x: 588, y: 152 }, { x: 672, y: 152 },
+      ]),
+    ],
+    source: chineseCharacterSource("同"),
+  },
   [ductusKey("chinese", "学")]: {
     script: "chinese",
     glyph: "学",
