@@ -58,7 +58,7 @@
     {
       "language": "gujarati",
       "chapter": 3,
-      "sourceHash": "fnv1a64:d894b8f5794d3b01",
+      "sourceHash": "fnv1a64:1a6b2afdffc13f91",
       "lessonIds": [
         "GU-W03-ja",
         "GU-W03-o-matra",
@@ -68,25 +68,27 @@
         "GU-W03-chha",
         "GU-W03-ka",
         "GU-W03-nna",
-        "GU-W03-sha"
+        "GU-W03-sha",
+        "GU-R03-doorway-three-r1"
       ],
       "voiceLessons": 0,
       "drivablePrefix": 0,
       "text": "gujarati/narration/ch03.txt",
       "json": "gujarati/narration/ch03.json",
-      "textHash": "fnv1a64:92a94ed25920de8c",
-      "jsonHash": "fnv1a64:f5534ffbfad1068f"
+      "textHash": "fnv1a64:8b5d12a964deabae",
+      "jsonHash": "fnv1a64:ddb871c28d594fca"
     },
     {
       "language": "gujarati",
       "chapter": 4,
-      "sourceHash": "fnv1a64:8435a8e3cc0323a4",
+      "sourceHash": "fnv1a64:b8a36b9f1b2be367",
       "lessonIds": [
         "GU-C02-naam",
         "GU-C02-maarun",
         "GU-C02-chhe",
         "GU-C02-maarun-naam-chhe",
         "GU-C02-anand",
+        "GU-R04-doorway-nine-r2",
         "GU-C02-tu-tame",
         "GU-C02-shun",
         "GU-C02-tamarun-naam-shun-chhe",
@@ -96,8 +98,8 @@
       "drivablePrefix": 0,
       "text": "gujarati/narration/ch04.txt",
       "json": "gujarati/narration/ch04.json",
-      "textHash": "fnv1a64:6f2773122b3ff731",
-      "jsonHash": "fnv1a64:fa921652896a932a"
+      "textHash": "fnv1a64:e198c2810f3f4393",
+      "jsonHash": "fnv1a64:138b5b03c6363bc6"
     },
     {
       "language": "gujarati",

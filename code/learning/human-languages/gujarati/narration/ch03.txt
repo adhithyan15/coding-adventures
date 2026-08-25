@@ -1,8 +1,8 @@
 Gujarati, chapter 3: Nine Doorway Forms.
-9 lessons. The first lesson already needs your eyes or your hands, so save this one for when you have stopped.
+10 lessons. The first lesson already needs your eyes or your hands, so save this one for when you have stopped.
 
 
-Lesson 1 of 9.
+Lesson 1 of 10.
 જ — the consonant ja.
 
 Before we start: this one needs your hands, so it is not a driving lesson. You will want a pen and something to write on and your eyes, for letter shapes on the page. You can listen to everything else now — leave the section called Script — meet one form until you have stopped, and I will say so again when we reach it.
@@ -30,7 +30,7 @@ Name the form, its position or main landmark, and its pen-lift count.
 Sources: Gujarati Alphabet Writing Practice and the Unicode Gujarati chart.
 
 
-Lesson 2 of 9.
+Lesson 2 of 10.
 ો (-o) — the attached vowel sign o.
 
 Before we start: this one needs your hands, so it is not a driving lesson. You will want a pen and something to write on and your eyes, for letter shapes on the page. You can listen to everything else now — leave the section called Script — meet one form until you have stopped, and I will say so again when we reach it.
@@ -58,7 +58,7 @@ Name the form, its position or main landmark, and its pen-lift count.
 Sources: Gujarati Alphabet Writing Practice and the Unicode Gujarati chart.
 
 
-Lesson 3 of 9.
+Lesson 3 of 10.
 ં (ṃ) — the nasal mark anusvara.
 
 Before we start: this one needs your hands, so it is not a driving lesson. You will want a pen and something to write on and your eyes, for letter shapes on the page. You can listen to everything else now — leave the section called Script — meet one form until you have stopped, and I will say so again when we reach it.
@@ -86,7 +86,7 @@ Name the form, its position or main landmark, and its pen-lift count.
 Sources: Gujarati Alphabet Writing Practice and the Unicode Gujarati chart.
 
 
-Lesson 4 of 9.
+Lesson 4 of 10.
 ી (-ī) — the attached long-i vowel sign.
 
 Before we start: this one needs your hands, so it is not a driving lesson. You will want a pen and something to write on and your eyes, for letter shapes on the page. You can listen to everything else now — leave the section called Script — meet one form until you have stopped, and I will say so again when we reach it.
@@ -114,7 +114,7 @@ Name the form, its position or main landmark, and its pen-lift count.
 Sources: Gujarati Alphabet Writing Practice and the Unicode Gujarati chart.
 
 
-Lesson 5 of 9.
+Lesson 5 of 10.
 ુ — the attached short-u vowel sign.
 
 Before we start: this one needs your hands, so it is not a driving lesson. You will want a pen and something to write on and your eyes, for letter shapes on the page. You can listen to everything else now — leave the section called Script — meet one form until you have stopped, and I will say so again when we reach it.
@@ -142,7 +142,7 @@ Name the form, its position or main landmark, and its pen-lift count.
 Sources: Gujarati Alphabet Writing Practice and the Unicode Gujarati chart.
 
 
-Lesson 6 of 9.
+Lesson 6 of 10.
 છ — the consonant chha.
 
 Before we start: this one needs your hands, so it is not a driving lesson. You will want a pen and something to write on and your eyes, for letter shapes on the page. You can listen to everything else now — leave the section called Script — meet one form until you have stopped, and I will say so again when we reach it.
@@ -170,7 +170,7 @@ Name the form, its position or main landmark, and its pen-lift count.
 Sources: Gujarati Alphabet Writing Practice and the Unicode Gujarati chart.
 
 
-Lesson 7 of 9.
+Lesson 7 of 10.
 ક — the consonant ka.
 
 Before we start: this one needs your hands, so it is not a driving lesson. You will want a pen and something to write on and your eyes, for letter shapes on the page. You can listen to everything else now — leave the section called Script — meet one form until you have stopped, and I will say so again when we reach it.
@@ -198,7 +198,7 @@ Name the form, its position or main landmark, and its pen-lift count.
 Sources: Gujarati Alphabet Writing Practice and the Unicode Gujarati chart.
 
 
-Lesson 8 of 9.
+Lesson 8 of 10.
 ણ (ṇa) — the retroflex consonant nna.
 
 Before we start: this one needs your hands, so it is not a driving lesson. You will want a pen and something to write on and your eyes, for letter shapes on the page. You can listen to everything else now — leave the section called Script — meet one form until you have stopped, and I will say so again when we reach it.
@@ -226,7 +226,7 @@ Name the form, its position or main landmark, and its pen-lift count.
 Sources: Gujarati Alphabet Writing Practice and the Unicode Gujarati chart.
 
 
-Lesson 9 of 9.
+Lesson 9 of 10.
 શ — the consonant sha.
 
 Before we start: this one needs your hands, so it is not a driving lesson. You will want a pen and something to write on and your eyes, for letter shapes on the page. You can listen to everything else now — leave the section called Script — meet one form until you have stopped, and I will say so again when we reach it.
@@ -260,3 +260,26 @@ Wrap-up Recall.
 [pause 3 seconds]
 Name the form, its position or main landmark, and its pen-lift count.
 Sources: Gujarati Alphabet Writing Practice and the Unicode Gujarati chart.
+
+
+Lesson 10 of 10.
+ક — ણ (ṇa) — શ (ka — retroflex nna — sha): the last three return.
+
+Before we start: this one needs your hands, so it is not a driving lesson. You will want a pen and something to write on. You can listen to all of it now and come back to the parts that need looking at once you have stopped.
+
+Warm-up.
+Keep the three cards visible. Point to ક, ણ (ṇa), and શ as you say ka, retroflex nna, and sha. Notice only one contrast at a time: open bowl, hooked bowl, then looped body.
+
+Guided Practice.
+Read the row once from left to right. A correct shape name earns the reading point; a written answer cannot replace it.
+[question — say your answer, then pause 20 seconds]
+Read these three forms aloud in order: ક (ka) ણ (ṇa) શ (sha).
+
+Writing — from sound.
+Cover the row. Write ka, retroflex nna, and sha from the three spoken cues. Check reading and writing separately; stop after one focused repair.
+[question — say your answer, then pause 30 seconds]
+Cover every model. Write from these sound cues: ka, retroflex nna, sha.
+
+Wrap-up Recall.
+[pause 3 seconds]
+Which form has the small upper loop? Write it once. (શ (sha).)
