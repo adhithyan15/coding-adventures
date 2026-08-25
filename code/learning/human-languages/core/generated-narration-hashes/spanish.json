@@ -5336,7 +5336,7 @@
     {
       "language": "spanish",
       "chapter": 349,
-      "sourceHash": "fnv1a64:93267b1fde8627ad",
+      "sourceHash": "fnv1a64:8f73341b9aeaf9c5",
       "lessonIds": [
         "ES-C349-jornada",
         "ES-C349-decada",
@@ -5349,7 +5349,7 @@
       "text": "spanish/narration/ch349.txt",
       "json": "spanish/narration/ch349.json",
       "textHash": "fnv1a64:573a8c24be52efdc",
-      "jsonHash": "fnv1a64:fea3c261af0ad3bd"
+      "jsonHash": "fnv1a64:71d59fb86aaf3295"
     },
     {
       "language": "spanish",

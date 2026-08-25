@@ -7,7 +7,7 @@ chapter: 349
 type: word
 headword: la agenda
 gloss: the diary, the schedule — Latin agenda, the things that must be done, from agere to drive; English agent, agile and act come off the same verb
-concept_tag: ES-CLOCK-SCHEDULE
+concept_tag: ES-CLOCK-DIARY
 prerequisites: [ES-C349-aniversario]
 sounds: [vowel-a, j-jota, nasal-n, stress-penultimate]
 roots: [agenda-latin, agere-latin]
