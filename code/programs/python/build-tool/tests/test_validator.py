@@ -253,6 +253,8 @@ def test_validate_tracked_artifacts_consumes_shared_cases(case_name):
         ("/absolute/file", "ABSOLUTE"),
         ("C:/drive/file", "DRIVE_QUALIFIED"),
         ("code//empty/file", "EMPTY_SEGMENT"),
+        ("code/trailing/", "EMPTY_SEGMENT"),
+        ("code\\trailing\\", "EMPTY_SEGMENT"),
         ("code/bad?/file", "UNSAFE_CHARACTER"),
         ("code/../traversal", "DOT_SEGMENT"),
         ("code/trailing./file", "TRAILING_DOT_OR_SPACE"),

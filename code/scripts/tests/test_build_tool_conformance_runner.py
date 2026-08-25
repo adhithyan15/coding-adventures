@@ -935,6 +935,8 @@ class PureDomainValidationTests(unittest.TestCase):
             "/code/file": "ABSOLUTE",
             "C:\\code\\file": "DRIVE_QUALIFIED",
             "code//file": "EMPTY_SEGMENT",
+            "code/trailing/": "EMPTY_SEGMENT",
+            "code\\trailing\\": "EMPTY_SEGMENT",
             "code/../file": "DOT_SEGMENT",
             "code/file.": "TRAILING_DOT_OR_SPACE",
             "code/file?.txt": "UNSAFE_CHARACTER",

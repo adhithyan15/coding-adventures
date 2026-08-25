@@ -6416,6 +6416,71 @@ coverage, diff, artifact-cleanliness, and security validations passed. The PR
 remains mergeable while replacement checks run; auto-merge stays disabled until
 all required checks are terminal and acceptable.
 
+PR #12633 ultimately completed all 29 reported checks: 23 successes and six
+expected skips. GitHub reported the branch clean and mergeable, so the loop
+enabled squash auto-merge; GitHub merged it as
+`293f79290187d2dd3b1a993f9b11df2198cb5787` at
+`2026-08-25T00:13:59Z` without a manual merge command. The mandatory
+post-merge collision report remains schema 3 with 15 established lanes, 1,370
+implementation identities, 4,563 slots, 718 Rust singletons, zero collisions,
+and zero unknown buckets. OCaml remains correctly emerging at zero packages,
+and no package identity, slot, or newly unowned portable gap appeared.
+
+The refreshed 486-owner state graph is complete and acyclic. Its rockspec UTF-8
+umbrella previously depended only on the shared corpus despite naming three
+unfinished engine children; explicit Ruby, Haskell, and Elixir dependencies now
+prevent that umbrella from becoming ready early. This semantic correction
+raises the edge count from 731 to 734 without adding an owner. A leverage pass
+selects
+`build-tool-tracked-artifact-trailing-empty-segment-cross-runtime-hardening`:
+all five prerequisites are merged, it directly gates 11 owners and 20
+unfinished descendants, and it closes a reproduced correctness defect in a
+smaller dependency surface than the equally leveraged Unicode-version sibling.
+Seven live open PRs have zero exact overlap on its neutral fixture, oracle,
+Python, C#, F#, state, or roadmap surfaces. Before the first push, `main`
+advanced through three non-overlapping Vault, Java-spec, and Tamil commits. The
+branch rebased without conflict to exact `origin/main`
+`ee13dca795810c618dcbfce660dd707838a8e5ef`; no force push was involved because
+the target branch was still absent. The refreshed collision report contains
+1,371 identities, 4,564 slots, 908 singletons with 12,712 missing slots, and 719
+Rust singletons, while high-, middle-, and low-consensus bands remain unchanged
+and collisions and unknown buckets remain zero. The new deterministic
+`vault-import-otpauth` singleton is classified by extending the existing
+pending `vault-external-import-portable-conformance` owner with VLT-PM49 URI
+fixtures, rather than creating a duplicate umbrella.
+
+The implementation makes the existing portable-path rule explicit: a trailing
+slash or backslash creates an invalid empty component after separator
+normalization. The language-neutral invalid fixture now proves both forms while
+preserving redacted diagnostics. The process-free oracle, Python engine, and
+shared C# engine inspect every normalized component rather than only internal
+double separators; absolute and drive-qualified precedence is unchanged. The
+F# facade independently consumes the expanded fixture without adding native
+Git, filesystem, process, environment, or network authority.
+
+Red phases failed exactly the expanded fixture and both new direct cases in the
+neutral oracle and C# engine. Green validation passes 80 neutral tests plus 121
+subtests and validates all 111 corpus cases across 269 files. Python passes 426
+tests at 90.06% total and 97% validator coverage. C# passes 29 tests, with the
+changed predicate exercised 130 times and both branch outcomes covered; F#
+passes all seven facade tests. Warning-free .NET builds, the canonical Python
+`uv` front, NuGet vulnerability audits, Bandit, scoped Ruff, collision,
+capability-taxonomy, Haskell-capability, OCaml-lock, dependency-manifest,
+credential, diff, production-authority, and state-DAG checks pass. Broader
+formatter, Ruff, MyPy, and `dotnet format` probes reproduce only pre-existing
+untouched baseline findings; `dotnet format` does not support F#.
+
+Ready-for-review PR #12644 opened from clean independently reviewed head
+`e317ff99b3e53f3d32325136a677da392242e50c` after a normal first push. The
+branch was based on exact `origin/main`
+`ee13dca795810c618dcbfce660dd707838a8e5ef`; later package-neutral main commits
+have zero changed-path overlap and leave GitHub mergeable, so no further rebase
+or force push is appropriate. Immediately before publication, six live PRs had
+zero exact overlap across all 19 changed paths, and the target branch and PR
+were absent. GitHub reports the PR non-draft and mergeable while required checks
+are queued or in progress. Auto-merge remains disabled until every required
+check is terminal and acceptable.
+
 ## Autonomous Loop Protocol
 
 Only one parity PR should be active at a time.

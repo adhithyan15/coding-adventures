@@ -124,7 +124,8 @@ exact, nested, case, and Unicode compatibility aliases of a `node_modules`
 component. Regular, symlink, and reparse metadata is classified identically;
 path limits and diagnostic ordering use Unicode scalar values, and Windows
 reserved basenames use full Unicode uppercase mapping before comparison;
-the validator never enumerates Git, opens or follows a path, launches a
+trailing slash and backslash separators are rejected as empty components. The
+validator never enumerates Git, opens or follows a path, launches a
 process, reads the environment, or accesses the network.
 
 ## Installation

@@ -292,7 +292,7 @@ def _normalize_tracked_artifact_path(path: str) -> tuple[str | None, str | None]
         return None, "ABSOLUTE"
     if re.match(r"^[A-Za-z]:", normalized):
         return None, "DRIVE_QUALIFIED"
-    if "//" in normalized:
+    if any(not segment for segment in normalized.split("/")):
         return None, "EMPTY_SEGMENT"
     if any(ord(character) < 32 or character in '<>:"|?*' for character in normalized):
         return None, "UNSAFE_CHARACTER"

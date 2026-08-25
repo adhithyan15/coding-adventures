@@ -2019,7 +2019,7 @@ public static class Validator
             return (null, "DRIVE_QUALIFIED");
         }
 
-        if (normalized.Contains("//", StringComparison.Ordinal))
+        if (normalized.Split('/').Any(segment => segment.Length == 0))
         {
             return (null, "EMPTY_SEGMENT");
         }

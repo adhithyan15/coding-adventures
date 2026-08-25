@@ -1,5 +1,11 @@
 # Changelog
 
+## 2026-08-25
+
+- Added forward- and backslash trailing-separator records to the invalid
+  tracked-artifact fixture. Both normalize to a trailing empty path component
+  and must report redacted `EMPTY_SEGMENT` diagnostics.
+
 ## 2026-08-24
 
 - Added one process-free tracked-artifact Unicode boundary case. It makes empty

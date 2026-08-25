@@ -225,6 +225,8 @@ public sealed class BuildToolTests : IDisposable
         { "/absolute/file.cs", "ABSOLUTE" },
         { "C:\\repo\\file.cs", "DRIVE_QUALIFIED" },
         { "code//file.cs", "EMPTY_SEGMENT" },
+        { "code/trailing/", "EMPTY_SEGMENT" },
+        { "code\\trailing\\", "EMPTY_SEGMENT" },
         { "code/<unsafe>/file.cs", "UNSAFE_CHARACTER" },
         { "code/\u001f/file.cs", "UNSAFE_CHARACTER" },
         { "code/../file.cs", "DOT_SEGMENT" },
