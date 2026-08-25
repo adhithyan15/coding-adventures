@@ -89,6 +89,8 @@ const KA = DUCTUS["க"];
 const kaOutline = tamilOutline("க");
 const CA = DUCTUS["ச"];
 const caOutline = tamilOutline("ச");
+const TTA = DUCTUS["ட"];
+const ttaOutline = tamilOutline("ட");
 const VA = DUCTUS["வ"];
 const vaOutline = tamilOutline("வ");
 const LA = DUCTUS["ல"];
@@ -506,13 +508,14 @@ function collect(node: SvgNode, pick: (n: SvgNode) => boolean, out: SvgNode[] = 
 const byTag = (node: SvgNode, tag: string) => collect(node, (n) => n.tag === tag);
 
 describe("ductusFor — only cited letters have a ductus", () => {
-  it("finds sixteen Tamil letters, ten Persian letters, eighteen Arabic letters, and fourteen Urdu letters", () => {
+  it("finds seventeen Tamil letters, ten Persian letters, eighteen Arabic letters, and fourteen Urdu letters", () => {
     expect(ductusFor("ம")?.glyph).toBe("ம");
     expect(ductusFor("அ")?.glyph).toBe("அ");
     expect(ductusFor("ஆ")?.glyph).toBe("ஆ");
     expect(ductusFor("இ")?.glyph).toBe("இ");
     expect(ductusFor("க")?.glyph).toBe("க");
     expect(ductusFor("ச")?.glyph).toBe("ச");
+    expect(ductusFor("ட")?.glyph).toBe("ட");
     expect(ductusFor("வ")?.glyph).toBe("வ");
     expect(ductusFor("ல")?.glyph).toBe("ல");
     expect(ductusFor("ற")?.glyph).toBe("ற");
@@ -975,6 +978,34 @@ describe("ச — a real cited two-stroke filmstrip", () => {
     const pen = byTag(final, "path").find((node) => node.attrs.class === "ductus__pen")!;
     expect(done.map((path) => path.attrs.d)).toEqual([penPathD(CA.strokes[0], 1)]);
     expect(pen.attrs.d).toBe(penPathD(CA.strokes[1], 1));
+  });
+});
+
+describe("ட — a real cited unbroken two-movement filmstrip", () => {
+  const steps = ductusSteps(TTA);
+  const strip = ductusFilmstrip(TTA, ttaOutline);
+
+  it("keeps the cornering movements in one pen-down run", () => {
+    expect(steps.map((step) => step.label)).toEqual([
+      "down the left upright",
+      "along the long rightward foot",
+    ]);
+    expect(steps.map((step) => step.startsAfterLift)).toEqual([false, false]);
+    expect(steps.map((step) => step.strokeIndex)).toEqual([0, 0]);
+  });
+
+  it("reports two movements in one unbroken stroke", () => {
+    expect(strip.frames).toHaveLength(2);
+    expect(strip.penLifts).toBe(0);
+    expect(strip.summary).toBe("one unbroken stroke · 2 movements");
+  });
+
+  it("finishes the sole stroke without a completed-stroke overlay", () => {
+    const last = strip.frames.at(-1)!;
+    const done = byTag(last, "path").filter((node) => node.attrs.class === "ductus__done");
+    const pen = byTag(last, "path").find((node) => node.attrs.class === "ductus__pen")!;
+    expect(done).toHaveLength(0);
+    expect(pen.attrs.d).toBe(penPathD(TTA.strokes[0], 1));
   });
 });
 

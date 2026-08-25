@@ -167,6 +167,20 @@ describe("real curriculum", () => {
       /left-to-right.*top-to-bottom.*varies by school.*continuous order.*Noto Sans Tamil/i,
     );
 
+    const tamilTta = scripts.tamil!.letters.find((letter) => letter.glyph === "ட")!;
+    expect(tamilTta.strokeOrder).toEqual([
+      "start at the top left and draw the left upright straight down",
+      "without lifting, turn right and carry the long foot to the far edge — and only now lift",
+    ]);
+    expect(tamilTta.penLifts).toBe(0);
+    expect(tamilTta.strokeOrderSource?.url).toBe(
+      "https://sites.la.utexas.edu/tamilscript/files/2009/08/hw_lettersinstructions.pdf",
+    );
+    expect(tamilTta.strokeOrderSource?.citation).toMatch(/Appendix I.*Frame 1.*ட.*p\. 190/i);
+    expect(tamilTta.strokeOrderSource?.variation).toMatch(
+      /left descent.*rightward foot.*two joined movements.*Module 1 identifies.*top-to-bottom.*left-to-right.*varies by school.*continuous order.*Noto Sans Tamil/i,
+    );
+
     const tamilRa = scripts.tamil!.letters.find((letter) => letter.glyph === "ர")!;
     expect(tamilRa.strokeOrder).toEqual([
       "start at the top left and draw the left upright straight down — then lift once",
@@ -288,9 +302,11 @@ describe("real curriculum", () => {
     expect(affected.get("د") ?? 0).toBe(0);
     expect(missingByScript.get("tamil.json")?.has("ச")).toBe(false);
     expect(affected.get("ச") ?? 0).toBe(0);
+    expect(missingByScript.get("tamil.json")?.has("ட")).toBe(false);
+    expect(affected.get("ட") ?? 0).toBe(0);
     expect(
       [...affected.entries()].sort((left, right) => right[1] - left[1])[0],
-    ).toEqual(["ட", 30]);
+    ).toEqual(["ே", 29]);
   });
 
   it("loaded every track (17+ and growing)", () => {
