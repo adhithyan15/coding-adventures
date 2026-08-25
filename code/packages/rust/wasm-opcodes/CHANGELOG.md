@@ -2,6 +2,31 @@
 
 All notable changes to this package will be documented in this file.
 
+## [0.2.39] - 2026-08-24 - SIMD widen PR36: i64x2.extend_low/high_i32x4_s/u (task #223-225)
+
+### Added
+
+- 4 new `SIMD_OPS` entries: `i64x2.extend_low_i32x4_s` (`0xC7`),
+  `i64x2.extend_high_i32x4_s` (`0xC8`), `i64x2.extend_low_i32x4_u`
+  (`0xC9`), `i64x2.extend_high_i32x4_u` (`0xCA`) -- the THIRD and FINAL
+  rung of the "extend" family (`i16x8`-from-`i8x16` and
+  `i32x4`-from-`i16x8` both landed in PR26). 197 SIMD opcodes total, up
+  from 193. Each sub-opcode byte fetched live from the SIMD proposal's
+  own `BinarySIMD.md` and cross-checked against every existing
+  `SIMD_OPS` entry: the closest neighbors are `i64x2.bitmask` at `0xC4`
+  (just below) and `i64x2.shl` at `0xCB` (just above) -- `0xC7`-`0xCA`
+  sit in the gap between them with no collision.
+- 4 new `SimdOpKind` variants: `ExtendLowI32x4S`, `ExtendHighI32x4S`,
+  `ExtendLowI32x4U`, `ExtendHighI32x4U`. Same shape as PR26's
+  `ExtendLowI16x8S`/etc., one lane width up -- reinterpret the operand
+  `v128` as 4 `i32` lanes, take the LOW (indices 0-1) or HIGH (indices
+  2-3) 2 lanes, sign- or zero-extend each to `i64`, producing an
+  `i64x2` result. EXACTLY the lane-selection + extend half of the
+  already-implemented `ExtmulLowI64x2S`/etc. handlers, minus the
+  multiply.
+- Table-size test updated from 193 to 197 entries. New test
+  `simd_i64x2_extend_low_high_widening_family_has_the_real_verified_sub_opcode_values`.
+
 ## [0.2.38] - 2026-08-24 - SIMD widen PR35: f64x2.abs/min/max/pmin/pmax (task #220-222)
 
 ### Added

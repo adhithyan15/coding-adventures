@@ -109,7 +109,13 @@ Fetched:       2026-08-13 (initial slice, W05/PR3), extended 2026-08-14 (WASM08)
                simd_f64x2_pmin_pmax.wast, 5 new opcodes (f64x2.abs/min/
                max/pmin/pmax), same pinned commit, no re-pin -- see below;
                closes the f64x2 arithmetic family, mirroring PR34's
-               f32x4 closure)
+               f32x4 closure),
+               extended 2026-08-24 (task #223-225 -- simd_int_to_int_
+               extend.wast, 4 new opcodes (i64x2.extend_low/
+               high_i32x4_s/_u), same pinned commit, no re-pin -- see
+               below; completes the 3-rung integer "extend" family
+               (i16x8-from-i8x16 and i32x4-from-i16x8 landed opcode-only
+               in PR26, this file exercises those too))
 Fetch method:  code/packages/rust/wasm-conformance/tests/fixtures/fetch_testsuite.py
 
 The pinned commit was resolved via:
@@ -1119,6 +1125,49 @@ and tracked separately, none touching `f64x2.abs`/`min`/`max`/`pmin`/
 `pmax` or this campaign) are byte-for-byte unchanged by this PR,
 confirming zero regressions. No other already-vendored file's stats
 changed.
+
+`simd_int_to_int_extend.wast` is the upstream corpus's dedicated file for
+the whole 3-rung integer "extend" family: `i16x8.extend_low/
+high_i8x16_s/_u` and `i32x4.extend_low/high_i16x8_s/_u` (both rungs
+landed opcode-only in PR26, with NO corpus vendoring at the time since
+this is their first dedicated corpus file) plus this PR's new
+`i64x2.extend_low/high_i32x4_s/_u` (0xC7/0xC8/0xC9/0xCA), the third and
+FINAL rung. Unlike PR26/27/28's split handling of `simd_conversions.wast`
+(which bundles three DIFFERENT opcode families together and so could only
+be vendored once all three families existed), this single file bundles
+all THREE RUNGS of the SAME "extend" family together in one `(module
+...)`, so landing it required all three rungs, not just this PR's new
+one -- meaning this file, once vendored, immediately exercises PR26's
+two-rung-old opcodes as well as this PR's new third rung, all in the same
+run. 253 real directives: 1 module, 228 assert_return, 24 assert_invalid,
+0 assert_malformed (12 opcodes -- 4 each for the i16x8/i32x4/i64x2 rungs
+-- covered across all three categories: the module exports one function
+per opcode; assert_return exercises lane-order/half-selection and signed/
+unsigned boundary values -- 0, +/-1, +/-127/128, i8::MIN/MAX for the
+i16x8 rung, the i16 equivalents for the i32x4 rung, the i32 equivalents
+for the i64x2 rung, all cross-combined across low/high lane pairs;
+assert_invalid covers both a wrong-operand-type case and an empty-operand
+case for each of the 12 opcodes, 24 total).
+
+100% pass on every directive kind (1/1 module, 228/228 assert_return,
+24/24 assert_invalid) -- including every one of this file's i16x8/i32x4
+rung directives (PR26's own opcodes, now integration-tested against a
+real upstream corpus file for the first time) alongside this PR's new
+i64x2 rung, confirming the third rung's lane-selection (low = indices
+0-1, high = indices 2-3 of the source `i32x4`) and sign/zero-extend logic
+are correct, not just unit-test-correct in isolation. Aggregate
+`assert_return` rose from 43320/43337 to 43548/43565 (+228 pass, +228
+gradeable, exactly this file's own count, `fail` unchanged at 17);
+`assert_invalid` rose from 1866/1866 to 1890/1890 (+24, exactly this
+file's own count, still 100.0% of gradeable directives); `module` pass
+count rose from 1192/1193 to 1193/1194 (+1, exactly this file's own
+module count, passing); `assert_malformed` unchanged at 359/359 (this
+file has none). The pre-existing, unrelated baseline failures (17
+`assert_return`, 1 `module`, 1 `assert_unlinkable`, 2 `register` --
+present before this PR and tracked separately, none touching
+`i16x8`/`i32x4`/`i64x2` extend opcodes or this campaign) are
+byte-for-byte unchanged by this PR, confirming zero regressions. No other
+already-vendored file's stats changed.
 
 The vendored files are licensed under the Apache License, Version 2.0 --
 see the accompanying LICENSE file, itself vendored verbatim from the same

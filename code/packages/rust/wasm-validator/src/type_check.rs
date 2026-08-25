@@ -1683,6 +1683,10 @@ fn type_check_function(ctx: &ModuleContext, func_idx: usize, func_type: &FuncTyp
                     | wasm_opcodes::SimdOpKind::ExtendHighI16x8S
                     | wasm_opcodes::SimdOpKind::ExtendLowI16x8U
                     | wasm_opcodes::SimdOpKind::ExtendHighI16x8U
+                    | wasm_opcodes::SimdOpKind::ExtendLowI32x4S
+                    | wasm_opcodes::SimdOpKind::ExtendHighI32x4S
+                    | wasm_opcodes::SimdOpKind::ExtendLowI32x4U
+                    | wasm_opcodes::SimdOpKind::ExtendHighI32x4U
                     | wasm_opcodes::SimdOpKind::DemoteF64x2Zero
                     | wasm_opcodes::SimdOpKind::PromoteLowF32x4
                     | wasm_opcodes::SimdOpKind::ConvertLowI32x4S
@@ -1741,6 +1745,14 @@ fn type_check_function(ctx: &ModuleContext, func_idx: usize, func_type: &FuncTyp
                         // 2-lane mirror of `f32x4.abs` above -- a pure bit
                         // operation, no new type-checker machinery needed,
                         // same pop-one-`V128`-push-one-`V128` shape.
+                        // `ExtendLow/HighI32x4S/_U` (SIMD widen PR36) join
+                        // too, the third and final rung of the "extend"
+                        // family one lane width up from `ExtendLow/
+                        // HighI16x8S/_U` -- same reasoning, the narrower
+                        // (`i32`) source lane width and wider (`i64`)
+                        // result lane width are both invisible to the type
+                        // checker, still just pop-one-`V128`-push-one-
+                        // `V128`.
                         pop_expect(&mut stack, frame!(), ValueType::V128)?;
                         push_val(&mut stack, ValueType::V128);
                     }

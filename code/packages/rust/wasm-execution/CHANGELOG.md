@@ -2,6 +2,30 @@
 
 All notable changes to this package will be documented in this file.
 
+## [0.9.46] - 2026-08-24 (task #223-225 — SIMD widen PR36: i64x2.extend_low/high_i32x4_s/u)
+
+### Added
+
+- New dispatch arm for `ExtendLowI32x4S`/`ExtendHighI32x4S`/
+  `ExtendLowI32x4U`/`ExtendHighI32x4U`: UNARY -- pop ONE `v128`, reinterpret
+  it as 4 `i32` lanes, take the LOW (indices 0-1) or HIGH (indices 2-3) 2
+  lanes, sign- or zero-extend each to `i64`, producing an `i64x2` result.
+  The THIRD and FINAL rung of the "extend" family, one lane width up from
+  `ExtendLowI16x8S`/etc. (PR26) -- EXACTLY the lane-selection + extend
+  half of the already-implemented `ExtmulLowI64x2S`/etc. handlers, minus
+  the multiply.
+- New tests:
+  `i64x2_extend_low_high_i32x4_preserves_lane_order_and_selects_the_correct_half`
+  (a sequential `0..4` operand proves lanes 0-1 go to `extend_low`,
+  lanes 2-3 go to `extend_high`, in order, not reversed),
+  `i64x2_extend_low_high_i32x4_distinguishes_signed_from_unsigned_at_the_i32_boundary`
+  (`i32::MIN`/`i32::MAX` at the sign boundary, mirroring the existing
+  i16x8/i32x4 boundary tests one lane width up), and
+  `i64x2_extend_low_i32x4_sign_and_zero_extends_ordinary_positive_and_negative_values`
+  (ordinary in-range positive/negative values, not just the extremes --
+  confirms `_u` on a negative operand produces a large POSITIVE `i64`,
+  never a negative one).
+
 ## [0.9.45] - 2026-08-24 (task #220-222 — SIMD widen PR35: f64x2.abs/min/max/pmin/pmax)
 
 ### Added
