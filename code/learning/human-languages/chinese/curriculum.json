@@ -195,6 +195,33 @@
         "ZH-EXT-029-QING-INVITES"
       ],
       "after": []
+    },
+    {
+      "id": "ZH-PATH-011",
+      "spine_node": "SPINE-EXCHANGE-NAMES",
+      "lessons": [
+        "ZH-C12-ren",
+        "ZH-C12-nu",
+        "ZH-C12-hear-erzi",
+        "ZH-W12-er",
+        "ZH-C12-erzi",
+        "ZH-C12-hear-nuer",
+        "ZH-C12-nuer",
+        "ZH-C12-hear-jia",
+        "ZH-W12-jia",
+        "ZH-C12-jia",
+        "ZH-C12-hear-jiaren",
+        "ZH-C12-jiaren",
+        "ZH-R12-family-six",
+        "ZH-C12-practice"
+      ],
+      "before": [],
+      "inline": [
+        "ZH-EXT-030-FAMILY-MEANING-FIRST",
+        "ZH-EXT-031-FAMILY-SCRIPT",
+        "ZH-EXT-032-FAMILY-FOUR-SKILL"
+      ],
+      "after": []
     }
   ],
   "spine": {
@@ -232,7 +259,8 @@
     "SPINE-EXCHANGE-NAMES": {
       "segments": [
         "ZH-PATH-007",
-        "ZH-PATH-008"
+        "ZH-PATH-008",
+        "ZH-PATH-011"
       ],
       "omits": [
         "PRONOUN-ME",
@@ -982,6 +1010,56 @@
       ],
       "lessons": [
         "ZH-C11-qing"
+      ]
+    },
+    {
+      "id": "ZH-EXT-030-FAMILY-MEANING-FIRST",
+      "stage": "pre-A1",
+      "kind": "required",
+      "category": "lexis",
+      "canDo": "I can understand and say six HSK Level 1 people-and-family words, with every unfamiliar spoken meaning arriving before its new character form.",
+      "prerequisites": [
+        "ZH-EXT-029-QING-INVITES"
+      ],
+      "lessons": [
+        "ZH-C12-ren",
+        "ZH-C12-nu",
+        "ZH-C12-hear-erzi",
+        "ZH-C12-hear-nuer",
+        "ZH-C12-hear-jia",
+        "ZH-C12-hear-jiaren"
+      ]
+    },
+    {
+      "id": "ZH-EXT-031-FAMILY-SCRIPT",
+      "stage": "pre-A1",
+      "kind": "required",
+      "category": "script",
+      "canDo": "I can write 儿 and 家 from their ordered strokes, then read and write 儿子, 女儿, 家 and 家人 without pinyin.",
+      "prerequisites": [
+        "ZH-EXT-030-FAMILY-MEANING-FIRST"
+      ],
+      "lessons": [
+        "ZH-W12-er",
+        "ZH-C12-erzi",
+        "ZH-C12-nuer",
+        "ZH-W12-jia",
+        "ZH-C12-jia",
+        "ZH-C12-jiaren"
+      ]
+    },
+    {
+      "id": "ZH-EXT-032-FAMILY-FOUR-SKILL",
+      "stage": "pre-A1",
+      "kind": "required",
+      "category": "assessment",
+      "canDo": "I can pass separate listening, speaking, reading and writing checks for 人, 女, 儿子, 女儿, 家 and 家人; no strong skill compensates for a weak one.",
+      "prerequisites": [
+        "ZH-EXT-031-FAMILY-SCRIPT"
+      ],
+      "lessons": [
+        "ZH-R12-family-six",
+        "ZH-C12-practice"
       ]
     }
   ]

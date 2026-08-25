@@ -250,6 +250,31 @@
           "ZH-DIALOGUE-POLITE"
         ]
       }
+    },
+    {
+      "chapter": 12,
+      "title": "People under one roof",
+      "label": "ch:zh-family-six",
+      "canDo": "I can understand, say, read and write six HSK Level 1 people-and-family words, building 儿子, 女儿 and 家人 only after their spoken meanings and component characters are secure.",
+      "spineNodes": [
+        "SPINE-EXCHANGE-NAMES"
+      ],
+      "payoff": {
+        "lesson": "ZH-C12-practice",
+        "kind": "writing",
+        "summary": "Six family words pass separate listening, speaking, reading and no-model writing checks; pinyin cannot compensate for an unread character, and a strong skill cannot compensate for a weak one.",
+        "assesses": [
+          "ZH-PERFORMANCE-FAMILY-SIX-FOUR-SKILL-01",
+          "ZH-LEX-REN-01",
+          "ZH-LEX-NU-01",
+          "ZH-LEX-ERZI-01",
+          "ZH-LEX-NUER-01",
+          "ZH-LEX-JIA-01",
+          "ZH-LEX-JIAREN-01",
+          "ZH-SCRIPT-ER-CHAR-01",
+          "ZH-SCRIPT-JIA-01"
+        ]
+      }
     }
   ]
 }
