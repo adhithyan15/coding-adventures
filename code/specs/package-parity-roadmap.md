@@ -6576,7 +6576,7 @@ OCaml process-free substrate remains collision-unsafe while PRs #12149 and
 #12162 own exact Go validator and main paths.
 
 The TypeScript repair now has red-to-green evidence at exact rebased main
-`5a3d0e1a0b4bada6811856b76394933dd6c0c3c6`: the focused regression initially
+`a6b3c9d3b95e4d310b57a3b194c4b035b58b8bfc`: the focused regression initially
 failed in all three expected assertions, then all 284 TypeScript build-tool
 tests passed across 12 files. Overall coverage is 89.43% statements, 82.06%
 branches, 92.75% functions, and 89.36% lines; `discovery.ts` is 93.68%, 89.23%,
@@ -6591,6 +6591,13 @@ graph remain unchanged. Production dependency audit reports zero
 vulnerabilities; the full audit exposes one pre-existing development-only
 `nanoid` advisory below Vitest, while this branch changes neither dependency
 metadata nor runtime authority.
+
+Two read-only security reviews pass the exact-component boundary, credential,
+dependency, and production-authority checks. The branch rebased twice without
+conflict over four non-overlapping WASM, HTML-parser, Spanish, and human-
+language debt-ceiling commits; after the final rebase, all 38 focused discovery
+tests pass, the collision report is unchanged, and the 486-owner, 739-edge
+graph remains complete and acyclic.
 
 ## Autonomous Loop Protocol
 
