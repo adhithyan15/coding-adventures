@@ -144,6 +144,62 @@ correct for the 32- and 64-byte tags of the wider hashes. The
 `10^digits` modulus is computed in `u64`, because `digits` is legal
 up to 10 and `10^10` exceeds `u32::MAX`.
 
+## `WebAuthnPrfAuthenticator` (scaffold)
+
+Added by `VLT-PM51-hardware-security-keys.md`. Bind-mode: a FIDO2
+hardware security key (YubiKey and other CTAP2-compliant
+authenticators — a standards-based factor, not vendor-specific)
+contributes key material via the CTAP2 `hmac-secret` extension
+(WebAuthn's `prf` extension).
+
+```rust
+pub struct WebAuthnPrfAuthenticator { /* relying_party_id, credential_id, public_key_cose */ }
+
+impl WebAuthnPrfAuthenticator {
+    pub fn new(relying_party_id: impl Into<String>,
+               credential_id: impl Into<Vec<u8>>,
+               public_key_cose: impl Into<Vec<u8>>) -> Result<Self, AuthError>;
+}
+```
+
+`kind()` is `"webauthn-prf"`, `mode()` is `Mode::Bind`. `verify()`
+always returns `AuthError::Unimplemented { backend: "FIDO2 CTAP2
+hmac-secret (WebAuthn PRF)" }`, regardless of input — the identical
+pattern `vault-key-custody::TpmCustodian` uses for `wrap`/`unwrap`.
+Two pieces are missing before `verify()` can do anything else: a real
+CTAP2/WebAuthn hardware transport, and an ECDSA P-256 signature
+verifier (no elliptic-curve primitive exists anywhere in this
+workspace today). `VLT-PM51` §6 explains at length why `verify()`
+refuses unconditionally rather than validating the parts of an
+assertion that don't need the missing signature check.
+
+This lets:
+
+- Code that composes authenticators (a future VLT06 policy, e.g.
+  `all_of { password, webauthn_prf }`) be written against a real type
+  today.
+- `combine_key_contributions` and `summarize_auth_assertions` be
+  exercised against a real bind-mode `"webauthn-prf"` assertion now
+  (both dispatch on `Mode`, not `kind`, so neither needs a change once
+  `verify()` is real).
+
+Future PR: a CTAP2/WebAuthn hardware transport (`VLT-PM51` §5
+recommends `ctap-hid-fido2`) plus ECDSA P-256 verification, landing
+together since neither is independently useful without the other.
+
+## `AuthError`
+
+```rust
+pub enum AuthError {
+    InvalidCredential,
+    MalformedCredential,
+    InvalidParameter { what: &'static str },
+    Crypto,
+    NoBindFactors,
+    Unimplemented { backend: &'static str },
+}
+```
+
 ## Threat model & test coverage
 
 | Threat                                                     | Defence                                                             | Test                                                              |
@@ -158,10 +214,11 @@ up to 10 and `10^10` exceeds `u32::MAX`.
 | Caller forgets to supply any bind factor                   | `NoBindFactors`                                                     | `combine_no_factors_rejected`                                     |
 | Argon2id timing leak on tag compare                        | `ct_eq` constant-time                                               | implicit via the upstream `ct-compare` crate's tests              |
 | Attacker-controlled bytes in error logs                    | All `Display` strings are static literals                           | `error_messages_are_static_literals`                              |
+| A `webauthn-prf` assertion validated only "shaped like" real | `verify()` refuses unconditionally rather than partially validating | `webauthn_prf_verify_always_returns_unimplemented` (tried against both empty and plausible-looking input) |
+| Hardware-key construction with missing registration data   | Constructor validation (empty rp id / credential id / public key)   | `webauthn_prf_rejects_empty_relying_party_id`, `webauthn_prf_rejects_empty_credential_id`, `webauthn_prf_rejects_empty_public_key` |
 
 ## Out of scope (this PR)
 
-- WebAuthn / passkeys / FIDO2-PRF.
 - OPAQUE / SRP-6a aPAKE.
 - OIDC / JWT / mTLS / AppRole / AWS-STS / GCP-JWT / Azure-MI /
   Kubernetes-SA.
@@ -169,6 +226,12 @@ up to 10 and `10^10` exceeds `u32::MAX`.
 - Replay-cache integration: this crate exposes `verify_at_time`
   returning the matched step; persisting last-used-step per
   secret and rejecting replays is the caller's job.
+- Real WebAuthn-PRF hardware I/O and ECDSA P-256 signature
+  verification — `WebAuthnPrfAuthenticator` ships as a scaffold
+  (see above); `VLT-PM51-hardware-security-keys.md` covers the full
+  design and the follow-up work that completes it.
+- Plain-signature (gate-mode) `WebAuthnAuthenticator` — not needed
+  until a factor without `hmac-secret` support is required.
 
 ## Citations
 
@@ -179,4 +242,7 @@ up to 10 and `10^10` exceeds `u32::MAX`.
 - RFC 9106 — *Argon2 Memory-Hard Function*. Used by
   `PasswordAuthenticator`.
 - RFC 5869 — *HKDF*. Used by `combine_key_contributions`.
+- FIDO Alliance CTAP2 `hmac-secret` extension / W3C WebAuthn `prf`
+  extension — used by `WebAuthnPrfAuthenticator`. See
+  `VLT-PM51-hardware-security-keys.md` for the full protocol survey.
 - VLT00-vault-roadmap.md — VLT05 layer purpose.
