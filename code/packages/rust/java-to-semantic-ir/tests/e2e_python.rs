@@ -338,3 +338,51 @@ fn do_while_flag_name_collision_does_not_corrupt_a_real_variable() {
     );
     assert_eq!(out, "2");
 }
+
+#[test]
+fn classic_for_loop_runs_in_python() {
+    if !python_available() {
+        eprintln!("skipping classic_for_loop_runs_in_python: `python3` not available");
+        return;
+    }
+    let out = run_via_python(
+        "classic_for",
+        &wrap("int sum = 0; for (int i = 0; i < 5; i++) { sum = sum + i; } sum;"),
+    );
+    assert_eq!(out, "10");
+}
+
+#[test]
+fn classic_for_loop_with_no_declaration_runs_in_python() {
+    if !python_available() {
+        eprintln!(
+            "skipping classic_for_loop_with_no_declaration_runs_in_python: `python3` not available"
+        );
+        return;
+    }
+    // `for (i = 0; ...)` reusing an already-declared `i`, rather than
+    // declaring a fresh one -- a different `for_init` grammar alternative
+    // from the usual `for (int i = 0; ...)` case, exercised on its own.
+    let out = run_via_python(
+        "classic_for_no_decl",
+        &wrap("int i = -1; int sum = 0; for (i = 0; i < 4; i++) { sum = sum + i; } sum;"),
+    );
+    assert_eq!(out, "6");
+}
+
+// No execution-proof test for `for (;;)` (empty clauses): without a
+// `break` statement -- which has no SIR IR primitive at all (see the
+// module doc comment) -- a `for (;;)` loop genuinely cannot terminate via
+// any construct this milestone can lower; an execution proof would just
+// hang forever. `classic_for_loop_with_all_clauses_empty_is_an_unconditional_loop`
+// in `tests/test_lower.rs` covers the structural claim (the absent
+// condition lowers to `BoolLit(true)`, not `false` or some other
+// accidentally-terminating shape) without ever actually running it.
+
+// No enhanced-for execution-proof test: M1/M2 have no array/collection
+// construction syntax yet (JV02 M4), so there is no way to build a real
+// Java expression that lowers to something Python's own `for x in xs:`
+// codegen could actually iterate — `enhanced_for_loop_lowers_to_stmt_foreach`
+// in `tests/test_lower.rs` covers what's honestly provable at this
+// milestone (the lowering shape itself: `Stmt::ForEach`'s `var`/`iter`/
+// `body` fields and scoping), not real execution.
