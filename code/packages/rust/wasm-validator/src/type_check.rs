@@ -176,6 +176,23 @@ fn push_vals(stack: &mut Vec<StackType>, ts: &[ValueType]) {
     }
 }
 
+/// Read the single raw (non-LEB128) lane-index immediate byte every
+/// `extract_lane`/`replace_lane` SIMD opcode carries, advancing `offset`
+/// past it. Shared by every lane-immediate `SimdOpKind` arm in the `0xFD`
+/// match below (SIMD widen PR37) -- only the truncation check is common
+/// here; each caller still applies its OWN shape-specific range check
+/// (0-15 for `i8x16`, 0-7 for `i16x8`, 0-3 for `i32x4`/`f32x4`, 0-1 for
+/// `i64x2`/`f64x2`) immediately after, since the valid range depends on
+/// which vector shape the immediate belongs to.
+fn read_lane_index(code: &[u8], offset: &mut usize, func_idx: usize, op_name: &str) -> Result<u8, ValidationError> {
+    if *offset >= code.len() {
+        return Err(ValidationError::Other(format!("function #{func_idx}: truncated {op_name} lane index")));
+    }
+    let lane_idx = code[*offset];
+    *offset += 1;
+    Ok(lane_idx)
+}
+
 /// Enter dead code: truncate to this (innermost) frame's own floor and
 /// mark it unreachable. Called by `unreachable`, `br`, and `return`.
 fn mark_unreachable(stack: &mut Vec<StackType>, frame: &mut ControlFrame) {
@@ -1770,11 +1787,18 @@ fn type_check_function(ctx: &ModuleContext, func_idx: usize, func_type: &FuncTyp
                     wasm_opcodes::SimdOpKind::ExtractLane => {
                         // Lane-index immediate: a single raw byte, not a
                         // LEB128 value -- see wasm-execution's decoder for
-                        // the same convention.
-                        if offset >= code.len() {
-                            return Err(ValidationError::Other(format!("function #{func_idx}: truncated i32x4.extract_lane lane index")));
+                        // the same convention. (SIMD widen PR37 retrofit:
+                        // the lane index's VALUE, not just its presence,
+                        // is now checked here too -- see this match's own
+                        // header comment above for why `i32x4.extract_lane`
+                        // 4 must be a validation-time rejection, not a
+                        // runtime-only one.)
+                        let lane_idx = read_lane_index(code, &mut offset, func_idx, "i32x4.extract_lane")?;
+                        if lane_idx >= 4 {
+                            return Err(ValidationError::Other(format!(
+                                "function #{func_idx}: i32x4.extract_lane lane index {lane_idx} out of range (must be 0-3)"
+                            )));
                         }
-                        offset += 1;
                         pop_expect(&mut stack, frame!(), ValueType::V128)?;
                         push_val(&mut stack, ValueType::I32);
                     }
@@ -1783,14 +1807,21 @@ fn type_check_function(ctx: &ModuleContext, func_idx: usize, func_type: &FuncTyp
                         // shape as `ExtractLane` above -- a single raw
                         // lane-index byte immediate, pop one V128, push
                         // one I32. The valid 0-15 lane RANGE (vs
-                        // `ExtractLane`'s 0-3) and the sign-/zero-extend
-                        // split are runtime concerns, invisible here --
-                        // the type checker only needs to skip the
-                        // immediate byte and adjust the stack.
-                        if offset >= code.len() {
-                            return Err(ValidationError::Other(format!("function #{func_idx}: truncated i8x16.extract_lane_s/u lane index")));
+                        // `ExtractLane`'s 0-3) is now checked HERE (SIMD
+                        // widen PR37 retrofit -- previously only the
+                        // immediate's presence was checked, not its
+                        // value, leaving out-of-range lane indices to
+                        // reach `wasm-execution`'s runtime bounds check
+                        // instead of being rejected at validation time,
+                        // as the WASM spec requires). The sign-/zero-
+                        // extend split remains a runtime-only concern,
+                        // still invisible here.
+                        let lane_idx = read_lane_index(code, &mut offset, func_idx, "i8x16.extract_lane_s/u")?;
+                        if lane_idx >= 16 {
+                            return Err(ValidationError::Other(format!(
+                                "function #{func_idx}: i8x16.extract_lane_s/u lane index {lane_idx} out of range (must be 0-15)"
+                            )));
                         }
-                        offset += 1;
                         pop_expect(&mut stack, frame!(), ValueType::V128)?;
                         push_val(&mut stack, ValueType::I32);
                     }
@@ -1804,12 +1835,147 @@ fn type_check_function(ctx: &ModuleContext, func_idx: usize, func_type: &FuncTyp
                         // the v128 first, the scalar second, so the
                         // scalar is on TOP of stack and popped FIRST):
                         // pop I32 (the replacement value), then pop V128
-                        // (the base operand), push V128.
-                        if offset >= code.len() {
-                            return Err(ValidationError::Other(format!("function #{func_idx}: truncated i8x16.replace_lane lane index")));
+                        // (the base operand), push V128. Lane-index VALUE
+                        // now bounds-checked here too (SIMD widen PR37
+                        // retrofit, same reasoning as `ExtractLaneI8x16S/U`
+                        // above).
+                        let lane_idx = read_lane_index(code, &mut offset, func_idx, "i8x16.replace_lane")?;
+                        if lane_idx >= 16 {
+                            return Err(ValidationError::Other(format!(
+                                "function #{func_idx}: i8x16.replace_lane lane index {lane_idx} out of range (must be 0-15)"
+                            )));
                         }
-                        offset += 1;
                         pop_expect(&mut stack, frame!(), ValueType::I32)?;
+                        pop_expect(&mut stack, frame!(), ValueType::V128)?;
+                        push_val(&mut stack, ValueType::V128);
+                    }
+                    wasm_opcodes::SimdOpKind::ExtractLaneI16x8S | wasm_opcodes::SimdOpKind::ExtractLaneI16x8U => {
+                        // i16x8.extract_lane_s/_u (SIMD widen PR37):
+                        // direct 8-lane mirror of `ExtractLaneI8x16S/U`
+                        // above, one lane width up -- valid range 0-7.
+                        let lane_idx = read_lane_index(code, &mut offset, func_idx, "i16x8.extract_lane_s/u")?;
+                        if lane_idx >= 8 {
+                            return Err(ValidationError::Other(format!(
+                                "function #{func_idx}: i16x8.extract_lane_s/u lane index {lane_idx} out of range (must be 0-7)"
+                            )));
+                        }
+                        pop_expect(&mut stack, frame!(), ValueType::V128)?;
+                        push_val(&mut stack, ValueType::I32);
+                    }
+                    wasm_opcodes::SimdOpKind::ReplaceLaneI16x8 => {
+                        // i16x8.replace_lane (SIMD widen PR37): direct
+                        // 8-lane mirror of `ReplaceLaneI8x16` above --
+                        // valid range 0-7.
+                        let lane_idx = read_lane_index(code, &mut offset, func_idx, "i16x8.replace_lane")?;
+                        if lane_idx >= 8 {
+                            return Err(ValidationError::Other(format!(
+                                "function #{func_idx}: i16x8.replace_lane lane index {lane_idx} out of range (must be 0-7)"
+                            )));
+                        }
+                        pop_expect(&mut stack, frame!(), ValueType::I32)?;
+                        pop_expect(&mut stack, frame!(), ValueType::V128)?;
+                        push_val(&mut stack, ValueType::V128);
+                    }
+                    wasm_opcodes::SimdOpKind::ReplaceLaneI32x4 => {
+                        // i32x4.replace_lane (SIMD widen PR37): the
+                        // `i32x4` counterpart to `ExtractLane` above --
+                        // valid range 0-3, pop I32 then V128, push V128.
+                        let lane_idx = read_lane_index(code, &mut offset, func_idx, "i32x4.replace_lane")?;
+                        if lane_idx >= 4 {
+                            return Err(ValidationError::Other(format!(
+                                "function #{func_idx}: i32x4.replace_lane lane index {lane_idx} out of range (must be 0-3)"
+                            )));
+                        }
+                        pop_expect(&mut stack, frame!(), ValueType::I32)?;
+                        pop_expect(&mut stack, frame!(), ValueType::V128)?;
+                        push_val(&mut stack, ValueType::V128);
+                    }
+                    wasm_opcodes::SimdOpKind::ExtractLaneI64x2 => {
+                        // i64x2.extract_lane (SIMD widen PR37): valid
+                        // range 0-1 -- this table's narrowest lane-index
+                        // range. Pops V128, pushes I64 (not I32 -- the
+                        // first `extract_lane` family member whose
+                        // result is a native 64-bit type, needing no
+                        // widening).
+                        let lane_idx = read_lane_index(code, &mut offset, func_idx, "i64x2.extract_lane")?;
+                        if lane_idx >= 2 {
+                            return Err(ValidationError::Other(format!(
+                                "function #{func_idx}: i64x2.extract_lane lane index {lane_idx} out of range (must be 0-1)"
+                            )));
+                        }
+                        pop_expect(&mut stack, frame!(), ValueType::V128)?;
+                        push_val(&mut stack, ValueType::I64);
+                    }
+                    wasm_opcodes::SimdOpKind::ReplaceLaneI64x2 => {
+                        // i64x2.replace_lane (SIMD widen PR37): valid
+                        // range 0-1. Pops I64 (not I32 -- the first
+                        // `replace_lane` member with a 64-bit scalar
+                        // operand) then V128, pushes V128.
+                        let lane_idx = read_lane_index(code, &mut offset, func_idx, "i64x2.replace_lane")?;
+                        if lane_idx >= 2 {
+                            return Err(ValidationError::Other(format!(
+                                "function #{func_idx}: i64x2.replace_lane lane index {lane_idx} out of range (must be 0-1)"
+                            )));
+                        }
+                        pop_expect(&mut stack, frame!(), ValueType::I64)?;
+                        pop_expect(&mut stack, frame!(), ValueType::V128)?;
+                        push_val(&mut stack, ValueType::V128);
+                    }
+                    wasm_opcodes::SimdOpKind::ExtractLaneF32x4 => {
+                        // f32x4.extract_lane (SIMD widen PR37): valid
+                        // range 0-3. Pops V128, pushes F32 -- the first
+                        // `extract_lane` family member whose result is
+                        // floating-point.
+                        let lane_idx = read_lane_index(code, &mut offset, func_idx, "f32x4.extract_lane")?;
+                        if lane_idx >= 4 {
+                            return Err(ValidationError::Other(format!(
+                                "function #{func_idx}: f32x4.extract_lane lane index {lane_idx} out of range (must be 0-3)"
+                            )));
+                        }
+                        pop_expect(&mut stack, frame!(), ValueType::V128)?;
+                        push_val(&mut stack, ValueType::F32);
+                    }
+                    wasm_opcodes::SimdOpKind::ReplaceLaneF32x4 => {
+                        // f32x4.replace_lane (SIMD widen PR37): valid
+                        // range 0-3. Pops F32 (the first `replace_lane`
+                        // member with a floating-point scalar operand)
+                        // then V128, pushes V128.
+                        let lane_idx = read_lane_index(code, &mut offset, func_idx, "f32x4.replace_lane")?;
+                        if lane_idx >= 4 {
+                            return Err(ValidationError::Other(format!(
+                                "function #{func_idx}: f32x4.replace_lane lane index {lane_idx} out of range (must be 0-3)"
+                            )));
+                        }
+                        pop_expect(&mut stack, frame!(), ValueType::F32)?;
+                        pop_expect(&mut stack, frame!(), ValueType::V128)?;
+                        push_val(&mut stack, ValueType::V128);
+                    }
+                    wasm_opcodes::SimdOpKind::ExtractLaneF64x2 => {
+                        // f64x2.extract_lane (SIMD widen PR37): valid
+                        // range 0-1. Pops V128, pushes F64.
+                        let lane_idx = read_lane_index(code, &mut offset, func_idx, "f64x2.extract_lane")?;
+                        if lane_idx >= 2 {
+                            return Err(ValidationError::Other(format!(
+                                "function #{func_idx}: f64x2.extract_lane lane index {lane_idx} out of range (must be 0-1)"
+                            )));
+                        }
+                        pop_expect(&mut stack, frame!(), ValueType::V128)?;
+                        push_val(&mut stack, ValueType::F64);
+                    }
+                    wasm_opcodes::SimdOpKind::ReplaceLaneF64x2 => {
+                        // f64x2.replace_lane (SIMD widen PR37): valid
+                        // range 0-1. Pops F64 then V128, pushes V128 --
+                        // the LAST member of the extract_lane/
+                        // replace_lane family across all six SIMD vector
+                        // shapes, closing out validation-time bounds
+                        // checking for the whole family.
+                        let lane_idx = read_lane_index(code, &mut offset, func_idx, "f64x2.replace_lane")?;
+                        if lane_idx >= 2 {
+                            return Err(ValidationError::Other(format!(
+                                "function #{func_idx}: f64x2.replace_lane lane index {lane_idx} out of range (must be 0-1)"
+                            )));
+                        }
+                        pop_expect(&mut stack, frame!(), ValueType::F64)?;
                         pop_expect(&mut stack, frame!(), ValueType::V128)?;
                         push_val(&mut stack, ValueType::V128);
                     }

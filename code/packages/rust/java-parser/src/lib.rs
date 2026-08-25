@@ -126,4 +126,135 @@ mod tests {
     fn test_reasonable_nesting_stays_under_the_cap() {
         assert!(parse_java(&nested_paren_source(10), "21").is_ok());
     }
+
+    // -------------------------------------------------------------------
+    // Real construct coverage (JV02 M0). `parses_basic_class` above only
+    // ever checked `ast.rule_name == "program"` on a bare `class Hello {
+    // }` -- it proves the parser didn't error, not that any interesting
+    // construct actually produced the AST shape a future lowering pass
+    // will need to match on. These tests use the engine's own
+    // `find_nodes`/`collect_tokens` walkers (parser::grammar_parser) to
+    // assert a named rule genuinely appears in the parsed tree, for every
+    // construct this frontend's own milestones (JV02 M1-M9) will consume.
+    // -------------------------------------------------------------------
+
+    use parser::grammar_parser::find_nodes;
+
+    #[test]
+    fn interface_with_generic_type_param_and_method_signature() {
+        let ast = parse_java("interface Shape<T> { T area(); }", "21").unwrap();
+        assert!(
+            !find_nodes(&ast, "interface_declaration").is_empty(),
+            "expected an interface_declaration node"
+        );
+        assert!(
+            !find_nodes(&ast, "type_parameters").is_empty(),
+            "expected a type_parameters node for <T>"
+        );
+        assert!(
+            !find_nodes(&ast, "interface_method_declaration").is_empty()
+                || !find_nodes(&ast, "method_declaration").is_empty(),
+            "expected a method-declaration-shaped node for `T area();`"
+        );
+    }
+
+    #[test]
+    fn class_with_extends_and_implements() {
+        let ast =
+            parse_java("class Dog extends Animal implements Comparable { }", "21").unwrap();
+        assert!(!find_nodes(&ast, "class_declaration").is_empty());
+        let tokens = parser::grammar_parser::collect_tokens(&ast, None);
+        let values: Vec<&str> = tokens.iter().map(|t| t.value.as_str()).collect();
+        assert!(values.contains(&"extends"), "expected `extends` keyword");
+        assert!(
+            values.contains(&"implements"),
+            "expected `implements` keyword"
+        );
+    }
+
+    #[test]
+    fn generic_class_declaration_with_field() {
+        let ast = parse_java("class Box<T> { T value; }", "21").unwrap();
+        assert!(!find_nodes(&ast, "class_declaration").is_empty());
+        assert!(
+            !find_nodes(&ast, "type_parameters").is_empty(),
+            "expected a type_parameters node for <T>"
+        );
+        assert!(!find_nodes(&ast, "field_declaration").is_empty());
+    }
+
+    #[test]
+    fn lambda_expression_assigned_to_a_variable() {
+        let ast = parse_java(
+            "class C { void m() { Runnable r = () -> System.out.println(1); } }",
+            "21",
+        )
+        .unwrap();
+        assert!(
+            !find_nodes(&ast, "lambda_expression").is_empty(),
+            "expected a lambda_expression node"
+        );
+    }
+
+    #[test]
+    fn try_catch_finally_with_throws_clause() {
+        let ast = parse_java(
+            "class C { void m() throws java.io.IOException { try { m(); } catch (java.io.IOException e) { } finally { } } }",
+            "21",
+        )
+        .unwrap();
+        assert!(!find_nodes(&ast, "try_statement").is_empty());
+        assert!(!find_nodes(&ast, "catch_clause").is_empty());
+        assert!(
+            !find_nodes(&ast, "throws_clause").is_empty(),
+            "expected a throws_clause node on the method signature"
+        );
+    }
+
+    #[test]
+    fn annotation_on_a_method_declaration() {
+        let ast = parse_java(
+            "class C { @Override public String toString() { return \"\"; } }",
+            "21",
+        )
+        .unwrap();
+        assert!(
+            !find_nodes(&ast, "annotation").is_empty(),
+            "expected an annotation node for @Override"
+        );
+        assert!(!find_nodes(&ast, "method_declaration").is_empty());
+    }
+
+    #[test]
+    fn enum_declaration_with_constants() {
+        let ast = parse_java("enum Color { RED, GREEN, BLUE }", "21").unwrap();
+        assert!(
+            !find_nodes(&ast, "enum_declaration").is_empty(),
+            "expected an enum_declaration node"
+        );
+    }
+
+    #[test]
+    fn varargs_and_method_reference() {
+        let ast = parse_java(
+            "class C { void f(int... xs) { java.util.Arrays.stream(xs).forEach(System.out::println); } }",
+            "21",
+        )
+        .unwrap();
+        // Real construct, no crash / parse error is the load-bearing
+        // assertion here -- `unwrap()` above already enforces that.
+        assert!(!find_nodes(&ast, "method_declaration").is_empty());
+    }
+
+    // NOTE: multi-level generic nesting (`Map<String, List<Integer>>`) is
+    // a KNOWN, tracked gap, not covered by a test here. The lexer merges
+    // the two closing `>` characters into a single ">>" token (see
+    // `coding_adventures_java_lexer`'s own
+    // `nested_generic_closing_angle_brackets_merge_into_one_token` test),
+    // and this parser has no contextual token-splitting to re-derive two
+    // separate closers from it -- `Map<String, List<Integer>>` currently
+    // fails to parse. This is a shared `parser` crate (GrammarParser)
+    // engine gap, not Java-specific (confirmed identically reproducible
+    // in `csharp-parser`), and is tracked as its own follow-up rather
+    // than silently asserted as expected-to-fail here.
 }

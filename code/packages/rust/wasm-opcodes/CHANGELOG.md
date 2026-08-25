@@ -2,6 +2,35 @@
 
 All notable changes to this package will be documented in this file.
 
+## [0.2.40] - 2026-08-24 - SIMD widen PR37: extract_lane/replace_lane family, remaining shapes (task #226-228)
+
+### Added
+
+- 10 new `SIMD_OPS` entries closing the extract_lane/replace_lane family
+  across all six SIMD vector shapes (`i8x16`'s own trio and
+  `i32x4.extract_lane` already existed from SIMD PR1b-2/PR18):
+  `i16x8.extract_lane_s` (`0x18`), `i16x8.extract_lane_u` (`0x19`),
+  `i16x8.replace_lane` (`0x1A`), `i32x4.replace_lane` (`0x1C`),
+  `i64x2.extract_lane` (`0x1D`), `i64x2.replace_lane` (`0x1E`),
+  `f32x4.extract_lane` (`0x1F`), `f32x4.replace_lane` (`0x20`),
+  `f64x2.extract_lane` (`0x21`), `f64x2.replace_lane` (`0x22`). 207 SIMD
+  opcodes total, up from 197. Each sub-opcode byte fetched live from the
+  SIMD proposal's own `BinarySIMD.md` and cross-checked against the
+  already-implemented `i8x16.extract_lane_s`/`_u`/`replace_lane`
+  (`0x15`-`0x17`) and `i32x4.extract_lane` (`0x1B`) entries, confirming
+  the whole `0x15`-`0x22` lane-op run is contiguous and self-consistent.
+- 10 new `SimdOpKind` variants: `ExtractLaneI16x8S`, `ExtractLaneI16x8U`,
+  `ReplaceLaneI16x8`, `ReplaceLaneI32x4`, `ExtractLaneI64x2`,
+  `ReplaceLaneI64x2`, `ExtractLaneF32x4`, `ReplaceLaneF32x4`,
+  `ExtractLaneF64x2`, `ReplaceLaneF64x2`. Each `extract_lane` variant
+  mirrors `ExtractLaneI8x16S`/`_U`'s "pop v128 + lane immediate, push
+  scalar" shape one lane width up (widening to `i32` for `i16x8`, no
+  widening for `i64x2`/`f32x4`/`f64x2` since those are already
+  native-width); each `replace_lane` variant mirrors
+  `ReplaceLaneI8x16`'s mixed-type binary-pop shape.
+- Table-size test updated from 197 to 207 entries. New test
+  `simd_extract_replace_lane_family_pr37_has_the_real_verified_sub_opcode_values`.
+
 ## [0.2.39] - 2026-08-24 - SIMD widen PR36: i64x2.extend_low/high_i32x4_s/u (task #223-225)
 
 ### Added

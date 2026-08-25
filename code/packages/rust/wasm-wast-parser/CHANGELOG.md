@@ -1,5 +1,43 @@
 # Changelog — wasm-wast-parser
 
+## 0.1.59 — 2026-08-24 — SIMD widen PR37: extract_lane/replace_lane family, remaining shapes + real lane-index literal grammar (task #226-228)
+
+### Added
+
+- The 10 new opcodes join the existing lane-immediate encoding arms in
+  both `encode_stream_instr` (flat form: lane index trails) and
+  `encode_folded_instr` (folded form: lane index leads, operands
+  trail): `ExtractLaneI16x8S`/`ExtractLaneI16x8U`/`ExtractLaneI64x2`/
+  `ExtractLaneF32x4`/`ExtractLaneF64x2` join the `ExtractLane`/
+  `ExtractLaneI8x16S`/`ExtractLaneI8x16U` arm; `ReplaceLaneI16x8`/
+  `ReplaceLaneI32x4`/`ReplaceLaneI64x2`/`ReplaceLaneF32x4`/
+  `ReplaceLaneF64x2` join the `ReplaceLaneI8x16` arm. Both arms' bodies
+  were already shape-agnostic (the encoding mechanics don't depend on
+  lane width or scalar type), so no NEW encoding logic was needed --
+  only widening the `|`-pattern match.
+
+### Changed
+
+- **`parse_lane_index` now supports the real WAT lane-index literal
+  grammar** (decimal or `0x`-hex, `_`-separated), not just a plain
+  `str::parse::<u8>()`. New `numeric::parse_lane_index` -- deliberately
+  NOT built on `parse_int_magnitude`'s sign-stripping (correct for
+  `parse_i32`/`parse_u32`'s dual signed/unsigned spelling, WRONG here):
+  a lane index's own WAT grammar (`laneidx`, a plain unsigned token)
+  does not allow a leading `+`/`-` sign AT ALL, confirmed against the
+  real upstream `simd_lane.wast` corpus, which vendors BOTH directions
+  of this exact distinction in the same file -- plain hex/underscore/
+  leading-zero-decimal literals (`0x0f`, `0x0_7`, `03`) must be
+  ACCEPTED, while the same literals with an explicit `+` prefix
+  (`+0x0f`, `+03`) must be REJECTED as malformed. This fix also
+  retroactively unlocks a previously-unbuildable module in the
+  already-vendored `simd_splat.wast` (a lane-index literal in a form
+  the old decimal-only parser couldn't parse) -- see `wasm-conformance`'s
+  own CHANGELOG/NOTICE for the real before/after pass-rate numbers.
+- New tests: folded/flat encoding for all 10 new opcodes at their valid
+  lane-index extremes; hex/underscore/leading-zero-decimal lane-index
+  literal parsing; leading `+`/`-` sign rejection.
+
 ## 0.1.58 — 2026-08-24 — SIMD widen PR36: i64x2.extend_low/high_i32x4_s/u text-form (task #223-225)
 
 ### Added

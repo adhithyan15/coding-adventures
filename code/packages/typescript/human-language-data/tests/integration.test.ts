@@ -39,7 +39,7 @@ describe("real curriculum", () => {
     expect(scripts.devanagari!.complete).toBe(true);
   });
 
-  it("keeps the cross-script closure queue measured after Persian and Urdu dal", () => {
+  it("keeps the cross-script closure queue measured after Telugu అ", () => {
     const candrakkala = scripts.malayalam!.marks!.find((mark) => mark.mark === "്")!;
     expect(candrakkala.role).toBe("virama");
     expect(candrakkala.compositionOrder).toEqual([
@@ -135,6 +135,26 @@ describe("real curriculum", () => {
     );
     expect(tamilU.compositionSource?.variation).toMatch(
       /encoded carrier-first composition.*normally ligates.*not a universal handwriting direction.*no standalone ductus claim/i,
+    );
+
+    const teluguA = scripts.telugu!.independentVowels!.find((entry) => entry.glyph === "అ")!;
+    expect(teluguA.sound).toBe("a");
+    expect(teluguA.penLifts).toBe(1);
+    expect(teluguA.strokeOrder).toEqual([
+      "turn around the left lobe",
+      "sweep around the broad lower bowl",
+      "turn around the right lobe",
+      "return left along the inner bar",
+    ]);
+    expect(teluguA.strokeOrderNote).toMatch(/four numbered movements.*two pen-down runs.*1.?2.*3.?4/i);
+    expect(teluguA.strokeOrderSource?.url).toBe(
+      "https://write-telugu-alphabets.en.aptoide.com/app",
+    );
+    expect(teluguA.strokeOrderSource?.citation).toMatch(
+      /Sathish Shanmugam.*Write Telugu Alphabets.*అ.*movements 1.?4.*version 2\.6/i,
+    );
+    expect(teluguA.strokeOrderSource?.variation).toMatch(
+      /four directional movements.*two pen-down starts.*1.?2.*3.?4.*not uniform.*Noto Sans Telugu/i,
     );
 
     const tamilRetroflexLa = scripts.tamil!.letters.find((entry) => entry.glyph === "ள")!;
@@ -377,9 +397,11 @@ describe("real curriculum", () => {
     expect(affected.get("ಂ") ?? 0).toBe(0);
     expect(missingByScript.get("tamil.json")?.has("ள")).toBe(false);
     expect(affected.get("ள") ?? 0).toBe(0);
+    expect(missingByScript.get("telugu.json")?.has("అ")).toBe(false);
+    expect(affected.get("అ") ?? 0).toBe(0);
     expect(
       [...affected.entries()].sort((left, right) => right[1] - left[1])[0],
-    ).toEqual(["అ", 20]);
+    ).toEqual(["ر", 18]);
   });
 
   it("loaded every track (17+ and growing)", () => {

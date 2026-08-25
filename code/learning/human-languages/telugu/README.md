@@ -146,30 +146,35 @@ Chapters 35–40 are a pre-A1 vocabulary-depth tranche (family, face, heart, tea
 and a meal) rather than a new grammar arc; every payoff there closes its own
 chapter's atoms at full representativeness.
 
-## Handwriting — not taught yet, and why
+## Handwriting — the first sourced shape, not yet a writing course
 
-The track teaches you to **read** Telugu and not to **write** it. Every one of the
-455 entries in [`../data/scripts/telugu.json`](../data/scripts/telugu.json) carries
-an empty `strokeOrder`, and there are no `type: writing` lessons. That is a gap, and
-it is recorded rather than papered over.
+The track still teaches you primarily to **read** Telugu: there are no `type:
+writing` lessons yet. The script inventory now has one source-verified exception
+to its recognition-only baseline, however. Independent short **అ** carries four
+numbered movements in two pen-down runs, and Language Ladder fits those movements
+to the vendored Noto Sans Telugu outline. The remaining recognition rows retain
+empty `strokeOrder` arrays rather than guesses.
 
-The blocker is not effort — it is provenance. A pen path's *shape* can be checked
+That distinction is provenance, not polish. A pen path's *shape* can be checked
 against the vendored font automatically, but no font records the *order* a hand
-travels it in, so the order has to trace to a published source. Nothing citable could
-be reached for a single Telugu letter (HL-C41; the search record is in
-[`../BACKLOG.md`](../BACKLOG.md)). Rather than invent a plausible order, none was
-authored.
+travels it in. The order for **అ** comes from Sathish Shanmugam's *Write Telugu
+Alphabets* tracing screen; movements 1–2 stay joined around the left lobe and
+lower bowl, then movements 3–4 restart around the right lobe and return along the
+inner bar. Vemuri's published overview also cautions that Telugu stroke direction
+is not uniform across letters, so this is one attested pedagogical order, not a
+claim that every school uses the same ductus.
 
-Two things are worth knowing when that source turns up:
+Two things govern the remaining work:
 
 - **Only ~36 shapes need authoring, not 455.** Telugu's syllabary is compositional —
   a base consonant plus a vowel sign — so handwriting is authored for the *parts* and
-  a syllable's figure is assembled from them.
+  a syllable's figure is assembled from them. Independent vowels such as **అ**
+  are authored directly because they have no consonant carrier.
 - **"Telugu is written without lifting the pen" is a simplification.** The roundness
   does make many letters loop-continuous, but the published account of Telugu stroke
   direction is that it is not uniform across letters, and the `talakattu` tick on top
-  of most consonants is its own mark. Until a path is authored and font-checked, no
-  entry carries a `penLifts` — and absent means *not verified*, never *none*.
+  of most consonants is its own mark. Until a path is authored and font-checked, an
+  entry carries no `penLifts` — and absent means *not verified*, never *none*.
 
 ## Book / fonts
 

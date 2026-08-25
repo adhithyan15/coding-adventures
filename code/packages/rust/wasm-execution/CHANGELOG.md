@@ -2,6 +2,35 @@
 
 All notable changes to this package will be documented in this file.
 
+## [0.9.47] - 2026-08-24 (task #226-228 — SIMD widen PR37: extract_lane/replace_lane family, remaining shapes)
+
+### Added
+
+- New dispatch arms for the 10 remaining extract_lane/replace_lane
+  opcodes: `i16x8.extract_lane_s`/`_u` (sign-/zero-extend the 2-byte
+  lane to `i32`), `i16x8.replace_lane` (truncate the popped `i32` to its
+  low 16 bits), `i32x4.replace_lane` (full-width, no truncation),
+  `i64x2.extract_lane`/`replace_lane` (native `i64`, no widening),
+  `f32x4.extract_lane`/`replace_lane`, `f64x2.extract_lane`/
+  `replace_lane`. Every arm bounds-checks the lane index BEFORE indexing
+  the 16-byte lane buffer (0-7 for `i16x8`, 0-3 for `i32x4`/`f32x4`,
+  0-1 for `i64x2`/`f64x2`), same discipline as the existing
+  `i8x16.extract_lane_s`/`_u`/`replace_lane` handlers -- a clean
+  `VMError`, never an out-of-bounds panic.
+- The `0xFD`-prefix decoder's lane-immediate sub-opcode check widened
+  from an explicit 4-value list (`0x15`/`0x16`/`0x17`/`0x1B`) to the now
+  fully-contiguous `0x15..=0x22` range -- every one of the 14
+  extract_lane/replace_lane opcodes carries a single raw (non-LEB128)
+  lane-index byte immediate.
+
+### Changed
+
+- New unit tests: sign/zero-extension for `i16x8.extract_lane_s`/`_u`,
+  replace-then-extract round-trips for every new `replace_lane` variant
+  (proving the write actually landed, not just that SOME v128 came
+  back), out-of-range lane index rejection for all 10 new opcodes (a
+  clean `Result::Err`, not a panic).
+
 ## [0.9.46] - 2026-08-24 (task #223-225 — SIMD widen PR36: i64x2.extend_low/high_i32x4_s/u)
 
 ### Added

@@ -139,7 +139,7 @@ export const SCRIPTS: ScriptData[] = [
 /** Resolve a cited letter back to the exact canonical script font that owns it. */
 export function verifiedLetterFont(glyph: string, sourceUrl: string): string | undefined {
   return SCRIPTS.find((script) =>
-    script.letters.some(
+    [...script.letters, ...(script.independentVowels ?? [])].some(
       (letter) => letter.glyph === glyph && letter.strokeOrderSource?.url === sourceUrl,
     ),
   )?.font;

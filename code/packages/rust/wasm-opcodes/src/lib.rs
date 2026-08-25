@@ -1273,6 +1273,78 @@ pub enum SimdOpKind {
     /// result -- deliberately not force-fit into `ExtractLane`'s shape,
     /// since neither its pop count nor its result type match.
     ReplaceLaneI8x16,
+    /// `i16x8.extract_lane_s` (SIMD widen PR37) -- read one `i16` lane
+    /// back out of a `v128`, selected by a lane-index immediate (0-7,
+    /// between `i8x16`'s 0-15 and `i32x4`'s 0-3), SIGN-extended to `i32`.
+    /// Direct 8-lane mirror of [`Self::ExtractLaneI8x16S`], one lane
+    /// width up -- same "pop v128 + lane immediate, push i32" shape,
+    /// same signed/unsigned split (a 16-bit lane still has a narrower
+    /// representation to sign- or zero-extend from, unlike `i32x4`'s
+    /// full-width lanes).
+    ExtractLaneI16x8S,
+    /// `i16x8.extract_lane_u` -- same shape as [`Self::ExtractLaneI16x8S`],
+    /// but ZERO-extended to `i32` instead of sign-extended.
+    ExtractLaneI16x8U,
+    /// `i16x8.replace_lane` -- pop an `i32` (only its low 16 bits are
+    /// used) and a `v128`, overwrite the `v128`'s lane selected by a
+    /// lane-index immediate (0-7) with that low `i16`, push the
+    /// resulting `v128`. Direct 8-lane mirror of
+    /// [`Self::ReplaceLaneI8x16`], one lane width up -- same mixed-type
+    /// (`v128`, then `i32`) binary pop producing a `v128`.
+    ReplaceLaneI16x8,
+    /// `i32x4.replace_lane` (SIMD widen PR37) -- pop an `i32` and a
+    /// `v128`, overwrite the `v128`'s lane selected by a lane-index
+    /// immediate (0-3) with the full `i32`, push the resulting `v128`.
+    /// The `i32x4` counterpart to [`Self::ExtractLane`] (which reads
+    /// `i32x4` lanes back out) -- same shape as
+    /// [`Self::ReplaceLaneI8x16`]/[`Self::ReplaceLaneI16x8`], just at
+    /// `i32x4`'s full 32-bit lane width, so there's no narrowing
+    /// truncation on write (unlike the `i8x16`/`i16x8` replace variants,
+    /// which only keep the low byte/half-word of the popped `i32`).
+    ReplaceLaneI32x4,
+    /// `i64x2.extract_lane` (SIMD widen PR37) -- read one `i64` lane
+    /// back out of a `v128`, selected by a lane-index immediate (0-1,
+    /// this table's narrowest lane-index range so far). Pops a `v128`,
+    /// pushes an `I64` -- the first `extract_lane` family member whose
+    /// result is NOT `i32`: a full 64-bit lane is already the native
+    /// WASM `i64` stack type, so there's no widening left to do (unlike
+    /// `i8x16`/`i16x8`, which sign-/zero-extend their narrower lanes up
+    /// to `i32`), and no signed/unsigned split either.
+    ExtractLaneI64x2,
+    /// `i64x2.replace_lane` -- pop an `i64` and a `v128`, overwrite the
+    /// `v128`'s lane selected by a lane-index immediate (0-1) with that
+    /// `i64`, push the resulting `v128`. Same mixed-type binary-pop
+    /// shape as [`Self::ReplaceLaneI8x16`]/[`Self::ReplaceLaneI16x8`]/
+    /// [`Self::ReplaceLaneI32x4`], but the FIRST `replace_lane` member
+    /// whose popped scalar is `I64`, not `I32`.
+    ReplaceLaneI64x2,
+    /// `f32x4.extract_lane` (SIMD widen PR37) -- read one `f32` lane back
+    /// out of a `v128`, selected by a lane-index immediate (0-3). Pops a
+    /// `v128`, pushes an `F32` -- the first `extract_lane` family member
+    /// whose result is FLOATING-POINT, not integer. No sign-/zero-
+    /// extension split (floating-point lanes have no narrower-width
+    /// variant to extend from), same reasoning as `i32x4`/`i64x2`'s
+    /// single-variant extract ops.
+    ExtractLaneF32x4,
+    /// `f32x4.replace_lane` -- pop an `f32` and a `v128`, overwrite the
+    /// `v128`'s lane selected by a lane-index immediate (0-3) with that
+    /// `f32`, push the resulting `v128`. Same mixed-type binary-pop
+    /// shape as the integer `replace_lane` variants, but the FIRST
+    /// `replace_lane` member whose popped scalar is a FLOAT.
+    ReplaceLaneF32x4,
+    /// `f64x2.extract_lane` (SIMD widen PR37) -- read one `f64` lane back
+    /// out of a `v128`, selected by a lane-index immediate (0-1, same
+    /// narrow range as `i64x2`'s extract/replace pair, since both are
+    /// this table's only 2-lane shapes). Pops a `v128`, pushes an `F64`.
+    ExtractLaneF64x2,
+    /// `f64x2.replace_lane` -- pop an `f64` and a `v128`, overwrite the
+    /// `v128`'s lane selected by a lane-index immediate (0-1) with that
+    /// `f64`, push the resulting `v128`. The LAST member of the
+    /// `extract_lane`/`replace_lane` family across all six SIMD vector
+    /// shapes (`i8x16`/`i16x8`/`i32x4`/`i64x2`/`f32x4`/`f64x2`) --
+    /// closes out the family this table opened with `i32x4.extract_lane`
+    /// back in SIMD PR1b-2.
+    ReplaceLaneF64x2,
     /// `f32x4.abs` -- pop one `v128`, clear the sign bit of each of the 4
     /// `f32` lanes (`f32::abs()` in Rust is a pure bit operation here, no
     /// NaN/signed-zero subtlety -- unlike [`Self::MinF32x4`] below). Same
@@ -2216,6 +2288,24 @@ pub static SIMD_OPS: &[SimdOpInfo] = &[
     SimdOpInfo { name: "i8x16.extract_lane_s", sub_opcode: 0x15, kind: SimdOpKind::ExtractLaneI8x16S },
     SimdOpInfo { name: "i8x16.extract_lane_u", sub_opcode: 0x16, kind: SimdOpKind::ExtractLaneI8x16U },
     SimdOpInfo { name: "i8x16.replace_lane", sub_opcode: 0x17, kind: SimdOpKind::ReplaceLaneI8x16 },
+    // ── SIMD widen PR37: the remaining extract_lane/replace_lane family
+    // members across i16x8/i32x4/i64x2/f32x4/f64x2 (i8x16's trio and
+    // i32x4.extract_lane above already existed from PR1b-2/PR18). Each
+    // sub-opcode byte fetched live from BinarySIMD.md and cross-checked
+    // against the already-implemented i8x16.extract_lane_s (0x15)/
+    // extract_lane_u (0x16)/replace_lane (0x17) and i32x4.extract_lane
+    // (0x1B) entries above -- confirming the whole 0x15-0x22 lane-op run
+    // is contiguous and self-consistent.
+    SimdOpInfo { name: "i16x8.extract_lane_s", sub_opcode: 0x18, kind: SimdOpKind::ExtractLaneI16x8S },
+    SimdOpInfo { name: "i16x8.extract_lane_u", sub_opcode: 0x19, kind: SimdOpKind::ExtractLaneI16x8U },
+    SimdOpInfo { name: "i16x8.replace_lane", sub_opcode: 0x1A, kind: SimdOpKind::ReplaceLaneI16x8 },
+    SimdOpInfo { name: "i32x4.replace_lane", sub_opcode: 0x1C, kind: SimdOpKind::ReplaceLaneI32x4 },
+    SimdOpInfo { name: "i64x2.extract_lane", sub_opcode: 0x1D, kind: SimdOpKind::ExtractLaneI64x2 },
+    SimdOpInfo { name: "i64x2.replace_lane", sub_opcode: 0x1E, kind: SimdOpKind::ReplaceLaneI64x2 },
+    SimdOpInfo { name: "f32x4.extract_lane", sub_opcode: 0x1F, kind: SimdOpKind::ExtractLaneF32x4 },
+    SimdOpInfo { name: "f32x4.replace_lane", sub_opcode: 0x20, kind: SimdOpKind::ReplaceLaneF32x4 },
+    SimdOpInfo { name: "f64x2.extract_lane", sub_opcode: 0x21, kind: SimdOpKind::ExtractLaneF64x2 },
+    SimdOpInfo { name: "f64x2.replace_lane", sub_opcode: 0x22, kind: SimdOpKind::ReplaceLaneF64x2 },
     SimdOpInfo { name: "f32x4.abs", sub_opcode: 0xE0, kind: SimdOpKind::AbsF32x4 },
     SimdOpInfo { name: "f32x4.mul", sub_opcode: 0xE6, kind: SimdOpKind::MulF32x4 },
     SimdOpInfo { name: "f32x4.min", sub_opcode: 0xE8, kind: SimdOpKind::MinF32x4 },
@@ -2935,8 +3025,8 @@ mod tests {
     // ── SIMD (0xFD prefix, v128 first slice) ─────────────────────────────────
 
     #[test]
-    fn simd_ops_table_has_the_expected_197_entries_and_no_duplicates() {
-        assert_eq!(SIMD_OPS.len(), 197);
+    fn simd_ops_table_has_the_expected_207_entries_and_no_duplicates() {
+        assert_eq!(SIMD_OPS.len(), 207);
 
         let mut seen_sub_opcodes = std::collections::HashSet::new();
         let mut seen_names = std::collections::HashSet::new();
@@ -3439,6 +3529,34 @@ mod tests {
             ("i8x16.extract_lane_s", 0x15, SimdOpKind::ExtractLaneI8x16S),
             ("i8x16.extract_lane_u", 0x16, SimdOpKind::ExtractLaneI8x16U),
             ("i8x16.replace_lane", 0x17, SimdOpKind::ReplaceLaneI8x16),
+        ] {
+            let op = get_simd_op(sub_opcode).unwrap_or_else(|| panic!("{sub_opcode:#04x} should be {name}"));
+            assert_eq!(op.name, name);
+            assert_eq!(op.kind, kind);
+            assert_eq!(get_simd_op_by_name(name).map(|o| o.sub_opcode), Some(sub_opcode));
+        }
+    }
+
+    #[test]
+    fn simd_extract_replace_lane_family_pr37_has_the_real_verified_sub_opcode_values() {
+        // SIMD widen PR37: the remaining extract_lane/replace_lane family
+        // members across i16x8/i32x4/i64x2/f32x4/f64x2 -- fetched live
+        // from BinarySIMD.md and cross-checked against the already-
+        // implemented i8x16.extract_lane_s (0x15)/extract_lane_u (0x16)/
+        // replace_lane (0x17) and i32x4.extract_lane (0x1B) entries
+        // (all four matched exactly, confirming the whole 0x15-0x22
+        // lane-op run is contiguous and self-consistent).
+        for (name, sub_opcode, kind) in [
+            ("i16x8.extract_lane_s", 0x18, SimdOpKind::ExtractLaneI16x8S),
+            ("i16x8.extract_lane_u", 0x19, SimdOpKind::ExtractLaneI16x8U),
+            ("i16x8.replace_lane", 0x1A, SimdOpKind::ReplaceLaneI16x8),
+            ("i32x4.replace_lane", 0x1C, SimdOpKind::ReplaceLaneI32x4),
+            ("i64x2.extract_lane", 0x1D, SimdOpKind::ExtractLaneI64x2),
+            ("i64x2.replace_lane", 0x1E, SimdOpKind::ReplaceLaneI64x2),
+            ("f32x4.extract_lane", 0x1F, SimdOpKind::ExtractLaneF32x4),
+            ("f32x4.replace_lane", 0x20, SimdOpKind::ReplaceLaneF32x4),
+            ("f64x2.extract_lane", 0x21, SimdOpKind::ExtractLaneF64x2),
+            ("f64x2.replace_lane", 0x22, SimdOpKind::ReplaceLaneF64x2),
         ] {
             let op = get_simd_op(sub_opcode).unwrap_or_else(|| panic!("{sub_opcode:#04x} should be {name}"));
             assert_eq!(op.name, name);
