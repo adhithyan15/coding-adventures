@@ -1792,16 +1792,19 @@ fn encode_stream_instr(
             | wasm_opcodes::SimdOpKind::Load8Splat
             | wasm_opcodes::SimdOpKind::Load16Splat
             | wasm_opcodes::SimdOpKind::Load32Splat
-            | wasm_opcodes::SimdOpKind::Load64Splat => {
-                // v128.load/v128.store (SIMD widen PR15), plus the
-                // v128.loadN_splat family (SIMD PR40): a standard
-                // `memarg` immediate (align, offset), same shape and
-                // parser every scalar `iNN.load`/`iNN.store` uses --
-                // this first slice doesn't support an explicit leading
-                // memidx token (memory 0 only, same scope note as the
-                // executor in wasm-execution). The encoding is identical
-                // regardless of Load vs. Store vs. loadN_splat -- only the
-                // sub-opcode value differs, already captured in
+            | wasm_opcodes::SimdOpKind::Load64Splat
+            | wasm_opcodes::SimdOpKind::Load32Zero
+            | wasm_opcodes::SimdOpKind::Load64Zero => {
+                // v128.load/v128.store (SIMD widen PR15), the
+                // v128.loadN_splat family (SIMD PR40), plus the
+                // v128.loadN_zero family (SIMD PR41): a standard `memarg`
+                // immediate (align, offset), same shape and parser every
+                // scalar `iNN.load`/`iNN.store` uses -- this first slice
+                // doesn't support an explicit leading memidx token
+                // (memory 0 only, same scope note as the executor in
+                // wasm-execution). The encoding is identical regardless
+                // of Load vs. Store vs. loadN_splat vs. loadN_zero -- only
+                // the sub-opcode value differs, already captured in
                 // `simd_op.sub_opcode`.
                 let (memarg, consumed) = parse_memarg(following, 0);
                 out.push(0xFD);
@@ -2727,12 +2730,15 @@ fn encode_flat_instr(
             | wasm_opcodes::SimdOpKind::Load8Splat
             | wasm_opcodes::SimdOpKind::Load16Splat
             | wasm_opcodes::SimdOpKind::Load32Splat
-            | wasm_opcodes::SimdOpKind::Load64Splat => {
-                // v128.load/v128.store (SIMD widen PR15), plus the
-                // v128.loadN_splat family (SIMD PR40): a standard
-                // `memarg` immediate (align, offset) -- this first slice
-                // doesn't support an explicit leading memidx token
-                // (memory 0 only, same scope note as the executor in
+            | wasm_opcodes::SimdOpKind::Load64Splat
+            | wasm_opcodes::SimdOpKind::Load32Zero
+            | wasm_opcodes::SimdOpKind::Load64Zero => {
+                // v128.load/v128.store (SIMD widen PR15), the
+                // v128.loadN_splat family (SIMD PR40), plus the
+                // v128.loadN_zero family (SIMD PR41): a standard `memarg`
+                // immediate (align, offset) -- this first slice doesn't
+                // support an explicit leading memidx token (memory 0
+                // only, same scope note as the executor in
                 // wasm-execution). Encoding is identical regardless of
                 // which of these kinds it is -- only `simd_op.sub_opcode`
                 // differs.
@@ -5825,6 +5831,34 @@ mod tests {
         )
         .unwrap();
         assert_eq!(code_of(&flat, 0), &[0x20, 0x00, 0xFD, 0x07, 0x00, 0x00, 0x0B]);
+    }
+
+    #[test]
+    fn v128_load_zero_family_encodes_the_real_sub_opcodes_with_a_memarg() {
+        // SIMD PR41: v128.load32_zero/load64_zero -- reuses the SAME
+        // memarg-parsing match arm `v128.load`/`v128.store`/the
+        // `load_splat` family already own (see this file's own
+        // `SimdOpKind::Load | ... | Load64Zero` arm), just with the new
+        // sub-opcode values (0x5C/0x5D). Covers both the folded form
+        // (with an explicit `offset=` attribute) and the flat/stream
+        // form, mirroring
+        // `v128_load_splat_family_encodes_the_real_sub_opcodes_with_a_memarg`
+        // above.
+        let m = parse_module(
+            r#"(module (memory 1)
+                 (func (param i32) (result v128) (v128.load32_zero offset=8 (local.get 0)))
+                 (func (param i32) (result v128) (v128.load64_zero (local.get 0))))"#,
+        )
+        .unwrap();
+        // local.get 0 ; v128.load32_zero align=0 offset=8 ; end
+        assert_eq!(code_of(&m, 0), &[0x20, 0x00, 0xFD, 0x5C, 0x00, 0x08, 0x0B]);
+        assert_eq!(code_of(&m, 1), &[0x20, 0x00, 0xFD, 0x5D, 0x00, 0x00, 0x0B]);
+
+        let flat = parse_module(
+            "(module (memory 1) (func (param i32) (result v128) local.get 0 v128.load32_zero))",
+        )
+        .unwrap();
+        assert_eq!(code_of(&flat, 0), &[0x20, 0x00, 0xFD, 0x5C, 0x00, 0x00, 0x0B]);
     }
 
     #[test]

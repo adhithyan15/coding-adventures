@@ -603,6 +603,17 @@ TESTSUITE_FILES = [
     # First bite into the wider load-extend/splat/zero/lane family opened
     # by this PR's scoping pass -- see this file's own doc comment.
     "simd_load_splat.wast",
+    # SIMD PR41: simd_load_zero.wast -- v128.load32_zero/load64_zero
+    # (sub-opcodes 0x5C/0x5D), same "load then fill a v128" shape as
+    # `simd_load_splat.wast` above, but ZEROES the non-loaded lanes
+    # instead of repeating the loaded value. Second bite into the wider
+    # load_extend/load_splat/load_zero/load{8,16,32,64}_lane/
+    # store{8,16,32,64}_lane memory-access family PR39 deferred and PR40
+    # opened -- the simplest remaining piece (still the plain "pop i32,
+    # push v128" type signature, no new instruction SHAPE needed, unlike
+    # the lane-load/store family which needs a v128 operand input PLUS a
+    # lane-index immediate PLUS a memarg all at once).
+    "simd_load_zero.wast",
 ]
 
 # Reference-types/threads-proposal files whose UPSTREAM path lives under

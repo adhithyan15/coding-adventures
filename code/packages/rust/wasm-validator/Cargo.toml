@@ -1,6 +1,6 @@
 [package]
 name = "wasm-validator"
-version = "0.2.52"
+version = "0.2.53"
 edition = "2021"
 description = "WebAssembly 1.0 wasm-validator"
 

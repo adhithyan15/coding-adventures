@@ -2,6 +2,47 @@
 
 All notable changes to this package will be documented in this file.
 
+## [0.9.52] - 2026-08-25 (SIMD PR41: v128.loadN_zero family)
+
+### Added
+
+- `v128.load32_zero`/`load64_zero` (`SimdOpKind::Load32Zero`/
+  `Load64Zero`, sub-opcodes `0x5C`/`0x5D`): pop the `i32` base address,
+  add the instruction's own `memarg` offset, bounds-checked read of 4/8
+  raw bytes (little-endian) from memory 0 via the existing full-width
+  `load_i32`/`load_i64` loaders, place those bytes in the LOW 32/64 bits
+  of a new `v128` and ZERO the remaining bytes. Same "load then fill a
+  v128" shape as `Load32Splat`/`Load64Splat` (SIMD PR40), but zeroed
+  instead of repeated.
+
+### Fixed
+
+- The `0xFD`-prefixed SIMD instruction decoder's memarg-detection gate
+  (widened in PR40 to cover `0x07..=0x0A`) only recognized `v128.load`/
+  `v128.store`/the `load_splat` family. Widened again to also cover
+  `0x5C`/`0x5D` -- without this, every `v128.loadN_zero` with a non-zero
+  `offset=` immediate would have silently fallen through to the "no
+  immediate" decode arm (leaving `aux` at 0) and read from the wrong
+  address. Caught by `v128_load32_zero_honors_a_nonzero_memarg_offset`
+  and the upstream `simd_load_zero.wast` corpus's own offset-variant
+  `assert_return` directives, all of which would otherwise silently
+  mis-grade. Same lesson PR40's own decoder fix already established --
+  every new memarg-carrying SIMD opcode must be added to this gate, not
+  just to the executor's own `match`.
+
+### Tests
+
+- `v128_load32_zero_places_four_bytes_in_the_low_lane_and_zeroes_the_
+  rest`, `v128_load64_zero_places_eight_bytes_in_the_low_lane_and_
+  zeroes_the_rest`: each reads back the exact bytes a plain scalar
+  `i32.store`/`i64.store` wrote to real memory, placed in the low lane
+  with the rest ZEROED -- same "prove it reads genuine `LinearMemory`
+  content" discipline as the existing `v128.load`/`load_splat` tests.
+- `v128_load32_zero_honors_a_nonzero_memarg_offset`: pins the
+  decoder-gate fix above.
+- `v128_load_zero_family_past_the_end_of_memory_traps_cleanly_not_panic`:
+  both widths trap, not panic, when `address + width` overruns memory.
+
 ## [0.9.51] - 2026-08-25 (SIMD PR40: v128.loadN_splat family)
 
 ### Added

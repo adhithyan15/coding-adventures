@@ -2114,6 +2114,27 @@ pub enum SimdOpKind {
     /// as [`Self::Load8Splat`], but reads 8 raw bytes (little-endian) and
     /// broadcasts that 64-bit value into both lanes of the result.
     Load64Splat,
+    /// `v128.load32_zero` (SIMD PR41) -- pop the `i32` base address, add
+    /// this instruction's own `memarg` offset, bounds-checked read of
+    /// exactly 4 raw bytes (little-endian) from memory 0, place those 4
+    /// bytes in the LOW 32 bits of a new `v128` and fill the remaining 12
+    /// bytes with zero. Same "load then fill a v128" shape as
+    /// [`Self::Load32Splat`], but the non-loaded lanes are ZEROED instead
+    /// of repeating the loaded value -- the "zero" half of the
+    /// `load_extend`/`load_splat`/`load_zero`/`load{8,16,32,64}_lane`/
+    /// `store{8,16,32,64}_lane` memory-access family PR39 deferred and
+    /// PR40 opened with the `load_splat` slice. Opens the `v128.loadN_
+    /// zero` family (this PR's whole scope) -- see
+    /// `code/specs/W13-wasm-simd-v128-first-slice.md`'s staged-PR plan
+    /// and the upstream `simd_load_zero.wast` corpus this PR vendors.
+    Load32Zero,
+    /// `v128.load64_zero` (SIMD PR41) -- same "load then zero-fill" shape
+    /// as [`Self::Load32Zero`], but reads 8 raw bytes (little-endian) and
+    /// places them in the LOW 64 bits of the result, zeroing the
+    /// remaining 8 bytes (the upper lane). Closes the `v128.loadN_zero`
+    /// family (both opcodes land in this single PR, mirroring the
+    /// one-family-per-PR cadence PR40 established for `load_splat`).
+    Load64Zero,
 }
 
 /// One entry in the SIMD opcode table: everything a consumer needs to
@@ -2775,6 +2796,22 @@ pub static SIMD_OPS: &[SimdOpInfo] = &[
     SimdOpInfo { name: "v128.load16_splat", sub_opcode: 0x08, kind: SimdOpKind::Load16Splat },
     SimdOpInfo { name: "v128.load32_splat", sub_opcode: 0x09, kind: SimdOpKind::Load32Splat },
     SimdOpInfo { name: "v128.load64_splat", sub_opcode: 0x0A, kind: SimdOpKind::Load64Splat },
+
+    // ── v128.loadN_zero family (SIMD PR41) ──────────────────────────────
+    //
+    // Sub-opcode values verified live against the SIMD proposal's own
+    // BinarySIMD.md (https://github.com/WebAssembly/spec/blob/main/
+    // proposals/simd/BinarySIMD.md) at the time of this PR -- 0x5C/0x5D
+    // sit well outside the `load_splat` family's 0x07-0x0A run (confirmed
+    // NOT a simple "next after splat" continuation, per PR40's own
+    // sub-opcode-value test comment), and neither collided with any
+    // pre-existing entry in this table. See each variant's own doc
+    // comment above (`SimdOpKind::Load32Zero`/`Load64Zero`) for the exact
+    // "load then zero-fill" semantics. This PR also vendors
+    // `simd_load_zero.wast` -- see `code/packages/rust/wasm-conformance/
+    // tests/fixtures/fetch_testsuite.py`.
+    SimdOpInfo { name: "v128.load32_zero", sub_opcode: 0x5C, kind: SimdOpKind::Load32Zero },
+    SimdOpInfo { name: "v128.load64_zero", sub_opcode: 0x5D, kind: SimdOpKind::Load64Zero },
 ];
 
 /// Look up a SIMD opcode by its LEB128-decoded sub-opcode value (the
@@ -3193,8 +3230,8 @@ mod tests {
     // ── SIMD (0xFD prefix, v128 first slice) ─────────────────────────────────
 
     #[test]
-    fn simd_ops_table_has_the_expected_220_entries_and_no_duplicates() {
-        assert_eq!(SIMD_OPS.len(), 220);
+    fn simd_ops_table_has_the_expected_222_entries_and_no_duplicates() {
+        assert_eq!(SIMD_OPS.len(), 222);
 
         let mut seen_sub_opcodes = std::collections::HashSet::new();
         let mut seen_names = std::collections::HashSet::new();
@@ -4244,5 +4281,31 @@ mod tests {
         // the sub-opcode space.
         assert_eq!(get_simd_op(0x00).map(|o| o.name), Some("v128.load"));
         assert_eq!(get_simd_op(0x0B).map(|o| o.name), Some("v128.store"));
+    }
+
+    #[test]
+    fn simd_load_zero_family_has_the_real_verified_sub_opcode_values() {
+        // SIMD PR41 (v128.loadN_zero family): v128.load32_zero (0x5C),
+        // v128.load64_zero (0x5D) -- fetched live from BinarySIMD.md.
+        // This pair sits immediately after the `v128.load{8,16,32,64}_
+        // lane`/`v128.store{8,16,32,64}_lane` family (0x54-0x5B, not yet
+        // implemented -- a later PR, since it needs a new instruction
+        // SHAPE: an existing v128 operand PLUS a lane-index immediate
+        // PLUS a memarg, unlike this pair) and immediately before
+        // `f32x4.demote_f64x2_zero` (0x5E, already implemented) -- well
+        // outside the `load_splat` family's 0x07-0x0A run confirmed by
+        // PR40's own sub-opcode-value test comment.
+        for (name, sub_opcode, kind) in [
+            ("v128.load32_zero", 0x5C, SimdOpKind::Load32Zero),
+            ("v128.load64_zero", 0x5D, SimdOpKind::Load64Zero),
+        ] {
+            let op = get_simd_op(sub_opcode).unwrap_or_else(|| panic!("{sub_opcode:#04x} should be {name}"));
+            assert_eq!(op.name, name);
+            assert_eq!(op.kind, kind);
+            assert_eq!(get_simd_op_by_name(name).map(|o| o.sub_opcode), Some(sub_opcode));
+        }
+        // f32x4.demote_f64x2_zero (0x5E) immediately follows v128.load64_
+        // zero (0x5D) with no overlap.
+        assert_eq!(get_simd_op(0x5E).map(|o| o.name), Some("f32x4.demote_f64x2_zero"));
     }
 }

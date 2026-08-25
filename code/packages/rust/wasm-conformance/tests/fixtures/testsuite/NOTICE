@@ -1361,6 +1361,60 @@ touching the load_splat family) are byte-for-byte unchanged by this PR,
 confirming zero regressions. No other already-vendored file's stats
 changed.
 
+SIMD PR41 (v128.loadN_zero family): simd_load_zero.wast -- vendors the
+dedicated upstream file for `v128.load32_zero`/`load64_zero`
+(sub-opcodes 0x5C/0x5D, both verified live against the SIMD proposal's
+own BinarySIMD.md at the time of this PR, neither colliding with any
+pre-existing table entry). Second bite into the wider `load_extend`/
+`load_splat`/`load_zero`/`load{8,16,32,64}_lane`/
+`store{8,16,32,64}_lane` memory-access family PR39 deliberately deferred
+and PR40 opened with `simd_load_splat.wast` -- same "load then fill a
+v128" shape as that file, but the non-loaded lanes are ZEROED instead of
+repeating the loaded value, and (unlike the lane-load/store family still
+left in this family) the type signature stays the plain "pop i32, push
+v128" shape PR40 already established, so no new instruction SHAPE was
+needed -- just two more `SimdOpKind` variants joining the existing
+`Load`/`Load8Splat`/etc. memarg-decoding match arm in every touched
+crate.
+
+The file is self-contained: 2 modules (the first declares the 2
+load_zero functions plus 2 constant-offset variants plus 9 offset/align
+variants; the second exercises load_zero nested in blocks/br/
+extract_lane operand position), 23 `assert_return` directives (byte-
+pattern verification at various addresses and offset/align
+combinations, confirming the low lane holds the loaded bytes and every
+other byte is zero), 4 `assert_trap` directives (out-of-bounds memory
+access at a negative address and via a non-zero `offset=` immediate, for
+both widths), 4 `assert_invalid` directives (wrong-operand-type and
+arg-empty type-mismatch, one pair per opcode), and 6 `assert_malformed`
+directives (unknown-operator checks for `i16x8.load16x4_s`/`_u`,
+`i32x4.load32x2_s`/`_u`, `i64x2.load64x1_s`/`_u` -- all six belong to
+the still-unimplemented `load_extend` family, deliberately NOT
+`v128.load32_zero`/`load64_zero` themselves, which this file's own
+`module`/`assert_return` blocks prove parse and execute correctly).
+
+Pass rate: 100% on every directive -- 2/2 module, 23/23 assert_return,
+4/4 assert_trap, 4/4 assert_invalid, 6/6 assert_malformed. The
+out-of-bounds `assert_trap` coverage exercises this PR's own decoder-gate
+widening directly, same discipline PR40's own decoder fix established:
+`wasm-execution`'s SIMD memarg-detection gate had to be widened to also
+recognize sub-opcodes 0x5C/0x5D, or a `v128.loadN_zero` with a non-
+default `offset=` immediate would have silently decoded as a NO-
+immediate op (leaving the offset at 0) instead of reading the real one.
+
+Aggregate `assert_return` rose from 44297/44314 to 44320/44337 (+23
+pass, +23 gradeable, `fail` unchanged); `assert_trap` rose from
+1462/1462 to 1466/1466 (+4, still 100.0%); `assert_invalid` rose from
+1997/1997 to 2001/2001 (+4, still 100.0% of gradeable directives);
+`assert_malformed` rose from 501/501 to 507/507 (+6, still 100.0%);
+`module` pass count rose from 1210/1211 to 1212/1213 (+2, exactly this
+PR's own file's 2 modules). The pre-existing, unrelated baseline
+failures (17 `assert_return`, 1 `module`, 1 `assert_unlinkable`, 2
+`register` -- present before this PR and tracked separately, none
+touching the load_zero family) are byte-for-byte unchanged by this PR,
+confirming zero regressions. No other already-vendored file's stats
+changed.
+
 The vendored files are licensed under the Apache License, Version 2.0 --
 see the accompanying LICENSE file, itself vendored verbatim from the same
 pinned commit.
