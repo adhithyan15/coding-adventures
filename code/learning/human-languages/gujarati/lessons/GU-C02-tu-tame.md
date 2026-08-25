@@ -8,7 +8,7 @@ type: word
 headword: તું / તમે
 gloss: you (familiar / respectful)
 concept_tag: PRONOUN-YOU
-prerequisites: [GU-C02-naam]
+prerequisites: [GU-C02-naam, GU-W02-ra]
 sounds: [u-nasal, e-sign]
 roots: [tu-second-person]
 duration:
@@ -18,8 +18,8 @@ requires:
 introduces:
   knowledge: [GU-CONCEPT-C02-TUTAME-01]
 practises:
-  knowledge: [GU-CONCEPT-C02-NAAM-01, GU-CONCEPT-C02-TUTAME-01]
-skills: [listening, speaking, reading]
+  knowledge: [GU-CONCEPT-C02-NAAM-01, GU-CONCEPT-C02-TUTAME-01, GU-SCRIPT-RA-01]
+skills: [listening, speaking, reading, writing]
 modes: [interpretive, interpersonal, presentational]
 strands: [meaning-input, meaning-output, language-focus]
 register: neutral
@@ -57,6 +57,13 @@ plural copula *chho* (*tame … chho*).
 - [YOU SAY: "tũ" (familiar) and "tame" (respectful)]
 - [YOU SAY: the English cousin of *tũ* (**thou**)]
 - [YOU SAY: which you use on first meeting (*tame*)]
+
+## Script retrieval
+<!-- hl-knowledge: introduces=[]; assesses=[GU-SCRIPT-RA-01] -->
+<!-- hl-activity: {"id":"GU-C02-tu-tame-ra-retrieval","kind":"text","assesses":["GU-SCRIPT-RA-01"],"prompt":"Without looking back, write ર once.","answer":"ર","accepted":[],"feedback":{"correct":"Good: one careful retrieval is enough.","incorrect":"Look at ર once, hide it, and write it one time."},"response_seconds":12} -->
+
+Hide the earlier model for **ર**. Write it once, compare it, and repair only
+one part if needed.
 
 ## Wrap-up Recall
 <!-- hl-knowledge: introduces=[]; assesses=[GU-CONCEPT-C02-NAAM-01, GU-CONCEPT-C02-TUTAME-01] -->

@@ -24,8 +24,15 @@
     {
       "language": "gujarati",
       "chapter": 2,
-      "sourceHash": "fnv1a64:a6aba9cfb0fea7e1",
+      "sourceHash": "fnv1a64:04004e3b92d81fc3",
       "lessonIds": [
+        "GU-W02-ra",
+        "GU-W02-da",
+        "GU-W02-va",
+        "GU-W02-ya",
+        "GU-W02-bha",
+        "GU-W02-dha",
+        "GU-W02-vocalic-r",
         "GU-C01-aabhaar",
         "GU-C01-aavjo",
         "GU-C01-haa-naa",
@@ -40,7 +47,7 @@
     {
       "language": "gujarati",
       "chapter": 3,
-      "sourceHash": "fnv1a64:c9e12c0e23e67a11",
+      "sourceHash": "fnv1a64:104124da3cd7dc3b",
       "lessonIds": [
         "GU-C02-naam",
         "GU-C02-maarun",
@@ -57,7 +64,7 @@
     {
       "language": "gujarati",
       "chapter": 4,
-      "sourceHash": "fnv1a64:db23cc118f5fda2a",
+      "sourceHash": "fnv1a64:43291304ee49e3a2",
       "lessonIds": [
         "GU-C03-hun",
         "GU-C03-kem",

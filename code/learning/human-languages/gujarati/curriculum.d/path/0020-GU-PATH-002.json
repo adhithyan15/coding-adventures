@@ -2,9 +2,18 @@
   "id": "GU-PATH-002",
   "spine_node": "SPINE-COURTESY-THANK",
   "lessons": [
+    "GU-W02-ra",
+    "GU-W02-da",
+    "GU-W02-va",
+    "GU-W02-ya",
+    "GU-W02-bha",
+    "GU-W02-dha",
+    "GU-W02-vocalic-r",
     "GU-C01-aabhaar"
   ],
-  "before": [],
+  "before": [
+    "GU-EXT-017-COURTESY-GLYPHS"
+  ],
   "inline": [],
   "after": []
 }

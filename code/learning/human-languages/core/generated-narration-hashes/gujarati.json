@@ -30,8 +30,15 @@
     {
       "language": "gujarati",
       "chapter": 2,
-      "sourceHash": "fnv1a64:9aa5417f46ee5710",
+      "sourceHash": "fnv1a64:b3f71b37f2f57af6",
       "lessonIds": [
+        "GU-W02-ra",
+        "GU-W02-da",
+        "GU-W02-va",
+        "GU-W02-ya",
+        "GU-W02-bha",
+        "GU-W02-dha",
+        "GU-W02-vocalic-r",
         "GU-C01-aabhaar",
         "GU-C01-aavjo",
         "GU-C01-haa-naa",
@@ -45,13 +52,13 @@
       "drivablePrefix": 0,
       "text": "gujarati/narration/ch02.txt",
       "json": "gujarati/narration/ch02.json",
-      "textHash": "fnv1a64:a5809492de1eb8e8",
-      "jsonHash": "fnv1a64:0eaacd824d120be2"
+      "textHash": "fnv1a64:793433660d98cb71",
+      "jsonHash": "fnv1a64:6e38edc41ed57333"
     },
     {
       "language": "gujarati",
       "chapter": 3,
-      "sourceHash": "fnv1a64:04abedd8a0974b05",
+      "sourceHash": "fnv1a64:ad0877e91dcfd81d",
       "lessonIds": [
         "GU-C02-naam",
         "GU-C02-maarun",
@@ -63,17 +70,17 @@
         "GU-C02-tamarun-naam-shun-chhe",
         "GU-C02-practice"
       ],
-      "voiceLessons": 3,
+      "voiceLessons": 2,
       "drivablePrefix": 0,
       "text": "gujarati/narration/ch03.txt",
       "json": "gujarati/narration/ch03.json",
-      "textHash": "fnv1a64:7f622b950f89b251",
-      "jsonHash": "fnv1a64:15f0e22702a59d20"
+      "textHash": "fnv1a64:f89c49f849581279",
+      "jsonHash": "fnv1a64:d3685fe6fbeb841c"
     },
     {
       "language": "gujarati",
       "chapter": 4,
-      "sourceHash": "fnv1a64:02e258d590fe3a40",
+      "sourceHash": "fnv1a64:54edde8eb6eec271",
       "lessonIds": [
         "GU-C03-hun",
         "GU-C03-kem",
@@ -82,12 +89,12 @@
         "GU-C03-vandho-nahi",
         "GU-C03-practice"
       ],
-      "voiceLessons": 2,
+      "voiceLessons": 1,
       "drivablePrefix": 0,
       "text": "gujarati/narration/ch04.txt",
       "json": "gujarati/narration/ch04.json",
-      "textHash": "fnv1a64:77bc865258b5073c",
-      "jsonHash": "fnv1a64:4cb18a875f7447fb"
+      "textHash": "fnv1a64:ed47608c60062acb",
+      "jsonHash": "fnv1a64:de75e5b4bba83f81"
     },
     {
       "language": "gujarati",

@@ -4,7 +4,7 @@
   "chapter": 3,
   "title": "Introducing Yourself",
   "drivablePrefix": 0,
-  "sourceHash": "fnv1a64:04abedd8a0974b05",
+  "sourceHash": "fnv1a64:ad0877e91dcfd81d",
   "lessons": [
     {
       "id": "GU-C02-naam",
@@ -645,16 +645,17 @@
       "modalityReasons": [
         "script-block"
       ],
-      "sourceHash": "fnv1a64:1dbe9a9860ca7d78",
+      "sourceHash": "fnv1a64:3ea21e95b0fe0a20",
       "notice": {
         "modality": "sight",
         "needs": [
           "your eyes, for letter shapes on the page"
         ],
         "waitUntilStopped": [
-          "The letters in this word"
+          "The letters in this word",
+          "Script retrieval"
         ],
-        "text": "Before we start: this one needs your eyes, so it is not fully a driving lesson. You will want your eyes, for letter shapes on the page. You can listen to everything else now — leave the section called The letters in this word until you have stopped, and I will say so again when we reach it."
+        "text": "Before we start: this one needs your eyes, so it is not fully a driving lesson. You will want your eyes, for letter shapes on the page. You can listen to everything else now — leave the sections called The letters in this word and Script retrieval until you have stopped, and I will say so again when we reach it."
       },
       "blocks": [
         {
@@ -738,6 +739,34 @@
         },
         {
           "index": 4,
+          "type": "script",
+          "title": "Script retrieval",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "Hide the earlier model for ર. Write it once, compare it, and repair only one part if needed."
+            },
+            {
+              "kind": "activity",
+              "scored": true,
+              "id": "GU-C02-tu-tame-ra-retrieval",
+              "prompt": "Without looking back, write ર once.",
+              "assesses": [
+                "GU-SCRIPT-RA-01"
+              ],
+              "responseSeconds": 12,
+              "acceptedResponses": [
+                "ર"
+              ],
+              "feedback": {
+                "correct": "Good: one careful retrieval is enough.",
+                "incorrect": "Look at ર once, hide it, and write it one time."
+              }
+            }
+          ]
+        },
+        {
+          "index": 5,
           "type": "recall",
           "title": "Wrap-up Recall",
           "segments": [
@@ -768,16 +797,17 @@
       "modalityReasons": [
         "script-block"
       ],
-      "sourceHash": "fnv1a64:23ec2d8891fc1e7e",
+      "sourceHash": "fnv1a64:ecd884a0b0eceb66",
       "notice": {
         "modality": "sight",
         "needs": [
           "your eyes, for letter shapes on the page"
         ],
         "waitUntilStopped": [
-          "The letters in this word"
+          "The letters in this word",
+          "Script retrieval"
         ],
-        "text": "Before we start: this one needs your eyes, so it is not fully a driving lesson. You will want your eyes, for letter shapes on the page. You can listen to everything else now — leave the section called The letters in this word until you have stopped, and I will say so again when we reach it."
+        "text": "Before we start: this one needs your eyes, so it is not fully a driving lesson. You will want your eyes, for letter shapes on the page. You can listen to everything else now — leave the sections called The letters in this word and Script retrieval until you have stopped, and I will say so again when we reach it."
       },
       "blocks": [
         {
@@ -861,6 +891,34 @@
         },
         {
           "index": 4,
+          "type": "script",
+          "title": "Script retrieval",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "Hide the earlier model for દ. Write it once, compare, make at most one repair, and stop."
+            },
+            {
+              "kind": "activity",
+              "scored": true,
+              "id": "GU-C02-shun-da-retrieval",
+              "prompt": "Without looking back, write દ once.",
+              "assesses": [
+                "GU-SCRIPT-DA-01"
+              ],
+              "responseSeconds": 12,
+              "acceptedResponses": [
+                "દ"
+              ],
+              "feedback": {
+                "correct": "Good: one careful retrieval is enough.",
+                "incorrect": "Look at દ once, hide it, and write it one time."
+              }
+            }
+          ]
+        },
+        {
+          "index": 5,
           "type": "recall",
           "title": "Wrap-up Recall",
           "segments": [
@@ -886,13 +944,22 @@
       "romanization": "",
       "gloss": "what's your name?",
       "script": "gujarati",
-      "modality": "voice",
-      "derivedModality": "voice",
+      "modality": "sight",
+      "derivedModality": "sight",
       "modalityReasons": [
-        "no-visual-dependency"
+        "script-block"
       ],
-      "sourceHash": "fnv1a64:bd3a4f94655850ec",
-      "notice": null,
+      "sourceHash": "fnv1a64:1236bf548f094112",
+      "notice": {
+        "modality": "sight",
+        "needs": [
+          "your eyes, for letter shapes on the page"
+        ],
+        "waitUntilStopped": [
+          "Script retrieval"
+        ],
+        "text": "Before we start: this one needs your eyes, so it is not fully a driving lesson. You will want your eyes, for letter shapes on the page. You can listen to everything else now — leave the section called Script retrieval until you have stopped, and I will say so again when we reach it."
+      },
       "blocks": [
         {
           "index": 0,
@@ -975,6 +1042,34 @@
         },
         {
           "index": 4,
+          "type": "script",
+          "title": "Script retrieval",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "Hide the earlier model for વ. Write it once, compare, and stop after one possible repair."
+            },
+            {
+              "kind": "activity",
+              "scored": true,
+              "id": "GU-C02-tamarun-naam-shun-chhe-va-retrieval",
+              "prompt": "Without looking back, write વ once.",
+              "assesses": [
+                "GU-SCRIPT-VA-01"
+              ],
+              "responseSeconds": 12,
+              "acceptedResponses": [
+                "વ"
+              ],
+              "feedback": {
+                "correct": "Good: one careful retrieval is enough.",
+                "incorrect": "Look at વ once, hide it, and write it one time."
+              }
+            }
+          ]
+        },
+        {
+          "index": 5,
           "type": "recall",
           "title": "Wrap-up Recall",
           "segments": [

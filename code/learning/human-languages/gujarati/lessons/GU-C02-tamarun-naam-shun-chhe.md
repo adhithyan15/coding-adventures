@@ -8,7 +8,7 @@ type: phrase
 headword: તમારું નામ શું છે?
 gloss: what's your name?
 concept_tag: INTRO-WHATS-YOUR-NAME
-prerequisites: [GU-C02-tu-tame, GU-C02-shun, GU-C02-chhe]
+prerequisites: [GU-C02-tu-tame, GU-C02-shun, GU-C02-chhe, GU-W02-va]
 sounds: []
 roots: []
 duration:
@@ -18,8 +18,8 @@ requires:
 introduces:
   knowledge: [GU-CONCEPT-C02-TAMARUNNAAMSHUNCHHE-01]
 practises:
-  knowledge: [GU-CONCEPT-C02-CHHE-01, GU-CONCEPT-C02-SHUN-01, GU-CONCEPT-C02-TAMARUNNAAMSHUNCHHE-01, GU-CONCEPT-C02-TUTAME-01]
-skills: [listening, speaking, reading]
+  knowledge: [GU-CONCEPT-C02-CHHE-01, GU-CONCEPT-C02-SHUN-01, GU-CONCEPT-C02-TAMARUNNAAMSHUNCHHE-01, GU-CONCEPT-C02-TUTAME-01, GU-SCRIPT-VA-01]
+skills: [listening, speaking, reading, writing]
 modes: [interpretive, interpersonal, presentational]
 strands: [meaning-input, meaning-output, language-focus]
 register: neutral
@@ -57,6 +57,13 @@ before *nām*.
 - [YOU SAY: the respectful question — *tamārũ nām shũ chhe?*]
 - [YOU SAY: answer it — *mārũ nām … chhe*]
 - [YOU SAY: the familiar "your" (*tārũ*)]
+
+## Script retrieval
+<!-- hl-knowledge: introduces=[]; assesses=[GU-SCRIPT-VA-01] -->
+<!-- hl-activity: {"id":"GU-C02-tamarun-naam-shun-chhe-va-retrieval","kind":"text","assesses":["GU-SCRIPT-VA-01"],"prompt":"Without looking back, write વ once.","answer":"વ","accepted":[],"feedback":{"correct":"Good: one careful retrieval is enough.","incorrect":"Look at વ once, hide it, and write it one time."},"response_seconds":12} -->
+
+Hide the earlier model for **વ**. Write it once, compare, and stop after one
+possible repair.
 
 ## Wrap-up Recall
 <!-- hl-knowledge: introduces=[]; assesses=[GU-CONCEPT-C02-CHHE-01, GU-CONCEPT-C02-SHUN-01, GU-CONCEPT-C02-TAMARUNNAAMSHUNCHHE-01, GU-CONCEPT-C02-TUTAME-01] -->

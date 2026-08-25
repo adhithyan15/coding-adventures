@@ -8,7 +8,7 @@ type: word
 headword: હું
 gloss: I
 concept_tag: PRONOUN-I
-prerequisites: [GU-C02-maarun]
+prerequisites: [GU-C02-maarun, GU-W02-ya]
 sounds: [ha, u-nasal]
 roots: [aham-first-person]
 duration:
@@ -18,8 +18,8 @@ requires:
 introduces:
   knowledge: [GU-CONCEPT-C03-HUN-01]
 practises:
-  knowledge: [GU-CONCEPT-C02-MAARUN-01, GU-CONCEPT-C03-HUN-01]
-skills: [listening, speaking, reading]
+  knowledge: [GU-CONCEPT-C02-MAARUN-01, GU-CONCEPT-C03-HUN-01, GU-SCRIPT-YA-01]
+skills: [listening, speaking, reading, writing]
 modes: [interpretive, interpersonal, presentational]
 strands: [meaning-input, meaning-output, language-focus]
 register: neutral
@@ -62,6 +62,13 @@ kem chho?* begins **હું** (*hũ …*).
 - [YOU SAY: "hũ"]
 - [YOU SAY: the family — *hũ* / Latin *ego* / English **I**]
 - [YOU SAY: "hũ … chhũ" — I am …]
+
+## Script retrieval
+<!-- hl-knowledge: introduces=[]; assesses=[GU-SCRIPT-YA-01] -->
+<!-- hl-activity: {"id":"GU-C03-hun-ya-retrieval","kind":"text","assesses":["GU-SCRIPT-YA-01"],"prompt":"Without looking back, write ય once.","answer":"ય","accepted":[],"feedback":{"correct":"Good: one careful retrieval is enough.","incorrect":"Look at ય once, hide it, and write it one time."},"response_seconds":12} -->
+
+Hide the earlier model for **ય**. Write it once, compare, and repair only one
+part if needed.
 
 ## Wrap-up Recall
 <!-- hl-knowledge: introduces=[]; assesses=[GU-CONCEPT-C02-MAARUN-01, GU-CONCEPT-C03-HUN-01] -->

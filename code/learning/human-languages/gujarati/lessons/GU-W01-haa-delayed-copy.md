@@ -9,7 +9,7 @@ type: writing
 headword: હા
 romanization: "hā"
 gloss: "look, hide, write, compare, and repair yes"
-prerequisites: [GU-W01-haa-guided-copy]
+prerequisites: [GU-W01-haa-guided-copy, GU-W02-vocalic-r]
 sounds: [long-aa, no-top-line]
 roots: []
 duration:
@@ -19,7 +19,7 @@ requires:
 introduces:
   knowledge: []
 practises:
-  knowledge: [GU-CONCEPT-C01-HAANAA-01, GU-SCRIPT-HA-01, GU-SCRIPT-AA-MATRA-01]
+  knowledge: [GU-CONCEPT-C01-HAANAA-01, GU-SCRIPT-HA-01, GU-SCRIPT-AA-MATRA-01, GU-SCRIPT-VOCALIC-R-MATRA-01]
 skills: [reading, writing]
 modes: [interpretive, presentational]
 strands: [meaning-input, language-focus]
@@ -47,6 +47,14 @@ copy it yet.
 
 If one piece differs, circle it and repair only that place. Repair is part of
 the exercise, not a failure.
+
+## Script retrieval — one older vowel sign
+<!-- hl-knowledge: introduces=[]; assesses=[GU-SCRIPT-VOCALIC-R-MATRA-01] -->
+<!-- hl-writing-stage: delayed-copy -->
+<!-- hl-activity: {"id":"GU-W01-haa-delayed-copy-vocalic-r-retrieval","kind":"text","assesses":["GU-SCRIPT-VOCALIC-R-MATRA-01"],"prompt":"Hide the earlier model and write the vowel sign ૃ once.","answer":"ૃ","accepted":[],"feedback":{"correct":"Good: ૃ sits below the consonant it modifies.","incorrect":"Look once at the small below-consonant sign ૃ, hide it, and try once."},"response_seconds":12} -->
+
+Hide the earlier model for **ૃ**. Write the small below-consonant sign once,
+compare it, and stop after one repair.
 
 ## Wrap-up recall
 <!-- hl-knowledge: introduces=[]; assesses=[GU-CONCEPT-C01-HAANAA-01, GU-SCRIPT-HA-01, GU-SCRIPT-AA-MATRA-01] -->

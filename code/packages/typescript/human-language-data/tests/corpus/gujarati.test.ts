@@ -35,8 +35,15 @@ it("pins Gujarati's meaning-first opening script spine", () => {
   expect(meaningFirst.frontmatter.skills).toEqual(["listening", "speaking"]);
   expect(meaningFirst.body).not.toMatch(/\p{Script=Gujarati}/u);
 
-  const courtesy = ordered.slice(11, 19);
+  const courtesy = ordered.slice(11, 26);
   expect(courtesy.map((lesson) => lesson.realization.lessonId)).toEqual([
+    "GU-W02-ra",
+    "GU-W02-da",
+    "GU-W02-va",
+    "GU-W02-ya",
+    "GU-W02-bha",
+    "GU-W02-dha",
+    "GU-W02-vocalic-r",
     "GU-C01-aabhaar",
     "GU-C01-aavjo",
     "GU-C01-haa-naa",
@@ -55,7 +62,7 @@ it("pins Gujarati's meaning-first opening script spine", () => {
   }
   expect([...chapterSizes.entries()]).toEqual([
     ["1", 11],
-    ["2", 8],
+    ["2", 15],
     ["3", 9],
     ["4", 6],
     ["5", 5],
@@ -85,9 +92,33 @@ it("pins Gujarati's complete pre-A1 writing runway", () => {
     "observe-trace",
     "observe-trace",
     "guided-copy",
+    "observe-trace",
     "guided-copy",
     "delayed-copy",
+    "observe-trace",
+    "guided-copy",
+    "delayed-copy",
+    "observe-trace",
+    "guided-copy",
+    "delayed-copy",
+    "observe-trace",
+    "guided-copy",
+    "delayed-copy",
+    "observe-trace",
+    "guided-copy",
+    "delayed-copy",
+    "observe-trace",
+    "guided-copy",
+    "delayed-copy",
+    "observe-trace",
+    "guided-copy",
+    "delayed-copy",
+    "guided-copy",
+    "delayed-copy",
+    "delayed-copy",
+    "delayed-copy",
     "dictation-transcription",
+    "delayed-copy",
   ]);
 });
 
@@ -97,12 +128,33 @@ it("pins Gujarati-owned objective activities", () => {
     .map((activity) => activity.id)
     .sort();
   expect(ids).toEqual([
+    "GU-C01-aabhaar-script-retrieval",
+    "GU-C01-aavjo-script-retrieval",
+    "GU-C01-haa-naa-script-retrieval",
+    "GU-C01-practice-four-consonants",
+    "GU-C01-practice-two-consonants-one-sign",
     "GU-C01-practice-writing-payoff",
+    "GU-C02-shun-da-retrieval",
+    "GU-C02-tamarun-naam-shun-chhe-va-retrieval",
+    "GU-C02-tu-tame-ra-retrieval",
+    "GU-C03-hun-ya-retrieval",
+    "GU-C03-kem-bha-retrieval",
+    "GU-C03-majaa-vocalic-r-retrieval",
+    "GU-C03-tame-kem-chho-dha-retrieval",
     "GU-C06-number-histories-be-source",
     "GU-W01-aa-matra-observe-check",
     "GU-W01-ha-observe-check",
     "GU-W01-haa-delayed-copy-check",
+    "GU-W01-haa-delayed-copy-vocalic-r-retrieval",
     "GU-W01-haa-dictation-answer",
     "GU-W01-haa-guided-copy-check",
+    "GU-W01-haa-guided-copy-dha-retrieval",
+    "GU-W02-bha-recall",
+    "GU-W02-da-recall",
+    "GU-W02-dha-recall",
+    "GU-W02-ra-recall",
+    "GU-W02-va-recall",
+    "GU-W02-vocalic-r-recall",
+    "GU-W02-ya-recall",
   ]);
 });
