@@ -175,6 +175,7 @@ resolutionCabalSpec = describe "Cabal resolution conformance" $ do
             DG.nodes graph
                 `shouldBe`
                     [ "haskell/alpha"
+                    , "haskell/ambiguous"
                     , "haskell/beta"
                     , "haskell/delta"
                     , "haskell/gamma"
@@ -182,7 +183,7 @@ resolutionCabalSpec = describe "Cabal resolution conformance" $ do
             DG.independentGroups graph
                 `shouldBe`
                     Right
-                        [ ["haskell/beta", "haskell/delta", "haskell/gamma"]
+                        [ ["haskell/ambiguous", "haskell/beta", "haskell/delta", "haskell/gamma"]
                         , ["haskell/alpha"]
                         ]
 
@@ -236,14 +237,21 @@ resolutionDartSpec = describe "Dart resolution conformance" $ do
             DG.nodes graph
                 `shouldBe`
                     [ "dart/alpha"
+                    , "dart/attacker"
                     , "dart/beta-helper"
                     , "dart/delta_name"
                     , "dart/gamma"
+                    , "dart/shadowed_name"
                     ]
             DG.independentGroups graph
                 `shouldBe`
                     Right
-                        [ ["dart/beta-helper", "dart/delta_name", "dart/gamma"]
+                        [ [ "dart/attacker"
+                          , "dart/beta-helper"
+                          , "dart/delta_name"
+                          , "dart/gamma"
+                          , "dart/shadowed_name"
+                          ]
                         , ["dart/alpha"]
                         ]
 

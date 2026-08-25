@@ -7650,13 +7650,15 @@ colors extend their already registered neutral/parity or frontend owners. None
 adds or removes a package identity or BUILD/build-tool marker.
 
 Merged PR #12844 does expose one genuinely unowned portable behavior family:
-Rust alone now implements `i8x16.relaxed_swizzle` and recursive `(either A B)`
-expected-result grading across the WAST parser, conformance reporter, opcode,
-validator, and execution stack. Two newly registered owners separate a neutral
-relaxed-SIMD contract from an established-lane completion umbrella. The neutral
-owner covers all nineteen `0x100` through `0x113` instructions, canonical
-multi-byte LEB128 encoding, deterministic permitted implementations,
-recursive accepted-result sets, validator shapes, and diagnostics. Existing
+Rust alone now implements the relaxed-SIMD families including
+`i8x16.relaxed_swizzle`, `f32x4.relaxed_min/max`, and
+`f64x2.relaxed_min/max`, plus recursive N-ary `either` expected-result grading
+across the WAST parser, conformance reporter, opcode, validator, and execution
+stack. Two registered owners separate a neutral relaxed-SIMD contract from an
+established-lane completion umbrella. The neutral owner covers all twenty
+`0x100` through `0x113` instructions, canonical multi-byte LEB128 encoding,
+deterministic permitted implementations, recursive N-ary accepted-result sets,
+validator shapes, and diagnostics. Existing
 WAT/WAST, conformance-report, corpus, and host-authority owners retain syntax,
 directive execution, pinned provenance, fetching, and baseline writes. The
 state graph now has 505 unique owners and 768 complete acyclic edges.
@@ -7750,6 +7752,128 @@ state-graph, and diff validation was rerun after the rebase. Independent split
 reviews of content-equivalent rebased head
 `7bf7926ba5280f54c71be16ce8ff22daed0520be` returned
 `SECURITY REVIEW PASSED` or `REVIEW PASSED` with no actionable issue.
+
+Ready-for-review PR #12862 opened from clean published head
+`e5ba227fc3a58a6ebac8ce08e0b32169ac141079`. All 35 reported checks reached
+terminal acceptable conclusions: 29 succeeded and six were expected skips,
+with no failure or pending job. GitHub reported the branch clean and
+mergeable, so the loop enabled squash auto-merge. GitHub merged it as
+`0ed3d402a2bf61424032ad34f88223348b915a3c` at
+`2026-08-25T20:44:39Z` without a manual merge command.
+
+### Post-#12862 refresh and Haskell tracked-artifact selection
+
+The exact-main schema-3 collision report at
+`0ed3d402a2bf61424032ad34f88223348b915a3c` remains structurally unchanged:
+15 established lanes, 1,373 implementation identities, 4,566 package slots,
+175 high-consensus packages with 276 missing slots, 910 singletons with 12,740
+gaps, and 721 Rust singletons. Canonical collisions and unknown language
+buckets remain zero; OCaml remains correctly emerging at zero packages.
+
+Every intervening commit is classified before selection. Gujarati R3 closure
+and R4 bridge work remains curriculum and generated TypeScript data. Nested
+anchor diagnostics extend the HTML frontend owner. Java method declarations,
+calls, overload choice, rejection, and backend proofs extend the JV02 neutral
+and lane owners while the existing extra-CI owner retains the Python proof
+requirement. The long-vowel ADJ fact stays in the shared fact corpus and its
+scratch-filesystem/process E2E extends the adj-lang-cli capability owner.
+Signed-neutral ALGOL writes, the pinned Mermaid 11.16.1 XY compatibility
+corpus, and `i16x8.relaxed_q15mulr_s` semantics extend their existing ALGOL,
+Mermaid, relaxed-SIMD, WAST, and corpus-provenance owners. No intervening
+commit adds or removes a package identity or BUILD/build-tool marker, and no
+new owner is required.
+
+The dependency/leverage pass selects
+`build-tool-haskell-tracked-artifact-validation-conformance` on branch
+`codex/build-tool-haskell-tracked-artifact-validation-conformance`. All four
+declared prerequisites are merged. Haskell is the widest remaining
+tracked-artifact lane at 204 reported packages, ahead of Swift at 161. It
+directly unlocks the Haskell orphan consumer and advances both tracked-artifact
+and orphan completion umbrellas, giving it more unfinished descendants than
+any ready orphan-only child. Full emitted-Haskell Unicode verification is
+recorded under the excluded generator-host owner and must reuse the hardened
+bounded process-tree runner without granting process authority to the pure
+validator.
+
+All ten live open PRs have zero exact overlap with the expected Haskell
+validator, generated Unicode module, Cabal/package metadata, generator and
+test, fixture README, Unicode license, package tests/docs, CI, state, and
+roadmap surfaces. The target branch and prior PR were absent locally and
+remotely before the fresh worktree and branch were created. Perl, Lua, Elixir,
+and Ruby orphan validation are ready but narrower. The broader extra-CI corpus
+and OCaml process-free substrate remain collision-unsafe while PRs #12149 and
+#12162 own required Go entry-point, validator, CI, or Swift surfaces. After
+selection the graph contains 505 unique owners and 769 complete acyclic edges,
+with 142 merged owners, 362 pending owners, exactly one in-progress owner, no
+pr-open owner, and no active parity PR.
+
+### Haskell tracked-artifact implementation
+
+The Haskell build tool now exposes a pure in-memory tracked-artifact validator
+and consumes all five language-neutral fixtures. It preserves the closed
+portable-path precedence, lexical slash normalization, hostile-path redaction,
+Unicode-scalar length and ordering, NFKC plus full-fold `node_modules`
+identities, full-uppercase Windows reserved basenames, inert entry kinds, and
+canonical deterministic diagnostics without adding Git, filesystem, process,
+environment, or network authority to the adapter.
+
+Generated source-embedded Unicode 17.0.0 tables provide NFC, NFKC, full case
+folding, NFKC-fold, and full uppercase independently of host Unicode tables.
+The pinned generator checks exact upstream byte counts and SHA-256 identities,
+emits the complete Unicode License v3 notice, and verifies every official
+normalization, C/F folding, unconditional-uppercase, derived NFKC-fold, and
+Unicode 17 sentinel vector against the emitted Haskell source. The verifier
+requires exact reviewed GHC 9.4.8 `runghc` and compiler paths, disables user
+package databases and package environments, uses a minimal environment and
+isolated temporary directory, bounds retained output, and unconditionally
+cleans the isolated process tree.
+
+The full Haskell BUILD front passes graph's four examples, directed-graph's
+three examples, and the build tool's 44 examples. HPC reports 75% expression,
+69% alternative, and 59% top-level-definition coverage across the existing
+large `BuildTool` module. The complete shared resolver fixtures also exposed
+and this tranche repairs two existing Haskell-engine defects: ambiguous
+multi-Cabal metadata and duplicate Dart manifest-name aliases contribute no
+ambiguous edge, while every discovered package node and the Haskell directory
+aliases remain available and a package identity still wins over a
+same-basename program identity.
+
+All 29 generator tests and the real emitted-Haskell official-vector check pass.
+The neutral corpus validates 111 cases and 269 files; conformance,
+package-parity, Haskell-capability, and OCaml-lock families pass 262 tests with
+25 expected platform skips. The Go oracle passes all packages with coverage,
+vet, and trimpath compilation; a fresh binary evaluates 45 Starlark BUILD files
+and validates a forced Haskell dry plan over all 207 discovered Haskell
+packages. Cabal metadata validation, Ruff check and formatting, zero-new-hint
+HLint comparison, workflow YAML, strict state JSON, the complete acyclic state
+graph, collision checks, Bandit medium/high, credential-pattern review, and
+diff checks pass. No dependency changed.
+
+A required read-only `ubuntu-24.04` job pins GHC 9.4.8 and Cabal 3.10.3.0,
+disables checkout credentials, executes the real full-vector verifier, and
+feeds its result into the stable CI gate. Generator subprocess authority stays
+under the separate selection-blocked host-authority owner.
+
+Independent generator and CI security review passed the exact emitted-vector
+implementation, pinned action and toolchain objects, package isolation,
+bounded streams, process-tree cleanup, Unicode provenance, and read-only gate.
+Adapter review caught one real resolver regression in the first implementation:
+ambiguous Haskell and Dart metadata had removed whole packages from the graph.
+The final repair suppresses only the ambiguous aliases and dependency edges,
+retains all discovered nodes and Haskell directory aliases, and extends the
+shared node and scheduling assertions. All 51 Haskell examples pass afterward.
+
+The branch rebased without conflict onto exact `origin/main`
+`89a236a69a925673b734cacf07a1ebca4024205d`. Grouped ALGOL selector identity,
+relaxed SIMD min/max, HTML table diagnostics, Tamil dependent long-i, Gujarati
+R4 bridge B, suffix-meaning ADJ work, and its later thread-ledger update remain
+inside their existing neutral, frontend, conformance, curriculum, or adjacent
+automation-state owners and do not overlap this tranche.
+The first Mermaid Gantt grammar/parser/IR/temporal-layout/paint pipeline was
+newly unowned, so `mermaid-gantt-chart-portable-conformance` and its dependent
+established-lane parity umbrella were registered before publication. The state
+graph now contains 507 unique owners and 770 complete acyclic edges: 142 merged,
+364 pending, and exactly one in progress.
 
 ## Autonomous Loop Protocol
 

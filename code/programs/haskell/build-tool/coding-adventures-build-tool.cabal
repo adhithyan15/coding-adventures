@@ -4,15 +4,17 @@ version:       0.2.0
 synopsis:      Haskell implementation of the monorepo build tool
 description:   Dependency-aware coding-adventures build orchestration in Haskell
 category:      Development
-license:       MIT
+license:       MIT AND LicenseRef-Unicode-3.0
 author:        Adhithya Rajasekaran
 maintainer:    Adhithya Rajasekaran
 build-type:    Simple
 extra-doc-files: README.md
                CHANGELOG.md
+               UNICODE-LICENSE.txt
 
 library
     exposed-modules:  BuildTool
+    other-modules:    TrackedArtifactUnicode17
     build-depends:    aeson >=2.0 && <3
                     , base >=4.14 && <5
                     , bytestring >=0.10 && <0.13

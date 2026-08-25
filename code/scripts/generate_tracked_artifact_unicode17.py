@@ -42,6 +42,7 @@ LICENSE_TARGETS = (
     Path("code/programs/elixir/build-tool/UNICODE-LICENSE.txt"),
     Path("code/programs/lua/build-tool/UNICODE-LICENSE.txt"),
     Path("code/programs/perl/build-tool/UNICODE-LICENSE.txt"),
+    Path("code/programs/haskell/build-tool/UNICODE-LICENSE.txt"),
 )
 SOURCES = {
     "UnicodeData.txt": "2e1efc1dcb59c575eedf5ccae60f95229f706ee6d031835247d843c11d96470c",
@@ -82,6 +83,9 @@ LUA_TARGET = Path(
 PERL_TARGET = Path(
     "code/programs/perl/build-tool/lib/CodingAdventures/BuildTool/"
     "TrackedArtifactUnicode17.pm"
+)
+HASKELL_TARGET = Path(
+    "code/programs/haskell/build-tool/src/TrackedArtifactUnicode17.hs"
 )
 
 
@@ -1721,6 +1725,207 @@ return Unicode
     return header + body
 
 
+def _render_haskell(
+    tables: tuple[
+        list[tuple[int, int]],
+        list[tuple[int, bool, tuple[int, ...]]],
+        list[tuple[int, int, int]],
+        list[tuple[int, tuple[int, ...]]],
+        list[tuple[int, tuple[int, ...]]],
+    ],
+) -> str:
+    """Render the process-free Haskell implementation from pinned UCD rows."""
+    combining, decomposition, composition, folding, uppercase = tables
+
+    def mapping(values: tuple[int, ...]) -> str:
+        return "[" + ", ".join(f"0x{value:X}" for value in values) + "]"
+
+    def int_map(rows: list[str]) -> str:
+        if not rows:
+            return "IntMap.empty"
+        return "IntMap.fromDistinctAscList\n    [ " + "\n    , ".join(rows) + "\n    ]"
+
+    combining_text = int_map(
+        [f"(0x{scalar:X}, {combining_class})" for scalar, combining_class in combining]
+    )
+    decomposition_text = int_map(
+        [
+            f"(0x{scalar:X}, ({compatibility!s}, {mapping(values)}))"
+            for scalar, compatibility, values in decomposition
+        ]
+    )
+    composition_text = (
+        "Map.fromDistinctAscList\n    [ "
+        + "\n    , ".join(
+            f"((0x{left:X}, 0x{right:X}), 0x{result:X})"
+            for left, right, result in composition
+        )
+        + "\n    ]"
+    )
+    folding_text = int_map(
+        [f"(0x{scalar:X}, {mapping(values)})" for scalar, values in folding]
+    )
+    uppercase_text = int_map(
+        [f"(0x{scalar:X}, {mapping(values)})" for scalar, values in uppercase]
+    )
+    hashes = ", ".join(f"{name} sha256:{digest}" for name, digest in SOURCES.items())
+    return f'''-- Generated Unicode {UNICODE_VERSION} data and algorithms.
+-- DO NOT EDIT. Run `python code/scripts/generate_tracked_artifact_unicode17.py`.
+-- Sources: {UCD_BASE}
+-- {hashes}
+-- Unicode License v3: every source and binary distribution carries the full
+-- notice as UNICODE-LICENSE.txt (sha256:{LICENSE_SHA256}).
+
+module TrackedArtifactUnicode17
+    ( casefold
+    , fullUppercase
+    , nfc
+    , nfkc
+    , nfkcCasefold
+    , unicodeVersion
+    ) where
+
+import Data.Char (chr, ord)
+import Data.List (foldl')
+import qualified Data.IntMap.Strict as IntMap
+import Data.IntMap.Strict (IntMap)
+import Data.Maybe (fromMaybe)
+import qualified Data.Map.Strict as Map
+
+-- Host Unicode tables move with GHC. These source-embedded rows keep the
+-- tracked-artifact policy stable across compiler and operating-system updates.
+unicodeVersion :: String
+unicodeVersion = "{UNICODE_VERSION}"
+
+combining :: IntMap Int
+combining = {combining_text}
+
+decomposition :: IntMap (Bool, [Int])
+decomposition = {decomposition_text}
+
+composition :: Map.Map (Int, Int) Int
+composition = {composition_text}
+
+folding :: IntMap [Int]
+folding = {folding_text}
+
+uppercase :: IntMap [Int]
+uppercase = {uppercase_text}
+
+sBase, lBase, vBase, tBase, lCount, vCount, tCount, nCount, sCount :: Int
+sBase = 0xAC00
+lBase = 0x1100
+vBase = 0x1161
+tBase = 0x11A7
+lCount = 19
+vCount = 21
+tCount = 28
+nCount = vCount * tCount
+sCount = lCount * nCount
+
+combiningClass :: Int -> Int
+combiningClass scalar = IntMap.findWithDefault 0 scalar combining
+
+decomposeScalar :: Bool -> Int -> [Int]
+decomposeScalar compatibility scalar
+    | scalar >= sBase && scalar < sBase + sCount =
+        let index = scalar - sBase
+            leading = lBase + index `div` nCount
+            vowel = vBase + (index `mod` nCount) `div` tCount
+            trailing = tBase + index `mod` tCount
+         in if trailing == tBase then [leading, vowel] else [leading, vowel, trailing]
+    | otherwise =
+        case IntMap.lookup scalar decomposition of
+            Nothing -> [scalar]
+            Just (isCompatibility, _)
+                | isCompatibility && not compatibility -> [scalar]
+            Just (_, values) -> concatMap (decomposeScalar compatibility) values
+
+canonicalOrder :: [Int] -> [Int]
+canonicalOrder = foldl' insertScalar []
+  where
+    insertScalar ordered scalar
+        | scalarClass == 0 = ordered ++ [scalar]
+        | otherwise =
+            let (later, earlierReversed) =
+                    span
+                        (\\previous ->
+                            let previousClass = combiningClass previous
+                             in previousClass /= 0 && previousClass > scalarClass
+                        )
+                        (reverse ordered)
+             in reverse earlierReversed ++ [scalar] ++ reverse later
+      where
+        scalarClass = combiningClass scalar
+
+composePair :: Int -> Int -> Maybe Int
+composePair left right
+    | left >= lBase && left < lBase + lCount
+        && right >= vBase && right < vBase + vCount =
+        Just (sBase + (((left - lBase) * vCount) + right - vBase) * tCount)
+    | left >= sBase && left < sBase + sCount
+        && (left - sBase) `mod` tCount == 0
+        && right > tBase && right < tBase + tCount =
+        Just (left + right - tBase)
+    | otherwise = Map.lookup (left, right) composition
+
+replaceAt :: Int -> Int -> [Int] -> [Int]
+replaceAt index replacement values =
+    take index values ++ [replacement] ++ drop (index + 1) values
+
+compose :: [Int] -> [Int]
+compose [] = []
+compose (first : rest) =
+    let initialClass = if combiningClass first == 0 then 0 else 255
+        (output, _, _, _) =
+            foldl' composeScalar ([first], 0, first, initialClass) rest
+     in output
+  where
+    composeScalar (output, starterIndex, starter, lastClass) scalar =
+        let scalarClass = combiningClass scalar
+            composite =
+                if lastClass == 0 || lastClass < scalarClass
+                    then composePair starter scalar
+                    else Nothing
+         in case composite of
+                Just value ->
+                    (replaceAt starterIndex value output, starterIndex, value, lastClass)
+                Nothing ->
+                    let extended = output ++ [scalar]
+                     in if scalarClass == 0
+                            then (extended, length output, scalar, scalarClass)
+                            else (extended, starterIndex, starter, scalarClass)
+
+normalize :: Bool -> String -> String
+normalize compatibility =
+    map chr
+        . compose
+        . canonicalOrder
+        . concatMap (decomposeScalar compatibility . ord)
+
+mapScalars :: IntMap [Int] -> String -> String
+mapScalars table =
+    map chr
+        . concatMap (\\value -> fromMaybe [value] (IntMap.lookup value table))
+        . map ord
+
+nfc :: String -> String
+nfc = normalize False
+
+nfkc :: String -> String
+nfkc = normalize True
+
+casefold :: String -> String
+casefold = mapScalars folding
+
+nfkcCasefold :: String -> String
+nfkcCasefold = casefold . nfkc
+
+fullUppercase :: String -> String
+fullUppercase = mapScalars uppercase
+'''
+
+
 def _render_perl(
     tables: tuple[
         list[tuple[int, int]],
@@ -2559,6 +2764,98 @@ print "ok\n";
 """
 
 
+_HASKELL_SELF_CHECK = r"""module Main (main) where
+
+import Control.Monad (foldM, unless)
+import Data.Char (chr)
+import Numeric (readHex)
+import qualified TrackedArtifactUnicode17 as Unicode
+
+splitOn :: Char -> String -> [String]
+splitOn delimiter = go
+  where
+    go value =
+        case break (== delimiter) value of
+            (field, []) -> [field]
+            (field, _ : rest) -> field : go rest
+
+fromHex :: String -> Int
+fromHex value =
+    case readHex value of
+        [(scalar, "")] -> scalar
+        _ -> error "invalid generated Haskell scalar"
+
+fromScalarField :: String -> String
+fromScalarField "" = ""
+fromScalarField value = map (chr . fromHex) (splitOn ',' value)
+
+require :: Bool -> String -> IO ()
+require condition message = unless condition (ioError (userError message))
+
+checkRecord :: (Int, Int, Int, Bool) -> String -> IO (Int, Int, Int, Bool)
+checkRecord counts@(normalizationCount, foldingCount, uppercaseCount, sawVersion) line =
+    case splitOn ';' line of
+        "V" : version : _ -> do
+            require (version == Unicode.unicodeVersion) "generated Haskell Unicode version drift"
+            pure (normalizationCount, foldingCount, uppercaseCount, True)
+        "N" : rawValues -> do
+            let values = map fromScalarField rawValues
+                next = normalizationCount + 1
+            case values of
+                [c1, c2, c3, c4, c5] ->
+                    require
+                        ( Unicode.nfc c1 == c2
+                            && Unicode.nfc c2 == c2
+                            && Unicode.nfc c3 == c2
+                            && Unicode.nfc c4 == c4
+                            && Unicode.nfc c5 == c4
+                            && Unicode.nfkc c1 == c4
+                            && Unicode.nfkc c2 == c4
+                            && Unicode.nfkc c3 == c4
+                            && Unicode.nfkc c4 == c4
+                            && Unicode.nfkc c5 == c4
+                        )
+                        ("normalization Haskell self-check failed at vector " ++ show next)
+                _ -> ioError (userError "invalid generated Haskell normalization record")
+            pure (next, foldingCount, uppercaseCount, sawVersion)
+        "F" : source : expectedFold : expectedNfkcFold : _ -> do
+            let next = foldingCount + 1
+                decoded = fromScalarField source
+            require
+                (Unicode.casefold decoded == fromScalarField expectedFold)
+                ("case-fold Haskell self-check failed at vector " ++ show next)
+            require
+                (Unicode.nfkcCasefold decoded == fromScalarField expectedNfkcFold)
+                ("NFKC-case-fold Haskell self-check failed at vector " ++ show next)
+            pure (normalizationCount, next, uppercaseCount, sawVersion)
+        "U" : source : expected : _ -> do
+            let next = uppercaseCount + 1
+            require
+                (Unicode.fullUppercase (fromScalarField source) == fromScalarField expected)
+                ("full-uppercase Haskell self-check failed at vector " ++ show next)
+            pure (normalizationCount, foldingCount, next, sawVersion)
+        _ -> ioError (userError "unknown Haskell self-check record")
+
+main :: IO ()
+main = do
+    input <- getContents
+    (_, _, _, sawVersion) <- foldM checkRecord (0, 0, 0, False) (lines input)
+    require sawVersion "missing generated Haskell Unicode version"
+    let outlined =
+            map chr
+                [ 0x1CCE3, 0x1CCE4, 0x1CCD9, 0x1CCDA, 0x5F, 0x1CCE2
+                , 0x1CCE4, 0x1CCD9, 0x1CCEA, 0x1CCE1, 0x1CCDA, 0x1CCE8
+                ]
+    require
+        (Unicode.nfkcCasefold outlined == "node_modules")
+        "Unicode 17 outlined-letter Haskell sentinel failed"
+    require
+        (Unicode.nfc (map chr [0x105D2, 0x0307]) == map chr [0x105C9])
+        "Unicode 17 Todhri Haskell sentinel failed"
+    putStrLn "ok"
+"""
+
+
 _LUA_OUTPUT_LIMIT = 8192
 _WINDOWS_CREATE_SUSPENDED = 0x00000004
 _WINDOWS_JOB_OBJECT_EXTENDED_LIMIT_INFORMATION = 9
@@ -2900,6 +3197,15 @@ def _perl_self_check_environment() -> dict[str, str]:
     }
 
 
+def _haskell_self_check_environment() -> dict[str, str]:
+    """Retain only loader state; GHC receives no user package or project state."""
+    return {
+        name: value
+        for name in ("SystemRoot", "WINDIR")
+        if (value := os.environ.get(name)) is not None
+    }
+
+
 def _self_check_lua(
     root: Path,
     lua_output: str,
@@ -2993,6 +3299,85 @@ def _self_check_perl(
         raise RuntimeError(f"generated Perl Unicode self-check failed: {detail}")
 
 
+def _self_check_haskell(
+    root: Path,
+    haskell_output: str,
+    sources: dict[str, str],
+    python_module,
+    runghc_executable: Path,
+    ghc_executable: Path,
+) -> None:
+    del root  # Kept parallel with the other emitted-runtime call signatures.
+    runghc = runghc_executable.expanduser().resolve(strict=True)
+    if not runghc.is_file():
+        raise RuntimeError(
+            f"Haskell Unicode self-check executable is not a file: {runghc}"
+        )
+    ghc = ghc_executable.expanduser().resolve(strict=True)
+    if not ghc.is_file():
+        raise RuntimeError(f"Haskell Unicode GHC executable is not a file: {ghc}")
+    environment = _haskell_self_check_environment()
+
+    with tempfile.TemporaryDirectory(prefix="unicode17-haskell-check-") as temporary:
+        temporary_path = Path(temporary)
+        module_path = temporary_path / "TrackedArtifactUnicode17.hs"
+        runner_path = temporary_path / "SelfCheck.hs"
+        ghc_temporary_path = temporary_path / "ghc-tmp"
+        ghc_temporary_path.mkdir()
+        module_path.write_text(haskell_output, encoding="utf-8", newline="\n")
+        runner_path.write_text(_HASKELL_SELF_CHECK, encoding="utf-8", newline="\n")
+        version = _run_bounded_process(
+            [str(runghc), "--version"],
+            cwd=temporary_path,
+            env=environment,
+            input_text="",
+            timeout=10,
+        )
+        version_text = (version.stdout + version.stderr).replace("\r\n", "\n")
+        if version.returncode != 0 or version_text != "runghc 9.4.8\n":
+            raise RuntimeError(
+                "Haskell Unicode self-check requires pinned runghc 9.4.8"
+            )
+        ghc_version = _run_bounded_process(
+            [str(ghc), "--numeric-version"],
+            cwd=temporary_path,
+            env=environment,
+            input_text="",
+            timeout=10,
+        )
+        ghc_version_text = (ghc_version.stdout + ghc_version.stderr).replace(
+            "\r\n", "\n"
+        )
+        if ghc_version.returncode != 0 or ghc_version_text != "9.4.8\n":
+            raise RuntimeError("Haskell Unicode self-check requires pinned GHC 9.4.8")
+        result = _run_bounded_process(
+            [
+                str(runghc),
+                "-f",
+                str(ghc),
+                "--ghc-arg=-ignore-dot-ghci",
+                "--ghc-arg=-no-user-package-db",
+                "--ghc-arg=-clear-package-db",
+                "--ghc-arg=-global-package-db",
+                "--ghc-arg=-package-env=-",
+                "--ghc-arg=-hide-all-packages",
+                "--ghc-arg=-package=base",
+                "--ghc-arg=-package=containers",
+                f"--ghc-arg=-tmpdir={ghc_temporary_path}",
+                f"--ghc-arg=-i{temporary_path}",
+                str(runner_path),
+            ],
+            cwd=temporary_path,
+            env=environment,
+            input_text=_lua_self_check_payload(python_module, sources),
+            timeout=180,
+        )
+    normalized_stdout = result.stdout.replace("\r\n", "\n")
+    if result.returncode != 0 or normalized_stdout != "ok\n":
+        detail = result.stderr.strip() or result.stdout.strip() or "no diagnostic"
+        raise RuntimeError(f"generated Haskell Unicode self-check failed: {detail}")
+
+
 def _write_or_check(root: Path, target: Path, content: str, check: bool) -> None:
     absolute = root / target
     content = content.replace("\r\n", "\n")
@@ -3019,7 +3404,7 @@ def _write_bytes_or_check(
 def _selected_runtime_self_checks(requested: list[str] | None) -> tuple[str, ...]:
     """Return the emitted runtimes whose official-vector checks must run."""
     if requested is None:
-        return ("typescript", "ruby", "elixir", "lua", "perl")
+        return ("typescript", "ruby", "elixir", "lua", "perl", "haskell")
     return tuple(dict.fromkeys(requested))
 
 
@@ -3029,7 +3414,7 @@ def main() -> int:
     parser.add_argument(
         "--self-check-runtime",
         action="append",
-        choices=("typescript", "ruby", "elixir", "lua", "perl"),
+        choices=("typescript", "ruby", "elixir", "lua", "perl", "haskell"),
         help=(
             "limit emitted-runtime official-vector checks; repeat to select more "
             "than one runtime (default: every emitted runtime)"
@@ -3049,6 +3434,22 @@ def main() -> int:
         help=(
             "exact reviewed Perl 5.38.2 executable used when the Perl "
             "emitted-runtime check is selected"
+        ),
+    )
+    parser.add_argument(
+        "--runghc-executable",
+        type=Path,
+        help=(
+            "exact reviewed GHC 9.4.8 runghc executable used when the Haskell "
+            "emitted-runtime check is selected"
+        ),
+    )
+    parser.add_argument(
+        "--ghc-executable",
+        type=Path,
+        help=(
+            "exact reviewed GHC 9.4.8 compiler paired with the Haskell "
+            "emitted-runtime check"
         ),
     )
     args = parser.parse_args()
@@ -3071,6 +3472,7 @@ def main() -> int:
     elixir_output = _render_elixir(tables)
     lua_output = _render_lua(tables)
     perl_output = _render_perl(tables)
+    haskell_output = _render_haskell(tables)
     for target in PYTHON_TARGETS:
         _write_or_check(root, target, python_output, args.check)
     _write_or_check(root, CSHARP_TARGET, csharp_output, args.check)
@@ -3079,6 +3481,7 @@ def main() -> int:
     _write_or_check(root, ELIXIR_TARGET, elixir_output, args.check)
     _write_or_check(root, LUA_TARGET, lua_output, args.check)
     _write_or_check(root, PERL_TARGET, perl_output, args.check)
+    _write_or_check(root, HASKELL_TARGET, haskell_output, args.check)
     for target in LICENSE_TARGETS:
         _write_bytes_or_check(root, target, upstream_license, args.check)
     python_module = _load_generated_module(root / PYTHON_TARGETS[0])
@@ -3109,6 +3512,19 @@ def main() -> int:
             sources,
             python_module,
             args.perl_executable,
+        )
+    if "haskell" in selected_runtimes:
+        if args.runghc_executable is None:
+            parser.error("--runghc-executable is required for the Haskell self-check")
+        if args.ghc_executable is None:
+            parser.error("--ghc-executable is required for the Haskell self-check")
+        _self_check_haskell(
+            root,
+            haskell_output,
+            sources,
+            python_module,
+            args.runghc_executable,
+            args.ghc_executable,
         )
     print(
         f"Unicode {UNICODE_VERSION} generated and verified: "
