@@ -26,6 +26,7 @@ pub const CRASH_INJECTION_COMPILED: bool = cfg!(feature = "crash-injection");
 use coding_adventures_vault_import_bitwarden::BitwardenJsonImporter;
 use coding_adventures_vault_import_csv::CsvLoginImporter;
 use coding_adventures_vault_import_export::{Importer, PortableRecord, PortableRecordKind};
+use coding_adventures_vault_import_otpauth::OtpauthUriImporter;
 use coding_adventures_vault_pm_application::{
     attachment_name_from_path, attachment_random_bytes, complete_generation_zero,
     open_portable_with_passphrase, portable_import_random_bytes, prepare_audited_generation_zero,
@@ -110,7 +111,7 @@ const MAX_EXTERNAL_IMPORT_SOURCE_BYTES: usize = 16 * 1024 * 1024;
 /// everything sensitive travels on the child's standard input, because argv is
 /// readable by every account on the machine through `ps` (VLT-PM46 §2.2).
 const CLIPBOARD_CLEAR_ARGUMENTS: &[&str] = &["clipboard", "clear"];
-const USAGE: &str = "Usage:\n  vault-pm init [--vault NAME] [--storage NAME]\n  vault-pm vault create NAME\n  vault-pm [--vault NAME] status [--json]\n  vault-pm [--vault NAME] shell\n  vault-pm agent start\n  vault-pm agent stop\n  vault-pm agent status [--json]\n  vault-pm [--vault NAME] agent unlock\n  vault-pm [--vault NAME] agent lock\n  vault-pm agent run-foreground\n  vault-pm [--vault NAME] audit enable\n  vault-pm [--vault NAME] audit verify\n  vault-pm [--vault NAME] audit list\n  vault-pm [--vault NAME] audit show TRACE\n  vault-pm [--vault NAME] doctor [--unlock]\n  vault-pm [--vault NAME] passphrase rotate\n  vault-pm password generate [--length N] [--no-lowercase] [--no-uppercase] [--no-digits] [--no-symbols] [--exclude-ambiguous] (--reveal|--copy)\n  vault-pm [--vault NAME] export FILE\n  vault-pm [--vault NAME] import portable FILE\n  vault-pm [--vault NAME] import bitwarden FILE\n  vault-pm [--vault NAME] import csv FILE\n  vault-pm [--vault NAME] import kdbx FILE\n  vault-pm --vault NAME restore FILE\n  vault-pm [--vault NAME] restore verify FILE\n  vault-pm [--vault NAME] item add login\n  vault-pm [--vault NAME] item add secure-note\n  vault-pm [--vault NAME] item add card\n  vault-pm [--vault NAME] item add api-key\n  vault-pm [--vault NAME] item add database-credential\n  vault-pm [--vault NAME] item add totp\n  vault-pm [--vault NAME] item edit ITEM\n  vault-pm [--vault NAME] item delete ITEM\n  vault-pm [--vault NAME] item list\n  vault-pm [--vault NAME] item show ITEM\n  vault-pm [--vault NAME] item reveal ITEM FIELD\n  vault-pm [--vault NAME] totp code ITEM (--reveal|--copy)\n  vault-pm clipboard clear\n  vault-pm [--vault NAME] attachment add ITEM FILE\n  vault-pm [--vault NAME] attachment list ITEM\n  vault-pm [--vault NAME] attachment export ITEM ATTACHMENT FILE\n  vault-pm [--vault NAME] search QUERY\n  vault-pm [--vault NAME] history list ITEM\n  vault-pm [--vault NAME] history restore ITEM REVISION\n  vault-pm [--vault NAME] conflict list ITEM\n  vault-pm [--vault NAME] conflict reveal ITEM REVISION FIELD\n  vault-pm [--vault NAME] conflict choose ITEM REVISION\n  vault-pm [--vault NAME] conflict merge login ITEM BASE_REVISION\n  vault-pm [--vault NAME] conflict merge secure-note ITEM BASE_REVISION\n  vault-pm [--vault NAME] conflict merge card ITEM BASE_REVISION\n  vault-pm [--vault NAME] conflict merge api-key ITEM BASE_REVISION\n  vault-pm [--vault NAME] conflict merge database-credential ITEM BASE_REVISION\n  vault-pm [--vault NAME] conflict merge totp ITEM BASE_REVISION\n  vault-pm [--vault NAME] conflict merge opaque ITEM BASE_REVISION\n  vault-pm storage add filesystem NAME PATH\n  vault-pm storage add removable NAME PATH\n  vault-pm storage list\n  vault-pm storage check NAME\n  vault-pm [--vault NAME] storage migrate SOURCE TARGET [--mirror]\n";
+const USAGE: &str = "Usage:\n  vault-pm init [--vault NAME] [--storage NAME]\n  vault-pm vault create NAME\n  vault-pm [--vault NAME] status [--json]\n  vault-pm [--vault NAME] shell\n  vault-pm agent start\n  vault-pm agent stop\n  vault-pm agent status [--json]\n  vault-pm [--vault NAME] agent unlock\n  vault-pm [--vault NAME] agent lock\n  vault-pm agent run-foreground\n  vault-pm [--vault NAME] audit enable\n  vault-pm [--vault NAME] audit verify\n  vault-pm [--vault NAME] audit list\n  vault-pm [--vault NAME] audit show TRACE\n  vault-pm [--vault NAME] doctor [--unlock]\n  vault-pm [--vault NAME] passphrase rotate\n  vault-pm password generate [--length N] [--no-lowercase] [--no-uppercase] [--no-digits] [--no-symbols] [--exclude-ambiguous] (--reveal|--copy)\n  vault-pm [--vault NAME] export FILE\n  vault-pm [--vault NAME] import portable FILE\n  vault-pm [--vault NAME] import bitwarden FILE\n  vault-pm [--vault NAME] import csv FILE\n  vault-pm [--vault NAME] import kdbx FILE\n  vault-pm [--vault NAME] import otpauth-uri FILE\n  vault-pm [--vault NAME] import otpauth-qr FILE\n  vault-pm --vault NAME restore FILE\n  vault-pm [--vault NAME] restore verify FILE\n  vault-pm [--vault NAME] item add login\n  vault-pm [--vault NAME] item add secure-note\n  vault-pm [--vault NAME] item add card\n  vault-pm [--vault NAME] item add api-key\n  vault-pm [--vault NAME] item add database-credential\n  vault-pm [--vault NAME] item add totp\n  vault-pm [--vault NAME] item edit ITEM\n  vault-pm [--vault NAME] item delete ITEM\n  vault-pm [--vault NAME] item list\n  vault-pm [--vault NAME] item show ITEM\n  vault-pm [--vault NAME] item reveal ITEM FIELD\n  vault-pm [--vault NAME] totp code ITEM (--reveal|--copy)\n  vault-pm clipboard clear\n  vault-pm [--vault NAME] attachment add ITEM FILE\n  vault-pm [--vault NAME] attachment list ITEM\n  vault-pm [--vault NAME] attachment export ITEM ATTACHMENT FILE\n  vault-pm [--vault NAME] search QUERY\n  vault-pm [--vault NAME] history list ITEM\n  vault-pm [--vault NAME] history restore ITEM REVISION\n  vault-pm [--vault NAME] conflict list ITEM\n  vault-pm [--vault NAME] conflict reveal ITEM REVISION FIELD\n  vault-pm [--vault NAME] conflict choose ITEM REVISION\n  vault-pm [--vault NAME] conflict merge login ITEM BASE_REVISION\n  vault-pm [--vault NAME] conflict merge secure-note ITEM BASE_REVISION\n  vault-pm [--vault NAME] conflict merge card ITEM BASE_REVISION\n  vault-pm [--vault NAME] conflict merge api-key ITEM BASE_REVISION\n  vault-pm [--vault NAME] conflict merge database-credential ITEM BASE_REVISION\n  vault-pm [--vault NAME] conflict merge totp ITEM BASE_REVISION\n  vault-pm [--vault NAME] conflict merge opaque ITEM BASE_REVISION\n  vault-pm storage add filesystem NAME PATH\n  vault-pm storage add removable NAME PATH\n  vault-pm storage list\n  vault-pm storage check NAME\n  vault-pm [--vault NAME] storage migrate SOURCE TARGET [--mirror]\n";
 
 /// Stable process exit classes defined by VLT-PM00.
 #[derive(Clone, Copy, Debug, PartialEq, Eq)]
@@ -933,6 +934,19 @@ enum Command {
     ImportKdbx {
         source: PathBuf,
     },
+    /// Decode a file containing exactly one `otpauth://totp/...` URI and
+    /// create one new item from it (VLT-PM49 §5.5).
+    ImportOtpauthUri {
+        source: PathBuf,
+    },
+    /// Parses, but always fails closed with the `unsupported` exit class
+    /// before opening `source` (VLT-PM49 §9): decoding a QR code *image*
+    /// into its embedded `otpauth://` URI is explicitly deferred, not
+    /// silently missing from the grammar -- the same pattern §8 already
+    /// established for `import kdbx`.
+    ImportOtpauthQr {
+        source: PathBuf,
+    },
     PortableRestore {
         source: PathBuf,
     },
@@ -1334,14 +1348,15 @@ fn parse_restore(arguments: &[String]) -> Result<Command, CliFailure> {
     }
 }
 
-/// Parse the `import` verb (VLT-PM49 §3).
+/// Parse the `import` verb (VLT-PM49 §3, extended by §5.5/§9).
 ///
 /// V1 requires an explicit format keyword -- `portable`, `bitwarden`,
-/// `csv`, or `kdbx` -- rather than letting one format own the bare
-/// `import FILE` form VLT-PM18 originally specified. `kdbx` still parses
-/// (VLT-PM49 §8): the grammar names every format VLT-PM00 §14.4
-/// documents, and a format missing from `--help` with no explanation is
-/// worse than one that always answers `unsupported`.
+/// `csv`, `kdbx`, `otpauth-uri`, or `otpauth-qr` -- rather than letting
+/// one format own the bare `import FILE` form VLT-PM18 originally
+/// specified. `kdbx` and `otpauth-qr` still parse (VLT-PM49 §8, §9): the
+/// grammar names every format VLT-PM00 §14.4 documents, and a format
+/// missing from `--help` with no explanation is worse than one that
+/// always answers `unsupported`.
 fn parse_import(arguments: &[String]) -> Result<Command, CliFailure> {
     match arguments {
         [format, source] if !source.is_empty() && format == "portable" => {
@@ -1360,6 +1375,16 @@ fn parse_import(arguments: &[String]) -> Result<Command, CliFailure> {
         [format, source] if !source.is_empty() && format == "kdbx" => Ok(Command::ImportKdbx {
             source: PathBuf::from(source),
         }),
+        [format, source] if !source.is_empty() && format == "otpauth-uri" => {
+            Ok(Command::ImportOtpauthUri {
+                source: PathBuf::from(source),
+            })
+        }
+        [format, source] if !source.is_empty() && format == "otpauth-qr" => {
+            Ok(Command::ImportOtpauthQr {
+                source: PathBuf::from(source),
+            })
+        }
         _ => Err(CliFailure::InvalidCommand),
     }
 }
@@ -2030,6 +2055,19 @@ fn dispatch(
         // VLT-PM49 §8: always fails closed before opening `source`. KDBX's
         // own encrypted-container format is explicitly deferred.
         Command::ImportKdbx { source: _ } => Err(CliFailure::Unsupported),
+        Command::ImportOtpauthUri { source } => import_external(
+            host,
+            paths,
+            writer,
+            selected_vault,
+            &source,
+            &OtpauthUriImporter,
+        ),
+        // VLT-PM49 §9: always fails closed before opening `source`. Turning
+        // a QR code *image* into its embedded `otpauth://` URI text is
+        // explicitly deferred -- the URI-file half of this feature
+        // (`import otpauth-uri`, immediately above) ships in this slice.
+        Command::ImportOtpauthQr { source: _ } => Err(CliFailure::Unsupported),
         Command::PortableRestore { source } => {
             portable_restore(host, paths, writer, selected_vault, &source)
         }
@@ -8759,6 +8797,208 @@ mod tests {
             parse(["import", "kdbx", "vault.kdbx"]),
             default_invocation(Command::ImportKdbx {
                 source: PathBuf::from("vault.kdbx")
+            })
+        );
+    }
+
+    // === VLT-PM49 §5.5: standalone otpauth://totp/... URI import =========
+
+    #[test]
+    fn import_otpauth_uri_grammar_accepts_exactly_one_source() {
+        assert_eq!(
+            parse(["import", "otpauth-uri", "seed.txt"]),
+            default_invocation(Command::ImportOtpauthUri {
+                source: PathBuf::from("seed.txt")
+            })
+        );
+        assert_eq!(
+            parse(["import", "otpauth-uri"]),
+            Err(CliFailure::InvalidCommand)
+        );
+        assert_eq!(
+            parse(["import", "otpauth-uri", "seed.txt", "extra"]),
+            Err(CliFailure::InvalidCommand)
+        );
+        assert_eq!(
+            parse(["import", "otpauth-uri", ""]),
+            Err(CliFailure::InvalidCommand)
+        );
+    }
+
+    /// The full URI's query parameters (issuer/algorithm/digits/period)
+    /// survive the whole pipeline unchanged: `vault-import-otpauth` only
+    /// extracts the label for the title and passes the URI through
+    /// untouched, and `decode_external_totp_field` /
+    /// `parse_otpauth_totp_uri` (VLT-PM49 §5.3, unmodified by this slice)
+    /// decode the rest -- proving the two layers are wired correctly
+    /// together, not re-proving either layer's own already-tested logic.
+    #[test]
+    fn import_otpauth_uri_creates_a_totp_item_with_every_field_and_leaks_no_secret() {
+        let root = TestRoot::new();
+        let paths = root.paths();
+        let passphrase = b"otpauth uri import passphrase".to_vec();
+        let init_host = TestHost::new(paths.clone(), [passphrase.clone()]);
+        assert_eq!(run(["init"], &init_host).exit_code(), ExitCode::Success);
+
+        let source = root.0.join("github-totp.txt");
+        fs::write(
+            &source,
+            b"otpauth://totp/GitHub:alice@example.com?secret=JBSWY3DPEHPK3PXP&\
+              issuer=GitHub&algorithm=SHA256&digits=8&period=60",
+        )
+        .unwrap();
+
+        let import_host = TestHost::new(paths.clone(), [passphrase.clone()]);
+        let imported = run(
+            ["import", "otpauth-uri", source.to_str().unwrap()],
+            &import_host,
+        );
+        assert_eq!(imported.exit_code(), ExitCode::Success, "{imported:?}");
+        assert_eq!(
+            imported.stdout(),
+            "Import complete: created=1 skipped=0 failed=0\n"
+        );
+        assert!(!imported.stdout().contains("JBSWY3DPEHPK3PXP"));
+        assert!(!imported.stdout().contains("GitHub"));
+
+        let list_host = TestHost::new(paths.clone(), [passphrase.clone()]);
+        let listed = run(["item", "list"], &list_host);
+        assert_eq!(listed.exit_code(), ExitCode::Success, "{listed:?}");
+        let item = listed.stdout().split('\t').next().unwrap().to_owned();
+        assert_eq!(
+            listed.stdout(),
+            format!("{item}\t{TOTP_SEED_V1}\t\"GitHub:alice@example.com\"\n")
+        );
+
+        let show_host = TestHost::new(paths, [passphrase]);
+        let shown = run(["item", "show", &item], &show_host);
+        assert_eq!(shown.exit_code(), ExitCode::Success, "{shown:?}");
+        for field in [
+            "Label: \"GitHub:alice@example.com\"",
+            "Issuer: \"GitHub\"",
+            "Algorithm: SHA256",
+            "Digits: 8",
+            "Period: 60",
+            "Secret: <redacted>",
+        ] {
+            assert!(shown.stdout().contains(field), "{}", shown.stdout());
+        }
+        assert!(!shown.stdout().contains("JBSWY3DPEHPK3PXP"));
+    }
+
+    /// Absent `issuer`/`algorithm`/`digits`/`period` fall back to VLT-PM29's
+    /// existing defaults (`none`/SHA1/6/30) -- the same defaults a Bitwarden
+    /// or CSV `otpauth://` field already gets (VLT-PM49 §5.3), proven here
+    /// rather than assumed for the new command surface.
+    #[test]
+    fn import_otpauth_uri_applies_default_algorithm_digits_period_when_absent() {
+        let root = TestRoot::new();
+        let paths = root.paths();
+        let passphrase = b"otpauth uri defaults passphrase".to_vec();
+        let init_host = TestHost::new(paths.clone(), [passphrase.clone()]);
+        assert_eq!(run(["init"], &init_host).exit_code(), ExitCode::Success);
+
+        let source = root.0.join("minimal-totp.txt");
+        fs::write(
+            &source,
+            b"otpauth://totp/Example:bob?secret=JBSWY3DPEHPK3PXP",
+        )
+        .unwrap();
+
+        let import_host = TestHost::new(paths.clone(), [passphrase.clone()]);
+        let imported = run(
+            ["import", "otpauth-uri", source.to_str().unwrap()],
+            &import_host,
+        );
+        assert_eq!(imported.exit_code(), ExitCode::Success, "{imported:?}");
+        assert_eq!(
+            imported.stdout(),
+            "Import complete: created=1 skipped=0 failed=0\n"
+        );
+
+        let list_host = TestHost::new(paths.clone(), [passphrase.clone()]);
+        let listed = run(["item", "list"], &list_host);
+        let item = listed.stdout().split('\t').next().unwrap().to_owned();
+
+        let show_host = TestHost::new(paths, [passphrase]);
+        let shown = run(["item", "show", &item], &show_host);
+        assert_eq!(shown.exit_code(), ExitCode::Success, "{shown:?}");
+        for field in [
+            "Label: \"Example:bob\"",
+            "Issuer: none",
+            "Algorithm: SHA1",
+            "Digits: 6",
+            "Period: 30",
+        ] {
+            assert!(shown.stdout().contains(field), "{}", shown.stdout());
+        }
+    }
+
+    /// A `hotp://` URI, or any other malformed source, is refused before
+    /// any vault is opened (mirroring `import_bitwarden_with_only_
+    /// unsupported_items_opens_no_vault`'s proof for the sibling formats):
+    /// a `TestHost` with an empty secrets queue would panic on an
+    /// unexpected authentication prompt, so success here proves none was
+    /// attempted.
+    #[test]
+    fn import_otpauth_uri_rejects_a_malformed_source_without_opening_a_vault() {
+        let root = TestRoot::new();
+        let paths = root.paths();
+        let passphrase = b"otpauth uri malformed passphrase".to_vec();
+        let init_host = TestHost::new(paths.clone(), [passphrase.clone()]);
+        assert_eq!(run(["init"], &init_host).exit_code(), ExitCode::Success);
+
+        for (name, contents) in [
+            (
+                "hotp.txt",
+                &b"otpauth://hotp/Example:bob?secret=JBSWY3DPEHPK3PXP&counter=0"[..],
+            ),
+            ("not-a-uri.txt", &b"just some plain text"[..]),
+            ("empty.txt", &b""[..]),
+        ] {
+            let source = root.0.join(name);
+            fs::write(&source, contents).unwrap();
+            let host = TestHost::new(paths.clone(), []);
+            let result = run(["import", "otpauth-uri", source.to_str().unwrap()], &host);
+            assert_eq!(
+                result.exit_code(),
+                ExitCode::InvalidInput,
+                "{name}: {result:?}"
+            );
+            assert!(result.stdout().is_empty(), "{name}");
+        }
+    }
+
+    /// otpauth QR-image decoding always fails closed with the
+    /// `unsupported` exit class, before `source` is ever opened (VLT-PM49
+    /// §11, explicitly deferred): a nonexistent path must fail the *same*
+    /// way a real one would, proving no filesystem access was attempted --
+    /// the identical proof `import_kdbx_always_fails_closed_without_
+    /// opening_source` gives for KDBX (§8).
+    #[test]
+    fn import_otpauth_qr_always_fails_closed_without_opening_source() {
+        let root = TestRoot::new();
+        let paths = root.paths();
+        let passphrase = b"otpauth qr unsupported passphrase".to_vec();
+        let init_host = TestHost::new(paths.clone(), [passphrase.clone()]);
+        assert_eq!(run(["init"], &init_host).exit_code(), ExitCode::Success);
+
+        let absent_source = root.0.join("does-not-exist.png");
+        let host = TestHost::new(paths, []);
+        let result = run(
+            ["import", "otpauth-qr", absent_source.to_str().unwrap()],
+            &host,
+        );
+        assert_eq!(result.exit_code(), ExitCode::Unsupported, "{result:?}");
+        assert!(result.stdout().is_empty());
+    }
+
+    #[test]
+    fn import_otpauth_qr_grammar_accepts_exactly_one_source() {
+        assert_eq!(
+            parse(["import", "otpauth-qr", "code.png"]),
+            default_invocation(Command::ImportOtpauthQr {
+                source: PathBuf::from("code.png")
             })
         );
     }

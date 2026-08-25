@@ -1,4 +1,4 @@
-# VLT-PM49 — CLI External Import: Bitwarden JSON and Browser CSV
+# VLT-PM49 — CLI External Import: Bitwarden JSON, Browser CSV, and otpauth
 
 ## Status
 
@@ -6,6 +6,16 @@ Normative Phase 1B contract for VLT-PM00 §23 item 13, "Bitwarden/KDBX/
 browser CSV import adapters." This slice ships the Bitwarden JSON and
 browser/LastPass-style CSV adapters as a complete, well-tested pair.
 KDBX is explicitly deferred; §8 records why and what closes it.
+
+**Amendment.** §5.5 and the `otpauth-uri`/`otpauth-qr` grammar lines in
+§3 were added later, at the user's explicit request for TOTP setup via a
+QR code image and/or `otpauth://` URI instead of only manual Base32
+secret entry through `item add totp` (`VLT-PM29-cli-totp-create.md`).
+§1 explains why that request became an amendment to *this* spec rather
+than a change to VLT-PM29's own closed grammar. `otpauth-uri` ships
+complete in this amendment; `otpauth-qr` (QR *image* decoding) is
+explicitly deferred, matching §8's existing precedent for KDBX — see the
+new §9 for why and what closes it.
 
 ## 1. Purpose
 
@@ -20,6 +30,34 @@ vault's own encrypted export into an empty target.
 These two ceremonies look similar — both start with the word `import` —
 and are deliberately *not* the same machinery, for reasons §2 below
 explains from source, not by assertion.
+
+### 1.1 Why `otpauth-uri`/`otpauth-qr` amend this spec, not VLT-PM29
+
+`VLT-PM29-cli-totp-create.md` §1 states plainly that "QR scanning,
+`otpauth://` parsing, code generation/display, HOTP counters, online
+issuer discovery, clock correction, migration formats, and
+non-interactive input are outside this command" — meaning `item add
+totp`'s own closed grammar. That boundary is a deliberate scope
+statement, not an oversight, and it is still accurate: this amendment
+touches none of `item add totp`'s prompts, grammar, or code.
+
+An `otpauth://` URI or a QR code encoding one is exactly the same *shape*
+of thing this spec already handles: an external, untrusted, plaintext
+artifact that becomes a new vault-pm item through the unmodified `item
+add` publication path, read from a file named on the command line — not
+typed at an interactive prompt. `PortableRecordKind::Totp` (§5) already
+exists in `vault-import-export`'s vocabulary for exactly a standalone TOTP
+seed, and §5.3's `decode_external_totp_field` /
+`parse_otpauth_totp_uri` already parse the `otpauth://totp/...` query
+string a Bitwarden/CSV TOTP field can carry. So the new work is a new
+*format* this spec's existing `import FORMAT FILE` grammar names (§3), a
+new sibling adapter crate (§5.5) implementing the same `Importer` trait
+§2 already established as the reuse boundary, reusing §5.3's decoder
+unchanged — not a new command, a new mutation path, or a new audit event.
+Extending VLT-PM49 keeps that reuse honest; extending VLT-PM29 would mean
+either duplicating this machinery next to `item add totp`'s interactive
+prompts, or quietly widening a command whose own spec says in the same
+paragraph that this exact capability is out of scope.
 
 ## 2. Reuse precedent: what this slice builds on, and what it does not
 
@@ -64,12 +102,16 @@ in the whole workspace:
 - `code/packages/rust/vault-import-csv` — implements `Importer`, decodes
   a header-keyed browser/LastPass/Bitwarden-CSV login export into
   `Vec<PortableRecord>`.
+- `code/packages/rust/vault-import-otpauth` (§5.5, added by this
+  amendment) — implements `Importer`, decodes a file holding exactly one
+  `otpauth://totp/...` URI into a single `PortableRecord`.
 
-Neither crate touches vault-pm cryptography, item identity, or audit
-events. `vault-pm-cli` is the only place `PortableRecord` values become
-real vault-pm items, and it does that by mapping each one onto the
-*existing* `item add` machinery (§4), not by inventing a second
-mutation/publication path next to the one VLT-PM05 already specifies.
+Neither the original two crates nor this amendment's third one touch
+vault-pm cryptography, item identity, or audit events. `vault-pm-cli` is
+the only place `PortableRecord` values become real vault-pm items, and it
+does that by mapping each one onto the *existing* `item add` machinery
+(§4), not by inventing a second mutation/publication path next to the
+one VLT-PM05 already specifies.
 
 ## 3. Grammar
 
@@ -78,7 +120,16 @@ vault-pm [--vault NAME] import portable FILE
 vault-pm [--vault NAME] import bitwarden FILE
 vault-pm [--vault NAME] import csv FILE
 vault-pm [--vault NAME] import kdbx FILE
+vault-pm [--vault NAME] import otpauth-uri FILE
+vault-pm [--vault NAME] import otpauth-qr FILE
 ```
+
+`otpauth-uri` and `otpauth-qr` are this amendment's two new formats
+(§5.5, §9). `otpauth-qr` parses the identical shape as `kdbx` — one
+format keyword, one path — and, like `kdbx`, always fails closed with the
+`unsupported` exit class before opening `FILE`: §9 records why QR *image*
+decoding is deferred and what closes it, the same treatment §8 already
+gives KDBX.
 
 This supersedes VLT-PM18 §2's bare `vault-pm import FILE`, which is now
 `vault-pm import portable FILE` — the format keyword is mandatory so the
@@ -240,6 +291,49 @@ not abort the whole import; counted in `failed`, §6).
   beyond the first (§5.1) — kept by the adapter, no destination on the
   mapped vault-pm item yet.
 
+### 5.5 Standalone otpauth URI (`vault-import-otpauth`) — added by this amendment
+
+`vault-pm import otpauth-uri FILE` reads `FILE` as the entire contents of
+one `otpauth://totp/...` URI — the de facto "Google Authenticator Key URI
+Format" every authenticator issuer's QR code and manual TOTP setup page
+encodes — and creates exactly one `TOTP_SEED_V1` item from it, through
+the same `item add` publication path as every other format in this spec.
+
+Unlike §5.1/§5.2's login/note/card records, there is no containing record
+to take a title from, so `vault-import-otpauth::decode` does two, and
+only two, things of its own:
+
+1. **Validates the scheme and type.** Exactly `otpauth://totp/...`
+   (case-insensitive on the scheme and type only). Any other type —
+   `hotp` is the real-world case — is refused with a distinct error
+   rather than guessed at, matching §5.3's existing answer for the same
+   shape embedded in a Bitwarden/CSV field, and VLT-PM29's TOTP-only
+   scope.
+2. **Extracts and percent-decodes the label** (`otpauth://totp/<LABEL>?
+   ...`) to use as the created item's title, bounded to
+   `VLT-PM29-cli-totp-create.md` §2's own 256-byte `Label` bound.
+
+Everything after `?` — `secret`, `issuer`, `algorithm`, `digits`,
+`period` — is **not** parsed by the new crate. The entire original URI,
+byte for byte, becomes the produced `PortableRecord`'s `totp_seed` field,
+which is exactly the field §5.3's existing, unmodified
+`decode_external_totp_field` / `parse_otpauth_totp_uri` already knows how
+to decode (a Bitwarden JSON export's `login.totp` field carrying an
+`otpauth://` URI takes the identical path today). So the query string is
+decoded by exactly one piece of code in the workspace regardless of which
+format handed it the URI — this amendment reuses that decoder unchanged
+rather than duplicating its RFC 4648 Base32 handling, algorithm/digit/
+period validation, or percent-decoding a second time. Absent `issuer`,
+`algorithm`, `digits`, or `period` fall back to the same defaults §5.3
+and VLT-PM29 already define (`none`/SHA1/6/30).
+
+`vault-import-otpauth`'s own README and test suite carry the full
+adversarial-input matrix for this shape (oversized source, invalid UTF-8,
+non-otpauth scheme, missing type segment, empty/oversize label, malformed
+percent escapes, multi-byte-boundary panics), the same "each crate's own
+broad test matrix rather than asserted here" discipline §7 states for the
+other two adapters.
+
 ## 6. Output and errors
 
 Success reports only aggregate counts, matching VLT-PM18 §8's existing
@@ -305,6 +399,17 @@ own broad test matrix rather than asserted here:
   attacker who puts a fake syslog line, ANSI escape, or `Set-Cookie`-
   shaped string in an item title cannot get it echoed anywhere this
   product controls.
+- **`otpauth-uri` (added by this amendment).** A QR code or pasted URI
+  can come from anywhere. `vault-import-otpauth` bounds the whole source
+  before any other work (`MAX_SOURCE_BYTES`), never indexes an untrusted
+  `&str` at a fixed byte offset (every slice boundary is either
+  `str::get`-checked or a single-byte ASCII delimiter offset from
+  `str::find`, so a crafted multi-byte character cannot trigger a
+  boundary panic — the same class of regression §5.3's own
+  `parse_otpauth_totp_uri` already guards against), refuses `hotp` and
+  every other non-`totp` type with a closed error instead of guessing,
+  and bounds the decoded label to VLT-PM29's own 256-byte `Label` limit.
+  See that crate's own README and test suite for the full matrix.
 
 ## 8. Explicitly deferred: KDBX
 
@@ -342,12 +447,77 @@ the same `PortableRecord` vocabulary as the other two, and wiring
 `import kdbx` in `vault-pm-cli` to it exactly as this slice wires
 `bitwarden`/`csv`.
 
-## 9. Acceptance gates
+## 9. Explicitly deferred: QR image decoding — added by this amendment
 
-1. `import bitwarden`/`import csv`/`import portable` each parse exactly
-   one source path and nothing else; `import kdbx` parses the same shape
-   but fails closed with the `unsupported` exit class before any file
-   access, in a unit test that also proves the file was never opened.
+`import otpauth-uri FILE` (§5.5) closes the "type or paste an `otpauth://`
+URI into a file" half of the user's request. The other half — point the
+CLI at a **QR code image** (a screenshot or export from an issuer's setup
+page, or another password manager's export; this is a CLI product with
+no camera, so "scanning" always means an image file someone already has)
+and decode its embedded `otpauth://` URI — needs turning pixels into that
+URI text first, which is a materially different and larger problem than
+§5.5's text parsing.
+
+**What was checked before assuming a new dependency was needed.** Every
+Rust package under `code/packages/rust/` and `code/programs/rust/` was
+searched for existing QR handling: `code/packages/rust/qr-code` exists,
+but it is an **encoder only** (ISO/IEC 18004 string → `ModuleGrid` →
+pixels, for `barcode-2d` to render) with no decode direction at all — it
+cannot be pointed at an image and asked what it says. The `barcode-2d`,
+`gf256`, `reed-solomon`, `aztec-code`, `data-matrix`, `pdf417`, and
+`micro-qr` sibling packages are the same shape: encoders and their
+supporting field/error-correction arithmetic, not decoders. No `paint-vm`
+family package reads a QR code either — they render vector scenes, not
+recognize codes in raster images. Two actively-maintained crates.io
+crates were also checked: `rqrr` (pure-Rust QR-grid detection and
+decoding from a raw luma buffer; its own runtime dependencies are just
+`g2p` and `lru` — the heavier `image` crate is only an *optional* feature
+this project would not need to enable) and `png` (pure-Rust PNG
+decoding). Together they would be lighter than pulling in the general
+`image` crate, and PNG-only is a reasonable restriction for this use
+case: QR exports are typically PNG already, and JPEG's lossy compression
+actively works against reliable QR decoding.
+
+**Why this is still deferred rather than shipped alongside §5.5.** Every
+other dependency this whole vault-pm stack composes today —
+`vault-pm-cli`'s own `Cargo.toml`, and every crate in its dependency
+closure including this amendment's own `vault-import-otpauth` — is a
+workspace-internal path dependency; none of vault-pm's import/export or
+cryptographic surface depends on an external (crates.io) crate today.
+Adding the first two would be a real, deliberate architectural decision
+about this product's untrusted-input surface, and it deserves its own
+focused review rather than riding as a second concern inside this
+amendment's URI-parsing review — the same "cost more to review well
+together than it would return" judgment §8 already made for KDBX, for an
+analogous reason (a structurally different untrusted-input format, here
+a compressed raster image rather than a binary container). Decompression-
+bomb-style guarding (an attacker-supplied PNG with a tiny file size but
+enormous decoded pixel dimensions) needs its own adversarial test
+fixtures, and correctness needs real QR images to decode against —
+`code/packages/rust/qr-code`'s own `encode_and_layout`/`render_png` can
+generate those fixtures in-house, which is real, separable follow-up
+work of its own.
+
+`import otpauth-qr FILE` therefore stays in the grammar (§3) — named so
+it is not silently missing from `--help` with no explanation — and every
+invocation fails closed with the `unsupported` exit class before opening
+`FILE`, identical in shape to `import kdbx` (§8). A follow-up slice owns:
+adding `rqrr` and `png` to a new crate (or extending
+`vault-import-otpauth`), decoding the PNG header first to cap width ×
+height before any full pixel decode, running `rqrr` detection/decoding to
+recover the embedded string, and feeding that string through §5.5's
+existing `otpauth://` label/query pipeline unchanged — plus real
+QR-image test fixtures generated from `qr-code`'s own encoder, covering a
+corrupt file, a non-QR image, an oversized image, and a QR code encoding
+something other than an `otpauth://` URI.
+
+## 10. Acceptance gates
+
+1. `import bitwarden`/`import csv`/`import portable`/`import otpauth-uri`
+   each parse exactly one source path and nothing else; `import kdbx` and
+   `import otpauth-qr` parse the same shape but fail closed with the
+   `unsupported` exit class before any file access, in a unit test that
+   also proves the file was never opened.
 2. A well-formed Bitwarden JSON export containing one of each mapped
    kind (login with URIs and a TOTP seed, secure note, card) creates the
    expected vault-pm items, each independently reachable by `item show`
@@ -359,11 +529,16 @@ the same `PortableRecord` vocabulary as the other two, and wiring
 4. A file whose every record is an unsupported kind reports
    `created=0 skipped=N failed=0` and never authenticates a vault (a
    fake `CliHost` asserting `read_existing_passphrase`/`fill_entropy`
-   are never called for that case).
-5. Both adapter crates' own malformed-input matrices (§7) are green,
-   plus a `vault-pm-cli`-level test importing a truncated/malformed file
-   of each format and observing the invalid exit class with no vault
-   opened.
+   are never called for that case); the equivalent proof for
+   `import otpauth-uri` is that a malformed/`hotp`/empty source is
+   refused with the invalid exit class without ever authenticating.
+5. Both original adapter crates' own malformed-input matrices (§7) are
+   green, plus a `vault-pm-cli`-level test importing a
+   truncated/malformed file of each format and observing the invalid
+   exit class with no vault opened; `vault-import-otpauth`'s own matrix
+   (§5.5) — oversized source, invalid UTF-8, non-otpauth scheme, missing
+   type segment, `hotp`, empty/oversize label, malformed percent
+   escapes, multi-byte-boundary panics — is equally green.
 6. Imported secrets never appear in stdout, stderr, or an audit-event
    field — verified the same way VLT-PM18 §9 verifies it for portable
    import: grep the real CLI's captured output and the durable audit
@@ -373,3 +548,15 @@ the same `PortableRecord` vocabulary as the other two, and wiring
    one created by `item add` — same `ItemCreate` event kind, same
    crash-resumable publication — because no new mutation or audit path
    was introduced for this slice.
+8. `import otpauth-uri` on a well-formed URI carrying every optional
+   query parameter (`issuer`, `algorithm`, `digits`, `period`) creates an
+   item whose `item show` fields match the URI exactly, and on a URI
+   carrying only `secret` falls back to VLT-PM29's documented defaults
+   (`none`/SHA1/6/30) — proven through the real executable with a real
+   PTY by independently recomputing the expected TOTP code from the same
+   RFC 6238 engine `totp code` uses and checking the executable agrees,
+   the same style of proof VLT-PM45 §9 already uses for the interactive
+   path.
+9. `otpauth://hotp/...` and every other non-`totp` type is refused by
+   `import otpauth-uri` with the invalid exit class, not silently
+   imported as if it were `totp`.

@@ -1,0 +1,10 @@
+[package]
+name = "coding_adventures_vault_import_otpauth"
+version = "0.1.0"
+edition = "2021"
+description = "VLT-PM49 -- standalone otpauth://totp/... URI adapter. Implements vault-import-export's (VLT15) Importer trait, decoding a file containing exactly one otpauth URI into a single PortableRecord for vault-pm's `import otpauth-uri` ceremony."
+license = "MIT"
+
+[dependencies]
+coding_adventures_vault_import_export = { path = "../vault-import-export" }
+coding_adventures_zeroize = { path = "../zeroize" }

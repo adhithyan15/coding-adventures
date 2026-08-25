@@ -24,6 +24,7 @@ coding_adventures_zeroize = { path = "../zeroize" }
 coding_adventures_vault_import_export = { path = "../vault-import-export" }
 coding_adventures_vault_import_bitwarden = { path = "../vault-import-bitwarden" }
 coding_adventures_vault_import_csv = { path = "../vault-import-csv" }
+coding_adventures_vault_import_otpauth = { path = "../vault-import-otpauth" }
 
 [features]
 # Test-only real-process crash injection (VLT-PM41). Only

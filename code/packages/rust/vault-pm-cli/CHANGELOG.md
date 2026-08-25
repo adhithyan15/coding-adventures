@@ -2,6 +2,31 @@
 
 ## Unreleased
 
+- **`import otpauth-uri FILE`**, extending `VLT-PM49-cli-external-import.md`
+  §5.5, at the user's explicit request for TOTP setup via `otpauth://` URI
+  instead of only manual Base32 entry. Decodes a file containing exactly one
+  `otpauth://totp/...` URI (the de facto Google Authenticator Key URI Format
+  every authenticator issuer's QR code and manual-setup page encodes) into a
+  single new `TOTP_SEED_V1` item, through the unmodified `item add`
+  publication path — the same "new input into the existing audited creation
+  ceremony" shape `import bitwarden`/`import csv` already established for
+  Bitwarden/CSV TOTP fields (§5.3). A new sibling crate,
+  `coding_adventures_vault_import_otpauth`, implements
+  `vault-import-export`'s `Importer` trait and extracts only the URI's label
+  segment for the item's title; the query string (`secret`/`issuer`/
+  `algorithm`/`digits`/`period`) is handed unmodified to the existing,
+  unchanged `decode_external_totp_field` / `parse_otpauth_totp_uri` decoder
+  §5.3 already shipped and tested, so there remains exactly one place in the
+  workspace that decodes an `otpauth://` query string. `otpauth://hotp/...`
+  and every other non-`totp` type are refused with the invalid exit class,
+  matching `VLT-PM29`'s TOTP-only scope — `item add totp`'s own closed
+  grammar is untouched by this slice.
+- **`import otpauth-qr FILE`** parses but always fails closed with the
+  `unsupported` exit class before opening its file — turning a QR code
+  *image* into its embedded `otpauth://` URI text is explicitly deferred
+  (`VLT-PM49` §9), the same pattern §8 already established for
+  `import kdbx`. `import otpauth-uri` above ships the URI-file half of this
+  feature as a real, complete slice.
 - **`storage add|list|check|migrate`**, `VLT-PM00` §23 item 14, the last item
   of Phase 1B. Specified by `VLT-PM50-cli-storage-migration.md`.
 

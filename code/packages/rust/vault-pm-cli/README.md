@@ -31,7 +31,14 @@ items through the unmodified `item add` publication path, once per record,
 rather than the disaster-recovery ceremony `import portable` uses.
 `import kdbx FILE` parses but always fails closed with the `unsupported`
 class before opening its file — KDBX's own encrypted container format is
-explicitly deferred. `storage add|list|check|migrate`
+explicitly deferred. `import otpauth-uri FILE`
+(`VLT-PM49-cli-external-import.md` §5.5) adds a third, standalone-URI
+adapter: a file holding one `otpauth://totp/...` URI — the shape a QR
+code or an issuer's manual-setup page encodes — becomes a new TOTP item
+through the same unmodified `item add` publication path. `import
+otpauth-qr FILE` parses but always fails closed with `unsupported`
+before opening its file — decoding a QR code *image* into that URI text
+is explicitly deferred (§11). `storage add|list|check|migrate`
 (`VLT-PM50-cli-storage-migration.md`, `VLT-PM00` §23 item 14) add named
 storage locations, third-party sync-tool conflict-copy detection, and
 byte-for-byte migration with a real independent-unlock verification step. The
