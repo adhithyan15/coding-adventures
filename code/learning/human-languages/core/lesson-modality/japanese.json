@@ -7,7 +7,7 @@
   "policy": {
     "maxLinearisableTableColumns": 3
   },
-  "sourceHash": "fnv1a64:fac00dfd1969a975",
+  "sourceHash": "fnv1a64:af97dde0b5249e65",
   "summary": {
     "totalLessons": 117,
     "voice": 60,
@@ -2644,7 +2644,7 @@
         "no-visual-dependency"
       ],
       "coreDrivable": true,
-      "sourceHash": "fnv1a64:3f1d58283f1b75f4",
+      "sourceHash": "fnv1a64:c51ab0195d84ea20",
       "detachableSegments": [
         "Writing"
       ]

@@ -4,7 +4,7 @@
   "chapter": 13,
   "title": "Nine Family Words Through One New Kana",
   "drivablePrefix": 0,
-  "sourceHash": "fnv1a64:a237946320dea068",
+  "sourceHash": "fnv1a64:2e73a606b631f6fc",
   "lessons": [
     {
       "id": "JA-W13-tsu",
@@ -1330,7 +1330,7 @@
       "modalityReasons": [
         "writing-block"
       ],
-      "sourceHash": "fnv1a64:3f1d58283f1b75f4",
+      "sourceHash": "fnv1a64:c51ab0195d84ea20",
       "notice": {
         "modality": "pen",
         "needs": [],
@@ -1351,7 +1351,15 @@
             },
             {
               "kind": "speech",
-              "text": "Write distant katakana ヒ, then read コーヒー and recall why a loanword uses katakana. Hear, say, read, and write the seven later body words: あたま・かみ・は・かた・おなか・せなか・こし."
+              "text": "Start with two older forms. Write distant katakana ヒ. Then read コーヒー and recall why a loanword uses katakana."
+            },
+            {
+              "kind": "speech",
+              "text": "Now hear, say, read, and write these four later body words: あたま・かみ・は・かた."
+            },
+            {
+              "kind": "speech",
+              "text": "Finish with the remaining three: おなか・せなか・こし."
             }
           ]
         },

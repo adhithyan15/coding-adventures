@@ -34,9 +34,13 @@ reviews_of: [JA-C13-family-reception, JA-C13-chichi, JA-C13-haha, JA-C13-ani, JA
 ## Warm-up
 <!-- hl-knowledge: introduces=[]; assesses=[JA-SCRIPT-KATAKANA-HI-01, JA-LEX-KOOHII, JA-SCRIPT-KATAKANA-LOANWORDS, JA-LEX-ATAMA, JA-LEX-KAMI-HAIR, JA-LEX-HA-TOOTH, JA-LEX-KATA-SHOULDER, JA-LEX-ONAKA, JA-LEX-SENAKA, JA-LEX-KOSHI] -->
 
-[PAUSE 55s] Write distant katakana **ヒ**, then read **コーヒー** and recall why
-a loanword uses katakana. Hear, say, read, and write the seven later body words:
-**あたま・かみ・は・かた・おなか・せなか・こし**.
+[PAUSE 55s] Start with two older forms. Write distant katakana **ヒ**. Then read
+**コーヒー** and recall why a loanword uses katakana.
+
+Now hear, say, read, and write these four later body words:
+**あたま・かみ・は・かた**.
+
+Finish with the remaining three: **おなか・せなか・こし**.
 
 ## Guided Practice — speaking
 <!-- hl-knowledge: introduces=[JA-PERFORMANCE-FAMILY-NINE-01]; assesses=[JA-PERFORMANCE-FAMILY-RECEPTION-01, JA-LEX-CHICHI, JA-LEX-HAHA, JA-LEX-ANI, JA-LEX-ANE, JA-LEX-OTOUTO, JA-LEX-IMOUTO, JA-LEX-OTTO, JA-LEX-TSUMA, JA-LEX-KODOMO] -->
