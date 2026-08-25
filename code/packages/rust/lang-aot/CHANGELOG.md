@@ -1,5 +1,12 @@
 # Changelog — `lang-aot`
 
+## 0.237.0 - 2026-08-25 (ALGOL unary-plus selector writes)
+
+The seven-backend ALGOL matrix now proves leading unary plus composes with an
+integer identity tail without changing a bounded-while selector dependency.
+Compiler regressions cover integer and real wrappers and retain conservative
+unary-minus handling.
+
 ## 0.236.0 - 2026-08-25 (ALGOL power-one selector writes)
 
 The seven-backend ALGOL matrix now proves a literal exponent chain equal to

@@ -5986,8 +5986,15 @@ impl Compiler {
             return self.integer_identity_expression_preserves_name(base, name);
         }
         let sequence = pieces(node);
+        let (sequence, leading_plus) = match sequence.as_slice() {
+            [Piece::Op(op), rest @ ..] if op == "+" => (rest, true),
+            sequence => (sequence, false),
+        };
+        if let (true, [Piece::Node(child)]) = (leading_plus, sequence) {
+            return self.integer_identity_expression_preserves_name(child, name);
+        }
         if let (true, [Piece::Node(child)]) =
-            (direct_tokens(node).is_empty(), sequence.as_slice())
+            (direct_tokens(node).is_empty(), sequence)
         {
             return self.integer_identity_expression_preserves_name(child, name);
         }
@@ -6058,8 +6065,15 @@ impl Compiler {
             return self.real_unit_identity_expression_preserves_name(base, name);
         }
         let sequence = pieces(node);
+        let (sequence, leading_plus) = match sequence.as_slice() {
+            [Piece::Op(op), rest @ ..] if op == "+" => (rest, true),
+            sequence => (sequence, false),
+        };
+        if let (true, [Piece::Node(child)]) = (leading_plus, sequence) {
+            return self.real_unit_identity_expression_preserves_name(child, name);
+        }
         if let (true, [Piece::Node(child)]) =
-            (direct_tokens(node).is_empty(), sequence.as_slice())
+            (direct_tokens(node).is_empty(), sequence)
         {
             return self.real_unit_identity_expression_preserves_name(child, name);
         }
@@ -10626,6 +10640,8 @@ mod tests {
             "choose ^ 1",
             "choose ** 1",
             "choose ^ 1 ^ 1",
+            "+choose",
+            "+choose + 0 - 0",
         ] {
             compile_source(
                 &format!(
@@ -10639,12 +10655,16 @@ mod tests {
 
     #[test]
     fn al4_integer_non_identity_selector_write_remains_conservative() {
-        let err = compile_source(
-            "begin integer i, n, limit, choose; boolean other; n := 3; limit := 3; choose := 1; other := true; i := 0; for i := i + 1 while i < n do begin n := limit; limit := if choose = 1 then limit else limit + 1; choose := if other then choose else 0; other := other; choose := choose * 0 end; print(i + 0.25) end",
-            "test",
-        )
-        .expect_err("an integer non-identity write may change the selector dependency");
-        assert!(format!("{err:?}").contains("cannot print a real value"));
+        for write in ["choose * 0", "-choose"] {
+            let err = compile_source(
+                &format!(
+                    "begin integer i, n, limit, choose; boolean other; n := 3; limit := 3; choose := 1; other := true; i := 0; for i := i + 1 while i < n do begin n := limit; limit := if choose = 1 then limit else limit + 1; choose := if other then choose else 0; other := other; choose := {write} end; print(i + 0.25) end"
+                ),
+                "test",
+            )
+            .expect_err("an integer non-identity write may change the selector dependency");
+            assert!(format!("{err:?}").contains("cannot print a real value"));
+        }
     }
 
     #[test]
@@ -10690,6 +10710,7 @@ mod tests {
             "choose ^ 1",
             "choose ** 1",
             "choose ^ 1 ^ 1",
+            "+choose",
         ] {
             compile_source(
                 &format!(
@@ -10713,6 +10734,16 @@ mod tests {
             .expect_err("non-identity real powers must fail closed");
             assert!(format!("{err:?}").contains("cannot print a real value"));
         }
+    }
+
+    #[test]
+    fn al4_real_unary_minus_selector_write_remains_conservative() {
+        let err = compile_source(
+            "begin integer i, n, limit; real choose; boolean other; n := 3; limit := 3; choose := 1.0; other := true; i := 0; for i := i + 1 while i < n do begin n := limit; limit := if choose = 1.0 then limit else limit + 1; choose := if other then choose else 0.0; other := other; choose := -choose end; print(i + 0.25) end",
+            "test",
+        )
+        .expect_err("real unary minus changes the selector");
+        assert!(format!("{err:?}").contains("cannot print a real value"));
     }
 
     #[test]
