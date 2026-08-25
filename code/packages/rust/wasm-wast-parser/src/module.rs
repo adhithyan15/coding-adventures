@@ -1820,21 +1820,33 @@ fn encode_stream_instr(
                 out.extend(wasm_leb128::encode_unsigned(memarg.1 as u64));
                 return Ok(consumed);
             }
-            wasm_opcodes::SimdOpKind::Load8Lane | wasm_opcodes::SimdOpKind::Store8Lane => {
-                // v128.load8_lane / v128.store8_lane (SIMD PR44): a
-                // GENUINELY NEW combined shape -- unlike the plain
-                // `Load`/`Store`-family arm just above (memarg only,
-                // operands trail) and unlike `ExtractLane`/`ReplaceLane`
-                // above (lane-index only, operands trail), this carries
-                // a memarg AND a lane-index immediate together, BOTH
-                // leading, memarg BEFORE the lane index (confirmed
-                // against the pinned `simd_load8_lane.wast`/
-                // `simd_store8_lane.wast` corpus's own source order:
-                // `(v128.load8_lane offset=4 4 (addr) (x))`). In
-                // STREAM/flat form the two operands (address, existing
-                // v128) are already emitted onto `out` by whatever
-                // preceding instructions produced them, so only the
-                // memarg tokens (optional `offset=`/`align=`) and the
+            wasm_opcodes::SimdOpKind::Load8Lane
+            | wasm_opcodes::SimdOpKind::Store8Lane
+            | wasm_opcodes::SimdOpKind::Load16Lane
+            | wasm_opcodes::SimdOpKind::Store16Lane => {
+                // v128.load8_lane / v128.store8_lane (SIMD PR44), plus
+                // v128.load16_lane / v128.store16_lane (SIMD PR45, one
+                // width up): a GENUINELY NEW combined shape -- unlike the
+                // plain `Load`/`Store`-family arm just above (memarg
+                // only, operands trail) and unlike `ExtractLane`/
+                // `ReplaceLane` above (lane-index only, operands trail),
+                // this carries a memarg AND a lane-index immediate
+                // together, BOTH leading, memarg BEFORE the lane index
+                // (confirmed against the pinned `simd_load8_lane.wast`/
+                // `simd_store8_lane.wast`/`simd_load16_lane.wast`/
+                // `simd_store16_lane.wast` corpus's own source order:
+                // `(v128.loadN_lane offset=4 4 (addr) (x))`). Encoding is
+                // IDENTICAL between the 8-bit and 16-bit pairs -- only
+                // `simd_op.sub_opcode` differs, and `parse_lane_index`
+                // doesn't itself enforce a shape-specific range (that's
+                // `wasm-validator`'s job, at a NARROWER 0-7 bound for the
+                // 16-bit pair vs. 0-15 for the 8-bit pair -- see that
+                // crate's `type_check.rs`), so this arm needs no changes
+                // beyond joining the two new variants into the existing
+                // pattern. In STREAM/flat form the two operands (address,
+                // existing v128) are already emitted onto `out` by
+                // whatever preceding instructions produced them, so only
+                // the memarg tokens (optional `offset=`/`align=`) and the
                 // trailing lane-index literal need reading here.
                 let (memarg, mem_consumed) = parse_memarg(following, 0);
                 let (text, lpos) = literal_text(following.get(mem_consumed), pos)?;
@@ -2789,17 +2801,21 @@ fn encode_flat_instr(
                 out.extend(wasm_leb128::encode_unsigned(memarg.1 as u64));
                 return Ok(());
             }
-            wasm_opcodes::SimdOpKind::Load8Lane | wasm_opcodes::SimdOpKind::Store8Lane => {
-                // v128.load8_lane / v128.store8_lane (SIMD PR44): a
-                // GENUINELY NEW combined shape (see the matching comment
-                // in `encode_stream_instr`) -- the memarg's `offset=`/
-                // `align=` tokens lead (`args[0..operand_start]`), the
-                // lane-index literal comes right after
-                // (`args[operand_start]`), and the two operand
-                // expressions (address, existing v128) trail
-                // (`args[operand_start + 1..]`), matching the pinned
-                // corpus's own source order: `(v128.load8_lane offset=4
-                // 4 (addr) (x))`.
+            wasm_opcodes::SimdOpKind::Load8Lane
+            | wasm_opcodes::SimdOpKind::Store8Lane
+            | wasm_opcodes::SimdOpKind::Load16Lane
+            | wasm_opcodes::SimdOpKind::Store16Lane => {
+                // v128.load8_lane / v128.store8_lane (SIMD PR44), plus
+                // v128.load16_lane / v128.store16_lane (SIMD PR45, one
+                // width up, identical encoding -- see the matching
+                // comment in `encode_stream_instr`): a GENUINELY NEW
+                // combined shape -- the memarg's `offset=`/`align=`
+                // tokens lead (`args[0..operand_start]`), the lane-index
+                // literal comes right after (`args[operand_start]`), and
+                // the two operand expressions (address, existing v128)
+                // trail (`args[operand_start + 1..]`), matching the
+                // pinned corpus's own source order: `(v128.loadN_lane
+                // offset=4 4 (addr) (x))`.
                 let (memarg, operand_start) = parse_memarg(args, 0);
                 let lane_expr = args.get(operand_start).ok_or(WastParseError::UnexpectedEof)?;
                 let (text, lpos) = literal_text(Some(lane_expr), pos)?;
@@ -5991,6 +6007,41 @@ mod tests {
         )
         .unwrap();
         assert_eq!(code_of(&flat, 0), &[0x20, 0x00, 0x20, 0x01, 0xFD, 0x54, 0x00, 0x00, 0x05, 0x0B]);
+    }
+
+    #[test]
+    fn v128_load16_lane_and_store16_lane_encode_the_real_sub_opcode_with_a_combined_memarg_and_lane_index() {
+        // SIMD PR45: v128.load16_lane (0x55) / v128.store16_lane (0x59)
+        // -- one width up from `v128.load8_lane`/`v128.store8_lane`
+        // above, reusing the identical encoder arm (see that arm's own
+        // updated doc comment) since the encoding shape is unchanged --
+        // only `simd_op.sub_opcode` differs. Real WAT syntax confirmed
+        // against the pinned simd_load16_lane.wast/simd_store16_lane.wast
+        // corpus: `(v128.load16_lane offset=8 5 (addr) (x))`. Binary
+        // encoding order (verified against BinarySIMD.md: "m:memarg,
+        // i:ImmLaneIdx8") is sub-opcode, align, offset, THEN the raw
+        // lane-index byte -- same order as the 8-bit pair, just a
+        // narrower valid lane range (0-7, not checked at this layer --
+        // see `wasm-validator`'s own test for that).
+        let m = parse_module(
+            r#"(module (memory 1)
+                 (func (param i32 v128) (result v128) (v128.load16_lane offset=8 5 (local.get 0) (local.get 1)))
+                 (func (param i32 v128) (v128.store16_lane offset=8 5 (local.get 0) (local.get 1))))"#,
+        )
+        .unwrap();
+        // local.get 0 ; local.get 1 ; v128.load16_lane align=0 offset=8 lane=5 ; end
+        assert_eq!(code_of(&m, 0), &[0x20, 0x00, 0x20, 0x01, 0xFD, 0x55, 0x00, 0x08, 0x05, 0x0B]);
+        // local.get 0 ; local.get 1 ; v128.store16_lane align=0 offset=8 lane=5 ; end
+        assert_eq!(code_of(&m, 1), &[0x20, 0x00, 0x20, 0x01, 0xFD, 0x59, 0x00, 0x08, 0x05, 0x0B]);
+
+        // Flat/stream form: operands already emitted, memarg tokens (none
+        // here -- defaults to align=0/offset=0) and the lane-index
+        // literal trail the mnemonic.
+        let flat = parse_module(
+            "(module (memory 1) (func (param i32 v128) (result v128) local.get 0 local.get 1 v128.load16_lane 5))",
+        )
+        .unwrap();
+        assert_eq!(code_of(&flat, 0), &[0x20, 0x00, 0x20, 0x01, 0xFD, 0x55, 0x00, 0x00, 0x05, 0x0B]);
     }
 
     #[test]

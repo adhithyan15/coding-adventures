@@ -2207,6 +2207,39 @@ pub enum SimdOpKind {
     /// a lane. Closes this PR's scope (both opcodes land together,
     /// mirroring the one-family-per-PR cadence PR40-42 established).
     Store8Lane,
+    /// `v128.load16_lane` (SIMD PR45) -- the lane-load/store family's
+    /// SECOND bite, one width up from [`Self::Load8Lane`]: pop an
+    /// EXISTING `v128` operand (the "base" whose other 7 lanes are
+    /// preserved unchanged), pop the `i32` base address, add this
+    /// instruction's own `memarg` offset, bounds-checked read of exactly
+    /// 2 raw little-endian bytes from memory 0, write those 2 bytes into
+    /// the lane this instruction's own lane-index immediate (`0..=7` --
+    /// an `i16x8` v128 holds 8 lanes, not `i8x16`'s 16, so this is a
+    /// NARROWER range than [`Self::Load8Lane`]'s `0..=15`, not the same
+    /// bound reused at a different width) selects, push the updated
+    /// `v128`. Reuses [`Self::Load8Lane`]'s own `DecodedOperand::
+    /// SimdMemLane` shape unchanged (see that variant's doc comment in
+    /// `wasm-execution`) -- the combined memarg-plus-lane-index-plus-
+    /// existing-v128 SHAPE this PR needed is already infrastructure from
+    /// PR44, so this PR is purely new sub-opcode values, a widened
+    /// memarg-detection gate, a narrower (0-7, not 0-15) lane-index
+    /// bounds check, and a 2-byte (not 1-byte) memory access -- see
+    /// `code/specs/W13-wasm-simd-v128-first-slice.md`'s staged-PR plan
+    /// and the upstream `simd_load16_lane.wast` corpus this PR vendors.
+    Load16Lane,
+    /// `v128.store16_lane` (SIMD PR45) -- pop the `v128` to read a lane
+    /// from (pushed LAST, so on top of stack, popped FIRST -- same pop
+    /// order as [`Self::Store8Lane`]), pop the `i32` base address, add
+    /// this instruction's own `memarg` offset, write the 2 little-endian
+    /// bytes at this instruction's own lane-index immediate (`0..=7`) to
+    /// memory 0 at the bounds-checked effective address. The store-
+    /// direction mirror of [`Self::Load16Lane`] -- same combined memarg-
+    /// plus-lane-index shape, but reading a lane OUT of the popped
+    /// `v128` and writing to memory, instead of reading 2 bytes FROM
+    /// memory and writing them INTO a lane. Closes this PR's scope (both
+    /// opcodes land together, mirroring the one-family-per-PR cadence
+    /// PR40-44 established).
+    Store16Lane,
 }
 
 /// One entry in the SIMD opcode table: everything a consumer needs to
@@ -2937,6 +2970,29 @@ pub static SIMD_OPS: &[SimdOpInfo] = &[
     // fetch_testsuite.py`.
     SimdOpInfo { name: "v128.load8_lane", sub_opcode: 0x54, kind: SimdOpKind::Load8Lane },
     SimdOpInfo { name: "v128.store8_lane", sub_opcode: 0x58, kind: SimdOpKind::Store8Lane },
+
+    // ── v128.loadN_lane/storeN_lane family, 16-bit slice (SIMD PR45) ────
+    //
+    // Sub-opcode values re-verified live against the same BinarySIMD.md
+    // at the time of THIS PR: v128.load16_lane 0x55 (m:memarg,
+    // i:ImmLaneIdx8), v128.store16_lane 0x59 (m:memarg, i:ImmLaneIdx8) --
+    // both sit in the 0x55/0x59 gap PR44's own table comment (just
+    // above) and its own sub-opcode-value test already flagged as "not
+    // yet implemented", confirmed still NOT colliding with any entry
+    // landed since. Second bite of the 8-file, 8-opcode lane-load/store
+    // family -- reuses PR44's `DecodedOperand::SimdMemLane` shape
+    // unchanged (no new instruction SHAPE needed this time, unlike
+    // PR44), just a narrower lane-index bound (0-7, an `i16x8` v128 has
+    // 8 lanes, not `i8x16`'s 16) and a 2-byte memory access instead of
+    // 1-byte -- see `SimdOpKind::Load16Lane`/`Store16Lane`'s own doc
+    // comments above for the full shape comparison. The remaining 4
+    // opcodes (32/64-bit widths) are later PRs' scope, same
+    // one-family-per-PR cadence PR40-44 established. This PR also
+    // vendors `simd_load16_lane.wast`/`simd_store16_lane.wast` -- see
+    // `code/packages/rust/wasm-conformance/tests/fixtures/
+    // fetch_testsuite.py`.
+    SimdOpInfo { name: "v128.load16_lane", sub_opcode: 0x55, kind: SimdOpKind::Load16Lane },
+    SimdOpInfo { name: "v128.store16_lane", sub_opcode: 0x59, kind: SimdOpKind::Store16Lane },
 ];
 
 /// Look up a SIMD opcode by its LEB128-decoded sub-opcode value (the
@@ -3355,8 +3411,8 @@ mod tests {
     // ── SIMD (0xFD prefix, v128 first slice) ─────────────────────────────────
 
     #[test]
-    fn simd_ops_table_has_the_expected_230_entries_and_no_duplicates() {
-        assert_eq!(SIMD_OPS.len(), 230);
+    fn simd_ops_table_has_the_expected_232_entries_and_no_duplicates() {
+        assert_eq!(SIMD_OPS.len(), 232);
 
         let mut seen_sub_opcodes = std::collections::HashSet::new();
         let mut seen_names = std::collections::HashSet::new();
@@ -4490,14 +4546,54 @@ mod tests {
         // (0x54) and v128.load32_zero (0x5C) immediately follows
         // v128.store8_lane (0x58) with a gap (0x55-0x57, 0x59-0x5B) left
         // for the not-yet-implemented 16/32/64-bit lane widths -- no
-        // overlap in either direction.
+        // overlap in either direction. UPDATE (SIMD PR45): 0x55/0x59
+        // (v128.load16_lane/v128.store16_lane) are no longer part of
+        // that gap -- see `simd_load16_lane_and_store16_lane_have_the_
+        // real_verified_sub_opcode_values` below, which is now the
+        // authority on their values. Only the 32/64-bit widths
+        // (0x56/0x57/0x5A/0x5B) remain unimplemented.
         assert_eq!(get_simd_op(0x53).map(|o| o.name), Some("v128.any_true"));
         assert_eq!(get_simd_op(0x5C).map(|o| o.name), Some("v128.load32_zero"));
-        assert!(get_simd_op(0x55).is_none(), "v128.load16_lane (0x55) is not yet implemented");
         assert!(get_simd_op(0x56).is_none(), "v128.load32_lane (0x56) is not yet implemented");
         assert!(get_simd_op(0x57).is_none(), "v128.load64_lane (0x57) is not yet implemented");
-        assert!(get_simd_op(0x59).is_none(), "v128.store16_lane (0x59) is not yet implemented");
         assert!(get_simd_op(0x5A).is_none(), "v128.store32_lane (0x5A) is not yet implemented");
         assert!(get_simd_op(0x5B).is_none(), "v128.store64_lane (0x5B) is not yet implemented");
+    }
+
+    #[test]
+    fn simd_load16_lane_and_store16_lane_have_the_real_verified_sub_opcode_values() {
+        // SIMD PR45 (v128.loadN_lane/storeN_lane family, 16-bit slice):
+        // v128.load16_lane (0x55), v128.store16_lane (0x59) -- fetched
+        // live from BinarySIMD.md. PR44's own test comment (see
+        // `simd_load8_lane_and_store8_lane_have_the_real_verified_sub_
+        // opcode_values` above) already flagged 0x55/0x59 as "not yet
+        // implemented -- the remaining 6 opcodes (16/32/64-bit widths)
+        // are later PRs' scope"; this PR is that follow-up, scoped to
+        // just the 16-bit width pair (32/64-bit remain future PRs'
+        // scope). 0x55 sits strictly between `v128.load8_lane` (0x54)
+        // and `v128.load32_lane` (0x56, still not implemented); 0x59
+        // sits strictly between `v128.store8_lane` (0x58) and
+        // `v128.store32_lane` (0x5A, still not implemented) --
+        // confirming no overlap with any pre-existing entry in this
+        // table.
+        for (name, sub_opcode, kind) in [
+            ("v128.load16_lane", 0x55, SimdOpKind::Load16Lane),
+            ("v128.store16_lane", 0x59, SimdOpKind::Store16Lane),
+        ] {
+            let op = get_simd_op(sub_opcode).unwrap_or_else(|| panic!("{sub_opcode:#04x} should be {name}"));
+            assert_eq!(op.name, name);
+            assert_eq!(op.kind, kind);
+            assert_eq!(get_simd_op_by_name(name).map(|o| o.sub_opcode), Some(sub_opcode));
+        }
+        // v128.load8_lane (0x54) immediately precedes v128.load16_lane
+        // (0x55) and v128.load32_lane (0x56, not yet implemented)
+        // immediately follows it; v128.store8_lane (0x58) immediately
+        // precedes v128.store16_lane (0x59) and v128.store32_lane (0x5A,
+        // not yet implemented) immediately follows it -- no overlap in
+        // either direction.
+        assert_eq!(get_simd_op(0x54).map(|o| o.name), Some("v128.load8_lane"));
+        assert!(get_simd_op(0x56).is_none(), "v128.load32_lane (0x56) is not yet implemented");
+        assert_eq!(get_simd_op(0x58).map(|o| o.name), Some("v128.store8_lane"));
+        assert!(get_simd_op(0x5A).is_none(), "v128.store32_lane (0x5A) is not yet implemented");
     }
 }
