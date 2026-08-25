@@ -31,6 +31,9 @@ explicit numeric x-axis ranges distribute data points evenly across that range.
 Core `xyChart` init configuration preserves authored chart dimensions, title
 visibility, title size and padding, and optional inside/outside bar-value
 labels. Configured data-label colors also reach backend-neutral Paint glyphs.
+Nested x/y-axis configuration independently controls label and title visibility,
+font sizes and padding, along with axis-line visibility and stroke width. Tick
+line styling and label rotation remain pending.
 
 Each supported family lowers into the shared Diagram IR and can continue
 through its family layout package:
