@@ -138,6 +138,17 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/).
   seam is gated behind `CHECK_BOOK_COMPILE_SELF_TEST=1`.
 - The shell-escape verification step checks `-L` before `-f` on each `book.log`,
   since `-f` follows a link and would read an attacker-chosen file.
+- **Fixed `check-book-compile.sh` and `verify-human-languages.sh` shipping mode
+  `100644` while documenting `./code/scripts/<script>.sh` as their usage.** The
+  documented invocation had never worked on a fresh Linux or macOS clone —
+  `Permission denied`, exit 126. Hidden by two things at once: Windows does not
+  model the executable bit, so the authoring platform could not detect it, and
+  every automated caller used `bash <script>`, which works either way. So the
+  only broken invocation form was the one only humans use, and no gate used it.
+  Found by the new guards suite, which runs the script the way the docs say to.
+  Fixed by mode rather than by changing the caller: `bash "$SCRIPT"` would have
+  gone green while leaving the documented command broken. The suite now asserts
+  the **git index** mode, since a filesystem `-x` test is vacuous on Windows.
 - Read-side TeX exposure (`openin_any`) and third-party action SHA pinning are
   tracked separately rather than guessed at here — see the linked issues. An
   unverified control is worse than an acknowledged gap.
