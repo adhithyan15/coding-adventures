@@ -40,6 +40,74 @@ struct DiscoveryTests {
     }
 
     @Test
+    func discoveryExcludesOnlyExactDistNewstyleDirectory() throws {
+        let root = try makeTempDirectory(label: "discovery_dist_newstyle")
+        defer { try? FileManager.default.removeItem(atPath: root) }
+
+        try writeFile(
+            (root as NSString).appendingPathComponent(
+                "code/packages/haskell/exact-parent/dist-newstyle/BUILD"
+            ),
+            "cabal test\n"
+        )
+        try writeFile(
+            (root as NSString).appendingPathComponent(
+                "code/packages/haskell/near-parent/dist-newstyle-example/BUILD"
+            ),
+            "cabal test\n"
+        )
+        try writeFile(
+            (root as NSString).appendingPathComponent(
+                "code/packages/haskell/case-parent/Dist-Newstyle/BUILD"
+            ),
+            "cabal test\n"
+        )
+
+        let packages = try Discovery.discoverPackages(
+            root: (root as NSString).appendingPathComponent("code")
+        )
+
+        #expect(Discovery.skipDirectories.contains("dist-newstyle"))
+        #expect(
+            packages.map(\.name) == [
+                "haskell/Dist-Newstyle",
+                "haskell/dist-newstyle-example",
+            ]
+        )
+    }
+
+    @Test
+    func sourceHashingReusesExactDistNewstyleExclusion() throws {
+        let root = try makeTempDirectory(label: "hash_dist_newstyle")
+        defer { try? FileManager.default.removeItem(atPath: root) }
+
+        try writeFile((root as NSString).appendingPathComponent("root.swift"), "let root = 1\n")
+        try writeFile(
+            (root as NSString).appendingPathComponent("exact/dist-newstyle/generated.swift"),
+            "let generated = 1\n"
+        )
+        try writeFile(
+            (root as NSString).appendingPathComponent(
+                "near/dist-newstyle-example/preserved.swift"
+            ),
+            "let nearName = 1\n"
+        )
+        let package = BuildPackage(name: "swift/example", path: root, language: "swift")
+        let normalizedRoot = root.replacingOccurrences(of: "\\", with: "/") + "/"
+        let files = Hasher.collectSourceFiles(package).map {
+            $0.replacingOccurrences(of: "\\", with: "/")
+                .replacingOccurrences(of: normalizedRoot, with: "")
+        }
+
+        #expect(
+            files == [
+                "near/dist-newstyle-example/preserved.swift",
+                "root.swift",
+            ]
+        )
+    }
+
+    @Test
     func languageRegistryConsumesSharedFixture() throws {
         let fixture = try loadSharedDiscoveryFixture("discovery-language-registry.json")
         let root = try materializeSharedDiscoveryFixture(fixture, label: "discovery_registry")

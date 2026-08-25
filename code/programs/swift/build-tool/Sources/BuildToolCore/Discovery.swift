@@ -40,6 +40,7 @@ public enum Discovery {
         "node_modules",
         "vendor",
         "dist",
+        "dist-newstyle",
         "build",
         "target",
         ".claude",

@@ -2,6 +2,10 @@
 
 ## Unreleased
 
+- Exclude Cabal's exact, case-sensitive `dist-newstyle` generated directory
+  from package discovery and source hashing while preserving near-names such
+  as `dist-newstyle-example`. Shared-fixture and focused Swift tests cover the
+  boundary.
 - Classify package and program buckets with the canonical discovery language
   registry, exclude specification fixture trees, preserve program identities,
   and fail closed on duplicate qualified names with

@@ -6599,6 +6599,39 @@ language debt-ceiling commits; after the final rebase, all 38 focused discovery
 tests pass, the collision report is unchanged, and the 486-owner, 739-edge
 graph remains complete and acyclic.
 
+PR #12669 then completed all 30 reported checks: 24 successes, five expected
+skips, and one neutral aggregate. GitHub reported the branch clean and
+mergeable, so the loop enabled squash auto-merge; GitHub merged it as
+`67391c12334b0193f67fba16864dbcaf8190d647` at
+`2026-08-25T03:36:51Z` without a manual merge command. The mandatory
+post-merge collision report remains schema 3 with 15 established lanes, 1,371
+implementation identities, 4,564 slots, 175 high-consensus packages with 276
+gaps, 908 singleton packages with 12,712 gaps, 719 Rust singletons, zero
+collisions, and zero unknown buckets. OCaml remains correctly emerging at zero
+packages, and exact comparison with the preceding inventory finds no identity
+or slot additions or removals and no newly unowned portable gap.
+
+The post-merge audit registered the development-only TypeScript `nanoid`
+advisory chain as its own pending, non-blocking security owner. Production
+dependencies remain clean. It also added four missing semantic prerequisites:
+the TypeScript, Ruby, and Swift orphan-crate consumers now depend on their
+respective discovery exclusions, and Swift Windows absolute-file-option work
+depends on Swift discovery exclusion. The complete graph therefore contains
+487 owners and 744 dependency edges and remains acyclic.
+
+The next selected owner is
+`build-tool-swift-dist-newstyle-discovery-exclusion`. It is the highest-
+leverage collision-free tranche: the bounded exact-component repair unlocks
+three direct owners and five unfinished descendants, versus two and four for
+Ruby. Eight live open PRs have zero exact path overlap, the remote target
+branch was absent, and the fresh worktree starts at the merged PR #12669
+revision. OCaml remains a stronger strategic chain but collision-unsafe while
+PRs #12149 and #12162 own its exact Go validator and entry-point surfaces.
+Before publication, the branch rebased without conflict over three non-
+overlapping Rust WASM, ADJ, and Tamil commits to
+`b7bf7f6b1430de01855ea44831cddd4f767d229a`; the refreshed collision report is
+unchanged.
+
 ## Autonomous Loop Protocol
 
 Only one parity PR should be active at a time.
