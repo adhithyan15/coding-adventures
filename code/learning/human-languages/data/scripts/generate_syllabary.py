@@ -94,11 +94,11 @@ SCRIPTS = [
      "Highly rounded and loopy — full circles, hooks and curls, with almost no straight lines."),
 ]
 
-# Hand-authored exceptions are deliberately tiny and exact. This map records
-# generator intent for the rows below, but it is not yet the authoritative merge
-# boundary for every verified row added after the original syllabary. HL-C10U
-# keeps whole-file regeneration blocked until removing any sourced row fails
-# closed rather than silently erasing later work.
+# New hand-authored exceptions are deliberately tiny and exact. Existing
+# source-gated rows are merged back from the committed output by
+# `merge_verified_rows` below, so this table only needs to describe an exception
+# at the moment it is first introduced. A routine regeneration therefore cannot
+# silently erase a later verified row that is not duplicated here.
 VERIFIED_INDEPENDENT_VOWELS = {
     ("telugu", "A"): {
         "components": [
@@ -175,6 +175,63 @@ VERIFIED_INDEPENDENT_VOWELS = {
 }
 
 HERE = os.path.dirname(os.path.abspath(__file__))
+
+# Unicode still owns the identity fields. Everything else on a row carrying a
+# cited stroke-order source is hand-authored evidence and must survive the
+# Unicode rebuild, including future fields this generator does not know yet.
+GENERATED_IDENTITY_FIELDS = {"glyph", "sound", "role", "inherentVowel"}
+GENERATED_COLLECTIONS = ("letters", "independentVowels", "digits")
+
+
+def merge_verified_rows(generated: dict, existing: dict, script_id: str) -> dict:
+    """Preserve committed extensions, failing closed if a row vanished.
+
+    A row newly declared by this generator already carries
+    `strokeOrderSource`, so that explicit declaration wins. Otherwise the
+    committed non-identity fields are merged onto the freshly generated Unicode
+    identity. Collections added downstream, such as marks and final consonants,
+    are preserved wholesale, as are committed rows outside the generator's core
+    varga inventory. Duplicate or malformed glyph identities fail closed.
+    """
+    for field, value in existing.items():
+        if field not in generated:
+            generated[field] = value
+
+    for collection in GENERATED_COLLECTIONS:
+        generated_rows = generated.get(collection)
+        existing_rows = existing.get(collection)
+        if not isinstance(generated_rows, list) or not isinstance(existing_rows, list):
+            raise RuntimeError(f"{script_id}: malformed {collection} collection")
+
+        if any(not isinstance(row, dict) for row in generated_rows + existing_rows):
+            raise RuntimeError(f"{script_id}: malformed {collection} row")
+        generated_by_glyph = {row.get("glyph"): row for row in generated_rows}
+        if None in generated_by_glyph or len(generated_by_glyph) != len(generated_rows):
+            raise RuntimeError(f"{script_id}: malformed or duplicate generated {collection} glyph")
+        existing_glyphs = [row.get("glyph") for row in existing_rows]
+        if None in existing_glyphs or len(set(existing_glyphs)) != len(existing_glyphs):
+            raise RuntimeError(f"{script_id}: malformed or duplicate committed {collection} glyph")
+        for existing_row in existing_rows:
+            glyph = existing_row.get("glyph")
+            generated_row = generated_by_glyph.get(glyph)
+            if generated_row is None:
+                generated_rows.append(existing_row)
+                generated_by_glyph[glyph] = existing_row
+                continue
+            explicit_source = isinstance(generated_row.get("strokeOrderSource"), dict)
+            for field, value in existing_row.items():
+                if field in GENERATED_IDENTITY_FIELDS:
+                    continue
+                if explicit_source and field in generated_row:
+                    continue
+                generated_row[field] = value
+    # Preserve the established top-level order as well as its data. This keeps a
+    # safe regeneration reviewable: surviving extension collections do not jump
+    # to the end of a 5,000-line file merely because the core builder predates
+    # them. Brand-new generated fields are appended deterministically.
+    ordered = {field: generated[field] for field in existing if field in generated}
+    ordered.update({field: value for field, value in generated.items() if field not in ordered})
+    return ordered
 
 
 def codepoint_by_name(target_name: str, block_base: int) -> int | None:
@@ -312,8 +369,22 @@ def build_script(script_id: str, name: str, base: int, font: str, signature: str
 
 def main() -> None:
     for script_id, name, base, font, signature in SCRIPTS:
-        data = build_script(script_id, name, base, font, signature)
         path = os.path.join(HERE, f"{script_id}.json")
+        if not os.path.exists(path):
+            raise RuntimeError(
+                f"{script_id}: refusing to regenerate without committed {path}; "
+                "it is the merge boundary for source-verified rows"
+            )
+        with open(path, encoding="utf-8") as fh:
+            existing = json.load(fh)
+        data = merge_verified_rows(
+            build_script(script_id, name, base, font, signature),
+            existing,
+            script_id,
+        )
+        # File-level notes have accumulated source-gated scope details too. They
+        # are prose, not Unicode-derived identity, so keep the committed wording.
+        data["notes"] = existing.get("notes", data["notes"])
         with open(path, "w", encoding="utf-8") as fh:
             json.dump(data, fh, ensure_ascii=False, indent=2)
             fh.write("\n")
