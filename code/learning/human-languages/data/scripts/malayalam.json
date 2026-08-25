@@ -5595,10 +5595,23 @@
       "sound": "a",
       "role": "vowel",
       "components": [
-        "അ  a — independent vowel (word-initial)"
+        "the joined left arch, upper turn, lower loop, and central crown",
+        "the right outer arch curling into its lower inner loop"
       ],
-      "strokeOrder": [],
-      "strokeOrderNote": ""
+      "strokeOrder": [
+        "climb the left outer arch, curve through the upper turn, and arrive at the central junction",
+        "without lifting, circle the broad lower loop and return to the junction",
+        "without lifting, sweep up through the central crown and descend the upright",
+        "after one lift, sweep up and over through the right outer arch and descend its far side",
+        "without lifting, curl left around the lower inner loop"
+      ],
+      "strokeOrderNote": "Five visible movements in two pen-down runs: the complete left-and-central body stays joined; after one lift, the right outer arch flows directly into its lower inner loop.",
+      "penLifts": 1,
+      "strokeOrderSource": {
+        "citation": "Donald R. Davis Jr., The Malayalam Script, Initial Vowels, അ handwriting clip, 00:00–00:04 (University of Texas at Austin)",
+        "url": "https://malayalam.la.utexas.edu/resources/the-malayalam-script/",
+        "variation": "The page identifies initial vowels as word-initial forms and supplies a click-to-play handwriting clip for each. The അ clip visibly completes the joined left-and-central body before one lifted right-side run; that second run draws the outer arch before curling into the lower inner loop. This is one attested pedagogical order fitted to the bundled Noto Sans Malayalam outline."
+      }
     },
     {
       "glyph": "ആ",

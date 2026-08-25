@@ -39,7 +39,7 @@ describe("real curriculum", () => {
     expect(scripts.devanagari!.complete).toBe(true);
   });
 
-  it("keeps the cross-script closure queue measured after Persian پ", () => {
+  it("keeps the cross-script closure queue measured after Malayalam അ", () => {
     const candrakkala = scripts.malayalam!.marks!.find((mark) => mark.mark === "്")!;
     expect(candrakkala.role).toBe("virama");
     expect(candrakkala.compositionOrder).toEqual([
@@ -174,6 +174,27 @@ describe("real curriculum", () => {
     );
     expect(malayalamE.strokeOrderSource?.variation).toMatch(
       /word-initial forms.*click-to-play handwriting clip.*two pen-down runs.*inner loop and outer arch below the line.*Noto Sans Malayalam/i,
+    );
+
+    const malayalamA = scripts.malayalam!.independentVowels!.find((entry) => entry.glyph === "അ")!;
+    expect(malayalamA.sound).toBe("a");
+    expect(malayalamA.penLifts).toBe(1);
+    expect(malayalamA.strokeOrder).toEqual([
+      "climb the left outer arch, curve through the upper turn, and arrive at the central junction",
+      "without lifting, circle the broad lower loop and return to the junction",
+      "without lifting, sweep up through the central crown and descend the upright",
+      "after one lift, sweep up and over through the right outer arch and descend its far side",
+      "without lifting, curl left around the lower inner loop",
+    ]);
+    expect(malayalamA.strokeOrderNote).toMatch(/five visible movements.*two pen-down runs.*after one lift/i);
+    expect(malayalamA.strokeOrderSource?.url).toBe(
+      "https://malayalam.la.utexas.edu/resources/the-malayalam-script/",
+    );
+    expect(malayalamA.strokeOrderSource?.citation).toMatch(
+      /Donald R\. Davis Jr\..*The Malayalam Script.*Initial Vowels.*അ.*00:00.?00:04.*University of Texas at Austin/i,
+    );
+    expect(malayalamA.strokeOrderSource?.variation).toMatch(
+      /word-initial forms.*click-to-play handwriting clip.*left-and-central body.*one lifted right-side run.*outer arch.*lower inner loop.*Noto Sans Malayalam/i,
     );
 
     const tamilIndependentE = scripts.tamil!.letters.find((entry) => entry.glyph === "எ")!;
@@ -503,11 +524,15 @@ describe("real curriculum", () => {
     expect(affected.get("ள") ?? 0).toBe(0);
     expect(missingByScript.get("telugu.json")?.has("అ")).toBe(false);
     expect(affected.get("అ") ?? 0).toBe(0);
+    expect(missingByScript.get("malayalam.json")?.has("അ")).toBe(false);
+    expect(affected.get("അ") ?? 0).toBe(0);
+    expect(missingByScript.get("perso-arabic.json")?.has("خ")).toBe(true);
+    expect(missingByScript.get("urdu-nastaliq.json")?.has("خ")).toBe(true);
     expect(missingByScript.get("tamil.json")?.has("எ")).toBe(false);
     expect(affected.get("எ") ?? 0).toBe(0);
     expect(
       [...affected.entries()].sort((left, right) => right[1] - left[1])[0],
-    ).toEqual(["അ", 13]);
+    ).toEqual(["خ", 13]);
   });
 
   it("loaded every track (17+ and growing)", () => {

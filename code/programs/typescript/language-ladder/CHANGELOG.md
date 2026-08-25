@@ -7,6 +7,12 @@
 - Keep its displayed Persian provenance separate from the still-missing Urdu
   row; Malayalam independent **അ** now leads the measured queue.
 
+## Unreleased — source-verified Malayalam independent a
+
+- Teach Malayalam **അ** with its cited joined left body and lifted right arch.
+- Keep the right outer arch visibly flowing into its lower inner loop.
+- Rerank shared **خ** next while retaining separate Persian and Urdu source debt.
+
 ## Unreleased — source-verified Tamil independent short e
 
 - Teach Tamil **எ** with its cited six-movement body and separate upward right

@@ -937,9 +937,10 @@ queue: **و**, not ه, follows ن. Its 02:43–02:45 demonstration loops the sma
   verified claim has the same cited, font-checked path. That closes `HL-C19`;
   future entries join one side of this enforced boundary automatically.
 
-**Telugu, Kannada and Malayalam currently have zero authored letters** and
-therefore no `penLifts` anywhere. See [`BACKLOG.md`](../../BACKLOG.md) HL-C41 for
-the source-availability finding that keeps it that way.
+The initial source-availability gap recorded by HL-C41 is now being closed one
+verified shape at a time. Telugu has a cited independent **అ** row; Malayalam
+has cited independent **അ** and **എ** rows. Kannada still has no authored
+letter path. An absent `penLifts` remains unverified, never an implied zero.
 
 ## Adding a script (e.g. Gujarati, Bengali, Hebrew)
 
