@@ -6,7 +6,7 @@
     {
       "language": "russian",
       "chapter": 1,
-      "sourceHash": "fnv1a64:2451a9ab030d898f",
+      "sourceHash": "fnv1a64:8c636a1b3ad8952f",
       "lessonIds": [
         "RU-C01-privet",
         "RU-C01-zdravstvuyte",
@@ -19,14 +19,18 @@
         "RU-W02-false-friends-s-n",
         "RU-W03-new-shapes-b-d",
         "RU-W04-privet-letters-p-i",
-        "RU-W05-privet-letters-e-t"
+        "RU-W05-privet-letters-e-t",
+        "RU-W05-privet-observe",
+        "RU-W05-privet-guided-copy",
+        "RU-W05-privet-delayed-copy",
+        "RU-W05-privet-dictation"
       ],
       "voiceLessons": 0,
       "drivablePrefix": 0,
       "text": "russian/narration/ch01.txt",
       "json": "russian/narration/ch01.json",
-      "textHash": "fnv1a64:20574a22bd49071d",
-      "jsonHash": "fnv1a64:ba61ee68a69f7c31"
+      "textHash": "fnv1a64:7c665568b36d3bde",
+      "jsonHash": "fnv1a64:fb8b419cb31bbd7a"
     },
     {
       "language": "russian",

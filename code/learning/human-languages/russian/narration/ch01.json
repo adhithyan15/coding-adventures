@@ -4,7 +4,7 @@
   "chapter": 1,
   "title": "Greetings and courtesy",
   "drivablePrefix": 0,
-  "sourceHash": "fnv1a64:2451a9ab030d898f",
+  "sourceHash": "fnv1a64:8c636a1b3ad8952f",
   "lessons": [
     {
       "id": "RU-C01-privet",
@@ -2199,6 +2199,357 @@
             {
               "kind": "speech",
               "text": "Draw е — what sound, and what does iotated mean? (\"Ye\"; it carries a y-onset.) Draw т — what sound and which Greek letter? (\"t\"; Greek tau.) Spell out the letters of привет (privét) with their sounds. (п-р-и-в-е-т = p-r-i-v-ye-t.) You can now hand-write your first Russian word end to end."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "RU-W05-privet-observe",
+      "sequence": 61,
+      "title": "привет (privét) — watch one word move",
+      "headword": "привет",
+      "romanization": "privét",
+      "gloss": "observe and trace one fully known greeting",
+      "script": "cyrillic",
+      "modality": "pen",
+      "derivedModality": "pen",
+      "modalityReasons": [
+        "writing-block",
+        "sight-cue"
+      ],
+      "sourceHash": "fnv1a64:cad52a8b87306e8b",
+      "notice": {
+        "modality": "pen",
+        "needs": [
+          "your eyes, because the lesson points at something written down"
+        ],
+        "waitUntilStopped": [],
+        "text": "Before we start: this one needs your hands, so it is not a driving lesson. You will want your eyes, because the lesson points at something written down. You can listen to all of it now and come back to the parts that need looking at once you have stopped."
+      },
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "Look at привет (privét). Point from left to right and say the six sounds slowly: p, r, ee, v, ye, t. Every shape is already known."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "writing",
+          "title": "Writing — observe and trace",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "Keep привет (privét) visible. Trace it once with a finger or a capped pen. Pause on р and say r; pause on в and say v. Stop after one careful trace."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "Read привет (privét) once. Today was observation, not a memory test."
+            },
+            {
+              "kind": "activity",
+              "scored": true,
+              "id": "RU-W05-privet-observe-check",
+              "prompt": "Trace the visible word once, then type the Russian greeting you traced.",
+              "assesses": [
+                "RU-LEX-PRIVET",
+                "RU-SCRIPT-R-01",
+                "RU-SCRIPT-V-01"
+              ],
+              "responseSeconds": 15,
+              "acceptedResponses": [
+                "привет"
+              ],
+              "feedback": {
+                "correct": "привет — one supported trace, with р saying r and в saying v.",
+                "incorrect": "Keep the model visible. Trace only once from п through т, then compare each shape."
+              }
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "RU-W05-privet-guided-copy",
+      "sequence": 62,
+      "title": "привет (privét) — one supported copy",
+      "headword": "привет",
+      "romanization": "privét",
+      "gloss": "copy one known greeting with the model visible",
+      "script": "cyrillic",
+      "modality": "pen",
+      "derivedModality": "pen",
+      "modalityReasons": [
+        "writing-type",
+        "writing-block"
+      ],
+      "sourceHash": "fnv1a64:02ab18f9f9e902d7",
+      "notice": {
+        "modality": "pen",
+        "needs": [
+          "a pen and something to write on"
+        ],
+        "waitUntilStopped": [],
+        "text": "Before we start: this one needs your hands, so it is not a driving lesson. You will want a pen and something to write on. You can listen to all of it now and come back to the parts that need looking at once you have stopped."
+      },
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "Keep привет (privét) visible. Point to its two traps: р says r and в says v. You may look back after every letter."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "writing",
+          "title": "Writing — guided copy",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "Copy привет (privét) once. Use three small chunks: при, ве, т. After each chunk, look back and compare only those letters. Then read the finished word."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "Stop after one supported copy. Hiding the model belongs to the next lesson."
+            },
+            {
+              "kind": "activity",
+              "scored": true,
+              "id": "RU-W05-privet-guided-copy-check",
+              "prompt": "Copy the visible Russian word for informal hi once, then type your copy.",
+              "assesses": [
+                "RU-LEX-PRIVET",
+                "RU-SCRIPT-P-01",
+                "RU-SCRIPT-R-01",
+                "RU-SCRIPT-I-01",
+                "RU-SCRIPT-V-01",
+                "RU-SCRIPT-E-01",
+                "RU-SCRIPT-T-01"
+              ],
+              "responseSeconds": 18,
+              "acceptedResponses": [
+                "привет"
+              ],
+              "feedback": {
+                "correct": "Good: привет, copied once in three supported chunks.",
+                "incorrect": "Keep the model visible and copy only при, then ве, then т. Repair one differing letter."
+              }
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "RU-W05-privet-delayed-copy",
+      "sequence": 63,
+      "title": "привет (privét) — look, hide, write, compare",
+      "headword": "привет",
+      "romanization": "privét",
+      "gloss": "look, hide, write, compare, and repair one greeting",
+      "script": "cyrillic",
+      "modality": "pen",
+      "derivedModality": "pen",
+      "modalityReasons": [
+        "writing-type",
+        "writing-block",
+        "sight-cue"
+      ],
+      "sourceHash": "fnv1a64:64ba8f34ba6c2c3e",
+      "notice": {
+        "modality": "pen",
+        "needs": [
+          "a pen and something to write on",
+          "your eyes, because the lesson points at something written down"
+        ],
+        "waitUntilStopped": [],
+        "text": "Before we start: this one needs your hands, so it is not a driving lesson. You will want a pen and something to write on and your eyes, because the lesson points at something written down. You can listen to all of it now and come back to the parts that need looking at once you have stopped."
+      },
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "Look at привет (privét) for five seconds. Touch the three chunks при, ве, т. Do not copy while the model is visible."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "writing",
+          "title": "Writing — delayed copy",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "cover привет (privét)."
+            },
+            {
+              "kind": "speech",
+              "text": "wait five seconds."
+            },
+            {
+              "kind": "speech",
+              "text": "write it once from memory."
+            },
+            {
+              "kind": "speech",
+              "text": "uncover the model and compare one chunk at a time."
+            },
+            {
+              "kind": "speech",
+              "text": "Circle and repair one differing letter if needed. Repair is part of retrieval."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "Read the repaired word once. Stop after one memory attempt."
+            },
+            {
+              "kind": "activity",
+              "scored": true,
+              "id": "RU-W05-privet-delayed-copy-check",
+              "prompt": "After hiding the model for five seconds, write the Russian word for informal hi and then compare it.",
+              "assesses": [
+                "RU-LEX-PRIVET",
+                "RU-SCRIPT-P-01",
+                "RU-SCRIPT-R-01",
+                "RU-SCRIPT-I-01",
+                "RU-SCRIPT-V-01",
+                "RU-SCRIPT-E-01",
+                "RU-SCRIPT-T-01"
+              ],
+              "responseSeconds": 18,
+              "acceptedResponses": [
+                "привет"
+              ],
+              "feedback": {
+                "correct": "Yes: привет, recovered after a short delay.",
+                "incorrect": "Uncover the model, repair only the differing letter, and try once more tomorrow."
+              }
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "RU-W05-privet-dictation",
+      "sequence": 64,
+      "title": "One heard greeting — write what you know",
+      "headword": "привет",
+      "romanization": "privét",
+      "gloss": "write one known greeting from a heard cue",
+      "script": "cyrillic",
+      "modality": "pen",
+      "derivedModality": "pen",
+      "modalityReasons": [
+        "writing-type",
+        "writing-block"
+      ],
+      "sourceHash": "fnv1a64:639f850ac75f4931",
+      "notice": {
+        "modality": "pen",
+        "needs": [
+          "a pen and something to write on"
+        ],
+        "waitUntilStopped": [],
+        "text": "Before we start: this one needs your hands, so it is not a driving lesson. You will want a pen and something to write on. You can listen to all of it now and come back to the parts that need looking at once you have stopped."
+      },
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "Cover the answer lower on this page. You will hear one familiar informal greeting. No new Russian and no new Cyrillic shape is hiding here."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "writing",
+          "title": "Writing — short dictation",
+          "segments": [
+            {
+              "kind": "prompt",
+              "action": "HEAR",
+              "instruction": "privét — informal \"hi\"",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU HEAR: *privét* — informal \"hi\"]"
+            },
+            {
+              "kind": "speech",
+              "text": "Write the Russian word from sound alone. Do not use a visible model or romanization. Now uncover and compare: привет (privét). Check р and в first, then the other four letters. Repair one place if needed."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "This completes a tiny writing runway, not an exam simulation. Later work must grow from one word to messages, connected composition, and timed production."
+            },
+            {
+              "kind": "activity",
+              "scored": true,
+              "id": "RU-W05-privet-dictation-answer",
+              "prompt": "From the heard cue privet alone, write the known Russian word for informal hi.",
+              "assesses": [
+                "RU-LEX-PRIVET",
+                "RU-SCRIPT-P-01",
+                "RU-SCRIPT-R-01",
+                "RU-SCRIPT-I-01",
+                "RU-SCRIPT-V-01",
+                "RU-SCRIPT-E-01",
+                "RU-SCRIPT-T-01"
+              ],
+              "responseSeconds": 18,
+              "acceptedResponses": [
+                "привет"
+              ],
+              "feedback": {
+                "correct": "привет — six known letters retrieved from sound.",
+                "incorrect": "The word is привет. Compare one letter at a time and repair only the differing place."
+              }
             }
           ]
         }

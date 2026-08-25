@@ -5,7 +5,7 @@
     {
       "language": "russian",
       "chapter": 1,
-      "sourceHash": "fnv1a64:e06d77b1635241b5",
+      "sourceHash": "fnv1a64:669e4e27345d266a",
       "lessonIds": [
         "RU-C01-privet",
         "RU-C01-zdravstvuyte",
@@ -18,7 +18,11 @@
         "RU-W02-false-friends-s-n",
         "RU-W03-new-shapes-b-d",
         "RU-W04-privet-letters-p-i",
-        "RU-W05-privet-letters-e-t"
+        "RU-W05-privet-letters-e-t",
+        "RU-W05-privet-observe",
+        "RU-W05-privet-guided-copy",
+        "RU-W05-privet-delayed-copy",
+        "RU-W05-privet-dictation"
       ],
       "tex": "russian/book/chapters/ch01-greetings-and-courtesy.tex"
     },
