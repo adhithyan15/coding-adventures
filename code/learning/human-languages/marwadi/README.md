@@ -20,11 +20,13 @@ writing **पाणी**. Chapters 5–9 add a name exchange, a wellbeing exchan
 **पाछे मिलसू** (*pāchhe milsū*, "see you later"). Chapters 10–13 then secure
 twelve family and relationship labels by ear before their spelling, add only
 **ब**, **द**, **व**, **त**, and **च**, and end in independent listening, speaking,
-reading, and writing. Every lesson is at most five minutes.
+reading, and writing. Chapters 14--22 extend the same meaning-first pattern
+through places, weather, shopping, and transport vocabulary. Every lesson is
+at most five minutes.
 
 ## What this starter edition can honestly claim
 
-Across the current nineteen chapters, a learner can recognise, read, say, copy,
+Across the current twenty-two chapters, a learner can recognise, read, say, copy,
 and write the polite
 greeting **राम-राम सा**, answer it, and offer formal **आभार** after a kindness.
 They can also answer yes respectfully with **हां सा**, and retrieve **पाणी**
@@ -39,9 +41,14 @@ signs and without pretending that a complete weather exchange is taught.
 Chapter 17 adds **मौसम, गर्मी, ठंडी** as weather, heat, and cold after isolating
 only **ौ**, **ग**, and **ड**. Chapters 18–19 add **दुकान, वस्तु, भाव, सस्ता,
 सामान** as shop, item, price, cheap, and goods after isolating only short **ु**.
-The words form a five-part map in all four skills, while a complete price
-question and bargaining exchange remain untaught. The track now contains 147
-canonical lessons and 39 distinct taught headwords. That is still a small pre-A1
+Chapter 20 adds **कपड़ा, महंगो** as clothes and expensive after isolating only
+the nukta that turns familiar **ड** into **ड़**. Chapters 21--22 then add **बस,
+गाड़ी, ठेला, रिक्शा, घोड़ो** as bus, vehicle, cart, rickshaw, and horse; only
+**श** is new. The words form seven-part shopping and five-part transport maps
+in all four skills, while a complete price question, bargaining exchange,
+ticket purchase, timetable question, and transport problem report remain
+untaught. The track now contains 172 canonical lessons and 46 distinct taught
+headwords. That is still a small pre-A1
 capability, not completion of pre-A1 and not exam readiness. The curriculum map
 records every untouched spine concept explicitly so the remaining work stays
 measurable.
@@ -84,7 +91,10 @@ heat and cold meanings rather than collapsing weather and seasons.
 Marwari Pathshala Lesson 9 supplies **दुकान, वस्तु, भाव, सस्ता, सामान** for
 Chapters 18–19. The book teaches the five words before attempting the source's
 longer shopping phrases and therefore does not yet claim a complete purchase or
-bargaining exchange.
+bargaining exchange. The same lesson supplies **कपड़ा, महंगो** for Chapter 20.
+Marwari Pathshala Lesson 10 supplies **बस, गाड़ी, ठेला, रिक्शा, घोड़ो** for
+Chapters 21--22; the book teaches a transport vocabulary map without claiming
+the still-untaught ticket, timetable, location, or problem-report exchanges.
 
 - [Rajasthan Foundation: Rajasthani Language](https://foundation.rajasthan.gov.in/RajasthaniLanguage.aspx)
 - [Rajasthan State Archives: learning Rajasthani (Marwari)](https://rsad.artandculture.rajasthan.gov.in/content/raj/art-and-culture/rajasthan-state-archives-bikaner/en/download.html)
@@ -96,6 +106,7 @@ bargaining exchange.
 - [Marwari Pathshala, Lesson 4: relations](https://www.marwaripathshala.com/marwari-lesson-4-english)
 - [Marwari Pathshala, Lesson 7: weather and seasons](https://www.marwaripathshala.com/marwari-lesson-7-english)
 - [Marwari Pathshala, Lesson 9: shopping and bargaining](https://www.marwaripathshala.com/marwari-lesson-9-english)
+- [Marwari Pathshala, Lesson 10: transportation](https://www.marwaripathshala.com/marwari-lesson-10-english)
 - [Marwari Pathshala, D glossary](https://www.marwaripathshala.com/d-glossary-of-rajasthani-language)
 - [Society for Endangered Languages, Marwari Swadesh list](https://selindia.org/wp-content/uploads/2025/05/SWL-Marwari_IPA.pdf)
 - [Turner, *A Comparative Dictionary of the Indo-Aryan Languages*](https://dsal.uchicago.edu/dictionaries/soas/)

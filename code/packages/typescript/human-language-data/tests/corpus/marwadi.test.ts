@@ -87,17 +87,29 @@ it("pins Marwadi's complete pre-A1 writing ramp", () => {
     "delayed-copy",
     "delayed-copy",
     "delayed-copy",
+    "observe-trace",
+    "delayed-copy",
+    "delayed-copy",
+    "dictation-transcription",
+    "delayed-copy",
+    "delayed-copy",
+    "delayed-copy",
+    "dictation-transcription",
+    "observe-trace",
+    "delayed-copy",
+    "delayed-copy",
+    "dictation-transcription",
   ]);
 });
 
 it("pins Marwadi-owned chapters and objective activities", () => {
   const lessons = loadTrackLessons("marwadi");
-  expect(lessons).toHaveLength(147);
+  expect(lessons).toHaveLength(172);
   expect(new Set(lessons.map((lesson) => Number(lesson.frontmatter.chapter)))).toEqual(
-    new Set([1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19]),
+    new Set([1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21, 22]),
   );
   const activities = lessons.flatMap((lesson) => compileLessonActivities(lesson.blocks));
-  expect(activities).toHaveLength(147);
+  expect(activities).toHaveLength(172);
   expect(lessons.every((lesson) => compileLessonActivities(lesson.blocks).length === 1)).toBe(true);
   expect(activities.map((activity) => activity.id).sort()).toEqual([
     "MW-C01-practice-answer",
@@ -193,6 +205,23 @@ it("pins Marwadi-owned chapters and objective activities", () => {
     "MW-C14-samaan-dictation",
     "MW-C14-sasta-dictation",
     "MW-C14-shopping-five-payoff",
+    "MW-C15-hear-kapda-meaning",
+    "MW-C15-hear-mahango-meaning",
+    "MW-C15-kapda-dictation",
+    "MW-C15-mahango-dictation",
+    "MW-C15-shopping-seven-payoff",
+    "MW-C16-bas-dictation",
+    "MW-C16-gaadi-dictation",
+    "MW-C16-hear-bas-meaning",
+    "MW-C16-hear-gaadi-meaning",
+    "MW-C16-hear-thela-meaning",
+    "MW-C16-thela-dictation",
+    "MW-C16-transport-three-payoff",
+    "MW-C17-ghodo-dictation",
+    "MW-C17-hear-ghodo-meaning",
+    "MW-C17-hear-riksha-meaning",
+    "MW-C17-riksha-dictation",
+    "MW-C17-transport-five-payoff",
     "MW-R08-family-foundation-three",
     "MW-R08-family-map-four",
     "MW-R08-script-close-three",
@@ -211,6 +240,12 @@ it("pins Marwadi-owned chapters and objective activities", () => {
     "MW-R13-shopping-three-recall",
     "MW-R14-shopping-close-recall",
     "MW-R14-shopping-new-two-recall",
+    "MW-R15-shopping-close-recall",
+    "MW-R15-shopping-new-two-recall",
+    "MW-R16-transport-close-recall",
+    "MW-R16-transport-three-recall",
+    "MW-R17-script-close-recall",
+    "MW-R17-transport-new-two-recall",
     "MW-W01-aa-matra-change",
     "MW-W01-ra-read",
     "MW-W01-raam-build",
@@ -247,12 +282,14 @@ it("pins Marwadi-owned chapters and objective activities", () => {
     "MW-W12-dda-write",
     "MW-W12-ga-write",
     "MW-W13-u-matra-write",
+    "MW-W15-nukta-write",
+    "MW-W17-sha-write",
   ]);
 
   const closure = measureScriptClosure(lessons);
   expect(closure.violations.filter((violation) => violation.language === "marwadi")).toEqual([]);
   expect(closure.tracks.find((track) => track.language === "marwadi")).toMatchObject({
-    lessonCount: 147,
+    lessonCount: 172,
     neverTaughtGlyphs: 0,
     violations: 0,
   });

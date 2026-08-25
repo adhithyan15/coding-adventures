@@ -153,6 +153,31 @@ memory demand at a time.
 | S145 | `MW-R14-shopping-new-two` | retrieve cheap and goods | mixed four-skill recall |
 | S146 | `MW-C14-shopping-five` | pass the five-word shopping map | non-compensatory listening, speaking, reading, and writing |
 | S147 | `MW-R14-shopping-close` | close the five-word shopping loop | hidden-model five-word recall |
+| S148 | `MW-C15-hear-kapda` | hear *kapṛā* as clothes | none; meaning precedes the dotted consonant |
+| S149 | `MW-W15-nukta` | change familiar **ड** to **ड़** with one dot | observe, trace, copy one mark |
+| S150 | `MW-C15-kapda` | assemble **कपड़ा** | delayed copy and dictation |
+| S151 | `MW-C15-hear-mahango` | hear *mahaṅgo* as expensive | none; contrast cheap by ear |
+| S152 | `MW-C15-mahango` | assemble **महंगो** from known signs | delayed copy and dictation |
+| S153 | `MW-R15-shopping-new-two` | retrieve clothes and expensive | mixed four-skill recall |
+| S154 | `MW-C15-shopping-seven` | pass the seven-word shopping map | non-compensatory listening, speaking, reading, and writing |
+| S155 | `MW-R15-shopping-close` | close the seven-word shopping loop | hidden-model seven-word recall |
+| S156 | `MW-C16-hear-bas` | hear *bas* as bus | none; meaning precedes spelling |
+| S157 | `MW-C16-bas` | assemble **बस** from known signs | delayed copy and dictation |
+| S158 | `MW-C16-hear-gaadi` | hear *gāṛī* as vehicle | none; reuse the dotted sound by ear |
+| S159 | `MW-C16-gaadi` | assemble **गाड़ी** from known signs | delayed copy and dictation |
+| S160 | `MW-C16-hear-thela` | hear *ṭhelā* as cart | none; meaning precedes spelling |
+| S161 | `MW-C16-thela` | assemble **ठेला** from known signs | delayed copy and dictation |
+| S162 | `MW-R16-transport-three` | retrieve bus, vehicle, and cart | mixed four-skill recall |
+| S163 | `MW-C16-transport-three` | pass the first transport map | non-compensatory listening, speaking, reading, and writing |
+| S164 | `MW-R16-transport-close` | close the three-word transport loop | hidden-model three-word recall |
+| S165 | `MW-C17-hear-riksha` | hear *rikśā* as rickshaw | none; meaning precedes the new consonant |
+| S166 | `MW-W17-sha` | distinguish **श** from familiar **स** | observe, trace, copy one sign |
+| S167 | `MW-C17-riksha` | assemble **रिक्शा** | delayed copy and dictation |
+| S168 | `MW-C17-hear-ghodo` | hear *ghoṛo* as horse | none; reuse the dotted sound by ear |
+| S169 | `MW-C17-ghodo` | assemble **घोड़ो** from known signs | delayed copy and dictation |
+| S170 | `MW-R17-transport-new-two` | retrieve rickshaw and horse | mixed four-skill recall |
+| S171 | `MW-C17-transport-five` | pass the five-word transport map | non-compensatory listening, speaking, reading, and writing |
+| S172 | `MW-R17-script-close` | close **ड़** and **श** in load-bearing words | independent sign and word dictation |
 
 Reviews use expanding spacing: repeat S7 the next day, after three days, after
 one week, and after two weeks. A failed written recall sends the learner back to

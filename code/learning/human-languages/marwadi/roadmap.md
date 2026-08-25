@@ -50,11 +50,18 @@ closes with a five-word four-skill payoff but leaves price questions and
 bargaining phrases as explicit debt. The strict report remains all-zero at 147
 lessons, including R1–R4 continuity.
 
-This brings the first vocabulary expansion from 11 to 39 distinct taught
-headwords: 28 of the issue's intended 35 new headwords are complete, leaving 7
-new headwords in this tranche. The earlier 17-word remaining figure counted toward a
-35-word total rather than the issue's explicit allowance of 35 additions and is
-superseded here. The next independent slice should favor high-frequency
-survival nouns that reuse the current script inventory. The contrasting no response before a complete yes/no
+Chapter 20 adds eight meaning-first lessons for **कपड़ा, महंगो**, introducing
+only the nukta and securing a seven-word shopping map. Chapters 21--22 add
+seventeen lessons for **बस, गाड़ी, ठेला, रिक्शा, घोड़ो**. Only **श** is new;
+the dotted **ड़** from clothes is deliberately reused in vehicle and horse.
+The transport set closes in separately scored listening, speaking, reading,
+and independent writing without claiming untaught ticket, timetable, location,
+or problem-report language. The strict report remains all-zero at 172 lessons.
+
+This completes the issue's 35-word vocabulary expansion, bringing the track
+from 11 to 46 distinct taught headwords. The next dependency-unblocking slice
+should turn the secured shopping and transport nouns into tiny source-backed
+interactions, one function at a time, while continuing to reuse the current
+script inventory. The contrasting no response before a complete yes/no
 exchange, okay, casual gratitude, a you're-welcome response, and a full request
 for water also remain explicit debt.

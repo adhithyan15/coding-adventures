@@ -300,6 +300,55 @@
         "MW-R14-shopping-close"
       ],
       "tex": "marwadi/book/chapters/ch19-shopping-five.tex"
+    },
+    {
+      "language": "marwadi",
+      "chapter": 20,
+      "sourceHash": "fnv1a64:f1a8ca7bbf3a4729",
+      "lessonIds": [
+        "MW-C15-hear-kapda",
+        "MW-W15-nukta",
+        "MW-C15-kapda",
+        "MW-C15-hear-mahango",
+        "MW-C15-mahango",
+        "MW-R15-shopping-new-two",
+        "MW-C15-shopping-seven",
+        "MW-R15-shopping-close"
+      ],
+      "tex": "marwadi/book/chapters/ch20-shopping-seven.tex"
+    },
+    {
+      "language": "marwadi",
+      "chapter": 21,
+      "sourceHash": "fnv1a64:147cf2692686f1c1",
+      "lessonIds": [
+        "MW-C16-hear-bas",
+        "MW-C16-bas",
+        "MW-C16-hear-gaadi",
+        "MW-C16-gaadi",
+        "MW-C16-hear-thela",
+        "MW-C16-thela",
+        "MW-R16-transport-three",
+        "MW-C16-transport-three",
+        "MW-R16-transport-close"
+      ],
+      "tex": "marwadi/book/chapters/ch21-transport-three.tex"
+    },
+    {
+      "language": "marwadi",
+      "chapter": 22,
+      "sourceHash": "fnv1a64:7112a7db655ee1e3",
+      "lessonIds": [
+        "MW-C17-hear-riksha",
+        "MW-W17-sha",
+        "MW-C17-riksha",
+        "MW-C17-hear-ghodo",
+        "MW-C17-ghodo",
+        "MW-R17-transport-new-two",
+        "MW-C17-transport-five",
+        "MW-R17-script-close"
+      ],
+      "tex": "marwadi/book/chapters/ch22-transport-five.tex"
     }
   ]
 }

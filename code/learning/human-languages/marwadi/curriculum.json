@@ -105,6 +105,30 @@
       "before": [],
       "inline": ["MW-EXT-027-SHOPPING-FIVE"],
       "after": []
+    },
+    {
+      "id": "MW-PATH-014",
+      "spine_node": "SPINE-POLITE-REQUEST-REPAIR",
+      "lessons": ["MW-C15-hear-kapda", "MW-W15-nukta", "MW-C15-kapda", "MW-C15-hear-mahango", "MW-C15-mahango", "MW-R15-shopping-new-two", "MW-C15-shopping-seven", "MW-R15-shopping-close"],
+      "before": [],
+      "inline": ["MW-EXT-028-SHOPPING-SEVEN"],
+      "after": []
+    },
+    {
+      "id": "MW-PATH-015",
+      "spine_node": "SPINE-POLITE-REQUEST-REPAIR",
+      "lessons": ["MW-C16-hear-bas", "MW-C16-bas", "MW-C16-hear-gaadi", "MW-C16-gaadi", "MW-C16-hear-thela", "MW-C16-thela", "MW-R16-transport-three", "MW-C16-transport-three", "MW-R16-transport-close"],
+      "before": [],
+      "inline": ["MW-EXT-029-TRANSPORT-THREE"],
+      "after": []
+    },
+    {
+      "id": "MW-PATH-016",
+      "spine_node": "SPINE-POLITE-REQUEST-REPAIR",
+      "lessons": ["MW-C17-hear-riksha", "MW-W17-sha", "MW-C17-riksha", "MW-C17-hear-ghodo", "MW-C17-ghodo", "MW-R17-transport-new-two", "MW-C17-transport-five", "MW-R17-script-close"],
+      "before": [],
+      "inline": ["MW-EXT-030-TRANSPORT-FIVE"],
+      "after": []
     }
   ],
   "spine": {
@@ -113,7 +137,7 @@
     "SPINE-RESPOND-BASIC": { "segments": ["MW-PATH-003"], "omits": ["RESPONSE-NO", "RESPONSE-YESNO", "RESPONSE-OKAY"], "relocates": {} },
     "SPINE-EXCHANGE-NAMES": { "segments": ["MW-PATH-005", "MW-PATH-008", "MW-PATH-009"], "omits": ["PRONOUN-I", "PRONOUN-ME", "PRONOUN-YOU", "WORD-IS", "INTRO-WHATS-YOUR-NAME", "INTRO-NICE-TO-MEET-YOU"], "relocates": {} },
     "SPINE-CHECK-WELLBEING": { "segments": ["MW-PATH-006"], "omits": ["QUESTION-HOW", "WORD-GOOD", "WORD-SOSO"], "relocates": {} },
-    "SPINE-POLITE-REQUEST-REPAIR": { "segments": ["MW-PATH-004", "MW-PATH-010", "MW-PATH-011", "MW-PATH-012", "MW-PATH-013"], "omits": ["COURTESY-PLEASE", "COURTESY-SORRY"], "relocates": {} },
+    "SPINE-POLITE-REQUEST-REPAIR": { "segments": ["MW-PATH-004", "MW-PATH-010", "MW-PATH-011", "MW-PATH-012", "MW-PATH-013", "MW-PATH-014", "MW-PATH-015", "MW-PATH-016"], "omits": ["COURTESY-PLEASE", "COURTESY-SORRY"], "relocates": {} },
     "SPINE-TAKE-LEAVE": { "segments": ["MW-PATH-007"], "omits": ["FAREWELL", "FAREWELL-CASUAL", "FAREWELL-LATER", "FAREWELL-SOON", "FAREWELL-TOMORROW", "GREETING-GOODNIGHT"], "relocates": {} },
     "SPINE-TIME-OF-DAY": { "segments": [], "omits": ["TIME-DAY", "TIME-MORNING", "TIME-AFTERNOON", "TIME-EVENING", "TIME-NIGHT", "GREETING-DAY", "GREETING-MORNING", "GREETING-AFTERNOON", "GREETING-EVENING"], "relocates": {} },
     "SPINE-ASK-LOCATION": { "segments": [], "omits": ["QUESTION-WHERE"], "relocates": {} },
@@ -385,6 +409,33 @@
       "canDo": "I can retrieve shop, item, price, cheap, and goods in listening, speaking, reading, and writing after adding only the short-u vowel mark.",
       "prerequisites": ["MW-EXT-026-WEATHER-SIX"],
       "lessons": ["MW-C13-hear-dukan", "MW-W13-u-matra", "MW-C13-dukan", "MW-C13-hear-vastu", "MW-C13-vastu", "MW-C13-hear-bhaav", "MW-C13-bhaav", "MW-R13-shopping-three", "MW-C13-shopping-three", "MW-R13-shopping-close", "MW-C14-hear-sasta", "MW-C14-sasta", "MW-C14-hear-samaan", "MW-C14-samaan", "MW-R14-shopping-new-two", "MW-C14-shopping-five", "MW-R14-shopping-close"]
+    },
+    {
+      "id": "MW-EXT-028-SHOPPING-SEVEN",
+      "stage": "pre-A1",
+      "kind": "required",
+      "category": "vocabulary",
+      "canDo": "I can add clothes and expensive to the shopping map in four separately scored skills after learning only the nukta that changes ड to ड़.",
+      "prerequisites": ["MW-EXT-027-SHOPPING-FIVE"],
+      "lessons": ["MW-C15-hear-kapda", "MW-W15-nukta", "MW-C15-kapda", "MW-C15-hear-mahango", "MW-C15-mahango", "MW-R15-shopping-new-two", "MW-C15-shopping-seven", "MW-R15-shopping-close"]
+    },
+    {
+      "id": "MW-EXT-029-TRANSPORT-THREE",
+      "stage": "pre-A1",
+      "kind": "required",
+      "category": "vocabulary",
+      "canDo": "I can retrieve bus, vehicle, and cart in listening, speaking, reading, and writing using only previously taught Devanagari signs.",
+      "prerequisites": ["MW-EXT-028-SHOPPING-SEVEN"],
+      "lessons": ["MW-C16-hear-bas", "MW-C16-bas", "MW-C16-hear-gaadi", "MW-C16-gaadi", "MW-C16-hear-thela", "MW-C16-thela", "MW-R16-transport-three", "MW-C16-transport-three", "MW-R16-transport-close"]
+    },
+    {
+      "id": "MW-EXT-030-TRANSPORT-FIVE",
+      "stage": "pre-A1",
+      "kind": "required",
+      "category": "vocabulary",
+      "canDo": "I can add rickshaw and horse to a five-word transport map in four separately scored skills after learning only श.",
+      "prerequisites": ["MW-EXT-029-TRANSPORT-THREE"],
+      "lessons": ["MW-C17-hear-riksha", "MW-W17-sha", "MW-C17-riksha", "MW-C17-hear-ghodo", "MW-C17-ghodo", "MW-R17-transport-new-two", "MW-C17-transport-five", "MW-R17-script-close"]
     }
   ]
 }

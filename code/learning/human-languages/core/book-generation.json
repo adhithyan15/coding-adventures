@@ -2963,6 +2963,24 @@
         "scriptSet": "marwadi-main"
       },
       {
+        "language": "marwadi",
+        "chapter": 20,
+        "output": "marwadi/book/chapters/ch20-shopping-seven.tex",
+        "scriptSet": "marwadi-main"
+      },
+      {
+        "language": "marwadi",
+        "chapter": 21,
+        "output": "marwadi/book/chapters/ch21-transport-three.tex",
+        "scriptSet": "marwadi-main"
+      },
+      {
+        "language": "marwadi",
+        "chapter": 22,
+        "output": "marwadi/book/chapters/ch22-transport-five.tex",
+        "scriptSet": "marwadi-main"
+      },
+      {
         "language": "persian",
       "chapter": 2,
       "output": "persian/book/chapters/ch02-give-your-name.tex",
