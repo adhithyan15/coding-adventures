@@ -6879,6 +6879,15 @@ and authority checks are clean. Three independent audits confirm exact fixture
 consumption, zero live-PR or remote-head path overlap, and no publication
 blocker after adding the missing README paragraph break.
 
+Ready-for-review PR #12715 opened from clean validated head
+`aa6a49c93aeb533fe75846ef74ad6d8512147e6d` after a normal first push. At
+publication, `origin/main` and the branch merge base both equal
+`fc01df1ae0b68af15f7a493d610f348c32edf60f`; the seven-path diff has zero
+exact overlap with live open PRs or remote heads. GitHub reports the PR
+non-draft and mergeable, blocked only by queued checks, so auto-merge remains
+disabled until every required check is terminal and acceptable and GitHub
+reports no conflict.
+
 ## Autonomous Loop Protocol
 
 Only one parity PR should be active at a time.

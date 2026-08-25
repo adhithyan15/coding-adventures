@@ -11,7 +11,12 @@
     "selection_rule": "host-security, credential, native-runtime, and external-approval work may inform classification but is never selected by this parity loop",
     "excluded_delivery_classes": ["onvif", "host-security-hardening", "native-runtime", "external-approval"]
   },
-  "active_pr": null,
+  "active_pr": {
+    "number": 12715,
+    "url": "https://github.com/adhithyan15/coding-adventures/pull/12715",
+    "branch": "codex/build-tool-fsharp-orphan-crate-validation-conformance",
+    "status": "open"
+  },
   "last_inventory": {
     "revision": "fc01df1ae0b68af15f7a493d610f348c32edf60f",
     "schema_version": 3,
@@ -4838,19 +4843,24 @@
     {
       "id": "build-tool-fsharp-orphan-crate-validation-conformance",
       "title": "Make the F# build tool consume orphan-crate validation",
-      "status": "in-progress",
+      "status": "pr-open",
       "depends_on": [
         "build-tool-orphan-crate-validation-corpus",
         "build-tool-csharp-orphan-crate-validation-conformance"
       ],
       "branch": "codex/build-tool-fsharp-orphan-crate-validation-conformance",
-      "pr_number": null,
+      "pr_number": 12715,
+      "pr_url": "https://github.com/adhithyan15/coding-adventures/pull/12715",
+      "opened_at": "2026-08-25T07:21:51Z",
+      "opened_revision": "aa6a49c93aeb533fe75846ef74ad6d8512147e6d",
+      "final_revision": "aa6a49c93aeb533fe75846ef74ad6d8512147e6d",
       "selection_revision": "fc01df1ae0b68af15f7a493d610f348c32edf60f",
       "implementation_revision": "128832d6f52459f2e8553fa096a643c9e73aedc2",
       "validation_revision": "128832d6f52459f2e8553fa096a643c9e73aedc2",
       "selection_notes": "Selected after PR #12700 completed 29 terminal acceptable checks and merged through squash auto-merge as c68b31d8daa9b82e2b59b139364dd990d8244a27, followed by package-marker-neutral human-language, WASM, storage-fs, and HTML-parser commits on current origin/main fc01df1ae0b68af15f7a493d610f348c32edf60f. The collision-checked schema-3 inventory remains 15 established lanes, 1,372 implementation identities, 4,565 slots, 175 high-consensus packages with 276 gaps, 909 singletons with 12,726 gaps, 720 Rust singletons, zero collisions, and zero unknown buckets; OCaml remains emerging at zero packages. The refresh registers the newly exposed storage-fs persistent revision-floor native-authority review before selection and binds PR #12698's Rust conformance growth to its existing portable WASM owner. This newly unlocked process-free F# facade is dependency-ready, has zero exact overlap across live PRs and remote heads, and advances the reviewed shared .NET orphan validator into another supported implementation lane. The higher-leverage extra-CI-toolchain corpus remains collision-unsafe as currently owned because its canonical Go-normalization half overlaps live PRs #12149 and #12162 on main.go; OCaml shares that collision.",
       "notes": "Consume the closed process-free orphan-crate snapshot and diagnostics through the supported F# build-tool lane without assuming the C# engine or facade supplies unreviewed parity, and without adding filesystem enumeration or process authority.",
-      "validation_notes": "The conformance specification now requires every established shared-engine front door to expose a language-native orphan-snapshot adapter and consume every registered neutral fixture without acquiring discovery authority. The F# regression first failed at compile time because validateOrphanCrateSnapshot was absent, then the new no-inline F# facade passed all four clean, unlisted, invalid-exemption, and stale-exemption fixtures with exact diagnostic arrays and pending counts. The formatted Release suite passes 11 tests, the shared C# downstream passes 43 tests, warnings-as-errors build and publish pass, both canonical F# BUILD commands pass twice, and the F# assembly records 100% line, branch, and method coverage while the exercised shared C# engine records 92.39% line coverage. Fantomas 7.0.6 is clean. The process-free neutral corpus validates 111 cases and 269 files; 146 focused repository tests and 928 subtests pass with two expected Windows skips. The Go build tool passes all packages, vet, and trimpath compilation, and a real forced F# dry run evaluates 45 Starlark BUILD files, discovers 199 packages, preserves the five reviewed orphan exemptions, and reports all 199 as WOULD-BUILD. NuGet vulnerability audits report no vulnerable production or test dependencies. The exact-base schema-3 inventory remains 15 established lanes, 1,372 identities, 4,565 slots, zero collisions, and zero unknown buckets; the 492-owner/749-edge state graph is unique, dependency-complete, and acyclic with exactly this one in-progress item. Diff, JSON, dependency-scope, credential, artifact, and production-authority checks pass: the sole added file read is the test-only fixed neutral fixture, while production only delegates caller-supplied records. Independent implementation/security, fixture/inventory, and state/roadmap reviews found no remaining publication blocker after the README paragraph-spacing cleanup."
+      "validation_notes": "The conformance specification now requires every established shared-engine front door to expose a language-native orphan-snapshot adapter and consume every registered neutral fixture without acquiring discovery authority. The F# regression first failed at compile time because validateOrphanCrateSnapshot was absent, then the new no-inline F# facade passed all four clean, unlisted, invalid-exemption, and stale-exemption fixtures with exact diagnostic arrays and pending counts. The formatted Release suite passes 11 tests, the shared C# downstream passes 43 tests, warnings-as-errors build and publish pass, both canonical F# BUILD commands pass twice, and the F# assembly records 100% line, branch, and method coverage while the exercised shared C# engine records 92.39% line coverage. Fantomas 7.0.6 is clean. The process-free neutral corpus validates 111 cases and 269 files; 146 focused repository tests and 928 subtests pass with two expected Windows skips. The Go build tool passes all packages, vet, and trimpath compilation, and a real forced F# dry run evaluates 45 Starlark BUILD files, discovers 199 packages, preserves the five reviewed orphan exemptions, and reports all 199 as WOULD-BUILD. NuGet vulnerability audits report no vulnerable production or test dependencies. The exact-base schema-3 inventory remains 15 established lanes, 1,372 identities, 4,565 slots, zero collisions, and zero unknown buckets; the 492-owner/749-edge state graph is unique, dependency-complete, and acyclic with exactly this one active pr-open item. Diff, JSON, dependency-scope, credential, artifact, and production-authority checks pass: the sole added file read is the test-only fixed neutral fixture, while production only delegates caller-supplied records. Independent implementation/security, fixture/inventory, and state/roadmap reviews found no remaining publication blocker after the README paragraph-spacing cleanup.",
+      "publication_notes": "Opened ready-for-review PR #12715 from clean validated head aa6a49c93aeb533fe75846ef74ad6d8512147e6d after a normal first push. Immediately before publication, origin/main and the branch merge base both equaled fc01df1ae0b68af15f7a493d610f348c32edf60f, the seven changed paths had zero exact overlap with live open PRs or remote heads, and GitHub reported the PR non-draft and mergeable. Required checks are queued, so auto-merge remains disabled until every check is terminal and acceptable and GitHub reports no conflict."
     },
     {
       "id": "build-tool-elixir-orphan-crate-validation-conformance",
