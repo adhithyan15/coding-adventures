@@ -8,7 +8,7 @@ type: word
 headword: મજા
 gloss: enjoyment, fun — and the reply "હું મજામાં છું"
 concept_tag: WORD-WELL
-prerequisites: [GU-C03-hun, GU-C03-tame-kem-chho]
+prerequisites: [GU-C03-hun, GU-C03-tame-kem-chho, GU-W02-vocalic-r]
 sounds: [ja, long-aa]
 roots: [maza-persian]
 duration:
@@ -18,8 +18,8 @@ requires:
 introduces:
   knowledge: [GU-CONCEPT-C03-MAJAA-01]
 practises:
-  knowledge: [GU-CONCEPT-C03-HUN-01, GU-CONCEPT-C03-MAJAA-01, GU-CONCEPT-C03-TAMEKEMCHHO-01]
-skills: [listening, speaking, reading]
+  knowledge: [GU-CONCEPT-C03-HUN-01, GU-CONCEPT-C03-MAJAA-01, GU-CONCEPT-C03-TAMEKEMCHHO-01, GU-SCRIPT-VOCALIC-R-MATRA-01]
+skills: [listening, speaking, reading, writing]
 modes: [interpretive, interpersonal, presentational]
 strands: [meaning-input, meaning-output, language-focus]
 register: neutral
@@ -64,6 +64,13 @@ majāmā chhũ*) — literally "**I am in enjoyment**" (*majā* + *-mā* "in" + 
 - [YOU SAY: "majā"]
 - [YOU SAY: the full reply — *hũ majāmā chhũ*]
 - [YOU SAY: which heritage *majā* belongs to (Persian, not Sanskrit)]
+
+## Script retrieval
+<!-- hl-knowledge: introduces=[]; assesses=[GU-SCRIPT-VOCALIC-R-MATRA-01] -->
+<!-- hl-activity: {"id":"GU-C03-majaa-vocalic-r-retrieval","kind":"text","assesses":["GU-SCRIPT-VOCALIC-R-MATRA-01"],"prompt":"Without looking back, write the vowel sign ૃ once.","answer":"ૃ","accepted":[],"feedback":{"correct":"Good: ૃ is the small vowel sign written below its consonant.","incorrect":"Look once at ૃ below a consonant, hide it, and try the sign one time."},"response_seconds":12} -->
+
+Hide the earlier model for **ૃ**. Write the below-consonant sign once, compare,
+and stop after one possible repair.
 
 ## Wrap-up Recall
 <!-- hl-knowledge: introduces=[]; assesses=[GU-CONCEPT-C03-HUN-01, GU-CONCEPT-C03-MAJAA-01, GU-CONCEPT-C03-TAMEKEMCHHO-01] -->

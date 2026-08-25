@@ -7,14 +7,14 @@
   "policy": {
     "maxLinearisableTableColumns": 3
   },
-  "sourceHash": "fnv1a64:e1f92445039a154c",
+  "sourceHash": "fnv1a64:3fd9f5c2f063e1ac",
   "summary": {
-    "totalLessons": 72,
-    "voice": 17,
-    "sight": 41,
-    "pen": 14,
-    "drivableLessons": 17,
-    "drivablePercent": 24,
+    "totalLessons": 79,
+    "voice": 15,
+    "sight": 43,
+    "pen": 21,
+    "drivableLessons": 15,
+    "drivablePercent": 19,
     "trackCount": 1,
     "chapterCount": 13,
     "drivablePrefixTotal": 9,
@@ -26,11 +26,11 @@
   "tracks": [
     {
       "language": "gujarati",
-      "lessonCount": 72,
-      "voice": 17,
-      "sight": 41,
-      "pen": 14,
-      "drivablePercent": 24,
+      "lessonCount": 79,
+      "voice": 15,
+      "sight": 43,
+      "pen": 21,
+      "drivablePercent": 19,
       "drivablePrefixTotal": 9,
       "modalities": [
         "voice",
@@ -58,24 +58,24 @@
         },
         {
           "chapter": 2,
-          "lessonCount": 8,
+          "lessonCount": 15,
           "voice": 0,
           "sight": 4,
-          "pen": 4,
+          "pen": 11,
           "modalities": [
             "sight",
             "pen"
           ],
           "drivablePrefix": 0,
-          "firstNonVoiceLesson": "GU-C01-aabhaar",
+          "firstNonVoiceLesson": "GU-W02-ra",
           "drivable": false,
           "drivableLessonIds": []
         },
         {
           "chapter": 3,
           "lessonCount": 9,
-          "voice": 3,
-          "sight": 6,
+          "voice": 2,
+          "sight": 7,
           "pen": 0,
           "modalities": [
             "voice",
@@ -89,8 +89,8 @@
         {
           "chapter": 4,
           "lessonCount": 6,
-          "voice": 2,
-          "sight": 4,
+          "voice": 1,
+          "sight": 5,
           "pen": 0,
           "modalities": [
             "voice",
@@ -497,6 +497,197 @@
       "delivery": "script"
     },
     {
+      "id": "GU-W02-ra",
+      "language": "gujarati",
+      "chapter": 2,
+      "sequence": 12,
+      "modality": "pen",
+      "derived": "pen",
+      "drivable": false,
+      "reasons": [
+        "writing-type",
+        "writing-block",
+        "script-block"
+      ],
+      "coreModality": "pen",
+      "coreReasons": [
+        "writing-type"
+      ],
+      "coreDrivable": false,
+      "sourceHash": "fnv1a64:c6ba2258329a86e8",
+      "detachableSegments": [
+        "Script — meet the shape",
+        "Writing — notice and trace",
+        "Writing — copy with the model",
+        "Writing — recall after hiding"
+      ],
+      "delivery": "script"
+    },
+    {
+      "id": "GU-W02-da",
+      "language": "gujarati",
+      "chapter": 2,
+      "sequence": 13,
+      "modality": "pen",
+      "derived": "pen",
+      "drivable": false,
+      "reasons": [
+        "writing-type",
+        "writing-block",
+        "script-block"
+      ],
+      "coreModality": "pen",
+      "coreReasons": [
+        "writing-type"
+      ],
+      "coreDrivable": false,
+      "sourceHash": "fnv1a64:a65836abacf49487",
+      "detachableSegments": [
+        "Script — meet the shape",
+        "Writing — notice and trace",
+        "Writing — copy with the model",
+        "Writing — recall after hiding"
+      ],
+      "delivery": "script"
+    },
+    {
+      "id": "GU-W02-va",
+      "language": "gujarati",
+      "chapter": 2,
+      "sequence": 14,
+      "modality": "pen",
+      "derived": "pen",
+      "drivable": false,
+      "reasons": [
+        "writing-type",
+        "writing-block",
+        "script-block",
+        "sight-cue"
+      ],
+      "coreModality": "pen",
+      "coreReasons": [
+        "writing-type",
+        "sight-cue"
+      ],
+      "coreDrivable": false,
+      "sourceHash": "fnv1a64:25bdb09f880398ee",
+      "detachableSegments": [
+        "Script — meet the shape",
+        "Writing — notice and trace",
+        "Writing — copy with the model",
+        "Writing — recall after hiding"
+      ],
+      "delivery": "script"
+    },
+    {
+      "id": "GU-W02-ya",
+      "language": "gujarati",
+      "chapter": 2,
+      "sequence": 15,
+      "modality": "pen",
+      "derived": "pen",
+      "drivable": false,
+      "reasons": [
+        "writing-type",
+        "writing-block",
+        "script-block"
+      ],
+      "coreModality": "pen",
+      "coreReasons": [
+        "writing-type"
+      ],
+      "coreDrivable": false,
+      "sourceHash": "fnv1a64:3627d3db156fbefa",
+      "detachableSegments": [
+        "Script — meet the shape",
+        "Writing — notice and trace",
+        "Writing — copy with the model",
+        "Writing — recall after hiding"
+      ],
+      "delivery": "script"
+    },
+    {
+      "id": "GU-W02-bha",
+      "language": "gujarati",
+      "chapter": 2,
+      "sequence": 16,
+      "modality": "pen",
+      "derived": "pen",
+      "drivable": false,
+      "reasons": [
+        "writing-type",
+        "writing-block",
+        "script-block"
+      ],
+      "coreModality": "pen",
+      "coreReasons": [
+        "writing-type"
+      ],
+      "coreDrivable": false,
+      "sourceHash": "fnv1a64:44c623977f1affa2",
+      "detachableSegments": [
+        "Script — meet the shape",
+        "Writing — notice and trace",
+        "Writing — copy with the model",
+        "Writing — recall after hiding"
+      ],
+      "delivery": "script"
+    },
+    {
+      "id": "GU-W02-dha",
+      "language": "gujarati",
+      "chapter": 2,
+      "sequence": 17,
+      "modality": "pen",
+      "derived": "pen",
+      "drivable": false,
+      "reasons": [
+        "writing-type",
+        "writing-block",
+        "script-block"
+      ],
+      "coreModality": "pen",
+      "coreReasons": [
+        "writing-type"
+      ],
+      "coreDrivable": false,
+      "sourceHash": "fnv1a64:194c43bbf0a2f0c9",
+      "detachableSegments": [
+        "Script — meet the shape",
+        "Writing — notice and trace",
+        "Writing — copy with the model",
+        "Writing — recall after hiding"
+      ],
+      "delivery": "script"
+    },
+    {
+      "id": "GU-W02-vocalic-r",
+      "language": "gujarati",
+      "chapter": 2,
+      "sequence": 18,
+      "modality": "pen",
+      "derived": "pen",
+      "drivable": false,
+      "reasons": [
+        "writing-type",
+        "writing-block",
+        "script-block"
+      ],
+      "coreModality": "pen",
+      "coreReasons": [
+        "writing-type"
+      ],
+      "coreDrivable": false,
+      "sourceHash": "fnv1a64:8e8c5ecd82f5d392",
+      "detachableSegments": [
+        "Script — meet the shape",
+        "Writing — notice and trace",
+        "Writing — copy with the model",
+        "Writing — recall after hiding"
+      ],
+      "delivery": "script"
+    },
+    {
       "id": "GU-C01-aabhaar",
       "language": "gujarati",
       "chapter": 2,
@@ -512,9 +703,10 @@
         "no-visual-dependency"
       ],
       "coreDrivable": true,
-      "sourceHash": "fnv1a64:76a7c83bd3c315be",
+      "sourceHash": "fnv1a64:2ba2e65aa826735f",
       "detachableSegments": [
-        "The letters in this word"
+        "The letters in this word",
+        "Script retrieval"
       ]
     },
     {
@@ -533,9 +725,10 @@
         "no-visual-dependency"
       ],
       "coreDrivable": true,
-      "sourceHash": "fnv1a64:584e28dd4cdac7c4",
+      "sourceHash": "fnv1a64:de23d8ab32db0010",
       "detachableSegments": [
-        "The letters in this word"
+        "The letters in this word",
+        "Script retrieval"
       ]
     },
     {
@@ -554,9 +747,10 @@
         "no-visual-dependency"
       ],
       "coreDrivable": true,
-      "sourceHash": "fnv1a64:0b4d73f6d54b7363",
+      "sourceHash": "fnv1a64:c790e4994d265f59",
       "detachableSegments": [
-        "The letters in this word"
+        "The letters in this word",
+        "Script retrieval"
       ]
     },
     {
@@ -569,16 +763,18 @@
       "drivable": false,
       "reasons": [
         "writing-type",
-        "writing-block"
+        "writing-block",
+        "script-block"
       ],
       "coreModality": "pen",
       "coreReasons": [
         "writing-type"
       ],
       "coreDrivable": false,
-      "sourceHash": "fnv1a64:5494bdfab7dbc9d8",
+      "sourceHash": "fnv1a64:93656ffc1f2617bf",
       "detachableSegments": [
-        "Writing — guided copy"
+        "Writing — guided copy",
+        "Script retrieval — one older consonant"
       ],
       "delivery": "script"
     },
@@ -593,6 +789,7 @@
       "reasons": [
         "writing-type",
         "writing-block",
+        "script-block",
         "sight-cue"
       ],
       "coreModality": "pen",
@@ -601,9 +798,10 @@
         "sight-cue"
       ],
       "coreDrivable": false,
-      "sourceHash": "fnv1a64:297506659a7c2240",
+      "sourceHash": "fnv1a64:8308ea6113bd3e0d",
       "detachableSegments": [
-        "Writing — delayed copy"
+        "Writing — delayed copy",
+        "Script retrieval — one older vowel sign"
       ],
       "delivery": "script"
     },
@@ -669,10 +867,10 @@
         "no-visual-dependency"
       ],
       "coreDrivable": true,
-      "sourceHash": "fnv1a64:9af4a2dd90b8b6a6",
+      "sourceHash": "fnv1a64:4800ef74eac7514b",
       "detachableSegments": [
         "Script — the script and the language",
-        "Writing — retrieve the tiny word once"
+        "Writing — three gentle retrievals"
       ]
     },
     {
@@ -793,9 +991,10 @@
         "no-visual-dependency"
       ],
       "coreDrivable": true,
-      "sourceHash": "fnv1a64:1dbe9a9860ca7d78",
+      "sourceHash": "fnv1a64:3ea21e95b0fe0a20",
       "detachableSegments": [
-        "The letters in this word"
+        "The letters in this word",
+        "Script retrieval"
       ]
     },
     {
@@ -814,9 +1013,10 @@
         "no-visual-dependency"
       ],
       "coreDrivable": true,
-      "sourceHash": "fnv1a64:23ec2d8891fc1e7e",
+      "sourceHash": "fnv1a64:ecd884a0b0eceb66",
       "detachableSegments": [
-        "The letters in this word"
+        "The letters in this word",
+        "Script retrieval"
       ]
     },
     {
@@ -824,18 +1024,21 @@
       "language": "gujarati",
       "chapter": 3,
       "sequence": 140,
-      "modality": "voice",
-      "derived": "voice",
-      "drivable": true,
+      "modality": "sight",
+      "derived": "sight",
+      "drivable": false,
       "reasons": [
-        "no-visual-dependency"
+        "script-block"
       ],
       "coreModality": "voice",
       "coreReasons": [
         "no-visual-dependency"
       ],
       "coreDrivable": true,
-      "sourceHash": "fnv1a64:bd3a4f94655850ec"
+      "sourceHash": "fnv1a64:1236bf548f094112",
+      "detachableSegments": [
+        "Script retrieval"
+      ]
     },
     {
       "id": "GU-C02-practice",
@@ -871,9 +1074,10 @@
         "no-visual-dependency"
       ],
       "coreDrivable": true,
-      "sourceHash": "fnv1a64:350e3861b3c778fe",
+      "sourceHash": "fnv1a64:206cc26d05687c52",
       "detachableSegments": [
-        "The letters in this word"
+        "The letters in this word",
+        "Script retrieval"
       ]
     },
     {
@@ -892,9 +1096,10 @@
         "no-visual-dependency"
       ],
       "coreDrivable": true,
-      "sourceHash": "fnv1a64:7bd99bbaa0be68e5",
+      "sourceHash": "fnv1a64:84deb405a7bd450f",
       "detachableSegments": [
-        "The letters in this word"
+        "The letters in this word",
+        "Script retrieval"
       ]
     },
     {
@@ -902,18 +1107,21 @@
       "language": "gujarati",
       "chapter": 4,
       "sequence": 180,
-      "modality": "voice",
-      "derived": "voice",
-      "drivable": true,
+      "modality": "sight",
+      "derived": "sight",
+      "drivable": false,
       "reasons": [
-        "no-visual-dependency"
+        "script-block"
       ],
       "coreModality": "voice",
       "coreReasons": [
         "no-visual-dependency"
       ],
       "coreDrivable": true,
-      "sourceHash": "fnv1a64:9e80d3589c3f0503"
+      "sourceHash": "fnv1a64:513b4112557d60cd",
+      "detachableSegments": [
+        "Script retrieval"
+      ]
     },
     {
       "id": "GU-C03-majaa",
@@ -931,9 +1139,10 @@
         "no-visual-dependency"
       ],
       "coreDrivable": true,
-      "sourceHash": "fnv1a64:0241677852710ccc",
+      "sourceHash": "fnv1a64:a69ae91312f5b0f6",
       "detachableSegments": [
-        "The letters in this word"
+        "The letters in this word",
+        "Script retrieval"
       ]
     },
     {

@@ -4,7 +4,7 @@
   "chapter": 4,
   "title": "How Are You?",
   "drivablePrefix": 0,
-  "sourceHash": "fnv1a64:02e258d590fe3a40",
+  "sourceHash": "fnv1a64:54edde8eb6eec271",
   "lessons": [
     {
       "id": "GU-C03-hun",
@@ -19,16 +19,17 @@
       "modalityReasons": [
         "script-block"
       ],
-      "sourceHash": "fnv1a64:350e3861b3c778fe",
+      "sourceHash": "fnv1a64:206cc26d05687c52",
       "notice": {
         "modality": "sight",
         "needs": [
           "your eyes, for letter shapes on the page"
         ],
         "waitUntilStopped": [
-          "The letters in this word"
+          "The letters in this word",
+          "Script retrieval"
         ],
-        "text": "Before we start: this one needs your eyes, so it is not fully a driving lesson. You will want your eyes, for letter shapes on the page. You can listen to everything else now — leave the section called The letters in this word until you have stopped, and I will say so again when we reach it."
+        "text": "Before we start: this one needs your eyes, so it is not fully a driving lesson. You will want your eyes, for letter shapes on the page. You can listen to everything else now — leave the sections called The letters in this word and Script retrieval until you have stopped, and I will say so again when we reach it."
       },
       "blocks": [
         {
@@ -123,6 +124,34 @@
         },
         {
           "index": 5,
+          "type": "script",
+          "title": "Script retrieval",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "Hide the earlier model for ય. Write it once, compare, and repair only one part if needed."
+            },
+            {
+              "kind": "activity",
+              "scored": true,
+              "id": "GU-C03-hun-ya-retrieval",
+              "prompt": "Without looking back, write ય once.",
+              "assesses": [
+                "GU-SCRIPT-YA-01"
+              ],
+              "responseSeconds": 12,
+              "acceptedResponses": [
+                "ય"
+              ],
+              "feedback": {
+                "correct": "Good: one careful retrieval is enough.",
+                "incorrect": "Look at ય once, hide it, and write it one time."
+              }
+            }
+          ]
+        },
+        {
+          "index": 6,
           "type": "recall",
           "title": "Wrap-up Recall",
           "segments": [
@@ -153,16 +182,17 @@
       "modalityReasons": [
         "script-block"
       ],
-      "sourceHash": "fnv1a64:7bd99bbaa0be68e5",
+      "sourceHash": "fnv1a64:84deb405a7bd450f",
       "notice": {
         "modality": "sight",
         "needs": [
           "your eyes, for letter shapes on the page"
         ],
         "waitUntilStopped": [
-          "The letters in this word"
+          "The letters in this word",
+          "Script retrieval"
         ],
-        "text": "Before we start: this one needs your eyes, so it is not fully a driving lesson. You will want your eyes, for letter shapes on the page. You can listen to everything else now — leave the section called The letters in this word until you have stopped, and I will say so again when we reach it."
+        "text": "Before we start: this one needs your eyes, so it is not fully a driving lesson. You will want your eyes, for letter shapes on the page. You can listen to everything else now — leave the sections called The letters in this word and Script retrieval until you have stopped, and I will say so again when we reach it."
       },
       "blocks": [
         {
@@ -237,6 +267,34 @@
         },
         {
           "index": 4,
+          "type": "script",
+          "title": "Script retrieval",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "Hide the earlier model for ભ. Write it once, compare, and stop after one possible repair."
+            },
+            {
+              "kind": "activity",
+              "scored": true,
+              "id": "GU-C03-kem-bha-retrieval",
+              "prompt": "Without looking back, write ભ once.",
+              "assesses": [
+                "GU-SCRIPT-BHA-01"
+              ],
+              "responseSeconds": 12,
+              "acceptedResponses": [
+                "ભ"
+              ],
+              "feedback": {
+                "correct": "Good: one careful retrieval is enough.",
+                "incorrect": "Look at ભ once, hide it, and write it one time."
+              }
+            }
+          ]
+        },
+        {
+          "index": 5,
           "type": "recall",
           "title": "Wrap-up Recall",
           "segments": [
@@ -262,13 +320,22 @@
       "romanization": "",
       "gloss": "how are you? (respectful)",
       "script": "gujarati",
-      "modality": "voice",
-      "derivedModality": "voice",
+      "modality": "sight",
+      "derivedModality": "sight",
       "modalityReasons": [
-        "no-visual-dependency"
+        "script-block"
       ],
-      "sourceHash": "fnv1a64:9e80d3589c3f0503",
-      "notice": null,
+      "sourceHash": "fnv1a64:513b4112557d60cd",
+      "notice": {
+        "modality": "sight",
+        "needs": [
+          "your eyes, for letter shapes on the page"
+        ],
+        "waitUntilStopped": [
+          "Script retrieval"
+        ],
+        "text": "Before we start: this one needs your eyes, so it is not fully a driving lesson. You will want your eyes, for letter shapes on the page. You can listen to everything else now — leave the section called Script retrieval until you have stopped, and I will say so again when we reach it."
+      },
       "blocks": [
         {
           "index": 0,
@@ -359,6 +426,34 @@
         },
         {
           "index": 4,
+          "type": "script",
+          "title": "Script retrieval",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "Hide the earlier model for ધ. Write it once, compare, make at most one repair, and stop."
+            },
+            {
+              "kind": "activity",
+              "scored": true,
+              "id": "GU-C03-tame-kem-chho-dha-retrieval",
+              "prompt": "Without looking back, write ધ once.",
+              "assesses": [
+                "GU-SCRIPT-DHA-01"
+              ],
+              "responseSeconds": 12,
+              "acceptedResponses": [
+                "ધ"
+              ],
+              "feedback": {
+                "correct": "Good: one careful retrieval is enough.",
+                "incorrect": "Look at ધ once, hide it, and write it one time."
+              }
+            }
+          ]
+        },
+        {
+          "index": 5,
           "type": "recall",
           "title": "Wrap-up Recall",
           "segments": [
@@ -389,16 +484,17 @@
       "modalityReasons": [
         "script-block"
       ],
-      "sourceHash": "fnv1a64:0241677852710ccc",
+      "sourceHash": "fnv1a64:a69ae91312f5b0f6",
       "notice": {
         "modality": "sight",
         "needs": [
           "your eyes, for letter shapes on the page"
         ],
         "waitUntilStopped": [
-          "The letters in this word"
+          "The letters in this word",
+          "Script retrieval"
         ],
-        "text": "Before we start: this one needs your eyes, so it is not fully a driving lesson. You will want your eyes, for letter shapes on the page. You can listen to everything else now — leave the section called The letters in this word until you have stopped, and I will say so again when we reach it."
+        "text": "Before we start: this one needs your eyes, so it is not fully a driving lesson. You will want your eyes, for letter shapes on the page. You can listen to everything else now — leave the sections called The letters in this word and Script retrieval until you have stopped, and I will say so again when we reach it."
       },
       "blocks": [
         {
@@ -493,6 +589,34 @@
         },
         {
           "index": 5,
+          "type": "script",
+          "title": "Script retrieval",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "Hide the earlier model for ૃ. Write the below-consonant sign once, compare, and stop after one possible repair."
+            },
+            {
+              "kind": "activity",
+              "scored": true,
+              "id": "GU-C03-majaa-vocalic-r-retrieval",
+              "prompt": "Without looking back, write the vowel sign ૃ once.",
+              "assesses": [
+                "GU-SCRIPT-VOCALIC-R-MATRA-01"
+              ],
+              "responseSeconds": 12,
+              "acceptedResponses": [
+                "ૃ"
+              ],
+              "feedback": {
+                "correct": "Good: ૃ is the small vowel sign written below its consonant.",
+                "incorrect": "Look once at ૃ below a consonant, hide it, and try the sign one time."
+              }
+            }
+          ]
+        },
+        {
+          "index": 6,
           "type": "recall",
           "title": "Wrap-up Recall",
           "segments": [
