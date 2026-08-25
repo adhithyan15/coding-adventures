@@ -140,6 +140,15 @@ jobs:
           python3 -m unittest discover -s code/scripts/tests \
             -p 'test_build_human_language_book_catalog.py' -v
 
+      # The Unicode grid generator merges committed handwriting evidence and
+      # later script extensions back into Telugu, Kannada, and Malayalam. Run
+      # its idempotence suite before book generation so an unsafe rewrite cannot
+      # silently reopen already closed provenance work.
+      - name: Test the Dravidian syllabary generator
+        run: |
+          set -euo pipefail
+          python3 code/learning/human-languages/data/scripts/test_generate_syllabary.py -v
+
       - name: Build curriculum gap report
         working-directory: code/packages/typescript/human-language-data
         run: |

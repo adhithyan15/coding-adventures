@@ -7,6 +7,21 @@ writing it by hand. The schema is deliberately general (spec:
 model teaches an alphabet, an abugida, or an abjad — and so **adding a new script
 is data, not code.**
 
+## Safe regeneration of the Dravidian syllabaries
+
+`generate_syllabary.py` rebuilds the Telugu, Kannada, and Malayalam Unicode
+grids, but the committed JSON is also its merge boundary for later authored
+work. Unicode owns only `glyph`, `sound`, `role`, and `inherentVowel`. Existing
+components, sourced stroke data, notes, new evidence fields, core-external rows,
+and downstream collections such as `marks` and `finalConsonants` survive the
+rebuild. Missing output, malformed collections, and duplicate glyph identities
+stop regeneration instead of allowing a destructive rewrite.
+
+Run `python test_generate_syllabary.py` before regeneration. Its corpus test
+rebuilds all three scripts in memory and proves that merging the committed
+extensions is semantically idempotent. A subsequent
+`python generate_syllabary.py` should leave all three tracked JSON files clean.
+
 ## The three families this schema covers
 
 | Family | Examples | How vowels work | Direction |
