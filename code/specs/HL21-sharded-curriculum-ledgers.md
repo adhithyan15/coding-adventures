@@ -397,6 +397,44 @@ looking sequential. This is the §2.2 trap, live.
 shard mode for `spine`. That is a real but contained generalisation of
 `ShardPlan`.
 
+> **MEASURED, NOT YET BUILT.** Four corrections to the table above, all taken
+> from the committed corpus on 2026-08-24 rather than from reading the schema.
+>
+> 1. **`spine` DOES need an ordinal, and the sentence above is wrong.** "An
+>    object has no meaningful order" is true of JSON semantics and false of this
+>    ledger. `JSON.stringify` emits object keys in insertion order, so
+>    `<NODE-ID>.json` shards merged in sorted filename order would rewrite the
+>    key order and **break byte-identity in all 23 tracks** — none of them has
+>    its spine keys in sorted order. Worse, the order is not arbitrary: every
+>    one of the 23 tracks lists its spine keys in exactly `core/spine.d/`'s
+>    ladder order, pre-A1 → C2. That is the §2.2 trap again, at the one place
+>    this spec said it did not apply. Verified across all 23.
+>
+> 2. **`path` and `extensions` need ordinals, as the spec says.** Confirmed. The
+>    first divergence in Spanish is at index 3: authored `ES-PATH-004` against
+>    sorted `ES-PATH-003-CASA`, because a bare prefix sorts before the same
+>    prefix extended. Ids are unique and `^[A-Z][A-Z0-9-]*$`-safe in every track.
+>
+> 3. **The arrays are NOT the last top-level key.** Every track is
+>    `{version, language, path, spine, extensions}` — Spanish adds
+>    `conceptAliases` last. §2.5 refuses a ledger whose array is not last and
+>    tells whoever migrates it to decide then. This is that moment: the multi-key
+>    form needs the top-level key ORDER recorded, because three of the sharded
+>    keys sit in the middle of the document. A `_keys` array in `_meta.json` is
+>    the obvious home; it is not a conflict point, since key order changes never.
+>
+> 4. **`marwadi/curriculum.json` does not round-trip byte-exactly.** Its
+>    `lessons` arrays are hand-formatted inline on one line. Data identical,
+>    bytes not. Per §8.5 it gets reported, not reformatted — the same call made
+>    for three `chapters.json` files in §4.1a.
+>
+> And the disposition question is already answered by §4.3: `language-ladder`
+> globs `*/curriculum.json`, so this ledger **keeps its monolith as a generated
+> artifact** too. Sharding it would put roughly 1,500 keys into the eager glob
+> table against a 500 kB ceiling that `chapters.d/` alone came within 4 kB of
+> breaking with 1,020. The conflict on `spine[<node>].segments` is therefore
+> downgraded to "regenerate, do not hand-merge", not removed.
+
 ### 5.3 `core/book-generation.json` → `core/book-generation.d/<language>.json`
 
 Shape today: `{ version, sourceBaseUrl, scriptSets, referenceAppendices[6],
@@ -433,6 +471,46 @@ arrays, and a Spanish tranche touches only that file.
 > `\input` list are the things to check).
 
 **Difficulty: medium-high**, entirely because of that normalization step.
+
+> **THE BLOCKER ABOVE HAS RESOLVED ITSELF. A DIFFERENT ONE IS IN ITS PLACE.**
+> Re-measured on 2026-08-24, at 1,007 `targets` (the spec was written at 949):
+>
+> | array | n | runs | languages | contiguous? |
+> | --- | ---: | ---: | ---: | --- |
+> | `referenceAppendices` | 6 | 6 | 6 | yes |
+> | `glossaries` | 23 | 23 | 23 | yes |
+> | `answerKeys` | 23 | 23 | 23 | yes |
+> | `indexes` | 23 | 23 | 23 | yes |
+> | **`targets`** | **1,007** | **23** | **23** | **yes** |
+> | `handwritten` | 71 | 14 | 14 | yes |
+>
+> `targets` is now **contiguous by language** — 23 runs for 23 languages, not the
+> 27 the spec recorded. The split runs for `hindi`, `kannada`, `spanish` and
+> `telugu` closed as later tranches inserted into the existing runs. Every array
+> is additionally in the SAME alphabetical language order, which is also sorted
+> filename order for `<language>.json`, so a per-language split reproduces
+> authored order with no ordinal prefix. **No normalization commit is needed.**
+>
+> What blocks it instead is formatting. `core/book-generation.json` does not
+> round-trip byte-exactly:
+>
+> - 74 differing lines, a contiguous run at **lines 2911–2984**;
+> - identical line COUNT before and after (6,658 either way);
+> - every single difference is **leading whitespace only** — a block of twelve
+>   `marwadi` entries in `targets` indented six/eight spaces where the canonical
+>   form is four/six. A hand-merge artifact.
+> - `JSON.parse` of the reformatted bytes is deep-equal to the original.
+>
+> So §5.3's "one-time normalization commit, landed separately" is still the right
+> shape, but it is a **re-indent**, not a re-sort, and it is 74 lines rather than
+> a reordering of 1,007. It remains a decision for an owner under §8.5 rather
+> than something to fold into the shard commit.
+>
+> `scriptSets` (8 keys, keyed by script set) belongs in `_meta.json` as the spec
+> says — confirmed, it carries no `language`. Every element of the other six
+> arrays does carry one. Also note `src/book-cli.ts:134` reads this file with a
+> bare `readFileSync`, outside the loader; it is the only non-loader `src` read
+> of any of the three ledgers and needs routing through `readMaybeSharded`.
 
 ### 5.4 `<track>/book/book.tex` → **generated, not sharded**
 
@@ -518,3 +596,14 @@ separate script, never wired into `vitest run`.
 6. Wire `--check` into CI and `verify-human-languages.sh`.
 7. Land it when the file is quiet. Reshaping a file underneath an open branch
    breaks that branch.
+8. **Decide the monolith's disposition explicitly, and check §4.3 first.** If
+   `language-ladder` globs the ledger, the monolith stays as a generated
+   artifact and the conflict is downgraded rather than removed. `ShardPlan`
+   makes this a required field for exactly that reason.
+9. **If the committed file does not round-trip byte-exactly, stop and report
+   it.** Do not reformat it into agreement with the serialiser as part of the
+   migration. Four files are in this state today and are named in §4.1a and
+   §5.2/§5.3: three `chapters.json`, `marwadi/curriculum.json`, and
+   `core/book-generation.json`. Each needs a separate, deliberate
+   normalization commit whose whole content is the reformatting, so that the
+   diff can be read as "no data changed" rather than buried inside a migration.
