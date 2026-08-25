@@ -5912,10 +5912,13 @@ impl HtmlParser {
             && body_element_existed_before_start_tag
             && self.has_open_element("body")
         {
-            self.diagnostics.push(ParserDiagnostic::new(
-                "unexpected-body-start-tag",
-                "body start tag was recovered against the existing body element",
-            ));
+            self.diagnostics.push(
+                ParserDiagnostic::new(
+                    "unexpected-body-start-tag",
+                    "body start tag was recovered against the existing body element",
+                )
+                .at_emission(self.current_token_emission_position),
+            );
         }
 
         if !in_foreign_content
@@ -27317,6 +27320,14 @@ mod tests {
             .at_emission(Some(start_tag_position_at(source, "head", occurrence)))
     }
 
+    fn unexpected_body_start_tag(source: &str, occurrence: usize) -> ParserDiagnostic {
+        ParserDiagnostic::new(
+            "unexpected-body-start-tag",
+            "body start tag was recovered against the existing body element",
+        )
+        .at_emission(Some(start_tag_position_at(source, "body", occurrence)))
+    }
+
     fn foreign_start_tag_in_table_recovery(source: &str, name: &str) -> ParserDiagnostic {
         ParserDiagnostic::new(
             "unexpected-foreign-start-tag-in-table",
@@ -40425,10 +40436,9 @@ mod tests {
 
     #[test]
     fn reports_and_recovers_duplicate_body_start_tags() {
-        let output = parse_html_with_diagnostics(
-            "<!doctype html><body class=first><body data-app=venture class=ignored><p>x",
-        )
-        .unwrap();
+        let source =
+            "<!doctype html><body class=first><body data-app=venture class=ignored><p>x";
+        let output = parse_html_with_diagnostics(source).unwrap();
 
         assert_eq!(body(&output.document).attribute("class"), Some("first"));
         assert_eq!(
@@ -40437,10 +40447,74 @@ mod tests {
         );
         assert_eq!(
             output.parser_diagnostics,
-            vec![ParserDiagnostic::new(
-                "unexpected-body-start-tag",
-                "body start tag was recovered against the existing body element"
-            )]
+            vec![unexpected_body_start_tag(source, 1)]
+        );
+    }
+
+    #[test]
+    fn positions_rejected_body_start_tags_at_token_emission() {
+        let repeated_source = "<!doctype html><body><body><!--é-->\r\n<body>";
+        let repeated = parse_html_with_diagnostics(repeated_source).unwrap();
+        assert_eq!(
+            repeated
+                .parser_diagnostics
+                .iter()
+                .filter(|diagnostic| diagnostic.code == "unexpected-body-start-tag")
+                .collect::<Vec<_>>(),
+            vec![
+                &unexpected_body_start_tag(repeated_source, 1),
+                &unexpected_body_start_tag(repeated_source, 2),
+            ]
+        );
+
+        for excluded in [
+            "<!doctype html><body>",
+            "<!doctype html><body><body",
+            "<!doctype html><template><body></template>",
+        ] {
+            let output = parse_html_with_diagnostics(excluded).unwrap();
+            assert!(
+                output
+                    .parser_diagnostics
+                    .iter()
+                    .all(|diagnostic| diagnostic.code != "unexpected-body-start-tag"),
+                "source {excluded:?}"
+            );
+        }
+
+        let fragment_source = "<body>";
+        let fragment = parse_html_fragment_with_diagnostics(fragment_source).unwrap();
+        assert_eq!(
+            fragment
+                .parser_diagnostics
+                .iter()
+                .filter(|diagnostic| diagnostic.code == "unexpected-body-start-tag")
+                .collect::<Vec<_>>(),
+            vec![&unexpected_body_start_tag(fragment_source, 0)]
+        );
+
+        let foreign_source = "<!doctype html><body><svg><body>";
+        let foreign = parse_html_with_diagnostics(foreign_source).unwrap();
+        assert!(foreign.parser_diagnostics.iter().any(|diagnostic| {
+            diagnostic == &unexpected_body_start_tag(foreign_source, 1)
+        }));
+
+        let mut unpositioned = HtmlParser::new();
+        for _ in 0..2 {
+            unpositioned.process_token(Token::StartTag {
+                name: "body".to_string(),
+                attributes: Vec::new(),
+                self_closing: false,
+            });
+        }
+        assert_eq!(
+            unpositioned
+                .diagnostics()
+                .iter()
+                .find(|diagnostic| diagnostic.code == "unexpected-body-start-tag")
+                .unwrap()
+                .position,
+            None
         );
     }
 
