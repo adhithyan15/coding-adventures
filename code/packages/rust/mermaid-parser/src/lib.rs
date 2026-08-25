@@ -1759,6 +1759,7 @@ fn parse_class_relationship(line: &str) -> Option<StructuralRelationship> {
 /// ```
 pub fn parse_xychart(source: &str) -> Result<ChartDiagram, ParseError> {
     parse_mermaid_xychart_ast(source)?;
+    let xy_config = parse_xychart_config(source);
     let tokens = try_tokenize_mermaid_xychart(source).map_err(|message| ParseError {
         message,
         line: 1,
@@ -1773,7 +1774,10 @@ pub fn parse_xychart(source: &str) -> Result<ChartDiagram, ParseError> {
     let mut title: Option<String> = None;
     let mut accessibility_title = None;
     let mut accessibility_description = None;
-    let mut orientation = ChartOrientation::Vertical;
+    let mut orientation = xy_config
+        .chart_orientation
+        .clone()
+        .unwrap_or(ChartOrientation::Vertical);
     if let Some(token) = cursor.consume_if("ORIENTATION") {
         orientation = if token.value.eq_ignore_ascii_case("horizontal") {
             ChartOrientation::Horizontal
@@ -1875,7 +1879,7 @@ pub fn parse_xychart(source: &str) -> Result<ChartDiagram, ParseError> {
         quadrant_labels: [None, None, None, None],
         quadrant_points: vec![],
         quadrant_config: QuadrantConfig::default(),
-        xy_config: parse_xychart_config(source),
+        xy_config,
         orientation,
     })
 }
@@ -1915,6 +1919,13 @@ fn parse_xychart_config(source: &str) -> XyChartConfig {
     XyChartConfig {
         width: positive_number("width"),
         height: positive_number("height"),
+        chart_orientation: quadrant_directive_value(chart_source, "chartOrientation").and_then(
+            |value| match value.to_ascii_lowercase().as_str() {
+                "horizontal" => Some(ChartOrientation::Horizontal),
+                "vertical" => Some(ChartOrientation::Vertical),
+                _ => None,
+            },
+        ),
         title_font_size: positive_number("titleFontSize"),
         title_padding: non_negative_number("titlePadding"),
         show_title: boolean("showTitle"),
@@ -6145,12 +6156,17 @@ Rel(customer, web, \"Uses\", \"HTTPS\")";
     #[test]
     fn xychart_preserves_core_init_configuration() {
         let diagram = parse_xychart(
-            "%%{init: {\"xyChart\": {\"width\": 720, \"height\": 440, \"titleFontSize\": 24, \"titlePadding\": 14, \"showTitle\": false, \"showLegend\": false, \"legendFontSize\": 18, \"legendPadding\": 16, \"showDataLabel\": true, \"showDataLabelOutsideBar\": true, \"xAxis\": {\"showLabel\": false, \"labelFontSize\": 13, \"labelPadding\": 7, \"showTitle\": false, \"titleFontSize\": 18, \"titlePadding\": 9, \"showTick\": false, \"tickLength\": 11, \"tickWidth\": 3, \"showAxisLine\": false, \"axisLineWidth\": 4}, \"yAxis\": {\"showLabel\": true, \"labelFontSize\": 15, \"labelPadding\": 8, \"showTitle\": true, \"titleFontSize\": 19, \"titlePadding\": 10, \"showTick\": true, \"tickLength\": 12, \"tickWidth\": 4, \"showAxisLine\": true, \"axisLineWidth\": 5}}, \"themeVariables\": {\"xyChart\": {\"dataLabelColor\": \"#123456\"}}}}%%\nxychart\ntitle Hidden\nbar [10, 20]\n",
+            "%%{init: {\"xyChart\": {\"width\": 720, \"height\": 440, \"chartOrientation\": \"horizontal\", \"titleFontSize\": 24, \"titlePadding\": 14, \"showTitle\": false, \"showLegend\": false, \"legendFontSize\": 18, \"legendPadding\": 16, \"showDataLabel\": true, \"showDataLabelOutsideBar\": true, \"xAxis\": {\"showLabel\": false, \"labelFontSize\": 13, \"labelPadding\": 7, \"showTitle\": false, \"titleFontSize\": 18, \"titlePadding\": 9, \"showTick\": false, \"tickLength\": 11, \"tickWidth\": 3, \"showAxisLine\": false, \"axisLineWidth\": 4}, \"yAxis\": {\"showLabel\": true, \"labelFontSize\": 15, \"labelPadding\": 8, \"showTitle\": true, \"titleFontSize\": 19, \"titlePadding\": 10, \"showTick\": true, \"tickLength\": 12, \"tickWidth\": 4, \"showAxisLine\": true, \"axisLineWidth\": 5}}, \"themeVariables\": {\"xyChart\": {\"dataLabelColor\": \"#123456\"}}}}%%\nxychart\ntitle Hidden\nbar [10, 20]\n",
         )
         .unwrap();
 
         assert_eq!(diagram.xy_config.width, Some(720.0));
         assert_eq!(diagram.xy_config.height, Some(440.0));
+        assert_eq!(
+            diagram.xy_config.chart_orientation,
+            Some(ChartOrientation::Horizontal)
+        );
+        assert_eq!(diagram.orientation, ChartOrientation::Horizontal);
         assert_eq!(diagram.xy_config.title_font_size, Some(24.0));
         assert_eq!(diagram.xy_config.title_padding, Some(14.0));
         assert_eq!(diagram.xy_config.show_title, Some(false));
@@ -6180,6 +6196,12 @@ Rel(customer, web, \"Uses\", \"HTTPS\")";
         assert_eq!(diagram.xy_config.y_axis.tick_length, Some(12.0));
         assert_eq!(diagram.xy_config.y_axis.tick_width, Some(4.0));
         assert_eq!(diagram.xy_config.y_axis.axis_line_width, Some(5.0));
+
+        let explicit = parse_xychart(
+            "%%{init: {\"xyChart\": {\"chartOrientation\": \"horizontal\"}}}%%\nxychart vertical\nline [1, 2]\n",
+        )
+        .unwrap();
+        assert_eq!(explicit.orientation, ChartOrientation::Vertical);
     }
 
     #[test]

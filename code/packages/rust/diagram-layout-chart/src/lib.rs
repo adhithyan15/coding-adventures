@@ -1440,6 +1440,7 @@ mod tests {
         diagram.xy_config = XyChartConfig {
             width: Some(720.0),
             height: Some(440.0),
+            chart_orientation: None,
             title_font_size: Some(24.0),
             title_padding: Some(14.0),
             show_title: Some(false),
