@@ -6542,6 +6542,39 @@ PRs. GitHub reports the PR non-draft and mergeable while required checks are
 queued. Auto-merge remains disabled until every required check is terminal and
 acceptable.
 
+PR #12659 completed all 30 reported checks: 24 successes, five expected skips,
+and one neutral aggregate. GitHub reported the branch clean and mergeable, so
+the loop enabled squash auto-merge; GitHub merged it as
+`9cfe95f38364e3bc1609548c7b85b57c6b0fc72d` at
+`2026-08-25T02:42:16Z` without a manual merge command. The mandatory
+post-merge collision report remains schema 3 with 15 established lanes, 1,371
+implementation identities, 4,564 slots, 175 high-consensus packages with 276
+gaps, 908 singleton packages with 12,712 gaps, 719 Rust singletons, zero
+collisions, and zero unknown buckets. OCaml remains correctly emerging at zero
+packages, and exact comparison with the stored inventory finds no added or
+removed identity or slot and no newly unowned portable gap.
+
+The post-merge dependency audit found that Ruby, Swift, and TypeScript cannot
+yet take their tracked-artifact children through the required complete engine
+suites: each retains a separately registered `dist-newstyle` discovery
+failure. Their tracked-artifact owners now explicitly depend on the Ruby,
+Swift, and TypeScript discovery repairs, respectively. The complete 486-owner
+graph remains dependency-complete and acyclic while its edge count rises from
+736 to 739. Elixir, Haskell, Lua, and Perl remain immediately ready tracked-
+artifact consumers; Ruby, Swift, and TypeScript correctly become two-step
+chains rather than nominally ready children with known red validation.
+
+The next selected owner is
+`build-tool-typescript-dist-newstyle-discovery-exclusion`. Its language-
+identity prerequisite is merged, the exact shared fixture already reproduces
+the one generated Cabal-directory false package, and the bounded engine-only
+repair unlocks the widest affected tracked-artifact lane at 446 TypeScript
+package directories. Eight live open PRs have zero exact overlap on the
+TypeScript build-tool, state, or roadmap surfaces, and the target remote branch
+was absent before the fresh exact-main worktree was created. The strategic
+OCaml process-free substrate remains collision-unsafe while PRs #12149 and
+#12162 own exact Go validator and main paths.
+
 ## Autonomous Loop Protocol
 
 Only one parity PR should be active at a time.

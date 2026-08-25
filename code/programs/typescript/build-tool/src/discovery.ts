@@ -69,6 +69,7 @@ export const SKIP_DIRS: ReadonlySet<string> = new Set([
   "specs",
   "Pods",
   ".dart_tool",
+  "dist-newstyle",
   ".build",
   ".gradle",
   "gradle-build",

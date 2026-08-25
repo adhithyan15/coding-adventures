@@ -358,6 +358,28 @@ describe("discoverPackages", () => {
     expect(packages[0].name).toBe("python/real-pkg");
   });
 
+  it("should skip only the exact Cabal dist-newstyle artifact component", () => {
+    writeFile(
+      path.join(tmpDir, "packages", "haskell", "dist-newstyle", "BUILD"),
+      "echo generated\n",
+    );
+    writeFile(
+      path.join(
+        tmpDir,
+        "packages",
+        "haskell",
+        "dist-newstyle-example",
+        "BUILD",
+      ),
+      "echo source\n",
+    );
+
+    const packages = discoverPackages(tmpDir);
+    expect(packages.map((pkg) => pkg.name)).toEqual([
+      "haskell/dist-newstyle-example",
+    ]);
+  });
+
   it("should stop recursing when BUILD file found", () => {
     const parentDir = path.join(tmpDir, "packages", "python", "parent");
     writeFile(path.join(parentDir, "BUILD"), "echo parent\n");
@@ -501,5 +523,6 @@ describe("SKIP_DIRS", () => {
     expect(SKIP_DIRS.has(".venv")).toBe(true);
     expect(SKIP_DIRS.has("target")).toBe(true);
     expect(SKIP_DIRS.has(".claude")).toBe(true);
+    expect(SKIP_DIRS.has("dist-newstyle")).toBe(true);
   });
 });
