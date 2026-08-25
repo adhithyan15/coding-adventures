@@ -4576,3 +4576,81 @@ opposite.
 come from the producer (`wc -l < manifest`) rather than a hardcoded number that goes stale
 when a track is added. This is the same failure as `compiled 0, skipped 1, failed 0` two
 lessons up — which is the point: the shape recurs, including inside the fix for itself.
+
+## `openout_any=p` vets the NAME and then opens it — it does not resolve symlinks, so guarding one output filename guards one of eight
+
+Round two of the same security review. The `book.pdf` symlink guard added in round
+one — itself a review finding — was **still wrong**, in the same shape as the bug it
+fixed: it enumerated a filename instead of banning a category.
+
+A XeLaTeX run writes at least eight files into the book directory:
+
+    book.aux  book.log  book.toc  book.out  book.xdv  book.pdf
+    book.fdb_latexmk   book.fls        <- latexmk's own, written from Perl
+
+`openout_any=p` looks like it covers these and does not. It is a **name** check: it
+rejects absolute paths, `..`, and dotfiles, and then hands the name to `fopen(name, "w")`,
+which follows the link. `book.fdb_latexmk` and `book.fls` never reach a TeX-side check at
+all, because latexmk writes them itself with a plain Perl `open(…, ">")`.
+
+So `<track>/book/book.aux -> /home/runner/.ssh/authorized_keys` is an **arbitrary write as
+the build user, from a pull request, with no shell escape and no `latexmkrc` involved.**
+Seven doors stood open next to the one that got locked.
+
+**The rule: ban the category, do not enumerate the cases.** The fix moved into the
+tree-walking lint, which now refuses *any* symlink under the book tree. Cost of the
+blanket ban: zero — `git ls-files -s <tree> | awk '$1=="120000"'` returned nothing, and no
+curriculum book has a reason to contain a link. Cost of the enumeration: one missed
+filename is a full compromise, and the list grows whenever XeLaTeX or latexmk decides to
+write something new. An allowlist of safe things beats a denylist of dangerous ones, and
+"the file XeLaTeX happens to write today" is a denylist.
+
+**`.gitignore` is not a boundary.** `book.aux` and friends are ignored — and `git add -f`
+commits them anyway. Ignoring a path says where files come from, not what may exist.
+
+**Corollary on where the guard belongs.** It went in the Python lint that already walks
+the tree, not in the shell script, because the walk is one pass that already runs twice
+and the shell script would need the check at every write site. Put a categorical ban where
+the enumeration already happens.
+
+## Adjacent code being correct is not evidence about this line
+
+Three times in one day, in unrelated files: `doc-shard.ts` kept a sanitization gap after
+the CLI beside it was fixed; `shard.ts` kept a bare `catch → "missing"` while
+`shard-cli.ts` had it right; and the `book.pdf` symlink guard was defended in review with
+"same `[ -L ]` idiom as the figure guard twenty lines above." The first two were real
+misses. The third was a real miss too — the idiom was right and the *coverage* was wrong,
+which the analogy could not have revealed, because the sibling guarded a genuinely
+complete set (`figures/*.pdf`) and this one did not.
+
+**A sibling proves the idiom compiles, never that the coverage is complete.** When
+tempted to write "same pattern as X, so it is fine", the honest move is to enumerate what
+this line must cover and check the list — the sibling's list is the sibling's.
+
+## If you cannot execute the proof locally, move the proof to where it runs — do not infer it
+
+The `book.pdf` symlink guard could not be exercised on the authoring box: native symlinks
+need elevation or Developer Mode, `New-Item -ItemType SymbolicLink` fails with
+"Administrator privilege required", and WSL is not installed. The tempting write-up is
+"same idiom as the guard above, so it is fine" — an inferred pass, and the thing this
+repository has been burned by.
+
+**Better than a local demo: make it a test that runs where the capability exists.**
+`tests/test-check-book-compile-guards.sh` and the lint's `SymlinkBanTests` create a real
+symlink, run the real code, and assert the real refusal. They **skip with a printed
+reason** on a filesystem that cannot make one, and run on the Linux CI runner — which is
+also where the guard actually matters. A one-off local observation would have proved it
+once; this proves it on every run.
+
+Two details that make the skip honest rather than a dodge:
+- **Probe, don't guess.** Try `ln -s` / `Path.symlink_to` and check `[ -L ]`; do not branch
+  on `$OSTYPE` or `os.name`. Git Bash reports `msys` whether or not Developer Mode is on.
+- **Scope the skip to the test that needs the capability**, not the whole file. The first
+  draft `exit 0`-ed the entire suite before the `book.tex`/manifest cases, which need no
+  symlink — so Windows verified nothing at all. Scoped, a Windows run still executes three
+  real assertions.
+
+**And mutation-test the new test before believing it.** Removing
+`[ -f "$dir/book.tex" ] || continue` turned the suite red; restoring it turned it green. A
+test that has only ever been observed passing has not been observed working — the same
+principle as proving a gate's red path, applied to the gate's own tests.

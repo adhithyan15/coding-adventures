@@ -72,11 +72,24 @@ set -uo pipefail
 
 STRICT=0
 MANIFEST=""
+BOOK_ROOT=""
 WANTED=()
 for arg in "$@"; do
   case "$arg" in
     --strict) STRICT=1 ;;
+    # An empty value is a mistake, not a request to disable the manifest. A
+    # caller writing `--manifest="$SOME_UNSET_VAR"` means to get a manifest and
+    # would otherwise get a silent no-op, and then a downstream step reading an
+    # empty file.
+    --manifest=) echo "--manifest= requires a path" >&2; exit 2 ;;
     --manifest=*) MANIFEST="${arg#--manifest=}" ;;
+    # A test seam, and only that. `tests/test-check-book-compile-guards.sh`
+    # points this at a throwaway tree so the symlink and no-`book.tex` guards can
+    # be exercised against real hostile input without planting anything in the
+    # corpus. The containment check below still applies — it just compares
+    # against whichever root was named, so overriding it moves the fence rather
+    # than removing it.
+    --book-root=*) BOOK_ROOT="${arg#--book-root=}" ;;
     -h|--help)
       sed -n '2,50p' "${BASH_SOURCE[0]}" | sed 's/^# \{0,1\}//'
       exit 0 ;;
@@ -97,6 +110,17 @@ fi
 ROOT="$(cd "$(dirname "${BASH_SOURCE[0]}")/../.." && pwd -P)"
 BOOKS="$ROOT/code/learning/human-languages"
 RC="$ROOT/code/scripts/latexmk-safe.rc"
+
+# `--book-root` is resolved the same way, so the containment comparison stays a
+# resolved-against-resolved test. The rc is deliberately NOT relocatable: it is
+# always loaded from this repository's `code/scripts/`, never from the tree being
+# compiled, which is the entire point of `-norc -r`.
+if [ -n "$BOOK_ROOT" ]; then
+  BOOKS="$(cd "$BOOK_ROOT" 2>/dev/null && pwd -P)" || {
+    echo "--book-root does not exist or is not a directory: $BOOK_ROOT" >&2
+    exit 2
+  }
+fi
 
 # Belt and braces for the rc.
 #
@@ -276,6 +300,21 @@ for dir in "$BOOKS"/*/book; do
   # It is a file rather than an inline `-e '...'` because Git Bash's argv
   # translation splits the quoted Perl and latexmk reads `%O` and `%S` as
   # filenames.
+  #
+  # DO NOT DROP EITHER FLAG BELIEVING THE OTHER COVERS IT. They are orthogonal,
+  # and assuming otherwise is precisely the drift that left the CI job exposed.
+  # Measured on latexmk 4.88 against a marker `latexmkrc`:
+  #
+  #   invocation                                  latexmkrc    shell escape
+  #   ------------------------------------------  -----------  -------------------
+  #   latexmk -xelatex ...                        EXECUTED     restricted, enabled
+  #   latexmk -norc -xelatex ...                  not read     restricted, enabled
+  #   shell_escape=f latexmk -xelatex ...         EXECUTED     restricted, enabled
+  #   latexmk -norc -r "$RC" -xelatex ...         not read     DISABLED
+  #
+  # `-norc` stops the rc being READ; it does nothing to shell escape. `-r "$RC"`
+  # is what disables shell escape; it does nothing to stop the repo's own rc
+  # being read. Neither implies the other. Both, always.
   if ( cd "$dir" && latexmk -norc -r "$RC" -xelatex \
         -interaction=nonstopmode -halt-on-error book.tex ) \
       >"$log" 2>&1; then
@@ -283,7 +322,19 @@ for dir in "$BOOKS"/*/book; do
     COMPILED=$((COMPILED + 1))
     # Record the real, containment-checked directory, not the glob's `$dir`, so
     # a consumer resolving these paths lands where this script actually built.
-    [ -n "$MANIFEST" ] && printf '%s\n' "$real_dir" >> "$MANIFEST"
+    #
+    # A failed append is FATAL. This script runs `set -uo pipefail` without `-e`,
+    # so a silent failure here would leave the book out of the manifest while the
+    # summary still reported "every selected track was compiled and verified" —
+    # a downstream step would then publish fewer books than were built and call
+    # it success. That is precisely the vacuous-pass class this script exists to
+    # eliminate, so it exits rather than warns.
+    if [ -n "$MANIFEST" ]; then
+      printf '%s\n' "$real_dir" >> "$MANIFEST" || {
+        echo "FATAL: could not append $track to the manifest: $MANIFEST" >&2
+        exit 2
+      }
+    fi
   else
     printf 'FAIL %-12s\n' "$track"
     # The lines that say what actually broke, not the 400 that surround them.

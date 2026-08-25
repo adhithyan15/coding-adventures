@@ -1,4 +1,4 @@
-"""Tests for the `latexmkrc` repository lint.
+"""Tests for the book-tree hygiene lint.
 
 The lint has exactly three answers and they must never be confused with one
 another: the tree is clean, the tree holds a file latexmk would execute, or the
@@ -24,7 +24,7 @@ from unittest import mock
 SCRIPTS_DIR = Path(__file__).resolve().parents[1]
 sys.path.insert(0, str(SCRIPTS_DIR))
 
-lint = importlib.import_module("check_no_book_latexmkrc")
+lint = importlib.import_module("check_book_tree_hygiene")
 
 
 def run(*argv: str) -> tuple[int, str, str]:
@@ -58,7 +58,7 @@ class CleanTreeTests(unittest.TestCase):
         with BookTree() as tree:
             status, out, err = run("--book-root", str(tree.root))
         self.assertEqual(status, 0)
-        self.assertIn("no latexmkrc under", out)
+        self.assertIn("no latexmkrc and no symlinks under", out)
         self.assertEqual(err, "")
 
     def test_a_tex_file_that_merely_mentions_latexmkrc_is_not_a_hit(self) -> None:
@@ -79,7 +79,7 @@ class ForbiddenFileTests(unittest.TestCase):
             planted.write_text("system('id');\n", encoding="utf-8")
             status, _out, err = run("--book-root", str(tree.root))
         self.assertEqual(status, 1)
-        self.assertIn("FORBIDDEN", err)
+        self.assertIn("FORBIDDEN latexmkrc", err)
         self.assertIn("latexmkrc", err)
         # The message has to say what to do instead, or the next author just
         # re-adds the file somewhere the lint has not been taught about.
@@ -121,7 +121,116 @@ class ForbiddenFileTests(unittest.TestCase):
             (tree.root / "hindi" / "book" / ".latexmkrc").write_text("", encoding="utf-8")
             status, _out, err = run("--book-root", str(tree.root))
         self.assertEqual(status, 1)
-        self.assertEqual(err.count("FORBIDDEN"), 2)
+        self.assertEqual(err.count("FORBIDDEN latexmkrc"), 2)
+
+
+def can_symlink(directory: Path) -> bool:
+    """Probe rather than guess. Windows needs elevation or Developer Mode."""
+    probe = directory / "__symlink_probe__"
+    try:
+        probe.symlink_to(directory / "nowhere")
+    except (OSError, NotImplementedError):
+        return False
+    created = probe.is_symlink()
+    if created:
+        probe.unlink()
+    return created
+
+
+class SymlinkBanTests(unittest.TestCase):
+    """A symlink is banned outright, whatever it is called.
+
+    The guard this replaces checked two filenames. A XeLaTeX run writes at least
+    eight files into the book directory and `openout_any=p` follows a link for
+    every one of them, so `book.aux -> ~/.ssh/authorized_keys` was an arbitrary
+    write that a `book.pdf`-shaped check sails straight past.
+    """
+
+    def setUp(self) -> None:
+        self.tree = BookTree()
+        self.tree.__enter__()
+        if not can_symlink(self.tree.root):
+            self.tree.__exit__()
+            self.skipTest(
+                "this filesystem cannot create symlinks (Windows without "
+                "elevation or Developer Mode); exercised on the Linux CI runner"
+            )
+
+    def tearDown(self) -> None:
+        self.tree.__exit__()
+
+    def test_book_aux_symlink_is_caught(self) -> None:
+        # The exact case the filename-based guard missed.
+        link = self.tree.root / "spanish" / "book" / "book.aux"
+        link.symlink_to(self.tree.root / "elsewhere")
+        status, out, err = run("--book-root", str(self.tree.root))
+        self.assertEqual(status, 1)
+        self.assertIn("FORBIDDEN symlink", err)
+        self.assertIn("book.aux", err)
+        self.assertNotIn("no latexmkrc and no symlinks under", out)
+
+    def test_the_message_explains_why_openout_any_does_not_save_us(self) -> None:
+        link = self.tree.root / "spanish" / "book" / "book.fls"
+        link.symlink_to(self.tree.root / "elsewhere")
+        _status, _out, err = run("--book-root", str(self.tree.root))
+        self.assertIn("openout_any", err)
+
+    def test_every_output_name_is_covered_not_just_book_pdf(self) -> None:
+        names = [
+            "book.aux",
+            "book.log",
+            "book.toc",
+            "book.out",
+            "book.xdv",
+            "book.pdf",
+            "book.fdb_latexmk",
+            "book.fls",
+        ]
+        for name in names:
+            with self.subTest(name=name):
+                link = self.tree.root / "hindi" / "book" / name
+                link.symlink_to(self.tree.root / "elsewhere")
+                try:
+                    status, _out, err = run("--book-root", str(self.tree.root))
+                    self.assertEqual(status, 1, f"{name} was not caught")
+                    self.assertIn(name, err)
+                finally:
+                    link.unlink()
+
+    def test_a_symlinked_directory_is_caught_and_not_descended(self) -> None:
+        # With followlinks=False a linked directory is never walked into, so if
+        # it were not reported here it would be invisible entirely.
+        link = self.tree.root / "spanish" / "book" / "chapters"
+        link.symlink_to(self.tree.root / "hindi", target_is_directory=True)
+        status, _out, err = run("--book-root", str(self.tree.root))
+        self.assertEqual(status, 1)
+        self.assertIn("FORBIDDEN symlink", err)
+        self.assertIn("chapters", err)
+
+    def test_a_dangling_symlink_is_still_a_finding(self) -> None:
+        # The target can be created later, or exist on the machine that matters.
+        link = self.tree.root / "spanish" / "book" / "book.aux"
+        link.symlink_to(self.tree.root / "definitely-not-there")
+        status, _out, err = run("--book-root", str(self.tree.root))
+        self.assertEqual(status, 1)
+        self.assertIn("FORBIDDEN symlink", err)
+
+    def test_the_report_names_the_target(self) -> None:
+        link = self.tree.root / "spanish" / "book" / "book.aux"
+        link.symlink_to(self.tree.root / "the-target-file")
+        _status, _out, err = run("--book-root", str(self.tree.root))
+        self.assertIn("->", err)
+        self.assertIn("the-target-file", err)
+
+    def test_a_symlink_named_latexmkrc_is_reported_once(self) -> None:
+        link = self.tree.root / "spanish" / "book" / "latexmkrc"
+        link.symlink_to(self.tree.root / "payload.pl")
+        status, _out, err = run("--book-root", str(self.tree.root))
+        self.assertEqual(status, 1)
+        # Both bans match it. Reporting it twice would be noise, and the symlink
+        # framing is the more actionable of the two.
+        self.assertIn("FORBIDDEN symlink", err)
+        self.assertNotIn("FORBIDDEN latexmkrc", err)
 
 
 class CouldNotDetermineTests(unittest.TestCase):
@@ -134,7 +243,7 @@ class CouldNotDetermineTests(unittest.TestCase):
         self.assertIn("COULD NOT DETERMINE", err)
         self.assertIn("ENOENT", err)
         self.assertIn(str(errno.ENOENT), err)
-        self.assertNotIn("no latexmkrc under", out)
+        self.assertNotIn("no latexmkrc and no symlinks under", out)
 
     def test_root_that_is_a_file_is_unknown(self) -> None:
         with BookTree() as tree:
@@ -169,7 +278,7 @@ class CouldNotDetermineTests(unittest.TestCase):
         self.assertIn("EACCES", err)
         self.assertIn(str(errno.EACCES), err)
         self.assertIn("did not establish", err)
-        self.assertNotIn("no latexmkrc under", out)
+        self.assertNotIn("no latexmkrc and no symlinks under", out)
 
     def test_a_real_hit_outranks_an_unreadable_directory(self) -> None:
         # Both problems at once. Exit 1 (found it) is the more actionable of the
@@ -190,7 +299,7 @@ class CouldNotDetermineTests(unittest.TestCase):
                 status, _out, err = run("--book-root", str(tree.root))
 
         self.assertEqual(status, 1)
-        self.assertIn("FORBIDDEN", err)
+        self.assertIn("FORBIDDEN latexmkrc", err)
         self.assertIn("COULD NOT DETERMINE", err)
 
 
@@ -222,7 +331,7 @@ class RealRepositoryTests(unittest.TestCase):
             self.skipTest(f"book root not present at {book_root}")
         status, out, err = run("--book-root", str(book_root))
         self.assertEqual(status, 0, f"lint is not clean on this checkout:\n{err}")
-        self.assertIn("no latexmkrc under", out)
+        self.assertIn("no latexmkrc and no symlinks under", out)
 
 
 if __name__ == "__main__":  # pragma: no cover

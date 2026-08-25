@@ -1,8 +1,43 @@
 #!/usr/bin/env python3
-"""Refuse to let a ``latexmkrc`` live anywhere latexmk would ``eval`` it.
+"""Keep the book tree free of files that turn a book build into an exploit.
 
-Why this script exists
-----------------------
+Two bans, both absolute, both cheap because the tree already satisfies them:
+
+1. no ``latexmkrc`` / ``.latexmkrc`` — latexmk ``eval``s those as Perl;
+2. **no symlinks at all** — the book build writes through them.
+
+Why symlinks are banned outright rather than by name
+-----------------------------------------------------
+
+The first version of this guard lived in ``check-book-compile.sh`` and checked
+two filenames: ``figures/*.pdf`` and ``book.pdf``. That was the wrong shape, and
+review caught it. A XeLaTeX run writes at least eight files into the book
+directory::
+
+    book.aux  book.log  book.toc  book.out  book.bbl  book.idx  book.xdv
+    book.fdb_latexmk   book.fls        <- latexmk's own, written from Perl
+
+``openout_any=p`` does not save any of them. It vets the *name* — rejecting
+absolute paths, ``..`` and dotfiles — and then hands the name to
+``fopen(name, "w")``, which follows the symlink. ``book.fdb_latexmk`` and
+``book.fls`` never see a TeX-side check at all, because latexmk writes them
+itself with a plain Perl ``open``.
+
+So ``<track>/book/book.aux -> /home/runner/.ssh/authorized_keys`` is an
+arbitrary write as the build user, from a pull request, needing no shell escape
+and no ``latexmkrc``. Guarding ``book.pdf`` and stopping there would have left
+seven doors open next to the one that got locked.
+
+Enumerating the dangerous cases loses to banning the category. There are zero
+symlinks under the book tree today, and no reason for a curriculum book to
+contain one, so the ban costs nothing and cannot be outrun by the next file
+XeLaTeX decides to write.
+
+``.gitignore`` is not a boundary here, incidentally: ``book.aux`` and friends are
+ignored, but ``git add -f`` commits them anyway.
+
+Why the latexmkrc ban exists
+----------------------------
 
 ``latexmk`` reads ``latexmkrc`` and ``.latexmkrc`` **from its current working
 directory** and hands the contents to Perl's ``eval``. Not "parses as config" —
@@ -66,8 +101,8 @@ Exit status
 -----------
 
 ===  =========================================================================
-0    every directory under the book root was read, and none holds a latexmkrc
-1    at least one ``latexmkrc`` was found
+0    every directory under the book root was read, and it is clean
+1    at least one ``latexmkrc`` or symlink was found
 2    at least one directory could not be read, so the answer is unknown
 ===  =========================================================================
 
@@ -76,7 +111,7 @@ Usage
 
 ::
 
-    python3 code/scripts/check_no_book_latexmkrc.py \\
+    python3 code/scripts/check_book_tree_hygiene.py \\
         --book-root code/learning/human-languages
 """
 
@@ -108,8 +143,10 @@ def describe_oserror(error: OSError) -> str:
     return f"OSError {name} ({code}): {detail}"
 
 
-def scan(book_root: Path) -> tuple[list[Path], list[tuple[Path, OSError]]]:
-    """Walk ``book_root`` and return ``(hits, unreadable)``.
+def scan(
+    book_root: Path,
+) -> tuple[list[Path], list[Path], list[tuple[Path, OSError]]]:
+    """Walk ``book_root`` and return ``(latexmkrc_hits, symlinks, unreadable)``.
 
     ``os.walk`` swallows errors by default — it simply yields nothing for a
     directory it cannot open, which would turn "unreadable" into "empty" at the
@@ -117,27 +154,47 @@ def scan(book_root: Path) -> tuple[list[Path], list[tuple[Path, OSError]]]:
     keeps the two apart.
 
     ``followlinks`` is left at its default of ``False`` **on purpose** — do not
-    "fix" it. Following links here buys nothing and costs a symlink-loop hang in
-    a step that runs before everything else in the build. It is not a bypass: a
-    link whose target is inside ``book_root`` has that target walked on its own
-    account, and a link pointing outside is rejected at compile time by the
-    containment check in ``check-book-compile.sh``, which compares each book
-    directory's fully-resolved path against the book root before latexmk is
-    allowed anywhere near it.
+    "fix" it. Every symlink is a finding here, so there is nothing to gain by
+    descending one, and following links costs a hang on a symlink loop in a step
+    that runs before everything else in the build. Because links are reported
+    rather than traversed, a symlinked *directory* is caught as a finding
+    instead of being silently walked past.
     """
     hits: list[Path] = []
+    symlinks: list[Path] = []
     unreadable: list[tuple[Path, OSError]] = []
 
     def on_error(error: OSError) -> None:
         raw = getattr(error, "filename", None)
         unreadable.append((Path(raw) if raw else book_root, error))
 
-    for dirpath, _dirnames, filenames in os.walk(book_root, onerror=on_error):
-        for filename in filenames:
-            if filename.lower() in FORBIDDEN_NAMES:
-                hits.append(Path(dirpath) / filename)
+    for dirpath, dirnames, filenames in os.walk(book_root, onerror=on_error):
+        # Directories first: with ``followlinks=False`` a symlinked directory is
+        # listed here and never descended, so this is the only chance to see it.
+        for name in dirnames + filenames:
+            path = Path(dirpath) / name
+            if path.is_symlink():
+                symlinks.append(path)
+            elif name.lower() in FORBIDDEN_NAMES:
+                # `elif`: a symlink NAMED latexmkrc is reported once, as the
+                # symlink it is. Both bans catch it; only one message is useful.
+                hits.append(path)
 
-    return sorted(hits), unreadable
+    return sorted(hits), sorted(symlinks), unreadable
+
+
+def describe_symlink(path: Path) -> str:
+    """Name the link and where it points, without following it.
+
+    ``os.readlink`` reads the link's own contents; it does not resolve or
+    require the target to exist. A dangling link is still a finding — the target
+    can be created later, or exist on the machine that matters and not this one.
+    """
+    try:
+        target = os.readlink(path)
+    except OSError as error:  # pragma: no cover - defensive
+        return f"{path} -> <unreadable link: {describe_oserror(error)}>"
+    return f"{path} -> {target}"
 
 
 def main(argv: list[str] | None = None) -> int:
@@ -165,14 +222,17 @@ def main(argv: list[str] | None = None) -> int:
         print(f"  OSError ENOTDIR ({errno.ENOTDIR}): not a directory", file=sys.stderr)
         return 2
 
-    hits, unreadable = scan(resolved)
+    hits, symlinks, unreadable = scan(resolved)
 
     for path, error in unreadable:
         print(f"COULD NOT DETERMINE  {path}", file=sys.stderr)
         print(f"  {describe_oserror(error)}", file=sys.stderr)
 
     for hit in hits:
-        print(f"FORBIDDEN            {hit}", file=sys.stderr)
+        print(f"FORBIDDEN latexmkrc  {hit}", file=sys.stderr)
+
+    for link in symlinks:
+        print(f"FORBIDDEN symlink    {describe_symlink(link)}", file=sys.stderr)
 
     if hits:
         print(
@@ -183,6 +243,20 @@ def main(argv: list[str] | None = None) -> int:
             "script.",
             file=sys.stderr,
         )
+
+    if symlinks:
+        print(
+            "\nA book build writes at least eight files into its own directory "
+            "(book.aux,\nbook.log, book.toc, book.out, book.xdv, book.pdf, and "
+            "latexmk's own\nbook.fdb_latexmk and book.fls). Every one of those "
+            "writes follows a symlink,\nand `openout_any=p` does not stop it: "
+            "that setting vets the NAME, then opens\nit. So a symlink here is an "
+            "arbitrary write as the build user.\n\nNo book needs one. Replace the "
+            "link with the real file, or delete it.",
+            file=sys.stderr,
+        )
+
+    if hits or symlinks:
         return 1
 
     if unreadable:
@@ -194,7 +268,7 @@ def main(argv: list[str] | None = None) -> int:
         )
         return 2
 
-    print(f"no latexmkrc under {resolved}")
+    print(f"no latexmkrc and no symlinks under {resolved}")
     return 0
 
 

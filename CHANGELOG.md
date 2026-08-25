@@ -86,6 +86,34 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/).
 - `npm ci` for `human-language-data` now passes `--ignore-scripts`, matching its
   four sibling installs. It was the only one without it, so a dependency's
   `postinstall` ran on a pull-request runner.
+- **Banned symlinks outright under the book tree, replacing a filename-based
+  guard that covered one of eight cases.** A XeLaTeX run writes `book.aux`,
+  `book.log`, `book.toc`, `book.out`, `book.xdv`, `book.pdf` and latexmk's own
+  `book.fdb_latexmk` and `book.fls` into the book directory. `openout_any=p`
+  vets the *name* and then opens it, so it follows a symlink for every one of
+  them — and the last two never see a TeX-side check at all, being written from
+  Perl. `<track>/book/book.aux -> ~/.ssh/authorized_keys` was therefore an
+  arbitrary write as the build user, from a pull request, needing no shell
+  escape. Guarding `book.pdf` alone locked one door of eight. Enumerating the
+  dangerous cases loses to banning the category; there are zero symlinks under
+  the tree today, so the ban costs nothing. `.gitignore` is not a boundary here
+  — those names are ignored, but `git add -f` commits them anyway.
+- The lint is renamed `check_book_tree_hygiene.py` to match what it now
+  enforces, and reports a symlink with its target rather than only its path.
+- **The shell-escape verification step now iterates the manifest** rather than
+  re-finding logs with `find -path '*/book/book.log'` and comparing counts.
+  `-path` matches at any depth, so a committed decoy log could pad the count and
+  mask a real one that had dropped out; a count was standing in for an identity
+  check. Iterating the manifest removes the count comparison entirely.
+- A failed manifest append is now fatal. The script runs `set -uo pipefail`
+  without `-e`, so a silent failure would have left a book out of the manifest
+  while the summary still read "every selected track was compiled and verified"
+  — the vacuous-pass class this work exists to remove. `--manifest=` with an
+  empty value is now an error rather than a silent no-op.
+- Added `code/scripts/tests/test-check-book-compile-guards.sh`, which runs the
+  real script against a real symlink and a real planted `book.pdf`. It skips the
+  symlink case where the filesystem cannot create one and runs it on CI.
+  Confirmed non-vacuous by mutation: removing the `book.tex` guard turns it red.
 - Read-side TeX exposure (`openin_any`) and third-party action SHA pinning are
   tracked separately rather than guessed at here — see the linked issues. An
   unverified control is worse than an acknowledged gap.
