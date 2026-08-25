@@ -7621,6 +7621,68 @@ The final reviews of validated code revision
 CI is read-only with checkout credentials disabled, the Unicode and Lua source
 inputs remain hash-pinned, and no actionable security issue remains.
 
+Ready-for-review PR #12843 opened from clean published head
+`997ffd2bf389d66e2aeadd59089898f6696257a2`. All 33 reported checks reached
+terminal acceptable conclusions: 27 succeeded and six were expected skips,
+with no failure or pending job. GitHub reported the branch clean and
+mergeable, so the loop enabled squash auto-merge. GitHub merged it as
+`de59078b731c226e77e9475ce83669070d6be383` at
+`2026-08-25T19:04:20Z` without a manual merge command.
+
+### Post-#12843 refresh and Perl tracked-artifact selection
+
+The exact-main schema-3 collision report at
+`de59078b731c226e77e9475ce83669070d6be383` remains structurally unchanged:
+15 established lanes, 1,373 implementation identities, 4,566 package slots,
+175 high-consensus packages with 276 missing slots, 910 singletons with 12,740
+gaps, and 721 Rust singletons. Canonical collisions and unknown language
+buckets remain zero; OCaml remains correctly emerging at zero packages.
+
+Every commit since the Lua branch's final rebase is classified before the next
+selection. Tamil independent-u ductus remains curriculum and script data.
+HL22's deterministic Markdown partition/join helper and its filesystem-backed
+shard, unshard, and check CLI remain inside the existing TypeScript
+human-language-data domain and generator-authority owner; that owner now
+records plan-table target selection, enumeration, exclusive creation,
+monolith replacement, containment, and disk-derived diagnostics. ALGOL
+unary-plus selector writes, HTML caption recovery, and Mermaid XY axis theme
+colors extend their already registered neutral/parity or frontend owners. None
+adds or removes a package identity or BUILD/build-tool marker.
+
+Merged PR #12844 does expose one genuinely unowned portable behavior family:
+Rust alone now implements `i8x16.relaxed_swizzle` and recursive `(either A B)`
+expected-result grading across the WAST parser, conformance reporter, opcode,
+validator, and execution stack. Two newly registered owners separate a neutral
+relaxed-SIMD contract from an established-lane completion umbrella. The neutral
+owner covers all nineteen `0x100` through `0x113` instructions, canonical
+multi-byte LEB128 encoding, deterministic permitted implementations,
+recursive accepted-result sets, validator shapes, and diagnostics. Existing
+WAT/WAST, conformance-report, corpus, and host-authority owners retain syntax,
+directive execution, pinned provenance, fetching, and baseline writes. The
+state graph now has 505 unique owners and 768 complete acyclic edges.
+
+The dependency/leverage pass selects
+`build-tool-perl-tracked-artifact-validation-conformance` on branch
+`codex/build-tool-perl-tracked-artifact-validation-conformance`. All four
+declared prerequisites are merged. Perl is the widest remaining
+tracked-artifact lane at 251 packages, ahead of Haskell at 204 and Swift at
+161. It directly unlocks the Perl orphan-crate consumer and advances the
+tracked-artifact completion umbrella. Full emitted-Perl Unicode verification
+is recorded under the excluded generator-host owner and must reuse the
+hardened bounded process-tree runner without granting process authority to the
+pure validator.
+
+All eight live open PRs have zero exact overlap with the expected Perl
+validator, generated Unicode, generator/test, fixture README, license, package
+tests/docs, CI, state, and roadmap surfaces. The target branch and prior PR
+were absent locally and remotely before the fresh worktree and branch were
+created. Lua and Elixir orphan validation are ready but narrower. The broader
+extra-CI corpus and OCaml process-free substrate remain collision-unsafe while
+PRs #12149 and #12162 own required Go entry-point and validator surfaces, and
+the ALGOL neutral contract overlaps PR #12847. After selection the ledger has
+141 merged owners, 363 pending owners, exactly one in-progress owner, and no
+active parity PR.
+
 ## Autonomous Loop Protocol
 
 Only one parity PR should be active at a time.
