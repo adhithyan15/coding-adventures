@@ -1484,6 +1484,9 @@ fn type_check_function(ctx: &ModuleContext, func_idx: usize, func_type: &FuncTyp
                     | wasm_opcodes::SimdOpKind::Swizzle
                     | wasm_opcodes::SimdOpKind::MulF32x4
                     | wasm_opcodes::SimdOpKind::MinF32x4
+                    | wasm_opcodes::SimdOpKind::MaxF32x4
+                    | wasm_opcodes::SimdOpKind::PminF32x4
+                    | wasm_opcodes::SimdOpKind::PmaxF32x4
                     | wasm_opcodes::SimdOpKind::AddF32x4
                     | wasm_opcodes::SimdOpKind::SubF32x4
                     | wasm_opcodes::SimdOpKind::DivF32x4
@@ -1556,6 +1559,16 @@ fn type_check_function(ctx: &ModuleContext, func_idx: usize, func_type: &FuncTyp
                         // compute-in-a-wider-type-then-clamp saturation
                         // arithmetic is entirely a runtime concern,
                         // invisible to the type checker.
+                        // `f32x4.max`/`pmin`/`pmax` (SIMD widen PR34) join
+                        // too: `f32x4.max`'s NaN-canonicalizing/signed-zero
+                        // runtime subtlety (mirroring `f32x4.min` above) and
+                        // `pmin`/`pmax`'s DELIBERATELY SIMPLER `<`-based
+                        // conditional-select semantics (see wasm-opcodes'
+                        // `SimdOpKind::PminF32x4`/`PmaxF32x4` doc comments
+                        // for the exact first-operand-wins-on-NaN behavior)
+                        // are both entirely runtime concerns -- at the type
+                        // level all three are still just two V128 pops, one
+                        // V128 push, same as `f32x4.min`/`mul` beside them.
                         pop_expect(&mut stack, frame!(), ValueType::V128)?;
                         pop_expect(&mut stack, frame!(), ValueType::V128)?;
                         push_val(&mut stack, ValueType::V128);

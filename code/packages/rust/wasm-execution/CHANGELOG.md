@@ -2,7 +2,29 @@
 
 All notable changes to this package will be documented in this file.
 
-## [0.9.43] - 2026-08-24 (task #214-216 — SIMD widen PR33: i8x16/i16x8 add_sat/sub_sat)
+## [0.9.44] - 2026-08-24 (task #217-219 — SIMD widen PR34: f32x4.max/pmin/pmax)
+
+### Added
+
+- New dispatch arm for `MaxF32x4`: BINARY, same pop-order/lane shape as
+  `MinF32x4`, mirroring its exact NaN-canonicalization boilerplate --
+  if either lane is NaN the result lane is NaN; for a `-0.0`/`+0.0`
+  tie, `+0.0` wins (the mirror-image tie-break from `MinF32x4`'s
+  `-0.0`).
+- New dispatch arm for `PminF32x4`/`PmaxF32x4`: BINARY, a genuinely
+  DIFFERENT and SIMPLER code path than `MaxF32x4`/`MinF32x4` -- a plain
+  IEEE-754 `<`-based conditional select (`pmin(a, b) = b < a ? b : a`,
+  `pmax(a, b) = a < b ? b : a`), no NaN canonicalization. Since IEEE-754
+  `<` is always `false` when either operand is NaN, this returns the
+  FIRST operand (`a`) unchanged whenever either operand is NaN -- NOT a
+  canonicalized NaN the way `MaxF32x4`/`MinF32x4` would produce.
+- New tests: `f32x4_max_propagates_nan_in_either_lane_regardless_of_
+  operand_order`, `f32x4_max_signed_zero_tie_returns_positive_zero`,
+  `f32x4_max_normal_case_picks_the_larger_value`,
+  `f32x4_pmin_pmax_return_the_first_operand_unchanged_when_either_
+  operand_is_nan` (the highest-risk correctness case in this PR, tested
+  at both operand positions for both `pmin` and `pmax`),
+  `f32x4_pmin_pmax_normal_case_matches_plain_less_than_select`.
 
 ### Added
 

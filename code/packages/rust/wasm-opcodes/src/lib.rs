@@ -1806,6 +1806,46 @@ pub enum SimdOpKind {
     /// family -- explicit unit tests cover this direction at this lane
     /// width too.
     SubSatI16x8U,
+    /// `f32x4.max` (SIMD widen PR34) -- pop two `v128`s, take the
+    /// WASM-spec `fmax` of each of the 4 `f32` lane pairs. Same BINARY
+    /// shape as [`Self::MinF32x4`] above, and the same "NOT a plain
+    /// `f32::max()`" caveat applies in the mirror-image direction: WASM's
+    /// `fmax` is NOT IEEE `maxNum` -- if EITHER operand is NaN the result
+    /// is NaN (propagated), and for a `-0.0`/`+0.0` tie, `+0.0` wins
+    /// (the opposite tie-break from [`Self::MinF32x4`]'s `-0.0`). This is
+    /// the exact per-lane transplant of this crate's own scalar `f32.max`
+    /// opcode handler (0x97 in `wasm-execution`), which already
+    /// implements this correct NaN-propagating, signed-zero-aware `fmax`
+    /// for the non-SIMD MVP opcode.
+    MaxF32x4,
+    /// `f32x4.pmin` (SIMD widen PR34) -- pop two `v128`s (`a` then `b`,
+    /// in that push order so `a` is BELOW `b` on the stack, i.e. `a` was
+    /// pushed first), compute each of the 4 lanes as `b < a ? b : a`
+    /// using the IEEE-754 `<` operator DIRECTLY, push one `v128`. This is
+    /// a "pseudo-min", DELIBERATELY SIMPLER than [`Self::MinF32x4`]
+    /// above and NOT the same code path: no NaN canonicalization, no
+    /// signed-zero tie-break special case -- just a plain conditional
+    /// select. Since IEEE-754 `<` is always `false` when either operand
+    /// is NaN, `pmin` returns `a` (the FIRST operand) unchanged whenever
+    /// either operand is NaN, NOT a canonicalized NaN result the way
+    /// `MinF32x4` would produce -- this first-operand-wins-on-NaN
+    /// behavior is `pmin`'s whole reason for existing (a cheap select
+    /// hardware can implement as one branchless compare-and-select
+    /// instruction, unlike `min`'s NaN/signed-zero special-casing) and is
+    /// the classic point of confusion/bugs porting real WASM SIMD
+    /// implementations: copying `MinF32x4`'s NaN-canonicalization logic
+    /// here would be WRONG.
+    PminF32x4,
+    /// `f32x4.pmax` (SIMD widen PR34) -- same "pseudo-max" shape as
+    /// [`Self::PminF32x4`] above, symmetric formula: pop two `v128`s
+    /// (`a` then `b`), compute each of the 4 lanes as `a < b ? b : a`
+    /// using IEEE-754 `<` DIRECTLY, push one `v128`. Since `a < b` is
+    /// always `false` when either operand is NaN, `pmax` also returns
+    /// `a` (the FIRST operand) unchanged whenever either operand is NaN
+    /// -- same first-operand-wins-on-NaN discipline as `pmin`, NOT
+    /// [`Self::MaxF32x4`]'s NaN-canonicalizing behavior. Deliberately NOT
+    /// implemented by reusing `MaxF32x4`'s NaN logic.
+    PmaxF32x4,
 }
 
 /// One entry in the SIMD opcode table: everything a consumer needs to
@@ -1962,7 +2002,7 @@ pub struct SimdOpInfo {
 /// close the last remaining gap in `f32x4`'s core arithmetic family --
 /// `abs`/`mul`/`min` landed in PR19, leaving `neg`/`sqrt`/`add`/`sub`/
 /// `div`/`max`/`pmin`/`pmax` (this PR covers the first 5; `max`/`pmin`/
-/// `pmax` remain future work). Each sub-opcode byte fetched live from
+/// `pmax` landed later in SIMD widen PR34, task #217-219). Each sub-opcode byte fetched live from
 /// `BinarySIMD.md` and cross-checked against the already-implemented
 /// `f32x4.abs` (`0xE0`)/`f32x4.mul` (`0xE6`)/`f32x4.min` (`0xE8`)
 /// entries: `neg` (`0xE1`) sits immediately past `abs`, `sqrt` (`0xE3`)
@@ -2323,6 +2363,30 @@ pub static SIMD_OPS: &[SimdOpInfo] = &[
     SimdOpInfo { name: "i16x8.add_sat_u", sub_opcode: 0x90, kind: SimdOpKind::AddSatI16x8U },
     SimdOpInfo { name: "i16x8.sub_sat_s", sub_opcode: 0x92, kind: SimdOpKind::SubSatI16x8S },
     SimdOpInfo { name: "i16x8.sub_sat_u", sub_opcode: 0x93, kind: SimdOpKind::SubSatI16x8U },
+    // SIMD widen PR34 (task #217-219): f32x4.max (0xE9), f32x4.pmin
+    // (0xEA), f32x4.pmax (0xEB) -- the last 3 opcodes of the f32x4
+    // arithmetic family, sitting immediately past the already-implemented
+    // `f32x4.min`'s `0xE8` (PR19) with no gap. Each sub-opcode byte
+    // fetched live from `BinarySIMD.md` and cross-checked against
+    // `f32x4.min`'s existing `0xE8` `SIMD_OPS` entry: `0xE9`/`0xEA`/`0xEB`
+    // run contiguously past it, confirmed free of collision with every
+    // existing `SIMD_OPS` entry (the next occupied slot above this run is
+    // `i32x4.trunc_sat_f32x4_s` at `0xF8`, well clear). `f32x4.max`
+    // mirrors `f32x4.min`'s WASM-spec `fmax` NaN-propagating,
+    // signed-zero-aware semantics exactly (see `SimdOpKind::MaxF32x4`'s
+    // own doc comment); `f32x4.pmin`/`f32x4.pmax` are a DIFFERENT,
+    // deliberately SIMPLER "pseudo-min"/"pseudo-max" shape -- a plain
+    // IEEE-754 `<`-based conditional select with no NaN canonicalization,
+    // NOT the same code path as `min`/`max` (see `SimdOpKind::PminF32x4`/
+    // `PmaxF32x4`'s own doc comments for the exact first-operand-wins-on-
+    // NaN behavior this implies). This PR also vendors `simd_f32x4.wast`
+    // and `simd_f32x4_pmin_pmax.wast` -- the best directive-per-opcode
+    // ratio in this campaign so far -- see
+    // `code/packages/rust/wasm-conformance/tests/fixtures/
+    // fetch_testsuite.py`.
+    SimdOpInfo { name: "f32x4.max", sub_opcode: 0xE9, kind: SimdOpKind::MaxF32x4 },
+    SimdOpInfo { name: "f32x4.pmin", sub_opcode: 0xEA, kind: SimdOpKind::PminF32x4 },
+    SimdOpInfo { name: "f32x4.pmax", sub_opcode: 0xEB, kind: SimdOpKind::PmaxF32x4 },
 ];
 
 /// Look up a SIMD opcode by its LEB128-decoded sub-opcode value (the
@@ -2741,8 +2805,8 @@ mod tests {
     // ── SIMD (0xFD prefix, v128 first slice) ─────────────────────────────────
 
     #[test]
-    fn simd_ops_table_has_the_expected_185_entries_and_no_duplicates() {
-        assert_eq!(SIMD_OPS.len(), 185);
+    fn simd_ops_table_has_the_expected_188_entries_and_no_duplicates() {
+        assert_eq!(SIMD_OPS.len(), 188);
 
         let mut seen_sub_opcodes = std::collections::HashSet::new();
         let mut seen_names = std::collections::HashSet::new();
@@ -3580,5 +3644,25 @@ mod tests {
         assert_eq!(get_simd_op(0x71).map(|o| o.name), Some("i8x16.sub"));
         assert_eq!(get_simd_op(0x8E).map(|o| o.name), Some("i16x8.add"));
         assert_eq!(get_simd_op(0x91).map(|o| o.name), Some("i16x8.sub"));
+    }
+
+    #[test]
+    fn simd_f32x4_max_pmin_pmax_have_the_real_verified_sub_opcode_values() {
+        // SIMD widen PR34 (task #217-219): f32x4.max (0xE9), f32x4.pmin
+        // (0xEA), f32x4.pmax (0xEB) -- fetched live from BinarySIMD.md and
+        // cross-checked against the already-implemented f32x4.min (0xE8)
+        // entry: this run sits immediately past it with no gap.
+        for (name, sub_opcode, kind) in [
+            ("f32x4.max", 0xE9, SimdOpKind::MaxF32x4),
+            ("f32x4.pmin", 0xEA, SimdOpKind::PminF32x4),
+            ("f32x4.pmax", 0xEB, SimdOpKind::PmaxF32x4),
+        ] {
+            let op = get_simd_op(sub_opcode).unwrap_or_else(|| panic!("{sub_opcode:#04x} should be {name}"));
+            assert_eq!(op.name, name);
+            assert_eq!(op.kind, kind);
+            assert_eq!(get_simd_op_by_name(name).map(|o| o.sub_opcode), Some(sub_opcode));
+        }
+        // f32x4.min (0xE8) immediately precedes this run with no overlap.
+        assert_eq!(get_simd_op(0xE8).map(|o| o.name), Some("f32x4.min"));
     }
 }

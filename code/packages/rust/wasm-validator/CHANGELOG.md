@@ -2,7 +2,23 @@
 
 All notable changes to this package will be documented in this file.
 
-## [0.2.45] - 2026-08-24 (task #214-216 — SIMD widen PR33: i8x16/i16x8 add_sat/sub_sat type rules)
+## [0.2.46] - 2026-08-24 (task #217-219 — SIMD widen PR34: f32x4.max/pmin/pmax type rules)
+
+### Added
+
+- `SimdOpKind::MaxF32x4`/`PminF32x4`/`PmaxF32x4` join the existing
+  BINARY `v128,v128->v128` arm alongside `MinF32x4`/`MulF32x4` -- same
+  pop-two-push-one `V128` shape. `max`'s NaN-canonicalizing/signed-zero
+  runtime subtlety (mirroring `min`) and `pmin`/`pmax`'s deliberately
+  simpler `<`-based conditional-select semantics are both entirely
+  runtime concerns, invisible to the type checker.
+- New tests: `valid_f32x4_max_pmin_pmax_family`,
+  `invalid_f32x4_max_given_an_i32_operand_instead_of_v128`,
+  `invalid_f32x4_pmin_given_an_i32_operand_instead_of_v128`,
+  `invalid_f32x4_pmax_given_an_i32_operand_instead_of_v128`,
+  `invalid_f32x4_pmax_given_only_one_operand_instead_of_two`,
+  `invalid_f32x4_pmin_given_no_operand_at_all`,
+  `invalid_f32x4_max_given_an_i32_result_type_instead_of_v128`.
 
 ### Added
 
