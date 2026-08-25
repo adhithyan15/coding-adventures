@@ -31,7 +31,7 @@ This is one of several build tool implementations in the monorepo (Python, Ruby,
 | `cache.ts` | JSON cache file for fallback change detection |
 | `executor.ts` | Parallel build execution respecting dependency order |
 | `reporter.ts` | Human-readable build report formatting |
-| `validator.ts` | Build-contract checks and pure tracked-artifact snapshot validation |
+| `validator.ts` | Build-contract checks plus pure orphan-crate and tracked-artifact snapshot validation |
 | `tracked-artifact-unicode17.ts` | Generated, source-pinned Unicode 17 normalization and casing substrate |
 | `index.ts` | CLI entry point tying everything together |
 
@@ -63,6 +63,23 @@ Git-diff package matching uses the same repository-relative forward-slash
 paths on every platform. Its integration tests create native temporary Git
 repositories and invoke Git with direct argument vectors, so the package suite
 runs without a POSIX shell on Windows.
+
+## Process-free orphan-crate validation
+
+`validateOrphanCrateSnapshot()` consumes a closed, caller-supplied snapshot of
+Cargo-manifest directories, recognized BUILD records, and exemption-ledger
+entries. It derives direct and ancestor BUILD coverage, ignores only exact
+generated-artifact components, reports empty or unlisted crates, rejects
+malformed exemptions with a fixed redacted ledger path, detects stale
+exemptions, and returns the active `PENDING` count.
+
+The adapter uses the shared fixed BUILD filename order, Unicode-scalar path
+limits and ordering, Python-compatible reason whitespace and diagnostic-detail
+ordering, and the source-pinned Unicode 17 NFC plus full-casefold tables for
+duplicate exemption identities. It does not enumerate the checkout, inspect
+the filesystem, consult Git, launch a process, read the environment, or access
+the network. All four language-neutral orphan-crate fixtures enter through this
+TypeScript-native API.
 
 ## Process-free tracked-artifact validation
 
