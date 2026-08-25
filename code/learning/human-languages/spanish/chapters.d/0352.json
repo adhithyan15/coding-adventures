@@ -1,0 +1,21 @@
+{
+  "chapter": 352,
+  "title": "The Whole Set, And How Much Of It",
+  "label": "ch:el-conjunto-y-el-resto",
+  "canDo": "I can say el conjunto, entero, la mayoria, el resto and escaso, and say why a whole thing is one nobody has touched.",
+  "spineNodes": [
+    "SPINE-COUNT-ONE-TO-FIVE"
+  ],
+  "payoff": {
+    "lesson": "ES-C352-escaso",
+    "kind": "production",
+    "summary": "Complete ES-C352-escaso: name a set, say it is whole, name most of it, name what is left, and say there is not enough.",
+    "assesses": [
+      "ES-LEX-C352-COUNT-11",
+      "ES-LEX-C352-COUNT-12",
+      "ES-LEX-C352-COUNT-13",
+      "ES-LEX-C352-COUNT-14",
+      "ES-LEX-C352-COUNT-15"
+    ]
+  }
+}

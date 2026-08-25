@@ -4,6 +4,31 @@ All notable changes to the Go build tool will be documented in this file.
 
 ## [Unreleased]
 
+### Added
+
+- **A package can now declare an extra CI toolchain it needs beyond the
+  one its own path-bucket language infers.** `inferLanguage` buckets a
+  package's `Language` purely by the directory segment right after
+  `packages/`/`programs/`, so a Rust crate whose own tests shell out to
+  a `javac`/`java` process (e.g. `java-to-semantic-ir`, JV02's planned
+  first consumer) had no way to flip CI's `needs_java` flag — it would
+  either silently skip its own execution-proof tests or run them against
+  whatever JDK version the runner image happens to ship, not the pinned
+  version `actions/setup-java` guarantees. A package now opts in with a
+  bare BUILD-file comment line, recognized by
+  `discovery.parseExtraToolchains` and consulted by
+  `computeLanguagesNeeded` alongside (not instead of) the inferred
+  language:
+
+  ```
+  # needs-toolchain: java
+  ```
+
+  Multiple lines are supported for a package needing more than one extra
+  toolchain. The directive is inert to the shell that executes
+  BUILD/BUILD_windows (`#`-prefixed lines are already dropped before
+  execution). New `Package.ExtraToolchains []string` field.
+
 ### Fixed
 
 - **`clippyStepFor` scanned only the first BUILD command, silently disabling

@@ -1,0 +1,21 @@
+{
+  "chapter": 348,
+  "title": "A Moment, And Its Two Edges",
+  "label": "ch:el-principio-y-el-fin",
+  "canDo": "I can name el principio, el fin, el instante, la demora and el turno, and say why an ending began as the boundary stone of a field.",
+  "spineNodes": [
+    "SPINE-TIME-OF-DAY"
+  ],
+  "payoff": {
+    "lesson": "ES-C348-turno",
+    "kind": "production",
+    "summary": "Complete ES-C348-turno: mark where a stretch of time opens and closes, name an instant inside it, report a delay, and claim your turn.",
+    "assesses": [
+      "ES-LEX-C348-CLOCK-11",
+      "ES-LEX-C348-CLOCK-12",
+      "ES-LEX-C348-CLOCK-13",
+      "ES-LEX-C348-CLOCK-14",
+      "ES-LEX-C348-CLOCK-15"
+    ]
+  }
+}

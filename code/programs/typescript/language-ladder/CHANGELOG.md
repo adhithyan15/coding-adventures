@@ -1,5 +1,10 @@
 # Changelog
 
+## Unreleased — source-verified Persian re
+
+- Teach Persian **ر** with its cited one-run descent and leftward lower curve.
+- Keep the displayed Persian source separate from Arabic and Urdu provenance.
+
 ## Unreleased — source-verified Arabic alif-maqsura ending
 
 - Teach **ى** as a word-final long-aa ending with isolated and final forms.

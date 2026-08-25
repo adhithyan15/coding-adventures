@@ -1,0 +1,146 @@
+% ============================================================================
+% abo-genotype-phenotype — for each of three named ABO genotype combinations,
+% the blood-type PHENOTYPE it produces, a fresh WebFetch-sourced OpenStax
+% table (adj-facts-stdlib, BIOLOGY). Grounds the "heredity" Major Gap
+% ADJ-STDLIB-COVERAGE.md §5.1/§5.2 names for K-8/9-12 science — the THIRD
+% instance of that gap (after `biology/dna-base-pairs.adj` and
+% `biology/heredity-term.adj`), and the first to ground it with a REAL,
+% textbook-solid genetics example rather than either a molecular fact
+% (base-pairing) or curated abstract vocabulary.
+% ============================================================================
+% `biology/heredity-term.adj` already defines the abstract vocabulary this
+% table puts to work — "dominant" ("one allele is expressed and the effect
+% of the other allele is masked"), "genotype" ("the type of variant present
+% at a given location"), "phenotype" ("an individual's observable traits") —
+% but that table's own header explicitly documents checking twice for a
+% composable second table and finding the search dry: no other shipped table
+% has `gene`, `allele`, `dominant`, `recessive`, `genotype`, or `phenotype`
+% as a ROW VALUE anywhere in the stdlib (confirmed again this session via a
+% fresh full-tree grep). So this file does not compose `heredity-term.adj`
+% directly — it grounds a genuinely NEW, concrete worked example of the same
+% underlying concepts `heredity-term.adj` only defines in the abstract, one
+% that a K-12 genetics curriculum reaches for constantly: human ABO blood
+% type is the textbook case of MULTIPLE ALLELES and CODOMINANCE, not the
+% simple one-dominant-one-recessive picture MS-LS3 vocabulary starts from.
+%
+% CANDIDATE SOURCES TRIED, in order (repeating `heredity-term.adj`'s own
+% "vet before shipping" discipline, since this domain has a documented
+% myth-trap precedent):
+%   1. The NCBI Bookshelf "The ABO blood group" chapter (already cited by
+%      `biology/blood-groups.adj`) states the GENERAL facts plainly — three
+%      alleles (A, B, O), "the A and B antigens were inherited codominantly
+%      over O", and "six possible genotypes and four possible blood types
+%      (phenotypes)" — but never enumerates, in continuous prose, WHICH of
+%      the six genotypes maps to which of the four phenotypes; that mapping
+%      appears only in a non-text figure (Figure 8.14-style diagrams appear
+%      in secondary sources reproducing this same chapter). Byte-for-byte
+%      curl-verified: no substring "AA", "AO", "BO", or "OO" (as genotype
+%      labels) appears anywhere in the chapter's text. REJECTED as the
+%      source for the genotype->phenotype mapping specifically (though it
+%      remains `blood-groups.adj`'s own correct citation for the antigen
+%      table).
+%   2. OpenStax "Concepts of Biology", section 8.3 "Extensions of the Laws
+%      of Inheritance" — WebFetched and curl-verified byte-for-byte against
+%      the raw server-rendered page text (not an AI paraphrase). Its
+%      Codominance subsection states, in ONE continuous passage, EXACTLY
+%      three of the six possible genotype->phenotype pairings in plain
+%      prose — the two homozygotes and the one heterozygote a self-cross
+%      between them produces — which is what the table below grounds. The
+%      other three genotypes (a heterozygote crossed with the null allele,
+%      and the null/null homozygote) are true too, but this specific passage
+%      never states them in continuous prose (only in an accompanying
+%      figure this fetch could not extract as text), so this table honestly
+%      STOPS at the three it can cite, rather than completing the set from
+%      memory. OpenStax is CC-BY-licensed, peer-reviewed, and openly
+%      accessible — a `trust consensus` source, the same tier this stdlib
+%      already gives CK-12 (`scientific-model-type.adj`) and Mathematics
+%      LibreTexts (`geometry/angle-pairs.adj`), one rung below a primary
+%      government reference.
+%
+% A full-tree grep for `\bcodominan`, `\bmultiple allele`, and the literal
+% row atoms below, run before scoping, found zero prior hits — this is the
+% FIRST genuine ABO-genetics (as opposed to ABO-immunohematology) content
+% anywhere in this stdlib.
+%
+% Recall is a binding query:
+%
+%     ? abo_genotype_phenotype(ia_ia, $BloodType)
+%       % a
+%
+% This is a native `table` (ADJ-TABLES RS-5): each `row` lowers to a ground
+% relation `abo_genotype_phenotype(genotype, blood_type)` carrying the
+% citation, so the lookup above is the ordinary SLD binding query — the
+% engine returns the blood type WITH its source, on the CPU, with zero model
+% calls, and abstains on any genotype this curated slice does not include
+% (see below). The query also runs BACKWARD — bind a blood type and recall
+% which genotype the source's own passage says produces it:
+%
+%     ? abo_genotype_phenotype($G, ab)
+%       % ia_ib
+%
+% The three genotype/phenotype pairs this passage states, as a truth table:
+%
+%     genotype   the source's OWN notation   blood_type (phenotype)   atom
+%     ---------  --------------------------  -----------------------  -----
+%     ia_ia      "Homozygotes (IAIA ...)"     A                        a
+%     ib_ib      "... and IBIB) express ..."  B                        b
+%     ia_ib      "heterozygotes (IAIB) ..."   AB                       ab
+%
+% (`IA`/`IB` render as capital I with a superscript A or B in the source's
+% own typography — flattened here to plain adjacent letters, matching the
+% source's own HTML with no inserted spacing between the two allele symbols
+% of a genotype.)
+%
+% WHY this is a genuine "heredity" fact, not a coincidental relabeling of
+% anything already shipped: `biology/blood-groups.adj` tables WHICH antigen
+% a given PHENOTYPE (a/b/ab/o) carries — a pure immunohematology fact with no
+% genetics content at all (its own header never mentions an allele, a gene,
+% or a genotype). This table answers a different, upstream question: WHICH
+% phenotype does a given GENOTYPE (a specific pair of inherited alleles)
+% produce — the actual heredity mechanism `heredity-term.adj`'s "genotype"
+% and "phenotype" entries define only in the abstract. Because this table's
+% `blood_type` column deliberately reuses the SAME atoms (`a`, `b`, `ab`)
+% `blood-groups.adj`'s `blood_type` column already uses, a later rule could
+% chain the two — genotype -> phenotype -> antigen — into a single derived
+% fact a clinical or genetics reasoner could use directly; this file does
+% not ship that rule (kept as a separate, smaller slice per this loop's
+% "keep each slice small and citable" discipline), but the shared vocabulary
+% is deliberate, not accidental.
+%
+% HONEST ABSTENTION — the crux of why this table is narrow rather than
+% overreaching: the cited passage states only three of the six genotypes
+% NCBI's chapter confirms exist (`ia_i`, `ib_i`, and `i_i` — a heterozygote
+% with the null allele, and the null/null homozygote — are real, textbook
+% genotypes, and their phenotypes follow logically from the same passage's
+% own dominance statement elsewhere in the chapter, "the IA and IB alleles
+% are codominant with each other and are both dominant over the i allele" —
+% but that sentence never itself states a phenotype LABEL the way the
+% Codominance passage's three pairs do, so deriving `ia_i -> a` would mean
+% inferring rather than reading a stated fact). A query for any of these
+% three, or for a typo, honestly ABSTAINS rather than inventing a blood
+% type — the engine never completes the set from outside knowledge.
+%
+% Provenance: WebFetch-verified directly against the raw OpenStax
+% server-rendered page text before writing this file, confirming the quoted
+% span byte-for-byte, including its exact three-genotype scope (no fourth,
+% fifth, or sixth genotype mentioned in continuous prose anywhere on the
+% page). `locator` is the live OpenStax URL. `trust consensus` — OpenStax
+% ("Concepts of Biology", Rice University, CC-BY 4.0) is a peer-reviewed,
+% openly licensed educational reference, not a primary government source,
+% hence one rung below `heredity-term.adj`'s and `blood-groups.adj`'s own
+% `authoritative` NHGRI/NCBI tier. Nothing here is asserted from memory.
+% (See ../README.md; feedback_nothing_human_authored,
+% feedback_adj_only_shipped_artifacts, feedback_no_byte_arithmetic_for_llm.)
+% ============================================================================
+
+table abo_genotype_phenotype {
+    columns genotype, blood_type
+
+    row (ia_ia, a)
+    row (ib_ib, b)
+    row (ia_ib, ab)
+
+    source "Homozygotes (IAIA and IBIB) express either the A or the B phenotype, and heterozygotes (IAIB) express both phenotypes equally. The IAIB individual has blood type AB."
+    locator "https://openstax.org/books/concepts-biology/pages/8-3-extensions-of-the-laws-of-inheritance"
+    trust consensus
+}

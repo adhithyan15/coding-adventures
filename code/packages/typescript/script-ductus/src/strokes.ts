@@ -423,6 +423,10 @@ export const ductusKey = (script: string, glyph: string): string => `${script}:$
 // its shallow dip, then lifts once before placing the separate dot below.
 // After the intervening Persian-added پ row, ت repeats the same bowl, lifts to
 // place the left dot above, then lifts again to place the right dot.
+// The Persian د row folds through its shoulder into the leftward baseline in
+// one run. The following ر row likewise keeps the pen down: descend from the
+// upper tip through the short stroke, then sweep left through the lower curve.
+// Its source remains Persian-scoped rather than inheriting Arabic or Urdu ر.
 // The later س row stays pen-down: it shapes all three teeth right-to-left and
 // flows directly into the final bowl as one continuous Naskh stroke.
 // Near the end of the same demonstration, ل descends its tall upright and
@@ -10914,6 +10918,44 @@ export const DUCTUS: Record<string, LetterDuctus> = {
       },
     ],
     source: persianAlphabetSource("د"),
+  },
+  [ductusKey("perso-arabic", "ر")]: {
+    script: "perso-arabic",
+    glyph: "ر",
+    strokes: [
+      {
+        segments: [
+          {
+            label: "begin at the upper tip and descend through the short stroke",
+            path: [
+              { x: 250, y: 320 },
+              { x: 248, y: 280 },
+              { x: 255, y: 235 },
+              { x: 270, y: 190 },
+              { x: 287, y: 145 },
+              { x: 300, y: 95 },
+              { x: 304, y: 48 },
+            ],
+          },
+          {
+            label: "without lifting, sweep left through the lower curve",
+            path: [
+              { x: 304, y: 48 },
+              { x: 298, y: 8 },
+              { x: 284, y: -30 },
+              { x: 260, y: -68 },
+              { x: 226, y: -103 },
+              { x: 185, y: -130 },
+              { x: 140, y: -146 },
+              { x: 95, y: -151 },
+              { x: 52, y: -147 },
+              { x: 10, y: -136 },
+            ],
+          },
+        ],
+      },
+    ],
+    source: persianAlphabetSource("ر"),
   },
   "س": {
     script: "perso-arabic",

@@ -827,6 +827,16 @@ func computeLanguagesNeeded(
 	for _, pkg := range packages {
 		if affectedSet[pkg.Name] {
 			needed[toolchainForPackageLanguage(pkg.Language)] = true
+			// A package's own bucket language (above) doesn't always cover
+			// every toolchain its tests actually shell out to — e.g. a Rust
+			// crate whose own execution-proof tests need `javac`/`java` on
+			// PATH. Such a package opts in via a "# needs-toolchain: X"
+			// BUILD-file comment (see discovery.parseExtraToolchains);
+			// consult that alongside the inferred language, not instead of
+			// it.
+			for _, toolchain := range pkg.ExtraToolchains {
+				needed[toolchain] = true
+			}
 		}
 	}
 

@@ -95,6 +95,73 @@ func TestComputeLanguagesNeededIncludesSafeCIWorkflowToolchains(t *testing.T) {
 	}
 }
 
+// TestComputeLanguagesNeededConsultsExtraToolchains verifies that a
+// package's own bucket Language ("rust") and its declared
+// ExtraToolchains (e.g. "java", from a "# needs-toolchain: java"
+// BUILD-file comment — see discovery.parseExtraToolchains) are BOTH
+// consulted, not one instead of the other. This is the fix for the gap
+// where a Rust-bucketed crate (e.g. java-to-semantic-ir under
+// packages/rust/**) whose own tests shell out to `javac`/`java` could
+// not flip needs_java, since inferLanguage buckets purely by the
+// packages/programs path segment.
+func TestComputeLanguagesNeededConsultsExtraToolchains(t *testing.T) {
+	packages := []discovery.Package{
+		{
+			Name:            "rust/java-to-semantic-ir",
+			Language:        "rust",
+			ExtraToolchains: []string{"java"},
+		},
+	}
+
+	needed := computeLanguagesNeeded(
+		packages,
+		map[string]bool{"rust/java-to-semantic-ir": true},
+		false,
+		map[string]bool{},
+	)
+
+	for _, toolchain := range []string{"rust", "java"} {
+		if !needed[toolchain] {
+			t.Fatalf("expected %s to be enabled, got %v", toolchain, needed)
+		}
+	}
+
+	for _, toolchain := range []string{"go", "python", "kotlin"} {
+		if needed[toolchain] {
+			t.Fatalf("did not expect unrelated %s toolchain: %v", toolchain, needed)
+		}
+	}
+}
+
+// TestComputeLanguagesNeededIgnoresExtraToolchainsOnUnaffectedPackages
+// verifies a package's ExtraToolchains are only consulted when that
+// package is actually in the affected set — declaring "# needs-toolchain:
+// java" must not unconditionally force a JDK setup on every CI run.
+func TestComputeLanguagesNeededIgnoresExtraToolchainsOnUnaffectedPackages(t *testing.T) {
+	packages := []discovery.Package{
+		{
+			Name:            "rust/java-to-semantic-ir",
+			Language:        "rust",
+			ExtraToolchains: []string{"java"},
+		},
+		{Name: "rust/other-crate", Language: "rust"},
+	}
+
+	needed := computeLanguagesNeeded(
+		packages,
+		map[string]bool{"rust/other-crate": true},
+		false,
+		map[string]bool{},
+	)
+
+	if needed["java"] {
+		t.Fatalf("did not expect java toolchain when java-to-semantic-ir is not affected: %v", needed)
+	}
+	if !needed["rust"] {
+		t.Fatalf("expected rust to be enabled for the affected other-crate package: %v", needed)
+	}
+}
+
 // TestCollectAffectedLanguages verifies language detection from affected sets.
 func TestCollectAffectedLanguages(t *testing.T) {
 	packages := []discovery.Package{

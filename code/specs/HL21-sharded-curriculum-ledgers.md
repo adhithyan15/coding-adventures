@@ -591,3 +591,14 @@ separate script, never wired into `vitest run`.
 6. Wire `--check` into CI and `verify-human-languages.sh`.
 7. Land it when the file is quiet. Reshaping a file underneath an open branch
    breaks that branch.
+8. **Decide the monolith's disposition explicitly, and check §4.3 first.** If
+   `language-ladder` globs the ledger, the monolith stays as a generated
+   artifact and the conflict is downgraded rather than removed. `ShardPlan`
+   makes this a required field for exactly that reason.
+9. **If the committed file does not round-trip byte-exactly, stop and report
+   it.** Do not reformat it into agreement with the serialiser as part of the
+   migration. Four files are in this state today and are named in §4.1a and
+   §5.2/§5.3: three `chapters.json`, `marwadi/curriculum.json`, and
+   `core/book-generation.json`. Each needs a separate, deliberate
+   normalization commit whose whole content is the reformatting, so that the
+   diff can be read as "no data changed" rather than buried inside a migration.

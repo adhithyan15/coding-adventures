@@ -6,9 +6,18 @@ description = "VLT05 — pluggable authentication for the Vault stack. Authentic
 
 [dependencies]
 coding_adventures_argon2id = { path = "../argon2id" }
+coding_adventures_canonical_cbor = { path = "../canonical-cbor" }
 coding_adventures_hkdf = { path = "../hkdf" }
 coding_adventures_hmac = { path = "../hmac" }
 coding_adventures_csprng = { path = "../csprng" }
 coding_adventures_zeroize = { path = "../zeroize" }
 coding_adventures_ct_compare = { path = "../ct-compare" }
 coding_adventures_sha256 = { path = "../sha256" }
+# ECDSA P-256 assertion-signature verification for `WebAuthnPrfAuthenticator`
+# (VLT-PM51 slice 3). Not a new crate in this workspace's build in any
+# meaningful sense: `vault-webauthn-ctap2-hid` already pulls `ring` v0.17.14
+# in transitively (`ctap-hid-fido2`'s own "ring" feature, used for its CTAP2
+# PIN-protocol ECDH), so this only promotes an already-resolved, already-
+# audited dependency to a direct one -- see VLT-PM51 §19 for the survey that
+# re-confirmed this over adding `p256` (RustCrypto) as a brand-new crate.
+ring = "0.17"

@@ -5296,12 +5296,15 @@ impl HtmlParser {
             self.close_fostered_formatting_before_table_context(&name);
             self.pop_fostered_content_before_table_context(&name);
             if self.fragment_context_ignores_table_start_tag(&name) {
-                self.diagnostics.push(ParserDiagnostic::new(
-                    "unexpected-table-start-tag-in-fragment",
-                    format!(
-                        "start tag `<{name}>` was ignored by the seeded table fragment context"
-                    ),
-                ));
+                self.diagnostics.push(
+                    ParserDiagnostic::new(
+                        "unexpected-table-start-tag-in-fragment",
+                        format!(
+                            "start tag `<{name}>` was ignored by the seeded table fragment context"
+                        ),
+                    )
+                    .at_emission(self.current_token_emission_position),
+                );
                 return;
             }
             if self.has_open_element("select")
@@ -27430,6 +27433,18 @@ mod tests {
         .at_emission(Some(end_tag_position(source, name)))
     }
 
+    fn table_start_tag_in_fragment_recovery(
+        source: &str,
+        name: &str,
+        occurrence: usize,
+    ) -> ParserDiagnostic {
+        ParserDiagnostic::new(
+            "unexpected-table-start-tag-in-fragment",
+            format!("start tag `<{name}>` was ignored by the seeded table fragment context"),
+        )
+        .at_emission(Some(start_tag_position_at(source, name, occurrence)))
+    }
+
     fn start_tag_in_template_column_group_recovery(
         source: &str,
         name: &str,
@@ -41975,15 +41990,9 @@ mod tests {
         ] {
             let output = parse_html_fragment_for_context_with_diagnostics(source, context).unwrap();
             assert!(
-                output.parser_diagnostics.iter().any(|diagnostic| {
-                    diagnostic
-                        == &ParserDiagnostic::new(
-                            "unexpected-table-start-tag-in-fragment",
-                            format!(
-                                "start tag `<{name}>` was ignored by the seeded table fragment context"
-                            ),
-                        )
-                }),
+                output
+                    .parser_diagnostics
+                    .contains(&table_start_tag_in_fragment_recovery(source, name, 0)),
                 "source {source:?} in context {context:?}"
             );
         }
@@ -41993,6 +42002,45 @@ mod tests {
             .parser_diagnostics
             .iter()
             .all(|diagnostic| diagnostic.code != "unexpected-table-start-tag-in-fragment"));
+
+        let repeated_source = "<!--é-->\r\n<table></table><table>";
+        let repeated =
+            parse_html_fragment_for_context_with_diagnostics(repeated_source, "table").unwrap();
+        assert_eq!(
+            repeated
+                .parser_diagnostics
+                .iter()
+                .filter(|diagnostic| diagnostic.code == "unexpected-table-start-tag-in-fragment")
+                .collect::<Vec<_>>(),
+            vec![
+                &table_start_tag_in_fragment_recovery(repeated_source, "table", 0),
+                &table_start_tag_in_fragment_recovery(repeated_source, "table", 1),
+            ]
+        );
+
+        let incomplete =
+            parse_html_fragment_for_context_with_diagnostics("<table", "table").unwrap();
+        assert!(incomplete
+            .parser_diagnostics
+            .iter()
+            .all(|diagnostic| diagnostic.code != "unexpected-table-start-tag-in-fragment"));
+
+        let mut unpositioned = HtmlParser::with_fragment_context_options(
+            HtmlParseOptions::default(),
+            "table",
+        );
+        unpositioned.process_token(Token::StartTag {
+            name: "table".to_string(),
+            attributes: Vec::new(),
+            self_closing: false,
+        });
+        unpositioned.process_token(Token::Eof);
+        let diagnostic = unpositioned
+            .diagnostics()
+            .iter()
+            .find(|diagnostic| diagnostic.code == "unexpected-table-start-tag-in-fragment")
+            .unwrap();
+        assert_eq!(diagnostic.position, None);
     }
 
     #[test]

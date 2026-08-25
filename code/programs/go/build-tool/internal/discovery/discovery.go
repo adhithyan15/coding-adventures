@@ -57,14 +57,19 @@ import (
 // For Starlark BUILD files, the build tool evaluates them to extract targets
 // with explicit srcs and deps, populating DeclaredSrcs and DeclaredDeps.
 type Package struct {
-	Name          string   // Qualified name, e.g. "python/logic-gates"
-	Path          string   // Absolute path to the package directory
-	BuildCommands []string // Lines from the BUILD file (commands to execute)
-	Language      string   // Canonical package/program bucket, or "unknown"
-	BuildContent  string   // Raw BUILD file content (used for Starlark detection)
-	IsStarlark    bool     // Whether this BUILD file is Starlark (vs shell)
-	DeclaredSrcs  []string // Explicit source files from Starlark srcs field
-	DeclaredDeps  []string // Explicit deps from Starlark deps field
+	Name            string   // Qualified name, e.g. "python/logic-gates"
+	Path            string   // Absolute path to the package directory
+	BuildCommands   []string // Lines from the BUILD file (commands to execute)
+	Language        string   // Canonical package/program bucket, or "unknown"
+	BuildContent    string   // Raw BUILD file content (used for Starlark detection)
+	IsStarlark      bool     // Whether this BUILD file is Starlark (vs shell)
+	DeclaredSrcs    []string // Explicit source files from Starlark srcs field
+	DeclaredDeps    []string // Explicit deps from Starlark deps field
+	ExtraToolchains []string // CI toolchains this package needs beyond its own
+	// inferred Language (see parseExtraToolchains) — e.g. a Rust crate
+	// under packages/rust/** whose own tests shell out to a `java`/`javac`
+	// process needs the Java CI toolchain even though its own bucket
+	// language is "rust".
 }
 
 // DuplicatePackageIdentityError reports two or more package directories that
@@ -141,6 +146,46 @@ func readLines(filepath string) []string {
 		}
 	}
 	return lines
+}
+
+// extraToolchainDirectivePrefix is the BUILD-file comment convention a
+// package uses to declare it needs a CI toolchain beyond the one its own
+// path-bucket Language infers. A shell BUILD file has no declarative
+// section (see readLines above — every "#"-prefixed line is dropped before
+// execution), so this is a bare comment line, inert to the shell that runs
+// BUILD/BUILD_windows and cheap for this discovery pass to scan alongside
+// the Starlark-detection read it already does.
+//
+// Example: a Rust crate under packages/rust/java-to-semantic-ir whose own
+// tests shell out to `javac`/`java` adds this line to its BUILD file so CI
+// sets up a JDK even though the crate's own bucket language is "rust":
+//
+//	# needs-toolchain: java
+const extraToolchainDirectivePrefix = "# needs-toolchain:"
+
+// parseExtraToolchains scans raw BUILD file content for
+// "# needs-toolchain: <name>" comment lines and returns the declared
+// toolchain names, in file order, deduplicated. A name is not validated
+// against the canonical toolchain list here (that list — allToolchains —
+// lives in the main package, which this package cannot import without a
+// cycle); an unrecognized name is harmless, it only ever adds a CI
+// setup-step flag nothing consults.
+func parseExtraToolchains(rawContent string) []string {
+	var toolchains []string
+	seen := make(map[string]bool)
+	for _, line := range strings.Split(rawContent, "\n") {
+		trimmed := strings.TrimSpace(line)
+		if !strings.HasPrefix(trimmed, extraToolchainDirectivePrefix) {
+			continue
+		}
+		name := strings.TrimSpace(strings.TrimPrefix(trimmed, extraToolchainDirectivePrefix))
+		if name == "" || seen[name] {
+			continue
+		}
+		seen[name] = true
+		toolchains = append(toolchains, name)
+	}
+	return toolchains
 }
 
 // packageBoundary returns the final packages/programs boundary in path. The
@@ -310,11 +355,12 @@ func walkDirs(directory string, packages *[]Package) {
 		}
 
 		*packages = append(*packages, Package{
-			Name:          name,
-			Path:          directory,
-			BuildCommands: commands,
-			Language:      language,
-			BuildContent:  rawContent,
+			Name:            name,
+			Path:            directory,
+			BuildCommands:   commands,
+			Language:        language,
+			BuildContent:    rawContent,
+			ExtraToolchains: parseExtraToolchains(rawContent),
 		})
 		return
 	}
