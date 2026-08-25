@@ -240,8 +240,11 @@ below. The full-alphabet source then demonstrates Persian-added **پ** at
 in left, right, then lower-center order. This added corpus row does not change
 HL-C09's fixed 228 prose entries. The next starter entry, **ت**, repeats the
 right-to-left bowl at 00:22–00:27, lifts to place the left dot above, then lifts
-again for the right dot. All three authored paths are checked against their
-vendored isolated Noto Naskh outlines. The **د** row at 01:04–01:06 folds from
+  again for the right dot. The **خ** demonstration at 00:49–00:54 completes its
+  short head and deep bowl before lifting once for the dot above; this row stays
+  Persian-scoped rather than borrowing Arabic or Urdu provenance. All four
+  authored paths are checked against their vendored isolated Noto Naskh outlines.
+  The **د** row at 01:04–01:06 folds from
 its upper tip through the shoulder and left along the baseline without lifting.
 The following **ر** row at 01:10–01:12 likewise keeps one pen-down run: descend
 through the short stroke, then sweep left through the lower curve. Its source
@@ -275,7 +278,11 @@ queue: **و**, not ه, follows ن. Its 02:43–02:45 demonstration loops the sma
   the dot below, lift once, then keep the pointed hooked head, descent, and bowl
   in one continuous run. The chapter's alternate flat head is purely aesthetic,
   so the learner path preserves the pointed form without inventing a different
-  lift count. Urdu **ر** follows from the next source-backed chapter as one
+  lift count. Urdu **خ** follows from Chapter 7: its independent handwriting
+  animation completes the pointed head and deep bowl in one body-first run, then
+  lifts once for the dot above. The prose identifies it as the **ج** shape with
+  its dot moved above, while the script-scoped row remains independent of Arabic
+  and Persian. Urdu **ر** follows from the next source-backed chapter as one
   uninterrupted downward line that curves left. Its zero-lift learner path
   preserves the chapter's separate final-form motion and its Naskh/Nastaliq
   distinction without conflating them with the independent form. Urdu **و**

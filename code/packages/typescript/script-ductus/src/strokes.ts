@@ -483,6 +483,73 @@ export const ductusKey = (script: string, glyph: string): string => `${script}:$
 // paired runs, then movement 7 restarts for the low leftward tail.
 // ---------------------------------------------------------------------------
 
+const independentKhehStrokes = (): Stroke[] => [
+  {
+    segments: [
+      {
+        label: "draw the short upper head from left to right",
+        path: [
+          { x: 110, y: 315 },
+          { x: 150, y: 335 },
+          { x: 210, y: 340 },
+          { x: 280, y: 325 },
+          { x: 350, y: 305 },
+          { x: 420, y: 285 },
+          { x: 490, y: 270 },
+          { x: 540, y: 270 },
+        ],
+      },
+      {
+        label: "continue down and around the deep bowl",
+        path: [
+          { x: 540, y: 270 },
+          { x: 490, y: 270 },
+          { x: 420, y: 285 },
+          { x: 350, y: 305 },
+          { x: 280, y: 325 },
+          { x: 210, y: 340 },
+          { x: 150, y: 335 },
+          { x: 110, y: 315 },
+          { x: 100, y: 290 },
+          { x: 130, y: 305 },
+          { x: 170, y: 310 },
+          { x: 220, y: 305 },
+          { x: 270, y: 285 },
+          { x: 320, y: 265 },
+          { x: 300, y: 245 },
+          { x: 260, y: 220 },
+          { x: 216, y: 190 },
+          { x: 180, y: 130 },
+          { x: 145, y: 65 },
+          { x: 118, y: -42 },
+          { x: 130, y: -110 },
+          { x: 180, y: -175 },
+          { x: 225, y: -200 },
+          { x: 300, y: -245 },
+          { x: 400, y: -245 },
+          { x: 500, y: -230 },
+          { x: 575, y: -210 },
+          { x: 608, y: -195 },
+        ],
+      },
+    ],
+  },
+  {
+    segments: [
+      {
+        label: "lift once, then place the dot above",
+        path: [
+          { x: 340, y: 460 },
+          { x: 285, y: 510 },
+          { x: 338, y: 565 },
+          { x: 390, y: 515 },
+          { x: 340, y: 460 },
+        ],
+      },
+    ],
+  },
+];
+
 export const DUCTUS: Record<string, LetterDuctus> = {
   // Hanzi Writer Data's ordered medians draw 人 with the left-falling stroke
   // first, then restart at the central junction for the right-falling stroke.
@@ -9058,6 +9125,18 @@ export const DUCTUS: Record<string, LetterDuctus> = {
       },
     ],
     source: arabicAlphabetSource("خ"),
+  },
+  [ductusKey("perso-arabic", "خ")]: {
+    script: "perso-arabic",
+    glyph: "خ",
+    strokes: independentKhehStrokes(),
+    source: persianAlphabetSource("خ"),
+  },
+  [ductusKey("urdu-nastaliq", "خ")]: {
+    script: "urdu-nastaliq",
+    glyph: "خ",
+    strokes: independentKhehStrokes(),
+    source: urduAlphabetSource("خ"),
   },
   [ductusKey("arabic", "د")]: {
     script: "arabic",
