@@ -11,14 +11,9 @@
     "selection_rule": "host-security, credential, native-runtime, and external-approval work may inform classification but is never selected by this parity loop",
     "excluded_delivery_classes": ["onvif", "host-security-hardening", "native-runtime", "external-approval"]
   },
-  "active_pr": {
-    "number": 12683,
-    "url": "https://github.com/adhithyan15/coding-adventures/pull/12683",
-    "branch": "codex/build-tool-ruby-dist-newstyle-discovery-exclusion",
-    "status": "open"
-  },
+  "active_pr": null,
   "last_inventory": {
-    "revision": "59b34f88ca0e1b4882c966374bb4bd53a2b9defa",
+    "revision": "671d62d2c1c536da2778c03347e030fae77f6c33",
     "schema_version": 3,
     "established_languages": 15,
     "implementation_identities": 1372,
@@ -133,10 +128,14 @@
     {
       "id": "build-tool-dist-newstyle-discovery-exclusion-remaining-engines",
       "title": "Make Ruby build-tool discovery honor the dist-newstyle exclusion",
-      "status": "pr-open",
+      "status": "merged",
       "depends_on": ["build-tool-ruby-language-identity-registry"],
       "branch": "codex/build-tool-ruby-dist-newstyle-discovery-exclusion",
       "pr_number": 12683,
+      "merged_head_revision": "1bd8e55ec2126c9da5664efc7052544d7b2f17c8",
+      "merge_revision": "8bda602ea0546ae6c078faa1f833f835d43fb233",
+      "merged_at": "2026-08-25T05:38:14Z",
+      "merge_notes": "All 30 reported checks reached terminal acceptable conclusions: 24 successes, five expected skips, and one neutral CodeQL aggregate, with no failures or pending work. GitHub reported the branch clean and mergeable; the loop enabled squash auto-merge, and GitHub merged PR #12683 without a manual merge command.",
       "selection_revision": "42ae3e50152fc5373451cd9eee257a789f279782",
       "implementation_revision": "e87160006f18473b27662021298862a9202f7bd4",
       "selection_notes": "Selected after PR #12678 completed 32 terminal acceptable checks and merged through squash auto-merge as 834b6a01530906f64f218d41edf233e5537a7c8d, followed by a package-neutral HTML-parser commit on current origin/main 42ae3e50152fc5373451cd9eee257a789f279782. The mandatory schema-3 inventory remains 15 established lanes, 1,372 implementation identities, 4,565 slots, 175 high-consensus packages with 276 gaps, 909 singletons with 12,726 gaps, 720 Rust singletons, zero collisions, and zero unknown buckets; OCaml remains emerging at zero packages. The 488-owner, 745-edge graph is complete and acyclic, the Vault HID native-authority and TypeScript nanoid findings have explicit owners, and no new eligible unowned gap exists. This bounded Ruby-only repair is the highest-leverage collision-safe implementation item: it closes the reproduced shared-fixture failure and unlocks two direct Ruby consumers and four unfinished descendants. Six live open PRs have zero exact overlap on the Ruby build-tool, state, and roadmap surfaces, while OCaml remains collision-unsafe against PRs #12149 and #12162.",
@@ -147,6 +146,34 @@
       "final_revision": "f07299a1c88655544c99aabbbddb5a309e241e24",
       "publication_notes": "Opened ready-for-review PR #12683 from clean validated head f07299a1c88655544c99aabbbddb5a309e241e24 after a normal first push. Immediately before publication, remote main, origin/main, and the branch merge base all equaled 59b34f88ca0e1b4882c966374bb4bd53a2b9defa; the six changed paths had zero exact overlap with the live open-PR set, and independent security and final reviews reported no blocker. Auto-merge remains disabled until every required check is terminal and acceptable and GitHub reports no merge conflict.",
       "notes": "Discovered during the CLI corpus downstream audit. The canonical Go build-tool suite accepts the shared language-registry fixture, while Ruby's 307-run suite retains exactly one Windows failure because it discovers code/packages/haskell/dist-newstyle as a package instead of applying the fixture's build-artifact exclusion; Ruby otherwise reports 632 assertions and one expected skip. Rust originally shared this owner, but its exact-component exclusion was closed as the minimal CI repair in PR #12633 after the first Rust tracked-artifact check run reproduced the failure on Ubuntu and macOS. TypeScript and Swift remain decomposed under separate owners, so this stable owner is now Ruby-only."
+    },
+    {
+      "id": "build-tool-ruby-generated-directory-hashing-exclusion",
+      "title": "Exclude generated directories from Ruby build-tool source hashing",
+      "status": "pending",
+      "depends_on": ["build-tool-dist-newstyle-discovery-exclusion-remaining-engines"],
+      "branch": null,
+      "pr_number": null,
+      "notes": "Discovered in the post-#12683 source audit. Build-tool conformance requires every hasher to exclude generated, dependency, VCS, cache, and temporary directories, but Ruby's extension and declared-src collectors recursively visit every descendant file without pruning any directory component. Add a bounded exact-component skip registry with focused hashing fixtures, preserve source directories with similar names or different case, and keep the repair separate from discovery and process-free validation consumers."
+    },
+    {
+      "id": "build-tool-extra-ci-toolchain-declaration-corpus",
+      "title": "Define language-neutral extra CI toolchain declaration fixtures",
+      "status": "pending",
+      "depends_on": ["build-tool-pure-domain-corpus"],
+      "branch": null,
+      "pr_number": null,
+      "notes": "Discovered when the C# orphan consumer rebased over merged PR #12687. Go now recognizes shell BUILD comments of the form '# needs-toolchain: NAME' and adds those names only for affected packages, but the behavior has no language-neutral toolchain-detection fixture or cross-engine contract. Define a closed process-free snapshot for exact directive syntax, canonical toolchain names, empty and unknown values, stable deduplication, multiple declarations, platform BUILD precedence, affected-only selection, forced-full behavior, and deterministic results; then make the canonical Go oracle consume it without consulting a checkout, process, environment, or network."
+    },
+    {
+      "id": "build-tool-extra-ci-toolchain-declaration-remaining-engines",
+      "title": "Implement extra CI toolchain declarations in every supported build-tool engine",
+      "status": "pending",
+      "depends_on": ["build-tool-extra-ci-toolchain-declaration-corpus"],
+      "branch": null,
+      "pr_number": null,
+      "selection_blocked": true,
+      "notes": "Completion umbrella for the C#, F#, Elixir, Haskell, Lua, Perl, Python, Ruby, Rust, Swift, and TypeScript engines after the neutral declaration corpus closes. Decompose the umbrella into independently reviewable engine children before implementation, and route later Dart, JVM, and promoted OCaml engines through the same inert toolchain-detection contract rather than copying Go-only BUILD parsing."
     },
     {
       "id": "build-tool-typescript-dist-newstyle-discovery-exclusion",
@@ -1212,8 +1239,9 @@
         "build-tool-tracked-artifact-validation-corpus",
         "build-tool-tracked-artifact-unicode-cross-runtime-corpus-hardening",
         "build-tool-tracked-artifact-trailing-empty-segment-cross-runtime-hardening",
-        "build-tool-tracked-artifact-unicode-version-contract",
-        "build-tool-execution-semantics-corpus"
+    "build-tool-tracked-artifact-unicode-version-contract",
+    "build-tool-extra-ci-toolchain-declaration-corpus",
+    "build-tool-execution-semantics-corpus"
       ],
       "branch": null,
       "pr_number": null,
@@ -4785,11 +4813,16 @@
     {
       "id": "build-tool-csharp-orphan-crate-validation-conformance",
       "title": "Make the C# build tool consume orphan-crate validation",
-      "status": "pending",
+      "status": "in-progress",
       "depends_on": ["build-tool-orphan-crate-validation-corpus"],
-      "branch": null,
+      "branch": "codex/build-tool-csharp-orphan-crate-validation-conformance",
       "pr_number": null,
-      "notes": "Consume the closed process-free orphan-crate snapshot and diagnostics in the C# engine without adding filesystem enumeration or process authority."
+      "selection_revision": "8bda602ea0546ae6c078faa1f833f835d43fb233",
+      "selection_notes": "Selected after PR #12683 completed 30 terminal acceptable checks and merged through squash auto-merge. The exact-main schema-3 inventory remains 15 established lanes, 1,372 implementation identities, 4,565 slots, 175 high-consensus packages with 276 gaps, 909 singleton packages with 12,726 gaps, 720 Rust singletons, zero collisions, and zero unknown buckets; OCaml remains emerging at zero packages. The refreshed graph registers the newly discovered Ruby generated-directory hashing owner before selection. This bounded process-free C# consumer has the highest immediate build-tool leverage because it directly unlocks the separately reviewed F# facade plus the orphan completion umbrella. Live open PRs and the target remote branch have zero exact overlap on its C# engine, state, or roadmap surfaces; the higher-descendant OCaml process-free core remains collision-unsafe against live Go validator and entry-point owners.",
+      "rebase_revision": "e7bf788e7fee0bb160978f83cd5149746b8bba0a",
+      "rebase_notes": "Rebased without conflict before the first push over package-neutral ADJ PR #12684, Go build-tool PR #12687, Persian ductus PR #12688, vault-auth PR #12685, and Rust html-parser PR #12689. PR #12687 adds a Go-only extra CI toolchain declaration, so the refresh registers a neutral corpus owner plus a selection-blocked remaining-engines umbrella before publication. None of these main advances overlaps the six selected paths or changes package identities or slots.",
+      "notes": "Consume the closed process-free orphan-crate snapshot and diagnostics in the C# engine without adding filesystem enumeration or process authority.",
+      "validation_notes": "The C# engine now exposes one process-free orphan-crate snapshot validator and exactly consumes all four language-neutral fixtures. It covers direct and ancestor BUILD ownership, closer empty BUILD precedence, the fixed platform filename order, exact case-sensitive artifact exclusions, invalid exemption precedence, stale exemptions, pending-debt counting, hostile-path redaction, deterministic Unicode-scalar ordering, Unicode 17 NFC/full-fold collision checks, and Python-compatible reason blankness including U+001C through U+001F. The focused fixture/adversarial family passes 13 tests and the complete canonical C# BUILD front passes all 43 tests twice; Release coverage is 94.6% line, 42.89% branch, and 76.54% method, and the warnings-as-errors build and publish succeed. The F# downstream facade passes all seven tests. The neutral corpus validates 111 cases and 269 files; 146 conformance, parity, capability, Haskell, and OCaml-lock tests plus 928 subtests pass with two expected Windows skips. The current Go build tool passes all packages, vet, and trimpath compilation; its real forced C# plan evaluates 45 Starlark BUILD files, discovers 200 packages, preserves five reviewed orphan exemptions, and reports 200 of 200 WOULD-BUILD. NuGet reports no vulnerable direct or transitive dependency. The schema-3 inventory remains 15 established lanes, 1,372 identities, 4,565 slots, zero collisions, zero unknown buckets, and OCaml at zero packages. Strict JSON, the complete acyclic 491-owner/749-edge graph, diff hygiene, dependency scope, and production authority scans pass. Source-wide dotnet format reproduces only the exact pre-existing whitespace baseline outside changed lines. Independent implementation, fixture/inventory, state/roadmap, and security reviews found and verified closure of Python whitespace parity, closest-empty filename ranking, the Go-oracle corpus dependency, generated-artifact cleanup, and live-main rebase requirements, then found no remaining publication blocker."
     },
     {
       "id": "build-tool-fsharp-orphan-crate-validation-conformance",
