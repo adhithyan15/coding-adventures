@@ -628,6 +628,21 @@ TESTSUITE_FILES = [
     # once), unlike this file, which stays the plain "pop i32, push v128"
     # type signature PR40/PR41 already established.
     "simd_load_extend.wast",
+    # SIMD PR43: simd_align.wast -- alignment-hint coverage (align=1/2/
+    # 4/8/16, valid/invalid/malformed) for `v128.load`/`v128.store` plus
+    # the entire load_splat/load_zero/load_extend family this campaign
+    # already landed (PR15/PR39-42). Adds ZERO new opcodes -- every
+    # instruction this file exercises (`v128.load`, `v128.store`,
+    # `v128.load{8,16,32,64}_splat`, `v128.load{8x8,16x4,32x2}_{s,u}`) was
+    # already implemented before this PR. The remaining piece of the
+    # load-extend/splat/zero/lane family epic is the
+    # load{8,16,32,64}_lane/store{8,16,32,64}_lane shape (a v128 operand
+    # PLUS a lane-index immediate PLUS a memarg all at once) -- this file
+    # needs none of that, so it slots in now as the simplest possible
+    # next bite, same "vendor a corpus file, zero new opcodes" shape as
+    # earlier zero-opcode PRs in this campaign. See the NOTICE file for
+    # the real vendored/pass counts.
+    "simd_align.wast",
 ]
 
 # Reference-types/threads-proposal files whose UPSTREAM path lives under
