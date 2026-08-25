@@ -151,22 +151,6 @@ describe("real curriculum", () => {
       /left-to-right.*top-to-bottom.*varies by school.*continuous order.*Noto Sans Tamil/i,
     );
 
-    const tamilTha = scripts.tamil!.letters.find((letter) => letter.glyph === "த")!;
-    expect(tamilTha.strokeOrder).toEqual([
-      "start at the top left and descend the short left upright",
-      "without lifting, turn around the compact left loop and return to the central crossing",
-      "without lifting, climb the central upright and carry the top bar to the right",
-      "without lifting, retrace to the central crossing, sweep around the broad right bowl, and finish down the low left tail — and only now lift",
-    ]);
-    expect(tamilTha.penLifts).toBe(0);
-    expect(tamilTha.strokeOrderSource?.url).toBe(
-      "https://sites.la.utexas.edu/tamilscript/category/3-moduals/module-01",
-    );
-    expect(tamilTha.strokeOrderSource?.citation).toMatch(/Tamil Script Learners Manual.*Frame 1.*த/i);
-    expect(tamilTha.strokeOrderSource?.variation).toMatch(
-      /left-to-right.*top-to-bottom.*varies by school.*continuous order.*Noto Sans Tamil/i,
-    );
-
     const tamilTta = scripts.tamil!.letters.find((letter) => letter.glyph === "ட")!;
     expect(tamilTta.strokeOrder).toEqual([
       "start at the top left and draw the left upright straight down",
@@ -179,6 +163,22 @@ describe("real curriculum", () => {
     expect(tamilTta.strokeOrderSource?.citation).toMatch(/Appendix I.*Frame 1.*ட.*p\. 190/i);
     expect(tamilTta.strokeOrderSource?.variation).toMatch(
       /left descent.*rightward foot.*two joined movements.*Module 1 identifies.*top-to-bottom.*left-to-right.*varies by school.*continuous order.*Noto Sans Tamil/i,
+    );
+
+    const tamilTha = scripts.tamil!.letters.find((letter) => letter.glyph === "த")!;
+    expect(tamilTha.strokeOrder).toEqual([
+      "start at the middle left, climb the short upright, and carry the top bar to the right — then lift once",
+      "restart at the central crossing, carry the short upper bar right, and curve down around the broad right bowl — then lift a second time",
+      "restart at the middle left, turn around the compact left loop, and curl back to the central crossing — then lift a third time",
+      "restart at the lower right and sweep the low tail left",
+    ]);
+    expect(tamilTha.penLifts).toBe(3);
+    expect(tamilTha.strokeOrderSource?.url).toBe(
+      "https://sites.la.utexas.edu/tamilscript/files/2009/08/hw_lettersinstructions.pdf",
+    );
+    expect(tamilTha.strokeOrderSource?.citation).toMatch(/Appendix I.*Frame 3.*த.*p\. 192/i);
+    expect(tamilTha.strokeOrderSource?.variation).toMatch(
+      /Module 3 identifies.*dental stop.*final Frame 3 row.*four separate pen-down runs.*1–2.*upper frame.*3–4.*right bowl.*5–6.*left loop.*movement 7.*leftward tail.*varies by school.*four-run order.*Noto Sans Tamil/i,
     );
 
     const tamilRa = scripts.tamil!.letters.find((letter) => letter.glyph === "ர")!;

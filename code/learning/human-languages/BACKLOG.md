@@ -5,14 +5,19 @@ Findings from the pre-A1 tranche work were recorded in commit messages and PR
 bodies, which are durable and searchable, but a reader opening this file found
 nothing. The entries below are the ones that change how the work is done.
 
-## HL-C09W — audit and repair Tamil த before extending the queue
+## HL-C09W — Tamil த provenance repair restores the four-run order
 
 The source cross-check for ட exposed that the existing dental **த** record
 points to Frame 1, but UT Austin's Module 1 explicitly teaches retroflex ட,
 not dental த. Appendix I places த in the final Frame 3 row continued onto page
-192, with seven numbered directions whose pen-run grouping must be re-audited
-before the citation, path, or lift count is changed. This is provenance
-correctness debt and therefore outranks the numerically next uncovered glyph.
+192. Its seven numbered directions resolve into four visible pen-down runs:
+movements 1–2 for the upper frame, 3–4 for the broad right bowl, 5–6 for the
+compact left loop, and separate movement 7 for the low leftward tail.
+
+The repaired record now cites the correct frame and page, reverses the first
+upright to the source's upward direction, and replaces the unsupported
+continuous path with three verified lifts. The measured uncovered-glyph queue
+is unchanged, so Tamil vowel sign **ே** remains next at 29.
 
 ## HL-C09V — Tamil ட closes the Frame 1 gap
 
@@ -89,11 +94,10 @@ The new inventory and ductus entry remove all **47 affected realizations** for
 ## HL-C09P — Tamil த keeps the letter-ledger queue moving
 
 After Tamil pa landed, the measured queue put Tamil dental **த** first at **50
-affected realizations**. The UT Austin *Tamil Script Learners Manual* presents
-த beside ப in Frame 1, states the usual left-to-right and top-to-bottom hand
-movement, and gives the letter directly for copying. The continuous fitted path
-keeps that attested movement while expanding it across the bundled Noto Sans
-Tamil outline: short left stem, compact loop, central cap, broad bowl, and tail.
+affected realizations**. This original tranche correctly closed the letter gap,
+but incorrectly attributed த to Frame 1 and modeled it as one continuous path.
+HL-C09W supersedes that provenance claim with Appendix I's actual final Frame 3
+row and its four-run, seven-movement order.
 
 The new inventory and ductus entry remove all **50 affected realizations** for
 **த**. The reranked queue keeps Tamil first with **ர** at 47.
