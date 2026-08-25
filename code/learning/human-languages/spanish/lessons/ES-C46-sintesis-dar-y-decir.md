@@ -2,7 +2,7 @@
 schema_version: 2
 id: ES-C46-sintesis-dar-y-decir
 spine_node: SPINE-DEFINITE-REFERENCE
-sequence: 1235
+sequence: 1236
 chapter: 97
 type: practice-mix
 headword: (synthesis)

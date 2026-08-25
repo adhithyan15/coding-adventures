@@ -4,7 +4,7 @@
   "chapter": 256,
   "title": "Review --- Five Sets, Finished",
   "drivablePrefix": 1,
-  "sourceHash": "fnv1a64:305d9c3812c48942",
+  "sourceHash": "fnv1a64:ab4cd15764779848",
   "lessons": [
     {
       "id": "ES-C65-repaso-parejas",
@@ -19,7 +19,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:1ea9c3ba5e7fdd0b",
+      "sourceHash": "fnv1a64:6d6f71b65ff55137",
       "notice": null,
       "blocks": [
         {

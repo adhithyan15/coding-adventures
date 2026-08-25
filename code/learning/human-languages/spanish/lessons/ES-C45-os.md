@@ -2,7 +2,7 @@
 schema_version: 2
 id: ES-C45-os
 spine_node: SPINE-DEFINITE-REFERENCE
-sequence: 1228
+sequence: 1229
 chapter: 90
 type: word
 headword: os

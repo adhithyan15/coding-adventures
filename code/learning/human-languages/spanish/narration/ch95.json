@@ -4,11 +4,11 @@
   "chapter": 95,
   "title": "Which One Is the Verb Asking For?",
   "drivablePrefix": 1,
-  "sourceHash": "fnv1a64:14d848634f2755a8",
+  "sourceHash": "fnv1a64:a34249600243fd8b",
   "lessons": [
     {
       "id": "ES-C46-cual-pide",
-      "sequence": 1233,
+      "sequence": 1234,
       "title": "Which one is the verb asking for?",
       "headword": "lo tengo / le hablo",
       "romanization": "lo tengo / le hablo",
@@ -19,7 +19,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:771bfd3ab8356258",
+      "sourceHash": "fnv1a64:b83776e21d39f575",
       "notice": null,
       "blocks": [
         {

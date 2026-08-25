@@ -4,22 +4,22 @@
   "chapter": 255,
   "title": "Vi, Di --- The Shortest Pasts",
   "drivablePrefix": 0,
-  "sourceHash": "fnv1a64:b17bee498495fff0",
+  "sourceHash": "fnv1a64:b06274dc71bda036",
   "lessons": [
     {
       "id": "ES-C65-vi-di",
       "sequence": 2510,
-      "title": "vi, di — the shortest pasts in the language",
-      "headword": "vi · di",
-      "romanization": "vi · di",
-      "gloss": "I saw, I gave — two verbs whose past is so short it needs no accent, and the second is a verb you have never met",
+      "title": "vi — the shortest past in the language",
+      "headword": "vi",
+      "romanization": "vi",
+      "gloss": "I saw — a past so short it needs no accent, and the reason that is a rule rather than an exception",
       "script": "latin",
       "modality": "sight",
       "derivedModality": "sight",
       "modalityReasons": [
         "sight-cue"
       ],
-      "sourceHash": "fnv1a64:b97d685aa2072ea9",
+      "sourceHash": "fnv1a64:6b77dff3a5ed160b",
       "notice": {
         "modality": "sight",
         "needs": [
@@ -89,8 +89,172 @@
         },
         {
           "index": 2,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "comí, then vi, and hear which one needs the mark",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *comí*, then *vi*, and hear which one needs the mark]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "vi, viste, vio",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *vi*, *viste*, *vio*]"
+            },
+            {
+              "kind": "repeat",
+              "times": 2,
+              "source": "[REPEAT x2]"
+            },
+            {
+              "kind": "activity",
+              "scored": true,
+              "id": "ES-C65-vi-di-saw",
+              "prompt": "I saw.",
+              "assesses": [
+                "ES-GRAMMAR-VER-PRETERITE"
+              ],
+              "responseSeconds": 10,
+              "acceptedResponses": [
+                "vi",
+                "yo vi"
+              ],
+              "feedback": {
+                "correct": "And no accent on it.",
+                "incorrect": "Vi."
+              }
+            },
+            {
+              "kind": "activity",
+              "scored": true,
+              "id": "ES-C65-vi-di-third",
+              "prompt": "He saw.",
+              "assesses": [
+                "ES-GRAMMAR-VER-PRETERITE",
+                "ES-GRAMMAR-ER-PRETERITE-SINGULAR"
+              ],
+              "responseSeconds": 11,
+              "acceptedResponses": [
+                "vio",
+                "el vio"
+              ],
+              "feedback": {
+                "correct": "Bare, where comio carries a mark.",
+                "incorrect": "Vio -- and no accent."
+              }
+            },
+            {
+              "kind": "activity",
+              "scored": true,
+              "id": "ES-C65-vi-di-accent",
+              "prompt": "Why does vi take no accent when comi does?",
+              "assesses": [
+                "ES-ORTHOGRAPHY-ONE-SYLLABLE-NO-ACCENT",
+                "ES-ORTHOGRAPHY-ER-IR-PRETERITE-FINAL-STRESS"
+              ],
+              "responseSeconds": 15,
+              "acceptedResponses": [
+                "it has only one syllable",
+                "one syllable, so the beat cannot fall elsewhere"
+              ],
+              "feedback": {
+                "correct": "No choice to correct.",
+                "incorrect": "One syllable -- there is nowhere else the stress could go."
+              }
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Why does vi carry no accent? (One syllable — the beat has nowhere else to fall.)"
+            },
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "And what is \"I saw\"? (Vi.) Next: a second verb that does the same thing, and it is one you have never met."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "ES-C65-di",
+      "sequence": 2512,
+      "title": "di — the verb that changed families in the past",
+      "headword": "di",
+      "romanization": "di",
+      "gloss": "I gave — an -ar verb that takes -er endings in the past, and goes as bare as vi",
+      "script": "latin",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:42cebc6bfe54740f",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Vi, viste, vio — bare, because one syllable has nowhere else to put the beat."
+            },
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "speech",
+              "text": "A second verb does the same, and it is one you have never met."
+            }
+          ]
+        },
+        {
+          "index": 1,
           "type": "grammar",
-          "title": "Grammar Lens: and dar, which behaves like an -er verb",
+          "title": "Grammar Lens: dar, which behaves like an -er verb",
           "segments": [
             {
               "kind": "speech",
@@ -123,7 +287,7 @@
           ]
         },
         {
-          "index": 3,
+          "index": 2,
           "type": "guided-production",
           "title": "Guided Practice",
           "segments": [
@@ -136,20 +300,20 @@
             {
               "kind": "prompt",
               "action": "SAY",
-              "instruction": "vi, viste, vio",
-              "spoken": true,
-              "scored": false,
-              "responseSeconds": 8,
-              "source": "[YOU SAY: *vi*, *viste*, *vio*]"
-            },
-            {
-              "kind": "prompt",
-              "action": "SAY",
               "instruction": "di, diste, dio",
               "spoken": true,
               "scored": false,
               "responseSeconds": 8,
               "source": "[YOU SAY: *di*, *diste*, *dio*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "vi, viste, vio, then di, diste, dio",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *vi*, *viste*, *vio*, then *di*, *diste*, *dio*]"
             },
             {
               "kind": "repeat",
@@ -159,25 +323,7 @@
             {
               "kind": "activity",
               "scored": true,
-              "id": "ES-C65-vi-di-saw",
-              "prompt": "I saw.",
-              "assesses": [
-                "ES-GRAMMAR-VER-PRETERITE"
-              ],
-              "responseSeconds": 10,
-              "acceptedResponses": [
-                "vi",
-                "yo vi"
-              ],
-              "feedback": {
-                "correct": "And no accent on it.",
-                "incorrect": "Vi."
-              }
-            },
-            {
-              "kind": "activity",
-              "scored": true,
-              "id": "ES-C65-vi-di-gave",
+              "id": "ES-C65-di-gave",
               "prompt": "He gave.",
               "assesses": [
                 "ES-GRAMMAR-DAR-PRETERITE"
@@ -195,25 +341,47 @@
             {
               "kind": "activity",
               "scored": true,
-              "id": "ES-C65-vi-di-accent",
-              "prompt": "Why does vi take no accent when comi does?",
+              "id": "ES-C65-di-family",
+              "prompt": "Dar is an -ar verb. Which endings does it take in the past?",
               "assesses": [
-                "ES-ORTHOGRAPHY-ONE-SYLLABLE-NO-ACCENT"
+                "ES-LEX-DAR",
+                "ES-GRAMMAR-DAR-PRETERITE"
+              ],
+              "responseSeconds": 13,
+              "acceptedResponses": [
+                "the -er endings",
+                "-er endings",
+                "those of comer"
+              ],
+              "feedback": {
+                "correct": "It changes families for the preterite alone.",
+                "incorrect": "The -er endings, the ones comer takes."
+              }
+            },
+            {
+              "kind": "activity",
+              "scored": true,
+              "id": "ES-C65-di-bare",
+              "prompt": "Which two preterite forms of dar carry no written accent, and why?",
+              "assesses": [
+                "ES-ORTHOGRAPHY-ONE-SYLLABLE-NO-ACCENT",
+                "ES-GRAMMAR-VER-PRETERITE"
               ],
               "responseSeconds": 15,
               "acceptedResponses": [
-                "it has only one syllable",
-                "one syllable, so the beat cannot fall elsewhere"
+                "di and dio, because they are one syllable",
+                "di and dio",
+                "di, dio -- one syllable each"
               ],
               "feedback": {
-                "correct": "No choice to correct.",
-                "incorrect": "One syllable -- there is nowhere else the stress could go."
+                "correct": "The same reason vi and vio go bare.",
+                "incorrect": "Di and dio -- one syllable, so there is no beat to correct."
               }
             }
           ]
         },
         {
-          "index": 4,
+          "index": 3,
           "type": "recall",
           "title": "Wrap-up Recall",
           "segments": [
@@ -225,7 +393,7 @@
             },
             {
               "kind": "speech",
-              "text": "Why do vi and di carry no accent? (One syllable — the beat has nowhere else to fall.)"
+              "text": "Which endings does dar take in the past? (The -er ones, though it is an -ar verb.)"
             },
             {
               "kind": "pause",
@@ -235,7 +403,7 @@
             },
             {
               "kind": "speech",
-              "text": "And which endings does dar take in the past? (The -er ones, though it is an -ar verb.)"
+              "text": "And what does dar mean? (To give.)"
             }
           ]
         }

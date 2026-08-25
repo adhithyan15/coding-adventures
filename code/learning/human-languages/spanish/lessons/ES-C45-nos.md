@@ -6,21 +6,20 @@ sequence: 1226
 chapter: 88
 type: word
 headword: nos
-gloss: "us" — and the word hiding inside the verb ending you have used since hablamos
+gloss: "us" — the object pronoun that speaks for more than one person
 concept_tag: ES-PRONOUN-NOS
 prerequisites: [ES-C42-sintesis-decirlo-una-vez, ES-C13-plurales-cambio, ES-C11-querer]
 sounds: []
-roots: [nos-latin]
+roots: []
 teaches_cells: []
-etymology_hook: "nos is Latin nos, 'we' and 'us' — and nosotros is that same nos with otros, 'we others', which is why the verb ending is -mos"
 duration:
   max_seconds: 250
 requires:
-  knowledge: [ES-GRAMMAR-ME-DIRECT-OBJECT, ES-GRAMMAR-TE-DIRECT-OBJECT, ES-GRAMMAR-QUERER-PRESENT-PLURAL, ES-LEX-QUERER, ES-GRAMMAR-AR-PRESENT-1PL]
+  knowledge: [ES-GRAMMAR-ME-DIRECT-OBJECT, ES-GRAMMAR-TE-DIRECT-OBJECT, ES-GRAMMAR-QUERER-PRESENT-PLURAL, ES-LEX-QUERER]
 introduces:
-  knowledge: [ES-LEX-NOS-OBJECT, ES-GRAMMAR-NOS-DIRECT-OBJECT, ES-LEX-NOSOTROS, ES-ETYMON-NOS-OTROS]
+  knowledge: [ES-LEX-NOS-OBJECT, ES-GRAMMAR-NOS-DIRECT-OBJECT]
 practises:
-  knowledge: [ES-GRAMMAR-ME-DIRECT-OBJECT, ES-GRAMMAR-TE-DIRECT-OBJECT, ES-GRAMMAR-QUERER-PRESENT-PLURAL, ES-LEX-QUERER, ES-GRAMMAR-AR-PRESENT-1PL, ES-LEX-NOS-OBJECT, ES-GRAMMAR-NOS-DIRECT-OBJECT, ES-LEX-NOSOTROS, ES-ETYMON-NOS-OTROS]
+  knowledge: [ES-GRAMMAR-ME-DIRECT-OBJECT, ES-GRAMMAR-TE-DIRECT-OBJECT, ES-GRAMMAR-QUERER-PRESENT-PLURAL, ES-LEX-QUERER, ES-LEX-NOS-OBJECT, ES-GRAMMAR-NOS-DIRECT-OBJECT]
 skills: [listening, speaking, reading]
 modes: [interpretive, interpersonal]
 strands: [meaning-input, meaning-output, language-focus]
@@ -54,41 +53,21 @@ is that person and somebody else.
 One letter of difference, and the difference is how many people you are
 speaking for.
 
-## The word, taken apart
-<!-- hl-knowledge: introduces=[ES-LEX-NOSOTROS, ES-ETYMON-NOS-OTROS]; assesses=[ES-GRAMMAR-AR-PRESENT-1PL] -->
-
-*Nos* is Latin **nōs**, which meant both *we* and *us* — the language had not
-yet split them into two words.
-
-You have been carrying it for a long time without being shown. The *-mos*
-ending on *hablamos*, *comemos*, *tenemos* is that same **nōs**, worn down and
-glued to the back of the verb. Every time you said "we speak," you were saying
-*nos* twice: once in the ending, and once by not needing to say it at all.
-
-And the word for "we" itself:
-
-> **nosotros** — *we*, literally **nos** + **otros**, "we **others**."
-
-Spanish added *otros* to the plain *nos* somewhere in the Middle Ages, to make
-clear the speaker meant *this* group and not the person being addressed.
-Nothing else in the family did it quite this way, and the seam is still visible
-in the word.
-
 ## Guided Practice
-<!-- hl-knowledge: introduces=[]; assesses=[ES-GRAMMAR-NOS-DIRECT-OBJECT, ES-LEX-NOS-OBJECT, ES-LEX-NOSOTROS, ES-ETYMON-NOS-OTROS, ES-GRAMMAR-QUERER-PRESENT-PLURAL, ES-LEX-QUERER, ES-GRAMMAR-ME-DIRECT-OBJECT, ES-GRAMMAR-TE-DIRECT-OBJECT, ES-GRAMMAR-AR-PRESENT-1PL] -->
+<!-- hl-knowledge: introduces=[]; assesses=[ES-GRAMMAR-NOS-DIRECT-OBJECT, ES-LEX-NOS-OBJECT, ES-GRAMMAR-QUERER-PRESENT-PLURAL, ES-LEX-QUERER, ES-GRAMMAR-ME-DIRECT-OBJECT, ES-GRAMMAR-TE-DIRECT-OBJECT] -->
 
 <!-- hl-activity: {"id":"ES-C45-nos-say","kind":"text","assesses":["ES-GRAMMAR-NOS-DIRECT-OBJECT","ES-LEX-NOS-OBJECT"],"prompt":"Say they love us.","answer":"nos quieren","accepted":["ellos nos quieren"],"feedback":{"correct":"Same slot, in front of the verb.","incorrect":"Nos quieren."},"response_seconds":8} -->
-<!-- hl-activity: {"id":"ES-C45-nos-ending","kind":"text","assesses":["ES-ETYMON-NOS-OTROS","ES-GRAMMAR-AR-PRESENT-1PL"],"prompt":"Which verb ending is the same ancient word as nos?","answer":"-mos","accepted":["the -mos ending","mos"],"feedback":{"correct":"Hablamos carries it on the back of the verb.","incorrect":"The -mos of hablamos: nos worn down and glued on."},"response_seconds":10} -->
-<!-- hl-activity: {"id":"ES-C45-nos-word","kind":"text","assesses":["ES-LEX-NOSOTROS"],"prompt":"What are the two pieces inside nosotros, and what do they mean together?","answer":"nos and otros, we others","accepted":["nos + otros","we others"],"feedback":{"correct":"The seam is still visible.","incorrect":"nos + otros, literally we others."},"response_seconds":12} -->
+<!-- hl-activity: {"id":"ES-C45-nos-count","kind":"text","assesses":["ES-LEX-NOS-OBJECT","ES-GRAMMAR-ME-DIRECT-OBJECT"],"prompt":"Me quieren and nos quieren differ in one thing. What?","answer":"how many people are on the receiving end","accepted":["one person versus more than one","me is one, nos is more"],"feedback":{"correct":"One letter, and it changes who you speak for.","incorrect":"Me is one person; nos is that person and somebody else."},"response_seconds":12} -->
+<!-- hl-activity: {"id":"ES-C45-nos-slot","kind":"text","assesses":["ES-GRAMMAR-NOS-DIRECT-OBJECT","ES-GRAMMAR-TE-DIRECT-OBJECT","ES-GRAMMAR-QUERER-PRESENT-PLURAL"],"prompt":"Where does nos stand in nos quieren?","answer":"in front of the verb","accepted":["before the verb","the same slot as me and te"],"feedback":{"correct":"The same slot me and te have always taken.","incorrect":"In front of the verb, exactly where me and te go."},"response_seconds":10} -->
 
 [PAUSE 1s]
 
 - [YOU SAY: "Me quieren" then "Nos quieren"]
-- [YOU SAY: "hablamos" and hear the *nos* at the end of it]
+- [YOU SAY: "Te quiero" then "Nos quieren" — one person, then a group]
 
 ## Wrap-up Recall
-<!-- hl-knowledge: introduces=[]; assesses=[ES-GRAMMAR-NOS-DIRECT-OBJECT, ES-LEX-NOSOTROS] -->
+<!-- hl-knowledge: introduces=[]; assesses=[ES-GRAMMAR-NOS-DIRECT-OBJECT, ES-LEX-NOS-OBJECT] -->
 
-[PAUSE 3s] Say "they love us." (***Nos quieren***.) What is *nosotros* made of?
-(***Nos*** + ***otros*** — "we others.") Next: the plural of *lo* and *la*, and
-you will not need to be told what they are.
+[PAUSE 3s] Say "they love us." (***Nos quieren***.) And which slot did *nos*
+take? (The one in **front of the verb**.) Next: where *nos* came from, and the
+verb ending that has been carrying it all along.

@@ -8,7 +8,7 @@ type: grammar
 headword: uno... otro
 gloss: one... the other — a way of splitting a pair across two halves of a sentence, using a word you have carried since chapter three
 concept_tag: ES-DISTRIBUTIVE
-prerequisites: [ES-C67-primero]
+prerequisites: [ES-C67-primer-libro]
 sounds: []
 roots: []
 teaches_cells: []

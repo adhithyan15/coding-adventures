@@ -3,8 +3,8 @@
   "language": "spanish",
   "chapter": 262,
   "title": "Primero, Segundo, Tercero --- Counting in Order",
-  "drivablePrefix": 1,
-  "sourceHash": "fnv1a64:004c3be7e3f556fd",
+  "drivablePrefix": 2,
+  "sourceHash": "fnv1a64:13c8fc6c6e8f283f",
   "lessons": [
     {
       "id": "ES-C67-primero",
@@ -12,14 +12,14 @@
       "title": "primero, segundo, tercero — counting in order",
       "headword": "primero · segundo · tercero",
       "romanization": "primero · segundo · tercero",
-      "gloss": "first, second, third — the counting words for order rather than amount, and two of them shorten in a way you have now seen three times",
+      "gloss": "first, second, third — the counting words for order rather than amount, and the story inside the second one",
       "script": "latin",
       "modality": "voice",
       "derivedModality": "voice",
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:45d7c07d1bb534bb",
+      "sourceHash": "fnv1a64:ff320be9149e1336",
       "notice": null,
       "blocks": [
         {
@@ -88,6 +88,170 @@
         },
         {
           "index": 2,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "primero, segundo, tercero, cuarto, quinto",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *primero*, *segundo*, *tercero*, *cuarto*, *quinto*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "la segunda casa, los primeros libros",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *la segunda casa*, *los primeros libros*]"
+            },
+            {
+              "kind": "repeat",
+              "times": 2,
+              "source": "[REPEAT x2]"
+            },
+            {
+              "kind": "activity",
+              "scored": true,
+              "id": "ES-C67-primero-count",
+              "prompt": "Uno, dos, tres tells how many. Give the three words that tell which one in the line.",
+              "assesses": [
+                "ES-LEX-ORDINALS",
+                "ES-LEX-NUMBERS-1-5"
+              ],
+              "responseSeconds": 13,
+              "acceptedResponses": [
+                "primero, segundo, tercero",
+                "primero segundo tercero"
+              ],
+              "feedback": {
+                "correct": "Order, not amount.",
+                "incorrect": "Primero, segundo, tercero."
+              }
+            },
+            {
+              "kind": "activity",
+              "scored": true,
+              "id": "ES-C67-primero-fem",
+              "prompt": "Say: the second house.",
+              "assesses": [
+                "ES-LEX-ORDINALS",
+                "ES-GRAMMAR-NOUN-GENDER"
+              ],
+              "responseSeconds": 12,
+              "acceptedResponses": [
+                "la segunda casa",
+                "la segunda casa."
+              ],
+              "feedback": {
+                "correct": "They agree like any adjective.",
+                "incorrect": "La segunda casa."
+              }
+            },
+            {
+              "kind": "activity",
+              "scored": true,
+              "id": "ES-C67-primero-second",
+              "prompt": "What did the Latin word behind segundo actually mean?",
+              "assesses": [
+                "ES-ETYMON-SEGUNDO-SEQUI"
+              ],
+              "responseSeconds": 14,
+              "acceptedResponses": [
+                "following",
+                "following, from sequi"
+              ],
+              "feedback": {
+                "correct": "Second place is the one that comes after.",
+                "incorrect": "Following -- from sequi, to follow."
+              }
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Give the first three in order. (Primero, segundo, tercero.)"
+            },
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "And what did secundus mean before it meant second? (Following — the one that comes after.) Next: where these words stand, and what happens to two of them when they get there."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "ES-C67-primer-libro",
+      "sequence": 2547,
+      "title": "el primer libro — where an ordinal stands",
+      "headword": "el primer libro",
+      "romanization": "el primer libro",
+      "gloss": "where an ordinal stands, and the shortening you have now seen three times",
+      "script": "latin",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:8cd6ebe73d08fa78",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Primero, segundo, tercero. And the rule you have carried for a long time: a Spanish adjective follows its noun."
+            },
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "speech",
+              "text": "These do not."
+            }
+          ]
+        },
+        {
+          "index": 1,
           "type": "culture-pragmatics",
           "title": "Why it's said this way",
           "segments": [
@@ -141,7 +305,7 @@
           ]
         },
         {
-          "index": 3,
+          "index": 2,
           "type": "guided-production",
           "title": "Guided Practice",
           "segments": [
@@ -154,20 +318,20 @@
             {
               "kind": "prompt",
               "action": "SAY",
-              "instruction": "primero, segundo, tercero, cuarto, quinto",
-              "spoken": true,
-              "scored": false,
-              "responseSeconds": 8,
-              "source": "[YOU SAY: *primero*, *segundo*, *tercero*, *cuarto*, *quinto*]"
-            },
-            {
-              "kind": "prompt",
-              "action": "SAY",
               "instruction": "el primer libro, la primera casa",
               "spoken": true,
               "scored": false,
               "responseSeconds": 8,
               "source": "[YOU SAY: *el primer libro*, *la primera casa*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "muy, mal, primer — one habit, three sightings",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *muy*, *mal*, *primer* — one habit, three sightings]"
             },
             {
               "kind": "repeat",
@@ -177,10 +341,11 @@
             {
               "kind": "activity",
               "scored": true,
-              "id": "ES-C67-primero-first",
+              "id": "ES-C67-primer-libro-first",
               "prompt": "Say: the first book.",
               "assesses": [
-                "ES-GRAMMAR-ORDINAL-APOCOPE"
+                "ES-GRAMMAR-ORDINAL-APOCOPE",
+                "ES-LEX-LIBRO"
               ],
               "responseSeconds": 12,
               "acceptedResponses": [
@@ -195,10 +360,11 @@
             {
               "kind": "activity",
               "scored": true,
-              "id": "ES-C67-primero-fem",
+              "id": "ES-C67-primer-libro-fem",
               "prompt": "And the first house?",
               "assesses": [
-                "ES-LEX-ORDINALS"
+                "ES-LEX-ORDINALS",
+                "ES-GRAMMAR-ORDINAL-APOCOPE"
               ],
               "responseSeconds": 12,
               "acceptedResponses": [
@@ -213,25 +379,27 @@
             {
               "kind": "activity",
               "scored": true,
-              "id": "ES-C67-primero-second",
-              "prompt": "What did the Latin word behind segundo actually mean?",
+              "id": "ES-C67-primer-libro-third",
+              "prompt": "Which side of the noun does an ordinal take, and which habit does primer share with muy and mal?",
               "assesses": [
-                "ES-ETYMON-SEGUNDO-SEQUI"
+                "ES-GRAMMAR-ORDINAL-BEFORE-NOUN",
+                "ES-GRAMMAR-APOCOPE-PATTERN"
               ],
-              "responseSeconds": 14,
+              "responseSeconds": 16,
               "acceptedResponses": [
-                "following",
-                "following, from sequi"
+                "in front, and the ending is bitten off when it leans on the noun",
+                "before the noun; the same shortening",
+                "in front; apocope"
               ],
               "feedback": {
-                "correct": "Second place is the one that comes after.",
-                "incorrect": "Following -- from sequi, to follow."
+                "correct": "Third sighting of one habit.",
+                "incorrect": "In front -- and the same biting-short you met in muy and mal."
               }
             }
           ]
         },
         {
-          "index": 4,
+          "index": 3,
           "type": "recall",
           "title": "Wrap-up Recall",
           "segments": [

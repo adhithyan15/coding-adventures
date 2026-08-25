@@ -2,7 +2,7 @@
 schema_version: 2
 id: ES-C47-sintesis-dos-a-la-vez
 spine_node: SPINE-DEFINITE-REFERENCE
-sequence: 1240
+sequence: 1241
 chapter: 102
 type: practice-mix
 headword: (synthesis)

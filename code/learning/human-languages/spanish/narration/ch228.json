@@ -3,8 +3,8 @@
   "language": "spanish",
   "chapter": 228,
   "title": "Mal --- Bien Finally Gets Its Opposite",
-  "drivablePrefix": 0,
-  "sourceHash": "fnv1a64:48c7f8ce2828abb6",
+  "drivablePrefix": 2,
+  "sourceHash": "fnv1a64:d9abeba6e8a62ead",
   "lessons": [
     {
       "id": "ES-C60-mal",
@@ -12,22 +12,15 @@
       "title": "mal — bien finally gets its opposite",
       "headword": "mal",
       "romanization": "mal",
-      "gloss": "badly — the partner bien has been waiting for since chapter one, and the second word in three chapters to appear in a long form and a short one",
+      "gloss": "badly — the partner bien has been waiting for since the opening pages, in a long form and a short one",
       "script": "latin",
-      "modality": "sight",
-      "derivedModality": "sight",
+      "modality": "voice",
+      "derivedModality": "voice",
       "modalityReasons": [
-        "sight-cue"
+        "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:279bdbe0772adc09",
-      "notice": {
-        "modality": "sight",
-        "needs": [
-          "your eyes, because the lesson points at something written down"
-        ],
-        "waitUntilStopped": [],
-        "text": "Before we start: this one needs your eyes, so it is not fully a driving lesson. You will want your eyes, because the lesson points at something written down. You can listen to all of it now and come back to the parts that need looking at once you have stopped."
-      },
+      "sourceHash": "fnv1a64:3d995ce48f1e732c",
+      "notice": null,
       "blocks": [
         {
           "index": 0,
@@ -96,51 +89,6 @@
         },
         {
           "index": 2,
-          "type": "culture-pragmatics",
-          "title": "Why it's said this way",
-          "segments": [
-            {
-              "kind": "speech",
-              "text": "Now look at what has happened twice in three chapters."
-            },
-            {
-              "kind": "table",
-              "headers": [
-                "long form",
-                "short form",
-                "short one appears"
-              ],
-              "columns": 3,
-              "rowCount": 2,
-              "utterances": [
-                "long form: mucho. short form: muy. short one appears: before an adjective or adverb.",
-                "long form: malo. short form: mal. short one appears: before a masculine noun, and as the adverb."
-              ]
-            },
-            {
-              "kind": "pause",
-              "seconds": 2,
-              "perItem": false,
-              "source": "[PAUSE 2s]"
-            },
-            {
-              "kind": "speech",
-              "text": "This is not two exceptions. It is one habit of the language: Spanish bites the ending off a word that is leaning on another word, and keeps it whole when it stands on its own."
-            },
-            {
-              "kind": "pause",
-              "seconds": 2,
-              "perItem": false,
-              "source": "[PAUSE 2s]"
-            },
-            {
-              "kind": "speech",
-              "text": "Once you have heard it twice you will start noticing it everywhere, and it stops being something to memorise. A short form is a word in a hurry to get to the next one."
-            }
-          ]
-        },
-        {
-          "index": 3,
           "type": "guided-production",
           "title": "Guided Practice",
           "segments": [
@@ -162,11 +110,11 @@
             {
               "kind": "prompt",
               "action": "SAY",
-              "instruction": "mucho / muy, then malo / mal, and hear the same trick twice",
+              "instruction": "bueno, then malo",
               "spoken": true,
               "scored": false,
               "responseSeconds": 8,
-              "source": "[YOU SAY: *mucho* / *muy*, then *malo* / *mal*, and hear the same trick twice]"
+              "source": "[YOU SAY: *bueno*, then *malo*]"
             },
             {
               "kind": "repeat",
@@ -213,7 +161,172 @@
             {
               "kind": "activity",
               "scored": true,
-              "id": "ES-C60-mal-pattern",
+              "id": "ES-C60-mal-pairs",
+              "prompt": "Give the opposite of bien, and the opposite of bueno.",
+              "assesses": [
+                "ES-LEX-BIEN",
+                "ES-MORPH-BUENO-BUENA",
+                "ES-LEX-MAL"
+              ],
+              "responseSeconds": 14,
+              "acceptedResponses": [
+                "mal and malo",
+                "mal, malo",
+                "mal / malo"
+              ],
+              "feedback": {
+                "correct": "Adverb against adverb, adjective against adjective.",
+                "incorrect": "Bien becomes mal; bueno becomes malo."
+              }
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "How do you say you are not well? (Estoy mal.)"
+            },
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "And which English words still carry Latin malus? (Malady, malice.) Next: the short form and the long form turn out to be a habit, not a quirk."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "ES-C60-apocope",
+      "sequence": 2377,
+      "title": "a word in a hurry — the short form and the long one",
+      "headword": "mucho · muy, malo · mal",
+      "romanization": "mucho · muy, malo · mal",
+      "gloss": "the same biting-short seen twice, which makes it a habit of the language rather than a pair of quirks",
+      "script": "latin",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:de5b4f267940d893",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Muy — very. Mal — badly."
+            },
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Each of those arrived beside a longer word, and the pairing was not a coincidence either time."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "culture-pragmatics",
+          "title": "Why it's said this way",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "Set the two pairs beside each other."
+            },
+            {
+              "kind": "table",
+              "headers": [
+                "long form",
+                "short form",
+                "short one appears"
+              ],
+              "columns": 3,
+              "rowCount": 2,
+              "utterances": [
+                "long form: mucho. short form: muy. short one appears: before an adjective or adverb.",
+                "long form: malo. short form: mal. short one appears: before a masculine noun, and as the adverb."
+              ]
+            },
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "This is not two exceptions. It is one habit of the language: Spanish bites the ending off a word that is leaning on another word, and keeps it whole when that word stands on its own."
+            },
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Once you have heard it twice you start noticing it everywhere, and it stops being something to memorise. A short form is a word in a hurry to get to the next one."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "mucho / muy, then malo / mal, and hear the same trick twice",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *mucho* / *muy*, then *malo* / *mal*, and hear the same trick twice]"
+            },
+            {
+              "kind": "repeat",
+              "times": 2,
+              "source": "[REPEAT x2]"
+            },
+            {
+              "kind": "activity",
+              "scored": true,
+              "id": "ES-C60-apocope-pattern",
               "prompt": "What do mucho/muy and malo/mal have in common?",
               "assesses": [
                 "ES-GRAMMAR-APOCOPE-PATTERN"
@@ -228,11 +341,51 @@
                 "correct": "One habit, not two exceptions.",
                 "incorrect": "Each has a long form and a short one, and the short one leans on the next word."
               }
+            },
+            {
+              "kind": "activity",
+              "scored": true,
+              "id": "ES-C60-apocope-which",
+              "prompt": "Which of each pair stands on its own -- mucho or muy, malo or mal?",
+              "assesses": [
+                "ES-LEX-MUY",
+                "ES-LEX-MALO"
+              ],
+              "responseSeconds": 14,
+              "acceptedResponses": [
+                "mucho and malo",
+                "mucho, malo",
+                "the long forms"
+              ],
+              "feedback": {
+                "correct": "Whole when alone, short when leaning.",
+                "incorrect": "The long forms: mucho and malo."
+              }
+            },
+            {
+              "kind": "activity",
+              "scored": true,
+              "id": "ES-C60-apocope-hear",
+              "prompt": "When a Spanish word loses its ending, what is it about to do?",
+              "assesses": [
+                "ES-GRAMMAR-APOCOPE-PATTERN",
+                "ES-LEX-MAL"
+              ],
+              "responseSeconds": 14,
+              "acceptedResponses": [
+                "lean on the word after it",
+                "hurry to the next word",
+                "attach to the following word"
+              ],
+              "feedback": {
+                "correct": "The ending goes where the word is in a hurry.",
+                "incorrect": "It is about to lean on the word that follows."
+              }
             }
           ]
         },
         {
-          "index": 4,
+          "index": 3,
           "type": "recall",
           "title": "Wrap-up Recall",
           "segments": [
@@ -254,7 +407,7 @@
             },
             {
               "kind": "speech",
-              "text": "And which English words still carry Latin malus? (Malady, malice.)"
+              "text": "And what was muy before it was in a hurry? (Latin multum.)"
             }
           ]
         }

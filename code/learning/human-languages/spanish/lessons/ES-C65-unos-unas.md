@@ -8,7 +8,7 @@ type: grammar
 headword: unos · unas
 gloss: some, a few — the plural of a word that means one, which sounds impossible until you hear what it actually does
 concept_tag: ES-INDEFINITE-PLURAL
-prerequisites: [ES-C65-ahora-hoy]
+prerequisites: [ES-C65-hoy]
 sounds: []
 roots: []
 teaches_cells: []

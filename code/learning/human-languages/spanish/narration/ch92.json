@@ -4,11 +4,11 @@
   "chapter": 92,
   "title": "Synthesis --- The Conversation Without Them",
   "drivablePrefix": 1,
-  "sourceHash": "fnv1a64:dabc0605125384c3",
+  "sourceHash": "fnv1a64:3a2810dd0d64ab32",
   "lessons": [
     {
       "id": "ES-C45-sintesis-sin-repetir",
-      "sequence": 1230,
+      "sequence": 1231,
       "title": "Synthesis — the conversation without them",
       "headword": "(synthesis)",
       "romanization": "(synthesis)",
@@ -19,7 +19,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:35f9d79acb23a139",
+      "sourceHash": "fnv1a64:53a38bf6163fcc46",
       "notice": null,
       "blocks": [
         {

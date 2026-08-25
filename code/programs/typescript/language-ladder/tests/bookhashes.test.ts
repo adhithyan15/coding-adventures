@@ -148,10 +148,14 @@ describe("generated book source hashes", () => {
     [82, 1],
     [83, 1],
     [84, 1],
-    [85, 2],
+    // 85 and 88 each gained a lesson when the two over-budget lessons in them
+    // were SPLIT rather than trimmed: ES-C42-te shed its etymology to
+    // ES-C42-te-thee, and ES-C45-nos shed nosotros/-mos to ES-C45-nosotros.
+    // The chapters' atom sets are unchanged; only the lesson boundary moved.
+    [85, 3],
     [86, 1],
     [87, 1],
-    [88, 1],
+    [88, 2],
     [89, 1],
     [90, 1],
     [91, 1],
