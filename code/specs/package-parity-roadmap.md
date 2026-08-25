@@ -6860,7 +6860,8 @@ The extra-CI-toolchain corpus has greater graph leverage, but its current owner
 also requires canonical Go normalization on `main.go`, which overlaps live PRs
 #12149 and #12162; OCaml remains collision-unsafe on the same surfaces.
 
-The selected F# slice now has a validated implementation. The specification
+The selected F# slice now has validated implementation head
+`128832d6f52459f2e8553fa096a643c9e73aedc2`. The specification
 requires each established shared-engine front door to expose a language-native
 orphan-snapshot adapter and consume every registered neutral fixture without
 gaining discovery authority. A focused regression first failed because the F#
