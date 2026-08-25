@@ -241,12 +241,45 @@ care. Then run `npm run unshard:docs <path>` and commit both.
 
 **Never hand-edit the monolith.** Edit the shard and regenerate.
 
-**Never hand-merge the monolith.** On a conflict, take either side, re-run
-`unshard:docs`, and commit the result. Hand-merging a generated file produces
-bytes no generator would emit, and the next `--check` fails for reasons nobody
-can read. This supersedes the older "union both sides of `CHANGELOG.md`"
+**Never hand-merge the monolith.** Hand-merging a generated file produces bytes
+no generator would emit, and the next `--check` fails for reasons nobody can
+read. On a conflict, take either side and regenerate:
+
+```sh
+git checkout --ours code/learning/human-languages/BACKLOG.md
+npm run unshard:docs code/learning/human-languages/BACKLOG.md
+```
+
+`--ours` versus `--theirs` does not matter, and that is the point: the monolith
+carries no information the shards do not, so either starting point regenerates to
+the same bytes. This supersedes the older "union both sides of `CHANGELOG.md`"
 convention *for these two files only* — union-merging is still right for the 23
 per-language changelogs, which are not generated.
+
+### 4.1 What this actually buys, measured
+
+Two branches were built off one base, each adding one backlog entry and one
+changelog entry — the exact shape of two parallel level-authoring agents — and
+merged. Both agents independently chose the **same ordinal**, which is the
+expected case and the one the design has to survive.
+
+| File | Result |
+| --- | --- |
+| `BACKLOG.d/01090-AGENT-BB-5104222c.md` | merged clean, no conflict |
+| `CHANGELOG.d/04380-AGENT-BB-ee659fe1.md` | merged clean, no conflict |
+| `BACKLOG.md` (generated) | conflict |
+| `CHANGELOG.md` (generated) | conflict |
+
+The digest kept the same-ordinal filenames apart, so git never saw a question.
+After the two-command resolution above, **both** agents' entries were present in
+both regenerated files and no conflict markers remained.
+
+The honest summary: this does not make the merge conflict-free, it makes it
+*content-free*. Before, resolving meant merging prose by hand with a live risk of
+dropping somebody's entry — which is how this `CHANGELOG.md` acquired three
+"Unreleased" sections (§5.1). Now the conflict is confined to a derived file that
+carries no information, and the resolution cannot lose anything because the
+content was never in the conflicting file.
 
 **`--shard` is a migration tool, not a routine step.** Running it renumbers to
 the canonical stride, which is a mass rename and therefore a mass merge conflict.

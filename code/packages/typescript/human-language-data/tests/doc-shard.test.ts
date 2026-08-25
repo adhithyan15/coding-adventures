@@ -92,6 +92,19 @@ describe("splitDocument", () => {
     expect(sections.map((s) => s.heading)).toEqual(["## A", "## B"]);
   });
 
+  it("handles a document whose FIRST line is a section heading", () => {
+    // The empty-preamble case. Without the `to > from` guard in `lineRange`,
+    // the empty range gained a newline and invented a blank line the file never
+    // had — caught by the round-trip assertion, but as an unactionable
+    // "internal error". Latent for both current plans, because both documents
+    // open with an `#` title above their split level.
+    const text = "## A\n\nx\n\n## B\n\ny\n";
+    const { preamble, sections } = splitDocument(text, 2);
+    expect(preamble).toBe("");
+    expect(sections).toHaveLength(2);
+    expect(preamble + sections.map((s) => s.text).join("")).toBe(text);
+  });
+
   it("returns the whole document as preamble when there are no sections", () => {
     const { preamble, sections } = splitDocument("# T\n\njust prose\n", 2);
     expect(sections).toHaveLength(0);

@@ -377,8 +377,18 @@ export function splitDocument(text: string, level: 2 | 3): SplitDocument {
   // `slice().join("\n")` does, provided the final chunk keeps whatever the file
   // ended with. Working in line indices and rejoining is why the trailing
   // newline, or its absence, survives untouched.
+  //
+  // The `to > from` half of the guard is not decoration. An EMPTY range —
+  // which is what the preamble is when the document's very first line is a
+  // section heading — joins to `""`, and without it the `to < lines.length`
+  // test would still append a newline and invent a blank line that was never in
+  // the file. The round-trip assertion below catches it, so the failure mode is
+  // a refusal rather than a corrupted document; but it would refuse the first
+  // plan added whose document opens at the split level, with an "internal
+  // error" message nobody could act on. Both current plans open with an `#`
+  // title above their split level, which is why this was latent.
   const lineRange = (from: number, to: number): string =>
-    lines.slice(from, to).join("\n") + (to < lines.length ? "\n" : "");
+    lines.slice(from, to).join("\n") + (to > from && to < lines.length ? "\n" : "");
 
   const preamble = starts.length === 0 ? text : lineRange(0, starts[0]);
   const sections: DocSection[] = starts.map((start, i) => ({

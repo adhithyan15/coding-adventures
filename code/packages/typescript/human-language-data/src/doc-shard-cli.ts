@@ -80,6 +80,7 @@ import {
 } from "node:fs";
 import { basename, dirname, join, normalize, relative as pathRelative, resolve } from "node:path";
 import { fileURLToPath, pathToFileURL } from "node:url";
+import { stripControlCharacters } from "./constants.js";
 import { assertRelativeManifestPath } from "./manifest-path.js";
 import {
   type DocShardPlan,
@@ -151,6 +152,36 @@ export const DOC_SHARD_PLANS: readonly DocShardPlan[] = [
     newestFirst: true,
   },
 ];
+
+/**
+ * A DISK-DERIVED name, made safe to print into a CI log.
+ *
+ * This is the only string in this file that comes from something other than the
+ * plan table, and it is the one mode CI runs — so it is the one place a hostile
+ * pull request reaches a maintainer's runner. On Linux every byte except `/` and
+ * NUL is legal in a filename and git tracks such names fine, so a branch can
+ * commit `BACKLOG.d/EVIL<ESC>[2K<CR>innocent` and have the raw bytes go to
+ * stderr. An ANSI escape rewrites its own line in a terminal, which means a
+ * crafted filename can erase the neighbouring "generated monolith is stale" line
+ * that the maintainer is reading to work out why the gate failed.
+ *
+ * This is HL-C90's finding, and this package already fixed it package-wide:
+ * `stripControlCharacters` exists in `constants.ts` for exactly this, six
+ * modules import it, and `control-characters.test.ts` pins it with a
+ * line-eating id. The JSON `shard-cli` does not need it because its `--check`
+ * only ever prints names it generated itself; this one reads the directory, so
+ * the exposure is new here.
+ *
+ * `JSON.stringify` on top of the strip, and both are needed. The strip keeps
+ * `\n` and `\t` deliberately — they are ordinary layout for the report helpers
+ * that own their own line breaks — but a filename containing a newline would
+ * then forge a whole extra log line, which is the same attack one level up.
+ * Quoting also makes a name with leading or trailing spaces legible, which is
+ * the honest reason someone hits this by accident rather than on purpose.
+ */
+function reportable(name: string): string {
+  return JSON.stringify(stripControlCharacters(name));
+}
 
 /**
  * `lstatSync`, or `undefined` if the path is not there at all.
@@ -420,8 +451,8 @@ export function runDocShardCli(
       .map((entry) => entry.name);
     for (const name of ignored) {
       process.stderr.write(
-        `${plan.path}: '${name}' is in ${docShardDirectoryFor(plan.path)} but is not a ` +
-          `*.md shard, so its contents are not in the document. Rename it or remove it.\n`,
+        `${plan.path}: ${reportable(name)} is in ${docShardDirectoryFor(plan.path)} but is not ` +
+          `a *.md shard, so its contents are not in the document. Rename it or remove it.\n`,
       );
       failed = true;
     }
