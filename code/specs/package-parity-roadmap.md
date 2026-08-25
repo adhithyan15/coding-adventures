@@ -7943,6 +7943,15 @@ and module-cache writes, and on Windows toolchain-relative runtime, SDK, and
 linker-library selection; these native powers remain outside the pure Swift
 validator.
 
+Before publication, the branch rebased without conflict onto exact main
+`52adb62ee56ec11203f5d047a399d57bb2f1047a`. The intervening relaxed-SIMD
+madd/nmadd merge remains owned by the relaxed-SIMD, WAST, conformance, and
+provenance work; Java-to-Semantic-IR array declarations remain owned by JV02.
+Neither changes package identity or build-tool scope. The refreshed report is
+unchanged at 15 lanes, 1,373 identities, 4,566 slots, zero collisions, and zero
+unknown buckets, and all 13 tranche paths have zero exact overlap across nine
+live open PRs.
+
 ## Autonomous Loop Protocol
 
 Only one parity PR should be active at a time.
