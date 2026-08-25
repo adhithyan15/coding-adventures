@@ -4398,6 +4398,102 @@
         "ES-EXT-336-REPASO"
       ],
       "after": []
+    },
+    {
+      "id": "ES-PATH-340-01",
+      "spine_node": "SPINE-ASK-LOCATION",
+      "lessons": [
+        "ES-C340-cerca",
+        "ES-C340-lejos",
+        "ES-C340-derecha",
+        "ES-C340-izquierda",
+        "ES-C340-enfrente"
+      ],
+      "before": [],
+      "inline": [
+        "ES-EXT-340-WHERE"
+      ],
+      "after": []
+    },
+    {
+      "id": "ES-PATH-341-01",
+      "spine_node": "SPINE-ASK-LOCATION",
+      "lessons": [
+        "ES-C341-arriba",
+        "ES-C341-abajo",
+        "ES-C341-delante",
+        "ES-C341-detras",
+        "ES-C341-dentro"
+      ],
+      "before": [],
+      "inline": [
+        "ES-EXT-341-WHERE"
+      ],
+      "after": []
+    },
+    {
+      "id": "ES-PATH-342-01",
+      "spine_node": "SPINE-TIME-OF-DAY",
+      "lessons": [
+        "ES-C342-minuto",
+        "ES-C342-cuarto",
+        "ES-C342-punto",
+        "ES-C342-horario",
+        "ES-C342-madrugada"
+      ],
+      "before": [],
+      "inline": [
+        "ES-EXT-342-CLOCK"
+      ],
+      "after": []
+    },
+    {
+      "id": "ES-PATH-343-01",
+      "spine_node": "SPINE-TIME-OF-DAY",
+      "lessons": [
+        "ES-C343-fecha",
+        "ES-C343-calendario",
+        "ES-C343-proximo",
+        "ES-C343-epoca",
+        "ES-C343-siglo"
+      ],
+      "before": [],
+      "inline": [
+        "ES-EXT-343-CLOCK"
+      ],
+      "after": []
+    },
+    {
+      "id": "ES-PATH-344-01",
+      "spine_node": "SPINE-COUNT-ONE-TO-FIVE",
+      "lessons": [
+        "ES-C344-cero",
+        "ES-C344-numero",
+        "ES-C344-mitad",
+        "ES-C344-docena",
+        "ES-C344-doble"
+      ],
+      "before": [],
+      "inline": [
+        "ES-EXT-344-COUNT"
+      ],
+      "after": []
+    },
+    {
+      "id": "ES-PATH-345-01",
+      "spine_node": "SPINE-DEFINITE-REFERENCE",
+      "lessons": [
+        "ES-C345-mismo",
+        "ES-C345-cada",
+        "ES-C345-parte",
+        "ES-C345-persona",
+        "ES-C345-objeto"
+      ],
+      "before": [],
+      "inline": [
+        "ES-EXT-345-REF"
+      ],
+      "after": []
     }
   ],
   "spine": {
@@ -4549,7 +4645,9 @@
         "ES-PATH-006",
         "ES-PATH-019",
         "ES-PATH-023",
-        "ES-PATH-025"
+        "ES-PATH-025",
+        "ES-PATH-342-01",
+        "ES-PATH-343-01"
       ],
       "omits": [
         "TIME-MORNING",
@@ -4568,7 +4666,9 @@
         "ES-PATH-015-HAY-ETYM",
         "ES-PATH-015-HAY-QUE",
         "ES-PATH-015-REVIEW-HAY",
-        "ES-PATH-015-SYNTH-HAY"
+        "ES-PATH-015-SYNTH-HAY",
+        "ES-PATH-340-01",
+        "ES-PATH-341-01"
       ],
       "omits": [],
       "relocates": {}
@@ -4657,7 +4757,8 @@
         "ES-PATH-278-01",
         "ES-PATH-279-01",
         "ES-PATH-280-01",
-        "ES-PATH-281-01"
+        "ES-PATH-281-01",
+        "ES-PATH-345-01"
       ],
       "omits": [],
       "relocates": {}
@@ -4666,7 +4767,8 @@
       "segments": [
         "ES-PATH-016",
         "ES-PATH-016-AGE",
-        "ES-PATH-026"
+        "ES-PATH-026",
+        "ES-PATH-344-01"
       ],
       "omits": [],
       "relocates": {}
@@ -8786,6 +8888,96 @@
         "ES-C334-frio",
         "ES-C334-calor",
         "ES-C334-edad"
+      ]
+    },
+    {
+      "id": "ES-EXT-340-WHERE",
+      "stage": "A1",
+      "kind": "required",
+      "category": "vocabulary",
+      "canDo": "I can place a thing near or far, send somebody to the right or the left, and say that one thing faces another.",
+      "prerequisites": [],
+      "lessons": [
+        "ES-C340-cerca",
+        "ES-C340-lejos",
+        "ES-C340-derecha",
+        "ES-C340-izquierda",
+        "ES-C340-enfrente"
+      ]
+    },
+    {
+      "id": "ES-EXT-341-WHERE",
+      "stage": "A1",
+      "kind": "required",
+      "category": "vocabulary",
+      "canDo": "I can put a thing above or below me, ahead of me or behind me, and inside rather than outside.",
+      "prerequisites": [],
+      "lessons": [
+        "ES-C341-arriba",
+        "ES-C341-abajo",
+        "ES-C341-delante",
+        "ES-C341-detras",
+        "ES-C341-dentro"
+      ]
+    },
+    {
+      "id": "ES-EXT-342-CLOCK",
+      "stage": "A1",
+      "kind": "required",
+      "category": "vocabulary",
+      "canDo": "I can cut an hour into minutes and quarters, give a time on the dot, ask for a timetable, and name the hours before dawn.",
+      "prerequisites": [],
+      "lessons": [
+        "ES-C342-minuto",
+        "ES-C342-cuarto",
+        "ES-C342-punto",
+        "ES-C342-horario",
+        "ES-C342-madrugada"
+      ]
+    },
+    {
+      "id": "ES-EXT-343-CLOCK",
+      "stage": "A1",
+      "kind": "required",
+      "category": "vocabulary",
+      "canDo": "I can name a date, find it on a calendar, point forward to the next one, and name the era it belongs to.",
+      "prerequisites": [],
+      "lessons": [
+        "ES-C343-fecha",
+        "ES-C343-calendario",
+        "ES-C343-proximo",
+        "ES-C343-epoca",
+        "ES-C343-siglo"
+      ]
+    },
+    {
+      "id": "ES-EXT-344-COUNT",
+      "stage": "A1",
+      "kind": "required",
+      "category": "vocabulary",
+      "canDo": "I can count from zero, name a number, take half of a thing, count by dozens, and double an amount.",
+      "prerequisites": [],
+      "lessons": [
+        "ES-C344-cero",
+        "ES-C344-numero",
+        "ES-C344-mitad",
+        "ES-C344-docena",
+        "ES-C344-doble"
+      ]
+    },
+    {
+      "id": "ES-EXT-345-REF",
+      "stage": "A1",
+      "kind": "required",
+      "category": "vocabulary",
+      "canDo": "I can say a thing is the same one, take a set one at a time, name a share of it, and name a single person or object.",
+      "prerequisites": [],
+      "lessons": [
+        "ES-C345-mismo",
+        "ES-C345-cada",
+        "ES-C345-parte",
+        "ES-C345-persona",
+        "ES-C345-objeto"
       ]
     },
     {

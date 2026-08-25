@@ -5385,6 +5385,36 @@
       "output": "spanish/book/chapters/ch336-repaso-seis-en-uso.tex"
     },
     {
+      "language": "spanish",
+      "chapter": 340,
+      "output": "spanish/book/chapters/ch340-cerca-y-lejos.tex"
+    },
+    {
+      "language": "spanish",
+      "chapter": 341,
+      "output": "spanish/book/chapters/ch341-arriba-y-abajo.tex"
+    },
+    {
+      "language": "spanish",
+      "chapter": 342,
+      "output": "spanish/book/chapters/ch342-el-minuto-y-el-cuarto.tex"
+    },
+    {
+      "language": "spanish",
+      "chapter": 343,
+      "output": "spanish/book/chapters/ch343-la-fecha-y-el-siglo.tex"
+    },
+    {
+      "language": "spanish",
+      "chapter": 344,
+      "output": "spanish/book/chapters/ch344-cero-y-mitad.tex"
+    },
+    {
+      "language": "spanish",
+      "chapter": 345,
+      "output": "spanish/book/chapters/ch345-cada-y-mismo.tex"
+    },
+    {
       "language": "tamil",
       "chapter": 6,
       "output": "tamil/book/chapters/ch06-dative-case.tex",
