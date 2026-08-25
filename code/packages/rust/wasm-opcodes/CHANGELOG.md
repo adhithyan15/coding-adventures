@@ -2,6 +2,42 @@
 
 All notable changes to this package will be documented in this file.
 
+## [0.2.50] - 2026-08-25 - Relaxed SIMD epic PR1: i8x16.relaxed_swizzle
+
+### Added
+
+- 1 new `SIMD_OPS` entry starting the relaxed-SIMD epic (see
+  `code/specs/W19-wasm-relaxed-simd-first-slice.md`) that follows the
+  now-complete base SIMD epic (PR1-PR47): `i8x16.relaxed_swizzle`
+  (`0x100`) -- 237 SIMD opcodes total, up from 236.
+- Sub-opcode value fetched live from the relaxed-simd proposal's own
+  encoding table, `https://github.com/WebAssembly/relaxed-simd/blob/
+  main/proposals/relaxed-simd/Overview.md` -- a DIFFERENT document from
+  `BinarySIMD.md`, which every base-SIMD entry above cites and which
+  does not cover this proposal. Re-verified against a live GitHub API
+  tree listing of the pinned `WebAssembly/testsuite` commit this repo's
+  `wasm-conformance` crate already pins (`28864811cf03bdbf880733786148
+  feaba339582d`) that relaxed-simd `.wast` corpus files genuinely exist
+  there, rather than assumed.
+- 1 new `SimdOpKind` variant: `RelaxedSwizzle`. `0x100` is the first
+  sub-opcode in this whole table `>= 0x100`; every relaxed-simd opcode
+  needs the 2-byte LEB128 continuation encoding (`0x100` =
+  `[0x80, 0x02]`) this crate already exercises for base-SIMD values
+  `>= 0x80` (e.g. `i32x4.add`'s `0xAE` = `[0xAE, 0x01]`) -- confirmed no
+  new decoder infrastructure was needed for this epic, unlike the
+  original base-SIMD LEB128 gap W13 had to close.
+- Hand-verified against the real upstream `i8x16_relaxed_swizzle.wast`
+  corpus's own `either`-wrapped expected values that this repo's
+  existing `Swizzle` clamp-to-zero out-of-range behavior is a literal,
+  deterministic member of every `either` pair in that file, so
+  `wasm-execution`'s new `RelaxedSwizzle` match arm reuses `Swizzle`'s
+  execution body unchanged (own arm, not a shared helper, matching this
+  table's existing per-kind-duplication convention) -- no new numeric
+  semantics needed for this specific opcode.
+- Test suite bumped: `simd_ops_table_has_the_expected_237_entries_and_
+  no_duplicates` (was 236), plus a new dedicated
+  `simd_relaxed_swizzle_has_the_real_verified_sub_opcode_value` test.
+
 ## [0.2.49] - 2026-08-25 - SIMD PR47: v128.load64_lane/store64_lane
 
 ### Added

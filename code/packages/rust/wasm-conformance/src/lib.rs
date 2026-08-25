@@ -747,6 +747,17 @@ fn value_matches_expected(actual: &WasmValue, v128_bytes: Option<V128Bytes>, exp
             }),
             _ => false,
         },
+        // `(either A B)` (relaxed SIMD epic PR1 -- see `code/specs/
+        // W19-wasm-relaxed-simd-first-slice.md` and `Expected::Either`'s
+        // own doc comment in wasm-wast-parser): the relaxed-simd spec
+        // deliberately leaves certain ops implementation-defined for
+        // certain inputs, and the upstream corpus grades them with this
+        // "match A OR B" combinator instead of one exact value. Recurses
+        // through this same function for both children -- `A`/`B` can in
+        // principle be any other `Expected` shape (a NaN class, a nested
+        // `Either`, etc.), not just a plain `v128.const`, so this is NOT
+        // limited to the specific opcode this PR implements.
+        Expected::Either(a, b) => value_matches_expected(actual, v128_bytes, a) || value_matches_expected(actual, v128_bytes, b),
     }
 }
 
@@ -969,6 +980,55 @@ mod tests {
             None,
             &Expected::NanArithmeticF64
         ));
+    }
+
+    // ── Relaxed SIMD epic PR1: `(either A B)` grading -- see code/specs/
+    // W19-wasm-relaxed-simd-first-slice.md ───────────────────────────────
+
+    #[test]
+    fn either_accepts_a_value_matching_the_first_alternative() {
+        let expected = Expected::Either(
+            Box::new(Expected::Value(ConstValue::I32(1))),
+            Box::new(Expected::Value(ConstValue::I32(2))),
+        );
+        assert!(value_matches_expected(&WasmValue::I32(1), None, &expected));
+    }
+
+    #[test]
+    fn either_accepts_a_value_matching_the_second_alternative() {
+        let expected = Expected::Either(
+            Box::new(Expected::Value(ConstValue::I32(1))),
+            Box::new(Expected::Value(ConstValue::I32(2))),
+        );
+        assert!(value_matches_expected(&WasmValue::I32(2), None, &expected));
+    }
+
+    #[test]
+    fn either_rejects_a_value_matching_neither_alternative() {
+        let expected = Expected::Either(
+            Box::new(Expected::Value(ConstValue::I32(1))),
+            Box::new(Expected::Value(ConstValue::I32(2))),
+        );
+        assert!(!value_matches_expected(&WasmValue::I32(3), None, &expected));
+    }
+
+    #[test]
+    fn either_v128_matches_the_real_relaxed_swizzle_out_of_range_shape() {
+        // Mirrors `i8x16_relaxed_swizzle.wast`'s own out-of-range case:
+        // accepts either the all-zero clamp-to-zero result (this repo's
+        // actual choice) or the modulo-16-wrapped alternative.
+        let zeros = [0u8; 16];
+        let mut identity = [0u8; 16];
+        for (i, b) in identity.iter_mut().enumerate() {
+            *b = i as u8;
+        }
+        let expected =
+            Expected::Either(Box::new(Expected::Value(ConstValue::V128(zeros))), Box::new(Expected::Value(ConstValue::V128(identity))));
+        assert!(value_matches_expected(&WasmValue::V128(0), Some(V128Bytes(zeros)), &expected));
+        assert!(value_matches_expected(&WasmValue::V128(0), Some(V128Bytes(identity)), &expected));
+        let mut neither = [0u8; 16];
+        neither[0] = 0xFF;
+        assert!(!value_matches_expected(&WasmValue::V128(0), Some(V128Bytes(neither)), &expected));
     }
 
     #[test]

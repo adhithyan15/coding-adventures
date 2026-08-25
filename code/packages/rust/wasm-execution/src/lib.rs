@@ -6989,6 +6989,44 @@ fn register_simd(vm: &mut GenericVM) {
                 let handle = push_v128(ctx, result)?;
                 push_wasm(vm, WasmValue::V128(handle));
             }
+            SimdOpKind::RelaxedSwizzle => {
+                // i8x16.relaxed_swizzle (relaxed SIMD epic PR1 -- see
+                // `code/specs/W19-wasm-relaxed-simd-first-slice.md`): the
+                // relaxed-simd spec deliberately leaves out-of-range
+                // index behavior implementation-defined -- an engine MAY
+                // clamp to `0` (this repo's plain `Swizzle` behavior,
+                // above) OR wrap the index modulo 16 for `s[i] < 128`.
+                // Verified BY HAND against the real upstream
+                // `i8x16_relaxed_swizzle.wast` corpus's own `either`
+                // expected-value pairs (not assumed from spec prose
+                // alone): this repo's existing clamp-to-zero behavior is
+                // a literal member of every one of that file's `either`
+                // pairs, so this arm is intentionally a byte-for-byte
+                // copy of `Swizzle`'s body just above -- same shape, same
+                // deterministic choice, no new numeric logic needed for
+                // this specific opcode. Own arm rather than folding into
+                // `Swizzle`'s `|`-pattern above, matching this match's
+                // existing convention of one arm per `SimdOpKind` even
+                // when two kinds share identical bodies (e.g.
+                // `ExtractLaneI8x16S`/`_U` below don't merge either).
+                let s_handle = pop_wasm(vm)?.as_v128_handle().map_err(VMError::from)?;
+                let a_handle = pop_wasm(vm)?.as_v128_handle().map_err(VMError::from)?;
+                let s = *ctx
+                    .v128_heap
+                    .get(s_handle as usize)
+                    .ok_or_else(|| VMError::GenericError("v128 operand: heap handle out of range".into()))?;
+                let a = *ctx
+                    .v128_heap
+                    .get(a_handle as usize)
+                    .ok_or_else(|| VMError::GenericError("v128 operand: heap handle out of range".into()))?;
+                let mut result = [0u8; 16];
+                for i in 0..16 {
+                    let idx = s[i];
+                    result[i] = if idx < 16 { a[idx as usize] } else { 0 };
+                }
+                let handle = push_v128(ctx, result)?;
+                push_wasm(vm, WasmValue::V128(handle));
+            }
             SimdOpKind::ExtractLaneI8x16S | SimdOpKind::ExtractLaneI8x16U => {
                 // i8x16.extract_lane_s/_u (SIMD widen PR18): pop a v128,
                 // read the `aux`-selected `i8` lane back out as a plain
@@ -17832,6 +17870,67 @@ mod tests {
             results[0],
             Some(V128Bytes([0u8; 16])),
             "every index lane here is >= 16 (as an unsigned byte), so every result lane must be 0"
+        );
+    }
+
+    // ── Relaxed SIMD epic PR1: i8x16.relaxed_swizzle -- see code/specs/
+    // W19-wasm-relaxed-simd-first-slice.md ──────────────────────────────
+
+    /// `i8x16.relaxed_swizzle`'s sub-opcode is `0x100`, the FIRST value in
+    /// this whole table `>= 0x100` -- LEB128-encodes as the 2-byte
+    /// sequence `[0x80, 0x02]` (confirmed by hand: `0x100` = `0b1_0000000`,
+    /// low 7 bits `0000000` with the continuation bit set = `0x80`,
+    /// remaining `0x100 >> 7 = 2` fits the final byte unchanged). This
+    /// test exists specifically to confirm that 2-byte encoding decodes
+    /// correctly (not just that the opcode dispatches once decoded) --
+    /// same in-range permutation case as `i8x16_swizzle_permutes_lanes_
+    /// by_the_index_vector` above, reusing the reversing index vector so
+    /// the two tests are directly comparable.
+    #[test]
+    fn i8x16_relaxed_swizzle_permutes_lanes_by_the_index_vector() {
+        let a: [i8; 16] = [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15];
+        let s: [i8; 16] = [15, 14, 13, 12, 11, 10, 9, 8, 7, 6, 5, 4, 3, 2, 1, 0]; // reverse
+        let mut code = vec![0xFD, 0x0C];
+        code.extend(v128_const_bytes_i8x16(a));
+        code.extend([0xFD, 0x0C]);
+        code.extend(v128_const_bytes_i8x16(s));
+        code.extend([0xFD, 0x80, 0x02]); // i8x16.relaxed_swizzle (sub-opcode 0x100, 2-byte LEB128)
+        code.push(0x0B);
+        let mut engine = simd_engine_returning_v128(code);
+        let (_, results) = engine.call_function_with_v128(0, &[]).unwrap();
+        let expected: [i8; 16] = [15, 14, 13, 12, 11, 10, 9, 8, 7, 6, 5, 4, 3, 2, 1, 0];
+        assert_eq!(
+            results[0],
+            Some(V128Bytes(v128_const_bytes_i8x16(expected).try_into().unwrap())),
+            "relaxed_swizzle with a reversing index vector must reverse the 16 lanes, same as plain swizzle"
+        );
+    }
+
+    /// `i8x16.relaxed_swizzle`'s out-of-range behavior is spec-sanctioned
+    /// as implementation-defined; this repo picks the same deterministic
+    /// clamp-to-zero behavior plain `Swizzle` uses (verified by hand
+    /// against the real upstream `i8x16_relaxed_swizzle.wast` corpus's
+    /// own `either` pairs -- see `SimdOpKind::RelaxedSwizzle`'s doc
+    /// comment) -- so this repo's own result for an out-of-range index is
+    /// unconditionally `0`, exactly mirroring `i8x16_swizzle_out_of_
+    /// range_index_lane_produces_zero` above.
+    #[test]
+    fn i8x16_relaxed_swizzle_out_of_range_index_lane_produces_zero() {
+        let a: [i8; 16] = [10, 20, 30, 40, 50, 60, 70, 80, 90, 100, 110, 120, -1, -2, -3, -4];
+        // Every index lane here is >= 16 (as an unsigned byte 0-255).
+        let s: [i8; 16] = [16, 17, 18, 19, 20, 100, -1, -128, 127, -56, 16, 16, 16, 16, 16, 16];
+        let mut code = vec![0xFD, 0x0C];
+        code.extend(v128_const_bytes_i8x16(a));
+        code.extend([0xFD, 0x0C]);
+        code.extend(v128_const_bytes_i8x16(s));
+        code.extend([0xFD, 0x80, 0x02]); // i8x16.relaxed_swizzle
+        code.push(0x0B);
+        let mut engine = simd_engine_returning_v128(code);
+        let (_, results) = engine.call_function_with_v128(0, &[]).unwrap();
+        assert_eq!(
+            results[0],
+            Some(V128Bytes([0u8; 16])),
+            "every index lane here is >= 16 (as an unsigned byte), so every result lane must be 0, same as plain swizzle"
         );
     }
 

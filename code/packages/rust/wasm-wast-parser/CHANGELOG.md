@@ -1,5 +1,35 @@
 # Changelog — wasm-wast-parser
 
+## 0.1.69 — 2026-08-25 — Relaxed SIMD epic PR1: i8x16.relaxed_swizzle + the `either` assert_return combinator
+
+### Added
+
+- `SimdOpKind::RelaxedSwizzle` joined the existing no-immediate SIMD
+  match arm (same list `Swizzle` is already in) in both
+  `encode_stream_instr` and `encode_flat_instr` -- `i8x16.relaxed_
+  swizzle` takes no immediate beyond the opcode itself, identical
+  encoding shape to `i8x16.swizzle`. First opcode of the relaxed-simd
+  epic that follows the now-complete base SIMD epic (PR1-PR47) -- see
+  `code/specs/W19-wasm-relaxed-simd-first-slice.md`.
+- New top-level `assert_return` expected-value combinator:
+  `Expected::Either(Box<Expected>, Box<Expected>)`, parsed from
+  `(either A B)`. The relaxed-simd spec deliberately leaves certain ops
+  implementation-defined for certain inputs; the upstream corpus grades
+  those cases with `either` instead of one exact expected value.
+  `parse_expected` gained a new `("either", _)` arm that recurses into
+  itself for both children, so `either` can wrap any other `Expected`
+  shape (a NaN class, a nested `either`, etc.), not just a plain
+  `v128.const`. Every relaxed-simd `.wast` file in the pinned upstream
+  corpus uses `either` at least once -- a genuine prerequisite for
+  vendoring any relaxed-simd fixture, discovered by reading the real
+  corpus content, not assumed from the opcode list.
+- `Expected` is no longer `Copy` (only `Clone`) -- a `Box<Expected>`
+  can't be `Copy`. Every existing call site already took `&Expected` or
+  moved a freshly constructed value, so this cost nothing; confirmed by
+  this crate's full test suite passing unchanged.
+- New tests: `either_of_two_v128_const_values_parses_as_expected_either`,
+  `either_recurses_through_parse_expected_for_non_v128_children`.
+
 ## 0.1.68 — 2026-08-25 — SIMD PR47: v128.load64_lane/store64_lane text-form encoding
 
 ### Added

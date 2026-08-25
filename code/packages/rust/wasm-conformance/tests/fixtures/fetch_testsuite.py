@@ -697,6 +697,31 @@ TESTSUITE_FILES = [
     # PR40.
     "simd_load64_lane.wast",
     "simd_store64_lane.wast",
+    # Relaxed SIMD epic PR1 (see code/specs/
+    # W19-wasm-relaxed-simd-first-slice.md): i8x16_relaxed_swizzle.wast --
+    # `i8x16.relaxed_swizzle` (sub-opcode 0x100), the FIRST relaxed-simd
+    # opcode, the smallest self-contained REAL-assertion-bearing file in
+    # the relaxed-simd family (confirmed via a live GitHub API tree
+    # listing at this same pinned SHA -- relaxed-simd is a SEPARATE
+    # proposal from base SIMD, its own encoding table at
+    # `https://github.com/WebAssembly/relaxed-simd/blob/main/proposals/
+    # relaxed-simd/Overview.md`, not `BinarySIMD.md`). Lives at the
+    # testsuite repo ROOT, same as every other file in this list -- no
+    # `PROPOSAL_FILES` entry needed (unlike `atomic.wast`). Real
+    # `assert_return` coverage using the upstream corpus's `either A B`
+    # combinator (a NEW assert_return shape this PR added parsing/grading
+    # support for in `wasm-wast-parser`/`wasm-conformance` -- every
+    # relaxed-simd `.wast` file at this pinned SHA uses it at least once,
+    # confirmed by inspection, so it's a genuine prerequisite for
+    # vendoring ANY relaxed-simd fixture, not opcode-specific). The other
+    # 6 relaxed-simd files (`i16x8_relaxed_q15mulr_s.wast`,
+    # `i32x4_relaxed_trunc.wast` -- flagged as having ZERO real
+    # `assert_return` directives, weaker coverage than every other file
+    # here -- `relaxed_dot_product.wast`, `relaxed_laneselect.wast`,
+    # `relaxed_madd_nmadd.wast`, `relaxed_min_max.wast`) are each a later
+    # PR's scope, same one-opcode-family-per-PR cadence the base SIMD
+    # epic (PR1-PR47) established.
+    "i8x16_relaxed_swizzle.wast",
 ]
 
 # Reference-types/threads-proposal files whose UPSTREAM path lives under
