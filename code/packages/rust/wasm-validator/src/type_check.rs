@@ -1880,12 +1880,27 @@ fn type_check_function(ctx: &ModuleContext, func_idx: usize, func_type: &FuncTyp
                         pop_expect(&mut stack, frame!(), ValueType::V128)?;
                         push_val(&mut stack, ValueType::V128);
                     }
-                    wasm_opcodes::SimdOpKind::Bitselect => {
+                    wasm_opcodes::SimdOpKind::Bitselect
+                    | wasm_opcodes::SimdOpKind::RelaxedLaneselectI8x16
+                    | wasm_opcodes::SimdOpKind::RelaxedLaneselectI16x8
+                    | wasm_opcodes::SimdOpKind::RelaxedLaneselectI32x4
+                    | wasm_opcodes::SimdOpKind::RelaxedLaneselectI64x2 => {
                         // The first TERNARY SIMD op in this crate: pops
                         // THREE v128s, pushes one. See
                         // `SimdOpKind::Bitselect`'s own doc comment in
                         // wasm-opcodes for the runtime semantics -- at
                         // the type level it's just three V128 pops.
+                        // `i8x16/i16x8/i32x4/i64x2.relaxed_laneselect`
+                        // (relaxed-SIMD epic PR4 -- see `code/specs/
+                        // W19-wasm-relaxed-simd-first-slice.md`) join
+                        // too: same TERNARY `(v128, v128, v128) -> v128`
+                        // shape as `Bitselect`, whose body they reuse
+                        // verbatim at the runtime level -- the
+                        // implementation-defined-vs-bitselect distinction
+                        // the relaxed-simd spec draws (see
+                        // `SimdOpKind::RelaxedLaneselectI8x16`'s own doc
+                        // comment in wasm-opcodes) is entirely a runtime
+                        // concern, invisible here.
                         pop_expect(&mut stack, frame!(), ValueType::V128)?;
                         pop_expect(&mut stack, frame!(), ValueType::V128)?;
                         pop_expect(&mut stack, frame!(), ValueType::V128)?;

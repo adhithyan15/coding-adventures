@@ -2072,7 +2072,19 @@ fn encode_stream_instr(
             | wasm_opcodes::SimdOpKind::RelaxedMinF32x4
             | wasm_opcodes::SimdOpKind::RelaxedMaxF32x4
             | wasm_opcodes::SimdOpKind::RelaxedMinF64x2
-            | wasm_opcodes::SimdOpKind::RelaxedMaxF64x2 => {
+            | wasm_opcodes::SimdOpKind::RelaxedMaxF64x2
+            | wasm_opcodes::SimdOpKind::RelaxedLaneselectI8x16
+            | wasm_opcodes::SimdOpKind::RelaxedLaneselectI16x8
+            | wasm_opcodes::SimdOpKind::RelaxedLaneselectI32x4
+            | wasm_opcodes::SimdOpKind::RelaxedLaneselectI64x2 => {
+                // `i8x16/i16x8/i32x4/i64x2.relaxed_laneselect` (relaxed
+                // SIMD epic PR4 -- see code/specs/
+                // W19-wasm-relaxed-simd-first-slice.md) join too: same
+                // TERNARY `(v128, v128, v128) -> v128` shape as
+                // `Bitselect` above, whose body they reuse verbatim at
+                // the runtime level -- still just a bare opcode encoding
+                // (`0xFD` + 2-byte LEB128 sub-opcode), no immediate.
+
                 // `i8x16.add_sat_s`/`_u`/`.sub_sat_s`/`_u`/
                 // `i16x8.add_sat_s`/`_u`/`.sub_sat_s`/`_u` (SIMD widen
                 // PR33) join too: same BINARY (pop two v128s, push one),
@@ -3064,7 +3076,19 @@ fn encode_flat_instr(
             | wasm_opcodes::SimdOpKind::RelaxedMinF32x4
             | wasm_opcodes::SimdOpKind::RelaxedMaxF32x4
             | wasm_opcodes::SimdOpKind::RelaxedMinF64x2
-            | wasm_opcodes::SimdOpKind::RelaxedMaxF64x2 => {
+            | wasm_opcodes::SimdOpKind::RelaxedMaxF64x2
+            | wasm_opcodes::SimdOpKind::RelaxedLaneselectI8x16
+            | wasm_opcodes::SimdOpKind::RelaxedLaneselectI16x8
+            | wasm_opcodes::SimdOpKind::RelaxedLaneselectI32x4
+            | wasm_opcodes::SimdOpKind::RelaxedLaneselectI64x2 => {
+                // `i8x16/i16x8/i32x4/i64x2.relaxed_laneselect` (relaxed
+                // SIMD epic PR4 -- see code/specs/
+                // W19-wasm-relaxed-simd-first-slice.md) join too: same
+                // TERNARY `(v128, v128, v128) -> v128` shape as
+                // `Bitselect` above, whose body they reuse verbatim at
+                // the runtime level -- still just a bare opcode encoding
+                // (`0xFD` + 2-byte LEB128 sub-opcode), no immediate.
+
                 // `i8x16.add_sat_s`/`_u`/`.sub_sat_s`/`_u`/
                 // `i16x8.add_sat_s`/`_u`/`.sub_sat_s`/`_u` (SIMD widen
                 // PR33) join too, same reasoning as `NarrowI16x8S/_U`

@@ -1,6 +1,21 @@
 # Changelog — wasm-wast-parser
 
-## 0.1.71 — 2026-08-25 — Relaxed SIMD epic PR3: f32x4/f64x2 relaxed_min/relaxed_max, N-ary `either`
+## 0.1.72 — 2026-08-25 — Relaxed SIMD epic PR4: i8x16/i16x8/i32x4/i64x2.relaxed_laneselect
+
+### Added
+
+- `SimdOpKind::RelaxedLaneselectI8x16`/`RelaxedLaneselectI16x8`/
+  `RelaxedLaneselectI32x4`/`RelaxedLaneselectI64x2` joined the existing
+  no-immediate SIMD match arm in both `module.rs` encoding functions
+  (the same arm `Bitselect` and the earlier relaxed-simd opcodes are
+  already in) -- these 4 opcodes are TERNARY, same as `Bitselect`, but
+  still take no immediate beyond the `0xFD` prefix + 2-byte LEB128
+  sub-opcode, so no new parsing logic was needed beyond the table
+  lookup this crate already does for every SIMD opcode.
+- No changes needed to `script.rs`'s `Expected::Either`/`parse_expected`
+  -- the N-ary `either` generalization PR3 added already handles the
+  real `relaxed_laneselect.wast` corpus's THREE-alternative "pblendvb"
+  special-case group unchanged.
 
 ### Added
 

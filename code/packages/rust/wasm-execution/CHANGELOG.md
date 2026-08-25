@@ -2,6 +2,28 @@
 
 All notable changes to this package will be documented in this file.
 
+## [0.9.61] - 2026-08-25 (Relaxed SIMD epic PR4: i8x16/i16x8/i32x4/i64x2.relaxed_laneselect)
+
+### Added
+
+- `SimdOpKind::RelaxedLaneselectI8x16`/`RelaxedLaneselectI16x8`/
+  `RelaxedLaneselectI32x4`/`RelaxedLaneselectI64x2` execution arm
+  (sub-opcodes `0x109`-`0x10c`) -- the SEVENTH/EIGHTH/NINTH/TENTH
+  relaxed-simd opcodes (see `code/specs/
+  W19-wasm-relaxed-simd-first-slice.md`). TERNARY: pops three v128s
+  (`a`, `b`, mask `c`), pushes one -- the same shape as this crate's
+  existing `Bitselect` arm, whose body (bytewise `(a AND c) OR (b AND
+  (NOT c))`) this new arm reuses verbatim, hand-verified against every
+  `either` group in the real vendored `relaxed_laneselect.wast` corpus
+  to be an exact, literal match to the first alternative in every case
+  -- including the file's own "impure mask" pblendvb special case (a
+  THREE-alternative `either`). The first relaxed-simd family to reuse a
+  TERNARY base opcode's body rather than a binary/unary one.
+- 5 new unit tests: a cross-lane-width pure-mask test mirroring the
+  existing `v128_bitselect_selects_bits_per_mask` test, plus one
+  dedicated test per opcode reproducing the real corpus's exact first
+  `either` alternative byte-for-byte.
+
 ## [0.9.60] - 2026-08-25 (Relaxed SIMD epic PR3: f32x4/f64x2 relaxed_min/relaxed_max)
 
 ### Added

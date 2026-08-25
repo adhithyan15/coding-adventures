@@ -2425,6 +2425,79 @@ pub enum SimdOpKind {
     /// [`Self::RelaxedMinF64x2`] against the real corpus's
     /// `f64x2.relaxed_max` cases.
     RelaxedMaxF64x2,
+    /// `i8x16.relaxed_laneselect` (relaxed-SIMD epic, PR4 -- see
+    /// `code/specs/W19-wasm-relaxed-simd-first-slice.md`) -- sub-opcode
+    /// `0x109`, the SEVENTH relaxed-simd opcode implemented after
+    /// [`Self::RelaxedSwizzle`]/[`Self::RelaxedQ15mulrI16x8S`]/
+    /// [`Self::RelaxedMinF32x4`]/[`Self::RelaxedMaxF32x4`]/
+    /// [`Self::RelaxedMinF64x2`]/[`Self::RelaxedMaxF64x2`]. TERNARY,
+    /// same `(v128, v128, v128) -> v128` shape as this crate's existing
+    /// [`Self::Bitselect`] -- confirmed live against the real
+    /// `relaxed-simd` Overview.md encoding table (`https://github.com/
+    /// WebAssembly/relaxed-simd/blob/main/proposals/relaxed-simd/
+    /// Overview.md`): the task brief that scoped this PR guessed
+    /// `0x104`-`0x107`, which is WRONG -- that range is actually
+    /// `i32x4.relaxed_trunc_f64x2_u_zero`/`f32x4.relaxed_madd`/
+    /// `relaxed_nmadd`/`f64x2.relaxed_madd`. The real laneselect range,
+    /// re-verified by fetching the live table, is `0x109`-`0x10c`.
+    ///
+    /// Per the spec's own prose: "If each lane-sized mask in `m` has all
+    /// bits set or all bits unset, these instructions behave the same as
+    /// `v128.bitselect`. Otherwise, the result is implementation
+    /// defined." Hand-verified against every `either` case in the real
+    /// vendored `relaxed_laneselect.wast` corpus (pinned
+    /// `WebAssembly/testsuite` SHA
+    /// `28864811cf03bdbf880733786148feaba339582d`): this crate's existing
+    /// [`Self::Bitselect`] body -- bytewise `(a AND mask) OR (b AND (NOT
+    /// mask))`, entirely lane-width-agnostic -- reproduces the FIRST
+    /// `either` alternative EXACTLY in every one of that file's
+    /// `i8x16.relaxed_laneselect` cases, e.g. for
+    /// `laneselect(a=[0,1,0x12,0x12,...], b=[16,17,0x34,0x34,...],
+    /// m=[0xff,0,0xf0,0x0f,0,...])`: bitwise bitselect gives lane2 =
+    /// `(0x12 & 0xf0) | (0x34 & 0x0f)` = `0x14`, lane3 =
+    /// `(0x12 & 0x0f) | (0x34 & 0xf0)` = `0x32`, matching the corpus's
+    /// first `either` alternative `[0, 17, 0x14, 0x32, ...]` bit-for-bit
+    /// (the second alternative, `[0, 17, 0x12, 0x34, ...]`, is instead
+    /// what a per-lane blend instruction examining only each lane's top
+    /// bit would produce -- this repo's interpreter is byte-oriented, not
+    /// blend-instruction-oriented, so the bitwise `Bitselect` body is the
+    /// natural, literal, hand-verified match). So this opcode reuses
+    /// [`Self::Bitselect`]'s existing execution body verbatim (own match
+    /// arm, matching this table's per-kind-duplication convention). See
+    /// `wasm-execution`'s `SimdOpKind::RelaxedLaneselectI8x16` match arm.
+    RelaxedLaneselectI8x16,
+    /// `i16x8.relaxed_laneselect` (relaxed-SIMD epic, PR4) -- sub-opcode
+    /// `0x10a`, the 8-lane mirror of [`Self::RelaxedLaneselectI8x16`].
+    /// Reuses [`Self::Bitselect`]'s body verbatim -- bitwise bitselect is
+    /// lane-width-agnostic, so the SAME execution code is correct
+    /// regardless of the lane interpretation used to pick the opcode
+    /// mnemonic. Hand-verified against the real corpus's
+    /// `i16x8.relaxed_laneselect` cases the same way, INCLUDING the
+    /// corpus's own "special case for i16x8 to allow pblendvb" test
+    /// (mask lane `0x0080`, a THREE-alternative `either`): bitwise
+    /// bitselect on that case gives `(0x1234 & 0x0080) | (0x5678 &
+    /// 0xff7f)` = `0x5678`, matching that test's first `either`
+    /// alternative bit-for-bit.
+    RelaxedLaneselectI16x8,
+    /// `i32x4.relaxed_laneselect` (relaxed-SIMD epic, PR4) -- sub-opcode
+    /// `0x10b`, the 4-lane mirror of [`Self::RelaxedLaneselectI8x16`].
+    /// Reuses [`Self::Bitselect`]'s body verbatim, hand-verified against
+    /// the real corpus's `i32x4.relaxed_laneselect` case the same way:
+    /// `laneselect(a=[0,1,0x12341234,0x12341234], b=[4,5,0x56785678,
+    /// 0x56785678], m=[0xffffffff,0,0xffff0000,0x0000ffff])` bitwise-
+    /// bitselects to `[0,5,0x12345678,0x56781234]`, matching the corpus's
+    /// first `either` alternative bit-for-bit.
+    RelaxedLaneselectI32x4,
+    /// `i64x2.relaxed_laneselect` (relaxed-SIMD epic, PR4) -- sub-opcode
+    /// `0x10c`, the 2-lane mirror of [`Self::RelaxedLaneselectI8x16`].
+    /// Reuses [`Self::Bitselect`]'s body verbatim, hand-verified against
+    /// the real corpus's `i64x2.relaxed_laneselect` cases the same way,
+    /// e.g. `laneselect(a=[0x1234123412341234,0x1234123412341234],
+    /// b=[0x5678567856785678,0x5678567856785678],
+    /// m=[0xffffffff00000000,0x00000000ffffffff])` bitwise-bitselects to
+    /// `[0x1234123456785678,0x5678567812341234]`, matching the corpus's
+    /// first `either` alternative bit-for-bit.
+    RelaxedLaneselectI64x2,
 }
 
 /// One entry in the SIMD opcode table: everything a consumer needs to
@@ -3282,6 +3355,31 @@ pub static SIMD_OPS: &[SimdOpInfo] = &[
     SimdOpInfo { name: "f32x4.relaxed_max", sub_opcode: 0x10e, kind: SimdOpKind::RelaxedMaxF32x4 },
     SimdOpInfo { name: "f64x2.relaxed_min", sub_opcode: 0x10f, kind: SimdOpKind::RelaxedMinF64x2 },
     SimdOpInfo { name: "f64x2.relaxed_max", sub_opcode: 0x110, kind: SimdOpKind::RelaxedMaxF64x2 },
+
+    // ── Relaxed SIMD epic, PR4 -- see code/specs/
+    // W19-wasm-relaxed-simd-first-slice.md ──────────────────────────────
+    //
+    // `i8x16.relaxed_laneselect`/`i16x8.relaxed_laneselect`/
+    // `i32x4.relaxed_laneselect`/`i64x2.relaxed_laneselect` -- sub-opcodes
+    // `0x109`-`0x10c`, re-verified live against the same relaxed-simd
+    // Overview.md encoding table the other relaxed-simd rows above cite
+    // (fetched live, not guessed -- the task brief's own guessed range,
+    // `0x104`-`0x107`, turned out to be wrong; that range actually
+    // belongs to `i32x4.relaxed_trunc_f64x2_u_zero`/`f32x4.relaxed_madd`/
+    // `relaxed_nmadd`/`f64x2.relaxed_madd`, none implemented yet). LEB128
+    // encodings: `0x109` (265) -> `[0x89, 0x02]`, `0x10a` (266) ->
+    // `[0x8A, 0x02]`, `0x10b` (267) -> `[0x8B, 0x02]`, `0x10c` (268) ->
+    // `[0x8C, 0x02]` -- same 2-byte-continuation shape every relaxed-simd
+    // row uses. See `SimdOpKind::RelaxedLaneselectI8x16`/`I16x8`/`I32x4`/
+    // `I64x2`'s own doc comments for the hand-verified `either`-pair
+    // semantics (against the real `relaxed_laneselect.wast` corpus) that
+    // let these reuse this crate's existing `Bitselect` execution body
+    // unchanged -- the first relaxed-simd family to reuse a TERNARY base
+    // opcode's body rather than a binary/unary one.
+    SimdOpInfo { name: "i8x16.relaxed_laneselect", sub_opcode: 0x109, kind: SimdOpKind::RelaxedLaneselectI8x16 },
+    SimdOpInfo { name: "i16x8.relaxed_laneselect", sub_opcode: 0x10a, kind: SimdOpKind::RelaxedLaneselectI16x8 },
+    SimdOpInfo { name: "i32x4.relaxed_laneselect", sub_opcode: 0x10b, kind: SimdOpKind::RelaxedLaneselectI32x4 },
+    SimdOpInfo { name: "i64x2.relaxed_laneselect", sub_opcode: 0x10c, kind: SimdOpKind::RelaxedLaneselectI64x2 },
 ];
 
 /// Look up a SIMD opcode by its LEB128-decoded sub-opcode value (the
@@ -3700,8 +3798,8 @@ mod tests {
     // ── SIMD (0xFD prefix, v128 first slice) ─────────────────────────────────
 
     #[test]
-    fn simd_ops_table_has_the_expected_242_entries_and_no_duplicates() {
-        assert_eq!(SIMD_OPS.len(), 242);
+    fn simd_ops_table_has_the_expected_246_entries_and_no_duplicates() {
+        assert_eq!(SIMD_OPS.len(), 246);
 
         let mut seen_sub_opcodes = std::collections::HashSet::new();
         let mut seen_names = std::collections::HashSet::new();
@@ -5042,5 +5140,41 @@ mod tests {
         assert_eq!(max64.name, "f64x2.relaxed_max");
         assert_eq!(max64.kind, SimdOpKind::RelaxedMaxF64x2);
         assert_eq!(get_simd_op_by_name("f64x2.relaxed_max").map(|o| o.sub_opcode), Some(0x110));
+    }
+
+    // ── Relaxed SIMD epic, PR4 -- see code/specs/
+    // W19-wasm-relaxed-simd-first-slice.md ──────────────────────────────
+
+    #[test]
+    fn simd_relaxed_laneselect_has_the_real_verified_sub_opcode_values() {
+        // Relaxed SIMD epic PR4: `i8x16.relaxed_laneselect`/
+        // `i16x8.relaxed_laneselect`/`i32x4.relaxed_laneselect`/
+        // `i64x2.relaxed_laneselect` -- seventh/eighth/ninth/tenth
+        // relaxed-simd opcodes, same Overview.md encoding table as
+        // `relaxed_swizzle`/`relaxed_q15mulr_s`/`relaxed_min`/`relaxed_max`
+        // above. Re-verified LIVE against the relaxed-simd Overview.md
+        // table -- NOT the `0x104`-`0x107` range this PR's own task brief
+        // guessed, which was wrong. `0x109` (265), `0x10a` (266), `0x10b`
+        // (267), `0x10c` (268) all LEB128-encode as 2-byte sequences
+        // (`[0x89, 0x02]`, `[0x8A, 0x02]`, `[0x8B, 0x02]`, `[0x8C, 0x02]`).
+        let i8 = get_simd_op(0x109).expect("0x109 should be i8x16.relaxed_laneselect");
+        assert_eq!(i8.name, "i8x16.relaxed_laneselect");
+        assert_eq!(i8.kind, SimdOpKind::RelaxedLaneselectI8x16);
+        assert_eq!(get_simd_op_by_name("i8x16.relaxed_laneselect").map(|o| o.sub_opcode), Some(0x109));
+
+        let i16 = get_simd_op(0x10a).expect("0x10a should be i16x8.relaxed_laneselect");
+        assert_eq!(i16.name, "i16x8.relaxed_laneselect");
+        assert_eq!(i16.kind, SimdOpKind::RelaxedLaneselectI16x8);
+        assert_eq!(get_simd_op_by_name("i16x8.relaxed_laneselect").map(|o| o.sub_opcode), Some(0x10a));
+
+        let i32_ = get_simd_op(0x10b).expect("0x10b should be i32x4.relaxed_laneselect");
+        assert_eq!(i32_.name, "i32x4.relaxed_laneselect");
+        assert_eq!(i32_.kind, SimdOpKind::RelaxedLaneselectI32x4);
+        assert_eq!(get_simd_op_by_name("i32x4.relaxed_laneselect").map(|o| o.sub_opcode), Some(0x10b));
+
+        let i64 = get_simd_op(0x10c).expect("0x10c should be i64x2.relaxed_laneselect");
+        assert_eq!(i64.name, "i64x2.relaxed_laneselect");
+        assert_eq!(i64.kind, SimdOpKind::RelaxedLaneselectI64x2);
+        assert_eq!(get_simd_op_by_name("i64x2.relaxed_laneselect").map(|o| o.sub_opcode), Some(0x10c));
     }
 }

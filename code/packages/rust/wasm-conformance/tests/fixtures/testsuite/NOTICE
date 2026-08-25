@@ -1987,6 +1987,51 @@ gradeable, `NotYetSupported` unchanged at 67); `assert_return` rose from
 unchanged at 545). No other already-vendored file's stats changed --
 zero regressions.
 
+extended 2026-08-25 (relaxed SIMD epic PR4 -- see code/specs/
+               W19-wasm-relaxed-simd-first-slice.md -- relaxed_laneselect.
+               wast, `i8x16.relaxed_laneselect`/`i16x8.relaxed_laneselect`/
+               `i32x4.relaxed_laneselect`/`i64x2.relaxed_laneselect`
+               (sub-opcodes 0x109-0x10c -- re-verified LIVE against the
+               relaxed-simd Overview.md encoding table; this PR's own task
+               brief guessed 0x104-0x107, which was WRONG -- that range
+               actually belongs to `i32x4.relaxed_trunc_f64x2_u_zero`/
+               `f32x4.relaxed_madd`/`relaxed_nmadd`/`f64x2.relaxed_madd`,
+               none implemented yet), same pinned commit, no re-pin): the
+               FOURTH file from the relaxed-simd proposal, byte-identical
+               (6517 bytes) against a fresh re-fetch at this pinned SHA.
+               Lives at the testsuite repo ROOT like every other file
+               above, no `PROPOSAL_FILES` entry needed. Grades 1/1
+               `module` and 11/11 `assert_return`, ALL REAL passes,
+               ZERO `NotYetSupported`. The first relaxed-simd file whose
+               opcodes are TERNARY rather than binary/unary -- confirmed
+               BY HAND against every `either` group in this file
+               (including its "special case for i16x8 to allow pblendvb",
+               a THREE-alternative `either` exercising an "impure" mask
+               lane) that this repo's existing `v128.bitselect` body --
+               bytewise `(a AND mask) OR (b AND (NOT mask))`, entirely
+               lane-width-agnostic -- reproduces the FIRST alternative of
+               EVERY `either` group in this file bit-for-bit, e.g. for
+               `i8x16.relaxed_laneselect(a=[0,1,0x12,0x12,...],
+               b=[16,17,0x34,0x34,...], m=[0xff,0,0xf0,0x0f,...])`:
+               `Bitselect`'s formula gives lane 2 = `(0x12 & 0xf0) |
+               (0x34 & 0x0f)` = `0x14`, lane 3 = `(0x12 & 0x0f) | (0x34 &
+               0xf0)` = `0x32`, an EXACT, literal match to that group's
+               first alternative -- so, same as every prior relaxed-simd
+               PR, no new numeric semantics were needed, all 4 opcodes
+               reuse `Bitselect`'s existing execution body verbatim. The
+               remaining 3 relaxed-simd files at this pinned SHA
+               (`i32x4_relaxed_trunc.wast` -- flagged as having ZERO real
+               assert_return directives, weaker coverage than every other
+               relaxed-simd file -- `relaxed_dot_product.wast`,
+               `relaxed_madd_nmadd.wast`) remain unvendored, each its own
+               future PR's scope.
+
+Aggregate `module` rose from 1271/1272 to 1272/1273 (+1 pass, +1
+gradeable, `NotYetSupported` unchanged at 67); `assert_return` rose from
+44655/44672 to 44666/44683 (+11 pass, +11 gradeable, `NotYetSupported`
+unchanged at 545). No other already-vendored file's stats changed --
+zero regressions.
+
 The vendored files are licensed under the Apache License, Version 2.0 --
 see the accompanying LICENSE file, itself vendored verbatim from the same
 pinned commit.
