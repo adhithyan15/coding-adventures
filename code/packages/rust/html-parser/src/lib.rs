@@ -5864,18 +5864,24 @@ impl HtmlParser {
         }
 
         if !in_foreign_content && name == "head" && self.has_open_element("head") {
-            self.diagnostics.push(ParserDiagnostic::new(
-                "unexpected-head-start-tag",
-                "duplicate head start tag was ignored",
-            ));
+            self.diagnostics.push(
+                ParserDiagnostic::new(
+                    "unexpected-head-start-tag",
+                    "duplicate head start tag was ignored",
+                )
+                .at_emission(self.current_token_emission_position),
+            );
             return;
         }
 
         if !in_foreign_content && name == "head" && self.has_open_element("body") {
-            self.diagnostics.push(ParserDiagnostic::new(
-                "unexpected-head-start-tag",
-                "head start tag was ignored after body content had already started",
-            ));
+            self.diagnostics.push(
+                ParserDiagnostic::new(
+                    "unexpected-head-start-tag",
+                    "head start tag was ignored after body content had already started",
+                )
+                .at_emission(self.current_token_emission_position),
+            );
             return;
         }
 
@@ -27302,6 +27308,15 @@ mod tests {
         .at_emission(Some(start_tag_position_at(source, "html", occurrence)))
     }
 
+    fn unexpected_head_start_tag(
+        source: &str,
+        occurrence: usize,
+        message: &str,
+    ) -> ParserDiagnostic {
+        ParserDiagnostic::new("unexpected-head-start-tag", message)
+            .at_emission(Some(start_tag_position_at(source, "head", occurrence)))
+    }
+
     fn foreign_start_tag_in_table_recovery(source: &str, name: &str) -> ParserDiagnostic {
         ParserDiagnostic::new(
             "unexpected-foreign-start-tag-in-table",
@@ -40069,11 +40084,144 @@ mod tests {
             output.parser_diagnostics,
             vec![
                 unexpected_html_start_tag(source, 1),
-                ParserDiagnostic::new(
-                    "unexpected-head-start-tag",
+                unexpected_head_start_tag(
+                    source,
+                    1,
                     "duplicate head start tag was ignored"
                 )
             ]
+        );
+    }
+
+    #[test]
+    fn positions_rejected_head_start_tags_at_token_emission() {
+        let duplicate_source = "<!doctype html><head><head><!--é-->\r\n<head>";
+        let duplicate = parse_html_with_diagnostics(duplicate_source).unwrap();
+        let duplicate_diagnostics = duplicate
+            .parser_diagnostics
+            .iter()
+            .filter(|diagnostic| diagnostic.code == "unexpected-head-start-tag")
+            .collect::<Vec<_>>();
+        assert_eq!(
+            duplicate_diagnostics,
+            vec![
+                &unexpected_head_start_tag(
+                    duplicate_source,
+                    1,
+                    "duplicate head start tag was ignored"
+                ),
+                &unexpected_head_start_tag(
+                    duplicate_source,
+                    2,
+                    "duplicate head start tag was ignored"
+                ),
+            ]
+        );
+
+        let late_source = "<!doctype html><body><head><!--é-->\r\n<head>";
+        let late = parse_html_with_diagnostics(late_source).unwrap();
+        let late_diagnostics = late
+            .parser_diagnostics
+            .iter()
+            .filter(|diagnostic| diagnostic.code == "unexpected-head-start-tag")
+            .collect::<Vec<_>>();
+        assert_eq!(
+            late_diagnostics,
+            vec![
+                &unexpected_head_start_tag(
+                    late_source,
+                    0,
+                    "head start tag was ignored after body content had already started"
+                ),
+                &unexpected_head_start_tag(
+                    late_source,
+                    1,
+                    "head start tag was ignored after body content had already started"
+                ),
+            ]
+        );
+
+        let fragment_source = "<head>";
+        let fragment = parse_html_fragment_with_diagnostics(fragment_source).unwrap();
+        assert!(fragment.parser_diagnostics.iter().any(|diagnostic| {
+            diagnostic
+                == &unexpected_head_start_tag(
+                    fragment_source,
+                    0,
+                    "head start tag was ignored after body content had already started",
+                )
+        }));
+
+        let template_source = "<!doctype html><template><head>";
+        let template = parse_html_with_diagnostics(template_source).unwrap();
+        assert!(template.parser_diagnostics.iter().any(|diagnostic| {
+            diagnostic
+                == &unexpected_head_start_tag(
+                    template_source,
+                    0,
+                    "duplicate head start tag was ignored",
+                )
+        }));
+
+        let foreign_source = "<!doctype html><svg><head>";
+        let foreign = parse_html_with_diagnostics(foreign_source).unwrap();
+        assert!(foreign.parser_diagnostics.iter().any(|diagnostic| {
+            diagnostic
+                == &unexpected_head_start_tag(
+                    foreign_source,
+                    0,
+                    "head start tag was ignored after body content had already started",
+                )
+        }));
+
+        for source in [
+            "<!doctype html><head>",
+            "<!doctype html><head><head",
+        ] {
+            let output = parse_html_with_diagnostics(source).unwrap();
+            assert!(
+                output
+                    .parser_diagnostics
+                    .iter()
+                    .all(|diagnostic| diagnostic.code != "unexpected-head-start-tag"),
+                "source {source:?}"
+            );
+        }
+
+        let mut duplicate_unpositioned = HtmlParser::new();
+        for name in ["html", "head", "head"] {
+            duplicate_unpositioned.process_token(Token::StartTag {
+                name: name.to_string(),
+                attributes: Vec::new(),
+                self_closing: false,
+            });
+        }
+        assert_eq!(
+            duplicate_unpositioned
+                .diagnostics()
+                .iter()
+                .find(|diagnostic| diagnostic.code == "unexpected-head-start-tag")
+                .unwrap()
+                .position,
+            None
+        );
+
+        let mut late_unpositioned = HtmlParser::new();
+        for name in ["html", "body", "head"] {
+            late_unpositioned.process_token(Token::StartTag {
+                name: name.to_string(),
+                attributes: Vec::new(),
+                self_closing: false,
+            });
+        }
+        assert_eq!(
+            late_unpositioned
+                .diagnostics()
+                .iter()
+                .find(|diagnostic| diagnostic.code == "unexpected-head-start-tag")
+                .unwrap()
+                .position,
+            None
         );
     }
 
@@ -48154,15 +48302,14 @@ mod tests {
 
     #[test]
     fn ignores_head_start_tags_after_body_content_starts() {
-        let output = parse_html_with_diagnostics(
-            "<!doctype html><body><p>before</p><head data-late=yes><p>after</p>",
-        )
-        .unwrap();
+        let source = "<!doctype html><body><p>before</p><head data-late=yes><p>after</p>";
+        let output = parse_html_with_diagnostics(source).unwrap();
 
         assert_eq!(
             output.parser_diagnostics,
-            vec![ParserDiagnostic::new(
-                "unexpected-head-start-tag",
+            vec![unexpected_head_start_tag(
+                source,
+                0,
                 "head start tag was ignored after body content had already started"
             )]
         );
