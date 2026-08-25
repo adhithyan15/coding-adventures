@@ -13772,6 +13772,89 @@ export const DUCTUS: Record<string, LetterDuctus> = {
     ],
     source: malayalamAlphabetSource("ൽ"),
   },
+  // Sriveenkat's 67-frame animation draws chillu ൻ in two pen-down runs:
+  // the left arch descends into the central stem, then a lifted right-side run
+  // completes the outer loop, inner return, and above-line chillu hook.
+  [ductusKey("malayalam", "ൻ")]: {
+    script: "malayalam",
+    glyph: "ൻ",
+    strokes: [
+      {
+        segments: [
+          {
+            label: "climb clockwise around the left arch and turn inward at the upper junction",
+            path: [
+              { x: 225, y: 35 },
+              { x: 170, y: 75 },
+              { x: 120, y: 145 },
+              { x: 88, y: 225 },
+              { x: 84, y: 305 },
+              { x: 112, y: 395 },
+              { x: 175, y: 475 },
+              { x: 245, y: 520 },
+              { x: 315, y: 530 },
+              { x: 380, y: 505 },
+              { x: 430, y: 455 },
+            ],
+          },
+          {
+            label: "descend the central stem to the line",
+            path: [
+              { x: 430, y: 455 },
+              { x: 450, y: 370 },
+              { x: 455, y: 280 },
+              { x: 455, y: 190 },
+              { x: 455, y: 100 },
+              { x: 455, y: 35 },
+            ],
+          },
+        ],
+      },
+      {
+        segments: [
+          {
+            label: "carry the upper shoulder right, sweep clockwise around the outer loop, and return through its inner curve",
+            path: [
+              { x: 540, y: 455 },
+              { x: 600, y: 500 },
+              { x: 675, y: 530 },
+              { x: 740, y: 515 },
+              { x: 790, y: 480 },
+              { x: 860, y: 450 },
+              { x: 925, y: 390 },
+              { x: 965, y: 305 },
+              { x: 978, y: 220 },
+              { x: 955, y: 135 },
+              { x: 900, y: 65 },
+              { x: 825, y: 24 },
+              { x: 755, y: 45 },
+              { x: 695, y: 110 },
+              { x: 665, y: 195 },
+              { x: 670, y: 275 },
+              { x: 705, y: 355 },
+              { x: 750, y: 420 },
+              { x: 790, y: 480 },
+            ],
+          },
+          {
+            label: "rise into the chillu hook and curl left above the line",
+            path: [
+              { x: 790, y: 480 },
+              { x: 830, y: 515 },
+              { x: 875, y: 565 },
+              { x: 905, y: 620 },
+              { x: 910, y: 675 },
+              { x: 875, y: 725 },
+              { x: 815, y: 752 },
+              { x: 755, y: 750 },
+              { x: 720, y: 740 },
+            ],
+          },
+        ],
+      },
+    ],
+    source: malayalamAlphabetSource("ൻ"),
+  },
   எ: {
     script: "tamil",
     glyph: "எ",

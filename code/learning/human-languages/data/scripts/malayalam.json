@@ -5772,6 +5772,29 @@
         "variation": "The 97-frame Gayathri-font animation draws ൽ in one uninterrupted run: left entry arch, clockwise central loop, rightward upper shoulder, clockwise right loop, then the finishing hook above the line. The University of Texas Malayalam Script guide independently identifies ൽ as the chillu shared by ത/ല and says a chillu marker extends above the line. This is one attested pedagogical order fitted to the bundled Noto Sans Malayalam outline."
       },
       "notes": "Atomic Malayalam chillu L (U+0D7D): a vowel-free final consonant, not the base ല with its inherent a."
+    },
+    {
+      "glyph": "ൻ",
+      "sound": "n",
+      "role": "consonant",
+      "components": [
+        "the left arch and descending central stem",
+        "the right outer loop, inner return, and above-line chillu hook"
+      ],
+      "strokeOrder": [
+        "climb clockwise around the left arch and turn inward at the upper junction",
+        "without lifting, descend the central stem to the line",
+        "after one lift, carry the upper shoulder right, sweep clockwise around the right outer loop, and return through its inner curve",
+        "without lifting, rise into the chillu hook and curl left above the line"
+      ],
+      "strokeOrderNote": "Four visible movements in two pen-down runs: the left arch descends into its central stem, then one lifted right-side run carries the upper shoulder through the outer loop, inner return, and chillu hook above the line.",
+      "penLifts": 1,
+      "strokeOrderSource": {
+        "citation": "Sriveenkat, Ml ൻ order.gif, Malayalam chillu N stroke-order animation, 00:03.0–00:09.5 (Wikimedia Commons, 2 July 2023)",
+        "url": "https://commons.wikimedia.org/wiki/File:Ml_%E0%B5%BB_order.gif",
+        "variation": "The 67-frame Gayathri-font animation completes the left arch and central stem in one run, then lifts once before carrying the upper shoulder through the right outer loop, inner return, and finishing hook above the line as a second joined run. This is one attested pedagogical order fitted to the bundled Noto Sans Malayalam outline."
+      },
+      "notes": "Atomic Malayalam chillu N (U+0D7B): a vowel-free final consonant, not the base ന with its inherent a."
     }
   ],
   "marks": [

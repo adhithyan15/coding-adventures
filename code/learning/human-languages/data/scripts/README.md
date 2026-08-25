@@ -957,7 +957,7 @@ queue: **و**, not ه, follows ن. Its 02:43–02:45 demonstration loops the sma
 The initial source-availability gap recorded by HL-C41 is now being closed one
 verified shape at a time. Telugu has a cited independent **అ** row; Kannada has
 a cited independent **ಅ** row; Malayalam has cited independent **അ** and **എ**
-rows plus standalone chillu **ൽ**. An absent `penLifts` remains unverified,
+rows plus standalone chillus **ൽ** and **ൻ**. An absent `penLifts` remains unverified,
 never an implied zero.
 
 ## Adding a script (e.g. Gujarati, Bengali, Hebrew)

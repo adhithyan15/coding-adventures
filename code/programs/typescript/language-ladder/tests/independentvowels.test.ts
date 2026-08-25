@@ -67,9 +67,9 @@ describe("independent (word-initial) vowels", () => {
 });
 
 describe("atomic final consonants", () => {
-  it("keeps Malayalam chillu ൽ sourced and outside the all-syllable grid", () => {
+  it("keeps Malayalam chillus sourced and outside the all-syllable grid", () => {
     const malayalam = SCRIPTS.find((s) => s.script === "malayalam")!;
-    expect(malayalam.finalConsonants?.map((entry) => entry.glyph)).toEqual(["ൽ"]);
+    expect(malayalam.finalConsonants?.map((entry) => entry.glyph)).toEqual(["ൽ", "ൻ"]);
     const chilluL = malayalam.finalConsonants![0]!;
     expect(chilluL.role).toBe("consonant");
     expect(chilluL.penLifts).toBe(0);
@@ -78,6 +78,14 @@ describe("atomic final consonants", () => {
       "https://commons.wikimedia.org/wiki/File:Ml_%E0%B5%BD_order.gif",
     );
     expect(malayalam.letters.some((entry) => entry.glyph === "ൽ")).toBe(false);
+    const chilluN = malayalam.finalConsonants![1]!;
+    expect(chilluN.role).toBe("consonant");
+    expect(chilluN.penLifts).toBe(1);
+    expect(chilluN.strokeOrder).toHaveLength(4);
+    expect(chilluN.strokeOrderSource?.url).toBe(
+      "https://commons.wikimedia.org/wiki/File:Ml_%E0%B5%BB_order.gif",
+    );
+    expect(malayalam.letters.some((entry) => entry.glyph === "ൻ")).toBe(false);
     expect(isSyllabary(malayalam.letters)).toBe(true);
     expect(buildSyllableMatrix(malayalam.letters as never)).not.toBeNull();
   });
