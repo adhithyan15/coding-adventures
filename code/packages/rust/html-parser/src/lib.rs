@@ -5339,10 +5339,13 @@ impl HtmlParser {
             && !self.has_open_element("table")
             && !self.has_open_element("template")
         {
-            self.diagnostics.push(ParserDiagnostic::new(
-                "unexpected-table-start-tag",
-                format!("start tag `<{name}>` outside a table was ignored"),
-            ));
+            self.diagnostics.push(
+                ParserDiagnostic::new(
+                    "unexpected-table-start-tag",
+                    format!("start tag `<{name}>` outside a table was ignored"),
+                )
+                .at_emission(self.current_token_emission_position),
+            );
             return;
         }
 
@@ -27466,6 +27469,18 @@ mod tests {
         .at_emission(Some(start_tag_position_at(source, name, occurrence)))
     }
 
+    fn unexpected_table_start_tag(
+        source: &str,
+        name: &str,
+        occurrence: usize,
+    ) -> ParserDiagnostic {
+        ParserDiagnostic::new(
+            "unexpected-table-start-tag",
+            format!("start tag `<{name}>` outside a table was ignored"),
+        )
+        .at_emission(Some(start_tag_position_at(source, name, occurrence)))
+    }
+
     fn start_tag_in_template_column_group_recovery(
         source: &str,
         name: &str,
@@ -42235,6 +42250,68 @@ mod tests {
         let table = parse_html(&format!("<table><tr><td>{source}")).unwrap();
         let cell = find_first_element_in_nodes(&table.children, "td").unwrap();
         assert_repaired_outer_div(element(&cell.children[0]));
+    }
+
+    #[test]
+    fn positions_table_only_start_tags_ignored_outside_tables() {
+        let source =
+            "<!doctype html><caption><colgroup><tbody><thead><tfoot><tr><td><th><!--é-->\r\n<tr>";
+        let output = parse_html_with_diagnostics(source).unwrap();
+        assert_eq!(
+            output
+                .parser_diagnostics
+                .iter()
+                .filter(|diagnostic| diagnostic.code == "unexpected-table-start-tag")
+                .collect::<Vec<_>>(),
+            vec![
+                &unexpected_table_start_tag(source, "caption", 0),
+                &unexpected_table_start_tag(source, "colgroup", 0),
+                &unexpected_table_start_tag(source, "tbody", 0),
+                &unexpected_table_start_tag(source, "thead", 0),
+                &unexpected_table_start_tag(source, "tfoot", 0),
+                &unexpected_table_start_tag(source, "tr", 0),
+                &unexpected_table_start_tag(source, "td", 0),
+                &unexpected_table_start_tag(source, "th", 0),
+                &unexpected_table_start_tag(source, "tr", 1),
+            ]
+        );
+
+        let fragment_source = "</p><tr>";
+        let fragment = parse_html_fragment_with_diagnostics(fragment_source).unwrap();
+        assert!(fragment
+            .parser_diagnostics
+            .iter()
+            .any(|diagnostic| diagnostic
+                == &unexpected_table_start_tag(fragment_source, "tr", 0)));
+
+        for excluded in [
+            "<!doctype html><table><tr>",
+            "<!doctype html><template><tr>",
+            "<!doctype html><svg><tr>",
+            "<!doctype html><tr",
+        ] {
+            let output = parse_html_with_diagnostics(excluded).unwrap();
+            assert!(
+                output
+                    .parser_diagnostics
+                    .iter()
+                    .all(|diagnostic| diagnostic.code != "unexpected-table-start-tag"),
+                "source {excluded:?}"
+            );
+        }
+
+        let mut unpositioned = HtmlParser::new();
+        unpositioned.process_token(Token::StartTag {
+            name: "tr".to_string(),
+            attributes: Vec::new(),
+            self_closing: false,
+        });
+        let diagnostic = unpositioned
+            .diagnostics()
+            .iter()
+            .find(|diagnostic| diagnostic.code == "unexpected-table-start-tag")
+            .unwrap();
+        assert_eq!(diagnostic.position, None);
     }
 
     #[test]
