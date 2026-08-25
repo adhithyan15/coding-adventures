@@ -1,7 +1,39 @@
-local script_dir = debug.getinfo(1, "S").source:sub(2):match("(.*/)")
+local test_source = debug.getinfo(1, "S").source:sub(2):gsub("\\", "/")
+local script_dir = assert(test_source:match("(.*/)"))
 package.path = script_dir .. "../lib/?.lua;" .. script_dir .. "../lib/?/init.lua;" .. package.path
 
 local Validator = require("build_tool.validator")
+local json = require("dkjson")
+
+local tracked_artifact_cases = {
+    "validation-tracked-artifacts-clean.json",
+    "validation-tracked-artifacts-forbidden.json",
+    "validation-tracked-artifacts-aliases.json",
+    "validation-tracked-artifacts-invalid.json",
+    "validation-tracked-artifacts-unicode-boundaries.json",
+}
+local conformance_cases = "../../../../specs/fixtures/build-tool-v1/cases"
+
+local function read_file(pathname)
+    local file = assert(io.open(pathname, "rb"))
+    local contents = file:read("*a")
+    file:close()
+    return contents
+end
+
+local function load_fixture(filename)
+    local fixture, _, decode_error = json.decode(read_file(conformance_cases .. "/" .. filename))
+    assert.is_nil(decode_error)
+    return fixture
+end
+
+local function utf8_from_scalars(scalars)
+    local chunks = {}
+    for _, scalar in ipairs(scalars) do
+        chunks[#chunks + 1] = utf8.char(scalar)
+    end
+    return table.concat(chunks)
+end
 
 local function write_file(pathname, content)
     local file = assert(io.open(pathname, "w"))
@@ -204,5 +236,144 @@ luarocks make --local --deps-mode=none coding-adventures-safe-pkg-0.1.0-1.rocksp
         assert.is_nil(Validator.validate_build_contracts(tmpdir, {
             { language = "lua", path = tmpdir .. "/code/packages/lua/safe_pkg" },
         }))
+    end)
+
+    for _, fixture_name in ipairs(tracked_artifact_cases) do
+        it("matches shared " .. fixture_name:gsub("%.json$", "") .. " fixture", function()
+            local fixture = load_fixture(fixture_name)
+            local snapshot = fixture.input.options.tracked_artifact_snapshot
+            local actual = Validator.validate_tracked_artifact_snapshot(
+                snapshot.entries,
+                snapshot.unicode_version
+            )
+
+            assert.are.same(fixture.expected.diagnostics, actual)
+        end)
+    end
+
+    it("rejects Unicode version drift before entries", function()
+        assert.are.equal("17.0.0", Validator.TRACKED_ARTIFACT_UNICODE_VERSION)
+
+        local ok, validation_error = pcall(
+            Validator.validate_tracked_artifact_snapshot,
+            {{ ordinal = 1, path = "/hostile", entry_kind = "regular" }},
+            "15.1.0"
+        )
+
+        assert.is_false(ok)
+        assert.are.equal(
+            "tracked artifact Unicode version must be 17.0.0",
+            tostring(validation_error):gsub("^.-:%d+: ", "")
+        )
+    end)
+
+    it("redacts every unsafe tracked path class", function()
+        local unsafe_paths = {
+            {"", "EMPTY"},
+            {string.rep("a", 513), "TOO_LONG"},
+            {"code/packages/e\204\129/file.lua", "NON_NFC"},
+            {"/absolute/file.lua", "ABSOLUTE"},
+            {"C:\\repo\\file.lua", "DRIVE_QUALIFIED"},
+            {"code//file.lua", "EMPTY_SEGMENT"},
+            {"code/trailing/", "EMPTY_SEGMENT"},
+            {"code\\trailing\\", "EMPTY_SEGMENT"},
+            {"code/<unsafe>/file.lua", "UNSAFE_CHARACTER"},
+            {"code/../file.lua", "DOT_SEGMENT"},
+            {"code/trailing./file.lua", "TRAILING_DOT_OR_SPACE"},
+            {"code/CON.txt/file.lua", "RESERVED_BASENAME"},
+        }
+
+        for _, case in ipairs(unsafe_paths) do
+            local diagnostics = Validator.validate_tracked_artifact_snapshot({
+                { ordinal = 7, path = case[1], entry_kind = "regular" },
+            })
+            assert.are.equal(1, #diagnostics)
+            assert.are.equal("repository", diagnostics[1].path)
+            assert.are.equal(case[2], diagnostics[1].details.problem)
+            if case[1] ~= "" then
+                assert.is_nil(json.encode(diagnostics):find(case[1], 1, true))
+            end
+        end
+    end)
+
+    it("uses lexical separators and Unicode scalar lengths", function()
+        assert.are.same({}, Validator.validate_tracked_artifact_snapshot({
+            { ordinal = 1, path = "code\\src\\file.lua", entry_kind = "regular" },
+        }))
+        assert.are.same({}, Validator.validate_tracked_artifact_snapshot({
+            { ordinal = 2, path = string.rep("\240\159\152\128", 512), entry_kind = "regular" },
+        }))
+
+        local diagnostics = Validator.validate_tracked_artifact_snapshot({
+            { ordinal = 3, path = string.rep("\240\159\152\128", 513), entry_kind = "regular" },
+        })
+        assert.are.equal("TOO_LONG", diagnostics[1].details.problem)
+    end)
+
+    it("uses only pinned Unicode 17 tables", function()
+        local unicode = require("build_tool.tracked_artifact_unicode17")
+        local todhri_source = utf8_from_scalars({0x105D2, 0x0307})
+        local todhri_composed = utf8_from_scalars({0x105C9})
+        assert.are.equal(todhri_composed, unicode.nfc(todhri_source))
+
+        local diagnostics = Validator.validate_tracked_artifact_snapshot({
+            { ordinal = 1, path = todhri_source, entry_kind = "regular" },
+        })
+        assert.are.equal("NON_NFC", diagnostics[1].details.problem)
+
+        local outlined_scalars = {}
+        for scalar in string.gmatch("NODE_MODULES", ".") do
+            local value = string.byte(scalar)
+            outlined_scalars[#outlined_scalars + 1] =
+                value == 0x5F and value or 0x1CCD6 + value - 0x41
+        end
+        local outlined = utf8_from_scalars(outlined_scalars)
+        assert.are.equal("node_modules", unicode.nfkc_casefold(outlined))
+        diagnostics = Validator.validate_tracked_artifact_snapshot({
+            { ordinal = 2, path = "code/" .. outlined .. "/file.lua", entry_kind = "regular" },
+        })
+        assert.are.equal("TRACKED_ARTIFACT_FORBIDDEN", diagnostics[1].code)
+
+        assert.are.equal("CONIN$", unicode.full_uppercase("con\196\177n$"))
+        diagnostics = Validator.validate_tracked_artifact_snapshot({
+            { ordinal = 3, path = "code/con\196\177n$.txt/file.lua", entry_kind = "regular" },
+        })
+        assert.are.equal("RESERVED_BASENAME", diagnostics[1].details.problem)
+
+        assert.are.equal("q\204\128", unicode.nfc("q\204\128"))
+        assert.are.same({}, Validator.validate_tracked_artifact_snapshot({
+            { ordinal = 4, path = "q\204\128/file.lua", entry_kind = "regular" },
+        }))
+    end)
+
+    it("sorts diagnostics by Unicode scalar value", function()
+        local private_use = utf8_from_scalars({0xE000})
+        local supplementary = utf8_from_scalars({0x10000})
+        local diagnostics = Validator.validate_tracked_artifact_snapshot({
+            { ordinal = 1, path = supplementary .. "/node_modules/a", entry_kind = "regular" },
+            { ordinal = 2, path = private_use .. "/node_modules/b", entry_kind = "regular" },
+        })
+
+        assert.are.same(
+            {private_use .. "/node_modules/b", supplementary .. "/node_modules/a"},
+            {diagnostics[1].path, diagnostics[2].path}
+        )
+    end)
+
+    it("treats entry kind as inert metadata", function()
+        local diagnostics = Validator.validate_tracked_artifact_snapshot({
+            { ordinal = 1, path = "node_modules/a", entry_kind = "regular" },
+            { ordinal = 2, path = "node_modules/b", entry_kind = "symlink" },
+            { ordinal = 3, path = "node_modules/c", entry_kind = "reparse" },
+        })
+
+        assert.are.same(
+            {"regular", "symlink", "reparse"},
+            {
+                diagnostics[1].details.entry_kind,
+                diagnostics[2].details.entry_kind,
+                diagnostics[3].details.entry_kind,
+            }
+        )
     end)
 end)

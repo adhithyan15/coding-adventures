@@ -7392,9 +7392,10 @@ The dependency/leverage pass selects
 `build-tool-elixir-tracked-artifact-validation-conformance` on branch
 `codex/build-tool-elixir-tracked-artifact-validation-conformance`. All four
 declared dependencies are merged. Elixir is the widest remaining
-tracked-artifact lane at 279 packages and this consumer has two direct children
-plus three unfinished descendants through the Elixir orphan validator and both
-completion umbrellas. Ruby orphan validation is newly ready after #12802, but
+tracked-artifact lane at 279 packages and this consumer has three direct
+children plus four unfinished descendants through the Elixir orphan validator,
+both completion umbrellas, and the separately selection-blocked generator
+authority review. Ruby orphan validation is newly ready after #12802, but
 has only one unfinished descendant; Lua, Perl, Haskell, and Swift tracked
 consumers cover 252, 251, 204, and 161 packages respectively. The expected
 Elixir validator, generated Unicode, generator and generator-test, fixture
@@ -7476,6 +7477,149 @@ reports the branch mergeable, with required checks queued or in progress,
 including the new Unicode 17 generated Elixir conformance job. Auto-merge
 remains disabled until every required check is terminal and acceptable and the
 branch remains conflict-free.
+
+### Post-#12819 refresh and Lua tracked-artifact selection
+
+PR #12819 reached 31 terminal acceptable checks: 25 succeeded and six were
+expected skips, with no failure or pending job. GitHub reported reviewed head
+`33df983e3f6eba67e05aa2f6f71bc5de1c3f33b0` clean and mergeable, so the loop
+enabled squash auto-merge. GitHub merged it as
+`a939778e7f7ce375bc5b4deefdb3467ca487ab54` at
+`2026-08-25T16:50:05Z` without a manual merge command.
+
+The mandatory exact-main schema-3 collision report remains structurally
+unchanged: 15 established lanes, 1,373 implementation identities, 4,566
+package slots, 175 high-consensus packages with 276 missing slots, 910
+singletons with 12,740 gaps, and 721 Rust singletons. Canonical collisions and
+unknown language buckets remain zero; OCaml remains correctly emerging at zero
+packages. The state graph before newly discovered owners contained 499 unique
+owners and 763 complete acyclic edges. A pre-existing historical inversion in
+which merged `build-file-standalone-integrity-lua` names the still-pending
+`build-file-standalone-integrity` umbrella remains unchanged; dependency
+readiness is therefore evaluated for the candidate tranche rather than claimed
+as a global lifecycle invariant.
+
+Every intervening commit is classified before selection. ADJ Dolch Primer and
+First/Second Grade tracking, HTML colgroup and template-table diagnostics,
+vault-pm best-effort export, Kannada and Gujarati script work, and
+Java-to-semantic-IR lowering remain inside existing owners. The Java execution
+proof now silently skips without `python3` while its BUILD files declare no
+Python requirement, so that concrete consumer is added to the existing
+extra-CI toolchain corpus and remaining-engine adoption owner.
+
+The audit also found two genuinely unowned behavior families before selecting
+the next implementation. Rust alone added the complete SIMD lane-memory
+load/store family across `wasm-opcodes`, `wasm-validator`, and
+`wasm-execution`, even though those identities report package presence in all
+15 established lanes. New neutral and established-lane owners now cover binary
+sub-opcodes, memarg/lane ordering, width-specific bounds, little-endian lane
+updates, stack typing, traps, and multi-memory behavior while leaving WAST
+syntax and official-corpus consumption with their existing owners. Rust's
+`algol-iir-compiler` also added bounded chained-Boolean selector identity and
+seven-backend results without an exact delivery contract; new neutral and
+selection-blocked applicable-lane owners now pin that behavior and require an
+explicit interpreter-IR lane decomposition. These four owners are registered
+as pending before the next item moves to in-progress.
+
+The dependency/leverage pass selects
+`build-tool-lua-tracked-artifact-validation-conformance` on branch
+`codex/build-tool-lua-tracked-artifact-validation-conformance`. All four
+declared prerequisites are merged. Lua is the widest remaining tracked lane at
+252 packages, ahead of Perl at 251, Haskell at 204, and Swift at 161. It has
+two existing direct children and three unfinished descendants through the Lua
+orphan validator and both completion umbrellas. Registering its real emitted
+Lua subprocess verification under the excluded Unicode-generator authority
+review raises that leverage to three direct children and four unfinished
+descendants without granting process authority to the pure runtime adapter.
+Elixir orphan validation is newly ready but unlocks only the orphan completion
+umbrella.
+
+All nine live open PRs and all non-main remote heads have zero exact overlap
+with the expected Lua validator, generated Unicode module, generator and test,
+fixture README, Unicode license, package tests and docs, CI, state, and roadmap
+surfaces. The target branch and prior PR were absent before the clean worktree
+and branch were created. The broader extra-CI corpus and OCaml process-free
+substrate remain collision-unsafe while PRs #12149 and #12162 own their
+required Go validator and main surfaces; PR #12824 likewise owns the
+otherwise-ready Mermaid XY surfaces. After registering the four new owners and
+the Lua generator-authority edge, the graph contains 503 unique owners and 766
+complete acyclic dependency edges, with exactly one in-progress owner and no
+active parity PR.
+
+### Lua tracked-artifact implementation
+
+The Lua build tool now exposes a pure
+`validate_tracked_artifact_snapshot` adapter and independently consumes all
+five language-neutral fixtures. It implements the closed portable-path error
+precedence, lexical slash normalization, Unicode-scalar length limits and
+ordering, hostile-path redaction, normalized safe forbidden paths, NFKC plus
+full default folding for exact `node_modules` components, full-uppercase
+Windows reserved basenames, inert entry kinds, and deterministic canonical
+diagnostic ordering. The adapter adds no Git, filesystem, process,
+environment, or network authority.
+
+Generated source-embedded Unicode 17.0.0 tables provide NFC, NFKC, full
+folding, NFKC-fold, and full uppercase without inheriting host Unicode data.
+The generator pins the upstream byte counts and SHA-256 identities, carries
+the complete Unicode License v3 notice, and checks the emitted Lua module over
+every official normalization, C/F folding, unconditional uppercase, derived
+NFKC-fold, and Unicode 17 sentinel vector. A required read-only CI job builds
+the repository-pinned Lua 5.4.7 toolchain and runs that real emitted-runtime
+check through an explicit executable path; the stable CI gate explicitly
+requires its result. The generator invokes Lua with `-E` under a minimal
+environment, retains at most 8 KiB from each output stream, and terminates the
+isolated process tree after every verifier exit. Windows starts the verifier
+suspended, assigns it to a kill-on-close Job Object before resuming it, and
+waits for job accounting to reach zero; POSIX always kills the isolated process
+group. Real timeout and early-root-exit descendant probes plus a cleanup-error
+ownership regression cover the boundary.
+
+The repository-pinned Lua 5.4.7 toolchain passes syntax compilation, 19
+focused validator tests, and the complete 72-test Lua build-tool suite. LuaCov
+measures the validator at 98.23% and the generated Unicode module at 84.06%; the
+package-wide total is 51.24% because unchanged CLI, resolver, and bundled test
+framework code remains outside this bounded consumer. All 23 generator tests
+and six pinned-Lua setup tests pass on Windows; the two Job Object failure-path
+tests are expected platform skips on POSIX. Ruff, changed-source Luacheck, workflow
+YAML parsing, generated-byte verification, and the full emitted Lua Unicode
+self-check pass.
+
+The neutral corpus validates 111 cases and 269 files. The schema and runner
+conformance families pass 22 and 58 tests respectively; package-parity,
+capability, Haskell-capability, and OCaml-lock suites pass another 66 tests
+with two expected platform skips and 928 subtests. The Go build tool passes all
+packages with coverage, vet, and trimpath compilation, then a fresh binary
+evaluates 45 Starlark BUILD files and validates a forced dry plan over all 259
+Lua packages.
+The refreshed schema-3 inventory remains 15 established lanes, 1,373
+implementation identities, 4,566 slots, 175 high-consensus packages with 276
+gaps, 910 singletons with 12,740 gaps, 721 Rust singletons, zero collisions,
+and zero unknown buckets. Bandit medium/high, strict JSON, state-graph, and diff
+checks pass; no package dependency changed. Generator subprocess authority
+remains explicitly selection-blocked under its separate review owner.
+
+The branch rebased without conflict onto exact `origin/main`
+`4faca735e6851d24bb78f96817292dbb354c0748` after classifying intervening HTML
+parser diagnostics and Malayalam script data under their existing owners. The
+merged SIMD lane-memory completion, ALGOL power-one selector writes, and
+Mermaid XY axis theme colors remain inside the neutral/parity owners registered
+before selection and the existing WAST/conformance, ALGOL, and Mermaid XY
+owners. Later implied-row HTML diagnostics and JV02 classic/enhanced for-loop
+lowering likewise remain inside the HTML frontend and Java-to-Semantic-IR
+owners; its two Python execution proofs retain the already registered extra-CI
+toolchain declaration gap. None adds or removes a package identity,
+BUILD/build-tool marker, or Lua tranche path. The focused package, generator,
+full-vector, Go oracle,
+build-plan, lint, and syntax gates were rerun successfully after the rebase.
+
+Independent split security review passed the pure Lua adapter and generated
+Unicode substrate without a finding. Generator and CI review found and then
+closed executable/environment, bounded-output, timeout-tree,
+early-root-descendant, Job Object ownership, and suspended setup-failure risks.
+The final reviews of validated code revision
+`f459a4cf54cbddac899a1172a22180d91a4acadd` returned `SECURITY REVIEW PASSED`:
+CI is read-only with checkout credentials disabled, the Unicode and Lua source
+inputs remain hash-pinned, and no actionable security issue remains.
 
 ## Autonomous Loop Protocol
 

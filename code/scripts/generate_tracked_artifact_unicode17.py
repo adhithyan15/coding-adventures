@@ -11,13 +11,18 @@ official normalization and case-folding vectors before accepting output.
 from __future__ import annotations
 
 import argparse
+import ctypes
 import hashlib
 import importlib.util
 import json
+import os
 import shutil
+import signal
 import subprocess
 import sys
 import tempfile
+import threading
+import time
 import urllib.parse
 import urllib.request
 from pathlib import Path
@@ -35,6 +40,7 @@ LICENSE_TARGETS = (
     Path("code/programs/typescript/build-tool/UNICODE-LICENSE.txt"),
     Path("code/programs/ruby/build-tool/UNICODE-LICENSE.txt"),
     Path("code/programs/elixir/build-tool/UNICODE-LICENSE.txt"),
+    Path("code/programs/lua/build-tool/UNICODE-LICENSE.txt"),
 )
 SOURCES = {
     "UnicodeData.txt": "2e1efc1dcb59c575eedf5ccae60f95229f706ee6d031835247d843c11d96470c",
@@ -68,6 +74,9 @@ RUBY_TARGET = Path(
 )
 ELIXIR_TARGET = Path(
     "code/programs/elixir/build-tool/lib/build_tool/tracked_artifact_unicode17.ex"
+)
+LUA_TARGET = Path(
+    "code/programs/lua/build-tool/lib/build_tool/tracked_artifact_unicode17.lua"
 )
 
 
@@ -1431,6 +1440,282 @@ end
     return header + body
 
 
+def _render_lua(
+    tables: tuple[
+        list[tuple[int, int]],
+        list[tuple[int, bool, tuple[int, ...]]],
+        list[tuple[int, int, int]],
+        list[tuple[int, tuple[int, ...]]],
+        list[tuple[int, tuple[int, ...]]],
+    ],
+) -> str:
+    """Render the process-free Lua implementation from the pinned UCD rows."""
+    combining, decomposition, composition, folding, uppercase = tables
+    combining_text = "\n".join(f"{cp:X};{ccc}" for cp, ccc in combining)
+    decomposition_text = "\n".join(
+        f"{cp:X};{'K' if compat else 'C'};{','.join(f'{value:X}' for value in mapping)}"
+        for cp, compat, mapping in decomposition
+    )
+    composition_text = "\n".join(
+        f"{left:X},{right:X};{result:X}" for left, right, result in composition
+    )
+    folding_text = _mapping_lines(folding)
+    uppercase_text = _mapping_lines(uppercase)
+    hashes = ", ".join(f"{name} sha256:{digest}" for name, digest in SOURCES.items())
+    header = f'''-- Generated Unicode {UNICODE_VERSION} data and algorithms.
+-- DO NOT EDIT. Run `python code/scripts/generate_tracked_artifact_unicode17.py`.
+-- Sources: {UCD_BASE}
+-- {hashes}
+-- Unicode License v3: every source and binary distribution carries the full
+-- notice as UNICODE-LICENSE.txt (sha256:{LICENSE_SHA256}).
+
+-- Lua's host runtime has no pinned normalization or full-casing tables. These
+-- source-embedded rows keep validator results independent of installed modules.
+local Unicode = {{}}
+
+Unicode.UNICODE_VERSION = "{UNICODE_VERSION}"
+
+local COMBINING_DATA = [[
+{combining_text}
+]]
+local DECOMPOSITION_DATA = [[
+{decomposition_text}
+]]
+local COMPOSITION_DATA = [[
+{composition_text}
+]]
+local FOLDING_DATA = [[
+{folding_text}
+]]
+local UPPERCASE_DATA = [[
+{uppercase_text}
+]]
+'''
+    body = r"""
+local S_BASE = 0xAC00
+local L_BASE = 0x1100
+local V_BASE = 0x1161
+local T_BASE = 0x11A7
+local L_COUNT = 19
+local V_COUNT = 21
+local T_COUNT = 28
+local N_COUNT = V_COUNT * T_COUNT
+local S_COUNT = L_COUNT * N_COUNT
+
+local function data_lines(data)
+    return data:gmatch("[^\n]+")
+end
+
+local function parse_hex_list(value)
+    local values = {}
+    for item in value:gmatch("[^,]+") do
+        values[#values + 1] = assert(tonumber(item, 16))
+    end
+    return values
+end
+
+local function parse_combining()
+    local result = {}
+    for line in data_lines(COMBINING_DATA) do
+        local scalar, value = line:match("^([^;]+);([^;]+)$")
+        result[assert(tonumber(scalar, 16))] = assert(tonumber(value, 10))
+    end
+    return result
+end
+
+local function parse_decomposition()
+    local result = {}
+    for line in data_lines(DECOMPOSITION_DATA) do
+        local scalar, kind, mapping = line:match("^([^;]+);([^;]+);(.*)$")
+        result[assert(tonumber(scalar, 16))] = {
+            compatibility = kind == "K",
+            mapping = parse_hex_list(mapping),
+        }
+    end
+    return result
+end
+
+local function pair_key(left, right)
+    return left * 0x110000 + right
+end
+
+local function parse_composition()
+    local result = {}
+    for line in data_lines(COMPOSITION_DATA) do
+        local left, right, composite = line:match("^([^,]+),([^;]+);([^;]+)$")
+        result[pair_key(assert(tonumber(left, 16)), assert(tonumber(right, 16)))] =
+            assert(tonumber(composite, 16))
+    end
+    return result
+end
+
+local function parse_mapping(data)
+    local result = {}
+    for line in data_lines(data) do
+        local scalar, mapping = line:match("^([^;]+);(.*)$")
+        result[assert(tonumber(scalar, 16))] = parse_hex_list(mapping)
+    end
+    return result
+end
+
+local COMBINING = parse_combining()
+local DECOMPOSITION = parse_decomposition()
+local COMPOSITION = parse_composition()
+local FOLDING = parse_mapping(FOLDING_DATA)
+local UPPERCASE = parse_mapping(UPPERCASE_DATA)
+
+local function combining_class(scalar)
+    return COMBINING[scalar] or 0
+end
+
+local function decompose_scalar(scalar, compatibility, output)
+    if scalar >= S_BASE and scalar < S_BASE + S_COUNT then
+        local index = scalar - S_BASE
+        output[#output + 1] = L_BASE + index // N_COUNT
+        output[#output + 1] = V_BASE + (index % N_COUNT) // T_COUNT
+        local trailing = T_BASE + index % T_COUNT
+        if trailing ~= T_BASE then
+            output[#output + 1] = trailing
+        end
+        return
+    end
+
+    local row = DECOMPOSITION[scalar]
+    if row == nil or (row.compatibility and not compatibility) then
+        output[#output + 1] = scalar
+        return
+    end
+    for _, mapped in ipairs(row.mapping) do
+        decompose_scalar(mapped, compatibility, output)
+    end
+end
+
+local function canonical_order(scalars)
+    local index = 1
+    while index <= #scalars do
+        if combining_class(scalars[index]) == 0 then
+            index = index + 1
+        else
+            local ending = index + 1
+            while ending <= #scalars and combining_class(scalars[ending]) ~= 0 do
+                ending = ending + 1
+            end
+            for current = index + 1, ending - 1 do
+                local value = scalars[current]
+                local value_class = combining_class(value)
+                local insertion = current
+                while insertion > index and
+                    combining_class(scalars[insertion - 1]) > value_class
+                do
+                    scalars[insertion] = scalars[insertion - 1]
+                    insertion = insertion - 1
+                end
+                scalars[insertion] = value
+            end
+            index = ending
+        end
+    end
+end
+
+local function compose_pair(left, right)
+    if left >= L_BASE and left < L_BASE + L_COUNT and
+        right >= V_BASE and right < V_BASE + V_COUNT
+    then
+        return S_BASE + ((left - L_BASE) * V_COUNT + right - V_BASE) * T_COUNT
+    end
+    if left >= S_BASE and left < S_BASE + S_COUNT and
+        (left - S_BASE) % T_COUNT == 0 and right > T_BASE and
+        right < T_BASE + T_COUNT
+    then
+        return left + right - T_BASE
+    end
+    return COMPOSITION[pair_key(left, right)]
+end
+
+local function from_scalars(scalars)
+    local chunks = {}
+    for index, scalar in ipairs(scalars) do
+        chunks[index] = utf8.char(scalar)
+    end
+    return table.concat(chunks)
+end
+
+local function normalize(value, compatibility)
+    local decomposed = {}
+    for _, scalar in utf8.codes(value) do
+        decompose_scalar(scalar, compatibility, decomposed)
+    end
+    canonical_order(decomposed)
+    if #decomposed == 0 then
+        return ""
+    end
+
+    local output = {decomposed[1]}
+    local starter_index = 1
+    local starter = decomposed[1]
+    local last_class = combining_class(starter) == 0 and 0 or 255
+    for index = 2, #decomposed do
+        local scalar = decomposed[index]
+        local scalar_class = combining_class(scalar)
+        local composite
+        if last_class == 0 or last_class < scalar_class then
+            composite = compose_pair(starter, scalar)
+        end
+        if composite ~= nil then
+            output[starter_index] = composite
+            starter = composite
+        else
+            output[#output + 1] = scalar
+            if scalar_class == 0 then
+                starter_index = #output
+                starter = scalar
+            end
+            last_class = scalar_class
+        end
+    end
+    return from_scalars(output)
+end
+
+local function map_scalars(value, mapping)
+    local output = {}
+    for _, scalar in utf8.codes(value) do
+        local mapped = mapping[scalar]
+        if mapped == nil then
+            output[#output + 1] = scalar
+        else
+            for _, mapped_scalar in ipairs(mapped) do
+                output[#output + 1] = mapped_scalar
+            end
+        end
+    end
+    return from_scalars(output)
+end
+
+function Unicode.nfc(value)
+    return normalize(value, false)
+end
+
+function Unicode.nfkc(value)
+    return normalize(value, true)
+end
+
+function Unicode.casefold(value)
+    return map_scalars(value, FOLDING)
+end
+
+function Unicode.nfkc_casefold(value)
+    return Unicode.casefold(Unicode.nfkc(value))
+end
+
+function Unicode.full_uppercase(value)
+    return map_scalars(value, UPPERCASE)
+end
+
+return Unicode
+"""
+    return header + body
+
+
 def _load_generated_module(path: Path):
     spec = importlib.util.spec_from_file_location("tracked_unicode17_generated", path)
     if spec is None or spec.loader is None:
@@ -1821,6 +2106,513 @@ def _self_check_elixir(
         raise RuntimeError(f"generated Elixir Unicode self-check failed: {detail}")
 
 
+def _lua_scalar_field(value: str) -> str:
+    return ",".join(f"{ord(character):X}" for character in value)
+
+
+def _lua_self_check_payload(module, sources: dict[str, str]) -> str:
+    lines = [f"V;{UNICODE_VERSION}"]
+    for line in sources["NormalizationTest.txt"].splitlines():
+        payload = line.split("#", 1)[0].strip()
+        if not payload or payload.startswith("@"):
+            continue
+        columns = [_scalars(field.strip()) for field in payload.split(";")[:5]]
+        lines.append("N;" + ";".join(_lua_scalar_field(value) for value in columns))
+
+    for line in sources["CaseFolding.txt"].splitlines():
+        payload = line.split("#", 1)[0].strip()
+        if not payload:
+            continue
+        fields = [field.strip() for field in payload.split(";")]
+        if fields[1] not in {"C", "F"}:
+            continue
+        source = chr(int(fields[0], 16))
+        values = (source, _scalars(fields[2]), module.nfkc_casefold(source))
+        lines.append("F;" + ";".join(_lua_scalar_field(value) for value in values))
+
+    uppercase: dict[int, tuple[int, ...]] = {}
+    for line in sources["UnicodeData.txt"].splitlines():
+        fields = line.split(";")
+        if fields[12]:
+            uppercase[int(fields[0], 16)] = (int(fields[12], 16),)
+    for line in sources["SpecialCasing.txt"].splitlines():
+        payload = line.split("#", 1)[0].strip()
+        if not payload:
+            continue
+        fields = [field.strip() for field in payload.split(";")]
+        if fields[4]:
+            continue
+        uppercase[int(fields[0], 16)] = tuple(
+            int(value, 16) for value in fields[3].split()
+        )
+    for scalar, mapping in sorted(uppercase.items()):
+        source = chr(scalar)
+        expected = "".join(chr(value) for value in mapping)
+        lines.append(f"U;{_lua_scalar_field(source)};{_lua_scalar_field(expected)}")
+    return "\n".join(lines) + "\n"
+
+
+_LUA_SELF_CHECK = r"""local unicode = dofile("tracked_artifact_unicode17.lua")
+
+local function split(value, separator)
+    local fields = {}
+    local start = 1
+    while true do
+        local position = value:find(separator, start, true)
+        if position == nil then
+            fields[#fields + 1] = value:sub(start)
+            return fields
+        end
+        fields[#fields + 1] = value:sub(start, position - 1)
+        start = position + #separator
+    end
+end
+
+local function from_scalar_field(value)
+    local chunks = {}
+    if value == "" then return "" end
+    for scalar in value:gmatch("[^,]+") do
+        chunks[#chunks + 1] = utf8.char(assert(tonumber(scalar, 16)))
+    end
+    return table.concat(chunks)
+end
+
+local counts = {N = 0, F = 0, U = 0}
+local saw_version = false
+for line in io.lines() do
+    local fields = split(line, ";")
+    local kind = fields[1]
+    if kind == "V" then
+        assert(fields[2] == unicode.UNICODE_VERSION, "generated Lua Unicode version drift")
+        saw_version = true
+    elseif kind == "N" then
+        counts.N = counts.N + 1
+        local c1, c2, c3, c4, c5 =
+            from_scalar_field(fields[2]), from_scalar_field(fields[3]),
+            from_scalar_field(fields[4]), from_scalar_field(fields[5]),
+            from_scalar_field(fields[6])
+        local valid = unicode.nfc(c1) == c2 and unicode.nfc(c2) == c2 and
+            unicode.nfc(c3) == c2 and unicode.nfc(c4) == c4 and
+            unicode.nfc(c5) == c4 and unicode.nfkc(c1) == c4 and
+            unicode.nfkc(c2) == c4 and unicode.nfkc(c3) == c4 and
+            unicode.nfkc(c4) == c4 and unicode.nfkc(c5) == c4
+        assert(valid, "normalization Lua self-check failed at vector " .. counts.N)
+    elseif kind == "F" then
+        counts.F = counts.F + 1
+        local source = from_scalar_field(fields[2])
+        assert(
+            unicode.casefold(source) == from_scalar_field(fields[3]),
+            "case-fold Lua self-check failed at vector " .. counts.F
+        )
+        assert(
+            unicode.nfkc_casefold(source) == from_scalar_field(fields[4]),
+            "NFKC-case-fold Lua self-check failed at vector " .. counts.F
+        )
+    elseif kind == "U" then
+        counts.U = counts.U + 1
+        assert(
+            unicode.full_uppercase(from_scalar_field(fields[2])) ==
+                from_scalar_field(fields[3]),
+            "full-uppercase Lua self-check failed at vector " .. counts.U
+        )
+    else
+        error("unknown Lua self-check record")
+    end
+end
+assert(saw_version, "missing generated Lua Unicode version")
+
+local outlined = utf8.char(
+    0x1CCE3, 0x1CCE4, 0x1CCD9, 0x1CCDA, 0x5F, 0x1CCE2,
+    0x1CCE4, 0x1CCD9, 0x1CCEA, 0x1CCE1, 0x1CCDA, 0x1CCE8
+)
+assert(
+    unicode.nfkc_casefold(outlined) == "node_modules",
+    "Unicode 17 outlined-letter Lua sentinel failed"
+)
+assert(
+    unicode.nfc(utf8.char(0x105D2, 0x0307)) == utf8.char(0x105C9),
+    "Unicode 17 Todhri Lua sentinel failed"
+)
+io.write("ok\n")
+"""
+
+
+_LUA_OUTPUT_LIMIT = 8192
+_WINDOWS_CREATE_SUSPENDED = 0x00000004
+_WINDOWS_JOB_OBJECT_EXTENDED_LIMIT_INFORMATION = 9
+_WINDOWS_JOB_OBJECT_LIMIT_KILL_ON_JOB_CLOSE = 0x00002000
+
+
+def _create_windows_kill_on_close_job(process: subprocess.Popen) -> int:
+    """Contain a Windows child and all descendants in a kill-on-close job."""
+    from ctypes import wintypes
+
+    class _IoCounters(ctypes.Structure):
+        _fields_ = [
+            ("ReadOperationCount", ctypes.c_ulonglong),
+            ("WriteOperationCount", ctypes.c_ulonglong),
+            ("OtherOperationCount", ctypes.c_ulonglong),
+            ("ReadTransferCount", ctypes.c_ulonglong),
+            ("WriteTransferCount", ctypes.c_ulonglong),
+            ("OtherTransferCount", ctypes.c_ulonglong),
+        ]
+
+    class _BasicLimitInformation(ctypes.Structure):
+        _fields_ = [
+            ("PerProcessUserTimeLimit", ctypes.c_longlong),
+            ("PerJobUserTimeLimit", ctypes.c_longlong),
+            ("LimitFlags", wintypes.DWORD),
+            ("MinimumWorkingSetSize", ctypes.c_size_t),
+            ("MaximumWorkingSetSize", ctypes.c_size_t),
+            ("ActiveProcessLimit", wintypes.DWORD),
+            ("Affinity", ctypes.c_size_t),
+            ("PriorityClass", wintypes.DWORD),
+            ("SchedulingClass", wintypes.DWORD),
+        ]
+
+    class _ExtendedLimitInformation(ctypes.Structure):
+        _fields_ = [
+            ("BasicLimitInformation", _BasicLimitInformation),
+            ("IoInfo", _IoCounters),
+            ("ProcessMemoryLimit", ctypes.c_size_t),
+            ("JobMemoryLimit", ctypes.c_size_t),
+            ("PeakProcessMemoryUsed", ctypes.c_size_t),
+            ("PeakJobMemoryUsed", ctypes.c_size_t),
+        ]
+
+    kernel32 = ctypes.WinDLL("kernel32", use_last_error=True)
+    kernel32.CreateJobObjectW.argtypes = (wintypes.LPVOID, wintypes.LPCWSTR)
+    kernel32.CreateJobObjectW.restype = wintypes.HANDLE
+    kernel32.SetInformationJobObject.argtypes = (
+        wintypes.HANDLE,
+        ctypes.c_int,
+        wintypes.LPVOID,
+        wintypes.DWORD,
+    )
+    kernel32.SetInformationJobObject.restype = wintypes.BOOL
+    kernel32.AssignProcessToJobObject.argtypes = (wintypes.HANDLE, wintypes.HANDLE)
+    kernel32.AssignProcessToJobObject.restype = wintypes.BOOL
+    kernel32.CloseHandle.argtypes = (wintypes.HANDLE,)
+    kernel32.CloseHandle.restype = wintypes.BOOL
+
+    job = kernel32.CreateJobObjectW(None, None)
+    if not job:
+        raise ctypes.WinError(ctypes.get_last_error())
+    information = _ExtendedLimitInformation()
+    information.BasicLimitInformation.LimitFlags = (
+        _WINDOWS_JOB_OBJECT_LIMIT_KILL_ON_JOB_CLOSE
+    )
+    if not kernel32.SetInformationJobObject(
+        job,
+        _WINDOWS_JOB_OBJECT_EXTENDED_LIMIT_INFORMATION,
+        ctypes.byref(information),
+        ctypes.sizeof(information),
+    ):
+        error = ctypes.WinError(ctypes.get_last_error())
+        kernel32.CloseHandle(job)
+        raise error
+    process_handle = wintypes.HANDLE(int(process._handle))
+    if not kernel32.AssignProcessToJobObject(job, process_handle):
+        error = ctypes.WinError(ctypes.get_last_error())
+        kernel32.CloseHandle(job)
+        process.kill()
+        raise error
+    return int(job)
+
+
+def _resume_windows_process(process_id: int) -> None:
+    """Resume the one thread of a just-created suspended Windows process."""
+    from ctypes import wintypes
+
+    class _ThreadEntry32(ctypes.Structure):
+        _fields_ = [
+            ("dwSize", wintypes.DWORD),
+            ("cntUsage", wintypes.DWORD),
+            ("th32ThreadID", wintypes.DWORD),
+            ("th32OwnerProcessID", wintypes.DWORD),
+            ("tpBasePri", wintypes.LONG),
+            ("tpDeltaPri", wintypes.LONG),
+            ("dwFlags", wintypes.DWORD),
+        ]
+
+    kernel32 = ctypes.WinDLL("kernel32", use_last_error=True)
+    kernel32.CreateToolhelp32Snapshot.argtypes = (wintypes.DWORD, wintypes.DWORD)
+    kernel32.CreateToolhelp32Snapshot.restype = wintypes.HANDLE
+    kernel32.Thread32First.argtypes = (
+        wintypes.HANDLE,
+        ctypes.POINTER(_ThreadEntry32),
+    )
+    kernel32.Thread32First.restype = wintypes.BOOL
+    kernel32.Thread32Next.argtypes = (
+        wintypes.HANDLE,
+        ctypes.POINTER(_ThreadEntry32),
+    )
+    kernel32.Thread32Next.restype = wintypes.BOOL
+    kernel32.OpenThread.argtypes = (wintypes.DWORD, wintypes.BOOL, wintypes.DWORD)
+    kernel32.OpenThread.restype = wintypes.HANDLE
+    kernel32.ResumeThread.argtypes = (wintypes.HANDLE,)
+    kernel32.ResumeThread.restype = wintypes.DWORD
+    kernel32.CloseHandle.argtypes = (wintypes.HANDLE,)
+    kernel32.CloseHandle.restype = wintypes.BOOL
+
+    snapshot = kernel32.CreateToolhelp32Snapshot(0x00000004, 0)
+    if snapshot == ctypes.c_void_p(-1).value:
+        raise ctypes.WinError(ctypes.get_last_error())
+    thread = _ThreadEntry32()
+    thread.dwSize = ctypes.sizeof(thread)
+    thread_id = None
+    try:
+        present = kernel32.Thread32First(snapshot, ctypes.byref(thread))
+        while present:
+            if thread.th32OwnerProcessID == process_id:
+                thread_id = thread.th32ThreadID
+                break
+            present = kernel32.Thread32Next(snapshot, ctypes.byref(thread))
+    finally:
+        kernel32.CloseHandle(snapshot)
+    if thread_id is None:
+        raise RuntimeError("could not find suspended emitted-runtime thread")
+
+    thread_handle = kernel32.OpenThread(0x0002, False, thread_id)
+    if not thread_handle:
+        raise ctypes.WinError(ctypes.get_last_error())
+    try:
+        if kernel32.ResumeThread(thread_handle) == 0xFFFFFFFF:
+            raise ctypes.WinError(ctypes.get_last_error())
+    finally:
+        kernel32.CloseHandle(thread_handle)
+
+
+def _terminate_windows_job(job: int) -> None:
+    from ctypes import wintypes
+
+    class _BasicAccountingInformation(ctypes.Structure):
+        _fields_ = [
+            ("TotalUserTime", ctypes.c_longlong),
+            ("TotalKernelTime", ctypes.c_longlong),
+            ("ThisPeriodTotalUserTime", ctypes.c_longlong),
+            ("ThisPeriodTotalKernelTime", ctypes.c_longlong),
+            ("TotalPageFaultCount", wintypes.DWORD),
+            ("TotalProcesses", wintypes.DWORD),
+            ("ActiveProcesses", wintypes.DWORD),
+            ("TotalTerminatedProcesses", wintypes.DWORD),
+        ]
+
+    kernel32 = ctypes.WinDLL("kernel32", use_last_error=True)
+    kernel32.TerminateJobObject.argtypes = (wintypes.HANDLE, wintypes.UINT)
+    kernel32.TerminateJobObject.restype = wintypes.BOOL
+    kernel32.QueryInformationJobObject.argtypes = (
+        wintypes.HANDLE,
+        ctypes.c_int,
+        wintypes.LPVOID,
+        wintypes.DWORD,
+        wintypes.LPVOID,
+    )
+    kernel32.QueryInformationJobObject.restype = wintypes.BOOL
+    kernel32.CloseHandle.argtypes = (wintypes.HANDLE,)
+    kernel32.CloseHandle.restype = wintypes.BOOL
+    handle = wintypes.HANDLE(job)
+    try:
+        if not kernel32.TerminateJobObject(handle, 1):
+            raise ctypes.WinError(ctypes.get_last_error())
+        deadline = time.monotonic() + 5
+        while True:
+            accounting = _BasicAccountingInformation()
+            if not kernel32.QueryInformationJobObject(
+                handle,
+                1,
+                ctypes.byref(accounting),
+                ctypes.sizeof(accounting),
+                None,
+            ):
+                raise ctypes.WinError(ctypes.get_last_error())
+            if accounting.ActiveProcesses == 0:
+                break
+            if time.monotonic() >= deadline:
+                raise RuntimeError("Windows emitted-runtime job did not terminate")
+            time.sleep(0.01)
+    finally:
+        kernel32.CloseHandle(handle)
+
+
+def _terminate_process_tree(
+    process: subprocess.Popen, windows_job: int | None = None
+) -> None:
+    """Terminate an isolated emitted-runtime process and its descendants."""
+    if os.name == "nt":
+        if windows_job is not None:
+            _terminate_windows_job(windows_job)
+    else:
+        try:
+            os.killpg(process.pid, signal.SIGKILL)
+        except ProcessLookupError:
+            pass
+    if process.poll() is None:
+        process.kill()
+
+
+def _run_bounded_process(
+    command: list[str],
+    *,
+    cwd: Path,
+    env: dict[str, str],
+    input_text: str,
+    timeout: int,
+    output_limit: int = _LUA_OUTPUT_LIMIT,
+) -> subprocess.CompletedProcess:
+    """Run an isolated child while draining but retaining only bounded output."""
+
+    def drain(stream, target: list[bytes]) -> None:
+        retained = bytearray()
+        try:
+            while chunk := stream.read(8192):
+                remaining = output_limit - len(retained)
+                if remaining > 0:
+                    retained.extend(chunk[:remaining])
+        finally:
+            stream.close()
+            target.append(bytes(retained))
+
+    options: dict[str, object] = {}
+    if os.name == "nt":
+        options["creationflags"] = (
+            subprocess.CREATE_NEW_PROCESS_GROUP | _WINDOWS_CREATE_SUSPENDED
+        )
+    else:
+        options["start_new_session"] = True
+
+    stdout: list[bytes] = []
+    stderr: list[bytes] = []
+    with tempfile.TemporaryFile() as input_stream:
+        input_stream.write(input_text.encode("utf-8"))
+        input_stream.seek(0)
+        process = subprocess.Popen(
+            command,
+            cwd=cwd,
+            env=env,
+            stdin=input_stream,
+            stdout=subprocess.PIPE,
+            stderr=subprocess.PIPE,
+            **options,
+        )
+        try:
+            windows_job = (
+                _create_windows_kill_on_close_job(process) if os.name == "nt" else None
+            )
+        except Exception as setup_error:
+            try:
+                _terminate_process_tree(process)
+                process.wait(timeout=10)
+            except (OSError, subprocess.SubprocessError):
+                raise RuntimeError(
+                    "could not terminate suspended emitted-runtime process"
+                ) from setup_error
+            finally:
+                if process.stdout is not None:
+                    process.stdout.close()
+                if process.stderr is not None:
+                    process.stderr.close()
+            raise
+        if os.name == "nt":
+            try:
+                _resume_windows_process(process.pid)
+            except Exception:
+                _terminate_process_tree(process, windows_job)
+                raise
+        assert process.stdout is not None
+        assert process.stderr is not None
+        readers = (
+            threading.Thread(target=drain, args=(process.stdout, stdout), daemon=True),
+            threading.Thread(target=drain, args=(process.stderr, stderr), daemon=True),
+        )
+        for reader in readers:
+            reader.start()
+        try:
+            returncode = process.wait(timeout=timeout)
+        except subprocess.TimeoutExpired as error:
+            terminating_job = windows_job
+            windows_job = None
+            _terminate_process_tree(process, terminating_job)
+            process.wait(timeout=10)
+            raise RuntimeError(
+                f"emitted-runtime self-check exceeded {timeout} seconds"
+            ) from error
+        else:
+            terminating_job = windows_job
+            windows_job = None
+            _terminate_process_tree(process, terminating_job)
+        finally:
+            if windows_job is not None:
+                terminating_job = windows_job
+                windows_job = None
+                _terminate_process_tree(process, terminating_job)
+            for reader in readers:
+                reader.join(timeout=10)
+        if any(reader.is_alive() for reader in readers):
+            _terminate_process_tree(process)
+            raise RuntimeError("emitted-runtime output readers did not terminate")
+
+    return subprocess.CompletedProcess(
+        command,
+        returncode,
+        stdout[0].decode("utf-8", errors="replace"),
+        stderr[0].decode("utf-8", errors="replace"),
+    )
+
+
+def _lua_self_check_environment() -> dict[str, str]:
+    """Retain only Windows loader state; Lua receives no user initialization."""
+    return {
+        name: value
+        for name in ("SystemRoot", "WINDIR")
+        if (value := os.environ.get(name)) is not None
+    }
+
+
+def _self_check_lua(
+    root: Path,
+    lua_output: str,
+    sources: dict[str, str],
+    python_module,
+    lua_executable: Path,
+) -> None:
+    del root  # Kept parallel with the other emitted-runtime call signatures.
+    lua = lua_executable.expanduser().resolve(strict=True)
+    if not lua.is_file():
+        raise RuntimeError(f"Lua Unicode self-check executable is not a file: {lua}")
+    environment = _lua_self_check_environment()
+
+    with tempfile.TemporaryDirectory(prefix="unicode17-lua-check-") as temporary:
+        temporary_path = Path(temporary)
+        generated_path = temporary_path / "tracked_artifact_unicode17.lua"
+        runner_path = temporary_path / "self_check.lua"
+        generated_path.write_text(lua_output, encoding="utf-8", newline="\n")
+        runner_path.write_text(_LUA_SELF_CHECK, encoding="utf-8", newline="\n")
+        version = _run_bounded_process(
+            [str(lua), "-E", "-v"],
+            cwd=temporary_path,
+            env=environment,
+            input_text="",
+            timeout=10,
+        )
+        version_text = version.stdout + version.stderr
+        if version.returncode != 0 or not any(
+            line.startswith("Lua 5.4.7") for line in version_text.splitlines()[:1]
+        ):
+            raise RuntimeError("Lua Unicode self-check requires pinned Lua 5.4.7")
+        result = _run_bounded_process(
+            [str(lua), "-E", str(runner_path)],
+            cwd=temporary_path,
+            env=environment,
+            input_text=_lua_self_check_payload(python_module, sources),
+            timeout=180,
+        )
+    normalized_stdout = result.stdout.replace("\r\n", "\n")
+    if result.returncode != 0 or normalized_stdout != "ok\n":
+        detail = result.stderr.strip() or result.stdout.strip() or "no diagnostic"
+        raise RuntimeError(f"generated Lua Unicode self-check failed: {detail}")
+
+
 def _write_or_check(root: Path, target: Path, content: str, check: bool) -> None:
     absolute = root / target
     content = content.replace("\r\n", "\n")
@@ -1847,7 +2639,7 @@ def _write_bytes_or_check(
 def _selected_runtime_self_checks(requested: list[str] | None) -> tuple[str, ...]:
     """Return the emitted runtimes whose official-vector checks must run."""
     if requested is None:
-        return ("typescript", "ruby", "elixir")
+        return ("typescript", "ruby", "elixir", "lua")
     return tuple(dict.fromkeys(requested))
 
 
@@ -1857,10 +2649,18 @@ def main() -> int:
     parser.add_argument(
         "--self-check-runtime",
         action="append",
-        choices=("typescript", "ruby", "elixir"),
+        choices=("typescript", "ruby", "elixir", "lua"),
         help=(
             "limit emitted-runtime official-vector checks; repeat to select more "
             "than one runtime (default: every emitted runtime)"
+        ),
+    )
+    parser.add_argument(
+        "--lua-executable",
+        type=Path,
+        help=(
+            "exact repository-pinned Lua 5.4.7 executable used when the Lua "
+            "emitted-runtime check is selected"
         ),
     )
     args = parser.parse_args()
@@ -1881,12 +2681,14 @@ def main() -> int:
     typescript_output = _render_typescript(tables)
     ruby_output = _render_ruby(tables)
     elixir_output = _render_elixir(tables)
+    lua_output = _render_lua(tables)
     for target in PYTHON_TARGETS:
         _write_or_check(root, target, python_output, args.check)
     _write_or_check(root, CSHARP_TARGET, csharp_output, args.check)
     _write_or_check(root, TYPESCRIPT_TARGET, typescript_output, args.check)
     _write_or_check(root, RUBY_TARGET, ruby_output, args.check)
     _write_or_check(root, ELIXIR_TARGET, elixir_output, args.check)
+    _write_or_check(root, LUA_TARGET, lua_output, args.check)
     for target in LICENSE_TARGETS:
         _write_bytes_or_check(root, target, upstream_license, args.check)
     python_module = _load_generated_module(root / PYTHON_TARGETS[0])
@@ -1898,6 +2700,16 @@ def main() -> int:
         _self_check_ruby(root, ruby_output, sources, python_module)
     if "elixir" in selected_runtimes:
         _self_check_elixir(root, elixir_output, sources, python_module)
+    if "lua" in selected_runtimes:
+        if args.lua_executable is None:
+            parser.error("--lua-executable is required for the Lua self-check")
+        _self_check_lua(
+            root,
+            lua_output,
+            sources,
+            python_module,
+            args.lua_executable,
+        )
     print(
         f"Unicode {UNICODE_VERSION} generated and verified: "
         f"{len(tables[0])} combining, {len(tables[1])} decomposition, "

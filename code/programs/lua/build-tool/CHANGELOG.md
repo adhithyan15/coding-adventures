@@ -2,8 +2,25 @@
 
 ## Unreleased
 
+### Added
+
+- A pure tracked-artifact snapshot validator now independently consumes the
+  five language-neutral fixtures, including redacted portable-path failures,
+  Unicode-scalar boundaries and ordering, inert link metadata, and exact,
+  case, nested, and Unicode-compatible `node_modules` aliases.
+- Generated source-embedded Unicode 17.0.0 normalization, full default-fold,
+  and full-uppercase tables keep validation independent of host Lua tables;
+  the generator verifies the emitted Lua module against every official vector.
+
 ### Fixed
 
+- The emitted-Lua Unicode verifier now requires an explicit pinned Lua 5.4.7
+  executable, ignores Lua initialization and module-path environment state,
+  bounds retained child output, and terminates the isolated process tree after
+  every exit. Windows starts the verifier suspended inside a kill-on-close Job
+  Object; POSIX uses an isolated process group. Timeout, early-root-exit, and
+  cleanup-error regressions cover descendant containment, and a Job Object
+  setup failure now reaps the still-suspended verifier before propagating.
 - Lua `.rockspec` dependency metadata now follows the shared strict UTF-8
   contract. Invalid bytes fail closed with the stable
   `METADATA_INVALID_UTF8` diagnostic and CLI exit code 2 without leaking host

@@ -1,10 +1,14 @@
 from __future__ import annotations
 
+import ctypes
 import hashlib
 import json
+import os
+import signal
 import subprocess
 import sys
 import tempfile
+import time
 import unittest
 import urllib.request
 from pathlib import Path
@@ -14,6 +18,61 @@ SCRIPTS_DIR = Path(__file__).resolve().parents[1]
 sys.path.insert(0, str(SCRIPTS_DIR))
 
 import generate_tracked_artifact_unicode17 as generator
+
+
+def _test_process_is_running(process_id: int) -> bool:
+    if os.name != "nt":
+        try:
+            os.kill(process_id, 0)
+        except OSError:
+            return False
+        return True
+    kernel32 = ctypes.WinDLL("kernel32", use_last_error=True)
+    kernel32.OpenProcess.argtypes = (ctypes.c_ulong, ctypes.c_int, ctypes.c_ulong)
+    kernel32.OpenProcess.restype = ctypes.c_void_p
+    kernel32.WaitForSingleObject.argtypes = (ctypes.c_void_p, ctypes.c_ulong)
+    kernel32.WaitForSingleObject.restype = ctypes.c_ulong
+    kernel32.CloseHandle.argtypes = (ctypes.c_void_p,)
+    kernel32.CloseHandle.restype = ctypes.c_int
+    handle = kernel32.OpenProcess(0x00100000, False, process_id)
+    if not handle:
+        return False
+    try:
+        return kernel32.WaitForSingleObject(handle, 0) == 0x00000102
+    finally:
+        kernel32.CloseHandle(handle)
+
+
+def _terminate_test_process(process_id: int) -> None:
+    if os.name != "nt":
+        os.kill(process_id, signal.SIGTERM)
+        return
+    kernel32 = ctypes.WinDLL("kernel32", use_last_error=True)
+    kernel32.OpenProcess.argtypes = (ctypes.c_ulong, ctypes.c_int, ctypes.c_ulong)
+    kernel32.OpenProcess.restype = ctypes.c_void_p
+    kernel32.TerminateProcess.argtypes = (ctypes.c_void_p, ctypes.c_uint)
+    kernel32.TerminateProcess.restype = ctypes.c_int
+    kernel32.WaitForSingleObject.argtypes = (ctypes.c_void_p, ctypes.c_ulong)
+    kernel32.WaitForSingleObject.restype = ctypes.c_ulong
+    kernel32.CloseHandle.argtypes = (ctypes.c_void_p,)
+    kernel32.CloseHandle.restype = ctypes.c_int
+    handle = kernel32.OpenProcess(0x0001 | 0x00100000, False, process_id)
+    if not handle:
+        return
+    try:
+        kernel32.TerminateProcess(handle, 1)
+        kernel32.WaitForSingleObject(handle, 5000)
+    finally:
+        kernel32.CloseHandle(handle)
+
+
+def _wait_for_test_process_exit(process_id: int, timeout: float = 5) -> bool:
+    deadline = time.monotonic() + timeout
+    while _test_process_is_running(process_id):
+        if time.monotonic() >= deadline:
+            return False
+        time.sleep(0.01)
+    return True
 
 
 class _Response:
@@ -42,7 +101,7 @@ class UnicodeDownloadBoundaryTests(unittest.TestCase):
     ) -> None:
         self.assertEqual(
             generator._selected_runtime_self_checks(None),
-            ("typescript", "ruby", "elixir"),
+            ("typescript", "ruby", "elixir", "lua"),
         )
 
     def test_runtime_self_check_selection_can_isolate_elixir_for_ci(self) -> None:
@@ -200,6 +259,39 @@ class UnicodeDownloadBoundaryTests(unittest.TestCase):
             generator.LICENSE_TARGETS,
         )
 
+    def test_lua_renderer_exports_the_pinned_process_free_api(self) -> None:
+        rendered = generator._render_lua(
+            (
+                [(0x0300, 230)],
+                [(0x00C0, False, (0x0041, 0x0300))],
+                [(0x0041, 0x0300, 0x00C0)],
+                [(0x0041, (0x0061,))],
+                [(0x0061, (0x0041,))],
+            )
+        )
+
+        self.assertIn('Unicode.UNICODE_VERSION = "17.0.0"', rendered)
+        self.assertIn("function Unicode.nfc", rendered)
+        self.assertIn("function Unicode.nfkc", rendered)
+        self.assertIn("function Unicode.casefold", rendered)
+        self.assertIn("function Unicode.nfkc_casefold", rendered)
+        self.assertIn("function Unicode.full_uppercase", rendered)
+        self.assertNotIn("utf8.nf", rendered)
+        self.assertNotIn("string.lower", rendered)
+
+    def test_lua_output_and_license_are_declared_targets(self) -> None:
+        self.assertEqual(
+            generator.LUA_TARGET,
+            Path(
+                "code/programs/lua/build-tool/lib/build_tool/"
+                "tracked_artifact_unicode17.lua"
+            ),
+        )
+        self.assertIn(
+            Path("code/programs/lua/build-tool/UNICODE-LICENSE.txt"),
+            generator.LICENSE_TARGETS,
+        )
+
     def test_typescript_self_check_runs_every_official_vector_family(self) -> None:
         sources = {
             "NormalizationTest.txt": "0041;0041;0041;0041;0041; # LATIN A\n",
@@ -315,6 +407,172 @@ class UnicodeDownloadBoundaryTests(unittest.TestCase):
         self.assertEqual(payload["uppercase"], [["a", "A"]])
         self.assertEqual(invocation["timeout"], 180)
         self.assertFalse(invocation["check"])
+
+    def test_lua_self_check_runs_every_official_vector_family(self) -> None:
+        sources = {
+            "NormalizationTest.txt": "0041;0041;0041;0041;0041; # LATIN A\n",
+            "CaseFolding.txt": "0041; C; 0061; # LATIN A\n",
+            "UnicodeData.txt": ";".join(["0061"] + [""] * 11 + ["0041"] + [""] * 2),
+            "SpecialCasing.txt": "0061; 0061; 0041; 0041; ; # LATIN A\n",
+        }
+
+        class _Module:
+            @staticmethod
+            def nfkc_casefold(value: str) -> str:
+                return value.lower()
+
+        executable = Path(sys.executable).resolve()
+        version = subprocess.CompletedProcess([], 0, "", "Lua 5.4.7\n")
+        completed = subprocess.CompletedProcess([], 0, "ok\r\n", "")
+        with mock.patch.object(
+            generator,
+            "_run_bounded_process",
+            side_effect=(version, completed),
+        ) as run:
+            generator._self_check_lua(
+                Path("C:/repo"),
+                "return {}\n",
+                sources,
+                _Module(),
+                executable,
+            )
+
+        version_command = run.call_args_list[0].args[0]
+        self.assertEqual(version_command, [str(executable), "-E", "-v"])
+        command = run.call_args_list[1].args[0]
+        self.assertEqual(command[:2], [str(executable), "-E"])
+        invocation = run.call_args_list[1].kwargs
+        self.assertEqual(
+            invocation["input_text"],
+            "V;17.0.0\nN;41;41;41;41;41\nF;41;61;61\nU;61;41\n",
+        )
+        self.assertEqual(invocation["timeout"], 180)
+        self.assertNotIn("PATH", invocation["env"])
+        self.assertNotIn("LUA_INIT", invocation["env"])
+        self.assertNotIn("LUA_PATH", invocation["env"])
+
+    def test_bounded_process_discards_output_past_the_limit(self) -> None:
+        with tempfile.TemporaryDirectory() as temporary:
+            completed = generator._run_bounded_process(
+                [
+                    sys.executable,
+                    "-c",
+                    (
+                        "import sys; sys.stdout.write('x' * 4096); "
+                        "sys.stderr.write('y' * 4096)"
+                    ),
+                ],
+                cwd=Path(temporary),
+                env=generator._lua_self_check_environment(),
+                input_text="",
+                timeout=10,
+                output_limit=64,
+            )
+
+        self.assertEqual(completed.returncode, 0)
+        self.assertEqual(len(completed.stdout), 64)
+        self.assertEqual(len(completed.stderr), 64)
+
+    def test_bounded_process_terminates_a_timed_out_process_tree(self) -> None:
+        with (
+            tempfile.TemporaryDirectory() as temporary,
+            self.assertRaisesRegex(RuntimeError, "exceeded 1 seconds"),
+        ):
+            generator._run_bounded_process(
+                [sys.executable, "-c", "import time; time.sleep(60)"],
+                cwd=Path(temporary),
+                env=generator._lua_self_check_environment(),
+                input_text="",
+                timeout=1,
+                output_limit=64,
+            )
+
+    def test_bounded_process_contains_descendants_after_root_exit(self) -> None:
+        child_source = "import time; time.sleep(60)"
+        root_source = (
+            "import subprocess, sys; "
+            "child = subprocess.Popen("
+            "[sys.executable, '-c', sys.argv[1]], "
+            "stdin=subprocess.DEVNULL, stdout=subprocess.DEVNULL, "
+            "stderr=subprocess.DEVNULL); "
+            "print(child.pid, flush=True)"
+        )
+        child_pid = None
+        try:
+            completed = generator._run_bounded_process(
+                [sys.executable, "-c", root_source, child_source],
+                cwd=Path(__file__).resolve().parent,
+                env=generator._lua_self_check_environment(),
+                input_text="",
+                timeout=10,
+                output_limit=64,
+            )
+            self.assertEqual(completed.returncode, 0)
+            child_pid = int(completed.stdout.strip())
+            self.assertTrue(_wait_for_test_process_exit(child_pid))
+        finally:
+            if child_pid is not None and _test_process_is_running(child_pid):
+                _terminate_test_process(child_pid)
+
+    @unittest.skipUnless(os.name == "nt", "Windows Job Object regression")
+    def test_bounded_process_does_not_reuse_a_consumed_windows_job(self) -> None:
+        with (
+            mock.patch.object(
+                generator,
+                "_terminate_process_tree",
+                side_effect=RuntimeError("cleanup failed"),
+            ) as terminate,
+            self.assertRaisesRegex(RuntimeError, "cleanup failed"),
+        ):
+            generator._run_bounded_process(
+                [sys.executable, "-c", "pass"],
+                cwd=Path(__file__).resolve().parent,
+                env=generator._lua_self_check_environment(),
+                input_text="",
+                timeout=10,
+                output_limit=64,
+            )
+        terminate.assert_called_once()
+
+    @unittest.skipUnless(os.name == "nt", "Windows Job Object regression")
+    def test_bounded_process_reaps_a_job_setup_failure(self) -> None:
+        started: list[subprocess.Popen] = []
+        real_popen = subprocess.Popen
+
+        def start_process(*args, **kwargs):
+            process = real_popen(*args, **kwargs)
+            started.append(process)
+            return process
+
+        try:
+            with (
+                mock.patch.object(
+                    generator.subprocess,
+                    "Popen",
+                    side_effect=start_process,
+                ),
+                mock.patch.object(
+                    generator,
+                    "_create_windows_kill_on_close_job",
+                    side_effect=OSError("job setup failed"),
+                ),
+                self.assertRaisesRegex(OSError, "job setup failed"),
+            ):
+                generator._run_bounded_process(
+                    [sys.executable, "-c", "pass"],
+                    cwd=Path(__file__).resolve().parent,
+                    env=generator._lua_self_check_environment(),
+                    input_text="",
+                    timeout=10,
+                    output_limit=64,
+                )
+            self.assertEqual(len(started), 1)
+            self.assertIsNotNone(started[0].poll())
+        finally:
+            for process in started:
+                if process.poll() is None:
+                    process.kill()
+                    process.wait(timeout=5)
 
 
 if __name__ == "__main__":
