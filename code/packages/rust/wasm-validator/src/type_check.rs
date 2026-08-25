@@ -1766,7 +1766,15 @@ fn type_check_function(ctx: &ModuleContext, func_idx: usize, func_type: &FuncTyp
                     | wasm_opcodes::SimdOpKind::PromoteLowF32x4
                     | wasm_opcodes::SimdOpKind::ConvertLowI32x4S
                     | wasm_opcodes::SimdOpKind::ConvertLowI32x4U
-                    | wasm_opcodes::SimdOpKind::AbsF64x2 => {
+                    | wasm_opcodes::SimdOpKind::AbsF64x2
+                    | wasm_opcodes::SimdOpKind::CeilF32x4
+                    | wasm_opcodes::SimdOpKind::FloorF32x4
+                    | wasm_opcodes::SimdOpKind::TruncF32x4
+                    | wasm_opcodes::SimdOpKind::NearestF32x4
+                    | wasm_opcodes::SimdOpKind::CeilF64x2
+                    | wasm_opcodes::SimdOpKind::FloorF64x2
+                    | wasm_opcodes::SimdOpKind::TruncF64x2
+                    | wasm_opcodes::SimdOpKind::NearestF64x2 => {
                         // UNARY, unlike every kind in the two arms above.
                         // `extadd_pairwise_i16x8_s`/`_u`/`i8x16.neg`/
                         // `i16x8.neg`/`i8x16.abs`/`popcnt`/`i16x8.abs`/
@@ -1828,6 +1836,17 @@ fn type_check_function(ctx: &ModuleContext, func_idx: usize, func_type: &FuncTyp
                         // result lane width are both invisible to the type
                         // checker, still just pop-one-`V128`-push-one-
                         // `V128`.
+                        // `f32x4.ceil`/`floor`/`trunc`/`nearest` and
+                        // `f64x2.ceil`/`floor`/`trunc`/`nearest` (SIMD
+                        // widen PR39) join too: all 8 UNARY, same
+                        // pop-one-`V128`-push-one-`V128` shape as
+                        // `AbsF32x4`/`AbsF64x2` above -- the per-lane
+                        // IEEE-754 rounding-mode selection (including
+                        // `nearest`'s ties-to-even vs. Rust's native
+                        // away-from-zero `round()`, see
+                        // `SimdOpKind::NearestF32x4`'s own doc comment in
+                        // wasm-opcodes) is entirely a runtime concern,
+                        // invisible here.
                         pop_expect(&mut stack, frame!(), ValueType::V128)?;
                         push_val(&mut stack, ValueType::V128);
                     }

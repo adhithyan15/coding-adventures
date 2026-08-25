@@ -1259,6 +1259,50 @@ touching lane ops or this campaign) are byte-for-byte unchanged by this
 PR, confirming zero regressions. No other already-vendored file's stats
 changed besides the `simd_splat.wast` fix documented above.
 
+SIMD widen PR39 (rounding family): simd_f32x4_rounding.wast and
+simd_f64x2_rounding.wast -- vendors the dedicated upstream files for the
+ceil/floor/trunc/nearest "rounding" family across both f32x4 and f64x2,
+this PR's 8 new opcodes (f32x4.ceil/floor/trunc/nearest, f64x2.ceil/
+floor/trunc/nearest, sub-opcodes 0x67/0x68/0x69/0x6A and
+0x74/0x75/0x7A/0x94 respectively -- all 8 verified live against the SIMD
+proposal's own BinarySIMD.md at the time of this PR, none colliding with
+any pre-existing table entry). This was one of the two open fronts
+scoped after PR38's `i8x16.shuffle` closed out the lane-immediate
+family: the smaller, purely-arithmetic front (this one) vs. the larger
+`load_extend`/`load_splat`/`load_zero`/`load{8,16,32,64}_lane`/
+`store{8,16,32,64}_lane` memory-access family (deferred -- it introduces
+new instruction SHAPES, not just new arithmetic).
+
+Each file is self-contained -- exactly one vector shape's 4 rounding
+opcodes, 1 module, 176 `assert_return` directives (boundary values,
+special values (`+/-0.0`, `+/-inf`, various NaN forms), and decimal-
+literal edge cases, per WASM's usual per-instruction pattern), 8
+`assert_invalid` directives (wrong-operand-type and arg-empty type-
+mismatch, one pair per opcode), and 16 `assert_malformed` directives
+(unknown-operator checks for `i8x16`/`i16x8`/`i32x4`/`i64x2` variants of
+each of the 4 rounding op names, which the spec deliberately does NOT
+define -- only `f32x4`/`f64x2` have a rounding family).
+
+Pass rate: 100% on every directive in both files -- 1/1 module, 176/176
+assert_return, 8/8 assert_invalid, 16/16 assert_malformed, in EACH file
+(352/352, 16/16, 32/32, 2/2 combined). `f32x4.nearest`/`f64x2.nearest`'s
+ties-to-even semantics (`round_ties_even()`, deliberately NOT
+`round()`'s away-from-zero convention) pass every boundary-value
+assertion, confirming the tie-break direction is correct, not just
+plausible.
+
+Aggregate `assert_return` rose from 43865/43882 to 44217/44234 (+352
+pass, +352 gradeable, `fail` unchanged at 17); `assert_invalid` rose
+from 1973/1973 to 1989/1989 (+16, still 100.0% of gradeable
+directives); `assert_malformed` rose from 465/465 to 497/497 (+32,
+still 100.0%); `module` pass count rose from 1206/1207 to 1208/1209
+(+2, exactly this PR's own 2 files' single module each). The
+pre-existing, unrelated baseline failures (17 `assert_return`, 1
+`module`, 1 `assert_unlinkable`, 2 `register` -- present before this PR
+and tracked separately, none touching the rounding family) are
+byte-for-byte unchanged by this PR, confirming zero regressions. No
+other already-vendored file's stats changed.
+
 The vendored files are licensed under the Apache License, Version 2.0 --
 see the accompanying LICENSE file, itself vendored verbatim from the same
 pinned commit.

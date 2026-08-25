@@ -2,6 +2,31 @@
 
 All notable changes to this package will be documented in this file.
 
+## [0.9.49] - 2026-08-25 (SIMD widen PR39: f32x4/f64x2 ceil/floor/trunc/nearest rounding family)
+
+### Added
+
+- `f32x4.ceil`/`floor`/`trunc`/`nearest` and `f64x2.ceil`/`floor`/
+  `trunc`/`nearest` (8 new opcodes, sub-opcodes `0x67`/`0x68`/`0x69`/
+  `0x6A` and `0x74`/`0x75`/`0x7A`/`0x94`): two new combined match arms
+  in `run_simd_op`, `CeilF32x4 | FloorF32x4 | TruncF32x4 | NearestF32x4`
+  and `CeilF64x2 | FloorF64x2 | TruncF64x2 | NearestF64x2`, same UNARY
+  "pop one v128, push one" shape as the existing `AbsF32x4`/`SqrtF32x4`/
+  `AbsF64x2` arms. `ceil`/`floor`/`trunc` use Rust's native
+  `f32::ceil()`/`floor()`/`trunc()` (`f64` equivalents for the `f64x2`
+  arm) directly -- already IEEE-754 compliant (`roundToIntegralToward
+  Positive`/`Negative`/`Zero`), NaN payload/sign preserved, signed zero
+  preserved, infinities pass through unchanged, no bespoke handling
+  needed. `nearest` uses `round_ties_even()` (IEEE-754
+  `roundToIntegralTiesToEven`), DELIBERATELY NOT `round()` -- `round()`
+  breaks ties away from zero (`2.5 -> 3.0`), which is the WRONG answer
+  for WASM's `nearest`; `round_ties_even()` breaks ties toward even
+  (`2.5 -> 2.0`), the spec-correct behavior.
+- 7 new unit tests covering both directions of rounding for ordinary
+  fractional values, `nearest`'s ties-to-even behavior specifically
+  (including a genuine tie case in each direction), and NaN/signed-zero/
+  infinity preservation across all four rounding modes for both shapes.
+
 ## [0.9.48] - 2026-08-24 (task #229-231 — SIMD widen PR38: i8x16.shuffle, unlocks 268 stuck directives in the already-vendored simd_lane.wast)
 
 ### Added

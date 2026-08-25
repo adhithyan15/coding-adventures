@@ -2,6 +2,37 @@
 
 All notable changes to this package will be documented in this file.
 
+## [0.2.42] - 2026-08-25 - SIMD widen PR39: f32x4/f64x2 rounding family
+
+### Added
+
+- 8 new `SIMD_OPS` entries, closing the ceil/floor/trunc/nearest
+  "rounding" family across both `f32x4` and `f64x2` in one PR: 216 SIMD
+  opcodes total, up from 208.
+  - `f32x4.ceil` (`0x67`), `f32x4.floor` (`0x68`), `f32x4.trunc`
+    (`0x69`), `f32x4.nearest` (`0x6A`).
+  - `f64x2.ceil` (`0x74`), `f64x2.floor` (`0x75`), `f64x2.trunc`
+    (`0x7A`), `f64x2.nearest` (`0x94`).
+  - Every sub-opcode value verified live against the SIMD proposal's own
+    `BinarySIMD.md` at the time of this PR; none collided with any
+    pre-existing table entry. `f64x2.nearest`'s `0x94` (148 decimal) is
+    the second entry in this table (after `i32x4.add`'s `0xAE`) that
+    needs the real 2-byte LEB128 continuation encoding -- every other
+    rounding sub-opcode is single-byte-safe (< 128).
+- 8 new `SimdOpKind` variants: `CeilF32x4`, `FloorF32x4`, `TruncF32x4`,
+  `NearestF32x4`, `CeilF64x2`, `FloorF64x2`, `TruncF64x2`,
+  `NearestF64x2`. All 8 are UNARY (pop one v128, push one), the same
+  shape as `AbsF32x4`/`SqrtF32x4`/`AbsF64x2`. `nearest`'s ties-to-even
+  rounding mode (IEEE-754 `roundToIntegralTiesToEven`, implemented via
+  Rust's `round_ties_even()`, NOT `round()`'s away-from-zero convention)
+  is the one non-trivial correctness subtlety in this family -- see each
+  variant's own doc comment.
+- `simd_rounding_family_has_the_real_verified_sub_opcode_values`: pins
+  all 8 new sub-opcode values and confirms none collide with any
+  pre-existing table entry.
+- `simd_ops_table_has_the_expected_216_entries_and_no_duplicates`
+  (renamed from the 208-entry version): bumps the total-count assertion.
+
 ## [0.2.41] - 2026-08-24 - SIMD widen PR38: i8x16.shuffle (task #229-231)
 
 ### Added

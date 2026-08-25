@@ -2438,3 +2438,76 @@ fn valid_ref_null_is_null() {
     );
     wasm_validator::validate(&module).expect("ref.is_null must consume a reference and produce i32");
 }
+
+#[test]
+fn valid_f32x4_rounding_family() {
+    // SIMD widen PR39: f32x4.ceil/floor/trunc/nearest -- all UNARY (pop
+    // one v128, push one), same shape as f32x4.abs/sqrt above. The
+    // per-lane IEEE-754 rounding-mode selection (including `nearest`'s
+    // ties-to-even semantics) is entirely invisible to the type checker,
+    // which only ever sees the opaque V128 type.
+    assert_valid(
+        r#"(module
+             (func (param v128) (result v128) (f32x4.ceil (local.get 0)))
+             (func (param v128) (result v128) (f32x4.floor (local.get 0)))
+             (func (param v128) (result v128) (f32x4.trunc (local.get 0)))
+             (func (param v128) (result v128) (f32x4.nearest (local.get 0))))"#,
+    );
+}
+
+#[test]
+fn valid_f64x2_rounding_family() {
+    // SIMD widen PR39: f64x2.ceil/floor/trunc/nearest, a direct 2-lane
+    // mirror of the f32x4 rounding family above -- same UNARY shape,
+    // same complete invisibility of the rounding-mode distinction to the
+    // type checker.
+    assert_valid(
+        r#"(module
+             (func (param v128) (result v128) (f64x2.ceil (local.get 0)))
+             (func (param v128) (result v128) (f64x2.floor (local.get 0)))
+             (func (param v128) (result v128) (f64x2.trunc (local.get 0)))
+             (func (param v128) (result v128) (f64x2.nearest (local.get 0))))"#,
+    );
+}
+
+#[test]
+fn invalid_f32x4_ceil_given_an_i32_operand_instead_of_v128() {
+    assert_invalid("(module (func (param i32) (result v128) (f32x4.ceil (local.get 0))))");
+}
+
+#[test]
+fn invalid_f32x4_floor_given_no_operand_at_all() {
+    assert_invalid("(module (func (result v128) (f32x4.floor)))");
+}
+
+#[test]
+fn invalid_f32x4_trunc_given_an_i32_result_type_instead_of_v128() {
+    // Confirms the type checker enforces the RESULT type too, not just
+    // operand types.
+    assert_invalid("(module (func (param v128) (result i32) (f32x4.trunc (local.get 0))))");
+}
+
+#[test]
+fn invalid_f32x4_nearest_given_an_i32_operand_instead_of_v128() {
+    assert_invalid("(module (func (param i32) (result v128) (f32x4.nearest (local.get 0))))");
+}
+
+#[test]
+fn invalid_f64x2_ceil_given_an_i32_operand_instead_of_v128() {
+    assert_invalid("(module (func (param i32) (result v128) (f64x2.ceil (local.get 0))))");
+}
+
+#[test]
+fn invalid_f64x2_floor_given_no_operand_at_all() {
+    assert_invalid("(module (func (result v128) (f64x2.floor)))");
+}
+
+#[test]
+fn invalid_f64x2_trunc_given_an_i32_result_type_instead_of_v128() {
+    assert_invalid("(module (func (param v128) (result i32) (f64x2.trunc (local.get 0))))");
+}
+
+#[test]
+fn invalid_f64x2_nearest_given_an_i32_operand_instead_of_v128() {
+    assert_invalid("(module (func (param i32) (result v128) (f64x2.nearest (local.get 0))))");
+}
