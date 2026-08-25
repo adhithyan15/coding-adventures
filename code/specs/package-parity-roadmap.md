@@ -6888,6 +6888,48 @@ non-draft and mergeable, blocked only by queued checks, so auto-merge remains
 disabled until every required check is terminal and acceptable and GitHub
 reports no conflict.
 
+### Post-#12715 refresh and Rust orphan-validator selection
+
+PR #12715 subsequently completed all 29 reported checks: 23 successes and six
+expected skips, with no failures or pending work. GitHub reported the branch
+clean and mergeable, so the loop enabled squash auto-merge; GitHub merged it as
+`07aa6098a25018e672cf4538be630aea52b30330` at
+`2026-08-25T08:06:29Z` without a manual merge command. The exact merged head is
+`5c716a9283e604fa1f922e6f95075fd63b166abd`.
+
+The mandatory post-merge refresh followed every intervening main commit through
+`192768b4190c852754b01c531025b8064109e709`. The collision-checked schema-3
+inventory now contains 15 established lanes, 1,373 implementation identities,
+4,566 package slots, 175 high-consensus packages with 276 missing slots, 122
+five-to-nine-lane packages with 926 missing slots, 166 two-to-four-lane packages
+with 2,087 missing slots, 910 singletons with 12,740 missing slots, and 721 Rust
+singletons. Canonical collisions and unknown language buckets remain zero;
+OCaml remains correctly emerging at zero packages.
+
+The source audit registered all newly exposed portable work before selection.
+Merged Mermaid XY configuration and axis changes now have an explicit
+`mermaid-xy-chart-portable-conformance` contract owner followed by a
+selection-blocked established-lane rollout umbrella; the existing sequence
+diagram owner is intentionally too narrow. Merged PR #12720 added the pure Rust
+`java-to-semantic-ir` singleton, now owned by a language-neutral JV02 fixture
+contract followed by a selection-blocked established-lane rollout. HTML-parser,
+ALGOL, ADJ, human-language, and vault changes remain inside their existing
+portable, curriculum, or native classifications. The resulting state contains
+496 unique owners and 751 complete dependency edges, with no duplicate IDs or
+missing prerequisites.
+
+The selected next owner is
+`build-tool-rust-orphan-crate-validation-conformance` on exact base
+`192768b4190c852754b01c531025b8064109e709`. Its neutral corpus prerequisite is
+merged. Rust is the widest established lane, and its build tool already pins one
+Unicode 17 normalization, full-folding, and full-uppercase substrate required by
+the orphan exemption contract, so this process-free consumer is bounded and
+dependency-ready without a runtime Unicode-version expansion. Eight live open
+PRs have zero exact overlap with the Rust build-tool, state, or roadmap surfaces,
+and the target remote branch was absent. The higher-descendant extra-CI-toolchain
+corpus and OCaml process-free substrate remain collision-unsafe while live PRs
+#12149 and #12162 own their required Go entry-point and validator surfaces.
+
 ## Autonomous Loop Protocol
 
 Only one parity PR should be active at a time.

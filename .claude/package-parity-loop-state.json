@@ -11,23 +11,18 @@
     "selection_rule": "host-security, credential, native-runtime, and external-approval work may inform classification but is never selected by this parity loop",
     "excluded_delivery_classes": ["onvif", "host-security-hardening", "native-runtime", "external-approval"]
   },
-  "active_pr": {
-    "number": 12715,
-    "url": "https://github.com/adhithyan15/coding-adventures/pull/12715",
-    "branch": "codex/build-tool-fsharp-orphan-crate-validation-conformance",
-    "status": "open"
-  },
+  "active_pr": null,
   "last_inventory": {
-    "revision": "fc01df1ae0b68af15f7a493d610f348c32edf60f",
+    "revision": "192768b4190c852754b01c531025b8064109e709",
     "schema_version": 3,
     "established_languages": 15,
-    "implementation_identities": 1372,
-    "implementation_package_slots": 4565,
+    "implementation_identities": 1373,
+    "implementation_package_slots": 4566,
     "high_consensus_packages": 175,
     "high_consensus_missing_slots": 276,
-    "singleton_packages": 909,
-    "singleton_missing_slots": 12726,
-    "rust_singletons": 720,
+    "singleton_packages": 910,
+    "singleton_missing_slots": 12740,
+    "rust_singletons": 721,
     "canonical_collisions": 0,
     "unknown_language_buckets": 0
   },
@@ -4843,7 +4838,7 @@
     {
       "id": "build-tool-fsharp-orphan-crate-validation-conformance",
       "title": "Make the F# build tool consume orphan-crate validation",
-      "status": "pr-open",
+      "status": "merged",
       "depends_on": [
         "build-tool-orphan-crate-validation-corpus",
         "build-tool-csharp-orphan-crate-validation-conformance"
@@ -4860,7 +4855,11 @@
       "selection_notes": "Selected after PR #12700 completed 29 terminal acceptable checks and merged through squash auto-merge as c68b31d8daa9b82e2b59b139364dd990d8244a27, followed by package-marker-neutral human-language, WASM, storage-fs, and HTML-parser commits on current origin/main fc01df1ae0b68af15f7a493d610f348c32edf60f. The collision-checked schema-3 inventory remains 15 established lanes, 1,372 implementation identities, 4,565 slots, 175 high-consensus packages with 276 gaps, 909 singletons with 12,726 gaps, 720 Rust singletons, zero collisions, and zero unknown buckets; OCaml remains emerging at zero packages. The refresh registers the newly exposed storage-fs persistent revision-floor native-authority review before selection and binds PR #12698's Rust conformance growth to its existing portable WASM owner. This newly unlocked process-free F# facade is dependency-ready, has zero exact overlap across live PRs and remote heads, and advances the reviewed shared .NET orphan validator into another supported implementation lane. The higher-leverage extra-CI-toolchain corpus remains collision-unsafe as currently owned because its canonical Go-normalization half overlaps live PRs #12149 and #12162 on main.go; OCaml shares that collision.",
       "notes": "Consume the closed process-free orphan-crate snapshot and diagnostics through the supported F# build-tool lane without assuming the C# engine or facade supplies unreviewed parity, and without adding filesystem enumeration or process authority.",
       "validation_notes": "The conformance specification now requires every established shared-engine front door to expose a language-native orphan-snapshot adapter and consume every registered neutral fixture without acquiring discovery authority. The F# regression first failed at compile time because validateOrphanCrateSnapshot was absent, then the new no-inline F# facade passed all four clean, unlisted, invalid-exemption, and stale-exemption fixtures with exact diagnostic arrays and pending counts. The formatted Release suite passes 11 tests, the shared C# downstream passes 43 tests, warnings-as-errors build and publish pass, both canonical F# BUILD commands pass twice, and the F# assembly records 100% line, branch, and method coverage while the exercised shared C# engine records 92.39% line coverage. Fantomas 7.0.6 is clean. The process-free neutral corpus validates 111 cases and 269 files; 146 focused repository tests and 928 subtests pass with two expected Windows skips. The Go build tool passes all packages, vet, and trimpath compilation, and a real forced F# dry run evaluates 45 Starlark BUILD files, discovers 199 packages, preserves the five reviewed orphan exemptions, and reports all 199 as WOULD-BUILD. NuGet vulnerability audits report no vulnerable production or test dependencies. The exact-base schema-3 inventory remains 15 established lanes, 1,372 identities, 4,565 slots, zero collisions, and zero unknown buckets; the 492-owner/749-edge state graph is unique, dependency-complete, and acyclic with exactly this one active pr-open item. Diff, JSON, dependency-scope, credential, artifact, and production-authority checks pass: the sole added file read is the test-only fixed neutral fixture, while production only delegates caller-supplied records. Independent implementation/security, fixture/inventory, and state/roadmap reviews found no remaining publication blocker after the README paragraph-spacing cleanup.",
-      "publication_notes": "Opened ready-for-review PR #12715 from clean validated head aa6a49c93aeb533fe75846ef74ad6d8512147e6d after a normal first push. Immediately before publication, origin/main and the branch merge base both equaled fc01df1ae0b68af15f7a493d610f348c32edf60f, the seven changed paths had zero exact overlap with live open PRs or remote heads, and GitHub reported the PR non-draft and mergeable. Required checks are queued, so auto-merge remains disabled until every check is terminal and acceptable and GitHub reports no conflict."
+      "publication_notes": "Opened ready-for-review PR #12715 from clean validated head aa6a49c93aeb533fe75846ef74ad6d8512147e6d after a normal first push. Immediately before publication, origin/main and the branch merge base both equaled fc01df1ae0b68af15f7a493d610f348c32edf60f, the seven changed paths had zero exact overlap with live open PRs or remote heads, and GitHub reported the PR non-draft and mergeable. Required checks are queued, so auto-merge remains disabled until every check is terminal and acceptable and GitHub reports no conflict.",
+      "merged_head_revision": "5c716a9283e604fa1f922e6f95075fd63b166abd",
+      "merge_revision": "07aa6098a25018e672cf4538be630aea52b30330",
+      "merged_at": "2026-08-25T08:06:29Z",
+      "merge_notes": "All 29 reported checks reached terminal acceptable conclusions: 23 successes and six expected skips, with no failures or pending work. GitHub reported the branch clean and mergeable; the loop enabled squash auto-merge, and GitHub merged PR #12715 without a manual merge command."
     },
     {
       "id": "build-tool-elixir-orphan-crate-validation-conformance",
@@ -4922,10 +4921,12 @@
     {
       "id": "build-tool-rust-orphan-crate-validation-conformance",
       "title": "Make the Rust build tool consume orphan-crate validation",
-      "status": "pending",
+      "status": "in-progress",
       "depends_on": ["build-tool-orphan-crate-validation-corpus"],
-      "branch": null,
+      "branch": "codex/build-tool-rust-orphan-crate-validation-conformance",
       "pr_number": null,
+      "selection_revision": "192768b4190c852754b01c531025b8064109e709",
+      "selection_notes": "Selected only after PR #12715 completed all 29 checks and merged through squash auto-merge, the stale active PR and F# lifecycle were reconciled, every intervening main commit was classified, and the exact collision inventory was regenerated on current origin/main. The schema-3 report now contains 15 established lanes, 1,373 implementation identities, 4,566 slots, 175 high-consensus packages with 276 gaps, 910 singletons with 12,740 gaps, 721 Rust singletons, zero collisions, and zero unknown buckets; OCaml remains correctly emerging at zero packages. The new pure Mermaid XY pipeline and pure Java-to-Semantic-IR singleton are registered under neutral-contract and established-lane rollout owners before selection. This bounded process-free Rust consumer is dependency-ready behind the merged orphan corpus, reuses the already pinned Unicode 17 normalization and casing substrate, and advances the widest established lane without adding discovery authority. Eight live open PRs have zero exact overlap on the Rust build-tool, state, or roadmap surfaces, and the target remote branch was absent. The higher-descendant extra-CI-toolchain corpus and OCaml process-free core remain collision-unsafe while live PRs #12149 and #12162 own their required Go main and validator surfaces.",
       "notes": "Consume the closed process-free orphan-crate snapshot and diagnostics in the Rust engine without adding filesystem enumeration or process authority."
     },
     {
@@ -5433,6 +5434,44 @@
       "pr_number": null,
       "selection_blocked": true,
       "notes": "Discovered after merged PR #12686 made single-instance initialization idempotent but explicitly documented that deleting the highest surviving record lets a fresh backend reuse an issued revision, and that multiple backend instances sharing one root remain uncoordinated. Reconcile the overclaims in STR01 and the package README with a reviewed durable monotone floor or epoch design, crash and rollback behavior, cross-process locking, no-follow/path containment, atomic publication and fsync semantics, restart and two-instance tests, and truthful native filesystem/clock authority. This host-authority work is excluded from autonomous portable selection."
+    },
+    {
+      "id": "mermaid-xy-chart-portable-conformance",
+      "title": "Fixture the portable Mermaid XY chart pipeline",
+      "status": "pending",
+      "depends_on": [],
+      "branch": null,
+      "pr_number": null,
+      "notes": "Discovered after merged PRs #12707 and #12718 added deterministic XY chart configuration, axis semantics, IR, layout, and paint behavior across mermaid-parser, diagram-ir, diagram-layout-chart, and diagram-to-paint. Define one language-neutral contract and fixture corpus for parsing, defaults, axis bounds and labels, line and bar geometry, theme and config precedence, stable diagnostics, and deterministic paint output before claiming cross-lane parity. The existing sequence-diagram owner is deliberately sequence-specific and does not cover this chart pipeline."
+    },
+    {
+      "id": "mermaid-xy-chart-established-lane-parity",
+      "title": "Bring Mermaid XY charts to every applicable established lane",
+      "status": "pending",
+      "depends_on": ["mermaid-xy-chart-portable-conformance"],
+      "branch": null,
+      "pr_number": null,
+      "selection_blocked": true,
+      "notes": "Completion umbrella for established-lane Mermaid XY parser, IR, layout, and paint consumers after the neutral chart contract closes. Decompose into coherent lane and prerequisite children before delivery; keep Apple-native example rendering under its existing native authority class rather than multiplying per-example owners."
+    },
+    {
+      "id": "java-to-semantic-ir-portable-conformance",
+      "title": "Fixture the portable Java-to-Semantic-IR frontend",
+      "status": "pending",
+      "depends_on": [],
+      "branch": null,
+      "pr_number": null,
+      "notes": "Discovered after merged PR #12720 added the pure Rust java-to-semantic-ir singleton for JV02 milestone M0. Define language-neutral source, module, literal-lowering, stable-error, depth-bound, and Semantic-IR validation fixtures across the JV02 milestone surface before treating the Rust reference as portable coverage."
+    },
+    {
+      "id": "java-to-semantic-ir-established-lane-parity",
+      "title": "Bring Java-to-Semantic-IR to every applicable established lane",
+      "status": "pending",
+      "depends_on": ["java-to-semantic-ir-portable-conformance"],
+      "branch": null,
+      "pr_number": null,
+      "selection_blocked": true,
+      "notes": "Completion umbrella for pure Java frontend implementations after the neutral JV02 corpus closes. Decompose by reusable parser and Semantic-IR prerequisites before selection; do not infer all-language coverage from the current Rust reference crate."
     },
     {
       "id": "wasm-conformance-host-authority-review",
