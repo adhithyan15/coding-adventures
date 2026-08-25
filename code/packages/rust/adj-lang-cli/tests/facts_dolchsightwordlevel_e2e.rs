@@ -7,10 +7,12 @@
 //! "sight word" is first taught at. Genuinely distinct in KIND from
 //! `digraph-sound.adj`/`diphthong-sound.adj` (phonics: spelling -> sound):
 //! this is whole-word recognition vocabulary (word -> reading-level band).
-//! Ships 25 of the full 220-word Dolch list (the first five words of each
-//! level, in the source deck's own listed order), mirroring
-//! `food-groups.adj`'s "representative subset" convention. 0 answer-time
-//! model calls.
+//! Round 2 (extend): completes the Pre-Primer level to its full 40 words
+//! (re-fetched and re-parsed the SAME cited UFLI slide deck), while
+//! Primer/First Grade/Second Grade/Third Grade still ship only their first
+//! five words each -- 60 of the full 220-word Dolch list total, mirroring
+//! `food-groups.adj`'s "representative subset" convention for the four
+//! still-partial levels. 0 answer-time model calls.
 
 use std::path::{Path, PathBuf};
 use std::process::Command;
@@ -87,7 +89,27 @@ fn dolch_sight_word_level_forward_would_recalls_second_grade() {
 }
 
 #[test]
-fn dolch_sight_word_level_reverse_binds_all_five_pre_primer_words() {
+fn dolch_sight_word_level_forward_funny_recalls_pre_primer() {
+    let dir = scratch("forward_pre_primer_extension");
+    place_lib(&dir);
+    std::fs::write(
+        dir.join("case.adj"),
+        "import \"dolch-sight-word-level.adj\"\n\
+         ? dolch_sight_word_level(funny, $Level)\n",
+    )
+    .unwrap();
+
+    let (ok, out) = run(&dir.join("case.adj"));
+    assert!(ok, "cli should succeed: {out}");
+    assert!(
+        out.contains("\"Level\":\"pre_primer\""),
+        "'funny' is the 40th (last) word of the now-completed Pre-Primer \
+         level -- confirms this round's extension shipped correctly: {out}"
+    );
+}
+
+#[test]
+fn dolch_sight_word_level_reverse_binds_all_forty_pre_primer_words() {
     let dir = scratch("reverse");
     place_lib(&dir);
     std::fs::write(
@@ -99,11 +121,17 @@ fn dolch_sight_word_level_reverse_binds_all_five_pre_primer_words() {
 
     let (ok, out) = run(&dir.join("case.adj"));
     assert!(ok, "cli should succeed: {out}");
-    // The table ships all five of the Pre-Primer level's shipped words --
-    // a genuine one-to-many reverse recall, the same shape
-    // `food-groups.adj`'s `food_group($Food, dairy)` reverse query already
-    // established in this stdlib.
-    for w in ["the", "to", "and", "a", "i"] {
+    // Pre-Primer is now a COMPLETE Dolch level (40/40 words) as of this
+    // round's extension -- a genuine one-to-many reverse recall over the
+    // full level, the same shape `food-groups.adj`'s
+    // `food_group($Food, dairy)` reverse query already established in this
+    // stdlib, just carried all the way to completion for this one level.
+    for w in [
+        "the", "to", "and", "a", "i", "you", "it", "in", "said", "for", "up", "look", "is", "go",
+        "we", "little", "down", "can", "see", "not", "one", "my", "me", "big", "come", "blue",
+        "red", "where", "jump", "away", "here", "help", "make", "yellow", "two", "play", "run",
+        "find", "three", "funny",
+    ] {
         assert!(
             out.contains(&format!("\"W\":\"{w}\"")),
             "{w} should be a bound Pre-Primer answer: {out}"
@@ -118,7 +146,7 @@ fn dolch_sight_word_level_abstains_honestly_on_a_real_dolch_word_outside_the_shi
     std::fs::write(
         dir.join("case.adj"),
         "import \"dolch-sight-word-level.adj\"\n\
-         ? dolch_sight_word_level(you, $Level)\n",
+         ? dolch_sight_word_level(they, $Level)\n",
     )
     .unwrap();
 
@@ -126,9 +154,10 @@ fn dolch_sight_word_level_abstains_honestly_on_a_real_dolch_word_outside_the_shi
     assert!(ok, "cli should succeed: {out}");
     assert!(
         out.contains("\"abstained\":true"),
-        "'you' is a REAL Dolch Pre-Primer word, but not one of this \
-         table's shipped first-five-per-level subset -- honest abstention \
-         on scope, never invented: {out}"
+        "'they' is a REAL Dolch Primer word (its sixth), but Primer still \
+         ships only its first-five subset (unlike the now-completed \
+         Pre-Primer level) -- honest abstention on scope, never invented: \
+         {out}"
     );
 }
 

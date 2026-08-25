@@ -24,7 +24,7 @@
 % query also runs BACKWARD — bind a level and recall every word shipped
 % under it:
 %
-%     ? dolch_sight_word_level($W, pre_primer)  % the ; to ; and ; a ; i
+%     ? dolch_sight_word_level($W, pre_primer)  % all 40 Pre-Primer words
 %
 % WHAT A "SIGHT WORD" IS, AND WHY DOLCH: In 1936, educator Edward W. Dolch
 % published a list of 220 common "service words" (articles, pronouns,
@@ -37,40 +37,60 @@
 % `diphthong-sound.adj` both key a SPELLING to the SOUND it makes; this
 % table keys a WHOLE WORD to the READING-LEVEL BAND it is first taught in).
 %
-% DESIGN NOTE — why this table carries only 25 of the full 220 Dolch words
-% (5 per level), not the complete list: the SAME "representative subset"
-% convention this stdlib already established in `nutrition/food-groups.adj`
-% (which tables 4-5 "example foods" per USDA MyPlate group rather than
-% MyPlate's full food list). The subset here is not a content-based edit —
-% it is the first FIVE words of each level exactly as the cited slide deck
-% itself presents them, in the deck's own built-in order (see Provenance),
-% so no editorial judgment selects which words "feel" most representative.
-% This keeps the largest table this stdlib has shipped to a genetic-code.adj
-% (64 rows) scale of effort at 25 rows, while still genuinely exercising all
-% five of Dolch's real category values (unlike a single-level table, whose
-% second column would never vary). A future round can extend any one level
-% with its remaining words as a further instance of this same gap, mirroring
-% how `wave2-k8-science-foundations` grows a gap across several rounds.
+% EXTENSION (round 2 on this file): the table originally shipped 25 words
+% (the first five of each of Dolch's five levels). This round completes
+% Pre-Primer to its FULL 40 words, re-fetching and re-parsing the SAME
+% cited UFLI slide deck rather than a new source -- exactly the untried
+% angle this loop's own tracking issue backlog flagged after the file first
+% shipped ("a future round can extend any one level with its remaining
+% words as a further instance of this same gap"). The other four levels
+% (Primer/First Grade/Second Grade/Third Grade) still ship only their first
+% five words each, unchanged -- a future round can complete any one of
+% THOSE the same way. This table now carries 60 of the full 220 Dolch
+% words: one COMPLETE level (Pre-Primer, 40/40) plus four still-partial
+% levels (5 words each), mirroring how `wave2-k8-science-foundations` grows
+% a single gap incrementally across several rounds rather than requiring
+% every instance to close in one pass.
 %
-% The 25 words shipped, banded by Dolch's own five reading levels:
+% DESIGN NOTE -- why the four non-Pre-Primer levels still carry only 5 of
+% their words each: the SAME "representative subset" convention this
+% stdlib already established in `nutrition/food-groups.adj` (which tables
+% 4-5 "example foods" per USDA MyPlate group rather than MyPlate's full
+% food list). Nothing about the subset choice is content-based editorial
+% judgment -- it is always the first N words of a level exactly as the
+% cited slide deck itself presents them, in the deck's own built-in order
+% (see Provenance). Pre-Primer was chosen to complete first purely because
+% it was the level already partially shipped with the lowest word count
+% among the two smallest bands (Pre-Primer 40, First Grade 41, Third Grade
+% 41, Second Grade 46, Primer 52) -- keeping this round's added-row count
+% modest while still fully retiring one level's "partial subset" caveat.
 %
-%     level          words (deck's own listed order, first five per level)
-%     -------------  ----------------------------------------------------
-%     pre_primer     the, to, and, a, i
-%     primer         he, was, that, she, on
-%     first_grade    of, his, had, him, her
-%     second_grade   would, very, your, its, around
-%     third_grade    if, long, about, got, six
+% The 60 words shipped, banded by Dolch's own five reading levels:
 %
-% HONEST ABSTENTION — a word that is a REAL Dolch word at a level shipped
-% here, but not one of that level's first five (e.g. `you`, the sixth
-% Pre-Primer word in the deck) is deliberately NOT a row, so a recall on it
+%     level          words (deck's own listed order)
+%     -------------  ------------------------------------------------------
+%     pre_primer     the, to, and, a, i, you, it, in, said, for, up, look,
+%                    is, go, we, little, down, can, see, not, one, my, me,
+%                    big, come, blue, red, where, jump, away, here, help,
+%                    make, yellow, two, play, run, find, three, funny
+%                    (ALL 40 -- this level is now COMPLETE)
+%     primer         he, was, that, she, on                    (5 of 52)
+%     first_grade    of, his, had, him, her                    (5 of 41)
+%     second_grade   would, very, your, its, around             (5 of 46)
+%     third_grade    if, long, about, got, six                  (5 of 41)
+%
+% HONEST ABSTENTION -- a word that is a REAL Dolch word, but at a level not
+% yet completed here (e.g. `they`, Primer's sixth word -- Primer still
+% ships only its first five), is deliberately NOT a row, so a recall on it
 % ABSTAINS rather than inventing a level for a word this table's own scoped
-% subset does not carry — the same honest-narrowing discipline
+% subset does not (yet) carry — the same honest-narrowing discipline
 % `food-groups.adj` already established for a real MyPlate food outside its
-% own "example foods" subset. A word that is not a Dolch word at all (e.g.
-% `elephant`) abstains for the same reason, more strongly (it is outside the
-% cited source entirely, not merely outside this table's chosen subset).
+% own "example foods" subset. Pre-Primer itself no longer has this
+% caveat -- every real Pre-Primer word now recalls correctly, since that
+% level is complete. A word that is not a Dolch word at all (e.g.
+% `elephant`) abstains for a different, stronger reason (it is outside the
+% cited source entirely, not merely outside a level's currently-shipped
+% subset).
 %
 % Provenance: UFLI's Virtual Teaching Resource Hub page "Irregular and High
 % Frequency Words" (curl-fetched directly and confirmed byte-for-byte) states
@@ -78,29 +98,39 @@
 % encountered in the text children read. This high-frequency word list
 % includes many easily decodable words (e.g., it, get) and some words with
 % irregular parts (e.g., was, said)." That page links UFLI's own "Dolch High
-% Frequency Word List Slides" PowerPoint deck, downloaded directly from
-% ufli.education.ufl.edu (the SAME .edu domain and source family
+% Frequency Word List Slides" PowerPoint deck, re-downloaded directly from
+% ufli.education.ufl.edu this round (the SAME .edu domain and source family
 % `digraph-sound.adj`/`diphthong-sound.adj` already established at `trust
-% authoritative`) and unzipped as raw OOXML — its 227 slides are: one title
-% slide, five level-DIVIDER slides (each a bare `<a:t>` run naming one Dolch
-% level: "Pre-Primer", "Primer", "First Grade", "Second Grade", "Third
-% Grade", confirmed byte-for-byte in the raw slide XML) and 220 individual
-% word slides, each one word's own `<a:t>` text run, immediately following
-% its level's divider slide in the deck's built-in order. Counting the word
+% authoritative`, and the SAME deck this file's original 25 rows already
+% cited) and unzipped as raw OOXML. This round resolved the deck's true
+% slide DISPLAY order via `ppt/presentation.xml`'s `<p:sldId>` list and its
+% `ppt/_rels/presentation.xml.rels` relationship map (rather than assuming
+% the zip's filename order, e.g. `slide1.xml`, `slide2.xml`, ...,
+% `slide10.xml`, which is NOT display order) -- a more rigorous re-check
+% than the original sourcing pass needed, since this round reads far deeper
+% into the deck. The resolved 226-slide order is: one title slide, five
+% level-DIVIDER slides (each a bare `<a:t>` run naming one Dolch level:
+% "Pre-Primer", "Primer", "First Grade", "Second Grade", "Third Grade",
+% confirmed byte-for-byte in the raw slide XML) and 220 individual word
+% slides, each one word's own `<a:t>` text run, immediately following its
+% level's divider slide in the deck's built-in order. Counting the word
 % slides between each pair of divider slides gives exactly 40 (Pre-Primer),
-% 52 (Primer), 41 (First Grade), 46 (Second Grade), and 41 (Third Grade) —
-% summing to exactly 220, an independent cross-check that this deck faithfully
-% reproduces Dolch's own well-documented 220-word count, not a corrupted or
-% partial copy. The 25 rows below transcribe the first five word-slide `<a:t>`
-% runs immediately following each level's divider slide, in that exact order.
+% 52 (Primer), 41 (First Grade), 46 (Second Grade), and 41 (Third Grade) --
+% summing to exactly 220, independently reproducing the SAME per-level
+% counts this file's original header already documented, confirming this
+% round's re-parse is consistent with the original sourcing pass and that
+% the deck faithfully reproduces Dolch's own well-documented 220-word
+% count. The 40 Pre-Primer rows below transcribe every one of the 40
+% word-slide `<a:t>` runs immediately following the "Pre-Primer" divider
+% slide, in that exact deck order (the source's own capitalized "I" is
+% lowercased to `i`, matching this table's existing atom-naming convention
+% for every other row). The 20 rows for the remaining four levels are
+% unchanged from the original sourcing pass.
 % `https://ufli.education.ufl.edu/wp-content/uploads/2022/01/Dolch-Words-Slides.pptx`
 % `trust authoritative` — UFLI is a university literacy research center
-% (University of Florida, .edu). A full-tree grep for `dolch`/`sight word`/
-% `sight_word` across the whole shipped stdlib (the mandatory duplication
-% check before scoping) found zero prior hits — confirming this is the
-% FIRST sight-word/high-frequency-word content anywhere in this stdlib.
-% Nothing here is asserted from memory. (See ../README.md;
-% feedback_nothing_human_authored, feedback_adj_only_shipped_artifacts.)
+% (University of Florida, .edu). Nothing here is asserted from memory.
+% (See ../README.md; feedback_nothing_human_authored,
+% feedback_adj_only_shipped_artifacts.)
 % ============================================================================
 
 table dolch_sight_word_level {
@@ -111,6 +141,41 @@ table dolch_sight_word_level {
     row (and, pre_primer)
     row (a, pre_primer)
     row (i, pre_primer)
+    row (you, pre_primer)
+    row (it, pre_primer)
+    row (in, pre_primer)
+    row (said, pre_primer)
+    row (for, pre_primer)
+    row (up, pre_primer)
+    row (look, pre_primer)
+    row (is, pre_primer)
+    row (go, pre_primer)
+    row (we, pre_primer)
+    row (little, pre_primer)
+    row (down, pre_primer)
+    row (can, pre_primer)
+    row (see, pre_primer)
+    row (not, pre_primer)
+    row (one, pre_primer)
+    row (my, pre_primer)
+    row (me, pre_primer)
+    row (big, pre_primer)
+    row (come, pre_primer)
+    row (blue, pre_primer)
+    row (red, pre_primer)
+    row (where, pre_primer)
+    row (jump, pre_primer)
+    row (away, pre_primer)
+    row (here, pre_primer)
+    row (help, pre_primer)
+    row (make, pre_primer)
+    row (yellow, pre_primer)
+    row (two, pre_primer)
+    row (play, pre_primer)
+    row (run, pre_primer)
+    row (find, pre_primer)
+    row (three, pre_primer)
+    row (funny, pre_primer)
 
     row (he, primer)
     row (was, primer)
@@ -140,5 +205,5 @@ table dolch_sight_word_level {
     locator "https://ufli.education.ufl.edu/resources/teaching-resources/instructional-activities/irregular-and-high-frequency-words/"
     trust authoritative
 
-    cites "Pre-Primer: the, to, and, a, i. Primer: he, was, that, she, on. First Grade: of, his, had, him, her. Second Grade: would, very, your, its, around. Third Grade: if, long, about, got, six. (Transcribed directly from the deck's own level-divider and word-slide text runs, in the deck's built-in order.)" locator "https://ufli.education.ufl.edu/wp-content/uploads/2022/01/Dolch-Words-Slides.pptx"
+    cites "Pre-Primer (all 40, complete): the, to, and, a, i, you, it, in, said, for, up, look, is, go, we, little, down, can, see, not, one, my, me, big, come, blue, red, where, jump, away, here, help, make, yellow, two, play, run, find, three, funny. Primer (first five of 52): he, was, that, she, on. First Grade (first five of 41): of, his, had, him, her. Second Grade (first five of 46): would, very, your, its, around. Third Grade (first five of 41): if, long, about, got, six. (Transcribed directly from the deck's own level-divider and word-slide text runs, in the deck's true display order resolved via presentation.xml's slide-ID list, not zip filename order.)" locator "https://ufli.education.ufl.edu/wp-content/uploads/2022/01/Dolch-Words-Slides.pptx"
 }
