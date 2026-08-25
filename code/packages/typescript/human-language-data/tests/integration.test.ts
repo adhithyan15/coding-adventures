@@ -39,7 +39,7 @@ describe("real curriculum", () => {
     expect(scripts.devanagari!.complete).toBe(true);
   });
 
-  it("keeps the cross-script closure queue measured after Tamil எ", () => {
+  it("keeps the cross-script closure queue measured after Persian پ", () => {
     const candrakkala = scripts.malayalam!.marks!.find((mark) => mark.mark === "്")!;
     expect(candrakkala.role).toBe("virama");
     expect(candrakkala.compositionOrder).toEqual([
@@ -383,6 +383,22 @@ describe("real curriculum", () => {
       /continuous Naskh.*upper tip.*shoulder.*baseline.*without lifting.*non-connector.*Persian-scoped/i,
     );
 
+    const persianPeh = scripts["perso-arabic"]!.letters.find((letter) => letter.glyph === "پ")!;
+    expect(persianPeh.strokeOrder).toEqual([
+      "sweep the shallow bowl from right to left",
+      "lift, then place the left dot below",
+      "lift again and place the right dot below",
+      "lift again and place the lower-center dot",
+    ]);
+    expect(persianPeh.penLifts).toBe(3);
+    expect(persianPeh.strokeOrderSource?.url).toBe(
+      "https://laits.utexas.edu/persian_grammar/video/gr/kooroshalphabet",
+    );
+    expect(persianPeh.strokeOrderSource?.citation).toMatch(/Persian Online.*پ.*00:16–00:21/i);
+    expect(persianPeh.strokeOrderSource?.variation).toMatch(
+      /right-to-left.*three separate dots below.*left, right, then lower-center.*Noto Naskh/i,
+    );
+
     const persianRa = scripts["perso-arabic"]!.letters.find((letter) => letter.glyph === "ر")!;
     expect(persianRa.strokeOrder).toEqual([
       "begin at the upper tip and descend through the short stroke",
@@ -471,6 +487,8 @@ describe("real curriculum", () => {
     expect(affected.get("و") ?? 0).toBe(0);
     expect(affected.get("د") ?? 0).toBe(0);
     expect(missingByScript.get("perso-arabic.json")?.has("ر")).toBe(false);
+    expect(missingByScript.get("perso-arabic.json")?.has("پ")).toBe(false);
+    expect(missingByScript.get("urdu-nastaliq.json")?.has("پ")).toBe(true);
     expect(missingByScript.get("tamil.json")?.has("ச")).toBe(false);
     expect(affected.get("ச") ?? 0).toBe(0);
     expect(missingByScript.get("tamil.json")?.has("ட")).toBe(false);
@@ -489,7 +507,7 @@ describe("real curriculum", () => {
     expect(affected.get("எ") ?? 0).toBe(0);
     expect(
       [...affected.entries()].sort((left, right) => right[1] - left[1])[0],
-    ).toEqual(["پ", 14]);
+    ).toEqual(["അ", 13]);
   });
 
   it("loaded every track (17+ and growing)", () => {

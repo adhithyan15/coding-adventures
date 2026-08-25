@@ -1,5 +1,12 @@
 # Changelog
 
+## Unreleased — source-verified Persian pe
+
+- Teach Persian **پ** with its cited right-to-left bowl and three separate dots
+  below.
+- Keep its displayed Persian provenance separate from the still-missing Urdu
+  row; Malayalam independent **അ** now leads the measured queue.
+
 ## Unreleased — source-verified Tamil independent short e
 
 - Teach Tamil **எ** with its cited six-movement body and separate upward right

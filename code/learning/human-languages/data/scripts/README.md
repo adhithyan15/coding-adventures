@@ -236,7 +236,8 @@ right-to-left-script ductus: UT Austin's freehand lesson shows one top-to-bottom
 Naskh stem at 00:08–00:11, with no lift. The adjacent **ب** demonstration at
 00:11–00:15 sweeps its shallow bowl right-to-left, then lifts once for the dot
 below. The full-alphabet source then demonstrates Persian-added **پ** at
-00:16–00:21; that letter remains deferred inventory work and does not change
+00:16–00:21: the same bowl comes first, followed by three separate dots below
+in left, right, then lower-center order. This added corpus row does not change
 HL-C09's fixed 228 prose entries. The next starter entry, **ت**, repeats the
 right-to-left bowl at 00:22–00:27, lifts to place the left dot above, then lifts
 again for the right dot. All three authored paths are checked against their
