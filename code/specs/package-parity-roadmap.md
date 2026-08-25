@@ -7043,6 +7043,107 @@ unchanged at 15 established lanes, 1,373 identities, 4,566 slots, 175
 high-consensus packages with 276 gaps, 910 singletons with 12,740 gaps, 721
 Rust singletons, zero collisions, and zero unknown buckets.
 
+### Post-#12762 refresh and TypeScript tracked-artifact selection
+
+PR #12762 reached 30 terminal acceptable checks: 24 succeeded, five skipped,
+and one completed neutrally, with no failure or pending job. GitHub reported the
+branch clean and mergeable, so the loop enabled squash auto-merge. GitHub merged
+the exact reviewed head `430a99f8d48597ecb027abf4467a29f84f75bb29` as
+`8149e2fe933ce4047ab417b8aa61d5af7ed49c6c` at
+`2026-08-25T11:16:19Z` without a manual merge command.
+
+The mandatory exact-main collision report remains structurally unchanged: 15
+established lanes, 1,373 implementation identities, 4,566 package slots, 175
+high-consensus packages with 276 missing slots, 122 five-to-nine-lane packages
+with 926 gaps, 166 two-to-four-lane packages with 2,087 gaps, 910 singletons
+with 12,740 gaps, and 721 Rust singletons. Canonical collisions and unknown
+language buckets remain zero; OCaml remains correctly emerging at zero
+packages.
+
+Every intervening main commit is assigned before selection. PR #12746 extends
+the shared script-ductus Tamil data and provenance owner; #12759 extends the
+existing WAST parser, portable WebAssembly conformance, and selection-blocked
+corpus-host owners with `v128.loadN_zero`; #12757 remains Rust-only ALGOL
+compiler semantics under singleton classification; #12760 adds source-position
+evidence to the existing portable HTML frontend; and #12761 adds shared ADJ
+facts plus scratch/process E2E authority evidence to the existing ADJ CLI
+capability review. No commit changes a package identity, BUILD marker, or
+build-tool contract, and no new unowned gap appears.
+
+The selected next owner is
+`build-tool-typescript-tracked-artifact-validation-conformance` on exact base
+`8149e2fe933ce4047ab417b8aa61d5af7ed49c6c`. All five declared prerequisites
+are merged, and all 11 live open PRs plus 34 non-main remote heads have zero
+exact overlap with its expected TypeScript build-tool, generator, state, or
+roadmap surfaces. The dependency audit also found that the TypeScript orphan
+consumer was falsely ready: ECMAScript host normalization and casing do not
+supply the reviewed, source-pinned Unicode 17 NFC, NFKC, full-fold, and full
+uppercase contract. The tracked-artifact consumer is therefore now an explicit
+prerequisite of the TypeScript orphan owner. This bounded process-free slice
+advances the widest remaining tracked-artifact lane at 446 packages and
+establishes one reusable deterministic Unicode substrate without adding Git,
+filesystem, process, environment, or network authority. The higher-descendant
+extra-CI and OCaml owners remain collision-unsafe while live PRs #12149 and
+#12162 own their required Go entry-point and validator surfaces. The reconciled
+state now has 496 unique owners and 752 complete acyclic dependency edges, with
+one in-progress owner and no missing prerequisite.
+
+### TypeScript tracked-artifact implementation
+
+The TypeScript build tool now consumes the five language-neutral
+tracked-artifact fixtures through a pure in-memory snapshot adapter. It follows
+the closed error precedence, redacts hostile input, normalizes separators only
+lexically, counts and orders Unicode scalar values, detects exact, nested,
+case, and compatibility aliases of `node_modules`, and evaluates reserved
+Windows basenames with full uppercase. It adds no Git, filesystem, process,
+environment, network, or credential authority.
+
+The engine uses newly generated source-embedded Unicode 17.0.0 NFC, NFKC,
+full-fold, NFKC-plus-fold, and full-uppercase tables. The exact Unicode notice
+ships in the npm package and both manifest and lock metadata declare
+`MIT AND Unicode-3.0`. The generator verifies pinned upstream sizes and SHA-256
+identities, then executes both the generated Python and TypeScript runtimes over
+all 20,034 official normalization vectors, 1,585 C/F folding rows, 1,581
+unconditional uppercase mappings, derived NFKC-fold expectations, and Unicode
+17 sentinels before accepting either artifact.
+
+Seven generator tests, 34 focused validator tests, and the full 307-test Vitest
+suite pass. V8 coverage is 89.61% statements, 82.16% branches, 94.18%
+functions, and 89.51% lines overall; the validator reaches 100% statements,
+lines, and functions plus 95.04% branches. A pinned temporary TypeScript 5.9.2
+toolchain passes `tsc --noEmit`. Both literal npm BUILD steps, the complete
+111-case and 269-file neutral corpus, 201 conformance tests with 23 expected
+skips, the package-parity and capability suites, and Go test, vet, trimpath,
+and BUILD validation pass. The npm package has an explicit 18-file allowlist,
+includes the Unicode notice and generated source, and excludes local coverage
+and dependency trees. Production dependency audit is clean; the sole full
+audit finding is the already registered development-only `nanoid` owner.
+
+Independent differential review compared 1,183,049 Unicode inputs with the
+Python runtime without a mismatch. Independent security review found no
+authority, dependency, license, credential, or packaging blocker. Its initial
+package-allowlist finding and a separate persistent TypeScript full-vector
+self-check finding were both corrected and revalidated. The implementation is
+committed as `1fc9ee695cfceab184b0013b125802df398d6424`.
+
+Before publication the branch rebased without conflict over Rust HTML
+frame-position diagnostics, native Vault generation-zero journal recovery, and
+ADJ curriculum-loop bookkeeping to exact `origin/main`
+`ad36477baa5ada117c52ccb682b5b26fe4ee0510`. Those changes remain inside the
+existing HTML frontend, Vault native storage/CLI, and ADJ fact/capability
+owners, add no package identity or build-tool contract, and have zero exact
+surface overlap. The generator, complete TypeScript suite, coverage, typecheck,
+diff gate, state graph, and collision report pass again after the rebase; the
+exact-main inventory remains 15 established lanes, 1,373 identities, 4,566
+slots, zero collisions, and zero unknown buckets.
+
+Ready-for-review PR #12773 opened from clean validated head
+`eeb0f448217aa96bd170b2e719ddf64f8946aab8` after a normal first push. The
+target remote branch and prior PR were absent before publication, and all 12
+changed paths had zero exact overlap across 13 other live open PRs. GitHub
+reports the branch mergeable with required checks queued; auto-merge remains
+disabled until every check is terminal and acceptable.
+
 ## Autonomous Loop Protocol
 
 Only one parity PR should be active at a time.

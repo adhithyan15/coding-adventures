@@ -7,6 +7,12 @@
   "bin": {
     "build-tool": "src/index.ts"
   },
+  "files": [
+    "src",
+    "CHANGELOG.md",
+    "README.md",
+    "UNICODE-LICENSE.txt"
+  ],
   "scripts": {
     "test": "vitest run",
     "test:coverage": "vitest run --coverage"
@@ -18,7 +24,7 @@
     "parallel-build"
   ],
   "author": "Adhithya Rajasekaran",
-  "license": "MIT",
+  "license": "MIT AND Unicode-3.0",
   "devDependencies": {
     "@vitest/coverage-v8": "^4.1.0",
     "tsx": "^4.23.5",

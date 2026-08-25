@@ -13,7 +13,11 @@ from __future__ import annotations
 import argparse
 import hashlib
 import importlib.util
+import json
+import shutil
+import subprocess
 import sys
+import tempfile
 import urllib.parse
 import urllib.request
 from pathlib import Path
@@ -28,6 +32,7 @@ LICENSE_TARGETS = (
     Path("code/programs/python/build-tool/UNICODE-LICENSE.txt"),
     Path("code/programs/dotnet/build-tool-csharp/UNICODE-LICENSE.txt"),
     Path("code/programs/dotnet/build-tool-fsharp/UNICODE-LICENSE.txt"),
+    Path("code/programs/typescript/build-tool/UNICODE-LICENSE.txt"),
 )
 SOURCES = {
     "UnicodeData.txt": "2e1efc1dcb59c575eedf5ccae60f95229f706ee6d031835247d843c11d96470c",
@@ -52,6 +57,9 @@ PYTHON_TARGETS = (
 )
 CSHARP_TARGET = Path(
     "code/programs/dotnet/build-tool-csharp/TrackedArtifactUnicode17.g.cs"
+)
+TYPESCRIPT_TARGET = Path(
+    "code/programs/typescript/build-tool/src/tracked-artifact-unicode17.ts"
 )
 
 
@@ -676,6 +684,282 @@ internal static class TrackedArtifactUnicode17
 '''
 
 
+def _typescript_raw(value: str) -> str:
+    return f"`{value}`"
+
+
+def _render_typescript(
+    tables: tuple[
+        list[tuple[int, int]],
+        list[tuple[int, bool, tuple[int, ...]]],
+        list[tuple[int, int, int]],
+        list[tuple[int, tuple[int, ...]]],
+        list[tuple[int, tuple[int, ...]]],
+    ],
+) -> str:
+    combining, decomposition, composition, folding, uppercase = tables
+    combining_text = "\n".join(f"{cp:X};{ccc}" for cp, ccc in combining)
+    decomposition_text = "\n".join(
+        f"{cp:X};{'K' if compat else 'C'};{','.join(f'{value:X}' for value in mapping)}"
+        for cp, compat, mapping in decomposition
+    )
+    composition_text = "\n".join(
+        f"{left:X},{right:X};{result:X}" for left, right, result in composition
+    )
+    folding_text = _mapping_lines(folding)
+    uppercase_text = _mapping_lines(uppercase)
+    hashes = ", ".join(f"{name} sha256:{digest}" for name, digest in SOURCES.items())
+    return f'''// Generated Unicode {UNICODE_VERSION} data and algorithms.
+// DO NOT EDIT. Run `python code/scripts/generate_tracked_artifact_unicode17.py`.
+// Sources: {UCD_BASE}
+// {hashes}
+// Unicode License v3: every source and binary distribution carries the full
+// notice as UNICODE-LICENSE.txt (sha256:{LICENSE_SHA256}).
+
+export const UNICODE_VERSION = "{UNICODE_VERSION}";
+
+const combiningData = {_typescript_raw(combining_text)};
+const decompositionData = {_typescript_raw(decomposition_text)};
+const compositionData = {_typescript_raw(composition_text)};
+const foldingData = {_typescript_raw(folding_text)};
+const uppercaseData = {_typescript_raw(uppercase_text)};
+
+interface DecompositionRow {{
+  readonly compatibility: boolean;
+  readonly mapping: readonly number[];
+}}
+
+function lines(data: string): string[] {{
+  return data.length === 0 ? [] : data.split("\\n");
+}}
+
+function parseHex(value: string): number {{
+  return Number.parseInt(value, 16);
+}}
+
+function parseHexList(value: string): number[] {{
+  return value.length === 0 ? [] : value.split(",").map(parseHex);
+}}
+
+function parseCombining(): Map<number, number> {{
+  const result = new Map<number, number>();
+  for (const line of lines(combiningData)) {{
+    const [scalar, value] = line.split(";");
+    result.set(parseHex(scalar), Number.parseInt(value, 10));
+  }}
+  return result;
+}}
+
+function parseDecomposition(): Map<number, DecompositionRow> {{
+  const result = new Map<number, DecompositionRow>();
+  for (const line of lines(decompositionData)) {{
+    const [scalar, kind, mapping] = line.split(";");
+    result.set(parseHex(scalar), {{
+      compatibility: kind === "K",
+      mapping: parseHexList(mapping),
+    }});
+  }}
+  return result;
+}}
+
+function pairKey(left: number, right: number): number {{
+  return left * 0x110000 + right;
+}}
+
+function parseComposition(): Map<number, number> {{
+  const result = new Map<number, number>();
+  for (const line of lines(compositionData)) {{
+    const [pair, composite] = line.split(";");
+    const [left, right] = pair.split(",");
+    result.set(pairKey(parseHex(left), parseHex(right)), parseHex(composite));
+  }}
+  return result;
+}}
+
+function parseMapping(data: string): Map<number, readonly number[]> {{
+  const result = new Map<number, readonly number[]>();
+  for (const line of lines(data)) {{
+    const [scalar, mapping] = line.split(";");
+    result.set(parseHex(scalar), parseHexList(mapping));
+  }}
+  return result;
+}}
+
+const combining = parseCombining();
+const decomposition = parseDecomposition();
+const composition = parseComposition();
+const folding = parseMapping(foldingData);
+const uppercase = parseMapping(uppercaseData);
+
+const sBase = 0xac00;
+const lBase = 0x1100;
+const vBase = 0x1161;
+const tBase = 0x11a7;
+const lCount = 19;
+const vCount = 21;
+const tCount = 28;
+const nCount = vCount * tCount;
+const sCount = lCount * nCount;
+
+function combiningClass(scalar: number): number {{
+  return combining.get(scalar) ?? 0;
+}}
+
+function scalarValues(value: string): number[] {{
+  const result: number[] = [];
+  for (const character of value) {{
+    result.push(character.codePointAt(0)!);
+  }}
+  return result;
+}}
+
+function fromScalars(scalars: readonly number[]): string {{
+  return scalars.map((scalar) => String.fromCodePoint(scalar)).join("");
+}}
+
+function decomposeScalar(
+  scalar: number,
+  compatibility: boolean,
+  output: number[],
+): void {{
+  if (scalar >= sBase && scalar < sBase + sCount) {{
+    const index = scalar - sBase;
+    output.push(lBase + Math.floor(index / nCount));
+    output.push(vBase + Math.floor((index % nCount) / tCount));
+    const trailing = tBase + (index % tCount);
+    if (trailing !== tBase) {{
+      output.push(trailing);
+    }}
+    return;
+  }}
+
+  const row = decomposition.get(scalar);
+  if (row === undefined || (row.compatibility && !compatibility)) {{
+    output.push(scalar);
+    return;
+  }}
+  for (const mapped of row.mapping) {{
+    decomposeScalar(mapped, compatibility, output);
+  }}
+}}
+
+function canonicalOrder(scalars: number[]): void {{
+  let index = 0;
+  while (index < scalars.length) {{
+    if (combiningClass(scalars[index]) === 0) {{
+      index += 1;
+      continue;
+    }}
+    let end = index + 1;
+    while (end < scalars.length && combiningClass(scalars[end]) !== 0) {{
+      end += 1;
+    }}
+    for (let current = index + 1; current < end; current += 1) {{
+      const value = scalars[current];
+      const valueClass = combiningClass(value);
+      let insertion = current;
+      while (
+        insertion > index &&
+        combiningClass(scalars[insertion - 1]) > valueClass
+      ) {{
+        scalars[insertion] = scalars[insertion - 1];
+        insertion -= 1;
+      }}
+      scalars[insertion] = value;
+    }}
+    index = end;
+  }}
+}}
+
+function composePair(left: number, right: number): number | undefined {{
+  if (
+    left >= lBase &&
+    left < lBase + lCount &&
+    right >= vBase &&
+    right < vBase + vCount
+  ) {{
+    return sBase + ((left - lBase) * vCount + right - vBase) * tCount;
+  }}
+  if (
+    left >= sBase &&
+    left < sBase + sCount &&
+    (left - sBase) % tCount === 0 &&
+    right > tBase &&
+    right < tBase + tCount
+  ) {{
+    return left + right - tBase;
+  }}
+  return composition.get(pairKey(left, right));
+}}
+
+function normalize(value: string, compatibility: boolean): string {{
+  const decomposed: number[] = [];
+  for (const scalar of scalarValues(value)) {{
+    decomposeScalar(scalar, compatibility, decomposed);
+  }}
+  canonicalOrder(decomposed);
+  if (decomposed.length === 0) {{
+    return "";
+  }}
+
+  const output = [decomposed[0]];
+  let starterIndex = 0;
+  let starter = decomposed[0];
+  let lastClass = combiningClass(starter) === 0 ? 0 : 255;
+  for (const scalar of decomposed.slice(1)) {{
+    const scalarClass = combiningClass(scalar);
+    const composite =
+      lastClass === 0 || lastClass < scalarClass
+        ? composePair(starter, scalar)
+        : undefined;
+    if (composite !== undefined) {{
+      output[starterIndex] = composite;
+      starter = composite;
+      continue;
+    }}
+    output.push(scalar);
+    if (scalarClass === 0) {{
+      starterIndex = output.length - 1;
+      starter = scalar;
+    }}
+    lastClass = scalarClass;
+  }}
+  return fromScalars(output);
+}}
+
+function mapScalars(
+  value: string,
+  table: ReadonlyMap<number, readonly number[]>,
+): string {{
+  const output: number[] = [];
+  for (const scalar of scalarValues(value)) {{
+    output.push(...(table.get(scalar) ?? [scalar]));
+  }}
+  return fromScalars(output);
+}}
+
+export function nfc(value: string): string {{
+  return normalize(value, false);
+}}
+
+export function nfkc(value: string): string {{
+  return normalize(value, true);
+}}
+
+export function casefold(value: string): string {{
+  return mapScalars(value, folding);
+}}
+
+export function nfkcCasefold(value: string): string {{
+  return casefold(nfkc(value));
+}}
+
+export function fullUppercase(value: string): string {{
+  return mapScalars(value, uppercase);
+}}
+'''
+
+
 def _load_generated_module(path: Path):
     spec = importlib.util.spec_from_file_location("tracked_unicode17_generated", path)
     if spec is None or spec.loader is None:
@@ -752,6 +1036,147 @@ def _self_check(module, sources: dict[str, str]) -> None:
         raise RuntimeError("Unicode 17 Todhri composition sentinel failed")
 
 
+def _typescript_self_check_payload(module, sources: dict[str, str]) -> dict:
+    normalization: list[list[str]] = []
+    for line in sources["NormalizationTest.txt"].splitlines():
+        payload = line.split("#", 1)[0].strip()
+        if not payload or payload.startswith("@"):
+            continue
+        normalization.append(
+            [_scalars(field.strip()) for field in payload.split(";")[:5]]
+        )
+
+    folding: list[list[str]] = []
+    for line in sources["CaseFolding.txt"].splitlines():
+        payload = line.split("#", 1)[0].strip()
+        if not payload:
+            continue
+        fields = [field.strip() for field in payload.split(";")]
+        if fields[1] not in {"C", "F"}:
+            continue
+        source = chr(int(fields[0], 16))
+        folding.append([source, _scalars(fields[2]), module.nfkc_casefold(source)])
+
+    uppercase: dict[int, tuple[int, ...]] = {}
+    for line in sources["UnicodeData.txt"].splitlines():
+        fields = line.split(";")
+        if fields[12]:
+            uppercase[int(fields[0], 16)] = (int(fields[12], 16),)
+    for line in sources["SpecialCasing.txt"].splitlines():
+        payload = line.split("#", 1)[0].strip()
+        if not payload:
+            continue
+        fields = [field.strip() for field in payload.split(";")]
+        if fields[4]:
+            continue
+        uppercase[int(fields[0], 16)] = tuple(
+            int(value, 16) for value in fields[3].split()
+        )
+
+    return {
+        "unicodeVersion": UNICODE_VERSION,
+        "normalization": normalization,
+        "folding": folding,
+        "uppercase": [
+            [chr(scalar), "".join(chr(value) for value in mapping)]
+            for scalar, mapping in sorted(uppercase.items())
+        ],
+    }
+
+
+_TYPESCRIPT_SELF_CHECK = r"""import { readFileSync } from "node:fs";
+import {
+  UNICODE_VERSION,
+  casefold,
+  fullUppercase,
+  nfc,
+  nfkc,
+  nfkcCasefold,
+} from "./tracked-artifact-unicode17.ts";
+
+type Payload = {
+  unicodeVersion: string;
+  normalization: string[][];
+  folding: string[][];
+  uppercase: string[][];
+};
+
+const payload = JSON.parse(readFileSync(0, "utf8")) as Payload;
+const fail = (kind: string, index: number): never => {
+  throw new Error(`${kind} TypeScript self-check failed at vector ${index}`);
+};
+
+if (UNICODE_VERSION !== payload.unicodeVersion) {
+  throw new Error("generated TypeScript Unicode version drift");
+}
+for (const [index, row] of payload.normalization.entries()) {
+  const [c1, c2, c3, c4, c5] = row;
+  if (
+    nfc(c1) !== c2 || nfc(c2) !== c2 || nfc(c3) !== c2 ||
+    nfc(c4) !== c4 || nfc(c5) !== c4 || nfkc(c1) !== c4 ||
+    nfkc(c2) !== c4 || nfkc(c3) !== c4 || nfkc(c4) !== c4 ||
+    nfkc(c5) !== c4
+  ) fail("normalization", index);
+}
+for (const [index, row] of payload.folding.entries()) {
+  const [source, expectedFold, expectedNfkcFold] = row;
+  if (casefold(source) !== expectedFold) fail("case-fold", index);
+  if (nfkcCasefold(source) !== expectedNfkcFold) fail("NFKC-case-fold", index);
+}
+for (const [index, row] of payload.uppercase.entries()) {
+  if (fullUppercase(row[0]) !== row[1]) fail("full-uppercase", index);
+}
+
+const outlined = "\u{1CCE3}\u{1CCE4}\u{1CCD9}\u{1CCDA}_\u{1CCE2}\u{1CCE4}\u{1CCD9}\u{1CCEA}\u{1CCE1}\u{1CCDA}\u{1CCE8}";
+if (nfkcCasefold(outlined) !== "node_modules") {
+  throw new Error("Unicode 17 outlined-letter TypeScript sentinel failed");
+}
+if (nfc("\u{105D2}\u0307") !== "\u{105C9}") {
+  throw new Error("Unicode 17 Todhri TypeScript sentinel failed");
+}
+process.stdout.write("ok\n");
+"""
+
+
+def _self_check_typescript(
+    root: Path,
+    typescript_output: str,
+    sources: dict[str, str],
+    python_module,
+) -> None:
+    node = shutil.which("node")
+    tsx_cli = root / "code/programs/typescript/build-tool/node_modules/tsx/dist/cli.mjs"
+    if node is None or not tsx_cli.is_file():
+        raise RuntimeError(
+            "TypeScript Unicode self-check requires Node.js and the pinned build-tool "
+            "dependencies; run `npm ci` in code/programs/typescript/build-tool"
+        )
+
+    with tempfile.TemporaryDirectory(prefix="unicode17-typescript-check-") as temporary:
+        temporary_path = Path(temporary)
+        generated_path = temporary_path / "tracked-artifact-unicode17.ts"
+        runner_path = temporary_path / "self-check.ts"
+        generated_path.write_text(typescript_output, encoding="utf-8", newline="\n")
+        runner_path.write_text(_TYPESCRIPT_SELF_CHECK, encoding="utf-8", newline="\n")
+        result = subprocess.run(
+            [node, str(tsx_cli), str(runner_path)],
+            cwd=temporary_path,
+            input=json.dumps(
+                _typescript_self_check_payload(python_module, sources),
+                ensure_ascii=True,
+                separators=(",", ":"),
+            ),
+            capture_output=True,
+            text=True,
+            encoding="utf-8",
+            timeout=180,
+            check=False,
+        )
+    if result.returncode != 0 or result.stdout != "ok\n":
+        detail = result.stderr.strip() or result.stdout.strip() or "no diagnostic"
+        raise RuntimeError(f"generated TypeScript Unicode self-check failed: {detail}")
+
+
 def _write_or_check(root: Path, target: Path, content: str, check: bool) -> None:
     absolute = root / target
     content = content.replace("\r\n", "\n")
@@ -793,12 +1218,16 @@ def main() -> int:
     tables = _parse_sources(sources)
     python_output = _render_python(tables)
     csharp_output = _render_csharp(tables)
+    typescript_output = _render_typescript(tables)
     for target in PYTHON_TARGETS:
         _write_or_check(root, target, python_output, args.check)
     _write_or_check(root, CSHARP_TARGET, csharp_output, args.check)
+    _write_or_check(root, TYPESCRIPT_TARGET, typescript_output, args.check)
     for target in LICENSE_TARGETS:
         _write_bytes_or_check(root, target, upstream_license, args.check)
-    _self_check(_load_generated_module(root / PYTHON_TARGETS[0]), sources)
+    python_module = _load_generated_module(root / PYTHON_TARGETS[0])
+    _self_check(python_module, sources)
+    _self_check_typescript(root, typescript_output, sources, python_module)
     print(
         f"Unicode {UNICODE_VERSION} generated and verified: "
         f"{len(tables[0])} combining, {len(tables[1])} decomposition, "
