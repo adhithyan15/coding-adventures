@@ -6940,6 +6940,153 @@
           "ES-LEX-C352-COUNT-15"
         ]
       }
+    },
+    {
+      "chapter": 353,
+      "title": "Five Buildings You May Have To Find",
+      "label": "ch:el-hospital-y-el-banco",
+      "canDo": "I can say el hospital, el banco, la farmacia, la biblioteca and el museo, and ask where any one of them is.",
+      "spineNodes": [
+        "SPINE-ASK-LOCATION"
+      ],
+      "payoff": {
+        "lesson": "ES-C353-museo",
+        "kind": "production",
+        "summary": "Complete ES-C353-museo: name five buildings a town has, and ask a stranger where one of them is.",
+        "assesses": [
+          "ES-LEX-C353-WHERE-21",
+          "ES-LEX-C353-WHERE-22",
+          "ES-LEX-C353-WHERE-23",
+          "ES-LEX-C353-WHERE-24",
+          "ES-LEX-C353-WHERE-25"
+        ]
+      }
+    },
+    {
+      "chapter": 354,
+      "title": "Where The Town Goes When The Work Stops",
+      "label": "ch:el-hotel-y-el-cine",
+      "canDo": "I can say el hotel, el restaurante, el cine, el parque and el jardin, and say which one I am going to.",
+      "spineNodes": [
+        "SPINE-ASK-LOCATION"
+      ],
+      "payoff": {
+        "lesson": "ES-C354-jardin",
+        "kind": "production",
+        "summary": "Complete ES-C354-jardin: name five places you go when the work is done, and say which one you are going to.",
+        "assesses": [
+          "ES-LEX-C354-WHERE-26",
+          "ES-LEX-C354-WHERE-27",
+          "ES-LEX-C354-WHERE-28",
+          "ES-LEX-C354-WHERE-29",
+          "ES-LEX-C354-WHERE-30"
+        ]
+      }
+    },
+    {
+      "chapter": 355,
+      "title": "Inside The Building, Not Outside It",
+      "label": "ch:la-pared-y-el-techo",
+      "canDo": "I can say la pared, el techo, el piso, el rincon and el fondo, and place a thing inside a room instead of inside a town.",
+      "spineNodes": [
+        "SPINE-ASK-LOCATION"
+      ],
+      "payoff": {
+        "lesson": "ES-C355-fondo",
+        "kind": "production",
+        "summary": "Complete ES-C355-fondo: name the wall, the ceiling and the floor of a room, and put a thing in its corner or at its back.",
+        "assesses": [
+          "ES-LEX-C355-WHERE-31",
+          "ES-LEX-C355-WHERE-32",
+          "ES-LEX-C355-WHERE-33",
+          "ES-LEX-C355-WHERE-34",
+          "ES-LEX-C355-WHERE-35"
+        ]
+      }
+    },
+    {
+      "chapter": 356,
+      "title": "From When, For How Long, And All At Once",
+      "label": "ch:desde-y-de-repente",
+      "canDo": "I can say desde, la cita, la etapa, la ocasion and de repente, and mark when something starts, how long it runs and how fast it arrives.",
+      "spineNodes": [
+        "SPINE-TIME-OF-DAY"
+      ],
+      "payoff": {
+        "lesson": "ES-C356-repente",
+        "kind": "production",
+        "summary": "Complete ES-C356-repente: say when a thing starts, name the time you agreed on, and say that something arrived without warning.",
+        "assesses": [
+          "ES-LEX-C356-CLOCK-21",
+          "ES-LEX-C356-CLOCK-22",
+          "ES-LEX-C356-CLOCK-23",
+          "ES-LEX-C356-CLOCK-24",
+          "ES-LEX-C356-CLOCK-25"
+        ]
+      }
+    },
+    {
+      "chapter": 357,
+      "title": "The Days A Calendar Circles",
+      "label": "ch:la-navidad-y-la-pascua",
+      "canDo": "I can say la Navidad, la Pascua, la vispera, el regalo and la tarjeta, and name the two days a Spanish calendar circles first.",
+      "spineNodes": [
+        "SPINE-TIME-OF-DAY"
+      ],
+      "payoff": {
+        "lesson": "ES-C357-tarjeta",
+        "kind": "production",
+        "summary": "Complete ES-C357-tarjeta: name a feast, name the day before it, and name the two things that arrive with it.",
+        "assesses": [
+          "ES-LEX-C357-CLOCK-26",
+          "ES-LEX-C357-CLOCK-27",
+          "ES-LEX-C357-CLOCK-28",
+          "ES-LEX-C357-CLOCK-29",
+          "ES-LEX-C357-CLOCK-30"
+        ]
+      }
+    },
+    {
+      "chapter": 358,
+      "title": "Which One: By Colour, Size And Shape",
+      "label": "ch:el-color-y-el-tamano",
+      "canDo": "I can say el color, el tamano, la forma, la clase and la marca, and single out one thing from several without pointing at it.",
+      "spineNodes": [
+        "SPINE-DEFINITE-REFERENCE"
+      ],
+      "payoff": {
+        "lesson": "ES-C358-marca",
+        "kind": "production",
+        "summary": "Complete ES-C358-marca: single out one thing among several by its colour, its size, its shape, its kind and its maker.",
+        "assesses": [
+          "ES-LEX-C358-REF-11",
+          "ES-LEX-C358-REF-12",
+          "ES-LEX-C358-REF-13",
+          "ES-LEX-C358-REF-14",
+          "ES-LEX-C358-REF-15"
+        ]
+      }
+    },
+    {
+      "chapter": 359,
+      "title": "What It Weighs, And How Much There Is",
+      "label": "ch:el-kilo-y-el-litro",
+      "canDo": "I can say el metro, el gramo, el kilo, el litro and el peso, and put a number on a length, a weight and a volume.",
+      "spineNodes": [
+        "SPINE-COUNT-ONE-TO-FIVE"
+      ],
+      "payoff": {
+        "lesson": "ES-C359-peso",
+        "kind": "production",
+        "summary": "Complete ES-C359-peso: put a number and a unit on a length, on a volume and on a weight, and ask a shopkeeper for that much.",
+        "assesses": [
+          "ES-LEX-C359-COUNT-16",
+          "ES-LEX-C359-COUNT-17",
+          "ES-LEX-C359-COUNT-18",
+          "ES-LEX-C359-COUNT-19",
+          "ES-LEX-C359-COUNT-20"
+        ]
+      }
     }
   ]
 }

@@ -1,0 +1,16 @@
+{
+  "id": "ES-PATH-356-01",
+  "spine_node": "SPINE-TIME-OF-DAY",
+  "lessons": [
+    "ES-C356-desde",
+    "ES-C356-cita",
+    "ES-C356-etapa",
+    "ES-C356-ocasion",
+    "ES-C356-repente"
+  ],
+  "before": [],
+  "inline": [
+    "ES-EXT-356-SPAN"
+  ],
+  "after": []
+}

@@ -1,0 +1,21 @@
+{
+  "chapter": 359,
+  "title": "What It Weighs, And How Much There Is",
+  "label": "ch:el-kilo-y-el-litro",
+  "canDo": "I can say el metro, el gramo, el kilo, el litro and el peso, and put a number on a length, a weight and a volume.",
+  "spineNodes": [
+    "SPINE-COUNT-ONE-TO-FIVE"
+  ],
+  "payoff": {
+    "lesson": "ES-C359-peso",
+    "kind": "production",
+    "summary": "Complete ES-C359-peso: put a number and a unit on a length, on a volume and on a weight, and ask a shopkeeper for that much.",
+    "assesses": [
+      "ES-LEX-C359-COUNT-16",
+      "ES-LEX-C359-COUNT-17",
+      "ES-LEX-C359-COUNT-18",
+      "ES-LEX-C359-COUNT-19",
+      "ES-LEX-C359-COUNT-20"
+    ]
+  }
+}

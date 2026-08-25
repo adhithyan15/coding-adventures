@@ -1,0 +1,15 @@
+{
+  "id": "ES-EXT-355-PLACE",
+  "stage": "A1",
+  "kind": "required",
+  "category": "vocabulary",
+  "canDo": "I can name the surfaces of a room and say where in it a thing stands.",
+  "prerequisites": [],
+  "lessons": [
+    "ES-C355-pared",
+    "ES-C355-techo",
+    "ES-C355-piso",
+    "ES-C355-rincon",
+    "ES-C355-fondo"
+  ]
+}

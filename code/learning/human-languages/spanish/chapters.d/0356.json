@@ -1,0 +1,21 @@
+{
+  "chapter": 356,
+  "title": "From When, For How Long, And All At Once",
+  "label": "ch:desde-y-de-repente",
+  "canDo": "I can say desde, la cita, la etapa, la ocasion and de repente, and mark when something starts, how long it runs and how fast it arrives.",
+  "spineNodes": [
+    "SPINE-TIME-OF-DAY"
+  ],
+  "payoff": {
+    "lesson": "ES-C356-repente",
+    "kind": "production",
+    "summary": "Complete ES-C356-repente: say when a thing starts, name the time you agreed on, and say that something arrived without warning.",
+    "assesses": [
+      "ES-LEX-C356-CLOCK-21",
+      "ES-LEX-C356-CLOCK-22",
+      "ES-LEX-C356-CLOCK-23",
+      "ES-LEX-C356-CLOCK-24",
+      "ES-LEX-C356-CLOCK-25"
+    ]
+  }
+}

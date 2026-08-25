@@ -1,0 +1,16 @@
+{
+  "id": "ES-PATH-355-01",
+  "spine_node": "SPINE-ASK-LOCATION",
+  "lessons": [
+    "ES-C355-pared",
+    "ES-C355-techo",
+    "ES-C355-piso",
+    "ES-C355-rincon",
+    "ES-C355-fondo"
+  ],
+  "before": [],
+  "inline": [
+    "ES-EXT-355-PLACE"
+  ],
+  "after": []
+}

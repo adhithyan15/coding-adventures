@@ -1,0 +1,15 @@
+{
+  "id": "ES-EXT-354-PLACE",
+  "stage": "A1",
+  "kind": "required",
+  "category": "vocabulary",
+  "canDo": "I can name the places a town keeps for the hours nobody is working.",
+  "prerequisites": [],
+  "lessons": [
+    "ES-C354-hotel",
+    "ES-C354-restaurante",
+    "ES-C354-cine",
+    "ES-C354-parque",
+    "ES-C354-jardin"
+  ]
+}

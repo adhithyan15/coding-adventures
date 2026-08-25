@@ -1,0 +1,16 @@
+{
+  "id": "ES-PATH-359-01",
+  "spine_node": "SPINE-COUNT-ONE-TO-FIVE",
+  "lessons": [
+    "ES-C359-metro",
+    "ES-C359-gramo",
+    "ES-C359-kilo",
+    "ES-C359-litro",
+    "ES-C359-peso"
+  ],
+  "before": [],
+  "inline": [
+    "ES-EXT-359-COUNT"
+  ],
+  "after": []
+}

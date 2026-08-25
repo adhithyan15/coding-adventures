@@ -3643,6 +3643,97 @@
         "ES-C352-escaso"
       ],
       "tex": "spanish/book/chapters/ch352-el-conjunto-y-el-resto.tex"
+    },
+    {
+      "language": "spanish",
+      "chapter": 353,
+      "sourceHash": "fnv1a64:af9219a6edb1af31",
+      "lessonIds": [
+        "ES-C353-hospital",
+        "ES-C353-banco",
+        "ES-C353-farmacia",
+        "ES-C353-biblioteca",
+        "ES-C353-museo"
+      ],
+      "tex": "spanish/book/chapters/ch353-el-hospital-y-el-banco.tex"
+    },
+    {
+      "language": "spanish",
+      "chapter": 354,
+      "sourceHash": "fnv1a64:aba6e9ff294ac279",
+      "lessonIds": [
+        "ES-C354-hotel",
+        "ES-C354-restaurante",
+        "ES-C354-cine",
+        "ES-C354-parque",
+        "ES-C354-jardin"
+      ],
+      "tex": "spanish/book/chapters/ch354-el-hotel-y-el-cine.tex"
+    },
+    {
+      "language": "spanish",
+      "chapter": 355,
+      "sourceHash": "fnv1a64:85623cdace8e9b48",
+      "lessonIds": [
+        "ES-C355-pared",
+        "ES-C355-techo",
+        "ES-C355-piso",
+        "ES-C355-rincon",
+        "ES-C355-fondo"
+      ],
+      "tex": "spanish/book/chapters/ch355-la-pared-y-el-techo.tex"
+    },
+    {
+      "language": "spanish",
+      "chapter": 356,
+      "sourceHash": "fnv1a64:34748382e6df727a",
+      "lessonIds": [
+        "ES-C356-desde",
+        "ES-C356-cita",
+        "ES-C356-etapa",
+        "ES-C356-ocasion",
+        "ES-C356-repente"
+      ],
+      "tex": "spanish/book/chapters/ch356-desde-y-de-repente.tex"
+    },
+    {
+      "language": "spanish",
+      "chapter": 357,
+      "sourceHash": "fnv1a64:bc81aa718c33e504",
+      "lessonIds": [
+        "ES-C357-navidad",
+        "ES-C357-pascua",
+        "ES-C357-vispera",
+        "ES-C357-regalo",
+        "ES-C357-tarjeta"
+      ],
+      "tex": "spanish/book/chapters/ch357-la-navidad-y-la-pascua.tex"
+    },
+    {
+      "language": "spanish",
+      "chapter": 358,
+      "sourceHash": "fnv1a64:ad1958dc5e8223d7",
+      "lessonIds": [
+        "ES-C358-color",
+        "ES-C358-tamano",
+        "ES-C358-forma",
+        "ES-C358-clase",
+        "ES-C358-marca"
+      ],
+      "tex": "spanish/book/chapters/ch358-el-color-y-el-tamano.tex"
+    },
+    {
+      "language": "spanish",
+      "chapter": 359,
+      "sourceHash": "fnv1a64:6d3dbad6d4d43b83",
+      "lessonIds": [
+        "ES-C359-metro",
+        "ES-C359-gramo",
+        "ES-C359-kilo",
+        "ES-C359-litro",
+        "ES-C359-peso"
+      ],
+      "tex": "spanish/book/chapters/ch359-el-kilo-y-el-litro.tex"
     }
   ]
 }

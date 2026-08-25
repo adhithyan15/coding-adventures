@@ -1,0 +1,16 @@
+{
+  "id": "ES-PATH-354-01",
+  "spine_node": "SPINE-ASK-LOCATION",
+  "lessons": [
+    "ES-C354-hotel",
+    "ES-C354-restaurante",
+    "ES-C354-cine",
+    "ES-C354-parque",
+    "ES-C354-jardin"
+  ],
+  "before": [],
+  "inline": [
+    "ES-EXT-354-PLACE"
+  ],
+  "after": []
+}

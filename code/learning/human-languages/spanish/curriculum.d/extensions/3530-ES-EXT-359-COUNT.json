@@ -1,0 +1,15 @@
+{
+  "id": "ES-EXT-359-COUNT",
+  "stage": "A1",
+  "kind": "required",
+  "category": "vocabulary",
+  "canDo": "I can put a number and a unit on how long, how heavy and how much of a thing there is.",
+  "prerequisites": [],
+  "lessons": [
+    "ES-C359-metro",
+    "ES-C359-gramo",
+    "ES-C359-kilo",
+    "ES-C359-litro",
+    "ES-C359-peso"
+  ]
+}

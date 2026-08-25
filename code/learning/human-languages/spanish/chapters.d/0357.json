@@ -1,0 +1,21 @@
+{
+  "chapter": 357,
+  "title": "The Days A Calendar Circles",
+  "label": "ch:la-navidad-y-la-pascua",
+  "canDo": "I can say la Navidad, la Pascua, la vispera, el regalo and la tarjeta, and name the two days a Spanish calendar circles first.",
+  "spineNodes": [
+    "SPINE-TIME-OF-DAY"
+  ],
+  "payoff": {
+    "lesson": "ES-C357-tarjeta",
+    "kind": "production",
+    "summary": "Complete ES-C357-tarjeta: name a feast, name the day before it, and name the two things that arrive with it.",
+    "assesses": [
+      "ES-LEX-C357-CLOCK-26",
+      "ES-LEX-C357-CLOCK-27",
+      "ES-LEX-C357-CLOCK-28",
+      "ES-LEX-C357-CLOCK-29",
+      "ES-LEX-C357-CLOCK-30"
+    ]
+  }
+}
