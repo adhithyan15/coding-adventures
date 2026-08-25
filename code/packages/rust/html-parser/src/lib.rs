@@ -5837,10 +5837,13 @@ impl HtmlParser {
         }
 
         if !in_foreign_content && name == "html" && self.has_document_element() {
-            self.diagnostics.push(ParserDiagnostic::new(
-                "unexpected-html-start-tag",
-                "html start tag was recovered against the existing document element",
-            ));
+            self.diagnostics.push(
+                ParserDiagnostic::new(
+                    "unexpected-html-start-tag",
+                    "html start tag was recovered against the existing document element",
+                )
+                .at_emission(self.current_token_emission_position),
+            );
         }
 
         if !in_foreign_content
@@ -27291,6 +27294,14 @@ mod tests {
         .at_emission(Some(start_tag_position(source, name)))
     }
 
+    fn unexpected_html_start_tag(source: &str, occurrence: usize) -> ParserDiagnostic {
+        ParserDiagnostic::new(
+            "unexpected-html-start-tag",
+            "html start tag was recovered against the existing document element",
+        )
+        .at_emission(Some(start_tag_position_at(source, "html", occurrence)))
+    }
+
     fn foreign_start_tag_in_table_recovery(source: &str, name: &str) -> ParserDiagnostic {
         ParserDiagnostic::new(
             "unexpected-foreign-start-tag-in-table",
@@ -40042,10 +40053,8 @@ mod tests {
 
     #[test]
     fn reports_and_recovers_duplicate_html_and_head_start_tags() {
-        let output = parse_html_with_diagnostics(
-            "<!doctype html><html lang=en><html data-app=venture lang=ignored><head id=main><head data-h=yes><title>T</title><body><p>x</p>",
-        )
-        .unwrap();
+        let source = "<!doctype html><html lang=en><html data-app=venture lang=ignored><head id=main><head data-h=yes><title>T</title><body><p>x</p>";
+        let output = parse_html_with_diagnostics(source).unwrap();
         let document = output.document;
 
         assert_eq!(html(&document).attribute("lang"), Some("en"));
@@ -40059,16 +40068,83 @@ mod tests {
         assert_eq!(
             output.parser_diagnostics,
             vec![
-                ParserDiagnostic::new(
-                    "unexpected-html-start-tag",
-                    "html start tag was recovered against the existing document element"
-                ),
+                unexpected_html_start_tag(source, 1),
                 ParserDiagnostic::new(
                     "unexpected-head-start-tag",
                     "duplicate head start tag was ignored"
                 )
             ]
         );
+    }
+
+    #[test]
+    fn positions_duplicate_html_start_tags_at_token_emission() {
+        let source = "<!doctype html><html><html><!--é-->\r\n<html>";
+        let output = parse_html_with_diagnostics(source).unwrap();
+        let diagnostics = output
+            .parser_diagnostics
+            .iter()
+            .filter(|diagnostic| diagnostic.code == "unexpected-html-start-tag")
+            .collect::<Vec<_>>();
+        assert_eq!(
+            diagnostics,
+            vec![
+                &unexpected_html_start_tag(source, 1),
+                &unexpected_html_start_tag(source, 2),
+            ]
+        );
+
+        for (source, occurrences) in [
+            ("<html><html>", vec![0, 1]),
+            ("<table><html>", vec![0]),
+        ] {
+            let output = parse_html_fragment_with_diagnostics(source).unwrap();
+            let positions = output
+                .parser_diagnostics
+                .iter()
+                .filter(|diagnostic| diagnostic.code == "unexpected-html-start-tag")
+                .map(|diagnostic| diagnostic.position)
+                .collect::<Vec<_>>();
+            assert_eq!(
+                positions,
+                occurrences
+                    .into_iter()
+                    .map(|occurrence| Some(start_tag_position_at(source, "html", occurrence)))
+                    .collect::<Vec<_>>(),
+                "source {source:?}"
+            );
+        }
+
+        for source in [
+            "<!doctype html><html>",
+            "<!doctype html><template><html>",
+            "<!doctype html><svg><html>",
+            "<!doctype html><html><html",
+        ] {
+            let output = parse_html_with_diagnostics(source).unwrap();
+            assert!(
+                output
+                    .parser_diagnostics
+                    .iter()
+                    .all(|diagnostic| diagnostic.code != "unexpected-html-start-tag"),
+                "source {source:?}"
+            );
+        }
+
+        let mut unpositioned = HtmlParser::new();
+        for _ in 0..2 {
+            unpositioned.process_token(Token::StartTag {
+                name: "html".to_string(),
+                attributes: Vec::new(),
+                self_closing: false,
+            });
+        }
+        let diagnostic = unpositioned
+            .diagnostics()
+            .iter()
+            .find(|diagnostic| diagnostic.code == "unexpected-html-start-tag")
+            .unwrap();
+        assert_eq!(diagnostic.position, None);
     }
 
     #[test]
