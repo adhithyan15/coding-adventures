@@ -530,6 +530,9 @@ pub struct XyAxisConfig {
     pub show_title: Option<bool>,
     pub title_font_size: Option<f64>,
     pub title_padding: Option<f64>,
+    pub show_tick: Option<bool>,
+    pub tick_length: Option<f64>,
+    pub tick_width: Option<f64>,
     pub show_axis_line: Option<bool>,
     pub axis_line_width: Option<f64>,
 }
@@ -664,6 +667,13 @@ pub enum LayoutedChartItem {
         label: String,
         orientation: Orientation,
         font_size: f64,
+    },
+    AxisTickMark {
+        x1: f64,
+        y1: f64,
+        x2: f64,
+        y2: f64,
+        stroke_width: f64,
     },
     GridLine {
         x1: f64,

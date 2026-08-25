@@ -143,6 +143,16 @@ fn layout_xy_vertical(diagram: &ChartDiagram, cw: f64, ch: f64) -> LayoutedChart
     let y_label_font_size = y_config.label_font_size.unwrap_or(14.0);
     let x_label_padding = x_config.label_padding.unwrap_or(5.0);
     let y_label_padding = y_config.label_padding.unwrap_or(5.0);
+    let x_tick_length = if x_config.show_tick.unwrap_or(true) {
+        x_config.tick_length.unwrap_or(TICK_LEN)
+    } else {
+        0.0
+    };
+    let y_tick_length = if y_config.show_tick.unwrap_or(true) {
+        y_config.tick_length.unwrap_or(TICK_LEN)
+    } else {
+        0.0
+    };
     let x_label_space = if x_config.show_label.unwrap_or(true) {
         x_label_font_size + x_label_padding * 2.0
     } else {
@@ -259,9 +269,18 @@ fn layout_xy_vertical(diagram: &ChartDiagram, cw: f64, ch: f64) -> LayoutedChart
             x2: pr,
             y2: y,
         });
+        if y_config.show_tick.unwrap_or(true) {
+            items.push(LayoutedChartItem::AxisTickMark {
+                x1: pl - y_tick_length,
+                y1: y,
+                x2: pl,
+                y2: y,
+                stroke_width: y_config.tick_width.unwrap_or(2.0),
+            });
+        }
         if y_config.show_label.unwrap_or(true) {
             items.push(LayoutedChartItem::AxisTick {
-                x: pl - TICK_LEN - y_label_padding,
+                x: pl - y_tick_length - y_label_padding,
                 y,
                 label: format!("{val:.0}"),
                 orientation: Orientation::Horizontal,
@@ -274,10 +293,20 @@ fn layout_xy_vertical(diagram: &ChartDiagram, cw: f64, ch: f64) -> LayoutedChart
         let axis = diagram.x_axis.as_ref().expect("numeric x-axis");
         for index in 0..=GRID_COUNT {
             let fraction = index as f64 / GRID_COUNT as f64;
+            let x = pl + fraction * pw;
+            if x_config.show_tick.unwrap_or(true) {
+                items.push(LayoutedChartItem::AxisTickMark {
+                    x1: x,
+                    y1: pb,
+                    x2: x,
+                    y2: pb + x_tick_length,
+                    stroke_width: x_config.tick_width.unwrap_or(2.0),
+                });
+            }
             if x_config.show_label.unwrap_or(true) {
                 items.push(LayoutedChartItem::AxisTick {
-                    x: pl + fraction * pw,
-                    y: pb + TICK_LEN + x_label_padding,
+                    x,
+                    y: pb + x_tick_length + x_label_padding,
                     label: format!("{:.0}", axis.min + fraction * (axis.max - axis.min)),
                     orientation: Orientation::Vertical,
                     font_size: x_label_font_size,
@@ -287,10 +316,19 @@ fn layout_xy_vertical(diagram: &ChartDiagram, cw: f64, ch: f64) -> LayoutedChart
     } else {
         for (i, cat) in cats.iter().enumerate() {
             let cx = indexed_axis_position(pl, pw, i, cats.len(), false);
+            if x_config.show_tick.unwrap_or(true) {
+                items.push(LayoutedChartItem::AxisTickMark {
+                    x1: cx,
+                    y1: pb,
+                    x2: cx,
+                    y2: pb + x_tick_length,
+                    stroke_width: x_config.tick_width.unwrap_or(2.0),
+                });
+            }
             if x_config.show_label.unwrap_or(true) {
                 items.push(LayoutedChartItem::AxisTick {
                     x: cx,
-                    y: pb + TICK_LEN + x_label_padding,
+                    y: pb + x_tick_length + x_label_padding,
                     label: cat.clone(),
                     orientation: Orientation::Vertical,
                     font_size: x_label_font_size,
@@ -496,6 +534,16 @@ fn layout_xy_horizontal(diagram: &ChartDiagram, cw: f64, ch: f64) -> LayoutedCha
     let y_label_font_size = y_config.label_font_size.unwrap_or(14.0);
     let x_label_padding = x_config.label_padding.unwrap_or(5.0);
     let y_label_padding = y_config.label_padding.unwrap_or(5.0);
+    let x_tick_length = if x_config.show_tick.unwrap_or(true) {
+        x_config.tick_length.unwrap_or(TICK_LEN)
+    } else {
+        0.0
+    };
+    let y_tick_length = if y_config.show_tick.unwrap_or(true) {
+        y_config.tick_length.unwrap_or(TICK_LEN)
+    } else {
+        0.0
+    };
     let x_label_space = if x_config.show_label.unwrap_or(true) {
         Y_LBL_W + x_label_padding
     } else {
@@ -606,10 +654,19 @@ fn layout_xy_horizontal(diagram: &ChartDiagram, cw: f64, ch: f64) -> LayoutedCha
             x2: x,
             y2: bottom,
         });
+        if y_config.show_tick.unwrap_or(true) {
+            items.push(LayoutedChartItem::AxisTickMark {
+                x1: x,
+                y1: bottom,
+                x2: x,
+                y2: bottom + y_tick_length,
+                stroke_width: y_config.tick_width.unwrap_or(2.0),
+            });
+        }
         if y_config.show_label.unwrap_or(true) {
             items.push(LayoutedChartItem::AxisTick {
                 x,
-                y: bottom + TICK_LEN + y_label_padding,
+                y: bottom + y_tick_length + y_label_padding,
                 label: format!("{value:.0}"),
                 orientation: Orientation::Vertical,
                 font_size: y_label_font_size,
@@ -620,10 +677,20 @@ fn layout_xy_horizontal(diagram: &ChartDiagram, cw: f64, ch: f64) -> LayoutedCha
         let axis = diagram.x_axis.as_ref().expect("numeric x-axis");
         for index in 0..=GRID_COUNT {
             let fraction = index as f64 / GRID_COUNT as f64;
+            let y = top + fraction * plot_height;
+            if x_config.show_tick.unwrap_or(true) {
+                items.push(LayoutedChartItem::AxisTickMark {
+                    x1: left - x_tick_length,
+                    y1: y,
+                    x2: left,
+                    y2: y,
+                    stroke_width: x_config.tick_width.unwrap_or(2.0),
+                });
+            }
             if x_config.show_label.unwrap_or(true) {
                 items.push(LayoutedChartItem::AxisTick {
-                    x: left - TICK_LEN - x_label_padding,
-                    y: top + fraction * plot_height,
+                    x: left - x_tick_length - x_label_padding,
+                    y,
                     label: format!("{:.0}", axis.min + fraction * (axis.max - axis.min)),
                     orientation: Orientation::Horizontal,
                     font_size: x_label_font_size,
@@ -632,10 +699,20 @@ fn layout_xy_horizontal(diagram: &ChartDiagram, cw: f64, ch: f64) -> LayoutedCha
         }
     } else {
         for (index, category) in categories.iter().enumerate() {
+            let y = indexed_axis_position(top, plot_height, index, categories.len(), false);
+            if x_config.show_tick.unwrap_or(true) {
+                items.push(LayoutedChartItem::AxisTickMark {
+                    x1: left - x_tick_length,
+                    y1: y,
+                    x2: left,
+                    y2: y,
+                    stroke_width: x_config.tick_width.unwrap_or(2.0),
+                });
+            }
             if x_config.show_label.unwrap_or(true) {
                 items.push(LayoutedChartItem::AxisTick {
-                    x: left - TICK_LEN - x_label_padding,
-                    y: indexed_axis_position(top, plot_height, index, categories.len(), false),
+                    x: left - x_tick_length - x_label_padding,
+                    y,
                     label: category.clone(),
                     orientation: Orientation::Horizontal,
                     font_size: x_label_font_size,
@@ -1383,6 +1460,7 @@ mod tests {
             show_label: Some(false),
             show_title: Some(false),
             show_axis_line: Some(false),
+            show_tick: Some(false),
             ..XyAxisConfig::default()
         };
         diagram.xy_config.y_axis = XyAxisConfig {
@@ -1391,6 +1469,8 @@ mod tests {
             title_font_size: Some(19.0),
             title_padding: Some(9.0),
             axis_line_width: Some(5.0),
+            tick_length: Some(12.0),
+            tick_width: Some(4.0),
             ..XyAxisConfig::default()
         };
 
@@ -1429,6 +1509,39 @@ mod tests {
         assert!(layout.items.iter().any(|item| matches!(
             item,
             LayoutedChartItem::AxisSpine { stroke_width, .. } if *stroke_width == 5.0
+        )));
+        assert_eq!(
+            layout
+                .items
+                .iter()
+                .filter(|item| matches!(item, LayoutedChartItem::AxisTickMark { .. }))
+                .count(),
+            GRID_COUNT + 1
+        );
+        assert!(layout.items.iter().all(|item| !matches!(
+            item,
+            LayoutedChartItem::AxisTickMark { y1, y2, .. } if y1 != y2
+        )));
+        assert!(layout.items.iter().any(|item| matches!(
+            item,
+            LayoutedChartItem::AxisTickMark { x1, x2, stroke_width, .. }
+                if (*x2 - *x1 - 12.0).abs() < f64::EPSILON && *stroke_width == 4.0
+        )));
+
+        diagram.orientation = ChartOrientation::Horizontal;
+        let horizontal = layout_chart_diagram(&diagram, 600.0, 400.0);
+        assert_eq!(
+            horizontal
+                .items
+                .iter()
+                .filter(|item| matches!(item, LayoutedChartItem::AxisTickMark { .. }))
+                .count(),
+            GRID_COUNT + 1
+        );
+        assert!(horizontal.items.iter().any(|item| matches!(
+            item,
+            LayoutedChartItem::AxisTickMark { y1, y2, stroke_width, .. }
+                if (*y2 - *y1 - 12.0).abs() < f64::EPSILON && *stroke_width == 4.0
         )));
     }
 
