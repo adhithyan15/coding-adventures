@@ -11,8 +11,10 @@
 import "dolch-sight-word-level.adj"
 
 ? dolch_sight_word_level(the, $Level)          % expect pre_primer (direct)
-? dolch_sight_word_level(funny, $Level)        % expect pre_primer (direct, the 40th/last Pre-Primer word -- confirms the completed level)
-? dolch_sight_word_level($W, pre_primer)       % expect all 40 Pre-Primer words (reverse, many-answer -- the completed level)
-? dolch_sight_word_level(would, $Level)        % expect second_grade (direct, a different level)
+? dolch_sight_word_level(funny, $Level)        % expect pre_primer (direct, the 40th/last Pre-Primer word -- confirms that completed level)
+? dolch_sight_word_level($W, pre_primer)       % expect all 40 Pre-Primer words (reverse, many-answer -- a completed level)
+? dolch_sight_word_level(laugh, $Level)        % expect third_grade (direct, the 41st/last Third Grade word -- confirms this round's completed level)
+? dolch_sight_word_level($W, third_grade)      % expect all 41 Third Grade words (reverse, many-answer -- this round's completed level)
+? dolch_sight_word_level(would, $Level)        % expect second_grade (direct, a different, still-partial level)
 ? dolch_sight_word_level(they, $Level)         % expect abstain -- a REAL Dolch Primer word, but Primer still ships only its first-five subset
 ? dolch_sight_word_level(elephant, $Level)     % expect abstain -- not a Dolch word at all

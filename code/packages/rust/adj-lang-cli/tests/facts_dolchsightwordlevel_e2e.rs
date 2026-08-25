@@ -7,11 +7,12 @@
 //! "sight word" is first taught at. Genuinely distinct in KIND from
 //! `digraph-sound.adj`/`diphthong-sound.adj` (phonics: spelling -> sound):
 //! this is whole-word recognition vocabulary (word -> reading-level band).
-//! Round 2 (extend): completes the Pre-Primer level to its full 40 words
-//! (re-fetched and re-parsed the SAME cited UFLI slide deck), while
-//! Primer/First Grade/Second Grade/Third Grade still ship only their first
-//! five words each -- 60 of the full 220-word Dolch list total, mirroring
-//! `food-groups.adj`'s "representative subset" convention for the four
+//! Round 2 (extend): completed the Pre-Primer level to its full 40 words
+//! (re-fetched and re-parsed the SAME cited UFLI slide deck). Round 3
+//! (extend): completes the Third Grade level to its full 41 words the same
+//! way -- Primer/First Grade/Second Grade still ship only their first five
+//! words each -- 96 of the full 220-word Dolch list total, mirroring
+//! `food-groups.adj`'s "representative subset" convention for the three
 //! still-partial levels. 0 answer-time model calls.
 
 use std::path::{Path, PathBuf};
@@ -135,6 +136,57 @@ fn dolch_sight_word_level_reverse_binds_all_forty_pre_primer_words() {
         assert!(
             out.contains(&format!("\"W\":\"{w}\"")),
             "{w} should be a bound Pre-Primer answer: {out}"
+        );
+    }
+}
+
+#[test]
+fn dolch_sight_word_level_forward_laugh_recalls_third_grade() {
+    let dir = scratch("forward_third_grade_extension");
+    place_lib(&dir);
+    std::fs::write(
+        dir.join("case.adj"),
+        "import \"dolch-sight-word-level.adj\"\n\
+         ? dolch_sight_word_level(laugh, $Level)\n",
+    )
+    .unwrap();
+
+    let (ok, out) = run(&dir.join("case.adj"));
+    assert!(ok, "cli should succeed: {out}");
+    assert!(
+        out.contains("\"Level\":\"third_grade\""),
+        "'laugh' is the 41st (last) word of the now-completed Third Grade \
+         level -- confirms this round's extension shipped correctly: {out}"
+    );
+}
+
+#[test]
+fn dolch_sight_word_level_reverse_binds_all_forty_one_third_grade_words() {
+    let dir = scratch("reverse_third_grade");
+    place_lib(&dir);
+    std::fs::write(
+        dir.join("case.adj"),
+        "import \"dolch-sight-word-level.adj\"\n\
+         ? dolch_sight_word_level($W, third_grade)\n",
+    )
+    .unwrap();
+
+    let (ok, out) = run(&dir.join("case.adj"));
+    assert!(ok, "cli should succeed: {out}");
+    // Third Grade is now a COMPLETE Dolch level (41/41 words) as of this
+    // round's extension -- a genuine one-to-many reverse recall over the
+    // full level, the same shape the Pre-Primer reverse test above already
+    // established, just carried to completion for this second level.
+    for w in [
+        "if", "long", "about", "got", "six", "never", "seven", "eight", "today", "myself",
+        "much", "keep", "try", "start", "ten", "bring", "drink", "only", "better", "hold",
+        "warm", "full", "done", "light", "pick", "hurt", "cut", "kind", "fall", "carry",
+        "small", "own", "show", "hot", "far", "draw", "clean", "grow", "together", "shall",
+        "laugh",
+    ] {
+        assert!(
+            out.contains(&format!("\"W\":\"{w}\"")),
+            "{w} should be a bound Third Grade answer: {out}"
         );
     }
 }
