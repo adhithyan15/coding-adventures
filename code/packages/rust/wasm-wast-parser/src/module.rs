@@ -1756,6 +1756,37 @@ fn encode_stream_instr(
                 out.push(lane);
                 return Ok(1);
             }
+            wasm_opcodes::SimdOpKind::Shuffle => {
+                // i8x16.shuffle (SIMD widen PR38): 16 trailing raw
+                // lane-index literals -- the real WAT grammar
+                // (`i8x16.shuffle laneidx^16`, confirmed against the
+                // vendored `simd_lane.wast` corpus itself, e.g.
+                // `(i8x16.shuffle 0 1 2 ... 15 (local.get 0) (local.get
+                // 1))`) puts all 16 BEFORE the two v128 operands, same
+                // "immediates lead, operands trail" convention as
+                // `ExtractLane*`/`ReplaceLane*` just above, just 16
+                // immediates instead of 1. In FLAT/stream form the two
+                // v128 operands are already emitted onto `out` by
+                // whatever preceding instructions produced them, so only
+                // the 16 trailing lane-index literals need reading here.
+                // Each byte's own `0..=31` range check is
+                // `wasm-validator`'s job (validation-time, not this
+                // parser's), same discipline `parse_lane_index` already
+                // documents for the narrower extract_lane/replace_lane
+                // families.
+                if following.len() < 16 {
+                    return Err(WastParseError::UnexpectedEof);
+                }
+                let mut lanes = [0u8; 16];
+                for (i, lane) in lanes.iter_mut().enumerate() {
+                    let (text, lpos) = literal_text(following.get(i), pos)?;
+                    *lane = parse_lane_index(&text, lpos)?;
+                }
+                out.push(0xFD);
+                out.extend(wasm_leb128::encode_unsigned(simd_op.sub_opcode as u64));
+                out.extend(lanes);
+                return Ok(16);
+            }
             wasm_opcodes::SimdOpKind::Load | wasm_opcodes::SimdOpKind::Store => {
                 // v128.load/v128.store (SIMD widen PR15): a standard
                 // `memarg` immediate (align, offset), same shape and
@@ -2639,6 +2670,31 @@ fn encode_flat_instr(
                 out.push(0xFD);
                 out.extend(wasm_leb128::encode_unsigned(simd_op.sub_opcode as u64));
                 out.push(lane);
+                return Ok(());
+            }
+            wasm_opcodes::SimdOpKind::Shuffle => {
+                // i8x16.shuffle (SIMD widen PR38): 16 leading lane-index
+                // literals (`args[0..16]`), then the two v128 operand
+                // expressions trail (`args[16..]`) -- same "immediates
+                // lead, operands trail" convention as `ExtractLane*`/
+                // `ReplaceLane*` above, just 16 immediates instead of 1;
+                // confirmed against the real WAT grammar in the vendored
+                // `simd_lane.wast` corpus itself (`(i8x16.shuffle 0 1 2
+                // ... 15 (local.get 0) (local.get 1))`). Each byte's own
+                // `0..=31` range check is `wasm-validator`'s job
+                // (validation-time), not this parser's.
+                if args.len() < 16 {
+                    return Err(WastParseError::UnexpectedEof);
+                }
+                let mut lanes = [0u8; 16];
+                for (i, lane) in lanes.iter_mut().enumerate() {
+                    let (text, lpos) = literal_text(args.get(i), pos)?;
+                    *lane = parse_lane_index(&text, lpos)?;
+                }
+                encode_instr_list(&args[16..], icx, out)?;
+                out.push(0xFD);
+                out.extend(wasm_leb128::encode_unsigned(simd_op.sub_opcode as u64));
+                out.extend(lanes);
                 return Ok(());
             }
             wasm_opcodes::SimdOpKind::Load | wasm_opcodes::SimdOpKind::Store => {
@@ -5786,6 +5842,62 @@ mod tests {
         .unwrap();
         for code in [code_of(&folded, 0), code_of(&flat, 0)] {
             assert!(code.windows(2).any(|w| w == [0xFD, 0x0E]), "missing i8x16.swizzle: {code:?}");
+        }
+    }
+
+    #[test]
+    fn i8x16_shuffle_folded_and_flat_emit_the_16_byte_immediate_in_source_order() {
+        // SIMD widen PR38 (task #229-231): i8x16.shuffle (sub-opcode
+        // 0x0D) -- unlike `swizzle` just above (no immediate at all)
+        // and `extract_lane` (a single trailing byte), this carries the
+        // most complex immediate in this table so far: 16 raw
+        // (non-LEB128) lane-index bytes, one per output lane. Both the
+        // folded form (`(i8x16.shuffle <16 indices> <v128-expr>
+        // <v128-expr>)`, indices LEADING) and the flat/stream form
+        // (`<v128-expr> <v128-expr> i8x16.shuffle <16 indices>`, indices
+        // TRAILING) must encode to the exact same bytes: the sub-opcode
+        // immediately followed by all 16 index bytes in source order,
+        // untouched (not reversed, not reordered).
+        let folded = parse_module(
+            r#"(module (func (param v128 v128) (result v128)
+                 (i8x16.shuffle 0 1 2 3 4 5 6 7 8 9 10 11 12 13 14 15 (local.get 0) (local.get 1))))"#,
+        )
+        .unwrap();
+        let flat = parse_module(
+            r#"(module (func (param v128 v128) (result v128)
+                 local.get 0 local.get 1 i8x16.shuffle 0 1 2 3 4 5 6 7 8 9 10 11 12 13 14 15))"#,
+        )
+        .unwrap();
+        let expected: [u8; 18] = [0xFD, 0x0D, 0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15];
+        for code in [code_of(&folded, 0), code_of(&flat, 0)] {
+            assert!(code.windows(18).any(|w| w == expected), "missing i8x16.shuffle + 16-byte immediate: {code:?}");
+        }
+    }
+
+    #[test]
+    fn i8x16_shuffle_folded_and_flat_encode_a_non_identity_immediate_correctly() {
+        // Confirms the 16 bytes really do carry through in source order
+        // for a genuinely mixed (non-monotonic) immediate too, not just
+        // the identity `0..15` case above -- e.g. real corpus files like
+        // `simd_lane.wast` use reversed and mixed immediates
+        // (`v8x16_shuffle-3`/`-4`), not only the identity/reverse
+        // extremes.
+        let imm = [3u8, 31, 0, 20, 15, 16, 7, 24, 1, 30, 9, 21, 12, 17, 5, 28];
+        let wat_imm = imm.iter().map(|b| b.to_string()).collect::<Vec<_>>().join(" ");
+        let folded = parse_module(&format!(
+            r#"(module (func (param v128 v128) (result v128)
+                 (i8x16.shuffle {wat_imm} (local.get 0) (local.get 1))))"#
+        ))
+        .unwrap();
+        let flat = parse_module(&format!(
+            r#"(module (func (param v128 v128) (result v128)
+                 local.get 0 local.get 1 i8x16.shuffle {wat_imm}))"#
+        ))
+        .unwrap();
+        let mut expected = vec![0xFDu8, 0x0D];
+        expected.extend(imm);
+        for code in [code_of(&folded, 0), code_of(&flat, 0)] {
+            assert!(code.windows(expected.len()).any(|w| w == expected.as_slice()), "missing mixed i8x16.shuffle immediate: {code:?}");
         }
     }
 

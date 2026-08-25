@@ -2,6 +2,38 @@
 
 All notable changes to this package will be documented in this file.
 
+## [0.2.50] - 2026-08-24 (task #229-231 — SIMD widen PR38: i8x16.shuffle, elevated-risk validation-time bounds gate)
+
+### Added
+
+- Type-check arm for `i8x16.shuffle`: pops TWO V128 operands (the same
+  BINARY shape as `i8x16.swizzle`/`i8x16.add`/etc.), pushes one V128.
+- `read_shuffle_lane_indices`: reads AND validates the instruction's
+  16-byte raw (non-LEB128) lane-index immediate, one byte per output
+  lane. Direct extension of `read_lane_index`'s single-byte pattern
+  (SIMD widen PR37) to all 16 bytes at once, with a WIDER valid range
+  than any prior lane-index family: `0..=31`, not `0..=15`, because
+  `shuffle` indexes into the COMBINED 32-lane space of its two operands,
+  not one operand's own narrower lane count.
+- **Security: this is the highest-scrutiny opcode in the SIMD widen
+  campaign so far** -- 16 independently attacker-controlled immediate
+  bytes, each used as an array index into a 32-element gather space.
+  `read_shuffle_lane_indices` rejects the module at VALIDATION time if
+  ANY of the 16 bytes is `> 31` (checked in a loop over every position,
+  not just the first or last), before the module can ever execute. This
+  is what lets `wasm-execution`'s own gather treat a bad index as
+  provably unreachable for any module that passed validation (see that
+  crate's own changelog for its matching defense-in-depth guard on the
+  execution side).
+- 7 new tests: a valid identity-shuffle module, a valid module spanning
+  the full `0..=31` range (confirming `31` itself validates), 3
+  out-of-range tests targeting DIFFERENT byte positions specifically
+  (position 0, a middle position 8, and the last position 15, each with
+  a different out-of-range value) to confirm every position is actually
+  checked and not just the first/last, and a stack-shape test (only one
+  v128 operand supplied) confirming the BINARY pop requirement is
+  genuinely enforced.
+
 ## [0.2.49] - 2026-08-24 (task #226-228 — SIMD widen PR37: extract_lane/replace_lane family, remaining shapes + lane-index bounds retrofit)
 
 ### Added
