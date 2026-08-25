@@ -6726,6 +6726,14 @@ live-main metadata refresh. A final exact-head confirmation then verified the
 clean six-path diff, current merge base, complete acyclic graph, and count-free
 overlap wording and found no publication blocker.
 
+Ready-for-review PR #12683 opened from validated head
+`f07299a1c88655544c99aabbbddb5a309e241e24` after a normal first push. At
+publication, remote main, local `origin/main`, and the branch merge base all
+equal `59b34f88ca0e1b4882c966374bb4bd53a2b9defa`; the six-path diff has zero
+exact overlap with the live open-PR set. Auto-merge remains disabled until all
+required checks are terminal and acceptable and GitHub reports no merge
+conflict.
+
 ## Autonomous Loop Protocol
 
 Only one parity PR should be active at a time.
