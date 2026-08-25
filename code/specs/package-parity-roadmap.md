@@ -6712,7 +6712,7 @@ its five reviewed exemptions. Syntax and dependency-current checks pass; a
 fresh ruby-advisory-db at `eca0eccee391` reports no vulnerabilities. Direct
 StandardRB lint reproduces the clean-main file's pre-existing broad baseline
 and adds no offense on a changed production or test line. The collision report
-and complete acyclic 488-owner/745-edge graph remain clean, and seven current
+and complete acyclic 488-owner/745-edge graph remain clean, and eight current
 open PRs have zero exact overlap with the six-path diff. An independent
 exact-head security review found no new filesystem, process, network,
 environment, credential, diagnostic, dependency, or execution-authority
