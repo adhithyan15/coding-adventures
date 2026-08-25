@@ -271,7 +271,13 @@ queue: **و**, not ه, follows ن. Its 02:43–02:45 demonstration loops the sma
   lift count. Urdu **ر** follows from the next source-backed chapter as one
   uninterrupted downward line that curves left. Its zero-lift learner path
   preserves the chapter's separate final-form motion and its Naskh/Nastaliq
-  distinction without conflating them with the independent form. Urdu **س**
+  distinction without conflating them with the independent form. Urdu **و**
+  follows in that same chapter: its independent handwriting animation shapes
+  the looped head and continues down-left through the tail in one unbroken run.
+  The learner path preserves the prose's handwritten loop, solid printed-head
+  alternative, nonconnector status, and context-dependent consonant and vowel
+  readings while keeping Urdu provenance separate from Arabic and Persian.
+  Urdu **س**
   follows from the source-adjacent chapter: both independent animations keep
   its three close teeth and final bowl in one right-to-left, zero-lift run. The
   learner path uses that standard toothed form while preserving the chapter's
