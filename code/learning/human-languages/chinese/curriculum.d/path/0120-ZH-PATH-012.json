@@ -1,0 +1,30 @@
+{
+  "id": "ZH-PATH-012",
+  "spine_node": "SPINE-EXCHANGE-NAMES",
+  "lessons": [
+    "ZH-C13-hear-da",
+    "ZH-W13-da",
+    "ZH-C13-da",
+    "ZH-C13-hear-dajia",
+    "ZH-C13-dajia",
+    "ZH-C13-hear-xue",
+    "ZH-W13-xue",
+    "ZH-C13-xue",
+    "ZH-C13-hear-xuesheng",
+    "ZH-W13-sheng",
+    "ZH-C13-xuesheng",
+    "ZH-C13-hear-daxue",
+    "ZH-C13-daxue",
+    "ZH-C13-hear-daxuesheng",
+    "ZH-C13-daxuesheng",
+    "ZH-R13-school-six",
+    "ZH-C13-practice"
+  ],
+  "before": [],
+  "inline": [
+    "ZH-EXT-033-SCHOOL-MEANING-FIRST",
+    "ZH-EXT-034-SCHOOL-SCRIPT",
+    "ZH-EXT-035-SCHOOL-FOUR-SKILL"
+  ],
+  "after": []
+}

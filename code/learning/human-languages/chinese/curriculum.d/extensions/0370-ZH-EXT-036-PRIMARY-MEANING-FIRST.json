@@ -1,0 +1,15 @@
+{
+  "id": "ZH-EXT-036-PRIMARY-MEANING-FIRST",
+  "stage": "pre-A1",
+  "kind": "required",
+  "category": "lexis",
+  "canDo": "I can understand and say 小, 小学 and 小学生, with the unfamiliar spoken meaning of 小 arriving before its character.",
+  "prerequisites": [
+    "ZH-EXT-035-SCHOOL-FOUR-SKILL"
+  ],
+  "lessons": [
+    "ZH-C14-hear-xiao",
+    "ZH-C14-hear-xiaoxue",
+    "ZH-C14-hear-xiaoxuesheng"
+  ]
+}

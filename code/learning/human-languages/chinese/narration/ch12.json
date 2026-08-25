@@ -1,0 +1,1263 @@
+{
+  "version": 1,
+  "language": "chinese",
+  "chapter": 12,
+  "title": "People under one roof",
+  "drivablePrefix": 3,
+  "sourceHash": "fnv1a64:f0602da8dc62347d",
+  "lessons": [
+    {
+      "id": "ZH-C12-ren",
+      "sequence": 700,
+      "title": "人 (rén) — a person",
+      "headword": "人",
+      "romanization": "rén",
+      "gloss": "person",
+      "script": "chinese",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:4c73e635208809d0",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 12,
+              "perItem": false,
+              "source": "[PAUSE 12s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Write the two-stroke figure, then say wǒ — I."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "人 — rén — person."
+            },
+            {
+              "kind": "speech",
+              "text": "Hear the rising tone first. Say rén. Now read the character you already know. The meaning is singular here: one person. Number comes from context or another word; the character itself does not grow a plural ending."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "Say person in Mandarin. Read 人 (rén). Cover it, wait five seconds, and write it."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "Source: Official HSK 3.0 syllabus, Level 1 vocabulary entry 170."
+            },
+            {
+              "kind": "activity",
+              "scored": true,
+              "id": "ZH-C12-ren-meaning",
+              "prompt": "Type the Mandarin character for person.",
+              "assesses": [
+                "ZH-LEX-REN-01"
+              ],
+              "responseSeconds": 10,
+              "acceptedResponses": [
+                "人",
+                "人 rén"
+              ],
+              "feedback": {
+                "correct": "Right: 人 is rén, person.",
+                "incorrect": "It is the two-stroke figure 人, read rén."
+              }
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "ZH-C12-nu",
+      "sequence": 710,
+      "title": "女 (nǚ) — female, woman",
+      "headword": "女",
+      "romanization": "nǚ",
+      "gloss": "female; woman",
+      "script": "chinese",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:e182f3f8949015e6",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 12,
+              "perItem": false,
+              "source": "[PAUSE 12s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Say person, then write the three-stroke left half of 好."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "女 — nǚ — female; woman."
+            },
+            {
+              "kind": "speech",
+              "text": "Say it low: nǚ. The rounded vowel is the same written ü you met in the character lesson. On its own, 女 labels female gender; it is not a polite way to call out to a woman. Here you are learning the word for reading and building."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "Read 女 (nǚ), cover it, and write it from the meaning cue female."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "Source: Official HSK 3.0 syllabus, Level 1 vocabulary entry 152."
+            },
+            {
+              "kind": "activity",
+              "scored": true,
+              "id": "ZH-C12-nu-meaning",
+              "prompt": "Which taught character is the Level 1 word female or woman?",
+              "assesses": [
+                "ZH-LEX-NU-01"
+              ],
+              "responseSeconds": 10,
+              "acceptedResponses": [
+                "女",
+                "女 nǚ"
+              ],
+              "feedback": {
+                "correct": "Right: 女 is nǚ.",
+                "incorrect": "It is 女, the component you know from 好."
+              }
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "ZH-C12-hear-erzi",
+      "sequence": 720,
+      "title": "Hear érzi — son",
+      "headword": "érzi",
+      "romanization": "érzi",
+      "gloss": "son",
+      "script": "chinese",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:a57e410e0be33515",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 12,
+              "perItem": false,
+              "source": "[PAUSE 12s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Say person, then female."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "érzi — son."
+            },
+            {
+              "kind": "speech",
+              "text": "Hear two beats: rising ér, then a short, light zi. Say the whole word once from the meaning. Keep the characters covered; the new first shape comes next."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "Source: Official HSK 3.0 syllabus, Level 1 vocabulary entry 48."
+            },
+            {
+              "kind": "activity",
+              "scored": true,
+              "id": "ZH-C12-hear-erzi-meaning",
+              "prompt": "What does érzi mean?",
+              "assesses": [
+                "ZH-LEX-ERZI-01"
+              ],
+              "responseSeconds": 9,
+              "acceptedResponses": [
+                "son",
+                "a son"
+              ],
+              "feedback": {
+                "correct": "Right: érzi means son.",
+                "incorrect": "Keep the sound and meaning together: érzi — son."
+              }
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "ZH-W12-er",
+      "sequence": 730,
+      "title": "儿 (ér) — fall, then bend and hook",
+      "headword": "儿",
+      "romanization": "ér",
+      "gloss": "child or son; the first character of érzi",
+      "script": "chinese",
+      "modality": "pen",
+      "derivedModality": "pen",
+      "modalityReasons": [
+        "writing-type",
+        "script-block"
+      ],
+      "sourceHash": "fnv1a64:136bd98127c8fdb4",
+      "notice": {
+        "modality": "pen",
+        "needs": [
+          "a pen and something to write on",
+          "your eyes, for letter shapes on the page"
+        ],
+        "waitUntilStopped": [
+          "Script — the shape"
+        ],
+        "text": "Before we start: this one needs your hands, so it is not a driving lesson. You will want a pen and something to write on and your eyes, for letter shapes on the page. You can listen to everything else now — leave the section called Script — the shape until you have stopped, and I will say so again when we reach it."
+      },
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 12,
+              "perItem": false,
+              "source": "[PAUSE 12s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Say son, then write 人 (rén)."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "script",
+          "title": "Script — the shape",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "儿 (ér)."
+            },
+            {
+              "kind": "speech",
+              "text": "Two strokes. First a short fall down-left. Then start high on the right, descend, bend right along the floor, and hook upward without lifting. Unlike 人 (rén), the two strokes do not meet at the top."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "Trace 儿 (ér) once. Copy it once. Point to the bend that keeps it apart from 人 (rén)."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "Source: Hanzi Writer Data 儿 (ér), pinned stroke paths and medians."
+            },
+            {
+              "kind": "activity",
+              "scored": true,
+              "id": "ZH-W12-er-write",
+              "prompt": "Write the first character of érzi.",
+              "assesses": [
+                "ZH-SCRIPT-ER-CHAR-01"
+              ],
+              "responseSeconds": 10,
+              "acceptedResponses": [
+                "儿",
+                "儿 ér"
+              ],
+              "feedback": {
+                "correct": "Right: 儿, with the right stroke bending and hooking.",
+                "incorrect": "First fall left; second descend, bend right, and hook."
+              }
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "ZH-C12-erzi",
+      "sequence": 740,
+      "title": "儿子 (érzi) — son on the page",
+      "headword": "儿子",
+      "romanization": "érzi",
+      "gloss": "son, now read and written",
+      "script": "chinese",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:f979bb2600627c0d",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 14,
+              "perItem": false,
+              "source": "[PAUSE 14s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Say son, then write 儿 (ér) and 子 separately."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "儿子 — érzi — son."
+            },
+            {
+              "kind": "speech",
+              "text": "The first syllable rises. The second is light. Both characters carry child meanings, but the whole word—not either character alone—is the ordinary kinship word son."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "Copy 儿子 (érzi) once while saying ér-zi. Then read it once without pinyin."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "Source: Official HSK 3.0 syllabus, Level 1 vocabulary entry 48."
+            },
+            {
+              "kind": "activity",
+              "scored": true,
+              "id": "ZH-C12-erzi-write",
+              "prompt": "Write son in Chinese characters.",
+              "assesses": [
+                "ZH-LEX-ERZI-01"
+              ],
+              "responseSeconds": 12,
+              "acceptedResponses": [
+                "儿子",
+                "儿子 érzi"
+              ],
+              "feedback": {
+                "correct": "Right: 儿子.",
+                "incorrect": "Write 儿 first, then the familiar 子."
+              }
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "ZH-C12-hear-nuer",
+      "sequence": 750,
+      "title": "Hear nǚ'ér — daughter",
+      "headword": "nǚ'ér",
+      "romanization": "nǚ'ér",
+      "gloss": "daughter",
+      "script": "chinese",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:669844489037ac14",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 12,
+              "perItem": false,
+              "source": "[PAUSE 12s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Say female, then son."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "nǚ'ér — daughter."
+            },
+            {
+              "kind": "speech",
+              "text": "Say two clear syllables: low nǚ, rising ér. The apostrophe only keeps the vowel boundary visible in pinyin. It is not a pause and not part of the Chinese writing."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "Source: Official HSK 3.0 syllabus, Level 1 vocabulary entry 153."
+            },
+            {
+              "kind": "activity",
+              "scored": true,
+              "id": "ZH-C12-hear-nuer-meaning",
+              "prompt": "What does nǚ'ér mean?",
+              "assesses": [
+                "ZH-LEX-NUER-01"
+              ],
+              "responseSeconds": 9,
+              "acceptedResponses": [
+                "daughter",
+                "a daughter"
+              ],
+              "feedback": {
+                "correct": "Right: nǚ'ér means daughter.",
+                "incorrect": "Keep the two beats together: nǚ'ér — daughter."
+              }
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "ZH-C12-nuer",
+      "sequence": 760,
+      "title": "女儿 (nǚ'ér) — daughter on the page",
+      "headword": "女儿",
+      "romanization": "nǚ'ér",
+      "gloss": "daughter, now read and written",
+      "script": "chinese",
+      "modality": "sight",
+      "derivedModality": "sight",
+      "modalityReasons": [
+        "sight-cue"
+      ],
+      "sourceHash": "fnv1a64:86c27c08c250753b",
+      "notice": {
+        "modality": "sight",
+        "needs": [
+          "your eyes, because the lesson points at something written down"
+        ],
+        "waitUntilStopped": [],
+        "text": "Before we start: this one needs your eyes, so it is not fully a driving lesson. You will want your eyes, because the lesson points at something written down. You can listen to all of it now and come back to the parts that need looking at once you have stopped."
+      },
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 14,
+              "perItem": false,
+              "source": "[PAUSE 14s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Say daughter, then write 女 (nǚ) and 儿 (ér) separately."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "女儿 — nǚ'ér — daughter."
+            },
+            {
+              "kind": "speech",
+              "text": "Nothing is hidden: 女 (nǚ) gives female and 儿 (ér) gives child. Read the two characters without the pinyin, then say the whole word without a pause."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "Look at 女儿 (nǚ'ér), cover it, wait five seconds, and write it from daughter."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "Source: Official HSK 3.0 syllabus, Level 1 vocabulary entry 153."
+            },
+            {
+              "kind": "activity",
+              "scored": true,
+              "id": "ZH-C12-nuer-write",
+              "prompt": "Write daughter in Chinese characters.",
+              "assesses": [
+                "ZH-LEX-NUER-01"
+              ],
+              "responseSeconds": 12,
+              "acceptedResponses": [
+                "女儿",
+                "女儿 nǚ'ér"
+              ],
+              "feedback": {
+                "correct": "Right: 女儿.",
+                "incorrect": "Write familiar 女, then the newly learned 儿."
+              }
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "ZH-C12-hear-jia",
+      "sequence": 770,
+      "title": "Hear jiā — home, family",
+      "headword": "jiā",
+      "romanization": "jiā",
+      "gloss": "home; family",
+      "script": "chinese",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:b7ebfa4ca4ee088c",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 12,
+              "perItem": false,
+              "source": "[PAUSE 12s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Say daughter, then son."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "jiā — home; family."
+            },
+            {
+              "kind": "speech",
+              "text": "Hold the pitch high and level: jiā. The word can name the household place or the family belonging to it. Keep the character covered; it has ten strokes, and the next lesson gives them to you in two familiar-sized pieces."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "Source: Official HSK 3.0 syllabus, Level 1 vocabulary entry 86."
+            },
+            {
+              "kind": "activity",
+              "scored": true,
+              "id": "ZH-C12-hear-jia-meaning",
+              "prompt": "What two closely linked meanings does jiā carry?",
+              "assesses": [
+                "ZH-LEX-JIA-01"
+              ],
+              "responseSeconds": 10,
+              "acceptedResponses": [
+                "home and family",
+                "family and home",
+                "home; family",
+                "household and home"
+              ],
+              "feedback": {
+                "correct": "Right: jiā is home or family.",
+                "incorrect": "Keep place and people together: jiā — home, family."
+              }
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "ZH-W12-jia",
+      "sequence": 780,
+      "title": "家 (jiā) — roof first, body second",
+      "headword": "家",
+      "romanization": "jiā",
+      "gloss": "home or family, a roof over an old livestock character",
+      "script": "chinese",
+      "modality": "pen",
+      "derivedModality": "pen",
+      "modalityReasons": [
+        "writing-type",
+        "script-block"
+      ],
+      "sourceHash": "fnv1a64:2dcbd10345348aeb",
+      "notice": {
+        "modality": "pen",
+        "needs": [
+          "a pen and something to write on",
+          "your eyes, for letter shapes on the page"
+        ],
+        "waitUntilStopped": [
+          "Script — the shape"
+        ],
+        "text": "Before we start: this one needs your hands, so it is not a driving lesson. You will want a pen and something to write on and your eyes, for letter shapes on the page. You can listen to everything else now — leave the section called Script — the shape until you have stopped, and I will say so again when we reach it."
+      },
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 15,
+              "perItem": false,
+              "source": "[PAUSE 15s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Say home, then write the roof from 字 and the whole character 字."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "script",
+          "title": "Script — the shape",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "宀 + 豕 becomes 家 (jiā)."
+            },
+            {
+              "kind": "speech",
+              "text": "Finish the three-stroke roof first. Under it, write the lower body from its top horizontal through the centre curve, three left-falling strokes, and the long right-falling finish. Ten strokes; nine lifts."
+            },
+            {
+              "kind": "speech",
+              "text": "The old lower component is 豕, livestock. That decomposition is real history and a useful shape boundary. It is not a claim that a present-day home or family is defined by an animal."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "Trace 家 (jiā) once. Copy it once, saying roof, then body."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "Source: Hanzi Writer Data 家 (jiā), pinned stroke paths and medians."
+            },
+            {
+              "kind": "activity",
+              "scored": true,
+              "id": "ZH-W12-jia-build",
+              "prompt": "Which taught component must be completed first when writing 家 (jiā)?",
+              "assesses": [
+                "ZH-SCRIPT-JIA-01"
+              ],
+              "responseSeconds": 10,
+              "acceptedResponses": [
+                "宀",
+                "the roof",
+                "roof",
+                "宀 roof"
+              ],
+              "feedback": {
+                "correct": "Right: finish 宀 before the lower body.",
+                "incorrect": "Start with the three-stroke roof 宀."
+              }
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "ZH-C12-jia",
+      "sequence": 790,
+      "title": "家 (jiā) — home on the page",
+      "headword": "家",
+      "romanization": "jiā",
+      "gloss": "home or family, now read and written",
+      "script": "chinese",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:b9b0f577c3807708",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 12,
+              "perItem": false,
+              "source": "[PAUSE 12s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Say home or family, then write 宀."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "家 — jiā — home; family."
+            },
+            {
+              "kind": "speech",
+              "text": "Read it once without pinyin. The high line over ā records first tone; the character records no tone mark at all."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "Copy 家 (jiā) once from the model. Name the roof before you write the lower body."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "Source: Official HSK 3.0 syllabus, Level 1 vocabulary entry 86."
+            },
+            {
+              "kind": "activity",
+              "scored": true,
+              "id": "ZH-C12-jia-write",
+              "prompt": "Write home or family in one Chinese character.",
+              "assesses": [
+                "ZH-LEX-JIA-01"
+              ],
+              "responseSeconds": 12,
+              "acceptedResponses": [
+                "家",
+                "家 jiā"
+              ],
+              "feedback": {
+                "correct": "Right: 家.",
+                "incorrect": "It is the ten-stroke character 家: roof first."
+              }
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "ZH-C12-hear-jiaren",
+      "sequence": 800,
+      "title": "Hear jiārén — family members",
+      "headword": "jiārén",
+      "romanization": "jiārén",
+      "gloss": "family members; family",
+      "script": "chinese",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:070b1c8be41bf708",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 12,
+              "perItem": false,
+              "source": "[PAUSE 12s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Say home or family, then person."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "jiārén — family members; family."
+            },
+            {
+              "kind": "speech",
+              "text": "You already own both sounds: jiā + rén. The compound names the people of the home. Say it once from the meaning before looking at either character."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "Source: Official HSK 3.0 syllabus, Level 1 vocabulary entry 87."
+            },
+            {
+              "kind": "activity",
+              "scored": true,
+              "id": "ZH-C12-hear-jiaren-meaning",
+              "prompt": "What does jiārén mean?",
+              "assesses": [
+                "ZH-LEX-JIAREN-01"
+              ],
+              "responseSeconds": 10,
+              "acceptedResponses": [
+                "family members",
+                "family",
+                "the people in a family",
+                "members of the family"
+              ],
+              "feedback": {
+                "correct": "Right: jiārén means family members or family.",
+                "incorrect": "Combine home and person: jiārén — family members."
+              }
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "ZH-C12-jiaren",
+      "sequence": 810,
+      "title": "家人 (jiārén) — the people of the home",
+      "headword": "家人",
+      "romanization": "jiārén",
+      "gloss": "family members, now read and written",
+      "script": "chinese",
+      "modality": "sight",
+      "derivedModality": "sight",
+      "modalityReasons": [
+        "sight-cue"
+      ],
+      "sourceHash": "fnv1a64:b5f30f5080216dfc",
+      "notice": {
+        "modality": "sight",
+        "needs": [
+          "your eyes, because the lesson points at something written down"
+        ],
+        "waitUntilStopped": [],
+        "text": "Before we start: this one needs your eyes, so it is not fully a driving lesson. You will want your eyes, because the lesson points at something written down. You can listen to all of it now and come back to the parts that need looking at once you have stopped."
+      },
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 15,
+              "perItem": false,
+              "source": "[PAUSE 15s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Say family members, then write 家 (jiā) and 人 (rén) separately."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "家人 — jiārén — family members; family."
+            },
+            {
+              "kind": "speech",
+              "text": "Read from the characters: home + person. The word is plural by meaning here, but Mandarin adds no plural ending to 人 (rén)."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "Look at 家人 (jiārén), cover it, wait five seconds, and write it from family."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "Source: Official HSK 3.0 syllabus, Level 1 vocabulary entry 87."
+            },
+            {
+              "kind": "activity",
+              "scored": true,
+              "id": "ZH-C12-jiaren-write",
+              "prompt": "Write family members in Chinese characters.",
+              "assesses": [
+                "ZH-LEX-JIAREN-01"
+              ],
+              "responseSeconds": 12,
+              "acceptedResponses": [
+                "家人",
+                "家人 jiārén"
+              ],
+              "feedback": {
+                "correct": "Right: 家人, home plus person.",
+                "incorrect": "Write 家 first, then the two-stroke 人."
+              }
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "ZH-R12-family-six",
+      "sequence": 820,
+      "title": "Retrieve six people and family words",
+      "headword": "人 — 女 — 儿子 — 女儿 — 家 — 家人",
+      "romanization": "rén — nǚ — érzi — nǚ'ér — jiā — jiārén",
+      "gloss": "six Level 1 people and family words",
+      "script": "chinese",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:925e809e18f50e45",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 18,
+              "perItem": false,
+              "source": "[PAUSE 18s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Say name, then write 儿 (ér) and 家 (jiā)."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "Hear the six words in a shuffled order and point to meanings. Then take six meaning cards, say each word, read the six character cards, and write only the two you missed. Repair one item at a time."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "Source: Official HSK 3.0 syllabus, Level 1 vocabulary entries 48, 87, and 153."
+            },
+            {
+              "kind": "activity",
+              "scored": true,
+              "id": "ZH-R12-family-six-recall",
+              "prompt": "Write son, daughter, and family members in that order.",
+              "assesses": [
+                "ZH-LEX-ERZI-01",
+                "ZH-LEX-NUER-01",
+                "ZH-LEX-JIAREN-01"
+              ],
+              "responseSeconds": 24,
+              "acceptedResponses": [
+                "儿子 — 女儿 — 家人",
+                "儿子 女儿 家人",
+                "儿子, 女儿, 家人"
+              ],
+              "feedback": {
+                "correct": "All three family words remain distinct.",
+                "incorrect": "Repair only the missed word, then retry the three-item row."
+              }
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "ZH-C12-practice",
+      "sequence": 830,
+      "title": "Payoff — six family words in four skills",
+      "headword": "人 — 女 — 儿子 — 女儿 — 家 — 家人",
+      "romanization": "rén — nǚ — érzi — nǚ'ér — jiā — jiārén",
+      "gloss": "separately scored listening, speaking, reading, and writing family map",
+      "script": "chinese",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:fc8792abb0c5783c",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 18,
+              "perItem": false,
+              "source": "[PAUSE 18s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Say name, then write 儿 (ér) and 家 (jiā) without a model."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "Listening: hear six words in mixed order and choose each meaning."
+            },
+            {
+              "kind": "speech",
+              "text": "Speaking: produce all six from meaning cards, with tones audible."
+            },
+            {
+              "kind": "speech",
+              "text": "Reading: read the six character cards without pinyin."
+            },
+            {
+              "kind": "speech",
+              "text": "Writing: hear all six and write them without a model."
+            },
+            {
+              "kind": "speech",
+              "text": "Pass each skill separately. If one misses, repair that skill and retry only that part. This is a family vocabulary map, not yet a full family-description task."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "Source: Official HSK 3.0 syllabus, Level 1 task outline pp. 2–3 and vocabulary entries 48, 86–87, 152–153, and 170."
+            },
+            {
+              "kind": "activity",
+              "scored": true,
+              "id": "ZH-C12-practice-family-payoff",
+              "prompt": "After all four checks pass, write home, person, and family members.",
+              "assesses": [
+                "ZH-PERFORMANCE-FAMILY-SIX-FOUR-SKILL-01"
+              ],
+              "responseSeconds": 32,
+              "acceptedResponses": [
+                "家 — 人 — 家人",
+                "家 人 家人",
+                "家, 人, 家人"
+              ],
+              "feedback": {
+                "correct": "The six-word family map passes in all four skills.",
+                "incorrect": "Repair only the failed skill or word, then retry that part."
+              }
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "findings": []
+}

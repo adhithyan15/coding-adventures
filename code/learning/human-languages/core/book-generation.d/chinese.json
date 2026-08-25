@@ -110,6 +110,27 @@
       "output": "chinese/book/chapters/ch11-qing.tex",
       "unicodeScript": "Han",
       "scriptCommand": "zh"
+    },
+    {
+      "language": "chinese",
+      "chapter": 12,
+      "output": "chinese/book/chapters/ch12-family-six.tex",
+      "unicodeScript": "Han",
+      "scriptCommand": "zh"
+    },
+    {
+      "language": "chinese",
+      "chapter": 13,
+      "output": "chinese/book/chapters/ch13-school-six.tex",
+      "unicodeScript": "Han",
+      "scriptCommand": "zh"
+    },
+    {
+      "language": "chinese",
+      "chapter": 14,
+      "output": "chinese/book/chapters/ch14-primary-three.tex",
+      "unicodeScript": "Han",
+      "scriptCommand": "zh"
     }
   ]
 }

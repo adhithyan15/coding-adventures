@@ -342,8 +342,8 @@
       "tone": "4",
       "components": [
         "a horizontal bar",
-        "a left-falling stroke crossing the bar",
-        "a long right-falling stroke from the crossing"
+        "丿 (left-falling stroke) crossing the bar",
+        "㇏ (long right-falling stroke) from the crossing"
       ],
       "strokeOrder": [
         "draw the horizontal héng stroke from left to right",
@@ -389,8 +389,8 @@
       "role": "logograph",
       "tone": "2",
       "components": [
-        "three short marks across the top",
-        "a covering dot and horizontal hook",
+        "⺍ (three short marks across the top)",
+        "冖 (covering dot and horizontal hook)",
         "子 (child) below"
       ],
       "strokeOrder": [
