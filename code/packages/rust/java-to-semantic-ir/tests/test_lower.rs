@@ -1230,6 +1230,155 @@ fn do_while_flag_name_does_not_collide_with_a_local_the_body_itself_declares() {
     }
 }
 
+// ── M2b: classic for-loop ────────────────────────────────────────────────
+
+#[test]
+fn classic_for_loop_desugars_to_init_then_while() {
+    let m = compile_ok(&wrap(
+        "int sum = 0; for (int i = 0; i < 5; i++) { sum = sum + i; } sum;",
+    ));
+    match &main_fn(&m).body.stmts[1] {
+        Stmt::ExprStmt {
+            expr: Expr::Block(block),
+            ..
+        } => {
+            assert_eq!(block.stmts.len(), 2, "expected [init, Stmt::While]");
+            match &block.stmts[0] {
+                Stmt::LetStarBinding {
+                    name,
+                    value: Expr::IntLit { value: 0, .. },
+                    ..
+                } => {
+                    assert_eq!(name, "i");
+                }
+                other => panic!("expected LetStarBinding(\"i\", IntLit(0)), got {other:?}"),
+            }
+            match &block.stmts[1] {
+                Stmt::While {
+                    cond: Expr::BuiltinCall { name, .. },
+                    body,
+                    ..
+                } => {
+                    assert_eq!(name, "<");
+                    // the source body statement plus the appended update
+                    // clause (`i++` desugared to an Assign).
+                    assert_eq!(body.stmts.len(), 2);
+                    assert!(matches!(&body.stmts[1], Stmt::Assign { name, .. } if name == "i"));
+                }
+                other => panic!("expected While(BuiltinCall(\"<\")), got {other:?}"),
+            }
+        }
+        other => panic!("expected ExprStmt(Block), got {other:?}"),
+    }
+}
+
+#[test]
+fn classic_for_loop_init_variable_does_not_leak_past_the_loop() {
+    let err =
+        compile_source(&wrap("for (int i = 0; i < 5; i++) { } int y = i;"), "prog").unwrap_err();
+    assert!(!err.message.is_empty());
+}
+
+#[test]
+fn classic_for_loop_without_a_declaration_reuses_an_existing_variable() {
+    let m = compile_ok(&wrap("int i = -1; for (i = 0; i < 5; i++) { } i;"));
+    match &main_fn(&m).body.stmts[1] {
+        Stmt::ExprStmt {
+            expr: Expr::Block(block),
+            ..
+        } => {
+            assert!(matches!(&block.stmts[0], Stmt::Assign { name, .. } if name == "i"));
+        }
+        other => panic!("expected ExprStmt(Block), got {other:?}"),
+    }
+}
+
+#[test]
+fn classic_for_loop_with_all_clauses_empty_is_an_unconditional_loop() {
+    let m = compile_ok(&wrap("int c = 0; for (;;) { c = c + 1; c = c + 1; }"));
+    match &main_fn(&m).body.stmts[1] {
+        Stmt::ExprStmt {
+            expr: Expr::Block(block),
+            ..
+        } => {
+            // no init statement -- just the While.
+            assert_eq!(block.stmts.len(), 1);
+            match &block.stmts[0] {
+                Stmt::While {
+                    cond: Expr::BoolLit { value: true, .. },
+                    ..
+                } => {}
+                other => panic!("expected While(BoolLit(true)), got {other:?}"),
+            }
+        }
+        other => panic!("expected ExprStmt(Block), got {other:?}"),
+    }
+}
+
+#[test]
+fn classic_for_loop_condition_must_be_boolean() {
+    let err = compile_source(&wrap("for (int i = 0; i; i++) { }"), "prog").unwrap_err();
+    assert!(
+        err.message.contains("boolean"),
+        "unexpected message: {}",
+        err.message
+    );
+}
+
+#[test]
+fn classic_for_loop_with_multiple_init_declarators_is_unsupported() {
+    let err = compile_source(&wrap("for (int i = 0, j = 0; i < 5; i++) { }"), "prog").unwrap_err();
+    assert!(!err.message.is_empty());
+}
+
+#[test]
+fn classic_for_loop_with_multiple_update_expressions_is_unsupported() {
+    let err = compile_source(&wrap("for (int i = 0; i < 5; i++, i++) { }"), "prog").unwrap_err();
+    assert!(!err.message.is_empty());
+}
+
+// ── M2b: enhanced for-loop ───────────────────────────────────────────────
+
+#[test]
+fn enhanced_for_loop_lowers_to_stmt_foreach() {
+    let m = compile_ok(&wrap(
+        "int xs = 0; String s = \"\"; for (String x : xs) { s = x; }",
+    ));
+    match &main_fn(&m).body.stmts[2] {
+        Stmt::ForEach {
+            var,
+            iter: Expr::VarRef { name, .. },
+            body,
+            ..
+        } => {
+            assert_eq!(var, "x");
+            assert_eq!(name, "xs");
+            assert_eq!(body.stmts.len(), 1);
+        }
+        other => panic!("expected ForEach, got {other:?}"),
+    }
+}
+
+#[test]
+fn enhanced_for_loop_variable_does_not_leak_past_the_loop() {
+    let err = compile_source(
+        &wrap("int xs = 0; for (String x : xs) { } String y = x;"),
+        "prog",
+    )
+    .unwrap_err();
+    assert!(!err.message.is_empty());
+}
+
+#[test]
+fn enhanced_for_loop_with_var_is_unsupported() {
+    let err = compile_source(&wrap("int xs = 0; for (var x : xs) { }"), "prog").unwrap_err();
+    assert!(
+        err.message.contains("`var`"),
+        "unexpected message: {}",
+        err.message
+    );
+}
+
 // ── M2a: switch / break / continue have no SIR IR yet ───────────────────
 
 #[test]

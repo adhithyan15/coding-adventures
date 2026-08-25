@@ -13,20 +13,21 @@ end-to-end.
 
 **Implementation progress**: M0 (hardening + `main` + literals), M1
 (local variable declarations, re-assignment, arithmetic/comparison/
-logical operators, `+`-based string concatenation), and M2a (`if`/
-`else`, `while`, `do`/`while`, compound-assignment/increment/decrement
-as bare statements) are merged — see `code/packages/rust/
+logical operators, `+`-based string concatenation), M2a (`if`/`else`,
+`while`, `do`/`while`, compound-assignment/increment/decrement as bare
+statements), and M2b (classic `for`, desugared to `while`; enhanced
+`for`, → `Stmt::ForEach` directly) are merged — see `code/packages/rust/
 java-to-semantic-ir`'s own `CHANGELOG.md` for the exact per-milestone
 construct list and the real correctness bugs each milestone's own test
-suite caught before shipping. M2's own scope split into two PRs (M2a
-above; M2b — classic/enhanced `for`-loops — next) once implementation
-revealed how much scope-stack infrastructure `if`/`while`/`do`-`while`
-alone already needed. `switch` was also discovered, during M2a, to have
-no corresponding SIR IR node at all (confirmed by a repo-wide grep, not
-assumed) — it needs its own spec-level design decision (Java's
-fall-through semantics in particular) before any frontend can target
-it, tracked as a separate backlog item rather than folded into "M2"
-implicitly. M2b onward are pending.
+suite caught before shipping. M2's own scope split into two PRs (M2a;
+M2b) once implementation revealed how much scope-stack infrastructure
+`if`/`while`/`do`-`while` alone already needed. `switch` was also
+discovered, during M2a, to have no corresponding SIR IR node at all
+(confirmed by a repo-wide grep, not assumed) — it needs its own
+spec-level design decision (Java's fall-through semantics in particular)
+before any frontend can target it, tracked as a separate backlog item
+rather than folded into "M2" implicitly; `break`/`continue` have the
+identical gap. M3 onward are pending.
 
 ## Motivation
 
@@ -143,11 +144,13 @@ its own lexical scope, mirroring the SIR validator's own `LocalEnv`
 mark/rewind discipline): **M2a** — `if`/`else`, `while`, `do`/`while`,
 plus compound-assignment/increment/decrement as bare statements (a real
 practical necessity for the classic `for`'s own update clause, pulled
-forward from M2b since it's needed there too). **M2b** — classic and
-enhanced `for`, desugared to `Stmt::While` (mirroring `c-to-semantic-ir`'s
-own precedent for C's identically-general three-clause `for`, chosen
-over `javascript-to-semantic-ir`'s stricter canonical-`ForRange`-only
-approach since Java's classic `for` is highly variable in shape).
+forward from M2b since it's needed there too). **M2b** — classic `for`,
+desugared to `Stmt::While` (mirroring `c-to-semantic-ir`'s own precedent
+for C's identically-general three-clause `for`, chosen over
+`javascript-to-semantic-ir`'s stricter canonical-`ForRange`-only
+approach since Java's classic `for` is highly variable in shape); and
+enhanced `for`, which lowers directly to `Stmt::ForEach` with no
+desugaring needed (SIR already has exactly this shape).
 `switch` (statement form; `switch` *expressions*, Java 14+, are a
 later-milestone stretch goal regardless) turned out to need its own
 spec-level design decision, not a mechanical translation: `semantic-ir`

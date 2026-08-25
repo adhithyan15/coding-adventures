@@ -2,6 +2,62 @@
 
 All notable changes to the `java-to-semantic-ir` crate will be documented in this file.
 
+## [0.4.0] - 2026-08-25
+
+### Added
+
+- JV02 milestone M2b: classic and enhanced `for`-loops.
+- Classic `for (init; cond; update) body` desugars to `{ init; while
+  (cond) { body; update } }`, wrapped in one synthetic `Expr::Block`
+  (mirroring `do`/`while`'s own established wrapping pattern) so `init`'s
+  own scope spans the whole construct but ends exactly where Java's own
+  `for` scope does. SIR's `Stmt::ForRange` — a canonical `for var in
+  range(start, stop, step)` counting loop — is too narrow to represent
+  Java's fully general three-clause `for`; this desugaring instead
+  mirrors `c-to-semantic-ir`'s own identically-reasoned precedent for
+  C's equally general `for` (chosen over `javascript-to-semantic-ir`'s
+  stricter canonical-`ForRange`-only-else-reject approach, since Java's
+  classic `for` is highly variable in shape). Each clause independently
+  supports the shapes that actually occur in practice: `init` may be a
+  declaration (`for (int i = 0; ...)`), a single expression reusing an
+  already-declared variable (`for (i = 0; ...)`), or entirely absent;
+  `cond` absent defaults to `true` (`for (;;)`); `update` may be absent
+  or a single expression (assignment, compound assignment, or
+  increment/decrement — reuses the same statement-level desugaring M2a
+  built for bare `i++;`/`x += 1;` statements, since `for_update`'s items
+  are ordinary `expression` nodes, structurally identical to what an
+  `expression_statement` already handles). Multiple comma-separated
+  expressions in one init/update clause (`for (int i = 0, j = 0; ...)`)
+  are deferred, mirroring the single-declarator restriction M1 already
+  established for plain declaration statements.
+- Enhanced `for (T x : xs) body` lowers directly to `Stmt::ForEach` — SIR
+  already has exactly this shape, no desugaring needed. `var` as the
+  element type is rejected: M1/M2 have no array/collection `Kind` or
+  construction syntax at all yet (that's JV02 M4), so there's no way to
+  infer the element type from the iterable the way real Java type
+  inference would.
+- A shared `lower_variable_declarator` helper now backs both
+  `lower_local_var_decl` (a standalone declaration statement) and the
+  classic `for`'s own declaration-form init clause — the two shapes are
+  structurally identical (`local_var_type` + `variable_declarators`)
+  minus the wrapping node, so this is a refactor of M1's existing code,
+  not new logic duplicated a second time.
+- 12 new tests in `tests/test_lower.rs` (classic `for` desugaring shape,
+  init-variable scope leak prevention in both directions, the no-
+  declaration init form, empty-clauses defaulting to an unconditional
+  loop, boolean-condition requirement, multiple-declarator/multiple-
+  update rejection, enhanced `for`'s `Stmt::ForEach` shape, its own scope
+  leak prevention, and `var`-as-element-type rejection) plus 2 new
+  execution-proof tests in `tests/e2e_python.rs` (a classic `for` summing
+  0..4, and the same with the loop variable reusing an already-declared
+  local rather than a fresh declaration). No execution-proof test exists
+  for enhanced `for` (nothing in M1/M2's own scope can construct a real
+  iterable value to iterate) or `for (;;)` with empty clauses (it
+  genuinely cannot terminate without `break`, which has no SIR IR
+  primitive — an execution proof would just hang forever); both are
+  covered structurally instead, honestly reflecting what's provable at
+  this milestone rather than fabricating a misleading green check.
+
 ## [0.3.0] - 2026-08-25
 
 ### Added

@@ -1,6 +1,6 @@
 //! The lowering pass from `coding_adventures_java_parser`'s generic
-//! [`GrammarASTNode`] CST → [`semantic_ir::Module`], **v0.3.0 (JV02
-//! milestone M2a)**.
+//! [`GrammarASTNode`] CST → [`semantic_ir::Module`], **v0.4.0 (JV02
+//! milestone M2b)**.
 //!
 //! # Scope
 //!
@@ -31,7 +31,7 @@
 //!   semantics for mixed-type concatenation, e.g. `"n=" + 5`).
 //! - Parenthesized sub-expressions.
 //!
-//! **Supported (M2a, new):**
+//! **Supported (M2a, unchanged):**
 //! - `if`/`else` (an absent `else` becomes a synthetic empty, nil-valued
 //!   block — matching the established `javascript-to-semantic-ir`/
 //!   `ruby-to-semantic-ir` precedent for the same "the IR's `If` is an
@@ -47,28 +47,52 @@
 //!   either as a *value* (`y = i++;`) remains out of scope — that needs
 //!   pre-increment-value capture semantics this milestone doesn't build.
 //!
-//! Every block (an `if`/`while`/`do`-`while` body) is its own lexical
-//! scope, mirroring the SIR validator's own `Block`-scoped `LocalEnv`
-//! mark/rewind discipline exactly (a local declared inside an `if` body is
-//! not visible after it, in both Java and the validator's own contract).
+//! **Supported (M2b, new):**
+//! - Classic `for (init; cond; update) body` — SIR's `Stmt::ForRange` is a
+//!   canonical `for var in range(start, stop, step)` counting loop, too
+//!   narrow to represent Java's fully general three-clause `for` (an
+//!   arbitrary init/cond/update, not necessarily a simple increasing
+//!   counter), so this desugars to `{ init; while (cond) { body; update }
+//!   }` instead (mirrors `c-to-semantic-ir`'s own identically-reasoned
+//!   precedent for C's own equally general `for` — see
+//!   `lower_for_statement`'s own doc comment). Each clause may be a
+//!   declaration (`for (int i = 0; ...)`), a single expression
+//!   (`for (i = 0; ...)`, reusing an already-declared variable), or
+//!   entirely absent (`for (;;)`, defaulting the condition to `true`).
+//! - Enhanced `for (T x : xs) body` → `Stmt::ForEach` directly (SIR
+//!   already has exactly this shape, no desugaring needed). `var` as the
+//!   element type is rejected: M1/M2 have no array/collection `Kind` or
+//!   construction syntax at all yet (that's JV02 M4), so there's no way
+//!   to infer the element type from the iterable the way real Java would.
 //!
-//! **Deliberately out of scope for v0.3.0** (each rejected with an
+//! Every block (an `if`/`while`/`do`-`while`/`for`/enhanced-`for` body) is
+//! its own lexical scope, mirroring the SIR validator's own `Block`-scoped
+//! `LocalEnv` mark/rewind discipline exactly (a local declared inside an
+//! `if` body is not visible after it, in both Java and the validator's own
+//! contract) — a classic `for`'s own init-declared variable additionally
+//! spans its condition/update/body (but not beyond the loop), matching
+//! Java's own for-loop scoping exactly.
+//!
+//! **Deliberately out of scope for v0.4.0** (each rejected with an
 //! explicit [`JavaLowerError`], tracked in
 //! [JV02](../../../specs/JV02-java-to-semantic-ir.md)'s own milestone
-//! table): `for`/enhanced-`for` (JV02 M2b — needs the scope infrastructure
-//! this milestone builds, sequenced right after it), `switch` (SIR has no
-//! `Switch`/`Match`/`Case` IR node at all — confirmed by a repo-wide grep,
-//! not assumed — so this needs its own spec-level design decision before
-//! any frontend can target it, tracked as a separate backlog item, not
-//! silently dropped), method calls, field/array access, lambdas, casts,
-//! `instanceof`, the ternary conditional, bitwise operators
-//! (`& | ^ ~ << >> >>>`), increment/decrement or compound assignment used
-//! as a *value* rather than a bare statement, `break`/`continue` (SIR has
-//! no IR primitive for either — every loop body this milestone lowers
-//! must not contain one, checked structurally, not merely "happens not to
-//! occur in the test corpus"), uninitialized declarations, multiple
-//! declarators per statement, C-style array-bracket declarators, array
-//! initializers, and reference types other than `String`.
+//! table): `switch` (SIR has no `Switch`/`Match`/`Case` IR node at all —
+//! confirmed by a repo-wide grep, not assumed — so this needs its own
+//! spec-level design decision before any frontend can target it, tracked
+//! as a separate backlog item, not silently dropped), method calls,
+//! field/array access, lambdas, casts, `instanceof`, the ternary
+//! conditional, bitwise operators (`& | ^ ~ << >> >>>`), increment/
+//! decrement or compound assignment used as a *value* rather than a bare
+//! statement, `break`/`continue` (SIR has no IR primitive for either —
+//! every loop body this milestone lowers must not contain one, checked
+//! structurally, not merely "happens not to occur in the test corpus" —
+//! this also means a bare `for (;;)` loop genuinely cannot terminate via
+//! any construct this milestone can lower, a real and permanent
+//! limitation until `break` exists), multiple comma-separated expressions
+//! in one `for` init/update clause, `var` as an enhanced-`for` element
+//! type, uninitialized declarations, multiple declarators per statement,
+//! C-style array-bracket declarators, array initializers, and reference
+//! types other than `String`.
 //!
 //! ## The `var` ambiguity
 //!
@@ -500,6 +524,13 @@ impl Lowerer {
         if let Some(do_while_stmt) = self.first_child_named(statement, "do_while_statement") {
             return self.lower_do_while_statement(do_while_stmt, depth);
         }
+        if let Some(for_stmt) = self.first_child_named(statement, "for_statement") {
+            return self.lower_for_statement(for_stmt, depth);
+        }
+        if let Some(enhanced_for_stmt) = self.first_child_named(statement, "enhanced_for_statement")
+        {
+            return self.lower_enhanced_for_statement(enhanced_for_stmt, depth);
+        }
         if let Some(expr_stmt) = self.first_child_named(statement, "expression_statement") {
             let expression = self
                 .first_child_named(expr_stmt, "expression")
@@ -513,7 +544,7 @@ impl Lowerer {
         }
         Err(self.err_at(
             statement,
-            "unsupported statement kind (JV02 M2a supports variable declarations, assignment, if/while/do-while, and bare expression statements — for-loops are JV02 M2b, switch/break/continue have no SIR IR yet, everything else is deferred further)"
+            "unsupported statement kind (JV02 M2b supports variable declarations, assignment, if/while/do-while/for/enhanced-for, and bare expression statements — switch/break/continue have no SIR IR yet, everything else is deferred further)"
                 .to_string(),
         ))
     }
@@ -772,6 +803,250 @@ impl Lowerer {
         })
     }
 
+    /// `for_statement = "for" LPAREN for_init SEMICOLON [ expression ]
+    /// SEMICOLON [ for_update ] RPAREN statement ;`. SIR's `Stmt::ForRange`
+    /// is a canonical `for var in range(start, stop, step)` counting loop
+    /// — too narrow a shape to represent Java's fully general three-clause
+    /// `for` (an arbitrary init/cond/update, not necessarily a simple
+    /// increasing counter). Desugars to `Stmt::While` instead, mirroring
+    /// `c-to-semantic-ir`'s own precedent for C's identically-general
+    /// `for` (chosen over `javascript-to-semantic-ir`'s stricter
+    /// canonical-`ForRange`-only-else-reject approach, since Java's
+    /// classic `for` is highly variable in shape):
+    ///
+    ///   { init; while (cond) { S; update; } }
+    ///
+    /// wrapped in one synthetic `Expr::Block` — matching `do`/`while`'s
+    /// own established wrapping pattern — so `init`'s own scope (the loop
+    /// variable, if it's a declaration) spans the whole construct but
+    /// ends exactly where Java's own `for` scope does, not the
+    /// surrounding function. Delegates the "run once, wrapped correctly"
+    /// scope bookkeeping to `lower_for_statement_inner`, which this
+    /// wrapper always calls with the scope pushed and popped around it —
+    /// pushed *before* `init` (`init`'s own declared variable must be
+    /// visible in `cond`, `update`, and the body, all of which are
+    /// lowered inside `_inner`) and popped only after everything below
+    /// has finished, including on an error return.
+    fn lower_for_statement(
+        &mut self,
+        node: &GrammarASTNode,
+        depth: usize,
+    ) -> Result<Stmt, JavaLowerError> {
+        self.push_scope();
+        let result = self.lower_for_statement_inner(node, depth);
+        self.pop_scope();
+        result
+    }
+
+    fn lower_for_statement_inner(
+        &mut self,
+        node: &GrammarASTNode,
+        depth: usize,
+    ) -> Result<Stmt, JavaLowerError> {
+        let span = self.span_of(node);
+        let for_init = self.first_child_named(node, "for_init").ok_or_else(|| {
+            self.err_at(node, "malformed `for` (missing init clause)".to_string())
+        })?;
+        let init_stmt = self.lower_for_init(for_init)?;
+
+        let cond = match self.first_child_named(node, "expression") {
+            Some(cond_node) => {
+                let (c, k) = self.lower_expr(cond_node, 0)?;
+                if k != Kind::Bool {
+                    return Err(
+                        self.err_at(cond_node, "`for` condition must be boolean".to_string())
+                    );
+                }
+                c
+            }
+            // An absent condition means "loop forever" (`for (;;)`),
+            // exactly like `c-to-semantic-ir`'s own identically-reasoned
+            // handling of C's own absent-condition `for`.
+            None => Expr::BoolLit {
+                value: true,
+                span: span.clone(),
+            },
+        };
+
+        let update_stmt = self
+            .first_child_named(node, "for_update")
+            .map(|fu| self.lower_for_update(fu))
+            .transpose()?;
+
+        let body_stmt = self
+            .first_child_named(node, "statement")
+            .ok_or_else(|| self.err_at(node, "malformed `for` (missing body)".to_string()))?;
+        let mut body = self.lower_body(body_stmt, depth + 1)?;
+        if let Some(u) = update_stmt {
+            body.stmts.push(u);
+        }
+        self.observed.add(Feature::Loops);
+
+        let while_stmt = Stmt::While {
+            cond,
+            body,
+            span: span.clone(),
+        };
+        let mut outer_stmts = Vec::new();
+        if let Some(i) = init_stmt {
+            outer_stmts.push(i);
+        }
+        outer_stmts.push(while_stmt);
+        Ok(Stmt::ExprStmt {
+            expr: Expr::Block(Box::new(Block {
+                stmts: outer_stmts,
+                value: Expr::NilLit { span: span.clone() },
+                span: span.clone(),
+            })),
+            span,
+        })
+    }
+
+    /// `for_init = {annotation} [final] local_var_type
+    /// variable_declarators | [expression_list] ;` — the empty
+    /// alternative (`for (;;)`) is `for_init` with zero children; the
+    /// bare-expression alternative (`for (i = 0; ...)`, no declaration)
+    /// wraps its `expression_list` directly (no `local_var_type`
+    /// sibling); the declaration alternative has `local_var_type` and
+    /// `variable_declarators` as direct children, structurally identical
+    /// to `local_variable_declaration_statement`'s own pair minus the
+    /// wrapping node and trailing `SEMICOLON` — `lower_variable_declarator`
+    /// (shared with `lower_local_var_decl`) handles the actual lowering
+    /// either way.
+    fn lower_for_init(
+        &mut self,
+        for_init: &GrammarASTNode,
+    ) -> Result<Option<Stmt>, JavaLowerError> {
+        if for_init.children.is_empty() {
+            return Ok(None);
+        }
+        if let Some(lvt) = self.first_child_named(for_init, "local_var_type") {
+            let declared_kind = self.declared_kind_of_local_var_type(lvt)?;
+            let declarators = self
+                .first_child_named(for_init, "variable_declarators")
+                .ok_or_else(|| {
+                    self.err_at(
+                        for_init,
+                        "malformed `for` init (missing declarators)".to_string(),
+                    )
+                })?;
+            let declarator = self.single_variable_declarator(declarators)?;
+            return self
+                .lower_variable_declarator(declared_kind, declarator, for_init)
+                .map(Some);
+        }
+        if let Some(expr_list) = self.first_child_named(for_init, "expression_list") {
+            let expr = self.single_expression_in_list(expr_list)?;
+            return self.lower_expr_statement(expr).map(Some);
+        }
+        Err(self.err_at(for_init, "malformed `for` init".to_string()))
+    }
+
+    /// `for_update = expression_list ;`. Reuses `lower_expr_statement` —
+    /// each item is an ordinary `expression` node, structurally identical
+    /// to an expression-statement's own child, so the same assignment/
+    /// compound-assignment/increment-decrement handling applies unchanged.
+    fn lower_for_update(&mut self, for_update: &GrammarASTNode) -> Result<Stmt, JavaLowerError> {
+        let expr_list = self
+            .first_child_named(for_update, "expression_list")
+            .ok_or_else(|| {
+                self.err_at(
+                    for_update,
+                    "malformed `for` update (missing expression list)".to_string(),
+                )
+            })?;
+        let expr = self.single_expression_in_list(expr_list)?;
+        self.lower_expr_statement(expr)
+    }
+
+    /// `expression_list = expression { COMMA expression } ;` — M2b
+    /// supports exactly one expression per `for` init/update clause
+    /// (`for (int i = 0, j = 0; ...)`-style multi-clause forms are
+    /// deferred, mirroring `lower_local_var_decl`'s own single-declarator
+    /// restriction).
+    fn single_expression_in_list<'a>(
+        &self,
+        expr_list: &'a GrammarASTNode,
+    ) -> Result<&'a GrammarASTNode, JavaLowerError> {
+        let exprs: Vec<&GrammarASTNode> = child_nodes(expr_list)
+            .into_iter()
+            .filter(|n| n.rule_name == "expression")
+            .collect();
+        match exprs.as_slice() {
+            [only] => Ok(only),
+            _ => Err(self.err_at(
+                expr_list,
+                "multiple comma-separated expressions in one `for` clause are not supported yet (deferred; use only one)".to_string(),
+            )),
+        }
+    }
+
+    /// `enhanced_for_statement = "for" LPAREN {annotation} [final]
+    /// local_var_type NAME COLON expression RPAREN statement ;` → lowers
+    /// directly to `Stmt::ForEach` (no desugaring needed — SIR already has
+    /// exactly this shape). `var` is rejected: M1/M2 have no array/
+    /// collection `Kind` or construction syntax at all yet (that's JV02
+    /// M4), so there is no way to infer the loop variable's element type
+    /// from the iterable expression the way real Java type inference
+    /// would — an explicit element type is required for now.
+    fn lower_enhanced_for_statement(
+        &mut self,
+        node: &GrammarASTNode,
+        depth: usize,
+    ) -> Result<Stmt, JavaLowerError> {
+        let span = self.span_of(node);
+        let lvt = self
+            .first_child_named(node, "local_var_type")
+            .ok_or_else(|| {
+                self.err_at(node, "malformed enhanced `for` (missing type)".to_string())
+            })?;
+        let declared_kind = self.declared_kind_of_local_var_type(lvt)?;
+        let var_kind = declared_kind.ok_or_else(|| {
+            self.err_at(
+                node,
+                "`var` in an enhanced `for` is not supported yet (deferred; the element type can't be inferred without array/collection support)".to_string(),
+            )
+        })?;
+        let var_name_tok = node
+            .children
+            .iter()
+            .find_map(|c| match c {
+                ASTNodeOrToken::Token(t) if t.type_ == lexer::token::TokenType::Name => Some(t),
+                _ => None,
+            })
+            .ok_or_else(|| {
+                self.err_at(
+                    node,
+                    "malformed enhanced `for` (missing loop variable name)".to_string(),
+                )
+            })?;
+        let var_name = var_name_tok.value.clone();
+        let iter_node = self.first_child_named(node, "expression").ok_or_else(|| {
+            self.err_at(
+                node,
+                "malformed enhanced `for` (missing iterable expression)".to_string(),
+            )
+        })?;
+        let (iter, _iter_kind) = self.lower_expr(iter_node, 0)?;
+        let body_stmt = self.first_child_named(node, "statement").ok_or_else(|| {
+            self.err_at(node, "malformed enhanced `for` (missing body)".to_string())
+        })?;
+
+        self.push_scope();
+        self.declare_local(var_name.clone(), var_kind);
+        let body = self.lower_body(body_stmt, depth + 1);
+        self.pop_scope();
+        let body = body?;
+
+        self.observed.add(Feature::Loops);
+        Ok(Stmt::ForEach {
+            var: var_name,
+            iter,
+            body,
+            span,
+        })
+    }
+
     fn lower_var_declaration_node(
         &mut self,
         var_decl: &GrammarASTNode,
@@ -797,7 +1072,6 @@ impl Lowerer {
                 )
             })?;
         let declared_kind = self.declared_kind_of_local_var_type(lvt)?;
-
         let declarators = self
             .first_child_named(lvds, "variable_declarators")
             .ok_or_else(|| {
@@ -806,18 +1080,46 @@ impl Lowerer {
                     "malformed local variable declaration (missing declarators)".to_string(),
                 )
             })?;
+        let declarator = self.single_variable_declarator(declarators)?;
+        self.lower_variable_declarator(declared_kind, declarator, lvds)
+    }
+
+    /// Extract the single `variable_declarator` from a `variable_declarators`
+    /// node, rejecting the (deferred) multi-declarator case with a clear
+    /// error. Shared by `lower_local_var_decl` and the classic `for`
+    /// loop's own declaration-form init clause (`lower_for_init`), whose
+    /// `variable_declarators` node has the identical shape either way.
+    fn single_variable_declarator<'a>(
+        &self,
+        declarators: &'a GrammarASTNode,
+    ) -> Result<&'a GrammarASTNode, JavaLowerError> {
         let decls: Vec<&GrammarASTNode> = child_nodes(declarators)
             .into_iter()
             .filter(|n| n.rule_name == "variable_declarator")
             .collect();
-        let declarator = match decls.as_slice() {
-            [only] => *only,
-            _ => return Err(self.err_at(
+        match decls.as_slice() {
+            [only] => Ok(only),
+            _ => Err(self.err_at(
                 declarators,
                 "multiple variable declarators in one statement are not supported yet (deferred; declare each variable in its own statement)".to_string(),
             )),
-        };
+        }
+    }
 
+    /// Lower one `variable_declarator` (`NAME {LBRACKET RBRACKET} [EQUALS
+    /// variable_initializer]`) given its already-resolved declared kind
+    /// (`None` for `var`) into a `Stmt::LetStarBinding`, declaring the
+    /// name in the current innermost scope. `span_node` supplies the
+    /// emitted statement's span — the enclosing construct (a standalone
+    /// declaration statement, or a classic `for`'s own init clause),
+    /// since `variable_declarator` itself doesn't carry a span typical of
+    /// the whole declaration.
+    fn lower_variable_declarator(
+        &mut self,
+        declared_kind: Option<Kind>,
+        declarator: &GrammarASTNode,
+        span_node: &GrammarASTNode,
+    ) -> Result<Stmt, JavaLowerError> {
         let has_array_brackets = declarator
             .children
             .iter()
@@ -846,7 +1148,7 @@ impl Lowerer {
         let initializer = self.first_child_named(declarator, "variable_initializer").ok_or_else(|| {
             self.err_at(
                 declarator,
-                "uninitialized local variable declarations are not supported yet (JV02 M1 requires an initializer)".to_string(),
+                "uninitialized local variable declarations are not supported yet (an initializer is required)".to_string(),
             )
         })?;
         let init_expr_node = match initializer.children.as_slice() {
@@ -881,7 +1183,7 @@ impl Lowerer {
         // outside each other's scope — see that variant's own doc
         // comment), which would make every declaration but the first
         // reference an "unknown name" per `semantic_ir::validate()`.
-        let span = self.span_of(lvds);
+        let span = self.span_of(span_node);
         Ok(Stmt::LetStarBinding {
             name,
             sir_type: None,
