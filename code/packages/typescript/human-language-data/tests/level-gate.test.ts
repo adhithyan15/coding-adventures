@@ -72,34 +72,44 @@ describe("the gate that would have caught the A2 claim", () => {
   it("names which criterion failed and by how much, not just that one did", () => {
     const gate = realReport().levelGate!;
     const spanish = gate.tracks.find((t) => t.language === "spanish")!;
-    const vocab = spanish.blockers.find((b) => b.criterion === "vocabulary")!;
 
-    // A bare `false` would move the argument rather than settle it.
-    expect(vocab.detail).toContain(String(LEVEL_VOCABULARY["pre-A1"]));
-    // This used to assert Spanish also carried a `reinforcement` blocker. It no
-    // longer does: the pre-A1 reinforcement tranche closed all 24 of its
-    // under-reinforced atoms, and Spanish is now the only track in the corpus with
-    // criterion 4 clean. Pinning WHICH criteria are open would make this test a
-    // ledger of unfinished work that every closing tranche has to edit, so what is
-    // asserted instead is the property the test is named for: every blocker names
-    // its criterion AND quantifies it.
+    // This used to reach for Spanish's `vocabulary` blocker and assert its
+    // shortfall. Spanish no longer HAS one. Chapters 328-334 carried the track
+    // from 269 to 304 distinct headwords taught at or below pre-A1, past the
+    // 300-word floor, and closed the criterion outright — so the assertions that
+    // read `vocab.detail` and `vocab.shortfall` now describe a blocker that is
+    // not there, and have been replaced by the closure itself.
+    expect(spanish.blockers.map((b) => b.criterion)).not.toContain("vocabulary");
+    // Something must still be open, or the loop below asserts over nothing and
+    // the test passes vacuously. Criterion 4 re-opened when this tranche landed:
+    // 35 new pre-A1 atoms arrived and the last few have not been revisited twice
+    // yet, which is the reinforcement tail that follows every vocabulary wave.
+    expect(spanish.blockers.length).toBeGreaterThan(0);
+    // This once asserted a `reinforcement` blocker, then asserted its absence
+    // after the reinforcement tranche closed all 24 under-reinforced atoms, and
+    // now it would have to assert its presence again — criterion 4 re-opens
+    // every time a vocabulary wave lands and closes as the new atoms get their
+    // second outing. That churn is the argument: pinning WHICH criteria are open
+    // makes this test a ledger of unfinished work that every tranche has to
+    // edit. What is asserted instead is the property the test is named for —
+    // every blocker names its criterion AND quantifies it.
     for (const blocker of spanish.blockers) {
       expect(blocker.detail.trim()).not.toBe("");
       expect(blocker.shortfall).toBeGreaterThan(0);
     }
 
     // The criterion counts vocabulary AT OR BELOW the level, not the whole track.
-    // Spanish teaches 135 headwords in total but only 46 at or below pre-A1, so the
-    // shortfall is 254. Measuring the whole track against a per-level target
-    // was the first version of this module committing the very error it exists to
-    // catch — a number meaning "everything taught" published against one meaning
-    // "by the end of pre-A1".
-    expect(vocab.shortfall).toBeLessThanOrEqual(131); // spanish pre-A1 survival tranche: +15 lessons, +3 chapters (chapters 303-305) -- 154/300 to 169/300, a drop of exactly the lesson count // -1: quien now has its own pre-A1 voice-first lesson // -2 more: the repair kit adds two pre-A1 headwords // +1: HL-C98 // spanish pre-A1 tranche: +35 lessons, +7 chapters (chapters 282-288) // spanish pre-A1 round 2: +35 lessons, +7 chapters (chapters 289-295) // spanish pre-A1 round 3: +35 lessons, +7 chapters (chapters 296-302) -- 118/300 to 153/300, a drop of exactly the lesson count // FLOOR — content only grows; exact pins serialize parallel tranches
+    // Measuring the whole track against a per-level target was the first version
+    // of this module committing the very error it exists to catch — a number
+    // meaning "everything taught" published against one meaning "by the end of
+    // pre-A1". That distinction is what the closure above rests on: the track
+    // teaches 482 headwords in total, and it is the 304 taught at or below
+    // pre-A1 that cleared the 300-word floor. The shortfall CEILING that stood
+    // here is retired along with the blocker it measured — git holds its history.
     // Chapter 16 reclassifies two paradigm bundles as grammar and adds ver;
     // Chapter 17 correctly reclassifies its two tense bundles as grammar.
     // Chapter 18 likewise replaces two word/phrase bundles with typed grammar.
     expect(spanish.vocabulary).toBeGreaterThanOrEqual(347); // spanish pre-A1 survival tranche: +15, and exactly +15 -- an earlier draft moved this only +12 because cansado, mal and como-se-dice already existed elsewhere in the track; they were replaced with tranquilo, triste and que-significa rather than shipped as duplicates // +2 more: the repair kit // -1: HL-C98 retires the bundled AR-PRESENT-SINGULAR headword // HL-C152: +5 lessons, +1 chapter — Spanish realizes SPINE-NEGATE-AND-ASK, completing A2 at 5/5 // HL-C157: ayer + hablare close A2 // HL-C158: +4 -- the B1 travel rung (chapter 268) // HL-C159: +4 -- the B1 describe-experience rung (chapter 269) // HL-C160: +1 -- depende closes SPINE-EXPRESS-CONDITION, and B1 // HL-C172: +4 -- the B2 argue rung (chapter 270) // HL-C173: +2 -- B2 closes (chapter 271) // HL-C175: +5 -- chapter 272, reading between the lines // HL-C177: +5 -- chapter 273, C1 closes // HL-C178: +5 -- chapter 274, C2 opens // HL-C179: +5 -- chapter 275, fine shades // HL-C180: +4 -- chapter 276; ARCHAIC-FORM was already taught at chapter 3 // HL-C181: +5 -- chapter 277, the spine closes at 33/33 // HL-C194: +16 Spanish pre-A1 words // spanish pre-A1 tranche: +35 lessons, +7 chapters (chapters 282-288) // spanish pre-A1 round 2: +35 lessons, +7 chapters (chapters 289-295) // spanish pre-A1 round 3: +35 lessons, +7 chapters (chapters 296-302) // FLOOR — content only grows; exact pins serialize parallel tranches
-    expect(vocab.shortfall).toBeGreaterThan(LEVEL_VOCABULARY["pre-A1"] - spanish.vocabulary);
   });
 
   it("scopes the atom budget to the level, so a high lesson cannot block a low one", () => {
