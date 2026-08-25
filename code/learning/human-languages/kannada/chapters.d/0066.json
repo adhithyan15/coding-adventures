@@ -1,0 +1,21 @@
+{
+  "chapter": 66,
+  "title": "The Field",
+  "label": "ch:ka-field",
+  "canDo": "I can name a Kannada field and its crop, and take my leave of the village that grew it.",
+  "spineNodes": [
+    "SPINE-TAKE-LEAVE"
+  ],
+  "payoff": {
+    "lesson": "KA-C66-harvest",
+    "kind": "production",
+    "summary": "Complete KA-C66-harvest and say all five words in order.",
+    "assesses": [
+      "KA-LEX-C66-FIELD-01",
+      "KA-LEX-C66-FIELD-02",
+      "KA-LEX-C66-FIELD-03",
+      "KA-LEX-C66-FIELD-04",
+      "KA-LEX-C66-FIELD-05"
+    ]
+  }
+}

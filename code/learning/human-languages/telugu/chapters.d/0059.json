@@ -1,0 +1,21 @@
+{
+  "chapter": 59,
+  "title": "Weather and Ground",
+  "label": "ch:te-weather-ground",
+  "canDo": "I can name the weather and what is underfoot in Telugu, and use it as a reason to go home.",
+  "spineNodes": [
+    "SPINE-TAKE-LEAVE"
+  ],
+  "payoff": {
+    "lesson": "TE-C59-fire",
+    "kind": "production",
+    "summary": "Complete TE-C59-fire and demonstrate the chapter promise.",
+    "assesses": [
+      "TE-LEX-C59-WEATHER-01",
+      "TE-LEX-C59-WEATHER-02",
+      "TE-LEX-C59-WEATHER-03",
+      "TE-LEX-C59-WEATHER-04",
+      "TE-LEX-C59-WEATHER-05"
+    ]
+  }
+}

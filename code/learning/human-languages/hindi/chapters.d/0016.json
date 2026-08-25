@@ -1,0 +1,18 @@
+{
+  "chapter": 16,
+  "title": "Months",
+  "label": "ch:hi-months",
+  "canDo": "I can name the twelve months in Hindi and explain why the festivals move against the Gregorian calendar.",
+  "spineNodes": [
+    "SPINE-TIME-OF-DAY"
+  ],
+  "payoff": {
+    "lesson": "HI-C16-mahine",
+    "kind": "production",
+    "summary": "Say जनवरी through दिसंबर, then name Chaitra and Vaiśākh and explain that the festivals are dated by Vikram Samvat instead.",
+    "assesses": [
+      "HI-CONCEPT-C16-MAHINE-01",
+      "HI-CONCEPT-C16-MAHINE-02"
+    ]
+  }
+}

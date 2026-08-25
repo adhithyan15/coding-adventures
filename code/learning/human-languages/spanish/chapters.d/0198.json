@@ -1,0 +1,17 @@
+{
+  "chapter": 198,
+  "title": "Synthesis --- Real Conditions",
+  "label": "ch:sintesis-condicion",
+  "canDo": "I can say what happens, or will happen, if something else does.",
+  "spineNodes": [
+    "SPINE-ASK-LOCATION"
+  ],
+  "payoff": {
+    "lesson": "ES-C55-sintesis-condicion",
+    "kind": "task",
+    "summary": "I can say what happens, or will happen, if something else does.",
+    "assesses": [
+      "ES-GRAMMAR-SI-REAL-CONDITION"
+    ]
+  }
+}

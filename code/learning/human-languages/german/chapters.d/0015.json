@@ -1,0 +1,16 @@
+{
+  "chapter": 15,
+  "title": "The Two Past Tenses",
+  "label": "ch:perfekt",
+  "canDo": "I can build the chapter's conversational past tense in German and say what happened.",
+  "spineNodes": [
+    "SPINE-TALK-ABOUT-PAST"
+  ],
+  "payoff": {
+    "lesson": "GE-C15-praeteritum-map",
+    "kind": "task",
+    "summary": "Complete GE-C15-praeteritum-map, the canonical closing checkpoint, and demonstrate the chapter promise: build the chapter's conversational past tense in German and say what happened.",
+    "assesses": [],
+    "note": "This legacy schema-v1 chapter has no typed knowledge atoms yet. The payoff is anchored to real canonical lesson content, but its representativeness remains authored rather than atom-scored until migration."
+  }
+}

@@ -1,0 +1,21 @@
+{
+  "chapter": 44,
+  "title": "Things You Ask For",
+  "label": "ch:ta-things-you-ask-for",
+  "canDo": "I can name five everyday things I might ask somebody for in Tamil, and say which of them Tamil has held all along and which arrived from elsewhere.",
+  "spineNodes": [
+    "SPINE-POLITE-REQUEST-REPAIR"
+  ],
+  "payoff": {
+    "lesson": "TA-C44-book",
+    "kind": "production",
+    "summary": "Complete TA-C44-book and say all five words in order.",
+    "assesses": [
+      "TA-LEX-C44-ASK-01",
+      "TA-LEX-C44-ASK-02",
+      "TA-LEX-C44-ASK-03",
+      "TA-LEX-C44-ASK-04",
+      "TA-LEX-C44-ASK-05"
+    ]
+  }
+}

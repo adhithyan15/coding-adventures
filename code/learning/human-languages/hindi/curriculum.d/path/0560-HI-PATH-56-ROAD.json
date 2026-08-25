@@ -1,0 +1,16 @@
+{
+  "id": "HI-PATH-56-ROAD",
+  "spine_node": "SPINE-TAKE-LEAVE",
+  "lessons": [
+    "HI-C56-road",
+    "HI-C56-village",
+    "HI-C56-market",
+    "HI-C56-shop",
+    "HI-C56-field"
+  ],
+  "before": [],
+  "inline": [
+    "HI-EXT-56-ROAD"
+  ],
+  "after": []
+}

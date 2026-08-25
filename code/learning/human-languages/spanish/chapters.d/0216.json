@@ -1,0 +1,17 @@
+{
+  "chapter": 216,
+  "title": "Review --- Three Joints, Two Constants",
+  "label": "ch:repaso-reportar",
+  "canDo": "I can choose the right joint for anything I am reporting.",
+  "spineNodes": [
+    "SPINE-REPORT-WHAT-OTHERS-SAID"
+  ],
+  "payoff": {
+    "lesson": "ES-C57-repaso-reportar",
+    "kind": "task",
+    "summary": "I can choose the right joint for anything I am reporting.",
+    "assesses": [
+      "ES-GRAMMAR-REPORTED-WH-ACCENT"
+    ]
+  }
+}

@@ -1,0 +1,12 @@
+{
+  "id": "AR-PATH-023",
+  "spine_node": "SPINE-COURTESY-THANK",
+  "lessons": [
+    "AR-C23-afwan"
+  ],
+  "before": [],
+  "inline": [
+    "AR-EXT-023-LANGUAGE-SPECIFIC"
+  ],
+  "after": []
+}

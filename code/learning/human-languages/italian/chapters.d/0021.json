@@ -1,0 +1,35 @@
+{
+  "chapter": 21,
+  "title": "Two Ways to Play, and Two Verbs That Bend",
+  "label": "ch:it-play-get-answer",
+  "canDo": "I can tell apart the two Italian verbs English calls play — giocare for a game, suonare for an instrument — say that I obtain something and that I answer someone, and explain the silent h of giochi and the doubled tt of ottenere.",
+  "spineNodes": [
+    "SPINE-SAY-WHAT-I-DO"
+  ],
+  "payoff": {
+    "lesson": "IT-C21-rispondere",
+    "kind": "production",
+    "summary": "The chapter's last lesson gathers gioco, suono, ottengo and rispondo, then reads risposto against preso: prehēnsum lost its n and gave preso, so respōnsum ought to have given risposo, and instead the verb joins the small -sto band with chiedere's chiesto — Chapter 17's rule that an irregular form is a regular one from a system you can no longer see.",
+    "assesses": [
+      "IT-LEX-GIOCARE-02",
+      "IT-ETYMON-GIOCARE-03",
+      "IT-GRAMMAR-GIOCARE-04",
+      "IT-LEX-OTTENERE-02",
+      "IT-ETYMON-OTTENERE-03",
+      "IT-GRAMMAR-OTTENERE-04",
+      "IT-LEX-RISPONDERE-02",
+      "IT-ETYMON-RISPONDERE-03",
+      "IT-NOTICE-RISPONDERE-04",
+      "IT-ETYMON-PRENDERE-03",
+      "IT-GRAMMAR-PRENDERE-04",
+      "IT-GRAMMAR-CHIEDERE-04",
+      "IT-ETYMON-CHIEDERE-03",
+      "IT-GRAMMAR-MANO-03",
+      "IT-LEX-PASSATO-REMOTO-02",
+      "IT-PRAGMATICS-PASSATO-REMOTO-04",
+      "IT-NOTICE-PASSATO-REMOTO-05",
+      "IT-NOTICE-MI-PIACE-04",
+      "IT-LEX-ASPETTARE-02"
+    ]
+  }
+}

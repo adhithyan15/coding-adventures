@@ -1,0 +1,20 @@
+{
+  "chapter": 185,
+  "title": "Synthesis --- Reading the Window",
+  "label": "ch:synthesis-se",
+  "canDo": "I can read impersonal signs and ask my way past the words I do not have.",
+  "spineNodes": [
+    "SPINE-GIVE-REASONS"
+  ],
+  "payoff": {
+    "lesson": "ES-C52-sintesis-el-letrero",
+    "kind": "task",
+    "summary": "Complete ES-C52-sintesis-el-letrero: read the signs, ask for an unknown word, and say what the missing person buys a notice.",
+    "assesses": [
+      "ES-GRAMMAR-SE-IMPERSONAL",
+      "ES-GRAMMAR-SE-PASSIVE-AGREEMENT",
+      "ES-LEX-COMO-SE-DICE"
+    ],
+    "note": "This construction is written at the reader rather than spoken to them, so the skill is reading it off the world -- and the missing person is what gives a sign its authority."
+  }
+}

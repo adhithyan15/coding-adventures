@@ -1,0 +1,20 @@
+{
+  "chapter": 115,
+  "title": "Synthesis --- A Small Story",
+  "label": "ch:synthesis-story",
+  "canDo": "I can narrate four sentences using both past tenses, with a background and a foreground.",
+  "spineNodes": [
+    "SPINE-TALK-ABOUT-PAST"
+  ],
+  "payoff": {
+    "lesson": "ES-C48-sintesis-una-historia",
+    "kind": "task",
+    "summary": "Complete ES-C48-sintesis-una-historia: identify the two layers of the story and say why tuve belongs to the foreground.",
+    "assesses": [
+      "ES-GRAMMAR-BACKDROP-AND-EVENT",
+      "ES-GRAMMAR-ASPECT-CHANGES-MEANING",
+      "ES-LEX-CUANDO"
+    ],
+    "note": "First narration in the book. The same verb appears in both layers doing different jobs, and nothing about it is irregular."
+  }
+}

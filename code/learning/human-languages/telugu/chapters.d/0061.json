@@ -1,0 +1,21 @@
+{
+  "chapter": 61,
+  "title": "In the Kitchen",
+  "label": "ch:te-kitchen",
+  "canDo": "I can name five everyday things in a Telugu kitchen, and swap names with the person cooking.",
+  "spineNodes": [
+    "SPINE-EXCHANGE-NAMES"
+  ],
+  "payoff": {
+    "lesson": "TE-C61-chilli",
+    "kind": "production",
+    "summary": "Complete TE-C61-chilli and demonstrate the chapter promise.",
+    "assesses": [
+      "TE-LEX-C61-KITCHEN-01",
+      "TE-LEX-C61-KITCHEN-02",
+      "TE-LEX-C61-KITCHEN-03",
+      "TE-LEX-C61-KITCHEN-04",
+      "TE-LEX-C61-KITCHEN-05"
+    ]
+  }
+}

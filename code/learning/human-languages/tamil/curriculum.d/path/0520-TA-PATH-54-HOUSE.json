@@ -1,0 +1,16 @@
+{
+  "id": "TA-PATH-54-HOUSE",
+  "spine_node": "SPINE-COURTESY-THANK",
+  "lessons": [
+    "TA-C54-mat",
+    "TA-C54-basket",
+    "TA-C54-knife",
+    "TA-C54-bowl",
+    "TA-C54-box"
+  ],
+  "before": [],
+  "inline": [
+    "TA-EXT-54-HOUSE"
+  ],
+  "after": []
+}

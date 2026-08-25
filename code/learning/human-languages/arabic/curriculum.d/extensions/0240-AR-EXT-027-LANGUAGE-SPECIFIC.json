@@ -1,0 +1,16 @@
+{
+  "id": "AR-EXT-027-LANGUAGE-SPECIFIC",
+  "stage": "A2",
+  "kind": "required",
+  "category": "language-specific",
+  "canDo": "I can say six core Arabic verbs in their dictionary form and take each one apart into its three-consonant root.",
+  "prerequisites": [],
+  "lessons": [
+    "AR-C28-dhahaba",
+    "AR-C28-jaa",
+    "AR-C29-qala",
+    "AR-C29-raa",
+    "AR-C30-arafa",
+    "AR-C30-akala"
+  ]
+}

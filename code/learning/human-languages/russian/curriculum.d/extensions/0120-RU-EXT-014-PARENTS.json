@@ -1,0 +1,14 @@
+{
+  "id": "RU-EXT-014-PARENTS",
+  "stage": "pre-A1",
+  "kind": "required",
+  "category": "language-specific",
+  "canDo": "I can name my mother and father in Russian, in both the affectionate and the formal register, and say which one is a real cousin of the English word and which is not.",
+  "prerequisites": [],
+  "lessons": [
+    "RU-C12-mama",
+    "RU-C12-papa",
+    "RU-C12-mat",
+    "RU-C12-otets"
+  ]
+}

@@ -1,0 +1,15 @@
+{
+  "id": "TA-PATH-43-KIN",
+  "spine_node": "SPINE-DEFINITE-REFERENCE",
+  "lessons": [
+    "TA-C43-child",
+    "TA-C43-son",
+    "TA-C43-daughter",
+    "TA-C43-family"
+  ],
+  "before": [],
+  "inline": [
+    "TA-EXT-43-KIN"
+  ],
+  "after": []
+}

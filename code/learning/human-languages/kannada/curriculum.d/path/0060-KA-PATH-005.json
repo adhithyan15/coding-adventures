@@ -1,0 +1,10 @@
+{
+  "id": "KA-PATH-005",
+  "spine_node": "SPINE-CHECK-WELLBEING",
+  "lessons": [
+    "KA-C03-hege"
+  ],
+  "before": [],
+  "inline": [],
+  "after": []
+}

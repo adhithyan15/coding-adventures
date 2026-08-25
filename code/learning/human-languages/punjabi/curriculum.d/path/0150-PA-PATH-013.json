@@ -1,0 +1,15 @@
+{
+  "id": "PA-PATH-013",
+  "spine_node": "SPINE-SAY-WHAT-I-DO",
+  "lessons": [
+    "PA-C09-laina",
+    "PA-C09-puchhna",
+    "PA-C09-madad-karna",
+    "PA-C09-pasand"
+  ],
+  "before": [],
+  "inline": [
+    "PA-EXT-013-DOING-VERBS"
+  ],
+  "after": []
+}

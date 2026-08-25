@@ -1,0 +1,15 @@
+{
+  "id": "PT-PATH-019",
+  "spine_node": "SPINE-EXCHANGE-NAMES",
+  "lessons": [
+    "PT-C14-ter",
+    "PT-C14-idade",
+    "PT-C15-preterito-perfeito",
+    "PT-C15-tenho-falado"
+  ],
+  "before": [],
+  "inline": [
+    "PT-EXT-019-LANGUAGE-SPECIFIC"
+  ],
+  "after": []
+}

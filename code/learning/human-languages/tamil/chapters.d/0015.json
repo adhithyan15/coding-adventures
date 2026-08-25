@@ -1,0 +1,20 @@
+{
+  "chapter": 15,
+  "title": "Water and Rice",
+  "label": "ch:ta-water-and-rice",
+  "canDo": "I can ask for water and keep raw அரிசி apart from cooked சாதம், and state how far the arisi-to-\"rice\" claim can honestly be pushed.",
+  "spineNodes": [
+    "SPINE-POLITE-REQUEST-REPAIR"
+  ],
+  "payoff": {
+    "lesson": "TA-C15-thanneer-arisi",
+    "kind": "production",
+    "summary": "Assemble taṇ plus nīr into taṇṇīr, switch between arisi and sātam by whether it is cooked, and label the English \"rice\" link as contested.",
+    "assesses": [
+      "TA-LEX-KAALANGAL-01",
+      "TA-LEX-THANNEER-ARISI-01",
+      "TA-LEX-THANNEER-ARISI-02",
+      "TA-PRAGMATICS-THANNEER-ARISI-03"
+    ]
+  }
+}

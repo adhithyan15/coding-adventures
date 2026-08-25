@@ -1,0 +1,17 @@
+{
+  "chapter": 38,
+  "title": "Hablamos --- the First Form That Is Not About One Person",
+  "label": "ch:spanish-hablamos",
+  "canDo": "I can say what we do, with the -amos ending.",
+  "spineNodes": [
+    "SPINE-ASK-LOCATION"
+  ],
+  "payoff": {
+    "lesson": "ES-C07-hablamos",
+    "kind": "task",
+    "summary": "-mos is Latin's -mus, barely changed in two thousand years.",
+    "assesses": [
+      "ES-GRAMMAR-AR-PRESENT-1PL"
+    ]
+  }
+}

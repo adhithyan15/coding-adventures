@@ -1,0 +1,20 @@
+{
+  "chapter": 8,
+  "title": "Head and Hand",
+  "label": "ch:la-head-and-hand",
+  "canDo": "I can say head and hand in Latin, and explain why manus is feminine when its declension usually is not.",
+  "spineNodes": [
+    "SPINE-CHECK-WELLBEING"
+  ],
+  "payoff": {
+    "lesson": "LA-C08-manus",
+    "kind": "production",
+    "summary": "Say caput and manus with the correct gender, then list the manus words English still runs on.",
+    "assesses": [
+      "LA-ETYMON-CAPUT-01",
+      "LA-PRAGMATICS-CAPUT-02",
+      "LA-ETYMON-MANUS-01",
+      "LA-ETYMON-MANUS-02"
+    ]
+  }
+}

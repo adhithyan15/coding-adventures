@@ -1,0 +1,14 @@
+{
+  "id": "RU-EXT-015-MORE-FOOD-DRINK",
+  "stage": "pre-A1",
+  "kind": "required",
+  "category": "language-specific",
+  "canDo": "I can name milk, cheese, juice and soup in Russian with their genders, ask for any of them politely, and say which are inherited and which are borrowed.",
+  "prerequisites": [],
+  "lessons": [
+    "RU-C13-moloko",
+    "RU-C13-syr",
+    "RU-C13-sok",
+    "RU-C13-sup"
+  ]
+}

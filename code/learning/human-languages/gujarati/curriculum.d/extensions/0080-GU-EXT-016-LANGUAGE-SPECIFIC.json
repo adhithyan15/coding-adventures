@@ -1,0 +1,15 @@
+{
+  "id": "GU-EXT-016-LANGUAGE-SPECIFIC",
+  "stage": "pre-A1",
+  "kind": "required",
+  "category": "language-specific",
+  "canDo": "I can use the Gujarati-specific vocabulary and grammar that support this shared ability.",
+  "prerequisites": [],
+  "lessons": [
+    "GU-C05-bolvun",
+    "GU-C05-hun-gujarati-bolun-chhun",
+    "GU-C05-kaam-karvun",
+    "GU-C05-rahevun",
+    "GU-C05-practice"
+  ]
+}

@@ -1,0 +1,17 @@
+{
+  "chapter": 238,
+  "title": "Estoy Hablando --- The Payoff",
+  "label": "ch:estoy-hablando",
+  "canDo": "I can say what I am doing right now.",
+  "spineNodes": [
+    "SPINE-DEFINITE-REFERENCE"
+  ],
+  "payoff": {
+    "lesson": "ES-C62-estoy-hablando",
+    "kind": "task",
+    "summary": "I can say what I am doing right now.",
+    "assesses": [
+      "ES-GRAMMAR-PROGRESSIVE-ESTAR-GERUND"
+    ]
+  }
+}

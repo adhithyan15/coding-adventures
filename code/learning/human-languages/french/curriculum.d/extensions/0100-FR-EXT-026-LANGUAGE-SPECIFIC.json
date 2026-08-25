@@ -1,0 +1,14 @@
+{
+  "id": "FR-EXT-026-LANGUAGE-SPECIFIC",
+  "stage": "pre-A1",
+  "kind": "required",
+  "category": "language-specific",
+  "canDo": "I can introduce a friend, name my family, name a child and name any person, and use the article each one's gender requires, including where French elides le or la to l'.",
+  "prerequisites": [],
+  "lessons": [
+    "FR-C29-ami",
+    "FR-C29-famille",
+    "FR-C29-enfant",
+    "FR-C29-personne"
+  ]
+}

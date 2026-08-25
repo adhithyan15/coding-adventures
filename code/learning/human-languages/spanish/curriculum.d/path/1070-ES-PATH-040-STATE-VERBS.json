@@ -1,0 +1,12 @@
+{
+  "id": "ES-PATH-040-STATE-VERBS",
+  "spine_node": "SPINE-TALK-ABOUT-PAST",
+  "lessons": [
+    "ES-C48-tenia-tuve"
+  ],
+  "before": [],
+  "inline": [
+    "ES-EXT-040-STATE-VERBS"
+  ],
+  "after": []
+}

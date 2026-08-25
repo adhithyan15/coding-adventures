@@ -1,0 +1,15 @@
+{
+  "id": "ML-PATH-031",
+  "spine_node": "SPINE-CHECK-WELLBEING",
+  "lessons": [
+    "ML-C37-kannu",
+    "ML-C37-chevi",
+    "ML-C37-mookku",
+    "ML-C37-vaay"
+  ],
+  "before": [],
+  "inline": [
+    "ML-EXT-031-FACE-WORDS"
+  ],
+  "after": []
+}

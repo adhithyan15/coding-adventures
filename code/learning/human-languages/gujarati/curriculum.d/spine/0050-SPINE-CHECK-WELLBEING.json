@@ -1,0 +1,12 @@
+{
+  "segments": [
+    "GU-PATH-006",
+    "GU-PATH-015",
+    "GU-PATH-C3P"
+  ],
+  "omits": [
+    "WORD-GOOD",
+    "WORD-SOSO"
+  ],
+  "relocates": {}
+}

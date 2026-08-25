@@ -1,0 +1,10 @@
+{
+  "id": "RU-PATH-003",
+  "spine_node": "SPINE-POLITE-REQUEST-REPAIR",
+  "lessons": [
+    "RU-C01-pozhaluysta"
+  ],
+  "before": [],
+  "inline": [],
+  "after": []
+}

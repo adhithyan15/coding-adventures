@@ -1,0 +1,14 @@
+{
+  "id": "TE-EXT-45-FAMILY",
+  "stage": "pre-A1",
+  "kind": "required",
+  "category": "vocabulary",
+  "canDo": "I can name four family and people words.",
+  "prerequisites": [],
+  "lessons": [
+    "TE-C45-grandfather",
+    "TE-C45-grandmother",
+    "TE-C45-husband",
+    "TE-C45-wife"
+  ]
+}

@@ -1,0 +1,10 @@
+{
+  "segments": [
+    "BN-PATH-003"
+  ],
+  "omits": [
+    "RESPONSE-YES",
+    "RESPONSE-NO"
+  ],
+  "relocates": {}
+}

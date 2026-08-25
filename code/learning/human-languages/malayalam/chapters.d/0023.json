@@ -1,0 +1,17 @@
+{
+  "chapter": 23,
+  "title": "Day",
+  "label": "ch:ml-day",
+  "canDo": "I can use divasam for an everyday day in Malayalam and still recognise native nāḷ where it survives.",
+  "spineNodes": [
+    "SPINE-TIME-OF-DAY"
+  ],
+  "payoff": {
+    "lesson": "ML-C23-naal",
+    "kind": "task",
+    "summary": "Find nāḷ alive inside nāḷe, oru nāḷ and piṟannāḷ, and answer whether Sanskrit divasam erased it.",
+    "assesses": [
+      "ML-CONCEPT-C23-NAAL-01"
+    ]
+  }
+}

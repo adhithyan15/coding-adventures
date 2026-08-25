@@ -1,0 +1,16 @@
+{
+  "id": "KA-PATH-48-ROLE",
+  "spine_node": "SPINE-EXCHANGE-NAMES",
+  "lessons": [
+    "KA-C48-teacher",
+    "KA-C48-student",
+    "KA-C48-doctor",
+    "KA-C48-farmer",
+    "KA-C48-guest"
+  ],
+  "before": [],
+  "inline": [
+    "KA-EXT-48-ROLE"
+  ],
+  "after": []
+}

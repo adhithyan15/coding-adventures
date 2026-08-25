@@ -1,0 +1,12 @@
+{
+  "id": "ES-PATH-037-PARA",
+  "spine_node": "SPINE-GIVE-REASONS",
+  "lessons": [
+    "ES-C51-para"
+  ],
+  "before": [],
+  "inline": [
+    "ES-EXT-037-PARA"
+  ],
+  "after": []
+}

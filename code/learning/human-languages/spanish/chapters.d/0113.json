@@ -1,0 +1,20 @@
+{
+  "chapter": 113,
+  "title": "Tenia and Tuve --- When the Tense Changes the Meaning",
+  "label": "ch:aspect-changes-meaning",
+  "canDo": "I can say why tuve una casa means I got one, and predict what a state verb's preterite will mean.",
+  "spineNodes": [
+    "SPINE-TALK-ABOUT-PAST"
+  ],
+  "payoff": {
+    "lesson": "ES-C48-tenia-tuve",
+    "kind": "task",
+    "summary": "Complete ES-C48-tenia-tuve: contrast tenia and tuve, and say what any state verb's preterite will mean.",
+    "assesses": [
+      "ES-GRAMMAR-ASPECT-CHANGES-MEANING",
+      "ES-GRAMMAR-TENER-PRETERITE-SINGULAR",
+      "ES-GRAMMAR-ER-IMPERFECT-SINGULAR"
+    ],
+    "note": "Derives the meaning change from the aspect rule rather than listing it: a state forced to have edges gives you the moment it began."
+  }
+}

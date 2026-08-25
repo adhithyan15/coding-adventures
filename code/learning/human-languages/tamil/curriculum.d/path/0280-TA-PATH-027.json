@@ -1,0 +1,27 @@
+{
+  "id": "TA-PATH-027",
+  "spine_node": "SPINE-TIME-OF-DAY",
+  "lessons": [
+    "TA-C23-naal",
+    "TA-C23-day-family-register",
+    "TA-C24-iravu",
+    "TA-C24-night-register-darkness",
+    "TA-C25-iniya-iravu",
+    "TA-C25-goodnight-alternatives",
+    "TA-C26-kaalai",
+    "TA-C27-maalai",
+    "TA-C28-pirpakal",
+    "TA-C28-afternoon-boundary",
+    "TA-C29-kaalai-vanakkam",
+    "TA-C30-maalai-vanakkam",
+    "TA-C31-matiya-vanakkam",
+    "TA-C31-afternoon-greeting-root"
+  ],
+  "before": [],
+  "inline": [
+    "TA-EXT-027-REGISTER",
+    "TA-EXT-027-LANGUAGE-SPECIFIC",
+    "TA-EXT-027-ETYMOLOGY"
+  ],
+  "after": []
+}

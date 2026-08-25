@@ -1,0 +1,15 @@
+{
+  "id": "GE-PATH-034",
+  "spine_node": "SPINE-CHECK-WELLBEING",
+  "lessons": [
+    "GE-C31-arm",
+    "GE-C31-finger",
+    "GE-C31-fuss",
+    "GE-C31-herz"
+  ],
+  "before": [],
+  "inline": [
+    "GE-EXT-034-LANGUAGE-SPECIFIC"
+  ],
+  "after": []
+}

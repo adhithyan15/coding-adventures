@@ -1,0 +1,18 @@
+{
+  "chapter": 26,
+  "title": "Night",
+  "label": "ch:hi-night",
+  "canDo": "I can say night in Hindi and explain why रात and Latin's nox are not cousins at all.",
+  "spineNodes": [
+    "SPINE-TIME-OF-DAY"
+  ],
+  "payoff": {
+    "lesson": "HI-C26-raat",
+    "kind": "task",
+    "summary": "Trace rātri → ratti → raat, then state the honest twist: unlike दिन and diēs, रात and nox share no root.",
+    "assesses": [
+      "HI-CONCEPT-C26-RAAT-01",
+      "HI-CONCEPT-C26-RAAT-02"
+    ]
+  }
+}

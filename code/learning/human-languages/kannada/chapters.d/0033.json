@@ -1,0 +1,33 @@
+{
+  "chapter": 33,
+  "title": "Four Verbs of Mind and Page",
+  "label": "ch:ka-mind-verbs",
+  "canDo": "I can say I think, I understand, I read and I write in Kannada, name the suffix that turns a Sanskrit noun into a Kannada verb, use the ending that hands an action back to its doer, and give both of the front-of-the-word sound laws that separate Kannada from Tamil.",
+  "spineNodes": [
+    "SPINE-SAY-WHAT-I-DO"
+  ],
+  "payoff": {
+    "lesson": "KA-C33-bare",
+    "kind": "production",
+    "summary": "Say ನಾನು ಕನ್ನಡ ಬರೆಯುತ್ತೇನೆ, keep it apart from ಬರುತ್ತೇನೆ one vowel away, explain the glide a vowel-final stem needs, take bare back to the Dravidian line-drawing root behind Tamil வரை, set the v → b law beside the p → h law, and count this chapter’s four verbs onto Chapter 32’s six to reach hattu.",
+    "assesses": [
+      "KA-LEX-C33-BARE-01",
+      "KA-ETYMON-C33-BARE-02",
+      "KA-GRAMMAR-C33-BARE-03",
+      "KA-LEX-C33-OODU-01",
+      "KA-ETYMON-C33-OODU-02",
+      "KA-LEX-C33-ARTHA-MAADIKO-01",
+      "KA-GRAMMAR-C33-ARTHA-MAADIKO-02",
+      "KA-LEX-C33-YOCISU-01",
+      "KA-ETYMON-C33-YOCISU-02",
+      "KA-ETYMON-C33-YOCISU-03",
+      "KA-LEX-C32-BAA-01",
+      "KA-LEX-C32-TINNU-01",
+      "KA-GRAMMAR-C32-NOODU-02",
+      "KA-LEX-C07-NUMBERS-6-10-01",
+      "KA-ETYMON-C07-NUMBERS-6-10-02",
+      "KA-ETYMON-C22-HASIRU-HALADI-01",
+      "KA-LEX-C20-HAVAMANA-02"
+    ]
+  }
+}

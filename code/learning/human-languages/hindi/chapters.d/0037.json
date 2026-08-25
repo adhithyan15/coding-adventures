@@ -1,0 +1,36 @@
+{
+  "chapter": 37,
+  "title": "One Tea, Please",
+  "label": "ch:hi-one-tea-please",
+  "canDo": "I can ask for tea, milk, food or a book in the words Hindi speakers actually use rather than the dictionary's, I know that कृपया belongs on a sign and दीजिए in the street, and I can name which of the four nouns take मेरी.",
+  "spineNodes": [
+    "SPINE-POLITE-REQUEST-REPAIR"
+  ],
+  "payoff": {
+    "lesson": "HI-C37-kitaab",
+    "kind": "task",
+    "summary": "Ask for all four — एक चाय दीजिए, एक दूध दीजिए, खाना दीजिए, and the किताब that is मेरी — then unpack the Arabic root k-t-b into book, scribe and school, and place कृपया where it belongs, beside पुस्तक at the formal end of the language.",
+    "assesses": [
+      "HI-CONCEPT-C37-CHAI-01",
+      "HI-CONCEPT-C37-CHAI-02",
+      "HI-CONCEPT-C37-CHAI-03",
+      "HI-CONCEPT-C37-DUDH-01",
+      "HI-CONCEPT-C37-DUDH-02",
+      "HI-CONCEPT-C37-KHAANA-01",
+      "HI-CONCEPT-C37-KHAANA-02",
+      "HI-CONCEPT-C37-KITAAB-01",
+      "HI-CONCEPT-C37-KITAAB-02",
+      "HI-CONCEPT-C37-KITAAB-03",
+      "HI-CONCEPT-C36-KURSI-01",
+      "HI-CONCEPT-C36-KURSI-02",
+      "HI-CONCEPT-C36-KURSI-03",
+      "HI-CONCEPT-C08-KRIPAYA-01",
+      "HI-CONCEPT-C08-KRIPAYA-02",
+      "HI-CONCEPT-C09-MAAF-KIJIYE-02",
+      "HI-CONCEPT-W02-KA-TA-MOUTH-ORDER-01",
+      "HI-CONCEPT-W02-KA-TA-MOUTH-ORDER-02",
+      "HI-CONCEPT-W02-KA-TA-MOUTH-ORDER-03",
+      "HI-CONCEPT-W03-PREPOSED-I-01"
+    ]
+  }
+}

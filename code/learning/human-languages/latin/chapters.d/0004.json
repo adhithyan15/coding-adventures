@@ -1,0 +1,20 @@
+{
+  "chapter": 4,
+  "title": "Sorry",
+  "label": "ch:la-sorry",
+  "canDo": "I can apologise in Latin with ignōsce mihi, and use paenitet mē when I want to name the regret instead.",
+  "spineNodes": [
+    "SPINE-POLITE-REQUEST-REPAIR"
+  ],
+  "payoff": {
+    "lesson": "LA-C04-ignosce-mihi",
+    "kind": "dialogue",
+    "summary": "Apologise to someone's face with ignōsce mihi, then contrast it with paenitet mē, which names regret rather than asking pardon.",
+    "assesses": [
+      "LA-ETYMON-QUAESO-01",
+      "LA-PRAGMATICS-QUAESO-02",
+      "LA-ETYMON-IGNOSCE-MIHI-01",
+      "LA-PRAGMATICS-IGNOSCE-MIHI-02"
+    ]
+  }
+}

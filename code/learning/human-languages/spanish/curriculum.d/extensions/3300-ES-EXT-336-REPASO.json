@@ -1,0 +1,11 @@
+{
+  "id": "ES-EXT-336-REPASO",
+  "stage": "pre-A1",
+  "kind": "required",
+  "category": "review",
+  "canDo": "I can put those same six nouns inside a whole conversational turn of four words or fewer.",
+  "prerequisites": [],
+  "lessons": [
+    "ES-C336-repaso-seis-en-uso"
+  ]
+}

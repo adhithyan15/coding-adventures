@@ -1,0 +1,20 @@
+{
+  "chapter": 80,
+  "title": "-es --- The Plural Chapter One Promised",
+  "label": "ch:plural-es",
+  "canDo": "I can form the plural of a word ending in a consonant, and say why the extra vowel is there.",
+  "spineNodes": [
+    "SPINE-DEFINITE-REFERENCE"
+  ],
+  "payoff": {
+    "lesson": "ES-C44-plural-es",
+    "kind": "task",
+    "summary": "Complete ES-C44-plural-es: pluralise espanol, name the word that has carried this rule since long before the chapter, and say why -s alone will not do.",
+    "assesses": [
+      "ES-GRAMMAR-NOUN-PLURAL-ES",
+      "ES-LEX-USTEDES",
+      "ES-LEX-ESPANOL"
+    ],
+    "note": "Delivers a rule chapter one explicitly deferred. Anchored on ustedes, which the reader has used for fifty chapters without being told it was the consonant plural."
+  }
+}

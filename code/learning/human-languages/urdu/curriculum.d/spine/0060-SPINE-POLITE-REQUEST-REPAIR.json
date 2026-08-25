@@ -1,0 +1,12 @@
+{
+  "segments": [
+    "UR-PATH-013",
+    "UR-PATH-014",
+    "UR-PATH-015"
+  ],
+  "omits": [
+    "COURTESY-PLEASE",
+    "COURTESY-SORRY"
+  ],
+  "relocates": {}
+}

@@ -1,0 +1,15 @@
+{
+  "id": "HI-EXT-63-STATE",
+  "stage": "pre-A1",
+  "kind": "required",
+  "category": "vocabulary",
+  "canDo": "I can name five states a body reports, from hunger to pain.",
+  "prerequisites": [],
+  "lessons": [
+    "HI-C63-hunger",
+    "HI-C63-thirst",
+    "HI-C63-sleep",
+    "HI-C63-fever",
+    "HI-C63-pain"
+  ]
+}

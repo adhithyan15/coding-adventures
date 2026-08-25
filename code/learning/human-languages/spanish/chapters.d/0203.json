@@ -1,0 +1,17 @@
+{
+  "chapter": 203,
+  "title": "Fueron --- They Were, and They Went",
+  "label": "ch:fueron",
+  "canDo": "I can use the one plural past that serves both ser and ir.",
+  "spineNodes": [
+    "SPINE-ASK-LOCATION"
+  ],
+  "payoff": {
+    "lesson": "ES-C55-fueron",
+    "kind": "task",
+    "summary": "I can use the one plural past that serves both ser and ir.",
+    "assesses": [
+      "ES-GRAMMAR-SER-IR-PRETERITE-PLURAL"
+    ]
+  }
+}

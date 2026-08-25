@@ -1,0 +1,16 @@
+{
+  "id": "ES-PATH-313-01",
+  "spine_node": "SPINE-POLITE-REQUEST-REPAIR",
+  "lessons": [
+    "ES-C313-boleto",
+    "ES-C313-moneda",
+    "ES-C313-pasaporte",
+    "ES-C313-entrada",
+    "ES-C313-cambio"
+  ],
+  "before": [],
+  "inline": [
+    "ES-EXT-313-ASK"
+  ],
+  "after": []
+}

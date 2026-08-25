@@ -1,0 +1,17 @@
+{
+  "id": "BN-PATH-005",
+  "spine_node": "SPINE-EXCHANGE-NAMES",
+  "lessons": [
+    "BN-C02-naam",
+    "BN-C02-amar",
+    "BN-C02-amar-naam",
+    "BN-C02-alaap",
+    "BN-C02-ki",
+    "BN-C02-tumi-apni",
+    "BN-C02-tomar-naam-ki",
+    "BN-C03-ami"
+  ],
+  "before": [],
+  "inline": [],
+  "after": []
+}

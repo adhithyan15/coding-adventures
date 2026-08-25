@@ -1,0 +1,18 @@
+{
+  "chapter": 9,
+  "title": "Months and Seasons",
+  "label": "ch:pt-months-and-seasons",
+  "canDo": "I can name the Portuguese months and seasons and explain how verão grew out of a word for spring.",
+  "spineNodes": [
+    "SPINE-TIME-OF-DAY"
+  ],
+  "payoff": {
+    "lesson": "PT-C09-estacoes",
+    "kind": "task",
+    "summary": "Give a primavera, o verão, o outono, o inverno, then trace verão back through vērānum to vēr, spring — the summer word grown out of the spring one.",
+    "assesses": [
+      "PT-ETYMON-MESES-02",
+      "PT-ETYMON-ESTACOES-02"
+    ]
+  }
+}

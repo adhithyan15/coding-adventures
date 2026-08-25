@@ -1,0 +1,15 @@
+{
+  "id": "TA-EXT-57-FIRE",
+  "stage": "pre-A1",
+  "kind": "required",
+  "category": "vocabulary",
+  "canDo": "I can name five things of wind and fire in Tamil.",
+  "prerequisites": [],
+  "lessons": [
+    "TA-C57-wind",
+    "TA-C57-sand",
+    "TA-C57-mud",
+    "TA-C57-smoke",
+    "TA-C57-ember"
+  ]
+}

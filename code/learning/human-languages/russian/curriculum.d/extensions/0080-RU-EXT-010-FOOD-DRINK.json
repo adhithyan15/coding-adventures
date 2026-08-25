@@ -1,0 +1,14 @@
+{
+  "id": "RU-EXT-010-FOOD-DRINK",
+  "stage": "pre-A1",
+  "kind": "required",
+  "category": "language-specific",
+  "canDo": "I can name water, coffee, tea and bread with their genders in Russian, ask for any of them politely, and say which are native and which are loans.",
+  "prerequisites": [],
+  "lessons": [
+    "RU-C06-voda",
+    "RU-C06-kofe",
+    "RU-C06-chai",
+    "RU-C06-khleb"
+  ]
+}

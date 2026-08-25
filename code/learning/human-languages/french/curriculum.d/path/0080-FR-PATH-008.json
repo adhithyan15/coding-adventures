@@ -1,0 +1,10 @@
+{
+  "id": "FR-PATH-008",
+  "spine_node": "SPINE-CHECK-WELLBEING",
+  "lessons": [
+    "FR-C02-comment"
+  ],
+  "before": [],
+  "inline": [],
+  "after": []
+}

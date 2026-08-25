@@ -1,0 +1,25 @@
+{
+  "chapter": 3,
+  "title": "Ask and Answer Names",
+  "label": "ch:fa-ask-and-answer-names",
+  "canDo": "I can ask someone's name respectfully with shomâ, answer with my own, and tell them I am pleased to meet them.",
+  "spineNodes": [
+    "SPINE-EXCHANGE-NAMES"
+  ],
+  "payoff": {
+    "lesson": "FA-C03-practice",
+    "kind": "dialogue",
+    "summary": "A six-line first meeting: greet, ask the name with respectful shomâ, answer with your own, and acknowledge with khoshvaghtam.",
+    "assesses": [
+      "FA-LEX-ESM-E-MAN-AST",
+      "FA-GRAMMAR-EZAFE-OWNER",
+      "FA-LEX-SHOMA-TO",
+      "FA-PRAGMATICS-SHOMA-REGISTER",
+      "FA-LEX-CHIST",
+      "FA-LEX-NAME-QUESTION",
+      "FA-SCRIPT-PERSIAN-QUESTION-MARK",
+      "FA-LEX-KHOSHVAGHTAM",
+      "FA-DIALOGUE-NAME-EXCHANGE"
+    ]
+  }
+}

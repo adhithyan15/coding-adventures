@@ -1,0 +1,12 @@
+{
+  "id": "ES-PATH-023",
+  "spine_node": "SPINE-TIME-OF-DAY",
+  "lessons": [
+    "ES-C25-las-estaciones"
+  ],
+  "before": [],
+  "inline": [
+    "ES-EXT-023-LANGUAGE-SPECIFIC"
+  ],
+  "after": []
+}

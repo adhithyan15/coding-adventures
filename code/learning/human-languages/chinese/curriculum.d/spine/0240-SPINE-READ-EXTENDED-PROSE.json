@@ -1,0 +1,10 @@
+{
+  "segments": [],
+  "omits": [
+    "DISCOURSE-TOPIC-SENTENCE",
+    "RELATIVE-CLAUSE",
+    "VOICE-PASSIVE",
+    "VOCAB-FIELD-SPECIFIC"
+  ],
+  "relocates": {}
+}

@@ -1,0 +1,23 @@
+{
+  "chapter": 7,
+  "title": "Numbers One to Ten",
+  "label": "ch:ta-numbers-one-to-ten",
+  "canDo": "I can hear, say, read, and write representative numbers from one to ten in Tamil and recognize their Dravidian family history.",
+  "spineNodes": [
+    "SPINE-COUNT-ONE-TO-FIVE"
+  ],
+  "payoff": {
+    "lesson": "TA-C07-numbers-practice",
+    "kind": "task",
+    "summary": "Count onru to pattu, read the ten Tamil numeral shapes out of order, write eezhu with its numeral from sound alone, and recall the pattu/hattu relationship.",
+    "assesses": [
+      "TA-LEX-NUMBERS-1-5-01",
+      "TA-ETYMON-NUMBERS-1-5-FAMILY-01",
+      "TA-LEX-NUMBERS-6-10-01",
+      "TA-LEX-NUMBERS-6-10-02",
+      "TA-GRAMMAR-NUMBERS-6-10-03",
+      "TA-ETYMON-NUMBERS-6-10-FAMILY-01",
+      "TA-ETYMON-NUMBERS-6-10-FAMILY-02"
+    ]
+  }
+}

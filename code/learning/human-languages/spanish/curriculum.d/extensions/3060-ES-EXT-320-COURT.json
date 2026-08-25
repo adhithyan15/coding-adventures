@@ -1,0 +1,15 @@
+{
+  "id": "ES-EXT-320-COURT",
+  "stage": "pre-A1",
+  "kind": "required",
+  "category": "vocabulary",
+  "canDo": "I can name the favour, the trouble, the shame, the luck and the fault behind a Spanish courtesy.",
+  "prerequisites": [],
+  "lessons": [
+    "ES-C320-favor",
+    "ES-C320-molestia",
+    "ES-C320-pena",
+    "ES-C320-suerte",
+    "ES-C320-culpa"
+  ]
+}

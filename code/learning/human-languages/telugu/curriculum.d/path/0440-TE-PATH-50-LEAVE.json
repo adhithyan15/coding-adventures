@@ -1,0 +1,16 @@
+{
+  "id": "TE-PATH-50-LEAVE",
+  "spine_node": "SPINE-TAKE-LEAVE",
+  "lessons": [
+    "TE-C50-now",
+    "TE-C50-day-after",
+    "TE-C50-journey",
+    "TE-C50-set-out",
+    "TE-C50-farewell"
+  ],
+  "before": [],
+  "inline": [
+    "TE-EXT-50-LEAVE"
+  ],
+  "after": []
+}

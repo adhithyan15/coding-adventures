@@ -1,0 +1,10 @@
+{
+  "id": "ES-PATH-268-TICKET",
+  "spine_node": "SPINE-HANDLE-TRAVEL",
+  "lessons": [
+    "ES-C268-billete"
+  ],
+  "before": [],
+  "inline": [],
+  "after": []
+}

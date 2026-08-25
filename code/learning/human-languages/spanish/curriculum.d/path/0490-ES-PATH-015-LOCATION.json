@@ -1,0 +1,14 @@
+{
+  "id": "ES-PATH-015-LOCATION",
+  "spine_node": "SPINE-ASK-LOCATION",
+  "lessons": [
+    "ES-C09-esta-en",
+    "ES-C09-practice"
+  ],
+  "before": [],
+  "inline": [
+    "ES-EXT-015-LOCATION",
+    "ES-EXT-015-SER-ESTAR-CONSOLIDATION"
+  ],
+  "after": []
+}

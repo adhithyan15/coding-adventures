@@ -1,0 +1,19 @@
+{
+  "chapter": 17,
+  "title": "Talking to a Friend",
+  "label": "ch:hablas",
+  "canDo": "I can say what a friend does, using the tu form of an -ar verb.",
+  "spineNodes": [
+    "SPINE-POLITE-REQUEST-REPAIR"
+  ],
+  "payoff": {
+    "lesson": "ES-C06-hablas",
+    "kind": "dialogue",
+    "summary": "The -as ending, and the one English ending that survives beside it.",
+    "assesses": [
+      "ES-GRAMMAR-AR-PRESENT-2SG",
+      "ES-LEX-TU",
+      "ES-GRAMMAR-AR-PRESENT-1SG"
+    ]
+  }
+}

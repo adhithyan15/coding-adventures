@@ -1,0 +1,11 @@
+{
+  "id": "ES-EXT-272-IMPLICIT",
+  "stage": "C1",
+  "kind": "required",
+  "category": "grammar",
+  "canDo": "I can name the listener strategy each implicit device requires, and say which one a written text cannot show me.",
+  "prerequisites": [],
+  "lessons": [
+    "ES-C272-practice"
+  ]
+}

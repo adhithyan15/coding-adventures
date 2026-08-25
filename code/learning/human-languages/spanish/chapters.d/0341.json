@@ -1,0 +1,21 @@
+{
+  "chapter": 341,
+  "title": "Above, Below, In Front, Behind",
+  "label": "ch:arriba-y-abajo",
+  "canDo": "I can say arriba, abajo, delante, detras and dentro, and say why arriba and English arrive are the same climb up the same riverbank.",
+  "spineNodes": [
+    "SPINE-ASK-LOCATION"
+  ],
+  "payoff": {
+    "lesson": "ES-C341-dentro",
+    "kind": "production",
+    "summary": "Complete ES-C341-dentro: put a thing above or below, ahead or behind, and inside rather than out.",
+    "assesses": [
+      "ES-LEX-C341-WHERE-06",
+      "ES-LEX-C341-WHERE-07",
+      "ES-LEX-C341-WHERE-08",
+      "ES-LEX-C341-WHERE-09",
+      "ES-LEX-C341-WHERE-10"
+    ]
+  }
+}

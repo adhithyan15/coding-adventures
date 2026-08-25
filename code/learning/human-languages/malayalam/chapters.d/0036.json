@@ -1,0 +1,23 @@
+{
+  "chapter": 36,
+  "title": "Child, Son, Daughter",
+  "label": "ch:ml-child-son-daughter",
+  "canDo": "I can say child, son and daughter in Malayalam, and say which of the three matches Tamil most closely and which one Kannada softened.",
+  "spineNodes": [
+    "SPINE-EXCHANGE-NAMES"
+  ],
+  "payoff": {
+    "lesson": "ML-C36-makal",
+    "kind": "production",
+    "summary": "Say ithu ente makalaanu, set makan/makal beside Tamil's identical makan/makal and Kannada's softened maga/magalu, and ask ninte makanu ethra vayassundu using Chapter 19's dative-subject question again.",
+    "assesses": [
+      "ML-CONCEPT-C36-MAKAL-01",
+      "ML-CONCEPT-C36-MAKAL-02",
+      "ML-CONCEPT-C36-MAKAN-01",
+      "ML-CONCEPT-C36-MAKAN-02",
+      "ML-CONCEPT-C36-KUTTI-01",
+      "ML-CONCEPT-C36-KUTTI-02",
+      "ML-CONCEPT-C19-VAYASSU-01"
+    ]
+  }
+}

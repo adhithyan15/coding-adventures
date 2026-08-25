@@ -1,0 +1,17 @@
+{
+  "chapter": 252,
+  "title": "Ahora, Hoy --- Now and Today",
+  "label": "ch:ahora-hoy",
+  "canDo": "I can place what I am saying in time.",
+  "spineNodes": [
+    "SPINE-DEFINITE-REFERENCE"
+  ],
+  "payoff": {
+    "lesson": "ES-C65-ahora-hoy",
+    "kind": "task",
+    "summary": "I can place what I am saying in time.",
+    "assesses": [
+      "ES-LEX-AHORA"
+    ]
+  }
+}

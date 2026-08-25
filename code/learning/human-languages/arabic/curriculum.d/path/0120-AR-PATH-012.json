@@ -1,0 +1,13 @@
+{
+  "id": "AR-PATH-012",
+  "spine_node": "SPINE-TIME-OF-DAY",
+  "lessons": [
+    "AR-C08-al-ahad-al-khamis",
+    "AR-C08-al-jumua-as-sabt"
+  ],
+  "before": [],
+  "inline": [
+    "AR-EXT-012-LANGUAGE-SPECIFIC"
+  ],
+  "after": []
+}

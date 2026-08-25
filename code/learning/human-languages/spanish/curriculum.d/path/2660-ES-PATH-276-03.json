@@ -1,0 +1,13 @@
+{
+  "id": "ES-PATH-276-03",
+  "spine_node": "SPINE-READ-LITERARY-AND-CLASSICAL",
+  "lessons": [
+    "ES-C276-asonancia",
+    "ES-C276-practice"
+  ],
+  "before": [],
+  "inline": [
+    "ES-EXT-276-LITERARY"
+  ],
+  "after": []
+}

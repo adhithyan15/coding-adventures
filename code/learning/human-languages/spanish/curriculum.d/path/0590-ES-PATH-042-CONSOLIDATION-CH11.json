@@ -1,0 +1,12 @@
+{
+  "id": "ES-PATH-042-CONSOLIDATION-CH11",
+  "spine_node": "SPINE-SAY-WHAT-I-WANT",
+  "lessons": [
+    "ES-C11-practice"
+  ],
+  "before": [],
+  "inline": [
+    "ES-EXT-042-CONSOLIDATION-CH11"
+  ],
+  "after": []
+}

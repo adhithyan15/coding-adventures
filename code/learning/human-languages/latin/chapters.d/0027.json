@@ -1,0 +1,20 @@
+{
+  "chapter": 27,
+  "title": "Well",
+  "label": "ch:la-well",
+  "canDo": "I can answer well in Latin with bene, and show how one regular sound change turns it into bien.",
+  "spineNodes": [
+    "SPINE-CHECK-WELLBEING"
+  ],
+  "payoff": {
+    "lesson": "LA-C27-bene",
+    "kind": "dialogue",
+    "summary": "Answer bene when asked how you fare, then derive bien from it in one regular sound change.",
+    "assesses": [
+      "LA-LEX-VALEO-FAMILY-01",
+      "LA-LEX-BENE-01",
+      "LA-ETYMON-BENE-02",
+      "LA-PRAGMATICS-BENE-03"
+    ]
+  }
+}

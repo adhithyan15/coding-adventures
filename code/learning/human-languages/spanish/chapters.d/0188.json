@@ -1,0 +1,19 @@
+{
+  "chapter": 188,
+  "title": "Lo Que --- What, Out of Two Old Words",
+  "label": "ch:lo-que",
+  "canDo": "I can use lo que for a thing that is never named.",
+  "spineNodes": [
+    "SPINE-GIVE-REASONS"
+  ],
+  "payoff": {
+    "lesson": "ES-C53-lo-que",
+    "kind": "task",
+    "summary": "Complete ES-C53-lo-que: produce lo que digo and contrast it with lo digo.",
+    "assesses": [
+      "ES-GRAMMAR-LO-QUE",
+      "ES-GRAMMAR-DIRECT-OBJECT-LO"
+    ],
+    "note": "A noun-shaped hole with a sentence attached, built from two words the reader already held. The chapter introduces no new vocabulary."
+  }
+}

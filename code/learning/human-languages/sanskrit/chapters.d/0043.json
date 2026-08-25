@@ -1,0 +1,21 @@
+{
+  "chapter": 43,
+  "title": "Good Manners",
+  "label": "ch:sa-good-manners",
+  "canDo": "I can name hospitality, good conduct, humility, trust and plain dealing in Sanskrit.",
+  "spineNodes": [
+    "SPINE-COURTESY-THANK"
+  ],
+  "payoff": {
+    "lesson": "SA-C43-honest",
+    "kind": "production",
+    "summary": "Complete SA-C43-honest and demonstrate the chapter promise.",
+    "assesses": [
+      "SA-LEX-C43-COURTESY-01",
+      "SA-LEX-C43-COURTESY-02",
+      "SA-LEX-C43-COURTESY-03",
+      "SA-LEX-C43-COURTESY-04",
+      "SA-LEX-C43-COURTESY-05"
+    ]
+  }
+}

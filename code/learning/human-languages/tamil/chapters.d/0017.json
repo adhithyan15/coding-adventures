@@ -1,0 +1,18 @@
+{
+  "chapter": 17,
+  "title": "Noon and Midnight",
+  "label": "ch:ta-noon-and-midnight",
+  "canDo": "I can use both the fused and the transparent Tamil words for noon and midnight, and point to the நடு \"middle\" that makes one pair readable on sight.",
+  "spineNodes": [
+    "SPINE-TIME-OF-DAY"
+  ],
+  "payoff": {
+    "lesson": "TA-C17-transparent-middle-synonyms",
+    "kind": "production",
+    "summary": "Say naṇpakal beside naṭuppakal and naḷḷiravu beside naṭu iravu, pointing at naṭu as the everyday \"middle\" still visible in the second of each pair.",
+    "assesses": [
+      "TA-ETYMON-NANPAKAL-NALLIRAVU-01",
+      "TA-LEX-TRANSPARENT-MIDDLE-SYNONYMS-01"
+    ]
+  }
+}

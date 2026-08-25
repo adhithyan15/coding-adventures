@@ -1,0 +1,11 @@
+{
+  "id": "ES-EXT-007-ORIGIN",
+  "stage": "A1",
+  "kind": "required",
+  "category": "language-specific",
+  "canDo": "I can ask and state where someone is from with ser and de.",
+  "prerequisites": [],
+  "lessons": [
+    "ES-C09-soy-de"
+  ]
+}

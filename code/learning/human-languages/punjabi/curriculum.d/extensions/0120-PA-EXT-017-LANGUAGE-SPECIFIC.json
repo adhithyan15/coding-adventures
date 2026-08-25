@@ -1,0 +1,12 @@
+{
+  "id": "PA-EXT-017-LANGUAGE-SPECIFIC",
+  "stage": "pre-A1",
+  "kind": "required",
+  "category": "language-specific",
+  "canDo": "I can name the heart and the head in Punjabi, and tell a borrowed word from an inherited one.",
+  "prerequisites": [],
+  "lessons": [
+    "PA-C13-dil",
+    "PA-C13-sir"
+  ]
+}

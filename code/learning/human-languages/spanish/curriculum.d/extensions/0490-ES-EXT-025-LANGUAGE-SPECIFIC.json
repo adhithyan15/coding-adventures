@@ -1,0 +1,16 @@
+{
+  "id": "ES-EXT-025-LANGUAGE-SPECIFIC",
+  "stage": "A1",
+  "kind": "required",
+  "category": "language-specific",
+  "canDo": "I can use the additional Spanish material required at this point in the path.",
+  "prerequisites": [],
+  "lessons": [
+    "ES-C27-los-meses",
+    "ES-C28-mediodia-medianoche",
+    "ES-C29-la-hora",
+    "ES-C30-el-tiempo",
+    "ES-C30-hace-calor",
+    "ES-C30-llueve"
+  ]
+}

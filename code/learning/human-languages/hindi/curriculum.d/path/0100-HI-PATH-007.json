@@ -1,0 +1,10 @@
+{
+  "id": "HI-PATH-007",
+  "spine_node": "SPINE-EXCHANGE-NAMES",
+  "lessons": [
+    "HI-C03-main"
+  ],
+  "before": [],
+  "inline": [],
+  "after": []
+}

@@ -1,0 +1,14 @@
+{
+  "segments": [
+    "SA-PATH-200",
+    "SA-PATH-201",
+    "SA-PATH-202",
+    "SA-PATH-203",
+    "SA-PATH-206",
+    "SA-PATH-23-KIN"
+  ],
+  "omits": [
+    "GRAMMAR-THE"
+  ],
+  "relocates": {}
+}

@@ -1,0 +1,17 @@
+{
+  "id": "HI-PATH-029",
+  "spine_node": "SPINE-SAY-WHAT-I-DO",
+  "lessons": [
+    "HI-C34-sochna",
+    "HI-C34-samajhna",
+    "HI-C34-padhna",
+    "HI-C34-likhna",
+    "HI-C35-lena",
+    "HI-C35-puchna",
+    "HI-C35-madad",
+    "HI-C35-pasand"
+  ],
+  "before": [],
+  "inline": [],
+  "after": []
+}

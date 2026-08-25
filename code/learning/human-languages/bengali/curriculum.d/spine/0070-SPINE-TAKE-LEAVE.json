@@ -1,0 +1,13 @@
+{
+  "segments": [
+    "BN-PATH-004",
+    "BN-PATH-009",
+    "BN-PATH-004B"
+  ],
+  "omits": [
+    "FAREWELL-CASUAL",
+    "FAREWELL-SOON",
+    "GREETING-GOODNIGHT"
+  ],
+  "relocates": {}
+}

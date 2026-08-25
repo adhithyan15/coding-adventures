@@ -2908,80 +2908,80 @@
       "output": "marwadi/book/chapters/ch10-family-four.tex",
       "scriptSet": "marwadi-main"
     },
-      {
-        "language": "marwadi",
-        "chapter": 11,
-        "output": "marwadi/book/chapters/ch11-family-seven.tex",
-        "scriptSet": "marwadi-main"
-      },
-      {
-        "language": "marwadi",
-        "chapter": 12,
-        "output": "marwadi/book/chapters/ch12-maternal-and-husband.tex",
-        "scriptSet": "marwadi-main"
-      },
-      {
-        "language": "marwadi",
-        "chapter": 13,
-        "output": "marwadi/book/chapters/ch13-wife-and-child.tex",
-        "scriptSet": "marwadi-main"
-      },
-      {
-        "language": "marwadi",
-        "chapter": 14,
-        "output": "marwadi/book/chapters/ch14-three-places.tex",
-        "scriptSet": "marwadi-main"
-      },
-      {
-        "language": "marwadi",
-        "chapter": 15,
-        "output": "marwadi/book/chapters/ch15-hand-and-money.tex",
-        "scriptSet": "marwadi-main"
-      },
-      {
-        "language": "marwadi",
-        "chapter": 16,
-        "output": "marwadi/book/chapters/ch16-weather-three.tex",
-        "scriptSet": "marwadi-main"
-      },
-      {
-        "language": "marwadi",
-        "chapter": 17,
-        "output": "marwadi/book/chapters/ch17-weather-six.tex",
-        "scriptSet": "marwadi-main"
-      },
-      {
-        "language": "marwadi",
-        "chapter": 18,
-        "output": "marwadi/book/chapters/ch18-shopping-three.tex",
-        "scriptSet": "marwadi-main"
-      },
-      {
-        "language": "marwadi",
-        "chapter": 19,
-        "output": "marwadi/book/chapters/ch19-shopping-five.tex",
-        "scriptSet": "marwadi-main"
-      },
-      {
-        "language": "marwadi",
-        "chapter": 20,
-        "output": "marwadi/book/chapters/ch20-shopping-seven.tex",
-        "scriptSet": "marwadi-main"
-      },
-      {
-        "language": "marwadi",
-        "chapter": 21,
-        "output": "marwadi/book/chapters/ch21-transport-three.tex",
-        "scriptSet": "marwadi-main"
-      },
-      {
-        "language": "marwadi",
-        "chapter": 22,
-        "output": "marwadi/book/chapters/ch22-transport-five.tex",
-        "scriptSet": "marwadi-main"
-      },
-      {
-        "language": "persian",
+    {
+      "language": "marwadi",
+      "chapter": 11,
+      "output": "marwadi/book/chapters/ch11-family-seven.tex",
+      "scriptSet": "marwadi-main"
+    },
+    {
+      "language": "marwadi",
+      "chapter": 12,
+      "output": "marwadi/book/chapters/ch12-maternal-and-husband.tex",
+      "scriptSet": "marwadi-main"
+    },
+    {
+      "language": "marwadi",
+      "chapter": 13,
+      "output": "marwadi/book/chapters/ch13-wife-and-child.tex",
+      "scriptSet": "marwadi-main"
+    },
+    {
+      "language": "marwadi",
+      "chapter": 14,
+      "output": "marwadi/book/chapters/ch14-three-places.tex",
+      "scriptSet": "marwadi-main"
+    },
+    {
+      "language": "marwadi",
+      "chapter": 15,
+      "output": "marwadi/book/chapters/ch15-hand-and-money.tex",
+      "scriptSet": "marwadi-main"
+    },
+    {
+      "language": "marwadi",
+      "chapter": 16,
+      "output": "marwadi/book/chapters/ch16-weather-three.tex",
+      "scriptSet": "marwadi-main"
+    },
+    {
+      "language": "marwadi",
+      "chapter": 17,
+      "output": "marwadi/book/chapters/ch17-weather-six.tex",
+      "scriptSet": "marwadi-main"
+    },
+    {
+      "language": "marwadi",
+      "chapter": 18,
+      "output": "marwadi/book/chapters/ch18-shopping-three.tex",
+      "scriptSet": "marwadi-main"
+    },
+    {
+      "language": "marwadi",
+      "chapter": 19,
+      "output": "marwadi/book/chapters/ch19-shopping-five.tex",
+      "scriptSet": "marwadi-main"
+    },
+    {
+      "language": "marwadi",
+      "chapter": 20,
+      "output": "marwadi/book/chapters/ch20-shopping-seven.tex",
+      "scriptSet": "marwadi-main"
+    },
+    {
+      "language": "marwadi",
+      "chapter": 21,
+      "output": "marwadi/book/chapters/ch21-transport-three.tex",
+      "scriptSet": "marwadi-main"
+    },
+    {
+      "language": "marwadi",
+      "chapter": 22,
+      "output": "marwadi/book/chapters/ch22-transport-five.tex",
+      "scriptSet": "marwadi-main"
+    },
+    {
+      "language": "persian",
       "chapter": 2,
       "output": "persian/book/chapters/ch02-give-your-name.tex",
       "unicodeScript": "Arabic",

@@ -1,0 +1,27 @@
+{
+  "chapter": 1,
+  "title": "Namaste, Piece by Piece",
+  "label": "ch:first-greeting-script",
+  "canDo": "I can hear and say namaste, trace each Gujarati sign separately, and copy the whole greeting only after every sign is familiar.",
+  "spineNodes": [
+    "SPINE-MEET-GREET"
+  ],
+  "payoff": {
+    "lesson": "GU-W01-namaste-read",
+    "kind": "task",
+    "summary": "Complete GU-W01-namaste-read: assemble, read, and copy નમસ્તે only after hearing its meaning and tracing every load-bearing sign in its own short lesson.",
+    "assesses": [
+      "GU-CONCEPT-C01-NAMASTE-01",
+      "GU-SCRIPT-HA-01",
+      "GU-SCRIPT-AA-MATRA-01",
+      "GU-SCRIPT-AA-01",
+      "GU-SCRIPT-NA-01",
+      "GU-SCRIPT-MA-01",
+      "GU-SCRIPT-SA-01",
+      "GU-SCRIPT-TA-01",
+      "GU-SCRIPT-E-MATRA-01",
+      "GU-SCRIPT-VIRAMA-01",
+      "GU-SCRIPT-NAMASTE-READ-01"
+    ]
+  }
+}

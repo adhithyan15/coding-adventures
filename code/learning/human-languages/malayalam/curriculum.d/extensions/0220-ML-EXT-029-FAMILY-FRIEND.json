@@ -1,0 +1,12 @@
+{
+  "id": "ML-EXT-029-FAMILY-FRIEND",
+  "stage": "pre-A1",
+  "kind": "required",
+  "category": "language-specific",
+  "canDo": "I can name my family as a group and name a friend in Malayalam, and say which of the two words is a Sanskrit loan.",
+  "prerequisites": [],
+  "lessons": [
+    "ML-C35-kudumbam",
+    "ML-C35-suhruthu"
+  ]
+}

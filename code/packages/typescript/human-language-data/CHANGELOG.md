@@ -33,6 +33,294 @@
   Spanish track actually introduces before the file was committed.
 - Spanish A1 consequently joins the `exam-point` planner queue for the first
   time, and the corpus-wide uncovered-point total moves 146 → 196.
+### Added - `core/book-generation.d/<language>.json` (HL21 §5.3) — the last shared ledger
+
+- 24 files, one per language plus `_meta.json`, each holding that language's
+  slice of all six arrays. A Spanish tranche now edits `spanish.json` and
+  collides with nobody working on another language. **This completes HL21's
+  three ledgers.**
+- **Grouped rather than one file per element**, and it is the only ledger split
+  that way. Element-wise this would be over a thousand files nobody opens
+  individually (`targets` alone is 1,014). It is also the only ledger with no
+  ordinal prefix, and both facts follow from one measurement: all six arrays are
+  already contiguous by language and in the same alphabetical order, which is
+  *also* sorted `<language>.json` order.
+- Round trip byte-exact against the committed file, SHA-256
+  `f894e435e9d5ea21d33aebdb2e8e8e53e2ef26fc23342b79159521a4552f812d` — the same
+  digest the re-indent commit produced, so this commit changes no bytes of the
+  monolith at all. The entire data diff is the 24 new shard files.
+- `_meta.json` holds `version`, `sourceBaseUrl` and `scriptSets`. `scriptSets`
+  is keyed by *script set*, carries no `language` on any element, and so has no
+  per-language home — confirmed, not assumed. No `_keys` needed: the six grouped
+  arrays are already a suffix.
+- `src/book-cli.ts` now reads through `readMaybeSharded`. It was the last
+  non-loader read of any of the three ledgers in `src/`; with the shards as
+  source of truth, a direct read would have served the generator a *derived*
+  file — correct while `--check` is green and quietly stale the moment it is not.
+
+### Changed - `core/book-generation.json` re-indented (whitespace only)
+
+- Twelve `marwadi` entries in `targets` were indented two spaces deeper than
+  canonical — a hand-merge artifact at lines 2911–2984. 74 lines, identical line
+  count, **leading whitespace only**.
+- Landed as **its own commit**, and proved whitespace-only by **deep-comparing
+  the parsed structures** — not by reading a 6,693-line diff. The script refused
+  to write unless `isDeepStrictEqual` held, top-level key order was unchanged,
+  every array length was unchanged, all 1,160 array elements had the same key
+  order, and no differing line differed once trimmed.
+- **This exemption is narrow.** HL21 §8 says a ledger that does not round-trip is
+  reported, not reformatted — and the four other such files stay untouched,
+  because they are hand-maintained *curriculum data* where whitespace churn
+  buries real edits. `core/book-generation.json` is a *build manifest*:
+  `(language, chapter, output, scriptSet)` triples nobody reads for meaning. And
+  unlike the others a track cannot be skipped here — it is one file shared by all
+  23 — so "leave it alone" would have meant "never shard it".
+- `tests/grouped-shards.test.ts` is **inverted** to match: it used to assert the
+  file does NOT round-trip, as an executable statement of the blocker that would
+  fail the day someone re-indented it. It now asserts the file STAYS canonical,
+  so a hand-edit reintroducing stray indentation fails immediately.
+
+### Added - `<track>/curriculum.d/`, and the end of the worst conflict in the corpus (HL21 §5.2)
+
+- 22 of 23 tracks' `curriculum.json` are now stored as three sibling
+  directories under `curriculum.d/`, sharing one `_meta.json`:
+
+  ```text
+  curriculum.d/_meta.json                          version, language, conceptAliases
+  curriculum.d/path/0010-ES-PATH-001.json          the authored ladder
+  curriculum.d/extensions/0010-ES-EXT-001-….json   the track's own additions
+  curriculum.d/spine/0010-SPINE-MEET-GREET.json    ONE FILE PER SPINE NODE
+  ```
+
+- **`spine/` is the prize.** Every content tranche in every track appends to
+  `spine[<node>].segments`, and there are only 33 nodes for 23 tracks' worth of
+  authors to collide on. Two tranches touching two different nodes now write two
+  different files and never meet.
+- Round trip verified byte-exact against all 22 committed ledgers before the
+  data moved; the monoliths in this commit are unchanged, which is the proof.
+  `marwadi` is left on its monolith — its `lessons` arrays are written inline on
+  one line, so the bytes do not round-trip. Data identical, reported not
+  reformatted, per §8.9.
+
+### Fixed - HL21 §5.2 was wrong about `spine`, and every track proves it
+
+- The spec argued `spine` is keyed by node id and so "needs no ordinal: an
+  object has no meaningful order". True of JSON, false of this ledger:
+  `JSON.stringify` emits keys in **insertion** order; **no** track has its spine
+  keys sorted; and all 23 list them in exactly `core/spine.d/`'s ladder order,
+  pre-A1 → C2. `<NODE-ID>.json` shards merged in sorted order would have
+  scrambled the shared ladder in 23 files at once, silently, while still
+  "round-tripping successfully".
+- `spine/` therefore carries zero-padded ordinals like every other section, and
+  a test asserts both halves: sorted shard order reproduces the ladder, and
+  plain `<ID>.json` names would not have.
+- `path`/`extensions` ordinals confirmed needed. Spanish diverges at index 3 —
+  authored `ES-PATH-004` against sorted `ES-PATH-003-CASA`. That claim is now
+  pinned **corpus-wide** rather than per-track, because it is not true of every
+  track: `japanese` and `urdu` happen to have both lists already sorted and
+  would coincidentally survive losing their ordinals. 20 of 22 would not.
+
+### Fixed - four shard-merge holes on the READ path (security review)
+
+All four sit at a trust boundary the write-side checks do not cover: shard
+*names* and `_meta.json` *contents* come off disk, where a pull request put
+them.
+
+- **Prototype poisoning of an `"object"` section via a crafted filename.**
+  Moving the object-section merge out of `shard-cli` dropped the id check, and
+  the key was assigned with plain `[]=`. A branch committing
+  `spanish/curriculum.d/spine/0010-__proto__.json` invoked the inherited setter
+  instead of creating a key: the node's realization vanished and the assembled
+  `spine` object was re-parented to attacker-supplied JSON.
+  `rejectDangerousKeys` did not help — it inspects a parsed *value's* own keys,
+  and this key came from a *filename*. Reachable through
+  `curriculum.ts`'s `curriculum.spine?.[node.id]`, which reads through the
+  prototype chain, silencing `missing-curriculum-spine-node` for every
+  unrealized node; and invisible to the reverse check, which uses
+  `Object.keys`. `--check` could not catch it either — a poisoned node produces
+  no own key, so the rebuild omits it and the committed monolith still matched.
+  Fixed three ways: `SHARD_ID_PATTERN` is re-applied on read, every
+  name-derived key goes through `assertSafeKey`, and both mergers assign with
+  `Object.defineProperty`.
+- **A shard belonging to no section was read, parsed and silently discarded** —
+  the silence that let the above pass CI green. Now refused by name. The
+  grouped path gets the mirror-image guard: it consumed *every* non-meta shard
+  regardless of directory, so `book-generation.d/sub/spanish.json` would have
+  duplicated that language's entries into all six arrays.
+- **`_keys` could truncate the rebuilt document.** It decides which properties
+  the document has, and the rebuild emitted only the keys it named, so
+  `"_keys": ["path","spine","extensions"]` silently dropped `version`,
+  `language` and `conceptAliases`. Caught today only by luck — every plan is
+  `"generated"`, so `--check` byte-compares against a committed file; a
+  `"removed"` ledger has none. `_keys` must now be a **permutation**.
+- **`mergeGroupedShards` was missing the two `_meta.json` guards its siblings
+  have.** A `_meta.json` holding `["a","b"]` spread to `{0:"a",1:"b"}`; one
+  carrying `targets` was silently shadowed by the assembled array.
+- Two sections sharing a shard directory are now refused at plan level: each
+  would claim the other's files, and the ledger would come back with the same
+  elements under two keys.
+- Deleted the dead `idFromShardName` in `shard-cli`, whose docstring still
+  claimed the result was "re-validated against `SAFE_ID` by the caller" —
+  documenting a control that no longer existed anywhere.
+
+### Changed - the shard machinery grew two projections
+
+- `ShardPlan.listKey`/`idOf`/`ordinalOf` become `ShardPlan.sections`, a list of
+  `ShardSection`. A section names one top-level key, an optional subdirectory,
+  and whether it holds an `"array"` or an `"object"`.
+- **`_keys`**: `_meta.json` now records the monolith's top-level key order, but
+  **only when it is needed** — when the sharded keys are not already a suffix of
+  the document. §2.5 deliberately did not invent this and left the decision to
+  "whoever migrates" a ledger whose array is not last; `curriculum.json` is that
+  ledger, with three sharded keys in the middle. In practice only `spanish`
+  needs it (its `conceptAliases` follows `extensions`); the other 21 tracks and
+  all 21 previously-committed shard sets are untouched.
+- The "array must be the last top-level key" refusal is gone, replaced by a
+  check that a ledger has no top-level `_keys` of its own to collide with.
+- `mergeSectionedShards` lives in `shard.ts` and is used by **both**
+  `--unshard` and `loadLanguageCurricula`. Two definitions of what these files
+  mean is precisely the drift `--check` exists to catch — and `--check` only
+  compares the monolith against `unshardContents`, so a divergent loader would
+  go unreported.
+- `listShardNames` descends exactly one level into subdirectories, refusing a
+  symlinked subdirectory as it already refused a symlinked shard. One level is a
+  constant, so it cannot be walked into a cycle by a committed symlink.
+
+### Added - the grouped projection for `core/book-generation.json`, not yet enabled
+
+- A second projection: several parallel arrays partitioned into **one file per
+  language** rather than one file per element. Element-wise, that ledger would
+  be 1,153 files nobody opens individually; what an author touches is "Spanish's
+  slice of everything".
+- Built, tested against the real ledger, and **deliberately absent from
+  `SHARD_PLANS`** — `BOOK_GENERATION_PLAN` is exported and is one line from
+  being enabled.
+- **The spec's recorded blocker resolved itself.** §5.3 measured `targets` at 27
+  runs for 23 languages and called for a one-time re-sort. At 1,007 entries it
+  is 23 runs for 23 languages — the split runs for hindi, kannada, spanish and
+  telugu closed as later tranches inserted into them. No re-sort needed, and a
+  test pins the contiguity so a future append to the end of `targets` reopens
+  the question loudly.
+- **A different blocker replaced it.** `core/book-generation.json` does not
+  round-trip at all: twelve `marwadi` entries in `targets` (lines 2911–2984) are
+  indented two spaces deeper than canonical. 74 lines, identical line count,
+  leading whitespace only, data deep-equal. The sharded rebuild is byte-identical
+  to the *canonical* reserialization and differs from the *committed* file by
+  exactly those 74 lines. Unlike the other two ledgers this cannot be worked
+  around by skipping a track — it is one file shared by all 23 — so the whole
+  ledger waits on a deliberate re-indent commit. A test states that blocker as an
+  executable fact and **fails the day someone re-indents the file**, which is
+  exactly when the plan should be enabled.
+
+### Added - `<track>/chapters.d/`, one file per chapter (HL21 §5.1)
+
+- Twenty of the twenty-three chapter ledgers are now stored as
+  `<track>/chapters.d/<NNNN>.json`, one file per chapter, named for the chapter
+  number and zero-padded to four digits. The shards are the source of truth;
+  `<track>/chapters.json` remains as a **generated artifact** gated by
+  `npm run check:shards`. Two authors adding two chapters now write two
+  different files and do not collide there.
+- **Round trip verified byte-exact against the real committed ledgers**, before
+  and after. Folding each shard set back together reproduced the committed
+  `chapters.json` with an unchanged SHA-256 for all twenty tracks:
+
+  | track | sha256 of the rebuilt monolith |
+  | --- | --- |
+  | arabic | `c12ea1004e424c95565b6a07ecad8f921ab581d69e6896c9e6f984aca60a6a6c` |
+  | bengali | `70e320ae1746b69555a5f2a7448735de18970be376139ecb77eb69e2766936ee` |
+  | chinese | `d0f14241684e3c796b8c5cbf10c12aaf01ac3a98a335276f6e0e6a6695624c1f` |
+  | german | `e1e0ddfcf601ecfbc32f04d821c92f2f99c8b432b2a64aa9ba235e25bb3fd2e3` |
+  | gujarati | `87f45ca989153de9c580002f75433dea6179228f7e7533380100267c4d7ff0cd` |
+  | hindi | `20833fac76c126feae3fac3bc246980bafae699a57785fed6586841f2278c12c` |
+  | italian | `4e148da035b63e7b320f06d51316f7b5bcc9d4b89e8d1972e59ea6e6ac38761e` |
+  | kannada | `b7c79176b53dfb4d0985a7420ac913d30b35f5d370208c68a1fe3ba7f4df3188` |
+  | latin | `74582e67fcfc375b99a0a3a285429e230f9bcf3498a3194b5cf4dce37efcf092` |
+  | malayalam | `ccb6402a8eee5ee62bcf3b46c46d7739593a44f2201b530f10dc8fd93459c152` |
+  | marathi | `b58a6124229d9a4f8a5771308d0878cb187c8f5b3e9a5589ea5e7025bfab5549` |
+  | persian | `7ba2e8889a48f482410edbab278c36ceb3c1d82c68ca29beb3774579a26aacbf` |
+  | portuguese | `b6f54850d8c01a235556029ee9080ae13e633957f01a85dcc7faef9a9264e7e9` |
+  | punjabi | `6967f61f0757cd7b39c562d4499767705dd3fa18aedb7d0c097af3380d1914b5` |
+  | russian | `0d7b3e7556516b9ccdae89b21d7e40ac814e42c40a4bdd0146aba419e6b2d0fc` |
+  | sanskrit | `23f829dfe1298e098c01b0871b2efd3d87c09c31e6edac5454ec9c556d025f73` |
+  | spanish | `86eac84690073429d65c633bb647ac1bcd74424c6336210dcce7bdf8608bbc0a` |
+  | tamil | `2d71531d58e61c7df74a37b703f53e773404ad9d666b37ded572fea940ff9a43` |
+  | telugu | `2b93ddb5b10991d082b11152604e81efe8197b70ec0164ee9233977522d95171` |
+  | urdu | `c6490ebb397b761bccf2033ac1607e5cd69858d6850ebdc132ea20cc1272df6f` |
+
+- **The order trap is live in every track.** Shard filenames carry the chapter
+  number zero-padded, and unpadded names would re-sort all twenty — including
+  the smallest, where eleven chapters are enough for `10.json` and `11.json` to
+  sort before `2.json`. Tests assert both halves: that sorted shard order
+  reproduces authored order, and that unpadded names would not have.
+
+### Not done, and why - three tracks and the deleted monolith
+
+- **`french`, `japanese` and `marwadi` keep their monoliths.** Their committed
+  `chapters.json` is hand-formatted with inline one-line arrays that
+  `JSON.stringify(x, null, 2)` expands over three lines. The *data* is identical
+  — checked by deep comparison — but the *bytes* are not, so they cannot migrate
+  without a reformatting commit that rewrites lines nobody asked to change.
+  HL21's rule is to report a ledger that does not round-trip rather than quietly
+  reformat it into agreement with the serialiser. The loader's fallback reads
+  them unchanged.
+- **The monolith is kept rather than deleted, and that is a compromise.**
+  Deleting it is what would remove the conflict outright; keeping it means every
+  tranche still regenerates it and still collides on that one file — though on
+  HL21 §3's terms, where the fix is `npm run unshard` rather than a hand-merge.
+  The blocker is the browser: `language-ladder` reads these ledgers through
+  `import.meta.glob`, and while a glob's *modules* are lazy, its *key table* is
+  eager code in the importing module. Sharding took that table from 23 entries
+  to ~1,020 and grew the app's largest eager chunk by 191 kB — 312,216 to
+  503,765 — through the hard 500 kB budget in `scripts/check-bundle.mjs`. That
+  budget is a ceiling on debt and was not raised. Moving the capability fields
+  into the generated hash manifest the app already loads would dodge it, at the
+  cost of a real check: the app recomputes each chapter's fingerprint from the
+  currently authored capability, so a capability edited without regenerating
+  reads as `stale`; sourcing it from the same generated file as the hash would
+  make that comparison agree with itself.
+
+### Changed - shard machinery generalised
+
+- `ShardPlan` gains an optional `ordinalOf`, so a ledger that carries its own
+  ordering number uses it. Appending chapter 346 writes one new file and renames
+  nothing, where the index-derived stride would have renumbered every shard
+  after the insertion point — a mass rename, and therefore the mass merge
+  conflict this work exists to remove.
+- `ShardPlan` gains an optional `idOf` (absent when identity *is* the number)
+  and a **required** `monolith` disposition, `"generated" | "removed"`. That
+  decision is what makes a migration worth doing, so it is not defaulted.
+- `shardContents` now refuses two elements that collide on a *filename*, not
+  only on an id. With no id, a duplicate chapter number silently overwrote a
+  chapter, and `--check` would have agreed with itself about the truncated set
+  ever after.
+- `loadTrackChapters` reads either form. Its presence test is
+  `existsSync(path) || isSharded(path)`; the second half is load-bearing,
+  because the function treats a missing `chapters.json` as "not yet authored".
+- `code/scripts/verify-human-languages.sh` gains `check:shards`. CI has run it
+  since the spine landed, but the script people run before pushing had not —
+  under a heading that promises "exactly what CI runs".
+
+### Fixed - the shard drift message no longer walks an author into data loss
+
+- `--check`'s stale-monolith message used to say only "Run `npm run unshard`".
+  That was correct while `core/spine.json` was the only sharded ledger, because
+  its monolith is purely derived and rebuilding it from the shards is always the
+  recovery.
+- It stops being correct for an **authored** ledger. `<track>/chapters.json` is
+  read, appended to, and written back wholesale by the Python authoring scripts
+  in `learning/human-languages/data/scripts/` (`author_adjective_wave.py`,
+  `author_deixis_wave.py`). An author who adds a chapter that way and then
+  follows a bare "unshard" **discards the chapter they just wrote**, because
+  unshard overwrites the monolith from shards that never saw it.
+- The message now names both directions and lets the author pick: `npm run
+  unshard <path>` if they edited the shards, `npm run shard <path>` if they
+  edited the monolith, and "do not hand-merge either side". The tool cannot know
+  which edit was intended; the person who just made it can. A drift message that
+  destroys the reader's work is worse than no message.
+- Those scripts are otherwise unchanged and still work: `check:shards` catches
+  the desync loudly rather than letting the loader — which prefers `.d/` —
+  silently ignore the new chapter.
+
 ### Added - source-verified Urdu و
 
 - Add independent Urdu **و** from *Zer o Zabar* as one continuous looped-head
@@ -68,6 +356,115 @@
   stroke-order source is present, preserving fail-closed provenance for the
   remaining generated vowel rows.
 - Remove 20 affected Telugu realizations and rerank Arabic **ر** first at 18.
+
+### Added - `<track>/chapters.d/`, one file per chapter (HL21 §5.1)
+
+- Twenty of the twenty-three chapter ledgers are now stored as
+  `<track>/chapters.d/<NNNN>.json`, one file per chapter, named for the chapter
+  number and zero-padded to four digits. The shards are the source of truth;
+  `<track>/chapters.json` remains as a **generated artifact** gated by
+  `npm run check:shards`. Two authors adding two chapters now write two
+  different files and do not collide there.
+- **Round trip verified byte-exact against the real committed ledgers**, before
+  and after. Folding each shard set back together reproduced the committed
+  `chapters.json` with an unchanged SHA-256 for all twenty tracks:
+
+  | track | sha256 of the rebuilt monolith |
+  | --- | --- |
+  | arabic | `c12ea1004e424c95565b6a07ecad8f921ab581d69e6896c9e6f984aca60a6a6c` |
+  | bengali | `70e320ae1746b69555a5f2a7448735de18970be376139ecb77eb69e2766936ee` |
+  | chinese | `d0f14241684e3c796b8c5cbf10c12aaf01ac3a98a335276f6e0e6a6695624c1f` |
+  | german | `e1e0ddfcf601ecfbc32f04d821c92f2f99c8b432b2a64aa9ba235e25bb3fd2e3` |
+  | gujarati | `87f45ca989153de9c580002f75433dea6179228f7e7533380100267c4d7ff0cd` |
+  | hindi | `20833fac76c126feae3fac3bc246980bafae699a57785fed6586841f2278c12c` |
+  | italian | `4e148da035b63e7b320f06d51316f7b5bcc9d4b89e8d1972e59ea6e6ac38761e` |
+  | kannada | `b7c79176b53dfb4d0985a7420ac913d30b35f5d370208c68a1fe3ba7f4df3188` |
+  | latin | `74582e67fcfc375b99a0a3a285429e230f9bcf3498a3194b5cf4dce37efcf092` |
+  | malayalam | `ccb6402a8eee5ee62bcf3b46c46d7739593a44f2201b530f10dc8fd93459c152` |
+  | marathi | `b58a6124229d9a4f8a5771308d0878cb187c8f5b3e9a5589ea5e7025bfab5549` |
+  | persian | `7ba2e8889a48f482410edbab278c36ceb3c1d82c68ca29beb3774579a26aacbf` |
+  | portuguese | `b6f54850d8c01a235556029ee9080ae13e633957f01a85dcc7faef9a9264e7e9` |
+  | punjabi | `6967f61f0757cd7b39c562d4499767705dd3fa18aedb7d0c097af3380d1914b5` |
+  | russian | `0d7b3e7556516b9ccdae89b21d7e40ac814e42c40a4bdd0146aba419e6b2d0fc` |
+  | sanskrit | `23f829dfe1298e098c01b0871b2efd3d87c09c31e6edac5454ec9c556d025f73` |
+  | spanish | `86eac84690073429d65c633bb647ac1bcd74424c6336210dcce7bdf8608bbc0a` |
+  | tamil | `2d71531d58e61c7df74a37b703f53e773404ad9d666b37ded572fea940ff9a43` |
+  | telugu | `2b93ddb5b10991d082b11152604e81efe8197b70ec0164ee9233977522d95171` |
+  | urdu | `c6490ebb397b761bccf2033ac1607e5cd69858d6850ebdc132ea20cc1272df6f` |
+
+- **The order trap is live in every track.** Shard filenames carry the chapter
+  number zero-padded, and unpadded names would re-sort all twenty — including
+  the smallest, where eleven chapters are enough for `10.json` and `11.json` to
+  sort before `2.json`. Tests assert both halves: that sorted shard order
+  reproduces authored order, and that unpadded names would not have.
+
+### Not done, and why - three tracks and the deleted monolith
+
+- **`french`, `japanese` and `marwadi` keep their monoliths.** Their committed
+  `chapters.json` is hand-formatted with inline one-line arrays that
+  `JSON.stringify(x, null, 2)` expands over three lines. The *data* is identical
+  — checked by deep comparison — but the *bytes* are not, so they cannot migrate
+  without a reformatting commit that rewrites lines nobody asked to change.
+  HL21's rule is to report a ledger that does not round-trip rather than quietly
+  reformat it into agreement with the serialiser. The loader's fallback reads
+  them unchanged.
+- **The monolith is kept rather than deleted, and that is a compromise.**
+  Deleting it is what would remove the conflict outright; keeping it means every
+  tranche still regenerates it and still collides on that one file — though on
+  HL21 §3's terms, where the fix is `npm run unshard` rather than a hand-merge.
+  The blocker is the browser: `language-ladder` reads these ledgers through
+  `import.meta.glob`, and while a glob's *modules* are lazy, its *key table* is
+  eager code in the importing module. Sharding took that table from 23 entries
+  to ~1,020 and grew the app's largest eager chunk by 191 kB — 312,216 to
+  503,765 — through the hard 500 kB budget in `scripts/check-bundle.mjs`. That
+  budget is a ceiling on debt and was not raised. Moving the capability fields
+  into the generated hash manifest the app already loads would dodge it, at the
+  cost of a real check: the app recomputes each chapter's fingerprint from the
+  currently authored capability, so a capability edited without regenerating
+  reads as `stale`; sourcing it from the same generated file as the hash would
+  make that comparison agree with itself.
+
+### Changed - shard machinery generalised
+
+- `ShardPlan` gains an optional `ordinalOf`, so a ledger that carries its own
+  ordering number uses it. Appending chapter 346 writes one new file and renames
+  nothing, where the index-derived stride would have renumbered every shard
+  after the insertion point — a mass rename, and therefore the mass merge
+  conflict this work exists to remove.
+- `ShardPlan` gains an optional `idOf` (absent when identity *is* the number)
+  and a **required** `monolith` disposition, `"generated" | "removed"`. That
+  decision is what makes a migration worth doing, so it is not defaulted.
+- `shardContents` now refuses two elements that collide on a *filename*, not
+  only on an id. With no id, a duplicate chapter number silently overwrote a
+  chapter, and `--check` would have agreed with itself about the truncated set
+  ever after.
+- `loadTrackChapters` reads either form. Its presence test is
+  `existsSync(path) || isSharded(path)`; the second half is load-bearing,
+  because the function treats a missing `chapters.json` as "not yet authored".
+- `code/scripts/verify-human-languages.sh` gains `check:shards`. CI has run it
+  since the spine landed, but the script people run before pushing had not —
+  under a heading that promises "exactly what CI runs".
+
+### Fixed - the shard drift message no longer walks an author into data loss
+
+- `--check`'s stale-monolith message used to say only "Run `npm run unshard`".
+  That was correct while `core/spine.json` was the only sharded ledger, because
+  its monolith is purely derived and rebuilding it from the shards is always the
+  recovery.
+- It stops being correct for an **authored** ledger. `<track>/chapters.json` is
+  read, appended to, and written back wholesale by the Python authoring scripts
+  in `learning/human-languages/data/scripts/` (`author_adjective_wave.py`,
+  `author_deixis_wave.py`). An author who adds a chapter that way and then
+  follows a bare "unshard" **discards the chapter they just wrote**, because
+  unshard overwrites the monolith from shards that never saw it.
+- The message now names both directions and lets the author pick: `npm run
+  unshard <path>` if they edited the shards, `npm run shard <path>` if they
+  edited the monolith, and "do not hand-merge either side". The tool cannot know
+  which edit was intended; the person who just made it can. A drift message that
+  destroys the reader's work is worse than no message.
+- Those scripts are otherwise unchanged and still work: `check:shards` catches
+  the desync loudly rather than letting the loader — which prefers `.d/` —
+  silently ignore the new chapter.
 
 ### Fixed - Tamil ந handwriting provenance
 

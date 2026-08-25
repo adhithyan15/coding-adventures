@@ -1,0 +1,13 @@
+{
+  "id": "FA-EXT-008-QUESTION-SCRIPT",
+  "stage": "pre-A1",
+  "kind": "required",
+  "category": "script",
+  "canDo": "I can read chetor as the Persian how-question and remember its Persian che plus Arabic-loan tor layers.",
+  "prerequisites": [
+    "FA-EXT-007-STATE-ETYMOLOGY"
+  ],
+  "lessons": [
+    "FA-C04-chetor"
+  ]
+}

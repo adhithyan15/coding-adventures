@@ -1,0 +1,14 @@
+{
+  "id": "AR-EXT-031-LANGUAGE-SPECIFIC",
+  "stage": "pre-A1",
+  "kind": "required",
+  "category": "language-specific",
+  "canDo": "I can ask for salt, meat, cheese and food in Arabic, and I can build the word for a restaurant from a root using the ma- place shape.",
+  "prerequisites": [],
+  "lessons": [
+    "AR-C34-milh",
+    "AR-C34-lahm",
+    "AR-C34-jubn",
+    "AR-C34-taam"
+  ]
+}

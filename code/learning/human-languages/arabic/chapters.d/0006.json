@@ -1,0 +1,18 @@
+{
+  "chapter": 6,
+  "title": "Please",
+  "label": "ch:ar-please",
+  "canDo": "I can attach min faḍlik to a request in Arabic and change its ending for a man or a woman.",
+  "spineNodes": [
+    "SPINE-POLITE-REQUEST-REPAIR"
+  ],
+  "payoff": {
+    "lesson": "AR-C06-min-fadlik",
+    "kind": "production",
+    "summary": "Say min faḍlik with the heavy ḍād, take it apart as 'from your grace', and offer law samaḥt as the alternative.",
+    "assesses": [
+      "AR-CONCEPT-C06-MIN-FADLIK-01",
+      "AR-CONCEPT-C06-MIN-FADLIK-02"
+    ]
+  }
+}

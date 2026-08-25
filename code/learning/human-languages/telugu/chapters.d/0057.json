@@ -1,0 +1,21 @@
+{
+  "chapter": 57,
+  "title": "More of the Body",
+  "label": "ch:te-more-body",
+  "canDo": "I can name five more parts of the body in Telugu and say which one hurts.",
+  "spineNodes": [
+    "SPINE-CHECK-WELLBEING"
+  ],
+  "payoff": {
+    "lesson": "TE-C57-bone",
+    "kind": "production",
+    "summary": "Complete TE-C57-bone and demonstrate the chapter promise.",
+    "assesses": [
+      "TE-LEX-C57-BODY-01",
+      "TE-LEX-C57-BODY-02",
+      "TE-LEX-C57-BODY-03",
+      "TE-LEX-C57-BODY-04",
+      "TE-LEX-C57-BODY-05"
+    ]
+  }
+}

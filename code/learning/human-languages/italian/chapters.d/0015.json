@@ -1,0 +1,22 @@
+{
+  "chapter": 15,
+  "title": "Two Italian Pasts",
+  "label": "ch:it-two-pasts",
+  "canDo": "I can say what I did in Italian with the everyday passato prossimo, and recognise the passato remoto when it turns up.",
+  "spineNodes": [
+    "SPINE-EXCHANGE-NAMES"
+  ],
+  "payoff": {
+    "lesson": "IT-C15-passato-remoto",
+    "kind": "production",
+    "summary": "Put ha parlato beside parlò, line parlò up with Spanish habló and Portuguese falou, and place the remoto as ordinary speech in Palermo but literary in Milan.",
+    "assesses": [
+      "IT-GRAMMAR-PASSATO-PROSSIMO-02",
+      "IT-ETYMON-PASSATO-PROSSIMO-03",
+      "IT-LEX-PASSATO-REMOTO-02",
+      "IT-ETYMON-PASSATO-REMOTO-03",
+      "IT-PRAGMATICS-PASSATO-REMOTO-04",
+      "IT-NOTICE-PASSATO-REMOTO-05"
+    ]
+  }
+}

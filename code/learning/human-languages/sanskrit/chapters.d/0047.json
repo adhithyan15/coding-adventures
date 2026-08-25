@@ -1,0 +1,21 @@
+{
+  "chapter": 47,
+  "title": "Parts of a House",
+  "label": "ch:sa-parts-of-a-house",
+  "canDo": "I can name a wall, a window, a stair, a pillar and the floor in Sanskrit.",
+  "spineNodes": [
+    "SPINE-POLITE-REQUEST-REPAIR"
+  ],
+  "payoff": {
+    "lesson": "SA-C47-floor",
+    "kind": "production",
+    "summary": "Complete SA-C47-floor and demonstrate the chapter promise.",
+    "assesses": [
+      "SA-LEX-C47-DWELL-01",
+      "SA-LEX-C47-DWELL-02",
+      "SA-LEX-C47-DWELL-03",
+      "SA-LEX-C47-DWELL-04",
+      "SA-LEX-C47-DWELL-05"
+    ]
+  }
+}

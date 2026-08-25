@@ -1,0 +1,10 @@
+{
+  "id": "ML-PATH-006",
+  "spine_node": "SPINE-CHECK-WELLBEING",
+  "lessons": [
+    "ML-C03-engane"
+  ],
+  "before": [],
+  "inline": [],
+  "after": []
+}

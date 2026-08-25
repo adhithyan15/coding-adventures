@@ -1,0 +1,13 @@
+{
+  "id": "JA-EXT-011-DAKUTEN-WRITING",
+  "stage": "pre-A1",
+  "kind": "required",
+  "category": "script",
+  "canDo": "I can carry the dakuten to a sign I meet later, voicing さ into ざ without being taught a new shape.",
+  "prerequisites": [
+    "JA-EXT-010-HIRAGANA-THANKS"
+  ],
+  "lessons": [
+    "JA-W03-sa"
+  ]
+}

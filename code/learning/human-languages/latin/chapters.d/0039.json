@@ -1,0 +1,21 @@
+{
+  "chapter": 39,
+  "title": "Taking, Asking, Helping, Loving",
+  "label": "ch:la-doing-verbs",
+  "canDo": "I can say I take, I ask, I help and I love in Latin, produce the he-or-she form of each, and name the English words each verb built.",
+  "spineNodes": [
+    "SPINE-SAY-WHAT-I-DO"
+  ],
+  "payoff": {
+    "lesson": "LA-C39-amo",
+    "kind": "production",
+    "summary": "The chapter closes on amō: after learning it the reader produces all four first-person forms and all four third-person forms in sequence — capiō, rogō, adiuvō, amō and capit, rogat, adiuvat, amat.",
+    "assesses": [
+      "LA-LEX-CAPIO-01",
+      "LA-LEX-ROGO-01",
+      "LA-LEX-ADIUVO-01",
+      "LA-LEX-AMO-01",
+      "LA-ETYMON-AMO-02"
+    ]
+  }
+}

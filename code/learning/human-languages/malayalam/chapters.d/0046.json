@@ -1,0 +1,21 @@
+{
+  "chapter": 46,
+  "title": "Things You Ask For",
+  "label": "ch:ml-ask-for",
+  "canDo": "I can name five everyday things I might ask someone for in Malayalam, and say which of them the language has held all along and which walked in from elsewhere.",
+  "spineNodes": [
+    "SPINE-POLITE-REQUEST-REPAIR"
+  ],
+  "payoff": {
+    "lesson": "ML-C46-book",
+    "kind": "production",
+    "summary": "Complete ML-C46-book and say all five words in order.",
+    "assesses": [
+      "ML-LEX-C46-ASK-01",
+      "ML-LEX-C46-ASK-02",
+      "ML-LEX-C46-ASK-03",
+      "ML-LEX-C46-ASK-04",
+      "ML-LEX-C46-ASK-05"
+    ]
+  }
+}

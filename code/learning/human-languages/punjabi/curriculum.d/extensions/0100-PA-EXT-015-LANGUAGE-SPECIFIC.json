@@ -1,0 +1,14 @@
+{
+  "id": "PA-EXT-015-LANGUAGE-SPECIFIC",
+  "stage": "pre-A1",
+  "kind": "required",
+  "category": "language-specific",
+  "canDo": "I can name a friend, a family, a brother, and a sister in Punjabi.",
+  "prerequisites": [],
+  "lessons": [
+    "PA-C11-dost",
+    "PA-C11-parivar",
+    "PA-C11-bhara",
+    "PA-C11-bhain"
+  ]
+}

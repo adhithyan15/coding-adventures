@@ -1,0 +1,16 @@
+{
+  "id": "UR-EXT-024-COLORS",
+  "stage": "pre-A1",
+  "kind": "required",
+  "category": "language-specific",
+  "canDo": "I can name red, white, black and blue in Urdu, and tell which colors change their ending for the noun they describe and which never do.",
+  "prerequisites": [
+    "UR-EXT-023-WATER-TEA-MILK-BREAD"
+  ],
+  "lessons": [
+    "UR-C13-lal",
+    "UR-C13-safed",
+    "UR-C13-kala",
+    "UR-C13-nila"
+  ]
+}

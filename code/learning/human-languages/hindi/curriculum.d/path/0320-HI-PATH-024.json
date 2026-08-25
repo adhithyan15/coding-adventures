@@ -1,0 +1,11 @@
+{
+  "id": "HI-PATH-024",
+  "spine_node": "SPINE-TIME-OF-DAY",
+  "lessons": [
+    "HI-C25-din",
+    "HI-C26-raat"
+  ],
+  "before": [],
+  "inline": [],
+  "after": []
+}

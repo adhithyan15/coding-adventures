@@ -1,0 +1,20 @@
+{
+  "chapter": 22,
+  "title": "Espanol, and Your First Built Sentence",
+  "label": "ch:spanish-espanol",
+  "canDo": "I can name the language and build a whole sentence from parts I chose myself.",
+  "spineNodes": [
+    "SPINE-POLITE-REQUEST-REPAIR"
+  ],
+  "payoff": {
+    "lesson": "ES-C06-hablo-espanol",
+    "kind": "dialogue",
+    "summary": "Hispania to espanol, and the first sentence assembled rather than memorised.",
+    "assesses": [
+      "ES-LEX-ESPANOL",
+      "ES-ETYMON-HISPANIA",
+      "ES-LEX-HABLO-ESPANOL",
+      "ES-GRAMMAR-BARE-LANGUAGE"
+    ]
+  }
+}

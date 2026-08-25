@@ -1,0 +1,12 @@
+{
+  "id": "ES-PATH-338-01",
+  "spine_node": "SPINE-TIME-OF-DAY",
+  "lessons": [
+    "ES-W01-ficha-personal"
+  ],
+  "before": [],
+  "inline": [
+    "ES-EXT-338-WRITING"
+  ],
+  "after": []
+}

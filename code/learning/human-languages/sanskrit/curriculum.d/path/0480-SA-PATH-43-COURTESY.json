@@ -1,0 +1,16 @@
+{
+  "id": "SA-PATH-43-COURTESY",
+  "spine_node": "SPINE-COURTESY-THANK",
+  "lessons": [
+    "SA-C43-hospitality",
+    "SA-C43-conduct",
+    "SA-C43-humility",
+    "SA-C43-trust",
+    "SA-C43-honest"
+  ],
+  "before": [],
+  "inline": [
+    "SA-EXT-43-COURTESY"
+  ],
+  "after": []
+}

@@ -1,0 +1,10 @@
+{
+  "id": "AR-PATH-002",
+  "spine_node": "SPINE-DEFINITE-REFERENCE",
+  "lessons": [
+    "AR-C01-al"
+  ],
+  "before": [],
+  "inline": [],
+  "after": []
+}

@@ -1,0 +1,26 @@
+{
+  "chapter": 40,
+  "title": "A Meal",
+  "label": "ch:ka-a-meal",
+  "canDo": "I can say I am having a meal in Kannada, using the word Chapter 32 used once and never explained, and place it at the hour of two greetings I already know.",
+  "spineNodes": [
+    "SPINE-POLITE-REQUEST-REPAIR"
+  ],
+  "payoff": {
+    "lesson": "KA-C40-oota",
+    "kind": "production",
+    "summary": "Say ಊಟ ಮಾಡು, explain ūṭa against everyday tinnu, read the independent vowel ಊ, and place the word at the hour of ಶುಭ ಮಧ್ಯಾಹ್ನ and before ಶುಭ ರಾತ್ರಿ.",
+    "assesses": [
+      "KA-LEX-C40-OOTA-01",
+      "KA-ETYMON-C40-OOTA-02",
+      "KA-LEX-C32-TINNU-01",
+      "KA-LEX-C39-HAALU-01",
+      "KA-ETYMON-C39-HAALU-02",
+      "KA-ETYMON-C25-SHUBHA-RATRI-01",
+      "KA-ETYMON-C25-SHUBHA-RATRI-02",
+      "KA-ETYMON-C25-SHUBHA-RATRI-03",
+      "KA-ETYMON-C31-SHUBHA-MADHYAHNA-01",
+      "KA-PRAGMATICS-C31-SHUBHA-MADHYAHNA-02"
+    ]
+  }
+}

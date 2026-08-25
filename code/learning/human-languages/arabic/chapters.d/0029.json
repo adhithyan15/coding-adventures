@@ -1,0 +1,19 @@
+{
+  "chapter": 29,
+  "title": "Saying and Seeing",
+  "label": "ch:ar-saying-and-seeing",
+  "canDo": "I can say the Arabic for 'he said' and 'he saw', read the letters qāf and alif maqṣūra, and name the doer, done-to, place and instrument words each root builds.",
+  "spineNodes": [
+    "SPINE-SAY-WHAT-I-DO"
+  ],
+  "payoff": {
+    "lesson": "AR-C29-raa",
+    "kind": "production",
+    "summary": "Say raʾā, read its dotless alif maqṣūra, follow the root out into raʾy 'opinion' and mirʾāh 'mirror', and restate the pattern family qāla laid out.",
+    "assesses": [
+      "AR-CONCEPT-C29-RAA-01",
+      "AR-CONCEPT-C29-RAA-02",
+      "AR-CONCEPT-C29-QALA-02"
+    ]
+  }
+}

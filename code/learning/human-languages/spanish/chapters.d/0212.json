@@ -1,0 +1,17 @@
+{
+  "chapter": 212,
+  "title": "Dijo --- The Stem That Breaks Its Own Rule",
+  "label": "ch:dijo",
+  "canDo": "I can say what someone said, and say it in the plural without inventing a syllable.",
+  "spineNodes": [
+    "SPINE-REPORT-WHAT-OTHERS-SAID"
+  ],
+  "payoff": {
+    "lesson": "ES-C57-dijo",
+    "kind": "task",
+    "summary": "I can say what someone said, and say it in the plural without inventing a syllable.",
+    "assesses": [
+      "ES-GRAMMAR-DECIR-PRETERITE"
+    ]
+  }
+}

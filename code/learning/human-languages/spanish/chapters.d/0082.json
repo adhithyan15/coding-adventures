@@ -1,0 +1,20 @@
+{
+  "chapter": 82,
+  "title": "Synthesis --- More Than One",
+  "label": "ch:synthesis-more-than-one",
+  "canDo": "I can contrast a bare plural with a definite plural, and know that the indefinite article is dropped rather than pluralised.",
+  "spineNodes": [
+    "SPINE-DEFINITE-REFERENCE"
+  ],
+  "payoff": {
+    "lesson": "ES-C44-sintesis-mas-de-uno",
+    "kind": "task",
+    "summary": "Complete ES-C44-sintesis-mas-de-uno: say tengo libros and tengo los libros and explain what separates them.",
+    "assesses": [
+      "ES-GRAMMAR-BARE-PLURAL-NOUN",
+      "ES-GRAMMAR-DEFINITE-PLURAL-MASCULINE",
+      "ES-GRAMMAR-DEFINITE-PLURAL-FEMININE"
+    ],
+    "note": "The communicative payoff of the plural arc: one article pluralises and the other leaves, and the difference is definiteness, which English marks without ever explaining."
+  }
+}

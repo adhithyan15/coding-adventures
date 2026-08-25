@@ -1,0 +1,12 @@
+{
+  "id": "TE-PATH-014",
+  "spine_node": "SPINE-TIME-OF-DAY",
+  "lessons": [
+    "TE-C10-vaaram"
+  ],
+  "before": [],
+  "inline": [
+    "TE-EXT-014-LANGUAGE-SPECIFIC"
+  ],
+  "after": []
+}

@@ -1,0 +1,25 @@
+{
+  "chapter": 12,
+  "title": "Eye, Ear, Mouth, and Nose",
+  "label": "ch:pa-face-parts",
+  "canDo": "I can name the eye, ear, mouth, and nose in Punjabi, tell a doubled consonant that survived from one that vanished into tone, and clear up the false friend ਕੰਨ shares in spelling, but not in root, with ਕਰਨਾ.",
+  "spineNodes": [
+    "SPINE-CHECK-WELLBEING"
+  ],
+  "payoff": {
+    "lesson": "PA-C12-nakk",
+    "kind": "production",
+    "summary": "The chapter closes on ਨੱਕ, completing the face: the reader produces ਅੱਖ, ਕੰਨ, ਮੂੰਹ and ਨੱਕ, names ਅੱਖ and ਨੱਕ as unbroken PIE cousins of eye and nose that kept their doubled consonants and so never traded a sound for a tone, and states that ਮੂੰਹ alone among the four carries a level high tone, the same one first heard in ਚਾਹ.",
+    "assesses": [
+      "PA-LEX-NAKK",
+      "PA-ETYMON-NAKK-NOSE",
+      "PA-LEX-MUNH",
+      "PA-ETYMON-MUNH-MUKHA",
+      "PA-LEX-AKKH",
+      "PA-ETYMON-AKKH-EYE",
+      "PA-LEX-KANN",
+      "PA-CONTRAST-KANN-KARNA",
+      "PA-SOUND-TONE-HIGH-LEVEL"
+    ]
+  }
+}

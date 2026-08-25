@@ -1,0 +1,15 @@
+{
+  "segments": [
+    "ES-PATH-B2-DICE-QUE",
+    "ES-PATH-B2-DIJO",
+    "ES-PATH-B2-DIJO-QUE",
+    "ES-PATH-B2-PREGUNTO-SI",
+    "ES-PATH-B2-PREGUNTO-DONDE",
+    "ES-PATH-B2-REVIEW-REPORT",
+    "ES-PATH-B2-SYNTH-REPORT"
+  ],
+  "omits": [
+    "QUOTATION-DIRECT"
+  ],
+  "relocates": {}
+}

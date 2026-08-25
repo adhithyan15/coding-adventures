@@ -1,0 +1,18 @@
+{
+  "chapter": 20,
+  "title": "Trabajar --- Work, and the Torture Device Behind It",
+  "label": "ch:spanish-trabajar",
+  "canDo": "I can say what I do for work with a second regular -ar verb.",
+  "spineNodes": [
+    "SPINE-POLITE-REQUEST-REPAIR"
+  ],
+  "payoff": {
+    "lesson": "ES-C06-trabajar",
+    "kind": "task",
+    "summary": "tripalium, a three-stake device, is why work and travail are the same word.",
+    "assesses": [
+      "ES-LEX-TRABAJAR",
+      "ES-ETYMON-TRIPALIUM"
+    ]
+  }
+}

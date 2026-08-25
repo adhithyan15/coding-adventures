@@ -1,0 +1,22 @@
+{
+  "chapter": 6,
+  "title": "Numbers One to Ten",
+  "label": "ch:it-numbers-one-to-ten",
+  "canDo": "I can count from one to ten in Italian and hear the old numbers still sitting inside settembre and dicembre.",
+  "spineNodes": [
+    "SPINE-COUNT-ONE-TO-FIVE"
+  ],
+  "payoff": {
+    "lesson": "IT-C06-numeri-6-10",
+    "kind": "task",
+    "summary": "Count uno to dieci, pair sette, otto, nove and dieci with settembre, ottobre, novembre and dicembre, and hear Latin's -ct- flattened into the doubled -tt- of otto.",
+    "assesses": [
+      "IT-SOUND-NUMERI-1-5-02",
+      "IT-ETYMON-NUMERI-1-5-03",
+      "IT-GRAMMAR-NUMERI-1-5-04",
+      "IT-SOUND-NUMERI-6-10-02",
+      "IT-ETYMON-NUMERI-6-10-03",
+      "IT-GRAMMAR-NUMERI-6-10-04"
+    ]
+  }
+}

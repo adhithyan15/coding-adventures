@@ -1,0 +1,12 @@
+{
+  "id": "BN-PATH-010",
+  "spine_node": "SPINE-COUNT-ONE-TO-FIVE",
+  "lessons": [
+    "BN-C06-numbers-1-5"
+  ],
+  "before": [],
+  "inline": [
+    "BN-EXT-010-LANGUAGE-SPECIFIC"
+  ],
+  "after": []
+}

@@ -1,0 +1,22 @@
+{
+  "chapter": 6,
+  "title": "Numbers One to Ten",
+  "label": "ch:pt-numbers-one-to-ten",
+  "canDo": "I can count from one to ten in Portuguese and hear the old numbers still sitting inside setembro and dezembro.",
+  "spineNodes": [
+    "SPINE-COUNT-ONE-TO-FIVE"
+  ],
+  "payoff": {
+    "lesson": "PT-C06-numeros-6-10",
+    "kind": "task",
+    "summary": "Count um to dez, pair sete, oito, nove and dez with setembro, outubro, novembro and dezembro, and hear Latin's -ct- become the -it- of oito, noite and leite.",
+    "assesses": [
+      "PT-SOUND-NUMEROS-1-5-02",
+      "PT-ETYMON-NUMEROS-1-5-03",
+      "PT-GRAMMAR-NUMEROS-1-5-04",
+      "PT-SOUND-NUMEROS-6-10-02",
+      "PT-ETYMON-NUMEROS-6-10-03",
+      "PT-GRAMMAR-NUMEROS-6-10-04"
+    ]
+  }
+}

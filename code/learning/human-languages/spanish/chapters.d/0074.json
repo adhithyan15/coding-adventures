@@ -1,0 +1,18 @@
+{
+  "chapter": 74,
+  "title": "Review --- Six Verbs, One Ending",
+  "label": "ch:spanish-review-yo-go",
+  "canDo": "I can name all six -go verbs and say why the list is closed.",
+  "spineNodes": [
+    "SPINE-SAY-WHAT-I-DO"
+  ],
+  "payoff": {
+    "lesson": "ES-C13-practice",
+    "kind": "dialogue",
+    "summary": "The club is complete at six - and it was never a club, only six unrelated verbs that converged.",
+    "assesses": [
+      "ES-GRAMMAR-YO-GO-CONTRAST-LEARNED",
+      "ES-HISTORY-YO-GO-CONVERGENCE"
+    ]
+  }
+}

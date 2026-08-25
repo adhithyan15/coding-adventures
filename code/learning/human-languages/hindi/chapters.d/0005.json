@@ -1,0 +1,16 @@
+{
+  "chapter": 5,
+  "title": "The First Verbs",
+  "label": "ch:first-verbs",
+  "canDo": "I can build short present-tense Hindi sentences with the chapter's first verbs.",
+  "spineNodes": [
+    "SPINE-SAY-WHAT-I-DO"
+  ],
+  "payoff": {
+    "lesson": "HI-C05-practice",
+    "kind": "task",
+    "summary": "Complete HI-C05-practice, the canonical closing checkpoint, and demonstrate the chapter promise: build short present-tense Hindi sentences with the chapter's first verbs.",
+    "assesses": [],
+    "note": "This legacy schema-v1 chapter has no typed knowledge atoms yet. The payoff is anchored to real canonical lesson content, but its representativeness remains authored rather than atom-scored until migration."
+  }
+}

@@ -1,0 +1,10 @@
+{
+  "segments": [],
+  "omits": [
+    "LITERARY-REGISTER",
+    "ARCHAIC-FORM",
+    "METER-AND-VERSE",
+    "ORTHOGRAPHY-HISTORICAL"
+  ],
+  "relocates": {}
+}

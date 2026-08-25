@@ -1,0 +1,21 @@
+{
+  "chapter": 46,
+  "title": "Sun and Shade",
+  "label": "ch:sa-sun-and-shade",
+  "canDo": "I can name the sun, a ray, light, shade and heat in Sanskrit.",
+  "spineNodes": [
+    "SPINE-CHECK-WELLBEING"
+  ],
+  "payoff": {
+    "lesson": "SA-C46-heat",
+    "kind": "production",
+    "summary": "Complete SA-C46-heat and demonstrate the chapter promise.",
+    "assesses": [
+      "SA-LEX-C46-LIGHT-01",
+      "SA-LEX-C46-LIGHT-02",
+      "SA-LEX-C46-LIGHT-03",
+      "SA-LEX-C46-LIGHT-04",
+      "SA-LEX-C46-LIGHT-05"
+    ]
+  }
+}

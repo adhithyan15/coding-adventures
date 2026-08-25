@@ -1,0 +1,18 @@
+{
+  "chapter": 21,
+  "title": "Dog and Cat",
+  "label": "ch:ar-dog-and-cat",
+  "canDo": "I can name a dog and a cat in Arabic.",
+  "spineNodes": [
+    "SPINE-DEFINITE-REFERENCE"
+  ],
+  "payoff": {
+    "lesson": "AR-C21-kalb-qitt",
+    "kind": "production",
+    "summary": "Say kalb beside Hebrew kelev, then qiṭṭ beside Latin cattus, flagging that the cat link is still debated.",
+    "assesses": [
+      "AR-CONCEPT-C21-KALB-QITT-01",
+      "AR-CONCEPT-C21-KALB-QITT-02"
+    ]
+  }
+}

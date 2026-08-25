@@ -1,0 +1,17 @@
+{
+  "chapter": 262,
+  "title": "Primero, Segundo, Tercero --- Counting in Order",
+  "label": "ch:primero",
+  "canDo": "I can say which one in a line something is.",
+  "spineNodes": [
+    "SPINE-DEFINITE-REFERENCE"
+  ],
+  "payoff": {
+    "lesson": "ES-C67-primero",
+    "kind": "task",
+    "summary": "I can say which one in a line something is.",
+    "assesses": [
+      "ES-LEX-ORDINALS"
+    ]
+  }
+}

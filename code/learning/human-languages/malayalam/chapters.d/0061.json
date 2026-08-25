@@ -1,0 +1,21 @@
+{
+  "chapter": 61,
+  "title": "On the Kitchen Shelf",
+  "label": "ch:ml-on-the-kitchen-shelf",
+  "canDo": "I can name a coconut, oil, curd, jaggery and a chilli in Malayalam.",
+  "spineNodes": [
+    "SPINE-EXCHANGE-NAMES"
+  ],
+  "payoff": {
+    "lesson": "ML-C61-chilli",
+    "kind": "production",
+    "summary": "Complete ML-C61-chilli and say all five words in order.",
+    "assesses": [
+      "ML-LEX-C61-SHELF-01",
+      "ML-LEX-C61-SHELF-02",
+      "ML-LEX-C61-SHELF-03",
+      "ML-LEX-C61-SHELF-04",
+      "ML-LEX-C61-SHELF-05"
+    ]
+  }
+}

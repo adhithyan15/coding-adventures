@@ -1,0 +1,16 @@
+{
+  "id": "SA-PATH-24-ASK",
+  "spine_node": "SPINE-POLITE-REQUEST-REPAIR",
+  "lessons": [
+    "SA-C24-water",
+    "SA-C24-rice",
+    "SA-C24-fruit",
+    "SA-C24-cloth",
+    "SA-C24-lamp"
+  ],
+  "before": [],
+  "inline": [
+    "SA-EXT-24-ASK"
+  ],
+  "after": []
+}

@@ -1,0 +1,12 @@
+{
+  "id": "ES-EXT-319-RESPUESTAS",
+  "stage": "pre-A1",
+  "kind": "required",
+  "category": "review",
+  "canDo": "I can use the five answering words, and say which two change their ending and why.",
+  "prerequisites": [],
+  "lessons": [
+    "ES-C319-repaso-respuestas",
+    "ES-C319-otro-y-poco"
+  ]
+}

@@ -1,0 +1,21 @@
+{
+  "chapter": 330,
+  "title": "The Road and the World",
+  "label": "ch:camino-y-vez",
+  "canDo": "I can name el camino, la parada, el mundo, la vida and la vez, and say which of them is Celtic rather than Latin.",
+  "spineNodes": [
+    "SPINE-MEET-GREET"
+  ],
+  "payoff": {
+    "lesson": "ES-C330-vez",
+    "kind": "production",
+    "summary": "Complete ES-C330-vez: follow a camino to a parada, widen out to el mundo and la vida, and open the noun inside otra vez.",
+    "assesses": [
+      "ES-LEX-C330-WAY-11",
+      "ES-LEX-C330-WAY-12",
+      "ES-LEX-C330-WAY-13",
+      "ES-LEX-C330-WAY-14",
+      "ES-LEX-C330-WAY-15"
+    ]
+  }
+}

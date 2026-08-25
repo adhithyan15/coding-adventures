@@ -1,0 +1,11 @@
+{
+  "segments": [
+    "GU-PATH-004",
+    "GU-PATH-C1P"
+  ],
+  "omits": [
+    "RESPONSE-YES",
+    "RESPONSE-NO"
+  ],
+  "relocates": {}
+}

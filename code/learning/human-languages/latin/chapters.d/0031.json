@@ -1,0 +1,21 @@
+{
+  "chapter": 31,
+  "title": "Morning",
+  "label": "ch:la-morning",
+  "canDo": "I can say morning in Latin with māne, and keep it apart from manus, the hand.",
+  "spineNodes": [
+    "SPINE-TIME-OF-DAY"
+  ],
+  "payoff": {
+    "lesson": "LA-C31-mane",
+    "kind": "production",
+    "summary": "Say māne, recover it inside dē māne and mañana, and keep long-ā mānus apart from short-a manus, the hand.",
+    "assesses": [
+      "LA-LEX-CRAS-TE-VIDEBO-01",
+      "LA-ETYMON-CRAS-TE-VIDEBO-02",
+      "LA-PRAGMATICS-CRAS-TE-VIDEBO-03",
+      "LA-GRAMMAR-MANE-01",
+      "LA-ETYMON-MANE-02"
+    ]
+  }
+}

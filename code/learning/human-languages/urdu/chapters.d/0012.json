@@ -1,0 +1,26 @@
+{
+  "chapter": 12,
+  "title": "Water, Tea, Milk, Bread",
+  "label": "ch:ur-food-words",
+  "canDo": "I can name water, tea, milk and bread in Urdu, say what I like using the frame Chapter 8 built, and sort each word as inherited or Persian.",
+  "spineNodes": [
+    "SPINE-POLITE-REQUEST-REPAIR"
+  ],
+  "payoff": {
+    "lesson": "UR-C12-roti",
+    "kind": "production",
+    "summary": "Say mujhe roṭī pasand hai, reusing Chapter 8's dative-experiencer frame on a plain noun instead of an infinitive, and sort pānī/dūdh/roṭī as inherited against chāy's Persian loan — with pānī reusing lenā's verb frame and dūdh correcting a tempting false cognate with English dough.",
+    "assesses": [
+      "UR-LEX-PANI",
+      "UR-ETYMON-PANI-DRINK",
+      "UR-LEX-CHAI",
+      "UR-ETYMON-CHAI-SILKROAD",
+      "UR-LEX-DOODH",
+      "UR-ETYMON-DOODH-DOUGHTY",
+      "UR-LEX-ROTI",
+      "UR-ETYMON-ROTI-STRIKE",
+      "UR-GRAMMAR-DATIVE-EXPERIENCER",
+      "UR-LEX-PASAND"
+    ]
+  }
+}

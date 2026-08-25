@@ -1,0 +1,20 @@
+{
+  "chapter": 35,
+  "title": "The People You Introduce",
+  "label": "ch:ar-people-you-introduce",
+  "canDo": "I can name and introduce a neighbour, a son, a daughter and a friend in Arabic, and say what single letter genders a pair of them.",
+  "spineNodes": [
+    "SPINE-EXCHANGE-NAMES"
+  ],
+  "payoff": {
+    "lesson": "AR-C35-sadiq",
+    "kind": "production",
+    "summary": "Take ṣadīq back to ص-د-ق, 'to be truthful', and run the family ṣidq, ṣādiq, ṣadaqa and aṣdiqāʾ, naming the faʿīl pattern it shares with ḥalīb and malīḥ and the doer shape it shares with qāʾil and kātib, then line up the people already owned — ab, umm, akh, ukht — against jārī, ibn, bint and ṣadīqī.",
+    "assesses": [
+      "AR-CONCEPT-C35-SADIQ-01",
+      "AR-CONCEPT-C35-SADIQ-02",
+      "AR-CONCEPT-C35-IBN-BINT-02",
+      "AR-CONCEPT-C35-JAR-02"
+    ]
+  }
+}

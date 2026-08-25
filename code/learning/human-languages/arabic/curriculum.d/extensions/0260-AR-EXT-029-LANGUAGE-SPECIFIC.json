@@ -1,0 +1,14 @@
+{
+  "id": "AR-EXT-029-LANGUAGE-SPECIFIC",
+  "stage": "A2",
+  "kind": "required",
+  "category": "language-specific",
+  "canDo": "I can tell a plain Arabic verb from a rebuilt one and say what doubling, stretching or prefixing a root does to its meaning.",
+  "prerequisites": [],
+  "lessons": [
+    "AR-C32-akhadha",
+    "AR-C32-fakkara",
+    "AR-C32-saada",
+    "AR-C32-ahabba"
+  ]
+}

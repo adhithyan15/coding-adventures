@@ -1,0 +1,24 @@
+{
+  "chapter": 4,
+  "title": "How Are You?",
+  "label": "ch:responding",
+  "canDo": "I can ask how someone is in Gujarati, answer naturally, and return the question.",
+  "spineNodes": [
+    "SPINE-EXCHANGE-NAMES",
+    "SPINE-CHECK-WELLBEING",
+    "SPINE-COURTESY-THANK"
+  ],
+  "payoff": {
+    "lesson": "GU-C03-practice",
+    "kind": "task",
+    "summary": "Complete GU-C03-practice, the canonical closing checkpoint, and demonstrate the chapter promise: ask how someone is in Gujarati, answer naturally, and return the question.",
+    "assesses": [
+      "GU-CONCEPT-C03-HUN-01",
+      "GU-CONCEPT-C03-KEM-01",
+      "GU-CONCEPT-C03-MAJAA-01",
+      "GU-CONCEPT-C03-PRACTICE-01",
+      "GU-CONCEPT-C03-TAMEKEMCHHO-01",
+      "GU-CONCEPT-C03-VANDHONAHI-01"
+    ]
+  }
+}

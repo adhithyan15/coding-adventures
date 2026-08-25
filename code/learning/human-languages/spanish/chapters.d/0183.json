@@ -1,0 +1,19 @@
+{
+  "chapter": 183,
+  "title": "Como Se Dice --- The Sentence That Unlocks the Rest",
+  "label": "ch:como-se-dice",
+  "canDo": "I can ask how something is said, and say which se that is.",
+  "spineNodes": [
+    "SPINE-GIVE-REASONS"
+  ],
+  "payoff": {
+    "lesson": "ES-C52-como-se-dice",
+    "kind": "task",
+    "summary": "Complete ES-C52-como-se-dice: ask the question politely and say why it is impersonal rather than aimed at the listener.",
+    "assesses": [
+      "ES-LEX-COMO-SE-DICE",
+      "ES-GRAMMAR-SE-IMPERSONAL"
+    ],
+    "note": "The one sentence that lets a conversation repair itself: it gets the reader a word they do not have, from the person in front of them, mid-conversation."
+  }
+}

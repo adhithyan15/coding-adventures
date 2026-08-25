@@ -1,0 +1,15 @@
+{
+  "id": "BN-EXT-020-COLORS",
+  "stage": "pre-A1",
+  "kind": "required",
+  "category": "language-specific",
+  "canDo": "I can name five colors in Bengali and say which arrived from Persian, which from Sanskrit, and which parted ways with Hindi's own word for the same color.",
+  "prerequisites": [],
+  "lessons": [
+    "BN-C14-lal",
+    "BN-C14-nil",
+    "BN-C14-kalo",
+    "BN-C14-shada",
+    "BN-C14-shobuj"
+  ]
+}

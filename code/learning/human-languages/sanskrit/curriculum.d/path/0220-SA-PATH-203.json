@@ -1,0 +1,17 @@
+{
+  "id": "SA-PATH-203",
+  "spine_node": "SPINE-DEFINITE-REFERENCE",
+  "lessons": [
+    "SA-C17-day",
+    "SA-C17-night",
+    "SA-C17-today",
+    "SA-C17-yesterday",
+    "SA-C17-always",
+    "SA-C17-time-words"
+  ],
+  "before": [],
+  "inline": [
+    "SA-EXT-203-TIME"
+  ],
+  "after": []
+}

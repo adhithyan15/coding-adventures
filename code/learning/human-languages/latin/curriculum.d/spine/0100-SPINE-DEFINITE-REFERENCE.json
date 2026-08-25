@@ -1,0 +1,10 @@
+{
+  "segments": [
+    "LA-PATH-009",
+    "LA-PATH-018"
+  ],
+  "omits": [
+    "GRAMMAR-THE"
+  ],
+  "relocates": {}
+}

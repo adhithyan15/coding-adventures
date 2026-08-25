@@ -1,0 +1,21 @@
+{
+  "chapter": 22,
+  "title": "Green and Yellow",
+  "label": "ch:ta-green-and-yellow",
+  "canDo": "I can say green and yellow in Tamil, recognise பசுப்பு as a rarer doublet, and keep the pan-Dravidian root separate from the independent one.",
+  "spineNodes": [
+    "SPINE-DEFINITE-REFERENCE"
+  ],
+  "payoff": {
+    "lesson": "TA-C22-paccai-manjal",
+    "kind": "production",
+    "summary": "Say பச்சை as the pan-Dravidian green, மஞ்சள் as a separate native yellow, and பசுப்பு as the rarer doublet beside them.",
+    "assesses": [
+      "TA-ETYMON-NIRANGAL-01",
+      "TA-LEX-NAAY-POONAI-01",
+      "TA-LEX-PACCAI-MANJAL-01",
+      "TA-ETYMON-PACCAI-MANJAL-02",
+      "TA-ETYMON-PACCAI-MANJAL-03"
+    ]
+  }
+}

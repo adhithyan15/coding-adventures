@@ -1,0 +1,20 @@
+{
+  "chapter": 22,
+  "title": "Verbs of Mind and Motion",
+  "label": "ch:sa-verbs-of-mind",
+  "canDo": "I can say that someone hears, leads, plays and asks in Sanskrit, and name the root behind each.",
+  "spineNodes": [
+    "SPINE-SAY-WHAT-I-DO"
+  ],
+  "payoff": {
+    "lesson": "SA-C22-burn",
+    "kind": "production",
+    "summary": "Complete SA-C22-burn and say all four verbs in order.",
+    "assesses": [
+      "SA-LEX-HEAR",
+      "SA-LEX-LEAD",
+      "SA-LEX-PLAY",
+      "SA-LEX-BURN"
+    ]
+  }
+}

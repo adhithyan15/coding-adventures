@@ -1,0 +1,21 @@
+{
+  "chapter": 73,
+  "title": "Tastes",
+  "label": "ch:te-tastes",
+  "canDo": "I can name the tastes of a Telugu meal and take my leave when it is finished.",
+  "spineNodes": [
+    "SPINE-TAKE-LEAVE"
+  ],
+  "payoff": {
+    "lesson": "TE-C73-astringent",
+    "kind": "production",
+    "summary": "Complete TE-C73-astringent and demonstrate the chapter promise.",
+    "assesses": [
+      "TE-LEX-C73-TASTE-01",
+      "TE-LEX-C73-TASTE-02",
+      "TE-LEX-C73-TASTE-03",
+      "TE-LEX-C73-TASTE-04",
+      "TE-LEX-C73-TASTE-05"
+    ]
+  }
+}

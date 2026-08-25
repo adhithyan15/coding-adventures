@@ -1,0 +1,12 @@
+{
+  "id": "SA-EXT-009-ETYMOLOGY",
+  "stage": "A1",
+  "kind": "supporting",
+  "category": "etymology",
+  "canDo": "I can use this Sanskrit word history as a memory hook without confusing origin and current use.",
+  "prerequisites": [],
+  "lessons": [
+    "SA-C06-number-cognates",
+    "SA-C06-pancha-travels"
+  ]
+}

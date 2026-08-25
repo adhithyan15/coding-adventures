@@ -1,0 +1,18 @@
+{
+  "chapter": 28,
+  "title": "Afternoon",
+  "label": "ch:ml-afternoon",
+  "canDo": "I can say afternoon in Malayalam as uchakaḻiññ -- literally 'noon having passed'.",
+  "spineNodes": [
+    "SPINE-TIME-OF-DAY"
+  ],
+  "payoff": {
+    "lesson": "ML-C28-uchakazhinju",
+    "kind": "production",
+    "summary": "Build uchakaḻiññ from ucha plus kaḻiyuka, and contrast it with Telugu, which widened its noon-word instead.",
+    "assesses": [
+      "ML-CONCEPT-C28-UCHAKAZHINJU-01",
+      "ML-CONCEPT-C28-UCHAKAZHINJU-02"
+    ]
+  }
+}

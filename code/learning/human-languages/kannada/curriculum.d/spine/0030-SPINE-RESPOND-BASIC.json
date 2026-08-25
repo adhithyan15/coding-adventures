@@ -1,0 +1,12 @@
+{
+  "segments": [
+    "KA-PATH-003",
+    "KA-PATH-49-REPLY",
+    "KA-PATH-58-REPLY",
+    "KA-PATH-64-JOIN"
+  ],
+  "omits": [
+    "RESPONSE-YESNO"
+  ],
+  "relocates": {}
+}

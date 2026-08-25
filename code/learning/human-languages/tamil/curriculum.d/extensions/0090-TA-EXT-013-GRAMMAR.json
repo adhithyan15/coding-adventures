@@ -1,0 +1,12 @@
+{
+  "id": "TA-EXT-013-GRAMMAR",
+  "stage": "pre-A1",
+  "kind": "required",
+  "category": "grammar",
+  "canDo": "I can use the Tamil-specific grammar needed for this part of the shared ability.",
+  "prerequisites": [],
+  "lessons": [
+    "TA-C06-dative-stacking",
+    "TA-C06-dative-subject-family"
+  ]
+}

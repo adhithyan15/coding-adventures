@@ -1,0 +1,21 @@
+{
+  "chapter": 351,
+  "title": "Counting Past Your Fingers",
+  "label": "ch:cien-y-la-cantidad",
+  "canDo": "I can say cien, la cantidad, ambos, varios and el triple, and say why cien and English hundred are the same word split by one sound change.",
+  "spineNodes": [
+    "SPINE-COUNT-ONE-TO-FIVE"
+  ],
+  "payoff": {
+    "lesson": "ES-C351-triple",
+    "kind": "production",
+    "summary": "Complete ES-C351-triple: count to a hundred, name an amount, take two together, say there are several, and treble a figure.",
+    "assesses": [
+      "ES-LEX-C351-COUNT-06",
+      "ES-LEX-C351-COUNT-07",
+      "ES-LEX-C351-COUNT-08",
+      "ES-LEX-C351-COUNT-09",
+      "ES-LEX-C351-COUNT-10"
+    ]
+  }
+}

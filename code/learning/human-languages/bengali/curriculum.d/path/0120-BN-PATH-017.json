@@ -1,0 +1,16 @@
+{
+  "id": "BN-PATH-017",
+  "spine_node": "SPINE-SAY-WHAT-I-DO",
+  "lessons": [
+    "BN-C05-bola",
+    "BN-C05-ami-bangla-boli",
+    "BN-C05-kaj-kora",
+    "BN-C05-thaka",
+    "BN-C05-practice"
+  ],
+  "before": [],
+  "inline": [
+    "BN-EXT-017-LANGUAGE-SPECIFIC"
+  ],
+  "after": []
+}

@@ -1,0 +1,21 @@
+{
+  "chapter": 58,
+  "title": "More Short Replies",
+  "label": "ch:te-more-replies",
+  "canDo": "I can say how much I want, refuse politely, and close a conversation in Telugu.",
+  "spineNodes": [
+    "SPINE-RESPOND-BASIC"
+  ],
+  "payoff": {
+    "lesson": "TE-C58-thats-all",
+    "kind": "production",
+    "summary": "Complete TE-C58-thats-all and demonstrate the chapter promise.",
+    "assesses": [
+      "TE-LEX-C58-REPLY-01",
+      "TE-LEX-C58-REPLY-02",
+      "TE-LEX-C58-REPLY-03",
+      "TE-LEX-C58-REPLY-04",
+      "TE-LEX-C58-REPLY-05"
+    ]
+  }
+}

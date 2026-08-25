@@ -1,0 +1,18 @@
+{
+  "chapter": 13,
+  "title": "Head and Hand",
+  "label": "ch:hi-head-and-hand",
+  "canDo": "I can name the head and the hand in Hindi and trace both back to the Sanskrit words they wore down from.",
+  "spineNodes": [
+    "SPINE-CHECK-WELLBEING"
+  ],
+  "payoff": {
+    "lesson": "HI-C13-haath",
+    "kind": "production",
+    "summary": "Say हाथ, then हस्त, then the shape of the change between them: the -st- cluster simplifies and the vowel lengthens.",
+    "assesses": [
+      "HI-CONCEPT-C13-HAATH-01",
+      "HI-CONCEPT-C13-HAATH-02"
+    ]
+  }
+}

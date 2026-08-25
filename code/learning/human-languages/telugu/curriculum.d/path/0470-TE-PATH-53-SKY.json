@@ -1,0 +1,16 @@
+{
+  "id": "TE-PATH-53-SKY",
+  "spine_node": "SPINE-MEET-GREET",
+  "lessons": [
+    "TE-C53-sky",
+    "TE-C53-sun",
+    "TE-C53-moon",
+    "TE-C53-star",
+    "TE-C53-cloud"
+  ],
+  "before": [],
+  "inline": [
+    "TE-EXT-53-SKY"
+  ],
+  "after": []
+}

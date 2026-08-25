@@ -1,0 +1,15 @@
+{
+  "id": "KA-EXT-46-ASK",
+  "stage": "pre-A1",
+  "kind": "required",
+  "category": "vocabulary",
+  "canDo": "I can name five everyday things I might ask someone for in Kannada.",
+  "prerequisites": [],
+  "lessons": [
+    "KA-C46-fruit",
+    "KA-C46-cloth",
+    "KA-C46-lamp",
+    "KA-C46-salt",
+    "KA-C46-book"
+  ]
+}

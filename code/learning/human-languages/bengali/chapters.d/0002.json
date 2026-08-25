@@ -1,0 +1,24 @@
+{
+  "chapter": 2,
+  "title": "Introducing Yourself",
+  "label": "ch:introductions",
+  "canDo": "I can introduce myself in Bengali, give my name, and understand the other person's name.",
+  "spineNodes": [
+    "SPINE-EXCHANGE-NAMES"
+  ],
+  "payoff": {
+    "lesson": "BN-C02-practice",
+    "kind": "task",
+    "summary": "Complete BN-C02-practice, the canonical closing checkpoint, and demonstrate the chapter promise: introduce myself in Bengali, give my name, and understand the other person's name.",
+    "assesses": [
+      "BN-CONCEPT-C02-ALAAP-01",
+      "BN-CONCEPT-C02-AMAR-01",
+      "BN-CONCEPT-C02-AMARNAAM-01",
+      "BN-CONCEPT-C02-KI-01",
+      "BN-CONCEPT-C02-NAAM-01",
+      "BN-CONCEPT-C02-PRACTICE-01",
+      "BN-CONCEPT-C02-TOMARNAAMKI-01",
+      "BN-CONCEPT-C02-TUMIAPNI-01"
+    ]
+  }
+}

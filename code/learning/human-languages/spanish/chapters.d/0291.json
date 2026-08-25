@@ -1,0 +1,21 @@
+{
+  "chapter": 291,
+  "title": "From the Seed Up --- Seed, Root, Trunk, Branch, Wood",
+  "label": "ch:de-la-semilla",
+  "canDo": "I can name the seed, the root, the trunk, the branch and the wood in Spanish.",
+  "spineNodes": [
+    "SPINE-RESPOND-BASIC"
+  ],
+  "payoff": {
+    "lesson": "ES-C291-bosque",
+    "kind": "production",
+    "summary": "Complete ES-C291-bosque: name all five from the ground upwards, seed to forest.",
+    "assesses": [
+      "ES-LEX-C291-TREE-01",
+      "ES-LEX-C291-TREE-02",
+      "ES-LEX-C291-TREE-03",
+      "ES-LEX-C291-TREE-04",
+      "ES-LEX-C291-TREE-05"
+    ]
+  }
+}

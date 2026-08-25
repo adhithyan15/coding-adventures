@@ -1,0 +1,25 @@
+{
+  "chapter": 175,
+  "title": "Saying Why",
+  "label": "ch:spanish-giving-reasons",
+  "canDo": "I can give a reason for what I think and what I plan — stating an opinion with creo que, running forward to its consequence with así que, and naming an obligation with debo.",
+  "spineNodes": [
+    "SPINE-GIVE-REASONS"
+  ],
+  "payoff": {
+    "lesson": "ES-C41-explicar",
+    "kind": "task",
+    "summary": "Answer ¿Por qué no corres? in four moves — Creo que llueve. No corro porque llueve, así que leo. Debo estudiar. Opinion, cause, consequence, obligation, each with its own word, and every word in it taught by this book.",
+    "assesses": [
+      "ES-LEX-CREER-01",
+      "ES-ETYMON-CREDERE-02",
+      "ES-LEX-ASI-QUE-03",
+      "ES-ETYMON-SIC-04",
+      "ES-LEX-DEBER-05",
+      "ES-ETYMON-DEBERE-06",
+      "ES-LEX-EXPLICAR-07",
+      "ES-ETYMON-PLICARE-08",
+      "ES-GRAMMAR-REASON-CHAIN-09"
+    ]
+  }
+}

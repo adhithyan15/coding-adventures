@@ -1,0 +1,16 @@
+{
+  "id": "ES-PATH-328-01",
+  "spine_node": "SPINE-RESPOND-BASIC",
+  "lessons": [
+    "ES-C328-asi",
+    "ES-C328-jamas",
+    "ES-C328-apenas",
+    "ES-C328-casi",
+    "ES-C328-incluso"
+  ],
+  "before": [],
+  "inline": [
+    "ES-EXT-328-DEGREE"
+  ],
+  "after": []
+}

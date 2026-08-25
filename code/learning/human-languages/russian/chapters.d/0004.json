@@ -1,0 +1,27 @@
+{
+  "chapter": 4,
+  "title": "Verbs of the Mind and the Page",
+  "label": "ch:russian-verbs-of-the-mind",
+  "canDo": "I can say what I think, understand, read and write in Russian, name the finished partner each of those verbs travels with, and read the letter ш that has been hiding in words I already say.",
+  "spineNodes": [
+    "SPINE-SAY-WHAT-I-DO"
+  ],
+  "payoff": {
+    "lesson": "RU-C04-pisat",
+    "kind": "task",
+    "summary": "Say all four verbs of the chapter in the I form — я думаю, я понимаю, я читаю, я пишу — then name each one's finished partner, put the stress on the end of писать where it belongs, and read the ш you have been decoding since живёшь.",
+    "assesses": [
+      "RU-LEX-DUMAT",
+      "RU-ETYMON-DUMAT-DUMA",
+      "RU-GRAMMAR-ASPECT-PARTNER",
+      "RU-LEX-PONIMAT",
+      "RU-ETYMON-PONIMAT-TAKE-HOLD",
+      "RU-LEX-CHITAT",
+      "RU-ETYMON-CHITAT-COUNT-HONOUR",
+      "RU-GRAMMAR-NO-PROGRESSIVE",
+      "RU-LEX-PISAT",
+      "RU-SCRIPT-SHA",
+      "RU-ETYMON-PISAT-PAINT"
+    ]
+  }
+}

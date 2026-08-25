@@ -1,0 +1,21 @@
+{
+  "chapter": 38,
+  "title": "The Two Hearts",
+  "label": "ch:ml-two-hearts",
+  "canDo": "I can name my heart in Malayalam two ways, one Sanskrit and one native, and say which one everyday idiom actually uses and why hridayam is a genuine cousin of the English word heart.",
+  "spineNodes": [
+    "SPINE-CHECK-WELLBEING"
+  ],
+  "payoff": {
+    "lesson": "ML-C38-nenchu",
+    "kind": "production",
+    "summary": "Name hridayam and nenchu, place nenchidippu beside the santosham/nandi pattern from Chapter 2, and trace hridayam's root to the same PIE ancestor as English heart.",
+    "assesses": [
+      "ML-CONCEPT-C38-NENCHU-01",
+      "ML-CONCEPT-C38-NENCHU-02",
+      "ML-CONCEPT-C38-HRUDAYAM-01",
+      "ML-CONCEPT-C38-HRUDAYAM-02",
+      "ML-CONCEPT-C13-SHAREERA-BHAAGANGAL-01"
+    ]
+  }
+}

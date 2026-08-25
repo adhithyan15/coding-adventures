@@ -1,0 +1,24 @@
+{
+  "id": "RU-PATH-005",
+  "spine_node": "SPINE-RESPOND-BASIC",
+  "lessons": [
+    "RU-C01-da",
+    "RU-C01-net",
+    "RU-W06-u",
+    "RU-W06-z",
+    "RU-W06-k",
+    "RU-W06-l",
+    "RU-W06-m",
+    "RU-W06-y",
+    "RU-W06-zh",
+    "RU-W06-ch",
+    "RU-W06-sh",
+    "RU-W06-soft-sign",
+    "RU-W06-ya"
+  ],
+  "before": [],
+  "inline": [],
+  "after": [
+    "RU-EXT-020-SCRIPT-ELEVEN"
+  ]
+}

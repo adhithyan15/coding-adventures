@@ -1,0 +1,21 @@
+{
+  "chapter": 333,
+  "title": "Noise, Silence, Calm and Hurry",
+  "label": "ch:calma-y-prisa",
+  "canDo": "I can say el ruido, el silencio, la calma, la prisa and el cuidado, and say why a word for burning heat came to mean stillness.",
+  "spineNodes": [
+    "SPINE-COURTESY-THANK"
+  ],
+  "payoff": {
+    "lesson": "ES-C333-cuidado",
+    "kind": "production",
+    "summary": "Complete ES-C333-cuidado: answer ruido with silencio, ask for calma, take the prisa out of a moment, and say cuidado when it matters.",
+    "assesses": [
+      "ES-LEX-C333-QUIET-26",
+      "ES-LEX-C333-QUIET-27",
+      "ES-LEX-C333-QUIET-28",
+      "ES-LEX-C333-QUIET-29",
+      "ES-LEX-C333-QUIET-30"
+    ]
+  }
+}

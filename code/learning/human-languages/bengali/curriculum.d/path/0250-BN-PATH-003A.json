@@ -1,0 +1,12 @@
+{
+  "id": "BN-PATH-003A",
+  "spine_node": "SPINE-CHECK-WELLBEING",
+  "lessons": [
+    "BN-C03-practice"
+  ],
+  "before": [],
+  "inline": [
+    "BN-EXT-003-CONSOLIDATION"
+  ],
+  "after": []
+}

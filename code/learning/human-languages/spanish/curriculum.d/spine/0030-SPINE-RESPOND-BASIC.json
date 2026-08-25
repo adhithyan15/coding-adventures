@@ -1,0 +1,19 @@
+{
+  "segments": [
+    "ES-PATH-017",
+    "ES-PATH-284-01",
+    "ES-PATH-291-01",
+    "ES-PATH-298-01",
+    "ES-PATH-316-01",
+    "ES-PATH-317-01",
+    "ES-PATH-319-04",
+    "ES-PATH-324-01",
+    "ES-PATH-328-01",
+    "ES-PATH-329-01"
+  ],
+  "omits": [
+    "RESPONSE-YESNO",
+    "RESPONSE-OKAY"
+  ],
+  "relocates": {}
+}

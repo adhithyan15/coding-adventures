@@ -1,0 +1,15 @@
+{
+  "segments": [
+    "SA-PATH-004",
+    "SA-PATH-27-REPLY",
+    "SA-PATH-36-REPLY",
+    "SA-PATH-42-REPLY",
+    "SA-PATH-49-REPLY"
+  ],
+  "omits": [
+    "RESPONSE-YES",
+    "RESPONSE-NO",
+    "RESPONSE-OKAY"
+  ],
+  "relocates": {}
+}

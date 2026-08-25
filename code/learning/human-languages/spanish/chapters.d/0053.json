@@ -1,0 +1,17 @@
+{
+  "chapter": 53,
+  "title": "-ista --- Jobs You Can Already Read",
+  "label": "ch:ista",
+  "canDo": "I can read an -ista word as English -ist without being taught it.",
+  "spineNodes": [
+    "SPINE-SAY-WHAT-I-DO"
+  ],
+  "payoff": {
+    "lesson": "ES-C09-ista",
+    "kind": "task",
+    "summary": "I can read an -ista word as English -ist without being taught it.",
+    "assesses": [
+      "ES-FRIEND-ISTA-IST"
+    ]
+  }
+}

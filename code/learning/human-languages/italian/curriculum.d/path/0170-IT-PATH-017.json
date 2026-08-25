@@ -1,0 +1,13 @@
+{
+  "id": "IT-PATH-017",
+  "spine_node": "SPINE-COUNT-ONE-TO-FIVE",
+  "lessons": [
+    "IT-C12-numeri-11-16",
+    "IT-C12-numeri-17-20"
+  ],
+  "before": [],
+  "inline": [
+    "IT-EXT-017-LANGUAGE-SPECIFIC"
+  ],
+  "after": []
+}

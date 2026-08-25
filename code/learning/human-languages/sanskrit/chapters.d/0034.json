@@ -1,0 +1,21 @@
+{
+  "chapter": 34,
+  "title": "More of the Body",
+  "label": "ch:sa-limbs",
+  "canDo": "I can name an arm, a neck, a bone, blood and the body itself in Sanskrit, and name the Latin word for bone that is a cousin of one of them.",
+  "spineNodes": [
+    "SPINE-CHECK-WELLBEING"
+  ],
+  "payoff": {
+    "lesson": "SA-C34-body",
+    "kind": "production",
+    "summary": "Complete SA-C34-body and demonstrate the chapter promise.",
+    "assesses": [
+      "SA-LEX-C34-LIMB-01",
+      "SA-LEX-C34-LIMB-02",
+      "SA-LEX-C34-LIMB-03",
+      "SA-LEX-C34-LIMB-04",
+      "SA-LEX-C34-LIMB-05"
+    ]
+  }
+}

@@ -1,0 +1,10 @@
+{
+  "segments": [
+    "MR-PATH-015"
+  ],
+  "omits": [
+    "COURTESY-PLEASE",
+    "COURTESY-SORRY"
+  ],
+  "relocates": {}
+}

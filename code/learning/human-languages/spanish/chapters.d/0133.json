@@ -1,0 +1,19 @@
+{
+  "chapter": 133,
+  "title": "No Hables --- Telling Somebody Not To",
+  "label": "ch:command-negative",
+  "canDo": "I can give a negative informal command, and say why it takes the subjunctive.",
+  "spineNodes": [
+    "SPINE-SAY-WHAT-I-DO"
+  ],
+  "payoff": {
+    "lesson": "ES-C50-no-hables",
+    "kind": "task",
+    "summary": "Complete ES-C50-no-hables: produce no hables and say why the subjunctive is the right form.",
+    "assesses": [
+      "ES-GRAMMAR-COMMAND-NEGATIVE",
+      "ES-GRAMMAR-SUBJUNCTIVE-WANTED-NONASSERTED"
+    ],
+    "note": "Not a borrowing: no hables asserts no speaking at all, so the non-asserting form is doing exactly its usual job."
+  }
+}

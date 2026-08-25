@@ -1,0 +1,16 @@
+{
+  "id": "ES-PATH-341-01",
+  "spine_node": "SPINE-ASK-LOCATION",
+  "lessons": [
+    "ES-C341-arriba",
+    "ES-C341-abajo",
+    "ES-C341-delante",
+    "ES-C341-detras",
+    "ES-C341-dentro"
+  ],
+  "before": [],
+  "inline": [
+    "ES-EXT-341-WHERE"
+  ],
+  "after": []
+}

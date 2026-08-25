@@ -1,0 +1,22 @@
+{
+  "chapter": 8,
+  "title": "Please",
+  "label": "ch:ta-please",
+  "canDo": "I can tell an emphatic தயவுசெய்து from the everyday courtesy that lives in the -உங்கள் verb ending, and I can write சொல்லுங்கள் from hearing.",
+  "spineNodes": [
+    "SPINE-POLITE-REQUEST-REPAIR"
+  ],
+  "payoff": {
+    "lesson": "TA-C08-please-register",
+    "kind": "production",
+    "summary": "Ask for something twice — தயவுசெய்து when the request needs weight, plain உட்காருங்கள் when it does not — read the join in செய்து, and write சொல்லுங்கள் from hearing.",
+    "assesses": [
+      "TA-LEX-TAYAVUSEYTU-01",
+      "TA-LEX-SOLLUNGAL-01",
+      "TA-SCRIPT-SHORT-O-01",
+      "TA-SCRIPT-WRITE-SOLLUNGAL-02",
+      "TA-PRAGMATICS-PLEASE-REGISTER-01",
+      "TA-SCRIPT-PLEASE-REGISTER-02"
+    ]
+  }
+}

@@ -1,0 +1,22 @@
+{
+  "chapter": 337,
+  "title": "Writing --- Your Own Line",
+  "label": "ch:escribir-frase-propia",
+  "canDo": "I can write a greeting and my name from a closed supply of known words, choosing the greeting the hour asks for.",
+  "spineNodes": [
+    "SPINE-TIME-OF-DAY"
+  ],
+  "payoff": {
+    "lesson": "ES-W01-frase-propia",
+    "kind": "task",
+    "summary": "Complete ES-W01-frase-propia: with no model to copy, choose one of four greetings by the hour and order it in front of me llamo.",
+    "assesses": [
+      "ES-WRITING-CONTROLLED-COMPOSITION",
+      "ES-LEX-BUENOS-DIAS",
+      "ES-LEX-BUENAS-TARDES",
+      "ES-LEX-BUENAS-NOCHES",
+      "ES-LEX-ME-LLAMO"
+    ],
+    "note": "The first writing step with nothing to reach for. Every earlier step supplied a model; this chapter introduces the one atom that names the difference, and the payoff assesses it directly."
+  }
+}

@@ -1,0 +1,15 @@
+{
+  "id": "LA-EXT-046-NIGHT",
+  "stage": "pre-A1",
+  "kind": "required",
+  "category": "lexicon",
+  "canDo": "I can name light, shadow, star, moon and sleep in Latin and use them to close a day.",
+  "prerequisites": [],
+  "lessons": [
+    "LA-C46-lux",
+    "LA-C46-umbra",
+    "LA-C46-stella",
+    "LA-C46-luna",
+    "LA-C46-somnus"
+  ]
+}

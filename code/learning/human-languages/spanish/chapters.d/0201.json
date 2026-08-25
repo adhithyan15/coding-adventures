@@ -1,0 +1,17 @@
+{
+  "chapter": 201,
+  "title": "Comieron --- One Ending, Two Families",
+  "label": "ch:comieron",
+  "canDo": "I can put -er and -ir verbs into the plural past with one set of endings.",
+  "spineNodes": [
+    "SPINE-ASK-LOCATION"
+  ],
+  "payoff": {
+    "lesson": "ES-C55-comieron",
+    "kind": "task",
+    "summary": "I can put -er and -ir verbs into the plural past with one set of endings.",
+    "assesses": [
+      "ES-GRAMMAR-ER-IR-PRETERITE-PLURAL"
+    ]
+  }
+}

@@ -1,0 +1,18 @@
+{
+  "id": "ES-PATH-009",
+  "spine_node": "SPINE-EXCHANGE-NAMES",
+  "lessons": [
+    "ES-C03-se-llama",
+    "ES-C03-como-se-llama",
+    "ES-C03-mucho",
+    "ES-C03-gusto",
+    "ES-C03-practice"
+  ],
+  "before": [],
+  "inline": [
+    "ES-EXT-009-LANGUAGE-SPECIFIC"
+  ],
+  "after": [
+    "ES-EXT-009-CONSOLIDATION"
+  ]
+}

@@ -1,0 +1,19 @@
+{
+  "chapter": 168,
+  "title": "Traer --- Bringing, and Latin for Dragging",
+  "label": "ch:spanish-traer",
+  "canDo": "I can say what I bring, and choose traer over llevar by where I am standing.",
+  "spineNodes": [
+    "SPINE-SAY-WHAT-I-DO"
+  ],
+  "payoff": {
+    "lesson": "ES-C39-traer",
+    "kind": "task",
+    "summary": "trahere, to drag - the root under tractor, attract and abstract.",
+    "assesses": [
+      "ES-LEX-TRAER-01",
+      "ES-ETYMON-TRAER-02",
+      "ES-GRAMMAR-TRAER-LLEVAR-03"
+    ]
+  }
+}

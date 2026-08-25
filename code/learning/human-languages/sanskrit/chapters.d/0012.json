@@ -1,0 +1,24 @@
+{
+  "chapter": 12,
+  "title": "The Face, Part One",
+  "label": "ch:sa-face-nouns-1",
+  "canDo": "I can name an eye, an ear and a mouth in Sanskrit, say why eyes take a dual number, and say which of the three words has a settled Western cousin and which do not.",
+  "spineNodes": [
+    "SPINE-CHECK-WELLBEING"
+  ],
+  "payoff": {
+    "lesson": "SA-C12-mukham",
+    "kind": "production",
+    "summary": "Say मुखम्, report both scholarly accounts of its origin without choosing between them, and run अक्षि, कर्णः and मुखम् back together against their daughter-language descendants and the neuter gender most of them share.",
+    "assesses": [
+      "SA-LEX-AKSHI-EYE",
+      "SA-ETYMON-OKW-EYE",
+      "SA-GRAMMAR-NUMERAL-DUAL",
+      "SA-LEX-KARNAH-EAR",
+      "SA-ETYMON-KARNA-DISPUTED",
+      "SA-LEX-MUKHAM-MOUTH",
+      "SA-ETYMON-MUKHA-DISPUTED",
+      "SA-GRAMMAR-NOUN-GENDER-THREE"
+    ]
+  }
+}

@@ -1,0 +1,15 @@
+{
+  "id": "HI-EXT-61-FIRE",
+  "stage": "pre-A1",
+  "kind": "required",
+  "category": "vocabulary",
+  "canDo": "I can name five things a Hindi kitchen cooks with.",
+  "prerequisites": [],
+  "lessons": [
+    "HI-C61-vessel",
+    "HI-C61-spoon",
+    "HI-C61-tumbler",
+    "HI-C61-griddle",
+    "HI-C61-stove"
+  ]
+}

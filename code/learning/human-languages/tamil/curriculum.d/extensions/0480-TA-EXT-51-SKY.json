@@ -1,0 +1,15 @@
+{
+  "id": "TA-EXT-51-SKY",
+  "stage": "pre-A1",
+  "kind": "required",
+  "category": "vocabulary",
+  "canDo": "I can name five things in the Tamil sky.",
+  "prerequisites": [],
+  "lessons": [
+    "TA-C51-sky",
+    "TA-C51-sun",
+    "TA-C51-moon",
+    "TA-C51-star",
+    "TA-C51-cloud"
+  ]
+}

@@ -1,0 +1,13 @@
+{
+  "id": "FA-EXT-011-PERSONAL-COPULA",
+  "stage": "pre-A1",
+  "kind": "required",
+  "category": "grammar",
+  "canDo": "I can attach the single first-person copula -am to khub and answer without learning a full paradigm.",
+  "prerequisites": [
+    "FA-EXT-010-INHERITED-LEXICON"
+  ],
+  "lessons": [
+    "FA-C04-khubam"
+  ]
+}

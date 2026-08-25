@@ -1,0 +1,12 @@
+{
+  "id": "TA-EXT-001-INLINE-SCRIPT",
+  "stage": "pre-A1",
+  "kind": "required",
+  "category": "script",
+  "canDo": "I can recognize and copy the first visible Tamil shape inside a greeting I already understand, with the model still present.",
+  "prerequisites": [],
+  "lessons": [
+    "TA-C01-vanakkam",
+    "TA-W00-va-guided-copy"
+  ]
+}

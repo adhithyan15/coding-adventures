@@ -1,0 +1,15 @@
+{
+  "id": "ES-EXT-300-CUERPO",
+  "stage": "pre-A1",
+  "kind": "required",
+  "category": "vocabulary",
+  "canDo": "I can say in Spanish that I am thirsty or sleepy, name the skin and the blood, and say there is no remedy.",
+  "prerequisites": [],
+  "lessons": [
+    "ES-C300-sed",
+    "ES-C300-sueno",
+    "ES-C300-piel",
+    "ES-C300-sangre",
+    "ES-C300-remedio"
+  ]
+}

@@ -1,0 +1,25 @@
+{
+  "chapter": 70,
+  "title": "Hacer, Decir, and the -go Verb Club",
+  "label": "ch:yo-go-verbs",
+  "canDo": "I can use the three learned singular forms of hacer and decir and compare tengo, hago, and digo without predicting unseen verbs.",
+  "spineNodes": [
+    "SPINE-SAY-WHAT-I-DO"
+  ],
+  "payoff": {
+    "lesson": "ES-C12-practice",
+    "kind": "task",
+    "summary": "Complete ES-C12-practice, the canonical closing checkpoint, and demonstrate the chapter promise with known words and only the learned singular person frame.",
+    "assesses": [
+      "ES-LEX-HACER",
+      "ES-GRAMMAR-HACER-PRESENT-SINGULAR",
+      "ES-ETYMON-FACERE",
+      "ES-LEX-DECIR",
+      "ES-GRAMMAR-DECIR-PRESENT-SINGULAR",
+      "ES-ETYMON-DICERE",
+      "ES-GRAMMAR-YO-GO-CONTRAST-LEARNED",
+      "ES-HISTORY-YO-GO-CONVERGENCE"
+    ],
+    "note": "The payoff retrieves all eight Chapter-12 atoms and deliberately leaves plural persons, weather and homework vocabulary, and unseen yo-go verbs for later lessons."
+  }
+}

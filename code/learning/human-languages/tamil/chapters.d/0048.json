@@ -1,0 +1,21 @@
+{
+  "chapter": 48,
+  "title": "Setting Out",
+  "label": "ch:ta-setting-out",
+  "canDo": "I can say that it is time, that I have a journey, and that I am setting out in Tamil.",
+  "spineNodes": [
+    "SPINE-TAKE-LEAVE"
+  ],
+  "payoff": {
+    "lesson": "TA-C48-set-out",
+    "kind": "production",
+    "summary": "Complete TA-C48-set-out and say all five words in order.",
+    "assesses": [
+      "TA-LEX-C48-LEAVE-01",
+      "TA-LEX-C48-LEAVE-02",
+      "TA-LEX-C48-LEAVE-03",
+      "TA-LEX-C48-LEAVE-04",
+      "TA-LEX-C48-LEAVE-05"
+    ]
+  }
+}

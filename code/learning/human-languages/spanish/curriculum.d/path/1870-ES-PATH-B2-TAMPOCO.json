@@ -1,0 +1,12 @@
+{
+  "id": "ES-PATH-B2-TAMPOCO",
+  "spine_node": "SPINE-ARGUE-A-VIEW",
+  "lessons": [
+    "ES-C58-tampoco"
+  ],
+  "before": [],
+  "inline": [
+    "ES-EXT-B2-TAMPOCO"
+  ],
+  "after": []
+}

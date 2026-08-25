@@ -1,0 +1,13 @@
+{
+  "id": "ES-PATH-273-04",
+  "spine_node": "SPINE-STRUCTURE-EXTENDED-TEXT",
+  "lessons": [
+    "ES-C273-lo-cual",
+    "ES-C273-practice"
+  ],
+  "before": [],
+  "inline": [
+    "ES-EXT-273-COHESION"
+  ],
+  "after": []
+}

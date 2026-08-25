@@ -1,0 +1,21 @@
+{
+  "chapter": 326,
+  "title": "Five Ways to Be",
+  "label": "ch:nervioso-y-listo",
+  "canDo": "I can say I am nervous, brave, alone, free or ready in Spanish, and say why ser listo and estar listo mean two different things.",
+  "spineNodes": [
+    "SPINE-CHECK-WELLBEING"
+  ],
+  "payoff": {
+    "lesson": "ES-C326-listo",
+    "kind": "production",
+    "summary": "Complete ES-C326-listo: answer with nervioso or valiente, say estoy solo and estoy libre, and split ser listo from estar listo.",
+    "assesses": [
+      "ES-LEX-C326-STATE-11",
+      "ES-LEX-C326-STATE-12",
+      "ES-LEX-C326-STATE-13",
+      "ES-LEX-C326-STATE-14",
+      "ES-LEX-C326-STATE-15"
+    ]
+  }
+}

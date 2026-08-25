@@ -1,0 +1,19 @@
+{
+  "chapter": 25,
+  "title": "-mente --- With No Upper Limit",
+  "label": "ch:friend-mente",
+  "canDo": "I can build an adverb from any adjective, and say why the adjective goes feminine first.",
+  "spineNodes": [
+    "SPINE-SAY-WHAT-I-DO"
+  ],
+  "payoff": {
+    "lesson": "ES-C56-mente",
+    "kind": "task",
+    "summary": "Complete ES-C56-mente: build rapidamente, explain the feminine step, and say what the word literally means.",
+    "assesses": [
+      "ES-FRIEND-MENTE-LY",
+      "ES-ETYMON-MENTE"
+    ],
+    "note": "A machine rather than a decoder: its reach is however many adjectives the reader ends up holding. The feminine step is not arbitrary -- mente was a feminine NOUN, and the agreement outlived it."
+  }
+}

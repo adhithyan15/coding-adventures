@@ -1,0 +1,20 @@
+{
+  "chapter": 21,
+  "title": "Dog and Cat",
+  "label": "ch:te-dog-and-cat",
+  "canDo": "I can name a dog and a cat in Telugu.",
+  "spineNodes": [
+    "SPINE-DEFINITE-REFERENCE"
+  ],
+  "payoff": {
+    "lesson": "TE-C21-kukka-pilli",
+    "kind": "production",
+    "summary": "Say కుక్క, which genuinely breaks from the family's shared naayi root, and పిల్లి, most likely the Dravidian source behind Hindi's billī.",
+    "assesses": [
+      "TE-ETYMON-C20-PADAKONDU-IRAVAI-01",
+      "TE-ETYMON-C20-PADAKONDU-IRAVAI-02",
+      "TE-ETYMON-C21-KUKKA-PILLI-01",
+      "TE-ETYMON-C21-KUKKA-PILLI-02"
+    ]
+  }
+}

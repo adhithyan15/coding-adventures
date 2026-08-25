@@ -1,0 +1,19 @@
+{
+  "chapter": 23,
+  "title": "Day",
+  "label": "ch:ta-day",
+  "canDo": "I can use நாள் as the everyday word for day and keep தினம் for the formal compounds where it actually belongs.",
+  "spineNodes": [
+    "SPINE-TIME-OF-DAY"
+  ],
+  "payoff": {
+    "lesson": "TA-C23-day-family-register",
+    "kind": "production",
+    "summary": "Say mūnṟu nāḷ for three days and sutantira tiṉam for Independence Day, classifying each as everyday-native or formal-Sanskrit.",
+    "assesses": [
+      "TA-ETYMON-NAAL-01",
+      "TA-LEX-DAY-FAMILY-REGISTER-01",
+      "TA-LEX-DAY-FAMILY-REGISTER-02"
+    ]
+  }
+}

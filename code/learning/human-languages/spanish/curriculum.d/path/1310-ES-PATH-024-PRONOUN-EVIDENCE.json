@@ -1,0 +1,12 @@
+{
+  "id": "ES-PATH-024-PRONOUN-EVIDENCE",
+  "spine_node": "SPINE-POLITE-REQUEST-REPAIR",
+  "lessons": [
+    "ES-C55-la-bebo"
+  ],
+  "before": [],
+  "inline": [
+    "ES-EXT-024-PRONOUN-EVIDENCE"
+  ],
+  "after": []
+}

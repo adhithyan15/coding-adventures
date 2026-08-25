@@ -1,0 +1,17 @@
+{
+  "id": "BN-PATH-011",
+  "spine_node": "SPINE-SAY-WHAT-I-DO",
+  "lessons": [
+    "BN-C07-howa",
+    "BN-C07-jaowa",
+    "BN-C07-asha",
+    "BN-C07-khaowa",
+    "BN-C07-dekha",
+    "BN-C07-jana"
+  ],
+  "before": [],
+  "inline": [
+    "BN-EXT-011-CORE-VERBS"
+  ],
+  "after": []
+}

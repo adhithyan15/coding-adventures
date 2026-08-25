@@ -1,0 +1,11 @@
+{
+  "id": "ES-EXT-271-HEDGING",
+  "stage": "B2",
+  "kind": "required",
+  "category": "grammar",
+  "canDo": "I can state one idea three ways -- bare, hedged from doubt, and hedged from inference -- and say what each does to my commitment.",
+  "prerequisites": [],
+  "lessons": [
+    "ES-C271-practice"
+  ]
+}

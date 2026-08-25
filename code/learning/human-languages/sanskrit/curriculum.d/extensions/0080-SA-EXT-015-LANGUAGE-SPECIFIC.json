@@ -1,0 +1,13 @@
+{
+  "id": "SA-EXT-015-LANGUAGE-SPECIFIC",
+  "stage": "pre-A1",
+  "kind": "required",
+  "category": "language-specific",
+  "canDo": "I can use the additional Sanskrit material required at this point in the path.",
+  "prerequisites": [],
+  "lessons": [
+    "SA-C12-akshi",
+    "SA-C12-karnah",
+    "SA-C12-mukham"
+  ]
+}

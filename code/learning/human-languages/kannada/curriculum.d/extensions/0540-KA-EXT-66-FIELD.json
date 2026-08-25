@@ -1,0 +1,15 @@
+{
+  "id": "KA-EXT-66-FIELD",
+  "stage": "pre-A1",
+  "kind": "required",
+  "category": "vocabulary",
+  "canDo": "I can name a Kannada field, what grows on it, and the season that takes it in.",
+  "prerequisites": [],
+  "lessons": [
+    "KA-C66-field",
+    "KA-C66-grass",
+    "KA-C66-paddy",
+    "KA-C66-crop",
+    "KA-C66-harvest"
+  ]
+}

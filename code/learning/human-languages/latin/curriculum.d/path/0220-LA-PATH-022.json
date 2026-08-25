@@ -1,0 +1,18 @@
+{
+  "id": "LA-PATH-022",
+  "spine_node": "SPINE-TAKE-LEAVE",
+  "lessons": [
+    "LA-C24-propediem-te-videbo",
+    "LA-C25-cras-te-videbo",
+    "LA-C46-lux",
+    "LA-C46-umbra",
+    "LA-C46-stella",
+    "LA-C46-luna",
+    "LA-C46-somnus"
+  ],
+  "before": [],
+  "inline": [],
+  "after": [
+    "LA-EXT-046-NIGHT"
+  ]
+}

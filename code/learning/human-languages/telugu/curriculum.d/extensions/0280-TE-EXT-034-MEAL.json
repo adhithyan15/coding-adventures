@@ -1,0 +1,11 @@
+{
+  "id": "TE-EXT-034-MEAL",
+  "stage": "pre-A1",
+  "kind": "required",
+  "category": "language-specific",
+  "canDo": "I can say I am having a meal in Telugu, using the word an earlier chapter already used and never explained.",
+  "prerequisites": [],
+  "lessons": [
+    "TE-C40-bhojanam"
+  ]
+}

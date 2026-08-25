@@ -1,0 +1,14 @@
+{
+  "id": "HI-EXT-033-LANGUAGE-SPECIFIC",
+  "stage": "pre-A1",
+  "kind": "required",
+  "category": "language-specific",
+  "canDo": "I can name the people around me — friend, child, man, woman — and I know which of them take their gender from the person rather than the word.",
+  "prerequisites": [],
+  "lessons": [
+    "HI-C39-dost",
+    "HI-C39-baccha",
+    "HI-C39-aadmi",
+    "HI-C39-aurat"
+  ]
+}

@@ -1,0 +1,14 @@
+{
+  "id": "KA-EXT-030-FACE-WORDS",
+  "stage": "pre-A1",
+  "kind": "required",
+  "category": "language-specific",
+  "canDo": "I can name my eye, ear, nose and mouth in Kannada, and say which of the four the family agrees on and which it splits.",
+  "prerequisites": [],
+  "lessons": [
+    "KA-C37-kannu",
+    "KA-C37-kivi",
+    "KA-C37-moogu",
+    "KA-C37-baayi"
+  ]
+}

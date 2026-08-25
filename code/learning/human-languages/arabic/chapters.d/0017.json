@@ -1,0 +1,18 @@
+{
+  "chapter": 17,
+  "title": "Asking Someone's Age",
+  "label": "ch:ar-asking-age",
+  "canDo": "I can ask how old someone is in Arabic and give my own age without using a verb.",
+  "spineNodes": [
+    "SPINE-EXCHANGE-NAMES"
+  ],
+  "payoff": {
+    "lesson": "AR-C17-kam-umruka",
+    "kind": "dialogue",
+    "summary": "Ask kam ʿumruka? and answer 'ʿumrī ʿishrūna sana' -- age as a noun you possess, no verb anywhere.",
+    "assesses": [
+      "AR-CONCEPT-C17-KAM-UMRUKA-01",
+      "AR-CONCEPT-C17-KAM-UMRUKA-02"
+    ]
+  }
+}

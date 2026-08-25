@@ -1,0 +1,11 @@
+{
+  "id": "LA-EXT-019-CONSOLIDATION",
+  "stage": "pre-A1",
+  "kind": "supporting",
+  "category": "consolidation",
+  "canDo": "I can run a whole short Latin wellbeing exchange, from the greeting to the farewell.",
+  "prerequisites": [],
+  "lessons": [
+    "LA-C19-practice"
+  ]
+}

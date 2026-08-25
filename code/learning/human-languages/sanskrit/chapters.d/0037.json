@@ -1,0 +1,21 @@
+{
+  "chapter": 37,
+  "title": "More Courtesy",
+  "label": "ch:sa-courtesy-more",
+  "canDo": "I can wish someone peace, speak respectfully, call a host gracious, congratulate a friend and give a blessing in Sanskrit.",
+  "spineNodes": [
+    "SPINE-COURTESY-THANK"
+  ],
+  "payoff": {
+    "lesson": "SA-C37-blessing",
+    "kind": "production",
+    "summary": "Complete SA-C37-blessing and demonstrate the chapter promise.",
+    "assesses": [
+      "SA-LEX-C37-COURTESY-01",
+      "SA-LEX-C37-COURTESY-02",
+      "SA-LEX-C37-COURTESY-03",
+      "SA-LEX-C37-COURTESY-04",
+      "SA-LEX-C37-COURTESY-05"
+    ]
+  }
+}

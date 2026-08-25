@@ -1,0 +1,18 @@
+{
+  "id": "JA-PATH-004",
+  "spine_node": "SPINE-COURTESY-THANK",
+  "lessons": [
+    "JA-W03-sa",
+    "JA-W03-ma",
+    "JA-W03-su",
+    "JA-C01-gozaimasu",
+    "JA-C03-practice"
+  ],
+  "before": [],
+  "inline": [
+    "JA-EXT-006-TEINEIGO-REGISTER",
+    "JA-EXT-011-DAKUTEN-WRITING",
+    "JA-EXT-012-POLITE-THANKS-CONSOLIDATION"
+  ],
+  "after": []
+}

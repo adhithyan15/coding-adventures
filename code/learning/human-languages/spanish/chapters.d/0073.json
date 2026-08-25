@@ -1,0 +1,18 @@
+{
+  "chapter": 73,
+  "title": "Venir --- Coming",
+  "label": "ch:spanish-venir",
+  "canDo": "I can say that I come, and hear the stem break in the other two forms.",
+  "spineNodes": [
+    "SPINE-SAY-WHAT-I-DO"
+  ],
+  "payoff": {
+    "lesson": "ES-C13-venir",
+    "kind": "task",
+    "summary": "vengo, then vienes and viene with the ie break.",
+    "assesses": [
+      "ES-LEX-VENIR",
+      "ES-GRAMMAR-VENIR-PRESENT-SINGULAR"
+    ]
+  }
+}

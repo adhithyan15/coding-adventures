@@ -1,0 +1,17 @@
+{
+  "id": "TA-EXT-200-DEIXIS",
+  "stage": "pre-A1",
+  "kind": "required",
+  "category": "grammar",
+  "canDo": "I can point at something in Tamil and ask who or where it is, and I can see the one pattern the six words are built from.",
+  "prerequisites": [],
+  "lessons": [
+    "TA-C40-this",
+    "TA-C40-that",
+    "TA-C40-here",
+    "TA-C40-there",
+    "TA-C40-who",
+    "TA-C40-where",
+    "TA-C40-deixis-system"
+  ]
+}

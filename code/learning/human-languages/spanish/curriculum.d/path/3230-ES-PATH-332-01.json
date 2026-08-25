@@ -1,0 +1,16 @@
+{
+  "id": "ES-PATH-332-01",
+  "spine_node": "SPINE-COURTESY-THANK",
+  "lessons": [
+    "ES-C332-permiso",
+    "ES-C332-aviso",
+    "ES-C332-disculpa",
+    "ES-C332-palabra",
+    "ES-C332-voz"
+  ],
+  "before": [],
+  "inline": [
+    "ES-EXT-332-WORD"
+  ],
+  "after": []
+}

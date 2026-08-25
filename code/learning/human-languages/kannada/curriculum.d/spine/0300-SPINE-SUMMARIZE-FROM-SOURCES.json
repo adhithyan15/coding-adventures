@@ -1,0 +1,10 @@
+{
+  "segments": [],
+  "omits": [
+    "SYNTHESIS-MULTI-SOURCE",
+    "PARAPHRASE",
+    "ATTRIBUTION-CITE",
+    "SUMMARY-COMPRESSION"
+  ],
+  "relocates": {}
+}

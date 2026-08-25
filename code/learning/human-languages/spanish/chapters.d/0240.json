@@ -1,0 +1,17 @@
+{
+  "chapter": 240,
+  "title": "Review --- Two Endings and One Little A",
+  "label": "ch:repaso-gerundio",
+  "canDo": "I can say what is happening now, and mark a person correctly.",
+  "spineNodes": [
+    "SPINE-DEFINITE-REFERENCE"
+  ],
+  "payoff": {
+    "lesson": "ES-C62-repaso-gerundio",
+    "kind": "task",
+    "summary": "I can say what is happening now, and mark a person correctly.",
+    "assesses": [
+      "ES-GRAMMAR-GERUND-TWO-ENDINGS"
+    ]
+  }
+}

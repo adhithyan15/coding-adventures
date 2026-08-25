@@ -1,0 +1,12 @@
+{
+  "id": "JA-EXT-001-HIRAGANA-MORA",
+  "stage": "pre-A1",
+  "kind": "required",
+  "category": "script",
+  "canDo": "I can read the hiragana of a short answer and count its beats, because a Japanese sign is one mora rather than one letter.",
+  "prerequisites": [],
+  "lessons": [
+    "JA-C01-hai",
+    "JA-C01-iie"
+  ]
+}

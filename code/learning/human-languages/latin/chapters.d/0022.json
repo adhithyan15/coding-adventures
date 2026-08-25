@@ -1,0 +1,21 @@
+{
+  "chapter": 22,
+  "title": "You, Singular and Plural",
+  "label": "ch:la-you-singular-plural",
+  "canDo": "I can choose tū or vōs correctly in Latin, knowing the choice is about number and not politeness.",
+  "spineNodes": [
+    "SPINE-EXCHANGE-NAMES"
+  ],
+  "payoff": {
+    "lesson": "LA-C22-tu-vos",
+    "kind": "production",
+    "summary": "Address one person as tū and a group as vōs, then say why neither carries politeness the way German's Sie does.",
+    "assesses": [
+      "LA-GRAMMAR-NAME-CASE-VARIATION-01",
+      "LA-GRAMMAR-NAME-CASE-VARIATION-02",
+      "LA-LEX-TU-VOS-01",
+      "LA-LEX-TU-VOS-02",
+      "LA-PRAGMATICS-TU-VOS-03"
+    ]
+  }
+}

@@ -1,0 +1,23 @@
+{
+  "chapter": 19,
+  "title": "Verbs of the Mind",
+  "label": "ch:pt-mind-verbs",
+  "canDo": "I can say that I think, understand, read and write in Portuguese, produce the broken row ler shares with ver, and name the English words each of the four verbs left behind.",
+  "spineNodes": [
+    "SPINE-SAY-WHAT-I-DO"
+  ],
+  "payoff": {
+    "lesson": "PT-C19-escrever",
+    "kind": "production",
+    "summary": "The chapter's last lesson closes the set: after escrever the reader produces all four first-person forms in one run - penso, entendo, leio, escrevo - names escrito as the Latin scriptum, and re-derives the propped-up e- that turned scribere into escrever and stare into estar.",
+    "assesses": [
+      "PT-LEX-PENSAR-02",
+      "PT-LEX-ENTENDER-COMPREENDER-02",
+      "PT-LEX-LER-02",
+      "PT-ETYMON-LER-03",
+      "PT-ETYMON-SER-ESTAR-03",
+      "PT-LEX-ESCREVER-02",
+      "PT-ETYMON-ESCREVER-03"
+    ]
+  }
+}

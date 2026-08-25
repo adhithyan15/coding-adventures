@@ -1,0 +1,14 @@
+{
+  "id": "ZH-EXT-014-BU-SANDHI",
+  "stage": "pre-A1",
+  "kind": "required",
+  "category": "phonology",
+  "canDo": "I can apply the second tone-sandhi rule taught in this book -- 不 rises before a falling tone -- and I know that no sandhi rule appears in the writing.",
+  "prerequisites": [
+    "ZH-EXT-013-SHI-BUILD"
+  ],
+  "lessons": [
+    "ZH-C05-bushi",
+    "ZH-C05-practice"
+  ]
+}

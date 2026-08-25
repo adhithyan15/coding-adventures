@@ -1,0 +1,16 @@
+{
+  "id": "ES-PATH-304-01",
+  "spine_node": "SPINE-CHECK-WELLBEING",
+  "lessons": [
+    "ES-C304-tranquilo",
+    "ES-C304-enfermo",
+    "ES-C304-contento",
+    "ES-C304-ocupado",
+    "ES-C304-triste"
+  ],
+  "before": [],
+  "inline": [
+    "ES-EXT-304-ESTADO"
+  ],
+  "after": []
+}

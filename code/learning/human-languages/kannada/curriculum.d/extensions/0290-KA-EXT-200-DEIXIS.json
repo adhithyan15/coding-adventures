@@ -1,0 +1,17 @@
+{
+  "id": "KA-EXT-200-DEIXIS",
+  "stage": "pre-A1",
+  "kind": "required",
+  "category": "grammar",
+  "canDo": "I can point at something in Kannada and ask who or where it is, and I can see the one pattern the six words are built from.",
+  "prerequisites": [],
+  "lessons": [
+    "KA-C41-this",
+    "KA-C41-that",
+    "KA-C41-here",
+    "KA-C41-there",
+    "KA-C41-who",
+    "KA-C41-where",
+    "KA-C41-deixis-system"
+  ]
+}

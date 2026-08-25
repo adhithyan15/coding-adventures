@@ -1,0 +1,21 @@
+{
+  "chapter": 299,
+  "title": "The Field and the Farm --- Field, Farm, Livestock, Harvest, Shepherd",
+  "label": "ch:la-granja",
+  "canDo": "I can name the field, the farm, the livestock, the harvest and the shepherd in Spanish, and say I am from the country.",
+  "spineNodes": [
+    "SPINE-EXCHANGE-NAMES"
+  ],
+  "payoff": {
+    "lesson": "ES-C299-pastor",
+    "kind": "production",
+    "summary": "Complete ES-C299-pastor: name all five of a holding in order, and say what three of them were named after.",
+    "assesses": [
+      "ES-LEX-C299-FARM-01",
+      "ES-LEX-C299-FARM-02",
+      "ES-LEX-C299-FARM-03",
+      "ES-LEX-C299-FARM-04",
+      "ES-LEX-C299-FARM-05"
+    ]
+  }
+}

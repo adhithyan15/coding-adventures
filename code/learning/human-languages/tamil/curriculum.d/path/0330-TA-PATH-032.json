@@ -1,0 +1,15 @@
+{
+  "id": "TA-PATH-032",
+  "spine_node": "SPINE-POLITE-REQUEST-REPAIR",
+  "lessons": [
+    "TA-C36-teneer",
+    "TA-C36-paal",
+    "TA-C36-unavu",
+    "TA-C36-tavaru"
+  ],
+  "before": [],
+  "inline": [
+    "TA-EXT-032-LANGUAGE-SPECIFIC"
+  ],
+  "after": []
+}

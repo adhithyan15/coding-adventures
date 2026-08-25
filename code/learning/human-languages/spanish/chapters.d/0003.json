@@ -1,0 +1,19 @@
+{
+  "chapter": 3,
+  "title": "Un and Una --- the Other Article",
+  "label": "ch:spanish-indefinite-article",
+  "canDo": "I can say a day, an afternoon and a night, choosing the article by the noun's gender.",
+  "spineNodes": [
+    "SPINE-TIME-OF-DAY"
+  ],
+  "payoff": {
+    "lesson": "ES-C02-repaso-articulos",
+    "kind": "dialogue",
+    "summary": "un is the number one, and English a is the same word worn down.",
+    "assesses": [
+      "ES-GRAMMAR-INDEFINITE-ARTICLE-MASCULINE",
+      "ES-GRAMMAR-INDEFINITE-ARTICLE-FEMININE",
+      "ES-ETYMON-UNUS"
+    ]
+  }
+}

@@ -1,0 +1,12 @@
+{
+  "segments": [
+    "PA-PATH-009"
+  ],
+  "omits": [
+    "FAREWELL-CASUAL",
+    "FAREWELL-SOON",
+    "FAREWELL-TOMORROW",
+    "GREETING-GOODNIGHT"
+  ],
+  "relocates": {}
+}

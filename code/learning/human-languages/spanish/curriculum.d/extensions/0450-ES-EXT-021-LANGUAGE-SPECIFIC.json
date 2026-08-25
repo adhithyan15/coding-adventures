@@ -1,0 +1,13 @@
+{
+  "id": "ES-EXT-021-LANGUAGE-SPECIFIC",
+  "stage": "pre-A1",
+  "kind": "required",
+  "category": "language-specific",
+  "canDo": "I can use the additional Spanish material required at this point in the path.",
+  "prerequisites": [],
+  "lessons": [
+    "ES-C23-padre-madre",
+    "ES-C23-hermano-hermana",
+    "ES-C23-hermano-hache"
+  ]
+}

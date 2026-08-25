@@ -1,0 +1,21 @@
+{
+  "chapter": 23,
+  "title": "Green and Yellow",
+  "label": "ch:ge-green-and-yellow",
+  "canDo": "I can name green and yellow in German, and say why grün is English green's own cousin while gelb's link to French jaune is only probable.",
+  "spineNodes": [
+    "SPINE-DEFINITE-REFERENCE"
+  ],
+  "payoff": {
+    "lesson": "GE-C23-gruen-gelb",
+    "kind": "production",
+    "summary": "Say grün as the direct cousin of English green from a root unrelated to Latin viridis, say gelb, and state the gelb / jaune cousinhood as probable rather than airtight. The chapter's only lesson, so the payoff covers everything it introduces.",
+    "assesses": [
+      "GE-LEX-GRUEN-02",
+      "GE-ETYMON-GRUEN-03",
+      "GE-LEX-GELB-04",
+      "GE-ETYMON-GELB-05",
+      "GE-EVIDENCE-GELB-JAUNE-06"
+    ]
+  }
+}

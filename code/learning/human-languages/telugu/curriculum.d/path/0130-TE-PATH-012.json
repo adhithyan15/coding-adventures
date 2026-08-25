@@ -1,0 +1,13 @@
+{
+  "id": "TE-PATH-012",
+  "spine_node": "SPINE-COUNT-ONE-TO-FIVE",
+  "lessons": [
+    "TE-C07-numbers-1-5",
+    "TE-C07-numbers-6-10"
+  ],
+  "before": [],
+  "inline": [
+    "TE-EXT-012-LANGUAGE-SPECIFIC"
+  ],
+  "after": []
+}

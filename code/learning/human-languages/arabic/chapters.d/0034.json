@@ -1,0 +1,21 @@
+{
+  "chapter": 34,
+  "title": "Asking for Food",
+  "label": "ch:ar-asking-for-food",
+  "canDo": "I can ask for salt, meat, cheese and food in Arabic, and I can build the word for a restaurant myself out of a root and the ma- place shape.",
+  "spineNodes": [
+    "SPINE-POLITE-REQUEST-REPAIR"
+  ],
+  "payoff": {
+    "lesson": "AR-C34-taam",
+    "kind": "production",
+    "summary": "Name ط as the emphatic partner of ت beside ص under س and ض under د, then pour ط-ع-م through the ma- place shape that already gave maktab and madhhab to generate maṭʿam, 'a restaurant', and ask for the chapter's foods with min faḍlik.",
+    "assesses": [
+      "AR-CONCEPT-C34-TAAM-01",
+      "AR-CONCEPT-C34-TAAM-02",
+      "AR-CONCEPT-C34-JUBN-02",
+      "AR-CONCEPT-C34-LAHM-02",
+      "AR-CONCEPT-C34-MILH-02"
+    ]
+  }
+}

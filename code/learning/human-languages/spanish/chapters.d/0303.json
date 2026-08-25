@@ -1,0 +1,21 @@
+{
+  "chapter": 303,
+  "title": "When the Words Run Out --- Help, a Moment, Again, I Don't Know, What Does It Mean",
+  "label": "ch:reparaciones",
+  "canDo": "I can ask for help, ask for a moment, ask for another go, admit I do not know, and ask what a word means in Spanish.",
+  "spineNodes": [
+    "SPINE-POLITE-REQUEST-REPAIR"
+  ],
+  "payoff": {
+    "lesson": "ES-C303-que-significa",
+    "kind": "production",
+    "summary": "Complete ES-C303-que-significa: repair a stalled exchange five ways, ending with the question that earns a meaning.",
+    "assesses": [
+      "ES-LEX-C303-REPAIR-01",
+      "ES-LEX-C303-REPAIR-02",
+      "ES-LEX-C303-REPAIR-03",
+      "ES-LEX-C303-REPAIR-04",
+      "ES-LEX-C303-REPAIR-05"
+    ]
+  }
+}

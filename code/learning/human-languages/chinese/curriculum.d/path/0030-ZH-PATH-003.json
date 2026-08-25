@@ -1,0 +1,20 @@
+{
+  "id": "ZH-PATH-003",
+  "spine_node": "SPINE-RESPOND-BASIC",
+  "lessons": [
+    "ZH-W04-kou",
+    "ZH-C04-kou",
+    "ZH-W04-ri",
+    "ZH-C04-ri",
+    "ZH-W04-bu",
+    "ZH-C04-bu",
+    "ZH-C04-practice"
+  ],
+  "before": [],
+  "inline": [
+    "ZH-EXT-010-BOX-REUSE",
+    "ZH-EXT-011-NEGATION",
+    "ZH-EXT-012-NEGATE-CONSOLIDATION"
+  ],
+  "after": []
+}

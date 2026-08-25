@@ -1,0 +1,13 @@
+{
+  "id": "ES-PATH-022",
+  "spine_node": "SPINE-CHECK-WELLBEING",
+  "lessons": [
+    "ES-C24-cabeza",
+    "ES-C24-mano"
+  ],
+  "before": [],
+  "inline": [
+    "ES-EXT-022-LANGUAGE-SPECIFIC"
+  ],
+  "after": []
+}

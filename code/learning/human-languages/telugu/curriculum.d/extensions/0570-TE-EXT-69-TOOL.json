@@ -1,0 +1,15 @@
+{
+  "id": "TE-EXT-69-TOOL",
+  "stage": "pre-A1",
+  "kind": "required",
+  "category": "vocabulary",
+  "canDo": "I can name five Telugu tools and ask politely to borrow one.",
+  "prerequisites": [],
+  "lessons": [
+    "TE-C69-axe",
+    "TE-C69-saw",
+    "TE-C69-spade",
+    "TE-C69-hammer",
+    "TE-C69-stick"
+  ]
+}

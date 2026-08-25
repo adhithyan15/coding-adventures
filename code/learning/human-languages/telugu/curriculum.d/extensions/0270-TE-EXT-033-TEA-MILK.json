@@ -1,0 +1,12 @@
+{
+  "id": "TE-EXT-033-TEA-MILK",
+  "stage": "pre-A1",
+  "kind": "required",
+  "category": "language-specific",
+  "canDo": "I can politely ask for tea or milk in Telugu, and say which word travelled by sea and which one three Dravidian cousins share under one regular sound law.",
+  "prerequisites": [],
+  "lessons": [
+    "TE-C39-tii",
+    "TE-C39-paalu"
+  ]
+}

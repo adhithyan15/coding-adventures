@@ -1,0 +1,17 @@
+{
+  "chapter": 60,
+  "title": "Synthesis --- Describing Things",
+  "label": "ch:sintesis-describir",
+  "canDo": "I can choose ser or estar with an adjective and make it agree.",
+  "spineNodes": [
+    "SPINE-SAY-WHAT-I-DO"
+  ],
+  "payoff": {
+    "lesson": "ES-C09-sintesis-describir",
+    "kind": "task",
+    "summary": "I can choose ser or estar with an adjective and make it agree.",
+    "assesses": [
+      "ES-GRAMMAR-STATE-LOCATION-ESTAR"
+    ]
+  }
+}

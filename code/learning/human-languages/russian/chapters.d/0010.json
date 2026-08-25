@@ -1,0 +1,23 @@
+{
+  "chapter": 10,
+  "title": "Heart",
+  "label": "ch:russian-heart",
+  "canDo": "I can name the heart in Russian, pronounce its silent letter correctly, and name its cousins across three other languages.",
+  "spineNodes": [
+    "SPINE-CHECK-WELLBEING"
+  ],
+  "payoff": {
+    "lesson": "RU-C10-serdtse",
+    "kind": "production",
+    "summary": "A one-lesson chapter closing the tranche on сердце, the surest cognate in the book: the reader produces the word with its silent д, reads the new letter ц, names heart, cor and kardía as its cousins, and closes by naming любить as the verb the heart does — the last of Chapter 5's atoms to be rescued.",
+    "assesses": [
+      "RU-LEX-SERDTSE",
+      "RU-SCRIPT-TSE",
+      "RU-ETYMON-SERDTSE-HEART",
+      "RU-LEX-GLAZ",
+      "RU-ETYMON-GLAZ-BALL",
+      "RU-LEX-LYUBIT",
+      "RU-ETYMON-LYUBIT-LOVE"
+    ]
+  }
+}

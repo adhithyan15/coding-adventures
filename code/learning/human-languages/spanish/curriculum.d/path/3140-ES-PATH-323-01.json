@@ -1,0 +1,16 @@
+{
+  "id": "ES-PATH-323-01",
+  "spine_node": "SPINE-TAKE-LEAVE",
+  "lessons": [
+    "ES-C323-ya",
+    "ES-C323-entonces",
+    "ES-C323-antes",
+    "ES-C323-despues",
+    "ES-C323-mientras"
+  ],
+  "before": [],
+  "inline": [
+    "ES-EXT-323-WHEN"
+  ],
+  "after": []
+}

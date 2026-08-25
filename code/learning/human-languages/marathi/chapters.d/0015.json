@@ -1,0 +1,21 @@
+{
+  "chapter": 15,
+  "title": "Family Memory at Real Distance",
+  "label": "ch:mr-family-memory",
+  "canDo": "I can retrieve मित्र and कुटुंब after short, medium, and durable gaps; explain the binding root and tatsama path of मित्र; and recall that कुटुंब is neuter in Marathi.",
+  "spineNodes": [
+    "SPINE-EXCHANGE-NAMES"
+  ],
+  "payoff": {
+    "lesson": "MR-R14-kutumb-r3",
+    "kind": "task",
+    "summary": "After genuine intervening retrievals, produce the five-part comparison: मित्र, its binding root and tatsama path, then कुटुंब and its Marathi neuter gender.",
+    "assesses": [
+      "MR-LEX-MITRA",
+      "MR-ETYMON-MITRA-BIND",
+      "MR-GRAMMAR-TATSAMA-BORROWING",
+      "MR-LEX-KUTUMB",
+      "MR-GRAMMAR-KUTUMB-NEUTER"
+    ]
+  }
+}

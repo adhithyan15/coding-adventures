@@ -1,0 +1,19 @@
+{
+  "chapter": 154,
+  "title": "Entender — Understanding Is Stretching Toward",
+  "label": "ch:spanish-entender",
+  "canDo": "I can say what I understand, and see the verb inside the no entiendo I have used since chapter 14.",
+  "spineNodes": [
+    "SPINE-SAY-WHAT-I-DO"
+  ],
+  "payoff": {
+    "lesson": "ES-C34-entender",
+    "kind": "task",
+    "summary": "The second e→ie stem-changer, and the moment a chapter-14 formula turns out to have parts.",
+    "assesses": [
+      "ES-LEX-ENTENDER-03",
+      "ES-ETYMON-ENTENDER-04",
+      "ES-LEX-NO-ENTIENDO-01"
+    ]
+  }
+}

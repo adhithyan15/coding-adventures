@@ -1,0 +1,23 @@
+{
+  "chapter": 28,
+  "title": "Afternoon",
+  "label": "ch:te-afternoon",
+  "canDo": "I can use Telugu's noon word to talk about the afternoon, and reach for the classical term when I need to be precise.",
+  "spineNodes": [
+    "SPINE-TIME-OF-DAY"
+  ],
+  "payoff": {
+    "lesson": "TE-C28-madhyahnam-widened",
+    "kind": "production",
+    "summary": "Reuse మధ్యాహ్నం for the stretch between noon and evening, then contrast it with అపరాహ్నం, the more formal, more precise later-afternoon word.",
+    "assesses": [
+      "TE-ETYMON-C17-MADHYAAHNAM-ARDHARAATRI-01",
+      "TE-ETYMON-C17-MADHYAAHNAM-ARDHARAATRI-02",
+      "TE-GRAMMAR-C17-MADHYAAHNAM-ARDHARAATRI-03",
+      "TE-ETYMON-C27-SAYANTRAM-01",
+      "TE-ETYMON-C27-SAYANTRAM-02",
+      "TE-PRAGMATICS-C28-MADHYAHNAM-WIDENED-01",
+      "TE-ETYMON-C28-MADHYAHNAM-WIDENED-02"
+    ]
+  }
+}

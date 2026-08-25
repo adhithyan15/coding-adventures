@@ -1,0 +1,11 @@
+{
+  "id": "ES-EXT-015-LOCATION",
+  "stage": "A1",
+  "kind": "required",
+  "category": "language-specific",
+  "canDo": "I can locate someone with estar and en.",
+  "prerequisites": [],
+  "lessons": [
+    "ES-C09-esta-en"
+  ]
+}

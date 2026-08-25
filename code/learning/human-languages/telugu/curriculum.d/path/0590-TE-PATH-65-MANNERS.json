@@ -1,0 +1,16 @@
+{
+  "id": "TE-PATH-65-MANNERS",
+  "spine_node": "SPINE-COURTESY-THANK",
+  "lessons": [
+    "TE-C65-welcome",
+    "TE-C65-manners",
+    "TE-C65-request",
+    "TE-C65-permission",
+    "TE-C65-trust"
+  ],
+  "before": [],
+  "inline": [
+    "TE-EXT-65-MANNERS"
+  ],
+  "after": []
+}

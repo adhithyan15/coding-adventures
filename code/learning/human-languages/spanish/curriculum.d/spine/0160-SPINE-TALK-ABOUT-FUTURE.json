@@ -1,0 +1,10 @@
+{
+  "segments": [
+    "ES-PATH-041-NEAR-FUTURE",
+    "ES-PATH-041-SIMPLE-FUTURE",
+    "ES-PATH-041-CONSOLIDATION",
+    "ES-PATH-041"
+  ],
+  "omits": [],
+  "relocates": {}
+}

@@ -1,0 +1,12 @@
+{
+  "id": "AR-PATH-020",
+  "spine_node": "SPINE-TIME-OF-DAY",
+  "lessons": [
+    "AR-C18-al-taqs"
+  ],
+  "before": [],
+  "inline": [
+    "AR-EXT-020-LANGUAGE-SPECIFIC"
+  ],
+  "after": []
+}

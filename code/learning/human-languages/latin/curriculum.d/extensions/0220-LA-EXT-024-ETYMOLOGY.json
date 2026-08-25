@@ -1,0 +1,11 @@
+{
+  "id": "LA-EXT-024-ETYMOLOGY",
+  "stage": "A1",
+  "kind": "supporting",
+  "category": "etymology",
+  "canDo": "I can use this Latin word history as a memory hook without confusing origin and current use.",
+  "prerequisites": [],
+  "lessons": [
+    "LA-C33-vesper-afterlives"
+  ]
+}

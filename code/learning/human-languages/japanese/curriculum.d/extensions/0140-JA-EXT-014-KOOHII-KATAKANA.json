@@ -1,0 +1,15 @@
+{
+  "id": "JA-EXT-014-KOOHII-KATAKANA",
+  "stage": "pre-A1",
+  "kind": "required",
+  "category": "script",
+  "canDo": "I can write the three distinct katakana shapes in コーヒー and use the long mark to hold the preceding vowel for one more mora.",
+  "prerequisites": [
+    "JA-EXT-003-KANJI-READINGS"
+  ],
+  "lessons": [
+    "JA-W06-ko-katakana",
+    "JA-W06-long-mark",
+    "JA-W06-hi-katakana"
+  ]
+}

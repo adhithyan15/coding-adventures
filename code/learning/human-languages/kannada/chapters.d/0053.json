@@ -1,0 +1,21 @@
+{
+  "chapter": 53,
+  "title": "The Sky",
+  "label": "ch:ka-sky",
+  "canDo": "I can name five things overhead in Kannada, and say which of them Kannada borrowed and which it has always had.",
+  "spineNodes": [
+    "SPINE-MEET-GREET"
+  ],
+  "payoff": {
+    "lesson": "KA-C53-cloud",
+    "kind": "production",
+    "summary": "Complete KA-C53-cloud and say all five words in order.",
+    "assesses": [
+      "KA-LEX-C53-SKY-01",
+      "KA-LEX-C53-SKY-02",
+      "KA-LEX-C53-SKY-03",
+      "KA-LEX-C53-SKY-04",
+      "KA-LEX-C53-SKY-05"
+    ]
+  }
+}

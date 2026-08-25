@@ -1,0 +1,16 @@
+{
+  "id": "TA-EXT-028-CORE-VERBS",
+  "stage": "A2",
+  "kind": "required",
+  "category": "language-specific",
+  "canDo": "I can say what I do with six everyday Tamil verbs, build each one as stem plus tense plus person, and name the one that carries no person at all.",
+  "prerequisites": [],
+  "lessons": [
+    "TA-C32-iru",
+    "TA-C32-po",
+    "TA-C32-vaa",
+    "TA-C32-saappidu",
+    "TA-C32-paar",
+    "TA-C32-teri"
+  ]
+}

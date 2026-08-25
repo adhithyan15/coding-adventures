@@ -1,0 +1,17 @@
+{
+  "chapter": 51,
+  "title": "Profesor --- and the Article Spanish Leaves Out",
+  "label": "ch:profesor",
+  "canDo": "I can say what someone does for a living with ser and no article.",
+  "spineNodes": [
+    "SPINE-SAY-WHAT-I-DO"
+  ],
+  "payoff": {
+    "lesson": "ES-C09-profesor",
+    "kind": "task",
+    "summary": "I can say what someone does for a living with ser and no article.",
+    "assesses": [
+      "ES-LEX-PROFESOR"
+    ]
+  }
+}

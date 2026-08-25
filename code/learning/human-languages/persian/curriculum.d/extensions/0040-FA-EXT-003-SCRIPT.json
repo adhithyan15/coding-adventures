@@ -1,0 +1,13 @@
+{
+  "id": "FA-EXT-003-SCRIPT",
+  "stage": "pre-A1",
+  "kind": "required",
+  "category": "script",
+  "canDo": "I can read Persian che and ye inside chist without completing an alphabet gate.",
+  "prerequisites": [
+    "FA-EXT-001-INLINE-SCRIPT"
+  ],
+  "lessons": [
+    "FA-C03-chist"
+  ]
+}

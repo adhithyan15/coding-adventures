@@ -1,0 +1,16 @@
+{
+  "id": "FA-PATH-014",
+  "spine_node": "SPINE-CHECK-WELLBEING",
+  "lessons": [
+    "FA-C13-aseman",
+    "FA-C13-khorshid",
+    "FA-C13-mah",
+    "FA-C13-setare",
+    "FA-C13-baran"
+  ],
+  "before": [],
+  "inline": [
+    "FA-EXT-021-LANGUAGE-SPECIFIC"
+  ],
+  "after": []
+}

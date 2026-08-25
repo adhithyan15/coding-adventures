@@ -1,0 +1,26 @@
+{
+  "chapter": 24,
+  "title": "Cheese, Egg, Rice, and Sugar",
+  "label": "ch:pt-cheese-egg-rice-sugar",
+  "canDo": "I can ask for cheese, egg, rice or sugar in Portuguese, name each one's gender, and split them into the two that are plain Latin and the two that crossed from Asia through Arabic.",
+  "spineNodes": [
+    "SPINE-POLITE-REQUEST-REPAIR"
+  ],
+  "payoff": {
+    "lesson": "PT-C24-acucar",
+    "kind": "production",
+    "summary": "The chapter's last lesson closes the set with a one-table review of all four foods' origins, ties acucar's cedilla back to Chapter 17's cabeca, and names acucar and arroz as cousins of English sugar and rice by the same Arabic doorway that gave Chapter 13 its azul.",
+    "assesses": [
+      "PT-LEX-QUEIJO-02",
+      "PT-ETYMON-QUEIJO-03",
+      "PT-LEX-OVO-02",
+      "PT-ETYMON-OVO-03",
+      "PT-LEX-ARROZ-02",
+      "PT-ETYMON-ARROZ-03",
+      "PT-LEX-ACUCAR-02",
+      "PT-ETYMON-ACUCAR-03",
+      "PT-NOTICE-C24-COMIDA-04",
+      "PT-SOUND-CABECA-02"
+    ]
+  }
+}

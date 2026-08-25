@@ -1,0 +1,24 @@
+{
+  "chapter": 279,
+  "title": "Four Things in a Room --- Door, Window, Chair, Bed",
+  "label": "ch:la-habitacion",
+  "canDo": "I can name the door, the window, the chair and the bed in Spanish, and say which of the four has no settled origin.",
+  "spineNodes": [
+    "SPINE-DEFINITE-REFERENCE"
+  ],
+  "payoff": {
+    "lesson": "ES-C279-cama",
+    "kind": "task",
+    "summary": "Complete ES-C279-cama: name the four things around you, and say which one nobody has managed to trace.",
+    "assesses": [
+      "ES-LEX-PUERTA",
+      "ES-ETYMON-PUERTA",
+      "ES-LEX-VENTANA",
+      "ES-ETYMON-VENTANA",
+      "ES-LEX-SILLA",
+      "ES-ETYMON-SILLA",
+      "ES-LEX-CAMA",
+      "ES-ETYMON-CAMA"
+    ]
+  }
+}

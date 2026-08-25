@@ -1,0 +1,15 @@
+{
+  "id": "AR-PATH-030",
+  "spine_node": "SPINE-POLITE-REQUEST-REPAIR",
+  "lessons": [
+    "AR-C33-shay",
+    "AR-C33-halib",
+    "AR-C33-sukkar",
+    "AR-C33-qahwa"
+  ],
+  "before": [],
+  "inline": [
+    "AR-EXT-030-LANGUAGE-SPECIFIC"
+  ],
+  "after": []
+}

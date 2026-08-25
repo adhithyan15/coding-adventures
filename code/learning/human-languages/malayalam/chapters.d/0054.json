@@ -1,0 +1,21 @@
+{
+  "chapter": 54,
+  "title": "A Tree, Part by Part",
+  "label": "ch:ml-a-tree-part-by-part",
+  "canDo": "I can name a tree and four of its parts in Malayalam.",
+  "spineNodes": [
+    "SPINE-EXCHANGE-NAMES"
+  ],
+  "payoff": {
+    "lesson": "ML-C54-seed",
+    "kind": "production",
+    "summary": "Complete ML-C54-seed and say all five words in order.",
+    "assesses": [
+      "ML-LEX-C54-TREE-01",
+      "ML-LEX-C54-TREE-02",
+      "ML-LEX-C54-TREE-03",
+      "ML-LEX-C54-TREE-04",
+      "ML-LEX-C54-TREE-05"
+    ]
+  }
+}

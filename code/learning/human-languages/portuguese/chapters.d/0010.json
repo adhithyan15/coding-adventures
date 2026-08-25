@@ -1,0 +1,20 @@
+{
+  "chapter": 10,
+  "title": "Family",
+  "label": "ch:pt-family",
+  "canDo": "I can name my parents and my siblings in Portuguese and say why irmão is not built on Latin's frater.",
+  "spineNodes": [
+    "SPINE-EXCHANGE-NAMES"
+  ],
+  "payoff": {
+    "lesson": "PT-C10-irmaos",
+    "kind": "task",
+    "summary": "Say o pai, a mãe, o irmão, a irmã with their nasal endings, then cut frāter germānus down to germānus alone and land on irmão, twin of Spanish hermano.",
+    "assesses": [
+      "PT-ETYMON-PAIS-02",
+      "PT-GRAMMAR-PAIS-03",
+      "PT-ETYMON-IRMAOS-02",
+      "PT-ETYMON-IRMAOS-03"
+    ]
+  }
+}

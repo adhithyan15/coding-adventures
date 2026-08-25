@@ -1,0 +1,16 @@
+{
+  "id": "SA-PATH-204",
+  "spine_node": "SPINE-NEGATE-AND-ASK",
+  "lessons": [
+    "SA-C18-when",
+    "SA-C18-why",
+    "SA-C18-how-many",
+    "SA-C18-from-where",
+    "SA-C18-k-words"
+  ],
+  "before": [],
+  "inline": [
+    "SA-EXT-204-ASK"
+  ],
+  "after": []
+}

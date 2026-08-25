@@ -1,0 +1,26 @@
+{
+  "chapter": 24,
+  "title": "Heart, Eyes, Ears, and Mouth",
+  "label": "ch:it-heart-eyes-ears-mouth",
+  "canDo": "I can name my heart, eyes, ears and mouth in Italian, and trace the sound-law that built two of them.",
+  "spineNodes": [
+    "SPINE-CHECK-WELLBEING"
+  ],
+  "payoff": {
+    "lesson": "IT-C24-bocca",
+    "kind": "task",
+    "summary": "The chapter's last lesson gathers il cuore, l'occhio, l'orecchio and la bocca, the set Chapter 17's la mano lesson promised, and closes on bocca's history as slang for 'cheek' that replaced Latin's real word for mouth.",
+    "assesses": [
+      "IT-LEX-CUORE-02",
+      "IT-LEX-OCCHIO-02",
+      "IT-LEX-ORECCHIO-02",
+      "IT-ETYMON-ORECCHIO-03",
+      "IT-GRAMMAR-ORECCHIO-04",
+      "IT-SOUND-PREGO-02",
+      "IT-ETYMON-PREGO-03",
+      "IT-LEX-BOCCA-02",
+      "IT-ETYMON-BOCCA-03",
+      "IT-NOTICE-BOCCA-04"
+    ]
+  }
+}

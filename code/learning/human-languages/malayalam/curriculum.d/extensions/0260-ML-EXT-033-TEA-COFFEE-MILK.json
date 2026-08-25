@@ -1,0 +1,13 @@
+{
+  "id": "ML-EXT-033-TEA-COFFEE-MILK",
+  "stage": "pre-A1",
+  "kind": "required",
+  "category": "language-specific",
+  "canDo": "I can politely ask for tea, coffee or milk in Malayalam, and trace each word back along the road it travelled to get here.",
+  "prerequisites": [],
+  "lessons": [
+    "ML-C39-chaaya",
+    "ML-C39-kaapi",
+    "ML-C39-paal"
+  ]
+}

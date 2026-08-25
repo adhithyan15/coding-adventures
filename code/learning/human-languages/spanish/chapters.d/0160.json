@@ -1,0 +1,18 @@
+{
+  "chapter": 160,
+  "title": "Preguntar — Asking, and Sounding a Depth",
+  "label": "ch:spanish-preguntar",
+  "canDo": "I can ask a question with preguntar, and choose it over pedir.",
+  "spineNodes": [
+    "SPINE-SAY-WHAT-I-DO"
+  ],
+  "payoff": {
+    "lesson": "ES-C35-preguntar",
+    "kind": "task",
+    "summary": "percontari, to sound a depth with a pole; and why English's one ask becomes two Spanish verbs.",
+    "assesses": [
+      "ES-LEX-PREGUNTAR-03",
+      "ES-GRAMMAR-ASK-SPLIT-04"
+    ]
+  }
+}

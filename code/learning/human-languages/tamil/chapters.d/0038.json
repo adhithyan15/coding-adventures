@@ -1,0 +1,43 @@
+{
+  "chapter": 38,
+  "title": "Keeping Well, and Leaving",
+  "label": "ch:ta-keeping-well-and-leaving",
+  "canDo": "I can ask உங்கள் உடம்பு எப்படி இருக்கு?, recognise சுகமா? and place it as the Sanskrit-derived option beside native நலம், say விடை பெறுகிறேன், and show that விடு, வீடு and விடை are one root while ஊர் and நண்பன் are not.",
+  "spineNodes": [
+    "SPINE-CHECK-WELLBEING",
+    "SPINE-TAKE-LEAVE"
+  ],
+  "payoff": {
+    "lesson": "TA-C38-vidai",
+    "kind": "production",
+    "summary": "Close the visit with நன்றி. விடை பெறுகிறேன்., put விடு, வீடு and விடை in one dictionary entry, refuse the second விடை that means 'bull' and came from Sanskrit, and refuse to join ஊர் and நண்பன் to the pattern just because they are nearby.",
+    "assesses": [
+      "TA-LEX-VIDAI-01",
+      "TA-ETYMON-VIDAI-02",
+      "TA-LEX-SUGAM-01",
+      "TA-ETYMON-SUGAM-02",
+      "TA-LEX-UDAMBU-01",
+      "TA-ETYMON-UDAMBU-02",
+      "TA-LEX-VEEDU-01",
+      "TA-ETYMON-VEEDU-02",
+      "TA-LEX-UUR-01",
+      "TA-LEX-NANBAN-01",
+      "TA-LEX-TENEER-01",
+      "TA-ETYMON-TAYAVUSEYTU-02",
+      "TA-SCRIPT-I-SIGN-WRITE-NANDRI-01",
+      "TA-SCRIPT-I-SIGN-WRITE-NANDRI-02",
+      "TA-SOUND-I-SIGN-WRITE-NANDRI-03",
+      "TA-SCRIPT-ABUGIDA-VA-KA-03",
+      "TA-LEX-UDAL-URUPPUGAL-01",
+      "TA-GRAMMAR-DATIVE-UKKU-01",
+      "TA-GRAMMAR-DATIVE-STACKING-01",
+      "TA-GRAMMAR-AGE-REGISTER-GRAMMAR-02",
+      "TA-SCRIPT-MA-RETROFLEX-NA-01",
+      "TA-SCRIPT-PULLI-VANAKKAM-01",
+      "TA-SOUND-ABUGIDA-VA-KA-04",
+      "TA-SCRIPT-SORRY-REGISTER-02",
+      "TA-ETYMON-MANNIKKAVUM-02",
+      "TA-LEX-TERI-01"
+    ]
+  }
+}

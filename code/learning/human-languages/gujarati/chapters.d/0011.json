@@ -1,0 +1,28 @@
+{
+  "chapter": 11,
+  "title": "Water, Tea, Milk, and Bread",
+  "label": "ch:gu-request-food-drink",
+  "canDo": "I can politely ask for water, tea, milk, or bread in Gujarati, name which of the four is a loanword and which have no settled root beyond Sanskrit, and explain why a word ending in -ī is not automatically feminine.",
+  "spineNodes": [
+    "SPINE-POLITE-REQUEST-REPAIR"
+  ],
+  "payoff": {
+    "lesson": "GU-C10-rotli",
+    "kind": "production",
+    "summary": "The chapter closes on રોટલી, the request that breaks the drink pattern: the reader produces all four requests with મહેરબાની કરીને, sorts પાણી and દૂધ (inherited, known root) against ચા (loaned from Chinese by the overland route) against રોટલી (inherited, root unknown), and uses પાણી's neuter gender despite its -ī ending to show that રોટલી's own feminine -ī is a hint, not a rule.",
+    "assesses": [
+      "GU-LEX-PAANI",
+      "GU-PHRASE-MEHERBANI-KARINE",
+      "GU-ETYMON-PAANI-DRINK",
+      "GU-LEX-CHA",
+      "GU-ETYMON-CHA-CHINESE",
+      "GU-HISTORY-TEA-CHA-ISOGLOSS",
+      "GU-LEX-DUDH",
+      "GU-ETYMON-DUDH-DUGDHA",
+      "GU-LEX-ROTLI",
+      "GU-ETYMON-ROTLI-UNKNOWN",
+      "GU-GRAMMAR-GENDER-NOT-BY-ENDING",
+      "GU-SCRIPT-HEADLESS-CLUE"
+    ]
+  }
+}

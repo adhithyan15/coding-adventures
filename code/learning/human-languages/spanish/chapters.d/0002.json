@@ -1,0 +1,23 @@
+{
+  "chapter": 2,
+  "title": "The Rest of the Greetings",
+  "label": "ch:greetings",
+  "canDo": "I can greet someone correctly at any hour — morning, afternoon or night — and say why the greeting changes shape.",
+  "spineNodes": [
+    "SPINE-TIME-OF-DAY"
+  ],
+  "payoff": {
+    "lesson": "ES-C02-practice",
+    "kind": "dialogue",
+    "summary": "The same greeting exchange run three times across the day, choosing the right form for each hour.",
+    "assesses": [
+      "ES-LEX-HOLA",
+      "ES-LEX-BUENOS-DIAS",
+      "ES-LEX-BUENAS-TARDES",
+      "ES-LEX-BUENAS-NOCHES",
+      "ES-GRAMMAR-NOUN-GENDER",
+      "ES-GRAMMAR-AGREEMENT-MASCULINE-PLURAL",
+      "ES-GRAMMAR-AGREEMENT-FEMININE-PLURAL"
+    ]
+  }
+}

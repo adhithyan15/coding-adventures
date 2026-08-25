@@ -1,0 +1,14 @@
+{
+  "id": "AR-PATH-018",
+  "spine_node": "SPINE-TIME-OF-DAY",
+  "lessons": [
+    "AR-C14-ashhur",
+    "AR-C15-ad-duhr-muntasaf-al-layl",
+    "AR-C16-al-saa"
+  ],
+  "before": [],
+  "inline": [
+    "AR-EXT-018-LANGUAGE-SPECIFIC"
+  ],
+  "after": []
+}

@@ -1,0 +1,21 @@
+{
+  "chapter": 17,
+  "title": "Noon and Midnight",
+  "label": "ch:te-noon-and-midnight",
+  "canDo": "I can say noon and midnight in Telugu and explain why one is \"middle\" and the other \"half.\"",
+  "spineNodes": [
+    "SPINE-TIME-OF-DAY"
+  ],
+  "payoff": {
+    "lesson": "TE-C17-madhyaahnam-ardharaatri",
+    "kind": "production",
+    "summary": "Say మధ్యాహ్నం and అర్ధరాత్రి, then separate madhya (\"middle\") from ardha (\"half\") — two different Sanskrit roots where Kannada uses one.",
+    "assesses": [
+      "TE-LEX-C16-NELALU-01",
+      "TE-ETYMON-C16-NELALU-02",
+      "TE-ETYMON-C17-MADHYAAHNAM-ARDHARAATRI-01",
+      "TE-ETYMON-C17-MADHYAAHNAM-ARDHARAATRI-02",
+      "TE-GRAMMAR-C17-MADHYAAHNAM-ARDHARAATRI-03"
+    ]
+  }
+}

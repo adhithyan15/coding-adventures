@@ -1,0 +1,29 @@
+{
+  "id": "AR-PATH-008",
+  "spine_node": "SPINE-CHECK-WELLBEING",
+  "lessons": [
+    "AR-W04-dots-family-nun-ta",
+    "AR-W05-ya-and-my-name",
+    "AR-W06-harakat-and-hamza",
+    "AR-W06-sukun-shadda-tanwin",
+    "AR-W06-hamza",
+    "AR-W07-hook-family-ha-kha",
+    "AR-W08-kaf-and-ra",
+    "AR-W09-khayr-bikhayr",
+    "AR-C03-kayfa",
+    "AR-C03-hal",
+    "AR-C03-kayfa-haluka",
+    "AR-C03-bi-khayr",
+    "AR-C03-al-hamdu-lillah",
+    "AR-C03-practice"
+  ],
+  "before": [
+    "AR-EXT-008-SCRIPT"
+  ],
+  "inline": [
+    "AR-EXT-008-LANGUAGE-SPECIFIC"
+  ],
+  "after": [
+    "AR-EXT-008-CONSOLIDATION"
+  ]
+}

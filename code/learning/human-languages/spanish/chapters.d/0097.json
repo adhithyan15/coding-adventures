@@ -1,0 +1,21 @@
+{
+  "chapter": 97,
+  "title": "Synthesis --- The Thing and the Person",
+  "label": "ch:synthesis-two-sets",
+  "canDo": "I can use both sets in one exchange and say what decides between them.",
+  "spineNodes": [
+    "SPINE-DEFINITE-REFERENCE"
+  ],
+  "payoff": {
+    "lesson": "ES-C46-sintesis-dar-y-decir",
+    "kind": "task",
+    "summary": "Complete ES-C46-sintesis-dar-y-decir: run the four-turn exchange and say what separates lo from le.",
+    "assesses": [
+      "ES-GRAMMAR-WHICH-OBJECT",
+      "ES-GRAMMAR-DIRECT-OBJECT-LO",
+      "ES-GRAMMAR-INDIRECT-OBJECT-LE",
+      "ES-GRAMMAR-INDIRECT-OBJECT-PLURAL"
+    ],
+    "note": "First choice in the book that nothing on the page can settle: same slot, same length, same Latin ancestor, and only meaning tells them apart."
+  }
+}

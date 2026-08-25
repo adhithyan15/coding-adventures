@@ -260,6 +260,76 @@ committed file with SHA-256
 `c230a32258b7c2f492221a22edac19b429c3e357f15cebfd2ac062f80fe19098` unchanged,
 asserted by a test over the real ledger rather than only a fixture.
 
+### 4.1a `<track>/chapters.json` — DONE for 20 of 23 tracks
+
+```text
+<track>/chapters.d/_meta.json      version, language, note
+<track>/chapters.d/<NNNN>.json     one chapter each, named for the chapter number
+```
+
+Round-tripping is byte-exact for all twenty, verified against the real committed
+ledgers rather than a fixture; the SHA-256 of each rebuild is recorded in the
+package CHANGELOG.
+
+Three findings, all of which contradict something this spec assumed:
+
+1. **§5.1 said "no separate prefix is needed".** That is true of the *prefix*
+   but not of the *padding*: the chapter number alone, unpadded, re-sorts every
+   one of the twenty tracks. Eleven chapters is enough — `10.json` and
+   `11.json` both sort before `2.json`. The shard name is the chapter number
+   zero-padded to four digits.
+
+2. **`french`, `japanese` and `marwadi` do not round-trip.** Their committed
+   `chapters.json` is hand-formatted with inline one-line arrays that
+   `JSON.stringify(x, null, 2)` expands. The data is identical; the bytes are
+   not. Per §8.5 they are reported rather than reformatted, and keep their
+   monoliths. This is a decision waiting for an owner, not an oversight.
+
+3. **The monolith could not be deleted, and §5.1 did not anticipate why.**
+   See §4.3.
+
+### 4.3 The eager glob-table cost — why browser-read ledgers keep their monoliths
+
+§4.1 explains `core/spine.json`'s surviving monolith as a *static import* a
+browser cannot follow. The real constraint is broader, and it decides the
+disposition of every ledger `language-ladder` reads.
+
+`bookhashes.ts` already reads `<track>/chapters.json` through
+`import.meta.glob` — the browser equivalent of `readdirSync`, resolved by Vite
+at build time. A glob's **modules** are lazy. Its **key table** is not: Vite
+expands the glob into one string key plus one `() => import(…)` arrow per
+matching file, as ordinary code in the importing module, and that module is on
+the eager path.
+
+Sharding takes the match count from 23 files to ~1,020. Measured:
+
+| | largest eager chunk |
+| --- | ---: |
+| before | 312,216 bytes |
+| with `chapters.d/` globbed | 503,765 bytes |
+
+which is through the hard 500 kB ceiling in
+`language-ladder/scripts/check-bundle.mjs`. That ceiling is a debt ceiling and
+was not raised.
+
+The dodge worth naming, because it looks free and is not: move the four
+capability fields into `core/generated-book-hashes/<lang>.json`, which the app
+already loads lazily in 23 pieces. That would work and would cost a real check.
+The app recomputes each chapter's fingerprint from the **currently authored**
+capability, so a capability edited without regenerating the book reads as
+`stale`. Sourcing the capability from the same generated file as the hash it is
+compared against would make that comparison agree with itself, and the drift it
+exists to catch would go silent.
+
+So: **a ledger the browser globs keeps its monolith as a generated artifact.**
+The conflict is not removed, it is downgraded — from a hand-merge of JSON to
+"take either side, re-run `npm run unshard`", which is §3's rule and is
+mechanical. Removing it outright needs the app to stop reading authored ledgers
+at all, which is its own piece of work with its own trade to decide.
+
+This applies directly to `<track>/curriculum.json` (§5.2), which the app globs
+**eagerly** — a stricter case again.
+
 ### 4.2 Tooling
 
 ```sh
@@ -291,6 +361,15 @@ separate prefix is needed and no id-safety question arises.
 **Difficulty: low.** This is the cleanest of the remaining migrations and should
 go first.
 
+> **DONE for 20 of 23 tracks — see §4.1a.** Three corrections to the paragraph
+> above, all found by doing it. The chapter numbers are contiguous `1..n` as
+> claimed, but "no separate prefix is needed" understates the requirement: the
+> number must be ZERO-PADDED or sorted filename order re-sorts every track in
+> the corpus. `french`, `japanese` and `marwadi` do not round-trip byte-exactly
+> and were left alone. And the monolith could not be deleted, for the reason in
+> §4.3 — which is the finding that matters most here, because it governs §5.2
+> and §5.3 as well.
+
 ### 5.2 `<track>/curriculum.json` → four sibling directories
 
 Shape today (`spanish`):
@@ -317,6 +396,44 @@ looking sequential. This is the §2.2 trap, live.
 `.d/`" to "several keys, each in its own sibling `.d/`", plus an object-valued
 shard mode for `spine`. That is a real but contained generalisation of
 `ShardPlan`.
+
+> **DONE for 22 of 23 tracks.** `marwadi` is left on its monolith: its `lessons`
+> arrays are written inline on one line, so the bytes do not round-trip. Data
+> identical, reported not reformatted, per §8.
+>
+> The monolith is KEPT as a generated artifact, per §4.3 — `language-ladder`
+> globs `*/curriculum.json` and a glob's key table is eager code. The conflict on
+> `spine[<node>].segments` is downgraded to "regenerate, do not hand-merge",
+> not removed. A deliberate trade: not raising the app's 500 kB debt ceiling,
+> and not weakening the staleness check that the alternative would have cost.
+>
+> **Three corrections to the table above, found by doing it:**
+>
+> 1. **`spine` DOES need an ordinal, and the reasoning above is wrong.** "It is
+>    keyed by node id, so it needs no ordinal: an object has no meaningful
+>    order" is true of JSON semantics and false of this ledger.
+>    `JSON.stringify` emits object keys in INSERTION order; **no** track has its
+>    spine keys in sorted order; and all 23 list them in exactly
+>    `core/spine.d/`'s ladder order, pre-A1 → C2. It is the shared ordered
+>    ladder, mirrored per track. `<NODE-ID>.json` shards merged in sorted order
+>    would have scrambled it in 23 files at once, silently, while still
+>    "round-tripping successfully" — the §2.2 trap, at the one place this spec
+>    said it did not apply.
+>
+> 2. **`path`/`extensions` ordinals confirmed needed, but not universally.**
+>    Spanish diverges at index 3: authored `ES-PATH-004` against sorted
+>    `ES-PATH-003-CASA`, because a bare prefix sorts before the same prefix
+>    extended. That holds for 20 of the 22 tracks — `japanese` and `urdu` happen
+>    to have both lists already in sorted order and would coincidentally survive
+>    losing their ordinals. The convention still applies to all 22: those two are
+>    one authored id away from joining the other twenty, and nothing would
+>    announce it.
+>
+> 3. **The arrays are not last, and §2.5's refusal had to go.** Every track is
+>    `{version, language, path, spine, extensions}`, Spanish adding
+>    `conceptAliases`. `_meta.json` now records the top-level key order in
+>    `_keys` — but only when the sharded keys are not already a suffix, so only
+>    `spanish` has one and no previously-committed shard set changed.
 
 ### 5.3 `core/book-generation.json` → `core/book-generation.d/<language>.json`
 
@@ -354,6 +471,53 @@ arrays, and a Spanish tranche touches only that file.
 > `\input` list are the things to check).
 
 **Difficulty: medium-high**, entirely because of that normalization step.
+
+> **DONE. Both blockers cleared.** `core/book-generation.d/<language>.json`,
+> 24 files, byte-exact round trip. This was the last of the shared ledgers.
+>
+> **The blocker this section records resolved itself.**
+>
+> Re-measured at 1,007 `targets` (this spec was written at 949): every one of
+> the six arrays is contiguous by language, and `targets` is **23 runs for 23
+> languages**, not 27. The split runs for hindi, kannada, spanish and telugu
+> closed as later tranches inserted into them. All six arrays are additionally
+> in the same alphabetical language order, which is also sorted `<language>.json`
+> order — so a per-language split reproduces authored order with **no ordinal
+> prefix and no normalization commit**. A test pins that contiguity, so an
+> append to the end of `targets` reopens the question loudly.
+>
+> **A second blocker replaced it, and was cleared deliberately.** The committed
+> file did not round-trip through `JSON.stringify(…, null, 2)` at all: 74
+> differing lines at **2911–2984**, identical line count, **leading whitespace
+> only** — twelve `marwadi` entries in `targets` indented two spaces deeper than
+> canonical, a hand-merge artifact.
+>
+> Unlike `chapters.json` and `curriculum.json`, a track cannot be skipped here —
+> it is one file shared by all 23 — so §8's "report, do not reformat" would have
+> meant "never shard it". It was re-indented in **its own commit**, proved
+> whitespace-only by **deep-comparing the parsed structures** (plus top-level key
+> order, every array length, and the key order of all 1,160 elements) rather than
+> by reading the diff.
+>
+> **That exemption is narrow and should not be generalised.** This is a BUILD
+> MANIFEST — `(language, chapter, output, scriptSet)` triples nobody reads for
+> meaning — so whitespace in it is not content. The four remaining
+> non-round-tripping files are hand-maintained CURRICULUM DATA, where churn
+> buries real edits in review; they keep their monoliths. See §8.9.
+>
+> `tests/grouped-shards.test.ts` used to assert the file does NOT round-trip, as
+> an executable statement of the blocker. It is now **inverted**: the file must
+> STAY canonical, so a hand-edit reintroducing stray indentation — the way the
+> first one arrived, through a merge nobody looked at closely — fails
+> immediately rather than surfacing months later as an unaccountable `--check`
+> failure.
+>
+> `scriptSets` → `_meta.json` confirmed: 8 keys, keyed by script set, carrying no
+> `language`. Every element of the other six arrays carries one. No `_keys` is
+> needed — the six grouped arrays are already a suffix of the document.
+>
+> `src/book-cli.ts` now reads through `readMaybeSharded`; it was the last
+> non-loader read of any of the three ledgers in `src/`.
 
 ### 5.4 `<track>/book/book.tex` → **generated, not sharded**
 
@@ -439,3 +603,14 @@ separate script, never wired into `vitest run`.
 6. Wire `--check` into CI and `verify-human-languages.sh`.
 7. Land it when the file is quiet. Reshaping a file underneath an open branch
    breaks that branch.
+8. **Decide the monolith's disposition explicitly, and check §4.3 first.** If
+   `language-ladder` globs the ledger, the monolith stays as a generated
+   artifact and the conflict is downgraded rather than removed. `ShardPlan`
+   makes this a required field for exactly that reason.
+9. **If the committed file does not round-trip byte-exactly, stop and report
+   it.** Do not reformat it into agreement with the serialiser as part of the
+   migration. Four files are in this state today and are named in §4.1a and
+   §5.2/§5.3: three `chapters.json`, `marwadi/curriculum.json`, and
+   `core/book-generation.json`. Each needs a separate, deliberate
+   normalization commit whose whole content is the reformatting, so that the
+   diff can be read as "no data changed" rather than buried inside a migration.

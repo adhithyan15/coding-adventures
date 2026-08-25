@@ -1,0 +1,28 @@
+{
+  "chapter": 15,
+  "title": "Nine Letters, and the Words You Already Knew",
+  "label": "ch:fa-script-nine",
+  "canDo": "I can write nine Perso-Arabic letters from memory, read salâm, bale, na, mamnun, nân, nâm and mâh off the page rather than from the romanization, and explain why Persian leaves its short vowels unwritten.",
+  "spineNodes": [
+    "SPINE-RESPOND-BASIC"
+  ],
+  "payoff": {
+    "lesson": "FA-C15-practice",
+    "kind": "writing",
+    "summary": "Seven words the book had only ever given by ear, read letter by letter from the right -- and the reason a Persian word can be read only once you have heard it.",
+    "assesses": [
+      "FA-SCRIPT-RTL-01",
+      "FA-SCRIPT-ALEF-01",
+      "FA-SCRIPT-LAM-01",
+      "FA-SCRIPT-SIN-01",
+      "FA-SCRIPT-MIM-01",
+      "FA-SCRIPT-JOINING-01",
+      "FA-SCRIPT-BE-01",
+      "FA-SCRIPT-TE-01",
+      "FA-SCRIPT-NUN-01",
+      "FA-SCRIPT-HE-01",
+      "FA-SCRIPT-VAV-01",
+      "FA-SCRIPT-NINE-READ-01"
+    ]
+  }
+}

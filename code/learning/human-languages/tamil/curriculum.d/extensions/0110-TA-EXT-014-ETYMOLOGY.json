@@ -1,0 +1,12 @@
+{
+  "id": "TA-EXT-014-ETYMOLOGY",
+  "stage": "A1",
+  "kind": "supporting",
+  "category": "etymology",
+  "canDo": "I can use this Tamil word history as a memory hook without confusing origin and current use.",
+  "prerequisites": [],
+  "lessons": [
+    "TA-C07-numbers-1-5-family",
+    "TA-C07-numbers-6-10-family"
+  ]
+}

@@ -1,0 +1,11 @@
+{
+  "id": "TA-PATH-004",
+  "spine_node": "SPINE-RESPOND-BASIC",
+  "lessons": [
+    "TA-C01-aam",
+    "TA-C01-illai"
+  ],
+  "before": [],
+  "inline": [],
+  "after": []
+}

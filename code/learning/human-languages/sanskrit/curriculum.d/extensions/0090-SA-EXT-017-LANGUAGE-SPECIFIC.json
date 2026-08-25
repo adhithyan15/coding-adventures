@@ -1,0 +1,15 @@
+{
+  "id": "SA-EXT-017-LANGUAGE-SPECIFIC",
+  "stage": "pre-A1",
+  "kind": "required",
+  "category": "language-specific",
+  "canDo": "I can use the Sanskrit-specific vocabulary and grammar that support this shared ability.",
+  "prerequisites": [],
+  "lessons": [
+    "SA-C05-vadami",
+    "SA-C05-aham-samskritam-vadami",
+    "SA-C05-karomi",
+    "SA-C05-vasami",
+    "SA-C05-practice"
+  ]
+}

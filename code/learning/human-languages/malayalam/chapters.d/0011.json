@@ -1,0 +1,18 @@
+{
+  "chapter": 11,
+  "title": "Four Core Colours",
+  "label": "ch:ml-core-colours",
+  "canDo": "I can name black, white, red and blue in Malayalam.",
+  "spineNodes": [
+    "SPINE-DEFINITE-REFERENCE"
+  ],
+  "payoff": {
+    "lesson": "ML-C11-nirangal",
+    "kind": "production",
+    "summary": "Say karuppŭ, veḷḷa, cuvappŭ and nīla, and mark which three are native Dravidian and which one is a shared Sanskrit loan.",
+    "assesses": [
+      "ML-CONCEPT-C11-NIRANGAL-01",
+      "ML-CONCEPT-C11-NIRANGAL-02"
+    ]
+  }
+}

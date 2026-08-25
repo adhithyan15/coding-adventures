@@ -1,0 +1,10 @@
+{
+  "segments": [],
+  "omits": [
+    "DISCOURSE-COHESION",
+    "PARAGRAPH-PLAN",
+    "CONNECTIVE-FURTHERMORE",
+    "REFERENCE-ANAPHORA"
+  ],
+  "relocates": {}
+}

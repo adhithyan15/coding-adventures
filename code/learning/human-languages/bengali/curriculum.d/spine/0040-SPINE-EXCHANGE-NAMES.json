@@ -1,0 +1,12 @@
+{
+  "segments": [
+    "BN-PATH-005",
+    "BN-PATH-015",
+    "BN-PATH-002A"
+  ],
+  "omits": [
+    "PRONOUN-ME",
+    "WORD-IS"
+  ],
+  "relocates": {}
+}

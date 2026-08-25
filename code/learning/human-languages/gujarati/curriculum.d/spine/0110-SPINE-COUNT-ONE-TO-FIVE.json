@@ -1,0 +1,9 @@
+{
+  "segments": [
+    "GU-PATH-009"
+  ],
+  "omits": [
+    "NUMBER-ONE-TO-FIVE"
+  ],
+  "relocates": {}
+}

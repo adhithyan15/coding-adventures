@@ -1,0 +1,17 @@
+{
+  "chapter": 242,
+  "title": "Comisteis, Tuvisteis --- The Last Gap Closes",
+  "label": "ch:comisteis",
+  "canDo": "I can use the whole preterite, regular and strong.",
+  "spineNodes": [
+    "SPINE-DEFINITE-REFERENCE"
+  ],
+  "payoff": {
+    "lesson": "ES-C63-comisteis",
+    "kind": "task",
+    "summary": "I can use the whole preterite, regular and strong.",
+    "assesses": [
+      "ES-GRAMMAR-PRETERITE-COMPLETE"
+    ]
+  }
+}

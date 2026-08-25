@@ -1,0 +1,17 @@
+{
+  "id": "SA-PATH-201",
+  "spine_node": "SPINE-DEFINITE-REFERENCE",
+  "lessons": [
+    "SA-C15-big",
+    "SA-C15-small",
+    "SA-C15-good",
+    "SA-C15-new",
+    "SA-C15-old",
+    "SA-C15-adjective-system"
+  ],
+  "before": [],
+  "inline": [
+    "SA-EXT-201-ADJ"
+  ],
+  "after": []
+}

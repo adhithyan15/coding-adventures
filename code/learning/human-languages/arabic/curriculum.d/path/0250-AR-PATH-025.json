@@ -1,0 +1,11 @@
+{
+  "id": "AR-PATH-025",
+  "spine_node": "SPINE-TIME-OF-DAY",
+  "lessons": [
+    "AR-C25-yawm",
+    "AR-C26-layl"
+  ],
+  "before": [],
+  "inline": [],
+  "after": []
+}

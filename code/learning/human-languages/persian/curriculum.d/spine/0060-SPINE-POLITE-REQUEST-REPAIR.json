@@ -1,0 +1,10 @@
+{
+  "segments": [
+    "FA-PATH-010"
+  ],
+  "omits": [
+    "COURTESY-PLEASE",
+    "COURTESY-SORRY"
+  ],
+  "relocates": {}
+}

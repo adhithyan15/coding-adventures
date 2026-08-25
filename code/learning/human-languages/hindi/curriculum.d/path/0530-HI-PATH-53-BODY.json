@@ -1,0 +1,16 @@
+{
+  "id": "HI-PATH-53-BODY",
+  "spine_node": "SPINE-CHECK-WELLBEING",
+  "lessons": [
+    "HI-C53-shoulder",
+    "HI-C53-knee",
+    "HI-C53-forehead",
+    "HI-C53-back",
+    "HI-C53-lip"
+  ],
+  "before": [],
+  "inline": [
+    "HI-EXT-53-BODY"
+  ],
+  "after": []
+}

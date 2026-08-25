@@ -1,0 +1,27 @@
+{
+  "chapter": 7,
+  "title": "Six Verbs at the Core",
+  "label": "ch:pa-core-verbs",
+  "canDo": "I can name six everyday Punjabi verbs by the -ਣਾ/-ਨਾ ending, strip that ending to reach the stem, trace each one to its Sanskrit and Indo-European root, and explain how the lost breathy consonants left Punjabi with a tone no other major Indo-Aryan language has.",
+  "spineNodes": [
+    "SPINE-SAY-WHAT-I-DO"
+  ],
+  "payoff": {
+    "lesson": "PA-C07-janna",
+    "kind": "production",
+    "summary": "The sixth verb runs the whole chapter at once: hold the doubled n that keeps jāṇnā apart from jāṇā, separate the two ਜ that came from different Sanskrit sounds, strip the stem off all six infinitives, and state that none of them carries a tone.",
+    "assesses": [
+      "PA-LEX-JANNA",
+      "PA-CONTRAST-JANA-JANNA",
+      "PA-ETYMON-JANNA-KNOW",
+      "PA-GRAMMAR-NA-INFINITIVE",
+      "PA-LEX-HONA",
+      "PA-LEX-JANA",
+      "PA-LEX-AUNA",
+      "PA-LEX-KHANA",
+      "PA-LEX-VEKHNA",
+      "PA-SOUND-Y-TO-J",
+      "PA-SOUND-PUNJABI-TONE"
+    ]
+  }
+}

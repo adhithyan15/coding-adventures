@@ -1,0 +1,16 @@
+{
+  "id": "KA-PATH-59-GROUND",
+  "spine_node": "SPINE-TAKE-LEAVE",
+  "lessons": [
+    "KA-C59-wind",
+    "KA-C59-mist",
+    "KA-C59-sand",
+    "KA-C59-mud",
+    "KA-C59-fire"
+  ],
+  "before": [],
+  "inline": [
+    "KA-EXT-59-GROUND"
+  ],
+  "after": []
+}

@@ -1,0 +1,15 @@
+{
+  "id": "MR-PATH-015",
+  "spine_node": "SPINE-POLITE-REQUEST-REPAIR",
+  "lessons": [
+    "MR-C10-paani",
+    "MR-C10-chaha",
+    "MR-C10-dudh",
+    "MR-C10-bhakari"
+  ],
+  "before": [],
+  "inline": [
+    "MR-EXT-015-LANGUAGE-SPECIFIC"
+  ],
+  "after": []
+}

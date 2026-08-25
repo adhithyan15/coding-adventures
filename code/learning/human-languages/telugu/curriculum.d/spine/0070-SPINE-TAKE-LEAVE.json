@@ -1,0 +1,16 @@
+{
+  "segments": [
+    "TE-PATH-010",
+    "TE-PATH-50-LEAVE",
+    "TE-PATH-59-WEATHER",
+    "TE-PATH-66-FIELD",
+    "TE-PATH-73-TASTE"
+  ],
+  "omits": [
+    "FAREWELL-CASUAL",
+    "FAREWELL-SOON"
+  ],
+  "relocates": {
+    "GREETING-GOODNIGHT": "SPINE-TIME-OF-DAY"
+  }
+}

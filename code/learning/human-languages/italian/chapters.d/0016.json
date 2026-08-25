@@ -1,0 +1,24 @@
+{
+  "chapter": 16,
+  "title": "Being, Going, and the Past with Essere",
+  "label": "ch:it-essere-andare-past",
+  "canDo": "I can say in Italian where I went, using essere as the auxiliary and making the participle agree with me.",
+  "spineNodes": [
+    "SPINE-ASK-LOCATION"
+  ],
+  "payoff": {
+    "lesson": "IT-C16-passato-prossimo-essere",
+    "kind": "production",
+    "summary": "Say sono stato and sono andato, switch to sono andata as a woman, run andato, andata, andati, andate, and set the whole set against avere's unchanging ho parlato.",
+    "assesses": [
+      "IT-LEX-ANDARE-02",
+      "IT-GRAMMAR-ESSERE-STATO-02",
+      "IT-NOTICE-ESSERE-STATO-03",
+      "IT-GRAMMAR-PASSATO-PROSSIMO-02",
+      "IT-ETYMON-PASSATO-PROSSIMO-03",
+      "IT-LEX-PASSATO-PROSSIMO-ESSERE-02",
+      "IT-GRAMMAR-PASSATO-PROSSIMO-ESSERE-03",
+      "IT-PRAGMATICS-PASSATO-PROSSIMO-ESSERE-04"
+    ]
+  }
+}

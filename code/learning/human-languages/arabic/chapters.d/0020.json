@@ -1,0 +1,18 @@
+{
+  "chapter": 20,
+  "title": "Numbers Eleven to Twenty",
+  "label": "ch:ar-numbers-eleven-to-twenty",
+  "canDo": "I can count from eleven to twenty in Arabic and build the teens as 'X and ten'.",
+  "spineNodes": [
+    "SPINE-COUNT-ONE-TO-FIVE"
+  ],
+  "payoff": {
+    "lesson": "AR-C20-ahada-ashar-ishrun",
+    "kind": "production",
+    "summary": "Build the teens as additive X-ʿashar compounds, then say ʿishrūn, which is not built that way at all.",
+    "assesses": [
+      "AR-CONCEPT-C20-AHADA-ASHAR-ISHRUN-01",
+      "AR-CONCEPT-C20-AHADA-ASHAR-ISHRUN-02"
+    ]
+  }
+}

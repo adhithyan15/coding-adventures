@@ -1,0 +1,21 @@
+{
+  "chapter": 54,
+  "title": "Animals",
+  "label": "ch:hi-animals",
+  "canDo": "I can name five common animals when I say what something is called.",
+  "spineNodes": [
+    "SPINE-EXCHANGE-NAMES"
+  ],
+  "payoff": {
+    "lesson": "HI-C54-goat",
+    "kind": "production",
+    "summary": "Complete HI-C54-goat and say all five words in order.",
+    "assesses": [
+      "HI-LEX-C54-ANIMAL-01",
+      "HI-LEX-C54-ANIMAL-02",
+      "HI-LEX-C54-ANIMAL-03",
+      "HI-LEX-C54-ANIMAL-04",
+      "HI-LEX-C54-ANIMAL-05"
+    ]
+  }
+}

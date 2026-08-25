@@ -1,0 +1,15 @@
+{
+  "id": "ES-PATH-015-IR",
+  "spine_node": "SPINE-ASK-LOCATION",
+  "lessons": [
+    "ES-C10-ir",
+    "ES-C10-vamos",
+    "ES-C10-van"
+  ],
+  "before": [],
+  "inline": [
+    "ES-EXT-015-IR",
+    "ES-EXT-015-IR-PLURAL"
+  ],
+  "after": []
+}

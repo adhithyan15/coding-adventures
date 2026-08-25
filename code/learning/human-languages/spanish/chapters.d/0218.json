@@ -1,0 +1,17 @@
+{
+  "chapter": 218,
+  "title": "Pero --- Two True Things at Once",
+  "label": "ch:pero",
+  "canDo": "I can hold two facts against each other without denying either.",
+  "spineNodes": [
+    "SPINE-ARGUE-A-VIEW"
+  ],
+  "payoff": {
+    "lesson": "ES-C58-pero",
+    "kind": "task",
+    "summary": "I can hold two facts against each other without denying either.",
+    "assesses": [
+      "ES-LEX-PERO"
+    ]
+  }
+}

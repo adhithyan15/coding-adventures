@@ -1,0 +1,21 @@
+{
+  "chapter": 49,
+  "title": "Short Replies",
+  "label": "ch:ml-replies",
+  "canDo": "I can answer with five short replies in Malayalam, from a flat agreement to a hedge.",
+  "spineNodes": [
+    "SPINE-RESPOND-BASIC"
+  ],
+  "payoff": {
+    "lesson": "ML-C49-just-so",
+    "kind": "production",
+    "summary": "Complete ML-C49-just-so and say all five words in order.",
+    "assesses": [
+      "ML-LEX-C49-REPLY-01",
+      "ML-LEX-C49-REPLY-02",
+      "ML-LEX-C49-REPLY-03",
+      "ML-LEX-C49-REPLY-04",
+      "ML-LEX-C49-REPLY-05"
+    ]
+  }
+}

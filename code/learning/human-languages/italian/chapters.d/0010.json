@@ -1,0 +1,19 @@
+{
+  "chapter": 10,
+  "title": "Family",
+  "label": "ch:it-family",
+  "canDo": "I can name my parents and my siblings in Italian and spot the little-ending Italian bolted onto frater and soror.",
+  "spineNodes": [
+    "SPINE-EXCHANGE-NAMES"
+  ],
+  "payoff": {
+    "lesson": "IT-C10-fratello-sorella",
+    "kind": "task",
+    "summary": "Say il padre, la madre, il fratello, la sorella, then rebuild fratello from frāter plus the diminutive -ello and reach English fraternal and sorority from the same roots.",
+    "assesses": [
+      "IT-ETYMON-GENITORI-02",
+      "IT-ETYMON-GENITORI-03",
+      "IT-ETYMON-FRATELLO-SORELLA-02"
+    ]
+  }
+}

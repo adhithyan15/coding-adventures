@@ -1,0 +1,13 @@
+{
+  "id": "IT-EXT-029-LANGUAGE-SPECIFIC",
+  "stage": "pre-A1",
+  "kind": "required",
+  "category": "language-specific",
+  "canDo": "I can name my nose, stomach and throat in Italian, closing the body-word set Chapter 17 opened.",
+  "prerequisites": [],
+  "lessons": [
+    "IT-C25-naso",
+    "IT-C25-stomaco",
+    "IT-C25-gola"
+  ]
+}

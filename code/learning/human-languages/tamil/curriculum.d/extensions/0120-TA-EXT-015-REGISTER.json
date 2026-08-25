@@ -1,0 +1,17 @@
+{
+  "id": "TA-EXT-015-REGISTER",
+  "stage": "pre-A1",
+  "kind": "required",
+  "category": "register",
+  "canDo": "I can choose the Tamil form that fits this relationship and setting.",
+  "prerequisites": [],
+  "lessons": [
+    "TA-C08-sollungal",
+    "TA-W08-short-o-observe",
+    "TA-W08-sollungal-guided-copy",
+    "TA-W08-sollungal-delayed-copy",
+    "TA-W08-sollungal-dictation",
+    "TA-C08-please-register",
+    "TA-C09-sorry-register"
+  ]
+}

@@ -1,0 +1,16 @@
+{
+  "id": "HI-PATH-55-SKY",
+  "spine_node": "SPINE-RESPOND-BASIC",
+  "lessons": [
+    "HI-C55-sun",
+    "HI-C55-moon",
+    "HI-C55-star",
+    "HI-C55-cloud",
+    "HI-C55-sky"
+  ],
+  "before": [],
+  "inline": [
+    "HI-EXT-55-SKY"
+  ],
+  "after": []
+}

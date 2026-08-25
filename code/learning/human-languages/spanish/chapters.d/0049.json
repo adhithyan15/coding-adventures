@@ -1,0 +1,28 @@
+{
+  "chapter": 49,
+  "title": "Going, and the Future You Can Already Say",
+  "label": "ch:ir-y-futuro",
+  "canDo": "I can ask where someone is going, say what a singular person is going to do, and mark a known singular noun with mi, tu, or su.",
+  "spineNodes": [
+    "SPINE-ASK-LOCATION",
+    "SPINE-TALK-ABOUT-FUTURE",
+    "SPINE-DEFINITE-REFERENCE"
+  ],
+  "payoff": {
+    "lesson": "ES-C10-practice",
+    "kind": "task",
+    "summary": "Complete ES-C10-practice, the canonical closing checkpoint, and demonstrate the chapter promise with singular ir, ir a plus a known infinitive, and mi, tu, or su before café.",
+    "assesses": [
+      "ES-LEX-IR",
+      "ES-GRAMMAR-IR-VERB-PRESENT-SINGULAR",
+      "ES-ETYMON-IRE-VADERE",
+      "ES-LEX-A",
+      "ES-GRAMMAR-NEAR-FUTURE-IR-A-INFINITIVE",
+      "ES-SEMANTIC-MOTION-TOWARD-FUTURE",
+      "ES-LEX-POSSESSIVES-MI-TU-SU",
+      "ES-GRAMMAR-POSSESSIVE-BEFORE-NOUN",
+      "ES-ETYMON-MEUS-TUUS-SUUS"
+    ],
+    "note": "The payoff retrieves all nine Chapter-10 atoms and deliberately stays on the singular-person, known-infinitive, and known-noun frontier."
+  }
+}

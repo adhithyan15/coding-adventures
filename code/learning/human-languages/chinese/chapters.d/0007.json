@@ -1,0 +1,22 @@
+{
+  "chapter": 7,
+  "title": "Good Morning, and a Rule That Declines to Fire",
+  "label": "ch:zh-zaoshang",
+  "canDo": "I can write 早 and 上, greet someone with 早上好, hear a neutral-tone syllable as the absence of a tone mark rather than a mistake, and say why the third-tone rule changes 你好 but leaves 早上好 alone.",
+  "spineNodes": [
+    "SPINE-TIME-OF-DAY"
+  ],
+  "payoff": {
+    "lesson": "ZH-C07-practice",
+    "kind": "dialogue",
+    "summary": "The first exchange where the reader chooses between two correct greetings rather than reciting the only one available -- and the first place all three tone behaviours in the track line up side by side, one moving and two declining to.",
+    "assesses": [
+      "ZH-SCRIPT-ZAO",
+      "ZH-SCRIPT-SHANG",
+      "ZH-LEX-ZAOSHANG",
+      "ZH-TONE-NEUTRAL",
+      "ZH-LEX-ZAOSHANGHAO",
+      "ZH-DIALOGUE-MORNING"
+    ]
+  }
+}

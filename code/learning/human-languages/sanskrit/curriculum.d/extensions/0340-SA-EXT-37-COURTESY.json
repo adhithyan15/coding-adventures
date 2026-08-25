@@ -1,0 +1,15 @@
+{
+  "id": "SA-EXT-37-COURTESY",
+  "stage": "pre-A1",
+  "kind": "required",
+  "category": "vocabulary",
+  "canDo": "I can offer five more courtesies in Sanskrit.",
+  "prerequisites": [],
+  "lessons": [
+    "SA-C37-peace",
+    "SA-C37-respectfully",
+    "SA-C37-gracious",
+    "SA-C37-congratulations",
+    "SA-C37-blessing"
+  ]
+}

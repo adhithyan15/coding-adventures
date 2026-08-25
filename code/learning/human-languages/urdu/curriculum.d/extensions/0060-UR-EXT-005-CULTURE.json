@@ -1,0 +1,13 @@
+{
+  "id": "UR-EXT-005-CULTURE",
+  "stage": "pre-A1",
+  "kind": "required",
+  "category": "culture-pragmatics",
+  "canDo": "I can close a first introduction with the conventional respectful pleased-to-meet-you response.",
+  "prerequisites": [
+    "UR-EXT-004-GRAMMAR"
+  ],
+  "lessons": [
+    "UR-C03-khushi-hui"
+  ]
+}

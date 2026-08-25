@@ -1,0 +1,14 @@
+{
+  "segments": [
+    "SA-PATH-002",
+    "SA-PATH-007",
+    "SA-PATH-29-COURTESY",
+    "SA-PATH-37-COURTESY",
+    "SA-PATH-43-COURTESY",
+    "SA-PATH-50-SOUND"
+  ],
+  "omits": [
+    "COURTESY-THANKS-CASUAL"
+  ],
+  "relocates": {}
+}

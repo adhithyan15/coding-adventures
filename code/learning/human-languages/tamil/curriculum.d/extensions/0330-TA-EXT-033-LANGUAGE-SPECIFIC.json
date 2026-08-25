@@ -1,0 +1,14 @@
+{
+  "id": "TA-EXT-033-LANGUAGE-SPECIFIC",
+  "stage": "pre-A1",
+  "kind": "required",
+  "category": "language-specific",
+  "canDo": "I can ask where somebody is from and introduce a friend in Tamil, choosing the ending that fits.",
+  "prerequisites": [],
+  "lessons": [
+    "TA-C37-uur",
+    "TA-C37-nanban",
+    "TA-C37-ivar",
+    "TA-C37-ivar-en-nanbar"
+  ]
+}

@@ -1,0 +1,13 @@
+{
+  "id": "GU-EXT-003-CONSOLIDATION",
+  "stage": "pre-A1",
+  "kind": "required",
+  "category": "consolidation",
+  "canDo": "I can ask how someone is in Gujarati and say that I am well.",
+  "prerequisites": [
+    "GU-EXT-008-LANGUAGE-SPECIFIC"
+  ],
+  "lessons": [
+    "GU-C03-practice"
+  ]
+}

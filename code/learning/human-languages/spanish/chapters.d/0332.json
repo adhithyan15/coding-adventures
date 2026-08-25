@@ -1,0 +1,21 @@
+{
+  "chapter": 332,
+  "title": "Permission, Notice, and the Word",
+  "label": "ch:permiso-y-voz",
+  "canDo": "I can say el permiso, el aviso, la disculpa, la palabra and la voz, and say which Greek geometry term became the Spanish word for word.",
+  "spineNodes": [
+    "SPINE-COURTESY-THANK"
+  ],
+  "payoff": {
+    "lesson": "ES-C332-voz",
+    "kind": "production",
+    "summary": "Complete ES-C332-voz: open the noun inside con permiso, give an aviso, offer a disculpa, and carry a palabra on your voz.",
+    "assesses": [
+      "ES-LEX-C332-WORD-21",
+      "ES-LEX-C332-WORD-22",
+      "ES-LEX-C332-WORD-23",
+      "ES-LEX-C332-WORD-24",
+      "ES-LEX-C332-WORD-25"
+    ]
+  }
+}

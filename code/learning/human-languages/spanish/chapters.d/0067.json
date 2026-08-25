@@ -1,0 +1,20 @@
+{
+  "chapter": 67,
+  "title": "Tener in the Plural, and the Stem-Change Rule",
+  "label": "ch:spanish-tener-plural",
+  "canDo": "I can use tener in every person, and state when a stem changes and when it does not.",
+  "spineNodes": [
+    "SPINE-SAY-WHAT-I-DO"
+  ],
+  "payoff": {
+    "lesson": "ES-C08-tienen",
+    "kind": "dialogue",
+    "summary": "The stem breaks exactly where it is stressed - so nosotros and vosotros never break, in any verb.",
+    "assesses": [
+      "ES-GRAMMAR-TENER-PRESENT-1PL",
+      "ES-GRAMMAR-TENER-PRESENT-2PL",
+      "ES-GRAMMAR-TENER-PRESENT-3PL",
+      "ES-GRAMMAR-STEM-CHANGE-STRESS-RULE"
+    ]
+  }
+}

@@ -1,0 +1,18 @@
+{
+  "chapter": 18,
+  "title": "Telling Time",
+  "label": "ch:ml-telling-time",
+  "canDo": "I can say the hour in Malayalam with maṇi, as in oru maṇi, one o'clock.",
+  "spineNodes": [
+    "SPINE-TIME-OF-DAY"
+  ],
+  "payoff": {
+    "lesson": "ML-C18-mani",
+    "kind": "production",
+    "summary": "Say maṇi for hour, bell and gem, then oru maṇi, and state where Malayalam's and Tamil's dictionaries disagree about it.",
+    "assesses": [
+      "ML-CONCEPT-C18-MANI-01",
+      "ML-CONCEPT-C18-MANI-02"
+    ]
+  }
+}

@@ -1,0 +1,21 @@
+{
+  "chapter": 62,
+  "title": "Things People Make",
+  "label": "ch:ka-made",
+  "canDo": "I can name five things a Kannada household keeps to hand, and ask politely for one.",
+  "spineNodes": [
+    "SPINE-POLITE-REQUEST-REPAIR"
+  ],
+  "payoff": {
+    "lesson": "KA-C62-umbrella",
+    "kind": "production",
+    "summary": "Complete KA-C62-umbrella and say all five words in order.",
+    "assesses": [
+      "KA-LEX-C62-MADE-01",
+      "KA-LEX-C62-MADE-02",
+      "KA-LEX-C62-MADE-03",
+      "KA-LEX-C62-MADE-04",
+      "KA-LEX-C62-MADE-05"
+    ]
+  }
+}

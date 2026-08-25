@@ -1,0 +1,20 @@
+{
+  "chapter": 102,
+  "title": "Synthesis --- Two at a Time",
+  "label": "ch:synthesis-double-object",
+  "canDo": "I can carry a four-turn exchange in which almost no noun appears.",
+  "spineNodes": [
+    "SPINE-DEFINITE-REFERENCE"
+  ],
+  "payoff": {
+    "lesson": "ES-C47-sintesis-dos-a-la-vez",
+    "kind": "task",
+    "summary": "Complete ES-C47-sintesis-dos-a-la-vez: produce se la hago and say how many words in it name anything.",
+    "assesses": [
+      "ES-GRAMMAR-DOUBLE-OBJECT-ORDER",
+      "ES-GRAMMAR-SE-FOR-LE",
+      "ES-GRAMMAR-DIRECT-OBJECT-LA"
+    ],
+    "note": "Three words carrying a person and a thing, neither named. The cost is doubled too: two pronouns are two promises that both things are still in the room."
+  }
+}

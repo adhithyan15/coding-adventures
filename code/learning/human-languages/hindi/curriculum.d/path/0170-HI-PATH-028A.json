@@ -1,0 +1,12 @@
+{
+  "id": "HI-PATH-028A",
+  "spine_node": "SPINE-SAY-WHAT-I-DO",
+  "lessons": [
+    "HI-C05-practice"
+  ],
+  "before": [],
+  "inline": [
+    "HI-EXT-005-CONSOLIDATION"
+  ],
+  "after": []
+}

@@ -1,0 +1,21 @@
+{
+  "chapter": 282,
+  "title": "Meeting Someone --- Welcome, Greeting, Hug, Smile, Guest",
+  "label": "ch:encuentro",
+  "canDo": "I can welcome someone in Spanish and name the greeting, the hug, the smile and the guest that go with it.",
+  "spineNodes": [
+    "SPINE-MEET-GREET"
+  ],
+  "payoff": {
+    "lesson": "ES-C282-invitado",
+    "kind": "production",
+    "summary": "Complete ES-C282-invitado: say all five words in order, and say which two of them are participles.",
+    "assesses": [
+      "ES-LEX-C282-MEET-01",
+      "ES-LEX-C282-MEET-02",
+      "ES-LEX-C282-MEET-03",
+      "ES-LEX-C282-MEET-04",
+      "ES-LEX-C282-MEET-05"
+    ]
+  }
+}

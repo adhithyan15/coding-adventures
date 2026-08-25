@@ -1,0 +1,10 @@
+{
+  "segments": [
+    "MR-PATH-003",
+    "MR-PATH-C1P"
+  ],
+  "omits": [
+    "RESPONSE-YESNO"
+  ],
+  "relocates": {}
+}

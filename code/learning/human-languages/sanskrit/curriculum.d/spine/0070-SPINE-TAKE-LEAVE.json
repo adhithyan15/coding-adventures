@@ -1,0 +1,15 @@
+{
+  "segments": [
+    "SA-PATH-008",
+    "SA-PATH-28-LEAVE",
+    "SA-PATH-33-LAND",
+    "SA-PATH-44-COLOUR",
+    "SA-PATH-51-KIN"
+  ],
+  "omits": [
+    "FAREWELL-CASUAL",
+    "FAREWELL-SOON",
+    "GREETING-GOODNIGHT"
+  ],
+  "relocates": {}
+}

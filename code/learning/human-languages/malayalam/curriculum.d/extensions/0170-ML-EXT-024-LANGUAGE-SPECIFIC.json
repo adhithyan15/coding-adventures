@@ -1,0 +1,12 @@
+{
+  "id": "ML-EXT-024-LANGUAGE-SPECIFIC",
+  "stage": "A1",
+  "kind": "required",
+  "category": "language-specific",
+  "canDo": "I can use the additional Malayalam material required at this point in the path.",
+  "prerequisites": [],
+  "lessons": [
+    "ML-C21-naaya-poocha",
+    "ML-C22-paccha-manja"
+  ]
+}

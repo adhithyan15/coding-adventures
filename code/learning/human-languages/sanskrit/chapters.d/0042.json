@@ -1,0 +1,21 @@
+{
+  "chapter": 42,
+  "title": "Five More Replies",
+  "label": "ch:sa-replies-third",
+  "canDo": "I can say sometimes, suddenly, mostly, a little and much in Sanskrit, and use any of the five on its own as a reply.",
+  "spineNodes": [
+    "SPINE-RESPOND-BASIC"
+  ],
+  "payoff": {
+    "lesson": "SA-C42-much",
+    "kind": "production",
+    "summary": "Complete SA-C42-much and demonstrate the chapter promise.",
+    "assesses": [
+      "SA-LEX-C42-REPLY-01",
+      "SA-LEX-C42-REPLY-02",
+      "SA-LEX-C42-REPLY-03",
+      "SA-LEX-C42-REPLY-04",
+      "SA-LEX-C42-REPLY-05"
+    ]
+  }
+}

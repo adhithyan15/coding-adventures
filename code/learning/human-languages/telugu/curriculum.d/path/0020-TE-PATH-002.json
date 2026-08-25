@@ -1,0 +1,10 @@
+{
+  "id": "TE-PATH-002",
+  "spine_node": "SPINE-RESPOND-BASIC",
+  "lessons": [
+    "TE-C01-avunu"
+  ],
+  "before": [],
+  "inline": [],
+  "after": []
+}

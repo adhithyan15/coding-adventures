@@ -1,0 +1,14 @@
+{
+  "id": "IT-PATH-012",
+  "spine_node": "SPINE-POLITE-REQUEST-REPAIR",
+  "lessons": [
+    "IT-C05-parlo-italiano",
+    "IT-C05-practice"
+  ],
+  "before": [],
+  "inline": [
+    "IT-EXT-012-LANGUAGE-SPECIFIC",
+    "IT-EXT-012-CONSOLIDATION"
+  ],
+  "after": []
+}

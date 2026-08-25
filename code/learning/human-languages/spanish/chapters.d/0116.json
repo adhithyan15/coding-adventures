@@ -1,0 +1,19 @@
+{
+  "chapter": 116,
+  "title": "Hablado, Comido, Vivido --- The Participle",
+  "label": "ch:participle",
+  "canDo": "I can form the participle of any regular verb, and know it never changes for person.",
+  "spineNodes": [
+    "SPINE-TALK-ABOUT-PAST"
+  ],
+  "payoff": {
+    "lesson": "ES-C49-participio",
+    "kind": "task",
+    "summary": "Complete ES-C49-participio: form the three participles and say whether the form changes with the speaker.",
+    "assesses": [
+      "ES-GRAMMAR-PAST-PARTICIPLE",
+      "ES-ETYMON-PARTICIPIUM"
+    ],
+    "note": "One new ending and one the reader can predict: -er and -ir merge here for the same reason they merged in the preterite."
+  }
+}

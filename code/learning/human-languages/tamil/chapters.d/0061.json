@@ -1,0 +1,21 @@
+{
+  "chapter": 61,
+  "title": "How the Body Feels",
+  "label": "ch:ta-how-the-body-feels",
+  "canDo": "I can say I am hungry, thirsty, sleepy, feverish or in pain in Tamil.",
+  "spineNodes": [
+    "SPINE-CHECK-WELLBEING"
+  ],
+  "payoff": {
+    "lesson": "TA-C61-pain",
+    "kind": "production",
+    "summary": "Complete TA-C61-pain and say all five words in order.",
+    "assesses": [
+      "TA-LEX-C61-FEEL-01",
+      "TA-LEX-C61-FEEL-02",
+      "TA-LEX-C61-FEEL-03",
+      "TA-LEX-C61-FEEL-04",
+      "TA-LEX-C61-FEEL-05"
+    ]
+  }
+}

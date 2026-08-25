@@ -1,0 +1,21 @@
+{
+  "chapter": 10,
+  "title": "Days of the Week",
+  "label": "ch:te-days-of-the-week",
+  "canDo": "I can name any day of the week in Telugu, including the Sunday that is counted rather than named for a planet.",
+  "spineNodes": [
+    "SPINE-TIME-OF-DAY"
+  ],
+  "payoff": {
+    "lesson": "TE-C10-vaaram",
+    "kind": "task",
+    "summary": "Run Somavāram through Śanivāram, then name Sunday ఆదివారం, \"the first day\" — positional like Arabic's numbered days, not planetary.",
+    "assesses": [
+      "TE-ETYMON-C09-KSHAMINCHANDI-01",
+      "TE-ETYMON-C09-KSHAMINCHANDI-02",
+      "TE-PRAGMATICS-C09-KSHAMINCHANDI-03",
+      "TE-ETYMON-C10-VAARAM-01",
+      "TE-PRAGMATICS-C10-VAARAM-02"
+    ]
+  }
+}

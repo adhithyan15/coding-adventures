@@ -1,0 +1,19 @@
+{
+  "chapter": 170,
+  "title": "Jugar --- Playing Was Joking",
+  "label": "ch:spanish-jugar",
+  "canDo": "I can say what I play, with the only u-to-ue verb in Spanish.",
+  "spineNodes": [
+    "SPINE-SAY-WHAT-I-DO"
+  ],
+  "payoff": {
+    "lesson": "ES-C39-jugar",
+    "kind": "task",
+    "summary": "iocari, to joke - and Latin's own play-verb ludere left Spanish entirely.",
+    "assesses": [
+      "ES-LEX-JUGAR-07",
+      "ES-ETYMON-JUGAR-08",
+      "ES-GRAMMAR-STEM-U-UE-09"
+    ]
+  }
+}

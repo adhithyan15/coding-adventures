@@ -1,0 +1,15 @@
+{
+  "id": "SA-EXT-35-HOUSE",
+  "stage": "pre-A1",
+  "kind": "required",
+  "category": "vocabulary",
+  "canDo": "I can name five things in a house in Sanskrit.",
+  "prerequisites": [],
+  "lessons": [
+    "SA-C35-milk",
+    "SA-C35-honey",
+    "SA-C35-salt",
+    "SA-C35-book",
+    "SA-C35-bed"
+  ]
+}

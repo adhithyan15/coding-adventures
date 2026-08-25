@@ -1,0 +1,15 @@
+{
+  "id": "ES-EXT-267-NEGATE-ASK",
+  "stage": "A2",
+  "kind": "required",
+  "category": "grammar",
+  "canDo": "I can say that something is not so, and ask a question that can be answered yes or no.",
+  "prerequisites": [],
+  "lessons": [
+    "ES-C267-no-verbo",
+    "ES-C267-no-nada",
+    "ES-C267-pregunta-si-no",
+    "ES-C267-verdad-no",
+    "ES-C267-negar-preguntar"
+  ]
+}

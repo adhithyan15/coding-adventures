@@ -1,0 +1,15 @@
+{
+  "id": "SA-EXT-30-WELCOME",
+  "stage": "pre-A1",
+  "kind": "required",
+  "category": "vocabulary",
+  "canDo": "I can name the five things a Sanskrit welcome offers a guest.",
+  "prerequisites": [],
+  "lessons": [
+    "SA-C30-door",
+    "SA-C30-seat",
+    "SA-C30-flower",
+    "SA-C30-garland",
+    "SA-C30-anjali"
+  ]
+}

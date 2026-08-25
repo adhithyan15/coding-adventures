@@ -1,0 +1,19 @@
+{
+  "chapter": 125,
+  "title": "Synthesis --- Promising, and Supposing",
+  "label": "ch:spanish-synthesis-future-conditional",
+  "canDo": "I can choose between a promise and a supposition, and say why the endings differ.",
+  "spineNodes": [
+    "SPINE-SAY-WHAT-I-DO"
+  ],
+  "payoff": {
+    "lesson": "ES-C17-sintesis-futuro-condicional",
+    "kind": "dialogue",
+    "summary": "Haber glued on twice - present for the promise, past for the guess.",
+    "assesses": [
+      "ES-ETYMON-ROMANCE-FUTURE-CONDITIONAL",
+      "ES-GRAMMAR-FUTURE-PREDICTION-INTENTION",
+      "ES-GRAMMAR-CONDITIONAL-HYPOTHETICAL"
+    ]
+  }
+}

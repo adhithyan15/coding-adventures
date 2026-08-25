@@ -1,0 +1,22 @@
+{
+  "chapter": 86,
+  "title": "Review --- Four Pronouns, One Slot",
+  "label": "ch:review-direct-object",
+  "canDo": "I can name me, te, lo and la and say which of them a noun decides.",
+  "spineNodes": [
+    "SPINE-DEFINITE-REFERENCE"
+  ],
+  "payoff": {
+    "lesson": "ES-C42-repaso-objeto",
+    "kind": "task",
+    "summary": "Complete ES-C42-repaso-objeto: give all four pronouns and identify the single question that chooses between them.",
+    "assesses": [
+      "ES-GRAMMAR-DIRECT-OBJECT-LO",
+      "ES-GRAMMAR-DIRECT-OBJECT-LA",
+      "ES-GRAMMAR-ME-DIRECT-OBJECT",
+      "ES-GRAMMAR-TE-DIRECT-OBJECT",
+      "ES-GRAMMAR-OBJECT-PRONOUN"
+    ],
+    "note": "Nothing is introduced. The table is a recap of four cells built one per chapter, which is why it is allowed to appear at all."
+  }
+}

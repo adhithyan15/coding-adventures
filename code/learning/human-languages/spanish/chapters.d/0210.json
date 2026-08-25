@@ -1,0 +1,17 @@
+{
+  "chapter": 210,
+  "title": "Synthesis --- Supposing Out Loud",
+  "label": "ch:sintesis-condiciones",
+  "canDo": "I can speak about a world that does not exist.",
+  "spineNodes": [
+    "SPINE-EXPRESS-CONDITION"
+  ],
+  "payoff": {
+    "lesson": "ES-C56-sintesis-condiciones",
+    "kind": "task",
+    "summary": "I can speak about a world that does not exist.",
+    "assesses": [
+      "ES-GRAMMAR-SI-UNREAL-CONDITION"
+    ]
+  }
+}

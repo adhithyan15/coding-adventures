@@ -1,0 +1,11 @@
+{
+  "id": "UR-PATH-003",
+  "spine_node": "SPINE-RESPOND-BASIC",
+  "lessons": [
+    "UR-C01-ji-han",
+    "UR-C01-nahin"
+  ],
+  "before": [],
+  "inline": [],
+  "after": []
+}

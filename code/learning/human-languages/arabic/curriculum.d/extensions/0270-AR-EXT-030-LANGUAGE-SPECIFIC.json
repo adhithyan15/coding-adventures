@@ -1,0 +1,14 @@
+{
+  "id": "AR-EXT-030-LANGUAGE-SPECIFIC",
+  "stage": "pre-A1",
+  "kind": "required",
+  "category": "language-specific",
+  "canDo": "I can name tea, milk, sugar and coffee in Arabic, ask for any of them politely, and tell a borrowed word from one Arabic built on a root.",
+  "prerequisites": [],
+  "lessons": [
+    "AR-C33-shay",
+    "AR-C33-halib",
+    "AR-C33-sukkar",
+    "AR-C33-qahwa"
+  ]
+}

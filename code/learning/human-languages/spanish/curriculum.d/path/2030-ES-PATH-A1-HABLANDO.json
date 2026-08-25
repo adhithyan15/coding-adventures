@@ -1,0 +1,12 @@
+{
+  "id": "ES-PATH-A1-HABLANDO",
+  "spine_node": "SPINE-DEFINITE-REFERENCE",
+  "lessons": [
+    "ES-C62-hablando"
+  ],
+  "before": [],
+  "inline": [
+    "ES-EXT-A1-HABLANDO"
+  ],
+  "after": []
+}

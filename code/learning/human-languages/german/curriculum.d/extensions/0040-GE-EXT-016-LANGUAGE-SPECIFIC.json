@@ -1,0 +1,17 @@
+{
+  "id": "GE-EXT-016-LANGUAGE-SPECIFIC",
+  "stage": "pre-A1",
+  "kind": "required",
+  "category": "language-specific",
+  "canDo": "I can use the additional German material required at this point in the path.",
+  "prerequisites": [],
+  "lessons": [
+    "GE-C08-uhr",
+    "GE-C09-monate",
+    "GE-C09-jahreszeiten",
+    "GE-C10-eltern",
+    "GE-C10-geschwister",
+    "GE-C11-brot",
+    "GE-C11-wasser-wein"
+  ]
+}

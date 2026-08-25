@@ -1,0 +1,14 @@
+{
+  "id": "LA-EXT-029-LANGUAGE-SPECIFIC",
+  "stage": "A1",
+  "kind": "required",
+  "category": "language-specific",
+  "canDo": "I can produce the present-tense forms of the four Latin verbs of walking, running, opening and closing, and say what a Latin prefix does to the verb it sits on.",
+  "prerequisites": [],
+  "lessons": [
+    "LA-C41-ambulo",
+    "LA-C41-curro",
+    "LA-C41-aperio",
+    "LA-C41-claudo"
+  ]
+}

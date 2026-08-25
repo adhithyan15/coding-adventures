@@ -1,0 +1,14 @@
+{
+  "segments": [
+    "SA-PATH-013",
+    "SA-PATH-24-ASK",
+    "SA-PATH-35-HOUSE",
+    "SA-PATH-40-FOOD",
+    "SA-PATH-47-DWELL"
+  ],
+  "omits": [
+    "COURTESY-PLEASE",
+    "COURTESY-SORRY"
+  ],
+  "relocates": {}
+}

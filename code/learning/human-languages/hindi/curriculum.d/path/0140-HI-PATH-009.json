@@ -1,0 +1,16 @@
+{
+  "id": "HI-PATH-009",
+  "spine_node": "SPINE-TAKE-LEAVE",
+  "lessons": [
+    "HI-C04-chalta-hun",
+    "HI-C04-milenge",
+    "HI-C04-kal-milte-hain",
+    "HI-C04-phir",
+    "HI-C04-phir-milenge"
+  ],
+  "before": [],
+  "inline": [
+    "HI-EXT-009-LANGUAGE-SPECIFIC"
+  ],
+  "after": []
+}

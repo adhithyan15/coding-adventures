@@ -1,0 +1,13 @@
+{
+  "id": "GE-PATH-020",
+  "spine_node": "SPINE-TALK-ABOUT-PAST",
+  "lessons": [
+    "GE-C15-perfekt",
+    "GE-C15-praeteritum"
+  ],
+  "before": [],
+  "inline": [
+    "GE-EXT-020-LANGUAGE-SPECIFIC"
+  ],
+  "after": []
+}

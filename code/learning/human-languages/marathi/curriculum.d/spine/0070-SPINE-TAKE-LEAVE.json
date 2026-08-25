@@ -1,0 +1,12 @@
+{
+  "segments": [
+    "MR-PATH-004",
+    "MR-PATH-010"
+  ],
+  "omits": [
+    "FAREWELL-CASUAL",
+    "FAREWELL-SOON",
+    "GREETING-GOODNIGHT"
+  ],
+  "relocates": {}
+}

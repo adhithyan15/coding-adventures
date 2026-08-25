@@ -1,0 +1,21 @@
+{
+  "chapter": 49,
+  "title": "Answering With More Than Yes",
+  "label": "ch:ka-replies",
+  "canDo": "I can answer in Kannada with more than yes and no --- true, enough, certainly, perhaps, just so --- and see the three-vowel grid running under ಇದು, ಅದು and ಹೇಗೆ.",
+  "spineNodes": [
+    "SPINE-RESPOND-BASIC"
+  ],
+  "payoff": {
+    "lesson": "KA-C49-just-so",
+    "kind": "production",
+    "summary": "Complete KA-C49-just-so and say all five words in order.",
+    "assesses": [
+      "KA-LEX-C49-REPLY-01",
+      "KA-LEX-C49-REPLY-02",
+      "KA-LEX-C49-REPLY-03",
+      "KA-LEX-C49-REPLY-04",
+      "KA-LEX-C49-REPLY-05"
+    ]
+  }
+}

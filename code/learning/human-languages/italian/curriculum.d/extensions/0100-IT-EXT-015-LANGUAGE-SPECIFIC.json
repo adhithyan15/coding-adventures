@@ -1,0 +1,12 @@
+{
+  "id": "IT-EXT-015-LANGUAGE-SPECIFIC",
+  "stage": "pre-A1",
+  "kind": "required",
+  "category": "language-specific",
+  "canDo": "I can use the additional Italian material required at this point in the path.",
+  "prerequisites": [],
+  "lessons": [
+    "IT-C10-genitori",
+    "IT-C10-fratello-sorella"
+  ]
+}

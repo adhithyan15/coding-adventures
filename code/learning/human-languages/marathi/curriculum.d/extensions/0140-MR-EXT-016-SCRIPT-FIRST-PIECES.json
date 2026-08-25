@@ -1,0 +1,23 @@
+{
+  "id": "MR-EXT-016-SCRIPT-FIRST-PIECES",
+  "stage": "pre-A1",
+  "kind": "required",
+  "category": "script",
+  "canDo": "I can write ten Devanagari pieces from memory — six consonants, three vowel signs and the virama — and read the words for yes, no and the greeting by assembling them rather than recalling the words whole.",
+  "prerequisites": [],
+  "lessons": [
+    "MR-W01-ha",
+    "MR-W01-o-matra",
+    "MR-W01-ho-delayed-copy",
+    "MR-W01-ho-dictation",
+    "MR-W01-na",
+    "MR-W01-aa-matra",
+    "MR-W01-ii-matra",
+    "MR-W01-ma",
+    "MR-W01-sa",
+    "MR-W01-ka",
+    "MR-W01-virama",
+    "MR-W01-ra",
+    "MR-W01-namaskar-read"
+  ]
+}

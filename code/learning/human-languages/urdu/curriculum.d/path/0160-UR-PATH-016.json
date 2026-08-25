@@ -1,0 +1,16 @@
+{
+  "id": "UR-PATH-016",
+  "spine_node": "SPINE-CHECK-WELLBEING",
+  "lessons": [
+    "UR-C15-barish",
+    "UR-C15-dhoop",
+    "UR-C15-hawa",
+    "UR-C15-garmi",
+    "UR-C15-sardi"
+  ],
+  "before": [],
+  "inline": [
+    "UR-EXT-026-WEATHER"
+  ],
+  "after": []
+}

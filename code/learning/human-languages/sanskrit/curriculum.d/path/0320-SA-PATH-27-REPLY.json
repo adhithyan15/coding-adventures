@@ -1,0 +1,16 @@
+{
+  "id": "SA-PATH-27-REPLY",
+  "spine_node": "SPINE-RESPOND-BASIC",
+  "lessons": [
+    "SA-C27-so-be-it",
+    "SA-C27-well-done",
+    "SA-C27-enough",
+    "SA-C27-true",
+    "SA-C27-thus"
+  ],
+  "before": [],
+  "inline": [
+    "SA-EXT-27-REPLY"
+  ],
+  "after": []
+}

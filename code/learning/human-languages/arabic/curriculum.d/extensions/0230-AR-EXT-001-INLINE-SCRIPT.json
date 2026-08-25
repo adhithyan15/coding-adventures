@@ -1,0 +1,13 @@
+{
+  "id": "AR-EXT-001-INLINE-SCRIPT",
+  "stage": "pre-A1",
+  "kind": "required",
+  "category": "script",
+  "canDo": "I can recognize the first Arabic script pattern inside a greeting I already understand.",
+  "prerequisites": [],
+  "lessons": [
+    "AR-C01-salam",
+    "AR-W00-sin-lam",
+    "AR-W00-alif-mim-salam"
+  ]
+}

@@ -1,0 +1,15 @@
+{
+  "segments": [
+    "BN-PATH-006",
+    "BN-PATH-008",
+    "BN-PATH-016",
+    "BN-PATH-020",
+    "BN-PATH-021",
+    "BN-PATH-003A"
+  ],
+  "omits": [
+    "WORD-GOOD",
+    "WORD-SOSO"
+  ],
+  "relocates": {}
+}

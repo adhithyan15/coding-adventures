@@ -1,0 +1,16 @@
+{
+  "id": "TE-PATH-68-SOUND",
+  "spine_node": "SPINE-EXCHANGE-NAMES",
+  "lessons": [
+    "TE-C68-sound",
+    "TE-C68-voice",
+    "TE-C68-song",
+    "TE-C68-shout",
+    "TE-C68-message"
+  ],
+  "before": [],
+  "inline": [
+    "TE-EXT-68-SOUND"
+  ],
+  "after": []
+}

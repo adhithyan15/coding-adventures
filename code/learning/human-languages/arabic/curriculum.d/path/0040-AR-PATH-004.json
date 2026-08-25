@@ -1,0 +1,11 @@
+{
+  "id": "AR-PATH-004",
+  "spine_node": "SPINE-TIME-OF-DAY",
+  "lessons": [
+    "AR-C01-sabah-al-khayr",
+    "AR-C01-masa-al-khayr"
+  ],
+  "before": [],
+  "inline": [],
+  "after": []
+}

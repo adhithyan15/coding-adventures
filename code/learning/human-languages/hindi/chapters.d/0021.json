@@ -1,0 +1,19 @@
+{
+  "chapter": 21,
+  "title": "Numbers Six to Ten",
+  "label": "ch:hi-numbers-six-to-ten",
+  "canDo": "I can count from six to ten in Hindi and hear the sound changes that wore the Sanskrit numerals down.",
+  "spineNodes": [
+    "SPINE-COUNT-ONE-TO-FIVE"
+  ],
+  "payoff": {
+    "lesson": "HI-C21-six-nine-ten-history",
+    "kind": "task",
+    "summary": "Trace ṣaṣ → chhah, nava → nau and daśa → das, naming the one change each numeral underwent.",
+    "assesses": [
+      "HI-CONCEPT-C21-SIX-NINE-TEN-HISTORY-01",
+      "HI-CONCEPT-C21-SIX-NINE-TEN-HISTORY-02",
+      "HI-CONCEPT-C21-SIX-NINE-TEN-HISTORY-03"
+    ]
+  }
+}

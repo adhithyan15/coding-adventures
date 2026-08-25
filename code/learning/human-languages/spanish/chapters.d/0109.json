@@ -1,0 +1,21 @@
+{
+  "chapter": 109,
+  "title": "The Only Three Irregulars",
+  "label": "ch:spanish-imperfecto-irregulares",
+  "canDo": "I can use era, iba and veia, and know that no fourth irregular imperfect exists.",
+  "spineNodes": [
+    "SPINE-TALK-ABOUT-PAST"
+  ],
+  "payoff": {
+    "lesson": "ES-C16-ver-imperfecto",
+    "kind": "task",
+    "summary": "erat and ibat worn straight through from Latin, never tidied up.",
+    "assesses": [
+      "ES-GRAMMAR-SER-IMPERFECT-SINGULAR",
+      "ES-GRAMMAR-IR-VERB-IMPERFECT-SINGULAR",
+      "ES-GRAMMAR-VER-IMPERFECT-SINGULAR",
+      "ES-ETYMON-ERA",
+      "ES-ETYMON-IBA"
+    ]
+  }
+}

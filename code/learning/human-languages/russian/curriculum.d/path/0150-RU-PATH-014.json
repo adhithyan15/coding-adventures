@@ -1,0 +1,15 @@
+{
+  "id": "RU-PATH-014",
+  "spine_node": "SPINE-EXCHANGE-NAMES",
+  "lessons": [
+    "RU-C12-mama",
+    "RU-C12-papa",
+    "RU-C12-mat",
+    "RU-C12-otets"
+  ],
+  "before": [],
+  "inline": [
+    "RU-EXT-014-PARENTS"
+  ],
+  "after": []
+}

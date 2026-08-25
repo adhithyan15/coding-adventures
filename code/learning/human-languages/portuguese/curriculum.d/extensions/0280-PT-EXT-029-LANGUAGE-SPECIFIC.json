@@ -1,0 +1,13 @@
+{
+  "id": "PT-EXT-029-LANGUAGE-SPECIFIC",
+  "stage": "pre-A1",
+  "kind": "required",
+  "canDo": "I can name a friend, a family, a man and a woman with the right gender, and say which Latin root each of the four Romance sisters actually picked for 'woman'.",
+  "prerequisites": [],
+  "lessons": [
+    "PT-C25-amigo",
+    "PT-C25-familia",
+    "PT-C25-homem",
+    "PT-C25-mulher"
+  ]
+}

@@ -1,0 +1,15 @@
+{
+  "segments": [
+    "ML-PATH-010",
+    "ML-PATH-50-LEAVE",
+    "ML-PATH-59-AIR",
+    "ML-PATH-66-PADDY"
+  ],
+  "omits": [
+    "FAREWELL-CASUAL",
+    "FAREWELL-SOON"
+  ],
+  "relocates": {
+    "GREETING-GOODNIGHT": "SPINE-TIME-OF-DAY"
+  }
+}

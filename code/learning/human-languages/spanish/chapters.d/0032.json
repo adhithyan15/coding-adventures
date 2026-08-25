@@ -1,0 +1,19 @@
+{
+  "chapter": 32,
+  "title": "Synthesis --- The Same Conversation, Twice",
+  "label": "ch:synthesis-ar-singular",
+  "canDo": "I can hold one short conversation both warmly and respectfully, changing only the verb ending.",
+  "spineNodes": [
+    "SPINE-POLITE-REQUEST-REPAIR"
+  ],
+  "payoff": {
+    "lesson": "ES-C06-repaso-hablar",
+    "kind": "dialogue",
+    "summary": "The register choice carried entirely by one letter - and now with something real to say.",
+    "assesses": [
+      "ES-GRAMMAR-AR-PRESENT-SINGULAR",
+      "ES-REGISTER-TU-USTED",
+      "ES-LEX-ESPANOL"
+    ]
+  }
+}

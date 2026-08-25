@@ -1,0 +1,21 @@
+{
+  "chapter": 88,
+  "title": "Nos --- Us, and the Word Inside -mos",
+  "label": "ch:pronoun-nos",
+  "canDo": "I can say nos quieren, and say what nosotros is made of.",
+  "spineNodes": [
+    "SPINE-DEFINITE-REFERENCE"
+  ],
+  "payoff": {
+    "lesson": "ES-C45-nos",
+    "kind": "task",
+    "summary": "Complete ES-C45-nos: produce nos quieren and name the verb ending that is the same ancient word.",
+    "assesses": [
+      "ES-LEX-NOS-OBJECT",
+      "ES-GRAMMAR-NOS-DIRECT-OBJECT",
+      "ES-LEX-NOSOTROS",
+      "ES-ETYMON-NOS-OTROS"
+    ],
+    "note": "Also closes a gap: the reader has used the -mos ending for thirty chapters and had never met the word nosotros."
+  }
+}

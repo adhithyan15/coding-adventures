@@ -1,0 +1,19 @@
+{
+  "chapter": 16,
+  "title": "Tamil Months",
+  "label": "ch:ta-tamil-months",
+  "canDo": "I can name the twelve months of the Tamil solar calendar and place Tamil New Year and Pongal inside it.",
+  "spineNodes": [
+    "SPINE-TIME-OF-DAY"
+  ],
+  "payoff": {
+    "lesson": "TA-C16-thamizh-maadangal",
+    "kind": "production",
+    "summary": "Recite Chithirai through Panguṉi, then date Tamil New Year to Chithirai 1 and Pongal to Thai 1.",
+    "assesses": [
+      "TA-LEX-THANNEER-ARISI-01",
+      "TA-LEX-THAMIZH-MAADANGAL-01",
+      "TA-PRAGMATICS-THAMIZH-MAADANGAL-02"
+    ]
+  }
+}

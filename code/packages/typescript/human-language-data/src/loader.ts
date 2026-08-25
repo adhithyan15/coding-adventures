@@ -18,7 +18,13 @@ import {
   type ExamInventory,
 } from "./exam-inventory.js";
 import { parseTaskShapeInventory, type TaskShapeInventory } from "./task-shapes.js";
-import { mergeMetaAndList, readMaybeSharded } from "./shard.js";
+import {
+  CURRICULUM_SECTIONS,
+  isSharded,
+  mergeMetaAndList,
+  mergeSectionedShards,
+  readMaybeSharded,
+} from "./shard.js";
 import { CEFR_LEVELS, type CefrLevel } from "./levels.js";
 import {
   parseAssessmentContract,
@@ -235,8 +241,17 @@ export function loadLanguageCurricula(root = defaultCurriculumRoot()): LanguageC
   for (const track of sortedEntries(root)) {
     if (!track.isDirectory()) continue;
     const path = join(root, track.name, "curriculum.json");
-    if (!existsSync(path)) continue;
-    out.push(JSON.parse(readFileSync(path, "utf8")) as LanguageCurriculum);
+    // `|| isSharded`, for the same load-bearing reason as `loadTrackChapters`:
+    // a migrated track's monolith may not be here, and `continue` means "this
+    // track has no authored curriculum", which would drop it from every gate.
+    if (!existsSync(path) && !isSharded(path)) continue;
+    out.push(
+      readMaybeSharded<LanguageCurriculum>(
+        path,
+        (shards) =>
+          mergeSectionedShards(shards, CURRICULUM_SECTIONS) as unknown as LanguageCurriculum,
+      ),
+    );
   }
   return out.sort((left, right) => left.language.localeCompare(right.language));
 }
@@ -254,8 +269,22 @@ export function loadTrackChapters(root = defaultCurriculumRoot()): TrackChapters
   for (const track of sortedEntries(root)) {
     if (!track.isDirectory()) continue;
     const path = join(root, track.name, "chapters.json");
-    if (!existsSync(path)) continue;
-    const track_ = JSON.parse(readFileSync(path, "utf8")) as TrackChapters;
+    // `existsSync(path) || isSharded(path)`, and the second half is load-bearing
+    // rather than defensive. HL21 DELETES the monolith of a sharded ledger, so
+    // for every migrated track `existsSync` is now false — and this loop's
+    // `continue` means "this track has not authored a chapter ledger yet".
+    //
+    // With only the `existsSync` half, migrating a track would therefore drop it
+    // from the corpus entirely, and drop it SILENTLY: the gap report is designed
+    // to treat an absent ledger as honest un-authored debt rather than an error,
+    // so twenty tracks' chapters would vanish and every gate would go green on
+    // the smaller corpus. That is the failure this whole file's docstring above
+    // is about, arriving through the migration instead of through an author.
+    if (!existsSync(path) && !isSharded(path)) continue;
+    const track_ = readMaybeSharded<TrackChapters>(
+      path,
+      (shards) => mergeMetaAndList(shards, "chapters") as unknown as TrackChapters,
+    );
     for (const chapter of track_.chapters ?? []) {
       // A chapter's `label` is interpolated RAW into `\label{...}` by the book
       // generator -- the one author-controlled field in that file with no guard,

@@ -1,0 +1,20 @@
+{
+  "id": "GU-EXT-016-SCRIPT-FIRST-PIECES",
+  "stage": "pre-A1",
+  "kind": "required",
+  "category": "script",
+  "canDo": "I can write nine Gujarati pieces from memory — four consonants, two vowel signs, an independent vowel and the virama — and read the words for yes, no and the greeting by assembling them.",
+  "prerequisites": [],
+  "lessons": [
+    "GU-W01-ha",
+    "GU-W01-aa-matra",
+    "GU-W01-aa",
+    "GU-W01-na",
+    "GU-W01-ma",
+    "GU-W01-sa",
+    "GU-W01-ta",
+    "GU-W01-e-matra",
+    "GU-W01-virama",
+    "GU-W01-namaste-read"
+  ]
+}

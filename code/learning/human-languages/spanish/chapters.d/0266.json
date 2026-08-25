@@ -1,0 +1,17 @@
+{
+  "chapter": 266,
+  "title": "Review --- Four Last Pieces, and the Thread",
+  "label": "ch:repaso-a1",
+  "canDo": "I can use the last of the A1 structures, and name the thread that runs through them.",
+  "spineNodes": [
+    "SPINE-DEFINITE-REFERENCE"
+  ],
+  "payoff": {
+    "lesson": "ES-C67-repaso-a1",
+    "kind": "task",
+    "summary": "I can use the last of the A1 structures, and name the thread that runs through them.",
+    "assesses": [
+      "ES-GRAMMAR-WORD-ORDER-EMPHASIS"
+    ]
+  }
+}

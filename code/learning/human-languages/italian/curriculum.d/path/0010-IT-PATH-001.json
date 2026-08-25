@@ -1,0 +1,13 @@
+{
+  "id": "IT-PATH-001",
+  "spine_node": "SPINE-MEET-GREET",
+  "lessons": [
+    "IT-C01-ciao",
+    "IT-W01-ciao-guided-copy"
+  ],
+  "before": [],
+  "inline": [],
+  "after": [
+    "IT-EXT-001-WRITING-START"
+  ]
+}

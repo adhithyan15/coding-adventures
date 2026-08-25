@@ -1,0 +1,16 @@
+{
+  "id": "ES-PATH-334-01",
+  "spine_node": "SPINE-CHECK-WELLBEING",
+  "lessons": [
+    "ES-C334-salud",
+    "ES-C334-hambre",
+    "ES-C334-frio",
+    "ES-C334-calor",
+    "ES-C334-edad"
+  ],
+  "before": [],
+  "inline": [
+    "ES-EXT-334-BODY"
+  ],
+  "after": []
+}

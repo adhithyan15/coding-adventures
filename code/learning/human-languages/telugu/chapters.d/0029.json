@@ -1,0 +1,20 @@
+{
+  "chapter": 29,
+  "title": "Good Morning",
+  "label": "ch:te-good-morning",
+  "canDo": "I can wish someone good morning in Telugu.",
+  "spineNodes": [
+    "SPINE-TIME-OF-DAY"
+  ],
+  "payoff": {
+    "lesson": "TE-C29-subhodayam",
+    "kind": "dialogue",
+    "summary": "Say శుభోదయం — śubha + ఉదయం — and weigh the single low-authority claim that it is out of trend against నమస్కారం, the safer everyday bet.",
+    "assesses": [
+      "TE-ETYMON-C26-UDAYAM-01",
+      "TE-PRAGMATICS-C26-UDAYAM-02",
+      "TE-ETYMON-C29-SUBHODAYAM-01",
+      "TE-PRAGMATICS-C29-SUBHODAYAM-02"
+    ]
+  }
+}

@@ -1,0 +1,11 @@
+{
+  "id": "ES-EXT-008-SCRIPT",
+  "stage": "pre-A1",
+  "kind": "required",
+  "category": "script",
+  "canDo": "I can recognize and use the Spanish script features introduced inside these words.",
+  "prerequisites": [],
+  "lessons": [
+    "ES-C03-como-acento"
+  ]
+}

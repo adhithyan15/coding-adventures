@@ -1,0 +1,11 @@
+{
+  "id": "PA-PATH-008",
+  "spine_node": "SPINE-CHECK-WELLBEING",
+  "lessons": [
+    "PA-C03-thik",
+    "PA-C03-tusi-kivein-ho"
+  ],
+  "before": [],
+  "inline": [],
+  "after": []
+}

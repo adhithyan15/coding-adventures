@@ -1,0 +1,16 @@
+{
+  "id": "TA-PATH-44-ASK",
+  "spine_node": "SPINE-POLITE-REQUEST-REPAIR",
+  "lessons": [
+    "TA-C44-fruit",
+    "TA-C44-cloth",
+    "TA-C44-lamp",
+    "TA-C44-salt",
+    "TA-C44-book"
+  ],
+  "before": [],
+  "inline": [
+    "TA-EXT-44-ASK"
+  ],
+  "after": []
+}

@@ -1,0 +1,10 @@
+{
+  "segments": [],
+  "omits": [
+    "ABSTRACT-NOUN",
+    "HEDGE-PROBABLY",
+    "HEDGE-SUPPOSE",
+    "NOMINALIZATION"
+  ],
+  "relocates": {}
+}

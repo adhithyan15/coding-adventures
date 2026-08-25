@@ -1,0 +1,19 @@
+{
+  "chapter": 9,
+  "title": "Sorry",
+  "label": "ch:ta-sorry",
+  "canDo": "I can apologise with மன்னிக்கவும் where its register fits, and say plainly where colloquial Tamil varies by region instead of pretending one form is standard.",
+  "spineNodes": [
+    "SPINE-POLITE-REQUEST-REPAIR"
+  ],
+  "payoff": {
+    "lesson": "TA-C09-sorry-register",
+    "kind": "production",
+    "summary": "Say maṉ-ṉi-kkavum holding both doubled consonants, use it for a considered apology, and qualify the casual alternatives rather than asserting one.",
+    "assesses": [
+      "TA-ETYMON-MANNIKKAVUM-01",
+      "TA-PRAGMATICS-SORRY-REGISTER-01",
+      "TA-SCRIPT-SORRY-REGISTER-02"
+    ]
+  }
+}

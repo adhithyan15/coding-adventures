@@ -1,0 +1,17 @@
+{
+  "chapter": 243,
+  "title": "Hablábamos --- The Imperfect Gets Its Plural",
+  "label": "ch:hablabamos",
+  "canDo": "I can use every person of the -aba imperfect.",
+  "spineNodes": [
+    "SPINE-DEFINITE-REFERENCE"
+  ],
+  "payoff": {
+    "lesson": "ES-C63-hablabamos",
+    "kind": "task",
+    "summary": "I can use every person of the -aba imperfect.",
+    "assesses": [
+      "ES-GRAMMAR-AR-IMPERFECT-PLURAL"
+    ]
+  }
+}

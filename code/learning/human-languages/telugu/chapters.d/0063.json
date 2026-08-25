@@ -1,0 +1,21 @@
+{
+  "chapter": 63,
+  "title": "Hunger, Sleep and Health",
+  "label": "ch:te-health",
+  "canDo": "I can say in Telugu that I am hungry, sleepy or unwell, and ask after somebody else's health.",
+  "spineNodes": [
+    "SPINE-CHECK-WELLBEING"
+  ],
+  "payoff": {
+    "lesson": "TE-C63-health",
+    "kind": "production",
+    "summary": "Complete TE-C63-health and demonstrate the chapter promise.",
+    "assesses": [
+      "TE-LEX-C63-HEALTH-01",
+      "TE-LEX-C63-HEALTH-02",
+      "TE-LEX-C63-HEALTH-03",
+      "TE-LEX-C63-HEALTH-04",
+      "TE-LEX-C63-HEALTH-05"
+    ]
+  }
+}

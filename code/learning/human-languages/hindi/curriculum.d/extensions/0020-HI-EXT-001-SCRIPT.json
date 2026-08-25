@@ -1,0 +1,14 @@
+{
+  "id": "HI-EXT-001-SCRIPT",
+  "stage": "pre-A1",
+  "kind": "required",
+  "category": "script",
+  "canDo": "I can recognize and use the Hindi script features introduced inside these words.",
+  "prerequisites": [],
+  "lessons": [
+    "HI-W01-shirorekha-na-ma",
+    "HI-W01-na-ma",
+    "HI-W02-abugida-ka-ta",
+    "HI-W02-ka-ta-mouth-order"
+  ]
+}

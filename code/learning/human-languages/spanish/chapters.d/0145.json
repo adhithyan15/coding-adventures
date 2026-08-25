@@ -1,0 +1,20 @@
+{
+  "chapter": 145,
+  "title": "The Months",
+  "label": "ch:spanish-months",
+  "canDo": "I can name the twelve months in Spanish and explain why diciembre carries the Latin word for ten.",
+  "spineNodes": [
+    "SPINE-TIME-OF-DAY"
+  ],
+  "payoff": {
+    "lesson": "ES-C27-los-meses",
+    "kind": "task",
+    "summary": "Recite enero through diciembre, tie marzo back to martes through Mars, and place septiembre and diciembre against the Roman year that started in March.",
+    "assesses": [
+      "ES-LEX-WEEKDAYS-01",
+      "ES-ETYMON-WEEKDAYS-02",
+      "ES-LEX-MONTHS-01",
+      "ES-ETYMON-MONTHS-02"
+    ]
+  }
+}

@@ -1,0 +1,11 @@
+{
+  "id": "ES-EXT-337-WRITING",
+  "stage": "A1",
+  "kind": "required",
+  "category": "consolidation",
+  "canDo": "I can write an original line with no model in front of me, choosing which known words to use and in what order.",
+  "prerequisites": [],
+  "lessons": [
+    "ES-W01-frase-propia"
+  ]
+}

@@ -1,0 +1,21 @@
+{
+  "chapter": 64,
+  "title": "Joining Words",
+  "label": "ch:ka-joining",
+  "canDo": "I can join one Kannada answer to the next five ways, from afterwards to in that case.",
+  "spineNodes": [
+    "SPINE-RESPOND-BASIC"
+  ],
+  "payoff": {
+    "lesson": "KA-C64-in-that-case",
+    "kind": "production",
+    "summary": "Complete KA-C64-in-that-case and say all five words in order.",
+    "assesses": [
+      "KA-LEX-C64-JOIN-01",
+      "KA-LEX-C64-JOIN-02",
+      "KA-LEX-C64-JOIN-03",
+      "KA-LEX-C64-JOIN-04",
+      "KA-LEX-C64-JOIN-05"
+    ]
+  }
+}

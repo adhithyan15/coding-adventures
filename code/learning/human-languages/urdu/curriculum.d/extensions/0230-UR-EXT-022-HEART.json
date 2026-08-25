@@ -1,0 +1,13 @@
+{
+  "id": "UR-EXT-022-HEART",
+  "stage": "pre-A1",
+  "kind": "required",
+  "category": "language-specific",
+  "canDo": "I can name my heart in Urdu and trace dil to the same Indo-European root as Sanskrit hṛdaya and English heart, arriving by the Persian road instead of the Sanskrit one.",
+  "prerequisites": [
+    "UR-EXT-021-FACE-WORDS"
+  ],
+  "lessons": [
+    "UR-C11-dil"
+  ]
+}

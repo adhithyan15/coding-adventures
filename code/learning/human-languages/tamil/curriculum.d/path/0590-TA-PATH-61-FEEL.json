@@ -1,0 +1,16 @@
+{
+  "id": "TA-PATH-61-FEEL",
+  "spine_node": "SPINE-CHECK-WELLBEING",
+  "lessons": [
+    "TA-C61-hunger",
+    "TA-C61-thirst",
+    "TA-C61-sleep",
+    "TA-C61-fever",
+    "TA-C61-pain"
+  ],
+  "before": [],
+  "inline": [
+    "TA-EXT-61-FEEL"
+  ],
+  "after": []
+}

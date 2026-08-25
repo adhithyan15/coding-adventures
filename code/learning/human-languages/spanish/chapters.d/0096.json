@@ -1,0 +1,22 @@
+{
+  "chapter": 96,
+  "title": "Review --- Two Systems, Two New Words",
+  "label": "ch:review-both-objects",
+  "canDo": "I can give both object pronoun sets and say which row is the only one where they differ in shape.",
+  "spineNodes": [
+    "SPINE-DEFINITE-REFERENCE"
+  ],
+  "payoff": {
+    "lesson": "ES-C46-repaso-dos-sistemas",
+    "kind": "task",
+    "summary": "Complete ES-C46-repaso-dos-sistemas: give the six indirect pronouns and count the distinct shapes across both tables.",
+    "assesses": [
+      "ES-GRAMMAR-OBJECT-SETS-OVERLAP",
+      "ES-GRAMMAR-INDIRECT-OBJECT-LE",
+      "ES-GRAMMAR-INDIRECT-OBJECT-PLURAL",
+      "ES-GRAMMAR-DIRECT-OBJECT-LO",
+      "ES-GRAMMAR-DIRECT-OBJECT-PLURAL"
+    ],
+    "note": "Twelve cells carried by nine shapes. The only asymmetry is the him/her row, where the direct set marks gender and the indirect set does not."
+  }
+}

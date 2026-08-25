@@ -1,0 +1,20 @@
+{
+  "chapter": 39,
+  "title": "Tea and Milk, Two Roads",
+  "label": "ch:te-tea-and-milk",
+  "canDo": "I can politely ask for tea or milk in Telugu, and say which word travelled by sea and which one three Dravidian cousins share under one regular sound law.",
+  "spineNodes": [
+    "SPINE-POLITE-REQUEST-REPAIR"
+  ],
+  "payoff": {
+    "lesson": "TE-C39-paalu",
+    "kind": "production",
+    "summary": "Ask దయచేసి టీ and దయచేసి పాలు, follow టీ along its sea route through Hokkien and Malay against the overland chai route, then place పాలు beside Tamil and Malayalam's matching pāl against Kannada's own p-to-h shift.",
+    "assesses": [
+      "TE-LEX-C39-TII-01",
+      "TE-ETYMON-C39-TII-02",
+      "TE-LEX-C39-PAALU-01",
+      "TE-ETYMON-C39-PAALU-02"
+    ]
+  }
+}

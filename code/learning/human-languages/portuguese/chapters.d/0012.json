@@ -1,0 +1,20 @@
+{
+  "chapter": 12,
+  "title": "Numbers Eleven to Twenty",
+  "label": "ch:pt-numbers-eleven-to-twenty",
+  "canDo": "I can count from eleven to twenty in Portuguese and read dezesseis as the little sentence ten-and-six that it is.",
+  "spineNodes": [
+    "SPINE-COUNT-ONE-TO-FIVE"
+  ],
+  "payoff": {
+    "lesson": "PT-C12-numeros-16-20",
+    "kind": "task",
+    "summary": "Run onze to vinte, hear dez e seis inside dezesseis, and note that Portuguese breaks from the fused teens at 16, a number earlier than French or Italian.",
+    "assesses": [
+      "PT-GRAMMAR-NUMEROS-11-15-02",
+      "PT-NOTICE-NUMEROS-11-15-03",
+      "PT-GRAMMAR-NUMEROS-16-20-02",
+      "PT-NOTICE-NUMEROS-16-20-03"
+    ]
+  }
+}

@@ -1,0 +1,12 @@
+{
+  "id": "ES-PATH-B1-TUVIERON",
+  "spine_node": "SPINE-TALK-ABOUT-PAST",
+  "lessons": [
+    "ES-C55-tuvieron"
+  ],
+  "before": [],
+  "inline": [
+    "ES-EXT-B1-TUVIERON"
+  ],
+  "after": []
+}

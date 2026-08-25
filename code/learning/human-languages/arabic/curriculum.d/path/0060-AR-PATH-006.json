@@ -1,0 +1,17 @@
+{
+  "id": "AR-PATH-006",
+  "spine_node": "SPINE-CHECK-WELLBEING",
+  "lessons": [
+    "AR-W01-direction-and-alif",
+    "AR-W01-abjad-short-vowels",
+    "AR-W02-joining-sin-lam",
+    "AR-W02-lam-alif-joins",
+    "AR-W03-dots-mim-ba-salam",
+    "AR-W03-write-salam"
+  ],
+  "before": [],
+  "inline": [
+    "AR-EXT-006-SCRIPT"
+  ],
+  "after": []
+}

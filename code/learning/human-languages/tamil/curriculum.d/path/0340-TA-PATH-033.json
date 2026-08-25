@@ -1,0 +1,15 @@
+{
+  "id": "TA-PATH-033",
+  "spine_node": "SPINE-EXCHANGE-NAMES",
+  "lessons": [
+    "TA-C37-uur",
+    "TA-C37-nanban",
+    "TA-C37-ivar",
+    "TA-C37-ivar-en-nanbar"
+  ],
+  "before": [],
+  "inline": [
+    "TA-EXT-033-LANGUAGE-SPECIFIC"
+  ],
+  "after": []
+}

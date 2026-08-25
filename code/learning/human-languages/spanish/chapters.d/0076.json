@@ -1,0 +1,19 @@
+{
+  "chapter": 76,
+  "title": "Deriving the Rest",
+  "label": "ch:spanish-derive-plurals",
+  "canDo": "I can produce the plural of any irregular verb in this book from rules, and conjugate a verb I was never shown.",
+  "spineNodes": [
+    "SPINE-SAY-WHAT-I-DO"
+  ],
+  "payoff": {
+    "lesson": "ES-C13-sintesis-derivar",
+    "kind": "dialogue",
+    "summary": "Three rules generate the whole present tense - and a system, unlike a table, works on words it has never seen.",
+    "assesses": [
+      "ES-GRAMMAR-YO-GO-PLURAL-REGULAR",
+      "ES-GRAMMAR-STEM-CHANGE-STRESS-RULE",
+      "ES-GRAMMAR-QUERER-PRESENT-PLURAL"
+    ]
+  }
+}

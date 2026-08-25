@@ -1,0 +1,16 @@
+{
+  "id": "KA-PATH-54-TREE",
+  "spine_node": "SPINE-EXCHANGE-NAMES",
+  "lessons": [
+    "KA-C54-tree",
+    "KA-C54-branch",
+    "KA-C54-leaf",
+    "KA-C54-root",
+    "KA-C54-seed"
+  ],
+  "before": [],
+  "inline": [
+    "KA-EXT-54-TREE"
+  ],
+  "after": []
+}

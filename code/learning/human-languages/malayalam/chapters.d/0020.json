@@ -1,0 +1,19 @@
+{
+  "chapter": 20,
+  "title": "Numbers 11–20 and Weather",
+  "label": "ch:ml-numbers-and-weather",
+  "canDo": "I can count from eleven to twenty in Malayalam and say what the weather is doing.",
+  "spineNodes": [
+    "SPINE-COUNT-ONE-TO-FIVE",
+    "SPINE-TIME-OF-DAY"
+  ],
+  "payoff": {
+    "lesson": "ML-C20-kalavastha",
+    "kind": "production",
+    "summary": "Say kālāvastha as 'the state of time', split it into kālam and avastha, and add mazha peyyunnu for rain.",
+    "assesses": [
+      "ML-CONCEPT-C20-KALAVASTHA-01",
+      "ML-CONCEPT-C20-KALAVASTHA-02"
+    ]
+  }
+}

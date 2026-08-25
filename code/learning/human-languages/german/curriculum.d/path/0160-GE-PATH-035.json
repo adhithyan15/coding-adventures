@@ -1,0 +1,13 @@
+{
+  "id": "GE-PATH-035",
+  "spine_node": "SPINE-TIME-OF-DAY",
+  "lessons": [
+    "GE-C07-wochentage-1",
+    "GE-C07-wochentage-2"
+  ],
+  "before": [],
+  "inline": [
+    "GE-EXT-035-LANGUAGE-SPECIFIC"
+  ],
+  "after": []
+}

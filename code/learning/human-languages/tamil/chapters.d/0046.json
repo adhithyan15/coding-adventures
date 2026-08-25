@@ -1,0 +1,21 @@
+{
+  "chapter": 46,
+  "title": "Who Somebody Is",
+  "label": "ch:ta-roles",
+  "canDo": "I can say what somebody's work is in Tamil, and recognise the endings that mark a man, a woman and respect.",
+  "spineNodes": [
+    "SPINE-EXCHANGE-NAMES"
+  ],
+  "payoff": {
+    "lesson": "TA-C46-guest",
+    "kind": "production",
+    "summary": "Complete TA-C46-guest and say all five words in order.",
+    "assesses": [
+      "TA-LEX-C46-ROLE-01",
+      "TA-LEX-C46-ROLE-02",
+      "TA-LEX-C46-ROLE-03",
+      "TA-LEX-C46-ROLE-04",
+      "TA-LEX-C46-ROLE-05"
+    ]
+  }
+}

@@ -1,0 +1,21 @@
+{
+  "id": "ES-PATH-030-SER",
+  "spine_node": "SPINE-SAY-WHAT-I-DO",
+  "lessons": [
+    "ES-C09-ser",
+    "ES-C09-somos",
+    "ES-C09-son",
+    "ES-C09-sois",
+    "ES-C09-repaso-ser",
+    "ES-C09-estamos",
+    "ES-C09-estan",
+    "ES-C09-estais",
+    "ES-C09-repaso-ser-estar"
+  ],
+  "before": [],
+  "inline": [
+    "ES-EXT-030-SER-PLURAL",
+    "ES-EXT-030-ESTAR-PLURAL"
+  ],
+  "after": []
+}

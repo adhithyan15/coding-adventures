@@ -1,0 +1,15 @@
+{
+  "id": "FR-PATH-025",
+  "spine_node": "SPINE-POLITE-REQUEST-REPAIR",
+  "lessons": [
+    "FR-C28-cafe",
+    "FR-C28-the",
+    "FR-C28-lait",
+    "FR-C28-sucre"
+  ],
+  "before": [],
+  "inline": [
+    "FR-EXT-025-LANGUAGE-SPECIFIC"
+  ],
+  "after": []
+}

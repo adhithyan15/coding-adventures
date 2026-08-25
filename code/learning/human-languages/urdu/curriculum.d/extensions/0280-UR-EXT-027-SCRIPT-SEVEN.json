@@ -1,0 +1,19 @@
+{
+  "id": "UR-EXT-027-SCRIPT-SEVEN",
+  "stage": "pre-A1",
+  "kind": "required",
+  "category": "script",
+  "canDo": "I can write seven Urdu letters from memory, read eight words the book taught me by ear, and explain why a Nastaliq word falls as it runs and why a gap can appear inside it.",
+  "prerequisites": [],
+  "lessons": [
+    "UR-W16-alef",
+    "UR-W16-lam",
+    "UR-W16-sin",
+    "UR-W16-mim",
+    "UR-W16-joining",
+    "UR-W16-kaf",
+    "UR-W16-nun",
+    "UR-W16-ye",
+    "UR-C16-practice"
+  ]
+}

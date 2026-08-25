@@ -1,0 +1,19 @@
+{
+  "chapter": 28,
+  "title": "F to H --- Why the H Says Nothing",
+  "label": "ch:sound-f-h",
+  "canDo": "I can decode an unfamiliar h- word by putting an f back, and say why the h is silent.",
+  "spineNodes": [
+    "SPINE-SAY-WHAT-I-DO"
+  ],
+  "payoff": {
+    "lesson": "ES-C57-f-a-h",
+    "kind": "task",
+    "summary": "Complete ES-C57-f-a-h: say why the h is silent, name hablar's English friend, and decode hierro unseen.",
+    "assesses": [
+      "ES-SOUND-F-TO-H",
+      "ES-ETYMON-FABULARI"
+    ],
+    "note": "Pays off a bare fact held since chapter one. The silent h is a gravestone: Latin f- weakened to a breath and then to nothing, and the spelling outlived the sound. Also states its own limits -- hola and hasta are not dead f-words."
+  }
+}

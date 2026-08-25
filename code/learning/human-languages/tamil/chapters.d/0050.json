@@ -1,0 +1,21 @@
+{
+  "chapter": 50,
+  "title": "At the Doorway",
+  "label": "ch:ta-at-the-doorway",
+  "canDo": "I can name the five things a guest meets at a Tamil doorway, and welcome them.",
+  "spineNodes": [
+    "SPINE-MEET-GREET"
+  ],
+  "payoff": {
+    "lesson": "TA-C50-welcome",
+    "kind": "production",
+    "summary": "Complete TA-C50-welcome and say all five words in order.",
+    "assesses": [
+      "TA-LEX-C50-WELCOME-01",
+      "TA-LEX-C50-WELCOME-02",
+      "TA-LEX-C50-WELCOME-03",
+      "TA-LEX-C50-WELCOME-04",
+      "TA-LEX-C50-WELCOME-05"
+    ]
+  }
+}

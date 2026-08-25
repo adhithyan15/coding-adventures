@@ -1,0 +1,20 @@
+{
+  "chapter": 136,
+  "title": "Synthesis --- Asking Without Sounding Rude",
+  "label": "ch:synthesis-commands",
+  "canDo": "I can pick the command form that matches my relationship to the listener.",
+  "spineNodes": [
+    "SPINE-SAY-WHAT-I-DO"
+  ],
+  "payoff": {
+    "lesson": "ES-C50-sintesis-pedir-bien",
+    "kind": "task",
+    "summary": "Complete ES-C50-sintesis-pedir-bien: command a friend and a stranger, and say where a Spanish command's politeness lives.",
+    "assesses": [
+      "ES-CULTURE-COMMAND-REGISTER",
+      "ES-GRAMMAR-COMMAND-USTED",
+      "ES-GRAMMAR-COMMAND-TU-AFFIRMATIVE"
+    ],
+    "note": "The English speaker's mistake here is not tone but person: politeness lives in the tu/usted choice, made before the command was spoken."
+  }
+}

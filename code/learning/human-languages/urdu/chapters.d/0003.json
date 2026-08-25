@@ -1,0 +1,26 @@
+{
+  "chapter": 3,
+  "title": "Ask and Answer Names",
+  "label": "ch:ur-ask-and-answer-names",
+  "canDo": "I can ask someone's name with respectful āp, answer with my own, and close the introduction politely.",
+  "spineNodes": [
+    "SPINE-EXCHANGE-NAMES"
+  ],
+  "payoff": {
+    "lesson": "UR-C03-practice",
+    "kind": "dialogue",
+    "summary": "A six-line first meeting: greet, ask āp kā nām kyā hai?, answer with your own name, and close with āp se mil kar khushī huī.",
+    "assesses": [
+      "UR-LEX-MERA-NAAM-HAI",
+      "UR-GRAMMAR-COPULA-FINAL",
+      "UR-LEX-AAP-TUM-TU",
+      "UR-PRAGMATICS-YOU-REGISTER",
+      "UR-LEX-KYA",
+      "UR-LEX-NAME-QUESTION",
+      "UR-GRAMMAR-AAP-KA",
+      "UR-SCRIPT-URDU-QUESTION-MARK",
+      "UR-LEX-NICE-TO-MEET",
+      "UR-DIALOGUE-NAME-EXCHANGE"
+    ]
+  }
+}

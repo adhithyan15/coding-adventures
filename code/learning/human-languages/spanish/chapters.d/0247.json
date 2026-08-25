@@ -1,0 +1,17 @@
+{
+  "chapter": 247,
+  "title": "Conmigo, Contigo --- The Word That Says With Twice",
+  "label": "ch:conmigo",
+  "canDo": "I can say with me and with you.",
+  "spineNodes": [
+    "SPINE-DEFINITE-REFERENCE"
+  ],
+  "payoff": {
+    "lesson": "ES-C64-conmigo",
+    "kind": "task",
+    "summary": "I can say with me and with you.",
+    "assesses": [
+      "ES-LEX-CONMIGO"
+    ]
+  }
+}

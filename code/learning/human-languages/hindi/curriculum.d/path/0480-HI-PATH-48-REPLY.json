@@ -1,0 +1,16 @@
+{
+  "id": "HI-PATH-48-REPLY",
+  "spine_node": "SPINE-RESPOND-BASIC",
+  "lessons": [
+    "HI-C48-true",
+    "HI-C48-enough",
+    "HI-C48-certainly",
+    "HI-C48-perhaps",
+    "HI-C48-absolutely"
+  ],
+  "before": [],
+  "inline": [
+    "HI-EXT-48-REPLY"
+  ],
+  "after": []
+}

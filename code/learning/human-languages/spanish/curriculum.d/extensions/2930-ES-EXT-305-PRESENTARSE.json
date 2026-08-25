@@ -1,0 +1,15 @@
+{
+  "id": "ES-EXT-305-PRESENTARSE",
+  "stage": "pre-A1",
+  "kind": "required",
+  "category": "vocabulary",
+  "canDo": "I can complete a first introduction in Spanish: both names, the right form of address, and the reply.",
+  "prerequisites": [],
+  "lessons": [
+    "ES-C305-nombre",
+    "ES-C305-apellido",
+    "ES-C305-senor",
+    "ES-C305-senora",
+    "ES-C305-encantado"
+  ]
+}

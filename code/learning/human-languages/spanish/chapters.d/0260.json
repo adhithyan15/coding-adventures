@@ -1,0 +1,17 @@
+{
+  "chapter": 260,
+  "title": "María, España --- The Nouns That Need No Article",
+  "label": "ch:nombres-propios",
+  "canDo": "I can use names and titles with the right article, or none.",
+  "spineNodes": [
+    "SPINE-DEFINITE-REFERENCE"
+  ],
+  "payoff": {
+    "lesson": "ES-C66-nombres-propios",
+    "kind": "task",
+    "summary": "I can use names and titles with the right article, or none.",
+    "assesses": [
+      "ES-GRAMMAR-PROPER-NOUN-NO-ARTICLE"
+    ]
+  }
+}

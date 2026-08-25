@@ -1,0 +1,20 @@
+{
+  "id": "FA-EXT-023-SCRIPT-NINE",
+  "stage": "pre-A1",
+  "kind": "required",
+  "category": "script",
+  "canDo": "I can write nine Perso-Arabic letters from memory, read seven words the book taught me by ear, and explain why a gap can appear inside a Persian word.",
+  "prerequisites": [],
+  "lessons": [
+    "FA-W15-alef",
+    "FA-W15-lam",
+    "FA-W15-sin",
+    "FA-W15-mim",
+    "FA-W15-joining",
+    "FA-W15-be",
+    "FA-W15-te-nun",
+    "FA-W15-he",
+    "FA-W15-vav",
+    "FA-C15-practice"
+  ]
+}

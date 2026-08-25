@@ -1,0 +1,17 @@
+{
+  "chapter": 13,
+  "title": "Head and Hand",
+  "label": "ch:ml-head-and-hand",
+  "canDo": "I can name the head and the hand in Malayalam.",
+  "spineNodes": [
+    "SPINE-CHECK-WELLBEING"
+  ],
+  "payoff": {
+    "lesson": "ML-C13-shareera-bhaagangal",
+    "kind": "production",
+    "summary": "Say thala and kai, and match them against Tamil's talai and kai.",
+    "assesses": [
+      "ML-CONCEPT-C13-SHAREERA-BHAAGANGAL-01"
+    ]
+  }
+}

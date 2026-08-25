@@ -1,0 +1,11 @@
+{
+  "id": "TE-PATH-006",
+  "spine_node": "SPINE-CHECK-WELLBEING",
+  "lessons": [
+    "TE-C03-elaa",
+    "TE-C03-miiru-elaa-unnaaru"
+  ],
+  "before": [],
+  "inline": [],
+  "after": []
+}

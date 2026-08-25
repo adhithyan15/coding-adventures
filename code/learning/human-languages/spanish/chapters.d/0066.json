@@ -1,0 +1,17 @@
+{
+  "chapter": 66,
+  "title": "Falsos Amigos --- the Words That Obey and Lie",
+  "label": "ch:falsos-amigos",
+  "canDo": "I can spot a false friend by checking a decoded word against the sentence.",
+  "spineNodes": [
+    "SPINE-SAY-WHAT-I-DO"
+  ],
+  "payoff": {
+    "lesson": "ES-C09-falsos-amigos",
+    "kind": "task",
+    "summary": "Recognise exito, actualmente and libreria as words that obey the rules and mean something else.",
+    "assesses": [
+      "ES-FRIENDS-FALSE-FRIENDS"
+    ]
+  }
+}

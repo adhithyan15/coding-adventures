@@ -1,0 +1,21 @@
+{
+  "chapter": 14,
+  "title": "Asking Someone's Age",
+  "label": "ch:la-asking-age",
+  "canDo": "I can say how old I am in Latin, using the classical born-so-many-years construction.",
+  "spineNodes": [
+    "SPINE-EXCHANGE-NAMES"
+  ],
+  "payoff": {
+    "lesson": "LA-C14-annos-natus",
+    "kind": "production",
+    "summary": "State your own age as vīgintī annōs nātus sum, and set that pattern against Romance's have-your-years and English's be-your-years.",
+    "assesses": [
+      "LA-LEX-HORA-01",
+      "LA-PRAGMATICS-HORA-02",
+      "LA-ETYMON-HORA-03",
+      "LA-LEX-ANNOS-NATUS-01",
+      "LA-PRAGMATICS-ANNOS-NATUS-02"
+    ]
+  }
+}

@@ -1,0 +1,12 @@
+{
+  "id": "ES-PATH-A1-DEIXIS-LUGAR",
+  "spine_node": "SPINE-DEFINITE-REFERENCE",
+  "lessons": [
+    "ES-C65-ahi-alli"
+  ],
+  "before": [],
+  "inline": [
+    "ES-EXT-A1-DEIXIS-LUGAR"
+  ],
+  "after": []
+}

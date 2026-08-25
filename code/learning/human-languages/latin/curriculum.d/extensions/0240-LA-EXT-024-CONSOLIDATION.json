@@ -1,0 +1,12 @@
+{
+  "id": "LA-EXT-024-CONSOLIDATION",
+  "stage": "A1",
+  "kind": "supporting",
+  "category": "consolidation",
+  "canDo": "I can sort a European evening word into its real Latin family and greet across a whole Roman day.",
+  "prerequisites": [],
+  "lessons": [
+    "LA-C33-practice",
+    "LA-C36-practice"
+  ]
+}

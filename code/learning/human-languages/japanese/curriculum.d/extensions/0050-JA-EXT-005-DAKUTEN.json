@@ -1,0 +1,13 @@
+{
+  "id": "JA-EXT-005-DAKUTEN",
+  "stage": "pre-A1",
+  "kind": "required",
+  "category": "script",
+  "canDo": "I can add the dakuten to a hiragana sign to voice it, and read the etymology of arigatou without treating history as a production burden.",
+  "prerequisites": [
+    "JA-EXT-010-HIRAGANA-THANKS"
+  ],
+  "lessons": [
+    "JA-C01-arigatou"
+  ]
+}

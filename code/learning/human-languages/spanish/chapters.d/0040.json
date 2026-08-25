@@ -1,0 +1,19 @@
+{
+  "chapter": 40,
+  "title": "Hablais --- the Form Spain Keeps",
+  "label": "ch:spanish-hablais",
+  "canDo": "I can recognise the vosotros form and say where it is used.",
+  "spineNodes": [
+    "SPINE-ASK-LOCATION"
+  ],
+  "payoff": {
+    "lesson": "ES-C07-hablais",
+    "kind": "task",
+    "summary": "vos + otros, added in Spain to keep the plural apart from a singular vos the Americas kept instead.",
+    "assesses": [
+      "ES-GRAMMAR-AR-PRESENT-2PL",
+      "ES-LEX-VOSOTROS",
+      "ES-CULTURE-VOSOTROS-USTEDES-SPLIT"
+    ]
+  }
+}

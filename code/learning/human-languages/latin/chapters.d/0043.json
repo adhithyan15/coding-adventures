@@ -1,0 +1,29 @@
+{
+  "chapter": 43,
+  "title": "Answering, Meeting, Buying",
+  "label": "ch:la-answering-meeting-buying",
+  "canDo": "I can say I answer, I meet and I buy in Latin, produce the he-or-she form of each, and read an English word by recovering the older sense of the Latin verb inside it.",
+  "spineNodes": [
+    "SPINE-SAY-WHAT-I-DO"
+  ],
+  "payoff": {
+    "lesson": "LA-C43-emo",
+    "kind": "production",
+    "summary": "The chapter closes on emō: after learning it the reader produces all three first-person forms and all three third-person forms in sequence — respondeō, conveniō, emō and respondet, convenit, emit — recovers redeem and example from the root's older sense 'take', and ranks the four getting-verbs capiō, accipiō, obtineō, emō against dō, retrieving capiō and dō from chapters 39 and 37.",
+    "assesses": [
+      "LA-LEX-RESPONDEO-01",
+      "LA-ETYMON-RESPONDEO-02",
+      "LA-LEX-CONVENIO-01",
+      "LA-LEX-OCCURRO-02",
+      "LA-ETYMON-CONVENIO-OCCURRO-03",
+      "LA-LEX-EMO-01",
+      "LA-ETYMON-EMO-02",
+      "LA-LEX-ACCIPIO-01",
+      "LA-LEX-OBTINEO-02",
+      "LA-ETYMON-ACCIPIO-OBTINEO-03",
+      "LA-LEX-CAPIO-01",
+      "LA-LEX-DO-01",
+      "LA-ETYMON-DO-02"
+    ]
+  }
+}

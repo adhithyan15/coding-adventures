@@ -1,0 +1,23 @@
+{
+  "chapter": 7,
+  "title": "Numbers One to Five",
+  "label": "ch:numbers-one-to-five",
+  "canDo": "I can count from one to five in Marathi, say चार as tsār rather than chār, and tell which of Marathi's differences from Hindi is an innovation and which is Hindi holding on to something older.",
+  "spineNodes": [
+    "SPINE-COUNT-ONE-TO-FIVE"
+  ],
+  "payoff": {
+    "lesson": "MR-C06-number-differences",
+    "kind": "task",
+    "summary": "Account for all three tells: दोन's final n copied from the rhyme of tiṇṇi/doṇṇi, पाच dropping the nasal Hindi पाँच still writes, and चार spelled as everywhere else but pronounced with a ts.",
+    "assesses": [
+      "MR-LEX-NUMBERS-ONE-TO-FIVE",
+      "MR-SCRIPT-DON-FINAL-N",
+      "MR-SCRIPT-PAACH-NONNASAL",
+      "MR-SOUND-CHA-TSAA",
+      "MR-ETYMON-DON-ANALOGY",
+      "MR-ETYMON-PAACH-NASAL-RETENTION",
+      "MR-HISTORY-SELECTIVE-RETENTION"
+    ]
+  }
+}

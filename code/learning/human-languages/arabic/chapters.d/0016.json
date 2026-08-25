@@ -1,0 +1,18 @@
+{
+  "chapter": 16,
+  "title": "Telling Time",
+  "label": "ch:ar-telling-time",
+  "canDo": "I can ask what time it is in Arabic and answer with the hour.",
+  "spineNodes": [
+    "SPINE-TIME-OF-DAY"
+  ],
+  "payoff": {
+    "lesson": "AR-C16-al-saa",
+    "kind": "dialogue",
+    "summary": "Ask kam as-sāʿa? and answer with the ordinal hour, including the one-o'clock exception.",
+    "assesses": [
+      "AR-CONCEPT-C16-AL-SAA-01",
+      "AR-CONCEPT-C16-AL-SAA-02"
+    ]
+  }
+}

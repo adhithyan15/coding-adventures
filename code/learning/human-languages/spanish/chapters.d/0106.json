@@ -1,0 +1,18 @@
+{
+  "chapter": 106,
+  "title": "Synthesis --- You Can Hear Which Past It Is",
+  "label": "ch:spanish-synthesis-preterito",
+  "canDo": "I can tell a regular preterite from a strong one by ear, and say why only one of them carries an accent.",
+  "spineNodes": [
+    "SPINE-TALK-ABOUT-PAST"
+  ],
+  "payoff": {
+    "lesson": "ES-C15-sintesis-preterito",
+    "kind": "dialogue",
+    "summary": "The accent is the stress written down: ending-stressed regular, stem-stressed strong.",
+    "assesses": [
+      "ES-GRAMMAR-STRONG-PRETERITE-SINGULAR-PATTERN",
+      "ES-ORTHOGRAPHY-ER-IR-PRETERITE-FINAL-STRESS"
+    ]
+  }
+}

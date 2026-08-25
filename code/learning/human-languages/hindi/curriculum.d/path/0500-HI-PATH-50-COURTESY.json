@@ -1,0 +1,16 @@
+{
+  "id": "HI-PATH-50-COURTESY",
+  "spine_node": "SPINE-COURTESY-THANK",
+  "lessons": [
+    "HI-C50-gratitude",
+    "HI-C50-favour",
+    "HI-C50-respect",
+    "HI-C50-blessing",
+    "HI-C50-salutation"
+  ],
+  "before": [],
+  "inline": [
+    "HI-EXT-50-COURTESY"
+  ],
+  "after": []
+}

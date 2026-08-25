@@ -1,0 +1,5 @@
+{
+  "version": 1,
+  "language": "latin",
+  "note": "HL05 chapter capability ledger. Authored intent, not a derived cache: no validator may rewrite this file. All 41 Latin chapters are authored here. Chapters 1, 19, 21, 33 and 36 own a terminal consolidation lesson that recombines the chapter's material; every other chapter's payoff is still its last lesson by sequence, which is where that chapter's recombination and wrap-up recall currently live. Chapter 1's title and label come from its hand-written book/chapters/ch01-greetings.tex, the only Latin chapter with no core/book-generation.json target."
+}

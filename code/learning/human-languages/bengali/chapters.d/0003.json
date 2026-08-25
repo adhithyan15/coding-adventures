@@ -1,0 +1,24 @@
+{
+  "chapter": 3,
+  "title": "How Are You?",
+  "label": "ch:responding",
+  "canDo": "I can ask how someone is in Bengali, answer naturally, and return the question.",
+  "spineNodes": [
+    "SPINE-EXCHANGE-NAMES",
+    "SPINE-CHECK-WELLBEING",
+    "SPINE-COURTESY-THANK"
+  ],
+  "payoff": {
+    "lesson": "BN-C03-practice",
+    "kind": "task",
+    "summary": "Complete BN-C03-practice, the canonical closing checkpoint, and demonstrate the chapter promise: ask how someone is in Bengali, answer naturally, and return the question.",
+    "assesses": [
+      "BN-CONCEPT-C03-AMI-01",
+      "BN-CONCEPT-C03-BHALO-01",
+      "BN-CONCEPT-C03-KEMON-01",
+      "BN-CONCEPT-C03-KONOBEPARNA-01",
+      "BN-CONCEPT-C03-PRACTICE-01",
+      "BN-CONCEPT-C03-TUMIKEMONACHHO-01"
+    ]
+  }
+}

@@ -1,0 +1,15 @@
+{
+  "id": "ES-EXT-284-RESPUESTAS",
+  "stage": "pre-A1",
+  "kind": "required",
+  "category": "vocabulary",
+  "canDo": "I can answer someone in Spanish with a single short phrase, and say what is inside each one.",
+  "prerequisites": [],
+  "lessons": [
+    "ES-C284-de-acuerdo",
+    "ES-C284-seguro",
+    "ES-C284-cierto",
+    "ES-C284-exacto",
+    "ES-C284-por-supuesto"
+  ]
+}

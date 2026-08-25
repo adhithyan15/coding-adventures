@@ -1,0 +1,16 @@
+{
+  "id": "KA-PATH-63-HEALTH",
+  "spine_node": "SPINE-CHECK-WELLBEING",
+  "lessons": [
+    "KA-C63-hunger",
+    "KA-C63-sleep",
+    "KA-C63-fever",
+    "KA-C63-pain",
+    "KA-C63-health"
+  ],
+  "before": [],
+  "inline": [
+    "KA-EXT-63-HEALTH"
+  ],
+  "after": []
+}

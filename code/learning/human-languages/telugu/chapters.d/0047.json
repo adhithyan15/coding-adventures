@@ -1,0 +1,21 @@
+{
+  "chapter": 47,
+  "title": "The Leg and the Tooth",
+  "label": "ch:te-body-more",
+  "canDo": "I can name five more parts of the body in Telugu, and say which of them held their old shape and which wore down past recognition.",
+  "spineNodes": [
+    "SPINE-CHECK-WELLBEING"
+  ],
+  "payoff": {
+    "lesson": "TE-C47-stomach",
+    "kind": "production",
+    "summary": "Complete TE-C47-stomach and demonstrate the chapter promise.",
+    "assesses": [
+      "TE-LEX-C47-BODY-01",
+      "TE-LEX-C47-BODY-02",
+      "TE-LEX-C47-BODY-03",
+      "TE-LEX-C47-BODY-04",
+      "TE-LEX-C47-BODY-05"
+    ]
+  }
+}

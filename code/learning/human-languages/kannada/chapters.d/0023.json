@@ -1,0 +1,22 @@
+{
+  "chapter": 23,
+  "title": "Day",
+  "label": "ch:ka-day",
+  "canDo": "I can say \"day\" in Kannada and tell it apart from the native word for daytime.",
+  "spineNodes": [
+    "SPINE-TIME-OF-DAY"
+  ],
+  "payoff": {
+    "lesson": "KA-C23-dina",
+    "kind": "production",
+    "summary": "Say ದಿನ, kept whole as a Sanskrit tatsama where Hindi's din eroded, and set it against native ಹಗಲು, which means daytime rather than a day.",
+    "assesses": [
+      "KA-ETYMON-C17-MADHYAAHNA-MADHYARAATRI-01",
+      "KA-ETYMON-C17-MADHYAAHNA-MADHYARAATRI-02",
+      "KA-PRAGMATICS-C17-MADHYAAHNA-MADHYARAATRI-03",
+      "KA-ETYMON-C23-DINA-01",
+      "KA-ETYMON-C23-DINA-02",
+      "KA-ETYMON-C23-DINA-03"
+    ]
+  }
+}

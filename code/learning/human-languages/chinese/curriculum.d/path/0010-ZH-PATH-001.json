@@ -1,0 +1,32 @@
+{
+  "id": "ZH-PATH-001",
+  "spine_node": "SPINE-MEET-GREET",
+  "lessons": [
+    "ZH-C01-tones",
+    "ZH-W01-ren",
+    "ZH-W01-ren-radical",
+    "ZH-W01-er",
+    "ZH-W01-ni-build",
+    "ZH-C01-ni",
+    "ZH-W01-nu",
+    "ZH-W01-zi",
+    "ZH-W01-hao-build",
+    "ZH-C01-hao",
+    "ZH-C01-nihao",
+    "ZH-C01-tone-sandhi",
+    "ZH-C01-hao-fond",
+    "ZH-C01-practice"
+  ],
+  "before": [
+    "ZH-EXT-000-TONE-INVENTORY"
+  ],
+  "inline": [
+    "ZH-EXT-006-COMPONENT-INVENTORY",
+    "ZH-EXT-001-CHARACTER-DECOMPOSITION",
+    "ZH-EXT-002-COMPONENT-HOOK",
+    "ZH-EXT-003-TONE-SANDHI",
+    "ZH-EXT-004-TONE-MINIMAL-PAIR",
+    "ZH-EXT-005-GREETING-CONSOLIDATION"
+  ],
+  "after": []
+}

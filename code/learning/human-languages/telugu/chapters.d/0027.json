@@ -1,0 +1,20 @@
+{
+  "chapter": 27,
+  "title": "Evening",
+  "label": "ch:te-evening",
+  "canDo": "I can say \"evening\" in Telugu.",
+  "spineNodes": [
+    "SPINE-TIME-OF-DAY"
+  ],
+  "payoff": {
+    "lesson": "TE-C27-sayantram",
+    "kind": "production",
+    "summary": "Say సాయంత్రం, from sāyam plus a time-suffix, and follow its PIE \\*seh₁- root across to Latin sērus, French soir and Italian sera.",
+    "assesses": [
+      "TE-ETYMON-C26-UDAYAM-01",
+      "TE-PRAGMATICS-C26-UDAYAM-02",
+      "TE-ETYMON-C27-SAYANTRAM-01",
+      "TE-ETYMON-C27-SAYANTRAM-02"
+    ]
+  }
+}

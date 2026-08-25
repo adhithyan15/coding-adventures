@@ -1,0 +1,15 @@
+{
+  "id": "ES-EXT-285-QUIEN",
+  "stage": "pre-A1",
+  "kind": "required",
+  "category": "vocabulary",
+  "canDo": "I can say who someone is in Spanish — the neighbour, a friend, the teacher, the nurse, the cook.",
+  "prerequisites": [],
+  "lessons": [
+    "ES-C285-vecino",
+    "ES-C285-amiga",
+    "ES-C285-maestro",
+    "ES-C285-enfermera",
+    "ES-C285-cocinero"
+  ]
+}

@@ -1,0 +1,21 @@
+{
+  "chapter": 316,
+  "title": "Never, Always, All, Nothing",
+  "label": "ch:nunca-y-siempre",
+  "canDo": "I can answer with never, always, all and nothing in Spanish.",
+  "spineNodes": [
+    "SPINE-RESPOND-BASIC"
+  ],
+  "payoff": {
+    "lesson": "ES-C316-nada",
+    "kind": "production",
+    "summary": "Complete ES-C316-nada: put nunca and siempre against la risa and el llanto, then close the line with todo and nada.",
+    "assesses": [
+      "ES-LEX-C316-ANSW-11",
+      "ES-LEX-C316-ANSW-12",
+      "ES-LEX-C316-ANSW-13",
+      "ES-LEX-C316-ANSW-14",
+      "ES-LEX-C316-ANSW-15"
+    ]
+  }
+}

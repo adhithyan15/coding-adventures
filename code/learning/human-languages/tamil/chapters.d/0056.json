@@ -1,0 +1,21 @@
+{
+  "chapter": 56,
+  "title": "How Much",
+  "label": "ch:ta-how-much",
+  "canDo": "I can say how much I want in Tamil, from a little to a lot, and turn an offer down politely.",
+  "spineNodes": [
+    "SPINE-RESPOND-BASIC"
+  ],
+  "payoff": {
+    "lesson": "TA-C56-let-it-be",
+    "kind": "production",
+    "summary": "Complete TA-C56-let-it-be and say all five words in order.",
+    "assesses": [
+      "TA-LEX-C56-AMOUNT-01",
+      "TA-LEX-C56-AMOUNT-02",
+      "TA-LEX-C56-AMOUNT-03",
+      "TA-LEX-C56-AMOUNT-04",
+      "TA-LEX-C56-AMOUNT-05"
+    ]
+  }
+}

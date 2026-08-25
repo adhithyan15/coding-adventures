@@ -1,0 +1,22 @@
+{
+  "segments": [
+    "ES-PATH-037",
+    "ES-PATH-037-PARA",
+    "ES-PATH-037-POR",
+    "ES-PATH-037-ARROW",
+    "ES-PATH-037-REVIEW-PP",
+    "ES-PATH-037-SYNTH-PP",
+    "ES-PATH-037-SE-IMP",
+    "ES-PATH-037-SE-AGREE",
+    "ES-PATH-037-COMO-SE-DICE",
+    "ES-PATH-037-REVIEW-SE",
+    "ES-PATH-037-SYNTH-SE",
+    "ES-PATH-037-REL-QUE",
+    "ES-PATH-037-REL-OBLIG",
+    "ES-PATH-037-LO-QUE",
+    "ES-PATH-037-REVIEW-REL",
+    "ES-PATH-037-SYNTH-REL"
+  ],
+  "omits": [],
+  "relocates": {}
+}

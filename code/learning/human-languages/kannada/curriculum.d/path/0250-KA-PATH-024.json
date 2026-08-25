@@ -1,0 +1,20 @@
+{
+  "id": "KA-PATH-024",
+  "spine_node": "SPINE-TIME-OF-DAY",
+  "lessons": [
+    "KA-C23-dina",
+    "KA-C24-ratri",
+    "KA-C25-shubha-ratri",
+    "KA-C26-belagge",
+    "KA-C27-sanje",
+    "KA-C28-aparahna",
+    "KA-C29-shubhodaya",
+    "KA-C30-shubha-sanje",
+    "KA-C31-shubha-madhyahna"
+  ],
+  "before": [],
+  "inline": [
+    "KA-EXT-024-LANGUAGE-SPECIFIC"
+  ],
+  "after": []
+}

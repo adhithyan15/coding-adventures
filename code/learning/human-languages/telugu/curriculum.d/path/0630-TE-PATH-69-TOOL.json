@@ -1,0 +1,16 @@
+{
+  "id": "TE-PATH-69-TOOL",
+  "spine_node": "SPINE-POLITE-REQUEST-REPAIR",
+  "lessons": [
+    "TE-C69-axe",
+    "TE-C69-saw",
+    "TE-C69-spade",
+    "TE-C69-hammer",
+    "TE-C69-stick"
+  ],
+  "before": [],
+  "inline": [
+    "TE-EXT-69-TOOL"
+  ],
+  "after": []
+}

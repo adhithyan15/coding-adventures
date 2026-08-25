@@ -1,0 +1,11 @@
+{
+  "id": "KA-EXT-001-INLINE-SCRIPT",
+  "stage": "pre-A1",
+  "kind": "required",
+  "category": "script",
+  "canDo": "I can recognize the first Kannada script pattern inside a greeting I already understand.",
+  "prerequisites": [],
+  "lessons": [
+    "KA-C01-namaskara"
+  ]
+}

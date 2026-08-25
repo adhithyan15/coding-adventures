@@ -1,0 +1,19 @@
+{
+  "chapter": 94,
+  "title": "Les --- And What the Second System Costs",
+  "label": "ch:pronoun-les",
+  "canDo": "I can say les digo and name the four pronouns that are identical in both object systems.",
+  "spineNodes": [
+    "SPINE-DEFINITE-REFERENCE"
+  ],
+  "payoff": {
+    "lesson": "ES-C46-les",
+    "kind": "task",
+    "summary": "Complete ES-C46-les: produce les digo and say how many genuinely new words the indirect set adds.",
+    "assesses": [
+      "ES-GRAMMAR-INDIRECT-OBJECT-PLURAL",
+      "ES-GRAMMAR-OBJECT-SETS-OVERLAP"
+    ],
+    "note": "The arithmetic is the lesson: a second complete table costs exactly two new words, because me, te, nos and os do both jobs unchanged."
+  }
+}

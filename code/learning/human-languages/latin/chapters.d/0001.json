@@ -1,0 +1,35 @@
+{
+  "chapter": 1,
+  "title": "Greetings",
+  "label": "ch:greetings",
+  "canDo": "I can greet someone in Latin, thank them, answer yes or no, and say goodbye.",
+  "spineNodes": [
+    "SPINE-MEET-GREET",
+    "SPINE-TAKE-LEAVE",
+    "SPINE-COURTESY-THANK",
+    "SPINE-RESPOND-BASIC"
+  ],
+  "payoff": {
+    "lesson": "LA-C01-practice",
+    "kind": "dialogue",
+    "summary": "The whole doorway sequence on cue: salvē or avē on arrival, grātiās tibi agō, ita or nōn, and valē on the way out.",
+    "assesses": [
+      "LA-PHONO-SALVE-01",
+      "LA-ETYMON-SALVE-02",
+      "LA-GRAMMAR-SALVE-03",
+      "LA-PHONO-AVE-01",
+      "LA-ETYMON-AVE-02",
+      "LA-LEX-AVE-03",
+      "LA-PHONO-VALE-01",
+      "LA-ETYMON-VALE-02",
+      "LA-GRAMMAR-VALE-03",
+      "LA-PHONO-GRATIAS-01",
+      "LA-ETYMON-GRATIAS-02",
+      "LA-GRAMMAR-GRATIAS-03",
+      "LA-PHONO-ITA-NON-01",
+      "LA-ETYMON-ITA-NON-02",
+      "LA-LEX-ITA-NON-03",
+      "LA-ETYMON-PRACTICE-01"
+    ]
+  }
+}

@@ -1,0 +1,16 @@
+{
+  "id": "HI-PATH-49-LEAVE",
+  "spine_node": "SPINE-TAKE-LEAVE",
+  "lessons": [
+    "HI-C49-now",
+    "HI-C49-day-after",
+    "HI-C49-journey",
+    "HI-C49-set-out",
+    "HI-C49-meeting"
+  ],
+  "before": [],
+  "inline": [
+    "HI-EXT-49-LEAVE"
+  ],
+  "after": []
+}

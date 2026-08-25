@@ -1,0 +1,12 @@
+{
+  "id": "HI-EXT-013-LANGUAGE-SPECIFIC",
+  "stage": "A1",
+  "kind": "required",
+  "category": "language-specific",
+  "canDo": "I can use the additional Hindi material required at this point in the path.",
+  "prerequisites": [],
+  "lessons": [
+    "HI-C10-somavaar-shukravaar",
+    "HI-C10-shanivaar-ravivaar"
+  ]
+}

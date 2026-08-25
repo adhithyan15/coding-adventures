@@ -1,0 +1,19 @@
+{
+  "chapter": 186,
+  "title": "El Libro Que Compro --- One Sentence Out of Two",
+  "label": "ch:relative-que",
+  "canDo": "I can join two sentences with que so a noun carries a clause.",
+  "spineNodes": [
+    "SPINE-GIVE-REASONS"
+  ],
+  "payoff": {
+    "lesson": "ES-C53-que-relativo",
+    "kind": "task",
+    "summary": "Complete ES-C53-que-relativo: join two sentences with que and name the question words that share its root.",
+    "assesses": [
+      "ES-GRAMMAR-RELATIVE-QUE",
+      "ES-ETYMON-QUI-RELATIVE"
+    ],
+    "note": "The point where sentences stop having one verb each. Que is a worn-down question word, and a question and a relative clause both fill a gap."
+  }
+}

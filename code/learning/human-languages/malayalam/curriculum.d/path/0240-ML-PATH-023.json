@@ -1,0 +1,12 @@
+{
+  "id": "ML-PATH-023",
+  "spine_node": "SPINE-TIME-OF-DAY",
+  "lessons": [
+    "ML-C20-kalavastha"
+  ],
+  "before": [],
+  "inline": [
+    "ML-EXT-023-LANGUAGE-SPECIFIC"
+  ],
+  "after": []
+}

@@ -1,0 +1,18 @@
+{
+  "chapter": 187,
+  "title": "El Libro Que Compre --- The Word You Cannot Leave Out",
+  "label": "ch:relative-obligatory",
+  "canDo": "I can supply the que that English deletes.",
+  "spineNodes": [
+    "SPINE-GIVE-REASONS"
+  ],
+  "payoff": {
+    "lesson": "ES-C53-que-no-se-cae",
+    "kind": "task",
+    "summary": "Complete ES-C53-que-no-se-cae: produce el libro que compre and name the English pattern that always needs a que.",
+    "assesses": [
+      "ES-GRAMMAR-RELATIVE-QUE-OBLIGATORY"
+    ],
+    "note": "The error that outlives the others, because the learner thinks the English first and the gap is invisible. English can delete the joint because its word order is rigid; Spanish moves its pieces, so it cannot."
+  }
+}

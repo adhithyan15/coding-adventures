@@ -1,0 +1,15 @@
+{
+  "id": "ML-EXT-62-HAND",
+  "stage": "pre-A1",
+  "kind": "required",
+  "category": "vocabulary",
+  "canDo": "I can name rope, thread, a needle, a broom and a winnowing tray in Malayalam.",
+  "prerequisites": [],
+  "lessons": [
+    "ML-C62-rope",
+    "ML-C62-thread",
+    "ML-C62-needle",
+    "ML-C62-broom",
+    "ML-C62-winnowing-tray"
+  ]
+}

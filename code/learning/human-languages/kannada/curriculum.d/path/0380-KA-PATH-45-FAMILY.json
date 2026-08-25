@@ -1,0 +1,15 @@
+{
+  "id": "KA-PATH-45-FAMILY",
+  "spine_node": "SPINE-DEFINITE-REFERENCE",
+  "lessons": [
+    "KA-C45-grandfather",
+    "KA-C45-grandmother",
+    "KA-C45-husband",
+    "KA-C45-wife"
+  ],
+  "before": [],
+  "inline": [
+    "KA-EXT-45-FAMILY"
+  ],
+  "after": []
+}

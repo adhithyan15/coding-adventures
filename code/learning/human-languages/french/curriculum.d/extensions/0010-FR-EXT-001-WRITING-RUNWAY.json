@@ -1,0 +1,14 @@
+{
+  "id": "FR-EXT-001-WRITING-RUNWAY",
+  "stage": "pre-A1",
+  "kind": "required",
+  "category": "script",
+  "canDo": "I can trace, copy, recall, and write salut from a heard cue while preserving its silent final t.",
+  "prerequisites": [],
+  "lessons": [
+    "FR-W01-salut-observe",
+    "FR-W01-salut-guided-copy",
+    "FR-W01-salut-delayed-copy",
+    "FR-W01-salut-dictation"
+  ]
+}

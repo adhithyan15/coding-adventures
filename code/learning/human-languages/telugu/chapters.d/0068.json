@@ -1,0 +1,21 @@
+{
+  "chapter": 68,
+  "title": "Sound and Voice",
+  "label": "ch:te-sound-and-voice",
+  "canDo": "I can name the sounds a Telugu house makes, and give my name aloud in a message.",
+  "spineNodes": [
+    "SPINE-EXCHANGE-NAMES"
+  ],
+  "payoff": {
+    "lesson": "TE-C68-message",
+    "kind": "production",
+    "summary": "Complete TE-C68-message and demonstrate the chapter promise.",
+    "assesses": [
+      "TE-LEX-C68-SOUND-01",
+      "TE-LEX-C68-SOUND-02",
+      "TE-LEX-C68-SOUND-03",
+      "TE-LEX-C68-SOUND-04",
+      "TE-LEX-C68-SOUND-05"
+    ]
+  }
+}

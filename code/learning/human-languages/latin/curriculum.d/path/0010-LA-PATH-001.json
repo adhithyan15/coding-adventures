@@ -1,0 +1,14 @@
+{
+  "id": "LA-PATH-001",
+  "spine_node": "SPINE-MEET-GREET",
+  "lessons": [
+    "LA-C01-salve",
+    "LA-W01-salve-guided-copy",
+    "LA-C01-ave"
+  ],
+  "before": [],
+  "inline": [],
+  "after": [
+    "LA-EXT-001-WRITING-START"
+  ]
+}

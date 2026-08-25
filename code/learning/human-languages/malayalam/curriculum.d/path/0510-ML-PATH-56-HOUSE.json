@@ -1,0 +1,16 @@
+{
+  "id": "ML-PATH-56-HOUSE",
+  "spine_node": "SPINE-COURTESY-THANK",
+  "lessons": [
+    "ML-C56-mat",
+    "ML-C56-basket",
+    "ML-C56-knife",
+    "ML-C56-vessel",
+    "ML-C56-box"
+  ],
+  "before": [],
+  "inline": [
+    "ML-EXT-56-HOUSE"
+  ],
+  "after": []
+}

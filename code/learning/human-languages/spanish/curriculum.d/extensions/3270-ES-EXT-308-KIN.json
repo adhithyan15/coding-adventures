@@ -1,0 +1,15 @@
+{
+  "id": "ES-EXT-308-KIN",
+  "stage": "pre-A1",
+  "kind": "required",
+  "category": "vocabulary",
+  "canDo": "I can name children and people in general in Spanish, and I can spot a false friend.",
+  "prerequisites": [],
+  "lessons": [
+    "ES-C308-nino",
+    "ES-C308-nina",
+    "ES-C308-chico",
+    "ES-C308-chica",
+    "ES-C308-gente"
+  ]
+}

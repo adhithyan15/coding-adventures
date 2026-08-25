@@ -1,0 +1,13 @@
+{
+  "id": "TE-PATH-028",
+  "spine_node": "SPINE-EXCHANGE-NAMES",
+  "lessons": [
+    "TE-C35-kutumbam",
+    "TE-C35-snehitudu"
+  ],
+  "before": [],
+  "inline": [
+    "TE-EXT-029-FAMILY-FRIENDS"
+  ],
+  "after": []
+}

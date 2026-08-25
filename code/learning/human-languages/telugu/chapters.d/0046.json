@@ -1,0 +1,21 @@
+{
+  "chapter": 46,
+  "title": "Things You Ask For",
+  "label": "ch:te-ask-for",
+  "canDo": "I can name five everyday things I might ask someone for in Telugu, and say which of them Telugu has always had and which arrived from elsewhere.",
+  "spineNodes": [
+    "SPINE-POLITE-REQUEST-REPAIR"
+  ],
+  "payoff": {
+    "lesson": "TE-C46-book",
+    "kind": "production",
+    "summary": "Complete TE-C46-book and demonstrate the chapter promise.",
+    "assesses": [
+      "TE-LEX-C46-ASK-01",
+      "TE-LEX-C46-ASK-02",
+      "TE-LEX-C46-ASK-03",
+      "TE-LEX-C46-ASK-04",
+      "TE-LEX-C46-ASK-05"
+    ]
+  }
+}

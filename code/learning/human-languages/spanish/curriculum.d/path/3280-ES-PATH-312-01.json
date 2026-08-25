@@ -1,0 +1,16 @@
+{
+  "id": "ES-PATH-312-01",
+  "spine_node": "SPINE-POLITE-REQUEST-REPAIR",
+  "lessons": [
+    "ES-C312-reloj",
+    "ES-C312-telefono",
+    "ES-C312-maleta",
+    "ES-C312-mapa",
+    "ES-C312-carta"
+  ],
+  "before": [],
+  "inline": [
+    "ES-EXT-312-ASK"
+  ],
+  "after": []
+}

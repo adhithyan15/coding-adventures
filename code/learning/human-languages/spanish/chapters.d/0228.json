@@ -1,0 +1,17 @@
+{
+  "chapter": 228,
+  "title": "Mal --- Bien Finally Gets Its Opposite",
+  "label": "ch:mal",
+  "canDo": "I can say that something is bad, or going badly.",
+  "spineNodes": [
+    "SPINE-DEFINITE-REFERENCE"
+  ],
+  "payoff": {
+    "lesson": "ES-C60-mal",
+    "kind": "task",
+    "summary": "I can say that something is bad, or going badly.",
+    "assesses": [
+      "ES-LEX-MAL"
+    ]
+  }
+}

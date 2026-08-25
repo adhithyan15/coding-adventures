@@ -1,0 +1,15 @@
+{
+  "id": "ES-EXT-349-SPAN",
+  "stage": "A1",
+  "kind": "required",
+  "category": "vocabulary",
+  "canDo": "I can name a day's whole stretch, a decade, a holiday and an anniversary, and name the book those dates are written in.",
+  "prerequisites": [],
+  "lessons": [
+    "ES-C349-jornada",
+    "ES-C349-decada",
+    "ES-C349-fiesta",
+    "ES-C349-aniversario",
+    "ES-C349-agenda"
+  ]
+}

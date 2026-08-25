@@ -1,0 +1,15 @@
+{
+  "id": "LA-EXT-047-TABLE",
+  "stage": "pre-A1",
+  "kind": "required",
+  "category": "lexicon",
+  "canDo": "I can name salt, honey, milk, egg and fish in Latin, and use Grimm's Law to tell an inherited cousin from a borrowed loan.",
+  "prerequisites": [],
+  "lessons": [
+    "LA-C47-sal",
+    "LA-C47-mel",
+    "LA-C47-lac",
+    "LA-C47-ovum",
+    "LA-C47-piscis"
+  ]
+}

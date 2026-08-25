@@ -1,0 +1,15 @@
+{
+  "id": "ES-EXT-298-RESPUESTAS",
+  "stage": "pre-A1",
+  "kind": "required",
+  "category": "vocabulary",
+  "canDo": "I can answer someone in Spanish anywhere from maybe to out of the question, and say how strong each answer is.",
+  "prerequisites": [],
+  "lessons": [
+    "ES-C298-tal-vez",
+    "ES-C298-puede-ser",
+    "ES-C298-en-efecto",
+    "ES-C298-sin-duda",
+    "ES-C298-ni-hablar"
+  ]
+}

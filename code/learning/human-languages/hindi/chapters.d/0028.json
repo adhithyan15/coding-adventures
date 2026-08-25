@@ -1,0 +1,19 @@
+{
+  "chapter": 28,
+  "title": "Morning",
+  "label": "ch:hi-morning",
+  "canDo": "I can say morning in Hindi and recognise सुबह as a Persian-Arabic loan rather than a Sanskrit word.",
+  "spineNodes": [
+    "SPINE-TIME-OF-DAY"
+  ],
+  "payoff": {
+    "lesson": "HI-C28-subah",
+    "kind": "production",
+    "summary": "Say सुबह, find the ṣ-b-ḥ root it shares with Arabic ṣabāḥ, and name the break from Sanskrit दिन and रात.",
+    "assesses": [
+      "HI-CONCEPT-C28-SUBAH-01",
+      "HI-CONCEPT-C28-SUBAH-02",
+      "HI-CONCEPT-C28-SUBAH-03"
+    ]
+  }
+}

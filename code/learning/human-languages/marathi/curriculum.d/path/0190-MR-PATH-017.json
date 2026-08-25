@@ -1,0 +1,15 @@
+{
+  "id": "MR-PATH-017",
+  "spine_node": "SPINE-CHECK-WELLBEING",
+  "lessons": [
+    "MR-C12-dola",
+    "MR-C12-kaan",
+    "MR-C12-tond",
+    "MR-C12-naak"
+  ],
+  "before": [],
+  "inline": [
+    "MR-EXT-017-LANGUAGE-SPECIFIC"
+  ],
+  "after": []
+}

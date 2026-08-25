@@ -1,0 +1,29 @@
+{
+  "chapter": 23,
+  "title": "Asking for Something to Drink",
+  "label": "ch:pt-coffee-tea-milk",
+  "canDo": "I can ask for coffee, tea or milk in Portuguese, name each one's gender, and say which of the three actually descends from Latin.",
+  "spineNodes": [
+    "SPINE-POLITE-REQUEST-REPAIR"
+  ],
+  "payoff": {
+    "lesson": "PT-C23-leite",
+    "kind": "production",
+    "summary": "The chapter's last lesson closes the set with a one-table review of all three drinks' origins (Arabic/Turkish, Cantonese, Latin), then reaches back to Chapter 11's pao and agua/vinho and Chapter 5's trabalhar and Falo portugues to stock a full sentence: Trabalho no Porto e gosto de cafe.",
+    "assesses": [
+      "PT-LEX-CAFE-02",
+      "PT-SOUND-CAFE-02",
+      "PT-ETYMON-CAFE-03",
+      "PT-LEX-CHA-02",
+      "PT-ETYMON-CHA-03",
+      "PT-LEX-LEITE-02",
+      "PT-ETYMON-LEITE-03",
+      "PT-NOTICE-C23-BEBIDAS-04",
+      "PT-ETYMON-PAO-02",
+      "PT-ETYMON-AGUA-VINHO-02",
+      "PT-LEX-FALO-PORTUGUES-02",
+      "PT-GRAMMAR-TRABALHAR-04",
+      "PT-SOUND-TRABALHAR-02"
+    ]
+  }
+}

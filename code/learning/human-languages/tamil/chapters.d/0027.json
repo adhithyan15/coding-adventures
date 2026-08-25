@@ -1,0 +1,20 @@
+{
+  "chapter": 27,
+  "title": "Evening",
+  "label": "ch:ta-evening",
+  "canDo": "I can say மாலை for evening and keep it apart from the identically spelled garland word, which is a separate etymology rather than a second sense.",
+  "spineNodes": [
+    "SPINE-TIME-OF-DAY"
+  ],
+  "payoff": {
+    "lesson": "TA-C27-maalai",
+    "kind": "task",
+    "summary": "Say mālai for evening, name the garland mālai as a distinct homonym, and mark the \"darkness\" link as plausible but not spelled out.",
+    "assesses": [
+      "TA-ETYMON-KAALAI-01",
+      "TA-ETYMON-MAALAI-01",
+      "TA-ETYMON-MAALAI-02"
+    ],
+    "note": "This chapter gained TA-W11-read-niingal when the writing strand was extended, and the payoff was not widened to match, so representativeness fell from 2/2 to 2/5 and this chapter joins payoffsNotRepresentative alongside chapter 25. Widening it means authoring a payoff that assesses both the evening-word homonym and the three glyphs of நீங்கள், which is HL-C25 work."
+  }
+}

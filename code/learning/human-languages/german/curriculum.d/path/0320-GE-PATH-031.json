@@ -1,0 +1,14 @@
+{
+  "id": "GE-PATH-031",
+  "spine_node": "SPINE-POLITE-REQUEST-REPAIR",
+  "lessons": [
+    "GE-C28-kaffee",
+    "GE-C28-tee",
+    "GE-C28-milch"
+  ],
+  "before": [],
+  "inline": [
+    "GE-EXT-031-LANGUAGE-SPECIFIC"
+  ],
+  "after": []
+}

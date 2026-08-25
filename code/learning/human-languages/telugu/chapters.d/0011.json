@@ -1,0 +1,20 @@
+{
+  "chapter": 11,
+  "title": "Four Core Colours",
+  "label": "ch:te-core-colours",
+  "canDo": "I can name four basic colours in Telugu — black, white, red, and blue.",
+  "spineNodes": [
+    "SPINE-DEFINITE-REFERENCE"
+  ],
+  "payoff": {
+    "lesson": "TE-C11-rangulu",
+    "kind": "production",
+    "summary": "Say నలుపు, తెలుపు, ఎరుపు — Telugu's own three — then నీలం, blue, which Telugu borrowed rather than inherited.",
+    "assesses": [
+      "TE-ETYMON-C10-VAARAM-01",
+      "TE-PRAGMATICS-C10-VAARAM-02",
+      "TE-LEX-C11-RANGULU-01",
+      "TE-ETYMON-C11-RANGULU-02"
+    ]
+  }
+}

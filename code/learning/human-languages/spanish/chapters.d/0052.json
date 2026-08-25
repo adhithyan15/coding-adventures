@@ -1,0 +1,17 @@
+{
+  "chapter": 52,
+  "title": "Estudiante --- a Word You Can Build",
+  "label": "ch:estudiante",
+  "canDo": "I can build a person-word from a verb with -ante, and read it as English -ant.",
+  "spineNodes": [
+    "SPINE-SAY-WHAT-I-DO"
+  ],
+  "payoff": {
+    "lesson": "ES-C09-estudiante",
+    "kind": "task",
+    "summary": "I can build a person-word from a verb with -ante, and read it as English -ant.",
+    "assesses": [
+      "ES-FRIEND-ANTE-ANT"
+    ]
+  }
+}

@@ -1,0 +1,28 @@
+{
+  "chapter": 3,
+  "title": "Introducing Yourself",
+  "label": "ch:pt-introductions",
+  "canDo": "I can give my name in Portuguese, ask for someone else's, and say that it is a pleasure.",
+  "spineNodes": [
+    "SPINE-EXCHANGE-NAMES"
+  ],
+  "payoff": {
+    "lesson": "PT-C03-practice",
+    "kind": "dialogue",
+    "summary": "A whole first meeting: Olá, me chamo …, Como se chama?, prazer — then the same exchange again with o senhor and a senhora.",
+    "assesses": [
+      "PT-SOUND-EU-02",
+      "PT-ETYMON-EU-03",
+      "PT-GRAMMAR-EU-04",
+      "PT-SOUND-ME-CHAMO-02",
+      "PT-ETYMON-ME-CHAMO-03",
+      "PT-GRAMMAR-ME-CHAMO-04",
+      "PT-ETYMON-COMO-SE-CHAMA-02",
+      "PT-SOUND-PRAZER-02",
+      "PT-ETYMON-PRAZER-03",
+      "PT-GRAMMAR-PRAZER-04",
+      "PT-LEX-C03-PRACTICE-02",
+      "PT-NOTICE-C03-PRACTICE-03"
+    ]
+  }
+}

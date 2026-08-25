@@ -1,0 +1,12 @@
+{
+  "id": "BN-PATH-019",
+  "spine_node": "SPINE-MEET-GREET",
+  "lessons": [
+    "BN-C13-sbagotom"
+  ],
+  "before": [],
+  "inline": [
+    "BN-EXT-019-LANGUAGE-SPECIFIC"
+  ],
+  "after": []
+}

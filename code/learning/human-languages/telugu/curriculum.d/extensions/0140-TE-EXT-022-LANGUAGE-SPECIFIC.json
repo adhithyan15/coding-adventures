@@ -1,0 +1,11 @@
+{
+  "id": "TE-EXT-022-LANGUAGE-SPECIFIC",
+  "stage": "A1",
+  "kind": "required",
+  "category": "language-specific",
+  "canDo": "I can use the additional Telugu material required at this point in the path.",
+  "prerequisites": [],
+  "lessons": [
+    "TE-C20-padakondu-iravai"
+  ]
+}

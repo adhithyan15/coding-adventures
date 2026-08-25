@@ -1,0 +1,15 @@
+{
+  "id": "SA-EXT-42-REPLY",
+  "stage": "pre-A1",
+  "kind": "required",
+  "category": "vocabulary",
+  "canDo": "I can give five more short replies in Sanskrit.",
+  "prerequisites": [],
+  "lessons": [
+    "SA-C42-sometimes",
+    "SA-C42-suddenly",
+    "SA-C42-mostly",
+    "SA-C42-a-little",
+    "SA-C42-much"
+  ]
+}

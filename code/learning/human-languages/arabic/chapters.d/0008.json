@@ -1,0 +1,18 @@
+{
+  "chapter": 8,
+  "title": "Days of the Week",
+  "label": "ch:ar-days-of-the-week",
+  "canDo": "I can name any day of the Arabic week and say which two days break the counting pattern.",
+  "spineNodes": [
+    "SPINE-TIME-OF-DAY"
+  ],
+  "payoff": {
+    "lesson": "AR-C08-al-jumua-as-sabt",
+    "kind": "production",
+    "summary": "Name al-jumʿa and as-sabt beside the counted days, and place as-sabt next to Hebrew shabbāt.",
+    "assesses": [
+      "AR-CONCEPT-C08-AL-JUMUA-AS-SABT-01",
+      "AR-CONCEPT-C08-AL-JUMUA-AS-SABT-02"
+    ]
+  }
+}

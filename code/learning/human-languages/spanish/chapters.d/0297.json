@@ -1,0 +1,21 @@
+{
+  "chapter": 297,
+  "title": "More of the Kitchen --- Pan, Oven, Fork, Garlic, Soup",
+  "label": "ch:la-cocina",
+  "canDo": "I can name the pan, the oven, the fork, the garlic and the soup in Spanish, and thank somebody for the meal.",
+  "spineNodes": [
+    "SPINE-COURTESY-THANK"
+  ],
+  "payoff": {
+    "lesson": "ES-C297-sopa",
+    "kind": "production",
+    "summary": "Complete ES-C297-sopa: name all five of the kitchen in order and thank somebody for what came out of it.",
+    "assesses": [
+      "ES-LEX-C297-COOK-01",
+      "ES-LEX-C297-COOK-02",
+      "ES-LEX-C297-COOK-03",
+      "ES-LEX-C297-COOK-04",
+      "ES-LEX-C297-COOK-05"
+    ]
+  }
+}

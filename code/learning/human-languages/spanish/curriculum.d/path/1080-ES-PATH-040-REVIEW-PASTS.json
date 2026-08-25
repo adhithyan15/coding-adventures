@@ -1,0 +1,12 @@
+{
+  "id": "ES-PATH-040-REVIEW-PASTS",
+  "spine_node": "SPINE-TALK-ABOUT-PAST",
+  "lessons": [
+    "ES-C48-repaso-dos-pasados"
+  ],
+  "before": [],
+  "inline": [
+    "ES-EXT-040-REVIEW-PASTS"
+  ],
+  "after": []
+}

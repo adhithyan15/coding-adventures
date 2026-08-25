@@ -1,0 +1,23 @@
+{
+  "chapter": 9,
+  "title": "Sorry",
+  "label": "ch:te-sorry",
+  "canDo": "I can apologise in Telugu and ask someone to forgive me, using the same respectful ending.",
+  "spineNodes": [
+    "SPINE-POLITE-REQUEST-REPAIR"
+  ],
+  "payoff": {
+    "lesson": "TE-C09-kshaminchandi",
+    "kind": "production",
+    "summary": "Say క్షమించండి, unpack it as kṣamin̄cu plus the respectful -aṇḍi already met in kūrcōṇḍi, and trace it to Sanskrit kṣamā.",
+    "assesses": [
+      "TE-LEX-C08-DAYACHESI-01",
+      "TE-ETYMON-C08-DAYACHESI-02",
+      "TE-PRAGMATICS-C08-DAYACHESI-03",
+      "TE-SCRIPT-C08-DAYACHESI-04",
+      "TE-ETYMON-C09-KSHAMINCHANDI-01",
+      "TE-ETYMON-C09-KSHAMINCHANDI-02",
+      "TE-PRAGMATICS-C09-KSHAMINCHANDI-03"
+    ]
+  }
+}

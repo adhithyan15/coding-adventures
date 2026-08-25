@@ -1,0 +1,18 @@
+{
+  "chapter": 5,
+  "title": "Yes and No",
+  "label": "ch:ar-yes-and-no",
+  "canDo": "I can answer a question in Arabic with naʿam or lā, and write lā as the single joined lām-alif shape.",
+  "spineNodes": [
+    "SPINE-RESPOND-BASIC"
+  ],
+  "payoff": {
+    "lesson": "AR-C05-la",
+    "kind": "production",
+    "summary": "Say the yes/no pair and form lā as one lām-alif ligature rather than two separate letters.",
+    "assesses": [
+      "AR-CONCEPT-C05-LA-01",
+      "AR-CONCEPT-C05-LA-02"
+    ]
+  }
+}

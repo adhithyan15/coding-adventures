@@ -1,0 +1,13 @@
+{
+  "id": "FA-EXT-009-EZAFE-REGISTER",
+  "stage": "pre-A1",
+  "kind": "required",
+  "category": "register",
+  "canDo": "I can reuse ezafe and careful ast to ask a respectful wellbeing question before learning colloquial contractions.",
+  "prerequisites": [
+    "FA-EXT-008-QUESTION-SCRIPT"
+  ],
+  "lessons": [
+    "FA-C04-hal-e-shoma-chetor-ast"
+  ]
+}

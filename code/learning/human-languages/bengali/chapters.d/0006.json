@@ -1,0 +1,22 @@
+{
+  "chapter": 6,
+  "title": "Numbers One to Five",
+  "label": "ch:numbers-one-to-five",
+  "canDo": "I can count from one to five in Bengali script and say what দুই kept that Hindi and Marathi flattened away.",
+  "spineNodes": [
+    "SPINE-COUNT-ONE-TO-FIVE"
+  ],
+  "payoff": {
+    "lesson": "BN-C06-numbers-1-5",
+    "kind": "production",
+    "summary": "Count ek, dui, tin, chār, pā̃ch aloud, name the chandrabindu riding পাঁচ, and set দুই beside Hindi do and Marathi don to show the -i it preserved.",
+    "assesses": [
+      "BN-LEX-NUMBERS-ONE-TO-FIVE",
+      "BN-SCRIPT-CHANDRABINDU-NASAL",
+      "BN-ETYMON-DUI-COMPARISON",
+      "BN-HISTORY-DV-NUMERAL-SIMPLIFICATION",
+      "BN-HISTORY-DUI-AREAL-COMPANY",
+      "BN-SOUND-INHERENT-O-NOT-IN-NUMBERS"
+    ]
+  }
+}

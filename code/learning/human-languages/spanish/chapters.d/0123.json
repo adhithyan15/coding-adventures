@@ -1,0 +1,19 @@
+{
+  "chapter": 123,
+  "title": "The Conditional --- Saying What Would Happen",
+  "label": "ch:spanish-condicional",
+  "canDo": "I can say what I would do, in the singular, across all three verb families.",
+  "spineNodes": [
+    "SPINE-SAY-WHAT-I-DO"
+  ],
+  "payoff": {
+    "lesson": "ES-C17-vivir-condicional",
+    "kind": "task",
+    "summary": "The same infinitive, a different auxiliary tense on the end.",
+    "assesses": [
+      "ES-GRAMMAR-AR-CONDITIONAL-SINGULAR",
+      "ES-GRAMMAR-ER-CONDITIONAL-SINGULAR",
+      "ES-GRAMMAR-IR-CONDITIONAL-SINGULAR"
+    ]
+  }
+}

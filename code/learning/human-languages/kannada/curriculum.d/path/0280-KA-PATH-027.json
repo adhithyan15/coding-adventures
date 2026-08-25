@@ -1,0 +1,13 @@
+{
+  "id": "KA-PATH-027",
+  "spine_node": "SPINE-EXCHANGE-NAMES",
+  "lessons": [
+    "KA-C35-kutumba",
+    "KA-C35-snehita"
+  ],
+  "before": [],
+  "inline": [
+    "KA-EXT-028-FAMILY-FRIENDS"
+  ],
+  "after": []
+}

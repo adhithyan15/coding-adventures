@@ -1,0 +1,17 @@
+{
+  "id": "MR-PATH-005",
+  "spine_node": "SPINE-EXCHANGE-NAMES",
+  "lessons": [
+    "MR-C02-naav",
+    "MR-C02-majhe",
+    "MR-C02-aahe",
+    "MR-C02-majhe-naav-aahe",
+    "MR-C02-tu-tumhi",
+    "MR-C02-kaay",
+    "MR-C02-tumche-naav-kaay-aahe",
+    "MR-C02-anand"
+  ],
+  "before": [],
+  "inline": [],
+  "after": []
+}

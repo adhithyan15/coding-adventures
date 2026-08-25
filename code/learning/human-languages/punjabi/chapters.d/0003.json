@@ -1,0 +1,18 @@
+{
+  "chapter": 3,
+  "title": "How Are You?",
+  "label": "ch:responding",
+  "canDo": "I can ask how someone is in Punjabi, answer naturally, and return the question.",
+  "spineNodes": [
+    "SPINE-CHECK-WELLBEING",
+    "SPINE-COURTESY-THANK",
+    "SPINE-EXCHANGE-NAMES"
+  ],
+  "payoff": {
+    "lesson": "PA-C03-practice",
+    "kind": "task",
+    "summary": "Complete PA-C03-practice, the canonical closing checkpoint, and demonstrate the chapter promise: ask how someone is in Punjabi, answer naturally, and return the question.",
+    "assesses": [],
+    "note": "This legacy schema-v1 chapter has no typed knowledge atoms yet. The payoff is anchored to real canonical lesson content, but its representativeness remains authored rather than atom-scored until migration."
+  }
+}

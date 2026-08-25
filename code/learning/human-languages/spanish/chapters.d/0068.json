@@ -1,0 +1,19 @@
+{
+  "chapter": 68,
+  "title": "Ir in the Plural --- a Verb That Is Not Ir",
+  "label": "ch:spanish-ir-plural",
+  "canDo": "I can use ir in every person, and say why its present belongs to a different verb.",
+  "spineNodes": [
+    "SPINE-ASK-LOCATION"
+  ],
+  "payoff": {
+    "lesson": "ES-C10-van",
+    "kind": "dialogue",
+    "summary": "The present of ir is regular for vadere - and the four commonest verbs are now complete.",
+    "assesses": [
+      "ES-GRAMMAR-IR-VERB-PRESENT-1PL",
+      "ES-GRAMMAR-IR-VERB-PRESENT-2PL",
+      "ES-GRAMMAR-IR-VERB-PRESENT-3PL"
+    ]
+  }
+}

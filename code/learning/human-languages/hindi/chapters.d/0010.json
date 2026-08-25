@@ -1,0 +1,19 @@
+{
+  "chapter": 10,
+  "title": "Days of the Week",
+  "label": "ch:hi-days-of-the-week",
+  "canDo": "I can name all seven days of the week in Hindi and say which planet each day is named for.",
+  "spineNodes": [
+    "SPINE-TIME-OF-DAY"
+  ],
+  "payoff": {
+    "lesson": "HI-C10-shanivaar-ravivaar",
+    "kind": "production",
+    "summary": "Recite सोमवार through रविवार end to end, naming Saturn's day and the Sun's day to close the planet-week.",
+    "assesses": [
+      "HI-CONCEPT-C10-SHANIVAAR-RAVIVAAR-01",
+      "HI-CONCEPT-C10-SHANIVAAR-RAVIVAAR-02"
+    ],
+    "note": "HL12 added a one-character recognition segment at the end of this chapter, and its atom is not in this payoff -- so the ratio moved from 2/4 (0.50, exactly on the floor) to 2/5 (0.40, below it). Recorded rather than papered over. The payoff is not widened, and deliberately: this chapter promises something the reader can DO with the language, and recognising a character is the other ramp. HL12 section 2.1 keeps those apart on purpose, so folding a letter into a speaking payoff would make the chapter's promise less true, not more. The right repair is a payoff for the script strand itself, which arrives with the strand's own chapter capability."
+  }
+}

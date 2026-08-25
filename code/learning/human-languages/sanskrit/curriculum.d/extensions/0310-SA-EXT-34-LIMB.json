@@ -1,0 +1,15 @@
+{
+  "id": "SA-EXT-34-LIMB",
+  "stage": "pre-A1",
+  "kind": "required",
+  "category": "vocabulary",
+  "canDo": "I can name five more parts of the body in Sanskrit.",
+  "prerequisites": [],
+  "lessons": [
+    "SA-C34-arm",
+    "SA-C34-neck",
+    "SA-C34-bone",
+    "SA-C34-blood",
+    "SA-C34-body"
+  ]
+}

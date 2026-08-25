@@ -1,0 +1,15 @@
+{
+  "id": "FA-PATH-011",
+  "spine_node": "SPINE-EXCHANGE-NAMES",
+  "lessons": [
+    "FA-C10-madar",
+    "FA-C10-pedar",
+    "FA-C10-baradar",
+    "FA-C10-dokhtar"
+  ],
+  "before": [],
+  "inline": [
+    "FA-EXT-018-LANGUAGE-SPECIFIC"
+  ],
+  "after": []
+}

@@ -1,0 +1,18 @@
+{
+  "chapter": 19,
+  "title": "Counting On --- Six to Ten, and What They Prove",
+  "label": "ch:sa-numbers-6-10",
+  "canDo": "I can count to ten in Sanskrit and explain why the numbers are evidence that Sanskrit, Latin and English are related.",
+  "spineNodes": [
+    "SPINE-COUNT-ONE-TO-FIVE"
+  ],
+  "payoff": {
+    "lesson": "SA-C19-number-family",
+    "kind": "production",
+    "summary": "Complete SA-C19-number-family and demonstrate the chapter promise.",
+    "assesses": [
+      "SA-LEX-C19-NUM-01",
+      "SA-GRAMMAR-C19-NUMBER-FAMILY"
+    ]
+  }
+}

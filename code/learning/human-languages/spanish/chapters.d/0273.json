@@ -1,0 +1,19 @@
+{
+  "chapter": 273,
+  "title": "Building a Paragraph --- Plan, Add, Join, Refer Back",
+  "label": "ch:parrafo",
+  "canDo": "I can build a paragraph in Spanish whose sentences signal how they relate to one another, and say what is lost when the signals are removed.",
+  "spineNodes": [
+    "SPINE-STRUCTURE-EXTENDED-TEXT"
+  ],
+  "payoff": {
+    "lesson": "ES-C273-practice",
+    "kind": "task",
+    "summary": "Complete ES-C273-practice: build a four-sentence paragraph with each join, then say it again with the joins removed and describe what changed.",
+    "assesses": [
+      "ES-SEMANTIC-TEXT-PLAN",
+      "ES-SEMANTIC-COHESION-CHAIN",
+      "ES-SEMANTIC-ANAPHORA"
+    ]
+  }
+}

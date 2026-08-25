@@ -1,0 +1,20 @@
+{
+  "chapter": 43,
+  "title": "More Everyday Verbs",
+  "label": "ch:ml-more-verbs",
+  "canDo": "I can tell someone to come, sit, stand and give in Malayalam.",
+  "spineNodes": [
+    "SPINE-SAY-WHAT-I-DO"
+  ],
+  "payoff": {
+    "lesson": "ML-C43-give",
+    "kind": "production",
+    "summary": "Complete ML-C43-give and say all four verbs in order.",
+    "assesses": [
+      "ML-LEX-RUN",
+      "ML-LEX-SLEEP",
+      "ML-LEX-STAND",
+      "ML-LEX-GIVE"
+    ]
+  }
+}

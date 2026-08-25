@@ -1,0 +1,12 @@
+{
+  "id": "TE-PATH-015",
+  "spine_node": "SPINE-DEFINITE-REFERENCE",
+  "lessons": [
+    "TE-C11-rangulu"
+  ],
+  "before": [],
+  "inline": [
+    "TE-EXT-015-LANGUAGE-SPECIFIC"
+  ],
+  "after": []
+}

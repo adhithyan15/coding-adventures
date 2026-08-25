@@ -1,0 +1,11 @@
+{
+  "id": "ES-EXT-338-WRITING",
+  "stage": "A1",
+  "kind": "required",
+  "category": "consolidation",
+  "canDo": "I can compose a four-line personal-information answer from frames I already hold, and stop when the asked-for facts are down.",
+  "prerequisites": [],
+  "lessons": [
+    "ES-W01-ficha-personal"
+  ]
+}

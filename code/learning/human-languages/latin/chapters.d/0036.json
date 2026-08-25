@@ -1,0 +1,19 @@
+{
+  "chapter": 36,
+  "title": "Good Afternoon",
+  "label": "ch:la-good-afternoon",
+  "canDo": "I can greet someone in Latin in the afternoon with salvē or salvēte, and explain why nothing more is needed.",
+  "spineNodes": [
+    "SPINE-TIME-OF-DAY"
+  ],
+  "payoff": {
+    "lesson": "LA-C36-practice",
+    "kind": "dialogue",
+    "summary": "One Roman day in four meetings — morning, afternoon, evening, and parting at night — with salvē and valē marked as the attested pair and the three bonus phrases marked as modern.",
+    "assesses": [
+      "LA-PRAGMATICS-SALVE-POST-MERIDIEM-01",
+      "LA-PRAGMATICS-TIMELESS-SALVE-01",
+      "LA-DIALOGUE-DAY-CYCLE-01"
+    ]
+  }
+}

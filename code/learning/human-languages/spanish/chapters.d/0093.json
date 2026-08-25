@@ -1,0 +1,20 @@
+{
+  "chapter": 93,
+  "title": "Le --- To Him, To Her, To You",
+  "label": "ch:pronoun-le",
+  "canDo": "I can say le digo, and know that le does not mark gender.",
+  "spineNodes": [
+    "SPINE-DEFINITE-REFERENCE"
+  ],
+  "payoff": {
+    "lesson": "ES-C46-le",
+    "kind": "task",
+    "summary": "Complete ES-C46-le: produce le digo, say how many genders le has, and name the Latin case it comes from.",
+    "assesses": [
+      "ES-LEX-LE-OBJECT",
+      "ES-GRAMMAR-INDIRECT-OBJECT-LE",
+      "ES-ETYMON-ILLI-DATIVE"
+    ],
+    "note": "After four chapters of choosing between lo and la by gender, le asks for nothing: one form covers him, her and usted. Latin's dative illi survives here whole."
+  }
+}

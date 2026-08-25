@@ -1,0 +1,21 @@
+{
+  "chapter": 57,
+  "title": "El Libro --- And a Word Made of Tree Bark",
+  "label": "ch:noun-libro",
+  "canDo": "I can say el libro and tengo un libro, and contrast it with la casa as a gender pair.",
+  "spineNodes": [
+    "SPINE-DEFINITE-REFERENCE"
+  ],
+  "payoff": {
+    "lesson": "ES-C43-libro",
+    "kind": "task",
+    "summary": "Complete ES-C43-libro: produce el libro and tengo un libro, and say what Latin liber originally named.",
+    "assesses": [
+      "ES-LEX-LIBRO",
+      "ES-ETYMON-LIBER",
+      "ES-GRAMMAR-NOUN-GENDER",
+      "ES-GRAMMAR-INDEFINITE-ARTICLE-MASCULINE"
+    ],
+    "note": "Pairing one masculine and one feminine everyday noun is the point: from here every gender-dependent rule has two plain test cases."
+  }
+}

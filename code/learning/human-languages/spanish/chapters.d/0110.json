@@ -1,0 +1,19 @@
+{
+  "chapter": 110,
+  "title": "Synthesis --- Three Exceptions, and No Others",
+  "label": "ch:spanish-synthesis-imperfecto",
+  "canDo": "I can use the imperfect freely, knowing its complete irregular inventory is three verbs.",
+  "spineNodes": [
+    "SPINE-TALK-ABOUT-PAST"
+  ],
+  "payoff": {
+    "lesson": "ES-C16-sintesis-imperfecto",
+    "kind": "dialogue",
+    "summary": "The exceptions are the words you use most - which is the reason they are exceptions.",
+    "assesses": [
+      "ES-GRAMMAR-IMPERFECT-ONGOING-HABITUAL",
+      "ES-ETYMON-ERA",
+      "ES-ETYMON-IBA"
+    ]
+  }
+}

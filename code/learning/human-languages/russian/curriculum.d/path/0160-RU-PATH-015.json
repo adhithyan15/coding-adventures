@@ -1,0 +1,15 @@
+{
+  "id": "RU-PATH-015",
+  "spine_node": "SPINE-POLITE-REQUEST-REPAIR",
+  "lessons": [
+    "RU-C13-moloko",
+    "RU-C13-syr",
+    "RU-C13-sok",
+    "RU-C13-sup"
+  ],
+  "before": [],
+  "inline": [
+    "RU-EXT-015-MORE-FOOD-DRINK"
+  ],
+  "after": []
+}

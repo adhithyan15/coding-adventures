@@ -1,0 +1,19 @@
+{
+  "chapter": 28,
+  "title": "Afternoon",
+  "label": "ch:ta-afternoon",
+  "canDo": "I can say பிற்பகல் for afternoon, read it as \"after\" plus \"daytime,\" and name exactly where the dictionary's own noon and afternoon labels overlap.",
+  "spineNodes": [
+    "SPINE-TIME-OF-DAY"
+  ],
+  "payoff": {
+    "lesson": "TA-C28-afternoon-boundary",
+    "kind": "task",
+    "summary": "Show naṭuppakal straddling noon and afternoon, place matiyam as a Sanskrit noon-word, and label the unsourced moon claim unsupported.",
+    "assesses": [
+      "TA-LEX-PIRPAKAL-01",
+      "TA-LEX-AFTERNOON-BOUNDARY-01",
+      "TA-ETYMON-AFTERNOON-BOUNDARY-02"
+    ]
+  }
+}

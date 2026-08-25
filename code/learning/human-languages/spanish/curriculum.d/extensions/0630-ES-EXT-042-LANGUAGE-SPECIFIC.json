@@ -1,0 +1,19 @@
+{
+  "id": "ES-EXT-042-LANGUAGE-SPECIFIC",
+  "stage": "A2",
+  "kind": "required",
+  "category": "language-specific",
+  "canDo": "I can use the Spanish-specific vocabulary and grammar that support this shared ability.",
+  "prerequisites": [],
+  "lessons": [
+    "ES-C18-quiero-que",
+    "ES-C18-subjuntivo",
+    "ES-C18-comer-subjuntivo",
+    "ES-C18-vivir-subjuntivo",
+    "ES-C18-querer-subjuntivo",
+    "ES-C18-poder-subjuntivo",
+    "ES-C18-hacer-subjuntivo",
+    "ES-C18-ojala",
+    "ES-C18-practice"
+  ]
+}

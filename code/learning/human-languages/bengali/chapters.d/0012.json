@@ -1,0 +1,22 @@
+{
+  "chapter": 12,
+  "title": "Eye, Mouth, Nose, and Heart",
+  "label": "ch:bn-eye-mouth-nose-heart",
+  "canDo": "I can name my eye, my mouth, my nose and my heart in Bengali, and say which of those four words is settled Indo-European, which is a genuinely disputed origin, and which is borrowed whole from Sanskrit with the widest confirmed cousin family in this book.",
+  "spineNodes": [
+    "SPINE-CHECK-WELLBEING"
+  ],
+  "payoff": {
+    "lesson": "BN-C12-hridoy",
+    "kind": "production",
+    "summary": "The chapter closes on হৃদয়, whose root hṛd traces to PIE ḱérd- alongside English heart, Greek kardía and Latin cor — the widest, most secure cousin family taught anywhere in this track. The reader names all four body words (chokh, mukh, nāk, hridoy) and states each one's status: চোখ an ardhatatsama half worn down by sound change, মুখ a tatsama with a genuinely disputed Dravidian-versus-Indo-European origin, নাক a tadbhava with a settled root, হৃদয় a tatsama with a poetic tadbhava twin, হিয়া. It reaches back to rescue Chapter 8's flapped-ড় sound rule and its causative -আনো grammar, neither revisited since Chapter 8.",
+    "assesses": [
+      "BN-LEX-C12-CHOKH-01",
+      "BN-LEX-C12-MUKH-01",
+      "BN-LEX-C12-NAK-01",
+      "BN-LEX-C12-HRIDOY-01",
+      "BN-SOUND-C08-PORA-02",
+      "BN-GRAMMAR-C08-BHABA-02"
+    ]
+  }
+}

@@ -1,0 +1,13 @@
+{
+  "id": "BN-EXT-018-COURTESY-AND-WELCOME",
+  "stage": "pre-A1",
+  "kind": "required",
+  "category": "language-specific",
+  "canDo": "I can say please and sorry in Bengali, and excuse myself politely with a softened future-tense request.",
+  "prerequisites": [],
+  "lessons": [
+    "BN-C13-doya-kore",
+    "BN-C13-dukkhito",
+    "BN-C13-maf-korben"
+  ]
+}

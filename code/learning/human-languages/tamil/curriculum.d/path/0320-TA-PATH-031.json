@@ -1,0 +1,15 @@
+{
+  "id": "TA-PATH-031",
+  "spine_node": "SPINE-MEET-GREET",
+  "lessons": [
+    "TA-C35-veedu",
+    "TA-C35-kadavu",
+    "TA-C35-arai",
+    "TA-C35-naarkaali"
+  ],
+  "before": [],
+  "inline": [
+    "TA-EXT-031-LANGUAGE-SPECIFIC"
+  ],
+  "after": []
+}

@@ -1,0 +1,13 @@
+{
+  "id": "JA-EXT-003-KANJI-READINGS",
+  "stage": "pre-A1",
+  "kind": "required",
+  "category": "script",
+  "canDo": "I can read a three-kanji word and explain that a kanji carries a set of readings the word selects from, not one fixed sound.",
+  "prerequisites": [
+    "JA-EXT-013-NIHONGO-KANJI"
+  ],
+  "lessons": [
+    "JA-C01-nihongo"
+  ]
+}

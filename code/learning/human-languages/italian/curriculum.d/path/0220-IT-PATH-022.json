@@ -1,0 +1,13 @@
+{
+  "id": "IT-PATH-022",
+  "spine_node": "SPINE-SAY-WHAT-I-DO",
+  "lessons": [
+    "IT-C18-pensare",
+    "IT-C18-capire",
+    "IT-C18-leggere",
+    "IT-C18-scrivere"
+  ],
+  "before": [],
+  "inline": [],
+  "after": []
+}

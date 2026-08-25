@@ -1,0 +1,17 @@
+{
+  "chapter": 202,
+  "title": "Tuvieron --- the Strong Stems, Made Plural",
+  "label": "ch:tuvieron",
+  "canDo": "I can put the strong preterite stems into the plural.",
+  "spineNodes": [
+    "SPINE-ASK-LOCATION"
+  ],
+  "payoff": {
+    "lesson": "ES-C55-tuvieron",
+    "kind": "task",
+    "summary": "I can put the strong preterite stems into the plural.",
+    "assesses": [
+      "ES-GRAMMAR-STRONG-PRETERITE-PLURAL"
+    ]
+  }
+}

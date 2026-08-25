@@ -1,0 +1,14 @@
+{
+  "segments": [
+    "UR-PATH-004",
+    "UR-PATH-010"
+  ],
+  "omits": [
+    "PRONOUN-I",
+    "PRONOUN-ME",
+    "PRONOUN-MY",
+    "WORD-NAME",
+    "WORD-IS"
+  ],
+  "relocates": {}
+}

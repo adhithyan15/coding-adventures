@@ -1,0 +1,16 @@
+{
+  "id": "SA-EXT-205-NUM",
+  "stage": "pre-A1",
+  "kind": "required",
+  "category": "vocabulary",
+  "canDo": "I can count to ten in Sanskrit and name the English cousin of each number.",
+  "prerequisites": [],
+  "lessons": [
+    "SA-C19-six",
+    "SA-C19-seven",
+    "SA-C19-eight",
+    "SA-C19-nine",
+    "SA-C19-ten",
+    "SA-C19-number-family"
+  ]
+}

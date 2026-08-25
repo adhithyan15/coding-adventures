@@ -1,0 +1,9 @@
+{
+  "segments": [
+    "PT-PATH-020"
+  ],
+  "omits": [
+    "QUESTION-WHERE"
+  ],
+  "relocates": {}
+}

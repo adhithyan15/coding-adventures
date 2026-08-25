@@ -1,0 +1,14 @@
+{
+  "id": "TE-EXT-031-FACE-WORDS",
+  "stage": "pre-A1",
+  "kind": "required",
+  "category": "language-specific",
+  "canDo": "I can name my eye, ear, nose and mouth in Telugu, and say which three the family agrees on and which one Telugu's word does not obviously match.",
+  "prerequisites": [],
+  "lessons": [
+    "TE-C37-kannu",
+    "TE-C37-cevi",
+    "TE-C37-mukku",
+    "TE-C37-noru"
+  ]
+}

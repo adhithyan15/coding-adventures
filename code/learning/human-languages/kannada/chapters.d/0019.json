@@ -1,0 +1,21 @@
+{
+  "chapter": 19,
+  "title": "Asking Someone's Age",
+  "label": "ch:ka-asking-age",
+  "canDo": "I can ask someone how old they are in Kannada and give my own age in return.",
+  "spineNodes": [
+    "SPINE-EXCHANGE-NAMES"
+  ],
+  "payoff": {
+    "lesson": "KA-C19-vayassu",
+    "kind": "dialogue",
+    "summary": "Ask ನಿನ್ನ ವಯಸ್ಸು ಎಷ್ಟು? and answer ನನ್ನ ವಯಸ್ಸು ಇಪ್ಪತ್ತು — a complete verbless exchange about age.",
+    "assesses": [
+      "KA-ETYMON-C18-GANTE-01",
+      "KA-PRAGMATICS-C18-GANTE-02",
+      "KA-GRAMMAR-C18-GANTE-03",
+      "KA-ETYMON-C19-VAYASSU-01",
+      "KA-GRAMMAR-C19-VAYASSU-02"
+    ]
+  }
+}

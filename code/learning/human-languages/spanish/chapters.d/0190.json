@@ -1,0 +1,20 @@
+{
+  "chapter": 190,
+  "title": "Synthesis --- Sentences Worth Saying",
+  "label": "ch:synthesis-relative",
+  "canDo": "I can build a sentence containing other sentences.",
+  "spineNodes": [
+    "SPINE-GIVE-REASONS"
+  ],
+  "payoff": {
+    "lesson": "ES-C53-sintesis-frases-largas",
+    "kind": "task",
+    "summary": "Complete ES-C53-sintesis-frases-largas: build a three-verb sentence and say why length is not difficulty.",
+    "assesses": [
+      "ES-GRAMMAR-LO-QUE",
+      "ES-GRAMMAR-RELATIVE-QUE",
+      "ES-GRAMMAR-RELATIVE-QUE-OBLIGATORY"
+    ],
+    "note": "A relative clause adds a slot, not grammar. From here the growth is more of what the reader has, arranged more deeply -- what remains hard is vocabulary and hearing speed, and both are time."
+  }
+}

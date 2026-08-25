@@ -1,0 +1,13 @@
+{
+  "id": "IT-PATH-018",
+  "spine_node": "SPINE-DEFINITE-REFERENCE",
+  "lessons": [
+    "IT-C13-nero-bianco",
+    "IT-C13-rosso-blu"
+  ],
+  "before": [],
+  "inline": [
+    "IT-EXT-018-LANGUAGE-SPECIFIC"
+  ],
+  "after": []
+}

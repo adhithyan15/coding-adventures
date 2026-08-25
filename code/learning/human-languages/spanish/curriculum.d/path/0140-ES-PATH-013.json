@@ -1,0 +1,34 @@
+{
+  "id": "ES-PATH-013",
+  "spine_node": "SPINE-POLITE-REQUEST-REPAIR",
+  "lessons": [
+    "ES-C06-cafe",
+    "ES-C06-por-favor",
+    "ES-C06-hablar",
+    "ES-C06-hablo",
+    "ES-C06-pro-drop",
+    "ES-C06-hablas",
+    "ES-C06-habla",
+    "ES-C06-ar-presente",
+    "ES-C06-trabajar",
+    "ES-C06-estudiar",
+    "ES-C06-espanol",
+    "ES-C06-hablo-espanol",
+    "ES-C06-practice",
+    "ES-C06-repaso-cafe",
+    "ES-C06-repaso-hablar",
+    "ES-R01-no-entiendo",
+    "ES-R02-mas-despacio",
+    "ES-R03-repaso-reparar"
+  ],
+  "before": [],
+  "inline": [
+    "ES-EXT-013-LANGUAGE-SPECIFIC"
+  ],
+  "after": [
+    "ES-EXT-013-CONSOLIDATION",
+    "ES-EXT-013-CONSOLIDATION-CAFE",
+    "ES-EXT-013-CONSOLIDATION-HABLAR",
+    "ES-EXT-013-REPAIR"
+  ]
+}

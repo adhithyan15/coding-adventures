@@ -1,0 +1,21 @@
+{
+  "chapter": 30,
+  "title": "Welcoming a Guest",
+  "label": "ch:sa-welcome",
+  "canDo": "I can name the five steps of a Sanskrit welcome, from the door to the hands that make the greeting.",
+  "spineNodes": [
+    "SPINE-MEET-GREET"
+  ],
+  "payoff": {
+    "lesson": "SA-C30-anjali",
+    "kind": "production",
+    "summary": "Complete SA-C30-anjali and demonstrate the chapter promise.",
+    "assesses": [
+      "SA-LEX-C30-WELCOME-01",
+      "SA-LEX-C30-WELCOME-02",
+      "SA-LEX-C30-WELCOME-03",
+      "SA-LEX-C30-WELCOME-04",
+      "SA-LEX-C30-WELCOME-05"
+    ]
+  }
+}

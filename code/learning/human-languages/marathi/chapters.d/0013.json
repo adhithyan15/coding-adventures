@@ -1,0 +1,26 @@
+{
+  "chapter": 13,
+  "title": "Eye, Ear, Mouth, and Nose",
+  "label": "ch:mr-face-parts",
+  "canDo": "I can name the eye, ear, mouth, and nose in Marathi, say the retroflex ळ formally for the first time, and tell which of the four carries the most secure English cognate and which replaced its own inherited word entirely.",
+  "spineNodes": [
+    "SPINE-CHECK-WELLBEING"
+  ],
+  "payoff": {
+    "lesson": "MR-C12-naak",
+    "kind": "production",
+    "summary": "The chapter closes on नाक, completing the face: the reader produces डोळा, कान, तोंड and नाक with their genders, and sorts the four by kind of history — डोळा replaced the old Indo-Aryan eye-word with one that once meant \"swing\"; कान's root is honestly disputed; तोंड keeps a formal doublet, मुख, standing beside it; नाक alone reaches English नोज़ / nose without qualification.",
+    "assesses": [
+      "MR-LEX-DOLA",
+      "MR-SCRIPT-RETROFLEX-LA",
+      "MR-ETYMON-DOLA-SWING",
+      "MR-LEX-KAAN",
+      "MR-ETYMON-KAAN-DISPUTED",
+      "MR-SOUND-KARNA-GEMINATION",
+      "MR-LEX-TOND",
+      "MR-GRAMMAR-TOND-MUKH-DOUBLET",
+      "MR-LEX-NAAK",
+      "MR-ETYMON-NAAK-NOSE"
+    ]
+  }
+}

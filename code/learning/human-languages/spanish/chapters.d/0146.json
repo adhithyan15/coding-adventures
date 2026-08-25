@@ -1,0 +1,18 @@
+{
+  "chapter": 146,
+  "title": "Noon and Midnight",
+  "label": "ch:spanish-noon-midnight",
+  "canDo": "I can say that it is noon or midnight in Spanish and break both words into their two living halves.",
+  "spineNodes": [
+    "SPINE-TIME-OF-DAY"
+  ],
+  "payoff": {
+    "lesson": "ES-C28-mediodia-medianoche",
+    "kind": "task",
+    "summary": "Say es mediodía and es medianoche, split each into medio/media plus día/noche, and set them against French's worn-down midi and minuit.",
+    "assesses": [
+      "ES-LEX-NOON-MIDNIGHT-01",
+      "ES-ETYMON-NOON-MIDNIGHT-02"
+    ]
+  }
+}

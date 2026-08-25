@@ -1,0 +1,19 @@
+{
+  "chapter": 31,
+  "title": "Good Afternoon",
+  "label": "ch:te-good-afternoon",
+  "canDo": "I can wish someone good afternoon in Telugu and judge whether it fits the setting I am in.",
+  "spineNodes": [
+    "SPINE-TIME-OF-DAY"
+  ],
+  "payoff": {
+    "lesson": "TE-C31-subha-madhyahnam-register",
+    "kind": "dialogue",
+    "summary": "Say శుభ మధ్యాహ్నం where the setting is formal or workplace-timed, and fall back on నమస్కారం, the time-independent everyday greeting.",
+    "assesses": [
+      "TE-LEX-C31-SUBHA-MADHYAHNAM-01",
+      "TE-PRAGMATICS-C31-SUBHA-MADHYAHNAM-REGISTER-01",
+      "TE-PRAGMATICS-C31-SUBHA-MADHYAHNAM-REGISTER-02"
+    ]
+  }
+}

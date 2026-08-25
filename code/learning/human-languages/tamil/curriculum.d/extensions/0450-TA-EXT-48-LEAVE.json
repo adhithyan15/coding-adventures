@@ -1,0 +1,15 @@
+{
+  "id": "TA-EXT-48-LEAVE",
+  "stage": "pre-A1",
+  "kind": "required",
+  "category": "vocabulary",
+  "canDo": "I can say I am setting out in Tamil.",
+  "prerequisites": [],
+  "lessons": [
+    "TA-C48-now",
+    "TA-C48-time",
+    "TA-C48-journey",
+    "TA-C48-later",
+    "TA-C48-set-out"
+  ]
+}

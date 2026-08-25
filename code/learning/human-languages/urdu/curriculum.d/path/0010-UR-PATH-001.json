@@ -1,0 +1,12 @@
+{
+  "id": "UR-PATH-001",
+  "spine_node": "SPINE-MEET-GREET",
+  "lessons": [
+    "UR-C01-salam"
+  ],
+  "before": [],
+  "inline": [
+    "UR-EXT-001-INLINE-SCRIPT"
+  ],
+  "after": []
+}

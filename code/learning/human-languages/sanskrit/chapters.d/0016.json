@@ -1,0 +1,18 @@
+{
+  "chapter": 16,
+  "title": "Places --- and the Two Noun Families",
+  "label": "ch:sa-places",
+  "canDo": "I can name five places in Sanskrit, put a known adjective in front of any of them, and hear from a noun's ending whether it is neuter or masculine.",
+  "spineNodes": [
+    "SPINE-DEFINITE-REFERENCE"
+  ],
+  "payoff": {
+    "lesson": "SA-C16-noun-families",
+    "kind": "production",
+    "summary": "Complete SA-C16-noun-families: sort the chapter's five places into the -am and -aH families and say a known adjective before each.",
+    "assesses": [
+      "SA-LEX-C16-PLACE-01",
+      "SA-GRAMMAR-C16-NOUN-FAMILIES"
+    ]
+  }
+}

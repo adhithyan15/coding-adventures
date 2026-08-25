@@ -1,0 +1,12 @@
+{
+  "id": "ES-PATH-015-SYNTH-HAY",
+  "spine_node": "SPINE-ASK-LOCATION",
+  "lessons": [
+    "ES-C54-sintesis-lo-que-hay"
+  ],
+  "before": [],
+  "inline": [
+    "ES-EXT-015-SYNTH-HAY"
+  ],
+  "after": []
+}

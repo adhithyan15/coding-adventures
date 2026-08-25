@@ -1,0 +1,15 @@
+{
+  "id": "ES-PATH-279-01",
+  "spine_node": "SPINE-DEFINITE-REFERENCE",
+  "lessons": [
+    "ES-C279-puerta",
+    "ES-C279-ventana",
+    "ES-C279-silla",
+    "ES-C279-cama"
+  ],
+  "before": [],
+  "inline": [
+    "ES-EXT-279-HABITACION"
+  ],
+  "after": []
+}

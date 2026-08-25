@@ -1,0 +1,22 @@
+{
+  "id": "UR-PATH-005",
+  "spine_node": "SPINE-CHECK-WELLBEING",
+  "lessons": [
+    "UR-C04-kaise-kaisi",
+    "UR-C04-aap-kaise-hain",
+    "UR-C04-main-hun",
+    "UR-C04-thik",
+    "UR-C04-main-thik-hun",
+    "UR-C04-practice"
+  ],
+  "before": [],
+  "inline": [
+    "UR-EXT-007-GENDERED-HOW",
+    "UR-EXT-008-HONORIFIC-COPULA",
+    "UR-EXT-009-FIRST-PERSON-FRAME",
+    "UR-EXT-010-SCRIPT-BRIDGE",
+    "UR-EXT-011-WELLBEING-WORD-ORDER",
+    "UR-EXT-012-WELLBEING-CONSOLIDATION"
+  ],
+  "after": []
+}

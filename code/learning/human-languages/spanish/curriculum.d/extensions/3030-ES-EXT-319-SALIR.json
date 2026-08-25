@@ -1,0 +1,12 @@
+{
+  "id": "ES-EXT-319-SALIR",
+  "stage": "pre-A1",
+  "kind": "required",
+  "category": "review",
+  "canDo": "I can name the five stages of a leaving in order, and close it with a goodbye that says I will be back soon.",
+  "prerequisites": [],
+  "lessons": [
+    "ES-C319-repaso-salir",
+    "ES-C319-despedida"
+  ]
+}

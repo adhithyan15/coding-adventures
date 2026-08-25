@@ -1,0 +1,13 @@
+{
+  "segments": [
+    "TA-PATH-017",
+    "TA-PATH-026",
+    "TA-PATH-200",
+    "TA-PATH-201",
+    "TA-PATH-43-KIN"
+  ],
+  "omits": [
+    "GRAMMAR-THE"
+  ],
+  "relocates": {}
+}

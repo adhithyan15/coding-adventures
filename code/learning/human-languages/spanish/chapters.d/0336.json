@@ -1,0 +1,22 @@
+{
+  "chapter": 336,
+  "title": "Review --- The Same Six, In Use",
+  "label": "ch:repaso-seis-en-uso",
+  "canDo": "I can buy una entrada, ask for el cambio, name a bebe and a pareja, and report my calor and my edad in whole turns.",
+  "spineNodes": [
+    "SPINE-CHECK-WELLBEING"
+  ],
+  "payoff": {
+    "lesson": "ES-C336-repaso-seis-en-uso",
+    "kind": "task",
+    "summary": "Complete ES-C336-repaso-seis-en-uso: split tengo calor from hace calor, ask an age with the noun, and put all six inside a turn of four words or fewer.",
+    "assesses": [
+      "ES-LEX-C309-KIN-19",
+      "ES-LEX-C309-KIN-20",
+      "ES-LEX-C313-ASK-19",
+      "ES-LEX-C313-ASK-20",
+      "ES-LEX-C334-BODY-34",
+      "ES-LEX-C334-BODY-35"
+    ]
+  }
+}

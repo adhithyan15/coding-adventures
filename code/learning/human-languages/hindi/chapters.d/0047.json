@@ -1,0 +1,21 @@
+{
+  "chapter": 47,
+  "title": "Who Someone Is",
+  "label": "ch:hi-roles",
+  "canDo": "I can say what someone's work is in Hindi, and tell an inherited word for a person from a borrowed one.",
+  "spineNodes": [
+    "SPINE-EXCHANGE-NAMES"
+  ],
+  "payoff": {
+    "lesson": "HI-C47-neighbour",
+    "kind": "production",
+    "summary": "Complete HI-C47-neighbour and say all five words in order.",
+    "assesses": [
+      "HI-LEX-C47-ROLE-01",
+      "HI-LEX-C47-ROLE-02",
+      "HI-LEX-C47-ROLE-03",
+      "HI-LEX-C47-ROLE-04",
+      "HI-LEX-C47-ROLE-05"
+    ]
+  }
+}

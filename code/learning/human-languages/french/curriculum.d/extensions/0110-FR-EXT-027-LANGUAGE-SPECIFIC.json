@@ -1,0 +1,14 @@
+{
+  "id": "FR-EXT-027-LANGUAGE-SPECIFIC",
+  "stage": "pre-A1",
+  "kind": "required",
+  "category": "language-specific",
+  "canDo": "I can ask for cheese, butter, salt or an egg, and say why un œuf keeps its f while les œufs drops it.",
+  "prerequisites": [],
+  "lessons": [
+    "FR-C30-fromage",
+    "FR-C30-beurre",
+    "FR-C30-sel",
+    "FR-C30-oeuf"
+  ]
+}

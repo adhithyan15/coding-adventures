@@ -1,0 +1,21 @@
+{
+  "chapter": 32,
+  "title": "Taking, Thinking, Helping, Loving",
+  "label": "ch:ar-taking-thinking-helping-loving",
+  "canDo": "I can say the Arabic for 'he took', 'he thought', 'he helped' and 'he loved', and tell a plain verb from a rebuilt one — doubled, stretched or prefixed — by what the shape does to the root's meaning.",
+  "spineNodes": [
+    "SPINE-SAY-WHAT-I-DO"
+  ],
+  "payoff": {
+    "lesson": "AR-C32-ahabba",
+    "kind": "production",
+    "summary": "Say the chapter's four verbs against the four shapes they wear — ʾakhadha plain, fakkara doubled, sāʿada stretched, ʾaḥabba prefixed — then run the done-to shape across maktūb, maʾkhūdh and maḥbūb and restate the ma- engine dhahaba opened.",
+    "assesses": [
+      "AR-CONCEPT-C32-AHABBA-01",
+      "AR-CONCEPT-C32-AHABBA-02",
+      "AR-CONCEPT-C32-SAADA-02",
+      "AR-CONCEPT-C32-FAKKARA-02",
+      "AR-CONCEPT-C32-AKHADHA-02"
+    ]
+  }
+}

@@ -1,0 +1,12 @@
+{
+  "id": "ES-PATH-A1-VOS-PRET-AR",
+  "spine_node": "SPINE-DEFINITE-REFERENCE",
+  "lessons": [
+    "ES-C63-hablasteis"
+  ],
+  "before": [],
+  "inline": [
+    "ES-EXT-A1-VOS-PRET-AR"
+  ],
+  "after": []
+}

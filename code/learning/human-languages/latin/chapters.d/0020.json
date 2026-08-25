@@ -1,0 +1,20 @@
+{
+  "chapter": 20,
+  "title": "Exchanging Names",
+  "label": "ch:la-exchanging-names",
+  "canDo": "I can ask someone's name in Latin and give my own, using the classical dative of possession.",
+  "spineNodes": [
+    "SPINE-EXCHANGE-NAMES"
+  ],
+  "payoff": {
+    "lesson": "LA-C20-name-case-variation",
+    "kind": "dialogue",
+    "summary": "Ask quid tibi nōmen est? and answer mihi nōmen est, holding the possessor in the dative while the name itself may go either way.",
+    "assesses": [
+      "LA-LEX-QUID-TIBI-NOMEN-01",
+      "LA-LEX-QUID-TIBI-NOMEN-02",
+      "LA-GRAMMAR-NAME-CASE-VARIATION-01",
+      "LA-GRAMMAR-NAME-CASE-VARIATION-02"
+    ]
+  }
+}

@@ -1,0 +1,17 @@
+{
+  "chapter": 250,
+  "title": "Review --- Four Small Things",
+  "label": "ch:repaso-tonicos",
+  "canDo": "I can use the stressed pronouns, exclaim, and address somebody.",
+  "spineNodes": [
+    "SPINE-DEFINITE-REFERENCE"
+  ],
+  "payoff": {
+    "lesson": "ES-C64-repaso-tonicos",
+    "kind": "task",
+    "summary": "I can use the stressed pronouns, exclaim, and address somebody.",
+    "assesses": [
+      "ES-GRAMMAR-VOCATIVE-COMMA"
+    ]
+  }
+}
