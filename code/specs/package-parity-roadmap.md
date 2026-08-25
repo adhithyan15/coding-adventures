@@ -6693,6 +6693,29 @@ its Ruby build-tool, state, or roadmap surfaces. OCaml remains strategically
 important but collision-unsafe while PRs #12149 and #12162 own its exact Go
 validator and entry-point surfaces.
 
+The Ruby repair has direct red-to-green evidence on that selected base. The
+shared registry fixture and a focused exact-component regression first emitted
+the Cabal decoy, while case and near-name controls already passed. Adding the
+single frozen registry member closes both failures. Ruby 3.4.9 with Bundler
+2.6.9 now passes all 310 runs and 635 assertions with one expected skip, 89.43%
+line coverage, and 72.55% branch coverage; repeated canonical `BUILD` runs
+reproduce the result. The process-free corpus validates 111 cases and 269
+files, and 148 focused conformance, package-parity, capability, Haskell, and
+OCaml-lock tests pass with two expected Windows symlink skips.
+
+The Go oracle passes its full test, vet, and trimpath build gates. A real forced
+Ruby dry validation evaluates 45 Starlark BUILD files, discovers 305 packages,
+reports all 305 as `WOULD-BUILD`, and leaves the orphan-crate check clean with
+its five reviewed exemptions. Syntax and dependency-current checks pass; a
+fresh ruby-advisory-db at `eca0eccee391` reports no vulnerabilities. Direct
+StandardRB lint reproduces the clean-main file's pre-existing broad baseline
+and adds no offense on a changed production or test line. The collision report
+and complete acyclic 488-owner/745-edge graph remain clean, and seven current
+open PRs have zero exact overlap with the six-path diff. An independent
+exact-head security review found no new filesystem, process, network,
+environment, credential, diagnostic, dependency, or execution-authority
+surface and no publication blocker.
+
 ## Autonomous Loop Protocol
 
 Only one parity PR should be active at a time.
