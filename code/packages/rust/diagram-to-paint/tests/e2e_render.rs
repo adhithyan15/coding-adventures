@@ -903,6 +903,35 @@ line "Target" [35, 50, 68, 82]"##,
         write_png(&precise_pixels, "/tmp/mermaid_gantt_seconds_e2e.png")
             .expect("seconds-only PNG write failed");
         assert!(!precise_scene.instructions.is_empty());
+
+        let meridiem = parse_gantt(
+            "gantt\ntitle Daily handoff\ndateFormat YYYY-MM-DD h:mm A\nsection Shift\nMorning :am, 2026-03-01 9:30 AM, 1h\nAfternoon :pm, 2026-03-01 2:30 PM, 1h",
+        )
+        .expect("12-hour Mermaid Gantt parse failed");
+        let meridiem_layout = layout_temporal_diagram(
+            &TemporalDiagram {
+                kind: TemporalKind::Gantt,
+                title: meridiem.title.clone(),
+                body: TemporalBody::Gantt(meridiem),
+            },
+            800.0,
+        );
+        let meridiem_scene = diagram_to_paint_temporal(
+            &meridiem_layout,
+            &DiagramToPaintOptions {
+                background: layout_ir::Color { r: 255, g: 255, b: 255, a: 255 },
+                device_pixel_ratio: 2.0,
+                label_font: font_spec("Helvetica", 12.0),
+                title_font: font_spec("Helvetica", 16.0),
+                shaper: &shaper,
+                metrics: &metrics,
+                resolver: &resolver,
+            },
+        );
+        let meridiem_pixels = render(&meridiem_scene);
+        write_png(&meridiem_pixels, "/tmp/mermaid_gantt_meridiem_e2e.png")
+            .expect("12-hour PNG write failed");
+        assert!(!meridiem_scene.instructions.is_empty());
     }
 
     #[test]

@@ -1,5 +1,9 @@
 # Changelog — diagram-ir
 
+## 0.85.0
+
+- Represent padded and unpadded 12-hour Gantt clocks plus uppercase and lowercase meridiem markers in typed date formats.
+
 ## 0.84.0
 
 - Represent colon and compact Gantt timezone offsets as typed date-format parts.
