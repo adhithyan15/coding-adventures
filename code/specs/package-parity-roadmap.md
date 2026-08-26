@@ -8983,6 +8983,30 @@ no active parity PR. The fresh worktree starts from exact
 the clean exact-merged-head deletion rule, so dirty, detached, open-PR, and
 ambiguous worktrees remain preserved.
 
+The Dart candidate implements the generic DT13 contract in specification,
+tests, source, and documentation order. Nineteen package tests pass with
+109/109 production lines covered; formatting and fatal analysis are clean.
+The contract pins Unicode-scalar edges and numeric order without normalization,
+nullable endpoint presence, empty keys and prefixes, upsert counts, iterative
+enumeration/deletion/validation, longest-prefix fallback, pruning, and a
+50,001-scalar stack-safety case. Independent contract and security findings
+were resolved by making the reference pseudocode iterative and nullable-safe,
+rejecting malformed UTF-16 atomically before insertion, redacting missing-key
+errors, and streaming longest-prefix traversal so a first-edge miss does not
+materialize the rest of an attacker-controlled input.
+
+The existing Dart LZ78 downstream suite passes all 47 tests and the Dart
+scaffold generator passes all 17. The Go build tool passes all package tests
+and vet; its real exact-diff execution evaluates 45 Starlark files, discovers
+90 Dart packages, builds only `dart/trie`, and skips the other 89. The
+collision-checked candidate report adds exactly one slot to 4,582, reduces
+high-consensus gaps from 267 to 266 and Dart's share from 98 to 97, and
+completes trie at 15/15 with zero canonical collisions or unknown buckets.
+Capability, dependency, README-link, state, diff, and credential checks are
+clean. The state graph remains complete and acyclic at 531 owners and 790
+edges: 156 merged, 374 pending, and exactly one in-progress owner, with no
+active parity PR.
+
 ## Autonomous Loop Protocol
 
 Only one parity PR should be active at a time.
