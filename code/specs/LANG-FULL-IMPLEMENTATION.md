@@ -972,7 +972,8 @@ backend immediately) come before the enabler-dependent items.
   selectors, multiplication and division by exact positive one are likewise
   preserving, including left-associative chains of those operations. Exact
   signed-unit chains are also preserving when their negative-one parity is
-  even; odd-sign chains and division by a selector remain conservative.
+  even, including grouped literal-only unit products and quotients. Odd-sign
+  chains, non-unit operands, and division by a selector remain conservative.
   Subtraction of positive numeric zero is also preserving, including
   left-associative chains, as is addition of negative real zero, because each
   retains the sign bit of negative zero. Addition of positive zero and

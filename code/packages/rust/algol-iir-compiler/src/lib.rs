@@ -8506,19 +8506,42 @@ fn literal_numeric_unit_is_negative(node: &GrammarASTNode) -> Option<bool> {
     }
     let tokens = direct_tokens(node);
     if tokens.len() == 1 {
-        return match tokens[0].effective_type_name() {
-            "INTEGER_LIT" => (tokens[0].value.parse::<i64>() == Ok(1)).then_some(false),
-            "REAL_LIT" => tokens[0]
-                .value
-                .parse::<f64>()
-                .ok()
-                .and_then(|value| match value.to_bits() {
-                    bits if bits == 1.0f64.to_bits() => Some(false),
-                    bits if bits == (-1.0f64).to_bits() => Some(true),
-                    _ => None,
-                }),
-            _ => None,
+        match tokens[0].effective_type_name() {
+            "INTEGER_LIT" => {
+                return (tokens[0].value.parse::<i64>() == Ok(1)).then_some(false);
+            }
+            "REAL_LIT" => {
+                return tokens[0]
+                    .value
+                    .parse::<f64>()
+                    .ok()
+                    .and_then(|value| match value.to_bits() {
+                        bits if bits == 1.0f64.to_bits() => Some(false),
+                        bits if bits == (-1.0f64).to_bits() => Some(true),
+                        _ => None,
+                    });
+            }
+            _ => {}
+        }
+    }
+    let sequence = pieces(node);
+    if sequence.len() >= 3
+        && !sequence.len().is_multiple_of(2)
+        && sequence.iter().skip(1).step_by(2).all(
+            |piece| matches!(piece, Piece::Op(op) if matches!(op.as_str(), "*" | "/")),
+        )
+    {
+        let Piece::Node(first) = &sequence[0] else {
+            return None;
         };
+        let mut negative = literal_numeric_unit_is_negative(first)?;
+        for index in (1..sequence.len()).step_by(2) {
+            let Piece::Node(rhs) = &sequence[index + 1] else {
+                return None;
+            };
+            negative ^= literal_numeric_unit_is_negative(rhs)?;
+        }
+        return Some(negative);
     }
     let child_nodes = direct_nodes(node);
     (tokens.is_empty() && child_nodes.len() == 1)
@@ -11066,6 +11089,10 @@ mod tests {
             "(-1.0) * choose * (-1.0)",
             "(-1.0) / (-1.0) * choose",
             "((choose * (-(+1.0)) / (-1)))",
+            "choose * ((-1.0) * (-1.0))",
+            "choose / ((-1.0) / (-1.0))",
+            "((-1.0) * (-1.0)) * choose",
+            "choose * ((1.0 / (-1.0)) * (-1.0))",
         ] {
             compile_source(
                 &format!(
@@ -11110,6 +11137,7 @@ mod tests {
             "choose / (-1.0)",
             "(-1.0) * choose",
             "choose * (-1.0) / 1.0",
+            "choose * ((-1.0) * 1.0)",
             "1.0 / choose * 1.0",
         ] {
             let err = compile_source(
