@@ -8619,6 +8619,32 @@ registration and .NET selection, the graph contains 525 unique owners and 786
 complete acyclic edges: 151 merged, 373 pending, and exactly one in-progress
 owner, with no active parity PR.
 
+The selected implementation now adds independent dependency-free C# and F#
+packages for the complete closed `canonical-cbor-v1` corpus. Each native engine
+supports the full CBR01 data model, shortest-form definite decoding, exact
+single-item consumption, canonical length-first unsigned map-key ordering,
+duplicate and out-of-order key rejection, strict Unicode, bounded nesting and
+encoder output, defensive ownership, stable payload-blind errors, and
+transactional `MemoryStream` append at destination length. The F# public
+facade exposes safe typed views over its private value union. Neither engine
+shares production code or adds filesystem, process, environment, credential,
+clock, random, or network authority.
+
+All 55 neutral cases plus adversarial direct probes pass in both lanes through
+the literal Unix and Windows BUILD fronts: eight tests per package. C# reaches
+98.19% line, 87.15% branch, and 100% method coverage; F# reaches 98.08% line,
+95.47% branch, and 100% method coverage. Warning-free .NET 9 release builds and
+release packs, capability and OCaml-lock suites, the Go build tool's tests,
+vet, module verification, trimpath build, full repository plan, and forced C#
+and F# dry plans all pass. The forced plans report 202 and 201 WOULD-BUILD
+packages respectively. Reporter, collision, strict-JSON, dependency,
+credential, production-authority, formatting, packaging, diff, and independent
+security reviews are clean. The branch inventory therefore adds exactly the
+two selected slots: 1,373 identities, 4,570 slots, 1,412 all-reported
+identities, breadth bands 175/276, 123/936, 166/2,087, and 909/12,726, 720 Rust
+singletons, zero collisions, and zero unknown buckets. Global `last_inventory`
+remains pinned to the exact merged main baseline until publication merges.
+
 ## Autonomous Loop Protocol
 
 Only one parity PR should be active at a time.
