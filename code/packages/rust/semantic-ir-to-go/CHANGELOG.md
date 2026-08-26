@@ -1,5 +1,53 @@
 # Changelog
 
+## 0.43.0 — Accept `Feature::LoopControl` (task #63)
+
+Third backend (after `semantic-ir-to-javascript` task #62 and
+`semantic-ir-to-typescript` task #63's own earlier PR) to accept the
+SIR16 addendum's `Stmt::Break`/`Stmt::Continue`. `While`/`ForRange`/
+`ForEach` already emit real inline native `for` loops with no closure
+boundary in the way, so a bare `break`/`continue` is a trivial 1:1
+emission — see `Feature::LoopControl`'s own doc comment for why
+`ForRange` needs no special handling (the shared validator already
+refuses to accept `Break`/`Continue` whose nearest enclosing loop is a
+`ForRange`, regardless of backend).
+
+**Confirmed, not just anticipated, that this backend shares the JS/TS
+backends' own if-as-statement hazard**: `Stmt::ExprStmt { expr: Expr::If
+{ .. } }` (a bare `if` used as a statement) was routed through
+`Expr::If`'s generic value-position codegen — Go has no expression-
+position `if`, so that codegen lifts the whole thing to an anonymous
+`func() Value { ... }()` literal that `return`s a value (and
+`emit_block_as_expr` wraps a non-empty branch in a SECOND, nested func
+literal of its own). A `break`/`continue` inside that func literal
+cannot cross its boundary — `if (cond) { break; }` inside a `for` is the
+single most common way source code uses `break`/`continue` at all, so
+every such program was a `go build` compile error
+(`break is not in a loop`), not a hypothetical edge case. Fixed by
+special-casing that shape in `emit_stmt`'s `Stmt::ExprStmt` arm to emit
+a real native `if ... { … } else { … }` statement instead — correct
+regardless of `LoopControl`, since the value was already being
+discarded. Mirrors `semantic-ir-to-javascript`'s (task #62) and
+`semantic-ir-to-typescript`'s (task #63) own identically-shaped fix
+exactly.
+
+Unlike the TypeScript backend's own rollout, this crate's other
+`Stmt`-matching traversal functions needed no change: `emit.rs`'s
+`collect_ancestry_edges_in_stmt` already had a wildcard `_ => {}`
+catch-all (a correct no-op for `Break`/`Continue`), and `lib.rs`'s
+`check_soundness_stmt` already had a dedicated, correct no-op arm for
+both variants — only its own comment (which claimed the feature "is not
+in `ACCEPTED_FEATURES`") was stale, now corrected.
+
+New tests: 4 unit tests (`emit.rs`) locking in the bare `break`/
+`continue` emission, `break`/`continue` inside a native `for` loop body
+at the correct indentation, and — the crux of the fix — that a bare `if`
+used as a statement emits a real native `if`/`else`, never a func-
+literal IIFE. 2 new `go run`-execution-proof tests
+(`tests/compile_and_run_loops.rs`) mirroring the JS/TS backends' own two
+loop-control proofs in spirit (a `while`+`continue`+`break`
+accumulation, a `for`-each+`break` early exit).
+
 ## 0.42.1 — Security fix: `sanitize_ident` was not injective
 
 Task #65 (`/security-review`, discovered while auditing `java-to-
