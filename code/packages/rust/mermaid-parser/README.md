@@ -60,9 +60,10 @@ stroke configuration resolves into backend-neutral path geometry. Multi-task
 `after` starts choose the latest dependency end, while `until` ends choose the
 earliest referenced start; unknown IDs and cyclic start graphs fail parsing.
 ID-less declarations receive pinned `taskN` IDs, and one-field task data starts
-after the preceding task even across sections. Gantt remains partial while full
-date-format and task-tag combinations plus the complete pinned parser and visual
-corpus are still outstanding.
+after the preceding task even across sections. Repeated task tags retain active,
+done, critical, milestone, and vertical-marker semantics independently. Gantt
+remains partial while full date-format support plus the complete pinned parser
+and visual corpus are still outstanding.
 
 Each supported family lowers into the shared Diagram IR and can continue
 through its family layout package:

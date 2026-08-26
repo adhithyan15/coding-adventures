@@ -1,0 +1,16 @@
+{
+  "id": "ES-PATH-373-01",
+  "spine_node": "SPINE-DEFINITE-REFERENCE",
+  "lessons": [
+    "ES-C373-oro",
+    "ES-C373-botella",
+    "ES-C373-alfombra",
+    "ES-C373-falda",
+    "ES-C373-peine"
+  ],
+  "before": [],
+  "inline": [
+    "ES-EXT-373-REF"
+  ],
+  "after": []
+}

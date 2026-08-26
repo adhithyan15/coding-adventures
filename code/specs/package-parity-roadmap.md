@@ -8095,8 +8095,125 @@ The refresh also corrected the state graph's one historical lifecycle
 inversion: the still-pending standalone-integrity umbrella now depends on its
 merged Lua child, instead of the merged child depending on pending work. The
 W21 exception owner now records all changed Wasm type, opcode, module,
-validator, execution, runtime, WAST, conformance, and IIR-lowering surfaces;
-the IIR exception builtins remain part of that same semantic family.
+validator, execution, runtime, WAST, and conformance surfaces.
+
+### Post-#12940 refresh and Perl orphan-crate selection
+
+PR #12940 completed all 40 terminal acceptable checks: 33 successes and seven
+expected skips. GitHub reported the reviewed branch clean and mergeable, so the
+loop enabled squash auto-merge. GitHub merged reviewed head
+`29ee502daa1d841d3fb888b7cf8b35095193f420` as
+`d0fc3d3b094249ed46b304294703cc6ec72d0d5c` at
+`2026-08-26T04:37:28Z` without a manual merge command.
+
+The collision-checked exact-main schema-3 report remains structurally
+unchanged: 15 established lanes, 1,373 implementation identities, 4,566
+package slots, 175 high-consensus packages with 276 missing slots, 122
+identities in five to nine lanes with 926 gaps, 166 identities in two to four
+lanes with 2,087 gaps, 910 singletons with 12,740 gaps, and 721 Rust
+singletons. The all-reported union is 1,412. Canonical collisions and unknown
+language buckets remain zero, and OCaml remains correctly emerging at zero
+packages.
+
+Every intervening change is classified before selection. Merged PR #12929 is
+retained under the registered Wasm exception neutral and applicable-lane
+owners. Merged PR #12941 extends the Mermaid Gantt owner with multi-source
+`after`/`until` ranges, validated dependency lists, duplicate, unknown, and
+cyclic dependency rejection, fixed-point scheduling, and resolved-range
+geometry. Merged PRs #12927 and #12939 extend the ALGOL IIR owner with exact
+mixed numeric comparisons and checked integer snapshots widened into real
+targets, including transitive while dependencies and fail-closed overflow or
+inexact values. Kannada independent-i work remains curriculum and generated
+script data.
+
+Merged PR #12937 exposes one newly unowned Semantic IR loop-control family.
+The refresh therefore registers
+`semantic-ir-loop-control-language-neutral-conformance` for bare
+`Break`/`Continue`, `Feature::LoopControl`, nearest-loop and `ForRange`
+validation, statement-flow boundaries, unlabeled-only behavior, manifest/text/
+metadata representation, stable diagnostics, and resource bounds. The dependent,
+selection-blocked `semantic-ir-loop-control-applicable-consumer-parity` umbrella
+owns decomposition across applicable frontend, core, execution, and emission
+lanes while existing frontend owners retain source-language lowering details.
+This is distinct from the SIR28 system-write owner.
+
+The dependency/leverage pass selects
+`build-tool-perl-orphan-crate-validation-conformance` on branch
+`codex/build-tool-perl-orphan-crate-validation-conformance`. Its neutral
+orphan corpus and Perl tracked-artifact substrate are merged. Each remaining
+consumer unlocks the same orphan completion umbrella, so breadth breaks the
+tie: Perl covers 251 reported packages versus Haskell at 204 and Swift at 161.
+All ten live open PRs have zero exact overlap with the six expected Perl
+validator, test, documentation, state, and roadmap paths. The target local
+branch, remote branch, and prior PR were absent before creating the fresh
+exact-main worktree. OCaml's process-free core remains collision-unsafe while
+PRs #12149 and #12162 own required Go entry-point and validator surfaces.
+
+After lifecycle reconciliation, new-owner registration, and selection, the
+state graph contains 517 unique owners and 778 complete acyclic edges: 147
+merged, 369 pending, and exactly one pr-open owner, with active parity PR
+#12958 and no merged-to-unmerged dependency edge.
+
+Before publication, the branch rebased four times without conflict, most
+recently onto exact main `53c7c6054f9cd93378726f2348a92ed6514c5948`. PRs
+#12944 and #12949 extend the shared script-ductus authored-data owner; PRs
+#12946 and #12951 extend the deterministic HTML frontend owner; PR #12947
+supplies the first JavaScript
+emitter child under the SIR16 loop-control consumer umbrella; and PR #12948 is
+Language Ladder program-only batching. PR #12917 extends the existing
+TypeScript `human-language-data` singleton classification and leaves its writer
+shell in the separate filesystem-authority review. PR #12952 extends the
+Mermaid Gantt neutral and lane owners with pinned implicit IDs and sequential
+tasks. PR #12950 extends the ALGOL IIR owners with exact subtractive-positive-
+zero selector identity. PR #12945 adds Chinese curriculum and generated data
+without changing package source behavior. Merged PR #12943 adds Spanish A1
+curriculum and generated human-language-data without new package behavior.
+PR #12949 specifically adds sourced Malayalam chillu RR as one zero-lift
+three-movement arch, loop, and hook run
+across the existing curriculum, human-language-data, script-ductus, and
+Language Ladder consumers.
+
+None of those eleven commits touches a selected Perl path or changes a package
+identity, BUILD marker, build-tool marker, or dependency surface. All eight
+live open PRs have zero exact overlap with this six-path tranche. The post-rebase
+schema-3 report remains 15 established lanes, 1,373 identities, 4,566 slots,
+175 high-consensus packages with 276 gaps, 910 singletons with 12,740 gaps,
+721 Rust singletons, zero collisions, and zero unknown buckets. The 517-owner,
+778-edge state graph remains complete and acyclic with exactly one pr-open
+item.
+
+The live-PR audit also classifies four unmerged surfaces before publication.
+PR #12955 remains inside the existing ALGOL IIR neutral and applicable-lane
+owners with additive negative-real-zero selector identity. PR #12954 exposes a
+distinct W22 contract that W21 deliberately excluded, so the state registers a
+neutral same-instance `catch`/`catch_all` matching owner depending on the W21
+neutral tag/throw contract, plus an applicable-lane umbrella depending on both
+that W22 contract and the W21 lane substrate. Generic inert `exnref` parsing,
+official WAST reporting and baseline data, and native corpus-fetch authority
+remain with the existing WAST, conformance, and host-authority owners.
+Open PR #12956 likewise remains in the shared script-ductus authored-data owner
+with sourced Persian shin geometry and provenance, while PR #12957 remains in
+the Mermaid Gantt neutral and lane owners with repeatable status tags, vertical
+markers, interaction bounds, and deterministic paint projection.
+
+Pinned Strawberry Perl 5.38.2 validation passes all 14 package test files and
+136 tests. `Validator.pm` reaches 100% statement and subroutine coverage and
+83.5% total coverage; the severity-5 Perl::Critic result has no regression
+against exact main. The neutral corpus validates 111 cases and 269 files, all
+201 build-tool conformance tests pass with 23 expected Windows skips, and the
+canonical Go oracle passes module verification, test, vet, and trimpath build.
+A forced Perl dry plan evaluates 45 Starlark files, discovers 258 packages,
+preserves the five-entry orphan ledger, and reports all 258 as WOULD-BUILD.
+Independent exact-head contract and security reviews are clean after explicit
+fail-closed regressions for malformed exemption reasons and Perl-internal
+surrogate or above-Unicode code points.
+
+Ready-for-review PR #12958 opened from exact independently reviewed head
+`ce9b6c85715a1ee268020477096d718a9f8093c0` after a normal first push from
+exact main `53c7c6054f9cd93378726f2348a92ed6514c5948`. GitHub reports the PR
+open, non-draft, and mergeable. Required checks are queued or in progress, so
+auto-merge remains disabled until every check is terminal and acceptable and
+GitHub reports no conflict.
 
 ## Autonomous Loop Protocol
 

@@ -1855,6 +1855,41 @@
       "language": "spanish",
       "chapter": 366,
       "output": "spanish/book/chapters/ch366-la-caja-y-la-lampara.tex"
+    },
+    {
+      "language": "spanish",
+      "chapter": 367,
+      "output": "spanish/book/chapters/ch367-el-desayuno-y-la-fruta.tex"
+    },
+    {
+      "language": "spanish",
+      "chapter": 368,
+      "output": "spanish/book/chapters/ch368-la-abeja-y-la-mosca.tex"
+    },
+    {
+      "language": "spanish",
+      "chapter": 369,
+      "output": "spanish/book/chapters/ch369-el-rio-y-la-arena.tex"
+    },
+    {
+      "language": "spanish",
+      "chapter": 370,
+      "output": "spanish/book/chapters/ch370-la-tormenta-y-el-trueno.tex"
+    },
+    {
+      "language": "spanish",
+      "chapter": 371,
+      "output": "spanish/book/chapters/ch371-pequeno-y-gordo.tex"
+    },
+    {
+      "language": "spanish",
+      "chapter": 372,
+      "output": "spanish/book/chapters/ch372-gris-y-rosa.tex"
+    },
+    {
+      "language": "spanish",
+      "chapter": 373,
+      "output": "spanish/book/chapters/ch373-el-oro-y-la-botella.tex"
     }
   ]
 }

@@ -11,3 +11,4 @@ The three-movement path fits that zero-lift order to the bundled Noto Sans
 Malayalam outline while retaining handwritten arch, loop, and hook variation.
 The canonical row and ductus close all 8 gaps. Shared Arabic-family **ش** now
 leads the measured queue at **8 affected realizations**.
+

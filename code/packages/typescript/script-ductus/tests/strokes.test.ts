@@ -232,6 +232,7 @@ const ARABIC_LAM_ALIF = DUCTUS[ductusKey("arabic", "لا")];
 const URDU_ALEF = DUCTUS[ductusKey("urdu-nastaliq", "ا")];
 const URDU_PEH = DUCTUS[ductusKey("urdu-nastaliq", "پ")];
 const PERSIAN_CHE = DUCTUS[ductusKey("perso-arabic", "چ")];
+const PERSIAN_SHIN = DUCTUS[ductusKey("perso-arabic", "ش")];
 const URDU_JIM = DUCTUS[ductusKey("urdu-nastaliq", "ج")];
 const URDU_CHE = DUCTUS[ductusKey("urdu-nastaliq", "چ")];
 const URDU_DAL = DUCTUS[ductusKey("urdu-nastaliq", "د")];
@@ -4203,6 +4204,23 @@ describe("handwriting ductus", () => {
     expect(path[0].x).toBeGreaterThan(path.at(-1)!.x);
   });
 
+  it("Persian ش draws its body before three separately lifted dots", () => {
+    expect(PERSIAN_SHIN.script).toBe("perso-arabic");
+    expect(penLifts(PERSIAN_SHIN)).toBe(3);
+    expect(PERSIAN_SHIN.strokes).toHaveLength(4);
+    expect(PERSIAN_SHIN.strokes.map((stroke) => stroke.segments.length)).toEqual([2, 1, 1, 1]);
+    const teeth = PERSIAN_SHIN.strokes[0].segments[0].path;
+    const bowl = PERSIAN_SHIN.strokes[0].segments[1].path;
+    expect(bowl[0]).toEqual(teeth.at(-1));
+    const [lowerLeft, lowerRight, upper] = PERSIAN_SHIN.strokes.slice(1).map(
+      (stroke) => stroke.segments[0].path[1],
+    );
+    expect(lowerLeft.x).toBeLessThan(lowerRight.x);
+    expect(upper.x).toBeGreaterThan(lowerLeft.x);
+    expect(upper.x).toBeLessThan(lowerRight.x);
+    expect(upper.y).toBeGreaterThan(lowerLeft.y);
+  });
+
   it("Persian ل joins its descending upright directly to the base curve", () => {
     const lam = DUCTUS["ل"];
     expect(penLifts(lam)).toBe(0);
@@ -7346,8 +7364,17 @@ describe("handwriting ductus", () => {
   it("Persian س traces to the later continuous teeth-and-bowl demonstration", () => {
     const src = DUCTUS["س"].source;
     expect(src.url).toContain("laits.utexas.edu/persian_grammar/video");
-    expect(src.citation).toMatch(/Persian Online.*س.*01:29–01:35/i);
+    expect(src.citation).toMatch(/Persian Online.*س.*01:23–01:28/i);
     expect(src.variation).toMatch(/continuous right-to-left.*three teeth.*final bowl.*no pen lift.*Noto Naskh/i);
+  });
+
+  it("Persian ش traces its body-first three-dot order to the freehand demonstration", () => {
+    const src = PERSIAN_SHIN.source;
+    expect(src.url).toContain("laits.utexas.edu/persian_grammar/video");
+    expect(src.citation).toMatch(/Persian Online.*ش.*01:29–01:35/i);
+    expect(src.variation).toMatch(
+      /body-first.*continuous right-to-left.*three teeth.*final bowl.*lower-left.*lower-right.*centered-upper.*four-stroke.*Noto Naskh.*Persian-scoped provenance.*Arabic or Urdu ش sources/i,
+    );
   });
 
   it("Persian ل traces to the later continuous upright-and-base demonstration", () => {

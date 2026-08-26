@@ -1,0 +1,21 @@
+{
+  "chapter": 369,
+  "title": "The River, The Sand And The Ash",
+  "label": "ch:el-rio-y-la-arena",
+  "canDo": "I can say el río, la arena, el polvo, el humo and la ceniza, and name what the ground carries and what a fire leaves.",
+  "spineNodes": [
+    "SPINE-ASK-LOCATION"
+  ],
+  "payoff": {
+    "lesson": "ES-C369-ceniza",
+    "kind": "production",
+    "summary": "Complete ES-C369-ceniza: name what the ground carries and what a fire leaves behind.",
+    "assesses": [
+      "ES-LEX-C369-WHERE-46",
+      "ES-LEX-C369-WHERE-47",
+      "ES-LEX-C369-WHERE-48",
+      "ES-LEX-C369-WHERE-49",
+      "ES-LEX-C369-WHERE-50"
+    ]
+  }
+}

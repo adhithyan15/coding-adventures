@@ -4937,6 +4937,149 @@ ordinal.
 direction is not evidence about the other. Assert on the structure both sides define, not
 on the bytes one side produces.
 
+## Unused capacity in a size-capped bundler group is not headroom
+
+Follow-up to "A grouping parameter is not a budget", and a correction to the reasoning
+recorded there. Raising `maxSize` 49 kB → 56 kB took the lesson-batch count 401 → 353 and
+left 32% of the aggregate cap unused. That 32% was written into a merged PR body as
+"6.29 MB of fill headroom before the batch count can grow again". It is not headroom, and
+the next tranche proved it:
+
+```
+origin/main   353 batches   13,478,418 B   32% of cap unused
++35 lessons   359 batches   13,624,129 B   32% of cap unused
+```
+
+Thirty-five lessons weighing 145,711 B — about **2.6** batches at the cap, and lighter than
+the previous thirty-five — added **six** batches, and the unused fraction did not move at
+all. Rolldown groups by track and *then* splits each track greedily by size, so every other
+track's tail batch is sealed and never revisited. A Spanish tranche can only extend
+Spanish's tail. **Aggregate slack in a partitioned bundler group is stranded by
+construction.**
+
+**Generalisable check:** before treating unused capacity as headroom, ask whether the
+allocator can *reach* it. Summing free space across N independently-sealed partitions
+answers a question nobody asked; the number that predicts growth is the free space in the
+one partition the next write lands in. The same error is available in disk allocators,
+shard maps and connection pools.
+
+**How it was actually fixed, since "stop treating slack as headroom" is not a fix.** Group
+by something the corpus *has* rather than by size — here a five-chapter band — so the count
+follows a structural property instead of bytes. Then **derive the budget from that property
+instead of hardcoding it**: count the bands and require the emitted chunks to correspond.
+Adding lessons inside a band moves neither side; adding chapters moves both together; a
+regression moves only one and fails. The ceiling stops needing to be raised, which is what
+made it debt in the first place.
+
+**And it exposed how weak the constant had been.** 353 was met on a corpus that only needed
+281, so **72 batches of drift would have passed unremarked**. A constant sized once is a
+gate that loosens every day the corpus grows without ever telling you.
+
+## `--shard` renames other people's shards, and `--check` does not ask it to
+
+`doc-shard-cli --shard` regenerates **every** filename from its heading text. Several
+committed shards were named by hand and no longer match what the generator produces —
+one whose heading contains a non-ASCII letter the slug drops, several committed before the
+digest suffix existed. So a routine re-shard after a merge deleted and recreated three
+files this branch never touched, twice, putting unrelated renames into a content diff and
+manufacturing conflicts for whoever else was editing them.
+
+`--check` compares the **bytes of the rebuilt document**, not filenames, and its own comment
+says so explicitly: ordinals are author-chosen by design, so requiring canonical names would
+break the promise that wedging an entry in at `00155-…` needs no renumber.
+
+So after a re-shard: restore every shard that is not yours to its committed name, delete the
+regenerated duplicates, and then run `--unshard` so the monolith is rebuilt from the shard
+set actually on disk. Only the **ordinal** has to be right, because filename order is
+document order.
+
+**The generalisable half:** when a generator is idempotent in *content* but not in *naming*,
+running it wholesale attributes other people's history to your commit. Regenerate the entry
+you added; leave the ones you did not.
+
+Doing that by hand is fine. Doing it with a helper that *infers* which shards are yours is
+not — see "A helper that decides ownership by pattern will discard your own work
+when you rename it" below, which is how I lost three of my own.
+
+## A curriculum gate can silently constrain what may be authored
+
+Chasing "600 headwords at or below A1", ten fully-verified verb candidates were dropped —
+not for duplication, not for etymology, but because **no A1 spine node can host a verb**.
+`vocabularyOf` credits a headword to a level through its curriculum segment's spine node,
+and the three A1 nodes in use are "mark out a specific known thing", "ask where something
+is" and "the numbers one to five". A `canDo` reading "I can say *aprender*, *olvidar* and
+*necesitar*, and mark out which specific thing I mean" is a slot being filled, not a
+capability.
+
+Nothing reports this. The gate counts headwords and is satisfied; the fact that the only
+headwords it can count are nouns and adjectives is invisible to it, and the resulting
+curriculum shape is one nobody chose.
+
+**Generalisable check:** when a metric is defined by a join against a taxonomy, the taxonomy
+silently bounds what can be built. Ask what the metric *cannot* count before assuming a
+shortfall is a content problem.
+
+## A gate that recovers a constant by regex can be disarmed by a comment
+
+Replacing a hardcoded CI ceiling with one **derived** from the corpus was the right move and
+almost shipped with the same class of hole it was removing.
+
+The bundler config declared the band width; the checker recovered it with
+`/export const LESSON_BAND_CHAPTERS = (\d+);/.exec(configSource)`. `exec` returns the
+**first** match anywhere in the file — and that file carries eighty lines of prose that
+discuss the constant by name, because a number nobody can explain is a number the next
+person bumps. So a line as innocent as
+
+    // historical note: this was `export const LESSON_BAND_CHAPTERS = 1;` before
+
+hands the checker a band width of 1 while the bundler goes on using 5. Smaller bands mean
+*more* bands, so the derived budget inflated from 281 to **1,158**, and a grouping
+regression all the way back to the byte-linear shape the change existed to kill would have
+passed unremarked. Documenting the constant well was what armed the attack.
+
+**The fix is not a better regex** — `^`-anchoring or "last match wins" both lose to a
+slightly different comment. Put the value in a module and `import` it from both sides. An
+import cannot be shadowed by a comment, and the two consumers stop being two
+implementations that merely look alike.
+
+**Generalisable check:** any time a checker recovers a value by *parsing the source of the
+thing it checks*, ask what happens when that source also *talks about* the value. Config
+files, migration scripts and lockfile linters all do this. If both sides can import, they
+must.
+
+**Corollary — for a CI gate, ask which direction an error moves it.** Every guard on that
+corpus walk pointed the same way once the question was framed: a symlinked `lessons/`
+directory, an unbounded digit run reaching `Infinity`, a track name Rollup's sanitiser
+mangles — each *invents* a band, each *raises* the budget, each makes the gate pass when it
+should fail. None of them threatened the build. A gate's own permissiveness is the only bug
+class it cannot catch for you.
+
+
+## A helper that decides ownership by pattern will discard your own work when you rename it
+
+Re-sharding a merged document renames shards it did not author (previous entry), so I wrote
+a helper to restore the foreign ones: it matched shard filenames against a regex of *my*
+slugs, kept those, and reverted the rest.
+
+Then I rewrote my three entries' headings — which is what the whole edit was for — and ran
+it. The slugs no longer matched, the helper classified my own new shards as foreign,
+deleted all three, and the subsequent `--unshard` rebuilt the document from what was left.
+The monolith lost three sections and `--check` passed, because the shards and the monolith
+agreed perfectly about the reduced content.
+
+The section count is what caught it: 132 where 135 was expected. The byte-level round trip
+cannot see this, and neither can a grep for the titles — the titles were the thing that had
+changed.
+
+**Rules:**
+
+1. **Ownership is a fact you know, not a pattern you infer.** Pass the file list explicitly.
+   A helper that guesses which changes are yours will guess wrong exactly when you have
+   changed them.
+2. **Count before and after, and make the expected count a number you wrote down first.**
+   "135 sections, 135 shards" is a check; "shards and monolith agree" is not, because a
+   tool that deletes from both keeps them agreeing.
+
 ## Making a safety detector *less* trigger-happy can add a false negative in exactly the direction it exists to prevent
 
 `modality.ts` decides whether a lesson can be done while driving. Its stated bias is to

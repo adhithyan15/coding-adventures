@@ -1,0 +1,831 @@
+{
+  "version": 1,
+  "language": "spanish",
+  "chapter": 367,
+  "title": "Breakfast, Fruit And Something Sweet",
+  "drivablePrefix": 5,
+  "sourceHash": "fnv1a64:78fcd77eda73b9b5",
+  "lessons": [
+    {
+      "id": "ES-C367-desayuno",
+      "sequence": 7270,
+      "title": "el desayuno — the meal that undoes a fast",
+      "headword": "el desayuno",
+      "romanization": "el desayuno",
+      "gloss": "breakfast — des- undoing ayuno, a fast; English breakfast says the same thing in Germanic words, and dinner is the borrowed Romance version of it",
+      "script": "latin",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:37dcbbc6a48598b1",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Say the stairs, then the wardrobe. (La escalera; el armario.)"
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know first",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "el pan — what is most often on the plate at this hour."
+            },
+            {
+              "kind": "speech",
+              "text": "el café — the drink beside it."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "pronunciation",
+          "title": "Sounds you'll need",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "de-sa-YU-no, four beats with the weight on the third. The y here is a consonant, close to the y of English yes. see pronunciation reference."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "el desayuno — \"breakfast.\""
+            },
+            {
+              "kind": "speech",
+              "text": "Take the word in two pieces. Ayuno is a fast — going without food. Des- undoes whatever follows it. So desayuno is the un-fasting: the meal that cancels a night of not eating."
+            },
+            {
+              "kind": "speech",
+              "text": "English builds its own word out of exactly that idea, out of Germanic parts rather than Latin ones: break plus fast. Two languages, two vocabularies, one thought."
+            },
+            {
+              "kind": "speech",
+              "text": "Then English does it a second time, by borrowing instead of building. Dinner came from Old French disner, and behind disner stands a late Latin verb meaning to break a fast. Breakfast and dinner are the same sentence in one language, one half of it homegrown and the other imported — which is how the imported half drifted all the way to the evening without anybody noticing what it said."
+            },
+            {
+              "kind": "speech",
+              "text": "The Latin family behind ayuno left two more marks on English:"
+            },
+            {
+              "kind": "speech",
+              "text": "jejune — thin, meagre, unsatisfying. A jejune argument leaves you hungry."
+            },
+            {
+              "kind": "speech",
+              "text": "the jejunum — a stretch of the small intestine. Early anatomists opened bodies and kept finding that particular stretch empty, so they called it \"the fasting one.\""
+            },
+            {
+              "kind": "speech",
+              "text": "One Latin root for going without: a meal that ends it, a criticism that means it, and a piece of your own body that got the name by accident of dissection."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "You can now name the first meal of the day: el desayuno."
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "el desayuno",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *el desayuno*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "un desayuno",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *un desayuno*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "el pan del desayuno",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *el pan del desayuno*]"
+            }
+          ]
+        },
+        {
+          "index": 6,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What are the two pieces of desayuno? (Des-, undoing, and ayuno, a fast.) And why did anatomists call one stretch of gut the jejunum? (They kept finding it empty.)"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "ES-C367-fruta",
+      "sequence": 7280,
+      "title": "la fruta — what a plant gives you back",
+      "headword": "la fruta",
+      "romanization": "la fruta",
+      "gloss": "fruit — Latin fructus from frui, to enjoy, so a fruit is what a plant gives back; English fruit and frugal both arrived through French, and the old verb brook is the inherited cousin",
+      "script": "latin",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:1ebda27cf5d53c44",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Say the wardrobe, then breakfast. (El armario; el desayuno.)"
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know first",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "la manzana — the one you can already name."
+            },
+            {
+              "kind": "speech",
+              "text": "el árbol — where most of it grows."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "pronunciation",
+          "title": "Sounds you'll need",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "FRU-ta, two beats with the weight on the first. The r is a single tap, and the fr runs together without a vowel sneaking in between. see pronunciation reference."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "la fruta — \"fruit.\""
+            },
+            {
+              "kind": "speech",
+              "text": "Latin frūctus meant the yield of something — what it produced, what you got out of it. It was built on the verb fruī, \"to enjoy, to make use of.\" So a fruit is not first a sweet round thing. It is the enjoyment a plant hands back to whoever tended it."
+            },
+            {
+              "kind": "speech",
+              "text": "That older sense survives in English wherever fruit steps away from the greengrocer: the fruits of your labour, a fruitful meeting, fruitless effort."
+            },
+            {
+              "kind": "speech",
+              "text": "Three relatives, and the road each one took matters:"
+            },
+            {
+              "kind": "speech",
+              "text": "fruit came through Old French, which is why the Latin -ct- wore off it;"
+            },
+            {
+              "kind": "speech",
+              "text": "frugal came through French too, from frūx, a sister noun meaning produce or crops. A frugal life is one lived on what the ground actually yields;"
+            },
+            {
+              "kind": "speech",
+              "text": "fructose was assembled in a laboratory in the nineteenth century out of the Latin stem and a chemist's ending. Nobody inherited it. It kept the -ct- because it was built from the spelling, not passed down by mouth."
+            },
+            {
+              "kind": "speech",
+              "text": "There is one more, and it does not look related at all. English brook, in she will brook no argument, is the inherited Germanic cousin of the same ancient root. It once meant to use or enjoy a thing, and narrowed over centuries to putting up with it. Enjoy and endure, from one starting point."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "You can now name the class as well as the item: la manzana es una fruta."
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "la fruta",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *la fruta*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "una fruta",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *una fruta*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "la manzana es una fruta",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *la manzana es una fruta*]"
+            }
+          ]
+        },
+        {
+          "index": 6,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What did Latin fruī mean? (To enjoy, to make use of.) And what does a frugal person live on? (What the ground yields.)"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "ES-C367-naranja",
+      "sequence": 7290,
+      "title": "la naranja — the fruit that lent English a colour",
+      "headword": "la naranja",
+      "romanization": "la naranja",
+      "gloss": "orange — Arabic naranj from Persian narang, traceable back to Sanskrit; Spanish kept the n that English lost when a norange was reheard as an orange",
+      "script": "latin",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:a8924ea326e8b2f5",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Say breakfast, then fruit. (El desayuno; la fruta.)"
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know first",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "la fruta — the class this one belongs to."
+            },
+            {
+              "kind": "speech",
+              "text": "el color — because in Spanish, as in English, this word does both jobs."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "pronunciation",
+          "title": "Sounds you'll need",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "na-RAN-ja, three beats with the weight on the second. The j is the scraping sound at the back of the mouth, nothing like an English j. see pronunciation reference."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "la naranja — \"the orange.\""
+            },
+            {
+              "kind": "speech",
+              "text": "This word walked to Spain, and you can follow its footprints backwards. Arabic nāranj. Persian nārang. Sanskrit nāraṅga, and probably a loan into Sanskrit before that, from further south in India. Spanish took the Arabic form with its first n still on the front."
+            },
+            {
+              "kind": "speech",
+              "text": "English got the same word and dropped that n. Somewhere in Romance the phrase was reheard: a norange turned into an orange, and the consonant walked across to the article. That is a reconstruction rather than a recorded event, but English has done the identical thing to itself twice where the paperwork survives:"
+            },
+            {
+              "kind": "speech",
+              "text": "an apron was once a napron;"
+            },
+            {
+              "kind": "speech",
+              "text": "a newt was once an ewte, and took an n it had no right to."
+            },
+            {
+              "kind": "speech",
+              "text": "Portuguese has laranja, with an l where Spanish has n. Nobody has a convincing account of why, and the honest thing is to notice it rather than explain it."
+            },
+            {
+              "kind": "speech",
+              "text": "Now the part people find hard to believe. The colour is named after the fruit. English has no record of the word as a colour until the sixteenth century, because before the fruit came north there was no ordinary word for that shade — writers reached for compounds of yellow and red. A carrot, a sunset and a traffic cone are all named after a piece of fruit."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "You can now name a fruit and a colour with one word: la naranja."
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "la naranja",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *la naranja*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "una naranja",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *una naranja*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "la naranja es una fruta",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *la naranja es una fruta*]"
+            }
+          ]
+        },
+        {
+          "index": 6,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Which language did naranja reach Spanish from? (Arabic.) And which came first in English, the fruit or the colour? (The fruit — the colour was named after it.)"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "ES-C367-patata",
+      "sequence": 7300,
+      "title": "la patata — two American words in one",
+      "headword": "la patata",
+      "romanization": "la patata",
+      "gloss": "potato — read as a crossing of Taíno batata, the sweet potato, with Quechua papa, this one; English potato is the Spanish word, and it named the sweet one first",
+      "script": "latin",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:c97700eeb5e73fc9",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Say fruit, then the orange. (La fruta; la naranja.)"
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know first",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "la comida — what this ends up inside."
+            },
+            {
+              "kind": "speech",
+              "text": "la tierra — where it grows, out of sight."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "pronunciation",
+          "title": "Sounds you'll need",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "pa-TA-ta, three beats with the weight on the second. Both t sounds are made with the tongue against the teeth, softer than an English t. see pronunciation reference."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "la patata — \"the potato.\""
+            },
+            {
+              "kind": "speech",
+              "text": "Two plants, two American languages, one Spanish word — and a muddle nobody ever tidied up."
+            },
+            {
+              "kind": "speech",
+              "text": "Batata is Taíno, an Arawakan language of the Caribbean islands, and it named the sweet potato. Papa is Quechua, from the Andes, and it named the tuber you would recognise as a potato. Spanish met both plants within a few decades of each other, and the standard reading of patata is that the two names ran together."
+            },
+            {
+              "kind": "speech",
+              "text": "The muddle is still on the map. Much of Latin America says papa and holds the two plants apart with separate words. Spain says patata for the ordinary one. Both are Spanish; neither is a mistake, and you will be understood either way."
+            },
+            {
+              "kind": "speech",
+              "text": "English took patata and made potato of it — and for its first decades in English, a potato was the sweet one. The white potato borrowed the name afterwards, from the plant that had it first."
+            },
+            {
+              "kind": "speech",
+              "text": "One warning worth carrying. Quechua papa, the tuber, has nothing to do with papá, father. That one is a nursery word, the sound a small child makes early, and dozens of unrelated languages arrived at it on their own."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "You can now name what grows underground: la patata, and la papa where they say it that way."
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "la patata",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *la patata*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "una patata",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *una patata*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "la patata está en la tierra",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *la patata está en la tierra*]"
+            }
+          ]
+        },
+        {
+          "index": 6,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Which two American languages are read into patata? (Taíno and Quechua.) And which plant did English call a potato first? (The sweet potato.)"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "ES-C367-azucar",
+      "sequence": 7310,
+      "title": "el azúcar — the article that came along with the word",
+      "headword": "el azúcar",
+      "romanization": "el azúcar",
+      "gloss": "sugar — Arabic as-sukkar back through Persian to Sanskrit śarkarā, grit; the a- on the front is the Arabic article, and English sugar came the same road through French",
+      "script": "latin",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:1b04696822ab26d7",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Say the orange, then the potato. (La naranja; la patata.)"
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know first",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "la miel — what sweetened food before this arrived."
+            },
+            {
+              "kind": "speech",
+              "text": "el café — the usual reason to reach for it."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "pronunciation",
+          "title": "Sounds you'll need",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "a-ZÚ-car, three beats with the weight on the second, which is why the accent is written: a word ending in -r would otherwise carry its weight at the end. see pronunciation reference."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "el azúcar — \"sugar.\""
+            },
+            {
+              "kind": "speech",
+              "text": "Start with the front of the word, because the front of the word is not part of the word."
+            },
+            {
+              "kind": "speech",
+              "text": "Arabic marks a definite noun with al-, and before certain letters that l assimilates to whatever follows. Before s it becomes as-. Arabic for the sugar is as-sukkar, and Spanish borrowed the whole phrase without noticing the seam. So el azúcar carries two definite articles stacked on one noun, a Spanish one and an Arabic one."
+            },
+            {
+              "kind": "speech",
+              "text": "Behind the Arabic stands a Persian form, and behind that Sanskrit śarkarā, which meant grit, gravel. Somebody looked at a heap of dried sugar, broken up for carrying, and reached for the word for coarse sand."
+            },
+            {
+              "kind": "speech",
+              "text": "English sugar is the same eastern word, but it arrived through French rather than through Spanish — which is why English kept the sugar and left the article behind."
+            },
+            {
+              "kind": "speech",
+              "text": "And English holds that Sanskrit word a second time, from the other end of the sea route: jaggery, the dark palm sugar, came through the languages of south India and then Portuguese. Two borrowings of one word, centuries apart, arriving from opposite directions."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "You can now say how you take it: con azúcar, sin azúcar."
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "el azúcar",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *el azúcar*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "con azúcar",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *con azúcar*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "un café con azúcar",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *un café con azúcar*]"
+            }
+          ]
+        },
+        {
+          "index": 6,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What is the a- at the front of azúcar? (The Arabic article al-, assimilated to as-.) And what did Sanskrit śarkarā mean? (Grit, gravel.)"
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "findings": []
+}

@@ -5,6 +5,7 @@ use warnings;
 use utf8;
 use File::Basename qw(basename);
 use File::Spec ();
+use JSON::PP ();
 use CodingAdventures::BuildTool::TrackedArtifactUnicode17 ();
 
 my %CI_MANAGED_TOOLCHAIN_LANGUAGES = map { $_ => 1 } qw(
@@ -13,6 +14,29 @@ my %CI_MANAGED_TOOLCHAIN_LANGUAGES = map { $_ => 1 } qw(
 
 my $TRACKED_ARTIFACT_COMPONENT_IDENTITY = 'node_modules';
 my $TRACKED_ARTIFACT_REDACTED_PATH = 'repository';
+my $ORPHAN_SCAN_ROOT = 'code';
+my $ORPHAN_LEDGER_PATH = 'code/BUILD-EXEMPTIONS';
+my @ORPHAN_BUILD_NAMES = qw(
+    BUILD BUILD_windows BUILD_mac BUILD_linux BUILD_mac_and_linux
+);
+my %ORPHAN_BUILD_RANK = map { $ORPHAN_BUILD_NAMES[$_] => $_ }
+    0 .. $#ORPHAN_BUILD_NAMES;
+my %ORPHAN_SKIP_COMPONENTS = map { $_ => 1 } qw(
+    .git target node_modules vendor .venv _build deps .build dist-newstyle .cargo
+);
+my %PYTHON_BLANK_CODEPOINTS = map { $_ => 1 } (
+    0x0009 .. 0x000D,
+    0x001C .. 0x0020,
+    0x0085,
+    0x00A0,
+    0x1680,
+    0x2000 .. 0x200A,
+    0x2028,
+    0x2029,
+    0x202F,
+    0x205F,
+    0x3000,
+);
 our $TRACKED_ARTIFACT_UNICODE_VERSION =
     $CodingAdventures::BuildTool::TrackedArtifactUnicode17::UNICODE_VERSION;
 my %WINDOWS_RESERVED_BASENAMES = map { $_ => 1 } (
@@ -114,6 +138,301 @@ sub _canonical_tracked_details {
         $details->{ordinal},
         $details->{problem},
     ));
+}
+
+# Validate a closed Cargo/BUILD/ledger snapshot without touching the host.
+# Discovery belongs to the native Go front door. This adapter accepts only
+# inert hashes and arrays and deliberately gains no filesystem, Git, process,
+# environment, network, credential, or link-following authority.
+sub validate_orphan_crate_snapshot {
+    my ($snapshot) = @_;
+
+    my @manifests = grep {
+        !_orphan_artifact_path($_->{path})
+    } @{$snapshot->{manifests} || []};
+    my %directories = map { $_ => 1 } @{$snapshot->{directories} || []};
+    my %manifest_by_path = map { $_->{path} => $_ } @manifests;
+    my (%coverage, %empty_builds);
+    for my $manifest (@manifests) {
+        my $path = $manifest->{path};
+        $coverage{$path} = _covering_orphan_build(
+            $snapshot->{build_files} || [],
+            $path,
+            'runnable',
+        );
+        $empty_builds{$path} = _covering_orphan_build(
+            $snapshot->{build_files} || [],
+            $path,
+            'empty',
+        );
+    }
+
+    my @diagnostics;
+    my %seen_exemption_paths;
+    my @valid_exemptions;
+
+    # Reserve portable identities before field-policy precedence. An invalid
+    # first spelling must not let a later full-fold alias escape detection.
+    for my $exemption (@{$snapshot->{exemptions} || []}) {
+        my $path = $exemption->{path};
+        my ($identity, $path_problem);
+        if (_portable_orphan_path($path)) {
+            $identity = _orphan_path_identity($path);
+            if (!_under_orphan_scan_root($path)) {
+                $path_problem = 'PATH_OUTSIDE_SCAN';
+            }
+            elsif (_orphan_artifact_path($path)) {
+                $path_problem = 'PATH_ARTIFACT';
+            }
+        }
+        else {
+            $path_problem = 'PATH_UNSAFE';
+        }
+
+        my $duplicate = defined($identity) && $seen_exemption_paths{$identity};
+        $seen_exemption_paths{$identity} = 1
+            if defined($identity) && !$duplicate;
+
+        my $kind = $exemption->{kind};
+        my $problem;
+        if (!defined($kind) || ($kind ne 'EXCLUDED' && $kind ne 'PENDING')) {
+            $problem = 'UNKNOWN_KIND';
+        }
+        elsif (!_valid_orphan_reason($exemption->{reason})
+            || _python_blank($exemption->{reason})) {
+            $problem = 'REASON_MISSING';
+        }
+        elsif ($duplicate) {
+            $problem = 'DUPLICATE_PATH';
+        }
+        else {
+            $problem = $path_problem;
+        }
+
+        if (defined $problem) {
+            push @diagnostics, {
+                code => 'ORPHAN_EXEMPTION_INVALID',
+                severity => 'error',
+                path => $ORPHAN_LEDGER_PATH,
+                details => {
+                    line => $exemption->{line},
+                    problem => $problem,
+                },
+            };
+            next;
+        }
+        push @valid_exemptions, $exemption;
+    }
+
+    my %active_exemptions;
+    my $pending_exemption_count = 0;
+    for my $exemption (@valid_exemptions) {
+        my $path = $exemption->{path};
+        my $stale_problem;
+        if (!$directories{$path}) {
+            $stale_problem = 'MISSING_DIRECTORY';
+        }
+        elsif (!$manifest_by_path{$path}) {
+            $stale_problem = 'NO_MANIFEST';
+        }
+        elsif (defined $coverage{$path}) {
+            $stale_problem = 'COVERED';
+        }
+
+        if (defined $stale_problem) {
+            push @diagnostics, {
+                code => 'ORPHAN_EXEMPTION_STALE',
+                severity => 'error',
+                path => $ORPHAN_LEDGER_PATH,
+                details => {
+                    entry_path => $path,
+                    kind => $exemption->{kind},
+                    line => $exemption->{line},
+                    problem => $stale_problem,
+                },
+            };
+            next;
+        }
+
+        $active_exemptions{$path} = $exemption;
+        $pending_exemption_count++ if $exemption->{kind} eq 'PENDING';
+    }
+
+    for my $manifest (@manifests) {
+        my $path = $manifest->{path};
+        next if defined($coverage{$path}) || $active_exemptions{$path};
+
+        if (defined $empty_builds{$path}) {
+            push @diagnostics, {
+                code => 'ORPHAN_CRATE_EMPTY_BUILD',
+                severity => 'error',
+                path => $path,
+                details => {
+                    build_path => $empty_builds{$path}{path},
+                    manifest_kind => $manifest->{kind},
+                },
+            };
+        }
+        else {
+            push @diagnostics, {
+                code => 'ORPHAN_CRATE_UNLISTED',
+                severity => 'error',
+                path => $path,
+                details => { manifest_kind => $manifest->{kind} },
+            };
+        }
+    }
+
+    @diagnostics = sort {
+        _unicode_scalar_cmp($a->{code}, $b->{code})
+            || _unicode_scalar_cmp($a->{path}, $b->{path})
+            || _canonical_orphan_details($a->{details})
+                cmp _canonical_orphan_details($b->{details})
+    } @diagnostics;
+
+    my %seen_codes;
+    my @diagnostic_codes = sort grep { !$seen_codes{$_}++ }
+        map { $_->{code} } @diagnostics;
+    return {
+        valid => @diagnostics ? JSON::PP::false : JSON::PP::true,
+        diagnostic_codes => \@diagnostic_codes,
+        pending_exemption_count => $pending_exemption_count,
+        diagnostics => \@diagnostics,
+    };
+}
+
+sub _covering_orphan_build {
+    my ($build_files, $manifest_path, $wanted_state) = @_;
+    my ($best, $best_parent, $best_rank);
+    for my $build_file (@{$build_files || []}) {
+        next unless defined($build_file->{state})
+            && $build_file->{state} eq $wanted_state;
+        my $path = $build_file->{path} // '';
+        next unless $path =~ m{\A(.+)/([^/]+)\z};
+        my ($parent, $name) = ($1, $2);
+        next unless exists $ORPHAN_BUILD_RANK{$name};
+        next unless _under_orphan_scan_root($parent);
+        next unless $manifest_path eq $parent
+            || index($manifest_path, "$parent/") == 0;
+
+        my $rank = $ORPHAN_BUILD_RANK{$name};
+        if (!defined($best)
+            || _orphan_path_depth($parent) > _orphan_path_depth($best_parent)
+            || (_orphan_path_depth($parent) == _orphan_path_depth($best_parent)
+                && $rank < $best_rank)
+            || (_orphan_path_depth($parent) == _orphan_path_depth($best_parent)
+                && $rank == $best_rank
+                && _unicode_scalar_cmp($path, $best->{path}) < 0)) {
+            $best = $build_file;
+            $best_parent = $parent;
+            $best_rank = $rank;
+        }
+    }
+    return $best;
+}
+
+sub _portable_orphan_path {
+    my ($path) = @_;
+    return 0 unless defined($path) && !ref($path);
+    return 0 if $path eq '' || length($path) > 2048;
+    return 0 unless _valid_unicode_text($path);
+    my @scalars = unpack('U*', $path);
+    return 0 if @scalars > 512;
+    return 0
+        unless CodingAdventures::BuildTool::TrackedArtifactUnicode17::nfc($path)
+            eq $path;
+    return 0 if substr($path, 0, 1) eq '/'
+        || index($path, '\\') >= 0
+        || index($path, '//') >= 0
+        || $path =~ /^[A-Za-z]:/;
+    return 0 if grep {
+        $_ < 32 || $_ == 0x3C || $_ == 0x3E || $_ == 0x3A
+            || $_ == 0x22 || $_ == 0x7C || $_ == 0x3F || $_ == 0x2A
+    } @scalars;
+
+    for my $component (split m{/}, $path, -1) {
+        return 0 if $component eq '' || $component eq '.' || $component eq '..';
+        return 0 if $component =~ /[. ]\z/;
+        my ($basename) = split /\./, $component, 2;
+        my $uppercase =
+            CodingAdventures::BuildTool::TrackedArtifactUnicode17::full_uppercase($basename);
+        return 0 if $WINDOWS_RESERVED_BASENAMES{$uppercase};
+    }
+    return 1;
+}
+
+sub _orphan_path_identity {
+    my ($path) = @_;
+    return CodingAdventures::BuildTool::TrackedArtifactUnicode17::casefold(
+        CodingAdventures::BuildTool::TrackedArtifactUnicode17::nfc($path),
+    );
+}
+
+sub _under_orphan_scan_root {
+    my ($path) = @_;
+    return defined($path)
+        && ($path eq $ORPHAN_SCAN_ROOT || index($path, "$ORPHAN_SCAN_ROOT/") == 0);
+}
+
+sub _orphan_artifact_path {
+    my ($path) = @_;
+    return 0 unless defined($path) && !ref($path);
+    return scalar grep { $ORPHAN_SKIP_COMPONENTS{$_} }
+        split m{/}, $path, -1;
+}
+
+sub _python_blank {
+    my ($value) = @_;
+    return 0 unless _valid_unicode_text($value);
+    pos($value) = 0;
+    while ($value =~ /\G(.)/gcs) {
+        return 0 unless $PYTHON_BLANK_CODEPOINTS{ord($1)};
+    }
+    return 1;
+}
+
+sub _valid_orphan_reason {
+    my ($value) = @_;
+    return 0 unless defined($value) && !ref($value);
+    return 0 if length($value) > 4096;
+    return _valid_unicode_text($value);
+}
+
+sub _valid_unicode_text {
+    my ($value) = @_;
+    return 0 unless defined($value) && !ref($value);
+    return $value !~ /[\x80-\xFF]/ unless utf8::is_utf8($value);
+    return 0 unless utf8::valid($value);
+
+    pos($value) = 0;
+    while ($value =~ /\G(.)/gcs) {
+        my $codepoint = ord($1);
+        return 0 if ($codepoint >= 0xD800 && $codepoint <= 0xDFFF)
+            || $codepoint > 0x10FFFF;
+    }
+    return 1;
+}
+
+sub _orphan_path_depth {
+    my ($path) = @_;
+    return scalar split m{/}, $path, -1;
+}
+
+sub _unicode_scalar_cmp {
+    my ($left, $right) = @_;
+    my @left = unpack('U*', $left // '');
+    my @right = unpack('U*', $right // '');
+    my $limit = @left < @right ? scalar(@left) : scalar(@right);
+    for my $index (0 .. $limit - 1) {
+        my $comparison = $left[$index] <=> $right[$index];
+        return $comparison if $comparison;
+    }
+    return @left <=> @right;
+}
+
+sub _canonical_orphan_details {
+    my ($details) = @_;
+    return JSON::PP->new->canonical(1)->ascii(1)->encode($details);
 }
 
 sub validate_ci_full_build_toolchains {

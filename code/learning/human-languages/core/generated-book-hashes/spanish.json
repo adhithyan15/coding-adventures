@@ -3825,6 +3825,97 @@
         "ES-C366-armario"
       ],
       "tex": "spanish/book/chapters/ch366-la-caja-y-la-lampara.tex"
+    },
+    {
+      "language": "spanish",
+      "chapter": 367,
+      "sourceHash": "fnv1a64:96f8f636ab25e37b",
+      "lessonIds": [
+        "ES-C367-desayuno",
+        "ES-C367-fruta",
+        "ES-C367-naranja",
+        "ES-C367-patata",
+        "ES-C367-azucar"
+      ],
+      "tex": "spanish/book/chapters/ch367-el-desayuno-y-la-fruta.tex"
+    },
+    {
+      "language": "spanish",
+      "chapter": 368,
+      "sourceHash": "fnv1a64:181803044a7f3764",
+      "lessonIds": [
+        "ES-C368-abeja",
+        "ES-C368-mosca",
+        "ES-C368-cerdo",
+        "ES-C368-lobo",
+        "ES-C368-toro"
+      ],
+      "tex": "spanish/book/chapters/ch368-la-abeja-y-la-mosca.tex"
+    },
+    {
+      "language": "spanish",
+      "chapter": 369,
+      "sourceHash": "fnv1a64:d882c1e89d4c56b0",
+      "lessonIds": [
+        "ES-C369-rio",
+        "ES-C369-arena",
+        "ES-C369-polvo",
+        "ES-C369-humo",
+        "ES-C369-ceniza"
+      ],
+      "tex": "spanish/book/chapters/ch369-el-rio-y-la-arena.tex"
+    },
+    {
+      "language": "spanish",
+      "chapter": 370,
+      "sourceHash": "fnv1a64:f99824489062fe7f",
+      "lessonIds": [
+        "ES-C370-tormenta",
+        "ES-C370-trueno",
+        "ES-C370-hielo",
+        "ES-C370-cueva",
+        "ES-C370-costa"
+      ],
+      "tex": "spanish/book/chapters/ch370-la-tormenta-y-el-trueno.tex"
+    },
+    {
+      "language": "spanish",
+      "chapter": 371,
+      "sourceHash": "fnv1a64:fb6efe5764d4aad5",
+      "lessonIds": [
+        "ES-C371-pequeno",
+        "ES-C371-gordo",
+        "ES-C371-joven",
+        "ES-C371-lento",
+        "ES-C371-dulce"
+      ],
+      "tex": "spanish/book/chapters/ch371-pequeno-y-gordo.tex"
+    },
+    {
+      "language": "spanish",
+      "chapter": 372,
+      "sourceHash": "fnv1a64:005b9ad2c4197cd3",
+      "lessonIds": [
+        "ES-C372-gris",
+        "ES-C372-rosa",
+        "ES-C372-oscuro",
+        "ES-C372-palido",
+        "ES-C372-suave"
+      ],
+      "tex": "spanish/book/chapters/ch372-gris-y-rosa.tex"
+    },
+    {
+      "language": "spanish",
+      "chapter": 373,
+      "sourceHash": "fnv1a64:034734e69bd94429",
+      "lessonIds": [
+        "ES-C373-oro",
+        "ES-C373-botella",
+        "ES-C373-alfombra",
+        "ES-C373-falda",
+        "ES-C373-peine"
+      ],
+      "tex": "spanish/book/chapters/ch373-el-oro-y-la-botella.tex"
     }
   ]
 }

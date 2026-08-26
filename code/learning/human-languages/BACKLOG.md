@@ -5,6 +5,20 @@ Findings from the pre-A1 tranche work were recorded in commit messages and PR
 bodies, which are durable and searchable, but a reader opening this file found
 nothing. The entries below are the ones that change how the work is done.
 
+## HL-C11E — Persian shin closes the last shared-Arabic-family gap
+
+After Malayalam chillu RR **ർ** landed, shared Arabic-family **ش** led the
+measured queue at **8 affected realizations**. The primary Persian Online
+freehand lesson writes Persian shin body-first at 01:29–01:35: form the three
+teeth right-to-left, flow directly into the final bowl, then lift for the
+lower-left, lower-right, and centered upper dots.
+
+The four-stroke path fits that independently demonstrated order to the bundled
+Noto Naskh outline while keeping Persian provenance separate from the Arabic
+and Urdu rows for the same Unicode glyph. Frame inspection also corrected the
+adjacent Persian sin timestamp to 01:23–01:28. The canonical row and ductus
+close all 8 shin gaps; Telugu independent **ఆ** now leads at **8 affected
+realizations**.
 ## HL-C11D — Malayalam chillu RR closes the arch-and-loop gap
 
 After Malayalam chillu LL **ൾ** landed, Malayalam chillu RR **ർ** led the
@@ -18,6 +32,144 @@ The three-movement path fits that zero-lift order to the bundled Noto Sans
 Malayalam outline while retaining handwritten arch, loop, and hook variation.
 The canonical row and ductus close all 8 gaps. Shared Arabic-family **ش** now
 leads the measured queue at **8 affected realizations**.
+
+## A1 vocabulary is nouns and adjectives only, and the count does not show it
+
+**This is a content defect, not a tooling note.** Spanish is at 549 of the 600
+distinct headwords HL09 3.1 asks for at or below A1, and the number is honest as
+far as it goes. What it does not say is that essentially none of those headwords
+is a verb, and that the run to 600 cannot add one.
+
+A CEFR A1 vocabulary that contains no verbs is not an A1 vocabulary, whatever the
+count says. A1 descriptors are about doing things -- introducing yourself, asking
+for something, saying what you need. A learner who has 600 nouns and adjectives
+and cannot say *I need*, *I learn*, *I break*, *I wash* has not reached A1; they
+have reached a picture dictionary.
+
+### How the restriction happens
+
+`vocabularyOf` credits a headword to a level through its lesson's curriculum
+segment, which names a spine node, which declares a `stage`. So the set of things
+that can be taught at A1 is exactly the set of things that can be honestly
+attached to an A1 spine node.
+
+The vocabulary tranches use three:
+
+- `SPINE-DEFINITE-REFERENCE` -- "mark out a specific known person or thing"
+- `SPINE-ASK-LOCATION` -- "ask where a familiar person, place or object is"
+- `SPINE-COUNT-ONE-TO-FIVE` -- "the cardinal numbers one through five"
+
+None of them can host a verb. Writing a chapter `canDo` that reads "I can say
+*aprender*, *olvidar*, *necesitar*, *terminar* and *usar*, and mark out which
+specific thing I mean" is not a capability statement; it is a slot being filled
+so a lesson can be credited to a level.
+
+Tranche 5 dropped ten verb candidates for exactly this and nothing else --
+`aprender`, `olvidar`, `necesitar`, `terminar`, `usar`, `lavar`, `romper`,
+`bailar`, `tocar`, `oler`. Every one had cleared the headword screen, the atom
+screen and the root screen. Every one had its etymology verified against current
+scholarship. They were replaced with nouns and adjectives that fit the three
+nodes, and the tranche shipped 35 headwords with the level number moving exactly
+as planned. **Nothing anywhere reported that the composition had been decided by
+the taxonomy rather than by anyone's judgement of what a learner needs.**
+
+### Why the existing escape hatch is not an answer
+
+Pre-A1 nodes also count toward "at or below A1", and one of them already carries
+verbs: chapter 6 teaches `hablar`, `estudiar` and `trabajar` on
+`SPINE-POLITE-REQUEST-REPAIR`. That is a stretch on its face -- those verbs are
+not a politeness repair -- and it was set two hundred chapters ago rather than
+chosen. Using it deliberately now would mean knowingly filing the entire verb
+vocabulary of a language under "make a request politely and repair a small social
+mistake", which trades a visible gap for an invisible lie.
+
+### What is actually missing
+
+An A1 spine node for the thing a learner does at A1 with a verb: naming an
+everyday action, and saying they do it. Something on the order of "I can name
+common everyday actions and say that I do them." Until one exists:
+
+- the run from 549 to 600 is structurally restricted to things and their
+  properties;
+- the resulting curriculum shape is one nobody chose;
+- and the gate that is supposed to certify A1 readiness will certify it.
+
+**Do not fix this inside a vocabulary tranche.** It is a spine change, it affects
+every track that reaches A1 rather than Spanish alone, and it wants the owner's
+decision on the node's wording before any lesson is written against it.
+
+### The general form, for whoever meets this next
+
+A metric defined by a join against a taxonomy is silently bounded by that
+taxonomy. The count answers "how many", and the taxonomy quietly decides "of
+what" -- so a shortfall reads as a content problem when it may be a shape
+problem, and a target that is *met* can be met by the wrong thing entirely. Ask
+what a metric **cannot** count before trusting what it does.
+
+## Lesson batches never backfill, so unused capacity is not headroom
+
+Recorded here because the figure it corrects has already been printed in a merged
+pull-request body as evidence, and evidence is what it is not.
+
+Tranche 4 raised the bundler's `maxSize` grouping parameter from 49 kB to 56 kB,
+took the emitted lesson-batch count from 401 down to 353, lowered the
+request-count ceiling to match, and reasoned that the remaining 32% of unused
+capacity was headroom the next few tranches could grow into -- "6.29 MB of fill
+headroom before the batch count can grow again".
+
+Measured on the next tranche:
+
+```
+before   353 batches   13,478,418 B total   32% of cap unused
+after    359 batches   13,624,129 B total   32% of cap unused
+```
+
+Thirty-five lessons weighing **145,711 B** -- about 2.6 batches at the 56 kB cap,
+and slightly *lighter* than tranche 4's thirty-five -- added **six** batches, and
+the unused fraction did not move at all. A number that does not move when the
+thing it supposedly measures does is not a measurement.
+
+The slack is not one pool. Rolldown groups by track and then splits each track
+greedily by size, so the tail batch of every *other* track is sealed and never
+revisited; a Spanish tranche can only extend Spanish's tail. Corpus-wide slack is
+stranded by construction, and the count therefore tracks corpus bytes roughly
+linearly however much aggregate slack a report shows.
+
+Fixed structurally rather than with a third bump: batches are now grouped by a
+five-chapter range and the request budget is derived from the corpus band count
+instead of hardcoded, so adding lessons inside a band moves neither side and
+adding chapters moves both together.
+
+**The generalisable check:** before treating unused capacity as headroom, ask
+whether the allocator can *reach* it. Summing free space across N independently
+sealed partitions answers a question nobody asked; the number that predicts
+growth is the free space in the one partition the next write lands in. The same
+error is available in disk allocators, shard maps and connection pools.
+
+## An etymology can be its own evidence
+
+`la alfombra` was going to be taught as Arabic for "the red one". That account was
+printed in the Academy's dictionary for a long time and is repeated widely.
+
+Corominas took it apart on a ground worth naming: the redness had been read **out
+of** the proposed etymology and then offered back as evidence **for** it. Nobody
+had found a red carpet and gone looking for a word; somebody had found a word
+that could mean red and imagined the carpet. A genuinely red-rooted neighbour --
+`alhamar`, a coverlet -- sat tangled in the record beside it, and the colour
+walked from one word to the other. The Academy now prints `alhanbal`, a kind of
+tapestry.
+
+That is not a one-off. Three more of tranche 5's rewrites have the same shape --
+a tidy, old, widely printed proposal the current specialists have quietly stopped
+endorsing: `pecten`/`pecus` (comb to livestock to money), `pulvis`/`pollen`, and
+`gelu`/`glacies`. Four in thirty-five lessons.
+
+**The check:** an etymology that is beautiful, old and widely repeated is the one
+most worth verifying, not the one least. Ask specifically whether the evidence
+offered for it is independent of the proposal itself, and whether the dictionary
+of record still prints it -- the two questions that separate scholarship from a
+story that has been told often enough to sound settled.
+
 ## HL-C11C — Malayalam chillu LL closes the two-bowl gap
 
 After Kannada independent **ಇ** landed, Malayalam chillu LL **ൾ** led the

@@ -1,0 +1,21 @@
+{
+  "chapter": 368,
+  "title": "Five Animals, Two Of Them Small",
+  "label": "ch:la-abeja-y-la-mosca",
+  "canDo": "I can say la abeja, la mosca, el cerdo, el lobo and el toro, and name five animals a field might hold.",
+  "spineNodes": [
+    "SPINE-DEFINITE-REFERENCE"
+  ],
+  "payoff": {
+    "lesson": "ES-C368-toro",
+    "kind": "production",
+    "summary": "Complete ES-C368-toro: name five animals, two of them small enough to sit on a hand.",
+    "assesses": [
+      "ES-LEX-C368-REF-41",
+      "ES-LEX-C368-REF-42",
+      "ES-LEX-C368-REF-43",
+      "ES-LEX-C368-REF-44",
+      "ES-LEX-C368-REF-45"
+    ]
+  }
+}

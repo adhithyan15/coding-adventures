@@ -1,0 +1,15 @@
+{
+  "id": "ES-EXT-367-REF",
+  "stage": "A1",
+  "kind": "required",
+  "category": "vocabulary",
+  "canDo": "I can name el desayuno, la fruta, la naranja, la patata and el azúcar.",
+  "prerequisites": [],
+  "lessons": [
+    "ES-C367-desayuno",
+    "ES-C367-fruta",
+    "ES-C367-naranja",
+    "ES-C367-patata",
+    "ES-C367-azucar"
+  ]
+}

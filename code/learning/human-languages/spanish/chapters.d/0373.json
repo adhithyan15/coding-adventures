@@ -1,0 +1,21 @@
+{
+  "chapter": 373,
+  "title": "Five Things You Can Pick Up",
+  "label": "ch:el-oro-y-la-botella",
+  "canDo": "I can say el oro, la botella, la alfombra, la falda and el peine, and name five ordinary things I can pick up.",
+  "spineNodes": [
+    "SPINE-DEFINITE-REFERENCE"
+  ],
+  "payoff": {
+    "lesson": "ES-C373-peine",
+    "kind": "production",
+    "summary": "Complete ES-C373-peine: name five ordinary things you can pick up, and say what each is for.",
+    "assesses": [
+      "ES-LEX-C373-REF-51",
+      "ES-LEX-C373-REF-52",
+      "ES-LEX-C373-REF-53",
+      "ES-LEX-C373-REF-54",
+      "ES-LEX-C373-REF-55"
+    ]
+  }
+}

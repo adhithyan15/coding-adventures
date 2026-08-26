@@ -1,0 +1,15 @@
+{
+  "id": "ES-EXT-372-REF",
+  "stage": "A1",
+  "kind": "required",
+  "category": "vocabulary",
+  "canDo": "I can name gris, rosa, oscuro, pálido and suave.",
+  "prerequisites": [],
+  "lessons": [
+    "ES-C372-gris",
+    "ES-C372-rosa",
+    "ES-C372-oscuro",
+    "ES-C372-palido",
+    "ES-C372-suave"
+  ]
+}
