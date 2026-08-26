@@ -26,13 +26,16 @@ splice used by 17 more call sites) is correct with zero further changes.
 Same end state as the issue's prescribed per-sink fix, less code, and
 structurally impossible to miss a site since there's only one producer.
 
-New tests cover all four architecturally distinct consumption paths with a
+New tests cover all six architecturally distinct consumption paths with a
 value carrying all of `" < > &`: a plain `Box` (`partition_box_style`), a
 `Row` (`partition_flex_grid_style`, #12021's `<Grid>` lowering), a
-`HostButton` (`content_control_style_attr`), and `Image`
-(`part_style_attr`'s raw-splice path) — each asserts the escaped form
-appears and the raw hostile value never does. A fifth test confirms a
-literal backslash (not XML-significant) still round-trips unchanged now
+`HostButton` (`content_control_style_attr`), `Image`
+(`part_style_attr`'s raw-splice path), and direct unit tests for
+`drag_control_style_attr` (`HostDraggable`/`HostDropTarget`) and
+`partition_stack_panel_style` (still used by `HostTable`'s row-section
+emitter) — each asserts the escaped form appears and the raw hostile value
+never does. A seventh test confirms a literal backslash (not
+XML-significant) still round-trips unchanged now
 that the backslash-specific escape/unescape scheme is gone. All 229
 pre-existing tests pass unchanged, since escaping ordinary values (none of
 which contain `"<>&`) is a no-op.

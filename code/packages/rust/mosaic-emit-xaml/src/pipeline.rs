@@ -10766,6 +10766,36 @@ mod tests {
         assert_hostile_value_escaped_not_injected(&r.xaml);
     }
 
+    /// `drag_control_style_attr` (`HostDraggable`/`HostDropTarget`'s
+    /// `<ContentControl>` lowering) — direct unit test rather than full
+    /// emission, since `HostDraggable` needs several required props
+    /// (`drag-key`, etc.) unrelated to what this is testing.
+    #[test]
+    fn drag_control_style_attr_escapes_hostile_value() {
+        let style = style_for_box("handle", vec![("opacity", HOSTILE_STYLE_VALUE)]);
+        let part_styles = build_part_style_map(&style);
+        let node = LayoutNode {
+            tag: "HostDraggable".to_string(),
+            part_name: Some("handle".to_string()),
+            props: Vec::new(),
+            children: Vec::new(),
+        };
+        let (attrs, _spacing) = drag_control_style_attr(&node, &part_styles);
+        assert_hostile_value_escaped_not_injected(&attrs);
+    }
+
+    /// `partition_stack_panel_style` (still used by the `HostTable` row-
+    /// section emitter, `emit_host_table_rows` — table rows aren't flex
+    /// containers, so they didn't move to `partition_flex_grid_style` in
+    /// #12021). Direct unit test for the same reason as the one above.
+    #[test]
+    fn partition_stack_panel_style_escapes_hostile_value() {
+        let style = style_for_box("row", vec![("opacity", HOSTILE_STYLE_VALUE)]);
+        let part_styles = build_part_style_map(&style);
+        let (wrapper, stack, _text) = partition_stack_panel_style(Some("row"), &part_styles);
+        assert_hostile_value_escaped_not_injected(&format!("{wrapper}{stack}"));
+    }
+
     /// `parse_style_fragment` no longer needs (or has) backslash-escape
     /// handling — confirm a value containing a literal backslash round-
     /// trips as itself (backslash isn't XML-significant, so
