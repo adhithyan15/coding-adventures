@@ -970,7 +970,9 @@ backend immediately) come before the enabler-dependent items.
   its selector; a changing branch remains conservative and does not extend the
   ten-level proof budget. For finite real
   selectors, multiplication and division by exact positive one are likewise
-  preserving, including left-associative chains of those operations.
+  preserving, including left-associative chains of those operations. Exact
+  signed-unit chains are also preserving when their negative-one parity is
+  even; odd-sign chains and division by a selector remain conservative.
   Subtraction of positive numeric zero is also preserving, including
   left-associative chains, as is addition of negative real zero, because each
   retains the sign bit of negative zero. Addition of positive zero and
