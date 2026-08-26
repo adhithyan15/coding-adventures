@@ -4,6 +4,26 @@ All notable changes to this package will be documented in this file.
 
 ## [Unreleased]
 
+### Security - validate HostLink.href's URI scheme before Qt.openUrlExternally (#13052)
+
+Follow-up to #12038, which fixed the identical gap in the XAML backend and
+flagged that the other native backends likely shared it. `emit_host_link_qml`
+handed a literal `href` straight into `<a href="...">` rich text, and
+`onLinkActivated` passes the clicked link straight to
+`Qt.openUrlExternally(link)` — the OS shell launcher — with no scheme check.
+Since layout/style source is a trust boundary (third-party Mosaic packages),
+an unvalidated `file:`/custom-protocol scheme would launch arbitrary local
+content rather than open as a web link.
+
+Added `has_allowed_uri_scheme` (mirrors XAML's function of the same name —
+allowlists `http`/`https`/`mailto`, RFC-3986-shaped scheme/authority
+parsing) and a new `PipelineEmitError::UnsafeUriScheme` variant. Rejects a
+literal disallowed scheme at compile time — the only href path this backend
+has today (no `slot:`-bound href exists yet). Only checked when `external`
+is not `false`: that path dispatches only and never references `link`/
+`Qt.openUrlExternally` at all, so a routing placeholder like `href: "#"`
+stays valid there, matching XAML's identical in-app-routing exemption.
+
 ### Fixed - generated components collapsed to zero size in any QML layout
 
 Every generated component reported `0 x 0` to its parent and collapsed when

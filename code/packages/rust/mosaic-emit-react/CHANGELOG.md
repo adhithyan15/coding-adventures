@@ -4,6 +4,25 @@ All notable changes to this package will be documented in this file.
 
 ## [Unreleased]
 
+### Security - validate HostLink.href's URI scheme, literal and slot-bound (#13052)
+
+Follow-up to #12038 (the identical XAML gap). Both a literal `href="..."`
+and a slot-bound `href={u}` were spliced into a real `<a>` with no scheme
+check — React does not itself sanitize `javascript:`/`data:` URLs in a
+plain `href` attribute (a known React footgun), so this was a real XSS
+vector reachable from a third-party layout (layout/style source is a trust
+boundary).
+
+Added `has_disallowed_uri_scheme` (new `PipelineEmitError::UnsafeUriScheme`
+variant) rejecting a literal disallowed-scheme href at compile time. A
+slot-bound href is validated at runtime instead: a new module-level
+`isSafeUri(raw)` helper is emitted once (gated on
+`layout_contains_slot_bound_host_link_href`, matching the existing
+hook-import gating pattern) and every slot-bound `href={x}` becomes
+`href={isSafeUri(x) ? x : "#"}`. A relative reference with no scheme at
+all (`"#"`, `"/about"`) is unaffected in both paths — the common
+in-app-routing shape.
+
 ### Added - UI36: `background` joins the bindable-property list
 
 UI36's `dynamic_size_style` hard-listed exactly six literal size properties

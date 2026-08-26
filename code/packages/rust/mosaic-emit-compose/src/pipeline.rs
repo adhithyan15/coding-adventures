@@ -457,6 +457,16 @@ private fun _mosaicHostSlider(
 /// activation, and assistive technology. Keeping the URI handler inside this
 /// composable also avoids application-owned glue and duplicate local names when
 /// several links share one generated layout scope.
+///
+/// #13052: a *slot-bound* `href` is unknown at compile time (unlike a
+/// literal, rejected up front in `host_link_href_expr`), so it's
+/// validated here at runtime, once, for every call site regardless of
+/// whether `href` came from a literal or a slot. When the scheme is
+/// disallowed, the link degrades to the same inert `Clickable` shape
+/// the `external == false` branch already uses -- neither
+/// `onActivate` nor `uriHandler.openUri` fires, matching the "no
+/// navigation target" outcome the XAML backend's `SafeNavigateUri`
+/// fix (#12038) settled on for a null Uri.
 fn emit_host_link_helper() -> String {
     r#"@Composable
 private fun _mosaicHostLink(
@@ -476,18 +486,20 @@ private fun _mosaicHostLink(
     val linkStyles = TextLinkStyles(
         style = SpanStyle(color = linkColor, textDecoration = TextDecoration.Underline),
     )
-    val link = if (external) {
-        if (onActivate == null) {
-            LinkAnnotation.Url(url = href, styles = linkStyles)
-        } else {
-            LinkAnnotation.Url(url = href, styles = linkStyles) { annotation ->
-                onActivate()
-                uriHandler.openUri((annotation as LinkAnnotation.Url).url)
-            }
-        }
-    } else {
+    val link = if (!external) {
         LinkAnnotation.Clickable(tag = href, styles = linkStyles) {
             onActivate?.invoke()
+        }
+    } else if (!_mosaicIsSafeUri(href)) {
+        LinkAnnotation.Clickable(tag = href, styles = linkStyles) {
+            // Disallowed URI scheme -- no navigation, no dispatch.
+        }
+    } else if (onActivate == null) {
+        LinkAnnotation.Url(url = href, styles = linkStyles)
+    } else {
+        LinkAnnotation.Url(url = href, styles = linkStyles) { annotation ->
+            onActivate()
+            uriHandler.openUri((annotation as LinkAnnotation.Url).url)
         }
     }
     Text(
@@ -497,6 +509,12 @@ private fun _mosaicHostLink(
         modifier = modifier,
         style = textStyle,
     )
+}
+
+private fun _mosaicIsSafeUri(raw: String): Boolean {
+    val schemeMatch = Regex("^([a-zA-Z][a-zA-Z0-9+.-]*):").find(raw) ?: return true
+    val scheme = schemeMatch.groupValues[1].lowercase()
+    return scheme == "http" || scheme == "https" || scheme == "mailto"
 }
 "#
     .to_string()
@@ -3620,7 +3638,7 @@ fn emit_host_link(
         None => inherited_text,
     };
 
-    let href = host_link_text_prop_expr(node, "href")?.unwrap_or_else(|| "\"\"".to_string());
+    let href = host_link_href_expr(node)?.unwrap_or_else(|| "\"\"".to_string());
     let label = host_link_text_prop_expr(node, "label")?.unwrap_or_else(|| href.clone());
     let external = bool_prop_expr(node, "external", "true")?;
     let on_activate = host_link_on_activate(node, component_name, emits, for_payload, &href)?;
@@ -3660,6 +3678,52 @@ fn host_link_text_prop_expr(
         Some(LayoutPropValue::Expr(expression)) => Ok(Some(expression.clone())),
         _ => Ok(None),
     }
+}
+
+/// #13052: the `href`-specific analogue of [`host_link_text_prop_expr`]
+/// above -- identical except a literal `String` is checked against the
+/// URI scheme allowlist first. `label` keeps using the generic
+/// function since it's never handed to `uriHandler.openUri`.
+fn host_link_href_expr(node: &LayoutNode) -> Result<Option<String>, PipelineEmitError> {
+    if let Some(LayoutPropValue::String(value)) = find_prop_value(node, "href") {
+        if has_disallowed_uri_scheme(value) {
+            return Err(PipelineEmitError::UnsupportedHostLink(format!(
+                "href {value:?} uses a disallowed URI scheme -- only http, https, mailto, \
+                 or a relative reference are allowed"
+            )));
+        }
+    }
+    host_link_text_prop_expr(node, "href")
+}
+
+/// #13052: does `href` carry an explicit URI scheme outside the
+/// `http`/`https`/`mailto` allowlist? A relative reference (no scheme
+/// at all -- `"#"`, a route path) returns `false`, since a relative
+/// reference never reaches `uriHandler.openUri` as an external
+/// navigation target in the first place (see `_mosaicHostLink`'s
+/// runtime guard, which only gates the `external == true` branch).
+/// Only a *present, disallowed* scheme (`javascript:`, `data:`,
+/// `intent:`, a custom protocol handler, ...) returns `true`.
+fn has_disallowed_uri_scheme(href: &str) -> bool {
+    let Some(colon) = href.find(':') else {
+        return false;
+    };
+    let prefix = &href[..colon];
+    if prefix.is_empty() || prefix.contains(['/', '?', '#']) {
+        return false;
+    }
+    let mut chars = prefix.chars();
+    let Some(first) = chars.next() else {
+        return false;
+    };
+    if !first.is_ascii_alphabetic() {
+        return false;
+    }
+    if !chars.all(|c| c.is_ascii_alphanumeric() || c == '+' || c == '-' || c == '.') {
+        return false;
+    }
+    const ALLOWED: [&str; 3] = ["http", "https", "mailto"];
+    !ALLOWED.iter().any(|s| s.eq_ignore_ascii_case(prefix))
 }
 
 fn host_link_on_activate(
@@ -6329,6 +6393,98 @@ mod tests {
         assert!(out.contains("href = \"https://example.com/docs\","));
         assert!(out.contains("label = \"Read docs\","));
         assert!(out.contains("external = true,"));
+    }
+
+    /// #13052: a literal `href` carrying an explicit disallowed URI
+    /// scheme is rejected at compile time -- no escaping makes an
+    /// unsafe scheme safe.
+    #[test]
+    fn host_link_disallowed_scheme_href_is_rejected() {
+        for hostile in [
+            "javascript:alert(1)",
+            "data:text/html,<script>alert(1)</script>",
+            "intent:#Intent;action=android.intent.action.VIEW;end",
+            "file:///etc/passwd",
+        ] {
+            let m = component("X", vec![], vec![]);
+            let l = layout(
+                "X",
+                node(
+                    "HostLink",
+                    vec![LayoutProp {
+                        name: "href".into(),
+                        value: LayoutPropValue::String(hostile.to_string()),
+                    }],
+                    vec![],
+                ),
+            );
+            let err = from_pipeline(&m, &l, &empty_style("X")).unwrap_err();
+            assert!(
+                matches!(err, PipelineEmitError::UnsupportedHostLink(ref reason) if reason.contains(hostile)),
+                "expected UnsupportedHostLink naming {hostile:?}, got: {err:?}"
+            );
+        }
+    }
+
+    /// #13052: allowed schemes and relative references (no scheme at
+    /// all -- the common in-app-routing shape) stay valid.
+    #[test]
+    fn host_link_allowed_or_relative_href_still_compiles() {
+        for safe in [
+            "http://example.com",
+            "https://example.com",
+            "HTTPS://example.com",
+            "mailto:hello@example.com",
+            "#",
+            "/about",
+        ] {
+            let m = component("X", vec![], vec![]);
+            let l = layout(
+                "X",
+                node(
+                    "HostLink",
+                    vec![LayoutProp {
+                        name: "href".into(),
+                        value: LayoutPropValue::String(safe.to_string()),
+                    }],
+                    vec![],
+                ),
+            );
+            let out = from_pipeline(&m, &l, &empty_style("X")).unwrap().output;
+            assert!(
+                out.contains(&format!("href = \"{safe}\",")),
+                "expected {safe:?} to still compile, got:\n{out}"
+            );
+        }
+    }
+
+    /// #13052: the shared `_mosaicHostLink` composable gates
+    /// `LinkAnnotation.Url` behind a runtime `_mosaicIsSafeUri(href)`
+    /// check, so a slot-bound href (unknown at compile time) can't
+    /// reach `uriHandler.openUri` with a disallowed scheme.
+    #[test]
+    fn host_link_helper_gates_url_annotation_on_runtime_scheme_check() {
+        let m = component("X", vec![], vec![]);
+        let l = layout(
+            "X",
+            node(
+                "HostLink",
+                vec![LayoutProp {
+                    name: "href".into(),
+                    value: LayoutPropValue::String("https://example.com".into()),
+                }],
+                vec![],
+            ),
+        );
+        let out = from_pipeline(&m, &l, &empty_style("X")).unwrap().output;
+        assert!(
+            out.contains("private fun _mosaicIsSafeUri(raw: String): Boolean"),
+            "expected the runtime scheme-check helper, got:\n{out}"
+        );
+        assert!(
+            out.contains("} else if (!_mosaicIsSafeUri(href)) {"),
+            "expected LinkAnnotation.Url to be gated on the runtime check, got:\n{out}"
+        );
     }
 
     #[test]

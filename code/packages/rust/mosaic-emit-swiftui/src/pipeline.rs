@@ -147,6 +147,13 @@ pub enum PipelineEmitError {
     /// First-pass limitations: see the module-level "What is NOT in this
     /// first pass" section.
     UnknownPrimitive(String),
+    /// #13052: a `HostLink.href` literal uses a URI scheme outside the
+    /// `http`/`https`/`mailto` allowlist. `Link(destination:)` hands
+    /// the URL to the OS on tap, so an unvalidated scheme (`file:`, a
+    /// custom protocol handler, ...) would open arbitrary local
+    /// content rather than a web link. Rejected rather than escaped --
+    /// no escaping makes an unsafe scheme safe.
+    UnsafeUriScheme(String),
 }
 
 impl std::fmt::Display for PipelineEmitError {
@@ -168,6 +175,10 @@ impl std::fmt::Display for PipelineEmitError {
             PipelineEmitError::UnknownPrimitive(t) => write!(
                 f,
                 "moslayout primitive '{t}' is not yet supported by the SwiftUI emitter"
+            ),
+            PipelineEmitError::UnsafeUriScheme(href) => write!(
+                f,
+                "HostLink href {href:?} does not use an allowed URI scheme (http, https, mailto)"
             ),
         }
     }
@@ -4840,6 +4851,34 @@ fn swift_drag_event_dispatch(
 /// `onActivate` dispatch when `external != false` and documents
 /// the limitation. The far-more-common in-app routing path
 /// (`external: false`) gets the full Button-with-dispatch shape.
+/// #13052: does `href` carry an explicit URI scheme outside the
+/// `http`/`https`/`mailto` allowlist? A relative reference (no scheme
+/// at all -- `"#"`) returns `false`. Only a *present, disallowed*
+/// scheme (`javascript:`, `data:`, `file:`, a custom protocol
+/// handler, ...) returns `true`. A colon appearing after a `/`, `?`,
+/// or `#` is data, not a scheme separator.
+fn has_disallowed_uri_scheme(href: &str) -> bool {
+    let Some(colon) = href.find(':') else {
+        return false;
+    };
+    let prefix = &href[..colon];
+    if prefix.is_empty() || prefix.contains(['/', '?', '#']) {
+        return false;
+    }
+    let mut chars = prefix.chars();
+    let Some(first) = chars.next() else {
+        return false;
+    };
+    if !first.is_ascii_alphabetic() {
+        return false;
+    }
+    if !chars.all(|c| c.is_ascii_alphanumeric() || c == '+' || c == '-' || c == '.') {
+        return false;
+    }
+    const ALLOWED: [&str; 3] = ["http", "https", "mailto"];
+    !ALLOWED.iter().any(|s| s.eq_ignore_ascii_case(prefix))
+}
+
 fn emit_host_link(
     node: &LayoutNode,
     indent: usize,
@@ -4850,10 +4889,21 @@ fn emit_host_link(
     let inner_pad = " ".repeat(indent + 4);
 
     let href = find_string_prop(node, "href").unwrap_or("#");
+    let external_false = matches!(find_keyword_prop(node, "external"), Some("false"));
+    // #13052: reject rather than escape. `href` is the exact value
+    // `Link(destination:)` hands to the OS on tap (see below) -- no
+    // escaping done further down makes an unsafe scheme safe. Only
+    // checked when `external` can actually reach that call:
+    // `external: false` routes through a Button + dispatch instead,
+    // never constructing a URL, so a routing placeholder like
+    // `href: "#"` stays valid there (mirrors the Qt/Compose backends'
+    // identical scoping for #13052).
+    if !external_false && has_disallowed_uri_scheme(href) {
+        return Err(PipelineEmitError::UnsafeUriScheme(href.to_string()));
+    }
     let escaped_href = escape_swift_string(href);
     let label_text = host_link_label_text_expr(node, href)?;
 
-    let external_false = matches!(find_keyword_prop(node, "external"), Some("false"));
     let on_activate = find_emit_ref_prop(node, "onActivate");
 
     if external_false {
@@ -9853,6 +9903,91 @@ mod tests {
         assert!(
             r.contains("Text(\"Click me\")"),
             "expected SwiftUI Link label, got:\n{r}"
+        );
+    }
+
+    /// #13052: a literal `href` carrying an explicit disallowed URI
+    /// scheme is rejected at compile time when it can reach
+    /// `Link(destination:)` (the default, `external` not `false`).
+    #[test]
+    fn host_link_disallowed_scheme_href_is_rejected() {
+        for hostile in [
+            "javascript:alert(1)",
+            "data:text/html,<script>alert(1)</script>",
+            "file:///etc/passwd",
+        ] {
+            let l = layout_with(
+                "X",
+                container_node(
+                    "Box",
+                    vec![leaf("HostLink", vec![prop_string("href", hostile)])],
+                ),
+            );
+            let err = from_pipeline(&component("X", vec![], vec![]), &l, &empty_style("X"))
+                .unwrap_err();
+            assert!(
+                matches!(err, PipelineEmitError::UnsafeUriScheme(ref h) if h == hostile),
+                "expected UnsafeUriScheme for {hostile:?}, got: {err:?}"
+            );
+        }
+    }
+
+    /// #13052: allowed schemes (including case-insensitively) still
+    /// compile to the same `Link(destination:)` shape as before.
+    #[test]
+    fn host_link_allowed_scheme_hrefs_still_emit_link() {
+        for allowed in [
+            "http://example.com",
+            "https://example.com",
+            "HTTPS://example.com",
+            "mailto:hello@example.com",
+        ] {
+            let l = layout_with(
+                "X",
+                container_node(
+                    "Box",
+                    vec![leaf("HostLink", vec![prop_string("href", allowed)])],
+                ),
+            );
+            let r = from_pipeline(&component("X", vec![], vec![]), &l, &empty_style("X"))
+                .unwrap()
+                .output;
+            assert!(
+                r.contains(&format!("URL(string: \"{allowed}\")!")),
+                "expected {allowed:?} to still compile, got:\n{r}"
+            );
+        }
+    }
+
+    /// #13052: a routing placeholder like `href: "#"` (the default
+    /// when no href is bound) and a disallowed scheme both stay valid
+    /// when `external: false`, since that path never constructs a
+    /// `URL` at all -- it's Button + dispatch only.
+    #[test]
+    fn host_link_disallowed_scheme_href_stays_valid_with_external_false() {
+        let m = component(
+            "X",
+            vec![],
+            vec![emit("onNavigate", vec![param("href", EmitPayloadType::Text)])],
+        );
+        let l = layout_with(
+            "X",
+            container_node(
+                "Box",
+                vec![leaf(
+                    "HostLink",
+                    vec![
+                        prop_string("href", "javascript:alert(1)"),
+                        prop_keyword("external", "false"),
+                        prop_emit_ref("onActivate", "onNavigate"),
+                    ],
+                )],
+            ),
+        );
+        let r = from_pipeline(&m, &l, &empty_style("X"));
+        assert!(
+            r.is_ok(),
+            "expected a disallowed scheme with external:false to compile, got: {r:?}"
         );
     }
 

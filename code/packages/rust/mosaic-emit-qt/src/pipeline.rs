@@ -144,6 +144,13 @@ pub enum PipelineEmitError {
     /// See the primitive table at the top of this module for the supported
     /// set.
     UnknownPrimitive(String),
+    /// #13052: a `HostLink.href` literal uses a URI scheme outside the
+    /// `http`/`https`/`mailto` allowlist. `Qt.openUrlExternally` hands the
+    /// clicked link straight to the OS shell, so an unvalidated scheme
+    /// (`file:`, a custom protocol handler, ...) would launch arbitrary
+    /// local content rather than open as a web link. Rejected rather than
+    /// escaped -- no escaping makes an unsafe scheme safe.
+    UnsafeUriScheme(String),
 }
 
 impl std::fmt::Display for PipelineEmitError {
@@ -165,6 +172,10 @@ impl std::fmt::Display for PipelineEmitError {
             PipelineEmitError::UnknownPrimitive(t) => write!(
                 f,
                 "moslayout primitive '{t}' is not yet supported by the Qt/QML emitter"
+            ),
+            PipelineEmitError::UnsafeUriScheme(href) => write!(
+                f,
+                "HostLink href {href:?} does not use an allowed URI scheme (http, https, mailto)"
             ),
         }
     }
@@ -3807,6 +3818,40 @@ fn emit_host_slider_qml(
 // UI29-4 — HostLink / HostTooltip / HostNumberInput emitters
 // =====================================================================
 
+/// #13052: is `href` a URI whose scheme is safe to hand to
+/// `Qt.openUrlExternally`, i.e. the OS shell launcher? Allowlists
+/// `http`/`https`/`mailto` (case-insensitive scheme token per RFC 3986
+/// §3.1), and additionally requires a non-empty `//`-authority for
+/// `http`/`https` (mirrors `mosaic-emit-xaml`'s `has_allowed_uri_scheme`,
+/// added in #12038 for the identical XAML `NavigateUri` gap).
+fn has_allowed_uri_scheme(href: &str) -> bool {
+    const ALLOWED: [&str; 3] = ["http", "https", "mailto"];
+    let Some(colon) = href.find(':') else {
+        return false;
+    };
+    let scheme = &href[..colon];
+    let mut chars = scheme.chars();
+    let Some(first) = chars.next() else {
+        return false;
+    };
+    if !first.is_ascii_alphabetic() {
+        return false;
+    }
+    if !chars.all(|c| c.is_ascii_alphanumeric() || c == '+' || c == '-' || c == '.') {
+        return false;
+    }
+    if !ALLOWED.iter().any(|s| s.eq_ignore_ascii_case(scheme)) {
+        return false;
+    }
+    if scheme.eq_ignore_ascii_case("mailto") {
+        return true;
+    }
+    let Some(authority_onward) = href[colon + 1..].strip_prefix("//") else {
+        return false;
+    };
+    !authority_onward.starts_with(['/', '?', '#']) && !authority_onward.is_empty()
+}
+
 /// Lower a `HostLink` node (UI29-4, 19th kernel primitive) to a QML
 /// rich-text `Text` element with `onLinkActivated`.
 ///
@@ -3869,6 +3914,21 @@ fn emit_host_link_qml(
     //   - bare (no onActivate)            -> open externally
     let external_false = matches!(find_keyword_prop(node, "external"), Some("false"));
     let on_activate = find_emit_ref_prop(node, "onActivate");
+
+    // #13052: reject rather than escape. Only validate when `href` can
+    // actually reach `Qt.openUrlExternally(link)` -- when `external:
+    // false`, the handler dispatches only and never touches `link`
+    // (the href is purely cosmetic rich-text at that point, same as
+    // XAML's in-app-routing path never reaching `NavigateUri`), so an
+    // `href: "#"`-style routing placeholder stays valid there. No
+    // escaping done further down makes an unsafe scheme safe, so this
+    // has to reject rather than sanitize. Mirrors the XAML backend's
+    // `NavigateUri` fix (#12038). There is no dynamic (`slot:`) href
+    // path in this backend today, so this compile-time check on the
+    // literal is the only validation needed.
+    if !external_false && !has_allowed_uri_scheme(href) {
+        return Err(PipelineEmitError::UnsafeUriScheme(href.to_string()));
+    }
 
     let handler_body: String = match (external_false, on_activate) {
         (true, Some(emit)) => {
@@ -9644,6 +9704,107 @@ mod tests {
         assert!(
             out.contains("Qt.openUrlExternally(link)"),
             "expected open-external handler, got:\n{out}"
+        );
+    }
+
+    /// #13052: a `HostLink.href` literal using a disallowed URI scheme
+    /// must be rejected at compile time when it can reach
+    /// `Qt.openUrlExternally` (the default, `external` not `false`) --
+    /// mirrors the XAML `NavigateUri` fix (#12038).
+    #[test]
+    fn host_link_disallowed_scheme_href_is_rejected() {
+        for hostile in [
+            "file:///etc/passwd",
+            "javascript:alert(1)",
+            "vbscript:msgbox(1)",
+            "no-scheme-at-all",
+        ] {
+            let m = component("X", vec![], vec![]);
+            let l = LayoutDef {
+                component_name: "X".to_string(),
+                root: LayoutNode {
+                    tag: "HostLink".to_string(),
+                    part_name: None,
+                    props: vec![LayoutProp {
+                        name: "href".to_string(),
+                        value: LayoutPropValue::String(hostile.to_string()),
+                    }],
+                    children: Vec::new(),
+                },
+            };
+            let err = from_pipeline(&m, &l, &empty_style("X")).unwrap_err();
+            assert!(
+                matches!(err, PipelineEmitError::UnsafeUriScheme(ref h) if h == hostile),
+                "expected UnsafeUriScheme for {hostile:?}, got: {err:?}"
+            );
+        }
+    }
+
+    /// #13052: allowed schemes (including case-insensitively) still
+    /// compile to the same `Qt.openUrlExternally` shape as before.
+    #[test]
+    fn host_link_allowed_scheme_hrefs_still_emit_anchor() {
+        for allowed in [
+            "http://example.com",
+            "https://example.com",
+            "HTTPS://example.com",
+            "mailto:hello@example.com",
+        ] {
+            let m = component("X", vec![], vec![]);
+            let l = LayoutDef {
+                component_name: "X".to_string(),
+                root: LayoutNode {
+                    tag: "HostLink".to_string(),
+                    part_name: None,
+                    props: vec![LayoutProp {
+                        name: "href".to_string(),
+                        value: LayoutPropValue::String(allowed.to_string()),
+                    }],
+                    children: Vec::new(),
+                },
+            };
+            let r = from_pipeline(&m, &l, &empty_style("X")).unwrap();
+            assert!(
+                r.output.contains("Qt.openUrlExternally(link)"),
+                "expected {allowed:?} to still compile, got:\n{}",
+                r.output
+            );
+        }
+    }
+
+    /// #13052: a routing placeholder like `href: "#"` or a relative
+    /// path stays valid when `external: false`, since that path never
+    /// reaches `Qt.openUrlExternally` -- the href there is cosmetic
+    /// rich-text only, dispatch handles the actual navigation.
+    #[test]
+    fn host_link_no_scheme_href_stays_valid_with_external_false() {
+        let m = component("X", vec![], vec![emit_decl("onNavigate", vec![])]);
+        let l = LayoutDef {
+            component_name: "X".to_string(),
+            root: LayoutNode {
+                tag: "HostLink".to_string(),
+                part_name: None,
+                props: vec![
+                    LayoutProp {
+                        name: "href".to_string(),
+                        value: LayoutPropValue::String("#".to_string()),
+                    },
+                    LayoutProp {
+                        name: "external".to_string(),
+                        value: LayoutPropValue::Keyword("false".to_string()),
+                    },
+                    LayoutProp {
+                        name: "onActivate".to_string(),
+                        value: LayoutPropValue::EmitRef("onNavigate".to_string()),
+                    },
+                ],
+                children: Vec::new(),
+            },
+        };
+        let r = from_pipeline(&m, &l, &empty_style("X"));
+        assert!(
+            r.is_ok(),
+            "expected `href: \"#\"` with external:false to compile, got: {r:?}"
         );
     }
 

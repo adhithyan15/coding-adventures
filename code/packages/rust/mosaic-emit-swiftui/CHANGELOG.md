@@ -4,6 +4,23 @@ All notable changes to this package will be documented in this file.
 
 ## [Unreleased]
 
+### Security - validate literal HostLink.href's URI scheme (#13052)
+
+Follow-up to #12038 (the identical XAML gap). `Link(destination: URL(string:
+href)!)` hands the href straight to the OS on tap with no scheme check.
+Added `has_disallowed_uri_scheme` (new `PipelineEmitError::UnsafeUriScheme`
+variant), checked when `external` is not `false` — `external: false` routes
+through a Button + dispatch instead, never constructing a `URL` at all, so
+a routing placeholder like `href: "#"` stays valid there (mirrors the
+Qt/Compose backends' identical scoping).
+
+Audit finding, not fixed here: this backend has no `slot:`-bound href
+support at all today — `find_string_prop` only matches a literal `String`,
+so a `SlotRef` href silently falls back to `"#"` with no diagnostic. That's
+a pre-existing silent-drop bug (the epic's own recurring failure class,
+#12017), not a #13052 scheme-validation gap; filed separately as its own
+issue rather than folded into this security fix.
+
 ### Added - accessible HostSlider names
 
 Literal and slot-backed `HostSlider.a11y-label` values now lower to a native
