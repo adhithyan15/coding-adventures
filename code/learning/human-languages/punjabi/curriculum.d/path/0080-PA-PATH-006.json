@@ -1,8 +1,8 @@
 {
   "id": "PA-PATH-006",
-  "spine_node": "SPINE-COURTESY-THANK",
+  "spine_node": "SPINE-EXCHANGE-NAMES",
   "lessons": [
-    "PA-C03-koi-gall-nahin"
+    "PA-C03-main"
   ],
   "before": [],
   "inline": [],

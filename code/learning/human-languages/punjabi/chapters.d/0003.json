@@ -11,8 +11,21 @@
   "payoff": {
     "lesson": "PA-C03-practice",
     "kind": "task",
-    "summary": "Complete PA-C03-practice, the canonical closing checkpoint, and demonstrate the chapter promise: ask how someone is in Punjabi, answer naturally, and return the question.",
-    "assesses": [],
-    "note": "This legacy schema-v1 chapter has no typed knowledge atoms yet. The payoff is anchored to real canonical lesson content, but its representativeness remains authored rather than atom-scored until migration."
+    "summary": "Complete separate oral listening and speaking checks: understand a respectful wellbeing question, answer naturally, return the question, and close a thanks exchange. Independent Gurmukhi reading and writing remain blocked until #13068 teaches the forms.",
+    "assesses": [
+      "PA-LEX-KIVEIN-03",
+      "PA-ETYMON-QUESTION-K-03",
+      "PA-PHRASE-HOW-ARE-YOU-03",
+      "PA-GRAMMAR-TUSI-HO-03",
+      "PA-LEX-MAIN-03",
+      "PA-GRAMMAR-MAIN-HAAN-03",
+      "PA-ETYMON-FIRST-PERSON-M-03",
+      "PA-LEX-THIK-03",
+      "PA-PHRASE-I-AM-FINE-03",
+      "PA-PHRASE-NO-PROBLEM-03",
+      "PA-ETYMON-NEGATIVE-NE-03",
+      "PA-LEX-DHANVAAD-01"
+    ],
+    "note": "This migrated chapter measures its real oral capability without claiming untaught Gurmukhi production. Romanization is evidence for spoken recall only and never earns script credit."
   }
 }

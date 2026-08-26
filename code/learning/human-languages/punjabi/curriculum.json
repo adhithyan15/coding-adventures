@@ -99,7 +99,8 @@
       "id": "PA-PATH-005",
       "spine_node": "SPINE-CHECK-WELLBEING",
       "lessons": [
-        "PA-C03-kivein"
+        "PA-C03-kivein",
+        "PA-C03-tusi-kivein-ho"
       ],
       "before": [],
       "inline": [],
@@ -107,16 +108,6 @@
     },
     {
       "id": "PA-PATH-006",
-      "spine_node": "SPINE-COURTESY-THANK",
-      "lessons": [
-        "PA-C03-koi-gall-nahin"
-      ],
-      "before": [],
-      "inline": [],
-      "after": []
-    },
-    {
-      "id": "PA-PATH-007",
       "spine_node": "SPINE-EXCHANGE-NAMES",
       "lessons": [
         "PA-C03-main"
@@ -126,14 +117,35 @@
       "after": []
     },
     {
-      "id": "PA-PATH-008",
+      "id": "PA-PATH-007",
       "spine_node": "SPINE-CHECK-WELLBEING",
       "lessons": [
-        "PA-C03-thik",
-        "PA-C03-tusi-kivein-ho"
+        "PA-C03-thik"
       ],
       "before": [],
       "inline": [],
+      "after": []
+    },
+    {
+      "id": "PA-PATH-008",
+      "spine_node": "SPINE-COURTESY-THANK",
+      "lessons": [
+        "PA-C03-koi-gall-nahin"
+      ],
+      "before": [],
+      "inline": [],
+      "after": []
+    },
+    {
+      "id": "PA-PATH-C3P",
+      "spine_node": "SPINE-CHECK-WELLBEING",
+      "lessons": [
+        "PA-C03-practice"
+      ],
+      "before": [],
+      "inline": [
+        "PA-EXT-019-WELLBEING-CHECKPOINT"
+      ],
       "after": []
     },
     {
@@ -286,7 +298,7 @@
     "SPINE-COURTESY-THANK": {
       "segments": [
         "PA-PATH-002",
-        "PA-PATH-006"
+        "PA-PATH-008"
       ],
       "omits": [],
       "relocates": {}
@@ -306,7 +318,7 @@
     "SPINE-EXCHANGE-NAMES": {
       "segments": [
         "PA-PATH-004",
-        "PA-PATH-007",
+        "PA-PATH-006",
         "PA-PATH-015"
       ],
       "omits": [
@@ -317,7 +329,8 @@
     "SPINE-CHECK-WELLBEING": {
       "segments": [
         "PA-PATH-005",
-        "PA-PATH-008",
+        "PA-PATH-007",
+        "PA-PATH-C3P",
         "PA-PATH-016",
         "PA-PATH-017"
       ],
@@ -817,6 +830,19 @@
       ],
       "lessons": [
         "PA-C02-practice"
+      ]
+    },
+    {
+      "id": "PA-EXT-019-WELLBEING-CHECKPOINT",
+      "stage": "pre-A1",
+      "kind": "required",
+      "category": "assessment",
+      "canDo": "I can understand and perform a short Punjabi wellbeing exchange orally while keeping untaught Gurmukhi reading and writing explicitly uncredited.",
+      "prerequisites": [
+        "PA-EXT-018-INTRODUCTION-CHECKPOINT"
+      ],
+      "lessons": [
+        "PA-C03-practice"
       ]
     }
   ]

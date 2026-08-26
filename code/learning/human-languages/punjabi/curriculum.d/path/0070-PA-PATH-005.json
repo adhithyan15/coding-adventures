@@ -2,7 +2,8 @@
   "id": "PA-PATH-005",
   "spine_node": "SPINE-CHECK-WELLBEING",
   "lessons": [
-    "PA-C03-kivein"
+    "PA-C03-kivein",
+    "PA-C03-tusi-kivein-ho"
   ],
   "before": [],
   "inline": [],

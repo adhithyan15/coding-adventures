@@ -1,0 +1,12 @@
+{
+  "id": "PA-PATH-C3P",
+  "spine_node": "SPINE-CHECK-WELLBEING",
+  "lessons": [
+    "PA-C03-practice"
+  ],
+  "before": [],
+  "inline": [
+    "PA-EXT-019-WELLBEING-CHECKPOINT"
+  ],
+  "after": []
+}
