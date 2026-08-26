@@ -1041,7 +1041,7 @@ turn around the compact left loop, sweep through the joined lower curves,
 climb the rounded right side, then carry the tall outer arch over and finish
 left. Its four-movement Noto Sans Kannada fit preserves that zero-lift order
 while recording loop-width, lower-bowl, and arch-height variation.
-Malayalam has cited independent **അ** and **എ** rows, base consonant **ഴ**, and
+Malayalam has cited independent **അ**, **ആ**, and **എ** rows, base consonant **ഴ**, and
 standalone chillus **ൽ**, **ൻ**, **ൾ**, and **ർ**. Sriveenkat's 57-frame
 animation writes chillu RR **ർ** in one uninterrupted run: climb around the
 left arch, cross the upper shoulder, circle the right loop, and finish in the
@@ -1052,6 +1052,11 @@ writes chillu LL **ൾ** in one uninterrupted run: descend around the left bowl,
 climb the central rise, cross the upper shoulder, circle the right loop, and
 finish in the hook above the line. Its four-movement Noto Sans Malayalam fit
 preserves that zero-lift order while recording bowl, loop, and hook variation.
+The same author's 73-frame Gayathri animation writes independent **ആ** in two
+runs: climb the left outer arch; lift once, then carry the inner curl through
+the lower loop, central upright, rounded right loop, and below-line finish.
+Its five-movement Noto Sans Malayalam fit preserves that one-lift order while
+recording arch-width, loop-roundness, and descender-depth variation.
 An absent `penLifts` remains unverified, never an implied zero.
 
 ## Adding a script (e.g. Gujarati, Bengali, Hebrew)

@@ -80,7 +80,7 @@ describe("independent (word-initial) vowels", () => {
     expect(iv.filter((_, index) => ![0, 1, 2, 6].includes(index)).every((v) => v.strokeOrder.length === 0)).toBe(true);
   });
 
-  it("keeps Malayalam independent അ, ഇ, ഉ, and എ sourced while the remaining vowels stay unverified", () => {
+  it("keeps Malayalam independent അ, ആ, ഇ, ഉ, and എ sourced while the remaining vowels stay unverified", () => {
     const malayalam = SCRIPTS.find((s) => s.script === "malayalam")!;
     const iv = malayalam.independentVowels!;
     expect(iv[0]!.glyph).toBe("അ");
@@ -88,6 +88,12 @@ describe("independent (word-initial) vowels", () => {
     expect(iv[0]!.penLifts).toBe(1);
     expect(iv[0]!.strokeOrderSource?.url).toBe(
       "https://malayalam.la.utexas.edu/resources/the-malayalam-script/",
+    );
+    expect(iv[1]!.glyph).toBe("ആ");
+    expect(iv[1]!.strokeOrder).toHaveLength(5);
+    expect(iv[1]!.penLifts).toBe(1);
+    expect(iv[1]!.strokeOrderSource?.url).toBe(
+      "https://commons.wikimedia.org/wiki/File:Ml_%E0%B4%86_order.gif",
     );
     expect(iv[2]!.glyph).toBe("ഇ");
     expect(iv[2]!.strokeOrder).toHaveLength(4);
@@ -104,7 +110,7 @@ describe("independent (word-initial) vowels", () => {
     expect(iv[6]!.glyph).toBe("എ");
     expect(iv[6]!.strokeOrder).toHaveLength(3);
     expect(iv[6]!.penLifts).toBe(1);
-    expect(iv.filter((_, index) => ![0, 2, 4, 6].includes(index)).every((v) => v.strokeOrder.length === 0)).toBe(true);
+    expect(iv.filter((_, index) => ![0, 1, 2, 4, 6].includes(index)).every((v) => v.strokeOrder.length === 0)).toBe(true);
   });
 
   it("CONTROL: they are SEPARATE from the syllabary — letters, isSyllabary and the matrix are untouched", () => {
