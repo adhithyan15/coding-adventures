@@ -3916,6 +3916,97 @@
         "ES-C373-peine"
       ],
       "tex": "spanish/book/chapters/ch373-el-oro-y-la-botella.tex"
+    },
+    {
+      "language": "spanish",
+      "chapter": 374,
+      "sourceHash": "fnv1a64:b4a4faf458a21b12",
+      "lessonIds": [
+        "ES-C374-lapiz",
+        "ES-C374-cepillo",
+        "ES-C374-guante",
+        "ES-C374-vela",
+        "ES-C374-nudo"
+      ],
+      "tex": "spanish/book/chapters/ch374-el-lapiz-y-el-cepillo.tex"
+    },
+    {
+      "language": "spanish",
+      "chapter": 375,
+      "sourceHash": "fnv1a64:2a57a3c85dcf603c",
+      "lessonIds": [
+        "ES-C375-una",
+        "ES-C375-labio",
+        "ES-C375-pulgar",
+        "ES-C375-beso",
+        "ES-C375-sobrino"
+      ],
+      "tex": "spanish/book/chapters/ch375-la-una-y-el-labio.tex"
+    },
+    {
+      "language": "spanish",
+      "chapter": 376,
+      "sourceHash": "fnv1a64:db9f4edf2120566c",
+      "lessonIds": [
+        "ES-C376-harina",
+        "ES-C376-uva",
+        "ES-C376-maiz",
+        "ES-C376-chocolate",
+        "ES-C376-pimiento"
+      ],
+      "tex": "spanish/book/chapters/ch376-la-harina-y-la-uva.tex"
+    },
+    {
+      "language": "spanish",
+      "chapter": 377,
+      "sourceHash": "fnv1a64:a25ce1e27498eab8",
+      "lessonIds": [
+        "ES-C377-letra",
+        "ES-C377-frase",
+        "ES-C377-idioma",
+        "ES-C377-historia",
+        "ES-C377-baile"
+      ],
+      "tex": "spanish/book/chapters/ch377-la-letra-y-la-frase.tex"
+    },
+    {
+      "language": "spanish",
+      "chapter": 378,
+      "sourceHash": "fnv1a64:c185280a83d7bb99",
+      "lessonIds": [
+        "ES-C378-selva",
+        "ES-C378-prado",
+        "ES-C378-volcan",
+        "ES-C378-cumbre",
+        "ES-C378-edificio"
+      ],
+      "tex": "spanish/book/chapters/ch378-la-selva-y-el-prado.tex"
+    },
+    {
+      "language": "spanish",
+      "chapter": 379,
+      "sourceHash": "fnv1a64:71bcf5572c4711fa",
+      "lessonIds": [
+        "ES-C379-seco",
+        "ES-C379-mojado",
+        "ES-C379-fresco",
+        "ES-C379-tibio",
+        "ES-C379-grueso"
+      ],
+      "tex": "spanish/book/chapters/ch379-seco-y-mojado.tex"
+    },
+    {
+      "language": "spanish",
+      "chapter": 380,
+      "sourceHash": "fnv1a64:bcacf8bca0146eb9",
+      "lessonIds": [
+        "ES-C380-simpatico",
+        "ES-C380-alegre",
+        "ES-C380-feo",
+        "ES-C380-ultimo",
+        "ES-C380-necesario"
+      ],
+      "tex": "spanish/book/chapters/ch380-simpatico-y-alegre.tex"
     }
   ]
 }

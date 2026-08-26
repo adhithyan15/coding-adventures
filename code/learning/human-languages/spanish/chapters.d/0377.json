@@ -1,0 +1,21 @@
+{
+  "chapter": 377,
+  "title": "Five Things You Can Learn",
+  "label": "ch:la-letra-y-la-frase",
+  "canDo": "I can say la letra, la frase, el idioma, la historia and el baile, and name five things a person can learn.",
+  "spineNodes": [
+    "SPINE-DEFINITE-REFERENCE"
+  ],
+  "payoff": {
+    "lesson": "ES-C377-baile",
+    "kind": "production",
+    "summary": "Complete ES-C377-baile: name five things a person can learn, and say one thing about each.",
+    "assesses": [
+      "ES-LEX-C377-REF-71",
+      "ES-LEX-C377-REF-72",
+      "ES-LEX-C377-REF-73",
+      "ES-LEX-C377-REF-74",
+      "ES-LEX-C377-REF-75"
+    ]
+  }
+}

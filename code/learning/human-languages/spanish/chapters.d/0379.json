@@ -1,0 +1,21 @@
+{
+  "chapter": 379,
+  "title": "Five Words for How Something Feels",
+  "label": "ch:seco-y-mojado",
+  "canDo": "I can say seco, mojado, fresco, tibio and grueso, and count five things and say how each one feels.",
+  "spineNodes": [
+    "SPINE-COUNT-ONE-TO-FIVE"
+  ],
+  "payoff": {
+    "lesson": "ES-C379-grueso",
+    "kind": "production",
+    "summary": "Complete ES-C379-grueso: count five things and say how each one feels, and say one thing about each.",
+    "assesses": [
+      "ES-LEX-C379-COUNT-31",
+      "ES-LEX-C379-COUNT-32",
+      "ES-LEX-C379-COUNT-33",
+      "ES-LEX-C379-COUNT-34",
+      "ES-LEX-C379-COUNT-35"
+    ]
+  }
+}

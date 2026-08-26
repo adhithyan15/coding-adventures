@@ -1,0 +1,16 @@
+{
+  "id": "ES-PATH-374-01",
+  "spine_node": "SPINE-DEFINITE-REFERENCE",
+  "lessons": [
+    "ES-C374-lapiz",
+    "ES-C374-cepillo",
+    "ES-C374-guante",
+    "ES-C374-vela",
+    "ES-C374-nudo"
+  ],
+  "before": [],
+  "inline": [
+    "ES-EXT-374-REF"
+  ],
+  "after": []
+}

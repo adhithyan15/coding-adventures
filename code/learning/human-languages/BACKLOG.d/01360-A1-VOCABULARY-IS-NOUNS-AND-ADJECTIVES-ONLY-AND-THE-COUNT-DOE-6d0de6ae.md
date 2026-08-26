@@ -71,3 +71,26 @@ what" -- so a shortfall reads as a content problem when it may be a shape
 problem, and a target that is *met* can be met by the wrong thing entirely. Ask
 what a metric **cannot** count before trusting what it does.
 
+
+### Tranche 6 confirms it, and the restriction is now load-bearing
+
+Spanish A1 vocabulary tranche 6 (chapters 374-380) took the count 549 -> 584
+without authoring a single verb, because the constraint above still holds. It
+did not repeat tranche 5's ten candidates; it screened a fresh twenty common A1
+verbs through all three duplicate ledgers to find out how much of the shortfall
+is real.
+
+Nine cleared the string and atom screens: `lavar`, `subir`, `bajar`, `buscar`,
+`guardar`, `reir`, `nacer`, `morir`, `enviar`. Six of those also clear the
+ROOT ledger and are therefore fully authorable on every criterion the project
+has -- `lavar`, `subir`, `buscar`, `guardar`, `morir`, `enviar`. They were not
+written, and the only reason is that no A1 spine node can host them.
+
+Two tranches have now spent their entire budget on nouns and adjectives. Spanish
+is sixteen headwords from the 600 floor, which means **the gate will report A1
+vocabulary attained, on a vocabulary with essentially no verbs in it, within one
+more tranche.** After that the number stops moving and the defect stops being
+visible in any measurement at all -- a met target reports nothing.
+
+That makes the owner decision on the spine node time-sensitive in a way it was
+not when this was first recorded.

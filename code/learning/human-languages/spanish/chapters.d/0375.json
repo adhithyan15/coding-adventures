@@ -1,0 +1,21 @@
+{
+  "chapter": 375,
+  "title": "Five Things a Person Has",
+  "label": "ch:la-una-y-el-labio",
+  "canDo": "I can say la uña, el labio, el pulgar, el beso and el sobrino, and name five things that belong to a person.",
+  "spineNodes": [
+    "SPINE-DEFINITE-REFERENCE"
+  ],
+  "payoff": {
+    "lesson": "ES-C375-sobrino",
+    "kind": "production",
+    "summary": "Complete ES-C375-sobrino: name five things that belong to a person, and say one thing about each.",
+    "assesses": [
+      "ES-LEX-C375-REF-61",
+      "ES-LEX-C375-REF-62",
+      "ES-LEX-C375-REF-63",
+      "ES-LEX-C375-REF-64",
+      "ES-LEX-C375-REF-65"
+    ]
+  }
+}

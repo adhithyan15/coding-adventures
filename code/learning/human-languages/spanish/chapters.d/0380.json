@@ -1,0 +1,21 @@
+{
+  "chapter": 380,
+  "title": "Five Words for What Something Is Like",
+  "label": "ch:simpatico-y-alegre",
+  "canDo": "I can say simpático, alegre, feo, último and necesario, and count five people or things and say what each is like.",
+  "spineNodes": [
+    "SPINE-COUNT-ONE-TO-FIVE"
+  ],
+  "payoff": {
+    "lesson": "ES-C380-necesario",
+    "kind": "production",
+    "summary": "Complete ES-C380-necesario: count five people or things and say what each is like, and say one thing about each.",
+    "assesses": [
+      "ES-LEX-C380-COUNT-36",
+      "ES-LEX-C380-COUNT-37",
+      "ES-LEX-C380-COUNT-38",
+      "ES-LEX-C380-COUNT-39",
+      "ES-LEX-C380-COUNT-40"
+    ]
+  }
+}

@@ -1,0 +1,21 @@
+{
+  "chapter": 376,
+  "title": "Five Things on a Plate",
+  "label": "ch:la-harina-y-la-uva",
+  "canDo": "I can say la harina, la uva, el maíz, el chocolate and el pimiento, and name five things that go on a plate.",
+  "spineNodes": [
+    "SPINE-DEFINITE-REFERENCE"
+  ],
+  "payoff": {
+    "lesson": "ES-C376-pimiento",
+    "kind": "production",
+    "summary": "Complete ES-C376-pimiento: name five things that go on a plate, and say one thing about each.",
+    "assesses": [
+      "ES-LEX-C376-REF-66",
+      "ES-LEX-C376-REF-67",
+      "ES-LEX-C376-REF-68",
+      "ES-LEX-C376-REF-69",
+      "ES-LEX-C376-REF-70"
+    ]
+  }
+}
