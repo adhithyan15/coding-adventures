@@ -1079,11 +1079,7 @@ fn do_while_desugars_to_a_flag_guarded_while_not_a_body_clone() {
                     value: Expr::BoolLit { value: true, .. },
                     ..
                 } => {
-                    // `#` is not a legal Java identifier character —
-                    // deliberately unforgeable by real Java source, not
-                    // just checked against it (see the function's own
-                    // doc comment, `/security-review`).
-                    assert!(name.starts_with("__do_while#"));
+                    assert!(name.starts_with("__do_while_"));
                 }
                 other => {
                     panic!("expected LetStarBinding(BoolLit(true)) flag declaration, got {other:?}")
@@ -1174,59 +1170,28 @@ fn a_local_declared_inside_a_do_while_body_does_not_leak_past_it() {
 }
 
 #[test]
-fn do_while_flag_name_does_not_collide_with_a_same_named_user_variable() {
-    // Caught by /security-review: an earlier version generated the
-    // do-while desugaring's synthetic flag as a bare `__do_while_N`
-    // with no collision check against real Java locals already in
-    // scope. `__do_while_0` is a legal Java identifier, so a program
-    // that happens to declare a variable by that exact name is a real,
-    // reachable case -- the old version silently shadowed and corrupted
-    // it (through the Python backend, `x` came back `42` instead of the
-    // correct `43`) rather than picking a different synthetic name.
-    // `do_while_counter` starts at 0, so the very first synthetic name
-    // it would try is exactly `__do_while_0` -- this test collides on
-    // the first possible attempt, not an edge case reached only after
-    // several unrelated do-while statements.
-    let m = compile_ok(&wrap(concat!(
-        "int __do_while_0 = 1; ",
-        "do { __do_while_0 = __do_while_0 + 1; } while (false); ",
-        "__do_while_0;"
-    )));
-    // `__do_while_0` (the user's own variable) must have been mutated by
-    // the loop body exactly like any other local -- the fix's own
-    // collision check must not have skipped lowering the mutation, and
-    // the synthetic flag it generated instead must be a different name.
-    match &main_fn(&m).body.stmts[2] {
-        Stmt::ExprStmt {
-            expr: Expr::VarRef { name, .. },
-            ..
-        } => assert_eq!(name, "__do_while_0"),
-        other => panic!("expected ExprStmt(VarRef(\"__do_while_0\")), got {other:?}"),
-    }
-}
-
-#[test]
-fn do_while_flag_name_is_unforgeable_even_when_the_body_declares_the_underscore_lookalike() {
-    // Historical note (this test previously locked in a THIRD round of
-    // /security-review's own fix, `body_declares_name`, and — in an
+fn do_while_flag_name_skips_ahead_when_the_body_declares_the_first_candidate_name() {
+    // Historical note: this test previously locked in a THIRD round of
+    // /security-review's own fix (`body_declares_name`), then — in an
     // earlier version of *this* commit — incorrectly claimed the flag
     // could safely reuse the exact name `__do_while_0` once the
-    // flag-clear moved out of the body's own scope; a FOURTH
-    // /security-review round caught that claim as false: the flag's own
-    // *reference* still lives inside the loop condition, and several
-    // backends (Python, Ruby) compile a SIR condition/body pair with
-    // FLAT scoping — no new scope opened for either — so a body-declared
-    // local named exactly `__do_while_0` would still re-arm the flag to
-    // `true` every iteration under those backends, an infinite loop, the
-    // do-while counterpart of the classic-`for` update-clause bug this
-    // whole fix pass exists to close). The real, correct fix (see
-    // `lower_do_while_statement`'s own doc comment) makes the flag name
-    // unforgeable instead of merely checked: `#` is not a legal Java
-    // identifier character, so `__do_while#0` can never collide with any
-    // name real Java source declares, at any nesting depth, under any
-    // backend's scoping rules — this test locks in that a body
-    // declaring the closest *legal* Java lookalike (`__do_while_0`, with
-    // an underscore) still gets an untouched, distinctly-named flag.
+    // flag-clear moved out of the body's own scope. A FOURTH round
+    // caught that claim as false (the flag's own *reference* still lives
+    // inside the loop condition, which several backends compile with
+    // FLAT scoping relative to the body). The fix at that point tried
+    // making the name unforgeable via `#` (illegal in a Java identifier,
+    // JLS §3.8) instead of checked — a FIFTH round then proved that
+    // premise false too: every backend's `sanitize_ident` escapes `#`
+    // into an ordinary, `#`-free string a real Java program CAN declare
+    // directly (see `fresh_flag_name`'s own doc comment for the full
+    // account). The real, final fix drops the `#` entirely and instead
+    // walks the lowered body (`DeclaredNameCollector`) for every name it
+    // declares, retrying the next counter value on a collision — this
+    // test locks in that behavior directly: `do_while_counter` starts at
+    // 0, so the first candidate tried is `__do_while_0`; the body
+    // declares exactly that name, so the picked flag must be
+    // `__do_while_1` instead, and the body's own declaration must survive
+    // completely untouched.
     let m = compile_ok(&wrap(
         "int y = 0; do { boolean __do_while_0 = true; y = y + 1; } while (y < 3); y;",
     ));
@@ -1237,9 +1202,10 @@ fn do_while_flag_name_is_unforgeable_even_when_the_body_declares_the_underscore_
         } => {
             match &block.stmts[0] {
                 Stmt::LetStarBinding { name, .. } => {
-                    assert!(
-                        name.starts_with("__do_while#"),
-                        "flag name must be the unforgeable `#`-based form, got {name:?}"
+                    assert_eq!(
+                        name, "__do_while_1",
+                        "candidate 0 collides with the body's own declaration, so the picker \
+                         must skip to 1"
                     );
                 }
                 other => panic!("expected LetStarBinding flag declaration, got {other:?}"),
@@ -1261,6 +1227,49 @@ fn do_while_flag_name_is_unforgeable_even_when_the_body_declares_the_underscore_
             }
         }
         other => panic!("expected ExprStmt(Block), got {other:?}"),
+    }
+}
+
+#[test]
+fn do_while_flag_name_skips_ahead_when_an_outer_local_declares_the_first_candidate_name() {
+    // Companion to the test above, for the OTHER half of `fresh_flag_
+    // name`'s collision check: an outer local the body only reads/writes
+    // (never redeclares) is invisible to `DeclaredNameCollector` (which
+    // only sees `body`'s own declarations), so this only passes because
+    // `fresh_flag_name` also consults `lookup_local_with_frame` — the
+    // ambient scope check. Without it, the picker would happily choose
+    // `__do_while_0` again, colliding with the user's own outer variable
+    // exactly the way the very first /security-review round's finding
+    // did.
+    let m = compile_ok(&wrap(concat!(
+        "int __do_while_0 = 1; ",
+        "do { __do_while_0 = __do_while_0 + 1; } while (false); ",
+        "__do_while_0;"
+    )));
+    match &main_fn(&m).body.stmts[1] {
+        Stmt::ExprStmt {
+            expr: Expr::Block(block),
+            ..
+        } => match &block.stmts[0] {
+            Stmt::LetStarBinding { name, .. } => {
+                assert_eq!(
+                    name, "__do_while_1",
+                    "candidate 0 collides with the outer user variable, so the picker must \
+                     skip to 1"
+                );
+            }
+            other => panic!("expected LetStarBinding flag declaration, got {other:?}"),
+        },
+        other => panic!("expected ExprStmt(Block), got {other:?}"),
+    }
+    // The user's own outer variable must still have been mutated by the
+    // loop body exactly like any other local.
+    match &main_fn(&m).body.stmts[2] {
+        Stmt::ExprStmt {
+            expr: Expr::VarRef { name, .. },
+            ..
+        } => assert_eq!(name, "__do_while_0"),
+        other => panic!("expected ExprStmt(VarRef(\"__do_while_0\")), got {other:?}"),
     }
 }
 
@@ -1303,10 +1312,7 @@ fn classic_for_loop_desugars_to_init_flag_then_while() {
                     value: Expr::BoolLit { value: true, .. },
                     ..
                 } => {
-                    // `#` is not a legal Java identifier character — see
-                    // `do_while_desugars_to_a_flag_guarded_while_not_a_
-                    // body_clone`'s own identical comment.
-                    assert!(name.starts_with("__for_first#"));
+                    assert!(name.starts_with("__for_first_"));
                 }
                 other => {
                     panic!("expected LetStarBinding(BoolLit(true)) flag declaration, got {other:?}")
@@ -1355,6 +1361,71 @@ fn classic_for_loop_desugars_to_init_flag_then_while() {
             }
         }
         other => panic!("expected ExprStmt(Block), got {other:?}"),
+    }
+}
+
+#[test]
+fn classic_for_loop_flag_name_skips_ahead_when_the_body_declares_the_first_candidate_name() {
+    // The classic-`for` counterpart of `do_while_flag_name_skips_ahead_
+    // when_the_body_declares_the_first_candidate_name`: `for_counter`
+    // starts at 0, so the first candidate tried is `__for_first_0`; the
+    // body declares exactly that name, so `fresh_flag_name` (shared with
+    // the do-while desugaring — see its own doc comment) must skip to
+    // `__for_first_1` instead, leaving the body's own declaration intact.
+    let m = compile_ok(&wrap(
+        "for (int i = 0; i < 3; i++) { boolean __for_first_0 = true; }",
+    ));
+    match &main_fn(&m).body.stmts[0] {
+        Stmt::ExprStmt {
+            expr: Expr::Block(block),
+            ..
+        } => match &block.stmts[1] {
+            Stmt::LetStarBinding { name, .. } => {
+                assert_eq!(
+                    name, "__for_first_1",
+                    "candidate 0 collides with the body's own declaration, so the picker \
+                     must skip to 1"
+                );
+            }
+            other => panic!("expected LetStarBinding flag declaration, got {other:?}"),
+        },
+        other => panic!("expected ExprStmt(Block), got {other:?}"),
+    }
+}
+
+#[test]
+fn classic_for_loop_flag_name_skips_ahead_when_an_outer_local_declares_the_first_candidate_name() {
+    // Ambient-scope counterpart: an outer local the body only reads/
+    // writes (never redeclares) is invisible to `DeclaredNameCollector`,
+    // so this only passes because `fresh_flag_name` also consults
+    // `lookup_local_with_frame` — see that method's own doc comment.
+    let m = compile_ok(&wrap(concat!(
+        "int __for_first_0 = 0; ",
+        "for (int i = 0; i < 3; i++) { __for_first_0 = __for_first_0 + 1; } ",
+        "__for_first_0;"
+    )));
+    match &main_fn(&m).body.stmts[1] {
+        Stmt::ExprStmt {
+            expr: Expr::Block(block),
+            ..
+        } => match &block.stmts[1] {
+            Stmt::LetStarBinding { name, .. } => {
+                assert_eq!(
+                    name, "__for_first_1",
+                    "candidate 0 collides with the outer user variable, so the picker must \
+                     skip to 1"
+                );
+            }
+            other => panic!("expected LetStarBinding flag declaration, got {other:?}"),
+        },
+        other => panic!("expected ExprStmt(Block), got {other:?}"),
+    }
+    match &main_fn(&m).body.stmts[2] {
+        Stmt::ExprStmt {
+            expr: Expr::VarRef { name, .. },
+            ..
+        } => assert_eq!(name, "__for_first_0"),
+        other => panic!("expected ExprStmt(VarRef(\"__for_first_0\")), got {other:?}"),
     }
 }
 

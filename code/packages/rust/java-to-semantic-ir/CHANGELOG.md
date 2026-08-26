@@ -101,22 +101,48 @@ All notable changes to the `java-to-semantic-ir` crate will be documented in thi
     legal Java identifier) silently re-arms the flag every iteration
     under those backends, reproducing the identical infinite-loop shape
     the fix above exists to close — confirmed by actually executing the
-    emitted Python and observing a hang, not by inspection alone. Fixed
-    by making the flag's own name **unforgeable** rather than merely
-    checked: it now embeds `#`, a character JLS §3.8 forbids in a Java
-    identifier (`__do_while#N`/`__for_first#N`), so no real Java source
-    can ever declare a colliding local, under any backend's scoping
-    rules, at any nesting depth — every backend's own `sanitize_ident`
-    already deterministically escapes the `#` for its target language, so
-    this needs no backend-side change. The now-redundant `lookup_local`
-    collision-retry loop (and, since nothing else called the plain
-    `lookup_local` wrapper, that dead function itself) were removed —
-    collision is structurally impossible, not merely checked-and-avoided.
-    Two new `tests/loop_control_flat_scoping_regression.rs` tests run the
-    exact reported scenario through the real Python backend (not just
+    emitted Python and observing a hang, not by inspection alone.
+  - **First attempted fix (superseded below)**: embed `#`, a character
+    JLS §3.8 forbids in a Java identifier, into the flag's own name
+    (`__do_while#N`/`__for_first#N`), reasoning that no real Java source
+    could ever spell it. **A THIRD `/security-review` round proved that
+    reasoning false**: every flat-scoping backend's `sanitize_ident`
+    exists precisely to turn an arbitrary string into a legal identifier
+    by escaping illegal characters, so `sanitize_ident("__do_while#0")`
+    produces an ordinary, `#`-free string (`___do_while_230` under
+    Python's hex-escape scheme) that a real Java program *can* declare
+    directly — reproducing the identical hang through the escaped form,
+    confirmed again by actually executing the emitted Python.
+  - **The real, final fix**: `fresh_flag_name` (shared by both
+    desugarings) drops any attempt at an unforgeable name and instead
+    picks a plain, escape-free candidate (`__do_while_N`/`__for_first_N`
+    again), then checks it directly against **both** (1) the ambient
+    scope at the loop's call site, via the existing `lookup_local_with_
+    frame` lookup, and (2) every name the loop's own lowered body
+    declares at any nesting depth, via a new `DeclaredNameCollector`
+    riding `semantic-ir`'s shared, already depth-guarded `Visitor`
+    (`walker.rs`) rather than a bespoke re-implementation of SIR's own
+    tree shape — retrying the next counter value on any collision. Both
+    checks are necessary: the ambient check alone misses a body-declared
+    local (the loop's own scope frame has already been popped by the
+    time the flag name is picked); the body-declared check alone misses
+    an *outer* local of the same name that the body only reads/writes,
+    never redeclares — still a real collision, since the flag lives in
+    the same synthetic `Expr::Block` a flat-scoping backend shares with
+    everything the loop references from outside it too. The now-dead
+    `lookup_local` collision-retry loop from the very first attempt (and,
+    since nothing else called the plain `lookup_local` wrapper, that
+    function itself) were removed in favor of this single shared
+    mechanism.
+  - New/rewritten tests lock in both halves of the check directly at the
+    IR level (`classic_for_loop_flag_name_skips_ahead_when_the_body_
+    declares_the_first_candidate_name` and its `_an_outer_local_
+    declares_` sibling, plus the `do_while_` equivalents), and two
+    `tests/loop_control_flat_scoping_regression.rs` tests run the
+    original reported scenario through the real Python backend (not just
     JavaScript, where the bug never reproduced) with a hard 15-second
-    wall-clock timeout, so a reintroduction of this specific bug fails
-    the test cleanly instead of hanging the suite.
+    wall-clock timeout, so a reintroduction of any of these three bugs
+    fails the affected test cleanly instead of hanging the suite.
 
 ## [0.11.0] - 2026-08-26
 

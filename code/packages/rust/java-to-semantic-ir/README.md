@@ -165,12 +165,22 @@ now lives inside the loop's *condition* — which several backends
 (Python, Ruby) compile with flat scoping relative to the body — so a
 body-declared local sharing the flag's exact name silently re-armed it
 every iteration under those backends, the identical infinite-loop shape
-again. Fixed by making the flag names unforgeable (`__do_while#N`/
-`__for_first#N` — `#` is illegal in a Java identifier per JLS §3.8) so
-no real Java source can ever collide with them, under any backend's
-scoping, at any nesting depth — see `CHANGELOG.md`'s `[0.12.0]` entry
-for the full before/after shapes and the real-Python-backend regression
-tests this finding added. Everything else — `switch`
+again. A first attempted fix tried making the flag names unforgeable
+(`__do_while#N`/`__for_first#N` — `#` is illegal in a Java identifier
+per JLS §3.8), reasoning no real Java source could ever spell them — **a
+third `/security-review` round proved that false too**: every flat-
+scoping backend's `sanitize_ident` escapes `#` into an ordinary, legal-
+identifier string a real Java program *can* declare directly (Python's
+hex-escape turns `__do_while#0` into `___do_while_230`), reproducing the
+identical hang through the escaped form. The real fix (`fresh_flag_
+name`) drops the unforgeable-character idea entirely and instead checks
+a plain candidate name directly against both the ambient scope
+(`lookup_local_with_frame`) and everything the loop's own lowered body
+declares at any nesting depth (`DeclaredNameCollector`, riding `semantic-
+ir`'s shared `Visitor`), retrying the next counter value on either kind
+of collision — see `CHANGELOG.md`'s `[0.12.0]` entry for the full
+before/after shapes and the real-Python-backend regression tests this
+finding added. Everything else — `switch`
 (SIR still has no IR node for it at all — confirmed by a repo-wide grep,
 not assumed — so this needs its own spec-level design decision before
 any frontend can target it, tracked as task #51; `break`/`continue`

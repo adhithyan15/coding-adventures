@@ -1,24 +1,37 @@
 //! Regression test for a real, `/security-review`-caught non-termination
 //! bug in task #64's own `Stmt::Break`/`Stmt::Continue` support work:
 //! `lower_do_while_statement`/`lower_for_statement_inner`'s synthetic
-//! guard-flag names (`__do_while#N`/`__for_first#N`) must be *unforgeable*
-//! by real Java source, not merely checked against it.
+//! guard-flag names must never collide with a real Java local, under any
+//! backend's scoping rules.
 //!
 //! An earlier version of this same fix pass generated the flag as a plain
-//! `__do_while_N`/`__for_first_N` (valid Java identifiers) and either
-//! skipped or under-checked collision against a body-declared local of
-//! that exact name. The flag's own reference lives inside the loop's
+//! `__do_while_N`/`__for_first_N` with no collision check at all against
+//! real Java locals. The flag's own reference lives inside the loop's
 //! *condition* expression (moved there by this same fix pass, to keep a
 //! `continue` from skipping it), and several backends — Python and Ruby
 //! among them — compile a SIR condition/body pair with FLAT scoping: no
 //! new scope opens for either, so a body-declared local sharing the
 //! flag's exact name silently shadows it. For `do`-`while`, that re-arms
 //! the "always enter" flag every iteration, so the real condition is
-//! never evaluated again — an unconditional infinite loop. The fix uses
-//! `#` (illegal in a Java identifier, JLS §3.8) in the flag's own name,
-//! making the collision structurally impossible regardless of which
-//! backend's scoping rules apply — see `lower_do_while_statement`'s own
-//! doc comment for the full story.
+//! never evaluated again — an unconditional infinite loop.
+//!
+//! A second attempted fix used `#` (illegal in a Java identifier, JLS
+//! §3.8) in the flag's own name, reasoning that made it unforgeable by
+//! real Java source. A further `/security-review` round proved that
+//! false: every flat-scoping backend's `sanitize_ident` escapes `#` into
+//! an ordinary, legal-identifier string a real Java program CAN declare
+//! directly (e.g. Python's hex-escape turns `__do_while#0` into
+//! `___do_while_230`), reproducing the identical collision through the
+//! escaped form instead.
+//!
+//! The actual fix (`fresh_flag_name`, shared by both desugarings) drops
+//! any attempt at an "unforgeable" name and instead picks a plain,
+//! escape-free candidate, then checks it directly against both the
+//! ambient scope (`lookup_local_with_frame`) and everything the loop's
+//! own lowered body declares (`DeclaredNameCollector`, riding
+//! `semantic_ir`'s shared `Visitor`), retrying the next counter value on
+//! any collision — see `lower_do_while_statement`'s and `fresh_flag_
+//! name`'s own doc comments for the full story.
 //!
 //! This test proves the fix holds against the ACTUAL Python backend (the
 //! one the original finding reproduced against), not just against
@@ -153,9 +166,9 @@ fn do_while_flag_name_does_not_hang_on_python_flat_scoping_even_with_a_shadowing
         eprintln!("skipping: `python3` not available");
         return;
     }
-    // A body-declared local matching the closest LEGAL Java lookalike of
-    // the flag's own naming scheme. Before the `#`-based fix, this
-    // scenario hung Python's own interpreter forever (flat `while`/
+    // A body-declared local matching the flag's own first-candidate
+    // name exactly. Before `fresh_flag_name`'s collision check existed,
+    // this scenario hung Python's own interpreter forever (flat `while`/
     // condition scoping means the body's own assignment IS the flag).
     let src = wrap(concat!(
         "int y = 0; ",

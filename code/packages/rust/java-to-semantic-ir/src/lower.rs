@@ -333,8 +333,8 @@
 
 use parser::grammar_parser::{ASTNodeOrToken, GrammarASTNode};
 use semantic_ir::{
-    Block, Capture, CaptureValue, EffectSet, Expr, Feature, FeatureManifest, Function, Metadata,
-    Module, Param, ParamKind, Scope, Span, Stmt,
+    walk_stmt_default, Block, Capture, CaptureValue, EffectSet, Expr, Feature, FeatureManifest,
+    Function, Metadata, Module, Param, ParamKind, Scope, Span, Stmt, Visitor,
 };
 use std::collections::{HashMap, HashSet};
 
@@ -806,6 +806,81 @@ impl Lowerer {
             .enumerate()
             .rev()
             .find_map(|(i, frame)| frame.get(name).map(|&(k, s)| (k, s, i)))
+    }
+
+    /// Picks a synthetic guard-flag name of the form `{prefix}_{N}`
+    /// (starting at `*counter`, incrementing `*counter` past every
+    /// candidate tried, including the one finally chosen) that collides
+    /// with **neither**:
+    ///
+    /// 1. any name currently visible in the *ambient* scope at the call
+    ///    site (an outer local, a parameter, ...) — checked via `self.
+    ///    lookup_local_with_frame`, the same lookup every ordinary name
+    ///    reference goes through; nor
+    /// 2. any name `body` itself *declares*, anywhere within it (inside a
+    ///    nested `if`, `while`, `for`, ...) — checked via
+    ///    `DeclaredNameCollector`, since those declarations live in a
+    ///    scope frame this crate has already popped by the time the
+    ///    caller (`lower_do_while_statement`/`lower_for_statement_inner`)
+    ///    picks the flag name, so `lookup_local_with_frame` alone can't
+    ///    see them.
+    ///
+    /// Both checks are necessary: (1) alone misses a body-declared local
+    /// shadowing the flag (a `do`/`while`/`for` body scope has already
+    /// closed by the time this runs); (2) alone misses an *outer* local
+    /// of the same name that the body only reads/writes, never
+    /// redeclares (`do { flag_name = flag_name + 1; } while (...)`) —
+    /// still a real collision, since the flag lives in the very same
+    /// synthetic `Expr::Block` as the loop, which several backends
+    /// (`semantic-ir-to-python`, `semantic-ir-to-ruby`) compile as one
+    /// flat scope shared with everything the loop references from
+    /// outside it too.
+    ///
+    /// # Why a name-uniqueness check, not an unforgeable-character trick
+    ///
+    /// An earlier version of this fix used `#` (illegal in a Java
+    /// identifier per JLS §3.8) in the flag's own name, reasoning that no
+    /// real Java source could ever spell it. A second `/security-review`
+    /// round proved that reasoning false: every backend's `sanitize_ident`
+    /// (e.g. `semantic-ir-to-python::sanitize_ident`) exists precisely to
+    /// turn an *arbitrary* string into a legal identifier in its target
+    /// language by escaping illegal characters — so `sanitize_ident("__do_
+    /// while#0")` produces an ordinary, `#`-free string (e.g.
+    /// `___do_while_230` under Python's hex-escape scheme) that a real
+    /// Java program CAN declare directly. Since `sanitize_ident` is
+    /// idempotent on names that are already legal (the overwhelming
+    /// majority of real Java identifiers, which use only ASCII
+    /// letters/digits/underscore — a subset of both Python's and Ruby's
+    /// own identifier alphabets), a plain, escape-free candidate name
+    /// collides with a real Java local if and only if that local's raw
+    /// source name is *exactly* the candidate string — no backend-
+    /// specific escaping knowledge is needed to detect that. This method
+    /// checks the candidate directly against real Java names instead,
+    /// retrying with the next counter value on a hit, which closes the
+    /// hole completely rather than relying on a name no real Java source
+    /// is expected to spell.
+    ///
+    /// Takes the starting counter *by value* and returns `(name,
+    /// next_counter)` rather than a `&mut usize` in/out parameter: the
+    /// caller reads its own `do_while_counter`/`for_counter` field
+    /// (a plain `Copy` read, not a borrow) before calling, so this
+    /// `&self` method and the caller's later `self.do_while_counter =
+    /// next` assignment never overlap as simultaneous borrows of `self`.
+    fn fresh_flag_name(&self, prefix: &str, start_counter: usize, body: &Block) -> (String, usize) {
+        let mut collector = DeclaredNameCollector {
+            names: HashSet::new(),
+        };
+        collector.visit_block(body, 0);
+        let mut counter = start_counter;
+        loop {
+            let candidate = format!("{prefix}_{counter}");
+            counter += 1;
+            if self.lookup_local_with_frame(&candidate).is_none()
+                && !collector.names.contains(&candidate)
+            {
+                return (candidate, counter);
+            }
+        }
     }
 
     /// Resolve a bare name for use as a `VarRef`/assignment target,
@@ -1786,17 +1861,20 @@ impl Lowerer {
     ///
     /// `__do_while_N`'s uniqueness comes from `do_while_counter` (a
     /// monotonic per-`Lowerer` counter — two sibling do-while statements
-    /// in the same function must not share a flag) *and* a collision
-    /// check against every currently-visible name via `lookup_local`:
-    /// the flag lives in the enclosing scope for the duration of the
-    /// synthetic `Expr::Block` (it is not itself scope-pushed), so it
-    /// must not collide with any real Java local already in scope at
-    /// this point — `__do_while_0` is a legal Java identifier, so a
-    /// program that happens to declare a variable by that exact name is
-    /// a real, reachable case, not a hypothetical one. Since the
-    /// flag-clear no longer lives inside `S`'s own body, `body_declares_
-    /// name` collision-checking against it is no longer needed (only
-    /// `lookup_local`'s ambient-scope check remains relevant).
+    /// in the same function must not share a flag) *and* [`fresh_flag_
+    /// name`]'s collision check against every name `body` itself declares
+    /// (at any nesting depth): the flag's own reference lives inside the
+    /// loop's *condition*, which several backends (`semantic-ir-to-
+    /// python`, `semantic-ir-to-ruby`) compile with FLAT scoping relative
+    /// to the body — no new scope opens for either — so a body-declared
+    /// local sharing the flag's exact name would re-arm it to `true` on
+    /// every iteration, making the loop **run forever** regardless of the
+    /// real condition. `__do_while_0` is a legal Java identifier, so a
+    /// program that happens to declare a body-local by that exact name is
+    /// a real, reachable case, not a hypothetical one — see `fresh_flag_
+    /// name`'s own doc comment for why a plain, escape-free name plus a
+    /// direct collision check is the fix, not an attempted "unforgeable"
+    /// character.
     fn lower_do_while_statement(
         &mut self,
         node: &GrammarASTNode,
@@ -1826,30 +1904,13 @@ impl Lowerer {
         self.observed.add(Feature::Loops);
         self.observed.add(Feature::MutableBindings);
 
-        // `#` is not a legal character in a Java identifier (JLS §3.8), so
-        // no real Java source can ever declare a local named `__do_while#N`
-        // — this makes the flag's name unforgeable by construction,
-        // rather than relying on a collision *check* against real Java
-        // locals (`/security-review` found the flag's own reference now
-        // lives inside the loop *condition*, which several backends
-        // compile with FLAT scoping relative to the loop body — e.g.
-        // `semantic-ir-to-python`'s `emit_block_as_expr` renders both the
-        // condition and the body as ordinary Python assignments, no new
-        // scope opened for either — so a `lookup_local`-only check, which
-        // by this point can no longer see anything the body itself
-        // declares, missed the case where the BODY shadows the flag, not
-        // the other way around: a body-declared local named exactly
-        // `__do_while_0` would re-arm the flag to `true` on every
-        // iteration, making the loop **run forever** regardless of the
-        // real condition — the do-while counterpart of the classic-`for`
-        // update-clause bug this same fix pass already found). Every
-        // backend's own `sanitize_ident` (see e.g. `semantic-ir-to-
-        // javascript::sanitize_ident`) already deterministically escapes
-        // any character outside its target language's own identifier
-        // alphabet, so this name still lowers to a valid, unique
-        // identifier in every backend without any backend-side change.
-        let flag_name = format!("__do_while#{}", self.do_while_counter);
-        self.do_while_counter += 1;
+        // See `fresh_flag_name`'s own doc comment for why this checks
+        // both ambient scope and every name `body` declares (at any
+        // nesting depth), not an attempt to pick a name no real Java
+        // source could spell.
+        let (flag_name, next_counter) =
+            self.fresh_flag_name("__do_while", self.do_while_counter, &body);
+        self.do_while_counter = next_counter;
 
         let flag_decl = Stmt::LetStarBinding {
             name: flag_name.clone(),
@@ -2056,21 +2117,20 @@ impl Lowerer {
         let (flag_decl, while_cond) = match update_stmt {
             None => (None, cond),
             Some(update) => {
-                // `#` is not a legal character in a Java identifier (JLS
-                // §3.8) — see `lower_do_while_statement`'s own identically-
-                // reasoned flag-name comment (`/security-review`) for why
-                // this name must be unforgeable by a real Java local
-                // rather than merely checked against one: the flag
+                // See `fresh_flag_name`'s own doc comment (and `lower_do_
+                // while_statement`'s identically-reasoned flag-name
+                // comment) for why this is a direct collision check
+                // against every name `body` declares, not an attempt to
+                // pick a name no real Java source could spell: the flag
                 // reference lives inside the loop's own *condition*,
                 // which several backends compile with flat scoping
                 // relative to the body (no new scope opened for either),
-                // so a body-declared local sharing the flag's name would
-                // re-arm it every iteration and skip `update` forever —
-                // an infinite loop, the exact bug class this whole fix
-                // pass exists to close, reached through the fix's own
-                // synthetic name instead of the original bug.
-                let flag_name = format!("__for_first#{}", self.for_counter);
-                self.for_counter += 1;
+                // so an unchecked body-declared local sharing the flag's
+                // name would re-arm it every iteration and skip `update`
+                // forever — an infinite loop.
+                let (flag_name, next_counter) =
+                    self.fresh_flag_name("__for_first", self.for_counter, &body);
+                self.for_counter = next_counter;
                 let flag_decl = Stmt::LetStarBinding {
                     name: flag_name.clone(),
                     sir_type: None,
@@ -4663,6 +4723,39 @@ fn label_token(node: &GrammarASTNode) -> Option<&str> {
         }
         _ => None,
     })
+}
+
+/// Collects every name a lowered loop body declares as a local — via
+/// `Stmt::LetBinding`/`LetStarBinding` directly, or a `ForRange`/`ForEach`
+/// loop variable — at any nesting depth (inside a nested `if`, `while`,
+/// `for`, etc.). Used by [`fresh_flag_name`] to guarantee a synthetic
+/// guard-flag name can never collide with a real Java local.
+///
+/// Rides `semantic_ir::Visitor`'s shared, already-depth-guarded traversal
+/// (`walker.rs`) rather than a bespoke recursive walk over `Stmt`/`Expr`:
+/// this crate's own `Expr::If`/`Expr::Block` (how a bare Java `if`
+/// statement and a nested block both lower — see `lower_statement`'s
+/// `if`/`else` handling) already nest further declarations the walker
+/// must see, and any future SIR node this crate starts emitting inside a
+/// loop body is covered automatically, without a second traversal to keep
+/// in sync with `nodes.rs`.
+struct DeclaredNameCollector {
+    names: HashSet<String>,
+}
+
+impl Visitor for DeclaredNameCollector {
+    fn visit_stmt(&mut self, s: &Stmt, depth: usize) {
+        match s {
+            Stmt::LetBinding { name, .. } | Stmt::LetStarBinding { name, .. } => {
+                self.names.insert(name.clone());
+            }
+            Stmt::ForRange { var, .. } | Stmt::ForEach { var, .. } => {
+                self.names.insert(var.clone());
+            }
+            _ => {}
+        }
+        walk_stmt_default(self, s, depth);
+    }
 }
 
 fn child_nodes(node: &GrammarASTNode) -> Vec<&GrammarASTNode> {

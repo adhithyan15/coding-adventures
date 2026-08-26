@@ -492,16 +492,37 @@ flag's exact name (`__do_while_0` is a legal Java identifier — a real,
 reachable case, not hypothetical) silently re-armed the flag every
 iteration under those backends, reproducing the identical infinite-loop
 shape the fix above exists to close — confirmed by actually executing
-the emitted Python and observing a hang, not by inspection. Fixed by
-making the flag names **unforgeable** rather than merely checked: `#`
-is not a legal Java identifier character (JLS §3.8), so `__do_while#N`/
-`__for_first#N` can never collide with any name real Java source
-declares, under any backend's scoping, at any nesting depth — every
-backend's own `sanitize_ident` already deterministically escapes `#`
-for its target language, so this needed no backend-side change; the
-now-provably-unreachable `lookup_local` collision-retry loop (and the
-`lookup_local` wrapper itself, once nothing else called it) were
-removed rather than left in place. See `java-to-semantic-ir`'s own
+the emitted Python and observing a hang, not by inspection. **A first
+attempted fix tried making the flag names unforgeable** instead of
+merely checked, embedding `#` — not a legal Java identifier character
+per JLS §3.8 — so no real Java source could spell `__do_while#N`/
+`__for_first#N` directly. **A third `/security-review` round proved that
+reasoning false**: every flat-scoping backend's own `sanitize_ident`
+exists precisely to turn an arbitrary string into a legal identifier by
+escaping illegal characters, so `sanitize_ident("__do_while#0")`
+produces an ordinary, `#`-free string (`___do_while_230` under Python's
+hex-escape scheme) that a real Java program *can* declare directly —
+reproducing the identical hang through the escaped form, confirmed again
+by actually executing the emitted Python. **The real, final fix**
+(`Lowerer::fresh_flag_name`, shared by both desugarings) drops the
+unforgeable-character idea entirely: it picks a plain, escape-free
+candidate name and checks it directly against both (1) the ambient scope
+at the loop's call site, via the existing `lookup_local_with_frame`
+lookup, and (2) every name the loop's own lowered body declares at any
+nesting depth, via a new `DeclaredNameCollector` that rides `semantic-
+ir`'s shared, already depth-guarded `Visitor` (`walker.rs`) rather than a
+bespoke re-implementation of SIR's own tree shape — retrying the next
+counter value on either kind of collision. Both checks are necessary:
+the ambient check alone misses a body-declared local (the loop's own
+scope frame has already been popped by the time the flag name is
+picked); the body-declared check alone misses an *outer* local of the
+same name the body only reads/writes, never redeclares — still a real
+collision, since the flag lives in the same synthetic `Expr::Block` a
+flat-scoping backend shares with everything the loop references from
+outside it too. The now-dead `lookup_local` collision-retry loop from
+the first attempt (and, since nothing else called the plain
+`lookup_local` wrapper, that function itself) were removed in favor of
+this single shared mechanism. See `java-to-semantic-ir`'s own
 `CHANGELOG.md` `[0.12.0]` entry for the full before/after shapes, its
 `tests/loop_control_java_execution.rs` for `node`-execution-proof tests
 (two of which are direct termination-regression tests for the first two
