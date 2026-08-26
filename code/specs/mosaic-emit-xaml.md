@@ -90,6 +90,23 @@ When invoked on a userland component package (`mosaic-compile pkg <path>
 component plus a `<PackageName>.csproj` that bundles them as a referenceable
 library.
 
+### 2.1 Native runtime library bundling (issue #12026)
+
+The generated `.csproj` carries a `CopyMosaicNativeHostLibraries` MSBuild
+target that copies a bundled native runtime library next to the built
+executable so `DllImport`/`NativeLibrary` can resolve it at launch. The
+target's `Include` is the single, exact, known filename
+`$(MSBuildProjectDirectory)\mosaic_app.dll` — never a glob — since
+`mosaic-package-artifact-builder`'s `install_xaml_runtime_library` is the
+only code path that ever legitimately places a file there, and it
+validates that exact name before writing. A broader glob would copy any
+`.dll` planted in the project directory next to the executable, where
+the app's own load-from-own-directory convention would pick it up
+directly. Bundling a runtime library is optional even with
+`--emit-project` on, so the target carries
+`Condition="Exists('$(MSBuildProjectDirectory)\mosaic_app.dll')"` to skip
+cleanly rather than let `<Copy>` fail on a missing source file.
+
 ## 3. Mapping table — UI29 kernel primitives → XAML
 
 The fifteen kernel primitives (UI29 §2.1). Every Mosaic backend must handle all

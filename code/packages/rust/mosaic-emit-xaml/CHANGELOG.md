@@ -1,5 +1,46 @@
 # Changelog — mosaic-emit-xaml
 
+## [Unreleased] — security: narrow CopyMosaicNativeHostLibraries from a *.dll glob to the known runtime filename (#12026)
+
+The generated `.csproj`'s `CopyMosaicNativeHostLibraries` MSBuild target
+globbed `$(MSBuildProjectDirectory)\*.dll` and copied every match next
+to the built executable — a DLL-planting primitive if anything can drop
+a file into the generated project directory, since the app already
+loads `mosaic_app.dll` from its own directory by convention (a planted
+DLL with that name would be loaded directly). Flagged during #12015's
+review as adjacent to that diff, not introduced by it.
+
+`mosaic-package-artifact-builder::install_xaml_runtime_library` is the
+only code path that ever legitimately places a DLL there for this
+mechanism's purpose — it `unreachable!()`s unless the file is validated
+to be named exactly `mosaic_app.dll` before ever being written. Narrowed
+the glob to that one exact, known filename; matches 100% of legitimate
+usage with nothing left to catch. Since bundling a runtime library is
+optional even with project emission on, `mosaic_app.dll` may legitimately
+not exist — a literal (non-wildcard) MSBuild `Include`, unlike a glob,
+makes `<Copy>` error at build time on a missing source file, so the
+`<Target>` now also carries `Condition="Exists('$(MSBuildProjectDirectory)\mosaic_app.dll')"`
+to skip cleanly instead.
+
+Verified against a real `dotnet build`, three cases: (1) no
+`mosaic_app.dll` present — build succeeds, target skipped, no error on
+the missing source file; (2) `mosaic_app.dll` present — build succeeds
+and the file is still copied to `$(OutDir)` exactly as before, no
+regression to the legitimate case; (3) a differently-named planted DLL
+(`evil_planted.dll`) present instead — build succeeds and the planted
+file is confirmed absent from `$(OutDir)`, the concrete proof the
+vulnerability is closed rather than just narrowed.
+
+One bug caught by that same empirical verification, not by the unit
+tests: the new doc comment's first draft used a literal `--` inside the
+generated XML `<!-- -->` comment (illegal — XML comments cannot contain
+`--` anywhere in their body), which broke MSBuild project-file parsing
+entirely (`MSB4025`). Rewritten to avoid the sequence; a reminder that
+generated-XML-comment content needs the same scrutiny as any other
+emitted markup, not just the code around it.
+
+Closes #12026.
+
 ## [Unreleased] — security: validate URI schemes on HostLink's NavigateUri (#12038)
 
 `emit_host_link`'s `NavigateUri` binding had no scheme validation on
