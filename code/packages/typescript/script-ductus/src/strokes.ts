@@ -703,6 +703,39 @@ const independentPehStrokes = (
   },
 ];
 
+const independentUrduTteStrokes = (): Stroke[] => {
+  const [bowl] = independentPehStrokes();
+  return [
+    bowl,
+    {
+      segments: [
+        {
+          label:
+            "after one lift, draw the small retroflex mark downward, back upward, and down again to close its loop",
+          path: [
+            { x: 340, y: 500 },
+            { x: 335, y: 445 },
+            { x: 340, y: 415 },
+            { x: 335, y: 445 },
+            { x: 340, y: 500 },
+            { x: 335, y: 445 },
+            { x: 340, y: 415 },
+            { x: 325, y: 380 },
+            { x: 280, y: 370 },
+            { x: 325, y: 348 },
+            { x: 375, y: 338 },
+            { x: 425, y: 348 },
+            { x: 460, y: 375 },
+            { x: 470, y: 395 },
+            { x: 450, y: 420 },
+            { x: 405, y: 448 },
+          ],
+        },
+      ],
+    },
+  ];
+};
+
 const independentCheStrokes = (
   headLabel = "sweep left through the pointed hooked head",
   bowlLabel = "continue down and around the bowl without lifting",
@@ -12011,6 +12044,15 @@ export const DUCTUS: Record<string, LetterDuctus> = {
     glyph: "پ",
     strokes: independentPehStrokes(),
     source: urduAlphabetSource("پ"),
+  },
+  // Zer o Zabar demonstrates the independent be-series bowl first, followed
+  // after one lift by the small to'e-shaped retroflex mark above it. Share the
+  // bowl's Noto fallback geometry with Urdu pe while retaining ṭe's own source.
+  [ductusKey("urdu-nastaliq", "ٹ")]: {
+    script: "urdu-nastaliq",
+    glyph: "ٹ",
+    strokes: independentUrduTteStrokes(),
+    source: urduAlphabetSource("ٹ"),
   },
   // Persian Online independently demonstrates che body-first, then places the
   // three lower dots left, right, and lower-center. Share only Noto geometry
