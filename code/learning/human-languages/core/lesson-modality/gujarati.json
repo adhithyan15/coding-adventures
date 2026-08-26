@@ -7,17 +7,17 @@
   "policy": {
     "maxLinearisableTableColumns": 3
   },
-  "sourceHash": "fnv1a64:78baeebaa73439ca",
+  "sourceHash": "fnv1a64:ed1c3795d5de686c",
   "summary": {
     "totalLessons": 163,
-    "voice": 32,
-    "sight": 44,
-    "pen": 87,
-    "drivableLessons": 32,
-    "drivablePercent": 20,
+    "voice": 25,
+    "sight": 43,
+    "pen": 95,
+    "drivableLessons": 25,
+    "drivablePercent": 15,
     "trackCount": 1,
     "chapterCount": 27,
-    "drivablePrefixTotal": 17,
+    "drivablePrefixTotal": 13,
     "fullyDrivableChapters": 2,
     "unstartableChapters": 20,
     "overriddenLessons": 0,
@@ -27,11 +27,11 @@
     {
       "language": "gujarati",
       "lessonCount": 163,
-      "voice": 32,
-      "sight": 44,
-      "pen": 87,
-      "drivablePercent": 20,
-      "drivablePrefixTotal": 17,
+      "voice": 25,
+      "sight": 43,
+      "pen": 95,
+      "drivablePercent": 15,
+      "drivablePrefixTotal": 13,
       "modalities": [
         "voice",
         "sight",
@@ -394,41 +394,37 @@
         {
           "chapter": 24,
           "lessonCount": 8,
-          "voice": 6,
-          "sight": 1,
-          "pen": 1,
+          "voice": 3,
+          "sight": 0,
+          "pen": 5,
           "modalities": [
             "voice",
             "sight",
             "pen"
           ],
-          "drivablePrefix": 3,
-          "firstNonVoiceLesson": "GU-W20-gha",
+          "drivablePrefix": 1,
+          "firstNonVoiceLesson": "GU-C20-bajar",
           "drivable": false,
           "drivableLessonIds": [
-            "GU-C20-hear-bajar",
-            "GU-C20-bajar",
-            "GU-C20-hear-ghar"
+            "GU-C20-hear-bajar"
           ]
         },
         {
           "chapter": 25,
           "lessonCount": 7,
-          "voice": 6,
+          "voice": 2,
           "sight": 0,
-          "pen": 1,
+          "pen": 5,
           "modalities": [
             "voice",
             "sight",
             "pen"
           ],
-          "drivablePrefix": 3,
-          "firstNonVoiceLesson": "GU-W21-ai-matra",
+          "drivablePrefix": 1,
+          "firstNonVoiceLesson": "GU-C21-haath",
           "drivable": false,
           "drivableLessonIds": [
-            "GU-C21-hear-haath",
-            "GU-C21-haath",
-            "GU-C21-hear-paisa"
+            "GU-C21-hear-haath"
           ]
         },
         {
@@ -3558,18 +3554,21 @@
       "language": "gujarati",
       "chapter": 24,
       "sequence": 890,
-      "modality": "voice",
-      "derived": "voice",
-      "drivable": true,
+      "modality": "pen",
+      "derived": "pen",
+      "drivable": false,
       "reasons": [
-        "no-visual-dependency"
+        "writing-type"
       ],
-      "coreModality": "voice",
+      "coreModality": "pen",
       "coreReasons": [
-        "no-visual-dependency"
+        "writing-type"
       ],
-      "coreDrivable": true,
-      "sourceHash": "fnv1a64:ff2b4f810ab6c9cc"
+      "coreDrivable": false,
+      "sourceHash": "fnv1a64:a46539ae956d0b42",
+      "delivery": "script",
+      "authored": "pen",
+      "authoredReason": "The guided-copy activity requires handwriting; its machine-readable stage is not visible to prose cue derivation."
     },
     {
       "id": "GU-C20-hear-ghar",
@@ -3613,18 +3612,23 @@
       "language": "gujarati",
       "chapter": 24,
       "sequence": 910,
-      "modality": "sight",
-      "derived": "sight",
+      "modality": "pen",
+      "derived": "pen",
       "drivable": false,
       "reasons": [
+        "writing-type",
         "sight-cue"
       ],
-      "coreModality": "sight",
+      "coreModality": "pen",
       "coreReasons": [
+        "writing-type",
         "sight-cue"
       ],
       "coreDrivable": false,
-      "sourceHash": "fnv1a64:e44f3c04d1183048"
+      "sourceHash": "fnv1a64:e6cd2e676f88d93c",
+      "delivery": "script",
+      "authored": "pen",
+      "authoredReason": "The delayed-copy activity requires handwriting; its machine-readable stage is not visible to prose cue derivation."
     },
     {
       "id": "GU-C20-hear-mandir",
@@ -3649,36 +3653,42 @@
       "language": "gujarati",
       "chapter": 24,
       "sequence": 930,
-      "modality": "voice",
-      "derived": "voice",
-      "drivable": true,
+      "modality": "pen",
+      "derived": "pen",
+      "drivable": false,
       "reasons": [
-        "no-visual-dependency"
+        "writing-type"
       ],
-      "coreModality": "voice",
+      "coreModality": "pen",
       "coreReasons": [
-        "no-visual-dependency"
+        "writing-type"
       ],
-      "coreDrivable": true,
-      "sourceHash": "fnv1a64:b4304754d2a02dd9"
+      "coreDrivable": false,
+      "sourceHash": "fnv1a64:48433150b57078b9",
+      "delivery": "script",
+      "authored": "pen",
+      "authoredReason": "The delayed-copy activity requires handwriting; its machine-readable stage is not visible to prose cue derivation."
     },
     {
       "id": "GU-C20-places-three",
       "language": "gujarati",
       "chapter": 24,
       "sequence": 940,
-      "modality": "voice",
-      "derived": "voice",
-      "drivable": true,
+      "modality": "pen",
+      "derived": "pen",
+      "drivable": false,
       "reasons": [
-        "no-visual-dependency"
+        "writing-type"
       ],
-      "coreModality": "voice",
+      "coreModality": "pen",
       "coreReasons": [
-        "no-visual-dependency"
+        "writing-type"
       ],
-      "coreDrivable": true,
-      "sourceHash": "fnv1a64:a6e3bba9437b7559"
+      "coreDrivable": false,
+      "sourceHash": "fnv1a64:c10cf25559b36e35",
+      "delivery": "script",
+      "authored": "pen",
+      "authoredReason": "The non-compensatory payoff includes required dictation, so the complete lesson needs a pen even though its oral core is drivable."
     },
     {
       "id": "GU-C21-hear-haath",
@@ -3703,18 +3713,21 @@
       "language": "gujarati",
       "chapter": 25,
       "sequence": 960,
-      "modality": "voice",
-      "derived": "voice",
-      "drivable": true,
+      "modality": "pen",
+      "derived": "pen",
+      "drivable": false,
       "reasons": [
-        "no-visual-dependency"
+        "writing-type"
       ],
-      "coreModality": "voice",
+      "coreModality": "pen",
       "coreReasons": [
-        "no-visual-dependency"
+        "writing-type"
       ],
-      "coreDrivable": true,
-      "sourceHash": "fnv1a64:7672285a8e39b9eb"
+      "coreDrivable": false,
+      "sourceHash": "fnv1a64:c67811afa66f857b",
+      "delivery": "script",
+      "authored": "pen",
+      "authoredReason": "The delayed-copy activity requires handwriting; its machine-readable stage is not visible to prose cue derivation."
     },
     {
       "id": "GU-C21-hear-paisa",
@@ -3758,54 +3771,63 @@
       "language": "gujarati",
       "chapter": 25,
       "sequence": 990,
-      "modality": "voice",
-      "derived": "voice",
-      "drivable": true,
+      "modality": "pen",
+      "derived": "pen",
+      "drivable": false,
       "reasons": [
-        "no-visual-dependency"
+        "writing-type"
       ],
-      "coreModality": "voice",
+      "coreModality": "pen",
       "coreReasons": [
-        "no-visual-dependency"
+        "writing-type"
       ],
-      "coreDrivable": true,
-      "sourceHash": "fnv1a64:9331739576b3c3e8"
+      "coreDrivable": false,
+      "sourceHash": "fnv1a64:a60d96237de12a24",
+      "delivery": "script",
+      "authored": "pen",
+      "authoredReason": "The delayed-copy activity requires handwriting; its machine-readable stage is not visible to prose cue derivation."
     },
     {
       "id": "GU-R21-travel-five",
       "language": "gujarati",
       "chapter": 25,
       "sequence": 1000,
-      "modality": "voice",
-      "derived": "voice",
-      "drivable": true,
+      "modality": "pen",
+      "derived": "pen",
+      "drivable": false,
       "reasons": [
-        "no-visual-dependency"
+        "writing-type"
       ],
-      "coreModality": "voice",
+      "coreModality": "pen",
       "coreReasons": [
-        "no-visual-dependency"
+        "writing-type"
       ],
-      "coreDrivable": true,
-      "sourceHash": "fnv1a64:367762e308249f9b"
+      "coreDrivable": false,
+      "sourceHash": "fnv1a64:e8d92bf645e9348f",
+      "delivery": "script",
+      "authored": "pen",
+      "authoredReason": "Mixed retrieval includes required model-free writing, so the complete lesson needs a pen even though its oral core is drivable."
     },
     {
       "id": "GU-C21-travel-five",
       "language": "gujarati",
       "chapter": 25,
       "sequence": 1010,
-      "modality": "voice",
-      "derived": "voice",
-      "drivable": true,
+      "modality": "pen",
+      "derived": "pen",
+      "drivable": false,
       "reasons": [
-        "no-visual-dependency"
+        "writing-type"
       ],
-      "coreModality": "voice",
+      "coreModality": "pen",
       "coreReasons": [
-        "no-visual-dependency"
+        "writing-type"
       ],
-      "coreDrivable": true,
-      "sourceHash": "fnv1a64:cc96b36d820b4010"
+      "coreDrivable": false,
+      "sourceHash": "fnv1a64:9ecfd6b279c50770",
+      "delivery": "script",
+      "authored": "pen",
+      "authoredReason": "The non-compensatory payoff includes required dictation, so the complete lesson needs a pen even though its oral core is drivable."
     },
     {
       "id": "GU-C22-hear-shahar",

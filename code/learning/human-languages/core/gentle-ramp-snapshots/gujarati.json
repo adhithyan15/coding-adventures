@@ -1,8 +1,8 @@
 {
   "language": "gujarati",
   "lessonCount": 163,
-  "atomMeasurableLessons": 161,
-  "atomMeasurementBlindLessons": 2,
+  "atomMeasurableLessons": 160,
+  "atomMeasurementBlindLessons": 3,
   "durationViolations": 0,
   "atomLessonSpikes": 2,
   "atomChapterSpikes": 1,
@@ -26,7 +26,7 @@
     "R4": 61
   },
   "payoffSurprises": 0,
-  "writingPracticeLessons": 130,
+  "writingPracticeLessons": 138,
   "firstWritingPracticeAt": 1,
   "lessonsBeforeWritingPractice": 1,
   "findings": [
@@ -54,7 +54,7 @@
     {
       "language": "gujarati",
       "kind": "measurement-blind",
-      "count": 2,
+      "count": 3,
       "unit": "lesson(s)",
       "detail": "migrate undeclared lesson knowledge so gentleness can be measured"
     }

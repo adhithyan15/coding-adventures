@@ -3,8 +3,11 @@ schema_version: 2
 id: GU-C21-haath
 spine_node: SPINE-POLITE-REQUEST-REPAIR
 sequence: 960
+delivery: script
+modality: pen
+modality_reason: The delayed-copy activity requires handwriting; its machine-readable stage is not visible to prose cue derivation.
 chapter: 25
-type: word
+type: writing
 headword: હાથ
 romanization: hāth
 gloss: hand, read and written
