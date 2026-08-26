@@ -1353,6 +1353,19 @@ pub struct Table {
     elements: Vec<Option<u32>>,
     /// Maximum table size, enforced by `grow` (task #98).
     max_size: Option<u32>,
+    /// Whether this table uses 64-bit addressing (table64 proposal, W26)
+    /// -- mirrors `LinearMemory::is64` (W25) exactly. `elements`/`max_size`
+    /// stay `u32`/`usize`-based regardless: `is64` only changes what the
+    /// DECLARED index width is (an eventual `table.get`/`table.set`/
+    /// `table.grow`/`table.size`/`call_indirect` against this table would
+    /// use an `i64` index -- out of scope for W26 itself, see
+    /// `code/specs/W26-wasm-table64-first-slice.md`), not how many
+    /// elements this interpreter will actually try to allocate (already
+    /// bounded well under any `u64` range by [`MAX_TABLE_ELEMENTS`],
+    /// enforced by [`new_with_is64`](Self::new_with_is64)). Always `false`
+    /// via the plain [`new`](Self::new) constructor; only
+    /// `new_with_is64` can set it.
+    is64: bool,
 }
 
 impl Table {
@@ -1361,7 +1374,54 @@ impl Table {
         Table {
             elements: vec![None; initial_size as usize],
             max_size,
+            is64: false,
         }
+    }
+
+    /// As [`new`](Self::new), but for a table that may be 64-bit-indexed
+    /// (table64 proposal, W26) -- mirrors `LinearMemory::new_with_is64`
+    /// (W25) exactly. `initial_size`/`max_size` are `u64` here because a
+    /// real, spec-valid 64-bit table's limits can reach `u64::MAX`
+    /// (table64's own real spec ceiling, verified live against the
+    /// reference interpreter's `check_tabletype` -- NOT the same `2^48`
+    /// bound memory64 uses; see `code/specs/
+    /// W26-wasm-table64-first-slice.md`).
+    ///
+    /// Fallible, unlike `new`: an eager `vec![None; initial_size]`
+    /// allocation at anywhere near `u64::MAX` elements is not something
+    /// any real system can actually back (each element already costs
+    /// multiple bytes as `Option<u32>`), and would abort the process via
+    /// Rust's allocator error handler, not a catchable panic, if ever
+    /// actually attempted at that size. [`MAX_TABLE_ELEMENTS`] is reused
+    /// here as this interpreter's own practical, implementation-defined
+    /// resource limit on ACTUAL allocation for an `is64` table too --
+    /// deliberately separate from (and much smaller than) the spec's own
+    /// 64-bit declaration ceiling, the same "spec allows more than we'll
+    /// actually allocate" shape `MAX_MEMORY64_INITIAL_PAGES` already
+    /// establishes for memory64. A module that only ever DECLARES such a
+    /// table (never instantiates it) still validates successfully (see
+    /// `wasm-validator`'s own Check 2b) -- only an actual instantiation
+    /// attempt hits this cap, as a real, gracefully-returned `TrapError`,
+    /// never a panic or process abort.
+    pub fn new_with_is64(initial_size: u64, max_size: Option<u64>, is64: bool) -> Result<Self, TrapError> {
+        if is64 && initial_size > MAX_TABLE_ELEMENTS as u64 {
+            return Err(TrapError::new(format!(
+                "table of {initial_size} initial elements exceeds this interpreter's practical 64-bit table allocation cap of {MAX_TABLE_ELEMENTS} elements (a real, spec-valid declaration this interpreter still refuses to actually allocate)"
+            )));
+        }
+        // Safe to narrow to u32 here either way: a 32-bit table's `min`
+        // is already validator-capped at MAX_TABLE_ELEMENTS (Check 2b),
+        // and a 64-bit table's `min` just got checked against the SAME
+        // cap immediately above.
+        let mut table = Table::new(initial_size as u32, max_size.map(|m| m.min(MAX_TABLE_ELEMENTS as u64) as u32));
+        table.is64 = is64;
+        Ok(table)
+    }
+
+    /// Whether this table uses 64-bit addressing (table64 proposal, W26).
+    /// See [`Table`]'s own `is64` field doc comment.
+    pub fn is64(&self) -> bool {
+        self.is64
     }
 
     /// Get the function index at the given table index.
@@ -11403,6 +11463,49 @@ mod tests {
         assert!(mem.load_i32(usize::MAX - 1).is_err());
         assert!(mem.load_i32(usize::MAX).is_err());
         assert!(mem.load_i64(usize::MAX - 3).is_err());
+    }
+
+    // ── table64 (W26): Table::new_with_is64 ──────────────────────────────
+
+    #[test]
+    fn table_new_with_is64_builds_a_real_is64_table() {
+        let table = Table::new_with_is64(1, Some(2), true).unwrap();
+        assert!(table.is64());
+        assert_eq!(table.size(), 1);
+        assert_eq!(table.max_size(), Some(2));
+    }
+
+    #[test]
+    fn table_new_with_is64_false_matches_plain_new() {
+        let table = Table::new_with_is64(1, None, false).unwrap();
+        assert!(!table.is64());
+    }
+
+    #[test]
+    fn table_new_with_is64_rejects_an_initial_size_past_the_practical_cap() {
+        let result = Table::new_with_is64(MAX_TABLE_ELEMENTS as u64 + 1, None, true);
+        let err = match result {
+            Err(e) => e,
+            Ok(_) => panic!("expected an error, got Ok"),
+        };
+        assert!(err.message.contains("practical 64-bit table allocation cap"), "{}", err.message);
+    }
+
+    #[test]
+    fn table_new_with_is64_accepts_exactly_the_practical_cap() {
+        let table = Table::new_with_is64(MAX_TABLE_ELEMENTS as u64, None, true).unwrap();
+        assert_eq!(table.size(), MAX_TABLE_ELEMENTS);
+    }
+
+    /// The `u64::MAX`-`min` case `table64.wast` itself declares (via a
+    /// `(module definition ...)` directive, so this repo's harness --
+    /// see code/specs/W26-wasm-table64-first-slice.md -- still attempts
+    /// real instantiation): must return a graceful `TrapError`, never a
+    /// panic or process abort.
+    #[test]
+    fn table_new_with_is64_rejects_u64_max_gracefully() {
+        let result = Table::new_with_is64(u64::MAX, None, true);
+        assert!(result.is_err());
     }
 
     #[test]

@@ -2,6 +2,25 @@
 
 All notable changes to this package will be documented in this file.
 
+## [0.2.69] - 2026-08-26 (W26 — table64 proposal, first slice)
+
+### Changed
+
+- **Check 2b (table limits ≤ `MAX_TABLE_ELEMENTS`) is now `is64`-aware**:
+  unchanged for `is64: false` tables (same implementation-defined
+  `MAX_TABLE_ELEMENTS` validation-time cap as before — no 32-bit table's
+  validation outcome changes); an `is64` table (`TableType::is64`,
+  `wasm-types` 0.1.11) is checked against the REAL spec ceiling instead
+  (`u64::MAX`, verified live against the reference interpreter's
+  `check_tabletype` — table64's ceiling is NOT the same `2^48`-page bound
+  memory64 uses), which no `u64` value can ever exceed. `is64` tables are
+  also excluded from the 32-bit `total_table_elements` aggregate, mirroring
+  Check 1b's own `is64` memory exclusion (W25).
+- Table-import linking (`wasm-runtime`) gains an `is64` mismatch check,
+  mirroring the existing memory-import one exactly.
+
+See `code/specs/W26-wasm-table64-first-slice.md`.
+
 ## [0.2.68] - 2026-08-26 (W25 — memory64 proposal, first slice)
 
 ### Added

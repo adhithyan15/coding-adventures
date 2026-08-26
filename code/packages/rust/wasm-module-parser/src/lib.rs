@@ -538,8 +538,8 @@ fn decode_mutability(byte: u8, offset: usize) -> Result<bool, WasmParseError> {
 ///   bit 0 = 0  →  { min: u32leb }
 ///   bit 0 = 1  →  { min: u32leb, max: u32leb }
 ///   bit 1 = 1  →  shared (threads proposal, memory only -- WASM18)
-///   bit 2 = 1  →  64-bit index (memory64 proposal, W25): min/max are
-///                 u64leb instead of u32leb, memory only (see below)
+///   bit 2 = 1  →  64-bit index (memory64/table64 proposals, W25/W26):
+///                 min/max are u64leb instead of u32leb
 /// ```
 ///
 /// Verified live against the real spec's binary grammar (`https://
@@ -548,15 +548,13 @@ fn decode_mutability(byte: u8, offset: usize) -> Result<bool, WasmParseError> {
 /// `min`/`max` are `u64leb` in the 64-bit case (needed for real, spec-valid
 /// values up to `2^48`, past `u32`'s range).
 ///
-/// Returns `(Limits, shared, is64)`. `shared`/`is64` are only ever
-/// meaningful for a memory (a real encoder never sets bit 1 or bit 2 on a
-/// table's limits -- `table64`, the analogous widening for TABLES, is a
-/// separate, out-of-scope proposal this repo does not implement, so bit 2
-/// set on a table's limits is rejected as a real parse error rather than
-/// silently misinterpreted), but reading them unconditionally here --
-/// rather than threading a "which kind is this" flag through -- keeps this
-/// one shared helper simple; the table call site rejects `is64` itself
-/// immediately after calling this.
+/// Returns `(Limits, shared, is64)`. `shared` is only ever meaningful for a
+/// memory (a real encoder never sets bit 1 on a table's limits -- WASM18's
+/// threads proposal has no shared-table concept); `is64` is meaningful for
+/// BOTH kinds as of W26 (table64) -- both call sites (table and memory) now
+/// wire it into their own `TableType`/`MemoryType.is64` field, reading it
+/// unconditionally here rather than threading a "which kind is this" flag
+/// through keeps this one shared helper simple.
 fn parse_limits(p: &mut Parser) -> Result<(Limits, bool, bool), WasmParseError> {
     const IS64_FLAG: u8 = 0x04;
     let flags = p.read_u8()?;
@@ -711,16 +709,15 @@ fn parse_import_section(p: &mut Parser, module: &mut WasmModule) -> Result<(), W
             }
             ExternalKind::Table => {
                 let elem_type = p.read_u8()?;
+                // W26 (table64 proposal): `is64` (flags bit 0x04) is now
+                // wired into `TableType.is64`, mirroring `Memory` below --
+                // previously rejected outright (see git history/W25's own
+                // "table64 out of scope" note).
                 let (limits, _shared, is64) = parse_limits(p)?;
-                if is64 {
-                    return Err(WasmParseError {
-                        message: "table64 (a 64-bit-indexed table) is not supported by this parser".to_string(),
-                        offset: p.offset(),
-                    });
-                }
                 ImportTypeInfo::Table(TableType {
                     element_type: elem_type,
                     limits,
+                    is64,
                 })
             }
             ExternalKind::Memory => {
@@ -793,16 +790,15 @@ fn parse_table_section(p: &mut Parser, module: &mut WasmModule) -> Result<(), Wa
     let count = p.read_u32leb()? as usize;
     for _ in 0..count {
         let element_type = p.read_u8()?;
+        // W26 (table64 proposal): `is64` (flags bit 0x04) is now wired
+        // into `TableType.is64`, mirroring `Memory`'s own arm above --
+        // previously rejected outright (see git history/W25's own
+        // "table64 out of scope" note).
         let (limits, _shared, is64) = parse_limits(p)?;
-        if is64 {
-            return Err(WasmParseError {
-                message: "table64 (a 64-bit-indexed table) is not supported by this parser".to_string(),
-                offset: p.offset(),
-            });
-        }
         module.tables.push(TableType {
             element_type,
             limits,
+            is64,
         });
     }
     Ok(())
@@ -1630,16 +1626,37 @@ mod tests {
         assert_eq!(m.memories[0].limits.max, Some(big + 8));
     }
 
-    // ── Test 7d: table64 (out of scope) is rejected, not misparsed ────────────
+    // ── Test 7d: table64 (W26) round-trips instead of being rejected ─────────
     #[test]
-    fn test_table_section_is64_rejected() {
+    fn test_table_section_is64() {
         let mut payload = vec![0x01]; // count = 1
         payload.push(0x70); // funcref
-        payload.push(0x04); // flags = 0x04 (64-bit index) -- table64, unsupported
-        payload.extend(wasm_leb128::encode_unsigned(0)); // min = 0 (u64leb)
+        payload.push(0x04); // flags = 0x04 (64-bit index) -- table64
+        payload.extend(wasm_leb128::encode_unsigned(1)); // min = 1 (u64leb)
         let data = wasm_with_sections(&[make_section(4, &payload)]);
-        let err = WasmModuleParser::parse(&data).unwrap_err();
-        assert!(err.message.contains("table64"), "{}", err.message);
+        let m = WasmModuleParser::parse(&data).unwrap();
+        assert_eq!(m.tables.len(), 1);
+        assert_eq!(
+            m.tables[0],
+            TableType { element_type: 0x70, limits: Limits { min: 1, max: None }, is64: true }
+        );
+    }
+
+    // ── Test 7e: table64 with a value past u32::MAX ───────────────────────────
+    #[test]
+    fn test_table_section_is64_wide_limits() {
+        let big: u64 = (u32::MAX as u64) + 42;
+        let mut payload = vec![0x01]; // count = 1
+        payload.push(0x70); // funcref
+        payload.push(0x05); // flags = 0x05 (64-bit index, has max)
+        payload.extend(wasm_leb128::encode_unsigned(big));
+        payload.extend(wasm_leb128::encode_unsigned(big + 8));
+        let data = wasm_with_sections(&[make_section(4, &payload)]);
+        let m = WasmModuleParser::parse(&data).unwrap();
+        assert_eq!(m.tables.len(), 1);
+        assert!(m.tables[0].is64);
+        assert_eq!(m.tables[0].limits.min, big);
+        assert_eq!(m.tables[0].limits.max, Some(big + 8));
     }
 
     // ── Test 8: Table section ─────────────────────────────────────────────────

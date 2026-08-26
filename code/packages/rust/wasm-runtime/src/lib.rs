@@ -1345,14 +1345,26 @@ impl WasmRuntime {
                     // `Table` doesn't track its declared element type at
                     // runtime (WASM 1.0 only ever has funcref tables, and
                     // this repo's reference-types slice hasn't grown a
-                    // runtime-typed Table yet either) -- only limits are
-                    // checked here. Every table this repo can currently
-                    // construct is funcref, so this doesn't lose real
-                    // coverage against the vendored corpus, but a table
-                    // import mismatched purely on element type (not
-                    // limits) would incorrectly link here rather than
-                    // fail. Named, not silent: revisit if a future PR
-                    // gives `Table` a real element-type field.
+                    // runtime-typed Table yet either) -- only limits (and,
+                    // as of W26, `is64`) are checked here. Every table this
+                    // repo can currently construct is funcref, so this
+                    // doesn't lose real coverage against the vendored
+                    // corpus, but a table import mismatched purely on
+                    // element type (not limits) would incorrectly link
+                    // here rather than fail. Named, not silent: revisit if
+                    // a future PR gives `Table` a real element-type field.
+                    //
+                    // W26 (table64 proposal): an `is64` mismatch between
+                    // the actual table and the declared import type is
+                    // always incompatible, the same "real type mismatch"
+                    // shape the memory-import arm above already uses --
+                    // checked BEFORE `limits_compatible` (which is
+                    // `is64`-agnostic; both sides' `Limits` are `u64` now
+                    // regardless of `is64`, so a mismatch wouldn't
+                    // otherwise be caught by it at all).
+                    if imported_table.is64() != table_type.is64 {
+                        return Err(link_error("incompatible import type", imp));
+                    }
                     let actual = Limits { min: imported_table.size() as u64, max: imported_table.max_size().map(|m| m as u64) };
                     if !limits_compatible(&actual, &table_type.limits) {
                         return Err(link_error("incompatible import type", imp));
@@ -1455,15 +1467,27 @@ impl WasmRuntime {
             memories.push(LinearMemory::new_with_is64(mem_type.limits.min, mem_type.limits.max, mem_type.is64)?);
         }
 
-        // Allocate tables. `as u32`: `wasm-validator`'s Check 2b already
-        // bounds-checked `limits.min` against `MAX_TABLE_ELEMENTS` (a
-        // `u32`) before this module could ever reach instantiation, and
-        // tables don't have a W25 `is64` widening (`table64` is a
-        // separate, out-of-scope proposal -- see `code/specs/
-        // W25-wasm-memory64-first-slice.md`), so this narrowing is
-        // always lossless in practice.
+        // Allocate tables. W26 (table64 proposal): `table_type.limits.min`
+        // is `u64` (already widened in W25, table-agnostic), and an `is64`
+        // table's own real spec ceiling is `u64::MAX` (`wasm-validator`'s
+        // Check 2b) -- far larger than this interpreter will actually
+        // allocate. A plain `as u32` narrowing here would silently
+        // TRUNCATE/wrap an out-of-practical-range `min` into an
+        // arbitrary, wrong-sized table instead of failing loudly, for any
+        // `is64` table whose declared `min` exceeds `u32::MAX` (newly
+        // reachable now that `is64` tables can validly declare such a
+        // `min`). `Table::new_with_is64` mirrors `LinearMemory::
+        // new_with_is64` (W25) exactly: fallible, returning a real,
+        // gracefully-propagated `TrapError` (never a panic/allocator
+        // abort) if `is64 && min` exceeds `MAX_TABLE_ELEMENTS`, this
+        // interpreter's own practical resource cap reused as the is64
+        // instantiation-time bound (same "reuse the existing bound" move
+        // W25 made with `MAX_MEMORY64_INITIAL_PAGES`). A 32-bit table's
+        // `min` is already validator-capped at `MAX_TABLE_ELEMENTS`
+        // itself, so this is a pure behavior-preserving widening for
+        // every existing `is64: false` table.
         for table_type in &module.tables {
-            tables.push(Table::new(table_type.limits.min as u32, table_type.limits.max.map(|m| m as u32)));
+            tables.push(Table::new_with_is64(table_type.limits.min, table_type.limits.max, table_type.is64)?);
         }
 
         // The instance's persistent v128 heap (see `code/specs/
@@ -2743,6 +2767,11 @@ mod tests {
         fn resolve_table(&self, module_name: &str, name: &str) -> Option<Table> {
             if module_name == "env" && name == "tab" {
                 Some(Table::new(1, Some(2)))
+            } else if module_name == "env" && name == "tab64" {
+                // W26 (table64 proposal): a real `is64` table, for the
+                // is64-mismatch import-linking tests below -- mirrors
+                // `resolve_table`'s own plain 32-bit "tab" entry.
+                Some(Table::new_with_is64(1, Some(2), true).unwrap())
             } else {
                 None
             }
@@ -2806,6 +2835,7 @@ mod tests {
             tables: vec![TableType {
                 element_type: 0x70,
                 limits: Limits { min: wasm_execution::MAX_TABLE_ELEMENTS as u64 + 1, max: None },
+                is64: false,
             }],
             ..Default::default()
         };
@@ -2887,7 +2917,7 @@ mod tests {
                 module_name: "env".to_string(),
                 name: "no_such_table".to_string(),
                 kind: ExternalKind::Table,
-                type_info: ImportTypeInfo::Table(TableType { element_type: 0x70, limits: Limits { min: 1, max: None } }),
+                type_info: ImportTypeInfo::Table(TableType { element_type: 0x70, limits: Limits { min: 1, max: None }, is64: false }),
             }],
             ..Default::default()
         };
@@ -2904,7 +2934,7 @@ mod tests {
                 module_name: "env".to_string(),
                 name: "tab".to_string(),
                 kind: ExternalKind::Table,
-                type_info: ImportTypeInfo::Table(TableType { element_type: 0x70, limits: Limits { min: 5, max: None } }),
+                type_info: ImportTypeInfo::Table(TableType { element_type: 0x70, limits: Limits { min: 5, max: None }, is64: false }),
             }],
             ..Default::default()
         };
@@ -2921,13 +2951,106 @@ mod tests {
                 module_name: "env".to_string(),
                 name: "tab".to_string(),
                 kind: ExternalKind::Table,
-                type_info: ImportTypeInfo::Table(TableType { element_type: 0x70, limits: Limits { min: 1, max: Some(2) } }),
+                type_info: ImportTypeInfo::Table(TableType { element_type: 0x70, limits: Limits { min: 1, max: Some(2) }, is64: false }),
             }],
             ..Default::default()
         };
         let validated = runtime.validate(&module).unwrap();
         let instance = runtime.instantiate(&validated).unwrap();
         assert_eq!(instance.tables.len(), 1);
+    }
+
+    // ── table64 (W26): is64 import-linking compatibility ─────────────────
+
+    #[test]
+    fn test_instantiate_fails_when_a_table_import_is64_mismatched_declared_is64_actual_32bit() {
+        let runtime = WasmRuntime::with_host(Box::new(LinkingTestHost));
+        let module = WasmModule {
+            imports: vec![Import {
+                module_name: "env".to_string(),
+                name: "tab".to_string(), // actual host table is 32-bit
+                kind: ExternalKind::Table,
+                type_info: ImportTypeInfo::Table(TableType {
+                    element_type: 0x70,
+                    limits: Limits { min: 1, max: Some(2) },
+                    is64: true, // declared as 64-bit -- mismatch
+                }),
+            }],
+            ..Default::default()
+        };
+        let validated = runtime.validate(&module).unwrap();
+        let err = runtime.instantiate(&validated).err().unwrap();
+        assert!(err.to_string().contains("incompatible import type"), "{err}");
+    }
+
+    #[test]
+    fn test_instantiate_fails_when_a_table_import_is64_mismatched_declared_32bit_actual_is64() {
+        let runtime = WasmRuntime::with_host(Box::new(LinkingTestHost));
+        let module = WasmModule {
+            imports: vec![Import {
+                module_name: "env".to_string(),
+                name: "tab64".to_string(), // actual host table is 64-bit
+                kind: ExternalKind::Table,
+                type_info: ImportTypeInfo::Table(TableType {
+                    element_type: 0x70,
+                    limits: Limits { min: 1, max: Some(2) },
+                    is64: false, // declared as 32-bit -- mismatch
+                }),
+            }],
+            ..Default::default()
+        };
+        let validated = runtime.validate(&module).unwrap();
+        let err = runtime.instantiate(&validated).err().unwrap();
+        assert!(err.to_string().contains("incompatible import type"), "{err}");
+    }
+
+    #[test]
+    fn test_instantiate_succeeds_when_a_table64_import_is_compatible() {
+        let runtime = WasmRuntime::with_host(Box::new(LinkingTestHost));
+        let module = WasmModule {
+            imports: vec![Import {
+                module_name: "env".to_string(),
+                name: "tab64".to_string(),
+                kind: ExternalKind::Table,
+                type_info: ImportTypeInfo::Table(TableType { element_type: 0x70, limits: Limits { min: 1, max: Some(2) }, is64: true }),
+            }],
+            ..Default::default()
+        };
+        let validated = runtime.validate(&module).unwrap();
+        let instance = runtime.instantiate(&validated).unwrap();
+        assert_eq!(instance.tables.len(), 1);
+        assert!(instance.tables[0].is64());
+    }
+
+    #[test]
+    fn test_instantiate_builds_an_is64_declared_table_at_a_real_in_range_size() {
+        let runtime = WasmRuntime::with_host(Box::new(LinkingTestHost));
+        let module = WasmModule {
+            tables: vec![TableType { element_type: 0x70, limits: Limits { min: 3, max: Some(5) }, is64: true }],
+            ..Default::default()
+        };
+        let validated = runtime.validate(&module).unwrap();
+        let instance = runtime.instantiate(&validated).unwrap();
+        assert_eq!(instance.tables.len(), 1);
+        assert!(instance.tables[0].is64());
+        assert_eq!(instance.tables[0].size(), 3);
+    }
+
+    /// The genuinely new DoS consideration `is64` introduces for tables
+    /// (mirrors `W25`'s memory64 practical-cap rationale exactly): a
+    /// spec-valid `is64` table declaration whose `min` this interpreter
+    /// will not actually allocate must TRAP gracefully at instantiation,
+    /// never panic/abort the process.
+    #[test]
+    fn test_instantiate_traps_gracefully_for_an_is64_table_past_the_practical_cap() {
+        let runtime = WasmRuntime::with_host(Box::new(LinkingTestHost));
+        let module = WasmModule {
+            tables: vec![TableType { element_type: 0x70, limits: Limits { min: u64::MAX, max: None }, is64: true }],
+            ..Default::default()
+        };
+        let validated = runtime.validate(&module).unwrap();
+        let err = runtime.instantiate(&validated).err().unwrap();
+        assert!(err.to_string().contains("practical 64-bit table allocation cap"), "{err}");
     }
 
     #[test]

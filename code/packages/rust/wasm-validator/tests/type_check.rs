@@ -511,7 +511,7 @@ fn invalid_table_init_references_an_out_of_bounds_elem_segment_index() {
         wasm_types::FuncType { params: vec![], results: vec![] },
         vec![0x41, 0, 0x41, 0, 0x41, 0, 0xFC, 0x0C, 0, 0, 0x0B],
     );
-    module.tables.push(wasm_types::TableType { element_type: 0x70, limits: wasm_types::Limits { min: 4, max: None } });
+    module.tables.push(wasm_types::TableType { element_type: 0x70, limits: wasm_types::Limits { min: 4, max: None }, is64: false });
     let result = wasm_validator::validate(&module);
     assert!(result.is_err(), "table.init with an out-of-bounds elem segment index must be rejected");
 }
@@ -524,7 +524,7 @@ fn invalid_table_copy_references_an_out_of_bounds_table_index() {
         wasm_types::FuncType { params: vec![], results: vec![] },
         vec![0x41, 0, 0x41, 0, 0x41, 0, 0xFC, 0x0E, 1, 0, 0x0B],
     );
-    module.tables.push(wasm_types::TableType { element_type: 0x70, limits: wasm_types::Limits { min: 4, max: None } });
+    module.tables.push(wasm_types::TableType { element_type: 0x70, limits: wasm_types::Limits { min: 4, max: None }, is64: false });
     let result = wasm_validator::validate(&module);
     assert!(result.is_err(), "table.copy with an out-of-bounds destination table index must be rejected");
 }

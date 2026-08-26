@@ -1,6 +1,6 @@
 [package]
 name = "wasm-types"
-version = "0.1.10"
+version = "0.1.11"
 edition = "2021"
 description = "WASM 1.0 type system: ValueType, FuncType, Limits, MemoryType, TableType, GlobalType, WasmModule"
 
