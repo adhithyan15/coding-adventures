@@ -163,6 +163,27 @@ struct ValidatorState<'m> {
     /// per-arg walk of a call and reset to false before recursing into any
     /// argument's sub-expressions.
     in_call_args: bool,
+    /// Stack of enclosing loops, innermost last.  Pushed/popped around
+    /// each `While`/`ForRange`/`ForEach` body walk (same save/restore
+    /// idiom as `in_call_args`, generalized to a stack since loops
+    /// nest).  `Stmt::Break`/`Stmt::Continue` consult only the top entry:
+    /// empty means "not inside any loop" (error); `LoopKind::ForRange`
+    /// means the nearest enclosing loop is a `ForRange`, which both
+    /// statements reject — see `Feature::LoopControl`'s doc comment for
+    /// why `ForRange` can't safely host either one on every backend.
+    loop_stack: Vec<LoopKind>,
+}
+
+/// The kind of the nearest enclosing loop, as seen by `Stmt::Break`/
+/// `Stmt::Continue` validation.  See `ValidatorState::loop_stack`.
+#[derive(Debug, Clone, Copy, PartialEq, Eq)]
+enum LoopKind {
+    /// `While` or `ForEach` — break/continue are well-defined on every
+    /// backend surveyed for `Feature::LoopControl`.
+    Safe,
+    /// `ForRange` — break/continue are excluded; see
+    /// `Feature::LoopControl`'s doc comment.
+    ForRange,
 }
 
 impl<'m> ValidatorState<'m> {
@@ -176,6 +197,7 @@ impl<'m> ValidatorState<'m> {
             global_names: HashSet::new(),
             depth_overflow_reported: false,
             in_call_args: false,
+            loop_stack: Vec::new(),
         }
     }
 
@@ -495,8 +517,19 @@ impl<'m> ValidatorState<'m> {
 
         // Now walk the body checking name resolution.  A small
         // scope stack tracks `let` and `let*` bindings.
+        //
+        // A top-level function's own body is its own statement-flow
+        // boundary — `break`/`continue` inside it must never resolve
+        // against a loop left over from checking a *previous* top-level
+        // function.  Every loop arm pushes/pops `loop_stack` in balanced
+        // pairs, so in practice this is always already empty here; the
+        // explicit reset (mirroring `check_method_def`'s identical
+        // save/restore) makes that an enforced invariant rather than an
+        // implicit one a future refactor could quietly break.
         let mut env = LocalEnv::new(&param_names, &capture_names);
+        let saved_loop_stack = std::mem::take(&mut self.loop_stack);
         self.check_block(&f.body, &mut env, 0);
+        self.loop_stack = saved_loop_stack;
     }
 
     fn check_block(&mut self, b: &Block, env: &mut LocalEnv, depth: usize) {
@@ -586,7 +619,9 @@ impl<'m> ValidatorState<'m> {
                 Stmt::While { cond, body, .. } => {
                     self.observed.add(Feature::Loops);
                     self.check_expr(cond, env, depth + 1);
+                    self.loop_stack.push(LoopKind::Safe);
                     self.check_block(body, env, depth + 1);
+                    self.loop_stack.pop();
                     i += 1;
                 }
                 Stmt::ForRange {
@@ -604,7 +639,9 @@ impl<'m> ValidatorState<'m> {
                     // Loop variable is in scope inside the body only.
                     let inner_mark = env.mark();
                     env.add_local(var.clone());
+                    self.loop_stack.push(LoopKind::ForRange);
                     self.check_block(body, env, depth + 1);
+                    self.loop_stack.pop();
                     env.rewind(inner_mark);
                     i += 1;
                 }
@@ -615,7 +652,9 @@ impl<'m> ValidatorState<'m> {
                     self.check_expr(iter, env, depth + 1);
                     let inner_mark = env.mark();
                     env.add_local(var.clone());
+                    self.loop_stack.push(LoopKind::Safe);
                     self.check_block(body, env, depth + 1);
+                    self.loop_stack.pop();
                     env.rewind(inner_mark);
                     i += 1;
                 }
@@ -680,7 +719,17 @@ impl<'m> ValidatorState<'m> {
                         continue;
                     }
                     let class_mark = env.mark();
+                    // A class body is its own statement-flow boundary,
+                    // same reasoning as `check_method_def`'s save/restore:
+                    // a `break`/`continue` directly in this body must not
+                    // resolve against a loop the *class declaration*
+                    // happens to be nested in (`while (...) { class C;
+                    // break; end }` is IR-legal but must still reject —
+                    // there is no loop inside `C`'s own body for it to
+                    // target).
+                    let saved_loop_stack = std::mem::take(&mut self.loop_stack);
                     self.check_stmt_seq(body, env, depth + 1);
+                    self.loop_stack = saved_loop_stack;
                     env.rewind(class_mark);
                     i += 1;
                 }
@@ -696,7 +745,11 @@ impl<'m> ValidatorState<'m> {
                         continue;
                     }
                     let module_mark = env.mark();
+                    // Same statement-flow-boundary reset as `ClassDef`
+                    // above.
+                    let saved_loop_stack = std::mem::take(&mut self.loop_stack);
                     self.check_stmt_seq(body, env, depth + 1);
+                    self.loop_stack = saved_loop_stack;
                     env.rewind(module_mark);
                     i += 1;
                 }
@@ -711,7 +764,11 @@ impl<'m> ValidatorState<'m> {
                         continue;
                     }
                     let singleton_mark = env.mark();
+                    // Same statement-flow-boundary reset as `ClassDef`
+                    // above.
+                    let saved_loop_stack = std::mem::take(&mut self.loop_stack);
                     self.check_stmt_seq(body, env, depth + 1);
+                    self.loop_stack = saved_loop_stack;
                     env.rewind(singleton_mark);
                     i += 1;
                 }
@@ -787,7 +844,15 @@ impl<'m> ValidatorState<'m> {
                         continue;
                     }
                     let class_mark = env.mark();
+                    // Same statement-flow-boundary reset as `ClassDef`
+                    // above: a `break`/`continue` directly in this body
+                    // (not nested inside a `MethodDef`, which already
+                    // gets its own reset in `check_method_def`) must not
+                    // resolve against a loop the class declaration
+                    // happens to be nested in.
+                    let saved_loop_stack = std::mem::take(&mut self.loop_stack);
                     self.check_stmt_seq(body, env, depth + 1);
+                    self.loop_stack = saved_loop_stack;
                     env.rewind(class_mark);
                     i += 1;
                 }
@@ -853,6 +918,32 @@ impl<'m> ValidatorState<'m> {
                     self.check_method_def(name, params, body, depth + 1);
                     i += 1;
                 }
+                Stmt::Break { span } => {
+                    self.observed.add(Feature::LoopControl);
+                    match self.loop_stack.last() {
+                        None => self.error("`break` outside a loop", span),
+                        Some(LoopKind::ForRange) => self.error(
+                            "`break` inside a for-range loop is not supported yet (deferred — \
+                             see Feature::LoopControl's doc comment)",
+                            span,
+                        ),
+                        Some(LoopKind::Safe) => {}
+                    }
+                    i += 1;
+                }
+                Stmt::Continue { span } => {
+                    self.observed.add(Feature::LoopControl);
+                    match self.loop_stack.last() {
+                        None => self.error("`continue` outside a loop", span),
+                        Some(LoopKind::ForRange) => self.error(
+                            "`continue` inside a for-range loop is not supported yet (deferred \
+                             — see Feature::LoopControl's doc comment)",
+                            span,
+                        ),
+                        Some(LoopKind::Safe) => {}
+                    }
+                    i += 1;
+                }
             }
         }
     }
@@ -916,7 +1007,15 @@ impl<'m> ValidatorState<'m> {
             scope_so_far.insert(p.name.clone());
         }
         let mut env = LocalEnv::new(&param_names, &no_captures);
+        // A method body is its own statement-flow boundary — a `break`/
+        // `continue` inside it must never resolve against a loop the
+        // *enclosing class declaration* happens to be nested in (a
+        // pathological but IR-legal shape: `while (...) { class C { ...
+        // method m() { break; } ... } }`).  Save/restore the loop stack
+        // around the walk, same idiom as `in_call_args`.
+        let saved_loop_stack = std::mem::take(&mut self.loop_stack);
         self.check_block(body, &mut env, depth);
+        self.loop_stack = saved_loop_stack;
     }
 
     fn check_expr(&mut self, e: &Expr, env: &mut LocalEnv, depth: usize) {
@@ -2828,6 +2927,364 @@ mod tests {
         });
         let r = validate(&m);
         assert!(r.is_ok(), "expected ok, got {:?}", r.issues);
+    }
+
+    fn fn_with_body(stmts: Vec<Stmt>) -> Function {
+        Function {
+            name: "f".into(),
+            params: vec![],
+            return_type: None,
+            captures: vec![],
+            body: Block {
+                stmts,
+                value: Expr::NilLit { span: s() },
+                span: s(),
+            },
+            effects: EffectSet::PURE,
+            metadata: Metadata::new(),
+            span: s(),
+        }
+    }
+
+    #[test]
+    fn break_inside_while_observes_loop_control_feature() {
+        let mut m = empty_module(FeatureManifest::from_features(&[
+            Feature::Loops,
+            Feature::LoopControl,
+        ]));
+        m.functions.push(fn_with_body(vec![Stmt::While {
+            cond: Expr::BoolLit {
+                value: true,
+                span: s(),
+            },
+            body: Block {
+                stmts: vec![Stmt::Break { span: s() }],
+                value: Expr::NilLit { span: s() },
+                span: s(),
+            },
+            span: s(),
+        }]));
+        let r = validate(&m);
+        assert!(r.is_ok(), "expected ok, got {:?}", r.issues);
+    }
+
+    #[test]
+    fn continue_inside_for_each_observes_loop_control_feature() {
+        let mut m = empty_module(FeatureManifest::from_features(&[
+            Feature::Loops,
+            Feature::Sequences,
+            Feature::LoopControl,
+        ]));
+        m.functions.push(fn_with_body(vec![Stmt::ForEach {
+            var: "x".into(),
+            iter: Expr::SeqLit {
+                items: vec![],
+                span: s(),
+            },
+            body: Block {
+                stmts: vec![Stmt::Continue { span: s() }],
+                value: Expr::NilLit { span: s() },
+                span: s(),
+            },
+            span: s(),
+        }]));
+        let r = validate(&m);
+        assert!(r.is_ok(), "expected ok, got {:?}", r.issues);
+    }
+
+    #[test]
+    fn break_outside_any_loop_is_error() {
+        let mut m = empty_module(FeatureManifest::from_features(&[Feature::LoopControl]));
+        m.functions
+            .push(fn_with_body(vec![Stmt::Break { span: s() }]));
+        let r = validate(&m);
+        assert!(r.errors().any(|i| i.message.contains("outside a loop")));
+    }
+
+    #[test]
+    fn continue_outside_any_loop_is_error() {
+        let mut m = empty_module(FeatureManifest::from_features(&[Feature::LoopControl]));
+        m.functions
+            .push(fn_with_body(vec![Stmt::Continue { span: s() }]));
+        let r = validate(&m);
+        assert!(r.errors().any(|i| i.message.contains("outside a loop")));
+    }
+
+    #[test]
+    fn break_inside_for_range_is_rejected() {
+        let mut m = empty_module(FeatureManifest::from_features(&[
+            Feature::Loops,
+            Feature::LoopControl,
+        ]));
+        m.functions.push(fn_with_body(vec![Stmt::ForRange {
+            var: "i".into(),
+            start: Expr::IntLit {
+                value: 0,
+                span: s(),
+            },
+            stop: Expr::IntLit {
+                value: 10,
+                span: s(),
+            },
+            step: Expr::IntLit {
+                value: 1,
+                span: s(),
+            },
+            body: Block {
+                stmts: vec![Stmt::Break { span: s() }],
+                value: Expr::NilLit { span: s() },
+                span: s(),
+            },
+            span: s(),
+        }]));
+        let r = validate(&m);
+        assert!(r.errors().any(|i| i.message.contains("for-range")));
+    }
+
+    #[test]
+    fn continue_inside_for_range_is_rejected() {
+        let mut m = empty_module(FeatureManifest::from_features(&[
+            Feature::Loops,
+            Feature::LoopControl,
+        ]));
+        m.functions.push(fn_with_body(vec![Stmt::ForRange {
+            var: "i".into(),
+            start: Expr::IntLit {
+                value: 0,
+                span: s(),
+            },
+            stop: Expr::IntLit {
+                value: 10,
+                span: s(),
+            },
+            step: Expr::IntLit {
+                value: 1,
+                span: s(),
+            },
+            body: Block {
+                stmts: vec![Stmt::Continue { span: s() }],
+                value: Expr::NilLit { span: s() },
+                span: s(),
+            },
+            span: s(),
+        }]));
+        let r = validate(&m);
+        assert!(r.errors().any(|i| i.message.contains("for-range")));
+    }
+
+    #[test]
+    fn break_inside_while_nested_in_for_range_is_allowed() {
+        // The innermost enclosing loop is the `While`, not the outer
+        // `ForRange` — only the nearest loop's kind matters.
+        let mut m = empty_module(FeatureManifest::from_features(&[
+            Feature::Loops,
+            Feature::LoopControl,
+        ]));
+        m.functions.push(fn_with_body(vec![Stmt::ForRange {
+            var: "i".into(),
+            start: Expr::IntLit {
+                value: 0,
+                span: s(),
+            },
+            stop: Expr::IntLit {
+                value: 10,
+                span: s(),
+            },
+            step: Expr::IntLit {
+                value: 1,
+                span: s(),
+            },
+            body: Block {
+                stmts: vec![Stmt::While {
+                    cond: Expr::BoolLit {
+                        value: true,
+                        span: s(),
+                    },
+                    body: Block {
+                        stmts: vec![Stmt::Break { span: s() }],
+                        value: Expr::NilLit { span: s() },
+                        span: s(),
+                    },
+                    span: s(),
+                }],
+                value: Expr::NilLit { span: s() },
+                span: s(),
+            },
+            span: s(),
+        }]));
+        let r = validate(&m);
+        assert!(r.is_ok(), "expected ok, got {:?}", r.issues);
+    }
+
+    #[test]
+    fn break_in_nominal_method_does_not_see_enclosing_class_loop() {
+        // Pathological but IR-legal: a class declared inside a `while`
+        // loop. A `break` in one of its methods must not resolve
+        // against that outer loop — the method is its own statement-
+        // flow boundary (mirrors the top-level-function boundary a
+        // `MakeClosure`-hoisted lambda already gets for free).
+        let mut m = empty_module(FeatureManifest::from_features(&[
+            Feature::Loops,
+            Feature::LoopControl,
+            Feature::NominalClasses,
+        ]));
+        m.functions.push(fn_with_body(vec![Stmt::While {
+            cond: Expr::BoolLit {
+                value: true,
+                span: s(),
+            },
+            body: Block {
+                stmts: vec![Stmt::NominalClassDef {
+                    name: "C".into(),
+                    type_params: vec![],
+                    superclass: None,
+                    interfaces: vec![],
+                    is_abstract: false,
+                    fields: vec![],
+                    body: vec![Stmt::MethodDef {
+                        name: "m".into(),
+                        params: vec![],
+                        return_type: None,
+                        is_static: false,
+                        is_override: false,
+                        vtable_slot: None,
+                        body: Block {
+                            stmts: vec![Stmt::Break { span: s() }],
+                            value: Expr::NilLit { span: s() },
+                            span: s(),
+                        },
+                        span: s(),
+                    }],
+                    span: s(),
+                }],
+                value: Expr::NilLit { span: s() },
+                span: s(),
+            },
+            span: s(),
+        }]));
+        let r = validate(&m);
+        assert!(r.errors().any(|i| i.message.contains("outside a loop")));
+    }
+
+    #[test]
+    fn break_directly_in_nominal_class_body_does_not_see_enclosing_loop() {
+        // Same pathological shape as the test above, but the `break` sits
+        // directly in the `NominalClassDef.body` — NOT nested inside a
+        // `MethodDef` — regression-testing the class-body walk's own
+        // save/restore rather than `check_method_def`'s.
+        let mut m = empty_module(FeatureManifest::from_features(&[
+            Feature::Loops,
+            Feature::LoopControl,
+            Feature::NominalClasses,
+        ]));
+        m.functions.push(fn_with_body(vec![Stmt::While {
+            cond: Expr::BoolLit {
+                value: true,
+                span: s(),
+            },
+            body: Block {
+                stmts: vec![Stmt::NominalClassDef {
+                    name: "C".into(),
+                    type_params: vec![],
+                    superclass: None,
+                    interfaces: vec![],
+                    is_abstract: false,
+                    fields: vec![],
+                    body: vec![Stmt::Break { span: s() }],
+                    span: s(),
+                }],
+                value: Expr::NilLit { span: s() },
+                span: s(),
+            },
+            span: s(),
+        }]));
+        let r = validate(&m);
+        assert!(r.errors().any(|i| i.message.contains("outside a loop")));
+    }
+
+    #[test]
+    fn break_directly_in_class_def_body_does_not_see_enclosing_loop() {
+        // `while (...) { class C; break; end }` — same statement-flow-
+        // boundary invariant as `NominalClassDef` above, for SIR17's
+        // dynamic-OOP `Stmt::ClassDef`.
+        let mut m = empty_module(FeatureManifest::from_features(&[
+            Feature::Loops,
+            Feature::LoopControl,
+            Feature::Classes,
+        ]));
+        m.functions.push(fn_with_body(vec![Stmt::While {
+            cond: Expr::BoolLit {
+                value: true,
+                span: s(),
+            },
+            body: Block {
+                stmts: vec![Stmt::ClassDef {
+                    name: "C".into(),
+                    superclass: None,
+                    body: vec![Stmt::Break { span: s() }],
+                    span: s(),
+                }],
+                value: Expr::NilLit { span: s() },
+                span: s(),
+            },
+            span: s(),
+        }]));
+        let r = validate(&m);
+        assert!(r.errors().any(|i| i.message.contains("outside a loop")));
+    }
+
+    #[test]
+    fn break_directly_in_module_def_body_does_not_see_enclosing_loop() {
+        let mut m = empty_module(FeatureManifest::from_features(&[
+            Feature::Loops,
+            Feature::LoopControl,
+            Feature::Modules,
+        ]));
+        m.functions.push(fn_with_body(vec![Stmt::While {
+            cond: Expr::BoolLit {
+                value: true,
+                span: s(),
+            },
+            body: Block {
+                stmts: vec![Stmt::ModuleDef {
+                    name: "M".into(),
+                    body: vec![Stmt::Break { span: s() }],
+                    span: s(),
+                }],
+                value: Expr::NilLit { span: s() },
+                span: s(),
+            },
+            span: s(),
+        }]));
+        let r = validate(&m);
+        assert!(r.errors().any(|i| i.message.contains("outside a loop")));
+    }
+
+    #[test]
+    fn break_directly_in_singleton_class_def_body_does_not_see_enclosing_loop() {
+        let mut m = empty_module(FeatureManifest::from_features(&[
+            Feature::Loops,
+            Feature::LoopControl,
+            Feature::Classes,
+        ]));
+        m.functions.push(fn_with_body(vec![Stmt::While {
+            cond: Expr::BoolLit {
+                value: true,
+                span: s(),
+            },
+            body: Block {
+                stmts: vec![Stmt::SingletonClassDef {
+                    target: "self".into(),
+                    body: vec![Stmt::Break { span: s() }],
+                    span: s(),
+                }],
+                value: Expr::NilLit { span: s() },
+                span: s(),
+            },
+            span: s(),
+        }]));
+        let r = validate(&m);
+        assert!(r.errors().any(|i| i.message.contains("outside a loop")));
     }
 
     #[test]

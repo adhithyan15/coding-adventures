@@ -205,6 +205,14 @@ fn collect_ancestry_in_stmt(
                 span
             );
         }
+        // SIR16 addendum: `LoopControl` not accepted by this backend yet
+        // — same rationale as the SIR29 arm just above.
+        Stmt::Break { span, .. } | Stmt::Continue { span, .. } => {
+            panic!(
+                "typescript backend reached a Stmt::Break/Continue node at {} — capability check should have rejected it",
+                span
+            );
+        }
     }
 }
 
@@ -383,6 +391,14 @@ fn stmt_uses_builtin(s: &Stmt, name: &str) -> bool {
         | Stmt::MethodDef { span, .. } => {
             panic!(
                 "typescript backend reached a SIR29 nominal-OOP node at {} — capability check should have rejected it",
+                span
+            );
+        }
+        // SIR16 addendum: `LoopControl` not accepted by this backend yet
+        // — same rationale as the SIR29 arm just above.
+        Stmt::Break { span, .. } | Stmt::Continue { span, .. } => {
+            panic!(
+                "typescript backend reached a Stmt::Break/Continue node at {} — capability check should have rejected it",
                 span
             );
         }
@@ -935,6 +951,14 @@ fn collect_stmt_assigned(s: &Stmt, out: &mut HashSet<String>) {
                 span
             );
         }
+        // SIR16 addendum: `LoopControl` not accepted by this backend yet —
+        // same rationale as the SIR29 arm just above.
+        Stmt::Break { span, .. } | Stmt::Continue { span, .. } => {
+            panic!(
+                "typescript backend reached a Stmt::Break/Continue node at {} — capability check should have rejected it",
+                span
+            );
+        }
     }
 }
 
@@ -1466,6 +1490,17 @@ fn emit_stmt(out: &mut String, s: &Stmt, indent: usize) {
         | Stmt::MethodDef { span, .. } => {
             panic!(
                 "typescript backend reached a SIR29 nominal-OOP node at {} — capability check should have rejected it",
+                span
+            );
+        }
+        // SIR16 addendum: `LoopControl` not accepted by this backend yet
+        // (no `Feature::LoopControl` in `accepts_features`) — same
+        // rationale as the SIR29 arm just above. A future PR wiring this
+        // backend to the feature would replace this arm with real
+        // `break;`/`continue;` emission.
+        Stmt::Break { span, .. } | Stmt::Continue { span, .. } => {
+            panic!(
+                "typescript backend reached a Stmt::Break/Continue node at {} — capability check should have rejected it",
                 span
             );
         }

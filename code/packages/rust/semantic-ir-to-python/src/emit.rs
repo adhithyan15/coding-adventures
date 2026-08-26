@@ -201,6 +201,14 @@ fn collect_ancestry_in_stmt(
                 span
             );
         }
+        // SIR16 addendum: `Feature::LoopControl` not accepted by this
+        // backend yet — same rationale as the SIR29 arm just above.
+        Stmt::Break { span, .. } | Stmt::Continue { span, .. } => {
+            panic!(
+                "python backend reached a Stmt::Break/Continue node at {} — capability check should have rejected it",
+                span
+            );
+        }
     }
 }
 
@@ -387,6 +395,14 @@ fn stmt_uses_builtin(s: &Stmt, name: &str) -> bool {
         | Stmt::MethodDef { span, .. } => {
             panic!(
                 "python backend reached a SIR29 nominal-OOP node at {} — capability check should have rejected it",
+                span
+            );
+        }
+        // SIR16 addendum: `Feature::LoopControl` not accepted by this
+        // backend yet — same rationale as the SIR29 arm just above.
+        Stmt::Break { span, .. } | Stmt::Continue { span, .. } => {
+            panic!(
+                "python backend reached a Stmt::Break/Continue node at {} — capability check should have rejected it",
                 span
             );
         }
@@ -1158,6 +1174,14 @@ fn emit_stmt_inner(out: &mut String, s: &Stmt, indent: usize, env: &mut TypeEnv)
         | Stmt::MethodDef { span, .. } => {
             panic!(
                 "python backend reached a SIR29 nominal-OOP node at {} — capability check should have rejected it",
+                span
+            );
+        }
+        // SIR16 addendum: `Feature::LoopControl` not accepted by this
+        // backend yet — same rationale as the SIR29 arm just above.
+        Stmt::Break { span, .. } | Stmt::Continue { span, .. } => {
+            panic!(
+                "python backend reached a Stmt::Break/Continue node at {} — capability check should have rejected it",
                 span
             );
         }
@@ -2396,6 +2420,17 @@ fn emit_block_as_expr(out: &mut String, b: &Block, indent: usize, env: &mut Type
             | Stmt::MethodDef { span, .. } => {
                 panic!(
                     "python backend reached a SIR29 nominal-OOP node at {} — capability check should have rejected it",
+                    span
+                );
+            }
+            // SIR16 addendum: `Feature::LoopControl` not accepted by this
+            // backend yet (see `ACCEPTED_FEATURES`) — same rationale as
+            // the SIR29 arm just above; a validated module never reaches
+            // here regardless of which block context it would otherwise
+            // have appeared in.
+            Stmt::Break { span, .. } | Stmt::Continue { span, .. } => {
+                panic!(
+                    "python backend reached a Stmt::Break/Continue node at {} — capability check should have rejected it",
                     span
                 );
             }

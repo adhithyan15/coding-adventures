@@ -651,6 +651,26 @@ pub enum Stmt {
         body: Block,
         span: Span,
     },
+
+    // ── SIR16 addendum: loop control ─────────────────────────────────
+    /// `break;` — unconditionally exits the nearest enclosing loop.
+    ///
+    /// Bare (unlabeled) only: SIR v0 has no loop-label vocabulary, so a
+    /// source language's labeled `break` (Java `break outer;`) has no
+    /// lowering yet — a frontend encountering one rejects cleanly rather
+    /// than mis-targeting the wrong loop. The validator rejects a
+    /// `Break` with no enclosing loop at all, and also rejects one whose
+    /// nearest enclosing loop is a `Stmt::ForRange` — see
+    /// `Feature::LoopControl`'s doc comment for why `ForRange` is
+    /// excluded. Gated by `Feature::LoopControl`.
+    Break { span: Span },
+
+    /// `continue;` — skips the remainder of the current loop iteration
+    /// and re-evaluates the loop's own condition/advances to the next
+    /// element. Same bare-only, `Feature::LoopControl`, and
+    /// `ForRange`-exclusion rules as `Break` — see its doc comment and
+    /// `Feature::LoopControl`'s.
+    Continue { span: Span },
 }
 
 impl Stmt {
@@ -673,6 +693,8 @@ impl Stmt {
             Stmt::NominalClassDef { span, .. } => span,
             Stmt::InterfaceDef { span, .. } => span,
             Stmt::MethodDef { span, .. } => span,
+            Stmt::Break { span } => span,
+            Stmt::Continue { span } => span,
         }
     }
 }

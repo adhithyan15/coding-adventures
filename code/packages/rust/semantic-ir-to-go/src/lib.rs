@@ -552,6 +552,13 @@ fn check_soundness_stmt(s: &semantic_ir::Stmt, errs: &mut Vec<BackendError>) {
             }
             check_soundness_expr(&body.value, errs);
         }
+        // ── SIR16 addendum: loop control ──────────────────────────────
+        // Same "must stay non-panicking" contract as the SIR29 arms
+        // above — `Feature::LoopControl` is not in `ACCEPTED_FEATURES`,
+        // so a module using this node is rejected by the manifest-level
+        // gate later in `compile()`, not here. Neither statement carries
+        // a nested `Stmt`/`Expr` to recurse into.
+        Stmt::Break { .. } | Stmt::Continue { .. } => {}
     }
 }
 

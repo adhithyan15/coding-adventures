@@ -675,6 +675,15 @@ impl Scan {
             "a SIR29 nominal-OOP statement (class/interface/method definition)".to_string(),
             span.clone(),
         )),
+        // SIR16 addendum: `break`/`continue` (`Feature::LoopControl` —
+        // NOT in this backend's `ACCEPTED_FEATURES`). Same reasoning as
+        // the SIR29 arm just above: reject cleanly in the scan rather
+        // than risk a hand-built module reaching the emitter's
+        // `unreachable!`.
+        Stmt::Break { span, .. } | Stmt::Continue { span, .. } => Some(ScanHit::Unsupported(
+            "a break/continue statement".to_string(),
+            span.clone(),
+        )),
     }
     }
 }

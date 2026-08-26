@@ -246,6 +246,11 @@ pub fn walk_stmt_default<V: Visitor>(v: &mut V, s: &Stmt, depth: usize) {
         Stmt::MethodDef { body, .. } => {
             v.visit_block(body, depth + 1);
         }
+
+        // ── SIR16 addendum: loop control ─────────────────────────────
+        Stmt::Break { .. } | Stmt::Continue { .. } => {
+            // No nested expression or statement to recurse into.
+        }
     }
 }
 
