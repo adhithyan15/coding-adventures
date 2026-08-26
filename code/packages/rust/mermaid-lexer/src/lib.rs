@@ -1,6 +1,6 @@
 //! Grammar-driven lexers for Mermaid diagram families.
 
-pub const VERSION: &str = "0.68.0";
+pub const VERSION: &str = "0.69.0";
 
 use grammar_tools::token_grammar::parse_token_grammar;
 use lexer::grammar_lexer::GrammarLexer;
@@ -307,7 +307,7 @@ mod tests {
 
     #[test]
     fn version_exists() {
-        assert_eq!(VERSION, "0.68.0");
+        assert_eq!(VERSION, "0.69.0");
     }
 
     #[test]
@@ -333,7 +333,7 @@ mod tests {
     #[test]
     fn tokenizes_gantt_core_statements_case_insensitively() {
         let tokens = try_tokenize_mermaid_gantt(
-            "GANTT\nTITLE Project\naccTitle: Timeline\nSECTION Build\nTask :done, t1, 2026-01-01, 2d\n",
+            "GANTT\nTITLE Project\naccTitle: Timeline\nSECTION Build\nTask :done, t1, 2026-01-01, 2d\nCLICK t1 href \"https://example.com\" call inspect(t1)\n",
         )
         .unwrap();
         let names: Vec<_> = tokens
@@ -345,6 +345,7 @@ mod tests {
         assert!(names.contains(&"ACC_TITLE_STATEMENT"));
         assert!(names.contains(&"SECTION_STATEMENT"));
         assert!(names.contains(&"TASK_STATEMENT"));
+        assert!(names.contains(&"CLICK_STATEMENT"));
     }
 
     #[test]

@@ -76,7 +76,9 @@ Gantt core syntax is grammar-first for titles, accessibility metadata, date
 formats, sections, and task declarations. Those statements lower to temporal
 semantic IR, deterministic task-bar layout, Paint instructions, and a Metal PNG
 fixture. The family remains partial until the remaining calendar, axis,
-interactivity, and pinned upstream corpus surface is represented and validated.
+and pinned upstream corpus surface is represented and validated. Gantt task
+`click` links and callbacks already lower through semantic IR to resolved task
+bounds and backend-neutral PaintScene metadata.
 
 The XY-chart pipeline preserves Mermaid's bounded `xAxis.labelRotation` and
 `yAxis.labelRotation` configuration in semantic chart IR. As in the pinned

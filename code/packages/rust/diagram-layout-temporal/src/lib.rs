@@ -13,12 +13,13 @@
 
 use diagram_ir::{
     DiagramDirection, GitCommitSymbol, GitCommitType, GitDiagram, GitEvent, JourneyDiagram,
-    LayoutedTemporalDiagram, LayoutedTemporalItem, TaskStart, TaskStatus,
+    LayoutedTemporalDiagram, LayoutedTemporalInteraction, LayoutedTemporalItem, TaskStart,
+    TaskStatus,
     TemporalBody, TemporalDiagram,
 };
 use std::collections::{BTreeSet, HashMap};
 
-pub const VERSION: &str = "0.17.0";
+pub const VERSION: &str = "0.18.0";
 
 // ── Constants ─────────────────────────────────────────────────────────────
 
@@ -182,6 +183,7 @@ fn layout_journey(title: &Option<String>, diagram: &JourneyDiagram, cw: f64) -> 
         height: (max_score_y + 20.0).max(actor_y + margin_y + 16.0),
         accessibility_title: diagram.accessibility_title.clone(),
         accessibility_description: diagram.accessibility_description.clone(),
+        interactions: Vec::new(),
         items,
     }
 }
@@ -279,6 +281,7 @@ fn layout_gantt(
     let x_scale = plot_w / t_range;
 
     let mut items: Vec<LayoutedTemporalItem> = Vec::new();
+    let mut interactions = Vec::new();
     let mut y = AXIS_H;
 
     // Title
@@ -329,6 +332,15 @@ fn layout_gantt(
                     label: task.label.clone(),
                 });
             }
+            if task.link.is_some() || task.callback.is_some() {
+                interactions.push(LayoutedTemporalInteraction {
+                    task_id: task.id.clone(),
+                    bounds: (bx, y, bw.max(16.0), TASK_H),
+                    link: task.link.clone(),
+                    callback: task.callback.clone(),
+                    callback_args: task.callback_args.clone(),
+                });
+            }
             y += TASK_H + TASK_GAP;
         }
     }
@@ -337,6 +349,7 @@ fn layout_gantt(
         width: cw, height: y + 16.0,
         accessibility_title: diagram.accessibility_title.clone(),
         accessibility_description: diagram.accessibility_description.clone(),
+        interactions,
         items,
     }
 }
@@ -519,6 +532,7 @@ fn layout_git(diagram: &GitDiagram, cw: f64) -> LayoutedTemporalDiagram {
         width, height,
         accessibility_title: diagram.accessibility_title.clone(),
         accessibility_description: diagram.accessibility_description.clone(),
+        interactions: Vec::new(),
         items,
     }
 }
@@ -564,6 +578,9 @@ mod tests {
                             duration_days: 5.0,
                             status: TaskStatus::Done,
                             dependencies: vec![],
+                            link: None,
+                            callback: None,
+                            callback_args: None,
                         },
                         GanttTask {
                             id: "t2".into(), label: "Build".into(),
@@ -571,6 +588,9 @@ mod tests {
                             duration_days: 3.0,
                             status: TaskStatus::Active,
                             dependencies: vec!["t1".into()],
+                            link: None,
+                            callback: None,
+                            callback_args: None,
                         },
                     ],
                 }],
@@ -606,7 +626,7 @@ mod tests {
 
     #[test]
     fn version_exists() {
-        assert_eq!(crate::VERSION, "0.17.0");
+        assert_eq!(crate::VERSION, "0.18.0");
     }
 
     #[test]
@@ -666,6 +686,22 @@ mod tests {
             layout.accessibility_description.as_deref(),
             Some("Two delivery tasks")
         );
+    }
+
+    #[test]
+    fn gantt_layout_resolves_task_interaction_bounds() {
+        let mut diagram = simple_gantt();
+        let TemporalBody::Gantt(gantt) = &mut diagram.body else {
+            unreachable!();
+        };
+        gantt.sections[0].tasks[0].link = Some("https://example.com/design".into());
+        gantt.sections[0].tasks[0].callback = Some("inspectTask".into());
+        let layout = layout_temporal_diagram(&diagram, 800.0);
+        let interaction = &layout.interactions[0];
+        assert_eq!(interaction.task_id, "t1");
+        assert_eq!(interaction.link.as_deref(), Some("https://example.com/design"));
+        assert!(interaction.bounds.2 > 0.0);
+        assert!(interaction.bounds.3 > 0.0);
     }
 
     #[test]
