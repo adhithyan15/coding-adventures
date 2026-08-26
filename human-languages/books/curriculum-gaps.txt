@@ -13,7 +13,7 @@ cousin layer: 217 lessons show another script (max 26 glyphs) — context, never
 script closure: 660 lessons ask the reader to decode a glyph nobody taught them, across 17 non-Latin tracks; 0 of those tracks teach NO letters at all
 exposure: 287 native-script headwords carry no romanization, so they are load-bearing rather than exposure; the rule exempts 1907 glyphs and makes 212 lessons clean on its own
 order: 0 lessons with no declared sequence across 0 tracks; 0 prerequisites and 0 reviews pointing forward
-reinforcement: 596 of 5464 atoms never revisited (11%); missed windows R1 1180, R2 4062, R3 4020, R4 2587
+reinforcement: 589 of 5464 atoms never revisited (11%); missed windows R1 1169, R2 4058, R3 4019, R4 2586
 forward references: 681 uses of material a later lesson teaches
 writing stages: 13/23 tracks prove the cumulative pre-A1 ladder; 404 evidence blocks, 0 invalid; 596 missing (track, level, stage) pairs
 super-gentle ramp: 21/23 tracks carry detected or unmeasured debt; 119 named track/debt items
