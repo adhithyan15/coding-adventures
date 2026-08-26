@@ -2,6 +2,55 @@
 
 All notable changes to this package will be documented in this file.
 
+## [0.9.74] - 2026-08-26 (W26 follow-up — real table64 operations)
+
+### Added
+
+- **Real `is64` table operations**: `table.get`/`table.set`/`table.grow`/
+  `table.size`/`table.fill`/`table.copy`/`table.init`/`call_indirect`/
+  `return_call_indirect` all now honor the TARGET table's own `is64`
+  (table64 proposal, W26's own first slice added `Table::is64`/
+  `Table::new_with_is64` but left every operation assuming a hardcoded
+  `i32` index). Mirrors memory64's own `pop_effective_addr` is64/is32
+  branch (W25) exactly, just for table index/dest/src/len/delta operands
+  instead of a memory address — `Table`'s own storage stays
+  `u32`/`usize`-based (unchanged, already bounded well under any `u64`
+  range by `MAX_TABLE_ELEMENTS`), only the operand WIDTH popped off/pushed
+  onto the WASM value stack changes.
+- New `pop_table_operand`/`push_table_result`/`table_u64_to_u32` helpers.
+  `table_u64_to_u32` maps any `u64` that doesn't fit `u32` to `u32::MAX`
+  rather than truncating — a real, attacker-reachable `(i64.const -1)`
+  index (the real `table_get64.wast`/`table_set64.wast` corpus's own
+  boundary case) must still trip every existing bounds check, never
+  silently wrap into a small, coincidentally-in-bounds index.
+- `table.copy`'s `len` operand is `i64` ONLY when BOTH the source and
+  destination tables are `is64` — otherwise `i32`, even when exactly one
+  side is `is64` (verified against the real `table_copy_mixed.wast`
+  corpus's `test_64to32`/`test_32to64` valid cases and its
+  `bad_size_arg`/`bad_src_idx`/`bad_dst_idx` `assert_invalid` cases; see
+  `code/specs/W26-wasm-table64-first-slice.md`'s addendum for the full
+  operand-width rule table).
+- `table.init`'s `dest` operand widens per the TARGET table's own `is64`;
+  `src`/`len` (positions within the passive element segment) always stay
+  `i32` — a segment isn't itself address-typed.
+
+### Fixed
+
+- **Real, pre-existing bug**: `wasm-runtime`'s active ELEMENT segment
+  application unconditionally evaluated its offset expression as `i32`,
+  even though the sibling active DATA segment branch was already
+  correctly `is64`-aware (W25) — any active element segment targeting an
+  `is64` table trapped instantiation instead of applying. Found via the
+  real `call_indirect64.wast` corpus (its `(table $t64 i64 funcref (elem
+  $const-i32))` shorthand hit exactly this gap). Fixed in `wasm-runtime`,
+  noted here since this crate's `Table::is64()` is what the fix reads.
+
+### Tests
+
+- 8 new unit tests covering `table.get`/`set`/`grow`/`size`/`fill`/
+  `copy`/`init`/`call_indirect` against a real `is64` table, including a
+  huge-`i64`-index boundary case and a mixed is32/is64 `table.copy`.
+
 ## [0.9.73] - 2026-08-26 (W28 — shared, live `LinearMemory`/`Table` storage across instances)
 
 ### Fixed

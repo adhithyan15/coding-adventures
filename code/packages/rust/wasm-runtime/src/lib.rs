@@ -1616,8 +1616,27 @@ impl WasmRuntime {
                 continue;
             }
             if let Some(table) = tables.get_mut(elem.table_index as usize) {
+                // W26 (table64): an active element segment's offset
+                // expression must match its TARGET table's own address
+                // width -- `i64.const` for an `is64` table, `i32.const`
+                // otherwise -- mirroring the active data segment's
+                // identical `is64`-aware branch just above (W25). Kept in
+                // `u64` throughout (not narrowed to `u32` until AFTER the
+                // upfront bounds check below): an is64 table's real spec
+                // ceiling is `u64::MAX` (see `code/specs/
+                // W26-wasm-table64-first-slice.md`), so a huge, clearly
+                // out-of-range `i64` offset must not silently wrap into a
+                // small, coincidentally-in-range `u32` before the bounds
+                // check runs (the same "narrow only after checking, never
+                // before" discipline `pop_table_operand`'s own doc comment
+                // establishes in `wasm-execution`).
+                let is64 = table.is64();
                 let offset = evaluate_const_expr(&elem.offset_expr, &globals, &mut v128_heap)?;
-                let offset_num = offset.as_i32().map_err(|e| TrapError::new(e.message))? as u32;
+                let offset_num: u64 = if is64 {
+                    offset.as_i64().map_err(|e| TrapError::new(e.message))? as u64
+                } else {
+                    offset.as_i32().map_err(|e| TrapError::new(e.message))? as u32 as u64
+                };
                 // Bounds-check the WHOLE segment before writing ANY entry
                 // (W28) -- real per-segment atomicity, matching
                 // `LinearMemory::write_bytes`'s own upfront-bounds-check
@@ -1644,16 +1663,22 @@ impl WasmRuntime {
                 // past a LATER segment's trap, but a single segment is
                 // itself all-or-nothing) requires exactly this upfront
                 // check.
-                let count = elem.function_indices.len() as u32;
-                let table_size = table.size();
+                let count = elem.function_indices.len() as u64;
+                let table_size = table.size() as u64;
                 if offset_num.checked_add(count).is_none_or(|end| end > table_size) {
                     return Err(TrapError::new(format!(
                         "out of bounds table access: elements {offset_num}..{}, table size={table_size}",
-                        offset_num as u64 + count as u64
+                        offset_num.saturating_add(count)
                     )));
                 }
+                // Safe to narrow to `u32` here: `offset_num + j` (for every
+                // `j` in this loop, `j < count`) was just checked `<=
+                // table_size` above, which is itself always `<=
+                // MAX_TABLE_ELEMENTS` (far below `u32::MAX`) -- so this
+                // cast never loses information for any value that reaches
+                // this loop body.
                 for (j, &func_idx) in elem.function_indices.iter().enumerate() {
-                    table.set(offset_num + j as u32, func_idx)?;
+                    table.set((offset_num + j as u64) as u32, func_idx)?;
                 }
             }
         }

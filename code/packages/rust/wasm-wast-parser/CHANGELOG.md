@@ -1,5 +1,29 @@
 # Changelog — wasm-wast-parser
 
+## 0.1.83 — 2026-08-26 — W26 follow-up: real table64 operations (inline-elem-shorthand offset fix)
+
+### Fixed
+
+- **`build_table_limits_and_elements`'s inline `(table $t i64 ... funcref
+  (elem ...))` shorthand hardcoded its generated active element
+  segment's offset expression to `i32.const 0` regardless of the table's
+  own `is64`.** Mirrors `build_memory_limits_and_data`'s OWN already-
+  `is64`-aware default-offset branch (W25), which this one had drifted
+  from. Found via the real `call_indirect64.wast` corpus, whose `(table
+  $t64 i64 funcref (elem $const-i32))` shorthand hit exactly this gap —
+  `wasm-runtime::instantiate`'s `is64`-aware offset evaluation then tried
+  to read the emitted `i32.const 0` as an `i64`, trapping instantiation.
+  Fixed: `i64.const 0` (`0x42`) for an `is64` table, `i32.const 0`
+  (`0x41`) otherwise, same shape `build_memory_limits_and_data` already
+  used.
+
+No other wast-parser changes were needed for table64's real operations
+follow-up (see `code/specs/W26-wasm-table64-first-slice.md`'s addendum):
+every other text-form site (explicit `(elem ...)` offset expressions,
+`table.get`/`set`/`grow`/`fill`/`copy`/`init` operand expressions)
+already encodes whatever const-expr instruction the source text names
+generically, with no `is32` assumption baked in.
+
 ## 0.1.82 — 2026-08-26 — W27 census batch: combined inline export+import, more `ref.null` heap types
 
 ### Fixed

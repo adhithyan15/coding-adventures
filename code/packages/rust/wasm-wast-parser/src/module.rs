@@ -1399,7 +1399,20 @@ fn build_table_limits_and_elements(rest: &[SExpr], table_idx: u32, storage_idx: 
     ctx.module.tables[storage_idx as usize].limits = Limits { min: count, max: Some(count) };
     ctx.module.elements.push(Element {
         table_index: table_idx,
-        offset_expr: vec![0x41, 0x00, 0x0B], // i32.const 0; end
+        // `i64.const 0` (0x42) for a 64-bit table, `i32.const 0` (0x41)
+        // otherwise (table64 proposal, W26 follow-up) -- an active
+        // element segment's offset expression must match its target
+        // table's own address width, mirroring `build_memory_limits_and_
+        // data`'s identical `is64`-aware default-offset branch (W25) for
+        // memory's own inline-data shorthand. Found via the real
+        // `call_indirect64.wast` corpus: `(table $t64 i64 funcref (elem
+        // $const-i32))` uses exactly this shorthand on an `is64` table,
+        // which previously always emitted an `i32.const 0` offset
+        // regardless -- `wasm-runtime::instantiate`'s matching `is64`-aware
+        // offset evaluation then tried to read that `i32` value as an
+        // `i64`, trapping every such module's instantiation instead of
+        // applying the segment.
+        offset_expr: if is64 { vec![0x42, 0x00, 0x0B] } else { vec![0x41, 0x00, 0x0B] },
         function_indices,
         is_passive: false,
     });
@@ -5490,6 +5503,30 @@ mod tests {
         assert_eq!(m.elements[0].table_index, 0);
         assert_eq!(m.elements[0].function_indices, vec![Some(0), Some(1)]);
         assert_eq!(m.elements[0].offset_expr, vec![0x41, 0x00, 0x0B]);
+    }
+
+    /// W26 follow-up (table64 real operations): the SAME inline
+    /// `(table reftype (elem e*))` shorthand as the sibling test just
+    /// above, but on an `is64` table (`(table i64 reftype (elem e*))`) --
+    /// the generated active element segment's offset expression must be
+    /// `i64.const 0` (`0x42`), not `i32.const 0` (`0x41`). Found via the
+    /// real `call_indirect64.wast` corpus, whose `(table $t64 i64 funcref
+    /// (elem $const-i32))` previously emitted an `i32.const 0` offset
+    /// regardless of `is64`, trapping instantiation (`wasm-runtime`'s own
+    /// `is64`-aware offset evaluation tried to read it as `i64`).
+    #[test]
+    fn is64_table_with_size_implied_by_inline_elem_list_emits_an_i64_offset() {
+        let m = parse_module(
+            "(module
+               (func $a (result i32) i32.const 1)
+               (table i64 funcref (elem $a))
+             )",
+        )
+        .unwrap();
+        assert_eq!(m.tables.len(), 1);
+        assert!(m.tables[0].is64);
+        assert_eq!(m.elements.len(), 1);
+        assert_eq!(m.elements[0].offset_expr, vec![0x42, 0x00, 0x0B]);
     }
 
     /// Found via security review of the round-4 `wasm-conformance` PR,

@@ -3899,6 +3899,64 @@ fn get_table<'a>(ctx: &mut WasmExecutionContext, idx: usize) -> Result<&'a mut T
     Ok(unsafe { &mut *ctx.tables[idx] })
 }
 
+// ── table64 (W26 follow-up): is64/is32 operand widening for table ops ─────
+//
+// Mirrors `pop_effective_addr`'s memory64 is64/is32 branch (W25) exactly,
+// just for table index/dest/src/len/delta operands instead of a memory
+// address. `Table`'s own storage stays `u32`-based regardless of `is64`
+// (see that struct's own doc comment: `is64` only changes the DECLARED
+// index width, not how many elements this interpreter will actually
+// allocate -- already bounded well under any `u64` range by
+// `MAX_TABLE_ELEMENTS`). So an `is64` table's operand is popped as a real
+// `i64`/`u64`, then narrowed to `u32` via `table_u64_to_u32` before reaching
+// any existing `u32`-based `Table` method.
+//
+// `table_u64_to_u32` maps any `u64` value that doesn't fit in `u32` to
+// `u32::MAX` rather than truncating. Truncating would let a huge,
+// obviously-out-of-range `i64` index (`table_get64.wast`/
+// `table_set64.wast`'s own `(i64.const -1)` cases, i.e. `u64::MAX`) wrap
+// down to a small, coincidentally-in-range `u32` and silently turn a
+// spec-mandated trap into an incorrect successful access. `u32::MAX` is
+// itself always past every real table's actual size (`MAX_TABLE_ELEMENTS`
+// is 10_000_000, many orders of magnitude smaller), so it still trips
+// every existing bounds check downstream (`Table::get`/`set`/`fill`/
+// `copy_between`'s own `checked_add`-then-compare logic) exactly the same
+// way a genuinely too-large index would -- this sentinel is never itself
+// a false-negative in-bounds value.
+fn table_u64_to_u32(v: u64) -> u32 {
+    u32::try_from(v).unwrap_or(u32::MAX)
+}
+
+/// Pop a table index/dest/src/len/delta operand, honoring the TARGET
+/// table's own `is64`-ness (table64 proposal, W26) -- an `is64` table's
+/// operand is a real `i64` on the WASM value stack, an `is32` table's is
+/// `i32`, same real-spec-operand-width distinction `pop_effective_addr`
+/// already makes for memory addresses (W25).
+fn pop_table_operand(vm: &mut GenericVM, is64: bool) -> Result<u32, VMError> {
+    if is64 {
+        let v = pop_wasm(vm)?.as_i64().map_err(VMError::from)? as u64;
+        Ok(table_u64_to_u32(v))
+    } else {
+        Ok(pop_wasm(vm)?.as_i32().map_err(VMError::from)? as u32)
+    }
+}
+
+/// Push a table-op result (`table.size`'s current size, `table.grow`'s old
+/// size or `-1` failure sentinel) as `I64` when the target table is `is64`,
+/// `I32` otherwise -- same real-spec-result-type distinction `memory.size`/
+/// `memory.grow`'s own `is64` branch already makes (W25). `v` is always a
+/// small, real (non-overflowing) `i32` value already -- either a genuine
+/// table size (bounded by `MAX_TABLE_ELEMENTS`, far below `i32::MAX`) or the
+/// literal `-1` failure sentinel -- so `v as i64` is a lossless sign-extend
+/// in both cases, never a value that needs its own overflow handling.
+fn push_table_result(vm: &mut GenericVM, is64: bool, v: i32) {
+    if is64 {
+        push_wasm(vm, WasmValue::I64(v as i64));
+    } else {
+        push_wasm(vm, WasmValue::I32(v));
+    }
+}
+
 // ── Helper: block arity resolution ────────────────────────────────────────
 //
 // Returns `(param_arity, result_arity)` for a `block`/`loop`/`if` header's
@@ -4577,9 +4635,20 @@ fn register_numeric_i64(vm: &mut GenericVM) {
                 // `len=0` still succeeds, but any `len>0` traps --
                 // matching `memory.init`'s own "a dropped segment can
                 // never be initialized from again" rule exactly.
+                //
+                // W26 (table64): `dest`'s width depends on the TARGET
+                // table's own `is64` -- `src`/`len` (positions within the
+                // element segment) always stay `i32`, since a passive
+                // element segment isn't itself address-typed. Verified
+                // against the real `table_init64.wast` corpus: `(table.init
+                // $t2 1 (i64.const 7) (i32.const 0) (i32.const 4))` pops
+                // `dest` as `i64` for an `is64` `$t2`, but `src`/`len` stay
+                // `i32` even there.
+                let table_idx = aux as usize;
+                let is64 = get_table(ctx, table_idx)?.is64();
                 let len = pop_wasm(vm)?.as_i32().map_err(VMError::from)? as u32 as usize;
                 let src = pop_wasm(vm)?.as_i32().map_err(VMError::from)? as u32 as usize;
-                let dest = pop_wasm(vm)?.as_i32().map_err(VMError::from)? as u32 as usize;
+                let dest = pop_table_operand(vm, is64)? as usize;
                 let elem_idx = data_idx as usize;
                 // Security review pattern (task #95/#97): an out-of-range
                 // `elem_idx` is ALWAYS a hard error, checked before any
@@ -4601,7 +4670,7 @@ fn register_numeric_i64(vm: &mut GenericVM) {
                 // completely untouched -- same atomicity discipline
                 // `Table::copy_between` below uses.
                 let src_end = src.checked_add(len);
-                let table = get_table(ctx, aux as usize)?;
+                let table = get_table(ctx, table_idx)?;
                 let dest_end = dest.checked_add(len);
                 match (src_end, dest_end) {
                     (Some(se), Some(de)) if se <= segment.len() && de <= table.size() as usize => {
@@ -4638,9 +4707,22 @@ fn register_numeric_i64(vm: &mut GenericVM) {
                 // this repo already supports `MAX_TABLES` real tables,
                 // so both operands are real decoded indices, never
                 // hardcoded to 0.
-                let len = pop_wasm(vm)?.as_i32().map_err(VMError::from)? as u32;
-                let src = pop_wasm(vm)?.as_i32().map_err(VMError::from)? as u32;
-                let dest = pop_wasm(vm)?.as_i32().map_err(VMError::from)? as u32;
+                //
+                // W26 (table64) / `table_copy_mixed.wast`: `dest`'s width
+                // follows the DESTINATION table's own `is64`, `src`'s
+                // follows the SOURCE table's own `is64` -- independently,
+                // since a mixed is64/is32 copy is legal (`table_copy_
+                // mixed.wast`'s `test_64to32`/`test_32to64`). `len`'s
+                // width is `i64` ONLY when BOTH tables are `is64` --
+                // otherwise `i32`, even when exactly one side is `is64`
+                // (confirmed against that same corpus file's real, valid
+                // `test_64to32`/`test_32to64` cases, which both use a
+                // plain `i32` `len`, and its `bad_size_arg` `assert_
+                // invalid` case, which types `len` to `i64` in that same
+                // mixed scenario and is correctly rejected) -- same "the
+                // smaller of the two index types governs a shared
+                // length/count operand" rule the combined memory64/
+                // table64 proposal defines for mixed memory.copy too.
                 let dst_table_idx = data_idx as usize;
                 let src_table_idx = aux as usize;
                 if dst_table_idx >= ctx.tables.len() {
@@ -4649,6 +4731,11 @@ fn register_numeric_i64(vm: &mut GenericVM) {
                 if src_table_idx >= ctx.tables.len() {
                     return Err(VMError::GenericError(format!("table.copy: source table index {src_table_idx} out of bounds")));
                 }
+                let dst_is64 = unsafe { (*ctx.tables[dst_table_idx]).is64() };
+                let src_is64 = unsafe { (*ctx.tables[src_table_idx]).is64() };
+                let len = pop_table_operand(vm, dst_is64 && src_is64)?;
+                let src = pop_table_operand(vm, src_is64)?;
+                let dest = pop_table_operand(vm, dst_is64)?;
                 let dst_ptr = ctx.tables[dst_table_idx];
                 let src_ptr: *const Table = ctx.tables[src_table_idx];
                 // SAFETY: both pointers were bounds-checked above and come
@@ -4674,12 +4761,17 @@ fn register_numeric_i64(vm: &mut GenericVM) {
                 // size (i32) on success, or -1 on failure -- growth
                 // failure is a normal return value per spec, never a
                 // trap, same contract as `memory.grow`.
-                let delta = pop_wasm(vm)?.as_i32().map_err(VMError::from)? as u32;
+                //
+                // W26 (table64): `delta`/the pushed result are `i64` for
+                // an `is64` table, same real-spec-result-type distinction
+                // `memory.grow`'s own `is64` branch already makes.
+                let target_idx = data_idx as usize;
+                let is64 = get_table(ctx, target_idx)?.is64();
+                let delta = pop_table_operand(vm, is64)?;
                 let init = match pop_wasm(vm)? {
                     WasmValue::Ref(v) => v,
                     other => return Err(VMError::GenericError(format!("type mismatch: table.grow expected a reference, got {other:?}"))),
                 };
-                let target_idx = data_idx as usize;
                 // Security review (task #98, round 2): `Table::grow`'s own
                 // `MAX_TABLE_ELEMENTS` cap bounds a SINGLE table, but
                 // `MAX_TABLES` (64) tables each individually grown to that
@@ -4700,18 +4792,21 @@ fn register_numeric_i64(vm: &mut GenericVM) {
                     aggregate += if i == target_idx { sz + delta as u64 } else { sz };
                 }
                 if aggregate > MAX_TABLE_ELEMENTS as u64 {
-                    push_wasm(vm, WasmValue::I32(-1));
+                    push_table_result(vm, is64, -1);
                 } else {
                     let table = get_table(ctx, target_idx)?;
                     let old_size = table.grow(delta, init);
-                    push_wasm(vm, WasmValue::I32(old_size));
+                    push_table_result(vm, is64, old_size);
                 }
             }
             0x10 => {
                 // `table.size` (task #98): no stack operands, pushes the
-                // table's current size as i32.
+                // table's current size -- `i64` for an `is64` table (W26),
+                // `i32` otherwise.
                 let table = get_table(ctx, data_idx as usize)?;
-                push_wasm(vm, WasmValue::I32(table.size() as i32));
+                let is64 = table.is64();
+                let size = table.size() as i32;
+                push_table_result(vm, is64, size);
             }
             0x11 => {
                 // `table.fill` (task #98): stack (bottom -> top) is
@@ -4719,13 +4814,19 @@ fn register_numeric_i64(vm: &mut GenericVM) {
                 // matching `wasm-validator`'s pop order for this
                 // sub-opcode (mirrors `memory.fill`'s own `[dest, value,
                 // size]` shape just above).
-                let len = pop_wasm(vm)?.as_i32().map_err(VMError::from)? as u32;
+                //
+                // W26 (table64): `dest`/`len` are `i64` for an `is64`
+                // table (`value` stays the table's own element type,
+                // unaffected by is64-ness).
+                let target_idx = data_idx as usize;
+                let is64 = get_table(ctx, target_idx)?.is64();
+                let len = pop_table_operand(vm, is64)?;
                 let value = match pop_wasm(vm)? {
                     WasmValue::Ref(v) => v,
                     other => return Err(VMError::GenericError(format!("type mismatch: table.fill expected a reference, got {other:?}"))),
                 };
-                let dest = pop_wasm(vm)?.as_i32().map_err(VMError::from)? as u32;
-                let table = get_table(ctx, data_idx as usize)?;
+                let dest = pop_table_operand(vm, is64)?;
+                let table = get_table(ctx, target_idx)?;
                 table.fill(dest, value, len).map_err(VMError::from)?;
             }
             other => {
@@ -5566,26 +5667,33 @@ fn register_variable(vm: &mut GenericVM) {
     vm.register_context_opcode(0x25, |vm, instr, _code, ctx| {
         let ctx = get_ctx(ctx);
         let table_idx = operand_int(instr) as usize;
-        let elem_index = pop_wasm(vm)?.as_i32().map_err(VMError::from)?;
+        // W26 (table64): the index operand's width depends on the TARGET
+        // table's own `is64` -- read it BEFORE popping, same
+        // "read table/memory's is64 first, then pop the correctly-typed
+        // operand" ordering `pop_effective_addr` uses for memory.
+        let is64 = get_table(ctx, table_idx)?.is64();
+        let elem_index = pop_table_operand(vm, is64)?;
         let table = get_table(ctx, table_idx)?;
-        let func_index = table.get(elem_index as u32).map_err(VMError::from)?;
+        let func_index = table.get(elem_index).map_err(VMError::from)?;
         push_wasm(vm, WasmValue::Ref(func_index));
         vm.advance_pc();
         Ok(None)
     });
 
-    // table.set (0x26 <tableidx>) — pop a funcref and an i32 index, store
-    // into table[tableidx][index] (WASM17). Thin wrapper around `Table::set`.
+    // table.set (0x26 <tableidx>) — pop a funcref and an index (i64 for an
+    // `is64` table, i32 otherwise -- table64 proposal, W26), store into
+    // table[tableidx][index] (WASM17). Thin wrapper around `Table::set`.
     vm.register_context_opcode(0x26, |vm, instr, _code, ctx| {
         let ctx = get_ctx(ctx);
         let table_idx = operand_int(instr) as usize;
+        let is64 = get_table(ctx, table_idx)?.is64();
         let value = match pop_wasm(vm)? {
             WasmValue::Ref(v) => v,
             other => return Err(VMError::GenericError(format!("type mismatch: expected funcref, got {other:?}"))),
         };
-        let elem_index = pop_wasm(vm)?.as_i32().map_err(VMError::from)?;
+        let elem_index = pop_table_operand(vm, is64)?;
         let table = get_table(ctx, table_idx)?;
-        table.set(elem_index as u32, value).map_err(VMError::from)?;
+        table.set(elem_index, value).map_err(VMError::from)?;
         vm.advance_pc();
         Ok(None)
     });
@@ -10221,10 +10329,13 @@ fn register_control(vm: &mut GenericVM) {
         let ctx = get_ctx(ctx);
         let (type_idx, table_idx) = unpack_call_indirect_operand(instr);
         let type_idx = type_idx as usize;
-        let elem_index = pop_wasm(vm)?.as_i32().map_err(VMError::from)?;
+        // W26 (table64): the element-index operand's width depends on the
+        // TARGET table's own `is64`.
+        let is64 = get_table(ctx, table_idx as usize)?.is64();
+        let elem_index = pop_table_operand(vm, is64)?;
         let table = get_table(ctx, table_idx as usize)?;
         let func_index = table
-            .get(elem_index as u32)
+            .get(elem_index)
             .map_err(VMError::from)?
             .ok_or_else(|| VMError::GenericError("uninitialized table element".into()))?;
 
@@ -10295,10 +10406,12 @@ fn register_control(vm: &mut GenericVM) {
         let ctx = get_ctx(ctx);
         let (type_idx, table_idx) = unpack_call_indirect_operand(instr);
         let type_idx = type_idx as usize;
-        let elem_index = pop_wasm(vm)?.as_i32().map_err(VMError::from)?;
+        // W26 (table64): see `call_indirect` (0x11)'s identical comment.
+        let is64 = get_table(ctx, table_idx as usize)?.is64();
+        let elem_index = pop_table_operand(vm, is64)?;
         let table = get_table(ctx, table_idx as usize)?;
         let func_index = table
-            .get(elem_index as u32)
+            .get(elem_index)
             .map_err(VMError::from)?
             .ok_or_else(|| VMError::GenericError("uninitialized table element".into()))?;
 
@@ -20572,6 +20685,207 @@ mod tests {
         engine.set_dropped_elements(vec![]);
         let result = engine.call_function(0, &[]);
         assert!(result.is_err(), "out-of-range elem_idx must trap, not silently succeed: {result:?}");
+    }
+
+    // ══════════════════════════════════════════════════════════════════════
+    // W26 follow-up: real table64 operations -- table.get/set/grow/size/
+    // fill/copy/init/call_indirect against an `is64` table. Mirrors
+    // memory64's own i32->i64 address-operand widening tests, applied to
+    // table index/dest/src/len/delta operands instead.
+    // ══════════════════════════════════════════════════════════════════════
+
+    #[test]
+    fn table_get_set_use_i64_index_operands_on_an_is64_table() {
+        // i64.const 3; ref.func 0; table.set 0; i64.const 3; table.get 0
+        let code = vec![
+            0x42, 0x03, // i64.const 3
+            0xD2, 0x00, // ref.func 0
+            0x26, 0x00, // table.set 0
+            0x42, 0x03, // i64.const 3
+            0x25, 0x00, // table.get 0
+            0x0B,
+        ];
+        let func_type = FuncType { params: vec![], results: vec![ValueType::Funcref] };
+        let body = FunctionBody { locals: vec![], code };
+        let mut engine = WasmExecutionEngine::new(WasmEngineConfig {
+            memories: Vec::new(),
+            tables: vec![Table::new_with_is64(10, None, true).unwrap()],
+            globals: vec![],
+            global_types: vec![],
+            func_types: vec![func_type],
+            func_bodies: vec![Some(body)],
+            host_functions: vec![None],
+        });
+        assert_eq!(engine.call_function(0, &[]).unwrap(), vec![WasmValue::Ref(Some(0))]);
+    }
+
+    #[test]
+    fn table_get_on_an_is64_table_with_a_huge_i64_index_traps_cleanly_not_a_panic() {
+        // `(i64.const -1)` (bit pattern u64::MAX) -- the real
+        // `table_get64.wast`/`table_set64.wast` corpus's own boundary
+        // case. Must trap, not silently wrap into a small,
+        // coincidentally-in-bounds index (security review concern: see
+        // `table_u64_to_u32`'s own doc comment).
+        let code = vec![
+            0x42, 0x7F, // i64.const -1
+            0x25, 0x00, // table.get 0
+            0x0B,
+        ];
+        let func_type = FuncType { params: vec![], results: vec![ValueType::Funcref] };
+        let body = FunctionBody { locals: vec![], code };
+        let mut engine = WasmExecutionEngine::new(WasmEngineConfig {
+            memories: Vec::new(),
+            tables: vec![Table::new_with_is64(5, None, true).unwrap()],
+            globals: vec![],
+            global_types: vec![],
+            func_types: vec![func_type],
+            func_bodies: vec![Some(body)],
+            host_functions: vec![None],
+        });
+        assert!(engine.call_function(0, &[]).is_err());
+    }
+
+    #[test]
+    fn table_size_and_grow_push_i64_for_an_is64_table() {
+        // (ref.null func); i64.const 2; table.grow 0 -- pushes the OLD
+        // size as i64; table.size 0 -- pushes the NEW size as i64.
+        let func_type = FuncType { params: vec![], results: vec![ValueType::I64, ValueType::I64] };
+        let body = FunctionBody {
+            locals: vec![],
+            code: vec![
+                0xD0, 0x70, // ref.null func
+                0x42, 0x02, // i64.const 2 (delta)
+                0xFC, 0x0F, 0x00, // table.grow 0
+                0xFC, 0x10, 0x00, // table.size 0
+                0x0B,
+            ],
+        };
+        let mut engine = WasmExecutionEngine::new(WasmEngineConfig {
+            memories: Vec::new(),
+            tables: vec![Table::new_with_is64(1, None, true).unwrap()],
+            globals: vec![],
+            global_types: vec![],
+            func_types: vec![func_type],
+            func_bodies: vec![Some(body)],
+            host_functions: vec![None],
+        });
+        assert_eq!(engine.call_function(0, &[]).unwrap(), vec![WasmValue::I64(1), WasmValue::I64(3)]);
+    }
+
+    #[test]
+    fn table_fill_uses_i64_dest_and_len_on_an_is64_table() {
+        let func_type = FuncType { params: vec![], results: vec![] };
+        let body = FunctionBody {
+            locals: vec![],
+            code: vec![
+                0x42, 0x01, // i64.const 1 (dest)
+                0xD0, 0x70, // ref.null func (value)
+                0x42, 0x02, // i64.const 2 (len)
+                0xFC, 0x11, 0x00, // table.fill 0
+                0x0B,
+            ],
+        };
+        let mut engine = WasmExecutionEngine::new(WasmEngineConfig {
+            memories: Vec::new(),
+            tables: vec![Table::new_with_is64(5, None, true).unwrap()],
+            globals: vec![],
+            global_types: vec![],
+            func_types: vec![func_type],
+            func_bodies: vec![Some(body)],
+            host_functions: vec![None],
+        });
+        assert!(engine.call_function(0, &[]).is_ok());
+    }
+
+    #[test]
+    fn table_copy_between_an_is32_and_an_is64_table_uses_each_own_index_width() {
+        // table 0 is is32 (dst), table 1 is is64 (src): `dest` is i32
+        // (dst's own width), `src` is i64 (src's own width), `len` is i32
+        // (mixed -> the SMALLER width governs `len`, mirroring the real
+        // `table_copy_mixed.wast`'s own `test_64to32` case).
+        let func_type = FuncType { params: vec![], results: vec![] };
+        let body = FunctionBody {
+            locals: vec![],
+            code: vec![
+                0x41, 0x00, // i32.const 0 (dest, table 0 is32)
+                0x42, 0x00, // i64.const 0 (src, table 1 is64)
+                0x41, 0x02, // i32.const 2 (len, mixed -> i32)
+                0xFC, 0x0E, 0x00, 0x01, // table.copy dst_table=0 src_table=1
+                0x0B,
+            ],
+        };
+        let mut src_table = Table::new_with_is64(5, None, true).unwrap();
+        src_table.set(0, Some(7)).unwrap();
+        src_table.set(1, Some(8)).unwrap();
+        let mut engine = WasmExecutionEngine::new(WasmEngineConfig {
+            memories: Vec::new(),
+            tables: vec![Table::new(5, None), src_table],
+            globals: vec![],
+            global_types: vec![],
+            func_types: vec![func_type],
+            func_bodies: vec![Some(body)],
+            host_functions: vec![None],
+        });
+        engine.call_function(0, &[]).expect("mixed is32/is64 table.copy should succeed");
+        let state = engine.into_state();
+        assert_eq!(state.tables[0].get(0).unwrap(), Some(7));
+        assert_eq!(state.tables[0].get(1).unwrap(), Some(8));
+    }
+
+    #[test]
+    fn table_init_on_an_is64_table_widens_only_the_destination_operand() {
+        // `dest` is i64 (is64 target table); `src`/`len` (positions within
+        // the element segment) stay i32 -- a passive element segment
+        // isn't itself address-typed, mirroring the real
+        // `table_init64.wast` corpus.
+        let func_type = FuncType { params: vec![], results: vec![] };
+        let body = FunctionBody {
+            locals: vec![],
+            code: vec![
+                0x42, 0x01, // i64.const 1 (dest)
+                0x41, 0x00, // i32.const 0 (src, segment offset -- always i32)
+                0x41, 0x02, // i32.const 2 (len -- always i32)
+                0xFC, 0x0C, 0x00, 0x00, // table.init elem_idx=0 table_idx=0
+                0x0B,
+            ],
+        };
+        let mut engine = WasmExecutionEngine::new(WasmEngineConfig {
+            memories: Vec::new(),
+            tables: vec![Table::new_with_is64(5, None, true).unwrap()],
+            globals: vec![],
+            global_types: vec![],
+            func_types: vec![func_type],
+            func_bodies: vec![Some(body)],
+            host_functions: vec![None],
+        });
+        engine.set_elements(vec![vec![Some(3), Some(4)]]);
+        engine.set_dropped_elements(vec![false]);
+        engine.call_function(0, &[]).expect("table.init against an is64 table should succeed");
+        let state = engine.into_state();
+        assert_eq!(state.tables[0].get(1).unwrap(), Some(3));
+        assert_eq!(state.tables[0].get(2).unwrap(), Some(4));
+    }
+
+    #[test]
+    fn call_indirect_against_an_is64_table_pops_an_i64_index() {
+        let code = vec![0x42, 0x00, 0x11, 0x00, 0x00, 0x0B]; // i64.const 0; call_indirect type=0 table=0; end
+        let func_type = FuncType { params: vec![], results: vec![ValueType::I32] };
+        let caller_body = FunctionBody { locals: vec![], code };
+        let target_body = FunctionBody { locals: vec![], code: vec![0x41, 42, 0x0B] };
+        let mut table = Table::new_with_is64(1, None, true).unwrap();
+        table.set(0, Some(1)).unwrap();
+        let mut engine = WasmExecutionEngine::new(WasmEngineConfig {
+            memories: Vec::new(),
+            tables: vec![table],
+            globals: vec![],
+            global_types: vec![],
+            func_types: vec![func_type.clone(), func_type.clone()],
+            func_bodies: vec![Some(caller_body), Some(target_body)],
+            host_functions: vec![None, None],
+        });
+        engine.set_type_section(vec![func_type]);
+        let result = engine.call_function(0, &[]).expect("call_indirect against an is64 table should succeed");
+        assert_eq!(result, vec![WasmValue::I32(42)]);
     }
 
     #[test]

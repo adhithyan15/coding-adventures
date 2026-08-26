@@ -2,6 +2,32 @@
 
 All notable changes to this package will be documented in this file.
 
+## [0.6.14] — 2026-08-26 (W26 follow-up — real table64 operations)
+
+### Fixed
+
+- **Real, pre-existing bug: active ELEMENT segment application ignored
+  the target table's own `is64`.** `instantiate()`'s active
+  element-segment-application loop unconditionally evaluated the
+  segment's offset expression as `i32`, even though the sibling active
+  DATA segment branch immediately above it was already correctly
+  `is64`-aware (W25) — an active element segment targeting an `is64`
+  table trapped instantiation (`expected I64, found I32`) instead of
+  applying. Found via the real `call_indirect64.wast` corpus (its
+  `(table $t64 i64 funcref (elem $const-i32))` shorthand hit exactly
+  this). Fixed to branch on the target table's own `Table::is64()`,
+  matching the data-segment code exactly; kept in `u64` throughout
+  (narrowing to `u32` only AFTER the upfront whole-segment bounds check),
+  same "never narrow before checking" discipline `wasm-execution`'s own
+  `table_u64_to_u32` helper documents.
+
+### Tests
+
+- New `active_element_segment_on_an_is64_table_applies_at_instantiation_time`
+  end-to-end test (`tests/table_init_copy_elem_drop.rs`): instantiates a
+  module with an active element segment on an `is64` table and confirms
+  `call_indirect` reaches the right functions.
+
 ## [0.6.13] — 2026-08-26 (W28 — real cross-instance shared memory/table + atomic elem-segment application)
 
 ### Fixed

@@ -961,6 +961,34 @@ TESTSUITE_FILES = [
     # exactly what this slice builds.
     "table64.wast",
     "memory64-imports.wast",
+    # table64 proposal, REAL OPERATIONS follow-up (W26 addendum -- see
+    # code/specs/W26-wasm-table64-first-slice.md's own "Explicitly out of
+    # scope" section, which named exactly these 9 files as the deferred
+    # follow-on): `table.get`/`table.set`/`table.grow`/`table.size`/
+    # `table.fill`/`table.copy`/`table.init`/`call_indirect` against a real
+    # `is64` table, plus the active-element-segment-offset interaction.
+    # Mirrors memory64's own i32->i64 address-operand widening pattern
+    # (`pop_effective_addr`'s is64/is32 branch, W25) applied to table
+    # index/dest/src/len/delta operands instead of a memory address --
+    # `Table`'s own storage stays u32-based regardless (bounded well under
+    # any u64 range by `MAX_TABLE_ELEMENTS`), only the DECLARED/pushed
+    # operand width changes. `table_copy_mixed.wast` is the one file that
+    # ISN'T a plain "is32 sibling with i32->i64 substituted" mechanical
+    # transform of an already-vendored file -- it exercises a real
+    # `table.copy` between an is32 table and an is64 table in the SAME
+    # instruction, confirming (via its own `assert_invalid` cases) that
+    # `dest`'s width follows the DESTINATION table's own is64-ness, `src`'s
+    # follows the SOURCE's, and `len`'s follows the DESTINATION's even when
+    # it differs from the source's.
+    "call_indirect64.wast",
+    "table_copy64.wast",
+    "table_fill64.wast",
+    "table_get64.wast",
+    "table_grow64.wast",
+    "table_init64.wast",
+    "table_set64.wast",
+    "table_size64.wast",
+    "table_copy_mixed.wast",
     # Real module linking, `imports.wast` (task #61 -- originally logged as
     # "blocked on tag/exceptions-proposal parsing", now closed out): this
     # file's own "auxiliary modules to import from" preamble declares
@@ -1052,15 +1080,16 @@ TESTSUITE_FILES = [
     # instance ...)` generative-instantiation directive form this crate's
     # `wasm-wast-parser` has zero grammar support for at all -- see W28's
     # own PR description; a distinct, self-contained follow-on from the
-    # shared-memory/table fix just below, not blocked BY it); every real
-    # `table*64.wast`/`call_indirect64.wast`
-    # (table64 REAL operations -- table.get/set/grow/size/fill/copy/init/
-    # call_indirect against an `is64` table -- confirmed still exactly the
-    # explicitly-deferred scope boundary W26's own spec drew, not
-    # newly-found or newly-fixed here); `annotations.wast`/
-    # `inline-module.wast` (two more genuinely separate, unimplemented
+    # shared-memory/table fix just below, not blocked BY it); `annotations.
+    # wast`/`inline-module.wast` (two more genuinely separate, unimplemented
     # text-format features -- custom `@id` annotation syntax, and a
-    # `.wast` script with no enclosing `(module ...)` wrapper at all).
+    # `.wast` script with no enclosing `(module ...)` wrapper at all). The
+    # `table*64.wast`/`call_indirect64.wast`/`table_copy_mixed.wast` family
+    # (table64 REAL operations against an `is64` table) that a PRIOR
+    # revision of this comment named as still deferred here is no longer
+    # out of scope -- see the dedicated "table64 proposal, REAL OPERATIONS
+    # follow-up" entry earlier in this same list, which vendors all 9 of
+    # them.
     "address0.wast",
     "address1.wast",
     "align0.wast",

@@ -562,6 +562,16 @@ struct ModuleContext<'a> {
     /// funcref, but a module with more than one table (multi-table) can
     /// mix funcref and externref tables freely.
     table_element_types: Vec<u8>,
+    /// Each table's `is64`-ness (table64 proposal, W26), same combined
+    /// imports-first-then-declared index-space/ordering convention as
+    /// `table_element_types`/`memory_is64` -- `table.get`/`table.set`/
+    /// `table.grow`/`table.size`/`table.fill`/`table.init`/`table.copy`/
+    /// `call_indirect`/`return_call_indirect` must type-check their
+    /// index/dest/src/len/delta operands (and pushed results) against the
+    /// TARGET table's own `is64`, not unconditionally assume `i32` (see
+    /// `code/specs/W26-wasm-table64-first-slice.md`'s follow-up "real
+    /// table64 operations" scope).
+    table_is64: Vec<bool>,
     /// Combined imported + module-defined TAG types (W21 — the exceptions
     /// proposal), same index-space convention as `func_types` above:
     /// imports first, then module-defined (`module.tags: Vec<u32>`, type
@@ -639,6 +649,15 @@ fn build_module_context(module: &WasmModule) -> Result<ModuleContext<'_>, Valida
         .collect();
     table_element_types.extend(module.tables.iter().map(|t| t.element_type));
     let table_count = table_element_types.len() as u32;
+    let mut table_is64: Vec<bool> = module
+        .imports
+        .iter()
+        .filter_map(|i| match &i.type_info {
+            ImportTypeInfo::Table(tt) => Some(tt.is64),
+            _ => None,
+        })
+        .collect();
+    table_is64.extend(module.tables.iter().map(|t| t.is64));
 
     Ok(ModuleContext {
         module,
@@ -649,6 +668,7 @@ fn build_module_context(module: &WasmModule) -> Result<ModuleContext<'_>, Valida
         memory_is64,
         table_count,
         table_element_types,
+        table_is64,
         tag_types,
     })
 }
@@ -831,7 +851,8 @@ fn type_check_function(ctx: &ModuleContext, func_idx: usize, func_type: &FuncTyp
                     0x0F => {
                         // `table.grow` (task #98): pops `[init, delta]`
                         // (init: the REFERENCED table's own element type,
-                        // delta: i32), pushes i32 (old size, or -1 on
+                        // delta: i32/i64 per that table's own `is64` --
+                        // W26), pushes i32/i64 (old size, or -1 on
                         // failure -- never a validation-time error, growth
                         // failure is a normal runtime return value). Same
                         // per-table element-type lookup as `table.get`/
@@ -847,13 +868,15 @@ fn type_check_function(ctx: &ModuleContext, func_idx: usize, func_type: &FuncTyp
                             0x6F => ValueType::Externref,
                             _ => ValueType::Funcref,
                         };
-                        pop_expect(&mut stack, frame!(), ValueType::I32)?; // delta
+                        let idx_type = if ctx.table_is64.get(table_idx as usize).copied().unwrap_or(false) { ValueType::I64 } else { ValueType::I32 };
+                        pop_expect(&mut stack, frame!(), idx_type)?; // delta
                         pop_expect(&mut stack, frame!(), elem_type)?; // init value
-                        push_val(&mut stack, ValueType::I32);
+                        push_val(&mut stack, idx_type);
                     }
                     0x10 => {
                         // `table.size` (task #98): no stack operands,
-                        // pushes the table's size as i32. Only the
+                        // pushes the table's size -- i64 for an `is64`
+                        // table (W26), i32 otherwise. Only the
                         // index-bounds check applies -- element type is
                         // irrelevant to a size query.
                         let (table_idx, size) = decode_idx(code, offset)?;
@@ -861,13 +884,15 @@ fn type_check_function(ctx: &ModuleContext, func_idx: usize, func_type: &FuncTyp
                         if table_idx >= ctx.table_count {
                             err!("table.size references table index {table_idx}, but only {} tables exist", ctx.table_count);
                         }
-                        push_val(&mut stack, ValueType::I32);
+                        let idx_type = if ctx.table_is64.get(table_idx as usize).copied().unwrap_or(false) { ValueType::I64 } else { ValueType::I32 };
+                        push_val(&mut stack, idx_type);
                     }
                     0x11 => {
                         // `table.fill` (task #98): pops `[dest, value,
-                        // len]` (dest/len: i32, value: the REFERENCED
-                        // table's own element type), no push. Same
-                        // element-type lookup as 0x0F above.
+                        // len]` (dest/len: i32/i64 per that table's own
+                        // `is64` -- W26, value: the REFERENCED table's own
+                        // element type), no push. Same element-type lookup
+                        // as 0x0F above.
                         let (table_idx, size) = decode_idx(code, offset)?;
                         offset += size;
                         if table_idx >= ctx.table_count {
@@ -877,19 +902,29 @@ fn type_check_function(ctx: &ModuleContext, func_idx: usize, func_type: &FuncTyp
                             0x6F => ValueType::Externref,
                             _ => ValueType::Funcref,
                         };
-                        pop_expect(&mut stack, frame!(), ValueType::I32)?; // length
+                        let idx_type = if ctx.table_is64.get(table_idx as usize).copied().unwrap_or(false) { ValueType::I64 } else { ValueType::I32 };
+                        pop_expect(&mut stack, frame!(), idx_type)?; // length
                         pop_expect(&mut stack, frame!(), elem_type)?; // value
-                        pop_expect(&mut stack, frame!(), ValueType::I32)?; // destination
+                        pop_expect(&mut stack, frame!(), idx_type)?; // destination
                     }
                     0x0C => {
-                        // `table.init` (task #97): pops `[dest, src, len]`
-                        // (all i32), no push. Binary immediate order is
-                        // `elemidx` THEN `tableidx` (opposite of the text
-                        // form's `$table $elem` order -- confirmed against
-                        // the real testsuite encoding). Both indices are
-                        // hard validation errors on out-of-bounds, same
+                        // `table.init` (task #97): pops `[dest, src, len]`,
+                        // no push. Binary immediate order is `elemidx`
+                        // THEN `tableidx` (opposite of the text form's
+                        // `$table $elem` order -- confirmed against the
+                        // real testsuite encoding). Both indices are hard
+                        // validation errors on out-of-bounds, same
                         // discipline as `memory.init`'s data_idx check
                         // above (task #95).
+                        //
+                        // W26 (table64): `dest`'s width depends on the
+                        // TARGET table's own `is64` -- `src`/`len`
+                        // (positions within the element segment) always
+                        // stay `i32`, since a passive element segment
+                        // isn't itself address-typed (verified against the
+                        // real `table_init64.wast` corpus: an is64
+                        // table's `table.init` still takes plain i32
+                        // `src`/`len` operands, only `dest` widens).
                         let (elem_idx, elem_size) = decode_idx(code, offset)?;
                         let (table_idx, table_size) = decode_idx(code, offset + elem_size)?;
                         offset += elem_size + table_size;
@@ -899,9 +934,10 @@ fn type_check_function(ctx: &ModuleContext, func_idx: usize, func_type: &FuncTyp
                         if table_idx >= ctx.table_count {
                             err!("table.init references table index {table_idx}, but only {} tables exist", ctx.table_count);
                         }
-                        pop_expect(&mut stack, frame!(), ValueType::I32)?; // length
-                        pop_expect(&mut stack, frame!(), ValueType::I32)?; // source
-                        pop_expect(&mut stack, frame!(), ValueType::I32)?; // destination
+                        let dest_type = if ctx.table_is64.get(table_idx as usize).copied().unwrap_or(false) { ValueType::I64 } else { ValueType::I32 };
+                        pop_expect(&mut stack, frame!(), ValueType::I32)?; // length (segment-side, always i32)
+                        pop_expect(&mut stack, frame!(), ValueType::I32)?; // source (segment-side, always i32)
+                        pop_expect(&mut stack, frame!(), dest_type)?; // destination
                     }
                     0x0D => {
                         // `elem.drop` (task #97): no stack operands, no
@@ -916,13 +952,32 @@ fn type_check_function(ctx: &ModuleContext, func_idx: usize, func_type: &FuncTyp
                         }
                     }
                     0x0E => {
-                        // `table.copy` (task #97): pops `[dest, src, len]`
-                        // (all i32), no push. Text and binary immediate
-                        // orders MATCH here (dst-then-src both times,
-                        // unlike table.init above). Both table indices are
-                        // bounds-checked independently -- a self-copy
-                        // (dst == src) is valid and checked at runtime, not
-                        // rejected here.
+                        // `table.copy` (task #97): pops `[dest, src, len]`,
+                        // no push. Text and binary immediate orders MATCH
+                        // here (dst-then-src both times, unlike table.init
+                        // above). Both table indices are bounds-checked
+                        // independently -- a self-copy (dst == src) is
+                        // valid and checked at runtime, not rejected here.
+                        //
+                        // W26 (table64) / `table_copy_mixed.wast`: `dest`'s
+                        // width follows the DESTINATION table's own
+                        // `is64`, `src`'s follows the SOURCE table's own
+                        // `is64` -- independently, since a mixed
+                        // is64/is32 copy is legal (`table_copy_mixed.
+                        // wast`'s `test_64to32`/`test_32to64` cases both
+                        // validate). `len`'s width is `i64` ONLY when
+                        // BOTH tables are `is64` -- otherwise `i32`, even
+                        // when exactly one side is `is64` (confirmed
+                        // against that same corpus file's real, valid
+                        // `test_64to32`/`test_32to64` cases, which both
+                        // use a plain `i32` `len` despite one table being
+                        // `is64`, and its `bad_size_arg` `assert_invalid`
+                        // case, which types `len` to `i64` in that same
+                        // mixed scenario and is correctly rejected). Same
+                        // "the smaller of the two index types governs a
+                        // shared length/count operand" rule the combined
+                        // memory64/table64 proposal defines for mixed
+                        // memory.copy too.
                         let (dst_table_idx, dst_size) = decode_idx(code, offset)?;
                         let (src_table_idx, src_size) = decode_idx(code, offset + dst_size)?;
                         offset += dst_size + src_size;
@@ -932,9 +987,14 @@ fn type_check_function(ctx: &ModuleContext, func_idx: usize, func_type: &FuncTyp
                         if src_table_idx >= ctx.table_count {
                             err!("table.copy references source table index {src_table_idx}, but only {} tables exist", ctx.table_count);
                         }
-                        pop_expect(&mut stack, frame!(), ValueType::I32)?; // length
-                        pop_expect(&mut stack, frame!(), ValueType::I32)?; // source
-                        pop_expect(&mut stack, frame!(), ValueType::I32)?; // destination
+                        let dst_is64 = ctx.table_is64.get(dst_table_idx as usize).copied().unwrap_or(false);
+                        let src_is64 = ctx.table_is64.get(src_table_idx as usize).copied().unwrap_or(false);
+                        let dst_type = if dst_is64 { ValueType::I64 } else { ValueType::I32 };
+                        let src_type = if src_is64 { ValueType::I64 } else { ValueType::I32 };
+                        let len_type = if dst_is64 && src_is64 { ValueType::I64 } else { ValueType::I32 };
+                        pop_expect(&mut stack, frame!(), len_type)?; // length
+                        pop_expect(&mut stack, frame!(), src_type)?; // source
+                        pop_expect(&mut stack, frame!(), dst_type)?; // destination
                     }
                     other => err!("unsupported 0xFC sub-opcode {other:#x}"),
                 }
@@ -1369,7 +1429,10 @@ fn type_check_function(ctx: &ModuleContext, func_idx: usize, func_type: &FuncTyp
                     .types
                     .get(type_idx as usize)
                     .ok_or_else(|| ValidationError::TypeIndexOutOfBounds(format!("function #{func_idx}: call_indirect references type index {type_idx}, but only {} types exist", ctx.module.types.len())))?;
-                pop_expect(&mut stack, frame!(), ValueType::I32)?; // table index
+                // W26 (table64): the table-index operand is i64 for an
+                // `is64` table, i32 otherwise.
+                let idx_type = if ctx.table_is64.get(table_idx as usize).copied().unwrap_or(false) { ValueType::I64 } else { ValueType::I32 };
+                pop_expect(&mut stack, frame!(), idx_type)?; // table index
                 pop_expect_many(&mut stack, frame!(), &callee_type.params)?;
                 push_vals(&mut stack, &callee_type.results);
             }
@@ -1424,7 +1487,10 @@ fn type_check_function(ctx: &ModuleContext, func_idx: usize, func_type: &FuncTyp
                 if !results_assignable(&callee_type.results, function_results) {
                     err!("return_call_indirect to type #{type_idx} returning {:?}, but the current function returns {function_results:?}", callee_type.results);
                 }
-                pop_expect(&mut stack, frame!(), ValueType::I32)?; // table index
+                // W26 (table64): same is64-dependent table-index operand
+                // width as `call_indirect` (0x11) above.
+                let idx_type = if ctx.table_is64.get(table_idx as usize).copied().unwrap_or(false) { ValueType::I64 } else { ValueType::I32 };
+                pop_expect(&mut stack, frame!(), idx_type)?; // table index
                 pop_expect_many(&mut stack, frame!(), &callee_type.params)?;
                 mark_unreachable(&mut stack, frame_mut!());
             }
@@ -1513,13 +1579,17 @@ fn type_check_function(ctx: &ModuleContext, func_idx: usize, func_type: &FuncTyp
                     0x6F => ValueType::Externref,
                     _ => ValueType::Funcref,
                 };
-                pop_expect(&mut stack, frame!(), ValueType::I32)?;
+                // W26 (table64): the index operand is i64 for an `is64`
+                // table, i32 otherwise.
+                let idx_type = if ctx.table_is64.get(table_idx as usize).copied().unwrap_or(false) { ValueType::I64 } else { ValueType::I32 };
+                pop_expect(&mut stack, frame!(), idx_type)?;
                 push_val(&mut stack, elem_type);
             }
             0x26 => {
                 // table.set <tableidx> (WASM17, generalized task #96):
                 // pops a value of the REFERENCED table's own element type
-                // and an i32 index, no push.
+                // and an index (i64 for an `is64` table, i32 otherwise --
+                // W26), no push.
                 let (table_idx, size) = decode_idx(code, offset)?;
                 offset += size;
                 if table_idx >= ctx.table_count {
@@ -1529,8 +1599,9 @@ fn type_check_function(ctx: &ModuleContext, func_idx: usize, func_type: &FuncTyp
                     0x6F => ValueType::Externref,
                     _ => ValueType::Funcref,
                 };
+                let idx_type = if ctx.table_is64.get(table_idx as usize).copied().unwrap_or(false) { ValueType::I64 } else { ValueType::I32 };
                 pop_expect(&mut stack, frame!(), elem_type)?;
-                pop_expect(&mut stack, frame!(), ValueType::I32)?;
+                pop_expect(&mut stack, frame!(), idx_type)?;
             }
 
             // ── Memory ───────────────────────────────────────────────────────
