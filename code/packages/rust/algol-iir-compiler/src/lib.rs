@@ -6075,7 +6075,7 @@ impl Compiler {
         if exact_bare_variable_expression_name(node).as_deref() == Some(name) {
             return true;
         }
-        if let Some(base) = literal_power_identity_base(node) {
+        if let Some(base) = literal_power_identity_base(node, false) {
             return self.integer_identity_expression_preserves_name(base, name);
         }
         let sequence = pieces(node);
@@ -6157,7 +6157,7 @@ impl Compiler {
         if exact_bare_variable_expression_name(node).as_deref() == Some(name) {
             return true;
         }
-        if let Some(base) = literal_power_identity_base(node) {
+        if let Some(base) = literal_power_identity_base(node, true) {
             return self.real_identity_expression_preserves_name(base, name);
         }
         let sequence = pieces(node);
@@ -8129,10 +8129,13 @@ fn literal_nonneg_integer_power_chain(nodes: &[&GrammarASTNode]) -> Option<u32> 
 }
 
 /// Return the base of an exponentiation expression whose complete literal
-/// exponent chain evaluates to one. The power lowerer returns that base
-/// directly, so this is an exact structural identity for integer and real
-/// values rather than an algebraic approximation of runtime `f64_pow`.
-fn literal_power_identity_base(node: &GrammarASTNode) -> Option<&GrammarASTNode> {
+/// exponent chain evaluates to one. Integer-literal chains return the base
+/// directly; real selector analysis also accepts bounded integral real
+/// literals whose finite runtime power result preserves the base.
+fn literal_power_identity_base(
+    node: &GrammarASTNode,
+    allow_integral_real_exponents: bool,
+) -> Option<&GrammarASTNode> {
     let sequence = pieces(node);
     if sequence.len() < 3 || sequence.len().is_multiple_of(2) {
         return None;
@@ -8149,7 +8152,12 @@ fn literal_power_identity_base(node: &GrammarASTNode) -> Option<&GrammarASTNode>
         }
     }
     let (base, exponents) = operands.split_first()?;
-    (literal_nonneg_integer_power_chain(exponents) == Some(1)).then_some(*base)
+    let exponent = if allow_integral_real_exponents {
+        literal_nonnegative_integral_power_chain(exponents)
+    } else {
+        literal_nonneg_integer_power_chain(exponents)
+    };
+    (exponent == Some(1)).then_some(*base)
 }
 
 fn literal_signed_integer_exponent(node: &GrammarASTNode) -> Option<i32> {
@@ -11189,6 +11197,9 @@ mod tests {
             "choose ^ 1",
             "choose ** 1",
             "choose ^ 1 ^ 1",
+            "choose ^ 1.0",
+            "choose ** (+1.0)",
+            "choose ^ 1.0 ^ 1",
             "+choose",
             "(choose)",
             "choose * (1.0)",
@@ -11282,7 +11293,7 @@ mod tests {
             "choose ^ 0",
             "choose ^ 0.0",
             "1.0 ^ choose",
-            "choose ^ 1.0",
+            "choose ^ 2.0",
             "choose - ((-0.0) ^ 0)",
             "choose + ((-0.0) ^ 2)",
         ] {
