@@ -260,6 +260,14 @@
 //!   result `Kind`, without embedding the signature inline on `Kind`
 //!   itself (which would force it to drop `Copy`, the same concern
 //!   `Kind::Array` already navigates by staying flat).
+//! - **Reassigning a `Closure`-kinded local is rejected** (`var f = (int
+//!   x) -> x + 1; f = g;`), found by `/security-review`: this crate only
+//!   tracks a local's `Kind` at *declaration* time, and a plain `=`
+//!   reassignment never re-checks or re-records it — harmless for every
+//!   other `Kind`, but `Kind::Closure(idx)`'s own `idx` is load-bearing,
+//!   so an unrejected reassignment would leave a later call site
+//!   type-checking against the *original* signature, not whatever the
+//!   variable was actually reassigned to.
 //! - A local/parameter that resolves but isn't `Closure`-kinded (`int x
 //!   = 1; x();`) is rejected with a clear error rather than silently
 //!   falling through to a same-named method — matching real Java, which
@@ -2512,6 +2520,34 @@ impl Lowerer {
                     return Err(self.err_at(
                         lvalue_node,
                         format!("cannot assign to `{name}`: local variables referenced from a lambda body must be effectively final"),
+                    ));
+                }
+                // Caught by `/security-review`: this crate tracks each
+                // local's `Kind` only at declaration time -- a plain `=`
+                // reassignment lowers the RHS but never re-checks or
+                // re-records the declared `Kind` against it (a real,
+                // pre-existing gap for every `Kind`, harmless for every
+                // *other* variant since none of them carry state that a
+                // later expression depends on). `Kind::Closure(idx)` is
+                // the one exception: `idx` is load-bearing -- a later
+                // `lower_call_expression` trusts it verbatim to look up
+                // `closure_signatures[idx]` and type-check the call.
+                // Reassigning a closure-typed local would leave that
+                // index silently stale (`var f = (int x) -> x+1; f = ()
+                // -> 42; f();` would still type-check `f`'s call against
+                // its *original* 1-parameter signature, not the 0-
+                // parameter closure `f` now actually holds) -- rejected
+                // outright rather than mis-tracked, since correctly
+                // updating the recorded `Kind` in place would require
+                // rewriting the scope frame the name was originally
+                // declared in, not just the innermost one (`declare_local`
+                // only ever inserts into `self.locals.last_mut()`, which
+                // is wrong whenever the assignment happens inside a
+                // nested block relative to the declaration).
+                if matches!(declared_kind, Kind::Closure(_)) {
+                    return Err(self.err_at(
+                        lvalue_node,
+                        format!("cannot reassign `{name}`: reassigning a lambda-valued variable is not supported yet (deferred to a later JV02 milestone)"),
                     ));
                 }
                 let span = self.span_of(inner);

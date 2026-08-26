@@ -53,6 +53,30 @@ All notable changes to the `java-to-semantic-ir` crate will be documented in thi
   primitive/`String` parameter types), so a `Kind::Closure`-typed
   parameter is not constructible in the first place; a boundary of what's
   expressible, not a gap in invocation itself.
+- **Caught by `/security-review` before push (MEDIUM, CWE-704 stale-
+  type-tracking / silent mis-lowering)**: this crate has always tracked
+  each local's `Kind` only at *declaration* time — a plain `=`
+  reassignment lowers the RHS but never re-checks or re-records the
+  declared `Kind` against it. That gap was harmless for every other
+  `Kind` variant (none of them carry state a later expression depends
+  on), but `Kind::Closure(idx)`'s own `idx` is now load-bearing: `x =
+  f;` where `f` and the reassigned closure have different signatures
+  would leave `x`'s recorded index stale, so a later `x(...)` call would
+  type-check against `x`'s *original* signature, not the closure it was
+  actually reassigned to. Confirmed live: `var f = (int x) -> x + 1;
+  var g = () -> 42; f = g; int z = f(5);` compiled cleanly and passed
+  `semantic_ir::validate()` before the fix, emitting an `IndirectCall`
+  that type-checked one `int` argument against a signature the
+  reassigned closure no longer has. Fixed by rejecting reassignment of a
+  `Closure`-kinded local outright, rather than attempting to re-track
+  the index correctly — updating it in place would require rewriting the
+  scope frame the name was originally declared in, not just the
+  innermost one (`declare_local` only ever inserts into
+  `self.locals.last_mut()`, which is the wrong frame whenever the
+  reassignment happens inside a nested block relative to the
+  declaration). `reassigning_a_lambda_valued_local_to_a_different_
+  signature_is_rejected`/`reassigning_a_lambda_valued_local_to_a_non_
+  lambda_value_is_rejected` are the regression tests.
 
 ## [0.10.0] - 2026-08-26
 

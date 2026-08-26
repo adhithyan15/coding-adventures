@@ -84,7 +84,12 @@ embedding the signature inline on `Kind` itself (which would force it to
 drop `Copy`, the same concern `Kind::Array` already navigates by staying
 flat). A local that resolves but isn't `Closure`-kinded (`int x = 1;
 x();`) is rejected rather than silently falling through to a same-named
-method. Single-dimensional array types (`int[]`/`String[]`/etc.) with a
+method. Reassigning a `Closure`-kinded local is also rejected (found by
+`/security-review`): since this crate only tracks a local's `Kind` at
+declaration time, an unrejected reassignment would leave a later call
+site type-checking against the *original* signature's interned index,
+not whatever the variable was actually reassigned to. Single-dimensional
+array types (`int[]`/`String[]`/etc.) with a
 bare `{ ... }` literal initializer (`int[] xs = {1, 2, 3};`, or `var xs =
 {1, 2, 3};` inferring the element kind from the literal itself) lower to
 `Expr::SeqLit`; indexing reads (`xs[i]`) lower to `Expr::SeqIndex`; and

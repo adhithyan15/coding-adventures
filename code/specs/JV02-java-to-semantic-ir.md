@@ -415,7 +415,12 @@ M3b's own lambdas — the first this crate has ever had. Calling a
 lambda-valued *method parameter* remains out of scope: this frontend has
 no way to declare one at all (no functional-interface parameter type
 exists), so it's a boundary of what's expressible, not a gap in
-invocation itself.
+invocation itself. **Caught by `/security-review` before push (MEDIUM,
+CWE-704 stale-type-tracking)**: reassigning a `Closure`-kinded local is
+now rejected outright — this crate only tracks a local's `Kind` at
+declaration time, and `Kind::Closure(idx)`'s own `idx` is load-bearing
+for a later call site's type-checking, so an unrejected reassignment
+would leave that index silently stale.
 
 **M5 — statics/breadth parity groundwork.** Pulled forward from the
 original M9 slot: static field/method access patterns

@@ -2257,6 +2257,27 @@ fn feature_closures_is_declared_when_a_lambda_is_invoked() {
     assert!(m.manifest.contains(Feature::Closures));
 }
 
+#[test]
+fn reassigning_a_lambda_valued_local_to_a_different_signature_is_rejected() {
+    // Caught by `/security-review`: without this rejection, a later call
+    // site would type-check `f(...)` against `f`'s *original* signature,
+    // not the closure it was actually reassigned to (`Kind::Closure`'s
+    // own interned-signature index goes stale on reassignment, since
+    // this crate only tracks a local's `Kind` at declaration time).
+    let err = compile_source(
+        &wrap("var f = (int x) -> x + 1; var g = () -> 42; f = g; int z = f(5);"),
+        "prog",
+    )
+    .unwrap_err();
+    assert!(!err.message.is_empty());
+}
+
+#[test]
+fn reassigning_a_lambda_valued_local_to_a_non_lambda_value_is_rejected() {
+    let err = compile_source(&wrap("var f = (int x) -> x + 1; f = 5;"), "prog").unwrap_err();
+    assert!(!err.message.is_empty());
+}
+
 // ── M4a: array declarations, indexing reads, .length ─────────────────────
 
 #[test]
