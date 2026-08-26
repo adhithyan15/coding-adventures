@@ -211,13 +211,27 @@ to emit a real native `if (...) { … } else { … }` statement instead.
 statement-position control-flow lowerings for the same class of hazard**,
 not just its loop-body emission.
 
+`semantic-ir-to-typescript` was the second backend to accept the feature
+(task #63): its `While`/`ForRange`/`ForEach` lowering shares the JS
+backend's own "real inline native loop, no closure boundary" shape, and
+— confirmed, not just anticipated, since this addendum's own text above
+already predicted it — its `Expr::If`/`emit_block_as_expr` pair shared
+the *identical* ternary+IIFE hazard, fixed the same way: a new
+`Stmt::ExprStmt`/`Expr::If` special case in `emit_stmt` emitting a real
+native `if`/`else`. Three of that backend's own `match Stmt` traversal
+helpers (ancestry collection, builtin-usage scanning, assigned-locals
+collection) also carried the same compile-exhaustiveness-only panic arm
+for `Stmt::Break`/`Stmt::Continue` this addendum's own Slice 0 landed
+everywhere — each replaced with the correct no-op (neither variant
+carries a nested expression or statement for any of those scans to find).
+
 Remaining backends (per-backend, once each is audited for this class of
-hazard): `semantic-ir-to-{typescript,go,python}`'s `While`/`ForEach`
-lowering was independently confirmed (during this addendum's own design
-research) to share the JS backend's "real inline native loop, no closure
-boundary" shape, so they're the next candidates — see the task tracker.
-`semantic-ir-to-ruby` needs its existing defensive-scan pattern extended
-rather than replaced outright. `semantic-ir-to-rust` needs its
+hazard): `semantic-ir-to-go`'s and `semantic-ir-to-python`'s `While`/
+`ForEach` lowering was independently confirmed (during this addendum's
+own design research) to share the same "real inline native loop, no
+closure boundary" shape, so they're the next candidates — see the task
+tracker. `semantic-ir-to-ruby` needs its existing defensive-scan pattern
+extended rather than replaced outright. `semantic-ir-to-rust` needs its
 `TryCatch`/`catch_unwind` hazard resolved (or scoped out) first.
 
 ### Sequences
