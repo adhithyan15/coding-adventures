@@ -8224,8 +8224,8 @@ enabled squash auto-merge. GitHub merged it as
 `a0cb099a58f58ee619e909fed6a42720a704d21f` at
 `2026-08-26T06:43:58Z` without a manual merge command.
 
-The collision-checked exact-main schema-3 report, refreshed after a clean
-rebase onto `8afaaa6e597031d62b43f0c2b0df13389f3f3981`, remains structurally
+The collision-checked exact-main schema-3 report, refreshed after clean rebases,
+most recently onto `6e425d80b47a01b118c7636005e2d4158a5d0a46`, remains structurally
 unchanged:
 15 established lanes, 1,373 implementation identities, 4,566 package slots,
 175 high-consensus packages with 276 missing slots, 122 identities in five to
@@ -8262,12 +8262,20 @@ frontend owner. PR #12968 remains inside the human-language-data generator
 filesystem-authority and human-language-books untrusted-input host-authority
 owners. None changes a package identity or BUILD/build-tool marker.
 
+Before the final rebase, PR #12964 merged as `68199d1105` inside that HTML
+owner, and PR #12963 merged as `6e425d80b4` inside the JV02 portable/lane,
+Semantic-IR loop-control consumer, and extra-CI toolchain-declaration owners.
+The three new live heads are also already owned: #12971 is ALGOL IIR, #12972
+is deterministic HTML frontend behavior, and #12973 is script-ductus plus
+curriculum and `human-language-data` work. None changes a package identity or
+BUILD/build-tool marker.
+
 The dependency/leverage pass selects
 `build-tool-haskell-orphan-crate-validation-conformance` on branch
 `codex/build-tool-haskell-orphan-crate-validation-conformance`. Its neutral
 orphan corpus and Haskell tracked-artifact substrate are merged. Haskell is the
 widest remaining orphan consumer at 204 reported packages versus Swift at 161;
-both advance the same completion umbrella. All eight live PRs have zero exact
+both advance the same completion umbrella. All nine live PRs have zero exact
 overlap with the expected Haskell validator, tests, README, changelog, state,
 and roadmap surfaces. The target local branch, remote branch, and prior PR were
 absent before the fresh exact-main worktree was created. The higher-descendant
