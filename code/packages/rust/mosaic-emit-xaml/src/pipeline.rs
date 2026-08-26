@@ -8736,6 +8736,22 @@ fn escape_csharp_string(s: &str) -> String {
 /// `tokenise_expr`). A string with no colon-delimited scheme at all (a
 /// relative reference) is also rejected -- an author who wants in-app
 /// routing has `external: false` for exactly that.
+///
+/// Also requires the shape after the scheme to look right for it, not
+/// just the scheme token itself -- security review of this fix flagged
+/// that checking only the scheme leaves a gap: this function's verdict
+/// and the ACTUAL parse WinUI's `Uri`/`UriTypeConverter` does on the same
+/// string at XAML-load time are two independent parsers on the same
+/// input. A string like `http:evil` (scheme-valid, but not a real
+/// hierarchical URI) would pass a scheme-only check and then hit an
+/// unhandled `UriFormatException` when .NET's own parser tries it --
+/// swapping "rejected at compile time" for "the app crashes on click".
+/// `http`/`https` are hierarchical (RFC 3986 Â§3: `hier-part` for a
+/// scheme with an authority always starts `//`), so requiring `://`
+/// immediately after the scheme name closes that gap for both without
+/// needing to replicate .NET's full `Uri` grammar. `mailto` is RFC
+/// 6068's non-hierarchical `mailto:mailbox` form and never uses `//`, so
+/// it's exempt from that specific check.
 fn has_allowed_uri_scheme(href: &str) -> bool {
     const ALLOWED: [&str; 3] = ["http", "https", "mailto"];
     let Some(colon) = href.find(':') else {
@@ -8752,7 +8768,13 @@ fn has_allowed_uri_scheme(href: &str) -> bool {
     if !chars.all(|c| c.is_ascii_alphanumeric() || c == '+' || c == '-' || c == '.') {
         return false;
     }
-    ALLOWED.iter().any(|s| s.eq_ignore_ascii_case(scheme))
+    if !ALLOWED.iter().any(|s| s.eq_ignore_ascii_case(scheme)) {
+        return false;
+    }
+    if scheme.eq_ignore_ascii_case("mailto") {
+        return true;
+    }
+    href[colon + 1..].starts_with("//")
 }
 
 /// `HostLink` â†’ WinUI 3 `<HyperlinkButton>` per UI29-4.
@@ -15659,6 +15681,14 @@ mod tests {
             "\\\\attacker\\share\\payload.exe",
             "javascript:alert(1)",
             "no-scheme-at-all",
+            // #12038 security review: an allowed scheme name with a
+            // malformed remainder must still be rejected, not just
+            // scheme-matched -- .NET's own `Uri`/`UriTypeConverter`
+            // parses the SAME string independently at XAML-load time,
+            // and a scheme-only check here would let this crash there
+            // instead of failing the build.
+            "http:evil",
+            "https:not-a-real-authority",
         ] {
             let c = component("X", vec![], vec![]);
             let l = link_in_box(vec![LayoutProp {

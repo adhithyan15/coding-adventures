@@ -40,6 +40,24 @@ that makes `file:` safe in this position.
   null`), required because `HelperMethod` bodies are emitted as C#
   expression-bodied methods, not statement blocks — build succeeded, 0
   warnings, 0 errors.
+- **Literal-arm hardening from the security review of this fix itself.**
+  The review flagged that checking only the scheme token leaves the
+  literal arm weaker than the slot-bound arm: the same string is parsed
+  *twice*, independently, by two different parsers — this hand-rolled
+  Rust check at compile time, and .NET's own `Uri`/`UriTypeConverter`
+  again at XAML-load time. A string like `href: "http:evil"` has an
+  allowed scheme but isn't a real hierarchical URI, so a scheme-only
+  check would let it through here only for .NET's independent parse of
+  the same string to throw `UriFormatException` when the app loads —
+  trading "rejected at compile time" for "crashes on click". Since
+  `http`/`https` are hierarchical schemes (RFC 3986 §3 — a scheme with an
+  authority always has a `//`-prefixed `hier-part`), `has_allowed_uri_scheme`
+  now also requires `://` immediately after the scheme name for those
+  two; `mailto` (RFC 6068's non-hierarchical `mailto:mailbox` form, never
+  `//`-prefixed) is exempt from that specific check. No bypass of the
+  scheme allowlist itself was found by the review for either arm — this
+  closes a real-but-narrower "malformed input crashes the app instead of
+  failing the build" gap, not a scheme bypass.
 
 Checked the other 7 backend emitter crates
 (`mosaic-emit-{compose,flutter,html,qt,react,swiftui,webcomponent}`) —
@@ -51,8 +69,10 @@ codegen shape, so bundling all 7 would have made this PR much harder to
 review as a single, contained fix.
 
 Three new tests: a disallowed-scheme table (`file:///...`,
-`ms-appx-web:///...`, a UNC path, `javascript:...`, and a scheme-less
-string) all reject with `UnsafeUriScheme`; an allowed-scheme table
+`ms-appx-web:///...`, a UNC path, `javascript:...`, a scheme-less
+string, and — from the review's hardening — `http:evil` and
+`https:not-a-real-authority`, allowed scheme names with a malformed
+remainder) all reject with `UnsafeUriScheme`; an allowed-scheme table
 (`http`, `https`, `mailto`, plus a case-insensitive `HTTPS://` variant)
 all still emit `NavigateUri` unchanged; a slot-bound href binds through
 `SafeNavigateUri` and the helper itself is present in the generated
