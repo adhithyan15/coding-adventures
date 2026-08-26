@@ -2,6 +2,92 @@
 
 All notable changes to the `java-to-semantic-ir` crate will be documented in this file.
 
+## [0.12.0] - 2026-08-26
+
+### Added
+
+- Task #64: `break`/`continue` support. `Stmt::Break`/`Stmt::Continue`
+  (`semantic-ir` v0.27.0's SIR16 addendum, `Feature::LoopControl`) now
+  lower from a bare `break_statement`/`continue_statement` inside a
+  `while`/`do`-`while`/classic-`for`/enhanced-`for` body — the exact gap
+  M2a's own research first identified ("`break`/`continue` have the
+  identical gap [as `switch`]... tracked as its own backlog item").
+  `switch` itself remains fully unsupported (no SIR IR node at all yet —
+  a separate, larger design problem, still tracked as task #51).
+- Bare (unlabeled) only, matching SIR's own bare-only primitive: a
+  labeled `break foo;`/`continue foo;` is rejected cleanly
+  ("labeled ... is not supported yet (deferred)") rather than
+  mis-targeting the wrong enclosing loop — SIR v0 has no loop-label
+  vocabulary at all.
+- New `Lowerer::loop_depth: usize`, incremented/decremented around every
+  loop body's own lowering. `break`/`continue` outside any loop is
+  rejected with a Java-flavored `` `break`/`continue` outside a loop ``
+  diagnostic — the shared `semantic-ir` validator's own `loop_stack`
+  independently enforces the same rule, but this gives a clearer error
+  before ever reaching that shared, more generic check. `loop_depth` is
+  explicitly reset to `0` (save/restore) around a lambda body's own
+  lowering and a method body's own lowering, so a `break`/`continue`
+  written directly inside either can never resolve against a loop the
+  lambda/method *declaration* merely happens to be lexically nested in —
+  real Java forbids this too (`list.forEach(x -> { break; })` inside an
+  enclosing loop is a `javac` compile error, not a jump to that loop).
+
+### Fixed
+
+- **Found while wiring `continue` support, not by inspection beforehand
+  — two real, `/security-review`-caught bugs, both now-live consequences
+  of a "trailing bookkeeping statement" shape this crate's own `do`-
+  `while` and classic-`for` desugarings already used, which was
+  inert only because `continue` had no lowering to reach it with until
+  this same PR added one:**
+  - **`lower_do_while_statement`** appended its synthetic guard flag's
+    clear (`__do_while_N = false;`) to the end of the lowered body — a
+    `continue` anywhere earlier in that body (SIR's own `Stmt::Continue`
+    jumps straight to re-evaluating the loop's `cond`) skipped it
+    entirely, leaving the flag permanently `true`. Since the loop
+    condition was `flag || C`, that made the loop **run forever**
+    regardless of `C`'s real value, from the very first `continue` a
+    real Java `do`/`while` executes. Fixed by moving the flag-clear
+    *into* the condition itself (`flag ? ({ flag = false; true }) : (C)`)
+    — the one position a `continue` can never skip.
+  - **`lower_for_statement_inner`** appended the update clause (`i++`)
+    to the end of the lowered body the same way — a `continue` skipped
+    the update, so `i` never advanced on any iteration containing an
+    early `continue`. For `for (int i = 0; i < N; i++) { if (i % 2 == 0)
+    continue; ... }`, this hangs on the very first (`i == 0`) iteration,
+    not an edge case. Fixed the same way: wrap `update` into the
+    condition, gated by a one-shot `__for_first_N` "have we run the
+    first check yet" flag (`flag ? ({ flag = false; C }) : ({ update; C
+    })`) so `update` always runs on the way back into the condition,
+    including via `continue`.
+  - Both fixes are applied unconditionally (every `do`/`while`, every
+    `for` with an update clause) rather than only when the body is known
+    to contain a `continue` — mirrors `do`/`while`'s own pre-existing
+    flag-guard discipline (already applied to every `do`/`while`
+    regardless of need) rather than adding a new "does this body contain
+    a `continue` targeting *this* loop" scanner whose own correctness
+    would itself be a new thing to get right.
+  - A useful side effect of the classic-`for` fix: moving `update` out
+    of the body's own lowered `Block.stmts` and into a separate wrapped-
+    condition `Expr::Block` means `update`'s target name can no longer
+    collide with a local the body declares directly (real Java's own
+    `for`-header scope was never inside the body's scope to begin with —
+    this is actually *more* faithful to Java's real scoping than the
+    old "append to body" shape was). The collision-rejection check this
+    crate previously needed for that scenario (`for (int i = 0; ...;
+    i++) { int i = 999; ... }`) is no longer needed and has been
+    removed; that source now compiles instead of being rejected (real
+    `javac` still rejects it for its own, unrelated reason — Java's
+    `for`-header variable is in scope for the body too, a general
+    duplicate-declaration rule this frontend does not otherwise enforce).
+  - Six new `tests/loop_control_java_execution.rs` `node`-execution-proof
+    tests exercise real `continue`/`break` behavior end-to-end (Java →
+    SIR → JavaScript → `node`) via the JavaScript backend, the first to
+    accept `Feature::LoopControl` (task #62). Two are direct termination
+    regression tests for the bugs above — a reintroduction of either bug
+    would hang the affected test rather than fail it cleanly, the nature
+    of a termination-correctness regression test.
+
 ## [0.11.0] - 2026-08-26
 
 ### Added

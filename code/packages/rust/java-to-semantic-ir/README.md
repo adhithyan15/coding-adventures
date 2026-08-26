@@ -4,7 +4,7 @@ Java CST → narrow-waist Semantic IR. The first frontend for
 [SIR29](../../../specs/SIR29-nominal-static-oop-profile.md), the
 nominal/static-dispatch OOP profile extension of the SIR10 narrow-waist IR.
 See [JV02](../../../specs/JV02-java-to-semantic-ir.md) for this frontend's
-full milestone plan (M0 + M1 + M2a + M2b + M3a + M3b + M4a + M4b + M4c + M4d here, through M9; plus standalone task #54, wiring `Expr::IndirectCall`).
+full milestone plan (M0 + M1 + M2a + M2b + M3a + M3b + M4a + M4b + M4c + M4d here, through M9; plus standalone tasks #54, wiring `Expr::IndirectCall`, and #64, `break`/`continue` support).
 
 ## Where this fits
 
@@ -34,7 +34,7 @@ let module = compile_source(
 )?;
 ```
 
-## Scope (v0.11.0 — JV02 milestones M0 + M1 + M2a + M2b + M3a + M3b + M4a + M4b + M4c + M4d, plus task #54)
+## Scope (v0.12.0 — JV02 milestones M0 + M1 + M2a + M2b + M3a + M3b + M4a + M4b + M4c + M4d, plus tasks #54 and #64)
 
 Java requires an explicit `class`/`main`-method wrapper at the source level
 (unlike Ruby/Python/JS, which allow bare top-level statements) — this crate
@@ -141,12 +141,30 @@ rejection (the chained-index dispatch only fires when *every* suffix is
 `[...]`-shaped — the sub-array's own `.length` remains reachable via an
 intermediate local), and a *chained* indexed-assignment target
 (`grid[i][j] = v;`) is not reachable at all — both real, disclosed gaps,
-tracked as their own follow-up tasks. Everything else — `switch`/`break`/
-`continue` (SIR has no IR node for any of the three — confirmed by a
-repo-wide grep, not assumed — so this needs a spec-level design decision
-before any frontend can target it; note a bare `for (;;)` loop genuinely
-cannot terminate without `break`, a real and permanent limitation until
-it exists), qualified calls (`x.foo(...)`), method overloading, an early
+tracked as their own follow-up tasks. Bare (unlabeled) `break`/`continue`
+now lower to `Stmt::Break`/`Stmt::Continue` (`Feature::LoopControl`,
+task #64) inside any of `while`/`do`-`while`/classic-`for`/enhanced-`for`
+— a `Lowerer::loop_depth` counter rejects one outside any loop with a
+Java-flavored diagnostic, and is explicitly reset around a lambda body's
+or a method body's own lowering so a `break`/`continue` written directly
+inside either never resolves against an outer loop the declaration
+merely happens to be lexically nested in (real Java forbids this too). A
+labeled `break foo;`/`continue foo;` is rejected cleanly — SIR has no
+loop-label vocabulary. Wiring `continue` support surfaced two genuine,
+`/security-review`-caught non-termination bugs already latent in this
+crate's own `do`-`while` and classic-`for` desugarings (both appended a
+synthetic "bookkeeping" statement — a guard-flag clear, an update clause —
+to the very end of the lowered body, which a `continue` anywhere earlier
+would skip entirely): both are fixed by moving that bookkeeping *into*
+the loop's own condition expression instead, the one position a
+`continue` can never skip — see `CHANGELOG.md`'s `[0.12.0]` entry for the
+full before/after shapes. Everything else — `switch`
+(SIR still has no IR node for it at all — confirmed by a repo-wide grep,
+not assumed — so this needs its own spec-level design decision before
+any frontend can target it, tracked as task #51; `break`/`continue`
+themselves are supported as of task #64, see below), a labeled `break`/
+`continue` (SIR has no loop-label vocabulary at all), qualified calls
+(`x.foo(...)`), method overloading, an early
 or branched `return` (in a method *or* a lambda), untyped/`var`-inferred
 lambda parameters (Java infers these from the lambda's own target
 functional-interface type, which this frontend has no visibility into —
@@ -292,6 +310,22 @@ JV02 spec's milestone table for what comes next.
   `python3` is a toolchain other cross-language backend tests in this
   repo already depend on. Gracefully skips when `python3` is absent from
   `PATH`.
+- `tests/loop_control_java_execution.rs` (task #64): 6 `node`-execution-
+  proof tests for `break`/`continue`, mirroring `e2e_python.rs`'s own
+  "observe via `main`'s return value" harness but targeting the
+  JavaScript backend instead — as of this crate's own v0.12.0, JavaScript
+  is the only backend that accepts `Feature::LoopControl` (task #62), and
+  none of these tests use string concatenation, so JS's own
+  `StringInterpolation` gap (the reason `e2e_python.rs` picked Python)
+  doesn't apply. Covers a `while` combining both `continue` and `break`,
+  an enhanced-`for` `break`, and nested `while` loops proving `break`/
+  `continue` each target only the *innermost* enclosing loop, not an
+  outer one. Two tests are direct termination-regression tests for the
+  `do`-`while`/classic-`for` bugs `CHANGELOG.md`'s `[0.12.0]` entry
+  documents — before the fix, each hung forever rather than returning
+  the wrong answer; a reintroduction of either bug would hang the
+  corresponding test rather than fail it cleanly. Gracefully skips when
+  `node` is absent from `PATH`.
 
 ## How it fits in the stack
 

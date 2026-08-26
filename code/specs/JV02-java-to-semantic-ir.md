@@ -79,18 +79,26 @@ corresponding SIR IR node at all (confirmed by a repo-wide grep, not
 assumed) — it needs its own spec-level design decision (Java's
 fall-through semantics in particular) before any frontend can target it,
 tracked as a separate backlog item rather than folded into "M2"/"M3"
-implicitly; `break`/`continue` had the identical gap. **Update**: the
-`break`/`continue` half of this has since landed at the core-IR level —
-see [SIR16](SIR16-ir-extensions-for-python-and-javascript.md)'s "Loop
-control (addendum)" section for `Stmt::Break`/`Stmt::Continue` and
-`Feature::LoopControl` — but this frontend does not consume it yet (no
-backend accepts the feature yet either), and the crate's own classic-`for`
-desugaring (`lower_for_statement_inner`, which splices the update-clause
-statement onto the end of the loop body rather than using a dedicated
-increment slot) would need to change before a `continue` inside a classic
-`for` could be lowered safely; both are their own follow-up work. `switch`
-itself remains fully unaddressed. M5 onward, plus the standalone follow-up
-tasks split off from M4c and M4d, are pending.
+implicitly; `break`/`continue` had the identical gap. **Update**: fully
+resolved as of task #64. `Stmt::Break`/`Stmt::Continue`/`Feature::
+LoopControl` landed at the core-IR level first (see
+[SIR16](SIR16-ir-extensions-for-python-and-javascript.md)'s "Loop control
+(addendum)" section), `semantic-ir-to-javascript` became the first
+backend to accept the feature (task #62), and this frontend now lowers a
+bare `break`/`continue` inside any of `while`/`do`-`while`/classic-`for`/
+enhanced-`for` (task #64) — including fixing two genuine, `/security-
+review`-caught non-termination bugs task #64 found already latent in this
+crate's own `do`-`while` and classic-`for` desugarings (each had
+appended a synthetic bookkeeping statement — a guard-flag clear, the
+update clause — to the very end of the lowered body, which a `continue`
+anywhere earlier would skip entirely; both are fixed by moving that
+bookkeeping into the loop's own condition expression instead, the one
+position a `continue` can never skip — see `java-to-semantic-ir`'s own
+`CHANGELOG.md` `[0.12.0]` entry for the full shapes). A labeled `break`/
+`continue` remains rejected (SIR has no loop-label vocabulary at all).
+`switch` itself remains fully unaddressed — tracked as task #51. M5
+onward, plus the standalone follow-up tasks split off from M4c and M4d,
+are pending.
 
 ## Motivation
 
@@ -222,12 +230,11 @@ repo-wide grep during M2a's implementation, not assumed from reading
 the spec), and Java's `switch` fall-through semantics don't map onto
 existing IR surface the way `if`/`while` did — tracked as its own
 backlog item, not M2-blocking. `break`/`continue` had the identical gap
-at M2a time; `Stmt::Break`/`Stmt::Continue` and `Feature::LoopControl`
-have since landed at the core-IR level (see
-[SIR16](SIR16-ir-extensions-for-python-and-javascript.md)'s "Loop control
-(addendum)" section) — this frontend's own consumption of them, and the
-classic-`for` desugaring change that consumption needs first, remain
-their own follow-up, tracked separately from `switch`.
+at M2a time; fully resolved as of task #64 — see the "Implementation
+progress" note near the top of this spec for the full story (core-IR
+primitive, first backend, this frontend's own consumption plus two
+non-termination bugs fixed along the way). `switch` itself remains its
+own, separately-tracked (task #51) unresolved backlog item.
 
 **M3 — methods / calls / lambdas.** Static and instance top-level-
 function-shaped methods (still not class-nested — that's M6), calls,
@@ -438,6 +445,46 @@ now rejected outright — this crate only tracks a local's `Kind` at
 declaration time, and `Kind::Closure(idx)`'s own `idx` is load-bearing
 for a later call site's type-checking, so an unrejected reassignment
 would leave that index silently stale.
+
+**Task #64 — `break`/`continue` support.** Not a lettered milestone (a
+standalone follow-up, picked up once `semantic-ir-to-javascript` became
+the first backend to accept `Feature::LoopControl`, task #62). Closes
+M2's own disclosed gap: a bare `break_statement`/`continue_statement`
+inside a `while`/`do`-`while`/classic-`for`/enhanced-`for` body now
+lowers to `Stmt::Break`/`Stmt::Continue`. A new `Lowerer::loop_depth`
+counter rejects one outside any loop with a Java-flavored diagnostic
+(the shared `semantic-ir` validator's own `loop_stack` independently
+enforces the same rule, but this gives a clearer error first), and is
+explicitly reset to `0` around a lambda body's or a method body's own
+lowering — real Java forbids a `break`/`continue` written directly
+inside either from targeting a loop the *declaration* merely happens to
+be lexically nested in. A labeled `break foo;`/`continue foo;` is
+rejected cleanly (SIR has no loop-label vocabulary at all); `switch`
+itself remains its own separately-tracked (task #51) unresolved gap.
+**Found while wiring `continue` support, not by inspection beforehand —
+two real, `/security-review`-caught non-termination bugs**: both
+`lower_do_while_statement` and `lower_for_statement_inner` appended a
+synthetic "bookkeeping" statement (a guard-flag clear; the update
+clause) to the very end of the lowered loop body — a `continue` anywhere
+earlier in that body (SIR's own `Stmt::Continue` jumps straight to
+re-evaluating the loop's `cond`) skipped it entirely, making the loop
+run forever on the very first `continue` reached (for the classic-`for`
+case, the very first iteration, since `i == 0` is even in the
+regression test's own source). Both fixed by moving the bookkeeping
+*into* the loop's own condition expression instead — the one position a
+`continue` can never skip — mirroring the same flag-guard idiom
+`do`-`while`'s own desugaring already used, just relocated. A useful
+side effect of the classic-`for` fix: `update` no longer shares scope
+with the loop body at all (it lives in a separate wrapped-condition
+`Expr::Block` now), so the update-target/body-local shadowing collision
+this crate previously had to reject (`for (int i = 0; ...; i++) { int i
+= 999; ... }`) is now structurally impossible and no longer rejected —
+more faithful to real Java scoping than the old "append to body" shape
+was. See `java-to-semantic-ir`'s own `CHANGELOG.md` `[0.12.0]` entry for
+the full before/after shapes, and its `tests/loop_control_java_
+execution.rs` for `node`-execution-proof tests (two of which are direct
+termination-regression tests for the bugs above — a reintroduction of
+either would hang the affected test, not fail it cleanly).
 
 **M5 — statics/breadth parity groundwork.** Pulled forward from the
 original M9 slot: static field/method access patterns
