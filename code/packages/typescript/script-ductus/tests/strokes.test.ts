@@ -200,6 +200,8 @@ const ARABIC_TAA = DUCTUS[ductusKey("arabic", "ت")];
 const ARABIC_THAA = DUCTUS[ductusKey("arabic", "ث")];
 const ARABIC_JEEM = DUCTUS[ductusKey("arabic", "ج")];
 const ARABIC_HAA = DUCTUS[ductusKey("arabic", "ح")];
+const PERSIAN_HAH = DUCTUS[ductusKey("perso-arabic", "ح")];
+const URDU_BARI_HE = DUCTUS[ductusKey("urdu-nastaliq", "ح")];
 const ARABIC_KHAA = DUCTUS[ductusKey("arabic", "خ")];
 const PERSIAN_KHEH = DUCTUS[ductusKey("perso-arabic", "خ")];
 const URDU_KHE = DUCTUS[ductusKey("urdu-nastaliq", "خ")];
@@ -3915,6 +3917,20 @@ describe("handwriting ductus", () => {
     expect(Math.min(...bowl.map((point) => point.y))).toBeLessThan(
       Math.min(...head.map((point) => point.y)),
     );
+  });
+
+  it("Persian and Urdu independent ح keep separate sources for one body-first run", () => {
+    for (const letter of [PERSIAN_HAH, URDU_BARI_HE]) {
+      expect(penLifts(letter)).toBe(0);
+      expect(letter.strokes).toHaveLength(1);
+      expect(letter.strokes[0].segments).toHaveLength(2);
+      expect(letter.strokes[0].segments[0].path.at(-1)).toEqual(
+        letter.strokes[0].segments[1].path[0],
+      );
+    }
+    expect(PERSIAN_HAH.source.url).not.toBe(URDU_BARI_HE.source.url);
+    expect(PERSIAN_HAH.source.citation).toMatch(/Persian Online.*ح.*00:42.?00:46/i);
+    expect(URDU_BARI_HE.source.citation).toMatch(/Zer o Zabar.*baṛī he.*ح/i);
   });
 
   it("Arabic independent خ draws its body first, then lifts once for the upper dot", () => {
