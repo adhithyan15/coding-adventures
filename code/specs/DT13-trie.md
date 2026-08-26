@@ -362,6 +362,9 @@ behavior, a key is an exact sequence of **Unicode scalar values**:
    relying on the host call stack. Implementations may enforce an explicit,
    documented resource bound, but must not fail merely because a valid key is
    deeper than the host recursion limit.
+8. Host strings containing unmatched UTF-16 surrogates or any other non-scalar
+   edge must be rejected before a mutating operation changes the trie. Error
+   messages must not reproduce caller-supplied keys or values.
 
 Several pre-existing lanes do not yet meet every rule above, and DT13 has no
 language-neutral fixture corpus. Those gaps are tracked separately by the
@@ -380,32 +383,31 @@ def insert(trie: Trie, key: str, value: Any = True) -> Trie:
     If key already exists, updates its value.
     Time: O(len(key)).
     """
-    new_root = _insert_node(trie.root, key, value, 0)
-    old_exists = search(trie, key) is not None
+    scalars = unicode_scalars(key)
+    node = trie.root
+    path: list[tuple[TrieNode, Scalar]] = []
+    for scalar in scalars:
+        path.append((node, scalar))
+        node = node.children.get(scalar, TrieNode({}, False, None))
+
+    old_exists = node.is_end
+    replacement = TrieNode(dict(node.children), True, value)
+    for parent, scalar in reversed(path):
+        children = dict(parent.children)
+        children[scalar] = replacement
+        replacement = TrieNode(children, parent.is_end, parent.value)
+
     return Trie(
-        root=new_root,
+        root=replacement,
         word_count=trie.word_count + (0 if old_exists else 1),
     )
-
-def _insert_node(node: TrieNode, key: str, value: Any, depth: int) -> TrieNode:
-    if depth == len(key):
-        # Reached end of key — mark this node as a word endpoint
-        return TrieNode(
-            children=dict(node.children),
-            is_end=True,
-            value=value,
-        )
-    c = key[depth]
-    children = dict(node.children)
-    child = children.get(c, TrieNode({}, False, None))
-    children[c] = _insert_node(child, key, value, depth + 1)
-    return TrieNode(children=children, is_end=node.is_end, value=node.value)
 
 # ─── Search ────────────────────────────────────────────────────────────────
 
 def search(trie: Trie, key: str) -> Any | None:
     """
-    Exact match lookup. Returns value if key exists, None otherwise.
+    Exact match lookup. Returns the stored value if key exists, None otherwise.
+    Because None can itself be stored, membership decisions use contains_key.
     'app' does NOT match if only 'apple' is stored.
     Time: O(len(key)).
     """
@@ -414,12 +416,17 @@ def search(trie: Trie, key: str) -> Any | None:
         return None
     return node.value
 
+def contains_key(trie: Trie, key: str) -> bool:
+    """Return endpoint presence independently of the stored value."""
+    node = _find_node(trie.root, key)
+    return node is not None and node.is_end
+
 def _find_node(node: TrieNode | None, key: str) -> TrieNode | None:
     """Navigate to the node at the end of key's path, or None."""
-    for c in key:
-        if node is None or c not in node.children:
+    for scalar in unicode_scalars(key):
+        if node is None or scalar not in node.children:
             return None
-        node = node.children[c]
+        node = node.children[scalar]
     return node
 
 # ─── Prefix check ──────────────────────────────────────────────────────────
@@ -429,6 +436,8 @@ def starts_with(trie: Trie, prefix: str) -> bool:
     Return True if any stored key starts with prefix.
     Time: O(len(prefix)).
     """
+    if prefix == "":
+        return trie.word_count > 0
     return _find_node(trie.root, prefix) is not None
 
 # ─── Autocomplete ──────────────────────────────────────────────────────────
@@ -446,11 +455,15 @@ def words_with_prefix(trie: Trie, prefix: str) -> list[tuple[str, Any]]:
     return results
 
 def _collect_all(node: TrieNode, current: str, results: list[tuple[str, Any]]) -> None:
-    """DFS collecting all complete words in the subtree rooted at node."""
-    if node.is_end:
-        results.append((current, node.value))
-    for c, child in sorted(node.children.items()):  # sorted for deterministic order
-        _collect_all(child, current + c, results)
+    """Iterative DFS collecting complete words in scalar-numeric order."""
+    stack = [(node, current)]
+    while stack:
+        current_node, current_key = stack.pop()
+        if current_node.is_end:
+            results.append((current_key, current_node.value))
+        # Reverse push order makes the lowest scalar pop first.
+        for scalar, child in reversed(sorted(current_node.children.items())):
+            stack.append((child, current_key + scalar_to_string(scalar)))
 
 # ─── All words ──────────────────────────────────────────────────────────────
 
@@ -476,14 +489,16 @@ def longest_prefix_match(trie: Trie, string: str) -> tuple[str, Any] | None:
     Time: O(len(string)).
     """
     node = trie.root
-    last_match: tuple[str, Any] | None = None
+    last_match: tuple[str, Any] | None = (
+        ("", trie.root.value) if trie.root.is_end else None
+    )
     current = []
 
-    for c in string:
-        if c not in node.children:
+    for scalar in unicode_scalars(string):
+        if scalar not in node.children:
             break
-        node = node.children[c]
-        current.append(c)
+        node = node.children[scalar]
+        current.append(scalar_to_string(scalar))
         if node.is_end:
             last_match = ("".join(current), node.value)
 
@@ -497,36 +512,25 @@ def delete(trie: Trie, key: str) -> Trie:
     Cleans up nodes that become unreachable (no children, no is_end).
     Time: O(len(key)).
     """
-    if search(trie, key) is None:
-        return trie   # key not present; no-op
-    new_root = _delete_node(trie.root, key, 0)
-    return Trie(root=new_root or TrieNode({}, False, None),
-                word_count=trie.word_count - 1)
+    node = trie.root
+    path: list[tuple[TrieNode, Scalar]] = []
+    for scalar in unicode_scalars(key):
+        if scalar not in node.children:
+            return trie
+        path.append((node, scalar))
+        node = node.children[scalar]
+    if not node.is_end:
+        return trie
 
-def _delete_node(node: TrieNode | None, key: str, depth: int) -> TrieNode | None:
-    """
-    Return new node after deleting key[depth:].
-    Returns None if this node should be removed (no children, not an endpoint).
-    """
-    if node is None:
-        return None
-    if depth == len(key):
-        # Found the end of the key — unmark it
-        if not node.children:
-            return None  # leaf node with no other purpose → delete it
-        return TrieNode(children=node.children, is_end=False, value=None)
-    c = key[depth]
-    if c not in node.children:
-        return node  # key not found (shouldn't happen if we checked above)
-    children = dict(node.children)
-    new_child = _delete_node(children[c], key, depth + 1)
-    if new_child is None:
-        del children[c]
-    else:
-        children[c] = new_child
-    if not children and not node.is_end:
-        return None  # this node is now useless → let parent remove it
-    return TrieNode(children=children, is_end=node.is_end, value=node.value)
+    replacement = TrieNode(dict(node.children), False, None)
+    for parent, scalar in reversed(path):
+        children = dict(parent.children)
+        if not replacement.children and not replacement.is_end:
+            del children[scalar]
+        else:
+            children[scalar] = replacement
+        replacement = TrieNode(children, parent.is_end, parent.value)
+    return Trie(root=replacement, word_count=trie.word_count - 1)
 
 # ─── Word count ────────────────────────────────────────────────────────────
 
@@ -839,8 +843,8 @@ def verify_trie(trie: Trie) -> None:
 ### Test Cases
 
 ```
-1. Empty trie: search("any") → None, starts_with("") → False or True depending
-   on semantics, len == 0, all_words == [].
+1. Empty trie: search("any") → None, contains_key("any") → False,
+   starts_with("") → False, len == 0, all_words == [].
 
 2. Single insert + search: insert "hello", search("hello") → value.
    search("hell") → None. search("hellos") → None.

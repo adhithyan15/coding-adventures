@@ -59,10 +59,40 @@ void main() {
     test('supports index assignment and rejects a missing indexed lookup', () {
       final trie = Trie<int>();
       trie['answer'] = 42;
+      const sensitiveMissingKey = 'customer-secret-token';
 
       expect(trie['answer'], 42);
-      expect(() => trie['missing'], throwsStateError);
+      expect(
+        () => trie[sensitiveMissingKey],
+        throwsA(
+          isA<StateError>().having(
+            (error) => error.toString(),
+            'message',
+            isNot(contains(sensitiveMissingKey)),
+          ),
+        ),
+      );
       expect(trie.toString(), 'Trie(size: 1)');
+    });
+
+    test('rejects malformed UTF-16 without changing the trie', () {
+      final trie = Trie<int>()..insert('safe', 1);
+      final loneLeadSurrogate = String.fromCharCode(0xd800);
+      final loneTrailSurrogate = String.fromCharCode(0xdc00);
+
+      for (final invalid in [loneLeadSurrogate, loneTrailSurrogate]) {
+        expect(() => trie.insert(invalid, 2), throwsArgumentError);
+        expect(() => trie.search(invalid), throwsArgumentError);
+        expect(() => trie.containsKey(invalid), throwsArgumentError);
+        expect(() => trie[invalid], throwsArgumentError);
+        expect(() => trie.delete(invalid), throwsArgumentError);
+        expect(() => trie.startsWith(invalid), throwsArgumentError);
+        expect(() => trie.wordsWithPrefix(invalid), throwsArgumentError);
+        expect(() => trie.longestPrefixMatch(invalid), throwsArgumentError);
+        expect(trie.count, 1);
+        expect(trie.search('safe'), 1);
+        expect(trie.isValid(), isTrue);
+      }
     });
   });
 
@@ -178,6 +208,14 @@ void main() {
       expect(trie.longestPrefixMatch('unknown'), ('', 'fallback'));
       expect(trie.longestPrefixMatch('api/v1'), ('api', 'api route'));
       expect(trie.longestPrefixMatch(''), ('', 'fallback'));
+    });
+
+    test('stops scanning after the first missing scalar', () {
+      final trie = Trie<int>()..insert('api', 1);
+      final hugeMiss = 'z${List<String>.filled(1000000, 'x').join()}';
+
+      expect(trie.longestPrefixMatch(hugeMiss), isNull);
+      expect(trie.isValid(), isTrue);
     });
   });
 

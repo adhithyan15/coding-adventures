@@ -1,6 +1,20 @@
 /// One key-value endpoint returned by a [Trie].
 typedef TrieEntry<V> = (String, V);
 
+const _invalidScalarMessage =
+    'Trie input must contain only Unicode scalar values.';
+
+Iterable<int> _checkedRunes(String input) sync* {
+  for (final scalar in input.runes) {
+    if (scalar < 0 ||
+        scalar > 0x10ffff ||
+        (scalar >= 0xd800 && scalar <= 0xdfff)) {
+      throw ArgumentError(_invalidScalarMessage);
+    }
+    yield scalar;
+  }
+}
+
 /// A node in the prefix tree.
 ///
 /// The map key is a Unicode scalar value, not a UTF-16 code unit. Keeping
@@ -49,8 +63,11 @@ final class Trie<V> {
   /// The empty string is a valid key and terminates at the root. Inserting an
   /// existing endpoint does not change [count].
   void insert(String key, V value) {
+    // Validate the complete key before changing any node so malformed UTF-16
+    // cannot leave a partially inserted path behind.
+    final scalars = _checkedRunes(key).toList(growable: false);
     var node = _root;
-    for (final scalar in key.runes) {
+    for (final scalar in scalars) {
       node = node.children.putIfAbsent(scalar, _TrieNode<V>.new);
     }
 
@@ -77,7 +94,7 @@ final class Trie<V> {
   V operator [](String key) {
     final node = _findNode(key);
     if (node == null || !node.isEnd) {
-      throw StateError('Trie key not found: $key');
+      throw StateError('Trie key not found.');
     }
     return node.value as V;
   }
@@ -93,7 +110,7 @@ final class Trie<V> {
     final scalars = <int>[];
     var node = _root;
 
-    for (final scalar in key.runes) {
+    for (final scalar in _checkedRunes(key)) {
       final child = node.children[scalar];
       if (child == null) return false;
       scalars.add(scalar);
@@ -126,11 +143,17 @@ final class Trie<V> {
 
   /// All endpoints beginning with [prefix], in Unicode-scalar order.
   List<TrieEntry<V>> wordsWithPrefix(String prefix) {
-    final node = _findNode(prefix);
-    if (node == null) {
-      return List<TrieEntry<V>>.unmodifiable(<TrieEntry<V>>[]);
+    final path = <int>[];
+    var node = _root;
+    for (final scalar in _checkedRunes(prefix)) {
+      final child = node.children[scalar];
+      if (child == null) {
+        return List<TrieEntry<V>>.unmodifiable(<TrieEntry<V>>[]);
+      }
+      path.add(scalar);
+      node = child;
     }
-    return _collect(node, prefix.runes.toList(growable: true));
+    return _collect(node, path);
   }
 
   /// All endpoints in Unicode-scalar order.
@@ -146,26 +169,27 @@ final class Trie<V> {
 
   /// Return the deepest stored key that prefixes [text].
   TrieEntry<V>? longestPrefixMatch(String text) {
-    final scalars = text.runes.toList(growable: false);
+    final traversedScalars = <int>[];
     var node = _root;
     var found = node.isEnd;
     var matchedLength = 0;
     V? matchedValue = node.value;
 
-    for (var index = 0; index < scalars.length; index++) {
-      final child = node.children[scalars[index]];
+    for (final scalar in _checkedRunes(text)) {
+      final child = node.children[scalar];
       if (child == null) break;
+      traversedScalars.add(scalar);
       node = child;
       if (node.isEnd) {
         found = true;
-        matchedLength = index + 1;
+        matchedLength = traversedScalars.length;
         matchedValue = node.value;
       }
     }
 
     if (!found) return null;
     return (
-      String.fromCharCodes(scalars.take(matchedLength)),
+      String.fromCharCodes(traversedScalars.take(matchedLength)),
       matchedValue as V,
     );
   }
@@ -206,7 +230,7 @@ final class Trie<V> {
 
   _TrieNode<V>? _findNode(String key) {
     var node = _root;
-    for (final scalar in key.runes) {
+    for (final scalar in _checkedRunes(key)) {
       final child = node.children[scalar];
       if (child == null) return null;
       node = child;
