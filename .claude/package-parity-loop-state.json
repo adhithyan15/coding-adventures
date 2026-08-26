@@ -12,13 +12,13 @@
     "excluded_delivery_classes": ["onvif", "host-security-hardening", "native-runtime", "external-approval"]
   },
   "active_pr": {
-    "number": 12989,
-    "url": "https://github.com/adhithyan15/coding-adventures/pull/12989",
-    "branch": "codex/build-tool-swift-orphan-crate-validation-conformance",
+    "number": 13013,
+    "url": "https://github.com/adhithyan15/coding-adventures/pull/13013",
+    "branch": "codex/canonical-cbor-jvm-lane-parity",
     "status": "open"
   },
   "last_inventory": {
-    "revision": "4bc1649d28948a6daa609ef1f00239063a10f12b",
+    "revision": "1f62ce37805fa44a2bc00a84758ff1e11f35d7d3",
     "schema_version": 3,
     "established_languages": 15,
     "implementation_identities": 1373,
@@ -3086,6 +3086,25 @@
       "notes": "Completion umbrella for applicable Semantic IR cores, source frontends, and semantic-ir-to-* emitters after the neutral loop-control contract closes. Merged PR #12947 makes the JavaScript backend the first emitter to accept Feature::LoopControl and lower bare break/continue while preserving rejection outside loops; retain those concrete cases here without treating one backend as completion. Decompose the remaining work by frontend and backend before delivery; preserve ForRange update semantics and statement-flow boundaries, and do not infer support from ordinary Feature::Loops acceptance."
     },
     {
+      "id": "semantic-ir-emitted-identifier-encoding-language-neutral-conformance",
+      "title": "Specify injective Semantic IR emitted-identifier encoding with language-neutral fixtures",
+      "status": "pending",
+      "depends_on": [],
+      "branch": null,
+      "pr_number": null,
+      "notes": "Discovered during the final live-ownership audit while PR #13005 was open. Its seven Rust semantic-ir-to-* backends expose a portable injectivity contract that is not owned by package-directory presence or the loop-control and system-write families: reserved-marker domain separation, distinct verbatim and escaped tags, escaping the escape delimiter itself, fixed-width six-hex-digit Unicode scalar tokens, keyword and backend-identifier validity, collision cases, deterministic bounds, and stable authority-free behavior. Define a language-neutral corpus independently of the Rust reference implementation before claiming cross-backend or cross-language parity."
+    },
+    {
+      "id": "semantic-ir-emitted-identifier-encoding-applicable-consumer-parity",
+      "title": "Bring injective emitted identifiers to every applicable Semantic IR consumer",
+      "status": "pending",
+      "depends_on": ["semantic-ir-emitted-identifier-encoding-language-neutral-conformance"],
+      "branch": null,
+      "pr_number": null,
+      "selection_blocked": true,
+      "notes": "Completion umbrella for applicable Semantic IR backends after the neutral emitted-identifier contract closes. PR #13005 is the seven-backend Rust reference across C, Go, JavaScript, Python, Ruby, Rust, and TypeScript; decompose remaining applicable engines and language lanes before delivery, preserve each target's keyword and identifier grammar, and do not infer injectivity from ordinary identifier sanitization or existing package presence."
+    },
+    {
       "id": "gc-core-portable-conformance",
       "title": "Fixture and port the portable garbage-collector core",
       "status": "pending",
@@ -3201,10 +3220,21 @@
     {
       "id": "canonical-cbor-jvm-lane-parity",
       "title": "Port canonical CBOR to the Java and Kotlin lanes",
-      "status": "pending",
+      "status": "pr-open",
       "depends_on": ["canonical-cbor-language-neutral-conformance"],
-      "branch": null,
-      "pr_number": null,
+      "branch": "codex/canonical-cbor-jvm-lane-parity",
+      "pr_number": 13013,
+      "pr_url": "https://github.com/adhithyan15/coding-adventures/pull/13013",
+      "opened_at": "2026-08-26T10:36:48Z",
+      "opened_revision": "a057ff32f8630ca6dd86445410bce81d01e81f4c",
+      "selection_revision": "1f62ce37805fa44a2bc00a84758ff1e11f35d7d3",
+      "selection_notes": "Selected only after PR #12989 completed all 43 terminal acceptable checks and GitHub merged it through squash auto-merge as 1f3b85a73dde63076f584a0558d4d9019929362b without a manual merge command. Before the selection commit, the fresh branch incorporated exact origin/main 1f62ce37805fa44a2bc00a84758ff1e11f35d7d3; late merged PR #12991 remains inside the existing HTML frontend owner and changes no package identity or BUILD/build-tool marker. The collision-checked schema-3 inventory remains unchanged at 15 established lanes, 1,373 implementation identities, 4,566 package slots, 1,412 all-reported identities, 175 high-consensus packages with 276 gaps, 122 identities in five to nine lanes with 926 gaps, 166 identities in two to four lanes with 2,087 gaps, 910 singletons with 12,740 gaps, 721 Rust singletons, zero collisions, and zero unknown buckets; OCaml remains emerging at zero packages. Intervening merged PR #12986 is a human-language planning spec, #12987 extends ALGOL IIR, #12988 extends Malayalam script-ductus and human-language data, and #12990 extends Mermaid Gantt rendering; none adds a package identity or build-tool marker. All eight live PRs are already classified under Persian script-ductus, Gujarati curriculum, Mosaic generated-wrapper, ALGOL IIR, Chief native build evidence, extra-CI or build-file authority, Swift cowsay and Go validator overlap, or existing dependency owners and have zero exact overlap with the expected Java and Kotlin canonical-CBOR package, state, and roadmap paths. The neutral CBR01 corpus and three independent Rust, C, and C++ references are merged. The paired JVM item is a bounded shared-toolchain review unit that closes two explicitly prioritized established lanes and unlocks the same fourteen unfinished canonical-CBOR descendants as each single-lane sibling. The higher-descendant extra-CI corpus and strategic OCaml process-free core remain collision-unsafe while PRs #12162 and #12149 own their required Go validator and entry-point surfaces. The target local branch, remote branch, and prior PR were absent before creating the fresh exact-main worktree.",
+      "rebase_revision": "2d7bfa99226e341dee63e997d22dce50a9b57cf2",
+      "implementation_revision": "975c4391a029d57e4cc2318c39fee185d932f66a",
+      "final_review_revision": "dc90d4e66d26126b1d0bf9386455539208438410",
+      "ownership_notes": "The final paginated audit covers all eight open PRs and finds zero exact overlap with the 26 intended branch paths. PR #13009 remains inside script-ductus plus existing curriculum and human-language-data owners. PR #13011 is test-only Mosaic generated-wrapper and artifact-builder degradation evidence inside mosaic-app-bindings-generated-wrapper-review; its target-specific Checkbox, Radio, and Modal allowlists do not create a new portable or build-tool contract. PR #13012 adds deterministic source positions to unmatched HTML block-container end-tag diagnostics inside html-frontend-portable-conformance. PR #13005 is fully classified by the newly registered emitted-identifier neutral and applicable-consumer pair. The remaining older live heads stay within their prior native-authority, validator, Swift, or dependency owners.",
+      "publication_notes": "Opened ready-for-review PR #13013 from clean independently reviewed head a057ff32f8630ca6dd86445410bce81d01e81f4c after a normal first push from exact origin/main 2d7bfa99226e341dee63e997d22dce50a9b57cf2. The target remote branch and prior PR were absent before publication. All eight other open PRs had zero exact overlap across the complete 26-path diff. GitHub reports the PR non-draft and mergeable with required checks queued or in progress, so auto-merge remains disabled and the loop is monitor-only.",
+      "validation_notes": "The independent Java and Kotlin packages implement the closed CBR01 value model, checked canonical encoder, and strict decoder and consume all 55 shared canonical-cbor-v1 operations with the same 14 stable identifiers and byte-exact outcomes. Both preserve the full unsigned 64-bit domain, reject malformed UTF-16 before encoding, preflight UTF-8 and map-retention bounds before allocation, enforce shortest arguments, canonical map order and uniqueness, exact one-item decoding, depth 128, the 1,048,576-byte limit, and atomic checked append. Post-rebase gradle clean check, literal Unix BUILD, and exact Windows BUILD-content runs pass in both lanes; Java covers 268 of 276 production lines (97.10%) and Kotlin covers 224 of 228 (98.25%), above their 95% gates. Fixture, capability-taxonomy, and parity-reporter suites pass 21 tests plus 720 subtests. The Go build tool passes all tests, vet, and trimpath compilation; its exact dry plan evaluates 45 Starlark files, discovers 5,075 packages, validates the five-entry orphan ledger, and selects exactly these two packages. The prospective schema-3 inventory remains at 15 established lanes and 1,373 identities while increasing to 4,568 slots: Java 131, Kotlin 130, 175 high-consensus identities with 276 gaps, 122 in five to nine lanes with 926 gaps, 167 in two to four with 2,099 gaps, 909 singletons with 12,726 gaps, 720 Rust singletons, zero collisions, and zero unknown buckets. Java has no runtime dependency; Kotlin resolves only stdlib 2.1.20 plus transitive annotations 13.0. Diff, dependency, credential-pattern, production-authority, and independent semantic/security reviews pass. The final ownership audit registers open PR #13005 under the new neutral and applicable-consumer Semantic IR emitted-identifier owners, producing a unique, complete, acyclic 523-owner/785-edge graph with 150 merged, 372 pending, and one in-progress item.",
       "notes": "Implement CBR01 and the closed canonical-cbor-v1 corpus for the paired JVM lanes with native tests, build metadata, documentation, capability metadata, and exact cross-lane output equality."
     },
     {
@@ -5078,7 +5108,7 @@
     {
       "id": "build-tool-swift-orphan-crate-validation-conformance",
       "title": "Make the Swift build tool consume orphan-crate validation",
-      "status": "pr-open",
+      "status": "merged",
       "depends_on": [
         "build-tool-orphan-crate-validation-corpus",
         "build-tool-swift-dist-newstyle-discovery-exclusion",
@@ -5089,11 +5119,14 @@
       "pr_url": "https://github.com/adhithyan15/coding-adventures/pull/12989",
       "opened_at": "2026-08-26T09:12:23Z",
       "opened_revision": "810ec4bcec5d87a564f90cdb39e60ddd1b291c0d",
+      "final_revision": "56e153b0a4fdc70089e52509f2cbbf49eab72639",
+      "merge_revision": "1f3b85a73dde63076f584a0558d4d9019929362b",
+      "merged_at": "2026-08-26T09:44:31Z",
       "selection_revision": "4bc1649d28948a6daa609ef1f00239063a10f12b",
       "selection_notes": "Selected only after PR #12974 completed all 40 terminal acceptable checks, GitHub reported the reviewed branch clean and mergeable, and squash auto-merge merged reviewed head 47be7c15433a3548a3e36fa1da17a30f9af4c4a0 as 07eebd8125799553c3df6e97494dd437b63977be at 2026-08-26T08:11:54Z without a manual merge command. Before implementation, the branch rebased cleanly onto exact origin/main 3c442dcf16c3e0ec551b86f39d928feda6893078. Newly merged PR #12975 remains inside the Mermaid Gantt neutral and Rust lane owners, #12973 remains inside script-ductus plus curriculum and human-language-data owners, and #12976 remains inside curriculum, generated-book, and human-language-data owners. During validation, the implementation commits rebased cleanly onto exact origin/main 87c2f6564c0944d8fd47fccd041b1a9ba6e4b801; #12977 remains inside the ALGOL IIR neutral and Rust lane owners, while #12978 remains inside the deterministic HTML frontend owner. Immediately before publication, all three commits rebased without conflict onto exact origin/main 4bc1649d28948a6daa609ef1f00239063a10f12b. PR #12981 merged as 6604df1f9d inside the newly registered W24 exception pair plus the existing Wasm parser, conformance, corpus, and authority owners; PR #12982 merged as 9591aa6e44 inside script-ductus, curriculum, and human-language-data owners; PR #12980 merged as 72ccc71aa8 inside the Mosaic generated-wrapper review; and PR #12983 merged as 4bc1649d28 inside Mermaid Gantt neutral and lane owners. None changes a package identity or BUILD/build-tool marker. The refreshed collision-checked schema-3 report remains 15 established lanes, 1,373 implementation identities, 4,566 package slots, 1,412 all-reported identities, 175 high-consensus packages with 276 gaps, 122 identities in five to nine lanes with 926 gaps, 166 identities in two to four lanes with 2,087 gaps, 910 singletons with 12,740 gaps, 721 Rust singletons, zero canonical collisions, and zero unknown buckets; OCaml remains correctly emerging at zero packages. The final live publication refresh classifies PR #12985 under curriculum, generated-book, and human-language-data owners, the spec-only #12986 under human-language curriculum planning, and #12987 under ALGOL IIR neutral and Rust lane owners. The registered W24 pair does not displace Swift because its lane umbrella remains selection-blocked behind W23 while Swift is dependency-ready and solely closes the orphan-validator umbrella. None of the seven live PRs overlaps the seven selected Swift paths or changes the exact-main inventory. All three Swift prerequisites are merged. Swift covers 161 reported packages and is the only unfinished dependency of the orphan-validator completion umbrella. The expected Swift source, test, documentation, state, and roadmap paths do not overlap the newly merged work; the remote branch and prior PR remain absent. OCaml remains collision-unsafe while PRs #12149 and #12162 own required Go entry-point and validator surfaces.",
       "notes": "Consume the closed process-free orphan-crate snapshot and diagnostics in the Swift engine without adding filesystem enumeration or process authority.",
       "validation_notes": "The pure Swift adapter consumes all four shared orphan-crate fixtures and preserves exact case-sensitive artifact filtering, component-aware direct and ancestor BUILD coverage, fixed BUILD filename rank, nearer-empty nonmasking, closest-empty diagnostics, NFC/full-fold duplicate identities, full-uppercase Windows reserved basenames, exemption field precedence, stale-entry precedence, active PENDING counts, hostile-path redaction, Unicode-scalar limits and ordering, Python-compatible blank reasons, and Python-compatible lowercase ASCII JSON detail ordering including supplementary-plane surrogate escapes. A test-first compile failed on the deliberately missing OrphanSnapshot and Validator.validateOrphanCrateSnapshot API before source was added. Swift 6.3.3 then passes all 40 package tests in normal, parallel, coverage, literal Unix BUILD, and exact Windows BUILD-content modes; the optimized release build, package description, and zero-external-dependency graph all validate. LLVM coverage reports 98.21% of Validator.swift lines and 94.69% of its functions executed. The neutral corpus validates 111 cases and 269 files; the execution contract validates; and all 201 conformance tests pass with 23 expected platform skips. The Go oracle passes module verification, all package tests, vet, and trimpath compilation; its real forced Swift dry plan evaluates 45 Starlark BUILD files, validates the five-entry orphan ledger, discovers 165 Swift packages, and reports all 165 WOULD-BUILD. Reporter tests pass 10 of 10 and the refreshed schema-3 inventory remains 15 established lanes, 1,373 identities, 4,566 slots, 1,412 all-reported identities, zero collisions, and zero unknown buckets. The 521-owner, 784-edge state graph is unique, dependency-complete, acyclic, and free of merged-to-unmerged edges with 149 merged, 371 pending, and exactly one in-progress item before publication. Git diff hygiene, dependency scope, credential-pattern review, and the production-authority review pass: the new source contains no filesystem, process, environment, Git, link, credential, or network calls. The repository has no swift-format configuration and Swift 6.3.3 strict lint is already baseline-red on the exact-main versions of the three touched Swift files, so no unrelated formatter churn was introduced; all compiler diagnostics are inherited from unchanged BuildTool.swift and Executor.swift.",
-      "publication_notes": "Opened ready-for-review PR #12989 from clean independently reviewed head 810ec4bcec5d87a564f90cdb39e60ddd1b291c0d after a normal first push from exact origin/main 4bc1649d28948a6daa609ef1f00239063a10f12b. Immediately before publication, the target remote branch and prior PR were absent, all seven live PRs had zero exact overlap across the seven intended paths, the inventory and 521-owner/784-edge graph were clean, and independent semantic/security, scope, and state reviews reported no blocker. GitHub reports the PR non-draft and currently blocked only by queued or in-progress checks; auto-merge remains disabled until every required check is terminal and acceptable and no merge conflict exists."
+      "publication_notes": "Opened ready-for-review PR #12989 from clean independently reviewed head 810ec4bcec5d87a564f90cdb39e60ddd1b291c0d after a normal first push from exact origin/main 4bc1649d28948a6daa609ef1f00239063a10f12b. Immediately before publication, the target remote branch and prior PR were absent, all seven live PRs had zero exact overlap across the seven intended paths, the inventory and 521-owner/784-edge graph were clean, and independent semantic/security, scope, and state reviews reported no blocker. Final reviewed head 56e153b0a4fdc70089e52509f2cbbf49eab72639 completed all 43 reported checks with 36 successes, seven expected skips, and no failures or pending work. GitHub reported the branch clean and mergeable; the loop enabled squash auto-merge, and GitHub merged PR #12989 as 1f3b85a73dde63076f584a0558d4d9019929362b at 2026-08-26T09:44:31Z without a manual merge command."
     },
     {
       "id": "build-tool-typescript-orphan-crate-validation-conformance",
