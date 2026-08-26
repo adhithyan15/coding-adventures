@@ -20,10 +20,20 @@ argument. Also switched the illegal-character escape from unpadded
 `_{hex}` to fixed-width `_u{4-hex}_`, closing a separate hex-digit-count
 ambiguity the same review round found.
 
+**A second `/security-review` round found the marker alone still wasn't
+enough**: a *valid*, marker-prefixed name kept verbatim after the marker
+could still collide with a *different*, illegal-character name that
+happens to escape to that exact same text. Fixed by tagging the two
+marker sub-cases with distinct fixed characters (`v`/`e`) immediately
+after the marker, so they can never collide with each other regardless
+of content — see `sanitize_ident`'s own doc comment for the full
+argument.
+
 This changes the exact spelling `sanitize_ident` produces for every
-keyword/predeclared-identifier case (e.g. `"func"` now sanitizes to
-`"sir_esc_func"`, not `"func_"`) — a deliberate, disclosed behavior
-change: the old spellings were exactly the ones proven to collide.
+keyword/predeclared-identifier/invalid-character case (e.g. `"func"` now
+sanitizes to `"sir_esc_vfunc"`, not `"func_"`) — a deliberate, disclosed
+behavior change: the old spellings were exactly the ones proven to
+collide.
 
 ## 0.42.0 — SIR23 Tier A pattern matcher (second-wave backend rollout, Phase A Slice 4)
 

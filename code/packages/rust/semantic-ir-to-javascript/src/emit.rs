@@ -1994,6 +1994,21 @@ fn emit_block_as_stmts(out: &mut String, b: &Block, indent: usize) {
 /// exists and what it guarantees.
 const ESCAPE_MARKER: &str = "_$sir_esc_";
 
+/// Tag immediately following [`ESCAPE_MARKER`] for a valid, non-reserved
+/// name kept verbatim only because it merely starts with the marker —
+/// `is_valid_js_ident` already excludes reserved words itself, so a
+/// reserved word always takes [`TAG_ESCAPED`]'s branch instead, never
+/// this one (see `sanitize_ident`'s own doc-comment table). Distinct
+/// from `TAG_ESCAPED` so the two escaped sub-cases can never collide
+/// with each other.
+const TAG_VERBATIM: &str = "v";
+
+/// Tag immediately following [`ESCAPE_MARKER`] for a reserved word or a
+/// name containing an illegal character (both run through per-character
+/// escaping — a no-op on an all-legal reserved word), or the empty-input
+/// sentinel.
+const TAG_ESCAPED: &str = "e";
+
 /// Sanitize a SIR identifier for JavaScript.
 ///
 /// JavaScript identifiers match `[A-Za-z_$][A-Za-z0-9_$]*` and must not
@@ -2001,12 +2016,12 @@ const ESCAPE_MARKER: &str = "_$sir_esc_";
 /// etc. (Lisp/Ruby conventions), so we rewrite anything that does not
 /// fit:
 ///
-/// | input        | output               | rule |
-/// |--------------|----------------------|------|
-/// | `hello`      | `hello`              | already valid → unchanged |
-/// | `class`      | `_$sir_esc_class`    | reserved word → marker prefix |
-/// | `null?`      | `_$sir_esc_null_u003f_` | invalid char → marker + hex-encoded |
-/// | `""` (empty) | `_$sir_esc_empty`    | empty → sentinel |
+/// | input        | output                      | rule |
+/// |--------------|------------------------------|------|
+/// | `hello`      | `hello`                      | already valid → unchanged |
+/// | `class`      | `_$sir_esc_eclass`           | reserved word → marker + escaped tag (`is_valid_js_ident` itself excludes reserved words, so a reserved word always takes this branch, not the verbatim one — see below) |
+/// | `null?`      | `_$sir_esc_enull_u003f_`     | invalid char → marker + escaped tag + hex-encoded |
+/// | `""` (empty) | `_$sir_esc_e`                | empty → sentinel |
 ///
 /// # Injectivity — why this is more than "escape illegal chars"
 ///
@@ -2027,17 +2042,26 @@ const ESCAPE_MARKER: &str = "_$sir_esc_";
 /// marker is *itself* routed into the escaped case rather than allowed
 /// to pass through — so passthrough output can never start with the
 /// marker, and non-passthrough output always does.
+///
+/// **A second `/security-review` round found this alone was still not
+/// enough**: a *valid*, marker-prefixed name kept verbatim after the
+/// marker could still collide with a *different*, illegal-character
+/// name that happens to per-character-escape to that exact same text.
+/// The fix: [`TAG_VERBATIM`] and [`TAG_ESCAPED`] are two fixed, distinct
+/// single characters immediately after the marker, one per sub-case, so
+/// they can never collide with each other regardless of content.
 pub fn sanitize_ident(s: &str) -> String {
     if s.is_empty() {
-        return format!("{ESCAPE_MARKER}empty");
+        return format!("{ESCAPE_MARKER}{TAG_ESCAPED}");
     }
     if is_valid_js_ident(s) && !s.starts_with(ESCAPE_MARKER) {
         return s.to_string();
     }
     if is_valid_js_ident(s) {
-        return format!("{ESCAPE_MARKER}{s}");
+        return format!("{ESCAPE_MARKER}{TAG_VERBATIM}{s}");
     }
     let mut out = String::from(ESCAPE_MARKER);
+    out.push_str(TAG_ESCAPED);
     for ch in s.chars() {
         if ch.is_ascii_alphanumeric() || ch == '_' || ch == '$' {
             out.push(ch);
@@ -2200,7 +2224,7 @@ mod tests {
 
     #[test]
     fn sanitize_empty_ident_returns_sentinel() {
-        assert_eq!(sanitize_ident(""), "_$sir_esc_empty");
+        assert_eq!(sanitize_ident(""), "_$sir_esc_e");
     }
 
     #[test]
@@ -2213,7 +2237,11 @@ mod tests {
 
     #[test]
     fn sanitize_avoids_reserved_words() {
-        assert_eq!(sanitize_ident("class"), "_$sir_esc_class");
+        // `is_valid_js_ident` already excludes reserved words itself, so
+        // they always take the escaped-tag branch (a no-op escape on an
+        // all-legal word), never the verbatim-tag one — see
+        // `TAG_VERBATIM`'s own doc comment.
+        assert_eq!(sanitize_ident("class"), "_$sir_esc_eclass");
         assert!(sanitize_ident("function").starts_with("_$"));
         assert!(sanitize_ident("await").starts_with("_$"));
     }
@@ -2235,9 +2263,27 @@ mod tests {
 
     #[test]
     fn sanitize_ident_never_lets_a_raw_name_pass_through_as_the_escape_marker_itself() {
-        let escaped_keyword = sanitize_ident("class"); // "_$sir_esc_class"
+        let escaped_keyword = sanitize_ident("class"); // "_$sir_esc_eclass"
         assert_ne!(sanitize_ident(&escaped_keyword), escaped_keyword);
         assert!(sanitize_ident(&escaped_keyword).starts_with("_$"));
+    }
+
+    #[test]
+    fn sanitize_ident_is_injective_across_the_verbatim_vs_escaped_collision_this_backend_previously_had(
+    ) {
+        // A SECOND `/security-review` round found the marker alone
+        // wasn't enough: a marker-prefixed-but-otherwise-legal name kept
+        // verbatim could still collide with an illegal-character name
+        // that happens to escape to that exact same text. The fix (see
+        // `sanitize_ident`'s own doc comment) tags the two sub-cases
+        // with distinct fixed characters so they can never collide.
+        let verbatim_side = "_$sir_esc_null_u003f_";
+        let escaped_side = "_$sir_esc_null?";
+        assert_ne!(sanitize_ident(verbatim_side), sanitize_ident(escaped_side));
+        assert_eq!(
+            sanitize_ident(verbatim_side),
+            "_$sir_esc_v_$sir_esc_null_u003f_"
+        );
     }
 
     #[test]

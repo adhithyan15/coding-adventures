@@ -20,10 +20,24 @@ argument. Also switched the illegal-character escape from unpadded
 `_{hex}` to fixed-width `_u{4-hex}_`, closing a separate hex-digit-count
 ambiguity the same review round found.
 
+**A second `/security-review` round found the marker alone still wasn't
+enough**: the *previous* version of this function computed the escaped
+body first, unconditionally, then only decided whether to add the
+marker based on the *result* — so a genuinely invalid input (illegal
+character) whose escaped form didn't happen to need a marker was
+returned completely unmarked, colliding with an ordinary raw name of
+that same spelling (e.g. `sanitize_ident("a$")` and
+`sanitize_ident("a_u0024_")` both used to produce `"a_u0024_"`). Fixed
+by restructuring the function to check validity *before* escaping, and
+tagging the two marker sub-cases with distinct fixed characters (`v`/
+`e`) so they can never collide with each other — see `sanitize_ident`'s
+own doc comment for the full argument.
+
 This changes the exact spelling `sanitize_ident` produces for every
-keyword/reserved-macro/reserved-name case (e.g. `"int"` now sanitizes
-to `"sir_esc_int"`, not `"int_"`) — a deliberate, disclosed behavior
-change: the old spellings were exactly the ones proven to collide.
+keyword/reserved-macro/reserved-name/invalid-character case (e.g.
+`"int"` now sanitizes to `"sir_esc_vint"`, not `"int_"`) — a deliberate,
+disclosed behavior change: the old spellings were exactly the ones
+proven to collide.
 
 ## 0.42.0 — SIR23 Tier A pattern matcher (Phase A Slice 4, second-wave backend rollout)
 

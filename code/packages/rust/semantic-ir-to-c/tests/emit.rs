@@ -439,13 +439,17 @@ fn collection_array_reverse_shares_the_slice1_string_name() {
 fn sanitize_ident_maps_into_c() {
     assert_eq!(sanitize_ident("foo"), "foo");
     assert_eq!(sanitize_ident("foo_bar1"), "foo_bar1");
-    // C keywords get the reserved marker prepended (task #65: a bare
-    // trailing underscore used to collide with an ordinary name of the
-    // exact same shape -- see `sanitize_ident`'s own doc comment).
-    assert_eq!(sanitize_ident("int"), "sir_esc_int");
-    assert_eq!(sanitize_ident("return"), "sir_esc_return");
-    // Non-identifier characters are escaped, never passed through.
-    assert!(sanitize_ident("a-b").starts_with('a'));
+    // C keywords get the reserved marker + verbatim tag prepended (task
+    // #65: a bare trailing underscore used to collide with an ordinary
+    // name of the exact same shape -- see `sanitize_ident`'s own doc
+    // comment).
+    assert_eq!(sanitize_ident("int"), "sir_esc_vint");
+    assert_eq!(sanitize_ident("return"), "sir_esc_vreturn");
+    // Non-identifier characters are escaped and always marker-tagged
+    // (task #65 round 2: an earlier version left an escaped-but-not-
+    // otherwise-flagged result unmarked, reopening the same collision
+    // one level deeper -- see `sanitize_ident`'s own doc comment).
+    assert!(sanitize_ident("a-b").starts_with("sir_esc_e"));
     assert!(sanitize_ident("a-b").contains("_u"));
     // The runtime namespace is kept clear.
     assert!(sanitize_ident("_sir_plus").starts_with("sir_esc_"));
@@ -470,7 +474,23 @@ fn sanitize_ident_is_injective_across_the_keyword_collision_this_backend_previou
 
 #[test]
 fn sanitize_ident_never_lets_a_raw_name_pass_through_as_the_escape_marker_itself() {
-    let escaped_keyword = sanitize_ident("int"); // "sir_esc_int"
+    let escaped_keyword = sanitize_ident("int"); // "sir_esc_vint"
     assert_ne!(sanitize_ident(&escaped_keyword), escaped_keyword);
     assert!(sanitize_ident(&escaped_keyword).starts_with("sir_esc_"));
+}
+
+#[test]
+fn sanitize_ident_is_injective_across_the_verbatim_vs_escaped_collision_this_backend_previously_had(
+) {
+    // A SECOND `/security-review` round found the marker alone wasn't
+    // enough: the previous version computed the escaped body *first,
+    // unconditionally*, then only added the marker if the RESULT needed
+    // one -- so an illegal-character input whose escaped form didn't
+    // happen to need a marker was returned completely unmarked,
+    // colliding with an ordinary raw name of that same spelling. The fix
+    // (see `sanitize_ident`'s own doc comment) checks validity before
+    // escaping, so escaping always ends up marker-tagged.
+    assert_ne!(sanitize_ident("a$"), sanitize_ident("a_u0024_"));
+    assert_eq!(sanitize_ident("a_u0024_"), "a_u0024_");
+    assert_eq!(sanitize_ident("a$"), "sir_esc_ea_u0024_");
 }

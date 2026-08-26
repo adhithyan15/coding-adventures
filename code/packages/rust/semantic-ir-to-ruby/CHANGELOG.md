@@ -22,10 +22,24 @@ any raw name that already starts with that marker is itself routed into
 the escaped case rather than allowed to pass through. See
 `sanitize_ident`'s own doc comment for the full argument.
 
+**A second `/security-review` round found the marker alone still wasn't
+enough**: the *previous* version of this function computed the escaped
+body first, unconditionally, then only decided whether to add the
+marker based on the *result* — so a genuinely invalid input (illegal
+character) whose escaped form didn't happen to need a marker was
+returned completely unmarked, colliding with an ordinary raw name of
+that same spelling (e.g. `sanitize_ident("a$")` and
+`sanitize_ident("a_u0024_")` both used to produce `"a_u0024_"`). Fixed
+by restructuring the function to check validity *before* escaping, and
+tagging the two marker sub-cases with distinct fixed characters (`v`/
+`e`) so they can never collide with each other — see `sanitize_ident`'s
+own doc comment for the full argument.
+
 This changes the exact spelling `sanitize_ident` produces for every
-uppercase/keyword/`sir_`-namespace case (e.g. `"Foo"` now sanitizes to
-`"sir_esc_Foo"`, not `"_Foo"`) — a deliberate, disclosed behavior
-change: the old spellings were exactly the ones proven to collide.
+uppercase/keyword/`sir_`-namespace/invalid-character case (e.g. `"Foo"`
+now sanitizes to `"sir_esc_vFoo"`, not `"_Foo"`) — a deliberate,
+disclosed behavior change: the old spellings were exactly the ones
+proven to collide.
 
 ## 0.27.1 — Security fix: depth cap on SIR23 rule-pattern matching
 

@@ -20,10 +20,19 @@ argument. Also switched the illegal-character escape from unpadded
 `_{hex}` to fixed-width `_u{4-hex}_`, closing a separate hex-digit-count
 ambiguity the same review round found.
 
+**A second `/security-review` round found the marker alone still wasn't
+enough**: mirrors `semantic-ir-to-javascript` v0.54.1's identical
+follow-up finding — a valid, marker-prefixed name kept verbatim after
+the marker could still collide with a different, illegal-character name
+that happens to escape to that exact same text. Fixed by tagging the two
+marker sub-cases with distinct fixed characters (`v`/`e`) immediately
+after the marker.
+
 This changes the exact spelling `sanitize_ident` produces for every
 reserved-word/invalid-character case (e.g. `"class"` now sanitizes to
-`"_$sir_esc_class"`, not `"_$class"`) — a deliberate, disclosed behavior
-change: the old spellings were exactly the ones proven to collide.
+`"_$sir_esc_eclass"`, not `"_$class"`) — a deliberate, disclosed
+behavior change: the old spellings were exactly the ones proven to
+collide.
 
 ## 0.14.0 — SIR21 T3b-2 Slice 2: `div_floor`/`div_trunc`/`udiv_trunc`/`div_true`
 

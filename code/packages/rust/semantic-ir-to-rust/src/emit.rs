@@ -2836,6 +2836,18 @@ fn emit_float_literal(out: &mut String, value: f64) {
 /// why this exists and what it guarantees.
 const ESCAPE_MARKER: &str = "__sir_esc_";
 
+/// Tag immediately following [`ESCAPE_MARKER`] for a name kept verbatim
+/// (`self`/`Self`/`super`/`crate`, or a valid name that merely starts
+/// with the marker). Distinct from [`TAG_ESCAPED`] so the two escaped
+/// sub-cases can never collide with each other — see `sanitize_ident`'s
+/// own doc comment.
+const TAG_VERBATIM: &str = "v";
+
+/// Tag immediately following [`ESCAPE_MARKER`] for a name run through
+/// per-character escaping (contains an illegal character), or the
+/// empty-input sentinel.
+const TAG_ESCAPED: &str = "e";
+
 /// Sanitize a SIR identifier for Rust.
 ///
 /// SIR names can include `?`, `!`, `-`, `+`, `*`, etc.  Rust
@@ -2858,15 +2870,27 @@ const ESCAPE_MARKER: &str = "__sir_esc_";
 /// with no error anywhere in the pipeline. (The `r#`-prefixed branch
 /// was already safe on its own: `#` is illegal in a Rust identifier, so
 /// no raw name containing it can ever reach the passthrough case to
-/// collide with it.)
+/// collide with it, and no other branch's output ever contains `#`
+/// either.)
 ///
 /// The fix excludes any raw name that already starts with
 /// [`ESCAPE_MARKER`] from the passthrough case too, so the fallback
 /// branch's output (always `ESCAPE_MARKER`-prefixed) can never collide
 /// with an ordinary passthrough name.
+///
+/// **A second `/security-review` round found this alone was still not
+/// enough**: within the fallback branch, "keep verbatim" (`self`/
+/// `Self`/`super`/`crate`, or a marker-prefixed-but-otherwise-legal
+/// name) and "escape it" (a name with an illegal character) are two
+/// different sub-cases whose outputs still weren't disjoint from each
+/// other. The fix: [`TAG_VERBATIM`] and [`TAG_ESCAPED`] are two fixed,
+/// distinct single characters immediately after the marker, one per
+/// sub-case, so they can never collide with each other regardless of
+/// content — see `semantic-ir-to-python::sanitize_ident`'s own doc
+/// comment for the concrete before/after example this mirrors.
 pub fn sanitize_ident(s: &str) -> String {
     if s.is_empty() {
-        return format!("{ESCAPE_MARKER}empty");
+        return format!("{ESCAPE_MARKER}{TAG_ESCAPED}");
     }
     if is_valid_rust_ident(s) && !is_rust_keyword(s) && !s.starts_with(ESCAPE_MARKER) {
         return s.to_string();
@@ -2881,11 +2905,12 @@ pub fn sanitize_ident(s: &str) -> String {
         // `Self` / `super` / `crate`), or a valid-but-marker-prefixed
         // name — either way every character is already legal, so no
         // further per-character escaping is needed.
-        return format!("{ESCAPE_MARKER}{s}");
+        return format!("{ESCAPE_MARKER}{TAG_VERBATIM}{s}");
     }
     // Not a valid identifier shape at all — hex-encode the illegal
     // characters.
     let mut out = String::from(ESCAPE_MARKER);
+    out.push_str(TAG_ESCAPED);
     for ch in s.chars() {
         if ch.is_ascii_alphanumeric() || ch == '_' {
             out.push(ch);
@@ -3058,11 +3083,11 @@ mod tests {
 
         // `self`/`Self`/`super`/`crate` cannot be raw identifiers (rustc
         // rejects `r#self` etc. outright), so they must fall back to the
-        // marker-encoded form instead of `r#`.
-        assert_eq!(sanitize_ident("self"), "__sir_esc_self");
-        assert_eq!(sanitize_ident("Self"), "__sir_esc_Self");
-        assert_eq!(sanitize_ident("super"), "__sir_esc_super");
-        assert_eq!(sanitize_ident("crate"), "__sir_esc_crate");
+        // marker + verbatim-tag encoded form instead of `r#`.
+        assert_eq!(sanitize_ident("self"), "__sir_esc_vself");
+        assert_eq!(sanitize_ident("Self"), "__sir_esc_vSelf");
+        assert_eq!(sanitize_ident("super"), "__sir_esc_vsuper");
+        assert_eq!(sanitize_ident("crate"), "__sir_esc_vcrate");
 
         // Ordinary identifiers — including close look-alikes — are
         // unaffected by the addition.
@@ -3077,13 +3102,13 @@ mod tests {
     #[test]
     fn sanitize_rewrites_invalid_chars() {
         let r = sanitize_ident("null?");
-        assert!(r.starts_with("__sir_esc_"));
+        assert!(r.starts_with("__sir_esc_e"));
         assert!(r.contains("null"));
     }
 
     #[test]
     fn sanitize_empty_returns_safe_sentinel() {
-        assert_eq!(sanitize_ident(""), "__sir_esc_empty");
+        assert_eq!(sanitize_ident(""), "__sir_esc_e");
     }
 
     #[test]
@@ -3105,8 +3130,26 @@ mod tests {
     }
 
     #[test]
+    fn sanitize_ident_is_injective_across_the_verbatim_vs_escaped_collision_this_backend_previously_had(
+    ) {
+        // A SECOND `/security-review` round found the marker alone
+        // wasn't enough: within the fallback branch, "keep verbatim"
+        // and "escape it" are different sub-cases whose outputs still
+        // weren't disjoint from each other. The fix (see
+        // `sanitize_ident`'s own doc comment) tags the two sub-cases
+        // with distinct fixed characters so they can never collide.
+        let verbatim_side = "__sir_esc__u0024_";
+        let escaped_side = "__sir_esc_$";
+        assert_ne!(sanitize_ident(verbatim_side), sanitize_ident(escaped_side));
+        assert_eq!(
+            sanitize_ident(verbatim_side),
+            "__sir_esc_v__sir_esc__u0024_"
+        );
+    }
+
+    #[test]
     fn sanitize_ident_never_lets_a_raw_name_pass_through_as_the_escape_marker_itself() {
-        let escaped_keyword = sanitize_ident("self"); // "__sir_esc_self"
+        let escaped_keyword = sanitize_ident("self"); // "__sir_esc_vself"
         assert_ne!(sanitize_ident(&escaped_keyword), escaped_keyword);
         assert!(sanitize_ident(&escaped_keyword).starts_with("__sir_esc_"));
     }

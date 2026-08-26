@@ -3331,6 +3331,20 @@ fn f64_c_literal(value: f64) -> String {
 /// exists and what it guarantees.
 const ESCAPE_MARKER: &str = "sir_esc_";
 
+/// Tag immediately following [`ESCAPE_MARKER`] for a name kept verbatim
+/// (a keyword, a reserved macro/name, or a valid name that merely starts
+/// with the marker/`_sir`). Distinct from [`TAG_ESCAPED`] so the two
+/// escaped sub-cases can never collide with each other — see
+/// `sanitize_ident`'s own doc comment.
+const TAG_VERBATIM: &str = "v";
+
+/// Tag immediately following [`ESCAPE_MARKER`] for a name run through
+/// [`escape_body`] (contains an illegal character or a leading digit),
+/// or the empty-input sentinel (`escape_body("")` is itself `""`, so
+/// this tag alone, followed by nothing, uniquely signals the empty
+/// case).
+const TAG_ESCAPED: &str = "e";
+
 /// Map a SIR identifier into a valid C identifier: non-`[A-Za-z0-9_]` chars are
 /// escaped, a leading digit is escaped, and C keywords / reserved macros /
 /// this backend's own reserved names get [`ESCAPE_MARKER`] prepended.
@@ -3351,10 +3365,67 @@ const ESCAPE_MARKER: &str = "sir_esc_";
 /// reserved macro, this backend's own reserved names, or already
 /// starting with the marker) gets [`ESCAPE_MARKER`] prepended, so
 /// non-passthrough output always starts with it and passthrough output
-/// never does. Two names in different branches can therefore never
-/// collide.
+/// never does.
+///
+/// **A second `/security-review` round found this alone was still not
+/// enough**, the same way it wasn't for `semantic-ir-to-python`/`-ruby`:
+/// the previous version computed the escaped body *first,
+/// unconditionally*, then only decided whether to add the marker based
+/// on the *result* — so a genuinely invalid input (illegal character)
+/// whose escaped form didn't happen to need a marker was returned
+/// completely unmarked, colliding with an ordinary raw name of that same
+/// spelling. The fix restructures the decision to check validity
+/// *before* escaping, and tags the two marker sub-cases with distinct
+/// fixed characters ([`TAG_VERBATIM`]/[`TAG_ESCAPED`]) so they can never
+/// collide with each other regardless of content — see
+/// `semantic-ir-to-python::sanitize_ident`'s own doc comment for the
+/// concrete before/after example this mirrors.
 pub fn sanitize_ident(s: &str) -> String {
-    let mut out = String::new();
+    if is_valid_c_ident(s) && !needs_marker(s) && !s.starts_with(ESCAPE_MARKER) {
+        return s.to_string();
+    }
+    if is_valid_c_ident(s) {
+        return format!("{ESCAPE_MARKER}{TAG_VERBATIM}{s}");
+    }
+    format!("{ESCAPE_MARKER}{TAG_ESCAPED}{}", escape_body(s))
+}
+
+/// A syntactically legal, non-empty C identifier shape: ASCII
+/// alphanumeric or `_`, first character not a digit. Does not check
+/// keyword/reserved-macro/reserved-name status — that's [`needs_marker`]'s
+/// job, checked only once this returns `true`.
+fn is_valid_c_ident(s: &str) -> bool {
+    if s.is_empty() {
+        return false;
+    }
+    s.chars()
+        .enumerate()
+        .all(|(i, ch)| (ch.is_ascii_alphanumeric() || ch == '_') && !(i == 0 && ch.is_ascii_digit()))
+}
+
+/// Whether a syntactically-valid C identifier still needs the escape
+/// marker: a C keyword, a reserved platform macro (`min`/`max`), this
+/// backend's own reserved names, or already starting with the runtime's
+/// `_sir` namespace.
+fn needs_marker(s: &str) -> bool {
+    is_c_keyword(s)
+        || is_reserved_macro(s)
+        || s.starts_with("_sir")
+        || s == "main"
+        || s == "user_main"
+        || s == "sir_user_init"
+}
+
+/// Per-character encoding for a name containing at least one illegal
+/// character or a leading digit: legal characters (ASCII alphanumeric or
+/// `_`, except a leading digit) pass through verbatim; everything else
+/// becomes `_u{XXXX}_` — its Unicode codepoint as at least four,
+/// zero-padded lowercase hex digits, bracketed by underscores. Only ever
+/// called by [`sanitize_ident`] on a name [`is_valid_c_ident`] has
+/// already rejected, so its own output always ends up
+/// [`ESCAPE_MARKER`]/[`TAG_ESCAPED`]-prefixed — never returned bare.
+fn escape_body(s: &str) -> String {
+    let mut out = String::with_capacity(s.len() + 4);
     for (i, ch) in s.chars().enumerate() {
         let ok = ch.is_ascii_alphanumeric() || ch == '_';
         if ok && !(i == 0 && ch.is_ascii_digit()) {
@@ -3362,19 +3433,6 @@ pub fn sanitize_ident(s: &str) -> String {
         } else {
             let _ = write!(out, "_u{:04x}_", ch as u32);
         }
-    }
-    if out.is_empty() {
-        out.push('_');
-    }
-    let needs_marker = is_c_keyword(&out)
-        || is_reserved_macro(&out)
-        || out.starts_with(ESCAPE_MARKER)
-        || out.starts_with("_sir")
-        || out == "main"
-        || out == "user_main"
-        || out == "sir_user_init";
-    if needs_marker {
-        out = format!("{ESCAPE_MARKER}{out}");
     }
     out
 }

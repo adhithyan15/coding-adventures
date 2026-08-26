@@ -22,10 +22,23 @@ corrected argument. Also switched the illegal-character escape from
 unpadded `_{hex}` to fixed-width `_u{4-hex}_`, closing a separate
 hex-digit-count ambiguity the same review round found.
 
+**A second `/security-review` round found the marker alone still wasn't
+enough**: a valid, marker-prefixed name kept verbatim after the marker
+could still collide with a different, illegal-character name that
+happens to escape to that exact same text. Fixed by tagging the two
+marker sub-cases with distinct fixed characters (`v`/`e`) immediately
+after the marker, so they can never collide with each other regardless
+of content — see `sanitize_ident`'s own doc comment for the full
+argument. (Since `is_valid_js_ident` already excludes reserved words
+itself, a reserved word always takes the escaped-tag branch, never the
+verbatim one — the tag distinguishes *how* something gets marker-
+prefixed, not *why*.)
+
 This changes the exact spelling `sanitize_ident` produces for every
 reserved-word/invalid-character case (e.g. `"class"` now sanitizes to
-`"_$sir_esc_class"`, not `"_$class"`) — a deliberate, disclosed behavior
-change: the old spellings were exactly the ones proven to collide.
+`"_$sir_esc_eclass"`, not `"_$class"`) — a deliberate, disclosed
+behavior change: the old spellings were exactly the ones proven to
+collide.
 
 ## 0.54.0 — SIR16 addendum Slice 1: `Feature::LoopControl` (`break`/`continue`)
 

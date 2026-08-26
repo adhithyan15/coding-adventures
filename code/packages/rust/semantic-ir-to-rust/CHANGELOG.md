@@ -24,9 +24,21 @@ switched the illegal-character escape from unpadded `_{hex}` to
 fixed-width `_u{4-hex}_`, closing a separate hex-digit-count ambiguity
 the same review round found.
 
+**A second `/security-review` round found the marker alone still wasn't
+enough**: within the fallback branch, "keep verbatim" (`self`/`Self`/
+`super`/`crate`, or a marker-prefixed-but-otherwise-legal name) and
+"escape it" (an illegal-character name) are two different sub-cases
+whose outputs still weren't disjoint from each other. Fixed by tagging
+the two sub-cases with distinct fixed characters (`v`/`e`) immediately
+after the marker, so they can never collide with each other regardless
+of content — see `sanitize_ident`'s own doc comment for the full
+argument. (The separate `r#`-prefixed branch for ordinary keywords
+remains disjoint from both, since `#` never appears in either sub-case's
+output.)
+
 This changes the exact spelling `sanitize_ident` produces for
 `self`/`Self`/`super`/`crate` and every invalid-character case (e.g.
-`"self"` now sanitizes to `"__sir_esc_self"`, not `"__self"`) — a
+`"self"` now sanitizes to `"__sir_esc_vself"`, not `"__self"`) — a
 deliberate, disclosed behavior change: the old spellings were exactly
 the ones proven to collide. The `r#`-based keyword raw-identifier
 spellings (`"fn"` -> `"r#fn"`) are unchanged.

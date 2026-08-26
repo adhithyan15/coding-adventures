@@ -24,9 +24,22 @@ the same review round found (see `escape_body`'s own doc comment for
 what this closes and the narrower, lower-severity residual gap that
 remains, tracked separately).
 
+**A second `/security-review` round found the marker alone still wasn't
+enough**: within the marker-prefixed branch, "keep verbatim" (a keyword,
+or a marker-prefixed-but-otherwise-legal name) and "escape it" (a name
+with an illegal character) are two different sub-cases whose outputs
+still weren't disjoint from each other — e.g. the perfectly ordinary,
+marker-prefixed, all-legal name `sir_esc__u0024_` and the illegal-
+character name `sir_esc_$` both used to sanitize to the identical
+`sir_esc_sir_esc__u0024_`, reopening the exact bug class one level
+deeper. Fixed by tagging the two sub-cases with distinct fixed
+characters (`v`/`e`) immediately after the marker, so they can never
+collide with each other regardless of content — see `sanitize_ident`'s
+own doc comment for the full argument.
+
 This changes the exact spelling `sanitize_ident` produces for every
 keyword/reserved/invalid-character case (e.g. `"class"` now sanitizes to
-`"sir_esc_class"`, not `"class_"`) — a deliberate, disclosed behavior
+`"sir_esc_vclass"`, not `"class_"`) — a deliberate, disclosed behavior
 change, not a bug: the old spellings were exactly the ones proven to
 collide. Nothing in this backend's own emitted-code *shape* changes
 otherwise (still valid, still readable Python), only which exact

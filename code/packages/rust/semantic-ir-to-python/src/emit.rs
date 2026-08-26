@@ -2653,6 +2653,18 @@ fn indent_str(level: usize) -> String {
 /// exists and what it guarantees.
 const ESCAPE_MARKER: &str = "sir_esc_";
 
+/// Tag immediately following [`ESCAPE_MARKER`] for a name kept verbatim
+/// (a keyword, or a valid name that merely starts with the marker).
+/// Distinct from [`TAG_ESCAPED`] so the two escaped sub-cases can never
+/// collide with each other — see `sanitize_ident`'s own doc comment.
+const TAG_VERBATIM: &str = "v";
+
+/// Tag immediately following [`ESCAPE_MARKER`] for a name run through
+/// [`escape_body`] (contains an illegal character), or the empty-input
+/// sentinel (`escape_body("")` is itself `""`, so this tag alone,
+/// followed by nothing, uniquely signals the empty case).
+const TAG_ESCAPED: &str = "e";
+
 /// Turn an arbitrary SIR identifier into a legal, non-colliding Python
 /// identifier.
 ///
@@ -2677,18 +2689,29 @@ const ESCAPE_MARKER: &str = "sir_esc_";
 /// Two names in different branches can therefore never collide — this is
 /// what closes the specific, demonstrated bug above: an escaped name can
 /// never again be silently reinterpreted as somebody else's ordinary
-/// passthrough name. Within the escaped branch, the output is always
-/// `ESCAPE_MARKER` immediately followed by either the original name
-/// verbatim (for a keyword or a marker-prefixed-but-otherwise-valid
-/// name — trivially injective, since prefix-concatenation of the literal
-/// name can't collide with a *different* literal name), or, for a name
-/// containing an actual illegal character, [`escape_body`]'s per-
-/// character encoding — see that function's own doc comment for the
-/// (narrower, lower-severity, and separately tracked) residual gap that
-/// remains there.
+/// passthrough name.
+///
+/// **A second `/security-review` round found this alone was still not
+/// enough**: within the marker-prefixed branch, "keep the name verbatim"
+/// (for a keyword or a marker-prefixed-but-otherwise-valid name) and
+/// "escape it" (for a name with an illegal character) are two genuinely
+/// different sub-cases whose *outputs* still weren't disjoint from each
+/// other — e.g. the perfectly ordinary, marker-prefixed, all-legal name
+/// `sir_esc__u0024_` and the illegal-character name `sir_esc_$` both
+/// sanitized to the identical `sir_esc_sir_esc__u0024_`, reopening the
+/// exact bug class one level deeper. The fix: [`TAG_VERBATIM`] and
+/// [`TAG_ESCAPED`] are two fixed, distinct single characters immediately
+/// after the marker, one per sub-case — since they're fixed and
+/// distinct, `TAG_VERBATIM + s1` can never equal `TAG_ESCAPED +
+/// escape_body(s2)` for *any* `s1`/`s2`, closing the collision by
+/// construction the same way the outer marker closes the passthrough-
+/// vs-escaped one. The empty-input sentinel reuses `TAG_ESCAPED` with an
+/// empty body (`escape_body("")` is itself `""`, and no *non-empty*
+/// invalid name can ever produce an empty `escape_body` output, so this
+/// stays unambiguous too).
 pub fn sanitize_ident(s: &str) -> String {
     if s.is_empty() {
-        return format!("{ESCAPE_MARKER}empty");
+        return format!("{ESCAPE_MARKER}{TAG_ESCAPED}");
     }
     if is_valid_py_ident(s) && !is_python_keyword(s) && !s.starts_with(ESCAPE_MARKER) {
         return s.to_string();
@@ -2696,20 +2719,23 @@ pub fn sanitize_ident(s: &str) -> String {
     if is_valid_py_ident(s) {
         // A real Python keyword, or a valid-but-marker-prefixed name —
         // either way every character is already legal, so no further
-        // per-character escaping is needed; the marker alone disambiguates.
-        return format!("{ESCAPE_MARKER}{s}");
+        // per-character escaping is needed; the marker + tag alone
+        // disambiguates.
+        return format!("{ESCAPE_MARKER}{TAG_VERBATIM}{s}");
     }
-    format!("{ESCAPE_MARKER}{}", escape_body(s))
+    format!("{ESCAPE_MARKER}{TAG_ESCAPED}{}", escape_body(s))
 }
 
 /// Per-character encoding used by every backend's `sanitize_ident` for
 /// the "contains characters illegal in the target language" case: legal
 /// characters (ASCII alphanumeric or `_`) pass through verbatim; every
 /// other character becomes `_u{XXXX}_` — its Unicode codepoint as
-/// **exactly four**, zero-padded lowercase hex digits, bracketed by
-/// underscores on both sides.
+/// **at least four**, zero-padded lowercase hex digits (`{:04x}` pads up
+/// to, but never truncates, so a codepoint above U+FFFF — reachable,
+/// since the parameter is `char` — widens to 5 or 6 digits), bracketed
+/// by underscores on both sides.
 ///
-/// # Why fixed width, not the previous variable-width `_{:x}`
+/// # Why zero-padded, not the previous unpadded `_{:x}`
 ///
 /// The same `/security-review` round that found the keyword collision
 /// above also found this encoding was separately non-injective: with an
@@ -2718,9 +2744,11 @@ pub fn sanitize_ident(s: &str) -> String {
 /// through hex-digit-count ambiguity (e.g. escaping U+0001 immediately
 /// followed by the literal digit `'1'` produces the same three
 /// characters `_11` as escaping the single codepoint U+0011). Padding to
-/// a fixed 4 hex digits closes that specific ambiguity: every escape
-/// token is now a fixed 7-character run, so two inputs that differ only
-/// in *how* a given codepoint got escaped can no longer collide.
+/// *at least* 4 hex digits, with a trailing `_` closing every escape
+/// token, closes that specific ambiguity: two inputs that differ only in
+/// *how* a given codepoint got escaped can no longer collide, since a
+/// shorter token's closing `_` always lands on a position a longer
+/// token still has an actual hex digit.
 ///
 /// This does **not** make the encoding fully injective in general — a
 /// deliberately adversarial input containing both an illegal character
@@ -2866,11 +2894,11 @@ mod tests {
     #[test]
     fn sanitize_idents() {
         assert_eq!(sanitize_ident("hello"), "hello");
-        assert_eq!(sanitize_ident("def"), "sir_esc_def");
-        assert_eq!(sanitize_ident("class"), "sir_esc_class");
-        assert_eq!(sanitize_ident(""), "sir_esc_empty");
+        assert_eq!(sanitize_ident("def"), "sir_esc_vdef");
+        assert_eq!(sanitize_ident("class"), "sir_esc_vclass");
+        assert_eq!(sanitize_ident(""), "sir_esc_e");
         let r = sanitize_ident("null?");
-        assert!(r.starts_with("sir_esc_"));
+        assert!(r.starts_with("sir_esc_e"));
         assert!(r.contains("null"));
     }
 
@@ -2882,9 +2910,9 @@ mod tests {
         // `type` were missing.
         assert!(is_python_keyword("_"));
         assert!(is_python_keyword("type"));
-        assert!(sanitize_ident("_").starts_with("sir_esc_"));
-        assert_eq!(sanitize_ident("_"), "sir_esc__");
-        assert_eq!(sanitize_ident("type"), "sir_esc_type");
+        assert!(sanitize_ident("_").starts_with("sir_esc_v"));
+        assert_eq!(sanitize_ident("_"), "sir_esc_v_");
+        assert_eq!(sanitize_ident("type"), "sir_esc_vtype");
 
         // Ordinary identifiers — including close look-alikes — are
         // unaffected by the addition.
@@ -2905,7 +2933,7 @@ mod tests {
         // fix (see `sanitize_ident`'s own doc comment) makes the two
         // outputs provably different.
         assert_ne!(sanitize_ident("lambda"), sanitize_ident("lambda_"));
-        assert_eq!(sanitize_ident("lambda"), "sir_esc_lambda");
+        assert_eq!(sanitize_ident("lambda"), "sir_esc_vlambda");
         assert_eq!(sanitize_ident("lambda_"), "lambda_");
     }
 
@@ -2914,9 +2942,34 @@ mod tests {
         // A raw name that already starts with the reserved marker must
         // not be allowed to pass through unchanged -- otherwise it could
         // collide with the escaped form of some other name.
-        let escaped_keyword = sanitize_ident("class"); // "sir_esc_class"
+        let escaped_keyword = sanitize_ident("class"); // "sir_esc_vclass"
         assert_ne!(sanitize_ident(&escaped_keyword), escaped_keyword);
         assert!(sanitize_ident(&escaped_keyword).starts_with("sir_esc_"));
+    }
+
+    #[test]
+    fn sanitize_ident_is_injective_across_the_verbatim_vs_escaped_collision_this_backend_previously_had(
+    ) {
+        // A SECOND `/security-review` round, on the fix above, found the
+        // marker alone wasn't enough: within the marker-prefixed branch,
+        // "keep verbatim" (a marker-prefixed-but-otherwise-legal name)
+        // and "escape it" (a name with an illegal character) are
+        // different sub-cases whose outputs still weren't disjoint from
+        // each other. `sanitize_ident("sir_esc__u0024_")` (an entirely
+        // ordinary, all-legal name that happens to start with the
+        // marker) and `sanitize_ident("sir_esc_$")` (an illegal-
+        // character name) used to both sanitize to the identical
+        // `"sir_esc_sir_esc__u0024_"`. The fix (see `sanitize_ident`'s
+        // own doc comment) tags the two sub-cases with distinct fixed
+        // characters (`TAG_VERBATIM`/`TAG_ESCAPED`) so they can never
+        // collide regardless of content.
+        let verbatim_side = "sir_esc__u0024_";
+        let escaped_side = "sir_esc_$";
+        assert_ne!(sanitize_ident(verbatim_side), sanitize_ident(escaped_side));
+        assert_eq!(
+            sanitize_ident(verbatim_side),
+            "sir_esc_vsir_esc__u0024_"
+        );
     }
 
     #[test]

@@ -2016,6 +2016,18 @@ fn emit_float_literal(out: &mut String, value: f64) {
 /// exists and what it guarantees.
 const ESCAPE_MARKER: &str = "sir_esc_";
 
+/// Tag immediately following [`ESCAPE_MARKER`] for a name kept verbatim
+/// (a keyword, a builtin, or a valid name that merely starts with the
+/// marker). Distinct from [`TAG_ESCAPED`] so the two escaped sub-cases
+/// can never collide with each other — see `sanitize_ident`'s own doc
+/// comment.
+const TAG_VERBATIM: &str = "v";
+
+/// Tag immediately following [`ESCAPE_MARKER`] for a name run through
+/// per-character escaping (contains an illegal character), or the
+/// empty-input sentinel.
+const TAG_ESCAPED: &str = "e";
+
 /// Sanitize a SIR identifier for Go.
 ///
 /// Go identifiers match `[A-Za-z_][A-Za-z0-9_]*`.
@@ -2035,11 +2047,21 @@ const ESCAPE_MARKER: &str = "sir_esc_";
 /// builtin, invalid syntax, or a name that already starts with the
 /// marker) is prefixed with [`ESCAPE_MARKER`], and any raw name that
 /// already starts with that marker is *itself* routed into the escaped
-/// case rather than allowed to pass through. Two names in different
-/// branches can therefore never collide.
+/// case rather than allowed to pass through.
+///
+/// **A second `/security-review` round found this alone was still not
+/// enough**, the same way it wasn't for `semantic-ir-to-python`: a
+/// *valid*, marker-prefixed name kept verbatim after the marker could
+/// still collide with a *different*, illegal-character name that
+/// happens to per-character-escape to that exact same text. The fix:
+/// [`TAG_VERBATIM`] and [`TAG_ESCAPED`] are two fixed, distinct single
+/// characters immediately after the marker, one per sub-case, so they
+/// can never collide with each other regardless of content — see
+/// `semantic-ir-to-python::sanitize_ident`'s own doc comment for the
+/// concrete before/after example this mirrors.
 pub fn sanitize_ident(s: &str) -> String {
     if s.is_empty() {
-        return format!("{ESCAPE_MARKER}empty");
+        return format!("{ESCAPE_MARKER}{TAG_ESCAPED}");
     }
     if is_valid_go_ident(s)
         && !is_go_keyword(s)
@@ -2049,9 +2071,10 @@ pub fn sanitize_ident(s: &str) -> String {
         return s.to_string();
     }
     if is_valid_go_ident(s) {
-        return format!("{ESCAPE_MARKER}{s}");
+        return format!("{ESCAPE_MARKER}{TAG_VERBATIM}{s}");
     }
     let mut out = String::from(ESCAPE_MARKER);
+    out.push_str(TAG_ESCAPED);
     for ch in s.chars() {
         if ch.is_ascii_alphanumeric() || ch == '_' {
             out.push(ch);
@@ -2200,13 +2223,13 @@ mod tests {
     #[test]
     fn sanitize_idents() {
         assert_eq!(sanitize_ident("hello"), "hello");
-        assert_eq!(sanitize_ident(""), "sir_esc_empty");
-        assert_eq!(sanitize_ident("func"), "sir_esc_func");
-        assert_eq!(sanitize_ident("type"), "sir_esc_type");
-        assert_eq!(sanitize_ident("int"), "sir_esc_int"); // builtin predeclared
-        assert_eq!(sanitize_ident("print"), "sir_esc_print"); // predeclared
+        assert_eq!(sanitize_ident(""), "sir_esc_e");
+        assert_eq!(sanitize_ident("func"), "sir_esc_vfunc");
+        assert_eq!(sanitize_ident("type"), "sir_esc_vtype");
+        assert_eq!(sanitize_ident("int"), "sir_esc_vint"); // builtin predeclared
+        assert_eq!(sanitize_ident("print"), "sir_esc_vprint"); // predeclared
         let r = sanitize_ident("null?");
-        assert!(r.starts_with("sir_esc_"));
+        assert!(r.starts_with("sir_esc_e"));
         assert!(r.contains("null"));
     }
 
@@ -2225,9 +2248,24 @@ mod tests {
 
     #[test]
     fn sanitize_ident_never_lets_a_raw_name_pass_through_as_the_escape_marker_itself() {
-        let escaped_keyword = sanitize_ident("func"); // "sir_esc_func"
+        let escaped_keyword = sanitize_ident("func"); // "sir_esc_vfunc"
         assert_ne!(sanitize_ident(&escaped_keyword), escaped_keyword);
         assert!(sanitize_ident(&escaped_keyword).starts_with("sir_esc_"));
+    }
+
+    #[test]
+    fn sanitize_ident_is_injective_across_the_verbatim_vs_escaped_collision_this_backend_previously_had(
+    ) {
+        // A SECOND `/security-review` round found the marker alone
+        // wasn't enough: a marker-prefixed-but-otherwise-legal name kept
+        // verbatim could still collide with an illegal-character name
+        // that happens to escape to that exact same text. The fix (see
+        // `sanitize_ident`'s own doc comment) tags the two sub-cases
+        // with distinct fixed characters so they can never collide.
+        let verbatim_side = "sir_esc__u0024_";
+        let escaped_side = "sir_esc_$";
+        assert_ne!(sanitize_ident(verbatim_side), sanitize_ident(escaped_side));
+        assert_eq!(sanitize_ident(verbatim_side), "sir_esc_vsir_esc__u0024_");
     }
 
     #[test]

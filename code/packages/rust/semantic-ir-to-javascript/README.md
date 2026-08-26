@@ -586,9 +586,9 @@ reserved words. SIR names can carry `?`, `!`, `-`, `+`, etc., so
 | input        | output                    | rule                                    |
 |--------------|---------------------------|------------------------------------------|
 | `hello`      | `hello`                   | already valid → unchanged                |
-| `class`      | `_$sir_esc_class`         | reserved word → marker prefix            |
-| `null?`      | `_$sir_esc_null_u003f_`   | invalid char → marker + hex-encoded      |
-| `""` (empty) | `_$sir_esc_empty`         | empty → sentinel                         |
+| `class`      | `_$sir_esc_eclass`        | reserved word → marker + escaped tag     |
+| `null?`      | `_$sir_esc_enull_u003f_`  | invalid char → marker + escaped tag + hex-encoded |
+| `""` (empty) | `_$sir_esc_e`             | empty → sentinel                         |
 
 The `_$sir_esc_` marker guarantees a legal leading character. It also
 guarantees **injectivity**, not just avoiding "avoids collisions between
@@ -601,8 +601,14 @@ aliasing two distinct SIR locals onto one JavaScript variable. The fix:
 any raw name that already starts with the marker is *itself* routed
 into the escaped case rather than allowed to pass through, so
 passthrough output can never start with the marker and escaped output
-always does — the two output sets are disjoint by construction. See
-`sanitize_ident`'s own doc comment for the full argument.
+always does. A SECOND review round found the marker alone still wasn't
+enough — a valid, marker-prefixed name kept verbatim could collide with
+an unrelated illegal-character name that happens to escape to the exact
+same text — so every marker-prefixed output also carries one more fixed
+tag character (`v` for "kept verbatim", `e` for "ran through per-
+character escaping") immediately after the marker, making the two
+sub-cases disjoint from each other too. See `sanitize_ident`'s own doc
+comment for the full argument.
 
 ## Tests
 
