@@ -1,5 +1,45 @@
 # Changelog
 
+## 0.54.0 — SIR16 addendum Slice 1: `Feature::LoopControl` (`break`/`continue`)
+
+First backend to accept `Feature::LoopControl` (`semantic-ir` v0.27.0's new
+`Stmt::Break`/`Stmt::Continue` — see the SIR16 spec's "Loop control
+(addendum)" section). Chosen as the first target because this backend's
+`While`/`ForEach` lowering already emits a real, inline native loop with
+no closure boundary in the way, and its native `try`/`catch` is also
+closure-free — unlike e.g. `semantic-ir-to-rust`'s `catch_unwind`-closure-
+based `TryCatch` lowering (tracked separately, spawned-task
+`task_2e6d74fe`), so no extra validator interaction was needed for this
+specific backend.
+
+- `Feature::LoopControl` added to `ACCEPTED_FEATURES`.
+- `Stmt::Break`/`Stmt::Continue` now emit a bare `break;`/`continue;`
+  (the panic-stub compile-compat arm from `semantic-ir` v0.27.0's own
+  landing PR is gone).
+- **Found while adding the first real consumer of this feature, not by
+  inspection beforehand**: `Stmt::ExprStmt { expr: Expr::If { .. } }` (a
+  bare `if` used as a statement, its value always discarded) was
+  previously routed through `Expr::If`'s generic value-producing codegen
+  — a ternary wrapping each branch in an arrow-function IIFE so it could
+  `return` a value. `if (cond) { break; }` inside a `while` is the single
+  most common way real source code uses `break`/`continue` at all, and a
+  bare `break`/`continue` cannot cross a JS function boundary — so every
+  such program was a `node` `SyntaxError: Illegal break/continue
+  statement`, not a hypothetical edge case. Fixed by special-casing
+  `Stmt::ExprStmt`'s own `Expr::If` case to emit a real native
+  `if (...) { … } else { … }` statement (no IIFE) — strictly correct
+  since the value was already being discarded either way, so this is
+  also a general codegen-quality improvement independent of
+  `LoopControl`. Full existing test suite (336 tests, including two new
+  `node`-execution-proof tests exercising a `while`+`continue`+`break`
+  loop and a `for`-`each`+`break` loop) stayed green after the fix — the
+  IIFE path was never load-bearing for any other case.
+- `ForRange` is deliberately NOT wired here: the validator itself already
+  refuses `Break`/`Continue` whose nearest enclosing loop is a
+  `ForRange`, for reasons that hold regardless of backend (see
+  `Feature::LoopControl`'s own doc comment), so this backend never needs
+  to reason about that case.
+
 ## 0.53.0 — SIR21 T3b-2 Slice 2: `div_floor`/`div_trunc`/`udiv_trunc`/`div_true`
 
 Additive-only: adds the four new division builtin names from SIR21 T3b-2
