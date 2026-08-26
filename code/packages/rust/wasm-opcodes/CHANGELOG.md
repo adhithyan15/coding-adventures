@@ -2,6 +2,23 @@
 
 All notable changes to this package will be documented in this file.
 
+## [0.2.56] - 2026-08-25 - W21: exceptions proposal, tag/throw first slice
+
+### Added
+
+- `throw` (`0x08`, immediate: `["tagidx"]`, a plain LEB128 index decoded
+  identically to `funcidx`/`localidx`/etc.) and `try_table` (`0x1F`, no
+  generic immediates modeled — its blocktype + variable-length
+  catch-clause list is decoded explicitly by `wasm-execution`/
+  `wasm-wast-parser`, the same "single-byte opcode, custom immediate
+  shape" precedent `ref.null`/`0xD0` already established). Both real
+  exceptions-proposal opcodes, live-fetched and confirmed against
+  `WebAssembly/exception-handling`'s own `Exceptions.md`. `throw_ref`
+  (`0x0A`) and the 4 `catch`/`catch_ref`/`catch_all`/`catch_all_ref`
+  clause-kind bytes are NOT opcode-table entries (they're immediates of
+  `try_table`, not standalone opcodes) — see `code/specs/
+  W21-wasm-exceptions-tag-throw-slice.md`.
+
 ## [0.2.55] - 2026-08-25 - Relaxed SIMD epic PR6: i16x8/i32x4.relaxed_dot_i8x16_i7x16_s/_add_s
 
 ### Added

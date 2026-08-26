@@ -270,6 +270,18 @@ fn encode_import(import: &Import) -> Result<Vec<u8>, WasmEncodeError> {
         (ExternalKind::Global, ImportTypeInfo::Global(global_type)) => {
             bytes.extend(encode_global_type(global_type));
         }
+        // W21 (exceptions proposal): a tag's own "type" immediate IS just a
+        // type-section index, encoded identically to a function import's
+        // (`encode_u32`, no wrapper type) -- see `encode_import`'s own
+        // `ImportTypeInfo::Tag` doc comment for why this crate isn't
+        // actually exercised by this repo's `wasm-wast-parser`-driven
+        // corpus pipeline; this arm exists so the workspace keeps
+        // compiling now that `ExternalKind`/`ImportTypeInfo` both gained a
+        // `Tag` variant, per this repo's own "run `cargo build
+        // --workspace`" lesson.
+        (ExternalKind::Tag, ImportTypeInfo::Tag(type_index)) => {
+            bytes.extend(encode_u32(*type_index));
+        }
         (ExternalKind::Function, _) => {
             return Err(WasmEncodeError::new(
                 "function imports require a function type index",
@@ -288,6 +300,11 @@ fn encode_import(import: &Import) -> Result<Vec<u8>, WasmEncodeError> {
         (ExternalKind::Global, _) => {
             return Err(WasmEncodeError::new(
                 "global imports require GlobalType metadata",
+            ));
+        }
+        (ExternalKind::Tag, _) => {
+            return Err(WasmEncodeError::new(
+                "tag imports require a type index (ImportTypeInfo::Tag)",
             ));
         }
     }

@@ -2,6 +2,64 @@
 
 All notable changes to this package will be documented in this file.
 
+## [0.9.65] - 2026-08-25 (Exceptions proposal, first slice W21: tag/throw real conformance)
+
+### Added
+
+- `throw` (`0x08`): unconditionally raises an uncaught WASM exception --
+  this repo implements no catch-clause matching (see `try_table` below),
+  so every `throw` propagates all the way out to the top-level
+  `call_function` caller, exactly like any other trap already does via
+  `?`-based `Result` propagation.
+- `try_table` (`0x1F`): a near-verbatim copy of `block` (`0x02`)'s own
+  execution handler -- pushes a `Label`, closes on the matching `end`.
+  Its catch-clause list is decoded and DISCARDED by `decode_function_body`
+  (never retained), so an exception (or an ordinary trap) raised inside
+  its body propagates straight through uncaught -- the real spec's own
+  defined behavior for "no catch clause matched," which is ALWAYS true
+  here since this slice never looks for a match. `build_control_flow_map`
+  treats `0x1F` as an opener alongside `0x02..=0x04` so its matching `end`
+  resolves the same way.
+- `TrapError.is_exception: bool` (new field, defaults `false` via the
+  existing `TrapError::new` constructor) and `TrapError::exception(msg)`
+  (sets it `true`) -- distinguishes an uncaught WASM **exception** from an
+  ordinary trap, a real spec distinction (`try_table` never catches a
+  trap, only an exception) `wasm-conformance`'s `assert_exception`/
+  `assert_trap` grading now depends on.
+- `EXCEPTION_SENTINEL` + `vm_error_to_trap_error`: `VMError`
+  (`virtual-machine`, a generic cross-language-frontend shared type) has
+  no room for a real boolean flag, so `is_exception` is round-tripped
+  through the message string itself via a sentinel prefix, recovered at
+  the one place a `VMError` crosses back into this crate's own public
+  `Result<_, TrapError>` API for a top-level `call_function`.
+- `"tagidx"` recognized as a generic immediate kind in `decode_immediates`
+  (plain LEB128 index, same shape as `funcidx`/`localidx`/etc.), backing
+  `throw`'s decode.
+
+### Security
+
+- Security review found `decode_function_body`'s new `try_table`
+  catch-clause decode loop trusted the attacker-controlled `catch_count`
+  LEB128 immediate alone (up to ~4.3 billion), with no bound tied to the
+  function body's real remaining byte count -- a ~10-byte truncated body
+  naming a huge count could spin the loop billions of times before ever
+  reaching `decode_leb_u32`'s own silent past-the-end default. Fixed:
+  the loop now breaks the moment real bytes run out, bounding total cost
+  by the body's actual length, never by the fabricated count -- same
+  discipline `wasm-validator`'s sibling `0x1F` decode already had for
+  free (its `decode_idx` errors on truncation instead of defaulting).
+  New regression test proves a wildly-large `catch_count` over a
+  truncated body completes instantly rather than hanging.
+- Hardened `vm_error_to_trap_error`'s `EXCEPTION_SENTINEL` recovery to
+  anchor on the sentinel appearing immediately after `VMError::
+  GenericError`'s own fixed `"Error: "` `Display` prefix (`.strip_prefix`
+  chained), not a generic `.contains`/`.split_once` search anywhere in
+  the message -- eliminates any theoretical future risk of a message
+  that merely contains the sentinel substring elsewhere being
+  misclassified as an exception.
+
+See `code/specs/W21-wasm-exceptions-tag-throw-slice.md`.
+
 ## [0.9.64] - 2026-08-25 (GC epic, first slice W20: real i31ref box/unbox semantics + i31.get_u)
 
 ### Fixed

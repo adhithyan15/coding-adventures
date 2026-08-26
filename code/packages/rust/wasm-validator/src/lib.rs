@@ -202,6 +202,14 @@ pub fn validate(module: &WasmModule) -> Result<ValidatedModule, ValidationError>
         .iter()
         .filter(|i| i.kind == ExternalKind::Global)
         .count();
+    // W21 (exceptions proposal): tags, same "imports first, then
+    // module-defined, in declaration order" combined index-space
+    // convention as every other kind above.
+    let imported_tags = module
+        .imports
+        .iter()
+        .filter(|i| i.kind == ExternalKind::Tag)
+        .count();
 
     // ── Check 1: Memory count ≤ MAX_MEMORIES ───────────────────────────
     //
@@ -346,6 +354,32 @@ pub fn validate(module: &WasmModule) -> Result<ValidatedModule, ValidationError>
                 )));
             }
         }
+        // W21 (exceptions proposal): a tag import's type index must be in
+        // bounds, AND (a real spec rule, not this repo's own invention --
+        // `tag.wast`'s own two "non-empty tag result type" assert_invalid
+        // cases probe exactly this) the referenced function type's
+        // `results` must be empty. `grade_assert_invalid` only checks that
+        // SOME rejection happens, never the message text, so the exact
+        // wording here is not corpus-load-bearing -- still worded
+        // precisely for a real reader/future maintainer.
+        if let ImportTypeInfo::Tag(type_idx) = &imp.type_info {
+            let ty = module.types.get(*type_idx as usize).ok_or_else(|| {
+                ValidationError::TypeIndexOutOfBounds(format!(
+                    "import #{} ({}.{}) (tag) references type index {}, but only {} types exist",
+                    i,
+                    imp.module_name,
+                    imp.name,
+                    type_idx,
+                    module.types.len()
+                ))
+            })?;
+            if !ty.results.is_empty() {
+                return Err(ValidationError::Other(format!(
+                    "import #{} ({}.{}) (tag): non-empty tag result type",
+                    i, imp.module_name, imp.name
+                )));
+            }
+        }
     }
 
     // ── Check 4: Function type indices ──────────────────────────────────
@@ -356,6 +390,27 @@ pub fn validate(module: &WasmModule) -> Result<ValidatedModule, ValidationError>
                 i,
                 type_idx,
                 module.types.len()
+            )));
+        }
+    }
+
+    // ── Check 4b: Tag type indices, and "tag result type must be empty" ─
+    //
+    // W21 (exceptions proposal): mirrors Check 4 above for module-defined
+    // tags (`module.tags: Vec<u32>`, type indices only, imports handled by
+    // Check 3 above), plus the same non-empty-result-type rule.
+    for (i, &type_idx) in module.tags.iter().enumerate() {
+        let ty = module.types.get(type_idx as usize).ok_or_else(|| {
+            ValidationError::TypeIndexOutOfBounds(format!(
+                "tag #{} references type index {}, but only {} types exist",
+                i,
+                type_idx,
+                module.types.len()
+            ))
+        })?;
+        if !ty.results.is_empty() {
+            return Err(ValidationError::Other(format!(
+                "tag #{i}: non-empty tag result type"
             )));
         }
     }
@@ -383,6 +438,8 @@ pub fn validate(module: &WasmModule) -> Result<ValidatedModule, ValidationError>
     // ── Check 7: Export indices ─────────────────────────────────────────
     let total_functions = imported_functions + module.functions.len();
     let total_globals = imported_globals + module.globals.len();
+    // W21 (exceptions proposal): same combined-index-space convention.
+    let total_tags = imported_tags + module.tags.len();
 
     for exp in &module.exports {
         match exp.kind {
@@ -415,6 +472,14 @@ pub fn validate(module: &WasmModule) -> Result<ValidatedModule, ValidationError>
                     return Err(ValidationError::Other(format!(
                         "export \"{}\" references global index {}, but only {} globals exist",
                         exp.name, exp.index, total_globals
+                    )));
+                }
+            }
+            ExternalKind::Tag => {
+                if (exp.index as usize) >= total_tags {
+                    return Err(ValidationError::Other(format!(
+                        "export \"{}\" references tag index {}, but only {} tags exist",
+                        exp.name, exp.index, total_tags
                     )));
                 }
             }

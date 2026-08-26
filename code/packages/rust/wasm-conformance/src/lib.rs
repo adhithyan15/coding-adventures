@@ -87,6 +87,7 @@ fn directive_kind(d: &Directive) -> DirectiveKind {
         Directive::AssertInvalid { .. } => DirectiveKind::AssertInvalid,
         Directive::AssertMalformed { .. } => DirectiveKind::AssertMalformed,
         Directive::AssertUnlinkable { .. } => DirectiveKind::AssertUnlinkable,
+        Directive::AssertException { .. } => DirectiveKind::AssertException,
     }
 }
 
@@ -344,6 +345,7 @@ impl Executor {
                 Ok(_) => DirectiveOutcome::Pass,
                 Err(ActionError::NotYetSupported(m)) => DirectiveOutcome::NotYetSupported(m),
                 Err(ActionError::Trap(m)) => DirectiveOutcome::Trap(m),
+                Err(ActionError::Exception(m)) => DirectiveOutcome::Trap(m),
             },
 
             Directive::AssertReturn { action, expected } => match self.run_action(&action) {
@@ -368,6 +370,12 @@ impl Executor {
                 }
                 Err(ActionError::NotYetSupported(m)) => DirectiveOutcome::NotYetSupported(m),
                 Err(ActionError::Trap(m)) => DirectiveOutcome::Fail(format!("expected a return value but action trapped: {m}")),
+                // W21: an uncaught WASM exception is just as much "not a
+                // return value" as an ordinary trap is -- same Fail shape,
+                // distinct wording so a reader can tell which happened.
+                Err(ActionError::Exception(m)) => {
+                    DirectiveOutcome::Fail(format!("expected a return value but action raised an uncaught exception: {m}"))
+                }
             },
 
             Directive::AssertTrap { action, .. } => match self.run_action(&action) {
@@ -378,6 +386,13 @@ impl Executor {
                 // string formatting, not conformance.
                 Ok(_) => DirectiveOutcome::Fail("expected a trap, action returned normally".to_string()),
                 Err(ActionError::Trap(_)) => DirectiveOutcome::Pass,
+                // W21: a trap and an uncaught exception are different
+                // outcomes per the real spec (`try_table` never catches a
+                // trap, only an exception) -- `assert_trap` must not
+                // accept an exception in place of a real trap.
+                Err(ActionError::Exception(m)) => {
+                    DirectiveOutcome::Fail(format!("expected a trap, action raised an uncaught exception instead: {m}"))
+                }
                 Err(ActionError::NotYetSupported(m)) => DirectiveOutcome::NotYetSupported(m),
             },
 
@@ -391,12 +406,30 @@ impl Executor {
             Directive::AssertExhaustion { action, .. } => match self.run_action(&action) {
                 Ok(_) => DirectiveOutcome::Fail("expected exhaustion, action returned normally".to_string()),
                 Err(ActionError::Trap(_)) => DirectiveOutcome::Pass,
+                Err(ActionError::Exception(m)) => {
+                    DirectiveOutcome::Fail(format!("expected exhaustion, action raised an uncaught exception instead: {m}"))
+                }
                 Err(ActionError::NotYetSupported(m)) => DirectiveOutcome::NotYetSupported(m),
             },
 
             Directive::AssertInvalid { module, .. } => self.grade_assert_invalid(module),
             Directive::AssertMalformed { module, .. } => self.grade_assert_malformed(module),
             Directive::AssertUnlinkable { module, .. } => self.grade_assert_unlinkable(module),
+
+            // W21 (exceptions proposal): `assert_exception` passes ONLY on
+            // a real uncaught exception -- neither a normal return NOR an
+            // ordinary trap satisfies it (see `ActionError::Exception`'s
+            // own doc comment for why the two are graded as genuinely
+            // different outcomes, not interchangeable "something went
+            // wrong" signals).
+            Directive::AssertException { action } => match self.run_action(&action) {
+                Ok(_) => DirectiveOutcome::Fail("expected an uncaught exception, action returned normally".to_string()),
+                Err(ActionError::Exception(_)) => DirectiveOutcome::Pass,
+                Err(ActionError::Trap(m)) => {
+                    DirectiveOutcome::Fail(format!("expected an uncaught exception, action trapped instead (ordinary trap, not an exception): {m}"))
+                }
+                Err(ActionError::NotYetSupported(m)) => DirectiveOutcome::NotYetSupported(m),
+            },
         }
     }
 
@@ -555,7 +588,18 @@ impl Executor {
                 }
                 self.runtime
                     .call_typed_with_v128(&mut instance, name, &wasm_args)
-                    .map_err(|e: TrapError| ActionError::Trap(e.to_string()))
+                    // W21: an uncaught exception (`TrapError::is_exception`)
+                    // becomes `ActionError::Exception`, not `Trap` -- the
+                    // one place a `TrapError` crosses into this harness's
+                    // own `ActionError`, so the one place that distinction
+                    // needs preserving.
+                    .map_err(|e: TrapError| {
+                        if e.is_exception {
+                            ActionError::Exception(e.to_string())
+                        } else {
+                            ActionError::Trap(e.to_string())
+                        }
+                    })
             }
             Action::Get { module, name } => {
                 let key = module.clone();
@@ -604,6 +648,12 @@ impl Executor {
 enum ActionError {
     Trap(String),
     NotYetSupported(String),
+    /// An uncaught WASM **exception** (W21 -- the exceptions proposal's
+    /// `throw`, propagated all the way out), distinct from an ordinary
+    /// `Trap` -- see `wasm_execution::TrapError::is_exception`'s own doc
+    /// comment for why the real spec treats these as genuinely different
+    /// outcomes.
+    Exception(String),
 }
 
 /// `None` only for `ConstValue::V128` -- see this function's one caller
@@ -1098,6 +1148,51 @@ mod tests {
             "#,
         );
         assert!(matches!(results[1].1, DirectiveOutcome::Fail(_)));
+    }
+
+    #[test]
+    fn assert_exception_passes_on_a_real_uncaught_throw_fails_on_normal_return_and_on_a_plain_trap() {
+        // W21 (exceptions proposal): `assert_exception` must accept ONLY a
+        // real uncaught exception -- neither a normal return NOR an
+        // ordinary trap (this repo distinguishes the two via `TrapError::
+        // is_exception`, and the real spec treats them as genuinely
+        // different outcomes: `try_table` never catches a trap).
+        let results = outcomes(
+            r#"
+            (module (tag $e) (func (export "boom") (throw $e)))
+            (assert_exception (invoke "boom"))
+            "#,
+        );
+        assert_eq!(results[1], (DirectiveKind::AssertException, DirectiveOutcome::Pass));
+
+        let results = outcomes(
+            r#"
+            (module (func (export "one") (result i32) i32.const 1))
+            (assert_exception (invoke "one"))
+            "#,
+        );
+        assert!(matches!(results[1].1, DirectiveOutcome::Fail(_)), "a normal return must not satisfy assert_exception");
+
+        let results = outcomes(
+            r#"
+            (module (func (export "div0") (result i32) i32.const 1 i32.const 0 i32.div_s))
+            (assert_exception (invoke "div0"))
+            "#,
+        );
+        assert!(matches!(results[1].1, DirectiveOutcome::Fail(_)), "an ordinary trap must not satisfy assert_exception");
+    }
+
+    #[test]
+    fn assert_trap_and_assert_exception_do_not_accept_each_others_outcome() {
+        // The converse of the above, from `assert_trap`'s side: a real
+        // uncaught exception must NOT satisfy `assert_trap` either.
+        let results = outcomes(
+            r#"
+            (module (tag $e) (func (export "boom") (throw $e)))
+            (assert_trap (invoke "boom") "some trap")
+            "#,
+        );
+        assert!(matches!(results[1].1, DirectiveOutcome::Fail(_)), "an uncaught exception must not satisfy assert_trap");
     }
 
     #[test]

@@ -2199,6 +2199,41 @@ rose from 545 to 580); `assert_trap` rose from 1478/1478 to 1480/1480
 (+2 pass, +2 gradeable, `NotYetSupported` unchanged at 938). No other
 already-vendored file's stats changed -- zero regressions.
 
+extended 2026-08-25 (Exceptions proposal, first slice -- see code/specs/
+               W21-wasm-exceptions-tag-throw-slice.md -- tag.wast (976
+               bytes) + throw.wast (1920 bytes), same pinned commit, no
+               re-pin): the two real corpus files whose real conformance
+               value does not depend on `catch_ref`/`catch_all_ref`/
+               `exnref`/real catch-clause matching -- the "reify a caught
+               exception, rethrow it" half of the proposal, confirmed out
+               of scope this slice by reading the real, live-fetched
+               `WebAssembly/exception-handling` proposal text and every
+               real corpus file at this pinned SHA (`throw_ref.wast`/
+               `try_table.wast` are fully entangled with that half; not
+               vendored). `tag.wast`'s first two modules (tag section
+               declarations/imports, "non-empty tag result type"
+               assert_invalid cases) grade for real; its later "link-time
+               typing" modules use `(rec ...)` recursive type groups (the
+               same gap W20 already named for GC) and correctly grade
+               `NotYetSupported`. `throw.wast` grades 11/12 directives as
+               real `Pass`; its one `try_table`-catching test
+               (`test-throw-1-2`, needing REAL cross-function catch
+               matching this repo's `try_table` deliberately never does)
+               is a single, reviewed `Fail` -- documented in the spec, not
+               a surprise found later.
+
+Aggregate `module` rose from 1278/1279 to 1280/1281 (+2 pass, +2
+gradeable, `NotYetSupported` rose from 71 to 74, fail unchanged at 1);
+`register` rose from 11/13 to 12/14 (+1 pass, +1 gradeable,
+`NotYetSupported` rose from 2 to 3, fail unchanged at 2); `assert_invalid`
+rose from 2033/2125 to 2038/2130 (+5 pass, +5 gradeable, `NotYetSupported`
+unchanged at 92); `assert_unlinkable` rose from 49/50 to 51/52 (+2 pass,
++2 gradeable, fail unchanged at 1); `assert_return` rose from
+44713/44730+17fail to 44714/44732+18fail (+1 pass, +1 deliberate new
+fail -- `test-throw-1-2`, see above); new `assert_exception` directive
+kind: 7/7 pass. No other already-vendored file's stats changed -- zero
+regressions.
+
 The vendored files are licensed under the Apache License, Version 2.0 --
 see the accompanying LICENSE file, itself vendored verbatim from the same
 pinned commit.

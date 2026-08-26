@@ -837,6 +837,22 @@ TESTSUITE_FILES = [
     # own directives, per W14's per-module build-failure isolation (no
     # blast radius onto the first module's real pass count).
     "i31.wast",
+    # Exceptions proposal, first slice (W21 -- see code/specs/
+    # W21-wasm-exceptions-tag-throw-slice.md): tag.wast + throw.wast, the
+    # two real corpus files whose real conformance value doesn't depend on
+    # `catch_ref`/`catch_all_ref`/`exnref`/real catch-clause matching (the
+    # "reify a caught exception, rethrow it" half of the proposal, out of
+    # scope this slice). `tag.wast`'s first two modules (tag section
+    # declarations, imports, "non-empty tag result type" assert_invalid
+    # cases) grade for real; its later "link-time typing" modules use
+    # `(rec ...)` recursive type groups (same gap W20 already named for
+    # GC) and correctly grade NotYetSupported. `throw.wast` grades 11/12
+    # directives as real Pass; its one `try_table`-catching test
+    # (`test-throw-1-2`) is a deliberate, reviewed Fail -- see W21's own
+    # "What actually is separable" section for why this is honest,
+    # spec-accurate scope, not a bug.
+    "tag.wast",
+    "throw.wast",
 ]
 
 # Reference-types/threads-proposal files whose UPSTREAM path lives under
