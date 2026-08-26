@@ -36,6 +36,21 @@ This evaluates the bindings left-to-right and returns the tuple's
 last element (the block's value).  Tested deterministically — no
 codegen variance across runs.
 
+**One deliberate exception (task #63, `Feature::LoopControl`)**: a bare
+`if` used as a *statement* (`Stmt::ExprStmt{Expr::If{..}}`) is
+special-cased in `emit_stmt_inner` to emit a real native `if:`/`else:`
+statement, bypassing this whole block-as-expression strategy entirely.
+`break`/`continue` are Python statements — they cannot appear inside
+*any* Python expression, so a branch holding one could never round-trip
+through the ternary/walrus-tuple/lifted-`def` shapes above regardless of
+which one applied. `if (cond) { break; }` inside a loop is the single
+most common way source code uses `break`/`continue` at all, so this
+exception covers the realistic case; a block containing one whose value
+is *not* discarded (structurally legal per the SIR validator, though no
+real frontend produces it) still reaches the walrus-tuple path and hard-
+panics there rather than mis-compiling — see that arm's own doc comment
+in `src/emit.rs`.
+
 ## Type-directed operator selection (SIR21 T3c-3)
 
 `+ - * < > <= >= == !=` are `BuiltinCall`s that, by default, lower to a
@@ -152,6 +167,12 @@ Accepts: `Closures`, `Pairs`, `Symbols`, `Strings`, `DynamicTyping`,
 `NDArrays`, `MatrixOps`, `ArrayColumnMajor`, `SymbolicExpr`,
 `PatternMatching`, `Rationals` (and the SIR16/17 expression, mutation,
 loop, OOP and exception features).
+
+**`LoopControl`** (SIR16 addendum, task #63): `Stmt::Break`/
+`Stmt::Continue` emit bare native `break`/`continue` — see "Block-as-
+expression strategy" above for the one real wrinkle (a bare `if` used as
+a statement bypasses that whole strategy to avoid a shape neither Python
+expression form can represent).
 
 **`ConsoleIO`** (SIR28): `__sys_write__("stdout"|"stderr",
 "none"|"per_value"|"once", unpack_arrays, ...values)` → `_sir_write(...)`

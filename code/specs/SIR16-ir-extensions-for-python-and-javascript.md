@@ -241,14 +241,34 @@ already had a correct no-op arm for `Break`/`Continue` (only its own
 comment, which claimed the feature wasn't in `ACCEPTED_FEATURES`, was
 stale).
 
+`semantic-ir-to-python` was the fourth backend to accept the feature
+(task #63): its `While`/`ForEach` lowering shares the same "real inline
+native loop, no closure boundary" shape, and — once again confirmed, not
+just anticipated — its `Expr::If` codegen shared a hazard, though a
+*sharper* one than JS/TS/Go's: Python has no multi-statement expression
+at all, so a non-empty branch's value-position codegen is either a
+walrus-operator tuple (`((x := e), ...)[-1]`) or, for a branch
+containing a loop, a nested `def` lifted to the hoist buffer. `break`/
+`continue` are Python *statements* — unlike JS/TS/Go's "can't cross a
+closure boundary," in Python neither can appear inside *any* expression
+at all, so no codegen shape reachable from value position can represent
+them, full stop. Fixed the same way: a native `if:`/`else:` special case
+in `emit_stmt_inner`'s `Stmt::ExprStmt` arm. Two of this backend's own
+`Stmt`-matching traversal functions had the same compile-exhaustiveness-
+only panic arm this addendum's own Slice 0 landed everywhere — each
+replaced with the correct no-op/`false`. A narrower residual gap — a
+`Break`/`Continue` inside a block whose *value* is not discarded
+(structurally legal per the validator, which checks only lexical
+loop-nesting, not whether the enclosing value is used; no real frontend
+produces this) — deliberately stays a hard panic rather than attempting
+a mis-compile, since neither Python expression shape can represent it
+either; see `semantic-ir-to-python`'s own `emit_block_as_expr` doc
+comment on that arm.
+
 Remaining backends (per-backend, once each is audited for this class of
-hazard): `semantic-ir-to-python`'s `While`/`ForEach` lowering was
-independently confirmed (during this addendum's own design research) to
-share the same "real inline native loop, no closure boundary" shape, so
-it's the next candidate — see the task tracker. `semantic-ir-to-ruby`
-needs its existing defensive-scan pattern extended rather than replaced
-outright. `semantic-ir-to-rust` needs its `TryCatch`/`catch_unwind`
-hazard resolved (or scoped out) first.
+hazard): `semantic-ir-to-ruby` needs its existing defensive-scan pattern
+extended rather than replaced outright. `semantic-ir-to-rust` needs its
+`TryCatch`/`catch_unwind` hazard resolved (or scoped out) first.
 
 ### Sequences
 
