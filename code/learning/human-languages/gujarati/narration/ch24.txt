@@ -1,0 +1,130 @@
+Gujarati, chapter 24: A First Three-Place Map.
+8 lessons. You can do the first 3 of them in the car; after that you will want to have stopped.
+
+
+Lesson 1 of 8.
+બજાર (bajār) — hear market first.
+
+Warm-up.
+Listen twice: bajār. It means market. Do not study the Gujarati spelling yet; hold only the sound and meaning.
+
+Guided Practice.
+Point to a market picture when you hear bajār, then say bajār once from the English cue.
+
+Wrap-up Recall.
+Source: Gujarati Wiktionary word index.
+[question — say your answer, then pause 8 seconds]
+What does bajār mean?
+
+
+Lesson 2 of 8.
+બજાર (bajār) — market on the page.
+
+Warm-up.
+Say bajār from the meaning market. Now look:
+બજાર — bajār — market.
+
+Guided Practice.
+Trace બજાર once, then copy it once while naming the sound bajār.
+
+Wrap-up Recall.
+Source: Gujarati Wiktionary word index.
+[question — say your answer, then pause 15 seconds]
+Copy the Gujarati word for market once.
+
+
+Lesson 3 of 8.
+ઘર (ghar) — hear home first.
+
+Warm-up.
+Say bajār for market. Now listen twice: ghar means home or house.
+
+Guided Practice.
+Choose home or market as you hear ghar and bajār. Then say ghar once from the meaning cue.
+
+Wrap-up Recall.
+Source: ઘર (ghar) — Gujarati Wiktionary.
+[question — say your answer, then pause 8 seconds]
+Say the Gujarati sound for home.
+
+
+Lesson 4 of 8.
+ઘ (gha) — one consonant for gh.
+
+Before we start: this one needs your hands, so it is not a driving lesson. You will want a pen and something to write on. You can listen to all of it now and come back to the parts that need looking at once you have stopped.
+
+Warm-up.
+The consonant ઘ begins ghar. Today it is only a sound and writing shape; the complete word waits for the next lesson.
+
+Guided Practice.
+Watch the model, trace ઘ twice, and copy it once while saying gha.
+
+Wrap-up Recall.
+Stroke-order source: t30apps Gujarati Alphabet Writing Practice, fitted to the bundled Noto Sans Gujarati form documented in data/scripts/gujarati.json.
+[question — say your answer, then pause 12 seconds]
+Copy the Gujarati consonant gha once.
+
+
+Lesson 5 of 8.
+ઘર (ghar) — home on the page.
+
+Before we start: this one needs your eyes, so it is not fully a driving lesson. You will want your eyes, because the lesson points at something written down. You can listen to all of it now and come back to the parts that need looking at once you have stopped.
+
+Warm-up.
+Read બજાર (bajār), then look at the shorter place word:
+ઘર — ghar — home; house.
+
+Guided Practice.
+Look at ઘર (ghar), cover it, wait five seconds, and write it once.
+
+Wrap-up Recall.
+Source: ઘર (ghar) — Gujarati Wiktionary.
+[question — say your answer, then pause 12 seconds]
+From ghar, write home in Gujarati.
+
+
+Lesson 6 of 8.
+મંદિર (mandir) — hear temple first.
+
+Warm-up.
+Recall market and home. Now listen twice: mandir means temple.
+
+Guided Practice.
+Sort three heard cards: bajār, ghar, mandir. Say only mandir from its meaning cue.
+
+Wrap-up Recall.
+Source: Cambridge English–Gujarati Dictionary: temple.
+[question — say your answer, then pause 8 seconds]
+What does mandir mean?
+
+
+Lesson 7 of 8.
+મંદિર (mandir) — temple on the page.
+
+Warm-up.
+Read બજાર (bajār) and ઘર (ghar). Now look:
+મંદિર — mandir — temple.
+
+Guided Practice.
+Copy મંદિર (mandir), cover it, wait five seconds, then write it once more.
+
+Wrap-up Recall.
+Source: Cambridge English–Gujarati Dictionary: temple.
+[question — say your answer, then pause 15 seconds]
+Write the Gujarati word for temple.
+
+
+Lesson 8 of 8.
+Three places in four skills — market — home — temple.
+
+Warm-up.
+[pause 12 seconds]
+Say market, home, and temple from their meaning cues.
+
+Guided Practice.
+Score four short checks separately: identify three heard words, say three from meaning, read three printed cards, and write one heard word. Reach full marks in each skill; repair only the failed part.
+
+Wrap-up Recall.
+Sources: Gujarati Wiktionary word index and Cambridge English–Gujarati Dictionary: temple.
+[question — say your answer, then pause 35 seconds]
+After all four skills pass separately, write market, home, and temple in order.

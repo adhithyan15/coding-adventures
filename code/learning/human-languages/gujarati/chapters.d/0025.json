@@ -1,0 +1,22 @@
+{
+  "chapter": 25,
+  "title": "Hand and Money Join the Map",
+  "label": "ch:gu-hand-money-map",
+  "canDo": "I can hear, say, read, and write five concrete Gujarati words, including hand and money.",
+  "spineNodes": [
+    "SPINE-POLITE-REQUEST-REPAIR"
+  ],
+  "payoff": {
+    "lesson": "GU-C21-travel-five",
+    "kind": "four-skill-vocabulary-map",
+    "summary": "Hand and money enter meaning-first; one isolated ai-sign lesson unlocks પૈસા before the five-word checkpoint scores all four skills separately.",
+    "assesses": [
+      "GU-LEX-HAATH-01",
+      "GU-SCRIPT-HAATH-01",
+      "GU-LEX-PAISA-01",
+      "GU-SCRIPT-AI-MATRA-01",
+      "GU-SCRIPT-PAISA-01",
+      "GU-PERFORMANCE-TRAVEL-FIVE-FOUR-SKILL-01"
+    ]
+  }
+}

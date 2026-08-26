@@ -436,6 +436,47 @@
       "json": "gujarati/narration/ch23.json",
       "textHash": "fnv1a64:d5ea3817b8613956",
       "jsonHash": "fnv1a64:d5a54861bd66e136"
+    },
+    {
+      "language": "gujarati",
+      "chapter": 24,
+      "sourceHash": "fnv1a64:e2443bdb29c98822",
+      "lessonIds": [
+        "GU-C20-hear-bajar",
+        "GU-C20-bajar",
+        "GU-C20-hear-ghar",
+        "GU-W20-gha",
+        "GU-C20-ghar",
+        "GU-C20-hear-mandir",
+        "GU-C20-mandir",
+        "GU-C20-places-three"
+      ],
+      "voiceLessons": 6,
+      "drivablePrefix": 3,
+      "text": "gujarati/narration/ch24.txt",
+      "json": "gujarati/narration/ch24.json",
+      "textHash": "fnv1a64:e8bcde6193572133",
+      "jsonHash": "fnv1a64:63d26a27bd575bc1"
+    },
+    {
+      "language": "gujarati",
+      "chapter": 25,
+      "sourceHash": "fnv1a64:ea4c51c41fd60c30",
+      "lessonIds": [
+        "GU-C21-hear-haath",
+        "GU-C21-haath",
+        "GU-C21-hear-paisa",
+        "GU-W21-ai-matra",
+        "GU-C21-paisa",
+        "GU-R21-travel-five",
+        "GU-C21-travel-five"
+      ],
+      "voiceLessons": 6,
+      "drivablePrefix": 3,
+      "text": "gujarati/narration/ch25.txt",
+      "json": "gujarati/narration/ch25.json",
+      "textHash": "fnv1a64:1d78a6e50c9bcf84",
+      "jsonHash": "fnv1a64:d1c7a53ee487be21"
     }
   ],
   "findings": []

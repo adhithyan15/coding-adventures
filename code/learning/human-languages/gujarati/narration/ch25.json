@@ -1,0 +1,539 @@
+{
+  "version": 1,
+  "language": "gujarati",
+  "chapter": 25,
+  "title": "Hand and Money Join the Map",
+  "drivablePrefix": 3,
+  "sourceHash": "fnv1a64:ea4c51c41fd60c30",
+  "lessons": [
+    {
+      "id": "GU-C21-hear-haath",
+      "sequence": 950,
+      "title": "હાથ (hāth) — hear hand first",
+      "headword": "હાથ",
+      "romanization": "hāth",
+      "gloss": "hand, heard before reading",
+      "script": "gujarati",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:c4319bcc474118cf",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "Say home. Now listen twice: hāth means hand. Keep its long vowel and final puff distinct from ghar."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "Touch your hand when you hear hāth, then say hāth once from the meaning."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "Source: Gujarati Wiktionary word index."
+            },
+            {
+              "kind": "activity",
+              "scored": true,
+              "id": "GU-C21-hear-haath-recall",
+              "prompt": "What does hāth mean?",
+              "assesses": [
+                "GU-LEX-HAATH-01"
+              ],
+              "responseSeconds": 8,
+              "acceptedResponses": [
+                "hand",
+                "a hand"
+              ],
+              "feedback": {
+                "correct": "Right: hāth means hand.",
+                "incorrect": "Listen once more: hāth — hand."
+              }
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "GU-C21-haath",
+      "sequence": 960,
+      "title": "હાથ (hāth) — hand on the page",
+      "headword": "હાથ",
+      "romanization": "hāth",
+      "gloss": "hand, read and written",
+      "script": "gujarati",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:7672285a8e39b9eb",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "Read ઘર, then look:"
+            },
+            {
+              "kind": "speech",
+              "text": "હાથ — hāth — hand."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "Look, cover, wait five seconds, and write હાથ (hāth) once."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "Source: Gujarati Wiktionary word index."
+            },
+            {
+              "kind": "activity",
+              "scored": true,
+              "id": "GU-C21-haath-write",
+              "prompt": "Write the Gujarati word for hand.",
+              "assesses": [
+                "GU-LEX-HAATH-01",
+                "GU-SCRIPT-HAATH-01"
+              ],
+              "responseSeconds": 12,
+              "acceptedResponses": [
+                "હાથ"
+              ],
+              "feedback": {
+                "correct": "હાથ is hand.",
+                "incorrect": "Check હાથ, cover it, and retry."
+              }
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "GU-C21-hear-paisa",
+      "sequence": 970,
+      "title": "પૈસા (paisā) — hear money first",
+      "headword": "પૈસા",
+      "romanization": "paisā",
+      "gloss": "money, heard before the new ai sign is taught",
+      "script": "gujarati",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:64b469e20e3d903c",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "Say hand. Now listen twice: paisā means money. Do not read the Gujarati shape yet; one vowel sign still needs its own tiny lesson."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "Choose money or hand as you hear paisā and hāth. Then say paisā from the meaning cue."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "Source: Cambridge English–Gujarati Dictionary: money."
+            },
+            {
+              "kind": "activity",
+              "scored": true,
+              "id": "GU-C21-hear-paisa-recall",
+              "prompt": "What does paisā mean?",
+              "assesses": [
+                "GU-LEX-PAISA-01"
+              ],
+              "responseSeconds": 8,
+              "acceptedResponses": [
+                "money"
+              ],
+              "feedback": {
+                "correct": "Right: paisā means money.",
+                "incorrect": "Listen once more: paisā — money."
+              }
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "GU-W21-ai-matra",
+      "sequence": 980,
+      "title": "ૈ (ai vowel sign) — one sign for ai",
+      "headword": "ૈ",
+      "romanization": "ai vowel sign",
+      "gloss": "attached Gujarati sign for the ai sound",
+      "script": "gujarati",
+      "modality": "pen",
+      "derivedModality": "pen",
+      "modalityReasons": [
+        "writing-type"
+      ],
+      "sourceHash": "fnv1a64:7f2fb1e490d6859a",
+      "notice": {
+        "modality": "pen",
+        "needs": [
+          "a pen and something to write on"
+        ],
+        "waitUntilStopped": [],
+        "text": "Before we start: this one needs your hands, so it is not a driving lesson. You will want a pen and something to write on. You can listen to all of it now and come back to the parts that need looking at once you have stopped."
+      },
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "The attached sign ૈ (ai vowel sign) carries the ai sound. It sits above a consonant; by itself here it is only a writing shape, not a word."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "Watch the model: make the lower high arc from left to right, lift, then add the second higher arc from left to right. Trace ૈ (ai vowel sign) twice and copy it once."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "Stroke-order source: t30apps Gujarati Alphabet Writing Practice, fitted to the bundled Noto Sans Gujarati form documented in data/scripts/gujarati.json."
+            },
+            {
+              "kind": "activity",
+              "scored": true,
+              "id": "GU-W21-ai-matra-copy",
+              "prompt": "Copy the attached ai sign once.",
+              "assesses": [
+                "GU-SCRIPT-AI-MATRA-01"
+              ],
+              "responseSeconds": 12,
+              "acceptedResponses": [
+                "ૈ"
+              ],
+              "feedback": {
+                "correct": "That is the Gujarati ai vowel sign.",
+                "incorrect": "Make the lower arc first, then the higher arc."
+              }
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "GU-C21-paisa",
+      "sequence": 990,
+      "title": "પૈસા (paisā) — money on the page",
+      "headword": "પૈસા",
+      "romanization": "paisā",
+      "gloss": "money, read and written after the ai sign",
+      "script": "gujarati",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:9331739576b3c3e8",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "Write ૈ (ai vowel sign), then read હાથ (hāth). Now look:"
+            },
+            {
+              "kind": "speech",
+              "text": "પૈસા — paisā — money."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "Copy પૈસા (paisā), cover it, wait five seconds, and write it once more."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "Source: Cambridge English–Gujarati Dictionary: money."
+            },
+            {
+              "kind": "activity",
+              "scored": true,
+              "id": "GU-C21-paisa-write",
+              "prompt": "Write the Gujarati word for money.",
+              "assesses": [
+                "GU-LEX-PAISA-01",
+                "GU-SCRIPT-PAISA-01"
+              ],
+              "responseSeconds": 15,
+              "acceptedResponses": [
+                "પૈસા"
+              ],
+              "feedback": {
+                "correct": "પૈસા is money.",
+                "incorrect": "Check the ai sign in પૈસા, cover the model, and retry."
+              }
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "GU-R21-travel-five",
+      "sequence": 1000,
+      "title": "Retrieve five concrete words",
+      "headword": "બજાર — ઘર — મંદિર — હાથ — પૈસા",
+      "romanization": "bajār — ghar — mandir — hāth — paisā",
+      "gloss": "five concrete place, body, and money words",
+      "script": "gujarati",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:367762e308249f9b",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 15,
+              "perItem": false,
+              "source": "[PAUSE 15s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Recall the three-place checkpoint, then say hand and money."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "Hear all five in mixed order, say each from its meaning, read the five printed cards, then write the two words named aloud."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "Sources: Gujarati Wiktionary word index, Cambridge: temple, and Cambridge: money."
+            },
+            {
+              "kind": "activity",
+              "scored": true,
+              "id": "GU-R21-travel-five-recall",
+              "prompt": "Write market, home, temple, hand, and money in order.",
+              "assesses": [
+                "GU-LEX-BAJAR-01",
+                "GU-LEX-GHAR-01",
+                "GU-LEX-MANDIR-01",
+                "GU-LEX-HAATH-01",
+                "GU-LEX-PAISA-01"
+              ],
+              "responseSeconds": 40,
+              "acceptedResponses": [
+                "બજાર — ઘર — મંદિર — હાથ — પૈસા",
+                "બજાર ઘર મંદિર હાથ પૈસા"
+              ],
+              "feedback": {
+                "correct": "All five meanings and spellings remain distinct.",
+                "incorrect": "Repair only the missed card, then rebuild the line."
+              }
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "GU-C21-travel-five",
+      "sequence": 1010,
+      "title": "Payoff — five words in four skills",
+      "headword": "બજાર — ઘર — મંદિર — હાથ — પૈસા",
+      "romanization": "bajār — ghar — mandir — hāth — paisā",
+      "gloss": "five-word non-compensatory four-skill payoff",
+      "script": "gujarati",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:cc96b36d820b4010",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 15,
+              "perItem": false,
+              "source": "[PAUSE 15s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Recall the three-place score, then say hand and money."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "Identify five heard words."
+            },
+            {
+              "kind": "speech",
+              "text": "Produce five words from meaning cues."
+            },
+            {
+              "kind": "speech",
+              "text": "Match five printed cards to meanings."
+            },
+            {
+              "kind": "speech",
+              "text": "Write three heard words without a model."
+            },
+            {
+              "kind": "speech",
+              "text": "Pass each skill separately. A strong score in one skill cannot replace a miss in another."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "Sources: Gujarati Wiktionary word index, Cambridge: temple, and Cambridge: money."
+            },
+            {
+              "kind": "activity",
+              "scored": true,
+              "id": "GU-C21-travel-five-payoff",
+              "prompt": "After all four skills pass separately, write the five words in order.",
+              "assesses": [
+                "GU-PERFORMANCE-TRAVEL-FIVE-FOUR-SKILL-01"
+              ],
+              "responseSeconds": 45,
+              "acceptedResponses": [
+                "બજાર — ઘર — મંદિર — હાથ — પૈસા",
+                "બજાર ઘર મંદિર હાથ પૈસા"
+              ],
+              "feedback": {
+                "correct": "The five-word runway passes in all four skills.",
+                "incorrect": "Repair only the failed skill or word, then retry that part."
+              }
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "findings": []
+}

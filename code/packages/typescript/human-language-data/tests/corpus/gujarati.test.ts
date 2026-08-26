@@ -85,6 +85,8 @@ it("pins Gujarati's meaning-first opening script spine", () => {
     ["21", 6],
     ["22", 5],
     ["23", 1],
+    ["24", 8],
+    ["25", 7],
   ]);
 });
 
@@ -234,6 +236,14 @@ it("pins Gujarati's complete pre-A1 writing runway", () => {
     "dictation-transcription",
     "dictation-transcription",
     "dictation-transcription",
+    "dictation-transcription",
+    "guided-copy",
+    "guided-copy",
+    "delayed-copy",
+    "delayed-copy",
+    "delayed-copy",
+    "guided-copy",
+    "delayed-copy",
     "dictation-transcription",
   ]);
 });
@@ -565,7 +575,7 @@ it("closes Gujarati doorway R4 at position 134", () => {
   const beforeCheckpoint = measureContinuity(ordered.slice(0, 134));
   const afterCheckpoint = measureContinuity(lessons);
   expect(beforeCheckpoint.reinforcement.flatMap((defect) => defect.missed)).toHaveLength(248);
-  expect(afterCheckpoint.reinforcement.flatMap((defect) => defect.missed)).toHaveLength(247);
+  expect(afterCheckpoint.reinforcement.flatMap((defect) => defect.missed)).toHaveLength(260);
   expect(
     afterCheckpoint.reinforcement.filter(
       (defect) => doorway.includes(defect.atom) && defect.missed.includes("R4"),
@@ -593,6 +603,18 @@ it("pins Gujarati-owned objective activities", () => {
     "GU-C03-majaa-vocalic-r-retrieval",
     "GU-C03-tame-kem-chho-dha-retrieval",
     "GU-C06-number-histories-be-source",
+    "GU-C20-bajar-copy",
+    "GU-C20-ghar-write",
+    "GU-C20-hear-bajar-recall",
+    "GU-C20-hear-ghar-recall",
+    "GU-C20-hear-mandir-recall",
+    "GU-C20-mandir-write",
+    "GU-C20-places-three-payoff",
+    "GU-C21-haath-write",
+    "GU-C21-hear-haath-recall",
+    "GU-C21-hear-paisa-recall",
+    "GU-C21-paisa-write",
+    "GU-C21-travel-five-payoff",
     "GU-R03-doorway-three-r1-dictation",
     "GU-R03-doorway-three-r1-reading",
     "GU-R04-doorway-nine-r2-dictation",
@@ -657,6 +679,7 @@ it("pins Gujarati-owned objective activities", () => {
     "GU-R18-wellbeing-r4-writing",
     "GU-R19-doorway-nine-r4-dictation",
     "GU-R19-doorway-nine-r4-reading",
+    "GU-R21-travel-five-recall",
     "GU-W01-aa-matra-observe-check",
     "GU-W01-ha-observe-check",
     "GU-W01-haa-delayed-copy-check",
@@ -698,5 +721,7 @@ it("pins Gujarati-owned objective activities", () => {
     "GU-W07-independent-ii-recall",
     "GU-W07-tta-recall",
     "GU-W07-uu-matra-recall",
+    "GU-W20-gha-copy",
+    "GU-W21-ai-matra-copy",
   ]);
 });
