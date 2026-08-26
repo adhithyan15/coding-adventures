@@ -1,174 +1,81 @@
-Gujarati, chapter 12: The Mind and the Page.
-4 lessons. The first lesson already needs your eyes or your hands, so save this one for when you have stopped.
+Gujarati, chapter 12: Numbers One to Five.
+2 lessons. All 2 can be done entirely by ear.
 
 
-Lesson 1 of 4.
-વિચારવું (vichārvũ) — "to think," which began as wandering.
-
-Before we start: this one needs your eyes, so it is not fully a driving lesson. You will want your eyes, for letter shapes on the page. You can listen to everything else now — leave the sections called The letters in this word and Guided Practice until you have stopped, and I will say so again when we reach it.
+Lesson 1 of 2.
+એક, બે, ત્રણ, ચાર, પાંચ — one to five.
 
 Warm-up.
 [pause 2 seconds]
-Jāṇvũ — take the ending off it, and name the plain English verb that is the same word. Knowing is where you arrive. Here is what you do on the way.
+Three of these will look familiar from any other Indian language. Two won't — and both have a reason.
 
-You'll want to know first — one word.
-વિચારવું — vichārvũ — to think.
-The stem is વિચાર- vichār-: hũ vichārũ chhũ, "I think."
+You'll want to know: the five.
+[a table of 5 rows, read aloud]
+1. Gujarati: એક. said: ek.
+2. Gujarati: બે. said: be.
+3. Gujarati: ત્રણ. said: traṇ.
+4. Gujarati: ચાર. said: chār.
+5. Gujarati: પાંચ. said: pā̃ch.
+Notice the script: Gujarati is Devanagari without the top line. Same letters, same system — the shirorekhā simply isn't drawn. If you've done the Hindi writing track you can feel the relationship immediately.
 
-The letters in this word.
-વિ is વ va wearing િ, the short-i sign — and that sign stands to the left of its letter although the sound comes after it. Then chā: the letter ચ cha, already yours from chār, "four," under the long-ā sign. Then ર ra, and the ending વું.
-
-The word, taken apart — a thought is a wandering.
-વિચાર vichār is a word before it is a verb: it means a thought. It is Sanskrit vicāra — vi- "apart, thoroughly" on the root car-, "to move, to range about." A thought is named as a ranging over, the mind walking round a thing.
-The root is Indo-European, kwel- "to turn." Germanic wore it into wheel, whose whole business is turning. Greek made kúklos, "a circle," which English borrowed as cycle and encyclopedia. Latin made colere, "to till, to dwell in," behind cultivate, culture and colony.
-
-What you've built: a verb Gujarati made rather than inherited.
-Hovũ, javũ, āvvũ, khāvũ, jovũ and jāṇvũ came down the ordinary road, worn thinner at every step. Vichārvũ did not: Gujarati took the noun vichār and put a verb ending on it, on the model of Sanskrit vicarati.
-You have watched Sanskrit reach forward like this before. Count to three: ek, be, traṇ. Prakrit had lost the r of trīṇi, and traṇ carries it because Sanskrit put it back. A language that never stops reading its ancestor never stops borrowing from it. Traṇ got a sound that way; vichārvũ got a whole verb.
+What you've built: two surprises and a headless script.
+Most neighbouring languages have a d in “two,” but Gujarati says બે be. Hindi says tīn for “three,” but Gujarati says ત્રણ traṇ, with an r.
+Do not carry both histories while the count is still new. Make the five forms automatic first; the next prerequisite-ordered lesson explains why be and traṇ took those shapes.
 
 Guided Practice.
-[your turn — say: vichārvũ — to think]
+[pause 1 second]
+[your turn — say: "ek, be, traṇ, chār, pā̃ch"]
 [pause 8 seconds for the answer]
-[your turn — strip: minus -vũ leaves vichār-, which is also the noun "a thought"]
+[your turn — say: the odd two — Gujarati be and traṇ]
 [pause 8 seconds for the answer]
-[your turn — build: hũ vichārũ chhũ — I think]
-[pause 8 seconds for the answer]
-[once you have stopped driving — trace: vi- plus car- "range about" becomes wheel, cycle, colony]
-[your turn — contrast: jāṇvũ handed down, and English know; vichārvũ built — as traṇ had its r handed back]
+[your turn — say: the script clue — Devanagari shapes without a top line]
 [pause 8 seconds for the answer]
 
 Wrap-up Recall.
 [pause 3 seconds]
-What did the root behind vichār mean first, and which everyday English word turns on it? ("To range about"; wheel.) Was vichārvũ handed down or built, and which count of yours was patched the same way? (Built on the noun vichār; traṇ had its r restored.) Say "I think." (Hũ vichārũ chhũ.)
-Source: Wiktionary: વિચારવું (vichārvũ).
+Count to five in Gujarati. (Ek, be, traṇ, chār, pā̃ch.) Why does બે look unlike its neighbours? (It begins with b, not d.) What does ત્રણ contain that Hindi tīn does not? (r.) What is visibly missing from the Gujarati script? (The top line: the shirorekhā is not drawn.) Next: trace the two surprising number histories.
 
 
-Lesson 2 of 4.
-સમજવું (samajvũ) — "to understand," which is waking up.
-
-Before we start: this one needs your eyes, so it is not fully a driving lesson. You will want your eyes, for letter shapes on the page. You can listen to everything else now — leave the sections called The letters in this word and Guided Practice until you have stopped, and I will say so again when we reach it.
+Lesson 2 of 2.
+Two number histories: be and traṇ — why Gujarati two begins with b and why three regained an r.
 
 Warm-up.
 [pause 2 seconds]
-Two verbs and one root meaning: jāṇvũ, and vichārvũ on a root that meant to range about. The third sits between them, with a third kind of picture again.
+Count once: ek, be, traṇ, chār, pā̃ch. Which two forms look least like Hindi or Marathi? (Be and traṇ.)
 
-You'll want to know first — one word.
-સમજવું — samajvũ — to understand.
-The stem is સમજ- samaj-: hũ samajũ chhũ, "I understand." Samaj on its own, said alone, means "understood."
+The word, taken apart — બે from a different ancestor.
+Sanskrit had gendered forms of “two,” and its daughters selected different parts of that paradigm:
+[a table of 5 rows, read aloud]
+language: Sanskrit. “two”: dváu (masc.), dvé (fem. and neut.) route: —.
+language: Hindi. “two”: do. route: masculine side.
+language: Marathi. “two”: don. route: masculine side, plus an analogical -n.
+language: Bengali. “two”: dui. route: disyllabic Prakrit duve.
+language: Gujarati. “two”: be. route: feminine/neuter dvé side.
+Gujarati બે is not a corruption of do. It is a different inheritance from the same Sanskrit paradigm.
+The initial cluster changed too. In dv-, the dental d adopted the labial place of the following v: dv becomes bb becomes b. The first consonant was remade in the shape of its neighbour, then the double simplified.
 
-The letters in this word.
-Not one new letter. સ sa stood in namaste, મ ma in every mārũ, જ ja opened javũ. Three bare consonants carrying their built-in a, then the ending: sa-ma-ja-vũ.
-
-The word, taken apart — understanding is waking up.
-samajvũ comes from Sanskrit sambudhyate: sam- "together, fully," on the root budh-, "to wake, to become aware." To understand is to come awake to a thing.
-That root named a person too. One who has fully woken is a buddha — the title is this root with a participle ending, and it means exactly "the awakened one."
-It is Indo-European as well, bheudh-, and English keeps it in quieter clothes. Old English bēodan, "to announce, to offer," left bode and forebode — to bode ill is to give warning, which is what a waking mind does — and forbid, an announcement pointed the other way.
-
-What you've built: a cluster that assimilated, then simplified.
-Sambudhyate has a dhy in the middle; Gujarati has a plain j. Two steps did that, in this order. Assimilate: the dh was remade in the shape of the y after it, both landing on the palate, and the pair came out doubled as jjh — Prakrit saṃbujjhadi. Simplify: the double then fell to a single j, giving samaj-.
-You have watched this pair once already. Count to two: be. Its dv- went to bb because the d was remade in the shape of the v beside it, and the double then simplified to b. Different letters, same two moves.
-
-Guided Practice.
-[your turn — say: samajvũ, then hũ samajũ chhũ — I understand]
-[pause 8 seconds for the answer]
-[once you have stopped driving — trace: sambudhyate becomes saṃbujjhadi becomes samaj-: assimilate, then simplify]
-[your turn — match: the same two moves in dv becomes bb becomes b, which gave you be]
-[pause 8 seconds for the answer]
-[your turn — connect: budh- "to wake" becomes buddha, and English bode, forbid]
-[pause 8 seconds for the answer]
-[your turn — run: jāṇvũ, vichārvũ, samajvũ — know, think, understand]
-[pause 8 seconds for the answer]
-
-Wrap-up Recall.
-[pause 3 seconds]
-What did the root behind samajvũ mean, and which famous title is the same root? ("To wake, to become aware"; Buddha.) Name the two steps from dhy to j, and the number that took the same two. (Assimilate, then simplify; be, from dv to bb to b.) Say "I understand." (Hũ samajũ chhũ.)
-Source: Wiktionary: સમજવું (samajvũ).
-
-
-Lesson 3 of 4.
-વાંચવું (vā̃chvũ) — "to read," which is making a page speak.
-
-Before we start: this one needs your eyes, so it is not fully a driving lesson. You will want your eyes, for letter shapes on the page. You can listen to everything else now — leave the sections called The letters in this word and Guided Practice until you have stopped, and I will say so again when we reach it.
-
-Warm-up.
-[pause 2 seconds]
-Hũ samajũ chhũ — and what did that root mean first? Then vichārvũ. The next verb puts the words in front of you.
-
-You'll want to know first — one word.
-વાંચવું — vā̃chvũ — to read.
-The stem is વાંચ- vā̃ch-, and nothing new happens after it: hũ vā̃chũ chhũ, "I read."
-
-The letters in this word.
-વા is વ va with the long-ā sign, and the dot ં sits on top of it. Then ચ cha, the letter you counted chār with and thought with in vichār. Then વું. Vā̃-cha-vũ — and the dot in the middle is the piece to be careful about.
-
-What you've built: a nasal that is not at the end.
-Every nasal dot so far has been at the end of a word: hũ, chhũ, and the -વું on every verb. This one is in the middle, doing the same job in a new place — the ā before ચ goes through the nose, and it must be heard as well as written. Count to five and stop on પાંચ pā̃ch: same dot, same position, same nasal ā running into a ચ.
-And you know how much one small mark can carry. જવું javũ is "to go" and જોવું jovũ is "to see," and the whole difference is the sign on the જ. This dot is the same kind of hinge: small enough to skip, and not skippable.
-
-The word, taken apart — reading is making something speak.
-vā̃chvũ comes through Old Gujarati from Sanskrit vācayati, a causative: the root vac- means "to speak," so vācayati is "to make speak." Reading was named as making a silent page talk — which is what reading was, aloud, for most of the time people have done it.
-The root is Indo-European, wekw-, and Latin holds it as vōx, "voice." English took the family whole: voice, vocal, vowel, vocation (a calling), advocate (one called to your side), provoke, revoke.
-
-Guided Practice.
-[your turn — say: vā̃chvũ, then hũ vā̃chũ chhũ — I read]
-[pause 8 seconds for the answer]
-[your turn — match: the same middle nasal in pā̃ch, "five"]
-[pause 8 seconds for the answer]
-[your turn — contrast: javũ and jovũ — one mark decides which word it is]
-[pause 8 seconds for the answer]
-[once you have stopped driving — trace: vac- "speak" becomes vācayati "make speak" becomes vā̃chvũ, and becomes voice, vowel, advocate]
-[your turn — run: vichārvũ, samajvũ, vā̃chvũ]
-[pause 8 seconds for the answer]
-
-Wrap-up Recall.
-[pause 3 seconds]
-Where does the nasal dot sit in vā̃chvũ, and which number of yours carries it in the same place? (In the middle, on the ā; pā̃ch.) What did vācayati mean literally, and which English word for the thing you speak with is its cousin? ("To make speak"; voice.) Say "I read." (Hũ vā̃chũ chhũ.)
-Source: Wiktionary: વાંચવું (vā̃chvũ).
-
-
-Lesson 4 of 4.
-લખવું (lakhvũ) — "to write," which began as scratching.
-
-Before we start: this one needs your eyes, so it is not fully a driving lesson. You will want your eyes, for letter shapes on the page. You can listen to everything else now — leave the section called The letters in this word until you have stopped, and I will say so again when we reach it.
-
-Warm-up.
-[pause 2 seconds]
-Three verbs, three pictures: vichārvũ on a root meaning to range about, samajvũ on one meaning to wake, vā̃chvũ on one meaning to speak. The fourth root is the most physical of them.
-
-You'll want to know first — one word.
-લખવું — lakhvũ — to write.
-The stem is લખ- lakh-, and now you can say something worth saying:
-હું મારું નામ લખું છું — hũ mārũ nām lakhũ chhũ — "I write my name."
-
-The letters in this word.
-Both letters are already yours. લ la stood in bolvũ, "to speak." ખ kha is the puffed k of khāvũ, "to eat." La-kha-vũ.
-
-The word, taken apart — writing was scratching.
-lakhvũ comes through Prakrit from Sanskrit likhati, and likh- meant "to scratch, to score" long before it meant to write. Its plainest Sanskrit relative says so out loud: રેખા rekhā, "a line, a streak."
-Beyond Indo-Aryan the cousins are disputed, and this lesson claims none — the same answer khāvũ gave. What is not disputed is that three families reached for one picture: Latin scrībere also meant to scratch, behind scribe and script, and English write began as Germanic "to score."
-
-What you've built: four verbs, and what each root did first.
+The word, taken apart — ત્રણ and the r that came back.
 [a table of 4 rows, read aloud]
-verb: vichārvũ — think. what its root did first: ranged about, turned.
-verb: samajvũ — understand. what its root did first: woke up.
-verb: vā̃chvũ — read. what its root did first: spoke.
-verb: lakhvũ — write. what its root did first: scratched.
-Not one of the four began as a mental act. The mind gets its vocabulary from the body, every time.
-Three habits ran through the chapter. A cluster assimilates and then simplifies — dhy to jjh to j in samajvũ, whose root budh- also gave buddha. A dot in the middle is a nasal you must hear — vā̃ch-, whose root vac- also gave voice. And when the trail stops you say so: lakh- and khāvũ have no secure English cousin, jovũ's origin is probable rather than proven, and jāṇvũ is the one that paid out, being English know.
+stage: Sanskrit neuter. “three”: trī́ṇi.
+stage: Prakrit. “three”: tiṇṇi: r already gone.
+stage: Hindi. “three”: tīn.
+stage: Gujarati. “three”: traṇ: r present again.
+The shared ṇ shows that Hindi and Gujarati both descend from neuter trī́ṇi through Prakrit tiṇṇi. By that stage, the r was gone and its weight had moved into doubled ṇṇ. Hindi later simplified the double and lengthened the vowel.
+Gujarati's tr- is generally treated as restored from Sanskrit, not carried through unbroken. Sanskrit remained a literary language and continued to reshape its descendants. Traṇ looks older than tīn, but it is closer because speakers put the r back.
 
 Guided Practice.
-[your turn — produce: hũ mārũ nām lakhũ chhũ — I write my name]
+[pause 1 second]
+[your turn — say: Gujarati's selected form — feminine/neuter dvé]
 [pause 8 seconds for the answer]
-[your turn — run: vichārvũ, samajvũ, vā̃chvũ, lakhvũ — stripping -vũ off each]
+[your turn — say: the sound path — dv becomes bb becomes b]
 [pause 8 seconds for the answer]
-[your turn — name: what each root did first — ranged, woke, spoke, scratched]
+[your turn — say: the r path — trī́ṇi becomes tiṇṇi becomes traṇ]
 [pause 8 seconds for the answer]
-[your turn — say: the two steps behind samaj-, and where the dot sits in vā̃chvũ]
-[pause 8 seconds for the answer]
-[your turn — connect: rekhā, still meaning the scratch]
+[your turn — say: inherited continuously or restored — restored]
 [pause 8 seconds for the answer]
 
 Wrap-up Recall.
 [pause 3 seconds]
-Say "I write my name." (Hũ mārũ nām lakhũ chhũ.) Name the four verbs and what each root did before it meant a mental act. (Ranged, woke, spoke, scratched.) Which Sanskrit word is lakh-'s plainest relative? (Rekhā, "a line.") Which of your verbs has a certain English cousin, and which have none? (Jāṇvũ is know; lakh- and khāvũ have none.)
-Source: Wiktionary: લખવું (lakhvũ).
+Why be, not Hindi do? (Different Sanskrit forms.) What changed in dv becomes b? (D became labial beside v; the double simplified.) Did traṇ keep r? (No: Sanskrit restored Prakrit's lost r.) How can a newer form look older? (Learned restoration.)
+[question — say your answer, then pause 8 seconds]
+Does Gujarati be descend from the same Sanskrit form as Hindi do?

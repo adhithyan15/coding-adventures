@@ -1,22 +1,24 @@
 {
   "chapter": 9,
-  "title": "The First Verbs",
-  "label": "ch:first-verbs",
-  "canDo": "I can build short present-tense Gujarati sentences with the chapter's first verbs.",
+  "title": "How Are You?",
+  "label": "ch:responding",
+  "canDo": "I can ask how someone is in Gujarati, answer naturally, and return the question.",
   "spineNodes": [
-    "SPINE-SAY-WHAT-I-DO"
+    "SPINE-EXCHANGE-NAMES",
+    "SPINE-CHECK-WELLBEING",
+    "SPINE-COURTESY-THANK"
   ],
   "payoff": {
-    "lesson": "GU-C05-practice",
+    "lesson": "GU-C03-practice",
     "kind": "task",
-    "summary": "Complete GU-C05-practice, the canonical closing checkpoint, and demonstrate the chapter promise: build short present-tense Gujarati sentences with the chapter's first verbs.",
+    "summary": "Complete GU-C03-practice, the canonical closing checkpoint, and demonstrate the chapter promise: ask how someone is in Gujarati, answer naturally, and return the question.",
     "assesses": [
       "GU-CONCEPT-C03-HUN-01",
-      "GU-CONCEPT-C05-BOLVUN-01",
-      "GU-CONCEPT-C05-HUNGUJARATIBOLUNCHHUN-01",
-      "GU-CONCEPT-C05-KAAMKARVUN-01",
-      "GU-CONCEPT-C05-PRACTICE-01",
-      "GU-CONCEPT-C05-RAHEVUN-01"
+      "GU-CONCEPT-C03-KEM-01",
+      "GU-CONCEPT-C03-MAJAA-01",
+      "GU-CONCEPT-C03-PRACTICE-01",
+      "GU-CONCEPT-C03-TAMEKEMCHHO-01",
+      "GU-CONCEPT-C03-VANDHONAHI-01"
     ]
   }
 }

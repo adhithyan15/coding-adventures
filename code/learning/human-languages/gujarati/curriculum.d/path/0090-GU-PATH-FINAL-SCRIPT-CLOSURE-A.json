@@ -1,0 +1,16 @@
+{
+  "id": "GU-PATH-FINAL-SCRIPT-CLOSURE-A",
+  "spine_node": "SPINE-EXCHANGE-NAMES",
+  "lessons": [
+    "GU-W06-ga",
+    "GU-W06-independent-e",
+    "GU-W06-kha",
+    "GU-W06-independent-u",
+    "GU-R06-first-four-r1"
+  ],
+  "before": [],
+  "inline": [],
+  "after": [
+    "GU-EXT-033-FINAL-SCRIPT-CLOSURE-A"
+  ]
+}

@@ -2,9 +2,9 @@
 schema_version: 2
 id: GU-R15-chha-r4
 spine_node: SPINE-EXCHANGE-NAMES
-sequence: 640
+sequence: 650
 delivery: script
-chapter: 17
+chapter: 19
 type: writing
 headword: છ શ
 romanization: chha — sha

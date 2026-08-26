@@ -2,8 +2,8 @@
 schema_version: 2
 id: GU-C03-hun
 spine_node: SPINE-EXCHANGE-NAMES
-sequence: 170
-chapter: 7
+sequence: 180
+chapter: 9
 type: word
 headword: હું
 gloss: I

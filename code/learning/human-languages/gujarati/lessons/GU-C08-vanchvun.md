@@ -2,8 +2,8 @@
 schema_version: 2
 id: GU-C08-vanchvun
 spine_node: SPINE-SAY-WHAT-I-DO
-sequence: 450
-chapter: 12
+sequence: 460
+chapter: 14
 type: word
 headword: વાંચવું
 romanization: vā̃chvũ

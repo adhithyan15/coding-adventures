@@ -2,8 +2,8 @@
 schema_version: 2
 id: GU-R18-how-are-you-r4
 spine_node: SPINE-CHECK-WELLBEING
-sequence: 810
-chapter: 20
+sequence: 820
+chapter: 22
 type: practice
 headword: તમે કેમ છો?
 romanization: tame kem chho?

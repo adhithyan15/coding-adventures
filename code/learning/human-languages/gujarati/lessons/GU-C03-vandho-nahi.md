@@ -2,8 +2,8 @@
 schema_version: 2
 id: GU-C03-vandho-nahi
 spine_node: SPINE-COURTESY-THANK
-sequence: 210
-chapter: 7
+sequence: 220
+chapter: 9
 type: phrase
 headword: વાંધો નહીં
 gloss: no problem / it's okay / you're welcome

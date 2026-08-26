@@ -2,8 +2,8 @@
 schema_version: 2
 id: GU-C02-maarun-naam-chhe
 spine_node: SPINE-EXCHANGE-NAMES
-sequence: 110
-chapter: 6
+sequence: 120
+chapter: 8
 type: phrase
 headword: મારું નામ … છે
 gloss: my name is…

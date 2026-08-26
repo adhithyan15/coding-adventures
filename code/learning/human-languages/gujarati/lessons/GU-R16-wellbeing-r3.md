@@ -2,8 +2,8 @@
 schema_version: 2
 id: GU-R16-wellbeing-r3
 spine_node: SPINE-CHECK-WELLBEING
-sequence: 740
-chapter: 18
+sequence: 750
+chapter: 20
 type: practice
 headword: તમે કેમ છો? હું મજામાં છું। વાંધો નહીં।
 romanization: tame kem chho? hũ majāmā chhũ. vāndho nahĩ.

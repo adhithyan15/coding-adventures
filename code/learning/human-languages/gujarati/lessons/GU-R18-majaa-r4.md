@@ -2,8 +2,8 @@
 schema_version: 2
 id: GU-R18-majaa-r4
 spine_node: SPINE-CHECK-WELLBEING
-sequence: 820
-chapter: 20
+sequence: 830
+chapter: 22
 type: practice
 headword: હું મજામાં છું।
 romanization: hũ majāmā chhũ.

@@ -2,8 +2,8 @@
 schema_version: 2
 id: GU-C04-practice
 spine_node: SPINE-TAKE-LEAVE
-sequence: 270
-chapter: 8
+sequence: 280
+chapter: 10
 type: practice
 headword: (dialogue)
 gloss: Chapter 6 recap — the farewells

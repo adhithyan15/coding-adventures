@@ -1,24 +1,27 @@
 {
   "chapter": 17,
-  "title": "Fourth Return: Script and Names",
-  "label": "ch:gu-r4-script-names",
-  "canDo": "I can retrieve five Gujarati doorway forms at their fourth spacing window, distinguish each from a nearby familiar form, and independently read and write a complete name exchange after a long interval.",
+  "title": "Friend and Family",
+  "label": "ch:gu-friend-and-family",
+  "canDo": "I can name a friend, a family, a brother, and a sister in Gujarati, explain which of these words was inherited whole from Sanskrit rather than worn down by sound change, and say which sibling word is genuinely a cousin of its English counterpart and which is not.",
   "spineNodes": [
     "SPINE-EXCHANGE-NAMES"
   ],
   "payoff": {
-    "lesson": "GU-R15-name-exchange-r3",
+    "lesson": "GU-C11-bahen",
     "kind": "production",
-    "summary": "The chapter closes without adding an atom: the learner independently reads three shuffled introduction lines, then writes a complete name exchange from English cues after first closing exact R4 windows for the short-u sign, chha, ka, retroflex nna, and sha.",
+    "summary": "The chapter closes on બહેન, deliberately not a cousin of English sister: the reader produces મિત્ર, કુટુંબ, ભાઈ and બહેન, names ભાઈ as English brother's unbroken cousin against બહેન's unrelated (disputed bhaga-based) root, and names કુટુંબ as taken up whole from Sanskrit rather than worn down like the other three — while recalling that મિત્ર and મહેરબાની, taught a chapter apart, share the same ancient Indo-Iranian root.",
     "assesses": [
-      "GU-SCRIPT-U-MATRA-01",
-      "GU-SCRIPT-CHHA-01",
-      "GU-SCRIPT-KA-01",
-      "GU-SCRIPT-NNA-01",
-      "GU-SCRIPT-SHA-01",
-      "GU-CONCEPT-C02-ANAND-01",
-      "GU-CONCEPT-C02-MAARUNNAAMCHHE-01",
-      "GU-CONCEPT-C02-TAMARUNNAAMSHUNCHHE-01"
+      "GU-LEX-MITRA",
+      "GU-ETYMON-MITRA-BIND",
+      "GU-LEX-KUTUMB",
+      "GU-ETYMON-KUTUMB-DRAVIDIAN",
+      "GU-GRAMMAR-LEARNED-BORROWING",
+      "GU-LEX-BHAI",
+      "GU-ETYMON-BHAI-BROTHER",
+      "GU-LEX-BAHEN",
+      "GU-ETYMON-BAHEN-BHAGA",
+      "GU-PHRASE-MEHERBANI-KARINE",
+      "GU-HISTORY-LEARNED-RESTORATION"
     ]
   }
 }
