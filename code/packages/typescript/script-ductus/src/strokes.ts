@@ -14932,6 +14932,58 @@ export const DUCTUS: Record<string, LetterDuctus> = {
     ],
     source: teluguIndependentVowelSource("ఎ"),
   },
+  [ductusKey("telugu", "ఏ")]: {
+    script: "telugu",
+    glyph: "ఏ",
+    strokes: [
+      {
+        segments: [
+          {
+            label: "turn down and left around the compact lower loop",
+            path: [
+              { x: 275, y: 141 }, { x: 255, y: 195 }, { x: 215, y: 235 },
+              { x: 170, y: 245 }, { x: 120, y: 225 }, { x: 80, y: 180 },
+              { x: 68, y: 125 }, { x: 78, y: 82 },
+            ],
+          },
+          {
+            label: "continue around its base and return to the central junction",
+            path: [
+              { x: 78, y: 82 }, { x: 105, y: 42 }, { x: 155, y: 24 },
+              { x: 205, y: 30 }, { x: 245, y: 72 }, { x: 275, y: 141 },
+            ],
+          },
+        ],
+      },
+      {
+        segments: [
+          {
+            label: "restart at the lower-right tail and sweep up through the broad outer arch",
+            path: [
+              { x: 260, y: 655 }, { x: 345, y: 610 }, { x: 435, y: 545 },
+              { x: 515, y: 465 }, { x: 575, y: 370 }, { x: 610, y: 270 },
+              { x: 615, y: 180 }, { x: 585, y: 100 }, { x: 525, y: 45 },
+              { x: 460, y: 28 }, { x: 390, y: 52 }, { x: 325, y: 95 },
+              { x: 275, y: 141 },
+            ],
+          },
+        ],
+      },
+      {
+        segments: [
+          {
+            label: "restart below the upper-left hook and sweep upward to its tip",
+            path: [
+              { x: 210, y: 535 }, { x: 175, y: 585 }, { x: 155, y: 650 },
+              { x: 155, y: 705 }, { x: 175, y: 755 }, { x: 215, y: 790 },
+              { x: 260, y: 795 }, { x: 295, y: 785 },
+            ],
+          },
+        ],
+      },
+    ],
+    source: teluguIndependentVowelSource("ఏ"),
+  },
   [ductusKey("malayalam", "എ")]: {
     script: "malayalam",
     glyph: "എ",

@@ -41,7 +41,10 @@ describe("independent (word-initial) vowels", () => {
     expect(iv[6]!.strokeOrderSource?.url).toBe(
       "https://write-telugu-alphabets.en.aptoide.com/app",
     );
-    expect(iv.filter((_, index) => ![0, 1, 2, 4, 6].includes(index)).every((v) => v.strokeOrder.length === 0)).toBe(true);
+    expect(iv[7]!.strokeOrder).toHaveLength(4);
+    expect(iv[7]!.penLifts).toBe(2);
+    expect(iv[7]!.strokeOrderSource?.citation).toMatch(/dot_stroke_v_10_ae\.png.*movements 1–4.*version 2\.6/i);
+    expect(iv.filter((_, index) => ![0, 1, 2, 4, 6, 7].includes(index)).every((v) => v.strokeOrder.length === 0)).toBe(true);
     // The vocalic-R vowel is ISO-15919 r̥ = r + U+0325 (ring below), not IAST ṛ.
     expect([...iv[12]!.sound].map((c) => c.codePointAt(0))).toEqual([0x72, 0x325]);
   });
