@@ -8150,8 +8150,8 @@ exact-main worktree. OCaml's process-free core remains collision-unsafe while
 PRs #12149 and #12162 own required Go entry-point and validator surfaces.
 
 After lifecycle reconciliation, new-owner registration, and selection, the
-state graph contains 515 unique owners and 775 complete acyclic edges: 147
-merged, 367 pending, and exactly one in-progress owner, with no active parity
+state graph contains 517 unique owners and 778 complete acyclic edges: 147
+merged, 369 pending, and exactly one in-progress owner, with no active parity
 PR and no merged-to-unmerged dependency edge.
 
 Before publication, the branch rebased three times without conflict, most
@@ -8172,13 +8172,23 @@ across the existing curriculum, human-language-data, script-ductus, and
 Language Ladder consumers.
 
 None of those ten commits touches a selected Perl path or changes a package
-identity, BUILD marker, build-tool marker, or dependency surface. All five
+identity, BUILD marker, build-tool marker, or dependency surface. All seven
 live open PRs have zero exact overlap with this six-path tranche. The post-rebase
 schema-3 report remains 15 established lanes, 1,373 identities, 4,566 slots,
 175 high-consensus packages with 276 gaps, 910 singletons with 12,740 gaps,
-721 Rust singletons, zero collisions, and zero unknown buckets. The 515-owner,
-775-edge state graph remains complete and acyclic with exactly one in-progress
+721 Rust singletons, zero collisions, and zero unknown buckets. The 517-owner,
+778-edge state graph remains complete and acyclic with exactly one in-progress
 item.
+
+The live-PR audit also classifies two unmerged surfaces before publication.
+PR #12955 remains inside the existing ALGOL IIR neutral and applicable-lane
+owners with additive negative-real-zero selector identity. PR #12954 exposes a
+distinct W22 contract that W21 deliberately excluded, so the state registers a
+neutral same-instance `catch`/`catch_all` matching owner depending on the W21
+neutral tag/throw contract, plus an applicable-lane umbrella depending on both
+that W22 contract and the W21 lane substrate. Generic inert `exnref` parsing,
+official WAST reporting and baseline data, and native corpus-fetch authority
+remain with the existing WAST, conformance, and host-authority owners.
 
 Pinned Strawberry Perl 5.38.2 validation passes all 14 package test files and
 136 tests. `Validator.pm` reaches 100% statement and subroutine coverage and
