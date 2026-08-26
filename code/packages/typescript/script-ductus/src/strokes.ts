@@ -822,6 +822,73 @@ export const DUCTUS: Record<string, LetterDuctus> = {
     ],
     source: japanese.letters.find((letter) => letter.glyph === "し")!.strokeOrderSource!,
   },
+  // Sirgazil's 28-frame animation writes も in three pen-down runs: descend
+  // through the stem and broad lower bowl, then lift for each left-to-right
+  // horizontal. These medians preserve that order while fitting the bundled
+  // Noto Sans JP print outline.
+  [ductusKey("japanese", "も")]: {
+    script: "japanese",
+    glyph: "も",
+    strokes: [
+      {
+        segments: [
+          {
+            label: "descend and turn around the broad lower bowl to the rising right tip",
+            path: [
+              { x: 399, y: 772 },
+              { x: 395, y: 690 },
+              { x: 385, y: 610 },
+              { x: 374, y: 520 },
+              { x: 362, y: 430 },
+              { x: 350, y: 335 },
+              { x: 340, y: 245 },
+              { x: 335, y: 170 },
+              { x: 350, y: 90 },
+              { x: 405, y: 20 },
+              { x: 500, y: -8 },
+              { x: 610, y: -5 },
+              { x: 710, y: 35 },
+              { x: 785, y: 105 },
+              { x: 830, y: 195 },
+              { x: 810, y: 280 },
+              { x: 735, y: 385 },
+            ],
+          },
+        ],
+      },
+      {
+        segments: [
+          {
+            label: "draw the upper horizontal from left to right across the stem",
+            path: [
+              { x: 120, y: 615 },
+              { x: 215, y: 595 },
+              { x: 315, y: 580 },
+              { x: 415, y: 578 },
+              { x: 520, y: 582 },
+              { x: 617, y: 590 },
+            ],
+          },
+        ],
+      },
+      {
+        segments: [
+          {
+            label: "draw the lower horizontal from left to right across the stem",
+            path: [
+              { x: 97, y: 366 },
+              { x: 190, y: 345 },
+              { x: 290, y: 330 },
+              { x: 400, y: 325 },
+              { x: 510, y: 329 },
+              { x: 610, y: 336 },
+            ],
+          },
+        ],
+      },
+    ],
+    source: japanese.letters.find((letter) => letter.glyph === "も")!.strokeOrderSource!,
+  },
   // Hanzi Writer Data's ordered medians draw 人 with the left-falling stroke
   // first, then restart at the central junction for the right-falling stroke.
   // The source's Arphic-derived proportions are fitted to the vendored Noto
