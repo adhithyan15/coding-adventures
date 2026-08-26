@@ -336,6 +336,32 @@ buildToolSpec = do
                 orphanResultDiagnosticCodes result
                     `shouldBe` ["ORPHAN_CRATE_UNLISTED", "ORPHAN_EXEMPTION_INVALID"]
 
+        it "rejects over-limit lazy text without forcing hostile tails" $ do
+            let oversizedPath = replicate 513 'x' ++ error "path tail over-read"
+                oversizedReason = replicate 4097 'x' ++ error "reason tail over-read"
+                result =
+                    validateOrphanCrateSnapshot
+                        ( OrphanSnapshot
+                            ["code/packages/rust/demo"]
+                            [OrphanManifest "code/packages/rust/demo" "package"]
+                            []
+                            [ OrphanExemption 7 "PENDING" oversizedPath (Just "bounded")
+                            , OrphanExemption 8 "PENDING" "code/packages/rust/demo" (Just oversizedReason)
+                            ]
+                        )
+                invalidDetails =
+                    [ details
+                    | OrphanDiagnostic
+                        { orphanDiagnosticCode = "ORPHAN_EXEMPTION_INVALID"
+                        , orphanDiagnosticDetails = details
+                        } <- orphanResultDiagnostics result
+                    ]
+            invalidDetails
+                `shouldBe`
+                [ OrphanInvalidExemptionDetails 7 "PATH_UNSAFE"
+                , OrphanInvalidExemptionDetails 8 "REASON_MISSING"
+                ]
+
         it "chooses the closest empty BUILD and fixed filename rank" $ do
             let result =
                     validateOrphanCrateSnapshot
@@ -383,7 +409,8 @@ buildToolSpec = do
                 ]
 
         it "uses canonical ASCII JSON ordering for Unicode details" $ do
-            let accented = "code/packages/rust/\x00E9"
+            let deleteControl = "code/packages/rust/\x007F"
+                accented = "code/packages/rust/\x00E9"
                 emoji = "code/packages/rust/\x1F600"
                 result =
                     validateOrphanCrateSnapshot
@@ -391,7 +418,8 @@ buildToolSpec = do
                             []
                             []
                             []
-                            [ OrphanExemption 9 "EXCLUDED" "code/packages/rust/z" (Just "removed")
+                            [ OrphanExemption 6 "EXCLUDED" deleteControl (Just "removed")
+                            , OrphanExemption 9 "EXCLUDED" "code/packages/rust/z" (Just "removed")
                             , OrphanExemption 8 "EXCLUDED" emoji (Just "removed")
                             , OrphanExemption 7 "EXCLUDED" accented (Just "removed")
                             ]
@@ -403,7 +431,7 @@ buildToolSpec = do
                             OrphanStaleExemptionDetails entryPath _ _ _
                         } <- orphanResultDiagnostics result
                     ]
-            stalePaths `shouldBe` [accented, emoji, "code/packages/rust/z"]
+            stalePaths `shouldBe` [deleteControl, accented, emoji, "code/packages/rust/z"]
 
 trackedArtifactFixtureNames :: [FilePath]
 trackedArtifactFixtureNames =

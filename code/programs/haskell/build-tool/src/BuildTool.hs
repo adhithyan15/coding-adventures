@@ -557,7 +557,7 @@ splitOrphanBuildPath path =
 portableOrphanPath :: String -> Bool
 portableOrphanPath path =
     not (null path)
-        && length path <= 512
+        && null (drop 512 path)
         && validUnicodeScalarText path
         && TrackedUnicode.nfc path == path
         && head path /= '/'
@@ -583,7 +583,7 @@ notElemIn needle haystack = not (needle `isInfixOf` haystack)
 validOrphanReason :: Maybe String -> Bool
 validOrphanReason Nothing = False
 validOrphanReason (Just reason) =
-    length reason <= 4096
+    null (drop 4096 reason)
         && validUnicodeScalarText reason
         && not (all (\character -> Set.member (ord character) pythonBlankCodepoints) reason)
 
@@ -655,7 +655,7 @@ jsonAsciiString value = "\"" ++ concatMap escape value ++ "\""
             '\t' -> "\\t"
             _
                 | scalar < 0x20 -> unicodeEscape scalar
-                | scalar < 0x80 -> [character]
+                | scalar < 0x7F -> [character]
                 | scalar <= 0xFFFF -> unicodeEscape scalar
                 | otherwise ->
                     let adjusted = scalar - 0x10000
