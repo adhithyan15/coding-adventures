@@ -268,35 +268,41 @@ describe("the first rung anybody actually climbed", () => {
     expect(line).not.toContain("1 tracks");
   });
 
-  it("blocks Spanish at A1 on COMPOSITION ALONE, now that the total is met", () => {
-    // HL23's finding, made into a gate — and this test is now the argument for
-    // criterion 2b in a single assertion.
+  it("has SATISFIED criterion 2b at A1 — the composition blocker is discharged", () => {
+    // HL23's finding, made into a gate, and now paid off. The history of this one
+    // assertion is the whole argument for criterion 2b, so it is kept here rather
+    // than deleted with the blocker:
     //
-    // Spanish has PASSED criterion 2: 601 distinct headwords at or below A1
-    // against the floor of 600. On the old gate, A1's vocabulary requirement would
-    // now read as satisfied. It is satisfied by a vocabulary holding 24 verbs
-    // against a floor of 40. A total was reached, it was reached by the wrong
-    // parts, and exactly one of the two numbers can tell.
+    //   - first written when Spanish taught 584 headwords at or below A1 of which
+    //     SEVEN were verbs, and it read `verb-vocabulary(-32)` beside
+    //     `vocabulary(-15)` — two criteria failing by two different amounts, which
+    //     is what proved they measure different things;
+    //   - then `verb-vocabulary(-16)` with the `vocabulary` blocker GONE, the
+    //     moment the total crossed 600 on a lexicon of 24 verbs. That was the
+    //     sharpest the point ever got: a gate carrying only the count would have
+    //     waved A1's vocabulary through, and exactly one of the two numbers could
+    //     tell.
     //
-    // The shortfall is pinned rather than merely asserted non-zero, because a
-    // criterion that fails is not evidence of anything on its own: it has to fail
-    // by the amount the corpus actually justifies. This number must FALL as verbs
-    // are authored, and every tranche that moves it updates the pin here.
+    // Both are now discharged. 617 headwords at or below A1 against a floor of
+    // 600, and 40 verb headwords against a floor of 40 — met exactly, with no
+    // margin, which is why the assertion below is that the blocker is ABSENT
+    // rather than that some number is large.
     const spanish = realReport().levelGate!.tracks.find((t) => t.language === "spanish")!;
     expect(spanish.inProgressAt).toBe("A1");
-    const verbs = spanish.blockers.find((b) => b.criterion === "verb-vocabulary");
-    expect(verbs).toBeDefined();
-    expect(verbs!.shortfall).toBe(16);
-    expect(verbs!.detail).toContain("24 distinct verb headwords at or below A1");
-
-    // The criterion it partitions is NOT a blocker any more. That is the point: a
-    // gate carrying only the count would wave A1's vocabulary through from here.
+    expect(spanish.blockers.find((b) => b.criterion === "verb-vocabulary")).toBeUndefined();
     expect(spanish.blockers.find((b) => b.criterion === "vocabulary")).toBeUndefined();
 
-    // Critically: pre-A1 is NOT perturbed, by this criterion or by the tranche
+    // A1 is still NOT attained, and what holds it is now a different criterion
+    // entirely. Reporting that explicitly is what stops "the verb blocker is gone"
+    // from being misread as "A1 is done".
+    expect(spanish.attained).not.toBe("A1");
+    expect(spanish.blockers.map((b) => b.criterion)).toContain("reinforcement");
+
+    // Critically: pre-A1 is NOT perturbed, by this criterion or by the tranches
     // that moved the A1 numbers. Spanish is the only track holding any level at
-    // all, so a change that revoked it would be a regression dressed as progress. Six verb headwords at or below pre-A1 against a floor of
-    // five — one of margin, and that margin is why the floor is not higher.
+    // all, so a change that revoked it would be a regression dressed as progress.
+    // Six verb headwords at or below pre-A1 against a floor of five — one of
+    // margin, and that margin is why the floor is not higher.
     expect(spanish.attained).toBe("pre-A1");
   });
 });
@@ -535,6 +541,111 @@ word ${index + 1}
       inProgressAt: "pre-A1",
       blockers: [{ criterion: "writing-stage", shortfall: 1 }],
     });
+  });
+
+  it("still BITES on a track that reaches the total with the wrong parts", () => {
+    // This test exists because the corpus stopped providing the red case.
+    //
+    // Until this tranche, criterion 2b was proved on real data: Spanish reached
+    // 601 headwords at or below A1 with 24 verbs, and `verb-vocabulary(-16)` was
+    // the blocker that said so. Authoring sixteen more verbs discharged it — and
+    // that left the criterion with NO failing instance anywhere in the suite. The
+    // whole of `verbVocabularyOf` could have been deleted and every test would
+    // still have passed, which is the exact shape of a gate that quietly stops
+    // gating.
+    //
+    // So the red case moves from the corpus into a fixture, where authoring can
+    // never turn it green. The track below satisfies criterion 2 EXACTLY -- all
+    // `LEVEL_VOCABULARY["pre-A1"]` headwords, every one distinct -- and carries
+    // one verb fewer than criterion 2b asks for. Nothing else about it is short.
+    const verbTarget = LEVEL_VERB_VOCABULARY["pre-A1"];
+    const lessons = Array.from({ length: LEVEL_VOCABULARY["pre-A1"] }, (_, index) =>
+      parseLesson(`---
+id: BB-${String(index + 1).padStart(3, "0")}
+chapter: 1
+type: word
+headword: word-${index + 1}
+gloss: word ${index + 1}
+concept_tag: ${index < verbTarget - 1 ? "BB-VERB" : "BB-WORD"}-${index + 1}
+---
+
+word ${index + 1}
+`, "beta"),
+    );
+    const curricula = [{
+      version: 1,
+      language: "beta",
+      path: [{
+        id: "beta-pre-a1",
+        spine_node: "PRE",
+        lessons: lessons.map((lesson) => lesson.realization.lessonId),
+        before: [],
+        inline: [],
+        after: [],
+      }],
+      spine: { PRE: { segments: ["beta-pre-a1"], omits: [], relocates: {} } },
+      extensions: [],
+    }];
+    const spine = {
+      version: 1,
+      stages: ["pre-A1", "A1", "A2", "B1", "B2", "C1", "C2"],
+      nodes: [{
+        id: "PRE",
+        stage: "pre-A1",
+        strand: "LEXICON",
+        canDo: "name a word",
+        prerequisites: [],
+        core: true,
+        concepts: [],
+      }],
+    };
+    const levels = summarizeLevels(lessons, curricula, spine);
+    const gate = runLevelGate({
+      lessons,
+      levels,
+      curricula,
+      spine,
+      ramp: measureRamp(lessons, loadChapterPolicy()),
+      continuity: { reinforcement: [] } as unknown as ContinuityReport,
+    });
+    const beta = gate.tracks.find((track) => track.language === "beta")!;
+
+    // The total is met, so criterion 2 says nothing.
+    expect(beta.blockers.find((b) => b.criterion === "vocabulary")).toBeUndefined();
+    // Composition is one short, and criterion 2b is the only thing that can tell.
+    expect(beta.blockers).toEqual([
+      expect.objectContaining({ criterion: "verb-vocabulary", shortfall: 1 }),
+    ]);
+    expect(beta.attained).toBeNull();
+
+    // And the counterfactual, because "it failed" is not the same as "it failed
+    // for the right reason". Tag the one missing lesson as a verb and the level
+    // is attained -- so the blocker above was caused by the composition and by
+    // nothing else in the fixture.
+    const fixed = lessons.map((lesson, index) =>
+      index === verbTarget - 1
+        ? parseLesson(`---
+id: BB-${String(index + 1).padStart(3, "0")}
+chapter: 1
+type: word
+headword: word-${index + 1}
+gloss: word ${index + 1}
+concept_tag: BB-VERB-${index + 1}
+---
+
+word ${index + 1}
+`, "beta")
+        : lesson,
+    );
+    const repaired = runLevelGate({
+      lessons: fixed,
+      levels: summarizeLevels(fixed, curricula, spine),
+      curricula,
+      spine,
+      ramp: measureRamp(fixed, loadChapterPolicy()),
+      continuity: { reinforcement: [] } as unknown as ContinuityReport,
+    });
+    expect(repaired.tracks.find((track) => track.language === "beta")!.attained).toBe("pre-A1");
   });
 
   it("keeps the vocabulary targets ascending, since they are cumulative", () => {

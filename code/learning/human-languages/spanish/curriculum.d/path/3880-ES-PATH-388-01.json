@@ -1,0 +1,15 @@
+{
+  "id": "ES-PATH-388-01",
+  "spine_node": "SPINE-NAME-EVERYDAY-ACTIONS",
+  "lessons": [
+    "ES-C388-empujar",
+    "ES-C388-lanzar",
+    "ES-C388-borrar",
+    "ES-C388-gritar"
+  ],
+  "before": [],
+  "inline": [
+    "ES-EXT-388-VERB"
+  ],
+  "after": []
+}

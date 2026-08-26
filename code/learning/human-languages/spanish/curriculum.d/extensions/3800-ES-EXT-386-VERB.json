@@ -1,0 +1,14 @@
+{
+  "id": "ES-EXT-386-VERB",
+  "stage": "A1",
+  "kind": "required",
+  "category": "vocabulary",
+  "canDo": "I can name vender, servir, gastar and crecer.",
+  "prerequisites": [],
+  "lessons": [
+    "ES-C386-vender",
+    "ES-C386-servir",
+    "ES-C386-gastar",
+    "ES-C386-crecer"
+  ]
+}

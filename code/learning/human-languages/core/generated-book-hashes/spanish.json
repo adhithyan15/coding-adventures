@@ -4055,6 +4055,54 @@
         "ES-C384-olvidar"
       ],
       "tex": "spanish/book/chapters/ch384-enviar-y-subir.tex"
+    },
+    {
+      "language": "spanish",
+      "chapter": 385,
+      "sourceHash": "fnv1a64:476a2db7cf1fc2c0",
+      "lessonIds": [
+        "ES-C385-usar",
+        "ES-C385-tocar",
+        "ES-C385-mezclar",
+        "ES-C385-colgar"
+      ],
+      "tex": "spanish/book/chapters/ch385-usar-y-tocar.tex"
+    },
+    {
+      "language": "spanish",
+      "chapter": 386,
+      "sourceHash": "fnv1a64:c02b9ae7824d21eb",
+      "lessonIds": [
+        "ES-C386-vender",
+        "ES-C386-servir",
+        "ES-C386-gastar",
+        "ES-C386-crecer"
+      ],
+      "tex": "spanish/book/chapters/ch386-vender-y-servir.tex"
+    },
+    {
+      "language": "spanish",
+      "chapter": 387,
+      "sourceHash": "fnv1a64:24a691ceffb07781",
+      "lessonIds": [
+        "ES-C387-quemar",
+        "ES-C387-cruzar",
+        "ES-C387-volar",
+        "ES-C387-girar"
+      ],
+      "tex": "spanish/book/chapters/ch387-quemar-y-cruzar.tex"
+    },
+    {
+      "language": "spanish",
+      "chapter": 388,
+      "sourceHash": "fnv1a64:2bf3c6dfa1ee7158",
+      "lessonIds": [
+        "ES-C388-empujar",
+        "ES-C388-lanzar",
+        "ES-C388-borrar",
+        "ES-C388-gritar"
+      ],
+      "tex": "spanish/book/chapters/ch388-empujar-y-lanzar.tex"
     }
   ]
 }

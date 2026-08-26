@@ -1,0 +1,15 @@
+{
+  "id": "ES-PATH-386-01",
+  "spine_node": "SPINE-NAME-EVERYDAY-ACTIONS",
+  "lessons": [
+    "ES-C386-vender",
+    "ES-C386-servir",
+    "ES-C386-gastar",
+    "ES-C386-crecer"
+  ],
+  "before": [],
+  "inline": [
+    "ES-EXT-386-VERB"
+  ],
+  "after": []
+}
