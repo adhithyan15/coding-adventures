@@ -2,6 +2,86 @@
 
 All notable changes to the `java-to-semantic-ir` crate will be documented in this file.
 
+## [0.9.0] - 2026-08-26
+
+### Added
+
+- JV02 milestone M4c: `new`-based array-creation expressions.
+- `new int[]{1, 2, 3}` (`array_creation_type {LBRACKET RBRACKET}
+  array_initializer`) lowers by delegating directly to the same
+  `lower_array_initializer` M4a already built — semantically identical to
+  the bare `{1, 2, 3}` declarator-initializer form, just `new`-prefixed
+  with an always-explicit element type (never `var`-inferred, so there's
+  no ambiguity to resolve). Supports every element kind M4a's own array
+  literals do (`Int`/`Float`/`Bool`/`Str`).
+- `new int[5]` (`array_creation_type array_dimension_exprs`) — sized,
+  uninitialized array creation — lowers to a zero-filled `Expr::SeqLit`,
+  but **only** when the size expression is a compile-time-constant,
+  non-negative integer literal, capped at a new `MAX_SIZED_ARRAY_LEN =
+  10_000` element count (a CWE-400/770-style resource-exhaustion guard:
+  since the size must already be a constant for this milestone to lower
+  it at all, an uncapped `new int[2_000_000_000]` would blow up `O(N)`
+  source bytes into `O(N)` emitted IR nodes). A non-constant size (`new
+  int[n]` for a variable `n`) genuinely cannot be represented — SIR16 has
+  no repeat/fill primitive at all, confirmed by an exhaustive grep of
+  every `Seq*` node (only `SeqLit`/`SeqIndex`/`SeqLen`/`SeqSet` exist) —
+  so it's rejected with a clear error rather than attempted. Only
+  numeric/boolean element kinds are supported for sized creation; a
+  reference-typed sized array (`new String[n]`) is also deferred, since
+  real Java fills it with `null`, which this frontend's exact
+  element-kind-match invariant (every `SeqLit` item's `Kind` equals the
+  array's own declared element `Kind`) doesn't cleanly represent yet.
+- Both new shapes reuse the same `lower_primary` dispatch point, keyed on
+  whether `primary`'s second child (`array_creation_type`) is followed by
+  an `array_dimension_exprs` node (sized) or a bracket-pairs-then-
+  `array_initializer` tail (with-initializer) — confirmed via direct CST
+  inspection (a throwaway probe test, written, run, then deleted per this
+  crate's own established convention), not assumed from the grammar text
+  alone. Multi-dimensional forms of either shape (`new int[2][3]`, `new
+  int[][]{{1,2}}`) are rejected by counting dimension/bracket-pair counts
+  the same way `kind_of_type_node` already does for array *types*.
+- A new `ArrayElemKind::from_kind` helper (the inverse of the existing
+  `as_kind`) replaces three separate inline `Kind -> ArrayElemKind`
+  match blocks (`kind_of_type_node`, `lower_array_initializer`, and this
+  milestone's own `lower_new_sized_array`) with one shared conversion —
+  a refactor enabled by, not scope creep alongside, this milestone's own
+  third call site.
+- 16 new tests in `tests/test_lower.rs` (sized creation for every
+  numeric/boolean element kind including a zero-length array, allocate-
+  then-fill-by-index alongside M4b's own indexed assignment, negative-
+  size and size-cap rejection, non-constant-size and reference-typed-
+  sized-array deferral, `new`-with-initializer for both primitive and
+  `String` element kinds, element-kind-mismatch and empty-initializer
+  handling, multi-dimensional rejection for both `new` shapes,
+  `Feature::Sequences` re-declaration, and a regression check that
+  ordinary `new ClassName(...)` object construction — a structurally
+  different `primary` alternative, keyed off `class_type` rather than
+  `array_creation_type` — remains correctly rejected) plus 2 new
+  execution-proof tests in `tests/e2e_python.rs` (a sized `new int[N]`
+  array allocated, filled by index, and summed — the realistic pattern
+  M4b and M4c together exist to enable — and a `new int[]{...}`-with-
+  initializer indexed read).
+- **Narrowed during implementation**: task #57's own original bundling
+  of "new-based array-creation expressions" together with "compound-
+  assignment/increment-decrement on an indexed target" turned out to be
+  two structurally unrelated pieces of work once implementation began —
+  the latter needs a temp-variable-hoisting design to avoid double-
+  evaluating the index expression, an unrelated problem to array
+  creation. Split off into its own follow-up task rather than bundled
+  into this milestone.
+- **Caught by the crate's own `semantic_ir::validate()` check while
+  writing this milestone's own tests, not `/security-review`**: the
+  first version of the sized-creation float-fill path (`ArrayElemKind::
+  Float => Expr::FloatLit { value: 0.0, .. }`) didn't declare
+  `Feature::Floats` in the module manifest — the validator requires it on
+  every `FloatLit` node regardless of how it was constructed, and this
+  one is synthesized directly by this frontend's own code rather than
+  lowered from a real source-level float literal (which already declares
+  the feature via the existing M1 literal-lowering path), so it needed
+  its own explicit `self.observed.add(Feature::Floats)` call. Fixed by
+  adding it at the one synthesis site; `new_sized_float_array_fills_
+  with_zero_point_zero` is the regression test.
+
 ## [0.8.0] - 2026-08-25
 
 ### Added

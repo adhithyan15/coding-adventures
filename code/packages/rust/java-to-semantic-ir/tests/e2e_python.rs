@@ -601,9 +601,49 @@ fn array_fill_via_indexed_for_loop_runs_in_python() {
     assert_eq!(out, "12"); // 0 + 2 + 4 + 6
 }
 
-// No execution-proof test for the `new int[5]`/`new int[]{...}` array-
-// creation-expression forms, multi-dimensional arrays, or compound-
-// assignment/increment-decrement on an indexed target -- all remain
-// deferred past M4b (see the corresponding rejection tests in
-// `tests/test_lower.rs`, and the follow-up tasks logged when M4b was
-// scoped down to plain indexed assignment only).
+// ── M4c: new-based array-creation expressions ─────────────────────────
+
+#[test]
+fn new_sized_array_allocate_then_fill_by_index_runs_in_python() {
+    if !python_available() {
+        eprintln!(
+            "skipping new_sized_array_allocate_then_fill_by_index_runs_in_python: `python3` not available"
+        );
+        return;
+    }
+    // The realistic pattern M4b (indexed assignment) and M4c (sized
+    // array creation) together exist to enable: allocate a zero-filled
+    // array, then fill it by index, then sum -- exercising `new int[N]`,
+    // indexed writes, indexed reads, and `.length` all together.
+    let out = run_via_python(
+        "new_sized_array_fill_by_index",
+        &wrap(concat!(
+            "int[] xs = new int[5]; ",
+            "for (int i = 0; i < xs.length; i++) { xs[i] = i + 1; } ",
+            "int sum = 0; ",
+            "for (int i = 0; i < xs.length; i++) { sum = sum + xs[i]; } ",
+            "sum;"
+        )),
+    );
+    assert_eq!(out, "15"); // 1 + 2 + 3 + 4 + 5
+}
+
+#[test]
+fn new_array_with_initializer_runs_in_python() {
+    if !python_available() {
+        eprintln!("skipping new_array_with_initializer_runs_in_python: `python3` not available");
+        return;
+    }
+    let out = run_via_python(
+        "new_array_with_initializer",
+        &wrap("int[] xs = new int[]{10, 20, 30}; xs[1];"),
+    );
+    assert_eq!(out, "20");
+}
+
+// No execution-proof test for multi-dimensional arrays, a non-constant
+// sized-array creation, sized creation of a reference-typed array, or
+// compound-assignment/increment-decrement on an indexed target -- all
+// remain deferred past M4c (see the corresponding rejection tests in
+// `tests/test_lower.rs`, and the follow-up tasks logged when M4c was
+// scoped down from its own original bundling with those items).
