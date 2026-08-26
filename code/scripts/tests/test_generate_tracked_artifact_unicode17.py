@@ -775,6 +775,21 @@ class UnicodeDownloadBoundaryTests(unittest.TestCase):
         )
         self.assertNotIn("TrackedArtifactUnicode17.nfc(c1) == c2", runner)
 
+    def test_swift_driver_entrypoint_preserves_symlink_name(self) -> None:
+        with tempfile.TemporaryDirectory() as temporary:
+            temporary_path = Path(temporary)
+            entrypoint = temporary_path / "swift"
+            driver = temporary_path / "swift-driver"
+            driver.write_text("driver", encoding="utf-8")
+            with mock.patch.object(Path, "resolve", return_value=driver):
+                validated = generator._swift_driver_entrypoint(
+                    entrypoint,
+                    "runtime",
+                )
+
+        self.assertEqual(validated, entrypoint.absolute())
+        self.assertEqual(validated.name, "swift")
+
     def test_bounded_process_discards_output_past_the_limit(self) -> None:
         with tempfile.TemporaryDirectory() as temporary:
             completed = generator._run_bounded_process(

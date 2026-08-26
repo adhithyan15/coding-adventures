@@ -801,8 +801,9 @@ jobs:
       - name: Verify generated Swift against every official Unicode 17 vector
         shell: bash
         run: |
-          swift_executable="$(readlink -f "$(command -v swift)")"
-          swiftc_executable="$(readlink -f "$(command -v swiftc)")"
+          # The Swift driver dispatches by argv[0], so retain these entrypoint names.
+          swift_executable="$(command -v swift)"
+          swiftc_executable="$(command -v swiftc)"
           test -x "$swift_executable"
           test -x "$swiftc_executable"
           test "$("$swift_executable" --version | sed -n '1p')" = "Swift version 6.3.3 (swift-6.3.3-RELEASE)"

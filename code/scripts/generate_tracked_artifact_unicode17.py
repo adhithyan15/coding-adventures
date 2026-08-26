@@ -3716,6 +3716,15 @@ def _swift_windows_linker_arguments() -> list[str]:
     ]
 
 
+def _swift_driver_entrypoint(executable: Path, label: str) -> Path:
+    """Validate the driver target without replacing its invocation basename."""
+    candidate = Path(os.path.abspath(executable.expanduser()))
+    resolved = candidate.resolve(strict=True)
+    if not resolved.is_file():
+        raise RuntimeError(f"Swift {label} executable is not a file: {resolved}")
+    return candidate
+
+
 def _swift_self_check_environment(swiftc: Path, temporary_path: Path) -> dict[str, str]:
     """Provide only pinned toolchain and contained temporary state to Swift."""
     environment = {
@@ -3917,12 +3926,8 @@ def _self_check_swift(
     swiftc_executable: Path,
 ) -> None:
     del root  # Kept parallel with the other emitted-runtime call signatures.
-    swift = swift_executable.expanduser().resolve(strict=True)
-    if not swift.is_file():
-        raise RuntimeError(f"Swift runtime executable is not a file: {swift}")
-    swiftc = swiftc_executable.expanduser().resolve(strict=True)
-    if not swiftc.is_file():
-        raise RuntimeError(f"Swift compiler executable is not a file: {swiftc}")
+    swift = _swift_driver_entrypoint(swift_executable, "runtime")
+    swiftc = _swift_driver_entrypoint(swiftc_executable, "compiler")
 
     with tempfile.TemporaryDirectory(prefix="unicode17-swift-check-") as temporary:
         temporary_path = Path(temporary)

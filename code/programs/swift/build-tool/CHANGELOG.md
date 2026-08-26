@@ -8,7 +8,8 @@
   Unicode 17 alias plus Windows-reserved-basename behavior.
 - Add generated, source-embedded Unicode 17.0.0 NFC, NFKC, full-fold,
   NFKC-fold, and full-uppercase tables, the Unicode License v3 notice, and a
-  required isolated Swift 6.3.3 official-vector CI check.
+  required isolated Swift 6.3.3 official-vector CI check that preserves the
+  driver-sensitive `swift` and `swiftc` entrypoint names.
 - Exclude Cabal's exact, case-sensitive `dist-newstyle` generated directory
   from package discovery and source hashing while preserving near-names such
   as `dist-newstyle-example`. Shared-fixture and focused Swift tests cover the
