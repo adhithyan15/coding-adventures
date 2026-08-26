@@ -5,49 +5,91 @@ Findings from the pre-A1 tranche work were recorded in commit messages and PR
 bodies, which are durable and searchable, but a reader opening this file found
 nothing. The entries below are the ones that change how the work is done.
 
-## Two structural findings from the A1 vocabulary run: the spine has no room for a verb, and lesson batches never backfill
+## A1 vocabulary is nouns and adjectives only, and the count does not show it
 
-Tranche 5 (Spanish chapters 367-373) hit two walls that are not about content and
-will hit every tranche after it. Both are recorded here because both changed what
-was authored, and neither is visible from inside a single pull request.
+**This is a content defect, not a tooling note.** Spanish is at 549 of the 600
+distinct headwords HL09 3.1 asks for at or below A1, and the number is honest as
+far as it goes. What it does not say is that essentially none of those headwords
+is a verb, and that the run to 600 cannot add one.
 
-### The A1 spine cannot host a verb, so the run to 600 is nouns and adjectives
+A CEFR A1 vocabulary that contains no verbs is not an A1 vocabulary, whatever the
+count says. A1 descriptors are about doing things -- introducing yourself, asking
+for something, saying what you need. A learner who has 600 nouns and adjectives
+and cannot say *I need*, *I learn*, *I break*, *I wash* has not reached A1; they
+have reached a picture dictionary.
 
-`vocabularyOf` counts a headword toward a level when the lesson's curriculum
-segment names a spine node whose `stage` is at or below that level. For Spanish
-that leaves eleven usable nodes at or below A1, and in practice the vocabulary
-tranches use three of them: `SPINE-DEFINITE-REFERENCE` ("mark out a specific
-known thing"), `SPINE-ASK-LOCATION` ("ask where something is") and
-`SPINE-COUNT-ONE-TO-FIVE` ("the cardinal numbers one through five").
+### How the restriction happens
 
-None of those three can honestly host a verb. A `canDo` reading "I can say
+`vocabularyOf` credits a headword to a level through its lesson's curriculum
+segment, which names a spine node, which declares a `stage`. So the set of things
+that can be taught at A1 is exactly the set of things that can be honestly
+attached to an A1 spine node.
+
+The vocabulary tranches use three:
+
+- `SPINE-DEFINITE-REFERENCE` -- "mark out a specific known person or thing"
+- `SPINE-ASK-LOCATION` -- "ask where a familiar person, place or object is"
+- `SPINE-COUNT-ONE-TO-FIVE` -- "the cardinal numbers one through five"
+
+None of them can host a verb. Writing a chapter `canDo` that reads "I can say
 *aprender*, *olvidar*, *necesitar*, *terminar* and *usar*, and mark out which
-specific thing I mean" is not a capability statement; it is a slot being filled.
+specific thing I mean" is not a capability statement; it is a slot being filled
+so a lesson can be credited to a level.
 
-Ten verified verb candidates were dropped for this reason and this reason alone
--- `aprender`, `olvidar`, `necesitar`, `terminar`, `usar`, `lavar`, `romper`,
-`bailar`, `tocar`, `oler`. Every one of them had cleared the headword screen, the
-atom screen and the root screen, and every one had its etymology verified. They
-were replaced with nouns and adjectives that fit the three nodes.
+Tranche 5 dropped ten verb candidates for exactly this and nothing else --
+`aprender`, `olvidar`, `necesitar`, `terminar`, `usar`, `lavar`, `romper`,
+`bailar`, `tocar`, `oler`. Every one had cleared the headword screen, the atom
+screen and the root screen. Every one had its etymology verified against current
+scholarship. They were replaced with nouns and adjectives that fit the three
+nodes, and the tranche shipped 35 headwords with the level number moving exactly
+as planned. **Nothing anywhere reported that the composition had been decided by
+the taxonomy rather than by anyone's judgement of what a learner needs.**
 
-The pre-A1 nodes are the escape hatch and the precedent already exists: chapter 6
-teaches `hablar`, `estudiar` and `trabajar` on `SPINE-POLITE-REQUEST-REPAIR`. But
-that is a stretch too, and it was set two hundred chapters ago rather than chosen.
+### Why the existing escape hatch is not an answer
 
-**What is actually missing** is an A1 node for the thing a learner does at A1 with
-a verb -- naming an everyday action in the infinitive. Until one exists, the run
-from 549 to the 600 floor is structurally restricted to things and their
-properties, which is a curriculum shape nobody chose and which no gate reports.
+Pre-A1 nodes also count toward "at or below A1", and one of them already carries
+verbs: chapter 6 teaches `hablar`, `estudiar` and `trabajar` on
+`SPINE-POLITE-REQUEST-REPAIR`. That is a stretch on its face -- those verbs are
+not a politeness repair -- and it was set two hundred chapters ago rather than
+chosen. Using it deliberately now would mean knowingly filing the entire verb
+vocabulary of a language under "make a request politely and repair a small social
+mistake", which trades a visible gap for an invisible lie.
 
-### The "fill headroom" model of the lesson-batch count is wrong
+### What is actually missing
+
+An A1 spine node for the thing a learner does at A1 with a verb: naming an
+everyday action, and saying they do it. Something on the order of "I can name
+common everyday actions and say that I do them." Until one exists:
+
+- the run from 549 to 600 is structurally restricted to things and their
+  properties;
+- the resulting curriculum shape is one nobody chose;
+- and the gate that is supposed to certify A1 readiness will certify it.
+
+**Do not fix this inside a vocabulary tranche.** It is a spine change, it affects
+every track that reaches A1 rather than Spanish alone, and it wants the owner's
+decision on the node's wording before any lesson is written against it.
+
+### The general form, for whoever meets this next
+
+A metric defined by a join against a taxonomy is silently bounded by that
+taxonomy. The count answers "how many", and the taxonomy quietly decides "of
+what" -- so a shortfall reads as a content problem when it may be a shape
+problem, and a target that is *met* can be met by the wrong thing entirely. Ask
+what a metric **cannot** count before trusting what it does.
+
+## Lesson batches never backfill, so unused capacity is not headroom
+
+Recorded here because the figure it corrects has already been printed in a merged
+pull-request body as evidence, and evidence is what it is not.
 
 Tranche 4 raised the bundler's `maxSize` grouping parameter from 49 kB to 56 kB,
 took the emitted lesson-batch count from 401 down to 353, lowered the
 request-count ceiling to match, and reasoned that the remaining 32% of unused
-capacity was headroom the next few tranches could grow into.
+capacity was headroom the next few tranches could grow into -- "6.29 MB of fill
+headroom before the batch count can grow again".
 
-It is not headroom, and the arithmetic that says it is has the wrong model of the
-bundler. Measured on this tranche:
+Measured on the next tranche:
 
 ```
 before   353 batches   13,478,418 B total   32% of cap unused
@@ -55,37 +97,50 @@ after    359 batches   13,624,129 B total   32% of cap unused
 ```
 
 Thirty-five lessons weighing **145,711 B** -- about 2.6 batches at the 56 kB cap,
-and slightly *lighter* than tranche 4's thirty-five -- added **six** batches. The
-unused fraction did not move at all, because the slack is not one pool. Rolldown
-groups by track and then splits each track greedily by size; the tail batch of
-every *other* track is sealed and is never revisited, so a Spanish tranche can
-only ever extend Spanish's tail. Corpus-wide slack is stranded by construction.
+and slightly *lighter* than tranche 4's thirty-five -- added **six** batches, and
+the unused fraction did not move at all. A number that does not move when the
+thing it supposedly measures does is not a measurement.
 
-So the count tracks corpus bytes roughly linearly no matter how much aggregate
-slack the report shows, and a `maxSize` bump buys one tranche of relief by
-re-splitting everything at once. This is the third occurrence of the same
-recurrence, and the comment in `vite.config.ts` already says a third should not
-be answered with a fourth bump.
+The slack is not one pool. Rolldown groups by track and then splits each track
+greedily by size, so the tail batch of every *other* track is sealed and never
+revisited; a Spanish tranche can only extend Spanish's tail. Corpus-wide slack is
+stranded by construction, and the count therefore tracks corpus bytes roughly
+linearly however much aggregate slack a report shows.
 
-This is the argument for **#12918**: group batches by a **chapter range**, which
-is a unit a reader actually navigates and a unit that does not grow when a track
-gains lessons at its end. Recorded here rather than only in the issue because the
-32% figure has now appeared in a merged pull-request body as evidence of
-headroom, and it is not evidence of anything.
+Fixed structurally rather than with a third bump: batches are now grouped by a
+five-chapter range and the request budget is derived from the corpus band count
+instead of hardcoded, so adding lessons inside a band moves neither side and
+adding chapters moves both together.
 
-### A third, smaller one: an etymology can be its own evidence
+**The generalisable check:** before treating unused capacity as headroom, ask
+whether the allocator can *reach* it. Summing free space across N independently
+sealed partitions answers a question nobody asked; the number that predicts
+growth is the free space in the one partition the next write lands in. The same
+error is available in disk allocators, shard maps and connection pools.
+
+## An etymology can be its own evidence
 
 `la alfombra` was going to be taught as Arabic for "the red one". That account was
-printed in the Academy's dictionary for a long time. Corominas took it apart on a
-ground worth naming: the redness had been read **out of** the proposed etymology
-and then offered back as evidence **for** it, with a genuinely red-rooted
-neighbour (`alhamar`, a coverlet) tangled into the record beside it.
+printed in the Academy's dictionary for a long time and is repeated widely.
 
-Three of this tranche's other rewrites have the same shape -- a tidy, widely
-printed proposal that the current specialists have quietly stopped endorsing
-(`pecten`/`pecus`, `pulvis`/`pollen`, `gelu`/`glacies`). A hook that is beautiful
-and old is exactly the hook to check, and checking it costs one lookup.
+Corominas took it apart on a ground worth naming: the redness had been read **out
+of** the proposed etymology and then offered back as evidence **for** it. Nobody
+had found a red carpet and gone looking for a word; somebody had found a word
+that could mean red and imagined the carpet. A genuinely red-rooted neighbour --
+`alhamar`, a coverlet -- sat tangled in the record beside it, and the colour
+walked from one word to the other. The Academy now prints `alhanbal`, a kind of
+tapestry.
 
+That is not a one-off. Three more of tranche 5's rewrites have the same shape --
+a tidy, old, widely printed proposal the current specialists have quietly stopped
+endorsing: `pecten`/`pecus` (comb to livestock to money), `pulvis`/`pollen`, and
+`gelu`/`glacies`. Four in thirty-five lessons.
+
+**The check:** an etymology that is beautiful, old and widely repeated is the one
+most worth verifying, not the one least. Ask specifically whether the evidence
+offered for it is independent of the proposal itself, and whether the dictionary
+of record still prints it -- the two questions that separate scholarship from a
+story that has been told often enough to sound settled.
 ## HL-C11B — Kannada ಇ closes the retraced one-run gap
 
 After Japanese hiragana shi landed, Kannada independent vowel **ಇ** led the
