@@ -2,6 +2,20 @@
 
 ## Unreleased
 
+- Fixed backlog item #20 (VLT-PM41 §8.1), CI-cost only, no product behavior
+  change: `crash.rs` gained a third feature-split function,
+  `kdf_policy_override`, alongside the existing `around_*` durable-write
+  combinators. It is `None` unconditionally when this crate is not built with
+  `crash-injection` — the shipped `vault-pm` reads no environment variable and
+  derives no different Argon2id policy than before — and, only when that
+  feature is compiled in, reads
+  `VAULT_PM_DRILL_KDF_{MEMORY_KIB,ITERATIONS,LANES}` for
+  `NativeCliHost::generation_zero_kdf` to use in place of the
+  `PRODUCTION_KDF_*` constants. This exists for
+  `code/programs/rust/vault-pm-cli-drill`'s crash/fault matrix, whose rotation
+  sweep alone paid up to five production Argon2id derivations per landing
+  point across 48 landing points; see that package's changelog for the
+  measured before/after.
 - Fixed backlog item #8 (VLT-PM05 §13.9 / `VLT-PM17-cli-portable-export.md`
   amendment): `vault-pm export FILE` gained an optional `--best-effort` flag.
   Without it, one item this build cannot re-encode still denies the whole

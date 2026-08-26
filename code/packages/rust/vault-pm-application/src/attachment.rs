@@ -483,16 +483,86 @@ mod tests {
             expect_err(chunk_attachment(&[], blob(), dek())),
             ApplicationError::InvalidInput
         );
+        // The bound is checked before a single chunk is sealed (see this
+        // function's doc comment), so this allocates sixteen mebibytes but
+        // encrypts none of them — cheap, and it stays cheap regardless of how
+        // large `MAX_ATTACHMENT_BYTES` ever becomes.
         let oversized = vec![0u8; MAX_ATTACHMENT_BYTES + 1];
         assert_eq!(
             expect_err(chunk_attachment(&oversized, blob(), dek())),
             ApplicationError::BoundExceeded
         );
-        // Exactly at the ceiling still works, so the boundary is exact rather
-        // than approximate.
+    }
+
+    /// The ceiling is exact: `chunk_attachment` accepts every byte up to
+    /// `MAX_ATTACHMENT_BYTES` and produces precisely `MAX_ATTACHMENT_CHUNKS`
+    /// chunks there, not "approximately that many." Proving it used to mean
+    /// materializing sixteen real mebibytes and running them through the full
+    /// two-layer seal (`AttachmentEncryptor::encrypt_chunk`, 256 times) on
+    /// every CI run — about 1.5s in a debug build, in a package with 250+
+    /// otherwise-microsecond unit tests, for a fact that has nothing to do
+    /// with byte *content*.
+    ///
+    /// `chunk_attachment` has exactly one length-dependent behavior: an
+    /// offset-stepping loop that produces a full `ATTACHMENT_CHUNK_BYTES`
+    /// chunk per step until the final, possibly-shorter one. That mechanism
+    /// is scale-independent — the same code runs whether the input is 3
+    /// chunks or 256 — so a small representative multiple exercises it exactly
+    /// as thoroughly as the real ceiling does. What *is* unique to the real
+    /// ceiling is arithmetic, not mechanism: whether `MAX_ATTACHMENT_BYTES`
+    /// divides evenly by `ATTACHMENT_CHUNK_BYTES` into exactly
+    /// `MAX_ATTACHMENT_CHUNKS` pieces with no remainder. This proves the two
+    /// halves separately instead of fusing them into one expensive call.
+    #[test]
+    fn the_boundary_is_exact_in_mechanism_and_in_arithmetic() {
+        // (a) Mechanism, at a small representative scale: an exact multiple
+        // of the chunk size produces exactly that many chunks — never one
+        // more from a stray empty trailing chunk, never one fewer by folding
+        // the last full chunk's `is_final` flag into an earlier one. This is
+        // the same shape of edge case the real ceiling has (an exact
+        // multiple), just three chunks instead of two hundred fifty-six.
+        const REPRESENTATIVE_CHUNKS: usize = 3;
+        let representative = vec![7u8; REPRESENTATIVE_CHUNKS * ATTACHMENT_CHUNK_BYTES];
+        let chunked = chunk_attachment(&representative, blob(), dek()).unwrap();
+        assert_eq!(chunked.chunks.len(), REPRESENTATIVE_CHUNKS);
+        assert!(chunked.chunks.last().unwrap().is_final);
+        assert!(!chunked.chunks[..chunked.chunks.len() - 1]
+            .iter()
+            .any(|chunk| chunk.is_final));
+
+        // (b) Arithmetic, at the real ceiling: `expected_chunk_count` is the
+        // same chunk-counting arithmetic `chunk_attachment` derives its chunk
+        // count from (see its doc comment's "same arithmetic twice" cross
+        // check), so asking it directly proves the real ceiling lands on
+        // exactly `MAX_ATTACHMENT_CHUNKS` without ever allocating or
+        // encrypting the real sixteen mebibytes.
+        assert_eq!(
+            expected_chunk_count(MAX_ATTACHMENT_BYTES as u64),
+            MAX_ATTACHMENT_CHUNKS
+        );
+        assert_eq!(
+            MAX_ATTACHMENT_BYTES % ATTACHMENT_CHUNK_BYTES,
+            0,
+            "the real ceiling must divide evenly by the real chunk size"
+        );
+    }
+
+    /// The expensive, fully-real form of the test above: an actual
+    /// `MAX_ATTACHMENT_BYTES` buffer through the real two-layer seal. Not run
+    /// in ordinary CI — that cost is exactly what
+    /// `the_boundary_is_exact_in_mechanism_and_in_arithmetic` was written to
+    /// avoid paying on every run — but kept, `#[ignore]`d, as a periodic or
+    /// manual belt-and-suspenders check that the mechanism-at-small-scale and
+    /// arithmetic-at-real-scale split above did not quietly stop describing
+    /// what actually happens at the real ceiling. Run with
+    /// `cargo test -- --ignored the_full_scale_ceiling`.
+    #[test]
+    #[ignore = "exercises a real 16 MiB encryption pass; see VLT-PM47 CI-cost note"]
+    fn the_full_scale_ceiling_still_chunks_exactly_at_max_attachment_chunks() {
         let exact = vec![7u8; MAX_ATTACHMENT_BYTES];
         let chunked = chunk_attachment(&exact, blob(), dek()).unwrap();
         assert_eq!(chunked.chunks.len(), MAX_ATTACHMENT_CHUNKS);
+        assert!(chunked.chunks.last().unwrap().is_final);
     }
 
     /// Every one of these is authorable by a synchronising peer, and the point

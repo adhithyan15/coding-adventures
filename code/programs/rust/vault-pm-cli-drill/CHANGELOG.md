@@ -1,5 +1,27 @@
 # Changelog
 
+## [0.5.0] - 2026-08-25
+
+### Changed
+
+- **CI-cost fix (backlog item #20), no coverage change.** Every drilled
+  process now carries `VAULT_PM_DRILL_KDF_{MEMORY_KIB,ITERATIONS,LANES}`
+  (`TestHome::configure`), read by `coding_adventures_vault_pm_cli`'s
+  `crash-injection` build (`crash.rs`'s `kdf_policy_override`) in place of its
+  production Argon2id policy. A landing point's clean/resumable classification
+  is a fact about durable-write ordering, never about KDF cost, so this
+  removes pure overhead rather than any tested behavior: all 48 rotation
+  landing points, all 34 generation-zero landing points, all 20
+  publication-path landing points, and every other ceremony in this file are
+  still swept exhaustively through a real `SIGKILL`ed process, every
+  assertion unchanged. Measured on one development machine: `cargo test` for
+  this whole file, 266.92s to 38.92s. The equivalence-class reduction backlog
+  item #20 previously declined (cutting the rotation sweep's 48 landing points
+  to a representative subset) remains declined — it was not needed. See
+  `code/specs/VLT-PM41-cli-crash-fault-matrix.md` §8.1.
+- README updated to match: the Argon2id-cost section now documents the
+  override instead of only naming the cost.
+
 ## [0.4.0] - 2026-08-18
 
 ### Added
