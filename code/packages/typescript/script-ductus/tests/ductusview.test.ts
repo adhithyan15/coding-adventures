@@ -113,6 +113,8 @@ const TAMIL_ZHA = DUCTUS["ழ"];
 const tamilZhaOutline = tamilOutline("ழ");
 const TELUGU_A = DUCTUS[ductusKey("telugu", "అ")];
 const teluguAOutline = teluguOutline("అ");
+const TELUGU_AA = DUCTUS[ductusKey("telugu", "ఆ")];
+const teluguAaOutline = teluguOutline("ఆ");
 const KANNADA_A = DUCTUS[ductusKey("kannada", "ಅ")];
 const kannadaAOutline = kannadaOutline("ಅ");
 const KANNADA_I = DUCTUS[ductusKey("kannada", "ಇ")];
@@ -1002,6 +1004,31 @@ describe("Telugu అ — two joined movement pairs", () => {
     expect(done).toHaveLength(1);
     expect(done[0].attrs.d).toBe(penPathD(TELUGU_A.strokes[0], 1));
     expect(pen.attrs.d).toBe(penPathD(TELUGU_A.strokes[1], 1));
+  });
+});
+
+describe("Telugu ఆ — two source-verified component runs", () => {
+  const steps = ductusSteps(TELUGU_AA);
+  const strip = ductusFilmstrip(TELUGU_AA, teluguAaOutline);
+
+  it("places one lift between the bowl and right lobe", () => {
+    expect(steps.map((step) => step.startsAfterLift)).toEqual([false, true]);
+    expect(steps.map((step) => step.strokeIndex)).toEqual([0, 1]);
+  });
+
+  it("reports two movements in two strokes", () => {
+    expect(strip.frames).toHaveLength(2);
+    expect(strip.penLifts).toBe(1);
+    expect(strip.summary).toBe("2 strokes · 1 pen lift · 2 movements");
+  });
+
+  it("keeps the completed bowl visible while drawing the right lobe", () => {
+    const last = strip.frames[1];
+    const done = byTag(last, "path").filter((path) => path.attrs.class === "ductus__done");
+    const pen = byTag(last, "path").find((path) => path.attrs.class === "ductus__pen")!;
+    expect(done).toHaveLength(1);
+    expect(done[0].attrs.d).toBe(penPathD(TELUGU_AA.strokes[0], 1));
+    expect(pen.attrs.d).toBe(penPathD(TELUGU_AA.strokes[1], 1));
   });
 });
 
