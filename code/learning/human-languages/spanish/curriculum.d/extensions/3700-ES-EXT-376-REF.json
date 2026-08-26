@@ -1,0 +1,15 @@
+{
+  "id": "ES-EXT-376-REF",
+  "stage": "A1",
+  "kind": "required",
+  "category": "vocabulary",
+  "canDo": "I can name la harina, la uva, el maíz, el chocolate and el pimiento.",
+  "prerequisites": [],
+  "lessons": [
+    "ES-C376-harina",
+    "ES-C376-uva",
+    "ES-C376-maiz",
+    "ES-C376-chocolate",
+    "ES-C376-pimiento"
+  ]
+}

@@ -39,7 +39,7 @@ describe("real curriculum", () => {
     expect(scripts.devanagari!.complete).toBe(true);
   });
 
-  it("keeps the cross-script closure queue measured after Telugu independent aa", () => {
+  it("keeps the cross-script closure queue measured after Telugu independent i", () => {
     const candrakkala = scripts.malayalam!.marks!.find((mark) => mark.mark === "്")!;
     expect(candrakkala.role).toBe("virama");
     expect(candrakkala.compositionOrder).toEqual([
@@ -785,6 +785,22 @@ describe("real curriculum", () => {
     );
     expect(missingByScript.get("telugu.json")?.has("ఆ")).toBe(false);
     expect(affected.get("ఆ") ?? 0).toBe(0);
+    const teluguI = scripts.telugu!.independentVowels!.find((entry) => entry.glyph === "ఇ")!;
+    expect(teluguI.sound).toBe("i");
+    expect(teluguI.penLifts).toBe(2);
+    expect(teluguI.strokeOrder).toEqual([
+      "turn around the broad outer bowl",
+      "lift and form the compact upper-left lobe",
+      "lift again and form the angled upper-right shoulder",
+    ]);
+    expect(teluguI.strokeOrderSource?.citation).toMatch(
+      /Hojaswani LUCIDA and Physics classes.*ఇ decomposition.*00:00–00:05.*14 September 2024/i,
+    );
+    expect(teluguI.strokeOrderSource?.variation).toMatch(
+      /three separated components.*recombined as ఇ.*Noto Sans Telugu.*handwriting may vary/i,
+    );
+    expect(missingByScript.get("telugu.json")?.has("ఇ")).toBe(false);
+    expect(affected.get("ఇ") ?? 0).toBe(0);
     expect(missingByScript.get("telugu.json")?.has("ఎ")).toBe(false);
     expect(affected.get("ఎ") ?? 0).toBe(0);
     expect(missingByScript.get("malayalam.json")?.has("അ")).toBe(false);
@@ -864,7 +880,7 @@ describe("real curriculum", () => {
     expect(affected.get("ش") ?? 0).toBe(0);
     expect(
       [...affected.entries()].sort((left, right) => right[1] - left[1])[0],
-    ).toEqual(["ఇ", 8]);
+    ).toEqual(["ഇ", 7]);
   });
 
   it("loaded every track (17+ and growing)", () => {

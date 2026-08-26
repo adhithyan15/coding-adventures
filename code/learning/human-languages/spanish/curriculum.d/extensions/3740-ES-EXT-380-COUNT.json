@@ -1,0 +1,15 @@
+{
+  "id": "ES-EXT-380-COUNT",
+  "stage": "A1",
+  "kind": "required",
+  "category": "vocabulary",
+  "canDo": "I can name simpático, alegre, feo, último and necesario.",
+  "prerequisites": [],
+  "lessons": [
+    "ES-C380-simpatico",
+    "ES-C380-alegre",
+    "ES-C380-feo",
+    "ES-C380-ultimo",
+    "ES-C380-necesario"
+  ]
+}

@@ -6,6 +6,11 @@ All notable changes to this package will be documented in this file.
 
 ### Added
 
+- A pure orphan-crate snapshot validator consuming all four shared neutral
+  cases, with exact artifact filtering, direct and ancestor BUILD coverage,
+  empty-BUILD diagnostics, reasoned exemption validation and stale cleanup,
+  active PENDING counts, hostile-path redaction, pinned Unicode 17 duplicate
+  identities and reserved basenames, and canonical deterministic diagnostics.
 - A pure tracked-artifact snapshot validator consuming all five shared neutral
   cases, with hostile-path redaction, scalar-bounded and scalar-ordered
   diagnostics, exact problem precedence, inert entry metadata, and pinned

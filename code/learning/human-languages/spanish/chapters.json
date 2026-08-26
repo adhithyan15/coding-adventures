@@ -7381,6 +7381,153 @@
           "ES-LEX-C373-REF-55"
         ]
       }
+    },
+    {
+      "chapter": 374,
+      "title": "Five Things You Hold",
+      "label": "ch:el-lapiz-y-el-cepillo",
+      "canDo": "I can say el lápiz, el cepillo, el guante, la vela and el nudo, and name five things that fit in one hand.",
+      "spineNodes": [
+        "SPINE-DEFINITE-REFERENCE"
+      ],
+      "payoff": {
+        "lesson": "ES-C374-nudo",
+        "kind": "production",
+        "summary": "Complete ES-C374-nudo: name five things that fit in one hand, and say one thing about each.",
+        "assesses": [
+          "ES-LEX-C374-REF-56",
+          "ES-LEX-C374-REF-57",
+          "ES-LEX-C374-REF-58",
+          "ES-LEX-C374-REF-59",
+          "ES-LEX-C374-REF-60"
+        ]
+      }
+    },
+    {
+      "chapter": 375,
+      "title": "Five Things a Person Has",
+      "label": "ch:la-una-y-el-labio",
+      "canDo": "I can say la uña, el labio, el pulgar, el beso and el sobrino, and name five things that belong to a person.",
+      "spineNodes": [
+        "SPINE-DEFINITE-REFERENCE"
+      ],
+      "payoff": {
+        "lesson": "ES-C375-sobrino",
+        "kind": "production",
+        "summary": "Complete ES-C375-sobrino: name five things that belong to a person, and say one thing about each.",
+        "assesses": [
+          "ES-LEX-C375-REF-61",
+          "ES-LEX-C375-REF-62",
+          "ES-LEX-C375-REF-63",
+          "ES-LEX-C375-REF-64",
+          "ES-LEX-C375-REF-65"
+        ]
+      }
+    },
+    {
+      "chapter": 376,
+      "title": "Five Things on a Plate",
+      "label": "ch:la-harina-y-la-uva",
+      "canDo": "I can say la harina, la uva, el maíz, el chocolate and el pimiento, and name five things that go on a plate.",
+      "spineNodes": [
+        "SPINE-DEFINITE-REFERENCE"
+      ],
+      "payoff": {
+        "lesson": "ES-C376-pimiento",
+        "kind": "production",
+        "summary": "Complete ES-C376-pimiento: name five things that go on a plate, and say one thing about each.",
+        "assesses": [
+          "ES-LEX-C376-REF-66",
+          "ES-LEX-C376-REF-67",
+          "ES-LEX-C376-REF-68",
+          "ES-LEX-C376-REF-69",
+          "ES-LEX-C376-REF-70"
+        ]
+      }
+    },
+    {
+      "chapter": 377,
+      "title": "Five Things You Can Learn",
+      "label": "ch:la-letra-y-la-frase",
+      "canDo": "I can say la letra, la frase, el idioma, la historia and el baile, and name five things a person can learn.",
+      "spineNodes": [
+        "SPINE-DEFINITE-REFERENCE"
+      ],
+      "payoff": {
+        "lesson": "ES-C377-baile",
+        "kind": "production",
+        "summary": "Complete ES-C377-baile: name five things a person can learn, and say one thing about each.",
+        "assesses": [
+          "ES-LEX-C377-REF-71",
+          "ES-LEX-C377-REF-72",
+          "ES-LEX-C377-REF-73",
+          "ES-LEX-C377-REF-74",
+          "ES-LEX-C377-REF-75"
+        ]
+      }
+    },
+    {
+      "chapter": 378,
+      "title": "Five Places You Can Ask About",
+      "label": "ch:la-selva-y-el-prado",
+      "canDo": "I can say la selva, el prado, el volcán, la cumbre and el edificio, and ask where five kinds of place are.",
+      "spineNodes": [
+        "SPINE-ASK-LOCATION"
+      ],
+      "payoff": {
+        "lesson": "ES-C378-edificio",
+        "kind": "production",
+        "summary": "Complete ES-C378-edificio: ask where five kinds of place are, and say one thing about each.",
+        "assesses": [
+          "ES-LEX-C378-WHERE-56",
+          "ES-LEX-C378-WHERE-57",
+          "ES-LEX-C378-WHERE-58",
+          "ES-LEX-C378-WHERE-59",
+          "ES-LEX-C378-WHERE-60"
+        ]
+      }
+    },
+    {
+      "chapter": 379,
+      "title": "Five Words for How Something Feels",
+      "label": "ch:seco-y-mojado",
+      "canDo": "I can say seco, mojado, fresco, tibio and grueso, and count five things and say how each one feels.",
+      "spineNodes": [
+        "SPINE-COUNT-ONE-TO-FIVE"
+      ],
+      "payoff": {
+        "lesson": "ES-C379-grueso",
+        "kind": "production",
+        "summary": "Complete ES-C379-grueso: count five things and say how each one feels, and say one thing about each.",
+        "assesses": [
+          "ES-LEX-C379-COUNT-31",
+          "ES-LEX-C379-COUNT-32",
+          "ES-LEX-C379-COUNT-33",
+          "ES-LEX-C379-COUNT-34",
+          "ES-LEX-C379-COUNT-35"
+        ]
+      }
+    },
+    {
+      "chapter": 380,
+      "title": "Five Words for What Something Is Like",
+      "label": "ch:simpatico-y-alegre",
+      "canDo": "I can say simpático, alegre, feo, último and necesario, and count five people or things and say what each is like.",
+      "spineNodes": [
+        "SPINE-COUNT-ONE-TO-FIVE"
+      ],
+      "payoff": {
+        "lesson": "ES-C380-necesario",
+        "kind": "production",
+        "summary": "Complete ES-C380-necesario: count five people or things and say what each is like, and say one thing about each.",
+        "assesses": [
+          "ES-LEX-C380-COUNT-36",
+          "ES-LEX-C380-COUNT-37",
+          "ES-LEX-C380-COUNT-38",
+          "ES-LEX-C380-COUNT-39",
+          "ES-LEX-C380-COUNT-40"
+        ]
+      }
     }
   ]
 }

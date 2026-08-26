@@ -19,6 +19,18 @@ results do not depend on GHC's host Unicode version. All five shared neutral
 fixtures and every official Unicode normalization and casing vector are
 exercised with an isolated, explicitly pinned GHC 9.4.8/runghc pair.
 
+Orphan-crate validation is a second pure adapter over one caller-supplied
+Cargo/BUILD/exemption snapshot. It filters the exact artifact-component
+registry, finds direct or component-wise ancestor coverage using the fixed
+BUILD filename rank, reports the closest empty BUILD only when no runnable
+ancestor exists, and validates reasoned `EXCLUDED` and countable `PENDING`
+ledger entries. Portable paths use embedded Unicode 17 NFC, full folding for
+duplicate identities, and full uppercase for Windows reserved basenames.
+Unsafe exemptions are replaced by a fixed `code/BUILD-EXEMPTIONS` diagnostic;
+no hostile path is retained. All four shared neutral fixtures plus adversarial
+scalar, reason, precedence, and canonical-order cases run without filesystem,
+Git, process, environment, network, credential, or link authority.
+
 Lua rockspec metadata is read as raw bytes and decoded as strict UTF-8 before
 dependency resolution. Malformed bytes fail closed with package and
 repository-relative manifest identity:

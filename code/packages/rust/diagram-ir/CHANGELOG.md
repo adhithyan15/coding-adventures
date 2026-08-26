@@ -1,5 +1,9 @@
 # Changelog — diagram-ir
 
+## 0.83.0
+
+- Preserve authored Gantt duration values and millisecond-through-week units in typed semantic IR.
+
 ## 0.82.0
 
 - Represent Gantt input date formats as typed semantic parts rather than an inert string.

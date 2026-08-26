@@ -1,0 +1,827 @@
+{
+  "version": 1,
+  "language": "spanish",
+  "chapter": 376,
+  "title": "Five Things on a Plate",
+  "drivablePrefix": 5,
+  "sourceHash": "fnv1a64:9777c75c5ab0f902",
+  "lessons": [
+    {
+      "id": "ES-C376-harina",
+      "sequence": 7720,
+      "title": "la harina — the f that turned into silence",
+      "headword": "la harina",
+      "romanization": "la harina",
+      "gloss": "flour — Latin farina, from far, husked wheat; the f became h by the Castilian change behind hacer and hijo, which spared frente and fuego",
+      "script": "latin",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:3028a46d8ac587e7",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Say the kiss, then the nephew. (El beso; El sobrino.)"
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know first",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "el pan — what it becomes."
+            },
+            {
+              "kind": "speech",
+              "text": "el trigo — what it was first."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "pronunciation",
+          "title": "Sounds you'll need",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "a-RI-na, three beats with the weight on the middle one. The h is written and not pronounced, so the word opens on its vowel. see pronunciation reference."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "la harina — \"flour.\""
+            },
+            {
+              "kind": "speech",
+              "text": "Latin farīna was ground grain, built on far — husked wheat, the coarse stuff Romans ate long before anybody bolted flour fine. English holds the same Latin word twice, in farina and farinaceous."
+            },
+            {
+              "kind": "speech",
+              "text": "Spanish turned the f into an h, and then stopped pronouncing the h altogether. You have already met the change several times without it being named:"
+            },
+            {
+              "kind": "speech",
+              "text": "facere becomes hacer;"
+            },
+            {
+              "kind": "speech",
+              "text": "filius becomes hijo;"
+            },
+            {
+              "kind": "speech",
+              "text": "farīna becomes harina."
+            },
+            {
+              "kind": "speech",
+              "text": "Here is the part that makes it usable rather than a curiosity. The change had a boundary. It did not happen before r, before l, or before the ue glide, which is why these kept their f:"
+            },
+            {
+              "kind": "speech",
+              "text": "frente, not hrente;"
+            },
+            {
+              "kind": "speech",
+              "text": "flor, not hlor;"
+            },
+            {
+              "kind": "speech",
+              "text": "fuego, not huego."
+            },
+            {
+              "kind": "speech",
+              "text": "Do not turn that into a rule about every f, though, because there is a second reason and it covers many more words: the word never went through the change at all. It was lifted out of written Latin centuries after the change had finished, so there was nothing for it to apply to. Fácil, familia, forma, final, fecha, feliz and fiesta are all in that group."
+            },
+            {
+              "kind": "speech",
+              "text": "So an initial f tells you one of two things. Either an r, an l or a ue was standing directly behind it -- or the word came into Spanish through a book rather than through speech."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "You can now name what bread is made of: la harina."
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "la harina",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *la harina*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "un kilo de harina",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *un kilo de harina*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "harina y agua",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *harina y agua*]"
+            }
+          ]
+        },
+        {
+          "index": 6,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What happened to the f of Latin farīna? (It became a written, silent h.) And name the two reasons a Spanish word can still start with f. (An r, l or ue stood behind it — or it was lifted from written Latin long after the change finished.)"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "ES-C376-uva",
+      "sequence": 7730,
+      "title": "la uva — a little grape in your throat",
+      "headword": "la uva",
+      "romanization": "la uva",
+      "gloss": "grape — Latin uva, a grape or a bunch of them; English uvula is its diminutive, the little grape at the back of the throat",
+      "script": "latin",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:bb3a628141b08460",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Say the nephew, then the flour. (El sobrino; La harina.)"
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know first",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "el vino — what it becomes."
+            },
+            {
+              "kind": "speech",
+              "text": "la fruta — the family it belongs to."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "pronunciation",
+          "title": "Sounds you'll need",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "U-va, two beats with the weight on the first. The v is the same sound as a soft b, made with the lips barely touching. see pronunciation reference."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "la uva — \"grape.\""
+            },
+            {
+              "kind": "speech",
+              "text": "Latin uva meant a grape — and also the bunch. One word for the single thing and the cluster, which is convenient when the two rarely appear apart."
+            },
+            {
+              "kind": "speech",
+              "text": "Its diminutive was uvula, \"little grape,\" and that word is still in English, unchanged, naming the small soft flap that hangs at the back of your throat."
+            },
+            {
+              "kind": "speech",
+              "text": "Why that name? Because whoever first wrote it down thought the flap looked like a small grape, and said so. That is worth pausing on. Most of the time an explanation of why a word means what it does has to be reconstructed, and reconstructions can be talked into almost anything. Here the reason was written down at the time."
+            },
+            {
+              "kind": "speech",
+              "text": "So you have a Spanish fruit and an English piece of anatomy that are the same Latin word, one of them shrunk, and a recorded explanation joining them."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "You can now name what wine starts as: la uva."
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "la uva",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *la uva*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "las uvas",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *las uvas*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "un kilo de uvas",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *un kilo de uvas*]"
+            }
+          ]
+        },
+        {
+          "index": 6,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What did Latin uva cover, one grape or the bunch? (Both.) And what is the uvula named after? (A little grape, because of how it looks.)"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "ES-C376-maiz",
+      "sequence": 7740,
+      "title": "el maíz — one of the first words to cross",
+      "headword": "el maíz",
+      "romanization": "el maíz",
+      "gloss": "maize — Taíno mahis, one of the first American words to reach Europe, and the word Spanish handed on to English as maize",
+      "script": "latin",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:ca19fd8200d82000",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Say the flour, then the grape. (La harina; La uva.)"
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know first",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "el trigo — the grain Europe already had."
+            },
+            {
+              "kind": "speech",
+              "text": "la patata — another word that came the same way."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "pronunciation",
+          "title": "Sounds you'll need",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ma-ÍZ, two beats with the weight on the second. The written accent on the í keeps the a and the i apart, so they do not collapse into one glide. see pronunciation reference."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "el maíz — \"maize.\""
+            },
+            {
+              "kind": "speech",
+              "text": "Maíz comes from mahís, a word in Taíno — the Arawakan language spoken in the Caribbean islands Columbus reached in 1492. Spanish took it and handed it on: English maize is the Spanish word with an English spelling."
+            },
+            {
+              "kind": "speech",
+              "text": "It was among the very first American words to reach Europe. Canoa is in the same log, recorded within a fortnight of landfall, and so are hamaca and cacique."
+            },
+            {
+              "kind": "speech",
+              "text": "A note on how to say that safely. It is tempting to promote maíz to the first — a good line, and unprovable. Which word arrived first depends on which manuscript you trust and which transcription of it, and canoa is the usual claimant anyway. \"Among the first\" is a claim the evidence supports. \"The first\" is a claim nobody can check, and this word does not need it."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "You can now name a grain that crossed an ocean: el maíz."
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "el maíz",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *el maíz*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "un poco de maíz",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *un poco de maíz*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "harina de maíz",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *harina de maíz*]"
+            }
+          ]
+        },
+        {
+          "index": 6,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Which language did maíz come from? (Taíno, in the Caribbean.) And which word probably reached Europe before it? (Canoa.)"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "ES-C376-chocolate",
+      "sequence": 7750,
+      "title": "el chocolate — a famous etymology that is not attested",
+      "headword": "el chocolate",
+      "romanization": "el chocolate",
+      "gloss": "chocolate — Nahuatl, but the Academy marks the etymology disputed; the famous xocolātl is unattested, and chicolātl, named for the whisking stick, is the live proposal",
+      "script": "latin",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:a160668f163c3f5e",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Say the grape, then the maize. (La uva; El maíz.)"
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know first",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "la leche — what it is usually made with."
+            },
+            {
+              "kind": "speech",
+              "text": "el azúcar — what was added later."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "pronunciation",
+          "title": "Sounds you'll need",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "cho-co-LA-te, four beats with the weight on the third. The ch is one sound, as in English church. see pronunciation reference."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "el chocolate — \"chocolate.\""
+            },
+            {
+              "kind": "speech",
+              "text": "Chocolate came into Spanish from Nahuatl, the language of the Aztec empire. That much is agreed."
+            },
+            {
+              "kind": "speech",
+              "text": "After that, very little is. The Academy's dictionary marks the entry disputed — which a dictionary does not do lightly."
+            },
+            {
+              "kind": "speech",
+              "text": "You have probably met the standard story: Nahuatl xocolātl, \"bitter water,\" from xoco \"bitter\" and atl \"water.\" It has a problem. No colonial source records that word. It is missing from Molina's dictionary, the great sixteenth-century record of the language, and chocolatl does not surface in Nahuatl until the seventeen hundreds — long after the drink was being drunk in Madrid."
+            },
+            {
+              "kind": "speech",
+              "text": "And notice the shape of the argument. \"Bitter water\" is not evidence for the etymology; it is the etymology chopped in half and read back. Segmenting a reconstruction and then admiring how well the pieces fit proves only that you did the segmenting."
+            },
+            {
+              "kind": "speech",
+              "text": "The proposal that has gained ground instead is chicolātl, from chicolli — the wooden stick used to beat the drink into foam. The drink named for the implement, not the taste. Two things support it: living Nahuatl dialects, and the i that shows up in the earliest borrowings outside Spanish, where \"bitter water\" predicts an o."
+            },
+            {
+              "kind": "speech",
+              "text": "So this is a word you can use with complete confidence and cannot explain with any."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "You can now name what was drunk before it was eaten: el chocolate."
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "el chocolate",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *el chocolate*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "un chocolate",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *un chocolate*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "chocolate con leche",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *chocolate con leche*]"
+            }
+          ]
+        },
+        {
+          "index": 6,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does the Academy's dictionary say about this etymology? (That it is disputed.) And what does the leading proposal name the drink after? (Chicolli, the stick used to whisk it.)"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "ES-C376-pimiento",
+      "sequence": 7760,
+      "title": "el pimiento — a name that arrived through the spice cupboard",
+      "headword": "el pimiento",
+      "romanization": "el pimiento",
+      "gloss": "pepper — from pimienta, Latin pigmenta, which passed from colouring matter through drug and ingredient to condiment; the American pepper took the Old World name",
+      "script": "latin",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:3807a175951fe7d7",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Say the maize, then the chocolate. (El maíz; El chocolate.)"
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know first",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "la sal — the other thing on every table."
+            },
+            {
+              "kind": "speech",
+              "text": "el tomate — another that crossed the same ocean."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "pronunciation",
+          "title": "Sounds you'll need",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "pi-MIEN-to, three beats with the weight on the middle one. The ie is one glide, not two separate vowels. see pronunciation reference."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "el pimiento — \"pepper.\""
+            },
+            {
+              "kind": "speech",
+              "text": "Pimiento comes from pimienta, black pepper, and pimienta is Latin pigmenta — the plural of pigmentum."
+            },
+            {
+              "kind": "speech",
+              "text": "A pigmentum started out as colouring matter, the stuff a painter grinds. In later Latin it slid: from colouring matter to a drug, from a drug to an ingredient, from an ingredient to a condiment. And the condiment that mattered most in medieval Europe was pepper. So a word that began in the paint pot ended up meaning the spice."
+            },
+            {
+              "kind": "speech",
+              "text": "It is tempting to shorten that to \"the pepper is named for its colour.\" Do not. That version takes the earliest sense of the Latin word, skips the three steps that actually carried it, and then points at a red pepper as though the colour were the proof. The dictionary's own gloss lays the route out, and the route runs through the apothecary, not the paint."
+            },
+            {
+              "kind": "speech",
+              "text": "English keeps the older sense alive in pigment, and paint is a relative — both are built on pingere, \"to paint.\""
+            },
+            {
+              "kind": "speech",
+              "text": "One more turn. The pepper on a Spanish table is American, and it was named by transfer: Europeans reached for the word they already had for the hot thing you grind. Pimienta stayed with the peppercorn; pimiento went to the newcomer."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "You can now name a pepper: un pimiento."
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "el pimiento",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *el pimiento*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "un pimiento",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *un pimiento*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "un pimiento rojo",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *un pimiento rojo*]"
+            }
+          ]
+        },
+        {
+          "index": 6,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What did Latin pigmentum come to mean by late Latin? (A drug, an ingredient, a condiment.) And was the pepper named for its colour? (No — for being the spice.)"
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "findings": []
+}

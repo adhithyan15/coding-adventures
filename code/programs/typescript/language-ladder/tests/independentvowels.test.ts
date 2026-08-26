@@ -15,7 +15,7 @@ describe("independent (word-initial) vowels", () => {
     expect(iv.map((v) => v.sound)).toEqual(
       ["a", "ā", "i", "ī", "u", "ū", "e", "ē", "o", "ō", "ai", "au", "r̥"],
     );
-    // Independent vowels are vowels, not syllables. అ, ఆ, and ఎ have crossed
+    // Independent vowels are vowels, not syllables. అ, ఆ, ఇ, and ఎ have crossed
     // the source-and-font gate; every other row remains free of fabricated ductus.
     expect(iv.every((v) => v.role === "vowel")).toBe(true);
     expect(iv[0]!.strokeOrder).toHaveLength(4);
@@ -28,12 +28,17 @@ describe("independent (word-initial) vowels", () => {
     expect(iv[1]!.strokeOrderSource?.url).toBe(
       "https://www.youtube.com/watch?v=vXdrj1pP6q0",
     );
+    expect(iv[2]!.strokeOrder).toHaveLength(3);
+    expect(iv[2]!.penLifts).toBe(2);
+    expect(iv[2]!.strokeOrderSource?.url).toBe(
+      "https://www.youtube.com/watch?v=MKvmq1hFVIE",
+    );
     expect(iv[6]!.strokeOrder).toHaveLength(3);
     expect(iv[6]!.penLifts).toBe(1);
     expect(iv[6]!.strokeOrderSource?.url).toBe(
       "https://write-telugu-alphabets.en.aptoide.com/app",
     );
-    expect(iv.filter((_, index) => index !== 0 && index !== 1 && index !== 6).every((v) => v.strokeOrder.length === 0)).toBe(true);
+    expect(iv.filter((_, index) => ![0, 1, 2, 6].includes(index)).every((v) => v.strokeOrder.length === 0)).toBe(true);
     // The vocalic-R vowel is ISO-15919 r̥ = r + U+0325 (ring below), not IAST ṛ.
     expect([...iv[12]!.sound].map((c) => c.codePointAt(0))).toEqual([0x72, 0x325]);
   });

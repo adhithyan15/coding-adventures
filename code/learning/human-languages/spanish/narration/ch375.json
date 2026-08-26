@@ -1,0 +1,795 @@
+{
+  "version": 1,
+  "language": "spanish",
+  "chapter": 375,
+  "title": "Five Things a Person Has",
+  "drivablePrefix": 5,
+  "sourceHash": "fnv1a64:9c7dddfb0a477b25",
+  "lessons": [
+    {
+      "id": "ES-C375-una",
+      "sequence": 7670,
+      "title": "la uña — a small claw",
+      "headword": "la uña",
+      "romanization": "la uña",
+      "gloss": "fingernail — Latin ungula, a diminutive of unguis, nail or claw; English ungulate, a hoofed animal, is the same word",
+      "script": "latin",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:b350efcd13480efa",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Say the candle, then the knot. (La vela; El nudo.)"
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know first",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "el dedo — where it sits."
+            },
+            {
+              "kind": "speech",
+              "text": "la mano — the whole of which it is a corner."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "pronunciation",
+          "title": "Sounds you'll need",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "U-ña, two beats with the weight on the first. The ñ is one sound, the ny in English canyon, never two. see pronunciation reference."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "la uña — \"fingernail.\""
+            },
+            {
+              "kind": "speech",
+              "text": "Latin unguis was a nail or a claw. Ungula was its diminutive: a small claw. Spanish inherited the diminutive, so uña has a \"little\" folded into it that no Spanish speaker hears any more."
+            },
+            {
+              "kind": "speech",
+              "text": "English borrowed the same Latin diminutive much later and used it to name a whole branch of the animal kingdom. An ungulate is a hoofed animal — a horse, a deer, a cow — filed under a word that literally means small claw, because a hoof is what a claw becomes when an animal walks on it."
+            },
+            {
+              "kind": "speech",
+              "text": "One caution, because the resemblance invites the wrong conclusion. English nail is not descended from unguis. The two are relatives at a depth that has to be reconstructed rather than read off the page, which is a different kind of claim from ungulate, where you can watch the borrowing happen."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "You can now name the hard part of a finger: la uña."
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "la uña",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *la uña*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "las uñas",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *las uñas*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "una uña rota",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *una uña rota*]"
+            }
+          ]
+        },
+        {
+          "index": 6,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What did Latin ungula mean? (A small claw — it was already a diminutive.) And what kind of animal is an ungulate? (A hoofed one, named from the same word.)"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "ES-C375-labio",
+      "sequence": 7680,
+      "title": "el labio — a resemblance the handbooks have stopped explaining",
+      "headword": "el labio",
+      "romanization": "el labio",
+      "gloss": "lip — Latin labium, the same word as English labial; English lip is Germanic, and the old Indo-European link between them is now doubted",
+      "script": "latin",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:a0a9506b9cf4115f",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Say the knot, then the fingernail. (El nudo; La uña.)"
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know first",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "la boca — what it closes."
+            },
+            {
+              "kind": "speech",
+              "text": "el diente — what sits behind it."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "pronunciation",
+          "title": "Sounds you'll need",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "LA-bio, two beats with the weight on the first. The b between vowels is soft — the lips come close without quite meeting. see pronunciation reference."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "el labio — \"lip.\""
+            },
+            {
+              "kind": "speech",
+              "text": "Latin labium gave Spanish labio, and English took the same word directly for its technical use: a labial sound is one made with the lips."
+            },
+            {
+              "kind": "speech",
+              "text": "English lip is a different story. It is native Germanic, Old English lippa, and it is not descended from labium."
+            },
+            {
+              "kind": "speech",
+              "text": "For a long time the handbooks put the two under one Indo-European root and left it there. That is no longer where the argument stands. De Vaan and Boutkan reject the Indo-European derivation for this whole group and suspect something stranger: that Latin and Germanic each borrowed the word from a language spoken in Europe before either of them arrived, and then lost."
+            },
+            {
+              "kind": "speech",
+              "text": "So the resemblance between labio and lip is probably not an accident. It is probably also not inheritance. What it most likely records is a word that was already in Europe when the languages you can trace showed up — and a speaker nobody can name."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "You can now name the edge of a mouth: el labio."
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "el labio",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *el labio*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "los labios",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *los labios*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "el labio y el diente",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *el labio y el diente*]"
+            }
+          ]
+        },
+        {
+          "index": 6,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Which English word is the direct borrowing of labium? (Labial.) And is English lip descended from it? (No — Germanic, and the old shared-root story is now doubted.)"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "ES-C375-pulgar",
+      "sequence": 7690,
+      "title": "el pulgar — a ruler before it was a word",
+      "headword": "el pulgar",
+      "romanization": "el pulgar",
+      "gloss": "thumb — Latin pollicaris, which meant an inch long, from pollex; the same word gives Spanish pulgada, an inch",
+      "script": "latin",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:5a1d37f580f76a9d",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Say the fingernail, then the lip. (La uña; El labio.)"
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know first",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "el dedo — the family it belongs to."
+            },
+            {
+              "kind": "speech",
+              "text": "la mano — where it sits, opposite the rest."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "pronunciation",
+          "title": "Sounds you'll need",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "pul-GAR, two beats with the weight on the second. A word ending in -r takes its stress on the last beat and needs no written accent. see pronunciation reference."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "el pulgar — \"thumb.\""
+            },
+            {
+              "kind": "speech",
+              "text": "Latin pollex was the thumb. From it came the adjective pollicāris — and the Academy's dictionary glosses that adjective not as \"of the thumb\" but as \"an inch long.\""
+            },
+            {
+              "kind": "speech",
+              "text": "That is the real find here. The thumb was a measuring instrument before it was a word for a body part, and Spanish still carries the proof: a pulgada is an inch. English does the same thing in reverse — inch comes from Latin uncia, a twelfth part, and thumb stays out of it, but French pouce means both thumb and inch to this day."
+            },
+            {
+              "kind": "speech",
+              "text": "There is a story attached to pollex that you will meet, and it should be set aside. It says the thumb is \"the strong one,\" from the verb pollēre, \"to be strong.\""
+            },
+            {
+              "kind": "speech",
+              "text": "Follow how that argument runs. It reads strength out of the proposed ancestor, then points at how strong a thumb is as evidence for that ancestor. The thumb's strength is a fact about thumbs; it proves nothing about the word. De Vaan is unconvinced, and pollex is best left as disputed."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "You can now name the odd one out on a hand: el pulgar."
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "el pulgar",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *el pulgar*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "un pulgar",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *un pulgar*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "el pulgar y los dedos",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *el pulgar y los dedos*]"
+            }
+          ]
+        },
+        {
+          "index": 6,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What did Latin pollicāris actually mean? (An inch long.) And which Spanish word for a measurement comes from it? (Pulgada.)"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "ES-C375-beso",
+      "sequence": 7700,
+      "title": "el beso — a word Latin borrowed too",
+      "headword": "el beso",
+      "romanization": "el beso",
+      "gloss": "kiss — Latin basium, which the Academy's dictionary says Latin itself took from Celtic; French baiser and Italian bacio are the same word",
+      "script": "latin",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:a934cb6ae443bcb0",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Say the lip, then the thumb. (El labio; El pulgar.)"
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know first",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "el abrazo — what usually comes with it."
+            },
+            {
+              "kind": "speech",
+              "text": "la boca — what makes it."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "pronunciation",
+          "title": "Sounds you'll need",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "BE-so, two beats with the weight on the first. The s is clear and sharp, never buzzing into a z. see pronunciation reference."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "el beso — \"kiss.\""
+            },
+            {
+              "kind": "speech",
+              "text": "Latin basium gave Spanish beso, French baiser, Italian bacio. Three Romance languages, one Latin noun, nothing surprising so far."
+            },
+            {
+              "kind": "speech",
+              "text": "The surprise is in the Academy's own entry, which does not stop at Latin. It says basium was itself of Celtic origin — so the word had already crossed a language boundary before Latin got hold of it, and every Romance kiss is a loan on top of a loan."
+            },
+            {
+              "kind": "speech",
+              "text": "English has an old word buss for a kiss, and it is exactly the kind of resemblance that should make you slow down rather than speed up. Buss, bacio, Welsh and Gaelic bus for a lip — they all sound alike because the sound of a kiss is a short one made with the lips, and several languages appear to have arrived at it separately."
+            },
+            {
+              "kind": "speech",
+              "text": "That makes buss a look-alike, not a cousin. A word can resemble another because of shared ancestry or because both are imitating the same noise, and only one of those is a family tie."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "You can now name what goes with an embrace: un beso."
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "el beso",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *el beso*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "un beso",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *un beso*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "un abrazo y un beso",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *un abrazo y un beso*]"
+            }
+          ]
+        },
+        {
+          "index": 6,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Where did Latin get basium? (From Celtic — Latin borrowed it too.) And is English buss a relative? (Probably not; it imitates the sound.)"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "ES-C375-sobrino",
+      "sequence": 7710,
+      "title": "el sobrino — a cousin that slid down a generation",
+      "headword": "el sobrino",
+      "romanization": "el sobrino",
+      "gloss": "nephew — Latin sobrinus, a cousin on the mother's side, built on soror, sister; English cousin is the prefixed consobrinus",
+      "script": "latin",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:977d32cb82ee01d4",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Say the thumb, then the kiss. (El pulgar; El beso.)"
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know first",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "el primo — what the Latin word actually meant."
+            },
+            {
+              "kind": "speech",
+              "text": "el tío — the other end of the same relationship."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "pronunciation",
+          "title": "Sounds you'll need",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "so-BRI-no, three beats with the weight on the middle one. The r is a single tap, and br runs together with no vowel between. see pronunciation reference."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "el sobrino — \"nephew.\""
+            },
+            {
+              "kind": "speech",
+              "text": "Latin sobrīnus meant a cousin — on the mother's side. Underneath it is soror, \"sister\": sobrinus is a worn-down sororinus, the child of your mother's sister."
+            },
+            {
+              "kind": "speech",
+              "text": "Latin then built a second word on it. Prefixing com- gave consobrinus, and that one named the closer relation, the first cousin, where bare sobrinus drifted out to the more distant ones. Isidore of Seville uses consobrinus for a first cousin and sobrinus for a second."
+            },
+            {
+              "kind": "speech",
+              "text": "Each of the two words then went its own way:"
+            },
+            {
+              "kind": "speech",
+              "text": "consobrinus travelled through Old French and became English cousin;"
+            },
+            {
+              "kind": "speech",
+              "text": "sobrinus stayed in Spanish and moved down a generation, from cousin to nephew."
+            },
+            {
+              "kind": "speech",
+              "text": "So when an English speaker says cousin and a Spanish speaker says sobrino, they are reaching for the same Latin noun and landing on two different branches of the family. Spanish did not lose the cousin: el primo took the job instead."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "You can now name your sibling's child: mi sobrino."
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "el sobrino",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *el sobrino*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "mi sobrino",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *mi sobrino*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "mi sobrino y mi primo",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *mi sobrino y mi primo*]"
+            }
+          ]
+        },
+        {
+          "index": 6,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What did Latin sobrīnus mean? (A cousin, on the mother's side.) And which English word comes from its prefixed form consobrinus? (Cousin.)"
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "findings": []
+}

@@ -1890,6 +1890,41 @@
       "language": "spanish",
       "chapter": 373,
       "output": "spanish/book/chapters/ch373-el-oro-y-la-botella.tex"
+    },
+    {
+      "language": "spanish",
+      "chapter": 374,
+      "output": "spanish/book/chapters/ch374-el-lapiz-y-el-cepillo.tex"
+    },
+    {
+      "language": "spanish",
+      "chapter": 375,
+      "output": "spanish/book/chapters/ch375-la-una-y-el-labio.tex"
+    },
+    {
+      "language": "spanish",
+      "chapter": 376,
+      "output": "spanish/book/chapters/ch376-la-harina-y-la-uva.tex"
+    },
+    {
+      "language": "spanish",
+      "chapter": 377,
+      "output": "spanish/book/chapters/ch377-la-letra-y-la-frase.tex"
+    },
+    {
+      "language": "spanish",
+      "chapter": 378,
+      "output": "spanish/book/chapters/ch378-la-selva-y-el-prado.tex"
+    },
+    {
+      "language": "spanish",
+      "chapter": 379,
+      "output": "spanish/book/chapters/ch379-seco-y-mojado.tex"
+    },
+    {
+      "language": "spanish",
+      "chapter": 380,
+      "output": "spanish/book/chapters/ch380-simpatico-y-alegre.tex"
     }
   ]
 }
