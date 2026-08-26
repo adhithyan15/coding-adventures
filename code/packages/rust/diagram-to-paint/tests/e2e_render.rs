@@ -781,7 +781,7 @@ line "Target" [35, 50, 68, 82]"##,
     #[test]
     fn render_mermaid_gantt_to_png() {
         let gantt = parse_gantt(
-            "gantt\naccTitle: Native Gantt\naccDescr: Gantt rendered through Metal\ntitle Release timeline\ndateFormat YYYY-MM-DD\naxisFormat %m/%d\ntickInterval 1day\ninclusiveEndDates\ntopAxis\ntodayMarker off\nexcludes weekends\nincludes 2026-01-03\nsection Build\nParser :done, parser, 2026-01-01, 2026-01-04\nclick parser href \"https://example.com/parser\" call inspectTask(parser)\nPaint :active, paint, after parser, 3d\nsection Ship\nRelease :milestone, release, after paint, 0d",
+            "gantt\naccTitle: Native Gantt\naccDescr: Gantt rendered through Metal\ntitle Release timeline\ndateFormat YYYY-MM-DD\naxisFormat %m/%d\ntickInterval 1day\ninclusiveEndDates\ntopAxis\ntodayMarker off\nexcludes weekends\nincludes 2026-01-03\nsection Build\nParser :done, parser, 2026-01-01, 2026-01-04\nclick parser href \"https://example.com/parser\" call inspectTask(parser)\nWindow :window, 2025-12-29, until parser docs\nPaint :active, paint, after parser docs, 3d\nsection Ship\nDocs :docs, 2026-01-02, 2d\nRelease :milestone, release, after paint, 0d",
         )
         .expect("Mermaid Gantt parse failed");
         let temporal = TemporalDiagram {

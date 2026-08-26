@@ -4170,6 +4170,10 @@ fn collect_callees_stmt(stmt: &Stmt, out: &mut HashSet<String>) {
         // nested to recurse into.
         Stmt::InterfaceDef { .. } => {}
         Stmt::MethodDef { body, .. } => collect_direct_callees(body, out),
+        // SIR16 addendum compile-compat stub: this frontend never emits
+        // `break`/`continue` today; neither carries a child `Expr` with
+        // a call to collect.
+        Stmt::Break { .. } | Stmt::Continue { .. } => {}
     }
 }
 

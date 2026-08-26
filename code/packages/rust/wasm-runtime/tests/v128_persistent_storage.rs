@@ -55,6 +55,7 @@ fn v128_global_initialized_via_v128_const_instantiates_and_reads_back_exact_byte
         code: vec![FunctionBody { locals: vec![], code: get_code }],
         data: vec![],
         customs: vec![],
+        tags: vec![],
     };
 
     let runtime = WasmRuntime::new();
@@ -131,6 +132,7 @@ fn v128_value_allocated_in_one_call_is_visible_in_a_later_separate_call() {
         ],
         data: vec![],
         customs: vec![],
+        tags: vec![],
     };
 
     let runtime = WasmRuntime::new();

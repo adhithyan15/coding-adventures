@@ -561,6 +561,12 @@ fn emit_stmt(out: &mut String, s: &Stmt, indent: usize) {
         | Stmt::MethodDef { span, .. } => {
             panic!("go backend reached a SIR29 nominal-OOP node at {} — capability check should have rejected it", span);
         }
+        // ── SIR16 addendum: loop control ──────────────────────────────
+        // `Feature::LoopControl` not accepted by this backend yet — same
+        // rationale as the SIR29 arm just above.
+        Stmt::Break { span, .. } | Stmt::Continue { span, .. } => {
+            panic!("go backend reached a Stmt::Break/Continue node at {} — capability check should have rejected it", span);
+        }
     }
 }
 

@@ -26,6 +26,12 @@
   22, banned words unchanged, and Spanish cross-chapter prose references at
   zero. All seven chapters narrate as five-of-five drivable.
 
+### Added - source-verified Malayalam chillu LL
+
+- Add Malayalam **ൾ** as one continuous four-movement run from Sriveenkat's
+  65-frame Gayathri-font stroke-order animation.
+- Close all 8 affected realizations with a zero-lift Noto Sans Malayalam fit,
+  then rerank Malayalam chillu RR **ർ** first at 8.
 ### Added - source-verified Kannada independent i
 
 - Add Kannada **ಇ** as one continuous four-movement run from Yogesh's 98-frame

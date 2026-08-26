@@ -388,6 +388,11 @@ pub enum ExternalKind {
     Memory = 0x02,
     /// A global variable.
     Global = 0x03,
+    /// A tag (W21 — the exceptions proposal's `throw`/`try_table`). Matches
+    /// the real exception-handling proposal's binary encoding exactly (its
+    /// own `Exceptions.md` names `4` as the `Tag` import/export kind byte,
+    /// live-fetched and confirmed, not assumed).
+    Tag = 0x04,
 }
 
 // ──────────────────────────────────────────────────────────────────────────────
@@ -572,6 +577,10 @@ pub enum ImportTypeInfo {
     Memory(MemoryType),
     /// Import a global; carries the global's type.
     Global(GlobalType),
+    /// Import a tag (W21); carries the index into the module's type
+    /// section for the tag's function signature (its `results` must be
+    /// empty — a module-level rule, checked by `wasm-validator`, not here).
+    Tag(u32),
 }
 
 /// A single import declaration from the import section.
@@ -888,6 +897,19 @@ pub struct WasmModule {
     pub data: Vec<DataSegment>,
     /// Custom sections (§0): tool metadata (debug info, names, etc.).
     pub customs: Vec<CustomSection>,
+
+    /// Tag section (§13, W21 — the exceptions proposal): type indices for
+    /// MODULE-DEFINED tags only, in declaration order — mirrors
+    /// `functions: Vec<u32>`'s own "imports live in `imports`, this Vec is
+    /// only the module-defined ones" convention. The real binary section
+    /// id (13) sits, in file position, between the memory section (5) and
+    /// the global section (6) — same "numeric id != file position"
+    /// convention the MVP's own `datacount` section (id 12, positioned
+    /// between `elem` and `code`) already established; this repo's
+    /// text-only `wasm-wast-parser` pipeline for this field never
+    /// round-trips through a real binary layout, so that ordering detail
+    /// doesn't affect anything here, only documented for fidelity.
+    pub tags: Vec<u32>,
 }
 
 // ──────────────────────────────────────────────────────────────────────────────
@@ -1216,12 +1238,14 @@ mod tests {
             code: vec![FunctionBody { locals: vec![], code: vec![0x0B] }],
             data: vec![],
             customs: vec![],
+            tags: vec![],
         };
         assert_eq!(m.types.len(), 1);
         assert_eq!(m.struct_types.len(), 0);
         assert_eq!(m.functions, vec![0]);
         assert_eq!(m.start, Some(0));
         assert_eq!(m.exports[0].name, "main");
+        assert!(m.tags.is_empty());
     }
 
     // ── Test 20: WasmModule default is all-empty ──────────────────────────────
@@ -1242,6 +1266,7 @@ mod tests {
         assert!(m.code.is_empty());
         assert!(m.data.is_empty());
         assert!(m.customs.is_empty());
+        assert!(m.tags.is_empty());
     }
 
     // ── WasmGC type tests ──────────────────────────────────────────────────────

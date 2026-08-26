@@ -147,6 +147,17 @@ What's covered:
   `ErasedGenerics`. Not yet emitted by any frontend or implemented by any
   backend — see
   [SIR29](../../../specs/SIR29-nominal-static-oop-profile.md).
+- SIR16 addendum, bare loop-control statements: `Stmt::Break`/
+  `Stmt::Continue` (`Feature::LoopControl`, split from `Feature::Loops`
+  since no backend implements break/continue emission yet). Bare
+  (unlabeled) only. The validator rejects one whose nearest enclosing
+  loop is a `ForRange` — several backends' `ForRange` lowering (a `while`
+  with the step increment appended after the body, or, on
+  `semantic-ir-to-ruby`, the body hoisted into a `->(){ }` lambda) can't
+  safely host it; `While`/`ForEach` are unaffected. Not yet emitted by any
+  frontend or implemented by any backend — see
+  [SIR16](../../../specs/SIR16-ir-extensions-for-python-and-javascript.md)'s
+  "Loop control (addendum)" section.
 - EffectSet bitset
 - FeatureManifest
 - Textual form (printer; parser deferred)

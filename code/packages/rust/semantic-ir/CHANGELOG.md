@@ -2,6 +2,108 @@
 
 All notable changes to the `semantic-ir` crate are documented here.
 
+## 0.27.0 — SIR16 addendum: bare loop-control statements (`break`/`continue`)
+
+Implements the "Loop control" addendum to
+[SIR16](../../../specs/SIR16-ir-extensions-for-python-and-javascript.md) —
+the core IR previously had **zero** `Stmt` for `break`/`continue`, confirmed
+by an exhaustive grep during `java-to-semantic-ir`'s own M2a milestone
+(tracked as a standing backlog item). Additive only: every existing
+SIR10/SIR16/SIR17/SIR18/SIR21/SIR22/SIR23/SIR26/SIR29 module remains valid;
+no existing `Expr`/`Stmt`/`SirType`/`Feature` variant, validator rule, or
+backend behaviour changed. Mirrors SIR29's own "spec + pure-additive IR
+diff, zero backend behavior change" Slice 0 shape — no backend accepts
+`Feature::LoopControl` yet; every existing backend's exhaustive `Stmt`
+match gained a compile-forced reject arm instead.
+
+**New `Stmt` variants** (`nodes.rs`): `Break { span }`, `Continue { span }`
+— bare (unlabeled) only; SIR v0 has no loop-label vocabulary, so a source
+language's labeled `break`/`continue` (Java `break outer;`) has no
+lowering yet.
+
+**New `Feature` flag** (`manifest.rs`): `LoopControl` — a module contains a
+`Stmt::Break`/`Stmt::Continue`. Deliberately split from the existing
+`Feature::Loops` (which every backend already declares for plain
+`While`/`ForRange`/`ForEach`), so this addition doesn't silently redefine
+what `Loops` has always promised.
+
+**Validator** (`validator.rs`): new `ValidatorState::loop_stack:
+Vec<LoopKind>` (`LoopKind::Safe` for `While`/`ForEach`, `LoopKind::
+ForRange` for `ForRange`), pushed/popped around each loop's body walk
+(mirrors the existing `in_call_args` save/restore idiom, generalized to a
+stack since loops nest). `Stmt::Break`/`Stmt::Continue` consult only the
+innermost entry:
+- Empty stack → `"break"`/`"continue" outside a loop` error.
+- Innermost loop is a `ForRange` → rejected. Several backends lower
+  `ForRange` to a `while` with the step increment appended *after* the
+  body (a bare `continue` would skip it), and `semantic-ir-to-ruby`
+  hoists the body into a `->(){ }` lambda where a bare `break` doesn't
+  propagate to the enclosing loop at all — the two backends' failure
+  modes don't even agree on which statement is unsafe, so both are
+  rejected uniformly rather than making validator correctness depend on
+  a specific backend's lowering strategy.
+- Innermost loop is `While`/`ForEach` → accepted.
+
+`loop_stack` is explicitly reset (save/restore) around a top-level
+`Function`'s own body walk and around a `Stmt::MethodDef`'s body walk, so
+a `break`/`continue` inside a hoisted closure or a nested method can never
+resolve against an unrelated enclosing loop the declaration happens to be
+lexically nested in (a real, if pathological, IR-legal shape:
+`while (...) { class C { method m() { break; } } }`).
+
+**Caught by `/security-review` before push**: the same reset was
+initially missing from `Stmt::ClassDef`/`Stmt::ModuleDef`/
+`Stmt::SingletonClassDef`/`Stmt::NominalClassDef`'s own body walks — a
+`break`/`continue` sitting *directly* in one of those bodies (not nested
+inside a `MethodDef`, which already got its own reset) could resolve
+against a loop the class/module declaration happens to be nested in
+(`while (...) { class C; break; end }`). Inert today (no backend accepts
+`Feature::LoopControl` yet, so nothing can reach codegen), but it
+contradicted this very changelog's own stated invariant and would have
+become a real bug the moment a backend adopts the feature. Fixed by
+applying the identical save/restore to all four body walks; regression
+tests added for each (`break_directly_in_{nominal_class,class_def,
+module_def,singleton_class_def}_body_does_not_see_enclosing_loop`).
+
+**Compile-compat stubs**: every crate with an exhaustive `Stmt` match —
+six backends (`semantic-ir-to-{go,javascript,python,ruby,rust,
+typescript}`) and three frontends whose internal generic tree-walking
+utilities stay exhaustive even though none of them produce these nodes
+yet (`{ruby,python}-to-semantic-ir`) — gained the minimal arm needed to
+keep `cargo build --workspace` green, mirroring SIR29's own precedent:
+panic guards in the backends' real emit paths (unreachable because
+`ACCEPTED_FEATURES` never lists `LoopControl`), a defensive
+`ScanHit::Unsupported` rejection in `semantic-ir-to-ruby`'s pre-emit scan
+(this backend treats "capability check should reject it" as insufficient
+defense on its own — same reasoning as its existing SIR29 arm), `None`/
+no-op in the handful of pre-capability-check analysis passes that must
+stay non-panicking (`semantic-ir-to-go`'s `check_soundness_stmt`,
+`semantic-ir-to-rust`'s `const_ref_in_stmt`), and faithful structural
+recursion (a no-op, since neither statement carries a child `Expr`/
+`Stmt`) in the frontends. `javascript-to-semantic-ir` and `c-to-semantic-
+ir`/`semantic-ir-to-c` required no changes (no exhaustive `Stmt` match in
+either).
+
+**`CURRENT_SIR_VERSION`**: `"5"` → `"6"` (per this crate's "adding a
+feature is a v.bump" policy).
+
+**Named out of scope** (disclosed, not silently dropped): labeled break/
+continue; `switch` (still has no corresponding IR node at all — its own,
+separately tracked backlog item, since fall-through semantics need their
+own spec-level design decision); early/branched `return` (SIR still has
+no `Stmt::Return` — a function's value is always its trailing `Block`
+value — tracked alongside `switch` as needing comparable design work);
+wiring any backend to actually emit `break`/`continue` (this PR is IR +
+validator only, mirroring SIR29 Slice 0 — backend rollout is its own
+follow-up, per-backend, once a real consumer frontend exists);
+`java-to-semantic-ir` itself consuming this (its own follow-up — note its
+classic-`for`-loop lowering currently desugars to `Stmt::While` with the
+update-clause statement spliced onto the end of the body, the same
+"trailing bookkeeping statement a bare `continue` would skip" shape this
+addendum's `ForRange` restriction guards against, just at the frontend
+rather than the backend layer — that lowering needs to change before this
+crate can safely accept `continue` inside a classic `for`).
+
 ## 0.26.0 — SIR29: nominal/static-dispatch OOP profile (Java-family frontends)
 
 Implements [SIR29](../../../specs/SIR29-nominal-static-oop-profile.md) — a

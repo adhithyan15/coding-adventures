@@ -21,3 +21,4 @@ most worth verifying, not the one least. Ask specifically whether the evidence
 offered for it is independent of the proposal itself, and whether the dictionary
 of record still prints it -- the two questions that separate scholarship from a
 story that has been told often enough to sound settled.
+

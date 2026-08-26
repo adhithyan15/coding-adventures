@@ -133,7 +133,11 @@ fn desugar_one_inline_import(f: &SExpr) -> SExpr {
     let Some(items) = f.as_list() else { return (*f).clone() };
     let pos = f.pos();
     let kind = items.first().and_then(|e| e.as_atom()).unwrap_or("");
-    if !matches!(kind, "func" | "table" | "memory" | "global") {
+    // W21 (exceptions proposal): `tag` joins func/table/memory/global as a
+    // 5th kind with the same `(tag $f? (import "m" "n") ...rest)` inline-
+    // import-shorthand shape -- matches `throw.wast`'s own `(tag $t0
+    // (import "test" "t2") (param i32))`.
+    if !matches!(kind, "func" | "table" | "memory" | "global" | "tag") {
         return (*f).clone();
     }
     let mut i = 1;
@@ -173,6 +177,11 @@ struct ModuleCtx {
     /// (task #97). `table.init`/`elem.drop` reference an element segment
     /// by this same name/index space, mirroring `data_names` above.
     elem_names: HashMap<String, u32>,
+    /// A tag's own `$id` -> its index in the combined tag index space
+    /// (imports first, then module-defined -- W21, the exceptions
+    /// proposal). `throw`/`catch`/`catch_ref` reference a tag by this
+    /// same name/index space, mirroring `func_names`/`table_names`/etc.
+    tag_names: HashMap<String, u32>,
 }
 
 fn resolve_idx(map: &HashMap<String, u32>, expr: &SExpr, space: &'static str) -> Result<u32, WastParseError> {
@@ -353,6 +362,8 @@ fn collect_symbols(fields: &[&SExpr], ctx: &mut ModuleCtx) -> Result<(), WastPar
     let mut import_table_i = 0u32;
     let mut import_memory_i = 0u32;
     let mut import_global_i = 0u32;
+    // W21 (exceptions proposal): same "dedicated per-kind counter" shape.
+    let mut import_tag_i = 0u32;
     for f in fields {
         if f.is_keyword_list("import") {
             let items = f.as_list().unwrap();
@@ -388,6 +399,12 @@ fn collect_symbols(fields: &[&SExpr], ctx: &mut ModuleCtx) -> Result<(), WastPar
                     }
                     import_global_i += 1;
                 }
+                "tag" => {
+                    if let Some(n) = name {
+                        insert_unique(&mut ctx.tag_names, n, import_tag_i, f.pos(), "tag")?;
+                    }
+                    import_tag_i += 1;
+                }
                 _ => {}
             }
             let import = build_import_shell(items, desc, kind)?;
@@ -407,6 +424,8 @@ fn collect_symbols(fields: &[&SExpr], ctx: &mut ModuleCtx) -> Result<(), WastPar
     let num_import_tables = import_table_i;
     let num_import_memories = import_memory_i;
     let num_import_globals = import_global_i;
+    // W21 (exceptions proposal): same convention.
+    let num_import_tags = import_tag_i;
     // Data segments (task #95) have no import counterpart, so their index
     // space is just textual declaration order -- this counter tracks the
     // same index `build_data`'s later `ctx.module.data.push(...)` will
@@ -458,6 +477,21 @@ fn collect_symbols(fields: &[&SExpr], ctx: &mut ModuleCtx) -> Result<(), WastPar
                 global_type: GlobalType { value_type: ValueType::I32, mutable: false },
                 init_expr: vec![0x0B],
             });
+        } else if f.is_keyword_list("tag") {
+            // W21 (exceptions proposal): same "$name -> combined index
+            // space" registration + placeholder-push shape as func/table/
+            // memory/global above. `ctx.module.tags: Vec<u32>` holds only
+            // module-DEFINED tags' type indices (mirrors `functions:
+            // Vec<u32>`'s own "imports live in `imports`" split) -- fixed
+            // for real in `build`'s pass 2 (`build_tag`).
+            let items = f.as_list().unwrap();
+            if let Some(name) = items.get(1).and_then(|e| e.as_atom()) {
+                if name.starts_with('$') {
+                    let idx = num_import_tags + ctx.module.tags.len() as u32;
+                    insert_unique(&mut ctx.tag_names, name, idx, f.pos(), "tag")?;
+                }
+            }
+            ctx.module.tags.push(0); // fixed in pass 2
         } else if f.is_keyword_list("data") {
             // No placeholder pushed here (unlike func/table/memory/global
             // above): `build_data` (pass 2) is the only thing that appends
@@ -581,11 +615,18 @@ fn build_import_shell(items: &[SExpr], desc: &[SExpr], kind: &str) -> Result<Imp
             .ok_or(WastParseError::UnexpectedEof)?;
             ImportTypeInfo::Global(parse_global_type(type_field)?)
         }
+        // W21 (exceptions proposal): a tag import's real type index needs
+        // `resolve_func_signature_ref` (mutable `&mut ctx.module` access
+        // for `dedup_type`, same reason `func`'s own case above is fixed
+        // up in pass 2 instead of resolved here) -- this free function
+        // only has an IMMUTABLE `items`/`desc` to work with, so the real
+        // fixup happens in `build`'s pass 2, mirroring `func` exactly.
+        "tag" => ImportTypeInfo::Tag(0), // fixed in pass 2 once the type is known
         // `desc` can be an empty list (`(import "m" "n" ())`), in which case
         // `kind` is already "" from `unwrap_or("")` above -- fall back to
         // the enclosing `(import ...)` form's own position (always present,
         // `items` is that form's own list) rather than indexing `desc[0]`.
-        _ => return Err(WastParseError::UnexpectedToken { pos: desc.first().map(|e| e.pos()).unwrap_or_else(|| items[0].pos()), found: kind.to_string(), expected: "func/table/memory/global" }),
+        _ => return Err(WastParseError::UnexpectedToken { pos: desc.first().map(|e| e.pos()).unwrap_or_else(|| items[0].pos()), found: kind.to_string(), expected: "func/table/memory/global/tag" }),
     };
     Ok(Import {
         module_name,
@@ -594,6 +635,7 @@ fn build_import_shell(items: &[SExpr], desc: &[SExpr], kind: &str) -> Result<Imp
             "func" => ExternalKind::Function,
             "table" => ExternalKind::Table,
             "memory" => ExternalKind::Memory,
+            "tag" => ExternalKind::Tag,
             _ => ExternalKind::Global,
         },
         type_info,
@@ -679,12 +721,15 @@ fn build(fields: &[&SExpr], ctx: &mut ModuleCtx) -> Result<(), WastParseError> {
     let num_import_tables = ctx.module.imports.iter().filter(|i| i.kind == ExternalKind::Table).count();
     let num_import_memories = ctx.module.imports.iter().filter(|i| i.kind == ExternalKind::Memory).count();
     let num_import_globals = ctx.module.imports.iter().filter(|i| i.kind == ExternalKind::Global).count();
+    // W21 (exceptions proposal): same convention.
+    let num_import_tags = ctx.module.imports.iter().filter(|i| i.kind == ExternalKind::Tag).count();
 
     let mut import_all_i = 0usize; // index into ctx.module.imports (every kind, textual order)
     let mut func_i = 0usize;
     let mut table_i = 0usize;
     let mut memory_i = 0usize;
     let mut global_i = 0usize;
+    let mut tag_i = 0usize;
 
     for f in fields {
         let items = f.as_list().unwrap_or(&[]);
@@ -707,6 +752,16 @@ fn build(fields: &[&SExpr], ctx: &mut ModuleCtx) -> Result<(), WastParseError> {
                     // see `collect_symbols`'s doc comment on this same split).
                     let type_idx = resolve_func_signature_ref(&desc[1..], ctx)?;
                     ctx.module.imports[import_all_i].type_info = ImportTypeInfo::Function(type_idx);
+                } else if desc[0].as_atom().unwrap() == "tag" {
+                    // W21 (exceptions proposal): a tag's grammar (`$name?
+                    // (param ...)*(result ...)* | (type $t)`) is IDENTICAL
+                    // to a func's own signature-or-type-ref grammar, so
+                    // this reuses `resolve_func_signature_ref` verbatim --
+                    // same "fixed in pass 2, needs mutable `ctx.module`
+                    // access for `dedup_type`" reason as the `func` arm
+                    // just above.
+                    let type_idx = resolve_func_signature_ref(&desc[1..], ctx)?;
+                    ctx.module.imports[import_all_i].type_info = ImportTypeInfo::Tag(type_idx);
                 }
                 // table/memory/global import shells are already correct
                 // from pass 1 -- no fixup needed for those kinds.
@@ -734,7 +789,10 @@ fn build(fields: &[&SExpr], ctx: &mut ModuleCtx) -> Result<(), WastParseError> {
                     "table" => (ExternalKind::Table, &ctx.table_names),
                     "memory" => (ExternalKind::Memory, &ctx.memory_names),
                     "global" => (ExternalKind::Global, &ctx.global_names),
-                    other => return Err(WastParseError::UnexpectedToken { pos: refd_head.pos(), found: other.to_string(), expected: "func/table/memory/global" }),
+                    // W21 (exceptions proposal): `(export "t3" (tag 3))` --
+                    // `tag.wast`'s own real shape.
+                    "tag" => (ExternalKind::Tag, &ctx.tag_names),
+                    other => return Err(WastParseError::UnexpectedToken { pos: refd_head.pos(), found: other.to_string(), expected: "func/table/memory/global/tag" }),
                 };
                 let index = resolve_idx(map, expect_get(refd, 1)?, "export target")?;
                 ctx.module.exports.push(Export { name, kind, index });
@@ -775,6 +833,14 @@ fn build(fields: &[&SExpr], ctx: &mut ModuleCtx) -> Result<(), WastParseError> {
                 ctx.module.globals[global_i] = Global { global_type: gt, init_expr: code };
                 global_i += 1;
             }
+            "tag" => {
+                // W21 (exceptions proposal): same "$name skip, then real
+                // build" shape as func/table/memory/global above.
+                let name_skip = if items.get(1).and_then(|e| e.as_atom()).is_some_and(|s| s.starts_with('$')) { 2 } else { 1 };
+                let space_idx = num_import_tags + tag_i;
+                build_tag(&items[name_skip..], ctx, space_idx, tag_i)?;
+                tag_i += 1;
+            }
             "elem" => build_elem(&items[1..], ctx)?,
             "data" => build_data(&items[1..], ctx)?,
             "start" => {
@@ -802,6 +868,8 @@ fn handle_inline_export(
         "func" => ExternalKind::Function,
         "table" => ExternalKind::Table,
         "memory" => ExternalKind::Memory,
+        // W21 (exceptions proposal): `(tag $name (export "e") ...)`.
+        "tag" => ExternalKind::Tag,
         _ => ExternalKind::Global,
     };
     let mut i = 0;
@@ -848,6 +916,26 @@ fn resolve_func_signature_ref(desc_rest: &[SExpr], ctx: &mut ModuleCtx) -> Resul
     let sig_fields: Vec<&SExpr> = leading.iter().collect();
     let ty = parse_func_signature(&sig_fields)?;
     Ok(dedup_type(&mut ctx.module, ty))
+}
+
+/// `(tag $name? (export "e")* (param ...)*(result ...)* | (type $t))`
+/// (W21 -- the exceptions proposal). Mirrors `build_func`'s own
+/// inline-export handling; the tag's own function-type index is resolved
+/// via the exact same signature-or-type-ref grammar `resolve_func_
+/// signature_ref` already implements for `func` (a tag's grammar is
+/// identical -- see that function's own doc comment). `tag_space_idx` (the
+/// COMBINED imports+defined index -- what `(export ...)`/inline-export
+/// sugar addresses this tag by) and `tag_real_idx` (this tag's position
+/// among only the MODULE-DEFINED ones, i.e. its real index into
+/// `ctx.module.tags`) are DIFFERENT numbers the moment a module has any
+/// tag import, same split `build_func`'s own `func_idx`/`code_idx` doc
+/// comment explains for functions.
+fn build_tag(fields: &[SExpr], ctx: &mut ModuleCtx, tag_space_idx: usize, tag_real_idx: usize) -> Result<(), WastParseError> {
+    let (after_export, _) = handle_inline_export(fields, "tag", tag_space_idx, ctx)?;
+    let rest = &fields[after_export..];
+    let type_idx = resolve_func_signature_ref(rest, ctx)?;
+    ctx.module.tags[tag_real_idx] = type_idx;
+    Ok(())
 }
 
 /// Whether `f` belongs to a WASM function's leading `param`/`result`/
@@ -1498,14 +1586,19 @@ fn encode_one_inner(exprs: &[SExpr], i: usize, icx: &mut InstrCtx, out: &mut Vec
                 expected: "an instruction name",
             })?;
             let rest = &items[1..];
-            if matches!(name, "block" | "loop" | "if") {
+            // W21 (exceptions proposal): `try_table` joins block/loop/if as
+            // a 4th structured instruction -- own blocktype, own (deliber-
+            // ately never-matching, see `code/specs/
+            // W21-wasm-exceptions-tag-throw-slice.md`) catch-clause list,
+            // closed by a matching `end` exactly like the other three.
+            if matches!(name, "block" | "loop" | "if" | "try_table") {
                 encode_structured_instr(name, rest, *pos, icx, out)?;
             } else {
                 encode_flat_instr(name, rest, *pos, icx, out)?;
             }
             Ok(i + 1)
         }
-        SExpr::Atom(name, pos) if matches!(name.as_str(), "block" | "loop" | "if") => {
+        SExpr::Atom(name, pos) if matches!(name.as_str(), "block" | "loop" | "if" | "try_table") => {
             encode_stream_structured_instr(name, &exprs[i + 1..], *pos, icx, out)
                 .map(|consumed| i + 1 + consumed)
         }
@@ -2290,6 +2383,21 @@ fn encode_stream_instr(
             out.extend(wasm_leb128::encode_unsigned(idx as u64));
             Ok(1)
         }
+        // `throw $tag` (W21 -- exceptions proposal): a single `tagidx`
+        // immediate, same shape as `call`'s `funcidx` above -- no vendored
+        // corpus file needs `throw` in this bare-atom/flat form (every real
+        // use in `throw.wast` is parenthesized, so goes through `encode_
+        // flat_instr`'s own arm below instead), but this crate's own
+        // convention is to support both forms symmetrically for every
+        // instruction (see `ref.i31`/`i31.get_s`/`i31.get_u`, W20, for
+        // precedent), backed by this crate's own unit tests, not left as
+        // an unverified gap.
+        "throw" => {
+            let idx = resolve_idx(&icx.module.tag_names, following.first().ok_or(WastParseError::UnexpectedEof)?, "tag")?;
+            out.push(info.opcode);
+            out.extend(wasm_leb128::encode_unsigned(idx as u64));
+            Ok(1)
+        }
         "call_indirect" | "return_call_indirect" => {
             // Flat form: `call_indirect (type $t)` -- the type reference
             // (and any `(param...)`/`(result...)`) trails as List elements
@@ -2425,6 +2533,62 @@ fn encode_stream_instr(
     }
 }
 
+/// `try_table`'s own leading catch-clause list (W21 -- the exceptions
+/// proposal): zero or more `(catch $tag $label)` / `(catch_ref $tag
+/// $label)` / `(catch_all $label)` / `(catch_all_ref $label)` forms,
+/// immediately following the blocktype fields `encode_blocktype` already
+/// consumed -- same "always parenthesized, even in the flat/stream form"
+/// convention `encode_blocktype`'s own `(param...)`/`(result...)` fields
+/// already use (see that function's own doc comment), which is why this
+/// one helper serves BOTH the folded (`encode_structured_instr`) and
+/// flat/stream (`encode_stream_structured_instr`) encoders unchanged.
+///
+/// Label depths are resolved against `icx.labels` **as it stands right
+/// now** -- before `try_table`'s own label is pushed -- matching the real
+/// spec's rule that a catch clause's label is relative to `try_table`'s
+/// ENCLOSING scope, not to `try_table` itself (the same "resolve BEFORE
+/// push_ctrl" ordering `wasm-validator`'s own `0x1F` type-check rule
+/// uses). `catch_ref`/`catch_all_ref` are parsed into the real binary
+/// shape (clause kind byte `0x01`/`0x03`) even though this crate's
+/// execution side never produces or consumes an `exnref` value for them --
+/// see `code/specs/W21-wasm-exceptions-tag-throw-slice.md`'s scope section
+/// for why finishing all 4 clause-kind shapes costs nothing once `catch`/
+/// `catch_all` already need the same parsing skeleton.
+///
+/// Returns `(catch_clause_bytes, clause_count, items_consumed)` -- the
+/// caller writes `clause_count` as the binary format's own `catch_count`
+/// LEB128 `varuint32` immediate immediately before `catch_clause_bytes`
+/// (not done here, since a caller may want other things between the two).
+fn parse_try_table_catches(items: &[SExpr], icx: &mut InstrCtx) -> Result<(Vec<u8>, u32, usize), WastParseError> {
+    let mut bytes = Vec::new();
+    let mut count: u32 = 0;
+    let mut consumed = 0usize;
+    while let Some(item) = items.get(consumed) {
+        let Some(list_items) = item.as_list() else { break };
+        let Some(kind_name) = list_items.first().and_then(|a| a.as_atom()) else { break };
+        let (clause_byte, needs_tag) = match kind_name {
+            "catch" => (0x00u8, true),
+            "catch_ref" => (0x01u8, true),
+            "catch_all" => (0x02u8, false),
+            "catch_all_ref" => (0x03u8, false),
+            _ => break,
+        };
+        bytes.push(clause_byte);
+        let label_expr = if needs_tag {
+            let tag_idx = resolve_idx(&icx.module.tag_names, expect_get(list_items, 1)?, "tag")?;
+            bytes.extend(wasm_leb128::encode_unsigned(tag_idx as u64));
+            expect_get(list_items, 2)?
+        } else {
+            expect_get(list_items, 1)?
+        };
+        let label_depth = icx.resolve_label(label_expr)?;
+        bytes.extend(wasm_leb128::encode_unsigned(label_depth as u64));
+        count += 1;
+        consumed += 1;
+    }
+    Ok((bytes, count, consumed))
+}
+
 /// As [`encode_structured_instr`], for a flat (non-folded) `block`/`loop`/
 /// `if ... end` whose body is a run of bare stream elements terminated by
 /// a matching `end` atom **at this same nesting level** — a nested
@@ -2450,6 +2614,36 @@ fn encode_stream_structured_instr(
     }
     let (blocktype_byte, consumed) = encode_blocktype(&following[i..], icx)?;
     i += consumed;
+
+    // W21 (exceptions proposal): `try_table`'s own catch-clause list sits
+    // right after the blocktype, BEFORE the body -- and its label
+    // references must resolve against `icx.labels` as it stands RIGHT
+    // NOW, before `try_table`'s own label is pushed (see [`parse_try_table_
+    // catches`]'s own doc comment) -- so this whole case is handled as its
+    // own early return, ahead of the shared `out.push(opcode)`/`icx.labels.
+    // push` prologue every other structured instruction shares below.
+    if name == "try_table" {
+        let (catch_bytes, catch_count, catch_consumed) = parse_try_table_catches(&following[i..], icx)?;
+        i += catch_consumed;
+        out.push(opcode);
+        out.extend(&blocktype_byte);
+        out.extend(wasm_leb128::encode_unsigned(catch_count as u64));
+        out.extend(&catch_bytes);
+        icx.labels.push(label_name);
+        loop {
+            match following.get(i) {
+                None => return Err(WastParseError::UnexpectedEof),
+                Some(SExpr::Atom(s, _)) if s == "end" => {
+                    i += 1;
+                    break;
+                }
+                _ => i = encode_one(following, i, icx, out)?,
+            }
+        }
+        icx.labels.pop();
+        out.push(0x0B);
+        return Ok(i);
+    }
 
     out.push(opcode);
     out.extend(&blocktype_byte);
@@ -3325,6 +3519,23 @@ fn encode_flat_instr(
             out.extend(wasm_leb128::encode_unsigned(idx as u64));
             Ok(())
         }
+        // `(throw $tag)` (W21 -- exceptions proposal): the real corpus's
+        // own shape (`throw.wast`'s `(throw $e0)`, `(throw $e-i32-i32)`,
+        // ...) -- tag name FIRST syntactically, any payload VALUES pushed
+        // by separate PRECEDING flat statements in every real corpus case
+        // (e.g. `(i32.const 1) (i32.const 2) (throw $e-i32-i32)`), but
+        // this still recurses into `args[1..]` first (same order `call`
+        // above uses) in case a future/hand-written case folds an operand
+        // directly inside `(throw $tag (i32.const 1))` -- legal WAT, just
+        // unexercised by this slice's own vendored corpus.
+        "throw" => {
+            let idx_expr = args.first().ok_or(WastParseError::UnexpectedEof)?;
+            encode_instr_list(&args[1..], icx, out)?;
+            out.push(info.opcode);
+            let idx = resolve_idx(&icx.module.tag_names, idx_expr, "tag")?;
+            out.extend(wasm_leb128::encode_unsigned(idx as u64));
+            Ok(())
+        }
         "call_indirect" | "return_call_indirect" => {
             // `(call_indirect (type $t) (param...) (result...) operand-exprs...)`
             // `return_call_indirect` (WASM16) shares this exact shape --
@@ -3752,6 +3963,27 @@ fn encode_structured_instr(
     // comment for the full resolution order (WASM06).
     let (blocktype_byte, consumed) = encode_blocktype(&args[i..], icx)?;
     i += consumed;
+
+    // W21 (exceptions proposal): see the matching early-return branch in
+    // `encode_stream_structured_instr` for why `try_table` needs its own
+    // case ahead of the shared `block`/`loop`/`if` prologue below --
+    // exact same shape, folded form.
+    if name == "try_table" {
+        let (catch_bytes, catch_count, catch_consumed) = parse_try_table_catches(&args[i..], icx)?;
+        let body_start = i + catch_consumed;
+        out.push(opcode);
+        out.extend(&blocktype_byte);
+        out.extend(wasm_leb128::encode_unsigned(catch_count as u64));
+        out.extend(&catch_bytes);
+        icx.labels.push(label_name);
+        let body = &args[body_start..];
+        let end_pos = body.iter().position(|a| matches!(a, SExpr::Atom(s, _) if s == "end")).unwrap_or(body.len());
+        encode_instr_list(&body[..end_pos], icx, out)?;
+        icx.labels.pop();
+        out.push(0x0B);
+        let _ = pos;
+        return Ok(());
+    }
 
     if name == "if" {
         // `if`'s own condition is a folded operand appearing BEFORE the
@@ -5421,6 +5653,172 @@ mod tests {
         let m = parse_module("(module (func (result i32) (i31.get_u (ref.null i31))))").unwrap();
         // ref.null (0xD0) heap_type=0x6C (i31); i31.get_u (0xFB 0x1E); end.
         assert_eq!(code_of(&m, 0), &[0xD0, 0x6C, 0xFB, 0x1E, 0x0B]);
+    }
+
+    // ── W21 (exceptions proposal): tag / throw / try_table ──────────────
+
+    #[test]
+    fn tag_declarations_inline_and_explicit_export_real_shape() {
+        // `tag.wast`'s own real first module.
+        let m = parse_module(
+            r#"(module
+                 (tag)
+                 (tag (param i32))
+                 (tag (export "t2") (param i32))
+                 (tag $t3 (param i32 f32))
+                 (export "t3" (tag 3))
+               )"#,
+        )
+        .unwrap();
+        assert_eq!(m.tags.len(), 4);
+        assert_eq!(m.types[m.tags[0] as usize].params, Vec::<wasm_types::ValueType>::new());
+        assert_eq!(m.types[m.tags[1] as usize].params, vec![wasm_types::ValueType::I32]);
+        assert_eq!(m.types[m.tags[3] as usize].params, vec![wasm_types::ValueType::I32, wasm_types::ValueType::F32]);
+        assert_eq!(m.exports.iter().filter(|e| e.kind == ExternalKind::Tag).count(), 2);
+        let t2 = m.exports.iter().find(|e| e.name == "t2").unwrap();
+        assert_eq!(t2.index, 2);
+        let t3 = m.exports.iter().find(|e| e.name == "t3").unwrap();
+        assert_eq!(t3.index, 3);
+    }
+
+    #[test]
+    fn tag_import_inline_and_explicit_forms_share_the_combined_index_space() {
+        // `tag.wast`'s own real second module shape.
+        let m = parse_module(
+            r#"(module
+                 (tag $t0 (import "test" "t2") (param i32))
+                 (import "test" "t3" (tag $t1 (param i32 f32)))
+               )"#,
+        )
+        .unwrap();
+        assert_eq!(m.imports.len(), 2);
+        assert_eq!(m.imports[0].kind, ExternalKind::Tag);
+        assert_eq!(m.imports[1].kind, ExternalKind::Tag);
+        let ImportTypeInfo::Tag(t0_type) = m.imports[0].type_info else { panic!("expected Tag") };
+        assert_eq!(m.types[t0_type as usize].params, vec![wasm_types::ValueType::I32]);
+        let ImportTypeInfo::Tag(t1_type) = m.imports[1].type_info else { panic!("expected Tag") };
+        assert_eq!(m.types[t1_type as usize].params, vec![wasm_types::ValueType::I32, wasm_types::ValueType::F32]);
+    }
+
+    #[test]
+    fn throw_folded_and_flat_resolve_the_tag_name_to_a_leb128_index() {
+        let folded = parse_module(
+            r#"(module (tag $e0) (tag $e1 (param i32)) (func (throw $e1) (i32.const 0)))"#,
+        )
+        .unwrap();
+        // throw (0x08) tagidx=1 (leb128); i32.const 0; end.
+        assert_eq!(code_of(&folded, 0), &[0x08, 0x01, 0x41, 0x00, 0x0B]);
+
+        let flat = parse_module(
+            r#"(module (tag $e0) (tag $e1 (param i32)) (func throw $e1 i32.const 0))"#,
+        )
+        .unwrap();
+        assert_eq!(code_of(&flat, 0), &[0x08, 0x01, 0x41, 0x00, 0x0B]);
+    }
+
+    #[test]
+    fn throw_unknown_tag_name_is_a_clear_error() {
+        let err = parse_module(r#"(module (func (throw $nope)))"#).unwrap_err();
+        assert!(matches!(err, WastParseError::UnknownIdentifier { space: "tag", .. }));
+    }
+
+    #[test]
+    fn try_table_folded_catch_catch_all_catch_ref_catch_all_ref_encode_the_real_binary_shape() {
+        // `throw.wast`'s own real shape: `(block $h (result i32 i32) (try_table
+        // (catch $e-i32-i32 $h) (call $throw-1-2)) (return))`.
+        let m = parse_module(
+            r#"(module
+                 (tag $e (param i32 i32))
+                 (func $callee (i32.const 1) (i32.const 2) (throw $e))
+                 (func (export "f")
+                   (block $h (result i32 i32)
+                     (try_table (catch $e $h) (call $callee))
+                     (return)
+                   )
+                   (drop) (drop)
+                 )
+               )"#,
+        )
+        .unwrap();
+        // block (0x02) blocktype=type-idx (2 results -> a real func type,
+        // dedup'd); try_table (0x1F) blocktype=0x40 (empty/void);
+        // catch_count=1; clause 0x00 (catch) tagidx=0 labelidx=0 (the
+        // ENCLOSING block $h, not try_table itself); call $callee (0x10 0x00);
+        // end (try_table); return (0x0F); end (block); drop drop; end (func).
+        let code = code_of(&m, 1);
+        assert_eq!(code[0], 0x02); // block
+        // code[1] is the dedup'd type index for (result i32 i32) -- signed LEB128.
+        assert_eq!(&code[2..], &[0x1F, 0x40, 0x01, 0x00, 0x00, 0x00, 0x10, 0x00, 0x0B, 0x0F, 0x0B, 0x1A, 0x1A, 0x0B]);
+    }
+
+    #[test]
+    fn try_table_catch_all_and_ref_variants_parse_to_the_real_clause_bytes() {
+        // `exnref` (the value `catch_ref`/`catch_all_ref` would normally
+        // push) is NOT modeled as a `ValueType` by this crate at all (out
+        // of scope, W21 -- see this module's own doc comment) -- so this
+        // test exercises the 4 catch-clause SHAPES' own binary encoding
+        // directly, using plain scalar blocktypes throughout rather than a
+        // real `exnref`-typed catch target (which this crate can't parse).
+        let m = parse_module(
+            r#"(module
+                 (tag $e)
+                 (func (export "f")
+                   (block $h
+                     (try_table (catch_all $h))
+                     (try_table (catch_ref $e $h))
+                     (try_table (catch_all_ref $h))
+                   )
+                 )
+               )"#,
+        )
+        .unwrap();
+        let code = code_of(&m, 0);
+        // block $h (0x02 0x40). All three `try_table`s are SIBLINGS inside
+        // the same block, not nested in each other -- each pushes then
+        // pops its OWN label around its own body, so every one of them
+        // sees the identical enclosing label stack ($h at depth 0) when
+        // its OWN catch clause is resolved, hence label=0 in all three.
+        // try_table (0x1F 0x40) catch_count=1, clause 0x02 (catch_all) label=0; end.
+        // try_table (0x1F 0x40) catch_count=1, clause 0x01 (catch_ref) tag=0 label=0; end.
+        // try_table (0x1F 0x40) catch_count=1, clause 0x03 (catch_all_ref) label=0; end.
+        assert_eq!(
+            code,
+            &[
+                0x02, 0x40, // block $h
+                0x1F, 0x40, 0x01, 0x02, 0x00, 0x0B, // try_table (catch_all $h)
+                0x1F, 0x40, 0x01, 0x01, 0x00, 0x00, 0x0B, // try_table (catch_ref $e $h)
+                0x1F, 0x40, 0x01, 0x03, 0x00, 0x0B, // try_table (catch_all_ref $h)
+                0x0B, // end block
+                0x0B, // end function
+            ]
+        );
+    }
+
+    #[test]
+    fn try_table_flat_form_matches_the_folded_encoding() {
+        let folded = parse_module(
+            r#"(module (tag $e) (func (export "f") (block $h (try_table (catch $e $h) (throw $e)))))"#,
+        )
+        .unwrap();
+        let flat = parse_module(
+            r#"(module (tag $e) (func (export "f") block $h try_table (catch $e $h) throw $e end end))"#,
+        )
+        .unwrap();
+        assert_eq!(code_of(&folded, 0), code_of(&flat, 0));
+    }
+
+    #[test]
+    fn try_table_body_that_throws_is_not_caught_by_this_repo_uncaught_propagates() {
+        // Structural/parse-level sanity: a `try_table` with a real catch
+        // clause still just encodes the catch clause's bytes (this crate
+        // never intercepts it at parse time) -- the actual "never
+        // matches" behavior is an EXECUTION-time property, verified in
+        // `wasm-execution`'s own tests, not here.
+        let m = parse_module(
+            r#"(module (tag $e) (func (export "f") (block $h (result i32) (try_table (result i32) (catch $e $h) (throw $e)) (return)) (i32.const 0)))"#,
+        )
+        .unwrap();
+        assert!(!m.code[0].code.is_empty());
     }
 
     #[test]

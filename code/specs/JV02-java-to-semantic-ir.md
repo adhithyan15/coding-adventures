@@ -79,8 +79,18 @@ corresponding SIR IR node at all (confirmed by a repo-wide grep, not
 assumed) — it needs its own spec-level design decision (Java's
 fall-through semantics in particular) before any frontend can target it,
 tracked as a separate backlog item rather than folded into "M2"/"M3"
-implicitly; `break`/`continue` have the identical gap. M5 onward, plus
-the standalone follow-up tasks split off from M4c and M4d, are pending.
+implicitly; `break`/`continue` had the identical gap. **Update**: the
+`break`/`continue` half of this has since landed at the core-IR level —
+see [SIR16](SIR16-ir-extensions-for-python-and-javascript.md)'s "Loop
+control (addendum)" section for `Stmt::Break`/`Stmt::Continue` and
+`Feature::LoopControl` — but this frontend does not consume it yet (no
+backend accepts the feature yet either), and the crate's own classic-`for`
+desugaring (`lower_for_statement_inner`, which splices the update-clause
+statement onto the end of the loop body rather than using a dedicated
+increment slot) would need to change before a `continue` inside a classic
+`for` could be lowered safely; both are their own follow-up work. `switch`
+itself remains fully unaddressed. M5 onward, plus the standalone follow-up
+tasks split off from M4c and M4d, are pending.
 
 ## Motivation
 
@@ -211,8 +221,13 @@ has **no** `Switch`/`Match`/`Case` IR node at all (confirmed by a
 repo-wide grep during M2a's implementation, not assumed from reading
 the spec), and Java's `switch` fall-through semantics don't map onto
 existing IR surface the way `if`/`while` did — tracked as its own
-backlog item, not M2-blocking. `break`/`continue` have the identical
-gap (no IR primitive) and the identical "own design decision" status.
+backlog item, not M2-blocking. `break`/`continue` had the identical gap
+at M2a time; `Stmt::Break`/`Stmt::Continue` and `Feature::LoopControl`
+have since landed at the core-IR level (see
+[SIR16](SIR16-ir-extensions-for-python-and-javascript.md)'s "Loop control
+(addendum)" section) — this frontend's own consumption of them, and the
+classic-`for` desugaring change that consumption needs first, remain
+their own follow-up, tracked separately from `switch`.
 
 **M3 — methods / calls / lambdas.** Static and instance top-level-
 function-shaped methods (still not class-nested — that's M6), calls,
@@ -235,9 +250,11 @@ as the literal last top-level statement of a method body (SIR has no
 `Stmt::Return` primitive at all — a function's value is always its own
 body `Block`'s trailing value, confirmed by an exhaustive grep of the
 `Stmt` enum — so an early or branched return is a clean, disclosed
-rejection, not a mis-lowering; real branching-return support needs the
-same kind of design work `switch`/`break`/`continue` already need, and
-is deferred alongside them). Qualified calls (`x.foo(...)`, which the
+rejection, not a mis-lowering; real branching-return support needs its
+own comparable core-IR design work, same as `switch` still does — see the
+note on `break`/`continue` above, whose own IR primitive has since landed
+even though this frontend doesn't consume it yet). Qualified calls
+(`x.foo(...)`, which the
 grammar distinguishes from a bare call by chaining *two* `primary_suffix`
 nodes rather than one) and method overloading (this frontend has no
 type-based overload resolution — only one method per name is supported)

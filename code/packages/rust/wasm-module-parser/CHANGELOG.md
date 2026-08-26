@@ -2,6 +2,22 @@
 
 All notable changes to this package will be documented in this file.
 
+## [0.2.7] — 2026-08-25 — W21: exceptions proposal, tag/throw first slice
+
+### Changed
+
+- `parse_import_section`'s exhaustive `match kind { ... }` gained an
+  `ExternalKind::Tag` arm (a clean parse error, "tag imports are not
+  supported by the binary module parser") — `decode_external_kind` still
+  only recognizes bytes `0x00`-`0x03`, so this arm is unreachable in
+  practice; it exists only so the match stays exhaustive now that
+  `ExternalKind` (`wasm-types` 0.1.7) has a 5th variant. Real BINARY
+  tag-section/tag-import decoding stays out of scope for this slice —
+  `wasm-wast-parser`'s text pipeline (this repo's real corpus entry
+  point) never round-trips through this crate at all, matching the GC
+  epic's W20 precedent. See `code/specs/
+  W21-wasm-exceptions-tag-throw-slice.md`.
+
 ## [0.2.6] — 2026-08-17 — decode all 4 real element-segment modes (task #97)
 
 ### Changed

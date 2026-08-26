@@ -483,6 +483,9 @@ fn print_stmt(out: &mut String, s: &Stmt, indent: usize, depth: usize) {
             print_block_depth(out, body, indent + 2, depth + 1);
             out.push(')');
         }
+        // ── SIR16 addendum: loop control ─────────────────────────────
+        Stmt::Break { .. } => out.push_str("(break)"),
+        Stmt::Continue { .. } => out.push_str("(continue)"),
     }
 }
 
@@ -1012,7 +1015,7 @@ mod tests {
     fn print_empty_module() {
         let m = module_with(vec![], FeatureManifest::new());
         let t = print_module(&m);
-        assert!(t.starts_with("(sir-module demo v5"));
+        assert!(t.starts_with("(sir-module demo v6"));
         assert!(t.contains("(metadata"));
         assert!(t.ends_with(")\n"));
     }

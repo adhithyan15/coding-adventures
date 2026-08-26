@@ -3393,3 +3393,109 @@ fn valid_i31_ref_type_in_params_results_locals_and_globals() {
 fn invalid_i31_get_u_on_empty_stack_is_rejected() {
     assert_invalid("(module (func (result i32) (i31.get_u)))");
 }
+
+// ── W21: exceptions proposal (tag / throw / try_table) ────────────────────
+
+#[test]
+fn valid_throw_pops_the_tags_param_types_and_the_rest_of_the_block_is_dead_code() {
+    // Mirrors `throw.wast`'s own `test-throw-1-2` shape: throw's operands
+    // popped in order, and nothing after `throw` needs to type-check
+    // against anything real (dead code).
+    assert_valid(
+        "(module (tag $e (param i32 i32))
+           (func (i32.const 1) (i32.const 2) (throw $e) (unreachable)))",
+    );
+}
+
+#[test]
+fn valid_throw_no_params_tag() {
+    assert_valid("(module (tag $e) (func (throw $e)))");
+}
+
+#[test]
+fn valid_try_table_behaves_exactly_like_a_block_for_type_checking() {
+    // `try_table`'s OWN declared blocktype (`result i32` here) governs what
+    // it pushes on a normal fall-through, exactly like `block` -- same
+    // push_ctrl/pop_ctrl shape, no special-casing for the catch clause's
+    // own tag/label at all (this slice never actually matches one).
+    assert_valid("(module (tag $e (param i32)) (func (result i32) (try_table (result i32) (catch $e 0) (i32.const 1))))");
+}
+
+#[test]
+fn valid_try_table_dead_code_after_throw_needs_no_matching_result() {
+    // Mirrors `throw.wast`'s own `test-throw-1-2` shape: a function AND
+    // its callee both declaring NO results at all means `try_table`'s own
+    // empty (void) blocktype and the enclosing `return`'s 0-result
+    // requirement line up even though the body always `throw`s (dead
+    // code) rather than actually falling through.
+    assert_valid(
+        "(module (tag $e (param i32 i32))
+           (func $callee (i32.const 1) (i32.const 2) (throw $e))
+           (func (export \"f\")
+             (block $h (result i32 i32)
+               (try_table (catch $e $h) (call $callee))
+               (return)
+             )
+             (drop) (drop)
+           ))",
+    );
+}
+
+#[test]
+fn valid_try_table_with_no_catch_clauses_is_just_a_block() {
+    assert_valid("(module (func (result i32) (try_table (result i32) (i32.const 5))))");
+}
+
+#[test]
+fn valid_try_table_catch_all_and_ref_variants_parse_and_validate() {
+    assert_valid(
+        "(module (tag $e)
+           (func
+             (block $h
+               (try_table (catch_all $h))
+               (try_table (catch_ref $e $h))
+               (try_table (catch_all_ref $h))
+             )))",
+    );
+}
+
+#[test]
+fn invalid_throw_unknown_tag_index_is_rejected() {
+    // `throw.wast`'s own real case: `(assert_invalid (module (func (throw 0)))
+    // "unknown tag 0")` -- module has zero tags declared at all.
+    assert_invalid("(module (func (throw 0)))");
+}
+
+#[test]
+fn invalid_throw_missing_operand_is_rejected() {
+    // `throw.wast`'s own real case: tag declared with an i32 param, but
+    // nothing pushed before `throw`.
+    assert_invalid("(module (tag (param i32)) (func (throw 0)))");
+}
+
+#[test]
+fn invalid_throw_wrong_operand_type_is_rejected() {
+    // `throw.wast`'s own real case: tag wants i32, stack has i64.
+    assert_invalid("(module (tag (param i32)) (func (i64.const 5) (throw 0)))");
+}
+
+#[test]
+fn invalid_tag_with_non_empty_result_type_is_rejected() {
+    // `tag.wast`'s own real case: "non-empty tag result type".
+    assert_invalid("(module (tag (result i32)))");
+}
+
+#[test]
+fn invalid_tag_import_with_non_empty_result_type_is_rejected() {
+    assert_invalid(r#"(module (import "m" "t" (tag (result i32))))"#);
+}
+
+#[test]
+fn invalid_try_table_catch_clause_unknown_tag_is_rejected() {
+    assert_invalid("(module (func (block $h (try_table (catch 0 $h)))))");
+}
+
+#[test]
+fn invalid_try_table_catch_clause_label_out_of_range_is_rejected() {
+    assert_invalid("(module (tag $e) (func (try_table (catch $e 5))))");
+}

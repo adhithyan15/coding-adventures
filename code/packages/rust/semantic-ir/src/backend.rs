@@ -301,6 +301,9 @@ where
             }
             walk_intrinsics_in_expr(&body.value, f, depth + 1);
         }
+        crate::nodes::Stmt::Break { .. } | crate::nodes::Stmt::Continue { .. } => {
+            // No nested expression to recurse into.
+        }
     }
 }
 

@@ -30,6 +30,10 @@ pub enum DirectiveKind {
     AssertInvalid,
     AssertMalformed,
     AssertUnlinkable,
+    /// `assert_exception` (W21 -- the exceptions proposal): a genuinely
+    /// different outcome from `AssertTrap` -- see `wasm_wast_parser::
+    /// script::Directive::AssertException`'s own doc comment.
+    AssertException,
 }
 
 impl DirectiveKind {
@@ -38,7 +42,7 @@ impl DirectiveKind {
     /// every kind present (even ones a given run saw zero of), so the
     /// report's shape doesn't silently change just because a file happened
     /// not to use a particular directive.
-    pub const ALL: [DirectiveKind; 9] = [
+    pub const ALL: [DirectiveKind; 10] = [
         DirectiveKind::Module,
         DirectiveKind::Register,
         DirectiveKind::Action,
@@ -48,6 +52,7 @@ impl DirectiveKind {
         DirectiveKind::AssertInvalid,
         DirectiveKind::AssertMalformed,
         DirectiveKind::AssertUnlinkable,
+        DirectiveKind::AssertException,
     ];
 
     /// The stable string key used as a JSON object key (both in the golden
@@ -65,6 +70,7 @@ impl DirectiveKind {
             DirectiveKind::AssertInvalid => "assert_invalid",
             DirectiveKind::AssertMalformed => "assert_malformed",
             DirectiveKind::AssertUnlinkable => "assert_unlinkable",
+            DirectiveKind::AssertException => "assert_exception",
         }
     }
 }

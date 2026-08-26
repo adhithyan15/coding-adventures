@@ -39,7 +39,7 @@ describe("real curriculum", () => {
     expect(scripts.devanagari!.complete).toBe(true);
   });
 
-  it("keeps the cross-script closure queue measured after Kannada independent i", () => {
+  it("keeps the cross-script closure queue measured after Malayalam chillu LL", () => {
     const candrakkala = scripts.malayalam!.marks!.find((mark) => mark.mark === "്")!;
     expect(candrakkala.role).toBe("virama");
     expect(candrakkala.compositionOrder).toEqual([
@@ -286,6 +286,28 @@ describe("real curriculum", () => {
       /67-frame Gayathri-font animation.*left arch.*central stem.*lifts once.*right outer loop.*inner return.*hook above the line.*Noto Sans Malayalam/i,
     );
     expect(malayalamChilluN.notes).toMatch(/U\+0D7B.*vowel-free final consonant.*not the base ന/i);
+
+    const malayalamChilluLL = scripts.malayalam!.finalConsonants!.find((entry) => entry.glyph === "ൾ")!;
+    expect(malayalamChilluLL.sound).toBe("ḷ");
+    expect(malayalamChilluLL.role).toBe("consonant");
+    expect(malayalamChilluLL.penLifts).toBe(0);
+    expect(malayalamChilluLL.strokeOrder).toEqual([
+      "descend clockwise around the left bowl and climb the central rise",
+      "without lifting, carry the upper shoulder right",
+      "without lifting, sweep clockwise around the right loop and return to the upper crossing",
+      "without lifting, rise into the chillu hook and curl left above the line",
+    ]);
+    expect(malayalamChilluLL.strokeOrderNote).toMatch(/four visible movements.*one continuous pen-down run/i);
+    expect(malayalamChilluLL.strokeOrderSource?.url).toBe(
+      "https://commons.wikimedia.org/wiki/File:Ml_%E0%B5%BE_order.gif",
+    );
+    expect(malayalamChilluLL.strokeOrderSource?.citation).toMatch(
+      /Sriveenkat.*Ml ൾ order\.gif.*chillu LL.*00:03\.0.?00:09\.3.*Wikimedia Commons.*14 July 2023/i,
+    );
+    expect(malayalamChilluLL.strokeOrderSource?.variation).toMatch(
+      /65-frame Gayathri-font animation.*one uninterrupted run.*left bowl.*central rise.*upper shoulder.*right loop.*hook above the line.*Noto Sans Malayalam.*zero-lift order/i,
+    );
+    expect(malayalamChilluLL.notes).toMatch(/U\+0D7E.*vowel-free retroflex lateral final consonant.*not the base ള/i);
 
     const malayalamZha = scripts.malayalam!.letters.find((entry) => entry.glyph === "ഴ")!;
     expect(malayalamZha.sound).toBe("ḻa");
@@ -741,6 +763,8 @@ describe("real curriculum", () => {
     expect(affected.get("ൽ") ?? 0).toBe(0);
     expect(missingByScript.get("malayalam.json")?.has("ൻ")).toBe(false);
     expect(affected.get("ൻ") ?? 0).toBe(0);
+    expect(missingByScript.get("malayalam.json")?.has("ൾ")).toBe(false);
+    expect(affected.get("ൾ") ?? 0).toBe(0);
     expect(missingByScript.get("malayalam.json")?.has("ഴ")).toBe(false);
     expect(affected.get("ഴ") ?? 0).toBe(0);
     expect(missingByScript.get("tamil.json")?.has("உ")).toBe(false);
@@ -787,7 +811,7 @@ describe("real curriculum", () => {
     expect(affected.get("ಇ") ?? 0).toBe(0);
     expect(
       [...affected.entries()].sort((left, right) => right[1] - left[1])[0],
-    ).toEqual(["ൾ", 8]);
+    ).toEqual(["ർ", 8]);
   });
 
   it("loaded every track (17+ and growing)", () => {

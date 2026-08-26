@@ -14531,6 +14531,80 @@ export const DUCTUS: Record<string, LetterDuctus> = {
     ],
     source: malayalamAlphabetSource("ൻ"),
   },
+  // Sriveenkat's 65-frame animation draws chillu ൾ in one uninterrupted run:
+  // the left bowl climbs into the upper shoulder, flows clockwise around the
+  // right loop, then rises through the crossing into the above-line hook.
+  [ductusKey("malayalam", "ൾ")]: {
+    script: "malayalam",
+    glyph: "ൾ",
+    strokes: [
+      {
+        segments: [
+          {
+            label: "descend clockwise around the left bowl and climb the central rise",
+            path: [
+              { x: 210, y: 520 },
+              { x: 145, y: 485 },
+              { x: 95, y: 405 },
+              { x: 78, y: 300 },
+              { x: 98, y: 185 },
+              { x: 155, y: 85 },
+              { x: 245, y: 25 },
+              { x: 335, y: 28 },
+              { x: 410, y: 92 },
+              { x: 455, y: 190 },
+              { x: 470, y: 295 },
+              { x: 478, y: 455 },
+            ],
+          },
+          {
+            label: "carry the upper shoulder right",
+            path: [
+              { x: 478, y: 455 },
+              { x: 550, y: 505 },
+              { x: 635, y: 532 },
+              { x: 720, y: 520 },
+              { x: 805, y: 480 },
+            ],
+          },
+          {
+            label: "sweep clockwise around the right loop and return to the upper crossing",
+            path: [
+              { x: 805, y: 480 },
+              { x: 890, y: 440 },
+              { x: 950, y: 365 },
+              { x: 978, y: 270 },
+              { x: 968, y: 175 },
+              { x: 925, y: 85 },
+              { x: 850, y: 28 },
+              { x: 775, y: 28 },
+              { x: 705, y: 85 },
+              { x: 665, y: 175 },
+              { x: 662, y: 265 },
+              { x: 695, y: 365 },
+              { x: 755, y: 448 },
+              { x: 805, y: 480 },
+            ],
+          },
+          {
+            label: "rise into the chillu hook and curl left above the line",
+            path: [
+              { x: 805, y: 480 },
+              { x: 850, y: 530 },
+              { x: 892, y: 595 },
+              { x: 905, y: 655 },
+              { x: 885, y: 705 },
+              { x: 840, y: 745 },
+              { x: 780, y: 765 },
+              { x: 720, y: 758 },
+              { x: 690, y: 748 },
+            ],
+          },
+        ],
+      },
+    ],
+    source: malayalamAlphabetSource("ൾ"),
+  },
   // Sriveenkat's 47-frame animation draws ഴ as one uninterrupted run: the
   // left entry arch reaches the lower junction, turns clockwise around the
   // right loop, and descends through its inner return into the lower hook.

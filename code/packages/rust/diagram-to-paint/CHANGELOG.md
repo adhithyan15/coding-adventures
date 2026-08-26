@@ -1,5 +1,9 @@
 # Changelog — diagram-to-paint
 
+## 0.74.0
+
+- Validate multi-source Gantt `after` and `until` geometry through the backend-neutral Paint pipeline and Metal-to-PNG rendering.
+
 ## 0.73.0
 
 - Lower resolved top/bottom Gantt ticks and styled today markers into backend-neutral Paint glyphs and paths.

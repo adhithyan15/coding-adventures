@@ -1,5 +1,17 @@
 # Changelog
 
+- 0.2.4 (W21 — exceptions proposal, tag/throw first slice): `encode_import`'s
+  exhaustive `(ExternalKind, ImportTypeInfo)` match gained a
+  `(ExternalKind::Tag, ImportTypeInfo::Tag(type_index))` arm (encodes the
+  tag's type index the same way a function import's type index is
+  encoded) plus its own mismatch-fallback arm, purely so the workspace
+  keeps compiling now that both enums gained a `Tag` variant (`wasm-types`
+  0.1.7). This crate's own text-to-binary path isn't exercised by
+  `wasm-wast-parser`'s real corpus pipeline (that crate builds
+  `WasmModule` directly, never through this encoder), matching the GC
+  epic's W20 precedent of not touching this crate for a proposal that
+  otherwise only needed real coverage in the text-parser/execution/
+  validator layers. See `code/specs/W21-wasm-exceptions-tag-throw-slice.md`.
 - 0.2.3 (task #97): `encode_element` rewritten to write the real binary
   flags byte and dispatch across the 4 element-segment modes this repo
   now represents (0/1/2/5), the encoder-side counterpart to

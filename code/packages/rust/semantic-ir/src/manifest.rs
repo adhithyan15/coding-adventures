@@ -47,6 +47,7 @@ use std::fmt;
 /// | `Interfaces`               | a `Stmt::InterfaceDef`, or a `NominalClassDef` with interfaces |
 /// | `VirtualDispatch`          | an `Expr::VirtualCall` node           |
 /// | `ErasedGenerics`           | a `SirType::TypeParam`                |
+/// | `LoopControl`              | a `Stmt::Break` or `Stmt::Continue`   |
 #[derive(Debug, Clone, Copy, PartialEq, Eq, Hash)]
 pub enum Feature {
     Closures,
@@ -271,6 +272,30 @@ pub enum Feature {
     /// "erased" because SIR29 v1 carries no reification/runtime-type-
     /// token machinery — see `SirType::TypeParam`'s own doc comment.
     ErasedGenerics,
+    // ── SIR16 addendum (loop-control statements) ──────────────────────
+    /// The module contains a `Stmt::Break` or `Stmt::Continue` node —
+    /// bare (unlabeled) loop-control statements. Split out from
+    /// `Feature::Loops` deliberately: every existing backend already
+    /// declares `Loops` for plain `While`/`ForRange`/`ForEach` support,
+    /// and none of them have implemented `break`/`continue` emission
+    /// yet, so folding this into `Loops` would either force every
+    /// existing backend to gain (or fake) break/continue support
+    /// overnight, or silently redefine what `Loops` has always promised.
+    /// A backend accepting this promises `break`/`continue` inside a
+    /// `While` or `ForEach` body. `ForRange` is deliberately excluded:
+    /// several backends lower `ForRange` to a `while` loop with the step
+    /// increment appended *after* the body (so a bare `continue` would
+    /// skip it), and `semantic-ir-to-ruby` hoists the body into a
+    /// `->(){ }` lambda where a bare `break` doesn't propagate to the
+    /// enclosing loop at all — the two backends' failure modes don't even
+    /// agree on which statement is unsafe. Rather than let the validator's
+    /// correctness depend on a specific backend's lowering strategy, the
+    /// validator rejects *both* `Stmt::Break` and `Stmt::Continue` when
+    /// the nearest enclosing loop is a `ForRange`, independent of which
+    /// backend ultimately consumes the module. See the "Loop control"
+    /// section of
+    /// [SIR16](../../../../specs/SIR16-ir-extensions-for-python-and-javascript.md).
+    LoopControl,
 }
 
 impl Feature {
@@ -321,6 +346,7 @@ impl Feature {
         Feature::Interfaces,
         Feature::VirtualDispatch,
         Feature::ErasedGenerics,
+        Feature::LoopControl,
     ];
 
     /// Kebab-case name for the SIR text format.
@@ -371,6 +397,7 @@ impl Feature {
             Feature::Interfaces => "interfaces",
             Feature::VirtualDispatch => "virtual-dispatch",
             Feature::ErasedGenerics => "erased-generics",
+            Feature::LoopControl => "loop-control",
         }
     }
 
@@ -519,6 +546,18 @@ mod tests {
             assert_eq!(Feature::from_name(name), Some(feat));
             assert!(Feature::ALL.contains(&feat), "{} missing from ALL", name);
         }
+    }
+
+    #[test]
+    fn loop_control_feature_present_and_named() {
+        // LoopControl round-trips through name()/from_name() and is a
+        // member of ALL, mirroring the SIR29 test above.
+        assert_eq!(Feature::LoopControl.name(), "loop-control");
+        assert_eq!(
+            Feature::from_name("loop-control"),
+            Some(Feature::LoopControl)
+        );
+        assert!(Feature::ALL.contains(&Feature::LoopControl));
     }
 
     #[test]
