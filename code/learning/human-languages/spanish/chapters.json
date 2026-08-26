@@ -7528,6 +7528,86 @@
           "ES-LEX-C380-COUNT-40"
         ]
       }
+    },
+    {
+      "chapter": 381,
+      "title": "Four Everyday Actions English Kept",
+      "label": "ch:lavar-y-romper",
+      "canDo": "I can say lavar, romper, saltar and soñar, and name four everyday actions.",
+      "spineNodes": [
+        "SPINE-NAME-EVERYDAY-ACTIONS"
+      ],
+      "payoff": {
+        "lesson": "ES-C381-sonar",
+        "kind": "production",
+        "summary": "Complete ES-C381-sonar: name four everyday actions, and say which one you do most often.",
+        "assesses": [
+          "ES-LEX-LAVAR",
+          "ES-LEX-ROMPER",
+          "ES-LEX-SALTAR",
+          "ES-LEX-SONAR"
+        ]
+      }
+    },
+    {
+      "chapter": 382,
+      "title": "Four Verbs Two Languages Built Twice",
+      "label": "ch:acabar-y-empezar",
+      "canDo": "I can say empezar, acabar, pagar and quedar, and name four everyday actions.",
+      "spineNodes": [
+        "SPINE-NAME-EVERYDAY-ACTIONS"
+      ],
+      "payoff": {
+        "lesson": "ES-C382-quedar",
+        "kind": "production",
+        "summary": "Complete ES-C382-quedar: name four everyday actions, and say which one you did today.",
+        "assesses": [
+          "ES-LEX-EMPEZAR",
+          "ES-LEX-ACABAR",
+          "ES-LEX-PAGAR",
+          "ES-LEX-QUEDAR"
+        ]
+      }
+    },
+    {
+      "chapter": 383,
+      "title": "Two Words From Outside, and Two Nobody Can Place",
+      "label": "ch:guardar-y-dejar",
+      "canDo": "I can say guardar, dejar, sacar and buscar, and name four everyday actions.",
+      "spineNodes": [
+        "SPINE-NAME-EVERYDAY-ACTIONS"
+      ],
+      "payoff": {
+        "lesson": "ES-C383-buscar",
+        "kind": "production",
+        "summary": "Complete ES-C383-buscar: name four everyday actions, and say which one you do most.",
+        "assesses": [
+          "ES-LEX-GUARDAR",
+          "ES-LEX-DEJAR",
+          "ES-LEX-SACAR",
+          "ES-LEX-BUSCAR"
+        ]
+      }
+    },
+    {
+      "chapter": 384,
+      "title": "Four Roads, and Where the Trail Stops",
+      "label": "ch:enviar-y-subir",
+      "canDo": "I can say enviar, subir, morir and olvidar, and name four everyday actions.",
+      "spineNodes": [
+        "SPINE-NAME-EVERYDAY-ACTIONS"
+      ],
+      "payoff": {
+        "lesson": "ES-C384-olvidar",
+        "kind": "production",
+        "summary": "Complete ES-C384-olvidar: name four everyday actions, and say one thing about each.",
+        "assesses": [
+          "ES-LEX-ENVIAR",
+          "ES-LEX-SUBIR",
+          "ES-LEX-MORIR",
+          "ES-LEX-OLVIDAR"
+        ]
+      }
     }
   ]
 }

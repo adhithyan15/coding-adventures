@@ -1,0 +1,14 @@
+{
+  "id": "ES-EXT-381-VERB",
+  "stage": "A1",
+  "kind": "required",
+  "category": "vocabulary",
+  "canDo": "I can name lavar, romper, saltar and soñar.",
+  "prerequisites": [],
+  "lessons": [
+    "ES-C381-lavar",
+    "ES-C381-romper",
+    "ES-C381-saltar",
+    "ES-C381-sonar"
+  ]
+}

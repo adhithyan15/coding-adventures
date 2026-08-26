@@ -1,7 +1,7 @@
 {
   "language": "spanish",
-  "lessonCount": 966,
-  "atomMeasurableLessons": 962,
+  "lessonCount": 982,
+  "atomMeasurableLessons": 978,
   "atomMeasurementBlindLessons": 4,
   "durationViolations": 0,
   "atomLessonSpikes": 0,
@@ -15,15 +15,15 @@
   "unknownPrerequisites": 0,
   "forwardPrerequisites": 0,
   "forwardReviews": 0,
-  "forwardReferences": 341,
-  "atomsTaught": 1233,
+  "forwardReferences": 343,
+  "atomsTaught": 1249,
   "atomsNeverRevisited": 119,
-  "reinforcementWindowMisses": 3366,
+  "reinforcementWindowMisses": 3414,
   "reinforcementMissesByWindow": {
     "R1": 222,
-    "R2": 1056,
-    "R3": 1081,
-    "R4": 1007
+    "R2": 1072,
+    "R3": 1097,
+    "R4": 1023
   },
   "payoffSurprises": 26,
   "writingPracticeLessons": 14,
@@ -33,7 +33,7 @@
     {
       "language": "spanish",
       "kind": "forward-language",
-      "count": 341,
+      "count": 343,
       "unit": "use(s)",
       "detail": "teach target-language material before load-bearing use"
     },
@@ -47,7 +47,7 @@
     {
       "language": "spanish",
       "kind": "reinforcement",
-      "count": 3366,
+      "count": 3414,
       "unit": "missed window(s)",
       "detail": "add retrieval at the expanding R1-R4 intervals"
     },
@@ -69,7 +69,7 @@
   "next": {
     "language": "spanish",
     "kind": "forward-language",
-    "count": 341,
+    "count": 343,
     "unit": "use(s)",
     "detail": "teach target-language material before load-bearing use"
   }

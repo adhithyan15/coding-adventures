@@ -268,11 +268,15 @@ describe("the first rung anybody actually climbed", () => {
     expect(line).not.toContain("1 tracks");
   });
 
-  it("blocks Spanish at A1 on COMPOSITION, while its total is within sixteen", () => {
-    // HL23's finding, made into a gate. Spanish teaches 584 of the 600 headwords
-    // A1 asks for — close enough that criterion 2 alone would certify A1 after one
-    // more tranche — and SEVEN of those headwords are verbs. Criterion 2b is the
-    // one that says so, and it must be visibly RED until the lexicon is authored.
+  it("blocks Spanish at A1 on COMPOSITION ALONE, now that the total is met", () => {
+    // HL23's finding, made into a gate — and this test is now the argument for
+    // criterion 2b in a single assertion.
+    //
+    // Spanish has PASSED criterion 2: 601 distinct headwords at or below A1
+    // against the floor of 600. On the old gate, A1's vocabulary requirement would
+    // now read as satisfied. It is satisfied by a vocabulary holding 24 verbs
+    // against a floor of 40. A total was reached, it was reached by the wrong
+    // parts, and exactly one of the two numbers can tell.
     //
     // The shortfall is pinned rather than merely asserted non-zero, because a
     // criterion that fails is not evidence of anything on its own: it has to fail
@@ -282,17 +286,16 @@ describe("the first rung anybody actually climbed", () => {
     expect(spanish.inProgressAt).toBe("A1");
     const verbs = spanish.blockers.find((b) => b.criterion === "verb-vocabulary");
     expect(verbs).toBeDefined();
-    expect(verbs!.shortfall).toBe(32);
-    expect(verbs!.detail).toContain("8 distinct verb headwords at or below A1");
+    expect(verbs!.shortfall).toBe(16);
+    expect(verbs!.detail).toContain("24 distinct verb headwords at or below A1");
 
-    // And the criterion it partitions is still short too, by a different amount —
-    // proof the two numbers are measuring different things rather than one being a
-    // restatement of the other.
-    expect(spanish.blockers.find((b) => b.criterion === "vocabulary")?.shortfall).toBe(15);
+    // The criterion it partitions is NOT a blocker any more. That is the point: a
+    // gate carrying only the count would wave A1's vocabulary through from here.
+    expect(spanish.blockers.find((b) => b.criterion === "vocabulary")).toBeUndefined();
 
-    // Critically: pre-A1 is NOT perturbed. Spanish is the only track holding any
-    // level at all, so a new criterion that revoked it would be a regression
-    // dressed as a gate. Six verb headwords at or below pre-A1 against a floor of
+    // Critically: pre-A1 is NOT perturbed, by this criterion or by the tranche
+    // that moved the A1 numbers. Spanish is the only track holding any level at
+    // all, so a change that revoked it would be a regression dressed as progress. Six verb headwords at or below pre-A1 against a floor of
     // five — one of margin, and that margin is why the floor is not higher.
     expect(spanish.attained).toBe("pre-A1");
   });

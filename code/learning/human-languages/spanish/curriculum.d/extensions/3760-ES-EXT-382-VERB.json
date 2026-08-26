@@ -1,0 +1,14 @@
+{
+  "id": "ES-EXT-382-VERB",
+  "stage": "A1",
+  "kind": "required",
+  "category": "vocabulary",
+  "canDo": "I can name empezar, acabar, pagar and quedar.",
+  "prerequisites": [],
+  "lessons": [
+    "ES-C382-empezar",
+    "ES-C382-acabar",
+    "ES-C382-pagar",
+    "ES-C382-quedar"
+  ]
+}

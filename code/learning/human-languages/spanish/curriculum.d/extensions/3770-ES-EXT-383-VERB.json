@@ -1,0 +1,14 @@
+{
+  "id": "ES-EXT-383-VERB",
+  "stage": "A1",
+  "kind": "required",
+  "category": "vocabulary",
+  "canDo": "I can name guardar, dejar, sacar and buscar.",
+  "prerequisites": [],
+  "lessons": [
+    "ES-C383-guardar",
+    "ES-C383-dejar",
+    "ES-C383-sacar",
+    "ES-C383-buscar"
+  ]
+}
