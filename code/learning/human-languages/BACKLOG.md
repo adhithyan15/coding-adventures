@@ -5,6 +5,20 @@ Findings from the pre-A1 tranche work were recorded in commit messages and PR
 bodies, which are durable and searchable, but a reader opening this file found
 nothing. The entries below are the ones that change how the work is done.
 
+## HL-C11D — Malayalam chillu RR closes the arch-and-loop gap
+
+After Malayalam chillu LL **ൾ** landed, Malayalam chillu RR **ർ** led the
+measured queue at **8 affected realizations**. Sriveenkat's 57-frame Wikimedia
+Commons animation writes it in one uninterrupted run: climb from the lower-left
+tip around the left arch, carry the upper shoulder right, circle the right loop
+clockwise and return through its inner side, then rise into the finishing chillu
+hook above the line.
+
+The three-movement path fits that zero-lift order to the bundled Noto Sans
+Malayalam outline while retaining handwritten arch, loop, and hook variation.
+The canonical row and ductus close all 8 gaps. Shared Arabic-family **ش** now
+leads the measured queue at **8 affected realizations**.
+
 ## A1 vocabulary is nouns and adjectives only, and the count does not show it
 
 **This is a content defect, not a tooling note.** Spanish is at 549 of the 600
