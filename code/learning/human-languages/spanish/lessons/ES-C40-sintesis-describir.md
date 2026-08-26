@@ -19,7 +19,7 @@ requires:
 introduces:
   knowledge: []
 practises:
-  knowledge: [ES-GRAMMAR-INDEFINITE-ARTICLE-MASCULINE, ES-GRAMMAR-DEFINITE-ARTICLES, ES-GRAMMAR-TENER-PRESENT-SINGULAR, ES-LEX-PERRO-03, ES-LEX-GATO-01, ES-LEX-NEGRO-01, ES-LEX-BLANCO-03, ES-LEX-SIBLINGS-01, ES-LEX-WEATHER-03, ES-GRAMMAR-NOUN-GENDER]
+  knowledge: [ES-GRAMMAR-INDEFINITE-ARTICLE-MASCULINE, ES-GRAMMAR-DEFINITE-ARTICLES, ES-GRAMMAR-TENER-PRESENT-SINGULAR, ES-LEX-PERRO-03, ES-LEX-GATO-01, ES-LEX-NEGRO-01, ES-LEX-BLANCO-03, ES-LEX-SIBLINGS-01, ES-LEX-WEATHER-03, ES-GRAMMAR-NOUN-GENDER, ES-EVIDENCE-PERRO-04]
 skills: [listening, speaking]
 modes: [interpersonal, presentational]
 strands: [meaning-output, fluency]
@@ -50,7 +50,7 @@ That is not a vocabulary list any more. It is **enough to describe the room you
 are sitting in**, and this chapter is the first that asks you to.
 
 ## Grammar Lens: the word that made this possible
-<!-- hl-knowledge: introduces=[]; assesses=[ES-GRAMMAR-INDEFINITE-ARTICLE-MASCULINE, ES-GRAMMAR-DEFINITE-ARTICLES, ES-GRAMMAR-NOUN-GENDER] -->
+<!-- hl-knowledge: introduces=[]; assesses=[ES-GRAMMAR-INDEFINITE-ARTICLE-MASCULINE, ES-GRAMMAR-DEFINITE-ARTICLES, ES-GRAMMAR-NOUN-GENDER, ES-EVIDENCE-PERRO-04] -->
 
 Notice which article you need here, because it is not the one you have used
 most.

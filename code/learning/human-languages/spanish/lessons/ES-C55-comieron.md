@@ -20,7 +20,7 @@ requires:
 introduces:
   knowledge: [ES-GRAMMAR-ER-IR-PRETERITE-PLURAL]
 practises:
-  knowledge: [ES-GRAMMAR-ER-IR-PRETERITE-PLURAL, ES-GRAMMAR-ER-IR-PRETERITE-CONVERGENCE, ES-GRAMMAR-AR-PRETERITE-3PL, ES-GRAMMAR-ER-PRESENT-3PL]
+  knowledge: [ES-GRAMMAR-ER-IR-PRETERITE-PLURAL, ES-GRAMMAR-ER-IR-PRETERITE-CONVERGENCE, ES-GRAMMAR-AR-PRETERITE-3PL, ES-GRAMMAR-ER-PRESENT-3PL, ES-GRAMMAR-IR-PRESENT-3PL]
 skills: [listening, speaking, reading]
 modes: [interpretive, presentational]
 strands: [meaning-input, language-focus]
@@ -40,7 +40,7 @@ need between them? (**One** — *comí* and *viví* take the same endings.)
 [PAUSE 1s] The plural keeps that bargain.
 
 ## Grammar Lens: one ending, two families
-<!-- hl-knowledge: introduces=[ES-GRAMMAR-ER-IR-PRETERITE-PLURAL]; assesses=[ES-GRAMMAR-ER-PRESENT-3PL] -->
+<!-- hl-knowledge: introduces=[ES-GRAMMAR-ER-IR-PRETERITE-PLURAL]; assesses=[ES-GRAMMAR-ER-PRESENT-3PL, ES-GRAMMAR-IR-PRESENT-3PL] -->
 
 > ***comieron*** · ***vivieron*** — they ate · they lived
 

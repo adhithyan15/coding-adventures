@@ -4,7 +4,7 @@
   "chapter": 222,
   "title": "Ese --- Pointing at What Is by You",
   "drivablePrefix": 1,
-  "sourceHash": "fnv1a64:e057523aba739e82",
+  "sourceHash": "fnv1a64:e4b0b30dd6d4b93b",
   "lessons": [
     {
       "id": "ES-C59-ese",
@@ -19,7 +19,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:58e5d0de099407a8",
+      "sourceHash": "fnv1a64:8ed2b8a63b6d2567",
       "notice": null,
       "blocks": [
         {

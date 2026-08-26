@@ -4,7 +4,7 @@
   "chapter": 94,
   "title": "Les --- And What the Second System Costs",
   "drivablePrefix": 1,
-  "sourceHash": "fnv1a64:b8989651e04f83d2",
+  "sourceHash": "fnv1a64:fd9268fb3e0540bb",
   "lessons": [
     {
       "id": "ES-C46-les",
@@ -19,7 +19,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:20bc215e0da5933c",
+      "sourceHash": "fnv1a64:a14f18e333aaac2b",
       "notice": null,
       "blocks": [
         {

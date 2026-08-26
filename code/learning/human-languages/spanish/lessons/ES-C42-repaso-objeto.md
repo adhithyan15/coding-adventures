@@ -20,7 +20,7 @@ requires:
 introduces:
   knowledge: []
 practises:
-  knowledge: [ES-GRAMMAR-DIRECT-OBJECT-LO, ES-GRAMMAR-DIRECT-OBJECT-LA, ES-GRAMMAR-ME-DIRECT-OBJECT, ES-GRAMMAR-TE-DIRECT-OBJECT, ES-GRAMMAR-OBJECT-PRONOUN, ES-LEX-LIBRO, ES-LEX-COMIDA]
+  knowledge: [ES-GRAMMAR-DIRECT-OBJECT-LO, ES-GRAMMAR-DIRECT-OBJECT-LA, ES-GRAMMAR-ME-DIRECT-OBJECT, ES-GRAMMAR-TE-DIRECT-OBJECT, ES-GRAMMAR-OBJECT-PRONOUN, ES-LEX-LIBRO, ES-LEX-COMIDA, ES-LEX-LO-OBJECT, ES-LEX-LA-OBJECT, ES-LEX-TE-QUIERO]
 skills: [listening, speaking, reading]
 modes: [interpretive, presentational]
 strands: [meaning-input, language-focus, fluency]
@@ -38,7 +38,7 @@ reviews_of: [ES-C42-lo, ES-C42-la, ES-C42-me-objeto, ES-C42-te]
 pronoun go?
 
 ## What you've built
-<!-- hl-knowledge: introduces=[]; assesses=[ES-GRAMMAR-DIRECT-OBJECT-LO, ES-GRAMMAR-DIRECT-OBJECT-LA, ES-GRAMMAR-ME-DIRECT-OBJECT, ES-GRAMMAR-TE-DIRECT-OBJECT] -->
+<!-- hl-knowledge: introduces=[]; assesses=[ES-GRAMMAR-DIRECT-OBJECT-LO, ES-GRAMMAR-DIRECT-OBJECT-LA, ES-GRAMMAR-ME-DIRECT-OBJECT, ES-GRAMMAR-TE-DIRECT-OBJECT, ES-LEX-LO-OBJECT, ES-LEX-LA-OBJECT, ES-LEX-TE-QUIERO] -->
 
 Four chapters, four words, and now they can stand together — because you built
 each one separately and none of them is new here.

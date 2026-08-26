@@ -20,7 +20,7 @@ requires:
 introduces:
   knowledge: []
 practises:
-  knowledge: [ES-LEX-MUY, ES-LEX-BASTANTE, ES-LEX-MAL, ES-GRAMMAR-DEGREE-MUY, ES-GRAMMAR-DEGREE-SCALE, ES-GRAMMAR-APOCOPE-PATTERN, ES-ETYMON-BASTANTE-BASTAR]
+  knowledge: [ES-LEX-MUY, ES-LEX-BASTANTE, ES-LEX-MAL, ES-GRAMMAR-DEGREE-MUY, ES-GRAMMAR-DEGREE-SCALE, ES-GRAMMAR-APOCOPE-PATTERN, ES-ETYMON-BASTANTE-BASTAR, ES-LEX-MALO]
 skills: [listening, speaking]
 modes: [interpretive, presentational]
 strands: [language-focus, fluency]
@@ -37,7 +37,7 @@ reviews_of: [ES-C60-muy, ES-C60-bastante, ES-C60-mal]
 [PAUSE 2s] The scale, least to most. (*Poco*, *bastante*, *muy*.)
 
 ## What you've built
-<!-- hl-knowledge: introduces=[]; assesses=[ES-LEX-MUY, ES-LEX-BASTANTE, ES-LEX-MAL] -->
+<!-- hl-knowledge: introduces=[]; assesses=[ES-LEX-MUY, ES-LEX-BASTANTE, ES-LEX-MAL, ES-LEX-MALO] -->
 
 Three chants. Say each, then say what it is for.
 

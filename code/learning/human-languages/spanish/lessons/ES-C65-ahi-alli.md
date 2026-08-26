@@ -20,7 +20,7 @@ requires:
 introduces:
   knowledge: [ES-LEX-AHI, ES-LEX-ALLI, ES-GRAMMAR-PLACE-THREE-DISTANCES]
 practises:
-  knowledge: [ES-GRAMMAR-DEMONSTRATIVE-ESE, ES-GRAMMAR-DEMONSTRATIVE-THREE-DISTANCES, ES-GRAMMAR-PLACE-THREE-DISTANCES, ES-LEX-AHI, ES-LEX-ALLI, ES-LEX-AQUI]
+  knowledge: [ES-GRAMMAR-DEMONSTRATIVE-ESE, ES-GRAMMAR-DEMONSTRATIVE-THREE-DISTANCES, ES-GRAMMAR-PLACE-THREE-DISTANCES, ES-LEX-AHI, ES-LEX-ALLI, ES-LEX-AQUI, ES-GRAMMAR-DEMONSTRATIVE-AQUEL]
 skills: [listening, speaking, reading, writing]
 modes: [interpretive, interpersonal, presentational]
 strands: [meaning-input, meaning-output, language-focus]
@@ -32,7 +32,7 @@ reviews_of: [ES-C05-hasta-limits, ES-C59-repaso-demostrativos]
 # ahí · allí — the other two places
 
 ## Warm-up
-<!-- hl-knowledge: introduces=[]; assesses=[ES-LEX-AQUI, ES-GRAMMAR-DEMONSTRATIVE-THREE-DISTANCES] -->
+<!-- hl-knowledge: introduces=[]; assesses=[ES-LEX-AQUI, ES-GRAMMAR-DEMONSTRATIVE-THREE-DISTANCES, ES-GRAMMAR-DEMONSTRATIVE-AQUEL] -->
 
 [PAUSE 2s] *Aquí* — here. You have had it a long time, on its own.
 

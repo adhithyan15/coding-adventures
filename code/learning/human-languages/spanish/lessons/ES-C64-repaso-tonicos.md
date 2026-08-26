@@ -20,7 +20,7 @@ requires:
 introduces:
   knowledge: []
 practises:
-  knowledge: [ES-GRAMMAR-TONIC-PRONOUN-AFTER-PREPOSITION, ES-ORTHOGRAPHY-MI-ACCENT, ES-LEX-CONMIGO, ES-ETYMON-CONMIGO-MECUM, ES-GRAMMAR-EXCLAMATIVE-QUE, ES-GRAMMAR-VOCATIVE-COMMA]
+  knowledge: [ES-GRAMMAR-TONIC-PRONOUN-AFTER-PREPOSITION, ES-ORTHOGRAPHY-MI-ACCENT, ES-LEX-CONMIGO, ES-ETYMON-CONMIGO-MECUM, ES-GRAMMAR-EXCLAMATIVE-QUE, ES-GRAMMAR-VOCATIVE-COMMA, ES-GRAMMAR-VOCATIVE-NOT-OBJECT, ES-LEX-CON]
 skills: [listening, speaking]
 modes: [interpretive, presentational]
 strands: [language-focus, fluency]
@@ -37,7 +37,7 @@ reviews_of: [ES-C64-para-mi, ES-C64-conmigo, ES-C64-que-grande, ES-C64-maria-ven
 [PAUSE 2s] After a preposition: *para* ***mí***, *para* ***ti***, *para* ***él***.
 
 ## What you've built
-<!-- hl-knowledge: introduces=[]; assesses=[ES-LEX-CONMIGO, ES-GRAMMAR-EXCLAMATIVE-QUE, ES-GRAMMAR-VOCATIVE-COMMA] -->
+<!-- hl-knowledge: introduces=[]; assesses=[ES-LEX-CONMIGO, ES-GRAMMAR-EXCLAMATIVE-QUE, ES-GRAMMAR-VOCATIVE-COMMA, ES-GRAMMAR-VOCATIVE-NOT-OBJECT, ES-LEX-CON] -->
 
 Four chants.
 

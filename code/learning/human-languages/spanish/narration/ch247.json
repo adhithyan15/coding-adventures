@@ -4,7 +4,7 @@
   "chapter": 247,
   "title": "Conmigo, Contigo --- The Word That Says With Twice",
   "drivablePrefix": 1,
-  "sourceHash": "fnv1a64:1bc40300d7405f1d",
+  "sourceHash": "fnv1a64:4b8e516ee25c0421",
   "lessons": [
     {
       "id": "ES-C64-conmigo",
@@ -19,7 +19,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:a623ef87b1774d46",
+      "sourceHash": "fnv1a64:1b26b60d28dcbfc0",
       "notice": null,
       "blocks": [
         {
