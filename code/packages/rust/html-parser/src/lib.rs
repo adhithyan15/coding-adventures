@@ -7592,7 +7592,9 @@ impl HtmlParser {
                     )
                 };
                 let diagnostic = ParserDiagnostic::new(code, message);
-                self.diagnostics.push(if code == "unexpected-non-current-end-tag" {
+                let should_position =
+                    code == "unexpected-non-current-end-tag" || is_custom_element_name(name);
+                self.diagnostics.push(if should_position {
                     diagnostic.at_emission(self.current_token_emission_position)
                 } else {
                     diagnostic
@@ -8365,9 +8367,10 @@ impl HtmlParser {
             "unexpected-end-tag",
             format!("end tag `</{name}>` did not match an open element"),
         );
-        self.diagnostics.push(if matches!(
-            name,
-            "button"
+        let should_position = is_custom_element_name(name)
+            || matches!(
+                name,
+                "button"
                 | "section"
                 | "article"
                 | "aside"
@@ -8394,7 +8397,8 @@ impl HtmlParser {
                 | "listing"
                 | "pre"
                 | "search"
-        ) {
+            );
+        self.diagnostics.push(if should_position {
             diagnostic.at_emission(self.current_token_emission_position)
         } else {
             diagnostic
@@ -20942,7 +20946,7 @@ fn browser_custom_element_descriptor(element: &Element) -> Option<BrowserCustomE
         .or_else(|| custom_element_name.clone());
     let custom_element_name_valid = definition_name
         .as_deref()
-        .is_some_and(is_browser_custom_element_name);
+        .is_some_and(is_custom_element_name);
     let custom_element_block_reasons = browser_custom_element_block_reasons(
         custom_element_name.as_deref(),
         custom_element_is.as_deref(),
@@ -21211,7 +21215,7 @@ fn browser_component_hydration_block_reasons(
 ) -> Vec<String> {
     let mut reasons = Vec::new();
     let definition_name = custom_element_is.or(custom_element_name);
-    if definition_name.is_some_and(|name| !is_browser_custom_element_name(name)) {
+    if definition_name.is_some_and(|name| !is_custom_element_name(name)) {
         reasons.push("invalid-custom-element-name".to_string());
     }
     if custom_element_name.is_some() && custom_element_is.is_some() {
@@ -21665,7 +21669,7 @@ fn browser_custom_element(element: &Element) -> bool {
 }
 
 fn browser_custom_element_name(element: &Element) -> Option<String> {
-    is_browser_custom_element_name(&element.name).then(|| element.name.clone())
+    is_custom_element_name(&element.name).then(|| element.name.clone())
 }
 
 fn browser_custom_element_is(element: &Element) -> Option<String> {
@@ -21755,7 +21759,7 @@ fn browser_global_state_block_reasons(hidden: bool, inert: bool) -> Vec<String> 
     reasons
 }
 
-fn is_browser_custom_element_name(name: &str) -> bool {
+fn is_custom_element_name(name: &str) -> bool {
     name.contains('-')
         && !matches!(
             name,
@@ -27459,6 +27463,18 @@ mod tests {
     }
 
     fn unmatched_block_container_end_tag(
+        source: &str,
+        name: &str,
+        occurrence: usize,
+    ) -> ParserDiagnostic {
+        ParserDiagnostic::new(
+            "unexpected-end-tag",
+            format!("end tag `</{name}>` did not match an open element"),
+        )
+        .at_emission(Some(end_tag_position_at(source, name, occurrence)))
+    }
+
+    fn unmatched_custom_element_end_tag(
         source: &str,
         name: &str,
         occurrence: usize,
@@ -35589,10 +35605,7 @@ mod tests {
             unmatched.parser_diagnostics,
             vec![
                 generic_foreign_end_tag_mismatch(unmatched_source, "x-box"),
-                ParserDiagnostic::new(
-                    "unexpected-end-tag",
-                    "end tag `</x-box>` did not match an open element"
-                ),
+                unmatched_custom_element_end_tag(unmatched_source, "x-box", 0),
             ]
         );
         let boundary = find_element_by_id(&unmatched.document.children, "boundary").unwrap();
@@ -35695,6 +35708,121 @@ mod tests {
             unpositioned.process_token(token);
         }
         assert!(unpositioned
+            .diagnostics()
+            .iter()
+            .all(|diagnostic| diagnostic.position.is_none()));
+    }
+
+    #[test]
+    fn positions_unmatched_custom_element_end_tags_at_token_emission() {
+        let ordinary_source =
+            "<!doctype html></x-box><!--é-->\r\n</x-box></product-card>";
+        let ordinary = parse_html_with_diagnostics(ordinary_source).unwrap();
+        assert_eq!(
+            ordinary
+                .parser_diagnostics
+                .iter()
+                .filter(|diagnostic| diagnostic.code == "unexpected-end-tag")
+                .cloned()
+                .collect::<Vec<_>>(),
+            vec![
+                unmatched_custom_element_end_tag(ordinary_source, "x-box", 0),
+                unmatched_custom_element_end_tag(ordinary_source, "x-box", 1),
+                unmatched_custom_element_end_tag(ordinary_source, "product-card", 0),
+            ]
+        );
+        assert!(ordinary_source.len() > ordinary_source.chars().count());
+
+        let fragment_source = "X</x-box></product-card>";
+        let fragment = parse_html_fragment_with_diagnostics(fragment_source).unwrap();
+        assert_eq!(
+            fragment.parser_diagnostics,
+            vec![
+                unmatched_custom_element_end_tag(fragment_source, "x-box", 0),
+                unmatched_custom_element_end_tag(fragment_source, "product-card", 0),
+            ]
+        );
+
+        let foreign_source =
+            "<!doctype html><svg><foreignObject></product-card>X</foreignObject></svg>";
+        let foreign = parse_html_with_diagnostics(foreign_source).unwrap();
+        assert_eq!(
+            foreign.parser_diagnostics,
+            vec![
+                generic_foreign_end_tag_mismatch(foreign_source, "product-card"),
+                unmatched_custom_element_end_tag(foreign_source, "product-card", 0),
+            ]
+        );
+
+        for source in [
+            "<!doctype html></x-box",
+            "<!doctype html><svg><foreignObject></product-card",
+        ] {
+            let output = parse_html_with_diagnostics(source).unwrap();
+            assert!(output
+                .parser_diagnostics
+                .iter()
+                .all(|diagnostic| diagnostic.code != "unexpected-end-tag"));
+        }
+
+        let matched = parse_html_with_diagnostics(
+            "<!doctype html><product-card>X</product-card>",
+        )
+        .unwrap();
+        assert!(matched
+            .parser_diagnostics
+            .iter()
+            .all(|diagnostic| diagnostic.code != "unexpected-end-tag"));
+
+        let reserved_source = "<!doctype html></annotation-xml>";
+        let reserved = parse_html_with_diagnostics(reserved_source).unwrap();
+        assert_eq!(
+            reserved
+                .parser_diagnostics
+                .iter()
+                .find(|diagnostic| diagnostic.code == "unexpected-end-tag")
+                .unwrap()
+                .position,
+            None
+        );
+
+        let mut ordinary_direct =
+            HtmlParser::with_body_fragment_options(HtmlParseOptions::default());
+        ordinary_direct.process_token(Token::EndTag {
+            name: "x-box".to_string(),
+        });
+        ordinary_direct.process_token(Token::Eof);
+        assert_eq!(
+            ordinary_direct
+                .diagnostics()
+                .iter()
+                .find(|diagnostic| diagnostic.code == "unexpected-end-tag")
+                .unwrap()
+                .position,
+            None
+        );
+
+        let mut foreign_direct =
+            HtmlParser::with_body_fragment_options(HtmlParseOptions::default());
+        for token in [
+            Token::StartTag {
+                name: "svg".to_string(),
+                attributes: Vec::new(),
+                self_closing: false,
+            },
+            Token::StartTag {
+                name: "foreignObject".to_string(),
+                attributes: Vec::new(),
+                self_closing: false,
+            },
+            Token::EndTag {
+                name: "product-card".to_string(),
+            },
+            Token::Eof,
+        ] {
+            foreign_direct.process_token(token);
+        }
+        assert!(foreign_direct
             .diagnostics()
             .iter()
             .all(|diagnostic| diagnostic.position.is_none()));
