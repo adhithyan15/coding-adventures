@@ -8317,10 +8317,51 @@ build. A forced Haskell dry plan evaluates 45 Starlark BUILD files, discovers
 
 Ready-for-review PR #12974 opened from exact independently reviewed head
 `67f8d42a66c44e5ddda09d3eef091effb06e2d1d` after a normal first push from
-exact main `773ecf8b1b3485ef68c428b892c8e4a3d3d81f4b`. GitHub reports it open,
-non-draft, and mergeable. Required checks are queued or in progress, so
-auto-merge remains disabled until every check is terminal and acceptable and
-GitHub reports no conflict.
+exact main `773ecf8b1b3485ef68c428b892c8e4a3d3d81f4b`. After later review fixes,
+all 40 checks on final head `47be7c15433a3548a3e36fa1da17a30f9af4c4a0`
+reached terminal acceptable conclusions: 33 succeeded and seven were expected
+skips. GitHub reported the branch clean and mergeable, so the loop enabled
+squash auto-merge; GitHub merged it as `07eebd8125799553c3df6e97494dd437b63977be`
+at 2026-08-26T08:11:54Z without a manual merge command.
+
+The post-merge collision-checked schema-3 inventory remains structurally
+unchanged at 15 established lanes, 1,373 implementation identities, 4,566
+package slots, and 1,412 all-reported identities. The breadth buckets remain
+175 identities in ten to fifteen lanes with 276 missing slots, 122 in five to
+nine with 926 gaps, 166 in two to four with 2,087 gaps, and 910 singletons with
+12,740 gaps, including 721 Rust singletons. Canonical collisions and unknown
+language buckets remain zero, and OCaml remains emerging at zero packages.
+Merged PRs #12968, #12971, and #12972 stay within their registered
+human-language data/host-authority, ALGOL IIR, and deterministic HTML frontend
+owners. Live PRs #12973 and #12976 are curriculum or generated
+`human-language-data` work, while #12977 is ALGOL IIR. None creates a package
+identity, BUILD marker, or newly eligible unowned parity gap.
+
+The dependency/leverage pass therefore selects
+`build-tool-swift-orphan-crate-validation-conformance` on branch
+`codex/build-tool-swift-orphan-crate-validation-conformance`. Its neutral
+orphan corpus, exact `dist-newstyle` exclusion, and tracked-artifact substrate
+are merged. Swift covers 161 reported packages and is now the sole unfinished
+dependency of the orphan-validator completion umbrella. All eight live PRs
+have zero exact overlap with the expected Swift validator, tests, README,
+changelog, state, and roadmap surfaces. After lifecycle reconciliation and
+selection, the graph contains 519 unique owners and 781 complete acyclic edges:
+149 merged, 369 pending, and exactly one in-progress owner, with no active
+parity PR. The higher-descendant extra-CI corpus and strategic OCaml
+process-free substrate remain collision-unsafe while PRs #12149 and #12162 own
+their required Go entry-point and validator surfaces.
+
+Before Swift implementation began, `origin/main` advanced to
+`3c442dcf16c3e0ec551b86f39d928feda6893078`; the one-commit selection branch
+rebased cleanly onto that exact revision. Newly merged #12975 remains inside
+the Mermaid Gantt neutral and Rust lane owners, #12973 remains inside the
+script-ductus plus curriculum and `human-language-data` owners, and #12976
+remains inside curriculum, generated-book, and `human-language-data` owners.
+None changes a package identity, BUILD marker, or selected Swift path. The
+refreshed schema-3 inventory and reporter's ten focused tests remain clean and
+structurally unchanged: 1,373 established implementation identities, 4,566
+package slots, 1,412 all-reported identities, zero collisions, and zero unknown
+buckets. No newly eligible unowned gap displaced the selected Swift validator.
 
 ## Autonomous Loop Protocol
 
