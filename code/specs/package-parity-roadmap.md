@@ -8650,6 +8650,98 @@ through exact `origin/main`
 `bb6ae0c70e8000a28b9eaa0d6fc06c821bfbb43b`; all six current open PRs remain
 exact-path disjoint from the selected package, state, and roadmap surfaces.
 
+## Post-#13026 Refresh and TypeScript Canonical-CBOR Selection
+
+Reviewed head `00a5c729c3ea0fdbba8d2c2063b5c3badd8ca658`
+completed all 40 reported checks with terminal acceptable conclusions. GitHub
+reported the branch clean and mergeable, so the loop enabled squash
+auto-merge; GitHub merged PR #13026 as
+`ce4c3aa0c522e354653a2a4205b8dc5534c40f89` at 2026-08-26T12:25:25Z
+without a manual merge command. The exact merged-head worktree was clean and
+removed afterward, reclaiming 578,113,073 bytes while preserving dirty,
+detached, active-PR, and ambiguous checkouts.
+
+The exact-main schema-3 report remains collision-clean at 15 established lanes,
+1,373 implementation identities, and 1,412 all-reported identities. The C# and
+F# packages raise implementation slots from 4,568 to 4,570 and move
+`canonical-cbor` from the two-to-four band into five-to-nine. The breadth bands
+are now 175 identities with 276 gaps in ten to fifteen lanes, 123 with 936 gaps
+in five to nine, 166 with 2,087 gaps in two to four, and 909 singletons with
+12,726 gaps, including 720 Rust singletons. C# reports 199 packages, F# 198,
+and TypeScript 446. Canonical collisions and unknown language buckets remain
+zero. C and C++ remain emerging at 158 and 142 packages; OCaml remains
+correctly emerging at zero packages. All ten reporter tests pass.
+
+Every live head is classified before selection. PR #13028 extends the existing
+Rust singleton and `lang-aot` owner. PR #13027 remains inside script-ductus,
+human-language-data, curriculum, and generator-authority owners. PR #13011's
+five-backend native-complete degradation evidence remains inside the
+selection-blocked Mosaic generated-wrapper review and does not create a
+portable package or build-tool contract. PRs #12162 and #12149 temporarily
+overlap Go validator and entry-point surfaces already owned by
+`build-tool-go-oracle` plus the separate Swift cowsay owner; dependency-comment
+parsing, `BuildContent` reconstruction, worktree `.git`-file discovery, and raw
+Windows command-line behavior are now explicit in that canonical Go owner.
+PR #7821 reports no live files. No open PR touches a canonical-CBOR package,
+the neutral corpus or spec, parity state, or this roadmap, and no eligible
+unowned gap remains.
+
+The dependency/leverage pass selects
+`canonical-cbor-typescript-lane-parity` on branch
+`codex/canonical-cbor-typescript-lane-parity`. TypeScript is the largest
+remaining established canonical-CBOR lane at 446 packages with 331 Rust
+overlaps and zero high-consensus gaps, has the complete local Node/npm/pnpm
+toolchain, and advances one of the ten remaining established-lane children
+without shared production code. Its highest-risk contract points are bigint-
+only full-uint64 values, fatal UTF-8 and surrogate rejection, defensive byte
+and collection ownership, length-first unsigned map-key order and duplicate
+identity, exact 128/129 depth, the encoder-only 1,048,576-byte cap, hostile
+length preflight, exact one-item consumption, all 14 payload-blind diagnostics,
+atomic append, and closed fixture grammar. The fresh exact-main worktree,
+target path, branch, remote branch, and prior PR were absent before selection.
+The reconciled graph remains complete and acyclic at 525 owners and 786 edges:
+152 merged, 372 pending, and exactly one in-progress owner, with no active
+parity PR.
+
+### TypeScript canonical-CBOR implementation
+
+Commit `cc6729e698cd1e7295544763d34da038e7ea0e13` adds the native
+`code/packages/typescript/canonical-cbor` package without production
+dependencies. Its immutable value algebra keeps the complete unsigned 64-bit
+domain in `bigint`; the checked encoder stages output, orders and deduplicates
+complete encoded map keys, and applies the exact depth and byte limits. The
+decoder consumes exactly one item, uses fatal UTF-8, rejects hostile declared
+lengths before allocation, and exposes only the fourteen static CBR01 errors.
+
+The 55 shared cases and TypeScript adversarial coverage pass as 12 Vitest
+tests. Both front doors are real: the final Unix `BUILD` passes `npm ci`,
+`tsc`, and V8 coverage at 95.83% statements, 92.30% branches, 100% functions,
+and 96.61% lines; the Go build tool discovers 477 TypeScript packages, resolves
+exactly one changed and affected package, and executes its `BUILD_windows`
+successfully with the other 476 skipped. Focused Go discovery, resolver,
+validator, command-rendering, and executor suites pass, as do the ten parity
+reporter tests and seven capability-taxonomy tests. npm reports zero
+vulnerabilities and an empty production dependency tree.
+
+Independent review found and drove regressions for JavaScript runtime mutation,
+subclass and erased-type bypasses, replaceable null singleton state, sparse
+array append capacity, unchecked decode/container inputs, allocation ordering,
+and permissive generated-fixture suffixes. Private frozen storage plus
+encoder-side revalidation, exact runtime boundaries, preflight checks, and
+closed grammar repair every finding; the final security review reports no
+remaining actionable issue. The collision-checked candidate inventory stays
+at 1,373 implementation identities and 1,412 all-reported identities while
+raising slots to 4,571 and reducing five-to-nine missing slots to 935, with
+zero collisions and zero unknown buckets.
+
+Ready-for-review PR #13037 opened from reviewed head
+`4a8dea41c3b5ed6931d552eb924c3a8ab9223b0f` after a clean three-commit
+rebase onto exact `origin/main`
+`2295edd5975b43d5a3081e7eb1d7f5ca7afc43c1` and full local revalidation.
+GitHub reports the PR open, non-draft, and mergeable. Required CI and CodeQL
+checks are queued or in progress, so auto-merge remains disabled and the loop
+is monitor-only until they are terminal and acceptable.
+
 ## Autonomous Loop Protocol
 
 Only one parity PR should be active at a time.
