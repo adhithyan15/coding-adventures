@@ -1,6 +1,6 @@
 //! The lowering pass from `coding_adventures_java_parser`'s generic
-//! [`GrammarASTNode`] CST → [`semantic_ir::Module`], **v0.9.0 (JV02
-//! milestone M4c)**.
+//! [`GrammarASTNode`] CST → [`semantic_ir::Module`], **v0.10.0 (JV02
+//! milestone M4d)**.
 //!
 //! # Scope
 //!
@@ -205,7 +205,47 @@
 //!   invariant (every `Expr::SeqLit` item's `Kind` equals the array's own
 //!   declared element `Kind`) doesn't cleanly represent yet.
 //!
-//! **Deliberately out of scope for v0.9.0** (each rejected with an
+//! **Supported (M4d, new):**
+//! - Real multi-dimensional array *types* (`int[][]`, `int[][][]`, …),
+//!   capped at [`MAX_ARRAY_DIMS`] dimensions — [`Kind::Array`] gained a
+//!   dimension count (`u8`, alongside the existing element kind)
+//!   *without* becoming a boxed, recursive type: a multi-dimensional
+//!   array is representationally just a nested sequence of sequences (a
+//!   `SeqLit` of `SeqLit`s), so a flat dimension count is enough — see
+//!   `Kind::Array`'s own doc comment for the full reasoning.
+//! - Multi-dimensional array *literals* with an **explicit** declared
+//!   type (`int[][] grid = {{1, 2}, {3, 4}};`), including genuinely
+//!   ragged rows (`{{1, 2, 3}, {4}}` — real, independent inner arrays,
+//!   not a rectangular matrix). `lower_array_initializer` recurses one
+//!   dimension at a time, requiring each element be itself a nested
+//!   `array_initializer` until the base (single-dimension) case is
+//!   reached — `var`-inferred multi-dimensional array literals remain
+//!   deferred (inferring dims from a literal's own, possibly ragged,
+//!   nesting depth is real added complexity this milestone doesn't need;
+//!   an explicit declared type sidesteps it entirely).
+//! - Chained index *reads* (`grid[i][j]`, `cube[i][j][k]`) via a new
+//!   `lower_chained_index`, reached only when *every* suffix in a
+//!   2+-suffix `primary_expression` is `[...]`-shaped
+//!   (`is_index_only_suffix`) — a mix of `[` and `.`/`(` suffixes (e.g.
+//!   `grid[i].length`) still falls through to the pre-existing
+//!   multi-suffix rejection, a real, disclosed, narrower gap than full
+//!   suffix-chain generalization (the sub-array's own `.length` remains
+//!   reachable via an intermediate local). `Kind::index_once` peels
+//!   exactly one dimension per suffix, shared by the single-suffix
+//!   (`lower_index_get`) and chained paths alike, so `xs[i]` on a 1-D
+//!   array is unchanged from M4a.
+//! - `.length` and plain indexed assignment (M4b) already generalize for
+//!   free: `.length` was already dims-agnostic; `grid[i] = v;` (a whole
+//!   sub-array assignment, single suffix) now requires `v` match the
+//!   peeled-once result kind rather than always the flat element kind.
+//!   A *chained* assignment target (`grid[i][j] = v;`) is **not**
+//!   reachable at all — `indexed_assign_target`'s own fixed single-suffix
+//!   match arm doesn't recognize a multi-suffix lvalue, so it falls
+//!   through to the pre-existing bare-name-only rejection, deferred
+//!   alongside compound-assignment/increment-decrement on an indexed
+//!   target.
+//!
+//! **Deliberately out of scope for v0.10.0** (each rejected with an
 //! explicit [`JavaLowerError`], tracked in
 //! [JV02](../../../specs/JV02-java-to-semantic-ir.md)'s own milestone
 //! table): `switch` (SIR has no `Switch`/`Match`/`Case` IR node at all —
@@ -223,12 +263,17 @@
 //! `var`-typed local's initializer, but never called; see `tests/
 //! e2e_python.rs`'s own doc comment on why this makes an execution-proof
 //! test impossible this milestone), untyped or `var`-inferred lambda
-//! parameters, multi-dimensional arrays (both array *types* and `new`
-//! array-creation forms), compound-assignment/increment-decrement on an
-//! *indexed* target (see M4b's own entry above for why), a non-constant
-//! or reference-typed `new T[N]` (see M4c's own entry above for why),
-//! `List`/`Map` collection literals, field/array *field* access beyond
-//! `.length`, casts, `instanceof`, the ternary conditional, bitwise operators
+//! parameters, multi-dimensional `new` array-creation forms (`new
+//! int[2][3]`, `new int[][]{{1,2}}` — M4c's own two shapes stay
+//! single-dimension only), a *chained* indexed-assignment target
+//! (`grid[i][j] = v;`) and compound-assignment/increment-decrement on an
+//! indexed target (see M4b's own entry above for why), a mixed index-
+//! then-`.`/`(` primary-suffix chain (`grid[i].length`, `grid[i].foo()`
+//! — see M4d's own entry above for why), `var`-inferred multi-
+//! dimensional array literals, a non-constant or reference-typed
+//! `new T[N]` (see M4c's own entry above for why), `List`/`Map`
+//! collection literals, field/array *field* access beyond `.length`,
+//! casts, `instanceof`, the ternary conditional, bitwise operators
 //! (`& | ^ ~ << >> >>>`), increment/decrement or compound assignment
 //! used as a *value* rather than a bare statement, `break`/`continue`
 //! (SIR has no IR primitive for either — every loop body this milestone
@@ -322,6 +367,21 @@ const MAX_STMT_DEPTH: usize = 64;
 /// one is linear, not exponential, but still unbounded without a cap).
 const MAX_SIZED_ARRAY_LEN: i64 = 10_000;
 
+/// Maximum dimension count a Java array *type* (`int[][][]…`) or a
+/// nested array *literal* (`{{{1}}}`) may declare — M4d's own
+/// CWE-674-adjacent guard, mirroring [`MAX_EXPR_DEPTH`]'s reasoning:
+/// `kind_of_type_node` and `lower_array_initializer` both recurse (the
+/// latter genuinely, once per nesting level of a real literal; the
+/// former only counts bracket-pair tokens, so it isn't itself a stack-
+/// depth risk, but the *value* it produces feeds `Kind::Array`'s own
+/// `u8` dimension field, which must stay boundable regardless). Java
+/// itself caps array dimensionality at 255 (the JVM's own `arraycount`
+/// limit); this frontend's own cap is far smaller since no real program
+/// needs more than a handful of dimensions, and a smaller cap keeps the
+/// nested-literal nesting depth this milestone's own recursion has to
+/// handle correspondingly small.
+const MAX_ARRAY_DIMS: usize = 8;
+
 /// Synthetic file name used for all spans (the CST does not carry the
 /// original path).
 const FILE: &str = "<java>";
@@ -368,21 +428,27 @@ enum Kind {
     /// as a valid operand, so any other use falls through to an ordinary
     /// "wrong kind" rejection.
     Closure,
-    /// A single-dimensional Java array's own kind -- M4a's addition.
-    /// Carries the *element* kind (`ArrayElemKind`, a small flat `Copy`
-    /// enum -- not a boxed, recursive `Kind` -- deliberately: `Kind`
-    /// itself derives `Copy` and is threaded by value through hundreds
-    /// of call sites across this file, so a recursive `Kind::
-    /// Array(Box<Kind>)` would force `Kind` to drop `Copy` and ripple
-    /// `.clone()` calls through nearly every one of them. `ArrayElemKind`
-    /// only needs to represent what a single-dimensional array's element
-    /// can actually be this milestone -- a primitive or `String` -- so
-    /// it stays a flat, `Copy` enum with no recursion, and `Kind` itself
-    /// never needs to change shape. An array of arrays, or an array of
-    /// closures, is out of scope (multi-dimensional arrays are rejected
-    /// explicitly by `kind_of_type_node`; nothing in this milestone
-    /// constructs an array-of-closures in the first place).
-    Array(ArrayElemKind),
+    /// A Java array's own kind -- M4a's addition, extended to real
+    /// multi-dimensional arrays in M4d. Carries the *element* kind
+    /// (`ArrayElemKind`, a small flat `Copy` enum -- not a boxed,
+    /// recursive `Kind`) and a dimension count (`u8`, always `>= 1`,
+    /// capped at `MAX_ARRAY_DIMS`) -- deliberately *not* a recursive
+    /// `Kind::Array(Box<Kind>)`: `Kind` itself derives `Copy` and is
+    /// threaded by value through hundreds of call sites across this
+    /// file, so a boxed field would force `Kind` to drop `Copy` and
+    /// ripple `.clone()` calls through nearly every one of them. A
+    /// multi-dimensional Java array is representationally a *nested
+    /// sequence of sequences* (`int[][] grid = {{1,2},{3,4}};` lowers to
+    /// a `SeqLit` of `SeqLit`s, exactly the shape SIR16 already supports
+    /// with no new IR node needed) -- so the dimension count alone,
+    /// alongside the always-scalar `ArrayElemKind`, is enough to
+    /// represent it without `Kind` ever needing to nest. Indexing peels
+    /// one dimension at a time (`grid[i]` has kind `Array(elem, dims -
+    /// 1)` when `dims > 1`, or plain `elem.as_kind()` once `dims == 1`
+    /// exactly like M4a's original single-dimensional behavior) -- see
+    /// `lower_primary_expression`'s own doc comment for how a chained
+    /// `grid[i][j]` reaches this.
+    Array(ArrayElemKind, u8),
 }
 
 /// The element kind of a single-dimensional Java array (see `Kind::
@@ -397,8 +463,11 @@ enum ArrayElemKind {
 }
 
 impl ArrayElemKind {
-    /// The `Kind` of one element read out of an array of this element
-    /// kind (e.g. `xs[i]`'s own result kind, for `xs: Array(Int)`).
+    /// The `Kind` of one *fully-indexed* element of an array of this
+    /// element kind (e.g. `xs[i]`'s own result kind, for a single-
+    /// dimensional `xs: Array(Int, 1)`). For a multi-dimensional array,
+    /// indexing once peels only one dimension — see `Kind::index_once`,
+    /// which calls this only once `dims` has reached `1`.
     fn as_kind(self) -> Kind {
         match self {
             ArrayElemKind::Int => Kind::Int,
@@ -409,20 +478,42 @@ impl ArrayElemKind {
     }
 
     /// The inverse of [`ArrayElemKind::as_kind`]: `None` for any `Kind`
-    /// that isn't itself a valid array element kind this milestone
-    /// (`Kind::Null`/`Void`/`Closure`/`Array(_)` — an array of arrays is
-    /// multi-dimensional, deferred to a later milestone; the others are
-    /// non-value placeholder kinds that can't be an array element at
-    /// all). Shared by every call site that resolves a scalar `Kind` into
-    /// an array's own element kind (`kind_of_type_node`, `lower_array_
-    /// initializer`, and M4c's `lower_new_sized_array`).
+    /// that isn't itself a valid array element kind (`Kind::Null`/
+    /// `Void`/`Closure`/`Array(_)` — an array-of-arrays' own *element*
+    /// kind is still always a scalar `ArrayElemKind`, since `Kind::
+    /// Array`'s own dimension count already carries the nesting; the
+    /// others are non-value placeholder kinds that can't be an array
+    /// element at all). Shared by every call site that resolves a scalar
+    /// `Kind` into an array's own element kind (`kind_of_type_node`,
+    /// `lower_array_initializer`, and M4c's `lower_new_sized_array`).
     fn from_kind(kind: Kind) -> Option<ArrayElemKind> {
         match kind {
             Kind::Int => Some(ArrayElemKind::Int),
             Kind::Float => Some(ArrayElemKind::Float),
             Kind::Bool => Some(ArrayElemKind::Bool),
             Kind::Str => Some(ArrayElemKind::Str),
-            Kind::Null | Kind::Void | Kind::Closure | Kind::Array(_) => None,
+            Kind::Null | Kind::Void | Kind::Closure | Kind::Array(_, _) => None,
+        }
+    }
+}
+
+impl Kind {
+    /// The `Kind` produced by indexing *once* into a value of this kind
+    /// — `xs[i]`'s own result kind, for `xs: Kind::Array(elem, dims)`.
+    /// Peels exactly one dimension: `dims > 1` still leaves an array
+    /// (`Kind::Array(elem, dims - 1)`, itself indexable again — this is
+    /// what lets `grid[i][j]` chain, one `index_once` call per `[...]`
+    /// suffix in `lower_primary_expression`'s own chained-index fold);
+    /// `dims == 1` bottoms out at the plain element kind
+    /// ([`ArrayElemKind::as_kind`]). `None` for any non-array kind — the
+    /// caller must reject "indexing is only supported on an array-typed
+    /// value" itself, mirroring every other kind-mismatch rejection in
+    /// this crate.
+    fn index_once(self) -> Option<Kind> {
+        match self {
+            Kind::Array(elem, dims) if dims > 1 => Some(Kind::Array(elem, dims - 1)),
+            Kind::Array(elem, _) => Some(elem.as_kind()),
+            _ => None,
         }
     }
 }
@@ -2069,8 +2160,8 @@ impl Lowerer {
         let (value, value_kind) = match initializer.children.as_slice() {
             [ASTNodeOrToken::Node(n)] if n.rule_name == "expression" => self.lower_expr(n, 0)?,
             [ASTNodeOrToken::Node(n)] if n.rule_name == "array_initializer" => {
-                let declared_elem_kind = match declared_kind {
-                    Some(Kind::Array(e)) => Some(e),
+                let declared = match declared_kind {
+                    Some(Kind::Array(e, d)) => Some((e, d)),
                     Some(_) => {
                         return Err(self.err_at(
                             n,
@@ -2079,7 +2170,7 @@ impl Lowerer {
                     }
                     None => None, // `var` -- infer the element kind from the elements themselves.
                 };
-                self.lower_array_initializer(n, declared_elem_kind, 0)?
+                self.lower_array_initializer(n, declared, 0)?
             }
             _ => return Err(self.err_at(initializer, "malformed variable initializer".to_string())),
         };
@@ -2143,12 +2234,56 @@ impl Lowerer {
     fn lower_array_initializer(
         &mut self,
         array_init: &GrammarASTNode,
-        declared_elem_kind: Option<ArrayElemKind>,
+        declared: Option<(ArrayElemKind, u8)>,
         depth: usize,
     ) -> Result<(Expr, Kind), JavaLowerError> {
+        if depth >= MAX_EXPR_DEPTH {
+            return Err(self.err_at(
+                array_init,
+                format!("expression nesting exceeds {MAX_EXPR_DEPTH} levels"),
+            ));
+        }
+        // M4d: an explicitly-declared multi-dimensional array type (`dims
+        // > 1`) requires every element to itself be a *nested*
+        // `array_initializer`, one dimension shallower -- recurses down
+        // to the `dims == 1` base case below, which is exactly M4a's
+        // original flat logic, untouched. `var`-inferred arrays
+        // (`declared: None`) stay restricted to a single dimension this
+        // milestone -- inferring a *nested* literal's own dimension count
+        // from potentially inconsistent nesting adds real complexity this
+        // milestone doesn't need; `int[][] grid = {{1,2}};` (explicit
+        // type) works, `var grid = {{1,2}};` remains deferred.
+        if let Some((elem, dims)) = declared {
+            if dims > 1 {
+                let span = self.span_of(array_init);
+                let mut items = Vec::new();
+                for vi in child_nodes(array_init)
+                    .into_iter()
+                    .filter(|n| n.rule_name == "variable_initializer")
+                {
+                    let inner = match vi.children.as_slice() {
+                        [ASTNodeOrToken::Node(n)] if n.rule_name == "array_initializer" => n,
+                        [ASTNodeOrToken::Node(n)] if n.rule_name == "expression" => {
+                            return Err(self.err_at(
+                                n,
+                                format!("expected a nested array initializer (this array declares {dims} dimensions), found a plain value"),
+                            ));
+                        }
+                        _ => return Err(self.err_at(vi, "malformed array element".to_string())),
+                    };
+                    let (expr, _kind) =
+                        self.lower_array_initializer(inner, Some((elem, dims - 1)), depth + 1)?;
+                    items.push(expr);
+                }
+                self.observed.add(Feature::Sequences);
+                return Ok((Expr::SeqLit { items, span }, Kind::Array(elem, dims)));
+            }
+        }
+        // `dims == 1` (explicit single-dimensional type) or `None` (`var`
+        // inference) -- M4a's original flat logic, unchanged.
         let span = self.span_of(array_init);
         let mut items = Vec::new();
-        let mut elem_kind = declared_elem_kind;
+        let mut elem_kind = declared.map(|(e, _)| e);
         for vi in child_nodes(array_init)
             .into_iter()
             .filter(|n| n.rule_name == "variable_initializer")
@@ -2158,7 +2293,7 @@ impl Lowerer {
                 [ASTNodeOrToken::Node(n)] if n.rule_name == "array_initializer" => {
                     return Err(self.err_at(
                         n,
-                        "multi-dimensional array literals are not supported yet (deferred to a later JV02 milestone)".to_string(),
+                        "a nested array literal here needs an explicit, multi-dimensional declared array type (`var`-inferred multi-dimensional array literals are not supported yet)".to_string(),
                     ));
                 }
                 _ => return Err(self.err_at(vi, "malformed array element".to_string())),
@@ -2189,7 +2324,7 @@ impl Lowerer {
             )
         })?;
         self.observed.add(Feature::Sequences);
-        Ok((Expr::SeqLit { items, span }, Kind::Array(elem_kind)))
+        Ok((Expr::SeqLit { items, span }, Kind::Array(elem_kind, 1)))
     }
 
     /// Resolve `local_var_type`'s declared kind, or `None` for `var`
@@ -2229,10 +2364,10 @@ impl Lowerer {
         if bracket_pairs == 0 {
             return self.scalar_kind_of_type_node(type_node);
         }
-        if bracket_pairs > 1 {
+        if bracket_pairs > MAX_ARRAY_DIMS {
             return Err(self.err_at(
                 type_node,
-                "multi-dimensional arrays are not supported yet (deferred to a later JV02 milestone)".to_string(),
+                format!("array type declares more than {MAX_ARRAY_DIMS} dimensions"),
             ));
         }
         let scalar = self.scalar_kind_of_type_node(type_node)?;
@@ -2242,7 +2377,7 @@ impl Lowerer {
                 format!("unsupported array element kind `{scalar:?}`"),
             )
         })?;
-        Ok(Kind::Array(elem))
+        Ok(Kind::Array(elem, bracket_pairs as u8))
     }
 
     /// Resolve `type_node`'s own base (non-array) kind — the shared core
@@ -2574,11 +2709,21 @@ impl Lowerer {
     }
 
     /// Lower `xs[i] = v;` (`primary` indexed by `suffix`, assigned `rhs`)
-    /// into `Stmt::SeqSet` -- M4b. `primary` must resolve to an
-    /// array-typed value; the index must resolve to `Kind::Int`; `rhs`
-    /// must resolve to exactly the array's own element kind (no implicit
-    /// widening -- matches this crate's existing "reject rather than
-    /// mis-lower" discipline for every other kind-mismatch case).
+    /// into `Stmt::SeqSet` -- M4b, generalized in M4d via `Kind::
+    /// index_once` the same way `lower_index_get` is: on a multi-
+    /// dimensional array, `grid[i] = v;` assigns a whole sub-array
+    /// (`v` must itself be `Kind::Array(elem, dims - 1)`), matching real
+    /// Java's own "an array of arrays" semantics. `primary` must resolve
+    /// to an array-typed value; the index must resolve to `Kind::Int`;
+    /// `rhs` must resolve to exactly the peeled-once result kind (no
+    /// implicit widening -- matches this crate's existing "reject rather
+    /// than mis-lower" discipline for every other kind-mismatch case). A
+    /// *chained* indexed-assignment target (`grid[i][j] = v;`) never
+    /// reaches this function at all -- `indexed_assign_target`'s own
+    /// fixed single-suffix match arm doesn't recognize a multi-suffix
+    /// lvalue, so it falls through to `extract_bare_name`'s existing
+    /// rejection, deferred to its own follow-up task alongside compound-
+    /// assignment/increment-decrement on an indexed target.
     ///
     /// `context` is the enclosing `assignment_expression` node, used only
     /// for this statement's own span.
@@ -2590,15 +2735,13 @@ impl Lowerer {
         context: &GrammarASTNode,
     ) -> Result<Stmt, JavaLowerError> {
         let (seq, seq_kind) = self.lower_expr(primary, 0)?;
-        let elem_kind =
-            match seq_kind {
-                Kind::Array(e) => e,
-                _ => return Err(self.err_at(
-                    primary,
-                    "indexed assignment (`[...] = ...`) is only supported on an array-typed value"
-                        .to_string(),
-                )),
-            };
+        let result_kind = seq_kind.index_once().ok_or_else(|| {
+            self.err_at(
+                primary,
+                "indexed assignment (`[...] = ...`) is only supported on an array-typed value"
+                    .to_string(),
+            )
+        })?;
         let index_node = self
             .first_child_named(suffix, "expression")
             .ok_or_else(|| self.err_at(suffix, "malformed array index".to_string()))?;
@@ -2607,7 +2750,7 @@ impl Lowerer {
             return Err(self.err_at(index_node, "an array index must be an `int`".to_string()));
         }
         let (value, value_kind) = self.lower_expr(rhs, 0)?;
-        if value_kind != elem_kind.as_kind() {
+        if value_kind != result_kind {
             return Err(self.err_at(
                 rhs,
                 "the assigned value's kind does not match the array's own element kind".to_string(),
@@ -3218,14 +3361,20 @@ impl Lowerer {
 
     /// `primary_expression = primary { primary_suffix } ;` — M3a adds one
     /// shape (a *bare* unqualified call, `NAME(args)`) and M4a adds two
-    /// more (array indexing, `xs[i]`; and `.length`), all reached only
-    /// when there is *exactly one* suffix — a `primary` followed by more
-    /// than one suffix (`.field`, a *qualified* call `x.foo(...)`, which
-    /// chains a `.foo` suffix *then* a separate `(...)` suffix, `::`
-    /// method references, and so on) remains out of scope, rejected as
-    /// before. Which of the three single-suffix shapes applies is
-    /// decided by the suffix's own leading token — confirmed by direct
-    /// CST inspection, not assumed from the grammar text alone.
+    /// more (array indexing, `xs[i]`; and `.length`), reached when there
+    /// is *exactly one* suffix. M4d adds a fourth: two-or-more suffixes
+    /// where *every* one is a `[...]` index (`grid[i][j]`, chained
+    /// indexing into a multi-dimensional array) — see
+    /// `lower_chained_index`'s own doc comment. Any other multi-suffix
+    /// shape (`.field`, a *qualified* call `x.foo(...)`, which chains a
+    /// `.foo` suffix *then* a separate `(...)` suffix, `::` method
+    /// references, and so on) remains out of scope, rejected as before —
+    /// the chained-index check requires *every* suffix be `[...]`, so a
+    /// chain mixing in a `.`/`(` suffix anywhere still falls through to
+    /// the final catch-all unchanged. Which of the three single-suffix
+    /// shapes applies is decided by the suffix's own leading token —
+    /// confirmed by direct CST inspection, not assumed from the grammar
+    /// text alone.
     fn lower_primary_expression(
         &mut self,
         node: &GrammarASTNode,
@@ -3252,6 +3401,11 @@ impl Lowerer {
                     )),
                 }
             }
+            [ASTNodeOrToken::Node(primary), rest @ ..]
+                if rest.len() >= 2 && rest.iter().all(is_index_only_suffix) =>
+            {
+                self.lower_chained_index(primary, rest, node, depth)
+            }
             _ => Err(self.err_at(
                 node,
                 "field access, method calls with more than one suffix, and other primary suffixes are not supported yet (deferred to a later JV02 milestone)".to_string(),
@@ -3260,12 +3414,16 @@ impl Lowerer {
     }
 
     /// Lower an array-index-read suffix, `xs[i]` (`primary_suffix =
-    /// LBRACKET expression RBRACKET`) into an `Expr::SeqIndex` — M4a.
-    /// `primary` must resolve to an array-typed value; the index
-    /// expression must resolve to `Kind::Int`. Uses SIR16's `Expr::
-    /// SeqIndex` (not SIR22's `Expr::IndexGet`) for the same reason
-    /// `lower_array_initializer` uses `SeqLit` over `ArrayLit` — see
-    /// that function's own doc comment.
+    /// LBRACKET expression RBRACKET`) into an `Expr::SeqIndex` — M4a,
+    /// generalized in M4d to a multi-dimensional array via `Kind::
+    /// index_once` (peels exactly one dimension; `xs[i]` on a 1-D array
+    /// still gives the plain element kind exactly as before). `primary`
+    /// must resolve to an array-typed value; the index expression must
+    /// resolve to `Kind::Int`. Uses SIR16's `Expr::SeqIndex` (not SIR22's
+    /// `Expr::IndexGet`) for the same reason `lower_array_initializer`
+    /// uses `SeqLit` over `ArrayLit` — see that function's own doc
+    /// comment. Reached only for a *single* index suffix — `grid[i][j]`
+    /// (2+ chained index suffixes) is `lower_chained_index`'s own case.
     fn lower_index_get(
         &mut self,
         primary: &GrammarASTNode,
@@ -3274,15 +3432,12 @@ impl Lowerer {
         depth: usize,
     ) -> Result<(Expr, Kind), JavaLowerError> {
         let (target, target_kind) = self.lower_expr(primary, depth + 1)?;
-        let elem_kind = match target_kind {
-            Kind::Array(e) => e,
-            _ => {
-                return Err(self.err_at(
-                    node,
-                    "indexing (`[...]`) is only supported on an array-typed value".to_string(),
-                ))
-            }
-        };
+        let result_kind = target_kind.index_once().ok_or_else(|| {
+            self.err_at(
+                node,
+                "indexing (`[...]`) is only supported on an array-typed value".to_string(),
+            )
+        })?;
         let index_node = self
             .first_child_named(suffix, "expression")
             .ok_or_else(|| self.err_at(suffix, "malformed array index".to_string()))?;
@@ -3298,8 +3453,61 @@ impl Lowerer {
                 index: Box::new(index),
                 span,
             },
-            elem_kind.as_kind(),
+            result_kind,
         ))
+    }
+
+    /// Lower a *chained* index-suffix sequence, `grid[i][j]` (a `primary`
+    /// followed by two-or-more suffixes, every one already confirmed
+    /// `[...]`-shaped by `lower_primary_expression`'s own guard) — M4d.
+    /// Applies `Kind::index_once` once per suffix, left to right, each
+    /// producing a new `Expr::SeqIndex` wrapping the previous one and
+    /// peeling exactly one array dimension — `grid[i]` alone (a single
+    /// suffix) never reaches this function; that's `lower_index_get`'s
+    /// own unchanged case. A chain longer than the target's own
+    /// dimension count (e.g. `xs[i][j]` on a 1-D `xs`) fails naturally at
+    /// the first suffix whose `index_once` call finds a non-array kind,
+    /// with the same "indexing is only supported on an array-typed
+    /// value" rejection `lower_index_get` already gives — no separate
+    /// bounds check needed.
+    fn lower_chained_index(
+        &mut self,
+        primary: &GrammarASTNode,
+        suffixes: &[ASTNodeOrToken],
+        node: &GrammarASTNode,
+        depth: usize,
+    ) -> Result<(Expr, Kind), JavaLowerError> {
+        let (mut target, mut target_kind) = self.lower_expr(primary, depth + 1)?;
+        for suffix in suffixes {
+            let suffix = match suffix {
+                ASTNodeOrToken::Node(s) => s,
+                ASTNodeOrToken::Token(_) => {
+                    return Err(self.err_at(node, "malformed primary suffix chain".to_string()))
+                }
+            };
+            let result_kind = target_kind.index_once().ok_or_else(|| {
+                self.err_at(
+                    node,
+                    "indexing (`[...]`) is only supported on an array-typed value".to_string(),
+                )
+            })?;
+            let index_node = self
+                .first_child_named(suffix, "expression")
+                .ok_or_else(|| self.err_at(suffix, "malformed array index".to_string()))?;
+            let (index, index_kind) = self.lower_expr(index_node, depth + 1)?;
+            if index_kind != Kind::Int {
+                return Err(self.err_at(index_node, "an array index must be an `int`".to_string()));
+            }
+            let span = self.span_of(suffix);
+            target = Expr::SeqIndex {
+                seq: Box::new(target),
+                index: Box::new(index),
+                span,
+            };
+            target_kind = result_kind;
+        }
+        self.observed.add(Feature::Sequences);
+        Ok((target, target_kind))
     }
 
     /// Lower a `DOT NAME` suffix — this milestone supports exactly one
@@ -3329,7 +3537,7 @@ impl Lowerer {
             ));
         }
         let (target, target_kind) = self.lower_expr(primary, depth + 1)?;
-        if !matches!(target_kind, Kind::Array(_)) {
+        if !matches!(target_kind, Kind::Array(_, _)) {
             return Err(self.err_at(
                 node,
                 "`.length` is only supported on an array-typed value".to_string(),
@@ -3576,7 +3784,7 @@ impl Lowerer {
         let items = vec![zero_value; n as usize];
         self.observed.add(Feature::Sequences);
         let span = self.span_of(node);
-        Ok((Expr::SeqLit { items, span }, Kind::Array(elem_kind)))
+        Ok((Expr::SeqLit { items, span }, Kind::Array(elem_kind, 1)))
     }
 
     /// Lower `"new" array_creation_type {LBRACKET RBRACKET}
@@ -3630,7 +3838,7 @@ impl Lowerer {
         let elem_kind = ArrayElemKind::from_kind(scalar).ok_or_else(|| {
             self.err_at(act, format!("unsupported array element kind `{scalar:?}`"))
         })?;
-        self.lower_array_initializer(array_init, Some(elem_kind), depth)
+        self.lower_array_initializer(array_init, Some((elem_kind, 1)), depth)
     }
 
     /// Lower a `lambda_expression` (`lambda_parameters ARROW lambda_body`)
@@ -4099,6 +4307,22 @@ fn qualified_name_text(class_type: &GrammarASTNode) -> Option<String> {
     } else {
         Some(names.join("."))
     }
+}
+
+/// `true` iff `c` is a `primary_suffix` node whose own leading token is
+/// `[` — i.e. an array-index suffix (`[expr]`), not a call, field
+/// access, or method reference. Used by `lower_primary_expression`'s own
+/// chained-index guard: a 2+-suffix `primary_expression` only reaches
+/// `lower_chained_index` when *every* suffix passes this check — a chain
+/// mixing in a `.`/`(` suffix anywhere (a qualified call, field access,
+/// etc.) still falls through to that function's own unchanged rejection.
+fn is_index_only_suffix(c: &ASTNodeOrToken) -> bool {
+    matches!(
+        c,
+        ASTNodeOrToken::Node(s)
+            if s.rule_name == "primary_suffix"
+                && matches!(s.children.first(), Some(ASTNodeOrToken::Token(t)) if t.value == "[")
+    )
 }
 
 fn child_nodes(node: &GrammarASTNode) -> Vec<&GrammarASTNode> {

@@ -37,7 +37,12 @@ M4c (`new`-based array-creation expressions — `new int[]{1,2,3}`
 delegating to M4a's own array-literal lowering, and `new int[N]`
 zero-filled sized creation only for a compile-time-constant,
 non-negative, capped-size numeric/boolean `N`; see this section's own
-M4c entry for why) are merged — see `code/packages/rust/
+M4c entry for why), and M4d (real multi-dimensional arrays — array
+types and explicitly-typed literal declarations, capped at a small
+dimension limit, plus chained index reads via a generalized suffix-chain
+dispatch; a mixed index-then-`.length` chain and a chained indexed-
+assignment target both remain deferred; see this section's own M4d
+entry for why) are merged — see `code/packages/rust/
 java-to-semantic-ir`'s own `CHANGELOG.md` for the exact per-milestone
 construct list and the real correctness bugs each milestone's own test
 suite caught before shipping. M2's own scope split into two PRs (M2a;
@@ -54,19 +59,22 @@ dimensional arrays, `String` methods, and `List`/`Map` literals, all at
 once — was comparably large to M2's and M3's own combined scopes; M4b
 was narrowed *again* during its own implementation (indexed assignment
 alone turning out comparably sized to M4a) into M4b (plain indexed
-assignment only, merged) plus M4c (this section, `new`-based array
-creation, merged — its own original bundling with compound-assignment/
-increment-decrement on an indexed target was narrowed *yet again* once
-implementation revealed those were two structurally unrelated pieces of
-work; that piece is now its own standalone follow-up task, not a
-lettered sub-milestone) and M4d (multi-dimensional arrays, pending) —
-see those entries below. `switch` was also discovered, during M2a, to
-have no corresponding SIR IR node at all (confirmed by a repo-wide grep,
-not assumed) — it needs its own spec-level design decision (Java's
+assignment only, merged) plus M4c (`new`-based array creation, merged —
+its own original bundling with compound-assignment/increment-decrement
+on an indexed target was narrowed *yet again* once implementation
+revealed those were two structurally unrelated pieces of work; that
+piece is now its own standalone follow-up task, not a lettered
+sub-milestone) and M4d (this section, multi-dimensional arrays, merged
+— during its own implementation, a mixed index-then-`.length` suffix
+chain was similarly split off into its own standalone follow-up task
+rather than folded into this milestone's own scope) — see those entries
+below. `switch` was also discovered, during M2a, to have no
+corresponding SIR IR node at all (confirmed by a repo-wide grep, not
+assumed) — it needs its own spec-level design decision (Java's
 fall-through semantics in particular) before any frontend can target it,
 tracked as a separate backlog item rather than folded into "M2"/"M3"
-implicitly; `break`/`continue` have the identical gap. M4d onward are
-pending.
+implicitly; `break`/`continue` have the identical gap. M5 onward, plus
+the standalone follow-up tasks split off from M4c and M4d, are pending.
 
 ## Motivation
 
@@ -338,19 +346,37 @@ has caught before in the do-while and for-update desugarings (see
 `[0.3.0]`/`[0.4.0]`).
 
 **M4d — multi-dimensional arrays.** Deferred from M4b during its own
-scope narrowing (see that entry above). `int[][] grid` and deeper
-nesting need a real recursive element-kind representation —
-`kind_of_type_node`'s existing `bracket_pairs > 1` rejection is exactly
-the boundary this milestone removes. M4a's `Kind::Array(ArrayElemKind)`
-deliberately used a small flat *non-recursive* `ArrayElemKind` enum
-specifically to avoid forcing `Kind` itself to drop its `Copy` derive
-(see that milestone's own entry above); this milestone needs either a
-boxed recursive `Kind::Array(Box<Kind>)` (accepting the `Copy`-loss
-ripple M4a deliberately avoided) or another non-recursive-but-nested
-representation (e.g. a small fixed-depth-cap array of `ArrayElemKind`,
-mirroring this crate's own `MAX_EXPR_DEPTH`-style bounded-recursion
-convention elsewhere) — needs its own design pass before implementation
-starts.
+scope narrowing (see that entry above). Resolved the design question
+that entry left open (a recursive `Kind::Array(Box<Kind>)`, accepting
+the `Copy`-loss ripple M4a deliberately avoided, vs. some other
+non-recursive-but-nested representation) in favor of the latter:
+`Kind::Array` gained a plain `u8` dimension count alongside its existing
+`ArrayElemKind`, capped at `MAX_ARRAY_DIMS = 8` — a multi-dimensional
+Java array is representationally just a nested sequence of sequences (a
+`SeqLit` of `SeqLit`s), so a flat dimension count is enough; `Kind`
+itself never needs to nest. `int[][] grid` (and deeper nesting) is now
+supported as a real array *type*; explicitly-typed literal declarations
+recurse one dimension at a time in `lower_array_initializer`, including
+genuinely ragged rows (`{{1,2,3},{4}}`); and chained index reads
+(`grid[i][j]`) reach a new `lower_chained_index` via a generalized
+`lower_primary_expression` dispatch, requiring every suffix in the chain
+be `[...]`-shaped. **Narrowed further during implementation**: a mixed
+index-then-`.length` chain (`grid[i].length`) is *not* supported —
+`lower_chained_index`'s own all-bracket requirement means such a chain
+still falls through to the pre-existing multi-suffix rejection (the
+sub-array's own `.length` remains reachable via an intermediate local) —
+split off into its own standalone follow-up task rather than folded into
+this milestone (fixing it needs the suffix-chain fold generalized
+further, to accept a *trailing* `.length` after any number of leading
+`[...]` suffixes, a real design question about how far to generalize
+before it starts overlapping with method-call dispatch). A *chained*
+indexed-assignment target (`grid[i][j] = v;`) also remains unreachable —
+`indexed_assign_target`'s own fixed single-suffix match arm doesn't
+recognize a multi-suffix lvalue — deferred alongside compound-assignment/
+increment-decrement on an indexed target (the task split off from M4c).
+Multi-dimensional `new`-based array creation (`new int[2][3]`, `new
+int[][]{{1,2}}`) remains out of scope too — M4c's own two shapes stay
+single-dimension only by construction, unaffected by this milestone.
 
 Also still open from the original undifferentiated M4 scope, not yet
 assigned to a lettered sub-milestone: `String` method-dispatch surface

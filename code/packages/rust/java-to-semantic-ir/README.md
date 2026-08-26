@@ -4,7 +4,7 @@ Java CST → narrow-waist Semantic IR. The first frontend for
 [SIR29](../../../specs/SIR29-nominal-static-oop-profile.md), the
 nominal/static-dispatch OOP profile extension of the SIR10 narrow-waist IR.
 See [JV02](../../../specs/JV02-java-to-semantic-ir.md) for this frontend's
-full milestone plan (M0 + M1 + M2a + M2b + M3a + M3b + M4a + M4b + M4c here, through M9).
+full milestone plan (M0 + M1 + M2a + M2b + M3a + M3b + M4a + M4b + M4c + M4d here, through M9).
 
 ## Where this fits
 
@@ -34,7 +34,7 @@ let module = compile_source(
 )?;
 ```
 
-## Scope (v0.9.0 — JV02 milestones M0 + M1 + M2a + M2b + M3a + M3b + M4a + M4b + M4c)
+## Scope (v0.10.0 — JV02 milestones M0 + M1 + M2a + M2b + M3a + M3b + M4a + M4b + M4c + M4d)
 
 Java requires an explicit `class`/`main`-method wrapper at the source level
 (unlike Ruby/Python/JS, which allow bare top-level statements) — this crate
@@ -109,22 +109,36 @@ exist yet (confirmed by an exhaustive grep of every `Seq*` IR node), and
 a reference-typed sized array (`new String[N]`) would need real Java's
 own `null`-fill semantics, which this frontend's exact element-kind-match
 invariant doesn't cleanly represent yet — both deferred rather than
-attempted. Everything else — `switch`/`break`/`continue` (SIR has no IR
-node for any of the three — confirmed by a repo-wide grep, not assumed —
-so this needs a spec-level design decision before any frontend can target
-it; note a bare `for (;;)` loop genuinely cannot terminate without
-`break`, a real and permanent limitation until it exists), qualified
-calls (`x.foo(...)`), method overloading, an early or branched `return`
-(in a method *or* a lambda), untyped/`var`-inferred lambda parameters
-(Java infers these from the lambda's own target functional-interface
-type, which this frontend has no visibility into — no functional-
-interface declarations exist yet), *invoking* a lambda value
-(`Expr::IndirectCall` isn't wired up), multi-dimensional arrays
-(including multi-dimensional `new` forms), compound-assignment/
-increment-decrement on an indexed target, a non-constant or
-reference-typed `new T[N]`, List/Map collection literals, the
-array/String method-call surface beyond `.length`, field access other
-than an array's own `.length`, casts, `instanceof`, the ternary
+attempted. Real multi-dimensional arrays (M4d): array *types*
+(`int[][]`, capped at a small dimension limit) and explicitly-typed
+literal declarations (`int[][] grid = {{1, 2}, {3, 4}};`, including
+genuinely ragged rows), plus chained index reads (`grid[i][j]`) via a
+generalized `lower_primary_expression` suffix-chain dispatch — a
+multi-dimensional array is representationally just a nested sequence of
+sequences, so `Kind::Array` gained a dimension count alongside its
+existing element kind rather than becoming a boxed, recursive type.
+**Narrowed during implementation**: a *mixed* index-then-`.length` chain
+(`grid[i].length`) falls through to the pre-existing multi-suffix
+rejection (the chained-index dispatch only fires when *every* suffix is
+`[...]`-shaped — the sub-array's own `.length` remains reachable via an
+intermediate local), and a *chained* indexed-assignment target
+(`grid[i][j] = v;`) is not reachable at all — both real, disclosed gaps,
+tracked as their own follow-up tasks. Everything else — `switch`/`break`/
+`continue` (SIR has no IR node for any of the three — confirmed by a
+repo-wide grep, not assumed — so this needs a spec-level design decision
+before any frontend can target it; note a bare `for (;;)` loop genuinely
+cannot terminate without `break`, a real and permanent limitation until
+it exists), qualified calls (`x.foo(...)`), method overloading, an early
+or branched `return` (in a method *or* a lambda), untyped/`var`-inferred
+lambda parameters (Java infers these from the lambda's own target
+functional-interface type, which this frontend has no visibility into —
+no functional-interface declarations exist yet), *invoking* a lambda
+value (`Expr::IndirectCall` isn't wired up), `var`-inferred multi-
+dimensional array literals, multi-dimensional `new` array-creation forms,
+compound-assignment/increment-decrement on an indexed target, a
+non-constant or reference-typed `new T[N]`, List/Map collection literals,
+the array/String method-call surface beyond `.length`, field access
+other than an array's own `.length`, casts, `instanceof`, the ternary
 conditional, bitwise/shift operators, fields/constructors/nested types,
 and every SIR29 construct (`NominalClassDef`/`InterfaceDef`/`MethodDef`/
 `VirtualCall`) — is out of scope so far and returns a clean
@@ -170,9 +184,20 @@ JV02 spec's milestone table for what comes next.
   rejection for both `new` shapes, `Feature::Sequences` re-declaration,
   and a regression check that ordinary `new ClassName(...)` object
   construction — a structurally different `primary` alternative — remains
-  correctly rejected). Every positive test also asserts the lowered
-  `Module` passes `semantic_ir::validate()` — not just that lowering
-  itself didn't error.
+  correctly rejected), and M4d's own multi-dimensional shapes (2-D and
+  3-D literal declarations, ragged rows, `String`-element 2-D arrays,
+  element-kind mismatch across nested rows, a scalar where a nested
+  array was expected, `var`-inference deferral, the dimension-cap
+  rejection, chained index reads at 2 and 3 levels with the correctly-
+  peeled result kind at each level, a single (non-chained) index read on
+  a multi-dimensional array giving back a still-indexable sub-array, an
+  out-of-dimension chained index rejection, the mixed index-then-`.`
+  suffix-chain rejection, `.length` on a multi-dimensional array,
+  `Feature::Sequences` re-declaration, and both the still-deferred
+  chained-assignment-target rejection and the now-correctly-generalized
+  single-index sub-array assignment). Every positive test also asserts
+  the lowered `Module` passes `semantic_ir::validate()` — not just that
+  lowering itself didn't error.
 - `tests/e2e_python.rs` — execution-proof tests, per JV02's own
   "Verification" section. Real Java source lowers through this crate,
   then through the Python backend (`semantic-ir-to-python`, a dev-
@@ -209,11 +234,16 @@ JV02 spec's milestone table for what comes next.
   `.length`, indexed reads, and indexed *writes* together. M4c adds 2
   more: a sized `new int[N]` array allocated then filled and summed by
   index (the realistic pattern M4b and M4c together exist to enable),
-  and a `new int[]{...}`-with-initializer indexed read. No
-  execution-proof test exists for multi-dimensional arrays, a
-  non-constant sized-array creation, a reference-typed sized array, or
-  compound-assignment/increment-decrement on an indexed target (all
-  remain deferred past M4c). Python,
+  and a `new int[]{...}`-with-initializer indexed read. M4d adds 3 more:
+  a 2-D array literal with a chained index read, a nested indexed
+  `for`-loop summing a 2-D array via an intermediate row local (since
+  `grid[i].length` itself remains deferred — see below), and a genuinely
+  ragged 2-D array's two rows' differing `.length`s summed via
+  intermediate locals. No execution-proof test exists for a `var`-
+  inferred multi-dimensional array literal, a chained (multi-
+  dimensional) indexed-assignment target, or compound-assignment/
+  increment-decrement on an indexed target (all remain deferred past
+  M4d). Python,
   not JavaScript: the JavaScript backend does not accept `Feature::
   StringInterpolation` yet, and M1's `+`-based string concatenation needs
   it. The harness redirects `main`'s trailing block value to its last
