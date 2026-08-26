@@ -5961,6 +5961,30 @@
         "variation": "The 67-frame Gayathri-font animation completes the left arch and central stem in one run, then lifts once before carrying the upper shoulder through the right outer loop, inner return, and finishing hook above the line as a second joined run. This is one attested pedagogical order fitted to the bundled Noto Sans Malayalam outline."
       },
       "notes": "Atomic Malayalam chillu N (U+0D7B): a vowel-free final consonant, not the base ന with its inherent a."
+    },
+    {
+      "glyph": "ൾ",
+      "sound": "ḷ",
+      "role": "consonant",
+      "components": [
+        "the descending left bowl and central rise",
+        "the rightward upper shoulder",
+        "the clockwise right loop rising into the above-line chillu hook"
+      ],
+      "strokeOrder": [
+        "descend clockwise around the left bowl and climb the central rise",
+        "without lifting, carry the upper shoulder right",
+        "without lifting, sweep clockwise around the right loop and return to the upper crossing",
+        "without lifting, rise into the chillu hook and curl left above the line"
+      ],
+      "strokeOrderNote": "Four visible movements in one continuous pen-down run: the left bowl climbs into the shoulder, flows around the right loop, and finishes with the chillu hook above the line.",
+      "penLifts": 0,
+      "strokeOrderSource": {
+        "citation": "Sriveenkat, Ml ൾ order.gif, Malayalam chillu LL stroke-order animation, 00:03.0–00:09.3 (Wikimedia Commons, 14 July 2023)",
+        "url": "https://commons.wikimedia.org/wiki/File:Ml_%E0%B5%BE_order.gif",
+        "variation": "The 65-frame Gayathri-font animation draws ൾ in one uninterrupted run: descend around the left bowl, climb the central rise, carry the upper shoulder right, sweep clockwise around the right loop, then rise into the finishing hook above the line. This is one attested pedagogical order fitted to the bundled Noto Sans Malayalam outline; bowl width, loop roundness, and hook height vary by hand, but the zero-lift order remains the same."
+      },
+      "notes": "Atomic Malayalam chillu LL (U+0D7E): a vowel-free retroflex lateral final consonant, not the base ള with its inherent a."
     }
   ],
   "marks": [
