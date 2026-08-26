@@ -303,13 +303,74 @@ fn string_declaration_with_explicit_type() {
 
 #[test]
 fn string_declaration_accepts_null_initializer() {
-    // Declared type wins over the initializer's own (transient) `Null`
-    // kind -- see `lower_local_var_decl`'s handling of `declared_kind`.
+    // `null` is a legal initializer for any *reference*-kinded
+    // declaration (task #71's own `Kind::Null` carve-out) -- matches
+    // real Java, which permits `String s = null;` but rejects `null` for
+    // a primitive (`int x = null;`, see the rejection test below).
     let m = compile_ok(&wrap(r#"String s = null;"#));
     assert!(matches!(
         &main_fn(&m).body.stmts[0],
         Stmt::LetStarBinding { .. }
     ));
+}
+
+// ── task #71: declared type must actually match its own initializer ──
+
+#[test]
+fn declaring_an_int_with_a_string_initializer_is_rejected() {
+    // The original bug this task fixes: `lower_variable_declarator`
+    // used to trust `declared_kind` unconditionally, so this compiled
+    // with zero error.
+    let err = compile_source(&wrap(r#"int y = "hello";"#), "prog").unwrap_err();
+    assert!(
+        err.message.contains("Str") && err.message.contains("Int"),
+        "unexpected message: {}",
+        err.message
+    );
+}
+
+#[test]
+fn declaring_a_boolean_with_an_int_initializer_is_rejected() {
+    let err = compile_source(&wrap("boolean b = 1;"), "prog").unwrap_err();
+    assert!(!err.message.is_empty());
+}
+
+#[test]
+fn declaring_a_string_with_a_bool_initializer_is_rejected() {
+    let err = compile_source(&wrap("String s = true;"), "prog").unwrap_err();
+    assert!(!err.message.is_empty());
+}
+
+#[test]
+fn declaring_a_double_with_an_int_initializer_is_accepted_widening() {
+    // JLS 5.1.2's own primitive widening conversion -- real Java permits
+    // this without an explicit cast.
+    compile_ok(&wrap("double d = 5;"));
+}
+
+#[test]
+fn declaring_an_int_with_a_double_initializer_is_rejected_narrowing() {
+    // The reverse direction is NOT a legal implicit conversion in real
+    // Java (`int x = 5.0;` needs an explicit `(int)` cast) -- confirms
+    // the widening carve-out is directional, not a blanket Int/Float
+    // equivalence.
+    let err = compile_source(&wrap("int x = 5.0;"), "prog").unwrap_err();
+    assert!(!err.message.is_empty());
+}
+
+#[test]
+fn declaring_an_int_with_a_null_initializer_is_rejected() {
+    // Unlike `String s = null;`, a primitive can never be `null` in real
+    // Java -- confirms the `Kind::Null` carve-out is scoped to
+    // reference-kinded declarations only, not every declared kind.
+    let err = compile_source(&wrap("int x = null;"), "prog").unwrap_err();
+    assert!(!err.message.is_empty());
+}
+
+#[test]
+fn declaring_an_array_with_a_null_initializer_is_accepted() {
+    // Arrays are reference types too -- `int[] xs = null;` is legal Java.
+    compile_ok(&wrap("int[] xs = null;"));
 }
 
 #[test]

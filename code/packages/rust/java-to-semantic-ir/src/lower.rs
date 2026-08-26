@@ -3190,7 +3190,55 @@ impl Lowerer {
         };
 
         let kind = match declared_kind {
-            Some(k) => k,
+            // task #71: an explicitly-declared type's own initializer
+            // must actually match it — this frontend previously trusted
+            // `declared_kind` unconditionally here, so e.g. `int y =
+            // "hello";` compiled with **zero** error. Two mismatches real
+            // Java itself permits, kept accepted here:
+            //
+            // - int-widening-to-float (`double d = 5;`, JLS 5.1.2's
+            //   primitive widening conversion). This does **not** insert
+            //   a real numeric conversion (SIR's own `Expr::Convert`,
+            //   SIR26, only ever converts between *integer* widths —
+            //   there is no int-to-float primitive at all): the emitted
+            //   `value` for `double d = 5;` remains whatever `lower_expr`
+            //   produced for the literal `5` (`Kind::Int` at the value
+            //   level), only this frontend's own *bookkeeping* `Kind` for
+            //   `d` becomes `Float`. A backend whose runtime numeric
+            //   representation actually distinguishes int from float at
+            //   the value level (not just at compile-time type-checking)
+            //   could observe this — e.g. `String.valueOf(d)` would print
+            //   `"5"` not `"5.0"` — but this frontend has no output/print
+            //   primitive wired up at all yet (JV02's own scope), so the
+            //   gap is real but currently unobservable; a disclosed,
+            //   deliberately out-of-scope narrowing of *this* fix, not
+            //   silently swept under it.
+            // - `null` initializing a *reference*-kinded declaration
+            //   (`String s = null;`, and — M4a's array types — `int[] xs
+            //   = null;`): real Java permits `null` for any reference
+            //   type but rejects it for a primitive (`int x = null;` is a
+            //   `javac` compile error), matching exactly the `Kind::Str`/
+            //   `Kind::Array` vs. `Kind::Int`/`Float`/`Bool` split this
+            //   frontend's own declarable-type set already draws.
+            //
+            // Every other declared/initializer `Kind` pair is a genuine
+            // error, not a narrowing conversion this frontend could ever
+            // silently support.
+            Some(k)
+                if k == value_kind
+                    || (k == Kind::Float && value_kind == Kind::Int)
+                    || (value_kind == Kind::Null && matches!(k, Kind::Str | Kind::Array(_, _))) =>
+            {
+                k
+            }
+            Some(k) => {
+                return Err(self.err_at(
+                    initializer,
+                    format!(
+                        "cannot initialize a `{k:?}`-declared local variable with a `{value_kind:?}`-kinded initializer"
+                    ),
+                ));
+            }
             None => {
                 if value_kind == Kind::Null {
                     return Err(self.err_at(
