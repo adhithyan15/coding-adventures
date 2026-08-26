@@ -1,194 +1,155 @@
-Marathi, chapter 12: Friend and Family.
-6 lessons. The first lesson already needs your eyes or your hands, so save this one for when you have stopped.
+Marathi, chapter 12: Taking, Asking, Helping, Liking.
+4 lessons. The first lesson already needs your eyes or your hands, so save this one for when you have stopped.
 
 
-Lesson 1 of 6.
-मित्र (mitra) — a friend, and a very old bond.
-
-Before we start: this one needs your eyes, so it is not fully a driving lesson. You will want your eyes, for letter shapes on the page. You can listen to everything else now — leave the section called The letters in this word until you have stopped, and I will say so again when we reach it.
-
-Warm-up.
-[pause 2 seconds]
-You can ask for bhākarī now. This chapter turns from what you'd request to who you'd share it with.
-
-You'll want to know: मित्र.
-मित्र — mitra — friend (masculine).
-
-The letters in this word.
-Two things worth pausing on. ि, the short i vowel sign, is new — written before the consonant it belongs to but said after it, so मि is read mi, not im. And त्र is त joined to र by a halant, the same conjunct mechanism as punhā's न्हा, just a different pair of letters. Mi-tra.
-
-The word, taken apart — a friend, and a covenant before that.
-मित्र is a learned borrowing straight from Sanskrit मित्र mitra — taken up whole, not worn down by centuries of sound change the way most everyday words are. Its root is Indo-European mey-, "to bind," and the same word named a god: Avestan Mithra and Old Persian Mithra were divine witnesses to oaths — the bond itself, personified, before the word settled into ordinary Sanskrit as "friend."
-
-Grammar Lens: taken up whole, not worn down.
-Sanskrit-descended Marathi words come in two kinds: a tatsama, borrowed directly with its Sanskrit shape mostly intact — मित्र (mitra) is one — and a tadbhava, one that passed through centuries of Prakrit sound change and came out reshaped. भाकरी was neither: it never touched Sanskrit at all. This chapter will show both a tatsama and a tadbhava for family words, so you can hear the difference.
-
-Guided Practice.
-[pause 1 second]
-[your turn — say: mitra — friend]
-[pause 8 seconds for the answer]
-[your turn — say: what its root meant before "friend" — "to bind"]
-[pause 8 seconds for the answer]
-[your turn — name: the god-name that shares this root — Mithra]
-[pause 8 seconds for the answer]
-[your turn — say: mitra, then bhākarī — a learned word beside a native one whose own root went no further back than "a heap, a lump"]
-[pause 8 seconds for the answer]
-[your turn — recall: Chapter 11's four requests and their three genders — pāṇī neuter, chahā masculine, dūdh neuter, bhākarī feminine]
-[pause 8 seconds for the answer]
-
-Wrap-up Recall.
-[pause 3 seconds]
-What did मित्र (mitra)'s root mean before "friend"? (To bind.) What god-name shares that root? (Mithra.) Is मित्र (mitra) a tatsama or a tadbhava? (Tatsama — taken up whole from Sanskrit.)
-Sources: Wiktionary: मित्र (mitra).
-
-
-Lesson 2 of 6.
-One step later — retrieve मित्र (mitra).
-
-Warm-up.
-[pause 3 seconds]
-Say the Marathi word for friend before you uncover it: मित्र (mitra).
-
-What you've built.
-Its old root meant to bind. Marathi took the Sanskrit form up whole, so it is a tatsama, not a word worn down through ordinary sound change.
-
-Guided Practice.
-[pause 1 second]
-Answer once, then repair only the missing piece.
-[question — say your answer, then pause 18 seconds]
-Give the word for friend, the old root meaning, and its borrowing type.
-
-Wrap-up Recall.
-[pause 2 seconds]
-मित्र (mitra) — bind — tatsama. Stop here; the next lesson adds family.
-
-
-Lesson 3 of 6.
-कुटुंब (kutumb) (kuṭumb) — family, and a gender Hindi disagrees with.
+Lesson 1 of 4.
+घेणे (gheṇe) — "to take," which you have been saying since Chapter 7.
 
 Before we start: this one needs your eyes, so it is not fully a driving lesson. You will want your eyes, for letter shapes on the page. You can listen to everything else now — leave the section called The letters in this word until you have stopped, and I will say so again when we reach it.
 
 Warm-up.
 [pause 2 seconds]
-मित्र (mitra) was taken up whole from Sanskrit, not worn down. This next word was too — and it names the group your friend belongs to as well.
+Say "to write" and "to read" — lihiṇe, vāchṇe — and what lihiṇe's root meant before writing existed. (To scratch.) This next verb has been in your mouth since the farewells, unrecognised.
 
-You'll want to know: कुटुंब.
-कुटुंब (kutumb) — kuṭumb — family (neuter).
+You'll want to know: घेणे.
+घेणे — gheṇe — to take.
+काळजी घ्या — kāḷjī ghyā, "take care" — is this verb. घ्या ghyā is its respectful command, घे ghe the familiar one you would use with तू. The plain present is मी घेतो mī gheto / घेते ghete.
+Note the -त- that appears in the present but not the infinitive: ghe- on its own, ghe-t-o when conjugated. Marathi's commonest verbs are the ones that bend.
 
 The letters in this word.
-One new mark: ु, the short u vowel sign, a small hook under the consonant — the short partner of dūdh's long ू. ट you have informally from marāṭhī; ं the familiar anusvāra. Ku-ṭu-mb.
+घ is gha — a g with a real puff of breath behind it, a separate letter from ग ga, exactly as ख kha is separate from क ka. Add the -e stroke over the top and the retroflex णे: ghe-ṇe.
 
-The word, taken apart — borrowed whole, origin disputed.
-कुटुंब (kutumb) is a tatsama, a learned borrowing from Sanskrit कुटुम्ब kuṭumba, "household, family" — like मित्र (mitra), taken up whole rather than worn down by sound change. Unlike मित्र (mitra), its story does not reach a secure Indo-European root: a Dravidian origin for Sanskrit's own kuṭumba has been proposed, but it is not settled, so this lesson names the dispute rather than inventing a resolution.
-
-Grammar Lens: a gender Hindi disagrees with.
-The very same Sanskrit word carries two different genders in its two daughters: Marathi's कुटुंब (kutumb) (kuṭumb) is neuter, Hindi's कुटुंब (kutumb) (kuṭumb) is masculine. Both borrowed the identical tatsama; each language then had to assign it a gender inside its own system, and they assigned it differently. A word's gender is not carried in with its meaning — it is decided fresh by whichever language receives it.
+The word, taken apart — the root of "grab".
+घेणे (gheṇe) comes through Prakrit gahaï from the Sanskrit root ग्रह् grah-, "to seize, to grasp" — the root of ग्रहण grahaṇ, an eclipse, which is the sky being seized.
+Its older Vedic shape was ग्रभ् grabh-, and that bh is the piece worth holding on to: Indo-European gʰrebʰ- kept its bh in Vedic and turned it into a b in Germanic, which is English grab. Marathi's gh- is what four thousand years did to the same first consonant. Grabh and grab are the same word.
 
 Guided Practice.
 [pause 1 second]
-[your turn — say: kuṭumb — family]
+[your turn — say: "gheṇe" — to take — then "mī gheto" or "ghete"]
 [pause 8 seconds for the answer]
-[your turn — state: its gender in Marathi against Hindi — neuter here, masculine there]
+[your turn — say: the farewell it was hiding in — "kāḷjī ghyā"]
 [pause 8 seconds for the answer]
-[your turn — say: mitra, then kuṭumb — two tatsamas in a row]
-[pause 8 seconds for the answer]
-[your turn — recall: Chapter 11's own gender lineup — कुटुंब (kutumb) (kuṭumb)'s neuter joins पाणी and दूध, after bhākarī's feminine closed out all three genders in one chapter]
+[your turn — say: the Vedic form and its English cousin — "grabh … grab"]
 [pause 8 seconds for the answer]
 
 Wrap-up Recall.
 [pause 3 seconds]
-What gender is कुटुंब (kutumb) (kuṭumb) in Marathi, and how does that differ from Hindi? (Neuter here, masculine there — same borrowed word, different choice.) Is कुटुंब (kutumb) (kuṭumb)'s pre-Sanskrit origin settled? (No — a Dravidian source is proposed but disputed.)
-Sources: Wiktionary: कुटुंब (kutumb) (kuṭumb).
+Which farewell has been using घेणे all along, and what does it literally say? (काळजी घ्या — "take care.") Which English word is the same word as Vedic grabh? (Grab.) What gender is घेणे when it acts as a noun? (Neuter, like every -णे form.) Say "to write" and "to take" in one breath. (Lihiṇe, gheṇe.)
 
 
-Lesson 4 of 6.
-One step later — retrieve कुटुंब (kutumb) (kuṭumb).
-
-Warm-up.
-[pause 3 seconds]
-Say the Marathi word for family: कुटुंब (kuṭumb) (kutumb).
-
-What you've built.
-Marathi treats कुटुंब (kutumb) (kuṭumb) as neuter. Hindi assigns the same borrowed word masculine gender. Retrieve the Marathi choice, not a universal rule.
-
-Guided Practice.
-[pause 1 second]
-Answer once, then repair only the missing piece.
-[question — say your answer, then pause 15 seconds]
-Give the Marathi word for family and its Marathi gender.
-
-Wrap-up Recall.
-[pause 2 seconds]
-कुटुंब (kutumb) (kuṭumb) — family — neuter.
-
-
-Lesson 5 of 6.
-भाऊ (bhāū) — brother, and this time the resemblance is real.
+Lesson 2 of 4.
+विचारणे (vichārṇe) — "to ask," built out of "a thought".
 
 Before we start: this one needs your eyes, so it is not fully a driving lesson. You will want your eyes, for letter shapes on the page. You can listen to everything else now — leave the section called The letters in this word until you have stopped, and I will say so again when we reach it.
 
 Warm-up.
 [pause 2 seconds]
-मित्र (mitra) and कुटुंब (kutumb) (kuṭumb) were both taken up whole from Sanskrit. This next word was not — it was worn down, letter by letter, over centuries.
+Say "to take" — gheṇe. Say "to think" — vichār karṇe — and what its root meant. (To turn, to range about.) Hold that word. The next verb is it, with four letters fewer.
 
-You'll want to know: भाऊ.
-भाऊ — bhāū — brother (masculine).
-
-The letters in this word.
-One new letter: ऊ, the independent long ū, used here because a Marathi word cannot stack one vowel mark on top of another — after आ's ा, the second vowel needs its own full letter. भ you have from bheṭū. Bhā-ū.
-
-The word, taken apart — worn down, but the family resemblance survives.
-भाऊ (bhāū) is a tadbhava — not borrowed whole like मित्र (mitra) or कुटुंब (kutumb) (kuṭumb), but the ordinary Prakrit-worn descendant of Sanskrit भ्रातृ bhrātṛ, three syllables ground down to two over a thousand years of speech. That root is Indo-European bʰréh₂tēr, and here the family resemblance to English is not a false friend — it is the real thing: brother, Latin frāter, and Sanskrit's own bhrātṛ are all the same word, worn down four different ways by four different languages.
-
-Guided Practice.
-[pause 1 second]
-[your turn — say: bhāū — brother]
-[pause 8 seconds for the answer]
-[your turn — name: three languages that share this root — English, Latin, Sanskrit]
-[pause 8 seconds for the answer]
-[your turn — say: the three so far — mitra, kuṭumb, bhāū]
-[pause 8 seconds for the answer]
-
-Wrap-up Recall.
-[pause 3 seconds]
-Is भाऊ (bhāū) a tatsama or a tadbhava? (Tadbhava — worn down by sound change, not borrowed whole.) Which English word is the very same word as भाऊ (bhāū)? (Brother.)
-Sources: Wiktionary: भाऊ (bhāū).
-
-
-Lesson 6 of 6.
-बहीण (bahīṇ) — sister, deliberately not English's cousin.
-
-Before we start: this one needs your eyes, so it is not fully a driving lesson. You will want your eyes, for letter shapes on the page. You can listen to everything else now — leave the section called The letters in this word until you have stopped, and I will say so again when we reach it.
-
-Warm-up.
-[pause 2 seconds]
-Three words so far: mitra, kuṭumb, bhāū. Say them, and say which one is a genuine cousin of an English word. (Bhāū — brother.) Its pair is not so simple.
-
-You'll want to know: बहीण.
-बहीण — bahīṇ — sister (feminine).
+You'll want to know: विचारणे.
+विचारणे — vichārṇe — to ask.
+मी विचारतो — mī vichārto — "I ask," विचारते vichārte if a woman speaks. And the same च rule holds: say it vitsārto, with the ts Marathi puts before a long ā.
 
 The letters in this word.
-Nothing new. ब from baraṃ, ह from namaskār, ी the familiar long ī, ण from every -णे verb. Ba-hī-ṇ.
+There is nothing new. विचारणे (vichārṇe) is विचार — the noun from the last chapter, letter for letter — with णे on the end. If you can write "a thought," you can write "to ask."
 
-The word, taken apart — not sister's cousin.
-बहीण (bahīṇ) is a tadbhava, worn down like भाऊ (bhāū): Old Marathi bahiṇī, from Maharastri Prakrit bhaiṇī, from Sanskrit भगिनी bhaginī. There the resemblance to brother's pair ends. Bhaginī is traditionally connected to भज् bhaj-, "to share, to apportion" — a sister as one who shares in the household. That root has nothing to do with Indo-European swésōr, the ancestor of English sister. Two words that translate each other perfectly are, underneath, unrelated.
-
-Grammar Lens: the chapter's whole shape, in two pairs.
+The word, taken apart — one root, two verbs.
+Marathi builds both verbs on विचार:
 [a table of 2 rows, read aloud]
-word: मित्र, कुटुंब (kutumb) (mitra, kuṭumb). kind: tatsama. route: taken up whole from Sanskrit.
-word: भाऊ, बहीण (bhāū, bahīṇ). kind: tadbhava. route: worn down by Prakrit sound change.
-Notice, too, how each pair looks: मित्र (mitra) and कुटुंब (kutumb) (kuṭumb) carry conjuncts and marks a learner has to stop for; भाऊ (bhāū) and बहीण (bahīṇ) do not — plain consonants and vowels, the shape sound change tends to leave behind. And of the tadbhava pair, only भाऊ (bhāū) is a secure English cousin; बहीण (bahīṇ) is not.
+विचार करणे means to think — "to do a thought".
+विचारणे (vichārṇe) means to ask — the thought made into a verb.
+Both sit on वि- plus चर् car-, "to move, to range." Thinking is ranging over something privately; asking is ranging over it out loud with somebody else. Marathi did not decide they were different enough to need different words.
+This is Marathi's own arrangement, not a family inheritance. Hindi's verb for asking, पूछना pūchnā, comes from an unrelated root, and Hindi's विचार stays a noun. Where a language draws its lines is a choice each language makes for itself.
 
 Guided Practice.
 [pause 1 second]
-[your turn — say: all four — mitra, kuṭumb, bhāū, bahīṇ]
+[your turn — say: the pair, slowly — "vichār karṇe … vichārṇe"]
 [pause 8 seconds for the answer]
-[your turn — sort: which two are tatsama, which two are tadbhava]
+[your turn — say: "I ask" in your own gender — "mī vichārto" or "vichārte"]
 [pause 8 seconds for the answer]
-[your turn — name: which sibling word is English's real cousin, and which is not — bhāū yes, bahīṇ no]
+[your turn — say: both with the Marathi ts — "vitsār karto … vitsārto"]
 [pause 8 seconds for the answer]
 
 Wrap-up Recall.
 [pause 3 seconds]
-Is बहीण related to English sister? (No — a different Sanskrit root entirely.) Which sibling word is related to its English counterpart? (भाऊ, to brother.) Sort the chapter's four words into tatsama and tadbhava. (Mitra, kuṭumb — tatsama; bhāū, bahīṇ — tadbhava.) What did कुटुंब (kutumb)'s gender turn out to be, against Hindi's? (Neuter here, masculine there.) And what did मित्र (mitra)'s root mean before "friend"? (To bind.)
-Sources: Wiktionary: बहीण (bahīṇ); Wiktionary: भगिनी.
+What is the only difference between Marathi's "to think" and its "to ask"? (करणे — thinking adds "to do"; asking puts -णे straight onto विचार.) What did the shared root mean? (To move, to turn over.) How is the च said in both? (Nearer ts before the long ā.) And "to take"? (Gheṇe.)
+
+
+Lesson 3 of 4.
+मदत करणे (madat karṇe) — "to help," a word that travelled.
+
+Before we start: this one needs your eyes, so it is not fully a driving lesson. You will want your eyes, for letter shapes on the page. You can listen to everything else now — leave the section called The letters in this word until you have stopped, and I will say so again when we reach it.
+
+Warm-up.
+[pause 2 seconds]
+Say "to ask" — vichārṇe. And say "I know" — malā māhīt āhe — then name where माहीत was borrowed from. (Arabic, through Persian.) A second borrowed word from that same layer is coming.
+
+You'll want to know: मदत करणे.
+मदत करणे — madat karṇe — to help.
+Built the way kām karṇe and vichār karṇe are built: a noun, मदत madat ("help"), with करणे behind it. मी मदत करतो — mī madat karto — "I help," करते karte for a woman.
+That pattern is the most productive thing in the language: put करणे behind almost any noun and Marathi will accept the verb.
+
+The letters in this word.
+मदत is three bare consonants, each with its built-in a: म ma, द da, त ta — ma-da-t, with the last a falling away in speech as it usually does at the end of a Marathi word.
+
+The word, taken apart — help as a hand extended.
+मदत is Arabic madad, borrowed through Persian. Its Arabic root means to stretch out, to extend — madad is a thing extended: a hand, or reinforcements sent to an army. Help, named as reach.
+It belongs to the layer of Persian and Arabic administration that settled into Marathi under the Deccan sultanates — the same layer that gave you माहीत in malā māhīt āhe, and हरकत in kāhī harkat nāhī. Three everyday words, one route.
+One small tell worth keeping: Marathi writes मदत, with a final त. Hindi and Urdu write मदद, with a द. The same loan, landing differently in each language — which is what borrowing normally looks like.
+
+Guided Practice.
+[pause 1 second]
+[your turn — say: "madat karṇe" — then "mī madat karto" or "karte"]
+[pause 8 seconds for the answer]
+[your turn — say: the three करणे verbs you have — "kām karṇe, vichār karṇe, madat karṇe"]
+[pause 8 seconds for the answer]
+[your turn — say: what the Arabic root meant — "to stretch out"]
+[pause 8 seconds for the answer]
+
+Wrap-up Recall.
+[pause 3 seconds]
+What did मदत's Arabic root mean before it meant help? (To stretch out, to extend.) Which road did it travel to reach Marathi? (Persian.) Name another word you have from that same layer. (माहीत, or हरकत in kāhī harkat nāhī.) And how does Marathi spell the end of the word, against Hindi and Urdu? (With त, not द.)
+
+
+Lesson 4 of 4.
+आवडणे (āvaḍṇe) — "to like," which is not something you do.
+
+Before we start: this one needs your eyes, so it is not fully a driving lesson. You will want your eyes, for letter shapes on the page. You can listen to everything else now — leave the section called The letters in this word until you have stopped, and I will say so again when we reach it.
+
+Warm-up.
+[pause 2 seconds]
+Three verbs from this chapter: gheṇe, vichārṇe, madat karṇe. Say them. Each let you be the one acting. The fourth will not.
+
+You'll want to know: आवडणे.
+आवडणे — āvaḍṇe — to like.
+मला मराठी आवडते — malā marāṭhī āvaḍte — "I like Marathi," or word for word, "to me Marathi pleases."
+
+The letters in this word.
+आ is the standalone long ā; व va; ड ḍa, a retroflex d made with the tongue curled back — new here, and not the द da of madat; then णे. Ā-va-ḍa-ṇe.
+
+Grammar Lens: the third sentence built this way.
+[a table of 3 rows, read aloud]
+Marathi: मला मराठी येते. word for word: to-me Marathi comes — I know it.
+Marathi: मला मराठी समजते. word for word: to-me Marathi is-understood — I understand it.
+Marathi: मला मराठी आवडते. word for word: to-me Marathi pleases — I like it.
+One frame, three meanings. You are मला in all three, never the subject, and the verb agrees with मराठी. Change the thing liked and the ending follows it: a masculine thing takes आवडतो, a neuter thing आवडतं.
+
+The word, taken apart — one native, one inherited.
+आवडणे (āvaḍṇe) is Marathi's own — straight down from Old Marathi, cousin to Konkani āvaḍ, with no Sanskrit ancestor securely established, so this lesson claims none. Hindi and Urdu say पसंद pasand, borrowed from Persian.
+Loving is a separate verb: प्रेम करणे prem karṇe, and there you are the subject — मी प्रेम करतो. प्रेम is Sanskrit preman, on प्री prī-, "to be dear," from Indo-European preyH-. Germanic built a verb "to love" on it, and from that English has friend — the one loved — and free.
+
+Why it's said this way.
+Chapter 9's rule holds here: neither language is simply older. Marathi's दोन took its final n by copying तीन — an innovation. Hindi's पाँच kept a nasal Marathi dropped — a retention. Now a verb: Marathi kept its native word for liking, Hindi took a Persian one.
+
+Guided Practice.
+[pause 1 second]
+[your turn — say: "malā marāṭhī āvaḍte" — hearing "to me," not "I"]
+[pause 8 seconds for the answer]
+[your turn — say: the one you do — "mī prem karto" or "karte"]
+[pause 8 seconds for the answer]
+[your turn — say: this chapter's four — "gheṇe, vichārṇe, madat karṇe, āvaḍṇe"]
+[pause 8 seconds for the answer]
+
+Wrap-up Recall.
+[pause 3 seconds]
+Who is the subject of malā marāṭhī āvaḍte? (मराठी — not you.) Which of the two puts you in the subject's chair? (प्रेम करणे.) Which English words share प्रेम's root? (Friend, free.) Now the chapter's four sources — gheṇe, vichārṇe, madat karṇe, āvaḍṇe. (Sanskrit ग्रह्, cousin of grab; विचार, the thinking word itself; Arabic madad through Persian; and आवड, native.)

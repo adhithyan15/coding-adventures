@@ -1,10 +1,10 @@
 ---
 id: MR-C04-practice
-sequence: 140
-chapter: 5
+sequence: 160
+chapter: 7
 type: practice
 headword: (recap)
-gloss: Chapter 5 recap — farewells
+gloss: Chapter 7 recap — farewells
 concept_tag: REVIEW
 prerequisites: [MR-C04-kalji-ghya]
 sounds: []
@@ -13,7 +13,7 @@ est_minutes: 4
 reviews_of: [MR-C04-punha, MR-C04-bhetu, MR-C04-punha-bhetu, MR-C04-udya-bhetu, MR-C04-kalji-ghya, MR-C01-yeto]
 ---
 
-# Chapter 5 recap — farewells
+# Chapter 7 recap — farewells
 
 ## Warm-up
 

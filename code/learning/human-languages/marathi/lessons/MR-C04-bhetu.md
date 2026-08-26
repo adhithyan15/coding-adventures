@@ -1,7 +1,7 @@
 ---
 id: MR-C04-bhetu
-sequence: 120
-chapter: 5
+sequence: 140
+chapter: 7
 type: word
 headword: भेटू
 gloss: (we'll) meet (bheṭū)

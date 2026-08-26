@@ -2,8 +2,8 @@
 schema_version: 2
 id: MR-C12-kaan
 spine_node: SPINE-CHECK-WELLBEING
-sequence: 590
-chapter: 13
+sequence: 610
+chapter: 15
 type: word
 headword: कान
 romanization: kān
@@ -12,7 +12,7 @@ concept_tag: MR-BODY-EAR
 prerequisites: [MR-C12-dola]
 sounds: []
 roots: [sanskrit-karna]
-etymology_hook: "कान continues Sanskrit कर्ण karṇa through Prakrit kaṇṇa (the rṇ cluster simplified to a geminate ṇṇ, the same kind of change Chapter 7 traced in don) to Old Marathi kāna; karṇa's own root beyond Sanskrit is disputed among scholars, with no single proposal secure, so this lesson states the dispute rather than picking one"
+etymology_hook: "कान continues Sanskrit कर्ण karṇa through Prakrit kaṇṇa (the rṇ cluster simplified to a geminate ṇṇ, the same kind of change Chapter 9 traced in don) to Old Marathi kāna; karṇa's own root beyond Sanskrit is disputed among scholars, with no single proposal secure, so this lesson states the dispute rather than picking one"
 duration:
   max_seconds: 270
 requires:
@@ -50,11 +50,11 @@ meant, but how its middle got simpler.
 Nothing new. **क**, **ा**, **न** are all familiar from Chapter 1 onward.
 *Kā-n*.
 
-## Sounds you'll need: a cluster ground down, like Chapter 7's दोन
+## Sounds you'll need: a cluster ground down, like Chapter 9's दोन
 <!-- hl-knowledge: introduces=[MR-SOUND-KARNA-GEMINATION]; assesses=[MR-ETYMON-DON-ANALOGY] -->
 
 **कान** continues Sanskrit **कर्ण** *karṇa*. Getting there took the same kind
-of step Chapter 7 traced in **दोन**: Prakrit could not keep Sanskrit's
+of step Chapter 9 traced in **दोन**: Prakrit could not keep Sanskrit's
 consonant cluster **rṇ** intact, so it simplified — not by copying a neighbor
 this time, but by **doubling** the surviving consonant, *rṇ* → *ṇṇ*, giving
 Prakrit **कण्ण** *kaṇṇa*. Old Marathi then simplified the geminate back down
@@ -69,7 +69,7 @@ Past Sanskrit, **कर्ण**'s own origin is genuinely **disputed** among
 scholars — proposals connect it to a word for "point, spike," to a root for
 "handle, grip," even to the verb "to hear," but none has won general
 acceptance. Rather than choose one and present it as settled, this lesson
-names the dispute and stops there, the same honest gap Chapter 12 named for
+names the dispute and stops there, the same honest gap Chapter 14 named for
 **कुटुंब**, and the same restraint that kept **बहीण** from being handed a
 false cousin — **बहीण** looks like it should match English *sister*, and does
 not.
@@ -88,7 +88,7 @@ not.
 
 [PAUSE 3s] What did Prakrit do to Sanskrit **कर्ण**'s *rṇ* cluster? (**Doubled
 it** to *ṇṇ*, then Old Marathi simplified that back to one *ṇ*.) Is
-**कर्ण**'s root beyond Sanskrit settled? (**No** — disputed.) Which Chapter 7
+**कर्ण**'s root beyond Sanskrit settled? (**No** — disputed.) Which Chapter 9
 word also showed a consonant cluster changing shape? (**दोन**, whose final *n*
 came from copying **तीन**.)
 

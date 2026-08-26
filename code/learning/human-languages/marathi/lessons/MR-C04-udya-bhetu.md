@@ -1,7 +1,7 @@
 ---
 id: MR-C04-udya-bhetu
-sequence: 130
-chapter: 5
+sequence: 150
+chapter: 7
 type: phrase
 headword: उद्या भेटू
 gloss: see you tomorrow (udyā bheṭū)

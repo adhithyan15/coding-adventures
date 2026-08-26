@@ -1,0 +1,17 @@
+{
+  "id": "MR-EXT-023-SCRIPT-DISTANT",
+  "stage": "pre-A1",
+  "kind": "required",
+  "category": "script",
+  "canDo": "I can retrieve all twelve doorway signs and write dhanyavad after a long gap.",
+  "prerequisites": [
+    "MR-EXT-022-SCRIPT-DURABLE"
+  ],
+  "lessons": [
+    "MR-R18-script-warmup",
+    "MR-R18-script-a-r4",
+    "MR-R18-script-b-r4",
+    "MR-R18-script-c-r4",
+    "MR-R18-script-d-r4"
+  ]
+}

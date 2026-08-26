@@ -2,8 +2,8 @@
 schema_version: 2
 id: MR-C11-bhau
 spine_node: SPINE-EXCHANGE-NAMES
-sequence: 560
-chapter: 12
+sequence: 580
+chapter: 14
 type: word
 headword: भाऊ
 romanization: bhāū

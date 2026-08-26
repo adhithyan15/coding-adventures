@@ -2,84 +2,39 @@
   "version": 1,
   "language": "marathi",
   "chapter": 15,
-  "title": "Family Memory at Real Distance",
-  "drivablePrefix": 12,
-  "sourceHash": "fnv1a64:6da5ed82ea8b8386",
+  "title": "Eye, Ear, Mouth, and Nose",
+  "drivablePrefix": 0,
+  "sourceHash": "fnv1a64:eb10c2f7b02ebe44",
   "lessons": [
     {
-      "id": "MR-R14-mitra-r2",
-      "sequence": 630,
-      "title": "After a gap — मित्र (mitra)",
-      "headword": "मित्र",
-      "romanization": "mitra",
-      "gloss": "friend — retrieve meaning, history, and borrowing type after a real gap",
+      "id": "MR-C12-dola",
+      "sequence": 600,
+      "title": "डोळा (ḍoḷā) — the letter you've heard since Chapter 7, formally",
+      "headword": "डोळा",
+      "romanization": "ḍoḷā",
+      "gloss": "eye — carrying Marathi's signature extra letter ळ, and a word that started life meaning something else entirely",
       "script": "devanagari",
-      "modality": "voice",
-      "derivedModality": "voice",
+      "modality": "sight",
+      "derivedModality": "sight",
       "modalityReasons": [
-        "no-visual-dependency"
+        "script-block"
       ],
-      "sourceHash": "fnv1a64:604df0e6ddf46e98",
-      "notice": null,
+      "sourceHash": "fnv1a64:f4d24643a087e316",
+      "notice": {
+        "modality": "sight",
+        "needs": [
+          "your eyes, for letter shapes on the page"
+        ],
+        "waitUntilStopped": [
+          "The letters in this word"
+        ],
+        "text": "Before we start: this one needs your eyes, so it is not fully a driving lesson. You will want your eyes, for letter shapes on the page. You can listen to everything else now — leave the section called The letters in this word until you have stopped, and I will say so again when we reach it."
+      },
       "blocks": [
         {
           "index": 0,
           "type": "warmup",
           "title": "Warm-up",
-          "segments": [
-            {
-              "kind": "pause",
-              "seconds": 5,
-              "perItem": false,
-              "source": "[PAUSE 5s]"
-            },
-            {
-              "kind": "speech",
-              "text": "Friend. Old root meaning to bind. Borrowed whole from Sanskrit. Say the three answers: मित्र (mitra) — bind — tatsama."
-            }
-          ]
-        },
-        {
-          "index": 1,
-          "type": "guided-production",
-          "title": "Guided Practice",
-          "segments": [
-            {
-              "kind": "pause",
-              "seconds": 1,
-              "perItem": false,
-              "source": "[PAUSE 1s]"
-            },
-            {
-              "kind": "speech",
-              "text": "Answer once, then repair only the missing piece."
-            },
-            {
-              "kind": "activity",
-              "scored": true,
-              "id": "MR-R14-mitra-r2-check",
-              "prompt": "Complete: friend = __; old root = __; borrowing type = __.",
-              "assesses": [
-                "MR-LEX-MITRA",
-                "MR-ETYMON-MITRA-BIND",
-                "MR-GRAMMAR-TATSAMA-BORROWING"
-              ],
-              "responseSeconds": 18,
-              "acceptedResponses": [
-                "mitra; bind; tatsama",
-                "मित्र; bind; tatsama"
-              ],
-              "feedback": {
-                "correct": "All three parts survived the gap.",
-                "incorrect": "Repair only the missing part: mitra; bind; tatsama."
-              }
-            }
-          ]
-        },
-        {
-          "index": 2,
-          "type": "recall",
-          "title": "Wrap-up Recall",
           "segments": [
             {
               "kind": "pause",
@@ -89,235 +44,45 @@
             },
             {
               "kind": "speech",
-              "text": "Say मित्र (mitra) once more, then stop."
-            }
-          ]
-        }
-      ]
-    },
-    {
-      "id": "MR-R14-kutumb-r2",
-      "sequence": 640,
-      "title": "After a gap — कुटुंब (kutumb)",
-      "headword": "कुटुंब",
-      "romanization": "kutumb",
-      "gloss": "family — retrieve the noun and Marathi gender after a real gap",
-      "script": "devanagari",
-      "modality": "voice",
-      "derivedModality": "voice",
-      "modalityReasons": [
-        "no-visual-dependency"
-      ],
-      "sourceHash": "fnv1a64:067f079d0a19fa29",
-      "notice": null,
-      "blocks": [
-        {
-          "index": 0,
-          "type": "warmup",
-          "title": "Warm-up",
-          "segments": [
-            {
-              "kind": "pause",
-              "seconds": 5,
-              "perItem": false,
-              "source": "[PAUSE 5s]"
-            },
-            {
-              "kind": "speech",
-              "text": "Family. Marathi gender. Answer: कुटुंब (kutumb) — neuter."
-            }
-          ]
-        },
-        {
-          "index": 1,
-          "type": "guided-production",
-          "title": "Guided Practice",
-          "segments": [
-            {
-              "kind": "pause",
-              "seconds": 1,
-              "perItem": false,
-              "source": "[PAUSE 1s]"
-            },
-            {
-              "kind": "speech",
-              "text": "Answer once, then repair only the missing piece."
-            },
-            {
-              "kind": "activity",
-              "scored": true,
-              "id": "MR-R14-kutumb-r2-check",
-              "prompt": "Give family in Marathi and its Marathi gender.",
-              "assesses": [
-                "MR-LEX-KUTUMB",
-                "MR-GRAMMAR-KUTUMB-NEUTER"
-              ],
-              "responseSeconds": 15,
-              "acceptedResponses": [
-                "kutumb; neuter",
-                "कुटुंब; neuter"
-              ],
-              "feedback": {
-                "correct": "Right: kutumb, neuter.",
-                "incorrect": "Repair two pieces: kutumb; neuter."
-              }
-            }
-          ]
-        },
-        {
-          "index": 2,
-          "type": "recall",
-          "title": "Wrap-up Recall",
-          "segments": [
-            {
-              "kind": "pause",
-              "seconds": 2,
-              "perItem": false,
-              "source": "[PAUSE 2s]"
-            },
-            {
-              "kind": "speech",
-              "text": "Say कुटुंब (kutumb) once more."
-            }
-          ]
-        }
-      ]
-    },
-    {
-      "id": "MR-R14-siblings",
-      "sequence": 650,
-      "title": "Sibling retrieval",
-      "headword": "भाऊ / बहीण",
-      "romanization": "bhau / bahin",
-      "gloss": "brother and sister — one secure English cousin and one unrelated root",
-      "script": "devanagari",
-      "modality": "voice",
-      "derivedModality": "voice",
-      "modalityReasons": [
-        "no-visual-dependency"
-      ],
-      "sourceHash": "fnv1a64:d2ce6fbd2f84d5b6",
-      "notice": null,
-      "blocks": [
-        {
-          "index": 0,
-          "type": "warmup",
-          "title": "Warm-up",
-          "segments": [
-            {
-              "kind": "pause",
-              "seconds": 4,
-              "perItem": false,
-              "source": "[PAUSE 4s]"
-            },
-            {
-              "kind": "speech",
-              "text": "Say brother, sister: भाऊ, बहीण."
+              "text": "मित्र, कुटुंब, भाऊ, बहीण (mitra, kuṭumb, bhāū, bahīṇ) — the people you'd introduce. This chapter turns to the body you'd ask after when you check how someone is."
             }
           ]
         },
         {
           "index": 1,
           "type": "input",
-          "title": "The two words and their histories",
+          "title": "You'll want to know: डोळा",
           "segments": [
             {
               "kind": "speech",
-              "text": "भाऊ is a secure cousin of English brother. Do not extend that claim to बहीण and English sister; those roots are unrelated."
+              "text": "डोळा — ḍoḷā — eye (masculine)."
             }
           ]
         },
         {
           "index": 2,
-          "type": "guided-production",
-          "title": "Guided Practice",
+          "type": "script",
+          "title": "The letters in this word",
           "segments": [
             {
-              "kind": "pause",
-              "seconds": 1,
-              "perItem": false,
-              "source": "[PAUSE 1s]"
-            },
-            {
               "kind": "speech",
-              "text": "Answer once, then repair only the missing piece."
-            },
-            {
-              "kind": "activity",
-              "scored": true,
-              "id": "MR-R14-siblings-check",
-              "prompt": "Say brother and sister, then name the one securely related to English.",
-              "assesses": [
-                "MR-LEX-BHAU",
-                "MR-ETYMON-BHAU-BROTHER",
-                "MR-LEX-BAHIN"
-              ],
-              "responseSeconds": 18,
-              "acceptedResponses": [
-                "bhau, bahin; bhau is related to brother",
-                "भाऊ, बहीण; भाऊ"
-              ],
-              "feedback": {
-                "correct": "Yes: bhau is the secure cousin.",
-                "incorrect": "Brother is bhau; sister is bahin; only bhau is the secure English cousin."
-              }
+              "text": "ड you have from āvaḍṇe; ो the familiar o mark, from bolṇe. Then ळ — the retroflex \"l\" you first met, unlabeled, inside Chapter 7's काळजी. Formally: tongue curled back, same place as ट and ण. Standard Hindi dropped this sound centuries ago; Marathi kept it, sharing it with the Dravidian languages to the south and with Gujarati. Ḍo-ḷā."
             }
           ]
         },
         {
           "index": 3,
-          "type": "recall",
-          "title": "Wrap-up Recall",
+          "type": "etymology",
+          "title": "The word, taken apart — not the old eye-word at all",
           "segments": [
             {
-              "kind": "pause",
-              "seconds": 2,
-              "perItem": false,
-              "source": "[PAUSE 2s]"
-            },
-            {
               "kind": "speech",
-              "text": "भाऊ, बहीण."
-            }
-          ]
-        }
-      ]
-    },
-    {
-      "id": "MR-R14-eye-ear",
-      "sequence": 660,
-      "title": "Eye and ear retrieval",
-      "headword": "डोळा / कान",
-      "romanization": "dola / kaan",
-      "gloss": "eye and ear — retrieve two face words and the Marathi retroflex lateral",
-      "script": "devanagari",
-      "modality": "voice",
-      "derivedModality": "voice",
-      "modalityReasons": [
-        "no-visual-dependency"
-      ],
-      "sourceHash": "fnv1a64:510cabbbe74e1653",
-      "notice": null,
-      "blocks": [
-        {
-          "index": 0,
-          "type": "warmup",
-          "title": "Warm-up",
-          "segments": [
-            {
-              "kind": "pause",
-              "seconds": 4,
-              "perItem": false,
-              "source": "[PAUSE 4s]"
-            },
-            {
-              "kind": "speech",
-              "text": "Eye: डोळा. Ear: कान. In डोळा, keep ळ retroflex; do not replace it with ordinary ल."
+              "text": "डोळा (ḍoḷā) continues Maharastri Prakrit ḍola, \"eye,\" from Sanskrit दोल dola — \"a swing, a swinging.\" Somewhere in Prakrit, \"a swinging thing\" came to mean \"eye,\" and that word pushed out the one you might expect: the true inherited Indo-Aryan eye-word is Sanskrit अक्षि/अक्ष akṣi/akṣa, from Indo-European h₃ekʷ-, the very cousin of Latin oculus and English eye. Hindi's आँख ā̃kh continues that old word, worn down through Prakrit acchi. Marathi's eye is not that word at all — it is a replacement, built on something that once just meant swing."
             }
           ]
         },
         {
-          "index": 1,
+          "index": 4,
           "type": "guided-production",
           "title": "Guided Practice",
           "segments": [
@@ -328,35 +93,105 @@
               "source": "[PAUSE 1s]"
             },
             {
-              "kind": "speech",
-              "text": "Answer once, then repair only the missing piece."
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "ḍoḷā — eye",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: **ḍoḷā** — eye]"
             },
             {
-              "kind": "activity",
-              "scored": true,
-              "id": "MR-R14-eye-ear-check",
-              "prompt": "Give eye and ear in Marathi; identify the special consonant in dola.",
-              "assesses": [
-                "MR-LEX-DOLA",
-                "MR-SCRIPT-RETROFLEX-LA",
-                "MR-LEX-KAAN"
-              ],
-              "responseSeconds": 18,
-              "acceptedResponses": [
-                "dola, kaan; retroflex l",
-                "डोळा, कान; ळ"
-              ],
-              "feedback": {
-                "correct": "Right: dola, kaan, and retroflex ळ.",
-                "incorrect": "Retrieve: dola, kaan, retroflex ळ."
-              }
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "what its Sanskrit root actually meant — \"a swing\"",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: what its Sanskrit root actually meant — \"a swing\"]"
+            },
+            {
+              "kind": "prompt",
+              "action": "NAME",
+              "instruction": "the word Marathi's eye-word replaced — akṣi, Hindi's āṅkh",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU NAME: the word Marathi's eye-word replaced — **akṣi**, Hindi's **āṅkh**]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "what you do with your डोळे — pāhṇe, \"to see,\" Chapter 10's verb whose own root was Indo-European spek-",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: what you do with your **डोळे** — **pāhṇe**, \"to see,\" Chapter 10's verb whose own root was Indo-European *\\*spek-*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "Chapter 14's tatsama/tadbhava split — मित्र, कुटुंब taken up whole, भाऊ, बहीण worn down — and कुटुंब's own neuter gender against Hindi's masculine",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: Chapter 14's tatsama/tadbhava split — **मित्र, कुटुंब** taken up whole, **भाऊ, बहीण** worn down — and **कुटुंब**'s own neuter gender against Hindi's masculine]"
             }
           ]
         },
         {
-          "index": 2,
+          "index": 5,
           "type": "recall",
           "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What did डोळा (ḍoḷā)'s Sanskrit root originally mean? (A swing.) Is डोळा (ḍoḷā) the same word as Hindi's आँख? (No — Marathi replaced the old eye-word entirely.) What Marathi letter appears in डोळा (ḍoḷā) that Hindi lost? (ळ, the retroflex l.)"
+            },
+            {
+              "kind": "speech",
+              "text": "Sources: Wiktionary: डोळा (ḍoḷā); Wiktionary: दोल."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "MR-C12-kaan",
+      "sequence": 610,
+      "title": "कान (kān) — an ear, and a cluster you've seen simplify before",
+      "headword": "कान",
+      "romanization": "kān",
+      "gloss": "ear — a consonant cluster simplified the same way don copied teen, and a root disputed among Sanskrit scholars",
+      "script": "devanagari",
+      "modality": "sight",
+      "derivedModality": "sight",
+      "modalityReasons": [
+        "script-block"
+      ],
+      "sourceHash": "fnv1a64:9c4a1cde03c92de0",
+      "notice": {
+        "modality": "sight",
+        "needs": [
+          "your eyes, for letter shapes on the page"
+        ],
+        "waitUntilStopped": [
+          "The letters in this word",
+          "Guided Practice"
+        ],
+        "text": "Before we start: this one needs your eyes, so it is not fully a driving lesson. You will want your eyes, for letter shapes on the page. You can listen to everything else now — leave the sections called The letters in this word and Guided Practice until you have stopped, and I will say so again when we reach it."
+      },
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
           "segments": [
             {
               "kind": "pause",
@@ -366,47 +201,56 @@
             },
             {
               "kind": "speech",
-              "text": "डोळा, कान."
-            }
-          ]
-        }
-      ]
-    },
-    {
-      "id": "MR-R14-mouth-nose",
-      "sequence": 670,
-      "title": "Mouth and nose retrieval",
-      "headword": "तोंड / नाक",
-      "romanization": "tond / naak",
-      "gloss": "mouth and nose — retrieve the everyday mouth word and its formal doublet",
-      "script": "devanagari",
-      "modality": "voice",
-      "derivedModality": "voice",
-      "modalityReasons": [
-        "no-visual-dependency"
-      ],
-      "sourceHash": "fnv1a64:e51a70b67591771c",
-      "notice": null,
-      "blocks": [
-        {
-          "index": 0,
-          "type": "warmup",
-          "title": "Warm-up",
-          "segments": [
-            {
-              "kind": "pause",
-              "seconds": 4,
-              "perItem": false,
-              "source": "[PAUSE 4s]"
-            },
-            {
-              "kind": "speech",
-              "text": "Everyday mouth is तोंड; formal मुख stands beside it. Nose is नाक."
+              "text": "डोळा (ḍoḷā) — its own root turned out to be a surprise, a swing, not the old eye-word. This next word has a different kind of surprise: not what it meant, but how its middle got simpler."
             }
           ]
         },
         {
           "index": 1,
+          "type": "input",
+          "title": "You'll want to know: कान",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "कान — kān — ear (masculine)."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "script",
+          "title": "The letters in this word",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "Nothing new. क, ा, न are all familiar from Chapter 1 onward. Kā-n."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "pronunciation",
+          "title": "Sounds you'll need: a cluster ground down, like Chapter 9's दोन",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "कान continues Sanskrit कर्ण karṇa. Getting there took the same kind of step Chapter 9 traced in दोन: Prakrit could not keep Sanskrit's consonant cluster rṇ intact, so it simplified — not by copying a neighbor this time, but by doubling the surviving consonant, rṇ becomes ṇṇ, giving Prakrit कण्ण kaṇṇa. Old Marathi then simplified the geminate back down to one ṇ with a lengthened vowel: kāna. Different cluster, different path, same underlying habit — Prakrit does not tolerate what Sanskrit could pack into one syllable."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "etymology",
+          "title": "The word, taken apart — a disputed root",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "Past Sanskrit, कर्ण's own origin is genuinely disputed among scholars — proposals connect it to a word for \"point, spike,\" to a root for \"handle, grip,\" even to the verb \"to hear,\" but none has won general acceptance. Rather than choose one and present it as settled, this lesson names the dispute and stops there, the same honest gap Chapter 14 named for कुटुंब, and the same restraint that kept बहीण from being handed a false cousin — बहीण looks like it should match English sister, and does not."
+            }
+          ]
+        },
+        {
+          "index": 5,
           "type": "guided-production",
           "title": "Guided Practice",
           "segments": [
@@ -417,35 +261,86 @@
               "source": "[PAUSE 1s]"
             },
             {
-              "kind": "speech",
-              "text": "Answer once, then repair only the missing piece."
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "kān — ear",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: **kān** — ear]"
             },
             {
-              "kind": "activity",
-              "scored": true,
-              "id": "MR-R14-mouth-nose-check",
-              "prompt": "Give everyday mouth, its formal doublet, and nose.",
-              "assesses": [
-                "MR-LEX-TOND",
-                "MR-GRAMMAR-TOND-MUKH-DOUBLET",
-                "MR-LEX-NAAK"
-              ],
-              "responseSeconds": 18,
-              "acceptedResponses": [
-                "tond, mukh, naak",
-                "तोंड, मुख, नाक"
-              ],
-              "feedback": {
-                "correct": "Exactly: tond, mukh, naak.",
-                "incorrect": "Repair the trio: tond, mukh, naak."
-              }
+              "kind": "prompt",
+              "action": "TRACE",
+              "instruction": "karṇa becomes kaṇṇa becomes kāna, the cluster ground down and then simplified again",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU TRACE: *karṇa* → *kaṇṇa* → *kāna*, the cluster ground down and then simplified again]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "ḍoḷā, kān — eye, ear",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: **ḍoḷā, kān** — eye, ear]"
             }
           ]
         },
         {
-          "index": 2,
+          "index": 6,
           "type": "recall",
           "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What did Prakrit do to Sanskrit कर्ण's rṇ cluster? (Doubled it to ṇṇ, then Old Marathi simplified that back to one ṇ.) Is कर्ण's root beyond Sanskrit settled? (No — disputed.) Which Chapter 9 word also showed a consonant cluster changing shape? (दोन, whose final n came from copying तीन.)"
+            },
+            {
+              "kind": "speech",
+              "text": "Sources: Wiktionary: कान (kān)."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "MR-C12-tond",
+      "sequence": 620,
+      "title": "तोंड (tõḍ) — the mouth, and the formal word standing behind it",
+      "headword": "तोंड",
+      "romanization": "tõḍ",
+      "gloss": "mouth — the everyday word, beside a formal Sanskrit doublet you already half-know",
+      "script": "devanagari",
+      "modality": "sight",
+      "derivedModality": "sight",
+      "modalityReasons": [
+        "script-block"
+      ],
+      "sourceHash": "fnv1a64:c278cc5ceaef3ed3",
+      "notice": {
+        "modality": "sight",
+        "needs": [
+          "your eyes, for letter shapes on the page"
+        ],
+        "waitUntilStopped": [
+          "The letters in this word"
+        ],
+        "text": "Before we start: this one needs your eyes, so it is not fully a driving lesson. You will want your eyes, for letter shapes on the page. You can listen to everything else now — leave the section called The letters in this word until you have stopped, and I will say so again when we reach it."
+      },
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
           "segments": [
             {
               "kind": "pause",
@@ -455,47 +350,45 @@
             },
             {
               "kind": "speech",
-              "text": "तोंड, नाक."
-            }
-          ]
-        }
-      ]
-    },
-    {
-      "id": "MR-R14-food",
-      "sequence": 680,
-      "title": "Three request nouns",
-      "headword": "पाणी / चहा / दूध",
-      "romanization": "paani / chaha / dudh",
-      "gloss": "water, tea, and milk — three tiny request nouns from memory",
-      "script": "devanagari",
-      "modality": "voice",
-      "derivedModality": "voice",
-      "modalityReasons": [
-        "no-visual-dependency"
-      ],
-      "sourceHash": "fnv1a64:7e3e89ca6b29f553",
-      "notice": null,
-      "blocks": [
-        {
-          "index": 0,
-          "type": "warmup",
-          "title": "Warm-up",
-          "segments": [
-            {
-              "kind": "pause",
-              "seconds": 5,
-              "perItem": false,
-              "source": "[PAUSE 5s]"
-            },
-            {
-              "kind": "speech",
-              "text": "Say water, tea, milk in order: पाणी, चहा, दूध."
+              "text": "डोळा (ḍoḷā), कान (kān) — eye, ear. Recall how कान (kān)'s middle got simpler — rṇ doubled to ṇṇ, then simplified again. One more word before the chapter's closing one."
             }
           ]
         },
         {
           "index": 1,
+          "type": "input",
+          "title": "You'll want to know: तोंड",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "तोंड — tõḍ — mouth (neuter)."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "script",
+          "title": "The letters in this word",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "Nothing new. त, ो, ं, ड are all familiar. Tõ-ḍ, the anusvāra nasalizing the o."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "etymology",
+          "title": "The word, taken apart — the everyday word, and its formal twin",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "तोंड (tõḍ) continues Maharastri Prakrit तुंड tuṃḍa, from Sanskrit तुण्ड tuṇḍa, \"mouth, snout, beak\" — a tadbhava, worn down the way भाऊ was. Marathi keeps a second, formal word for the same thing: मुख mukh, borrowed whole from Sanskrit exactly the way मित्र and कुटुंब were — the same everyday-versus-formal split कुटुंब's chapter didn't need to show you for a body part until now. You'll hear तोंड (tõḍ) in daily speech and मुख in writing, formal address, and words like mukhya, \"chief, principal\" — literally \"at the mouth/face of things.\""
+            }
+          ]
+        },
+        {
+          "index": 4,
           "type": "guided-production",
           "title": "Guided Practice",
           "segments": [
@@ -506,35 +399,86 @@
               "source": "[PAUSE 1s]"
             },
             {
-              "kind": "speech",
-              "text": "Answer once, then repair only the missing piece."
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "tõḍ — mouth",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: **tõḍ** — mouth]"
             },
             {
-              "kind": "activity",
-              "scored": true,
-              "id": "MR-R14-food-check",
-              "prompt": "Give water, tea, and milk in Marathi.",
-              "assesses": [
-                "MR-LEX-PAANI",
-                "MR-LEX-CHAHA",
-                "MR-LEX-DUDH"
-              ],
-              "responseSeconds": 15,
-              "acceptedResponses": [
-                "paani, chaha, dudh",
-                "पाणी, चहा, दूध"
-              ],
-              "feedback": {
-                "correct": "All three are back.",
-                "incorrect": "Repair in order: paani, chaha, dudh."
-              }
+              "kind": "prompt",
+              "action": "NAME",
+              "instruction": "its formal doublet — mukh",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU NAME: its formal doublet — **mukh**]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "three so far — ḍoḷā, kān, tõḍ",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: three so far — **ḍoḷā, kān, tõḍ**]"
             }
           ]
         },
         {
-          "index": 2,
+          "index": 5,
           "type": "recall",
           "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What is तोंड (tõḍ)'s formal Sanskrit doublet? (मुख, mukh.) Is तोंड (tõḍ) itself borrowed whole or worn down? (Worn down — a tadbhava, like भाऊ.)"
+            },
+            {
+              "kind": "speech",
+              "text": "Sources: Wiktionary: तोंड (tõḍ)."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "MR-C12-naak",
+      "sequence": 630,
+      "title": "नाक (nāk) — the face, completed",
+      "headword": "नाक",
+      "romanization": "nāk",
+      "gloss": "nose — completing the face, and the one of the four with the most secure English cousin",
+      "script": "devanagari",
+      "modality": "sight",
+      "derivedModality": "sight",
+      "modalityReasons": [
+        "script-block"
+      ],
+      "sourceHash": "fnv1a64:2054fc8f3e66b6f4",
+      "notice": {
+        "modality": "sight",
+        "needs": [
+          "your eyes, for letter shapes on the page"
+        ],
+        "waitUntilStopped": [
+          "The letters in this word"
+        ],
+        "text": "Before we start: this one needs your eyes, so it is not fully a driving lesson. You will want your eyes, for letter shapes on the page. You can listen to everything else now — leave the section called The letters in this word until you have stopped, and I will say so again when we reach it."
+      },
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
           "segments": [
             {
               "kind": "pause",
@@ -544,47 +488,56 @@
             },
             {
               "kind": "speech",
-              "text": "Repeat once, then stop."
-            }
-          ]
-        }
-      ]
-    },
-    {
-      "id": "MR-R14-doing",
-      "sequence": 690,
-      "title": "Three doing verbs",
-      "headword": "घेणे / विचारणे / मदत करणे",
-      "romanization": "ghene / vicharne / madat karne",
-      "gloss": "take, ask, and help — three action verbs retrieved without a model",
-      "script": "devanagari",
-      "modality": "voice",
-      "derivedModality": "voice",
-      "modalityReasons": [
-        "no-visual-dependency"
-      ],
-      "sourceHash": "fnv1a64:af46686c33a87dcd",
-      "notice": null,
-      "blocks": [
-        {
-          "index": 0,
-          "type": "warmup",
-          "title": "Warm-up",
-          "segments": [
-            {
-              "kind": "pause",
-              "seconds": 5,
-              "perItem": false,
-              "source": "[PAUSE 5s]"
-            },
-            {
-              "kind": "speech",
-              "text": "Take: घेणे. Ask: विचारणे. Help: मदत करणे."
+              "text": "डोळा, कान, तोंड (ḍoḷā, kān, tõḍ) — say them. One face part left, and it is the one with the plainest history of the four."
             }
           ]
         },
         {
           "index": 1,
+          "type": "input",
+          "title": "You'll want to know: नाक",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "नाक — nāk — nose (neuter)."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "script",
+          "title": "The letters in this word",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "Nothing new. न, ा, क — all familiar since Chapter 1. Nā-k."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "etymology",
+          "title": "The word, taken apart — the secure cousin of \"nose\"",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "नाक (nāk) continues Prakrit णक्क ṇakka, \"nose,\" built on Sanskrit नस् nas-, \"nose,\" plus a suffix. You may have met the other Sanskrit route to \"nose,\" नासिका nāsikā, elsewhere — Marathi's नाक (nāk) took the shorter one, straight from the bare root. Either way the destination is the same Indo-European neh₂s-, which English inherited directly as nose. Of this chapter's four words, नाक (nāk) is the one whose English cousin needs no qualification at all."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "culture-pragmatics",
+          "title": "Why it's said this way — four words, four kinds of history",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "Run the face back one more time, and notice each word told a different kind of story: डोळा (ḍoḷā) replaced its old Indo-Aryan word entirely, with something that once just meant swing; कान (kān)'s root is honestly disputed, even though its rṇ becomes ṇṇ becomes ṇ path is not; तोंड (tõḍ) keeps a formal Sanskrit doublet, मुख, standing beside it; and नाक (nāk) is the plainest of the four — a straight, secure line to Sanskrit and to English both. Not every word in a family carries the same amount of history, and knowing which is which is worth more than assuming they all match."
+            }
+          ]
+        },
+        {
+          "index": 5,
           "type": "guided-production",
           "title": "Guided Practice",
           "segments": [
@@ -595,493 +548,52 @@
               "source": "[PAUSE 1s]"
             },
             {
-              "kind": "speech",
-              "text": "Answer once, then repair only the missing piece."
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "all four, with gender — ḍoḷā m, kān m, tõḍ n, nāk n",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: all four, with gender — **ḍoḷā** m, **kān** m, **tõḍ** n, **nāk** n]"
             },
             {
-              "kind": "activity",
-              "scored": true,
-              "id": "MR-R14-doing-check",
-              "prompt": "Give take, ask, and help in Marathi.",
-              "assesses": [
-                "MR-LEX-GHENE",
-                "MR-LEX-VICHARNE",
-                "MR-LEX-MADAT-KARNE"
-              ],
-              "responseSeconds": 18,
-              "acceptedResponses": [
-                "ghene, vicharne, madat karne",
-                "घेणे, विचारणे, मदत करणे"
-              ],
-              "feedback": {
-                "correct": "Three verbs, retrieved cleanly.",
-                "incorrect": "Repair in order: ghene, vicharne, madat karne."
-              }
+              "kind": "prompt",
+              "action": "NAME",
+              "instruction": "which is a secure English cousin (nāk), which replaced its old word (ḍoḷā), which is disputed (kān), which has a formal doublet (tõḍ)",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU NAME: which is a secure English cousin (**nāk**), which replaced its old word (**ḍoḷā**), which is disputed (**kān**), which has a formal doublet (**tõḍ**)]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "what you do with your डोळे — pāhṇe, \"to see\"",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: what you do with your **डोळे** — **pāhṇe**, \"to see\"]"
             }
           ]
         },
         {
-          "index": 2,
+          "index": 6,
           "type": "recall",
           "title": "Wrap-up Recall",
           "segments": [
             {
               "kind": "pause",
-              "seconds": 2,
+              "seconds": 3,
               "perItem": false,
-              "source": "[PAUSE 2s]"
+              "source": "[PAUSE 3s]"
             },
             {
               "kind": "speech",
-              "text": "Repeat the trio once."
-            }
-          ]
-        }
-      ]
-    },
-    {
-      "id": "MR-R14-mind",
-      "sequence": 700,
-      "title": "Three mind-and-page verbs",
-      "headword": "विचार करणे / समजणे / लिहिणे",
-      "romanization": "vichar karne / samajne / lihine",
-      "gloss": "think, understand, and write — three mind-and-page verbs",
-      "script": "devanagari",
-      "modality": "voice",
-      "derivedModality": "voice",
-      "modalityReasons": [
-        "no-visual-dependency"
-      ],
-      "sourceHash": "fnv1a64:58cc956b6b74886c",
-      "notice": null,
-      "blocks": [
-        {
-          "index": 0,
-          "type": "warmup",
-          "title": "Warm-up",
-          "segments": [
-            {
-              "kind": "pause",
-              "seconds": 5,
-              "perItem": false,
-              "source": "[PAUSE 5s]"
+              "text": "Which English word is नाक's most secure cousin? (Nose.) Sort the four face words by their history — replaced, disputed, twinned, secure. (Ḍoḷā replaced its old word; kān's root is disputed; tõḍ has the formal doublet mukh; nāk is the secure one.) What Chapter 10 verb names what your eyes do? (Pāhṇe, \"to see.\")"
             },
             {
               "kind": "speech",
-              "text": "Think: विचार करणे. Understand: समजणे. Write: लिहिणे."
-            }
-          ]
-        },
-        {
-          "index": 1,
-          "type": "guided-production",
-          "title": "Guided Practice",
-          "segments": [
-            {
-              "kind": "pause",
-              "seconds": 1,
-              "perItem": false,
-              "source": "[PAUSE 1s]"
-            },
-            {
-              "kind": "speech",
-              "text": "Answer once, then repair only the missing piece."
-            },
-            {
-              "kind": "activity",
-              "scored": true,
-              "id": "MR-R14-mind-check",
-              "prompt": "Give think, understand, and write in Marathi.",
-              "assesses": [
-                "MR-LEX-VICHAR-KARNE",
-                "MR-LEX-SAMAJNE",
-                "MR-LEX-LIHINE"
-              ],
-              "responseSeconds": 18,
-              "acceptedResponses": [
-                "vichar karne, samajne, lihine",
-                "विचार करणे, समजणे, लिहिणे"
-              ],
-              "feedback": {
-                "correct": "The three verbs survived the gap.",
-                "incorrect": "Repair: vichar karne, samajne, lihine."
-              }
-            }
-          ]
-        },
-        {
-          "index": 2,
-          "type": "recall",
-          "title": "Wrap-up Recall",
-          "segments": [
-            {
-              "kind": "pause",
-              "seconds": 2,
-              "perItem": false,
-              "source": "[PAUSE 2s]"
-            },
-            {
-              "kind": "speech",
-              "text": "Repeat once."
-            }
-          ]
-        }
-      ]
-    },
-    {
-      "id": "MR-R14-core",
-      "sequence": 710,
-      "title": "Three core verbs",
-      "headword": "असणे / जाणे / येणे",
-      "romanization": "asne / jane / yene",
-      "gloss": "be, go, and come — the three core motion-and-state verbs",
-      "script": "devanagari",
-      "modality": "voice",
-      "derivedModality": "voice",
-      "modalityReasons": [
-        "no-visual-dependency"
-      ],
-      "sourceHash": "fnv1a64:6f9b0c1c0da21024",
-      "notice": null,
-      "blocks": [
-        {
-          "index": 0,
-          "type": "warmup",
-          "title": "Warm-up",
-          "segments": [
-            {
-              "kind": "pause",
-              "seconds": 5,
-              "perItem": false,
-              "source": "[PAUSE 5s]"
-            },
-            {
-              "kind": "speech",
-              "text": "Be: असणे. Go: जाणे. Come: येणे."
-            }
-          ]
-        },
-        {
-          "index": 1,
-          "type": "guided-production",
-          "title": "Guided Practice",
-          "segments": [
-            {
-              "kind": "pause",
-              "seconds": 1,
-              "perItem": false,
-              "source": "[PAUSE 1s]"
-            },
-            {
-              "kind": "speech",
-              "text": "Answer once, then repair only the missing piece."
-            },
-            {
-              "kind": "activity",
-              "scored": true,
-              "id": "MR-R14-core-check",
-              "prompt": "Give be, go, and come in Marathi.",
-              "assesses": [
-                "MR-LEX-ASNE-AAHE",
-                "MR-LEX-JANE",
-                "MR-LEX-YENE"
-              ],
-              "responseSeconds": 15,
-              "acceptedResponses": [
-                "asne, jane, yene",
-                "असणे, जाणे, येणे"
-              ],
-              "feedback": {
-                "correct": "Three core verbs, still available.",
-                "incorrect": "Repair: asne, jane, yene."
-              }
-            }
-          ]
-        },
-        {
-          "index": 2,
-          "type": "recall",
-          "title": "Wrap-up Recall",
-          "segments": [
-            {
-              "kind": "pause",
-              "seconds": 2,
-              "perItem": false,
-              "source": "[PAUSE 2s]"
-            },
-            {
-              "kind": "speech",
-              "text": "Repeat once."
-            }
-          ]
-        }
-      ]
-    },
-    {
-      "id": "MR-R14-mitra-r3",
-      "sequence": 720,
-      "title": "Durable retrieval — मित्र (mitra)",
-      "headword": "मित्र",
-      "romanization": "mitra",
-      "gloss": "friend — durable retrieval of word, binding root, and tatsama path",
-      "script": "devanagari",
-      "modality": "voice",
-      "derivedModality": "voice",
-      "modalityReasons": [
-        "no-visual-dependency"
-      ],
-      "sourceHash": "fnv1a64:20549aedadefe91d",
-      "notice": null,
-      "blocks": [
-        {
-          "index": 0,
-          "type": "warmup",
-          "title": "Warm-up",
-          "segments": [
-            {
-              "kind": "pause",
-              "seconds": 6,
-              "perItem": false,
-              "source": "[PAUSE 6s]"
-            },
-            {
-              "kind": "speech",
-              "text": "Recover the word for friend, its old root meaning, and the name for a Sanskrit form borrowed whole."
-            }
-          ]
-        },
-        {
-          "index": 1,
-          "type": "guided-production",
-          "title": "Guided Practice",
-          "segments": [
-            {
-              "kind": "pause",
-              "seconds": 1,
-              "perItem": false,
-              "source": "[PAUSE 1s]"
-            },
-            {
-              "kind": "speech",
-              "text": "Answer once, then repair only the missing piece."
-            },
-            {
-              "kind": "activity",
-              "scored": true,
-              "id": "MR-R14-mitra-r3-check",
-              "prompt": "After the long gap: friend; root meaning; borrowing type.",
-              "assesses": [
-                "MR-LEX-MITRA",
-                "MR-ETYMON-MITRA-BIND",
-                "MR-GRAMMAR-TATSAMA-BORROWING"
-              ],
-              "responseSeconds": 20,
-              "acceptedResponses": [
-                "mitra; to bind; tatsama",
-                "मित्र; to bind; tatsama",
-                "mitra, bind, tatsama"
-              ],
-              "feedback": {
-                "correct": "Durable recall: mitra, bind, tatsama.",
-                "incorrect": "Repair only what failed, then close the model: mitra; bind; tatsama."
-              }
-            }
-          ]
-        },
-        {
-          "index": 2,
-          "type": "recall",
-          "title": "Wrap-up Recall",
-          "segments": [
-            {
-              "kind": "pause",
-              "seconds": 2,
-              "perItem": false,
-              "source": "[PAUSE 2s]"
-            },
-            {
-              "kind": "speech",
-              "text": "मित्र (mitra). One clean retrieval is enough."
-            }
-          ]
-        }
-      ]
-    },
-    {
-      "id": "MR-R14-numbers",
-      "sequence": 730,
-      "title": "Count, then notice",
-      "headword": "एक ते पाच",
-      "romanization": "ek te paach",
-      "gloss": "one to five — count and recover Marathi's diagnostic sound history",
-      "script": "devanagari",
-      "modality": "voice",
-      "derivedModality": "voice",
-      "modalityReasons": [
-        "no-visual-dependency"
-      ],
-      "sourceHash": "fnv1a64:31fe1ddd4d575b88",
-      "notice": null,
-      "blocks": [
-        {
-          "index": 0,
-          "type": "warmup",
-          "title": "Warm-up",
-          "segments": [
-            {
-              "kind": "pause",
-              "seconds": 6,
-              "perItem": false,
-              "source": "[PAUSE 6s]"
-            },
-            {
-              "kind": "speech",
-              "text": "Count one through five. Then say चार with Marathi tsā-, and remember that a language can innovate in one place while retaining an older feature in another."
-            }
-          ]
-        },
-        {
-          "index": 1,
-          "type": "guided-production",
-          "title": "Guided Practice",
-          "segments": [
-            {
-              "kind": "pause",
-              "seconds": 1,
-              "perItem": false,
-              "source": "[PAUSE 1s]"
-            },
-            {
-              "kind": "speech",
-              "text": "Answer once, then repair only the missing piece."
-            },
-            {
-              "kind": "activity",
-              "scored": true,
-              "id": "MR-R14-numbers-check",
-              "prompt": "Count one to five and give Marathi's diagnostic pronunciation of four.",
-              "assesses": [
-                "MR-LEX-NUMBERS-ONE-TO-FIVE",
-                "MR-SOUND-CHA-TSAA",
-                "MR-HISTORY-SELECTIVE-RETENTION"
-              ],
-              "responseSeconds": 20,
-              "acceptedResponses": [
-                "ek, don, tin, chaar, paach; chaar begins tsaa-",
-                "एक, दोन, तीन, चार, पाच; tsaa"
-              ],
-              "feedback": {
-                "correct": "Right: the count and Marathi tsaa- are both back.",
-                "incorrect": "Repair the count, then isolate chaar with tsaa-."
-              }
-            }
-          ]
-        },
-        {
-          "index": 2,
-          "type": "recall",
-          "title": "Wrap-up Recall",
-          "segments": [
-            {
-              "kind": "pause",
-              "seconds": 2,
-              "perItem": false,
-              "source": "[PAUSE 2s]"
-            },
-            {
-              "kind": "speech",
-              "text": "Count once more without looking."
-            }
-          ]
-        }
-      ]
-    },
-    {
-      "id": "MR-R14-kutumb-r3",
-      "sequence": 740,
-      "title": "Durable family comparison",
-      "headword": "मित्र / कुटुंब",
-      "romanization": "mitra / kutumb",
-      "gloss": "friend and family — durable comparison of five Chapter 12 memories",
-      "script": "devanagari",
-      "modality": "voice",
-      "derivedModality": "voice",
-      "modalityReasons": [
-        "no-visual-dependency"
-      ],
-      "sourceHash": "fnv1a64:05a946ddf7b3cb8b",
-      "notice": null,
-      "blocks": [
-        {
-          "index": 0,
-          "type": "warmup",
-          "title": "Warm-up",
-          "segments": [
-            {
-              "kind": "pause",
-              "seconds": 7,
-              "perItem": false,
-              "source": "[PAUSE 7s]"
-            },
-            {
-              "kind": "speech",
-              "text": "Friend: मित्र (mitra); old root to bind; tatsama. Family: कुटुंब (kutumb); neuter in Marathi."
-            }
-          ]
-        },
-        {
-          "index": 1,
-          "type": "guided-production",
-          "title": "Guided Practice",
-          "segments": [
-            {
-              "kind": "pause",
-              "seconds": 1,
-              "perItem": false,
-              "source": "[PAUSE 1s]"
-            },
-            {
-              "kind": "speech",
-              "text": "Answer once, then repair only the missing piece."
-            },
-            {
-              "kind": "activity",
-              "scored": true,
-              "id": "MR-R14-kutumb-r3-check",
-              "prompt": "Give the five-part durable comparison for mitra and kutumb.",
-              "assesses": [
-                "MR-LEX-MITRA",
-                "MR-ETYMON-MITRA-BIND",
-                "MR-GRAMMAR-TATSAMA-BORROWING",
-                "MR-LEX-KUTUMB",
-                "MR-GRAMMAR-KUTUMB-NEUTER"
-              ],
-              "responseSeconds": 24,
-              "acceptedResponses": [
-                "mitra; bind; tatsama; kutumb; neuter",
-                "मित्र; bind; tatsama; कुटुंब; neuter"
-              ],
-              "feedback": {
-                "correct": "All five memories are available at distance.",
-                "incorrect": "Repair only the missing row, then answer again without the model."
-              }
-            }
-          ]
-        },
-        {
-          "index": 2,
-          "type": "recall",
-          "title": "Wrap-up Recall",
-          "segments": [
-            {
-              "kind": "pause",
-              "seconds": 2,
-              "perItem": false,
-              "source": "[PAUSE 2s]"
-            },
-            {
-              "kind": "speech",
-              "text": "मित्र (mitra), कुटुंब (kutumb). End the session here."
+              "text": "Sources: Wiktionary: नाक (nāk)."
             }
           ]
         }

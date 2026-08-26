@@ -1,7 +1,7 @@
 ---
 id: MR-C05-bolne
-sequence: 145
-chapter: 6
+sequence: 165
+chapter: 8
 type: word
 headword: बोलणे
 gloss: to speak (bolṇe)

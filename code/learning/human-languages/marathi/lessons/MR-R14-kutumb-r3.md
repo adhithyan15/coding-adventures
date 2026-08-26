@@ -2,12 +2,12 @@
 schema_version: 2
 id: MR-R14-kutumb-r3
 spine_node: SPINE-EXCHANGE-NAMES
-sequence: 740
-chapter: 15
+sequence: 760
+chapter: 17
 type: review
 headword: मित्र / कुटुंब
 romanization: mitra / kutumb
-gloss: friend and family — durable comparison of five Chapter 12 memories
+gloss: friend and family — durable comparison of five Chapter 14 memories
 concept_tag: MR-REVIEW-FAMILY-R3
 prerequisites: [MR-R14-numbers]
 sounds: []

@@ -1,7 +1,7 @@
 ---
 id: MR-C02-tu-tumhi
-sequence: 60
-chapter: 3
+sequence: 80
+chapter: 5
 type: word
 headword: तू / तुम्ही
 gloss: you (tū familiar / tumhī respectful)

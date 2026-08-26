@@ -7,7 +7,7 @@ import { expectLanguageContinuity, expectLanguageModality } from "./assert-langu
 it("pins Marathi continuity", () => expectLanguageContinuity("marathi"));
 it("pins Marathi modality", () => expectLanguageModality("marathi"));
 
-it("splits Marathi's first writing runway at the chapter atom budget", () => {
+it("keeps Marathi's opening script runways below the chapter atom budget", () => {
   const ordered = loadTrackLessons("marathi").sort(readingOrder);
   const opening = ordered.slice(0, 14);
   expect(opening.map((lesson) => lesson.realization.lessonId)).toEqual([
@@ -28,16 +28,29 @@ it("splits Marathi's first writing runway at the chapter atom budget", () => {
   ]);
   expect(opening.every((lesson) => lesson.frontmatter.chapter === "1")).toBe(true);
 
-  const courtesy = ordered.slice(14, 20);
-  expect(courtesy.map((lesson) => lesson.realization.lessonId)).toEqual([
+  const firstDoorway = ordered.slice(14, 21);
+  expect(firstDoorway.map((lesson) => lesson.realization.lessonId)).toEqual([
     "MR-C01-dhanyavad",
-    "MR-C01-ho",
-    "MR-C01-baram",
-    "MR-C01-nahi",
-    "MR-C01-yeto",
-    "MR-C01-practice",
+    "MR-W02-visarga",
+    "MR-W02-aa-independent",
+    "MR-W02-bha",
+    "MR-W02-e-matra",
+    "MR-W02-anusvara",
+    "MR-W02-ta",
   ]);
-  expect(courtesy.every((lesson) => lesson.frontmatter.chapter === "2")).toBe(true);
+  expect(firstDoorway.every((lesson) => lesson.frontmatter.chapter === "2")).toBe(true);
+
+  const secondDoorway = ordered.slice(21, 28);
+  expect(secondDoorway.map((lesson) => lesson.realization.lessonId)).toEqual([
+    "MR-W03-da",
+    "MR-W03-dha",
+    "MR-W03-ba",
+    "MR-W03-ya",
+    "MR-W03-lla",
+    "MR-W03-va",
+    "MR-W03-dhanyavad-write",
+  ]);
+  expect(secondDoorway.every((lesson) => lesson.frontmatter.chapter === "3")).toBe(true);
 
   const chapterSizes = new Map<string, number>();
   for (const lesson of ordered) {
@@ -46,24 +59,27 @@ it("splits Marathi's first writing runway at the chapter atom budget", () => {
   }
   expect([...chapterSizes.entries()]).toEqual([
     ["1", 14],
-    ["2", 6],
-    ["3", 9],
-    ["4", 6],
-    ["5", 6],
-    ["6", 5],
-    ["7", 2],
-    ["8", 6],
-    ["9", 4],
-    ["10", 4],
+    ["2", 7],
+    ["3", 7],
+    ["4", 5],
+    ["5", 9],
+    ["6", 6],
+    ["7", 6],
+    ["8", 5],
+    ["9", 6],
+    ["10", 6],
     ["11", 4],
-    ["12", 6],
+    ["12", 4],
     ["13", 4],
-    ["14", 1],
-    ["15", 12],
+    ["14", 6],
+    ["15", 4],
+    ["16", 1],
+    ["17", 12],
+    ["18", 5],
   ]);
 });
 
-it("gives the five Chapter 12 family atoms genuine R1, R2, and R3 retrieval", () => {
+it("gives the five Chapter 14 family atoms genuine R1, R2, and R3 retrieval", () => {
   const report = measureContinuity(loadTrackLessons("marathi"));
   const repairedAtoms = new Set([
     "MR-LEX-MITRA",

@@ -2,8 +2,8 @@
 schema_version: 2
 id: MR-C08-lihine
 spine_node: SPINE-SAY-WHAT-I-DO
-sequence: 450
-chapter: 9
+sequence: 470
+chapter: 11
 type: word
 headword: लिहिणे
 romanization: lihiṇe

@@ -1,15 +1,17 @@
 {
   "chapter": 6,
-  "title": "The First Verbs",
-  "label": "ch:first-verbs",
-  "canDo": "I can build short present-tense Marathi sentences with the chapter's first verbs.",
+  "title": "How Are You?",
+  "label": "ch:responding",
+  "canDo": "I can ask how someone is in Marathi, answer naturally, and return the question.",
   "spineNodes": [
-    "SPINE-SAY-WHAT-I-DO"
+    "SPINE-CHECK-WELLBEING",
+    "SPINE-EXCHANGE-NAMES",
+    "SPINE-COURTESY-THANK"
   ],
   "payoff": {
-    "lesson": "MR-C05-practice",
+    "lesson": "MR-C03-practice",
     "kind": "task",
-    "summary": "Complete MR-C05-practice, the canonical closing checkpoint, and demonstrate the chapter promise: build short present-tense Marathi sentences with the chapter's first verbs.",
+    "summary": "Complete MR-C03-practice, the canonical closing checkpoint, and demonstrate the chapter promise: ask how someone is in Marathi, answer naturally, and return the question.",
     "assesses": [],
     "note": "This legacy schema-v1 chapter has no typed knowledge atoms yet. The payoff is anchored to real canonical lesson content, but its representativeness remains authored rather than atom-scored until migration."
   }

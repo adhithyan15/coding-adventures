@@ -2,9 +2,24 @@
   "id": "MR-PATH-002",
   "spine_node": "SPINE-COURTESY-THANK",
   "lessons": [
-    "MR-C01-dhanyavad"
+    "MR-C01-dhanyavad",
+    "MR-W02-visarga",
+    "MR-W02-aa-independent",
+    "MR-W02-bha",
+    "MR-W02-e-matra",
+    "MR-W02-anusvara",
+    "MR-W02-ta",
+    "MR-W03-da",
+    "MR-W03-dha",
+    "MR-W03-ba",
+    "MR-W03-ya",
+    "MR-W03-lla",
+    "MR-W03-va",
+    "MR-W03-dhanyavad-write"
   ],
   "before": [],
   "inline": [],
-  "after": []
+  "after": [
+    "MR-EXT-021-SCRIPT-DOORWAY"
+  ]
 }

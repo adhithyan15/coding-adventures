@@ -2,8 +2,8 @@
 schema_version: 2
 id: MR-R14-food
 spine_node: SPINE-EXCHANGE-NAMES
-sequence: 680
-chapter: 15
+sequence: 700
+chapter: 17
 type: review
 headword: पाणी / चहा / दूध
 romanization: paani / chaha / dudh

@@ -1,0 +1,20 @@
+{
+  "chapter": 18,
+  "title": "The Doorway Signs at Long Distance",
+  "label": "ch:doorway-script-distance",
+  "canDo": "I can write dhanyavad and retrieve all twelve doorway signs after more than eighty later lessons.",
+  "spineNodes": [
+    "SPINE-COURTESY-THANK"
+  ],
+  "payoff": {
+    "lesson": "MR-R18-script-d-r4",
+    "kind": "task",
+    "summary": "Retrieve the final sign batch from sound after every new doorway sign has crossed the long-distance window.",
+    "assesses": [
+      "MR-SCRIPT-YA-01",
+      "MR-SCRIPT-LLA-01",
+      "MR-SCRIPT-VA-01"
+    ],
+    "note": "The chapter introduces nothing; it supplies observable R4 writing evidence."
+  }
+}

@@ -1,7 +1,7 @@
 ---
 id: MR-C05-rahne
-sequence: 155
-chapter: 6
+sequence: 175
+chapter: 8
 type: word
 headword: राहणे
 gloss: to live, to stay (rāhṇe)
