@@ -8364,7 +8364,14 @@ impl HtmlParser {
         );
         self.diagnostics.push(if matches!(
             name,
-            "button" | "section" | "article" | "aside" | "nav"
+            "button"
+                | "section"
+                | "article"
+                | "aside"
+                | "nav"
+                | "header"
+                | "footer"
+                | "main"
         ) {
             diagnostic.at_emission(self.current_token_emission_position)
         } else {
@@ -27357,6 +27364,18 @@ mod tests {
         .at_emission(Some(end_tag_position_at(source, name, occurrence)))
     }
 
+    fn unmatched_landmark_end_tag(
+        source: &str,
+        name: &str,
+        occurrence: usize,
+    ) -> ParserDiagnostic {
+        ParserDiagnostic::new(
+            "unexpected-end-tag",
+            format!("end tag `</{name}>` did not match an open element"),
+        )
+        .at_emission(Some(end_tag_position_at(source, name, occurrence)))
+    }
+
     fn marker_end_tag_outside_scope(
         source: &str,
         name: &str,
@@ -34213,6 +34232,76 @@ mod tests {
         );
 
         for name in ["article", "aside", "nav"] {
+            let foreign_source = format!(
+                "<!doctype html><svg><foreignObject></{name}>X</foreignObject></svg>"
+            );
+            let foreign = parse_html_with_diagnostics(&foreign_source).unwrap();
+            assert!(foreign
+                .parser_diagnostics
+                .iter()
+                .all(|diagnostic| diagnostic.code != "unexpected-end-tag"));
+
+            for source in [
+                format!("<!doctype html></{name}"),
+                format!("<!doctype html><svg><foreignObject></{name}"),
+            ] {
+                let output = parse_html_with_diagnostics(&source).unwrap();
+                assert!(output
+                    .parser_diagnostics
+                    .iter()
+                    .all(|diagnostic| diagnostic.code != "unexpected-end-tag"));
+            }
+
+            let mut direct =
+                HtmlParser::with_body_fragment_options(HtmlParseOptions::default());
+            direct.process_token(Token::EndTag {
+                name: name.to_string(),
+            });
+            direct.process_token(Token::Eof);
+            assert_eq!(
+                direct
+                    .diagnostics()
+                    .iter()
+                    .find(|diagnostic| diagnostic.code == "unexpected-end-tag")
+                    .unwrap()
+                    .position,
+                None
+            );
+        }
+    }
+
+    #[test]
+    fn positions_unmatched_landmark_end_tags_at_token_emission() {
+        let ordinary_source =
+            "<!doctype html></header><!--é-->\r\n</header></footer></main>";
+        let ordinary = parse_html_with_diagnostics(ordinary_source).unwrap();
+        assert_eq!(
+            ordinary
+                .parser_diagnostics
+                .iter()
+                .filter(|diagnostic| diagnostic.code == "unexpected-end-tag")
+                .cloned()
+                .collect::<Vec<_>>(),
+            vec![
+                unmatched_landmark_end_tag(ordinary_source, "header", 0),
+                unmatched_landmark_end_tag(ordinary_source, "header", 1),
+                unmatched_landmark_end_tag(ordinary_source, "footer", 0),
+                unmatched_landmark_end_tag(ordinary_source, "main", 0),
+            ]
+        );
+        assert!(ordinary_source.len() > ordinary_source.chars().count());
+
+        let fragment_source = "X</footer></main>";
+        let fragment = parse_html_fragment_with_diagnostics(fragment_source).unwrap();
+        assert_eq!(
+            fragment.parser_diagnostics,
+            vec![
+                unmatched_landmark_end_tag(fragment_source, "footer", 0),
+                unmatched_landmark_end_tag(fragment_source, "main", 0),
+            ]
+        );
+
+        for name in ["header", "footer", "main"] {
             let foreign_source = format!(
                 "<!doctype html><svg><foreignObject></{name}>X</foreignObject></svg>"
             );

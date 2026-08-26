@@ -181,14 +181,44 @@ one across a statement-flow boundary: a `Break`/`Continue` inside a
 never resolves against a loop the *declaration* happens to be nested in —
 each of those bodies is validated with its own fresh loop-tracking state.
 
-**Backend status (as of this addendum)**: no backend accepts
-`Feature::LoopControl` yet — this addendum lands the IR/validator surface
-only (mirrors SIR29's own Slice 0), so every backend's `ACCEPTED_FEATURES`
-list omits it and a module using `Break`/`Continue` is cleanly rejected at
-the capability check on every target. Real per-backend emission (a
-mechanical `break;`/`continue;` on every language surveyed here, all of
-which have a native equivalent) is a follow-up, per-backend, once a real
-consumer frontend exists.
+**Backend status**: this addendum itself landed the IR/validator surface
+only (mirrors SIR29's own Slice 0) — no backend accepted
+`Feature::LoopControl` at first. `semantic-ir-to-javascript` was the
+first to add it (Slice 1), chosen because its `While`/`ForEach` lowering
+already emits a real, inline native loop with no closure boundary in the
+way, and its native `try`/`catch` is also closure-free (unlike e.g.
+`semantic-ir-to-rust`'s `catch_unwind`-closure-based `TryCatch`
+lowering — a real, tracked hazard for that backend specifically, not
+addressed here).
+
+That backend's own rollout surfaced a hazard this addendum's original
+text did not anticipate: emitting a mechanical `break;`/`continue;` is
+NOT sufficient on its own — a backend must also confirm that **every**
+statement-position control-flow construct it lowers (not just the loop
+body itself) avoids putting a closure boundary between the new statement
+and its target loop. `semantic-ir-to-javascript` previously lowered a
+bare `if` used as a *statement* (`Stmt::ExprStmt { expr: Expr::If { .. }
+}`, value always discarded) through `Expr::If`'s generic *value*-position
+codegen — an arrow-function IIFE per branch, so it could `return` a
+value for the (unused, in this position) ternary result. `if (cond) {
+break; }` inside a `while` is the single most common way real source
+code uses `break`/`continue` at all, and a bare `break`/`continue`
+cannot cross a JS function boundary, so this was a real, immediately-hit
+bug (a `node` `SyntaxError`), not a hypothetical edge case — fixed as
+part of that same PR by special-casing `Stmt::ExprStmt`'s `Expr::If` case
+to emit a real native `if (...) { … } else { … }` statement instead.
+**Any backend adopting this feature should audit its own equivalent
+statement-position control-flow lowerings for the same class of hazard**,
+not just its loop-body emission.
+
+Remaining backends (per-backend, once each is audited for this class of
+hazard): `semantic-ir-to-{typescript,go,python}`'s `While`/`ForEach`
+lowering was independently confirmed (during this addendum's own design
+research) to share the JS backend's "real inline native loop, no closure
+boundary" shape, so they're the next candidates — see the task tracker.
+`semantic-ir-to-ruby` needs its existing defensive-scan pattern extended
+rather than replaced outright. `semantic-ir-to-rust` needs its
+`TryCatch`/`catch_unwind` hazard resolved (or scoped out) first.
 
 ### Sequences
 

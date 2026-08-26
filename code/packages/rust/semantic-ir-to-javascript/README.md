@@ -201,6 +201,17 @@ explicit-table, no-reflection bar as the method tables — and a single shared
 | `While`                          | `while (__Sir.truthy(cond)) { … }`              |
 | `ForRange`                       | direction-aware C-style `for` (bounds once)     |
 | `ForEach`                        | `for (let x of iter) { … }`                     |
+| `Break` / `Continue` (addendum) | bare `break;` / `continue;`                      |
+
+`Break`/`Continue` (`Feature::LoopControl`) are only ever valid inside a
+`While`/`ForEach` body — the validator itself rejects them inside a
+`ForRange` body, for reasons independent of this backend (see
+`semantic-ir`'s `Feature::LoopControl` doc comment), so this backend
+never sees that case. A bare `if (cond) { break; }` used as a
+*statement* (its value discarded) gets a real native `if (...) { … }
+else { … }` here — not the ternary/IIFE form `Expr::If` gets in *value*
+position — precisely because that IIFE would put a JS function boundary
+between the `break`/`continue` and its target loop, which is illegal JS.
 
 ### Exceptions (E1) — `try`/`catch`/`raise`
 
