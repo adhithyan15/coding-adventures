@@ -76,6 +76,33 @@ const ACCEPTED_FEATURES: &[Feature] = &[
     // `for`-each → `for v in it:`), per code/specs/sir-runtime.md.
     Feature::MutableBindings,
     Feature::Loops,
+    // SIR16 addendum: bare loop-control statements (task #63). `Stmt::
+    // Break`/`Stmt::Continue` lower to a bare native `break`/`continue`
+    // — a trivial 1:1 emission, since this backend's `While`/`ForRange`/
+    // `ForEach` lowering (`emit.rs`'s corresponding arms) already emits
+    // a real, inline native loop with no `def`/lambda boundary in the
+    // way. `ForRange` is NOT listed as a safe host here — the validator
+    // itself already refuses to accept `Break`/`Continue` whose nearest
+    // enclosing loop is a `ForRange`, for reasons that apply regardless
+    // of which backend ultimately emits the module (see `Feature::
+    // LoopControl`'s own doc comment in `semantic-ir::manifest`), so
+    // this backend never needs to reason about that case at all.
+    // Mirrors `semantic-ir-to-javascript`'s (task #62),
+    // `semantic-ir-to-typescript`'s, and `semantic-ir-to-go`'s (task
+    // #63) own identically-reasoned rollout — including that rollout's
+    // own found-while-implementing fix: a bare `if` used as a statement
+    // must emit a real native `if:`/`else:`, not the value-position
+    // ternary/walrus-tuple/lifted-`def` shape, since `break`/`continue`
+    // are Python statements that cannot appear inside any Python
+    // expression at all (a stricter version of JS/TS/Go's "can't cross
+    // a closure boundary" hazard — this one can't even be attempted);
+    // see `emit_stmt_inner`'s `Stmt::ExprStmt` arm. A residual gap
+    // (`break`/`continue` inside a block whose value is NOT discarded —
+    // structurally legal per the validator, though no real frontend
+    // produces it) remains a hard panic rather than a silent
+    // mis-compile; see `emit_block_as_expr`'s own `Stmt::Break`/
+    // `Continue` arm.
+    Feature::LoopControl,
     // SIR17 OOP & scopes — class/module declarations register in the OOP
     // runtime; instance/class vars route through its stores; consts are
     // module-level bindings; `is_a?`-style dispatch goes through

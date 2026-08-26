@@ -7,7 +7,7 @@
   "policy": {
     "maxLinearisableTableColumns": 3
   },
-  "sourceHash": "fnv1a64:5c740e23967a1016",
+  "sourceHash": "fnv1a64:157d40fcddbdc295",
   "summary": {
     "totalLessons": 998,
     "voice": 941,
@@ -10123,7 +10123,7 @@
         "no-visual-dependency"
       ],
       "coreDrivable": true,
-      "sourceHash": "fnv1a64:f77986968e39ee3e"
+      "sourceHash": "fnv1a64:e04e3b17a45b359c"
     },
     {
       "id": "ES-C42-te",
@@ -10177,7 +10177,7 @@
         "sight-cue"
       ],
       "coreDrivable": false,
-      "sourceHash": "fnv1a64:940269c3ce1ccf7f"
+      "sourceHash": "fnv1a64:95a7d92583aeabfd"
     },
     {
       "id": "ES-C42-sintesis-decirlo-una-vez",
@@ -10213,7 +10213,7 @@
         "no-visual-dependency"
       ],
       "coreDrivable": true,
-      "sourceHash": "fnv1a64:1bc9362dede62d3a"
+      "sourceHash": "fnv1a64:e463a675fdfeeda2"
     },
     {
       "id": "ES-C45-nosotros",
@@ -10267,7 +10267,7 @@
         "no-visual-dependency"
       ],
       "coreDrivable": true,
-      "sourceHash": "fnv1a64:d4b56f06f2612a06"
+      "sourceHash": "fnv1a64:26c1fc64fce3bdc8"
     },
     {
       "id": "ES-C45-repaso-ocho",
@@ -10285,7 +10285,7 @@
         "no-visual-dependency"
       ],
       "coreDrivable": true,
-      "sourceHash": "fnv1a64:180cad2d040cf6b3"
+      "sourceHash": "fnv1a64:cf629b0f1dec3965"
     },
     {
       "id": "ES-C45-sintesis-sin-repetir",
@@ -10339,7 +10339,7 @@
         "no-visual-dependency"
       ],
       "coreDrivable": true,
-      "sourceHash": "fnv1a64:20bc215e0da5933c"
+      "sourceHash": "fnv1a64:a14f18e333aaac2b"
     },
     {
       "id": "ES-C46-cual-pide",
@@ -10357,7 +10357,7 @@
         "no-visual-dependency"
       ],
       "coreDrivable": true,
-      "sourceHash": "fnv1a64:b83776e21d39f575"
+      "sourceHash": "fnv1a64:fc6f7579ee417e13"
     },
     {
       "id": "ES-C46-repaso-dos-sistemas",
@@ -10393,7 +10393,7 @@
         "no-visual-dependency"
       ],
       "coreDrivable": true,
-      "sourceHash": "fnv1a64:5b8a3500a02b1a2c"
+      "sourceHash": "fnv1a64:626c321d74091122"
     },
     {
       "id": "ES-C47-me-lo",
@@ -12085,7 +12085,7 @@
         "no-visual-dependency"
       ],
       "coreDrivable": true,
-      "sourceHash": "fnv1a64:5f7f02639edd75dd"
+      "sourceHash": "fnv1a64:02fa49f5adf17f87"
     },
     {
       "id": "ES-C34-pensar",
@@ -13219,7 +13219,7 @@
         "no-visual-dependency"
       ],
       "coreDrivable": true,
-      "sourceHash": "fnv1a64:1d498f5a4fb3abb1"
+      "sourceHash": "fnv1a64:2cb5ee1a33161f7f"
     },
     {
       "id": "ES-C55-tuvieron",
@@ -13615,7 +13615,7 @@
         "no-visual-dependency"
       ],
       "coreDrivable": true,
-      "sourceHash": "fnv1a64:58e5d0de099407a8"
+      "sourceHash": "fnv1a64:8ed2b8a63b6d2567"
     },
     {
       "id": "ES-C59-aquel",
@@ -13759,7 +13759,7 @@
         "no-visual-dependency"
       ],
       "coreDrivable": true,
-      "sourceHash": "fnv1a64:12c2b1c3446afa7f"
+      "sourceHash": "fnv1a64:7a1af5b6909eebaf"
     },
     {
       "id": "ES-C61-al",
@@ -13813,7 +13813,7 @@
         "no-visual-dependency"
       ],
       "coreDrivable": true,
-      "sourceHash": "fnv1a64:3260de7602a22290"
+      "sourceHash": "fnv1a64:9420efd6cb4fe7c4"
     },
     {
       "id": "ES-C61-o",
@@ -13831,7 +13831,7 @@
         "no-visual-dependency"
       ],
       "coreDrivable": true,
-      "sourceHash": "fnv1a64:d70c2384ff35558f"
+      "sourceHash": "fnv1a64:c6e0ee0cf83dfc75"
     },
     {
       "id": "ES-C61-ni",
@@ -13867,7 +13867,7 @@
         "no-visual-dependency"
       ],
       "coreDrivable": true,
-      "sourceHash": "fnv1a64:8a864eee554e80c4"
+      "sourceHash": "fnv1a64:9900756932bd6da4"
     },
     {
       "id": "ES-C62-hablando",
@@ -13903,7 +13903,7 @@
         "no-visual-dependency"
       ],
       "coreDrivable": true,
-      "sourceHash": "fnv1a64:23e09065375db040"
+      "sourceHash": "fnv1a64:14799988e58679ee"
     },
     {
       "id": "ES-C62-estoy-hablando",
@@ -13921,7 +13921,7 @@
         "no-visual-dependency"
       ],
       "coreDrivable": true,
-      "sourceHash": "fnv1a64:e3cac60e74f0df16"
+      "sourceHash": "fnv1a64:57e90c1436beb2ae"
     },
     {
       "id": "ES-C62-veo-a-maria",
@@ -13939,7 +13939,7 @@
         "sight-cue"
       ],
       "coreDrivable": false,
-      "sourceHash": "fnv1a64:487c05dc3907b900"
+      "sourceHash": "fnv1a64:073af979dcb16884"
     },
     {
       "id": "ES-C62-repaso-gerundio",
@@ -13957,7 +13957,7 @@
         "no-visual-dependency"
       ],
       "coreDrivable": true,
-      "sourceHash": "fnv1a64:6adbdefc146077da"
+      "sourceHash": "fnv1a64:0a3444b4cadb4ae4"
     },
     {
       "id": "ES-C63-hablasteis",
@@ -13993,7 +13993,7 @@
         "no-visual-dependency"
       ],
       "coreDrivable": true,
-      "sourceHash": "fnv1a64:5c866751a7306760"
+      "sourceHash": "fnv1a64:d15a48b02a4594df"
     },
     {
       "id": "ES-C63-hablabamos",
@@ -14047,7 +14047,7 @@
         "no-visual-dependency"
       ],
       "coreDrivable": true,
-      "sourceHash": "fnv1a64:aaef7a550246dd47"
+      "sourceHash": "fnv1a64:bfc0e08c386a7426"
     },
     {
       "id": "ES-C64-para-mi",
@@ -14083,7 +14083,7 @@
         "no-visual-dependency"
       ],
       "coreDrivable": true,
-      "sourceHash": "fnv1a64:a623ef87b1774d46"
+      "sourceHash": "fnv1a64:1b26b60d28dcbfc0"
     },
     {
       "id": "ES-C64-que-grande",
@@ -14137,7 +14137,7 @@
         "no-visual-dependency"
       ],
       "coreDrivable": true,
-      "sourceHash": "fnv1a64:08d1637be328b071"
+      "sourceHash": "fnv1a64:fbabc0de79c6979a"
     },
     {
       "id": "ES-C65-ahi-alli",
@@ -14155,7 +14155,7 @@
         "no-visual-dependency"
       ],
       "coreDrivable": true,
-      "sourceHash": "fnv1a64:9c6cac056e548a9a"
+      "sourceHash": "fnv1a64:325897e8d77e4f53"
     },
     {
       "id": "ES-C65-ahora-hoy",
@@ -14227,7 +14227,7 @@
         "no-visual-dependency"
       ],
       "coreDrivable": true,
-      "sourceHash": "fnv1a64:8b3f82b0830743c5"
+      "sourceHash": "fnv1a64:6a22620940d7c1a3"
     },
     {
       "id": "ES-C65-vi-di",
@@ -14425,7 +14425,7 @@
         "no-visual-dependency"
       ],
       "coreDrivable": true,
-      "sourceHash": "fnv1a64:dc6eabc7797d4ff1"
+      "sourceHash": "fnv1a64:87a8d887acf15631"
     },
     {
       "id": "ES-C67-comer-es-bueno",

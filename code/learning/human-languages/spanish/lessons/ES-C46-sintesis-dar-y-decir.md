@@ -20,7 +20,7 @@ requires:
 introduces:
   knowledge: []
 practises:
-  knowledge: [ES-GRAMMAR-WHICH-OBJECT, ES-GRAMMAR-INDIRECT-OBJECT-LE, ES-GRAMMAR-INDIRECT-OBJECT-PLURAL, ES-GRAMMAR-DIRECT-OBJECT-LO, ES-GRAMMAR-DIRECT-OBJECT-PLURAL, ES-LEX-LIBRO, ES-LEX-DECIR, ES-GRAMMAR-DECIR-PRESENT-SINGULAR, ES-GRAMMAR-TENER-PRESENT-SINGULAR, ES-LEX-HABLAR, ES-GRAMMAR-AR-PRESENT-1SG]
+  knowledge: [ES-GRAMMAR-WHICH-OBJECT, ES-GRAMMAR-INDIRECT-OBJECT-LE, ES-GRAMMAR-INDIRECT-OBJECT-PLURAL, ES-GRAMMAR-DIRECT-OBJECT-LO, ES-GRAMMAR-DIRECT-OBJECT-PLURAL, ES-LEX-LIBRO, ES-LEX-DECIR, ES-GRAMMAR-DECIR-PRESENT-SINGULAR, ES-GRAMMAR-TENER-PRESENT-SINGULAR, ES-LEX-HABLAR, ES-GRAMMAR-AR-PRESENT-1SG, ES-GRAMMAR-OBJECT-SETS-OVERLAP]
 skills: [listening, speaking, reading]
 modes: [interpretive, interpersonal, presentational]
 strands: [meaning-input, meaning-output, fluency]
@@ -56,7 +56,7 @@ That is new. Every choice so far could be settled by looking at something — a
 noun's ending, its article, where the stress falls. This one cannot.
 
 ## Grammar Lens: choosing at speed
-<!-- hl-knowledge: introduces=[]; assesses=[ES-GRAMMAR-WHICH-OBJECT, ES-GRAMMAR-INDIRECT-OBJECT-PLURAL, ES-GRAMMAR-DIRECT-OBJECT-PLURAL] -->
+<!-- hl-knowledge: introduces=[]; assesses=[ES-GRAMMAR-WHICH-OBJECT, ES-GRAMMAR-INDIRECT-OBJECT-PLURAL, ES-GRAMMAR-DIRECT-OBJECT-PLURAL, ES-GRAMMAR-OBJECT-SETS-OVERLAP] -->
 
 In a real conversation you do not have time to run a test. So do not aim for
 the test — aim for the **feeling** of the two verbs:

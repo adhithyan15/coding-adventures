@@ -20,7 +20,7 @@ requires:
 introduces:
   knowledge: []
 practises:
-  knowledge: [ES-GRAMMAR-AR-IMPERFECT-PLURAL, ES-GRAMMAR-AR-PRETERITE-2PL, ES-GRAMMAR-ER-IR-IMPERFECT-PLURAL, ES-GRAMMAR-IMPERFECT-COMPLETE, ES-GRAMMAR-IMPERFECT-IRREGULAR-PLURAL, ES-GRAMMAR-PRETERITE-COMPLETE, ES-ORTHOGRAPHY-IMPERFECT-ACCENT]
+  knowledge: [ES-GRAMMAR-AR-IMPERFECT-PLURAL, ES-GRAMMAR-AR-PRETERITE-2PL, ES-GRAMMAR-ER-IR-IMPERFECT-PLURAL, ES-GRAMMAR-IMPERFECT-COMPLETE, ES-GRAMMAR-IMPERFECT-IRREGULAR-PLURAL, ES-GRAMMAR-PRETERITE-COMPLETE, ES-ORTHOGRAPHY-IMPERFECT-ACCENT, ES-GRAMMAR-PRETERITE-AR-COMPLETE]
 skills: [listening, speaking]
 modes: [interpretive, presentational]
 strands: [language-focus, fluency]
@@ -32,7 +32,7 @@ reviews_of: [ES-C63-hablasteis, ES-C63-comisteis, ES-C63-hablabamos, ES-C63-comi
 # (review)
 
 ## Warm-up
-<!-- hl-knowledge: introduces=[]; assesses=[ES-GRAMMAR-AR-PRETERITE-2PL] -->
+<!-- hl-knowledge: introduces=[]; assesses=[ES-GRAMMAR-AR-PRETERITE-2PL, ES-GRAMMAR-PRETERITE-AR-COMPLETE] -->
 
 [PAUSE 2s] The form the book owed you longest. (*Hablasteis*.)
 

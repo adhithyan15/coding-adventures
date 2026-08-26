@@ -20,7 +20,7 @@ requires:
 introduces:
   knowledge: [ES-GRAMMAR-GERUND-ER-IR, ES-GRAMMAR-GERUND-TWO-ENDINGS]
 practises:
-  knowledge: [ES-GRAMMAR-GERUND-ER-IR, ES-GRAMMAR-GERUND-TWO-ENDINGS, ES-GRAMMAR-GERUND-AR, ES-LEX-COMER, ES-LEX-VIVIR, ES-GRAMMAR-ER-IR-PRETERITE-CONVERGENCE]
+  knowledge: [ES-GRAMMAR-GERUND-ER-IR, ES-GRAMMAR-GERUND-TWO-ENDINGS, ES-GRAMMAR-GERUND-AR, ES-LEX-COMER, ES-LEX-VIVIR, ES-GRAMMAR-ER-IR-PRETERITE-CONVERGENCE, ES-GRAMMAR-GERUND-MEANING]
 skills: [listening, speaking, reading, writing]
 modes: [interpretive, interpersonal, presentational]
 strands: [meaning-input, meaning-output, language-focus]
@@ -32,7 +32,7 @@ reviews_of: [ES-C62-hablando, ES-C15-comer-vivir-preterite]
 # comiendo · viviendo — two families, one ending
 
 ## Warm-up
-<!-- hl-knowledge: introduces=[]; assesses=[ES-GRAMMAR-GERUND-AR] -->
+<!-- hl-knowledge: introduces=[]; assesses=[ES-GRAMMAR-GERUND-AR, ES-GRAMMAR-GERUND-MEANING] -->
 
 [PAUSE 2s] *Hablar* gave *hablando*. Now the other two families.
 

@@ -897,6 +897,19 @@ TESTSUITE_FILES = [
     # a dozen more `*64.wast` files live right here, at the same commit
     # every other file in this list already vendors from.
     "memory64.wast",
+    # table64 proposal, first slice (W26 -- see code/specs/
+    # W26-wasm-table64-first-slice.md): 64-bit table addressing for
+    # declarations, limits, and import-linking compatibility (no
+    # table.get/set/grow/size/fill/copy/init/call_indirect against an
+    # is64 table yet -- see that spec's own "Explicitly out of scope").
+    # `table64.wast` is the table64-only file (no memory64 mixed in);
+    # `memory64-imports.wast` -- W25's own deliberately-deferred file,
+    # entangled because roughly half of it is table64 import/export
+    # `assert_unlinkable` cases -- is un-deferred in the SAME slice, since
+    # the thing that entangled it (table64 needing to exist at all) is
+    # exactly what this slice builds.
+    "table64.wast",
+    "memory64-imports.wast",
 ]
 
 # Reference-types/threads-proposal files whose UPSTREAM path lives under

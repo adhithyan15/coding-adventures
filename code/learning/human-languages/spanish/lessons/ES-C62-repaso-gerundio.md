@@ -20,7 +20,7 @@ requires:
 introduces:
   knowledge: []
 practises:
-  knowledge: [ES-GRAMMAR-GERUND-AR, ES-GRAMMAR-GERUND-ER-IR, ES-GRAMMAR-GERUND-TWO-ENDINGS, ES-GRAMMAR-PROGRESSIVE-ESTAR-GERUND, ES-GRAMMAR-PROGRESSIVE-NOT-FUTURE, ES-GRAMMAR-PERSONAL-A]
+  knowledge: [ES-GRAMMAR-GERUND-AR, ES-GRAMMAR-GERUND-ER-IR, ES-GRAMMAR-GERUND-TWO-ENDINGS, ES-GRAMMAR-PROGRESSIVE-ESTAR-GERUND, ES-GRAMMAR-PROGRESSIVE-NOT-FUTURE, ES-GRAMMAR-PERSONAL-A, ES-GRAMMAR-PERSONAL-A-WHY]
 skills: [listening, speaking]
 modes: [interpretive, presentational]
 strands: [language-focus, fluency]
@@ -38,7 +38,7 @@ reviews_of: [ES-C62-hablando, ES-C62-comiendo, ES-C62-estoy-hablando, ES-C62-veo
 everything else.)
 
 ## What you've built
-<!-- hl-knowledge: introduces=[]; assesses=[ES-GRAMMAR-GERUND-AR, ES-GRAMMAR-PROGRESSIVE-ESTAR-GERUND, ES-GRAMMAR-PERSONAL-A] -->
+<!-- hl-knowledge: introduces=[]; assesses=[ES-GRAMMAR-GERUND-AR, ES-GRAMMAR-PROGRESSIVE-ESTAR-GERUND, ES-GRAMMAR-PERSONAL-A, ES-GRAMMAR-PERSONAL-A-WHY] -->
 
 Three chants.
 

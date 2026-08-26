@@ -1,5 +1,9 @@
 # Changelog
 
+## 0.28.0
+
+- Resolve typed 12-hour Gantt clocks into backend-neutral temporal geometry.
+
 ## 0.27.0
 
 - Resolve single-component Gantt second timestamps into precise backend-neutral task geometry.

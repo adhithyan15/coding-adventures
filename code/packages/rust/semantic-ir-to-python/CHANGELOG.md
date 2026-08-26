@@ -1,5 +1,72 @@
 # Changelog
 
+## 0.18.0 — Accept `Feature::LoopControl` (task #63)
+
+Fourth backend (after `semantic-ir-to-javascript` task #62,
+`semantic-ir-to-typescript`, and `semantic-ir-to-go`) to accept the
+SIR16 addendum's `Stmt::Break`/`Stmt::Continue`. `While`/`ForRange`/
+`ForEach` already emit real inline native `while`/`for` loops with no
+`def`/lambda boundary in the way, so a bare `break`/`continue` is a
+trivial 1:1 emission — see `Feature::LoopControl`'s own doc comment for
+why `ForRange` needs no special handling (the shared validator already
+refuses to accept `Break`/`Continue` whose nearest enclosing loop is a
+`ForRange`, regardless of backend).
+
+**This backend's own version of the if-as-statement hazard the JS/TS/Go
+rollouts each found is structurally sharper than theirs**:
+`Stmt::ExprStmt { expr: Expr::If { .. } }` (a bare `if` used as a
+statement) was routed through `Expr::If`'s generic value-position
+codegen — a Python ternary `(then if cond else else)`, or — for a
+branch with real statements — a walrus-operator tuple
+(`((x := e), ...)[-1]`), or — for a branch containing a `while`/`for`
+loop — a nested `def` lifted to the hoist buffer. `break`/`continue` are
+Python **statements**: unlike JS/TS/Go, where the problem was merely
+"can't cross a closure boundary," in Python neither one can appear
+inside *any* expression at all, so none of those three codegen shapes
+can represent them, regardless of nesting. `if (cond) { break; }` inside
+a `while` is the single most common way source code uses either
+statement at all, so routing it through the generic path made every
+such program hit `emit_block_as_expr`'s own `Stmt::Break`/`Continue`
+arm — previously a "capability check should have rejected it" panic,
+now a real, reachable one.
+
+Fixed the same way as the other three backends: `emit_stmt_inner`'s
+`Stmt::ExprStmt` arm now special-cases a bare `Expr::If` to emit a real
+native `if:`/`else:` statement, correct regardless of `LoopControl`
+since the value was already discarded.
+
+**A narrower residual gap remains, deliberately**: the SIR validator
+only requires `Break`/`Continue` be lexically inside a safe loop — it
+does not also require the enclosing block's own value be discarded. A
+pathological program that puts one inside a block whose value genuinely
+feeds a walrus-tuple/lifted-`def` expression (e.g.
+`let x = if (c) { break; 5 } else { 10 };` — no real frontend produces
+this) still reaches `emit_block_as_expr`'s own `Stmt::Break`/`Continue`
+arm, which **stays a panic** rather than attempting to mis-compile it:
+neither Python codegen shape available there can represent a statement
+inside an expression, full stop. Rejecting loudly is correct until that
+broader validator-level gap is closed (tracked separately).
+
+Two other `match Stmt` traversal helpers (`collect_ancestry_in_stmt`,
+`stmt_uses_builtin`) had their own compile-exhaustiveness-only
+`Stmt::Break`/`Stmt::Continue` panic arms — each replaced with the
+correct no-op/`false` (neither variant carries a nested expression or
+statement, so there is nothing for either scan to find), since a
+validated module can now legitimately contain one. `TypeEnv::
+observe_stmt` (shared, in `semantic-ir`) already had a wildcard `_ =>
+{}` catch-all — no change needed there.
+
+New tests: 4 unit tests (`src/emit.rs`) locking in the bare `break`/
+`continue` emission, `break`/`continue` inside a native `while` body at
+the correct indentation, and — the crux of the fix — that a bare `if`
+used as a statement emits a real native `if:`/`else:`, never the
+ternary/walrus-tuple/lifted-`def` path. 2 new real-interpreter execution-
+proof tests (`tests/loop_control.rs`, this backend's first dedicated
+loop-control execution proof, mirroring `tests/sir22_array.rs`'s own
+`python3`-on-`PATH` harness pattern) — a `while`+`continue`+`break`
+accumulation, a `for`-each+`break` early exit — mirroring the JS/Go
+backends' own two loop-control proofs in spirit.
+
 ## 0.17.1 — Security fix: `sanitize_ident` was not injective
 
 Task #65 (`/security-review`, discovered while auditing `java-to-

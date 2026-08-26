@@ -20,7 +20,7 @@ requires:
 introduces:
   knowledge: [ES-GRAMMAR-POSSESSIVE-VUESTRO, ES-GRAMMAR-POSSESSIVE-COMPLETE]
 practises:
-  knowledge: [ES-GRAMMAR-POSSESSIVE-BEFORE-NOUN, ES-GRAMMAR-POSSESSIVE-COMPLETE, ES-GRAMMAR-POSSESSIVE-VUESTRO, ES-LEX-POSSESSIVES-MI-TU-SU, ES-LEX-POSSESSIVES-NUESTRO-NUESTRA, ES-LEX-VOSOTROS]
+  knowledge: [ES-GRAMMAR-POSSESSIVE-BEFORE-NOUN, ES-GRAMMAR-POSSESSIVE-COMPLETE, ES-GRAMMAR-POSSESSIVE-VUESTRO, ES-LEX-POSSESSIVES-MI-TU-SU, ES-LEX-POSSESSIVES-NUESTRO-NUESTRA, ES-LEX-VOSOTROS, ES-GRAMMAR-POSSESSIVE-GENDER-AGREEMENT-SINGULAR]
 skills: [listening, speaking, reading, writing]
 modes: [interpretive, interpersonal, presentational]
 strands: [meaning-input, meaning-output, language-focus]
@@ -32,7 +32,7 @@ reviews_of: [ES-C13-nuestro, ES-C07-vosotros]
 # vuestro — the last possessive
 
 ## Warm-up
-<!-- hl-knowledge: introduces=[]; assesses=[ES-LEX-POSSESSIVES-NUESTRO-NUESTRA, ES-LEX-VOSOTROS] -->
+<!-- hl-knowledge: introduces=[]; assesses=[ES-LEX-POSSESSIVES-NUESTRO-NUESTRA, ES-LEX-VOSOTROS, ES-GRAMMAR-POSSESSIVE-GENDER-AGREEMENT-SINGULAR] -->
 
 [PAUSE 2s] *Nuestra casa* — our house. And *vosotros* — you all.
 

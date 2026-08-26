@@ -19,7 +19,7 @@ requires:
 introduces:
   knowledge: [ES-LEX-CONMIGO, ES-LEX-CON, ES-ETYMON-CONMIGO-MECUM]
 practises:
-  knowledge: [ES-LEX-CONMIGO, ES-LEX-CON, ES-ETYMON-CONMIGO-MECUM, ES-GRAMMAR-TONIC-PRONOUN-AFTER-PREPOSITION, ES-GRAMMAR-APOCOPE-PATTERN]
+  knowledge: [ES-LEX-CONMIGO, ES-LEX-CON, ES-ETYMON-CONMIGO-MECUM, ES-GRAMMAR-TONIC-PRONOUN-AFTER-PREPOSITION, ES-GRAMMAR-APOCOPE-PATTERN, ES-ORTHOGRAPHY-MI-ACCENT]
 skills: [listening, speaking, reading, writing]
 modes: [interpretive, interpersonal, presentational]
 strands: [meaning-input, meaning-output, language-focus]
@@ -31,7 +31,7 @@ reviews_of: [ES-C64-para-mi, ES-C60-mal]
 # conmigo · contigo — the word that says "with" twice
 
 ## Warm-up
-<!-- hl-knowledge: introduces=[]; assesses=[ES-GRAMMAR-TONIC-PRONOUN-AFTER-PREPOSITION] -->
+<!-- hl-knowledge: introduces=[]; assesses=[ES-GRAMMAR-TONIC-PRONOUN-AFTER-PREPOSITION, ES-ORTHOGRAPHY-MI-ACCENT] -->
 
 [PAUSE 2s] *Para mí*, *para ti*. The pattern is steady: preposition, then the
 stressed pronoun.

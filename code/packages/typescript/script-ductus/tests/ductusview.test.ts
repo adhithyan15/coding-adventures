@@ -153,6 +153,10 @@ const NGA = DUCTUS["ங"];
 const ngaOutline = tamilOutline("ங");
 const JAPANESE_SHI = DUCTUS[ductusKey("japanese", "し")];
 const japaneseShiOutline = japaneseOutline("し");
+const JAPANESE_KU = DUCTUS[ductusKey("japanese", "く")];
+const japaneseKuOutline = japaneseOutline("く");
+const JAPANESE_TA = DUCTUS[ductusKey("japanese", "た")];
+const japaneseTaOutline = japaneseOutline("た");
 const JAPANESE_MO = DUCTUS[ductusKey("japanese", "も")];
 const japaneseMoOutline = japaneseOutline("も");
 const CA = DUCTUS["ச"];
@@ -1579,6 +1583,50 @@ describe("し — one continuous descending curve", () => {
     expect(strip.frames).toHaveLength(2);
     expect(strip.penLifts).toBe(0);
     expect(strip.summary).toBe("one unbroken stroke · 2 movements");
+  });
+});
+
+describe("く — one continuous angled turn", () => {
+  const steps = ductusSteps(JAPANESE_KU);
+  const strip = ductusFilmstrip(JAPANESE_KU, japaneseKuOutline);
+
+  it("keeps both movements in one pen-down run", () => {
+    expect(steps.map((step) => step.strokeIndex)).toEqual([0, 0]);
+    expect(steps.map((step) => step.startsAfterLift)).toEqual([false, false]);
+  });
+
+  it("reports a two-frame zero-lift filmstrip", () => {
+    expect(strip.frames).toHaveLength(2);
+    expect(strip.penLifts).toBe(0);
+    expect(strip.summary).toBe("one unbroken stroke · 2 movements");
+  });
+});
+
+describe("た — four separate source-verified runs", () => {
+  const steps = ductusSteps(JAPANESE_TA);
+  const strip = ductusFilmstrip(JAPANESE_TA, japaneseTaOutline);
+
+  it("starts a new pen-down run after each lift", () => {
+    expect(steps.map((step) => step.strokeIndex)).toEqual([0, 1, 2, 3]);
+    expect(steps.map((step) => step.startsAfterLift)).toEqual([false, true, true, true]);
+  });
+
+  it("reports a four-frame three-lift filmstrip", () => {
+    expect(strip.frames).toHaveLength(4);
+    expect(strip.penLifts).toBe(3);
+    expect(strip.summary).toBe("4 strokes · 3 pen lifts · 4 movements");
+  });
+
+  it("keeps all earlier runs visible while drawing the lower bowl", () => {
+    const last = strip.frames.at(-1)!;
+    const done = byTag(last, "path").filter((node) => node.attrs.class === "ductus__done");
+    const pen = byTag(last, "path").find((node) => node.attrs.class === "ductus__pen")!;
+    expect(done.map((path) => path.attrs.d)).toEqual([
+      penPathD(JAPANESE_TA.strokes[0], 1),
+      penPathD(JAPANESE_TA.strokes[1], 1),
+      penPathD(JAPANESE_TA.strokes[2], 1),
+    ]);
+    expect(pen.attrs.d).toBe(penPathD(JAPANESE_TA.strokes[3], 1));
   });
 });
 

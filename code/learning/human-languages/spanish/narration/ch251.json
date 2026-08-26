@@ -4,7 +4,7 @@
   "chapter": 251,
   "title": "Ahí, Allí --- The Other Two Places",
   "drivablePrefix": 1,
-  "sourceHash": "fnv1a64:4fbb0bf04ff7c2fb",
+  "sourceHash": "fnv1a64:395163d3a481d446",
   "lessons": [
     {
       "id": "ES-C65-ahi-alli",
@@ -19,7 +19,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:9c6cac056e548a9a",
+      "sourceHash": "fnv1a64:325897e8d77e4f53",
       "notice": null,
       "blocks": [
         {

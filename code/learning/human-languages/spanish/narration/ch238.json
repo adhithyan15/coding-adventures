@@ -4,7 +4,7 @@
   "chapter": 238,
   "title": "Estoy Hablando --- The Payoff",
   "drivablePrefix": 1,
-  "sourceHash": "fnv1a64:d6559e2d88545e34",
+  "sourceHash": "fnv1a64:39d8474a5c5b854e",
   "lessons": [
     {
       "id": "ES-C62-estoy-hablando",
@@ -19,7 +19,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:e3cac60e74f0df16",
+      "sourceHash": "fnv1a64:57e90c1436beb2ae",
       "notice": null,
       "blocks": [
         {

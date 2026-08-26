@@ -1,5 +1,20 @@
 # Changelog — wasm-wast-parser
 
+## 0.1.80 — 2026-08-26 — table64 proposal, first slice (W26)
+
+### Added
+
+- `(table i64 <min> [<max>] funcref)` text syntax (table64 proposal): an
+  `i64` keyword atom in the same leading position `(memory i64 ...)`
+  already established sets `TableType::is64` (`wasm-types` 0.1.11), both
+  for a declared table (`build_table_limits_and_elements`) and an imported
+  one (explicit `(import "m" "n" (table i64 ...))` and the inline-import
+  shorthand `(table $t (import "m" "n") i64 ...)`, where `i64` sits AFTER
+  the `(import ...)` clause). Reuses `numeric::parse_u64`/`parse_limits64`
+  verbatim (already built for memory64, table-agnostic).
+
+See `code/specs/W26-wasm-table64-first-slice.md`.
+
 ## 0.1.79 — 2026-08-26 — memory64 proposal, first slice (W25)
 
 ### Added

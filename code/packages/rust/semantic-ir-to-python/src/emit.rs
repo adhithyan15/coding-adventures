@@ -201,14 +201,11 @@ fn collect_ancestry_in_stmt(
                 span
             );
         }
-        // SIR16 addendum: `Feature::LoopControl` not accepted by this
-        // backend yet — same rationale as the SIR29 arm just above.
-        Stmt::Break { span, .. } | Stmt::Continue { span, .. } => {
-            panic!(
-                "python backend reached a Stmt::Break/Continue node at {} — capability check should have rejected it",
-                span
-            );
-        }
+        // SIR16 addendum: `Stmt::Break`/`Stmt::Continue` carry only a
+        // `span`, no nested expression or statement, so there is
+        // nothing to walk — a bare `break`/`continue` can never itself
+        // contain a `ClassDef`.
+        Stmt::Break { .. } | Stmt::Continue { .. } => {}
     }
 }
 
@@ -398,14 +395,9 @@ fn stmt_uses_builtin(s: &Stmt, name: &str) -> bool {
                 span
             );
         }
-        // SIR16 addendum: `Feature::LoopControl` not accepted by this
-        // backend yet — same rationale as the SIR29 arm just above.
-        Stmt::Break { span, .. } | Stmt::Continue { span, .. } => {
-            panic!(
-                "python backend reached a Stmt::Break/Continue node at {} — capability check should have rejected it",
-                span
-            );
-        }
+        // SIR16 addendum: `Stmt::Break`/`Stmt::Continue` carry no
+        // expression, so they can never "use" any builtin.
+        Stmt::Break { .. } | Stmt::Continue { .. } => false,
     }
 }
 
@@ -898,6 +890,44 @@ fn emit_stmt_inner(out: &mut String, s: &Stmt, indent: usize, env: &mut TypeEnv)
                 let _ = write!(out, "{}_globals[{}] = ", pad, quote_py_string(global));
                 emit_expr(out, value, indent, env);
                 out.push('\n');
+            } else if let Expr::If {
+                cond,
+                then_branch,
+                else_branch,
+                ..
+            } = expr
+            {
+                // A bare `if` used for effect only (its value is
+                // discarded — this is `Stmt::ExprStmt`, which never
+                // captures a value at all) gets a REAL native Python
+                // `if:`/`else:` statement here, not the ternary/walrus-
+                // tuple/lifted-`def` shapes the generic `emit_expr` path
+                // below produces for `Expr::If` in *value* position.
+                //
+                // This isn't just a style improvement: `break`/
+                // `continue` (SIR16 addendum, `Feature::LoopControl`)
+                // are Python STATEMENTS — they cannot appear inside any
+                // Python expression at all, so a branch holding one can
+                // never round-trip through the ternary/walrus path in
+                // the first place (that path's own `Stmt::Break`/
+                // `Continue` arm panics — see `emit_block_as_expr`'s own
+                // doc comment on that arm). `if (cond) { break; }`
+                // inside a `while` is the single most common way source
+                // code uses `break`/`continue` at all, so routing it
+                // through the generic path made every such program hit
+                // that panic, not a hypothetical edge case. Mirrors
+                // `semantic-ir-to-javascript`'s (task #62),
+                // `semantic-ir-to-typescript`'s, and
+                // `semantic-ir-to-go`'s (task #63) own identically-
+                // reasoned fix — adapted to Python's own failure mode
+                // (a statement that can never be an expression at all,
+                // not merely one that can't cross a closure boundary).
+                let _ = write!(out, "{}if _sir_truthy(", pad);
+                emit_expr(out, cond, indent, env);
+                out.push_str("):\n");
+                emit_block_as_stmts(out, then_branch, indent + 1, env);
+                let _ = writeln!(out, "{}else:", pad);
+                emit_block_as_stmts(out, else_branch, indent + 1, env);
             } else {
                 let _ = write!(out, "{}", pad);
                 emit_expr(out, expr, indent, env);
@@ -1177,13 +1207,23 @@ fn emit_stmt_inner(out: &mut String, s: &Stmt, indent: usize, env: &mut TypeEnv)
                 span
             );
         }
-        // SIR16 addendum: `Feature::LoopControl` not accepted by this
-        // backend yet — same rationale as the SIR29 arm just above.
-        Stmt::Break { span, .. } | Stmt::Continue { span, .. } => {
-            panic!(
-                "python backend reached a Stmt::Break/Continue node at {} — capability check should have rejected it",
-                span
-            );
+        // SIR16 addendum: bare loop-control statements. A trivial 1:1
+        // emission — `While`/`ForRange`/`ForEach`'s bodies above are
+        // already inlined directly into a real native `while`/`for`
+        // loop with no `def`/lambda boundary in the way, so a bare
+        // `break`/`continue` here always targets the correct enclosing
+        // Python loop. The validator itself guarantees the nearest
+        // enclosing loop is never a `ForRange` (see `Feature::
+        // LoopControl`'s own doc comment in `semantic-ir::manifest`),
+        // so there's no case this backend needs to reject or
+        // special-case here. Mirrors `semantic-ir-to-javascript`'s
+        // (task #62), `semantic-ir-to-typescript`'s, and
+        // `semantic-ir-to-go`'s (task #63) own identical emission.
+        Stmt::Break { .. } => {
+            let _ = writeln!(out, "{pad}break");
+        }
+        Stmt::Continue { .. } => {
+            let _ = writeln!(out, "{pad}continue");
         }
     }
 }
@@ -2423,14 +2463,31 @@ fn emit_block_as_expr(out: &mut String, b: &Block, indent: usize, env: &mut Type
                     span
                 );
             }
-            // SIR16 addendum: `Feature::LoopControl` not accepted by this
-            // backend yet (see `ACCEPTED_FEATURES`) — same rationale as
-            // the SIR29 arm just above; a validated module never reaches
-            // here regardless of which block context it would otherwise
-            // have appeared in.
+            // SIR16 addendum (task #63): `Feature::LoopControl` IS now
+            // accepted, but this arm STAYS a panic — unlike the SIR29
+            // arm just above, this one is not permanently unreachable.
+            // The validator only requires `Break`/`Continue` to be
+            // lexically inside a `while`/`for-each` loop; it does not
+            // also require the enclosing block's own *value* be
+            // discarded. `emit_stmt_inner`'s own `Stmt::ExprStmt`/
+            // `Expr::If` special case routes the common "bare `if` used
+            // as a statement" shape around this function entirely (see
+            // that arm's own doc comment), but a pathological program
+            // that puts a `break`/`continue` inside a block whose value
+            // genuinely feeds a walrus-tuple/lifted-`def` expression
+            // (e.g. `let x = if (c) { break; 5 } else { 10 };`) would
+            // still reach here — and neither Python codegen shape below
+            // can represent it: a walrus tuple has no statement form at
+            // all, and a lifted `def`'s own new function scope is
+            // exactly the same closure boundary `break`/`continue`
+            // cannot cross that motivated this whole task. Panicking
+            // (reject rather than mis-lower) is correct until that
+            // broader validator gap is closed — tracked separately, see
+            // the task tracker's own "break/continue inside a
+            // value-position If/Block" entry.
             Stmt::Break { span, .. } | Stmt::Continue { span, .. } => {
                 panic!(
-                    "python backend reached a Stmt::Break/Continue node at {} — capability check should have rejected it",
+                    "python backend reached a Stmt::Break/Continue node at {} in a value-producing block — the block's value would be reachable only after the break/continue already unwound, which no Python expression form (walrus tuple or lifted `def`) can represent; deferred, see the task tracker's \"break/continue inside a value-position If/Block\" entry",
                     span
                 );
             }
@@ -3703,5 +3760,77 @@ mod tests {
         emit_block_as_expr(&mut out, &b, 0, &mut env);
         assert!(out.contains("(x + a)"), "got: {out}");
         assert!(!out.contains("_sir_plus"), "got: {out}");
+    }
+
+    // ── SIR16 addendum: loop control (task #63) ─────────────────────────
+
+    #[test]
+    fn emit_break_is_bare_break() {
+        let mut out = String::new();
+        emit_stmt(&mut out, &Stmt::Break { span: s() }, 0, &mut TypeEnv::new());
+        assert_eq!(out, "break\n");
+    }
+
+    #[test]
+    fn emit_continue_is_bare_continue() {
+        let mut out = String::new();
+        emit_stmt(&mut out, &Stmt::Continue { span: s() }, 0, &mut TypeEnv::new());
+        assert_eq!(out, "continue\n");
+    }
+
+    #[test]
+    fn emit_while_with_break_and_continue_in_body() {
+        // `while _sir_truthy(True): continue; break` — both statements
+        // land inside the native `while`'s body, at the loop body's own
+        // indentation.
+        let st = Stmt::While {
+            cond: Expr::BoolLit { value: true, span: s() },
+            body: Block {
+                stmts: vec![Stmt::Continue { span: s() }, Stmt::Break { span: s() }],
+                value: Expr::NilLit { span: s() },
+                span: s(),
+            },
+            span: s(),
+        };
+        let mut out = String::new();
+        emit_stmt(&mut out, &st, 0, &mut TypeEnv::new());
+        assert!(out.contains("    continue\n"), "got {out}");
+        assert!(out.contains("    break\n"), "got {out}");
+    }
+
+    #[test]
+    fn bare_if_used_as_a_statement_emits_native_if_else_not_ternary_or_walrus() {
+        // The crux of task #63's own fix: `Stmt::ExprStmt{Expr::If{..}}`
+        // must NOT route through the generic value-position `Expr::If`
+        // codegen (a ternary, or — for a non-empty branch — a walrus
+        // tuple or a lifted nested `def`) — `break`/`continue` are
+        // Python statements and cannot appear inside any Python
+        // expression at all, so none of those shapes can represent
+        // them. It must emit a real native `if:`/`else:` statement
+        // instead.
+        let st = Stmt::ExprStmt {
+            expr: Expr::If {
+                cond: Box::new(Expr::VarRef { name: "x".into(), scope: Scope::Local, span: s() }),
+                then_branch: Box::new(Block {
+                    stmts: vec![Stmt::Break { span: s() }],
+                    value: Expr::NilLit { span: s() },
+                    span: s(),
+                }),
+                else_branch: Box::new(Block {
+                    stmts: vec![],
+                    value: Expr::NilLit { span: s() },
+                    span: s(),
+                }),
+                span: s(),
+            },
+            span: s(),
+        };
+        let mut out = String::new();
+        emit_stmt(&mut out, &st, 0, &mut TypeEnv::new());
+        assert!(out.starts_with("if _sir_truthy("), "expected a native `if`, got {out}");
+        assert!(out.contains("    break\n"), "got {out}");
+        assert!(out.contains("else:\n"), "got {out}");
+        assert!(!out.contains(":="), "must not route through the walrus-tuple path: {out}");
+        assert!(!out.contains("def "), "must not route through a lifted nested def: {out}");
     }
 }

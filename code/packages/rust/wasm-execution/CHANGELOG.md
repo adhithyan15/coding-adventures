@@ -2,6 +2,33 @@
 
 All notable changes to this package will be documented in this file.
 
+## [0.9.70] - 2026-08-26 (W26 — table64 proposal, first slice)
+
+### Added
+
+- `Table::new_with_is64(initial_size: u64, max_size: Option<u64>, is64:
+  bool) -> Result<Self, TrapError>`: a fallible constructor for a table
+  that may be 64-bit-indexed, mirroring `LinearMemory::new_with_is64`
+  (W25) exactly. The plain, infallible `new(u32, Option<u32>)` constructor
+  is unchanged (always `is64: false`) — every existing call site needed no
+  changes.
+- `Table::is64(&self) -> bool`.
+- `MAX_TABLE_ELEMENTS` (the existing 10,000,000-element resource limit) is
+  now ALSO reused as the practical `is64` table instantiation-time cap —
+  the same "reuse the existing 32-bit-shaped bound" move W25 made with
+  `MAX_MEMORY64_INITIAL_PAGES`. An `is64` table's real spec ceiling
+  (`u64::MAX`) is validation-time-acceptable but has no relation to what
+  this interpreter can actually allocate; `new_with_is64` returns a real,
+  gracefully-propagated `TrapError` (never a panic/allocator abort) if
+  `initial_size` exceeds it — checked UNCONDITIONALLY, not only when
+  `is64` (security review: a 32-bit table's `min` is already
+  validator-capped at this exact same bound, so this is a pure,
+  behavior-preserving no-op for every validated module, and removes this
+  `pub` constructor's own safety from depending entirely on an invariant
+  living in a different crate, `wasm-validator`).
+
+See `code/specs/W26-wasm-table64-first-slice.md`.
+
 ## [0.9.69] - 2026-08-26 (W25 — memory64 proposal, first slice)
 
 ### Added

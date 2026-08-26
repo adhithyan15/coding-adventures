@@ -20,7 +20,7 @@ requires:
 introduces:
   knowledge: [ES-GRAMMAR-ME-DIRECT-OBJECT]
 practises:
-  knowledge: [ES-LEX-ME, ES-GRAMMAR-OBJECT-PRONOUN, ES-GRAMMAR-DIRECT-OBJECT-LO, ES-GRAMMAR-QUERER-PRESENT-SINGULAR, ES-LEX-QUERER, ES-GRAMMAR-ME-DIRECT-OBJECT]
+  knowledge: [ES-LEX-ME, ES-GRAMMAR-OBJECT-PRONOUN, ES-GRAMMAR-DIRECT-OBJECT-LO, ES-GRAMMAR-QUERER-PRESENT-SINGULAR, ES-LEX-QUERER, ES-GRAMMAR-ME-DIRECT-OBJECT, ES-LEX-LO-OBJECT]
 skills: [listening, speaking, reading]
 modes: [interpretive, interpersonal]
 strands: [meaning-input, meaning-output, language-focus]
@@ -39,7 +39,7 @@ more than fifty chapters. This chapter gives it nothing new to look like — onl
 something new to do.
 
 ## Grammar Lens: the same word, a simpler job
-<!-- hl-knowledge: introduces=[ES-GRAMMAR-ME-DIRECT-OBJECT]; assesses=[ES-GRAMMAR-QUERER-PRESENT-SINGULAR, ES-LEX-QUERER, ES-GRAMMAR-DIRECT-OBJECT-LO] -->
+<!-- hl-knowledge: introduces=[ES-GRAMMAR-ME-DIRECT-OBJECT]; assesses=[ES-GRAMMAR-QUERER-PRESENT-SINGULAR, ES-LEX-QUERER, ES-GRAMMAR-DIRECT-OBJECT-LO, ES-LEX-LO-OBJECT] -->
 
 In *me llamo*, the *me* points back at the speaker: *I call **myself***. That is
 a special use, and it was the one you needed first.

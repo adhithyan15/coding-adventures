@@ -832,6 +832,102 @@ export const DUCTUS: Record<string, LetterDuctus> = {
     ],
     source: japanese.letters.find((letter) => letter.glyph === "し")!.strokeOrderSource!,
   },
+  // Sirgazil's 20-frame animation writes hiragana く in one uninterrupted
+  // motion: sweep down-left from the upper right into the sharp central turn,
+  // then continue down-right to the lower tip. This path preserves that
+  // zero-lift order while fitting the bundled Noto Sans JP print outline.
+  [ductusKey("japanese", "く")]: {
+    script: "japanese",
+    glyph: "く",
+    strokes: [
+      {
+        segments: [
+          {
+            label: "sweep down-left from the upper right into the central turn",
+            path: [
+              { x: 667, y: 770 },
+              { x: 600, y: 700 },
+              { x: 500, y: 610 },
+              { x: 400, y: 525 },
+              { x: 310, y: 450 },
+              { x: 250, y: 390 },
+            ],
+          },
+          {
+            label: "continue down-right to the lower tip",
+            path: [
+              { x: 250, y: 390 },
+              { x: 300, y: 330 },
+              { x: 390, y: 250 },
+              { x: 490, y: 165 },
+              { x: 590, y: 75 },
+              { x: 690, y: -30 },
+            ],
+          },
+        ],
+      },
+    ],
+    source: japanese.letters.find((letter) => letter.glyph === "く")!.strokeOrderSource!,
+  },
+  // Sirgazil's 31-frame animation writes hiragana た in four pen-down runs:
+  // the upper horizontal, crossing left-falling stem, short right horizontal,
+  // and lower-right bowl. These medians preserve that three-lift order while
+  // fitting the bundled Noto Sans JP print outline.
+  [ductusKey("japanese", "た")]: {
+    script: "japanese",
+    glyph: "た",
+    strokes: [
+      {
+        segments: [{
+          label: "draw the upper horizontal from left to right",
+          path: [
+            { x: 110, y: 588 },
+            { x: 250, y: 582 },
+            { x: 400, y: 594 },
+            { x: 590, y: 630 },
+          ],
+        }],
+      },
+      {
+        segments: [{
+          label: "descend through the crossing stem and curve left at the foot",
+          path: [
+            { x: 395, y: 790 },
+            { x: 390, y: 710 },
+            { x: 370, y: 600 },
+            { x: 340, y: 450 },
+            { x: 300, y: 300 },
+            { x: 250, y: 150 },
+            { x: 160, y: -20 },
+          ],
+        }],
+      },
+      {
+        segments: [{
+          label: "draw the short right horizontal from left to right",
+          path: [
+            { x: 540, y: 445 },
+            { x: 720, y: 455 },
+            { x: 890, y: 445 },
+          ],
+        }],
+      },
+      {
+        segments: [{
+          label: "descend into the lower-right bowl and sweep right along its base",
+          path: [
+            { x: 520, y: 240 },
+            { x: 510, y: 160 },
+            { x: 530, y: 90 },
+            { x: 600, y: 40 },
+            { x: 720, y: 15 },
+            { x: 900, y: 35 },
+          ],
+        }],
+      },
+    ],
+    source: japanese.letters.find((letter) => letter.glyph === "た")!.strokeOrderSource!,
+  },
   // Sirgazil's 28-frame animation writes も in three pen-down runs: descend
   // through the stem and broad lower bowl, then lift for each left-to-right
   // horizontal. These medians preserve that order while fitting the bundled

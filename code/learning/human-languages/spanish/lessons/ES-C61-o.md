@@ -19,7 +19,7 @@ requires:
 introduces:
   knowledge: [ES-LEX-O, ES-GRAMMAR-O-BECOMES-U, ES-ETYMON-O-AUT]
 practises:
-  knowledge: [ES-LEX-O, ES-GRAMMAR-O-BECOMES-U, ES-ETYMON-O-AUT, ES-LEX-Y]
+  knowledge: [ES-LEX-O, ES-GRAMMAR-O-BECOMES-U, ES-ETYMON-O-AUT, ES-LEX-Y, ES-GRAMMAR-CONTRACTION-OBLIGATORY]
 skills: [listening, speaking, reading, writing]
 modes: [interpretive, interpersonal, presentational]
 strands: [meaning-input, meaning-output, language-focus]
@@ -46,7 +46,7 @@ reviews_of: [ES-C04-y, ES-C06-cafe]
 a single letter — which is about as far as a word can go without disappearing.
 
 ## Why it's said this way
-<!-- hl-knowledge: introduces=[ES-GRAMMAR-O-BECOMES-U]; assesses=[ES-LEX-O] -->
+<!-- hl-knowledge: introduces=[ES-GRAMMAR-O-BECOMES-U]; assesses=[ES-LEX-O, ES-GRAMMAR-CONTRACTION-OBLIGATORY] -->
 
 And that is the problem. A word one letter long is easy to lose.
 

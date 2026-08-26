@@ -19,7 +19,7 @@ requires:
 introduces:
   knowledge: [ES-LEX-NOS-OBJECT, ES-GRAMMAR-NOS-DIRECT-OBJECT]
 practises:
-  knowledge: [ES-GRAMMAR-ME-DIRECT-OBJECT, ES-GRAMMAR-TE-DIRECT-OBJECT, ES-GRAMMAR-QUERER-PRESENT-PLURAL, ES-LEX-QUERER, ES-LEX-NOS-OBJECT, ES-GRAMMAR-NOS-DIRECT-OBJECT]
+  knowledge: [ES-GRAMMAR-ME-DIRECT-OBJECT, ES-GRAMMAR-TE-DIRECT-OBJECT, ES-GRAMMAR-QUERER-PRESENT-PLURAL, ES-LEX-QUERER, ES-LEX-NOS-OBJECT, ES-GRAMMAR-NOS-DIRECT-OBJECT, ES-LEX-TE-QUIERO]
 skills: [listening, speaking, reading]
 modes: [interpretive, interpersonal]
 strands: [meaning-input, meaning-output, language-focus]
@@ -31,7 +31,7 @@ reviews_of: [ES-C42-me-objeto, ES-C42-te]
 # nos — "us"
 
 ## Warm-up
-<!-- hl-knowledge: introduces=[]; assesses=[ES-GRAMMAR-ME-DIRECT-OBJECT, ES-GRAMMAR-TE-DIRECT-OBJECT] -->
+<!-- hl-knowledge: introduces=[]; assesses=[ES-GRAMMAR-ME-DIRECT-OBJECT, ES-GRAMMAR-TE-DIRECT-OBJECT, ES-LEX-TE-QUIERO] -->
 
 [PAUSE 2s] Say "you love me." (*Me quieres*.) And "I love you." (*Te quiero*.)
 Both of those are about **one** person on the receiving end. Here is more than

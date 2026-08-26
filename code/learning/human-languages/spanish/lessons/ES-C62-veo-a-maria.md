@@ -20,7 +20,7 @@ requires:
 introduces:
   knowledge: [ES-GRAMMAR-PERSONAL-A, ES-GRAMMAR-PERSONAL-A-WHY]
 practises:
-  knowledge: [ES-GRAMMAR-PERSONAL-A, ES-GRAMMAR-PERSONAL-A-WHY, ES-LEX-VER, ES-ETYMON-QUIEN-QUEM, ES-GRAMMAR-VER-PRESENT-SINGULAR, ES-LEX-CASA]
+  knowledge: [ES-GRAMMAR-PERSONAL-A, ES-GRAMMAR-PERSONAL-A-WHY, ES-LEX-VER, ES-ETYMON-QUIEN-QUEM, ES-GRAMMAR-VER-PRESENT-SINGULAR, ES-LEX-CASA, ES-GRAMMAR-QUIEN-PEOPLE-ONLY]
 skills: [listening, speaking, reading, writing]
 modes: [interpretive, interpersonal, presentational]
 strands: [meaning-input, meaning-output, language-focus]
@@ -53,7 +53,7 @@ out of nowhere — and it is not optional. *Veo María* is wrong.
 María. The *a* is there purely because the thing being seen is a person.
 
 ## Why it's said this way
-<!-- hl-knowledge: introduces=[ES-GRAMMAR-PERSONAL-A-WHY]; assesses=[ES-ETYMON-QUIEN-QUEM] -->
+<!-- hl-knowledge: introduces=[ES-GRAMMAR-PERSONAL-A-WHY]; assesses=[ES-ETYMON-QUIEN-QUEM, ES-GRAMMAR-QUIEN-PEOPLE-ONLY] -->
 
 [PAUSE 2s] Remember what happened to *quién*: Latin marked the object of a
 sentence with an **ending**, and Spanish threw those endings away. That was

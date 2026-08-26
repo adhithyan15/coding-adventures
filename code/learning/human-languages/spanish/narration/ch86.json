@@ -4,7 +4,7 @@
   "chapter": 86,
   "title": "Review --- Four Pronouns, One Slot",
   "drivablePrefix": 0,
-  "sourceHash": "fnv1a64:787ecd7c640530cf",
+  "sourceHash": "fnv1a64:e778ab8310bd775d",
   "lessons": [
     {
       "id": "ES-C42-repaso-objeto",
@@ -19,7 +19,7 @@
       "modalityReasons": [
         "sight-cue"
       ],
-      "sourceHash": "fnv1a64:940269c3ce1ccf7f",
+      "sourceHash": "fnv1a64:95a7d92583aeabfd",
       "notice": {
         "modality": "sight",
         "needs": [

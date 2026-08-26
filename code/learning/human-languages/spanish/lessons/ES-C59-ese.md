@@ -19,7 +19,7 @@ requires:
 introduces:
   knowledge: [ES-GRAMMAR-DEMONSTRATIVE-ESE, ES-ETYMON-ESE-IPSE]
 practises:
-  knowledge: [ES-GRAMMAR-DEMONSTRATIVE-ESE, ES-ETYMON-ESE-IPSE, ES-GRAMMAR-DEMONSTRATIVE-ESTE, ES-ETYMON-ESTE-ISTE]
+  knowledge: [ES-GRAMMAR-DEMONSTRATIVE-ESE, ES-ETYMON-ESE-IPSE, ES-GRAMMAR-DEMONSTRATIVE-ESTE, ES-ETYMON-ESTE-ISTE, ES-GRAMMAR-DEMONSTRATIVE-BEFORE-NOUN]
 skills: [listening, speaking, reading, writing]
 modes: [interpretive, interpersonal, presentational]
 strands: [meaning-input, meaning-output, language-focus]
@@ -31,7 +31,7 @@ reviews_of: [ES-C59-este]
 # ese — pointing at what is by you
 
 ## Warm-up
-<!-- hl-knowledge: introduces=[]; assesses=[ES-GRAMMAR-DEMONSTRATIVE-ESTE, ES-ETYMON-ESTE-ISTE] -->
+<!-- hl-knowledge: introduces=[]; assesses=[ES-GRAMMAR-DEMONSTRATIVE-ESTE, ES-ETYMON-ESTE-ISTE, ES-GRAMMAR-DEMONSTRATIVE-BEFORE-NOUN] -->
 
 [PAUSE 2s] *Este libro* is the one in my hand.
 

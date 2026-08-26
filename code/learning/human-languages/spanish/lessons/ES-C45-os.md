@@ -20,7 +20,7 @@ requires:
 introduces:
   knowledge: [ES-LEX-OS-OBJECT, ES-GRAMMAR-OS-DIRECT-OBJECT]
 practises:
-  knowledge: [ES-GRAMMAR-NOS-DIRECT-OBJECT, ES-LEX-VOSOTROS, ES-LEX-USTEDES, ES-GRAMMAR-QUERER-PRESENT-SINGULAR, ES-LEX-QUERER, ES-GRAMMAR-DIRECT-OBJECT-PLURAL, ES-LEX-OS-OBJECT, ES-GRAMMAR-OS-DIRECT-OBJECT]
+  knowledge: [ES-GRAMMAR-NOS-DIRECT-OBJECT, ES-LEX-VOSOTROS, ES-LEX-USTEDES, ES-GRAMMAR-QUERER-PRESENT-SINGULAR, ES-LEX-QUERER, ES-GRAMMAR-DIRECT-OBJECT-PLURAL, ES-LEX-OS-OBJECT, ES-GRAMMAR-OS-DIRECT-OBJECT, ES-LEX-NOSOTROS]
 skills: [listening, speaking, reading]
 modes: [interpretive, interpersonal]
 strands: [meaning-input, meaning-output, language-focus]
@@ -59,7 +59,7 @@ Neither is a mistake for the other. Several hundred million speakers will
 never say *os* in their lives, and forty million say it every day.
 
 ## The word, taken apart
-<!-- hl-knowledge: introduces=[]; assesses=[ES-LEX-OS-OBJECT, ES-LEX-VOSOTROS] -->
+<!-- hl-knowledge: introduces=[]; assesses=[ES-LEX-OS-OBJECT, ES-LEX-VOSOTROS, ES-LEX-NOSOTROS] -->
 
 *Os* was **vos**, and the *v* simply fell off in the object slot — a word this
 small, said this often, and never stressed, wears faster than the rest of the

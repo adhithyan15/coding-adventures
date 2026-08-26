@@ -513,6 +513,33 @@
         "GU-EXT-030-DOORWAY-R4"
       ],
       "after": []
+    },
+    {
+      "id": "GU-PATH-022",
+      "spine_node": "SPINE-POLITE-REQUEST-REPAIR",
+      "lessons": [
+        "GU-C20-hear-bajar",
+        "GU-C20-bajar",
+        "GU-C20-hear-ghar",
+        "GU-W20-gha",
+        "GU-C20-ghar",
+        "GU-C20-hear-mandir",
+        "GU-C20-mandir",
+        "GU-C20-places-three",
+        "GU-C21-hear-haath",
+        "GU-C21-haath",
+        "GU-C21-hear-paisa",
+        "GU-W21-ai-matra",
+        "GU-C21-paisa",
+        "GU-R21-travel-five",
+        "GU-C21-travel-five"
+      ],
+      "before": [],
+      "inline": [
+        "GU-EXT-031-PLACES-THREE",
+        "GU-EXT-032-TRAVEL-FIVE"
+      ],
+      "after": []
     }
   ],
   "spine": {
@@ -587,7 +614,8 @@
     },
     "SPINE-POLITE-REQUEST-REPAIR": {
       "segments": [
-        "GU-PATH-013"
+        "GU-PATH-013",
+        "GU-PATH-022"
       ],
       "omits": [
         "COURTESY-PLEASE",
@@ -1357,6 +1385,45 @@
       ],
       "lessons": [
         "GU-R19-doorway-nine-r4"
+      ]
+    },
+    {
+      "id": "GU-EXT-031-PLACES-THREE",
+      "stage": "pre-A1",
+      "kind": "required",
+      "category": "vocabulary",
+      "canDo": "I can hear, say, read, and write market, home, and temple.",
+      "prerequisites": [
+        "GU-EXT-030-DOORWAY-R4"
+      ],
+      "lessons": [
+        "GU-C20-hear-bajar",
+        "GU-C20-bajar",
+        "GU-C20-hear-ghar",
+        "GU-W20-gha",
+        "GU-C20-ghar",
+        "GU-C20-hear-mandir",
+        "GU-C20-mandir",
+        "GU-C20-places-three"
+      ]
+    },
+    {
+      "id": "GU-EXT-032-TRAVEL-FIVE",
+      "stage": "pre-A1",
+      "kind": "required",
+      "category": "vocabulary",
+      "canDo": "I can hear, say, read, and write market, home, temple, hand, and money.",
+      "prerequisites": [
+        "GU-EXT-031-PLACES-THREE"
+      ],
+      "lessons": [
+        "GU-C21-hear-haath",
+        "GU-C21-haath",
+        "GU-C21-hear-paisa",
+        "GU-W21-ai-matra",
+        "GU-C21-paisa",
+        "GU-R21-travel-five",
+        "GU-C21-travel-five"
       ]
     }
   ]

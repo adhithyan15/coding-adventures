@@ -1,0 +1,5 @@
+uv venv .venv --quiet --no-project --clear --python 3.13
+uv pip install --python .venv -e .[dev] --quiet
+.venv/bin/python -m pytest tests/ -v
+.venv/bin/python -m ruff check src tests
+.venv/bin/python -m mypy src

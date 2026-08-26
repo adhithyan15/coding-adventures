@@ -19,7 +19,7 @@ requires:
 introduces:
   knowledge: [ES-GRAMMAR-QUIEN-PEOPLE-ONLY, ES-ETYMON-QUIEN-QUEM]
 practises:
-  knowledge: [ES-LEX-QUIEN, ES-GRAMMAR-QUIEN-PEOPLE-ONLY, ES-ETYMON-QUIEN-QUEM, ES-LEX-QUE, ES-GRAMMAR-QUESTION-ACCENT, ES-SCRIPT-INVERTED-QUESTION]
+  knowledge: [ES-LEX-QUIEN, ES-GRAMMAR-QUIEN-PEOPLE-ONLY, ES-ETYMON-QUIEN-QUEM, ES-LEX-QUE, ES-GRAMMAR-QUESTION-ACCENT, ES-SCRIPT-INVERTED-QUESTION, ES-GRAMMAR-DEMONSTRATIVE-NEUTER]
 skills: [listening, speaking, reading, writing]
 modes: [interpretive, interpersonal, presentational]
 strands: [meaning-input, meaning-output, language-focus]
@@ -31,7 +31,7 @@ reviews_of: [ES-C07-que, ES-C57-pregunto-donde]
 # quién — the asking word reserved for people
 
 ## Warm-up
-<!-- hl-knowledge: introduces=[]; assesses=[ES-LEX-QUE, ES-GRAMMAR-QUESTION-ACCENT] -->
+<!-- hl-knowledge: introduces=[]; assesses=[ES-LEX-QUE, ES-GRAMMAR-QUESTION-ACCENT, ES-GRAMMAR-DEMONSTRATIVE-NEUTER] -->
 
 [PAUSE 2s] *¿Qué es esto?* asks about a **thing**.
 

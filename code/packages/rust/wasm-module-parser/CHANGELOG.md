@@ -2,6 +2,18 @@
 
 All notable changes to this package will be documented in this file.
 
+## [0.2.9] — 2026-08-26 — W26: table64 proposal, first slice
+
+### Changed
+
+- The table section's and table import's `parse_limits` call sites no
+  longer reject binary `limits` flags bit `0x04` (64-bit index) — it's now
+  wired into `TableType::is64` (`wasm-types` 0.1.11), mirroring the memory
+  arm exactly. Previously a deliberate, named W25 rejection ("table64 is
+  not supported by this parser").
+
+See `code/specs/W26-wasm-table64-first-slice.md`.
+
 ## [0.2.8] — 2026-08-26 — W25: memory64 proposal, first slice
 
 ### Added

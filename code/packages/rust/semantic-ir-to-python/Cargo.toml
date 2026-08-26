@@ -1,8 +1,8 @@
 [package]
 name = "semantic-ir-to-python"
-version = "0.17.1"
+version = "0.18.0"
 edition = "2021"
-description = "Semantic IR → self-contained Python 3 source code (SIR14). Third backend for the SIR10 narrow-waist IR."
+description = "Semantic IR → self-contained Python 3 source code (SIR14). Task #63: accept Feature::LoopControl (break/continue), with the bare-if-as-statement fix that requires."
 
 [dependencies]
 semantic-ir = { path = "../semantic-ir" }

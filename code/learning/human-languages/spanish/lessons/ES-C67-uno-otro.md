@@ -20,7 +20,7 @@ requires:
 introduces:
   knowledge: [ES-LEX-OTRO, ES-GRAMMAR-DISTRIBUTIVE-UNO-OTRO, ES-ETYMON-OTRO-ALTER]
 practises:
-  knowledge: [ES-LEX-OTRO, ES-GRAMMAR-DISTRIBUTIVE-UNO-OTRO, ES-ETYMON-OTRO-ALTER, ES-ETYMON-UNUS, ES-LEX-LIBRO, ES-GRAMMAR-INDEFINITE-PLURAL]
+  knowledge: [ES-LEX-OTRO, ES-GRAMMAR-DISTRIBUTIVE-UNO-OTRO, ES-ETYMON-OTRO-ALTER, ES-ETYMON-UNUS, ES-LEX-LIBRO, ES-GRAMMAR-INDEFINITE-PLURAL, ES-GRAMMAR-INDEFINITE-PLURAL-AGAINST-BARE]
 skills: [listening, speaking, reading, writing]
 modes: [interpretive, interpersonal, presentational]
 strands: [meaning-input, meaning-output, language-focus]
@@ -32,7 +32,7 @@ reviews_of: [ES-C65-unos-unas, ES-C01-un-una]
 # uno... otro — splitting a pair
 
 ## Warm-up
-<!-- hl-knowledge: introduces=[]; assesses=[ES-ETYMON-UNUS, ES-GRAMMAR-INDEFINITE-PLURAL] -->
+<!-- hl-knowledge: introduces=[]; assesses=[ES-ETYMON-UNUS, ES-GRAMMAR-INDEFINITE-PLURAL, ES-GRAMMAR-INDEFINITE-PLURAL-AGAINST-BARE] -->
 
 [PAUSE 2s] *Un libro* — one book. *Unos libros* — some books.
 

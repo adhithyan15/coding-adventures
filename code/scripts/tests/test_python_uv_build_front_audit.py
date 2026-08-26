@@ -141,7 +141,7 @@ class RepositoryAuditTests(unittest.TestCase):
         packages = [row["package"] for row in self.report["fronts"]]
         self.assertEqual(packages, EXPECTED_LIVE_PACKAGES)
         self.assertEqual(self.report["schema_version"], 1)
-        self.assertEqual(self.report["python_package_count"], 481)
+        self.assertEqual(self.report["python_package_count"], 482)
         summary = self.report["summary"]
         self.assertEqual(summary["non_idempotent_fronts"], len(packages))
         self.assertEqual(

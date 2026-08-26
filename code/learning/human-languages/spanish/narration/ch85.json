@@ -4,7 +4,7 @@
   "chapter": 85,
   "title": "Me and Te --- The Two People Talking",
   "drivablePrefix": 3,
-  "sourceHash": "fnv1a64:53864665d41c747f",
+  "sourceHash": "fnv1a64:58f30ebc9d570e69",
   "lessons": [
     {
       "id": "ES-C42-me-objeto",
@@ -19,7 +19,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:f77986968e39ee3e",
+      "sourceHash": "fnv1a64:e04e3b17a45b359c",
       "notice": null,
       "blocks": [
         {

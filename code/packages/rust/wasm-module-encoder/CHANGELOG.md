@@ -1,5 +1,14 @@
 # Changelog
 
+- 0.2.6 (W26 — table64 proposal, first slice): `encode_table_type` becomes
+  `is64`-aware, mirroring `encode_memory_type`'s own `is64` branch (minus
+  the `shared` bit, which tables never carry) — emits binary `limits`
+  flags bit `0x04` and `u64leb`-encoded `min`/`max` for a 64-bit
+  (`TableType::is64`, `wasm-types` 0.1.11) table. Two round-trip tests
+  added (`encodes_table64_flag_and_wide_limits_round_trip`,
+  `encodes_table64_import_flag_round_trip`) using a `min`/`max` value
+  genuinely past `u32::MAX`. See `code/specs/
+  W26-wasm-table64-first-slice.md`.
 - 0.2.5 (W25 — memory64 proposal, first slice): `encode_memory_type`
   recognizes `MemoryType::is64` (`wasm-types` 0.1.10), emitting binary
   `limits` flags bit `0x04` and `u64leb`-encoded `min`/`max` for a 64-bit
