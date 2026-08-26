@@ -1,5 +1,11 @@
 # Changelog — `lang-aot`
 
+## 0.254.0 - 2026-08-26 (ALGOL zero-exponent literal expressions)
+
+The ALGOL matrix now preserves a finite-real selector multiplied by a finite
+literal-only arithmetic expression raised to a bounded zero exponent on all
+seven standard backends. Dynamic bases remain conservative.
+
 ## 0.253.0 - 2026-08-26 (fix: `closure_identity_returns_captured_value` for real)
 
 Fixes the recurring `e6d7a_wasm_closures.rs` failure on
@@ -34,6 +40,13 @@ closures are unaffected (verified they still pass; an earlier attempt to fix
 the stale hint in the shared `closure_heap.rs` emitter instead regressed
 `closures_run_on_native`/`_llvm`, which is why the fix lives in the
 WASM-specific `lower_dyn_repr_structural` pass instead).
+
+## 0.252.0 - 2026-08-26 (ALGOL real zero-exponent units)
+
+The ALGOL matrix now preserves a finite-real selector multiplied by a finite
+numeric literal raised to a bounded zero exponent on all seven standard
+backends. Compiler regressions cover signed and grouped literal bases while
+keeping dynamic bases conservative.
 
 ## 0.251.0 - 2026-08-26 (ALGOL real power-zero identities)
 
