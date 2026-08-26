@@ -340,8 +340,9 @@
 
 use parser::grammar_parser::{ASTNodeOrToken, GrammarASTNode};
 use semantic_ir::{
-    walk_stmt_default, Block, Capture, CaptureValue, EffectSet, Expr, Feature, FeatureManifest,
-    Function, Metadata, Module, Param, ParamKind, Scope, Span, Stmt, SwitchCase, Visitor,
+    walk_stmt_default, Block, Capture, CaptureValue, Effect, EffectSet, Expr, Feature,
+    FeatureManifest, Function, Metadata, Module, Param, ParamKind, RescueClause, Scope, Span,
+    Stmt, SwitchCase, Visitor,
 };
 use std::collections::{HashMap, HashSet};
 
@@ -496,6 +497,21 @@ enum Kind {
     /// `lower_primary_expression`'s own doc comment for how a chained
     /// `grid[i][j]` reaches this.
     Array(ArrayElemKind, u8),
+    /// The kind of a `catch (ExceptionType e)` clause's own bound local
+    /// — task #70/M8's addition. Like `Void`/`Closure`, not a real value
+    /// kind this frontend can do anything *with*: this crate has no
+    /// method-call-on-arbitrary-object or field-access support at all
+    /// (see the crate's own README "Everything else" list), so a caught
+    /// exception's own methods (`e.getMessage()`) and an explicit
+    /// rethrow of the bound variable (`throw e;`, distinct from `throw
+    /// new Foo(...)`, which *is* supported — see `lower_throw_statement`)
+    /// both remain out of scope. Exists purely so the bound name has
+    /// *some* kind to be declared with, so referencing it at all doesn't
+    /// spuriously fail as "undeclared" — any attempt to actually use it
+    /// as an operand falls through to an ordinary "wrong kind" rejection
+    /// at whichever operator tried to consume it, the same discipline
+    /// `Void`/`Closure` already established.
+    Exception,
 }
 
 /// The element kind of a single-dimensional Java array (see `Kind::
@@ -526,10 +542,10 @@ impl ArrayElemKind {
 
     /// The inverse of [`ArrayElemKind::as_kind`]: `None` for any `Kind`
     /// that isn't itself a valid array element kind (`Kind::Null`/
-    /// `Void`/`Closure`/`Array(_)` — an array-of-arrays' own *element*
-    /// kind is still always a scalar `ArrayElemKind`, since `Kind::
-    /// Array`'s own dimension count already carries the nesting; the
-    /// others are non-value placeholder kinds that can't be an array
+    /// `Void`/`Closure`/`Array(_)`/`Exception` — an array-of-arrays' own
+    /// *element* kind is still always a scalar `ArrayElemKind`, since
+    /// `Kind::Array`'s own dimension count already carries the nesting;
+    /// the others are non-value placeholder kinds that can't be an array
     /// element at all). Shared by every call site that resolves a scalar
     /// `Kind` into an array's own element kind (`kind_of_type_node`,
     /// `lower_array_initializer`, and M4c's `lower_new_sized_array`).
@@ -539,7 +555,9 @@ impl ArrayElemKind {
             Kind::Float => Some(ArrayElemKind::Float),
             Kind::Bool => Some(ArrayElemKind::Bool),
             Kind::Str => Some(ArrayElemKind::Str),
-            Kind::Null | Kind::Void | Kind::Closure(_) | Kind::Array(_, _) => None,
+            Kind::Null | Kind::Void | Kind::Closure(_) | Kind::Array(_, _) | Kind::Exception => {
+                None
+            }
         }
     }
 }
@@ -1800,9 +1818,15 @@ impl Lowerer {
         if let Some(switch_stmt) = self.first_child_named(statement, "switch_statement") {
             return self.lower_switch_statement(switch_stmt, depth);
         }
+        if let Some(try_stmt) = self.first_child_named(statement, "try_statement") {
+            return self.lower_try_statement(try_stmt, depth);
+        }
+        if let Some(throw_stmt) = self.first_child_named(statement, "throw_statement") {
+            return self.lower_throw_statement(throw_stmt);
+        }
         Err(self.err_at(
             statement,
-            "unsupported statement kind (JV02 supports variable declarations, assignment, if/while/do-while/for/enhanced-for/switch, bare break/continue, and bare expression statements — everything else is deferred further)"
+            "unsupported statement kind (JV02 supports variable declarations, assignment, if/while/do-while/for/enhanced-for/switch/try-catch-finally/throw, bare break/continue, and bare expression statements — everything else is deferred further)"
                 .to_string(),
         ))
     }
@@ -2240,6 +2264,275 @@ impl Lowerer {
             ));
         }
         Ok(None)
+    }
+
+    /// `try_statement = "try" resource_specification block catch_clause*
+    /// finally_clause? | "try" block ( catch_clause+ finally_clause? |
+    /// finally_clause ) ;` (task #70/M8). Lowers to `Stmt::TryCatch`
+    /// (SIR17), reused exactly as SIR29 itself specifies ("Explicitly
+    /// deferred: a checked-vs-unchecked exception distinction") — no new
+    /// IR needed.
+    ///
+    /// Try-with-resources (the first grammar alternative, carrying a
+    /// `resource_specification`) is rejected cleanly: SIR has no
+    /// resource-auto-close primitive, and desugaring it into an
+    /// equivalent `try`/`finally` would need real destructor/`close()`
+    /// method-call support this frontend doesn't have at all.
+    ///
+    /// Each of `try`'s own block, every `catch` clause's own block, and
+    /// `finally`'s own block is independently lowered via
+    /// `lower_block_node`, which already opens/closes its own scope —
+    /// unlike `Stmt::Switch` (task #51), there is no shared-scope
+    /// requirement here: a Java `catch` parameter is scoped to its own
+    /// clause only, matching `RescueClause.binding`'s own "in scope
+    /// within `body` only" doc comment, so no extra `push_scope`/
+    /// `pop_scope` wraps this function itself.
+    fn lower_try_statement(
+        &mut self,
+        node: &GrammarASTNode,
+        depth: usize,
+    ) -> Result<Stmt, JavaLowerError> {
+        if depth >= MAX_STMT_DEPTH {
+            return Err(self.err_at(
+                node,
+                format!("statement/block nesting exceeds {MAX_STMT_DEPTH} levels"),
+            ));
+        }
+        let span = self.span_of(node);
+        if self
+            .first_child_named(node, "resource_specification")
+            .is_some()
+        {
+            return Err(self.err_at(
+                node,
+                "`try`-with-resources is not supported yet (JV02 M8 supports plain try/catch/finally only)"
+                    .to_string(),
+            ));
+        }
+        let try_block = self
+            .first_child_named(node, "block")
+            .ok_or_else(|| self.err_at(node, "malformed `try` (missing body)".to_string()))?;
+        let body = self.lower_block_node(try_block, depth + 1)?.stmts;
+
+        let mut rescues = Vec::new();
+        for clause in child_nodes(node)
+            .into_iter()
+            .filter(|n| n.rule_name == "catch_clause")
+        {
+            rescues.push(self.lower_catch_clause(clause, depth)?);
+        }
+
+        let ensure_body = match self.first_child_named(node, "finally_clause") {
+            Some(finally_clause) => {
+                let finally_block =
+                    self.first_child_named(finally_clause, "block")
+                        .ok_or_else(|| {
+                            self.err_at(
+                                finally_clause,
+                                "malformed `finally` (missing body)".to_string(),
+                            )
+                        })?;
+                Some(self.lower_block_node(finally_block, depth + 1)?.stmts)
+            }
+            None => None,
+        };
+
+        self.observed.add(Feature::Exceptions);
+        Ok(Stmt::TryCatch {
+            body,
+            rescues,
+            ensure_body,
+            span,
+        })
+    }
+
+    /// `catch_clause = "catch" LPAREN catch_formal_parameter RPAREN block
+    /// ;`, `catch_formal_parameter = {annotation} ["final"] catch_type
+    /// NAME ;`, `catch_type = class_type ("|" class_type)*` (Java 7+
+    /// multi-catch, `catch (IOException | SQLException e) { ... }`) —
+    /// maps directly onto `RescueClause.exception_types: Vec<String>`,
+    /// no adaptation needed. The bound name is declared `Kind::
+    /// Exception` (see that variant's own doc comment) in a fresh scope
+    /// covering only this clause's own body, matching `RescueClause.
+    /// binding`'s own "in scope within `body` only" contract.
+    fn lower_catch_clause(
+        &mut self,
+        clause: &GrammarASTNode,
+        depth: usize,
+    ) -> Result<RescueClause, JavaLowerError> {
+        let span = self.span_of(clause);
+        let param = self
+            .first_child_named(clause, "catch_formal_parameter")
+            .ok_or_else(|| {
+                self.err_at(clause, "malformed `catch` (missing parameter)".to_string())
+            })?;
+        let catch_type = self.first_child_named(param, "catch_type").ok_or_else(|| {
+            self.err_at(param, "malformed `catch` (missing exception type)".to_string())
+        })?;
+        let exception_types: Vec<String> = child_nodes(catch_type)
+            .into_iter()
+            .filter(|n| n.rule_name == "class_type")
+            .filter_map(qualified_name_text)
+            .collect();
+        if exception_types.is_empty() {
+            return Err(self.err_at(
+                catch_type,
+                "malformed `catch` (missing exception type)".to_string(),
+            ));
+        }
+        let binding_name = param
+            .children
+            .iter()
+            .find_map(|c| match c {
+                ASTNodeOrToken::Token(t) if t.type_ == lexer::token::TokenType::Name => {
+                    Some(t.value.clone())
+                }
+                _ => None,
+            })
+            .ok_or_else(|| {
+                self.err_at(param, "malformed `catch` (missing bound name)".to_string())
+            })?;
+
+        let catch_block = self
+            .first_child_named(clause, "block")
+            .ok_or_else(|| self.err_at(clause, "malformed `catch` (missing body)".to_string()))?;
+        self.push_scope();
+        self.declare_local(binding_name.clone(), Kind::Exception);
+        let body_result = self.lower_block_node(catch_block, depth + 1);
+        self.pop_scope();
+        let body = body_result?.stmts;
+
+        Ok(RescueClause {
+            exception_types,
+            binding: Some(binding_name),
+            body,
+            span,
+        })
+    }
+
+    /// `throw_statement = "throw" expression SEMICOLON ;` (task #70/M8).
+    /// Lowers to a bare expression statement wrapping `Expr::BuiltinCall
+    /// ("raise", [class_name, message?])` — the exact cross-backend
+    /// convention `ruby-to-semantic-ir`'s own `raise Foo[, "msg"]`
+    /// already established (see `semantic-ir-to-javascript`'s/
+    /// `semantic-ir-to-python`'s own `"raise"` handling in `emit_expr`),
+    /// not a Ruby-specific one: `class_name` must be an `Expr::VarRef`
+    /// with `scope: Scope::Const` for a backend to recognize it as an
+    /// exception *class* (any other first-argument shape is instead
+    /// treated as an implicit-`RuntimeError` *message*, matching real
+    /// Ruby's own `raise "msg"` idiom — see the JS backend's own doc
+    /// comment on its `raise` arm) — so this only accepts the one shape
+    /// that can supply a well-formed `Const` reference, `throw new
+    /// ExceptionClass(...)`.
+    ///
+    /// **Deliberately out of scope** (rejected cleanly, not
+    /// mis-lowered): rethrowing an arbitrary expression (`throw e;` —
+    /// this frontend has no way to distinguish "the exact exception
+    /// object just caught" from any other local, and lowering it as a
+    /// `raise` *message* instead, per the fallback shape above, would
+    /// silently change what actually gets thrown), an anonymous
+    /// exception subclass (`throw new Foo() { ... };`), generic
+    /// exception construction (`throw new Foo<T>(...);`), and a
+    /// constructor call with more than one argument (real Java exception
+    /// constructors can chain a `cause` `Throwable`, `enableSuppression`/
+    /// `writableStackTrace` flags, etc. — only the common no-arg/message-
+    /// arg constructor shapes are supported here).
+    fn lower_throw_statement(&mut self, node: &GrammarASTNode) -> Result<Stmt, JavaLowerError> {
+        let span = self.span_of(node);
+        let expr_node = self
+            .first_child_named(node, "expression")
+            .ok_or_else(|| self.err_at(node, "malformed `throw` (missing expression)".to_string()))?;
+        let primary = unwrap_to_primary(expr_node, 0).ok_or_else(|| {
+            self.err_at(
+                node,
+                "`throw` only supports `throw new ExceptionClass(...)` in JV02 M8 (not a more complex expression, and not rethrowing a caught exception variable)"
+                    .to_string(),
+            )
+        })?;
+        let is_new = matches!(
+            primary.children.first(),
+            Some(ASTNodeOrToken::Token(t)) if t.value == "new"
+        );
+        if !is_new {
+            return Err(self.err_at(
+                node,
+                "`throw` only supports `throw new ExceptionClass(...)` in JV02 M8 (not rethrowing a caught exception variable, or any other expression)"
+                    .to_string(),
+            ));
+        }
+        if self.first_child_named(primary, "class_body").is_some() {
+            return Err(self.err_at(
+                node,
+                "an anonymous exception subclass (`throw new ExceptionClass() { ... }`) is not supported"
+                    .to_string(),
+            ));
+        }
+        if self.first_child_named(primary, "type_arguments").is_some() {
+            return Err(self.err_at(
+                node,
+                "generic exception construction (`throw new Foo<T>(...)`) is not supported"
+                    .to_string(),
+            ));
+        }
+        let class_type = self.first_child_named(primary, "class_type").ok_or_else(|| {
+            self.err_at(
+                node,
+                "malformed `throw new ...` (missing exception class)".to_string(),
+            )
+        })?;
+        let class_name = qualified_name_text(class_type).ok_or_else(|| {
+            self.err_at(
+                node,
+                "malformed `throw new ...` (missing exception class name)".to_string(),
+            )
+        })?;
+        let arg_exprs: Vec<&GrammarASTNode> = self
+            .first_child_named(primary, "argument_list")
+            .map(|al| {
+                child_nodes(al)
+                    .into_iter()
+                    .filter(|n| n.rule_name == "expression")
+                    .collect()
+            })
+            .unwrap_or_default();
+        if arg_exprs.len() > 1 {
+            return Err(self.err_at(
+                node,
+                "`throw new ExceptionClass(...)` supports at most one constructor argument (a message) in JV02 M8"
+                    .to_string(),
+            ));
+        }
+
+        let mut raise_args = vec![Expr::VarRef {
+            name: class_name,
+            scope: Scope::Const,
+            span: span.clone(),
+        }];
+        if let Some(msg_node) = arg_exprs.first() {
+            let (msg_expr, msg_kind) = self.lower_expr(msg_node, 0)?;
+            if msg_kind != Kind::Str {
+                return Err(self.err_at(
+                    node,
+                    "`throw new ExceptionClass(msg)`'s constructor argument must be a String"
+                        .to_string(),
+                ));
+            }
+            raise_args.push(msg_expr);
+        }
+
+        self.observed.add(Feature::Exceptions);
+        self.observed.add(Feature::Constants);
+        Ok(Stmt::ExprStmt {
+            expr: Expr::BuiltinCall {
+                name: "raise".to_string(),
+                args: raise_args,
+                effects: EffectSet::PURE
+                    .with(Effect::MayThrow)
+                    .with(Effect::Divergent),
+                span: span.clone(),
+            },
+            span,
+        })
     }
 
     /// `do_while_statement = "do" statement "while" LPAREN expression
@@ -2897,7 +3190,55 @@ impl Lowerer {
         };
 
         let kind = match declared_kind {
-            Some(k) => k,
+            // task #71: an explicitly-declared type's own initializer
+            // must actually match it — this frontend previously trusted
+            // `declared_kind` unconditionally here, so e.g. `int y =
+            // "hello";` compiled with **zero** error. Two mismatches real
+            // Java itself permits, kept accepted here:
+            //
+            // - int-widening-to-float (`double d = 5;`, JLS 5.1.2's
+            //   primitive widening conversion). This does **not** insert
+            //   a real numeric conversion (SIR's own `Expr::Convert`,
+            //   SIR26, only ever converts between *integer* widths —
+            //   there is no int-to-float primitive at all): the emitted
+            //   `value` for `double d = 5;` remains whatever `lower_expr`
+            //   produced for the literal `5` (`Kind::Int` at the value
+            //   level), only this frontend's own *bookkeeping* `Kind` for
+            //   `d` becomes `Float`. A backend whose runtime numeric
+            //   representation actually distinguishes int from float at
+            //   the value level (not just at compile-time type-checking)
+            //   could observe this — e.g. `String.valueOf(d)` would print
+            //   `"5"` not `"5.0"` — but this frontend has no output/print
+            //   primitive wired up at all yet (JV02's own scope), so the
+            //   gap is real but currently unobservable; a disclosed,
+            //   deliberately out-of-scope narrowing of *this* fix, not
+            //   silently swept under it.
+            // - `null` initializing a *reference*-kinded declaration
+            //   (`String s = null;`, and — M4a's array types — `int[] xs
+            //   = null;`): real Java permits `null` for any reference
+            //   type but rejects it for a primitive (`int x = null;` is a
+            //   `javac` compile error), matching exactly the `Kind::Str`/
+            //   `Kind::Array` vs. `Kind::Int`/`Float`/`Bool` split this
+            //   frontend's own declarable-type set already draws.
+            //
+            // Every other declared/initializer `Kind` pair is a genuine
+            // error, not a narrowing conversion this frontend could ever
+            // silently support.
+            Some(k)
+                if k == value_kind
+                    || (k == Kind::Float && value_kind == Kind::Int)
+                    || (value_kind == Kind::Null && matches!(k, Kind::Str | Kind::Array(_, _))) =>
+            {
+                k
+            }
+            Some(k) => {
+                return Err(self.err_at(
+                    initializer,
+                    format!(
+                        "cannot initialize a `{k:?}`-declared local variable with a `{value_kind:?}`-kinded initializer"
+                    ),
+                ));
+            }
             None => {
                 if value_kind == Kind::Null {
                     return Err(self.err_at(
@@ -5760,6 +6101,36 @@ fn child_nodes(node: &GrammarASTNode) -> Vec<&GrammarASTNode> {
             ASTNodeOrToken::Token(_) => None,
         })
         .collect()
+}
+
+/// Descend through a chain of single-child expression-precedence wrapper
+/// nodes (`lower_throw_statement`'s own helper, task #70) until reaching
+/// a `primary` node, or return `None` if any level along the way isn't a
+/// pure pass-through (a real binary/unary operator, or a trailing
+/// `primary_suffix`, was used) — meaning the throw target is a more
+/// complex expression than the bare `new ExceptionClass(...)` shape M8
+/// supports.
+///
+/// Depth-guarded against `MAX_EXPR_DEPTH`, mirroring `lower_expr`'s own
+/// guard: this walks the *parsed* CST, not source text, but Java's own
+/// `unary_expression`/`unary_expression_not_plus_minus` grammar pair is
+/// mutually left-recursive on a repeated prefix operator (`!!!!!x`,
+/// `-----x`) — each `!`/unary `-`/`+` adds one real wrapper level with
+/// exactly one `Node` child, so an adversarially long prefix-operator
+/// chain would otherwise recurse this function unboundedly, the same
+/// CWE-674 class this crate's other CST-walking helpers already guard
+/// against.
+fn unwrap_to_primary(node: &GrammarASTNode, depth: usize) -> Option<&GrammarASTNode> {
+    if depth >= MAX_EXPR_DEPTH {
+        return None;
+    }
+    if node.rule_name == "primary" {
+        return Some(node);
+    }
+    match child_nodes(node).as_slice() {
+        [only] => unwrap_to_primary(only, depth + 1),
+        _ => None,
+    }
 }
 
 /// Depth-guarded pre-order collection of every node named `rule_name`

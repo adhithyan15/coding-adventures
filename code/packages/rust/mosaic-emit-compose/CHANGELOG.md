@@ -5,6 +5,35 @@ This project follows [Semantic Versioning](https://semver.org/).
 
 ## [Unreleased]
 
+### Security
+
+- Validate `HostLink.href`'s URI scheme, literal and slot-bound (#13052).
+  Follow-up to #12038 (the identical XAML gap). A literal href is now
+  rejected at compile time when it carries an explicit, disallowed scheme
+  (new `host_link_href_expr` + `has_disallowed_uri_scheme`, reusing the
+  existing `UnsupportedHostLink` error variant). A slot-bound href — unknown
+  until runtime — is validated inside the shared `_mosaicHostLink`
+  composable via a new `_mosaicIsSafeUri` helper: when the scheme is
+  disallowed, the link degrades to the same inert `Clickable` shape the
+  `external == false` branch already uses (neither `onActivate` nor
+  `uriHandler.openUri` fires), matching the "no navigation target" outcome
+  XAML's `SafeNavigateUri` fix settled on for a null `Uri`. A relative
+  reference with no scheme at all (`"#"`, a route path) is unaffected in
+  both paths, since a relative href never reaches `uriHandler.openUri` as
+  an external target regardless (only the `external == true` branch is
+  gated).
+- Two rounds of security review caught two real gaps in the scheme
+  detection, both fixed before merge: a leading space or embedded
+  tab/CR/LF made the first-character-alphabetic check fail and
+  misclassified the string as "no scheme, therefore safe" -- but a real
+  consumer strips that whitespace before parsing the scheme, so it's
+  really the dangerous scheme it looks like. The first fix trimmed
+  leading/trailing whitespace via Kotlin's `trim()`, but a second review
+  round found `trim()`'s default `isWhitespace`-based predicate doesn't
+  cover the full C0-control range a real consumer strips (control bytes
+  like 0x01/0x1B bypassed it) -- `_mosaicIsSafeUri` now uses
+  `raw.trim { it.code <= 0x20 }`, matching the Rust-side check exactly.
+
 ### Fixed
 
 - MIL slots with authored defaults now emit non-null Kotlin parameters with

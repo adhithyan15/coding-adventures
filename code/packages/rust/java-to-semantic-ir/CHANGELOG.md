@@ -2,6 +2,105 @@
 
 All notable changes to the `java-to-semantic-ir` crate will be documented in this file.
 
+## [0.18.1] - 2026-08-26
+
+### Fixed
+
+- Task #71 (found while implementing task #70's own exceptions work,
+  unrelated to it): `lower_variable_declarator` used to trust an
+  *explicitly*-declared local variable's own type unconditionally,
+  never checking the initializer's actual `Kind` against it at all —
+  `int y = "hello";` compiled with **zero** error. Now rejects any
+  declared/initializer `Kind` mismatch, with two deliberate exceptions
+  matching real Java's own legal syntax:
+  - int-widening-to-float (`double d = 5;`, JLS 5.1.2's primitive
+    widening conversion) — directional only; the reverse (`int x =
+    5.0;`) is still rejected, matching real Java's own requirement for
+    an explicit narrowing cast. **Does not insert a real numeric
+    conversion** (SIR's own `Expr::Convert`, SIR26, only ever converts
+    between *integer* widths — there is no int-to-float primitive at
+    all): the emitted value for `double d = 5;` remains an `IntLit`,
+    only this frontend's own bookkeeping `Kind` becomes `Float`. A
+    disclosed, currently-unobservable gap (this frontend has no
+    output/print primitive wired up at all yet), not silently swept
+    under this fix.
+  - `null` initializing a *reference*-kinded declaration (`String s =
+    null;`, `int[] xs = null;`) — real Java permits `null` for any
+    reference type but rejects it for a primitive (`int x = null;` is a
+    `javac` compile error).
+- New tests cover the original bug, the widening/narrowing asymmetry,
+  and the primitive-vs-reference `null` distinction.
+
+## [0.18.0] - 2026-08-26
+
+### Added
+
+- JV02 M8 (task #70): `try`/`catch`/`finally`/`throw` → `Stmt::TryCatch`/
+  `RescueClause` (SIR17), reused exactly as SIR29 itself specifies
+  ("Explicitly deferred: a checked-vs-unchecked exception distinction")
+  — no new core-IR primitive needed, unblocked by task #68's own
+  `NominalClassDef`/`Module` gap since this milestone touches none of
+  that surface.
+- `try`'s own block, every `catch` clause's own block, and `finally`'s
+  own block each lower independently via the existing `lower_block_node`
+  (each already opens/closes its own scope) — unlike `Stmt::Switch`
+  (task #51), no shared cross-clause scope: a Java `catch` parameter is
+  scoped to its own clause only, matching `RescueClause.binding`'s own
+  "in scope within `body` only" contract.
+- Java 7+ multi-catch (`catch (IOException | SQLException e) { ... }`)
+  maps directly onto `RescueClause.exception_types: Vec<String>`, no
+  adaptation needed.
+- `throw new ExceptionClass(...)` (0 or 1 constructor arguments — a
+  no-arg or message-arg constructor) lowers to `Expr::BuiltinCall
+  ("raise", [class_name, message?])`, reusing the *cross-backend*
+  `"raise"` convention `ruby-to-semantic-ir` established (not a
+  Ruby-specific mechanism — `semantic-ir-to-{javascript,python}` both
+  already implement it in `emit_expr`). New `Lowerer::lower_throw_
+  statement` detects this one supported shape via a new depth-guarded
+  `unwrap_to_primary` helper (descends the expression-precedence CST
+  chain down to a `primary` node — depth-guarded against
+  `MAX_EXPR_DEPTH` since Java's `unary_expression`/`unary_expression_
+  not_plus_minus` grammar pair can nest an adversarially long prefix-
+  operator chain, `!!!!!...x`, the same CWE-674 recursion-depth class
+  this crate already guards elsewhere).
+- New `Kind::Exception` — the kind of a `catch` clause's own bound local,
+  following the exact established `Void`/`Closure` "placeholder kind no
+  operator accepts as an operand" pattern: this frontend has no method-
+  call-on-arbitrary-object or field-access support at all, so a caught
+  exception's own methods (`e.getMessage()`) remain out of scope: the
+  bound name just needs *some* kind so referencing it doesn't spuriously
+  fail as "undeclared".
+
+### Deliberately out of scope (rejected cleanly, not mis-lowered)
+
+- Try-with-resources (`try (AutoCloseable r = ...) { }`) — SIR has no
+  resource-auto-close primitive.
+- Rethrowing an arbitrary expression (`throw e;`) — this frontend has no
+  way to distinguish "the exact exception object just caught" from any
+  other local; lowering it via the same fallback shape a non-`Const`
+  `raise` argument gets (an implicit `RuntimeError` wrapping that value
+  as a *message*) would silently change what actually gets thrown, so
+  this is rejected outright rather than risk that — see `lower_throw_
+  statement`'s own doc comment.
+- An anonymous exception subclass (`throw new Foo() { ... };`), generic
+  exception construction (`throw new Foo<T>(...);`), and a constructor
+  call with more than one argument (real Java exception constructors can
+  chain a `cause` `Throwable`, `enableSuppression`/`writableStackTrace`
+  flags, etc.).
+
+### Found while implementing this (pre-existing, unrelated bug — logged
+as a new backlog item, not fixed here)
+
+- `lower_variable_declarator` never checks an initializer's own `Kind`
+  against an *explicitly* declared local-variable type at all (only
+  `var`-inferred declarations get a kind at all, taken from the
+  initializer) — confirmed directly: `int y = "hello";` currently
+  compiles with **zero** error. Not fixed in this PR: a correct fix
+  needs to first work out Java's own implicit-numeric-widening lattice
+  (`double d = 5;` is legal Java) before it can distinguish "legitimate
+  widening" from "genuinely wrong kind" — a separately-scoped
+  investigation, not a one-line equality check.
+
 ## [0.17.0] - 2026-08-26
 
 ### Added

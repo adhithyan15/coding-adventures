@@ -7,9 +7,12 @@
     "PA-C07-auna",
     "PA-C07-khana",
     "PA-C07-vekhna",
+    "PA-R07-wellbeing-r3",
     "PA-C07-janna"
   ],
   "before": [],
-  "inline": [],
+  "inline": [
+    "PA-EXT-022-WELLBEING-R3"
+  ],
   "after": []
 }

@@ -5,11 +5,14 @@
     "PA-C04-milaange",
     "PA-C04-phir",
     "PA-C04-phir-milaange",
+    "PA-R04-wellbeing-r2",
     "PA-C04-rab-raakha"
   ],
   "before": [
     "PA-EXT-009-LANGUAGE-SPECIFIC"
   ],
-  "inline": [],
+  "inline": [
+    "PA-EXT-021-WELLBEING-R2"
+  ],
   "after": []
 }
