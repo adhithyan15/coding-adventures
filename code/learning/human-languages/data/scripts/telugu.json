@@ -5517,10 +5517,25 @@
       "sound": "u",
       "role": "vowel",
       "components": [
-        "ఉ  u — independent vowel (word-initial)"
+        "the rounded upper arch flowing into the broad lower bowl and right lobe",
+        "the inner horizontal bar",
+        "the short upper headstroke"
       ],
-      "strokeOrder": [],
-      "strokeOrderNote": ""
+      "strokeOrder": [
+        "sweep left across the rounded upper arch",
+        "continue down and around the broad lower bowl",
+        "curl upward around the rounded right lobe without lifting",
+        "lift and draw the inner horizontal bar from left to right",
+        "lift again and draw the short upper headstroke downward"
+      ],
+      "strokeOrderNote": "Five numbered movements in three pen-down runs: movements 1–3 stay joined through the upper arch, broad lower bowl, and rounded right lobe; after one lift, movement 4 draws the separate inner horizontal bar; after a second lift, movement 5 draws the separate upper headstroke.",
+      "penLifts": 2,
+      "strokeOrderSource": {
+        "citation": "Sathish Shanmugam, Write Telugu Alphabets, independent vowel ఉ packaged tracing guide res/drawable/dot_stroke_v_5_u.png, movements 1–5 (version 2.6)",
+        "url": "https://write-telugu-alphabets.en.aptoide.com/app",
+        "variation": "The packaged tracing guide numbers five directional movements; the visible joins and disconnected printed components group movements 1–3 into the main body before separate movements 4 and 5. Telugu letter direction is not uniform across the script, so this is one attested pedagogical order fitted to the bundled Noto Sans Telugu outline."
+      },
+      "notes": "Independent short u used when a word or syllable begins with the vowel; it contrasts with long ఊ and with the dependent vowel sign ు."
     },
     {
       "glyph": "ఊ",

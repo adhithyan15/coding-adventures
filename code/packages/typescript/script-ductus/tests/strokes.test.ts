@@ -261,6 +261,7 @@ const KANNADA_E = DUCTUS[ductusKey("kannada", "ಎ")];
 const TELUGU_A = DUCTUS[ductusKey("telugu", "అ")];
 const TELUGU_AA = DUCTUS[ductusKey("telugu", "ఆ")];
 const TELUGU_I = DUCTUS[ductusKey("telugu", "ఇ")];
+const TELUGU_U = DUCTUS[ductusKey("telugu", "ఉ")];
 const TELUGU_E = DUCTUS[ductusKey("telugu", "ఎ")];
 const MALAYALAM_A = DUCTUS[ductusKey("malayalam", "അ")];
 const MALAYALAM_AA = DUCTUS[ductusKey("malayalam", "ആ")];
@@ -777,6 +778,20 @@ describe("handwriting ductus", () => {
       ["turn around the broad outer bowl"],
       ["form the compact upper-left lobe"],
       ["form the angled upper-right shoulder"],
+    ]);
+  });
+
+  it("Telugu ఉ groups five source-verified movements into three pen-down runs", () => {
+    expect(penLifts(TELUGU_U)).toBe(2);
+    expect(TELUGU_U.strokes).toHaveLength(3);
+    expect(TELUGU_U.strokes.map((stroke) => stroke.segments.map((segment) => segment.label))).toEqual([
+      [
+        "sweep left across the rounded upper arch",
+        "continue down and around the broad lower bowl",
+        "curl upward around the rounded right lobe without lifting",
+      ],
+      ["lift and draw the inner horizontal bar from left to right"],
+      ["lift again and draw the short upper headstroke downward"],
     ]);
   });
 
@@ -4489,6 +4504,9 @@ describe("handwriting ductus", () => {
       "_fonts/NotoSansTelugu-Static.ttf",
     );
     expect(verifiedLetterFont("ఇ", TELUGU_I.source.url)).toBe(
+      "_fonts/NotoSansTelugu-Static.ttf",
+    );
+    expect(verifiedLetterFont("ఉ", TELUGU_U.source.url)).toBe(
       "_fonts/NotoSansTelugu-Static.ttf",
     );
     expect(verifiedLetterFont("ఎ", TELUGU_E.source.url)).toBe(
