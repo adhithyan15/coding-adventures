@@ -2,6 +2,30 @@
 
 All notable changes to this package will be documented in this file.
 
+## [0.2.8] — 2026-08-26 — W25: memory64 proposal, first slice
+
+### Added
+
+- `read_u64leb`: decodes an unsigned LEB128 `u64`, needed for a 64-bit
+  memory's `min`/`max` limits (up to `2^48` pages, past `u32`'s range).
+
+### Changed
+
+- `parse_limits` now recognizes binary `limits` flags bit `0x04` (64-bit
+  index, memory64 proposal) alongside the existing bit 0 ("has max") and
+  bit 1 ("shared", W18) — `min`/`max` decode as `u64leb` instead of
+  `u32leb` when set. Returns `(Limits, shared, is64)` (was `(Limits,
+  shared)`). Verified live against the real spec's binary grammar
+  (`https://webassembly.github.io/spec/core/binary/types.html`) rather
+  than assumed. A table's limits flags byte with bit `0x04` set is
+  rejected with a clear parse error ("table64 ... is not supported by
+  this parser") instead of silently misinterpreted — `table64` (the
+  analogous widening for tables) is a separate, out-of-scope proposal.
+- `parse_memory_section`/import-section's memory arm thread the new
+  `is64` bool into `MemoryType::is64` (`wasm-types` 0.1.10).
+
+See `code/specs/W25-wasm-memory64-first-slice.md`.
+
 ## [0.2.7] — 2026-08-25 — W21: exceptions proposal, tag/throw first slice
 
 ### Changed

@@ -2,6 +2,38 @@
 
 All notable changes to this package will be documented in this file.
 
+## [0.6.9] — 2026-08-26 (W25 — memory64 proposal, first slice)
+
+### Changed
+
+- `instantiate()`'s module-defined-memory allocation now calls
+  `LinearMemory::new_with_is64` (fallible), tracking a running total of
+  every `is64` memory's declared `min` pages and rejecting (a real,
+  graceful `TrapError`, not a panic) if the total exceeds
+  `wasm_execution::MAX_MEMORY64_INITIAL_PAGES` — the same "many
+  individually-under-cap memories still summing to too much" aggregate
+  reasoning `wasm-validator`'s Check 1b already applies to 32-bit
+  memories, applied here for `is64` ones at the point where real
+  allocation actually happens (`wasm-validator`'s own spec-conformance
+  ceiling for `is64` is `2^48` pages — far larger than any real system
+  will actually back with allocated bytes, so this repo's OWN practical
+  resource limit lives here, at instantiation, not at validation).
+- The active-data-segment offset evaluation (previously hardcoded
+  `.as_i32()`) now checks memory 0's `is64` and calls `.as_i64()`
+  instead, matching `wasm-wast-parser` emitting an `i64.const` offset
+  expression for a 64-bit memory's data segments.
+- Import-compatibility checking for a memory import now also rejects an
+  `is64` mismatch between the actual memory and the declared import type
+  (previously uncheckable at all, since both sides' `Limits` are `u64`
+  regardless of `is64` — a mismatch wouldn't otherwise be caught).
+- `wasm_types::Limits.min`/`max` widened to `u64` (`wasm-types` 0.1.10):
+  `limits_compatible` and every `Limits`/`Table::new` construction site
+  updated to match (tables narrow back to `u32` — safe, since `table64`
+  is a separate, out-of-scope proposal and no real `TableType` this
+  crate builds sets a value outside `u32`'s range).
+
+See `code/specs/W25-wasm-memory64-first-slice.md`.
+
 ## [0.6.8] — 2026-08-26 (W23 — exceptions proposal, cross-instance tag identity)
 
 ### Added

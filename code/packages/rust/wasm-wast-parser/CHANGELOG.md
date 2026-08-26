@@ -1,5 +1,28 @@
 # Changelog — wasm-wast-parser
 
+## 0.1.79 — 2026-08-26 — memory64 proposal, first slice (W25)
+
+### Added
+
+- `(memory i64 <min> <max>?)` text syntax (memory64 proposal): an `i64`
+  keyword atom immediately after any optional `$name`, before the limit
+  numbers, sets `MemoryType::is64` (`wasm-types` 0.1.10). New
+  `numeric::parse_u64` (mirrors `parse_u32`, using the same
+  `parse_int_magnitude` u128 core `parse_i32`/`parse_i64` already share)
+  for a 64-bit memory's limit literals, which can reach `2^48`.
+- `(memory (data <string>*))` — the "memory sized by inline data" text
+  abbreviation, for BOTH 32- and 64-bit memories. This is a genuine,
+  pre-existing gap this crate never supported at all (found while
+  vendoring `memory64.wast`, whose first three modules use exactly this
+  form) — fixing the shared parser also unlocked three already-vendored
+  32-bit files that use the identical form and were silently grading
+  `NotYetSupported`: `memory.wast`, `float_exprs.wast`, and
+  `float_memory.wast` (previously ENTIRELY not-yet-supported). New
+  `build_memory_limits_and_data`, analogous to the existing
+  `build_table_limits_and_elements` (`(table funcref (elem ...))`).
+
+See `code/specs/W25-wasm-memory64-first-slice.md`.
+
 ## 0.1.78 — 2026-08-26 — Exceptions proposal, fourth slice W24: `throw_ref` text form
 
 ### Added

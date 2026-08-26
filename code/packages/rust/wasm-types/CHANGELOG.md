@@ -2,6 +2,25 @@
 
 All notable changes to this package will be documented in this file.
 
+## [0.1.10] - 2026-08-26 (W25 — memory64 proposal, first slice)
+
+### Changed
+
+- **`Limits.min`/`max` widened from `u32`/`Option<u32>` to
+  `u64`/`Option<u64>`**: a real, spec-valid 64-bit memory's limits can
+  reach `2^48` pages (the memory64 proposal's own ceiling), which doesn't
+  fit `u32`. `TableType` shares this same struct and stays well within
+  `u32`'s range for every value this repo has ever built — a pure,
+  numerically non-breaking widening for every existing table/32-bit-
+  memory caller.
+- **`MemoryType` gains `pub is64: bool`** (memory64 proposal): whether
+  this memory uses 64-bit addressing. Defaults to `false` at every
+  existing call site — no behavior change for any 32-bit memory.
+
+See `code/specs/W25-wasm-memory64-first-slice.md` for the full slice
+(binary/text encoding, validator/executor address-width plumbing,
+vendored `memory64.wast`).
+
 ## [0.1.9] - 2026-08-26 (W24 — exceptions proposal, fourth slice: real exnref)
 
 ### Fixed

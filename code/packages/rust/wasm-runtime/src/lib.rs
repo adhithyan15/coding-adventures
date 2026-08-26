@@ -1319,7 +1319,18 @@ impl WasmRuntime {
                         .as_ref()
                         .and_then(|h| h.resolve_memory(&imp.module_name, &imp.name))
                         .ok_or_else(|| link_error("unknown import", imp))?;
-                    let actual = Limits { min: imported_mem.size(), max: imported_mem.max_pages() };
+                    // W25 (memory64): an is64 mismatch between the actual
+                    // memory and the declared import type is always
+                    // incompatible, the same "real type mismatch" shape
+                    // every other import-compat check here already uses
+                    // -- checked BEFORE `limits_compatible` (which is
+                    // is64-agnostic; both sides' `Limits` are `u64` now
+                    // regardless of `is64`, so a mismatch wouldn't
+                    // otherwise be caught by it at all).
+                    if imported_mem.is64() != mem_type.is64 {
+                        return Err(link_error("incompatible import type", imp));
+                    }
+                    let actual = Limits { min: imported_mem.size() as u64, max: imported_mem.max_pages().map(|m| m as u64) };
                     if !limits_compatible(&actual, &mem_type.limits) {
                         return Err(link_error("incompatible import type", imp));
                     }
@@ -1342,7 +1353,7 @@ impl WasmRuntime {
                     // limits) would incorrectly link here rather than
                     // fail. Named, not silent: revisit if a future PR
                     // gives `Table` a real element-type field.
-                    let actual = Limits { min: imported_table.size(), max: imported_table.max_size() };
+                    let actual = Limits { min: imported_table.size() as u64, max: imported_table.max_size().map(|m| m as u64) };
                     if !limits_compatible(&actual, &table_type.limits) {
                         return Err(link_error("incompatible import type", imp));
                     }
@@ -1416,13 +1427,43 @@ impl WasmRuntime {
         // #85) -- imported memories (pushed above) occupy the low
         // indices, matching every other index space's import-then-declared
         // ordering in this same function.
+        //
+        // W25 (memory64): `new_with_is64` is fallible -- a memory64
+        // memory's spec-valid declaration ceiling (`2^48` pages,
+        // `wasm-validator`'s own Check 1b) is far larger than this
+        // interpreter will actually allocate (`MAX_MEMORY64_INITIAL_
+        // PAGES`, `wasm-execution`'s own practical cap) -- so a module
+        // that only ever DECLARES such a memory validates successfully,
+        // and only an actual instantiation attempt like this one hits
+        // the cap, as a real `TrapError` (never a panic/allocator
+        // abort). `total_is64_pages` mirrors `wasm-validator`'s own
+        // Check 1b aggregate reasoning (many individually-under-cap
+        // memories still totaling an unreasonable amount) for the is64
+        // case specifically -- Check 1b's own aggregate only covers
+        // 32-bit memories today.
+        let mut total_is64_pages: u64 = 0;
         for mem_type in &module.memories {
-            memories.push(LinearMemory::new(mem_type.limits.min, mem_type.limits.max));
+            if mem_type.is64 {
+                total_is64_pages += mem_type.limits.min;
+                if total_is64_pages > wasm_execution::MAX_MEMORY64_INITIAL_PAGES {
+                    return Err(TrapError::new(format!(
+                        "total declared 64-bit memory across this module is at least {total_is64_pages} pages, exceeding this interpreter's practical aggregate cap of {} pages",
+                        wasm_execution::MAX_MEMORY64_INITIAL_PAGES
+                    )));
+                }
+            }
+            memories.push(LinearMemory::new_with_is64(mem_type.limits.min, mem_type.limits.max, mem_type.is64)?);
         }
 
-        // Allocate tables.
+        // Allocate tables. `as u32`: `wasm-validator`'s Check 2b already
+        // bounds-checked `limits.min` against `MAX_TABLE_ELEMENTS` (a
+        // `u32`) before this module could ever reach instantiation, and
+        // tables don't have a W25 `is64` widening (`table64` is a
+        // separate, out-of-scope proposal -- see `code/specs/
+        // W25-wasm-memory64-first-slice.md`), so this narrowing is
+        // always lossless in practice.
         for table_type in &module.tables {
-            tables.push(Table::new(table_type.limits.min, table_type.limits.max));
+            tables.push(Table::new(table_type.limits.min as u32, table_type.limits.max.map(|m| m as u32)));
         }
 
         // The instance's persistent v128 heap (see `code/specs/
@@ -1456,12 +1497,24 @@ impl WasmRuntime {
         // completely separate code path from this one-time instantiation-
         // time copy.
         if let Some(mem) = memories.first_mut() {
+            // W25 (memory64): memory 0's `is64`-ness determines whether
+            // this active data segment's offset expression is an
+            // `i32.const` or `i64.const` -- `wasm-wast-parser` emits the
+            // matching const-expr opcode for whichever memory 0 actually
+            // is (this repo's data segments always target memory 0 --
+            // see `wasm-validator`'s own Check 8 doc comment -- so only
+            // memory 0's `is64` is ever relevant here).
+            let is64 = mem.is64();
             for seg in &module.data {
                 if seg.is_passive {
                     continue;
                 }
                 let offset = evaluate_const_expr(&seg.offset_expr, &globals, &mut v128_heap)?;
-                let offset_num = offset.as_i32().map_err(|e| TrapError::new(e.message))? as usize;
+                let offset_num = if is64 {
+                    offset.as_i64().map_err(|e| TrapError::new(e.message))? as usize
+                } else {
+                    offset.as_i32().map_err(|e| TrapError::new(e.message))? as usize
+                };
                 mem.write_bytes(offset_num, &seg.data)?;
             }
         }
@@ -2401,6 +2454,7 @@ mod tests {
             memories: vec![MemoryType {
                 limits: Limits { min: 1, max: None },
                 shared: false,
+                is64: false,
             }],
             data: vec![DataSegment {
                 memory_index: 0,
@@ -2751,7 +2805,7 @@ mod tests {
         let module = WasmModule {
             tables: vec![TableType {
                 element_type: 0x70,
-                limits: Limits { min: wasm_execution::MAX_TABLE_ELEMENTS + 1, max: None },
+                limits: Limits { min: wasm_execution::MAX_TABLE_ELEMENTS as u64 + 1, max: None },
             }],
             ..Default::default()
         };
@@ -2780,7 +2834,7 @@ mod tests {
                 module_name: "env".to_string(),
                 name: "no_such_memory".to_string(),
                 kind: ExternalKind::Memory,
-                type_info: ImportTypeInfo::Memory(MemoryType { limits: Limits { min: 1, max: None }, shared: false }),
+                type_info: ImportTypeInfo::Memory(MemoryType { limits: Limits { min: 1, max: None }, shared: false, is64: false }),
             }],
             ..Default::default()
         };
@@ -2799,7 +2853,7 @@ mod tests {
                 module_name: "env".to_string(),
                 name: "mem".to_string(),
                 kind: ExternalKind::Memory,
-                type_info: ImportTypeInfo::Memory(MemoryType { limits: Limits { min: 5, max: None }, shared: false }),
+                type_info: ImportTypeInfo::Memory(MemoryType { limits: Limits { min: 5, max: None }, shared: false, is64: false }),
             }],
             ..Default::default()
         };
@@ -2816,7 +2870,7 @@ mod tests {
                 module_name: "env".to_string(),
                 name: "mem".to_string(),
                 kind: ExternalKind::Memory,
-                type_info: ImportTypeInfo::Memory(MemoryType { limits: Limits { min: 1, max: Some(2) }, shared: false }),
+                type_info: ImportTypeInfo::Memory(MemoryType { limits: Limits { min: 1, max: Some(2) }, shared: false, is64: false }),
             }],
             ..Default::default()
         };

@@ -885,6 +885,18 @@ TESTSUITE_FILES = [
     # distinctions) stays `NotYetSupported` -- genuinely out of scope for
     # this slice, see W24's own scope section.
     "throw_ref.wast",
+    # memory64 proposal, first slice (W25 -- see code/specs/
+    # W25-wasm-memory64-first-slice.md): 64-bit memory addressing for
+    # plain scalar load/store, `memory.size`, and active data-segment
+    # offsets. `memory64.wast` is the one file in the real memory64/table64
+    # family that is NOT entangled with `table64` (a separate proposal) --
+    # `memory64-imports.wast` mixes both and is deliberately deferred, per
+    # this spec's own "Scoping the first slice" section. Corrects a prior
+    # session's (W23, repeated by W24) mistaken claim that memory64 has
+    # zero corpus coverage at this pinned SHA -- it does not; this file and
+    # a dozen more `*64.wast` files live right here, at the same commit
+    # every other file in this list already vendors from.
+    "memory64.wast",
 ]
 
 # Reference-types/threads-proposal files whose UPSTREAM path lives under

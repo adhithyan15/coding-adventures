@@ -503,6 +503,13 @@ struct ModuleContext<'a> {
     /// alone ("is there at least one") is no longer sufficient once an
     /// instruction can reference memory N specifically.
     memory_count: u32,
+    /// Each memory's `is64`-ness (memory64 proposal, W25), same combined
+    /// imports-first-then-declared index-space/ordering convention as
+    /// `table_element_types` below -- a load/store/`memory.size`/
+    /// `memory.grow` must type-check its address/result against the
+    /// TARGET memory's own `is64`, not unconditionally assume `i32` (see
+    /// `code/specs/W25-wasm-memory64-first-slice.md`).
+    memory_is64: Vec<bool>,
     /// Combined imported + module-defined table COUNT (WASM17), same
     /// index-space convention as `func_types`/`global_types` -- unlike
     /// `has_memory` (a plain bool, since every memory op hardcodes memory
@@ -577,6 +584,15 @@ fn build_module_context(module: &WasmModule) -> Result<ModuleContext<'_>, Valida
     let has_memory = !module.memories.is_empty() || module.imports.iter().any(|i| matches!(i.type_info, ImportTypeInfo::Memory(_)));
     let imported_memory_count = module.imports.iter().filter(|i| matches!(i.type_info, ImportTypeInfo::Memory(_))).count();
     let memory_count = (imported_memory_count + module.memories.len()) as u32;
+    let mut memory_is64: Vec<bool> = module
+        .imports
+        .iter()
+        .filter_map(|i| match &i.type_info {
+            ImportTypeInfo::Memory(mt) => Some(mt.is64),
+            _ => None,
+        })
+        .collect();
+    memory_is64.extend(module.memories.iter().map(|m| m.is64));
     let mut table_element_types: Vec<u8> = module
         .imports
         .iter()
@@ -594,6 +610,7 @@ fn build_module_context(module: &WasmModule) -> Result<ModuleContext<'_>, Valida
         global_types,
         has_memory,
         memory_count,
+        memory_is64,
         table_count,
         table_element_types,
         tag_types,
@@ -1451,6 +1468,16 @@ fn type_check_function(ctx: &ModuleContext, func_idx: usize, func_type: &FuncTyp
                 // own decode exactly (`MULTI_MEMORY_FLAG`).
                 const MULTI_MEMORY_FLAG: u32 = 0x40;
                 let (raw_align, sz1) = decode_unsigned(code, offset).map_err(|e| ValidationError::Other(format!("bad memarg align: {e}")))?;
+                // W25 (memory64): the memarg `offset` immediate is `u64`
+                // unconditionally in the real spec's binary grammar
+                // (verified live against `https://webassembly.github.io/
+                // spec/core/binary/instructions.html` -- see `code/specs/
+                // W25-wasm-memory64-first-slice.md`), not just for a
+                // 64-bit memory; widened from the previous `u32`-typed
+                // read purely for decode correctness -- this arm never
+                // actually uses the decoded VALUE, only its byte length,
+                // so this change is a no-op for every already-passing
+                // file.
                 let (_mem_offset, sz2) = decode_unsigned(code, offset + sz1).map_err(|e| ValidationError::Other(format!("bad memarg offset: {e}")))?;
                 let raw_align = raw_align as u32;
                 let has_memidx = raw_align & MULTI_MEMORY_FLAG != 0;
@@ -1472,12 +1499,16 @@ fn type_check_function(ctx: &ModuleContext, func_idx: usize, func_type: &FuncTyp
                 if align > max_align {
                     err!("{}: alignment 2^{align} exceeds the natural alignment 2^{max_align}", info.name);
                 }
+                // W25 (memory64): the address operand is `I64`, not
+                // `I32`, when the TARGET memory (`memidx`, just
+                // bounds-checked above) is `is64`.
+                let addr_type = if ctx.memory_is64.get(memidx as usize).copied().unwrap_or(false) { ValueType::I64 } else { ValueType::I32 };
                 if info.stack_push == 1 {
-                    pop_expect(&mut stack, frame!(), ValueType::I32)?; // address
+                    pop_expect(&mut stack, frame!(), addr_type)?; // address
                     push_val(&mut stack, value_type);
                 } else {
                     pop_expect(&mut stack, frame!(), value_type)?; // stored value (top)
-                    pop_expect(&mut stack, frame!(), ValueType::I32)?; // address
+                    pop_expect(&mut stack, frame!(), addr_type)?; // address
                 }
             }
             0x3F => {
@@ -1493,7 +1524,11 @@ fn type_check_function(ctx: &ModuleContext, func_idx: usize, func_type: &FuncTyp
                 if memidx >= ctx.memory_count {
                     err!("memory.size references memory index {memidx}, but only {} memories exist", ctx.memory_count);
                 }
-                push_val(&mut stack, ValueType::I32);
+                // W25 (memory64): result type is `I64` for an `is64`
+                // memory (see `code/specs/
+                // W25-wasm-memory64-first-slice.md`).
+                let result_type = if ctx.memory_is64.get(memidx as usize).copied().unwrap_or(false) { ValueType::I64 } else { ValueType::I32 };
+                push_val(&mut stack, result_type);
             }
             0x40 => {
                 // memory.grow -- same real-memidx bounds-check as memory.size above.
@@ -1505,8 +1540,11 @@ fn type_check_function(ctx: &ModuleContext, func_idx: usize, func_type: &FuncTyp
                 if memidx >= ctx.memory_count {
                     err!("memory.grow references memory index {memidx}, but only {} memories exist", ctx.memory_count);
                 }
-                pop_expect(&mut stack, frame!(), ValueType::I32)?;
-                push_val(&mut stack, ValueType::I32);
+                // W25 (memory64): delta/result types are `I64` for an
+                // `is64` memory, same shape as `memory.size` above.
+                let grow_type = if ctx.memory_is64.get(memidx as usize).copied().unwrap_or(false) { ValueType::I64 } else { ValueType::I32 };
+                pop_expect(&mut stack, frame!(), grow_type)?;
+                push_val(&mut stack, grow_type);
             }
 
             // ── `0xFE`-prefixed atomic memory operations (threads
@@ -2754,9 +2792,11 @@ fn type_check_function(ctx: &ModuleContext, func_idx: usize, func_type: &FuncTyp
 
 /// `(value_type, natural_access_size_in_bytes)` for a memory-family opcode
 /// name -- W02 §2.6's memory instruction table. Every one of these opcodes
-/// pops an `I32` address; the caller distinguishes load-family (address
-/// in, `value_type` out) from store-family (address + `value_type` in,
-/// nothing out) via `info.stack_push`.
+/// pops an address (`I32` for a 32-bit memory, `I64` for a 64-bit one --
+/// W25, memory64 proposal -- the caller derives the right one from the
+/// TARGET memory's own `is64`); the caller distinguishes load-family
+/// (address in, `value_type` out) from store-family (address +
+/// `value_type` in, nothing out) via `info.stack_push`.
 fn memory_op_shape(name: &str) -> Result<(ValueType, u32), ValidationError> {
     use ValueType::*;
     Ok(match name {

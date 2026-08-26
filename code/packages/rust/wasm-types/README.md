@@ -64,6 +64,8 @@ let sig = FuncType {
 // Describe a memory: at least 1 page, at most 4 pages (4 * 64KiB = 256KiB)
 let mem = MemoryType {
     limits: Limits { min: 1, max: Some(4) },
+    shared: false, // threads proposal (W09/W18)
+    is64: false,   // memory64 proposal (W25) -- 64-bit addressing
 };
 
 // Start with an empty module and add to it

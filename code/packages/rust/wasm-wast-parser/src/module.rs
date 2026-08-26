@@ -472,7 +472,7 @@ fn collect_symbols(fields: &[&SExpr], ctx: &mut ModuleCtx) -> Result<(), WastPar
                     insert_unique(&mut ctx.memory_names, name, idx, f.pos(), "memory")?;
                 }
             }
-            ctx.module.memories.push(MemoryType { limits: Limits { min: 0, max: None }, shared: false }); // fixed in pass 2
+            ctx.module.memories.push(MemoryType { limits: Limits { min: 0, max: None }, shared: false, is64: false }); // fixed in pass 2
         } else if f.is_keyword_list("global") {
             let items = f.as_list().unwrap();
             if let Some(name) = items.get(1).and_then(|e| e.as_atom()) {
@@ -597,8 +597,8 @@ fn build_import_shell(items: &[SExpr], desc: &[SExpr], kind: &str) -> Result<Imp
             // numbers" on a syntactically valid, real WAT form. Found
             // while adding WASM18's `shared` keyword support.
             let limits_start = if desc.get(1).and_then(|e| e.as_atom()).is_some_and(|s| s.starts_with('$')) { 2 } else { 1 };
-            let (limits, shared) = parse_memory_limits(&desc[limits_start..])?;
-            ImportTypeInfo::Memory(MemoryType { limits, shared })
+            let (limits, shared, is64) = parse_memory_limits(&desc[limits_start..])?;
+            ImportTypeInfo::Memory(MemoryType { limits, shared, is64 })
         }
         "global" => {
             // `desc` is `(global $name? <type>)` -- an optional `$name`
@@ -672,14 +672,39 @@ fn parse_limits(fields: &[SExpr]) -> Result<Limits, WastParseError> {
     // parsing it. `numeric::parse_u32` already has the real hex-aware
     // magnitude parser `parse_i32`/`parse_i8`/etc. all share.
     let digit_atoms: Vec<&SExpr> = fields.iter().take_while(|e| e.as_atom().is_some_and(looks_like_uint_literal)).collect();
-    let nums: Vec<u32> = digit_atoms
+    let nums: Vec<u64> = digit_atoms
         .iter()
         .map(|e| {
             let (s, pos) = match e {
                 SExpr::Atom(s, pos) => (s.as_str(), *pos),
                 _ => unreachable!("take_while already filtered to atoms"),
             };
-            numeric::parse_u32(s, pos)
+            numeric::parse_u32(s, pos).map(|v| v as u64)
+        })
+        .collect::<Result<_, _>>()?;
+    match nums.as_slice() {
+        [min] => Ok(Limits { min: *min, max: None }),
+        [min, max] => Ok(Limits { min: *min, max: Some(*max) }),
+        _ => Err(WastParseError::UnexpectedToken { pos: 0, found: "".into(), expected: "1 or 2 limit numbers" }),
+    }
+}
+
+/// As [`parse_limits`], but for a 64-bit (`memory64`, W25) memory's
+/// limits -- `min`/`max` parsed via [`numeric::parse_u64`] instead of
+/// `parse_u32`, since a real, spec-valid 64-bit memory's limits can reach
+/// `2^48` (this repo's own vendored `memory64.wast` uses the literal
+/// `0x1_0000_0000_0000` directly). Only reached when the `i64` keyword
+/// (see `parse_memory_limits` below) precedes the limit numbers.
+fn parse_limits64(fields: &[SExpr]) -> Result<Limits, WastParseError> {
+    let digit_atoms: Vec<&SExpr> = fields.iter().take_while(|e| e.as_atom().is_some_and(looks_like_uint_literal)).collect();
+    let nums: Vec<u64> = digit_atoms
+        .iter()
+        .map(|e| {
+            let (s, pos) = match e {
+                SExpr::Atom(s, pos) => (s.as_str(), *pos),
+                _ => unreachable!("take_while already filtered to atoms"),
+            };
+            numeric::parse_u64(s, pos)
         })
         .collect::<Result<_, _>>()?;
     match nums.as_slice() {
@@ -690,15 +715,22 @@ fn parse_limits(fields: &[SExpr]) -> Result<Limits, WastParseError> {
 }
 
 /// A memory's limits, plus WASM18's `shared` trailing keyword
-/// (`(memory 1 1 shared)`) -- tables never carry this, so `parse_limits`
-/// itself stays shared/table-agnostic; this wrapper is memory-specific.
-/// `parse_limits`'s own digit-scanning `take_while` already stops at the
-/// first non-digit atom, so a trailing `shared` keyword never confuses
-/// the numeric parse -- this just also checks whether it's present.
-fn parse_memory_limits(fields: &[SExpr]) -> Result<(Limits, bool), WastParseError> {
-    let limits = parse_limits(fields)?;
-    let shared = fields.iter().any(|e| e.as_atom() == Some("shared"));
-    Ok((limits, shared))
+/// (`(memory 1 1 shared)`) and W25's leading `i64` keyword (`(memory i64
+/// 1 1)`, memory64 proposal) -- tables never carry either, so
+/// `parse_limits` itself stays shared/`i64`/table-agnostic; this wrapper
+/// is memory-specific. `parse_limits`/`parse_limits64`'s own digit-
+/// scanning `take_while` already stops at the first non-digit atom, so a
+/// trailing `shared` keyword never confuses the numeric parse -- this
+/// just also checks whether `i64`/`shared` are present, and picks the
+/// 32- or 64-bit numeric parser accordingly.
+///
+/// Returns `(Limits, shared, is64)`.
+fn parse_memory_limits(fields: &[SExpr]) -> Result<(Limits, bool, bool), WastParseError> {
+    let is64 = fields.first().and_then(|e| e.as_atom()) == Some("i64");
+    let rest = if is64 { &fields[1..] } else { fields };
+    let limits = if is64 { parse_limits64(rest)? } else { parse_limits(rest)? };
+    let shared = rest.iter().any(|e| e.as_atom() == Some("shared"));
+    Ok((limits, shared, is64))
 }
 
 fn parse_global_type(expr: &SExpr) -> Result<GlobalType, WastParseError> {
@@ -815,9 +847,7 @@ fn build(fields: &[&SExpr], ctx: &mut ModuleCtx) -> Result<(), WastParseError> {
                 // a module has any memory import.
                 let space_idx = num_import_memories + memory_i;
                 let (limits_start, _) = handle_inline_export(rest, "memory", space_idx, ctx)?;
-                let (limits, shared) = parse_memory_limits(&rest[limits_start..])?;
-                ctx.module.memories[memory_i].limits = limits;
-                ctx.module.memories[memory_i].shared = shared;
+                build_memory_limits_and_data(&rest[limits_start..], space_idx as u32, memory_i, ctx)?;
                 memory_i += 1;
             }
             "table" => {
@@ -1229,12 +1259,82 @@ fn build_table_limits_and_elements(rest: &[SExpr], table_idx: u32, storage_idx: 
         .iter()
         .map(|f| resolve_idx(&ctx.func_names, f, "func").map(Some))
         .collect::<Result<_, _>>()?;
-    let count = function_indices.len() as u32;
+    let count = function_indices.len() as u64;
     ctx.module.tables[storage_idx as usize].limits = Limits { min: count, max: Some(count) };
     ctx.module.elements.push(Element {
         table_index: table_idx,
         offset_expr: vec![0x41, 0x00, 0x0B], // i32.const 0; end
         function_indices,
+        is_passive: false,
+    });
+    Ok(())
+}
+
+/// `(memory $name? (export "e")* i64? [limits shared? | (data <string>*)])`
+/// -- the memory build site's full grammar, after any leading `$name`/
+/// inline-export clauses have already been stripped. `parse_memory_limits`
+/// alone only handles the ordinary `limits shared?` form; this wraps it
+/// with the OTHER real WAT abbreviation a memory declaration can take --
+/// `(memory (data ...))`, which desugars to "however many pages the
+/// inline data needs (rounded up), no declared max" plus an active data
+/// segment (offset 0) holding those exact bytes -- the same "inline
+/// payload implies size" shape [`build_table_limits_and_elements`]
+/// already establishes for `(table funcref (elem ...))`, applied to
+/// memory's own abbreviation instead. `i64` (memory64 proposal, W25) can
+/// precede EITHER form (`(memory i64 (data ...))`, `(memory i64 1 2)`),
+/// so it's stripped once, up front, before dispatching between them.
+///
+/// Confirmed against this repo's own vendored `memory64.wast` (W25),
+/// whose very first three modules all use the inline-data form: `(memory
+/// i64 (data))`, `(memory i64 (data ""))`, `(memory i64 (data "x"))` --
+/// this repo's wast parser had NO support for this abbreviation at all
+/// before this fix, for either a 32- or 64-bit memory (a real,
+/// pre-existing gap this session found while vendoring `memory64.wast`,
+/// not something memory64 itself introduced).
+fn build_memory_limits_and_data(rest: &[SExpr], memory_idx: u32, storage_idx: usize, ctx: &mut ModuleCtx) -> Result<(), WastParseError> {
+    let is64 = rest.first().and_then(|e| e.as_atom()) == Some("i64");
+    let rest = if is64 { &rest[1..] } else { rest };
+    let starts_with_limit_number = rest.first().and_then(|e| e.as_atom()).is_some_and(looks_like_uint_literal);
+    if starts_with_limit_number {
+        let limits = if is64 { parse_limits64(rest)? } else { parse_limits(rest)? };
+        let shared = rest.iter().any(|e| e.as_atom() == Some("shared"));
+        ctx.module.memories[storage_idx].limits = limits;
+        ctx.module.memories[storage_idx].shared = shared;
+        ctx.module.memories[storage_idx].is64 = is64;
+        return Ok(());
+    }
+
+    // `(data <string>*)` -- the inline-data abbreviation. Byte
+    // concatenation logic mirrors `build_data`'s own (multiple adjacent
+    // string literals concatenate, matching the real spec's grammar).
+    let data_form = expect_get(rest, 0)?;
+    let data_items = data_form.as_list().ok_or(WastParseError::UnexpectedEof)?;
+    if expect_get(data_items, 0)?.as_atom() != Some("data") {
+        return Err(WastParseError::UnexpectedToken {
+            pos: data_items[0].pos(),
+            found: "list".to_string(),
+            expected: "a (data ...) form",
+        });
+    }
+    let mut data = Vec::new();
+    for f in &data_items[1..] {
+        if let SExpr::Str(b, _) = f {
+            data.extend_from_slice(b);
+        }
+    }
+    const PAGE_SIZE: u64 = 65536;
+    let page_count = (data.len() as u64).div_ceil(PAGE_SIZE);
+    ctx.module.memories[storage_idx].limits = Limits { min: page_count, max: Some(page_count) };
+    ctx.module.memories[storage_idx].is64 = is64;
+    ctx.module.data.push(DataSegment {
+        memory_index: memory_idx,
+        // `i64.const 0` (0x42) for a 64-bit memory, `i32.const 0` (0x41)
+        // otherwise -- W25: an active data segment's offset expression
+        // must match its target memory's own address width (see
+        // `wasm-runtime::instantiate`'s matching `is64`-aware offset
+        // evaluation).
+        offset_expr: if is64 { vec![0x42, 0x00, 0x0B] } else { vec![0x41, 0x00, 0x0B] },
+        data,
         is_passive: false,
     });
     Ok(())

@@ -485,12 +485,22 @@ pub struct FuncType {
 /// ```
 ///
 /// The WASM spec requires `min <= max` when a maximum is specified.
+///
+/// `min`/`max` are `u64`, not `u32` (W25 / memory64 proposal): a 64-bit
+/// memory's limits can be declared up to `2^48` pages (the real spec's own
+/// ceiling for a `memory64`-flagged memory — see `code/specs/
+/// W25-wasm-memory64-first-slice.md`), which doesn't fit `u32`. `TableType`
+/// shares this same struct and stays well within `u32`'s range for every
+/// value this repo has ever seen (`table64`, the analogous widening for
+/// tables, is a separate, out-of-scope proposal — see that spec's own
+/// "Explicitly out of scope" section) — widening here is a pure, numerically
+/// non-breaking generalization for every existing table/32-bit-memory caller.
 #[derive(Debug, Clone, PartialEq, Eq)]
 pub struct Limits {
     /// Minimum size (must always be present).
-    pub min: u32,
+    pub min: u64,
     /// Optional maximum size. `None` means unbounded.
-    pub max: Option<u32>,
+    pub max: Option<u64>,
 }
 
 // ──────────────────────────────────────────────────────────────────────────────
@@ -525,6 +535,14 @@ pub struct MemoryType {
     /// `code/specs/W09-wasm-atomics-plain.md`). Defaults to `false`,
     /// matching every pre-existing (non-atomic) module.
     pub shared: bool,
+    /// Whether this memory uses 64-bit addressing (memory64 proposal,
+    /// W25: `(memory i64 ...)` in text, binary `limits` flags bit `0x04`).
+    /// When `true`, `memory.size`/`memory.grow` and every load/store
+    /// instruction targeting this memory operate on `i64` addresses
+    /// instead of `i32` — see `code/specs/
+    /// W25-wasm-memory64-first-slice.md`. Defaults to `false`, matching
+    /// every pre-existing (32-bit) memory.
+    pub is64: bool,
 }
 
 // ──────────────────────────────────────────────────────────────────────────────
@@ -1086,9 +1104,27 @@ mod tests {
         let mt = MemoryType {
             limits: Limits { min: 2, max: Some(8) },
             shared: false,
+            is64: false,
         };
         assert_eq!(mt.limits.min, 2);
         assert_eq!(mt.limits.max, Some(8));
+    }
+
+    // ── Test 9b: MemoryType with 64-bit addressing (W25 / memory64) ───────────
+
+    #[test]
+    fn memory_type_is64_construction() {
+        // A real, spec-valid 64-bit memory's limits can exceed u32::MAX --
+        // see code/specs/W25-wasm-memory64-first-slice.md.
+        let big: u64 = (u32::MAX as u64) + 1;
+        let mt = MemoryType {
+            limits: Limits { min: big, max: Some(big * 2) },
+            shared: false,
+            is64: true,
+        };
+        assert!(mt.is64);
+        assert_eq!(mt.limits.min, big);
+        assert_eq!(mt.limits.max, Some(big * 2));
     }
 
     // ── Test 10: TableType default element type is FUNCREF ────────────────────
@@ -1155,6 +1191,7 @@ mod tests {
             type_info: ImportTypeInfo::Memory(MemoryType {
                 limits: Limits { min: 1, max: Some(2) },
                 shared: false,
+                is64: false,
             }),
         };
         assert_eq!(imp.kind, ExternalKind::Memory);
@@ -1265,7 +1302,7 @@ mod tests {
             imports: vec![],
             functions: vec![0],
             tables: vec![],
-            memories: vec![MemoryType { limits: Limits { min: 1, max: None }, shared: false }],
+            memories: vec![MemoryType { limits: Limits { min: 1, max: None }, shared: false, is64: false }],
             globals: vec![],
             exports: vec![Export { name: "main".to_string(), kind: ExternalKind::Function, index: 0 }],
             start: Some(0),

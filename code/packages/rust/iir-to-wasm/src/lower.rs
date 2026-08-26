@@ -5899,8 +5899,9 @@ pub fn lower_iir_to_wasm(
         || !string_data.is_empty()
     {
         vec![wasm_types::MemoryType {
-            limits: wasm_types::Limits { min: 1, max: Some(max_memory_pages) },
+            limits: wasm_types::Limits { min: 1, max: Some(max_memory_pages as u64) },
             shared: false,
+            is64: false,
         }]
     } else {
         vec![]

@@ -2,6 +2,32 @@
 
 All notable changes to this package will be documented in this file.
 
+## [0.2.68] - 2026-08-26 (W25 — memory64 proposal, first slice)
+
+### Added
+
+- `ModuleContext.memory_is64: Vec<bool>` — each memory's `is64`-ness
+  (memory64 proposal), same combined imports-first-then-declared
+  index-space ordering as `table_element_types`.
+- Load/store (`0x28..=0x3E`), `memory.size` (`0x3F`), and `memory.grow`
+  (`0x40`) now require an `I64` address/delta/result instead of `I32`
+  when the TARGET memory (its real `memidx`) is `is64`.
+- **New**: `min <= max` is now actually checked for both memories and
+  tables — a real, pre-existing gap this repo never checked before (found
+  chasing `memory64.wast`'s own `"size minimum must not be greater than
+  maximum"` `assert_invalid` case, which nothing rejected for ANY memory,
+  32- or 64-bit, or any table, before this slice).
+- Check 1b (the 65536-page spec-ceiling + DoS-aggregate check) is now
+  `is64`-aware: a 64-bit memory's own spec ceiling is `2^48` pages (not
+  `2^16`) — verified against `memory64.wast`'s own real `assert_invalid`
+  boundary. The DoS-motivated AGGREGATE aspect stays 32-bit-only
+  (validation never allocates, so a large-but-spec-valid `is64`
+  declaration is correctly accepted here; the practical allocation risk
+  is handled separately, at instantiation — see `wasm-runtime`'s own
+  changelog).
+
+See `code/specs/W25-wasm-memory64-first-slice.md`.
+
 ## [0.2.67] - 2026-08-26 (Exceptions proposal, fourth slice W24: throw_ref + catch_ref/catch_all_ref arity)
 
 ### Added

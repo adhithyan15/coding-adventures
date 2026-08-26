@@ -228,52 +228,130 @@ pub fn validate(module: &WasmModule) -> Result<ValidatedModule, ValidationError>
         )));
     }
 
-    // ── Check 1b: Memory limits ≤ the real spec's 65536-page ceiling ────
+    // ── Check 1a: min <= max for every memory (and, below, every table) ─
     //
-    // Security review (task #96): a REAL WASM spec structural-validation
-    // rule (not implementation-defined, unlike Check 2b below) -- a
-    // memory's `min`/`max` may never exceed 2^16 pages (the entire 32-bit
-    // address space at 64KiB/page), the identical bound `LinearMemory::
-    // grow()` already enforces at runtime. Previously unchecked at
-    // validation time: a module declaring an over-cap `min` would reach
-    // `LinearMemory::new`'s eager `vec![0u8; min * PAGE_SIZE]` allocation
-    // unvalidated -- e.g. a single `(memory 100000)` attempts a ~6.4GB
-    // allocation before ever running a single instruction.
-    //
-    // A per-memory cap alone isn't enough once `MAX_MEMORIES` (64) is
-    // multiplied in: 64 memories each at the spec's own 65536-page max
-    // would still total ~256GB of eager allocation from one small module,
-    // all through the fully-intended `validate()` path -- no bypass
-    // needed (2nd round finding). So this also tracks a running total
-    // across every memory (imported + declared) and caps the SUM at the
-    // same 65536-page bound: still permits any single spec-valid memory
-    // at its true max, just prevents many of them from being max-size
-    // simultaneously.
-    let mut total_memory_pages: u64 = 0;
+    // A real, spec-mandated structural rule this repo never actually
+    // checked before W25 (found chasing `memory64.wast`'s own
+    // `"size minimum must not be greater than maximum"` `assert_invalid`
+    // case -- a pre-existing gap for 32-bit memories too, not something
+    // memory64 introduced). Applies identically regardless of `is64`.
     for (i, mt) in module.memories.iter().enumerate() {
-        if mt.limits.min > 65536 || mt.limits.max.is_some_and(|m| m > 65536) {
+        if mt.limits.max.is_some_and(|m| mt.limits.min > m) {
             return Err(ValidationError::Other(format!(
-                "memory #{i}: limits (min={}, max={:?}) exceed the spec maximum of 65536 pages",
+                "memory #{i}: size minimum must not be greater than maximum (min={}, max={:?})",
                 mt.limits.min, mt.limits.max
             )));
         }
-        total_memory_pages += mt.limits.min as u64;
     }
     for imp in &module.imports {
         if let ImportTypeInfo::Memory(mt) = &imp.type_info {
-            if mt.limits.min > 65536 || mt.limits.max.is_some_and(|m| m > 65536) {
+            if mt.limits.max.is_some_and(|m| mt.limits.min > m) {
                 return Err(ValidationError::Other(format!(
-                    "imported memory {}.{}: limits (min={}, max={:?}) exceed the spec maximum of 65536 pages",
+                    "imported memory {}.{}: size minimum must not be greater than maximum (min={}, max={:?})",
                     imp.module_name, imp.name, mt.limits.min, mt.limits.max
                 )));
             }
-            total_memory_pages += mt.limits.min as u64;
+        }
+    }
+
+    // ── Check 1b: Memory limits ≤ the real spec's own ceiling ───────────
+    //
+    // Security review (task #96): a REAL WASM spec structural-validation
+    // rule (not implementation-defined, unlike Check 2b below) -- a
+    // 32-bit memory's `min`/`max` may never exceed 2^16 pages (the entire
+    // 32-bit address space at 64KiB/page), the identical bound
+    // `LinearMemory::grow()` already enforces at runtime. Previously
+    // unchecked at validation time: a module declaring an over-cap `min`
+    // would reach `LinearMemory::new`'s eager `vec![0u8; min * PAGE_SIZE]`
+    // allocation unvalidated -- e.g. a single `(memory 100000)` attempts a
+    // ~6.4GB allocation before ever running a single instruction.
+    //
+    // W25 (memory64): a 64-bit (`is64`) memory's OWN spec ceiling is
+    // `2^48` pages, not `2^16` -- verified live against `memory64.wast`'s
+    // own real `assert_invalid` boundary (`0x1_0000_0000_0001` invalid,
+    // `0x1_0000_0000_0000` valid). This is a much larger number than any
+    // real system will ever actually allocate, but VALIDATION does not
+    // allocate -- a module that only ever DECLARES such a memory (never
+    // instantiates it) is genuinely spec-valid and must validate
+    // successfully; only an actual instantiation attempt hits this
+    // interpreter's own separate, much smaller practical resource limit
+    // (`wasm-execution::MAX_MEMORY64_INITIAL_PAGES`, enforced by
+    // `LinearMemory::new_with_is64` in `wasm-runtime::instantiate`, not
+    // here).
+    //
+    // A per-memory cap alone isn't enough once `MAX_MEMORIES` (64) is
+    // multiplied in: 64 memories each at the 32-bit spec's own
+    // 65536-page max would still total ~256GB of eager allocation from
+    // one small module, all through the fully-intended `validate()` path
+    // -- no bypass needed (2nd round finding). So this also tracks a
+    // running total across every 32-bit memory (imported + declared) and
+    // caps the SUM at the same 65536-page bound: still permits any
+    // single spec-valid 32-bit memory at its true max, just prevents many
+    // of them from being max-size simultaneously. `is64` memories are
+    // deliberately EXCLUDED from this specific aggregate (it was
+    // calibrated for the 32-bit case, where the spec ceiling and the safe
+    // allocation ceiling are the SAME number, 65536 -- that's no longer
+    // true for `is64`, whose much larger spec ceiling would make this
+    // aggregate reject an individually-valid large `is64` declaration
+    // that nothing has even tried to instantiate yet); `is64` memories
+    // get their own, separate aggregate-and-per-memory practical cap at
+    // actual instantiation time instead (`wasm-runtime::instantiate`'s
+    // own `total_is64_pages` tracking, right where the real allocation
+    // risk lives).
+    let mut total_memory_pages: u64 = 0;
+    for (i, mt) in module.memories.iter().enumerate() {
+        let ceiling: u64 = if mt.is64 { 1u64 << 48 } else { 65536 };
+        if mt.limits.min > ceiling || mt.limits.max.is_some_and(|m| m > ceiling) {
+            return Err(ValidationError::Other(format!(
+                "memory #{i}: limits (min={}, max={:?}) exceed the spec maximum of {ceiling} pages",
+                mt.limits.min, mt.limits.max
+            )));
+        }
+        if !mt.is64 {
+            total_memory_pages += mt.limits.min;
+        }
+    }
+    for imp in &module.imports {
+        if let ImportTypeInfo::Memory(mt) = &imp.type_info {
+            let ceiling: u64 = if mt.is64 { 1u64 << 48 } else { 65536 };
+            if mt.limits.min > ceiling || mt.limits.max.is_some_and(|m| m > ceiling) {
+                return Err(ValidationError::Other(format!(
+                    "imported memory {}.{}: limits (min={}, max={:?}) exceed the spec maximum of {ceiling} pages",
+                    imp.module_name, imp.name, mt.limits.min, mt.limits.max
+                )));
+            }
+            if !mt.is64 {
+                total_memory_pages += mt.limits.min;
+            }
         }
     }
     if total_memory_pages > 65536 {
         return Err(ValidationError::Other(format!(
-            "total declared memory across all memories is {total_memory_pages} pages, exceeding the aggregate cap of 65536 pages"
+            "total declared memory across all 32-bit memories is {total_memory_pages} pages, exceeding the aggregate cap of 65536 pages"
         )));
+    }
+
+    // ── Check 1c: min <= max for every table (W25) ──────────────────────
+    //
+    // Same real, spec-mandated rule as Check 1a above, applied to tables
+    // too -- this repo never checked it for tables either before W25.
+    for (i, tt) in module.tables.iter().enumerate() {
+        if tt.limits.max.is_some_and(|m| tt.limits.min > m) {
+            return Err(ValidationError::Other(format!(
+                "table #{i}: size minimum must not be greater than maximum (min={}, max={:?})",
+                tt.limits.min, tt.limits.max
+            )));
+        }
+    }
+    for imp in &module.imports {
+        if let ImportTypeInfo::Table(tt) = &imp.type_info {
+            if tt.limits.max.is_some_and(|m| tt.limits.min > m) {
+                return Err(ValidationError::Other(format!(
+                    "imported table {}.{}: size minimum must not be greater than maximum (min={}, max={:?})",
+                    imp.module_name, imp.name, tt.limits.min, tt.limits.max
+                )));
+            }
+        }
     }
 
     // ── Check 2: Table count ≤ MAX_TABLES ───────────────────────────────
@@ -313,24 +391,24 @@ pub fn validate(module: &WasmModule) -> Result<ValidatedModule, ValidationError>
     // its full implementation-defined max, just not many of them at once.
     let mut total_table_elements: u64 = 0;
     for (i, tt) in module.tables.iter().enumerate() {
-        if tt.limits.min > wasm_execution::MAX_TABLE_ELEMENTS {
+        if tt.limits.min > wasm_execution::MAX_TABLE_ELEMENTS as u64 {
             return Err(ValidationError::Other(format!(
                 "table #{i}: declared minimum {} elements exceeds this interpreter's resource limit of {}",
                 tt.limits.min,
                 wasm_execution::MAX_TABLE_ELEMENTS
             )));
         }
-        total_table_elements += tt.limits.min as u64;
+        total_table_elements += tt.limits.min;
     }
     for imp in &module.imports {
         if let ImportTypeInfo::Table(tt) = &imp.type_info {
-            if tt.limits.min > wasm_execution::MAX_TABLE_ELEMENTS {
+            if tt.limits.min > wasm_execution::MAX_TABLE_ELEMENTS as u64 {
                 return Err(ValidationError::Other(format!(
                     "imported table {}.{}: declared minimum {} elements exceeds this interpreter's resource limit of {}",
                     imp.module_name, imp.name, tt.limits.min, wasm_execution::MAX_TABLE_ELEMENTS
                 )));
             }
-            total_table_elements += tt.limits.min as u64;
+            total_table_elements += tt.limits.min;
         }
     }
     if total_table_elements > wasm_execution::MAX_TABLE_ELEMENTS as u64 {
@@ -678,7 +756,7 @@ mod tests {
     fn rejects_too_many_memories() {
         let module = WasmModule {
             memories: (0..=wasm_execution::MAX_MEMORIES)
-                .map(|_| MemoryType { limits: Limits { min: 1, max: None }, shared: false })
+                .map(|_| MemoryType { limits: Limits { min: 1, max: None }, shared: false, is64: false })
                 .collect(),
             ..Default::default()
         };
@@ -693,7 +771,7 @@ mod tests {
     fn accepts_up_to_max_memories() {
         let module = WasmModule {
             memories: (0..wasm_execution::MAX_MEMORIES)
-                .map(|_| MemoryType { limits: Limits { min: 1, max: None }, shared: false })
+                .map(|_| MemoryType { limits: Limits { min: 1, max: None }, shared: false, is64: false })
                 .collect(),
             ..Default::default()
         };
@@ -708,7 +786,7 @@ mod tests {
     #[test]
     fn rejects_a_memory_declaring_more_than_65536_pages() {
         let module = WasmModule {
-            memories: vec![MemoryType { limits: Limits { min: 65537, max: None }, shared: false }],
+            memories: vec![MemoryType { limits: Limits { min: 65537, max: None }, shared: false, is64: false }],
             ..Default::default()
         };
         let err = validate(&module).unwrap_err();
@@ -718,7 +796,7 @@ mod tests {
     #[test]
     fn accepts_a_memory_declaring_exactly_65536_pages() {
         let module = WasmModule {
-            memories: vec![MemoryType { limits: Limits { min: 65536, max: None }, shared: false }],
+            memories: vec![MemoryType { limits: Limits { min: 65536, max: None }, shared: false, is64: false }],
             ..Default::default()
         };
         assert!(validate(&module).is_ok());
@@ -735,8 +813,8 @@ mod tests {
     fn rejects_memories_whose_combined_pages_exceed_the_aggregate_cap() {
         let module = WasmModule {
             memories: vec![
-                MemoryType { limits: Limits { min: 65536, max: None }, shared: false },
-                MemoryType { limits: Limits { min: 1, max: None }, shared: false },
+                MemoryType { limits: Limits { min: 65536, max: None }, shared: false, is64: false },
+                MemoryType { limits: Limits { min: 1, max: None }, shared: false, is64: false },
             ],
             ..Default::default()
         };
@@ -851,7 +929,7 @@ mod tests {
         let module = WasmModule {
             tables: vec![TableType {
                 element_type: 0x70,
-                limits: Limits { min: wasm_execution::MAX_TABLE_ELEMENTS + 1, max: None },
+                limits: Limits { min: wasm_execution::MAX_TABLE_ELEMENTS as u64 + 1, max: None },
             }],
             ..Default::default()
         };
@@ -864,7 +942,7 @@ mod tests {
         let module = WasmModule {
             tables: vec![TableType {
                 element_type: 0x70,
-                limits: Limits { min: wasm_execution::MAX_TABLE_ELEMENTS, max: None },
+                limits: Limits { min: wasm_execution::MAX_TABLE_ELEMENTS as u64, max: None },
             }],
             ..Default::default()
         };
@@ -882,7 +960,7 @@ mod tests {
             tables: vec![
                 TableType {
                     element_type: 0x70,
-                    limits: Limits { min: wasm_execution::MAX_TABLE_ELEMENTS, max: None },
+                    limits: Limits { min: wasm_execution::MAX_TABLE_ELEMENTS as u64, max: None },
                 },
                 TableType { element_type: 0x70, limits: Limits { min: 1, max: None } },
             ],
@@ -944,6 +1022,7 @@ mod tests {
             memories: vec![MemoryType {
                 limits: Limits { min: 1, max: None },
                 shared: false,
+                is64: false,
             }],
             data: vec![DataSegment {
                 memory_index: 1, // only index 0 is valid
@@ -963,6 +1042,7 @@ mod tests {
             memories: vec![MemoryType {
                 limits: Limits { min: 1, max: None },
                 shared: false,
+                is64: false,
             }],
             data: vec![DataSegment {
                 memory_index: 0,
@@ -1109,6 +1189,7 @@ mod tests {
             memories: vec![MemoryType {
                 limits: Limits { min: 1, max: None },
                 shared: false,
+                is64: false,
             }],
             exports: vec![Export {
                 name: "mem".to_string(),
@@ -1176,10 +1257,11 @@ mod tests {
                 type_info: ImportTypeInfo::Memory(MemoryType {
                     limits: Limits { min: 1, max: None },
                     shared: false,
+                    is64: false,
                 }),
             }],
             memories: (0..wasm_execution::MAX_MEMORIES)
-                .map(|_| MemoryType { limits: Limits { min: 1, max: None }, shared: false })
+                .map(|_| MemoryType { limits: Limits { min: 1, max: None }, shared: false, is64: false })
                 .collect(),
             ..Default::default()
         };

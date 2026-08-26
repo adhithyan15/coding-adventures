@@ -1,5 +1,12 @@
 # Changelog — iir-to-wasm
 
+## [0.48.5] — 2026-08-26 (W25 — memory64 proposal, first slice)
+
+`wasm_types::MemoryType` gained an `is64` field (see `wasm-types`'s own
+CHANGELOG); this crate's one memory-construction site (a linear-memory
+declaration for compiled output) sets it `false` (an ordinary 32-bit
+memory) -- no behavior change.
+
 ## [0.48.4] — 2026-08-16 (task #95)
 
 `wasm_types::DataSegment` gained an `is_passive` field (see
