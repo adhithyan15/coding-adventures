@@ -54,8 +54,10 @@ const ALLOWED_DEGRADATIONS: &[(Backend, &str, &str)] = &[
     (Backend::Qt, "Radio", "property.radio-group-ignored"),
     (Backend::Flutter, "Radio", "property.radio-group-ignored"),
     (Backend::Compose, "Radio", "property.radio-group-ignored"),
-    // #13008 — XAML Modal requires app code-behind to open; under
-    // investigation whether this is inherent or fixable.
+    // #13008 — XAML Modal requires app code-behind to open. Confirmed
+    // permanent, not a to-do: WinUI3's ContentDialog has no bindable
+    // IsOpen-style property the way Popup/Flyout/TeachingTip do, so
+    // there's no declarative show/hide surface to bind `open:` to.
     (Backend::Xaml, "Modal", "property.dialog-open-host-required"),
     // #13010 — Flutter Modal is a zero-size TODO placeholder.
     (Backend::Flutter, "Modal", "interaction.dialog-placeholder"),

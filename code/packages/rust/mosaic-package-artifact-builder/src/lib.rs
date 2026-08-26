@@ -1249,6 +1249,21 @@ fn ignored_native_property(
                 "native Text accessibility hiding must be a static true or false value",
             ))
         }
+        // #13008: confirmed permanent, not a to-do. WinUI3's
+        // `ContentDialog` exposes only imperative `ShowAsync()`/`Hide()`
+        // — unlike `Popup`, `Flyout`, and `TeachingTip`, it has no
+        // bindable `IsOpen` dependency property, so there is no
+        // declarative show/hide surface for the emitter to bind `open:`
+        // to (confirmed against current WinUI3/WinAppSDK docs and
+        // community discussion asking Microsoft for exactly this
+        // feature — it does not exist). SwiftUI/Qt/Compose don't share
+        // this gap because their dialog primitives (`.sheet(isPresented:)`,
+        // QML `Popup.visible`, Compose's conditional `Dialog { }`
+        // composition) are all natively declarative. Lowering to
+        // `Flyout` instead (which does have `IsOpen`) was considered and
+        // rejected — `Flyout` isn't a true modal dialog, so it would
+        // trade this degradation for a wrong-primitive one instead of
+        // fixing it. See #13008 for the full investigation.
         ("HostDialog", "open") if backend == Backend::Xaml => Some((
             "property.dialog-open-host-required",
             "the XAML emitter documents the authored open state but requires application code-behind to show and hide the native dialog",

@@ -1,5 +1,16 @@
 # Changelog
 
+## [Unreleased] - document HostDialog's XAML open-host-required gap as permanent (#13008)
+
+Added a doc comment above the `("HostDialog", "open")` arm in
+`ignored_native_property` recording that this degradation is confirmed
+permanent, not an open TODO: WinUI3's `ContentDialog` has no bindable
+`IsOpen`-style property the way `Popup`/`Flyout`/`TeachingTip` do, so
+there's no declarative show/hide surface for the XAML emitter to bind
+`open:` to — unlike SwiftUI/Qt/Compose, whose dialog primitives are all
+natively declarative. No behavior change; the degradation code and
+message are unchanged. Closes #13008.
+
 ## [Unreleased] - report dropped style properties, non-gating (#12022)
 
 - New `DegradationReport::style_degradations` field (`styleDegradations` in
