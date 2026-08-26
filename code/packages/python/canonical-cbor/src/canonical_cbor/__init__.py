@@ -9,7 +9,6 @@ cryptography, clocks, randomness, and storage outside this package.
 
 from __future__ import annotations
 
-from collections.abc import Iterable
 from dataclasses import dataclass
 from typing import Final, cast
 
@@ -139,11 +138,14 @@ class CborArray(CborValue):
     items: tuple[CborValue, ...]
 
     def __init__(self, items: object) -> None:
-        if not isinstance(items, Iterable):
+        if type(items) not in {list, tuple}:
             raise TypeError(
-                "canonical-cbor: array items must be CborValue objects"
+                "canonical-cbor: array items must be a list or tuple of "
+                "CborValue objects"
             )
-        owned: tuple[object, ...] = tuple(items)
+        owned: tuple[object, ...] = tuple(
+            cast(list[object] | tuple[object, ...], items)
+        )
         if any(not _is_exact_cbor_value(item) for item in owned):
             raise TypeError("canonical-cbor: array items must be CborValue objects")
         object.__setattr__(self, "items", cast(tuple[CborValue, ...], owned))
@@ -170,9 +172,13 @@ class CborMap(CborValue):
     entries: tuple[CborMapEntry, ...]
 
     def __init__(self, entries: object) -> None:
-        if not isinstance(entries, Iterable):
-            raise TypeError("canonical-cbor: map requires CborMapEntry objects")
-        owned: tuple[object, ...] = tuple(entries)
+        if type(entries) not in {list, tuple}:
+            raise TypeError(
+                "canonical-cbor: map requires a list or tuple of CborMapEntry objects"
+            )
+        owned: tuple[object, ...] = tuple(
+            cast(list[object] | tuple[object, ...], entries)
+        )
         if any(type(entry) is not CborMapEntry for entry in owned):
             raise TypeError("canonical-cbor: map requires CborMapEntry objects")
         object.__setattr__(self, "entries", cast(tuple[CborMapEntry, ...], owned))
@@ -413,8 +419,8 @@ def encode_checked(value: CborValue) -> bytes:
 def encode_into_checked(value: CborValue, destination: bytearray) -> None:
     """Append one complete encoding and restore the destination on host failure."""
 
-    if not isinstance(destination, bytearray):
-        raise TypeError("canonical-cbor: destination must be a bytearray")
+    if type(destination) is not bytearray:
+        raise TypeError("canonical-cbor: destination must be an exact bytearray")
     encoded = encode_checked(value)
     original_length = len(destination)
     try:
@@ -504,9 +510,14 @@ class _Cursor:
         if major == 3:
             payload = self.read_bytes(self.checked_length(argument, 1))
             try:
-                return CborText(payload.decode("utf-8", "strict"))
-            except UnicodeDecodeError as error:
-                raise CborError("invalid-utf8") from error
+                text = payload.decode("utf-8", "strict")
+            except UnicodeDecodeError:
+                pass
+            else:
+                return CborText(text)
+            # Raise after leaving the exception handler so the rejected payload
+            # is absent from both the cause and context chains.
+            raise CborError("invalid-utf8")
         if major == 4:
             count = self.checked_length(argument, 1)
             return CborArray(tuple(self.read_value(depth + 1) for _ in range(count)))

@@ -3,6 +3,7 @@
 from __future__ import annotations
 
 import json
+import traceback
 from pathlib import Path
 
 import pytest
@@ -67,6 +68,17 @@ def _generated_wire(specification: str) -> bytes:
     raise AssertionError(f"generated wire escaped the closed grammar: {specification}")
 
 
+def _fixture_decode_wire(specification: str) -> bytes:
+    parts = specification.split(":")
+    if len(parts) == 2 and parts[0] == "nested-array-wire":
+        return _nested_wire(int(parts[1]))
+    if ":" not in specification:
+        return bytes.fromhex(specification)
+    raise AssertionError(
+        f"fixture decode input escaped the closed grammar: {specification}"
+    )
+
+
 def _assert_error(expected: str, operation: object) -> None:
     assert callable(operation)
     with pytest.raises(CborError) as caught:
@@ -85,11 +97,7 @@ def test_language_neutral_fixture(case: dict[str, str]) -> None:
         wire = bytes.fromhex(case["input"])
         assert encode_checked(decode(wire)) == bytes.fromhex(case["expected"])
     elif operation == "decode-error":
-        wire = (
-            _nested_wire(int(case["input"].split(":")[1]))
-            if case["input"].startswith("nested-array-wire:")
-            else bytes.fromhex(case["input"])
-        )
+        wire = _fixture_decode_wire(case["input"])
         _assert_error(case["expected"], lambda: decode(wire))
     elif operation == "encode-map":
         entries = tuple(
@@ -197,6 +205,15 @@ def test_constructor_and_runtime_boundaries_are_exact() -> None:
         CborMap((object(),))  # type: ignore[arg-type]
     with pytest.raises(TypeError, match="CborMapEntry"):
         CborMap(1)
+
+    class BombIterable:
+        def __iter__(self) -> object:
+            raise AssertionError("constructor consumed hostile iterable")
+
+    with pytest.raises(TypeError, match="list or tuple"):
+        CborArray(BombIterable())
+    with pytest.raises(TypeError, match="list or tuple"):
+        CborMap(BombIterable())
     with pytest.raises(TypeError, match="CborValue"):
         CborMapEntry(object(), NULL)  # type: ignore[arg-type]
     with pytest.raises(TypeError, match="boolean"):
@@ -230,15 +247,16 @@ def test_checked_append_is_atomic_on_every_failure_path() -> None:
     with pytest.raises(TypeError, match="bytearray"):
         encode_into_checked(NULL, [])  # type: ignore[arg-type]
 
-    class FailingBytearray(bytearray):
+    class HostileBytearray(bytearray):
         def extend(self, value: object) -> None:
+            self[0] = ord("X")
             super().extend(bytes(value)[:1])  # type: ignore[arg-type]
             raise MemoryError("synthetic host allocation failure")
 
-    failing = FailingBytearray(b"kept")
-    with pytest.raises(MemoryError, match="synthetic"):
-        encode_into_checked(CborUnsigned(24), failing)
-    assert failing == b"kept"
+    hostile = HostileBytearray(b"kept")
+    with pytest.raises(TypeError, match="exact bytearray"):
+        encode_into_checked(CborUnsigned(24), hostile)
+    assert hostile == b"kept"
 
 
 def test_encoder_revalidates_frozen_values_at_the_public_boundary() -> None:
@@ -318,8 +336,25 @@ def test_decode_accepts_bytes_like_inputs_and_returns_immutable_payloads() -> No
         decoded.value[0] = 9  # type: ignore[index,union-attr]
 
 
+def test_invalid_utf8_error_chain_cannot_retain_the_rejected_payload() -> None:
+    with pytest.raises(CborError) as caught:
+        decode(bytes.fromhex("63ff6162"))
+    error = caught.value
+    assert error.error_id == "invalid-utf8"
+    assert error.__cause__ is None
+    assert error.__context__ is None
+    rendered = "".join(
+        traceback.format_exception(type(error), error, error.__traceback__)
+    )
+    assert "0xff" not in rendered
+    assert "position" not in rendered
+    assert "b'\\xffab'" not in rendered
+
+
 def test_fixture_generated_grammar_rejects_suffixes() -> None:
     with pytest.raises(AssertionError, match="closed grammar"):
         _generated_value("nested-array:1:ignored")
     with pytest.raises(AssertionError, match="closed grammar"):
         _generated_wire("wire:nested-array:1:ignored")
+    with pytest.raises(AssertionError, match="closed grammar"):
+        _fixture_decode_wire("nested-array-wire:129:ignored")

@@ -34,7 +34,7 @@ assert wire.hex(" ") == "a2 61 61 01 61 62 02"
 
 `encode_checked` stages a complete result and returns immutable `bytes`.
 `encode_into_checked` atomically appends that result to a caller-owned
-`bytearray`. `decode_canonical` accepts immutable or mutable bytes-like input,
+`bytearray`. `decode` accepts immutable or mutable bytes-like input,
 defensively copies it, and returns one exact `CborValue`.
 
 ## Contract and safety
