@@ -2,6 +2,39 @@
 
 All notable changes to this package will be documented in this file.
 
+## [0.2.72] - 2026-08-26 (W26 follow-up — real table64 operations)
+
+### Added
+
+- New `ModuleContext::table_is64: Vec<bool>` field (combined
+  imports-first-then-declared index space, mirroring the existing
+  `table_element_types`/`memory_is64`), populated from each table's own
+  `TableType::is64`.
+- `table.get`/`table.set`/`table.grow`/`table.size`/`table.fill`/
+  `table.init`/`table.copy`/`call_indirect`/`return_call_indirect`'s
+  type-check rules now pick `I64` vs. `I32` for their index/dest/src/len/
+  delta operand(s) (and, for `table.grow`/`table.size`, the pushed
+  result) per the TARGET table's own `is64` — previously every one
+  unconditionally required `I32`, rejecting a real `is64` table's own
+  correctly-`i64`-typed operands.
+- `table.copy`'s `len` operand type-checks as `I64` ONLY when BOTH the
+  source and destination tables are `is64` — otherwise `I32`, even when
+  exactly one side is `is64` (verified against the real
+  `table_copy_mixed.wast` corpus; see `code/specs/
+  W26-wasm-table64-first-slice.md`'s addendum for the full rule and why
+  an initial "always matches destination" draft of this rule was wrong).
+- `table.init`'s `dest` operand type-checks per the TARGET table's own
+  `is64`; `src`/`len` (positions within the passive element segment)
+  always stay `I32`.
+
+### Tests
+
+- 16 new `assert_valid`/`assert_invalid` cases covering every affected
+  instruction against a real `is64` table, including the exact mixed
+  is64/is32 `table.copy` scenarios `table_copy_mixed.wast`'s own
+  `assert_invalid` cases exercise (wrong `len` width, wrong `src` table's
+  width, wrong `dest` table's width, checked independently).
+
 ## [0.2.71] - 2026-08-26 (W27 — census batch: real multi-memory data segments)
 
 ### Fixed

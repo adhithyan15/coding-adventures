@@ -212,18 +212,17 @@ cap either way).
 
 ### Explicitly out of scope (deferred to a future slice)
 
-- **Actual operations on an `is64` table** — `table.get`/`table.set`/
-  `table.grow`/`table.size`/`table.fill`/`table.copy`/`table.init`/
-  `call_indirect` against an `is64`-indexed table all still assume an `i32`
-  index unconditionally in `wasm-validator::type_check` and
-  `wasm-execution`'s own opcode handlers — none of this slice's two
-  vendored files exercise any of them, so none of that address-width
-  branching is touched here. `call_indirect64.wast`, `table_copy64.wast`,
-  `table_fill64.wast`, `table_get64.wast`, `table_grow64.wast`,
-  `table_init64.wast`, `table_set64.wast`, `table_size64.wast`,
-  `table_copy_mixed.wast` (mixed `is64`/32-bit table pairs) all need this
-  and are deferred, the same "duplicate-shaped, mechanical follow-on"
-  status `W25` gave the analogous bulk-memory-op `*64.wast` files.
+- ~~**Actual operations on an `is64` table**~~ — **implemented in a
+  follow-up slice, see the "Addendum: real table64 operations" section
+  below.** `table.get`/`table.set`/`table.grow`/`table.size`/`table.fill`/
+  `table.copy`/`table.init`/`call_indirect` against an `is64`-indexed
+  table originally all assumed an `i32` index unconditionally; the
+  follow-up widens each per the TARGET table's own `is64`, mirroring
+  memory64's `i32`→`i64` address-operand widening pattern, and vendors
+  `call_indirect64.wast`, `table_copy64.wast`, `table_fill64.wast`,
+  `table_get64.wast`, `table_grow64.wast`, `table_init64.wast`,
+  `table_set64.wast`, `table_size64.wast`, `table_copy_mixed.wast` (mixed
+  `is64`/32-bit table pairs).
 - **SIMD/atomics against a table** — not applicable to tables at all
   (unaffected either way).
 - **The `(module definition ...)` validate-only semantic gap** — noted
@@ -286,3 +285,139 @@ cap either way).
 - Docker (`linux/amd64`) verification of every touched crate's test suite
   plus `wasm-conformance --test testsuite_conformance
   corpus_matches_the_committed_baseline` before pushing.
+
+## Addendum: real table64 operations (follow-up slice)
+
+This slice's own "Explicitly out of scope" section deferred actual
+operations against an `is64` table — `table.get`/`table.set`/`table.grow`/
+`table.size`/`table.fill`/`table.copy`/`table.init`/`call_indirect` all
+still assumed an `i32` index unconditionally. This follow-up implements all
+of them, vendoring the 9 real corpus files that exercise them
+(`call_indirect64.wast`, `table_copy64.wast`, `table_fill64.wast`,
+`table_get64.wast`, `table_grow64.wast`, `table_init64.wast`,
+`table_set64.wast`, `table_size64.wast`, `table_copy_mixed.wast`) at the
+same pinned SHA.
+
+### Operand-width rules (verified against the real corpus, not assumed)
+
+Each op's index/dest/src/len/delta operand width depends on the TARGET
+table's own `is64` — mirroring memory64's `pop_effective_addr` is64/is32
+branch (`wasm-execution`, W25) exactly, just for table operands instead of
+a memory address:
+
+- **`table.get`/`table.set`**: the index operand is `i64` for an `is64`
+  table, `i32` otherwise.
+- **`table.grow`**: `delta` and the pushed old-size result are both `i64`
+  for an `is64` table (mirrors `memory.grow`'s own `is64` branch).
+- **`table.size`**: the pushed result is `i64` for an `is64` table.
+- **`table.fill`**: `dest`/`len` are `i64` for an `is64` table (`value`
+  stays the table's own reference element type, unaffected by `is64`).
+- **`table.init`**: only `dest` (into the target TABLE) widens to `i64`
+  for an `is64` target table. `src`/`len` (positions within the PASSIVE
+  ELEMENT SEGMENT) always stay `i32` — a segment isn't itself
+  address-typed. Verified against `table_init64.wast`: `(table.init $t2 1
+  (i64.const 7) (i32.const 0) (i32.const 4))` widens only `dest`.
+- **`table.copy`**: `dest` follows the DESTINATION table's own `is64`,
+  `src` follows the SOURCE table's own `is64`, independently — a mixed
+  is64/is32 copy is legal (`table_copy_mixed.wast`'s `test_64to32`/
+  `test_32to64`). `len`'s width is `i64` ONLY when BOTH tables are
+  `is64` — otherwise `i32`, even when exactly one side is `is64`.
+  Verified against `table_copy_mixed.wast`'s own valid `test_64to32`/
+  `test_32to64` cases (both use a plain `i32` `len` despite one table
+  being `is64`) and its `bad_size_arg`/`bad_src_idx`/`bad_dst_idx`
+  `assert_invalid` cases, each of which mistypes exactly one of these
+  three operands. Same "the smaller of the two index types governs a
+  shared length/count operand" rule the combined memory64/table64
+  proposal defines for a mixed `memory.copy`.
+- **`call_indirect`/`return_call_indirect`**: the table-index (element
+  lookup) operand is `i64` for an `is64` table.
+
+### Implementation shape
+
+- **`wasm-execution`**: `Table`'s own storage stays `u32`/`usize`-based
+  (unchanged from the first slice — already bounded well under any `u64`
+  range by `MAX_TABLE_ELEMENTS`); only the operand WIDTH popped off/pushed
+  onto the WASM value stack changes. New helpers `pop_table_operand`
+  (pops `i64` or `i32` per a `bool is64`, narrowing to `u32` via
+  `table_u64_to_u32`) and `push_table_result` (pushes `i64` or `i32`).
+  `table_u64_to_u32` maps any `u64` that doesn't fit `u32` to `u32::MAX`
+  (never truncates) — a real, attacker-reachable `(i64.const -1)` index
+  (`table_get64.wast`/`table_set64.wast`'s own boundary case) must still
+  trip every existing bounds check, not silently wrap into a small,
+  coincidentally-in-bounds index.
+- **`wasm-validator`**: a new `ModuleContext::table_is64: Vec<bool>` field
+  (combined imports-first-then-declared index space, mirroring
+  `table_element_types`), populated in `build_module_context` from each
+  table's own `TableType::is64`. Every affected type-check rule above
+  reads it to pick `I64` vs. `I32` for the relevant operand(s).
+- **A real, pre-existing bug this follow-up also fixes**: `wasm-runtime`'s
+  active ELEMENT segment application (in `instantiate()`) unconditionally
+  evaluated its offset expression as `i32`, even though the analogous
+  active DATA segment branch right above it was already correctly
+  `is64`-aware (W25). Any active element segment targeting an `is64`
+  table trapped instantiation instead of applying (found via
+  `call_indirect64.wast`'s own `(table $t64 i64 funcref (elem
+  $const-i32))` shorthand). Fixed to branch on the target table's own
+  `is64`, matching the data-segment code exactly, with the same
+  upfront-whole-segment-bounds-check-in-`u64`-before-narrowing discipline
+  the rest of this follow-up uses.
+- **`wasm-wast-parser`**: one matching bug in the SAME family — the
+  `(table $t i64 funcref (elem ...))` inline-elem-shorthand desugaring
+  (`build_table_limits_and_elements`) hardcoded its generated active
+  segment's offset expression to `i32.const 0` regardless of `is64`,
+  mirroring `build_memory_limits_and_data`'s OWN already-`is64`-aware
+  default-offset branch. Fixed the same way: `i64.const 0` (`0x42`) for an
+  `is64` table, `i32.const 0` (`0x41`) otherwise. No other wast-parser
+  changes were needed — every other text-form site (explicit `(elem ...)`
+  offset expressions, `table.get`/`set`/`grow`/`fill`/`copy`/`init`
+  operand expressions) already encodes whatever const-expr instruction the
+  source text names generically, with no `is32` assumption baked in.
+- **`wasm-module-parser`/`wasm-module-encoder`**: no changes — these real
+  table OPERATIONS carry no table64-specific binary encoding of their own
+  (only the table DECLARATION's limits flags, already handled by the
+  first slice); an is64 table's operand width is inferred at
+  validation/execution time from the TARGET table's own already-decoded
+  `is64`, not from anything in the operation's own encoding.
+
+### Real corpus, measured
+
+All 9 files vendor with real, non-trivial pass numbers and ZERO `fail`
+anywhere (`cargo run --bin wasm_conformance_report -- --write-baseline`,
+diffed programmatically against the pre-change baseline — confirmed zero
+existing file's tally changed):
+
+| file | module | assert_return | assert_trap | assert_invalid |
+|---|---|---|---|---|
+| `call_indirect64.wast` | 1/1 | 1/1 | — | — |
+| `table_get64.wast` | 1/1 | 5/5 | 4/4 | — |
+| `table_set64.wast` | 1/1 | 10/10 | 8/8 | — |
+| `table_grow64.wast` | 1/1 | 15/15 | 6/6 | — |
+| `table_size64.wast` | 1/1 | 36/36 | — | — |
+| `table_fill64.wast` | 1/1 | 64/64 | 6/6 | 9/9 |
+| `table_copy64.wast` | 41/41 (+11 nys) | 334/334 (+109 nys) | 760/760 (+446 nys) | — |
+| `table_init64.wast` | 26/26 (+18 nys) | 120/120 (+1 nys) | 158/158 (+476 nys) | 67/67 |
+| `table_copy_mixed.wast` | 1/1 | — | — | 3/3 |
+
+("nys" = `not_yet_supported`, a pre-existing capability gap — e.g.
+`spectest` imports this crate deliberately has no host for, or, in
+`table_init64.wast`'s trailing module, a WasmGC `array`/`arrayref`
+construct this crate doesn't support at all — not something this
+follow-up's own scope covers or regresses. `table_copy64.wast`'s and
+`table_init64.wast`'s numbers are otherwise near-identical to their is32
+siblings `table_copy.wast`/`table_init.wast`, confirming both files are
+largely mechanical i32→i64 transforms of already-passing corpus.)
+
+Two real, previously-latent bugs surfaced and fixed while vendoring (not
+present in any already-vendored file, since no `is64` table existed
+before this slice): the `wasm-runtime` active-element-segment `is64` gap
+and the `wasm-wast-parser` inline-elem-shorthand default-offset gap, both
+described above — each initially surfaced as `call_indirect64.wast`'s sole
+module trapping instantiation, root-caused and fixed rather than deferred.
+
+A third correction to this follow-up's OWN first draft: `table.copy`'s
+`len` operand width was initially (incorrectly) assumed to always match
+the DESTINATION table's `is64`, by analogy with `dest` itself. Re-reading
+`table_copy_mixed.wast`'s real `test_32to64` case (destination `is64`,
+source `is32`, and `len` is still plain `i32`) falsified that assumption;
+the corrected rule (`len` is `i64` only when BOTH tables are `is64`) is
+what's implemented and vendored.
