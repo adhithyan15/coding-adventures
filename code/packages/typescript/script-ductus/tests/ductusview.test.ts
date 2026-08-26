@@ -163,6 +163,8 @@ const JAPANESE_MI = DUCTUS[ductusKey("japanese", "み")];
 const japaneseMiOutline = japaneseOutline("み");
 const JAPANESE_SE = DUCTUS[ductusKey("japanese", "せ")];
 const japaneseSeOutline = japaneseOutline("せ");
+const JAPANESE_TE = DUCTUS[ductusKey("japanese", "て")];
+const japaneseTeOutline = japaneseOutline("て");
 const JAPANESE_MO = DUCTUS[ductusKey("japanese", "も")];
 const japaneseMoOutline = japaneseOutline("も");
 const CA = DUCTUS["ச"];
@@ -1712,6 +1714,30 @@ describe("せ — a horizontal followed by two lifted crossing stems", () => {
       penPathD(JAPANESE_SE.strokes[1], 1),
     ]);
     expect(pen.attrs.d).toBe(penPathD(JAPANESE_SE.strokes[2], 1));
+  });
+});
+
+describe("て — one high bar returning through a broad lower curve", () => {
+  const steps = ductusSteps(JAPANESE_TE);
+  const strip = ductusFilmstrip(JAPANESE_TE, japaneseTeOutline);
+
+  it("keeps all three movements in one pen-down run", () => {
+    expect(steps.map((step) => step.strokeIndex)).toEqual([0, 0, 0]);
+    expect(steps.map((step) => step.startsAfterLift)).toEqual([false, false, false]);
+  });
+
+  it("reports a three-frame zero-lift filmstrip", () => {
+    expect(strip.frames).toHaveLength(3);
+    expect(strip.penLifts).toBe(0);
+    expect(strip.summary).toBe("one unbroken stroke · 3 movements");
+  });
+
+  it("finishes with the whole continuous path as the active pen", () => {
+    const last = strip.frames.at(-1)!;
+    const done = byTag(last, "path").filter((node) => node.attrs.class === "ductus__done");
+    const pen = byTag(last, "path").find((node) => node.attrs.class === "ductus__pen")!;
+    expect(done).toEqual([]);
+    expect(pen.attrs.d).toBe(penPathD(JAPANESE_TE.strokes[0], 1));
   });
 });
 

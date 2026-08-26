@@ -1235,6 +1235,58 @@ export const DUCTUS: Record<string, LetterDuctus> = {
     ],
     source: japanese.letters.find((letter) => letter.glyph === "せ")!.strokeOrderSource!,
   },
+  // Sirgazil's 28-frame animation writes て in one uninterrupted run: the
+  // high bar, returning diagonal, and broad lower curve. These medians preserve
+  // that zero-lift order in the bundled Noto Sans JP print outline.
+  [ductusKey("japanese", "て")]: {
+    script: "japanese",
+    glyph: "て",
+    strokes: [
+      {
+        segments: [
+          {
+            label: "draw the high horizontal from left to right",
+            path: [
+              { x: 110, y: 620 },
+              { x: 220, y: 630 },
+              { x: 340, y: 642 },
+              { x: 470, y: 655 },
+              { x: 600, y: 668 },
+              { x: 730, y: 680 },
+              { x: 845, y: 688 },
+            ],
+          },
+          {
+            label: "turn back down and left through the diagonal",
+            path: [
+              { x: 845, y: 688 },
+              { x: 760, y: 675 },
+              { x: 675, y: 645 },
+              { x: 600, y: 600 },
+              { x: 535, y: 540 },
+              { x: 485, y: 470 },
+              { x: 450, y: 390 },
+              { x: 430, y: 305 },
+            ],
+          },
+          {
+            label: "round the broad lower curve and sweep right to the finish",
+            path: [
+              { x: 430, y: 305 },
+              { x: 430, y: 230 },
+              { x: 450, y: 165 },
+              { x: 490, y: 110 },
+              { x: 550, y: 70 },
+              { x: 620, y: 42 },
+              { x: 700, y: 22 },
+              { x: 770, y: 12 },
+            ],
+          },
+        ],
+      },
+    ],
+    source: japanese.letters.find((letter) => letter.glyph === "て")!.strokeOrderSource!,
+  },
   // Sirgazil's つ animation supplies the one-run movement. Unicode identifies
   // U+3063 as small tsu; these medians preserve that movement while fitting it
   // explicitly to the bundled smaller Noto Sans JP glyph.

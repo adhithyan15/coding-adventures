@@ -39,7 +39,7 @@ describe("real curriculum", () => {
     expect(scripts.devanagari!.complete).toBe(true);
   });
 
-  it("keeps the cross-script closure queue measured after Japanese se", () => {
+  it("keeps the cross-script closure queue measured after Japanese te", () => {
     const candrakkala = scripts.malayalam!.marks!.find((mark) => mark.mark === "്")!;
     expect(candrakkala.role).toBe("virama");
     expect(candrakkala.compositionOrder).toEqual([
@@ -1122,6 +1122,23 @@ describe("real curriculum", () => {
     );
     expect(missingByScript.get("japanese.json")?.has("せ")).toBe(false);
     expect(affected.get("せ") ?? 0).toBe(0);
+    const japaneseTe = scripts.japanese!.letters.find((entry) => entry.glyph === "て")!;
+    expect(japaneseTe.sound).toBe("te");
+    expect(japaneseTe.role).toBe("hiragana");
+    expect(japaneseTe.penLifts).toBe(0);
+    expect(japaneseTe.strokeOrder).toEqual([
+      "draw the high horizontal from left to right",
+      "without lifting, turn back down and left through the diagonal",
+      "without lifting, round the broad lower curve and sweep right to the finish",
+    ]);
+    expect(japaneseTe.strokeOrderSource?.citation).toMatch(
+      /Sirgazil.*て.*28 frames.*2\.8 seconds.*Wikimedia Commons.*1 October 2009/i,
+    );
+    expect(japaneseTe.strokeOrderSource?.variation).toMatch(
+      /one uninterrupted run.*high horizontal.*left to right.*down and left.*diagonal.*broad lower curve.*sweep right.*Noto Sans JP.*zero-lift order/i,
+    );
+    expect(missingByScript.get("japanese.json")?.has("て")).toBe(false);
+    expect(affected.get("て") ?? 0).toBe(0);
     const japaneseMo = scripts.japanese!.letters.find((entry) => entry.glyph === "も")!;
     expect(japaneseMo.sound).toBe("mo");
     expect(japaneseMo.role).toBe("hiragana");
@@ -1238,7 +1255,7 @@ describe("real curriculum", () => {
     expect(affected.get("ب") ?? 0).toBe(0);
     expect(
       [...affected.entries()].sort((left, right) => right[1] - left[1])[0],
-    ).toEqual(["て", 3]);
+    ).toEqual(["な", 3]);
   });
 
   it("loaded every track (17+ and growing)", () => {
