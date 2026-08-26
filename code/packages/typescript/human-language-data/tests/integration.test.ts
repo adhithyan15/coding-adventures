@@ -39,7 +39,7 @@ describe("real curriculum", () => {
     expect(scripts.devanagari!.complete).toBe(true);
   });
 
-  it("keeps the cross-script closure queue measured after Persian and Urdu zah", () => {
+  it("keeps the cross-script closure queue measured after Persian kaf", () => {
     const candrakkala = scripts.malayalam!.marks!.find((mark) => mark.mark === "്")!;
     expect(candrakkala.role).toBe("virama");
     expect(candrakkala.compositionOrder).toEqual([
@@ -1147,9 +1147,11 @@ describe("real curriculum", () => {
     expect(missingByScript.get("perso-arabic.json")?.has("ظ")).toBe(false);
     expect(missingByScript.get("urdu-nastaliq.json")?.has("ظ")).toBe(false);
     expect(affected.get("ظ") ?? 0).toBe(0);
+    expect(missingByScript.get("perso-arabic.json")?.has("ک")).toBe(false);
+    expect(affected.get("ک") ?? 0).toBe(0);
     expect(
       [...affected.entries()].sort((left, right) => right[1] - left[1])[0],
-    ).toEqual(["ک", 4]);
+    ).toEqual(["ఏ", 4]);
   });
 
   it("loaded every track (17+ and growing)", () => {

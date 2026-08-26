@@ -600,7 +600,7 @@ function collect(node: SvgNode, pick: (n: SvgNode) => boolean, out: SvgNode[] = 
 const byTag = (node: SvgNode, tag: string) => collect(node, (n) => n.tag === tag);
 
 describe("ductusFor — only cited letters have a ductus", () => {
-  it("finds twenty-one Tamil letters, fourteen Persian letters, eighteen Arabic letters, and sixteen Urdu letters", () => {
+  it("finds twenty-one Tamil letters, fifteen Persian letters, eighteen Arabic letters, and sixteen Urdu letters", () => {
     expect(ductusFor("ம")?.glyph).toBe("ம");
     expect(ductusFor("அ")?.glyph).toBe("அ");
     expect(ductusFor("ஆ")?.glyph).toBe("ஆ");
@@ -658,7 +658,7 @@ describe("ductusFor — only cited letters have a ductus", () => {
     expect(ductusFor("ش", "urdu-nastaliq")?.glyph).toBe("ش");
     expect(ductusFor("ش", "perso-arabic")?.glyph).toBe("ش");
     expect(ductusFor("ک", "urdu-nastaliq")?.glyph).toBe("ک");
-    expect(ductusFor("ک", "perso-arabic")).toBeUndefined();
+    expect(ductusFor("ک", "perso-arabic")?.glyph).toBe("ک");
     expect(ductusFor("ل", "urdu-nastaliq")?.glyph).toBe("ل");
     expect(ductusFor("ل", "perso-arabic")?.glyph).toBe("ل");
     expect(ductusFor("م", "urdu-nastaliq")?.glyph).toBe("م");
