@@ -1,0 +1,16 @@
+{
+  "id": "ES-PATH-372-01",
+  "spine_node": "SPINE-DEFINITE-REFERENCE",
+  "lessons": [
+    "ES-C372-gris",
+    "ES-C372-rosa",
+    "ES-C372-oscuro",
+    "ES-C372-palido",
+    "ES-C372-suave"
+  ],
+  "before": [],
+  "inline": [
+    "ES-EXT-372-REF"
+  ],
+  "after": []
+}

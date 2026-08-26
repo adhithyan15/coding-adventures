@@ -1,0 +1,21 @@
+{
+  "chapter": 371,
+  "title": "Small, Fat, Young, Slow, Sweet",
+  "label": "ch:pequeno-y-gordo",
+  "canDo": "I can say pequeño, gordo, joven, lento and dulce, and put five more judgements on a thing without reaching for a number.",
+  "spineNodes": [
+    "SPINE-COUNT-ONE-TO-FIVE"
+  ],
+  "payoff": {
+    "lesson": "ES-C371-dulce",
+    "kind": "production",
+    "summary": "Complete ES-C371-dulce: put five judgements on a thing without reaching for a number.",
+    "assesses": [
+      "ES-LEX-C371-COUNT-26",
+      "ES-LEX-C371-COUNT-27",
+      "ES-LEX-C371-COUNT-28",
+      "ES-LEX-C371-COUNT-29",
+      "ES-LEX-C371-COUNT-30"
+    ]
+  }
+}

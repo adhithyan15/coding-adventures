@@ -1,0 +1,21 @@
+{
+  "chapter": 372,
+  "title": "Grey, Pink And Dark",
+  "label": "ch:gris-y-rosa",
+  "canDo": "I can say gris, rosa, oscuro, pálido and suave, and pick out which thing I mean by how it looks and how it feels.",
+  "spineNodes": [
+    "SPINE-DEFINITE-REFERENCE"
+  ],
+  "payoff": {
+    "lesson": "ES-C372-suave",
+    "kind": "production",
+    "summary": "Complete ES-C372-suave: pick out which thing you mean by how it looks and how it feels.",
+    "assesses": [
+      "ES-LEX-C372-REF-46",
+      "ES-LEX-C372-REF-47",
+      "ES-LEX-C372-REF-48",
+      "ES-LEX-C372-REF-49",
+      "ES-LEX-C372-REF-50"
+    ]
+  }
+}

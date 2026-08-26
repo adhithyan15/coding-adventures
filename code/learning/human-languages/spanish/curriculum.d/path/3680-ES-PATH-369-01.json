@@ -1,0 +1,16 @@
+{
+  "id": "ES-PATH-369-01",
+  "spine_node": "SPINE-ASK-LOCATION",
+  "lessons": [
+    "ES-C369-rio",
+    "ES-C369-arena",
+    "ES-C369-polvo",
+    "ES-C369-humo",
+    "ES-C369-ceniza"
+  ],
+  "before": [],
+  "inline": [
+    "ES-EXT-369-WHERE"
+  ],
+  "after": []
+}

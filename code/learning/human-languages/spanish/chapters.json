@@ -7234,6 +7234,153 @@
           "ES-LEX-C366-REF-35"
         ]
       }
+    },
+    {
+      "chapter": 367,
+      "title": "Breakfast, Fruit And Something Sweet",
+      "label": "ch:el-desayuno-y-la-fruta",
+      "canDo": "I can say el desayuno, la fruta, la naranja, la patata and el azúcar, and name the first meal of the day and what goes into it.",
+      "spineNodes": [
+        "SPINE-DEFINITE-REFERENCE"
+      ],
+      "payoff": {
+        "lesson": "ES-C367-azucar",
+        "kind": "production",
+        "summary": "Complete ES-C367-azucar: name the first meal of the day and four things that can go into it.",
+        "assesses": [
+          "ES-LEX-C367-REF-36",
+          "ES-LEX-C367-REF-37",
+          "ES-LEX-C367-REF-38",
+          "ES-LEX-C367-REF-39",
+          "ES-LEX-C367-REF-40"
+        ]
+      }
+    },
+    {
+      "chapter": 368,
+      "title": "Five Animals, Two Of Them Small",
+      "label": "ch:la-abeja-y-la-mosca",
+      "canDo": "I can say la abeja, la mosca, el cerdo, el lobo and el toro, and name five animals a field might hold.",
+      "spineNodes": [
+        "SPINE-DEFINITE-REFERENCE"
+      ],
+      "payoff": {
+        "lesson": "ES-C368-toro",
+        "kind": "production",
+        "summary": "Complete ES-C368-toro: name five animals, two of them small enough to sit on a hand.",
+        "assesses": [
+          "ES-LEX-C368-REF-41",
+          "ES-LEX-C368-REF-42",
+          "ES-LEX-C368-REF-43",
+          "ES-LEX-C368-REF-44",
+          "ES-LEX-C368-REF-45"
+        ]
+      }
+    },
+    {
+      "chapter": 369,
+      "title": "The River, The Sand And The Ash",
+      "label": "ch:el-rio-y-la-arena",
+      "canDo": "I can say el río, la arena, el polvo, el humo and la ceniza, and name what the ground carries and what a fire leaves.",
+      "spineNodes": [
+        "SPINE-ASK-LOCATION"
+      ],
+      "payoff": {
+        "lesson": "ES-C369-ceniza",
+        "kind": "production",
+        "summary": "Complete ES-C369-ceniza: name what the ground carries and what a fire leaves behind.",
+        "assesses": [
+          "ES-LEX-C369-WHERE-46",
+          "ES-LEX-C369-WHERE-47",
+          "ES-LEX-C369-WHERE-48",
+          "ES-LEX-C369-WHERE-49",
+          "ES-LEX-C369-WHERE-50"
+        ]
+      }
+    },
+    {
+      "chapter": 370,
+      "title": "Storm, Thunder And Ice",
+      "label": "ch:la-tormenta-y-el-trueno",
+      "canDo": "I can say la tormenta, el trueno, el hielo, la cueva and la costa, and say what the weather is doing and where I am standing while it does it.",
+      "spineNodes": [
+        "SPINE-ASK-LOCATION"
+      ],
+      "payoff": {
+        "lesson": "ES-C370-costa",
+        "kind": "production",
+        "summary": "Complete ES-C370-costa: say what the weather is doing and where you are standing while it does it.",
+        "assesses": [
+          "ES-LEX-C370-WHERE-51",
+          "ES-LEX-C370-WHERE-52",
+          "ES-LEX-C370-WHERE-53",
+          "ES-LEX-C370-WHERE-54",
+          "ES-LEX-C370-WHERE-55"
+        ]
+      }
+    },
+    {
+      "chapter": 371,
+      "title": "Small, Fat, Young, Slow, Sweet",
+      "label": "ch:pequeno-y-gordo",
+      "canDo": "I can say pequeño, gordo, joven, lento and dulce, and put five more judgements on a thing without reaching for a number.",
+      "spineNodes": [
+        "SPINE-COUNT-ONE-TO-FIVE"
+      ],
+      "payoff": {
+        "lesson": "ES-C371-dulce",
+        "kind": "production",
+        "summary": "Complete ES-C371-dulce: put five judgements on a thing without reaching for a number.",
+        "assesses": [
+          "ES-LEX-C371-COUNT-26",
+          "ES-LEX-C371-COUNT-27",
+          "ES-LEX-C371-COUNT-28",
+          "ES-LEX-C371-COUNT-29",
+          "ES-LEX-C371-COUNT-30"
+        ]
+      }
+    },
+    {
+      "chapter": 372,
+      "title": "Grey, Pink And Dark",
+      "label": "ch:gris-y-rosa",
+      "canDo": "I can say gris, rosa, oscuro, pálido and suave, and pick out which thing I mean by how it looks and how it feels.",
+      "spineNodes": [
+        "SPINE-DEFINITE-REFERENCE"
+      ],
+      "payoff": {
+        "lesson": "ES-C372-suave",
+        "kind": "production",
+        "summary": "Complete ES-C372-suave: pick out which thing you mean by how it looks and how it feels.",
+        "assesses": [
+          "ES-LEX-C372-REF-46",
+          "ES-LEX-C372-REF-47",
+          "ES-LEX-C372-REF-48",
+          "ES-LEX-C372-REF-49",
+          "ES-LEX-C372-REF-50"
+        ]
+      }
+    },
+    {
+      "chapter": 373,
+      "title": "Five Things You Can Pick Up",
+      "label": "ch:el-oro-y-la-botella",
+      "canDo": "I can say el oro, la botella, la alfombra, la falda and el peine, and name five ordinary things I can pick up.",
+      "spineNodes": [
+        "SPINE-DEFINITE-REFERENCE"
+      ],
+      "payoff": {
+        "lesson": "ES-C373-peine",
+        "kind": "production",
+        "summary": "Complete ES-C373-peine: name five ordinary things you can pick up, and say what each is for.",
+        "assesses": [
+          "ES-LEX-C373-REF-51",
+          "ES-LEX-C373-REF-52",
+          "ES-LEX-C373-REF-53",
+          "ES-LEX-C373-REF-54",
+          "ES-LEX-C373-REF-55"
+        ]
+      }
     }
   ]
 }

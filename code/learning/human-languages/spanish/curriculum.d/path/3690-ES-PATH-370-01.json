@@ -1,0 +1,16 @@
+{
+  "id": "ES-PATH-370-01",
+  "spine_node": "SPINE-ASK-LOCATION",
+  "lessons": [
+    "ES-C370-tormenta",
+    "ES-C370-trueno",
+    "ES-C370-hielo",
+    "ES-C370-cueva",
+    "ES-C370-costa"
+  ],
+  "before": [],
+  "inline": [
+    "ES-EXT-370-WHERE"
+  ],
+  "after": []
+}

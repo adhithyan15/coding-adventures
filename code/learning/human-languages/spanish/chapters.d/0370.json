@@ -1,0 +1,21 @@
+{
+  "chapter": 370,
+  "title": "Storm, Thunder And Ice",
+  "label": "ch:la-tormenta-y-el-trueno",
+  "canDo": "I can say la tormenta, el trueno, el hielo, la cueva and la costa, and say what the weather is doing and where I am standing while it does it.",
+  "spineNodes": [
+    "SPINE-ASK-LOCATION"
+  ],
+  "payoff": {
+    "lesson": "ES-C370-costa",
+    "kind": "production",
+    "summary": "Complete ES-C370-costa: say what the weather is doing and where you are standing while it does it.",
+    "assesses": [
+      "ES-LEX-C370-WHERE-51",
+      "ES-LEX-C370-WHERE-52",
+      "ES-LEX-C370-WHERE-53",
+      "ES-LEX-C370-WHERE-54",
+      "ES-LEX-C370-WHERE-55"
+    ]
+  }
+}

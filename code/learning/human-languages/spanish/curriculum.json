@@ -4872,6 +4872,118 @@
         "ES-EXT-366-REF"
       ],
       "after": []
+    },
+    {
+      "id": "ES-PATH-367-01",
+      "spine_node": "SPINE-DEFINITE-REFERENCE",
+      "lessons": [
+        "ES-C367-desayuno",
+        "ES-C367-fruta",
+        "ES-C367-naranja",
+        "ES-C367-patata",
+        "ES-C367-azucar"
+      ],
+      "before": [],
+      "inline": [
+        "ES-EXT-367-REF"
+      ],
+      "after": []
+    },
+    {
+      "id": "ES-PATH-368-01",
+      "spine_node": "SPINE-DEFINITE-REFERENCE",
+      "lessons": [
+        "ES-C368-abeja",
+        "ES-C368-mosca",
+        "ES-C368-cerdo",
+        "ES-C368-lobo",
+        "ES-C368-toro"
+      ],
+      "before": [],
+      "inline": [
+        "ES-EXT-368-REF"
+      ],
+      "after": []
+    },
+    {
+      "id": "ES-PATH-369-01",
+      "spine_node": "SPINE-ASK-LOCATION",
+      "lessons": [
+        "ES-C369-rio",
+        "ES-C369-arena",
+        "ES-C369-polvo",
+        "ES-C369-humo",
+        "ES-C369-ceniza"
+      ],
+      "before": [],
+      "inline": [
+        "ES-EXT-369-WHERE"
+      ],
+      "after": []
+    },
+    {
+      "id": "ES-PATH-370-01",
+      "spine_node": "SPINE-ASK-LOCATION",
+      "lessons": [
+        "ES-C370-tormenta",
+        "ES-C370-trueno",
+        "ES-C370-hielo",
+        "ES-C370-cueva",
+        "ES-C370-costa"
+      ],
+      "before": [],
+      "inline": [
+        "ES-EXT-370-WHERE"
+      ],
+      "after": []
+    },
+    {
+      "id": "ES-PATH-371-01",
+      "spine_node": "SPINE-COUNT-ONE-TO-FIVE",
+      "lessons": [
+        "ES-C371-pequeno",
+        "ES-C371-gordo",
+        "ES-C371-joven",
+        "ES-C371-lento",
+        "ES-C371-dulce"
+      ],
+      "before": [],
+      "inline": [
+        "ES-EXT-371-COUNT"
+      ],
+      "after": []
+    },
+    {
+      "id": "ES-PATH-372-01",
+      "spine_node": "SPINE-DEFINITE-REFERENCE",
+      "lessons": [
+        "ES-C372-gris",
+        "ES-C372-rosa",
+        "ES-C372-oscuro",
+        "ES-C372-palido",
+        "ES-C372-suave"
+      ],
+      "before": [],
+      "inline": [
+        "ES-EXT-372-REF"
+      ],
+      "after": []
+    },
+    {
+      "id": "ES-PATH-373-01",
+      "spine_node": "SPINE-DEFINITE-REFERENCE",
+      "lessons": [
+        "ES-C373-oro",
+        "ES-C373-botella",
+        "ES-C373-alfombra",
+        "ES-C373-falda",
+        "ES-C373-peine"
+      ],
+      "before": [],
+      "inline": [
+        "ES-EXT-373-REF"
+      ],
+      "after": []
     }
   ],
   "spine": {
@@ -5060,7 +5172,9 @@
         "ES-PATH-354-01",
         "ES-PATH-355-01",
         "ES-PATH-362-01",
-        "ES-PATH-363-01"
+        "ES-PATH-363-01",
+        "ES-PATH-369-01",
+        "ES-PATH-370-01"
       ],
       "omits": [],
       "relocates": {}
@@ -5156,7 +5270,11 @@
         "ES-PATH-360-01",
         "ES-PATH-361-01",
         "ES-PATH-364-01",
-        "ES-PATH-366-01"
+        "ES-PATH-366-01",
+        "ES-PATH-367-01",
+        "ES-PATH-368-01",
+        "ES-PATH-372-01",
+        "ES-PATH-373-01"
       ],
       "omits": [],
       "relocates": {}
@@ -5170,7 +5288,8 @@
         "ES-PATH-351-01",
         "ES-PATH-352-01",
         "ES-PATH-359-01",
-        "ES-PATH-365-01"
+        "ES-PATH-365-01",
+        "ES-PATH-371-01"
       ],
       "omits": [],
       "relocates": {}
@@ -9876,6 +9995,111 @@
         "ES-C366-almohada",
         "ES-C366-escalera",
         "ES-C366-armario"
+      ]
+    },
+    {
+      "id": "ES-EXT-367-REF",
+      "stage": "A1",
+      "kind": "required",
+      "category": "vocabulary",
+      "canDo": "I can name el desayuno, la fruta, la naranja, la patata and el azúcar.",
+      "prerequisites": [],
+      "lessons": [
+        "ES-C367-desayuno",
+        "ES-C367-fruta",
+        "ES-C367-naranja",
+        "ES-C367-patata",
+        "ES-C367-azucar"
+      ]
+    },
+    {
+      "id": "ES-EXT-368-REF",
+      "stage": "A1",
+      "kind": "required",
+      "category": "vocabulary",
+      "canDo": "I can name la abeja, la mosca, el cerdo, el lobo and el toro.",
+      "prerequisites": [],
+      "lessons": [
+        "ES-C368-abeja",
+        "ES-C368-mosca",
+        "ES-C368-cerdo",
+        "ES-C368-lobo",
+        "ES-C368-toro"
+      ]
+    },
+    {
+      "id": "ES-EXT-369-WHERE",
+      "stage": "A1",
+      "kind": "required",
+      "category": "vocabulary",
+      "canDo": "I can name el río, la arena, el polvo, el humo and la ceniza.",
+      "prerequisites": [],
+      "lessons": [
+        "ES-C369-rio",
+        "ES-C369-arena",
+        "ES-C369-polvo",
+        "ES-C369-humo",
+        "ES-C369-ceniza"
+      ]
+    },
+    {
+      "id": "ES-EXT-370-WHERE",
+      "stage": "A1",
+      "kind": "required",
+      "category": "vocabulary",
+      "canDo": "I can name la tormenta, el trueno, el hielo, la cueva and la costa.",
+      "prerequisites": [],
+      "lessons": [
+        "ES-C370-tormenta",
+        "ES-C370-trueno",
+        "ES-C370-hielo",
+        "ES-C370-cueva",
+        "ES-C370-costa"
+      ]
+    },
+    {
+      "id": "ES-EXT-371-COUNT",
+      "stage": "A1",
+      "kind": "required",
+      "category": "vocabulary",
+      "canDo": "I can name pequeño, gordo, joven, lento and dulce.",
+      "prerequisites": [],
+      "lessons": [
+        "ES-C371-pequeno",
+        "ES-C371-gordo",
+        "ES-C371-joven",
+        "ES-C371-lento",
+        "ES-C371-dulce"
+      ]
+    },
+    {
+      "id": "ES-EXT-372-REF",
+      "stage": "A1",
+      "kind": "required",
+      "category": "vocabulary",
+      "canDo": "I can name gris, rosa, oscuro, pálido and suave.",
+      "prerequisites": [],
+      "lessons": [
+        "ES-C372-gris",
+        "ES-C372-rosa",
+        "ES-C372-oscuro",
+        "ES-C372-palido",
+        "ES-C372-suave"
+      ]
+    },
+    {
+      "id": "ES-EXT-373-REF",
+      "stage": "A1",
+      "kind": "required",
+      "category": "vocabulary",
+      "canDo": "I can name el oro, la botella, la alfombra, la falda and el peine.",
+      "prerequisites": [],
+      "lessons": [
+        "ES-C373-oro",
+        "ES-C373-botella",
+        "ES-C373-alfombra",
+        "ES-C373-falda",
+        "ES-C373-peine"
       ]
     }
   ],

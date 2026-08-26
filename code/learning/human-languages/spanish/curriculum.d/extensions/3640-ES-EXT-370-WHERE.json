@@ -1,0 +1,15 @@
+{
+  "id": "ES-EXT-370-WHERE",
+  "stage": "A1",
+  "kind": "required",
+  "category": "vocabulary",
+  "canDo": "I can name la tormenta, el trueno, el hielo, la cueva and la costa.",
+  "prerequisites": [],
+  "lessons": [
+    "ES-C370-tormenta",
+    "ES-C370-trueno",
+    "ES-C370-hielo",
+    "ES-C370-cueva",
+    "ES-C370-costa"
+  ]
+}

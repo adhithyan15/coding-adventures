@@ -1,0 +1,879 @@
+{
+  "version": 1,
+  "language": "spanish",
+  "chapter": 370,
+  "title": "Storm, Thunder And Ice",
+  "drivablePrefix": 5,
+  "sourceHash": "fnv1a64:51d2e183b87fddfb",
+  "lessons": [
+    {
+      "id": "ES-C370-tormenta",
+      "sequence": 7420,
+      "title": "la tormenta — weather that wrings the sky",
+      "headword": "la tormenta",
+      "romanization": "la tormenta",
+      "gloss": "storm — Latin tormenta, from torquere, to twist; torment, torture, torque and contort are the same Latin verb, and a storm is weather that wrings the sky",
+      "script": "latin",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:3ca34b81d37965a6",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Say smoke, then ash. (El humo; la ceniza.)"
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know first",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "la nube — what one is made of."
+            },
+            {
+              "kind": "speech",
+              "text": "el viento — what arrives with it."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "pronunciation",
+          "title": "Sounds you'll need",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "tor-MEN-ta, three beats with the weight on the second. The r before the m is a single tap, not a roll. see pronunciation reference."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "la tormenta — \"the storm.\""
+            },
+            {
+              "kind": "speech",
+              "text": "Behind it is Latin torquēre, to twist or wring, and a noun tormentum built from it: a twisting."
+            },
+            {
+              "kind": "speech",
+              "text": "A tormentum was first a machine. Roman artillery stored its power in ropes of twisted sinew, wound tighter and tighter until they were let go. The twisting was the engine."
+            },
+            {
+              "kind": "speech",
+              "text": "From there the word travels by short steps, and English took a piece at each stop:"
+            },
+            {
+              "kind": "speech",
+              "text": "torment and torture — what a twisting machine does to a person;"
+            },
+            {
+              "kind": "speech",
+              "text": "contort and distort — twisted out of shape;"
+            },
+            {
+              "kind": "speech",
+              "text": "tortuous — a road that twists;"
+            },
+            {
+              "kind": "speech",
+              "text": "torque — the engineer's word for twisting force, taken off the Latin in the nineteenth century when machines needed a name for it again."
+            },
+            {
+              "kind": "speech",
+              "text": "And tormenta, the weather. A storm is the sky being wrung."
+            },
+            {
+              "kind": "speech",
+              "text": "One caution, because it catches people. Spanish torno and turno look as though they belong to this family and do not. They come from a Greek word for a lathe, a completely separate line. Turning and twisting are near enough in sense to make the mistake feel safe, which is exactly why it is not."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "You can now say what the weather is doing: hay tormenta."
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "la tormenta",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *la tormenta*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "hay tormenta",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *hay tormenta*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "una tormenta con viento",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *una tormenta con viento*]"
+            }
+          ]
+        },
+        {
+          "index": 6,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What did a Roman tormentum twist? (Ropes of sinew, in a catapult.) And do torno and turno belong to this family? (No — they come from a Greek word for a lathe.)"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "ES-C370-trueno",
+      "sequence": 7430,
+      "title": "el trueno — the noise that reshaped an English word",
+      "headword": "el trueno",
+      "romanization": "el trueno",
+      "gloss": "thunder — from a Latin word for a thunderclap, with an r that wandered in; English thunder is the inherited cousin, and tornado is a mangled Spanish tronada",
+      "script": "latin",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:f2c37cca687323ca",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Say ash, then the storm. (La ceniza; la tormenta.)"
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know first",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "la tormenta — what brings it."
+            },
+            {
+              "kind": "speech",
+              "text": "la luz — the flash that comes first."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "pronunciation",
+          "title": "Sounds you'll need",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "TRUE-no, two beats with the weight on the first. The ue is one glide, not two beats, and the tr runs together. see pronunciation reference."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "el trueno — \"thunder.\""
+            },
+            {
+              "kind": "speech",
+              "text": "The verb is tronar, to thunder, and it comes straight from Latin tonāre. The noun trueno comes from a Latin noun for a thunderclap — with an extra r that wandered in from a neighbouring Latin word for thunder and never left. Words borrow letters from their neighbours the way people borrow habits."
+            },
+            {
+              "kind": "speech",
+              "text": "English holds tonāre in three places, and only the first is obvious:"
+            },
+            {
+              "kind": "speech",
+              "text": "detonate — to thunder down;"
+            },
+            {
+              "kind": "speech",
+              "text": "astonish — from a late Latin compound meaning to thunder at somebody. To astonish was to leave a person the way a thunderclap leaves them;"
+            },
+            {
+              "kind": "speech",
+              "text": "stun — the same word again, worn shorter on its way through French. To stun and to astonish are one word at two lengths."
+            },
+            {
+              "kind": "speech",
+              "text": "English thunder is not borrowed at all. It came down the Germanic line from the same ancient root, which is also where the god Thor gets his name — the thunderer."
+            },
+            {
+              "kind": "speech",
+              "text": "The best of the family is one English took from Spanish and got wrong. A tronada is a thunderstorm. English sailors brought the word home, and somewhere along the way its letters were shuffled into tornado — most likely under the pull of tornar, \"to turn,\" a different Spanish word that happened to describe exactly what the wind was doing. A mishearing that improved the word."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "You can now name both halves of a storm: el trueno y la luz."
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "el trueno",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *el trueno*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "un trueno",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *un trueno*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "hay truenos en la tormenta",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *hay truenos en la tormenta*]"
+            }
+          ]
+        },
+        {
+          "index": 6,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Which English word is astonish the shorter twin of? (Stun.) And what Spanish word is tornado a mangling of? (Tronada, a thunderstorm.)"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "ES-C370-hielo",
+      "sequence": 7440,
+      "title": "el hielo — an h that stands for nothing",
+      "headword": "el hielo",
+      "romanization": "el hielo",
+      "gloss": "ice — Latin gelu; English gelatin, jelly, congeal and gelid are the same word, and the h- here is a spelling habit, not the f- that hides in humo",
+      "script": "latin",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:01df4ed15392d04b",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Say the storm, then thunder. (La tormenta; el trueno.)"
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know first",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "la nieve — its softer neighbour."
+            },
+            {
+              "kind": "speech",
+              "text": "el frío — the condition that makes it."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "pronunciation",
+          "title": "Sounds you'll need",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "HIE-lo, two beats with the weight on the first. The h is silent and the ie is one glide, so the word starts on a y-like sound. see pronunciation reference."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "el hielo — \"ice.\""
+            },
+            {
+              "kind": "speech",
+              "text": "Latin gelū, frost. English has the family wherever something sets as it cools:"
+            },
+            {
+              "kind": "speech",
+              "text": "gelid, taken straight off the Latin, meaning icy;"
+            },
+            {
+              "kind": "speech",
+              "text": "congeal, to freeze together, through French;"
+            },
+            {
+              "kind": "speech",
+              "text": "jelly, through French gelée, a thing that has set;"
+            },
+            {
+              "kind": "speech",
+              "text": "gelatin, through Italian and then French — the same word again, arriving a third time by a third road."
+            },
+            {
+              "kind": "speech",
+              "text": "Now the letter at the front, because it is a different animal from the h on humo."
+            },
+            {
+              "kind": "speech",
+              "text": "Humo has an h standing in for a Latin f. Hielo does not: gelū has no f in it anywhere. That h is a spelling habit. Medieval scribes wrote u and v with the same letter, so a word beginning ue- was liable to be read as though it began with a consonant. Sticking an h on the front settled the question, and the habit spread to ie- as well."
+            },
+            {
+              "kind": "speech",
+              "text": "That is why huevo and hueso carry one too. Latin ōvum and ossum have no f to stand for either."
+            },
+            {
+              "kind": "speech",
+              "text": "So Spanish has two silent h's doing two unrelated jobs. Do not generalise from one to the other: hierro, iron, comes from ferrum, and its h is the humo kind after all."
+            },
+            {
+              "kind": "speech",
+              "text": "One relative that will not come quietly: glaciar. It looks like it belongs with hielo, and specialists cannot show that it does — the Latin word behind it resists being derived from gelū. Near in meaning, unproven in ancestry."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "You can now name what cold water becomes: el hielo."
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "el hielo",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *el hielo*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "con hielo",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *con hielo*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "un café con hielo",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *un café con hielo*]"
+            }
+          ]
+        },
+        {
+          "index": 6,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Does the h of hielo stand in for a Latin f? (No — it is a spelling habit, like the one on huevo.) And what does jelly have in common with hielo? (Both come from gelū.)"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "ES-C370-cueva",
+      "sequence": 7450,
+      "title": "la cueva — the hollow, and one word that only looks hollow",
+      "headword": "la cueva",
+      "romanization": "la cueva",
+      "gloss": "cave — from a Latin variant of cavus, hollow; cavity, excavate and cage are relatives, but English cove is a Germanic look-alike that is not",
+      "script": "latin",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:2f67586105b958c0",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Say thunder, then ice. (El trueno; el hielo.)"
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know first",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "la montaña — what one is usually inside."
+            },
+            {
+              "kind": "speech",
+              "text": "la sombra — what there is a lot of in there."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "pronunciation",
+          "title": "Sounds you'll need",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "CUE-va, two beats with the weight on the first. The cu- is a hard k with a w glide, and the v is the same soft sound as a Spanish b. see pronunciation reference."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "la cueva — \"the cave.\""
+            },
+            {
+              "kind": "speech",
+              "text": "Latin cavus meant hollow. Spoken Latin also had a variant cova, and that is what Spanish grew cueva out of — the stressed vowel breaking into ue, which is why the word has a glide the Latin never did."
+            },
+            {
+              "kind": "speech",
+              "text": "The family is wide, and every member is still hollow:"
+            },
+            {
+              "kind": "speech",
+              "text": "cave itself, which reached English through French;"
+            },
+            {
+              "kind": "speech",
+              "text": "cavity and excavate, taken off the Latin;"
+            },
+            {
+              "kind": "speech",
+              "text": "cage, from cavea, a hollow enclosure for keeping animals;"
+            },
+            {
+              "kind": "speech",
+              "text": "gabion, the wicker basket packed with earth that soldiers stack for cover — the same cavea, come through Italian, still a hollow container."
+            },
+            {
+              "kind": "speech",
+              "text": "And then the one to refuse. English cove — a small sheltered bay — looks like it must be cova with the vowel worn down. It is not. Cove is Old English cofa, a small chamber, a Germanic word with no Latin in it; the seaside meaning is a late arrival, not turning up until the sixteenth century."
+            },
+            {
+              "kind": "speech",
+              "text": "Two words for a hollow place, from two families, meeting in the middle by accident. Spanish caves and English coves are neighbours who are not related."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "You can now say where the shelter is: la cueva está en la montaña."
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "la cueva",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *la cueva*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "una cueva",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *una cueva*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "la cueva está en la montaña",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *la cueva está en la montaña*]"
+            }
+          ]
+        },
+        {
+          "index": 6,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What did Latin cavus mean? (Hollow.) And is English cove from the same word? (No — it is Germanic, cofa, a small chamber.)"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "ES-C370-costa",
+      "sequence": 7460,
+      "title": "la costa — the country's rib",
+      "headword": "la costa",
+      "romanization": "la costa",
+      "gloss": "coast — Latin costa, a rib, so the coast is the country's side; English coast, intercostal, accost and cutlet are all the same rib",
+      "script": "latin",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:2293c42567090a91",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Say ice, then the cave. (El hielo; la cueva.)"
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know first",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "el mar — what it holds back."
+            },
+            {
+              "kind": "speech",
+              "text": "la isla — a place that is all of it."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "pronunciation",
+          "title": "Sounds you'll need",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "COS-ta, two beats with the weight on the first. The st is a clean s against a t on the teeth, with no vowel in front of the s. see pronunciation reference."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "la costa — \"the coast.\""
+            },
+            {
+              "kind": "speech",
+              "text": "Latin costa is a rib. Not the sea, not the shore — a bone in your side."
+            },
+            {
+              "kind": "speech",
+              "text": "The step to a coastline is a picture rather than a definition. A rib is the side of a body; a coast is the side of a country. English took the same picture and uses it every day without opening it up:"
+            },
+            {
+              "kind": "speech",
+              "text": "coast, from the Latin through French;"
+            },
+            {
+              "kind": "speech",
+              "text": "intercostal, the muscles between the ribs, straight off the Latin;"
+            },
+            {
+              "kind": "speech",
+              "text": "to accost — ad plus costa, to come up alongside. You accost somebody by arriving at their side;"
+            },
+            {
+              "kind": "speech",
+              "text": "cutlet, which is French côtelette, a diminutive of a diminutive: a little little rib. English speakers pulled its first syllable towards cut because a cutlet is something cut, and the word has looked like that ever since."
+            },
+            {
+              "kind": "speech",
+              "text": "There is a footnote about the Spanish word itself. Costa did not come down the inherited line into Castilian; it was taken in from a neighbouring language of the peninsula. The form that did come down the inherited line is cuesta, a slope — with the broken vowel that marks an inherited word. One Latin rib, two Spanish words, and the diphthong tells you which is which."
+            },
+            {
+              "kind": "speech",
+              "text": "Two neighbours that are nothing to do with it: cosa, a thing, and cosecha, a harvest. Both begin the same and neither is a relative."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "You can now say where the land stops: la costa del mar."
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "la costa",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *la costa*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "la costa del mar",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *la costa del mar*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "la casa está en la costa",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *la casa está en la costa*]"
+            }
+          ]
+        },
+        {
+          "index": 6,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does Latin costa mean? (A rib.) And which Spanish word is the inherited form of it? (Cuesta, a slope.)"
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "findings": []
+}
