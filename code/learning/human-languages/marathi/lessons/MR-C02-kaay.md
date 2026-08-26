@@ -1,7 +1,7 @@
 ---
 id: MR-C02-kaay
-sequence: 65
-chapter: 3
+sequence: 85
+chapter: 5
 type: word
 headword: काय
 gloss: what (kāy)
@@ -30,7 +30,7 @@ reviews_of: [MR-C02-naav]
 PIE **\*kʷo-** — the very root behind English **wh-** words (*what, who, when,
 where, why*) and Latin *qu-* (*quis, quid*). Marathi keeps the **k-** plainly
 across its whole question family: **काय** (*kāy*, what), **कोण** (*koṇ*, who),
-**कुठे** (*kuṭhe*, where), **का** (*kā*, why), **कसं** (*kasaṁ*, how — Chapter 4).
+**कुठे** (*kuṭhe*, where), **का** (*kā*, why), **कसं** (*kasaṁ*, how — Chapter 6).
 Learn to hear that opening **k-** and you can spot a Marathi question coming.
 
 ## Why it's said this way

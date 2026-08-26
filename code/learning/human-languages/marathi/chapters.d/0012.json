@@ -1,26 +1,25 @@
 {
   "chapter": 12,
-  "title": "Friend and Family",
-  "label": "ch:mr-friend-and-family",
-  "canDo": "I can name a friend, a family, a brother, and a sister in Marathi, sort each word into a tatsama taken up whole from Sanskrit or a tadbhava worn down by sound change, and say which sibling word is genuinely English's cousin and which is not.",
+  "title": "Taking, Asking, Helping, Liking",
+  "label": "ch:mr-doing-verbs",
+  "canDo": "I can take, ask, help and say what I like and what I love in Marathi, build a fresh verb by putting करणे behind a noun, and say why मला मराठी आवडते has no room for me as its subject while मी प्रेम करतो does.",
   "spineNodes": [
-    "SPINE-EXCHANGE-NAMES"
+    "SPINE-SAY-WHAT-I-DO"
   ],
   "payoff": {
-    "lesson": "MR-C11-bahin",
+    "lesson": "MR-C09-avadne",
     "kind": "production",
-    "summary": "The chapter closes on बहीण, deliberately not a cousin of English sister: the reader produces मित्र, कुटुंब, भाऊ and बहीण, sorts the four into two tatsamas (मित्र, कुटुंब) and two tadbhavas (भाऊ, बहीण), and names भाऊ as the secure cousin of brother against बहीण's unrelated root — while recalling कुटुंब's gender split from Hindi and मित्र's root in a covenant god's name.",
+    "summary": "Say मला मराठी आवडते and hear that you are not its subject, set it against मी प्रेम करतो where you are, place both beside मला मराठी येते and मला मराठी समजते so one frame carries three meanings, and run the chapter's four verbs back with where each came from — Sanskrit ग्रह् beside English grab, विचार doing double duty as thought and question, Arabic मदद through Persian, and आवडणे with no Sanskrit ancestor to claim.",
     "assesses": [
-      "MR-LEX-MITRA",
-      "MR-ETYMON-MITRA-BIND",
-      "MR-GRAMMAR-TATSAMA-BORROWING",
-      "MR-LEX-KUTUMB",
-      "MR-GRAMMAR-KUTUMB-NEUTER",
-      "MR-LEX-BHAU",
-      "MR-ETYMON-BHAU-BROTHER",
-      "MR-LEX-BAHIN",
-      "MR-ETYMON-BAHIN-NOT-SISTER",
-      "MR-GRAMMAR-TATSAMA-TADBHAVA-SPLIT"
+      "MR-LEX-GHENE",
+      "MR-ETYMON-GRAH-GRAB",
+      "MR-LEX-VICHARNE",
+      "MR-ETYMON-VICHAR-THINK-ASK",
+      "MR-LEX-MADAT-KARNE",
+      "MR-ETYMON-MADAT-ARABIC",
+      "MR-LEX-AVADNE",
+      "MR-GRAMMAR-DATIVE-LIKING",
+      "MR-LEX-PREM-KARNE"
     ]
   }
 }

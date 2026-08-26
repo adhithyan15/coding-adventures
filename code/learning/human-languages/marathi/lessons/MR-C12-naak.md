@@ -2,8 +2,8 @@
 schema_version: 2
 id: MR-C12-naak
 spine_node: SPINE-CHECK-WELLBEING
-sequence: 610
-chapter: 13
+sequence: 630
+chapter: 15
 type: word
 headword: नाक
 romanization: nāk
@@ -87,7 +87,7 @@ more than assuming they all match.
 [PAUSE 3s] Which English word is **नाक**'s most secure cousin? (**Nose**.) Sort
 the four face words by their history — replaced, disputed, twinned, secure.
 (**Ḍoḷā** replaced its old word; **kān**'s root is disputed; **tõḍ** has the
-formal doublet **mukh**; **nāk** is the secure one.) What Chapter 8 verb
+formal doublet **mukh**; **nāk** is the secure one.) What Chapter 10 verb
 names what your eyes do? (**Pāhṇe**, "to see.")
 
 Sources: [Wiktionary: नाक](https://en.wiktionary.org/wiki/%E0%A4%A8%E0%A4%BE%E0%A4%95).

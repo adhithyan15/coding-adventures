@@ -1,7 +1,7 @@
 ---
 id: MR-C02-majhe
-sequence: 45
-chapter: 3
+sequence: 65
+chapter: 5
 type: word
 headword: माझं
 gloss: my (mājhaṁ, neuter)

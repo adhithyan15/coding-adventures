@@ -1,26 +1,24 @@
 {
   "chapter": 11,
-  "title": "Water, Tea, Milk, and Bhakri",
-  "label": "ch:mr-request-food-drink",
-  "canDo": "I can politely ask for water, tea, milk, or bhakri in Marathi, name which of the four is a Chinese loan and which never touched Sanskrit at all, and say why all three of Marathi's genders already show up in one short chapter.",
+  "title": "The Mind and the Page",
+  "label": "ch:mr-mind-and-page",
+  "canDo": "I can say that I think, understand, read and write in Marathi, put the understander in the dative where Marathi puts it, and name what each of the four roots meant before it meant a mental act — turning, waking, speaking and scratching.",
   "spineNodes": [
-    "SPINE-POLITE-REQUEST-REPAIR"
+    "SPINE-SAY-WHAT-I-DO"
   ],
   "payoff": {
-    "lesson": "MR-C10-bhakari",
+    "lesson": "MR-C08-lihine",
     "kind": "production",
-    "summary": "The chapter closes on भाकरी, the request that breaks every pattern the first three set: the reader produces all four requests with कृपया, sorts पाणी and दूध (inherited from Sanskrit) against चहा (a Chinese loan by the overland route) against भाकरी (native to Marathi's own ground, sharing Sanskrit with none of them), and names the three genders the four words already cover.",
+    "summary": "Say मी माझं नाव लिहितो, run the chapter's four verbs back with the four things their roots meant — vichār karṇe from a root meaning to turn, samajṇe from one meaning to wake, vāchṇe from one meaning to speak, lihiṇe from one meaning to scratch — and pick out the one of the four that refuses मी and takes मला instead.",
     "assesses": [
-      "MR-LEX-PAANI",
-      "MR-PHRASE-KRUPAYA",
-      "MR-ETYMON-PAANI-DRINK",
-      "MR-LEX-CHAHA",
-      "MR-ETYMON-CHAHA-OVERLAND",
-      "MR-LEX-DUDH",
-      "MR-ETYMON-DUDH-DUGDHA",
-      "MR-LEX-BHAKARI",
-      "MR-ETYMON-BHAKARI-LUMP",
-      "MR-GRAMMAR-THREE-GENDERS-ONE-CHAPTER"
+      "MR-LEX-VICHAR-KARNE",
+      "MR-ETYMON-VICHAR-TURN",
+      "MR-LEX-SAMAJNE",
+      "MR-ETYMON-BUDH-AWAKE",
+      "MR-LEX-VACHNE",
+      "MR-ETYMON-VACH-VOICE",
+      "MR-LEX-LIHINE",
+      "MR-ETYMON-LIKH-SCRATCH"
     ]
   }
 }

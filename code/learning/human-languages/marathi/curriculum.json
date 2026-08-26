@@ -33,11 +33,26 @@
       "id": "MR-PATH-002",
       "spine_node": "SPINE-COURTESY-THANK",
       "lessons": [
-        "MR-C01-dhanyavad"
+        "MR-C01-dhanyavad",
+        "MR-W02-visarga",
+        "MR-W02-aa-independent",
+        "MR-W02-bha",
+        "MR-W02-e-matra",
+        "MR-W02-anusvara",
+        "MR-W02-ta",
+        "MR-W03-da",
+        "MR-W03-dha",
+        "MR-W03-ba",
+        "MR-W03-ya",
+        "MR-W03-lla",
+        "MR-W03-va",
+        "MR-W03-dhanyavad-write"
       ],
       "before": [],
       "inline": [],
-      "after": []
+      "after": [
+        "MR-EXT-021-SCRIPT-DOORWAY"
+      ]
     },
     {
       "id": "MR-PATH-003",
@@ -166,13 +181,18 @@
       "id": "MR-PATH-011",
       "spine_node": "SPINE-COUNT-ONE-TO-FIVE",
       "lessons": [
+        "MR-R09-script-a-r3",
+        "MR-R09-script-b-r3",
+        "MR-R09-script-c-r3",
+        "MR-R09-script-d-r3",
         "MR-C06-numbers-1-5",
         "MR-C06-number-differences"
       ],
       "before": [],
       "inline": [
         "MR-EXT-011-LANGUAGE-SPECIFIC",
-        "MR-EXT-011-ETYMOLOGY"
+        "MR-EXT-011-ETYMOLOGY",
+        "MR-EXT-022-SCRIPT-DURABLE"
       ],
       "after": []
     },
@@ -297,12 +317,18 @@
         "MR-R14-core",
         "MR-R14-mitra-r3",
         "MR-R14-numbers",
-        "MR-R14-kutumb-r3"
+        "MR-R14-kutumb-r3",
+        "MR-R18-script-warmup",
+        "MR-R18-script-a-r4",
+        "MR-R18-script-b-r4",
+        "MR-R18-script-c-r4",
+        "MR-R18-script-d-r4"
       ],
       "before": [],
       "inline": [],
       "after": [
-        "MR-EXT-020-FAMILY-RETRIEVAL"
+        "MR-EXT-020-FAMILY-RETRIEVAL",
+        "MR-EXT-023-SCRIPT-DISTANT"
       ]
     }
   ],
@@ -882,6 +908,64 @@
         "MR-R14-mitra-r3",
         "MR-R14-numbers",
         "MR-R14-kutumb-r3"
+      ]
+    },
+    {
+      "id": "MR-EXT-021-SCRIPT-DOORWAY",
+      "stage": "pre-A1",
+      "kind": "required",
+      "category": "script",
+      "canDo": "I can move twelve Devanagari signs from visible models through guided and delayed copy to dictation, then independently read and write dhanyavad.",
+      "prerequisites": [
+        "MR-EXT-016-SCRIPT-FIRST-PIECES"
+      ],
+      "lessons": [
+        "MR-W02-visarga",
+        "MR-W02-aa-independent",
+        "MR-W02-bha",
+        "MR-W02-e-matra",
+        "MR-W02-anusvara",
+        "MR-W02-ta",
+        "MR-W03-da",
+        "MR-W03-dha",
+        "MR-W03-ba",
+        "MR-W03-ya",
+        "MR-W03-lla",
+        "MR-W03-va",
+        "MR-W03-dhanyavad-write"
+      ]
+    },
+    {
+      "id": "MR-EXT-022-SCRIPT-DURABLE",
+      "stage": "pre-A1",
+      "kind": "required",
+      "category": "script",
+      "canDo": "I can retrieve all twelve doorway signs after a durable gap without receiving a new model first.",
+      "prerequisites": [
+        "MR-EXT-021-SCRIPT-DOORWAY"
+      ],
+      "lessons": [
+        "MR-R09-script-a-r3",
+        "MR-R09-script-b-r3",
+        "MR-R09-script-c-r3",
+        "MR-R09-script-d-r3"
+      ]
+    },
+    {
+      "id": "MR-EXT-023-SCRIPT-DISTANT",
+      "stage": "pre-A1",
+      "kind": "required",
+      "category": "script",
+      "canDo": "I can retrieve all twelve doorway signs and write dhanyavad after a long gap.",
+      "prerequisites": [
+        "MR-EXT-022-SCRIPT-DURABLE"
+      ],
+      "lessons": [
+        "MR-R18-script-warmup",
+        "MR-R18-script-a-r4",
+        "MR-R18-script-b-r4",
+        "MR-R18-script-c-r4",
+        "MR-R18-script-d-r4"
       ]
     }
   ]

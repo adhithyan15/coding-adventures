@@ -1,10 +1,10 @@
-# Session Guide — Marathi Chapters 1–10
+# Session Guide — Marathi Chapters 1–18
 
 Same spaced-repetition schedule as the other tracks (a word from session *N*
 resurfaces at successively wider distances). Lessons are named by slug. The
 machine-authoritative order is the `(chapter, sequence)` order in lesson
 frontmatter, with `curriculum.json` defining the learner paths; this guide
-records the original chapter hooks without trying to duplicate all 89 lessons.
+records the chapter hooks without trying to duplicate all 111 lessons.
 
 **Reading and writing begin inside the first exchange.** After hearing
 **नमस्कार**, the learner meets one shape at a time, traces and copies **हो**,
@@ -23,101 +23,149 @@ recalls it without a visible model, writes it from a heard cue, and then reads
 | 6–13 | W01-na … W01-ra | न, ा, ी, म, स, क, ्, र | one new piece per short lesson |
 | 14 | W01-namaskar-read | नमस्कार | blend and read the first greeting independently |
 
-## Chapter 2 — Courtesy, Responses, and Leave-Taking
+## Chapter 2 — Hear Thanks, Then Meet Six Signs
+
+| Session | Lesson | Word / sign | Job |
+|---|---|---|---|
+| 15 | dhanyavad | धन्यवाद | hear, understand, and say the word before decoding it |
+| 16 | W02-visarga | ः | observe and copy the two-dot breath sign |
+| 17 | W02-aa-independent | आ | guided copy of independent long *ā* |
+| 18 | W02-bha | भ | guided copy; keep *ba* and breathy *bha* distinct |
+| 19 | W02-e-matra | े | add one above-headline vowel sign; retrieve the first batch |
+| 20 | W02-anusvara | ं | place one nasal dot, distinct from visarga |
+| 21 | W02-ta | त | delayed copy of dental *ta* |
+
+## Chapter 3 — Six More Signs Make Thank You Readable
+
+| Session | Lesson | Word / sign | Job |
+|---|---|---|---|
+| 22 | W03-da | द | delayed copy; retrieve the second batch |
+| 23 | W03-dha | ध | delayed copy; retrieve the first batch at R2 |
+| 24 | W03-ba | ब | write quiet *ba* from a heard cue |
+| 25 | W03-ya | य | write *ya* from sound; retrieve *da/dha/ba* |
+| 26 | W03-lla | ळ | write Marathi *ḷa* from sound; retrieve the second batch at R2 |
+| 27 | W03-va | व | write light *va* from sound |
+| 28 | W03-dhanyavad-write | धन्यवाद | independent four-skill payoff; retrieve the final batch |
+
+## Chapter 4 — Courtesy, Responses, and Leave-Taking
 
 | Session | Lesson | Word | Root / hook |
 |---|---|---|---|
-| 15 | dhanyavad | धन्यवाद | "thanks" ← Sanskrit *dhanya*+*vāda* |
-| 16 | ho | हो | use the already written word as "yes" |
-| 17 | baram | बरं | "okay/fine" (native word); the anusvāra nasal |
-| 18 | nahi | नाही | "no" ← PIE *\*ne* (English *no/not/none*) |
-| 19 | yeto | येतो / येते | gendered leave-taking (m./f.) |
-| 20 | practice | (recap) | retrieve courtesy, responses, leave-taking, and independent **हो** writing |
+| 29 | ho | हो | use the already written word as "yes"; R2 for *da/dha/ba* |
+| 30 | baram | बरं | "okay/fine" (native word); the anusvāra nasal |
+| 31 | nahi | नाही | "no" ← PIE *\*ne* (English *no/not/none*) |
+| 32 | yeto | येतो / येते | gendered leave-taking (m./f.) |
+| 33 | practice | (recap) | retrieve courtesy and leave-taking; R2 for *ya/ḷa/va* |
 
-## Chapter 3 — Introducing Yourself
-
-| Session | Lesson | Word | Root / hook |
-|---|---|---|---|
-| 8 | naav | नाव | "name" ← Sanskrit *nāman* (English *name*); the *m→v* softening |
-| 9 | majhe | माझं | "my" ← *ma-* (English *me/my*); three genders *mājhā/mājhī/mājhaṁ* |
-| 10 | aahe | आहे | "is" ← Sanskrit *ásti* (√as, English *is*); the verb goes last |
-| 11 | majhe-naav-aahe | माझं नाव … आहे | "my name is…" assembled |
-| 12 | tu-tumhi | तू / तुम्ही | familiar / respectful "you"; *tū* → *thou*; courtesy-by-plural |
-| 13 | kaay | काय | "what"; the *k-* question family (PIE *\*kʷo-*) |
-| 14 | tumche-naav-kaay-aahe | तुमचं नाव काय आहे? | "what's your name?" assembled |
-| 15 | anand | भेटून आनंद झाला | "pleased to meet you" ← *ānand* "joy" |
-| 16 | practice | (recap) | the whole introduction exchange |
-
-## Chapter 4 — How Are You
+## Chapter 5 — Introducing Yourself
 
 | Session | Lesson | Word | Root / hook |
 |---|---|---|---|
-| 17 | kasa | कसा / कशी / कसं | "how"; gender-agreeing *k-* question |
-| 18 | tumhi-kase-aahat | तुम्ही कसे आहात? | "how are you?"; plural agreement with *tumhī* |
-| 19 | mi | मी | "I" ← *aham* → Latin *ego*, English *I* |
-| 20 | mi-bara-aahe | मी बरा आहे | "I'm well"; Ch1 *baraṁ* now gendered *barā/barī* |
-| 21 | kaahi-harkat-nahi | काही हरकत नाही | "no problem"; *nāhī* ← PIE *ne, *harkat* ← Arabic |
-| 22 | practice | (recap) | the whole how-are-you exchange |
+| 34 | naav | नाव | "name" ← Sanskrit *nāman* (English *name*); the *m→v* softening |
+| 35 | majhe | माझं | "my" ← *ma-* (English *me/my*); three genders *mājhā/mājhī/mājhaṁ* |
+| 36 | aahe | आहे | "is" ← Sanskrit *ásti* (√as, English *is*); the verb goes last |
+| 37 | majhe-naav-aahe | माझं नाव … आहे | "my name is…" assembled |
+| 38 | tu-tumhi | तू / तुम्ही | familiar / respectful "you"; *tū* → *thou*; courtesy-by-plural |
+| 39 | kaay | काय | "what"; the *k-* question family (PIE *\*kʷo-*) |
+| 40 | tumche-naav-kaay-aahe | तुमचं नाव काय आहे? | "what's your name?" assembled |
+| 41 | anand | भेटून आनंद झाला | "pleased to meet you" ← *ānand* "joy" |
+| 42 | practice | (recap) | the whole introduction exchange |
 
-## Chapter 5 — Farewells
-
-| Session | Lesson | Word | Root / hook |
-|---|---|---|---|
-| 23 | punha | पुन्हा | "again" ← Sanskrit *punar* |
-| 24 | bhetu | भेटू | "(we'll) meet"; the "we" lives in the *-ū* ending; ← *bheṭṇe* |
-| 25 | punha-bhetu | पुन्हा भेटू | "see you again" — the promise of return |
-| 26 | udya-bhetu | उद्या भेटू | "see you tomorrow"; *udyā* distinct from *kāl* (yesterday) |
-| 27 | kalji-ghya | काळजी घ्या | "take care"; the retroflex ळ; *ghyā* (resp.) / *ghe* (fam.) |
-| 28 | practice | (recap) | the farewells |
-
-## Chapter 6 — The First Verbs
+## Chapter 6 — How Are You
 
 | Session | Lesson | Word | Root / hook |
 |---|---|---|---|
-| 29 | bolne | बोलणे | "to speak"; the *-ṇe* infinitive; gendered present *bolto/bolte* |
-| 30 | mi-marathi-bolto | मी मराठी बोलतो | "I speak Marathi"; *marāṭhī* ← *Mahārāṣṭra* "great realm" |
-| 31 | rahne | राहणे | "to live" ← Sanskrit *rah-*; the postposition *-āt* ("in") |
-| 32 | kaam-karne | काम करणे | "to work"; *karṇe* ← √*kṛ* (root of *namaskār*, *karma*) |
-| 33 | practice | (recap) | three verbs, one engine — sentences about yourself |
+| 43 | kasa | कसा / कशी / कसं | "how"; gender-agreeing *k-* question |
+| 44 | tumhi-kase-aahat | तुम्ही कसे आहात? | "how are you?"; plural agreement with *tumhī* |
+| 45 | mi | मी | "I" ← *aham* → Latin *ego*, English *I* |
+| 46 | mi-bara-aahe | मी बरा आहे | "I'm well"; Ch1 *baraṁ* now gendered *barā/barī* |
+| 47 | kaahi-harkat-nahi | काही हरकत नाही | "no problem"; *nāhī* ← PIE *ne, *harkat* ← Arabic |
+| 48 | practice | (recap) | the whole how-are-you exchange |
 
-## Chapter 7 — Numbers 1–5
-
-| Session | Lesson | Word | Root / hook |
-|---|---|---|---|
-| 34 | numbers-1-5 | एक, दोन, तीन, चार, पाच | retrieve the five forms; notice two written differences and one sound difference |
-| 35 | number-differences | दोन · तीन · पाच · चार | *don* copied *tīn* by analogy; Hindi retained *pāṁch*'s nasal; Marathi *chār* shifts toward *tsār* |
-
-## Chapter 8 — The Core Verbs
+## Chapter 7 — Farewells
 
 | Session | Lesson | Word | Root / hook |
 |---|---|---|---|
-| 36 | asne | असणे | "to be"; the copula आहे closes the sentence; *ásti* ← the root behind *est*, *ist*, *is* |
-| 37 | jane | जाणे | "to go"; *jāto / jāte* — the present ending declares the subject's gender |
-| 38 | yene | येणे | "to come"; *ā-* + *yā-* — going and coming are one Sanskrit verb |
-| 39 | khane | खाणे | "to eat"; the *-णे* infinitive is a **neuter** noun — Marathi's third gender |
-| 40 | pahne | पाहणे | "to see" ← *prapaśyati*; *paś-* ← *\*spek-* → *spectacle, inspect, spy* |
-| 41 | mahit-asne | माहीत असणे | "to know"; *malā māhīt āhe* — the knower is dative; **माहीत** a Persian loan beside inherited जाणणे |
+| 49 | punha | पुन्हा | "again" ← Sanskrit *punar* |
+| 50 | bhetu | भेटू | "(we'll) meet"; the "we" lives in the *-ū* ending; ← *bheṭṇe* |
+| 51 | punha-bhetu | पुन्हा भेटू | "see you again" — the promise of return |
+| 52 | udya-bhetu | उद्या भेटू | "see you tomorrow"; *udyā* distinct from *kāl* (yesterday) |
+| 53 | kalji-ghya | काळजी घ्या | "take care"; the retroflex ळ; *ghyā* (resp.) / *ghe* (fam.) |
+| 54 | practice | (recap) | the farewells |
 
-## Chapter 9 — The Mind and the Page
-
-| Session | Lesson | Word | Root / hook |
-|---|---|---|---|
-| 42 | vichar-karne | विचार करणे | "to think"; वि- + *car-* "to turn" ← *\*kʷelh₁-* → *wheel, cycle*; said *vitsār* |
-| 43 | samajne | समजणे | "to understand"; ← *sambudhyate*, root *budh-* "to wake" — the **Buddha**'s root; dative like *yete* |
-| 44 | vachne | वाचणे | "to read"; ← *vācayati*, causative of *vac-* "to speak" ← *\*wekʷ-* → *voice, vocal, invoke* |
-| 45 | lihine | लिहिणे | "to write"; ← *likhati*, root sense "to scratch," beside *scrībere* and *write*; **payoff** |
-
-## Chapter 10 — Taking, Asking, Helping, Liking
+## Chapter 8 — The First Verbs
 
 | Session | Lesson | Word | Root / hook |
 |---|---|---|---|
-| 46 | ghene | घेणे | "to take"; the verb inside *kāḷjī ghyā*; ← *grah-*, Vedic *grabh* = English **grab** |
-| 47 | vicharne | विचारणे | "to ask"; **विचार** + *-णे* — thinking and asking are one word in Marathi |
-| 48 | madat-karne | मदत करणे | "to help"; Arabic *madad* "a thing extended," through Persian; Marathi **मदत** vs Hindi **मदद** |
-| 49 | avadne | आवडणे | "to like"; *malā marāṭhī āvaḍte* — native, not Persian *pasand*; beside प्रेम करणे ← *\*preyH-* → *friend, free*; **payoff** |
+| 55 | bolne | बोलणे | "to speak"; the *-ṇe* infinitive; gendered present *bolto/bolte* |
+| 56 | mi-marathi-bolto | मी मराठी बोलतो | "I speak Marathi"; *marāṭhī* ← *Mahārāṣṭra* "great realm" |
+| 57 | rahne | राहणे | "to live" ← Sanskrit *rah-*; the postposition *-āt* ("in") |
+| 58 | kaam-karne | काम करणे | "to work"; *karṇe* ← √*kṛ* (root of *namaskār*, *karma*) |
+| 59 | practice | (recap) | three verbs, one engine — sentences about yourself |
+
+## Chapter 9 — Numbers 1–5
+
+| Session | Lesson | Word | Root / hook |
+|---|---|---|---|
+| 60–63 | R09-script-a-r3 … R09-script-d-r3 | ः आ भ · े ं त · द ध ब · य ळ व | retrieve all twelve doorway signs at the durable window |
+| 64 | numbers-1-5 | एक, दोन, तीन, चार, पाच | retrieve the five forms; notice two written differences and one sound difference |
+| 65 | number-differences | दोन · तीन · पाच · चार | *don* copied *tīn* by analogy; Hindi retained *pāṁch*'s nasal; Marathi *chār* shifts toward *tsār* |
+
+## Chapter 10 — The Core Verbs
+
+| Session | Lesson | Word | Root / hook |
+|---|---|---|---|
+| 66 | asne | असणे | "to be"; the copula आहे closes the sentence; *ásti* ← the root behind *est*, *ist*, *is* |
+| 67 | jane | जाणे | "to go"; *jāto / jāte* — the present ending declares the subject's gender |
+| 68 | yene | येणे | "to come"; *ā-* + *yā-* — going and coming are one Sanskrit verb |
+| 69 | khane | खाणे | "to eat"; the *-णे* infinitive is a **neuter** noun — Marathi's third gender |
+| 70 | pahne | पाहणे | "to see" ← *prapaśyati*; *paś-* ← *\*spek-* → *spectacle, inspect, spy* |
+| 71 | mahit-asne | माहीत असणे | "to know"; *malā māhīt āhe* — the knower is dative; **माहीत** a Persian loan beside inherited जाणणे |
+
+## Chapter 11 — The Mind and the Page
+
+| Session | Lesson | Word | Root / hook |
+|---|---|---|---|
+| 72 | vichar-karne | विचार करणे | "to think"; वि- + *car-* "to turn" ← *\*kʷelh₁-* → *wheel, cycle*; said *vitsār* |
+| 73 | samajne | समजणे | "to understand"; ← *sambudhyate*, root *budh-* "to wake" — the **Buddha**'s root; dative like *yete* |
+| 74 | vachne | वाचणे | "to read"; ← *vācayati*, causative of *vac-* "to speak" ← *\*wekʷ-* → *voice, vocal, invoke* |
+| 75 | lihine | लिहिणे | "to write"; ← *likhati*, root sense "to scratch," beside *scrībere* and *write*; **payoff** |
+
+## Chapter 12 — Taking, Asking, Helping, Liking
+
+| Session | Lesson | Word | Root / hook |
+|---|---|---|---|
+| 76 | ghene | घेणे | "to take"; the verb inside *kāḷjī ghyā*; ← *grah-*, Vedic *grabh* = English **grab** |
+| 77 | vicharne | विचारणे | "to ask"; **विचार** + *-णे* — thinking and asking are one word in Marathi |
+| 78 | madat-karne | मदत करणे | "to help"; Arabic *madad* "a thing extended," through Persian; Marathi **मदत** vs Hindi **मदद** |
+| 79 | avadne | आवडणे | "to like"; *malā marāṭhī āvaḍte* — native, not Persian *pasand*; beside प्रेम करणे ← *\*preyH-* → *friend, free*; **payoff** |
+
+## Chapters 13–16 — Everyday Nouns and the Heart
+
+| Sessions | Chapter | Lessons | Payoff |
+|---|---|---|---|
+| 80–83 | 13 | pāṇī, chahā, dūdh, bhākarī | ask politely for four foods and drinks |
+| 84–89 | 14 | mitra, kuṭumb, bhāū, bahīṇ, with two R1 reviews | name friend and family while distinguishing tatsama from tadbhava |
+| 90–93 | 15 | ḍoḷā, kān, tõḍ, nāk | name four face parts |
+| 94 | 16 | hṛdaya | connect Marathi's heart word to its Indo-European cousins |
+
+## Chapter 17 — Family Memory at Real Distance
+
+Sessions 95–106 revisit family, body, food, verbs, and numbers without adding
+new material. The chapter supplies the R2/R3 evidence that makes the early noun
+tranche durable.
+
+## Chapter 18 — Doorway Signs at Long Distance
+
+| Session | Lesson | Retrieval |
+|---|---|---|
+| 107 | R18-script-warmup | hear, read, and independently write **धन्यवाद** |
+| 108 | R18-script-a-r4 | ः आ भ |
+| 109 | R18-script-b-r4 | े ं त |
+| 110 | R18-script-c-r4 | द ध ब |
+| 111 | R18-script-d-r4 | य ळ व |
 
 ## Next
 
-Finish the number runway with numbers 6–10 and Devanagari digits १२३, then family and
-food, then the rest of the core verbs, negation and questions, and the tenses
-where gender returns on the verb.
+The next Marathi script-closure tranche starts at the Chapter 5 doorway and
+teaches the next missing forms before their first load-bearing use.

@@ -1,7 +1,7 @@
 ---
 id: MR-C04-kalji-ghya
-sequence: 135
-chapter: 5
+sequence: 155
+chapter: 7
 type: phrase
 headword: काळजी घ्या
 gloss: take care (kāḷjī ghyā)
@@ -38,7 +38,7 @@ imperative) → **काळजी घ्या** — "take care." To a friend, t
 
 Where *punhā bheṭū* looks ahead to the next meeting, *kāḷjī ghyā* looks after the
 person in between — "mind yourself until then." The respectful **घ्या** (*ghyā*)
-matches the **तुम्ही** register from Chapter 3; the familiar **घे** (*ghe*)
+matches the **तुम्ही** register from Chapter 5; the familiar **घे** (*ghe*)
 matches **तू**.
 
 ## Guided Practice

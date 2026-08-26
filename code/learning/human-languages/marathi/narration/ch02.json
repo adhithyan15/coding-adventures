@@ -2,9 +2,9 @@
   "version": 1,
   "language": "marathi",
   "chapter": 2,
-  "title": "Courtesy, Responses, and Leave-Taking",
-  "drivablePrefix": 0,
-  "sourceHash": "fnv1a64:e134ce0340d7006b",
+  "title": "Hear Thanks, Then Meet Six Signs",
+  "drivablePrefix": 1,
+  "sourceHash": "fnv1a64:1cb7d7218495dc15",
   "lessons": [
     {
       "id": "MR-C01-dhanyavad",
@@ -14,22 +14,13 @@
       "romanization": "dhanyavad",
       "gloss": "thank you (dhanyavād)",
       "script": "devanagari",
-      "modality": "sight",
-      "derivedModality": "sight",
+      "modality": "voice",
+      "derivedModality": "voice",
       "modalityReasons": [
-        "script-block"
+        "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:a2b609b3b92d9399",
-      "notice": {
-        "modality": "sight",
-        "needs": [
-          "your eyes, for letter shapes on the page"
-        ],
-        "waitUntilStopped": [
-          "The letters in this word"
-        ],
-        "text": "Before we start: this one needs your eyes, so it is not fully a driving lesson. You will want your eyes, for letter shapes on the page. You can listen to everything else now — leave the section called The letters in this word until you have stopped, and I will say so again when we reach it."
-      },
+      "sourceHash": "fnv1a64:45cd4b877fb0ab2e",
+      "notice": null,
       "blocks": [
         {
           "index": 0,
@@ -50,12 +41,12 @@
         },
         {
           "index": 1,
-          "type": "script",
-          "title": "The letters in this word",
+          "type": "input",
+          "title": "You'll want to know — hear the word before reading it",
           "segments": [
             {
               "kind": "speech",
-              "text": "(Skim if you read Devanagari.) New: ध dha (a breathy d), य ya, वा vā, द da, and the conjunct न्य (na + ya). Read ध, न्य, वा, द becomes dhanyavād."
+              "text": "Keep the spelling in the heading as a sign you are not yet asked to decode. Listen first: dhan-ya-vād. Say it once for \"thank you.\" The next two tiny chapters will give you one missing sign at a time; only then will you read and write the whole word."
             }
           ]
         },
@@ -66,7 +57,7 @@
           "segments": [
             {
               "kind": "speech",
-              "text": "धन्यवाद (dhanyavad) (dhanyavād) = Sanskrit dhanya (\"worthy\") + vāda (\"a saying\") — \"an utterance of '[you are] worthy.'\" The same Sanskrit word behind Hindi dhanyavād, Kannada dhanyavāda, Telugu dhanyavādamulu. Warmer, more spoken Marathi often says आभारी आहे (ābhārī āhe, \"[I] am grateful\"), on the root ābhār, \"gratitude.\""
+              "text": "Dhanyavād = Sanskrit dhanya (\"worthy\") + vāda (\"a saying\") — \"an utterance of '[you are] worthy.'\" The same Sanskrit word behind Hindi dhanyavād, Kannada dhanyavāda, Telugu dhanyavādamulu. Warmer, more spoken Marathi often says ābhārī āhe (\"[I] am grateful\"), on the root ābhār, \"gratitude.\""
             }
           ]
         },
@@ -84,11 +75,11 @@
             {
               "kind": "prompt",
               "action": "SAY",
-              "instruction": "\"dhanyavād\"",
+              "instruction": "\"dhanyavād\" — no reading yet",
               "spoken": true,
               "scored": false,
               "responseSeconds": 8,
-              "source": "[YOU SAY: \"dhanyavād\"]"
+              "source": "[YOU SAY: \"dhanyavād\" — no reading yet]"
             },
             {
               "kind": "prompt",
@@ -114,35 +105,38 @@
             },
             {
               "kind": "speech",
-              "text": "What are the two Sanskrit pieces of धन्यवाद (dhanyavad), and a warmer Marathi alternative? (dhanya \"worthy\" + vāda \"a saying\"; ābhārī āhe.)"
+              "text": "What are the two Sanskrit pieces of dhanyavād, and a warmer Marathi alternative? (dhanya \"worthy\" + vāda \"a saying\"; ābhārī āhe.)"
             }
           ]
         }
       ]
     },
     {
-      "id": "MR-C01-ho",
-      "sequence": 22,
-      "title": "हो (ho) — \"yes\"",
-      "headword": "हो",
-      "romanization": "ho",
-      "gloss": "yes (ho)",
+      "id": "MR-W02-visarga",
+      "sequence": 21,
+      "title": "ः (ḥ) — a small breath after a vowel",
+      "headword": "ः",
+      "romanization": "ḥ",
+      "gloss": "visarga — two breath dots after a vowel",
       "script": "devanagari",
-      "modality": "sight",
-      "derivedModality": "sight",
+      "modality": "pen",
+      "derivedModality": "pen",
       "modalityReasons": [
+        "writing-type",
+        "writing-block",
         "script-block"
       ],
-      "sourceHash": "fnv1a64:982b01a13c85a06e",
+      "sourceHash": "fnv1a64:01b5d2824e802af5",
       "notice": {
-        "modality": "sight",
+        "modality": "pen",
         "needs": [
+          "a pen and something to write on",
           "your eyes, for letter shapes on the page"
         ],
         "waitUntilStopped": [
-          "The letters in this word"
+          "Script"
         ],
-        "text": "Before we start: this one needs your eyes, so it is not fully a driving lesson. You will want your eyes, for letter shapes on the page. You can listen to everything else now — leave the section called The letters in this word until you have stopped, and I will say so again when we reach it."
+        "text": "Before we start: this one needs your hands, so it is not a driving lesson. You will want a pen and something to write on and your eyes, for letter shapes on the page. You can listen to everything else now — leave the section called Script until you have stopped, and I will say so again when we reach it."
       },
       "blocks": [
         {
@@ -158,111 +152,40 @@
             },
             {
               "kind": "speech",
-              "text": "A one-syllable \"yes.\""
+              "text": "You already know the greeting namaskār and its older first piece, namaḥ, \"a bow.\" The final breath in namaḥ has its own mark."
             }
           ]
         },
         {
           "index": 1,
           "type": "script",
-          "title": "The letters in this word",
+          "title": "Script",
           "segments": [
             {
               "kind": "speech",
-              "text": "(Skim if you read Devanagari.) ह (ha) + the o-mātrā ो becomes हो (ho)."
+              "text": "ः (ḥ)."
+            },
+            {
+              "kind": "speech",
+              "text": "The visarga is two dots written vertically to the right of a syllable. It marks a quiet breath after the vowel. For this first encounter, place the upper dot, lift, then place the lower dot. Stop after this one sign."
             }
           ]
         },
         {
           "index": 2,
-          "type": "etymology",
-          "title": "The word, taken apart",
+          "type": "writing",
+          "title": "Writing — visible model",
           "segments": [
             {
               "kind": "speech",
-              "text": "हो (ho, \"yes\") is Marathi's plain affirmative — distinct from Hindi's hāṁ. Marathi builds its own everyday words on shared Indo-Aryan roots. The polite, fuller \"yes\" is ho, baraṃ āhe (\"yes, it's fine\")."
+              "text": "Keep ः (ḥ) visible. Point to the upper dot, then the lower dot. Finger-trace the two positions once and copy the sign once."
             }
           ]
         },
         {
           "index": 3,
-          "type": "guided-production",
-          "title": "Guided Practice",
-          "segments": [
-            {
-              "kind": "pause",
-              "seconds": 1,
-              "perItem": false,
-              "source": "[PAUSE 1s]"
-            },
-            {
-              "kind": "prompt",
-              "action": "SAY",
-              "instruction": "\"ho\" (\"yes\")",
-              "spoken": true,
-              "scored": false,
-              "responseSeconds": 8,
-              "source": "[YOU SAY: \"ho\" (\"yes\")]"
-            },
-            {
-              "kind": "prompt",
-              "action": "SAY",
-              "instruction": "the fuller polite form — \"ho, baraṃ āhe\"",
-              "spoken": true,
-              "scored": false,
-              "responseSeconds": 8,
-              "source": "[YOU SAY: the fuller polite form — \"ho, baraṃ āhe\"]"
-            }
-          ]
-        },
-        {
-          "index": 4,
           "type": "recall",
           "title": "Wrap-up Recall",
-          "segments": [
-            {
-              "kind": "pause",
-              "seconds": 3,
-              "perItem": false,
-              "source": "[PAUSE 3s]"
-            },
-            {
-              "kind": "speech",
-              "text": "What is Marathi's \"yes,\" and how does it differ from Hindi's? (ho; Hindi says hāṁ.)"
-            }
-          ]
-        }
-      ]
-    },
-    {
-      "id": "MR-C01-baram",
-      "sequence": 24,
-      "title": "बरं (baram) (baraṃ) — \"okay, fine\"",
-      "headword": "बरं",
-      "romanization": "baram",
-      "gloss": "okay / fine (baraṃ)",
-      "script": "devanagari",
-      "modality": "sight",
-      "derivedModality": "sight",
-      "modalityReasons": [
-        "script-block"
-      ],
-      "sourceHash": "fnv1a64:c49d1fbec66a9035",
-      "notice": {
-        "modality": "sight",
-        "needs": [
-          "your eyes, for letter shapes on the page"
-        ],
-        "waitUntilStopped": [
-          "The letters in this word"
-        ],
-        "text": "Before we start: this one needs your eyes, so it is not fully a driving lesson. You will want your eyes, for letter shapes on the page. You can listen to everything else now — leave the section called The letters in this word until you have stopped, and I will say so again when we reach it."
-      },
-      "blocks": [
-        {
-          "index": 0,
-          "type": "warmup",
-          "title": "Warm-up",
           "segments": [
             {
               "kind": "pause",
@@ -272,466 +195,200 @@
             },
             {
               "kind": "speech",
-              "text": "The verbal shrug of Marathi — \"sure, fine, all right.\""
-            }
-          ]
-        },
-        {
-          "index": 1,
-          "type": "script",
-          "title": "The letters in this word",
-          "segments": [
-            {
-              "kind": "speech",
-              "text": "(Skim if you read Devanagari.) ब (ba) + रं (ra with the anusvāra dot ं, a light nasal) becomes baraṃ. That dot on top nasalises the vowel."
-            }
-          ]
-        },
-        {
-          "index": 2,
-          "type": "etymology",
-          "title": "The word, taken apart",
-          "segments": [
-            {
-              "kind": "speech",
-              "text": "बरं (baram) (baraṃ, \"okay, fine, good, all right\") is the oil of everyday Marathi talk — a soft \"sure, fine.\" Its neutral form is bare. A genuinely Marathi word, not a Sanskrit loan — the kind of small, high-frequency word that gives a language its everyday texture."
-            }
-          ]
-        },
-        {
-          "index": 3,
-          "type": "guided-production",
-          "title": "Guided Practice",
-          "segments": [
-            {
-              "kind": "pause",
-              "seconds": 1,
-              "perItem": false,
-              "source": "[PAUSE 1s]"
-            },
-            {
-              "kind": "prompt",
-              "action": "SAY",
-              "instruction": "\"baraṃ\" (feel the nasal dot)",
-              "spoken": true,
-              "scored": false,
-              "responseSeconds": 8,
-              "source": "[YOU SAY: \"baraṃ\" (feel the nasal dot)]"
-            },
-            {
-              "kind": "prompt",
-              "action": "SAY",
-              "instruction": "\"ho, baraṃ āhe\" — \"yes, it's fine\"",
-              "spoken": true,
-              "scored": false,
-              "responseSeconds": 8,
-              "source": "[YOU SAY: \"ho, baraṃ āhe\" — \"yes, it's fine\"]"
-            }
-          ]
-        },
-        {
-          "index": 4,
-          "type": "recall",
-          "title": "Wrap-up Recall",
-          "segments": [
-            {
-              "kind": "pause",
-              "seconds": 3,
-              "perItem": false,
-              "source": "[PAUSE 3s]"
+              "text": "Name it: visarga, a breath after a vowel."
             },
             {
               "kind": "speech",
-              "text": "What does बरं (baram) mean, and what does the dot ं do? (\"Okay/fine\"; the anusvāra nasalises the vowel.)"
-            }
-          ]
-        }
-      ]
-    },
-    {
-      "id": "MR-C01-nahi",
-      "sequence": 26,
-      "title": "नाही (nahi) (nāhī) — \"no,\" a word older than English",
-      "headword": "नाही",
-      "romanization": "nahi",
-      "gloss": "no / is not (nāhī)",
-      "script": "devanagari",
-      "modality": "sight",
-      "derivedModality": "sight",
-      "modalityReasons": [
-        "script-block"
-      ],
-      "sourceHash": "fnv1a64:9bf4edc724d78b22",
-      "notice": {
-        "modality": "sight",
-        "needs": [
-          "your eyes, for letter shapes on the page"
-        ],
-        "waitUntilStopped": [
-          "The letters in this word"
-        ],
-        "text": "Before we start: this one needs your eyes, so it is not fully a driving lesson. You will want your eyes, for letter shapes on the page. You can listen to everything else now — leave the section called The letters in this word until you have stopped, and I will say so again when we reach it."
-      },
-      "blocks": [
-        {
-          "index": 0,
-          "type": "warmup",
-          "title": "Warm-up",
-          "segments": [
-            {
-              "kind": "pause",
-              "seconds": 2,
-              "perItem": false,
-              "source": "[PAUSE 2s]"
-            },
-            {
-              "kind": "speech",
-              "text": "The partner of ho — built on one of the oldest words in the whole Indo-European family."
-            }
-          ]
-        },
-        {
-          "index": 1,
-          "type": "script",
-          "title": "The letters in this word",
-          "segments": [
-            {
-              "kind": "speech",
-              "text": "(Skim if you read Devanagari.) ना (nā) + ही (hī) becomes nāhī."
-            }
-          ]
-        },
-        {
-          "index": 2,
-          "type": "etymology",
-          "title": "The word, taken apart",
-          "segments": [
-            {
-              "kind": "speech",
-              "text": "नाही (nahi) (nāhī, \"no / is not\") sits on the ancient negative na- — the same Proto-Indo-European ne behind English no, not, none, Latin non, and Hindi nahīṁ. So Marathi's \"no\" and English's \"no\" are cousins from before either language existed. It doubles as \"there isn't\": Marathi, like Hindi, denies with this one word."
-            }
-          ]
-        },
-        {
-          "index": 3,
-          "type": "guided-production",
-          "title": "Guided Practice",
-          "segments": [
-            {
-              "kind": "pause",
-              "seconds": 1,
-              "perItem": false,
-              "source": "[PAUSE 1s]"
-            },
-            {
-              "kind": "prompt",
-              "action": "SAY",
-              "instruction": "the pair — ho (\"yes\") / nāhī (\"no\")",
-              "spoken": true,
-              "scored": false,
-              "responseSeconds": 8,
-              "source": "[YOU SAY: the pair — *ho* (\"yes\") / *nāhī* (\"no\")]"
-            },
-            {
-              "kind": "prompt",
-              "action": "SAY",
-              "instruction": "the ancient cousins — no, not, Latin non",
-              "spoken": true,
-              "scored": false,
-              "responseSeconds": 8,
-              "source": "[YOU SAY: the ancient cousins — *no*, *not*, Latin *non*]"
-            }
-          ]
-        },
-        {
-          "index": 4,
-          "type": "recall",
-          "title": "Wrap-up Recall",
-          "segments": [
-            {
-              "kind": "pause",
-              "seconds": 3,
-              "perItem": false,
-              "source": "[PAUSE 3s]"
-            },
-            {
-              "kind": "speech",
-              "text": "What ancient root is नाही (nahi) built on, and what English words share it? (PIE ne; no, not, none.)"
-            }
-          ]
-        }
-      ]
-    },
-    {
-      "id": "MR-C01-yeto",
-      "sequence": 28,
-      "title": "येतो / येते (yeto / yete) — \"I'll take my leave\"",
-      "headword": "येतो / येते",
-      "romanization": "yeto / yete",
-      "gloss": "\"I'll be going\" (yeto m. / yete f.)",
-      "script": "devanagari",
-      "modality": "sight",
-      "derivedModality": "sight",
-      "modalityReasons": [
-        "script-block"
-      ],
-      "sourceHash": "fnv1a64:436d8e3c65f33658",
-      "notice": {
-        "modality": "sight",
-        "needs": [
-          "your eyes, for letter shapes on the page"
-        ],
-        "waitUntilStopped": [
-          "The letters in this word"
-        ],
-        "text": "Before we start: this one needs your eyes, so it is not fully a driving lesson. You will want your eyes, for letter shapes on the page. You can listen to everything else now — leave the section called The letters in this word until you have stopped, and I will say so again when we reach it."
-      },
-      "blocks": [
-        {
-          "index": 0,
-          "type": "warmup",
-          "title": "Warm-up",
-          "segments": [
-            {
-              "kind": "pause",
-              "seconds": 2,
-              "perItem": false,
-              "source": "[PAUSE 2s]"
-            },
-            {
-              "kind": "speech",
-              "text": "The Marathi goodbye — which, like the Dravidian languages, refuses to say a bare \"I'm leaving.\" And it changes with the speaker's gender."
-            }
-          ]
-        },
-        {
-          "index": 1,
-          "type": "script",
-          "title": "The letters in this word",
-          "segments": [
-            {
-              "kind": "speech",
-              "text": "(Skim if you read Devanagari.) ये (ye) + तो (to) becomes yeto; ये + ते (te) becomes yete."
-            }
-          ]
-        },
-        {
-          "index": 2,
-          "type": "etymology",
-          "title": "The word, taken apart",
-          "segments": [
-            {
-              "kind": "speech",
-              "text": "Marathi, like the Dravidian languages to its south, will not say a bare \"I'm leaving.\" The everyday goodbye is येतो (yeto) — literally \"I come [again],\" a promise of return, never a final departure. (Fuller: yeto, namaskār.)"
-            }
-          ]
-        },
-        {
-          "index": 3,
-          "type": "grammar",
-          "title": "Grammar Lens: Marathi verbs carry gender",
-          "segments": [
-            {
-              "kind": "speech",
-              "text": "yeto is what a man says; a woman says येते (yete). The verb itself changes with the speaker's gender — something Hindi does only in the past tense, but Marathi does in the present too. (And Marathi keeps three genders — masculine, feminine, and neuter — where Hindi kept only two.) You'll meet this at every verb."
-            }
-          ]
-        },
-        {
-          "index": 4,
-          "type": "guided-production",
-          "title": "Guided Practice",
-          "segments": [
-            {
-              "kind": "pause",
-              "seconds": 1,
-              "perItem": false,
-              "source": "[PAUSE 1s]"
-            },
-            {
-              "kind": "prompt",
-              "action": "SAY",
-              "instruction": "\"yeto\" (if male) / \"yete\" (if female)",
-              "spoken": true,
-              "scored": false,
-              "responseSeconds": 8,
-              "source": "[YOU SAY: \"yeto\" (if male) / \"yete\" (if female)]"
-            },
-            {
-              "kind": "prompt",
-              "action": "SAY",
-              "instruction": "what it literally means (\"I come [again]\") — a promise of return",
-              "spoken": true,
-              "scored": false,
-              "responseSeconds": 8,
-              "source": "[YOU SAY: what it literally means (\"I come [again]\") — a promise of return]"
-            }
-          ]
-        },
-        {
-          "index": 5,
-          "type": "recall",
-          "title": "Wrap-up Recall",
-          "segments": [
-            {
-              "kind": "pause",
-              "seconds": 3,
-              "perItem": false,
-              "source": "[PAUSE 3s]"
-            },
-            {
-              "kind": "speech",
-              "text": "What does the Marathi goodbye literally mean, and why two forms? (\"I'll come [again]\"; the verb agrees with the speaker's gender — yeto m. / yete f.)"
-            }
-          ]
-        }
-      ]
-    },
-    {
-      "id": "MR-C01-practice",
-      "sequence": 30,
-      "title": "Chapter 2 — courtesy, responses, and leave-taking",
-      "headword": "(recap)",
-      "romanization": "recap",
-      "gloss": "Chapter 2 recap — courtesy, responses, and leave-taking",
-      "script": "devanagari",
-      "modality": "voice",
-      "derivedModality": "voice",
-      "modalityReasons": [
-        "no-visual-dependency"
-      ],
-      "sourceHash": "fnv1a64:27e90ca75f2cbb97",
-      "notice": null,
-      "blocks": [
-        {
-          "index": 0,
-          "type": "warmup",
-          "title": "Warm-up",
-          "segments": [
-            {
-              "kind": "table",
-              "headers": [
-                "Marathi",
-                "",
-                "Meaning"
-              ],
-              "columns": 3,
-              "rowCount": 6,
-              "utterances": [
-                "Marathi: नमस्कार, namaskār. Meaning: hello / goodbye.",
-                "Marathi: धन्यवाद (dhanyavad), dhanyavād. Meaning: thank you.",
-                "Marathi: हो, ho. Meaning: yes.",
-                "Marathi: नाही (nahi), nāhī. Meaning: no.",
-                "Marathi: बरं (baram), baraṃ. Meaning: okay / fine.",
-                "Marathi: येतो / येते, yeto / yete. Meaning: \"I'll be going\" (m./f.)"
-              ]
-            }
-          ]
-        },
-        {
-          "index": 1,
-          "type": "notice",
-          "title": "What you've built",
-          "segments": [
-            {
-              "kind": "speech",
-              "text": "It prefers namaskār as the everyday greeting (Hindi leans on namaste)."
-            },
-            {
-              "kind": "speech",
-              "text": "It keeps three genders — masculine, feminine, neuter — where Hindi kept two."
-            },
-            {
-              "kind": "speech",
-              "text": "It marks gender on the verb, even in the present: yeto (m.) / yete (f.)."
-            },
-            {
-              "kind": "speech",
-              "text": "It has an extra letter, ळ (retroflex ḷ), shared with the Dravidian south and absent from Hindi."
-            },
-            {
-              "kind": "speech",
-              "text": "Shared with Hindi/Sanskrit: the Devanagari script, the negative nā- ( from PIE ne, English no), and much formal vocabulary (dhanyavād)."
-            }
-          ]
-        },
-        {
-          "index": 2,
-          "type": "guided-production",
-          "title": "Guided Practice",
-          "segments": [
-            {
-              "kind": "pause",
-              "seconds": 1,
-              "perItem": false,
-              "source": "[PAUSE 1s]"
-            },
-            {
-              "kind": "prompt",
-              "action": "SAY",
-              "instruction": "all six — namaskār, dhanyavād, ho, nāhī, baraṃ, yeto/yete",
-              "spoken": true,
-              "scored": false,
-              "responseSeconds": 8,
-              "source": "[YOU SAY: all six — namaskār · dhanyavād · ho · nāhī · baraṃ · yeto/yete]"
-            },
-            {
-              "kind": "prompt",
-              "action": "SAY",
-              "instruction": "greet and thank — \"namaskār!\" … \"dhanyavād.\"",
-              "spoken": true,
-              "scored": false,
-              "responseSeconds": 8,
-              "source": "[YOU SAY: greet and thank — \"namaskār!\" … \"dhanyavād.\"]"
-            },
-            {
-              "kind": "prompt",
-              "action": "SAY",
-              "instruction": "your leave-taking — \"yeto/yete\"",
-              "spoken": true,
-              "scored": false,
-              "responseSeconds": 8,
-              "source": "[YOU SAY: your leave-taking — \"yeto/yete\"]"
+              "text": "Source: Unicode Devanagari chart, U+0903."
             },
             {
               "kind": "activity",
               "scored": true,
-              "id": "MR-C01-practice-writing-ho",
-              "prompt": "Without a visible model, write the Marathi word you hear: ho (yes).",
+              "id": "MR-W02-visarga-model",
+              "prompt": "Copy the visible two-dot breath sign once.",
               "assesses": [
-                "MR-LEX-HO-01",
-                "MR-SCRIPT-HA-01",
-                "MR-SCRIPT-O-MATRA-01"
+                "MR-SCRIPT-VISARGA-01"
+              ],
+              "responseSeconds": 12,
+              "acceptedResponses": [
+                "ः"
+              ],
+              "feedback": {
+                "correct": "Right: upper dot, then lower dot.",
+                "incorrect": "Keep the model visible and place two dots vertically: ः."
+              }
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "MR-W02-aa-independent",
+      "sequence": 22,
+      "title": "आ (ā) — long aa standing alone",
+      "headword": "आ",
+      "romanization": "ā",
+      "gloss": "independent long aa",
+      "script": "devanagari",
+      "modality": "pen",
+      "derivedModality": "pen",
+      "modalityReasons": [
+        "writing-type",
+        "writing-block",
+        "script-block"
+      ],
+      "sourceHash": "fnv1a64:f60ec639cc16576f",
+      "notice": {
+        "modality": "pen",
+        "needs": [
+          "a pen and something to write on",
+          "your eyes, for letter shapes on the page"
+        ],
+        "waitUntilStopped": [
+          "Script"
+        ],
+        "text": "Before we start: this one needs your hands, so it is not a driving lesson. You will want a pen and something to write on and your eyes, for letter shapes on the page. You can listen to everything else now — leave the section called Script until you have stopped, and I will say so again when we reach it."
+      },
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "Set one blank line aside for a single new vowel sign."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "script",
+          "title": "Script",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "आ (ā)."
+            },
+            {
+              "kind": "speech",
+              "text": "This is independent ā, used when the vowel begins a syllable. Curve around the joined left body; lift for the middle shoulder; descend the inner stem; descend the trailing stem; finish with the headline from left to right."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "writing",
+          "title": "Writing — trace, then guided copy",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "Keep आ visible. Finger-trace the five runs once. Copy it once, looking back after every run. Say ā only when the pen stops."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Is this a vowel sign attached to a consonant? (No. It stands alone.)"
+            },
+            {
+              "kind": "speech",
+              "text": "Source: Saurmandal, Devanagari आ (ā) stroke order, frames 1–5."
+            },
+            {
+              "kind": "activity",
+              "scored": true,
+              "id": "MR-W02-aa-independent-guided",
+              "prompt": "Copy the visible independent long-aa sign once, finishing with the headline.",
+              "assesses": [
+                "MR-SCRIPT-AA-INDEPENDENT-01"
               ],
               "responseSeconds": 18,
               "acceptedResponses": [
-                "हो"
+                "आ"
               ],
               "feedback": {
-                "correct": "हो — ह with the attached o sign.",
-                "incorrect": "Repair two pieces only: ह, then ो: हो."
+                "correct": "Right: the independent vowel आ.",
+                "incorrect": "Return to the visible model; finish its two stems before the headline."
               }
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "MR-W02-bha",
+      "sequence": 23,
+      "title": "भ — bha, with a puff of breath",
+      "headword": "भ",
+      "romanization": "bha",
+      "gloss": "the breathy consonant bha",
+      "script": "devanagari",
+      "modality": "pen",
+      "derivedModality": "pen",
+      "modalityReasons": [
+        "writing-type",
+        "writing-block",
+        "script-block"
+      ],
+      "sourceHash": "fnv1a64:0e2242681967347c",
+      "notice": {
+        "modality": "pen",
+        "needs": [
+          "a pen and something to write on",
+          "your eyes, for letter shapes on the page"
+        ],
+        "waitUntilStopped": [
+          "Script"
+        ],
+        "text": "Before we start: this one needs your hands, so it is not a driving lesson. You will want a pen and something to write on and your eyes, for letter shapes on the page. You can listen to everything else now — leave the section called Script until you have stopped, and I will say so again when we reach it."
+      },
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "Make room for one consonant and one careful copy."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "script",
+          "title": "Script",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "भ (bha)."
             },
             {
-              "kind": "activity",
-              "scored": true,
-              "id": "MR-C01-practice-read-namaskar",
-              "prompt": "Read नमस्कार and give its conversational meaning.",
-              "assesses": [
-                "MR-LEX-NAMASKAR-01",
-                "MR-SCRIPT-NAMASKAR-READ-01"
-              ],
-              "responseSeconds": 15,
-              "acceptedResponses": [
-                "namaskar; greetings",
-                "hello",
-                "goodbye",
-                "greetings"
-              ],
-              "feedback": {
-                "correct": "Right: namaskar is the greeting you can also use when leaving.",
-                "incorrect": "Read the assembled word as namaskar: greetings."
-              }
+              "kind": "speech",
+              "text": "Say ba, then bha with a small puff against your palm. For the shape, sweep the upper loop into the trunk, lower bowl, and crossbar without lifting; descend the right stem; finish the headline left to right."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "writing",
+          "title": "Writing — guided copy",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "Keep भ visible. Copy one run at a time, looking back before each. Say bha once after the headline is complete."
             }
           ]
         },
@@ -742,17 +399,354 @@
           "segments": [
             {
               "kind": "pause",
-              "seconds": 3,
+              "seconds": 2,
               "perItem": false,
-              "source": "[PAUSE 3s]"
+              "source": "[PAUSE 2s]"
             },
             {
               "kind": "speech",
-              "text": "Read नमस्कार, write हो once without a model, then name two ways Marathi differs from Hindi despite sharing Devanagari. (Prefers namaskār; three genders; gender on the verb; the extra letter ळ.)"
+              "text": "Which has the puff: ba or bha? (bha.)"
             },
             {
               "kind": "speech",
-              "text": "Next chapter: introducing yourself — mājhe nāv… (\"my name…\") — and Marathi's tū / tumhī (familiar / respectful \"you\")."
+              "text": "Source: JackPotte, Devanagari bh stroke animation."
+            },
+            {
+              "kind": "activity",
+              "scored": true,
+              "id": "MR-W02-bha-guided",
+              "prompt": "Copy the visible breathy-b consonant once.",
+              "assesses": [
+                "MR-SCRIPT-BHA-01"
+              ],
+              "responseSeconds": 18,
+              "acceptedResponses": [
+                "भ"
+              ],
+              "feedback": {
+                "correct": "Right: भ is bha.",
+                "incorrect": "Use the visible model: joined loop-and-bowl body, right stem, then headline."
+              }
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "MR-W02-e-matra",
+      "sequence": 24,
+      "title": "े — e above the headline",
+      "headword": "े",
+      "romanization": "e",
+      "gloss": "the e vowel sign above a consonant",
+      "script": "devanagari",
+      "modality": "pen",
+      "derivedModality": "pen",
+      "modalityReasons": [
+        "writing-type",
+        "writing-block",
+        "script-block"
+      ],
+      "sourceHash": "fnv1a64:519f5d3a61c40dd4",
+      "notice": {
+        "modality": "pen",
+        "needs": [
+          "a pen and something to write on",
+          "your eyes, for letter shapes on the page"
+        ],
+        "waitUntilStopped": [
+          "Script"
+        ],
+        "text": "Before we start: this one needs your hands, so it is not a driving lesson. You will want a pen and something to write on and your eyes, for letter shapes on the page. You can listen to everything else now — leave the section called Script until you have stopped, and I will say so again when we reach it."
+      },
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "Leave a small space above the next practice headline."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "script",
+          "title": "Script",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "े (e)."
+            },
+            {
+              "kind": "speech",
+              "text": "This mātrā replaces the inherent vowel with e. Add its short rising stroke above the consonant's headline; it cannot stand alone as a spoken vowel here."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "writing",
+          "title": "Writing — guided copy and first retrieval",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "Copy े once beside the visible model. Then cover the previous three models and write, from their names, visarga, independent ā, and bha. Uncover and repair only one differing part."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Where does e sit? (Above the headline.)"
+            },
+            {
+              "kind": "speech",
+              "text": "Source: Unicode Devanagari chart, U+0947."
+            },
+            {
+              "kind": "activity",
+              "scored": true,
+              "id": "MR-W02-e-matra-r1",
+              "prompt": "Copy the e mark, then retrieve the three preceding signs by name.",
+              "assesses": [
+                "MR-SCRIPT-E-MATRA-01",
+                "MR-SCRIPT-VISARGA-01",
+                "MR-SCRIPT-AA-INDEPENDENT-01",
+                "MR-SCRIPT-BHA-01"
+              ],
+              "responseSeconds": 28,
+              "acceptedResponses": [
+                "e mark; visarga; independent aa; bha"
+              ],
+              "feedback": {
+                "correct": "Four small signs, each still separate.",
+                "incorrect": "Repair only the missed sign; do not recopy the set."
+              }
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "MR-W02-anusvara",
+      "sequence": 25,
+      "title": "ं (ṃ) — one nasal dot",
+      "headword": "ं",
+      "romanization": "ṃ",
+      "gloss": "anusvara — one nasal dot above the headline",
+      "script": "devanagari",
+      "modality": "pen",
+      "derivedModality": "pen",
+      "modalityReasons": [
+        "writing-type",
+        "writing-block",
+        "script-block"
+      ],
+      "sourceHash": "fnv1a64:fd644070796ff6a0",
+      "notice": {
+        "modality": "pen",
+        "needs": [
+          "a pen and something to write on",
+          "your eyes, for letter shapes on the page"
+        ],
+        "waitUntilStopped": [
+          "Script"
+        ],
+        "text": "Before we start: this one needs your hands, so it is not a driving lesson. You will want a pen and something to write on and your eyes, for letter shapes on the page. You can listen to everything else now — leave the section called Script until you have stopped, and I will say so again when we reach it."
+      },
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "Prepare to place one mark above a headline."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "script",
+          "title": "Script",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ं (ṃ)."
+            },
+            {
+              "kind": "speech",
+              "text": "The anusvāra is one dot above the headline. It marks a nasal sound whose exact place follows the sound after it. Place one dot; do not turn it into the two-dot visarga."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "writing",
+          "title": "Writing — guided copy",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "Keep ं (ṃ) visible and copy it once. Point above the imaginary headline where the dot belongs."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "One dot or two? (One.)"
+            },
+            {
+              "kind": "speech",
+              "text": "Source: Unicode Devanagari chart, U+0902."
+            },
+            {
+              "kind": "activity",
+              "scored": true,
+              "id": "MR-W02-anusvara-guided",
+              "prompt": "Copy the visible one-dot nasal sign once.",
+              "assesses": [
+                "MR-SCRIPT-ANUSVARA-01"
+              ],
+              "responseSeconds": 12,
+              "acceptedResponses": [
+                "ं"
+              ],
+              "feedback": {
+                "correct": "Right: one dot above.",
+                "incorrect": "Use one dot above the headline, not a two-dot pair."
+              }
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "MR-W02-ta",
+      "sequence": 26,
+      "title": "त — dental ta",
+      "headword": "त",
+      "romanization": "ta",
+      "gloss": "dental ta",
+      "script": "devanagari",
+      "modality": "pen",
+      "derivedModality": "pen",
+      "modalityReasons": [
+        "writing-type",
+        "writing-block",
+        "script-block",
+        "sight-cue"
+      ],
+      "sourceHash": "fnv1a64:a66c9d6e9adff3a8",
+      "notice": {
+        "modality": "pen",
+        "needs": [
+          "a pen and something to write on",
+          "your eyes, for letter shapes on the page",
+          "your eyes, because the lesson points at something written down"
+        ],
+        "waitUntilStopped": [
+          "Script"
+        ],
+        "text": "Before we start: this one needs your hands, so it is not a driving lesson. You will want a pen and something to write on, your eyes, for letter shapes on the page and your eyes, because the lesson points at something written down. You can listen to everything else now — leave the section called Script until you have stopped, and I will say so again when we reach it."
+      },
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "Touch the tongue lightly behind the upper teeth once."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "script",
+          "title": "Script",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "त (ta)."
+            },
+            {
+              "kind": "speech",
+              "text": "Touch the tongue lightly behind the upper teeth: ta. Sweep left across the shoulder and curve down to the open tip; descend the right stem; finish the headline left to right."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "writing",
+          "title": "Writing — look, hide, write",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "Look at त (ta) for five seconds. Cover it, wait five seconds, and write it once. Uncover and compare body, stem, then headline."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Say ta once with the tongue at the teeth."
+            },
+            {
+              "kind": "speech",
+              "text": "Source: Opiaterein, Devanagari ta stroke animation."
+            },
+            {
+              "kind": "activity",
+              "scored": true,
+              "id": "MR-W02-ta-delayed",
+              "prompt": "After a five-second delay, write dental ta from memory.",
+              "assesses": [
+                "MR-SCRIPT-TA-01"
+              ],
+              "responseSeconds": 18,
+              "acceptedResponses": [
+                "त"
+              ],
+              "feedback": {
+                "correct": "Right: त, with the tongue-at-the-teeth sound.",
+                "incorrect": "Repair body, right stem, then headline from the model."
+              }
             }
           ]
         }

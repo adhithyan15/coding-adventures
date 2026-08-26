@@ -1,7 +1,7 @@
 ---
 id: MR-C02-majhe-naav-aahe
-sequence: 55
-chapter: 3
+sequence: 75
+chapter: 5
 type: phrase
 headword: माझं नाव … आहे
 gloss: my name is… (mājhaṁ nāv … āhe)

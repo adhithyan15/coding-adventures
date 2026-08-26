@@ -1,7 +1,7 @@
 ---
 id: MR-C04-punha-bhetu
-sequence: 125
-chapter: 5
+sequence: 145
+chapter: 7
 type: phrase
 headword: पुन्हा भेटू
 gloss: see you again (punhā bheṭū)
@@ -24,7 +24,7 @@ reviews_of: [MR-C04-punha, MR-C04-bhetu, MR-C01-yeto]
 **पुन्हा** (*punhā*, again) + **भेटू** (*bheṭū*, we'll meet) → **पुन्हा भेटू** —
 "we'll meet again." Two words, and the whole promise of return is spoken.
 
-This is the fuller, explicit twin of Chapter 2's **येतो** (*yeto*, "I'll come
+This is the fuller, explicit twin of Chapter 4's **येतो** (*yeto*, "I'll come
 [again]"). Both refuse a final "farewell": one says *I'll come back*, the other
 *we'll meet again* — the subcontinent's shared goodbye-as-promise (Hindi *phir
 milenge*, Bengali *āshi*, Tamil *pōy varugiṟēṉ*).

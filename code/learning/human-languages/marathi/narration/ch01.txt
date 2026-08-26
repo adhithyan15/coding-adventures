@@ -15,7 +15,7 @@ The letters in this word.
 (If you already read Devanagari, skim this.) Devanagari runs left to right; every consonant carries a built-in "a." न na, म ma, का kā, र ra. The stroke under स् (a halant) removes its vowel, so the bare s leans onto the next as a conjunct: स् + का becomes स्का. Read न, म, स्, का, र becomes namaskār.
 
 The word, taken apart.
-नमस्कार (namaskar) (namaskār) = नमः (namaḥ, "a bow") + कार (kāra, "the making of"), from Sanskrit — literally "the making of a bow." The same word Kannada and Telugu borrowed, and close kin to Hindi's namaskār. But note: where Hindi leans on namaste, Marathi's default, all-purpose greeting is namaskār — one of many small ways the two Devanagari languages differ.
+नमस्कार (namaskar) (namaskār) = Sanskrit namaḥ ("a bow") + kāra ("the making of") — literally "the making of a bow." The same word Kannada and Telugu borrowed, and close kin to Hindi's namaskār. But note: where Hindi leans on namaste, Marathi's default, all-purpose greeting is namaskār — one of many small ways the two Devanagari languages differ.
 
 Why it's said this way.
 Said with palms pressed together, respectful and neutral — hello and goodbye, any time, to almost anyone. Warmer and more casual: kāy mhaṇtā? ("what do you say?" ≈ "how's it going?") among friends.

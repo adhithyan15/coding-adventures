@@ -1,24 +1,23 @@
 {
   "chapter": 9,
-  "title": "The Mind and the Page",
-  "label": "ch:mr-mind-and-page",
-  "canDo": "I can say that I think, understand, read and write in Marathi, put the understander in the dative where Marathi puts it, and name what each of the four roots meant before it meant a mental act — turning, waking, speaking and scratching.",
+  "title": "Numbers One to Five",
+  "label": "ch:numbers-one-to-five",
+  "canDo": "I can count from one to five in Marathi, say चार as tsār rather than chār, and tell which of Marathi's differences from Hindi is an innovation and which is Hindi holding on to something older.",
   "spineNodes": [
-    "SPINE-SAY-WHAT-I-DO"
+    "SPINE-COUNT-ONE-TO-FIVE"
   ],
   "payoff": {
-    "lesson": "MR-C08-lihine",
-    "kind": "production",
-    "summary": "Say मी माझं नाव लिहितो, run the chapter's four verbs back with the four things their roots meant — vichār karṇe from a root meaning to turn, samajṇe from one meaning to wake, vāchṇe from one meaning to speak, lihiṇe from one meaning to scratch — and pick out the one of the four that refuses मी and takes मला instead.",
+    "lesson": "MR-C06-number-differences",
+    "kind": "task",
+    "summary": "Account for all three tells: दोन's final n copied from the rhyme of tiṇṇi/doṇṇi, पाच dropping the nasal Hindi पाँच still writes, and चार spelled as everywhere else but pronounced with a ts.",
     "assesses": [
-      "MR-LEX-VICHAR-KARNE",
-      "MR-ETYMON-VICHAR-TURN",
-      "MR-LEX-SAMAJNE",
-      "MR-ETYMON-BUDH-AWAKE",
-      "MR-LEX-VACHNE",
-      "MR-ETYMON-VACH-VOICE",
-      "MR-LEX-LIHINE",
-      "MR-ETYMON-LIKH-SCRATCH"
+      "MR-LEX-NUMBERS-ONE-TO-FIVE",
+      "MR-SCRIPT-DON-FINAL-N",
+      "MR-SCRIPT-PAACH-NONNASAL",
+      "MR-SOUND-CHA-TSAA",
+      "MR-ETYMON-DON-ANALOGY",
+      "MR-ETYMON-PAACH-NASAL-RETENTION",
+      "MR-HISTORY-SELECTIVE-RETENTION"
     ]
   }
 }

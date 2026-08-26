@@ -2,8 +2,8 @@
 schema_version: 2
 id: MR-C09-vicharne
 spine_node: SPINE-SAY-WHAT-I-DO
-sequence: 470
-chapter: 10
+sequence: 490
+chapter: 12
 type: word
 headword: विचारणे
 romanization: vichārṇe

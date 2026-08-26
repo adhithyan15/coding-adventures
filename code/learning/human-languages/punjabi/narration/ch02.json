@@ -4,14 +4,14 @@
   "chapter": 2,
   "title": "Introducing Yourself",
   "drivablePrefix": 0,
-  "sourceHash": "fnv1a64:9b6b1cd9e51fae7e",
+  "sourceHash": "fnv1a64:a1160de7afbd017f",
   "lessons": [
     {
       "id": "PA-C02-naam",
       "sequence": 70,
       "title": "ਨਾਂ (nāṁ) — \"name,\" a word older than Europe",
       "headword": "ਨਾਂ",
-      "romanization": "",
+      "romanization": "nāṁ",
       "gloss": "name",
       "script": "gurmukhi",
       "modality": "sight",
@@ -19,7 +19,7 @@
       "modalityReasons": [
         "script-block"
       ],
-      "sourceHash": "fnv1a64:7bf8ae26798a135f",
+      "sourceHash": "fnv1a64:973aad1bb953e9b9",
       "notice": {
         "modality": "sight",
         "needs": [
@@ -66,7 +66,7 @@
           "segments": [
             {
               "kind": "speech",
-              "text": "ਨਾਂ (nāṁ, \"name\") from Sanskrit ਨਾਮਨ੍ (nāman), from Proto-Indo-European h₃nómn̥ — the same ancient root as English name, Latin nōmen (English noun, nominate), and Greek onoma. So Punjabi nāṁ and English name are cousins from before either language existed. (The Hindi form is nām; Punjabi nasalises the ending to nāṁ.)"
+              "text": "ਨਾਂ (nāṁ, \"name\") from Sanskrit ਨਾਮਨ੍ (nāman), from Proto-Indo-European h₃nómn (with a syllabic final n) — the same ancient root as English name, Latin nōmen (English noun, nominate), and Greek onoma. So Punjabi nāṁ and English name are cousins from before either language existed. (The Hindi form is nām; Punjabi nasalises the ending to nāṁ.)"
             }
           ]
         },
@@ -114,7 +114,24 @@
             },
             {
               "kind": "speech",
-              "text": "What Sanskrit and PIE roots is nāṁ from, and its English cousins? (Nāman / h₃nómn̥; name, noun, nominate.)"
+              "text": "What Sanskrit and PIE roots is nāṁ from, and its English cousins? (Nāman / h₃nómn, with a syllabic final n; name, noun, nominate.)"
+            },
+            {
+              "kind": "activity",
+              "scored": true,
+              "id": "PA-C02-naam-meaning",
+              "prompt": "You hear nāṁ. Type its English meaning.",
+              "assesses": [
+                "PA-LEX-NAAM-02"
+              ],
+              "responseSeconds": 8,
+              "acceptedResponses": [
+                "name"
+              ],
+              "feedback": {
+                "correct": "Right: nāṁ means name.",
+                "incorrect": "The first introduction word is nāṁ, name."
+              }
             }
           ]
         }
@@ -125,7 +142,7 @@
       "sequence": 80,
       "title": "ਮੇਰਾ (merā) — \"my\"",
       "headword": "ਮੇਰਾ",
-      "romanization": "",
+      "romanization": "merā",
       "gloss": "my",
       "script": "gurmukhi",
       "modality": "sight",
@@ -133,7 +150,7 @@
       "modalityReasons": [
         "script-block"
       ],
-      "sourceHash": "fnv1a64:c7f9fabf5c007270",
+      "sourceHash": "fnv1a64:137292eb187e119c",
       "notice": {
         "modality": "sight",
         "needs": [
@@ -249,6 +266,24 @@
             {
               "kind": "speech",
               "text": "What root links merā and English my, and what is its feminine form? (The first-person ma-; merī.)"
+            },
+            {
+              "kind": "activity",
+              "scored": true,
+              "id": "PA-C02-mera-meaning",
+              "prompt": "You hear merā nāṁ. Which word means my?",
+              "assesses": [
+                "PA-LEX-MERA-02"
+              ],
+              "responseSeconds": 8,
+              "acceptedResponses": [
+                "merā",
+                "mera"
+              ],
+              "feedback": {
+                "correct": "Right: merā means my before the masculine noun nāṁ.",
+                "incorrect": "The phrase is merā nāṁ: merā means my."
+              }
             }
           ]
         }
@@ -259,7 +294,7 @@
       "sequence": 90,
       "title": "ਹੈ (hai) — \"is,\" cousin of English is",
       "headword": "ਹੈ",
-      "romanization": "",
+      "romanization": "hai",
       "gloss": "is",
       "script": "gurmukhi",
       "modality": "sight",
@@ -267,7 +302,7 @@
       "modalityReasons": [
         "script-block"
       ],
-      "sourceHash": "fnv1a64:5daccefa0110cc86",
+      "sourceHash": "fnv1a64:bb95417168841d79",
       "notice": {
         "modality": "sight",
         "needs": [
@@ -383,6 +418,26 @@
             {
               "kind": "speech",
               "text": "What root is hai from, and where does the verb sit in a Punjabi sentence? (Sanskrit asti / PIE h₁es-; at the end.)"
+            },
+            {
+              "kind": "activity",
+              "scored": true,
+              "id": "PA-C02-hai-order",
+              "prompt": "Complete merā nāṁ Arun... and say where Punjabi puts this verb.",
+              "assesses": [
+                "PA-LEX-HAI-02",
+                "PA-GRAMMAR-VERB-LAST-02"
+              ],
+              "responseSeconds": 10,
+              "acceptedResponses": [
+                "hai; at the end",
+                "hai, at the end",
+                "hai; end"
+              ],
+              "feedback": {
+                "correct": "Right: hai means is and waits at the end.",
+                "incorrect": "Use hai, is; Punjabi places the verb at the end."
+              }
             }
           ]
         }
@@ -393,7 +448,7 @@
       "sequence": 100,
       "title": "ਮੇਰਾ ਨਾਂ … ਹੈ (merā nāṁ … hai) — \"my name is…\"",
       "headword": "ਮੇਰਾ ਨਾਂ … ਹੈ",
-      "romanization": "",
+      "romanization": "merā nāṁ … hai",
       "gloss": "my name is…",
       "script": "gurmukhi",
       "modality": "voice",
@@ -401,7 +456,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:63378f5513133299",
+      "sourceHash": "fnv1a64:0e29f514855dd0d1",
       "notice": null,
       "blocks": [
         {
@@ -423,8 +478,8 @@
         },
         {
           "index": 1,
-          "type": "unknown",
-          "title": "The phrase, assembled",
+          "type": "input",
+          "title": "The exchange — assembled",
           "segments": [
             {
               "kind": "speech",
@@ -488,6 +543,26 @@
             {
               "kind": "speech",
               "text": "Give your name in Punjabi, and say where the verb sits. (Merā nāṁ … hai; the verb is last.)"
+            },
+            {
+              "kind": "activity",
+              "scored": true,
+              "id": "PA-C02-mera-naam-hai-speaking",
+              "prompt": "Say my name is Mira in Punjabi, then type the romanized sentence you said.",
+              "assesses": [
+                "PA-PHRASE-MY-NAME-02",
+                "PA-GRAMMAR-VERB-LAST-02"
+              ],
+              "responseSeconds": 12,
+              "acceptedResponses": [
+                "merā nāṁ mira hai",
+                "mera nam mira hai",
+                "mera naam mira hai"
+              ],
+              "feedback": {
+                "correct": "Right: merā nāṁ Mira hai, with hai last.",
+                "incorrect": "Build my plus name plus Mira plus is: merā nāṁ Mira hai."
+              }
             }
           ]
         }
@@ -498,15 +573,15 @@
       "sequence": 110,
       "title": "ਤੂੰ / ਤੁਸੀਂ (tū̃ / tusī̃) — \"you,\" familiar and respectful",
       "headword": "ਤੂੰ / ਤੁਸੀਂ",
-      "romanization": "",
-      "gloss": "you (familiar / respectful)",
+      "romanization": "tū̃ / tusī̃",
+      "gloss": "you — familiar / respectful",
       "script": "gurmukhi",
       "modality": "sight",
       "derivedModality": "sight",
       "modalityReasons": [
         "script-block"
       ],
-      "sourceHash": "fnv1a64:acd2cf2d1eb84998",
+      "sourceHash": "fnv1a64:5b68d4e45e8970fb",
       "notice": {
         "modality": "sight",
         "needs": [
@@ -553,7 +628,7 @@
           "segments": [
             {
               "kind": "speech",
-              "text": "ਤੂੰ (tū̃, familiar \"you\") from Sanskrit tvam, from PIE tū — the same root as English archaic thou, Latin tū, French tu. ਤੁਸੀਂ (tusī̃, respectful \"you\") is grammatically plural — the same courtesy-by-plural you meet in French vous and Hindi āp."
+              "text": "ਤੂੰ (tū̃, familiar \"you\") from Sanskrit tvam, from PIE tū — the same root as English archaic thou, Latin tū, French tu. ਤੁਸੀਂ (tusī̃, respectful \"you\") is grammatically plural — the same courtesy-by-plural used by French vous and Hindi āp."
             }
           ]
         },
@@ -630,6 +705,24 @@
             {
               "kind": "speech",
               "text": "Which \"you\" is respectful, and what English word is tū̃ cousin to? (Tusī̃; archaic thou, from PIE tū.)"
+            },
+            {
+              "kind": "activity",
+              "scored": true,
+              "id": "PA-C02-tu-tusi-register",
+              "prompt": "Which Punjabi you belongs in a first meeting: tū̃ or tusī̃?",
+              "assesses": [
+                "PA-LEX-YOU-REGISTER-02"
+              ],
+              "responseSeconds": 8,
+              "acceptedResponses": [
+                "tusī̃",
+                "tusi"
+              ],
+              "feedback": {
+                "correct": "Right: tusī̃ is the respectful first-meeting choice.",
+                "incorrect": "Use plural-shaped tusī̃ with elders and strangers."
+              }
             }
           ]
         }
@@ -640,7 +733,7 @@
       "sequence": 120,
       "title": "ਕੀ (kī) — \"what\"",
       "headword": "ਕੀ",
-      "romanization": "",
+      "romanization": "kī",
       "gloss": "what",
       "script": "gurmukhi",
       "modality": "sight",
@@ -648,7 +741,7 @@
       "modalityReasons": [
         "script-block"
       ],
-      "sourceHash": "fnv1a64:1d30f46f7b103247",
+      "sourceHash": "fnv1a64:67db2d8205a27276",
       "notice": {
         "modality": "sight",
         "needs": [
@@ -753,6 +846,23 @@
             {
               "kind": "speech",
               "text": "What root do Punjabi's question-words share, and its English family? (The interrogative k-, PIE kʷo-; the wh- words.)"
+            },
+            {
+              "kind": "activity",
+              "scored": true,
+              "id": "PA-C02-ki-meaning",
+              "prompt": "You hear kī in a question. Type its English meaning.",
+              "assesses": [
+                "PA-LEX-KI-02"
+              ],
+              "responseSeconds": 8,
+              "acceptedResponses": [
+                "what"
+              ],
+              "feedback": {
+                "correct": "Right: kī means what.",
+                "incorrect": "Punjabi kī is the k-family question word what."
+              }
             }
           ]
         }
@@ -763,15 +873,15 @@
       "sequence": 130,
       "title": "ਤੁਹਾਡਾ ਨਾਂ ਕੀ ਹੈ? (tuhāḍā nāṁ kī hai?) — \"what's your name?\"",
       "headword": "ਤੁਹਾਡਾ ਨਾਂ ਕੀ ਹੈ?",
-      "romanization": "",
-      "gloss": "what's your name?",
+      "romanization": "tuhāḍā nāṁ kī hai?",
+      "gloss": "what is your name?",
       "script": "gurmukhi",
       "modality": "voice",
       "derivedModality": "voice",
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:46ae1a3294fd8f6a",
+      "sourceHash": "fnv1a64:ed73bdd53864f9c8",
       "notice": null,
       "blocks": [
         {
@@ -793,12 +903,12 @@
         },
         {
           "index": 1,
-          "type": "unknown",
-          "title": "The phrase, assembled",
+          "type": "input",
+          "title": "The exchange — assembled",
           "segments": [
             {
               "kind": "speech",
-              "text": "ਤੁਹਾਡਾ (tuhāḍā, \"your,\" the respectful possessive from tusī̃) + ਨਾਂ (name) + ਕੀ (what) + ਹੈ (is) becomes literally \"your name what is?\" Punjabi keeps the verb last again, and simply drops the question-word kī into the object slot."
+              "text": "ਤੁਹਾਡਾ (tuhāḍā, \"your,\" the respectful possessive from tusī̃) + ਨਾਂ (nāṁ) (name) + ਕੀ (what) + ਹੈ (hai) (is) becomes literally \"your name what is?\" Punjabi keeps the verb last again, and simply drops the question-word kī into the object slot."
             }
           ]
         },
@@ -867,6 +977,26 @@
             {
               "kind": "speech",
               "text": "Ask someone's name respectfully, and note where the verb sits. (Tuhāḍā nāṁ kī hai?; the verb is last.)"
+            },
+            {
+              "kind": "activity",
+              "scored": true,
+              "id": "PA-C02-tuhada-naam-ki-hai-respectful-question",
+              "prompt": "Ask what is your name respectfully in Punjabi, then type the romanized question you said.",
+              "assesses": [
+                "PA-PHRASE-YOUR-NAME-02",
+                "PA-GRAMMAR-VERB-LAST-02"
+              ],
+              "responseSeconds": 14,
+              "acceptedResponses": [
+                "tuhāḍā nāṁ kī hai?",
+                "tuhada nam ki hai",
+                "tuhada naam ki hai"
+              ],
+              "feedback": {
+                "correct": "Right: tuhāḍā nāṁ kī hai, with hai last.",
+                "incorrect": "Use respectful tuhāḍā, then nāṁ, kī, and final hai."
+              }
             }
           ]
         }
@@ -877,15 +1007,15 @@
       "sequence": 140,
       "title": "ਖ਼ੁਸ਼ੀ ਹੋਈ (khushī hoī) — \"pleased to meet you\"",
       "headword": "ਖ਼ੁਸ਼ੀ ਹੋਈ",
-      "romanization": "",
-      "gloss": "pleased to meet you (lit. \"happiness happened\")",
+      "romanization": "khushī hoī",
+      "gloss": "pleased to meet you — literally happiness happened",
       "script": "gurmukhi",
       "modality": "sight",
       "derivedModality": "sight",
       "modalityReasons": [
         "script-block"
       ],
-      "sourceHash": "fnv1a64:825b94b81299bf10",
+      "sourceHash": "fnv1a64:6da03ed7064f491c",
       "notice": {
         "modality": "sight",
         "needs": [
@@ -990,6 +1120,26 @@
             {
               "kind": "speech",
               "text": "What does the phrase literally mean, and where does khushī come from? (\"Having met you, happiness happened\"; Persian khush, \"happy\" — Punjabi's second vocabulary.)"
+            },
+            {
+              "kind": "activity",
+              "scored": true,
+              "id": "PA-C02-khushi-meaning",
+              "prompt": "You hear khushī hoī after an introduction. Give its use and source.",
+              "assesses": [
+                "PA-PHRASE-KHUSHI-HOI-02",
+                "PA-ETYMON-KHUSH-PERSIAN-02"
+              ],
+              "responseSeconds": 12,
+              "acceptedResponses": [
+                "pleased to meet you; persian khush",
+                "pleased to meet you, persian",
+                "nice to meet you; persian"
+              ],
+              "feedback": {
+                "correct": "Right: the welcome uses Persian khush, happy.",
+                "incorrect": "It means pleased to meet you and khushī comes through Persian khush."
+              }
             }
           ]
         }
@@ -1001,14 +1151,14 @@
       "title": "Chapter 2 — The introduction exchange",
       "headword": "(dialogue)",
       "romanization": "",
-      "gloss": "Chapter 2 recap — the introduction exchange",
+      "gloss": "Chapter 2 oral checkpoint — the introduction exchange",
       "script": "gurmukhi",
       "modality": "voice",
       "derivedModality": "voice",
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:abeab0324c331eb4",
+      "sourceHash": "fnv1a64:0830fb96cca7cb95",
       "notice": null,
       "blocks": [
         {
@@ -1074,13 +1224,52 @@
               "scored": false,
               "responseSeconds": 8,
               "source": "[YOU SAY: \"Pleased to meet you.\" — *tuhānū̃ mil ke khushī hoī.*]"
+            },
+            {
+              "kind": "activity",
+              "scored": true,
+              "id": "PA-C02-practice-listening",
+              "prompt": "You hear tuhāḍā nāṁ kī hai? Type what the speaker wants to know.",
+              "assesses": [
+                "PA-PHRASE-YOUR-NAME-02"
+              ],
+              "responseSeconds": 10,
+              "acceptedResponses": [
+                "your name",
+                "what my name is",
+                "my name"
+              ],
+              "feedback": {
+                "correct": "Listening score: the speaker asks your name.",
+                "incorrect": "The respectful question asks what your name is."
+              }
+            },
+            {
+              "kind": "activity",
+              "scored": true,
+              "id": "PA-C02-practice-speaking",
+              "prompt": "Say a three-turn introduction aloud, then type the romanized turns you said.",
+              "assesses": [
+                "PA-PHRASE-MY-NAME-02",
+                "PA-PHRASE-YOUR-NAME-02",
+                "PA-PHRASE-KHUSHI-HOI-02"
+              ],
+              "responseSeconds": 24,
+              "acceptedResponses": [
+                "merā nāṁ mira hai; tuhāḍā nāṁ kī hai?; khushī hoī",
+                "mera naam mira hai; tuhada naam ki hai; khushi hoi"
+              ],
+              "feedback": {
+                "correct": "Speaking score: statement, respectful question, and warm close are all present.",
+                "incorrect": "Use three oral turns: merā nāṁ... hai; tuhāḍā nāṁ kī hai; khushī hoī."
+              }
             }
           ]
         },
         {
           "index": 2,
-          "type": "unknown",
-          "title": "The atoms",
+          "type": "guided-production",
+          "title": "Guided Practice — the atoms",
           "segments": [
             {
               "kind": "pause",
@@ -1119,8 +1308,8 @@
         },
         {
           "index": 3,
-          "type": "unknown",
-          "title": "Roots you now carry",
+          "type": "etymology",
+          "title": "The word, taken apart — roots you now carry",
           "segments": [
             {
               "kind": "pause",
@@ -1151,6 +1340,16 @@
           "type": "recall",
           "title": "Wrap-up Recall",
           "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Independent Gurmukhi reading and writing are not scored here. Chapter 2 still contains untaught forms; #13068 must build their visible-model, guided-copy, delayed-copy, and dictation runway before either skill can earn credit. A romanized answer never counts as Gurmukhi writing."
+            },
             {
               "kind": "pause",
               "seconds": 3,

@@ -2,24 +2,165 @@
   "version": 1,
   "language": "marathi",
   "chapter": 8,
-  "title": "The Core Verbs",
-  "drivablePrefix": 6,
-  "sourceHash": "fnv1a64:1f946c2e8b3ceaf4",
+  "title": "The First Verbs",
+  "drivablePrefix": 0,
+  "sourceHash": "fnv1a64:f308b01bcd78b1e6",
   "lessons": [
     {
-      "id": "MR-C07-asne",
-      "sequence": 360,
-      "title": "असणे (asṇe) — \"to be,\" and the word your sentence ends on",
-      "headword": "असणे",
-      "romanization": "asṇe",
-      "gloss": "to be — the verb behind आहे, the word a Marathi sentence ends on",
+      "id": "MR-C05-bolne",
+      "sequence": 165,
+      "title": "बोलणे (bolṇe) — \"to speak\"",
+      "headword": "बोलणे",
+      "romanization": "",
+      "gloss": "to speak (bolṇe)",
+      "script": "devanagari",
+      "modality": "sight",
+      "derivedModality": "sight",
+      "modalityReasons": [
+        "script-block"
+      ],
+      "sourceHash": "fnv1a64:8137d55585765fb5",
+      "notice": {
+        "modality": "sight",
+        "needs": [
+          "your eyes, for letter shapes on the page"
+        ],
+        "waitUntilStopped": [
+          "The letters in this word"
+        ],
+        "text": "Before we start: this one needs your eyes, so it is not fully a driving lesson. You will want your eyes, for letter shapes on the page. You can listen to everything else now — leave the section called The letters in this word until you have stopped, and I will say so again when we reach it."
+      },
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Until now, verbs of being and meeting. Here is your first verb of doing — to speak — and the pattern that runs every Marathi verb."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "script",
+          "title": "The letters in this word",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "(Skim if you read Devanagari.) बो (bo) + ल (la) + णे (ṇe, the retroflex ण ṇa with the -e stroke) becomes बोलणे bolṇe."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "बोलणे (bolṇe, \"to speak\") is a native Indo-Aryan verb on the stem bol- — the same bol- as Hindi bolnā and Punjabi bolṇā. Its ending -णे (-ṇe) is the Marathi infinitive (\"to ___\"): bol-ṇe \"to speak,\" bheṭ-ṇe \"to meet,\" ye-ṇe \"to come.\" Strip -ṇe and you have the stem to build on: bol-."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "grammar",
+          "title": "Grammar Lens: stem + gendered present ending",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "From the stem you build the present tense — and, as with yeto/yete, it splits by the speaker's gender:"
+            },
+            {
+              "kind": "speech",
+              "text": "मी बोलतो (mī bolto) — a man speaks."
+            },
+            {
+              "kind": "speech",
+              "text": "मी बोलते (mī bolte) — a woman speaks."
+            },
+            {
+              "kind": "speech",
+              "text": "(plural / respectful: बोलतो / बोलता)."
+            },
+            {
+              "kind": "speech",
+              "text": "The verb still ends the sentence; the copula-less present tense is one word doing the work."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "\"bolṇe\" — to speak; then the stem (bol-)",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: \"bolṇe\" — to speak; then the stem (*bol-*)]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "\"I speak\" for your own gender (mī bolto / mī bolte)",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: \"I speak\" for your own gender (*mī bolto* / *mī bolte*)]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What is the Marathi infinitive ending, and how does the present split? (-ṇe; the present ending changes with the speaker's gender — bolto m. / bolte f.)"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "MR-C05-mi-marathi-bolto",
+      "sequence": 170,
+      "title": "मी मराठी बोलतो (mī marāṭhī bolto) — \"I speak Marathi\"",
+      "headword": "मी मराठी बोलतो",
+      "romanization": "",
+      "gloss": "I speak Marathi (gendered)",
       "script": "devanagari",
       "modality": "voice",
       "derivedModality": "voice",
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:7a92a1a16edc645d",
+      "sourceHash": "fnv1a64:3cf66530d8e3f343",
       "notice": null,
       "blocks": [
         {
@@ -35,239 +176,443 @@
             },
             {
               "kind": "speech",
-              "text": "You have already said it: mājhaṁ nāv … āhe. Now meet the verb that form belongs to, and notice where Marathi insists on putting it."
+              "text": "Your first full action-sentence — and it names the language itself."
             }
           ]
         },
         {
           "index": 1,
-          "type": "input",
-          "title": "You'll want to know: असणे and its present आहे",
+          "type": "unknown",
+          "title": "The phrase, assembled",
           "segments": [
             {
               "kind": "speech",
-              "text": "असणे — asṇe — to be."
+              "text": "मी (mī, I) + मराठी (marāṭhī, Marathi, the object) + बोलतो (bolto, speak) becomes \"I Marathi speak,\" verb last."
             },
             {
               "kind": "speech",
-              "text": "The ending -णे (-ṇe) is the Marathi infinitive, the same ending as bolṇe \"to speak.\" Its present tense is short, irregular, and already yours: आहे (āhe) — \"am, is, are.\""
+              "text": "A woman says मी मराठी बोलते (mī marāṭhī bolte)."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "मराठी (marāṭhī) is \"[the language] of महाराष्ट्र (Mahārāṣṭra)\" — the \"great kingdom/realm,\" mahā (\"great,\" cousin of Latin magnus and English magnitude) + rāṣṭra (\"nation, realm\"). The people are the Marāṭhā, the land Mahārāṣṭra, and the tongue marāṭhī — all one root. It carries the same retroflex sounds you keep meeting: the ट (ṭa) of marāṭhī, the ळ of kāḷjī."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "culture-pragmatics",
+          "title": "Why it's said this way",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "The present tense needs no separate \"am/do\" — बोलतो alone says \"I speak.\" Contrast Hindi, which adds a copula (maiṁ hindī boltā hūṁ); Marathi folds the \"am\" into the verb ending. Cleaner, and gendered."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
             },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "\"mī marāṭhī bolto/bolte\" — I speak Marathi",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: \"mī marāṭhī bolto/bolte\" — I speak Marathi]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "the root of marāṭhī (Mahārāṣṭra = \"great realm\")",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: the root of *marāṭhī* (*Mahārāṣṭra* = \"great realm\")]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Where does the name marāṭhī come from? (Mahārāṣṭra, \"great realm\" — mahā \"great\" + rāṣṭra \"nation.\")"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "MR-C05-rahne",
+      "sequence": 175,
+      "title": "राहणे (rāhṇe) — \"to live, to stay\"",
+      "headword": "राहणे",
+      "romanization": "",
+      "gloss": "to live, to stay (rāhṇe)",
+      "script": "devanagari",
+      "modality": "sight",
+      "derivedModality": "sight",
+      "modalityReasons": [
+        "script-block",
+        "sight-cue"
+      ],
+      "sourceHash": "fnv1a64:89c8d32a453db833",
+      "notice": {
+        "modality": "sight",
+        "needs": [
+          "your eyes, for letter shapes on the page",
+          "your eyes, because the lesson points at something written down"
+        ],
+        "waitUntilStopped": [
+          "The letters in this word"
+        ],
+        "text": "Before we start: this one needs your eyes, so it is not fully a driving lesson. You will want your eyes, for letter shapes on the page and your eyes, because the lesson points at something written down. You can listen to everything else now — leave the section called The letters in this word until you have stopped, and I will say so again when we reach it."
+      },
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "A second verb on the same engine — to live — and a first postposition to place yourself somewhere."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "script",
+          "title": "The letters in this word",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "(Skim if you read Devanagari.) रा (rā) + ह (ha) + णे (ṇe, retroflex) becomes राहणे rāhṇe."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "राहणे (rāhṇe, \"to live, remain, stay\") is from Sanskrit रह् (rah-, \"to remain\") — the same root behind Hindi rahnā. Present tense, gendered as always: मी पुण्यात राहतो (mī puṇyāt rāhto, a man) / राहते (rāhte, a woman) — \"I live in Pune.\""
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "grammar",
+          "title": "Grammar Lens: \"in\" comes after the noun",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "Look at पुण्यात (puṇyāt) = पुणे (Puṇe, the city) + -ात (-āt, \"in\"). Marathi glues \"in\" onto the end of the noun — a postposition, not a preposition. Verb last, place-marker on the noun's tail: mī puṇyāt rāhto, \"I in-Pune live.\""
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "\"rāhṇe\" — to live; then \"mī puṇyāt rāhto/rāhte\"",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: \"rāhṇe\" — to live; then \"mī puṇyāt rāhto/rāhte\"]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "how \"in\" attaches (Puṇe + -āt becomes puṇyāt)",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: how \"in\" attaches (*Puṇe* + *-āt* → *puṇyāt*)]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Where does \"in\" go in Marathi, and on what root is rāhṇe? (On the end of the noun (-āt); Sanskrit rah- \"to remain.\")"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "MR-C05-kaam-karne",
+      "sequence": 180,
+      "title": "काम करणे (kām karṇe) — \"to work\"",
+      "headword": "काम करणे",
+      "romanization": "",
+      "gloss": "to work (kām karṇe)",
+      "script": "devanagari",
+      "modality": "sight",
+      "derivedModality": "sight",
+      "modalityReasons": [
+        "script-block"
+      ],
+      "sourceHash": "fnv1a64:efc2a0d808a8c7f1",
+      "notice": {
+        "modality": "sight",
+        "needs": [
+          "your eyes, for letter shapes on the page"
+        ],
+        "waitUntilStopped": [
+          "The letters in this word"
+        ],
+        "text": "Before we start: this one needs your eyes, so it is not fully a driving lesson. You will want your eyes, for letter shapes on the page. You can listen to everything else now — leave the section called The letters in this word until you have stopped, and I will say so again when we reach it."
+      },
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Your third verb — to work — and it closes a circle back to Chapter 1's greeting."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "script",
+          "title": "The letters in this word",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "(Skim if you read Devanagari.) काम (kām): का + म (ma). करणे (karṇe): क (ka) + र (ra) + णे (ṇe, retroflex)."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "करणे (karṇe, \"to do, make\") is from Sanskrit √कृ (kṛ, \"to do\"), from PIE kʷer-. That is the very root hiding inside Chapter 1's नमस्कार (namaskār = \"the making of a bow\") and inside कर्म (karma, \"a thing done\"). And काम (kām, \"work\") is itself worn down from that same कर्म (karma). So \"to work\" is literally built twice from doing: काम करणे (kām karṇe) = \"work-do.\""
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "grammar",
+          "title": "Grammar Lens: noun + करणे makes a verb",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "Marathi builds countless verbs as noun + करणे: kām karṇe (to work), madat karṇe (to help), sevā karṇe (to serve). Present tense, gendered: मी काम करतो (mī kām karto, m.) / करते (karte, f.) — \"I work.\""
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "\"kām karṇe\" — to work; then \"mī kām karto/karte\"",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: \"kām karṇe\" — to work; then \"mī kām karto/karte\"]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "the root it shares with namaskār and karma (√kṛ, \"to do\")",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: the root it shares with *namaskār* and *karma* (*√kṛ*, \"to do\")]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What links karṇe, namaskār, and karma? (All from √kṛ, \"to do\" — and kām \"work\" is worn-down karma.)"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "MR-C05-practice",
+      "sequence": 185,
+      "title": "Chapter 8 recap — the first verbs",
+      "headword": "(recap)",
+      "romanization": "",
+      "gloss": "Chapter 8 recap — the first verbs",
+      "script": "devanagari",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:9ffcb38ee411f9ef",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Three verbs, one engine — sentences about yourself."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "unknown",
+          "title": "Sentences about yourself",
+          "segments": [
             {
               "kind": "table",
               "headers": [
-                "who",
                 "Marathi",
-                "said"
+                "Say it",
+                "English"
               ],
               "columns": 3,
               "rowCount": 3,
               "utterances": [
-                "who: मी (I). Marathi: आहे. said: āhe.",
-                "who: तू (you, familiar). Marathi: आहेस. said: āhes.",
-                "who: तुम्ही (you, respectful). Marathi: आहात. said: āhāt."
+                "Marathi: मी मराठी बोलतो / बोलते. Say it: mī marāṭhī bolto / bolte. English: I speak Marathi.",
+                "Marathi: मी पुण्यात राहतो / राहते. Say it: mī puṇyāt rāhto / rāhte. English: I live in Pune.",
+                "Marathi: मी काम करतो / करते. Say it: mī kām karto / karte. English: I work."
               ]
             }
           ]
         },
         {
           "index": 2,
-          "type": "pronunciation",
-          "title": "Sounds you'll need: अ, स, णे and आ, हे",
+          "type": "unknown",
+          "title": "The engine, in one look",
           "segments": [
             {
               "kind": "speech",
-              "text": "अ is the bare vowel a; स is sa; णे is the retroflex ण ṇa carrying the -e stroke — a-sa-ṇe. आ is that first letter with an upright stroke added, the long ā. हे is ह ha with the same -e stroke: ā-he."
+              "text": "Infinitive ends in -णे (-ṇe): bolṇe, rāhṇe, karṇe."
+            },
+            {
+              "kind": "speech",
+              "text": "Present = stem + a gendered ending — -to (m.) / -te (f.): bolto/ bolte, rāhto/rāhte, karto/karte. No separate \"am\" — the ending carries it."
+            },
+            {
+              "kind": "speech",
+              "text": "Verb goes last; \"in\" attaches to the noun's end (puṇyāt)."
             }
           ]
         },
         {
           "index": 3,
-          "type": "etymology",
-          "title": "The word, taken apart — the oldest verb in the family",
+          "type": "unknown",
+          "title": "Roots banked",
           "segments": [
             {
               "kind": "speech",
-              "text": "Sanskrit's word for \"is\" was अस्ति ásti, sitting on the stem as-, and that stem goes back to the Indo-European root h₁es-. It surfaces almost everywhere the family reaches: Latin est, Greek estí, German ist, and English is. Asṇe is built straight on it."
+              "text": "बोलणे (bolṇe) — to speak (native bol-)."
             },
             {
               "kind": "speech",
-              "text": "आहे itself is the contested piece. Some trace it to ásti directly; others route it through a Middle Indo-Aryan verb acchai \"stays, remains.\" The family is not in doubt, the exact line of descent is — so treat it as an open question rather than a settled fact."
-            }
-          ]
-        },
-        {
-          "index": 4,
-          "type": "grammar",
-          "title": "Grammar Lens: the sentence ends on आहे",
-          "segments": [
-            {
-              "kind": "speech",
-              "text": "English slots is into the middle of a sentence: \"My name is Sara.\" Marathi holds it back to the very end:"
+              "text": "मराठी (marāṭhī) — from Mahārāṣṭra, \"great realm.\""
             },
             {
               "kind": "speech",
-              "text": "माझं नाव सारा आहे — mājhaṁ nāv Sārā āhe — piece by piece, \"my name Sara is.\""
+              "text": "राहणे (rāhṇe) — to live (Sanskrit rah-)."
             },
             {
               "kind": "speech",
-              "text": "That is the rule for every Marathi verb, and āhe is where it becomes unmissable. Whatever else the sentence carries, the verb closes it."
-            }
-          ]
-        },
-        {
-          "index": 5,
-          "type": "guided-production",
-          "title": "Guided Practice",
-          "segments": [
-            {
-              "kind": "pause",
-              "seconds": 1,
-              "perItem": false,
-              "source": "[PAUSE 1s]"
-            },
-            {
-              "kind": "prompt",
-              "action": "SAY",
-              "instruction": "\"asṇe\" — to be — then its present, \"āhe\"",
-              "spoken": true,
-              "scored": false,
-              "responseSeconds": 8,
-              "source": "[YOU SAY: \"asṇe\" — to be — then its present, \"āhe\"]"
-            },
-            {
-              "kind": "prompt",
-              "action": "SAY",
-              "instruction": "the three persons — \"mī āhe … tū āhes … tumhī āhāt\"",
-              "spoken": true,
-              "scored": false,
-              "responseSeconds": 8,
-              "source": "[YOU SAY: the three persons — \"mī āhe … tū āhes … tumhī āhāt\"]"
-            },
-            {
-              "kind": "prompt",
-              "action": "SAY",
-              "instruction": "your own name in Marathi order — \"mājhaṁ nāv … āhe\"",
-              "spoken": true,
-              "scored": false,
-              "responseSeconds": 8,
-              "source": "[YOU SAY: your own name in Marathi order — \"mājhaṁ nāv … āhe\"]"
-            }
-          ]
-        },
-        {
-          "index": 6,
-          "type": "recall",
-          "title": "Wrap-up Recall",
-          "segments": [
-            {
-              "kind": "pause",
-              "seconds": 3,
-              "perItem": false,
-              "source": "[PAUSE 3s]"
-            },
-            {
-              "kind": "speech",
-              "text": "What is the infinitive behind āhe? (असणे, asṇe.) Where does a Marathi verb stand? (Last — the sentence closes on it.) Which everyday English word is ásti's own cousin? (Is.) Next: a verb that changes shape according to who is speaking."
-            }
-          ]
-        }
-      ]
-    },
-    {
-      "id": "MR-C07-jane",
-      "sequence": 370,
-      "title": "जाणे (jāṇe) — \"to go,\" and a present tense that gives you away",
-      "headword": "जाणे",
-      "romanization": "jāṇe",
-      "gloss": "to go — and the present tense you cannot say without declaring your own gender",
-      "script": "devanagari",
-      "modality": "voice",
-      "derivedModality": "voice",
-      "modalityReasons": [
-        "no-visual-dependency"
-      ],
-      "sourceHash": "fnv1a64:1e3ee24cfb0dc3a4",
-      "notice": null,
-      "blocks": [
-        {
-          "index": 0,
-          "type": "warmup",
-          "title": "Warm-up",
-          "segments": [
-            {
-              "kind": "pause",
-              "seconds": 2,
-              "perItem": false,
-              "source": "[PAUSE 2s]"
-            },
-            {
-              "kind": "speech",
-              "text": "Say \"my name is …\" once more, and hear where āhe lands. Every verb from here obeys that same rule. This one adds a second rule English has no use for."
-            }
-          ]
-        },
-        {
-          "index": 1,
-          "type": "input",
-          "title": "You'll want to know: जाणे",
-          "segments": [
-            {
-              "kind": "speech",
-              "text": "जाणे — jāṇe — to go."
-            },
-            {
-              "kind": "speech",
-              "text": "Strip the infinitive ending -णे and the stem is जा- jā-. On that stem Marathi builds the everyday present: जातो (jāto) and जाते (jāte)."
-            },
-            {
-              "kind": "speech",
-              "text": "Both mean \"I go.\" Neither is more correct than the other. Which one you may say is decided by something the English sentence never mentions."
-            }
-          ]
-        },
-        {
-          "index": 2,
-          "type": "pronunciation",
-          "title": "Sounds you'll need: जा, णे",
-          "segments": [
-            {
-              "kind": "speech",
-              "text": "ज is ja, and the upright stroke after it is the long ā — together जा jā. णे you met last lesson: retroflex ण with the -e stroke. Two syllables, jā-ṇe, with the tongue curled back for that second one."
-            }
-          ]
-        },
-        {
-          "index": 3,
-          "type": "grammar",
-          "title": "Grammar Lens: the ending declares who is speaking",
-          "segments": [
-            {
-              "kind": "speech",
-              "text": "English \"I go\" hides the speaker completely — a man and a woman say the same two words. Marathi will not let you:"
-            },
-            {
-              "kind": "table",
-              "headers": [
-                "speaking of",
-                "Marathi",
-                "said"
-              ],
-              "columns": 3,
-              "rowCount": 4,
-              "utterances": [
-                "speaking of: a man, of himself. Marathi: मी जातो. said: mī jāto.",
-                "speaking of: a woman, of herself. Marathi: मी जाते. said: mī jāte.",
-                "speaking of: a man, \"he goes\". Marathi: तो जातो. said: to jāto.",
-                "speaking of: a woman, \"she goes\". Marathi: ती जाते. said: tī jāte."
-              ]
-            },
-            {
-              "kind": "speech",
-              "text": "The -तो / -ते swap is the whole mechanism, and it runs through every verb: bolto / bolte, yeto / yete. Hindi marks gender on its verbs too, but Marathi makes it unavoidable in the plainest sentence a beginner can build. From your first \"I go,\" you are choosing."
-            },
-            {
-              "kind": "speech",
-              "text": "Notice also what is missing: no separate word for \"am.\" The ending carries the action, the person, and the gender at once."
+              "text": "करणे (karṇe) — to do/work (√kṛ — root of namaskār, karma; kām from karma)."
             }
           ]
         },
@@ -285,29 +630,20 @@
             {
               "kind": "prompt",
               "action": "SAY",
-              "instruction": "\"jāṇe\" — to go — then the stem, \"jā-\"",
+              "instruction": "all three sentences for your own gender",
               "spoken": true,
               "scored": false,
               "responseSeconds": 8,
-              "source": "[YOU SAY: \"jāṇe\" — to go — then the stem, \"jā-\"]"
+              "source": "[YOU SAY: all three sentences for your own gender]"
             },
             {
               "kind": "prompt",
               "action": "SAY",
-              "instruction": "\"I go\" in your own gender — \"mī jāto\" or \"mī jāte\"",
+              "instruction": "\"I speak Marathi and I work\" (mī marāṭhī bolto āṇi kām karto)",
               "spoken": true,
               "scored": false,
               "responseSeconds": 8,
-              "source": "[YOU SAY: \"I go\" in your own gender — \"mī jāto\" or \"mī jāte\"]"
-            },
-            {
-              "kind": "prompt",
-              "action": "SAY",
-              "instruction": "the pair — \"to jāto … tī jāte\"",
-              "spoken": true,
-              "scored": false,
-              "responseSeconds": 8,
-              "source": "[YOU SAY: the pair — \"to jāto … tī jāte\"]"
+              "source": "[YOU SAY: \"I speak Marathi and I work\" (*mī marāṭhī bolto āṇi kām karto*)]"
             }
           ]
         },
@@ -324,601 +660,7 @@
             },
             {
               "kind": "speech",
-              "text": "What is the stem inside jāṇe? (जा-, jā-.) Which two endings split the present, and by what? (-तो / -ते, by the gender of the one the verb is about.) Can a Marathi speaker say \"I go\" without revealing it? (No — the choice is forced.) Next: the same ancient root, pointed the other way."
-            }
-          ]
-        }
-      ]
-    },
-    {
-      "id": "MR-C07-yene",
-      "sequence": 380,
-      "title": "येणे (yeṇe) — \"to come,\" the other half of \"to go\"",
-      "headword": "येणे",
-      "romanization": "yeṇe",
-      "gloss": "to come — the same Sanskrit going-root as जाणे, turned around by one small prefix",
-      "script": "devanagari",
-      "modality": "voice",
-      "derivedModality": "voice",
-      "modalityReasons": [
-        "no-visual-dependency"
-      ],
-      "sourceHash": "fnv1a64:38e9c9d12b43db2a",
-      "notice": null,
-      "blocks": [
-        {
-          "index": 0,
-          "type": "warmup",
-          "title": "Warm-up",
-          "segments": [
-            {
-              "kind": "pause",
-              "seconds": 2,
-              "perItem": false,
-              "source": "[PAUSE 2s]"
-            },
-            {
-              "kind": "speech",
-              "text": "Say \"I go\" in your own gender: mī jāto or mī jāte. Hold that shape. The next verb is closer to it than it sounds."
-            }
-          ]
-        },
-        {
-          "index": 1,
-          "type": "input",
-          "title": "You'll want to know: येणे",
-          "segments": [
-            {
-              "kind": "speech",
-              "text": "येणे — yeṇe — to come."
-            },
-            {
-              "kind": "speech",
-              "text": "Same infinitive ending, same machinery: stem ये- ye-, present येतो (yeto) and येते (yete), split by gender exactly as jāto / jāte was."
-            },
-            {
-              "kind": "speech",
-              "text": "You met yeto in Chapter 2 as a farewell — Marathi takes its leave by saying \"I come,\" promising the return rather than announcing the departure."
-            }
-          ]
-        },
-        {
-          "index": 2,
-          "type": "pronunciation",
-          "title": "Sounds you'll need: ये, णे",
-          "segments": [
-            {
-              "kind": "speech",
-              "text": "य is ya, a soft English y as in yes. Add the -e stroke above and you have ये ye — the same stroke you have been putting on णे and on हे in āhe. Two syllables: ye-ṇe."
-            }
-          ]
-        },
-        {
-          "index": 3,
-          "type": "etymology",
-          "title": "The word, taken apart — one root, two directions",
-          "segments": [
-            {
-              "kind": "speech",
-              "text": "Sanskrit had a verb of travelling, yā-, whose present was याति yāti \"goes, travels.\" Middle Indo-Aryan turned that initial y- into a j-, giving Prakrit jāi — and that is Marathi जाणे (jāṇe)."
-            },
-            {
-              "kind": "speech",
-              "text": "Now put a prefix on it. Sanskrit आ- ā- means \"toward, hither,\" and आयाति āyāti is \"travels toward here\" — that is, comes. Worn down through the same centuries, āyāti is Marathi येणे (yeṇe)."
-            },
-            {
-              "kind": "speech",
-              "text": "So going and coming are not two verbs in this family. They are one verb of travelling, and the only difference is a prefix meaning \"this way.\" English keeps a faint echo of the same trick in go against in-coming, but it needs two separate roots to do what Sanskrit did with one."
-            }
-          ]
-        },
-        {
-          "index": 4,
-          "type": "guided-production",
-          "title": "Guided Practice",
-          "segments": [
-            {
-              "kind": "pause",
-              "seconds": 1,
-              "perItem": false,
-              "source": "[PAUSE 1s]"
-            },
-            {
-              "kind": "prompt",
-              "action": "SAY",
-              "instruction": "\"yeṇe\" — to come — then the stem, \"ye-\"",
-              "spoken": true,
-              "scored": false,
-              "responseSeconds": 8,
-              "source": "[YOU SAY: \"yeṇe\" — to come — then the stem, \"ye-\"]"
-            },
-            {
-              "kind": "prompt",
-              "action": "SAY",
-              "instruction": "\"I come\" in your own gender — \"mī yeto\" or \"mī yete\"",
-              "spoken": true,
-              "scored": false,
-              "responseSeconds": 8,
-              "source": "[YOU SAY: \"I come\" in your own gender — \"mī yeto\" or \"mī yete\"]"
-            },
-            {
-              "kind": "prompt",
-              "action": "SAY",
-              "instruction": "the derivation — \"yāti … āyāti … yeṇe\"",
-              "spoken": true,
-              "scored": false,
-              "responseSeconds": 8,
-              "source": "[YOU SAY: the derivation — \"yāti … āyāti … yeṇe\"]"
-            }
-          ]
-        },
-        {
-          "index": 5,
-          "type": "recall",
-          "title": "Wrap-up Recall",
-          "segments": [
-            {
-              "kind": "pause",
-              "seconds": 3,
-              "perItem": false,
-              "source": "[PAUSE 3s]"
-            },
-            {
-              "kind": "speech",
-              "text": "What is the stem of yeṇe? (ये-, ye-.) Which Sanskrit root do jāṇe and yeṇe share? (yā-, to travel.) What single piece turns going into coming? (The prefix आ- ā-, \"toward here.\") Next: an infinitive that is also a noun, and the gender Hindi does not have."
-            }
-          ]
-        }
-      ]
-    },
-    {
-      "id": "MR-C07-khane",
-      "sequence": 390,
-      "title": "खाणे (khāṇe) — \"to eat,\" and Marathi's third gender",
-      "headword": "खाणे",
-      "romanization": "khāṇe",
-      "gloss": "to eat — and an infinitive that doubles as a noun of the third gender Hindi lost",
-      "script": "devanagari",
-      "modality": "voice",
-      "derivedModality": "voice",
-      "modalityReasons": [
-        "no-visual-dependency"
-      ],
-      "sourceHash": "fnv1a64:6bd88c7d3b95ec92",
-      "notice": null,
-      "blocks": [
-        {
-          "index": 0,
-          "type": "warmup",
-          "title": "Warm-up",
-          "segments": [
-            {
-              "kind": "pause",
-              "seconds": 2,
-              "perItem": false,
-              "source": "[PAUSE 2s]"
-            },
-            {
-              "kind": "speech",
-              "text": "Two infinitives so far: jāṇe, yeṇe. Say them. This third one is ordinary as a verb and quietly remarkable as a noun."
-            }
-          ]
-        },
-        {
-          "index": 1,
-          "type": "input",
-          "title": "You'll want to know: खाणे",
-          "segments": [
-            {
-              "kind": "speech",
-              "text": "खाणे — khāṇe — to eat."
-            },
-            {
-              "kind": "speech",
-              "text": "Stem खा- khā-, present खातो (khāto) and खाते (khāte) on the gendered pattern you already have."
-            },
-            {
-              "kind": "speech",
-              "text": "Its root is Sanskrit खादति khādati, \"chews, eats\" — a solidly Indo-Aryan word with no borrowing in its history. The -d- wore away on the road to Marathi; the long ā stayed."
-            }
-          ]
-        },
-        {
-          "index": 2,
-          "type": "pronunciation",
-          "title": "Sounds you'll need: खा, णे",
-          "segments": [
-            {
-              "kind": "speech",
-              "text": "ख is kha — a k with a genuine puff of breath after it, the sound in English kit said hard, not the k of skit. Marathi treats that puff as a different letter, not an accent. Add the long-ā stroke and the familiar णे: khā-ṇe."
-            }
-          ]
-        },
-        {
-          "index": 3,
-          "type": "grammar",
-          "title": "Grammar Lens: the infinitive is a neuter noun",
-          "segments": [
-            {
-              "kind": "speech",
-              "text": "खाणे (khāṇe) also simply means \"eating\" — the thing, not the act of doing it. Every -णे infinitive works this way; खाणंपिणं (khāṇaṁ-piṇaṁ), \"eating and drinking,\" is how Marathi says food and drink."
-            },
-            {
-              "kind": "speech",
-              "text": "And as a noun it carries a gender — neuter, the third one. Hindi has two genders, masculine and feminine. Marathi kept all three that Sanskrit had, so words agreeing with a noun come in three shapes:"
-            },
-            {
-              "kind": "table",
-              "headers": [
-                "gender",
-                "\"good\"",
-                "said"
-              ],
-              "columns": 3,
-              "rowCount": 3,
-              "utterances": [
-                "gender: masculine. \"good\": चांगला. said: chāṅglā.",
-                "gender: feminine. \"good\": चांगली. said: chāṅglī.",
-                "gender: neuter. \"good\": चांगलं. said: chāṅglaṁ."
-              ]
-            },
-            {
-              "kind": "speech",
-              "text": "So \"eating is good\" is खाणं चांगलं आहे — khāṇaṁ chāṅglaṁ āhe, with the neuter ending twice over and the verb, as always, last."
-            }
-          ]
-        },
-        {
-          "index": 4,
-          "type": "guided-production",
-          "title": "Guided Practice",
-          "segments": [
-            {
-              "kind": "pause",
-              "seconds": 1,
-              "perItem": false,
-              "source": "[PAUSE 1s]"
-            },
-            {
-              "kind": "prompt",
-              "action": "SAY",
-              "instruction": "\"khāṇe\" — to eat — then \"I eat\" in your own gender",
-              "spoken": true,
-              "scored": false,
-              "responseSeconds": 8,
-              "source": "[YOU SAY: \"khāṇe\" — to eat — then \"I eat\" in your own gender]"
-            },
-            {
-              "kind": "prompt",
-              "action": "SAY",
-              "instruction": "the three shapes — \"chāṅglā … chāṅglī … chāṅglaṁ\"",
-              "spoken": true,
-              "scored": false,
-              "responseSeconds": 8,
-              "source": "[YOU SAY: the three shapes — \"chāṅglā … chāṅglī … chāṅglaṁ\"]"
-            },
-            {
-              "kind": "prompt",
-              "action": "SAY",
-              "instruction": "\"eating is good\" — \"khāṇaṁ chāṅglaṁ āhe\"",
-              "spoken": true,
-              "scored": false,
-              "responseSeconds": 8,
-              "source": "[YOU SAY: \"eating is good\" — \"khāṇaṁ chāṅglaṁ āhe\"]"
-            }
-          ]
-        },
-        {
-          "index": 5,
-          "type": "recall",
-          "title": "Wrap-up Recall",
-          "segments": [
-            {
-              "kind": "pause",
-              "seconds": 3,
-              "perItem": false,
-              "source": "[PAUSE 3s]"
-            },
-            {
-              "kind": "speech",
-              "text": "What are the two things खाणे (khāṇe) means? (To eat, and eating as a noun.) How many genders does Marathi have, and how many does Hindi have? (Three against two — Marathi kept Sanskrit's neuter.) Which gender is an infinitive? (Neuter.) Next: a verb whose root you already own in a dozen English words."
-            }
-          ]
-        }
-      ]
-    },
-    {
-      "id": "MR-C07-pahne",
-      "sequence": 400,
-      "title": "पाहणे (pāhṇe) — \"to see,\" a root you already own",
-      "headword": "पाहणे",
-      "romanization": "pāhṇe",
-      "gloss": "to see — from Sanskrit paś-, the root that reached English as spectacle, inspect and spy",
-      "script": "devanagari",
-      "modality": "voice",
-      "derivedModality": "voice",
-      "modalityReasons": [
-        "no-visual-dependency"
-      ],
-      "sourceHash": "fnv1a64:18f6c189167fb05d",
-      "notice": null,
-      "blocks": [
-        {
-          "index": 0,
-          "type": "warmup",
-          "title": "Warm-up",
-          "segments": [
-            {
-              "kind": "pause",
-              "seconds": 2,
-              "perItem": false,
-              "source": "[PAUSE 2s]"
-            },
-            {
-              "kind": "speech",
-              "text": "Say \"I eat\" in your own gender — mī khāto or mī khāte. The next verb runs on the same endings, and on a root you have been using in English all your life without knowing it."
-            }
-          ]
-        },
-        {
-          "index": 1,
-          "type": "input",
-          "title": "You'll want to know: पाहणे",
-          "segments": [
-            {
-              "kind": "speech",
-              "text": "पाहणे — pāhṇe — to see, to watch."
-            },
-            {
-              "kind": "speech",
-              "text": "Stem पाह- pāh-, present पाहतो (pāhto) and पाहते (pāhte). In everyday speech you will also hear बघणे (baghṇe) for the same job; pāhṇe is the one whose history repays digging."
-            }
-          ]
-        },
-        {
-          "index": 2,
-          "type": "pronunciation",
-          "title": "Sounds you'll need: पा, ह, णे",
-          "segments": [
-            {
-              "kind": "speech",
-              "text": "प is pa without the puff of breath that kha had. Add the upright stroke for long ā: पा pā. Then ह ha, and the णे you now know by heart. Three light syllables, pā-ha-ṇe, usually spoken as two: pāh-ṇe."
-            }
-          ]
-        },
-        {
-          "index": 3,
-          "type": "etymology",
-          "title": "The word, taken apart — one root, a dozen English words",
-          "segments": [
-            {
-              "kind": "speech",
-              "text": "Sanskrit's verb for seeing was पश्यति paśyati, on the root paś-, and Marathi's pāhṇe descends from its prefixed form प्रपश्यति prapaśyati, \"looks out at.\""
-            },
-            {
-              "kind": "speech",
-              "text": "Now the payoff. That paś- is the Indo-European root spek-, \"to observe.\" Sanskrit dropped the s- and swapped the consonants around; Latin kept them in order as speciō, \"I look.\" From the Latin side English inherited an enormous family, every one of them a cousin of pāhṇe:"
-            },
-            {
-              "kind": "speech",
-              "text": "spectacle, inspect, respect, suspect, prospect, species, specimen, speculate, telescope, and — through Italian — spy."
-            },
-            {
-              "kind": "speech",
-              "text": "So a Marathi speaker asking you to pāhṇe something is asking you to inspect it, in the most literal ancestral sense the word has."
-            }
-          ]
-        },
-        {
-          "index": 4,
-          "type": "guided-production",
-          "title": "Guided Practice",
-          "segments": [
-            {
-              "kind": "pause",
-              "seconds": 1,
-              "perItem": false,
-              "source": "[PAUSE 1s]"
-            },
-            {
-              "kind": "prompt",
-              "action": "SAY",
-              "instruction": "\"pāhṇe\" — to see — then \"I see\" in your own gender",
-              "spoken": true,
-              "scored": false,
-              "responseSeconds": 8,
-              "source": "[YOU SAY: \"pāhṇe\" — to see — then \"I see\" in your own gender]"
-            },
-            {
-              "kind": "prompt",
-              "action": "SAY",
-              "instruction": "the derivation — \"paśyati … prapaśyati … pāhṇe\"",
-              "spoken": true,
-              "scored": false,
-              "responseSeconds": 8,
-              "source": "[YOU SAY: the derivation — \"paśyati … prapaśyati … pāhṇe\"]"
-            },
-            {
-              "kind": "prompt",
-              "action": "SAY",
-              "instruction": "four English cousins — \"spectacle, inspect, species, spy\"",
-              "spoken": true,
-              "scored": false,
-              "responseSeconds": 8,
-              "source": "[YOU SAY: four English cousins — \"spectacle, inspect, species, spy\"]"
-            }
-          ]
-        },
-        {
-          "index": 5,
-          "type": "recall",
-          "title": "Wrap-up Recall",
-          "segments": [
-            {
-              "kind": "pause",
-              "seconds": 3,
-              "perItem": false,
-              "source": "[PAUSE 3s]"
-            },
-            {
-              "kind": "speech",
-              "text": "What is the stem of pāhṇe? (पाह-, pāh-.) Which Sanskrit verb is it from? (पश्यति paśyati, in its prefixed form prapaśyati.) Name three English words from the same ancient root. (Spectacle, inspect, species, spy — any three.) Next: a verb Marathi mostly refuses to use, and what it says instead."
-            }
-          ]
-        }
-      ]
-    },
-    {
-      "id": "MR-C07-mahit-asne",
-      "sequence": 410,
-      "title": "माहीत असणे (māhīt asṇe) — \"to know,\" which Marathi says sideways",
-      "headword": "माहीत असणे",
-      "romanization": "māhīt asṇe",
-      "gloss": "to know — built as \"is known to me\", so the knower is never the subject",
-      "script": "devanagari",
-      "modality": "voice",
-      "derivedModality": "voice",
-      "modalityReasons": [
-        "no-visual-dependency"
-      ],
-      "sourceHash": "fnv1a64:202917a80b332fce",
-      "notice": null,
-      "blocks": [
-        {
-          "index": 0,
-          "type": "warmup",
-          "title": "Warm-up",
-          "segments": [
-            {
-              "kind": "pause",
-              "seconds": 2,
-              "perItem": false,
-              "source": "[PAUSE 2s]"
-            },
-            {
-              "kind": "speech",
-              "text": "Say \"I go\" and \"I come\" in your own gender — jāto or jāte, yeto or yete. Five verbs obeyed that pattern. This one refuses."
-            }
-          ]
-        },
-        {
-          "index": 1,
-          "type": "input",
-          "title": "You'll want to know: माहीत असणे and जाणणे",
-          "segments": [
-            {
-              "kind": "speech",
-              "text": "माहीत असणे — māhīt asṇe — to know (everyday)."
-            },
-            {
-              "kind": "speech",
-              "text": "जाणणे — jāṇṇe — to know (formal, literary)."
-            },
-            {
-              "kind": "speech",
-              "text": "Marathi has an inherited verb for knowing and barely uses it. Everyday speech says māhīt asṇe, \"to be known,\" built on asṇe."
-            }
-          ]
-        },
-        {
-          "index": 2,
-          "type": "pronunciation",
-          "title": "Sounds you'll need: मा, ही, त",
-          "segments": [
-            {
-              "kind": "speech",
-              "text": "म is ma; with the long-ā stroke, मा. ही is ह ha with the long -ī stroke, which leans forward ahead of its letter. त is ta: mā-hī-t."
-            }
-          ]
-        },
-        {
-          "index": 3,
-          "type": "grammar",
-          "title": "Grammar Lens: knowledge comes to you, you do not do it",
-          "segments": [
-            {
-              "kind": "speech",
-              "text": "मला माहीत आहे — malā māhīt āhe — \"I know.\""
-            },
-            {
-              "kind": "speech",
-              "text": "Word by word: \"to me known is.\" Malā is \"to me,\" and the knower sits there, not in the subject slot. Nobody acts; a fact is simply in your possession, and āhe closes the line."
-            },
-            {
-              "kind": "speech",
-              "text": "The same frame carries a language: मला मराठी येते — malā marāṭhī yete — \"I know Marathi,\" literally \"to me Marathi comes.\" Yete is feminine because the subject is मराठी, a feminine noun — not the speaker; a man says it too. The verb agrees with its subject, as always. Here the subject is not you."
-            }
-          ]
-        },
-        {
-          "index": 4,
-          "type": "etymology",
-          "title": "The word, taken apart — a loan beside an inheritance",
-          "segments": [
-            {
-              "kind": "speech",
-              "text": "माहीत is a loan: through Persian from Arabic māhiyat, \"the particulars\" — one of the administrative words the Deccan sultanates left in Marathi."
-            },
-            {
-              "kind": "speech",
-              "text": "जाणणे is pure inheritance: Sanskrit जानाति jānāti, root jñā-, from Indo-European gnō- — the root of English know, Latin nōscere (notice, recognize) and Greek gnōsis (diagnosis). Marathi kept the cousin and gave the daily work to the loan."
-            }
-          ]
-        },
-        {
-          "index": 5,
-          "type": "guided-production",
-          "title": "Guided Practice",
-          "segments": [
-            {
-              "kind": "pause",
-              "seconds": 1,
-              "perItem": false,
-              "source": "[PAUSE 1s]"
-            },
-            {
-              "kind": "prompt",
-              "action": "SAY",
-              "instruction": "\"malā māhīt āhe\" — then literally, \"to me known is\"",
-              "spoken": true,
-              "scored": false,
-              "responseSeconds": 8,
-              "source": "[YOU SAY: \"malā māhīt āhe\" — then literally, \"to me known is\"]"
-            },
-            {
-              "kind": "prompt",
-              "action": "SAY",
-              "instruction": "\"I know Marathi\" — \"malā marāṭhī yete\"",
-              "spoken": true,
-              "scored": false,
-              "responseSeconds": 8,
-              "source": "[YOU SAY: \"I know Marathi\" — \"malā marāṭhī yete\"]"
-            },
-            {
-              "kind": "prompt",
-              "action": "SAY",
-              "instruction": "the inherited verb and its English cousin — \"jāṇṇe … know\"",
-              "spoken": true,
-              "scored": false,
-              "responseSeconds": 8,
-              "source": "[YOU SAY: the inherited verb and its English cousin — \"jāṇṇe … know\"]"
-            }
-          ]
-        },
-        {
-          "index": 6,
-          "type": "recall",
-          "title": "Wrap-up Recall",
-          "segments": [
-            {
-              "kind": "pause",
-              "seconds": 3,
-              "perItem": false,
-              "source": "[PAUSE 3s]"
-            },
-            {
-              "kind": "speech",
-              "text": "Where does Marathi put the knower? (In the dative — malā, \"to me.\") Which verb finishes malā māhīt āhe, and where? (आहे, last.) Why yete in malā marāṭhī yete? (The subject is मराठी, feminine — agreeing with it, not the speaker.) Which know-verb was borrowed? (माहीत, through Persian.)"
+              "text": "What three things does the Marathi present tense fold into one word? (The action, the person, and their gender — no separate \"am.\") From here, Marathi only opens further."
             }
           ]
         }

@@ -4,7 +4,7 @@
   "chapter": 1,
   "title": "Namaskar, Piece by Piece",
   "drivablePrefix": 0,
-  "sourceHash": "fnv1a64:8c4766847e2d3105",
+  "sourceHash": "fnv1a64:6dbbbbe08f10e3a9",
   "lessons": [
     {
       "id": "MR-C01-namaskar",
@@ -19,7 +19,7 @@
       "modalityReasons": [
         "script-block"
       ],
-      "sourceHash": "fnv1a64:f6315db577f9ba3b",
+      "sourceHash": "fnv1a64:5c1d62e53fae6bab",
       "notice": {
         "modality": "sight",
         "needs": [
@@ -66,7 +66,7 @@
           "segments": [
             {
               "kind": "speech",
-              "text": "नमस्कार (namaskar) (namaskār) = नमः (namaḥ, \"a bow\") + कार (kāra, \"the making of\"), from Sanskrit — literally \"the making of a bow.\" The same word Kannada and Telugu borrowed, and close kin to Hindi's namaskār. But note: where Hindi leans on namaste, Marathi's default, all-purpose greeting is namaskār — one of many small ways the two Devanagari languages differ."
+              "text": "नमस्कार (namaskar) (namaskār) = Sanskrit namaḥ (\"a bow\") + kāra (\"the making of\") — literally \"the making of a bow.\" The same word Kannada and Telugu borrowed, and close kin to Hindi's namaskār. But note: where Hindi leans on namaste, Marathi's default, all-purpose greeting is namaskār — one of many small ways the two Devanagari languages differ."
             }
           ]
         },

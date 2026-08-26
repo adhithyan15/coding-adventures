@@ -35,31 +35,32 @@ reviews_of: [MR-W01-namaskar-read, MR-C01-namaskar]
 
 [PAUSE 2s] The formal "thanks" — Sanskrit, shared across the Indian languages.
 
-## The letters in this word
+## You'll want to know — hear the word before reading it
 <!-- hl-knowledge: introduces=[]; assesses=[MR-LEX-DHANYAVAD-01] -->
 
-*(Skim if you read Devanagari.)* New: **ध** *dha* (a breathy *d*), **य** *ya*,
-**वा** *vā*, **द** *da*, and the conjunct **न्य** (*na* + *ya*). Read
-**ध·न्य·वा·द** → **dhanyavād**.
+Keep the spelling in the heading as a sign you are not yet asked to decode.
+Listen first: *dhan-ya-vād*. Say it once for "thank you." The next two tiny
+chapters will give you one missing sign at a time; only then will you read and
+write the whole word.
 
 ## The word, taken apart
 <!-- hl-knowledge: introduces=[]; assesses=[MR-LEX-DHANYAVAD-01] -->
 
-**धन्यवाद** (*dhanyavād*) = Sanskrit *dhanya* ("worthy") + *vāda* ("a saying") —
+*Dhanyavād* = Sanskrit *dhanya* ("worthy") + *vāda* ("a saying") —
 "an utterance of '[you are] worthy.'" The same Sanskrit word behind Hindi
 *dhanyavād*, Kannada *dhanyavāda*, Telugu *dhanyavādamulu*. Warmer, more spoken
-Marathi often says **आभारी आहे** (*ābhārī āhe*, "[I] am grateful"), on the root
+Marathi often says *ābhārī āhe* ("[I] am grateful"), on the root
 *ābhār*, "gratitude."
 
 ## Guided Practice
 <!-- hl-knowledge: introduces=[]; assesses=[MR-LEX-DHANYAVAD-01, MR-LEX-NAMASKAR-01] -->
 
 [PAUSE 1s]
-- [YOU SAY: "dhanyavād"]
+- [YOU SAY: "dhanyavād" — no reading yet]
 - [YOU SAY: the warmer spoken form — "ābhārī āhe"]
 
 ## Wrap-up Recall
 <!-- hl-knowledge: introduces=[]; assesses=[MR-LEX-DHANYAVAD-01] -->
 
-[PAUSE 3s] What are the two Sanskrit pieces of **धन्यवाद**, and a warmer Marathi
+[PAUSE 3s] What are the two Sanskrit pieces of *dhanyavād*, and a warmer Marathi
 alternative? (*dhanya* "worthy" + *vāda* "a saying"; *ābhārī āhe*.)

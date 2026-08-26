@@ -1,77 +1,182 @@
-Marathi, chapter 7: Numbers One to Five.
-2 lessons. All 2 can be done entirely by ear.
+Marathi, chapter 7: Farewells.
+6 lessons. The first lesson already needs your eyes or your hands, so save this one for when you have stopped.
 
 
-Lesson 1 of 2.
-एक, दोन, तीन, चार, पाच — one to five.
+Lesson 1 of 6.
+पुन्हा (punhā) — "again".
+
+Before we start: this one needs your eyes, so it is not fully a driving lesson. You will want your eyes, for letter shapes on the page. You can listen to everything else now — leave the section called The letters in this word until you have stopped, and I will say so again when we reach it.
 
 Warm-up.
 [pause 2 seconds]
-Marathi and Hindi both use Devanagari and both descend from Sanskrit, so their numbers look almost identical. Almost is where the interest is.
+Chapter 4 gave you the goodbye yeto ("I'll come [again]"). Now the explicit word for again, to build the warm "see you again."
 
-You'll want to know: the five.
-[a table of 5 rows, read aloud]
-1. Marathi: एक. said: ek.
-2. Marathi: दोन. said: don.
-3. Marathi: तीन. said: tīn.
-4. Marathi: चार. said: chār — but see below.
-5. Marathi: पाच. said: pāch.
+The letters in this word.
+(Skim if you read Devanagari.) पु (pu) + न्हा (nhā, the न na joined by a halant to ह ha with the long-ā stroke) becomes पुन्हा punhā.
 
-What you've built: three Marathi tells.
-Set them against Hindi. Two differences are visible and one is audible:
-[a table of 3 rows, read aloud]
-number: 2. Hindi: दो do. Marathi: दोन don: final n.
-number: 5. Hindi: पाँच pāṁch. Marathi: पाच pāch: no nasal mark.
-number: 4. Hindi: चार chār. Marathi: चार tsār: same spelling, different sound.
-Do not explain all three histories yet. First make the five forms automatic; the next lesson earns the deeper comparison.
+The word, taken apart.
+पुन्हा (punhā, "again") comes from Sanskrit पुनर् (punar, "again, back"). That punar is a genuine Indo-European cousin of Latin re- in the sense of "back/again," and it echoes in Hindi phir and the puna- of punarjanma ("rebirth"). To say a thing punhā is to send it round once more.
+
+Why it's said this way.
+Marathi's goodbyes lean on again and meet rather than on farewell — the parting is framed as a return, never an ending. This word is the hinge of that idea.
 
 Guided Practice.
 [pause 1 second]
-[your turn — say: "ek, don, tīn, tsār, pāch"]
+[your turn — say: "punhā" — again]
 [pause 8 seconds for the answer]
-[your turn — say: the visible tells — don has n; pāch has no nasal mark]
-[pause 8 seconds for the answer]
-[your turn — say: the audible tell — written chār, Marathi tsār]
+[your turn — say: its Sanskrit source (punar) and the punarjanma echo]
 [pause 8 seconds for the answer]
 
 Wrap-up Recall.
 [pause 3 seconds]
-Count to five in Marathi. (Ek, don, tīn, tsār, pāch.) Where does Marathi add a letter compared with Hindi? (दोन, don.) Which form drops a nasal mark? (पाच, pāch.) What differs in चार without differing in spelling? (Marathi's च is nearer ts before ā.) Next: explain where those differences came from.
+What does punhā mean, and from what Sanskrit word? ("Again"; from punar.)
 
 
-Lesson 2 of 2.
-Why Marathi two rhymes with three — why Marathi two rhymes with three, and why Hindi preserves a different piece of five.
+Lesson 2 of 6.
+भेटू (bheṭū) — "(let's / we'll) meet".
+
+Before we start: this one needs your eyes, so it is not fully a driving lesson. You will want your eyes, for letter shapes on the page. You can listen to everything else now — leave the section called The letters in this word until you have stopped, and I will say so again when we reach it.
 
 Warm-up.
 [pause 2 seconds]
-Count once: ek, don, tīn, tsār, pāch. Which two words end in n? (Don and tīn.)
+The other half of the goodbye: meet. You already brushed past it in bheṭūn ānand jhālā ("pleased to meet you").
 
-The word, taken apart — दोन borrowed from “three”.
-The tempting guess is that Marathi दोन don kept something Hindi दो do lost. It did not.
-Sanskrit's neuter word for three, त्रीणि trī́ṇi, became Prakrit tiṇṇi. In three, the ṇ genuinely belongs to the word. The doubled consonant is a Prakrit trade for the lost r.
-The word for two was then reshaped to match its neighbour: Prakrit doṇṇi copied the shape of tiṇṇi. Marathi don's final n is therefore an innovation, a rhyme borrowed from the number next door. Hindi do simply never took it.
-English numbers did this too: four acquired its initial f- by analogy with five. Familiar sequences pull neighbouring words toward one another.
+The letters in this word.
+(Skim if you read Devanagari.) भे (bhe) + टू (ṭū, the retroflex ट ṭa with the long-u stroke) becomes भेटू bheṭū. Note the retroflex ट (ṭa) — the tongue curls back to the roof of the mouth.
 
-What you've built: पाच and the nasal Hindi kept.
-Marathi पाच pāch and Hindi पाँच pāṁch tell the opposite story. Hindi's chandrabindu ँ records the nasal of Sanskrit pañca; Marathi's spelling drops it.
-So neither language is simply “older.” Marathi innovated in don, while Hindi retained an older feature in pāṁch. Comparing both descendants reveals the history that either one alone could hide.
+The word, taken apart.
+भेटू (bheṭū) is a form of the verb भेटणे (bheṭṇe, "to meet"). As भेटू it means "let's meet / (we) will meet" — the hopeful, forward-looking mood you want in a goodbye. It is a native Marathi verb (the bheṭ- stem also gives bheṭ, "a meeting, a visit").
 
-Sounds you'll need: चार and the change its spelling hides.
-Both write चार, but Marathi pronounces च before ā nearer ts: tsār. The letters stayed aligned while the sound moved.
+Grammar Lens: one verb, first-person-plural wish.
+भेटू carries a built-in "we/let's" — no separate word for "we" is needed, the verb form says it. This is the same -ū ending you'll feel in other "let's ___" verbs. Unlike the present tense (yeto/yete), this future-wish form does not split by gender — men and women both say bheṭū.
 
 Guided Practice.
 [pause 1 second]
-[your turn — say: the borrowed rhyme — tiṇṇi … doṇṇi]
+[your turn — say: "bheṭū" — (we'll) meet]
 [pause 8 seconds for the answer]
-[your turn — say: innovation — Marathi don's final n]
-[pause 8 seconds for the answer]
-[your turn — say: retention — Hindi pāṁch's nasal]
-[pause 8 seconds for the answer]
-[your turn — say: same spelling, shifted sound — chār / tsār]
+[your turn — say: the fuller verb it comes from (bheṭṇe, to meet)]
 [pause 8 seconds for the answer]
 
 Wrap-up Recall.
 [pause 3 seconds]
-Did Marathi don preserve an ancient ending? (No: two copied three.) Which language retains Sanskrit pañca's nasal in writing? (Hindi.) Why can neither daughter be called simply older? (Each changed or retained a different feature.) What does Marathi change without respelling चार? (Ch shifts toward ts before ā.)
-[question — say your answer, then pause 8 seconds]
-Did Marathi don preserve an ancient final n?
+What does bheṭū pack into one word? ("(we/let's) will meet" — the "we" lives in the verb ending.)
+
+
+Lesson 3 of 6.
+पुन्हा भेटू (punhā bheṭū) — "see you again".
+
+Warm-up.
+[pause 2 seconds]
+Assemble the two atoms into the standard warm goodbye.
+
+The phrase, assembled.
+पुन्हा (punhā, again) + भेटू (bheṭū, we'll meet) becomes पुन्हा भेटू — "we'll meet again." Two words, and the whole promise of return is spoken.
+This is the fuller, explicit twin of Chapter 4's येतो (yeto, "I'll come [again]"). Both refuse a final "farewell": one says I'll come back, the other we'll meet again — the subcontinent's shared goodbye-as-promise (Hindi phir milenge, Bengali āshi, Tamil pōy varugiṟēṉ).
+
+Why it's said this way.
+You can stack them for warmth: येतो, पुन्हा भेटू (yeto, punhā bheṭū) — "I'll be going; we'll meet again." Neither word contains "goodbye"; the parting is all return.
+
+Guided Practice.
+[pause 1 second]
+[your turn — say: "punhā bheṭū" — see you again]
+[pause 8 seconds for the answer]
+[your turn — say: it stacked with the Chapter-1 goodbye (yeto, punhā bheṭū)]
+[pause 8 seconds for the answer]
+
+Wrap-up Recall.
+[pause 3 seconds]
+What does punhā bheṭū literally promise? ("We'll meet again" — return, not farewell.)
+
+
+Lesson 4 of 6.
+उद्या भेटू (udyā bheṭū) — "see you tomorrow".
+
+Before we start: this one needs your eyes, so it is not fully a driving lesson. You will want your eyes, for letter shapes on the page. You can listen to everything else now — leave the section called The letters in this word until you have stopped, and I will say so again when we reach it.
+
+Warm-up.
+[pause 2 seconds]
+Swap "again" for "tomorrow" and you have a dated goodbye.
+
+The letters in this word.
+(Skim if you read Devanagari.) उ (u, standalone vowel) + द्या (dyā, द da joined by a halant to य ya with the long-ā stroke) becomes उद्या udyā.
+
+The phrase, assembled.
+उद्या (udyā, "tomorrow") + भेटू (bheṭū, we'll meet) becomes उद्या भेटू — "we'll meet tomorrow."
+उद्या comes from Sanskrit श्वः (śvaḥ) by way of a later udya-; unlike Hindi's kal (which means both tomorrow and yesterday), Marathi keeps tomorrow and yesterday as two distinct words — udyā (tomorrow) vs. काल (kāl, yesterday). No ambiguity about which way time is pointing.
+
+Why it's said this way.
+Because bheṭū already carries the future wish, you simply front it with when: udyā bheṭū (tomorrow), punhā bheṭū (again). The verb does the tense; the first word sets the day.
+
+Guided Practice.
+[pause 1 second]
+[your turn — say: "udyā bheṭū" — see you tomorrow]
+[pause 8 seconds for the answer]
+[your turn — say: the tomorrow/yesterday pair Marathi keeps apart (udyā / kāl)]
+[pause 8 seconds for the answer]
+
+Wrap-up Recall.
+[pause 3 seconds]
+How does Marathi's udyā differ from Hindi's kal? (udyā is only "tomorrow"; Marathi uses a separate word kāl for "yesterday.")
+
+
+Lesson 5 of 6.
+काळजी घ्या (kāḷjī ghyā) — "take care".
+
+Before we start: this one needs your eyes, so it is not fully a driving lesson. You will want your eyes, for letter shapes on the page. You can listen to everything else now — leave the section called The letters in this word until you have stopped, and I will say so again when we reach it.
+
+Warm-up.
+[pause 2 seconds]
+One last, tender goodbye — the Marathi "take care," and with it a letter unique to Marathi's corner of Devanagari.
+
+The letters in this word.
+(Skim if you read Devanagari.) काळजी carries the letter ळ (ḷa) — a retroflex "l," the tongue curled back. Standard Hindi dropped this sound; Marathi (like the Dravidian south and Gujarati) keeps it, and it appears in many everyday Marathi words. का + ळ + जी becomes kāḷjī. Then घ्या (ghyā, "take," respectful).
+
+The phrase, assembled.
+काळजी (kāḷjī, "care, concern") + घ्या (ghyā, "take," the respectful imperative) becomes काळजी घ्या — "take care." To a friend, the familiar imperative: काळजी घे (kāḷjī ghe).
+
+Why it's said this way.
+Where punhā bheṭū looks ahead to the next meeting, kāḷjī ghyā looks after the person in between — "mind yourself until then." The respectful घ्या (ghyā) matches the तुम्ही register from Chapter 5; the familiar घे (ghe) matches तू.
+
+Guided Practice.
+[pause 1 second]
+[your turn — say: "kāḷjī ghyā" (respectful) / "kāḷjī ghe" (to a friend)]
+[pause 8 seconds for the answer]
+[your turn — say: the retroflex ळ (ḷa) Marathi keeps that Hindi lost]
+[pause 8 seconds for the answer]
+
+Wrap-up Recall.
+[pause 3 seconds]
+Which special Marathi letter sits in kāḷjī, and who else keeps it? (The retroflex ळ ḷa; also kept by the Dravidian languages and Gujarati.)
+
+
+Lesson 6 of 6.
+Chapter 7 recap — farewells.
+
+Warm-up.
+[pause 2 seconds]
+The parting words, together — none of them a bare "goodbye."
+
+The farewells.
+[a table of 4 rows, read aloud]
+Marathi: येतो / येते. Say it: yeto / yete. English: I'll be going. ("I come again").
+Marathi: पुन्हा भेटू. Say it: punhā bheṭū. English: See you again.
+Marathi: उद्या भेटू. Say it: udyā bheṭū. English: See you tomorrow.
+Marathi: काळजी घ्या. Say it: kāḷjī ghyā. English: Take care.
+
+Atoms banked this chapter.
+पुन्हा (punhā) — again; Sanskrit punar.
+भेटू (bheṭū) — (we'll) meet; the "we" lives in the verb; from bheṭṇe.
+उद्या (udyā) — tomorrow (distinct from kāl, yesterday).
+काळजी घ्या (kāḷjī ghyā) — take care; the retroflex ळ Marathi keeps.
+Register: घ्या (ghyā, respectful) vs घे (ghe, familiar) — the tumhī / tū choice again.
+
+Guided Practice.
+[pause 1 second]
+[your turn — say: all four farewells in a row]
+[pause 8 seconds for the answer]
+[your turn — say: a stacked goodbye — yeto, punhā bheṭū, kāḷjī ghyā]
+[pause 8 seconds for the answer]
+
+Wrap-up Recall.
+[pause 3 seconds]
+What do every Marathi goodbye have in common? (None says "farewell" — each is a return or a caring wish.) Next chapter: the first real verbs — mī marāṭhī bolto.
