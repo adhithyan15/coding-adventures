@@ -2284,7 +2284,7 @@
       "depends_on": ["classical-cipher-language-neutral-fixtures-and-analysis-contract"],
       "branch": null,
       "pr_number": null,
-      "notes": "Discovered during the post-#13070 reference audit. Existing Scytale implementations count UTF-16 units in C#/F#/Java/Kotlin/TypeScript, Unicode scalars or code points in Go/Haskell/Python/Ruby/Rust/Perl, grapheme clusters in Elixir/Swift, and UTF-8 bytes in Lua, so non-ASCII ciphertext is not portable. Lua, Perl, Ruby, and TypeScript also remove all trailing whitespace rather than only the U+0020 padding character. Bring every established lane to the CR02 Unicode-scalar grid and literal-padding contract with exact non-ASCII and genuine-trailing-space fixtures."
+      "notes": "Discovered during the post-#13070 reference audit. Existing Scytale implementations count UTF-16 units in C#/F#/Java/Kotlin/TypeScript, Unicode scalars or code points in Go/Haskell/Python/Ruby/Rust/Perl, grapheme clusters in Elixir/Swift, and UTF-8 bytes in Lua, so non-ASCII ciphertext is not portable. Lua, Perl, Ruby, and TypeScript also remove all trailing whitespace rather than only the U+0020 padding character. Bring every established lane to the CR02 Unicode-scalar grid, explicit full-versus-ragged column reconstruction, and literal-padding contract with exact non-ASCII, uneven-column, and genuine-trailing-space fixtures."
     },
     {
       "id": "vigenere-ascii-established-lane-conformance",

@@ -97,9 +97,9 @@ Same as CR00 (Caesar cipher):
 `code/specs/fixtures/classical-ciphers-v1/cases.json` is the normative
 executable corpus for CR01 through CR03. For Atbash it pins the complete ASCII
 uppercase and lowercase mappings, case preservation, the self-inverse
-property, empty input, and byte-for-byte passthrough of punctuation, control
-characters, and non-ASCII Unicode scalar values. Implementations must consume
-the `atbash-transform` cases without normalizing or re-encoding the input.
+property, empty input, and exact scalar-sequence preservation for punctuation,
+control characters, and non-ASCII Unicode scalar values. Implementations must
+consume the `atbash-transform` cases without normalizing the input.
 
 The corpus is static data with no runtime authority. Its schema, bounded
 limits, and semantic oracle are validated by

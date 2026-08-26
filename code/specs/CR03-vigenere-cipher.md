@@ -16,12 +16,14 @@ until Friedrich Kasiski published a general method for breaking it in 1863.
 
 ### Encrypt
 
-Given plaintext P and keyword K (both letters only):
+Given plaintext P and keyword K (K contains ASCII letters only; P may contain
+any portable Unicode scalar values):
 
-1. Repeat K to match the length of alphabetic characters in P
-2. For each letter P[i], shift it forward by K[i] positions in the alphabet
-3. Non-alphabetic characters pass through unchanged (keyword position
-   does NOT advance for non-alpha characters)
+1. Repeat K to match the number of ASCII letters in P
+2. For each ASCII letter P[i], shift it forward by K[i] positions in the
+   alphabet
+3. All other scalars pass through unchanged (keyword position does NOT advance
+   for non-ASCII-letter scalars)
 
 ```
 Plaintext:  A T T A C K A T D A W N

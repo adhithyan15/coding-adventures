@@ -102,7 +102,9 @@
       "const": [
         "fixture-depth-limit",
         "fixture-duplicate-id",
+        "fixture-invalid-json",
         "fixture-invalid-scalar",
+        "fixture-schema-invalid",
         "fixture-size-limit"
       ]
     },

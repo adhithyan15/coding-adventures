@@ -56,7 +56,9 @@
   "validation_error_ids": [
     "fixture-depth-limit",
     "fixture-duplicate-id",
+    "fixture-invalid-json",
     "fixture-invalid-scalar",
+    "fixture-schema-invalid",
     "fixture-size-limit"
   ],
   "cases": [
@@ -107,6 +109,12 @@
       "operation": "scytale-decrypt",
       "input": { "text": "HLWLEOODL R ", "key": 3 },
       "expected": { "text": "HELLO WORLD" }
+    },
+    {
+      "id": "classical-ciphers-v1-scytale-ragged-decrypt",
+      "operation": "scytale-decrypt",
+      "input": { "text": "ABCDEF", "key": 4 },
+      "expected": { "text": "ACEFBD" }
     },
     {
       "id": "classical-ciphers-v1-scytale-unicode-encrypt",
@@ -177,7 +185,7 @@
           { "key": 2, "text": "HOLDWLL ERO" },
           { "key": 3, "text": "HELLO WORLD" },
           { "key": 4, "text": "HLO LEDRWOL" },
-          { "key": 5, "text": "HLO LEDRWOL" },
+          { "key": 5, "text": "HLOLRLED  WO" },
           { "key": 6, "text": "HWEOLRLLOD" }
         ]
       }
@@ -289,6 +297,12 @@
       "operation": "vigenere-find-key",
       "input": { "ciphertext": "E", "key_length": 3 },
       "expected": { "key": "AAA" }
+    },
+    {
+      "id": "classical-ciphers-v1-vigenere-smallest-chi-squared-tie",
+      "operation": "vigenere-find-key",
+      "input": { "ciphertext": "ABCDEFGHIJKLMNOPQRSTUVWXYZ", "key_length": 1 },
+      "expected": { "key": "A" }
     },
     {
       "id": "classical-ciphers-v1-vigenere-nonpositive-key-length-before-limit",

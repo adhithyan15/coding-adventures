@@ -19,11 +19,21 @@ every expected result with a dependency-free semantic oracle. A schema-only
 pass is not conformance: consumers must execute the operations and compare the
 full expected object.
 
+Consumers must reject the encoded schema or fixture above 131,072 bytes and
+scan both raw JSON inputs for bounded nesting before parsing. After the bounded
+parse, reject surrogates and duplicate IDs before recursive schema validation.
+The validation errors
+`fixture-size-limit`, `fixture-depth-limit`, `fixture-invalid-json`,
+`fixture-invalid-scalar`, `fixture-duplicate-id`, and
+`fixture-schema-invalid` are stable identifiers and never contain fixture
+payloads.
+
 ## Operations
 
 - `atbash-transform`: apply the fixed ASCII involution once.
 - `scytale-encrypt`: transpose a Unicode-scalar sequence by columns.
-- `scytale-decrypt`: invert the grid and remove trailing `U+0020` only.
+- `scytale-decrypt`: reconstruct full and ragged column lengths, invert the
+  grid, and remove trailing `U+0020` only.
 - `scytale-brute-force`: return candidates in ascending-key order.
 - `vigenere-encrypt` and `vigenere-decrypt`: transform ASCII letters while
   preserving all other scalars without advancing the key.
@@ -39,8 +49,8 @@ paths, interpolate environment values, or accept extension operations.
 
 ## Portable limits
 
-- at most 64 fixture cases, 131,072 encoded fixture bytes, and eight levels of
-  fixture nesting;
+- at most 64 fixture cases, 131,072 bytes for either encoded JSON input,
+  16 levels of schema JSON nesting, and eight levels of fixture JSON nesting;
 - at most 8,193 scalars in a fixture string or fixed repeat descriptor;
 - at most 4,096 scalars for Scytale brute force;
 - at most 8,192 scalars and key length 40 for Vigenère analysis.

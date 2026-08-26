@@ -5,14 +5,21 @@ from __future__ import annotations
 import copy
 import json
 import math
+import os
+import tempfile
 import unittest
 from pathlib import Path
 from typing import Any, ClassVar
+from unittest.mock import patch
 
-from jsonschema import Draft202012Validator  # type: ignore[import-untyped]
+from jsonschema import Draft202012Validator, SchemaError  # type: ignore[import-untyped]
+from referencing.exceptions import Unresolvable  # type: ignore[import-untyped]
 
 REPO_ROOT = Path(__file__).resolve().parents[3]
 FIXTURE_ROOT = REPO_ROOT / "code/specs/fixtures/classical-ciphers-v1"
+MAX_FIXTURE_BYTES = 131_072
+MAX_FIXTURE_NESTING_DEPTH = 8
+MAX_SCHEMA_NESTING_DEPTH = 16
 
 
 class ConformanceError(ValueError):
@@ -28,16 +35,12 @@ def _has_surrogate(value: str) -> bool:
 
 
 def _validate_document(document: dict[str, Any], encoded_size: int) -> None:
-    limits = document["limits"]
-    if encoded_size > limits["max_fixture_bytes"]:
+    if encoded_size > MAX_FIXTURE_BYTES:
         raise ConformanceError("fixture-size-limit")
-    ids = [case["id"] for case in document["cases"]]
-    if len(ids) != len(set(ids)):
-        raise ConformanceError("fixture-duplicate-id")
     stack: list[tuple[object, int]] = [(document, 0)]
     while stack:
         value, depth = stack.pop()
-        if depth > limits["max_fixture_nesting_depth"]:
+        if depth > MAX_FIXTURE_NESTING_DEPTH:
             raise ConformanceError("fixture-depth-limit")
         if isinstance(value, str):
             if _has_surrogate(value):
@@ -47,6 +50,104 @@ def _validate_document(document: dict[str, Any], encoded_size: int) -> None:
         elif isinstance(value, dict):
             stack.extend((key, depth + 1) for key in value)
             stack.extend((item, depth + 1) for item in value.values())
+    cases = document.get("cases")
+    if isinstance(cases, list) and all(isinstance(case, dict) for case in cases):
+        ids = [case.get("id") for case in cases]
+        if all(isinstance(case_id, str) for case_id in ids) and len(ids) != len(
+            set(ids)
+        ):
+            raise ConformanceError("fixture-duplicate-id")
+
+
+def _fixture_depth_preflight(encoded: bytes, max_depth: int) -> None:
+    source: str | None = None
+    try:
+        source = encoded.decode("utf-8")
+    except UnicodeDecodeError:
+        pass
+    if source is None:
+        raise ConformanceError("fixture-invalid-json")
+    depth = 0
+    in_string = False
+    escaped = False
+    for character in source:
+        if in_string:
+            if escaped:
+                escaped = False
+            elif character == "\\":
+                escaped = True
+            elif character == '"':
+                in_string = False
+        elif character == '"':
+            in_string = True
+        elif character in "[{":
+            depth += 1
+            if depth > max_depth:
+                raise ConformanceError("fixture-depth-limit")
+        elif character in "]}":
+            depth -= 1
+
+
+def _validate_schema_refs(schema: dict[str, Any]) -> None:
+    stack: list[object] = [schema]
+    while stack:
+        value = stack.pop()
+        if isinstance(value, list):
+            stack.extend(value)
+        elif isinstance(value, dict):
+            for key, item in value.items():
+                if key in {"$ref", "$dynamicRef"} and (
+                    not isinstance(item, str) or not item.startswith("#/")
+                ):
+                    raise ConformanceError("fixture-schema-invalid")
+                stack.append(item)
+
+
+def _read_bounded(path: Path) -> bytes:
+    with path.open("rb") as source:
+        if os.fstat(source.fileno()).st_size > MAX_FIXTURE_BYTES:
+            raise ConformanceError("fixture-size-limit")
+        encoded = source.read(MAX_FIXTURE_BYTES + 1)
+    if len(encoded) > MAX_FIXTURE_BYTES:
+        raise ConformanceError("fixture-size-limit")
+    return encoded
+
+
+def _load_fixture_bytes(
+    schema_encoded: bytes, document_encoded: bytes
+) -> tuple[dict[str, Any], dict[str, Any], Any]:
+    if (
+        len(schema_encoded) > MAX_FIXTURE_BYTES
+        or len(document_encoded) > MAX_FIXTURE_BYTES
+    ):
+        raise ConformanceError("fixture-size-limit")
+    _fixture_depth_preflight(schema_encoded, MAX_SCHEMA_NESTING_DEPTH)
+    _fixture_depth_preflight(document_encoded, MAX_FIXTURE_NESTING_DEPTH)
+    parsed: tuple[object, object] | None = None
+    try:
+        schema = json.loads(schema_encoded)
+        document = json.loads(document_encoded)
+        parsed = (schema, document)
+    except (UnicodeDecodeError, json.JSONDecodeError, RecursionError):
+        pass
+    if parsed is None:
+        raise ConformanceError("fixture-invalid-json")
+    schema, document = parsed
+    if not isinstance(schema, dict) or not isinstance(document, dict):
+        raise ConformanceError("fixture-schema-invalid")
+    _validate_document(document, len(document_encoded))
+    _validate_schema_refs(schema)
+    validation_failed = False
+    try:
+        Draft202012Validator.check_schema(schema)
+        validator = Draft202012Validator(schema)
+        if next(validator.iter_errors(document), None) is not None:
+            validation_failed = True
+    except (RecursionError, SchemaError, Unresolvable):
+        validation_failed = True
+    if validation_failed:
+        raise ConformanceError("fixture-schema-invalid")
+    return schema, document, validator
 
 
 def _atbash(text: str) -> str:
@@ -83,11 +184,20 @@ def _scytale_decrypt(text: str, key: int) -> str:
         return ""
     _scytale_key(text, key)
     rows = math.ceil(len(text) / key)
-    columns = [text[start : start + rows] for start in range(0, len(text), rows)]
+    remainder = len(text) % key
+    full_columns = key if remainder == 0 else remainder
+    column_lengths = [
+        rows if column < full_columns else rows - 1 for column in range(key)
+    ]
+    columns: list[str] = []
+    start = 0
+    for column_length in column_lengths:
+        columns.append(text[start : start + column_length])
+        start += column_length
     plaintext = "".join(
         columns[column][row]
         for row in range(rows)
-        for column in range(len(columns))
+        for column in range(key)
         if row < len(columns[column])
     )
     return plaintext.rstrip(" ")
@@ -269,17 +379,21 @@ def _execute(case: dict[str, Any], document: dict[str, Any]) -> dict[str, object
                 )
             }
         if operation == "vigenere-find-key-length":
+            max_length = case_input["max_length"]
+            if max_length > limits["max_vigenere_key_length"]:
+                raise ConformanceError("vigenere-key-length-limit")
             ciphertext = _resolve_text(case_input, "ciphertext")
             return {
-                "key_length": _find_key_length(
-                    ciphertext, case_input["max_length"], limits, analysis
-                )
+                "key_length": _find_key_length(ciphertext, max_length, limits, analysis)
             }
         if operation == "vigenere-find-key":
+            key_length = case_input["key_length"]
+            if key_length <= 0:
+                return {"key": ""}
+            if key_length > limits["max_vigenere_key_length"]:
+                raise ConformanceError("vigenere-key-length-limit")
             ciphertext = _resolve_text(case_input, "ciphertext")
-            return {
-                "key": _find_key(ciphertext, case_input["key_length"], limits, analysis)
-            }
+            return {"key": _find_key(ciphertext, key_length, limits, analysis)}
         if operation == "vigenere-break":
             ciphertext = _resolve_text(case_input, "ciphertext")
             return _break_cipher(ciphertext, limits, analysis)
@@ -292,15 +406,16 @@ class ClassicalCipherFixtureTests(unittest.TestCase):
     schema: ClassVar[dict[str, Any]]
     document: ClassVar[dict[str, Any]]
     validator: ClassVar[Any]
+    schema_encoded: ClassVar[bytes]
     encoded: ClassVar[bytes]
 
     @classmethod
     def setUpClass(cls) -> None:
-        cls.schema = json.loads((FIXTURE_ROOT / "schema.json").read_text("utf-8"))
-        cls.encoded = (FIXTURE_ROOT / "cases.json").read_bytes()
-        cls.document = json.loads(cls.encoded)
-        Draft202012Validator.check_schema(cls.schema)
-        cls.validator = Draft202012Validator(cls.schema)
+        cls.schema_encoded = _read_bounded(FIXTURE_ROOT / "schema.json")
+        cls.encoded = _read_bounded(FIXTURE_ROOT / "cases.json")
+        cls.schema, cls.document, cls.validator = _load_fixture_bytes(
+            cls.schema_encoded, cls.encoded
+        )
 
     def test_schema_profile_limits_and_ids_are_closed(self) -> None:
         self.validator.validate(self.document)
@@ -349,7 +464,9 @@ class ClassicalCipherFixtureTests(unittest.TestCase):
             {
                 "fixture-depth-limit",
                 "fixture-duplicate-id",
+                "fixture-invalid-json",
                 "fixture-invalid-scalar",
+                "fixture-schema-invalid",
                 "fixture-size-limit",
             },
         )
@@ -369,25 +486,113 @@ class ClassicalCipherFixtureTests(unittest.TestCase):
         duplicate = copy.deepcopy(self.document)
         duplicate["cases"][1]["id"] = duplicate["cases"][0]["id"]
         with self.assertRaisesRegex(ConformanceError, "^fixture-duplicate-id$"):
-            _validate_document(duplicate, len(self.encoded))
+            _load_fixture_bytes(self.schema_encoded, json.dumps(duplicate).encode())
 
         surrogate = copy.deepcopy(self.document)
         surrogate["cases"][0]["input"]["text"] = chr(0xD800)
         with self.assertRaisesRegex(ConformanceError, "^fixture-invalid-scalar$"):
-            _validate_document(surrogate, len(self.encoded))
+            _load_fixture_bytes(self.schema_encoded, json.dumps(surrogate).encode())
 
         nested: object = "leaf"
-        for _ in range(self.document["limits"]["max_fixture_nesting_depth"] + 1):
+        for _ in range(MAX_FIXTURE_NESTING_DEPTH + 1):
             nested = [nested]
         depth = copy.deepcopy(self.document)
         depth["cases"][0]["input"]["text"] = nested
         with self.assertRaisesRegex(ConformanceError, "^fixture-depth-limit$"):
+            _load_fixture_bytes(self.schema_encoded, json.dumps(depth).encode())
+        with self.assertRaisesRegex(ConformanceError, "^fixture-depth-limit$"):
             _validate_document(depth, len(self.encoded))
 
+        deep_schema = (
+            b"[" * (MAX_SCHEMA_NESTING_DEPTH + 1)
+            + b"{}"
+            + b"]" * (MAX_SCHEMA_NESTING_DEPTH + 1)
+        )
+        with self.assertRaisesRegex(ConformanceError, "^fixture-depth-limit$"):
+            _load_fixture_bytes(deep_schema, self.encoded)
+
         with self.assertRaisesRegex(ConformanceError, "^fixture-size-limit$"):
-            _validate_document(
-                self.document, self.document["limits"]["max_fixture_bytes"] + 1
-            )
+            _load_fixture_bytes(self.schema_encoded, b" " * (MAX_FIXTURE_BYTES + 1))
+        with self.assertRaisesRegex(ConformanceError, "^fixture-size-limit$"):
+            _validate_document(self.document, MAX_FIXTURE_BYTES + 1)
+
+        with self.assertRaisesRegex(ConformanceError, "^fixture-invalid-json$"):
+            _load_fixture_bytes(self.schema_encoded, b"\xff")
+
+        with self.assertRaisesRegex(ConformanceError, "^fixture-invalid-json$"):
+            try:
+                _load_fixture_bytes(self.schema_encoded, b'{"secret":"do-not-retain"')
+            except ConformanceError as error:
+                self.assertIsNone(error.__cause__)
+                self.assertIsNone(error.__context__)
+                raise
+
+        invalid_shape = copy.deepcopy(self.document)
+        invalid_shape["cases"][0]["unexpected"] = True
+        with self.assertRaisesRegex(ConformanceError, "^fixture-schema-invalid$"):
+            _load_fixture_bytes(self.schema_encoded, json.dumps(invalid_shape).encode())
+
+        with self.assertRaisesRegex(ConformanceError, "^fixture-schema-invalid$"):
+            _load_fixture_bytes(b"[]", self.encoded)
+
+        invalid_schema = copy.deepcopy(self.schema)
+        invalid_schema["type"] = 42
+        with self.assertRaisesRegex(ConformanceError, "^fixture-schema-invalid$"):
+            _load_fixture_bytes(json.dumps(invalid_schema).encode(), self.encoded)
+
+        for external_ref in (
+            "file:///private/corpus.json",
+            "https://example.invalid/schema",
+        ):
+            external_schema = copy.deepcopy(self.schema)
+            external_schema["$defs"]["text"] = {"$ref": external_ref}
+            with self.assertRaisesRegex(ConformanceError, "^fixture-schema-invalid$"):
+                _load_fixture_bytes(json.dumps(external_schema).encode(), self.encoded)
+
+        with tempfile.TemporaryDirectory() as temporary_directory:
+            oversized = Path(temporary_directory) / "oversized.json"
+            oversized.write_bytes(b" " * (MAX_FIXTURE_BYTES + 1))
+            with self.assertRaisesRegex(ConformanceError, "^fixture-size-limit$"):
+                _read_bounded(oversized)
+            with patch(f"{__name__}.os.fstat") as mocked_fstat:
+                mocked_fstat.return_value.st_size = MAX_FIXTURE_BYTES
+                with self.assertRaisesRegex(ConformanceError, "^fixture-size-limit$"):
+                    _read_bounded(oversized)
+
+    def test_parameter_preflight_does_not_expand_repeated_input(self) -> None:
+        cases = [
+            {
+                "operation": "vigenere-find-key-length",
+                "input": {
+                    "repeat_scalar": "A",
+                    "repeat_count": 8193,
+                    "max_length": 41,
+                },
+                "expected": {"error_id": "vigenere-key-length-limit"},
+            },
+            {
+                "operation": "vigenere-find-key",
+                "input": {
+                    "repeat_scalar": "A",
+                    "repeat_count": 8193,
+                    "key_length": 0,
+                },
+                "expected": {"key": ""},
+            },
+            {
+                "operation": "vigenere-find-key",
+                "input": {
+                    "repeat_scalar": "A",
+                    "repeat_count": 8193,
+                    "key_length": 41,
+                },
+                "expected": {"error_id": "vigenere-key-length-limit"},
+            },
+        ]
+        with patch(f"{__name__}._resolve_text") as resolve:
+            for case in cases:
+                self.assertEqual(_execute(case, self.document), case["expected"])
+            resolve.assert_not_called()
 
     def test_semantic_oracle_matches_every_case(self) -> None:
         for case in self.document["cases"]:

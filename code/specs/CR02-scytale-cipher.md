@@ -21,9 +21,12 @@ The Scytale cipher is equivalent to a columnar transposition:
    Pad the last row with spaces if needed. Then read the ciphertext
    column-by-column (top to bottom, left to right).
 
-2. **Decrypt**: Calculate the number of rows as `ceil(len / key)`. Write the
-   ciphertext into columns of that length (top to bottom, left to right).
-   Then read row-by-row and strip any trailing padding spaces.
+2. **Decrypt**: For ciphertext length `n`, calculate `rows = ceil(n / key)` and
+   `r = n % key`. If `r == 0`, all `key` columns contain `rows` scalars.
+   Otherwise, the first `r` columns contain `rows` scalars and the remaining
+   columns contain `rows - 1` scalars. Fill those columns from the ciphertext
+   top to bottom and left to right, then read row-by-row and strip only trailing
+   `U+0020` padding spaces.
 
 ### Historical Context
 
