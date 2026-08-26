@@ -15802,3 +15802,25 @@ DUCTUS[ductusKey("urdu-nastaliq", "ظ")] = {
   ],
   source: urduAlphabetSource("ظ"),
 };
+
+// Persian Online independently demonstrates the same two-run ک construction as
+// Urdu: main-line body first, then the long slash. Share only fallback geometry.
+const urduKafStrokes = DUCTUS[ductusKey("urdu-nastaliq", "ک")].strokes;
+DUCTUS[ductusKey("perso-arabic", "ک")] = {
+  script: "perso-arabic",
+  glyph: "ک",
+  strokes: [
+    {
+      segments: [
+        { ...urduKafStrokes[0].segments[0], label: "draw the independent stem downward" },
+        { ...urduKafStrokes[0].segments[1], label: "continue left through the shallow bowl and final hook without lifting" },
+      ],
+    },
+    {
+      segments: [
+        { ...urduKafStrokes[1].segments[0], label: "lift once, then draw the long slash down from the upper right toward the stem" },
+      ],
+    },
+  ],
+  source: persianAlphabetSource("ک"),
+};
