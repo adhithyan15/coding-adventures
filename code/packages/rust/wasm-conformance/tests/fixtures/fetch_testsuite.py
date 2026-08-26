@@ -84,6 +84,57 @@ TESTSUITE_FILES = [
     # Calls
     "call.wast",
     "call_indirect.wast",
+    # Tail-call proposal (W11/WASM16's real trampoline was already
+    # implemented before this vendoring pass -- see `code/specs/
+    # W11-wasm-tail-calls.md`). Both files' real corpus gap was ONE
+    # narrow construct, present in each: a "Result subtyping" test
+    # declaring `(func $f (result (ref null $t)) (ref.null $t))` --
+    # a NULLABLE reference to a CONCRETE function type, function-
+    # references-proposal grammar this crate had no support for at all.
+    # This addendum (see W11 spec's own addendum section) adds exactly
+    # that (`wasm_types::ValueType::ConcreteFuncRef`, `ref.null $t`/
+    # `(ref null $t)` parsing, and the matching one-directional validator
+    # subtyping rule -- a concrete function-type ref IS a funcref, a bare
+    # funcref is NOT a specific concrete one), deliberately stopping
+    # short of non-null `(ref $t)` or any other typed-function-
+    # references/GC-ref-type work (a much bigger, separately-tracked
+    # effort -- see `code/specs/W07-wasm-post-mvp-epics.md`).
+    #
+    # Real, measured per-file numbers (`testsuite-status.json` is the
+    # source of truth, not this comment): `return_call.wast` --
+    # module 2/2 pass (+1 not_yet_supported), assert_invalid 12/12 pass,
+    # assert_return 0/34 (all not_yet_supported). `return_call_indirect.
+    # wast` -- module 2/2 pass (+1 nys), assert_invalid 15/17 pass
+    # (+2 nys), assert_return 0/43, assert_trap 0/7, assert_malformed
+    # 0/11 (all not_yet_supported). Zero new `fail` anywhere in either
+    # file. Both files' main module does `(import "spectest"
+    # "print_i32_f32" (func ... (param i32 f32)))` -- this crate has no
+    # `spectest` host by design (see `RegistryHost`'s own doc comment),
+    # so EVERY directive against that module's live instance (all of
+    # `assert_return`, plus `return_call_indirect.wast`'s
+    # `assert_trap`) correctly cascades to `not_yet_supported`, the same
+    # pre-existing capability gap every other spectest-importing
+    # vendored file already has -- not a new regression, and not
+    # something this addendum's scope covers fixing. The 11 malformed
+    # directives are a separate, also pre-existing gap: strict
+    # `param`-before-`result`-before-`type` clause ORDERING in an inline
+    # `call_indirect`/`return_call_indirect` signature, which this
+    # crate's parser doesn't enforce (same "text parses when the spec
+    # says it shouldn't" class of gap several already-vendored files
+    # have). `assert_invalid`'s 2 not_yet_supported cases in
+    # `return_call_indirect.wast` are two more pre-existing, unrelated
+    # validator gaps (confirmed by actually running the file and
+    # inspecting which two): one expects a return_call_indirect's
+    # (correctly) unreachable "result" to still be rejected when
+    # consumed by a later instruction expecting a real value (this
+    # crate's dead-code polymorphism is deliberately permissive there,
+    # the same `unreached-invalid.wast` gap category), the other expects
+    # an indirect call through an `externref`-typed table to be rejected
+    # (this crate doesn't check a table's element type is `funcref`
+    # before an indirect call). Neither is new, and neither is this
+    # addendum's concrete-function-ref subtyping.
+    "return_call.wast",
+    "return_call_indirect.wast",
     "func.wast",
     "func_ptrs.wast",
     "fac.wast",

@@ -145,12 +145,36 @@ fn pop_val(stack: &mut Vec<StackType>, frame: &ControlFrame) -> Result<StackType
     Ok(stack.pop().unwrap())
 }
 
-/// Pop one value and require it to match `expected` (an `Unknown` actual
-/// or expected always matches -- see [`pop_val`]).
+/// WASM reference-type subtyping (W11 addendum): is a value of type
+/// `actual` a legal stand-in wherever `expected` is declared?
+///
+/// Exact equality is always a subtype of itself; beyond that, this crate
+/// only implements the ONE direction its function-references slice needs:
+/// a nullable reference to a SPECIFIC concrete function type
+/// (`ValueType::ConcreteFuncRef`, `(ref null $t)`) is a subtype of the
+/// general `funcref` (every concrete function type's nullable ref is a
+/// "some kind of funcref"), but never the reverse -- a plain `funcref`
+/// carries no static guarantee about WHICH function type it names, so it
+/// cannot stand in for a specific one. This is exactly the real corpus's
+/// own `return_call.wast`/`return_call_indirect.wast` "Result subtyping"
+/// tests: one direction `assert_return`s successfully, the mirror-image
+/// direction `assert_invalid`s with a type mismatch.
+///
+/// No other subtyping rule (e.g. `StructRef`/`Anyref`) is implemented
+/// here -- out of scope for this addendum, same discipline as everywhere
+/// else in this validator phase.
+fn is_assignable(actual: ValueType, expected: ValueType) -> bool {
+    actual == expected || matches!((actual, expected), (ValueType::ConcreteFuncRef(_), ValueType::Funcref))
+}
+
+/// Pop one value and require it to be assignable to `expected` (an
+/// `Unknown` actual or expected always matches -- see [`pop_val`]; a
+/// `Known` actual must satisfy [`is_assignable`], not bare equality, so a
+/// concrete function-type ref can flow wherever `funcref` is expected).
 fn pop_expect(stack: &mut Vec<StackType>, frame: &ControlFrame, expected: ValueType) -> Result<(), ValidationError> {
     match pop_val(stack, frame)? {
         StackType::Unknown => Ok(()),
-        StackType::Known(actual) if actual == expected => Ok(()),
+        StackType::Known(actual) if is_assignable(actual, expected) => Ok(()),
         StackType::Known(actual) => Err(ValidationError::Other(format!(
             "TypeMismatch: expected {expected:?}, found {actual:?}"
         ))),
@@ -164,6 +188,18 @@ fn pop_expect_many(stack: &mut Vec<StackType>, frame: &ControlFrame, expected: &
         pop_expect(stack, frame, t)?;
     }
     Ok(())
+}
+
+/// Whether `callee_results` -- a tail call's callee's own declared result
+/// types -- are a legal stand-in for `function_results`, the CURRENT
+/// function's own declared result types (`return_call`/
+/// `return_call_indirect`'s own special-cased check, W11 addendum;
+/// see [`is_assignable`]). Arity must match exactly (WASM has no
+/// result-count subtyping); each pairwise result must be assignable in
+/// the same direction `pop_expect` already checks.
+fn results_assignable(callee_results: &[ValueType], function_results: &[ValueType]) -> bool {
+    callee_results.len() == function_results.len()
+        && callee_results.iter().zip(function_results.iter()).all(|(&a, &b)| is_assignable(a, b))
 }
 
 fn push_val(stack: &mut Vec<StackType>, t: ValueType) {
@@ -985,16 +1021,38 @@ fn type_check_function(ctx: &ModuleContext, func_idx: usize, func_type: &FuncTyp
                 // is what lets `select`/`global.set`/etc.'s existing
                 // type-mismatch checks catch a funcref-vs-externref mixup,
                 // which they couldn't when both looked like the same
-                // `Unknown`. Any other heap-type byte (a concrete `$t`
-                // reference, out of this repo's scope) still falls back to
+                // `Unknown`.
+                //
+                // W11 addendum: a concrete `$t` reference is now ALSO a
+                // real static type, not a blanket `Unknown` fallback --
+                // `wasm-wast-parser`'s `parse_ref_null_heap_type` emits it
+                // as the tag byte `0x63` followed by an unsigned LEB128
+                // type-section index (the SAME 2-byte shape `ValueType::
+                // ConcreteFuncRef`'s own `.encode()` uses in a value-type
+                // position; see that variant's doc comment for why this
+                // repo's own `wasm-wast-parser`/`wasm-execution`/
+                // `wasm-validator` agree on it without needing to match
+                // the real spec's sign-disambiguated binary heap-type
+                // encoding). Any OTHER heap-type byte still falls back to
                 // `Unknown` -- full subtyping remains outside this
-                // validator phase, same as every other GC reference type.
+                // validator phase for every other GC reference type.
                 let heap_type = *code.get(offset).ok_or_else(|| ValidationError::Other(format!("function #{func_idx}: truncated ref.null heap-type immediate")))?;
                 offset += 1;
                 match heap_type {
                     0x70 => push_val(&mut stack, ValueType::Funcref),
                     0x6F => push_val(&mut stack, ValueType::Externref),
                     0x0F => push_val(&mut stack, ValueType::Anyref),
+                    0x63 => {
+                        let (idx, size) = decode_idx(code, offset)?;
+                        offset += size;
+                        if idx as usize >= ctx.module.types.len() {
+                            return Err(ValidationError::TypeIndexOutOfBounds(format!(
+                                "function #{func_idx}: ref.null references type index {idx}, but only {} types exist",
+                                ctx.module.types.len()
+                            )));
+                        }
+                        push_val(&mut stack, ValueType::ConcreteFuncRef(idx));
+                    }
                     _ => stack.push(StackType::Unknown),
                 }
             }
@@ -1303,10 +1361,13 @@ fn type_check_function(ctx: &ModuleContext, func_idx: usize, func_type: &FuncTyp
                 // return_call (WASM16): same immediate as `call`, but
                 // nothing runs after a tail call -- the callee's results
                 // become the CURRENT FUNCTION's own results directly, so
-                // they must match its declared result types exactly (not
-                // merely be pushable for further use), and everything
-                // textually after this is dead code, the same handling
-                // `return` (0x0F) already has.
+                // they must be ASSIGNABLE to its declared result types (not
+                // merely be pushable for further use; W11 addendum: a
+                // nullable ref to a specific concrete function type is a
+                // legal stand-in for the callee's declared `funcref` slot,
+                // not bare equality -- see `results_assignable`), and
+                // everything textually after this is dead code, the same
+                // handling `return` (0x0F) already has.
                 let (callee, size) = decode_idx(code, offset)?;
                 offset += size;
                 let callee_type = ctx
@@ -1317,7 +1378,7 @@ fn type_check_function(ctx: &ModuleContext, func_idx: usize, func_type: &FuncTyp
                     .first()
                     .ok_or_else(|| ValidationError::Other(format!("function #{func_idx}: return_call with no open block")))?
                     .end_types;
-                if callee_type.results != *function_results {
+                if !results_assignable(&callee_type.results, function_results) {
                     err!("return_call to function #{callee} returning {:?}, but the current function returns {function_results:?}", callee_type.results);
                 }
                 pop_expect_many(&mut stack, frame!(), &callee_type.params)?;
@@ -1326,7 +1387,7 @@ fn type_check_function(ctx: &ModuleContext, func_idx: usize, func_type: &FuncTyp
             0x13 => {
                 // return_call_indirect (WASM16): same immediates as
                 // `call_indirect` (typeidx, tableidx), same tail-call
-                // result-type-must-match-exactly + dead-code-after rule
+                // result-type-must-be-assignable + dead-code-after rule
                 // as `return_call` above.
                 let (type_idx, sz1) = decode_idx(code, offset)?;
                 let (table_idx, sz2) = decode_idx(code, offset + sz1)?;
@@ -1344,7 +1405,7 @@ fn type_check_function(ctx: &ModuleContext, func_idx: usize, func_type: &FuncTyp
                     .first()
                     .ok_or_else(|| ValidationError::Other(format!("function #{func_idx}: return_call_indirect with no open block")))?
                     .end_types;
-                if callee_type.results != *function_results {
+                if !results_assignable(&callee_type.results, function_results) {
                     err!("return_call_indirect to type #{type_idx} returning {:?}, but the current function returns {function_results:?}", callee_type.results);
                 }
                 pop_expect(&mut stack, frame!(), ValueType::I32)?; // table index

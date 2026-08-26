@@ -161,6 +161,63 @@ exactly like `imports.wast`'s, not silently skipping the question.
 - SIMD, GC, exceptions, the component model — unrelated, already
   tracked separately in `code/specs/W07-wasm-post-mvp-epics.md`.
 
+## Addendum (2026-08-26): the `(ref null $t)` gap is closed
+
+The "vendor if cheaply fixable, else defer" question this spec left open
+(see the verification plan below) was investigated for real and turned
+out to be cheap: `return_call.wast`/`return_call_indirect.wast` are now
+vendored (`wasm-conformance` 0.1.95).
+
+What actually landed, scoped to exactly the one construct both files
+need and nothing more:
+
+- **`wasm-types` 0.1.12**: a new `ValueType::ConcreteFuncRef(u32)`
+  variant — a nullable reference to a specific concrete FUNCTION type,
+  the direct analogue of the pre-existing `ValueType::StructRef(u32)`
+  (nullable ref to a concrete STRUCT type), but indexing the func-type
+  array (`WasmModule::types`) directly instead of the struct-type
+  array's offset space. Encodes identically to `StructRef` (`0x63` +
+  `LEB128(idx)`) — see that variant's own doc comment for why the two
+  never collide despite sharing a tag byte. This is a NEW, narrower
+  concept than "typed function references" in general: it only tracks
+  "this is a nullable ref to *some* concrete function type," never which
+  one, and there is still no non-null `(ref $t)` variant — the real
+  typed-function-references wall (`call_ref`/`return_call_ref`) remains
+  exactly as out-of-scope as the section above already said.
+- **`wasm-wast-parser` 0.1.81**: `(ref null $t)` as a value type and
+  `ref.null $t` as an instruction, both resolving `$t` via the same
+  `type_names` map every `(type $t)` reference already uses.
+- **`wasm-validator` 0.2.70**: one subtyping rule — a nullable ref to a
+  specific concrete function type IS assignable where `funcref` is
+  expected, never the reverse. This is what `return_call`/
+  `return_call_indirect`'s existing "callee results must match the
+  current function's declared results" check needed to stop being a
+  strict `Vec` equality comparison (which would have wrongly REJECTED
+  the valid direction) and start being a per-result subtype check
+  (which correctly still REJECTS the invalid, mirror-image direction —
+  both directions are real corpus `assert_return`/`assert_invalid`
+  cases in both files).
+- **`wasm-execution` 0.9.71**: the `ref.null` bytecode decoder's
+  heap-type-immediate skip was a hardcoded single byte; a concrete
+  function-type ref's immediate is a variable-length `0x63 <LEB128>`
+  sequence, so the decoder needed a real (if small) fix to consume it
+  correctly instead of corrupting the next instruction's decode.
+
+Real, measured numbers (zero new `fail` anywhere in either file — see
+`tests/fixtures/testsuite/NOTICE` for the full accounting):
+`return_call.wast` — module 2/2 pass (+1 not_yet_supported),
+assert_invalid 12/12 pass, assert_return 0/34 (all not_yet_supported,
+cascading from both files' `(import "spectest" "print_i32_f32" ...)`,
+this crate's pre-existing no-spectest-host gap, not new).
+`return_call_indirect.wast` — module 2/2 pass (+1 nys), assert_invalid
+15/17 pass (+2 nys, two more pre-existing, unrelated validator gaps —
+dead-code polymorphism after a tail call, and no funcref-element-type
+check on an indirect call's target table), assert_return 0/43,
+assert_trap 0/7, assert_malformed 0/11 (all not_yet_supported — the
+malformed cases need inline-signature clause-ordering validation this
+crate's parser doesn't do, a pre-existing gap several other vendored
+files also have).
+
 ## Verification plan
 
 - Unit tests in each touched crate for the new opcode family, following

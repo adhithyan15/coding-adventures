@@ -2,6 +2,31 @@
 
 All notable changes to this package will be documented in this file.
 
+## [0.2.70] - 2026-08-26 (W11 addendum — concrete function-type ref subtyping)
+
+### Added
+
+- **`is_assignable(actual, expected)`**: the one reference-type subtyping
+  rule this crate implements — a nullable ref to a specific concrete
+  function type (`ValueType::ConcreteFuncRef`) is assignable wherever the
+  general `funcref` is expected, never the reverse. `pop_expect` (the
+  single choke point every type check in this module already goes
+  through) now calls this instead of bare `==`, so `return`/block-end/
+  branch-target checks all pick it up automatically.
+- **`results_assignable(callee_results, function_results)`**:
+  `return_call`/`return_call_indirect`'s own special-cased "callee results
+  must match the current function's declared results" check now allows
+  this same one-directional subtyping per result position (previously a
+  strict `Vec` equality check), covering the real corpus's
+  `return_call.wast`/`return_call_indirect.wast` "Result subtyping" tests
+  (both the valid and the mirror-image `assert_invalid` direction).
+- `0xD0` (`ref.null`)'s heap-type-immediate decoder gained a `0x63` arm:
+  decodes the trailing `LEB128` type-section index (bounds-checked
+  against `ctx.module.types.len()`) and pushes a real
+  `StackType::Known(ValueType::ConcreteFuncRef(idx))`, instead of falling
+  back to the polymorphic `Unknown` every other unrecognized heap-type
+  byte still does.
+
 ## [0.2.69] - 2026-08-26 (W26 — table64 proposal, first slice)
 
 ### Changed

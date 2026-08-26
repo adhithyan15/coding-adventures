@@ -2,6 +2,25 @@
 
 All notable changes to this package will be documented in this file.
 
+## [0.9.71] - 2026-08-26 (W11 addendum — concrete function-type refs)
+
+### Fixed
+
+- **`ref.null`'s bytecode decode loop no longer hardcodes a 1-byte
+  heap-type immediate.** `wasm-wast-parser` can now emit a MULTI-byte
+  heap-type immediate for a concrete function-type ref (`0x63` tag +
+  `LEB128(idx)`, `wasm-types` 0.1.12's `ValueType::ConcreteFuncRef`) —
+  the old unconditional `offset += 1` would have consumed only the tag
+  byte and mis-decoded the trailing LEB128 index byte(s) as the START of
+  the next instruction. The decoder now checks for the `0x63` tag and, if
+  present, skips the LEB128 sequence via `wasm_leb128::decode_unsigned`
+  instead of a flat single-byte skip; every other heap type (the
+  pre-existing single-byte abstract ones) is unaffected. Runtime
+  semantics are unchanged either way (every null is still the same null
+  in this repo's value model) — only the byte-accounting needed fixing.
+- `WasmValue::default_for` gained a `ValueType::ConcreteFuncRef(_)` arm
+  (same `Ref(None)` default every other nullable reference type gets).
+
 ## [0.9.70] - 2026-08-26 (W26 — table64 proposal, first slice)
 
 ### Added
