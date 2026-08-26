@@ -320,6 +320,37 @@
         "GU-R19-doorway-nine-r4"
       ],
       "tex": "gujarati/book/chapters/ch23-doorway-r4.tex"
+    },
+    {
+      "language": "gujarati",
+      "chapter": 24,
+      "sourceHash": "fnv1a64:280ca7090bd9b734",
+      "lessonIds": [
+        "GU-C20-hear-bajar",
+        "GU-C20-bajar",
+        "GU-C20-hear-ghar",
+        "GU-W20-gha",
+        "GU-C20-ghar",
+        "GU-C20-hear-mandir",
+        "GU-C20-mandir",
+        "GU-C20-places-three"
+      ],
+      "tex": "gujarati/book/chapters/ch24-first-three-places.tex"
+    },
+    {
+      "language": "gujarati",
+      "chapter": 25,
+      "sourceHash": "fnv1a64:3c074e504402cd7e",
+      "lessonIds": [
+        "GU-C21-hear-haath",
+        "GU-C21-haath",
+        "GU-C21-hear-paisa",
+        "GU-W21-ai-matra",
+        "GU-C21-paisa",
+        "GU-R21-travel-five",
+        "GU-C21-travel-five"
+      ],
+      "tex": "gujarati/book/chapters/ch25-hand-money-map.tex"
     }
   ]
 }
