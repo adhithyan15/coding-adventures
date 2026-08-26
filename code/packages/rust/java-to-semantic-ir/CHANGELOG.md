@@ -2,6 +2,33 @@
 
 All notable changes to the `java-to-semantic-ir` crate will be documented in this file.
 
+## [0.19.0] - 2026-08-26
+
+### Added
+
+- Task #72: the ternary conditional operator (`cond ? a : b`) now lowers
+  to `Expr::If` used in **value** position — the same node `if`/`else`
+  statements already lower to (see that node's own doc comment: "the
+  IR's conditional is an expression with no statement-level
+  counterpart"), just with each branch's own lowered operand as its
+  `Block.value` instead of a bare `NilLit`. Not blocked by task #68's
+  own `NominalClassDef`/`Module` gap — a pure expression-level feature
+  needing no new IR primitive and no class/OOP surface.
+- The condition must be `Kind::Bool` (matching `lower_if_statement`'s own
+  identically-reasoned check). The two branches must lower to a
+  compatible `Kind`: exact match, or real Java's own symmetric numeric
+  promotion for a mismatched `Int`/`Float` pair (`true ? 1 : 2.0` has
+  type `double` regardless of which branch is which) — kept accepted the
+  same way task #71's own directional int-widening-to-float exception
+  is, with the identical disclosed caveat: no real numeric conversion is
+  inserted (SIR's `Expr::Convert`/SIR26 only ever converts between
+  *integer* widths). Every other `Kind` pair is rejected — real Java's
+  ternary does not auto-stringify mismatched branches the way `+` does.
+- New tests cover: the basic lowering shape, the boolean-condition
+  requirement, the numeric-promotion acceptance, the mismatched-kind
+  rejection, using the ternary as a bare expression statement, and
+  nested ternaries.
+
 ## [0.18.1] - 2026-08-26
 
 ### Fixed

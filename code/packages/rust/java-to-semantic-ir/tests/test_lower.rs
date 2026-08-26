@@ -951,16 +951,6 @@ fn parenthesized_expression_changes_grouping() {
 // ── M1: deferred constructs (clean errors, not mis-lowering) ────────────
 
 #[test]
-fn ternary_conditional_is_unsupported() {
-    let err = compile_source(&wrap("int x = true ? 1 : 2;"), "prog").unwrap_err();
-    assert!(
-        err.message.contains("ternary"),
-        "unexpected message: {}",
-        err.message
-    );
-}
-
-#[test]
 fn bitwise_and_is_unsupported() {
     let err = compile_source(&wrap("int x = 1 & 2;"), "prog").unwrap_err();
     assert!(
@@ -4690,4 +4680,70 @@ fn throw_new_anonymous_exception_subclass_is_rejected() {
         "unexpected message: {}",
         err.message
     );
+}
+
+// ── task #72: the ternary conditional operator (cond ? a : b) ───────────
+
+#[test]
+fn ternary_conditional_lowers_to_expr_if() {
+    let m = compile_ok(&wrap("int x = true ? 1 : 2;"));
+    match &main_fn(&m).body.stmts[0] {
+        Stmt::LetStarBinding { value, .. } => match value {
+            Expr::If {
+                then_branch,
+                else_branch,
+                ..
+            } => {
+                assert!(then_branch.stmts.is_empty());
+                assert!(matches!(then_branch.value, Expr::IntLit { value: 1, .. }));
+                assert!(else_branch.stmts.is_empty());
+                assert!(matches!(else_branch.value, Expr::IntLit { value: 2, .. }));
+            }
+            other => panic!("expected Expr::If, got {other:?}"),
+        },
+        other => panic!("expected LetStarBinding, got {other:?}"),
+    }
+}
+
+#[test]
+fn ternary_conditional_condition_must_be_boolean() {
+    let err = compile_source(&wrap("int x = 1 ? 1 : 2;"), "prog").unwrap_err();
+    assert!(
+        err.message.contains("boolean"),
+        "unexpected message: {}",
+        err.message
+    );
+}
+
+#[test]
+fn ternary_conditional_int_and_float_branches_promote_to_float() {
+    let m = compile_ok(&wrap("double d = true ? 1 : 2.0;"));
+    assert!(matches!(
+        &main_fn(&m).body.stmts[0],
+        Stmt::LetStarBinding { .. }
+    ));
+}
+
+#[test]
+fn ternary_conditional_mismatched_non_numeric_branches_are_rejected() {
+    let err = compile_source(&wrap(r#"String s = true ? "a" : 1;"#), "prog").unwrap_err();
+    assert!(
+        err.message.contains("compatible kinds"),
+        "unexpected message: {}",
+        err.message
+    );
+}
+
+#[test]
+fn ternary_conditional_can_appear_as_a_bare_expression_statement() {
+    compile_ok(&wrap("boolean b = true; b ? 1 : 2;"));
+}
+
+#[test]
+fn nested_ternary_conditionals_lower_correctly() {
+    let m = compile_ok(&wrap("int x = true ? (false ? 1 : 2) : 3;"));
+    assert!(matches!(
+        &main_fn(&m).body.stmts[0],
+        Stmt::LetStarBinding { .. }
+    ));
 }
