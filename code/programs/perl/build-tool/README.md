@@ -184,7 +184,7 @@ my $content = <$fh>;
 |-----------|--------|---------|
 | `Digest::SHA` | Core (5.9.3+) | SHA256 hashing |
 | `Encode` | Core | Strict UTF-8 package metadata decoding |
-| `JSON::PP` | Core (5.14+) | Cache/plan serialisation |
+| `JSON::PP` | Core (5.14+) | Cache/plan serialisation, JSON booleans, and canonical diagnostic-detail ordering |
 | `File::Find` | Core | Directory walking |
 | `Getopt::Long` | Core | CLI argument parsing |
 | `POSIX` | Core | `fork()`, `waitpid()` |

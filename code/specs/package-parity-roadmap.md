@@ -8154,6 +8154,28 @@ state graph contains 515 unique owners and 775 complete acyclic edges: 147
 merged, 367 pending, and exactly one in-progress owner, with no active parity
 PR and no merged-to-unmerged dependency edge.
 
+Before publication, the branch rebased without conflict onto exact main
+`f75f387fcd437a4524d548c9471d026b4d0f0d90`. Merged PR #12944 extends the
+existing shared script-ductus authored-data owner with sourced Malayalam chillu
+LL and its curriculum, data, package, and Language Ladder checks. Merged PR
+#12946 extends the deterministic HTML frontend owner with exact unmatched
+landmark end-tag positions across normal, Unicode, CRLF, template, fragment,
+and foreign-content contexts. Merged PR #12947 supplies the first concrete
+JavaScript-emitter child under the registered SIR16 loop-control consumer
+umbrella; the neutral contract and remaining applicable lanes stay pending.
+PR #12948 changes only the existing Language Ladder lesson batching and
+request-budget implementation and adds no package identity or new portable
+contract.
+
+None of those four commits touches a selected Perl path or changes a package
+identity, BUILD marker, build-tool marker, or dependency surface. All eleven
+live PRs have zero exact overlap with this six-path tranche. The post-rebase
+schema-3 report remains 15 established lanes, 1,373 identities, 4,566 slots,
+175 high-consensus packages with 276 gaps, 910 singletons with 12,740 gaps,
+721 Rust singletons, zero collisions, and zero unknown buckets. The 515-owner,
+775-edge state graph remains complete and acyclic with exactly one in-progress
+item.
+
 ## Autonomous Loop Protocol
 
 Only one parity PR should be active at a time.
