@@ -1544,12 +1544,17 @@ impl WasmRuntime {
             globals.push(value);
         }
 
-        // Apply data segments. Stays targeting memory 0 regardless of
-        // `seg.memory_index` (W16 scopes multi-memory support to
-        // `memory.size`/`memory.grow` only -- see the spec's "What does
-        // NOT change"); `wasm-validator` already bounds-checks
-        // `seg.memory_index` against the real memory count, so this is a
-        // real scope boundary, not a missed check.
+        // Apply data segments. Widened (real corpus vendoring pass, see
+        // `wasm-conformance`'s CHANGELOG) to target each active segment's
+        // OWN `seg.memory_index`, not unconditionally memory 0 -- the prior
+        // "memory 0 only" restriction was `wasm-validator`'s own Check 8
+        // rejecting any other index at validation time, not a real
+        // multi-memory limitation; a module past validation here is
+        // guaranteed `seg.memory_index` is in bounds (Check 8 bounds-checks
+        // it against the real memory count), so `memories.get_mut` below
+        // always succeeds for a well-formed caller -- the `continue`
+        // fallback is defensive only, never reachable through the normal
+        // validate-then-instantiate path this crate's own callers use.
         //
         // A PASSIVE segment (`is_passive`, task #95) is deliberately
         // skipped here -- applying it automatically would defeat the
@@ -1558,27 +1563,26 @@ impl WasmRuntime {
         // copies from it (any number of times, on demand), which is a
         // completely separate code path from this one-time instantiation-
         // time copy.
-        if let Some(mem) = memories.first_mut() {
-            // W25 (memory64): memory 0's `is64`-ness determines whether
-            // this active data segment's offset expression is an
-            // `i32.const` or `i64.const` -- `wasm-wast-parser` emits the
-            // matching const-expr opcode for whichever memory 0 actually
-            // is (this repo's data segments always target memory 0 --
-            // see `wasm-validator`'s own Check 8 doc comment -- so only
-            // memory 0's `is64` is ever relevant here).
-            let is64 = mem.is64();
-            for seg in &module.data {
-                if seg.is_passive {
-                    continue;
-                }
-                let offset = evaluate_const_expr(&seg.offset_expr, &globals, &mut v128_heap)?;
-                let offset_num = if is64 {
-                    offset.as_i64().map_err(|e| TrapError::new(e.message))? as usize
-                } else {
-                    offset.as_i32().map_err(|e| TrapError::new(e.message))? as usize
-                };
-                mem.write_bytes(offset_num, &seg.data)?;
+        for seg in &module.data {
+            if seg.is_passive {
+                continue;
             }
+            let Some(mem) = memories.get_mut(seg.memory_index as usize) else {
+                continue;
+            };
+            // W25 (memory64): the TARGET memory's own `is64`-ness
+            // determines whether this active data segment's offset
+            // expression is an `i32.const` or `i64.const` -- now resolved
+            // per-segment (each segment can target a different memory),
+            // not fixed to memory 0's.
+            let is64 = mem.is64();
+            let offset = evaluate_const_expr(&seg.offset_expr, &globals, &mut v128_heap)?;
+            let offset_num = if is64 {
+                offset.as_i64().map_err(|e| TrapError::new(e.message))? as usize
+            } else {
+                offset.as_i32().map_err(|e| TrapError::new(e.message))? as usize
+            };
+            mem.write_bytes(offset_num, &seg.data)?;
         }
 
         // Apply element segments. A passive segment (task #97) is never
@@ -1616,7 +1620,7 @@ impl WasmRuntime {
         // instantiation path drops anything itself.
         let dropped_elements = vec![false; module.elements.len()];
 
-        let instance = WasmInstance {
+        let mut instance = WasmInstance {
             module: module.clone(),
             memories,
             tables,
@@ -1632,6 +1636,30 @@ impl WasmRuntime {
             dropped_data_segments,
             dropped_elements,
         };
+
+        // Real corpus vendoring pass (`start.wast`/`start0.wast`, see
+        // `wasm-conformance`'s CHANGELOG): the spec requires invoking a
+        // module's start function, if it has one, as the LAST step of
+        // instantiation -- after every memory/table/global/data/elem is
+        // already in place, exactly like a normal exported call. This was
+        // a real, previously undetected gap: `module.start` was parsed and
+        // carried on `WasmModule` (see `wasm-wast-parser`'s own `"start"`
+        // build arm) but nothing ever read it here, so a module's start
+        // function silently never ran. `linking.wast` (already vendored)
+        // has exercised this gap all along -- its own `assert_return`
+        // tally already carries real, pre-existing fails from exactly
+        // this; this fix is expected to newly turn those into passes,
+        // not introduce a regression.
+        //
+        // `call_engine` re-threads `instance`'s memories/tables/etc.
+        // through a fresh engine and restores them afterward regardless
+        // of outcome (see that method's own doc comment) -- if the start
+        // function itself traps, that's a genuine instantiation-time
+        // trap, the same `Err` path any other instantiation-time fault
+        // (a data/elem segment out of bounds) already takes.
+        if let Some(start_idx) = module.start {
+            self.call_engine(&mut instance, start_idx as usize, &[])?;
+        }
 
         Ok(instance)
     }

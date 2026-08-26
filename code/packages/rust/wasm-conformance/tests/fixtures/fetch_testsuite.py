@@ -987,6 +987,154 @@ TESTSUITE_FILES = [
     # doesn't do (the same "text parsed without error" gap already
     # present in `align.wast`/`block.wast`/`func.wast`/a dozen others).
     "imports.wast",
+    # ── Census-driven batch (W27): 70 files vendored in one pass after a
+    # census found 146/257 upstream files vendored, 112 missing. Most of
+    # the missing 112 were plain corpus SPLITS of already-fully-
+    # implemented MVP features (numbered variants alongside an already-
+    # vendored base file, e.g. `address0.wast`/`address1.wast` next to
+    # `address.wast`) that had simply never been fetched -- not blocked on
+    # anything. Fetching and running each one live (this session's own
+    # methodology, not a repeat of a prior census) found:
+    #   - ~50 files that already passed cleanly (zero real `fail` anywhere).
+    #   - A handful blocked on THREE small, real, now-fixed gaps (see this
+    #     session's `wasm-validator`/`wasm-runtime`/`wasm-wast-parser`/
+    #     `wasm-execution` CHANGELOG entries for the full accounting):
+    #     (1) active data segments could only ever target memory 0,
+    #     rejecting/mistargeting any OTHER in-bounds memory index in a
+    #     multi-memory module (`address0.wast`/`address1.wast`/
+    #     `binary0.wast`/`data_drop0.wast`/`float_exprs1.wast`/
+    #     `float_memory0.wast`/`imports2.wast`/`linking2.wast`/
+    #     `load0.wast`/`memory_trap1.wast`/`start0.wast`/`store2.wast`/
+    #     `token.wast` all exercise this); (2) `(kind $name (export "e")
+    #     (import "m" "n") ...)` -- inline export AND inline import
+    #     combined on one field -- wasn't desugared at all
+    #     (`imports4.wast`/`table_grow.wast`); (3) a module's `start`
+    #     function was parsed and carried on `WasmModule` but never
+    #     actually INVOKED at instantiation time (`start.wast`/
+    #     `start0.wast`, and this incidentally fixed one of `linking.wast`'s
+    #     own pre-existing `assert_unlinkable` fails too -- see that file's
+    #     own already-vendored entry above, unchanged here).
+    #   - A genuine, pleasant surprise: nearly all of the GC-proposal files
+    #     this repo has no non-null concrete-ref-type (`(ref $t)`) support
+    #     for at all -- confirmed still true, that wall is real -- turned
+    #     out to gracefully degrade to all-`not_yet_supported`/zero-real-
+    #     `fail` rather than hard-failing, meeting the exact same "vendor
+    #     it" bar every other near-0%-pass file already vendored here
+    #     meets (e.g. `imports1.wast` below). Only `array.wast`,
+    #     `array_new_data.wast`, `array_new_elem.wast`, `struct.wast`
+    #     (fail to PARSE at all -- real array/struct type-declaration
+    #     grammar this crate has zero support for), `ref_null.wast` (a
+    #     null BOTTOM reference type, e.g. `nullfuncref`, needs to
+    #     type-check as a subtype of a concrete `(ref null $t)` result
+    #     type -- the same non-null-concrete-ref subtyping wall, just
+    #     reached from a different direction), `type-rec.wast`, and
+    #     `type-subtyping.wast` (real recursive-type-group/explicit-
+    #     subtype-declaration semantics) stay genuinely blocked and are
+    #     deliberately NOT in this list.
+    #   - `i32x4_relaxed_trunc.wast`/`table-sub.wast`/`simd_linking.wast`/
+    #     `simd_memory-multi.wast`: each independently double-checked NOT
+    #     to secretly need anything blocked -- all four gracefully degrade
+    #     (relaxed-simd trunc opcodes / table subtyping / SIMD value
+    #     export-import / SIMD across multiple memories are each either
+    #     already covered or cleanly `not_yet_supported`), zero real `fail`.
+    # Deliberately NOT in this batch (see this session's own PR description
+    # for the full skip list with reasons): `binary.wast`/
+    # `binary-leb128.wast`/`binary_leb128_64.wast` (real, pre-existing
+    # malformed-LEB128/binary-encoding-edge-case gaps -- `assert_malformed`'s
+    # BINARY variant has no `not_yet_supported` escape hatch at all, unlike
+    # the `quote`/text variant, so any case this crate doesn't yet reject
+    # grades a hard `fail`, not a capability-gap `not_yet_supported`);
+    # `data.wast` (the SEPARATE extended-const proposal -- `i32.add`/
+    # `i32.sub` inside a data segment's offset expression -- needs a real
+    # operator stack, not the single-accumulator evaluator this crate's
+    # `evaluate_const_expr` currently is); `elem.wast`/`instance.wast`/
+    # `linking0.wast`/`linking1.wast`/`linking3.wast`/`load1.wast` (a
+    # cross-instance imported memory/table is a CLONE, not a live shared
+    # view -- `RegistryHost::resolve_memory`/`resolve_table`'s own,
+    # already-documented, deliberate limitation; `instance.wast` also
+    # needs the separate `(module definition ...)`/`(module instance
+    # ...)` generative-instantiation directive form this crate has zero
+    # support for); every real `table*64.wast`/`call_indirect64.wast`
+    # (table64 REAL operations -- table.get/set/grow/size/fill/copy/init/
+    # call_indirect against an `is64` table -- confirmed still exactly the
+    # explicitly-deferred scope boundary W26's own spec drew, not
+    # newly-found or newly-fixed here); `annotations.wast`/
+    # `inline-module.wast` (two more genuinely separate, unimplemented
+    # text-format features -- custom `@id` annotation syntax, and a
+    # `.wast` script with no enclosing `(module ...)` wrapper at all).
+    "address0.wast",
+    "address1.wast",
+    "align0.wast",
+    "binary0.wast",
+    "data0.wast",
+    "data1.wast",
+    "data_drop0.wast",
+    "exports.wast",
+    "exports0.wast",
+    "float_exprs0.wast",
+    "float_exprs1.wast",
+    "float_memory0.wast",
+    "imports0.wast",
+    "imports1.wast",
+    "imports2.wast",
+    "imports3.wast",
+    "imports4.wast",
+    "linking2.wast",
+    "load0.wast",
+    "load2.wast",
+    "local_init.wast",
+    "memory_copy0.wast",
+    "memory_copy1.wast",
+    "memory_fill0.wast",
+    "memory_init0.wast",
+    "memory_size0.wast",
+    "memory_size1.wast",
+    "memory_size2.wast",
+    "memory_size3.wast",
+    "memory_size_import.wast",
+    "memory_trap0.wast",
+    "memory_trap1.wast",
+    "names.wast",
+    "ref_func.wast",
+    "ref_is_null.wast",
+    "skip-stack-guard-page.wast",
+    "start.wast",
+    "start0.wast",
+    "store0.wast",
+    "store1.wast",
+    "store2.wast",
+    "table-sub.wast",
+    "table_grow.wast",
+    "token.wast",
+    "traps0.wast",
+    "unwind.wast",
+    "utf8-custom-section-id.wast",
+    "utf8-import-field.wast",
+    "utf8-import-module.wast",
+    "simd_linking.wast",
+    "simd_memory-multi.wast",
+    "i32x4_relaxed_trunc.wast",
+    # GC proposal -- gracefully degrade to all-`not_yet_supported` (see the
+    # batch-level comment above); genuinely still blocked GC files are
+    # deliberately NOT in this list.
+    "ref.wast",
+    "br_on_null.wast",
+    "array_copy.wast",
+    "array_fill.wast",
+    "array_init_data.wast",
+    "array_init_elem.wast",
+    "br_on_cast.wast",
+    "br_on_cast_fail.wast",
+    "br_on_non_null.wast",
+    "call_ref.wast",
+    "ref_as_non_null.wast",
+    "ref_cast.wast",
+    "ref_eq.wast",
+    "ref_test.wast",
+    "return_call_ref.wast",
+    "type-canon.wast",
+    "type-equivalence.wast",
+    "binary-gc.wast",
 ]
 
 # Reference-types/threads-proposal files whose UPSTREAM path lives under

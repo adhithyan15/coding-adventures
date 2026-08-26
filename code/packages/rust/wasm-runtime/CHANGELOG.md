@@ -2,6 +2,35 @@
 
 All notable changes to this package will be documented in this file.
 
+## [0.6.12] — 2026-08-26 (W27 — census batch: multi-memory data segments + start function)
+
+### Fixed
+
+- **Active data segments now apply to their OWN `seg.memory_index`, not
+  unconditionally memory 0.** `instantiate()`'s data-segment loop used
+  to grab `memories.first_mut()` once and apply every non-passive
+  segment to it; it now looks up `memories.get_mut(seg.memory_index as
+  usize)` per segment, and resolves that segment's `i32.const`-vs-
+  `i64.const` offset-expression width from the TARGET memory's own
+  `is64`-ness (previously always memory 0's). `wasm-validator` 0.2.71
+  bounds-checks `seg.memory_index` before this ever runs, so the
+  `continue` fallback for a not-found index is defensive only.
+- **A module's `start` function is now actually invoked.** `module.start`
+  (parsed and carried on `WasmModule` since `wasm-wast-parser`'s own
+  `"start"` build arm) was never read anywhere in this crate —
+  `instantiate()` now calls it, via the same `call_engine` plumbing an
+  ordinary export call uses, as the LAST step of instantiation, exactly
+  once, only if present. A start-function trap surfaces through
+  `instantiate()`'s existing `Err` path, same as any other
+  instantiation-time fault.
+- Real corpus impact: unblocks `start.wast`/`start0.wast` outright;
+  `linking.wast` (already vendored) has exercised the missing-start-
+  invocation gap all along in its own `assert_return` tally, though a
+  full before/after baseline diff confirms neither this fix nor the
+  multi-memory one above moved that specific file's numbers (its
+  remaining fails share cross-instance-import root causes tracked
+  separately — see `wasm-conformance`'s own CHANGELOG skip list).
+
 ## [0.6.11] — 2026-08-26 (W11 addendum — concrete function-type refs)
 
 ### Changed

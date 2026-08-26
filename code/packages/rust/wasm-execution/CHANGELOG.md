@@ -2,6 +2,27 @@
 
 All notable changes to this package will be documented in this file.
 
+## [0.9.72] - 2026-08-26 (W27 — census batch: `ref.null` in a global's const-expr)
+
+### Fixed
+
+- **`evaluate_const_expr` gained a `0xD0` (`ref.null <heap_type>`) case.**
+  This crate already handled `ref.null` fine as an ordinary instruction
+  (the main decode loop) and as an element-segment entry, but never as a
+  GLOBAL's init expression — any `(global <reftype> (ref.null ...))`
+  simply trapped ("illegal opcode 0xD0 in constant expression") at
+  instantiation instead of producing the null reference it always
+  evaluates to. Same "heap-type byte doesn't change runtime behavior"
+  reasoning as the main decode loop's own `0xD0` handler: skip the
+  immediate (one byte for an abstract heap type, or `0x63` + a LEB128
+  type index for a concrete `(ref.null $t)`) and push `WasmValue::Ref
+  (None)`.
+- Real corpus impact: this was reaching for `ref_null.wast`'s own
+  `(global anyref (ref.null any))`-shaped cases — see `wasm-wast-
+  parser`'s own CHANGELOG (same date) for the heap-type-keyword
+  recognition this fix pairs with, and `wasm-conformance`'s CHANGELOG
+  for why that specific file still isn't vendored despite both fixes.
+
 ## [0.9.71] - 2026-08-26 (W11 addendum — concrete function-type refs)
 
 ### Fixed

@@ -1,5 +1,52 @@
 # Changelog — wasm-wast-parser
 
+## 0.1.82 — 2026-08-26 — W27 census batch: combined inline export+import, more `ref.null` heap types
+
+### Fixed
+
+- **`desugar_one_inline_import` now recognizes a field combining an
+  inline EXPORT with an inline IMPORT** — `(memory $m (export "e")
+  (import "m" "n") <limits>)`, spec-legal per the WAT module-
+  abbreviations grammar (expands to a plain import PLUS a separate
+  top-level `(export "e" (memory $m))`). Previously only recognized the
+  import form immediately after an optional `$name`; a field with an
+  export clause first fell through unrewritten, silently mis-parsing
+  the `(import ...)` list as part of the payload (limits/type) that
+  follows. `desugar_one_inline_import` now returns `Vec<SExpr>` (0 or 2
+  fields) instead of exactly 1, and `desugar_inline_imports` `flat_map`s
+  accordingly. A field with no `$name` of its own gets one synthesized
+  (`$__inline_import_export_<pos>`) purely so the generated export has
+  something to reference.
+- Real corpus impact: unblocks `imports4.wast`/`table_grow.wast` (both
+  use exactly this shape, e.g. `(memory $m (export "memory") (import
+  "grown-memory" "memory") 2)`), see `wasm-conformance`'s own CHANGELOG.
+
+### Added
+
+- `ref.null`'s heap-type keyword whitelist (both the real instruction
+  form in `module.rs`'s `parse_ref_null_heap_type`, and the script-level
+  literal form in `script.rs`'s `parse_const_expr`) now recognizes `any`
+  (`ValueType::Anyref`, `0x6E`), `exn` (`ValueType::Exnref`, `0x69` —
+  both already-wired real encodings), and the four BOTTOM heap types
+  `none`/`nofunc`/`noextern`/`noexn` (own internally-consistent, non-
+  spec-canonical single bytes — this crate's `0xD0` decoder treats every
+  abstract heap type identically, so byte-for-byte upstream fidelity
+  isn't needed for correctness here, only self-consistency). `parse_
+  value_type` also gained the four bare TYPE keywords `anyref`/
+  `nullref`/`nullfuncref`/`nullexternref`/`nullexnref` (each a bottom
+  type aliased to its one possible supertype — `nullref`→`Anyref`,
+  `nullfuncref`→`Funcref`, `nullexternref`→`Externref`, `nullexnref`→
+  `Exnref` — exact, not approximate, since this crate's `WasmValue::Ref`
+  carries no runtime type tag at all).
+- Real corpus impact: this was reaching for `ref_null.wast`, which turned
+  out to have one further, deliberately NOT-fixed gap (a null bottom-type
+  global's value doesn't type-check as a subtype of a concrete `(ref null
+  $t)` function result type — the same non-null-concrete-ref subtyping
+  wall this repo's GC files already document) — see `wasm-conformance`'s
+  own CHANGELOG skip list for why that file stays unvendored despite this
+  work. The keyword recognition itself is still real, generically-useful
+  infrastructure, not wasted effort.
+
 ## 0.1.81 — 2026-08-26 — W11 addendum: `(ref null $t)` / `ref.null $t`
 
 ### Added
