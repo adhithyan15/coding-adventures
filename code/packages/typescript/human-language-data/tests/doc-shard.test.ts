@@ -1,6 +1,6 @@
-// Tests for the Markdown document sharder (HL22).
+// Tests for the Markdown document sharder (HL22/HL23).
 //
-// The load-bearing test in this file is `round-trips the REAL documents`. Every
+// The load-bearing test in this file is `round-trips the REAL shards`. Every
 // other test here is a fixture, and a fixture proves the code does what the
 // fixture says — which is not the same as proving it does not lose a byte of a
 // 6,200-line changelog. HL21 §8 step 5 says to assert the round trip against the
@@ -8,7 +8,7 @@
 // migration that silently drops content is the failure this whole convention is
 // supposed to make impossible.
 
-import { mkdtempSync, readFileSync, readdirSync, rmSync, writeFileSync } from "node:fs";
+import { mkdirSync, mkdtempSync, readFileSync, readdirSync, rmSync, writeFileSync } from "node:fs";
 import { tmpdir } from "node:os";
 import { join, resolve } from "node:path";
 import { afterAll, describe, expect, it } from "vitest";
@@ -30,6 +30,7 @@ import {
   defaultRepoRoot,
   safeDocumentPath,
   unshardDocContents,
+  unshardDocument,
 } from "../src/doc-shard-cli.js";
 
 const PLAN: DocShardPlan = { path: "x/DOC.md", headingLevel: 2, newestFirst: true };
@@ -324,6 +325,24 @@ describe("safeDocumentPath", () => {
   });
 });
 
+describe("unshardDocument — ignored local render", () => {
+  const tmp = mkdtempSync(join(tmpdir(), "doc-shard-render-"));
+
+  afterAll(() => rmSync(tmp, { recursive: true, force: true }));
+
+  it("creates an absent rendered monolith from committed shards", () => {
+    const dir = join(tmp, "x", "DOC.d");
+    mkdirSync(dir, { recursive: true });
+    writeFileSync(join(dir, DOC_META_SHARD), "# T\n\n");
+    writeFileSync(join(dir, "00010-A-559aead0.md"), "## A\n\nbody\n");
+
+    expect(unshardDocument(tmp, PLAN)).toBe("# T\n\n## A\n\nbody\n");
+    expect(readFileSync(join(tmp, "x", "DOC.md"), "utf8")).toBe(
+      "# T\n\n## A\n\nbody\n",
+    );
+  });
+});
+
 // ---------------------------------------------------------------------------
 // ORDERING, verified independently of the round trip.
 // ---------------------------------------------------------------------------
@@ -441,26 +460,22 @@ describe("the real documents", () => {
   const root = defaultRepoRoot();
 
   for (const plan of DOC_SHARD_PLANS) {
-    it(`round-trips the REAL ${plan.path} byte-for-byte`, () => {
-      const committed = readFileSync(safeDocumentPath(root, plan.path), "utf8");
-      // Both directions, against the file actually on disk:
-      //   shards -> document   must reproduce the committed bytes
-      //   document -> shards -> document  must be the identity
-      expect(unshardDocContents(root, plan)).toBe(committed);
-      expect(joinDocShards(docShardContents(committed, plan), plan)).toBe(committed);
+    it(`round-trips the REAL shards for ${plan.path} byte-for-byte`, () => {
+      const rendered = unshardDocContents(root, plan);
+      expect(joinDocShards(docShardContents(rendered, plan), plan)).toBe(rendered);
     });
 
-    it(`${plan.path}: shard order on disk reproduces REAL section order`, () => {
+    it(`${plan.path}: shard order on disk reproduces rendered section order`, () => {
       // The ordering claim, asserted against the committed shard directory and
       // stated independently of the byte comparison above. Reading the headings
       // out of the shard FILES and out of the MONOLITH by two separate paths and
       // comparing the sequences fails with an ordering message when the ordering
       // is what broke — which is the diagnostic the byte comparison cannot give.
       const monolith = safeDocumentPath(root, plan.path);
-      const committed = readFileSync(monolith, "utf8");
+      const rendered = unshardDocContents(root, plan);
       const level = "#".repeat(plan.headingLevel) + " ";
 
-      const fromMonolith = committed
+      const fromMonolith = rendered
         .split("\n")
         .filter((line) => line.startsWith(level) && !line.startsWith(level + "#"));
 
@@ -492,9 +507,9 @@ describe("the real documents", () => {
       // `docShardContents` throws on a collision, so reaching the assertion at
       // all is most of the proof; the count check catches a silent overwrite if
       // that guard were ever weakened.
-      const committed = readFileSync(safeDocumentPath(root, plan.path), "utf8");
-      const contents = docShardContents(committed, plan);
-      const sections = splitDocument(committed, plan.headingLevel).sections.length;
+      const rendered = unshardDocContents(root, plan);
+      const contents = docShardContents(rendered, plan);
+      const sections = splitDocument(rendered, plan.headingLevel).sections.length;
       expect(contents.size).toBe(sections + 1); // +1 for _meta.md
     });
   }

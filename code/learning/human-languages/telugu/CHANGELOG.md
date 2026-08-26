@@ -767,7 +767,7 @@ script disagrees with its own authors often enough to teach mispronunciations.
   vendored font, but no font records the order, so it must trace to a published
   source. Not one such source could be opened for a single Telugu letter. Zero
   letters were authored rather than any uncited ones. The full search record is in
-  [`BACKLOG.md`](../BACKLOG.md), *Findings from HL-C41*.
+  the [`BACKLOG.d/`](../BACKLOG.d/) history, *Findings from HL-C41*.
 - **"Telugu is written without lifting the hand" is a simplification.** Telugu's
   roundness does make many letters loop-continuous, which is genuinely teachable, but
   the published statement about Telugu stroke direction is that the order is *not*

@@ -90,7 +90,7 @@ taught a letter of it.
 Every glyph is now taught, but the four lessons that use them sit in Chapter 1,
 ahead of the chapter that teaches them, so in reading order the debt is unchanged.
 Teaching the glyphs and teaching them *first* are two different fixes; this is the
-first. See HL-C210 in `BACKLOG.md` for the second.
+first. See HL-C210 in the [`BACKLOG.d/`](../BACKLOG.d/) history for the second.
 
 **Why a new chapter rather than more of Chapter 1.** Folding seven atoms into
 Chapter 1 took it to 18 against a per-chapter budget of 12 — a measured ramp

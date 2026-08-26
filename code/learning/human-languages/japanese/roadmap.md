@@ -67,6 +67,6 @@ The durable artifacts are:
 - [`session-map.md`](./session-map.md) for the current one-lesson-per-session map;
 - [`assessment-spec.md`](./assessment-spec.md) and
   [`assessment.json`](./assessment.json) for the seven-rung exam contract; and
-- the program backlog in [`../BACKLOG.md`](../BACKLOG.md) and GitHub issue
+- the program backlog in [`../BACKLOG.d/`](../BACKLOG.d/) and GitHub issue
   [#12206](https://github.com/adhithyan15/coding-adventures/issues/12206) for work
   that is not yet authored.

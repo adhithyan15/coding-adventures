@@ -1,5 +1,5 @@
-// doc-shard-cli — split a Markdown document into `X.d/`, put it back together,
-// or check that the two agree (spec: HL21, extended to prose by HL22).
+// doc-shard-cli — split a Markdown document into `X.d/`, render a local
+// aggregate, or validate the shards (spec: HL21, extended by HL22/HL23).
 //
 // ---------------------------------------------------------------------------
 // What this is for
@@ -15,34 +15,16 @@
 //   * `BACKLOG.d/` and `CHANGELOG.d/` are the SOURCE OF TRUTH. They are what
 //     authors edit, and the reason they exist is that one file per entry means
 //     five parallel level-authoring agents touch five different files.
-//   * `BACKLOG.md` and `CHANGELOG.md` are GENERATED ARTIFACTS.
+//   * `BACKLOG.md` and `CHANGELOG.md` are optional LOCAL RENDERED VIEWS. They
+//     are gitignored and must never be committed.
 //
-// The monoliths survive here for DIFFERENT reasons than `core/spine.json`'s,
-// and it is worth being precise because the obvious guess is wrong. HL21 kept
-// `core/spine.json` because `language-ladder` imports it statically into a
-// browser bundle with a 500 kB eager budget. That constraint was checked here
-// and does NOT apply: every Vite glob in `language-ladder/src` requires a
-// subdirectory segment (`*/lessons/*.md`, `*/curriculum.json`, …), so neither of
-// these files can match one, and neither is bundled at all. Nothing in the
-// repository READS either file programmatically — no loader, no test, no
-// script, no workflow.
-//
-// They are kept for two prosaic reasons instead:
-//
-//   1. Seven documents link to `BACKLOG.md` by relative path, two of them to a
-//      section ANCHOR (`../BACKLOG.md#findings-from-hl-c30`). Nothing in CI
-//      validates those links, so removing the file would break them silently —
-//      the worst way for a link to break.
-//   2. `CLAUDE.md` requires every package to carry a `CHANGELOG.md`. That rule
-//      is policy rather than machinery — there is no changelog gate in CI, which
-//      was checked — but it is the repo's convention and a reader opening the
-//      package expects the file to be there.
-//
-// The rule that makes a generated monolith safe is the one from the modality
-// manifest and the book chapters: a derived file that nothing verifies is worse
-// than no file. So `--check` runs in CI beside `check:shards`, and a stale
-// `BACKLOG.md` fails the build rather than quietly showing a reader an old
-// backlog.
+// Unlike `core/spine.json`, neither aggregate has a runtime consumer. Keeping
+// them tracked therefore bought no delivery capability and preserved exactly
+// the shared-file conflict the shards were meant to remove. HL23 deletes the
+// tracked copies. Relative documentation links now point at the shard directory,
+// and the repository policy recognises `CHANGELOG.d/_meta.md` as the package's
+// changelog entry point. `--unshard` remains available when a reader wants one
+// searchable file, but its output is local and ignored.
 //
 // ---------------------------------------------------------------------------
 // Why the round trip is byte-exact, and why that is cheap here
@@ -241,7 +223,7 @@ export function safeDocumentPath(root: string, relative: string): string {
  * The document bytes that the shards on disk currently mean.
  *
  * Pure enough to be the shared definition: `--unshard` writes what this returns
- * and `--check` compares against what this returns, so the two cannot disagree
+ * and `--check` validates against what this returns, so the two cannot disagree
  * about what the shards say.
  */
 export function unshardDocContents(root: string, plan: DocShardPlan): string {
@@ -305,21 +287,22 @@ export function shardDocument(root: string, plan: DocShardPlan): string[] {
 }
 
 /**
- * Rebuild the monolith from the shards. Returns the bytes written.
+ * Render a local monolith from the shards. Returns the bytes written.
  *
- * `assertRealDocFile` before the write, unconditionally, because `open(2)` with
- * `O_WRONLY|O_TRUNC` follows symlinks: with `CHANGELOG.md` committed as a link,
- * this would truncate and overwrite the link's target. The file is expected to
- * exist already — it is a generated artifact under version control — so a
- * missing one is a broken checkout worth reporting rather than silently
- * creating, and `--check`'s own failure message ("run npm run unshard:docs") is
- * exactly what would otherwise walk a maintainer into it.
+ * An existing target must be a real file because `O_TRUNC` follows symlinks.
+ * An absent target is created with `wx`: `safeDocumentPath` already proved its
+ * parent remains inside the checkout, and exclusive creation closes the race in
+ * which another process plants a symlink between the absence check and write.
  */
 export function unshardDocument(root: string, plan: DocShardPlan): string {
   const body = unshardDocContents(root, plan);
   const monolith = safeDocumentPath(root, plan.path);
-  assertRealDocFile(monolith);
-  writeFileSync(monolith, body, "utf8");
+  if (statIfPresent(monolith) === undefined) {
+    writeFileSync(monolith, body, { encoding: "utf8", flag: "wx" });
+  } else {
+    assertRealDocFile(monolith);
+    writeFileSync(monolith, body, "utf8");
+  }
   return body;
 }
 
@@ -368,7 +351,8 @@ export function runDocShardCli(
       continue;
     }
 
-    // --check: do the two representations agree?
+    // --check: can the committed shards produce one structurally complete
+    // document? The rendered monolith is optional and deliberately untracked.
     const monolith = safeDocumentPath(root, plan.path);
     if (!isDocSharded(monolith)) {
       process.stderr.write(`${plan.path}: ${docShardDirectoryFor(plan.path)} is missing\n`);
@@ -376,25 +360,32 @@ export function runDocShardCli(
       continue;
     }
     const expected = unshardDocContents(root, plan);
-    // Guarded even though this only READS: `--check` is the one mode CI runs, so
-    // it is the one mode a hostile branch can reach on a maintainer's runner. A
-    // symlinked monolith would otherwise have its target's bytes read, compared,
-    // and the comparison result reported.
+    const shardCount = listDocShardNames(monolith).length - 1; // `_meta.md`
+    const sectionCount = docShardContents(expected, plan).size - 1;
+    if (sectionCount !== shardCount) {
+      process.stderr.write(
+        `${plan.path}: ${shardCount} section shard(s) rebuild as ${sectionCount} section(s). ` +
+          `Each non-meta shard must contain exactly one level-${plan.headingLevel} section.\n`,
+      );
+      failed = true;
+    }
+
+    // If a developer rendered a local aggregate, validate it rather than letting
+    // a stale ignored file masquerade as current history. Its absence is the
+    // normal state of a clean checkout and is not an error.
     //
     // `lstatSync`, not `existsSync`, for the third time in this file: a dangling
     // link is invisible to `existsSync`, so the guard behind one never runs.
-    let actual: string | undefined;
     if (statIfPresent(monolith) !== undefined) {
       assertRealDocFile(monolith);
-      actual = readFileSync(monolith, "utf8");
-    }
-    if (actual !== expected) {
-      // Same failure, same fix, one message — as `modality-cli` puts it.
-      process.stderr.write(
-        `${plan.path}: generated monolith is missing or stale. ` +
-          `Run 'npm run unshard:docs' and commit the result.\n`,
-      );
-      failed = true;
+      const actual = readFileSync(monolith, "utf8");
+      if (actual !== expected) {
+        process.stderr.write(
+          `${plan.path}: local rendered monolith is stale. ` +
+            `Run 'npm run unshard:docs -- ${plan.path}'. Do not commit the result.\n`,
+        );
+        failed = true;
+      }
     }
 
     // And the reverse direction: a file in the shard directory that the join
