@@ -138,19 +138,41 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
   floor left to poison. Directory reads stay total, because the result is
   cached and a sweep that silently saw nothing would strand temporaries for good.
 
+- Made the write lock per-ROOT rather than per-instance, so two backends over
+  one directory actually exclude each other. `put` evaluates its
+  `if_absent`/`if_revision` check against a read and only then renames; a
+  per-instance mutex excluded nobody, so both backends passed the check and both
+  wrote. `chief-of-staff-daemon` holds exactly that shape — two
+  `FsStorageBackend`s over one state directory. A process-wide registry keyed by
+  canonicalised root now hands both the same lock.
+
+- Gave every write its own temporary. `<key>.tmp` was shared by all writers of
+  that key, which is a silent-corruption primitive rather than untidiness: A
+  writes the temporary, B truncates and rewrites it, A renames it into place,
+  and the record then holds B's BYTES under A's REVISION — which A has already
+  returned to its caller. Every `if_revision` guard later taken against that
+  revision protects content it was never derived from. Reproduced at 1/40 rounds
+  with 4 MiB bodies before the fix. Temporaries are now qualified by instance
+  and a per-write counter, so a rename can only commit its own writer's bytes.
+
 ### Known limitation
 
-- **Cross-process write exclusion is still missing, and it is sharper than
-  "unsupported".** `put` evaluates `if_absent`/`if_revision` against a read and
-  *then* writes-fsyncs-renames, with only a per-instance mutex in between, so
-  two processes can both pass the check and both rename. Unique revisions stop a
-  *stale* token from matching; they do not serialise concurrent writers.
-  Closing it needs an `flock`/`O_EXCL` lock spanning check-through-rename.
+- **Cross-process write exclusion is still missing.** The lock above is
+  process-wide, not system-wide, so two *processes* over one root can still both
+  pass a CAS check and both rename. Closing it needs an `flock`/`O_EXCL` lock
+  spanning check-through-rename, which this crate cannot express while it is
+  `#![forbid(unsafe_code)]` — the existing in-repo lock
+  (`vault-pm-local-host`) uses `libc::openat`/`CreateFileW`, and it sits *above*
+  this crate rather than below it.
 
-  Until that lands, any protocol whose safety rests on CAS-based mutual
-  exclusion between processes — D18R leadership fencing, for one — is not sound
-  on this backend and should not assume the storage layer provides an atomic
-  compare-and-swap.
+  Scope honestly: the per-write temporary reduces the cross-process failure from
+  silent corruption to a lost update, which is a real improvement but not
+  exclusion. That reduction is **not proven by the tests here** — they run
+  in-process, where the new lock already covers it.
+
+  Until a system-wide lock lands, any protocol whose safety rests on CAS-based
+  mutual exclusion between processes — D18R leadership fencing, for one — is not
+  sound on this backend and should not assume an atomic compare-and-swap.
 
 ### Added
 
