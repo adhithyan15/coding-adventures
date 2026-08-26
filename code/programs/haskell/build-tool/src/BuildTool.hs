@@ -2,6 +2,13 @@ module BuildTool
     ( BuildResult(..)
     , Config(..)
     , MetadataEncodingError(..)
+    , OrphanBuildFile(..)
+    , OrphanDiagnostic(..)
+    , OrphanDiagnosticDetails(..)
+    , OrphanExemption(..)
+    , OrphanManifest(..)
+    , OrphanSnapshot(..)
+    , OrphanValidationResult(..)
     , Package(..)
     , ParsedArgs(..)
     , TrackedArtifactDiagnostic(..)
@@ -17,6 +24,7 @@ module BuildTool
     , resolveDependencies
     , runWithArgs
     , trackedArtifactUnicodeVersion
+    , validateOrphanCrateSnapshot
     , validateTrackedArtifactSnapshot
     ) where
 
@@ -31,7 +39,7 @@ import Data.Char (isAlpha, isAlphaNum, isAsciiLower, isAsciiUpper, isSpace, ord,
 import Data.List (intercalate, isInfixOf, isPrefixOf, nub, sort, sortOn)
 import qualified Data.Map.Strict as Map
 import Data.Map.Strict (Map)
-import Data.Maybe (fromMaybe, listToMaybe, mapMaybe, maybeToList)
+import Data.Maybe (fromMaybe, isJust, listToMaybe, mapMaybe, maybeToList)
 import qualified Data.Set as Set
 import Data.Set (Set)
 import qualified Data.Text as Text
@@ -40,6 +48,7 @@ import Data.Time.Clock (diffUTCTime, getCurrentTime)
 import Data.Time.Format (defaultTimeLocale, formatTime)
 import qualified DirectedGraph as DG
 import GHC.Conc (getNumCapabilities)
+import Numeric (showHex)
 import System.Directory
     ( canonicalizePath
     , createDirectoryIfMissing
@@ -131,6 +140,67 @@ data TrackedArtifactDiagnostic = TrackedArtifactDiagnostic
     , trackedDiagnosticSeverity :: String
     , trackedDiagnosticPath :: String
     , trackedDiagnosticDetails :: TrackedArtifactDiagnosticDetails
+    }
+    deriving (Eq, Show)
+
+data OrphanManifest = OrphanManifest
+    { orphanManifestPath :: String
+    , orphanManifestKind :: String
+    }
+    deriving (Eq, Show)
+
+data OrphanBuildFile = OrphanBuildFile
+    { orphanBuildFilePath :: String
+    , orphanBuildFileState :: String
+    }
+    deriving (Eq, Show)
+
+data OrphanExemption = OrphanExemption
+    { orphanExemptionLine :: Int
+    , orphanExemptionKind :: String
+    , orphanExemptionPath :: String
+    , orphanExemptionReason :: Maybe String
+    }
+    deriving (Eq, Show)
+
+data OrphanSnapshot = OrphanSnapshot
+    { orphanSnapshotDirectories :: [String]
+    , orphanSnapshotManifests :: [OrphanManifest]
+    , orphanSnapshotBuildFiles :: [OrphanBuildFile]
+    , orphanSnapshotExemptions :: [OrphanExemption]
+    }
+    deriving (Eq, Show)
+
+data OrphanDiagnosticDetails
+    = OrphanCrateDiagnosticDetails
+        { orphanDetailBuildPath :: Maybe String
+        , orphanDetailManifestKind :: String
+        }
+    | OrphanInvalidExemptionDetails
+        { orphanInvalidLine :: Int
+        , orphanInvalidProblem :: String
+        }
+    | OrphanStaleExemptionDetails
+        { orphanStaleEntryPath :: String
+        , orphanStaleKind :: String
+        , orphanStaleLine :: Int
+        , orphanStaleProblem :: String
+        }
+    deriving (Eq, Show)
+
+data OrphanDiagnostic = OrphanDiagnostic
+    { orphanDiagnosticCode :: String
+    , orphanDiagnosticSeverity :: String
+    , orphanDiagnosticPath :: String
+    , orphanDiagnosticDetails :: OrphanDiagnosticDetails
+    }
+    deriving (Eq, Show)
+
+data OrphanValidationResult = OrphanValidationResult
+    { orphanResultValid :: Bool
+    , orphanResultDiagnosticCodes :: [String]
+    , orphanResultPendingExemptionCount :: Int
+    , orphanResultDiagnostics :: [OrphanDiagnostic]
     }
     deriving (Eq, Show)
 
@@ -250,6 +320,354 @@ trackedArtifactDiagnosticSortKey diagnostic =
     )
   where
     details = trackedDiagnosticDetails diagnostic
+
+orphanScanRoot :: String
+orphanScanRoot = "code"
+
+orphanLedgerPath :: String
+orphanLedgerPath = "code/BUILD-EXEMPTIONS"
+
+orphanBuildRanks :: Map String Int
+orphanBuildRanks =
+    Map.fromList
+        ( zip
+            ["BUILD", "BUILD_windows", "BUILD_mac", "BUILD_linux", "BUILD_mac_and_linux"]
+            [0 ..]
+        )
+
+orphanSkipComponents :: Set String
+orphanSkipComponents =
+    Set.fromList
+        [ ".git"
+        , "target"
+        , "node_modules"
+        , "vendor"
+        , ".venv"
+        , "_build"
+        , "deps"
+        , ".build"
+        , "dist-newstyle"
+        , ".cargo"
+        ]
+
+pythonBlankCodepoints :: Set Int
+pythonBlankCodepoints =
+    Set.fromList
+        ( [0x0009 .. 0x000D]
+            ++ [0x001C .. 0x0020]
+            ++ [0x0085, 0x00A0, 0x1680]
+            ++ [0x2000 .. 0x200A]
+            ++ [0x2028, 0x2029, 0x202F, 0x205F, 0x3000]
+        )
+
+-- Validate a caller-supplied Cargo/BUILD/ledger snapshot without consulting
+-- the checkout, Git, processes, environment, network, credentials, or links.
+validateOrphanCrateSnapshot :: OrphanSnapshot -> OrphanValidationResult
+validateOrphanCrateSnapshot snapshot =
+    OrphanValidationResult
+        { orphanResultValid = null diagnostics
+        , orphanResultDiagnosticCodes = sort (nub (map orphanDiagnosticCode diagnostics))
+        , orphanResultPendingExemptionCount = pendingCount
+        , orphanResultDiagnostics = diagnostics
+        }
+  where
+    manifests =
+        filter
+            (not . orphanArtifactPath . orphanManifestPath)
+            (orphanSnapshotManifests snapshot)
+    directorySet = Set.fromList (orphanSnapshotDirectories snapshot)
+    manifestPathSet = Set.fromList (map orphanManifestPath manifests)
+    buildFiles = orphanSnapshotBuildFiles snapshot
+    coverageFor manifest =
+        coveringOrphanBuild "runnable" (orphanManifestPath manifest) buildFiles
+    emptyBuildFor manifest =
+        coveringOrphanBuild "empty" (orphanManifestPath manifest) buildFiles
+    (invalidDiagnostics, validExemptions) =
+        validateOrphanExemptions (orphanSnapshotExemptions snapshot)
+    (staleDiagnostics, activePaths, pendingCount) =
+        activateOrphanExemptions
+            directorySet
+            manifestPathSet
+            (\path -> coveringOrphanBuild "runnable" path buildFiles)
+            validExemptions
+    manifestDiagnostics = mapMaybe manifestDiagnostic manifests
+    manifestDiagnostic manifest
+        | isJust (coverageFor manifest) = Nothing
+        | Set.member (orphanManifestPath manifest) activePaths = Nothing
+        | otherwise =
+            case emptyBuildFor manifest of
+                Just buildFile ->
+                    Just
+                        OrphanDiagnostic
+                            { orphanDiagnosticCode = "ORPHAN_CRATE_EMPTY_BUILD"
+                            , orphanDiagnosticSeverity = "error"
+                            , orphanDiagnosticPath = orphanManifestPath manifest
+                            , orphanDiagnosticDetails =
+                                OrphanCrateDiagnosticDetails
+                                    (Just (orphanBuildFilePath buildFile))
+                                    (orphanManifestKind manifest)
+                            }
+                Nothing ->
+                    Just
+                        OrphanDiagnostic
+                            { orphanDiagnosticCode = "ORPHAN_CRATE_UNLISTED"
+                            , orphanDiagnosticSeverity = "error"
+                            , orphanDiagnosticPath = orphanManifestPath manifest
+                            , orphanDiagnosticDetails =
+                                OrphanCrateDiagnosticDetails
+                                    Nothing
+                                    (orphanManifestKind manifest)
+                            }
+    diagnostics =
+        sortOn orphanDiagnosticSortKey
+            (invalidDiagnostics ++ staleDiagnostics ++ manifestDiagnostics)
+
+validateOrphanExemptions
+    :: [OrphanExemption]
+    -> ([OrphanDiagnostic], [OrphanExemption])
+validateOrphanExemptions = go Set.empty [] []
+  where
+    go _ diagnostics valid [] = (reverse diagnostics, reverse valid)
+    go seen diagnostics valid (exemption : remaining) =
+        let path = orphanExemptionPath exemption
+            portable = portableOrphanPath path
+            identity =
+                if portable
+                    then Just (TrackedUnicode.casefold (TrackedUnicode.nfc path))
+                    else Nothing
+            duplicate = maybe False (`Set.member` seen) identity
+            nextSeen = maybe seen (`Set.insert` seen) identity
+            pathProblem
+                | not portable = Just "PATH_UNSAFE"
+                | not (underOrphanScanRoot path) = Just "PATH_OUTSIDE_SCAN"
+                | orphanArtifactPath path = Just "PATH_ARTIFACT"
+                | otherwise = Nothing
+            problem
+                | orphanExemptionKind exemption `notElem` ["EXCLUDED", "PENDING"] =
+                    Just "UNKNOWN_KIND"
+                | not (validOrphanReason (orphanExemptionReason exemption)) =
+                    Just "REASON_MISSING"
+                | duplicate = Just "DUPLICATE_PATH"
+                | otherwise = pathProblem
+         in case problem of
+                Just invalidProblem ->
+                    go
+                        nextSeen
+                        ( invalidExemptionDiagnostic
+                            (orphanExemptionLine exemption)
+                            invalidProblem
+                            : diagnostics
+                        )
+                        valid
+                        remaining
+                Nothing -> go nextSeen diagnostics (exemption : valid) remaining
+
+activateOrphanExemptions
+    :: Set String
+    -> Set String
+    -> (String -> Maybe OrphanBuildFile)
+    -> [OrphanExemption]
+    -> ([OrphanDiagnostic], Set String, Int)
+activateOrphanExemptions directories manifests coverageFor = go [] Set.empty 0
+  where
+    go diagnostics active pending [] = (reverse diagnostics, active, pending)
+    go diagnostics active pending (exemption : remaining) =
+        let path = orphanExemptionPath exemption
+            staleProblem
+                | not (Set.member path directories) = Just "MISSING_DIRECTORY"
+                | not (Set.member path manifests) = Just "NO_MANIFEST"
+                | isJust (coverageFor path) = Just "COVERED"
+                | otherwise = Nothing
+         in case staleProblem of
+                Just problem ->
+                    go
+                        ( staleExemptionDiagnostic exemption problem
+                            : diagnostics
+                        )
+                        active
+                        pending
+                        remaining
+                Nothing ->
+                    go
+                        diagnostics
+                        (Set.insert path active)
+                        ( pending
+                            + if orphanExemptionKind exemption == "PENDING"
+                                then 1
+                                else 0
+                        )
+                        remaining
+
+invalidExemptionDiagnostic :: Int -> String -> OrphanDiagnostic
+invalidExemptionDiagnostic line problem =
+    OrphanDiagnostic
+        { orphanDiagnosticCode = "ORPHAN_EXEMPTION_INVALID"
+        , orphanDiagnosticSeverity = "error"
+        , orphanDiagnosticPath = orphanLedgerPath
+        , orphanDiagnosticDetails = OrphanInvalidExemptionDetails line problem
+        }
+
+staleExemptionDiagnostic :: OrphanExemption -> String -> OrphanDiagnostic
+staleExemptionDiagnostic exemption problem =
+    OrphanDiagnostic
+        { orphanDiagnosticCode = "ORPHAN_EXEMPTION_STALE"
+        , orphanDiagnosticSeverity = "error"
+        , orphanDiagnosticPath = orphanLedgerPath
+        , orphanDiagnosticDetails =
+            OrphanStaleExemptionDetails
+                (orphanExemptionPath exemption)
+                (orphanExemptionKind exemption)
+                (orphanExemptionLine exemption)
+                problem
+        }
+
+coveringOrphanBuild
+    :: String
+    -> String
+    -> [OrphanBuildFile]
+    -> Maybe OrphanBuildFile
+coveringOrphanBuild wantedState manifestPath buildFiles =
+    listToMaybe (sortOn candidateKey candidates)
+  where
+    candidates =
+        [ buildFile
+        | buildFile <- buildFiles
+        , orphanBuildFileState buildFile == wantedState
+        , Just (parent, name) <- [splitOrphanBuildPath (orphanBuildFilePath buildFile)]
+        , Map.member name orphanBuildRanks
+        , underOrphanScanRoot parent
+        , manifestPath == parent || (parent ++ "/") `isPrefixOf` manifestPath
+        ]
+    candidateKey buildFile =
+        case splitOrphanBuildPath (orphanBuildFilePath buildFile) of
+            Just (parent, name) ->
+                ( negate (orphanPathDepth parent)
+                , fromMaybe (length orphanBuildRanks) (Map.lookup name orphanBuildRanks)
+                , orphanBuildFilePath buildFile
+                )
+            Nothing -> (0, length orphanBuildRanks, orphanBuildFilePath buildFile)
+
+splitOrphanBuildPath :: String -> Maybe (String, String)
+splitOrphanBuildPath path =
+    case break (== '/') (reverse path) of
+        (_, []) -> Nothing
+        (reversedName, _ : reversedParent) ->
+            Just (reverse reversedParent, reverse reversedName)
+
+portableOrphanPath :: String -> Bool
+portableOrphanPath path =
+    not (null path)
+        && null (drop 512 path)
+        && validUnicodeScalarText path
+        && TrackedUnicode.nfc path == path
+        && head path /= '/'
+        && not (driveQualified path)
+        && '\\' `notElem` path
+        && "//" `notElemIn` path
+        && not (any unsafeTrackedArtifactCharacter path)
+        && all portableComponent (splitTrackedPath path)
+  where
+    portableComponent component =
+        not (null component)
+            && component `notElem` [".", ".."]
+            && last component `notElem` ['.', ' ']
+            && not
+                ( Set.member
+                    (TrackedUnicode.fullUppercase (takeWhile (/= '.') component))
+                    windowsReservedBasenames
+                )
+
+notElemIn :: Eq a => [a] -> [a] -> Bool
+notElemIn needle haystack = not (needle `isInfixOf` haystack)
+
+validOrphanReason :: Maybe String -> Bool
+validOrphanReason Nothing = False
+validOrphanReason (Just reason) =
+    null (drop 4096 reason)
+        && validUnicodeScalarText reason
+        && not (all (\character -> Set.member (ord character) pythonBlankCodepoints) reason)
+
+validUnicodeScalarText :: String -> Bool
+validUnicodeScalarText =
+    all
+        (\character ->
+            let scalar = ord character
+             in scalar < 0xD800 || scalar > 0xDFFF
+        )
+
+underOrphanScanRoot :: String -> Bool
+underOrphanScanRoot path =
+    path == orphanScanRoot || (orphanScanRoot ++ "/") `isPrefixOf` path
+
+orphanArtifactPath :: String -> Bool
+orphanArtifactPath = any (`Set.member` orphanSkipComponents) . splitTrackedPath
+
+orphanPathDepth :: String -> Int
+orphanPathDepth = length . splitTrackedPath
+
+orphanDiagnosticSortKey :: OrphanDiagnostic -> (String, String, String)
+orphanDiagnosticSortKey diagnostic =
+    ( orphanDiagnosticCode diagnostic
+    , orphanDiagnosticPath diagnostic
+    , canonicalOrphanDetails (orphanDiagnosticDetails diagnostic)
+    )
+
+canonicalOrphanDetails :: OrphanDiagnosticDetails -> String
+canonicalOrphanDetails details =
+    case details of
+        OrphanCrateDiagnosticDetails maybeBuildPath manifestKind ->
+            "{"
+                ++ maybe
+                    ""
+                    (\buildPath -> "\"build_path\":" ++ jsonAsciiString buildPath ++ ",")
+                    maybeBuildPath
+                ++ "\"manifest_kind\":"
+                ++ jsonAsciiString manifestKind
+                ++ "}"
+        OrphanInvalidExemptionDetails line problem ->
+            "{\"line\":"
+                ++ show line
+                ++ ",\"problem\":"
+                ++ jsonAsciiString problem
+                ++ "}"
+        OrphanStaleExemptionDetails entryPath kind line problem ->
+            "{\"entry_path\":"
+                ++ jsonAsciiString entryPath
+                ++ ",\"kind\":"
+                ++ jsonAsciiString kind
+                ++ ",\"line\":"
+                ++ show line
+                ++ ",\"problem\":"
+                ++ jsonAsciiString problem
+                ++ "}"
+
+jsonAsciiString :: String -> String
+jsonAsciiString value = "\"" ++ concatMap escape value ++ "\""
+  where
+    escape character =
+        case character of
+            '\"' -> "\\\""
+            '\\' -> "\\\\"
+            '\b' -> "\\b"
+            '\f' -> "\\f"
+            '\n' -> "\\n"
+            '\r' -> "\\r"
+            '\t' -> "\\t"
+            _
+                | scalar < 0x20 -> unicodeEscape scalar
+                | scalar < 0x7F -> [character]
+                | scalar <= 0xFFFF -> unicodeEscape scalar
+                | otherwise ->
+                    let adjusted = scalar - 0x10000
+                        high = 0xD800 + adjusted `div` 0x400
+                        low = 0xDC00 + adjusted `mod` 0x400
+                     in unicodeEscape high ++ unicodeEscape low
+              where
+                scalar = ord character
+    unicodeEscape scalar = "\\u" ++ padHex 4 scalar
+    padHex width scalar =
+        let encoded = showHex scalar ""
+         in replicate (width - length encoded) '0' ++ encoded
 
 renderMetadataEncodingError :: MetadataEncodingError -> String
 renderMetadataEncodingError metadataError =
