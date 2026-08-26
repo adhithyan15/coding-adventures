@@ -14169,6 +14169,59 @@ export const DUCTUS: Record<string, LetterDuctus> = {
     ],
     source: kannadaIndependentVowelSource("ಅ"),
   },
+  // Gopala Krishna A's 35-frame animation writes independent vowel ಆ in two
+  // runs. The first joins the compact left loop to the broad lower bowl. After
+  // one lift, the second circles the right loop and returns left along the
+  // inner bar. These four medians fit that order to the bundled Noto Sans
+  // Kannada outline.
+  [ductusKey("kannada", "ಆ")]: {
+    script: "kannada",
+    glyph: "ಆ",
+    strokes: [
+      {
+        segments: [
+          {
+            label: "turn clockwise around the compact left loop",
+            path: [
+              { x: 110, y: 400 }, { x: 125, y: 460 }, { x: 180, y: 525 },
+              { x: 242, y: 528 }, { x: 310, y: 490 }, { x: 345, y: 430 },
+              { x: 335, y: 380 }, { x: 285, y: 330 }, { x: 220, y: 312 },
+              { x: 160, y: 330 }, { x: 115, y: 370 },
+            ],
+          },
+          {
+            label: "sweep around the broad lower bowl and finish at the upper right",
+            path: [
+              { x: 115, y: 370 }, { x: 75, y: 300 }, { x: 90, y: 210 },
+              { x: 150, y: 115 }, { x: 270, y: 55 }, { x: 420, y: 28 },
+              { x: 550, y: 45 }, { x: 670, y: 100 }, { x: 750, y: 200 },
+              { x: 785, y: 320 },
+            ],
+          },
+        ],
+      },
+      {
+        segments: [
+          {
+            label: "lift, then turn clockwise around the rounded right loop",
+            path: [
+              { x: 535, y: 420 }, { x: 570, y: 480 }, { x: 640, y: 525 },
+              { x: 720, y: 500 }, { x: 770, y: 410 }, { x: 785, y: 320 },
+              { x: 750, y: 290 }, { x: 680, y: 280 },
+            ],
+          },
+          {
+            label: "return left along the inward horizontal bar",
+            path: [
+              { x: 680, y: 280 }, { x: 600, y: 280 }, { x: 500, y: 280 },
+              { x: 420, y: 280 }, { x: 375, y: 280 },
+            ],
+          },
+        ],
+      },
+    ],
+    source: kannadaIndependentVowelSource("ಆ"),
+  },
   // Yogesh's 98-frame animation writes independent vowel ಇ in one pen-down
   // run. The middle stem is deliberately retraced: the first arch descends it,
   // the second movement climbs it again before flowing through the right arch,

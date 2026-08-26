@@ -50,7 +50,7 @@ describe("independent (word-initial) vowels", () => {
     });
   });
 
-  it("keeps Kannada independent ಅ, ಇ, and ಎ sourced while the remaining vowels stay unverified", () => {
+  it("keeps Kannada independent ಅ, ಆ, ಇ, and ಎ sourced while the remaining vowels stay unverified", () => {
     const kannada = SCRIPTS.find((s) => s.script === "kannada")!;
     const iv = kannada.independentVowels!;
     expect(iv[0]!.glyph).toBe("ಅ");
@@ -58,6 +58,12 @@ describe("independent (word-initial) vowels", () => {
     expect(iv[0]!.penLifts).toBe(0);
     expect(iv[0]!.strokeOrderSource?.url).toBe(
       "https://commons.wikimedia.org/wiki/File:Kannada-alphabet-a.gif",
+    );
+    expect(iv[1]!.glyph).toBe("ಆ");
+    expect(iv[1]!.strokeOrder).toHaveLength(4);
+    expect(iv[1]!.penLifts).toBe(1);
+    expect(iv[1]!.strokeOrderSource?.url).toBe(
+      "https://commons.wikimedia.org/wiki/File:Kannada-alphabet-aa.gif",
     );
     expect(iv[2]!.glyph).toBe("ಇ");
     expect(iv[2]!.strokeOrder).toHaveLength(4);
@@ -71,7 +77,7 @@ describe("independent (word-initial) vowels", () => {
     expect(iv[6]!.strokeOrderSource?.url).toBe(
       "https://commons.wikimedia.org/wiki/File:Kannada-alphabet-ae.gif",
     );
-    expect(iv.filter((_, index) => ![0, 2, 6].includes(index)).every((v) => v.strokeOrder.length === 0)).toBe(true);
+    expect(iv.filter((_, index) => ![0, 1, 2, 6].includes(index)).every((v) => v.strokeOrder.length === 0)).toBe(true);
   });
 
   it("keeps Malayalam independent അ, ഇ, ഉ, and എ sourced while the remaining vowels stay unverified", () => {
