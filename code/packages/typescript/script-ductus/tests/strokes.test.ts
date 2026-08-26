@@ -236,6 +236,7 @@ const ARABIC_YAA = DUCTUS[ductusKey("arabic", "ي")];
 const ARABIC_HAMZA = DUCTUS[ductusKey("arabic", "ء")];
 const ARABIC_LAM_ALIF = DUCTUS[ductusKey("arabic", "لا")];
 const URDU_ALEF = DUCTUS[ductusKey("urdu-nastaliq", "ا")];
+const URDU_BEH = DUCTUS[ductusKey("urdu-nastaliq", "ب")];
 const URDU_PEH = DUCTUS[ductusKey("urdu-nastaliq", "پ")];
 const URDU_TTE = DUCTUS[ductusKey("urdu-nastaliq", "ٹ")];
 const PERSIAN_CHE = DUCTUS[ductusKey("perso-arabic", "چ")];
@@ -3656,6 +3657,27 @@ describe("handwriting ductus", () => {
     expect(URDU_ALEF.strokes[0].segments).toHaveLength(1);
     const path = penPath(URDU_ALEF.strokes[0]);
     expect(path[0].y).toBeGreaterThan(path.at(-1)!.y);
+  });
+
+  it("Urdu independent ب draws its bowl before the single lower dot", () => {
+    expect(URDU_BEH.script).toBe("urdu-nastaliq");
+    expect(penLifts(URDU_BEH)).toBe(1);
+    expect(URDU_BEH.strokes).toHaveLength(2);
+    expect(URDU_BEH.strokes.map((stroke) => stroke.segments[0].label)).toEqual([
+      "sweep the independent be-series bowl from right to left",
+      "after one lift, place the single dot below",
+    ]);
+    const bowl = URDU_BEH.strokes[0].segments[0].path;
+    const dot = URDU_BEH.strokes[1].segments[0].path;
+    expect(bowl[0].x).toBeGreaterThan(bowl.at(-1)!.x);
+    expect(Math.max(...dot.map((point) => point.y))).toBeLessThan(
+      Math.min(...bowl.map((point) => point.y)),
+    );
+    expect(URDU_BEH.source.url).toBe(
+      "https://openbooks.library.northwestern.edu/zerozabar/chapter/be-kaf-and-short-vowels/",
+    );
+    expect(URDU_BEH.source.citation).toMatch(/Zer o Zabar.*independent ب.*Be instructions/i);
+    expect(new Set([ARABIC_BAA.source.url, DUCTUS["ب"].source.url, URDU_BEH.source.url]).size).toBe(3);
   });
 
   it("Urdu independent پ draws its bowl before the three-dot triangle", () => {

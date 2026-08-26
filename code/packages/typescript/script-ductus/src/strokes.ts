@@ -703,6 +703,25 @@ const independentPehStrokes = (
   },
 ];
 
+const independentUrduBehStrokes = (): Stroke[] => {
+  const [bowl] = independentPehStrokes();
+  return [
+    bowl,
+    {
+      segments: [
+        {
+          label: "after one lift, place the single dot below",
+          path: [
+            { x: 412, y: -137 },
+            { x: 379, y: -101 },
+            { x: 344, y: -137 },
+          ],
+        },
+      ],
+    },
+  ];
+};
+
 const independentUrduTteStrokes = (): Stroke[] => {
   const [bowl] = independentPehStrokes();
   return [
@@ -12062,6 +12081,16 @@ export const DUCTUS: Record<string, LetterDuctus> = {
       },
     ],
     source: persianAlphabetSource("ب"),
+  },
+  // Zer o Zabar demonstrates Urdu independent be as the be-series main line
+  // first, followed after one lift by its single lower dot. Share only the
+  // checked Noto fallback geometry with Arabic and Persian; the scoped key
+  // keeps the Urdu handwriting animation and prose independently addressable.
+  [ductusKey("urdu-nastaliq", "ب")]: {
+    script: "urdu-nastaliq",
+    glyph: "ب",
+    strokes: independentUrduBehStrokes(),
+    source: urduAlphabetSource("ب"),
   },
   "پ": {
     script: "perso-arabic",
