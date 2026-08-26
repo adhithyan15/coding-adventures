@@ -14216,6 +14216,54 @@ export const DUCTUS: Record<string, LetterDuctus> = {
     ],
     source: kannadaIndependentVowelSource("ಇ"),
   },
+  // Gopala Krishna A's 30-frame animation writes independent vowel ಎ in one
+  // run: compact left loop, joined lower curves, rising right side, then the
+  // tall outer arch finishing left. These four medians fit that zero-lift
+  // order to the bundled Noto Sans Kannada outline.
+  [ductusKey("kannada", "ಎ")]: {
+    script: "kannada",
+    glyph: "ಎ",
+    strokes: [
+      {
+        segments: [
+          {
+            label: "turn clockwise around the compact left loop",
+            path: [
+              { x: 220, y: 185 }, { x: 240, y: 190 }, { x: 260, y: 210 },
+              { x: 260, y: 235 }, { x: 245, y: 260 }, { x: 210, y: 285 },
+              { x: 170, y: 295 }, { x: 135, y: 290 }, { x: 90, y: 270 }, { x: 65, y: 225 },
+              { x: 67, y: 165 }, { x: 100, y: 105 }, { x: 160, y: 55 },
+              { x: 230, y: 28 }, { x: 300, y: 35 }, { x: 350, y: 85 },
+              { x: 370, y: 150 }, { x: 370, y: 180 },
+            ],
+          },
+          {
+            label: "sweep through the joined lower-left curve",
+            path: [
+              { x: 370, y: 180 }, { x: 390, y: 145 }, { x: 430, y: 95 },
+              { x: 475, y: 55 }, { x: 525, y: 30 }, { x: 575, y: 28 },
+            ],
+          },
+          {
+            label: "turn around the rounded lower-right bowl and climb its right side",
+            path: [
+              { x: 575, y: 28 }, { x: 630, y: 48 }, { x: 680, y: 95 },
+              { x: 710, y: 155 }, { x: 710, y: 220 }, { x: 690, y: 290 },
+              { x: 650, y: 355 }, { x: 590, y: 415 }, { x: 515, y: 460 },
+            ],
+          },
+          {
+            label: "carry the tall outer arch over and finish to the left",
+            path: [
+              { x: 515, y: 460 }, { x: 440, y: 500 }, { x: 360, y: 525 },
+              { x: 290, y: 540 }, { x: 240, y: 540 },
+            ],
+          },
+        ],
+      },
+    ],
+    source: kannadaIndependentVowelSource("ಎ"),
+  },
   [ductusKey("telugu", "అ")]: {
     script: "telugu",
     glyph: "అ",

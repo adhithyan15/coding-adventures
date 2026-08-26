@@ -252,6 +252,7 @@ const PERSIAN_YEH = DUCTUS[ductusKey("perso-arabic", "ی")];
 const URDU_BARI_YE = DUCTUS[ductusKey("urdu-nastaliq", "ے")];
 const KANNADA_A = DUCTUS[ductusKey("kannada", "ಅ")];
 const KANNADA_I = DUCTUS[ductusKey("kannada", "ಇ")];
+const KANNADA_E = DUCTUS[ductusKey("kannada", "ಎ")];
 const TELUGU_A = DUCTUS[ductusKey("telugu", "అ")];
 const TELUGU_AA = DUCTUS[ductusKey("telugu", "ఆ")];
 const TELUGU_I = DUCTUS[ductusKey("telugu", "ఇ")];
@@ -798,6 +799,20 @@ describe("handwriting ductus", () => {
       "descend through the broad outer curve and turn left along the base",
       "close the lower loop and sweep out to the right",
     ]);
+  });
+
+  it("Kannada ಎ carries both lower curves into the tall arch without lifting", () => {
+    expect(penLifts(KANNADA_E)).toBe(0);
+    expect(KANNADA_E.strokes).toHaveLength(1);
+    expect(KANNADA_E.strokes[0].segments.map((segment) => segment.label)).toEqual([
+      "turn clockwise around the compact left loop",
+      "sweep through the joined lower-left curve",
+      "turn around the rounded lower-right bowl and climb its right side",
+      "carry the tall outer arch over and finish to the left",
+    ]);
+    expect(KANNADA_E.source.url).toBe(
+      "https://commons.wikimedia.org/wiki/File:Kannada-alphabet-ae.gif",
+    );
   });
 
   it("Malayalam എ keeps its joined body separate from the broad outer arch", () => {

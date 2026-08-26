@@ -39,7 +39,7 @@ describe("real curriculum", () => {
     expect(scripts.devanagari!.complete).toBe(true);
   });
 
-  it("keeps the cross-script closure queue measured after Japanese mo", () => {
+  it("keeps the cross-script closure queue measured after Kannada e", () => {
     const candrakkala = scripts.malayalam!.marks!.find((mark) => mark.mark === "്")!;
     expect(candrakkala.role).toBe("virama");
     expect(candrakkala.compositionOrder).toEqual([
@@ -917,6 +917,23 @@ describe("real curriculum", () => {
     );
     expect(missingByScript.get("kannada.json")?.has("ಇ")).toBe(false);
     expect(affected.get("ಇ") ?? 0).toBe(0);
+    const kannadaE = scripts.kannada!.independentVowels!.find((entry) => entry.glyph === "ಎ")!;
+    expect(kannadaE.sound).toBe("e");
+    expect(kannadaE.penLifts).toBe(0);
+    expect(kannadaE.strokeOrder).toEqual([
+      "turn clockwise around the compact left loop",
+      "without lifting, sweep through the joined lower-left curve",
+      "without lifting, turn around the rounded lower-right bowl and climb its right side",
+      "without lifting, carry the tall outer arch over and finish to the left",
+    ]);
+    expect(kannadaE.strokeOrderSource?.citation).toMatch(
+      /Gopala Krishna A.*Kannada-alphabet-ae\.gif.*ಎ.*30 frames.*3\.0 seconds.*Wikimedia Commons.*25 May 2016/i,
+    );
+    expect(kannadaE.strokeOrderSource?.variation).toMatch(
+      /CC BY-SA 4\.0.*one uninterrupted run.*compact left loop.*joined lower curves.*rounded right side.*tall outer arch.*finish left.*Noto Sans Kannada.*zero-lift order/i,
+    );
+    expect(missingByScript.get("kannada.json")?.has("ಎ")).toBe(false);
+    expect(affected.get("ಎ") ?? 0).toBe(0);
     const persianShin = scripts["perso-arabic"]!.letters.find((entry) => entry.glyph === "ش")!;
     expect(persianShin.sound).toBe("sh");
     expect(persianShin.penLifts).toBe(3);
@@ -949,7 +966,7 @@ describe("real curriculum", () => {
     expect(affected.get("ی") ?? 0).toBe(0);
     expect(
       [...affected.entries()].sort((left, right) => right[1] - left[1])[0],
-    ).toEqual(["ಎ", 6]);
+    ).toEqual(["ಆ", 6]);
   });
 
   it("loaded every track (17+ and growing)", () => {
