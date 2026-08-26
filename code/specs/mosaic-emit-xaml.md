@@ -98,8 +98,8 @@ of them; this column is the WinUI 3 contract.
 | UI29 kernel | XAML lowering | Notes |
 |---|---|---|
 | `Box`       | `<Border>` (or `<ContentPresenter>` when no padding/background) | Holds part-styled background, border, padding. |
-| `Row`       | `<StackPanel Orientation="Horizontal">` | Children flow left→right. |
-| `Column`    | `<StackPanel Orientation="Vertical">` | Children flow top→bottom. |
+| `Row`       | `<Grid>` + one `ColumnDefinition` per child | Children flow left→right; see §3.1 for sizing. |
+| `Column`    | `<Grid>` + one `RowDefinition` per child | Children flow top→bottom; see §3.1 for sizing. |
 | `Stack`     | `<Grid>` (single cell, all children) | Z-axis stacking; `Grid.ZIndex` on each child. |
 | `Text`      | `<TextBlock>` | `Text` set from slot ref via `{x:Bind}` or literal. |
 | `Image`     | `<Image Source="..."/>` | Slot ref → `{x:Bind}` on `Source`. |
@@ -121,6 +121,84 @@ A node whose tag is *not* in the kernel and *not* a recognised sub-tag is a
 **component reference** (UI29 §4.4); the resolver walks the package manifest
 and emits a `<local:ComponentName .../>` or `<pkg:ComponentName .../>`
 element, treating it as a XAML UserControl reference. See §11.
+
+### 3.1 `Row`/`Column` flex lowering
+
+`StackPanel` sizes to content and has no concept of distributing free
+space, so a `Row`/`Column` that used to lower to it silently dropped
+`flex-grow`, `justify-content`, `align-items`, and any percentage
+`width`/`height` — those become expressible once the container is a
+`<Grid>` with one `ColumnDefinition` (`Row`) or `RowDefinition`
+(`Column`) per child.
+
+**Sizing.** Each child gets an `Auto`-sized definition by default. A
+child's definition becomes `"*"` (star) when either is true:
+
+- the child's own mosstyle carries `flex-grow` (any non-zero value —
+  today's authored sources only ever use `1`, so weighted star ratios
+  are not yet implemented; add them if a real weighted case appears),
+- the child carries a **main-axis** percentage size — `width: 100%` on
+  a `Row`'s direct child, or `height: 100%` on a `Column`'s direct
+  child. This is flexbox's own "let this child claim the remaining
+  space" behavior in the main-axis direction, so it's treated
+  identically to `flex-grow: 1` rather than as a separate mechanism.
+
+A **cross-axis** percentage (`width: 100%` inside a `Column`,
+`height: 100%` inside a `Row`) needs no special handling: a single-row
+`Grid` cell already spans the container's full cross-axis extent, and
+a child's default `HorizontalAlignment`/`VerticalAlignment` is
+`Stretch` — matching flexbox's own default. The property is simply
+dropped as before (percentage lengths have no WinUI `Double`
+equivalent); the Grid's own sizing already produces the same visual
+result.
+
+**Positioning.** Every child (however many top-level XAML elements it
+expands to — see below) gets a matching `Grid.Column="i"` (`Row`) or
+`Grid.Row="i"` (`Column`) attached property, `i` counting up from `0`
+in source order.
+
+An `If`/`Else` pair is the one case where a single moslayout child
+expands to **two** sibling top-level elements (§6.2 — both
+`ContentControl`s always exist in the tree, toggled by `Visibility`).
+Both get the *same* `Grid.Column`/`Grid.Row` index: they represent one
+logical grid cell, mutually exclusive at runtime. A bare `If` (no
+`Else`) and a `For` (always exactly one `<ItemsRepeater>` root) each
+get one index, same as any other primitive.
+
+**Cross-axis alignment (`align-items`).** Read off the *container's*
+own mosstyle (not the child's). Only `center` is authored today, so
+that's what's implemented: it becomes `VerticalAlignment="Center"` on
+every child of a `Row` (cross-axis = vertical) or
+`HorizontalAlignment="Center"` on every child of a `Column`
+(cross-axis = horizontal), injected the same way as the
+`Grid.Column`/`Grid.Row` attribute. `flex-start` / `stretch` / unset
+need no attribute — `Stretch` is both WinUI's and flexbox's default.
+`flex-end` and `baseline` are not yet mapped; add them when an
+authored source needs them rather than guessing at the XAML shape
+unverified.
+
+**Main-axis distribution (`justify-content`).** Only `space-between`
+is authored today. It inserts a `"*"`-sized spacer definition
+*between* each pair of children — `N` children get `N − 1` spacers, no
+leading or trailing one, which is exactly `space-between`'s contract.
+Each spacer is an empty element (the same shape `Spacer` already
+emits: `<Rectangle Width="Auto" Height="Auto"/>`). Any other value (or
+none) gets no distribution — children pack from the start, unchanged
+from today's visual behavior. `space-around`, `space-evenly`, and
+`center` distribution are explicitly deferred, tracked in
+`code/programs/mosaic/task-app/BACKLOG.md`.
+
+**`gap`.** Unchanged mapping (`gap` → the `Spacing`-shaped setter, §3
+row unaffected), but the *attribute name* changes: `Grid` has no
+`Spacing` property, so the Grid emitter renames it to
+`ColumnSpacing` (`Row`) / `RowSpacing` (`Column`) — both added to
+`Grid` in Windows App SDK 1.3+, safely inside this spec's pinned 1.5
+floor (§10).
+
+**Out of scope**, tracked separately: `flex-wrap` (no WinUI 3
+`WrapPanel` — 8 uses repo-wide, its own follow-up), weighted
+`flex-grow` values other than `1`, `align-items: flex-end`/`baseline`,
+and `justify-content` values other than `space-between`.
 
 ## 4. Host* primitives
 
@@ -311,9 +389,12 @@ For (each: slot: viewport-rows, as: row, index: r) {
     <DataTemplate x:DataType="local:ViewportRowVm">
       <!-- "row" is the DataTemplate's DataContext;
            "r" is exposed via a generated Index property on RowVm -->
-      <StackPanel Orientation="Horizontal" Style="{StaticResource DataRowStyle}">
-        <TextBlock Text="{x:Bind GetCell(R, C)}"/>
-      </StackPanel>
+      <Grid Style="{StaticResource DataRowStyle}">
+        <Grid.ColumnDefinitions>
+          <ColumnDefinition Width="Auto"/>
+        </Grid.ColumnDefinitions>
+        <TextBlock Grid.Column="0" Text="{x:Bind GetCell(R, C)}"/>
+      </Grid>
     </DataTemplate>
   </ItemsRepeater.ItemTemplate>
 </ItemsRepeater>
