@@ -145,6 +145,13 @@
       "output": "chinese/book/chapters/ch16-language-identity.tex",
       "unicodeScript": "Han",
       "scriptCommand": "zh"
+    },
+    {
+      "language": "chinese",
+      "chapter": 17,
+      "output": "chinese/book/chapters/ch17-language-country.tex",
+      "unicodeScript": "Han",
+      "scriptCommand": "zh"
     }
   ]
 }

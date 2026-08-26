@@ -1,0 +1,19 @@
+{
+  "id": "ZH-EXT-047-LANGUAGE-COUNTRY-FOUR-SKILL",
+  "stage": "pre-A1",
+  "kind": "required",
+  "category": "assessment",
+  "canDo": "I can keep 字, 汉字, 汉语, 中文 and 中国 distinct across expanding retrieval and separate four-skill scores.",
+  "prerequisites": [
+    "ZH-EXT-046-LANGUAGE-COUNTRY-SCRIPT"
+  ],
+  "lessons": [
+    "ZH-R17-character-language-r2",
+    "ZH-R17-country-language-r1",
+    "ZH-R17-old-three-r2",
+    "ZH-R17-listening-five",
+    "ZH-R17-reading-five",
+    "ZH-R17-writing-five",
+    "ZH-C17-practice"
+  ]
+}

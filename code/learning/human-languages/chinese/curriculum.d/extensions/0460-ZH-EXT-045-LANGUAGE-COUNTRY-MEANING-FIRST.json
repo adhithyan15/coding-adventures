@@ -1,0 +1,14 @@
+{
+  "id": "ZH-EXT-045-LANGUAGE-COUNTRY-MEANING-FIRST",
+  "stage": "pre-A1",
+  "kind": "required",
+  "category": "vocabulary",
+  "canDo": "I can hear and say 中文 and 中国 and choose language or country from the ending.",
+  "prerequisites": [
+    "ZH-EXT-044-LANGUAGE-IDENTITY-FOUR-SKILL"
+  ],
+  "lessons": [
+    "ZH-C17-hear-zhongwen",
+    "ZH-C17-hear-zhongguo"
+  ]
+}
