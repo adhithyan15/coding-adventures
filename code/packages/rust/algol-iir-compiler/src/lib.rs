@@ -8504,6 +8504,9 @@ fn literal_numeric_unit_is_negative(node: &GrammarASTNode) -> Option<bool> {
             _ => None,
         };
     }
+    if let Some(negative) = literal_power_unit_is_negative(node) {
+        return Some(negative);
+    }
     let tokens = direct_tokens(node);
     if tokens.len() == 1 {
         match tokens[0].effective_type_name() {
@@ -8547,6 +8550,28 @@ fn literal_numeric_unit_is_negative(node: &GrammarASTNode) -> Option<bool> {
     (tokens.is_empty() && child_nodes.len() == 1)
         .then(|| literal_numeric_unit_is_negative(child_nodes[0]))
         .flatten()
+}
+
+fn literal_power_unit_is_negative(node: &GrammarASTNode) -> Option<bool> {
+    let sequence = pieces(node);
+    if sequence.len() < 3 || sequence.len().is_multiple_of(2) {
+        return None;
+    }
+    let mut operands = Vec::new();
+    for (index, piece) in sequence.iter().enumerate() {
+        if index.is_multiple_of(2) {
+            let Piece::Node(operand) = piece else {
+                return None;
+            };
+            operands.push(*operand);
+        } else if !matches!(piece, Piece::Op(op) if matches!(op.as_str(), "^" | "**")) {
+            return None;
+        }
+    }
+    let (base, exponents) = operands.split_first()?;
+    let exponent = literal_nonneg_integer_power_chain(exponents)?;
+    let base_is_negative = literal_numeric_unit_is_negative(base)?;
+    Some(base_is_negative && !exponent.is_multiple_of(2))
 }
 
 fn literal_positive_numeric_zero(node: &GrammarASTNode) -> bool {
@@ -11134,6 +11159,9 @@ mod tests {
             "choose / ((-1.0) / (-1.0))",
             "((-1.0) * (-1.0)) * choose",
             "choose * ((1.0 / (-1.0)) * (-1.0))",
+            "choose * ((-1.0) ^ 2)",
+            "choose / ((-1.0) ** 2)",
+            "choose * ((-1.0) ^ 3) * (-1.0)",
         ] {
             compile_source(
                 &format!(
@@ -11179,6 +11207,7 @@ mod tests {
             "(-1.0) * choose",
             "choose * (-1.0) / 1.0",
             "choose * ((-1.0) * 1.0)",
+            "choose * ((-1.0) ^ 3)",
             "1.0 / choose * 1.0",
         ] {
             let err = compile_source(
