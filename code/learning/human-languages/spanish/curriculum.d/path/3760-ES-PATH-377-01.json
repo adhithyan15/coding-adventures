@@ -1,0 +1,16 @@
+{
+  "id": "ES-PATH-377-01",
+  "spine_node": "SPINE-DEFINITE-REFERENCE",
+  "lessons": [
+    "ES-C377-letra",
+    "ES-C377-frase",
+    "ES-C377-idioma",
+    "ES-C377-historia",
+    "ES-C377-baile"
+  ],
+  "before": [],
+  "inline": [
+    "ES-EXT-377-REF"
+  ],
+  "after": []
+}

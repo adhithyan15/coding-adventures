@@ -1,0 +1,21 @@
+{
+  "chapter": 378,
+  "title": "Five Places You Can Ask About",
+  "label": "ch:la-selva-y-el-prado",
+  "canDo": "I can say la selva, el prado, el volcán, la cumbre and el edificio, and ask where five kinds of place are.",
+  "spineNodes": [
+    "SPINE-ASK-LOCATION"
+  ],
+  "payoff": {
+    "lesson": "ES-C378-edificio",
+    "kind": "production",
+    "summary": "Complete ES-C378-edificio: ask where five kinds of place are, and say one thing about each.",
+    "assesses": [
+      "ES-LEX-C378-WHERE-56",
+      "ES-LEX-C378-WHERE-57",
+      "ES-LEX-C378-WHERE-58",
+      "ES-LEX-C378-WHERE-59",
+      "ES-LEX-C378-WHERE-60"
+    ]
+  }
+}

@@ -1,0 +1,21 @@
+{
+  "chapter": 374,
+  "title": "Five Things You Hold",
+  "label": "ch:el-lapiz-y-el-cepillo",
+  "canDo": "I can say el lápiz, el cepillo, el guante, la vela and el nudo, and name five things that fit in one hand.",
+  "spineNodes": [
+    "SPINE-DEFINITE-REFERENCE"
+  ],
+  "payoff": {
+    "lesson": "ES-C374-nudo",
+    "kind": "production",
+    "summary": "Complete ES-C374-nudo: name five things that fit in one hand, and say one thing about each.",
+    "assesses": [
+      "ES-LEX-C374-REF-56",
+      "ES-LEX-C374-REF-57",
+      "ES-LEX-C374-REF-58",
+      "ES-LEX-C374-REF-59",
+      "ES-LEX-C374-REF-60"
+    ]
+  }
+}

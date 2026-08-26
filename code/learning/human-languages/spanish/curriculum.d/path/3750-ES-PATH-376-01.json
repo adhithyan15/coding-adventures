@@ -1,0 +1,16 @@
+{
+  "id": "ES-PATH-376-01",
+  "spine_node": "SPINE-DEFINITE-REFERENCE",
+  "lessons": [
+    "ES-C376-harina",
+    "ES-C376-uva",
+    "ES-C376-maiz",
+    "ES-C376-chocolate",
+    "ES-C376-pimiento"
+  ],
+  "before": [],
+  "inline": [
+    "ES-EXT-376-REF"
+  ],
+  "after": []
+}

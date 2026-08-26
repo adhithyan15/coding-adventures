@@ -1,0 +1,16 @@
+{
+  "id": "ES-PATH-380-01",
+  "spine_node": "SPINE-COUNT-ONE-TO-FIVE",
+  "lessons": [
+    "ES-C380-simpatico",
+    "ES-C380-alegre",
+    "ES-C380-feo",
+    "ES-C380-ultimo",
+    "ES-C380-necesario"
+  ],
+  "before": [],
+  "inline": [
+    "ES-EXT-380-COUNT"
+  ],
+  "after": []
+}

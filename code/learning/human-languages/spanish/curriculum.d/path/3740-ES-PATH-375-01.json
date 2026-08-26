@@ -1,0 +1,16 @@
+{
+  "id": "ES-PATH-375-01",
+  "spine_node": "SPINE-DEFINITE-REFERENCE",
+  "lessons": [
+    "ES-C375-una",
+    "ES-C375-labio",
+    "ES-C375-pulgar",
+    "ES-C375-beso",
+    "ES-C375-sobrino"
+  ],
+  "before": [],
+  "inline": [
+    "ES-EXT-375-REF"
+  ],
+  "after": []
+}

@@ -1,0 +1,16 @@
+{
+  "id": "ES-PATH-378-01",
+  "spine_node": "SPINE-ASK-LOCATION",
+  "lessons": [
+    "ES-C378-selva",
+    "ES-C378-prado",
+    "ES-C378-volcan",
+    "ES-C378-cumbre",
+    "ES-C378-edificio"
+  ],
+  "before": [],
+  "inline": [
+    "ES-EXT-378-WHERE"
+  ],
+  "after": []
+}

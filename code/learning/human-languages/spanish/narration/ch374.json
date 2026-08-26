@@ -1,0 +1,839 @@
+{
+  "version": 1,
+  "language": "spanish",
+  "chapter": 374,
+  "title": "Five Things You Hold",
+  "drivablePrefix": 5,
+  "sourceHash": "fnv1a64:8a95510a8476605e",
+  "lessons": [
+    {
+      "id": "ES-C374-lapiz",
+      "sequence": 7620,
+      "title": "el lápiz — a stone you write with",
+      "headword": "el lápiz",
+      "romanization": "el lápiz",
+      "gloss": "pencil — Latin lapis, a stone, with no diminutive in it; lapis opens lapis lazuli, and Spanish azul comes from the other half",
+      "script": "latin",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:f3cb88e4fed93d22",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Say the skirt, then the comb. (La falda; El peine.)"
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know first",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "el papel — what it goes onto."
+            },
+            {
+              "kind": "speech",
+              "text": "azul — a word from the other half of the same stone."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "pronunciation",
+          "title": "Sounds you'll need",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "LÁ-piz, two beats with the weight on the first. The written accent is there because a word ending in -z would otherwise be stressed on its last beat. see pronunciation reference."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "el lápiz — \"pencil.\""
+            },
+            {
+              "kind": "speech",
+              "text": "Latin lapis meant a stone. That is the whole word: no suffix, no diminutive, nothing meaning \"little\". A pencil is named for the mineral running down its middle."
+            },
+            {
+              "kind": "speech",
+              "text": "Where Spanish picked it up is less settled. The Academy's dictionary takes it straight from Latin. Corominas puts it three centuries later and routes it through Italian, where lapis was already a painters' word for a drawing stone."
+            },
+            {
+              "kind": "speech",
+              "text": "Then there is a near miss worth slowing down for."
+            },
+            {
+              "kind": "speech",
+              "text": "Lapis lazuli is the deep blue stone, and its name has two halves that come from opposite ends of the earth:"
+            },
+            {
+              "kind": "speech",
+              "text": "lapis is the Latin you have right here;"
+            },
+            {
+              "kind": "speech",
+              "text": "lazuli is Arabic lāzaward, which reached Arabic from Persian and Persian from Sanskrit."
+            },
+            {
+              "kind": "speech",
+              "text": "Spanish azul descends from the second half. Lápiz descends from the first. The two words meet inside one stone's name and share no ancestor at all — a real resemblance, and no relationship."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "You can now name the thing you write with: un lápiz."
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "el lápiz",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *el lápiz*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "un lápiz",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *un lápiz*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "un lápiz azul",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *un lápiz azul*]"
+            }
+          ]
+        },
+        {
+          "index": 6,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What did Latin lapis mean on its own? (A stone — with no \"little\" in it.) And which half of lapis lazuli gave Spanish azul? (The second half, the Arabic one.)"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "ES-C374-cepillo",
+      "sequence": 7630,
+      "title": "el cepillo — named after its back",
+      "headword": "el cepillo",
+      "romanization": "el cepillo",
+      "gloss": "brush — a diminutive of cepo, from Latin cippus, a post or block of wood; the brush is named for its back, not its bristles",
+      "script": "latin",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:fd0246cd2953e40e",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Say the comb, then the pencil. (El peine; El lápiz.)"
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know first",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "el peine — the one you met a moment ago."
+            },
+            {
+              "kind": "speech",
+              "text": "el jabón — what it works with."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "pronunciation",
+          "title": "Sounds you'll need",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ce-PI-llo, three beats with the weight on the middle one. The ll is a y sound across nearly all of the Spanish-speaking world. see pronunciation reference."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "el cepillo — \"brush.\""
+            },
+            {
+              "kind": "speech",
+              "text": "Cepillo is a small cepo, and cepo is Latin cippus: a post, a stake, a block of wood. The Academy's dictionary puts the diminutive right in the entry."
+            },
+            {
+              "kind": "speech",
+              "text": "So the brush is named after its back. The part a Roman would have recognised is the block of wood your hand closes around — not the bristles, which are the part you would probably have named it for."
+            },
+            {
+              "kind": "speech",
+              "text": "Cepo has never gone away, and it has kept that block in three separate jobs:"
+            },
+            {
+              "kind": "speech",
+              "text": "the block a trap is built on;"
+            },
+            {
+              "kind": "speech",
+              "text": "the stocks, the timber a prisoner's ankles went through;"
+            },
+            {
+              "kind": "speech",
+              "text": "the clamp a city locks onto a badly parked wheel."
+            },
+            {
+              "kind": "speech",
+              "text": "One piece of wood, three very different centuries, and a brush quietly carrying the oldest of them."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "You can now name what you clean with: un cepillo."
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "el cepillo",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *el cepillo*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "un cepillo",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *un cepillo*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "el cepillo y el peine",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *el cepillo y el peine*]"
+            }
+          ]
+        },
+        {
+          "index": 6,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What did Latin cippus mean? (A post or a block of wood.) And which part of a brush does its name point at? (The wooden back, not the bristles.)"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "ES-C374-guante",
+      "sequence": 7640,
+      "title": "el guante — a Germanic word in Romance clothes",
+      "headword": "el guante",
+      "romanization": "el guante",
+      "gloss": "glove — Germanic rather than Latin, probably through Catalan from Frankish want, a mitten, arriving already wearing the gu- Romance gives Germanic w-",
+      "script": "latin",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:d113b79bce1b0458",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Say the pencil, then the brush. (El lápiz; El cepillo.)"
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know first",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "la mano — what goes inside it."
+            },
+            {
+              "kind": "speech",
+              "text": "el zapato — the other thing you pull onto an end of yourself."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "pronunciation",
+          "title": "Sounds you'll need",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "GUAN-te, two beats with the weight on the first. The u is pronounced, so gua runs together as one glide. see pronunciation reference."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "el guante — \"glove.\""
+            },
+            {
+              "kind": "speech",
+              "text": "Nearly everything you have met came down from Latin. This one did not."
+            },
+            {
+              "kind": "speech",
+              "text": "The Academy's dictionary traces guante — hedging, with a perhaps — through Catalan guant to a Frankish word want, a mitten. Dutch still says want for the same thing."
+            },
+            {
+              "kind": "speech",
+              "text": "What repays attention is the front of the word. Germanic words beginning in w- do not keep it when they move into Romance. They turn up wearing gu-, and two pairs make the swap audible:"
+            },
+            {
+              "kind": "speech",
+              "text": "guerra beside English war;"
+            },
+            {
+              "kind": "speech",
+              "text": "Guillermo beside English William."
+            },
+            {
+              "kind": "speech",
+              "text": "Say each pair out loud and the w and the gu land in the same place in your mouth."
+            },
+            {
+              "kind": "speech",
+              "text": "One correction while it is fresh. Spanish did not perform that change on guante. The word was reshaped on its way in and arrived already wearing the gu-. Those pairs show a habit of Romance, not an operation Spanish ran on this particular noun."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "You can now name what goes on a hand: un guante."
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "el guante",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *el guante*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "un guante",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *un guante*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "dos guantes",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *dos guantes*]"
+            }
+          ]
+        },
+        {
+          "index": 6,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Is guante Latin or Germanic? (Germanic — a Frankish word for a mitten.) And what does a Germanic w- become when it moves into Romance? (A gu-, as in guerra and Guillermo.)"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "ES-C374-vela",
+      "sequence": 7650,
+      "title": "la vela — two words wearing one spelling",
+      "headword": "la vela",
+      "romanization": "la vela",
+      "gloss": "candle — from velar, Latin vigilare, to keep watch; the identically spelled vela meaning sail is a different word entirely, from velum, cloth",
+      "script": "latin",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:259e67a00492950d",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Say the brush, then the glove. (El cepillo; El guante.)"
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know first",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "la luz — what it gives."
+            },
+            {
+              "kind": "speech",
+              "text": "la noche — when you need it."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "pronunciation",
+          "title": "Sounds you'll need",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "VE-la, two beats with the weight on the first. The v and a b are the same sound in Spanish, so this begins the way bien does. see pronunciation reference."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "la vela — \"candle.\""
+            },
+            {
+              "kind": "speech",
+              "text": "Spanish has two words spelled vela, and the Academy's dictionary keeps them in separate entries because they are separate words."
+            },
+            {
+              "kind": "speech",
+              "text": "The candle comes from the verb velar, and velar is Latin vigilāre, \"to keep watch.\" A vela is what burns while somebody sits up. Its family in Spanish is vigilia, vigilancia, centinela — watching words, every one."
+            },
+            {
+              "kind": "speech",
+              "text": "The sail is a different noun: Latin vela, the plural of velum, \"cloth.\""
+            },
+            {
+              "kind": "speech",
+              "text": "It is tempting to knit these together — a sail is stretched cloth, a candle has a wick of cloth, so surely one word. That story is wrong, and wrong in a way worth noticing: it starts from the sail and reasons toward the candle, when the candle came from an entirely different verb."
+            },
+            {
+              "kind": "speech",
+              "text": "A useful habit falls out of this. When two Spanish words look identical, the question to ask is not \"how are these connected?\" but \"are these one word or two?\" Here the answer is two, and the dictionary says so on the page."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "You can now name what you light: una vela."
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "la vela",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *la vela*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "una vela",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *una vela*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "una vela en la mesa",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *una vela en la mesa*]"
+            }
+          ]
+        },
+        {
+          "index": 6,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Which Latin verb is behind vela, the candle? (Vigilāre, to keep watch.) And is vela meaning \"sail\" the same word? (No — a separate noun, from velum, cloth.)"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "ES-C374-nudo",
+      "sequence": 7660,
+      "title": "el nudo — a vowel nobody can account for",
+      "headword": "el nudo",
+      "romanization": "el nudo",
+      "gloss": "knot — Latin nodus by way of an irregular Vulgar Latin form; desnudo, naked, is a different Latin word, and Corominas denies the two ever merged",
+      "script": "latin",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:2bc3d1fd1fac8c22",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Say the glove, then the candle. (El guante; La vela.)"
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know first",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "la cuerda — what you tie it in."
+            },
+            {
+              "kind": "speech",
+              "text": "el hilo — the thinner version."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "pronunciation",
+          "title": "Sounds you'll need",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "NU-do, two beats with the weight on the first. The d between vowels is soft, close to the th of English this. see pronunciation reference."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "el nudo — \"knot.\""
+            },
+            {
+              "kind": "speech",
+              "text": "Latin nodus was a knot. English took it twice, as node and as nodule, and both still mean a knot of something."
+            },
+            {
+              "kind": "speech",
+              "text": "Spanish took it too — and the vowel came out wrong."
+            },
+            {
+              "kind": "speech",
+              "text": "Nodus should have given nodo. Spanish has nodo, in fact, as a later bookish borrowing. What ordinary speech produced was nudo, with a u that no sound change accounts for, so the Academy's dictionary reconstructs a spoken Latin form to bridge the gap."
+            },
+            {
+              "kind": "speech",
+              "text": "The obvious guess is sitting right there: Latin also had nudus, \"naked,\" which is where desnudo comes from. Two words, one vowel apart, surely they leaned on each other."
+            },
+            {
+              "kind": "speech",
+              "text": "Corominas says no, and says it flatly — there is no reason for such a confusion, and Catalan, facing the identical pair, went to some trouble to keep its knot and its naked distinct rather than letting them merge."
+            },
+            {
+              "kind": "speech",
+              "text": "So the honest answer is that the u is unexplained, and that the tidiest available explanation has been examined and turned down."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "You can now name what you tie: un nudo."
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "el nudo",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *el nudo*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "un nudo",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *un nudo*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "un nudo en la cuerda",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *un nudo en la cuerda*]"
+            }
+          ]
+        },
+        {
+          "index": 6,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What form should Latin nodus have produced in Spanish? (Nodo — which exists, as a later borrowing.) And does nudo come from nudus, \"naked\"? (No; Corominas rejects that.)"
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "findings": []
+}

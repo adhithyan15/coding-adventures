@@ -4984,6 +4984,118 @@
         "ES-EXT-373-REF"
       ],
       "after": []
+    },
+    {
+      "id": "ES-PATH-374-01",
+      "spine_node": "SPINE-DEFINITE-REFERENCE",
+      "lessons": [
+        "ES-C374-lapiz",
+        "ES-C374-cepillo",
+        "ES-C374-guante",
+        "ES-C374-vela",
+        "ES-C374-nudo"
+      ],
+      "before": [],
+      "inline": [
+        "ES-EXT-374-REF"
+      ],
+      "after": []
+    },
+    {
+      "id": "ES-PATH-375-01",
+      "spine_node": "SPINE-DEFINITE-REFERENCE",
+      "lessons": [
+        "ES-C375-una",
+        "ES-C375-labio",
+        "ES-C375-pulgar",
+        "ES-C375-beso",
+        "ES-C375-sobrino"
+      ],
+      "before": [],
+      "inline": [
+        "ES-EXT-375-REF"
+      ],
+      "after": []
+    },
+    {
+      "id": "ES-PATH-376-01",
+      "spine_node": "SPINE-DEFINITE-REFERENCE",
+      "lessons": [
+        "ES-C376-harina",
+        "ES-C376-uva",
+        "ES-C376-maiz",
+        "ES-C376-chocolate",
+        "ES-C376-pimiento"
+      ],
+      "before": [],
+      "inline": [
+        "ES-EXT-376-REF"
+      ],
+      "after": []
+    },
+    {
+      "id": "ES-PATH-377-01",
+      "spine_node": "SPINE-DEFINITE-REFERENCE",
+      "lessons": [
+        "ES-C377-letra",
+        "ES-C377-frase",
+        "ES-C377-idioma",
+        "ES-C377-historia",
+        "ES-C377-baile"
+      ],
+      "before": [],
+      "inline": [
+        "ES-EXT-377-REF"
+      ],
+      "after": []
+    },
+    {
+      "id": "ES-PATH-378-01",
+      "spine_node": "SPINE-ASK-LOCATION",
+      "lessons": [
+        "ES-C378-selva",
+        "ES-C378-prado",
+        "ES-C378-volcan",
+        "ES-C378-cumbre",
+        "ES-C378-edificio"
+      ],
+      "before": [],
+      "inline": [
+        "ES-EXT-378-WHERE"
+      ],
+      "after": []
+    },
+    {
+      "id": "ES-PATH-379-01",
+      "spine_node": "SPINE-COUNT-ONE-TO-FIVE",
+      "lessons": [
+        "ES-C379-seco",
+        "ES-C379-mojado",
+        "ES-C379-fresco",
+        "ES-C379-tibio",
+        "ES-C379-grueso"
+      ],
+      "before": [],
+      "inline": [
+        "ES-EXT-379-COUNT"
+      ],
+      "after": []
+    },
+    {
+      "id": "ES-PATH-380-01",
+      "spine_node": "SPINE-COUNT-ONE-TO-FIVE",
+      "lessons": [
+        "ES-C380-simpatico",
+        "ES-C380-alegre",
+        "ES-C380-feo",
+        "ES-C380-ultimo",
+        "ES-C380-necesario"
+      ],
+      "before": [],
+      "inline": [
+        "ES-EXT-380-COUNT"
+      ],
+      "after": []
     }
   ],
   "spine": {
@@ -5174,7 +5286,8 @@
         "ES-PATH-362-01",
         "ES-PATH-363-01",
         "ES-PATH-369-01",
-        "ES-PATH-370-01"
+        "ES-PATH-370-01",
+        "ES-PATH-378-01"
       ],
       "omits": [],
       "relocates": {}
@@ -5274,7 +5387,11 @@
         "ES-PATH-367-01",
         "ES-PATH-368-01",
         "ES-PATH-372-01",
-        "ES-PATH-373-01"
+        "ES-PATH-373-01",
+        "ES-PATH-374-01",
+        "ES-PATH-375-01",
+        "ES-PATH-376-01",
+        "ES-PATH-377-01"
       ],
       "omits": [],
       "relocates": {}
@@ -5289,7 +5406,9 @@
         "ES-PATH-352-01",
         "ES-PATH-359-01",
         "ES-PATH-365-01",
-        "ES-PATH-371-01"
+        "ES-PATH-371-01",
+        "ES-PATH-379-01",
+        "ES-PATH-380-01"
       ],
       "omits": [],
       "relocates": {}
@@ -10100,6 +10219,111 @@
         "ES-C373-alfombra",
         "ES-C373-falda",
         "ES-C373-peine"
+      ]
+    },
+    {
+      "id": "ES-EXT-374-REF",
+      "stage": "A1",
+      "kind": "required",
+      "category": "vocabulary",
+      "canDo": "I can name el lápiz, el cepillo, el guante, la vela and el nudo.",
+      "prerequisites": [],
+      "lessons": [
+        "ES-C374-lapiz",
+        "ES-C374-cepillo",
+        "ES-C374-guante",
+        "ES-C374-vela",
+        "ES-C374-nudo"
+      ]
+    },
+    {
+      "id": "ES-EXT-375-REF",
+      "stage": "A1",
+      "kind": "required",
+      "category": "vocabulary",
+      "canDo": "I can name la uña, el labio, el pulgar, el beso and el sobrino.",
+      "prerequisites": [],
+      "lessons": [
+        "ES-C375-una",
+        "ES-C375-labio",
+        "ES-C375-pulgar",
+        "ES-C375-beso",
+        "ES-C375-sobrino"
+      ]
+    },
+    {
+      "id": "ES-EXT-376-REF",
+      "stage": "A1",
+      "kind": "required",
+      "category": "vocabulary",
+      "canDo": "I can name la harina, la uva, el maíz, el chocolate and el pimiento.",
+      "prerequisites": [],
+      "lessons": [
+        "ES-C376-harina",
+        "ES-C376-uva",
+        "ES-C376-maiz",
+        "ES-C376-chocolate",
+        "ES-C376-pimiento"
+      ]
+    },
+    {
+      "id": "ES-EXT-377-REF",
+      "stage": "A1",
+      "kind": "required",
+      "category": "vocabulary",
+      "canDo": "I can name la letra, la frase, el idioma, la historia and el baile.",
+      "prerequisites": [],
+      "lessons": [
+        "ES-C377-letra",
+        "ES-C377-frase",
+        "ES-C377-idioma",
+        "ES-C377-historia",
+        "ES-C377-baile"
+      ]
+    },
+    {
+      "id": "ES-EXT-378-WHERE",
+      "stage": "A1",
+      "kind": "required",
+      "category": "vocabulary",
+      "canDo": "I can name la selva, el prado, el volcán, la cumbre and el edificio.",
+      "prerequisites": [],
+      "lessons": [
+        "ES-C378-selva",
+        "ES-C378-prado",
+        "ES-C378-volcan",
+        "ES-C378-cumbre",
+        "ES-C378-edificio"
+      ]
+    },
+    {
+      "id": "ES-EXT-379-COUNT",
+      "stage": "A1",
+      "kind": "required",
+      "category": "vocabulary",
+      "canDo": "I can name seco, mojado, fresco, tibio and grueso.",
+      "prerequisites": [],
+      "lessons": [
+        "ES-C379-seco",
+        "ES-C379-mojado",
+        "ES-C379-fresco",
+        "ES-C379-tibio",
+        "ES-C379-grueso"
+      ]
+    },
+    {
+      "id": "ES-EXT-380-COUNT",
+      "stage": "A1",
+      "kind": "required",
+      "category": "vocabulary",
+      "canDo": "I can name simpático, alegre, feo, último and necesario.",
+      "prerequisites": [],
+      "lessons": [
+        "ES-C380-simpatico",
+        "ES-C380-alegre",
+        "ES-C380-feo",
+        "ES-C380-ultimo",
+        "ES-C380-necesario"
       ]
     }
   ],

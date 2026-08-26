@@ -1,0 +1,15 @@
+{
+  "id": "ES-EXT-377-REF",
+  "stage": "A1",
+  "kind": "required",
+  "category": "vocabulary",
+  "canDo": "I can name la letra, la frase, el idioma, la historia and el baile.",
+  "prerequisites": [],
+  "lessons": [
+    "ES-C377-letra",
+    "ES-C377-frase",
+    "ES-C377-idioma",
+    "ES-C377-historia",
+    "ES-C377-baile"
+  ]
+}

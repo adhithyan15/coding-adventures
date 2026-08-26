@@ -1,0 +1,15 @@
+{
+  "id": "ES-EXT-378-WHERE",
+  "stage": "A1",
+  "kind": "required",
+  "category": "vocabulary",
+  "canDo": "I can name la selva, el prado, el volcán, la cumbre and el edificio.",
+  "prerequisites": [],
+  "lessons": [
+    "ES-C378-selva",
+    "ES-C378-prado",
+    "ES-C378-volcan",
+    "ES-C378-cumbre",
+    "ES-C378-edificio"
+  ]
+}
