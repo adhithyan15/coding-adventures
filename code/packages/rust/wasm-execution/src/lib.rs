@@ -275,6 +275,7 @@ impl WasmValue {
             // happens, and null is the only spec-correct one.
             ValueType::Anyref
             | ValueType::StructRef(_)
+            | ValueType::ConcreteFuncRef(_)
             | ValueType::Funcref
             | ValueType::Externref
             | ValueType::Exnref => WasmValue::Ref(None),
@@ -2453,14 +2454,30 @@ pub fn decode_function_body(body: &FunctionBody) -> Vec<DecodedInstruction> {
         // ── `ref.null` (`0xD0 <heap_type>`) ────────────────────────────────────
         //
         // `ref.null` is a *single-byte* primary opcode (not `0xFB`-prefixed)
-        // followed by a one-byte heap-type immediate (the encoder emits `none` =
-        // `0x0F`).  We must consume that immediate explicitly, otherwise the
-        // `0x0F` would be mis-decoded as a separate instruction.  The heap type
-        // doesn't change runtime behaviour (every null is the same null in our
-        // model), so we drop it and carry no operand.
+        // followed by a heap-type immediate (the encoder emits `none` =
+        // `0x0F` for the abstract case).  We must consume that immediate
+        // explicitly, otherwise its byte(s) would be mis-decoded as a
+        // separate instruction.  The heap type doesn't change runtime
+        // behaviour (every null is the same null in our model), so we drop
+        // it and carry no operand.
+        //
+        // W11 addendum: a concrete `$t` reference (`wasm-wast-parser`'s
+        // `parse_ref_null_heap_type`) emits a MULTI-byte immediate -- tag
+        // `0x63` followed by an unsigned LEB128 type-section index, the
+        // same 2-byte shape `ValueType::ConcreteFuncRef`'s own `.encode()`
+        // uses. Every other heap type here is exactly one byte, so this is
+        // the only case that needs the general LEB128 decoder rather than
+        // a flat `+= 1`.
         if opcode_byte == 0xD0 {
             if offset < code.len() {
-                offset += 1; // skip the heap-type byte
+                if code[offset] == 0x63 {
+                    offset += 1; // the 0x63 tag byte itself
+                    if let Ok((_idx, size)) = decode_unsigned(code, offset) {
+                        offset += size; // the LEB128 type index
+                    }
+                } else {
+                    offset += 1; // skip the single-byte abstract heap type
+                }
             }
             instructions.push(DecodedInstruction {
                 opcode: 0xD0,

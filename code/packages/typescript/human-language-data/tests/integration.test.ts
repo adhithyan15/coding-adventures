@@ -39,7 +39,7 @@ describe("real curriculum", () => {
     expect(scripts.devanagari!.complete).toBe(true);
   });
 
-  it("keeps the cross-script closure queue measured after Urdu retroflex tte", () => {
+  it("keeps the cross-script closure queue measured after Japanese small tsu", () => {
     const candrakkala = scripts.malayalam!.marks!.find((mark) => mark.mark === "്")!;
     expect(candrakkala.role).toBe("virama");
     expect(candrakkala.compositionOrder).toEqual([
@@ -818,6 +818,19 @@ describe("real curriculum", () => {
     expect(urduTte.strokeOrderSource?.variation).toMatch(
       /be-series body.*upper retroflex mark.*two pen-down runs.*dental te.*small to'e-shaped mark.*down.*back up.*down again.*loop.*body-first.*one-lift.*Noto Naskh fallback.*Nastaliq.*Urdu retroflex/i,
     );
+    const japaneseSmallTsu = scripts.japanese!.letters.find((entry) => entry.glyph === "っ")!;
+    expect(japaneseSmallTsu.sound).toMatch(/one mora.*closure.*doubles.*following consonant/i);
+    expect(japaneseSmallTsu.penLifts).toBe(0);
+    expect(japaneseSmallTsu.strokeOrder).toEqual([
+      "begin at the upper left and sweep right across the high shoulder",
+      "without lifting, round down the right side and finish by sweeping left along the lower curve",
+    ]);
+    expect(japaneseSmallTsu.strokeOrderSource?.citation).toMatch(
+      /Sirgazil.*つ.*24 frames.*Unicode Standard 17\.0.*U\+3063.*small tsu/i,
+    );
+    expect(japaneseSmallTsu.strokeOrderSource?.variation).toMatch(
+      /one uninterrupted run.*Unicode 17.*small tsu.*zero-lift.*scaling.*explicit.*independent handwriting evidence/i,
+    );
 
     const gaps = validate({ taxonomy, lessons, scripts }).filter(
       (issue) => issue.level === "warning" && issue.code === "uncovered-glyphs",
@@ -1129,9 +1142,11 @@ describe("real curriculum", () => {
     expect(affected.get("ی") ?? 0).toBe(0);
     expect(missingByScript.get("urdu-nastaliq.json")?.has("ٹ")).toBe(false);
     expect(affected.get("ٹ") ?? 0).toBe(0);
+    expect(missingByScript.get("japanese.json")?.has("っ")).toBe(false);
+    expect(affected.get("っ") ?? 0).toBe(0);
     expect(
       [...affected.entries()].sort((left, right) => right[1] - left[1])[0],
-    ).toEqual(["っ", 4]);
+    ).toEqual(["ظ", 4]);
   });
 
   it("loaded every track (17+ and growing)", () => {

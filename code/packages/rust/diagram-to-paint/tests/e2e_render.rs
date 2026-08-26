@@ -932,6 +932,35 @@ line "Target" [35, 50, 68, 82]"##,
         write_png(&meridiem_pixels, "/tmp/mermaid_gantt_meridiem_e2e.png")
             .expect("12-hour PNG write failed");
         assert!(!meridiem_scene.instructions.is_empty());
+
+        let weekday = parse_gantt(
+            "gantt\ntitle Weekend release\ndateFormat dddd YYYY-MM-DD\nsection Ship\nRelease :r1, Sunday 2026-03-01, Monday 2026-03-02",
+        )
+        .expect("weekday-name Mermaid Gantt parse failed");
+        let weekday_layout = layout_temporal_diagram(
+            &TemporalDiagram {
+                kind: TemporalKind::Gantt,
+                title: weekday.title.clone(),
+                body: TemporalBody::Gantt(weekday),
+            },
+            800.0,
+        );
+        let weekday_scene = diagram_to_paint_temporal(
+            &weekday_layout,
+            &DiagramToPaintOptions {
+                background: layout_ir::Color { r: 255, g: 255, b: 255, a: 255 },
+                device_pixel_ratio: 2.0,
+                label_font: font_spec("Helvetica", 12.0),
+                title_font: font_spec("Helvetica", 16.0),
+                shaper: &shaper,
+                metrics: &metrics,
+                resolver: &resolver,
+            },
+        );
+        let weekday_pixels = render(&weekday_scene);
+        write_png(&weekday_pixels, "/tmp/mermaid_gantt_weekday_e2e.png")
+            .expect("weekday-name PNG write failed");
+        assert!(!weekday_scene.instructions.is_empty());
     }
 
     #[test]

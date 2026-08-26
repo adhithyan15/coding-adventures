@@ -6057,7 +6057,9 @@ fn parse_gantt_date_format(token: &Token, source: &str) -> Result<GanttDateForma
         }
         let known = [
             ("YYYY", GanttDateFormatPart::Year4), ("MMMM", GanttDateFormatPart::MonthLong),
+            ("dddd", GanttDateFormatPart::WeekdayLong),
             ("MMM", GanttDateFormatPart::MonthShort), ("SSS", GanttDateFormatPart::Millisecond),
+            ("ddd", GanttDateFormatPart::WeekdayShort),
             ("ZZ", GanttDateFormatPart::TimezoneOffsetCompact),
             ("hh", GanttDateFormatPart::Hour12Padded),
             ("YY", GanttDateFormatPart::Year2), ("MM", GanttDateFormatPart::Month2),
@@ -6115,6 +6117,8 @@ fn gantt_date_matches_format(value: &str, format: &GanttDateFormat) -> bool {
             GanttDateFormatPart::Millisecond => consume_digits(rest, 3, 3),
             GanttDateFormatPart::MonthShort => consume_letters(rest, 3, 3),
             GanttDateFormatPart::MonthLong => consume_letters(rest, 3, 9),
+            GanttDateFormatPart::WeekdayShort => consume_letters(rest, 3, 3),
+            GanttDateFormatPart::WeekdayLong => consume_letters(rest, 6, 9),
             GanttDateFormatPart::MeridiemUpper => consume_meridiem(rest, true),
             GanttDateFormatPart::MeridiemLower => consume_meridiem(rest, false),
             GanttDateFormatPart::TimezoneOffsetColon => consume_timezone_offset(rest, true),
@@ -7177,6 +7181,19 @@ Rel(customer, web, \"Uses\", \"HTTPS\")";
         ).unwrap();
         assert!(padded.date_format.parts.contains(&GanttDateFormatPart::Hour12Padded));
         assert!(padded.date_format.parts.contains(&GanttDateFormatPart::MeridiemLower));
+    }
+
+    #[test]
+    fn gantt_compiles_named_weekday_formats() {
+        let short = parse_gantt(
+            "gantt\ndateFormat ddd YYYY-MM-DD\nRelease :r1, Sun 2026-03-01, 1d",
+        ).unwrap();
+        assert!(short.date_format.parts.contains(&GanttDateFormatPart::WeekdayShort));
+
+        let long = parse_gantt(
+            "gantt\ndateFormat dddd YYYY-MM-DD\nRelease :r1, Sunday 2026-03-01, 1d",
+        ).unwrap();
+        assert!(long.date_format.parts.contains(&GanttDateFormatPart::WeekdayLong));
     }
 
     #[test]

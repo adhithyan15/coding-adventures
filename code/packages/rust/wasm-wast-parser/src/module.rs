@@ -204,14 +204,24 @@ fn resolve_idx(map: &HashMap<String, u32>, expr: &SExpr, space: &'static str) ->
     }
 }
 
-fn parse_value_type(expr: &SExpr) -> Result<ValueType, WastParseError> {
+fn parse_value_type(expr: &SExpr, type_names: &HashMap<String, u32>) -> Result<ValueType, WastParseError> {
     // `(ref null func)` / `(ref null extern)` -- the fully-spelled-out
     // nullable abstract-heap-type syntax, semantically identical to the bare
     // `funcref`/`externref` keywords below (WASM17; found in the real
     // corpus's `br_table.wast`, e.g. `(result (ref null func))`). Non-null
-    // `(ref func)` and concrete `(ref null $t)` / `(ref $t)` forms are
-    // deliberately NOT recognized -- see `code/specs/
+    // `(ref func)` is deliberately NOT recognized -- see `code/specs/
     // W08-wasm-funcref-externref.md`'s "explicitly out of scope" section.
+    //
+    // `(ref null $t)` (function-references proposal's own narrow slice,
+    // W11 addendum): a NULLABLE reference to a CONCRETE function type
+    // named `$t` (or a bare numeric type index) -- resolved via
+    // `type_names` into `ValueType::ConcreteFuncRef`. This repo's own
+    // `wasm-wast-parser` has no struct-type text-format declarations at
+    // all (see `ConcreteFuncRef`'s own doc comment), so any named/numeric
+    // heap type reaching this branch always names a `func` type. Still
+    // deliberately NOT recognized: non-null `(ref $t)` (needs a second,
+    // non-nullable `ValueType` variant this repo's type system doesn't
+    // have -- the real "typed function references" wall, out of scope).
     //
     // `(ref i31)` / `(ref null i31)` (W20): unlike `func`/`extern` above,
     // this crate does NOT distinguish the null and non-null spellings for
@@ -227,7 +237,8 @@ fn parse_value_type(expr: &SExpr) -> Result<ValueType, WastParseError> {
                 Some("func") => Ok(ValueType::Funcref),
                 Some("extern") => Ok(ValueType::Externref),
                 Some("i31") => Ok(ValueType::I31ref),
-                _ => Err(WastParseError::UnexpectedToken { pos: expr.pos(), found: "list".to_string(), expected: "a value type" }),
+                Some(_) => Ok(ValueType::ConcreteFuncRef(resolve_idx(type_names, &items[2], "type")?)),
+                None => Err(WastParseError::UnexpectedToken { pos: expr.pos(), found: "list".to_string(), expected: "a value type" }),
             };
         }
         if items.len() == 2 && items[0].as_atom() == Some("ref") && items[1].as_atom() == Some("i31") {
@@ -261,22 +272,32 @@ fn parse_value_type(expr: &SExpr) -> Result<ValueType, WastParseError> {
     }
 }
 
-/// Parse a `ref.null` heap-type immediate keyword (`func`, `extern`, or
-/// `i31` -- W20) into its binary heap-type byte. This crate only
-/// recognizes the abstract heap types its own reference-type slice needs
-/// (WASM17's `func`/`extern`, W20's `i31`); a concrete `$t` heap type is
-/// deliberately out of scope (see `parse_value_type`'s doc comment).
-fn parse_ref_null_heap_type(expr: &SExpr) -> Result<u8, WastParseError> {
+/// Parse a `ref.null` heap-type immediate keyword (`func`, `extern`, `i31`
+/// -- W20, or a concrete `$t`/numeric type name -- W11 addendum) into its
+/// binary heap-type immediate bytes. The three abstract heap types
+/// (WASM17's `func`/`extern`, W20's `i31`) are each a single byte, exactly
+/// matching their [`ValueType::byte_tag`] encoding; a concrete `$t` is
+/// resolved via `type_names` and encoded as the SAME 2-byte `0x63
+/// <LEB128(idx)>` shape `ValueType::ConcreteFuncRef`'s own `.encode()`
+/// uses (see that variant's doc comment) -- `wasm-execution`'s decoder and
+/// `wasm-validator`'s type-checker both recognize this same `0x63` prefix
+/// on a `ref.null` heap-type immediate.
+fn parse_ref_null_heap_type(expr: &SExpr, type_names: &HashMap<String, u32>) -> Result<Vec<u8>, WastParseError> {
     let s = expr.as_atom().ok_or(WastParseError::UnexpectedToken {
         pos: expr.pos(),
         found: "list".to_string(),
-        expected: "a heap type (func, extern, or i31)",
+        expected: "a heap type (func, extern, i31, or a type name)",
     })?;
     match s {
-        "func" => Ok(0x70),
-        "extern" => Ok(0x6F),
-        "i31" => Ok(0x6C),
-        other => Err(WastParseError::UnexpectedToken { pos: expr.pos(), found: other.to_string(), expected: "a heap type (func, extern, or i31)" }),
+        "func" => Ok(vec![0x70]),
+        "extern" => Ok(vec![0x6F]),
+        "i31" => Ok(vec![0x6C]),
+        _ => {
+            let idx = resolve_idx(type_names, expr, "type")?;
+            let mut bytes = vec![0x63u8];
+            bytes.extend(wasm_leb128::encode_unsigned(idx as u64));
+            Ok(bytes)
+        }
     }
 }
 
@@ -286,7 +307,7 @@ fn parse_ref_null_heap_type(expr: &SExpr) -> Result<u8, WastParseError> {
 /// `$name`/`(export ...)`/`(type ...)` fields the caller has already
 /// consumed and any params'/locals' own `$name`s (signature-only; names
 /// are collected separately for the encoder's local scope).
-fn parse_func_signature(fields: &[&SExpr]) -> Result<FuncType, WastParseError> {
+fn parse_func_signature(fields: &[&SExpr], type_names: &HashMap<String, u32>) -> Result<FuncType, WastParseError> {
     let mut params = Vec::new();
     let mut results = Vec::new();
     for f in fields {
@@ -294,16 +315,16 @@ fn parse_func_signature(fields: &[&SExpr]) -> Result<FuncType, WastParseError> {
             let items = f.as_list().unwrap();
             // `(param $name type)` (exactly one, named) or `(param type type ...)` (positional, any count).
             if items.len() == 3 && items[1].as_atom().is_some_and(|s| s.starts_with('$')) {
-                params.push(parse_value_type(&items[2])?);
+                params.push(parse_value_type(&items[2], type_names)?);
             } else {
                 for t in &items[1..] {
-                    params.push(parse_value_type(t)?);
+                    params.push(parse_value_type(t, type_names)?);
                 }
             }
         } else if f.is_keyword_list("result") {
             let items = f.as_list().unwrap();
             for t in &items[1..] {
-                results.push(parse_value_type(t)?);
+                results.push(parse_value_type(t, type_names)?);
             }
         }
     }
@@ -345,7 +366,7 @@ fn collect_symbols(fields: &[&SExpr], ctx: &mut ModuleCtx) -> Result<(), WastPar
             }
             let func_sig = rest.first().and_then(|e| e.as_list()).unwrap_or(&[]);
             let sig_fields: Vec<&SExpr> = func_sig.iter().skip(1).collect();
-            let func_type = parse_func_signature(&sig_fields)?;
+            let func_type = parse_func_signature(&sig_fields, &ctx.type_names)?;
             ctx.module.types.push(func_type);
         }
     }
@@ -415,7 +436,7 @@ fn collect_symbols(fields: &[&SExpr], ctx: &mut ModuleCtx) -> Result<(), WastPar
                 }
                 _ => {}
             }
-            let import = build_import_shell(items, desc, kind)?;
+            let import = build_import_shell(items, desc, kind, &ctx.type_names)?;
             ctx.module.imports.push(import);
         }
     }
@@ -545,7 +566,7 @@ fn insert_unique(
     Ok(())
 }
 
-fn build_import_shell(items: &[SExpr], desc: &[SExpr], kind: &str) -> Result<Import, WastParseError> {
+fn build_import_shell(items: &[SExpr], desc: &[SExpr], kind: &str, type_names: &HashMap<String, u32>) -> Result<Import, WastParseError> {
     let module_name = match &items[1] {
         SExpr::Str(b, _) => String::from_utf8_lossy(b).to_string(),
         other => return Err(WastParseError::UnexpectedToken { pos: other.pos(), found: "".into(), expected: "a module name string" }),
@@ -626,7 +647,7 @@ fn build_import_shell(items: &[SExpr], desc: &[SExpr], kind: &str) -> Result<Imp
                 desc.get(1)
             }
             .ok_or(WastParseError::UnexpectedEof)?;
-            ImportTypeInfo::Global(parse_global_type(type_field)?)
+            ImportTypeInfo::Global(parse_global_type(type_field, type_names)?)
         }
         // W21 (exceptions proposal): a tag import's real type index needs
         // `resolve_func_signature_ref` (mutable `&mut ctx.module` access
@@ -738,15 +759,15 @@ fn parse_memory_limits(fields: &[SExpr]) -> Result<(Limits, bool, bool), WastPar
     Ok((limits, shared, is64))
 }
 
-fn parse_global_type(expr: &SExpr) -> Result<GlobalType, WastParseError> {
+fn parse_global_type(expr: &SExpr, type_names: &HashMap<String, u32>) -> Result<GlobalType, WastParseError> {
     if expr.is_keyword_list("mut") {
         let items = expr.as_list().unwrap();
         // `(mut)` with no trailing value type is syntactically a valid
         // keyword-list (arity isn't checked by `is_keyword_list`) but has
         // no second element.
-        Ok(GlobalType { value_type: parse_value_type(expect_get(items, 1)?)?, mutable: true })
+        Ok(GlobalType { value_type: parse_value_type(expect_get(items, 1)?, type_names)?, mutable: true })
     } else {
-        Ok(GlobalType { value_type: parse_value_type(expr)?, mutable: false })
+        Ok(GlobalType { value_type: parse_value_type(expr, type_names)?, mutable: false })
     }
 }
 
@@ -868,7 +889,7 @@ fn build(fields: &[&SExpr], ctx: &mut ModuleCtx) -> Result<(), WastParseError> {
                 let rest = &items[name_skip..];
                 let space_idx = num_import_globals + global_i;
                 let (type_start, _) = handle_inline_export(rest, "global", space_idx, ctx)?;
-                let gt = parse_global_type(expect_get(rest, type_start)?)?;
+                let gt = parse_global_type(expect_get(rest, type_start)?, &ctx.type_names)?;
                 let init_instrs = rest.get(type_start + 1..).unwrap_or(&[]);
                 let mut code = Vec::new();
                 encode_instr_list(init_instrs, &mut InstrCtx::empty(ctx), &mut code)?;
@@ -957,7 +978,7 @@ fn resolve_func_signature_ref(desc_rest: &[SExpr], ctx: &mut ModuleCtx) -> Resul
         return resolve_idx(&ctx.type_names, expect_get(items, 1)?, "type");
     }
     let sig_fields: Vec<&SExpr> = leading.iter().collect();
-    let ty = parse_func_signature(&sig_fields)?;
+    let ty = parse_func_signature(&sig_fields, &ctx.type_names)?;
     Ok(dedup_type(&mut ctx.module, ty))
 }
 
@@ -1153,11 +1174,11 @@ fn build_func(fields: &[SExpr], ctx: &mut ModuleCtx, func_idx: usize, code_idx: 
             let items = f.as_list().unwrap();
             if items.len() == 3 && items[1].as_atom().is_some_and(|s| s.starts_with('$')) {
                 local_names.insert(items[1].as_atom().unwrap().to_string(), *next_local);
-                locals_decl.push(parse_value_type(&items[2])?);
+                locals_decl.push(parse_value_type(&items[2], &ctx.type_names)?);
                 *next_local += 1;
             } else {
                 for t in &items[1..] {
-                    locals_decl.push(parse_value_type(t)?);
+                    locals_decl.push(parse_value_type(t, &ctx.type_names)?);
                     *next_local += 1;
                 }
             }
@@ -1475,7 +1496,7 @@ fn resolve_elem_expr_entry(expr: &SExpr, ctx: &ModuleCtx) -> Result<Option<u32>,
             // distinguish a null funcref from a null externref (see its
             // own doc comment), so the specific keyword doesn't change
             // anything downstream.
-            let _ = parse_ref_null_heap_type(expect_get(items, 1)?)?;
+            let _ = parse_ref_null_heap_type(expect_get(items, 1)?, &ctx.type_names)?;
             Ok(None)
         }
         _ => Err(WastParseError::UnexpectedToken {
@@ -1887,9 +1908,9 @@ fn encode_stream_instr(
     // had a metadata entry for either), so both must be intercepted here
     // before the `get_opcode_by_name` lookup below, exactly like trunc_sat.
     if name == "ref.null" {
-        let heap_byte = parse_ref_null_heap_type(following.first().ok_or(WastParseError::UnexpectedEof)?)?;
+        let heap_bytes = parse_ref_null_heap_type(following.first().ok_or(WastParseError::UnexpectedEof)?, &icx.module.type_names)?;
         out.push(0xD0);
-        out.push(heap_byte);
+        out.extend(heap_bytes);
         return Ok(1);
     }
     if name == "ref.is_null" {
@@ -2555,7 +2576,7 @@ fn encode_stream_instr(
                 resolve_idx(&icx.module.type_names, expect_get(t.as_list().unwrap(), 1)?, "type")?
             } else {
                 let refs: Vec<&SExpr> = sig_fields.iter().collect();
-                let ty = parse_func_signature(&refs)?;
+                let ty = parse_func_signature(&refs, &icx.module.type_names)?;
                 dedup_type(&mut icx.module.module, ty)
             };
             out.push(info.opcode);
@@ -3067,9 +3088,9 @@ fn encode_flat_instr(
     // not an operand) -- `ref.is_null` DOES take one stack operand (the
     // reference being tested), which is why it still recurses into `args`.
     if name == "ref.null" {
-        let heap_byte = parse_ref_null_heap_type(args.first().ok_or(WastParseError::UnexpectedEof)?)?;
+        let heap_bytes = parse_ref_null_heap_type(args.first().ok_or(WastParseError::UnexpectedEof)?, &icx.module.type_names)?;
         out.push(0xD0);
-        out.push(heap_byte);
+        out.extend(heap_bytes);
         return Ok(());
     }
     if name == "ref.is_null" {
@@ -3692,7 +3713,7 @@ fn encode_flat_instr(
                 resolve_idx(&icx.module.type_names, expect_get(t.as_list().unwrap(), 1)?, "type")?
             } else {
                 let sig_fields: Vec<&SExpr> = args[sig_start..operand_start].iter().collect();
-                let ty = parse_func_signature(&sig_fields)?;
+                let ty = parse_func_signature(&sig_fields, &icx.module.type_names)?;
                 dedup_type(&mut icx.module.module, ty)
             };
             out.extend(wasm_leb128::encode_unsigned(type_idx as u64));
@@ -3873,10 +3894,21 @@ fn encode_blocktype(items: &[SExpr], icx: &mut InstrCtx) -> Result<(Vec<u8>, usi
         return Ok((wasm_leb128::encode_signed(type_idx as i64), sig_end));
     }
     let refs: Vec<&SExpr> = sig_fields.iter().collect();
-    let ty = parse_func_signature(&refs)?;
+    let ty = parse_func_signature(&refs, &icx.module.type_names)?;
     if ty.params.is_empty() && ty.results.len() <= 1 {
-        let byte = ty.results.first().map(|t| t.byte_tag().unwrap()).unwrap_or(0x40);
-        return Ok((vec![byte], sig_end));
+        match ty.results.first().map(|t| t.byte_tag()) {
+            None => return Ok((vec![0x40], sig_end)),
+            Some(Some(byte)) => return Ok((vec![byte], sig_end)),
+            // A single result with no single-byte shorthand (`StructRef`/
+            // `ConcreteFuncRef`, W11 addendum) has no "anonymous inline
+            // blocktype" encoding either -- same as the multi-param/
+            // multi-result case below, it MUST be a real type-section
+            // index. Previously an `.unwrap()` panic waiting to happen
+            // (unreachable before `ConcreteFuncRef` existed only because
+            // nothing exercised a `StructRef`-result block/loop/if
+            // blocktype yet).
+            Some(None) => {}
+        }
     }
     let type_idx = dedup_type(&mut icx.module.module, ty);
     Ok((wasm_leb128::encode_signed(type_idx as i64), sig_end))
@@ -5770,11 +5802,52 @@ mod tests {
     }
 
     #[test]
-    fn ref_null_unknown_heap_type_is_a_clean_error_not_a_panic() {
-        // `$t` (a concrete heap type) is deliberately out of scope -- must
-        // error, not panic or silently accept it.
+    fn ref_null_undeclared_concrete_heap_type_is_a_clean_error_not_a_panic() {
+        // `$t` names a concrete function type (W11 addendum) -- but this
+        // module never DECLARES one, so it must be a clean
+        // `UnknownIdentifier`, not a panic or a silent accept.
         let err = parse_module("(module (func (result funcref) (ref.null $t)))").unwrap_err();
-        assert!(matches!(err, WastParseError::UnexpectedToken { .. }));
+        assert!(matches!(err, WastParseError::UnknownIdentifier { .. }));
+    }
+
+    #[test]
+    fn ref_null_concrete_type_emits_0x63_tag_and_leb128_index() {
+        // W11 addendum: `ref.null $t` for a DECLARED concrete function
+        // type now resolves and encodes as `0xD0 0x63 <LEB128(idx)>` --
+        // the same 2-byte heap-type-immediate shape `ValueType::
+        // ConcreteFuncRef`'s own `.encode()` uses for the VALUE-TYPE
+        // position, see that variant's doc comment.
+        let m = parse_module("(module (type $t (func)) (func (result (ref null $t)) (ref.null $t)))").unwrap();
+        assert_eq!(code_of(&m, 0), &[0xD0, 0x63, 0x00, 0x0B]);
+    }
+
+    #[test]
+    fn ref_null_concrete_type_by_numeric_index_also_resolves() {
+        let m = parse_module("(module (type (func)) (func (result (ref null 0)) (ref.null 0)))").unwrap();
+        assert_eq!(code_of(&m, 0), &[0xD0, 0x63, 0x00, 0x0B]);
+    }
+
+    #[test]
+    fn concrete_func_ref_result_type_is_subtype_stand_in_for_funcref_return_call() {
+        // The real corpus construct (return_call.wast / return_call_indirect.wast,
+        // W11 addendum): a helper `$f` declares `(result (ref null $t))`,
+        // and an exported function with a plain `(result funcref)` tail-calls
+        // it -- this must PARSE (subtyping itself is `wasm-validator`'s job,
+        // not the parser's), producing a real `ConcreteFuncRef` result type
+        // on `$f`'s own signature.
+        let m = parse_module(
+            "(module \
+               (type $t (func)) \
+               (func $f (result (ref null $t)) (ref.null $t)) \
+               (func (export \"type-funcref\") (result funcref) (return_call $f)))",
+        )
+        .unwrap();
+        assert_eq!(m.types[0], FuncType { params: vec![], results: vec![] }, "$t itself is a plain (func)");
+        assert_eq!(
+            m.types[1],
+            FuncType { params: vec![], results: vec![ValueType::ConcreteFuncRef(0)] },
+            "$f's own signature carries the concrete-func-ref result type"
+        );
     }
 
     #[test]

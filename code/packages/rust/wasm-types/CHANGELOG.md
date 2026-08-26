@@ -2,6 +2,26 @@
 
 All notable changes to this package will be documented in this file.
 
+## [0.1.12] - 2026-08-26 (W11 addendum — concrete function-type refs)
+
+### Added
+
+- **`ValueType::ConcreteFuncRef(u32)`**: a nullable reference to a
+  specific concrete FUNCTION type (`(ref null $t)` where `$t` names a
+  `func` type) — the function-references-proposal analogue of the
+  pre-existing `ValueType::StructRef(u32)`, but indexing
+  `WasmModule::types` (the func-type array) directly instead of the
+  struct-type array's `+ types.len()`-offset space. Needed for exactly
+  one real-corpus construct: `return_call.wast`/
+  `return_call_indirect.wast`'s "Result subtyping" test, which declares a
+  helper function `(func $f (result (ref null $t)) (ref.null $t))` and
+  then uses its result where `funcref` is expected. Encodes identically
+  to `StructRef` (`0x63` followed by `LEB128(idx)`) — see the variant's
+  own doc comment for why the two never collide despite sharing that tag
+  byte. Deliberately does NOT add a non-null `(ref $t)` variant (the real
+  "typed function references" wall, tracked separately, much larger in
+  scope).
+
 ## [0.1.11] - 2026-08-26 (W26 — table64 proposal, first slice)
 
 ### Changed

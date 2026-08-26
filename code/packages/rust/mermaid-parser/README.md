@@ -74,8 +74,9 @@ newlines with multiline layout. Colon and compact timezone offsets compile to
 typed parts and normalize into UTC layout geometry. Gantt remains partial while
 single-component second timestamps also retain sub-minute precision through
 layout, and typed 12-hour clocks resolve meridiem markers before layout. Gantt
-remains partial while locale-specific month and weekday tokens and the complete
-pinned visual corpus are still outstanding.
+also validates typed English short and long weekday names against resolved dates.
+It remains partial while non-English locale data and the complete pinned visual
+corpus are still outstanding.
 
 Each supported family lowers into the shared Diagram IR and can continue
 through its family layout package:

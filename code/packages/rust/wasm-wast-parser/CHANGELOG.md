@@ -1,5 +1,42 @@
 # Changelog — wasm-wast-parser
 
+## 0.1.81 — 2026-08-26 — W11 addendum: `(ref null $t)` / `ref.null $t`
+
+### Added
+
+- `(ref null $t)` as a value type (function/param/result/local/global),
+  resolving `$t` via the same `type_names` map every `(type $t)`
+  reference already uses, into `wasm_types::ValueType::ConcreteFuncRef`
+  (`wasm-types` 0.1.12). `parse_value_type` and `parse_func_signature`
+  both gained a `type_names: &HashMap<String, u32>` parameter, threaded
+  through every call site (type declarations, locals, globals, imports,
+  `call_indirect`/`return_call_indirect`'s inline signatures, blocktypes).
+- `ref.null $t` / `ref.null <numeric type index>` as an instruction, in
+  both folded and flat form: `parse_ref_null_heap_type` now returns the
+  full heap-type-immediate byte sequence (`Vec<u8>`, not a single `u8`) —
+  `0x63` followed by `LEB128(idx)` for a concrete type, matching
+  `ConcreteFuncRef`'s own binary encoding, alongside the pre-existing
+  single-byte abstract heap types (`func`/`extern`/`i31`).
+
+### Fixed
+
+- `encode_blocktype`'s single-result fast path called
+  `ValueType::byte_tag().unwrap()` unconditionally — a latent panic for
+  any single-result blocktype with no single-byte shorthand (`StructRef`
+  or the new `ConcreteFuncRef`), newly reachable now that concrete
+  function-type refs exist as a real value type. Now falls through to the
+  existing type-index-encoding path (the same one multi-param/
+  multi-result blocktypes already use) instead of panicking.
+
+### Changed
+
+- `ref_null_unknown_heap_type_is_a_clean_error_not_a_panic` (a `$t` heap
+  type used to be unconditionally out of scope) is now
+  `ref_null_undeclared_concrete_heap_type_is_a_clean_error_not_a_panic`:
+  an undeclared `$t` still errors cleanly, but now as
+  `WastParseError::UnknownIdentifier` (a real, resolvable name space), not
+  `UnexpectedToken` (an unrecognized grammar shape).
+
 ## 0.1.80 — 2026-08-26 — table64 proposal, first slice (W26)
 
 ### Added

@@ -1682,6 +1682,7 @@ impl WasmRuntime {
                 ValueType::Anyref
                 | ValueType::I31ref
                 | ValueType::StructRef(_)
+                | ValueType::ConcreteFuncRef(_)
                 | ValueType::Funcref
                 | ValueType::Externref
                 | ValueType::Exnref => WasmValue::I32(arg as i32),
