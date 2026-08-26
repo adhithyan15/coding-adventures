@@ -174,6 +174,16 @@ export function loadAssessmentContracts(
   const registry = loadLanguageRegistry(root);
   const out: LoadedAssessmentContract[] = [];
   for (const track of registry.languages) {
+    // BEFORE the join, not after. `loadLanguageRegistry` is an unchecked cast
+    // over `core/languages.json`, so `id` is whatever that file says — and a
+    // `"../../../../etc"` would otherwise be stat'ed and read outside the tree.
+    // `auditTrackArtifacts` applies the same pattern, but it runs on the
+    // contracts this function has ALREADY opened, which is too late to be the
+    // guard. The comment on TRACK_ID above predicts exactly this: a rule spelled
+    // in four places is a rule whose absence in the fifth nobody notices.
+    if (!TRACK_ID.test(track.id)) {
+      throw new Error(`assessment: registry declares unsafe track id '${String(track.id)}'`);
+    }
     const path = join(root, track.id, "assessment.json");
     if (!artifactExists(path)) continue;
     out.push({

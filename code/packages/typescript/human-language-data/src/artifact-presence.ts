@@ -30,7 +30,21 @@
 // a regular file) mean absent. Everything else throws, naming the errno, so the
 // build says "I could not determine this" instead of "it is not there".
 // ---------------------------------------------------------------------------
-import { statSync } from "node:fs";
+// A fourth answer, found in security review and folded in here rather than
+// bolted on at the call sites:
+//
+//     something is there, but it is a SYMLINK
+//
+// `statSync` FOLLOWS one, so `mocks/a1/rubric.md -> ../../../README.md` would
+// satisfy the artifact gate and the ceiling would report the debt paid. Worse,
+// the same helper decides whether `core/assessment-artifact-ceiling/` is there
+// before the generator writes into it, and a symlinked directory that reads as
+// present is the enabling half of a write-through-symlink. `shard.ts`'s
+// `assertRealFile` already made "a ledger must be a real file in the tree" the
+// house rule; this applies it to artifacts, and refuses rather than answering
+// false — "present but not admissible" is a third thing that a boolean would
+// again collapse.
+import { lstatSync } from "node:fs";
 
 /**
  * The two errnos that genuinely mean "nothing lives at this path".
@@ -42,24 +56,30 @@ import { statSync } from "node:fs";
  */
 const ABSENT_CODES = new Set(["ENOENT", "ENOTDIR"]);
 
-/** The one call this module makes, parameterised so its failure paths are testable. */
-export type StatProbe = (path: string) => unknown;
+/**
+ * The one call this module makes, parameterised so its failure paths are testable.
+ *
+ * Typed by the single method the check needs rather than as `unknown`, so a test
+ * double cannot omit the symlink answer and quietly skip the guard below.
+ */
+export type StatProbe = (path: string) => { isSymbolicLink(): boolean };
 
 /**
- * Does something exist at `path`?
+ * Is there a real, non-symlinked entry at `path`?
  *
  * @param path  an absolute filesystem path
- * @param probe the stat call; injectable so a test can produce an EACCES without
- *              needing a filesystem that can be made unreadable on all three CI
- *              platforms. The throwing branch below is the entire point of this
- *              module, and a branch no test can reach is a branch nobody has
- *              seen work.
- * @throws when the filesystem answered with anything other than "absent"
+ * @param probe the `lstat` call; injectable so a test can produce an EACCES
+ *              without needing a filesystem that can be made unreadable on all
+ *              three CI platforms. The throwing branches below are the entire
+ *              point of this module, and a branch no test can reach is a branch
+ *              nobody has seen work.
+ * @throws when the filesystem answered with anything other than "absent", and
+ *         when the entry is a symbolic link
  */
-export function artifactExists(path: string, probe: StatProbe = statSync): boolean {
+export function artifactExists(path: string, probe: StatProbe = lstatSync): boolean {
+  let entry: { isSymbolicLink(): boolean };
   try {
-    probe(path);
-    return true;
+    entry = probe(path);
   } catch (error) {
     const code = (error as NodeJS.ErrnoException | null)?.code;
     if (typeof code === "string" && ABSENT_CODES.has(code)) return false;
@@ -70,4 +90,12 @@ export function artifactExists(path: string, probe: StatProbe = statSync): boole
       { cause: error },
     );
   }
+  if (entry.isSymbolicLink()) {
+    throw new Error(
+      `artifact presence: '${path}' is a symbolic link. An assessment artifact must be a ` +
+        `real file in the tree — a link satisfies the presence check while the evidence it ` +
+        `points at was never written here, and the generator must never write through one.`,
+    );
+  }
+  return true;
 }

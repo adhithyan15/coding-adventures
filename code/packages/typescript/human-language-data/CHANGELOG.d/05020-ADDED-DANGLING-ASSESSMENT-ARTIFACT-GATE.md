@@ -21,3 +21,12 @@
   mock `rubric` and `answerKey` with `artifactReference`, as the external-capstone
   half of the same parser already did. These are paths a checker joins to a track
   directory; only one of the two halves was checking their shape.
+- Refuse symlinks on both sides, per `shard.ts`'s rule that a guard living only
+  inside the reader is a guard the writer forgets. `artifactExists` probes with
+  `lstat` and throws on a link, so `mocks/a1/rubric.md -> ../../README.md` cannot
+  satisfy the presence gate; `--write` refuses to write through a linked ceiling
+  file or a linked ceiling directory, which would otherwise make an ordinary
+  `generate:assessment-artifacts` an arbitrary write.
+- Validate `track.id` against `TRACK_ID` in `loadAssessmentContracts` **before**
+  joining it to a path. `core/languages.json` is an unchecked cast, so an id of
+  `../../../../etc` would have been stat'ed and read outside the tree.

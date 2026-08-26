@@ -9,7 +9,7 @@
 // whose green output is silence cannot be told apart from a gate that was never
 // invoked, and this repository has shipped several of those.
 // ---------------------------------------------------------------------------
-import { mkdirSync, writeFileSync } from "node:fs";
+import { lstatSync, mkdirSync, writeFileSync } from "node:fs";
 import { dirname, resolve } from "node:path";
 import { pathToFileURL } from "node:url";
 
@@ -23,6 +23,51 @@ import {
 } from "./assessment-artifacts.js";
 import { defaultCurriculumRoot } from "./loader.js";
 
+/** `lstat`, or `undefined` if there is nothing there. Never follows a link. */
+function entryIfPresent(path: string): ReturnType<typeof lstatSync> | undefined {
+  try {
+    return lstatSync(path);
+  } catch (error) {
+    const code = (error as NodeJS.ErrnoException | null)?.code;
+    if (code === "ENOENT" || code === "ENOTDIR") return undefined;
+    throw error;
+  }
+}
+
+/**
+ * Write a ceiling shard, refusing to write THROUGH anything.
+ *
+ * `ceilingPath` validates the track id and calls `resolve`, but `resolve` is
+ * purely LEXICAL — it cannot see a symlink, and `writeFileSync` follows one. A
+ * committed `core/assessment-artifact-ceiling/spanish.json -> ../../../../.git/hooks/post-checkout`
+ * would turn an ordinary `npm run generate:assessment-artifacts` into an
+ * arbitrary write, and the same trick on the DIRECTORY makes
+ * `mkdirSync(..., { recursive: true })` succeed silently against a link and put
+ * every shard outside the tree.
+ *
+ * `book-cli.ts` already carries this guard for the generated `.tex`, and
+ * `shard.ts` states the rule it comes from: a guard living only inside the
+ * reader is a guard the writer forgets. `readCeiling`'s read side is covered by
+ * `assertRealFile`; this is the write side.
+ */
+function writeCeilingFile(path: string, contents: string): void {
+  const directory = dirname(path);
+  const existingDirectory = entryIfPresent(directory);
+  if (existingDirectory && !existingDirectory.isDirectory()) {
+    throw new Error(
+      `assessment artifacts: '${directory}' is not a real directory — refusing to write through it`,
+    );
+  }
+  mkdirSync(directory, { recursive: true });
+  const existing = entryIfPresent(path);
+  if (existing && !existing.isFile()) {
+    throw new Error(
+      `assessment artifacts: '${path}' is not a regular file — refusing to write through it`,
+    );
+  }
+  writeFileSync(path, contents, "utf8");
+}
+
 /** Ordered so the failure an author must ACT on is read first. */
 const KIND_ORDER = [
   "audit-went-blind",
@@ -34,10 +79,7 @@ const KIND_ORDER = [
 export function runAssessmentArtifactCli(
   args = process.argv.slice(2),
   root = defaultCurriculumRoot(),
-  write: (path: string, contents: string) => void = (path, contents) => {
-    mkdirSync(dirname(path), { recursive: true });
-    writeFileSync(path, contents, "utf8");
-  },
+  write: (path: string, contents: string) => void = writeCeilingFile,
   out: (text: string) => void = (text) => process.stdout.write(text),
   err: (text: string) => void = (text) => process.stderr.write(text),
 ): number {

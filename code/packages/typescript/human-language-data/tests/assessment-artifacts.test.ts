@@ -8,7 +8,9 @@
 // times in a week — a gate wired up, gone green, and later found to have been
 // green because it measured nothing.
 // ---------------------------------------------------------------------------
-import { cpSync, mkdirSync, mkdtempSync, rmSync, writeFileSync } from "node:fs";
+import {
+  cpSync, mkdirSync, mkdtempSync, readFileSync, readdirSync, rmSync, symlinkSync, writeFileSync,
+} from "node:fs";
 import { tmpdir } from "node:os";
 import { join } from "node:path";
 import { afterEach, beforeEach, describe, expect, it } from "vitest";
@@ -266,6 +268,8 @@ describe("the pinned ceiling", () => {
 
 describe("artifactExists distinguishes absent from undetermined", () => {
   const errno = (code: string): Error => Object.assign(new Error(code), { code });
+  const realFile = () => ({ isSymbolicLink: () => false });
+  const link = () => ({ isSymbolicLink: () => true });
 
   it("treats ENOENT and ENOTDIR as absent", () => {
     expect(artifactExists("/nowhere", () => { throw errno("ENOENT"); })).toBe(false);
@@ -273,7 +277,16 @@ describe("artifactExists distinguishes absent from undetermined", () => {
   });
 
   it("treats a successful stat as present", () => {
-    expect(artifactExists("/somewhere", () => ({}))).toBe(true);
+    expect(artifactExists("/somewhere", realFile)).toBe(true);
+  });
+
+  it("REFUSES a symlink rather than counting it as the artifact", () => {
+    // The probe is `lstat`, not `stat`, so `mocks/a1/rubric.md -> ../../README.md`
+    // cannot satisfy the presence gate and report the debt paid. It throws
+    // instead of answering false, because "present but not admissible" is a
+    // third answer and a boolean would collapse it the same way `existsSync`
+    // collapses "I was not allowed to look".
+    expect(() => artifactExists("/linked", link)).toThrow(/is a symbolic link/);
   });
 
   it("THROWS on any other errno, naming it", () => {
@@ -314,6 +327,70 @@ describe("the gate cannot pass by measuring nothing", () => {
   it("rejects an unsafe track id before joining it to a path", () => {
     const { contract: parsed } = loadAssessmentContracts(root)[0]!;
     expect(() => auditTrackArtifacts(root, "../escape", parsed)).toThrow(/unsafe track id/);
+  });
+
+  it("rejects an unsafe track id in the REGISTRY, before anything is read", () => {
+    // `loadLanguageRegistry` is an unchecked cast over core/languages.json, so a
+    // pull request could put `"id": "../../../../etc"` there and have CI stat
+    // and read a path outside the tree. The guard in `auditTrackArtifacts` above
+    // is too late — it runs on contracts the loader has already opened.
+    write("core/languages.json", `${JSON.stringify({
+      version: 1,
+      languages: [{ id: "../../../../etc", name: "x", family: "x", script: "latin", status: "active", bridges: [] }],
+    }, null, 2)}\n`);
+    expect(() => loadAssessmentContracts(root)).toThrow(/unsafe track id/);
+  });
+});
+
+describe("the generator refuses to write through a symlink", () => {
+  // `resolve()` is lexical and `writeFileSync` follows a link, so a committed
+  // `core/assessment-artifact-ceiling/fixtura.json -> ../../../.git/hooks/post-checkout`
+  // would make `npm run generate:assessment-artifacts` an arbitrary write. Both
+  // halves are guarded: the file and the directory it sits in.
+  //
+  // Symlink creation needs a privilege Windows does not always grant, and it
+  // grants them SEPARATELY — a directory junction needs none, a file symlink
+  // needs SeCreateSymbolicLinkPrivilege. So the probe must use the same link
+  // type the case does; probing with a junction and then creating a file link
+  // is how the first version of this test "skipped" by throwing EPERM.
+  //
+  // Where the privilege really is absent the case skips itself, and the skip is
+  // visible — asserting the platform is the one where that is legitimate, so a
+  // Linux runner that lost symlink support fails instead of going quiet. A
+  // suite that stops exercising its security cases without saying so is the
+  // failure mode this whole file is written against.
+  const canSymlink = (type: "file" | "junction"): boolean => {
+    const probe = join(root, `probe-${type}`);
+    const target = type === "junction" ? join(root, "core") : join(root, "core", "languages.json");
+    try {
+      symlinkSync(target, probe, type);
+      rmSync(probe, { force: true });
+      return true;
+    } catch {
+      return false;
+    }
+  };
+
+  it("refuses a symlinked ceiling FILE", () => {
+    if (!canSymlink("file")) return void expect(process.platform).toBe("win32");
+    const victim = join(root, "victim.txt");
+    writeFileSync(victim, "original\n", "utf8");
+    mkdirSync(join(root, ARTIFACT_CEILING_DIR), { recursive: true });
+    symlinkSync(victim, join(root, ARTIFACT_CEILING_DIR, "fixtura.json"), "file");
+    expect(() => runAssessmentArtifactCli(["--write"], root, undefined, () => {}, () => {}))
+      .toThrow(/not a regular file — refusing to write through it/);
+    expect(readFileSync(victim, "utf8")).toBe("original\n");
+  });
+
+  it("refuses a symlinked ceiling DIRECTORY", () => {
+    if (!canSymlink("junction")) return void expect(process.platform).toBe("win32");
+    const elsewhere = join(root, "elsewhere");
+    mkdirSync(elsewhere, { recursive: true });
+    mkdirSync(join(root, "core"), { recursive: true });
+    symlinkSync(elsewhere, join(root, ARTIFACT_CEILING_DIR), "junction");
+    expect(() => runAssessmentArtifactCli(["--write"], root, undefined, () => {}, () => {}))
+      .toThrow(/not a real directory — refusing to write through it/);
+    expect(readdirSync(elsewhere)).toEqual([]);
   });
 });
 
