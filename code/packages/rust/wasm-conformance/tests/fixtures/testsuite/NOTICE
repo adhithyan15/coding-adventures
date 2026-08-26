@@ -2151,6 +2151,54 @@ gradeable, `NotYetSupported` unchanged at 67); `assert_return` rose from
 unchanged at 545). No other already-vendored file's stats changed --
 zero regressions.
 
+extended 2026-08-25 (GC epic, first slice -- see code/specs/
+               W20-wasm-gc-i31-conformance.md -- i31.wast, same pinned
+               commit, no re-pin): the one GC-family file at this pinned
+               SHA that is NOT entangled with `call_ref`, non-null
+               concrete reference types, `(rec ...)` recursive type
+               declarations, or the `eq`/`any`/`none` abstract heap-type
+               hierarchy (every other GC-family file -- `struct.wast`,
+               `array.wast` and friends, `br_on_null.wast`/
+               `br_on_non_null.wast`/`ref_as_non_null.wast`, `ref_eq.
+               wast` -- is, confirmed by direct inspection against a live
+               GitHub API tree listing at this same pinned SHA; see the
+               spec's own "Purpose" section for the full investigation).
+               Byte-identical (8347 bytes) against a fresh re-fetch.
+               Lives at the testsuite repo ROOT like every other file
+               above, no `PROPOSAL_FILES` entry needed. This repo's
+               existing struct/i31 GC slice (`struct.new`/`get`/`set`,
+               `i31.new`/`get_s`, `ref.test`) had NEVER been vendored or
+               conformance-tested before this PR, only exercised via
+               hand-built binary bytecode in `wasm-execution`'s own unit
+               tests -- vendoring this file for real surfaced a genuine
+               correctness bug (`ref.i31`/`i31.get_s` were stack-identity
+               no-ops, not real 31-bit masking/sign-extension -- see
+               `wasm-execution`'s own CHANGELOG for this same date), now
+               fixed, plus a new `i31.get_u` opcode and this crate's
+               first-ever wast text syntax for the whole struct/i31 GC
+               family. Grades 3/3 `module`, 20/20 `assert_return`, 2/2
+               `assert_trap`, ALL REAL passes, ZERO new `Fail`s -- the
+               file's first module (`new`/`get_u`/`get_s`/`get_u-null`/
+               `get_s-null`/`get_globals`/`set_global`) plus two later
+               modules that happened to need no further infrastructure.
+               Its remaining later modules use tables/elem-segments of a
+               non-`funcref` reference kind (this repo's element-segment
+               representation is function-index-shaped) and `ref.cast` --
+               both explicitly out of this slice's scope -- and correctly
+               grade `NotYetSupported` for their own directives, per W14's
+               per-module build-failure isolation (confirmed: no blast
+               radius onto the passing modules' own grades).
+
+Aggregate `module` rose from 1275/1276 to 1278/1279 (+3 pass, +3
+gradeable, `NotYetSupported` rose from 67 to 71); `register` rose from
+10/12 to 11/13 (+1 pass, +1 gradeable, `NotYetSupported` unchanged at 2);
+`action` rose from 145/145 to 146/146 (+1 pass, +1 gradeable,
+`NotYetSupported` rose from 29 to 36); `assert_return` rose from
+44693/44710 to 44713/44730 (+20 pass, +20 gradeable, `NotYetSupported`
+rose from 545 to 580); `assert_trap` rose from 1478/1478 to 1480/1480
+(+2 pass, +2 gradeable, `NotYetSupported` unchanged at 938). No other
+already-vendored file's stats changed -- zero regressions.
+
 The vendored files are licensed under the Apache License, Version 2.0 --
 see the accompanying LICENSE file, itself vendored verbatim from the same
 pinned commit.

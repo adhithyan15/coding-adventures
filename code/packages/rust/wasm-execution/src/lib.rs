@@ -1095,6 +1095,34 @@ pub fn evaluate_const_expr(
                 v128_heap.push(bytes);
                 result = Some(WasmValue::V128(handle));
             }
+            // WasmGC prefix (0xFB), W20: `ref.i31` (sub-opcode `0x1C`) is the
+            // one GC instruction the real spec allows in a constant
+            // expression (needed by `i31.wast`'s `(global $i (ref i31)
+            // (ref.i31 (i32.const 2)))`). Like every other opcode in this
+            // restricted evaluator, it transforms the running `result`
+            // rather than pushing/popping a real stack -- valid here
+            // because `ref.i31` takes exactly the single value the
+            // immediately preceding opcode already computed. Any other
+            // `0xFB` sub-opcode is illegal in a constant expression and
+            // falls through to the catch-all below.
+            0xFB => {
+                if pos >= expr.len() {
+                    return Err(TrapError::new("truncated WasmGC opcode in constant expression"));
+                }
+                let sub = expr[pos];
+                pos += 1;
+                if sub != 0x1C {
+                    return Err(TrapError::new(format!(
+                        "illegal WasmGC sub-opcode 0x{:02X} in constant expression",
+                        sub
+                    )));
+                }
+                let v = match result {
+                    Some(WasmValue::I32(v)) => v,
+                    _ => return Err(TrapError::new("ref.i31: expected an i32 operand")),
+                };
+                result = Some(WasmValue::I32(v & 0x7FFF_FFFF));
+            }
             // end
             0x0B => {
                 return result.ok_or_else(|| TrapError::new("empty constant expression"));
@@ -1185,8 +1213,9 @@ pub enum DecodedOperand {
     /// | 0x00 | struct.new   | ✓        | —         |
     /// | 0x02 | struct.get   | ✓        | ✓         |
     /// | 0x04 | struct.set   | ✓        | ✓         |
-    /// | 0x1C | i31.new      | —        | —         |
+    /// | 0x1C | ref.i31      | —        | —         |
     /// | 0x1D | i31.get_s    | —        | —         |
+    /// | 0x1E | i31.get_u    | —        | —         |
     ///
     /// Carrying all three together (rather than a bare `Int(sub)`) lets the
     /// single `0xFB` handler dispatch *and* read its indices from one place.
@@ -1288,8 +1317,9 @@ pub fn decode_function_body(body: &FunctionBody) -> Vec<DecodedInstruction> {
         //   0x00 struct.new    <type_idx>
         //   0x02 struct.get    <type_idx> <field_idx>
         //   0x04 struct.set    <type_idx> <field_idx>
-        //   0x1C i31.new       (none)
+        //   0x1C ref.i31       (none)
         //   0x1D i31.get_s     (none)
+        //   0x1E i31.get_u     (none, W20)
         if opcode_byte == 0xFB {
             let sub = if offset < code.len() {
                 let s = code[offset];
@@ -1322,7 +1352,8 @@ pub fn decode_function_body(body: &FunctionBody) -> Vec<DecodedInstruction> {
                     offset += sz1 + sz2;
                     (t, f)
                 }
-                // i31.new / i31.get_s (and any unknown sub-opcode): no immediates.
+                // ref.i31 / i31.get_s / i31.get_u (W20) (and any unknown
+                // sub-opcode): no immediates.
                 _ => (0, 0),
             };
             instructions.push(DecodedInstruction {
@@ -2591,6 +2622,24 @@ fn pop_struct_ref(vm: &mut GenericVM, op: &str) -> Result<u32, VMError> {
     }
 }
 
+// ── Helper: pop a *non-null* i31ref payload (W20) ─────────────────────────
+//
+// Used by `i31.get_s`/`i31.get_u`. An `i31ref` is carried on the value stack
+// as its plain (already 31-bit-masked, see `ref.i31`'s own handler) `i32`
+// payload — but `ref.null i31` (heap type `0x6C`) still produces a real
+// `WasmValue::Ref(None)`, exactly like every other heap type's null (see
+// the generic `0xD0` handler), so a null `i31ref` must be told apart from a
+// live one before unboxing. Real spec behavior: `i31.get_s`/`i31.get_u` on
+// a null reference traps ("null i31 reference"); any other, non-`I32`
+// value is a type mismatch, also a clean trap.
+fn pop_i31_payload(vm: &mut GenericVM, op: &str) -> Result<i32, VMError> {
+    match pop_wasm(vm)? {
+        WasmValue::I32(v) => Ok(v),
+        WasmValue::Ref(None) => Err(VMError::GenericError(format!("{op}: null i31 reference"))),
+        other => Err(VMError::GenericError(format!("{op}: expected an i31 reference, got {other:?}"))),
+    }
+}
+
 // ── Helper: get operand as integer ────────────────────────────────────────
 fn operand_int(instr: &Instruction) -> i64 {
     match &instr.operand {
@@ -2962,15 +3011,35 @@ fn register_numeric_i64(vm: &mut GenericVM) {
         Ok(None)
     });
 
-    // WasmGC prefix (0xFB) — LANG77 / McCarthy L3b-3a-3a + L3b-3a-3b.
+    // WasmGC prefix (0xFB) — LANG77 / McCarthy L3b-3a-3a + L3b-3a-3b, plus
+    // W20's real `i31ref` box/unbox semantics.
     //
     // The decoder bundles the sub-opcode and its index immediates into the
     // `ctx.gc_ops` side-table; the instruction's operand is the index into it.
     // We dispatch on the sub-opcode:
     //
-    //   - `i31.new`   (0x1C) / `i31.get_s` (0x1D): an `i31ref` ≡ its plain `i32`
-    //     payload on the value stack, so both are stack-identity **no-ops** —
-    //     the i32 passes straight through (L3b-3a-3a).
+    //   - `ref.i31` (0x1C, this repo's internal comments previously called it
+    //     `i31.new`): pop an `i32`, mask to the low 31 bits (`& 0x7FFF_FFFF`)
+    //     — an `i31ref` only ever carries a 31-bit payload — and push the
+    //     masked `i32` back (an `i31ref` ≡ its masked `i32` payload on the
+    //     value stack, L3b-3a-3a).
+    //   - `i31.get_s` (0x1D): pop a non-null `i31ref`, sign-extend from bit
+    //     30 (`(v << 1) as i32 >> 1`, an arithmetic shift) to fill the full
+    //     32-bit width, push the result. A null reference traps (W20; see
+    //     `pop_i31_payload`).
+    //   - `i31.get_u` (0x1E, W20 — new): pop a non-null `i31ref`, zero-extend
+    //     (mask to 31 bits — a no-op given `ref.i31` already masked at
+    //     construction, but re-masked here independently rather than
+    //     leaning on that invariant), push the result. Same null-reference
+    //     trap as `i31.get_s`.
+    //
+    //     Prior to W20, `0x1C`/`0x1D` were literal stack-identity no-ops —
+    //     correct only by coincidence for the small, always-positive,
+    //     bit-30-clear integers this repo's own LANG77 Lisp-compiler tests
+    //     happened to box (7, 9, 42, ...), and wrong for the real spec's own
+    //     `i31.wast` test vectors (e.g. `i31.get_s(0x7fff_ffff)` must be
+    //     `-1`, which a pure pass-through gets wrong). See `code/specs/
+    //     W20-wasm-gc-i31-conformance.md`.
     //   - `struct.new` (0x00): pop `struct_field_counts[type_idx]` field values
     //     (last field on top), allocate a `GcStruct` on the heap, push a
     //     `Ref(Some(handle))` (L3b-3a-3b).
@@ -2987,8 +3056,23 @@ fn register_numeric_i64(vm: &mut GenericVM) {
             VMError::GenericError(format!("WasmGC operand index {op_idx} out of range"))
         })?;
         match op.sub {
-            // i31.new / i31.get_s: i31ref ≡ its i32 payload — stack-identity.
-            0x1C | 0x1D => {}
+            // `ref.i31`: mask the operand to a real 31-bit `i31ref` payload
+            // (W20 — see this handler's own doc comment for why this isn't
+            // a plain pass-through).
+            0x1C => {
+                let v = pop_wasm(vm)?.as_i32().map_err(VMError::from)?;
+                push_wasm(vm, WasmValue::I32(v & 0x7FFF_FFFF));
+            }
+            // `i31.get_s`: sign-extend from bit 30 (W20).
+            0x1D => {
+                let v = pop_i31_payload(vm, "i31.get_s")?;
+                push_wasm(vm, WasmValue::I32((v << 1) >> 1));
+            }
+            // `i31.get_u`: zero-extend / re-mask to 31 bits (W20, new).
+            0x1E => {
+                let v = pop_i31_payload(vm, "i31.get_u")?;
+                push_wasm(vm, WasmValue::I32(v & 0x7FFF_FFFF));
+            }
 
             // struct.new <type_idx>: allocate a cons-like object.
             0x00 => {
@@ -10237,6 +10321,116 @@ mod tests {
         });
         let result = engine.call_function(0, &[]).unwrap();
         assert_eq!(result, vec![WasmValue::I32(42)], "i31 box/unbox must round-trip the integer");
+    }
+
+    // ── W20: real i31ref box/unbox semantics (mask + sign/zero-extend) ───────
+
+    /// Runs `param -> ref.i31 -> <unbox opcode> -> end` for one `(input,
+    /// unbox_sub)` pair and returns the resulting i32.
+    fn run_i31_unbox(input: i32, unbox_sub: u8) -> WasmValue {
+        let func_type = FuncType { params: vec![ValueType::I32], results: vec![ValueType::I32] };
+        let body = FunctionBody {
+            locals: vec![],
+            code: vec![0x20, 0x00, 0xFB, 0x1C, 0xFB, unbox_sub, 0x0B], // local.get 0; ref.i31; <unbox>; end
+        };
+        let mut engine = WasmExecutionEngine::new(WasmEngineConfig {
+            memories: Vec::new(),
+            tables: vec![],
+            globals: vec![],
+            global_types: vec![],
+            func_types: vec![func_type],
+            func_bodies: vec![Some(body)],
+            host_functions: vec![None],
+        });
+        engine.call_function(0, &[WasmValue::I32(input)]).unwrap()[0]
+    }
+
+    #[test]
+    fn test_i31_get_u_masks_to_31_bits() {
+        // Real `i31.wast` vectors -- verified against the pinned-SHA
+        // upstream file, not invented.
+        assert_eq!(run_i31_unbox(0, 0x1E), WasmValue::I32(0));
+        assert_eq!(run_i31_unbox(100, 0x1E), WasmValue::I32(100));
+        assert_eq!(run_i31_unbox(-1, 0x1E), WasmValue::I32(0x7fff_ffffu32 as i32));
+        assert_eq!(run_i31_unbox(0x3fff_ffff, 0x1E), WasmValue::I32(0x3fff_ffff));
+        assert_eq!(run_i31_unbox(0x4000_0000, 0x1E), WasmValue::I32(0x4000_0000));
+        assert_eq!(run_i31_unbox(0x7fff_ffff, 0x1E), WasmValue::I32(0x7fff_ffff));
+        assert_eq!(run_i31_unbox(0xaaaa_aaaau32 as i32, 0x1E), WasmValue::I32(0x2aaa_aaaa));
+        assert_eq!(run_i31_unbox(0xcaaa_aaaau32 as i32, 0x1E), WasmValue::I32(0x4aaa_aaaa));
+    }
+
+    #[test]
+    fn test_i31_get_s_sign_extends_from_bit_30() {
+        // Same real `i31.wast` vectors, signed side -- `get_s(0x7fff_ffff)`
+        // must be -1, the case a pure stack-identity pass-through (this
+        // repo's pre-W20 behavior) gets wrong.
+        assert_eq!(run_i31_unbox(0, 0x1D), WasmValue::I32(0));
+        assert_eq!(run_i31_unbox(100, 0x1D), WasmValue::I32(100));
+        assert_eq!(run_i31_unbox(-1, 0x1D), WasmValue::I32(-1));
+        assert_eq!(run_i31_unbox(0x3fff_ffff, 0x1D), WasmValue::I32(0x3fff_ffff));
+        assert_eq!(run_i31_unbox(0x4000_0000, 0x1D), WasmValue::I32(-0x4000_0000));
+        assert_eq!(run_i31_unbox(0x7fff_ffff, 0x1D), WasmValue::I32(-1));
+        assert_eq!(run_i31_unbox(0xaaaa_aaaau32 as i32, 0x1D), WasmValue::I32(0x2aaa_aaaa));
+        assert_eq!(run_i31_unbox(0xcaaa_aaaau32 as i32, 0x1D), WasmValue::I32(0xcaaa_aaaau32 as i32));
+    }
+
+    #[test]
+    fn test_ref_i31_masks_top_bit_at_construction() {
+        // `ref.i31` alone (no unbox) must already drop bit 31 -- verified by
+        // reading the raw i32 straight back out (a boxed i31ref IS its
+        // masked i32 payload on the stack, no unbox opcode needed to see
+        // the mask took effect).
+        let func_type = FuncType { params: vec![ValueType::I32], results: vec![ValueType::I32] };
+        let body = FunctionBody { locals: vec![], code: vec![0x20, 0x00, 0xFB, 0x1C, 0x0B] };
+        let mut engine = WasmExecutionEngine::new(WasmEngineConfig {
+            memories: Vec::new(),
+            tables: vec![],
+            globals: vec![],
+            global_types: vec![],
+            func_types: vec![func_type],
+            func_bodies: vec![Some(body)],
+            host_functions: vec![None],
+        });
+        let result = engine.call_function(0, &[WasmValue::I32(-1)]).unwrap();
+        assert_eq!(result, vec![WasmValue::I32(0x7fff_ffff)], "ref.i31 must mask bit 31 at construction");
+    }
+
+    #[test]
+    fn test_i31_get_s_and_get_u_trap_on_null_reference() {
+        // `ref.null i31` (0xD0 0x6C) then unbox -- both directions must
+        // trap cleanly, never panic or silently misinterpret the null
+        // sentinel as a payload.
+        for unbox_sub in [0x1D_u8, 0x1E_u8] {
+            let func_type = FuncType { params: vec![], results: vec![ValueType::I32] };
+            let body = FunctionBody { locals: vec![], code: vec![0xD0, 0x6C, 0xFB, unbox_sub, 0x0B] };
+            let mut engine = WasmExecutionEngine::new(WasmEngineConfig {
+                memories: Vec::new(),
+                tables: vec![],
+                globals: vec![],
+                global_types: vec![],
+                func_types: vec![func_type],
+                func_bodies: vec![Some(body)],
+                host_functions: vec![None],
+            });
+            assert!(engine.call_function(0, &[]).is_err(), "sub-opcode 0x{unbox_sub:02X} on a null i31ref must trap, not succeed");
+        }
+    }
+
+    #[test]
+    fn test_evaluate_const_expr_ref_i31_masks_operand() {
+        // `(global (ref i31) (ref.i31 (i32.const -1)))` -- the const-expr
+        // evaluator's own separate `ref.i31` support (needed by
+        // `i31.wast`'s global initializers), masked the same way the main
+        // interpreter's `0xFB 0x1C` handler is.
+        let expr = vec![0x41, 0x7F, 0xFB, 0x1C, 0x0B]; // i32.const -1 (sLEB 0x7F); ref.i31; end
+        let result = evaluate_const_expr(&expr, &[], &mut Vec::new()).unwrap();
+        assert_eq!(result, WasmValue::I32(0x7fff_ffff));
+    }
+
+    #[test]
+    fn test_evaluate_const_expr_rejects_unknown_gc_sub_opcode() {
+        let expr = vec![0x41, 0x00, 0xFB, 0x00, 0x0B]; // i32.const 0; struct.new (illegal here); end
+        assert!(evaluate_const_expr(&expr, &[], &mut Vec::new()).is_err());
     }
 
     #[test]

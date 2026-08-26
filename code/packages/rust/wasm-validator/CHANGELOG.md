@@ -2,6 +2,25 @@
 
 All notable changes to this package will be documented in this file.
 
+## [0.2.65] - 2026-08-25 (GC epic, first slice W20: i31.get_u type rule)
+
+### Added
+
+- `i31.get_u` (WasmGC `0xFB` sub-opcode `0x1E`, new): joins the existing
+  `i31.get_s` (`0x1D`) type-rule arm -- pop a value, push `I32`. The
+  unsigned-vs-signed distinction is purely a runtime concern, invisible
+  to the type checker.
+- Renamed the `0x1C` case's doc comment from `i31.new` to `ref.i31` (the
+  real spec instruction name; this crate's own comment had drifted from
+  it) -- no behavior change.
+- Unit tests (in `tests/type_check.rs`, built via `wasm-wast-parser`'s
+  new text syntax): `i31.get_u`/`i31.get_s` validate on a fresh
+  `ref.i31`, on `(ref.null i31)` (statically valid -- the null trap is a
+  runtime concern), `(ref i31)`/`(ref null i31)`/`i31ref` value-type
+  syntax in params/results/locals/globals (including a `(global (ref
+  i31) (ref.i31 ...))` const-expr end to end), and an empty-stack
+  rejection.
+
 ## [0.2.64] - 2026-08-25 (Relaxed SIMD epic PR6: i16x8/i32x4.relaxed_dot_i8x16_i7x16_s/_add_s)
 
 ### Added

@@ -820,6 +820,23 @@ TESTSUITE_FILES = [
     # this pinned SHA) remains unimplemented in the whole `0x100`-`0x113`
     # range.
     "relaxed_dot_product.wast",
+    # GC epic, first slice (W20 -- see code/specs/
+    # W20-wasm-gc-i31-conformance.md): i31.wast -- the one GC-family file
+    # at this pinned SHA that is NOT entangled with `call_ref`, non-null
+    # concrete reference types, `(rec ...)` recursive type declarations, or
+    # the `eq`/`any`/`none` abstract heap-type hierarchy (every other
+    # GC-family file is, confirmed by direct inspection -- see W20's own
+    # "Purpose" section). Lives at the testsuite repo root, same as every
+    # other file in this list -- no `PROPOSAL_FILES` entry needed. Only the
+    # file's FIRST module (`ref.i31`/`i31.get_s`/`i31.get_u` on plain
+    # params/results/globals) is expected to grade for real; its later
+    # modules use table/elem-segment shapes this repo's function-index-
+    # shaped element representation doesn't support yet (a separate,
+    # explicitly out-of-scope generalization -- see W20's "Explicitly out
+    # of scope" section) and correctly grade `NotYetSupported` for their
+    # own directives, per W14's per-module build-failure isolation (no
+    # blast radius onto the first module's real pass count).
+    "i31.wast",
 ]
 
 # Reference-types/threads-proposal files whose UPSTREAM path lives under

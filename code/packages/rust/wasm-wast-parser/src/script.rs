@@ -141,6 +141,11 @@ pub enum Expected {
     /// predict which specific function pointer a table lookup returns,
     /// only that it isn't null.
     RefFuncAny,
+    /// Bare `(ref.i31)` with no argument (W20) — matches ANY `i31ref`,
+    /// same "can't predict the exact value, just the shape" wildcard as
+    /// `RefFuncAny` above. Used by the real `i31.wast`'s own `(assert_return
+    /// (invoke "new" (i32.const 1)) (ref.i31))`.
+    RefI31Any,
     /// `(either A B)` (relaxed SIMD epic PR1 — see `code/specs/
     /// W19-wasm-relaxed-simd-first-slice.md`) — the actual result must
     /// match `A` **or** `B`, not necessarily either specific one. The
@@ -479,6 +484,9 @@ fn parse_expected(e: &SExpr) -> Result<Expected, WastParseError> {
         // forms carry no second element at all.
         ("ref.null", None) => Ok(Expected::RefNullAny),
         ("ref.func", None) => Ok(Expected::RefFuncAny),
+        // Bare `(ref.i31)` (W20) -- same wildcard shape as `ref.func`
+        // above, see [`Expected::RefI31Any`]'s own doc comment.
+        ("ref.i31", None) => Ok(Expected::RefI31Any),
         // `(either A B)` (relaxed SIMD epic PR1 -- see [`Expected::Either`]'s
         // own doc comment). `lit` is always `None` here in practice --
         // both children are LISTS (e.g. `(v128.const i8x16 ...)`), never a
@@ -1073,6 +1081,19 @@ mod tests {
         match &dirs[0] {
             Directive::AssertReturn { expected, .. } => {
                 assert_eq!(*expected, vec![Expected::RefNullAny, Expected::RefFuncAny]);
+            }
+            other => panic!("expected AssertReturn, got {other:?}"),
+        }
+    }
+
+    #[test]
+    fn bare_ref_i31_is_a_wildcard_expectation() {
+        // W20 -- `i31.wast`'s own `(assert_return (invoke "new" (i32.const
+        // 1)) (ref.i31))` real shape.
+        let dirs = parse_script(r#"(assert_return (invoke "f") (ref.i31))"#).unwrap();
+        match &dirs[0] {
+            Directive::AssertReturn { expected, .. } => {
+                assert_eq!(*expected, vec![Expected::RefI31Any]);
             }
             other => panic!("expected AssertReturn, got {other:?}"),
         }

@@ -1,5 +1,42 @@
 # Changelog — wasm-wast-parser
 
+## 0.1.75 — 2026-08-25 — GC epic, first slice W20: i31ref text syntax + real i31.wast conformance
+
+### Added
+
+- First-ever wast TEXT syntax for this repo's existing struct/i31 GC
+  slice (previously only exercised via hand-built binary bytecode in
+  `wasm-execution`'s own unit tests):
+  - `parse_value_type`: `(ref i31)`, `(ref null i31)`, and bare `i31ref`
+    all parse to `ValueType::I31ref`. Null vs. non-null is deliberately
+    NOT distinguished (same simplification this crate already makes for
+    `funcref`/`externref`).
+  - `parse_ref_null_heap_type`: recognizes `i31` (heap-type byte `0x6C`).
+  - Instruction names `ref.i31`, `i31.get_s`, `i31.get_u` in both the
+    flat/stream encoder (`encode_stream_instr`) and the folded encoder
+    (`encode_flat_instr`) -- the same "intercept by name before
+    `wasm_opcodes::get_opcode_by_name`" shape `ref.null`/`ref.is_null`
+    already use.
+- `Expected::RefI31Any` (new `assert_return` expected-value variant):
+  bare `(ref.i31)` with no argument -- matches ANY `i31ref`, the same
+  "can't predict the exact value, just the shape" wildcard `Expected::
+  RefFuncAny` already provides for funcref. Needed by the real
+  `i31.wast`'s own `(assert_return (invoke "new" (i32.const 1))
+  (ref.i31))`. Grading lives in `wasm-conformance`'s
+  `value_matches_expected` (this repo's i31ref values are plain `i32`s
+  on the stack, never a `WasmValue::Ref` -- see `wasm-execution`'s own
+  `0xFB` handler doc comment -- so the grading check is just "is this an
+  I32").
+- Unit tests for all of the above, in both flat and folded instruction
+  form, plus a params/results/locals/globals round trip and a
+  `ref.null i31` encoding check.
+
+### See also
+
+- `code/specs/W20-wasm-gc-i31-conformance.md` for the full GC epic
+  prioritization writeup and why this slice (not `br_on_null`/array
+  types/etc.) was picked first.
+
 ## 0.1.74 — 2026-08-25 — Relaxed SIMD epic PR6: i16x8/i32x4.relaxed_dot_i8x16_i7x16_s/_add_s
 
 ### Added
