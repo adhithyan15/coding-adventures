@@ -17,6 +17,36 @@ local CI_MANAGED_TOOLCHAIN_LANGUAGES = {
 
 local TRACKED_ARTIFACT_COMPONENT_IDENTITY = "node_modules"
 local TRACKED_ARTIFACT_REDACTED_PATH = "repository"
+local ORPHAN_SCAN_ROOT = "code"
+local ORPHAN_LEDGER_PATH = "code/BUILD-EXEMPTIONS"
+local ORPHAN_BUILD_NAMES = {
+    BUILD = 1,
+    BUILD_windows = 2,
+    BUILD_mac = 3,
+    BUILD_linux = 4,
+    BUILD_mac_and_linux = 5,
+}
+local ORPHAN_SKIP_COMPONENTS = {
+    [".git"] = true,
+    target = true,
+    node_modules = true,
+    vendor = true,
+    [".venv"] = true,
+    _build = true,
+    deps = true,
+    [".build"] = true,
+    ["dist-newstyle"] = true,
+    [".cargo"] = true,
+}
+local PYTHON_BLANK_CODEPOINTS = {}
+for scalar = 0x0009, 0x000D do PYTHON_BLANK_CODEPOINTS[scalar] = true end
+for scalar = 0x001C, 0x0020 do PYTHON_BLANK_CODEPOINTS[scalar] = true end
+for _, scalar in ipairs({
+    0x0085, 0x00A0, 0x1680, 0x2028, 0x2029, 0x202F, 0x205F, 0x3000,
+}) do
+    PYTHON_BLANK_CODEPOINTS[scalar] = true
+end
+for scalar = 0x2000, 0x200A do PYTHON_BLANK_CODEPOINTS[scalar] = true end
 local WINDOWS_RESERVED_BASENAMES = {
     CON = true,
     PRN = true,
@@ -103,6 +133,300 @@ local function diagnostic_less(left, right)
     if left.code ~= right.code then return left.code < right.code end
     if left.path ~= right.path then return left.path < right.path end
     return canonical_details(left.details) < canonical_details(right.details)
+end
+
+-- Lua compares UTF-8 strings by encoded byte, while the contract compares
+-- paths by Unicode scalar. Converting these bounded strings to scalar arrays
+-- keeps ordering independent of the host locale and string representation.
+local function unicode_scalar_less(left, right)
+    local left_scalars = {utf8.codepoint(left, 1, -1)}
+    local right_scalars = {utf8.codepoint(right, 1, -1)}
+    local shared = math.min(#left_scalars, #right_scalars)
+    for index = 1, shared do
+        if left_scalars[index] ~= right_scalars[index] then
+            return left_scalars[index] < right_scalars[index]
+        end
+    end
+    return #left_scalars < #right_scalars
+end
+
+local function json_ascii_string(value)
+    local chunks = {'"'}
+    for _, scalar in utf8.codes(value) do
+        if scalar == 0x22 then
+            chunks[#chunks + 1] = '\\"'
+        elseif scalar == 0x5C then
+            chunks[#chunks + 1] = "\\\\"
+        elseif scalar == 0x08 then
+            chunks[#chunks + 1] = "\\b"
+        elseif scalar == 0x09 then
+            chunks[#chunks + 1] = "\\t"
+        elseif scalar == 0x0A then
+            chunks[#chunks + 1] = "\\n"
+        elseif scalar == 0x0C then
+            chunks[#chunks + 1] = "\\f"
+        elseif scalar == 0x0D then
+            chunks[#chunks + 1] = "\\r"
+        elseif scalar >= 0x20 and scalar <= 0x7E then
+            chunks[#chunks + 1] = string.char(scalar)
+        elseif scalar <= 0xFFFF then
+            chunks[#chunks + 1] = string.format("\\u%04x", scalar)
+        else
+            local adjusted = scalar - 0x10000
+            local high = 0xD800 + (adjusted >> 10)
+            local low = 0xDC00 + (adjusted & 0x3FF)
+            chunks[#chunks + 1] = string.format("\\u%04x\\u%04x", high, low)
+        end
+    end
+    chunks[#chunks + 1] = '"'
+    return table.concat(chunks)
+end
+
+-- Match Python's json.dumps(details, sort_keys=True): sorted keys, ASCII-only
+-- strings, and the default comma/colon spacing. Details are deliberately flat
+-- bounded records, so this small encoder never needs host JSON behavior.
+local function canonical_orphan_details(details)
+    local keys = {}
+    for key in pairs(details) do keys[#keys + 1] = key end
+    table.sort(keys)
+
+    local members = {}
+    for _, key in ipairs(keys) do
+        local value = details[key]
+        local encoded
+        if type(value) == "string" then
+            encoded = json_ascii_string(value)
+        elseif type(value) == "boolean" then
+            encoded = value and "true" or "false"
+        elseif value == nil then
+            encoded = "null"
+        else
+            encoded = tostring(value)
+        end
+        members[#members + 1] = json_ascii_string(key) .. ": " .. encoded
+    end
+    return "{" .. table.concat(members, ", ") .. "}"
+end
+
+local function orphan_diagnostic_less(left, right)
+    if left.code ~= right.code then return unicode_scalar_less(left.code, right.code) end
+    if left.path ~= right.path then return unicode_scalar_less(left.path, right.path) end
+    return canonical_orphan_details(left.details) < canonical_orphan_details(right.details)
+end
+
+local function under_orphan_scan_root(path)
+    return path == ORPHAN_SCAN_ROOT or path:sub(1, #ORPHAN_SCAN_ROOT + 1) == "code/"
+end
+
+local function orphan_artifact_path(path)
+    for _, component in ipairs(split_path(path)) do
+        if ORPHAN_SKIP_COMPONENTS[component] then return true end
+    end
+    return false
+end
+
+local function portable_orphan_path(path)
+    if type(path) ~= "string" then return false end
+    local scalar_length = utf8.len(path)
+    if scalar_length == nil or scalar_length == 0 or scalar_length > 512 then return false end
+    if Unicode.nfc(path) ~= path then return false end
+    if path:sub(1, 1) == "/" or path:find("\\", 1, true) ~= nil then return false end
+    if path:find("//", 1, true) ~= nil or path:match("^[A-Za-z]:") then return false end
+    if has_unsafe_character(path) then return false end
+
+    for _, component in ipairs(split_path(path)) do
+        if component == "" or component == "." or component == ".." then return false end
+        local ending = component:sub(-1)
+        if ending == " " or ending == "." then return false end
+        local basename = component:match("^([^.]*)")
+        if WINDOWS_RESERVED_BASENAMES[Unicode.full_uppercase(basename)] then return false end
+    end
+    return true
+end
+
+local function orphan_path_identity(path)
+    return Unicode.casefold(Unicode.nfc(path))
+end
+
+local function python_blank(value)
+    if type(value) ~= "string" or utf8.len(value) == nil then return false end
+    for _, scalar in utf8.codes(value) do
+        if not PYTHON_BLANK_CODEPOINTS[scalar] then return false end
+    end
+    return true
+end
+
+local function path_depth(path)
+    return #split_path(path)
+end
+
+local function covering_orphan_build(build_files, manifest_path, wanted_state)
+    local best
+    local best_parent
+    local best_rank
+    for _, build_file in ipairs(build_files) do
+        if build_file.state == wanted_state then
+            local parent, name = build_file.path:match("^(.*)/([^/]*)$")
+            local rank = name and ORPHAN_BUILD_NAMES[name]
+            local ancestor = parent and
+                (manifest_path == parent or manifest_path:sub(1, #parent + 1) == parent .. "/")
+            if rank and under_orphan_scan_root(parent) and ancestor then
+                local better = best == nil or path_depth(parent) > path_depth(best_parent) or
+                    (path_depth(parent) == path_depth(best_parent) and rank < best_rank) or
+                    (path_depth(parent) == path_depth(best_parent) and rank == best_rank and
+                        unicode_scalar_less(build_file.path, best.path))
+                if better then
+                    best = build_file
+                    best_parent = parent
+                    best_rank = rank
+                end
+            end
+        end
+    end
+    return best
+end
+
+-- Validate a closed Cargo/BUILD/ledger snapshot without touching the host.
+-- Discovery, checkout enumeration, Git, processes, environment, and network
+-- authority stay outside this inert table-in/table-out policy boundary.
+function Validator.validate_orphan_crate_snapshot(snapshot)
+    local manifests = {}
+    local manifest_by_path = {}
+    local coverage = {}
+    local empty_builds = {}
+    for _, manifest in ipairs(snapshot.manifests) do
+        if not orphan_artifact_path(manifest.path) then
+            manifests[#manifests + 1] = manifest
+            manifest_by_path[manifest.path] = manifest
+            coverage[manifest.path] =
+                covering_orphan_build(snapshot.build_files, manifest.path, "runnable") or false
+            empty_builds[manifest.path] =
+                covering_orphan_build(snapshot.build_files, manifest.path, "empty") or false
+        end
+    end
+
+    local directories = {}
+    for _, path in ipairs(snapshot.directories) do directories[path] = true end
+
+    local diagnostics = {}
+    local seen_exemption_paths = {}
+    local valid_exemptions = {}
+
+    -- Reserve identities before field-policy precedence. An invalid first
+    -- spelling must not let a later full-fold alias escape duplicate detection.
+    for _, exemption in ipairs(snapshot.exemptions) do
+        local path = exemption.path
+        local identity
+        local path_problem
+        if portable_orphan_path(path) then
+            identity = orphan_path_identity(path)
+            if not under_orphan_scan_root(path) then
+                path_problem = "PATH_OUTSIDE_SCAN"
+            elseif orphan_artifact_path(path) then
+                path_problem = "PATH_ARTIFACT"
+            end
+        else
+            path_problem = "PATH_UNSAFE"
+        end
+
+        local duplicate = identity ~= nil and seen_exemption_paths[identity] == true
+        if identity ~= nil and not duplicate then seen_exemption_paths[identity] = true end
+
+        local problem
+        if exemption.kind ~= "EXCLUDED" and exemption.kind ~= "PENDING" then
+            problem = "UNKNOWN_KIND"
+        elseif python_blank(exemption.reason) then
+            problem = "REASON_MISSING"
+        elseif duplicate then
+            problem = "DUPLICATE_PATH"
+        else
+            problem = path_problem
+        end
+
+        if problem ~= nil then
+            diagnostics[#diagnostics + 1] = {
+                code = "ORPHAN_EXEMPTION_INVALID",
+                severity = "error",
+                path = ORPHAN_LEDGER_PATH,
+                details = {line = exemption.line, problem = problem},
+            }
+        else
+            valid_exemptions[#valid_exemptions + 1] = exemption
+        end
+    end
+
+    local active_exemptions = {}
+    local pending_exemption_count = 0
+    for _, exemption in ipairs(valid_exemptions) do
+        local path = exemption.path
+        local stale_problem
+        if not directories[path] then
+            stale_problem = "MISSING_DIRECTORY"
+        elseif manifest_by_path[path] == nil then
+            stale_problem = "NO_MANIFEST"
+        elseif coverage[path] then
+            stale_problem = "COVERED"
+        end
+
+        if stale_problem ~= nil then
+            diagnostics[#diagnostics + 1] = {
+                code = "ORPHAN_EXEMPTION_STALE",
+                severity = "error",
+                path = ORPHAN_LEDGER_PATH,
+                details = {
+                    entry_path = path,
+                    kind = exemption.kind,
+                    line = exemption.line,
+                    problem = stale_problem,
+                },
+            }
+        else
+            active_exemptions[path] = exemption
+            if exemption.kind == "PENDING" then
+                pending_exemption_count = pending_exemption_count + 1
+            end
+        end
+    end
+
+    for _, manifest in ipairs(manifests) do
+        local path = manifest.path
+        if not coverage[path] and active_exemptions[path] == nil then
+            local empty_build = empty_builds[path]
+            if empty_build then
+                diagnostics[#diagnostics + 1] = {
+                    code = "ORPHAN_CRATE_EMPTY_BUILD",
+                    severity = "error",
+                    path = path,
+                    details = {build_path = empty_build.path, manifest_kind = manifest.kind},
+                }
+            else
+                diagnostics[#diagnostics + 1] = {
+                    code = "ORPHAN_CRATE_UNLISTED",
+                    severity = "error",
+                    path = path,
+                    details = {manifest_kind = manifest.kind},
+                }
+            end
+        end
+    end
+
+    table.sort(diagnostics, orphan_diagnostic_less)
+    local diagnostic_codes = {}
+    local seen_codes = {}
+    for _, diagnostic in ipairs(diagnostics) do
+        if not seen_codes[diagnostic.code] then
+            seen_codes[diagnostic.code] = true
+            diagnostic_codes[#diagnostic_codes + 1] = diagnostic.code
+        end
+    end
+    table.sort(diagnostic_codes)
+
+    return {
+        valid = #diagnostics == 0,
+        diagnostic_codes = diagnostic_codes,
+        pending_exemption_count = pending_exemption_count,
+        diagnostics = diagnostics,
+    }
 end
 
 -- Validate caller-supplied inert records without reading a checkout, following

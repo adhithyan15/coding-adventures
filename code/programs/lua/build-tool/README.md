@@ -32,7 +32,9 @@ The build tool follows a pipeline:
 6. **Validation** (`lib/build_tool/validator.lua`): Apply process-free policy
    to caller-supplied snapshots. Tracked dependency artifacts consume all five
    language-neutral fixtures and reject unsafe or Unicode-compatible
-   `node_modules` paths without reading a checkout.
+   `node_modules` paths without reading a checkout. Cargo/BUILD/ledger
+   snapshots consume all four orphan-crate fixtures with the same pure
+   boundary.
 
 ## Usage
 
@@ -82,6 +84,22 @@ the module and its Unicode License v3 notice with:
 python code/scripts/generate_tracked_artifact_unicode17.py \
   --lua-executable .lua/bin/lua
 ```
+
+## Orphan-Crate Validation
+
+`Validator.validate_orphan_crate_snapshot(snapshot)` accepts only caller-owned
+tables describing Cargo manifest directories, recognized BUILD records, and
+bounded exemption-ledger entries. It ignores exact artifact components,
+selects the closest runnable ancestor BUILD with the contract's fixed filename
+rank, reports closer empty BUILDs without letting them mask runnable ancestors,
+and validates `EXCLUDED` and `PENDING` entries with stable redacted failures.
+
+Portable paths use the same source-embedded Unicode 17 NFC, full-fold, and
+full-uppercase data as tracked-artifact validation. Duplicate exemption
+identities, Python-exact blank reasons, stale entries, active pending counts,
+and diagnostics are therefore deterministic across Lua hosts. The adapter does
+not enumerate the filesystem, inspect Git, follow links, launch processes,
+read the environment, or access the network.
 
 ## Dependencies
 

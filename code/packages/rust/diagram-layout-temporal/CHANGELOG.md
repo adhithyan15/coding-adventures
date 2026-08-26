@@ -1,5 +1,9 @@
 # Changelog
 
+## 0.21.0
+
+- Resolve chained and multi-source Gantt starts to the latest dependency end and `until` ranges to the earliest referenced start.
+
 ## 0.20.0
 
 - Apply `inclusiveEndDates` to explicit Gantt end dates and place the standard bottom axis plus optional top axis.

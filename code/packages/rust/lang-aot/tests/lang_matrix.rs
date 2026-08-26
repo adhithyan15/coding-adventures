@@ -2369,6 +2369,16 @@ const PROGRAMS: &[Prog] = &[
         expect: Expect::Stdout("3.25"),
         backends: &[NativeAot, Llvm, Wasm, Jvm, Clr, Vm, Jit],
     },
+    // ALGOL 60 - a real assignment target supplies the widening context for
+    // an exact tracked integer. The widened value remains available through a
+    // transitive mixed-numeric while dependency on every standard backend.
+    Prog {
+        lang: Language::Algol60,
+        ext: "alg",
+        src: "begin integer i, limit; real n; limit := 3; n := limit + 0; i := 0; for i := i + 1 while i < n do begin n := limit + 0; limit := limit end; print(i + 0.25) end",
+        expect: Expect::Stdout("3.25"),
+        backends: &[NativeAot, Llvm, Wasm, Jvm, Clr, Vm, Jit],
+    },
     // ALGOL 60 — equal conditional self-assignment leaves also preserve a
     // transitive dependency without evaluating their dynamic selector.
     Prog {
@@ -9886,6 +9896,31 @@ fn algol_real_transitive_while_dependency_runs_on_every_available_standard_backe
             assert!(
                 !toolchain_available,
                 "{backend:?} toolchain is present but the real transitive dependency did not run"
+            );
+            continue;
+        };
+        assert_cell(backend, program, result);
+    }
+}
+
+#[test]
+fn algol_real_target_integer_snapshot_runs_on_every_available_standard_backend() {
+    let program = PROGRAMS
+        .iter()
+        .find(|program| {
+            program.lang == Language::Algol60
+                && program
+                    .src
+                    .contains("integer i, limit; real n; limit := 3; n := limit + 0")
+        })
+        .expect("the ALGOL real-target integer snapshot program must remain in the matrix");
+
+    for backend in [NativeAot, Llvm, Wasm, Jvm, Clr, Vm, Jit] {
+        let toolchain_available = toolchain_available(backend);
+        let Some(result) = run(backend, program) else {
+            assert!(
+                !toolchain_available,
+                "{backend:?} toolchain is present but the real-target integer snapshot did not run"
             );
             continue;
         };

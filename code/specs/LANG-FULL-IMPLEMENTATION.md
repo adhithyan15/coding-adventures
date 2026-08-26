@@ -948,7 +948,10 @@ backend immediately) come before the enabler-dependent items.
   adding recursive effect inference; changing writes still invalidate those
   proofs. Static mixed integer/real comparisons use the same one-way widening
   as runtime lowering when every tracked integer is exactly representable in
-  binary64 and every real operand is finite; otherwise they fail closed.
+  binary64 and every real operand is finite. Real scalar assignment targets
+  provide that same context for checked integer snapshots, including
+  transitive while dependencies; integer overflow and inexact widening still
+  fail closed.
   Integer and real exponentiation whose complete
   literal exponent chain evaluates to one is also preserving because the
   existing power lowerer returns the base directly without a multiply or

@@ -2442,6 +2442,14 @@ impl Compiler {
         self.static_real_arithmetic_value_with_widen(node, widen_tracked_integers)
     }
 
+    fn static_assigned_real_target_value(&self, node: &GrammarASTNode) -> Option<f64> {
+        if self.static_real_expression_has_real_evidence(node) {
+            return self.static_assigned_real_value_with_widen(node, true);
+        }
+        let value = self.static_assigned_integer_value(node)?;
+        (value.unsigned_abs() <= 9_007_199_254_740_992_u64).then_some(value as f64)
+    }
+
     fn static_assigned_integer_value(&self, node: &GrammarASTNode) -> Option<i64> {
         if let Some((condition, then_node, else_node)) = self.conditional_expression_parts(node) {
             match self.static_boolean_value(condition) {
@@ -4114,7 +4122,7 @@ impl Compiler {
         let expr = first_direct_node(node, "expression")
             .ok_or_else(|| CompileError::Malformed("assign_stmt has no expression".into()))?;
         let static_real_text = (!self.static_real_tracking_disabled)
-            .then(|| self.static_assigned_real_value(expr))
+            .then(|| self.static_assigned_real_target_value(expr))
             .flatten()
             .filter(|value| value.is_finite())
             .map(|value| value.to_string());
@@ -5604,7 +5612,7 @@ impl Compiler {
                 .zip(self.static_integer_slots.get(&binding.slot).copied())
                 .is_some_and(|(assigned, current)| assigned == current),
             ScalarType::Real => self
-                .static_assigned_real_value(node)
+                .static_assigned_real_target_value(node)
                 .filter(|value| value.is_finite())
                 .zip(
                     self.static_real_slots
@@ -10312,6 +10320,35 @@ mod tests {
             "test",
         )
         .expect("an exact real transitive self-assignment preserves the dependency");
+    }
+
+    #[test]
+    fn al4_real_target_widens_exact_integer_snapshot_dependency() {
+        compile_source(
+            "begin integer i, limit; real n; limit := 3; n := limit + 0; i := 0; for i := i + 1 while i < n do begin n := limit + 0; limit := limit end; print(i + 0.25) end",
+            "test",
+        )
+        .expect("a real assignment target provides exact integer-widening context");
+    }
+
+    #[test]
+    fn al4_real_target_rejects_inexact_integer_snapshot_assignment() {
+        let err = compile_source(
+            "begin integer n; real x; n := 9007199254740993; x := n; print(x) end",
+            "test",
+        )
+        .expect_err("an inexact integer snapshot cannot become a static real assignment");
+        assert!(format!("{err:?}").contains("cannot print a real value"));
+    }
+
+    #[test]
+    fn al4_real_target_rejects_overflowing_integer_snapshot_expression() {
+        let err = compile_source(
+            "begin integer n; real x; n := 9223372036854775807; x := n + 1; print(x) end",
+            "test",
+        )
+        .expect_err("integer overflow cannot become a static real assignment");
+        assert!(format!("{err:?}").contains("cannot print a real value"));
     }
 
     #[test]
