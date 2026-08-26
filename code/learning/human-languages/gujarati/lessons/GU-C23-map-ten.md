@@ -7,7 +7,7 @@ delivery: script
 modality: pen
 modality_reason: The non-compensatory payoff includes required dictation, so the complete lesson needs a pen even though its oral core is drivable.
 chapter: 27
-type: practice-mix
+type: writing
 headword: બજાર — ઘર — મંદિર — હાથ — પૈસા — શહેર — શાળા — રસ્તો — ગામ — દુકાન
 romanization: bajār — ghar — mandir — hāth — paisā — shahar — shāḷā — rasto — gām — dukān
 gloss: ten-word non-compensatory four-skill payoff

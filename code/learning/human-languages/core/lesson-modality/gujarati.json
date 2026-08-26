@@ -7,7 +7,7 @@
   "policy": {
     "maxLinearisableTableColumns": 3
   },
-  "sourceHash": "fnv1a64:a28e7d8a87ec6359",
+  "sourceHash": "fnv1a64:78baeebaa73439ca",
   "summary": {
     "totalLessons": 163,
     "voice": 32,
@@ -20,7 +20,7 @@
     "drivablePrefixTotal": 17,
     "fullyDrivableChapters": 2,
     "unstartableChapters": 20,
-    "overriddenLessons": 8,
+    "overriddenLessons": 0,
     "lessonsWithoutChapter": 0
   },
   "tracks": [
@@ -3831,21 +3831,20 @@
       "chapter": 26,
       "sequence": 1030,
       "modality": "pen",
-      "derived": "voice",
+      "derived": "pen",
       "drivable": false,
       "reasons": [
-        "no-visual-dependency"
+        "writing-type"
       ],
-      "coreModality": "voice",
+      "coreModality": "pen",
       "coreReasons": [
-        "no-visual-dependency"
+        "writing-type"
       ],
-      "coreDrivable": true,
-      "sourceHash": "fnv1a64:ed2f51c02112442f",
+      "coreDrivable": false,
+      "sourceHash": "fnv1a64:c342a4d972a68a09",
       "delivery": "script",
       "authored": "pen",
-      "authoredReason": "The guided-copy activity requires handwriting; its machine-readable stage is not visible to prose cue derivation.",
-      "overridden": true
+      "authoredReason": "The guided-copy activity requires handwriting; its machine-readable stage is not visible to prose cue derivation."
     },
     {
       "id": "GU-C22-hear-shaalaa",
@@ -3871,21 +3870,20 @@
       "chapter": 26,
       "sequence": 1050,
       "modality": "pen",
-      "derived": "voice",
+      "derived": "pen",
       "drivable": false,
       "reasons": [
-        "no-visual-dependency"
+        "writing-type"
       ],
-      "coreModality": "voice",
+      "coreModality": "pen",
       "coreReasons": [
-        "no-visual-dependency"
+        "writing-type"
       ],
-      "coreDrivable": true,
-      "sourceHash": "fnv1a64:2f42b04cf389484c",
+      "coreDrivable": false,
+      "sourceHash": "fnv1a64:8ff8d76830a759f4",
       "delivery": "script",
       "authored": "pen",
-      "authoredReason": "The delayed-copy activity requires handwriting; its machine-readable stage is not visible to prose cue derivation.",
-      "overridden": true
+      "authoredReason": "The delayed-copy activity requires handwriting; its machine-readable stage is not visible to prose cue derivation."
     },
     {
       "id": "GU-C22-hear-rasto",
@@ -3911,21 +3909,20 @@
       "chapter": 26,
       "sequence": 1070,
       "modality": "pen",
-      "derived": "voice",
+      "derived": "pen",
       "drivable": false,
       "reasons": [
-        "no-visual-dependency"
+        "writing-type"
       ],
-      "coreModality": "voice",
+      "coreModality": "pen",
       "coreReasons": [
-        "no-visual-dependency"
+        "writing-type"
       ],
-      "coreDrivable": true,
-      "sourceHash": "fnv1a64:137901f9086b9265",
+      "coreDrivable": false,
+      "sourceHash": "fnv1a64:b48f957f2096b37f",
       "delivery": "script",
       "authored": "pen",
-      "authoredReason": "The guided-copy activity requires handwriting; its machine-readable stage is not visible to prose cue derivation.",
-      "overridden": true
+      "authoredReason": "The guided-copy activity requires handwriting; its machine-readable stage is not visible to prose cue derivation."
     },
     {
       "id": "GU-C22-route-three",
@@ -3933,21 +3930,20 @@
       "chapter": 26,
       "sequence": 1080,
       "modality": "pen",
-      "derived": "voice",
+      "derived": "pen",
       "drivable": false,
       "reasons": [
-        "no-visual-dependency"
+        "writing-type"
       ],
-      "coreModality": "voice",
+      "coreModality": "pen",
       "coreReasons": [
-        "no-visual-dependency"
+        "writing-type"
       ],
-      "coreDrivable": true,
-      "sourceHash": "fnv1a64:fd0c2a0fad672b3d",
+      "coreDrivable": false,
+      "sourceHash": "fnv1a64:da57d76d4bb8583d",
       "delivery": "script",
       "authored": "pen",
-      "authoredReason": "The non-compensatory payoff includes required dictation, so the complete lesson needs a pen even though its oral core is drivable.",
-      "overridden": true
+      "authoredReason": "The non-compensatory payoff includes required dictation, so the complete lesson needs a pen even though its oral core is drivable."
     },
     {
       "id": "GU-C23-hear-gaam",
@@ -3973,21 +3969,20 @@
       "chapter": 27,
       "sequence": 1100,
       "modality": "pen",
-      "derived": "voice",
+      "derived": "pen",
       "drivable": false,
       "reasons": [
-        "no-visual-dependency"
+        "writing-type"
       ],
-      "coreModality": "voice",
+      "coreModality": "pen",
       "coreReasons": [
-        "no-visual-dependency"
+        "writing-type"
       ],
-      "coreDrivable": true,
-      "sourceHash": "fnv1a64:8cda7b312c6bdd62",
+      "coreDrivable": false,
+      "sourceHash": "fnv1a64:773c12288b422582",
       "delivery": "script",
       "authored": "pen",
-      "authoredReason": "The delayed-copy activity requires handwriting; its machine-readable stage is not visible to prose cue derivation.",
-      "overridden": true
+      "authoredReason": "The delayed-copy activity requires handwriting; its machine-readable stage is not visible to prose cue derivation."
     },
     {
       "id": "GU-C23-hear-dukaan",
@@ -4013,21 +4008,20 @@
       "chapter": 27,
       "sequence": 1120,
       "modality": "pen",
-      "derived": "voice",
+      "derived": "pen",
       "drivable": false,
       "reasons": [
-        "no-visual-dependency"
+        "writing-type"
       ],
-      "coreModality": "voice",
+      "coreModality": "pen",
       "coreReasons": [
-        "no-visual-dependency"
+        "writing-type"
       ],
-      "coreDrivable": true,
-      "sourceHash": "fnv1a64:f358a5d0a46c69f7",
+      "coreDrivable": false,
+      "sourceHash": "fnv1a64:7d5630147fadf3c9",
       "delivery": "script",
       "authored": "pen",
-      "authoredReason": "The guided-copy activity requires handwriting; its machine-readable stage is not visible to prose cue derivation.",
-      "overridden": true
+      "authoredReason": "The guided-copy activity requires handwriting; its machine-readable stage is not visible to prose cue derivation."
     },
     {
       "id": "GU-R23-map-ten",
@@ -4035,21 +4029,20 @@
       "chapter": 27,
       "sequence": 1130,
       "modality": "pen",
-      "derived": "voice",
+      "derived": "pen",
       "drivable": false,
       "reasons": [
-        "no-visual-dependency"
+        "writing-type"
       ],
-      "coreModality": "voice",
+      "coreModality": "pen",
       "coreReasons": [
-        "no-visual-dependency"
+        "writing-type"
       ],
-      "coreDrivable": true,
-      "sourceHash": "fnv1a64:13061b53c064a079",
+      "coreDrivable": false,
+      "sourceHash": "fnv1a64:c1e86ec51a989463",
       "delivery": "script",
       "authored": "pen",
-      "authoredReason": "Mixed retrieval includes required model-free writing, so the complete lesson needs a pen even though its oral core is drivable.",
-      "overridden": true
+      "authoredReason": "Mixed retrieval includes required model-free writing, so the complete lesson needs a pen even though its oral core is drivable."
     },
     {
       "id": "GU-C23-map-ten",
@@ -4057,21 +4050,20 @@
       "chapter": 27,
       "sequence": 1140,
       "modality": "pen",
-      "derived": "voice",
+      "derived": "pen",
       "drivable": false,
       "reasons": [
-        "no-visual-dependency"
+        "writing-type"
       ],
-      "coreModality": "voice",
+      "coreModality": "pen",
       "coreReasons": [
-        "no-visual-dependency"
+        "writing-type"
       ],
-      "coreDrivable": true,
-      "sourceHash": "fnv1a64:257ad49a453bc471",
+      "coreDrivable": false,
+      "sourceHash": "fnv1a64:2e23576dfd68af31",
       "delivery": "script",
       "authored": "pen",
-      "authoredReason": "The non-compensatory payoff includes required dictation, so the complete lesson needs a pen even though its oral core is drivable.",
-      "overridden": true
+      "authoredReason": "The non-compensatory payoff includes required dictation, so the complete lesson needs a pen even though its oral core is drivable."
     }
   ],
   "findings": []

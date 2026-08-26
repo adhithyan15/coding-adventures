@@ -4,7 +4,7 @@
   "chapter": 26,
   "title": "City, School, and Road",
   "drivablePrefix": 1,
-  "sourceHash": "fnv1a64:bf6fab05f210c5c9",
+  "sourceHash": "fnv1a64:e9780e192966fc9a",
   "lessons": [
     {
       "id": "GU-C22-hear-shahar",
@@ -84,16 +84,18 @@
       "gloss": "city, now read and written with familiar signs",
       "script": "gujarati",
       "modality": "pen",
-      "derivedModality": "voice",
+      "derivedModality": "pen",
       "modalityReasons": [
-        "no-visual-dependency"
+        "writing-type"
       ],
-      "sourceHash": "fnv1a64:ed2f51c02112442f",
+      "sourceHash": "fnv1a64:c342a4d972a68a09",
       "notice": {
         "modality": "pen",
-        "needs": [],
+        "needs": [
+          "a pen and something to write on"
+        ],
         "waitUntilStopped": [],
-        "text": "Before we start: this one needs your hands, so it is not a driving lesson. You can listen to all of it now and come back to the parts that need looking at once you have stopped."
+        "text": "Before we start: this one needs your hands, so it is not a driving lesson. You will want a pen and something to write on. You can listen to all of it now and come back to the parts that need looking at once you have stopped."
       },
       "blocks": [
         {
@@ -227,16 +229,18 @@
       "gloss": "school, now read and written with familiar signs",
       "script": "gujarati",
       "modality": "pen",
-      "derivedModality": "voice",
+      "derivedModality": "pen",
       "modalityReasons": [
-        "no-visual-dependency"
+        "writing-type"
       ],
-      "sourceHash": "fnv1a64:2f42b04cf389484c",
+      "sourceHash": "fnv1a64:8ff8d76830a759f4",
       "notice": {
         "modality": "pen",
-        "needs": [],
+        "needs": [
+          "a pen and something to write on"
+        ],
         "waitUntilStopped": [],
-        "text": "Before we start: this one needs your hands, so it is not a driving lesson. You can listen to all of it now and come back to the parts that need looking at once you have stopped."
+        "text": "Before we start: this one needs your hands, so it is not a driving lesson. You will want a pen and something to write on. You can listen to all of it now and come back to the parts that need looking at once you have stopped."
       },
       "blocks": [
         {
@@ -370,16 +374,18 @@
       "gloss": "road, now read and written with familiar signs",
       "script": "gujarati",
       "modality": "pen",
-      "derivedModality": "voice",
+      "derivedModality": "pen",
       "modalityReasons": [
-        "no-visual-dependency"
+        "writing-type"
       ],
-      "sourceHash": "fnv1a64:137901f9086b9265",
+      "sourceHash": "fnv1a64:b48f957f2096b37f",
       "notice": {
         "modality": "pen",
-        "needs": [],
+        "needs": [
+          "a pen and something to write on"
+        ],
         "waitUntilStopped": [],
-        "text": "Before we start: this one needs your hands, so it is not a driving lesson. You can listen to all of it now and come back to the parts that need looking at once you have stopped."
+        "text": "Before we start: this one needs your hands, so it is not a driving lesson. You will want a pen and something to write on. You can listen to all of it now and come back to the parts that need looking at once you have stopped."
       },
       "blocks": [
         {
@@ -444,16 +450,18 @@
       "gloss": "city, school, and road in four skills",
       "script": "gujarati",
       "modality": "pen",
-      "derivedModality": "voice",
+      "derivedModality": "pen",
       "modalityReasons": [
-        "no-visual-dependency"
+        "writing-type"
       ],
-      "sourceHash": "fnv1a64:fd0c2a0fad672b3d",
+      "sourceHash": "fnv1a64:da57d76d4bb8583d",
       "notice": {
         "modality": "pen",
-        "needs": [],
+        "needs": [
+          "a pen and something to write on"
+        ],
         "waitUntilStopped": [],
-        "text": "Before we start: this one needs your hands, so it is not a driving lesson. You can listen to all of it now and come back to the parts that need looking at once you have stopped."
+        "text": "Before we start: this one needs your hands, so it is not a driving lesson. You will want a pen and something to write on. You can listen to all of it now and come back to the parts that need looking at once you have stopped."
       },
       "blocks": [
         {

@@ -7,7 +7,7 @@ delivery: script
 modality: pen
 modality_reason: The non-compensatory payoff includes required dictation, so the complete lesson needs a pen even though its oral core is drivable.
 chapter: 26
-type: practice-mix
+type: writing
 headword: શહેર — શાળા — રસ્તો
 romanization: shahar — shāḷā — rasto
 gloss: city, school, and road in four skills

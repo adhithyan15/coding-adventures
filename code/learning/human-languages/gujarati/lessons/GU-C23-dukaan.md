@@ -7,7 +7,7 @@ delivery: script
 modality: pen
 modality_reason: The guided-copy activity requires handwriting; its machine-readable stage is not visible to prose cue derivation.
 chapter: 27
-type: word
+type: writing
 headword: દુકાન
 romanization: dukān
 gloss: shop, now read and written with familiar signs
