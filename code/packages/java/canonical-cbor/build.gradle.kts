@@ -17,6 +17,7 @@ tasks.withType<JavaCompile> {
     sourceCompatibility = "21"
     targetCompatibility = "21"
     options.release.set(21)
+    options.compilerArgs.addAll(listOf("-Xlint:all", "-Werror"))
 }
 
 dependencies {
@@ -58,4 +59,3 @@ tasks.jacocoTestCoverageVerification {
 tasks.named("check") {
     dependsOn(tasks.jacocoTestCoverageVerification)
 }
-

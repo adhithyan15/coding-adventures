@@ -2,6 +2,7 @@ package com.codingadventures.canonicalcbor;
 
 /** A stable, payload-blind CBR01 conformance error. */
 public final class CborException extends Exception {
+    private static final long serialVersionUID = 1L;
     private final String id;
 
     CborException(String id) {
@@ -34,4 +35,3 @@ public final class CborException extends Exception {
         };
     }
 }
-
