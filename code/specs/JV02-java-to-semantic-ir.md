@@ -79,18 +79,26 @@ corresponding SIR IR node at all (confirmed by a repo-wide grep, not
 assumed) — it needs its own spec-level design decision (Java's
 fall-through semantics in particular) before any frontend can target it,
 tracked as a separate backlog item rather than folded into "M2"/"M3"
-implicitly; `break`/`continue` had the identical gap. **Update**: the
-`break`/`continue` half of this has since landed at the core-IR level —
-see [SIR16](SIR16-ir-extensions-for-python-and-javascript.md)'s "Loop
-control (addendum)" section for `Stmt::Break`/`Stmt::Continue` and
-`Feature::LoopControl` — but this frontend does not consume it yet (no
-backend accepts the feature yet either), and the crate's own classic-`for`
-desugaring (`lower_for_statement_inner`, which splices the update-clause
-statement onto the end of the loop body rather than using a dedicated
-increment slot) would need to change before a `continue` inside a classic
-`for` could be lowered safely; both are their own follow-up work. `switch`
-itself remains fully unaddressed. M5 onward, plus the standalone follow-up
-tasks split off from M4c and M4d, are pending.
+implicitly; `break`/`continue` had the identical gap. **Update**: fully
+resolved as of task #64. `Stmt::Break`/`Stmt::Continue`/`Feature::
+LoopControl` landed at the core-IR level first (see
+[SIR16](SIR16-ir-extensions-for-python-and-javascript.md)'s "Loop control
+(addendum)" section), `semantic-ir-to-javascript` became the first
+backend to accept the feature (task #62), and this frontend now lowers a
+bare `break`/`continue` inside any of `while`/`do`-`while`/classic-`for`/
+enhanced-`for` (task #64) — including fixing two genuine, `/security-
+review`-caught non-termination bugs task #64 found already latent in this
+crate's own `do`-`while` and classic-`for` desugarings (each had
+appended a synthetic bookkeeping statement — a guard-flag clear, the
+update clause — to the very end of the lowered body, which a `continue`
+anywhere earlier would skip entirely; both are fixed by moving that
+bookkeeping into the loop's own condition expression instead, the one
+position a `continue` can never skip — see `java-to-semantic-ir`'s own
+`CHANGELOG.md` `[0.12.0]` entry for the full shapes). A labeled `break`/
+`continue` remains rejected (SIR has no loop-label vocabulary at all).
+`switch` itself remains fully unaddressed — tracked as task #51. M5
+onward, plus the standalone follow-up tasks split off from M4c and M4d,
+are pending.
 
 ## Motivation
 
@@ -222,12 +230,11 @@ repo-wide grep during M2a's implementation, not assumed from reading
 the spec), and Java's `switch` fall-through semantics don't map onto
 existing IR surface the way `if`/`while` did — tracked as its own
 backlog item, not M2-blocking. `break`/`continue` had the identical gap
-at M2a time; `Stmt::Break`/`Stmt::Continue` and `Feature::LoopControl`
-have since landed at the core-IR level (see
-[SIR16](SIR16-ir-extensions-for-python-and-javascript.md)'s "Loop control
-(addendum)" section) — this frontend's own consumption of them, and the
-classic-`for` desugaring change that consumption needs first, remain
-their own follow-up, tracked separately from `switch`.
+at M2a time; fully resolved as of task #64 — see the "Implementation
+progress" note near the top of this spec for the full story (core-IR
+primitive, first backend, this frontend's own consumption plus two
+non-termination bugs fixed along the way). `switch` itself remains its
+own, separately-tracked (task #51) unresolved backlog item.
 
 **M3 — methods / calls / lambdas.** Static and instance top-level-
 function-shaped methods (still not class-nested — that's M6), calls,
@@ -438,6 +445,117 @@ now rejected outright — this crate only tracks a local's `Kind` at
 declaration time, and `Kind::Closure(idx)`'s own `idx` is load-bearing
 for a later call site's type-checking, so an unrejected reassignment
 would leave that index silently stale.
+
+**Task #64 — `break`/`continue` support.** Not a lettered milestone (a
+standalone follow-up, picked up once `semantic-ir-to-javascript` became
+the first backend to accept `Feature::LoopControl`, task #62). Closes
+M2's own disclosed gap: a bare `break_statement`/`continue_statement`
+inside a `while`/`do`-`while`/classic-`for`/enhanced-`for` body now
+lowers to `Stmt::Break`/`Stmt::Continue`. A new `Lowerer::loop_depth`
+counter rejects one outside any loop with a Java-flavored diagnostic
+(the shared `semantic-ir` validator's own `loop_stack` independently
+enforces the same rule, but this gives a clearer error first), and is
+explicitly reset to `0` around a lambda body's or a method body's own
+lowering — real Java forbids a `break`/`continue` written directly
+inside either from targeting a loop the *declaration* merely happens to
+be lexically nested in. A labeled `break foo;`/`continue foo;` is
+rejected cleanly (SIR has no loop-label vocabulary at all); `switch`
+itself remains its own separately-tracked (task #51) unresolved gap.
+**Found while wiring `continue` support, not by inspection beforehand —
+two real, `/security-review`-caught non-termination bugs**: both
+`lower_do_while_statement` and `lower_for_statement_inner` appended a
+synthetic "bookkeeping" statement (a guard-flag clear; the update
+clause) to the very end of the lowered loop body — a `continue` anywhere
+earlier in that body (SIR's own `Stmt::Continue` jumps straight to
+re-evaluating the loop's `cond`) skipped it entirely, making the loop
+run forever on the very first `continue` reached (for the classic-`for`
+case, the very first iteration, since `i == 0` is even in the
+regression test's own source). Both fixed by moving the bookkeeping
+*into* the loop's own condition expression instead — the one position a
+`continue` can never skip — mirroring the same flag-guard idiom
+`do`-`while`'s own desugaring already used, just relocated. A useful
+side effect of the classic-`for` fix: `update` no longer shares scope
+with the loop body at all (it lives in a separate wrapped-condition
+`Expr::Block` now), so the update-target/body-local shadowing collision
+this crate previously had to reject (`for (int i = 0; ...; i++) { int i
+= 999; ... }`) is now structurally impossible and no longer rejected —
+more faithful to real Java scoping than the old "append to body" shape
+was. **A second `/security-review` round, on this very fix, found a
+THIRD real non-termination bug**: the two new synthetic flag names
+(`__do_while_N`/`__for_first_N`) were plain, legal Java identifiers,
+checked only against locals visible *before* the loop body was lowered
+— but the flag's own *reference* now lives inside the loop's
+*condition*, which several backends (`semantic-ir-to-python`,
+`semantic-ir-to-ruby`) compile with FLAT scoping relative to the body
+(no new scope opens for either). A body-declared local sharing the
+flag's exact name (`__do_while_0` is a legal Java identifier — a real,
+reachable case, not hypothetical) silently re-armed the flag every
+iteration under those backends, reproducing the identical infinite-loop
+shape the fix above exists to close — confirmed by actually executing
+the emitted Python and observing a hang, not by inspection. **A first
+attempted fix tried making the flag names unforgeable** instead of
+merely checked, embedding `#` — not a legal Java identifier character
+per JLS §3.8 — so no real Java source could spell `__do_while#N`/
+`__for_first#N` directly. **A third `/security-review` round proved that
+reasoning false**: every flat-scoping backend's own `sanitize_ident`
+exists precisely to turn an arbitrary string into a legal identifier by
+escaping illegal characters, so `sanitize_ident("__do_while#0")`
+produces an ordinary, `#`-free string (`___do_while_230` under Python's
+hex-escape scheme) that a real Java program *can* declare directly —
+reproducing the identical hang through the escaped form, confirmed again
+by actually executing the emitted Python. **The real, final fix**
+(`Lowerer::fresh_flag_name`, shared by both desugarings) drops the
+unforgeable-character idea entirely: it picks a plain, escape-free
+candidate name and checks it directly against both (1) the ambient scope
+at the loop's call site, via the existing `lookup_local_with_frame`
+lookup, and (2) every name the loop's own lowered body declares at any
+nesting depth, via a new `DeclaredNameCollector` that rides `semantic-
+ir`'s shared, already depth-guarded `Visitor` (`walker.rs`) rather than a
+bespoke re-implementation of SIR's own tree shape — retrying the next
+counter value on either kind of collision. Both checks are necessary:
+the ambient check alone misses a body-declared local (the loop's own
+scope frame has already been popped by the time the flag name is
+picked); the body-declared check alone misses an *outer* local of the
+same name the body only reads/writes, never redeclares — still a real
+collision, since the flag lives in the same synthetic `Expr::Block` a
+flat-scoping backend shares with everything the loop references from
+outside it too. The now-dead `lookup_local` collision-retry loop from
+the first attempt (and, since nothing else called the plain
+`lookup_local` wrapper, that function itself) were removed in favor of
+this single shared mechanism. **A third `/security-review` round, on
+`fresh_flag_name` itself, found a FOURTH real bug**: both of its checks
+compare a candidate name against a real Java local's *raw* source
+spelling — sound only when every backend's `sanitize_ident` is the
+identity function on both strings, true for `fresh_flag_name`'s own
+plain `[A-Za-z0-9_]`-only candidates but not for an arbitrary Java
+local. `$` is a legal Java identifier character (JLS §3.8) this crate's
+own lexer accepts, and Python's `sanitize_ident` escapes it to a plain
+hex-digit string, so a local named `_do_while$` can sanitize to the
+exact same Python name as some `__do_while_N` candidate — two
+*different* raw Java names colliding once emitted, defeating both
+raw-string checks at once (confirmed again by executing the emitted
+Python). Fixed by a new `Lowerer::reject_dollar_sign_identifier`,
+called at every one of the four points this crate turns a Java `NAME`
+token into a declared local/parameter name, which restores the
+invariant `fresh_flag_name`'s design actually needs (every declarable
+name lives in `[A-Za-z0-9_]`) by construction rather than teaching this
+backend-agnostic frontend every backend's own escaping scheme —
+`$`-containing identifiers are vanishingly rare in hand-written Java
+(real-world use is almost exclusively compiler-generated synthetic
+names), so this is a narrow, disclosed scope boundary in the same
+spirit as this crate's many other "not supported yet" rejections. See
+`java-to-semantic-ir`'s own `CHANGELOG.md` `[0.12.0]` entry for the full
+before/after shapes, its `tests/loop_control_java_execution.rs` for
+`node`-execution-proof tests (two of which are direct termination-
+regression tests for the first two bugs above), its `tests/loop_control_
+flat_scoping_regression.rs` for two more that reproduce the third bug
+against the real Python backend specifically (where it actually
+manifested), each with a hard 15-second wall-clock timeout so a
+reintroduction fails the test cleanly instead of hanging the suite, and
+its `tests/test_lower.rs`'s five `dollar_sign_in_*_is_rejected` tests
+for the fourth bug's own regression coverage — at the IR/lowering level,
+since `$` is now rejected before a `Module` is ever produced, leaving
+nothing for the fourth bug's own fix to run through a backend at all.
 
 **M5 — statics/breadth parity groundwork.** Pulled forward from the
 original M9 slot: static field/method access patterns

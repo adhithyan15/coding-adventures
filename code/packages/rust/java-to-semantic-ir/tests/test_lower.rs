@@ -1055,9 +1055,13 @@ fn do_while_desugars_to_a_flag_guarded_while_not_a_body_clone() {
     // as an exponential-blowup DoS on nested do-while (O(2^N) emitted
     // nodes for O(N) source bytes). The fix lowers the body exactly
     // once, wrapping it in a synthetic flag-guarded pretest loop
-    // instead: `boolean __do_while_N = true; while (__do_while_N || C)
-    // { S; __do_while_N = false; }` -- this test locks in that shape so
-    // a future change can't silently reintroduce the clone.
+    // instead: `boolean __do_while_N = true; while (__do_while_N ? ({
+    // __do_while_N = false; true }) : (C)) { S }` -- the flag-clear
+    // lives INSIDE the condition (task #64's own fix, so a `continue`
+    // in `S` can never skip it -- see the function's own doc comment)
+    // rather than appended to `S` -- this test locks in that shape so a
+    // future change can't silently reintroduce the clone, or the
+    // continue-skips-the-flag-clear bug task #64 fixed.
     let m = compile_ok(&wrap("int x = 0; do { x = x + 1; } while (x < 10);"));
     match &main_fn(&m).body.stmts[1] {
         Stmt::ExprStmt {
@@ -1083,23 +1087,35 @@ fn do_while_desugars_to_a_flag_guarded_while_not_a_body_clone() {
             }
             match &block.stmts[1] {
                 Stmt::While {
-                    cond: Expr::LogicalOr { .. },
+                    cond:
+                        Expr::If {
+                            then_branch,
+                            else_branch,
+                            ..
+                        },
                     body,
                     ..
                 } => {
-                    // original body statement (`x = x + 1;`) plus the
-                    // appended `__do_while_N = false;` -- exactly one
-                    // lowered copy of the source body, never two.
-                    assert_eq!(body.stmts.len(), 2);
+                    // exactly one lowered copy of the source body, never
+                    // two -- nothing appended to it anymore.
+                    assert_eq!(body.stmts.len(), 1);
+                    // then-branch clears the flag and yields `true`
+                    // (always enter on the first check).
                     assert!(matches!(
-                        &body.stmts[1],
-                        Stmt::Assign {
+                        then_branch.stmts.as_slice(),
+                        [Stmt::Assign {
                             value: Expr::BoolLit { value: false, .. },
                             ..
-                        }
+                        }]
                     ));
+                    assert!(matches!(
+                        then_branch.value,
+                        Expr::BoolLit { value: true, .. }
+                    ));
+                    // else-branch is the real condition, unmodified.
+                    assert!(else_branch.stmts.is_empty());
                 }
-                other => panic!("expected While(LogicalOr(...)), got {other:?}"),
+                other => panic!("expected While(If(...)), got {other:?}"),
             }
         }
         other => panic!("expected ExprStmt(Block), got {other:?}"),
@@ -1154,58 +1170,28 @@ fn a_local_declared_inside_a_do_while_body_does_not_leak_past_it() {
 }
 
 #[test]
-fn do_while_flag_name_does_not_collide_with_a_same_named_user_variable() {
-    // Caught by /security-review: an earlier version generated the
-    // do-while desugaring's synthetic flag as a bare `__do_while_N`
-    // with no collision check against real Java locals already in
-    // scope. `__do_while_0` is a legal Java identifier, so a program
-    // that happens to declare a variable by that exact name is a real,
-    // reachable case -- the old version silently shadowed and corrupted
-    // it (through the Python backend, `x` came back `42` instead of the
-    // correct `43`) rather than picking a different synthetic name.
-    // `do_while_counter` starts at 0, so the very first synthetic name
-    // it would try is exactly `__do_while_0` -- this test collides on
-    // the first possible attempt, not an edge case reached only after
-    // several unrelated do-while statements.
-    let m = compile_ok(&wrap(concat!(
-        "int __do_while_0 = 1; ",
-        "do { __do_while_0 = __do_while_0 + 1; } while (false); ",
-        "__do_while_0;"
-    )));
-    // `__do_while_0` (the user's own variable) must have been mutated by
-    // the loop body exactly like any other local -- the fix's own
-    // collision check must not have skipped lowering the mutation, and
-    // the synthetic flag it generated instead must be a different name.
-    match &main_fn(&m).body.stmts[2] {
-        Stmt::ExprStmt {
-            expr: Expr::VarRef { name, .. },
-            ..
-        } => assert_eq!(name, "__do_while_0"),
-        other => panic!("expected ExprStmt(VarRef(\"__do_while_0\")), got {other:?}"),
-    }
-}
-
-#[test]
-fn do_while_flag_name_does_not_collide_with_a_local_the_body_itself_declares() {
-    // Caught by a THIRD round of /security-review, on the fix for the
-    // second round's finding above: the collision check there only
-    // consulted `lookup_local` (the *ambient* scope active before the
-    // body is lowered), which can never see a name the do-while body
-    // itself declares -- by the time the check runs, `lower_body`'s own
-    // scope for the body has already been pushed *and popped* (the
-    // correct, real Java scope boundary). The flag-clear assignment this
-    // desugaring appends lives *inside* that body's own top level,
-    // though, so a same-named local declared there is exactly the case
-    // that reaches it. Under any backend with real block scoping (unlike
-    // this crate's own Python execution-proof harness, whose flat
-    // function-level scoping doesn't reproduce the bug), the appended
-    // flag-clear would resolve to the body's own shadowing local instead
-    // of the outer flag, so the outer flag would never actually clear --
-    // an infinite loop (`flag || C` staying `true` forever), not just a
-    // corrupted value. `do_while_counter` starts at 0 and this test's
-    // body declares exactly `__do_while_0`, so the fix must pick
-    // `__do_while_1` (or later) for the actual flag; `body_declares_name`
-    // is the check added to catch this specific case.
+fn do_while_flag_name_skips_ahead_when_the_body_declares_the_first_candidate_name() {
+    // Historical note: this test previously locked in a THIRD round of
+    // /security-review's own fix (`body_declares_name`), then — in an
+    // earlier version of *this* commit — incorrectly claimed the flag
+    // could safely reuse the exact name `__do_while_0` once the
+    // flag-clear moved out of the body's own scope. A FOURTH round
+    // caught that claim as false (the flag's own *reference* still lives
+    // inside the loop condition, which several backends compile with
+    // FLAT scoping relative to the body). The fix at that point tried
+    // making the name unforgeable via `#` (illegal in a Java identifier,
+    // JLS §3.8) instead of checked — a FIFTH round then proved that
+    // premise false too: every backend's `sanitize_ident` escapes `#`
+    // into an ordinary, `#`-free string a real Java program CAN declare
+    // directly (see `fresh_flag_name`'s own doc comment for the full
+    // account). The real, final fix drops the `#` entirely and instead
+    // walks the lowered body (`DeclaredNameCollector`) for every name it
+    // declares, retrying the next counter value on a collision — this
+    // test locks in that behavior directly: `do_while_counter` starts at
+    // 0, so the first candidate tried is `__do_while_0`; the body
+    // declares exactly that name, so the picked flag must be
+    // `__do_while_1` instead, and the body's own declaration must survive
+    // completely untouched.
     let m = compile_ok(&wrap(
         "int y = 0; do { boolean __do_while_0 = true; y = y + 1; } while (y < 3); y;",
     ));
@@ -1214,31 +1200,27 @@ fn do_while_flag_name_does_not_collide_with_a_local_the_body_itself_declares() {
             expr: Expr::Block(block),
             ..
         } => {
-            let flag_name = match &block.stmts[0] {
-                Stmt::LetStarBinding { name, .. } => name.clone(),
+            match &block.stmts[0] {
+                Stmt::LetStarBinding { name, .. } => {
+                    assert_eq!(
+                        name, "__do_while_1",
+                        "candidate 0 collides with the body's own declaration, so the picker \
+                         must skip to 1"
+                    );
+                }
                 other => panic!("expected LetStarBinding flag declaration, got {other:?}"),
-            };
-            assert_ne!(
-                flag_name, "__do_while_0",
-                "flag must not reuse the name the body itself declares"
-            );
+            }
             match &block.stmts[1] {
                 Stmt::While { body, .. } => {
                     // The body's own `__do_while_0` declaration survives
-                    // completely unchanged -- untouched value, untouched
-                    // name -- and the appended flag-clear at the end
-                    // targets the *different* synthetic name instead.
+                    // completely unchanged, and nothing was appended
+                    // after it.
+                    assert_eq!(body.stmts.len(), 2);
                     match &body.stmts[0] {
                         Stmt::LetStarBinding { name, value: Expr::BoolLit { value: true, .. }, .. } => {
                             assert_eq!(name, "__do_while_0");
                         }
                         other => panic!("expected the body's own LetStarBinding(BoolLit(true)) untouched, got {other:?}"),
-                    }
-                    match body.stmts.last() {
-                        Some(Stmt::Assign { name, value: Expr::BoolLit { value: false, .. }, .. }) => {
-                            assert_eq!(name, &flag_name);
-                        }
-                        other => panic!("expected the appended flag-clear Assign to target the flag name, got {other:?}"),
                     }
                 }
                 other => panic!("expected While, got {other:?}"),
@@ -1248,10 +1230,59 @@ fn do_while_flag_name_does_not_collide_with_a_local_the_body_itself_declares() {
     }
 }
 
+#[test]
+fn do_while_flag_name_skips_ahead_when_an_outer_local_declares_the_first_candidate_name() {
+    // Companion to the test above, for the OTHER half of `fresh_flag_
+    // name`'s collision check: an outer local the body only reads/writes
+    // (never redeclares) is invisible to `DeclaredNameCollector` (which
+    // only sees `body`'s own declarations), so this only passes because
+    // `fresh_flag_name` also consults `lookup_local_with_frame` — the
+    // ambient scope check. Without it, the picker would happily choose
+    // `__do_while_0` again, colliding with the user's own outer variable
+    // exactly the way the very first /security-review round's finding
+    // did.
+    let m = compile_ok(&wrap(concat!(
+        "int __do_while_0 = 1; ",
+        "do { __do_while_0 = __do_while_0 + 1; } while (false); ",
+        "__do_while_0;"
+    )));
+    match &main_fn(&m).body.stmts[1] {
+        Stmt::ExprStmt {
+            expr: Expr::Block(block),
+            ..
+        } => match &block.stmts[0] {
+            Stmt::LetStarBinding { name, .. } => {
+                assert_eq!(
+                    name, "__do_while_1",
+                    "candidate 0 collides with the outer user variable, so the picker must \
+                     skip to 1"
+                );
+            }
+            other => panic!("expected LetStarBinding flag declaration, got {other:?}"),
+        },
+        other => panic!("expected ExprStmt(Block), got {other:?}"),
+    }
+    // The user's own outer variable must still have been mutated by the
+    // loop body exactly like any other local.
+    match &main_fn(&m).body.stmts[2] {
+        Stmt::ExprStmt {
+            expr: Expr::VarRef { name, .. },
+            ..
+        } => assert_eq!(name, "__do_while_0"),
+        other => panic!("expected ExprStmt(VarRef(\"__do_while_0\")), got {other:?}"),
+    }
+}
+
 // ── M2b: classic for-loop ────────────────────────────────────────────────
 
 #[test]
-fn classic_for_loop_desugars_to_init_then_while() {
+fn classic_for_loop_desugars_to_init_flag_then_while() {
+    // See `lower_for_statement_inner`'s own doc comment (task #64): a
+    // classic `for` with an update clause wraps that update inside the
+    // loop's own condition, gated by a one-shot `__for_first_N` flag, so
+    // a `continue` in the body (which jumps straight to re-evaluating
+    // the condition) can never skip it -- mirrors `do`/`while`'s own
+    // analogous fix.
     let m = compile_ok(&wrap(
         "int sum = 0; for (int i = 0; i < 5; i++) { sum = sum + i; } sum;",
     ));
@@ -1260,7 +1291,11 @@ fn classic_for_loop_desugars_to_init_then_while() {
             expr: Expr::Block(block),
             ..
         } => {
-            assert_eq!(block.stmts.len(), 2, "expected [init, Stmt::While]");
+            assert_eq!(
+                block.stmts.len(),
+                3,
+                "expected [init, flag declaration, Stmt::While]"
+            );
             match &block.stmts[0] {
                 Stmt::LetStarBinding {
                     name,
@@ -1272,22 +1307,203 @@ fn classic_for_loop_desugars_to_init_then_while() {
                 other => panic!("expected LetStarBinding(\"i\", IntLit(0)), got {other:?}"),
             }
             match &block.stmts[1] {
+                Stmt::LetStarBinding {
+                    name,
+                    value: Expr::BoolLit { value: true, .. },
+                    ..
+                } => {
+                    assert!(name.starts_with("__for_first_"));
+                }
+                other => {
+                    panic!("expected LetStarBinding(BoolLit(true)) flag declaration, got {other:?}")
+                }
+            }
+            match &block.stmts[2] {
                 Stmt::While {
-                    cond: Expr::BuiltinCall { name, .. },
+                    cond:
+                        Expr::If {
+                            then_branch,
+                            else_branch,
+                            ..
+                        },
                     body,
                     ..
                 } => {
-                    assert_eq!(name, "<");
-                    // the source body statement plus the appended update
-                    // clause (`i++` desugared to an Assign).
-                    assert_eq!(body.stmts.len(), 2);
-                    assert!(matches!(&body.stmts[1], Stmt::Assign { name, .. } if name == "i"));
+                    // nothing appended to the body anymore -- just the
+                    // one source statement.
+                    assert_eq!(body.stmts.len(), 1);
+                    // then-branch (first check): clear the flag, yield
+                    // the real condition -- update does NOT run yet.
+                    assert!(matches!(
+                        then_branch.stmts.as_slice(),
+                        [Stmt::Assign {
+                            value: Expr::BoolLit { value: false, .. },
+                            ..
+                        }]
+                    ));
+                    assert!(matches!(
+                        then_branch.value,
+                        Expr::BuiltinCall { ref name, .. } if name == "<"
+                    ));
+                    // else-branch (every subsequent check, including one
+                    // reached via `continue`): run the update (`i++`
+                    // desugared to an Assign), then the real condition.
+                    assert!(matches!(
+                        else_branch.stmts.as_slice(),
+                        [Stmt::Assign { name, .. }] if name == "i"
+                    ));
+                    assert!(matches!(
+                        else_branch.value,
+                        Expr::BuiltinCall { ref name, .. } if name == "<"
+                    ));
                 }
-                other => panic!("expected While(BuiltinCall(\"<\")), got {other:?}"),
+                other => panic!("expected While(If(...)), got {other:?}"),
             }
         }
         other => panic!("expected ExprStmt(Block), got {other:?}"),
     }
+}
+
+#[test]
+fn classic_for_loop_flag_name_skips_ahead_when_the_body_declares_the_first_candidate_name() {
+    // The classic-`for` counterpart of `do_while_flag_name_skips_ahead_
+    // when_the_body_declares_the_first_candidate_name`: `for_counter`
+    // starts at 0, so the first candidate tried is `__for_first_0`; the
+    // body declares exactly that name, so `fresh_flag_name` (shared with
+    // the do-while desugaring — see its own doc comment) must skip to
+    // `__for_first_1` instead, leaving the body's own declaration intact.
+    let m = compile_ok(&wrap(
+        "for (int i = 0; i < 3; i++) { boolean __for_first_0 = true; }",
+    ));
+    match &main_fn(&m).body.stmts[0] {
+        Stmt::ExprStmt {
+            expr: Expr::Block(block),
+            ..
+        } => match &block.stmts[1] {
+            Stmt::LetStarBinding { name, .. } => {
+                assert_eq!(
+                    name, "__for_first_1",
+                    "candidate 0 collides with the body's own declaration, so the picker \
+                     must skip to 1"
+                );
+            }
+            other => panic!("expected LetStarBinding flag declaration, got {other:?}"),
+        },
+        other => panic!("expected ExprStmt(Block), got {other:?}"),
+    }
+}
+
+#[test]
+fn classic_for_loop_flag_name_skips_ahead_when_an_outer_local_declares_the_first_candidate_name() {
+    // Ambient-scope counterpart: an outer local the body only reads/
+    // writes (never redeclares) is invisible to `DeclaredNameCollector`,
+    // so this only passes because `fresh_flag_name` also consults
+    // `lookup_local_with_frame` — see that method's own doc comment.
+    let m = compile_ok(&wrap(concat!(
+        "int __for_first_0 = 0; ",
+        "for (int i = 0; i < 3; i++) { __for_first_0 = __for_first_0 + 1; } ",
+        "__for_first_0;"
+    )));
+    match &main_fn(&m).body.stmts[1] {
+        Stmt::ExprStmt {
+            expr: Expr::Block(block),
+            ..
+        } => match &block.stmts[1] {
+            Stmt::LetStarBinding { name, .. } => {
+                assert_eq!(
+                    name, "__for_first_1",
+                    "candidate 0 collides with the outer user variable, so the picker must \
+                     skip to 1"
+                );
+            }
+            other => panic!("expected LetStarBinding flag declaration, got {other:?}"),
+        },
+        other => panic!("expected ExprStmt(Block), got {other:?}"),
+    }
+    match &main_fn(&m).body.stmts[2] {
+        Stmt::ExprStmt {
+            expr: Expr::VarRef { name, .. },
+            ..
+        } => assert_eq!(name, "__for_first_0"),
+        other => panic!("expected ExprStmt(VarRef(\"__for_first_0\")), got {other:?}"),
+    }
+}
+
+#[test]
+fn dollar_sign_in_a_local_variable_name_is_rejected() {
+    // Round 3 of /security-review, on `fresh_flag_name` (the fix above):
+    // `$` is a legal Java identifier character (JLS §3.8) this crate's
+    // own lexer accepts, but `semantic-ir-to-python::sanitize_ident`
+    // escapes it to a plain digit string (`_24`) that a DIFFERENT raw
+    // Java identifier (no `$` at all) can spell directly -- so two
+    // distinct raw Java names can collide once a backend emits them,
+    // defeating `fresh_flag_name`'s raw-string-only collision check
+    // (confirmed by /security-review actually executing the emitted
+    // Python and observing a hang, using a local literally named
+    // `_do_while$` with enough decoys to force the flag counter to a
+    // colliding value). Rather than teach this backend-agnostic frontend
+    // every backend's own escaping scheme, `$` is rejected at the
+    // source: see `reject_dollar_sign_identifier`'s own doc comment.
+    let err = compile_source(&wrap("int x$ = 1; x$;"), "prog").unwrap_err();
+    assert!(
+        err.message.contains('$'),
+        "unexpected message: {}",
+        err.message
+    );
+}
+
+#[test]
+fn dollar_sign_in_an_enhanced_for_loop_variable_is_rejected() {
+    let err = compile_source(
+        &wrap("int[] xs = {1, 2, 3}; for (int i$ : xs) { }"),
+        "prog",
+    )
+    .unwrap_err();
+    assert!(
+        err.message.contains('$'),
+        "unexpected message: {}",
+        err.message
+    );
+}
+
+#[test]
+fn dollar_sign_in_a_classic_for_init_declarator_is_rejected() {
+    // `lower_variable_declarator` is shared between plain local
+    // declarations and a classic `for`'s own `for_init` declaration --
+    // this exercises the SECOND caller, not just the first.
+    let err = compile_source(&wrap("for (int i$ = 0; i$ < 3; i$++) { }"), "prog").unwrap_err();
+    assert!(
+        err.message.contains('$'),
+        "unexpected message: {}",
+        err.message
+    );
+}
+
+#[test]
+fn dollar_sign_in_a_method_parameter_name_is_rejected() {
+    let err = compile_source(
+        &class_src(
+            "public static void main(String[] args) { } \
+             static int f(int x$) { return x$; }",
+        ),
+        "prog",
+    )
+    .unwrap_err();
+    assert!(
+        err.message.contains('$'),
+        "unexpected message: {}",
+        err.message
+    );
+}
+
+#[test]
+fn dollar_sign_in_a_lambda_parameter_name_is_rejected() {
+    let err = compile_source(&wrap("var f = (int x$) -> x$ + 1;"), "prog").unwrap_err();
+    assert!(
+        err.message.contains('$'),
+        "unexpected message: {}",
+        err.message
+    );
 }
 
 #[test]
@@ -1356,31 +1572,34 @@ fn classic_for_loop_with_multiple_update_expressions_is_unsupported() {
 }
 
 #[test]
-fn classic_for_loop_update_target_shadowed_by_a_body_local_is_an_error() {
-    // Caught by /security-review: `update` is spliced onto the *end* of
-    // `body.stmts`, sharing one flat scope with whatever `body` itself
-    // already declared at its own top level -- by that point,
-    // `lower_body` has already pushed and popped `body`'s own scope, so
-    // there was no check that would notice `body` redeclaring the exact
-    // name `update` assigns to. Under any backend with real block
-    // scoping, that redeclaration would shadow the real loop control
-    // variable for the appended update, silently mutating the body's own
-    // local instead -- leaving the real loop variable permanently
-    // unincremented (an infinite loop), the exact non-termination DoS
-    // class `lower_do_while_statement` already needed two rounds of
-    // fixes for elsewhere in this same file. Real `javac` rejects this
-    // source outright (`variable i is already defined`), so rejecting it
-    // here loses no real program's ability to compile.
-    let err = compile_source(
-        &wrap("int sum = 0; for (int i = 0; i < 3; i++) { int i = 999; sum = sum + 1; }"),
-        "prog",
-    )
-    .unwrap_err();
-    assert!(
-        err.message.contains("shadowed"),
-        "unexpected message: {}",
-        err.message
-    );
+fn classic_for_loop_update_target_shadowed_by_a_body_local_no_longer_needs_rejecting() {
+    // Historical note: an earlier version of this frontend spliced
+    // `update` onto the *end* of `body.stmts`, sharing one flat scope
+    // with whatever `body` itself declared -- a body-declared local
+    // with the same name as the update's target (e.g. `int i = 999;`
+    // inside a `for (int i = 0; ...; i++)`) would shadow the real loop
+    // variable for that appended update under real block scoping, an
+    // infinite loop. That version rejected this source outright.
+    //
+    // Task #64's own fix moves `update` into a wholly separate `Expr::
+    // Block` (the wrapped condition's else-branch — see
+    // `lower_for_statement_inner`'s doc comment) that never shares
+    // `body`'s own scope at all, so this shadowing scenario is now
+    // structurally impossible regardless of what `body` declares --
+    // this is actually MORE faithful to real Java scoping than the old
+    // "append to body" shape was (Java's own `for`-header scope was
+    // never inside the body's scope to begin with). Real `javac` still
+    // rejects this exact source (`variable i is already defined` --
+    // Java's `for`-header variable is in scope for the body too, so
+    // redeclaring it is a duplicate-declaration error regardless of
+    // this crate's own codegen concerns), but that is a distinct
+    // real-Java-semantics check this frontend does not perform in
+    // general (documented elsewhere as "not a full type-checker") — not
+    // something task #64 needs to newly reject just to stay correct.
+    let m = compile_ok(&wrap(
+        "int sum = 0; for (int i = 0; i < 3; i++) { int i = 999; sum = sum + 1; } sum;",
+    ));
+    assert!(!main_fn(&m).body.stmts.is_empty());
 }
 
 #[test]
@@ -1437,7 +1656,7 @@ fn enhanced_for_loop_with_var_is_unsupported() {
     );
 }
 
-// ── M2a: switch / break / continue have no SIR IR yet ───────────────────
+// ── M2a: `switch` still has no SIR IR at all ─────────────────────────────
 
 #[test]
 fn switch_statement_is_unsupported() {
@@ -1446,16 +1665,203 @@ fn switch_statement_is_unsupported() {
     assert!(!err.message.is_empty());
 }
 
+// ── task #64: `break`/`continue` (SIR16 addendum, Feature::LoopControl) ──
+
 #[test]
-fn break_inside_a_while_loop_is_an_error() {
-    let err = compile_source(&wrap("while (true) { break; }"), "prog").unwrap_err();
-    assert!(!err.message.is_empty());
+fn break_inside_a_while_loop_lowers_to_stmt_break() {
+    let m = compile_ok(&wrap("while (true) { break; }"));
+    assert!(m.manifest.contains(Feature::LoopControl));
+    match &main_fn(&m).body.stmts[0] {
+        Stmt::While { body, .. } => {
+            assert!(matches!(body.stmts.as_slice(), [Stmt::Break { .. }]));
+        }
+        other => panic!("expected While, got {other:?}"),
+    }
 }
 
 #[test]
-fn continue_inside_a_while_loop_is_an_error() {
-    let err = compile_source(&wrap("while (true) { continue; }"), "prog").unwrap_err();
-    assert!(!err.message.is_empty());
+fn continue_inside_a_while_loop_lowers_to_stmt_continue() {
+    let m = compile_ok(&wrap("while (true) { continue; }"));
+    assert!(m.manifest.contains(Feature::LoopControl));
+    match &main_fn(&m).body.stmts[0] {
+        Stmt::While { body, .. } => {
+            assert!(matches!(body.stmts.as_slice(), [Stmt::Continue { .. }]));
+        }
+        other => panic!("expected While, got {other:?}"),
+    }
+}
+
+#[test]
+fn break_inside_a_do_while_loop_lowers_correctly() {
+    // Also a regression test for the flag-clear-vs-continue fix: this
+    // source compiles and validates at all only if the rewritten
+    // `lower_do_while_statement` (which now embeds the flag-clear in the
+    // condition rather than appending it to the body) still produces a
+    // module `semantic_ir::validate()` accepts.
+    compile_ok(&wrap("int i = 0; do { i = i + 1; break; } while (true);"));
+}
+
+#[test]
+fn continue_inside_a_do_while_loop_lowers_correctly() {
+    compile_ok(&wrap(
+        "int i = 0; do { i = i + 1; continue; } while (i < 3);",
+    ));
+}
+
+#[test]
+fn break_inside_a_classic_for_loop_lowers_correctly() {
+    compile_ok(&wrap(
+        "int sum = 0; for (int i = 0; i < 10; i++) { if (i > 5) { break; } sum = sum + i; }",
+    ));
+}
+
+#[test]
+fn continue_inside_a_classic_for_loop_lowers_correctly() {
+    // Also a regression test for the update-clause-vs-continue fix: this
+    // source compiles and validates at all only if the rewritten
+    // `lower_for_statement_inner` (which now embeds `update` in the
+    // condition rather than appending it to the body) still produces a
+    // module `semantic_ir::validate()` accepts.
+    compile_ok(&wrap(
+        "int sum = 0; for (int i = 0; i < 10; i++) { if (i % 2 == 0) { continue; } sum = sum + i; }",
+    ));
+}
+
+#[test]
+fn break_inside_an_enhanced_for_loop_lowers_correctly() {
+    compile_ok(&wrap(
+        "int xs = 0; for (int x : xs) { if (x > 5) { break; } }",
+    ));
+}
+
+#[test]
+fn continue_inside_an_enhanced_for_loop_lowers_correctly() {
+    compile_ok(&wrap(
+        "int xs = 0; for (int x : xs) { if (x % 2 == 0) { continue; } }",
+    ));
+}
+
+#[test]
+fn break_targets_the_innermost_enclosing_loop_when_nested() {
+    // Structural only (SIR's own `Stmt::Break` carries no explicit
+    // target -- it always means "the nearest enclosing loop", which is
+    // exactly what this source's own inner `while` is); the real
+    // innermost-vs-outermost *behavioral* proof is
+    // `tests/loop_control_java_execution.rs`'s own nested-loop test.
+    let m = compile_ok(&wrap(
+        "int i = 0; while (i < 3) { int j = 0; while (j < 3) { if (j == 1) { break; } j = j + 1; } i = i + 1; }",
+    ));
+    match &main_fn(&m).body.stmts[1] {
+        Stmt::While { body: outer_body, .. } => match &outer_body.stmts[1] {
+            Stmt::While { body: inner_body, .. } => {
+                assert!(matches!(&inner_body.stmts[0], Stmt::ExprStmt { .. }));
+            }
+            other => panic!("expected inner While, got {other:?}"),
+        },
+        other => panic!("expected outer While, got {other:?}"),
+    }
+}
+
+#[test]
+fn break_outside_any_loop_is_an_error() {
+    let err = compile_source(&wrap("break;"), "prog").unwrap_err();
+    assert!(
+        err.message.contains("outside a loop"),
+        "unexpected message: {}",
+        err.message
+    );
+}
+
+#[test]
+fn continue_outside_any_loop_is_an_error() {
+    let err = compile_source(&wrap("continue;"), "prog").unwrap_err();
+    assert!(
+        err.message.contains("outside a loop"),
+        "unexpected message: {}",
+        err.message
+    );
+}
+
+#[test]
+fn break_after_the_enclosing_loop_has_already_closed_is_an_error() {
+    // `loop_depth` must be decremented again once the loop's own body is
+    // done lowering -- a `break` textually AFTER the loop (not inside a
+    // sibling loop of its own) must still be rejected.
+    let err = compile_source(&wrap("while (true) { } break;"), "prog").unwrap_err();
+    assert!(
+        err.message.contains("outside a loop"),
+        "unexpected message: {}",
+        err.message
+    );
+}
+
+#[test]
+fn labeled_break_is_deferred() {
+    // Labeled *statements* (`outer: while (...) { ... }`) have no
+    // dispatch at all yet in `lower_statement` -- a separate, disclosed
+    // gap this test does not need the label to actually resolve to
+    // anything for; `label_token`'s own rejection is purely syntactic
+    // (does `break_statement`'s own grammar node carry a trailing NAME
+    // token at all), so an unlabeled loop is sufficient to exercise it.
+    let err = compile_source(&wrap("while (true) { break outer; }"), "prog").unwrap_err();
+    assert!(
+        err.message.contains("labeled") && err.message.contains("break"),
+        "unexpected message: {}",
+        err.message
+    );
+}
+
+#[test]
+fn labeled_continue_is_deferred() {
+    // See `labeled_break_is_deferred`'s own comment on why an unlabeled
+    // enclosing loop is sufficient here.
+    let err = compile_source(&wrap("while (true) { continue outer; }"), "prog").unwrap_err();
+    assert!(
+        err.message.contains("labeled") && err.message.contains("continue"),
+        "unexpected message: {}",
+        err.message
+    );
+}
+
+#[test]
+fn break_inside_a_lambda_body_does_not_see_an_enclosing_loop() {
+    // Real Java forbids this too (`javac`: "break outside switch or
+    // loop") -- a lambda literal is its own statement-flow boundary,
+    // even though it is lexically nested inside the `while` here.
+    let err = compile_source(
+        &wrap("while (true) { var f = () -> { break; 1; }; }"),
+        "prog",
+    )
+    .unwrap_err();
+    assert!(
+        err.message.contains("outside a loop"),
+        "unexpected message: {}",
+        err.message
+    );
+}
+
+#[test]
+fn continue_inside_a_lambda_body_does_not_see_an_enclosing_loop() {
+    let err = compile_source(
+        &wrap("while (true) { var f = () -> { continue; 1; }; }"),
+        "prog",
+    )
+    .unwrap_err();
+    assert!(
+        err.message.contains("outside a loop"),
+        "unexpected message: {}",
+        err.message
+    );
+}
+
+#[test]
+fn break_inside_a_lambda_body_still_works_when_the_lambda_itself_is_a_loop() {
+    // The lambda-boundary reset must not be so broad that it also
+    // rejects a `break` targeting a loop declared INSIDE the lambda's
+    // own body -- only a loop OUTSIDE the lambda boundary is off-limits.
+    compile_ok(&wrap(
+        "var f = () -> { while (true) { break; } 1; };",
+    ));
 }
 
 // ── M3a: method declarations + calls ─────────────────────────────────────
