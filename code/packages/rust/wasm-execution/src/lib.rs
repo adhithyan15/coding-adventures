@@ -267,11 +267,12 @@ impl WasmValue {
             // An `i31ref` is its `i32` payload, so its zero value is I32(0).
             ValueType::I31ref => WasmValue::I32(0),
             // Nullable reference types (GC and funcref/externref alike)
-            // default to the null reference. `Exnref` (W-next) is the same
-            // shape (nullable reference, `(ref null exn)`) -- never a REAL
-            // value in this repo (see its own doc comment), but a `(local
-            // $x exnref)` still needs SOME default, and null is the only
-            // spec-correct one.
+            // default to the null reference. `Exnref` is the same shape
+            // (nullable reference, `(ref null exn)`) -- a real, reified
+            // value once a `catch_ref`/`catch_all_ref` clause matches (W24,
+            // a handle into `WasmExecutionContext::exception_heap`), but a
+            // `(local $x exnref)` still needs SOME default before that ever
+            // happens, and null is the only spec-correct one.
             ValueType::Anyref
             | ValueType::StructRef(_)
             | ValueType::Funcref
@@ -724,24 +725,30 @@ fn catch_clause_tag_matches(ctx: &WasmExecutionContext, clause_tag_idx: u32, thr
 /// clause matching (building on W21's deliberately non-catching first
 /// slice, `code/specs/W21-wasm-exceptions-tag-throw-slice.md`), extended
 /// by W23 to match correctly ACROSS a cross-instance host-function call
-/// boundary (`code/specs/W23-wasm-exceptions-cross-instance-tag-identity.md`).
+/// boundary (`code/specs/W23-wasm-exceptions-cross-instance-tag-identity.md`),
+/// and by W24 to give `catch_ref`/`catch_all_ref` their own real, reified
+/// `exnref` (`code/specs/W24-wasm-exceptions-exnref-catch-ref.md`) instead
+/// of never matching.
 ///
 /// Returns `Ok(true)` if caught: `vm.pc`/`vm.typed_stack`/
 /// `ctx.label_stack` are already updated exactly as if a `br` to the
 /// matching clause's label had executed (with the tag's argument values
-/// pushed first, for a `catch` — not for `catch_all`). Returns `Ok(false)`
-/// if not caught here: nothing was touched, and the caller must propagate
-/// `err` onward unchanged (after restoring ITS OWN caller's saved frame —
-/// see `call_function_inner`'s own call site). `Err` only if the matched
-/// clause's own branch bookkeeping fails, which real corpus modules never
-/// hit (arity mismatches are ruled out by `wasm-validator`'s bounds/arity
-/// checks on `try_table`'s catch clauses).
+/// pushed first, for `catch`/`catch_ref` — not for `catch_all`/
+/// `catch_all_ref`; `catch_ref`/`catch_all_ref` ALSO push a reified
+/// `exnref` handle, after those values — see the match arm below). Returns
+/// `Ok(false)` if not caught here: nothing was touched, and the caller must
+/// propagate `err` onward unchanged (after restoring ITS OWN caller's saved
+/// frame — see `call_function_inner`'s own call site). `Err` only if the
+/// matched clause's own branch bookkeeping fails (real corpus modules never
+/// hit this — arity mismatches are ruled out by `wasm-validator`'s bounds/
+/// arity checks on `try_table`'s catch clauses), or if reifying an
+/// exception would exceed [`MAX_EXCEPTION_HEAP_LEN`].
 fn try_catch_exception(vm: &mut GenericVM, ctx: &mut WasmExecutionContext, err: &VMError) -> VMResult<bool> {
     let full = format!("{err}");
     let Some(rest) = full.strip_prefix("Error: ").and_then(|msg| msg.strip_prefix(EXCEPTION_SENTINEL)) else {
         return Ok(false); // not an exception at all -- an ordinary trap is never caught (real spec rule).
     };
-    let Some((_instance_id, tag_idx, tag_identity, values, _message)) = decode_exception_payload(rest) else {
+    let Some((instance_id, tag_idx, tag_identity, values, _message)) = decode_exception_payload(rest) else {
         return Ok(false);
     };
     // W23: NO instance_id-based gate here anymore (see `ExceptionPayload::
@@ -757,15 +764,13 @@ fn try_catch_exception(vm: &mut GenericVM, ctx: &mut WasmExecutionContext, err: 
     // counter.
     for try_label_idx in (0..ctx.label_stack.len()).rev() {
         let matched = ctx.label_stack[try_label_idx].catches.iter().find(|c| match c.kind {
-            CatchClauseKind::Catch => catch_clause_tag_matches(ctx, c.tag_idx, tag_idx, tag_identity),
-            CatchClauseKind::CatchAll => true,
-            // `catch_ref`/`catch_all_ref` need a real `exnref` value this
-            // slice never produces (see this slice's own spec doc) — these
-            // clauses are structurally present (parsed, validated) but
-            // never SELECTED as a match here, exactly as honest as W21's
-            // own "try_table never matches" default, just now scoped down
-            // to only these two clause kinds instead of all four.
-            CatchClauseKind::CatchRef | CatchClauseKind::CatchAllRef => false,
+            // `catch_ref`/`catch_all_ref` (W24) match under EXACTLY the
+            // same rule as their non-`_ref` counterparts — reifying the
+            // exception into a real `exnref` is a DIFFERENT question
+            // (what gets pushed) from WHETHER this clause matches (which
+            // tag, if any). See the push logic below.
+            CatchClauseKind::Catch | CatchClauseKind::CatchRef => catch_clause_tag_matches(ctx, c.tag_idx, tag_idx, tag_identity),
+            CatchClauseKind::CatchAll | CatchClauseKind::CatchAllRef => true,
         });
         if let Some(clause) = matched.cloned() {
             // The clause's label depth was resolved by the text/binary
@@ -785,10 +790,25 @@ fn try_catch_exception(vm: &mut GenericVM, ctx: &mut WasmExecutionContext, err: 
             // try_label_idx" term alone, since real index `try_label_idx`
             // itself -- try_table's own label -- is exactly the one entry
             // the virtual/real mapping omits).
-            if clause.kind == CatchClauseKind::Catch {
+            if clause.kind == CatchClauseKind::Catch || clause.kind == CatchClauseKind::CatchRef {
                 for v in &values {
                     push_wasm(vm, *v);
                 }
+            }
+            if clause.kind == CatchClauseKind::CatchRef || clause.kind == CatchClauseKind::CatchAllRef {
+                // W24: reify the caught exception into a real `exnref`,
+                // pushed AFTER the tag's own values (per the real spec's
+                // `catch_ref`/`catch_all_ref` result-type order — see
+                // `try_table.wast`'s own `(result i32 exnref)`-shaped block
+                // signatures). The heap entry carries the FULL payload
+                // (not just `values`) so a later `throw_ref` on this exact
+                // handle re-raises the identical exception, tag identity
+                // included.
+                let handle = push_caught_exception(
+                    ctx,
+                    ExceptionPayload { instance_id, tag_idx, tag_identity, values: values.clone() },
+                )?;
+                push_wasm(vm, WasmValue::Ref(Some(handle)));
             }
             let branch_depth = ctx.label_stack.len() - try_label_idx + clause.label_rel_depth as usize;
             execute_branch(vm, ctx, branch_depth)?;
@@ -1810,18 +1830,18 @@ pub enum CatchClauseKind {
     /// argument values, branches to `$label`.
     Catch,
     /// `catch_ref $tag $label` (`0x01`): like `Catch`, plus reifies the
-    /// exception into an `exnref` pushed after the argument values. This
-    /// slice never produces an `exnref` (see this slice's own spec doc),
-    /// so a clause of this kind is parsed/validated but never SELECTED as
-    /// a match by [`try_catch_exception`] — structurally present, never
-    /// chosen, exactly like W21's own "try_table never matches" default,
-    /// just narrowed to these two kinds only.
+    /// exception into a real `exnref` pushed after the argument values (W24
+    /// — see `code/specs/W24-wasm-exceptions-exnref-catch-ref.md`). The
+    /// `exnref` is a handle into `ctx.exception_heap`
+    /// ([`push_caught_exception`]), letting a later `throw_ref` re-raise
+    /// the exact same exception.
     CatchRef,
     /// `catch_all $label` (`0x02`): matches ANY tag, pushes nothing.
     CatchAll,
     /// `catch_all_ref $label` (`0x03`): like `CatchAll`, plus reifies the
-    /// exception into an `exnref` — same "never selected" treatment as
-    /// [`Self::CatchRef`].
+    /// exception into a real `exnref` — same treatment as
+    /// [`Self::CatchRef`], minus the tag's own argument values (`catch_all`
+    /// never has any to push either).
     CatchAllRef,
 }
 
@@ -2466,7 +2486,25 @@ fn decode_immediates(code: &[u8], offset: usize, immediates: &[&str]) -> (Decode
                 // validation against (confirmed via the real, pinned-commit
                 // `simd_const.wast` corpus -- see wasm-validator's matching
                 // fix in `decode_blocktype`).
-                0x40 | 0x7F | 0x7E | 0x7D | 0x7C | 0x7B | 0x70 | 0x6F => (DecodedOperand::Int(byte as i64), 1),
+                // `0x69` (`exnref`, W24): the same real, previously-
+                // undetected gap the doc comment above already fixed once
+                // for v128/funcref/externref -- a single-value `(block
+                // (result exnref) ...)` blocktype (the real corpus's own
+                // shape, e.g. `throw_ref.wast`) fell through to the
+                // signed-LEB128 branch below. Security review (W24): this
+                // crate's `ValueType::Exnref` byte was ORIGINALLY `0xE9`
+                // (the value's two's-complement-mod-256 byte, `-23+256`) --
+                // wrong, since `0xE9`'s LEB128 continuation bit is SET
+                // (`>= 0x80`), making it indistinguishable from the leading
+                // byte of a genuine multi-byte type index (any module
+                // declaring 234+ types could trigger a real, attacker-
+                // reachable decode desync). Fixed at the source
+                // (`wasm-types::ValueType::Exnref::byte_tag`/`encode`, now
+                // `0x69` -- the correct SLEB128 single-byte encoding of
+                // `-0x17`, continuation bit clear, matching how `0x7B`/
+                // `0x70`/`0x6F` are ALSO simultaneously their type's real
+                // spec opcode and a safe single SLEB128 byte).
+                0x40 | 0x7F | 0x7E | 0x7D | 0x7C | 0x7B | 0x70 | 0x6F | 0x69 => (DecodedOperand::Int(byte as i64), 1),
                 _ => {
                     // Type index (signed LEB128)
                     let (value, consumed) = decode_signed(code, offset).unwrap_or((0, 1));
@@ -2850,6 +2888,30 @@ pub struct WasmExecutionContext {
     /// hand-built `ctx` a test constructs directly without going through
     /// `WasmExecutionEngine::new`.
     pub instance_id: u64,
+    /// The real `exnref` heap (W24 — exceptions proposal, fourth slice):
+    /// a `catch_ref`/`catch_all_ref` clause that matches reifies the
+    /// exception it caught by pushing a new entry here and handing back a
+    /// `WasmValue::Ref(Some(handle))` indexing it — the SAME "handle into a
+    /// per-call heap" shape `gc_heap`/`v128_heap` already use for their own
+    /// non-numeric reference kinds (`Ref`/`V128`). Storing the exception's
+    /// full [`ExceptionPayload`] (not just its `values`) is what lets the
+    /// `throw_ref` (`0x0A`) opcode handler reconstruct and re-throw the
+    /// EXACT original exception later — tag identity included, so a
+    /// re-thrown exception is still caught by exactly the same `catch`
+    /// clauses the original would have been (the real spec's `throw_ref`
+    /// semantics: "re-raise the referenced exception").
+    ///
+    /// Starts empty and grows for the duration of one top-level
+    /// `call_function` invocation, exactly like `gc_heap` — persists across
+    /// NESTED calls within that one invocation (so an `exnref` a callee
+    /// receives as a parameter and re-throws still resolves), but is never
+    /// carried across separate top-level calls (unlike `v128_heap`, W15 —
+    /// no real corpus case stores an `exnref` in a global, so this
+    /// simpler, non-persistent treatment is sufficient; see `code/specs/
+    /// W24-wasm-exceptions-exnref-catch-ref.md`). No reclamation (mirrors
+    /// `v128_heap`'s own deferred-cleanup note) — bounded instead by
+    /// [`MAX_EXCEPTION_HEAP_LEN`].
+    pub exception_heap: Vec<ExceptionPayload>,
 }
 
 /// Process-wide counter minting a fresh, never-repeating
@@ -3001,6 +3063,19 @@ const MAX_DEDICATED_THREAD_DEPTH: usize = 64;
 /// into a real handle before a call even starts -- needs the identical
 /// cap, not a separately-chosen or unbounded one.
 pub const MAX_V128_HEAP_LEN: usize = 1_000_000;
+
+/// Caps `WasmExecutionContext::exception_heap`'s growth (W24, security
+/// review — same threat model and same shape of guard as
+/// [`MAX_V128_HEAP_LEN`] just above: a WASM `loop` whose body is a
+/// `try_table`/`catch_ref` that matches on every iteration, with no
+/// recursion at all, would otherwise grow this heap without bound). A
+/// caught exception is reified at most once per `catch_ref`/`catch_all_ref`
+/// match, so this bounds "how many exceptions can be caught-and-reified in
+/// one top-level call" the same way `MAX_V128_HEAP_LEN` bounds "how many
+/// v128s can be created" — 1,000,000 comfortably exceeds any real
+/// `throw_ref.wast`/`try_table.wast` conformance case (a handful of
+/// exceptions per test function) while still bounding worst-case memory.
+pub const MAX_EXCEPTION_HEAP_LEN: usize = 1_000_000;
 
 /// Caps how many linear memories a single module may declare + import
 /// (multi-memory proposal, W16, task #85). Real WASM has no spec-mandated
@@ -3459,6 +3534,19 @@ fn block_arity(block_type: i64, types: &[FuncType]) -> (usize, usize) {
         // match's own doc comment for why this was a real, previously-
         // undetected gap for the 3 non-MVP-scalar types).
         0x7C..=0x7F | 0x7B | 0x70 | 0x6F => (0, 1),
+        // `exnref` (`0x69` = 105, W24) -- MUST be matched here, before the
+        // generic type-index arm below: 105 is a plausible real type-section
+        // index for a module declaring 106+ types, so without this explicit
+        // arm a large-enough module would silently misinterpret an `exnref`
+        // blocktype as "look up type #105" instead. See `decode_function_body`'s
+        // matching "blocktype" operand-decode fix for the full story, and
+        // `wasm-types::ValueType::Exnref`'s own doc comment for why `0x69`
+        // (not this crate's originally-chosen `0xE9`) is the byte that's
+        // actually safe to special-case here (security review, W24):
+        // `0x69`'s LEB128 continuation bit is clear, so — unlike `0xE9` —
+        // it can never be the leading byte of a genuine multi-byte type
+        // index, only ever a complete, self-contained value on its own.
+        0x69 => (0, 1),
         n if n >= 0 && (n as usize) < types.len() => {
             let t = &types[n as usize];
             (t.params.len(), t.results.len())
@@ -5686,6 +5774,22 @@ fn push_v128(ctx: &mut WasmExecutionContext, bytes: [u8; 16]) -> Result<u32, VME
     }
     let handle = ctx.v128_heap.len() as u32;
     ctx.v128_heap.push(bytes);
+    Ok(handle)
+}
+
+/// Push a newly-caught exception onto `ctx.exception_heap`, enforcing
+/// [`MAX_EXCEPTION_HEAP_LEN`] (W24, security review) — every `catch_ref`/
+/// `catch_all_ref` clause that matches (see [`try_catch_exception`]) must
+/// go through this, not `ctx.exception_heap.push(...)` directly, exactly
+/// mirroring [`push_v128`]'s own enforcement shape.
+fn push_caught_exception(ctx: &mut WasmExecutionContext, payload: ExceptionPayload) -> Result<u32, VMError> {
+    if ctx.exception_heap.len() >= MAX_EXCEPTION_HEAP_LEN {
+        return Err(VMError::GenericError(
+            "exception heap limit exceeded (too many exceptions caught-and-reified in one call)".into(),
+        ));
+    }
+    let handle = ctx.exception_heap.len() as u32;
+    ctx.exception_heap.push(payload);
     Ok(handle)
 }
 
@@ -9549,6 +9653,38 @@ fn register_control(vm: &mut GenericVM) {
         )))
     });
 
+    // throw_ref (0x0A, W24 -- exceptions proposal, fourth slice): pops a
+    // real `exnref` (a `WasmValue::Ref` handle a `catch_ref`/`catch_all_ref`
+    // clause reified -- see `try_catch_exception`) and re-raises the EXACT
+    // exception it names, reconstructed verbatim from `ctx.exception_heap`.
+    // A null `exnref` (`ref.null exn`, or a default-initialized local/
+    // global that was never assigned a caught exception) traps -- the real
+    // spec's own rule for re-throwing nothing.
+    vm.register_context_opcode(0x0A, |vm, _instr, _code, ctx| {
+        let ctx = get_ctx(ctx);
+        let handle = match pop_wasm(vm)? {
+            WasmValue::Ref(Some(h)) => h,
+            WasmValue::Ref(None) => return Err(VMError::from(TrapError::new("null exception reference"))),
+            other => {
+                return Err(VMError::from(TrapError::new(format!(
+                    "throw_ref: expected an exnref, found {other:?}"
+                ))))
+            }
+        };
+        let Some(payload) = ctx.exception_heap.get(handle as usize).cloned() else {
+            return Err(VMError::from(TrapError::new(format!(
+                "throw_ref: invalid exnref handle {handle}"
+            ))));
+        };
+        Err(VMError::from(TrapError::exception_with_payload(
+            format!("uncaught wasm exception (tag {})", payload.tag_idx),
+            payload.instance_id,
+            payload.tag_idx,
+            payload.tag_identity,
+            payload.values,
+        )))
+    });
+
     // else (0x05)
     vm.register_context_opcode(0x05, |vm, _instr, _code, ctx| {
         let ctx = get_ctx(ctx);
@@ -10517,6 +10653,11 @@ impl WasmExecutionEngine {
             // no longer read by `try_catch_exception`'s matching (W23) --
             // see `WasmExecutionContext::instance_id`'s own doc comment.
             instance_id: NEXT_INSTANCE_ID.fetch_add(1, Ordering::Relaxed),
+            // Fresh per top-level call, exactly like `gc_heap` above (see
+            // `exception_heap`'s own doc comment for why persistence
+            // across SEPARATE top-level calls isn't needed here, unlike
+            // `v128_heap`).
+            exception_heap: Vec::new(),
         };
 
         // Reset and execute.
@@ -11523,6 +11664,132 @@ mod tests {
         engine.set_tags(vec![0]);
         let result = engine.call_function(0, &[]).unwrap();
         assert_eq!(result, Vec::<WasmValue>::new(), "catch_all must catch a thrown exception regardless of its tag");
+    }
+
+    #[test]
+    fn test_catch_all_ref_reifies_a_real_exnref_handle() {
+        // W24: `(block $h (result exnref) (try_table (catch_all_ref $h)
+        // (throw $tag0)))` -- a matching `catch_all_ref` clause must push a
+        // REAL `exnref` (a `WasmValue::Ref(Some(handle))` into
+        // `ctx.exception_heap`), not just structurally parse-and-ignore it
+        // (W21/W22/W23's own deliberate scope boundary, closed by this
+        // slice).
+        let func_type = FuncType { params: vec![], results: vec![ValueType::Exnref] };
+        let body = FunctionBody {
+            locals: vec![],
+            code: vec![
+                0x02, 0x69, // block $h (result exnref)
+                0x1F, 0x40, 0x01, 0x03, 0x00, // try_table (catch_all_ref label=0)
+                0x08, 0x00, // throw tag 0
+                0x0B, // end try_table
+                0x0B, // end block $h
+                0x0B, // function terminator
+            ],
+        };
+        let mut engine = WasmExecutionEngine::new(WasmEngineConfig {
+            memories: Vec::new(),
+            tables: vec![],
+            globals: vec![],
+            global_types: vec![],
+            func_types: vec![func_type],
+            func_bodies: vec![Some(body)],
+            host_functions: vec![None],
+        });
+        engine.set_tags(vec![0]);
+        let result = engine.call_function(0, &[]).unwrap();
+        assert_eq!(
+            result,
+            vec![WasmValue::Ref(Some(0))],
+            "catch_all_ref must reify the caught exception as a real, non-null exnref handle"
+        );
+    }
+
+    #[test]
+    fn test_throw_ref_rethrows_the_reified_exception_and_an_outer_catch_recovers_its_payload() {
+        // W24's full round trip: an inner `try_table (catch_all_ref ...)`
+        // reifies a thrown `i32`-carrying exception into a real `exnref`;
+        // `throw_ref` on that handle re-raises the EXACT same exception
+        // (tag + payload); an outer `try_table (catch $tag0 ...)` catches
+        // it by ordinary tag matching and recovers the original `i32`
+        // payload -- proving the reified `exnref` really does carry the
+        // full original exception, not just an opaque, empty token.
+        //
+        //   block $outer (result i32)
+        //     try_table (catch $tag0 -> $outer)
+        //       block $h (result exnref)
+        //         try_table (catch_all_ref -> $h)
+        //           i32.const 42
+        //           throw $tag0
+        //         end
+        //       end
+        //       throw_ref
+        //     end
+        //   end
+        let tag_type = FuncType { params: vec![ValueType::I32], results: vec![] };
+        let func_type = FuncType { params: vec![], results: vec![ValueType::I32] };
+        let body = FunctionBody {
+            locals: vec![],
+            code: vec![
+                0x02, 0x7F, // block $outer (result i32)
+                0x1F, 0x40, 0x01, 0x00, 0x00, 0x00, // try_table (catch tag=0 label=0 -> $outer)
+                0x02, 0x69, // block $h (result exnref)
+                0x1F, 0x40, 0x01, 0x03, 0x00, // try_table (catch_all_ref label=0 -> $h)
+                0x41, 0x2A, // i32.const 42
+                0x08, 0x00, // throw tag 0
+                0x0B, // end try_table (inner)
+                0x0B, // end block $h
+                0x0A, // throw_ref
+                0x0B, // end try_table (outer)
+                0x0B, // end block $outer
+                0x0B, // function terminator
+            ],
+        };
+        let mut engine = WasmExecutionEngine::new(WasmEngineConfig {
+            memories: Vec::new(),
+            tables: vec![],
+            globals: vec![],
+            global_types: vec![],
+            func_types: vec![func_type],
+            func_bodies: vec![Some(body)],
+            host_functions: vec![None],
+        });
+        engine.set_type_section(vec![tag_type]);
+        engine.set_tags(vec![0]);
+        let result = engine.call_function(0, &[]).unwrap();
+        assert_eq!(
+            result,
+            vec![WasmValue::I32(42)],
+            "throw_ref must re-raise the reified exception with its ORIGINAL tag and payload intact, letting an ordinary outer `catch` recover it"
+        );
+    }
+
+    #[test]
+    fn test_throw_ref_on_a_null_exnref_traps() {
+        // Real spec rule: re-throwing a null `exnref` (never assigned by a
+        // real `catch_ref`/`catch_all_ref` match -- here, a local that
+        // keeps its `default_for(Exnref)` null value) is a trap, not a
+        // silent no-op.
+        let func_type = FuncType { params: vec![], results: vec![] };
+        let body = FunctionBody {
+            locals: vec![ValueType::Exnref],
+            code: vec![
+                0x20, 0x00, // local.get 0 (null exnref)
+                0x0A, // throw_ref
+                0x0B, // function terminator
+            ],
+        };
+        let mut engine = WasmExecutionEngine::new(WasmEngineConfig {
+            memories: Vec::new(),
+            tables: vec![],
+            globals: vec![],
+            global_types: vec![],
+            func_types: vec![func_type],
+            func_bodies: vec![Some(body)],
+            host_functions: vec![None],
+        });
+        let err = engine.call_function(0, &[]).unwrap_err();
+        let msg = format!("{err}");
+        assert!(msg.contains("null exception reference"), "expected a null-exnref trap, got: {msg}");
     }
 
     #[test]

@@ -853,7 +853,7 @@ TESTSUITE_FILES = [
     # spec-accurate scope, not a bug.
     "tag.wast",
     "throw.wast",
-    # Exceptions proposal, second slice (W-next -- see code/specs/
+    # Exceptions proposal, second slice (W22 -- see code/specs/
     # W22-wasm-exceptions-catch-clause-matching.md): real, same-instance
     # `catch`/`catch_all` matching. `try_table.wast` -- the largest of the
     # four exceptions-proposal corpus files -- now grades real `Pass` for
@@ -865,6 +865,26 @@ TESTSUITE_FILES = [
     # real `Pass` too, from this SAME implementation -- no separate
     # vendoring needed, since that file was already vendored.
     "try_table.wast",
+    # Exceptions proposal, third slice (W23 -- see code/specs/
+    # W23-wasm-exceptions-cross-instance-tag-identity.md): real,
+    # cross-instance tag identity for `catch`/`catch_all` -- no new corpus
+    # file (the same already-vendored `try_table.wast` above).
+    #
+    # Exceptions proposal, fourth slice (W24 -- see code/specs/
+    # W24-wasm-exceptions-exnref-catch-ref.md): a real, reified `exnref`
+    # value type plus `throw_ref`/`catch_ref`/`catch_all_ref`, deliberately
+    # scoped to avoid non-null CONCRETE reference types (`(ref $t)`) --
+    # the same gap blocking GC continuation's `call_ref` (W20). Adds
+    # `throw_ref.wast` (a NEW vendored file -- every one of its real
+    # `assert_exception`/`assert_return`/`assert_invalid` directives uses
+    # only plain, abstract `exnref`, never a concrete `(ref $t)`) and turns
+    # `try_table.wast`'s own `throw-catch_ref-param-{i32,f32,i64,f64}`
+    # cluster (10 `assert_return` directives, previously real `Fail`s) into
+    # real `Pass`. `try_table.wast`'s LAST remaining module (the one using
+    # `(ref $t)`/`(ref exn)` non-null concrete/abstract reference type
+    # distinctions) stays `NotYetSupported` -- genuinely out of scope for
+    # this slice, see W24's own scope section.
+    "throw_ref.wast",
 ]
 
 # Reference-types/threads-proposal files whose UPSTREAM path lives under

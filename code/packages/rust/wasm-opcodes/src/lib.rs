@@ -237,10 +237,23 @@ pub static OPCODES: &[OpcodeInfo] = &[
     // never read generically from this table). Immediate: a single
     // `tagidx` (plain LEB128 index, decoded identically to `funcidx`/
     // `localidx`/etc. — see `wasm-execution`'s `decode_immediates`).
-    // `throw_ref` (`0x0A`, no immediate) and `try_table`'s own catch-clause
-    // list are deliberately NOT modeled here — see `code/specs/
-    // W21-wasm-exceptions-tag-throw-slice.md`'s scope section.
+    // `try_table`'s own catch-clause list is deliberately NOT modeled here
+    // — see `code/specs/W21-wasm-exceptions-tag-throw-slice.md`'s scope
+    // section (`wasm-wast-parser`'s encoder and `wasm-execution`'s
+    // `decode_function_body` special-case `0x1F` directly instead).
     OpcodeInfo { name: "throw",         opcode: 0x08, category: "control",     immediates: &["tagidx"],                    stack_pop: 0, stack_push: 0 },
+    // `throw_ref` (`0x0A`, W24 — exceptions proposal, fourth slice): pops a
+    // real, reified `exnref` (produced by a `catch_ref`/`catch_all_ref`
+    // clause — see `code/specs/W24-wasm-exceptions-exnref-catch-ref.md`)
+    // and re-throws the SAME underlying exception. No immediate — the
+    // exception's tag/identity/values travel with the popped `exnref`
+    // value itself (a handle into `wasm-execution`'s own exception heap),
+    // not as bytecode operands. Like `throw`, `stack_pop`/`stack_push` here
+    // are placeholders never read generically (real popping is `wasm-
+    // validator`'s own dedicated `0x0A` type-check rule: pop one `Exnref`,
+    // then mark the rest of the block unreachable, same shape `throw`
+    // already uses).
+    OpcodeInfo { name: "throw_ref",     opcode: 0x0A, category: "control",     immediates: &[],                            stack_pop: 0, stack_push: 0 },
     OpcodeInfo { name: "end",           opcode: 0x0B, category: "control",     immediates: &[],                            stack_pop: 0, stack_push: 0 },
     OpcodeInfo { name: "br",            opcode: 0x0C, category: "control",     immediates: &["labelidx"],                  stack_pop: 0, stack_push: 0 },
     OpcodeInfo { name: "br_if",         opcode: 0x0D, category: "control",     immediates: &["labelidx"],                  stack_pop: 1, stack_push: 0 },

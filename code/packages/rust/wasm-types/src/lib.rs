@@ -186,22 +186,36 @@ pub enum ValueType {
     V128,
 
     /// `exnref` — `(ref null exn)`, a nullable reference to a caught
-    /// exception (exceptions proposal; real spec type opcode `-0x17`, i.e.
-    /// unsigned byte `0xE9`).
+    /// exception (exceptions proposal; real spec type opcode `-0x17`).
     ///
-    /// Recognized ONLY so a module that mentions this type (e.g. a
-    /// `catch_ref`/`catch_all_ref` target block's declared result type)
-    /// still PARSES and STRUCTURALLY VALIDATES — this repo's exceptions
-    /// support (W21, W-next) never actually produces or consumes a real
-    /// `exnref` VALUE (no `catch_ref`/`catch_all_ref` clause is ever
-    /// selected as a match; see `wasm-execution`'s `try_catch_exception`
-    /// doc comment), so this variant is deliberately inert: it exists so a
-    /// module mixing `exnref`-typed functions alongside ordinary
-    /// `catch`/`catch_all`-only ones (the real testsuite's own
-    /// `try_table.wast` does exactly this, all in ONE module) doesn't fail
-    /// to build as a WHOLE and lose real conformance credit for the
-    /// functions that don't need `exnref` at all — see `code/specs/
-    /// W22-wasm-exceptions-catch-clause-matching.md`'s own scope section.
+    /// Encoded as the single byte `0x69` — the correct SLEB128 single-byte
+    /// encoding of `-0x17` (`-23 & 0x7F = 0x69`, matching how `funcref`
+    /// (`-0x10` → `0x70`) and `externref` (`-0x11` → `0x6F`) are encoded:
+    /// their raw byte values ARE the SLEB128 encoding, not `-0x17`'s
+    /// two's-complement-mod-256 byte (`0xE9`), which this variant used
+    /// PRIOR to W24 — a real bug, security-reviewed and fixed there: `0xE9`
+    /// has its LEB128 continuation bit set (`0xE9 >= 0x80`), so it can
+    /// never be a complete single-byte value on its own, meaning it was
+    /// genuinely ambiguous with the leading byte of a real, attacker-
+    /// controlled multi-byte type-index encoding in `wasm-validator`/
+    /// `wasm-execution`'s blocktype decoders (any module declaring 234+
+    /// types could trigger it). `0x69` has its continuation bit clear, so
+    /// — like every other special-cased blocktype byte — it can ONLY ever
+    /// mean "the complete value -23," never a partial prefix of a larger
+    /// number.
+    ///
+    /// A real, reified value as of W24 (`code/specs/
+    /// W24-wasm-exceptions-exnref-catch-ref.md`): a `catch_ref`/
+    /// `catch_all_ref` clause that matches pushes a genuine `exnref` —
+    /// `wasm-execution::WasmValue::Ref(Some(handle))`, a handle into
+    /// `WasmExecutionContext::exception_heap` — that `throw_ref` can later
+    /// pop to re-raise the exact same exception. Before W24 this variant
+    /// existed only so a module mixing `exnref`-typed functions alongside
+    /// ordinary `catch`/`catch_all`-only ones (the real testsuite's own
+    /// `try_table.wast` does exactly this, all in ONE module) still parsed
+    /// and structurally validated as a whole (see W22's own scope
+    /// section) — that parsing/validation role is unchanged, now backed by
+    /// real runtime semantics too.
     Exnref,
 }
 
@@ -229,7 +243,7 @@ impl ValueType {
             ValueType::Funcref => Some(0x70),
             ValueType::Externref => Some(0x6F),
             ValueType::V128 => Some(0x7B),
-            ValueType::Exnref => Some(0xE9),
+            ValueType::Exnref => Some(0x69),
         }
     }
 
@@ -265,7 +279,7 @@ impl ValueType {
             ValueType::Funcref => vec![0x70],
             ValueType::Externref => vec![0x6F],
             ValueType::V128 => vec![0x7B],
-            ValueType::Exnref => vec![0xE9],
+            ValueType::Exnref => vec![0x69],
         }
     }
 }
