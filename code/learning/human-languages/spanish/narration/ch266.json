@@ -3,8 +3,8 @@
   "language": "spanish",
   "chapter": 266,
   "title": "Review --- Four Last Pieces, and the Thread",
-  "drivablePrefix": 1,
-  "sourceHash": "fnv1a64:3a3195e1d9d5fd7d",
+  "drivablePrefix": 2,
+  "sourceHash": "fnv1a64:d040afcbd14d9d9e",
   "lessons": [
     {
       "id": "ES-C67-repaso-a1",
@@ -232,6 +232,236 @@
             {
               "kind": "speech",
               "text": "And what one event explains the article, the personal a, the vocative comma and that emphatic position? (Latin's endings falling away.)"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "ES-C67-repaso-lo-que-reemplazo-los-casos",
+      "sequence": 2566,
+      "title": "Review — one name, four different jobs",
+      "headword": "(review)",
+      "romanization": "(review)",
+      "gloss": "Latin's endings fell off and four small things took over their work — a preposition, a comma, an article, and where the word sits",
+      "script": "latin",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:44d8363d8a67a6c2",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "\"I see María.\" (Veo a María.) \"María, come.\" (María, ven.)"
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "The name does not change. María is María in both. Everything that distinguishes them sits outside the word."
+            },
+            {
+              "kind": "speech",
+              "text": "Veo a María. — she is what the seeing lands on. María, ven. — she is the one being spoken to."
+            },
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "A preposition in the first, a comma in the second. Latin did both with endings on María herself, and had a whole case for each."
+            },
+            {
+              "kind": "speech",
+              "text": "The article does a third job: a name points at one person already, so el has nothing left to do — María, not la María. Give her a title and it comes back: la señora García."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "culture-pragmatics",
+          "title": "Why it's said this way",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "The fourth job went to position, which decides form as well as meaning."
+            },
+            {
+              "kind": "speech",
+              "text": "Mucha agua. — leaning on a noun, so it agrees. Come mucho. — leaning on a verb, so it freezes."
+            },
+            {
+              "kind": "speech",
+              "text": "Same word, two shapes, and the only difference is what it stands next to. The ordinal does this one slot over: el primer libro, in front, shortened."
+            },
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "And because the verb's ending already says who did what, the pieces that say when and where can move:"
+            },
+            {
+              "kind": "speech",
+              "text": "Hoy como en casa., Como en casa hoy., En casa como hoy."
+            },
+            {
+              "kind": "speech",
+              "text": "Three placements, one meaning — and the front slot is the emphatic one. Latin bought that freedom with case endings; Spanish lost them and bought it back with word order. Same trade in ¡Qué grande!: the force sits at the front."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "hoy como en casa, como en casa hoy, en casa como hoy",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *hoy como en casa*, *como en casa hoy*, *en casa como hoy*]"
+            },
+            {
+              "kind": "activity",
+              "scored": true,
+              "id": "ES-C67-repaso-lo-que-reemplazo-los-casos-dos",
+              "prompt": "I see Maria, then Maria, come.",
+              "assesses": [
+                "ES-GRAMMAR-PERSONAL-A-WHY",
+                "ES-GRAMMAR-VOCATIVE-NOT-OBJECT"
+              ],
+              "responseSeconds": 14,
+              "acceptedResponses": [
+                "veo a maria; maria, ven",
+                "veo a maria, maria ven"
+              ],
+              "feedback": {
+                "correct": "A preposition, then a comma — the name itself never moved.",
+                "incorrect": "Veo a Maria; Maria, ven."
+              }
+            },
+            {
+              "kind": "activity",
+              "scored": true,
+              "id": "ES-C67-repaso-lo-que-reemplazo-los-casos-titulo",
+              "prompt": "Talk about Mrs Garcia in the third person, with her title.",
+              "assesses": [
+                "ES-GRAMMAR-PROPER-NOUN-NO-ARTICLE",
+                "ES-GRAMMAR-TITLE-TAKES-ARTICLE"
+              ],
+              "responseSeconds": 12,
+              "acceptedResponses": [
+                "la senora garcia",
+                "la señora garcia"
+              ],
+              "feedback": {
+                "correct": "The title brings the article back that the bare name refused.",
+                "incorrect": "La senora Garcia."
+              }
+            },
+            {
+              "kind": "activity",
+              "scored": true,
+              "id": "ES-C67-repaso-lo-que-reemplazo-los-casos-cuantificador",
+              "prompt": "A lot of water, then he eats a lot.",
+              "assesses": [
+                "ES-GRAMMAR-QUANTIFIER-AGREES-WITH-NOUN",
+                "ES-GRAMMAR-QUANTIFIER-FROZEN-AFTER-VERB"
+              ],
+              "responseSeconds": 14,
+              "acceptedResponses": [
+                "mucha agua; come mucho",
+                "mucha agua, come mucho"
+              ],
+              "feedback": {
+                "correct": "Next to a noun it agrees; next to a verb there is nothing to agree with.",
+                "incorrect": "Mucha agua; come mucho."
+              }
+            },
+            {
+              "kind": "activity",
+              "scored": true,
+              "id": "ES-C67-repaso-lo-que-reemplazo-los-casos-orden",
+              "prompt": "Say today I eat at home, putting the emphasis on today.",
+              "assesses": [
+                "ES-GRAMMAR-CIRCUMSTANTIAL-MOVES",
+                "ES-GRAMMAR-WORD-ORDER-EMPHASIS",
+                "ES-GRAMMAR-ORDINAL-BEFORE-NOUN"
+              ],
+              "responseSeconds": 12,
+              "acceptedResponses": [
+                "hoy como en casa",
+                "hoy, como en casa"
+              ],
+              "feedback": {
+                "correct": "Front slot, so hoy carries the weight.",
+                "incorrect": "Hoy como en casa."
+              }
+            },
+            {
+              "kind": "activity",
+              "scored": true,
+              "id": "ES-C67-repaso-lo-que-reemplazo-los-casos-que",
+              "prompt": "Say how big!",
+              "assesses": [
+                "ES-GRAMMAR-EXCLAMATIVE-QUE"
+              ],
+              "responseSeconds": 8,
+              "acceptedResponses": [
+                "que grande",
+                "¡qué grande!",
+                "qué grande"
+              ],
+              "feedback": {
+                "correct": "Que at the front, carrying the force, and keeping its accent.",
+                "incorrect": "Que grande."
+              }
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What replaced Latin's ending for the person on the receiving end? (A little a.) Which slot carries emphasis? (The front one.) And why does mucho refuse to agree in come mucho? (It leans on a verb.)"
             }
           ]
         }

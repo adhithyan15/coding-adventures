@@ -2,7 +2,8 @@
   "id": "ES-PATH-A1-DISTRIB",
   "spine_node": "SPINE-DEFINITE-REFERENCE",
   "lessons": [
-    "ES-C67-uno-otro"
+    "ES-C67-uno-otro",
+    "ES-C67-repaso-uno-otro-ninguno"
   ],
   "before": [],
   "inline": [

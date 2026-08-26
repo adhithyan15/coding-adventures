@@ -3,8 +3,8 @@
   "language": "spanish",
   "chapter": 345,
   "title": "Pinning Down Which One",
-  "drivablePrefix": 5,
-  "sourceHash": "fnv1a64:d82b85b2a7ddb928",
+  "drivablePrefix": 7,
+  "sourceHash": "fnv1a64:b8cf40d75cabd742",
   "lessons": [
     {
       "id": "ES-C345-mismo",
@@ -793,6 +793,397 @@
             {
               "kind": "speech",
               "text": "What did iacere mean? (To throw.) And what is a projectile, word for word? (A thing thrown forward.)"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "ES-C345-repaso-persona-objeto",
+      "sequence": 6215,
+      "title": "Review — the mask, the share, and the thing thrown down",
+      "headword": "(review)",
+      "romanization": "(review)",
+      "gloss": "three words that named something you could touch, and now name something you cannot — two of which you have been saying as grammar labels for three hundred chapters",
+      "script": "latin",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:dcd89ad3e720e2d3",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Two nouns from this chapter. The person. (La persona.) The object. (El objeto.)"
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "Three chants, and one thing they share."
+            },
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "First. La parte. — Latin partem: a piece cut off a whole."
+            },
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Second. La persona. — Latin persōna: a carved mask, held up in front of an actor's face."
+            },
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Third. El objeto. — Latin objectum: something thrown down in front of you."
+            },
+            {
+              "kind": "speech",
+              "text": "Every one of those started as a thing you could pick up. A cut piece. A mask. A thrown thing. And every one of them now names something with no shape at all — a share, a human being, a topic."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "culture-pragmatics",
+          "title": "Why it's said this way",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "Here is the part worth keeping, and it is not about vocabulary."
+            },
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "You did not meet persona and objeto this chapter. You have been using both for three hundred chapters, as grammar labels."
+            },
+            {
+              "kind": "speech",
+              "text": "primera persona — first person: hablo. objeto directo — direct object: lo tengo."
+            },
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "The first, second and third person are three masks a speaker can wear: I, you, and the one being talked about. And the object of a verb is exactly what the word says — the thing the action is thrown at."
+            },
+            {
+              "kind": "speech",
+              "text": "So the grammar words were never jargon. They were ordinary Spanish nouns the whole time, doing the same job in a classroom that they do in a kitchen."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "la parte, la persona, el objeto",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *la parte*, *la persona*, *el objeto*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "primera persona, then objeto directo — the same two words, at work",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *primera persona*, then *objeto directo* — the same two words, at work]"
+            },
+            {
+              "kind": "repeat",
+              "times": 2,
+              "source": "[REPEAT x2]"
+            },
+            {
+              "kind": "activity",
+              "scored": true,
+              "id": "ES-C345-repaso-persona-objeto-mask",
+              "prompt": "Which of the three words was a mask in Latin?",
+              "assesses": [
+                "ES-LEX-C345-REF-04"
+              ],
+              "responseSeconds": 10,
+              "acceptedResponses": [
+                "persona",
+                "la persona"
+              ],
+              "feedback": {
+                "correct": "The mask became the part, and the part became the human.",
+                "incorrect": "La persona."
+              }
+            },
+            {
+              "kind": "activity",
+              "scored": true,
+              "id": "ES-C345-repaso-persona-objeto-grammar",
+              "prompt": "Name a thing, and name a share of it.",
+              "assesses": [
+                "ES-LEX-C345-REF-05",
+                "ES-LEX-C345-REF-03"
+              ],
+              "responseSeconds": 12,
+              "acceptedResponses": [
+                "el objeto, la parte",
+                "el objeto and la parte"
+              ],
+              "feedback": {
+                "correct": "Both were physical in Latin and are not now.",
+                "incorrect": "El objeto, la parte."
+              }
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What did objeto mean before it meant a thing? (Something thrown down in front of you.) And where had you already been using persona without noticing? (In primera persona — the grammar label.)"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "ES-C345-repaso-cada-mismo-objeto",
+      "sequence": 6216,
+      "title": "Review — three plain words, none of them one piece",
+      "headword": "(review)",
+      "romanization": "(review)",
+      "gloss": "three plain words that are compounds underneath — and English kept every one of the pieces",
+      "script": "latin",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:ab30f751ce26548f",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "\"Same.\" (Mismo.) \"Each.\" (Cada.)"
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "Two of this chapter's words lean on a noun to say which one, and the chapter gave you the plainest noun there is to lean them on."
+            },
+            {
+              "kind": "speech",
+              "text": "Cada objeto. — each object. El mismo objeto. — the same object."
+            },
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Say both and the difference is doing real work: cada takes them one at a time, mismo says this one is the one you already met."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "culture-pragmatics",
+          "title": "Why it's said this way",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "Now look underneath. Not one of the three is a single piece."
+            },
+            {
+              "kind": "speech",
+              "text": "mismo was ipse, \"self\", with emphasis piled on it until it meant the very selfsame one. English keeps ipse bare in ipso facto."
+            },
+            {
+              "kind": "speech",
+              "text": "cada is Greek kata, \"down, by\", which reached Latin in the phrase cata unum — one by one, which is exactly what cada still does. English keeps kata at the front of catalogue and cathedral."
+            },
+            {
+              "kind": "speech",
+              "text": "objeto is ob plus iacere, thrown before. English project throws forward, inject throws in, eject throws out."
+            },
+            {
+              "kind": "speech",
+              "text": "Three of the most ordinary words in the chapter, and each is a small machine with the parts still visible — in Spanish, and in English too."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "cada objeto, el mismo objeto — the noun steady, the word in front doing the choosing",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *cada objeto*, *el mismo objeto* — the noun steady, the word in front doing the choosing]"
+            },
+            {
+              "kind": "activity",
+              "scored": true,
+              "id": "ES-C345-repaso-cada-mismo-objeto-cada",
+              "prompt": "Say each object.",
+              "assesses": [
+                "ES-LEX-C345-REF-02",
+                "ES-LEX-C345-REF-05"
+              ],
+              "responseSeconds": 8,
+              "acceptedResponses": [
+                "cada objeto",
+                "cada objeto."
+              ],
+              "feedback": {
+                "correct": "One at a time, which is what cata unum meant.",
+                "incorrect": "Cada objeto."
+              }
+            },
+            {
+              "kind": "activity",
+              "scored": true,
+              "id": "ES-C345-repaso-cada-mismo-objeto-mismo",
+              "prompt": "Say the same object.",
+              "assesses": [
+                "ES-LEX-C345-REF-01",
+                "ES-LEX-C345-REF-05"
+              ],
+              "responseSeconds": 8,
+              "acceptedResponses": [
+                "el mismo objeto",
+                "mismo objeto"
+              ],
+              "feedback": {
+                "correct": "The selfsame one.",
+                "incorrect": "El mismo objeto."
+              }
+            },
+            {
+              "kind": "activity",
+              "scored": true,
+              "id": "ES-C345-repaso-cada-mismo-objeto-partes",
+              "prompt": "Objeto is ob plus iacere. What does iacere mean?",
+              "assesses": [
+                "ES-LEX-C345-REF-05"
+              ],
+              "responseSeconds": 10,
+              "acceptedResponses": [
+                "to throw",
+                "throw"
+              ],
+              "feedback": {
+                "correct": "And project, inject and eject are all throws.",
+                "incorrect": "To throw."
+              }
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Which word takes them one at a time? (Cada.) And what was el objeto before it was a thing? (Something thrown down in front of you.)"
             }
           ]
         }

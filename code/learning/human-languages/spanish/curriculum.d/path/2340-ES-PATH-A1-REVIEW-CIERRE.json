@@ -2,7 +2,8 @@
   "id": "ES-PATH-A1-REVIEW-CIERRE",
   "spine_node": "SPINE-DEFINITE-REFERENCE",
   "lessons": [
-    "ES-C67-repaso-a1"
+    "ES-C67-repaso-a1",
+    "ES-C67-repaso-lo-que-reemplazo-los-casos"
   ],
   "before": [],
   "inline": [

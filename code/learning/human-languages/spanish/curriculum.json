@@ -1001,7 +1001,8 @@
       "id": "ES-PATH-003-REVIEW-ART",
       "spine_node": "SPINE-DEFINITE-REFERENCE",
       "lessons": [
-        "ES-C44-repaso-articulos"
+        "ES-C44-repaso-articulos",
+        "ES-C44-repaso-ir-ida"
       ],
       "before": [],
       "inline": [
@@ -1798,7 +1799,9 @@
         "ES-C32-perro",
         "ES-C33-verde",
         "ES-C33-amarillo",
-        "ES-C40-sintesis-describir"
+        "ES-C40-sintesis-describir",
+        "ES-C40-repaso-palabras-con-historia",
+        "ES-C40-repaso-un-sabado-de-octubre"
       ],
       "before": [],
       "inline": [
@@ -2889,7 +2892,9 @@
       "id": "ES-PATH-A1-REVIEW-PAREJAS",
       "spine_node": "SPINE-DEFINITE-REFERENCE",
       "lessons": [
-        "ES-C65-repaso-parejas"
+        "ES-C65-repaso-parejas",
+        "ES-C65-repaso-dos-pasados",
+        "ES-C65-repaso-columna-vosotros"
       ],
       "before": [],
       "inline": [
@@ -2974,7 +2979,8 @@
       "id": "ES-PATH-A1-DISTRIB",
       "spine_node": "SPINE-DEFINITE-REFERENCE",
       "lessons": [
-        "ES-C67-uno-otro"
+        "ES-C67-uno-otro",
+        "ES-C67-repaso-uno-otro-ninguno"
       ],
       "before": [],
       "inline": [
@@ -2986,7 +2992,8 @@
       "id": "ES-PATH-A1-INF-SUJETO",
       "spine_node": "SPINE-DEFINITE-REFERENCE",
       "lessons": [
-        "ES-C67-comer-es-bueno"
+        "ES-C67-comer-es-bueno",
+        "ES-C67-repaso-cuando-dos-palabras-se-tocan"
       ],
       "before": [],
       "inline": [
@@ -2998,7 +3005,8 @@
       "id": "ES-PATH-A1-ORDEN",
       "spine_node": "SPINE-DEFINITE-REFERENCE",
       "lessons": [
-        "ES-C67-hoy-como-en-casa"
+        "ES-C67-hoy-como-en-casa",
+        "ES-C67-repaso-la-terminacion-y-el-infinitivo"
       ],
       "before": [],
       "inline": [
@@ -3010,7 +3018,8 @@
       "id": "ES-PATH-A1-REVIEW-CIERRE",
       "spine_node": "SPINE-DEFINITE-REFERENCE",
       "lessons": [
-        "ES-C67-repaso-a1"
+        "ES-C67-repaso-a1",
+        "ES-C67-repaso-lo-que-reemplazo-los-casos"
       ],
       "before": [],
       "inline": [
@@ -4538,7 +4547,9 @@
         "ES-C345-cada",
         "ES-C345-parte",
         "ES-C345-persona",
-        "ES-C345-objeto"
+        "ES-C345-objeto",
+        "ES-C345-repaso-persona-objeto",
+        "ES-C345-repaso-cada-mismo-objeto"
       ],
       "before": [],
       "inline": [
@@ -6955,7 +6966,9 @@
       "canDo": "I can retrieve and combine the Spanish material introduced in this part of the path.",
       "prerequisites": [],
       "lessons": [
-        "ES-C40-sintesis-describir"
+        "ES-C40-sintesis-describir",
+        "ES-C40-repaso-palabras-con-historia",
+        "ES-C40-repaso-un-sabado-de-octubre"
       ]
     },
     {
@@ -7174,7 +7187,8 @@
       "canDo": "I can use the additional Spanish material required at this point in the path.",
       "prerequisites": [],
       "lessons": [
-        "ES-C44-repaso-articulos"
+        "ES-C44-repaso-articulos",
+        "ES-C44-repaso-ir-ida"
       ]
     },
     {
@@ -8685,7 +8699,9 @@
       "canDo": "I can use the additional Spanish material required at this point in the path.",
       "prerequisites": [],
       "lessons": [
-        "ES-C65-repaso-parejas"
+        "ES-C65-repaso-parejas",
+        "ES-C65-repaso-dos-pasados",
+        "ES-C65-repaso-columna-vosotros"
       ]
     },
     {
@@ -8763,7 +8779,8 @@
       "canDo": "I can use the additional Spanish material required at this point in the path.",
       "prerequisites": [],
       "lessons": [
-        "ES-C67-uno-otro"
+        "ES-C67-uno-otro",
+        "ES-C67-repaso-uno-otro-ninguno"
       ]
     },
     {
@@ -8774,7 +8791,8 @@
       "canDo": "I can use the additional Spanish material required at this point in the path.",
       "prerequisites": [],
       "lessons": [
-        "ES-C67-comer-es-bueno"
+        "ES-C67-comer-es-bueno",
+        "ES-C67-repaso-cuando-dos-palabras-se-tocan"
       ]
     },
     {
@@ -8785,7 +8803,8 @@
       "canDo": "I can use the additional Spanish material required at this point in the path.",
       "prerequisites": [],
       "lessons": [
-        "ES-C67-hoy-como-en-casa"
+        "ES-C67-hoy-como-en-casa",
+        "ES-C67-repaso-la-terminacion-y-el-infinitivo"
       ]
     },
     {
@@ -8796,7 +8815,8 @@
       "canDo": "I can use the additional Spanish material required at this point in the path.",
       "prerequisites": [],
       "lessons": [
-        "ES-C67-repaso-a1"
+        "ES-C67-repaso-a1",
+        "ES-C67-repaso-lo-que-reemplazo-los-casos"
       ]
     },
     {
@@ -9945,7 +9965,9 @@
         "ES-C345-cada",
         "ES-C345-parte",
         "ES-C345-persona",
-        "ES-C345-objeto"
+        "ES-C345-objeto",
+        "ES-C345-repaso-persona-objeto",
+        "ES-C345-repaso-cada-mismo-objeto"
       ]
     },
     {

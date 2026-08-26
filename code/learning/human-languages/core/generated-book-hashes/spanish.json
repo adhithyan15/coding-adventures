@@ -824,9 +824,10 @@
     {
       "language": "spanish",
       "chapter": 81,
-      "sourceHash": "fnv1a64:c06058fbde8eccd5",
+      "sourceHash": "fnv1a64:8cbc023c73c95858",
       "lessonIds": [
-        "ES-C44-repaso-articulos"
+        "ES-C44-repaso-articulos",
+        "ES-C44-repaso-ir-ida"
       ],
       "tex": "spanish/book/chapters/ch81-review-articles.tex"
     },
@@ -1505,9 +1506,11 @@
     {
       "language": "spanish",
       "chapter": 152,
-      "sourceHash": "fnv1a64:f365d8c5e690cba7",
+      "sourceHash": "fnv1a64:9d98f716d1a49786",
       "lessonIds": [
-        "ES-C40-sintesis-describir"
+        "ES-C40-sintesis-describir",
+        "ES-C40-repaso-palabras-con-historia",
+        "ES-C40-repaso-un-sabado-de-octubre"
       ],
       "tex": "spanish/book/chapters/ch152-synthesis-describing.tex"
     },
@@ -2459,9 +2462,11 @@
     {
       "language": "spanish",
       "chapter": 256,
-      "sourceHash": "fnv1a64:432690c1e3684b76",
+      "sourceHash": "fnv1a64:0768040cb513a410",
       "lessonIds": [
-        "ES-C65-repaso-parejas"
+        "ES-C65-repaso-parejas",
+        "ES-C65-repaso-dos-pasados",
+        "ES-C65-repaso-columna-vosotros"
       ],
       "tex": "spanish/book/chapters/ch256-review-parejas.tex"
     },
@@ -2523,36 +2528,40 @@
     {
       "language": "spanish",
       "chapter": 263,
-      "sourceHash": "fnv1a64:83adf908e4bb1313",
+      "sourceHash": "fnv1a64:73caa6dc8eeed293",
       "lessonIds": [
-        "ES-C67-uno-otro"
+        "ES-C67-uno-otro",
+        "ES-C67-repaso-uno-otro-ninguno"
       ],
       "tex": "spanish/book/chapters/ch263-uno-otro.tex"
     },
     {
       "language": "spanish",
       "chapter": 264,
-      "sourceHash": "fnv1a64:1e50fc17280f8b31",
+      "sourceHash": "fnv1a64:decc9ee694a11d19",
       "lessonIds": [
-        "ES-C67-comer-es-bueno"
+        "ES-C67-comer-es-bueno",
+        "ES-C67-repaso-cuando-dos-palabras-se-tocan"
       ],
       "tex": "spanish/book/chapters/ch264-comer-es-bueno.tex"
     },
     {
       "language": "spanish",
       "chapter": 265,
-      "sourceHash": "fnv1a64:a461728139f76390",
+      "sourceHash": "fnv1a64:19e5dbe170eaf9b9",
       "lessonIds": [
-        "ES-C67-hoy-como-en-casa"
+        "ES-C67-hoy-como-en-casa",
+        "ES-C67-repaso-la-terminacion-y-el-infinitivo"
       ],
       "tex": "spanish/book/chapters/ch265-hoy-como.tex"
     },
     {
       "language": "spanish",
       "chapter": 266,
-      "sourceHash": "fnv1a64:2a3765863e94ccf5",
+      "sourceHash": "fnv1a64:32d9b4bf375283c6",
       "lessonIds": [
-        "ES-C67-repaso-a1"
+        "ES-C67-repaso-a1",
+        "ES-C67-repaso-lo-que-reemplazo-los-casos"
       ],
       "tex": "spanish/book/chapters/ch266-review-a1.tex"
     },
@@ -3543,13 +3552,15 @@
     {
       "language": "spanish",
       "chapter": 345,
-      "sourceHash": "fnv1a64:dee933cd5c8ea0f5",
+      "sourceHash": "fnv1a64:fc6220398230aa5b",
       "lessonIds": [
         "ES-C345-mismo",
         "ES-C345-cada",
         "ES-C345-parte",
         "ES-C345-persona",
-        "ES-C345-objeto"
+        "ES-C345-objeto",
+        "ES-C345-repaso-persona-objeto",
+        "ES-C345-repaso-cada-mismo-objeto"
       ],
       "tex": "spanish/book/chapters/ch345-cada-y-mismo.tex"
     },
