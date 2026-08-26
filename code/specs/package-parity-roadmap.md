@@ -7962,7 +7962,7 @@ mergeable, so the loop enabled squash auto-merge. GitHub merged reviewed head
 `2026-08-26T00:58:42Z` without a manual merge command.
 
 The exact-main schema-3 collision report at
-`477e3f742304876fd5c17bcce21d8abf66f0075c` remains structurally unchanged:
+`297c1f3f72da31a856389b774f5cf7dd11cfb8d9` remains structurally unchanged:
 15 established lanes, 1,373 implementation identities, 4,566 package slots,
 175 high-consensus packages with 276 missing slots, 122 identities in five to
 nine lanes with 926 gaps, 166 identities in two to four lanes with 2,087 gaps,
@@ -7994,11 +7994,12 @@ zero exact overlap with the six Ruby tranche paths, and no prior branch or PR
 exists. OCaml's process-free core remains collision-unsafe while PRs #12149 and
 #12162 both own the required Go entry-point and validator surfaces.
 
-Before publication, the Ruby branch rebased without conflict onto exact main
-`477e3f742304876fd5c17bcce21d8abf66f0075c`. The intervening ADJ bookkeeping and
-Wasm GC i31 merge leave the schema-3 inventory unchanged. PR #12912 remains in
-the existing JV02 neutral/lane owners, and PR #12911 remains in the existing
-Vault owners; neither overlaps any of the six Ruby tranche paths.
+Before publication, the Ruby branch rebased twice without conflict, finally
+onto exact main `297c1f3f72da31a856389b774f5cf7dd11cfb8d9`. The intervening ADJ
+bookkeeping, Wasm GC i31, Vault, and JV02 merges leave the schema-3 inventory
+unchanged. Merged PR #12912 remains in the existing JV02 neutral/lane owners,
+and merged PR #12911 remains in the existing Vault owners; neither overlaps
+any of the six Ruby tranche paths.
 
 ## Autonomous Loop Protocol
 
