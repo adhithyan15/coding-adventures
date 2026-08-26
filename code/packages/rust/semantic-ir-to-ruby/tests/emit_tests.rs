@@ -119,13 +119,13 @@ fn string_hash_is_escaped_so_no_interpolation_can_fire() {
 #[test]
 fn sanitize_ident_handles_keywords_and_namespace() {
     assert_eq!(sanitize_ident("foo"), "foo");
-    assert_eq!(sanitize_ident("end"), "end_"); // ruby keyword
-    assert_eq!(sanitize_ident("class"), "class_");
+    assert_eq!(sanitize_ident("end"), "sir_esc_end"); // ruby keyword
+    assert_eq!(sanitize_ident("class"), "sir_esc_class");
     assert!(
-        sanitize_ident("sir_x").starts_with("sir_x"),
+        sanitize_ident("sir_x").starts_with("sir_esc_sir_x"),
         "runtime namespace guarded"
     );
-    assert_eq!(sanitize_ident("Foo"), "_Foo"); // locals may not start uppercase
+    assert_eq!(sanitize_ident("Foo"), "sir_esc_Foo"); // locals may not start uppercase
 }
 
 #[test]
@@ -135,12 +135,36 @@ fn sanitize_ident_flags_encoding_magic_constant() {
     // `__ENCODING__ = 5` is a SyntaxError under MRI, confirmed against
     // Ruby 3.4. It was missing from `is_ruby_keyword`'s list even though
     // its two siblings were already present.
-    assert_eq!(sanitize_ident("__ENCODING__"), "__ENCODING___");
+    assert_eq!(sanitize_ident("__ENCODING__"), "sir_esc___ENCODING__");
 
     // Ordinary identifiers — including close look-alikes — are
     // unaffected by the addition.
     assert_eq!(sanitize_ident("encoding"), "encoding");
     assert_eq!(sanitize_ident("__encoding__"), "__encoding__");
+}
+
+#[test]
+fn sanitize_ident_is_injective_across_the_keyword_and_case_collisions_this_backend_previously_had() {
+    // task #65 (/security-review): a Java local named `Foo` (which Ruby
+    // would treat as a constant) and a completely unrelated local named
+    // `_Foo` used to both sanitize to the identical Ruby name `_Foo` --
+    // two distinct SIR locals silently aliased onto one Ruby variable,
+    // with no error anywhere in the pipeline. Same flaw for the
+    // keyword-suffix rule (`end` vs `end_`) and the `sir_`-namespace
+    // rule. The fix (see `sanitize_ident`'s own doc comment) makes every
+    // one of these pairs provably distinct.
+    assert_ne!(sanitize_ident("Foo"), sanitize_ident("_Foo"));
+    assert_ne!(sanitize_ident("end"), sanitize_ident("end_"));
+    assert_ne!(sanitize_ident("sir_x"), sanitize_ident("sir_esc_sir_x"));
+    assert_eq!(sanitize_ident("_Foo"), "_Foo");
+    assert_eq!(sanitize_ident("end_"), "end_");
+}
+
+#[test]
+fn sanitize_ident_never_lets_a_raw_name_pass_through_as_the_escape_marker_itself() {
+    let escaped_keyword = sanitize_ident("class"); // "sir_esc_class"
+    assert_ne!(sanitize_ident(&escaped_keyword), escaped_keyword);
+    assert!(sanitize_ident(&escaped_keyword).starts_with("sir_esc_"));
 }
 
 // ── end-to-end (skips when `ruby` is absent) ────────────────────────────────

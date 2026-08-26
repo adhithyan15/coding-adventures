@@ -2011,28 +2011,52 @@ fn emit_float_literal(out: &mut String, value: f64) {
     }
 }
 
+/// Reserved marker prefix for every non-passthrough output of
+/// [`sanitize_ident`]. See that function's own doc comment for why this
+/// exists and what it guarantees.
+const ESCAPE_MARKER: &str = "sir_esc_";
+
 /// Sanitize a SIR identifier for Go.
 ///
-/// Go identifiers match `[A-Za-z_][A-Za-z0-9_]*`.  Keywords get an
-/// underscore suffix.  Invalid characters get `_<hex>` encoding.
-/// Empty → `_sir_empty`.
+/// Go identifiers match `[A-Za-z_][A-Za-z0-9_]*`.
+///
+/// # Injectivity — why this function is more than "escape illegal chars"
+///
+/// A `/security-review` finding (task #65) proved the *previous* version
+/// of this function was not injective: it escaped a Go-keyword collision
+/// by appending a trailing `_` (`"func"` -> `"func_"`), but a completely
+/// ordinary, unrelated SIR local literally named `func_` passed through
+/// **unchanged** — so two distinct raw SIR names collided on the same
+/// emitted Go identifier, silently aliasing two variables into one with
+/// no error anywhere in the pipeline.
+///
+/// The fix makes the passthrough and non-passthrough output sets
+/// **disjoint by construction**: every non-passthrough case (keyword,
+/// builtin, invalid syntax, or a name that already starts with the
+/// marker) is prefixed with [`ESCAPE_MARKER`], and any raw name that
+/// already starts with that marker is *itself* routed into the escaped
+/// case rather than allowed to pass through. Two names in different
+/// branches can therefore never collide.
 pub fn sanitize_ident(s: &str) -> String {
     if s.is_empty() {
-        return "_sir_empty".to_string();
+        return format!("{ESCAPE_MARKER}empty");
     }
-    if is_valid_go_ident(s) && !is_go_keyword(s) && !is_go_builtin(s) {
+    if is_valid_go_ident(s)
+        && !is_go_keyword(s)
+        && !is_go_builtin(s)
+        && !s.starts_with(ESCAPE_MARKER)
+    {
         return s.to_string();
     }
-    if is_go_keyword(s) || is_go_builtin(s) {
-        return format!("{}_", s);
+    if is_valid_go_ident(s) {
+        return format!("{ESCAPE_MARKER}{s}");
     }
-    let mut out = String::with_capacity(s.len() + 4);
-    out.push('_');
+    let mut out = String::from(ESCAPE_MARKER);
     for ch in s.chars() {
         if ch.is_ascii_alphanumeric() || ch == '_' {
             out.push(ch);
         } else {
-            let _ = write!(out, "_{:x}", ch as u32);
+            let _ = write!(out, "_u{:04x}_", ch as u32);
         }
     }
     out
@@ -2176,14 +2200,34 @@ mod tests {
     #[test]
     fn sanitize_idents() {
         assert_eq!(sanitize_ident("hello"), "hello");
-        assert_eq!(sanitize_ident(""), "_sir_empty");
-        assert_eq!(sanitize_ident("func"), "func_");
-        assert_eq!(sanitize_ident("type"), "type_");
-        assert_eq!(sanitize_ident("int"), "int_"); // builtin predeclared
-        assert_eq!(sanitize_ident("print"), "print_"); // predeclared
+        assert_eq!(sanitize_ident(""), "sir_esc_empty");
+        assert_eq!(sanitize_ident("func"), "sir_esc_func");
+        assert_eq!(sanitize_ident("type"), "sir_esc_type");
+        assert_eq!(sanitize_ident("int"), "sir_esc_int"); // builtin predeclared
+        assert_eq!(sanitize_ident("print"), "sir_esc_print"); // predeclared
         let r = sanitize_ident("null?");
-        assert!(r.starts_with('_'));
+        assert!(r.starts_with("sir_esc_"));
         assert!(r.contains("null"));
+    }
+
+    #[test]
+    fn sanitize_ident_is_injective_across_the_keyword_collision_this_backend_previously_had() {
+        // task #65 (/security-review): a Java local named `func` (a Go
+        // keyword) and a completely unrelated local named `func_` used
+        // to both sanitize to the identical Go name `func_` -- two
+        // distinct SIR locals silently aliased onto one Go variable,
+        // with no error anywhere in the pipeline. The fix (see
+        // `sanitize_ident`'s own doc comment) makes the two outputs
+        // provably different.
+        assert_ne!(sanitize_ident("func"), sanitize_ident("func_"));
+        assert_eq!(sanitize_ident("func_"), "func_");
+    }
+
+    #[test]
+    fn sanitize_ident_never_lets_a_raw_name_pass_through_as_the_escape_marker_itself() {
+        let escaped_keyword = sanitize_ident("func"); // "sir_esc_func"
+        assert_ne!(sanitize_ident(&escaped_keyword), escaped_keyword);
+        assert!(sanitize_ident(&escaped_keyword).starts_with("sir_esc_"));
     }
 
     #[test]

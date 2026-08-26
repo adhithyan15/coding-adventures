@@ -583,16 +583,26 @@ JavaScript identifiers match `[A-Za-z_$][A-Za-z0-9_$]*` and must not be
 reserved words. SIR names can carry `?`, `!`, `-`, `+`, etc., so
 `sanitize_ident` rewrites anything that does not fit:
 
-| input        | output      | rule                              |
-|--------------|-------------|-----------------------------------|
-| `hello`      | `hello`     | already valid → unchanged         |
-| `class`      | `_$class`   | reserved word → `_$` prefix       |
-| `null?`      | `_$null_3f` | invalid char → `_$` + hex-encoded |
-| `""` (empty) | `_$empty`   | empty → sentinel                  |
+| input        | output                    | rule                                    |
+|--------------|---------------------------|------------------------------------------|
+| `hello`      | `hello`                   | already valid → unchanged                |
+| `class`      | `_$sir_esc_class`         | reserved word → marker prefix            |
+| `null?`      | `_$sir_esc_null_u003f_`   | invalid char → marker + hex-encoded      |
+| `""` (empty) | `_$sir_esc_empty`         | empty → sentinel                         |
 
-The `_$` prefix guarantees a legal leading character and avoids
-collisions between distinct invalid inputs (each non-`[A-Za-z0-9_$]`
-character hex-encodes to `_<codepoint>`).
+The `_$sir_esc_` marker guarantees a legal leading character. It also
+guarantees **injectivity**, not just avoiding "avoids collisions between
+distinct invalid inputs" as an earlier version of this table claimed: a
+`/security-review` finding (task #65) proved that claim false — a raw
+SIR name like `_$class` is itself a valid, unreserved JavaScript
+identifier, so under the old scheme it passed through unchanged as the
+exact same string the escaped keyword `class` produced, silently
+aliasing two distinct SIR locals onto one JavaScript variable. The fix:
+any raw name that already starts with the marker is *itself* routed
+into the escaped case rather than allowed to pass through, so
+passthrough output can never start with the marker and escaped output
+always does — the two output sets are disjoint by construction. See
+`sanitize_ident`'s own doc comment for the full argument.
 
 ## Tests
 

@@ -2613,6 +2613,11 @@ fn emit_block_as_stmts(out: &mut String, b: &Block, indent: usize) {
 // Lexical helpers
 // ---------------------------------------------------------------------------
 
+/// Reserved marker prefix for every non-passthrough output of
+/// [`sanitize_ident`]. See that function's own doc comment for why this
+/// exists and what it guarantees.
+const ESCAPE_MARKER: &str = "_$sir_esc_";
+
 /// Sanitize a SIR identifier for TypeScript.
 ///
 /// SIR names can include `?`, `!`, `-`, `+`, `*`, etc.  TypeScript
@@ -2620,25 +2625,37 @@ fn emit_block_as_stmts(out: &mut String, b: &Block, indent: usize) {
 /// problematic characters to safe substitutes; names that are
 /// already valid identifiers pass through unchanged.
 ///
-/// Empty input is sanitised to `"_$empty"` to guarantee the result
-/// is a valid TS identifier and to avoid colliding with the
-/// `"_$"`-prefixed forms produced for other invalid inputs.
+/// # Injectivity — why this is more than "escape illegal chars"
+///
+/// A `/security-review` finding (task #65) proved this same
+/// escape-with-a-fixed-prefix approach, absent one more check, is not
+/// injective: a name needing escaping and a completely unrelated,
+/// already-legal raw name sharing the escaped output's exact spelling
+/// would otherwise collide and silently alias two variables into one
+/// (see `semantic-ir-to-javascript::sanitize_ident`'s own doc comment,
+/// which this backend mirrors, for the concrete before/after example).
+/// The fix: any raw name that already starts with [`ESCAPE_MARKER`] is
+/// *itself* routed into the escaped case rather than allowed to pass
+/// through, so passthrough output can never start with the marker and
+/// escaped output always does — the two output sets are disjoint by
+/// construction, so a name in one can never collide with a name in the
+/// other.
 pub fn sanitize_ident(s: &str) -> String {
     if s.is_empty() {
-        return "_$empty".to_string();
+        return format!("{ESCAPE_MARKER}empty");
     }
-    if is_valid_ts_ident(s) {
+    if is_valid_ts_ident(s) && !s.starts_with(ESCAPE_MARKER) {
         return s.to_string();
     }
-    let mut out = String::with_capacity(s.len() + 4);
-    out.push('_'); // prefix so the result never starts with a digit
-    out.push('$');
+    if is_valid_ts_ident(s) {
+        return format!("{ESCAPE_MARKER}{s}");
+    }
+    let mut out = String::from(ESCAPE_MARKER);
     for ch in s.chars() {
         if ch.is_ascii_alphanumeric() || ch == '_' || ch == '$' {
             out.push(ch);
         } else {
-            // Encode as the unicode codepoint to avoid collisions.
-            let _ = write!(out, "_{:x}", ch as u32);
+            let _ = write!(out, "_u{:04x}_", ch as u32);
         }
     }
     out
@@ -2793,7 +2810,7 @@ mod tests {
 
     #[test]
     fn sanitize_empty_ident_returns_safe_sentinel() {
-        assert_eq!(sanitize_ident(""), "_$empty");
+        assert_eq!(sanitize_ident(""), "_$sir_esc_empty");
     }
 
     #[test]
@@ -2858,14 +2875,27 @@ mod tests {
         let r = sanitize_ident("null?");
         assert!(r.starts_with("_$"));
         assert!(r.contains("null"));
-        // The `?` becomes a hex-encoded fragment.
-        assert!(r.contains("_3f"));
+        // The `?` becomes a fixed-width hex-encoded fragment.
+        assert!(r.contains("_u003f_"));
     }
 
     #[test]
     fn sanitize_avoids_reserved_words() {
         assert_ne!(sanitize_ident("class"), "class");
         assert!(sanitize_ident("class").starts_with("_$"));
+    }
+
+    #[test]
+    fn sanitize_ident_is_injective_across_the_reserved_word_collision_this_backend_previously_had(
+    ) {
+        // task #65 (/security-review): mirrors `semantic-ir-to-
+        // javascript`'s identical finding -- a Java local named `class`
+        // (a TS reserved word) and a completely unrelated local
+        // literally named `_$class` used to both sanitize to the
+        // identical TS name `_$class`, silently aliasing two variables
+        // into one. The fix makes the two outputs provably different.
+        assert_ne!(sanitize_ident("class"), sanitize_ident("_$class"));
+        assert_eq!(sanitize_ident("_$class"), "_$class");
     }
 
     #[test]

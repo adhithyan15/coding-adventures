@@ -1,5 +1,30 @@
 # Changelog
 
+## 0.42.1 — Security fix: `sanitize_ident` was not injective
+
+Task #65 (`/security-review`, discovered while auditing `java-to-
+semantic-ir`'s own loop-control synthetic-flag naming): this backend's
+`sanitize_ident` escaped a Go-keyword/predeclared-identifier collision
+with a bare trailing underscore (`"func"` -> `"func_"`), but a
+completely ordinary, unrelated SIR local literally named `func_` passed
+through **unchanged** — so two distinct raw SIR names collided on the
+same emitted Go identifier, silently aliasing two variables into one
+with no error anywhere in the pipeline.
+
+Fixed by making the passthrough and marked output sets disjoint by
+construction: every non-passthrough case is prefixed with a reserved
+`sir_esc_` marker, and any raw name that already starts with that
+marker is itself routed into the marked case rather than allowed to
+pass through — see `sanitize_ident`'s own doc comment for the full
+argument. Also switched the illegal-character escape from unpadded
+`_{hex}` to fixed-width `_u{4-hex}_`, closing a separate hex-digit-count
+ambiguity the same review round found.
+
+This changes the exact spelling `sanitize_ident` produces for every
+keyword/predeclared-identifier case (e.g. `"func"` now sanitizes to
+`"sir_esc_func"`, not `"func_"`) — a deliberate, disclosed behavior
+change: the old spellings were exactly the ones proven to collide.
+
 ## 0.42.0 — SIR23 Tier A pattern matcher (second-wave backend rollout, Phase A Slice 4)
 
 Implements the 7-node SIR23 Tier A slice — the symbolic-expression

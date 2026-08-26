@@ -439,15 +439,38 @@ fn collection_array_reverse_shares_the_slice1_string_name() {
 fn sanitize_ident_maps_into_c() {
     assert_eq!(sanitize_ident("foo"), "foo");
     assert_eq!(sanitize_ident("foo_bar1"), "foo_bar1");
-    // C keywords get a trailing underscore.
-    assert_eq!(sanitize_ident("int"), "int_");
-    assert_eq!(sanitize_ident("return"), "return_");
+    // C keywords get the reserved marker prepended (task #65: a bare
+    // trailing underscore used to collide with an ordinary name of the
+    // exact same shape -- see `sanitize_ident`'s own doc comment).
+    assert_eq!(sanitize_ident("int"), "sir_esc_int");
+    assert_eq!(sanitize_ident("return"), "sir_esc_return");
     // Non-identifier characters are escaped, never passed through.
     assert!(sanitize_ident("a-b").starts_with('a'));
     assert!(sanitize_ident("a-b").contains("_u"));
     // The runtime namespace is kept clear.
-    assert!(sanitize_ident("_sir_plus").ends_with('_'));
+    assert!(sanitize_ident("_sir_plus").starts_with("sir_esc_"));
     // A leading digit is escaped so the result is a valid C identifier.
     let s = sanitize_ident("1x");
     assert!(!s.starts_with(|c: char| c.is_ascii_digit()));
+}
+
+#[test]
+fn sanitize_ident_is_injective_across_the_keyword_collision_this_backend_previously_had() {
+    // task #65 (/security-review): a Java local named `int` (a C
+    // keyword) and a completely unrelated local named `int_` used to
+    // both sanitize to the identical C name `int_` -- two distinct SIR
+    // locals silently aliased onto one C variable, with no error
+    // anywhere in the pipeline. The fix (see `sanitize_ident`'s own doc
+    // comment) makes the two outputs provably different.
+    assert_ne!(sanitize_ident("int"), sanitize_ident("int_"));
+    assert_eq!(sanitize_ident("int_"), "int_");
+    assert_ne!(sanitize_ident("min"), sanitize_ident("min_"));
+    assert_eq!(sanitize_ident("min_"), "min_");
+}
+
+#[test]
+fn sanitize_ident_never_lets_a_raw_name_pass_through_as_the_escape_marker_itself() {
+    let escaped_keyword = sanitize_ident("int"); // "sir_esc_int"
+    assert_ne!(sanitize_ident(&escaped_keyword), escaped_keyword);
+    assert!(sanitize_ident(&escaped_keyword).starts_with("sir_esc_"));
 }

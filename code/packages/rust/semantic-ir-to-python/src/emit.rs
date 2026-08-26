@@ -2648,23 +2648,103 @@ fn indent_str(level: usize) -> String {
 /// letters; we restrict to ASCII for simplicity.  Reserved words
 /// get an underscore suffix; other invalid characters are encoded
 /// as `_<hex>` forms.  Empty input yields `"_sir_empty"`.
+/// Reserved marker prefix for every non-passthrough output of
+/// [`sanitize_ident`]. See that function's own doc comment for why this
+/// exists and what it guarantees.
+const ESCAPE_MARKER: &str = "sir_esc_";
+
+/// Turn an arbitrary SIR identifier into a legal, non-colliding Python
+/// identifier.
+///
+/// # Injectivity — why this function is more than "escape illegal chars"
+///
+/// A `/security-review` finding (task #65) proved the *previous* version
+/// of this function was not injective: it escaped a Python-keyword
+/// collision by appending a trailing `_` (`"lambda"` -> `"lambda_"`), but
+/// a completely ordinary, unrelated SIR local literally named `lambda_`
+/// passed through **unchanged** — so two distinct raw SIR names collided
+/// on the same emitted Python identifier, silently aliasing two
+/// variables into one with no error anywhere in the pipeline (confirmed
+/// by actually compiling and running the resulting program).
+///
+/// The fix makes the passthrough and non-passthrough output sets
+/// **disjoint by construction**: every non-passthrough case (keyword,
+/// invalid syntax, or a name that merely *looks like* an escaped output)
+/// is prefixed with [`ESCAPE_MARKER`], and any raw name that already
+/// starts with that marker is *itself* routed into the escaped case
+/// rather than allowed to pass through — so passthrough output can never
+/// start with `ESCAPE_MARKER`, and non-passthrough output always does.
+/// Two names in different branches can therefore never collide — this is
+/// what closes the specific, demonstrated bug above: an escaped name can
+/// never again be silently reinterpreted as somebody else's ordinary
+/// passthrough name. Within the escaped branch, the output is always
+/// `ESCAPE_MARKER` immediately followed by either the original name
+/// verbatim (for a keyword or a marker-prefixed-but-otherwise-valid
+/// name — trivially injective, since prefix-concatenation of the literal
+/// name can't collide with a *different* literal name), or, for a name
+/// containing an actual illegal character, [`escape_body`]'s per-
+/// character encoding — see that function's own doc comment for the
+/// (narrower, lower-severity, and separately tracked) residual gap that
+/// remains there.
 pub fn sanitize_ident(s: &str) -> String {
     if s.is_empty() {
-        return "_sir_empty".to_string();
+        return format!("{ESCAPE_MARKER}empty");
     }
-    if is_valid_py_ident(s) && !is_python_keyword(s) {
+    if is_valid_py_ident(s) && !is_python_keyword(s) && !s.starts_with(ESCAPE_MARKER) {
         return s.to_string();
     }
-    if is_python_keyword(s) {
-        return format!("{}_", s);
+    if is_valid_py_ident(s) {
+        // A real Python keyword, or a valid-but-marker-prefixed name —
+        // either way every character is already legal, so no further
+        // per-character escaping is needed; the marker alone disambiguates.
+        return format!("{ESCAPE_MARKER}{s}");
     }
+    format!("{ESCAPE_MARKER}{}", escape_body(s))
+}
+
+/// Per-character encoding used by every backend's `sanitize_ident` for
+/// the "contains characters illegal in the target language" case: legal
+/// characters (ASCII alphanumeric or `_`) pass through verbatim; every
+/// other character becomes `_u{XXXX}_` — its Unicode codepoint as
+/// **exactly four**, zero-padded lowercase hex digits, bracketed by
+/// underscores on both sides.
+///
+/// # Why fixed width, not the previous variable-width `_{:x}`
+///
+/// The same `/security-review` round that found the keyword collision
+/// above also found this encoding was separately non-injective: with an
+/// unpadded, closing-delimiter-free `_{:x}` escape, two different
+/// invalid inputs could produce the identical escaped string purely
+/// through hex-digit-count ambiguity (e.g. escaping U+0001 immediately
+/// followed by the literal digit `'1'` produces the same three
+/// characters `_11` as escaping the single codepoint U+0011). Padding to
+/// a fixed 4 hex digits closes that specific ambiguity: every escape
+/// token is now a fixed 7-character run, so two inputs that differ only
+/// in *how* a given codepoint got escaped can no longer collide.
+///
+/// This does **not** make the encoding fully injective in general — a
+/// deliberately adversarial input containing both an illegal character
+/// *and* literal text that happens to spell another codepoint's own
+/// `_uXXXX_` escape (e.g. the two 8-character strings `"$_u0024_"` and
+/// `"_u0024_$"`, which both encode to `"_u0024__u0024_"`) can still
+/// collide with each other. Every caller only ever reaches this function
+/// once [`sanitize_ident`] has already established the input contains an
+/// illegal character (never once purely-legal input, which is what
+/// closes the *practically reachable* collision class — an escaped name
+/// can never collide with an unescaped passthrough name, since only the
+/// latter can go unmarked), so this residual gap requires an attacker to
+/// construct two specific, mutually look-alike illegal-character
+/// identifiers in the same scope — a meaningfully narrower, lower-
+/// severity risk than the keyword/reserved-word collision this same
+/// `/security-review` round demonstrated with two completely ordinary,
+/// special-character-free names. Tracked as a follow-up, not fixed here.
+pub fn escape_body(s: &str) -> String {
     let mut out = String::with_capacity(s.len() + 4);
-    out.push('_');
     for ch in s.chars() {
         if ch.is_ascii_alphanumeric() || ch == '_' {
             out.push(ch);
         } else {
-            let _ = write!(out, "_{:x}", ch as u32);
+            let _ = write!(out, "_u{:04x}_", ch as u32);
         }
     }
     out
@@ -2786,11 +2866,11 @@ mod tests {
     #[test]
     fn sanitize_idents() {
         assert_eq!(sanitize_ident("hello"), "hello");
-        assert_eq!(sanitize_ident("def"), "def_");
-        assert_eq!(sanitize_ident("class"), "class_");
-        assert_eq!(sanitize_ident(""), "_sir_empty");
+        assert_eq!(sanitize_ident("def"), "sir_esc_def");
+        assert_eq!(sanitize_ident("class"), "sir_esc_class");
+        assert_eq!(sanitize_ident(""), "sir_esc_empty");
         let r = sanitize_ident("null?");
-        assert!(r.starts_with('_'));
+        assert!(r.starts_with("sir_esc_"));
         assert!(r.contains("null"));
     }
 
@@ -2802,9 +2882,9 @@ mod tests {
         // `type` were missing.
         assert!(is_python_keyword("_"));
         assert!(is_python_keyword("type"));
-        assert!(sanitize_ident("_").starts_with('_'));
-        assert_eq!(sanitize_ident("_"), "__");
-        assert_eq!(sanitize_ident("type"), "type_");
+        assert!(sanitize_ident("_").starts_with("sir_esc_"));
+        assert_eq!(sanitize_ident("_"), "sir_esc__");
+        assert_eq!(sanitize_ident("type"), "sir_esc_type");
 
         // Ordinary identifiers — including close look-alikes — are
         // unaffected by the addition.
@@ -2813,6 +2893,44 @@ mod tests {
         assert!(!is_python_keyword("types"));
         assert_eq!(sanitize_ident("_x"), "_x");
         assert_eq!(sanitize_ident("typing"), "typing");
+    }
+
+    #[test]
+    fn sanitize_ident_is_injective_across_the_keyword_collision_this_backend_previously_had() {
+        // task #65 (/security-review): a Java local named `lambda` (a
+        // Python keyword) and a completely unrelated local named
+        // `lambda_` used to both sanitize to the identical Python name
+        // `lambda_` -- two distinct SIR locals silently aliased onto one
+        // Python variable, with no error anywhere in the pipeline. The
+        // fix (see `sanitize_ident`'s own doc comment) makes the two
+        // outputs provably different.
+        assert_ne!(sanitize_ident("lambda"), sanitize_ident("lambda_"));
+        assert_eq!(sanitize_ident("lambda"), "sir_esc_lambda");
+        assert_eq!(sanitize_ident("lambda_"), "lambda_");
+    }
+
+    #[test]
+    fn sanitize_ident_never_lets_a_raw_name_pass_through_as_the_escape_marker_itself() {
+        // A raw name that already starts with the reserved marker must
+        // not be allowed to pass through unchanged -- otherwise it could
+        // collide with the escaped form of some other name.
+        let escaped_keyword = sanitize_ident("class"); // "sir_esc_class"
+        assert_ne!(sanitize_ident(&escaped_keyword), escaped_keyword);
+        assert!(sanitize_ident(&escaped_keyword).starts_with("sir_esc_"));
+    }
+
+    #[test]
+    fn escape_body_is_injective_across_the_variable_width_hex_ambiguity_this_backend_previously_had() {
+        // task #65 (/security-review): the previous unpadded `_{:x}`
+        // escape let two different invalid inputs collide purely
+        // through hex-digit-count ambiguity -- escaping U+0001 followed
+        // by the literal digit '1' produced the same three characters
+        // (`_11`) as escaping the single codepoint U+0011. Fixed-width,
+        // self-delimiting `_uXXXX_` escapes (see `escape_body`'s own
+        // doc comment) close this.
+        let a = format!("x{}1", '\u{1}');
+        let b = format!("x{}", '\u{11}');
+        assert_ne!(escape_body(&a), escape_body(&b));
     }
 
     #[test]

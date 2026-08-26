@@ -2079,9 +2079,40 @@ fn emit_symbol(name: &str) -> String {
     }
 }
 
+/// Reserved marker prefix for every non-passthrough output of
+/// [`sanitize_ident`]. See that function's own doc comment for why this
+/// exists and what it guarantees. Deliberately starts with `sir_` — a
+/// superset of this backend's own pre-existing `sir_`-namespace
+/// reservation, so every name this marker's own logic must already avoid
+/// colliding with (the runtime helper namespace) is automatically
+/// covered too.
+const ESCAPE_MARKER: &str = "sir_esc_";
+
 /// Map a SIR identifier to a valid Ruby local/method identifier.  Ruby locals
-/// may not start with an uppercase letter (that is a constant) or a digit, and
-/// keywords / the runtime `sir_` namespace are suffixed with `_`.
+/// may not start with an uppercase letter (that is a constant) or a digit.
+///
+/// # Injectivity — why this function is more than "escape illegal chars"
+///
+/// A `/security-review` finding (task #65) proved the *previous* version
+/// of this function was not injective: it escaped a leading-uppercase
+/// name (which Ruby would otherwise treat as a constant) by prefixing a
+/// single underscore (`"Foo"` -> `"_Foo"`), but a completely ordinary,
+/// unrelated SIR local literally named `_Foo` passed through
+/// **unchanged** — so two distinct raw SIR names collided on the same
+/// emitted Ruby identifier, silently aliasing two variables into one
+/// with no error anywhere in the pipeline (confirmed by actually
+/// compiling and running the resulting program). The same flaw applied
+/// to the keyword-suffix and `sir_`-prefix disambiguation rules below.
+///
+/// The fix makes the passthrough and non-passthrough output sets
+/// **disjoint by construction**: every non-passthrough case (leading
+/// uppercase, a keyword, or already starting with the reserved `sir_`
+/// namespace — which now includes [`ESCAPE_MARKER`] itself) gets
+/// [`ESCAPE_MARKER`] prepended, so non-passthrough output always starts
+/// with it and passthrough output never does (that's excluded by the
+/// same `starts_with("sir_")` check that used to only guard the runtime
+/// namespace). Two names in different branches can therefore never
+/// collide.
 pub fn sanitize_ident(s: &str) -> String {
     let mut out = String::new();
     for (i, ch) in s.chars().enumerate() {
@@ -2095,12 +2126,11 @@ pub fn sanitize_ident(s: &str) -> String {
     if out.is_empty() {
         out.push('_');
     }
-    // A leading uppercase would make it a constant; prefix an underscore.
-    if out.chars().next().is_some_and(|c| c.is_ascii_uppercase()) {
-        out.insert(0, '_');
-    }
-    if is_ruby_keyword(&out) || out.starts_with("sir_") {
-        out.push('_');
+    let needs_marker = out.chars().next().is_some_and(|c| c.is_ascii_uppercase())
+        || is_ruby_keyword(&out)
+        || out.starts_with("sir_");
+    if needs_marker {
+        out = format!("{ESCAPE_MARKER}{out}");
     }
     out
 }

@@ -1,5 +1,36 @@
 # Changelog
 
+## 0.44.1 — Security fix: `sanitize_ident` was not injective
+
+Task #65 (`/security-review`, discovered while auditing `java-to-
+semantic-ir`'s own loop-control synthetic-flag naming): this backend's
+`sanitize_ident` fallback branch (used for `self`/`Self`/`super`/`crate`
+— the four Rust keywords `r#`-raw-identifier syntax cannot represent —
+and for any name with an illegal character) escaped with a bare `__`
+prefix (`"self"` -> `"__self"`), but a completely ordinary, unrelated
+SIR local literally named `__self` passed through **unchanged** — so
+two distinct raw SIR names collided on the same emitted Rust identifier,
+silently aliasing two variables into one with no error anywhere in the
+pipeline. (The `r#`-prefixed branch for ordinary keywords like `fn` was
+already safe on its own: `#` is illegal in a raw Rust identifier, so no
+raw name containing it can ever reach the passthrough case to collide
+with it.)
+
+Fixed by excluding any raw name that already starts with the fallback
+branch's own `__sir_esc_` marker from the passthrough case too, so the
+fallback's output can never collide with an ordinary passthrough name —
+see `sanitize_ident`'s own doc comment for the full argument. Also
+switched the illegal-character escape from unpadded `_{hex}` to
+fixed-width `_u{4-hex}_`, closing a separate hex-digit-count ambiguity
+the same review round found.
+
+This changes the exact spelling `sanitize_ident` produces for
+`self`/`Self`/`super`/`crate` and every invalid-character case (e.g.
+`"self"` now sanitizes to `"__sir_esc_self"`, not `"__self"`) — a
+deliberate, disclosed behavior change: the old spellings were exactly
+the ones proven to collide. The `r#`-based keyword raw-identifier
+spellings (`"fn"` -> `"r#fn"`) are unchanged.
+
 ## 0.44.0 — SIR23 Tier A pattern matcher (Phase A Slice 4)
 
 Part of the SIR22/SIR23 backend-expansion initiative — one of 5 parallel,

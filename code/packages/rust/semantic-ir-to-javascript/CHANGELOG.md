@@ -1,5 +1,32 @@
 # Changelog
 
+## 0.54.1 — Security fix: `sanitize_ident` was not injective
+
+Task #65 (`/security-review`, discovered while auditing `java-to-
+semantic-ir`'s own loop-control synthetic-flag naming): this backend's
+`sanitize_ident` escaped a reserved-word collision with a `_$` prefix
+(`"class"` -> `"_$class"`), and its own doc comment claimed "a source
+`_$class` is itself valid, so no collision" — but that reasoning was
+wrong: a raw SIR name literally spelled `_$class` **is** valid
+JavaScript and **is** unreserved, so it passed through unchanged as
+`_$class` too — the exact same string the escaped keyword produced. Two
+distinct raw SIR names collided on the same emitted identifier, silently
+aliasing two variables into one with no error anywhere in the pipeline.
+
+Fixed by making the passthrough and escaped output sets disjoint by
+construction: every non-passthrough case is now prefixed with a
+reserved `_$sir_esc_` marker, and any raw name that already starts with
+that marker is itself routed into the escaped case rather than allowed
+to pass through — see `sanitize_ident`'s own doc comment for the full,
+corrected argument. Also switched the illegal-character escape from
+unpadded `_{hex}` to fixed-width `_u{4-hex}_`, closing a separate
+hex-digit-count ambiguity the same review round found.
+
+This changes the exact spelling `sanitize_ident` produces for every
+reserved-word/invalid-character case (e.g. `"class"` now sanitizes to
+`"_$sir_esc_class"`, not `"_$class"`) — a deliberate, disclosed behavior
+change: the old spellings were exactly the ones proven to collide.
+
 ## 0.54.0 — SIR16 addendum Slice 1: `Feature::LoopControl` (`break`/`continue`)
 
 First backend to accept `Feature::LoopControl` (`semantic-ir` v0.27.0's new

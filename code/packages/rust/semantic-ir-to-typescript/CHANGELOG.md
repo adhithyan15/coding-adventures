@@ -1,5 +1,30 @@
 # Changelog
 
+## 0.14.1 — Security fix: `sanitize_ident` was not injective
+
+Task #65 (`/security-review`, discovered while auditing `java-to-
+semantic-ir`'s own loop-control synthetic-flag naming): mirrors
+`semantic-ir-to-javascript` v0.54.1's identical finding — this backend's
+`sanitize_ident` escaped a reserved-word collision with a `_$` prefix
+(`"class"` -> `"_$class"`), but a raw SIR name literally spelled
+`_$class` passed through unchanged as the exact same string, silently
+aliasing two distinct SIR locals onto one TypeScript identifier with no
+error anywhere in the pipeline.
+
+Fixed by making the passthrough and escaped output sets disjoint by
+construction: every non-passthrough case is now prefixed with a
+reserved `_$sir_esc_` marker, and any raw name that already starts with
+that marker is itself routed into the escaped case rather than allowed
+to pass through — see `sanitize_ident`'s own doc comment for the full
+argument. Also switched the illegal-character escape from unpadded
+`_{hex}` to fixed-width `_u{4-hex}_`, closing a separate hex-digit-count
+ambiguity the same review round found.
+
+This changes the exact spelling `sanitize_ident` produces for every
+reserved-word/invalid-character case (e.g. `"class"` now sanitizes to
+`"_$sir_esc_class"`, not `"_$class"`) — a deliberate, disclosed behavior
+change: the old spellings were exactly the ones proven to collide.
+
 ## 0.14.0 — SIR21 T3b-2 Slice 2: `div_floor`/`div_trunc`/`udiv_trunc`/`div_true`
 
 Additive-only: adds the four new division builtin names from SIR21 T3b-2

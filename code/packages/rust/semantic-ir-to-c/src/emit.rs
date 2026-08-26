@@ -3326,9 +3326,33 @@ fn f64_c_literal(value: f64) -> String {
     }
 }
 
+/// Reserved marker prefix for every non-passthrough output of
+/// [`sanitize_ident`]. See that function's own doc comment for why this
+/// exists and what it guarantees.
+const ESCAPE_MARKER: &str = "sir_esc_";
+
 /// Map a SIR identifier into a valid C identifier: non-`[A-Za-z0-9_]` chars are
-/// escaped, a leading digit is escaped, C keywords get a trailing `_`, and the
-/// runtime's own namespace is kept clear.
+/// escaped, a leading digit is escaped, and C keywords / reserved macros /
+/// this backend's own reserved names get [`ESCAPE_MARKER`] prepended.
+///
+/// # Injectivity — why this function is more than "escape illegal chars"
+///
+/// A `/security-review` finding (task #65) proved the *previous* version
+/// of this function was not injective: it escaped a C-keyword collision
+/// by appending a trailing `_` (`"min"` -> `"min_"`, since `min` is a
+/// reserved macro on some platforms), but a completely ordinary,
+/// unrelated SIR local literally named `min_` passed through
+/// **unchanged** — so two distinct raw SIR names collided on the same
+/// emitted C identifier, silently aliasing two variables into one with
+/// no error anywhere in the pipeline.
+///
+/// The fix makes the passthrough and non-passthrough output sets
+/// **disjoint by construction**: every non-passthrough case (keyword,
+/// reserved macro, this backend's own reserved names, or already
+/// starting with the marker) gets [`ESCAPE_MARKER`] prepended, so
+/// non-passthrough output always starts with it and passthrough output
+/// never does. Two names in different branches can therefore never
+/// collide.
 pub fn sanitize_ident(s: &str) -> String {
     let mut out = String::new();
     for (i, ch) in s.chars().enumerate() {
@@ -3342,14 +3366,15 @@ pub fn sanitize_ident(s: &str) -> String {
     if out.is_empty() {
         out.push('_');
     }
-    if is_c_keyword(&out)
+    let needs_marker = is_c_keyword(&out)
         || is_reserved_macro(&out)
+        || out.starts_with(ESCAPE_MARKER)
         || out.starts_with("_sir")
         || out == "main"
         || out == "user_main"
-        || out == "sir_user_init"
-    {
-        out.push('_');
+        || out == "sir_user_init";
+    if needs_marker {
+        out = format!("{ESCAPE_MARKER}{out}");
     }
     out
 }

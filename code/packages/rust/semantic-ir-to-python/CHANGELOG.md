@@ -1,5 +1,37 @@
 # Changelog
 
+## 0.17.1 — Security fix: `sanitize_ident` was not injective
+
+Task #65 (`/security-review`, discovered while auditing `java-to-
+semantic-ir`'s own loop-control synthetic-flag naming): this backend's
+`sanitize_ident` escaped a Python-keyword collision with a bare trailing
+underscore (`"lambda"` -> `"lambda_"`), but a completely ordinary,
+unrelated SIR local literally named `lambda_` passed through
+**unchanged** — so two distinct raw SIR names collided on the same
+emitted Python identifier, silently aliasing two variables into one with
+no error anywhere in the pipeline (confirmed by actually compiling and
+running the resulting program). `semantic_ir::validate()` reported no
+issue; nothing in the pipeline would have caught this.
+
+Fixed by making the passthrough and escaped output sets disjoint by
+construction: every non-passthrough case is prefixed with a reserved
+`sir_esc_` marker, and any raw name that already starts with that marker
+is itself routed into the escaped case rather than allowed to pass
+through — see `sanitize_ident`'s own doc comment for the full argument.
+Also switched the illegal-character escape from unpadded `_{hex}` to
+fixed-width `_u{4-hex}_`, closing a separate hex-digit-count ambiguity
+the same review round found (see `escape_body`'s own doc comment for
+what this closes and the narrower, lower-severity residual gap that
+remains, tracked separately).
+
+This changes the exact spelling `sanitize_ident` produces for every
+keyword/reserved/invalid-character case (e.g. `"class"` now sanitizes to
+`"sir_esc_class"`, not `"class_"`) — a deliberate, disclosed behavior
+change, not a bug: the old spellings were exactly the ones proven to
+collide. Nothing in this backend's own emitted-code *shape* changes
+otherwise (still valid, still readable Python), only which exact
+identifier string a colliding name maps to.
+
 ## 0.17.0 — SIR23 Tier A pattern matcher (Phase A Slice 4)
 
 Part of the SIR22/SIR23 backend-expansion initiative (`code/specs/

@@ -2831,6 +2831,11 @@ fn emit_float_literal(out: &mut String, value: f64) {
     }
 }
 
+/// Reserved marker prefix for every fallback (non-`r#`, non-passthrough)
+/// output of [`sanitize_ident`]. See that function's own doc comment for
+/// why this exists and what it guarantees.
+const ESCAPE_MARKER: &str = "__sir_esc_";
+
 /// Sanitize a SIR identifier for Rust.
 ///
 /// SIR names can include `?`, `!`, `-`, `+`, `*`, etc.  Rust
@@ -2839,11 +2844,31 @@ fn emit_float_literal(out: &mut String, value: f64) {
 /// names that are already valid Rust identifiers pass through
 /// unchanged (UNLESS they are Rust keywords, in which case we
 /// prefix `r#` raw-identifier syntax).
+///
+/// # Injectivity — why this is more than "escape illegal chars"
+///
+/// A `/security-review` finding (task #65) proved the *previous*
+/// version's fallback branch — used for `self`/`Self`/`super`/`crate`
+/// (Rust keywords raw-identifier syntax cannot represent) and for any
+/// name with an illegal character — was not injective: it prefixed a
+/// bare `__` (`"self"` -> `"__self"`), but a completely ordinary,
+/// unrelated SIR local literally named `__self` passed through
+/// **unchanged** — so two distinct raw SIR names collided on the same
+/// emitted Rust identifier, silently aliasing two variables into one
+/// with no error anywhere in the pipeline. (The `r#`-prefixed branch
+/// was already safe on its own: `#` is illegal in a Rust identifier, so
+/// no raw name containing it can ever reach the passthrough case to
+/// collide with it.)
+///
+/// The fix excludes any raw name that already starts with
+/// [`ESCAPE_MARKER`] from the passthrough case too, so the fallback
+/// branch's output (always `ESCAPE_MARKER`-prefixed) can never collide
+/// with an ordinary passthrough name.
 pub fn sanitize_ident(s: &str) -> String {
     if s.is_empty() {
-        return "_$empty".to_string();
+        return format!("{ESCAPE_MARKER}empty");
     }
-    if is_valid_rust_ident(s) && !is_rust_keyword(s) {
+    if is_valid_rust_ident(s) && !is_rust_keyword(s) && !s.starts_with(ESCAPE_MARKER) {
         return s.to_string();
     }
     if is_rust_keyword(s) && !is_raw_incompatible_keyword(s) {
@@ -2851,18 +2876,21 @@ pub fn sanitize_ident(s: &str) -> String {
         // visible in tooling.
         return format!("r#{}", s);
     }
-    // Either not a valid identifier shape, or a keyword that raw-identifier
-    // syntax cannot represent (`self` / `Self` / `super` / `crate` — rustc
-    // rejects `r#self` etc. outright with "cannot be a raw identifier",
-    // verified against rustc 1.97), so hex-encode instead.
-    let mut out = String::with_capacity(s.len() + 4);
-    out.push('_'); // prefix so the result never starts with a digit
-    out.push('_');
+    if is_valid_rust_ident(s) {
+        // A keyword raw-identifier syntax can't represent (`self` /
+        // `Self` / `super` / `crate`), or a valid-but-marker-prefixed
+        // name — either way every character is already legal, so no
+        // further per-character escaping is needed.
+        return format!("{ESCAPE_MARKER}{s}");
+    }
+    // Not a valid identifier shape at all — hex-encode the illegal
+    // characters.
+    let mut out = String::from(ESCAPE_MARKER);
     for ch in s.chars() {
         if ch.is_ascii_alphanumeric() || ch == '_' {
             out.push(ch);
         } else {
-            let _ = write!(out, "_{:x}", ch as u32);
+            let _ = write!(out, "_u{:04x}_", ch as u32);
         }
     }
     out
@@ -3030,11 +3058,11 @@ mod tests {
 
         // `self`/`Self`/`super`/`crate` cannot be raw identifiers (rustc
         // rejects `r#self` etc. outright), so they must fall back to the
-        // underscore-encoded form instead of `r#`.
-        assert_eq!(sanitize_ident("self"), "__self");
-        assert_eq!(sanitize_ident("Self"), "__Self");
-        assert_eq!(sanitize_ident("super"), "__super");
-        assert_eq!(sanitize_ident("crate"), "__crate");
+        // marker-encoded form instead of `r#`.
+        assert_eq!(sanitize_ident("self"), "__sir_esc_self");
+        assert_eq!(sanitize_ident("Self"), "__sir_esc_Self");
+        assert_eq!(sanitize_ident("super"), "__sir_esc_super");
+        assert_eq!(sanitize_ident("crate"), "__sir_esc_crate");
 
         // Ordinary identifiers — including close look-alikes — are
         // unaffected by the addition.
@@ -3049,13 +3077,38 @@ mod tests {
     #[test]
     fn sanitize_rewrites_invalid_chars() {
         let r = sanitize_ident("null?");
-        assert!(r.starts_with("__"));
+        assert!(r.starts_with("__sir_esc_"));
         assert!(r.contains("null"));
     }
 
     #[test]
     fn sanitize_empty_returns_safe_sentinel() {
-        assert_eq!(sanitize_ident(""), "_$empty");
+        assert_eq!(sanitize_ident(""), "__sir_esc_empty");
+    }
+
+    #[test]
+    fn sanitize_ident_is_injective_across_the_raw_incompatible_keyword_collision_this_backend_previously_had(
+    ) {
+        // task #65 (/security-review): a Java local named `self` (a Rust
+        // keyword `r#self` raw-identifier syntax cannot represent, per
+        // rustc) and a completely unrelated local literally named
+        // `__self` used to both sanitize to the identical Rust name
+        // `__self` -- two distinct SIR locals silently aliased onto one
+        // Rust variable, with no error anywhere in the pipeline. The fix
+        // (see `sanitize_ident`'s own doc comment) makes the two outputs
+        // provably different. (The `r#`-prefixed branch for ordinary
+        // keywords like `fn` was already safe on its own, since `#` is
+        // illegal in a raw Rust identifier and so can never reach the
+        // passthrough case.)
+        assert_ne!(sanitize_ident("self"), sanitize_ident("__self"));
+        assert_eq!(sanitize_ident("__self"), "__self");
+    }
+
+    #[test]
+    fn sanitize_ident_never_lets_a_raw_name_pass_through_as_the_escape_marker_itself() {
+        let escaped_keyword = sanitize_ident("self"); // "__sir_esc_self"
+        assert_ne!(sanitize_ident(&escaped_keyword), escaped_keyword);
+        assert!(sanitize_ident(&escaped_keyword).starts_with("__sir_esc_"));
     }
 
     #[test]

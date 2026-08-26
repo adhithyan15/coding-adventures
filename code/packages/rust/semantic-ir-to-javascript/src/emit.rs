@@ -1989,6 +1989,11 @@ fn emit_block_as_stmts(out: &mut String, b: &Block, indent: usize) {
 // Lexical helpers
 // ---------------------------------------------------------------------------
 
+/// Reserved marker prefix for every non-passthrough output of
+/// [`sanitize_ident`]. See that function's own doc comment for why this
+/// exists and what it guarantees.
+const ESCAPE_MARKER: &str = "_$sir_esc_";
+
 /// Sanitize a SIR identifier for JavaScript.
 ///
 /// JavaScript identifiers match `[A-Za-z_$][A-Za-z0-9_$]*` and must not
@@ -1996,35 +2001,48 @@ fn emit_block_as_stmts(out: &mut String, b: &Block, indent: usize) {
 /// etc. (Lisp/Ruby conventions), so we rewrite anything that does not
 /// fit:
 ///
-/// | input        | output      | rule |
-/// |--------------|-------------|------|
-/// | `hello`      | `hello`     | already valid → unchanged |
-/// | `class`      | `_$class`   | reserved word → `_$` prefix |
-/// | `null?`      | `_$null_3f` | invalid char → `_$` + hex-encoded |
-/// | `""` (empty) | `_$empty`   | empty → sentinel |
+/// | input        | output               | rule |
+/// |--------------|----------------------|------|
+/// | `hello`      | `hello`              | already valid → unchanged |
+/// | `class`      | `_$sir_esc_class`    | reserved word → marker prefix |
+/// | `null?`      | `_$sir_esc_null_u003f_` | invalid char → marker + hex-encoded |
+/// | `""` (empty) | `_$sir_esc_empty`    | empty → sentinel |
 ///
-/// The `_$` prefix guarantees the result starts with a legal leading
-/// character (never a digit) and never collides with the bare valid
-/// form of another name (a valid name never starts with `_$` unless the
-/// source did, in which case it passes through unchanged — and a source
-/// `_$class` is itself valid, so no collision).
+/// # Injectivity — why this is more than "escape illegal chars"
+///
+/// A `/security-review` finding (task #65) proved a previous version of
+/// this function was not injective, and that its own doc comment's
+/// injectivity argument was wrong: it escaped a reserved-word collision
+/// with a `_$` prefix (`"class"` -> `"_$class"`), reasoning that "a
+/// source `_$class` is itself valid, so no collision" — but a raw SIR
+/// name literally spelled `_$class` **is** valid JavaScript and **is**
+/// unreserved, so it passed through unchanged as `_$class` too — the
+/// exact same string the escaped keyword produced. Two distinct raw SIR
+/// names collided on the same emitted identifier, silently aliasing two
+/// variables into one with no error anywhere in the pipeline.
+///
+/// The fix makes the passthrough and non-passthrough output sets
+/// **disjoint by construction**: [`ESCAPE_MARKER`] is prepended to every
+/// non-passthrough case, and any raw name that already starts with that
+/// marker is *itself* routed into the escaped case rather than allowed
+/// to pass through — so passthrough output can never start with the
+/// marker, and non-passthrough output always does.
 pub fn sanitize_ident(s: &str) -> String {
     if s.is_empty() {
-        return "_$empty".to_string();
+        return format!("{ESCAPE_MARKER}empty");
     }
-    if is_valid_js_ident(s) {
+    if is_valid_js_ident(s) && !s.starts_with(ESCAPE_MARKER) {
         return s.to_string();
     }
-    let mut out = String::with_capacity(s.len() + 4);
-    out.push('_');
-    out.push('$');
+    if is_valid_js_ident(s) {
+        return format!("{ESCAPE_MARKER}{s}");
+    }
+    let mut out = String::from(ESCAPE_MARKER);
     for ch in s.chars() {
         if ch.is_ascii_alphanumeric() || ch == '_' || ch == '$' {
             out.push(ch);
         } else {
-            // Hex-encode the codepoint to avoid collisions between
-            // different invalid characters.
-            let _ = write!(out, "_{:x}", ch as u32);
+            let _ = write!(out, "_u{:04x}_", ch as u32);
         }
     }
     out
@@ -2182,7 +2200,7 @@ mod tests {
 
     #[test]
     fn sanitize_empty_ident_returns_sentinel() {
-        assert_eq!(sanitize_ident(""), "_$empty");
+        assert_eq!(sanitize_ident(""), "_$sir_esc_empty");
     }
 
     #[test]
@@ -2195,9 +2213,31 @@ mod tests {
 
     #[test]
     fn sanitize_avoids_reserved_words() {
-        assert_eq!(sanitize_ident("class"), "_$class");
+        assert_eq!(sanitize_ident("class"), "_$sir_esc_class");
         assert!(sanitize_ident("function").starts_with("_$"));
         assert!(sanitize_ident("await").starts_with("_$"));
+    }
+
+    #[test]
+    fn sanitize_ident_is_injective_across_the_reserved_word_collision_this_backend_previously_had(
+    ) {
+        // task #65 (/security-review): a Java local named `class` (a JS
+        // reserved word) and a completely unrelated local literally
+        // named `_$class` used to both sanitize to the identical JS name
+        // `_$class` -- two distinct SIR locals silently aliased onto one
+        // JS variable, with no error anywhere in the pipeline (this
+        // function's own OLD doc comment even claimed the opposite was
+        // true and was wrong). The fix (see `sanitize_ident`'s own doc
+        // comment) makes the two outputs provably different.
+        assert_ne!(sanitize_ident("class"), sanitize_ident("_$class"));
+        assert_eq!(sanitize_ident("_$class"), "_$class");
+    }
+
+    #[test]
+    fn sanitize_ident_never_lets_a_raw_name_pass_through_as_the_escape_marker_itself() {
+        let escaped_keyword = sanitize_ident("class"); // "_$sir_esc_class"
+        assert_ne!(sanitize_ident(&escaped_keyword), escaped_keyword);
+        assert!(sanitize_ident(&escaped_keyword).starts_with("_$"));
     }
 
     #[test]
@@ -2224,8 +2264,8 @@ mod tests {
         let r = sanitize_ident("null?");
         assert!(r.starts_with("_$"));
         assert!(r.contains("null"));
-        // `?` (U+003F) hex-encodes to `_3f`.
-        assert!(r.contains("_3f"), "got {r}");
+        // `?` (U+003F) hex-encodes to the fixed-width `_u003f_`.
+        assert!(r.contains("_u003f_"), "got {r}");
     }
 
     #[test]
