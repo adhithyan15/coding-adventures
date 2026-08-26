@@ -692,6 +692,48 @@ const independentPehStrokes = (
   },
 ];
 
+const independentCheStrokes = (
+  headLabel = "sweep left through the pointed hooked head",
+  bowlLabel = "continue down and around the bowl without lifting",
+  leftDotLabel = "after one lift, place the lower-left dot",
+  rightDotLabel = "after another lift, place the lower-right dot",
+  centerDotLabel = "after a third lift, place the lower-center dot",
+): Stroke[] => [
+  {
+    segments: [
+      {
+        label: headLabel,
+        path: [
+          { x: 540, y: 270 }, { x: 490, y: 270 }, { x: 420, y: 285 },
+          { x: 350, y: 305 }, { x: 280, y: 325 }, { x: 210, y: 340 },
+          { x: 150, y: 335 }, { x: 110, y: 315 }, { x: 100, y: 290 },
+          { x: 130, y: 305 }, { x: 170, y: 310 }, { x: 220, y: 305 },
+          { x: 270, y: 285 }, { x: 320, y: 265 }, { x: 300, y: 245 },
+          { x: 260, y: 220 }, { x: 216, y: 190 },
+        ],
+      },
+      {
+        label: bowlLabel,
+        path: [
+          { x: 216, y: 190 }, { x: 180, y: 130 }, { x: 145, y: 65 },
+          { x: 118, y: -42 }, { x: 130, y: -110 }, { x: 180, y: -175 },
+          { x: 225, y: -200 }, { x: 300, y: -245 }, { x: 400, y: -245 },
+          { x: 500, y: -230 }, { x: 575, y: -210 }, { x: 608, y: -195 },
+        ],
+      },
+    ],
+  },
+  { segments: [{ label: leftDotLabel, path: [
+    { x: 302, y: 60 }, { x: 350, y: 13 }, { x: 304, y: -42 }, { x: 250, y: 5 },
+  ] }] },
+  { segments: [{ label: rightDotLabel, path: [
+    { x: 446, y: 72 }, { x: 493, y: 25 }, { x: 447, y: -30 }, { x: 395, y: 19 },
+  ] }] },
+  { segments: [{ label: centerDotLabel, path: [
+    { x: 378, y: -110 }, { x: 422, y: -68 }, { x: 375, y: -20 }, { x: 328, y: -68 },
+  ] }] },
+];
+
 export const DUCTUS: Record<string, LetterDuctus> = {
   // Hanzi Writer Data's ordered medians draw 人 with the left-falling stroke
   // first, then restart at the central junction for the right-falling stroke.
@@ -10773,6 +10815,15 @@ export const DUCTUS: Record<string, LetterDuctus> = {
     ],
     source: urduAlphabetSource("ج"),
   },
+  // Che shares jīm's Noto fallback body, but Zer o Zabar independently shows
+  // a body-first order followed by the lower-left, lower-right, and lower-center
+  // dots. Keep that Urdu-scoped evidence distinct from jīm's dot-first motion.
+  [ductusKey("urdu-nastaliq", "چ")]: {
+    script: "urdu-nastaliq",
+    glyph: "چ",
+    strokes: independentCheStrokes(),
+    source: urduAlphabetSource("چ"),
+  },
   [ductusKey("urdu-nastaliq", "د")]: {
     script: "urdu-nastaliq",
     glyph: "د",
@@ -11500,6 +11551,21 @@ export const DUCTUS: Record<string, LetterDuctus> = {
     glyph: "پ",
     strokes: independentPehStrokes(),
     source: urduAlphabetSource("پ"),
+  },
+  // Persian Online independently demonstrates che body-first, then places the
+  // three lower dots left, right, and lower-center. Share only Noto geometry
+  // with the Urdu filmstrip; the scoped key preserves its Persian provenance.
+  [ductusKey("perso-arabic", "چ")]: {
+    script: "perso-arabic",
+    glyph: "چ",
+    strokes: independentCheStrokes(
+      "draw the short upper head from left to right",
+      "continue down and around the deep bowl without lifting",
+      "lift, then place the lower-left dot",
+      "lift again and place the lower-right dot",
+      "lift again and place the lower-center dot",
+    ),
+    source: persianAlphabetSource("چ"),
   },
   "ت": {
     script: "perso-arabic",

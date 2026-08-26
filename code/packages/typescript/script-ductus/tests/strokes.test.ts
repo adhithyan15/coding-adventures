@@ -227,7 +227,9 @@ const ARABIC_HAMZA = DUCTUS[ductusKey("arabic", "ء")];
 const ARABIC_LAM_ALIF = DUCTUS[ductusKey("arabic", "لا")];
 const URDU_ALEF = DUCTUS[ductusKey("urdu-nastaliq", "ا")];
 const URDU_PEH = DUCTUS[ductusKey("urdu-nastaliq", "پ")];
+const PERSIAN_CHE = DUCTUS[ductusKey("perso-arabic", "چ")];
 const URDU_JIM = DUCTUS[ductusKey("urdu-nastaliq", "ج")];
+const URDU_CHE = DUCTUS[ductusKey("urdu-nastaliq", "چ")];
 const URDU_DAL = DUCTUS[ductusKey("urdu-nastaliq", "د")];
 const URDU_RE = DUCTUS[ductusKey("urdu-nastaliq", "ر")];
 const URDU_WAW = DUCTUS[ductusKey("urdu-nastaliq", "و")];
@@ -3381,6 +3383,40 @@ describe("handwriting ductus", () => {
     expect(head[0].x).toBeGreaterThan(Math.min(...head.map((point) => point.x)));
     expect(bowl[0]).toEqual(head.at(-1));
     expect(bowl[0].y).toBeGreaterThan(bowl.at(-1)!.y);
+  });
+
+  it("Urdu independent چ draws its body before the three-dot triangle", () => {
+    expect(URDU_CHE.script).toBe("urdu-nastaliq");
+    expect(penLifts(URDU_CHE)).toBe(3);
+    expect(URDU_CHE.strokes).toHaveLength(4);
+    expect(URDU_CHE.strokes.map((stroke) => stroke.segments.length)).toEqual([2, 1, 1, 1]);
+    expect(URDU_CHE.strokes.map((stroke) => stroke.segments[0].label)).toEqual([
+      "sweep left through the pointed hooked head",
+      "after one lift, place the lower-left dot",
+      "after another lift, place the lower-right dot",
+      "after a third lift, place the lower-center dot",
+    ]);
+    expect(URDU_CHE.strokes[0].segments[1].path[0]).toEqual(
+      URDU_CHE.strokes[0].segments[0].path.at(-1),
+    );
+    const [left, right, center] = URDU_CHE.strokes.slice(1).map(
+      (stroke) => stroke.segments[0].path,
+    );
+    expect(left[0].x).toBeLessThan(right[0].x);
+    expect(center[0].y).toBeLessThan(left[0].y);
+    expect(center[0].y).toBeLessThan(right[0].y);
+  });
+
+  it("Persian and Urdu چ share geometry but retain script-owned sources", () => {
+    expect(PERSIAN_CHE.script).toBe("perso-arabic");
+    expect(penLifts(PERSIAN_CHE)).toBe(3);
+    expect(PERSIAN_CHE.strokes).toHaveLength(4);
+    expect(PERSIAN_CHE.strokes.map((stroke) => stroke.segments.length)).toEqual([2, 1, 1, 1]);
+    expect(PERSIAN_CHE.strokes.map((stroke) => stroke.segments.map((segment) => segment.path))).toEqual(
+      URDU_CHE.strokes.map((stroke) => stroke.segments.map((segment) => segment.path)),
+    );
+    expect(PERSIAN_CHE.source.url).toContain("laits.utexas.edu/persian_grammar/video");
+    expect(PERSIAN_CHE.source.url).not.toBe(URDU_CHE.source.url);
   });
 
   it("Urdu independent د folds into its baseline without lifting", () => {
@@ -6917,6 +6953,28 @@ describe("handwriting ductus", () => {
     expect(src.citation).toMatch(/Zer o Zabar.*independent ج.*flat-head.*Northwestern/i);
     expect(src.variation).toMatch(
       /dot below first.*lifts once.*pointed hooked head.*one continuous stroke.*pointed rather than rounded.*flat-head.*purely aesthetic.*Noto Naskh.*Nastaliq/i,
+    );
+  });
+
+  it("Urdu independent چ traces to Zer o Zabar's body-first three-dot animations", () => {
+    const src = URDU_CHE.source;
+    expect(src.url).toBe(
+      "https://openbooks.library.northwestern.edu/zerozabar/chapter/te-mim-jim-che/",
+    );
+    expect(src.citation).toMatch(
+      /Zer o Zabar.*independent چ.*calligraphic and handwriting animations.*Che instructions.*Northwestern/i,
+    );
+    expect(src.variation).toMatch(
+      /pointed hooked head.*deep bowl.*body-first stroke.*lower-left dot.*lower-right dot.*lower-center dot.*three pen lifts.*jīm-series shape.*three dots below.*ch sound.*Noto Naskh.*Nastaliq/i,
+    );
+  });
+
+  it("Persian independent چ traces to its adjacent body-first freehand demonstration", () => {
+    const src = PERSIAN_CHE.source;
+    expect(src.url).toContain("laits.utexas.edu/persian_grammar/video");
+    expect(src.citation).toMatch(/Persian Online.*چ.*00:35–00:41/i);
+    expect(src.variation).toMatch(
+      /body-first.*head.*left to right.*deep bowl.*three separate dots below.*left, right, then lower-center.*Noto Naskh.*Persian-scoped.*Urdu/i,
     );
   });
 
