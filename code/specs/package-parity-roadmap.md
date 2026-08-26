@@ -8154,9 +8154,10 @@ state graph contains 515 unique owners and 775 complete acyclic edges: 147
 merged, 367 pending, and exactly one in-progress owner, with no active parity
 PR and no merged-to-unmerged dependency edge.
 
-Before publication, the branch rebased twice without conflict, most recently
-onto exact main `399a7c6bc43212c233c08e6171ced6220feb2ac6`. PR #12944 extends
-the shared script-ductus authored-data owner; PRs #12946 and #12951 extend the
+Before publication, the branch rebased three times without conflict, most
+recently onto exact main `ca3646356906cd3f3559ce2016209f6d082f5478`. PRs
+#12944 and #12949 extend the shared script-ductus authored-data owner; PRs
+#12946 and #12951 extend the
 deterministic HTML frontend owner; PR #12947 supplies the first JavaScript
 emitter child under the SIR16 loop-control consumer umbrella; and PR #12948 is
 Language Ladder program-only batching. PR #12917 extends the existing
@@ -8165,9 +8166,12 @@ shell in the separate filesystem-authority review. PR #12952 extends the
 Mermaid Gantt neutral and lane owners with pinned implicit IDs and sequential
 tasks. PR #12950 extends the ALGOL IIR owners with exact subtractive-positive-
 zero selector identity. PR #12945 adds Chinese curriculum and generated data
-without changing package source behavior.
+without changing package source behavior. PR #12949 specifically adds sourced
+Malayalam chillu RR as one zero-lift three-movement arch, loop, and hook run
+across the existing curriculum, human-language-data, script-ductus, and
+Language Ladder consumers.
 
-None of those nine commits touches a selected Perl path or changes a package
+None of those ten commits touches a selected Perl path or changes a package
 identity, BUILD marker, build-tool marker, or dependency surface. All five
 live open PRs have zero exact overlap with this six-path tranche. The post-rebase
 schema-3 report remains 15 established lanes, 1,373 identities, 4,566 slots,
