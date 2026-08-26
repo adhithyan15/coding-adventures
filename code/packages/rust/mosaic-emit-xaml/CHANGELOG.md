@@ -1,5 +1,67 @@
 # Changelog — mosaic-emit-xaml
 
+## [Unreleased] — security: validate URI schemes on HostLink's NavigateUri (#12038)
+
+`emit_host_link`'s `NavigateUri` binding had no scheme validation on
+either arm: the literal `href` arm only applied `escape_xaml_attr` (XML
+escaping, irrelevant to scheme safety), and the slot-bound arm bound the
+runtime value directly. WinUI hands `NavigateUri` to the OS shell
+launcher, so a `file:`, UNC, or registered custom-protocol target would
+launch rather than open as a web link. Layout/style source is a trust
+boundary (a third-party Mosaic package), so this was reachable. Reject
+rather than escape, per the issue's own framing — there is no escaping
+that makes `file:` safe in this position.
+
+- **Literal `href` — rejected at compile time.** A new
+  `has_allowed_uri_scheme` checks the RFC 3986 §3.1 scheme token against
+  an allowlist (`http`, `https`, `mailto`); anything outside it — or a
+  string with no scheme at all (a relative reference) — returns the new
+  `PipelineEmitError::UnsafeUriScheme` instead of emitting `NavigateUri`.
+  Confirmed via `grep` that every current `href` usage in the repo
+  (`Breadcrumb`/`Nav`/`Navbar`/`Pagination` in both `mosaic-pkg-toolkit`
+  and `toolkit-xaml-showcase`) is `href: "#"` paired with
+  `external: false`, which routes through the *other* branch of
+  `emit_host_link` and never reaches `NavigateUri` at all — this cannot
+  regress any currently-shipping package.
+- **Slot-bound `href` — validated host-side via a generated helper**,
+  since the value isn't known until runtime. A shared `SafeNavigateUri`
+  C# helper (registered once per component via the existing
+  `ctx.add_helper` dedup mechanism — the same shape
+  `disabled_slot_xbind_path`'s `Not(b)` helper already uses) parses the
+  bound string with `Uri.TryCreate` and checks the scheme against the
+  same allowlist, returning `null` for anything that fails either check.
+  `NavigateUri` bound to `null` means the button simply doesn't navigate
+  on click — no new `Click` handler, no manual `Launcher.LaunchUriAsync`
+  reimplementation, smallest change that closes the runtime-bound gap.
+  Verified against a real `dotnet build` (not just Rust-level string
+  assertions): the generated single-expression method body uses an
+  inline `out var` inside a boolean condition (`Uri.TryCreate(raw,
+  UriKind.Absolute, out var u) && (u.Scheme == "http" || ...) ? u :
+  null`), required because `HelperMethod` bodies are emitted as C#
+  expression-bodied methods, not statement blocks — build succeeded, 0
+  warnings, 0 errors.
+
+Checked the other 7 backend emitter crates
+(`mosaic-emit-{compose,flutter,html,qt,react,swiftui,webcomponent}`) —
+all of them handle `href` in their own `HostLink`-equivalent lowering,
+and none validate the scheme either. Filed as a follow-up
+([#13052](https://github.com/adhithyan15/coding-adventures/issues/13052))
+rather than fixed here — each backend's navigation API has a different
+codegen shape, so bundling all 7 would have made this PR much harder to
+review as a single, contained fix.
+
+Three new tests: a disallowed-scheme table (`file:///...`,
+`ms-appx-web:///...`, a UNC path, `javascript:...`, and a scheme-less
+string) all reject with `UnsafeUriScheme`; an allowed-scheme table
+(`http`, `https`, `mailto`, plus a case-insensitive `HTTPS://` variant)
+all still emit `NavigateUri` unchanged; a slot-bound href binds through
+`SafeNavigateUri` and the helper itself is present in the generated
+code-behind. All 241 pre-existing tests pass unchanged (the one
+pre-existing `NavigateUri="https://example.com"` test is unaffected —
+`https` is on the allowlist).
+
+Closes #12038.
+
 ## [Unreleased] — fix seven more silent Expr-drop sites, make their matches exhaustive (#12126)
 
 Continuation of the `label`-match `Expr`-drop bug fixed twice already
