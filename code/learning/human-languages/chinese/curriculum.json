@@ -362,6 +362,42 @@
         "ZH-EXT-047-LANGUAGE-COUNTRY-FOUR-SKILL"
       ],
       "after": []
+    },
+    {
+      "id": "ZH-PATH-017",
+      "spine_node": "SPINE-EXCHANGE-NAMES",
+      "lessons": [
+        "ZH-C18-hear-kan",
+        "ZH-W18-kan-observe",
+        "ZH-W18-kan-guided",
+        "ZH-W18-kan-delayed",
+        "ZH-C18-kan",
+        "ZH-C18-hear-kanjian",
+        "ZH-C18-kanjian",
+        "ZH-C18-hear-haokan",
+        "ZH-C18-haokan",
+        "ZH-R18-looking-three-r1",
+        "ZH-C18-hear-shu",
+        "ZH-W18-shu-observe",
+        "ZH-W18-shu-guided",
+        "ZH-W18-shu-delayed",
+        "ZH-C18-shu",
+        "ZH-C18-hear-kanshu",
+        "ZH-C18-kanshu",
+        "ZH-R18-looking-three-r2",
+        "ZH-R18-book-reading-r1",
+        "ZH-R18-listening-five",
+        "ZH-R18-reading-five",
+        "ZH-R18-writing-five",
+        "ZH-C18-practice"
+      ],
+      "before": [],
+      "inline": [
+        "ZH-EXT-048-LOOKING-READING-MEANING-FIRST",
+        "ZH-EXT-049-LOOKING-READING-SCRIPT",
+        "ZH-EXT-050-LOOKING-READING-FOUR-SKILL"
+      ],
+      "after": []
     }
   ],
   "spine": {
@@ -405,7 +441,8 @@
         "ZH-PATH-013",
         "ZH-PATH-014",
         "ZH-PATH-015",
-        "ZH-PATH-016"
+        "ZH-PATH-016",
+        "ZH-PATH-017"
       ],
       "omits": [
         "PRONOUN-ME",
@@ -1466,6 +1503,65 @@
         "ZH-R17-reading-five",
         "ZH-R17-writing-five",
         "ZH-C17-practice"
+      ]
+    },
+    {
+      "id": "ZH-EXT-048-LOOKING-READING-MEANING-FIRST",
+      "stage": "pre-A1",
+      "kind": "required",
+      "category": "vocabulary",
+      "canDo": "I can hear and say 看, 看见, 好看, 书 and 看书 before relying on their written forms.",
+      "prerequisites": [
+        "ZH-EXT-047-LANGUAGE-COUNTRY-FOUR-SKILL"
+      ],
+      "lessons": [
+        "ZH-C18-hear-kan",
+        "ZH-C18-hear-kanjian",
+        "ZH-C18-hear-haokan",
+        "ZH-C18-hear-shu",
+        "ZH-C18-hear-kanshu"
+      ]
+    },
+    {
+      "id": "ZH-EXT-049-LOOKING-READING-SCRIPT",
+      "stage": "pre-A1",
+      "kind": "required",
+      "category": "script",
+      "canDo": "I can read and write 看 and 书, then build 看见, 好看 and 看书 after tracing, guided copying and delayed copying.",
+      "prerequisites": [
+        "ZH-EXT-048-LOOKING-READING-MEANING-FIRST"
+      ],
+      "lessons": [
+        "ZH-W18-kan-observe",
+        "ZH-W18-kan-guided",
+        "ZH-W18-kan-delayed",
+        "ZH-C18-kan",
+        "ZH-C18-kanjian",
+        "ZH-C18-haokan",
+        "ZH-W18-shu-observe",
+        "ZH-W18-shu-guided",
+        "ZH-W18-shu-delayed",
+        "ZH-C18-shu",
+        "ZH-C18-kanshu"
+      ]
+    },
+    {
+      "id": "ZH-EXT-050-LOOKING-READING-FOUR-SKILL",
+      "stage": "pre-A1",
+      "kind": "required",
+      "category": "assessment",
+      "canDo": "I can keep the five looking and reading forms distinct across expanding retrieval and separate four-skill scores.",
+      "prerequisites": [
+        "ZH-EXT-049-LOOKING-READING-SCRIPT"
+      ],
+      "lessons": [
+        "ZH-R18-looking-three-r1",
+        "ZH-R18-looking-three-r2",
+        "ZH-R18-book-reading-r1",
+        "ZH-R18-listening-five",
+        "ZH-R18-reading-five",
+        "ZH-R18-writing-five",
+        "ZH-C18-practice"
       ]
     }
   ]

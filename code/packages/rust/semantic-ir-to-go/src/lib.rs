@@ -71,6 +71,26 @@ const ACCEPTED_FEATURES: &[Feature] = &[
     // unaccepted, so they remain strictly unreachable.
     Feature::Sequences,
     Feature::Maps,
+    // SIR16 addendum: bare loop-control statements (task #63). `Stmt::
+    // Break`/`Stmt::Continue` lower to a bare native `break`/`continue`
+    // — a trivial 1:1 emission, since this backend's `While`/`ForRange`/
+    // `ForEach` lowering (`emit.rs`'s corresponding arms) already emits
+    // a real, inline native `for` loop with no closure/func-literal
+    // boundary in the way. `ForRange` is NOT listed as a safe host here
+    // — the validator itself already refuses to accept `Break`/
+    // `Continue` whose nearest enclosing loop is a `ForRange`, for
+    // reasons that apply regardless of which backend ultimately emits
+    // the module (see `Feature::LoopControl`'s own doc comment in
+    // `semantic-ir::manifest`), so this backend never needs to reason
+    // about that case at all. Mirrors `semantic-ir-to-javascript`'s
+    // (task #62) and `semantic-ir-to-typescript`'s (task #63) own
+    // identically-reasoned rollout — including that rollout's own
+    // found-while-implementing fix: a bare `if` used as a statement
+    // must emit a real native `if`/`else`, not the value-position
+    // `func() Value {...}()` IIFE shape, since `break`/`continue` can't
+    // cross a Go func-literal boundary; see `emit_stmt`'s
+    // `Stmt::ExprStmt` arm.
+    Feature::LoopControl,
     // ── SIR19 (P2f) — default parameters ───────────────────────────
     // `DefaultParams` is a hybrid emit + runtime feature.  Go has no
     // native optional/default parameters, so we use a RUNTIME-MIMIC
@@ -553,11 +573,11 @@ fn check_soundness_stmt(s: &semantic_ir::Stmt, errs: &mut Vec<BackendError>) {
             check_soundness_expr(&body.value, errs);
         }
         // ── SIR16 addendum: loop control ──────────────────────────────
-        // Same "must stay non-panicking" contract as the SIR29 arms
-        // above — `Feature::LoopControl` is not in `ACCEPTED_FEATURES`,
-        // so a module using this node is rejected by the manifest-level
-        // gate later in `compile()`, not here. Neither statement carries
-        // a nested `Stmt`/`Expr` to recurse into.
+        // `Feature::LoopControl` is in `ACCEPTED_FEATURES` (task #63) —
+        // this arm's own no-op was already correct before that landed
+        // and needs no change now: neither statement carries a nested
+        // `Stmt`/`Expr` to recurse into, regardless of whether the
+        // feature is accepted.
         Stmt::Break { .. } | Stmt::Continue { .. } => {}
     }
 }

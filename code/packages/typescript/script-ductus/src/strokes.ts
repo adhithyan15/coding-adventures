@@ -3324,6 +3324,79 @@ export const DUCTUS: Record<string, LetterDuctus> = {
     ],
     source: chineseCharacterSource("国"),
   },
+  [ductusKey("chinese", "看")]: {
+    script: "chinese",
+    glyph: "看",
+    strokes: [
+      simpleStroke("draw the short top left-falling stroke", [
+        { x: 830, y: 805 }, { x: 750, y: 790 }, { x: 650, y: 780 },
+        { x: 525, y: 768 }, { x: 400, y: 760 }, { x: 275, y: 755 },
+        { x: 135, y: 755 },
+      ]),
+      simpleStroke("lift, then draw the upper horizontal left to right", [
+        { x: 140, y: 632 }, { x: 300, y: 632 }, { x: 500, y: 632 },
+        { x: 700, y: 632 }, { x: 875, y: 632 },
+      ]),
+      simpleStroke("lift, then draw the next horizontal left to right", [
+        { x: 70, y: 496 }, { x: 250, y: 496 }, { x: 500, y: 496 },
+        { x: 750, y: 496 }, { x: 930, y: 496 },
+      ]),
+      simpleStroke("lift, then draw the long left-falling stroke toward the lower component", [
+        { x: 455, y: 750 }, { x: 425, y: 660 }, { x: 390, y: 570 },
+        { x: 350, y: 485 }, { x: 300, y: 400 }, { x: 240, y: 325 },
+        { x: 175, y: 260 }, { x: 110, y: 215 }, { x: 50, y: 180 },
+      ]),
+      simpleStroke("lift, then draw 目's left vertical from top to bottom", [
+        { x: 296, y: 365 }, { x: 296, y: 280 }, { x: 296, y: 190 },
+        { x: 296, y: 100 }, { x: 296, y: 10 }, { x: 296, y: -60 },
+      ]),
+      simpleStroke("lift, draw 目's top horizontal, then turn down the right side without lifting", [
+        { x: 296, y: 365 }, { x: 420, y: 365 }, { x: 550, y: 365 },
+        { x: 680, y: 365 }, { x: 805, y: 365 }, { x: 805, y: 275 },
+        { x: 805, y: 180 }, { x: 805, y: 85 }, { x: 805, y: -50 },
+      ]),
+      simpleStroke("lift, then draw 目's first inner horizontal left to right", [
+        { x: 315, y: 240 }, { x: 430, y: 240 }, { x: 550, y: 240 },
+        { x: 675, y: 240 }, { x: 790, y: 240 },
+      ]),
+      simpleStroke("lift, then draw 目's second inner horizontal left to right", [
+        { x: 315, y: 118 }, { x: 430, y: 118 }, { x: 550, y: 118 },
+        { x: 675, y: 118 }, { x: 790, y: 118 },
+      ]),
+      simpleStroke("lift, then close 目 with its bottom horizontal left to right", [
+        { x: 310, y: -12 }, { x: 430, y: -12 }, { x: 550, y: -12 },
+        { x: 675, y: -12 }, { x: 790, y: -12 },
+      ]),
+    ],
+    source: chineseCharacterSource("看"),
+  },
+  [ductusKey("chinese", "书")]: {
+    script: "chinese",
+    glyph: "书",
+    strokes: [
+      simpleStroke("draw the short upper horizontal, then fold down without lifting", [
+        { x: 140, y: 630 }, { x: 280, y: 630 }, { x: 440, y: 630 },
+        { x: 600, y: 630 }, { x: 760, y: 630 }, { x: 760, y: 540 },
+        { x: 760, y: 450 }, { x: 760, y: 365 },
+      ]),
+      simpleStroke("lift, draw the second horizontal, then fold down and finish with the hook without lifting", [
+        { x: 70, y: 360 }, { x: 250, y: 360 }, { x: 470, y: 360 },
+        { x: 700, y: 360 }, { x: 900, y: 360 }, { x: 905, y: 280 },
+        { x: 900, y: 200 }, { x: 890, y: 125 }, { x: 870, y: 75 },
+        { x: 835, y: 55 }, { x: 785, y: 52 }, { x: 720, y: 55 },
+        { x: 650, y: 60 },
+      ]),
+      simpleStroke("lift, then draw the long central upright from top to bottom", [
+        { x: 456, y: 820 }, { x: 456, y: 650 }, { x: 456, y: 475 },
+        { x: 456, y: 300 }, { x: 456, y: 120 }, { x: 456, y: -60 },
+      ]),
+      simpleStroke("lift, then add the small upper-right dot", [
+        { x: 740, y: 780 }, { x: 790, y: 745 }, { x: 840, y: 710 },
+        { x: 900, y: 665 }, { x: 925, y: 645 },
+      ]),
+    ],
+    source: chineseCharacterSource("书"),
+  },
   // The four-frame Commons sequence writes the complete left body in one
   // continuous run, lifts for the middle shoulder, descends the right stem,
   // then closes with the short shirorekha: four strokes and three lifts.
@@ -14566,6 +14639,65 @@ export const DUCTUS: Record<string, LetterDuctus> = {
       },
     ],
     source: teluguIndependentVowelSource("ఇ"),
+  },
+  [ductusKey("telugu", "ఉ")]: {
+    script: "telugu",
+    glyph: "ఉ",
+    strokes: [
+      {
+        segments: [
+          {
+            label: "sweep left across the rounded upper arch",
+            path: [
+              { x: 610, y: 410 }, { x: 550, y: 440 }, { x: 470, y: 465 },
+              { x: 380, y: 468 }, { x: 285, y: 445 }, { x: 205, y: 405 },
+              { x: 145, y: 350 }, { x: 110, y: 285 },
+            ],
+          },
+          {
+            label: "continue down and around the broad lower bowl",
+            path: [
+              { x: 110, y: 285 }, { x: 78, y: 215 }, { x: 78, y: 145 },
+              { x: 105, y: 85 }, { x: 155, y: 45 }, { x: 215, y: 25 },
+              { x: 275, y: 35 }, { x: 325, y: 70 }, { x: 365, y: 115 },
+              { x: 405, y: 75 }, { x: 455, y: 42 },
+            ],
+          },
+          {
+            label: "curl upward around the rounded right lobe without lifting",
+            path: [
+              { x: 455, y: 42 }, { x: 520, y: 20 }, { x: 585, y: 25 },
+              { x: 645, y: 55 }, { x: 685, y: 105 }, { x: 690, y: 155 },
+              { x: 665, y: 205 }, { x: 620, y: 225 }, { x: 575, y: 220 },
+            ],
+          },
+        ],
+      },
+      {
+        segments: [
+          {
+            label: "lift and draw the inner horizontal bar from left to right",
+            path: [
+              { x: 95, y: 282 }, { x: 205, y: 282 }, { x: 320, y: 282 },
+              { x: 440, y: 282 }, { x: 560, y: 282 }, { x: 680, y: 282 },
+              { x: 750, y: 282 },
+            ],
+          },
+        ],
+      },
+      {
+        segments: [
+          {
+            label: "lift again and draw the short upper headstroke downward",
+            path: [
+              { x: 378, y: 610 }, { x: 378, y: 570 }, { x: 378, y: 525 },
+              { x: 378, y: 490 },
+            ],
+          },
+        ],
+      },
+    ],
+    source: teluguIndependentVowelSource("ఉ"),
   },
   [ductusKey("telugu", "ఎ")]: {
     script: "telugu",

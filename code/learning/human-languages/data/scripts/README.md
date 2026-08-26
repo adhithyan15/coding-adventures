@@ -1034,7 +1034,13 @@ queue: **و**, not ه, follows ن. Its 02:43–02:45 demonstration loops the sma
   future entries join one side of this enforced boundary automatically.
 
 The initial source-availability gap recorded by HL-C41 is now being closed one
-verified shape at a time. Telugu has a cited independent **అ** row; Kannada has
+verified shape at a time. Telugu has cited independent **అ**, **ఆ**, **ఇ**,
+**ఉ**, and **ఎ** rows. Sathish Shanmugam's packaged **ఉ** tracing guide numbers
+five movements in three pen-down runs: the rounded upper arch flows through the
+broad lower bowl and right lobe; after one lift, the separate inner bar runs
+left to right; after a second lift, the short upper headstroke descends. Its
+five-movement Noto Sans Telugu fit preserves that two-lift order while recording
+the guide as one attested pedagogical variant. Kannada has
 cited independent **ಅ**, **ಆ**, **ಇ**, and **ಎ** rows. Gopala Krishna A's
 35-frame animation writes **ಆ** in two pen-down runs: the compact left loop
 flows through the broad lower bowl; after one lift, the rounded right loop

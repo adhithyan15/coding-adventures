@@ -117,6 +117,8 @@ const TELUGU_AA = DUCTUS[ductusKey("telugu", "ఆ")];
 const teluguAaOutline = teluguOutline("ఆ");
 const TELUGU_I = DUCTUS[ductusKey("telugu", "ఇ")];
 const teluguIOutline = teluguOutline("ఇ");
+const TELUGU_U = DUCTUS[ductusKey("telugu", "ఉ")];
+const teluguUOutline = teluguOutline("ఉ");
 const KANNADA_A = DUCTUS[ductusKey("kannada", "ಅ")];
 const kannadaAOutline = kannadaOutline("ಅ");
 const KANNADA_AA = DUCTUS[ductusKey("kannada", "ಆ")];
@@ -1075,6 +1077,33 @@ describe("Telugu ఇ — three source-verified component runs", () => {
       penPathD(TELUGU_I.strokes[1], 1),
     ]);
     expect(pen.attrs.d).toBe(penPathD(TELUGU_I.strokes[2], 1));
+  });
+});
+
+describe("Telugu ఉ — joined body plus two separate printed components", () => {
+  const steps = ductusSteps(TELUGU_U);
+  const strip = ductusFilmstrip(TELUGU_U, teluguUOutline);
+
+  it("places lifts before the inner bar and upper headstroke", () => {
+    expect(steps.map((step) => step.startsAfterLift)).toEqual([false, false, false, true, true]);
+    expect(steps.map((step) => step.strokeIndex)).toEqual([0, 0, 0, 1, 2]);
+  });
+
+  it("reports five movements in three strokes", () => {
+    expect(strip.frames).toHaveLength(5);
+    expect(strip.penLifts).toBe(2);
+    expect(strip.summary).toBe("3 strokes · 2 pen lifts · 5 movements");
+  });
+
+  it("keeps both earlier runs visible while drawing the headstroke", () => {
+    const last = strip.frames[4];
+    const done = byTag(last, "path").filter((path) => path.attrs.class === "ductus__done");
+    const pen = byTag(last, "path").find((path) => path.attrs.class === "ductus__pen")!;
+    expect(done.map((path) => path.attrs.d)).toEqual([
+      penPathD(TELUGU_U.strokes[0], 1),
+      penPathD(TELUGU_U.strokes[1], 1),
+    ]);
+    expect(pen.attrs.d).toBe(penPathD(TELUGU_U.strokes[2], 1));
   });
 });
 

@@ -869,6 +869,40 @@ line "Target" [35, 50, 68, 82]"##,
         assert_eq!(metadata["gantt.task.parser.callback.name"], "inspectTask");
         assert_eq!(metadata["gantt.task.parser.callback.args"], "parser");
         assert!(metadata.contains_key("gantt.task.parser.bounds"));
+
+        let precise = parse_gantt(
+            "gantt\ntitle Network request\ndateFormat ss\nsection Timing\nRTT :rtt, 0, 20\nACK :ack, after rtt, 5s",
+        )
+        .expect("seconds-only Mermaid Gantt parse failed");
+        let precise_layout = layout_temporal_diagram(
+            &TemporalDiagram {
+                kind: TemporalKind::Gantt,
+                title: precise.title.clone(),
+                body: TemporalBody::Gantt(precise),
+            },
+            800.0,
+        );
+        let widths = precise_layout.items.iter().filter_map(|item| match item {
+            diagram_ir::LayoutedTemporalItem::TaskBar { width, .. } => Some(*width),
+            _ => None,
+        }).collect::<Vec<_>>();
+        assert!((widths[0] / widths[1] - 4.0).abs() < 0.01);
+        let precise_scene = diagram_to_paint_temporal(
+            &precise_layout,
+            &DiagramToPaintOptions {
+                background: layout_ir::Color { r: 255, g: 255, b: 255, a: 255 },
+                device_pixel_ratio: 2.0,
+                label_font: font_spec("Helvetica", 12.0),
+                title_font: font_spec("Helvetica", 16.0),
+                shaper: &shaper,
+                metrics: &metrics,
+                resolver: &resolver,
+            },
+        );
+        let precise_pixels = render(&precise_scene);
+        write_png(&precise_pixels, "/tmp/mermaid_gantt_seconds_e2e.png")
+            .expect("seconds-only PNG write failed");
+        assert!(!precise_scene.instructions.is_empty());
     }
 
     #[test]

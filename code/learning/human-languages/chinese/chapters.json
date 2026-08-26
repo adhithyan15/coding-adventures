@@ -391,6 +391,33 @@
           "ZH-SCRIPT-GUO-01"
         ]
       }
+    },
+    {
+      "chapter": 18,
+      "title": "Looking and reading",
+      "label": "ch:zh-looking-reading",
+      "canDo": "I can understand, say, read and write 看, 看见, 好看, 书 and 看书, and score listening, speaking, reading and writing separately.",
+      "spineNodes": [
+        "SPINE-EXCHANGE-NAMES"
+      ],
+      "payoff": {
+        "lesson": "ZH-C18-practice",
+        "kind": "writing",
+        "summary": "Two carefully staged characters support five nearby meanings, expanding retrieval and separate listening, speaking, cold-reading and no-model writing scores.",
+        "assesses": [
+          "ZH-PERFORMANCE-LOOKING-READING-FIVE-FOUR-SKILL-01",
+          "ZH-LEX-KAN-01",
+          "ZH-SCRIPT-KAN-01",
+          "ZH-LEX-KANJIAN-01",
+          "ZH-ORTHO-KANJIAN-01",
+          "ZH-LEX-HAOKAN-01",
+          "ZH-ORTHO-HAOKAN-01",
+          "ZH-LEX-SHU-01",
+          "ZH-SCRIPT-SHU-01",
+          "ZH-LEX-KANSHU-01",
+          "ZH-ORTHO-KANSHU-01"
+        ]
+      }
     }
   ]
 }

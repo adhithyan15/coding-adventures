@@ -344,6 +344,45 @@ fn emit_stmt(out: &mut String, s: &Stmt, indent: usize) {
                 let _ = write!(out, "{}_sir_globals[{}] = ", pad, quote_go_string(global));
                 emit_expr(out, value, indent);
                 out.push('\n');
+            } else if let Expr::If {
+                cond,
+                then_branch,
+                else_branch,
+                ..
+            } = expr
+            {
+                // A bare `if` used for effect only (its value is
+                // discarded — this is `Stmt::ExprStmt`, which never
+                // captures a value at all) gets a REAL native
+                // `if ... { … } else { … }` statement here, not the
+                // `func() Value { … }()` IIFE the generic value-position
+                // `Expr::If` codegen below produces.
+                //
+                // This isn't just a style improvement: Go has no
+                // expression-position `if`, so the generic path lifts
+                // the whole thing to an anonymous func literal that
+                // `return`s a value (and `emit_block_as_expr` wraps a
+                // non-empty branch in a SECOND, nested func literal of
+                // its own) — and `break`/`continue` (SIR16 addendum,
+                // `Feature::LoopControl`) cannot cross a Go func-literal
+                // boundary. `if (cond) { break; }` inside a `for` is the
+                // single most common way source code uses `break`/
+                // `continue` at all, so routing it through the IIFE path
+                // made every such program a `go build` compile error
+                // (`break is not in a loop`), not just a stylistic wart.
+                // Mirrors `semantic-ir-to-javascript`'s (task #62) and
+                // `semantic-ir-to-typescript`'s (task #63) own
+                // identically-reasoned fix — confirmed by direct
+                // inspection that this backend's `Expr::If`/
+                // `emit_block_as_expr` pair shares the exact same
+                // func-literal shape.
+                let _ = write!(out, "{}if _sir_truthy(", pad);
+                emit_expr(out, cond, indent);
+                out.push_str(") {\n");
+                emit_block_as_stmts(out, then_branch, indent + 1);
+                let _ = writeln!(out, "{}}} else {{", pad);
+                emit_block_as_stmts(out, else_branch, indent + 1);
+                let _ = writeln!(out, "{}}}", pad);
             } else {
                 // Go requires expression statements to use the value
                 // or assign to `_`.  Use `_ = expr`.
@@ -561,11 +600,23 @@ fn emit_stmt(out: &mut String, s: &Stmt, indent: usize) {
         | Stmt::MethodDef { span, .. } => {
             panic!("go backend reached a SIR29 nominal-OOP node at {} — capability check should have rejected it", span);
         }
-        // ── SIR16 addendum: loop control ──────────────────────────────
-        // `Feature::LoopControl` not accepted by this backend yet — same
-        // rationale as the SIR29 arm just above.
-        Stmt::Break { span, .. } | Stmt::Continue { span, .. } => {
-            panic!("go backend reached a Stmt::Break/Continue node at {} — capability check should have rejected it", span);
+        // ── SIR16 addendum: bare loop-control statements ──────────────
+        // A trivial 1:1 emission — `While`/`ForRange`/`ForEach`'s bodies
+        // above are already inlined directly into a real native `for`
+        // loop with no closure/func-literal boundary in the way, so a
+        // bare `break`/`continue` here always targets the correct
+        // enclosing Go loop. The validator itself guarantees the
+        // nearest enclosing loop is never a `ForRange` (see
+        // `Feature::LoopControl`'s own doc comment in `semantic-ir::
+        // manifest`), so there's no case this backend needs to reject
+        // or special-case here. Mirrors `semantic-ir-to-javascript`'s
+        // (task #62) and `semantic-ir-to-typescript`'s (task #63) own
+        // identical emission.
+        Stmt::Break { .. } => {
+            let _ = writeln!(out, "{}break", pad);
+        }
+        Stmt::Continue { .. } => {
+            let _ = writeln!(out, "{}continue", pad);
         }
     }
 }
@@ -4056,5 +4107,75 @@ mod tests {
         assert!(RUNTIME.contains(r#"return cls + "\x00" + method"#));
         // The user-object path in call_method must resolve + push/pop self.
         assert!(RUNTIME.contains("if inst, ok := recv.(*SirInstance); ok"));
+    }
+
+    // ── SIR16 addendum: loop control (task #63) ─────────────────────────
+
+    #[test]
+    fn emit_break_is_bare_break() {
+        let mut out = String::new();
+        emit_stmt(&mut out, &Stmt::Break { span: s() }, 0);
+        assert_eq!(out, "break\n");
+    }
+
+    #[test]
+    fn emit_continue_is_bare_continue() {
+        let mut out = String::new();
+        emit_stmt(&mut out, &Stmt::Continue { span: s() }, 0);
+        assert_eq!(out, "continue\n");
+    }
+
+    #[test]
+    fn emit_while_with_break_and_continue_in_body() {
+        // `for _sir_truthy(true) { continue; break }` — both statements
+        // land inside the native `for`'s body, at the loop body's own
+        // indentation.
+        let st = Stmt::While {
+            cond: Expr::BoolLit { value: true, span: s() },
+            body: Block {
+                stmts: vec![Stmt::Continue { span: s() }, Stmt::Break { span: s() }],
+                value: Expr::NilLit { span: s() },
+                span: s(),
+            },
+            span: s(),
+        };
+        let mut out = String::new();
+        emit_stmt(&mut out, &st, 0);
+        assert!(out.contains("continue\n"), "got {out}");
+        assert!(out.contains("break\n"), "got {out}");
+        assert!(out.trim_end().ends_with('}'));
+    }
+
+    #[test]
+    fn bare_if_used_as_a_statement_emits_native_if_else_not_func_literal_iife() {
+        // The crux of task #63's own fix: `Stmt::ExprStmt{Expr::If{..}}`
+        // must NOT route through the generic value-position `Expr::If`
+        // codegen (a `func() Value { ... }()` IIFE) — a `break`/
+        // `continue` inside either branch cannot cross that func
+        // literal's own boundary. It must emit a real native
+        // `if ... { } else { }` statement instead.
+        let st = Stmt::ExprStmt {
+            expr: Expr::If {
+                cond: Box::new(Expr::VarRef { name: "x".into(), scope: Scope::Local, span: s() }),
+                then_branch: Box::new(Block {
+                    stmts: vec![Stmt::Break { span: s() }],
+                    value: Expr::NilLit { span: s() },
+                    span: s(),
+                }),
+                else_branch: Box::new(Block {
+                    stmts: vec![],
+                    value: Expr::NilLit { span: s() },
+                    span: s(),
+                }),
+                span: s(),
+            },
+            span: s(),
+        };
+        let mut out = String::new();
+        emit_stmt(&mut out, &st, 0);
+        assert!(out.starts_with("if _sir_truthy("), "expected a native `if`, got {out}");
+        assert!(out.contains("break\n"), "got {out}");
+        assert!(!out.contains("func()"), "must not route through a func-literal IIFE: {out}");
+        assert!(out.contains("} else {"), "got {out}");
     }
 }

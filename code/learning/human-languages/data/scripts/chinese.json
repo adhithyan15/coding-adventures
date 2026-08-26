@@ -1120,6 +1120,60 @@
         "variation": "The cited PRC-order dataset supplies eight ordered strokes for 国. Medians 1–2 open the outer frame, medians 3–7 finish every stroke of 玉 inside it, and median 8 closes the frame along the bottom. Make Me a Hanzi documents that its stroke paths are ordered in proper stroke order, its medians share the coordinate system used for stroke-order animation, and the project follows People's Republic of China stroke order. The ductus uses those ordered source medians directly; the vendored Noto Sans SC outline can differ in width and proportion from the Arphic-derived source graphics."
       },
       "notes": "Means country or nation in the official Level 1 word 中国. It reuses the close-the-frame-last rule already taught with 口 and 四."
+    },
+    {
+      "glyph": "看",
+      "sound": "kàn",
+      "role": "logograph",
+      "tone": "4",
+      "components": [
+        "four upper hand-like strokes",
+        "the five-stroke eye component 目"
+      ],
+      "strokeOrder": [
+        "draw the short top left-falling stroke",
+        "lift, then draw the upper horizontal left to right",
+        "lift, then draw the next horizontal left to right",
+        "lift, then draw the long left-falling stroke toward the lower component",
+        "lift, then draw 目's left vertical from top to bottom",
+        "lift, draw 目's top horizontal, then turn down the right side without lifting",
+        "lift, then draw 目's first inner horizontal left to right",
+        "lift, then draw 目's second inner horizontal left to right",
+        "lift, then close 目 with its bottom horizontal left to right"
+      ],
+      "strokeOrderNote": "source-verified PRC stroke order",
+      "penLifts": 8,
+      "strokeOrderSource": {
+        "citation": "Hanzi Writer Data 看.json, ordered stroke paths and medians 1–9 (Hanzi Writer Data snapshot 68d10a4, updated from Make Me a Hanzi, 22 June 2019)",
+        "url": "https://raw.githubusercontent.com/chanind/hanzi-writer-data/68d10a4b21150cae5e1ebbd223eed289cf32d90c/data/%E7%9C%8B.json",
+        "variation": "The cited PRC-order dataset supplies nine ordered strokes for 看. Medians 1–4 form the upper hand-like element; medians 5–9 complete 目 below. Make Me a Hanzi documents that its stroke paths are ordered in proper stroke order and that the project follows People's Republic of China stroke order. The ductus preserves that ordered sequence while fitting its learner pen paths to the vendored Noto Sans SC outline, whose width and proportions differ from the Arphic-derived source graphics."
+      },
+      "notes": "Means look at or watch in the official Level 1 word 看 and composes transparently inside 看见, 好看, and 看书."
+    },
+    {
+      "glyph": "书",
+      "sound": "shū",
+      "role": "logograph",
+      "tone": "1",
+      "components": [
+        "two upper folding strokes",
+        "a central upright",
+        "a final upper-right dot"
+      ],
+      "strokeOrder": [
+        "draw the short upper horizontal, then fold down without lifting",
+        "lift, draw the second horizontal, then fold down and finish with the hook without lifting",
+        "lift, then draw the long central upright from top to bottom",
+        "lift, then add the small upper-right dot"
+      ],
+      "strokeOrderNote": "source-verified PRC stroke order",
+      "penLifts": 3,
+      "strokeOrderSource": {
+        "citation": "Hanzi Writer Data 书.json, ordered stroke paths and medians 1–4 (Hanzi Writer Data snapshot 68d10a4, updated from Make Me a Hanzi, 22 June 2019)",
+        "url": "https://raw.githubusercontent.com/chanind/hanzi-writer-data/68d10a4b21150cae5e1ebbd223eed289cf32d90c/data/%E4%B9%A6.json",
+        "variation": "The cited PRC-order dataset supplies four ordered strokes for 书: two upper folding strokes, the central upright, and the final upper-right dot. Make Me a Hanzi documents that its stroke paths are ordered in proper stroke order and that the project follows People's Republic of China stroke order. The ductus preserves that ordered sequence while fitting its learner pen paths to the vendored Noto Sans SC outline, whose width and proportions differ from the Arphic-derived source graphics."
+      },
+      "notes": "Means book in the official Level 1 word 书 and becomes the object in the transparent reading expression 看书."
     }
   ]
 }

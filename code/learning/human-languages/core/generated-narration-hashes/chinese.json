@@ -375,6 +375,42 @@
       "json": "chinese/narration/ch17.json",
       "textHash": "fnv1a64:4613b77da89aff3b",
       "jsonHash": "fnv1a64:65f983a9e5ba8ed8"
+    },
+    {
+      "language": "chinese",
+      "chapter": 18,
+      "sourceHash": "fnv1a64:ce49997d1662e026",
+      "lessonIds": [
+        "ZH-C18-hear-kan",
+        "ZH-W18-kan-observe",
+        "ZH-W18-kan-guided",
+        "ZH-W18-kan-delayed",
+        "ZH-C18-kan",
+        "ZH-C18-hear-kanjian",
+        "ZH-C18-kanjian",
+        "ZH-C18-hear-haokan",
+        "ZH-C18-haokan",
+        "ZH-R18-looking-three-r1",
+        "ZH-C18-hear-shu",
+        "ZH-W18-shu-observe",
+        "ZH-W18-shu-guided",
+        "ZH-W18-shu-delayed",
+        "ZH-C18-shu",
+        "ZH-C18-hear-kanshu",
+        "ZH-C18-kanshu",
+        "ZH-R18-looking-three-r2",
+        "ZH-R18-book-reading-r1",
+        "ZH-R18-listening-five",
+        "ZH-R18-reading-five",
+        "ZH-R18-writing-five",
+        "ZH-C18-practice"
+      ],
+      "voiceLessons": 11,
+      "drivablePrefix": 0,
+      "text": "chinese/narration/ch18.txt",
+      "json": "chinese/narration/ch18.json",
+      "textHash": "fnv1a64:4d929a50040f77aa",
+      "jsonHash": "fnv1a64:94e3c97c0d970370"
     }
   ],
   "findings": []

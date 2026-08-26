@@ -225,14 +225,30 @@ for `Stmt::Break`/`Stmt::Continue` this addendum's own Slice 0 landed
 everywhere — each replaced with the correct no-op (neither variant
 carries a nested expression or statement for any of those scans to find).
 
+`semantic-ir-to-go` was the third backend to accept the feature (task
+#63): its `While`/`ForRange`/`ForEach` lowering shares the same "real
+inline native loop, no closure boundary" shape, and — again confirmed,
+not just anticipated — its `Expr::If` codegen shared the identical
+hazard in Go's own idiom: Go has no expression-position `if`, so the
+value-position path lifts the whole thing to an anonymous
+`func() Value { ... }()` literal (with `emit_block_as_expr` nesting a
+second func literal for any non-empty branch), which `break`/`continue`
+cannot cross either. Fixed the same way: a native `if`/`else` special
+case in `emit_stmt`'s `Stmt::ExprStmt` arm. Unlike the TypeScript
+rollout, this backend's other `Stmt`-matching traversal functions needed
+no change: one already had a wildcard `_ => {}` catch-all, and the other
+already had a correct no-op arm for `Break`/`Continue` (only its own
+comment, which claimed the feature wasn't in `ACCEPTED_FEATURES`, was
+stale).
+
 Remaining backends (per-backend, once each is audited for this class of
-hazard): `semantic-ir-to-go`'s and `semantic-ir-to-python`'s `While`/
-`ForEach` lowering was independently confirmed (during this addendum's
-own design research) to share the same "real inline native loop, no
-closure boundary" shape, so they're the next candidates — see the task
-tracker. `semantic-ir-to-ruby` needs its existing defensive-scan pattern
-extended rather than replaced outright. `semantic-ir-to-rust` needs its
-`TryCatch`/`catch_unwind` hazard resolved (or scoped out) first.
+hazard): `semantic-ir-to-python`'s `While`/`ForEach` lowering was
+independently confirmed (during this addendum's own design research) to
+share the same "real inline native loop, no closure boundary" shape, so
+it's the next candidate — see the task tracker. `semantic-ir-to-ruby`
+needs its existing defensive-scan pattern extended rather than replaced
+outright. `semantic-ir-to-rust` needs its `TryCatch`/`catch_unwind`
+hazard resolved (or scoped out) first.
 
 ### Sequences
 
