@@ -355,7 +355,7 @@
     {
       "language": "gujarati",
       "chapter": 26,
-      "sourceHash": "fnv1a64:8b61d3ff603d5d2f",
+      "sourceHash": "fnv1a64:917b538c769de6d0",
       "lessonIds": [
         "GU-C22-hear-shahar",
         "GU-C22-shahar",
@@ -370,14 +370,16 @@
     {
       "language": "gujarati",
       "chapter": 27,
-      "sourceHash": "fnv1a64:e2b557d05872debc",
+      "sourceHash": "fnv1a64:30a8ee9a1da51134",
       "lessonIds": [
         "GU-C23-hear-gaam",
+        "GU-R23-route-three-r1",
         "GU-C23-gaam",
         "GU-C23-hear-dukaan",
         "GU-C23-dukaan",
         "GU-R23-map-ten",
-        "GU-C23-map-ten"
+        "GU-C23-map-ten",
+        "GU-R23-shaalaa-rasto-r2"
       ],
       "tex": "gujarati/book/chapters/ch27-village-shop-ten.tex"
     }

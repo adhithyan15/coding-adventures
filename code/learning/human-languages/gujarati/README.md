@@ -32,15 +32,18 @@ and book-only human pass evidence remain backlog.
 
 ## Current authored boundary
 
-Canonical data currently contains **27 chapters and 163 lessons**. All 163
+Canonical data currently contains **27 chapters and 165 lessons**. All 165
 lessons are mapped and generated, and every lesson stays within the five-minute
 cap. The pre-A1 writing-stage contract is complete, all 41 Gujarati forms shown
 by the current book are explicitly taught, and the exact script inventory has
 no never-taught glyphs.
 
 That is a solid pre-A1 foundation, not a finished course. The exact pre-A1
-headword inventory now contains 44 words. Current measured debt includes 294
-expanding-retrieval windows, six atoms never revisited, two lesson
+headword inventory now contains 44 words. Two zero-new-atom checkpoints now
+close the newest route performance's R1 window and the school/road meaning and
+script R2 windows; the school lesson also returns city writing at R1. Current
+measured continuity debt is pinned at 299 windows by the corpus tests rather
+than treated as mastery. It still includes six atoms never revisited, two lesson
 atom spikes, one chapter atom spike, two script-closure findings, and one
 measurement-blind lesson. Vocabulary breadth, grammar, listening volume,
 connected reading, free writing, speaking, every later level, and examination
@@ -53,7 +56,7 @@ materials still require substantial expansion.
 | 8-10 | Exchange names, check wellbeing, and take leave. |
 | 11-18 | Use first verbs and numbers, then build small domains around thought, reading, food, family, and the body. |
 | 19-23 | Retrieve early script and conversation atoms at genuine third and fourth spacing windows. |
-| 24-27 | Hear, say, read, and write ten concrete map words through separate four-skill checks. |
+| 24-27 | Hear, say, read, and write ten concrete map words through separate four-skill checks, then retrieve the newest route atoms at measured R1/R2 intervals. |
 
 The exact chapter titles, lesson ranges, and ordered lesson IDs are in the
 [session map](session-map.md). The [roadmap](roadmap.md) separates this authored

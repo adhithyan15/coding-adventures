@@ -135,7 +135,7 @@ it("pins Gujarati's meaning-first opening script spine", () => {
     ["24", 8],
     ["25", 7],
     ["26", 7],
-    ["27", 6],
+    ["27", 8],
   ]);
 });
 
@@ -298,8 +298,10 @@ it("pins Gujarati's complete pre-A1 writing runway", () => {
     "delayed-copy",
     "guided-copy",
     "dictation-transcription",
+    "dictation-transcription",
     "delayed-copy",
     "guided-copy",
+    "dictation-transcription",
     "dictation-transcription",
   ]);
 });
@@ -631,11 +633,57 @@ it("closes Gujarati doorway R4 at position 134", () => {
   const beforeCheckpoint = measureContinuity(ordered.slice(0, 134));
   const afterCheckpoint = measureContinuity(lessons);
   expect(beforeCheckpoint.reinforcement.flatMap((defect) => defect.missed)).toHaveLength(248);
-  expect(afterCheckpoint.reinforcement.flatMap((defect) => defect.missed)).toHaveLength(294);
+  expect(afterCheckpoint.reinforcement.flatMap((defect) => defect.missed)).toHaveLength(299);
   expect(
     afterCheckpoint.reinforcement.filter(
       (defect) => doorway.includes(defect.atom) && defect.missed.includes("R4"),
     ),
+  ).toEqual([]);
+});
+
+it("closes Gujarati runway B at exact R1 and R2 positions", () => {
+  const lessons = loadTrackLessons("gujarati");
+  const ordered = [...lessons].sort(
+    (left, right) => Number(left.frontmatter.sequence) - Number(right.frontmatter.sequence),
+  );
+  expect([
+    ordered[153]?.realization.lessonId,
+    ordered[158]?.realization.lessonId,
+    ordered[164]?.realization.lessonId,
+  ]).toEqual([
+    "GU-C22-shaalaa",
+    "GU-R23-route-three-r1",
+    "GU-R23-shaalaa-rasto-r2",
+  ]);
+  expect(
+    [ordered[158], ordered[164]].every(
+      (lesson) => ((lesson?.frontmatter["introduces.knowledge"] ?? []) as string[]).length === 0,
+    ),
+  ).toBe(true);
+
+  const exactReturns = [
+    ["GU-SCRIPT-SHAHAR-01", 153, 2],
+    ["GU-PERFORMANCE-ROUTE-THREE-FOUR-SKILL-01", 158, 2],
+    ["GU-LEX-SHAALAA-01", 164, 12],
+    ["GU-SCRIPT-SHAALAA-01", 164, 11],
+    ["GU-LEX-RASTO-01", 164, 10],
+    ["GU-SCRIPT-RASTO-01", 164, 9],
+  ] as const;
+  expect(
+    exactReturns.map(([atom, returnAt]) => {
+      const introducedAt = ordered.findIndex((lesson) =>
+        ((lesson.frontmatter["introduces.knowledge"] ?? []) as string[]).includes(atom),
+      );
+      expect(
+        ((ordered[returnAt]?.frontmatter["practises.knowledge"] ?? []) as string[]),
+      ).toContain(atom);
+      return returnAt - introducedAt;
+    }),
+  ).toEqual(exactReturns.map(([, , distance]) => distance));
+
+  const targets = new Set(exactReturns.map(([atom]) => atom));
+  expect(
+    measureContinuity(lessons).reinforcement.filter((defect) => targets.has(defect.atom)),
   ).toEqual([]);
 });
 
@@ -676,6 +724,7 @@ it("pins Gujarati-owned objective activities", () => {
     "GU-C22-hear-shahar-recall",
     "GU-C22-rasto-copy",
     "GU-C22-route-three-payoff",
+    "GU-C22-shaalaa-city-r1",
     "GU-C22-shaalaa-delayed",
     "GU-C22-shahar-copy",
     "GU-C23-dukaan-copy",
@@ -749,6 +798,14 @@ it("pins Gujarati-owned objective activities", () => {
     "GU-R19-doorway-nine-r4-reading",
     "GU-R21-travel-five-recall",
     "GU-R23-map-ten-recall",
+    "GU-R23-route-three-r1-listening",
+    "GU-R23-route-three-r1-reading",
+    "GU-R23-route-three-r1-speaking",
+    "GU-R23-route-three-r1-writing",
+    "GU-R23-shaalaa-rasto-r2-listening",
+    "GU-R23-shaalaa-rasto-r2-reading",
+    "GU-R23-shaalaa-rasto-r2-speaking",
+    "GU-R23-shaalaa-rasto-r2-writing",
     "GU-W01-aa-matra-observe-check",
     "GU-W01-ha-observe-check",
     "GU-W01-haa-delayed-copy-check",

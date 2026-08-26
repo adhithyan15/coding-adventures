@@ -7,12 +7,12 @@
   "policy": {
     "maxLinearisableTableColumns": 3
   },
-  "sourceHash": "fnv1a64:ed1c3795d5de686c",
+  "sourceHash": "fnv1a64:51ba50a793315f07",
   "summary": {
-    "totalLessons": 163,
+    "totalLessons": 165,
     "voice": 25,
     "sight": 43,
-    "pen": 95,
+    "pen": 97,
     "drivableLessons": 25,
     "drivablePercent": 15,
     "trackCount": 1,
@@ -26,10 +26,10 @@
   "tracks": [
     {
       "language": "gujarati",
-      "lessonCount": 163,
+      "lessonCount": 165,
       "voice": 25,
       "sight": 43,
-      "pen": 95,
+      "pen": 97,
       "drivablePercent": 15,
       "drivablePrefixTotal": 13,
       "modalities": [
@@ -447,17 +447,17 @@
         },
         {
           "chapter": 27,
-          "lessonCount": 6,
+          "lessonCount": 8,
           "voice": 2,
           "sight": 0,
-          "pen": 4,
+          "pen": 6,
           "modalities": [
             "voice",
             "sight",
             "pen"
           ],
           "drivablePrefix": 1,
-          "firstNonVoiceLesson": "GU-C23-gaam",
+          "firstNonVoiceLesson": "GU-R23-route-three-r1",
           "drivable": false,
           "drivableLessonIds": [
             "GU-C23-hear-gaam"
@@ -3902,7 +3902,7 @@
         "writing-type"
       ],
       "coreDrivable": false,
-      "sourceHash": "fnv1a64:8ff8d76830a759f4",
+      "sourceHash": "fnv1a64:c45c2473dc503b57",
       "delivery": "script",
       "authored": "pen",
       "authoredReason": "The delayed-copy activity requires handwriting; its machine-readable stage is not visible to prose cue derivation."
@@ -3984,6 +3984,31 @@
       ],
       "coreDrivable": true,
       "sourceHash": "fnv1a64:93c5a041485168fd"
+    },
+    {
+      "id": "GU-R23-route-three-r1",
+      "language": "gujarati",
+      "chapter": 27,
+      "sequence": 1095,
+      "modality": "pen",
+      "derived": "pen",
+      "drivable": false,
+      "reasons": [
+        "writing-type",
+        "writing-block"
+      ],
+      "coreModality": "pen",
+      "coreReasons": [
+        "writing-type"
+      ],
+      "coreDrivable": false,
+      "sourceHash": "fnv1a64:21b3b1e99502b1cb",
+      "detachableSegments": [
+        "Writing — from meaning, with every model covered"
+      ],
+      "delivery": "script",
+      "authored": "pen",
+      "authoredReason": "The four separate retrieval checks end in required model-free dictation, so the complete lesson needs a pen."
     },
     {
       "id": "GU-C23-gaam",
@@ -4086,6 +4111,31 @@
       "delivery": "script",
       "authored": "pen",
       "authoredReason": "The non-compensatory payoff includes required dictation, so the complete lesson needs a pen even though its oral core is drivable."
+    },
+    {
+      "id": "GU-R23-shaalaa-rasto-r2",
+      "language": "gujarati",
+      "chapter": 27,
+      "sequence": 1150,
+      "modality": "pen",
+      "derived": "pen",
+      "drivable": false,
+      "reasons": [
+        "writing-type",
+        "writing-block"
+      ],
+      "coreModality": "pen",
+      "coreReasons": [
+        "writing-type"
+      ],
+      "coreDrivable": false,
+      "sourceHash": "fnv1a64:d1676db0588d241b",
+      "detachableSegments": [
+        "Writing — from meaning, with every model covered"
+      ],
+      "delivery": "script",
+      "authored": "pen",
+      "authoredReason": "The four separate retrieval checks end in required model-free dictation, so the complete lesson needs a pen."
     }
   ],
   "findings": []
