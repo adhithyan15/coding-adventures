@@ -4,7 +4,7 @@
   "chapter": 27,
   "title": "Village and Shop Complete Ten",
   "drivablePrefix": 1,
-  "sourceHash": "fnv1a64:6967baa99778b1cf",
+  "sourceHash": "fnv1a64:3fb388e8d82594e4",
   "lessons": [
     {
       "id": "GU-C23-hear-gaam",
@@ -70,6 +70,178 @@
                 "correct": "Right: gām means village.",
                 "incorrect": "Listen once more: gām — village."
               }
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "GU-R23-route-three-r1",
+      "sequence": 1095,
+      "title": "The three-word route returns at R1",
+      "headword": "શહેર — શાળા — રસ્તો",
+      "romanization": "shahar — shāḷā — rasto",
+      "gloss": "retrieve the three-word route in four separate skills at R1",
+      "script": "gujarati",
+      "modality": "pen",
+      "derivedModality": "pen",
+      "modalityReasons": [
+        "writing-type",
+        "writing-block"
+      ],
+      "sourceHash": "fnv1a64:21b3b1e99502b1cb",
+      "notice": {
+        "modality": "pen",
+        "needs": [
+          "a pen and something to write on"
+        ],
+        "waitUntilStopped": [],
+        "text": "Before we start: this one needs your hands, so it is not a driving lesson. You will want a pen and something to write on. You can listen to all of it now and come back to the parts that need looking at once you have stopped."
+      },
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "Keep four scores. Each score needs 3/3; strength in one skill cannot replace a miss in another. Check and retry only a missed item."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "Listening — meaning from sound."
+            },
+            {
+              "kind": "speech",
+              "text": "Listen once: shāḷā — rasto — shahar. Record the listening score before any repair."
+            },
+            {
+              "kind": "speech",
+              "text": "Speaking — sound from meaning."
+            },
+            {
+              "kind": "speech",
+              "text": "Say the three meaning cues without reading a Gujarati model. Record speaking separately."
+            },
+            {
+              "kind": "speech",
+              "text": "Reading — a cold shuffled row."
+            },
+            {
+              "kind": "speech",
+              "text": "Read once before checking. Record the reading score on its own."
+            },
+            {
+              "kind": "activity",
+              "scored": true,
+              "id": "GU-R23-route-three-r1-listening",
+              "prompt": "Without looking at Gujarati, hear shāḷā, rasto, shahar. Give the three English meanings.",
+              "assesses": [
+                "GU-PERFORMANCE-ROUTE-THREE-FOUR-SKILL-01"
+              ],
+              "responseSeconds": 25,
+              "acceptedResponses": [
+                "school — road — city",
+                "school road city"
+              ],
+              "feedback": {
+                "correct": "Listening is 3/3.",
+                "incorrect": "Replay only a missed sound, then retry it."
+              }
+            },
+            {
+              "kind": "activity",
+              "scored": true,
+              "id": "GU-R23-route-three-r1-speaking",
+              "prompt": "Say road, city, school in Gujarati, in that order.",
+              "assesses": [
+                "GU-PERFORMANCE-ROUTE-THREE-FOUR-SKILL-01"
+              ],
+              "responseSeconds": 25,
+              "acceptedResponses": [
+                "rasto — shahar — shāḷā",
+                "rasto shahar shaalaa"
+              ],
+              "feedback": {
+                "correct": "Speaking is 3/3.",
+                "incorrect": "Repair only a missed word, then say that cue again."
+              }
+            },
+            {
+              "kind": "activity",
+              "scored": true,
+              "id": "GU-R23-route-three-r1-reading",
+              "prompt": "Read this shuffled row and give each meaning: રસ્તો — શહેર — શાળા.",
+              "assesses": [
+                "GU-PERFORMANCE-ROUTE-THREE-FOUR-SKILL-01"
+              ],
+              "responseSeconds": 25,
+              "acceptedResponses": [
+                "road — city — school",
+                "road city school"
+              ],
+              "feedback": {
+                "correct": "Cold reading is 3/3.",
+                "incorrect": "Repair only a missed card, reshuffle it, and read again."
+              }
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "writing",
+          "title": "Writing — from meaning, with every model covered",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "Do not copy from the reading row. Record writing separately, then repair only a missed word."
+            },
+            {
+              "kind": "activity",
+              "scored": true,
+              "id": "GU-R23-route-three-r1-writing",
+              "prompt": "Cover every Gujarati model. Write school, city, road in Gujarati, in that order.",
+              "assesses": [
+                "GU-PERFORMANCE-ROUTE-THREE-FOUR-SKILL-01"
+              ],
+              "responseSeconds": 40,
+              "acceptedResponses": [
+                "શાળા — શહેર — રસ્તો",
+                "શાળા શહેર રસ્તો"
+              ],
+              "feedback": {
+                "correct": "Model-free writing is 3/3; all four R1 scores now stand separately.",
+                "incorrect": "Check only a missed word, cover it again, and rewrite that cue."
+              }
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Which four scores must stand separately? (Listening, speaking, reading, and writing.)"
+            },
+            {
+              "kind": "speech",
+              "text": "Sources: Cambridge: city, school, and road."
             }
           ]
         }
@@ -458,6 +630,182 @@
                 "correct": "The ten-word runway passes in all four skills.",
                 "incorrect": "Repair only the failed word or skill, then retry that part."
               }
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "GU-R23-shaalaa-rasto-r2",
+      "sequence": 1150,
+      "title": "School and road return at R2",
+      "headword": "શાળા — રસ્તો",
+      "romanization": "shāḷā — rasto",
+      "gloss": "retrieve school and road in four separate skills at R2",
+      "script": "gujarati",
+      "modality": "pen",
+      "derivedModality": "pen",
+      "modalityReasons": [
+        "writing-type",
+        "writing-block"
+      ],
+      "sourceHash": "fnv1a64:d1676db0588d241b",
+      "notice": {
+        "modality": "pen",
+        "needs": [
+          "a pen and something to write on"
+        ],
+        "waitUntilStopped": [],
+        "text": "Before we start: this one needs your hands, so it is not a driving lesson. You will want a pen and something to write on. You can listen to all of it now and come back to the parts that need looking at once you have stopped."
+      },
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "Keep four scores. Each score needs 2/2; one skill cannot compensate for another. Check and retry only a missed item."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "Listening — meaning from sound."
+            },
+            {
+              "kind": "speech",
+              "text": "Listen once: rasto — shāḷā. Record the listening score before repair."
+            },
+            {
+              "kind": "speech",
+              "text": "Speaking — sound from meaning."
+            },
+            {
+              "kind": "speech",
+              "text": "Say both meaning cues without reading a Gujarati model. Record speaking separately."
+            },
+            {
+              "kind": "speech",
+              "text": "Reading — a cold reversed pair."
+            },
+            {
+              "kind": "speech",
+              "text": "Read once before checking. Record reading on its own."
+            },
+            {
+              "kind": "activity",
+              "scored": true,
+              "id": "GU-R23-shaalaa-rasto-r2-listening",
+              "prompt": "Without looking at Gujarati, hear rasto, shāḷā. Give the two English meanings.",
+              "assesses": [
+                "GU-LEX-SHAALAA-01",
+                "GU-LEX-RASTO-01"
+              ],
+              "responseSeconds": 20,
+              "acceptedResponses": [
+                "road — school",
+                "road school"
+              ],
+              "feedback": {
+                "correct": "Listening is 2/2.",
+                "incorrect": "Replay only a missed sound, then retry it."
+              }
+            },
+            {
+              "kind": "activity",
+              "scored": true,
+              "id": "GU-R23-shaalaa-rasto-r2-speaking",
+              "prompt": "Say school, road in Gujarati, in that order.",
+              "assesses": [
+                "GU-LEX-SHAALAA-01",
+                "GU-LEX-RASTO-01"
+              ],
+              "responseSeconds": 20,
+              "acceptedResponses": [
+                "shāḷā — rasto",
+                "shaalaa rasto"
+              ],
+              "feedback": {
+                "correct": "Speaking is 2/2.",
+                "incorrect": "Repair only a missed word, then say that cue again."
+              }
+            },
+            {
+              "kind": "activity",
+              "scored": true,
+              "id": "GU-R23-shaalaa-rasto-r2-reading",
+              "prompt": "Read this pair and give each meaning: રસ્તો — શાળા.",
+              "assesses": [
+                "GU-SCRIPT-SHAALAA-01",
+                "GU-SCRIPT-RASTO-01"
+              ],
+              "responseSeconds": 20,
+              "acceptedResponses": [
+                "road — school",
+                "road school"
+              ],
+              "feedback": {
+                "correct": "Cold reading is 2/2.",
+                "incorrect": "Repair only a missed card, reverse the pair, and read again."
+              }
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "writing",
+          "title": "Writing — from meaning, with every model covered",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "Do not copy from the reading pair. Record writing separately."
+            },
+            {
+              "kind": "activity",
+              "scored": true,
+              "id": "GU-R23-shaalaa-rasto-r2-writing",
+              "prompt": "Cover every Gujarati model. Write school, road in Gujarati, in that order.",
+              "assesses": [
+                "GU-SCRIPT-SHAALAA-01",
+                "GU-SCRIPT-RASTO-01"
+              ],
+              "responseSeconds": 30,
+              "acceptedResponses": [
+                "શાળા — રસ્તો",
+                "શાળા રસ્તો"
+              ],
+              "feedback": {
+                "correct": "Model-free writing is 2/2; both words now have R2 evidence.",
+                "incorrect": "Check only a missed word, cover it again, and rewrite that cue."
+              }
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Which two words now have a second spaced return? (School and road.)"
+            },
+            {
+              "kind": "speech",
+              "text": "Sources: Cambridge: school and road."
             }
           ]
         }

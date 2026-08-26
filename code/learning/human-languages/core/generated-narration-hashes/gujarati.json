@@ -481,7 +481,7 @@
     {
       "language": "gujarati",
       "chapter": 26,
-      "sourceHash": "fnv1a64:e9780e192966fc9a",
+      "sourceHash": "fnv1a64:6e4d80496bca2294",
       "lessonIds": [
         "GU-C22-hear-shahar",
         "GU-C22-shahar",
@@ -495,27 +495,29 @@
       "drivablePrefix": 1,
       "text": "gujarati/narration/ch26.txt",
       "json": "gujarati/narration/ch26.json",
-      "textHash": "fnv1a64:c6cfe93285013ef8",
-      "jsonHash": "fnv1a64:ab43a82afc900db9"
+      "textHash": "fnv1a64:285f307d2f1a6fc0",
+      "jsonHash": "fnv1a64:682edb051555a4b8"
     },
     {
       "language": "gujarati",
       "chapter": 27,
-      "sourceHash": "fnv1a64:6967baa99778b1cf",
+      "sourceHash": "fnv1a64:3fb388e8d82594e4",
       "lessonIds": [
         "GU-C23-hear-gaam",
+        "GU-R23-route-three-r1",
         "GU-C23-gaam",
         "GU-C23-hear-dukaan",
         "GU-C23-dukaan",
         "GU-R23-map-ten",
-        "GU-C23-map-ten"
+        "GU-C23-map-ten",
+        "GU-R23-shaalaa-rasto-r2"
       ],
       "voiceLessons": 2,
       "drivablePrefix": 1,
       "text": "gujarati/narration/ch27.txt",
       "json": "gujarati/narration/ch27.json",
-      "textHash": "fnv1a64:05d367fcb7d8409b",
-      "jsonHash": "fnv1a64:574130fe36e1db7a"
+      "textHash": "fnv1a64:f5295a25b5456f95",
+      "jsonHash": "fnv1a64:581a269da0b35444"
     }
   ],
   "findings": []

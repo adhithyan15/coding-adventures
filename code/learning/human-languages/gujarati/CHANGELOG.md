@@ -2,6 +2,17 @@
 
 ## [Unreleased]
 
+### Added — Gujarati runway B closes measured R1/R2 windows (#13079)
+
+- Return city writing inside the existing school lesson, two positions after
+  its script introduction, without adding a new form or word.
+- Add two zero-new-atom checkpoints that score listening, speaking, cold
+  reading, and model-free writing separately. The first closes R1 for the
+  three-word route performance; the second closes R2 for school and road
+  meaning and script atoms. Every checkpoint stays under five minutes.
+- Record the eleven windows newly made eligible by the longer runway in
+  follow-up #13103; the measured total is 299 rather than a hidden green claim.
+
 ### Added — Gujarati doorway retrieval closes R4 (#12837)
 
 - Add one zero-new-atom Chapter 19 checkpoint at track position 114, where all
