@@ -1,16 +1,25 @@
 {
   "chapter": 3,
-  "title": "Introducing Yourself",
-  "label": "ch:introductions",
-  "canDo": "I can introduce myself in Marathi, give my name, and understand the other person's name.",
+  "title": "Six More Signs Make Thank You Readable",
+  "label": "ch:thanks-script-b",
+  "canDo": "I can write six more Devanagari signs from delayed or heard cues, then read and write dhanyavad independently.",
   "spineNodes": [
-    "SPINE-EXCHANGE-NAMES"
+    "SPINE-COURTESY-THANK"
   ],
   "payoff": {
-    "lesson": "MR-C02-practice",
+    "lesson": "MR-W03-dhanyavad-write",
     "kind": "task",
-    "summary": "Complete MR-C02-practice, the canonical closing checkpoint, and demonstrate the chapter promise: introduce myself in Marathi, give my name, and understand the other person's name.",
-    "assesses": [],
-    "note": "This legacy schema-v1 chapter has no typed knowledge atoms yet. The payoff is anchored to real canonical lesson content, but its representativeness remains authored rather than atom-scored until migration."
+    "summary": "Hear, say, read, and independently write dhanyavad only after every load-bearing sign has been taught.",
+    "assesses": [
+      "MR-LEX-DHANYAVAD-01",
+      "MR-SCRIPT-DA-01",
+      "MR-SCRIPT-DHA-01",
+      "MR-SCRIPT-BA-01",
+      "MR-SCRIPT-YA-01",
+      "MR-SCRIPT-LLA-01",
+      "MR-SCRIPT-VA-01",
+      "MR-SCRIPT-DHANYAVAD-WRITE-01"
+    ],
+    "note": "The payoff adds no sign; it joins only forms already retrieved separately."
   }
 }

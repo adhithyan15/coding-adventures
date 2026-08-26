@@ -1,0 +1,25 @@
+{
+  "id": "MR-EXT-021-SCRIPT-DOORWAY",
+  "stage": "pre-A1",
+  "kind": "required",
+  "category": "script",
+  "canDo": "I can move twelve Devanagari signs from visible models through guided and delayed copy to dictation, then independently read and write dhanyavad.",
+  "prerequisites": [
+    "MR-EXT-016-SCRIPT-FIRST-PIECES"
+  ],
+  "lessons": [
+    "MR-W02-visarga",
+    "MR-W02-aa-independent",
+    "MR-W02-bha",
+    "MR-W02-e-matra",
+    "MR-W02-anusvara",
+    "MR-W02-ta",
+    "MR-W03-da",
+    "MR-W03-dha",
+    "MR-W03-ba",
+    "MR-W03-ya",
+    "MR-W03-lla",
+    "MR-W03-va",
+    "MR-W03-dhanyavad-write"
+  ]
+}

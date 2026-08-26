@@ -12,10 +12,10 @@ pieces taught before the whole; and a book you can read straight through.
   thread is what makes it distinct: it prefers **namaskār** as the greeting,
   keeps **three** genders (Hindi has two), marks **gender on the verb** even in
   the present (*yeto* m. / *yete* f.), and has an **extra letter ळ** (retroflex
-  *ḷ*) shared with the Dravidian south. Every word lesson teaches the letters
-  its own word needs, inline, under *"The letters in this word"* — the canonical
-  heading, which the tooling treats as a **detachable** section, so a hands-free
-  renderer may skip it and the lesson still counts as drivable. (Chapter 8 uses
+  *ḷ*) shared with the Dravidian south. The opening keeps meaning first, then
+  teaches one missing sign at a time before asking for decoding. Later word
+  lessons may teach letters inline under *"The letters in this word"* — a
+  **detachable** section a hands-free renderer may skip. (Chapter 10 uses
   *"Sounds you'll need"* instead; see the CHANGELOG for why that is a workaround
   rather than a convention.) A reader who knows Devanagari skims either.
 - **Grounded against English + Sanskrit**, with the wider Indo-European family
@@ -39,30 +39,40 @@ validation remain explicit backlog.
   hear **namaskār**, then trace, copy, recall, and write the pieces needed for
   **हो** before reading **नमस्कार** independently. The chapter reaches the
   12-atom ceiling exactly; no sign is bundled and no whole form comes first.
-- **Chapter 2 — Courtesy, responses, and leave-taking**
-  ([`lessons/MR-C01-*`](./lessons/)): add *dhanyavād*, *ho*, *baraṁ*, *nāhī*,
-  and *yeto/yete* only after the opening script runway, then close with a mixed
+- **Chapter 2 — Hear thanks, then meet six signs**
+  ([`lessons/MR-C01-dhanyavad.md`](./lessons/MR-C01-dhanyavad.md),
+  [`lessons/MR-W02-*`](./lessons/)): understand and say *dhanyavād* before
+  decoding it, then meet **ः आ भ े ं त** one sign at a time. Visible model,
+  guided copy, delayed copy, and the first R1/R2 retrieval all stay below five
+  minutes.
+- **Chapter 3 — Six more signs make thank you readable**
+  ([`lessons/MR-W03-*`](./lessons/)): add **द ध ब य ळ व** through delayed copy
+  and heard cues, then independently hear, say, read, and write **धन्यवाद**.
+  The payoff introduces no new sign.
+- **Chapter 4 — Courtesy, responses, and leave-taking**
+  ([`lessons/MR-C01-*`](./lessons/)): add *ho*, *baraṁ*, *nāhī*, and
+  *yeto/yete* only after the two script runways, then close with a mixed
   listening, speaking, and independent **हो** writing checkpoint.
-- **Chapter 3 — Introducing Yourself** ([`lessons/MR-C02-*`](./lessons/)): nāv,
+- **Chapter 5 — Introducing Yourself** ([`lessons/MR-C02-*`](./lessons/)): nāv,
   mājhaṁ, āhe, "my name is…", tū/tumhī, kāy, "what's your name?", ānand.
-- **Chapter 4 — How Are You** ([`lessons/MR-C03-*`](./lessons/)): kasā, "tumhī
+- **Chapter 6 — How Are You** ([`lessons/MR-C03-*`](./lessons/)): kasā, "tumhī
   kase āhāt?", mī, "mī barā āhe", kāhī harkat nāhī.
-- **Chapter 5 — Farewells** ([`lessons/MR-C04-*`](./lessons/)): punhā, bheṭū,
+- **Chapter 7 — Farewells** ([`lessons/MR-C04-*`](./lessons/)): punhā, bheṭū,
   "punhā bheṭū", "udyā bheṭū", kāḷjī ghyā.
-- **Chapter 6 — The First Verbs** ([`lessons/MR-C05-*`](./lessons/)): bolṇe,
+- **Chapter 8 — The First Verbs** ([`lessons/MR-C05-*`](./lessons/)): bolṇe,
   "mī marāṭhī bolto", rāhṇe, kām karṇe.
-- **Chapter 7 — Numbers 1–5** ([`lessons/MR-C06-*`](./lessons/)): a short
+- **Chapter 9 — Numbers 1–5** ([`lessons/MR-C06-*`](./lessons/)): a short
   counting lesson followed by a prerequisite-ordered etymology lesson on why
   *don* copied *tīn*, why Hindi retains *pāṁch*'s nasal, and why written *chār*
   sounds nearer *tsār* in Marathi.
-- **Chapter 8 — The Core Verbs** ([`lessons/MR-C07-*`](./lessons/)): asṇe,
+- **Chapter 10 — The Core Verbs** ([`lessons/MR-C07-*`](./lessons/)): asṇe,
   jāṇe, yeṇe, khāṇe, pāhṇe, māhīt asṇe — one idea each. The copula **आहे** and
   the verb-last rule; the present ending that declares your gender; *going* and
   *coming* as one Sanskrit root; the *-णे* infinitive as a **neuter** noun (the
   third gender Hindi lost); *paś-* as Indo-European *\*spek-*, cousin of
   *spectacle* and *spy*; and knowledge in the dative — *malā māhīt āhe*, "to me
   known is."
-- **Chapter 9 — The Mind and the Page** ([`lessons/MR-C08-*`](./lessons/)):
+- **Chapter 11 — The Mind and the Page** ([`lessons/MR-C08-*`](./lessons/)):
   vichār karṇe, samajṇe, vāchṇe, lihiṇe. Four roots that meant something
   physical first — *car-* "to turn" (Indo-European *\*kʷelh₁-*, behind **wheel**
   and **cycle**), *budh-* "to wake" (which named the **Buddha**), *vac-* "to
@@ -70,17 +80,17 @@ validation remain explicit backlog.
   Latin *scrībere* and English *write*, which named writing the same way.
   **समजणे** takes the dative, so *malā marāṭhī samajte* stands beside the core
   verb chapter's *malā marāṭhī yete*.
-- **Chapter 10 — Taking, Asking, Helping, Liking**
+- **Chapter 12 — Taking, Asking, Helping, Liking**
   ([`lessons/MR-C09-*`](./lessons/)): gheṇe, vichārṇe, madat karṇe, āvaḍṇe.
-  **घेणे** is the verb hiding inside Chapter 5's *kāḷjī ghyā*, on Sanskrit
+  **घेणे** is the verb hiding inside Chapter 7's *kāḷjī ghyā*, on Sanskrit
   **ग्रह्** — Vedic *grabh*, which is English **grab**. **विचारणे** is
-  Chapter 9's **विचार** with an infinitive ending, so in Marathi thinking and
+  Chapter 11's **विचार** with an infinitive ending, so in Marathi thinking and
   asking are one word. **मदत** is Arabic *madad* through Persian, the same
   Deccan layer as **माहीत**. And **आवडणे** is native, with no securely
   established Sanskrit ancestor, where Hindi and Urdu use the Persian loan
   *pasand* — it makes *malā marāṭhī āvaḍte* the third sentence on one frame.
 
-- **Chapter 11 — Water, Tea, Milk, and Bhakri** ([`lessons/MR-C10-*`](./lessons/)):
+- **Chapter 13 — Water, Tea, Milk, and Bhakri** ([`lessons/MR-C10-*`](./lessons/)):
   pāṇī, chahā, dūdh, bhākarī — the track's first pre-A1 nouns, and the first
   "please" pattern it has ever built, **[word], कृपया**. **कृपया** is Sanskrit's
   own instrumental of **कृपा**, "kindness." **पाणी** and **दूध** are secure
@@ -89,35 +99,39 @@ validation remain explicit backlog.
   loanword of the tranche, Mandarin *cha* by the overland route; **भाकरी**
   never touched Sanskrit at all and is not Hindi's word for bread — Hindi says
   **रोटी**. The four words carry all three Marathi genders between them.
-- **Chapter 12 — Friend and Family** ([`lessons/MR-C11-*`](./lessons/)): mitra,
+- **Chapter 14 — Friend and Family** ([`lessons/MR-C11-*`](./lessons/)): mitra,
   kuṭumb, bhāū, bahīṇ. **मित्र** and **कुटुंब** are tatsamas, taken up whole
   from Sanskrit; **भाऊ** and **बहीण** are tadbhavas, worn down by Prakrit sound
   change. **भाऊ** is a secure cousin of English **brother**; **बहीण**,
   deliberately, is not a cousin of **sister** at all — a different Sanskrit
   root, traditionally tied to "sharing." **कुटुंब** is neuter in Marathi and
   masculine in Hindi, from the identical borrowed word.
-- **Chapter 13 — Eye, Ear, Mouth, and Nose** ([`lessons/MR-C12-*`](./lessons/)):
+- **Chapter 15 — Eye, Ear, Mouth, and Nose** ([`lessons/MR-C12-*`](./lessons/)):
   ḍoḷā, kān, tõḍ, nāk. **डोळा** formally teaches the retroflex **ळ** first
-  heard, unlabeled, in Chapter 5's *kāḷjī* — and its own root is Sanskrit
+  heard, unlabeled, in Chapter 7's *kāḷjī* — and its own root is Sanskrit
   **दोल**, "a swing," a replacement for the old Indo-Aryan eye-word Hindi's
   **आँख** still carries. **कान**'s root is honestly disputed among scholars;
-  its *rṇ* → *ṇṇ* → *ṇ* path is the same cluster-simplifying habit Chapter 7
+  its *rṇ* → *ṇṇ* → *ṇ* path is the same cluster-simplifying habit Chapter 9
   traced in **दोन**. **तोंड** keeps a formal doublet, **मुख**. **नाक** alone
   reaches English **nose** without qualification.
-- **Chapter 14 — Heart** ([`lessons/MR-C13-*`](./lessons/)): hṛdaya, one lesson,
+- **Chapter 16 — Heart** ([`lessons/MR-C13-*`](./lessons/)): hṛdaya, one lesson,
   the surest cognate this book has taught — English **heart**, Latin
   **cor**/**cordis** (**cordial**), Greek **kardia** (**cardiac**), all one PIE
   root, *ḱērd-*, with no metaphorical drift at all, set against **वाचणे**'s and
-  **समजणे**'s (Chapter 9) and **डोळा**'s (Chapter 13) drifted meanings.
-- **Chapter 15 — Family Memory at Real Distance**
+  **समजणे**'s (Chapter 11) and **डोळा**'s (Chapter 15) drifted meanings.
+- **Chapter 17 — Family Memory at Real Distance**
   ([`lessons/MR-R14-*`](./lessons/)): twelve two-to-three-minute retrieval
   sessions revisit family, body, food, verbs, numbers, and the opening core.
   In particular, **मित्र** and **कुटुंब** now receive genuine R2 and R3 recalls
-  after their immediate Chapter 12 reviews rather than being credited through
+  after their immediate Chapter 14 reviews rather than being credited through
   metadata or a learner-invisible order.
+- **Chapter 18 — The doorway signs at long distance**
+  ([`lessons/MR-R18-*`](./lessons/)): reconnect the meaning and independent
+  spelling of **धन्यवाद**, then retrieve all twelve new signs from sound after
+  more than eighty later lessons. Nothing new is introduced in this chapter.
 
-Chapters 1–15 are in the book. Chapters 1–2 and 7–15 are schema v2. Chapter 8 is `voice`
-at full modality; Chapters 9–14 derive as `sight` because each lesson carries
+Chapters 1–18 are in the book. Chapters 1–4 and 9–18 are schema v2. Chapter 10 is `voice`
+at full modality; Chapters 11–16 derive as `sight` because each lesson carries
 a *"The letters in this word"* section — but that section is **detachable**, so
 every lesson is `coreVoice` and every chapter is fully drivable by ear.
 
@@ -134,54 +148,54 @@ language.
 [`chapters.json`](./chapters.json) is the HL05 capability ledger: per chapter, one
 first-person can-do sentence and the lesson that pays it off.
 
-- **Chapter 7** — *"I can count from one to five in Marathi, say चार as tsār
+- **Chapter 9** — *"I can count from one to five in Marathi, say चार as tsār
   rather than chār, and tell which of Marathi's differences from Hindi is an
   innovation and which is Hindi holding on to something older."* Payoff:
   [`MR-C06-number-differences`](./lessons/MR-C06-number-differences.md), a task —
   **दोन**'s borrowed *-n*, **पाच**'s missing nasal, and the *ts* hiding behind an
   unchanged spelling.
-- **Chapter 8** — *"I can use six everyday Marathi verbs, pick the present-tense
+- **Chapter 10** — *"I can use six everyday Marathi verbs, pick the present-tense
   ending that agrees with my subject's gender, end every sentence on the verb,
   and say that I know something the way Marathi says it."* Payoff:
   [`MR-C07-mahit-asne`](./lessons/MR-C07-mahit-asne.md), a task — *malā māhīt
   āhe* and *malā marāṭhī yete*, which put the knower in the dative, agree the
   verb with **मराठी** rather than the speaker, and close on **आहे**. It assesses
   7 of the chapter's 12 introduced atoms (0.58, above the 0.5 floor).
-- **Chapter 9** — *"I can say that I think, understand, read and write in
+- **Chapter 11** — *"I can say that I think, understand, read and write in
   Marathi, put the understander in the dative where Marathi puts it, and name
   what each of the four roots meant before it meant a mental act."* Payoff:
   [`MR-C08-lihine`](./lessons/MR-C08-lihine.md), a production task — write your
   own name, run the four verbs and their four root meanings back, and pick out
   the one that refuses **मी**. It assesses **8 of the chapter's 8** introduced
   atoms (1.00).
-- **Chapter 10** — *"I can take, ask, help and say what I like and what I love in
+- **Chapter 12** — *"I can take, ask, help and say what I like and what I love in
   Marathi, build a fresh verb by putting करणे behind a noun, and say why मला
   मराठी आवडते has no room for me as its subject."* Payoff:
   [`MR-C09-avadne`](./lessons/MR-C09-avadne.md), a production task — *malā
   marāṭhī āvaḍte* beside *mī prem karto*, and both beside *malā marāṭhī yete*
   and *malā marāṭhī samajte*, so one frame carries three meanings. It assesses
   **9 of the chapter's 9** introduced atoms (1.00).
-- **Chapter 11** — *"I can politely ask for water, tea, milk, or bhakri in
+- **Chapter 13** — *"I can politely ask for water, tea, milk, or bhakri in
   Marathi, name which of the four is a Chinese loan and which never touched
   Sanskrit at all, and say why all three of Marathi's genders already show up
   in one short chapter."* Payoff: [`MR-C10-bhakari`](./lessons/MR-C10-bhakari.md),
   a production task — all four requests with **कृपया**, sorted by origin and by
   gender. It assesses **10 of the chapter's 10** introduced atoms (1.00).
-- **Chapter 12** — *"I can name a friend, a family, a brother, and a sister in
+- **Chapter 14** — *"I can name a friend, a family, a brother, and a sister in
   Marathi, sort each word into a tatsama or a tadbhava, and say which sibling
   word is genuinely English's cousin and which is not."* Payoff:
   [`MR-C11-bahin`](./lessons/MR-C11-bahin.md), a production task — all four
   words sorted tatsama/tadbhava, **भाऊ** named as brother's secure cousin
   against **बहीण**'s unrelated root. It assesses **10 of the chapter's 10**
   introduced atoms (1.00).
-- **Chapter 13** — *"I can name the eye, ear, mouth, and nose in Marathi, say
+- **Chapter 15** — *"I can name the eye, ear, mouth, and nose in Marathi, say
   the retroflex ळ formally for the first time, and tell which of the four
   carries the most secure English cognate and which replaced its own
   inherited word entirely."* Payoff: [`MR-C12-naak`](./lessons/MR-C12-naak.md),
   a production task — all four face words with gender, sorted by kind of
   history: replaced, disputed, twinned, secure. It assesses **10 of the
   chapter's 10** introduced atoms (1.00).
-- **Chapter 14** — *"I can name the heart in Marathi, name three English words
+- **Chapter 16** — *"I can name the heart in Marathi, name three English words
   that share its root, and say what makes it different from every other word
   this book has taken apart: it never drifted at all."* Payoff:
   [`MR-C13-hrudaya`](./lessons/MR-C13-hrudaya.md), a production task — **heart,
@@ -204,7 +218,7 @@ preserves readable Devanagari while generated non-Latin sections use
 bookmark-safe romanization. (An early draft of Chapters 10 and 11 quoted
 Avestan, Old Persian, Bengali, Kannada, and Gujarati text directly, plus a
 Proto-Indo-Iranian reconstruction using the combining ring-below U+0325 in
-Chapter 14 — none of it covered by the book's fonts. All were flattened to
+Chapter 16 — none of it covered by the book's fonts. All were flattened to
 plain-Latin romanizations before commit.)
 
 ## Files

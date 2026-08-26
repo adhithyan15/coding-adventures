@@ -47,8 +47,8 @@ right**; every consonant carries a built-in "a." **न** na, **म** ma, **क�
 ## The word, taken apart
 <!-- hl-knowledge: introduces=[]; assesses=[MR-LEX-NAMASKAR-01] -->
 
-**नमस्कार** (*namaskār*) = **नमः** (*namaḥ*, "a bow") + **कार** (*kāra*, "the
-making of"), from Sanskrit — literally "the making of a bow." The same word
+**नमस्कार** (*namaskār*) = Sanskrit *namaḥ* ("a bow") + *kāra* ("the
+making of") — literally "the making of a bow." The same word
 Kannada and Telugu borrowed, and close kin to Hindi's *namaskār*. But note:
 where Hindi leans on *namaste*, Marathi's default, all-purpose greeting is
 **namaskār** — one of many small ways the two Devanagari languages differ.

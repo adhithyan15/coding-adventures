@@ -1,24 +1,24 @@
 {
   "chapter": 2,
-  "title": "Courtesy, Responses, and Leave-Taking",
-  "label": "ch:greetings",
-  "canDo": "I can thank someone, answer yes or no, say that things are fine, and take my leave politely in Marathi.",
+  "title": "Hear Thanks, Then Meet Six Signs",
+  "label": "ch:thanks-script-a",
+  "canDo": "I can understand and say dhanyavad before decoding it, then write six new Devanagari signs one at a time through visible, guided, and delayed work.",
   "spineNodes": [
-    "SPINE-COURTESY-THANK",
-    "SPINE-RESPOND-BASIC",
-    "SPINE-TAKE-LEAVE"
+    "SPINE-COURTESY-THANK"
   ],
   "payoff": {
-    "lesson": "MR-C01-practice",
+    "lesson": "MR-W02-ta",
     "kind": "task",
-    "summary": "Retrieve thanks, yes, fine, no, and gendered leave-taking in one short listening-and-speaking checkpoint, then write familiar हो without a visible model.",
+    "summary": "Write dental ta after a delay while keeping the first five signs separately retrievable.",
     "assesses": [
       "MR-LEX-DHANYAVAD-01",
-      "MR-LEX-HO-01",
-      "MR-LEX-BARAM-01",
-      "MR-LEX-NAHI-01",
-      "MR-PHRASE-YETO-YETE-01"
+      "MR-SCRIPT-VISARGA-01",
+      "MR-SCRIPT-AA-INDEPENDENT-01",
+      "MR-SCRIPT-BHA-01",
+      "MR-SCRIPT-E-MATRA-01",
+      "MR-SCRIPT-ANUSVARA-01",
+      "MR-SCRIPT-TA-01"
     ],
-    "note": "The checkpoint keeps independent writing and spoken retrieval separately observable rather than allowing one strong skill to hide another."
+    "note": "Meaning arrives first; every script lesson adds at most one sign and remains below five minutes."
   }
 }

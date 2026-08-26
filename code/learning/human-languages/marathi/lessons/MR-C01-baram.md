@@ -2,8 +2,8 @@
 schema_version: 2
 id: MR-C01-baram
 spine_node: SPINE-RESPOND-BASIC
-sequence: 24
-chapter: 2
+sequence: 44
+chapter: 4
 type: word
 headword: बरं
 romanization: baram

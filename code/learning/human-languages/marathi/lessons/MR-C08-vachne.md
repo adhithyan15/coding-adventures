@@ -2,8 +2,8 @@
 schema_version: 2
 id: MR-C08-vachne
 spine_node: SPINE-SAY-WHAT-I-DO
-sequence: 440
-chapter: 9
+sequence: 460
+chapter: 11
 type: word
 headword: वाचणे
 romanization: vāchṇe

@@ -2,8 +2,8 @@
 schema_version: 2
 id: MR-C09-madat-karne
 spine_node: SPINE-SAY-WHAT-I-DO
-sequence: 480
-chapter: 10
+sequence: 500
+chapter: 12
 type: word
 headword: मदत करणे
 romanization: madat karṇe

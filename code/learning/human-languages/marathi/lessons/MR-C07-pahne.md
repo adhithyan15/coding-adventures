@@ -2,8 +2,8 @@
 schema_version: 2
 id: MR-C07-pahne
 spine_node: SPINE-SAY-WHAT-I-DO
-sequence: 400
-chapter: 8
+sequence: 420
+chapter: 10
 type: word
 headword: पाहणे
 romanization: pāhṇe

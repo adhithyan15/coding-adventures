@@ -34,6 +34,55 @@
     },
     {
       "chapter": 2,
+      "title": "Hear Thanks, Then Meet Six Signs",
+      "label": "ch:thanks-script-a",
+      "canDo": "I can understand and say dhanyavad before decoding it, then write six new Devanagari signs one at a time through visible, guided, and delayed work.",
+      "spineNodes": [
+        "SPINE-COURTESY-THANK"
+      ],
+      "payoff": {
+        "lesson": "MR-W02-ta",
+        "kind": "task",
+        "summary": "Write dental ta after a delay while keeping the first five signs separately retrievable.",
+        "assesses": [
+          "MR-LEX-DHANYAVAD-01",
+          "MR-SCRIPT-VISARGA-01",
+          "MR-SCRIPT-AA-INDEPENDENT-01",
+          "MR-SCRIPT-BHA-01",
+          "MR-SCRIPT-E-MATRA-01",
+          "MR-SCRIPT-ANUSVARA-01",
+          "MR-SCRIPT-TA-01"
+        ],
+        "note": "Meaning arrives first; every script lesson adds at most one sign and remains below five minutes."
+      }
+    },
+    {
+      "chapter": 3,
+      "title": "Six More Signs Make Thank You Readable",
+      "label": "ch:thanks-script-b",
+      "canDo": "I can write six more Devanagari signs from delayed or heard cues, then read and write dhanyavad independently.",
+      "spineNodes": [
+        "SPINE-COURTESY-THANK"
+      ],
+      "payoff": {
+        "lesson": "MR-W03-dhanyavad-write",
+        "kind": "task",
+        "summary": "Hear, say, read, and independently write dhanyavad only after every load-bearing sign has been taught.",
+        "assesses": [
+          "MR-LEX-DHANYAVAD-01",
+          "MR-SCRIPT-DA-01",
+          "MR-SCRIPT-DHA-01",
+          "MR-SCRIPT-BA-01",
+          "MR-SCRIPT-YA-01",
+          "MR-SCRIPT-LLA-01",
+          "MR-SCRIPT-VA-01",
+          "MR-SCRIPT-DHANYAVAD-WRITE-01"
+        ],
+        "note": "The payoff adds no sign; it joins only forms already retrieved separately."
+      }
+    },
+    {
+      "chapter": 4,
       "title": "Courtesy, Responses, and Leave-Taking",
       "label": "ch:greetings",
       "canDo": "I can thank someone, answer yes or no, say that things are fine, and take my leave politely in Marathi.",
@@ -57,7 +106,7 @@
       }
     },
     {
-      "chapter": 3,
+      "chapter": 5,
       "title": "Introducing Yourself",
       "label": "ch:introductions",
       "canDo": "I can introduce myself in Marathi, give my name, and understand the other person's name.",
@@ -73,7 +122,7 @@
       }
     },
     {
-      "chapter": 4,
+      "chapter": 6,
       "title": "How Are You?",
       "label": "ch:responding",
       "canDo": "I can ask how someone is in Marathi, answer naturally, and return the question.",
@@ -91,7 +140,7 @@
       }
     },
     {
-      "chapter": 5,
+      "chapter": 7,
       "title": "Farewells",
       "label": "ch:farewells",
       "canDo": "I can end a Marathi conversation politely and choose a farewell that fits the situation.",
@@ -107,7 +156,7 @@
       }
     },
     {
-      "chapter": 6,
+      "chapter": 8,
       "title": "The First Verbs",
       "label": "ch:first-verbs",
       "canDo": "I can build short present-tense Marathi sentences with the chapter's first verbs.",
@@ -123,7 +172,7 @@
       }
     },
     {
-      "chapter": 7,
+      "chapter": 9,
       "title": "Numbers One to Five",
       "label": "ch:numbers-one-to-five",
       "canDo": "I can count from one to five in Marathi, say चार as tsār rather than chār, and tell which of Marathi's differences from Hindi is an innovation and which is Hindi holding on to something older.",
@@ -146,7 +195,7 @@
       }
     },
     {
-      "chapter": 8,
+      "chapter": 10,
       "title": "The Core Verbs",
       "label": "ch:mr-core-verbs",
       "canDo": "I can use six everyday Marathi verbs, pick the present-tense ending that agrees with my subject's gender, end every sentence on the verb, and say that I know something the way Marathi says it — with the knower in the dative and आहे closing the line.",
@@ -169,7 +218,7 @@
       }
     },
     {
-      "chapter": 9,
+      "chapter": 11,
       "title": "The Mind and the Page",
       "label": "ch:mr-mind-and-page",
       "canDo": "I can say that I think, understand, read and write in Marathi, put the understander in the dative where Marathi puts it, and name what each of the four roots meant before it meant a mental act — turning, waking, speaking and scratching.",
@@ -193,7 +242,7 @@
       }
     },
     {
-      "chapter": 10,
+      "chapter": 12,
       "title": "Taking, Asking, Helping, Liking",
       "label": "ch:mr-doing-verbs",
       "canDo": "I can take, ask, help and say what I like and what I love in Marathi, build a fresh verb by putting करणे behind a noun, and say why मला मराठी आवडते has no room for me as its subject while मी प्रेम करतो does.",
@@ -218,7 +267,7 @@
       }
     },
     {
-      "chapter": 11,
+      "chapter": 13,
       "title": "Water, Tea, Milk, and Bhakri",
       "label": "ch:mr-request-food-drink",
       "canDo": "I can politely ask for water, tea, milk, or bhakri in Marathi, name which of the four is a Chinese loan and which never touched Sanskrit at all, and say why all three of Marathi's genders already show up in one short chapter.",
@@ -244,7 +293,7 @@
       }
     },
     {
-      "chapter": 12,
+      "chapter": 14,
       "title": "Friend and Family",
       "label": "ch:mr-friend-and-family",
       "canDo": "I can name a friend, a family, a brother, and a sister in Marathi, sort each word into a tatsama taken up whole from Sanskrit or a tadbhava worn down by sound change, and say which sibling word is genuinely English's cousin and which is not.",
@@ -270,7 +319,7 @@
       }
     },
     {
-      "chapter": 13,
+      "chapter": 15,
       "title": "Eye, Ear, Mouth, and Nose",
       "label": "ch:mr-face-parts",
       "canDo": "I can name the eye, ear, mouth, and nose in Marathi, say the retroflex ळ formally for the first time, and tell which of the four carries the most secure English cognate and which replaced its own inherited word entirely.",
@@ -296,7 +345,7 @@
       }
     },
     {
-      "chapter": 14,
+      "chapter": 16,
       "title": "Heart",
       "label": "ch:mr-heart",
       "canDo": "I can name the heart in Marathi, name three English words that share its root, and say what makes it different from every other word this book has taken apart: it never drifted at all.",
@@ -314,7 +363,7 @@
       }
     },
     {
-      "chapter": 15,
+      "chapter": 17,
       "title": "Family Memory at Real Distance",
       "label": "ch:mr-family-memory",
       "canDo": "I can retrieve मित्र and कुटुंब after short, medium, and durable gaps; explain the binding root and tatsama path of मित्र; and recall that कुटुंब is neuter in Marathi.",
@@ -332,6 +381,26 @@
           "MR-LEX-KUTUMB",
           "MR-GRAMMAR-KUTUMB-NEUTER"
         ]
+      }
+    },
+    {
+      "chapter": 18,
+      "title": "The Doorway Signs at Long Distance",
+      "label": "ch:doorway-script-distance",
+      "canDo": "I can write dhanyavad and retrieve all twelve doorway signs after more than eighty later lessons.",
+      "spineNodes": [
+        "SPINE-COURTESY-THANK"
+      ],
+      "payoff": {
+        "lesson": "MR-R18-script-d-r4",
+        "kind": "task",
+        "summary": "Retrieve the final sign batch from sound after every new doorway sign has crossed the long-distance window.",
+        "assesses": [
+          "MR-SCRIPT-YA-01",
+          "MR-SCRIPT-LLA-01",
+          "MR-SCRIPT-VA-01"
+        ],
+        "note": "The chapter introduces nothing; it supplies observable R4 writing evidence."
       }
     }
   ]
