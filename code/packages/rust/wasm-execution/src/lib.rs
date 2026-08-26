@@ -425,10 +425,24 @@ const EXCEPTION_SENTINEL: &str = "\u{1}wasm-exception\u{1}";
 /// `TrapError::new(format!("{e}"))` shape every trap-producing call site in
 /// this crate already used before this — not a new code path, just the one
 /// that also recognizes an exception.
+///
+/// Security: anchored to the sentinel appearing immediately after
+/// `VMError::GenericError`'s own fixed `"Error: "` `Display` prefix
+/// (`.strip_prefix` chained, not a generic `.contains`/`.split_once`
+/// search anywhere in the string) — this is the ONLY position `From<
+/// TrapError> for VMError` ever places it, since that impl always builds
+/// the sentinel as the very first thing after the message it wraps. A
+/// hypothetical future trap message that happened to CONTAIN this
+/// control-character sequence somewhere in its own text (never true
+/// today — confirmed no call site in this crate interpolates unbounded
+/// attacker/module-supplied strings into a trap message that reaches
+/// this conversion) would still be correctly classified as an ordinary
+/// trap, not misread as an exception, because it wouldn't appear at this
+/// exact anchored position.
 fn vm_error_to_trap_error(e: VMError) -> TrapError {
     let full = format!("{e}");
-    match full.split_once(EXCEPTION_SENTINEL) {
-        Some((prefix, rest)) => TrapError::exception(format!("{prefix}{rest}")),
+    match full.strip_prefix("Error: ").and_then(|msg| msg.strip_prefix(EXCEPTION_SENTINEL)) {
+        Some(rest) => TrapError::exception(rest.to_string()),
         None => TrapError::new(full),
     }
 }
@@ -1809,8 +1823,27 @@ pub fn decode_function_body(body: &FunctionBody) -> Vec<DecodedInstruction> {
             offset += bt_size;
             let (catch_count, cc_size) = decode_leb_u32(code, offset);
             offset += cc_size;
+            // Security: `catch_count` is an attacker-controlled LEB128 value
+            // (up to ~4.3 billion) that a truncated/malformed body can
+            // declare regardless of how many real bytes actually follow --
+            // `decode_leb_u32` silently defaults to `(0, 1)` past the end of
+            // `code` rather than erroring (unlike `wasm-validator`'s sibling
+            // `decode_idx`, which DOES error on truncation, bounding ITS
+            // loop for free). Without this guard, a ~10-byte function body
+            // naming a huge `catch_count` would spin this loop billions of
+            // times before ever reaching `offset >= code.len()` on its own --
+            // a real DoS reachable through this crate's own public
+            // `WasmExecutionEngine::new`/`decode_function_body` API, which
+            // does not require going through `wasm-runtime`'s
+            // `validate()`-gated `instantiate()` first. Breaking the moment
+            // real bytes run out bounds total loop cost by `code.len()`
+            // (each further iteration consumes at least one real byte),
+            // never by the attacker-declared count alone.
             for _ in 0..catch_count {
-                let clause_kind = code.get(offset).copied().unwrap_or(0x02);
+                if offset >= code.len() {
+                    break;
+                }
+                let clause_kind = code[offset];
                 offset += 1;
                 match clause_kind {
                     0x00 | 0x01 => {
@@ -10692,6 +10725,39 @@ mod tests {
         });
         let err = engine.call_function(0, &[]).unwrap_err();
         assert!(err.is_exception, "an exception thrown inside try_table's body must propagate out as a real exception, not a plain trap");
+    }
+
+    #[test]
+    fn test_try_table_with_a_wildly_large_catch_count_and_truncated_body_does_not_hang() {
+        // Security review (task W21): `catch_count` is an attacker-
+        // controlled LEB128 value (up to ~4.3 billion) that a truncated
+        // body can declare regardless of how many real bytes actually
+        // follow. Before this test's own fix, the catch-clause decode
+        // loop in `decode_function_body` trusted `catch_count` alone and
+        // would spin for that many iterations even past the real end of
+        // `code` -- a genuine DoS on a ~10-byte function body. The fix
+        // breaks the loop the moment real bytes run out, bounding total
+        // cost by `code.len()`, never by the fabricated count. This test
+        // completing at all (regardless of whether the call itself
+        // succeeds or traps) is the actual assertion -- it would
+        // otherwise hang for a very long time before ever reaching here.
+        //
+        // `0xFFFFFFFF` as unsigned LEB128 is 5 bytes: `0xFF 0xFF 0xFF 0xFF 0x0F`.
+        let func_type = FuncType { params: vec![], results: vec![] };
+        let body = FunctionBody {
+            locals: vec![],
+            code: vec![0x1F, 0x40, 0xFF, 0xFF, 0xFF, 0xFF, 0x0F, 0x0B],
+        };
+        let mut engine = WasmExecutionEngine::new(WasmEngineConfig {
+            memories: Vec::new(),
+            tables: vec![],
+            globals: vec![],
+            global_types: vec![],
+            func_types: vec![func_type],
+            func_bodies: vec![Some(body)],
+            host_functions: vec![None],
+        });
+        let _ = engine.call_function(0, &[]);
     }
 
     // ── WasmGC struct heap + references (LANG77 / McCarthy L3b-3a-3b) ──────────
