@@ -104,10 +104,48 @@ A track may claim a level only when it has:
 
 1. realized **every** spine node at that level and all levels below,
 2. taught at least the cumulative vocabulary for that level,
+2b. **and enough of that vocabulary is verbs** — see the composition rule below,
 3. zero lessons over the atom budget at or below that level, and
 4. every atom at or below that level revisited at least twice (§7).
 
 Anything less is reported as *in progress at level X*, never as *reached X*.
+
+#### Every count criterion carries a composition criterion
+
+> Where this section asserts *how many*, it must also assert **of what**, for at
+> least one partition of the counted set that a reader would care about. A
+> criterion that can be satisfied by an arbitrary composition of the counted
+> items is not measuring the thing it is named after.
+
+This is not an abstraction looking for a customer. Criterion 2 counted headwords
+and asked nothing about part of speech, and `HL23` measured what that permits:
+Spanish reached **584 of the 600 headwords A1 asks for, of which seven were
+verbs** — five distinct lexemes — while the same levels taught the complete
+present paradigm of all three conjugations. The learner had the machinery and
+almost nothing to run it on, and criterion 2 reported a track sixteen words from
+certification. **A total can always be reached by the wrong parts.**
+
+Criterion 2b is that rule applied to vocabulary. Its floors live in
+`LEVEL_VERB_VOCABULARY` beside the totals they partition, and they are
+**editorial in the strong sense of §10** — conventional vocabulary sizes are at
+least conventional, whereas no awarding body publishes a verb quota and these
+numbers are not derived from one. They are a project choice: 1.7% of the total
+at pre-A1, 6.7% at A1, and 10% at every level from A2 up. A beginner level is
+allowed to be noun-heavy; the share then converges on a tenth.
+
+The measurement under it must **fail safe**, and this one does. A verb is
+identified by the `concept_tag` the validator already requires, which `HL23` §6.1
+measured at 96.2% recall corpus-wide; the residual 4% are verbs the tag misses,
+so the count runs low and the criterion flags a track far more readily than it
+certifies one. A composition check that erred the other way would be worse than
+having none, because it would launder exactly the case it exists to catch.
+
+**Criterion 4 has the same defect and is not fixed here.** Reinforcement counts
+revisits and never asks *what* is revisited, so a track can satisfy it while
+every unrevisited atom is the same kind — and Spanish's 83-atom shortfall is
+currently un-partitioned. That is its own piece of work, tracked separately;
+it is named here so the rule is visibly not a one-off written to justify a
+single gate.
 
 ---
 
@@ -481,7 +519,7 @@ This spec is the design. Implementation is a long series of small tranches:
 | 2 | Migrate Spanish chapters 7–8 to schema v2 and give all 56 sequence-less lessons a declared order | The ramp collapses exactly at the schema boundary: chapters 1–6 carry `sequence`/`spine_node`/atoms, chapters 7–8 carry none, so they are invisible to every tool that reads the knowledge graph. Chapter 7's order needs a **human decision** — `curriculum.json` says comer→beber→qué→vivir→dónde while the lesson prose and `reviews_of` say comer→vivir→beber→qué→dónde |
 | 3 | Close R1/R2 by wiring `practises.knowledge` on existing teaching lessons (§7.2), then add `review` lessons only for R3/R4 | 99 of Spanish's 114 R1 misses are never revisited at ANY distance, so this is an absence, not a scheduling error. A chapter-end review cannot reach R1 for 11 of 35 chapters. Extend `session-map.md` past chapter 3 as the schedule becomes real |
 | 4 | Close the functional holes: `sí`/`no`, `estoy`, `yo`, `un`/`una` | The learner can be asked a question and cannot decline; can ask "how are you?" and cannot answer |
-| 5 | Split `SPINE-SAY-WHAT-I-DO` (42 concepts) into rungs of ≤6 | No spine node holds more concepts than a chapter may introduce |
+| 5 | Split `SPINE-SAY-WHAT-I-DO` (42 concepts) into rungs of ≤6 | No spine node holds more concepts than a chapter may introduce. **First slice shipped** (`HL23` §8.3): three concepts moved to a new A1 `SPINE-NAME-EVERYDAY-ACTIONS`, 42 → 39. The remainder is a cross-track **lesson migration**, not a ledger edit — `HL23` §8.1 explains why and §8.2 prices it per concept |
 | 6 | Close Spanish's R1 windows | Zero atoms miss the first revisit window |
 | 7 | Author pre-A1 to its real size (~150 lessons) | Vocabulary ≥300; every pre-A1 node realized; culture/region strand present in every chapter |
 | 8 | A1, then A2, at their real sizes | §3.1 satisfied per level before the next begins |

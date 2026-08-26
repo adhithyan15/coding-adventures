@@ -1,0 +1,10 @@
+{
+  "id": "ES-PATH-A1-BEBER",
+  "spine_node": "SPINE-NAME-EVERYDAY-ACTIONS",
+  "lessons": [
+    "ES-C07-beber"
+  ],
+  "before": [],
+  "inline": [],
+  "after": []
+}

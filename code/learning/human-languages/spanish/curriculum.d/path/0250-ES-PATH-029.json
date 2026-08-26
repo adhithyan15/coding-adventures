@@ -2,8 +2,7 @@
   "id": "ES-PATH-029",
   "spine_node": "SPINE-SAY-WHAT-I-DO",
   "lessons": [
-    "ES-C07-vivir",
-    "ES-C07-beber"
+    "ES-C07-vivir"
   ],
   "before": [],
   "inline": [],

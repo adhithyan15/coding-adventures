@@ -16,6 +16,9 @@
 //
 //   1. every spine node at the level is realized by some path segment,
 //   2. the track teaches at least the level's cumulative vocabulary,
+//  2b. and enough of that vocabulary is VERBS (HL09 §3.1 / HL23 §6 — every count
+//      criterion carries a composition criterion, because a total can always be
+//      reached by the wrong parts),
 //   3. no lesson at or below the level exceeds the new-atom budget,
 //   4. every atom at or below the level is revisited at least twice, and
 //   5. when HL19 evidence is supplied, every cumulative writing stage is proved.
@@ -52,6 +55,39 @@ export const LEVEL_VOCABULARY: Record<CefrLevel, number> = {
 };
 
 /**
+ * Cumulative VERB vocabulary a level asks for, in distinct taught headwords.
+ *
+ * EDITORIAL, and more so than `LEVEL_VOCABULARY` above — which at least restates
+ * conventional working figures for CEFR receptive vocabulary size. **No awarding
+ * body publishes a verb quota, and this table is not derived from one.** It is a
+ * project choice, recorded here so that it can be argued with rather than
+ * absorbed. HL23 §6.2 proposed these numbers and HL09 §10 governs how they must
+ * be labelled; this comment is that label.
+ *
+ * The shape, stated so the numbers are not merely asserted: against
+ * `LEVEL_VOCABULARY` they are 1.7% at pre-A1, 6.7% at A1, and 10% at every level
+ * from A2 up. A beginner level is allowed to be noun-heavy — the first hundred
+ * words of any language are greetings, numbers and things — and the share then
+ * converges on a tenth. Ten percent is the editorial asymptote, not a measured
+ * property of any corpus.
+ *
+ * The measurement under it fails SAFE: `verbVocabularyOf` identifies a verb by
+ * its concept tag, which HL23 §6.1 measured at 96.2% recall corpus-wide, and the
+ * residual 4% are verbs the tag misses. So the count runs LOW, and a track is
+ * flagged when it should not be far more readily than certified when it should
+ * not be. A composition check that erred the other way would be worse than none.
+ */
+export const LEVEL_VERB_VOCABULARY: Record<CefrLevel, number> = {
+  "pre-A1": 5,
+  A1: 40,
+  A2: 120,
+  B1: 250,
+  B2: 400,
+  C1: 800,
+  C2: 1600,
+};
+
+/**
  * Is this atom an etymology hook rather than a skill?
  *
  * Every track names them the same way — `ES-ETYMON-CREDERE-02`, `TA-ETYMON-NAL-01` —
@@ -66,7 +102,13 @@ export function isEtymologyAtom(atom: string): boolean {
 
 /** Which attainment criterion a level failed, and by how much. */
 export interface LevelBlocker {
-  criterion: "spine-nodes" | "vocabulary" | "atom-budget" | "reinforcement" | "writing-stage";
+  criterion:
+    | "spine-nodes"
+    | "vocabulary"
+    | "verb-vocabulary"
+    | "atom-budget"
+    | "reinforcement"
+    | "writing-stage";
   detail: string;
   /** How far short the track is, in the criterion's own units. */
   shortfall: number;
@@ -88,6 +130,8 @@ export interface TrackLevelAttainment {
 
 export interface LevelGateReport {
   vocabularyTargets: Record<CefrLevel, number>;
+  /** Reported beside the totals so a shortfall names the number it was measured against. */
+  verbVocabularyTargets: Record<CefrLevel, number>;
   tracks: TrackLevelAttainment[];
   summary: {
     /** Tracks whose `touches` overstates their `attained` — the bug this exists for. */
@@ -125,6 +169,37 @@ function vocabularyOf(lessons: ParsedLesson[]): number {
   const words = new Set<string>();
   for (const lesson of lessons) {
     if (!CONTENT_TYPES.has(lesson.realization.type)) continue;
+    const headword = (lesson.realization.headword ?? "").trim().toLowerCase();
+    if (headword) words.add(headword);
+  }
+  return words.size;
+}
+
+/**
+ * Distinct headwords a set of lessons teaches whose concept names a VERB.
+ *
+ * `vocabularyOf` above counts vocabulary; this counts what KIND. The two have to
+ * be asserted separately, because **a total can always be reached by the wrong
+ * parts**: six hundred nouns satisfy criterion 2 exactly as well as six hundred
+ * words a learner can build a sentence with, and only one of those is A1.
+ *
+ * That is not hypothetical. HL23 measured Spanish at 584 headwords at or below
+ * A1 of which SEVEN were verb-tagged — five distinct lexemes — while the same
+ * levels taught the complete present paradigm of all three conjugations. The
+ * learner had the machinery and nothing to run it on, and criterion 2 reported
+ * a track sixteen words from certification.
+ *
+ * The verb signal is the `concept_tag` the validator ALREADY requires every
+ * content lesson to carry, so this costs no new frontmatter, no re-authoring and
+ * no schema change. `(^|-)VERB-` catches the canonical `VERB-EAT` and the
+ * namespaced `ES-VERB-LAVAR` alike, and matches neither `ADVERB-*` nor a
+ * hypothetical `PROVERB-*`, because the boundary is anchored.
+ */
+function verbVocabularyOf(lessons: ParsedLesson[]): number {
+  const words = new Set<string>();
+  for (const lesson of lessons) {
+    if (!CONTENT_TYPES.has(lesson.realization.type)) continue;
+    if (!/(^|-)VERB-/.test(lesson.realization.concept ?? "")) continue;
     const headword = (lesson.realization.headword ?? "").trim().toLowerCase();
     if (headword) words.add(headword);
   }
@@ -262,6 +337,21 @@ export function runLevelGate(input: LevelGateInput): LevelGateReport {
         });
       }
 
+      // Criterion 2b — HL09 §3.1's composition companion to the count above.
+      // Deliberately computed from the SAME `atLevel` lesson slice, so the two
+      // numbers can never disagree about which lessons they were measuring.
+      const verbTarget = LEVEL_VERB_VOCABULARY[level];
+      const verbsAtLevel = verbVocabularyOf(
+        trackLessons.filter((l) => atOrBelow(l.realization.lessonId, level)),
+      );
+      if (verbsAtLevel < verbTarget) {
+        failures.push({
+          criterion: "verb-vocabulary",
+          detail: `teaches ${verbsAtLevel} distinct verb headwords at or below ${level}, against ${verbTarget}`,
+          shortfall: verbTarget - verbsAtLevel,
+        });
+      }
+
       const overBudget = rampViolations.filter((v) => atOrBelow(v.lessonId, level));
       if (overBudget.length > 0) {
         failures.push({
@@ -326,6 +416,7 @@ export function runLevelGate(input: LevelGateInput): LevelGateReport {
   tracks.sort((a, b) => a.language.localeCompare(b.language));
   return {
     vocabularyTargets: { ...LEVEL_VOCABULARY },
+    verbVocabularyTargets: { ...LEVEL_VERB_VOCABULARY },
     tracks,
     summary: {
       tracksOverstating: tracks.filter(

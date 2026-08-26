@@ -1,0 +1,10 @@
+{
+  "segments": [],
+  "omits": [
+    "VERB-DRINK",
+    "VERB-PUT"
+  ],
+  "relocates": {
+    "VERB-GIVE": "SPINE-SAY-WHAT-I-DO"
+  }
+}
