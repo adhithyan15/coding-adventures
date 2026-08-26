@@ -1,6 +1,6 @@
 //! The lowering pass from `coding_adventures_java_parser`'s generic
-//! [`GrammarASTNode`] CST → [`semantic_ir::Module`], **v0.7.0 (JV02
-//! milestone M4a)**.
+//! [`GrammarASTNode`] CST → [`semantic_ir::Module`], **v0.8.0 (JV02
+//! milestone M4b)**.
 //!
 //! # Scope
 //!
@@ -155,10 +155,31 @@
 //! - Array indexing reads (`xs[i]`) → [`Expr::SeqIndex`], and `.length`
 //!   → [`Expr::SeqLen`] — together enabling the realistic `for (int i =
 //!   0; i < xs.length; i++) { ...xs[i]... }` pattern this milestone
-//!   exists to unlock. Indexed *assignment* (`xs[i] = v;`) is deferred —
-//!   this milestone only supports indexing as a value.
+//!   exists to unlock.
 //!
-//! **Deliberately out of scope for v0.7.0** (each rejected with an
+//! **Supported (M4b, new):**
+//! - Plain indexed assignment (`xs[i] = v;`) → [`Stmt::SeqSet`]. Detected
+//!   by a new `indexed_assign_target` check, run *ahead of*
+//!   `extract_bare_name` in `lower_expr_statement`'s own assignment-target
+//!   dispatch, so a plain-name target (`x = v;`, unchanged since M1) and
+//!   an indexed target (`xs[i] = v;`, new) are told apart before either is
+//!   lowered — every other assignment-target shape (a field target, a
+//!   qualified target) still falls through to `extract_bare_name`'s
+//!   existing "reject rather than mis-lower" catch-all, unchanged.
+//! - **Narrowed during implementation, mirroring the M2→M2a/M2b and
+//!   M3→M3a/M3b splits**: compound assignment or increment/decrement on
+//!   an indexed target (`xs[i] += v;`, `xs[i]++;`) is *not* supported this
+//!   milestone, deferred instead — naively lowering it would evaluate the
+//!   index expression twice (once to read the current element, once to
+//!   write the new one), silently double-evaluating any side effect a
+//!   non-constant index expression carries (e.g. a method call as the
+//!   index). This is exactly the kind of double-evaluation bug this
+//!   crate's own `/security-review` history has caught before (see
+//!   `CHANGELOG.md`'s do-while/for-update entries) — deferred rather than
+//!   risking it, tracked as its own follow-up milestone rather than
+//!   shipped unsound.
+//!
+//! **Deliberately out of scope for v0.8.0** (each rejected with an
 //! explicit [`JavaLowerError`], tracked in
 //! [JV02](../../../specs/JV02-java-to-semantic-ir.md)'s own milestone
 //! table): `switch` (SIR has no `Switch`/`Match`/`Case` IR node at all —
@@ -176,10 +197,11 @@
 //! `var`-typed local's initializer, but never called; see `tests/
 //! e2e_python.rs`'s own doc comment on why this makes an execution-proof
 //! test impossible this milestone), untyped or `var`-inferred lambda
-//! parameters, multi-dimensional arrays, indexed array *assignment*, the
-//! `new`-based array-creation-expression forms, `List`/`Map` collection
-//! literals, field/array *field* access beyond `.length`, casts,
-//! `instanceof`, the ternary conditional, bitwise operators
+//! parameters, multi-dimensional arrays, compound-assignment/increment-
+//! decrement on an *indexed* target (see M4b's own entry above for why),
+//! the `new`-based array-creation-expression forms, `List`/`Map`
+//! collection literals, field/array *field* access beyond `.length`,
+//! casts, `instanceof`, the ternary conditional, bitwise operators
 //! (`& | ^ ~ << >> >>>`), increment/decrement or compound assignment
 //! used as a *value* rather than a bare statement, `break`/`continue`
 //! (SIR has no IR primitive for either — every loop body this milestone
@@ -2244,6 +2266,15 @@ impl Lowerer {
                     .ok_or_else(|| {
                         self.err_at(op_node, "malformed assignment operator".to_string())
                     })?;
+                if let Some((primary, suffix)) = self.indexed_assign_target(lvalue_node, 0)? {
+                    if op_tok.value != "=" {
+                        return Err(self.err_at(
+                            op_node,
+                            "compound assignment on an indexed target (`xs[i] += ...`) is not supported yet (deferred to a later JV02 milestone)".to_string(),
+                        ));
+                    }
+                    return self.lower_indexed_assignment(primary, suffix, rhs_node, inner);
+                }
                 let name = self.extract_bare_name(lvalue_node, 0)?;
                 let (declared_kind, declared_scope) =
                     self.resolve_name(&name).ok_or_else(|| {
@@ -2412,9 +2443,14 @@ impl Lowerer {
     }
 
     /// Walk an assignment target's `unary_expression` chain down to its
-    /// `primary`, requiring it to be a bare `NAME` — `foo.bar = x`,
-    /// `arr[0] = x`, and any other non-simple target are out of scope for
-    /// M1/M2a (rejected here rather than mis-lowered).
+    /// `primary`, requiring it to be a bare `NAME` — `foo.bar = x` and any
+    /// other non-simple target remain out of scope (rejected here rather
+    /// than mis-lowered). Reached only after `indexed_assign_target` (M4b)
+    /// has already ruled out the one other supported target shape
+    /// (`xs[i] = v`) — this function's own error message covers every
+    /// other unsupported case: field targets, and compound-assignment/
+    /// increment-decrement on an *indexed* target (deferred; see
+    /// `lower_expr_statement`'s own `"="`-only check on the indexed path).
     fn extract_bare_name(
         &self,
         node: &GrammarASTNode,
@@ -2431,7 +2467,7 @@ impl Lowerer {
                 [ASTNodeOrToken::Token(t)] if t.type_ == lexer::token::TokenType::Name => Ok(t.value.clone()),
                 _ => Err(self.err_at(
                     node,
-                    "assignment target must be a simple local variable (field or indexed assignment targets are not supported yet)".to_string(),
+                    "assignment target must be a simple local variable or a plain indexed array element (`xs[i] = v`) -- field targets, and compound-assignment/increment-decrement on an indexed target, are not supported yet".to_string(),
                 )),
             };
         }
@@ -2439,9 +2475,104 @@ impl Lowerer {
             [ASTNodeOrToken::Node(only)] => self.extract_bare_name(only, depth + 1),
             _ => Err(self.err_at(
                 node,
-                "assignment target must be a simple local variable (field or indexed assignment targets are not supported yet)".to_string(),
+                "assignment target must be a simple local variable or a plain indexed array element (`xs[i] = v`) -- field targets, and compound-assignment/increment-decrement on an indexed target, are not supported yet".to_string(),
             )),
         }
+    }
+
+    /// Walk an assignment target's `unary_expression` chain down to either
+    /// a bare `primary` (a simple local-variable target, handled by
+    /// `extract_bare_name`) or a `primary_expression` matching M4b's new
+    /// indexed-assignment shape (`xs[i]`, exactly one `[...]` suffix) --
+    /// returns `Some((primary, suffix))` only for the latter, so
+    /// `lower_expr_statement` can distinguish "plain name assignment"
+    /// (unchanged) from "indexed assignment" (new) before falling through
+    /// to `extract_bare_name`'s existing rejection for every other shape.
+    /// A *qualified* indexed target (chaining more than the one `[...]`
+    /// suffix) does not match here -- `primary_expression`'s own
+    /// multi-suffix shape falls straight through to `Ok(None)` below, the
+    /// same "reject rather than mis-lower" outcome `extract_bare_name`
+    /// already gives every other unsupported multi-suffix target.
+    fn indexed_assign_target<'a>(
+        &self,
+        node: &'a GrammarASTNode,
+        depth: usize,
+    ) -> Result<Option<(&'a GrammarASTNode, &'a GrammarASTNode)>, JavaLowerError> {
+        if depth >= MAX_EXPR_DEPTH {
+            return Err(self.err_at(
+                node,
+                format!("expression nesting exceeds {MAX_EXPR_DEPTH} levels"),
+            ));
+        }
+        if node.rule_name == "primary_expression" {
+            if let [ASTNodeOrToken::Node(primary), ASTNodeOrToken::Node(suffix)] =
+                node.children.as_slice()
+            {
+                if suffix.rule_name == "primary_suffix"
+                    && matches!(suffix.children.first(), Some(ASTNodeOrToken::Token(t)) if t.value == "[")
+                {
+                    return Ok(Some((primary, suffix)));
+                }
+            }
+            return Ok(None);
+        }
+        if node.rule_name == "primary" {
+            return Ok(None);
+        }
+        match node.children.as_slice() {
+            [ASTNodeOrToken::Node(only)] => self.indexed_assign_target(only, depth + 1),
+            _ => Ok(None),
+        }
+    }
+
+    /// Lower `xs[i] = v;` (`primary` indexed by `suffix`, assigned `rhs`)
+    /// into `Stmt::SeqSet` -- M4b. `primary` must resolve to an
+    /// array-typed value; the index must resolve to `Kind::Int`; `rhs`
+    /// must resolve to exactly the array's own element kind (no implicit
+    /// widening -- matches this crate's existing "reject rather than
+    /// mis-lower" discipline for every other kind-mismatch case).
+    ///
+    /// `context` is the enclosing `assignment_expression` node, used only
+    /// for this statement's own span.
+    fn lower_indexed_assignment(
+        &mut self,
+        primary: &GrammarASTNode,
+        suffix: &GrammarASTNode,
+        rhs: &GrammarASTNode,
+        context: &GrammarASTNode,
+    ) -> Result<Stmt, JavaLowerError> {
+        let (seq, seq_kind) = self.lower_expr(primary, 0)?;
+        let elem_kind =
+            match seq_kind {
+                Kind::Array(e) => e,
+                _ => return Err(self.err_at(
+                    primary,
+                    "indexed assignment (`[...] = ...`) is only supported on an array-typed value"
+                        .to_string(),
+                )),
+            };
+        let index_node = self
+            .first_child_named(suffix, "expression")
+            .ok_or_else(|| self.err_at(suffix, "malformed array index".to_string()))?;
+        let (index, index_kind) = self.lower_expr(index_node, 0)?;
+        if index_kind != Kind::Int {
+            return Err(self.err_at(index_node, "an array index must be an `int`".to_string()));
+        }
+        let (value, value_kind) = self.lower_expr(rhs, 0)?;
+        if value_kind != elem_kind.as_kind() {
+            return Err(self.err_at(
+                rhs,
+                "the assigned value's kind does not match the array's own element kind".to_string(),
+            ));
+        }
+        self.observed.add(Feature::Sequences);
+        let span = self.span_of(context);
+        Ok(Stmt::SeqSet {
+            seq,
+            index,
+            value,
+            span,
+        })
     }
 
     // ── expression-level lowering ───────────────────────────────────

@@ -546,7 +546,64 @@ fn var_inferred_array_runs_in_python() {
     assert_eq!(out, "9");
 }
 
-// No execution-proof test for indexed assignment (`xs[i] = v;`) or the
-// `new int[5]`/`new int[]{...}` array-creation-expression forms --
-// deferred to task #56 (M4b), where their own execution-proof tests
-// belong.
+// ── M4b: indexed array assignment ─────────────────────────────────────
+
+#[test]
+fn indexed_assignment_runs_in_python() {
+    if !python_available() {
+        eprintln!("skipping indexed_assignment_runs_in_python: `python3` not available");
+        return;
+    }
+    let out = run_via_python(
+        "indexed_assignment",
+        &wrap("int[] xs = {1, 2, 3}; xs[1] = 99; xs[1];"),
+    );
+    assert_eq!(out, "99");
+}
+
+#[test]
+fn indexed_assignment_with_a_variable_index_runs_in_python() {
+    if !python_available() {
+        eprintln!(
+            "skipping indexed_assignment_with_a_variable_index_runs_in_python: `python3` not available"
+        );
+        return;
+    }
+    let out = run_via_python(
+        "indexed_assignment_variable_index",
+        &wrap("int[] xs = {0, 0, 0}; int i = 2; xs[i] = 7; xs[2];"),
+    );
+    assert_eq!(out, "7");
+}
+
+#[test]
+fn array_fill_via_indexed_for_loop_runs_in_python() {
+    if !python_available() {
+        eprintln!(
+            "skipping array_fill_via_indexed_for_loop_runs_in_python: `python3` not available"
+        );
+        return;
+    }
+    // Mirrors `array_sum_via_indexed_for_loop_runs_in_python`'s own
+    // realistic pattern, but for writes: fill each element with its own
+    // index doubled, then sum -- exercises `.length`, indexed reads, and
+    // indexed *writes* together.
+    let out = run_via_python(
+        "array_fill_via_indexed_for_loop",
+        &wrap(concat!(
+            "int[] xs = {0, 0, 0, 0}; ",
+            "for (int i = 0; i < xs.length; i++) { xs[i] = i * 2; } ",
+            "int sum = 0; ",
+            "for (int i = 0; i < xs.length; i++) { sum = sum + xs[i]; } ",
+            "sum;"
+        )),
+    );
+    assert_eq!(out, "12"); // 0 + 2 + 4 + 6
+}
+
+// No execution-proof test for the `new int[5]`/`new int[]{...}` array-
+// creation-expression forms, multi-dimensional arrays, or compound-
+// assignment/increment-decrement on an indexed target -- all remain
+// deferred past M4b (see the corresponding rejection tests in
+// `tests/test_lower.rs`, and the follow-up tasks logged when M4b was
+// scoped down to plain indexed assignment only).

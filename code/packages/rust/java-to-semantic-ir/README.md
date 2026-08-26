@@ -4,7 +4,7 @@ Java CST → narrow-waist Semantic IR. The first frontend for
 [SIR29](../../../specs/SIR29-nominal-static-oop-profile.md), the
 nominal/static-dispatch OOP profile extension of the SIR10 narrow-waist IR.
 See [JV02](../../../specs/JV02-java-to-semantic-ir.md) for this frontend's
-full milestone plan (M0 + M1 + M2a + M2b + M3a + M3b + M4a here, through M9).
+full milestone plan (M0 + M1 + M2a + M2b + M3a + M3b + M4a + M4b here, through M9).
 
 ## Where this fits
 
@@ -34,7 +34,7 @@ let module = compile_source(
 )?;
 ```
 
-## Scope (v0.7.0 — JV02 milestones M0 + M1 + M2a + M2b + M3a + M3b + M4a)
+## Scope (v0.8.0 — JV02 milestones M0 + M1 + M2a + M2b + M3a + M3b + M4a + M4b)
 
 Java requires an explicit `class`/`main`-method wrapper at the source level
 (unlike Ruby/Python/JS, which allow bare top-level statements) — this crate
@@ -85,23 +85,33 @@ makes a real execution-proof test possible this milestone (M4a). A new
 `Kind::Array(ArrayElemKind)` variant (`ArrayElemKind` a small flat `Copy`
 enum of `Int`/`Float`/`Bool`/`Str`, kept separate from `Kind` itself so
 `Kind` doesn't need a recursive `Box` and lose its own `Copy` derive)
-tracks an array-typed local/parameter/return's element kind. Everything
-else — `switch`/`break`/`continue` (SIR has no IR node for any of the
-three — confirmed by a repo-wide grep, not assumed — so this needs a
-spec-level design decision before any frontend can target it; note a bare
-`for (;;)` loop genuinely cannot terminate without `break`, a real and
-permanent limitation until it exists), qualified calls (`x.foo(...)`),
+tracks an array-typed local/parameter/return's element kind. Plain indexed
+assignment (`xs[i] = v;`) lowers to `Stmt::SeqSet` via a new
+`indexed_assign_target` check that runs ahead of the existing bare-name
+assignment-target resolution in `lower_expr_statement`, so a plain-name
+target (unchanged since M1) and an indexed target (new) are distinguished
+before either is lowered (M4b) — **narrowed during implementation**,
+mirroring the earlier M2→M2a/M2b and M3→M3a/M3b splits: compound
+assignment and increment/decrement on an indexed target (`xs[i] += v;`,
+`xs[i]++;`) remain deferred, since naively lowering either would evaluate
+the index expression twice (once to read, once to write), silently
+double-evaluating any side effect a non-constant index expression carries.
+Everything else — `switch`/`break`/`continue` (SIR has no IR node for any
+of the three — confirmed by a repo-wide grep, not assumed — so this needs
+a spec-level design decision before any frontend can target it; note a
+bare `for (;;)` loop genuinely cannot terminate without `break`, a real
+and permanent limitation until it exists), qualified calls (`x.foo(...)`),
 method overloading, an early or branched `return` (in a method *or* a
 lambda), untyped/`var`-inferred lambda parameters (Java infers these from
 the lambda's own target functional-interface type, which this frontend has
 no visibility into — no functional-interface declarations exist yet),
 *invoking* a lambda value (`Expr::IndirectCall` isn't wired up),
-multi-dimensional arrays, indexed array assignment (`xs[i] = v;`),
-`new`-based array creation (`new int[5]`/`new int[]{...}`), List/Map
-collection literals, the array/String method-call surface beyond
-`.length`, field access other than an array's own `.length`, casts,
-`instanceof`, the ternary conditional, bitwise/shift operators,
-fields/constructors/nested types, and every SIR29 construct
+multi-dimensional arrays, compound-assignment/increment-decrement on an
+indexed target, `new`-based array creation (`new int[5]`/
+`new int[]{...}`), List/Map collection literals, the array/String
+method-call surface beyond `.length`, field access other than an array's
+own `.length`, casts, `instanceof`, the ternary conditional, bitwise/shift
+operators, fields/constructors/nested types, and every SIR29 construct
 (`NominalClassDef`/`InterfaceDef`/`MethodDef`/`VirtualCall`) — is out of
 scope so far and returns a clean `JavaLowerError` rather than being
 silently mis-lowered. See `src/lower.rs`'s own module doc comment for the
@@ -129,10 +139,16 @@ exact boundary, and the JV02 spec's milestone table for what comes next.
   rejection, array-typed method parameters and call-argument kind
   checking, `Feature::Sequences` manifest declaration, and every
   deferred-construct rejection — multi-dimensional array types, nested
-  array initializers, indexed assignment, `new`-based array creation,
-  and field access other than `.length`). Every positive test also
-  asserts the lowered `Module` passes `semantic_ir::validate()` — not
-  just that lowering itself didn't error.
+  array initializers, and field access other than `.length`), and M4b's
+  own indexed-assignment shapes (plain assignment with a constant and a
+  variable index, inside a classic `for` loop's own update clause, on a
+  `String` array, `Feature::Sequences` re-declaration, index/value kind-
+  mismatch rejection, a plain-name assignment regression check alongside
+  the new indexed path, and the still-deferred compound-assignment/
+  increment-decrement-on-an-indexed-target and `new`-array-creation
+  rejections). Every positive test also asserts the lowered `Module`
+  passes `semantic_ir::validate()` — not just that lowering itself
+  didn't error.
 - `tests/e2e_python.rs` — execution-proof tests, per JV02's own
   "Verification" section. Real Java source lowers through this crate,
   then through the Python backend (`semantic-ir-to-python`, a dev-
@@ -163,9 +179,13 @@ exact boundary, and the JV02 spec's milestone table for what comes next.
   (`Expr::SeqLit`/`SeqIndex`/`SeqLen`) the Python backend already fully
   supports: an array literal plus `.length`, an indexed read, a full
   indexed `for`-loop summing an array's elements, and a `var`-inferred
-  array. No execution-proof test exists for indexed assignment or
-  `new`-based array creation (both deferred to M4b, not implemented at
-  all this milestone). Python,
+  array. M4b adds 3 more: a plain indexed assignment, one with a
+  variable (non-constant) index, and a full indexed `for`-loop that
+  fills each element by its own index then sums them — exercising
+  `.length`, indexed reads, and indexed *writes* together. No
+  execution-proof test exists for `new`-based array creation, multi-
+  dimensional arrays, or compound-assignment/increment-decrement on an
+  indexed target (all remain deferred past M4b). Python,
   not JavaScript: the JavaScript backend does not accept `Feature::
   StringInterpolation` yet, and M1's `+`-based string concatenation needs
   it. The harness redirects `main`'s trailing block value to its last

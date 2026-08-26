@@ -24,31 +24,41 @@ and M3b (lambda expressions with explicitly-typed parameters →
 function; captures discovered on-resolve, effectively-final enforced;
 both lambda-body shapes — though a lambda value can only be created and
 passed around this milestone, never actually invoked, since `Expr::
-IndirectCall` isn't wired up yet), and M4a (single-dimensional array
+IndirectCall` isn't wired up yet), M4a (single-dimensional array
 types with a bare `{ ... }` literal initializer → `Expr::SeqLit`,
 indexing reads → `Expr::SeqIndex`, `.length` → `Expr::SeqLen` — SIR16's
 `Sequences` primitives, not SIR22's `NDArrays`/matrix family; see this
-section's own M4a entry for why) are merged — see `code/packages/rust/
-java-to-semantic-ir`'s own `CHANGELOG.md` for the exact per-milestone
-construct list and the real correctness bugs each milestone's own test
-suite caught before shipping. M2's own scope split into two PRs (M2a;
-M2b) once implementation revealed how much scope-stack infrastructure
-`if`/`while`/`do`-`while` alone already needed; M3 similarly split into
-M3a and M3b (this section) once research showed M3's combined scope —
-multi-function tables, typed params, tail-position return, *and* lambda
-capture analysis — was comparably large to M2's own combined scope; M4
-was likewise narrowed into M4a (this section, merged) and M4b (deferred)
-once design research (grammar probing + a direct read of `semantic-ir`'s
-own node/validator/backend source) showed the original undifferentiated
-M4 scope — arrays, `new`-based array creation, indexed assignment,
-multi-dimensional arrays, `String` methods, and `List`/`Map` literals,
-all at once — was comparably large to M2's and M3's own combined scopes.
+section's own M4a entry for why), and M4b (plain indexed assignment,
+`xs[i] = v;` → `Stmt::SeqSet`, distinguished from a bare-name assignment
+target by a new check run ahead of the existing bare-name-only
+resolution — compound-assignment/increment-decrement on an indexed
+target remains deferred; see this section's own M4b entry for why) are
+merged — see `code/packages/rust/java-to-semantic-ir`'s own
+`CHANGELOG.md` for the exact per-milestone construct list and the real
+correctness bugs each milestone's own test suite caught before shipping.
+M2's own scope split into two PRs (M2a; M2b) once implementation
+revealed how much scope-stack infrastructure `if`/`while`/`do`-`while`
+alone already needed; M3 similarly split into M3a and M3b (this section)
+once research showed M3's combined scope — multi-function tables, typed
+params, tail-position return, *and* lambda capture analysis — was
+comparably large to M2's own combined scope; M4 was likewise narrowed
+into M4a (merged) and M4b (this section, merged) once design research
+(grammar probing + a direct read of `semantic-ir`'s own node/validator/
+backend source) showed the original undifferentiated M4 scope — arrays,
+`new`-based array creation, indexed assignment, multi-dimensional
+arrays, `String` methods, and `List`/`Map` literals, all at once — was
+comparably large to M2's and M3's own combined scopes; M4b was narrowed
+*again* during its own implementation (indexed assignment alone turning
+out comparably sized to M4a) into this section's own M4b (plain indexed
+assignment only, merged) plus M4c (`new`-based array creation and
+compound-assignment/increment-decrement on an indexed target, pending)
+and M4d (multi-dimensional arrays, pending) — see those entries below.
 `switch` was also discovered, during M2a, to have no corresponding SIR
 IR node at all (confirmed by a repo-wide grep, not assumed) — it needs
 its own spec-level design decision (Java's fall-through semantics in
 particular) before any frontend can target it, tracked as a separate
 backlog item rather than folded into "M2"/"M3" implicitly; `break`/
-`continue` have the identical gap. M4b onward are pending.
+`continue` have the identical gap. M4c onward are pending.
 
 ## Motivation
 
@@ -262,24 +272,65 @@ parameter, and return type already routes through the one shared
 checking fall out for free as a side effect of this milestone, without
 needing their own dedicated work.
 
-**M4b — indexed assignment, `new`-based array creation, multi-
-dimensional arrays.** Deferred from M4a during scope narrowing. Indexed
-assignment (`xs[i] = v;`, and the same treatment for compound-assignment/
-increment-decrement on an indexed target) needs `Stmt::SeqSet` and new
-lvalue-parsing machinery beyond the current bare-name-only assignment
-target. `new int[5]` (sized, uninitialized) and `new int[]{1,2,3}`
-(explicit array-creation-type + initializer) are new primary-expression
-forms. Multi-dimensional arrays (`int[][] grid`) need a real
-`Kind::Array(Box<Kind>)`-shaped (or equivalent) nested representation —
-deliberately not attempted as part of M4a's flat `ArrayElemKind`, which
-is single-level by construction. Also still open from the original
-undifferentiated M4 scope: `String` method-dispatch surface (`.length()`,
-`.charAt()`, `.substring()`, etc. — the built-in method catalog
-`sir-method-dispatch.md`/`sir-collection-methods.md` already define,
-reused rather than redefined; needs qualified-call support, itself still
-out of scope everywhere in this frontend), and `List`/`Map` collection
-literals where a fixed-shape lowering is unambiguous (`List.of(...)`,
-`new ArrayList<>()` + `.add`).
+**M4b — plain indexed array assignment.** Deferred from M4a during scope
+narrowing, then narrowed *again* once its own implementation began.
+`xs[i] = v;` lowers to `Stmt::SeqSet` via a new `indexed_assign_target`
+check in `lower_expr_statement`, run ahead of the existing bare-name-only
+assignment-target resolution (`extract_bare_name`) — it recognizes the
+one new target shape (`primary_expression` with exactly one `[...]`
+suffix) and falls through to the unchanged bare-name path for everything
+else. `Stmt::SeqSet` needs only `Feature::Sequences` (already declared
+since M4a); its `seq` field is an arbitrary expression, not a bound name,
+so unlike `Stmt::Assign` no `check_varref` applies. **Compound assignment
+and increment/decrement on an indexed target (`xs[i] += v;`, `xs[i]++;`)
+remain deferred to M4c**, not attempted here: naively lowering either
+would evaluate the index expression twice (once to read the current
+element, once to write the new one), silently double-evaluating any side
+effect a non-constant index expression carries (e.g. a method call used
+as the index) — the same class of correctness bug this frontend's own
+`/security-review` history has caught before in the do-while and
+for-update desugarings (see `code/packages/rust/java-to-semantic-ir`'s
+own `CHANGELOG.md`, `[0.3.0]`/`[0.4.0]`).
+
+**M4c — `new`-based array creation; compound-assignment/increment-
+decrement on an indexed target.** Deferred from M4b during its own scope
+narrowing (see that entry above). `new int[5]` (sized, uninitialized —
+needs a per-element-kind fill-value convention) and `new int[]{1,2,3}`
+(explicit array-creation-type + initializer, semantically identical to
+the bare `{1,2,3}` form M4a already supports, just `new`-prefixed) are
+new primary-expression forms — confirmed via empirical probing, not
+assumed, that both currently fall through cleanly to this frontend's
+existing "unsupported primary expression" rejection. Revisit here
+whether compound-assignment/increment-decrement on an indexed target
+belongs in this same slice or needs its own — it needs either a
+temp-variable-hoisting design (to evaluate the index expression exactly
+once) or a determination that this frontend's currently-reachable index
+expressions are narrow enough in practice to skip that safely; either
+way it's a real design question, not a mechanical extension of M4b.
+
+**M4d — multi-dimensional arrays.** Deferred from M4b during its own
+scope narrowing (see that entry above). `int[][] grid` and deeper
+nesting need a real recursive element-kind representation —
+`kind_of_type_node`'s existing `bracket_pairs > 1` rejection is exactly
+the boundary this milestone removes. M4a's `Kind::Array(ArrayElemKind)`
+deliberately used a small flat *non-recursive* `ArrayElemKind` enum
+specifically to avoid forcing `Kind` itself to drop its `Copy` derive
+(see that milestone's own entry above); this milestone needs either a
+boxed recursive `Kind::Array(Box<Kind>)` (accepting the `Copy`-loss
+ripple M4a deliberately avoided) or another non-recursive-but-nested
+representation (e.g. a small fixed-depth-cap array of `ArrayElemKind`,
+mirroring this crate's own `MAX_EXPR_DEPTH`-style bounded-recursion
+convention elsewhere) — needs its own design pass before implementation
+starts.
+
+Also still open from the original undifferentiated M4 scope, not yet
+assigned to a lettered sub-milestone: `String` method-dispatch surface
+(`.length()`, `.charAt()`, `.substring()`, etc. — the built-in method
+catalog `sir-method-dispatch.md`/`sir-collection-methods.md` already
+define, reused rather than redefined; needs qualified-call support,
+itself still out of scope everywhere in this frontend), and `List`/`Map`
+collection literals where a fixed-shape lowering is unambiguous
+(`List.of(...)`, `new ArrayList<>()` + `.add`).
 
 **M5 — statics/breadth parity groundwork.** Pulled forward from the
 original M9 slot: static field/method access patterns
