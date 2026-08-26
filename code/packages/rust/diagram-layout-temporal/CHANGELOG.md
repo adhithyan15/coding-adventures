@@ -1,5 +1,9 @@
 # Changelog
 
+## 0.29.0
+
+- Resolve and validate typed English weekday names before backend-neutral Gantt layout.
+
 ## 0.28.0
 
 - Resolve typed 12-hour Gantt clocks into backend-neutral temporal geometry.
