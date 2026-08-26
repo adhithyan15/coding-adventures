@@ -211,6 +211,16 @@ pub enum Directive {
     Action(Action),
     AssertReturn { action: Action, expected: Vec<Expected> },
     AssertTrap { action: Action, message: String },
+    /// `(assert_exception (invoke ...))` (W21 -- the exceptions proposal):
+    /// the action must produce an UNCAUGHT WASM exception (`throw`,
+    /// propagated without a matching `try_table` catch clause) -- a
+    /// genuinely different outcome from `AssertTrap`'s ordinary trap (the
+    /// real spec's own `try_table` never catches a trap, only an
+    /// exception; see `wasm-execution`'s `TrapError::is_exception`). No
+    /// message string, unlike `assert_trap`/`assert_exhaustion` -- the
+    /// real corpus's own shape (`throw.wast`'s `(assert_exception (invoke
+    /// "throw-if" (i32.const 10)))`) never carries one.
+    AssertException { action: Action },
     AssertExhaustion { action: Action, message: String },
     AssertInvalid { module: ModuleSource, message: String },
     AssertMalformed { module: ModuleSource, message: String },
@@ -269,6 +279,13 @@ fn parse_directive(e: &SExpr) -> Result<Directive, WastParseError> {
             let action = parse_action(expect_get(items, 1)?)?;
             let message = expect_str(expect_get(items, 2)?)?;
             Ok(Directive::AssertExhaustion { action, message })
+        }
+        // W21 (exceptions proposal): `(assert_exception (invoke ...))` --
+        // no message string, unlike every OTHER `assert_*` directive with
+        // an action (see `Directive::AssertException`'s own doc comment).
+        "assert_exception" => {
+            let action = parse_action(expect_get(items, 1)?)?;
+            Ok(Directive::AssertException { action })
         }
         "assert_invalid" => {
             let module = parse_module_source(expect_get(items, 1)?)?;
@@ -648,6 +665,19 @@ mod tests {
             Directive::AssertTrap { action: Action::Invoke { name, .. }, message } => {
                 assert_eq!(name, "div0");
                 assert_eq!(message, "integer divide by zero");
+            }
+            other => panic!("unexpected directive: {other:?}"),
+        }
+    }
+
+    #[test]
+    fn parses_assert_exception_no_message_real_corpus_shape() {
+        // W21 -- `throw.wast`'s own real shape: no message string, unlike
+        // `assert_trap`/`assert_exhaustion`.
+        let dirs = parse_script(r#"(assert_exception (invoke "throw-if" (i32.const 10)))"#).unwrap();
+        match &dirs[0] {
+            Directive::AssertException { action: Action::Invoke { name, .. } } => {
+                assert_eq!(name, "throw-if");
             }
             other => panic!("unexpected directive: {other:?}"),
         }

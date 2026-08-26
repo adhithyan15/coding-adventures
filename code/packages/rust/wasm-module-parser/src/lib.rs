@@ -693,6 +693,21 @@ fn parse_import_section(p: &mut Parser, module: &mut WasmModule) -> Result<(), W
                     mutable: decode_mutability(mut_byte, p.offset() - 1)?,
                 })
             }
+            // W21 (exceptions proposal): `decode_external_kind` above
+            // never actually produces `Tag` (still only recognizes bytes
+            // 0x00-0x03 -- real binary tag-section/tag-import decoding
+            // stays out of scope for this slice, matching W20's own
+            // precedent of not touching this crate; `wasm-wast-parser`'s
+            // text pipeline, this repo's real corpus entry point, never
+            // round-trips through this binary parser at all). This arm
+            // exists only so the match stays exhaustive now that
+            // `ExternalKind` has a 5th variant -- unreachable in practice.
+            ExternalKind::Tag => {
+                return Err(WasmParseError {
+                    message: "tag imports are not supported by the binary module parser".to_string(),
+                    offset: p.offset(),
+                })
+            }
         };
         module.imports.push(Import {
             module_name,

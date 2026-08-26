@@ -7,6 +7,12 @@
         "trap": 0,
         "not_yet_supported": 0
       },
+      "assert_exception": {
+        "pass": 0,
+        "fail": 0,
+        "trap": 0,
+        "not_yet_supported": 0
+      },
       "assert_exhaustion": {
         "pass": 0,
         "fail": 0,
@@ -58,6 +64,12 @@
     },
     "align.wast": {
       "action": {
+        "pass": 0,
+        "fail": 0,
+        "trap": 0,
+        "not_yet_supported": 0
+      },
+      "assert_exception": {
         "pass": 0,
         "fail": 0,
         "trap": 0,
@@ -119,6 +131,12 @@
         "trap": 0,
         "not_yet_supported": 0
       },
+      "assert_exception": {
+        "pass": 0,
+        "fail": 0,
+        "trap": 0,
+        "not_yet_supported": 0
+      },
       "assert_exhaustion": {
         "pass": 0,
         "fail": 0,
@@ -170,6 +188,12 @@
     },
     "block.wast": {
       "action": {
+        "pass": 0,
+        "fail": 0,
+        "trap": 0,
+        "not_yet_supported": 0
+      },
+      "assert_exception": {
         "pass": 0,
         "fail": 0,
         "trap": 0,
@@ -231,6 +255,12 @@
         "trap": 0,
         "not_yet_supported": 0
       },
+      "assert_exception": {
+        "pass": 0,
+        "fail": 0,
+        "trap": 0,
+        "not_yet_supported": 0
+      },
       "assert_exhaustion": {
         "pass": 0,
         "fail": 0,
@@ -282,6 +312,12 @@
     },
     "br_if.wast": {
       "action": {
+        "pass": 0,
+        "fail": 0,
+        "trap": 0,
+        "not_yet_supported": 0
+      },
+      "assert_exception": {
         "pass": 0,
         "fail": 0,
         "trap": 0,
@@ -343,6 +379,12 @@
         "trap": 0,
         "not_yet_supported": 0
       },
+      "assert_exception": {
+        "pass": 0,
+        "fail": 0,
+        "trap": 0,
+        "not_yet_supported": 0
+      },
       "assert_exhaustion": {
         "pass": 0,
         "fail": 0,
@@ -394,6 +436,12 @@
     },
     "call.wast": {
       "action": {
+        "pass": 0,
+        "fail": 0,
+        "trap": 0,
+        "not_yet_supported": 0
+      },
+      "assert_exception": {
         "pass": 0,
         "fail": 0,
         "trap": 0,
@@ -455,6 +503,12 @@
         "trap": 0,
         "not_yet_supported": 0
       },
+      "assert_exception": {
+        "pass": 0,
+        "fail": 0,
+        "trap": 0,
+        "not_yet_supported": 0
+      },
       "assert_exhaustion": {
         "pass": 2,
         "fail": 0,
@@ -506,6 +560,12 @@
     },
     "comments.wast": {
       "action": {
+        "pass": 0,
+        "fail": 0,
+        "trap": 0,
+        "not_yet_supported": 0
+      },
+      "assert_exception": {
         "pass": 0,
         "fail": 0,
         "trap": 0,
@@ -567,6 +627,12 @@
         "trap": 0,
         "not_yet_supported": 0
       },
+      "assert_exception": {
+        "pass": 0,
+        "fail": 0,
+        "trap": 0,
+        "not_yet_supported": 0
+      },
       "assert_exhaustion": {
         "pass": 0,
         "fail": 0,
@@ -618,6 +684,12 @@
     },
     "conversions.wast": {
       "action": {
+        "pass": 0,
+        "fail": 0,
+        "trap": 0,
+        "not_yet_supported": 0
+      },
+      "assert_exception": {
         "pass": 0,
         "fail": 0,
         "trap": 0,
@@ -679,6 +751,12 @@
         "trap": 0,
         "not_yet_supported": 0
       },
+      "assert_exception": {
+        "pass": 0,
+        "fail": 0,
+        "trap": 0,
+        "not_yet_supported": 0
+      },
       "assert_exhaustion": {
         "pass": 0,
         "fail": 0,
@@ -730,6 +808,12 @@
     },
     "endianness.wast": {
       "action": {
+        "pass": 0,
+        "fail": 0,
+        "trap": 0,
+        "not_yet_supported": 0
+      },
+      "assert_exception": {
         "pass": 0,
         "fail": 0,
         "trap": 0,
@@ -791,6 +875,12 @@
         "trap": 0,
         "not_yet_supported": 0
       },
+      "assert_exception": {
+        "pass": 0,
+        "fail": 0,
+        "trap": 0,
+        "not_yet_supported": 0
+      },
       "assert_exhaustion": {
         "pass": 0,
         "fail": 0,
@@ -842,6 +932,12 @@
     },
     "f32_bitwise.wast": {
       "action": {
+        "pass": 0,
+        "fail": 0,
+        "trap": 0,
+        "not_yet_supported": 0
+      },
+      "assert_exception": {
         "pass": 0,
         "fail": 0,
         "trap": 0,
@@ -903,6 +999,12 @@
         "trap": 0,
         "not_yet_supported": 0
       },
+      "assert_exception": {
+        "pass": 0,
+        "fail": 0,
+        "trap": 0,
+        "not_yet_supported": 0
+      },
       "assert_exhaustion": {
         "pass": 0,
         "fail": 0,
@@ -954,6 +1056,12 @@
     },
     "f64.wast": {
       "action": {
+        "pass": 0,
+        "fail": 0,
+        "trap": 0,
+        "not_yet_supported": 0
+      },
+      "assert_exception": {
         "pass": 0,
         "fail": 0,
         "trap": 0,
@@ -1015,6 +1123,12 @@
         "trap": 0,
         "not_yet_supported": 0
       },
+      "assert_exception": {
+        "pass": 0,
+        "fail": 0,
+        "trap": 0,
+        "not_yet_supported": 0
+      },
       "assert_exhaustion": {
         "pass": 0,
         "fail": 0,
@@ -1066,6 +1180,12 @@
     },
     "f64_cmp.wast": {
       "action": {
+        "pass": 0,
+        "fail": 0,
+        "trap": 0,
+        "not_yet_supported": 0
+      },
+      "assert_exception": {
         "pass": 0,
         "fail": 0,
         "trap": 0,
@@ -1127,6 +1247,12 @@
         "trap": 0,
         "not_yet_supported": 0
       },
+      "assert_exception": {
+        "pass": 0,
+        "fail": 0,
+        "trap": 0,
+        "not_yet_supported": 0
+      },
       "assert_exhaustion": {
         "pass": 1,
         "fail": 0,
@@ -1183,6 +1309,12 @@
         "trap": 0,
         "not_yet_supported": 0
       },
+      "assert_exception": {
+        "pass": 0,
+        "fail": 0,
+        "trap": 0,
+        "not_yet_supported": 0
+      },
       "assert_exhaustion": {
         "pass": 0,
         "fail": 0,
@@ -1234,6 +1366,12 @@
     },
     "float_literals.wast": {
       "action": {
+        "pass": 0,
+        "fail": 0,
+        "trap": 0,
+        "not_yet_supported": 0
+      },
+      "assert_exception": {
         "pass": 0,
         "fail": 0,
         "trap": 0,
@@ -1295,6 +1433,12 @@
         "trap": 0,
         "not_yet_supported": 24
       },
+      "assert_exception": {
+        "pass": 0,
+        "fail": 0,
+        "trap": 0,
+        "not_yet_supported": 0
+      },
       "assert_exhaustion": {
         "pass": 0,
         "fail": 0,
@@ -1346,6 +1490,12 @@
     },
     "float_misc.wast": {
       "action": {
+        "pass": 0,
+        "fail": 0,
+        "trap": 0,
+        "not_yet_supported": 0
+      },
+      "assert_exception": {
         "pass": 0,
         "fail": 0,
         "trap": 0,
@@ -1407,6 +1557,12 @@
         "trap": 0,
         "not_yet_supported": 0
       },
+      "assert_exception": {
+        "pass": 0,
+        "fail": 0,
+        "trap": 0,
+        "not_yet_supported": 0
+      },
       "assert_exhaustion": {
         "pass": 0,
         "fail": 0,
@@ -1458,6 +1614,12 @@
     },
     "func.wast": {
       "action": {
+        "pass": 0,
+        "fail": 0,
+        "trap": 0,
+        "not_yet_supported": 0
+      },
+      "assert_exception": {
         "pass": 0,
         "fail": 0,
         "trap": 0,
@@ -1519,6 +1681,12 @@
         "trap": 0,
         "not_yet_supported": 1
       },
+      "assert_exception": {
+        "pass": 0,
+        "fail": 0,
+        "trap": 0,
+        "not_yet_supported": 0
+      },
       "assert_exhaustion": {
         "pass": 0,
         "fail": 0,
@@ -1570,6 +1738,12 @@
     },
     "global.wast": {
       "action": {
+        "pass": 0,
+        "fail": 0,
+        "trap": 0,
+        "not_yet_supported": 0
+      },
+      "assert_exception": {
         "pass": 0,
         "fail": 0,
         "trap": 0,
@@ -1631,6 +1805,12 @@
         "trap": 0,
         "not_yet_supported": 0
       },
+      "assert_exception": {
+        "pass": 0,
+        "fail": 0,
+        "trap": 0,
+        "not_yet_supported": 0
+      },
       "assert_exhaustion": {
         "pass": 0,
         "fail": 0,
@@ -1687,6 +1867,12 @@
         "trap": 0,
         "not_yet_supported": 7
       },
+      "assert_exception": {
+        "pass": 0,
+        "fail": 0,
+        "trap": 0,
+        "not_yet_supported": 0
+      },
       "assert_exhaustion": {
         "pass": 0,
         "fail": 0,
@@ -1738,6 +1924,12 @@
     },
     "i32.wast": {
       "action": {
+        "pass": 0,
+        "fail": 0,
+        "trap": 0,
+        "not_yet_supported": 0
+      },
+      "assert_exception": {
         "pass": 0,
         "fail": 0,
         "trap": 0,
@@ -1799,6 +1991,12 @@
         "trap": 0,
         "not_yet_supported": 0
       },
+      "assert_exception": {
+        "pass": 0,
+        "fail": 0,
+        "trap": 0,
+        "not_yet_supported": 0
+      },
       "assert_exhaustion": {
         "pass": 0,
         "fail": 0,
@@ -1850,6 +2048,12 @@
     },
     "i8x16_relaxed_swizzle.wast": {
       "action": {
+        "pass": 0,
+        "fail": 0,
+        "trap": 0,
+        "not_yet_supported": 0
+      },
+      "assert_exception": {
         "pass": 0,
         "fail": 0,
         "trap": 0,
@@ -1911,6 +2115,12 @@
         "trap": 0,
         "not_yet_supported": 0
       },
+      "assert_exception": {
+        "pass": 0,
+        "fail": 0,
+        "trap": 0,
+        "not_yet_supported": 0
+      },
       "assert_exhaustion": {
         "pass": 0,
         "fail": 0,
@@ -1962,6 +2172,12 @@
     },
     "if.wast": {
       "action": {
+        "pass": 0,
+        "fail": 0,
+        "trap": 0,
+        "not_yet_supported": 0
+      },
+      "assert_exception": {
         "pass": 0,
         "fail": 0,
         "trap": 0,
@@ -2023,6 +2239,12 @@
         "trap": 0,
         "not_yet_supported": 0
       },
+      "assert_exception": {
+        "pass": 0,
+        "fail": 0,
+        "trap": 0,
+        "not_yet_supported": 0
+      },
       "assert_exhaustion": {
         "pass": 0,
         "fail": 0,
@@ -2074,6 +2296,12 @@
     },
     "int_literals.wast": {
       "action": {
+        "pass": 0,
+        "fail": 0,
+        "trap": 0,
+        "not_yet_supported": 0
+      },
+      "assert_exception": {
         "pass": 0,
         "fail": 0,
         "trap": 0,
@@ -2135,6 +2363,12 @@
         "trap": 0,
         "not_yet_supported": 0
       },
+      "assert_exception": {
+        "pass": 0,
+        "fail": 0,
+        "trap": 0,
+        "not_yet_supported": 0
+      },
       "assert_exhaustion": {
         "pass": 0,
         "fail": 0,
@@ -2186,6 +2420,12 @@
     },
     "left-to-right.wast": {
       "action": {
+        "pass": 0,
+        "fail": 0,
+        "trap": 0,
+        "not_yet_supported": 0
+      },
+      "assert_exception": {
         "pass": 0,
         "fail": 0,
         "trap": 0,
@@ -2247,6 +2487,12 @@
         "trap": 0,
         "not_yet_supported": 0
       },
+      "assert_exception": {
+        "pass": 0,
+        "fail": 0,
+        "trap": 0,
+        "not_yet_supported": 0
+      },
       "assert_exhaustion": {
         "pass": 0,
         "fail": 0,
@@ -2298,6 +2544,12 @@
     },
     "load.wast": {
       "action": {
+        "pass": 0,
+        "fail": 0,
+        "trap": 0,
+        "not_yet_supported": 0
+      },
+      "assert_exception": {
         "pass": 0,
         "fail": 0,
         "trap": 0,
@@ -2359,6 +2611,12 @@
         "trap": 0,
         "not_yet_supported": 0
       },
+      "assert_exception": {
+        "pass": 0,
+        "fail": 0,
+        "trap": 0,
+        "not_yet_supported": 0
+      },
       "assert_exhaustion": {
         "pass": 0,
         "fail": 0,
@@ -2410,6 +2668,12 @@
     },
     "local_set.wast": {
       "action": {
+        "pass": 0,
+        "fail": 0,
+        "trap": 0,
+        "not_yet_supported": 0
+      },
+      "assert_exception": {
         "pass": 0,
         "fail": 0,
         "trap": 0,
@@ -2471,6 +2735,12 @@
         "trap": 0,
         "not_yet_supported": 0
       },
+      "assert_exception": {
+        "pass": 0,
+        "fail": 0,
+        "trap": 0,
+        "not_yet_supported": 0
+      },
       "assert_exhaustion": {
         "pass": 0,
         "fail": 0,
@@ -2522,6 +2792,12 @@
     },
     "loop.wast": {
       "action": {
+        "pass": 0,
+        "fail": 0,
+        "trap": 0,
+        "not_yet_supported": 0
+      },
+      "assert_exception": {
         "pass": 0,
         "fail": 0,
         "trap": 0,
@@ -2583,6 +2859,12 @@
         "trap": 0,
         "not_yet_supported": 0
       },
+      "assert_exception": {
+        "pass": 0,
+        "fail": 0,
+        "trap": 0,
+        "not_yet_supported": 0
+      },
       "assert_exhaustion": {
         "pass": 0,
         "fail": 0,
@@ -2634,6 +2916,12 @@
     },
     "memory.wast": {
       "action": {
+        "pass": 0,
+        "fail": 0,
+        "trap": 0,
+        "not_yet_supported": 0
+      },
+      "assert_exception": {
         "pass": 0,
         "fail": 0,
         "trap": 0,
@@ -2695,6 +2983,12 @@
         "trap": 0,
         "not_yet_supported": 0
       },
+      "assert_exception": {
+        "pass": 0,
+        "fail": 0,
+        "trap": 0,
+        "not_yet_supported": 0
+      },
       "assert_exhaustion": {
         "pass": 0,
         "fail": 0,
@@ -2751,6 +3045,12 @@
         "trap": 0,
         "not_yet_supported": 0
       },
+      "assert_exception": {
+        "pass": 0,
+        "fail": 0,
+        "trap": 0,
+        "not_yet_supported": 0
+      },
       "assert_exhaustion": {
         "pass": 0,
         "fail": 0,
@@ -2802,6 +3102,12 @@
     },
     "memory_grow.wast": {
       "action": {
+        "pass": 0,
+        "fail": 0,
+        "trap": 0,
+        "not_yet_supported": 0
+      },
+      "assert_exception": {
         "pass": 0,
         "fail": 0,
         "trap": 0,
@@ -2863,6 +3169,12 @@
         "trap": 0,
         "not_yet_supported": 0
       },
+      "assert_exception": {
+        "pass": 0,
+        "fail": 0,
+        "trap": 0,
+        "not_yet_supported": 0
+      },
       "assert_exhaustion": {
         "pass": 0,
         "fail": 0,
@@ -2919,6 +3231,12 @@
         "trap": 0,
         "not_yet_supported": 0
       },
+      "assert_exception": {
+        "pass": 0,
+        "fail": 0,
+        "trap": 0,
+        "not_yet_supported": 0
+      },
       "assert_exhaustion": {
         "pass": 0,
         "fail": 0,
@@ -2970,6 +3288,12 @@
     },
     "memory_size.wast": {
       "action": {
+        "pass": 0,
+        "fail": 0,
+        "trap": 0,
+        "not_yet_supported": 0
+      },
+      "assert_exception": {
         "pass": 0,
         "fail": 0,
         "trap": 0,
@@ -3031,6 +3355,12 @@
         "trap": 0,
         "not_yet_supported": 0
       },
+      "assert_exception": {
+        "pass": 0,
+        "fail": 0,
+        "trap": 0,
+        "not_yet_supported": 0
+      },
       "assert_exhaustion": {
         "pass": 0,
         "fail": 0,
@@ -3082,6 +3412,12 @@
     },
     "nop.wast": {
       "action": {
+        "pass": 0,
+        "fail": 0,
+        "trap": 0,
+        "not_yet_supported": 0
+      },
+      "assert_exception": {
         "pass": 0,
         "fail": 0,
         "trap": 0,
@@ -3143,6 +3479,12 @@
         "trap": 0,
         "not_yet_supported": 0
       },
+      "assert_exception": {
+        "pass": 0,
+        "fail": 0,
+        "trap": 0,
+        "not_yet_supported": 0
+      },
       "assert_exhaustion": {
         "pass": 0,
         "fail": 0,
@@ -3194,6 +3536,12 @@
     },
     "relaxed_dot_product.wast": {
       "action": {
+        "pass": 0,
+        "fail": 0,
+        "trap": 0,
+        "not_yet_supported": 0
+      },
+      "assert_exception": {
         "pass": 0,
         "fail": 0,
         "trap": 0,
@@ -3255,6 +3603,12 @@
         "trap": 0,
         "not_yet_supported": 0
       },
+      "assert_exception": {
+        "pass": 0,
+        "fail": 0,
+        "trap": 0,
+        "not_yet_supported": 0
+      },
       "assert_exhaustion": {
         "pass": 0,
         "fail": 0,
@@ -3306,6 +3660,12 @@
     },
     "relaxed_madd_nmadd.wast": {
       "action": {
+        "pass": 0,
+        "fail": 0,
+        "trap": 0,
+        "not_yet_supported": 0
+      },
+      "assert_exception": {
         "pass": 0,
         "fail": 0,
         "trap": 0,
@@ -3367,6 +3727,12 @@
         "trap": 0,
         "not_yet_supported": 0
       },
+      "assert_exception": {
+        "pass": 0,
+        "fail": 0,
+        "trap": 0,
+        "not_yet_supported": 0
+      },
       "assert_exhaustion": {
         "pass": 0,
         "fail": 0,
@@ -3418,6 +3784,12 @@
     },
     "return.wast": {
       "action": {
+        "pass": 0,
+        "fail": 0,
+        "trap": 0,
+        "not_yet_supported": 0
+      },
+      "assert_exception": {
         "pass": 0,
         "fail": 0,
         "trap": 0,
@@ -3479,6 +3851,12 @@
         "trap": 0,
         "not_yet_supported": 0
       },
+      "assert_exception": {
+        "pass": 0,
+        "fail": 0,
+        "trap": 0,
+        "not_yet_supported": 0
+      },
       "assert_exhaustion": {
         "pass": 0,
         "fail": 0,
@@ -3530,6 +3908,12 @@
     },
     "simd_address.wast": {
       "action": {
+        "pass": 0,
+        "fail": 0,
+        "trap": 0,
+        "not_yet_supported": 0
+      },
+      "assert_exception": {
         "pass": 0,
         "fail": 0,
         "trap": 0,
@@ -3591,6 +3975,12 @@
         "trap": 0,
         "not_yet_supported": 0
       },
+      "assert_exception": {
+        "pass": 0,
+        "fail": 0,
+        "trap": 0,
+        "not_yet_supported": 0
+      },
       "assert_exhaustion": {
         "pass": 0,
         "fail": 0,
@@ -3642,6 +4032,12 @@
     },
     "simd_bit_shift.wast": {
       "action": {
+        "pass": 0,
+        "fail": 0,
+        "trap": 0,
+        "not_yet_supported": 0
+      },
+      "assert_exception": {
         "pass": 0,
         "fail": 0,
         "trap": 0,
@@ -3703,6 +4099,12 @@
         "trap": 0,
         "not_yet_supported": 0
       },
+      "assert_exception": {
+        "pass": 0,
+        "fail": 0,
+        "trap": 0,
+        "not_yet_supported": 0
+      },
       "assert_exhaustion": {
         "pass": 0,
         "fail": 0,
@@ -3754,6 +4156,12 @@
     },
     "simd_boolean.wast": {
       "action": {
+        "pass": 0,
+        "fail": 0,
+        "trap": 0,
+        "not_yet_supported": 0
+      },
+      "assert_exception": {
         "pass": 0,
         "fail": 0,
         "trap": 0,
@@ -3815,6 +4223,12 @@
         "trap": 0,
         "not_yet_supported": 0
       },
+      "assert_exception": {
+        "pass": 0,
+        "fail": 0,
+        "trap": 0,
+        "not_yet_supported": 0
+      },
       "assert_exhaustion": {
         "pass": 0,
         "fail": 0,
@@ -3866,6 +4280,12 @@
     },
     "simd_conversions.wast": {
       "action": {
+        "pass": 0,
+        "fail": 0,
+        "trap": 0,
+        "not_yet_supported": 0
+      },
+      "assert_exception": {
         "pass": 0,
         "fail": 0,
         "trap": 0,
@@ -3927,6 +4347,12 @@
         "trap": 0,
         "not_yet_supported": 0
       },
+      "assert_exception": {
+        "pass": 0,
+        "fail": 0,
+        "trap": 0,
+        "not_yet_supported": 0
+      },
       "assert_exhaustion": {
         "pass": 0,
         "fail": 0,
@@ -3978,6 +4404,12 @@
     },
     "simd_f32x4_arith.wast": {
       "action": {
+        "pass": 0,
+        "fail": 0,
+        "trap": 0,
+        "not_yet_supported": 0
+      },
+      "assert_exception": {
         "pass": 0,
         "fail": 0,
         "trap": 0,
@@ -4039,6 +4471,12 @@
         "trap": 0,
         "not_yet_supported": 0
       },
+      "assert_exception": {
+        "pass": 0,
+        "fail": 0,
+        "trap": 0,
+        "not_yet_supported": 0
+      },
       "assert_exhaustion": {
         "pass": 0,
         "fail": 0,
@@ -4090,6 +4528,12 @@
     },
     "simd_f32x4_pmin_pmax.wast": {
       "action": {
+        "pass": 0,
+        "fail": 0,
+        "trap": 0,
+        "not_yet_supported": 0
+      },
+      "assert_exception": {
         "pass": 0,
         "fail": 0,
         "trap": 0,
@@ -4151,6 +4595,12 @@
         "trap": 0,
         "not_yet_supported": 0
       },
+      "assert_exception": {
+        "pass": 0,
+        "fail": 0,
+        "trap": 0,
+        "not_yet_supported": 0
+      },
       "assert_exhaustion": {
         "pass": 0,
         "fail": 0,
@@ -4202,6 +4652,12 @@
     },
     "simd_f64x2.wast": {
       "action": {
+        "pass": 0,
+        "fail": 0,
+        "trap": 0,
+        "not_yet_supported": 0
+      },
+      "assert_exception": {
         "pass": 0,
         "fail": 0,
         "trap": 0,
@@ -4263,6 +4719,12 @@
         "trap": 0,
         "not_yet_supported": 0
       },
+      "assert_exception": {
+        "pass": 0,
+        "fail": 0,
+        "trap": 0,
+        "not_yet_supported": 0
+      },
       "assert_exhaustion": {
         "pass": 0,
         "fail": 0,
@@ -4314,6 +4776,12 @@
     },
     "simd_f64x2_cmp.wast": {
       "action": {
+        "pass": 0,
+        "fail": 0,
+        "trap": 0,
+        "not_yet_supported": 0
+      },
+      "assert_exception": {
         "pass": 0,
         "fail": 0,
         "trap": 0,
@@ -4375,6 +4843,12 @@
         "trap": 0,
         "not_yet_supported": 0
       },
+      "assert_exception": {
+        "pass": 0,
+        "fail": 0,
+        "trap": 0,
+        "not_yet_supported": 0
+      },
       "assert_exhaustion": {
         "pass": 0,
         "fail": 0,
@@ -4426,6 +4900,12 @@
     },
     "simd_f64x2_rounding.wast": {
       "action": {
+        "pass": 0,
+        "fail": 0,
+        "trap": 0,
+        "not_yet_supported": 0
+      },
+      "assert_exception": {
         "pass": 0,
         "fail": 0,
         "trap": 0,
@@ -4487,6 +4967,12 @@
         "trap": 0,
         "not_yet_supported": 0
       },
+      "assert_exception": {
+        "pass": 0,
+        "fail": 0,
+        "trap": 0,
+        "not_yet_supported": 0
+      },
       "assert_exhaustion": {
         "pass": 0,
         "fail": 0,
@@ -4538,6 +5024,12 @@
     },
     "simd_i16x8_arith2.wast": {
       "action": {
+        "pass": 0,
+        "fail": 0,
+        "trap": 0,
+        "not_yet_supported": 0
+      },
+      "assert_exception": {
         "pass": 0,
         "fail": 0,
         "trap": 0,
@@ -4599,6 +5091,12 @@
         "trap": 0,
         "not_yet_supported": 0
       },
+      "assert_exception": {
+        "pass": 0,
+        "fail": 0,
+        "trap": 0,
+        "not_yet_supported": 0
+      },
       "assert_exhaustion": {
         "pass": 0,
         "fail": 0,
@@ -4650,6 +5148,12 @@
     },
     "simd_i16x8_extadd_pairwise_i8x16.wast": {
       "action": {
+        "pass": 0,
+        "fail": 0,
+        "trap": 0,
+        "not_yet_supported": 0
+      },
+      "assert_exception": {
         "pass": 0,
         "fail": 0,
         "trap": 0,
@@ -4711,6 +5215,12 @@
         "trap": 0,
         "not_yet_supported": 0
       },
+      "assert_exception": {
+        "pass": 0,
+        "fail": 0,
+        "trap": 0,
+        "not_yet_supported": 0
+      },
       "assert_exhaustion": {
         "pass": 0,
         "fail": 0,
@@ -4762,6 +5272,12 @@
     },
     "simd_i16x8_q15mulr_sat_s.wast": {
       "action": {
+        "pass": 0,
+        "fail": 0,
+        "trap": 0,
+        "not_yet_supported": 0
+      },
+      "assert_exception": {
         "pass": 0,
         "fail": 0,
         "trap": 0,
@@ -4823,6 +5339,12 @@
         "trap": 0,
         "not_yet_supported": 0
       },
+      "assert_exception": {
+        "pass": 0,
+        "fail": 0,
+        "trap": 0,
+        "not_yet_supported": 0
+      },
       "assert_exhaustion": {
         "pass": 0,
         "fail": 0,
@@ -4874,6 +5396,12 @@
     },
     "simd_i32x4_arith.wast": {
       "action": {
+        "pass": 0,
+        "fail": 0,
+        "trap": 0,
+        "not_yet_supported": 0
+      },
+      "assert_exception": {
         "pass": 0,
         "fail": 0,
         "trap": 0,
@@ -4935,6 +5463,12 @@
         "trap": 0,
         "not_yet_supported": 0
       },
+      "assert_exception": {
+        "pass": 0,
+        "fail": 0,
+        "trap": 0,
+        "not_yet_supported": 0
+      },
       "assert_exhaustion": {
         "pass": 0,
         "fail": 0,
@@ -4986,6 +5520,12 @@
     },
     "simd_i32x4_cmp.wast": {
       "action": {
+        "pass": 0,
+        "fail": 0,
+        "trap": 0,
+        "not_yet_supported": 0
+      },
+      "assert_exception": {
         "pass": 0,
         "fail": 0,
         "trap": 0,
@@ -5047,6 +5587,12 @@
         "trap": 0,
         "not_yet_supported": 0
       },
+      "assert_exception": {
+        "pass": 0,
+        "fail": 0,
+        "trap": 0,
+        "not_yet_supported": 0
+      },
       "assert_exhaustion": {
         "pass": 0,
         "fail": 0,
@@ -5098,6 +5644,12 @@
     },
     "simd_i32x4_extadd_pairwise_i16x8.wast": {
       "action": {
+        "pass": 0,
+        "fail": 0,
+        "trap": 0,
+        "not_yet_supported": 0
+      },
+      "assert_exception": {
         "pass": 0,
         "fail": 0,
         "trap": 0,
@@ -5159,6 +5711,12 @@
         "trap": 0,
         "not_yet_supported": 0
       },
+      "assert_exception": {
+        "pass": 0,
+        "fail": 0,
+        "trap": 0,
+        "not_yet_supported": 0
+      },
       "assert_exhaustion": {
         "pass": 0,
         "fail": 0,
@@ -5210,6 +5768,12 @@
     },
     "simd_i32x4_trunc_sat_f32x4.wast": {
       "action": {
+        "pass": 0,
+        "fail": 0,
+        "trap": 0,
+        "not_yet_supported": 0
+      },
+      "assert_exception": {
         "pass": 0,
         "fail": 0,
         "trap": 0,
@@ -5271,6 +5835,12 @@
         "trap": 0,
         "not_yet_supported": 0
       },
+      "assert_exception": {
+        "pass": 0,
+        "fail": 0,
+        "trap": 0,
+        "not_yet_supported": 0
+      },
       "assert_exhaustion": {
         "pass": 0,
         "fail": 0,
@@ -5322,6 +5892,12 @@
     },
     "simd_i64x2_arith.wast": {
       "action": {
+        "pass": 0,
+        "fail": 0,
+        "trap": 0,
+        "not_yet_supported": 0
+      },
+      "assert_exception": {
         "pass": 0,
         "fail": 0,
         "trap": 0,
@@ -5383,6 +5959,12 @@
         "trap": 0,
         "not_yet_supported": 0
       },
+      "assert_exception": {
+        "pass": 0,
+        "fail": 0,
+        "trap": 0,
+        "not_yet_supported": 0
+      },
       "assert_exhaustion": {
         "pass": 0,
         "fail": 0,
@@ -5434,6 +6016,12 @@
     },
     "simd_i64x2_cmp.wast": {
       "action": {
+        "pass": 0,
+        "fail": 0,
+        "trap": 0,
+        "not_yet_supported": 0
+      },
+      "assert_exception": {
         "pass": 0,
         "fail": 0,
         "trap": 0,
@@ -5495,6 +6083,12 @@
         "trap": 0,
         "not_yet_supported": 0
       },
+      "assert_exception": {
+        "pass": 0,
+        "fail": 0,
+        "trap": 0,
+        "not_yet_supported": 0
+      },
       "assert_exhaustion": {
         "pass": 0,
         "fail": 0,
@@ -5546,6 +6140,12 @@
     },
     "simd_i8x16_arith.wast": {
       "action": {
+        "pass": 0,
+        "fail": 0,
+        "trap": 0,
+        "not_yet_supported": 0
+      },
+      "assert_exception": {
         "pass": 0,
         "fail": 0,
         "trap": 0,
@@ -5607,6 +6207,12 @@
         "trap": 0,
         "not_yet_supported": 0
       },
+      "assert_exception": {
+        "pass": 0,
+        "fail": 0,
+        "trap": 0,
+        "not_yet_supported": 0
+      },
       "assert_exhaustion": {
         "pass": 0,
         "fail": 0,
@@ -5658,6 +6264,12 @@
     },
     "simd_i8x16_cmp.wast": {
       "action": {
+        "pass": 0,
+        "fail": 0,
+        "trap": 0,
+        "not_yet_supported": 0
+      },
+      "assert_exception": {
         "pass": 0,
         "fail": 0,
         "trap": 0,
@@ -5719,6 +6331,12 @@
         "trap": 0,
         "not_yet_supported": 0
       },
+      "assert_exception": {
+        "pass": 0,
+        "fail": 0,
+        "trap": 0,
+        "not_yet_supported": 0
+      },
       "assert_exhaustion": {
         "pass": 0,
         "fail": 0,
@@ -5770,6 +6388,12 @@
     },
     "simd_int_to_int_extend.wast": {
       "action": {
+        "pass": 0,
+        "fail": 0,
+        "trap": 0,
+        "not_yet_supported": 0
+      },
+      "assert_exception": {
         "pass": 0,
         "fail": 0,
         "trap": 0,
@@ -5831,6 +6455,12 @@
         "trap": 0,
         "not_yet_supported": 0
       },
+      "assert_exception": {
+        "pass": 0,
+        "fail": 0,
+        "trap": 0,
+        "not_yet_supported": 0
+      },
       "assert_exhaustion": {
         "pass": 0,
         "fail": 0,
@@ -5882,6 +6512,12 @@
     },
     "simd_load.wast": {
       "action": {
+        "pass": 0,
+        "fail": 0,
+        "trap": 0,
+        "not_yet_supported": 0
+      },
+      "assert_exception": {
         "pass": 0,
         "fail": 0,
         "trap": 0,
@@ -5943,6 +6579,12 @@
         "trap": 0,
         "not_yet_supported": 0
       },
+      "assert_exception": {
+        "pass": 0,
+        "fail": 0,
+        "trap": 0,
+        "not_yet_supported": 0
+      },
       "assert_exhaustion": {
         "pass": 0,
         "fail": 0,
@@ -5994,6 +6636,12 @@
     },
     "simd_load32_lane.wast": {
       "action": {
+        "pass": 0,
+        "fail": 0,
+        "trap": 0,
+        "not_yet_supported": 0
+      },
+      "assert_exception": {
         "pass": 0,
         "fail": 0,
         "trap": 0,
@@ -6055,6 +6703,12 @@
         "trap": 0,
         "not_yet_supported": 0
       },
+      "assert_exception": {
+        "pass": 0,
+        "fail": 0,
+        "trap": 0,
+        "not_yet_supported": 0
+      },
       "assert_exhaustion": {
         "pass": 0,
         "fail": 0,
@@ -6106,6 +6760,12 @@
     },
     "simd_load8_lane.wast": {
       "action": {
+        "pass": 0,
+        "fail": 0,
+        "trap": 0,
+        "not_yet_supported": 0
+      },
+      "assert_exception": {
         "pass": 0,
         "fail": 0,
         "trap": 0,
@@ -6167,6 +6827,12 @@
         "trap": 0,
         "not_yet_supported": 0
       },
+      "assert_exception": {
+        "pass": 0,
+        "fail": 0,
+        "trap": 0,
+        "not_yet_supported": 0
+      },
       "assert_exhaustion": {
         "pass": 0,
         "fail": 0,
@@ -6218,6 +6884,12 @@
     },
     "simd_load_splat.wast": {
       "action": {
+        "pass": 0,
+        "fail": 0,
+        "trap": 0,
+        "not_yet_supported": 0
+      },
+      "assert_exception": {
         "pass": 0,
         "fail": 0,
         "trap": 0,
@@ -6279,6 +6951,12 @@
         "trap": 0,
         "not_yet_supported": 0
       },
+      "assert_exception": {
+        "pass": 0,
+        "fail": 0,
+        "trap": 0,
+        "not_yet_supported": 0
+      },
       "assert_exhaustion": {
         "pass": 0,
         "fail": 0,
@@ -6330,6 +7008,12 @@
     },
     "simd_select.wast": {
       "action": {
+        "pass": 0,
+        "fail": 0,
+        "trap": 0,
+        "not_yet_supported": 0
+      },
+      "assert_exception": {
         "pass": 0,
         "fail": 0,
         "trap": 0,
@@ -6391,6 +7075,12 @@
         "trap": 0,
         "not_yet_supported": 0
       },
+      "assert_exception": {
+        "pass": 0,
+        "fail": 0,
+        "trap": 0,
+        "not_yet_supported": 0
+      },
       "assert_exhaustion": {
         "pass": 0,
         "fail": 0,
@@ -6442,6 +7132,12 @@
     },
     "simd_store.wast": {
       "action": {
+        "pass": 0,
+        "fail": 0,
+        "trap": 0,
+        "not_yet_supported": 0
+      },
+      "assert_exception": {
         "pass": 0,
         "fail": 0,
         "trap": 0,
@@ -6503,6 +7199,12 @@
         "trap": 0,
         "not_yet_supported": 0
       },
+      "assert_exception": {
+        "pass": 0,
+        "fail": 0,
+        "trap": 0,
+        "not_yet_supported": 0
+      },
       "assert_exhaustion": {
         "pass": 0,
         "fail": 0,
@@ -6554,6 +7256,12 @@
     },
     "simd_store32_lane.wast": {
       "action": {
+        "pass": 0,
+        "fail": 0,
+        "trap": 0,
+        "not_yet_supported": 0
+      },
+      "assert_exception": {
         "pass": 0,
         "fail": 0,
         "trap": 0,
@@ -6615,6 +7323,12 @@
         "trap": 0,
         "not_yet_supported": 0
       },
+      "assert_exception": {
+        "pass": 0,
+        "fail": 0,
+        "trap": 0,
+        "not_yet_supported": 0
+      },
       "assert_exhaustion": {
         "pass": 0,
         "fail": 0,
@@ -6666,6 +7380,12 @@
     },
     "simd_store8_lane.wast": {
       "action": {
+        "pass": 0,
+        "fail": 0,
+        "trap": 0,
+        "not_yet_supported": 0
+      },
+      "assert_exception": {
         "pass": 0,
         "fail": 0,
         "trap": 0,
@@ -6727,6 +7447,12 @@
         "trap": 0,
         "not_yet_supported": 0
       },
+      "assert_exception": {
+        "pass": 0,
+        "fail": 0,
+        "trap": 0,
+        "not_yet_supported": 0
+      },
       "assert_exhaustion": {
         "pass": 0,
         "fail": 0,
@@ -6778,6 +7504,12 @@
     },
     "store.wast": {
       "action": {
+        "pass": 0,
+        "fail": 0,
+        "trap": 0,
+        "not_yet_supported": 0
+      },
+      "assert_exception": {
         "pass": 0,
         "fail": 0,
         "trap": 0,
@@ -6839,6 +7571,12 @@
         "trap": 0,
         "not_yet_supported": 0
       },
+      "assert_exception": {
+        "pass": 0,
+        "fail": 0,
+        "trap": 0,
+        "not_yet_supported": 0
+      },
       "assert_exhaustion": {
         "pass": 0,
         "fail": 0,
@@ -6890,6 +7628,12 @@
     },
     "table.wast": {
       "action": {
+        "pass": 0,
+        "fail": 0,
+        "trap": 0,
+        "not_yet_supported": 0
+      },
+      "assert_exception": {
         "pass": 0,
         "fail": 0,
         "trap": 0,
@@ -6951,6 +7695,12 @@
         "trap": 0,
         "not_yet_supported": 0
       },
+      "assert_exception": {
+        "pass": 0,
+        "fail": 0,
+        "trap": 0,
+        "not_yet_supported": 0
+      },
       "assert_exhaustion": {
         "pass": 0,
         "fail": 0,
@@ -7002,6 +7752,12 @@
     },
     "table_fill.wast": {
       "action": {
+        "pass": 0,
+        "fail": 0,
+        "trap": 0,
+        "not_yet_supported": 0
+      },
+      "assert_exception": {
         "pass": 0,
         "fail": 0,
         "trap": 0,
@@ -7063,6 +7819,12 @@
         "trap": 0,
         "not_yet_supported": 0
       },
+      "assert_exception": {
+        "pass": 0,
+        "fail": 0,
+        "trap": 0,
+        "not_yet_supported": 0
+      },
       "assert_exhaustion": {
         "pass": 0,
         "fail": 0,
@@ -7119,6 +7881,12 @@
         "trap": 0,
         "not_yet_supported": 4
       },
+      "assert_exception": {
+        "pass": 0,
+        "fail": 0,
+        "trap": 0,
+        "not_yet_supported": 0
+      },
       "assert_exhaustion": {
         "pass": 0,
         "fail": 0,
@@ -7170,6 +7938,12 @@
     },
     "table_set.wast": {
       "action": {
+        "pass": 0,
+        "fail": 0,
+        "trap": 0,
+        "not_yet_supported": 0
+      },
+      "assert_exception": {
         "pass": 0,
         "fail": 0,
         "trap": 0,
@@ -7231,6 +8005,12 @@
         "trap": 0,
         "not_yet_supported": 0
       },
+      "assert_exception": {
+        "pass": 0,
+        "fail": 0,
+        "trap": 0,
+        "not_yet_supported": 0
+      },
       "assert_exhaustion": {
         "pass": 0,
         "fail": 0,
@@ -7280,8 +8060,138 @@
         "not_yet_supported": 0
       }
     },
+    "tag.wast": {
+      "action": {
+        "pass": 0,
+        "fail": 0,
+        "trap": 0,
+        "not_yet_supported": 0
+      },
+      "assert_exception": {
+        "pass": 0,
+        "fail": 0,
+        "trap": 0,
+        "not_yet_supported": 0
+      },
+      "assert_exhaustion": {
+        "pass": 0,
+        "fail": 0,
+        "trap": 0,
+        "not_yet_supported": 0
+      },
+      "assert_invalid": {
+        "pass": 2,
+        "fail": 0,
+        "trap": 0,
+        "not_yet_supported": 0
+      },
+      "assert_malformed": {
+        "pass": 0,
+        "fail": 0,
+        "trap": 0,
+        "not_yet_supported": 0
+      },
+      "assert_return": {
+        "pass": 0,
+        "fail": 0,
+        "trap": 0,
+        "not_yet_supported": 0
+      },
+      "assert_trap": {
+        "pass": 0,
+        "fail": 0,
+        "trap": 0,
+        "not_yet_supported": 0
+      },
+      "assert_unlinkable": {
+        "pass": 2,
+        "fail": 0,
+        "trap": 0,
+        "not_yet_supported": 0
+      },
+      "module": {
+        "pass": 1,
+        "fail": 0,
+        "trap": 0,
+        "not_yet_supported": 3
+      },
+      "register": {
+        "pass": 1,
+        "fail": 0,
+        "trap": 0,
+        "not_yet_supported": 1
+      }
+    },
+    "throw.wast": {
+      "action": {
+        "pass": 0,
+        "fail": 0,
+        "trap": 0,
+        "not_yet_supported": 0
+      },
+      "assert_exception": {
+        "pass": 7,
+        "fail": 0,
+        "trap": 0,
+        "not_yet_supported": 0
+      },
+      "assert_exhaustion": {
+        "pass": 0,
+        "fail": 0,
+        "trap": 0,
+        "not_yet_supported": 0
+      },
+      "assert_invalid": {
+        "pass": 3,
+        "fail": 0,
+        "trap": 0,
+        "not_yet_supported": 0
+      },
+      "assert_malformed": {
+        "pass": 0,
+        "fail": 0,
+        "trap": 0,
+        "not_yet_supported": 0
+      },
+      "assert_return": {
+        "pass": 1,
+        "fail": 1,
+        "trap": 0,
+        "not_yet_supported": 0
+      },
+      "assert_trap": {
+        "pass": 0,
+        "fail": 0,
+        "trap": 0,
+        "not_yet_supported": 0
+      },
+      "assert_unlinkable": {
+        "pass": 0,
+        "fail": 0,
+        "trap": 0,
+        "not_yet_supported": 0
+      },
+      "module": {
+        "pass": 1,
+        "fail": 0,
+        "trap": 0,
+        "not_yet_supported": 0
+      },
+      "register": {
+        "pass": 0,
+        "fail": 0,
+        "trap": 0,
+        "not_yet_supported": 0
+      }
+    },
     "traps.wast": {
       "action": {
+        "pass": 0,
+        "fail": 0,
+        "trap": 0,
+        "not_yet_supported": 0
+      },
+      "assert_exception": {
         "pass": 0,
         "fail": 0,
         "trap": 0,
@@ -7343,6 +8253,12 @@
         "trap": 0,
         "not_yet_supported": 0
       },
+      "assert_exception": {
+        "pass": 0,
+        "fail": 0,
+        "trap": 0,
+        "not_yet_supported": 0
+      },
       "assert_exhaustion": {
         "pass": 0,
         "fail": 0,
@@ -7394,6 +8310,12 @@
     },
     "unreachable.wast": {
       "action": {
+        "pass": 0,
+        "fail": 0,
+        "trap": 0,
+        "not_yet_supported": 0
+      },
+      "assert_exception": {
         "pass": 0,
         "fail": 0,
         "trap": 0,
@@ -7455,6 +8377,12 @@
         "trap": 0,
         "not_yet_supported": 0
       },
+      "assert_exception": {
+        "pass": 0,
+        "fail": 0,
+        "trap": 0,
+        "not_yet_supported": 0
+      },
       "assert_exhaustion": {
         "pass": 0,
         "fail": 0,
@@ -7511,6 +8439,12 @@
         "trap": 0,
         "not_yet_supported": 0
       },
+      "assert_exception": {
+        "pass": 0,
+        "fail": 0,
+        "trap": 0,
+        "not_yet_supported": 0
+      },
       "assert_exhaustion": {
         "pass": 0,
         "fail": 0,
@@ -7562,6 +8496,12 @@
     },
     "utf8-invalid-encoding.wast": {
       "action": {
+        "pass": 0,
+        "fail": 0,
+        "trap": 0,
+        "not_yet_supported": 0
+      },
+      "assert_exception": {
         "pass": 0,
         "fail": 0,
         "trap": 0,
@@ -7624,6 +8564,12 @@
       "trap": 0,
       "not_yet_supported": 36
     },
+    "assert_exception": {
+      "pass": 7,
+      "fail": 0,
+      "trap": 0,
+      "not_yet_supported": 0
+    },
     "assert_exhaustion": {
       "pass": 5,
       "fail": 0,
@@ -7631,7 +8577,7 @@
       "not_yet_supported": 0
     },
     "assert_invalid": {
-      "pass": 2033,
+      "pass": 2038,
       "fail": 0,
       "trap": 0,
       "not_yet_supported": 92
@@ -7643,8 +8589,8 @@
       "not_yet_supported": 538
     },
     "assert_return": {
-      "pass": 44713,
-      "fail": 17,
+      "pass": 44714,
+      "fail": 18,
       "trap": 0,
       "not_yet_supported": 580
     },
@@ -7655,22 +8601,22 @@
       "not_yet_supported": 938
     },
     "assert_unlinkable": {
-      "pass": 49,
+      "pass": 51,
       "fail": 1,
       "trap": 0,
       "not_yet_supported": 0
     },
     "module": {
-      "pass": 1278,
+      "pass": 1280,
       "fail": 1,
       "trap": 0,
-      "not_yet_supported": 71
+      "not_yet_supported": 74
     },
     "register": {
-      "pass": 11,
+      "pass": 12,
       "fail": 2,
       "trap": 0,
-      "not_yet_supported": 2
+      "not_yet_supported": 3
     }
   },
   "parse_failures": {}

@@ -1,5 +1,35 @@
 # Changelog — wasm-wast-parser
 
+## 0.1.76 — 2026-08-25 — Exceptions proposal, first slice W21: tag/throw/try_table text syntax
+
+### Added
+
+- `tag` as a 5th inline-import-sugar kind (alongside func/table/memory/
+  global): `(tag $name? (param ...)*(result ...)* | (type $t))`,
+  `(export "x" (tag $idx))`, inline `(tag $name (export "x") ...)`
+  export sugar, both inline (`(tag $t (import "m" "n") ...)`) and
+  explicit (`(import "m" "n" (tag $t ...))`) import forms — reuses
+  `resolve_func_signature_ref` verbatim (a tag's grammar is identical to
+  a function's own signature-or-type-ref grammar). New `tag_names` index
+  space (combined imports + module-defined, same convention as
+  `func_names`/`table_names`/etc.).
+- `throw $tag` instruction encoding (folded + flat): a single `tagidx`
+  immediate resolved via `tag_names`.
+- `try_table` as a 4th structured-instruction form (alongside `block`/
+  `loop`/`if`), folded + flat: parses `(catch $tag $label)`/
+  `(catch_ref $tag $label)`/`(catch_all $label)`/`(catch_all_ref $label)`
+  clauses into the real binary catch-clause encoding (`0x00`-`0x03`
+  clause-kind byte + tag/label index(es)) via a new shared
+  `parse_try_table_catches` helper. Label depths resolve against
+  `icx.labels` BEFORE `try_table`'s own label is pushed, matching the
+  real spec's "relative to the ENCLOSING scope" rule.
+- `script.rs`: new `Directive::AssertException { action: Action }` --
+  `(assert_exception (invoke ...))`, no message string (unlike
+  `assert_trap`/`assert_exhaustion`), matching the real corpus's own
+  shape.
+
+See `code/specs/W21-wasm-exceptions-tag-throw-slice.md`.
+
 ## 0.1.75 — 2026-08-25 — GC epic, first slice W20: i31ref text syntax + real i31.wast conformance
 
 ### Added

@@ -2,6 +2,22 @@
 
 All notable changes to this package will be documented in this file.
 
+## [0.6.6] — 2026-08-25 (W21 — exceptions proposal, tag/throw first slice)
+
+### Added
+
+- `instantiate`'s import-resolution match gained an
+  `ImportTypeInfo::Tag(_)` arm: cleanly link-fails with an "unknown
+  import"-classified message (`HostInterface` has no `resolve_tag`
+  method — a real, separate generalization this slice doesn't need,
+  since its own corpus's tag-importing module has no subsequent
+  `invoke`/`assert_return` exercising it at all). Exists purely so the
+  workspace keeps compiling now that `ImportTypeInfo` (`wasm-types`
+  0.1.7) has a 5th variant, and so a module with a tag import grades a
+  real, gradeable `NotYetSupported` rather than crashing.
+
+See `code/specs/W21-wasm-exceptions-tag-throw-slice.md`.
+
 ## [0.6.5] — 2026-08-17 (task #97 — table.init/table.copy/elem.drop instance-state threading)
 
 ### Added

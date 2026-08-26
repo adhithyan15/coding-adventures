@@ -352,13 +352,37 @@ impl WasmValue {
 pub struct TrapError {
     /// Human-readable description of what caused the trap.
     pub message: String,
+    /// `true` when this error is a WASM **exception** (the exceptions
+    /// proposal's `throw`, propagated uncaught — W21), as opposed to an
+    /// ordinary trap (`unreachable`, out-of-bounds memory access, integer
+    /// division by zero, etc.). The real spec treats these as genuinely
+    /// different outcomes (`try_table` never catches a trap, only an
+    /// exception; a conformance harness's `assert_trap` and
+    /// `assert_exception` directives must not accept each other's case)
+    /// even though both currently unwind through this repo's call stack
+    /// via the exact same `Result::Err(TrapError)` propagation. Defaults
+    /// to `false` via [`TrapError::new`] — every existing trap site is
+    /// unaffected; only [`TrapError::exception`] (new) sets it `true`.
+    pub is_exception: bool,
 }
 
 impl TrapError {
-    /// Create a new TrapError with the given message.
+    /// Create a new ordinary-trap `TrapError` with the given message.
     pub fn new(message: impl Into<String>) -> Self {
         TrapError {
             message: message.into(),
+            is_exception: false,
+        }
+    }
+
+    /// Create a `TrapError` representing an uncaught WASM **exception**
+    /// (W21 — the exceptions proposal's `throw`), not an ordinary trap.
+    /// See [`TrapError::is_exception`]'s own doc comment for why this
+    /// distinction matters.
+    pub fn exception(message: impl Into<String>) -> Self {
+        TrapError {
+            message: message.into(),
+            is_exception: true,
         }
     }
 }
@@ -373,7 +397,39 @@ impl std::error::Error for TrapError {}
 
 impl From<TrapError> for VMError {
     fn from(e: TrapError) -> Self {
-        VMError::GenericError(e.message)
+        if e.is_exception {
+            // `VMError` (`virtual-machine`, a generic cross-language-
+            // frontend shared type) has no room for a real boolean flag,
+            // so `is_exception` is round-tripped through the message
+            // string itself via a sentinel prefix -- recovered by
+            // `vm_error_to_trap_error` at the one place a `VMError`
+            // crosses back into a public `TrapError` (W21).
+            VMError::GenericError(format!("{EXCEPTION_SENTINEL}{}", e.message))
+        } else {
+            VMError::GenericError(e.message)
+        }
+    }
+}
+
+/// Sentinel prefix marking a [`VMError::GenericError`]'s inner message as
+/// having originated from a WASM **exception** (`TrapError::exception`,
+/// W21's `throw`), not an ordinary trap. A control character no
+/// legitimate trap message would ever contain, chosen specifically to
+/// make an accidental real-message collision vanishingly unlikely.
+const EXCEPTION_SENTINEL: &str = "\u{1}wasm-exception\u{1}";
+
+/// Reconstruct a [`TrapError`] from a [`VMError`] that crossed the shared
+/// `virtual-machine` crate's generic error boundary, recovering the
+/// `is_exception` flag [`From<TrapError> for VMError`] encoded into the
+/// message via [`EXCEPTION_SENTINEL`] (W21). A drop-in replacement for the
+/// `TrapError::new(format!("{e}"))` shape every trap-producing call site in
+/// this crate already used before this — not a new code path, just the one
+/// that also recognizes an exception.
+fn vm_error_to_trap_error(e: VMError) -> TrapError {
+    let full = format!("{e}");
+    match full.split_once(EXCEPTION_SENTINEL) {
+        Some((prefix, rest)) => TrapError::exception(format!("{prefix}{rest}")),
+        None => TrapError::new(full),
     }
 }
 
@@ -1725,6 +1781,61 @@ pub fn decode_function_body(body: &FunctionBody) -> Vec<DecodedInstruction> {
             continue;
         }
 
+        // ── `try_table` (`0x1F <blocktype> <catch_count> <catch>*`) ────────────
+        //
+        // W21 (exceptions proposal): control-flow-shaped exactly like `block`
+        // (0x02) -- same blocktype immediate -- but with a variable-length
+        // catch-clause list in between the blocktype and the body that this
+        // table's generic `immediates` metadata can't express (see
+        // `wasm_opcodes::OPCODES`'s own `try_table` doc comment). Decoded
+        // here, same "single-byte opcode with its own custom immediate
+        // shape" precedent as `0xD0`/`ref.null` just above: the blocktype
+        // reuses the exact SAME decode path `block`/`loop`/`if` already go
+        // through (`decode_immediates(code, offset, &["blocktype"])`), then
+        // the catch-clause list is read and DISCARDED -- this repo's
+        // `try_table` never matches a catch clause at runtime (an uncaught
+        // exception propagates straight through it exactly like it would
+        // through a plain `block`; see `code/specs/
+        // W21-wasm-exceptions-tag-throw-slice.md` for why this is honest,
+        // spec-accurate behavior, not a shortcut), so nothing about the
+        // catch clauses needs to survive into the decoded instruction
+        // stream. The one `DecodedInstruction` this produces carries the
+        // SAME `DecodedOperand::Int(blocktype)` shape `block`'s own handler
+        // reads via `operand_int` -- `register_context_opcode(0x1F, ...)`
+        // is a near-verbatim copy of `0x02`'s handler for exactly that
+        // reason.
+        if opcode_byte == 0x1F {
+            let (blocktype_operand, bt_size) = decode_immediates(code, offset, &["blocktype"]);
+            offset += bt_size;
+            let (catch_count, cc_size) = decode_leb_u32(code, offset);
+            offset += cc_size;
+            for _ in 0..catch_count {
+                let clause_kind = code.get(offset).copied().unwrap_or(0x02);
+                offset += 1;
+                match clause_kind {
+                    0x00 | 0x01 => {
+                        // catch / catch_ref: tag idx, then label idx.
+                        let (_tag_idx, tsz) = decode_leb_u32(code, offset);
+                        offset += tsz;
+                        let (_label_idx, lsz) = decode_leb_u32(code, offset);
+                        offset += lsz;
+                    }
+                    _ => {
+                        // catch_all / catch_all_ref (and any malformed
+                        // kind byte, defensively treated the same way):
+                        // label idx only.
+                        let (_label_idx, lsz) = decode_leb_u32(code, offset);
+                        offset += lsz;
+                    }
+                }
+            }
+            instructions.push(DecodedInstruction {
+                opcode: 0x1F,
+                operand: blocktype_operand,
+            });
+            continue;
+        }
+
         let info = get_opcode(opcode_byte);
         let operand = if let Some(info) = info {
             let (op, size) = decode_immediates(code, offset, info.immediates);
@@ -1835,7 +1946,7 @@ fn decode_immediates(code: &[u8], offset: usize, immediates: &[&str]) -> (Decode
                 }
             }
         }
-        "labelidx" | "funcidx" | "typeidx" | "localidx" | "globalidx" | "tableidx" | "memidx" => {
+        "labelidx" | "funcidx" | "typeidx" | "localidx" | "globalidx" | "tableidx" | "memidx" | "tagidx" => {
             let (value, consumed) = decode_leb_u32(code, offset);
             (DecodedOperand::Int(value as i64), consumed)
         }
@@ -1918,8 +2029,10 @@ pub fn build_control_flow_map(
 
     for (i, instr) in instructions.iter().enumerate() {
         match instr.opcode {
-            0x02..=0x04 => {
-                // block, loop, if
+            0x02..=0x04 | 0x1F => {
+                // block, loop, if, try_table (W21 -- control-flow-shaped
+                // exactly like `block`: opens a frame closed by a matching
+                // `end`, never has an `else`).
                 stack.push((i, instr.opcode, None));
             }
             0x05 => {
@@ -8745,6 +8858,56 @@ fn register_control(vm: &mut GenericVM) {
         Ok(None)
     });
 
+    // try_table (0x1F, W21 -- exceptions proposal): a near-verbatim copy of
+    // `block` (0x02)'s own handler just above -- see this repo's `decode_
+    // function_body`'s own `0x1F` doc comment for why this is honest,
+    // spec-accurate behavior for a `try_table` that never matches a catch
+    // clause: an uncaught exception (or an ordinary trap) thrown inside its
+    // body propagates straight out, exactly like it would out of a plain
+    // `block`, since nothing here (or anywhere else in this repo) ever
+    // intercepts an `Err` mid-block. No catch-clause bytes reach this
+    // handler at all -- `decode_function_body` already consumed and
+    // discarded them, leaving only the SAME `DecodedOperand::Int(blocktype)`
+    // shape `block`'s handler reads.
+    vm.register_context_opcode(0x1F, |vm, instr, _code, ctx| {
+        let ctx = get_ctx(ctx);
+        let block_type = operand_int(instr);
+        let (param_arity, arity) = block_arity(block_type, &ctx.types);
+        let end_pc = ctx
+            .control_flow_map
+            .get(&vm.pc)
+            .map(|t| t.end_pc)
+            .unwrap_or(vm.pc + 1);
+        ctx.label_stack.push(Label {
+            arity,
+            param_arity,
+            target_pc: end_pc,
+            stack_height: vm.typed_stack.len(),
+            is_loop: false,
+        });
+        vm.advance_pc();
+        Ok(None)
+    });
+
+    // throw (0x08, W21 -- exceptions proposal): unconditionally raises an
+    // uncaught WASM exception -- this repo implements no catch-clause
+    // matching (see `try_table`'s own doc comment just above), so `throw`
+    // ALWAYS propagates all the way out to the top-level `call_function`
+    // caller, exactly like any other trap already does via `?`-based
+    // `Result` propagation through `call_function_inner`'s nested Rust call
+    // stack. Deliberately does not bother popping/validating the tag's own
+    // argument values off `vm.typed_stack` first -- `wasm-validator`
+    // already proved they were there at validation time, and execution
+    // terminates immediately either way (nothing after a `throw` ever
+    // runs), so there is no observable difference between popping them and
+    // not.
+    vm.register_context_opcode(0x08, |_vm, instr, _code, _ctx| {
+        let tag_idx = operand_int(instr);
+        Err(VMError::from(TrapError::exception(format!(
+            "uncaught wasm exception (tag {tag_idx})"
+        ))))
+    });
+
     // else (0x05)
     vm.register_context_opcode(0x05, |vm, _instr, _code, ctx| {
         let ctx = get_ctx(ctx);
@@ -9943,7 +10106,14 @@ impl WasmExecutionEngine {
         self.last_gc_state = ctx.gc_state;
 
         let final_result_count = match outcome {
-            Ok(exec_result) => exec_result.map_err(|e| TrapError::new(format!("{}", e)))?,
+            // W21: `vm_error_to_trap_error` (not a plain `TrapError::new`)
+            // so a `throw`'s `EXCEPTION_SENTINEL`-tagged message correctly
+            // reconstructs as `TrapError::exception(...)`, not an ordinary
+            // trap -- this is the ONE place a `VMError` crosses back into
+            // this crate's own public `Result<_, TrapError>` API for a
+            // top-level `call_function`, so it's the one place that flag
+            // needs recovering.
+            Ok(exec_result) => exec_result.map_err(vm_error_to_trap_error)?,
             Err(DedicatedThreadFailure::SpawnFailed(spawn_err)) => {
                 return Err(TrapError::new(format!("failed to spawn dedicated execution thread: {spawn_err}")));
             }
@@ -10449,6 +10619,79 @@ mod tests {
             host_functions: vec![None],
         });
         assert!(engine.call_function(0, &[]).is_err());
+    }
+
+    // ── W21: exceptions proposal (tag / throw / try_table) ──────────────────
+
+    #[test]
+    fn test_trap_error_exception_constructor_sets_is_exception_true_new_sets_false() {
+        assert!(TrapError::exception("boom").is_exception);
+        assert!(!TrapError::new("boom").is_exception);
+    }
+
+    #[test]
+    fn test_throw_always_traps_with_is_exception_flag_set() {
+        // `throw` (0x08) tagidx=0; end.
+        let func_type = FuncType { params: vec![], results: vec![] };
+        let body = FunctionBody { locals: vec![], code: vec![0x08, 0x00, 0x0B] };
+        let mut engine = WasmExecutionEngine::new(WasmEngineConfig {
+            memories: Vec::new(),
+            tables: vec![],
+            globals: vec![],
+            global_types: vec![],
+            func_types: vec![func_type],
+            func_bodies: vec![Some(body)],
+            host_functions: vec![None],
+        });
+        let err = engine.call_function(0, &[]).unwrap_err();
+        assert!(err.is_exception, "throw must produce an is_exception=true TrapError, not an ordinary trap");
+    }
+
+    #[test]
+    fn test_try_table_normal_fallthrough_behaves_exactly_like_block() {
+        // try_table (0x1F) blocktype=i32 (0x7F); catch_count=0 (no clauses at
+        // all); body: i32.const 5; end (try_table); end (function).
+        let func_type = FuncType { params: vec![], results: vec![ValueType::I32] };
+        let body = FunctionBody { locals: vec![], code: vec![0x1F, 0x7F, 0x00, 0x41, 0x05, 0x0B, 0x0B] };
+        let mut engine = WasmExecutionEngine::new(WasmEngineConfig {
+            memories: Vec::new(),
+            tables: vec![],
+            globals: vec![],
+            global_types: vec![],
+            func_types: vec![func_type],
+            func_bodies: vec![Some(body)],
+            host_functions: vec![None],
+        });
+        let result = engine.call_function(0, &[]).unwrap();
+        assert_eq!(result, vec![WasmValue::I32(5)]);
+    }
+
+    #[test]
+    fn test_try_table_never_catches_a_thrown_exception_it_propagates_uncaught() {
+        // try_table (0x1F) blocktype=empty (0x40); catch_count=1, ONE real
+        // `catch` clause naming tag 0, label 0 (its own enclosing scope);
+        // body: throw tag 0; end (try_table); end (function). Even though
+        // the catch clause's tag matches exactly what's thrown, this repo's
+        // `try_table` never looks for a match (see `code/specs/
+        // W21-wasm-exceptions-tag-throw-slice.md`) -- the exception must
+        // propagate all the way out, uncaught, as a real exception (not a
+        // plain trap).
+        let func_type = FuncType { params: vec![], results: vec![] };
+        let body = FunctionBody {
+            locals: vec![],
+            code: vec![0x1F, 0x40, 0x01, 0x00, 0x00, 0x00, 0x08, 0x00, 0x0B, 0x0B],
+        };
+        let mut engine = WasmExecutionEngine::new(WasmEngineConfig {
+            memories: Vec::new(),
+            tables: vec![],
+            globals: vec![],
+            global_types: vec![],
+            func_types: vec![func_type],
+            func_bodies: vec![Some(body)],
+            host_functions: vec![None],
+        });
+        let err = engine.call_function(0, &[]).unwrap_err();
+        assert!(err.is_exception, "an exception thrown inside try_table's body must propagate out as a real exception, not a plain trap");
     }
 
     // ── WasmGC struct heap + references (LANG77 / McCarthy L3b-3a-3b) ──────────

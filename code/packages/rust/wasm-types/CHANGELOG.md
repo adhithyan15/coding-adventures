@@ -2,6 +2,22 @@
 
 All notable changes to this package will be documented in this file.
 
+## [0.1.7] - 2026-08-25 (W21 — exceptions proposal: tag/throw first slice)
+
+### Added
+
+- `ExternalKind::Tag = 0x04` — matches the real exception-handling
+  proposal's binary encoding exactly (live-fetched and confirmed against
+  `WebAssembly/exception-handling`'s own `Exceptions.md`).
+- `ImportTypeInfo::Tag(u32)` — a tag import's function-type index (the
+  tag's underlying signature; its `results` must be empty, a rule
+  `wasm-validator` enforces, not this crate).
+- `WasmModule.tags: Vec<u32>` — module-defined tags' type indices, same
+  "imports live in `imports`, this Vec is only the module-defined ones"
+  convention `functions: Vec<u32>` already uses.
+
+See `code/specs/W21-wasm-exceptions-tag-throw-slice.md`.
+
 ## [0.1.6] - 2026-08-17 (task #97 — passive/exprs-list element segments)
 
 ### Changed

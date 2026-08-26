@@ -229,6 +229,18 @@ pub static OPCODES: &[OpcodeInfo] = &[
     OpcodeInfo { name: "loop",          opcode: 0x03, category: "control",     immediates: &["blocktype"],                 stack_pop: 0, stack_push: 0 },
     OpcodeInfo { name: "if",            opcode: 0x04, category: "control",     immediates: &["blocktype"],                 stack_pop: 1, stack_push: 0 },
     OpcodeInfo { name: "else",          opcode: 0x05, category: "control",     immediates: &[],                            stack_pop: 0, stack_push: 0 },
+    // `throw` (W21 — the exceptions proposal): pops the named tag's own
+    // declared param types (data-dependent, like `block`'s blocktype-
+    // dependent arity above -- `stack_pop`/`stack_push` here are
+    // placeholders for the same reason `block`/`loop`'s are, real popping
+    // happens in `wasm-validator`'s own dedicated `0x08` type-check rule,
+    // never read generically from this table). Immediate: a single
+    // `tagidx` (plain LEB128 index, decoded identically to `funcidx`/
+    // `localidx`/etc. — see `wasm-execution`'s `decode_immediates`).
+    // `throw_ref` (`0x0A`, no immediate) and `try_table`'s own catch-clause
+    // list are deliberately NOT modeled here — see `code/specs/
+    // W21-wasm-exceptions-tag-throw-slice.md`'s scope section.
+    OpcodeInfo { name: "throw",         opcode: 0x08, category: "control",     immediates: &["tagidx"],                    stack_pop: 0, stack_push: 0 },
     OpcodeInfo { name: "end",           opcode: 0x0B, category: "control",     immediates: &[],                            stack_pop: 0, stack_push: 0 },
     OpcodeInfo { name: "br",            opcode: 0x0C, category: "control",     immediates: &["labelidx"],                  stack_pop: 0, stack_push: 0 },
     OpcodeInfo { name: "br_if",         opcode: 0x0D, category: "control",     immediates: &["labelidx"],                  stack_pop: 1, stack_push: 0 },
@@ -238,6 +250,18 @@ pub static OPCODES: &[OpcodeInfo] = &[
     OpcodeInfo { name: "call_indirect", opcode: 0x11, category: "control",     immediates: &["typeidx", "tableidx"],       stack_pop: 1, stack_push: 0 },
     OpcodeInfo { name: "return_call",          opcode: 0x12, category: "control", immediates: &["funcidx"],             stack_pop: 0, stack_push: 0 },
     OpcodeInfo { name: "return_call_indirect", opcode: 0x13, category: "control", immediates: &["typeidx", "tableidx"], stack_pop: 1, stack_push: 0 },
+    // `try_table` (W21 — the exceptions proposal): control-flow-shaped
+    // exactly like `block`/`loop`/`if` above (a real blocktype immediate,
+    // PLUS a variable-length catch-clause list this table's generic
+    // `immediates` metadata can't express -- both `wasm-wast-parser`'s
+    // encoder and `wasm-execution`'s `decode_function_body` special-case
+    // `0x1F` explicitly rather than reading `.immediates` here at all;
+    // this entry exists only so `get_opcode_by_name("try_table")` resolves
+    // to the right opcode byte, the one thing every OTHER structured
+    // instruction (`block`/`loop`/`if`) also uses this table for). This
+    // slice's `try_table` never actually catches an exception -- see
+    // `code/specs/W21-wasm-exceptions-tag-throw-slice.md`.
+    OpcodeInfo { name: "try_table",     opcode: 0x1F, category: "control",     immediates: &[],                            stack_pop: 0, stack_push: 0 },
 
     // ── Parametric instructions ───────────────────────────────────────────────
     //
@@ -3654,6 +3678,11 @@ mod tests {
     // reserved/unassigned in the MVP — they are not valid opcodes.  The "~183"
     // figure sometimes cited counts proposals beyond MVP (SIMD, bulk-memory,
     // etc.) which use a two-byte 0xFC prefix encoding outside this table.
+    // (W21: `throw` (0x08) and `try_table` (0x1F) — two single-byte
+    // exceptions-proposal opcodes that happen to fall in these same
+    // MVP-reserved gaps — are now the first two of these entries actually
+    // filled in, real proposal opcodes, not MVP; the rest of each gap
+    // remains genuinely unassigned.)
     #[test]
     fn test_total_count() {
         println!("Total opcodes: {}", OPCODES.len());

@@ -2,6 +2,32 @@
 
 All notable changes to this package will be documented in this file.
 
+## [0.2.66] - 2026-08-25 (Exceptions proposal, first slice W21: tag/throw/try_table type rules)
+
+### Added
+
+- `throw` (`0x08`) type-check rule: pops the named tag's declared param
+  types (an out-of-bounds tag index is a hard validation error, "unknown
+  tag" -- `throw.wast`'s own case), then marks the rest of the current
+  block unreachable, same shape `unreachable`/`br`/`return` already use.
+- `try_table` (`0x1F`) type-check rule: decodes exactly like `block`
+  (same blocktype immediate, same `push_ctrl(..., FrameKind::Block, ...)`
+  -- no new `FrameKind` needed), plus real (if narrow) validation of its
+  own catch-clause list: each tag index (`catch`/`catch_ref`) must be in
+  bounds, each label index must resolve to a real enclosing block (same
+  `resolve_label_target` every branch instruction already uses).
+  Catch-target type-arity matching (tag params vs. label's own declared
+  types) is explicitly NOT checked -- no directive in this slice's corpus
+  needs it.
+- `crate::validate`: tag import/module-defined-tag type-index bounds
+  checks, the "tag's function-type `results` must be empty" rule
+  (`tag.wast`'s own "non-empty tag result type" cases), and an
+  `ExternalKind::Tag` arm for export-index bounds checking.
+- `ModuleContext.tag_types: Vec<FuncType>` -- combined imported +
+  module-defined tag types, same index-space convention as `func_types`.
+
+See `code/specs/W21-wasm-exceptions-tag-throw-slice.md`.
+
 ## [0.2.65] - 2026-08-25 (GC epic, first slice W20: i31.get_u type rule)
 
 ### Added
