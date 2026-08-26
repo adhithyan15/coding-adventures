@@ -4,7 +4,7 @@ Java CST → narrow-waist Semantic IR. The first frontend for
 [SIR29](../../../specs/SIR29-nominal-static-oop-profile.md), the
 nominal/static-dispatch OOP profile extension of the SIR10 narrow-waist IR.
 See [JV02](../../../specs/JV02-java-to-semantic-ir.md) for this frontend's
-full milestone plan (M0 + M1 + M2a + M2b + M3a + M3b + M4a + M4b + M4c + M4d here, through M9; plus standalone tasks #54, wiring `Expr::IndirectCall`, #64, `break`/`continue` support, and #59, compound-assignment/increment-decrement on an indexed array target).
+full milestone plan (M0 + M1 + M2a + M2b + M3a + M3b + M4a + M4b + M4c + M4d here, through M9; plus standalone tasks #54, wiring `Expr::IndirectCall`, #64, `break`/`continue` support, #59, compound-assignment/increment-decrement on an indexed array target, and #60, mixed index/dot primary-suffix chains).
 
 ## Where this fits
 
@@ -34,7 +34,7 @@ let module = compile_source(
 )?;
 ```
 
-## Scope (v0.13.0 — JV02 milestones M0 + M1 + M2a + M2b + M3a + M3b + M4a + M4b + M4c + M4d, plus tasks #54, #64, and #59)
+## Scope (v0.14.0 — JV02 milestones M0 + M1 + M2a + M2b + M3a + M3b + M4a + M4b + M4c + M4d, plus tasks #54, #64, #59, and #60)
 
 Java requires an explicit `class`/`main`-method wrapper at the source level
 (unlike Ruby/Python/JS, which allow bare top-level statements) — this crate
@@ -143,12 +143,18 @@ multi-dimensional array is representationally just a nested sequence of
 sequences, so `Kind::Array` gained a dimension count alongside its
 existing element kind rather than becoming a boxed, recursive type.
 **Narrowed during implementation**: a *mixed* index-then-`.length` chain
-(`grid[i].length`) falls through to the pre-existing multi-suffix
-rejection (the chained-index dispatch only fires when *every* suffix is
-`[...]`-shaped — the sub-array's own `.length` remains reachable via an
-intermediate local), and a *chained* indexed-assignment target
-(`grid[i][j] = v;`) is not reachable at all — both real, disclosed gaps,
-tracked as their own follow-up tasks. Bare (unlabeled) `break`/`continue`
+(`grid[i].length`) at the time fell through to the pre-existing
+multi-suffix rejection (the chained-index dispatch only fired when
+*every* suffix was `[...]`-shaped), and a *chained* indexed-assignment
+target (`grid[i][j] = v;`) was not reachable at all — both real,
+disclosed gaps, tracked as their own follow-up tasks. **The first is
+resolved as task #60**: `lower_primary_expression` gained one more
+suffix-chain shape — every leading suffix `[...]`, the trailing one
+`.length` — delegating the index prefix to the existing
+`lower_chained_index` and wrapping the result in `Expr::SeqLen`. The
+*chained*-indexed-assignment-target gap remains open (a separate,
+assignment-target-only concern task #60 didn't touch). Bare (unlabeled)
+`break`/`continue`
 now lower to `Stmt::Break`/`Stmt::Continue` (`Feature::LoopControl`,
 task #64) inside any of `while`/`do`-`while`/classic-`for`/enhanced-`for`
 — a `Lowerer::loop_depth` counter rejects one outside any loop with a
@@ -279,11 +285,16 @@ JV02 spec's milestone table for what comes next.
   rejection, chained index reads at 2 and 3 levels with the correctly-
   peeled result kind at each level, a single (non-chained) index read on
   a multi-dimensional array giving back a still-indexable sub-array, an
-  out-of-dimension chained index rejection, the mixed index-then-`.`
-  suffix-chain rejection, `.length` on a multi-dimensional array,
-  `Feature::Sequences` re-declaration, and both the still-deferred
-  chained-assignment-target rejection and the now-correctly-generalized
-  single-index sub-array assignment), and task #54's own indirect-call
+  out-of-dimension chained index rejection, `.length` on a
+  multi-dimensional array, `Feature::Sequences` re-declaration, and both
+  the still-deferred chained-assignment-target rejection and the
+  now-correctly-generalized single-index sub-array assignment), task
+  #60's own mixed index-then-`.length` chain shapes (a single leading
+  index suffix, two chained leading index suffixes on a 3-D array, a
+  scalar-element rejection when the peeled-down target isn't array-typed,
+  a non-`length` trailing dotted name still rejected rather than
+  mis-lowered, and a regression check that a *chained* indexed-assignment
+  target is untouched by this task), and task #54's own indirect-call
   shapes (zero/single/multi-argument calls with correct argument order,
   the call's own result kind usable in a further expression, a non-main
   method's own local lambda invocation, a captured closure invoked from
@@ -336,14 +347,23 @@ JV02 spec's milestone table for what comes next.
   index (the realistic pattern M4b and M4c together exist to enable),
   and a `new int[]{...}`-with-initializer indexed read. M4d adds 3 more:
   a 2-D array literal with a chained index read, a nested indexed
-  `for`-loop summing a 2-D array via an intermediate row local (since
-  `grid[i].length` itself remains deferred — see below), and a genuinely
-  ragged 2-D array's two rows' differing `.length`s summed via
-  intermediate locals. No execution-proof test exists for a `var`-
-  inferred multi-dimensional array literal, a chained (multi-
-  dimensional) indexed-assignment target, or compound-assignment/
-  increment-decrement on an indexed target (all remain deferred past
-  M4d). Task #54 adds 4 more, the first *lambda*-execution proofs this
+  `for`-loop summing a 2-D array via an intermediate row local (`grid[i].
+  length` itself was deferred at M4d's own time — see task #59/#60
+  below), and a genuinely ragged 2-D array's two rows' differing
+  `.length`s summed via intermediate locals. Task #59 adds 3 more: a
+  compound assignment, a doubled increment, and a realistic
+  accumulate-then-sum pattern over an indexed target — the finer
+  "evaluated exactly once" property this task's own fix exists to
+  guarantee is proven structurally instead, in `tests/test_lower.rs` (see
+  that section's own comment for why an execution-value proof can't add
+  much here). Task #60 adds 3 more: a single leading-index-suffix
+  `.length` read, the same nested-sum pattern task #59's own M4d
+  execution proof used but reading each row's `.length` directly off the
+  indexed chain instead of through an intermediate `row` local, and a
+  2-leading-suffix chain on a 3-D array. No execution-proof test exists
+  for a `var`-inferred multi-dimensional array literal or a chained
+  (multi-dimensional) indexed-assignment target (both remain deferred
+  past M4d). Task #54 adds 4 more, the first *lambda*-execution proofs this
   crate has ever had: a lambda-valued local invoked with one argument, a
   multi-argument invocation, a nested lambda invoking a value captured
   from its own enclosing scope, and the realistic pattern this task

@@ -229,13 +229,13 @@
 //!   `lower_chained_index`, reached only when *every* suffix in a
 //!   2+-suffix `primary_expression` is `[...]`-shaped
 //!   (`is_index_only_suffix`) — a mix of `[` and `.`/`(` suffixes (e.g.
-//!   `grid[i].length`) still falls through to the pre-existing
-//!   multi-suffix rejection, a real, disclosed, narrower gap than full
-//!   suffix-chain generalization (the sub-array's own `.length` remains
-//!   reachable via an intermediate local). `Kind::index_once` peels
-//!   exactly one dimension per suffix, shared by the single-suffix
-//!   (`lower_index_get`) and chained paths alike, so `xs[i]` on a 1-D
-//!   array is unchanged from M4a.
+//!   `grid[i].length`) still fell through to the pre-existing
+//!   multi-suffix rejection at the time, a real, disclosed, narrower gap
+//!   than full suffix-chain generalization; **resolved as task #60** —
+//!   see that entry below and `lower_chained_index_then_length`'s own
+//!   doc comment. `Kind::index_once` peels exactly one dimension per
+//!   suffix, shared by the single-suffix (`lower_index_get`) and chained
+//!   paths alike, so `xs[i]` on a 1-D array is unchanged from M4a.
 //! - `.length` and plain indexed assignment (M4b) already generalize for
 //!   free: `.length` was already dims-agnostic; `grid[i] = v;` (a whole
 //!   sub-array assignment, single suffix) now requires `v` match the
@@ -300,9 +300,12 @@
 //! (`grid[i][j] = v;` — a single-suffix indexed target's own compound-
 //! assignment/increment-decrement, `xs[i] += v;`/`xs[i]++;`, is
 //! supported as of task #59, see that entry above), a mixed index-
-//! then-`.`/`(` primary-suffix chain (`grid[i].length`, `grid[i].foo()`
-//! — see M4d's own entry above for why), `var`-inferred multi-
-//! dimensional array literals, a non-constant or reference-typed
+//! then-`(` primary-suffix chain (`grid[i].foo()`, a qualified method
+//! call — no such method-call surface exists on an array at all, so this
+//! remains unreachable regardless; a mixed index-then-`.length` chain,
+//! `grid[i].length`, is supported as of task #60, see that entry above),
+//! `var`-inferred multi-dimensional array literals, a non-constant or
+//! reference-typed
 //! `new T[N]` (see M4c's own entry above for why), `List`/`Map`
 //! collection literals, field/array *field* access beyond `.length`,
 //! casts, `instanceof`, the ternary conditional, bitwise operators
@@ -3937,16 +3940,20 @@ impl Lowerer {
     /// is *exactly one* suffix. M4d adds a fourth: two-or-more suffixes
     /// where *every* one is a `[...]` index (`grid[i][j]`, chained
     /// indexing into a multi-dimensional array) — see
-    /// `lower_chained_index`'s own doc comment. Any other multi-suffix
-    /// shape (`.field`, a *qualified* call `x.foo(...)`, which chains a
-    /// `.foo` suffix *then* a separate `(...)` suffix, `::` method
-    /// references, and so on) remains out of scope, rejected as before —
-    /// the chained-index check requires *every* suffix be `[...]`, so a
-    /// chain mixing in a `.`/`(` suffix anywhere still falls through to
-    /// the final catch-all unchanged. Which of the three single-suffix
-    /// shapes applies is decided by the suffix's own leading token —
-    /// confirmed by direct CST inspection, not assumed from the grammar
-    /// text alone.
+    /// `lower_chained_index`'s own doc comment. Task #60 adds a fifth:
+    /// two-or-more suffixes where every *leading* one is a `[...]` index
+    /// and the *trailing* one is `.length` (`grid[i].length`,
+    /// `cube[i][j].length`) — see `lower_chained_index_then_length`'s own
+    /// doc comment. Any other multi-suffix shape (a *qualified* call
+    /// `x.foo(...)`, which chains a `.foo` suffix *then* a separate
+    /// `(...)` suffix, `.length` anywhere but the trailing position,
+    /// `::` method references, and so on) remains out of scope, rejected
+    /// as before — both chain guards require *every* non-final suffix be
+    /// `[...]`, so a chain mixing in a `.`/`(` suffix anywhere else still
+    /// falls through to the final catch-all unchanged. Which shape
+    /// applies is decided by the suffix's own leading token (and, for the
+    /// two chain guards, the trailing suffix's own shape) — confirmed by
+    /// direct CST inspection, not assumed from the grammar text alone.
     fn lower_primary_expression(
         &mut self,
         node: &GrammarASTNode,
@@ -3977,6 +3984,25 @@ impl Lowerer {
                 if rest.len() >= 2 && rest.iter().all(is_index_only_suffix) =>
             {
                 self.lower_chained_index(primary, rest, node, depth)
+            }
+            [ASTNodeOrToken::Node(primary), rest @ ..]
+                if rest.len() >= 2
+                    && is_length_suffix(&rest[rest.len() - 1])
+                    && rest[..rest.len() - 1].iter().all(is_index_only_suffix) =>
+            {
+                let length_suffix = match &rest[rest.len() - 1] {
+                    ASTNodeOrToken::Node(s) => s,
+                    ASTNodeOrToken::Token(_) => {
+                        return Err(self.err_at(node, "malformed primary suffix chain".to_string()))
+                    }
+                };
+                self.lower_chained_index_then_length(
+                    primary,
+                    &rest[..rest.len() - 1],
+                    length_suffix,
+                    node,
+                    depth,
+                )
             }
             _ => Err(self.err_at(
                 node,
@@ -4080,6 +4106,66 @@ impl Lowerer {
         }
         self.observed.add(Feature::Sequences);
         Ok((target, target_kind))
+    }
+
+    /// Lower a *mixed* index-then-`.length` chain, `grid[i].length`
+    /// (`cube[i][j].length`, …) — task #60, the gap `lower_chained_index`'s
+    /// own all-`[...]` requirement and `lower_dot_suffix`'s own
+    /// single-suffix requirement each left unreached: neither function's
+    /// guard recognizes a chain that mixes suffix kinds, even though
+    /// nothing about `.length` actually needs the target to be a bare
+    /// `primary` — it only needs *some* array-typed expression, and
+    /// `lower_chained_index` already knows how to produce exactly that
+    /// from one-or-more leading `[...]` suffixes. Delegates the leading
+    /// index suffixes straight to `lower_chained_index` unchanged
+    /// (`index_suffixes` may be as short as one element — that function's
+    /// own loop works fine for a single suffix even though its only
+    /// other caller always hands it two-or-more), then applies the exact
+    /// same `.length` handling `lower_dot_suffix` does: confirm the
+    /// trailing suffix really is `.length` (not some other dotted name
+    /// that merely *looks* chain-shaped to `is_length_suffix`'s own
+    /// pre-check), confirm the peeled-down target is still array-typed,
+    /// and wrap it in `Expr::SeqLen`. A trailing suffix that peels a
+    /// *scalar* element down to something whose own `.length` doesn't
+    /// exist (`xs[i].length` on a 1-D `int[] xs`) is rejected with the
+    /// same "only supported on an array-typed value" message
+    /// `lower_dot_suffix` already gives for the un-indexed case.
+    fn lower_chained_index_then_length(
+        &mut self,
+        primary: &GrammarASTNode,
+        index_suffixes: &[ASTNodeOrToken],
+        length_suffix: &GrammarASTNode,
+        node: &GrammarASTNode,
+        depth: usize,
+    ) -> Result<(Expr, Kind), JavaLowerError> {
+        let is_length = length_suffix.children.iter().find_map(|c| match c {
+            ASTNodeOrToken::Token(t) if t.type_ == lexer::token::TokenType::Name => {
+                Some(t.value.as_str())
+            }
+            _ => None,
+        }) == Some("length");
+        if !is_length {
+            return Err(self.err_at(
+                node,
+                "field access and qualified method calls are not supported yet, except `.length` on an array (deferred to a later JV02 milestone)".to_string(),
+            ));
+        }
+        let (target, target_kind) =
+            self.lower_chained_index(primary, index_suffixes, node, depth)?;
+        if !matches!(target_kind, Kind::Array(_, _)) {
+            return Err(self.err_at(
+                node,
+                "`.length` is only supported on an array-typed value".to_string(),
+            ));
+        }
+        let span = self.span_of(node);
+        Ok((
+            Expr::SeqLen {
+                seq: Box::new(target),
+                span,
+            },
+            Kind::Int,
+        ))
     }
 
     /// Lower a `DOT NAME` suffix — this milestone supports exactly one
@@ -5028,6 +5114,31 @@ fn is_index_only_suffix(c: &ASTNodeOrToken) -> bool {
         ASTNodeOrToken::Node(s)
             if s.rule_name == "primary_suffix"
                 && matches!(s.children.first(), Some(ASTNodeOrToken::Token(t)) if t.value == "[")
+    )
+}
+
+/// `true` iff `c` is a `primary_suffix` node shaped exactly like
+/// `lower_dot_suffix`'s own single-suffix `.length` case: a leading `.`
+/// token followed by a `NAME` token spelling `length`. Used by
+/// `lower_primary_expression`'s own mixed-chain guard (task #60) to
+/// recognize a *trailing* `.length` on an otherwise all-index chain
+/// (`grid[i].length`) without duplicating `lower_dot_suffix`'s own
+/// recognition logic inline — `lower_chained_index_then_length` still
+/// re-derives the same `is_length` boolean itself (from the suffix it's
+/// actually handed, not from calling this predicate again) since it also
+/// needs the real error path when the trailing suffix looks
+/// dot-suffix-shaped but isn't `.length`.
+fn is_length_suffix(c: &ASTNodeOrToken) -> bool {
+    matches!(
+        c,
+        ASTNodeOrToken::Node(s)
+            if s.rule_name == "primary_suffix"
+                && matches!(s.children.first(), Some(ASTNodeOrToken::Token(t)) if t.value == ".")
+                && s.children.iter().any(|child| matches!(
+                    child,
+                    ASTNodeOrToken::Token(t)
+                        if t.type_ == lexer::token::TokenType::Name && t.value == "length"
+                ))
     )
 }
 

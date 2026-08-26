@@ -3524,18 +3524,86 @@ fn chained_index_beyond_the_array_s_own_dimension_count_is_an_error() {
 }
 
 #[test]
-fn mixed_index_then_dot_suffix_chain_remains_unsupported() {
-    // `grid[0].length` chains a `[` suffix then a `.` suffix -- since
-    // `lower_chained_index` is reached only when *every* suffix in a
-    // 2+-suffix chain is `[...]`-shaped (`is_index_only_suffix`'s own
-    // guard), a mixed chain still falls through to the pre-existing
-    // multi-suffix catch-all rejection, exactly as before M4d. The same
-    // sub-array's `.length` remains reachable via an intermediate local
-    // (see `single_index_read_on_a_two_dimensional_array_gives_an_
-    // array_valued_result`) -- a real, disclosed scope boundary, not an
-    // oversight.
+fn mixed_index_then_dot_length_chain_lowers_correctly() {
+    // `grid[0].length` chains a `[` suffix then a `.length` suffix --
+    // task #60: `lower_primary_expression`'s new mixed-chain guard
+    // recognizes an all-index prefix followed by a trailing `.length`
+    // suffix, delegating the prefix to the existing `lower_chained_index`
+    // and wrapping the result in `Expr::SeqLen`, exactly the shape
+    // `dot_length_on_a_two_dimensional_array_returns_the_outer_length`
+    // already uses for the un-indexed case.
+    let m = compile_ok(&wrap(
+        "int[][] grid = {{1, 2, 3}, {4, 5}}; int n = grid[0].length;",
+    ));
+    match &main_fn(&m).body.stmts[1] {
+        Stmt::LetStarBinding {
+            value: Expr::SeqLen { seq, .. },
+            ..
+        } => {
+            assert!(matches!(**seq, Expr::SeqIndex { .. }));
+        }
+        other => panic!("expected LetStarBinding(SeqLen(SeqIndex)), got {other:?}"),
+    }
+}
+
+#[test]
+fn chained_index_then_dot_length_on_a_three_dimensional_array_lowers_correctly() {
+    // `cube[i][j].length` -- two leading index suffixes, then `.length`.
+    let m = compile_ok(&wrap(
+        "int[][][] cube = {{{1, 2}}, {{3}}}; int n = cube[0][0].length;",
+    ));
+    match &main_fn(&m).body.stmts[1] {
+        Stmt::LetStarBinding {
+            value: Expr::SeqLen { seq, .. },
+            ..
+        } => match seq.as_ref() {
+            Expr::SeqIndex { seq: inner, .. } => {
+                assert!(matches!(**inner, Expr::SeqIndex { .. }))
+            }
+            other => panic!("expected the outer SeqIndex to wrap another SeqIndex, got {other:?}"),
+        },
+        other => panic!("expected LetStarBinding(SeqLen(SeqIndex(SeqIndex))), got {other:?}"),
+    }
+}
+
+#[test]
+fn mixed_index_then_dot_length_on_a_scalar_element_is_rejected() {
+    // `xs[0].length` on a 1-D array: after peeling the one `[0]` suffix,
+    // the target kind is a scalar `int`, not an array -- `.length`
+    // doesn't apply, same rejection `lower_dot_suffix` already gives for
+    // an un-indexed scalar.
     let err = compile_source(
-        &wrap("int[][] grid = {{1}}; int y = grid[0].length;"),
+        &wrap("int[] xs = {1, 2, 3}; int y = xs[0].length;"),
+        "prog",
+    )
+    .unwrap_err();
+    assert!(
+        err.message.contains("array-typed value"),
+        "unexpected message: {}",
+        err.message
+    );
+}
+
+#[test]
+fn mixed_index_then_dot_non_length_field_remains_unsupported() {
+    // `grid[0].foo` -- an all-index prefix followed by a trailing dotted
+    // name that *isn't* `length` -- must still be rejected, not
+    // mis-lowered as if it were `.length`.
+    let err = compile_source(&wrap("int[][] grid = {{1}}; int y = grid[0].foo;"), "prog")
+        .unwrap_err();
+    assert!(!err.message.is_empty());
+}
+
+#[test]
+fn chained_indexed_assignment_target_still_remains_unsupported() {
+    // Regression check: task #60 only touches the *value*-position
+    // suffix-chain dispatch (`lower_primary_expression`), not the
+    // assignment-target dispatch (`indexed_assign_target`) -- a chained
+    // indexed-assignment target (`grid[i][j] = v;`) is a structurally
+    // separate gap (still its own single-suffix-only match arm) and must
+    // remain rejected exactly as before.
+    let err = compile_source(
+        &wrap("int[][] grid = {{1, 2}}; grid[0][0] = 9;"),
         "prog",
     )
     .unwrap_err();

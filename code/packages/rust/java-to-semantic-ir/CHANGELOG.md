@@ -2,6 +2,58 @@
 
 All notable changes to the `java-to-semantic-ir` crate will be documented in this file.
 
+## [0.14.0] - 2026-08-26
+
+### Added
+
+- Task #60: a mixed index-then-`.length` primary-suffix chain
+  (`grid[i].length`, `cube[i][j].length`, …) — the gap M4d's own scope
+  narrowing split off, since `lower_chained_index`'s own all-`[...]`
+  requirement and `lower_dot_suffix`'s own single-suffix requirement each
+  left it unreached even though both a chain and a dotted `.length` are
+  individually supported. See
+  [JV02](../../../specs/JV02-java-to-semantic-ir.md)'s M4d entry for the
+  full history.
+- New `lower_primary_expression` match arm: a chain whose every *leading*
+  suffix is `[...]` and whose *trailing* suffix is `.length`. Delegates
+  the leading index prefix straight to the existing `lower_chained_index`
+  unchanged (which, it turns out, already worked correctly for a single
+  leading suffix too — its own loop was never actually two-or-more-only,
+  just never previously called with fewer), then applies the exact same
+  `.length` handling `lower_dot_suffix` already gives the un-indexed
+  case: confirm the peeled-down target is still array-typed, wrap it in
+  `Expr::SeqLen`.
+- A trailing dotted suffix that isn't `.length` (`grid[i].foo`) is still
+  rejected, not mis-lowered as if it were — `is_length_suffix`'s own
+  cheap pre-check only decides *which* lowering path a suffix chain takes
+  in `lower_primary_expression`'s dispatch; `lower_chained_index_then_
+  length` independently re-derives and checks the real `is_length`
+  boolean itself before committing to the `.length` lowering, so a
+  pre-check false positive (impossible today, but not load-bearing to
+  assume) can't silently mis-lower a non-`.length` dotted name.
+- A trailing `.length` on a chain that peels all the way down to a
+  *scalar* element (`xs[0].length` on a 1-D `int[] xs`) is rejected with
+  the same "only supported on an array-typed value" message
+  `lower_dot_suffix` already gives for the un-indexed case, not
+  mis-lowered.
+- **Explicitly unaffected, confirmed by a dedicated regression test**: a
+  *chained* indexed-assignment target (`grid[i][j] = v;`) — a
+  structurally separate gap in the assignment-*target* dispatch
+  (`indexed_assign_target`'s own fixed single-suffix match arm), not the
+  value-position suffix-chain dispatch this task touched. Still its own
+  open follow-up, tracked separately.
+- 3 new real-toolchain execution-proof tests (`tests/e2e_python.rs`): a
+  single leading-index-suffix `.length` read, the same nested-array-sum
+  pattern M4d's own execution proof used but reading each row's
+  `.length` directly off the indexed chain instead of through an
+  intermediate `row` local, and a 2-leading-suffix chain on a 3-D array.
+- 5 new unit tests (`tests/test_lower.rs`): the single- and
+  two-leading-suffix lowering shapes, the scalar-element rejection, the
+  non-`.length` trailing-suffix rejection, and the chained-indexed-
+  assignment-target regression check above. Replaces the prior
+  `mixed_index_then_dot_suffix_chain_remains_unsupported` test, which
+  asserted the pre-fix rejection.
+
 ## [0.13.0] - 2026-08-26
 
 ### Added

@@ -40,11 +40,18 @@ M4c entry for why), M4d (real multi-dimensional arrays — array
 types and explicitly-typed literal declarations, capped at a small
 dimension limit, plus chained index reads via a generalized suffix-chain
 dispatch; a mixed index-then-`.length` chain and a chained indexed-
-assignment target both remain deferred; see this section's own M4d
-entry for why), task #59 (compound-assignment/increment-decrement on an
-indexed target, `xs[i] += v;`/`xs[i]++;` — the piece M4b's own scope
+assignment target both initially remained deferred; see this section's
+own M4d entry for why), task #59 (compound-assignment/increment-decrement
+on an indexed target, `xs[i] += v;`/`xs[i]++;` — the piece M4b's own scope
 narrowing split off; resolved via a temp-variable-hoisting design, see
-that entry's own "Update" for the exact shape), and task #54 (wiring
+that entry's own "Update" for the exact shape), task #60 (a mixed
+index-then-`.length` primary-suffix chain, `grid[i].length` — the piece
+M4d's own scope narrowing split off; resolved by generalizing
+`lower_primary_expression`'s suffix-chain dispatch to recognize an
+all-index prefix with a trailing `.length` suffix, see that entry's own
+"Update"; a *chained* indexed-assignment target remains its own
+still-open gap, a structurally separate assignment-target-dispatch
+concern task #60 did not touch), and task #54 (wiring
 `Expr::IndirectCall` — a
 `Closure`-kinded local can now be *invoked*, `f(5)`, not just created and
 passed around; `lower_call_expression` checks local-variable resolution
@@ -415,19 +422,30 @@ genuinely ragged rows (`{{1,2,3},{4}}`); and chained index reads
 (`grid[i][j]`) reach a new `lower_chained_index` via a generalized
 `lower_primary_expression` dispatch, requiring every suffix in the chain
 be `[...]`-shaped. **Narrowed further during implementation**: a mixed
-index-then-`.length` chain (`grid[i].length`) is *not* supported —
-`lower_chained_index`'s own all-bracket requirement means such a chain
-still falls through to the pre-existing multi-suffix rejection (the
-sub-array's own `.length` remains reachable via an intermediate local) —
+index-then-`.length` chain (`grid[i].length`) was *not* supported at the
+time — `lower_chained_index`'s own all-bracket requirement meant such a
+chain still fell through to the pre-existing multi-suffix rejection (the
+sub-array's own `.length` remained reachable via an intermediate local) —
 split off into its own standalone follow-up task rather than folded into
-this milestone (fixing it needs the suffix-chain fold generalized
-further, to accept a *trailing* `.length` after any number of leading
-`[...]` suffixes, a real design question about how far to generalize
-before it starts overlapping with method-call dispatch). A *chained*
-indexed-assignment target (`grid[i][j] = v;`) also remains unreachable —
-`indexed_assign_target`'s own fixed single-suffix match arm doesn't
-recognize a multi-suffix lvalue — deferred alongside compound-assignment/
-increment-decrement on an indexed target (the task split off from M4c).
+this milestone. **Update**: resolved (task #60). The design question this
+entry left open (how far to generalize the suffix-chain fold before it
+starts overlapping with method-call dispatch) was answered narrowly, not
+broadly: a new `lower_primary_expression` match arm recognizes exactly
+one additional shape — every *leading* suffix in the chain is `[...]`,
+and the *trailing* suffix is `.length` — and delegates the leading
+index-suffix prefix straight to the existing `lower_chained_index`
+(which, it turns out, already worked correctly for a single leading
+suffix too, despite its only prior caller always handing it two-or-more),
+then wraps the peeled-down result in `Expr::SeqLen`, the exact same
+`.length` handling `lower_dot_suffix` already gives the un-indexed case.
+No suffix-chain/method-call-dispatch overlap risk materialized — a
+qualified method call (`grid[i].foo(...)`) remains categorically
+unreachable regardless, since no method-call surface exists on an array
+at all in this frontend. A *chained* indexed-assignment target
+(`grid[i][j] = v;`) remains unreachable — a structurally separate gap
+in the assignment-*target* dispatch (`indexed_assign_target`'s own fixed
+single-suffix match arm), not the value-position suffix-chain dispatch
+task #60 touched — still its own open follow-up.
 Multi-dimensional `new`-based array creation (`new int[2][3]`, `new
 int[][]{{1,2}}`) remains out of scope too — M4c's own two shapes stay
 single-dimension only by construction, unaffected by this milestone.
