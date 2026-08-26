@@ -8082,6 +8082,22 @@ branch, and prior PR were absent before creating the fresh exact-main
 worktree. OCaml's process-free core remains collision-unsafe while PRs #12149
 and #12162 own required Go entry-point and validator surfaces.
 
+Before publication, the branch rebased without conflict onto exact main
+`b4dbb28496f299f335fdda14021e61ab5d126614`. Intervening ALGOL mixed numeric
+folding, Japanese hiragana ductus, ADJ shipment bookkeeping, and HTML unmatched
+sectioning diagnostics stay within existing owners. Merged PR #12936 extends
+the existing Mermaid Gantt owner with explicit axis-end dates and
+inclusive/exclusive end behavior across the same parser, IR, temporal-layout,
+and paint roots. The refreshed collision report keeps all schema-3 counts
+unchanged and retains zero collisions and unknown buckets.
+
+The refresh also corrected the state graph's one historical lifecycle
+inversion: the still-pending standalone-integrity umbrella now depends on its
+merged Lua child, instead of the merged child depending on pending work. The
+W21 exception owner now records all changed Wasm type, opcode, module,
+validator, execution, runtime, WAST, conformance, and IIR-lowering surfaces;
+the IIR exception builtins remain part of that same semantic family.
+
 ## Autonomous Loop Protocol
 
 Only one parity PR should be active at a time.
