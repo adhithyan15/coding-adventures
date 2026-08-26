@@ -955,8 +955,10 @@ backend immediately) come before the enabler-dependent items.
   Integer and real exponentiation whose complete
   literal exponent chain evaluates to one is also preserving. Integer-literal
   chains return the base directly without a multiply or runtime power call;
-  finite-real selectors also accept bounded integral real-literal chains on
-  the runtime power path. Dynamic and otherwise non-unit exponents remain
+  finite-real selectors also accept bounded variable-free literal arithmetic
+  exponent operands when each evaluates to a nonnegative integer and the
+  complete chain evaluates to one on the runtime power path. Dynamic,
+  non-integral, and otherwise non-unit exponents remain
   conservative. Leading unary plus, including integer identity tails, is
   likewise preserving because lowering returns its operand unchanged; unary
   minus remains conservative. Parentheses are transparent around exact scalar
