@@ -20,7 +20,7 @@ requires:
 introduces:
   knowledge: []
 practises:
-  knowledge: [ES-GRAMMAR-CONTRACTION-AL, ES-GRAMMAR-CONTRACTION-DEL, ES-GRAMMAR-CONTRACTION-ONLY-TWO, ES-LEX-QUIEN, ES-GRAMMAR-QUIEN-PEOPLE-ONLY, ES-GRAMMAR-O-BECOMES-U, ES-LEX-NI, ES-GRAMMAR-DOUBLE-NEGATIVE, ES-GRAMMAR-NO-02]
+  knowledge: [ES-GRAMMAR-CONTRACTION-AL, ES-GRAMMAR-CONTRACTION-DEL, ES-GRAMMAR-CONTRACTION-ONLY-TWO, ES-LEX-QUIEN, ES-GRAMMAR-QUIEN-PEOPLE-ONLY, ES-GRAMMAR-O-BECOMES-U, ES-LEX-NI, ES-GRAMMAR-DOUBLE-NEGATIVE, ES-GRAMMAR-NO-02, ES-LEX-O]
 skills: [listening, speaking]
 modes: [interpretive, presentational]
 strands: [language-focus, fluency]
@@ -37,7 +37,7 @@ reviews_of: [ES-C61-al, ES-C61-del, ES-C61-quien, ES-C61-o, ES-C61-ni]
 [PAUSE 2s] The two contractions, and nothing else on the list. (*Al*, *del*.)
 
 ## What you've built
-<!-- hl-knowledge: introduces=[]; assesses=[ES-LEX-QUIEN, ES-LEX-NI, ES-GRAMMAR-O-BECOMES-U, ES-GRAMMAR-NO-02] -->
+<!-- hl-knowledge: introduces=[]; assesses=[ES-LEX-QUIEN, ES-LEX-NI, ES-GRAMMAR-O-BECOMES-U, ES-GRAMMAR-NO-02, ES-LEX-O] -->
 
 Four chants. Say each, then say what it does.
 

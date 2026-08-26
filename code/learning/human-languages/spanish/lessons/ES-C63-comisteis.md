@@ -20,7 +20,7 @@ requires:
 introduces:
   knowledge: [ES-GRAMMAR-ER-IR-PRETERITE-2PL, ES-GRAMMAR-STRONG-PRETERITE-2PL, ES-GRAMMAR-PRETERITE-COMPLETE]
 practises:
-  knowledge: [ES-GRAMMAR-AR-PRETERITE-2PL, ES-GRAMMAR-ER-IR-PRETERITE-2PL, ES-GRAMMAR-ER-IR-PRETERITE-PLURAL, ES-GRAMMAR-PRETERITE-COMPLETE, ES-GRAMMAR-SER-IR-PRETERITE-PLURAL, ES-GRAMMAR-STRONG-PRETERITE-2PL, ES-GRAMMAR-STRONG-PRETERITE-PLURAL]
+  knowledge: [ES-GRAMMAR-AR-PRETERITE-2PL, ES-GRAMMAR-ER-IR-PRETERITE-2PL, ES-GRAMMAR-ER-IR-PRETERITE-PLURAL, ES-GRAMMAR-PRETERITE-COMPLETE, ES-GRAMMAR-SER-IR-PRETERITE-PLURAL, ES-GRAMMAR-STRONG-PRETERITE-2PL, ES-GRAMMAR-STRONG-PRETERITE-PLURAL, ES-GRAMMAR-PRETERITE-AR-COMPLETE]
 skills: [listening, speaking, reading, writing]
 modes: [interpretive, interpersonal, presentational]
 strands: [meaning-input, meaning-output, language-focus]
@@ -32,7 +32,7 @@ reviews_of: [ES-C63-hablasteis, ES-C55-tuvieron]
 # comisteis · tuvisteis — the last gap closes
 
 ## Warm-up
-<!-- hl-knowledge: introduces=[]; assesses=[ES-GRAMMAR-AR-PRETERITE-2PL] -->
+<!-- hl-knowledge: introduces=[]; assesses=[ES-GRAMMAR-AR-PRETERITE-2PL, ES-GRAMMAR-PRETERITE-AR-COMPLETE] -->
 
 [PAUSE 2s] *Hablasteis*. Now the other two families, and then the hard stems.
 

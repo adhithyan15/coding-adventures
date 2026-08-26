@@ -20,7 +20,7 @@ requires:
 introduces:
   knowledge: [ES-GRAMMAR-PROGRESSIVE-ESTAR-GERUND, ES-GRAMMAR-PROGRESSIVE-NOT-FUTURE]
 practises:
-  knowledge: [ES-GRAMMAR-PROGRESSIVE-ESTAR-GERUND, ES-GRAMMAR-PROGRESSIVE-NOT-FUTURE, ES-GRAMMAR-GERUND-AR, ES-GRAMMAR-GERUND-ER-IR, ES-GRAMMAR-ESTAR-PRESENT-COMPLETE, ES-GRAMMAR-SER-ESTAR-CONTRAST]
+  knowledge: [ES-GRAMMAR-PROGRESSIVE-ESTAR-GERUND, ES-GRAMMAR-PROGRESSIVE-NOT-FUTURE, ES-GRAMMAR-GERUND-AR, ES-GRAMMAR-GERUND-ER-IR, ES-GRAMMAR-ESTAR-PRESENT-COMPLETE, ES-GRAMMAR-SER-ESTAR-CONTRAST, ES-GRAMMAR-GERUND-MEANING, ES-GRAMMAR-GERUND-TWO-ENDINGS]
 skills: [listening, speaking, reading, writing]
 modes: [interpretive, interpersonal, presentational]
 strands: [meaning-input, meaning-output, language-focus]
@@ -40,7 +40,7 @@ reviews_of: [ES-C62-comiendo, ES-C09-ser-estar]
 [PAUSE 1s] And one gerund. Put them side by side.
 
 ## Grammar Lens: standing in the middle of doing
-<!-- hl-knowledge: introduces=[ES-GRAMMAR-PROGRESSIVE-ESTAR-GERUND]; assesses=[ES-GRAMMAR-GERUND-ER-IR] -->
+<!-- hl-knowledge: introduces=[ES-GRAMMAR-PROGRESSIVE-ESTAR-GERUND]; assesses=[ES-GRAMMAR-GERUND-ER-IR, ES-GRAMMAR-GERUND-MEANING, ES-GRAMMAR-GERUND-TWO-ENDINGS] -->
 
 > ***Estoy hablando.*** — I am speaking, right now.
 
