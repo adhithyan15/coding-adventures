@@ -1026,11 +1026,16 @@ queue: **و**, not ه, follows ن. Its 02:43–02:45 demonstration loops the sma
 
 The initial source-availability gap recorded by HL-C41 is now being closed one
 verified shape at a time. Telugu has a cited independent **అ** row; Kannada has
-cited independent **ಅ** and **ಇ** rows. Yogesh's 98-frame animation writes **ಇ**
+cited independent **ಅ**, **ಇ**, and **ಎ** rows. Yogesh's 98-frame animation writes **ಇ**
 in one uninterrupted run: the left arch descends and retraces at the middle
 stem before the second arch flows through the broad outer curve, lower loop,
 and rightward exit. Its four-movement Noto Sans Kannada fit preserves that
 zero-lift order while recording handwritten arch, loop, and exit variation.
+Gopala Krishna A's 30-frame animation writes **ಎ** in one uninterrupted run:
+turn around the compact left loop, sweep through the joined lower curves,
+climb the rounded right side, then carry the tall outer arch over and finish
+left. Its four-movement Noto Sans Kannada fit preserves that zero-lift order
+while recording loop-width, lower-bowl, and arch-height variation.
 Malayalam has cited independent **അ** and **എ** rows, base consonant **ഴ**, and
 standalone chillus **ൽ**, **ൻ**, **ൾ**, and **ർ**. Sriveenkat's 57-frame
 animation writes chillu RR **ർ** in one uninterrupted run: climb around the

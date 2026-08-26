@@ -5528,10 +5528,24 @@
       "sound": "e",
       "role": "vowel",
       "components": [
-        "ಎ  e — independent vowel (word-initial)"
+        "a compact left loop",
+        "a joined lower-left sweep",
+        "a rounded lower-right bowl",
+        "a tall outer arch finishing left"
       ],
-      "strokeOrder": [],
-      "strokeOrderNote": ""
+      "strokeOrder": [
+        "turn clockwise around the compact left loop",
+        "without lifting, sweep through the joined lower-left curve",
+        "without lifting, turn around the rounded lower-right bowl and climb its right side",
+        "without lifting, carry the tall outer arch over and finish to the left"
+      ],
+      "strokeOrderNote": "Four visible movements in one continuous pen-down run: the compact left loop flows through both lower curves, climbs the right side, and finishes left along the tall outer arch.",
+      "penLifts": 0,
+      "strokeOrderSource": {
+        "citation": "Gopala Krishna A, Kannada-alphabet-ae.gif, animation of Kannada independent vowel ಎ, 30 frames, 3.0 seconds (Wikimedia Commons, 25 May 2016)",
+        "url": "https://commons.wikimedia.org/wiki/File:Kannada-alphabet-ae.gif",
+        "variation": "The CC BY-SA 4.0 animation writes ಎ in one uninterrupted run: turn around the compact left loop, sweep through the joined lower curves, climb the rounded right side, then carry the tall outer arch over and finish left. The path is fitted to the bundled Noto Sans Kannada outline; handwritten loop width, lower-bowl depth, and arch height vary, but the zero-lift order remains the same."
+      }
     },
     {
       "glyph": "ಏ",
