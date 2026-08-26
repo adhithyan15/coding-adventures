@@ -1,5 +1,9 @@
 # Changelog
 
+## 0.138.0
+
+- Parse explicit Mermaid Gantt end dates separately from duration expressions for inclusive-end layout.
+
 ## 0.137.0
 
 - Parse Gantt includes, excludes, weekend boundaries, axis formats, tick intervals, and remaining calendar control statements into typed IR.

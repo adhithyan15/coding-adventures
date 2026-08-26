@@ -26,6 +26,12 @@
   22, banned words unchanged, and Spanish cross-chapter prose references at
   zero. All seven chapters narrate as five-of-five drivable.
 
+### Added - source-verified Japanese hiragana shi
+
+- Add Japanese hiragana **し** as a continuous descent, lower turn, and rising
+  rightward sweep from Sirgazil's 23-frame CC0 animation.
+- Close all 8 affected realizations with a zero-lift Noto Sans JP fit, then
+  rerank Kannada **ಇ** first at 8.
 ### Added - Spanish A1 vocabulary tranche 4
 
 - Add thirty-five A1 vocabulary lessons across chapters 360-366, sequences

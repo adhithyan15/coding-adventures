@@ -47,6 +47,11 @@ const tamilOutline = (character: string): GlyphOutline => {
   return { path: g.path, bounds: boundsOf(g.contours) };
 };
 
+const japaneseOutline = (character: string): GlyphOutline => {
+  const g = parseFont(load("NotoSansJP-Subset.ttf")).glyphFor(character)!;
+  return { path: g.path, bounds: boundsOf(g.contours) };
+};
+
 const naskhOutline = (character: string): GlyphOutline => {
   const g = parseFont(load("NotoNaskhArabic-Static.ttf")).glyphFor(character)!;
   return { path: g.path, bounds: boundsOf(g.contours) };
@@ -124,6 +129,8 @@ const KA = DUCTUS["க"];
 const kaOutline = tamilOutline("க");
 const NGA = DUCTUS["ங"];
 const ngaOutline = tamilOutline("ங");
+const JAPANESE_SHI = DUCTUS[ductusKey("japanese", "し")];
+const japaneseShiOutline = japaneseOutline("し");
 const CA = DUCTUS["ச"];
 const caOutline = tamilOutline("ச");
 const TTA = DUCTUS["ட"];
@@ -1301,6 +1308,22 @@ describe("ங — a detached upright followed by one joined body", () => {
     const pen = byTag(last, "path").find((node) => node.attrs.class === "ductus__pen")!;
     expect(done.map((path) => path.attrs.d)).toEqual([penPathD(NGA.strokes[0], 1)]);
     expect(pen.attrs.d).toBe(penPathD(NGA.strokes[1], 1));
+  });
+});
+
+describe("し — one continuous descending curve", () => {
+  const steps = ductusSteps(JAPANESE_SHI);
+  const strip = ductusFilmstrip(JAPANESE_SHI, japaneseShiOutline);
+
+  it("keeps both movements in one pen-down run", () => {
+    expect(steps.map((step) => step.strokeIndex)).toEqual([0, 0]);
+    expect(steps.map((step) => step.startsAfterLift)).toEqual([false, false]);
+  });
+
+  it("reports a two-frame zero-lift filmstrip", () => {
+    expect(strip.frames).toHaveLength(2);
+    expect(strip.penLifts).toBe(0);
+    expect(strip.summary).toBe("one unbroken stroke · 2 movements");
   });
 });
 

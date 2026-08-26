@@ -946,7 +946,10 @@ backend immediately) come before the enabler-dependent items.
   the same bounded treatment. Complete supported integer and boolean identity
   writes also preserve transitive value and predicate dependencies without
   adding recursive effect inference; changing writes still invalidate those
-  proofs. Integer and real exponentiation whose complete
+  proofs. Static mixed integer/real comparisons use the same one-way widening
+  as runtime lowering when every tracked integer is exactly representable in
+  binary64 and every real operand is finite; otherwise they fail closed.
+  Integer and real exponentiation whose complete
   literal exponent chain evaluates to one is also preserving because the
   existing power lowerer returns the base directly without a multiply or
   runtime power call. Dynamic and otherwise non-unit exponents remain

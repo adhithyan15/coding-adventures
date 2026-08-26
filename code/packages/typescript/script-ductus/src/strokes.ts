@@ -13,6 +13,7 @@ import cyrillic from "../../../../learning/human-languages/data/scripts/cyrillic
 import devanagari from "../../../../learning/human-languages/data/scripts/devanagari.json";
 import gujarati from "../../../../learning/human-languages/data/scripts/gujarati.json";
 import hebrew from "../../../../learning/human-languages/data/scripts/hebrew.json";
+import japanese from "../../../../learning/human-languages/data/scripts/japanese.json";
 import kannada from "../../../../learning/human-languages/data/scripts/kannada.json";
 import malayalam from "../../../../learning/human-languages/data/scripts/malayalam.json";
 import persoArabic from "../../../../learning/human-languages/data/scripts/perso-arabic.json";
@@ -735,6 +736,45 @@ const independentCheStrokes = (
 ];
 
 export const DUCTUS: Record<string, LetterDuctus> = {
+  // Sirgazil's 23-frame animation writes hiragana し in one uninterrupted
+  // motion: descend from the top, turn around the broad lower curve, and sweep
+  // upward to the right. This path keeps that zero-lift order while fitting the
+  // heavier bundled Noto Sans JP print outline.
+  [ductusKey("japanese", "し")]: {
+    script: "japanese",
+    glyph: "し",
+    strokes: [
+      {
+        segments: [
+          {
+            label: "descend nearly straight from the top",
+            path: [
+              { x: 290, y: 750 },
+              { x: 290, y: 650 },
+              { x: 290, y: 500 },
+              { x: 290, y: 350 },
+              { x: 290, y: 180 },
+            ],
+          },
+          {
+            label: "turn around the broad lower curve and sweep upward right",
+            path: [
+              { x: 290, y: 180 },
+              { x: 300, y: 110 },
+              { x: 340, y: 50 },
+              { x: 410, y: 5 },
+              { x: 490, y: -10 },
+              { x: 590, y: 5 },
+              { x: 690, y: 55 },
+              { x: 770, y: 120 },
+              { x: 850, y: 190 },
+            ],
+          },
+        ],
+      },
+    ],
+    source: japanese.letters.find((letter) => letter.glyph === "し")!.strokeOrderSource!,
+  },
   // Hanzi Writer Data's ordered medians draw 人 with the left-falling stroke
   // first, then restart at the central junction for the right-falling stroke.
   // The source's Arphic-derived proportions are fitted to the vendored Noto

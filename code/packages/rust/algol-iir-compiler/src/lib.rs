@@ -2397,6 +2397,14 @@ impl Compiler {
 
     fn static_real_arithmetic_value(&self, node: &GrammarASTNode) -> Option<f64> {
         let widen_tracked_integers = self.static_real_expression_has_real_evidence(node);
+        self.static_real_arithmetic_value_with_widen(node, widen_tracked_integers)
+    }
+
+    fn static_real_arithmetic_value_with_widen(
+        &self,
+        node: &GrammarASTNode,
+        widen_tracked_integers: bool,
+    ) -> Option<f64> {
         expr_static_real_arithmetic_value_with(node, &|call| {
             self.static_standard_real_value(call)
                 .or_else(|| self.static_tracked_numeric_value(call, widen_tracked_integers))
@@ -2404,17 +2412,34 @@ impl Compiler {
     }
 
     fn static_assigned_real_value(&self, node: &GrammarASTNode) -> Option<f64> {
+        let widen_tracked_integers = self.static_real_expression_has_real_evidence(node);
+        self.static_assigned_real_value_with_widen(node, widen_tracked_integers)
+    }
+
+    fn static_assigned_real_value_with_widen(
+        &self,
+        node: &GrammarASTNode,
+        widen_tracked_integers: bool,
+    ) -> Option<f64> {
         if let Some((condition, then_node, else_node)) = self.conditional_expression_parts(node) {
             match self.static_boolean_value(condition) {
-                Some(true) => return self.static_assigned_real_value(then_node),
-                Some(false) => return self.static_assigned_real_value(else_node),
+                Some(true) => {
+                    return self
+                        .static_assigned_real_value_with_widen(then_node, widen_tracked_integers)
+                }
+                Some(false) => {
+                    return self
+                        .static_assigned_real_value_with_widen(else_node, widen_tracked_integers)
+                }
                 None => {}
             }
-            let then_value = self.static_assigned_real_value(then_node)?;
-            let else_value = self.static_assigned_real_value(else_node)?;
+            let then_value =
+                self.static_assigned_real_value_with_widen(then_node, widen_tracked_integers)?;
+            let else_value =
+                self.static_assigned_real_value_with_widen(else_node, widen_tracked_integers)?;
             return (then_value.to_bits() == else_value.to_bits()).then_some(then_value);
         }
-        self.static_real_arithmetic_value(node)
+        self.static_real_arithmetic_value_with_widen(node, widen_tracked_integers)
     }
 
     fn static_assigned_integer_value(&self, node: &GrammarASTNode) -> Option<i64> {
@@ -6302,8 +6327,10 @@ impl Compiler {
         ) {
             return Some(compare_static_values(op, lhs, rhs));
         }
-        let lhs = self.static_assigned_real_value(lhs)?;
-        let rhs = self.static_assigned_real_value(rhs)?;
+        let widen_tracked_integers = self.static_real_expression_has_real_evidence(lhs)
+            || self.static_real_expression_has_real_evidence(rhs);
+        let lhs = self.static_assigned_real_value_with_widen(lhs, widen_tracked_integers)?;
+        let rhs = self.static_assigned_real_value_with_widen(rhs, widen_tracked_integers)?;
         (lhs.is_finite() && rhs.is_finite()).then(|| compare_static_values(op, lhs, rhs))
     }
 
@@ -10276,6 +10303,35 @@ mod tests {
             "test",
         )
         .expect("an exact scalar self-assignment preserves the dependency");
+    }
+
+    #[test]
+    fn al4_static_while_preserves_real_transitive_dependency() {
+        compile_source(
+            "begin integer i; real n, limit; n := 3.0; limit := 3.0; i := 0; for i := i + 1 while i < n do begin n := limit; limit := limit end; print(i + 0.25) end",
+            "test",
+        )
+        .expect("an exact real transitive self-assignment preserves the dependency");
+    }
+
+    #[test]
+    fn al4_body_mutated_real_transitive_dependency_remains_conservative() {
+        let err = compile_source(
+            "begin integer i; real n, limit; n := 3.0; limit := 3.0; i := 0; for i := i + 1 while i < n do begin n := limit; limit := limit + 1.0 end; print(i + 0.25) end",
+            "test",
+        )
+        .expect_err("a changing real transitive dependency has no static exit value");
+        assert!(format!("{err:?}").contains("cannot print a real value"));
+    }
+
+    #[test]
+    fn al4_static_mixed_comparison_rejects_inexact_integer_widening() {
+        let err = compile_source(
+            "begin integer i; real n, x; i := 9007199254740993; n := 9007199254740994.0; if i < n then x := 1.0 else x := 2.0; print(x) end",
+            "test",
+        )
+        .expect_err("an inexact integer snapshot cannot drive a static real comparison");
+        assert!(format!("{err:?}").contains("cannot print a real value"));
     }
 
     #[test]

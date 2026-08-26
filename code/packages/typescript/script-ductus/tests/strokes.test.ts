@@ -258,6 +258,7 @@ const MALAYALAM_CHILLU_N = DUCTUS[ductusKey("malayalam", "ൻ")];
 const MALAYALAM_ZHA = DUCTUS[ductusKey("malayalam", "ഴ")];
 const TAMIL_U = DUCTUS["உ"];
 const TAMIL_NGA = DUCTUS["ங"];
+const JAPANESE_SHI = DUCTUS[ductusKey("japanese", "し")];
 
 const fontForDuctus = (letter: LetterDuctus) => {
   const script = SCRIPTS.find((candidate) => candidate.script === letter.script);
@@ -670,6 +671,18 @@ describe("handwriting ductus", () => {
       "carry the low bar to the right",
       "return left and finish up the inner stem",
     ]);
+  });
+
+  it("Japanese し descends and sweeps upward right without lifting", () => {
+    expect(penLifts(JAPANESE_SHI)).toBe(0);
+    expect(JAPANESE_SHI.strokes).toHaveLength(1);
+    expect(JAPANESE_SHI.strokes[0].segments.map((segment) => segment.label)).toEqual([
+      "descend nearly straight from the top",
+      "turn around the broad lower curve and sweep upward right",
+    ]);
+    expect(JAPANESE_SHI.source.url).toBe(
+      "https://commons.wikimedia.org/wiki/File:Hiragana_%E3%81%97_stroke_order_animation.gif",
+    );
   });
 
   it("ப descends, crosses the bottom, and rises without lifting", () => {

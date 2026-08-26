@@ -1,5 +1,10 @@
 # Changelog
 
+## 0.20.0
+
+- Apply `inclusiveEndDates` to explicit Gantt end dates and place the standard bottom axis plus optional top axis.
+- Resolve the current-day marker and supported inline stroke declarations before backend-neutral Paint lowering.
+
 ## 0.19.0
 
 - Extend Gantt task bars and dependency starts across excluded calendar days, honoring explicit includes and weekend boundaries.

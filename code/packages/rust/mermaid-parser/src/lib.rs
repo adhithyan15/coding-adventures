@@ -6166,12 +6166,16 @@ fn parse_gantt_task(token: &Token) -> Result<GanttTask, ParseError> {
     } else {
         TaskStart::Date("2026-01-01".to_string())
     };
-    let duration_days = if remaining.len() > 2 {
-        parse_duration(remaining[2])
-            .filter(|duration| *duration >= 0.0)
-            .ok_or_else(|| token_error(token, "invalid Gantt task duration"))?
+    let (duration_days, end_date) = if remaining.len() > 2 {
+        if let Some(duration) = parse_duration(remaining[2]).filter(|duration| *duration >= 0.0) {
+            (duration, None)
+        } else if looks_like_gantt_date(remaining[2]) {
+            (0.0, Some(remaining[2].to_string()))
+        } else {
+            return Err(token_error(token, "invalid Gantt task duration or end date"));
+        }
     } else {
-        1.0
+        (1.0, None)
     };
 
     Ok(GanttTask {
@@ -6179,12 +6183,27 @@ fn parse_gantt_task(token: &Token) -> Result<GanttTask, ParseError> {
         label,
         start,
         duration_days,
+        end_date,
         status,
         dependencies: vec![],
         link: None,
         callback: None,
         callback_args: None,
     })
+}
+
+fn looks_like_gantt_date(value: &str) -> bool {
+    let mut parts = value.split('-');
+    matches!(
+        (parts.next(), parts.next(), parts.next(), parts.next()),
+        (Some(year), Some(month), Some(day), None)
+            if year.len() == 4
+                && month.len() == 2
+                && day.len() == 2
+                && year.chars().all(|c| c.is_ascii_digit())
+                && month.chars().all(|c| c.is_ascii_digit())
+                && day.chars().all(|c| c.is_ascii_digit())
+    )
 }
 
 fn parse_task_status(s: &str) -> TaskStatus {
@@ -6758,6 +6777,16 @@ Rel(customer, web, \"Uses\", \"HTTPS\")";
         assert_eq!(diagram.config.today_marker.as_deref(), Some("off"));
         assert_eq!(diagram.config.weekday.as_deref(), Some("monday"));
         assert_eq!(diagram.config.weekend.as_deref(), Some("friday"));
+    }
+
+    #[test]
+    fn gantt_preserves_explicit_end_dates() {
+        let diagram = parse_gantt(
+            "gantt\ninclusiveEndDates\nRelease :release, 2026-03-01, 2026-03-03\n",
+        ).unwrap();
+        let task = &diagram.sections[0].tasks[0];
+        assert_eq!(task.end_date.as_deref(), Some("2026-03-03"));
+        assert_eq!(task.duration_days, 0.0);
     }
 
     #[test]

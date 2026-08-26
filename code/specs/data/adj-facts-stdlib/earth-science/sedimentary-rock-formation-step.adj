@@ -1,0 +1,114 @@
+% ============================================================================
+% sedimentary-rock-formation-step — the THREE-stage process by which
+% sedimentary rock forms, each stage's step number (adj-facts-stdlib,
+% EARTH-SCIENCE).
+% ============================================================================
+% The THIRD instance of the "Earth-processes" Major Gap
+% (ADJ-STDLIB-COVERAGE.md), after `geology/earth-layer-matter-behavior.adj`
+% and `weathering-cause-type.adj`, and a genuinely NEW axis from every rock
+% table already shipped in this stdlib: `geology/rock-type.adj` and
+% `rock-types.adj` each name WHAT a rock type forms FROM in one summary
+% phrase (sedimentary → "deposited_weathered_material" /
+% "compacted_sediment"); `weathering-cause-type.adj` sorts individual
+% weathering CAUSES into physical/chemical; `metamorphism-cause.adj` sorts
+% metamorphism CAUSES into a shared effect. None of them states the ORDER
+% the process actually runs in — this table does, the same "named stage → a
+% NUMBER marking its position" shape `water-cycle.adj` already established
+% for a different Earth cycle. Recall is a binding query:
+%
+%     ? sedimentary_rock_formation_step(erosion, $N)   % 2
+%
+% A native `table` (ADJ-TABLES RS-5): each `row` lowers to a ground relation
+% `sedimentary_rock_formation_step(stage, step_number)` carrying the
+% citation, so the lookup above is the ordinary SLD binding query — the
+% engine returns the step WITH its source, on the CPU, with zero model
+% calls, and abstains on anything the source does not name as one of these
+% three stages. The `step_number` value is a NUMBER, so a recalled step
+% composes into arithmetic, exactly like `water-cycle.adj`'s own
+% `step_number` column. The query also runs BACKWARD — bind the number and
+% recall which stage holds that position:
+%
+%     ? sedimentary_rock_formation_step($S, 3)   % compaction
+%
+% The three stages, as a little truth table (the source's own three
+% back-to-back sentences, one continuous paragraph, each handing off to the
+% next):
+%
+%     stage        step_number   the source's own words
+%     -----------  ------------  ------------------------------------------
+%     weathering   1             "begins with the weathering, or breaking
+%                                 down, of the exposed rock into small
+%                                 fragments"
+%     erosion      2             "these fragments are removed from their
+%                                 source and transported ... to a new
+%                                 location"
+%     compaction   3             "the lowest layers become compacted so
+%                                 tightly that they form solid rock"
+%
+% ----------------------------------------------------------------------------
+% Provenance (byte-quotable, per the ADJ-facts standard).
+% ----------------------------------------------------------------------------
+% curl-fetched the raw National Geographic Education "The Rock Cycle" page
+% directly (not just an AI-summarized WebFetch) and confirmed byte-for-byte,
+% inside the page's own embedded article JSON, the one continuous paragraph
+% under its "Clastic and Organic Sedimentary Rocks" heading:
+%
+%   "The formation of clastic and organic rocks begins with the weathering,
+%    or breaking down, of the exposed rock into small fragments. Through the
+%    process of erosion, these fragments are removed from their source and
+%    transported by wind, water, ice, or biological activity to a new
+%    location. Once the sediment settles somewhere, and enough of it
+%    collects, the lowest layers become compacted so tightly that they form
+%    solid rock."
+%
+% `trust consensus` — National Geographic Education, the SAME source family
+% already cited at this tier by `biology/consumer-trophic-level.adj`
+% (Thread 6 of this loop's session log), a reputable, widely-used K-8
+% science-education publisher, not a primary government research source.
+%
+% WHY this table is honestly SCOPED to the sedimentary path, not named
+% "rock-cycle" generally: the SAME cited page also states how igneous rock
+% forms ("formed when molten hot material cools and solidifies") and how
+% metamorphic rock forms ("changed from their original form by immense heat
+% or pressure") — but neither of those is a multi-stage, orderable SEQUENCE
+% the way the sedimentary path is; each is a single combined transformation
+% with no second or third numbered stage the source names. Only the
+% sedimentary path gets a three-sentence, hand-off-style paragraph a step
+% count can honestly be built from — so this table's own predicate name
+% says exactly what it grounds, no more.
+%
+% HONEST ABSTENTION:
+%
+% 1. `deposition` is deliberately NOT a row, even though many other K-8
+%    science sources use it as a named fourth stage between erosion and
+%    compaction. This page's own paragraph never uses the word — it says
+%    fragments are "transported ... to a new location" and the "sediment
+%    settles somewhere", folding what other sources call "deposition" into
+%    the erosion/compaction stages' own prose rather than naming it as its
+%    own numbered step. A query for `deposition`'s step honestly abstains
+%    rather than inventing a fourth stage this source never states.
+% 2. `melting` is deliberately NOT a row here either, despite being a real
+%    term the SAME page uses elsewhere (for how igneous rock forms). It is
+%    not part of the sedimentary path's own three-sentence paragraph, so a
+%    query for it against THIS predicate abstains — the honest boundary
+%    between what this table grounds (the sedimentary sequence) and what a
+%    sibling table would need to ground separately (the igneous path).
+%
+% (See ../README.md; feedback_nothing_human_authored,
+% feedback_adj_only_shipped_artifacts, feedback_no_byte_arithmetic_for_llm.)
+% ============================================================================
+
+table sedimentary_rock_formation_step {
+    columns stage, step_number
+
+    row (weathering, 1)
+    row (erosion, 2)
+    row (compaction, 3)
+
+    source "The formation of clastic and organic rocks begins with the weathering, or breaking down, of the exposed rock into small fragments."
+    locator "https://education.nationalgeographic.org/resource/rock-cycle/"
+    trust consensus
+
+    cites "Through the process of erosion, these fragments are removed from their source and transported by wind, water, ice, or biological activity to a new location." locator "https://education.nationalgeographic.org/resource/rock-cycle/"
+    cites "Once the sediment settles somewhere, and enough of it collects, the lowest layers become compacted so tightly that they form solid rock." locator "https://education.nationalgeographic.org/resource/rock-cycle/"
+}

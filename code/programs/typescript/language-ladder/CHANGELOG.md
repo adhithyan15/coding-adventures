@@ -1,5 +1,12 @@
 # Changelog
 
+## Unreleased — source-verified Japanese hiragana shi
+
+- Teach hiragana **し** as one uninterrupted descent, lower curve, and upward
+  right sweep from Sirgazil's 23-frame CC0 animation.
+- Preserve its zero-lift, two-movement filmstrip, close 8 affected
+  realizations, and rerank Kannada **ಇ** next at 8.
+
 ## Unreleased -- lesson batches regrouped, request ceiling lowered 399 -> 353
 
 - Raise the lesson-group `maxSize` in `vite.config.ts` from **49 kB to 56 kB**.
@@ -19,7 +26,6 @@
   files now say a third should not happen, and point at the structural fix:
   group batches by a chapter range rather than track-then-size, so the count
   grows sublinearly in corpus bytes.
-
 ## Unreleased — source-verified Tamil nga
 
 - Teach Tamil **ங** with its cited detached upright and joined five-movement

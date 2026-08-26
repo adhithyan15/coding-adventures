@@ -1,5 +1,9 @@
 # Changelog — diagram-ir
 
+## 0.79.0
+
+- Preserve explicit Gantt end dates and resolved top/bottom axis and styled today-marker geometry.
+
 ## 0.78.0
 
 - Preserve Mermaid Gantt calendar exclusions, includes, weekend boundaries, and axis controls in semantic temporal IR.
