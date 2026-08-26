@@ -1133,7 +1133,7 @@
       "strokeOrder": [
         "draw the short top left-falling stroke",
         "lift, then draw the upper horizontal left to right",
-        "lift, draw the next horizontal left to right, then turn down through it without lifting",
+        "lift, then draw the next horizontal left to right",
         "lift, then draw the long left-falling stroke toward the lower component",
         "lift, then draw 目's left vertical from top to bottom",
         "lift, draw 目's top horizontal, then turn down the right side without lifting",
@@ -1146,7 +1146,7 @@
       "strokeOrderSource": {
         "citation": "Hanzi Writer Data 看.json, ordered stroke paths and medians 1–9 (Hanzi Writer Data snapshot 68d10a4, updated from Make Me a Hanzi, 22 June 2019)",
         "url": "https://raw.githubusercontent.com/chanind/hanzi-writer-data/68d10a4b21150cae5e1ebbd223eed289cf32d90c/data/%E7%9C%8B.json",
-        "variation": "The cited PRC-order dataset supplies nine ordered strokes for 看. Medians 1–4 form the upper hand-like element; medians 5–9 complete 目 below. Make Me a Hanzi documents that its stroke paths are ordered in proper stroke order, its medians share the coordinate system used for stroke-order animation, and the project follows People's Republic of China stroke order. The ductus uses those ordered source medians directly; the vendored Noto Sans SC outline can differ in width and proportion from the Arphic-derived source graphics."
+        "variation": "The cited PRC-order dataset supplies nine ordered strokes for 看. Medians 1–4 form the upper hand-like element; medians 5–9 complete 目 below. Make Me a Hanzi documents that its stroke paths are ordered in proper stroke order and that the project follows People's Republic of China stroke order. The ductus preserves that ordered sequence while fitting its learner pen paths to the vendored Noto Sans SC outline, whose width and proportions differ from the Arphic-derived source graphics."
       },
       "notes": "Means look at or watch in the official Level 1 word 看 and composes transparently inside 看见, 好看, and 看书."
     },
@@ -1171,7 +1171,7 @@
       "strokeOrderSource": {
         "citation": "Hanzi Writer Data 书.json, ordered stroke paths and medians 1–4 (Hanzi Writer Data snapshot 68d10a4, updated from Make Me a Hanzi, 22 June 2019)",
         "url": "https://raw.githubusercontent.com/chanind/hanzi-writer-data/68d10a4b21150cae5e1ebbd223eed289cf32d90c/data/%E4%B9%A6.json",
-        "variation": "The cited PRC-order dataset supplies four ordered strokes for 书: two upper folding strokes, the central upright, and the final upper-right dot. Make Me a Hanzi documents that its stroke paths are ordered in proper stroke order, its medians share the coordinate system used for stroke-order animation, and the project follows People's Republic of China stroke order. The ductus uses those ordered source medians directly; the vendored Noto Sans SC outline can differ in width and proportion from the Arphic-derived source graphics."
+        "variation": "The cited PRC-order dataset supplies four ordered strokes for 书: two upper folding strokes, the central upright, and the final upper-right dot. Make Me a Hanzi documents that its stroke paths are ordered in proper stroke order and that the project follows People's Republic of China stroke order. The ductus preserves that ordered sequence while fitting its learner pen paths to the vendored Noto Sans SC outline, whose width and proportions differ from the Arphic-derived source graphics."
       },
       "notes": "Means book in the official Level 1 word 书 and becomes the object in the transparent reading expression 看书."
     }
