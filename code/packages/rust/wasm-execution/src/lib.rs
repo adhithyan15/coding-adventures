@@ -896,6 +896,14 @@ pub struct LinearMemory {
     current_pages: u32,
     /// Maximum page count (None = no limit other than spec max 65536).
     max_pages: Option<u32>,
+    /// Whether this memory uses 64-bit addressing (memory64 proposal,
+    /// W25) -- `true` means `memory.size`/`memory.grow` and every load/
+    /// store instruction targeting this memory operate on `i64`
+    /// addresses instead of `i32`. See `code/specs/
+    /// W25-wasm-memory64-first-slice.md`. Always `false` for a memory
+    /// built via the plain [`new`](Self::new) constructor; only
+    /// [`new_with_is64`](Self::new_with_is64) can set it.
+    is64: bool,
 }
 
 impl LinearMemory {
@@ -906,20 +914,83 @@ impl LinearMemory {
             data: vec![0u8; size],
             current_pages: initial_pages,
             max_pages,
+            is64: false,
         }
     }
 
-    /// Bounds-check: ensures `offset + width` is within the memory.
-    fn bounds_check(&self, offset: usize, width: usize) -> Result<(), TrapError> {
-        if offset + width > self.data.len() {
+    /// As [`new`](Self::new), but for a memory that may be 64-bit-
+    /// addressed (memory64 proposal, W25) -- `initial_pages`/`max_pages`
+    /// are `u64` here because a real, spec-valid 64-bit memory's limits
+    /// can reach `2^48` (`wasm-validator`'s own Check 1b enforces that
+    /// ceiling at validation time; see `code/specs/
+    /// W25-wasm-memory64-first-slice.md`).
+    ///
+    /// Fallible, unlike `new`: `2^48` pages is not something any real
+    /// system can actually back with allocated bytes (`2^48 * 65536 =
+    /// 2^64` bytes -- overflows a 64-bit byte-count multiplication
+    /// outright, and would abort the process via Rust's allocator error
+    /// handler, not a catchable panic, if `vec![0u8; ...]` were ever
+    /// actually attempted at that size). [`MAX_MEMORY64_INITIAL_PAGES`]
+    /// is this interpreter's own practical, implementation-defined
+    /// resource limit on ACTUAL allocation -- deliberately separate from
+    /// (and much smaller than) the spec's own 64-bit declaration ceiling,
+    /// the same "spec allows more than we'll actually allocate" shape
+    /// `MAX_TABLE_ELEMENTS`/`MAX_V128_HEAP_LEN` already establish
+    /// elsewhere in this crate. A module that only ever DECLARES such a
+    /// memory (never instantiates it) still validates successfully --
+    /// only an actual instantiation attempt hits this cap, as a real,
+    /// gracefully-returned `TrapError`, never a panic or process abort.
+    pub fn new_with_is64(initial_pages: u64, max_pages: Option<u64>, is64: bool) -> Result<Self, TrapError> {
+        if is64 && initial_pages > MAX_MEMORY64_INITIAL_PAGES {
             return Err(TrapError::new(format!(
+                "memory of {initial_pages} initial pages exceeds this interpreter's practical 64-bit memory allocation cap of {MAX_MEMORY64_INITIAL_PAGES} pages (a real, spec-valid declaration this interpreter still refuses to actually allocate)"
+            )));
+        }
+        // Safe to narrow to u32 here either way: a 32-bit memory's `min`
+        // is already validator-capped at 65536 (the entire 32-bit
+        // address space), and a 64-bit memory's `min` just got checked
+        // against the SAME 65536-page practical cap immediately above.
+        let mut mem = LinearMemory::new(initial_pages as u32, max_pages.map(|m| m.min(MAX_MEMORY64_INITIAL_PAGES) as u32));
+        mem.is64 = is64;
+        Ok(mem)
+    }
+
+    /// Whether this memory uses 64-bit addressing (memory64 proposal,
+    /// W25). See [`LinearMemory`]'s own `is64` field doc comment.
+    pub fn is64(&self) -> bool {
+        self.is64
+    }
+
+    /// Bounds-check: ensures `offset + width` is within the memory.
+    ///
+    /// W25 (memory64): `offset + width` used to be a plain, unchecked
+    /// `usize` addition -- harmless when every caller's `offset` came
+    /// from a 32-bit address plus a 32-bit memarg offset (at most
+    /// `2 * u32::MAX`, nowhere near `usize::MAX` on a 64-bit host), which
+    /// was true for every load/store this crate executed before this
+    /// slice. An `is64` memory's address operand is a full `i64`/`u64`
+    /// (see `effective_addr`'s own `pop_effective_addr` helper in
+    /// `register_memory`), so `offset` can now genuinely be adversarially
+    /// close to `usize::MAX` -- e.g. a real WASM module doing `i32.load
+    /// (i64.const -1)` against a 64-bit memory. An unchecked `offset +
+    /// width` at that point would overflow: a debug (`overflow-checks`)
+    /// build panics instead of trapping cleanly, and a release build
+    /// silently WRAPS to a small sum that could pass the bounds check
+    /// entirely, turning an out-of-bounds access into an in-bounds one.
+    /// `checked_add` (the same overflow-proof shape `copy`/`fill` above
+    /// already use for their own `dest`/`src`/`len` arithmetic) closes
+    /// this: any overflow is treated as an immediate out-of-bounds trap,
+    /// exactly as if it were an ordinary too-large offset.
+    fn bounds_check(&self, offset: usize, width: usize) -> Result<(), TrapError> {
+        match offset.checked_add(width) {
+            Some(end) if end <= self.data.len() => Ok(()),
+            _ => Err(TrapError::new(format!(
                 "out of bounds memory access: offset={}, size={}, memory_size={}",
                 offset,
                 width,
                 self.data.len()
-            )));
+            ))),
         }
-        Ok(())
     }
 
     // ── Full-width loads ──────────────────────────────────────────────
@@ -1133,7 +1204,15 @@ impl LinearMemory {
                 return -1;
             }
         }
-        if new_pages > 65536 {
+        // W25 (memory64): a 64-bit memory's practical ceiling is
+        // `MAX_MEMORY64_INITIAL_PAGES` (the same constructor-time cap
+        // `new_with_is64` enforces), not the 32-bit spec's own 65536-page
+        // address-space limit -- growing a 64-bit memory past 65536
+        // pages is spec-legal (up to its own, much larger ceiling), just
+        // still bounded by this interpreter's own practical resource
+        // limit either way.
+        let practical_ceiling = if self.is64 { MAX_MEMORY64_INITIAL_PAGES } else { 65536 };
+        if new_pages > practical_ceiling {
             return -1;
         }
 
@@ -1709,8 +1788,13 @@ pub enum DecodedOperand {
     /// A memory argument: (alignment_log2, offset, memidx). `memidx` is 0
     /// unless the multi-memory proposal's flags-bit `0x40` was set on the
     /// encoded `align` byte (task #92/W18), in which case a real memory
-    /// index followed the offset in the binary.
-    MemArg { _align: u32, offset: u32, memidx: u32 },
+    /// index followed the offset in the binary. `offset` is `u64`, not
+    /// `u32` (W25 / memory64 proposal): the real spec's binary `memarg`
+    /// grammar encodes `offset` as `u64` unconditionally, regardless of
+    /// the target memory's own address width (verified live against
+    /// `https://webassembly.github.io/spec/core/binary/instructions.html`
+    /// -- see `code/specs/W25-wasm-memory64-first-slice.md`).
+    MemArg { _align: u32, offset: u64, memidx: u32 },
     /// A branch table: labels + default.
     BrTable {
         labels: Vec<u32>,
@@ -2217,8 +2301,16 @@ pub fn decode_function_body(body: &FunctionBody) -> Vec<DecodedInstruction> {
                 // one-byte read below is unchanged from PR44/PR45/PR46.
                 let (mem_operand, mem_consumed) = decode_immediates(code, offset, &["memarg"]);
                 offset += mem_consumed;
+                // `as u32`: SIMD lane loads/stores always execute against
+                // memory 0 (32-bit only -- see the comment on the
+                // sibling `v128.load`/`v128.store` arm below; a 64-bit
+                // memory combined with SIMD is explicitly out of scope,
+                // W25), so `mem_offset` is always in `u32`'s range in
+                // practice despite `MemArg.offset` being `u64` (W25's
+                // memarg-offset widening, needed for the SCALAR
+                // load/store family, not this one).
                 let mem_offset = match mem_operand {
-                    DecodedOperand::MemArg { offset, .. } => offset,
+                    DecodedOperand::MemArg { offset, .. } => offset as u32,
                     _ => 0,
                 };
                 let lane = if offset < code.len() { code[offset] } else { 0 };
@@ -2264,8 +2356,13 @@ pub fn decode_function_body(body: &FunctionBody) -> Vec<DecodedInstruction> {
                 // scalar family.
                 let (operand, consumed) = decode_immediates(code, offset, &["memarg"]);
                 offset += consumed;
+                // `as u32`: see the sibling `SimdMemLane` arm's own
+                // comment above -- SIMD loads/stores always execute
+                // against memory 0 (32-bit only), so this narrowing is
+                // safe in practice despite `MemArg.offset` now being
+                // `u64` (W25).
                 let mem_offset = match operand {
-                    DecodedOperand::MemArg { offset, .. } => offset,
+                    DecodedOperand::MemArg { offset, .. } => offset as u32,
                     _ => 0,
                 };
                 instructions.push(DecodedInstruction {
@@ -2525,7 +2622,11 @@ fn decode_immediates(code: &[u8], offset: usize, immediates: &[&str]) -> (Decode
             // correct either way.
             const MULTI_MEMORY_FLAG: u32 = 0x40;
             let (raw_align, sz1) = decode_leb_u32(code, offset);
-            let (mem_offset, sz2) = decode_leb_u32(code, offset + sz1);
+            // W25 (memory64): `offset` decodes as `u64` -- the real
+            // spec's binary `memarg` grammar encodes it that way
+            // unconditionally, not just for a 64-bit memory (see
+            // `DecodedOperand::MemArg`'s own doc comment).
+            let (mem_offset, sz2) = decode_leb_u64(code, offset + sz1);
             let has_memidx = raw_align & MULTI_MEMORY_FLAG != 0;
             let align = raw_align & !MULTI_MEMORY_FLAG;
             let (memidx, sz3) = if has_memidx {
@@ -2562,6 +2663,16 @@ fn decode_immediates(code: &[u8], offset: usize, immediates: &[&str]) -> (Decode
             )
         }
         _ => (DecodedOperand::None, 0),
+    }
+}
+
+/// Convenience: decode an unsigned LEB128 u64 (W25 / memory64 proposal --
+/// a `memarg`'s `offset` field is `u64` unconditionally in the real spec's
+/// binary grammar; see `DecodedOperand::MemArg`'s own doc comment).
+fn decode_leb_u64(data: &[u8], offset: usize) -> (u64, usize) {
+    match decode_unsigned(data, offset) {
+        Ok((val, consumed)) => (val, consumed),
+        Err(_) => (0, 1),
     }
 }
 
@@ -3122,6 +3233,24 @@ pub const MAX_TABLES: usize = 64;
 /// the process.
 pub const MAX_TABLE_ELEMENTS: u32 = 10_000_000;
 
+/// The practical, real-allocation cap for a 64-bit (memory64, W25)
+/// memory's INITIAL page count, enforced at instantiation
+/// ([`LinearMemory::new_with_is64`]) -- deliberately separate from, and
+/// far smaller than, `wasm-validator`'s own spec-conformance ceiling for
+/// a 64-bit memory's DECLARED `min`/`max` (`2^48` pages). A 64-bit
+/// memory's spec ceiling is not a safe allocation target for any real
+/// system (`2^48 pages * 65536 bytes/page = 2^64` bytes -- overflows a
+/// 64-bit byte-count multiplication outright), so this repo reuses the
+/// exact same practical number a 32-bit memory's OWN spec ceiling already
+/// establishes as safe to actually allocate (this repo's own vendored
+/// `memory.wast` already instantiates a full `65536`-page, 4GiB, 32-bit
+/// memory today) -- generous relative to every real `assert_return`/
+/// `invoke` test in this repo's vendored corpus (all use a handful of
+/// pages), and it turns an attempt to instantiate an absurdly large
+/// (but spec-valid to merely DECLARE) 64-bit memory into a graceful,
+/// catchable `TrapError` instead of an allocator abort.
+pub const MAX_MEMORY64_INITIAL_PAGES: u64 = 65536;
+
 /// Caps the SUM of every memory's page count -- declared minimum plus
 /// any `memory.grow` growth -- at RUNTIME (task #101). `wasm-validator`'s
 /// own "Check 1b" already caps the sum of every memory's DECLARED
@@ -3235,11 +3364,26 @@ fn convert_operand(
         DecodedOperand::None => None,
         DecodedOperand::Int(v) => Some(Operand::Index(*v as usize)),
         // Packed exactly like `CallIndirect` above: `memidx` in the high
-        // 32 bits, `offset` in the low 32 (task #92/W18). `offset` needs
-        // the full low 32 bits (no memory64 support here); `MAX_MEMORIES`
+        // 32 bits, `offset` in the low 32 (task #92/W18). `MAX_MEMORIES`
         // (64) comfortably fits `memidx` in the high bits either way.
+        //
+        // `offset` is `u64` (W25 -- the real spec's binary `memarg`
+        // grammar encodes it that way unconditionally), but this packing
+        // scheme still only has room for its LOW 32 bits -- an explicit
+        // `as u32` truncation, not the implicit "as usize" this used to
+        // be when `offset` was itself `u32` (which zero-extended safely
+        // into the low 32 bits; now that `offset` is genuinely wider, an
+        // unmasked `as usize` on a 64-bit host would let any bit above
+        // bit 31 corrupt the `memidx` packed into the SAME word). Every
+        // vendored corpus file this repo executes through this operand
+        // (including `memory64.wast`, W25's own new file) only ever uses
+        // small offsets, so this is a real but currently-inert limit --
+        // widening this packed representation to carry a full 64-bit
+        // offset alongside `memidx` is deferred, the same "SIMD/atomics/
+        // bulk-memory on a 64-bit memory" scope boundary this spec's own
+        // "Explicitly out of scope" section already draws.
         DecodedOperand::MemArg { offset, memidx, .. } => {
-            Some(Operand::Index(((*memidx as usize) << 32) | (*offset as usize)))
+            Some(Operand::Index(((*memidx as usize) << 32) | (*offset as u32 as usize)))
         }
         DecodedOperand::F32(v) => Some(Operand::Index(v.to_bits() as usize)),
         DecodedOperand::F64(v) => Some(Operand::Index(v.to_bits() as usize)),
@@ -5237,11 +5381,32 @@ fn register_memory(vm: &mut GenericVM) {
         unpack_memarg_operand(instr).1 as usize
     }
 
+    // Pop a load/store's effective address, given the TARGET memory's
+    // `is64`-ness (memory64 proposal, W25): a 64-bit memory's address
+    // operand is `i64`, not `i32` (see `code/specs/
+    // W25-wasm-memory64-first-slice.md`). Bundles `memarg_memidx` +
+    // `effective_addr` together so every one of the ~23 load/store
+    // handlers below needs only ONE call instead of duplicating this
+    // is64/is32 branch inline at each one. `memidx` is looked up via
+    // `get_memory_at` (a cheap `Vec` index + raw-pointer deref, safe to
+    // call twice per instruction -- once here, once more when the
+    // handler itself fetches the memory again to actually load/store).
+    fn pop_effective_addr(vm: &mut GenericVM, ctx: &WasmExecutionContext, instr: &Instruction) -> Result<usize, VMError> {
+        let is64 = get_memory_at(ctx, memarg_memidx(instr))?.is64();
+        if is64 {
+            let base = pop_wasm(vm)?.as_i64().map_err(VMError::from)?;
+            let (mem_offset, _memidx) = unpack_memarg_operand(instr);
+            Ok((base as u64 as usize).wrapping_add(mem_offset as usize))
+        } else {
+            let base = pop_wasm(vm)?.as_i32().map_err(VMError::from)?;
+            Ok(effective_addr(instr, base))
+        }
+    }
+
     // i32.load (0x28)
     vm.register_context_opcode(0x28, |vm, instr, _code, ctx| {
         let ctx = get_ctx(ctx);
-        let base = pop_wasm(vm)?.as_i32().map_err(VMError::from)?;
-        let addr = effective_addr(instr, base);
+        let addr = pop_effective_addr(vm, ctx, instr)?;
         let mem = get_memory_at(ctx, memarg_memidx(instr))?;
         let val = mem.load_i32(addr).map_err(VMError::from)?;
         push_wasm(vm, WasmValue::I32(val));
@@ -5252,8 +5417,7 @@ fn register_memory(vm: &mut GenericVM) {
     // i64.load (0x29)
     vm.register_context_opcode(0x29, |vm, instr, _code, ctx| {
         let ctx = get_ctx(ctx);
-        let base = pop_wasm(vm)?.as_i32().map_err(VMError::from)?;
-        let addr = effective_addr(instr, base);
+        let addr = pop_effective_addr(vm, ctx, instr)?;
         let mem = get_memory_at(ctx, memarg_memidx(instr))?;
         let val = mem.load_i64(addr).map_err(VMError::from)?;
         push_wasm(vm, WasmValue::I64(val));
@@ -5264,8 +5428,7 @@ fn register_memory(vm: &mut GenericVM) {
     // f32.load (0x2A)
     vm.register_context_opcode(0x2A, |vm, instr, _code, ctx| {
         let ctx = get_ctx(ctx);
-        let base = pop_wasm(vm)?.as_i32().map_err(VMError::from)?;
-        let addr = effective_addr(instr, base);
+        let addr = pop_effective_addr(vm, ctx, instr)?;
         let mem = get_memory_at(ctx, memarg_memidx(instr))?;
         let val = mem.load_f32(addr).map_err(VMError::from)?;
         push_wasm(vm, WasmValue::F32(val));
@@ -5276,8 +5439,7 @@ fn register_memory(vm: &mut GenericVM) {
     // f64.load (0x2B)
     vm.register_context_opcode(0x2B, |vm, instr, _code, ctx| {
         let ctx = get_ctx(ctx);
-        let base = pop_wasm(vm)?.as_i32().map_err(VMError::from)?;
-        let addr = effective_addr(instr, base);
+        let addr = pop_effective_addr(vm, ctx, instr)?;
         let mem = get_memory_at(ctx, memarg_memidx(instr))?;
         let val = mem.load_f64(addr).map_err(VMError::from)?;
         push_wasm(vm, WasmValue::F64(val));
@@ -5288,8 +5450,7 @@ fn register_memory(vm: &mut GenericVM) {
     // i32.load8_s (0x2C)
     vm.register_context_opcode(0x2C, |vm, instr, _code, ctx| {
         let ctx = get_ctx(ctx);
-        let base = pop_wasm(vm)?.as_i32().map_err(VMError::from)?;
-        let addr = effective_addr(instr, base);
+        let addr = pop_effective_addr(vm, ctx, instr)?;
         let val = get_memory_at(ctx, memarg_memidx(instr))?.load_i32_8s(addr).map_err(VMError::from)?;
         push_wasm(vm, WasmValue::I32(val));
         vm.advance_pc();
@@ -5298,8 +5459,7 @@ fn register_memory(vm: &mut GenericVM) {
     // i32.load8_u (0x2D)
     vm.register_context_opcode(0x2D, |vm, instr, _code, ctx| {
         let ctx = get_ctx(ctx);
-        let base = pop_wasm(vm)?.as_i32().map_err(VMError::from)?;
-        let addr = effective_addr(instr, base);
+        let addr = pop_effective_addr(vm, ctx, instr)?;
         let val = get_memory_at(ctx, memarg_memidx(instr))?.load_i32_8u(addr).map_err(VMError::from)?;
         push_wasm(vm, WasmValue::I32(val));
         vm.advance_pc();
@@ -5308,8 +5468,7 @@ fn register_memory(vm: &mut GenericVM) {
     // i32.load16_s (0x2E)
     vm.register_context_opcode(0x2E, |vm, instr, _code, ctx| {
         let ctx = get_ctx(ctx);
-        let base = pop_wasm(vm)?.as_i32().map_err(VMError::from)?;
-        let addr = effective_addr(instr, base);
+        let addr = pop_effective_addr(vm, ctx, instr)?;
         let val = get_memory_at(ctx, memarg_memidx(instr))?.load_i32_16s(addr).map_err(VMError::from)?;
         push_wasm(vm, WasmValue::I32(val));
         vm.advance_pc();
@@ -5318,8 +5477,7 @@ fn register_memory(vm: &mut GenericVM) {
     // i32.load16_u (0x2F)
     vm.register_context_opcode(0x2F, |vm, instr, _code, ctx| {
         let ctx = get_ctx(ctx);
-        let base = pop_wasm(vm)?.as_i32().map_err(VMError::from)?;
-        let addr = effective_addr(instr, base);
+        let addr = pop_effective_addr(vm, ctx, instr)?;
         let val = get_memory_at(ctx, memarg_memidx(instr))?.load_i32_16u(addr).map_err(VMError::from)?;
         push_wasm(vm, WasmValue::I32(val));
         vm.advance_pc();
@@ -5329,8 +5487,7 @@ fn register_memory(vm: &mut GenericVM) {
     // i64.load8_s (0x30)
     vm.register_context_opcode(0x30, |vm, instr, _code, ctx| {
         let ctx = get_ctx(ctx);
-        let base = pop_wasm(vm)?.as_i32().map_err(VMError::from)?;
-        let addr = effective_addr(instr, base);
+        let addr = pop_effective_addr(vm, ctx, instr)?;
         let val = get_memory_at(ctx, memarg_memidx(instr))?.load_i64_8s(addr).map_err(VMError::from)?;
         push_wasm(vm, WasmValue::I64(val));
         vm.advance_pc();
@@ -5339,8 +5496,7 @@ fn register_memory(vm: &mut GenericVM) {
     // i64.load8_u (0x31)
     vm.register_context_opcode(0x31, |vm, instr, _code, ctx| {
         let ctx = get_ctx(ctx);
-        let base = pop_wasm(vm)?.as_i32().map_err(VMError::from)?;
-        let addr = effective_addr(instr, base);
+        let addr = pop_effective_addr(vm, ctx, instr)?;
         let val = get_memory_at(ctx, memarg_memidx(instr))?.load_i64_8u(addr).map_err(VMError::from)?;
         push_wasm(vm, WasmValue::I64(val));
         vm.advance_pc();
@@ -5349,8 +5505,7 @@ fn register_memory(vm: &mut GenericVM) {
     // i64.load16_s (0x32)
     vm.register_context_opcode(0x32, |vm, instr, _code, ctx| {
         let ctx = get_ctx(ctx);
-        let base = pop_wasm(vm)?.as_i32().map_err(VMError::from)?;
-        let addr = effective_addr(instr, base);
+        let addr = pop_effective_addr(vm, ctx, instr)?;
         let val = get_memory_at(ctx, memarg_memidx(instr))?.load_i64_16s(addr).map_err(VMError::from)?;
         push_wasm(vm, WasmValue::I64(val));
         vm.advance_pc();
@@ -5359,8 +5514,7 @@ fn register_memory(vm: &mut GenericVM) {
     // i64.load16_u (0x33)
     vm.register_context_opcode(0x33, |vm, instr, _code, ctx| {
         let ctx = get_ctx(ctx);
-        let base = pop_wasm(vm)?.as_i32().map_err(VMError::from)?;
-        let addr = effective_addr(instr, base);
+        let addr = pop_effective_addr(vm, ctx, instr)?;
         let val = get_memory_at(ctx, memarg_memidx(instr))?.load_i64_16u(addr).map_err(VMError::from)?;
         push_wasm(vm, WasmValue::I64(val));
         vm.advance_pc();
@@ -5369,8 +5523,7 @@ fn register_memory(vm: &mut GenericVM) {
     // i64.load32_s (0x34)
     vm.register_context_opcode(0x34, |vm, instr, _code, ctx| {
         let ctx = get_ctx(ctx);
-        let base = pop_wasm(vm)?.as_i32().map_err(VMError::from)?;
-        let addr = effective_addr(instr, base);
+        let addr = pop_effective_addr(vm, ctx, instr)?;
         let val = get_memory_at(ctx, memarg_memidx(instr))?.load_i64_32s(addr).map_err(VMError::from)?;
         push_wasm(vm, WasmValue::I64(val));
         vm.advance_pc();
@@ -5379,8 +5532,7 @@ fn register_memory(vm: &mut GenericVM) {
     // i64.load32_u (0x35)
     vm.register_context_opcode(0x35, |vm, instr, _code, ctx| {
         let ctx = get_ctx(ctx);
-        let base = pop_wasm(vm)?.as_i32().map_err(VMError::from)?;
-        let addr = effective_addr(instr, base);
+        let addr = pop_effective_addr(vm, ctx, instr)?;
         let val = get_memory_at(ctx, memarg_memidx(instr))?.load_i64_32u(addr).map_err(VMError::from)?;
         push_wasm(vm, WasmValue::I64(val));
         vm.advance_pc();
@@ -5391,8 +5543,7 @@ fn register_memory(vm: &mut GenericVM) {
     vm.register_context_opcode(0x36, |vm, instr, _code, ctx| {
         let ctx = get_ctx(ctx);
         let val = pop_wasm(vm)?.as_i32().map_err(VMError::from)?;
-        let base = pop_wasm(vm)?.as_i32().map_err(VMError::from)?;
-        let addr = effective_addr(instr, base);
+        let addr = pop_effective_addr(vm, ctx, instr)?;
         get_memory_at(ctx, memarg_memidx(instr))?
             .store_i32(addr, val)
             .map_err(VMError::from)?;
@@ -5402,8 +5553,7 @@ fn register_memory(vm: &mut GenericVM) {
     vm.register_context_opcode(0x37, |vm, instr, _code, ctx| {
         let ctx = get_ctx(ctx);
         let val = pop_wasm(vm)?.as_i64().map_err(VMError::from)?;
-        let base = pop_wasm(vm)?.as_i32().map_err(VMError::from)?;
-        let addr = effective_addr(instr, base);
+        let addr = pop_effective_addr(vm, ctx, instr)?;
         get_memory_at(ctx, memarg_memidx(instr))?
             .store_i64(addr, val)
             .map_err(VMError::from)?;
@@ -5413,8 +5563,7 @@ fn register_memory(vm: &mut GenericVM) {
     vm.register_context_opcode(0x38, |vm, instr, _code, ctx| {
         let ctx = get_ctx(ctx);
         let val = pop_wasm(vm)?.as_f32().map_err(VMError::from)?;
-        let base = pop_wasm(vm)?.as_i32().map_err(VMError::from)?;
-        let addr = effective_addr(instr, base);
+        let addr = pop_effective_addr(vm, ctx, instr)?;
         get_memory_at(ctx, memarg_memidx(instr))?
             .store_f32(addr, val)
             .map_err(VMError::from)?;
@@ -5424,8 +5573,7 @@ fn register_memory(vm: &mut GenericVM) {
     vm.register_context_opcode(0x39, |vm, instr, _code, ctx| {
         let ctx = get_ctx(ctx);
         let val = pop_wasm(vm)?.as_f64().map_err(VMError::from)?;
-        let base = pop_wasm(vm)?.as_i32().map_err(VMError::from)?;
-        let addr = effective_addr(instr, base);
+        let addr = pop_effective_addr(vm, ctx, instr)?;
         get_memory_at(ctx, memarg_memidx(instr))?
             .store_f64(addr, val)
             .map_err(VMError::from)?;
@@ -5437,8 +5585,7 @@ fn register_memory(vm: &mut GenericVM) {
     vm.register_context_opcode(0x3A, |vm, instr, _code, ctx| {
         let ctx = get_ctx(ctx);
         let val = pop_wasm(vm)?.as_i32().map_err(VMError::from)?;
-        let base = pop_wasm(vm)?.as_i32().map_err(VMError::from)?;
-        let addr = effective_addr(instr, base);
+        let addr = pop_effective_addr(vm, ctx, instr)?;
         get_memory_at(ctx, memarg_memidx(instr))?
             .store_i32_8(addr, val)
             .map_err(VMError::from)?;
@@ -5448,8 +5595,7 @@ fn register_memory(vm: &mut GenericVM) {
     vm.register_context_opcode(0x3B, |vm, instr, _code, ctx| {
         let ctx = get_ctx(ctx);
         let val = pop_wasm(vm)?.as_i32().map_err(VMError::from)?;
-        let base = pop_wasm(vm)?.as_i32().map_err(VMError::from)?;
-        let addr = effective_addr(instr, base);
+        let addr = pop_effective_addr(vm, ctx, instr)?;
         get_memory_at(ctx, memarg_memidx(instr))?
             .store_i32_16(addr, val)
             .map_err(VMError::from)?;
@@ -5461,8 +5607,7 @@ fn register_memory(vm: &mut GenericVM) {
     vm.register_context_opcode(0x3C, |vm, instr, _code, ctx| {
         let ctx = get_ctx(ctx);
         let val = pop_wasm(vm)?.as_i64().map_err(VMError::from)?;
-        let base = pop_wasm(vm)?.as_i32().map_err(VMError::from)?;
-        let addr = effective_addr(instr, base);
+        let addr = pop_effective_addr(vm, ctx, instr)?;
         get_memory_at(ctx, memarg_memidx(instr))?
             .store_i64_8(addr, val)
             .map_err(VMError::from)?;
@@ -5472,8 +5617,7 @@ fn register_memory(vm: &mut GenericVM) {
     vm.register_context_opcode(0x3D, |vm, instr, _code, ctx| {
         let ctx = get_ctx(ctx);
         let val = pop_wasm(vm)?.as_i64().map_err(VMError::from)?;
-        let base = pop_wasm(vm)?.as_i32().map_err(VMError::from)?;
-        let addr = effective_addr(instr, base);
+        let addr = pop_effective_addr(vm, ctx, instr)?;
         get_memory_at(ctx, memarg_memidx(instr))?
             .store_i64_16(addr, val)
             .map_err(VMError::from)?;
@@ -5483,8 +5627,7 @@ fn register_memory(vm: &mut GenericVM) {
     vm.register_context_opcode(0x3E, |vm, instr, _code, ctx| {
         let ctx = get_ctx(ctx);
         let val = pop_wasm(vm)?.as_i64().map_err(VMError::from)?;
-        let base = pop_wasm(vm)?.as_i32().map_err(VMError::from)?;
-        let addr = effective_addr(instr, base);
+        let addr = pop_effective_addr(vm, ctx, instr)?;
         get_memory_at(ctx, memarg_memidx(instr))?
             .store_i64_32(addr, val)
             .map_err(VMError::from)?;
@@ -5496,29 +5639,59 @@ fn register_memory(vm: &mut GenericVM) {
     // (multi-memory, W16, task #85); `convert_operand` already maps the
     // decoded `memidx` LEB128 straight through to `Operand::Index`, so
     // this only needed to start reading it instead of ignoring it.
+    //
+    // W25 (memory64): pushes `I64` instead of `I32` when the target
+    // memory is `is64` -- the real spec's own `memory.size` result type
+    // for a 64-bit memory (see `code/specs/
+    // W25-wasm-memory64-first-slice.md`; `wasm-validator`'s type-check
+    // rule for this opcode requires the same).
     vm.register_context_opcode(0x3F, |vm, instr, _code, ctx| {
         let ctx = get_ctx(ctx);
         let memidx = match &instr.operand {
             Some(Operand::Index(i)) => *i,
             _ => 0,
         };
-        let size = match ctx.memories.get(memidx) {
-            Some(&ptr) => unsafe { (*ptr).size() as i32 },
-            None => 0,
+        let (size, is64) = match ctx.memories.get(memidx) {
+            Some(&ptr) => unsafe { ((*ptr).size(), (*ptr).is64()) },
+            None => (0, false),
         };
-        push_wasm(vm, WasmValue::I32(size));
+        if is64 {
+            push_wasm(vm, WasmValue::I64(size as i64));
+        } else {
+            push_wasm(vm, WasmValue::I32(size as i32));
+        }
         vm.advance_pc();
         Ok(None)
     });
 
     // memory.grow (0x40) -- same memidx plumbing as memory.size above.
+    //
+    // W25 (memory64): pops/pushes `I64` instead of `I32` (delta and
+    // result respectively) when the target memory is `is64` -- same
+    // real-spec-result-type reasoning as `memory.size` just above.
     vm.register_context_opcode(0x40, |vm, instr, _code, ctx| {
         let ctx = get_ctx(ctx);
         let memidx = match &instr.operand {
             Some(Operand::Index(i)) => *i,
             _ => 0,
         };
-        let delta = pop_wasm(vm)?.as_i32().map_err(VMError::from)? as u32;
+        let is64 = memidx < ctx.memories.len() && unsafe { (*ctx.memories[memidx]).is64() };
+        // W25: an is64 memory's delta is popped as `i64`/`u64` -- if it's
+        // genuinely too large to fit `u32` (the width `LinearMemory::
+        // grow`/`memory_grow_would_exceed_aggregate_cap` both still take,
+        // since no real corpus value ever needs more), clamp to
+        // `u32::MAX` rather than silently truncating: `u32::MAX` pages
+        // already exceeds every practical cap this interpreter enforces
+        // (`MAX_MEMORY64_INITIAL_PAGES`/`MAX_TOTAL_MEMORY_PAGES`, both
+        // 65536), so it's guaranteed to fail the checks below the same
+        // way the real, huge delta should -- never silently wrapping
+        // around to a small, incorrectly-successful growth.
+        let delta = if is64 {
+            let delta64 = pop_wasm(vm)?.as_i64().map_err(VMError::from)? as u64;
+            delta64.min(u32::MAX as u64) as u32
+        } else {
+            pop_wasm(vm)?.as_i32().map_err(VMError::from)? as u32
+        };
         // Security review follow-up (task #101, mirroring `table.grow`'s
         // own task #98 round-2 fix): `LinearMemory::grow`'s per-memory
         // 65536-page cap alone still permits an AGGREGATE DoS across
@@ -5544,7 +5717,11 @@ fn register_memory(vm: &mut GenericVM) {
                 unsafe { (*ctx.memories[memidx]).grow(delta) }
             }
         };
-        push_wasm(vm, WasmValue::I32(result));
+        if is64 {
+            push_wasm(vm, WasmValue::I64(result as i64));
+        } else {
+            push_wasm(vm, WasmValue::I32(result));
+        }
         vm.advance_pc();
         Ok(None)
     });
@@ -11147,6 +11324,74 @@ mod tests {
         assert_eq!(mem.grow(1), 1); // old size was 1
         assert_eq!(mem.size(), 2);
         assert_eq!(mem.grow(2), -1); // would exceed max of 3
+    }
+
+    // ── W25 (memory64 proposal) ───────────────────────────────────────────
+
+    #[test]
+    fn new_with_is64_builds_a_real_is64_memory() {
+        let mem = LinearMemory::new_with_is64(1, Some(2), true).unwrap();
+        assert!(mem.is64());
+        assert_eq!(mem.size(), 1);
+        assert_eq!(mem.max_pages(), Some(2));
+    }
+
+    #[test]
+    fn new_with_is64_false_matches_plain_new() {
+        let mem = LinearMemory::new_with_is64(1, None, false).unwrap();
+        assert!(!mem.is64());
+    }
+
+    #[test]
+    fn new_with_is64_rejects_an_initial_page_count_past_the_practical_cap() {
+        let result = LinearMemory::new_with_is64(MAX_MEMORY64_INITIAL_PAGES + 1, None, true);
+        let err = match result {
+            Err(e) => e,
+            Ok(_) => panic!("expected an error, got Ok"),
+        };
+        assert!(err.message.contains("practical 64-bit memory allocation cap"), "{}", err.message);
+    }
+
+    #[test]
+    fn new_with_is64_accepts_exactly_the_practical_cap() {
+        // Not a huge real allocation (65536 pages = 4GiB) -- comparable to
+        // this repo's own already-passing `memory.wast` test that
+        // instantiates a full 32-bit memory at its own 65536-page spec
+        // ceiling, so this is a real, already-tolerated allocation size,
+        // not a new risk.
+        let mem = LinearMemory::new_with_is64(MAX_MEMORY64_INITIAL_PAGES, None, true).unwrap();
+        assert_eq!(mem.size(), MAX_MEMORY64_INITIAL_PAGES as u32);
+    }
+
+    #[test]
+    fn is64_memory_grow_uses_the_practical_cap_not_the_32_bit_65536_ceiling() {
+        // A 32-bit memory's grow ceiling and a 64-bit memory's practical
+        // ceiling happen to be the SAME number today
+        // (`MAX_MEMORY64_INITIAL_PAGES == 65536`), so this only proves
+        // `grow` genuinely reads `is64` (not silently ignoring it) via a
+        // small, cheap synthetic scenario: growing to exactly the cap
+        // succeeds, one page past it fails, for an `is64` memory that
+        // never touches the 32-bit code path at all.
+        let mut mem = LinearMemory::new_with_is64(1, None, true).unwrap();
+        assert!(mem.is64());
+        let ok_delta = (MAX_MEMORY64_INITIAL_PAGES - 1) as u32;
+        assert_eq!(mem.grow(ok_delta), 1);
+        assert_eq!(mem.size() as u64, MAX_MEMORY64_INITIAL_PAGES);
+        assert_eq!(mem.grow(1), -1); // one page past the cap
+    }
+
+    #[test]
+    fn bounds_check_does_not_overflow_on_an_address_near_usize_max() {
+        // W25: a real security-review finding -- an `is64` memory's
+        // address can be a full `u64`/`usize`, so `bounds_check`'s
+        // `offset + width` must not panic (debug) or silently wrap
+        // (release) when `offset` is adversarially close to `usize::MAX`.
+        // Both `load_i32` (offset near the top) and `load_i64` (width 8,
+        // pushing the checked sum even closer to overflow) are exercised.
+        let mem = LinearMemory::new(1, None);
+        assert!(mem.load_i32(usize::MAX - 1).is_err());
+        assert!(mem.load_i32(usize::MAX).is_err());
+        assert!(mem.load_i64(usize::MAX - 3).is_err());
     }
 
     #[test]

@@ -129,10 +129,11 @@ impl IrToWasmCompiler {
             let page_count = total_bytes.div_ceil(65_536).max(1);
             module.memories.push(MemoryType {
                 limits: Limits {
-                    min: page_count,
+                    min: page_count as u64,
                     max: None,
                 },
                 shared: false,
+                is64: false,
             });
             module.exports.push(Export {
                 name: "memory".to_string(),

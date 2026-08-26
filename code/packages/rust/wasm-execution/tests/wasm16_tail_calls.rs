@@ -36,7 +36,7 @@ fn engine_from_wat(wat: &str) -> (WasmExecutionEngine, WasmModule) {
     let mut tables: Vec<Table> = module
         .tables
         .iter()
-        .map(|t| Table::new(t.limits.min, t.limits.max))
+        .map(|t| Table::new(t.limits.min as u32, t.limits.max.map(|m| m as u32)))
         .collect();
     for elem in &module.elements {
         if let Some(table) = tables.get_mut(elem.table_index as usize) {

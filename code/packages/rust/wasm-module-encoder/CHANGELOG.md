@@ -1,5 +1,18 @@
 # Changelog
 
+- 0.2.5 (W25 — memory64 proposal, first slice): `encode_memory_type`
+  recognizes `MemoryType::is64` (`wasm-types` 0.1.10), emitting binary
+  `limits` flags bit `0x04` and `u64leb`-encoded `min`/`max` for a 64-bit
+  memory (verified live against the real spec's binary grammar, matching
+  `wasm-module-parser`'s decode side). New `encode_u64` helper.
+  `encode_limits` (the TABLE-only encoder — memory needs its own, since
+  tables never carry `is64`) narrows `Limits.min`/`max` back to `u32` at
+  the call site, safe because `table64` is a separate, out-of-scope
+  proposal. Round-trip test added
+  (`encodes_memory64_flag_and_wide_limits_round_trip`) using a `min`/`max`
+  value genuinely past `u32::MAX`. See `code/specs/
+  W25-wasm-memory64-first-slice.md`.
+
 - 0.2.4 (W21 — exceptions proposal, tag/throw first slice): `encode_import`'s
   exhaustive `(ExternalKind, ImportTypeInfo)` match gained a
   `(ExternalKind::Tag, ImportTypeInfo::Tag(type_index))` arm (encodes the

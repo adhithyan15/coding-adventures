@@ -87,6 +87,24 @@ pub fn parse_u32(text: &str, pos: usize) -> Result<u32, WastParseError> {
     Ok(mag as u32)
 }
 
+/// As [`parse_u32`], for a 64-bit memory's limits (W25 / memory64
+/// proposal: `(memory i64 <min> <max>?)`) -- a real, spec-valid `min`/`max`
+/// can be as large as `2^48` (this repo's own vendored `memory64.wast`
+/// exercises the literal `0x1_0000_0000_0000` directly), well past `u32`'s
+/// range. Same "no signed/unsigned dual-spelling" rule as `parse_u32`: a
+/// leading `-` is a real error, not an alternate encoding.
+pub fn parse_u64(text: &str, pos: usize) -> Result<u64, WastParseError> {
+    let (neg, mag) = parse_int_magnitude(text, pos)?;
+    if neg || mag > u64::MAX as u128 {
+        return Err(WastParseError::InvalidNumericLiteralForType {
+            pos,
+            text: text.to_string(),
+            ty: "u64 limit",
+        });
+    }
+    Ok(mag as u64)
+}
+
 /// As [`parse_i32`], for the 8-bit range `[-2^7, 2^8-1]`. There's no plain
 /// `i8.const` in WASM (`i32` is the smallest scalar integer type) -- this
 /// exists only for `v128.const`'s `i8x16` shape, whose 16 lane literals

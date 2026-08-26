@@ -156,6 +156,12 @@ fn encode_u32(value: u32) -> Vec<u8> {
     encode_unsigned(value as u64)
 }
 
+/// As [`encode_u32`], for a 64-bit memory's limits (W25 / memory64
+/// proposal) -- a real `min`/`max` can be as large as `2^48`, past `u32`.
+fn encode_u64(value: u64) -> Vec<u8> {
+    encode_unsigned(value)
+}
+
 fn encode_name(text: &str) -> Vec<u8> {
     let mut bytes = encode_u32(text.len() as u32);
     bytes.extend_from_slice(text.as_bytes());
@@ -197,17 +203,24 @@ fn encode_func_type(func_type: &FuncType) -> Vec<u8> {
     bytes
 }
 
+/// Encodes a TABLE's limits (memory needs its own encoder -- see
+/// `encode_memory_type` below -- since tables never carry `is64`; `min`/
+/// `max` here are always narrowed to `u32`, safe because `table64`, the
+/// 64-bit-indexed-table proposal, is out of scope -- see `code/specs/
+/// W25-wasm-memory64-first-slice.md`'s "Explicitly out of scope" -- and no
+/// real `TableType` this crate ever builds sets a `Limits` value outside
+/// `u32`'s range).
 fn encode_limits(limits: &Limits) -> Vec<u8> {
     let mut bytes = Vec::new();
     match limits.max {
         Some(max) => {
             bytes.push(0x01);
-            bytes.extend(encode_u32(limits.min));
-            bytes.extend(encode_u32(max));
+            bytes.extend(encode_u32(limits.min as u32));
+            bytes.extend(encode_u32(max as u32));
         }
         None => {
             bytes.push(0x00);
-            bytes.extend(encode_u32(limits.min));
+            bytes.extend(encode_u32(limits.min as u32));
         }
     }
     bytes
@@ -215,17 +228,27 @@ fn encode_limits(limits: &Limits) -> Vec<u8> {
 
 /// Mirrors `wasm-module-parser`'s `parse_limits` decode exactly: bit 0 of
 /// the flags byte is "max present" (shared with `encode_limits`), bit 1 is
-/// "shared" (threads proposal, memory only -- WASM18). `encode_limits`
-/// alone can't express the shared bit, so memory needs its own encoder
-/// rather than reusing it.
+/// "shared" (threads proposal, memory only -- WASM18), bit 2 is "64-bit
+/// index" (memory64 proposal, W25) -- `min`/`max` are encoded as `u64leb`
+/// instead of `u32leb` when bit 2 is set. `encode_limits` alone can't
+/// express the shared/is64 bits, so memory needs its own encoder rather
+/// than reusing it.
 fn encode_memory_type(memory_type: &MemoryType) -> Vec<u8> {
+    const IS64_FLAG: u8 = 0x04;
     let mut bytes = Vec::new();
     let has_max = memory_type.limits.max.is_some();
-    let flags = (has_max as u8) | ((memory_type.shared as u8) << 1);
+    let flags = (has_max as u8) | ((memory_type.shared as u8) << 1) | ((memory_type.is64 as u8) * IS64_FLAG);
     bytes.push(flags);
-    bytes.extend(encode_u32(memory_type.limits.min));
-    if let Some(max) = memory_type.limits.max {
-        bytes.extend(encode_u32(max));
+    if memory_type.is64 {
+        bytes.extend(encode_u64(memory_type.limits.min));
+        if let Some(max) = memory_type.limits.max {
+            bytes.extend(encode_u64(max));
+        }
+    } else {
+        bytes.extend(encode_u32(memory_type.limits.min as u32));
+        if let Some(max) = memory_type.limits.max {
+            bytes.extend(encode_u32(max as u32));
+        }
     }
     bytes
 }
@@ -844,6 +867,7 @@ mod tests {
                     max: Some(2),
                 },
                 shared: false,
+                is64: false,
             }],
             globals: vec![Global {
                 global_type: GlobalType {
@@ -897,6 +921,7 @@ mod tests {
             memories: vec![MemoryType {
                 limits: Limits { min: 1, max: Some(4) },
                 shared: true,
+                is64: false,
             }],
             ..Default::default()
         };
@@ -904,6 +929,32 @@ mod tests {
         let parsed = WasmModuleParser::parse(&encoded).unwrap();
         assert_eq!(parsed.memories, module.memories);
         assert!(parsed.memories[0].shared);
+    }
+
+    #[test]
+    fn encodes_memory64_flag_and_wide_limits_round_trip() {
+        // W25 (memory64 proposal): the `is64` bit (flags bit 2), plus a
+        // `min`/`max` value genuinely past `u32::MAX` -- a real, spec-valid
+        // 64-bit memory's own ceiling is `2^48` pages (see `code/specs/
+        // W25-wasm-memory64-first-slice.md`), and this round-trip uses a
+        // value comfortably past `u32::MAX` (but well under `2^48`) to
+        // prove the `u64leb` encode/decode path is genuinely exercised,
+        // not just accidentally correct for small numbers.
+        let big: u64 = (u32::MAX as u64) + 1000;
+        let module = WasmModule {
+            memories: vec![MemoryType {
+                limits: Limits { min: big, max: Some(big + 5) },
+                shared: false,
+                is64: true,
+            }],
+            ..Default::default()
+        };
+        let encoded = encode_module(&module).unwrap();
+        let parsed = WasmModuleParser::parse(&encoded).unwrap();
+        assert_eq!(parsed.memories, module.memories);
+        assert!(parsed.memories[0].is64);
+        assert_eq!(parsed.memories[0].limits.min, big);
+        assert_eq!(parsed.memories[0].limits.max, Some(big + 5));
     }
 
     #[test]
@@ -916,6 +967,7 @@ mod tests {
                 type_info: ImportTypeInfo::Memory(MemoryType {
                     limits: Limits { min: 1, max: Some(4) },
                     shared: true,
+                    is64: false,
                 }),
             }],
             ..Default::default()
@@ -961,6 +1013,7 @@ mod tests {
                     type_info: ImportTypeInfo::Memory(MemoryType {
                         limits: Limits { min: 1, max: None },
                         shared: false,
+                        is64: false,
                     }),
                 },
                 Import {
@@ -995,6 +1048,7 @@ mod tests {
                 type_info: ImportTypeInfo::Memory(MemoryType {
                     limits: Limits { min: 1, max: None },
                     shared: false,
+                    is64: false,
                 }),
             }],
             ..Default::default()

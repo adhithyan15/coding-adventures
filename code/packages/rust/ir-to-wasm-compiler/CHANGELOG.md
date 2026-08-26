@@ -1,5 +1,14 @@
 # Changelog
 
+## [0.3.2] — 2026-08-26 (W25 — memory64 proposal, first slice)
+
+### Changed
+
+- `wasm_types::MemoryType` gained an `is64` field (see `wasm-types`'s
+  own CHANGELOG); this crate's one memory-construction site sets it
+  `false` (every memory this compiler emits is an ordinary 32-bit one)
+  -- no behavior change.
+
 ## [0.3.1] — 2026-08-16 (task #95)
 
 ### Changed

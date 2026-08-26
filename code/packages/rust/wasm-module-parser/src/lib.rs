@@ -295,6 +295,27 @@ impl<'a> Parser<'a> {
         }
     }
 
+    /// Decode an unsigned LEB128 u64 from the current position (W25 /
+    /// memory64 proposal: a 64-bit memory's `min`/`max` limits, up to
+    /// `2^48`, don't fit `u32`). Same underlying `decode_unsigned` shared
+    /// LEB128 decoder as [`read_u32leb`](Self::read_u32leb) -- that
+    /// helper already decodes into a full `u64` internally and only
+    /// narrows at the very end; this is the same decode with the
+    /// narrowing removed.
+    fn read_u64leb(&mut self) -> Result<u64, WasmParseError> {
+        match decode_unsigned(self.data, 0) {
+            Ok((val, consumed)) => {
+                self.data = &self.data[consumed..];
+                self.pos += consumed;
+                Ok(val)
+            }
+            Err(e) => Err(WasmParseError {
+                message: e.message,
+                offset: self.pos + e.offset,
+            }),
+        }
+    }
+
     /// Decode a length-prefixed UTF-8 string.
     ///
     /// ```text
@@ -517,24 +538,40 @@ fn decode_mutability(byte: u8, offset: usize) -> Result<bool, WasmParseError> {
 ///   bit 0 = 0  →  { min: u32leb }
 ///   bit 0 = 1  →  { min: u32leb, max: u32leb }
 ///   bit 1 = 1  →  shared (threads proposal, memory only -- WASM18)
+///   bit 2 = 1  →  64-bit index (memory64 proposal, W25): min/max are
+///                 u64leb instead of u32leb, memory only (see below)
 /// ```
 ///
-/// Returns `(Limits, shared)`. `shared` is only ever meaningful for a
-/// memory (a real encoder never sets bit 1 on a table's limits, since
-/// tables aren't part of the threads proposal at all), but reading it
-/// unconditionally here -- rather than threading a "which kind is this"
-/// flag through -- keeps this one shared helper simple; table call sites
-/// just discard the second element.
-fn parse_limits(p: &mut Parser) -> Result<(Limits, bool), WasmParseError> {
+/// Verified live against the real spec's binary grammar (`https://
+/// webassembly.github.io/spec/core/binary/types.html`) while implementing
+/// W25: `0x00`/`0x01` = 32-bit index, `0x04`/`0x05` = 64-bit index --
+/// `min`/`max` are `u64leb` in the 64-bit case (needed for real, spec-valid
+/// values up to `2^48`, past `u32`'s range).
+///
+/// Returns `(Limits, shared, is64)`. `shared`/`is64` are only ever
+/// meaningful for a memory (a real encoder never sets bit 1 or bit 2 on a
+/// table's limits -- `table64`, the analogous widening for TABLES, is a
+/// separate, out-of-scope proposal this repo does not implement, so bit 2
+/// set on a table's limits is rejected as a real parse error rather than
+/// silently misinterpreted), but reading them unconditionally here --
+/// rather than threading a "which kind is this" flag through -- keeps this
+/// one shared helper simple; the table call site rejects `is64` itself
+/// immediately after calling this.
+fn parse_limits(p: &mut Parser) -> Result<(Limits, bool, bool), WasmParseError> {
+    const IS64_FLAG: u8 = 0x04;
     let flags = p.read_u8()?;
-    let min = p.read_u32leb()?;
-    let max = if flags & 0x01 != 0 {
-        Some(p.read_u32leb()?)
+    let is64 = flags & IS64_FLAG != 0;
+    let (min, max) = if is64 {
+        let min = p.read_u64leb()?;
+        let max = if flags & 0x01 != 0 { Some(p.read_u64leb()?) } else { None };
+        (min, max)
     } else {
-        None
+        let min = p.read_u32leb()? as u64;
+        let max = if flags & 0x01 != 0 { Some(p.read_u32leb()? as u64) } else { None };
+        (min, max)
     };
     let shared = flags & 0x02 != 0;
-    Ok((Limits { min, max }, shared))
+    Ok((Limits { min, max }, shared, is64))
 }
 
 // ──────────────────────────────────────────────────────────────────────────────
@@ -674,15 +711,21 @@ fn parse_import_section(p: &mut Parser, module: &mut WasmModule) -> Result<(), W
             }
             ExternalKind::Table => {
                 let elem_type = p.read_u8()?;
-                let (limits, _shared) = parse_limits(p)?;
+                let (limits, _shared, is64) = parse_limits(p)?;
+                if is64 {
+                    return Err(WasmParseError {
+                        message: "table64 (a 64-bit-indexed table) is not supported by this parser".to_string(),
+                        offset: p.offset(),
+                    });
+                }
                 ImportTypeInfo::Table(TableType {
                     element_type: elem_type,
                     limits,
                 })
             }
             ExternalKind::Memory => {
-                let (limits, shared) = parse_limits(p)?;
-                ImportTypeInfo::Memory(MemoryType { limits, shared })
+                let (limits, shared, is64) = parse_limits(p)?;
+                ImportTypeInfo::Memory(MemoryType { limits, shared, is64 })
             }
             ExternalKind::Global => {
                 let vt_byte = p.read_u8()?;
@@ -750,7 +793,13 @@ fn parse_table_section(p: &mut Parser, module: &mut WasmModule) -> Result<(), Wa
     let count = p.read_u32leb()? as usize;
     for _ in 0..count {
         let element_type = p.read_u8()?;
-        let (limits, _shared) = parse_limits(p)?;
+        let (limits, _shared, is64) = parse_limits(p)?;
+        if is64 {
+            return Err(WasmParseError {
+                message: "table64 (a 64-bit-indexed table) is not supported by this parser".to_string(),
+                offset: p.offset(),
+            });
+        }
         module.tables.push(TableType {
             element_type,
             limits,
@@ -771,8 +820,8 @@ fn parse_table_section(p: &mut Parser, module: &mut WasmModule) -> Result<(), Wa
 fn parse_memory_section(p: &mut Parser, module: &mut WasmModule) -> Result<(), WasmParseError> {
     let count = p.read_u32leb()? as usize;
     for _ in 0..count {
-        let (limits, shared) = parse_limits(p)?;
-        module.memories.push(MemoryType { limits, shared });
+        let (limits, shared, is64) = parse_limits(p)?;
+        module.memories.push(MemoryType { limits, shared, is64 });
     }
     Ok(())
 }
@@ -1539,8 +1588,58 @@ mod tests {
             MemoryType {
                 limits: Limits { min: 1, max: None },
                 shared: false,
+                is64: false,
             }
         );
+    }
+
+    // ── Test 7b: Memory section, memory64 (W25) ───────────────────────────────
+    //
+    // One 64-bit memory with min=1 page, no max:
+    //   01        count = 1
+    //   04        flags = 0x04 (64-bit index, no max)
+    //   01        min = 1 (u64leb)
+    #[test]
+    fn test_memory_section_is64() {
+        let payload = vec![0x01, 0x04, 0x01]; // count=1, flags=0x04, min=1
+        let data = wasm_with_sections(&[make_section(5, &payload)]);
+        let m = WasmModuleParser::parse(&data).unwrap();
+        assert_eq!(m.memories.len(), 1);
+        assert_eq!(
+            m.memories[0],
+            MemoryType {
+                limits: Limits { min: 1, max: None },
+                shared: false,
+                is64: true,
+            }
+        );
+    }
+
+    // ── Test 7c: Memory section, memory64 with a value past u32::MAX ──────────
+    #[test]
+    fn test_memory_section_is64_wide_limits() {
+        let big: u64 = (u32::MAX as u64) + 42;
+        let mut payload = vec![0x01, 0x05]; // count=1, flags=0x05 (64-bit, has max)
+        payload.extend(wasm_leb128::encode_unsigned(big));
+        payload.extend(wasm_leb128::encode_unsigned(big + 8));
+        let data = wasm_with_sections(&[make_section(5, &payload)]);
+        let m = WasmModuleParser::parse(&data).unwrap();
+        assert_eq!(m.memories.len(), 1);
+        assert!(m.memories[0].is64);
+        assert_eq!(m.memories[0].limits.min, big);
+        assert_eq!(m.memories[0].limits.max, Some(big + 8));
+    }
+
+    // ── Test 7d: table64 (out of scope) is rejected, not misparsed ────────────
+    #[test]
+    fn test_table_section_is64_rejected() {
+        let mut payload = vec![0x01]; // count = 1
+        payload.push(0x70); // funcref
+        payload.push(0x04); // flags = 0x04 (64-bit index) -- table64, unsupported
+        payload.extend(wasm_leb128::encode_unsigned(0)); // min = 0 (u64leb)
+        let data = wasm_with_sections(&[make_section(4, &payload)]);
+        let err = WasmModuleParser::parse(&data).unwrap_err();
+        assert!(err.message.contains("table64"), "{}", err.message);
     }
 
     // ── Test 8: Table section ─────────────────────────────────────────────────

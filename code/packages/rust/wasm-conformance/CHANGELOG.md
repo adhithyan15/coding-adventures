@@ -1,5 +1,42 @@
 # Changelog — wasm-conformance
 
+## 0.1.92 — 2026-08-26 — memory64 proposal, first slice (W25)
+
+### Added
+
+- Vendored `memory64.wast` (7930 bytes, pinned SHA
+  `28864811cf03bdbf880733786148feaba339582d`) to `TESTSUITE_FILES` —
+  corrects a prior session's (W23, repeated by W24) mistaken "memory64
+  has zero corpus coverage at this pinned SHA" claim; re-fetching the
+  pinned tree live found `memory64.wast` and a dozen more `*64.wast`
+  files at the SAME commit every other file in this campaign vendors
+  from. `memory64-imports.wast` (entangled with `table64`, a separate,
+  out-of-scope proposal) is deliberately deferred.
+
+### Fixed
+
+- Real corpus, measured (`cargo run --bin wasm_conformance_report`, full
+  baseline diff): `memory64.wast` grades `module` 9/10 (the one
+  non-passing directive is a deliberate `Trap` — a spec-valid declaration
+  of a memory whose min is `2^48` pages, which this interpreter's own
+  practical resource limit correctly refuses to actually allocate),
+  `assert_return` 45/45, `assert_invalid` 14/14 — all real `Pass`.
+  Implementing this also fixed a genuine, pre-existing `wasm-wast-parser`
+  gap (`(memory (data ...))` inline-data-implies-size syntax, unrelated
+  to memory64 itself), which additionally unlocked three already-vendored
+  32-bit files that use the identical form: `memory.wast` (`module`
+  9→12, `assert_return` 50→53, `assert_invalid` 21→22), `float_exprs.wast`
+  (`module` 94→98, `assert_return` 805→819), and `float_memory.wast`
+  (previously ENTIRELY not-yet-supported — `module` 0→6, `action` 0→24,
+  `assert_return` 0→60, now all 100%). A new "size minimum must not be
+  greater than maximum" structural check (`wasm-validator`) also
+  converts one more previously-not-yet-supported `assert_invalid`
+  directive each in `memory.wast` and `table.wast` to real `Pass`. Every
+  delta reconciles exactly, file by file, against the full baseline
+  diff — zero regressions anywhere in the 141-file corpus.
+
+See `code/specs/W25-wasm-memory64-first-slice.md`.
+
 ## 0.1.91 — 2026-08-26 — Exceptions proposal, fourth slice W24: real exnref/catch_ref/throw_ref
 
 ### Added

@@ -2234,6 +2234,67 @@ fail -- `test-throw-1-2`, see above); new `assert_exception` directive
 kind: 7/7 pass. No other already-vendored file's stats changed -- zero
 regressions.
 
+extended 2026-08-26 (memory64 proposal, first slice -- see code/specs/
+               W25-wasm-memory64-first-slice.md -- memory64.wast (7930
+               bytes), same pinned commit, no re-pin): 64-bit memory
+               addressing for plain scalar load/store, `memory.size`,
+               and active data-segment offsets. Corrects a prior
+               session's (W23, repeated by W24) mistaken "zero corpus
+               coverage" claim about memory64 -- re-fetching the pinned
+               tree live this session found `memory64.wast` and a dozen
+               more `*64.wast` files sitting at the SAME commit every
+               other file in this campaign already vendors from.
+               `memory64-imports.wast` (entangled with `table64`, a
+               separate, out-of-scope proposal) is deliberately deferred,
+               per this spec's own "Scoping the first slice" section.
+               `memory64.wast` itself grades `module` 9/10 (the one
+               non-passing directive is a DELIBERATE, documented `Trap`:
+               `(module definition (memory i64 0x1_0000_0000_0000))`
+               spec-validly DECLARES a memory whose min is `2^48` pages --
+               this interpreter's own practical resource limit,
+               `MAX_MEMORY64_INITIAL_PAGES`, refuses to actually allocate
+               it, the same way every real production engine also caps
+               memory64's practical size well below its own theoretical
+               ceiling), `assert_return` 45/45, `assert_invalid` 14/14 --
+               all real Pass.
+               Implementing this slice also surfaced and fixed a genuine,
+               PRE-EXISTING gap unrelated to memory64 itself: this crate's
+               wast-text parser had NO support at all for the `(memory
+               (data <string>*))` abbreviation (a memory sized to fit
+               inline data, plus an implicit active data segment) --
+               `memory64.wast`'s own first three modules use exactly this
+               form (`i64`-prefixed), which is what surfaced the gap.
+               Fixing the shared parser function also unlocked three
+               ALREADY-VENDORED 32-bit files that use the identical
+               32-bit form and were silently grading `NotYetSupported`
+               for it: `memory.wast`, `float_exprs.wast`, and
+               `float_memory.wast` (the last was ENTIRELY not-yet-
+               supported before this fix -- every one of its directives).
+               Also added a real, previously-entirely-missing "size
+               minimum must not be greater than maximum" structural check
+               for both memories and tables (found chasing one of
+               `memory64.wast`'s own `assert_invalid` cases; this repo
+               had no such check for EITHER 32- or 64-bit memories, or
+               tables, before this slice) -- this converts one more
+               previously-`NotYetSupported` `assert_invalid` directive
+               each in `memory.wast` and the already-vendored
+               `table.wast` to real `Pass`.
+
+Aggregate `module` rose from 1287/1288+1nys-baseline (pass 1287, fail 1,
+trap 0, not_yet_supported 74) to pass 1309, fail 1, trap 1 (the one
+deliberate new memory64 trap above), not_yet_supported 61 (+22 pass, +1
+new trap, -13 not_yet_supported); `action` rose from pass 146 to pass 170
+(+24 pass, -24 not_yet_supported, all from `float_memory.wast`);
+`assert_invalid` rose from pass 2047 to pass 2063 (+16 pass: 14 new from
+`memory64.wast` itself, +1 each from `memory.wast`/`table.wast`'s
+min-max-check fix, -2 not_yet_supported); `assert_return` rose from pass
+44758 (fail 17, unchanged) to pass 44880 (+122 pass: 45 new from
+`memory64.wast`, +3 `memory.wast`, +14 `float_exprs.wast`, +60
+`float_memory.wast`, -77 not_yet_supported). Every single delta above
+reconciles exactly, file by file, against the full baseline diff -- zero
+regressions anywhere in the corpus (no file's `pass` count decreased, and
+no new `fail` appeared anywhere).
+
 The vendored files are licensed under the Apache License, Version 2.0 --
 see the accompanying LICENSE file, itself vendored verbatim from the same
 pinned commit.

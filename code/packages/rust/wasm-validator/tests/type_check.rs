@@ -126,6 +126,7 @@ fn valid_bulk_memory_copy_and_fill() {
     let memory = wasm_types::MemoryType {
         limits: wasm_types::Limits { min: 1, max: None },
         shared: false,
+        is64: false,
     };
     let mut copy = module_with_body(
         wasm_types::FuncType { params: vec![], results: vec![] },
@@ -147,7 +148,7 @@ fn invalid_memory_copy_references_an_out_of_bounds_destination_or_source_memory_
     // W18 (task #92/#111): `memory.copy`'s dst/src memidx bytes are real,
     // decoded LEB128s now (task #109), not hardcoded MVP-only zero bytes
     // -- each must be bounds-checked independently.
-    let memory = wasm_types::MemoryType { limits: wasm_types::Limits { min: 1, max: None }, shared: false };
+    let memory = wasm_types::MemoryType { limits: wasm_types::Limits { min: 1, max: None }, shared: false, is64: false };
 
     let mut bad_dst = module_with_body(
         wasm_types::FuncType { params: vec![], results: vec![] },
@@ -170,7 +171,7 @@ fn invalid_memory_fill_references_an_out_of_bounds_memory_index() {
         wasm_types::FuncType { params: vec![], results: vec![] },
         vec![0x41, 0, 0x41, 42, 0x41, 8, 0xFC, 0x0B, 5, 0x0B], // memidx=5
     );
-    fill.memories.push(wasm_types::MemoryType { limits: wasm_types::Limits { min: 1, max: None }, shared: false });
+    fill.memories.push(wasm_types::MemoryType { limits: wasm_types::Limits { min: 1, max: None }, shared: false, is64: false });
     assert!(wasm_validator::validate(&fill).is_err(), "out-of-bounds memidx must be rejected");
 }
 
@@ -192,7 +193,7 @@ fn invalid_memory_init_references_an_out_of_bounds_memory_index() {
         wasm_types::FuncType { params: vec![], results: vec![] },
         vec![0x41, 0, 0x41, 0, 0x41, 2, 0xFC, 0x08, 0, 5, 0x0B], // dataidx=0, memidx=5
     );
-    init.memories.push(wasm_types::MemoryType { limits: wasm_types::Limits { min: 1, max: None }, shared: false });
+    init.memories.push(wasm_types::MemoryType { limits: wasm_types::Limits { min: 1, max: None }, shared: false, is64: false });
     init.data.push(wasm_types::DataSegment { memory_index: 0, offset_expr: vec![], data: b"hi".to_vec(), is_passive: true });
     assert!(wasm_validator::validate(&init).is_err(), "out-of-bounds memidx must be rejected");
 }
@@ -2873,8 +2874,8 @@ fn invalid_v128_load_explicit_nonzero_memidx_is_rejected_not_silently_redirected
         types: vec![wasm_types::FuncType { params: vec![wasm_types::ValueType::I32], results: vec![wasm_types::ValueType::V128] }],
         functions: vec![0],
         memories: vec![
-            wasm_types::MemoryType { limits: wasm_types::Limits { min: 1, max: None }, shared: false },
-            wasm_types::MemoryType { limits: wasm_types::Limits { min: 1, max: None }, shared: false },
+            wasm_types::MemoryType { limits: wasm_types::Limits { min: 1, max: None }, shared: false, is64: false },
+            wasm_types::MemoryType { limits: wasm_types::Limits { min: 1, max: None }, shared: false, is64: false },
         ],
         code: vec![wasm_types::FunctionBody {
             locals: vec![],
@@ -2909,8 +2910,8 @@ fn invalid_v128_load8_splat_explicit_nonzero_memidx_is_rejected_not_silently_red
         types: vec![wasm_types::FuncType { params: vec![wasm_types::ValueType::I32], results: vec![wasm_types::ValueType::V128] }],
         functions: vec![0],
         memories: vec![
-            wasm_types::MemoryType { limits: wasm_types::Limits { min: 1, max: None }, shared: false },
-            wasm_types::MemoryType { limits: wasm_types::Limits { min: 1, max: None }, shared: false },
+            wasm_types::MemoryType { limits: wasm_types::Limits { min: 1, max: None }, shared: false, is64: false },
+            wasm_types::MemoryType { limits: wasm_types::Limits { min: 1, max: None }, shared: false, is64: false },
         ],
         code: vec![wasm_types::FunctionBody {
             locals: vec![],
@@ -2945,8 +2946,8 @@ fn invalid_v128_load32_zero_explicit_nonzero_memidx_is_rejected_not_silently_red
         types: vec![wasm_types::FuncType { params: vec![wasm_types::ValueType::I32], results: vec![wasm_types::ValueType::V128] }],
         functions: vec![0],
         memories: vec![
-            wasm_types::MemoryType { limits: wasm_types::Limits { min: 1, max: None }, shared: false },
-            wasm_types::MemoryType { limits: wasm_types::Limits { min: 1, max: None }, shared: false },
+            wasm_types::MemoryType { limits: wasm_types::Limits { min: 1, max: None }, shared: false, is64: false },
+            wasm_types::MemoryType { limits: wasm_types::Limits { min: 1, max: None }, shared: false, is64: false },
         ],
         code: vec![wasm_types::FunctionBody {
             locals: vec![],
@@ -2975,8 +2976,8 @@ fn invalid_v128_load64_zero_explicit_nonzero_memidx_is_rejected_not_silently_red
         types: vec![wasm_types::FuncType { params: vec![wasm_types::ValueType::I32], results: vec![wasm_types::ValueType::V128] }],
         functions: vec![0],
         memories: vec![
-            wasm_types::MemoryType { limits: wasm_types::Limits { min: 1, max: None }, shared: false },
-            wasm_types::MemoryType { limits: wasm_types::Limits { min: 1, max: None }, shared: false },
+            wasm_types::MemoryType { limits: wasm_types::Limits { min: 1, max: None }, shared: false, is64: false },
+            wasm_types::MemoryType { limits: wasm_types::Limits { min: 1, max: None }, shared: false, is64: false },
         ],
         code: vec![wasm_types::FunctionBody {
             locals: vec![],
@@ -3011,8 +3012,8 @@ fn invalid_v128_load8x8_s_explicit_nonzero_memidx_is_rejected_not_silently_redir
         types: vec![wasm_types::FuncType { params: vec![wasm_types::ValueType::I32], results: vec![wasm_types::ValueType::V128] }],
         functions: vec![0],
         memories: vec![
-            wasm_types::MemoryType { limits: wasm_types::Limits { min: 1, max: None }, shared: false },
-            wasm_types::MemoryType { limits: wasm_types::Limits { min: 1, max: None }, shared: false },
+            wasm_types::MemoryType { limits: wasm_types::Limits { min: 1, max: None }, shared: false, is64: false },
+            wasm_types::MemoryType { limits: wasm_types::Limits { min: 1, max: None }, shared: false, is64: false },
         ],
         code: vec![wasm_types::FunctionBody {
             locals: vec![],
@@ -3161,7 +3162,7 @@ fn v128_load8_lane_with_the_multi_memory_flag_bit_set_validates_and_decodes_cons
     let module = WasmModule {
         types: vec![FuncType { params: vec![ValueType::I32], results: vec![ValueType::V128] }],
         functions: vec![0],
-        memories: vec![MemoryType { limits: Limits { min: 1, max: None }, shared: false }],
+        memories: vec![MemoryType { limits: Limits { min: 1, max: None }, shared: false, is64: false }],
         code: vec![FunctionBody { locals: vec![], code: code.clone() }],
         ..Default::default()
     };
@@ -3217,7 +3218,7 @@ fn v128_load16_lane_with_the_multi_memory_flag_bit_set_validates_and_decodes_con
     let module = WasmModule {
         types: vec![FuncType { params: vec![ValueType::I32], results: vec![ValueType::V128] }],
         functions: vec![0],
-        memories: vec![MemoryType { limits: Limits { min: 1, max: None }, shared: false }],
+        memories: vec![MemoryType { limits: Limits { min: 1, max: None }, shared: false, is64: false }],
         code: vec![FunctionBody { locals: vec![], code: code.clone() }],
         ..Default::default()
     };
@@ -3272,7 +3273,7 @@ fn v128_load32_lane_with_the_multi_memory_flag_bit_set_validates_and_decodes_con
     let module = WasmModule {
         types: vec![FuncType { params: vec![ValueType::I32], results: vec![ValueType::V128] }],
         functions: vec![0],
-        memories: vec![MemoryType { limits: Limits { min: 1, max: None }, shared: false }],
+        memories: vec![MemoryType { limits: Limits { min: 1, max: None }, shared: false, is64: false }],
         code: vec![FunctionBody { locals: vec![], code: code.clone() }],
         ..Default::default()
     };
@@ -3330,7 +3331,7 @@ fn v128_load64_lane_with_the_multi_memory_flag_bit_set_validates_and_decodes_con
     let module = WasmModule {
         types: vec![FuncType { params: vec![ValueType::I32], results: vec![ValueType::V128] }],
         functions: vec![0],
-        memories: vec![MemoryType { limits: Limits { min: 1, max: None }, shared: false }],
+        memories: vec![MemoryType { limits: Limits { min: 1, max: None }, shared: false, is64: false }],
         code: vec![FunctionBody { locals: vec![], code: code.clone() }],
         ..Default::default()
     };

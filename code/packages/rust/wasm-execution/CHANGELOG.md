@@ -2,6 +2,54 @@
 
 All notable changes to this package will be documented in this file.
 
+## [0.9.69] - 2026-08-26 (W25 — memory64 proposal, first slice)
+
+### Added
+
+- `LinearMemory::new_with_is64(initial_pages: u64, max_pages: Option<u64>,
+  is64: bool) -> Result<Self, TrapError>`: a fallible constructor for a
+  memory that may be 64-bit-addressed. The plain, infallible `new(u32,
+  Option<u32>)` constructor is unchanged (always `is64: false`) — every
+  existing call site (55 of them, mostly unit tests) needed no changes.
+- `LinearMemory::is64(&self) -> bool`.
+- `MAX_MEMORY64_INITIAL_PAGES: u64 = 65536` — this interpreter's own
+  practical, implementation-defined resource limit on a 64-bit memory's
+  ACTUAL allocation, deliberately separate from (and far smaller than)
+  `wasm-validator`'s spec-conformance ceiling for a 64-bit memory's
+  DECLARED `min`/`max` (`2^48` pages — not a safe allocation target for
+  any real system: `2^48 * 65536 = 2^64` bytes, overflowing a 64-bit
+  byte-count multiplication outright). A module that only ever declares
+  such a memory still validates successfully; only an actual
+  instantiation attempt hits this cap, as a real `TrapError`, never a
+  panic or allocator abort.
+- `decode_leb_u64`: decodes an unsigned LEB128 `u64` for the `memarg`
+  immediate's `offset` field, which the real spec encodes as `u64`
+  unconditionally (verified live against `https://webassembly.github.io/
+  spec/core/binary/instructions.html`), not just for a 64-bit memory.
+
+### Changed
+
+- `DecodedOperand::MemArg.offset` widened `u32` → `u64` (see above).
+- The shared `pop_effective_addr` helper (new, in `register_memory`) and
+  every one of the ~23 scalar load/store opcode handlers (`i32.load`...
+  `i64.store32`, `0x28`-`0x3E`) now pop `WasmValue::I64` instead of
+  `WasmValue::I32` for the address operand when the target memory is
+  `is64`. `memory.size`/`memory.grow` (`0x3F`/`0x40`) push/pop `I64`
+  instead of `I32` under the same condition.
+- `LinearMemory::grow`'s hard page-count ceiling is `is64`-aware
+  (`MAX_MEMORY64_INITIAL_PAGES` instead of the 32-bit spec's own 65536).
+- **Security fix**: `LinearMemory::bounds_check`'s `offset + width` used
+  unchecked `usize` addition — harmless while every caller's `offset`
+  came from a 32-bit address (at most `2 * u32::MAX`, nowhere near
+  `usize::MAX`). An `is64` memory's address can be a full `u64`, making
+  this genuinely, adversarially reachable (e.g. `i32.load (i64.const
+  -1)` against a 64-bit memory) — an unchecked overflow would panic in a
+  debug build or silently WRAP to a small, incorrectly-in-bounds sum in
+  release. Fixed with `checked_add`, the same overflow-proof shape
+  `copy`/`fill` already use.
+
+See `code/specs/W25-wasm-memory64-first-slice.md`.
+
 ## [0.9.68] - 2026-08-26 (Exceptions proposal, fourth slice W24: real exnref, catch_ref/catch_all_ref, throw_ref)
 
 ### Added
