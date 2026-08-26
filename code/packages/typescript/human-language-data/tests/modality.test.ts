@@ -279,6 +279,60 @@ describe("a sight cue must be anchored to something on the page", () => {
     );
   });
 
+  it("does not let an apostrophe forge a quoted gloss", () => {
+    // REGRESSION. The mention rule first shipped with `'` as both an opening and a
+    // closing delimiter, so any two contractions within sixty characters manufactured a
+    // "gloss" and silently ate the cue inside it. Ordinary English, no adversary, failing
+    // in the one direction this module may never fail in.
+    expect(matchedSightCues("Don't look at the chart's third bar unless you're sure")).toContain(
+      "look at",
+    );
+    expect(
+      matchedSightCues("You don't need the table's rows to hear this", {
+        hasPageArtifact: true,
+      }),
+    ).toContain("the table");
+  });
+
+  it("keeps a quoted artifact reference when the document really has the artifact", () => {
+    // Mention-suppression must not out-rank the evidence: with a table present, a quoted
+    // "the table" is still pointing at it.
+    expect(matchedSightCues(`He said "the table" and meant it.\n${TABLE}`)).toContain("the table");
+  });
+
+  it("keeps a wh-clause whose proposition is itself visual", () => {
+    // "Look at how X" is normally audible, but not when the fact lives in the layout.
+    expect(matchedSightCues("Look at how these two letters differ in shape")).toContain("look at");
+    expect(matchedSightCues("Look at what the third column does to the ending")).toContain(
+      "look at",
+    );
+    // ...while the plain propositional case still drops.
+    expect(matchedSightCues("Look at what English built on that jar")).toEqual([]);
+  });
+
+  it("counts an HTML figure as a page artifact, not only a pipe table", () => {
+    // Markdown passes raw HTML through, so a chart can arrive as <img> or <table>. Missing
+    // those would send the lesson to the driving edition.
+    expect(matchedSightCues('the chart <img src="vowels.png">')).toContain("the chart");
+    expect(matchedSightCues("the table <table><tr><td>a</td></tr></table>")).toContain("the table");
+    expect(matchedSightCues("![vowel chart][fig1] — the chart shows it")).toContain("the chart");
+  });
+
+  it("scans a pathological body in linear time", () => {
+    // The alt-text scan was `!\[[^\]]*\]\(`, which walks to end-of-text from every `!` in
+    // the document: 400 KB of "![" took 49 seconds. The same body now takes ~70 ms.
+    //
+    // The ceiling separates the two ALGORITHMIC CLASSES and nothing finer. Local is under
+    // 100 ms and CI runs perhaps 25x slower, so 15 s leaves two orders of magnitude of
+    // headroom over the linear reading while still failing the quadratic one by 3.5x.
+    // Do not tighten it to track the local number — that measures runner load, not the
+    // thing this guards.
+    const started = Date.now();
+    expect(matchedSightCues("![".repeat(200_000))).toEqual([]);
+    expect(matchedSightCues("look at what ".repeat(20_000))).toEqual([]);
+    expect(Date.now() - started).toBeLessThan(15_000);
+  });
+
   it("judges a block against its whole lesson, not against its own text", () => {
     // A cue in one block routinely points at a table in another. Judging the block alone
     // would call that figurative and drop a real requirement — a false negative.
