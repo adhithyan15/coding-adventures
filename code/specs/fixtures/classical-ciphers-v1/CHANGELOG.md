@@ -9,5 +9,6 @@
 - Pin Vigenère ASCII progression, the 90% shortest-near-maximum IC rule,
   smallest-shift chi-squared ties, analysis limits, and full requested keys.
 - Add a fixed long-English `SECRET` recovery vector, stable error IDs, bounded
-  raw JSON preflight, iterative fixture traversal, hostile schema mutations,
-  and a semantic-oracle drift gate.
+  strict JSON and raw-structure preflight, iterative fixture traversal,
+  fragment-local schema references, hostile schema mutations, and a
+  semantic-oracle drift gate.

@@ -34,6 +34,37 @@ def _has_surrogate(value: str) -> bool:
     return any(0xD800 <= ord(character) <= 0xDFFF for character in value)
 
 
+def _strict_json_loads(encoded: bytes) -> object:
+    def reject_constant(_token: str) -> object:
+        raise ValueError("non-standard JSON number")
+
+    def unique_object(pairs: list[tuple[str, object]]) -> dict[str, object]:
+        result: dict[str, object] = {}
+        for key, value in pairs:
+            if key in result:
+                raise ValueError("duplicate JSON object name")
+            result[key] = value
+        return result
+
+    return json.loads(
+        encoded,
+        object_pairs_hook=unique_object,
+        parse_constant=reject_constant,
+    )
+
+
+def _reject_nonfinite_numbers(value: object) -> None:
+    stack = [value]
+    while stack:
+        current = stack.pop()
+        if isinstance(current, float) and not math.isfinite(current):
+            raise ConformanceError("fixture-invalid-json")
+        if isinstance(current, list):
+            stack.extend(current)
+        elif isinstance(current, dict):
+            stack.extend(current.values())
+
+
 def _validate_document(document: dict[str, Any], encoded_size: int) -> None:
     if encoded_size > MAX_FIXTURE_BYTES:
         raise ConformanceError("fixture-size-limit")
@@ -125,16 +156,18 @@ def _load_fixture_bytes(
     _fixture_depth_preflight(document_encoded, MAX_FIXTURE_NESTING_DEPTH)
     parsed: tuple[object, object] | None = None
     try:
-        schema = json.loads(schema_encoded)
-        document = json.loads(document_encoded)
+        schema = _strict_json_loads(schema_encoded)
+        document = _strict_json_loads(document_encoded)
         parsed = (schema, document)
-    except (UnicodeDecodeError, json.JSONDecodeError, RecursionError):
+    except (UnicodeDecodeError, json.JSONDecodeError, RecursionError, ValueError):
         pass
     if parsed is None:
         raise ConformanceError("fixture-invalid-json")
     schema, document = parsed
     if not isinstance(schema, dict) or not isinstance(document, dict):
         raise ConformanceError("fixture-schema-invalid")
+    _reject_nonfinite_numbers(schema)
+    _reject_nonfinite_numbers(document)
     _validate_document(document, len(document_encoded))
     _validate_schema_refs(schema)
     validation_failed = False
@@ -526,6 +559,17 @@ class ClassicalCipherFixtureTests(unittest.TestCase):
                 self.assertIsNone(error.__cause__)
                 self.assertIsNone(error.__context__)
                 raise
+
+        strict_json_rejections = (
+            (b'{"type":"object","type":"array"}', self.encoded),
+            (self.schema_encoded, b'{"schema_version":1,"schema_version":1}'),
+            (b'{"type":"object","unused":NaN}', self.encoded),
+            (self.schema_encoded, b'{"value":1e999999}'),
+            (self.schema_encoded, b'{"value":' + b"9" * 5_000 + b"}"),
+        )
+        for schema_encoded, document_encoded in strict_json_rejections:
+            with self.assertRaisesRegex(ConformanceError, "^fixture-invalid-json$"):
+                _load_fixture_bytes(schema_encoded, document_encoded)
 
         invalid_shape = copy.deepcopy(self.document)
         invalid_shape["cases"][0]["unexpected"] = True

@@ -21,8 +21,9 @@ full expected object.
 
 Consumers must reject the encoded schema or fixture above 131,072 bytes and
 scan both raw JSON inputs for bounded nesting before parsing. After the bounded
-parse, reject surrogates and duplicate IDs before recursive schema validation.
-The validation errors
+parse, reject duplicate object names, non-standard or non-finite numbers,
+surrogates, and duplicate case IDs before recursive schema validation. Schema
+references are fragment-local only. The validation errors
 `fixture-size-limit`, `fixture-depth-limit`, `fixture-invalid-json`,
 `fixture-invalid-scalar`, `fixture-duplicate-id`, and
 `fixture-schema-invalid` are stable identifiers and never contain fixture
