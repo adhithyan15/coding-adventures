@@ -832,6 +832,43 @@ export const DUCTUS: Record<string, LetterDuctus> = {
     ],
     source: japanese.letters.find((letter) => letter.glyph === "し")!.strokeOrderSource!,
   },
+  // Sirgazil's 20-frame animation writes hiragana く in one uninterrupted
+  // motion: sweep down-left from the upper right into the sharp central turn,
+  // then continue down-right to the lower tip. This path preserves that
+  // zero-lift order while fitting the bundled Noto Sans JP print outline.
+  [ductusKey("japanese", "く")]: {
+    script: "japanese",
+    glyph: "く",
+    strokes: [
+      {
+        segments: [
+          {
+            label: "sweep down-left from the upper right into the central turn",
+            path: [
+              { x: 667, y: 770 },
+              { x: 600, y: 700 },
+              { x: 500, y: 610 },
+              { x: 400, y: 525 },
+              { x: 310, y: 450 },
+              { x: 250, y: 390 },
+            ],
+          },
+          {
+            label: "continue down-right to the lower tip",
+            path: [
+              { x: 250, y: 390 },
+              { x: 300, y: 330 },
+              { x: 390, y: 250 },
+              { x: 490, y: 165 },
+              { x: 590, y: 75 },
+              { x: 690, y: -30 },
+            ],
+          },
+        ],
+      },
+    ],
+    source: japanese.letters.find((letter) => letter.glyph === "く")!.strokeOrderSource!,
+  },
   // Sirgazil's 28-frame animation writes も in three pen-down runs: descend
   // through the stem and broad lower bowl, then lift for each left-to-right
   // horizontal. These medians preserve that order while fitting the bundled

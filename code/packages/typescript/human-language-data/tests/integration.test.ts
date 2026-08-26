@@ -39,7 +39,7 @@ describe("real curriculum", () => {
     expect(scripts.devanagari!.complete).toBe(true);
   });
 
-  it("keeps the cross-script closure queue measured after Telugu independent u", () => {
+  it("keeps the cross-script closure queue measured after Japanese hiragana ku", () => {
     const candrakkala = scripts.malayalam!.marks!.find((mark) => mark.mark === "്")!;
     expect(candrakkala.role).toBe("virama");
     expect(candrakkala.compositionOrder).toEqual([
@@ -954,6 +954,22 @@ describe("real curriculum", () => {
     );
     expect(missingByScript.get("japanese.json")?.has("し")).toBe(false);
     expect(affected.get("し") ?? 0).toBe(0);
+    const japaneseKu = scripts.japanese!.letters.find((entry) => entry.glyph === "く")!;
+    expect(japaneseKu.sound).toBe("ku");
+    expect(japaneseKu.role).toBe("hiragana");
+    expect(japaneseKu.penLifts).toBe(0);
+    expect(japaneseKu.strokeOrder).toEqual([
+      "sweep down and left from the upper right into the central turn",
+      "without lifting, sweep down and right to the lower tip",
+    ]);
+    expect(japaneseKu.strokeOrderSource?.citation).toMatch(
+      /Sirgazil.*Hiragana く stroke order animation\.gif.*20 frames.*2\.0 seconds.*Wikimedia Commons.*8 March 2010/i,
+    );
+    expect(japaneseKu.strokeOrderSource?.variation).toMatch(
+      /one uninterrupted run.*upper right.*sharp central turn.*down and right.*lower tip.*Noto Sans JP.*zero-lift order/i,
+    );
+    expect(missingByScript.get("japanese.json")?.has("く")).toBe(false);
+    expect(affected.get("く") ?? 0).toBe(0);
     const japaneseMo = scripts.japanese!.letters.find((entry) => entry.glyph === "も")!;
     expect(japaneseMo.sound).toBe("mo");
     expect(japaneseMo.role).toBe("hiragana");
@@ -1059,7 +1075,7 @@ describe("real curriculum", () => {
     expect(affected.get("ی") ?? 0).toBe(0);
     expect(
       [...affected.entries()].sort((left, right) => right[1] - left[1])[0],
-    ).toEqual(["く", 5]);
+    ).toEqual(["た", 5]);
   });
 
   it("loaded every track (17+ and growing)", () => {
