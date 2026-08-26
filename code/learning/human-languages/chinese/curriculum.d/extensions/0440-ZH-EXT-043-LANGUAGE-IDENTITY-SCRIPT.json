@@ -1,0 +1,21 @@
+{
+  "id": "ZH-EXT-043-LANGUAGE-IDENTITY-SCRIPT",
+  "stage": "pre-A1",
+  "kind": "required",
+  "category": "script",
+  "canDo": "I can read and write 字, 汉字 and 汉语 after observing, tracing, copying and recalling each new character.",
+  "prerequisites": [
+    "ZH-EXT-042-LANGUAGE-IDENTITY-MEANING-FIRST"
+  ],
+  "lessons": [
+    "ZH-C16-zi",
+    "ZH-W16-han-observe",
+    "ZH-W16-han-guided",
+    "ZH-W16-han-delayed",
+    "ZH-C16-hanzi",
+    "ZH-W16-yu-observe",
+    "ZH-W16-yu-guided",
+    "ZH-W16-yu-delayed",
+    "ZH-C16-hanyu"
+  ]
+}

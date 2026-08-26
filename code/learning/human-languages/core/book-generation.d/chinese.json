@@ -138,6 +138,13 @@
       "output": "chinese/book/chapters/ch15-school-compounds.tex",
       "unicodeScript": "Han",
       "scriptCommand": "zh"
+    },
+    {
+      "language": "chinese",
+      "chapter": 16,
+      "output": "chinese/book/chapters/ch16-language-identity.tex",
+      "unicodeScript": "Han",
+      "scriptCommand": "zh"
     }
   ]
 }
