@@ -218,6 +218,8 @@ const ARABIC_SAAD = DUCTUS[ductusKey("arabic", "ص")];
 const ARABIC_DAAD = DUCTUS[ductusKey("arabic", "ض")];
 const ARABIC_TAH = DUCTUS[ductusKey("arabic", "ط")];
 const ARABIC_ZAH = DUCTUS[ductusKey("arabic", "ظ")];
+const PERSIAN_ZAH = DUCTUS[ductusKey("perso-arabic", "ظ")];
+const URDU_ZOE = DUCTUS[ductusKey("urdu-nastaliq", "ظ")];
 const ARABIC_AYN = DUCTUS[ductusKey("arabic", "ع")];
 const ARABIC_GHAYN = DUCTUS[ductusKey("arabic", "غ")];
 const ARABIC_FAA = DUCTUS[ductusKey("arabic", "ف")];
@@ -4159,6 +4161,20 @@ describe("handwriting ductus", () => {
     const dot = ARABIC_ZAH.strokes[1].segments[0].path;
     expect(dot[0]).toEqual(dot.at(-1));
     expect(Math.min(...dot.map((point) => point.y))).toBeGreaterThan(ARABIC_ZAH.strokes[0].segments[0].path[0].y);
+  });
+
+  it("Persian and Urdu independent ظ retain scoped body-upright-dot sources", () => {
+    for (const letter of [PERSIAN_ZAH, URDU_ZOE]) {
+      expect(penLifts(letter)).toBe(2);
+      expect(letter.strokes).toHaveLength(3);
+      expect(letter.strokes[0]).toEqual(ARABIC_ZAH.strokes[0]);
+      expect(letter.strokes[1].segments[0].path).toEqual(ARABIC_ZAH.strokes[2].segments[0].path);
+      expect(letter.strokes[2].segments[0].path).toEqual(ARABIC_ZAH.strokes[1].segments[0].path);
+    }
+    expect(PERSIAN_ZAH.script).toBe("perso-arabic");
+    expect(PERSIAN_ZAH.source.citation).toMatch(/Persian Online.*ظ.*01:57–01:59/i);
+    expect(URDU_ZOE.script).toBe("urdu-nastaliq");
+    expect(URDU_ZOE.source.citation).toMatch(/Zer o Zabar.*Zo’e/i);
   });
 
   it("Arabic independent ع joins its open head directly to the lower bowl", () => {

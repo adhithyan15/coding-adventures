@@ -15776,3 +15776,29 @@ export const DUCTUS: Record<string, LetterDuctus> = {
     },
   },
 };
+
+// Persian Online and Zer o Zabar independently attest the same body-upright-dot
+// construction for ظ. The scoped entries intentionally share only the Noto
+// fallback geometry with Arabic while retaining language-specific provenance.
+const [sharedZahBody, sharedZahDot, sharedZahUpright] =
+  DUCTUS[ductusKey("arabic", "ظ")].strokes;
+DUCTUS[ductusKey("perso-arabic", "ظ")] = {
+  script: "perso-arabic",
+  glyph: "ظ",
+  strokes: [
+    sharedZahBody,
+    { segments: [{ ...sharedZahUpright.segments[0], label: "lift once, then draw the tall upright top-to-bottom" }] },
+    { segments: [{ ...sharedZahDot.segments[0], label: "lift again, then place the upper dot" }] },
+  ],
+  source: persianAlphabetSource("ظ"),
+};
+DUCTUS[ductusKey("urdu-nastaliq", "ظ")] = {
+  script: "urdu-nastaliq",
+  glyph: "ظ",
+  strokes: [
+    sharedZahBody,
+    { segments: [{ ...sharedZahUpright.segments[0], label: "after one lift, draw the tall upright" }] },
+    { segments: [{ ...sharedZahDot.segments[0], label: "after another lift, place the single dot above" }] },
+  ],
+  source: urduAlphabetSource("ظ"),
+};
