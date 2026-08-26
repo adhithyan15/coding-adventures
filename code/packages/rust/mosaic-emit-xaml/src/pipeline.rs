@@ -339,6 +339,14 @@ pub enum PipelineEmitError {
     /// A `HostTable` carries two of the same section sub-tag. PR-4
     /// detects and fires this.
     DuplicateTableSection(String),
+
+    /// #12038: a literal `HostLink.href` has no scheme, or a scheme
+    /// outside the `http`/`https`/`mailto` allowlist. `NavigateUri` is
+    /// handed to the OS shell launcher, so a `file:`/UNC/custom-protocol
+    /// target would launch rather than open as a web link. Rejected at
+    /// compile time rather than escaped, since XML-escaping the value
+    /// does nothing to make an unsafe scheme safe.
+    UnsafeUriScheme(String),
 }
 
 impl std::fmt::Display for PipelineEmitError {
@@ -375,6 +383,12 @@ impl std::fmt::Display for PipelineEmitError {
             PipelineEmitError::DuplicateTableSection(s) => {
                 write!(f, "HostTable has duplicate section sub-tag '{s}'")
             }
+            PipelineEmitError::UnsafeUriScheme(href) => write!(
+                f,
+                "HostLink href {href:?} has no scheme, or a scheme outside the allowed \
+                 set (http, https, mailto) -- NavigateUri would hand it to the OS shell \
+                 launcher. Use an allowed scheme, or `external: false` for in-app routing."
+            ),
         }
     }
 }
@@ -8710,6 +8724,71 @@ fn escape_csharp_string(s: &str) -> String {
 // UI29-4 â€” HostLink / HostTooltip / HostNumberInput emitters
 // =====================================================================
 
+/// #12038: whether a `HostLink.href` value's scheme is on the allowlist
+/// (`http`/`https`/`mailto`) used by `emit_host_link`'s `NavigateUri`
+/// handling below. `NavigateUri` is handed to the OS shell launcher, so
+/// a `file:`/UNC/custom-protocol target would launch rather than open as
+/// a web link -- reject rather than escape, since XML-escaping does
+/// nothing to make an unsafe scheme safe. Extracts the scheme per RFC
+/// 3986 §3.1 (`scheme = ALPHA *( ALPHA / DIGIT / "+" / "-" / "." )`); no
+/// new crate dependency, a small self-contained parse matching the rest
+/// of the file's hand-rolled text handling (`escape_xaml_attr`,
+/// `tokenise_expr`). A string with no colon-delimited scheme at all (a
+/// relative reference) is also rejected -- an author who wants in-app
+/// routing has `external: false` for exactly that.
+///
+/// Also requires the shape after the scheme to look right for it, not
+/// just the scheme token itself -- security review of this fix flagged
+/// that checking only the scheme leaves a gap: this function's verdict
+/// and the ACTUAL parse WinUI's `Uri`/`UriTypeConverter` does on the same
+/// string at XAML-load time are two independent parsers on the same
+/// input. A string like `http:evil` (scheme-valid, but not a real
+/// hierarchical URI) would pass a scheme-only check and then hit an
+/// unhandled `UriFormatException` when .NET's own parser tries it --
+/// swapping "rejected at compile time" for "the app crashes on click".
+/// `http`/`https` are hierarchical (RFC 3986 section 3: `hier-part` for
+/// a scheme with an authority always starts `//`, and the authority
+/// itself can't be empty), so this also requires a `//`-prefixed,
+/// non-empty authority token immediately after the scheme name --
+/// closing both the no-`//`-at-all case (`http:evil`) and the
+/// empty-authority case (`http://`, `http:///path`; a second round of
+/// review confirmed those two still throw in .NET even after the first,
+/// `//`-only version of this check). `mailto` is RFC 6068's
+/// non-hierarchical `mailto:mailbox` form and never uses `//`, so it's
+/// exempt from this specific check. This narrows the gap without fully
+/// replicating .NET's `Uri` grammar (host-label syntax, IPv6 literals,
+/// userinfo/port rules, etc.); it deliberately does not chase full
+/// parity -- an authority token that's present but itself malformed
+/// (e.g. a bare space) can still reach .NET's independent parse
+/// unrejected here.
+fn has_allowed_uri_scheme(href: &str) -> bool {
+    const ALLOWED: [&str; 3] = ["http", "https", "mailto"];
+    let Some(colon) = href.find(':') else {
+        return false;
+    };
+    let scheme = &href[..colon];
+    let mut chars = scheme.chars();
+    let Some(first) = chars.next() else {
+        return false;
+    };
+    if !first.is_ascii_alphabetic() {
+        return false;
+    }
+    if !chars.all(|c| c.is_ascii_alphanumeric() || c == '+' || c == '-' || c == '.') {
+        return false;
+    }
+    if !ALLOWED.iter().any(|s| s.eq_ignore_ascii_case(scheme)) {
+        return false;
+    }
+    if scheme.eq_ignore_ascii_case("mailto") {
+        return true;
+    }
+    let Some(authority_onward) = href[colon + 1..].strip_prefix("//") else {
+        return false;
+    };
+    !authority_onward.starts_with(['/', '?', '#']) && !authority_onward.is_empty()
+}
+
 /// `HostLink` â†’ WinUI 3 `<HyperlinkButton>` per UI29-4.
 ///
 /// WinUI 3 ships HyperlinkButton specifically for "clickable hyperlink"
@@ -8834,14 +8913,45 @@ fn emit_host_link(
         ))
     } else {
         // Default external-open path: HyperlinkButton with NavigateUri.
+        //
+        // #12038: NavigateUri is handed to the OS shell launcher, so a
+        // `file:`/UNC/custom-protocol target would launch rather than
+        // open as a web link. Reject rather than escape -- XML-escaping
+        // the value does nothing to make an unsafe scheme safe.
         let mut attrs = String::new();
         match find_prop_value(node, "href") {
             Some(LayoutPropValue::String(s)) => {
+                // The scheme is known at compile time -- reject outright
+                // rather than emit a NavigateUri that could launch
+                // arbitrary local content. Confirmed against every
+                // current `href` usage in the repo (all `"#"` + `external:
+                // false`, which never reaches this branch) that this
+                // cannot regress an existing package.
+                if !has_allowed_uri_scheme(s) {
+                    return Err(PipelineEmitError::UnsafeUriScheme(s.clone()));
+                }
                 attrs.push_str(&format!(" NavigateUri=\"{}\"", escape_xaml_attr(s)));
             }
             Some(LayoutPropValue::SlotRef(slot)) => {
+                // The value is only known at runtime -- validate host-
+                // side via a generated helper instead of trusting the
+                // raw slot value. `SafeNavigateUri` returns `null` for a
+                // disallowed/unparseable scheme, which WinUI treats as
+                // "no navigation target": the button simply doesn't
+                // navigate on click rather than launching one.
                 let pascal = ctx.slot_xbind_path(slot);
-                attrs.push_str(&format!(" NavigateUri=\"{{x:Bind {pascal}, Mode=OneWay}}\""));
+                ctx.add_helper(HelperMethod {
+                    name: "SafeNavigateUri".to_string(),
+                    parameters: vec![("raw".to_string(), "string?".to_string())],
+                    return_type: "Uri?".to_string(),
+                    body: "Uri.TryCreate(raw, UriKind.Absolute, out var u) && \
+                           (u.Scheme == \"http\" || u.Scheme == \"https\" || \
+                           u.Scheme == \"mailto\") ? u : null"
+                        .to_string(),
+                });
+                attrs.push_str(&format!(
+                    " NavigateUri=\"{{x:Bind SafeNavigateUri({pascal}), Mode=OneWay}}\""
+                ));
             }
             _ => {}
         }
@@ -15565,6 +15675,104 @@ mod tests {
             r.xaml.contains("Content=\"Click me\""),
             "expected `Content=\"Click me\"`, got:\n{}",
             r.xaml
+        );
+    }
+
+    // ── issue #12038: HostLink.href scheme validation ──
+
+    /// A literal `href` with no scheme, or a scheme outside the
+    /// `http`/`https`/`mailto` allowlist, is rejected at compile time
+    /// rather than emitted -- `NavigateUri` is handed to the OS shell
+    /// launcher, so a `file:`/UNC/custom-protocol target would launch
+    /// rather than open as a web link.
+    #[test]
+    fn host_link_disallowed_scheme_href_is_rejected() {
+        for hostile in [
+            "file:///etc/passwd",
+            "ms-appx-web:///malicious.html",
+            "\\\\attacker\\share\\payload.exe",
+            "javascript:alert(1)",
+            "no-scheme-at-all",
+            // #12038 security review: an allowed scheme name with a
+            // malformed remainder must still be rejected, not just
+            // scheme-matched -- .NET's own `Uri`/`UriTypeConverter`
+            // parses the SAME string independently at XAML-load time,
+            // and a scheme-only check here would let this crash there
+            // instead of failing the build.
+            "http:evil",
+            "https:not-a-real-authority",
+            // #12038 second review round: a `//`-prefixed but empty (or
+            // path/query/fragment-starting) authority is the same crash
+            // class -- `new Uri("http://")` throws in .NET the same way
+            // `new Uri("http:evil")` does.
+            "http://",
+            "https://",
+            "http:///path",
+            "http://?x",
+            "http://#frag",
+        ] {
+            let c = component("X", vec![], vec![]);
+            let l = link_in_box(vec![LayoutProp {
+                name: "href".to_string(),
+                value: LayoutPropValue::String(hostile.to_string()),
+            }]);
+            let err = from_pipeline(&c, &l, &empty_style("X"), None, &opts())
+                .expect_err(&format!("expected {hostile:?} to be rejected"));
+            assert!(
+                matches!(err, PipelineEmitError::UnsafeUriScheme(ref h) if h == hostile),
+                "expected UnsafeUriScheme({hostile:?}), got {err:?}"
+            );
+        }
+    }
+
+    /// Every allowed scheme -- including case-insensitively -- still
+    /// emits `NavigateUri` unchanged. This is the regression guard that
+    /// the fix for #12038 doesn't also reject legitimate links.
+    #[test]
+    fn host_link_allowed_scheme_hrefs_still_emit_navigate_uri() {
+        for allowed in [
+            "http://example.com",
+            "https://example.com/path?q=1",
+            "mailto:hello@example.com",
+            "HTTPS://Example.com",
+        ] {
+            let c = component("X", vec![], vec![]);
+            let l = link_in_box(vec![LayoutProp {
+                name: "href".to_string(),
+                value: LayoutPropValue::String(allowed.to_string()),
+            }]);
+            let r = compile(&c, &l, &empty_style("X"));
+            assert!(
+                r.xaml.contains(&format!("NavigateUri=\"{allowed}\"")),
+                "expected NavigateUri={allowed:?} to survive unchanged, got:\n{}",
+                r.xaml
+            );
+        }
+    }
+
+    /// A slot-valued `href` binds through the generated `SafeNavigateUri`
+    /// helper rather than the raw slot value -- the runtime-bound case
+    /// can't be checked at compile time, so it's validated host-side
+    /// instead. The helper itself must also be emitted into the
+    /// generated code-behind.
+    #[test]
+    fn host_link_slot_href_binds_through_safe_navigate_uri_helper() {
+        let c = component("X", vec![slot("target-url", SlotType::Text, true)], vec![]);
+        let l = link_in_box(vec![LayoutProp {
+            name: "href".to_string(),
+            value: LayoutPropValue::SlotRef("target-url".to_string()),
+        }]);
+        let r = compile(&c, &l, &empty_style("X"));
+        assert!(
+            r.xaml
+                .contains(" NavigateUri=\"{x:Bind SafeNavigateUri(TargetUrl), Mode=OneWay}\""),
+            "expected the slot href to bind through SafeNavigateUri, got:\n{}",
+            r.xaml
+        );
+        assert!(
+            r.code_behind.contains("SafeNavigateUri"),
+            "expected the SafeNavigateUri helper to be emitted, got:\n{}",
+            r.code_behind
         );
     }
 

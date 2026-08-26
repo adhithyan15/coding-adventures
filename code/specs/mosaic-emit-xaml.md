@@ -287,6 +287,24 @@ unconditionally (fully boolean-handled today, nothing recognisable as
 | `direction: both`       | both Auto. |
 | `direction: vertical`   | default (V=Auto, H=Disabled). |
 
+### 4.4 `HostLink` (issue #12038 — URI scheme validation)
+
+`href` lowers to `HyperlinkButton.NavigateUri`, which WinUI hands to the
+OS shell launcher on click. Layout/style source is a trust boundary (a
+third-party Mosaic package), so the scheme is validated rather than only
+XML-escaped — escaping does nothing to make an unsafe scheme (`file:`, a
+UNC path, a registered custom protocol) safe. Allowlist: `http`,
+`https`, `mailto` (case-insensitive scheme match).
+
+| `href` form | Behavior |
+|---|---|
+| literal string, allowed scheme | `NavigateUri="..."` (XML-attr-escaped), unchanged from before |
+| literal string, disallowed/no scheme | compile-time `PipelineEmitError::UnsafeUriScheme` — rejected, no XAML emitted |
+| `slot: u` | `NavigateUri="{x:Bind SafeNavigateUri(U), Mode=OneWay}"` — a generated shared helper validates the runtime value; a disallowed/unparseable scheme yields `null`, and `HyperlinkButton` simply doesn't navigate on click |
+
+`external: false` (the in-app-routing path, `<Button>` + `Click` handler)
+never emits `NavigateUri` at all and is unaffected.
+
 ## 5. `HostTable` and its section sub-tags
 
 WinUI 3 has no core DataGrid. The emitter therefore preserves Mosaic's explicit
