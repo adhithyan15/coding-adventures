@@ -2,9 +2,9 @@
 schema_version: 2
 id: GU-R15-u-matra-r4
 spine_node: SPINE-EXCHANGE-NAMES
-sequence: 620
+sequence: 630
 delivery: script
-chapter: 15
+chapter: 17
 type: writing
 headword: ુ ી
 romanization: short-u sign — long-ii sign

@@ -69,6 +69,145 @@ public struct TrackedArtifactValidationError: Error, Equatable, Sendable {
     }
 }
 
+public struct OrphanManifest: Codable, Equatable, Sendable {
+    public let path: String
+    public let kind: String
+
+    public init(path: String, kind: String) {
+        self.path = path
+        self.kind = kind
+    }
+}
+
+public struct OrphanBuildFile: Codable, Equatable, Sendable {
+    public let path: String
+    public let state: String
+
+    public init(path: String, state: String) {
+        self.path = path
+        self.state = state
+    }
+}
+
+public struct OrphanExemption: Codable, Equatable, Sendable {
+    public let line: Int
+    public let kind: String
+    public let path: String
+    public let reason: String?
+
+    public init(line: Int, kind: String, path: String, reason: String?) {
+        self.line = line
+        self.kind = kind
+        self.path = path
+        self.reason = reason
+    }
+}
+
+public struct OrphanSnapshot: Codable, Equatable, Sendable {
+    public let directories: [String]
+    public let manifests: [OrphanManifest]
+    public let buildFiles: [OrphanBuildFile]
+    public let exemptions: [OrphanExemption]
+
+    public init(
+        directories: [String],
+        manifests: [OrphanManifest],
+        buildFiles: [OrphanBuildFile],
+        exemptions: [OrphanExemption]
+    ) {
+        self.directories = directories
+        self.manifests = manifests
+        self.buildFiles = buildFiles
+        self.exemptions = exemptions
+    }
+
+    enum CodingKeys: String, CodingKey {
+        case directories
+        case manifests
+        case buildFiles = "build_files"
+        case exemptions
+    }
+}
+
+public struct OrphanDiagnosticDetails: Codable, Equatable, Sendable {
+    public let buildPath: String?
+    public let manifestKind: String?
+    public let line: Int?
+    public let problem: String?
+    public let entryPath: String?
+    public let kind: String?
+
+    public init(
+        buildPath: String? = nil,
+        manifestKind: String? = nil,
+        line: Int? = nil,
+        problem: String? = nil,
+        entryPath: String? = nil,
+        kind: String? = nil
+    ) {
+        self.buildPath = buildPath
+        self.manifestKind = manifestKind
+        self.line = line
+        self.problem = problem
+        self.entryPath = entryPath
+        self.kind = kind
+    }
+
+    enum CodingKeys: String, CodingKey {
+        case buildPath = "build_path"
+        case manifestKind = "manifest_kind"
+        case line
+        case problem
+        case entryPath = "entry_path"
+        case kind
+    }
+}
+
+public struct OrphanDiagnostic: Codable, Equatable, Sendable {
+    public let code: String
+    public let severity: String
+    public let path: String
+    public let details: OrphanDiagnosticDetails
+
+    public init(
+        code: String,
+        severity: String,
+        path: String,
+        details: OrphanDiagnosticDetails
+    ) {
+        self.code = code
+        self.severity = severity
+        self.path = path
+        self.details = details
+    }
+}
+
+public struct OrphanValidationResult: Codable, Equatable, Sendable {
+    public let valid: Bool
+    public let diagnosticCodes: [String]
+    public let pendingExemptionCount: Int
+    public let diagnostics: [OrphanDiagnostic]
+
+    public init(
+        valid: Bool,
+        diagnosticCodes: [String],
+        pendingExemptionCount: Int,
+        diagnostics: [OrphanDiagnostic]
+    ) {
+        self.valid = valid
+        self.diagnosticCodes = diagnosticCodes
+        self.pendingExemptionCount = pendingExemptionCount
+        self.diagnostics = diagnostics
+    }
+
+    enum CodingKeys: String, CodingKey {
+        case valid
+        case diagnosticCodes = "diagnostic_codes"
+        case pendingExemptionCount = "pending_exemption_count"
+        case diagnostics
+    }
+}
+
 public enum Validator {
     public static let trackedArtifactUnicodeVersion = TrackedArtifactUnicode17.unicodeVersion
 
@@ -81,6 +220,36 @@ public enum Validator {
                     ["¹", "²", "³"].map { "\(prefix)\($0)" }
             }
     )
+    private static let orphanScanRoot = "code"
+    private static let orphanLedgerPath = "code/BUILD-EXEMPTIONS"
+    private static let orphanBuildRanks = [
+        "BUILD": 0,
+        "BUILD_windows": 1,
+        "BUILD_mac": 2,
+        "BUILD_linux": 3,
+        "BUILD_mac_and_linux": 4,
+    ]
+    private static let orphanSkipComponents: Set<String> = [
+        ".git",
+        "target",
+        "node_modules",
+        "vendor",
+        ".venv",
+        "_build",
+        "deps",
+        ".build",
+        "dist-newstyle",
+        ".cargo",
+    ]
+    private static let pythonBlankScalars: Set<UInt32> = {
+        var values = Set<UInt32>()
+        values.formUnion(0x0009 ... 0x000D)
+        values.formUnion(0x001C ... 0x0020)
+        values.formUnion([0x0085, 0x00A0, 0x1680])
+        values.formUnion(0x2000 ... 0x200A)
+        values.formUnion([0x2028, 0x2029, 0x202F, 0x205F, 0x3000])
+        return values
+    }()
 
     public static let ciManagedToolchainLanguages: Set<String> = [
         "python",
@@ -146,6 +315,320 @@ public enum Validator {
                 )
             }
         }.sorted(by: trackedArtifactDiagnosticLessThan)
+    }
+
+    /// Validate a bounded, inert Cargo/BUILD/exemption snapshot.
+    ///
+    /// The caller owns snapshot construction. This pure adapter never
+    /// enumerates the checkout, follows links, invokes Git or another process,
+    /// reads environment state, opens credentials, or accesses the network.
+    public static func validateOrphanCrateSnapshot(
+        _ snapshot: OrphanSnapshot
+    ) -> OrphanValidationResult {
+        let manifests = snapshot.manifests.filter { !orphanArtifactPath($0.path) }
+        let directoryKeys = Set(snapshot.directories.map(scalarKey))
+        let manifestKeys = Set(manifests.map { scalarKey($0.path) })
+        let exemptionValidation = validateOrphanExemptions(snapshot.exemptions)
+        let activation = activateOrphanExemptions(
+            exemptions: exemptionValidation.valid,
+            directoryKeys: directoryKeys,
+            manifestKeys: manifestKeys,
+            buildFiles: snapshot.buildFiles
+        )
+
+        var diagnostics = exemptionValidation.diagnostics + activation.diagnostics
+        for manifest in manifests {
+            if coveringOrphanBuild(
+                state: "runnable",
+                manifestPath: manifest.path,
+                buildFiles: snapshot.buildFiles
+            ) != nil || activation.activePaths.contains(scalarKey(manifest.path)) {
+                continue
+            }
+
+            let emptyBuild = coveringOrphanBuild(
+                state: "empty",
+                manifestPath: manifest.path,
+                buildFiles: snapshot.buildFiles
+            )
+            diagnostics.append(OrphanDiagnostic(
+                code: emptyBuild == nil ? "ORPHAN_CRATE_UNLISTED" : "ORPHAN_CRATE_EMPTY_BUILD",
+                severity: "error",
+                path: manifest.path,
+                details: OrphanDiagnosticDetails(
+                    buildPath: emptyBuild?.path,
+                    manifestKind: manifest.kind
+                )
+            ))
+        }
+
+        diagnostics.sort(by: orphanDiagnosticLessThan)
+        return OrphanValidationResult(
+            valid: diagnostics.isEmpty,
+            diagnosticCodes: Array(Set(diagnostics.map(\.code))).sorted(),
+            pendingExemptionCount: activation.pendingCount,
+            diagnostics: diagnostics
+        )
+    }
+
+    private static func validateOrphanExemptions(
+        _ exemptions: [OrphanExemption]
+    ) -> (diagnostics: [OrphanDiagnostic], valid: [OrphanExemption]) {
+        var seen = Set<[UInt32]>()
+        var diagnostics: [OrphanDiagnostic] = []
+        var valid: [OrphanExemption] = []
+
+        for exemption in exemptions {
+            let portable = portableOrphanPath(exemption.path)
+            let identity = portable
+                ? scalarKey(TrackedArtifactUnicode17.casefold(
+                    TrackedArtifactUnicode17.nfc(exemption.path)
+                ))
+                : nil
+            let duplicate = identity.map { seen.contains($0) } ?? false
+            if let identity {
+                seen.insert(identity)
+            }
+
+            let pathProblem: String?
+            if !portable {
+                pathProblem = "PATH_UNSAFE"
+            } else if !underOrphanScanRoot(exemption.path) {
+                pathProblem = "PATH_OUTSIDE_SCAN"
+            } else if orphanArtifactPath(exemption.path) {
+                pathProblem = "PATH_ARTIFACT"
+            } else {
+                pathProblem = nil
+            }
+
+            let problem: String?
+            if exemption.kind != "EXCLUDED", exemption.kind != "PENDING" {
+                problem = "UNKNOWN_KIND"
+            } else if !validOrphanReason(exemption.reason) {
+                problem = "REASON_MISSING"
+            } else if duplicate {
+                problem = "DUPLICATE_PATH"
+            } else {
+                problem = pathProblem
+            }
+
+            if let problem {
+                diagnostics.append(OrphanDiagnostic(
+                    code: "ORPHAN_EXEMPTION_INVALID",
+                    severity: "error",
+                    path: orphanLedgerPath,
+                    details: OrphanDiagnosticDetails(line: exemption.line, problem: problem)
+                ))
+            } else {
+                valid.append(exemption)
+            }
+        }
+        return (diagnostics, valid)
+    }
+
+    private static func activateOrphanExemptions(
+        exemptions: [OrphanExemption],
+        directoryKeys: Set<[UInt32]>,
+        manifestKeys: Set<[UInt32]>,
+        buildFiles: [OrphanBuildFile]
+    ) -> (diagnostics: [OrphanDiagnostic], activePaths: Set<[UInt32]>, pendingCount: Int) {
+        var diagnostics: [OrphanDiagnostic] = []
+        var activePaths = Set<[UInt32]>()
+        var pendingCount = 0
+
+        for exemption in exemptions {
+            let key = scalarKey(exemption.path)
+            let problem: String?
+            if !directoryKeys.contains(key) {
+                problem = "MISSING_DIRECTORY"
+            } else if !manifestKeys.contains(key) {
+                problem = "NO_MANIFEST"
+            } else if coveringOrphanBuild(
+                state: "runnable",
+                manifestPath: exemption.path,
+                buildFiles: buildFiles
+            ) != nil {
+                problem = "COVERED"
+            } else {
+                problem = nil
+            }
+
+            if let problem {
+                diagnostics.append(OrphanDiagnostic(
+                    code: "ORPHAN_EXEMPTION_STALE",
+                    severity: "error",
+                    path: orphanLedgerPath,
+                    details: OrphanDiagnosticDetails(
+                        line: exemption.line,
+                        problem: problem,
+                        entryPath: exemption.path,
+                        kind: exemption.kind
+                    )
+                ))
+            } else {
+                activePaths.insert(key)
+                if exemption.kind == "PENDING" {
+                    pendingCount += 1
+                }
+            }
+        }
+        return (diagnostics, activePaths, pendingCount)
+    }
+
+    private static func coveringOrphanBuild(
+        state: String,
+        manifestPath: String,
+        buildFiles: [OrphanBuildFile]
+    ) -> OrphanBuildFile? {
+        let candidates = buildFiles.compactMap {
+            buildFile -> (file: OrphanBuildFile, parent: String, rank: Int)? in
+            guard buildFile.state == state,
+                  let split = splitOrphanBuildPath(buildFile.path),
+                  let rank = orphanBuildRanks[split.name],
+                  underOrphanScanRoot(split.parent),
+                  unicodeScalarEqual(manifestPath, split.parent) ||
+                  scalarHasPrefix(manifestPath, split.parent + "/") else {
+                return nil
+            }
+            return (buildFile, split.parent, rank)
+        }
+        return candidates.sorted { left, right in
+            let leftDepth = orphanPathDepth(left.parent)
+            let rightDepth = orphanPathDepth(right.parent)
+            if leftDepth != rightDepth { return leftDepth > rightDepth }
+            if left.rank != right.rank { return left.rank < right.rank }
+            return compareUnicodeScalars(left.file.path, right.file.path) < 0
+        }.first?.file
+    }
+
+    private static func splitOrphanBuildPath(_ path: String) -> (parent: String, name: String)? {
+        guard let slash = path.lastIndex(of: "/") else { return nil }
+        return (String(path[..<slash]), String(path[path.index(after: slash)...]))
+    }
+
+    private static func portableOrphanPath(_ path: String) -> Bool {
+        let scalars = Array(path.unicodeScalars)
+        guard !scalars.isEmpty,
+              scalars.count <= 512,
+              unicodeScalarEqual(TrackedArtifactUnicode17.nfc(path), path),
+              scalars[0].value != 0x2F,
+              !(scalars.count >= 2 && asciiAlpha(scalars[0].value) && scalars[1].value == 0x3A),
+              !scalars.contains(where: { $0.value == 0x5C }),
+              !path.contains("//"),
+              !scalars.contains(where: unsafeTrackedArtifactScalar) else {
+            return false
+        }
+
+        let components = path.split(separator: "/", omittingEmptySubsequences: false)
+        for componentSlice in components {
+            let component = String(componentSlice)
+            let componentScalars = Array(component.unicodeScalars)
+            guard !componentScalars.isEmpty,
+                  component != ".",
+                  component != "..",
+                  componentScalars.last?.value != 0x2E,
+                  componentScalars.last?.value != 0x20 else {
+                return false
+            }
+            let basename = String(component.split(
+                separator: ".",
+                maxSplits: 1,
+                omittingEmptySubsequences: false
+            )[0])
+            if windowsReservedBasenames.contains(TrackedArtifactUnicode17.fullUppercase(basename)) {
+                return false
+            }
+        }
+        return true
+    }
+
+    private static func validOrphanReason(_ reason: String?) -> Bool {
+        guard let reason else { return false }
+        let scalars = Array(reason.unicodeScalars)
+        return scalars.count <= 4_096 && !scalars.allSatisfy {
+            pythonBlankScalars.contains($0.value)
+        }
+    }
+
+    private static func underOrphanScanRoot(_ path: String) -> Bool {
+        unicodeScalarEqual(path, orphanScanRoot) || scalarHasPrefix(path, orphanScanRoot + "/")
+    }
+
+    private static func orphanArtifactPath(_ path: String) -> Bool {
+        path.split(separator: "/", omittingEmptySubsequences: false).contains {
+            orphanSkipComponents.contains(String($0))
+        }
+    }
+
+    private static func orphanPathDepth(_ path: String) -> Int {
+        path.split(separator: "/", omittingEmptySubsequences: false).count
+    }
+
+    private static func scalarKey(_ value: String) -> [UInt32] {
+        value.unicodeScalars.map(\.value)
+    }
+
+    private static func scalarHasPrefix(_ value: String, _ prefix: String) -> Bool {
+        scalarKey(value).starts(with: scalarKey(prefix))
+    }
+
+    private static func orphanDiagnosticLessThan(
+        _ left: OrphanDiagnostic,
+        _ right: OrphanDiagnostic
+    ) -> Bool {
+        if left.code != right.code { return left.code < right.code }
+        let pathComparison = compareUnicodeScalars(left.path, right.path)
+        if pathComparison != 0 { return pathComparison < 0 }
+        return canonicalOrphanDetails(left.details) < canonicalOrphanDetails(right.details)
+    }
+
+    private static func canonicalOrphanDetails(_ details: OrphanDiagnosticDetails) -> String {
+        if let manifestKind = details.manifestKind {
+            let build = details.buildPath.map { "\"build_path\":" + jsonASCIIString($0) + "," } ?? ""
+            return "{" + build + "\"manifest_kind\":" + jsonASCIIString(manifestKind) + "}"
+        }
+        if let entryPath = details.entryPath,
+           let kind = details.kind,
+           let line = details.line,
+           let problem = details.problem {
+            return "{\"entry_path\":" + jsonASCIIString(entryPath) +
+                ",\"kind\":" + jsonASCIIString(kind) +
+                ",\"line\":\(line),\"problem\":" + jsonASCIIString(problem) + "}"
+        }
+        return "{\"line\":\(details.line ?? 0),\"problem\":" +
+            jsonASCIIString(details.problem ?? "") + "}"
+    }
+
+    private static func jsonASCIIString(_ value: String) -> String {
+        var result = "\""
+        for scalar in value.unicodeScalars {
+            switch scalar.value {
+            case 0x22: result += "\\\""
+            case 0x5C: result += "\\\\"
+            case 0x08: result += "\\b"
+            case 0x0C: result += "\\f"
+            case 0x0A: result += "\\n"
+            case 0x0D: result += "\\r"
+            case 0x09: result += "\\t"
+            case 0x20 ... 0x7E: result += String(scalar)
+            case 0x0000 ... 0xFFFF:
+                result += unicodeEscape(scalar.value)
+            default:
+                let adjusted = scalar.value - 0x10000
+                result += unicodeEscape(0xD800 + adjusted / 0x400)
+                result += unicodeEscape(0xDC00 + adjusted % 0x400)
+            }
+        }
+        return result + "\""
+    }
+
+    private static func unicodeEscape(_ value: UInt32) -> String {
+        let digits = Array("0123456789abcdef".unicodeScalars)
+        var result = "\\u"
+        for shift in stride(from: 12, through: 0, by: -4) {
+            result += String(digits[Int((value >> UInt32(shift)) & 0xF)])
+        }
+        return result
     }
 
     private enum TrackedArtifactPathProblem: String, Error {

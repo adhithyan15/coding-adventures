@@ -2,8 +2,8 @@
 schema_version: 2
 id: GU-C09-gamvun
 spine_node: SPINE-SAY-WHAT-I-DO
-sequence: 490
-chapter: 11
+sequence: 500
+chapter: 13
 type: word
 headword: ગમવું
 romanization: gamvũ

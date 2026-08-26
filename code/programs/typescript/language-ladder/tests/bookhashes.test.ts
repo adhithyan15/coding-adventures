@@ -290,7 +290,7 @@ describe("generated book source hashes", () => {
 
   it.each([
     ["bengali", 6, 1],
-    ["gujarati", 6, 5],
+    ["gujarati", 6, 10],
     ["marathi", 7, 2],
     ["punjabi", 6, 2],
     ["sanskrit", 6, 3],

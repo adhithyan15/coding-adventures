@@ -2,8 +2,8 @@
 schema_version: 2
 id: GU-R16-anand-r4
 spine_node: SPINE-EXCHANGE-NAMES
-sequence: 720
-chapter: 16
+sequence: 730
+chapter: 18
 type: practice
 headword: તમને મળીને આનંદ થયો
 romanization: tamne maḷīne ānand thayo

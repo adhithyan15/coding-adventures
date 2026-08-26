@@ -105,6 +105,38 @@
       ]
     },
     {
+      "id": "GU-PATH-FIRST-USE-SCRIPT-A",
+      "spine_node": "SPINE-EXCHANGE-NAMES",
+      "lessons": [
+        "GU-W04-lla",
+        "GU-W04-tha",
+        "GU-W04-independent-a",
+        "GU-W04-i-matra",
+        "GU-R04-first-four-r1"
+      ],
+      "before": [],
+      "inline": [],
+      "after": [
+        "GU-EXT-031-FIRST-USE-SCRIPT-A"
+      ]
+    },
+    {
+      "id": "GU-PATH-FIRST-USE-SCRIPT-B",
+      "spine_node": "SPINE-EXCHANGE-NAMES",
+      "lessons": [
+        "GU-W05-la",
+        "GU-W05-pa",
+        "GU-W05-cha",
+        "GU-W05-ba",
+        "GU-R05-second-four-r1"
+      ],
+      "before": [],
+      "inline": [],
+      "after": [
+        "GU-EXT-032-FIRST-USE-SCRIPT-B"
+      ]
+    },
+    {
       "id": "GU-PATH-005",
       "spine_node": "SPINE-EXCHANGE-NAMES",
       "lessons": [
@@ -113,10 +145,10 @@
         "GU-C02-maarun",
         "GU-C02-maarun-naam-chhe",
         "GU-C02-anand",
-        "GU-R04-doorway-nine-r2",
         "GU-C02-shun",
         "GU-C02-tu-tame",
         "GU-C02-tamarun-naam-shun-chhe",
+        "GU-R04-doorway-nine-r2",
         "GU-C03-hun"
       ],
       "before": [],
@@ -488,6 +520,8 @@
     },
     "SPINE-EXCHANGE-NAMES": {
       "segments": [
+        "GU-PATH-FIRST-USE-SCRIPT-A",
+        "GU-PATH-FIRST-USE-SCRIPT-B",
         "GU-PATH-005",
         "GU-PATH-014",
         "GU-PATH-C2P",
@@ -1045,6 +1079,40 @@
         "GU-W03-nna",
         "GU-W03-sha",
         "GU-R03-doorway-three-r1"
+      ]
+    },
+    {
+      "id": "GU-EXT-031-FIRST-USE-SCRIPT-A",
+      "stage": "pre-A1",
+      "kind": "required",
+      "category": "script",
+      "canDo": "I can trace, copy, recall, read, and write ળ, થ, અ, and િ before any name-exchange lesson uses them.",
+      "prerequisites": [
+        "GU-EXT-018-DOORWAY-SCRIPT"
+      ],
+      "lessons": [
+        "GU-W04-lla",
+        "GU-W04-tha",
+        "GU-W04-independent-a",
+        "GU-W04-i-matra",
+        "GU-R04-first-four-r1"
+      ]
+    },
+    {
+      "id": "GU-EXT-032-FIRST-USE-SCRIPT-B",
+      "stage": "pre-A1",
+      "kind": "required",
+      "category": "script",
+      "canDo": "I can trace, copy, recall, read, and write લ, પ, ચ, and બ before any name-exchange lesson uses them.",
+      "prerequisites": [
+        "GU-EXT-031-FIRST-USE-SCRIPT-A"
+      ],
+      "lessons": [
+        "GU-W05-la",
+        "GU-W05-pa",
+        "GU-W05-cha",
+        "GU-W05-ba",
+        "GU-R05-second-four-r1"
       ]
     },
     {

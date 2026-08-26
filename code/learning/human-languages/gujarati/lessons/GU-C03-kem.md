@@ -2,8 +2,8 @@
 schema_version: 2
 id: GU-C03-kem
 spine_node: SPINE-CHECK-WELLBEING
-sequence: 170
-chapter: 5
+sequence: 180
+chapter: 7
 type: word
 headword: કેમ
 gloss: how (also "why")

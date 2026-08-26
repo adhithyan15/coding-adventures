@@ -2,34 +2,36 @@
   "version": 1,
   "language": "gujarati",
   "chapter": 5,
-  "title": "How Are You?",
+  "title": "Four More Forms Before Your Name",
   "drivablePrefix": 0,
-  "sourceHash": "fnv1a64:cad1eb9c6b45cd8c",
+  "sourceHash": "fnv1a64:8ee174ed2209434e",
   "lessons": [
     {
-      "id": "GU-C03-hun",
-      "sequence": 160,
-      "title": "હું (hũ) — \"I\"",
-      "headword": "હું",
-      "romanization": "",
-      "gloss": "I",
+      "id": "GU-W05-la",
+      "sequence": 76,
+      "title": "લ — the consonant la",
+      "headword": "લ",
+      "romanization": "la",
+      "gloss": "the consonant la",
       "script": "gujarati",
-      "modality": "sight",
-      "derivedModality": "sight",
+      "modality": "pen",
+      "derivedModality": "pen",
       "modalityReasons": [
+        "writing-type",
+        "writing-block",
         "script-block"
       ],
-      "sourceHash": "fnv1a64:dfdf311903de277b",
+      "sourceHash": "fnv1a64:e236f4810511d706",
       "notice": {
-        "modality": "sight",
+        "modality": "pen",
         "needs": [
+          "a pen and something to write on",
           "your eyes, for letter shapes on the page"
         ],
         "waitUntilStopped": [
-          "The letters in this word",
-          "Script retrieval"
+          "Script — meet one form"
         ],
-        "text": "Before we start: this one needs your eyes, so it is not fully a driving lesson. You will want your eyes, for letter shapes on the page. You can listen to everything else now — leave the sections called The letters in this word and Script retrieval until you have stopped, and I will say so again when we reach it."
+        "text": "Before we start: this one needs your hands, so it is not a driving lesson. You will want a pen and something to write on and your eyes, for letter shapes on the page. You can listen to everything else now — leave the section called Script — meet one form until you have stopped, and I will say so again when we reach it."
       },
       "blocks": [
         {
@@ -38,257 +40,68 @@
           "title": "Warm-up",
           "segments": [
             {
-              "kind": "pause",
-              "seconds": 2,
-              "perItem": false,
-              "source": "[PAUSE 2s]"
-            },
-            {
               "kind": "speech",
-              "text": "To answer \"how are you?\" you first need \"I.\" In the name exchange you learned mārũ (\"my\"); here is its owner."
+              "text": "Write retroflex ળ once from memory. Say lla, then put it away. The new letter is the ordinary l sound."
             }
           ]
         },
         {
           "index": 1,
           "type": "script",
-          "title": "The letters in this word",
+          "title": "Script — meet one form",
           "segments": [
             {
               "kind": "speech",
-              "text": "હ (ha) + the u-sign + nasal becomes હું (hũ). One nasal syllable."
+              "text": "Keep લ visible. It is la. Circle counterclockwise around the broad rounded left body. Lift once and sweep the separate middle shoulder from left to right. Lift again; descend the tall right spine and turn through its lower foot."
             }
           ]
         },
         {
           "index": 2,
-          "type": "etymology",
-          "title": "The word, taken apart",
+          "type": "writing",
+          "title": "Writing — notice and trace",
           "segments": [
             {
               "kind": "speech",
-              "text": "હું (hũ, \"I\") descends from Sanskrit અહમ્ (aham, \"I\"), worn down through Old Gujarati (haũ) to hũ. That aham is from Proto-Indo-European h₁eǵ(H)om — the ancestor of Latin ego and English I. So Gujarati's hũ, Latin ego, and English I are one ancient word. Its possessive is the મારું (mārũ, \"my\") from that name exchange."
+              "text": "Finger-trace લ (la) once, then air-trace it once. Notice rounded body, separate shoulder, separate spine; two pen lifts."
             }
           ]
         },
         {
           "index": 3,
-          "type": "grammar",
-          "title": "Grammar Lens: \"I\" plus the copula",
+          "type": "writing",
+          "title": "Writing — copy with the model",
           "segments": [
             {
               "kind": "speech",
-              "text": "Hũ takes the copula છું (chhũ, \"am\"): hũ … chhũ. So the answer to tame kem chho? begins હું (hũ …)."
+              "text": "Copy visible લ once. Compare only the rounded body and separate shoulder; repair one landmark if needed."
             }
           ]
         },
         {
           "index": 4,
-          "type": "guided-production",
-          "title": "Guided Practice",
-          "segments": [
-            {
-              "kind": "pause",
-              "seconds": 1,
-              "perItem": false,
-              "source": "[PAUSE 1s]"
-            },
-            {
-              "kind": "prompt",
-              "action": "SAY",
-              "instruction": "\"hũ\"",
-              "spoken": true,
-              "scored": false,
-              "responseSeconds": 8,
-              "source": "[YOU SAY: \"hũ\"]"
-            },
-            {
-              "kind": "prompt",
-              "action": "SAY",
-              "instruction": "the family — hũ / Latin ego / English I",
-              "spoken": true,
-              "scored": false,
-              "responseSeconds": 8,
-              "source": "[YOU SAY: the family — *hũ* / Latin *ego* / English **I**]"
-            },
-            {
-              "kind": "prompt",
-              "action": "SAY",
-              "instruction": "\"hũ … chhũ\" — I am …",
-              "spoken": true,
-              "scored": false,
-              "responseSeconds": 8,
-              "source": "[YOU SAY: \"hũ … chhũ\" — I am …]"
-            }
-          ]
-        },
-        {
-          "index": 5,
-          "type": "script",
-          "title": "Script retrieval",
+          "type": "writing",
+          "title": "Writing — recall after hiding",
           "segments": [
             {
               "kind": "speech",
-              "text": "Hide the earlier model for ય. Write it once, compare, and repair only one part if needed."
+              "text": "Hide the model and write la once. Uncover લ, compare, and stop after one repair."
             },
             {
               "kind": "activity",
               "scored": true,
-              "id": "GU-C03-hun-ya-retrieval",
-              "prompt": "Without looking back, write ય once.",
+              "id": "GU-W05-la-recall",
+              "prompt": "Hide the model and write ordinary la from memory.",
               "assesses": [
-                "GU-SCRIPT-YA-01"
+                "GU-SCRIPT-LA-01"
               ],
-              "responseSeconds": 12,
+              "responseSeconds": 20,
               "acceptedResponses": [
-                "ય"
+                "લ"
               ],
               "feedback": {
-                "correct": "Good: one careful retrieval is enough.",
-                "incorrect": "Look at ય once, hide it, and write it one time."
-              }
-            }
-          ]
-        },
-        {
-          "index": 6,
-          "type": "recall",
-          "title": "Wrap-up Recall",
-          "segments": [
-            {
-              "kind": "pause",
-              "seconds": 3,
-              "perItem": false,
-              "source": "[PAUSE 3s]"
-            },
-            {
-              "kind": "speech",
-              "text": "What Sanskrit word is hũ from, and its cousins? (Aham; Latin ego, English I.)"
-            }
-          ]
-        }
-      ]
-    },
-    {
-      "id": "GU-C03-kem",
-      "sequence": 170,
-      "title": "કેમ (kem) — \"how,\" a proper k- question",
-      "headword": "કેમ",
-      "romanization": "",
-      "gloss": "how (also \"why\")",
-      "script": "gujarati",
-      "modality": "sight",
-      "derivedModality": "sight",
-      "modalityReasons": [
-        "script-block"
-      ],
-      "sourceHash": "fnv1a64:f1af538d700fe2b8",
-      "notice": {
-        "modality": "sight",
-        "needs": [
-          "your eyes, for letter shapes on the page"
-        ],
-        "waitUntilStopped": [
-          "The letters in this word",
-          "Script retrieval"
-        ],
-        "text": "Before we start: this one needs your eyes, so it is not fully a driving lesson. You will want your eyes, for letter shapes on the page. You can listen to everything else now — leave the sections called The letters in this word and Script retrieval until you have stopped, and I will say so again when we reach it."
-      },
-      "blocks": [
-        {
-          "index": 0,
-          "type": "warmup",
-          "title": "Warm-up",
-          "segments": [
-            {
-              "kind": "pause",
-              "seconds": 2,
-              "perItem": false,
-              "source": "[PAUSE 2s]"
-            },
-            {
-              "kind": "speech",
-              "text": "Where shũ (\"what\") hid its k-, this one wears it plainly — and it opens the most Gujarati of greetings."
-            }
-          ]
-        },
-        {
-          "index": 1,
-          "type": "script",
-          "title": "The letters in this word",
-          "segments": [
-            {
-              "kind": "speech",
-              "text": "ક (ka) + ે (the e-sign) + મ (ma) becomes કેમ (kem)."
-            }
-          ]
-        },
-        {
-          "index": 2,
-          "type": "etymology",
-          "title": "The word, taken apart",
-          "segments": [
-            {
-              "kind": "speech",
-              "text": "કેમ (kem, \"how\"; also \"why\") is from the interrogative stem ક- (ka-), PIE kʷo- — the same root behind English wh- and Latin qu-. It heads the plain k- family Gujarati mostly kept: kem (how), kōṇ (who), kyā̃ (where), kyāre (when). And કેમ છો? (kem chho?, \"how are you?\") is, for most Gujaratis, the real everyday hello — warmer than namaste."
-            }
-          ]
-        },
-        {
-          "index": 3,
-          "type": "guided-production",
-          "title": "Guided Practice",
-          "segments": [
-            {
-              "kind": "pause",
-              "seconds": 1,
-              "perItem": false,
-              "source": "[PAUSE 1s]"
-            },
-            {
-              "kind": "prompt",
-              "action": "SAY",
-              "instruction": "\"kem\"",
-              "spoken": true,
-              "scored": false,
-              "responseSeconds": 8,
-              "source": "[YOU SAY: \"kem\"]"
-            },
-            {
-              "kind": "prompt",
-              "action": "SAY",
-              "instruction": "the k- question family — kem, kōṇ, kyā̃, kyāre",
-              "spoken": true,
-              "scored": false,
-              "responseSeconds": 8,
-              "source": "[YOU SAY: the k- question family — *kem, kōṇ, kyā̃, kyāre*]"
-            }
-          ]
-        },
-        {
-          "index": 4,
-          "type": "script",
-          "title": "Script retrieval",
-          "segments": [
-            {
-              "kind": "speech",
-              "text": "Hide the earlier model for ભ. Write it once, compare, and stop after one possible repair."
-            },
-            {
-              "kind": "activity",
-              "scored": true,
-              "id": "GU-C03-kem-bha-retrieval",
-              "prompt": "Without looking back, write ભ once.",
-              "assesses": [
-                "GU-SCRIPT-BHA-01"
-              ],
-              "responseSeconds": 12,
-              "acceptedResponses": [
-                "ભ"
-              ],
-              "feedback": {
-                "correct": "Good: one careful retrieval is enough.",
-                "incorrect": "Look at ભ once, hide it, and write it one time."
+                "correct": "લ — the rounded body, shoulder, and spine are intact.",
+                "incorrect": "Look once at લ, hide it, and repair only the differing landmark."
               }
             }
           ]
@@ -306,35 +119,42 @@
             },
             {
               "kind": "speech",
-              "text": "What root does kem share with English how/what? (The interrogative ka-, PIE kʷo-.)"
+              "text": "Point to ordinary la in લ ળ. Then point to retroflex lla."
+            },
+            {
+              "kind": "speech",
+              "text": "Sources: Gujarati Alphabet Writing Practice and the Unicode Gujarati chart."
             }
           ]
         }
       ]
     },
     {
-      "id": "GU-C03-tame-kem-chho",
-      "sequence": 180,
-      "title": "તમે કેમ છો? (tame kem chho?) — \"how are you?\"",
-      "headword": "તમે કેમ છો?",
-      "romanization": "",
-      "gloss": "how are you? (respectful)",
+      "id": "GU-W05-pa",
+      "sequence": 77,
+      "title": "પ — the consonant pa",
+      "headword": "પ",
+      "romanization": "pa",
+      "gloss": "the consonant pa",
       "script": "gujarati",
-      "modality": "sight",
-      "derivedModality": "sight",
+      "modality": "pen",
+      "derivedModality": "pen",
       "modalityReasons": [
+        "writing-type",
+        "writing-block",
         "script-block"
       ],
-      "sourceHash": "fnv1a64:5c65f1896ae4caee",
+      "sourceHash": "fnv1a64:41971c457cd24a3b",
       "notice": {
-        "modality": "sight",
+        "modality": "pen",
         "needs": [
+          "a pen and something to write on",
           "your eyes, for letter shapes on the page"
         ],
         "waitUntilStopped": [
-          "Script retrieval"
+          "Script — meet one form"
         ],
-        "text": "Before we start: this one needs your eyes, so it is not fully a driving lesson. You will want your eyes, for letter shapes on the page. You can listen to everything else now — leave the section called Script retrieval until you have stopped, and I will say so again when we reach it."
+        "text": "Before we start: this one needs your hands, so it is not a driving lesson. You will want a pen and something to write on and your eyes, for letter shapes on the page. You can listen to everything else now — leave the section called Script — meet one form until you have stopped, and I will say so again when we reach it."
       },
       "blocks": [
         {
@@ -343,111 +163,68 @@
           "title": "Warm-up",
           "segments": [
             {
-              "kind": "pause",
-              "seconds": 2,
-              "perItem": false,
-              "source": "[PAUSE 2s]"
-            },
-            {
               "kind": "speech",
-              "text": "The greeting most Gujaratis actually use — three words you already own."
+              "text": "Write la once from memory. Check its rounded body; the next form begins with a high hook instead."
             }
           ]
         },
         {
           "index": 1,
-          "type": "etymology",
-          "title": "The phrase, taken apart",
+          "type": "script",
+          "title": "Script — meet one form",
           "segments": [
             {
               "kind": "speech",
-              "text": "તમે કેમ છો? = તમે (tame, respectful \"you\") + કેમ (kem, \"how\") + છો (chho, \"are\") — literally \"you how are?\", the verb last. Chho is the respectful/plural form of the copula chhe you met in the name exchange (hũ chhũ I am / tame chho you are). To a friend (tũ): તું કેમ છે? (tũ kem chhe?)."
+              "text": "Keep પ visible. It is pa. Begin at the high left hook, curl over it, descend the left stem, and sweep around the broad lower body into the right shoulder. Lift once; descend the tall right spine into its lower foot."
             }
           ]
         },
         {
           "index": 2,
-          "type": "grammar",
-          "title": "Grammar Lens: match the \"you\" to the copula",
+          "type": "writing",
+          "title": "Writing — notice and trace",
           "segments": [
             {
               "kind": "speech",
-              "text": "Respectful: તમે કેમ છો? (tame … chho)."
-            },
-            {
-              "kind": "speech",
-              "text": "Familiar: તું કેમ છે? (tũ … chhe)."
-            },
-            {
-              "kind": "speech",
-              "text": "Same pattern as every Indo-Aryan track: the \"you\" and its verb-form travel together."
+              "text": "Finger-trace પ once, then air-trace it once. Notice high left hook, broad lower body, separate right spine; one pen lift."
             }
           ]
         },
         {
           "index": 3,
-          "type": "guided-production",
-          "title": "Guided Practice",
+          "type": "writing",
+          "title": "Writing — copy with the model",
           "segments": [
             {
-              "kind": "pause",
-              "seconds": 1,
-              "perItem": false,
-              "source": "[PAUSE 1s]"
-            },
-            {
-              "kind": "prompt",
-              "action": "SAY",
-              "instruction": "the respectful greeting — tame kem chho?",
-              "spoken": true,
-              "scored": false,
-              "responseSeconds": 8,
-              "source": "[YOU SAY: the respectful greeting — *tame kem chho?*]"
-            },
-            {
-              "kind": "prompt",
-              "action": "SAY",
-              "instruction": "the familiar version — tũ kem chhe?",
-              "spoken": true,
-              "scored": false,
-              "responseSeconds": 8,
-              "source": "[YOU SAY: the familiar version — *tũ kem chhe?*]"
-            },
-            {
-              "kind": "prompt",
-              "action": "SAY",
-              "instruction": "where the verb sits (at the end)",
-              "spoken": true,
-              "scored": false,
-              "responseSeconds": 8,
-              "source": "[YOU SAY: where the verb sits (at the end)]"
+              "kind": "speech",
+              "text": "Copy visible પ once. Compare only the high hook and lower body; repair one landmark if needed."
             }
           ]
         },
         {
           "index": 4,
-          "type": "script",
-          "title": "Script retrieval",
+          "type": "writing",
+          "title": "Writing — recall after hiding",
           "segments": [
             {
               "kind": "speech",
-              "text": "Hide the earlier model for ધ. Write it once, compare, make at most one repair, and stop."
+              "text": "Hide the model and write pa once. Uncover પ, compare, and stop after one repair."
             },
             {
               "kind": "activity",
               "scored": true,
-              "id": "GU-C03-tame-kem-chho-dha-retrieval",
-              "prompt": "Without looking back, write ધ once.",
+              "id": "GU-W05-pa-recall",
+              "prompt": "Hide the model and write pa from memory.",
               "assesses": [
-                "GU-SCRIPT-DHA-01"
+                "GU-SCRIPT-PA-01"
               ],
-              "responseSeconds": 12,
+              "responseSeconds": 20,
               "acceptedResponses": [
-                "ધ"
+                "પ"
               ],
               "feedback": {
-                "correct": "Good: one careful retrieval is enough.",
-                "incorrect": "Look at ધ once, hide it, and write it one time."
+                "correct": "પ — the high hook and separate right spine are intact.",
+                "incorrect": "Look once at પ, hide it, and repair only the differing landmark."
               }
             }
           ]
@@ -465,36 +242,42 @@
             },
             {
               "kind": "speech",
-              "text": "Give the everyday Gujarati \"how are you?\", and its copula form. (Tame kem chho?; chho — the respectful form of chhe.)"
+              "text": "Name the first landmark and the pen-lift count."
+            },
+            {
+              "kind": "speech",
+              "text": "Sources: Gujarati Alphabet Writing Practice and the Unicode Gujarati chart."
             }
           ]
         }
       ]
     },
     {
-      "id": "GU-C03-majaa",
-      "sequence": 190,
-      "title": "મજા (majā) — \"enjoyment,\" and how to answer",
-      "headword": "મજા",
-      "romanization": "",
-      "gloss": "enjoyment, fun — and the reply \"હું મજામાં છું\"",
+      "id": "GU-W05-cha",
+      "sequence": 78,
+      "title": "ચ — the consonant cha",
+      "headword": "ચ",
+      "romanization": "cha",
+      "gloss": "the consonant cha",
       "script": "gujarati",
-      "modality": "sight",
-      "derivedModality": "sight",
+      "modality": "pen",
+      "derivedModality": "pen",
       "modalityReasons": [
+        "writing-type",
+        "writing-block",
         "script-block"
       ],
-      "sourceHash": "fnv1a64:461b1b10379875ad",
+      "sourceHash": "fnv1a64:86f2c4edd54b0936",
       "notice": {
-        "modality": "sight",
+        "modality": "pen",
         "needs": [
+          "a pen and something to write on",
           "your eyes, for letter shapes on the page"
         ],
         "waitUntilStopped": [
-          "The letters in this word",
-          "Script retrieval"
+          "Script — meet one form"
         ],
-        "text": "Before we start: this one needs your eyes, so it is not fully a driving lesson. You will want your eyes, for letter shapes on the page. You can listen to everything else now — leave the sections called The letters in this word and Script retrieval until you have stopped, and I will say so again when we reach it."
+        "text": "Before we start: this one needs your hands, so it is not a driving lesson. You will want a pen and something to write on and your eyes, for letter shapes on the page. You can listen to everything else now — leave the section called Script — meet one form until you have stopped, and I will say so again when we reach it."
       },
       "blocks": [
         {
@@ -503,120 +286,74 @@
           "title": "Warm-up",
           "segments": [
             {
-              "kind": "pause",
-              "seconds": 2,
-              "perItem": false,
-              "source": "[PAUSE 2s]"
-            },
-            {
               "kind": "speech",
-              "text": "The word that answers \"how are you?\" — and it comes not from Sanskrit but from Persia."
+              "text": "Point to છ and say aspirated chha with its puff. The new ચ is the shorter, unaspirated cha: no extra puff."
             }
           ]
         },
         {
           "index": 1,
           "type": "script",
-          "title": "The letters in this word",
+          "title": "Script — meet one form",
           "segments": [
             {
               "kind": "speech",
-              "text": "મ (ma) + જા (jā) becomes મજા (majā)."
+              "text": "Keep ચ visible. It is cha. Circle the upper bowl, turn through the small middle loop, and continue around the broad lower body. Lift once; descend the separate right spine and turn through its lower foot."
             }
           ]
         },
         {
           "index": 2,
-          "type": "etymology",
-          "title": "The word, taken apart",
+          "type": "writing",
+          "title": "Writing — notice and trace",
           "segments": [
             {
               "kind": "speech",
-              "text": "મજા (majā, \"enjoyment, fun, relish, pleasure\") is not Sanskrit — it is Perso-Arabic, from Persian maza (\"taste, relish\"). Gujaratis, a great trading people, wove thousands of Persian and Arabic words into their speech over centuries of commerce across the Arabian Sea — and even \"how are you\" is answered with one. To say \"I'm well,\" Gujarati says હું મજામાં છું (hũ majāmā chhũ) — literally \"I am in enjoyment\" (majā + -mā \"in\" + chhũ \"am\")."
+              "text": "Finger-trace ચ (cha) once, then air-trace it once. Notice upper bowl, small middle loop, broad lower body, separate spine; one pen lift."
             }
           ]
         },
         {
           "index": 3,
-          "type": "input",
-          "title": "The exchange — the reply",
+          "type": "writing",
+          "title": "Writing — copy with the model",
           "segments": [
             {
               "kind": "speech",
-              "text": "— tame kem chho? (\"How are you?\") — majāmā, ābhār. (\"Well [lit. 'in enjoyment'], thank you.\")"
+              "text": "Copy visible ચ (cha) once. Compare only the upper bowl and middle loop; repair one landmark if needed."
             }
           ]
         },
         {
           "index": 4,
-          "type": "guided-production",
-          "title": "Guided Practice",
-          "segments": [
-            {
-              "kind": "pause",
-              "seconds": 1,
-              "perItem": false,
-              "source": "[PAUSE 1s]"
-            },
-            {
-              "kind": "prompt",
-              "action": "SAY",
-              "instruction": "\"majā\"",
-              "spoken": true,
-              "scored": false,
-              "responseSeconds": 8,
-              "source": "[YOU SAY: \"majā\"]"
-            },
-            {
-              "kind": "prompt",
-              "action": "SAY",
-              "instruction": "the full reply — hũ majāmā chhũ",
-              "spoken": true,
-              "scored": false,
-              "responseSeconds": 8,
-              "source": "[YOU SAY: the full reply — *hũ majāmā chhũ*]"
-            },
-            {
-              "kind": "prompt",
-              "action": "SAY",
-              "instruction": "which heritage majā belongs to (Persian, not Sanskrit)",
-              "spoken": true,
-              "scored": false,
-              "responseSeconds": 8,
-              "source": "[YOU SAY: which heritage *majā* belongs to (Persian, not Sanskrit)]"
-            }
-          ]
-        },
-        {
-          "index": 5,
-          "type": "script",
-          "title": "Script retrieval",
+          "type": "writing",
+          "title": "Writing — recall after hiding",
           "segments": [
             {
               "kind": "speech",
-              "text": "Hide the earlier model for ૃ. Write the below-consonant sign once, compare, and stop after one possible repair."
+              "text": "Hide the model and write unaspirated cha once. Uncover ચ, compare, and stop after one repair."
             },
             {
               "kind": "activity",
               "scored": true,
-              "id": "GU-C03-majaa-vocalic-r-retrieval",
-              "prompt": "Without looking back, write the vowel sign ૃ once.",
+              "id": "GU-W05-cha-recall",
+              "prompt": "Hide the model and write unaspirated cha from memory.",
               "assesses": [
-                "GU-SCRIPT-VOCALIC-R-MATRA-01"
+                "GU-SCRIPT-CHA-01"
               ],
-              "responseSeconds": 12,
+              "responseSeconds": 20,
               "acceptedResponses": [
-                "ૃ"
+                "ચ"
               ],
               "feedback": {
-                "correct": "Good: ૃ is the small vowel sign written below its consonant.",
-                "incorrect": "Look once at ૃ below a consonant, hide it, and try the sign one time."
+                "correct": "ચ — the upper bowl and middle loop are intact.",
+                "incorrect": "Look once at ચ, hide it, and repair only the differing landmark."
               }
             }
           ]
         },
         {
-          "index": 6,
+          "index": 5,
           "type": "recall",
           "title": "Wrap-up Recall",
           "segments": [
@@ -628,35 +365,42 @@
             },
             {
               "kind": "speech",
-              "text": "How does Gujarati say \"I'm well,\" and where does majā come from? (Hũ majāmā chhũ, \"I'm in enjoyment\"; Persian maza, \"taste/relish.\")"
+              "text": "Read ચ (cha) છ aloud, keeping the second sound's puff."
+            },
+            {
+              "kind": "speech",
+              "text": "Sources: Gujarati Alphabet Writing Practice and the Unicode Gujarati chart."
             }
           ]
         }
       ]
     },
     {
-      "id": "GU-C03-vandho-nahi",
-      "sequence": 200,
-      "title": "વાંધો નહીં (vāndho nahĩ) — \"no problem\"",
-      "headword": "વાંધો નહીં",
-      "romanization": "",
-      "gloss": "no problem / it's okay / you're welcome",
+      "id": "GU-W05-ba",
+      "sequence": 79,
+      "title": "બ — the consonant ba",
+      "headword": "બ",
+      "romanization": "ba",
+      "gloss": "the consonant ba",
       "script": "gujarati",
-      "modality": "sight",
-      "derivedModality": "sight",
+      "modality": "pen",
+      "derivedModality": "pen",
       "modalityReasons": [
+        "writing-type",
+        "writing-block",
         "script-block"
       ],
-      "sourceHash": "fnv1a64:8d9214283e9a1323",
+      "sourceHash": "fnv1a64:620ef5c0b6a03956",
       "notice": {
-        "modality": "sight",
+        "modality": "pen",
         "needs": [
+          "a pen and something to write on",
           "your eyes, for letter shapes on the page"
         ],
         "waitUntilStopped": [
-          "The letters in this word"
+          "Script — meet one form"
         ],
-        "text": "Before we start: this one needs your eyes, so it is not fully a driving lesson. You will want your eyes, for letter shapes on the page. You can listen to everything else now — leave the section called The letters in this word until you have stopped, and I will say so again when we reach it."
+        "text": "Before we start: this one needs your hands, so it is not a driving lesson. You will want a pen and something to write on and your eyes, for letter shapes on the page. You can listen to everything else now — leave the section called Script — meet one form until you have stopped, and I will say so again when we reach it."
       },
       "blocks": [
         {
@@ -665,36 +409,191 @@
           "title": "Warm-up",
           "segments": [
             {
-              "kind": "pause",
-              "seconds": 2,
-              "perItem": false,
-              "source": "[PAUSE 2s]"
-            },
-            {
               "kind": "speech",
-              "text": "When someone thanks you — or apologises — this is the easy, gracious reply."
+              "text": "Write cha once from memory. Check its small middle loop, then put that model away."
             }
           ]
         },
         {
           "index": 1,
           "type": "script",
-          "title": "The letters in this word",
+          "title": "Script — meet one form",
           "segments": [
             {
               "kind": "speech",
-              "text": "વાંધો (vāndho, \"objection, problem\" — with the nasal on વાં) + નહીં (nahĩ, \"not\") becomes vāndho nahĩ."
+              "text": "Keep બ visible. It is ba. Circle clockwise around the rounded left body, wind through the compact inner turn, and exit across the right shoulder. Lift once; descend the tall right spine and turn through its lower foot."
             }
           ]
         },
         {
           "index": 2,
-          "type": "etymology",
-          "title": "The word, taken apart",
+          "type": "writing",
+          "title": "Writing — notice and trace",
           "segments": [
             {
               "kind": "speech",
-              "text": "વાંધો નહીં literally means \"[there is] no objection\" — vāndho (\"objection, difficulty, harm\") + નહીં (nahĩ, \"not / no\"). It serves as \"it's okay / no worries / no problem / you're welcome.\" The negative નહીં (nahĩ) is the fuller form of the ના (nā) from the earlier yes/no lesson — both from the ancient na-, Proto-Indo-European ne, behind English no, not, and Hindi nahīṁ."
+              "text": "Finger-trace બ (ba) once, then air-trace it once. Notice rounded outer body, compact inner turn, separate right spine; one pen lift."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "writing",
+          "title": "Writing — copy with the model",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "Copy visible બ (ba) once. Compare only the outer body and inner turn; repair one landmark if needed."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "writing",
+          "title": "Writing — recall after hiding",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "Hide the model and write ba once. Uncover બ, compare, and stop after one repair."
+            },
+            {
+              "kind": "activity",
+              "scored": true,
+              "id": "GU-W05-ba-recall",
+              "prompt": "Hide the model and write ba from memory.",
+              "assesses": [
+                "GU-SCRIPT-BA-01"
+              ],
+              "responseSeconds": 20,
+              "acceptedResponses": [
+                "બ"
+              ],
+              "feedback": {
+                "correct": "બ — the rounded body and compact inner turn are intact.",
+                "incorrect": "Look once at બ, hide it, and repair only the differing landmark."
+              }
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Name the inner landmark and the pen-lift count."
+            },
+            {
+              "kind": "speech",
+              "text": "Sources: Gujarati Alphabet Writing Practice and the Unicode Gujarati chart."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "GU-R05-second-four-r1",
+      "sequence": 80,
+      "title": "લ — પ — ચ — બ (la — pa — cha — ba): four more forms return",
+      "headword": "લ — પ — ચ — બ",
+      "romanization": "la — pa — cha — ba",
+      "gloss": "retrieve the second four name-exchange forms",
+      "script": "gujarati",
+      "modality": "pen",
+      "derivedModality": "pen",
+      "modalityReasons": [
+        "writing-type",
+        "writing-block",
+        "sight-cue"
+      ],
+      "sourceHash": "fnv1a64:247119f8fdb22a07",
+      "notice": {
+        "modality": "pen",
+        "needs": [
+          "a pen and something to write on",
+          "your eyes, because the lesson points at something written down"
+        ],
+        "waitUntilStopped": [],
+        "text": "Before we start: this one needs your hands, so it is not a driving lesson. You will want a pen and something to write on and your eyes, because the lesson points at something written down. You can listen to all of it now and come back to the parts that need looking at once you have stopped."
+      },
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "Keep the four cards visible. Point as you say la, pa, unaspirated cha, and ba. Notice one landmark at a time: rounded body, high hook, middle loop, compact inner turn."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "Read the row once from left to right. Record a reading score out of four."
+            },
+            {
+              "kind": "activity",
+              "scored": true,
+              "id": "GU-R05-second-four-r1-reading",
+              "prompt": "Read these four consonants aloud in order: લ (la) પ (pa) ચ (cha) બ (ba).",
+              "assesses": [
+                "GU-SCRIPT-LA-01",
+                "GU-SCRIPT-PA-01",
+                "GU-SCRIPT-CHA-01",
+                "GU-SCRIPT-BA-01"
+              ],
+              "responseSeconds": 25,
+              "acceptedResponses": [
+                "la; pa; unaspirated cha; ba"
+              ],
+              "feedback": {
+                "correct": "All four consonants stayed distinct.",
+                "incorrect": "Name only the missed form, compare one landmark, then read the row again."
+              }
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "writing",
+          "title": "Writing — from sound",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "Cover every model. Write la, pa, unaspirated cha, and ba from the four spoken cues. Record a separate writing score out of four. Aim for 4/4 in each column, with one focused repair allowed."
+            },
+            {
+              "kind": "activity",
+              "scored": true,
+              "id": "GU-R05-second-four-r1-dictation",
+              "prompt": "Cover every model. Write from these sound cues: la, pa, unaspirated cha, ba.",
+              "assesses": [
+                "GU-SCRIPT-LA-01",
+                "GU-SCRIPT-PA-01",
+                "GU-SCRIPT-CHA-01",
+                "GU-SCRIPT-BA-01"
+              ],
+              "responseSeconds": 40,
+              "acceptedResponses": [
+                "લ પ ચ બ"
+              ],
+              "feedback": {
+                "correct": "The four consonants returned without a visible model.",
+                "incorrect": "Uncover only the missed form, repair one landmark, cover it, and retry once."
+              }
             }
           ]
         },
@@ -704,37 +603,46 @@
           "title": "Guided Practice",
           "segments": [
             {
-              "kind": "pause",
-              "seconds": 1,
-              "perItem": false,
-              "source": "[PAUSE 1s]"
+              "kind": "speech",
+              "text": "Read ક ણ શ once. Cover the row, then write ka, retroflex nna, and sha from sound. Keep these older scores separate from the four-form chapter payoff; one repair is enough."
             },
             {
-              "kind": "prompt",
-              "action": "SAY",
-              "instruction": "\"vāndho nahĩ\"",
-              "spoken": true,
-              "scored": false,
-              "responseSeconds": 8,
-              "source": "[YOU SAY: \"vāndho nahĩ\"]"
+              "kind": "activity",
+              "scored": true,
+              "id": "GU-R05-second-four-r1-doorway-three-r2-reading",
+              "prompt": "Read these returning doorway forms aloud: ક ણ શ.",
+              "assesses": [
+                "GU-SCRIPT-KA-01",
+                "GU-SCRIPT-NNA-01",
+                "GU-SCRIPT-SHA-01"
+              ],
+              "responseSeconds": 20,
+              "acceptedResponses": [
+                "ka; retroflex nna; sha"
+              ],
+              "feedback": {
+                "correct": "The three older forms stayed distinct.",
+                "incorrect": "Check only the missed form, cover it, and read the row once more."
+              }
             },
             {
-              "kind": "prompt",
-              "action": "SAY",
-              "instruction": "what it literally means (\"no objection\")",
-              "spoken": true,
-              "scored": false,
-              "responseSeconds": 8,
-              "source": "[YOU SAY: what it literally means (\"no objection\")]"
-            },
-            {
-              "kind": "prompt",
-              "action": "SAY",
-              "instruction": "the exchange — ābhār / vāndho nahĩ",
-              "spoken": true,
-              "scored": false,
-              "responseSeconds": 8,
-              "source": "[YOU SAY: the exchange — *ābhār* / *vāndho nahĩ*]"
+              "kind": "activity",
+              "scored": true,
+              "id": "GU-R05-second-four-r1-doorway-three-r2-dictation",
+              "prompt": "Cover every model. Write from these sound cues: ka, retroflex nna, sha.",
+              "assesses": [
+                "GU-SCRIPT-KA-01",
+                "GU-SCRIPT-NNA-01",
+                "GU-SCRIPT-SHA-01"
+              ],
+              "responseSeconds": 30,
+              "acceptedResponses": [
+                "ક ણ શ"
+              ],
+              "feedback": {
+                "correct": "The three older forms returned from sound at the expanding interval.",
+                "incorrect": "Uncover only the missed form, repair one landmark, cover it, and retry once."
+              }
             }
           ]
         },
@@ -751,177 +659,7 @@
             },
             {
               "kind": "speech",
-              "text": "What does vāndho nahĩ literally say, and what ancient root is its nahĩ from? (\"No objection\"; PIE ne — English no/not.)"
-            }
-          ]
-        }
-      ]
-    },
-    {
-      "id": "GU-C03-practice",
-      "sequence": 210,
-      "title": "Chapter 5 — The how-are-you exchange",
-      "headword": "(dialogue)",
-      "romanization": "",
-      "gloss": "Chapter 5 recap — the how-are-you exchange",
-      "script": "gujarati",
-      "modality": "voice",
-      "derivedModality": "voice",
-      "modalityReasons": [
-        "no-visual-dependency"
-      ],
-      "sourceHash": "fnv1a64:6a58377d2b3e0ba9",
-      "notice": null,
-      "blocks": [
-        {
-          "index": 0,
-          "type": "warmup",
-          "title": "Warm-up",
-          "segments": [
-            {
-              "kind": "pause",
-              "seconds": 2,
-              "perItem": false,
-              "source": "[PAUSE 2s]"
-            },
-            {
-              "kind": "speech",
-              "text": "No new words. The whole responding cycle, from atoms you now own."
-            }
-          ]
-        },
-        {
-          "index": 1,
-          "type": "input",
-          "title": "The exchange",
-          "segments": [
-            {
-              "kind": "pause",
-              "seconds": 1,
-              "perItem": true,
-              "source": "[PAUSE 1s each]"
-            },
-            {
-              "kind": "prompt",
-              "action": "SAY",
-              "instruction": "\"How are you?\" (the everyday hello) — tame kem chho?",
-              "spoken": true,
-              "scored": false,
-              "responseSeconds": 8,
-              "source": "[YOU SAY: \"How are you?\" (the everyday hello) — *tame kem chho?*]"
-            },
-            {
-              "kind": "prompt",
-              "action": "SAY",
-              "instruction": "\"I'm well, thank you.\" — hũ majāmā chhũ, ābhār.",
-              "spoken": true,
-              "scored": false,
-              "responseSeconds": 8,
-              "source": "[YOU SAY: \"I'm well, thank you.\" — *hũ majāmā chhũ, ābhār.*]"
-            },
-            {
-              "kind": "prompt",
-              "action": "SAY",
-              "instruction": "\"No problem / you're welcome.\" — vāndho nahĩ.",
-              "spoken": true,
-              "scored": false,
-              "responseSeconds": 8,
-              "source": "[YOU SAY: \"No problem / you're welcome.\" — *vāndho nahĩ.*]"
-            },
-            {
-              "kind": "prompt",
-              "action": "SAY",
-              "instruction": "the familiar question — tũ kem chhe?",
-              "spoken": true,
-              "scored": false,
-              "responseSeconds": 8,
-              "source": "[YOU SAY: the familiar question — *tũ kem chhe?*]"
-            }
-          ]
-        },
-        {
-          "index": 2,
-          "type": "etymology",
-          "title": "The word, taken apart — the atoms",
-          "segments": [
-            {
-              "kind": "pause",
-              "seconds": 2,
-              "perItem": false,
-              "source": "[PAUSE 2s]"
-            },
-            {
-              "kind": "prompt",
-              "action": "SAY",
-              "instruction": "the k- question-word for \"how\" (kem)",
-              "spoken": true,
-              "scored": false,
-              "responseSeconds": 8,
-              "source": "[YOU SAY: the k- question-word for \"how\" (*kem*)]"
-            },
-            {
-              "kind": "prompt",
-              "action": "SAY",
-              "instruction": "\"I\" and its copula (hũ, chhũ)",
-              "spoken": true,
-              "scored": false,
-              "responseSeconds": 8,
-              "source": "[YOU SAY: \"I\" and its copula (*hũ*, *chhũ*)]"
-            },
-            {
-              "kind": "prompt",
-              "action": "SAY",
-              "instruction": "which of your words is Persian, not Sanskrit (majā)",
-              "spoken": true,
-              "scored": false,
-              "responseSeconds": 8,
-              "source": "[YOU SAY: which of your words is Persian, not Sanskrit (*majā*)]"
-            }
-          ]
-        },
-        {
-          "index": 3,
-          "type": "notice",
-          "title": "What you've built — roots you now carry",
-          "segments": [
-            {
-              "kind": "pause",
-              "seconds": 2,
-              "perItem": false,
-              "source": "[PAUSE 2s]"
-            },
-            {
-              "kind": "speech",
-              "text": "kem from the interrogative k- (PIE kʷo-), cousin of English how/what."
-            },
-            {
-              "kind": "speech",
-              "text": "hũ from Sanskrit aham becomes Latin ego, English I."
-            },
-            {
-              "kind": "speech",
-              "text": "majā from Persian maza, \"taste/relish\" — the trade-language layer."
-            },
-            {
-              "kind": "speech",
-              "text": "nahĩ from PIE ne, English no (in vāndho nahĩ)."
-            }
-          ]
-        },
-        {
-          "index": 4,
-          "type": "recall",
-          "title": "Wrap-up Recall",
-          "segments": [
-            {
-              "kind": "pause",
-              "seconds": 3,
-              "perItem": false,
-              "source": "[PAUSE 3s]"
-            },
-            {
-              "kind": "speech",
-              "text": "Someone greets you with tame kem chho? — reply that you're well and thank them. (Hũ majāmā chhũ, ābhār — and to their thanks, vāndho nahĩ.)"
+              "text": "Read લ (la) ળ and ચ (cha) છ aloud. Keep ordinary/retroflex l and unaspirated/aspirated ch separate."
             }
           ]
         }

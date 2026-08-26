@@ -1,316 +1,137 @@
-Gujarati, chapter 4: Introducing Yourself.
-10 lessons. The first lesson already needs your eyes or your hands, so save this one for when you have stopped.
+Gujarati, chapter 4: Four Forms Before Your Name.
+5 lessons. The first lesson already needs your eyes or your hands, so save this one for when you have stopped.
 
 
-Lesson 1 of 10.
-નામ (nām) — "name," a word older than Europe.
+Lesson 1 of 5.
+ળ (ḷa) — one new shape, retroflex lla.
 
-Before we start: this one needs your eyes, so it is not fully a driving lesson. You will want your eyes, for letter shapes on the page. You can listen to everything else now — leave the section called The letters in this word until you have stopped, and I will say so again when we reach it.
+Before we start: this one needs your hands, so it is not a driving lesson. You will want a pen and something to write on and your eyes, for letter shapes on the page. You can listen to everything else now — leave the section called Script — meet one form until you have stopped, and I will say so again when we reach it.
 
 Warm-up.
-[pause 2 seconds]
-The first word of the introduction — and a bridge between India and Europe.
+Write retroflex nna once from memory. Keep the tongue-curl idea, but put the old shape away: today it receives a different sound and form.
 
-The letters in this word.
-ન (na) + ા (long ā) + મ (ma) becomes નામ (nām).
+Script — meet one form.
+Keep ળ (ḷa) visible. It is retroflex lla: the tongue curls back for the l sound. Begin at the upper left and circle the broad left bowl. Continue upward through the narrow middle turn, cross the high right arch, and descend the tall spine into its lower foot without lifting.
 
-The word, taken apart.
-નામ (nām, "name") from Sanskrit નામન્ (nāman), from Proto-Indo-European h₃nómn (its final n syllabic) — the same root as English name, Latin nōmen ( becomes noun), Greek onoma, and Hindi nām. Gujarati nām and English name are cousins from before either language existed.
+Writing — notice and trace.
+Finger-trace ળ (ḷa) once, then air-trace it once. Notice broad bowl, narrow turn, high arch, tall spine; no pen lift.
+
+Writing — copy with the model.
+Copy visible ળ (ḷa) once. Compare only the broad bowl and tall spine; repair one landmark if needed.
+
+Writing — recall after hiding.
+Hide the model and write retroflex lla once. Uncover ળ (ḷa), compare, and stop after one repair.
+[question — say your answer, then pause 20 seconds]
+Hide the model and write retroflex lla from memory.
+
+Wrap-up Recall.
+[pause 3 seconds]
+Name the sound, the two main landmarks, and the pen-lift count.
+Sources: Gujarati Alphabet Writing Practice and the Unicode Gujarati chart.
+
+
+Lesson 2 of 5.
+થ — the consonant tha.
+
+Before we start: this one needs your hands, so it is not a driving lesson. You will want a pen and something to write on and your eyes, for letter shapes on the page. You can listen to everything else now — leave the section called Script — meet one form until you have stopped, and I will say so again when we reach it.
+
+Warm-up.
+Write retroflex lla once from memory. Check only its broad bowl and tall spine.
+
+Script — meet one form.
+Keep થ visible. It is tha: say ta with a clear puff of air. Begin at the right of the small upper loop, circle it, descend through the middle, and sweep around the broad lower body into the right shoulder. Lift once; descend the tall right spine and turn through its lower foot.
+
+Writing — notice and trace.
+Finger-trace થ (tha) once, then air-trace it once. Notice small upper loop, broad lower body, separate right spine; one pen lift.
+
+Writing — copy with the model.
+Copy visible થ (tha) once. Compare only the upper loop and separate spine; repair one landmark if needed.
+
+Writing — recall after hiding.
+Hide the model and write tha once. Uncover થ, compare, and stop after one repair.
+[question — say your answer, then pause 20 seconds]
+Hide the model and write aspirated tha from memory.
+
+Wrap-up Recall.
+[pause 3 seconds]
+Say tha with its puff, then name the pen-lift count.
+Sources: Gujarati Alphabet Writing Practice and the Unicode Gujarati chart.
+
+
+Lesson 3 of 5.
+અ — short a standing alone.
+
+Before we start: this one needs your hands, so it is not a driving lesson. You will want a pen and something to write on and your eyes, for letter shapes on the page. You can listen to everything else now — leave the section called Script — meet one form until you have stopped, and I will say so again when we reach it.
+
+Warm-up.
+Write tha once from memory. Then say the vowel already carried by a bare Gujarati consonant: short a.
+
+Script — meet one form.
+Keep અ visible. It is independent short a, used when the vowel begins a syllable without a consonant. Sweep clockwise around the open left curve, continue through the lower body, rise into the middle shoulder, and finish the small right arch. Lift once; descend the separate right stem into its foot.
+
+Writing — notice and trace.
+Finger-trace અ once, then air-trace it once. Notice open left curve, middle shoulder, small arch, separate right stem; one pen lift.
+
+Writing — copy with the model.
+Copy visible અ once. Compare only the open curve and separate stem; repair one landmark if needed.
+
+Writing — recall after hiding.
+Hide the model and write independent short a once. Uncover અ, compare, and stop after one repair.
+[question — say your answer, then pause 20 seconds]
+Hide the model and write independent short a from memory.
+
+Wrap-up Recall.
+[pause 3 seconds]
+When does short a need અ instead of arriving free on a consonant? (When it stands without a consonant.)
+Sources: Gujarati Alphabet Writing Practice and the Unicode Gujarati chart.
+
+
+Lesson 4 of 5.
+િ (-i) — short i sits before, sounds after.
+
+Before we start: this one needs your hands, so it is not a driving lesson. You will want a pen and something to write on and your eyes, for letter shapes on the page. You can listen to everything else now — leave the section called Script — meet one form until you have stopped, and I will say so again when we reach it.
+
+Warm-up.
+Point to અ and શ. Say independent short a, then sha. Do not combine them; today one small sign changes only the vowel on શ.
+
+Script — meet one form.
+Keep િ visible. It is the attached short-i sign. It is written to the left of its consonant even though i is pronounced after that consonant. With શ, it makes શિ, shi. Start with the upright stem and finish through the curl that reaches toward the consonant.
+
+Writing — notice and trace.
+Finger-trace િ (-i) once, then air-trace it once. Notice the sign's left-side place in શિ. Say shi only after the whole form is visible.
+
+Writing — copy with the model.
+Copy visible શિ once. Circle only the short-i sign and check that it sits to the left of શ; repair its placement once if needed.
+
+Writing — recall after hiding.
+Hide the model. Add short i to શ and write shi. Uncover શિ, compare, and stop after one repair.
+[question — say your answer, then pause 20 seconds]
+Hide the model. Add short i to શ and write shi.
+
+Wrap-up Recall.
+[pause 3 seconds]
+Is િ (-i) seen before or after its consonant? (Before.) Is it pronounced before or after? (After.)
+Source: Unicode Gujarati chart; placement and example follow data/scripts/gujarati.json.
+
+
+Lesson 5 of 5.
+ળ (ḷa) — થ — અ — િ (-i) (retroflex lla — tha — independent a — attached i): four forms return.
+
+Before we start: this one needs your hands, so it is not a driving lesson. You will want a pen and something to write on and your eyes, because the lesson points at something written down. You can listen to all of it now and come back to the parts that need looking at once you have stopped.
+
+Warm-up.
+Keep the four cards visible. Point as you say retroflex lla, aspirated tha, independent short a, and attached short i. For િ (-i), also say: seen before, heard after.
 
 Guided Practice.
-[pause 1 second]
-[your turn — say: "nām"]
-[pause 8 seconds for the answer]
-[your turn — say: the family — nām / English name / Latin nōmen]
-[pause 8 seconds for the answer]
+Read the row once from left to right. Give િ (-i) its role as an attached sign, not as an independent letter. Record a reading score out of four.
+[question — say your answer, then pause 25 seconds]
+Read these four forms aloud in order: ળ (ḷa) થ (tha) અ િ (-i).
+
+Writing — from sound or role.
+Cover every model. Write the four cues in order. Record a separate writing score out of four; a reading point cannot replace a written form. Aim for 4/4 in each column, with one focused repair allowed.
+[question — say your answer, then pause 40 seconds]
+Cover every model. Write from these cues: retroflex lla, aspirated tha, independent short a, attached short i.
 
 Wrap-up Recall.
 [pause 3 seconds]
-What root is nām from, and its English cousin? (Sanskrit nāman / PIE h₃nómn; English name.)
-
-
-Lesson 2 of 10.
-મારું (mārũ) — "my," and gender again.
-
-Before we start: this one needs your eyes, so it is not fully a driving lesson. You will want your eyes, for letter shapes on the page. You can listen to everything else now — leave the section called The letters in this word until you have stopped, and I will say so again when we reach it.
-
-Warm-up.
-[pause 2 seconds]
-The word that makes the name yours — and, like sārũ, it changes with gender.
-
-The letters in this word.
-મા (mā) + રું (rũ, with the nasal) becomes મારું (mārũ).
-
-The word, taken apart.
-મારું (mārũ, "my") is on the first-person root ma- — the same ma-/me- behind English me, my, mine, Latin meus, and Hindi merā. Gujarati's "my" and English's "my" are, at the root, one word.
-
-Grammar Lens: "my" agrees in all three genders.
-Because nām ("name") is neuter, "my name" is મારું નામ (mārũ nām) — the neuter mārũ. The full set:
-મારો (māro) — masculine (e.g. māro dēsh, "my country").
-મારી (mārī) — feminine (e.g. mārī bhāṣā, "my language").
-મારું (mārũ) — neuter (e.g. mārũ nām, "my name").
-Every possessive works this way — three forms, chosen by the noun's gender. It is the thread you first pulled in the earlier sārũ lesson.
-
-Guided Practice.
-[pause 1 second]
-[your turn — say: the three — māro (m.) / mārī (f.) / mārũ (n.)]
-[pause 8 seconds for the answer]
-[your turn — say: "my name" and why (mārũ nām — nām is neuter)]
-[pause 8 seconds for the answer]
-[your turn — say: the m- family (mārũ, English me, my)]
-[pause 8 seconds for the answer]
-
-Wrap-up Recall.
-[pause 3 seconds]
-Which form of "my" goes with nām, and why? (Mārũ — the neuter, because nām is a neuter noun.)
-
-
-Lesson 3 of 10.
-છે (chhe) — "is," a copula all Gujarati's own.
-
-Before we start: this one needs your eyes, so it is not fully a driving lesson. You will want your eyes, for letter shapes on the page. You can listen to everything else now — leave the section called The letters in this word until you have stopped, and I will say so again when we reach it.
-
-Warm-up.
-[pause 2 seconds]
-The little verb "is" — and here it is a word you will not recognise from Hindi.
-
-The letters in this word.
-છ (chha, a breathy ch) + ે (the e-sign) becomes છે (chhe). One syllable.
-
-The word, taken apart.
-છે (chhe, "is") is Gujarati's copula — and, unusually, it is not the hai of Hindi or the asti of Sanskrit. It grew from an Old Gujarati form (achhaï) along its own path, so it is one of the words that most quickly marks a sentence as Gujarati rather than Hindi. Hear its forms first: hũ chhũ ("I am"), tũ chhe ("you are," familiar), તે છે (te chhe, "he/she/it is"), and tame chho ("you are," respectful). The later pronoun lessons will put the first, familiar-you, and respectful-you forms into Gujarati script gently.
-
-Grammar Lens: the verb goes last.
-Gujarati is subject–object–verb, like all its Indo-Aryan sisters: "my name Arun is." Chhe sits at the end of the sentence, where English puts "is" in the middle.
-
-Guided Practice.
-[pause 1 second]
-[your turn — say: "chhe"]
-[pause 8 seconds for the answer]
-[your turn — say: the copula set — hũ chhũ (I am), tame chho (you are), te chhe (is)]
-[pause 8 seconds for the answer]
-[your turn — say: what makes chhe special (it's Gujarati's own, not Hindi's hai)]
-[pause 8 seconds for the answer]
-
-Wrap-up Recall.
-[pause 3 seconds]
-What is chhe, and how does it differ from Hindi? (Gujarati's copula, "is"; it is not Hindi's hai — a distinctively Gujarati word.)
-
-
-Lesson 4 of 10.
-મારું નામ … છે (mārũ nām … chhe) — "my name is…"
-
-Warm-up.
-[pause 2 seconds]
-Three atoms you now own, assembled into a first sentence.
-
-The two words — assembled.
-મારું (my, neuter) + નામ (name) + your name + છે (is) = mārũ nām … chhe, "my name is…" Mārũ nām Arun chhe. becomes "My name is Arun."
-
-Grammar Lens: the verb goes last.
-Gujarati keeps the verb at the end — "my name Arun is." Note too that mārũ is neuter to agree with nām (neuter): the agreement you learned two lessons ago is already doing its quiet work.
-
-Guided Practice.
-[pause 1 second]
-[your turn — say: "mārũ nām … chhe" with your name]
-[pause 8 seconds for the answer]
-[your turn — say: why mārũ (neuter) and where chhe sits (agrees with nām; verb last)]
-[pause 8 seconds for the answer]
-
-Wrap-up Recall.
-[pause 3 seconds]
-Give your name in Gujarati, and say where the verb goes. (Mārũ nām … chhe; the verb chhe is last.)
-
-
-Lesson 5 of 10.
-તમને મળીને આનંદ થયો (tamne maḷīne ānand thayo) — "pleased to meet you".
-
-Before we start: this one needs your eyes, so it is not fully a driving lesson. You will want your eyes, for letter shapes on the page. You can listen to everything else now — leave the section called The letters in this word until you have stopped, and I will say so again when we reach it.
-
-Warm-up.
-[pause 2 seconds]
-The warm close of an introduction — a word that means bliss itself.
-
-The letters in this word.
-The key word is આનંદ (ānand): આ + ન + ં (the nasal) + દ (da).
-
-The word, taken apart.
-તમને મળીને આનંદ થયો = તમને (tamne, "to you") + મળીને (maḷīne, "having met") + આનંદ થયો (ānand thayo, "joy happened") — literally "having met you, joy happened." The key word આનંદ (ānand, "joy, bliss") is Sanskrit — ā- ("fully") + nand ("to rejoice") — the ānanda of sat-cit-ānanda ("being-consciousness-bliss"), and a common Gujarati name. So a simple greeting reaches, as Sanskrit did, for the word for the deepest happiness.
-
-Guided Practice.
-[pause 1 second]
-[your turn — say: "tamne maḷīne ānand thayo"]
-[pause 8 seconds for the answer]
-[your turn — say: the key word and its meaning (ānand, "joy/bliss")]
-[pause 8 seconds for the answer]
-[your turn — say: what it's built from (ā- "fully" + nand "to rejoice")]
-[pause 8 seconds for the answer]
-
-Wrap-up Recall.
-[pause 3 seconds]
-What does the phrase literally say, and what is ānand? ("Having met you, joy happened"; Sanskrit ānanda, "bliss.")
-
-
-Lesson 6 of 10.
-The nine-form doorway returns — retrieve the nine doorway forms at the first expanding interval.
-
-Before we start: this one needs your hands, so it is not a driving lesson. You will want a pen and something to write on. You can listen to all of it now and come back to the parts that need looking at once you have stopped.
-
-Warm-up.
-[pause 15 seconds]
-With no model, write ક ણ શ once. Check only the form you missed, if any, then put the model away again.
-
-Guided Practice.
-Read the visible row once. Keep the four marks and five consonants distinct; score 8/9 before moving to writing.
-[question — say your answer, then pause 45 seconds]
-Read these nine forms aloud in order: જ ો ં ી ુ છ ક ણ શ (ja — o sign — nasal mark — long-ii sign — u sign — chha — ka — retroflex nna — sha).
-
-Writing — from sound.
-Cover every form. Write the nine spoken cues in their taught order. Writing also needs 8/9; the reading score cannot compensate for it.
-[question — say your answer, then pause 60 seconds]
-Cover the row. Write from these cues: ja, attached o, nasal dot, attached long ii, attached u, chha, ka, retroflex nna, sha.
-
-Wrap-up Recall.
-[pause 3 seconds]
-Name the four marks, then write the five consonants without looking.
-
-
-Lesson 7 of 10.
-તું / તમે (tũ / tame) — "you," familiar and respectful.
-
-Before we start: this one needs your eyes, so it is not fully a driving lesson. You will want your eyes, for letter shapes on the page. You can listen to everything else now — leave the sections called The letters in this word and Script retrieval until you have stopped, and I will say so again when we reach it.
-
-Warm-up.
-[pause 2 seconds]
-To ask a name you need "you" — and Gujarati grades respect the way French does.
-
-The letters in this word.
-તું (tũ): ત (ta) + the u-sign + nasal. તમે (tame): ત + મ + ે.
-
-The word, taken apart.
-તું (tũ, familiar "you") from Sanskrit tvam, from PIE tū — the same root as English archaic thou, Latin tū, French tu, and Hindi tū. તમે (tame, respectful "you") is grammatically plural — courtesy-by-plural, like French vous and Hindi āp. For a first meeting, use તમે; it takes the plural copula chho (tame … chho).
-
-Guided Practice.
-[pause 1 second]
-[your turn — say: "tũ" (familiar) and "tame" (respectful)]
-[pause 8 seconds for the answer]
-[your turn — say: the English cousin of tũ (thou)]
-[pause 8 seconds for the answer]
-[your turn — say: which you use on first meeting (tame)]
-[pause 8 seconds for the answer]
-
-Script retrieval.
-Hide the earlier model for ર. Write it once, compare it, and repair only one part if needed.
-[question — say your answer, then pause 12 seconds]
-Without looking back, write ર once.
-
-Wrap-up Recall.
-[pause 3 seconds]
-Which "you" is respectful, and what English word is tũ cousin to? (Tame; archaic thou, from PIE tū.)
-
-
-Lesson 8 of 10.
-શું (shũ) — "what".
-
-Before we start: this one needs your eyes, so it is not fully a driving lesson. You will want your eyes, for letter shapes on the page. You can listen to everything else now — leave the sections called The letters in this word and Script retrieval until you have stopped, and I will say so again when we reach it.
-
-Warm-up.
-[pause 2 seconds]
-The question-word — and the one Gujarati question that does not start with k-.
-
-The letters in this word.
-શ (sha) + the u-sign + nasal becomes શું (shũ).
-
-The word, taken apart.
-શું (shũ, "what") descends, by a winding road, from the Sanskrit interrogative stem ક- (ka-, PIE kʷo-) — the root behind English what, Latin quis, and Hindi kyā. Most of Gujarati's questions still show that k- plainly — kem (how), કોણ (kōṇ, who), ક્યાં (kyā̃, where), ક્યારે (kyāre, when) — but "what" wore down into this sh- form. So shũ is the odd cousin in a k- family.
-
-Guided Practice.
-[pause 1 second]
-[your turn — say: "shũ"]
-[pause 8 seconds for the answer]
-[your turn — say: the k- question family it belongs to (kem, kōṇ, kyā̃, kyāre)]
-[pause 8 seconds for the answer]
-[your turn — say: its distant English cousin (what)]
-[pause 8 seconds for the answer]
-
-Script retrieval.
-Hide the earlier model for દ. Write it once, compare, make at most one repair, and stop.
-[question — say your answer, then pause 12 seconds]
-Without looking back, write દ once.
-
-Wrap-up Recall.
-[pause 3 seconds]
-What does shũ mean, and what root does it share with English what? ("What"; the interrogative ka- / PIE kʷo- — worn to sh- in Gujarati.)
-
-
-Lesson 9 of 10.
-તમારું નામ શું છે? (tamārũ nām shũ chhe?) — "what's your name?"
-
-Before we start: this one needs your eyes, so it is not fully a driving lesson. You will want your eyes, for letter shapes on the page. You can listen to everything else now — leave the section called Script retrieval until you have stopped, and I will say so again when we reach it.
-
-Warm-up.
-[pause 2 seconds]
-Turn the introduction around — ask, instead of tell.
-
-The two words — assembled.
-તમારું (tamārũ, "your," the respectful possessive from tame, neuter to match nām) + નામ (name) + શું (what) + છે (is) becomes literally "your name what is?" Gujarati keeps the verb last and drops the question-word shũ into the object slot.
-
-Grammar Lens: answering, and the familiar form.
-Answer with the sentence you built: Mārũ nām Arun chhe. The familiar version swaps tamārũ for તારું (tārũ, "your," from tũ): tārũ nām shũ chhe? Note mārũ / tārũ / tamārũ — "my / your / your (resp.)" — all take the neuter -ũ before nām.
-
-Guided Practice.
-[pause 1 second]
-[your turn — say: the respectful question — tamārũ nām shũ chhe?]
-[pause 8 seconds for the answer]
-[your turn — say: answer it — mārũ nām … chhe]
-[pause 8 seconds for the answer]
-[your turn — say: the familiar "your" (tārũ)]
-[pause 8 seconds for the answer]
-
-Script retrieval.
-Hide the earlier model for વ. Write it once, compare, and stop after one possible repair.
-[question — say your answer, then pause 12 seconds]
-Without looking back, write વ once.
-
-Wrap-up Recall.
-[pause 3 seconds]
-Ask "what's your name?" respectfully. (Tamārũ nām shũ chhe?; the verb chhe is last.)
-
-
-Lesson 10 of 10.
-Chapter 4 — The introduction exchange.
-
-Warm-up.
-[pause 2 seconds]
-No new words. The whole introduction, assembled from atoms you now own.
-
-The exchange.
-[pause 1 second after each]
-[your turn — say: "My name is Mira." — mārũ nām Mira chhe.]
-[pause 8 seconds for the answer]
-[your turn — say: "What's your name?" — tamārũ nām shũ chhe?]
-[pause 8 seconds for the answer]
-[your turn — say: "My name is Arun." — mārũ nām Arun chhe.]
-[pause 8 seconds for the answer]
-[your turn — say: "Pleased to meet you." — tamne maḷīne ānand thayo.]
-[pause 8 seconds for the answer]
-
-The word, taken apart — the atoms.
-[pause 2 seconds]
-[your turn — say: "name," "my," "is" (nām, mārũ, chhe)]
-[pause 8 seconds for the answer]
-[your turn — say: the two "you" levels (tũ / tame)]
-[pause 8 seconds for the answer]
-[your turn — say: "what," and where the verb sits (shũ; the verb is last)]
-[pause 8 seconds for the answer]
-
-What you've built — roots you now carry.
-[pause 2 seconds]
-nām from Sanskrit nāman becomes English name.
-mārũ from ma- becomes English my; agrees in three genders (māro/mārī/mārũ).
-chhe — Gujarati's own copula (not Hindi's hai).
-shũ from ka- becomes English what; tũ from tū becomes thou.
-
-Wrap-up Recall.
-[pause 3 seconds]
-Introduce yourself and ask a stranger's name in Gujarati. (Mārũ nām … chhe. Tamārũ nām shũ chhe?)
+Write the only attached sign in the row, then say its placement rule.

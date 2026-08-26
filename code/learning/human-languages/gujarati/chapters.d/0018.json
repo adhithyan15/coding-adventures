@@ -1,25 +1,25 @@
 {
   "chapter": 18,
-  "title": "Fourth Return: Wellbeing and Farewells",
-  "label": "ch:gu-r4-wellbeing-farewells",
-  "canDo": "I can retrieve and write the respectful wellbeing exchange and two familiar farewells without a model.",
+  "title": "Fourth Return: The Introduction",
+  "label": "ch:gu-r4-introduction",
+  "canDo": "I can retrieve name, my, the Gujarati copula, my-name-is, and pleased-to-meet-you at their fourth spacing window, write each response without a model, and continue into a familiar wellbeing exchange.",
   "spineNodes": [
-    "SPINE-CHECK-WELLBEING",
-    "SPINE-COURTESY-THANK",
-    "SPINE-TAKE-LEAVE"
+    "SPINE-EXCHANGE-NAMES",
+    "SPINE-CHECK-WELLBEING"
   ],
   "payoff": {
-    "lesson": "GU-R18-farewell-r4",
+    "lesson": "GU-R16-wellbeing-r3",
     "kind": "production",
-    "summary": "Five zero-atom lessons close the next exact R4 windows and end with independent farewell production at coherent R3 and R4 intervals.",
+    "summary": "The chapter closes without a new atom: after five exact R4 returns rebuild the introduction one piece at a time, the learner independently orders and writes the familiar how-are-you exchange in the zero-atom source slot.",
     "assesses": [
-      "GU-CONCEPT-C03-MAJAA-01",
-      "GU-CONCEPT-C03-PRACTICE-01",
+      "GU-CONCEPT-C02-NAAM-01",
+      "GU-CONCEPT-C02-MAARUN-01",
+      "GU-CONCEPT-C02-CHHE-01",
+      "GU-CONCEPT-C02-MAARUNNAAMCHHE-01",
+      "GU-CONCEPT-C02-ANAND-01",
       "GU-CONCEPT-C03-TAMEKEMCHHO-01",
-      "GU-CONCEPT-C03-VANDHONAHI-01",
-      "GU-CONCEPT-C04-KAALE-01",
-      "GU-CONCEPT-C04-MALISHUN-01",
-      "GU-CONCEPT-C04-PACHHAMALISHUN-01"
+      "GU-CONCEPT-C03-MAJAA-01",
+      "GU-CONCEPT-C03-VANDHONAHI-01"
     ]
   }
 }

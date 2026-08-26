@@ -127,6 +127,8 @@ const MALAYALAM_A = DUCTUS[ductusKey("malayalam", "അ")];
 const malayalamAOutline = malayalamOutline("അ");
 const MALAYALAM_I = DUCTUS[ductusKey("malayalam", "ഇ")];
 const malayalamIOutline = malayalamOutline("ഇ");
+const MALAYALAM_U = DUCTUS[ductusKey("malayalam", "ഉ")];
+const malayalamUOutline = malayalamOutline("ഉ");
 const MALAYALAM_CHILLU_L = DUCTUS[ductusKey("malayalam", "ൽ")];
 const malayalamChilluLOutline = malayalamOutline("ൽ");
 const MALAYALAM_CHILLU_N = DUCTUS[ductusKey("malayalam", "ൻ")];
@@ -569,6 +571,8 @@ const PERSIAN_WAW = DUCTUS["و"];
 const persianWawOutline = naskhOutline("و");
 const PERSIAN_HEH = DUCTUS["ه"];
 const persianHehOutline = naskhOutline("ه");
+const PERSIAN_YEH = ductusFor("ی", "perso-arabic")!;
+const persianYehOutline = naskhOutline("ی");
 
 /** Walk a node tree, collecting every node the predicate accepts. */
 function collect(node: SvgNode, pick: (n: SvgNode) => boolean, out: SvgNode[] = []): SvgNode[] {
@@ -580,7 +584,7 @@ function collect(node: SvgNode, pick: (n: SvgNode) => boolean, out: SvgNode[] = 
 const byTag = (node: SvgNode, tag: string) => collect(node, (n) => n.tag === tag);
 
 describe("ductusFor — only cited letters have a ductus", () => {
-  it("finds twenty-one Tamil letters, thirteen Persian letters, eighteen Arabic letters, and sixteen Urdu letters", () => {
+  it("finds twenty-one Tamil letters, fourteen Persian letters, eighteen Arabic letters, and sixteen Urdu letters", () => {
     expect(ductusFor("ம")?.glyph).toBe("ம");
     expect(ductusFor("அ")?.glyph).toBe("அ");
     expect(ductusFor("ஆ")?.glyph).toBe("ஆ");
@@ -1159,6 +1163,22 @@ describe("Malayalam ഇ — one expanding spiral-to-baseline run", () => {
     expect(strip.frames).toHaveLength(4);
     expect(strip.penLifts).toBe(0);
     expect(strip.summary).toBe("one unbroken stroke · 4 movements");
+  });
+});
+
+describe("Malayalam ഉ — one broad spiral-to-baseline run", () => {
+  const steps = ductusSteps(MALAYALAM_U);
+  const strip = ductusFilmstrip(MALAYALAM_U, malayalamUOutline);
+
+  it("keeps every movement in stroke zero without a lift", () => {
+    expect(steps.map((step) => step.startsAfterLift)).toEqual([false, false, false]);
+    expect(steps.map((step) => step.strokeIndex)).toEqual([0, 0, 0]);
+  });
+
+  it("reports three movements in one stroke", () => {
+    expect(strip.frames).toHaveLength(3);
+    expect(strip.penLifts).toBe(0);
+    expect(strip.summary).toBe("one unbroken stroke · 3 movements");
   });
 });
 
@@ -7503,6 +7523,34 @@ describe("Persian ه — its isolated looping body stays in one pen-down run", (
     expect(paths.filter((path) => path.attrs.class === "ductus__done")).toHaveLength(0);
     expect(paths.find((path) => path.attrs.class === "ductus__pen")!.attrs.d).toBe(
       penPathD(PERSIAN_HEH.strokes[0], 1),
+    );
+  });
+});
+
+describe("Persian ی — its freehand S and bowl stay in one pen-down run", () => {
+  const steps = ductusSteps(PERSIAN_YEH);
+  const strip = ductusFilmstrip(PERSIAN_YEH, persianYehOutline);
+
+  it("keeps both sourced movements continuous", () => {
+    expect(steps.map((step) => step.label)).toEqual([
+      "sweep left from the upper right and descend through the S curve",
+      "continue around the below-baseline bowl and finish at its rising tip without lifting",
+    ]);
+    expect(steps.map((step) => step.startsAfterLift)).toEqual([false, false]);
+    expect(steps.map((step) => step.strokeIndex)).toEqual([0, 0]);
+    expect(strip.frames).toHaveLength(2);
+    expect(strip.penLifts).toBe(0);
+    expect(strip.summary).toBe("one unbroken stroke · 2 movements");
+  });
+
+  it("draws the Noto Naskh outline and completes the same sourced stroke", () => {
+    const paths = byTag(strip.frames[1], "path");
+    expect(paths.find((path) => path.attrs.class === "ductus__glyph")!.attrs.d).toBe(
+      persianYehOutline.path,
+    );
+    expect(paths.filter((path) => path.attrs.class === "ductus__done")).toHaveLength(0);
+    expect(paths.find((path) => path.attrs.class === "ductus__pen")!.attrs.d).toBe(
+      penPathD(PERSIAN_YEH.strokes[0], 1),
     );
   });
 });

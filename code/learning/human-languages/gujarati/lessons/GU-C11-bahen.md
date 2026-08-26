@@ -2,8 +2,8 @@
 schema_version: 2
 id: GU-C11-bahen
 spine_node: SPINE-EXCHANGE-NAMES
-sequence: 570
-chapter: 13
+sequence: 580
+chapter: 15
 type: word
 headword: બહેન
 romanization: bahen

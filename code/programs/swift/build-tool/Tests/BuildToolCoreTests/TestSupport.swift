@@ -161,6 +161,40 @@ struct SharedTrackedArtifactFixture: Decodable {
     let expected: Expected
 }
 
+struct SharedOrphanFixture: Decodable {
+    struct Input: Decodable {
+        struct Options: Decodable {
+            let orphanSnapshot: OrphanSnapshot
+
+            enum CodingKeys: String, CodingKey {
+                case orphanSnapshot = "orphan_snapshot"
+            }
+        }
+
+        let options: Options
+    }
+
+    struct Expected: Decodable {
+        struct Result: Decodable {
+            let valid: Bool
+            let diagnosticCodes: [String]
+            let pendingExemptionCount: Int
+
+            enum CodingKeys: String, CodingKey {
+                case valid
+                case diagnosticCodes = "diagnostic_codes"
+                case pendingExemptionCount = "pending_exemption_count"
+            }
+        }
+
+        let result: Result
+        let diagnostics: [OrphanDiagnostic]
+    }
+
+    let input: Input
+    let expected: Expected
+}
+
 func loadSharedResolutionFixture(_ name: String) throws -> SharedResolutionFixture {
     let packageRoot = URL(fileURLWithPath: #filePath)
         .deletingLastPathComponent()
@@ -202,6 +236,21 @@ func loadSharedTrackedArtifactFixture(_ name: String) throws -> SharedTrackedArt
         .standardizedFileURL
     return try JSONDecoder().decode(
         SharedTrackedArtifactFixture.self,
+        from: Data(contentsOf: fixtureURL)
+    )
+}
+
+func loadSharedOrphanFixture(_ name: String) throws -> SharedOrphanFixture {
+    let packageRoot = URL(fileURLWithPath: #filePath)
+        .deletingLastPathComponent()
+        .deletingLastPathComponent()
+        .deletingLastPathComponent()
+    let fixtureURL = packageRoot
+        .appendingPathComponent("../../../specs/fixtures/build-tool-v1/cases")
+        .appendingPathComponent(name)
+        .standardizedFileURL
+    return try JSONDecoder().decode(
+        SharedOrphanFixture.self,
         from: Data(contentsOf: fixtureURL)
     )
 }

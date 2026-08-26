@@ -2,8 +2,8 @@
 schema_version: 2
 id: GU-C12-naak
 spine_node: SPINE-CHECK-WELLBEING
-sequence: 610
-chapter: 14
+sequence: 620
+chapter: 16
 type: word
 headword: નાક
 romanization: nāk

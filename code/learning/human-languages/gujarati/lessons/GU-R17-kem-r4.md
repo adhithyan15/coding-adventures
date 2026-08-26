@@ -2,8 +2,8 @@
 schema_version: 2
 id: GU-R17-kem-r4
 spine_node: SPINE-CHECK-WELLBEING
-sequence: 790
-chapter: 17
+sequence: 800
+chapter: 19
 type: practice
 headword: શું / કેમ
 romanization: shũ / kem

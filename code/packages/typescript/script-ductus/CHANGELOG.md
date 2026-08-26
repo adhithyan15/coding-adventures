@@ -2,6 +2,22 @@
 
 ## Unreleased
 
+### Added — source-verified Persian yeh
+
+- Add Persian **ی** as one source-backed two-movement run: sweep left from the
+  upper-right entry, descend through the S turn, then continue around the
+  below-baseline bowl.
+- Reuse only the Noto Naskh geometry while keeping the UT Persian provenance
+  separate from the independently verified Urdu form.
+
+### Added — source-verified Malayalam independent u
+
+- Add Malayalam independent **ഉ** as one source-backed three-movement run:
+  compact left spiral into the broad right lobe, below-line curl, then the
+  finishing baseline.
+- Preserve the clip's zero-lift order while fitting the path to the bundled
+  Noto Sans Malayalam outline.
+
 ### Added — source-verified Malayalam independent i
 
 - Add Malayalam independent **ഇ** as one source-backed four-movement run:

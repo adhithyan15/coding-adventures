@@ -1394,7 +1394,7 @@ pub fn parse_journey(source: &str) -> Result<(Option<String>, JourneyDiagram), P
     for token in tokens {
         match token.type_name.as_deref() {
             Some("TITLE_STATEMENT") => {
-                title = Some(normalize_journey_label(token.value["title".len()..].trim()));
+                title = Some(normalize_mermaid_line_breaks(token.value["title".len()..].trim()));
             }
             Some("ACC_TITLE_STATEMENT") => {
                 accessibility_title = token
@@ -1421,12 +1421,12 @@ pub fn parse_journey(source: &str) -> Result<(Option<String>, JourneyDiagram), P
                 );
             }
             Some("SECTION_STATEMENT") => sections.push(JourneySection {
-                label: normalize_journey_label(token.value["section".len()..].trim()),
+                label: normalize_mermaid_line_breaks(token.value["section".len()..].trim()),
                 tasks: Vec::new(),
             }),
             Some("TASK_STATEMENT") => {
                 let mut parts = token.value.split(':');
-                let label = normalize_journey_label(parts.next().unwrap_or_default().trim());
+                let label = normalize_mermaid_line_breaks(parts.next().unwrap_or_default().trim());
                 let score = parts
                     .next()
                     .unwrap_or_default()
@@ -1503,7 +1503,7 @@ fn mermaid_directive_string_array(source: &str, key: &str) -> Vec<String> {
     Vec::new()
 }
 
-fn normalize_journey_label(source: &str) -> String {
+fn normalize_mermaid_line_breaks(source: &str) -> String {
     let mut output = String::new();
     let mut rest = source;
     while let Some(open) = rest.find('<') {
@@ -6207,10 +6207,11 @@ fn gantt_metadata_value(token: &Token) -> Option<String> {
 }
 
 fn normalize_gantt_prefixed_label(value: &str) -> String {
-    value
-        .trim_start_matches([';', '#'])
-        .trim_start()
-        .to_string()
+    normalize_mermaid_line_breaks(
+        value
+            .trim_start_matches([';', '#'])
+            .trim_start(),
+    )
 }
 
 fn apply_gantt_interaction(
@@ -6962,6 +6963,20 @@ Rel(customer, web, \"Uses\", \"HTTPS\")";
         )
         .unwrap();
         assert_eq!(delimited.sections[0].tasks[0].label, "Parser");
+    }
+
+    #[test]
+    fn gantt_grammar_lowers_html_break_variants_to_semantic_newlines() {
+        let diagram = parse_gantt(
+            "gantt\ntitle Release<br>Plan\nsection Line1<br>Line2<br/>Line3</br />Line4<br\t/>Line5\nTask<br />One :task, 2026-03-01, 1d",
+        )
+        .unwrap();
+        assert_eq!(diagram.title.as_deref(), Some("Release\nPlan"));
+        assert_eq!(
+            diagram.sections[0].label.as_deref(),
+            Some("Line1\nLine2\nLine3\nLine4\nLine5")
+        );
+        assert_eq!(diagram.sections[0].tasks[0].label, "Task\nOne");
     }
 
     #[test]

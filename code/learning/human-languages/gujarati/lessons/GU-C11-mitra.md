@@ -2,8 +2,8 @@
 schema_version: 2
 id: GU-C11-mitra
 spine_node: SPINE-EXCHANGE-NAMES
-sequence: 540
-chapter: 13
+sequence: 550
+chapter: 15
 type: word
 headword: મિત્ર
 romanization: mitra

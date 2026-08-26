@@ -68,7 +68,7 @@ describe("independent (word-initial) vowels", () => {
     expect(iv.filter((_, index) => index !== 0 && index !== 2).every((v) => v.strokeOrder.length === 0)).toBe(true);
   });
 
-  it("keeps Malayalam independent അ and ഇ sourced while the remaining vowels stay unverified", () => {
+  it("keeps Malayalam independent അ, ഇ, ഉ, and എ sourced while the remaining vowels stay unverified", () => {
     const malayalam = SCRIPTS.find((s) => s.script === "malayalam")!;
     const iv = malayalam.independentVowels!;
     expect(iv[0]!.glyph).toBe("അ");
@@ -83,10 +83,16 @@ describe("independent (word-initial) vowels", () => {
     expect(iv[2]!.strokeOrderSource?.url).toBe(
       "https://malayalam.la.utexas.edu/resources/the-malayalam-script/",
     );
+    expect(iv[4]!.glyph).toBe("ഉ");
+    expect(iv[4]!.strokeOrder).toHaveLength(3);
+    expect(iv[4]!.penLifts).toBe(0);
+    expect(iv[4]!.strokeOrderSource?.url).toBe(
+      "https://malayalam.la.utexas.edu/resources/the-malayalam-script/",
+    );
     expect(iv[6]!.glyph).toBe("എ");
     expect(iv[6]!.strokeOrder).toHaveLength(3);
     expect(iv[6]!.penLifts).toBe(1);
-    expect(iv.filter((_, index) => ![0, 2, 6].includes(index)).every((v) => v.strokeOrder.length === 0)).toBe(true);
+    expect(iv.filter((_, index) => ![0, 2, 4, 6].includes(index)).every((v) => v.strokeOrder.length === 0)).toBe(true);
   });
 
   it("CONTROL: they are SEPARATE from the syllabary — letters, isSyllabary and the matrix are untouched", () => {
@@ -279,6 +285,20 @@ describe("shared Perso-Arabic letters retain script-owned provenance", () => {
     expect(urdu.penLifts).toBe(1);
     expect(persian.strokeOrder).toHaveLength(3);
     expect(urdu.strokeOrder).toHaveLength(3);
+    expect(persian.strokeOrderSource?.url).not.toBe(urdu.strokeOrderSource?.url);
+  });
+
+  it("keeps Persian and Urdu ی as separately sourced zero-lift independent forms", () => {
+    const persian = SCRIPTS.find((script) => script.script === "perso-arabic")!
+      .letters.find((entry) => entry.glyph === "ی")!;
+    const urdu = SCRIPTS.find((script) => script.script === "urdu-nastaliq")!
+      .letters.find((entry) => entry.glyph === "ی")!;
+    expect(persian.penLifts).toBe(0);
+    expect(urdu.penLifts).toBe(0);
+    expect(persian.strokeOrder).toHaveLength(2);
+    expect(urdu.strokeOrder).toHaveLength(2);
+    expect(persian.strokeOrder[0]).toMatch(/upper right.*S curve/i);
+    expect(urdu.strokeOrder[0]).toMatch(/upper right.*S curve/i);
     expect(persian.strokeOrderSource?.url).not.toBe(urdu.strokeOrderSource?.url);
   });
 });

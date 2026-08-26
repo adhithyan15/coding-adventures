@@ -2,8 +2,8 @@
 schema_version: 2
 id: GU-C08-lakhvun
 spine_node: SPINE-SAY-WHAT-I-DO
-sequence: 450
-chapter: 10
+sequence: 460
+chapter: 12
 type: word
 headword: લખવું
 romanization: lakhvũ

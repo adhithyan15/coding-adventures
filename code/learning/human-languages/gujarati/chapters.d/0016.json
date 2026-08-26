@@ -1,25 +1,29 @@
 {
   "chapter": 16,
-  "title": "Fourth Return: The Introduction",
-  "label": "ch:gu-r4-introduction",
-  "canDo": "I can retrieve name, my, the Gujarati copula, my-name-is, and pleased-to-meet-you at their fourth spacing window, write each response without a model, and continue into a familiar wellbeing exchange.",
+  "title": "Eye, Ear, Mouth, and Nose",
+  "label": "ch:gu-face-parts",
+  "canDo": "I can name the eye, ear, mouth, and nose in Gujarati, tell a nasal that only marks a sound from one that marks the neuter gender, and say which two of the four are unbroken cousins of their English counterparts.",
   "spineNodes": [
-    "SPINE-EXCHANGE-NAMES",
     "SPINE-CHECK-WELLBEING"
   ],
   "payoff": {
-    "lesson": "GU-R16-wellbeing-r3",
+    "lesson": "GU-C12-naak",
     "kind": "production",
-    "summary": "The chapter closes without a new atom: after five exact R4 returns rebuild the introduction one piece at a time, the learner independently orders and writes the familiar how-are-you exchange in the zero-atom source slot.",
+    "summary": "The chapter closes on નાક, completing the face: the reader produces આંખ, કાન, મોઢું and નાક with their genders (f, f, n, n), names આંખ and નાક as unbroken PIE cousins of eye and nose, states that મોઢું's nasalized -ũ is the same neuter tell carried by every -વું verb infinitive while નાક shows a neuter noun does not always carry it, and reaches back to વાંચવું's medial nasal and જવું/જોવું's one-mark contrast.",
     "assesses": [
-      "GU-CONCEPT-C02-NAAM-01",
-      "GU-CONCEPT-C02-MAARUN-01",
-      "GU-CONCEPT-C02-CHHE-01",
-      "GU-CONCEPT-C02-MAARUNNAAMCHHE-01",
-      "GU-CONCEPT-C02-ANAND-01",
-      "GU-CONCEPT-C03-TAMEKEMCHHO-01",
-      "GU-CONCEPT-C03-MAJAA-01",
-      "GU-CONCEPT-C03-VANDHONAHI-01"
+      "GU-LEX-AANKH",
+      "GU-ETYMON-AANKH-EYE",
+      "GU-LEX-KAAN",
+      "GU-ETYMON-KAAN-DISPUTED",
+      "GU-GRAMMAR-GENDER-SHIFT-INHERITANCE",
+      "GU-LEX-MODHU",
+      "GU-GRAMMAR-NEUTER-U-NASAL-TELL",
+      "GU-ETYMON-MODHU-MUKHA",
+      "GU-LEX-NAAK",
+      "GU-ETYMON-NAAK-NOSE",
+      "GU-GRAMMAR-VU-NEUTER-INFINITIVE",
+      "GU-FORM-JAVU-JOVU-CONTRAST",
+      "GU-SCRIPT-ANUSVARA-MEDIAL"
     ]
   }
 }

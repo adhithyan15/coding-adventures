@@ -1,147 +1,150 @@
-Gujarati, chapter 14: Eye, Ear, Mouth, and Nose.
+Gujarati, chapter 14: Water, Tea, Milk, and Bread.
 4 lessons. The first lesson already needs your eyes or your hands, so save this one for when you have stopped.
 
 
 Lesson 1 of 4.
-આંખ (āṅkh) — an eye, and a nasal that is not what it looks like.
+પાણી (pāṇī) — the first thing you'll actually ask for.
 
 Before we start: this one needs your eyes, so it is not fully a driving lesson. You will want your eyes, for letter shapes on the page. You can listen to everything else now — leave the sections called The letters in this word and Guided Practice until you have stopped, and I will say so again when we reach it.
 
 Warm-up.
 [pause 2 seconds]
-બહેન (bahen) closed a chapter about people. This chapter checks on how someone is — starting with the parts of the body a friend might actually ask about.
+Gamvũ let you say what you like; madad karvī let you ask for help. This chapter asks for something smaller and more frequent: a drink.
 
 You'll want to know first — one word.
-આંખ — āṅkh — eye.
+પાણી — pāṇī — water.
 
 The letters in this word.
-આ the independent long-ā, then the nasal dot ં sitting on top of it — exactly the medial anusvāra you first read inside વાંચવું, doing the same job here, in the middle of a noun rather than a verb — then ખ, the aspirated k. Note what this nasal is NOT: it does not mark આંખ (āṅkh) as neuter — the word is feminine. A nasal dot in the middle of a word is a sound, present or absent as pronunciation happens to need it; it is a different thing entirely from the grammatical -ũ ending you will meet again soon, and this chapter keeps the two apart on purpose.
+પ pa, ા the long-ā sign, ણ the retroflex ṇ you already curled back in jāṇvũ, then ી long-ī. No bar runs across the top of any of them — the headless tell, working the same way in a noun as it did in a verb.
 
-The word, taken apart — the same word as "eye," unbroken.
-āṅkh is inherited from Sauraseni Prakrit akkhi, from Sanskrit akṣi, "eye." The root is Indo-European h₃ekʷ-, "eye; to see," and it survives unbroken in English eye itself, in Latin oculus (behind ocular), and in Greek ósse. This is bhāī's kind of cousin, not bahen's: a straight line back to the same ancestor, no borrowing and no detour.
+Grammar Lens: asking politely.
+પાણી, મહેરબાની કરીને. — pāṇī, meherbānī karīne. — Water, please.
+મહેરબાની કરીને meherbānī karīne is built from મહેરબાની, "kindness" or "favor," plus કરીને, "having done" — the same કરીને/કરવી family you met in મદદ કરવી, "to do a favor of help." Literally: "having done a kindness." Name the item, add this, and you have a complete polite request with no verb for "give" needed at all — the pattern this whole chapter will reuse.
+
+The word, taken apart — the oldest drinking word you own.
+pāṇī comes from Sanskrit pānīya, "that which is to be drunk," built on pā-, "to drink." That root is Indo-European, peh₃(i)-, and English holds two disguised pieces of it: potion and poison both come through Latin potare, "to drink" — a poison, etymologically, is just a drink gone wrong. Greek turned the same idea into sympotēs, "one who drinks together," which English keeps as symposium. Pāṇī is not a stranger to those words; it is what "to drink" looks like when it never left the family that gave you jāṇvũ's Sanskrit cousin jñā-.
 
 Guided Practice.
-[your turn — say: āṅkh — eye]
+[your turn — say: pāṇī — water]
 [pause 8 seconds for the answer]
-[your turn — match: the medial nasal here against the one in વાંચવું]
+[your turn — say: pāṇī, meherbānī karīne. — water, please]
 [pause 8 seconds for the answer]
-[your turn — state: is this nasal a gender marker? (No.) Is āṅkh neuter? (No — feminine.)]
+[your turn — match: karīne against madad karvī's own kar- root]
 [pause 8 seconds for the answer]
-[once you have stopped driving — trace: PIE h₃ekʷ- becomes Sanskrit akṣi becomes આંખ (āṅkh), and becomes English eye]
+[once you have stopped driving — trace: pā- "to drink" becomes pāṇī, and becomes potion, poison, symposium]
+[your turn — run: mane gujarātī game chhe, then pāṇī, meherbānī karīne — liking and requesting, side by side]
+[pause 8 seconds for the answer]
 
 Wrap-up Recall.
 [pause 3 seconds]
-Give the word for "eye." (Āṅkh.) Which English word is the same word by unbroken descent? (Eye.) Does the nasal dot in āṅkh mean the word is neuter? (No — āṅkh is feminine; the dot is only a sound.)
-Sources: Wiktionary: આંખ (āṅkh); Wiktionary: Sanskrit akshi.
+Ask for water politely. (Pāṇī, meherbānī karīne.) What does meherbānī karīne mean word for word? ("Having done a kindness.") Which two English words for a drink, and one for a whole gathering of them, share pāṇī's root? (Potion, poison, symposium.)
+Sources: Wiktionary: પાણી (pāṇī); Wiktionary: મહેરબાની.
 
 
 Lesson 2 of 4.
-કાન (kān) — an ear whose own root is unsettled.
-
-Before we start: this one needs your eyes, so it is not fully a driving lesson. You will want your eyes, for letter shapes on the page. You can listen to everything else now — leave the section called The letters in this word until you have stopped, and I will say so again when we reach it.
-
-Warm-up.
-[pause 2 seconds]
-આંખ (āṅkh) traced back cleanly to a confirmed Indo-European root. The next body part will not be nearly as tidy.
-
-You'll want to know first — one word.
-કાન — kān — ear.
-
-The letters in this word.
-ક ka, ા long-ā, ન na. All three already yours.
-
-Grammar Lens: a gender that changed on the way here.
-કાન is feminine in Gujarati. Its Sanskrit ancestor, karṇa, was masculine. Nothing about inheriting a word guarantees its gender comes along unchanged — મિત્ર kept Sanskrit's masculine, but kān did not keep karṇa's. Gender, like the gender of આંખ (āṅkh) or બહેન, has to be learned with each noun as it stands today, not projected backward from what its ancestor was — the same caution રોટલી's chapter drew from its own -ī ending.
-
-The word, taken apart — where even Sanskrit scholars disagree.
-kān is inherited from Old Gujarati kāna, through Apabhramsa and Prakrit kaṇṇa, from Sanskrit karṇa, "ear." Past that point, no agreement exists. Proposed origins include a root for "defect" (with "ear" as a later, narrower sense), a root meaning "point" or "spike," a root meaning "handle" or "grip," and a connection to śṛṇoti, "to hear." None of these has won out. Kān joins roṭlī as a second word in your Gujarati vocabulary whose Sanskrit form is certain and whose deeper root is not — the honest answer, said plainly rather than picked at random.
-
-Guided Practice.
-[your turn — say: kān — ear, and āṅkh — eye]
-[pause 8 seconds for the answer]
-[your turn — state: karṇa's Sanskrit gender against kān's Gujarati gender (masculine becomes feminine)]
-[pause 8 seconds for the answer]
-[your turn — name: two of the four disputed origins scholars have proposed for karṇa]
-[pause 8 seconds for the answer]
-[your turn — contrast: āṅkh's confirmed PIE root against kān's unsettled one]
-[pause 8 seconds for the answer]
-
-Wrap-up Recall.
-[pause 3 seconds]
-Give the word for "ear." (Kān.) Did its gender change between Sanskrit and Gujarati? (Yes — masculine to feminine.) Is karṇa's own root settled? (No — several proposals, no agreement.)
-Sources: Wiktionary: કાન (kān); Wiktionary: Sanskrit karna.
-
-
-Lesson 3 of 4.
-મોઢું (moḍhũ) — the tell you have been hearing all along.
-
-Before we start: this one needs your eyes, so it is not fully a driving lesson. You will want your eyes, for letter shapes on the page. You can listen to everything else now — leave the section called The letters in this word until you have stopped, and I will say so again when we reach it.
-
-Warm-up.
-[pause 2 seconds]
-કાન (kān)'s own gender shifted away from Sanskrit's. The next body part wears its gender in plain sight — the same nasalized ending you have heard on nearly every verb in this book.
-
-You'll want to know first — one word.
-મોઢું — moḍhũ — mouth.
-
-The letters in this word.
-મ ma, ો the o sign, then a new letter: ઢ, the retroflex aspirated ḍh — curl the tongue back as for ટ and ણ, and add the puff of breath that made ધ aspirated. Then ું, u with the nasal dot. Mo-ḍhũ.
-
-Grammar Lens: the neuter tell, named plainly.
-Every verb infinitive in this book ends in the neuter -વું: hovũ, javũ, jāṇvũ, lakhvũ — a whole word class marked by that one nasalized ending. મોઢું shows the same ending doing the same job on a noun: moḍhũ is neuter, and the nasalized -ũ is the single most recognizable tell for it. Not every neuter noun wears it — પાણી and later nāk do not — but when you do see or hear a word end this way, neuter is the way to bet. And do not confuse it with આંખ (āṅkh)'s nasal: that one sat in the middle of a feminine word and marked nothing about gender at all. This one sits at the end, and it does.
-
-The word, taken apart — a mouth, and a doublet with its own formal twin.
-moḍhũ is inherited from Sauraseni Prakrit muha, from Sanskrit mukha, "mouth, face." It has a formal doublet, મુખ mukh, borrowed directly from the same Sanskrit word the way kuṭumb was — the everyday and the formal register, side by side, from one ancestor reached by two different roads. Past Sanskrit, mukha's own root is not agreed upon — a second open question, alongside karṇa's, rather than a guess dressed up as an answer.
-
-Guided Practice.
-[your turn — say: moḍhũ — mouth]
-[pause 8 seconds for the answer]
-[your turn — state: what gender the -ũ ending marks, and one verb infinitive that wears the same ending]
-[pause 8 seconds for the answer]
-[your turn — contrast: moḍhũ's end-of-word nasal against āṅkh's middle-of-word one]
-[pause 8 seconds for the answer]
-[your turn — name: moḍhũ's formal doublet, and how it reached Gujarati (borrowed whole, like kuṭumb)]
-[pause 8 seconds for the answer]
-
-Wrap-up Recall.
-[pause 3 seconds]
-Give the word for "mouth." (Moḍhũ.) What gender does its -ũ ending mark? (Neuter.) Name the formal doublet of moḍhũ. (મુખ, mukh.)
-Sources: Wiktionary: મોં; Wiktionary: Sanskrit mukha.
-
-
-Lesson 4 of 4.
-નાક (nāk) — the whole face, run back.
+ચા (chā) — the tea that went overland.
 
 Before we start: this one needs your eyes, so it is not fully a driving lesson. You will want your eyes, for letter shapes on the page. You can listen to everything else now — leave the sections called The letters in this word and Guided Practice until you have stopped, and I will say so again when we reach it.
 
 Warm-up.
 [pause 2 seconds]
-આંખ (āṅkh), કાન (kān), મોઢું (moḍhũ) — eye, ear, mouth. One more completes the face, and this one closes the chapter by tying its ending back to a pattern from three chapters ago.
+Pāṇī, meherbānī karīne — water, please. The next drink uses the exact same pattern, and its own name has traveled further than water's ever needed to.
 
 You'll want to know first — one word.
-નાક — nāk — nose.
+ચા — chā — tea.
+ચા, મહેરબાની કરીને. — chā, meherbānī karīne. — Tea, please.
 
 The letters in this word.
-ન na, ા long-ā, ક ka. Every letter already familiar — nāk's only new information is the word itself.
+ચ cha — the same letter that opened chār, "four," and sat inside vichār — plus the long-ā sign. Two letters, both already yours.
 
-Grammar Lens: closing the chapter's gender count.
-નાક is neuter, like મોઢું — but unlike moḍhũ, it carries no nasalized -ũ at all. Run the whole face: āṅkh feminine, kān feminine, moḍhũ neuter with the tell, nāk neuter without it. Two neuters, only one of them wearing the ending that names the class. This is exactly why last lesson called the nasalized -ũ a tell, not a rule: it is the loudest signal Gujarati gives you for neuter, and it is still only sometimes there — the same caution roṭlī and pāṇī already taught you about -ī, and kān's Grammar Lens taught you about gender and inheritance more generally.
-
-The word, taken apart — the last unbroken cousin in the chapter.
-nāk is inherited from Prakrit ṇakka, from Sanskrit nas, "nose," with a suffix added along the way — the retroflex ṇ here is the same sound-shift you first met turning jānāti into jāṇvũ, a single letter's worth of difference deciding a great deal, the way one mark once told javũ apart from jovũ. The root is Indo-European nehas-, unbroken in English nose, Latin nāsus (behind nasal), and Lithuanian nósis. Like āṅkh, nāk needed no ship and no loan to reach you — only the ordinary work of sound change, the same work that once put a nasal dot in the middle of વાંચવું and, this chapter, in the middle of આંખ.
+The word, taken apart — the word that went by land, not by sea.
+ચા is a loanword — unlike pāṇī, which Gujarati has owned since Sanskrit. It came through Classical Persian chā, from Mandarin Chinese chá. That is the overland route, out through Central Asia and Persia: Hindi and Urdu chāy, Russian chai, Turkish çay all took the same road and the same syllable.
+There is another route entirely. Chinese merchants on the coast spoke a different dialect, Hokkien, where the same word is tê. Dutch sailors picked that form up by sea and carried it into Europe: English tea, French thé, German Tee. One plant, one original Chinese word, and two pronunciations of it, sorted by whether a language met the word on a caravan route or a ship's deck. Gujarati's chā and English tea are, in that exact sense, the same word taken two different ways out of the same country.
 
 Guided Practice.
-[your turn — say: all four face words — āṅkh, kān, moḍhũ, nāk]
+[your turn — say: chā — tea, and chā, meherbānī karīne — tea, please]
 [pause 8 seconds for the answer]
-[your turn — sort: gender of each — feminine, feminine, neuter, neuter]
+[your turn — run: both requests — pāṇī, meherbānī karīne; chā, meherbānī karīne]
 [pause 8 seconds for the answer]
-[your turn — state: which of the two neuters carries the -ũ tell, and which does not]
-[pause 8 seconds for the answer]
-[once you have stopped driving — trace: PIE nehas- becomes Sanskrit nas becomes નાક (nāk), and becomes English nose]
-[your turn — recall: the medial nasal in વાંચવું, and the one-mark contrast between જવું and જોવું]
+[once you have stopped driving — trace: Chinese chá becomes Persian chā becomes ચા, the overland road]
+[your turn — name: one language that took the sea road instead, and its word (English, tea)]
 [pause 8 seconds for the answer]
 
 Wrap-up Recall.
 [pause 3 seconds]
-Give the word for "nose." (Nāk.) Which English word is the same word by unbroken descent? (Nose.) Name this chapter's four body words and their genders. (Āṅkh f., kān f., moḍhũ n., nāk n.) Which neuter noun wears the nasalized -ũ tell, and which does not? (Moḍhũ does; nāk does not.)
-Sources: Wiktionary: નાક (nāk); Wiktionary: Sanskrit nas.
+Ask for tea politely. (Chā, meherbānī karīne.) Did chā come by land or by sea? (Land — through Persian, from Mandarin.) Which English word for the same plant took the sea route instead, and through which language? (Tea, through Dutch.)
+Sources: Wiktionary: ચા (chā); Etymonline: chai.
+
+
+Lesson 3 of 4.
+દૂધ (dūdh) — a verb frozen into a noun.
+
+Before we start: this one needs your eyes, so it is not fully a driving lesson. You will want your eyes, for letter shapes on the page. You can listen to everything else now — leave the sections called The letters in this word and Guided Practice until you have stopped, and I will say so again when we reach it.
+
+Warm-up.
+[pause 2 seconds]
+પાણી (pāṇī) was never borrowed. ચા (chā) came the long way from China. The third drink is, like water, entirely Gujarati's own — but it got that way differently.
+
+You'll want to know first — one word.
+દૂધ — dūdh — milk.
+દૂધ, મહેરબાની કરીને. — dūdh, meherbānī karīne. — Milk, please.
+
+The letters in this word.
+દ da, ૂ the long-ū sign below it, then ધ dha — the aspirated d, the same puff of breath that made ખ the aspirated k and ભ the aspirated b. You have met the letter itself before, in વાંધો નહીં.
+
+The word, taken apart — the verb that became its own product.
+dūdh comes from Sanskrit dugdha, and dugdha is not, at root, a noun at all — it is the past participle of duh-, "to milk," so it means literally "milked." The action came first; the word for the substance is just that verb, frozen. It is the same trick gamvũ played with "to please," run on a different part of speech: a verb collapsing into the thing it names.
+The Indo-European root is dheugh-, "to be fit, useful, of avail." Its Germanic descendant did not go on to mean milk in English at all — it survives in doughty, "valiant, capable," from Old English dohtig, "of good use." Dūdh and doughty are cousins by way of a root that once meant simply being of use — milk as the useful thing, valor as the useful person.
+
+Guided Practice.
+[your turn — say: dūdh — milk, and dūdh, meherbānī karīne — milk, please]
+[pause 8 seconds for the answer]
+[your turn — run: all three requests so far — pāṇī, chā, dūdh, each with meherbānī karīne]
+[pause 8 seconds for the answer]
+[once you have stopped driving — trace: duh- "to milk" becomes dugdha "milked" becomes dūdh, and becomes English doughty]
+[your turn — name: which of the three drinks is a loanword (ચા (chā)) and which two are not]
+[pause 8 seconds for the answer]
+
+Wrap-up Recall.
+[pause 3 seconds]
+Ask for milk politely. (Dūdh, meherbānī karīne.) What part of speech was dugdha before it became a noun for milk? (A past participle — "milked.") Which unexpected English word for bravery shares its root with dūdh? (Doughty.)
+Sources: Wiktionary: દૂધ (dūdh); Etymonline: doughty.
+
+
+Lesson 4 of 4.
+રોટલી (roṭlī) — a request pattern, run four times.
+
+Before we start: this one needs your eyes, so it is not fully a driving lesson. You will want your eyes, for letter shapes on the page. You can listen to everything else now — leave the section called The letters in this word until you have stopped, and I will say so again when we reach it.
+
+Warm-up.
+[pause 2 seconds]
+Three drinks, one pattern: pāṇī, chā, dūdh, each followed by meherbānī karīne. The fourth request is food, not drink, and it closes the chapter by finally breaking a pattern instead of continuing one.
+
+You'll want to know first — one word.
+રોટલી — roṭlī — flatbread.
+રોટલી, મહેરબાની કરીને. — roṭlī, meherbānī karīne. — Bread, please.
+
+The letters in this word.
+ર ra, ો the o sign, then a new letter: ટ, a retroflex ṭ — the tongue curls back the way it does for ણ, but here it stops the airflow instead of letting it through the nose. Then લ la, and ી long-ī. Headless throughout, like every letter you've met.
+
+Grammar Lens: an -ī that does not mean "feminine, guaranteed".
+રોટલી (roṭlī) is feminine, and its ending fits: many Gujarati nouns ending in -ī are feminine, the same -ī you saw mark the feminine adjective ending in sārī. But you already own the counter-example: પાણી also ends in -ī, and pāṇī is neuter. The ending is a hint worth noticing, not a rule you can trust blind — every noun's gender has to be learned with the noun, the way madad karvī forced કરવી into its feminine shape only because madad itself was feminine, not because of any ending on karvī alone.
+
+The word, taken apart — where the trail runs out.
+roṭlī is inherited from Sanskrit roṭikā, "a kind of bread." That much is certain. What roṭikā itself comes from is not: the standard comparative dictionaries weigh an unattested root meaning "to strike against" against another meaning "to crush," and neither Turner nor Mayrhofer picks a winner.
+That gives this chapter its own three-way dial, the same shape jāṇvũ, levũ, and khāvũ once drew for verbs: pāṇī and dūdh are inherited straight from Sanskrit with a full etymology behind them; chā is a loan, traceable to Mandarin by a known road; roṭlī is inherited too, but its own root is where recorded history simply stops.
+
+Guided Practice.
+[your turn — say: roṭlī, meherbānī karīne — bread, please]
+[pause 8 seconds for the answer]
+[your turn — run: all four requests — pāṇī, chā, dūdh, roṭlī, each with meherbānī karīne]
+[pause 8 seconds for the answer]
+[your turn — sort: inherited with a known root (pāṇī, dūdh), loaned (chā), inherited with an unknown root (roṭlī)]
+[pause 8 seconds for the answer]
+[your turn — contrast: roṭlī feminine by its -ī, pāṇī neuter despite its -ī]
+[pause 8 seconds for the answer]
+
+Wrap-up Recall.
+[pause 3 seconds]
+Ask for bread politely. (Roṭlī, meherbānī karīne.) Does roṭikā's own root have a settled answer? (No — the dictionaries disagree and leave it open.) Name one Gujarati noun ending in -ī that is feminine and one that is neuter. (Roṭlī; pāṇī.) Run all four requests from this chapter. (Pāṇī, chā, dūdh, roṭlī, each with meherbānī karīne.)
+Sources: Wiktionary: રોટલી (roṭlī); Wiktionary: Sanskrit rotika.

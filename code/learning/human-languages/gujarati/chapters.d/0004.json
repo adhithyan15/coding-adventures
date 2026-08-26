@@ -1,25 +1,20 @@
 {
   "chapter": 4,
-  "title": "Introducing Yourself",
-  "label": "ch:introductions",
-  "canDo": "I can introduce myself in Gujarati, give my name, and understand the other person's name.",
+  "title": "Four Forms Before Your Name",
+  "label": "ch:gu-first-use-forms-a",
+  "canDo": "I can read and write four Gujarati forms before they appear in the first name exchange: ળ, થ, અ, and િ.",
   "spineNodes": [
     "SPINE-EXCHANGE-NAMES"
   ],
   "payoff": {
-    "lesson": "GU-C02-practice",
+    "lesson": "GU-R04-first-four-r1",
     "kind": "task",
-    "summary": "Complete GU-C02-practice, the canonical closing checkpoint, and demonstrate the chapter promise: introduce myself in Gujarati, give my name, and understand the other person's name.",
+    "summary": "With every model covered, read ળ, થ, અ, and િ and write each one from a spoken sound or role cue, keeping reading and writing scores separate.",
     "assesses": [
-      "GU-CONCEPT-C02-ANAND-01",
-      "GU-CONCEPT-C02-CHHE-01",
-      "GU-CONCEPT-C02-MAARUN-01",
-      "GU-CONCEPT-C02-MAARUNNAAMCHHE-01",
-      "GU-CONCEPT-C02-NAAM-01",
-      "GU-CONCEPT-C02-PRACTICE-01",
-      "GU-CONCEPT-C02-SHUN-01",
-      "GU-CONCEPT-C02-TAMARUNNAAMSHUNCHHE-01",
-      "GU-CONCEPT-C02-TUTAME-01"
+      "GU-SCRIPT-LLA-01",
+      "GU-SCRIPT-THA-01",
+      "GU-SCRIPT-INDEPENDENT-A-01",
+      "GU-SCRIPT-I-MATRA-01"
     ]
   }
 }

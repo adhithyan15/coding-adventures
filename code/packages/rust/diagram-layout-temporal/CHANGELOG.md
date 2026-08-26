@@ -1,5 +1,9 @@
 # Changelog
 
+## 0.25.0
+
+- Reserve backend-neutral row geometry for multiline Mermaid Gantt titles, sections, and task labels.
+
 ## 0.24.0
 
 - Resolve typed sub-day Gantt durations at millisecond precision before backend-neutral temporal layout.

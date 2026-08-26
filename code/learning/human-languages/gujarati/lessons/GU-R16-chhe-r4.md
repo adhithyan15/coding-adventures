@@ -2,8 +2,8 @@
 schema_version: 2
 id: GU-R16-chhe-r4
 spine_node: SPINE-EXCHANGE-NAMES
-sequence: 700
-chapter: 16
+sequence: 710
+chapter: 18
 type: practice
 headword: છે
 romanization: chhe

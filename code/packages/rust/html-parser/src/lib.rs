@@ -7639,10 +7639,13 @@ impl HtmlParser {
             }
 
             if !self.has_open_html_element_before_foreign_boundary(name) {
-                self.diagnostics.push(ParserDiagnostic::new(
-                    "unexpected-end-tag",
-                    format!("end tag `</{name}>` did not match an open element"),
-                ));
+                self.diagnostics.push(
+                    ParserDiagnostic::new(
+                        "unexpected-end-tag",
+                        format!("end tag `</{name}>` did not match an open element"),
+                    )
+                    .at_emission(self.current_token_emission_position),
+                );
                 return;
             }
 
@@ -28040,6 +28043,18 @@ mod tests {
         .at_emission(Some(end_tag_position(source, name)))
     }
 
+    fn unmatched_foreign_formatting_end_tag(
+        source: &str,
+        name: &str,
+        occurrence: usize,
+    ) -> ParserDiagnostic {
+        ParserDiagnostic::new(
+            "unexpected-end-tag",
+            format!("end tag `</{name}>` did not match an open element"),
+        )
+        .at_emission(Some(end_tag_position_at(source, name, occurrence)))
+    }
+
     fn unexpected_non_current_end_tag(
         source: &str,
         name: &str,
@@ -43832,10 +43847,7 @@ mod tests {
             unmatched.parser_diagnostics,
             vec![
                 generic_foreign_end_tag_mismatch(unmatched_source, "a"),
-                ParserDiagnostic::new(
-                    "unexpected-end-tag",
-                    "end tag `</a>` did not match an open element",
-                ),
+                unmatched_foreign_formatting_end_tag(unmatched_source, "a", 0),
             ]
         );
         let unmatched_svg = element(&body(&unmatched.document).children[0]);
@@ -43923,6 +43935,81 @@ mod tests {
             unpositioned.process_token(token);
         }
         assert!(unpositioned
+            .diagnostics()
+            .iter()
+            .all(|diagnostic| diagnostic.position.is_none()));
+    }
+
+    #[test]
+    fn positions_unmatched_foreign_formatting_end_tags_at_token_emission() {
+        let source = "<!doctype html><svg><g></a><!--é-->\r\n</a></g></svg>";
+        let output = parse_html_with_diagnostics(source).unwrap();
+        assert!(source.len() > source.chars().count());
+        assert_eq!(
+            output
+                .parser_diagnostics
+                .iter()
+                .filter(|diagnostic| diagnostic.code == "unexpected-end-tag")
+                .cloned()
+                .collect::<Vec<_>>(),
+            vec![
+                unmatched_foreign_formatting_end_tag(source, "a", 0),
+                unmatched_foreign_formatting_end_tag(source, "a", 1),
+            ]
+        );
+
+        let fragment_source = "<g></b>";
+        let fragment =
+            parse_html_fragment_for_context_with_diagnostics(fragment_source, "svg svg").unwrap();
+        assert_eq!(
+            fragment
+                .parser_diagnostics
+                .iter()
+                .filter(|diagnostic| diagnostic.code == "unexpected-end-tag")
+                .cloned()
+                .collect::<Vec<_>>(),
+            vec![unmatched_foreign_formatting_end_tag(
+                fragment_source,
+                "b",
+                0,
+            )]
+        );
+
+        let incomplete = parse_html_with_diagnostics("<!doctype html><svg><g></i").unwrap();
+        assert!(incomplete
+            .parser_diagnostics
+            .iter()
+            .all(|diagnostic| diagnostic.code != "unexpected-end-tag"));
+
+        let ordinary_source = "<!doctype html><div></a></div>";
+        let ordinary = parse_html_with_diagnostics(ordinary_source).unwrap();
+        let ordinary_diagnostic = ordinary
+            .parser_diagnostics
+            .iter()
+            .find(|diagnostic| diagnostic.code == "unexpected-end-tag")
+            .unwrap();
+        assert_eq!(ordinary_diagnostic.position, None);
+
+        let mut direct = HtmlParser::with_body_fragment_options(HtmlParseOptions::default());
+        for token in [
+            Token::StartTag {
+                name: "svg".to_string(),
+                attributes: Vec::new(),
+                self_closing: false,
+            },
+            Token::StartTag {
+                name: "g".to_string(),
+                attributes: Vec::new(),
+                self_closing: false,
+            },
+            Token::EndTag {
+                name: "a".to_string(),
+            },
+            Token::Eof,
+        ] {
+            direct.process_token(token);
+        }
+        assert!(direct
             .diagnostics()
             .iter()
             .all(|diagnostic| diagnostic.position.is_none()));
