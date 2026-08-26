@@ -11,14 +11,9 @@
     "selection_rule": "host-security, credential, native-runtime, and external-approval work may inform classification but is never selected by this parity loop",
     "excluded_delivery_classes": ["onvif", "host-security-hardening", "native-runtime", "external-approval"]
   },
-  "active_pr": {
-    "number": 12895,
-    "url": "https://github.com/adhithyan15/coding-adventures/pull/12895",
-    "branch": "codex/build-tool-swift-tracked-artifact-validation-conformance",
-    "status": "open"
-  },
+  "active_pr": null,
   "last_inventory": {
-    "revision": "52adb62ee56ec11203f5d047a399d57bb2f1047a",
+    "revision": "20e7e5d5b7d2a93754632845eeae48fa7e643bc2",
     "schema_version": 3,
     "established_languages": 15,
     "implementation_identities": 1373,
@@ -4940,14 +4935,16 @@
     {
       "id": "build-tool-ruby-orphan-crate-validation-conformance",
       "title": "Make the Ruby build tool consume orphan-crate validation",
-      "status": "pending",
+      "status": "in-progress",
       "depends_on": [
         "build-tool-orphan-crate-validation-corpus",
         "build-tool-dist-newstyle-discovery-exclusion-remaining-engines",
         "build-tool-ruby-tracked-artifact-validation-conformance"
       ],
-      "branch": null,
+      "branch": "codex/build-tool-ruby-orphan-crate-validation-conformance",
       "pr_number": null,
+      "selection_revision": "20e7e5d5b7d2a93754632845eeae48fa7e643bc2",
+      "selection_notes": "Selected only after PR #12895 completed all 45 reported checks and GitHub merged reviewed head ad5495ea7cf008d0db6a91137209b935290f7d69 through squash auto-merge as 89364dd43dc165e7a683a74df109d4fb77d40725 at 2026-08-26T00:58:42Z without a manual merge command. The collision-checked exact-main schema-3 report at 20e7e5d5b7d2a93754632845eeae48fa7e643bc2 remains 15 established lanes, 1,373 implementation identities, 4,566 package slots, 175 high-consensus packages with 276 gaps, 122 identities in five to nine lanes with 926 gaps, 166 identities in two to four lanes with 2,087 gaps, 910 singletons with 12,740 gaps, 721 Rust singletons, zero canonical collisions, and zero unknown buckets; OCaml remains correctly emerging at zero packages. The intervening ADJ, human-language, HTML-parser, Java-to-Semantic-IR, ALGOL, Mermaid, and relaxed-SIMD changes add no implementation identity or build-tool contract and remain inside existing owners. Live PR #12908 exposes a future Rust-only Wasm GC i31 family, so its neutral contract and selection-blocked lane umbrella are registered before selection. All three Ruby prerequisites are merged. Ruby covers 298 reported packages, has zero exact overlap with every live PR across the six expected tranche paths, and outranks the otherwise-ready Swift orphan consumer at 161 packages while unlocking the same orphan umbrella descendant. OCaml remains collision-unsafe while PRs #12149 and #12162 own required Go entry-point and validator surfaces.",
       "notes": "Consume the closed process-free orphan-crate snapshot and diagnostics in the Ruby engine without adding filesystem enumeration or process authority."
     },
     {
@@ -5416,7 +5413,7 @@
     {
       "id": "build-tool-swift-tracked-artifact-validation-conformance",
       "title": "Make the Swift build tool consume tracked-artifact validation",
-      "status": "pr-open",
+      "status": "merged",
       "depends_on": [
         "build-tool-tracked-artifact-validation-corpus",
         "build-tool-tracked-artifact-unicode-cross-runtime-corpus-hardening",
@@ -5429,6 +5426,9 @@
       "pr_url": "https://github.com/adhithyan15/coding-adventures/pull/12895",
       "opened_at": "2026-08-25T23:39:35Z",
       "opened_revision": "473fe26c88aa5f97703e676a14f6ea4b9bbc4b89",
+      "final_revision": "ad5495ea7cf008d0db6a91137209b935290f7d69",
+      "merge_revision": "89364dd43dc165e7a683a74df109d4fb77d40725",
+      "merged_at": "2026-08-26T00:58:42Z",
       "selection_revision": "ba51676b1047f365715a2fede4fbfc27a6d0ea37",
       "selection_notes": "Selected only after PR #12878 completed all repository checks following one infrastructure-only CodeQL retry and GitHub merged reviewed head f29bd65249fb3f08a7638a88bee7063e52e6f020 through squash auto-merge as 9042d13df3ea2391db6d23a0e49066e233e06ace at 2026-08-25T22:54:56Z without a manual merge command. The collision-checked exact-main schema-3 report at ba51676b1047f365715a2fede4fbfc27a6d0ea37 remains 15 established lanes, 1,373 implementation identities, 4,566 slots, 175 high-consensus packages with 276 gaps, 122 identities in five to nine lanes with 926 gaps, 166 identities in two to four lanes with 2,087 gaps, 910 singletons with 12,740 gaps, 721 Rust singletons, zero canonical collisions, and zero unknown buckets; OCaml remains correctly emerging at zero packages. Git-tree comparison from the preceding inventory finds no changed implementation bucket. Every intervening behavior is classified before selection: Java lambdas extend the JV02 owner, relaxed SIMD lane-select extends the relaxed-SIMD, WAST, conformance, and provenance owners, HTML form diagnostics extend the HTML frontend owner, conditional ALGOL selector writes extend the ALGOL IIR owner, the LaTeX workflow repair is excluded host-security hardening, and human-language plus ADJ changes remain curriculum, generated-data, or adjacent automation surfaces. No newly unowned eligible portable gap remains. All five Swift prerequisites are merged. Swift is the sole remaining tracked-artifact engine, covers 161 reported packages, directly unlocks its orphan-crate consumer, and completes the implementation dependencies of the tracked-artifact umbrella. Eight live open PRs have zero exact overlap with the expected Swift build-tool, generated Unicode, generator/test, fixture, CI, state, and roadmap surfaces; the target branch and prior PR were absent before creating the fresh clean worktree. The higher-descendant extra-CI corpus and strategically important OCaml process-free substrate remain collision-unsafe while PRs #12149 and #12162 own required Go main and validator surfaces; ready orphan-only children are narrower.",
       "implementation_revision": "5f75096321e93b965fcba06041d6f6db110f67a8",
@@ -5437,6 +5437,7 @@
       "final_review_revision": "473fe26c88aa5f97703e676a14f6ea4b9bbc4b89",
       "validation_notes": "The Swift engine now exposes one pure in-memory tracked-artifact snapshot validator and independently consumes all five language-neutral fixtures. It implements lexical slash normalization, the closed portable-path failure precedence, hostile invalid-path redaction, Unicode-scalar length and diagnostic ordering, NFKC plus full default folding for exact node_modules components, full-uppercase Windows reserved basenames, inert regular/symlink/reparse kinds, and canonical detail sorting without adding Git, filesystem, process, environment, or network authority. Generated source-embedded Unicode 17.0.0 tables provide NFC, NFKC, full folding, NFKC-fold, and full uppercase independently of host tables and carry the exact 1,995-byte Unicode License v3 notice. The hardened generator requires explicit exact Swift 6.3.3 swift and swiftc paths, preserves driver-sensitive entrypoint basenames while validating their resolved file targets, uses isolated temporary source and module-cache state, a minimal environment with fixed `/usr/bin:/bin` linker lookup on POSIX, bounded retained output, and unconditional process-tree cleanup; on Windows it derives the reviewed Swift runtime and SDK from the pinned toolchain and the linker libraries from registered host MSVC and Windows Kits versions. Its scalar-exact emitted-runtime check passes all 20,034 official normalization vectors, 1,585 C/F folding rows, 1,581 unconditional uppercase mappings, derived NFKC-fold expectations, and both Unicode 17 sentinels. All 35 generator tests and all 33 Swift package tests pass. LLVM coverage reports 98.28% line and 96.92% function coverage for Validator.swift, 91.33% line coverage for the generated Unicode module, and 62.69% overall line coverage. The dependency-free Swift package describes cleanly and builds in release mode; the canonical BUILD-equivalent test front also passes. The neutral corpus validates all 111 cases and 269 files; all 201 build-tool conformance tests pass with 23 expected platform skips. Package-parity, capability-taxonomy, Haskell-capability, and OCaml-lock families pass 68 tests with two expected Windows skips. The Go build tool passes all packages, vet, and trimpath build, then a real forced Swift dry plan evaluates 45 Starlark BUILD files, discovers and validates 165 Swift packages and programs, preserves the five-entry orphan ledger, and reports all 165 WOULD-BUILD. Ruff, formatting, Bandit medium/high, workflow YAML, 11 Mosaic Swift acceptance tests, strict JSON, the 509-owner/772-edge complete acyclic state graph, collision, credential-pattern, and diff checks pass. The new required CI job pins its Ubuntu runner family and checkout action SHA, requires the runner-provided Swift and Swift compiler to report the exact reviewed Swift 6.3.3 identity before execution, retains least read permission and disabled checkout credentials, and places the full emitted-runtime result in the stable aggregate gate. No dependency changed. Independent correctness and security review found and verified closure of scalar-equivalence masking in the official runner and Swift ownership in the excluded generator host-authority review, then found no remaining publication blocker.",
       "publication_notes": "Opened ready-for-review PR #12895 from clean validated head 473fe26c88aa5f97703e676a14f6ea4b9bbc4b89 after a normal first push from exact origin/main 52adb62ee56ec11203f5d047a399d57bb2f1047a. Immediately before publication, the target remote branch and prior PR were absent, and all 13 changed paths had zero exact overlap across ten live open PRs. GitHub reports the PR non-draft, mergeable, and currently blocked only by queued or in-progress checks including the new required Unicode 17 generated Swift conformance job; auto-merge remains disabled until every required check is terminal and acceptable and no merge conflict exists.",
+      "merge_notes": "The first hosted run exposed three concrete toolchain-host defects: the setup action did not support Swift 6.3.3, resolving driver-sensitive swift and swiftc symlinks changed their lexical entrypoint identity, and the isolated POSIX environment lacked the fixed linker lookup needed for clang. Focused same-branch repairs retained exact runner identity checks, preserved lexical driver entrypoints while validating resolved targets, and set POSIX PATH to root-owned /usr/bin:/bin. All 45 reported checks then reached terminal acceptable conclusions: 38 successes, six expected skips, and one neutral, with no failure or pending job. GitHub reported the branch clean and mergeable; the loop enabled squash auto-merge, and GitHub merged PR #12895 without a manual merge command.",
       "notes": "Consume the closed process-free tracked-artifact snapshot and diagnostics in the Swift engine without adding Git, filesystem, or process authority."
     },
     {
@@ -5581,6 +5582,25 @@
       "pr_number": null,
       "selection_blocked": true,
       "notes": "Excluded from autonomous portable selection. Review concrete UDP connect, send, and receive authority; endpoint and response-source correlation; the fixed eight-request ceiling; the five-second timeout; authorization-before-I/O ordering; payload and diagnostic redaction; truthful runtime/test capability profiles; and runtime projection or mutation. Preserve read-only Device-object telemetry and do not manufacture BACnet writes, arbitrary property access, BBMD, foreign-device registration, BACnet/SC, or all-language sockets."
+    },
+    {
+      "id": "wasm-gc-i31-language-neutral-conformance",
+      "title": "Specify Wasm GC i31 reference semantics with language-neutral fixtures",
+      "status": "pending",
+      "depends_on": [],
+      "branch": null,
+      "pr_number": null,
+      "notes": "Discovered during the post-PR #12895 live-PR audit after PR #12908 exposed that the existing Rust-only i31ref slice had no portable owner and that ref.i31/i31.get_s were incorrectly implemented as stack-identity operations. Define one language-neutral contract and adversarial corpus for ref.i31 low-31-bit masking, i31.get_s bit-30 sign extension, i31.get_u zero extension, null traps, ref.null i31, (ref i31)/(ref null i31)/i31ref text and binary forms, 0xFB sub-opcodes 0x1C through 0x1E, constant-expression globals, validator stack shapes, stable diagnostics, and explicit bounds. Reuse the existing WAST-parser, portable-conformance, corpus-provenance, and host-authority owners for generic directive execution, fetching, NOTICE, and baseline writes. Keep call_ref, typed non-null references, rec types, GC arrays, ref.cast, abstract heap hierarchies, and i31 tables/elements out of this bounded slice."
+    },
+    {
+      "id": "wasm-gc-i31-established-lane-parity",
+      "title": "Bring Wasm GC i31 reference semantics to every applicable established lane",
+      "status": "pending",
+      "depends_on": ["wasm-gc-i31-language-neutral-conformance"],
+      "branch": null,
+      "pr_number": null,
+      "selection_blocked": true,
+      "notes": "Completion umbrella for applicable execution, validation, and WAT/WAST lanes after the neutral i31 contract closes. Decompose into coherent runtime and parser children before delivery; preserve null-trap and 31-bit signed/unsigned semantics, and do not infer parity from existing package identities or the Rust W20 reference slice."
     },
     {
       "id": "wasm-wast-parser-language-neutral-conformance",
@@ -5779,7 +5799,7 @@
       "branch": null,
       "pr_number": null,
       "selection_blocked": true,
-      "notes": "Discovered after merged PR #12773 extended the shared Unicode 17 generator to resolve `node` through PATH, write temporary TypeScript sources and runner files, and invoke `tsx` for full-vector verification. The Ruby tracked-artifact consumer extends the same native generator boundary to PATH-resolved `ruby`, temporary Ruby source and runner files, inherited `RUBYOPT`/`RUBYLIB` and other environment state, buffered child output, and child diagnostics. The merged Elixir consumer adds PATH-resolved `elixir`, temporary emitted modules and runners, inherited `ERL_AFLAGS`/`ERL_FLAGS`/`ELIXIR_ERL_OPTIONS` and related runtime state, buffered child output, and child diagnostics. The merged Lua and Perl slices close their corresponding risks with explicit pinned executable identities, runtime isolation flags, minimal environments, bounded retained output, and unconditional descendant cleanup through a Windows kill-on-close Job Object or POSIX process group, with real timeout and early-root-exit tests. The merged Haskell consumer reuses that hardened runner with explicit exact GHC/runghc identities, no user package or project environment, bounded output, and descendant cleanup. The selected Swift consumer extends the same host boundary to explicit exact Swift 6.3.3 swift/swiftc identities, temporary generated and runner sources plus module-cache state, and on Windows reviewed toolchain-relative runtime, SDK, and linker-library resolution with bounded Job Object execution; full emitted-runtime verification owns those generator changes while the validator remains process-free. Review the still-open executable identity, environment and PATH authority, temporary-directory containment and cleanup, command construction, dependency resolution, bounded output and diagnostics, process failures and process-tree cleanup, offline determinism, credential redaction, and truthful capabilities across the remaining emitted runtimes separately from the pure runtime validators. This native generator-shell authority work is excluded from autonomous portable selection."
+      "notes": "Discovered after merged PR #12773 extended the shared Unicode 17 generator to resolve `node` through PATH, write temporary TypeScript sources and runner files, and invoke `tsx` for full-vector verification. The Ruby tracked-artifact consumer extends the same native generator boundary to PATH-resolved `ruby`, temporary Ruby source and runner files, inherited `RUBYOPT`/`RUBYLIB` and other environment state, buffered child output, and child diagnostics. The merged Elixir consumer adds PATH-resolved `elixir`, temporary emitted modules and runners, inherited `ERL_AFLAGS`/`ERL_FLAGS`/`ELIXIR_ERL_OPTIONS` and related runtime state, buffered child output, and child diagnostics. The merged Lua and Perl slices close their corresponding risks with explicit pinned executable identities, runtime isolation flags, minimal environments, bounded retained output, and unconditional descendant cleanup through a Windows kill-on-close Job Object or POSIX process group, with real timeout and early-root-exit tests. The merged Haskell consumer reuses that hardened runner with explicit exact GHC/runghc identities, no user package or project environment, bounded output, and descendant cleanup. The merged Swift consumer closes that reviewed boundary with exact runner-provided Swift 6.3.3 swift/swiftc identity gates, lexical driver entrypoint preservation plus resolved-target validation, isolated temporary source and module-cache state, fixed root-owned /usr/bin:/bin linker lookup on POSIX, and on Windows pinned-toolchain runtime and SDK discovery plus registered host MSVC and Windows Kits linker libraries under bounded Job Object execution; full emitted-runtime verification owns those generator changes while the validator remains process-free. Review the still-open executable identity, environment and PATH authority, temporary-directory containment and cleanup, command construction, dependency resolution, bounded output and diagnostics, process failures and process-tree cleanup, offline determinism, credential redaction, and truthful capabilities across the remaining emitted runtimes separately from the pure runtime validators. This native generator-shell authority work is excluded from autonomous portable selection."
     }
   ]
 }
