@@ -5474,10 +5474,24 @@
       "sound": "i",
       "role": "vowel",
       "components": [
-        "ಇ  i — independent vowel (word-initial)"
+        "a left upright turning over the first arch",
+        "a retraced middle stem turning over the second arch",
+        "a broad right descent",
+        "a lower loop and rightward exit"
       ],
-      "strokeOrder": [],
-      "strokeOrderNote": ""
+      "strokeOrder": [
+        "climb the left upright, turn over the first arch, and descend the middle stem",
+        "without lifting, retrace the middle stem upward and turn over the second arch",
+        "without lifting, descend through the broad outer curve and turn left along the base",
+        "without lifting, close the lower loop and sweep out to the right"
+      ],
+      "strokeOrderNote": "Four visible movements in one continuous pen-down run: the first arch descends and retraces at the middle stem before the second arch flows through the lower loop and exit.",
+      "penLifts": 0,
+      "strokeOrderSource": {
+        "citation": "Yogesh, Animation of hand-writing Kannada character \"ಇ\".gif, independent vowel ಇ, 98 frames, 4.6 seconds (Wikimedia Commons, 26 December 2015)",
+        "url": "https://commons.wikimedia.org/wiki/File:Animation_of_hand-writing_Kannada_character_%22%E0%B2%87%22.gif",
+        "variation": "The 98-frame animation writes ಇ in one uninterrupted run: climb the left upright, turn over the first arch and descend the middle stem, retrace that stem upward into the second arch, descend the broad outer curve, then close the lower loop and sweep out right. The path is fitted to the bundled Noto Sans Kannada outline; handwritten arch height, loop angularity, and exit length vary, but the zero-lift order remains the same."
+      }
     },
     {
       "glyph": "ಈ",

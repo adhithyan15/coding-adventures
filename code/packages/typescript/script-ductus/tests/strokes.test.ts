@@ -249,6 +249,7 @@ const URDU_DO_CHASHMI_HE = DUCTUS[ductusKey("urdu-nastaliq", "ھ")];
 const URDU_YE = DUCTUS[ductusKey("urdu-nastaliq", "ی")];
 const URDU_BARI_YE = DUCTUS[ductusKey("urdu-nastaliq", "ے")];
 const KANNADA_A = DUCTUS[ductusKey("kannada", "ಅ")];
+const KANNADA_I = DUCTUS[ductusKey("kannada", "ಇ")];
 const TELUGU_A = DUCTUS[ductusKey("telugu", "అ")];
 const TELUGU_E = DUCTUS[ductusKey("telugu", "ఎ")];
 const MALAYALAM_A = DUCTUS[ductusKey("malayalam", "അ")];
@@ -744,6 +745,17 @@ describe("handwriting ductus", () => {
       "sweep around the broad lower bowl",
       "turn counterclockwise around the rounded right loop",
       "return left along the inward horizontal bar",
+    ]);
+  });
+
+  it("Kannada ಇ retraces the middle stem and finishes without lifting", () => {
+    expect(penLifts(KANNADA_I)).toBe(0);
+    expect(KANNADA_I.strokes).toHaveLength(1);
+    expect(KANNADA_I.strokes[0].segments.map((segment) => segment.label)).toEqual([
+      "climb the left upright, turn over the first arch, and descend the middle stem",
+      "retrace the middle stem upward and turn over the second arch",
+      "descend through the broad outer curve and turn left along the base",
+      "close the lower loop and sweep out to the right",
     ]);
   });
 
