@@ -5857,7 +5857,7 @@ impl Compiler {
         let preserves_name = self.require_var(name).is_ok_and(|binding| match binding.ty {
             ScalarType::Integer => self.integer_identity_expression_preserves_name(node, name),
             ScalarType::Boolean => self.boolean_identity_expression_preserves_name(node, name),
-            ScalarType::Real => self.real_unit_identity_expression_preserves_name(node, name),
+            ScalarType::Real => self.real_identity_expression_preserves_name(node, name),
             ScalarType::String => {
                 exact_bare_variable_expression_name(node).as_deref() == Some(name)
             }
@@ -6146,19 +6146,19 @@ impl Compiler {
         preserves
     }
 
-    fn real_unit_identity_expression_preserves_name(
+    fn real_identity_expression_preserves_name(
         &self,
         node: &GrammarASTNode,
         name: &str,
     ) -> bool {
         if let Some(child) = single_parenthesized_child(node) {
-            return self.real_unit_identity_expression_preserves_name(child, name);
+            return self.real_identity_expression_preserves_name(child, name);
         }
         if exact_bare_variable_expression_name(node).as_deref() == Some(name) {
             return true;
         }
         if let Some(base) = literal_power_identity_base(node) {
-            return self.real_unit_identity_expression_preserves_name(base, name);
+            return self.real_identity_expression_preserves_name(base, name);
         }
         let sequence = pieces(node);
         let (sequence, leading_plus) = match sequence.as_slice() {
@@ -6166,12 +6166,12 @@ impl Compiler {
             sequence => (sequence, false),
         };
         if let (true, [Piece::Node(child)]) = (leading_plus, sequence) {
-            return self.real_unit_identity_expression_preserves_name(child, name);
+            return self.real_identity_expression_preserves_name(child, name);
         }
         if let (true, [Piece::Node(child)]) =
             (direct_tokens(node).is_empty(), sequence)
         {
-            return self.real_unit_identity_expression_preserves_name(child, name);
+            return self.real_identity_expression_preserves_name(child, name);
         }
         if sequence.len() < 3 || sequence.len().is_multiple_of(2) {
             return false;
@@ -6179,18 +6179,32 @@ impl Compiler {
         let Piece::Node(first) = &sequence[0] else {
             return false;
         };
+        if sequence.iter().skip(1).step_by(2).all(|piece| {
+            matches!(piece, Piece::Op(op) if matches!(op.as_str(), "+" | "-"))
+        }) {
+            if !self.real_identity_expression_preserves_name(first, name) {
+                return false;
+            }
+            return (1..sequence.len()).step_by(2).all(|index| {
+                matches!(
+                    (&sequence[index], &sequence[index + 1]),
+                    (Piece::Op(op), Piece::Node(rhs))
+                        if op == "-" && literal_positive_numeric_zero(rhs)
+                )
+            });
+        }
         if sequence.iter().skip(1).step_by(2).any(|piece| {
             !matches!(piece, Piece::Op(op) if matches!(op.as_str(), "*" | "/"))
         }) {
             return false;
         }
-        let mut preserves = self.real_unit_identity_expression_preserves_name(first, name);
+        let mut preserves = self.real_identity_expression_preserves_name(first, name);
         let mut is_one = literal_numeric_one(first);
         for index in (1..sequence.len()).step_by(2) {
             let (Piece::Op(op), Piece::Node(rhs)) = (&sequence[index], &sequence[index + 1]) else {
                 return false;
             };
-            let rhs_preserves = self.real_unit_identity_expression_preserves_name(rhs, name);
+            let rhs_preserves = self.real_identity_expression_preserves_name(rhs, name);
             let rhs_is_one = literal_numeric_one(rhs);
             if preserves {
                 if !rhs_is_one {
@@ -8493,6 +8507,34 @@ fn literal_numeric_one(node: &GrammarASTNode) -> bool {
     }
     let child_nodes = direct_nodes(node);
     tokens.is_empty() && child_nodes.len() == 1 && literal_numeric_one(child_nodes[0])
+}
+
+fn literal_positive_numeric_zero(node: &GrammarASTNode) -> bool {
+    if let Some(child) = single_parenthesized_child(node) {
+        return literal_positive_numeric_zero(child);
+    }
+    if let Some((sign, child)) = single_signed_child(node) {
+        return match sign {
+            "+" => literal_positive_numeric_zero(child),
+            "-" => literal_integer_value(child) == Some(0),
+            _ => false,
+        };
+    }
+    let tokens = direct_tokens(node);
+    if tokens.len() == 1 {
+        return match tokens[0].effective_type_name() {
+            "INTEGER_LIT" => tokens[0].value.parse::<i64>() == Ok(0),
+            "REAL_LIT" => tokens[0]
+                .value
+                .parse::<f64>()
+                .is_ok_and(|value| value.to_bits() == 0.0f64.to_bits()),
+            _ => false,
+        };
+    }
+    let child_nodes = direct_nodes(node);
+    tokens.is_empty()
+        && child_nodes.len() == 1
+        && literal_positive_numeric_zero(child_nodes[0])
 }
 
 /// Return the name of a bare scalar variable node. Array elements are kept
@@ -10910,6 +10952,36 @@ mod tests {
             "test",
         )
         .expect_err("real additive zero may change the sign bit of negative zero");
+        assert!(format!("{err:?}").contains("cannot print a real value"));
+    }
+
+    #[test]
+    fn al4_real_subtractive_zero_selector_writes_stay_stable() {
+        for write in [
+            "choose - 0.0",
+            "choose - (+0.0)",
+            "choose - 0",
+            "choose - (-0)",
+            "choose - 0.0 - 0",
+            "((choose - 0.0))",
+        ] {
+            compile_source(
+                &format!(
+                    "begin integer i, n, limit; real choose; boolean other; n := 3; limit := 3; choose := 1.0; other := true; i := 0; for i := i + 1 while i < n do begin n := limit; limit := if choose = 1.0 then limit else limit + 1; choose := if other then choose else 0.0; other := other; choose := {write} end; print(i + 0.25) end"
+                ),
+                "test",
+            )
+            .unwrap_or_else(|_| panic!("real subtractive-zero write {write:?} must stay stable"));
+        }
+    }
+
+    #[test]
+    fn al4_real_negative_zero_subtraction_remains_conservative() {
+        let err = compile_source(
+            "begin integer i, n, limit; real choose; boolean other; n := 3; limit := 3; choose := 1.0; other := true; i := 0; for i := i + 1 while i < n do begin n := limit; limit := if choose = 1.0 then limit else limit + 1; choose := if other then choose else 0.0; other := other; choose := choose - (-0.0) end; print(i + 0.25) end",
+            "test",
+        )
+        .expect_err("subtracting negative zero is the unsafe additive-zero identity");
         assert!(format!("{err:?}").contains("cannot print a real value"));
     }
 
