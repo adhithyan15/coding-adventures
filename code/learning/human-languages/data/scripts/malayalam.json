@@ -5784,10 +5784,26 @@
       "sound": "ā",
       "role": "vowel",
       "components": [
-        "ആ  ā — independent vowel (word-initial)"
+        "a left outer arch",
+        "a compact inner curl and broad lower loop",
+        "a central crown and upright",
+        "a rounded right loop",
+        "a below-line finishing curl"
       ],
-      "strokeOrder": [],
-      "strokeOrderNote": ""
+      "strokeOrder": [
+        "climb the left outer arch and curve inward at the top",
+        "after one lift, turn inward around the compact inner curl and circle the broad lower loop",
+        "without lifting, sweep up through the central crown and descend the upright",
+        "without lifting, retrace the upright and sweep around the rounded right loop",
+        "without lifting, descend the far side and curl left below the line"
+      ],
+      "strokeOrderNote": "Five visible movements in two pen-down runs: the left outer arch stands alone; after one lift, the inner curl flows through the lower loop, central upright, right loop, and below-line finish.",
+      "penLifts": 1,
+      "strokeOrderSource": {
+        "citation": "Sriveenkat, Ml ആ order.gif, stroke-order animation of Malayalam independent vowel ആ in Gayathri, 73 frames, 11 seconds (Wikimedia Commons, 1 June 2023)",
+        "url": "https://commons.wikimedia.org/wiki/File:Ml_%E0%B4%86_order.gif",
+        "variation": "The CC BY-SA 4.0 animation draws the left outer arch in frames 2–9, then begins a disconnected second run at frame 10; every later frame joins the existing ink as the inner curl flows through the lower loop, central upright, rounded right loop, and below-line finish. The path is fitted to the bundled Noto Sans Malayalam outline rather than the source's Gayathri proportions, preserving the one-lift order while allowing arch width, loop roundness, and descender depth to vary."
+      }
     },
     {
       "glyph": "ഇ",

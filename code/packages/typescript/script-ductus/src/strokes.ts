@@ -14761,6 +14761,75 @@ export const DUCTUS: Record<string, LetterDuctus> = {
     ],
     source: malayalamIndependentVowelSource("അ"),
   },
+  // Sriveenkat's 73-frame animation draws independent vowel ആ in two runs:
+  // the left outer arch stands alone, then the inner curl flows through the
+  // lower loop, central upright, rounded right loop, and below-line finish.
+  // These five medians preserve that one-lift order on Noto Sans Malayalam.
+  [ductusKey("malayalam", "ആ")]: {
+    script: "malayalam",
+    glyph: "ആ",
+    strokes: [
+      {
+        segments: [
+          {
+            label: "climb the left outer arch and curve inward at the top",
+            path: [
+              { x: 235, y: 45 }, { x: 175, y: 75 }, { x: 90, y: 205 },
+              { x: 85, y: 335 }, { x: 160, y: 470 }, { x: 285, y: 530 },
+              { x: 400, y: 530 },
+            ],
+          },
+        ],
+      },
+      {
+        segments: [
+          {
+            label: "turn inward around the compact inner curl and circle the broad lower loop",
+            path: [
+              { x: 410, y: 400 }, { x: 520, y: 510 }, { x: 600, y: 480 }, { x: 660, y: 410 },
+              { x: 665, y: 340 }, { x: 625, y: 285 }, { x: 550, y: 255 },
+              { x: 500, y: 250 }, { x: 610, y: 250 }, { x: 680, y: 190 },
+              { x: 680, y: 115 }, { x: 615, y: 30 }, { x: 535, y: 22 },
+              { x: 430, y: 35 }, { x: 350, y: 145 }, { x: 350, y: 235 },
+              { x: 390, y: 250 }, { x: 500, y: 250 },
+            ],
+          },
+          {
+            label: "sweep up through the central crown and descend the upright",
+            path: [
+              { x: 500, y: 250 }, { x: 610, y: 250 }, { x: 665, y: 340 },
+              { x: 640, y: 420 }, { x: 640, y: 470 }, { x: 650, y: 510 },
+              { x: 700, y: 530 }, { x: 760, y: 530 }, { x: 855, y: 465 },
+              { x: 890, y: 355 }, { x: 890, y: 210 }, { x: 890, y: 20 },
+            ],
+          },
+          {
+            label: "retrace the upright and sweep around the rounded right loop",
+            path: [
+              { x: 890, y: 20 }, { x: 890, y: 210 }, { x: 900, y: 350 },
+              { x: 950, y: 450 }, { x: 1050, y: 510 }, { x: 1150, y: 530 },
+              { x: 1280, y: 520 }, { x: 1380, y: 450 }, { x: 1420, y: 340 },
+              { x: 1400, y: 220 }, { x: 1340, y: 100 }, { x: 1250, y: 25 },
+              { x: 1160, y: 40 }, { x: 1090, y: 110 }, { x: 1060, y: 220 },
+              { x: 1080, y: 350 }, { x: 1140, y: 420 }, { x: 1240, y: 450 },
+              { x: 1340, y: 420 }, { x: 1400, y: 350 },
+            ],
+          },
+          {
+            label: "descend the far side and curl left below the line",
+            path: [
+              { x: 1400, y: 350 }, { x: 1500, y: 300 }, { x: 1580, y: 200 },
+              { x: 1600, y: 80 }, { x: 1535, y: -40 },
+              { x: 1460, y: -135 }, { x: 1360, y: -190 }, { x: 1240, y: -195 },
+              { x: 1180, y: -175 }, { x: 1130, y: -130 }, { x: 1120, y: -90 },
+              { x: 1150, y: -60 }, { x: 1210, y: -55 },
+            ],
+          },
+        ],
+      },
+    ],
+    source: malayalamIndependentVowelSource("ആ"),
+  },
   // Davis's four-second initial-vowel clip writes ഇ in one uninterrupted run:
   // a compact left spiral expands into the central crown, descends and
   // retraces the stem, flows around the broad right lobe, then curls below the

@@ -259,6 +259,7 @@ const TELUGU_AA = DUCTUS[ductusKey("telugu", "ఆ")];
 const TELUGU_I = DUCTUS[ductusKey("telugu", "ఇ")];
 const TELUGU_E = DUCTUS[ductusKey("telugu", "ఎ")];
 const MALAYALAM_A = DUCTUS[ductusKey("malayalam", "അ")];
+const MALAYALAM_AA = DUCTUS[ductusKey("malayalam", "ആ")];
 const MALAYALAM_I = DUCTUS[ductusKey("malayalam", "ഇ")];
 const MALAYALAM_U = DUCTUS[ductusKey("malayalam", "ഉ")];
 const MALAYALAM_E = DUCTUS[ductusKey("malayalam", "എ")];
@@ -614,12 +615,14 @@ describe("handwriting ductus", () => {
         const inInk = makeInInk(glyph().contours);
         for (let s = 0; s < letter.strokes.length; s++) {
           const frac = fractionOnInk(penPath(letter.strokes[s]), inInk);
-          // Five cited handwriting animations keep a run continuous across a
+          // Six cited handwriting animations keep a run continuous across a
           // gap in Noto's printed contours: Gujarati હ and Devanagari ख's
           // upper-right loop, Telugu అ's right-lobe return, and Malayalam അ's
           // lower-loop return, plus Kannada ಆ's loop-to-bowl and loop-to-bar
-          // joins. Permit only those documented bridges; every other authored
-          // path retains the stricter general-purpose floor.
+          // joins, while Malayalam ആ circles its right loop and descender in
+          // one uninterrupted run across Noto's separated print contours.
+          // Permit only those documented bridges; every other authored path
+          // retains the stricter general-purpose floor.
           const minimumInkFit = letter.script === "gujarati" && letter.glyph === "હ"
             ? 0.92
             : letter.script === "devanagari" && letter.glyph === "ख"
@@ -628,6 +631,8 @@ describe("handwriting ductus", () => {
               ? 0.96
               : letter.script === "malayalam" && letter.glyph === "അ"
                 ? 0.96
+              : letter.script === "malayalam" && letter.glyph === "ആ"
+                ? 0.89
               : letter.script === "kannada" && letter.glyph === "ಆ"
                 ? 0.92
               : 0.97;
@@ -862,6 +867,22 @@ describe("handwriting ductus", () => {
         "curl left around the lower inner loop",
       ],
     ]);
+  });
+
+  it("Malayalam ആ lifts once after the standalone left outer arch", () => {
+    expect(penLifts(MALAYALAM_AA)).toBe(1);
+    expect(MALAYALAM_AA.strokes.map((stroke) => stroke.segments.map((segment) => segment.label))).toEqual([
+      ["climb the left outer arch and curve inward at the top"],
+      [
+        "turn inward around the compact inner curl and circle the broad lower loop",
+        "sweep up through the central crown and descend the upright",
+        "retrace the upright and sweep around the rounded right loop",
+        "descend the far side and curl left below the line",
+      ],
+    ]);
+    expect(MALAYALAM_AA.source.url).toBe(
+      "https://commons.wikimedia.org/wiki/File:Ml_%E0%B4%86_order.gif",
+    );
   });
 
   it("Malayalam ഇ keeps all four animated movements in one run", () => {
