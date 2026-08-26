@@ -5464,10 +5464,24 @@
       "sound": "ā",
       "role": "vowel",
       "components": [
-        "ಆ  ā — independent vowel (word-initial)"
+        "a compact left loop",
+        "a broad lower bowl ending at upper right",
+        "a rounded right loop",
+        "an inward horizontal bar"
       ],
-      "strokeOrder": [],
-      "strokeOrderNote": ""
+      "strokeOrder": [
+        "turn clockwise around the compact left loop",
+        "without lifting, sweep around the broad lower bowl and finish at the upper right",
+        "lift, then turn clockwise around the rounded right loop",
+        "without lifting, return left along the inward horizontal bar"
+      ],
+      "strokeOrderNote": "Four visible movements in two pen-down runs: the left loop flows through the broad lower bowl; after one lift, the right loop returns left along the inner bar.",
+      "penLifts": 1,
+      "strokeOrderSource": {
+        "citation": "Gopala Krishna A, Kannada-alphabet-aa.gif, animation of Kannada independent vowel ಆ, 35 frames, 3.5 seconds (Wikimedia Commons, 25 May 2016)",
+        "url": "https://commons.wikimedia.org/wiki/File:Kannada-alphabet-aa.gif",
+        "variation": "The CC BY-SA 4.0 animation writes ಆ in two pen-down runs: turn around the compact left loop and sweep through the broad lower bowl to the upper right; lift once, turn around the rounded right loop, then return left along the inner horizontal bar. The path is fitted to the bundled Noto Sans Kannada outline; handwritten loop width, bowl depth, and bar length vary, but the one-lift order remains the same."
+      }
     },
     {
       "glyph": "ಇ",

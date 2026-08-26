@@ -1,5 +1,11 @@
 # Changelog
 
+## 0.208.0 — 2026-08-26 — real zero-exponent units
+
+Exact signed-unit recognition now accepts a finite numeric literal raised by a
+complete bounded zero exponent chain. This mirrors the existing unrolled power
+lowerer, which returns exact positive one; dynamic bases remain conservative.
+
 ## 0.207.0 — 2026-08-26 — real power-zero identities
 
 Exact signed-zero recognition now evaluates bounded literal powers with a

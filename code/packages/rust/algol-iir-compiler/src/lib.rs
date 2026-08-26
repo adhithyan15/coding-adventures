@@ -8570,6 +8570,14 @@ fn literal_power_unit_is_negative(node: &GrammarASTNode) -> Option<bool> {
     }
     let (base, exponents) = operands.split_first()?;
     let exponent = literal_nonneg_integer_power_chain(exponents)?;
+    if exponent == 0
+        && (literal_integer_value(base).is_some()
+            || expr_real_literal_text(base)
+                .and_then(|literal| literal.parse::<f64>().ok())
+                .is_some_and(f64::is_finite))
+    {
+        return Some(false);
+    }
     let base_is_negative = literal_numeric_unit_is_negative(base)?;
     Some(base_is_negative && !exponent.is_multiple_of(2))
 }
@@ -11228,6 +11236,24 @@ mod tests {
     }
 
     #[test]
+    fn al4_real_zero_exponent_unit_selector_writes_stay_stable() {
+        for write in [
+            "choose * (2.0 ^ 0)",
+            "choose / ((-3) ** 0)",
+            "(0 ^ 0) * choose",
+            "choose * ((+4.0) ^ 0 ^ 1)",
+        ] {
+            compile_source(
+                &format!(
+                    "begin integer i, n, limit; real choose; boolean other; n := 3; limit := 3; choose := 1.0; other := true; i := 0; for i := i + 1 while i < n do begin n := limit; limit := if choose = 1.0 then limit else limit + 1; choose := if other then choose else 0.0; other := other; choose := {write} end; print(i + 0.25) end"
+                ),
+                "test",
+            )
+            .unwrap_or_else(|_| panic!("real zero-exponent-unit write {write:?} must stay stable"));
+        }
+    }
+
+    #[test]
     fn al4_real_non_identity_power_selector_writes_remain_conservative() {
         for write in [
             "choose ^ 0",
@@ -11268,6 +11294,7 @@ mod tests {
             "choose * (-1.0) / 1.0",
             "choose * ((-1.0) * 1.0)",
             "choose * ((-1.0) ^ 3)",
+            "choose * (i ^ 0)",
             "1.0 / choose * 1.0",
         ] {
             let err = compile_source(

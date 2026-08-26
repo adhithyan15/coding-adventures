@@ -1,6 +1,6 @@
 # Changelog — `lang-aot`
 
-## 0.252.0 - 2026-08-26 (fix: `closure_identity_returns_captured_value` for real)
+## 0.253.0 - 2026-08-26 (fix: `closure_identity_returns_captured_value` for real)
 
 Fixes the recurring `e6d7a_wasm_closures.rs` failure on
 `((lambda (x) x) 42)` ("the minimal apply") that at least four consecutive

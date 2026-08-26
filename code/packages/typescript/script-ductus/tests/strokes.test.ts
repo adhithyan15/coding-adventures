@@ -251,6 +251,7 @@ const URDU_YE = DUCTUS[ductusKey("urdu-nastaliq", "ی")];
 const PERSIAN_YEH = DUCTUS[ductusKey("perso-arabic", "ی")];
 const URDU_BARI_YE = DUCTUS[ductusKey("urdu-nastaliq", "ے")];
 const KANNADA_A = DUCTUS[ductusKey("kannada", "ಅ")];
+const KANNADA_AA = DUCTUS[ductusKey("kannada", "ಆ")];
 const KANNADA_I = DUCTUS[ductusKey("kannada", "ಇ")];
 const KANNADA_E = DUCTUS[ductusKey("kannada", "ಎ")];
 const TELUGU_A = DUCTUS[ductusKey("telugu", "అ")];
@@ -613,11 +614,12 @@ describe("handwriting ductus", () => {
         const inInk = makeInInk(glyph().contours);
         for (let s = 0; s < letter.strokes.length; s++) {
           const frac = fractionOnInk(penPath(letter.strokes[s]), inInk);
-          // Four cited handwriting animations keep a run continuous across a
+          // Five cited handwriting animations keep a run continuous across a
           // gap in Noto's printed contours: Gujarati હ and Devanagari ख's
           // upper-right loop, Telugu అ's right-lobe return, and Malayalam അ's
-          // lower-loop return. Permit only those documented bridges; every
-          // other authored path retains the stricter general-purpose floor.
+          // lower-loop return, plus Kannada ಆ's loop-to-bowl and loop-to-bar
+          // joins. Permit only those documented bridges; every other authored
+          // path retains the stricter general-purpose floor.
           const minimumInkFit = letter.script === "gujarati" && letter.glyph === "હ"
             ? 0.92
             : letter.script === "devanagari" && letter.glyph === "ख"
@@ -626,6 +628,8 @@ describe("handwriting ductus", () => {
               ? 0.96
               : letter.script === "malayalam" && letter.glyph === "അ"
                 ? 0.96
+              : letter.script === "kannada" && letter.glyph === "ಆ"
+                ? 0.92
               : 0.97;
           expect(frac, `stroke ${s} strays off the glyph`).toBeGreaterThan(minimumInkFit);
         }
@@ -788,6 +792,23 @@ describe("handwriting ductus", () => {
       "turn counterclockwise around the rounded right loop",
       "return left along the inward horizontal bar",
     ]);
+  });
+
+  it("Kannada ಆ lifts once between the broad bowl and rounded right loop", () => {
+    expect(penLifts(KANNADA_AA)).toBe(1);
+    expect(KANNADA_AA.strokes.map((stroke) => stroke.segments.map((segment) => segment.label))).toEqual([
+      [
+        "turn clockwise around the compact left loop",
+        "sweep around the broad lower bowl and finish at the upper right",
+      ],
+      [
+        "lift, then turn clockwise around the rounded right loop",
+        "return left along the inward horizontal bar",
+      ],
+    ]);
+    expect(KANNADA_AA.source.url).toBe(
+      "https://commons.wikimedia.org/wiki/File:Kannada-alphabet-aa.gif",
+    );
   });
 
   it("Kannada ಇ retraces the middle stem and finishes without lifting", () => {

@@ -2,8 +2,8 @@
 
 Filesystem-backed implementation of `storage_core::StorageBackend`.
 Hand a vault a path on disk and it Just Works — atomic write +
-rename + fsync, single-file-per-record format, restart-safe
-revision counter.
+rename + fsync, single-file-per-record format, and revisions that
+are unique per backend instance rather than recovered from disk.
 
 The backend is **opaque to record content**. The Vault stack
 encrypts above it (VLT01 sealed-store), so this layer only ever
@@ -65,9 +65,27 @@ handle at all in a `#![forbid(unsafe_code)]` crate — see
 [`STR01-storage-fs-backend.md`](../../../specs/STR01-storage-fs-backend.md)
 for the full argument.
 
-`initialize()` cleans up any stranded `.tmp` files and seeds the
-in-memory revision counter from the highest revision on disk so
-monotonic numbering survives process restart.
+`initialize()` cleans up any stranded `.tmp` files. That is all it
+does: it opens no record, so it costs O(directory entries) rather
+than O(bytes in the store).
+
+Revisions are `rev-<instance>-<counter>`, where `<instance>` is 128
+bits of OS entropy drawn once per `FsStorageBackend`. Uniqueness is
+therefore **structural**, not recovered. An earlier design seeded the
+counter from the highest revision on disk, which made the guarantee
+depend on those records still existing — so deleting the record that
+held the high-water mark moved it backwards and the next instance
+reissued revisions it had already handed out. Since a revision is the
+token every `if_revision` compares against, a reissued one is an ABA:
+a stale guard matches a record it was never taken from.
+
+Two consequences worth knowing. Revisions **do not sort** —
+`storage_core` documents `Revision` as an opaque compare-and-swap
+token and this one lives up to that. And this is **not** cross-process
+write exclusion: two processes can still both pass a `put`'s check and
+both rename, because that check and the rename are not one atomic step.
+Unique revisions stop a *stale* token from matching; they do not
+serialise concurrent writers.
 
 The backend also runs the shared `storage-core` conformance suite, so its point
 reads, create-if-absent and revision-conditional writes, stable prefix listing,

@@ -65,7 +65,39 @@
 //!
 //! On `initialize`, the backend walks `<root>` and removes any
 //! stranded `.tmp` files — those are the result of crashes during
-//! step 1–3 above and don't represent any committed state.
+//! step 1–3 above and don't represent any committed state. That sweep
+//! is all the walk does: it opens no record, so it costs
+//! O(directory entries) rather than O(bytes in the store).
+//!
+//! ## Revisions
+//!
+//! A revision is `rev-<instance>-<counter>`, where `<instance>` is
+//! unique to one `FsStorageBackend` value and `<counter>` counts within
+//! it. `storage_core` documents `Revision` as an **opaque**
+//! compare-and-swap token, and this one lives up to that: it does not
+//! sort, and nothing should read meaning into it.
+//!
+//! Uniqueness is *structural* rather than recovered. An earlier scheme
+//! seeded the counter from the highest revision found on disk, which
+//! made the guarantee depend on the records still being there — so
+//! deleting the record holding the high-water mark moved it backwards
+//! and the next instance reissued revisions it had already handed out.
+//! Because a revision is the token every `if_revision` compares
+//! against, a reissued one is an ABA: a stale guard matches a record it
+//! was never taken from, and a compare-and-swap that must fail
+//! silently succeeds. Two instances over one root hit the same thing
+//! without any deletion at all.
+//!
+//! Deriving uniqueness from the instance instead removes the whole
+//! class. Deletion, a restored backup, a rolled-back store, and a
+//! second concurrent process are all non-events, and there is no
+//! durable bookkeeping to lose, corrupt, or roll back.
+//!
+//! **This is not a substitute for cross-process write exclusion.** Two
+//! processes can still both pass a `put`'s `if_revision`/`if_absent`
+//! check and both rename, because that check and the rename are not one
+//! atomic step — see the caveat below. Unique revisions stop a *stale*
+//! token from matching; they do not serialise concurrent writers.
 //!
 //! ## What this crate does *not* do
 //!
@@ -77,14 +109,24 @@
 //!   need POSIX `flock`/`lockf` which is platform-dependent;
 //!   defer.)
 //! - **No directory-level locking for concurrent writers.** Two
-//!   `put`s of the same `(namespace, key)` from the same process
-//!   are serialized via `Mutex` on the in-memory revision counter.
-//!   Cross-process concurrency is not supported (a vault should
-//!   be opened by one process at a time).
+//!   `put`s of the same `(namespace, key)` from the same process are
+//!   serialized by this backend's `write_lock`. **Across processes they
+//!   are not**, and the consequence is sharper than "not supported":
+//!   `put` evaluates `if_absent` / `if_revision` against a read and
+//!   *then* writes-fsyncs-renames, with only a per-instance mutex in
+//!   between. Two processes can both pass the check and both rename, so
+//!   a compare-and-swap that should have excluded one of them does not.
+//!
+//!   Closing it needs an `flock`/`O_EXCL` lock spanning check-through-
+//!   rename. Until that lands, any protocol whose *safety* rests on
+//!   CAS-based mutual exclusion between processes — leadership fencing,
+//!   for one — is not sound on this backend, and should say so rather
+//!   than assume the storage layer provides an atomic CAS.
 
 #![forbid(unsafe_code)]
 #![deny(missing_docs)]
 
+use coding_adventures_csprng::random_array;
 use coding_adventures_json_serializer::serialize as json_serialize;
 use coding_adventures_json_value::{parse as json_parse, JsonNumber, JsonValue};
 use std::collections::HashMap;
@@ -92,7 +134,7 @@ use std::fs::{self, File, OpenOptions};
 use std::io::{self, Read, Write};
 use std::path::{Path, PathBuf};
 use std::sync::atomic::{AtomicBool, AtomicU64, Ordering};
-use std::sync::{Mutex, PoisonError};
+use std::sync::{Mutex, OnceLock, PoisonError};
 use std::time::{SystemTime, UNIX_EPOCH};
 use storage_core::{
     LeaseToken, Revision, StorageBackend, StorageError, StorageLease, StorageListOptions,
@@ -185,6 +227,63 @@ pub const fn fs_storage_backend_summary() -> FsStorageBackendSummary {
 // 2. Backend struct
 // ─────────────────────────────────────────────────────────────────────
 
+/// Distinguishes backend instances within one process.
+///
+/// The process id separates concurrent processes and the clock separates
+/// restarts, but neither separates two `FsStorageBackend`s built in the same
+/// process in the same nanosecond — which `chief-of-staff-daemon` does, holding
+/// two backends over one state directory.
+static INSTANCE_SEQUENCE: AtomicU64 = AtomicU64::new(0);
+
+/// Build an identifier unique to one `FsStorageBackend` instance.
+///
+/// 128 bits from the OS entropy source, plus a process-local counter.
+///
+/// The counter is not the interesting half — it only separates two instances
+/// built in one process, which the random draw already does with overwhelming
+/// probability. It is there because it is free and it makes the within-process
+/// case a certainty rather than a probability.
+///
+/// ## Why not pid and the clock
+///
+/// That was the first attempt, and it does not hold. `INSTANCE_SEQUENCE` resets
+/// to zero in every new process, so across processes uniqueness would rest
+/// entirely on `(pid, clock)`, and both are weaker than they look:
+///
+/// - **Pids repeat.** A container almost always starts its daemon as pid 1, and
+///   a busy host wraps its pid space. Two runs then share a pid.
+/// - **The clock is coarse.** `SystemTime::now()` advances in microsecond steps
+///   on macOS, not nanoseconds — several consecutive constructions land on the
+///   same reading — and it can jump backwards outright.
+/// - **A pre-epoch clock collapsed it entirely.** Falling back to a constant on
+///   `duration_since` failure made the id a pure function of pid and a counter
+///   that always starts at zero, so two runs as pid 1 minted byte-identical
+///   revisions from the first `put`. That is precisely the ABA this design
+///   exists to remove, restored deterministically and silently.
+///
+/// Entropy has none of those failure modes: no ambient state to repeat, nothing
+/// to roll back, and no platform whose resolution it depends on.
+///
+/// ## On failure
+///
+/// A failed entropy draw is fatal to this constructor's contract, so it is
+/// reported rather than papered over. Substituting a predictable value would
+/// reintroduce exactly the collision above, and doing it silently is how the
+/// previous version got this wrong.
+fn new_instance_id() -> Result<String, StorageError> {
+    let random = random_array::<16>().map_err(|error| StorageError::Unavailable {
+        message: format!("fs storage cannot draw instance entropy: {error}"),
+    })?;
+    let mut hex = String::with_capacity(32);
+    for byte in random {
+        hex.push_str(&format!("{byte:02x}"));
+    }
+    Ok(format!(
+        "{hex}.{:x}",
+        INSTANCE_SEQUENCE.fetch_add(1, Ordering::Relaxed)
+    ))
+}
+
 /// Filesystem-backed `StorageBackend`. Wrap a directory and you've
 /// got a persistent vault store with crash-safe writes.
 pub struct FsStorageBackend {
@@ -192,24 +291,38 @@ pub struct FsStorageBackend {
     /// Mutex serialises all writes within this process; needed so
     /// the revision counter advances monotonically.
     write_lock: Mutex<()>,
+    /// Distinguishes THIS backend instance's revisions from every other
+    /// instance's, over this root or any other.
+    ///
+    /// Revision uniqueness used to be derived: the counter was seeded from the
+    /// highest revision found on disk, so restarting picked up where the last
+    /// process left off. That is unsound, and not subtly. The high-water mark
+    /// came from SURVIVING records, so deleting the record holding it moved the
+    /// mark backwards and the next instance re-issued revisions already handed
+    /// out. Since a revision is the token every `if_revision` compare-and-swap
+    /// compares against, a reissued one is an ABA: a stale guard matches a
+    /// record it was never taken from and passes where it must fail.
+    ///
+    /// Making uniqueness STRUCTURAL removes the whole class. Two instances
+    /// cannot mint the same revision no matter what happens to the records, so
+    /// deletion, a restored backup, a rolled-back store and a concurrent second
+    /// process are all non-events. Nothing durable has to be maintained,
+    /// because there is nothing to lose.
+    /// Resolved on first use rather than in `new`, so the constructor stays
+    /// infallible and an entropy failure is a retryable error at the call that
+    /// needed a revision instead of a panic in a constructor.
+    instance: OnceLock<String>,
     revision_counter: AtomicU64,
-    /// Whether the one-time recovery scan in `initialize()` has completed.
-    /// Per backend instance, so a genuine restart (a NEW `FsStorageBackend`
-    /// over the same root) scans again.
+    /// Whether the one-time `.tmp` sweep in `initialize()` has completed.
     ///
-    /// That re-scan recovers a floor, but NOT necessarily the true one, and the
-    /// difference is a live defect rather than a subtlety. `highest` is derived
-    /// from surviving records, so deleting the record that holds the high-water
-    /// mark lowers it; a fresh instance over that root then re-issues revisions
-    /// the previous instance already handed out, and a stale `if_revision`
-    /// compare-and-swap guard passes where it must fail. Caching closes this
-    /// within one instance -- which is what #12139 asked for -- and closes it
-    /// not at all across instances, including two live backends over one root.
+    /// Per backend instance, so a genuine restart sweeps again -- which is the
+    /// realistic recovery path, since stranded temporaries come from a write a
+    /// crash interrupted.
     ///
-    /// The real fix is to stop deriving the high-water mark from live records:
-    /// persist it beside them, or fold a per-boot epoch into the revision. That
-    /// is tracked separately; do not read this flag as a guarantee of global
-    /// revision uniqueness, because it is not one.
+    /// This flag says nothing about revisions. It used to: the walk it guards
+    /// once recovered the revision floor from disk, and caching that was the
+    /// best available answer at the time. Uniqueness is now structural, from the
+    /// instance id, so the flag guards a filesystem sweep and nothing else.
     scanned: AtomicBool,
     /// In-memory leases. Same shape as `InMemoryStorageBackend`'s.
     leases: Mutex<HashMap<String, StorageLease>>,
@@ -223,6 +336,7 @@ impl FsStorageBackend {
         Self {
             root: root.into(),
             write_lock: Mutex::new(()),
+            instance: OnceLock::new(),
             revision_counter: AtomicU64::new(0),
             scanned: AtomicBool::new(false),
             leases: Mutex::new(HashMap::new()),
@@ -235,9 +349,38 @@ impl FsStorageBackend {
         fs_storage_backend_summary()
     }
 
+    /// Mint the next revision for this instance.
+    ///
+    /// `rev-<instance>-<counter>`. The counter makes it unique WITHIN the
+    /// instance; the instance id makes it unique BETWEEN instances. Neither
+    /// half is redundant, and neither reads anything off disk, which is the
+    /// point — a revision cannot be reissued by a store that lost records.
+    ///
+    /// `storage_core` documents `Revision` as an *opaque* compare-and-swap
+    /// token, so this deliberately does not sort. Nothing in the repo orders
+    /// revisions: `revision_to_u64` has no callers outside this file, and
+    /// `vault-revisions` orders its own history by `archived_at_ms`. Equality
+    /// is the only operation the contract promises, and equality is what a CAS
+    /// needs.
     fn next_revision(&self) -> Result<Revision, StorageError> {
         let n = self.revision_counter.fetch_add(1, Ordering::SeqCst) + 1;
-        Revision::new(format!("rev-{:020}", n))
+        Revision::new(format!("rev-{}-{:020}", self.instance()?, n))
+    }
+
+    /// This instance's identifier, drawn once.
+    ///
+    /// `OnceLock::set` losing a race is not an error here: whichever draw landed
+    /// is equally valid, and both are unique. Only the value that won is ever
+    /// used, so the instance id never changes once observed.
+    fn instance(&self) -> Result<&str, StorageError> {
+        if let Some(existing) = self.instance.get() {
+            return Ok(existing);
+        }
+        let _ = self.instance.set(new_instance_id()?);
+        Ok(self
+            .instance
+            .get()
+            .expect("instance id is set immediately above"))
     }
 
     fn ns_dir(&self, namespace: &str) -> PathBuf {
@@ -607,8 +750,9 @@ impl StorageBackend for FsStorageBackend {
         // single cheap syscall, so that part stays unconditional.
         fs::create_dir_all(&self.root).map_err(io_to_storage)?;
 
-        // The recovery scan below is the expensive part: it reads the body of
-        // every record in every namespace. `ServiceRegistry::load` and `::list`
+        // The sweep below walks every namespace directory. It no longer opens
+        // any record, so it is O(directory entries) -- but it is still a walk,
+        // and `ServiceRegistry::load`/`::list` both call `initialize()`. `ServiceRegistry::load` and `::list`
         // both call `initialize()`, so on the shipped 5s health-check interval
         // this walk ran several times per reconcile tick -- over a state
         // directory shared by the registry, the audit log, channel state and
@@ -622,19 +766,10 @@ impl StorageBackend for FsStorageBackend {
             return Ok(());
         }
 
-        // The slow path holds `write_lock` -- the same lock `put` holds while
-        // it allocates a revision with `fetch_add`. That is the point, not a
-        // detail. The scan ends in a `store` on `revision_counter`, and doing
-        // that store unlocked let a concurrent `initialize` reset the counter
-        // to a value a writer had already allocated past. The same revision
-        // would then be issued twice, and a stale `if_revision` compare-and-swap
-        // guard would pass where it must fail -- a silently lost CAS, in the
-        // guards the registry's whole concurrency story rests on.
+        // The slow path holds `write_lock` so the sweep cannot race a `put`
+        // that is mid-write: removing a `.tmp` between that write's fsync and
+        // its rename would destroy a record that was about to commit.
         //
-        // Caching also removes a second, subtler version of the same hazard:
-        // re-scanning a root whose records have since been DELETED lowers
-        // `highest`, so the counter walks backwards over revisions it has
-        // already handed out. Scanning once can only ever move it forward.
         // The guarded data is `()` -- the mutex orders writers, it does not
         // protect a value that a panic could leave half-updated. So recover from
         // poisoning rather than failing: `ServiceRegistry::{load,list,register}`
@@ -651,19 +786,26 @@ impl StorageBackend for FsStorageBackend {
             return Ok(());
         }
 
-        // Walk and remove stranded .tmp files. Also: scan all
-        // record files to find the highest revision number so a
-        // restart picks up where the previous process left off.
+        // Walk and remove stranded `.tmp` files -- the residue of a `put` that
+        // died between writing its temporary and renaming it into place.
         //
-        // This walk must be TOTAL. Every failure here used to be swallowed by an
-        // `if let Ok(..)`, which was survivable only because the scan re-ran on
-        // the next call: a transient EACCES/EMFILE/EIO produced `highest = 0`
-        // and the following tick corrected it. Now that the result is cached for
-        // the life of the backend, a swallowed error would freeze the counter at
-        // a bogus floor permanently, and every subsequent revision would be one
-        // already issued. An unreadable directory is "I could not tell", which
-        // must never be recorded as "there was nothing there".
-        let mut highest: u64 = 0;
+        // This walk used to do a second job: read every record to find the
+        // highest revision on disk, so a restart could continue the numbering.
+        // That job is GONE, and its absence is the point of this change. The
+        // floor it recovered came from surviving records, so a deletion moved it
+        // backwards and the next instance reissued revisions already handed out.
+        // Uniqueness now comes from the instance id in `next_revision`, which no
+        // deletion, restore, or rollback can affect.
+        //
+        // Two things follow. Nothing here opens a record any more, so the walk
+        // is O(directory entries) rather than O(bytes in the store) -- on the
+        // 8 MB state directory #12139 measured, that was ~480 ms per call. And
+        // the delicate reasoning about which read failures could be tolerated
+        // is gone with the reads: there is no floor left to poison.
+        //
+        // The directory reads stay total regardless. A sweep that silently saw
+        // nothing would leave stranded temporaries behind for good, since this
+        // result is cached for the life of the backend.
         if let Some(namespaces) = read_dir_total(&self.root)? {
             for entry in namespaces {
                 let ns_path = entry.map_err(io_to_storage)?.path();
@@ -677,69 +819,15 @@ impl StorageBackend for FsStorageBackend {
                     let p = record.map_err(io_to_storage)?.path();
                     if p.extension().and_then(|s| s.to_str()) == Some("tmp") {
                         let _ = fs::remove_file(&p);
-                        continue;
-                    }
-
-                    // Only regular files are records. A namespace directory can
-                    // legitimately contain other things -- vault-pm nests a
-                    // directory per named target under its root -- and opening
-                    // one of those as a record yields EISDIR, an I/O error that
-                    // the arm below would propagate. Discriminate by TYPE here
-                    // so that the error arm keeps its meaning: it should fire
-                    // for a file we could not read, never for something that was
-                    // never a record to begin with.
-                    if !metadata_total(&p)?.is_some_and(|m| m.is_file()) {
-                        continue;
-                    }
-
-                    // The asymmetry here is deliberate, but it is a split
-                    // between ERROR KINDS, not between records and directories.
-                    //
-                    // "This file is not a record" is a local fact: we still read
-                    // every other record, so the floor is sound, and refusing to
-                    // start over one corrupt file is the failure mode #12137 is
-                    // about. Tolerate it.
-                    //
-                    // "I could not read this file" is not local at all. It means
-                    // the same thing a failed `read_dir` means, and it fails in
-                    // correlated ways -- under fd exhaustion EVERY record read
-                    // fails while the directory reads still succeed, so the
-                    // floor silently collapses to zero and, being cached, every
-                    // revision the instance issues afterwards is one already
-                    // handed out. Propagate it.
-                    //
-                    // `read_record_full` already draws exactly this line:
-                    // `io_to_storage` yields `Unavailable`, while format and
-                    // parse failures yield `Backend`.
-                    match read_record_full(&p) {
-                        Ok(Some((meta, _))) => {
-                            if let Some(n) = revision_to_u64(&meta.revision) {
-                                if n > highest {
-                                    highest = n;
-                                }
-                            }
-                        }
-                        Ok(None) => {}
-                        Err(StorageError::Backend { .. }) => {}
-                        Err(e) => return Err(e),
                     }
                 }
             }
         }
 
-        // `fetch_max`, not `store`. The counter must be monotone by
-        // construction: `put()` does not require `initialize()` and does not set
-        // `scanned`, so a first `initialize()` can legitimately run AFTER
-        // revisions have been issued, and a plain `store` would drop the counter
-        // back below them. Taking the maximum makes lowering it impossible
-        // regardless of call order -- and would, on its own, have prevented the
-        // defect this change is about.
-        self.revision_counter.fetch_max(highest, Ordering::SeqCst);
-
-        // `Release`, paired with the `Acquire` on the fast path, so the counter
-        // update above is visible to any thread that skips the scan. Set last,
-        // and only once the walk has completed without error, so a failed
-        // `initialize` is retried rather than remembered as done.
+        // `Release`, paired with the `Acquire` on the fast path, so everything
+        // this walk did is visible to a thread that skips it. Set last, and only
+        // once the walk completed without error, so a failed `initialize` is
+        // retried rather than remembered as done.
         self.scanned.store(true, Ordering::Release);
         Ok(())
     }
@@ -965,13 +1053,6 @@ impl StorageBackend for FsStorageBackend {
     }
 }
 
-// Parse "rev-NNNN…" → u64.
-fn revision_to_u64(r: &Revision) -> Option<u64> {
-    let s = r.as_str();
-    let stripped = s.strip_prefix("rev-")?;
-    stripped.parse::<u64>().ok()
-}
-
 // ─────────────────────────────────────────────────────────────────────
 // 6. Tests
 // ─────────────────────────────────────────────────────────────────────
@@ -979,6 +1060,7 @@ fn revision_to_u64(r: &Revision) -> Option<u64> {
 #[cfg(test)]
 mod tests {
     use super::*;
+    use std::collections::BTreeSet;
     use std::env;
     use storage_core::conformance;
 
@@ -1430,195 +1512,6 @@ mod tests {
     }
 
     #[test]
-    fn reinitialize_does_not_reissue_a_revision() {
-        // The regression test for the unlocked-counter defect, made
-        // deterministic. The concurrency window (a `put` in flight while
-        // `initialize` stores a lower `highest`) is hard to hit on demand, but
-        // DELETION reaches the identical end state with no threads at all:
-        // remove the record holding the highest revision, and a re-scan lowers
-        // the counter below revisions that were already issued.
-        let root = temp_root();
-        let be = FsStorageBackend::new(&root);
-        be.initialize().unwrap();
-
-        let r1 = be.put(put_input("ns", "k1", b"v1")).unwrap();
-        let r2 = be.put(put_input("ns", "k2", b"v2")).unwrap();
-        // Delete the holder of the high-water mark. Disk now tops out at r1.
-        be.delete("ns", "k2", None).unwrap();
-
-        // A second `initialize()` on the SAME backend. Before the fix this
-        // re-scanned, found only r1, and stored that -- walking the counter
-        // backwards over r2, which had already been handed out.
-        be.initialize().unwrap();
-        let r3 = be.put(put_input("ns", "k3", b"v3")).unwrap();
-
-        let n1 = revision_to_u64(&r1.revision).unwrap();
-        let n2 = revision_to_u64(&r2.revision).unwrap();
-        let n3 = revision_to_u64(&r3.revision).unwrap();
-        assert!(n2 > n1, "revisions must be monotonic: {} <= {}", n2, n1);
-        assert!(
-            n3 > n2,
-            "re-initialize reissued revision {}, already held by k2; a stale \
-             if_revision compare-and-swap guard would now pass",
-            n3
-        );
-        let _ = fs::remove_dir_all(&root);
-    }
-
-    #[test]
-    #[cfg(unix)]
-    fn initialize_reports_an_unreadable_root_instead_of_caching_a_bogus_floor() {
-        // Before the walk was made total, an unreadable directory was swallowed
-        // by `if let Ok(..)`, yielding `highest = 0`. That was survivable only
-        // while the scan re-ran every call; cached, it would freeze the counter
-        // at zero for the life of the backend and reissue every revision.
-        use std::os::unix::fs::PermissionsExt;
-
-        let root = temp_root();
-        let seed = FsStorageBackend::new(&root);
-        seed.initialize().unwrap();
-        let r1 = seed.put(put_input("ns", "k", b"v")).unwrap();
-        drop(seed);
-
-        // Make the namespace directory unreadable, then scan it fresh.
-        let ns_dir = root.join(hex_encode(b"ns"));
-        let original = fs::metadata(&ns_dir).unwrap().permissions();
-        fs::set_permissions(&ns_dir, fs::Permissions::from_mode(0o000)).unwrap();
-
-        // A root-owned runner ignores the mode bits entirely, so confirm the
-        // directory really did become unreadable before asserting on it.
-        // Otherwise this silently inverts into a false failure under a
-        // privileged CI container.
-        let permissions_bite = fs::read_dir(&ns_dir).is_err();
-
-        let be = FsStorageBackend::new(&root);
-        let outcome = be.initialize();
-
-        // Restore before asserting, so a failure cannot leave an
-        // undeletable directory behind.
-        fs::set_permissions(&ns_dir, original).unwrap();
-
-        if !permissions_bite {
-            // Running with privileges that bypass the mode bits (root in a
-            // container). There is no unreadable directory to observe, so
-            // there is nothing here to assert.
-            let _ = fs::remove_dir_all(&root);
-            return;
-        }
-
-        assert!(
-            outcome.is_err(),
-            "an unreadable namespace must be reported, not recorded as empty"
-        );
-
-        // And having failed, the backend must not consider itself scanned: a
-        // retry once permissions are back has to recover the real floor.
-        be.initialize().unwrap();
-        let r2 = be.put(put_input("ns", "k2", b"v2")).unwrap();
-        let n1 = revision_to_u64(&r1.revision).unwrap();
-        let n2 = revision_to_u64(&r2.revision).unwrap();
-        assert!(
-            n2 > n1,
-            "retry after a failed initialize must recover the floor: {} <= {}",
-            n2,
-            n1
-        );
-        let _ = fs::remove_dir_all(&root);
-    }
-
-    #[test]
-    fn initialize_tolerates_an_unparseable_record() {
-        // The counterweight to the two tests below. Propagating I/O failures
-        // must NOT turn into refusing to start over a corrupt file: one
-        // undecodable record stopping the daemon is #12137, and this crate must
-        // not reintroduce it while closing the I/O hole.
-        let root = temp_root();
-        let be = FsStorageBackend::new(&root);
-        be.initialize().unwrap();
-        let r1 = be.put(put_input("ns", "k", b"v")).unwrap();
-        drop(be);
-
-        // Garbage and an empty file, beside a good record, both readable.
-        let ns_dir = root.join(hex_encode(b"ns"));
-        fs::write(ns_dir.join(hex_encode(b"junk")), b"not a record at all").unwrap();
-        fs::write(ns_dir.join(hex_encode(b"empty")), b"").unwrap();
-
-        let be2 = FsStorageBackend::new(&root);
-        be2.initialize()
-            .expect("an unparseable record must not stop initialize (#12137)");
-
-        // The good record was still seen, so the floor is intact.
-        let r2 = be2.put(put_input("ns", "k2", b"v2")).unwrap();
-        let n1 = revision_to_u64(&r1.revision).unwrap();
-        let n2 = revision_to_u64(&r2.revision).unwrap();
-        assert!(n2 > n1, "floor lost across a corrupt sibling: {} <= {}", n2, n1);
-        let _ = fs::remove_dir_all(&root);
-    }
-
-    #[test]
-    fn initialize_ignores_non_record_entries_inside_a_namespace() {
-        // Regression test for a real break, caught by running the downstream
-        // consumers. `vault-pm` nests a directory per named target under its
-        // storage root, so a namespace directory legitimately contains
-        // subdirectories. Opening one as a record yields EISDIR -- an I/O error
-        // -- and propagating I/O errors (correctly, for unreadable FILES) turned
-        // every vault-pm CLI command into "storage unavailable".
-        //
-        // The error arm must fire for a record we could not read, never for
-        // something that was never a record.
-        let root = temp_root();
-        let be = FsStorageBackend::new(&root);
-        be.initialize().unwrap();
-        let r1 = be.put(put_input("ns", "k", b"v")).unwrap();
-        drop(be);
-
-        fs::create_dir_all(root.join(hex_encode(b"ns")).join("nested-target")).unwrap();
-
-        let be2 = FsStorageBackend::new(&root);
-        be2.initialize()
-            .expect("a subdirectory inside a namespace must not fail initialize");
-
-        // The real record was still read, so the floor survived.
-        let r2 = be2.put(put_input("ns", "k2", b"v2")).unwrap();
-        let n1 = revision_to_u64(&r1.revision).unwrap();
-        let n2 = revision_to_u64(&r2.revision).unwrap();
-        assert!(n2 > n1, "floor lost beside a nested dir: {} <= {}", n2, n1);
-        let _ = fs::remove_dir_all(&root);
-    }
-
-    #[test]
-    #[cfg(unix)]
-    fn initialize_reports_an_unreadable_record_instead_of_lowering_the_floor() {
-        // An I/O failure reading a record is "I could not tell", exactly as a
-        // failed read_dir is. It matters because these fail in CORRELATED ways:
-        // under fd exhaustion every record read fails while the directory reads
-        // succeed, so a tolerant walk collapses the floor to zero and caches it.
-        use std::os::unix::fs::PermissionsExt;
-
-        let root = temp_root();
-        let seed = FsStorageBackend::new(&root);
-        seed.initialize().unwrap();
-        seed.put(put_input("ns", "k", b"v")).unwrap();
-        drop(seed);
-
-        let record = root.join(hex_encode(b"ns")).join(hex_encode(b"k"));
-        let original = fs::metadata(&record).unwrap().permissions();
-        fs::set_permissions(&record, fs::Permissions::from_mode(0o000)).unwrap();
-        let permissions_bite = File::open(&record).is_err();
-
-        let outcome = FsStorageBackend::new(&root).initialize();
-        fs::set_permissions(&record, original).unwrap();
-
-        if permissions_bite {
-            assert!(
-                outcome.is_err(),
-                "an unreadable record must be reported, not silently skipped"
-            );
-        }
-        let _ = fs::remove_dir_all(&root);
-    }
-
-    #[test]
     #[cfg(unix)]
     fn initialize_reports_an_unstattable_namespace() {
         // `Path::is_dir()` answers false for ANY stat failure. A root that is
@@ -1652,27 +1545,147 @@ mod tests {
     }
 
     #[test]
-    fn initialize_never_lowers_a_counter_put_has_already_advanced() {
-        // `put()` does not require `initialize()`, so the first scan can run
-        // after revisions have been issued. `fetch_max` makes that harmless;
-        // a plain `store` would drop the counter back below them.
+    fn a_restart_never_reissues_a_revision_even_after_deletions() {
+        // The defect this design removes. The old scheme recovered its floor
+        // from SURVIVING records, so deleting the record holding the high-water
+        // mark moved it backwards and the next instance handed the number out a
+        // second time -- an ABA on every `if_revision` guard taken against it.
+        let root = temp_root();
+        let first = FsStorageBackend::new(&root);
+        first.initialize().unwrap();
+        let r1 = first.put(put_input("ns", "k1", b"v1")).unwrap();
+        let r2 = first.put(put_input("ns", "k2", b"v2")).unwrap();
+        first.delete("ns", "k2", None).unwrap();
+        drop(first);
+
+        // A genuine restart over a store whose high-water record is gone.
+        let second = FsStorageBackend::new(&root);
+        second.initialize().unwrap();
+        let r3 = second.put(put_input("ns", "k3", b"v3")).unwrap();
+
+        let seen = [&r1.revision, &r2.revision, &r3.revision];
+        let unique: BTreeSet<_> = seen.iter().map(|r| r.as_str()).collect();
+        assert_eq!(
+            unique.len(),
+            3,
+            "a restart reissued a revision: {:?}",
+            seen.iter().map(|r| r.as_str()).collect::<Vec<_>>()
+        );
+        let _ = fs::remove_dir_all(&root);
+    }
+
+    #[test]
+    fn two_backends_over_one_root_cannot_mint_the_same_revision() {
+        // `chief-of-staff-daemon` really does hold two `FsStorageBackend`s over
+        // one state directory. Under the old scheme both seeded their counters
+        // from the same scan and then issued identical revision strings, so a
+        // stale CAS from one matched a record written by the other.
+        let root = temp_root();
+        let a = FsStorageBackend::new(&root);
+        let b = FsStorageBackend::new(&root);
+        a.initialize().unwrap();
+        b.initialize().unwrap();
+
+        let mut seen = BTreeSet::new();
+        for i in 0..16 {
+            for (backend, tag) in [(&a, "a"), (&b, "b")] {
+                let record = backend
+                    .put(put_input("ns", &format!("{tag}{i}"), b"v"))
+                    .unwrap();
+                assert!(
+                    seen.insert(record.revision.as_str().to_string()),
+                    "revision {} was minted twice",
+                    record.revision.as_str()
+                );
+            }
+        }
+        let _ = fs::remove_dir_all(&root);
+    }
+
+    #[test]
+    fn a_stale_compare_and_swap_from_another_instance_is_rejected() {
+        // The property revisions exist to provide, stated as the guard it
+        // protects. Instance A's token must never match a record instance B
+        // wrote, or A's `if_revision` passes over B's newer write.
+        let root = temp_root();
+        let a = FsStorageBackend::new(&root);
+        a.initialize().unwrap();
+        let stale = a.put(put_input("ns", "k", b"from-a")).unwrap().revision;
+
+        let b = FsStorageBackend::new(&root);
+        b.initialize().unwrap();
+        b.put(put_input("ns", "k", b"from-b")).unwrap();
+
+        let mut overwrite = put_input("ns", "k", b"clobbered");
+        overwrite.if_revision = Some(stale);
+        assert!(
+            matches!(a.put(overwrite), Err(StorageError::Conflict { .. })),
+            "a token from a previous instance must not satisfy a CAS"
+        );
+        assert_eq!(a.get("ns", "k").unwrap().unwrap().body, b"from-b");
+        let _ = fs::remove_dir_all(&root);
+    }
+
+    #[test]
+    fn initialize_does_not_read_record_bodies() {
+        // The walk sweeps `.tmp` files and nothing else. Records it cannot read
+        // -- corrupt, unreadable, or not records at all -- are irrelevant to it,
+        // which is why the delicate "which read failures may be tolerated"
+        // reasoning went away with the reads. A nested directory is the case
+        // that actually broke vault-pm when the walk still opened files.
         let root = temp_root();
         let be = FsStorageBackend::new(&root);
-        let r1 = be.put(put_input("ns", "k1", b"v1")).unwrap();
-        be.delete("ns", "k1", None).unwrap();
-
-        // First initialize, now, with nothing on disk to recover from.
         be.initialize().unwrap();
-        let r2 = be.put(put_input("ns", "k1", b"v2")).unwrap();
+        be.put(put_input("ns", "k", b"v")).unwrap();
+        drop(be);
 
-        let n1 = revision_to_u64(&r1.revision).unwrap();
-        let n2 = revision_to_u64(&r2.revision).unwrap();
+        let ns_dir = root.join(hex_encode(b"ns"));
+        fs::write(ns_dir.join(hex_encode(b"junk")), b"not a record at all").unwrap();
+        fs::write(ns_dir.join(hex_encode(b"empty")), b"").unwrap();
+        fs::create_dir_all(ns_dir.join("nested-target")).unwrap();
+        let stranded = ns_dir.join(format!("{}.tmp", hex_encode(b"k")));
+        fs::write(&stranded, b"partial").unwrap();
+
+        let reopened = FsStorageBackend::new(&root);
+        reopened
+            .initialize()
+            .expect("unreadable records are not the sweep's business");
         assert!(
-            n2 > n1,
-            "a late first initialize lowered the counter: {} <= {}",
-            n2,
-            n1
+            !stranded.exists(),
+            "the sweep still removes stranded tmp files"
         );
+        assert_eq!(reopened.get("ns", "k").unwrap().unwrap().body, b"v");
+        let _ = fs::remove_dir_all(&root);
+    }
+
+    #[test]
+    #[cfg(unix)]
+    fn initialize_reports_an_unreadable_namespace_rather_than_sweeping_nothing() {
+        // The directory reads stay total. This result is cached for the life of
+        // the backend, so a sweep that silently saw nothing would leave
+        // stranded temporaries behind for good.
+        use std::os::unix::fs::PermissionsExt;
+
+        let root = temp_root();
+        let seed = FsStorageBackend::new(&root);
+        seed.initialize().unwrap();
+        seed.put(put_input("ns", "k", b"v")).unwrap();
+        drop(seed);
+
+        let ns_dir = root.join(hex_encode(b"ns"));
+        let original = fs::metadata(&ns_dir).unwrap().permissions();
+        fs::set_permissions(&ns_dir, fs::Permissions::from_mode(0o000)).unwrap();
+        let permissions_bite = fs::read_dir(&ns_dir).is_err();
+
+        let outcome = FsStorageBackend::new(&root).initialize();
+        fs::set_permissions(&ns_dir, original).unwrap();
+
+        if permissions_bite {
+            assert!(
+                outcome.is_err(),
+                "an unreadable namespace must be reported, not recorded as empty"
+            );
+        }
         let _ = fs::remove_dir_all(&root);
     }
 
@@ -1691,29 +1704,6 @@ mod tests {
 
         // And the backend is still usable afterwards.
         be.put(put_input("ns", "k2", b"v2")).unwrap();
-        let _ = fs::remove_dir_all(&root);
-    }
-
-    #[test]
-    fn restart_picks_up_revision_counter() {
-        let root = temp_root();
-        let be1 = FsStorageBackend::new(&root);
-        be1.initialize().unwrap();
-        let r1 = be1.put(put_input("ns", "k", b"v1")).unwrap();
-        // Drop be1, build a new one, re-initialize.
-        drop(be1);
-        let be2 = FsStorageBackend::new(&root);
-        be2.initialize().unwrap();
-        let r2 = be2.put(put_input("ns", "k", b"v2")).unwrap();
-        // Revisions are monotonic across restart.
-        let n1 = revision_to_u64(&r1.revision).unwrap();
-        let n2 = revision_to_u64(&r2.revision).unwrap();
-        assert!(
-            n2 > n1,
-            "revision must advance across restart: {} <= {}",
-            n2,
-            n1
-        );
         let _ = fs::remove_dir_all(&root);
     }
 

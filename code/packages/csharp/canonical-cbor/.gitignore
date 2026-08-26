@@ -1,0 +1,9 @@
+.artifacts/
+.coverage-artifacts/
+.dotnet/
+.red-artifacts/
+.release-artifacts/
+bin/
+obj/
+TestResults/
+coverage.json
