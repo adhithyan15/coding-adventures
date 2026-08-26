@@ -8477,6 +8477,73 @@ selection, the graph contains 521 owners and 784 complete acyclic edges: 150
 merged, 370 pending, and exactly one in-progress owner, with no active parity
 PR.
 
+### JVM canonical-CBOR implementation and final ownership refresh
+
+The selected `canonical-cbor-jvm-lane-parity` tranche adds independent Java
+and Kotlin implementations of the closed CBR01 value model, checked canonical
+encoder, and strict decoder. Both lanes consume all 55 shared
+`canonical-cbor-v1` operations and expose the same 14 stable error identifiers.
+They preserve the full unsigned 64-bit domain, reject non-minimal and
+non-canonical inputs, order map keys by encoded length and unsigned bytes,
+reject duplicate encoded keys, cap nesting at 128, and publish checked output
+atomically under the 1,048,576-byte item limit. A test-first compile failed on
+the missing APIs before the implementations were added.
+
+Independent correctness and security review found two pre-publication boundary
+defects and one documentation defect. Both value models now reject every
+unpaired UTF-16 surrogate while retaining valid supplementary pairs. Both
+encoders preflight UTF-8 length before payload allocation, reject impossible
+map entry counts, and bound cumulative retained encoded-key bytes before map
+sorting. The Kotlin dependency description now names its exact runtime closure:
+Kotlin stdlib 2.1.20 plus transitive JetBrains annotations 13.0; Java has an
+empty production runtime classpath. Production code remains pure in-memory
+computation with empty capability profiles and no filesystem, process,
+environment, network, credential, or link authority.
+
+Before final publication the branch rebased cleanly onto exact `origin/main`
+`2d7bfa99226e341dee63e997d22dce50a9b57cf2`.
+Intervening PRs #12985 and #12996 remain inside existing human-language,
+generated-data, script-ductus, and singleton-classification owners; #12993
+remains inside the Mosaic generated-wrapper review; and #12995 remains inside
+the ALGOL IIR neutral and applicable-lane owners. None adds a package identity,
+BUILD marker, or selected-path overlap.
+
+The later #13002 and #13001 merges remain inside existing human-language
+curriculum, generated-data, and singleton-classification owners. They likewise
+add no implementation package identity, BUILD marker, or selected-path overlap.
+
+Post-rebase Java and Kotlin `gradle clean check` runs pass their strict compiler,
+55-case corpus, and 95% JaCoCo gates. Java covers 268 of 276 production lines
+(97.10%); Kotlin covers 224 of 228 (98.25%). Literal Unix BUILD and exact
+Windows BUILD-content entry points pass in both lanes. The neutral fixture,
+capability-taxonomy, and parity-reporter suites pass 21 tests plus 720 subtests.
+The Go build tool passes all tests, vet, and trimpath compilation; its exact
+dry plan evaluates 45 Starlark BUILD files, discovers 5,075 packages, validates
+the five-entry orphan ledger, and selects exactly the two JVM packages while
+skipping 5,073. Diff hygiene, dependency, credential-pattern, authority, and
+independent security reviews pass.
+
+The prospective merged-tree schema-3 inventory remains collision-clean at 15
+established lanes, 1,373 implementation identities, 4,568 package slots, and
+1,412 all-reported identities. Java rises to 131 packages and Kotlin to 130.
+The breadth buckets become 175 identities in ten to fifteen lanes with 276
+gaps, 122 in five to nine with 926 gaps, 167 in two to four with 2,099 gaps,
+and 909 singletons with 12,726 gaps, including 720 Rust singletons. Canonical
+collisions and unknown language buckets remain zero; OCaml remains emerging at
+zero packages. Global `last_inventory` intentionally stays tied to exact-main's
+pre-tranche 4,566-slot inventory until the PR merges.
+
+The final live audit also registers two newly unowned owners exposed by open
+PR #13005 before publication. The neutral Semantic IR emitted-identifier owner
+covers reserved-marker separation, distinct verbatim and escaped tags,
+underscore escaping, fixed-width Unicode scalar encoding, keyword validity,
+collision cases, bounds, and deterministic authority-free behavior. Its
+selection-blocked applicable-consumer umbrella follows after that corpus and
+uses the seven Rust semantic-ir-to-* backends as reference evidence rather than
+as a parity claim. The resulting graph contains 523 unique owners and 785
+complete acyclic edges: 150 merged, 372 pending, and exactly one in-progress,
+with no active parity PR before publication.
+
 ## Autonomous Loop Protocol
 
 Only one parity PR should be active at a time.

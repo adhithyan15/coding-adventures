@@ -1,8 +1,9 @@
 # Canonical CBOR for Kotlin
 
 This package is the Kotlin implementation of
-[`CBR01`](../../../specs/CBR01-canonical-cbor.md): a from-scratch,
-no-third-party-production-dependency codec for RFC 8949 section 4.2.3
+[`CBR01`](../../../specs/CBR01-canonical-cbor.md): a from-scratch codec with no
+application production dependency beyond the Kotlin runtime closure for RFC
+8949 section 4.2.3
 length-first deterministic CBOR.
 
 The supported value model contains unsigned and negative 64-bit arguments,
@@ -46,8 +47,9 @@ content equality.
   with `canonical-cbor:` and never include input bytes, lengths, keys, or
   offsets.
 - Production code performs pure in-memory computation. The shared JSON corpus
-  is read only by tests. Its only runtime library is Kotlin's standard library,
-  the Kotlin/JVM equivalent of the language runtime used by other lanes.
+  is read only by tests. The resolved runtime closure is Kotlin stdlib 2.1.20
+  plus its transitive JetBrains annotations 13.0 library; neither grants
+  filesystem, process, environment, network, or other host authority.
 
 ## Validation
 
