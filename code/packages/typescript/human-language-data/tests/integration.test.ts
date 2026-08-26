@@ -39,7 +39,7 @@ describe("real curriculum", () => {
     expect(scripts.devanagari!.complete).toBe(true);
   });
 
-  it("keeps the cross-script closure queue measured after Tamil nga", () => {
+  it("keeps the cross-script closure queue measured after Japanese hiragana shi", () => {
     const candrakkala = scripts.malayalam!.marks!.find((mark) => mark.mark === "്")!;
     expect(candrakkala.role).toBe("virama");
     expect(candrakkala.compositionOrder).toEqual([
@@ -752,9 +752,25 @@ describe("real curriculum", () => {
     expect(affected.get("ಅ") ?? 0).toBe(0);
     expect(missingByScript.get("tamil.json")?.has("ங")).toBe(false);
     expect(affected.get("ங") ?? 0).toBe(0);
+    const japaneseShi = scripts.japanese!.letters.find((entry) => entry.glyph === "し")!;
+    expect(japaneseShi.sound).toBe("shi");
+    expect(japaneseShi.role).toBe("hiragana");
+    expect(japaneseShi.penLifts).toBe(0);
+    expect(japaneseShi.strokeOrder).toEqual([
+      "descend nearly straight from the top",
+      "without lifting, turn around the broad lower curve and sweep upward to the right",
+    ]);
+    expect(japaneseShi.strokeOrderSource?.citation).toMatch(
+      /Sirgazil.*Hiragana し stroke order animation\.gif.*23 frames.*2\.3 seconds.*Wikimedia Commons.*1 October 2009/i,
+    );
+    expect(japaneseShi.strokeOrderSource?.variation).toMatch(
+      /one uninterrupted run.*descend from the top.*broad lower curve.*upward to the right.*Noto Sans JP.*zero-lift order/i,
+    );
+    expect(missingByScript.get("japanese.json")?.has("し")).toBe(false);
+    expect(affected.get("し") ?? 0).toBe(0);
     expect(
       [...affected.entries()].sort((left, right) => right[1] - left[1])[0],
-    ).toEqual(["し", 8]);
+    ).toEqual(["ಇ", 8]);
   });
 
   it("loaded every track (17+ and growing)", () => {

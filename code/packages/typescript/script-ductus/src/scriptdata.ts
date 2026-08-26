@@ -27,6 +27,7 @@ import urduNastaliq from "../../../../learning/human-languages/data/scripts/urdu
 import devanagari from "../../../../learning/human-languages/data/scripts/devanagari.json";
 import gujarati from "../../../../learning/human-languages/data/scripts/gujarati.json";
 import tamil from "../../../../learning/human-languages/data/scripts/tamil.json";
+import japanese from "../../../../learning/human-languages/data/scripts/japanese.json";
 // The Dravidian syllabaries (Telugu/Kannada/Malayalam) are GENERATED from Unicode
 // by data/scripts/generate_syllabary.py — each "letter" is a base consonant
 // composed with a vowel sign (ka, ki, ku, kha, …), for reading-recognition.
@@ -133,6 +134,7 @@ export const SCRIPTS: ScriptData[] = [
   devanagari as ScriptData,
   gujarati as ScriptData,
   tamil as ScriptData,
+  japanese as ScriptData,
   // The Dravidian trio, in chain order (Tamil → Kannada → Telugu → Malayalam).
   kannada as ScriptData,
   telugu as ScriptData,
