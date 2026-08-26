@@ -8176,6 +8176,18 @@ schema-3 report remains 15 established lanes, 1,373 identities, 4,566 slots,
 775-edge state graph remains complete and acyclic with exactly one in-progress
 item.
 
+Pinned Strawberry Perl 5.38.2 validation passes all 14 package test files and
+136 tests. `Validator.pm` reaches 100% statement and subroutine coverage and
+83.5% total coverage; the severity-5 Perl::Critic result has no regression
+against exact main. The neutral corpus validates 111 cases and 269 files, all
+201 build-tool conformance tests pass with 23 expected Windows skips, and the
+canonical Go oracle passes module verification, test, vet, and trimpath build.
+A forced Perl dry plan evaluates 45 Starlark files, discovers 258 packages,
+preserves the five-entry orphan ledger, and reports all 258 as WOULD-BUILD.
+Independent exact-head contract and security reviews are clean after explicit
+fail-closed regressions for malformed exemption reasons and Perl-internal
+surrogate or above-Unicode code points.
+
 ## Autonomous Loop Protocol
 
 Only one parity PR should be active at a time.
