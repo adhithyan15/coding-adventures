@@ -6189,7 +6189,8 @@ impl Compiler {
                 matches!(
                     (&sequence[index], &sequence[index + 1]),
                     (Piece::Op(op), Piece::Node(rhs))
-                        if op == "-" && literal_positive_numeric_zero(rhs)
+                        if (op == "-" && literal_positive_numeric_zero(rhs))
+                            || (op == "+" && literal_negative_real_zero(rhs))
                 )
             });
         }
@@ -8535,6 +8536,12 @@ fn literal_positive_numeric_zero(node: &GrammarASTNode) -> bool {
     tokens.is_empty()
         && child_nodes.len() == 1
         && literal_positive_numeric_zero(child_nodes[0])
+}
+
+fn literal_negative_real_zero(node: &GrammarASTNode) -> bool {
+    expr_real_literal_text(node)
+        .and_then(|literal| literal.parse::<f64>().ok())
+        .is_some_and(|value| value.to_bits() == (-0.0f64).to_bits())
 }
 
 /// Return the name of a bare scalar variable node. Array elements are kept
@@ -10953,6 +10960,24 @@ mod tests {
         )
         .expect_err("real additive zero may change the sign bit of negative zero");
         assert!(format!("{err:?}").contains("cannot print a real value"));
+    }
+
+    #[test]
+    fn al4_real_additive_negative_zero_selector_writes_stay_stable() {
+        for write in [
+            "choose + (-0.0)",
+            "choose + (-(0.0))",
+            "choose + (-0.0) + (-0.0)",
+            "((choose + (-0.0)))",
+        ] {
+            compile_source(
+                &format!(
+                    "begin integer i, n, limit; real choose; boolean other; n := 3; limit := 3; choose := 1.0; other := true; i := 0; for i := i + 1 while i < n do begin n := limit; limit := if choose = 1.0 then limit else limit + 1; choose := if other then choose else 0.0; other := other; choose := {write} end; print(i + 0.25) end"
+                ),
+                "test",
+            )
+            .unwrap_or_else(|_| panic!("real additive-negative-zero write {write:?} must stay stable"));
+        }
     }
 
     #[test]
