@@ -394,17 +394,43 @@ pub struct ExceptionPayload {
     /// Identifies WHICH `WasmExecutionContext` this exception was thrown
     /// from — a fresh value minted per [`WasmExecutionEngine::new`] call
     /// (see [`WasmExecutionContext::instance_id`]'s own doc comment).
-    /// `try_catch_exception` refuses to match a catch clause against an
-    /// exception whose `instance_id` differs from the CURRENTLY EXECUTING
-    /// context's own — the deliberate, documented scope boundary that
-    /// keeps this slice's same-instance-only catching from ever
-    /// producing a false-positive match on a coincidentally-equal raw tag
-    /// index thrown by an unrelated module instance (e.g. across a
-    /// `wasm-conformance` `CrossModuleFunction` call boundary).
+    ///
+    /// **No longer used for matching** (W23): W22 originally gated every
+    /// catch attempt on this being equal to the catching context's own
+    /// `instance_id`, which made cross-instance catching impossible even
+    /// for the SAME logical tag, and made `catch_all` wrongly refuse a
+    /// foreign exception the real spec says it must catch. W23 replaced
+    /// that gate with real tag-identity comparison ([`Self::tag_identity`]
+    /// below) and removed the read of this field from
+    /// [`try_catch_exception`] entirely. Still minted and carried (no
+    /// remaining call site needed updating to drop it), but purely
+    /// informational now.
     pub instance_id: u64,
     /// The tag index (in the THROWING function's own module's combined
-    /// tag index space) this exception was created with.
+    /// tag index space) this exception was created with. Still used as a
+    /// FALLBACK match key (see [`Self::tag_identity`]) for any context
+    /// that never configured real tag identities (every hand-built
+    /// `wasm-execution` unit test that calls `set_tags` but not
+    /// `set_tag_identities`) — safe there only because such a context
+    /// never spans more than one real module instance.
     pub tag_idx: u32,
+    /// A canonical, globally-unique tag identity (W23), minted once per
+    /// real tag *definition* — see `wasm-runtime`'s `NEXT_TAG_IDENTITY`
+    /// and `WasmInstance::tag_identities`, which an imported tag adopts
+    /// verbatim from the exporting instance (via
+    /// `HostInterface::resolve_tag`) rather than minting its own. `0` is
+    /// reserved to mean "no real identity was configured for this throw"
+    /// (mirroring `instance_id`'s own `0` sentinel) — [`try_catch_exception`]
+    /// falls back to comparing [`Self::tag_idx`] directly whenever either
+    /// side of a prospective match has no real identity, which is exactly
+    /// what makes cross-instance catching safe: two unrelated tags from
+    /// different modules can never coincidentally share a nonzero
+    /// identity (minted from one monotonic, process-wide counter), so a
+    /// `catch $tag` can now correctly match the SAME tag reached through
+    /// two different local indices (an aliased re-import) while still
+    /// correctly refusing to match a genuinely DIFFERENT tag that happens
+    /// to sit at the same raw index in an unrelated module.
+    pub tag_identity: u64,
     /// The tag's declared argument values, popped off the stack by
     /// `throw` in declaration order — what a matching `catch` clause
     /// pushes back onto the stack.
@@ -438,12 +464,16 @@ impl TrapError {
     }
 
     /// Create a `TrapError` representing a real, catchable WASM exception
-    /// (W-next): carries the tag identity and argument values a matching
-    /// `try_table` `catch`/`catch_all` clause needs.
+    /// (W21/W22): carries the tag identity and argument values a matching
+    /// `try_table` `catch`/`catch_all` clause needs. `tag_identity` (W23)
+    /// is the canonical, cross-instance-safe identity — pass `0` when
+    /// none is configured (see [`ExceptionPayload::tag_identity`]'s own
+    /// doc comment for the fallback this triggers).
     pub fn exception_with_payload(
         message: impl Into<String>,
         instance_id: u64,
         tag_idx: u32,
+        tag_identity: u64,
         values: Vec<WasmValue>,
     ) -> Self {
         TrapError {
@@ -452,6 +482,7 @@ impl TrapError {
             exception: Some(ExceptionPayload {
                 instance_id,
                 tag_idx,
+                tag_identity,
                 values,
             }),
         }
@@ -487,6 +518,7 @@ impl From<TrapError> for VMError {
                 encode_exception_payload(
                     payload.map(|p| p.instance_id).unwrap_or(0),
                     payload.map(|p| p.tag_idx).unwrap_or(0),
+                    payload.map(|p| p.tag_identity).unwrap_or(0),
                     payload.map(|p| p.values.as_slice()).unwrap_or(&[]),
                     &e.message,
                 )
@@ -507,28 +539,33 @@ const EXCEPTION_SENTINEL: &str = "\u{1}wasm-exception\u{1}";
 /// Field separator used ONLY within the structured prefix
 /// `encode_exception_payload` builds after [`EXCEPTION_SENTINEL`] (W-next)
 /// -- another control character no legitimate trap/exception message
-/// would contain. Every structured field (`instance_id`, `tag_idx`, the
-/// value count, then that many encoded values) is read by
-/// `decode_exception_payload` via [`take_delim_field`], which peels off
-/// EXACTLY one field at a time from the front; the free-form `message`
-/// is never split on this separator at all -- it's simply "everything
-/// left over" after the last structured field is consumed, so a message
-/// that happens to CONTAIN this character (impossible today, since every
-/// message this crate builds is a fixed string or interpolates only
-/// numbers/opcodes, but not assumed away) still round-trips correctly,
-/// unlike a naive whole-string `split(EXCEPTION_FIELD_SEP)` would.
+/// would contain. Every structured field (`instance_id`, `tag_idx`,
+/// `tag_identity` (W23), the value count, then that many encoded values)
+/// is read by `decode_exception_payload` via [`take_delim_field`], which
+/// peels off EXACTLY one field at a time from the front; the free-form
+/// `message` is never split on this separator at all -- it's simply
+/// "everything left over" after the last structured field is consumed, so
+/// a message that happens to CONTAIN this character (impossible today,
+/// since every message this crate builds is a fixed string or
+/// interpolates only numbers/opcodes, but not assumed away) still
+/// round-trips correctly, unlike a naive whole-string
+/// `split(EXCEPTION_FIELD_SEP)` would.
 const EXCEPTION_FIELD_SEP: char = '\u{2}';
 
-/// Encode a thrown exception's real payload (W-next) into the wire format
-/// [`From<TrapError> for VMError`] places after [`EXCEPTION_SENTINEL`]:
-/// `{instance_id}{SEP}{tag_idx}{SEP}{n}{SEP}{v_0}{SEP}...{SEP}{v_{n-1}}{SEP}{message}`.
+/// Encode a thrown exception's real payload (W21/W22/W23) into the wire
+/// format [`From<TrapError> for VMError`] places after
+/// [`EXCEPTION_SENTINEL`]:
+/// `{instance_id}{SEP}{tag_idx}{SEP}{tag_identity}{SEP}{n}{SEP}{v_0}{SEP}...{SEP}{v_{n-1}}{SEP}{message}`.
 /// Each value is itself encoded via [`encode_wasm_value`] (never contains
 /// [`EXCEPTION_FIELD_SEP`] — see that function). `message` is written
 /// LAST and never escaped, so it may contain absolutely anything
 /// (including a stray separator character) without corrupting the parse —
 /// see [`EXCEPTION_FIELD_SEP`]'s own doc comment.
-fn encode_exception_payload(instance_id: u64, tag_idx: u32, values: &[WasmValue], message: &str) -> String {
-    let mut out = format!("{instance_id}{EXCEPTION_FIELD_SEP}{tag_idx}{EXCEPTION_FIELD_SEP}{}", values.len());
+fn encode_exception_payload(instance_id: u64, tag_idx: u32, tag_identity: u64, values: &[WasmValue], message: &str) -> String {
+    let mut out = format!(
+        "{instance_id}{EXCEPTION_FIELD_SEP}{tag_idx}{EXCEPTION_FIELD_SEP}{tag_identity}{EXCEPTION_FIELD_SEP}{}",
+        values.len()
+    );
     for v in values {
         out.push(EXCEPTION_FIELD_SEP);
         out.push_str(&encode_wasm_value(v));
@@ -587,15 +624,16 @@ fn take_delim_field<'a>(rest: &mut &'a str) -> Option<&'a str> {
 }
 
 /// Decode [`encode_exception_payload`]'s wire format back into
-/// `(instance_id, tag_idx, values, message)`. `None` on any structural
-/// malformation (should never happen for a string this crate itself
-/// encoded, but this is reached from a `VMError`'s `Display` output that
-/// crossed a generic, cross-language-frontend crate boundary, so a
-/// defensive `None` beats a panic).
-fn decode_exception_payload(encoded: &str) -> Option<(u64, u32, Vec<WasmValue>, String)> {
+/// `(instance_id, tag_idx, tag_identity, values, message)`. `None` on any
+/// structural malformation (should never happen for a string this crate
+/// itself encoded, but this is reached from a `VMError`'s `Display`
+/// output that crossed a generic, cross-language-frontend crate boundary,
+/// so a defensive `None` beats a panic).
+fn decode_exception_payload(encoded: &str) -> Option<(u64, u32, u64, Vec<WasmValue>, String)> {
     let mut rest = encoded;
     let instance_id: u64 = take_delim_field(&mut rest)?.parse().ok()?;
     let tag_idx: u32 = take_delim_field(&mut rest)?.parse().ok()?;
+    let tag_identity: u64 = take_delim_field(&mut rest)?.parse().ok()?;
     // Security: `n` is parsed from a string ONLY this crate's own
     // `encode_exception_payload` ever produces (never raw attacker/module
     // bytes), and there it always equals a real tag's declared param
@@ -610,7 +648,7 @@ fn decode_exception_payload(encoded: &str) -> Option<(u64, u32, Vec<WasmValue>, 
         let field = take_delim_field(&mut rest)?;
         values.push(decode_wasm_value(field)?);
     }
-    Some((instance_id, tag_idx, values, rest.to_string()))
+    Some((instance_id, tag_idx, tag_identity, values, rest.to_string()))
 }
 
 /// Reconstruct a [`TrapError`] from a [`VMError`] that crossed the shared
@@ -640,23 +678,53 @@ fn vm_error_to_trap_error(e: VMError) -> TrapError {
     let full = format!("{e}");
     match full.strip_prefix("Error: ").and_then(|msg| msg.strip_prefix(EXCEPTION_SENTINEL)) {
         Some(rest) => match decode_exception_payload(rest) {
-            Some((instance_id, tag_idx, values, message)) if instance_id != 0 || tag_idx != 0 || !values.is_empty() => {
-                TrapError::exception_with_payload(message, instance_id, tag_idx, values)
+            Some((instance_id, tag_idx, tag_identity, values, message))
+                if instance_id != 0 || tag_idx != 0 || tag_identity != 0 || !values.is_empty() =>
+            {
+                TrapError::exception_with_payload(message, instance_id, tag_idx, tag_identity, values)
             }
-            Some((_, _, _, message)) => TrapError::exception(message),
+            Some((_, _, _, _, message)) => TrapError::exception(message),
             None => TrapError::exception(rest.to_string()),
         },
         None => TrapError::new(full),
     }
 }
 
+/// Does a `catch $tag` clause's declared tag match a thrown exception
+/// (W23)? Prefers real, canonical tag-identity comparison — safe across
+/// ANY instance/context boundary, since identities are minted from one
+/// process-wide monotonic counter (`wasm-runtime::NEXT_TAG_IDENTITY`) and
+/// an imported tag adopts its exporter's identity verbatim (see
+/// `HostInterface::resolve_tag`) — falling back to a raw same-context
+/// index comparison only when real identity information is unavailable on
+/// either side (every hand-built `wasm-execution` unit test that never
+/// calls `set_tag_identities`; see `ctx.tag_identities`' own doc comment).
+/// `thrown_identity == 0` means "the throwing context had no real
+/// identities configured" (see [`ExceptionPayload::tag_identity`]); an
+/// out-of-bounds or `0` clause-side identity means the SAME for the
+/// catching context. Either being unknown falls back to the old
+/// same-context index comparison, which remains correct there precisely
+/// because such a context never spans more than one real module instance.
+fn catch_clause_tag_matches(ctx: &WasmExecutionContext, clause_tag_idx: u32, thrown_tag_idx: u32, thrown_identity: u64) -> bool {
+    if thrown_identity != 0 {
+        if let Some(&clause_identity) = ctx.tag_identities.get(clause_tag_idx as usize) {
+            if clause_identity != 0 {
+                return clause_identity == thrown_identity;
+            }
+        }
+    }
+    clause_tag_idx == thrown_tag_idx
+}
+
 /// At the ONE choke point where every instruction handler's `Result` is
 /// consumed inside a WASM dispatch loop ([`run_dispatch_loop`]), decide
 /// whether an exception-flagged error should be CAUGHT by an active
 /// `try_table` frame in the CURRENTLY EXECUTING function (walking
-/// `ctx.label_stack` from innermost to outermost) — W-next, real catch-
-/// clause matching, building on W21's deliberately non-catching first
-/// slice (`code/specs/W21-wasm-exceptions-tag-throw-slice.md`).
+/// `ctx.label_stack` from innermost to outermost) — W22's real catch-
+/// clause matching (building on W21's deliberately non-catching first
+/// slice, `code/specs/W21-wasm-exceptions-tag-throw-slice.md`), extended
+/// by W23 to match correctly ACROSS a cross-instance host-function call
+/// boundary (`code/specs/W23-wasm-exceptions-cross-instance-tag-identity.md`).
 ///
 /// Returns `Ok(true)` if caught: `vm.pc`/`vm.typed_stack`/
 /// `ctx.label_stack` are already updated exactly as if a `br` to the
@@ -673,19 +741,23 @@ fn try_catch_exception(vm: &mut GenericVM, ctx: &mut WasmExecutionContext, err: 
     let Some(rest) = full.strip_prefix("Error: ").and_then(|msg| msg.strip_prefix(EXCEPTION_SENTINEL)) else {
         return Ok(false); // not an exception at all -- an ordinary trap is never caught (real spec rule).
     };
-    let Some((instance_id, tag_idx, values, _message)) = decode_exception_payload(rest) else {
+    let Some((_instance_id, tag_idx, tag_identity, values, _message)) = decode_exception_payload(rest) else {
         return Ok(false);
     };
-    // Cross-instance exceptions are deliberately never matched — see
-    // `ExceptionPayload::instance_id`'s own doc comment for why this
-    // refusal is what makes same-instance-only catching SAFE rather than
-    // silently wrong.
-    if instance_id == 0 || instance_id != ctx.instance_id {
-        return Ok(false);
-    }
+    // W23: NO instance_id-based gate here anymore (see `ExceptionPayload::
+    // instance_id`'s own doc comment) — a `catch_all` clause must match
+    // ANY exception unconditionally, including one that crossed a
+    // cross-instance host-function call boundary (the real spec's own
+    // "try_table catches foreign exceptions... as well" rule; see the
+    // `imported-mismatch` corpus case this fixes). A `catch $tag` clause's
+    // own tag-identity comparison (`catch_clause_tag_matches`) is what
+    // keeps this SAFE rather than over-permissive: two unrelated tags
+    // that happen to share a raw index in different modules never
+    // compare equal, since identities are minted from one process-wide
+    // counter.
     for try_label_idx in (0..ctx.label_stack.len()).rev() {
         let matched = ctx.label_stack[try_label_idx].catches.iter().find(|c| match c.kind {
-            CatchClauseKind::Catch => c.tag_idx == tag_idx,
+            CatchClauseKind::Catch => catch_clause_tag_matches(ctx, c.tag_idx, tag_idx, tag_identity),
             CatchClauseKind::CatchAll => true,
             // `catch_ref`/`catch_all_ref` need a real `exnref` value this
             // slice never produces (see this slice's own spec doc) — these
@@ -1381,20 +1453,26 @@ pub trait HostInterface {
     /// Resolve an imported table.
     fn resolve_table(&self, module_name: &str, name: &str) -> Option<Table>;
 
-    /// Resolve an imported tag (exceptions proposal, W-next), returning the
-    /// tag's real declared type (its `params`; `results` is always empty
-    /// per the real spec rule `wasm-validator` already enforces) so the
-    /// importing module's own declared expectation can be checked for
-    /// compatibility, exactly like [`Self::resolve_function`] does for
-    /// `HostFunction::func_type()`.
+    /// Resolve an imported tag (exceptions proposal, W22/W23), returning
+    /// the tag's real declared type (its `params`; `results` is always
+    /// empty per the real spec rule `wasm-validator` already enforces),
+    /// AND its real, canonical cross-instance-safe identity (W23) — the
+    /// SAME identity value the exporting instance already minted for this
+    /// tag at its own `instantiate()` time (see
+    /// `wasm-runtime::WasmInstance::tag_identities`), so the importing
+    /// instance's own copy compares equal to it rather than to a freshly
+    /// minted, unrelated one. Exactly like [`Self::resolve_function`]
+    /// does for `HostFunction::func_type()`, but returning a tuple instead
+    /// of a value with its own accessor, since a tag import has no
+    /// analogue of `HostFunction` to hang the identity off of.
     ///
     /// Defaults to `None` (an unresolvable import, same as every other
     /// `resolve_*` method returning `None`) so existing `HostInterface`
     /// implementors that predate tag imports (this repo's own WASI stub
     /// among them) don't need a source change just to keep compiling —
     /// only a host that actually wants to link tag imports (`wasm-
-    /// conformance`'s `RegistryHost`, W-next) needs to override this.
-    fn resolve_tag(&self, _module_name: &str, _name: &str) -> Option<FuncType> {
+    /// conformance`'s `RegistryHost`) needs to override this.
+    fn resolve_tag(&self, _module_name: &str, _name: &str) -> Option<(FuncType, u64)> {
         None
     }
 
@@ -2741,22 +2819,36 @@ pub struct WasmExecutionContext {
     /// index (should never happen post-validation) degrades to "no
     /// declared params" rather than panicking.
     pub tags: Vec<u32>,
+    /// Canonical, cross-instance-safe tag identities (W23), same combined
+    /// index space as `tags` above: `tag_identities[N]` is tag `N`'s real
+    /// identity, minted once per tag DEFINITION by `wasm-runtime`'s
+    /// `NEXT_TAG_IDENTITY` (an import adopts its exporter's identity
+    /// verbatim — see `HostInterface::resolve_tag`) — NOT reset per call,
+    /// unlike `instance_id` below, since the same real tag must compare
+    /// equal across every call on the same instance. Empty unless the
+    /// embedder set it via [`WasmExecutionEngine::set_tag_identities`];
+    /// [`try_catch_exception`]/`catch_clause_tag_matches` fall back to
+    /// comparing raw tag indices directly whenever this is empty or an
+    /// index's entry is `0` (the "no real identity configured" sentinel)
+    /// — see [`ExceptionPayload::tag_identity`]'s own doc comment for why
+    /// that fallback is safe.
+    pub tag_identities: Vec<u64>,
     /// Per-function `try_table` info table (W-next: real catch-clause
     /// matching) — same per-function side-table save/restore shape as
     /// `br_table_targets`/`gc_ops`/`simd_consts` above. Each `try_table`
     /// instruction stores an index into this Vec as its operand.
     pub try_table_infos: Vec<TryTableInfo>,
     /// A value that's unique to THIS `WasmExecutionContext` (freshly
-    /// minted per [`WasmExecutionEngine::new`] call — see
-    /// [`ExceptionPayload::instance_id`]'s own doc comment for why this
-    /// exists and how [`try_catch_exception`] uses it: an exception is
-    /// only ever eligible to be caught by a `try_table` in the SAME
-    /// `WasmExecutionContext` it was thrown from, never one that crossed
-    /// a nested cross-instance host-function call boundary (e.g.
-    /// `wasm-conformance`'s `CrossModuleFunction`). `0` is never assigned
-    /// by [`NEXT_INSTANCE_ID`] (which starts at `1`), so it's reserved as
-    /// an always-fails-to-match sentinel for any hand-built `ctx` a test
-    /// constructs directly without going through `WasmExecutionEngine::new`.
+    /// minted per [`WasmExecutionEngine::new`] call). **No longer used by
+    /// [`try_catch_exception`] to gate matching** (W23 replaced that with
+    /// real tag-identity comparison — see [`ExceptionPayload::instance_id`]'s
+    /// own doc comment for why the old gate made both `catch` and
+    /// `catch_all` wrong in different directions across a cross-instance
+    /// host-function call boundary, e.g. `wasm-conformance`'s
+    /// `CrossModuleFunction`). `0` is never assigned by
+    /// [`NEXT_INSTANCE_ID`] (which starts at `1`), reserved for any
+    /// hand-built `ctx` a test constructs directly without going through
+    /// `WasmExecutionEngine::new`.
     pub instance_id: u64,
 }
 
@@ -9424,19 +9516,15 @@ fn register_control(vm: &mut GenericVM) {
     });
 
     // throw (0x08): creates and throws a real, catchable WASM exception
-    // (W-next). W21 originally made this an unconditional, payload-less
-    // `Err` (this repo implemented no catch-clause matching yet, so
-    // popping the tag's argument values off the stack first would have
-    // had no observable effect). Real catching needs those values --
-    // they're what a matching `catch` clause pushes back -- so this pops
-    // exactly the tag's declared param count/types (looked up via
-    // `ctx.tags`/`ctx.types`, the same combined tag index space
-    // `wasm-validator` already checked at validation time) and carries
-    // them, plus this context's own `instance_id`, in the resulting
-    // `TrapError`'s payload. If nothing along the propagation path
-    // matches (see `try_catch_exception`), this still propagates all the
-    // way out to the top-level `call_function` caller exactly like W21's
-    // version did.
+    // (W21/W22). This pops exactly the tag's declared param count/types
+    // (looked up via `ctx.tags`/`ctx.types`, the same combined tag index
+    // space `wasm-validator` already checked at validation time) and
+    // carries them, plus this context's own `instance_id` and (W23) the
+    // tag's real canonical identity (`ctx.tag_identities`, `0` if none was
+    // configured), in the resulting `TrapError`'s payload. If nothing
+    // along the propagation path matches (see `try_catch_exception`),
+    // this still propagates all the way out to the top-level
+    // `call_function` caller.
     vm.register_context_opcode(0x08, |vm, instr, _code, ctx| {
         let ctx = get_ctx(ctx);
         let tag_idx = operand_int(instr) as u32;
@@ -9446,6 +9534,7 @@ fn register_control(vm: &mut GenericVM) {
             .and_then(|&type_idx| ctx.types.get(type_idx as usize))
             .map(|ft| ft.params.clone())
             .unwrap_or_default();
+        let tag_identity = ctx.tag_identities.get(tag_idx as usize).copied().unwrap_or(0);
         let mut values = Vec::with_capacity(param_types.len());
         for _ in 0..param_types.len() {
             values.push(pop_wasm(vm)?);
@@ -9455,6 +9544,7 @@ fn register_control(vm: &mut GenericVM) {
             format!("uncaught wasm exception (tag {tag_idx})"),
             ctx.instance_id,
             tag_idx,
+            tag_identity,
             values,
         )))
     });
@@ -10075,6 +10165,11 @@ pub struct WasmExecutionEngine {
     /// force every tag-agnostic existing construction site to supply it).
     /// Empty by default; set with [`WasmExecutionEngine::set_tags`].
     tags: Vec<u32>,
+    /// Canonical, cross-instance-safe tag identities (W23) — same
+    /// combined index space as `tags` above, mirroring its own
+    /// optional-setter pattern for the identical reason. Empty by
+    /// default; set with [`WasmExecutionEngine::set_tag_identities`].
+    tag_identities: Vec<u64>,
     /// GC bookkeeping from the most recently completed [`Self::call_function`]
     /// (W04). `gc_heap` itself isn't persisted here — it's rebuilt fresh every
     /// call, same as `struct_field_counts` isn't — but the *counters* (live
@@ -10132,6 +10227,7 @@ impl WasmExecutionEngine {
             struct_field_counts: Vec::new(),
             type_section: Vec::new(),
             tags: Vec::new(),
+            tag_identities: Vec::new(),
             last_gc_state: gc::GcState::default(),
             v128_heap: vec![[0u8; 16]],
             data_segments: Vec::new(),
@@ -10179,6 +10275,22 @@ impl WasmExecutionEngine {
     /// chaining.
     pub fn set_tags(&mut self, tags: Vec<u32>) -> &mut Self {
         self.tags = tags;
+        self
+    }
+
+    /// Register the module's canonical, cross-instance-safe tag
+    /// identities (W23), same combined index space as [`Self::set_tags`]
+    /// — see `ctx.tag_identities`' own doc comment for how
+    /// `try_catch_exception` uses this to match a `catch` clause across a
+    /// cross-instance host-function call boundary. Same optional-setter
+    /// pattern as `set_tags`. Left unset (the default for every
+    /// tag-identity-agnostic existing construction site — the many
+    /// hand-built modules in this crate's own unit tests among them),
+    /// `catch` matching falls back to comparing raw tag indices directly,
+    /// which is exactly this crate's pre-W23 behavior. Returns `&mut
+    /// self` for chaining.
+    pub fn set_tag_identities(&mut self, tag_identities: Vec<u64>) -> &mut Self {
+        self.tag_identities = tag_identities;
         self
     }
 
@@ -10399,17 +10511,11 @@ impl WasmExecutionEngine {
             elements: self.elements.clone(),
             dropped_elements: self.dropped_elements.clone(),
             tags: self.tags.clone(),
+            tag_identities: self.tag_identities.clone(),
             try_table_infos: Vec::new(),
-            // A fresh id per `call_function_impl` invocation (W-next) --
+            // A fresh id per `call_function_impl` invocation (W21/W22) --
+            // no longer read by `try_catch_exception`'s matching (W23) --
             // see `WasmExecutionContext::instance_id`'s own doc comment.
-            // Rebuilt once per top-level call (this whole `ctx` is), which
-            // is exactly the granularity `try_catch_exception` needs: every
-            // nested call WITHIN this one invocation shares this same
-            // `ctx` (and so this same id), while any nested cross-instance
-            // call (a fresh `WasmRuntime::call_typed` on a DIFFERENT
-            // instance, e.g. `wasm-conformance`'s `CrossModuleFunction`)
-            // builds its own separate `ctx` via its own separate
-            // `call_function_impl` call, getting a different id.
             instance_id: NEXT_INSTANCE_ID.fetch_add(1, Ordering::Relaxed),
         };
 
@@ -11518,6 +11624,170 @@ mod tests {
         engine.set_tags(vec![0]);
         let result = engine.call_function(0, &[]).unwrap();
         assert_eq!(result, vec![WasmValue::I32(2)], "the FIRST matching catch clause must win, even when a later one also matches");
+    }
+
+    #[test]
+    fn test_catch_matches_the_same_tag_reached_through_two_different_aliased_indices() {
+        // W23 regression: mirrors the real testsuite's own `try_table.wast`
+        // `catch-imported-alias` shape -- a module can import the SAME
+        // underlying tag TWICE under two different local indices (e.g. two
+        // separate `(tag (import ...))` declarations for the same export).
+        // Raw index comparison can never match `catch $imported-e0`
+        // against a `throw $imported-e0-alias` (different indices), but
+        // real tag IDENTITY does, because both indices were configured to
+        // share the SAME identity (as a real `wasm-runtime::instantiate()`
+        // would do via `HostInterface::resolve_tag` returning the same
+        // value for both imports).
+        //   (block $h (try_table (catch tag=0 label=0) (throw tag=1)))
+        // tag 0 and tag 1 are DIFFERENT raw indices but the SAME identity.
+        let func_type = FuncType { params: vec![], results: vec![] };
+        let body = FunctionBody {
+            locals: vec![],
+            code: vec![
+                0x02, 0x40, // block $h (empty)
+                0x1F, 0x40, 0x01, 0x00, 0x00, 0x00, // try_table (catch tag=0 label=0)
+                0x08, 0x01, // throw tag 1 (the ALIAS index)
+                0x0B, // end try_table
+                0x0B, // end block $h
+                0x0B, // function terminator
+            ],
+        };
+        let mut engine = WasmExecutionEngine::new(WasmEngineConfig {
+            memories: Vec::new(),
+            tables: vec![],
+            globals: vec![],
+            global_types: vec![],
+            func_types: vec![func_type],
+            func_bodies: vec![Some(body)],
+            host_functions: vec![None],
+        });
+        engine.set_tags(vec![0, 0]);
+        // Two DIFFERENT raw tag indices, SAME real identity (777) --
+        // exactly what two aliased imports of the same exported tag would
+        // produce.
+        engine.set_tag_identities(vec![777, 777]);
+        let result = engine.call_function(0, &[]).unwrap();
+        assert_eq!(
+            result,
+            Vec::<WasmValue>::new(),
+            "a catch clause must match a throw of the SAME tag reached through a DIFFERENT aliased index, via real identity"
+        );
+    }
+
+    #[test]
+    fn test_catch_does_not_match_a_different_tag_with_a_different_identity_even_with_real_identities_configured() {
+        // W23 safety regression: with real per-tag identities configured
+        // (not the legacy raw-index-only fallback), a `catch` naming tag 1
+        // must still correctly REFUSE to match a `throw` of tag 0 when
+        // their configured identities differ -- confirming the new
+        // identity-aware path doesn't accidentally become MORE permissive
+        // than the raw-index comparison it replaces.
+        let func_type = FuncType { params: vec![], results: vec![] };
+        let body = FunctionBody {
+            locals: vec![],
+            code: vec![0x1F, 0x40, 0x01, 0x00, 0x01, 0x00, 0x08, 0x00, 0x0B, 0x0B],
+        };
+        let mut engine = WasmExecutionEngine::new(WasmEngineConfig {
+            memories: Vec::new(),
+            tables: vec![],
+            globals: vec![],
+            global_types: vec![],
+            func_types: vec![func_type],
+            func_bodies: vec![Some(body)],
+            host_functions: vec![None],
+        });
+        engine.set_tags(vec![0, 0]);
+        // Two DIFFERENT tags (indices 0 and 1), two DIFFERENT identities.
+        engine.set_tag_identities(vec![123, 456]);
+        let err = engine.call_function(0, &[]).unwrap_err();
+        assert!(err.is_exception, "a catch clause naming a DIFFERENT tag (different identity) must still not match");
+    }
+
+    #[test]
+    fn test_catch_all_catches_a_foreign_exception_that_crossed_a_host_function_call_boundary_even_when_a_same_raw_index_catch_does_not() {
+        // W23 regression: mirrors the real testsuite's own `try_table.wast`
+        // `imported-mismatch` case end to end, using a REAL second
+        // `WasmExecutionEngine` reached through a `HostFunction` call
+        // boundary (the same shape `wasm-conformance`'s `RegistryHost`/
+        // `CrossModuleFunction` uses for real cross-module calls) rather
+        // than a single shared `ctx` -- this is the one scenario that
+        // genuinely needs TWO separate engines/contexts to reproduce, not
+        // just two tag indices within one.
+        //
+        // Engine B ("test"): tag $e0 (identity 555), a function that
+        // throws it unconditionally.
+        struct CrossEngineCall(std::cell::RefCell<WasmExecutionEngine>);
+        impl HostFunction for CrossEngineCall {
+            fn func_type(&self) -> &FuncType {
+                static FT: FuncType = FuncType { params: vec![], results: vec![] };
+                &FT
+            }
+            fn call(&self, _args: &[WasmValue], _memory: Option<&mut LinearMemory>) -> Result<Vec<WasmValue>, TrapError> {
+                self.0.borrow_mut().call_function(0, &[])
+            }
+        }
+
+        let throw_type = FuncType { params: vec![], results: vec![] };
+        let throw_body = FunctionBody {
+            locals: vec![],
+            code: vec![0x08, 0x00, 0x0B], // throw tag 0; end
+        };
+        let mut callee_engine = WasmExecutionEngine::new(WasmEngineConfig {
+            memories: Vec::new(),
+            tables: vec![],
+            globals: vec![],
+            global_types: vec![],
+            func_types: vec![throw_type],
+            func_bodies: vec![Some(throw_body)],
+            host_functions: vec![None],
+        });
+        callee_engine.set_tags(vec![0]);
+        callee_engine.set_tag_identities(vec![555]); // engine B's own real tag identity
+
+        // Engine A (the importer): imports the above as host function 0,
+        // declares its OWN, UNRELATED local tag $e0 (identity 111 --
+        // deliberately DIFFERENT from 555, at the SAME raw index 0).
+        //   (block $h (try_table (catch_all label=$h)
+        //     (block $h0 (try_table (catch tag=0 label=$h0) (call 0)))
+        //     -- unreachable if inner ever caught, falls through if not --
+        //   ))
+        let caller_type = FuncType { params: vec![], results: vec![ValueType::I32] };
+        let callee_import_type = FuncType { params: vec![], results: vec![] };
+        let caller_body = FunctionBody {
+            locals: vec![],
+            code: vec![
+                0x02, 0x40, // block $h (empty)         -- catch_all target
+                0x1F, 0x40, 0x01, 0x02, 0x00, // try_table (catch_all label=0 == $h)
+                0x02, 0x40, // block $h0 (empty)
+                0x1F, 0x40, 0x01, 0x00, 0x00, 0x00, // try_table (catch tag=0 label=0 == $h0)
+                0x10, 0x00, // call function 0 (the cross-engine host import)
+                0x0B, // end inner try_table
+                0x0B, // end $h0
+                0x0B, // end outer try_table (unreached if nothing propagates this far)
+                0x0B, // end $h
+                0x41, 0x03, // i32.const 3 -- reached only if catch_all caught it
+                0x0B, // function terminator
+            ],
+        };
+        let mut caller_engine = WasmExecutionEngine::new(WasmEngineConfig {
+            memories: Vec::new(),
+            tables: vec![],
+            globals: vec![],
+            global_types: vec![],
+            func_types: vec![callee_import_type, caller_type],
+            func_bodies: vec![None, Some(caller_body)],
+            host_functions: vec![Some(Box::new(CrossEngineCall(std::cell::RefCell::new(callee_engine))))],
+        });
+        caller_engine.set_tags(vec![0]);
+        caller_engine.set_tag_identities(vec![111]); // engine A's own, UNRELATED local tag
+
+        let result = caller_engine.call_function(1, &[]).unwrap();
+        assert_eq!(
+            result,
+            vec![WasmValue::I32(3)],
+            "catch_all must catch a foreign exception that crossed a host-function call boundary, \
+             even though the inner same-raw-index `catch` correctly refused to match a DIFFERENT tag"
+        );
     }
 
     #[test]

@@ -295,6 +295,7 @@ mod tests {
             elements: Vec::new(),
             dropped_elements: Vec::new(),
             tags: Vec::new(),
+            tag_identities: Vec::new(),
             try_table_infos: Vec::new(),
             instance_id: 0,
         }
