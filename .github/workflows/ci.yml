@@ -1028,7 +1028,19 @@ jobs:
           components: clippy,llvm-tools
 
       - name: Install native Paint VM dependencies
-        if: (needs.detect.outputs.needs_rust == 'true' || needs.detect.outputs.needs_venture_windows == 'true') && runner.os == 'Linux'
+        # needs_mosaic_qt_runtime is its own condition, independent of
+        # needs_rust/needs_venture_windows: a change scoped to a Mosaic
+        # package outside code/packages/rust/ (e.g. a mosaic-pkg-* smoke-test
+        # crate whose Cargo.toml starts depending on mosaic-package-artifact-
+        # builder, which pulls in mosaic-emit-qt) can trip
+        # needs_mosaic_qt_runtime without tripping the other two. Without
+        # this arm, "Round-trip Rust engine through standard Qt binding"
+        # (which needs cairo transitively) runs while this installer is
+        # skipped, and the build fails with a pkg-config "cairo not found"
+        # error that has nothing to do with the actual diff. Matches the
+        # same three-way condition "Install Venture Qt acceptance
+        # dependencies" below already uses.
+        if: (needs.detect.outputs.needs_rust == 'true' || needs.detect.outputs.needs_venture_windows == 'true' || needs.detect.outputs.needs_mosaic_qt_runtime == 'true') && runner.os == 'Linux'
         run: |
           sudo apt-get update
           sudo apt-get install -y libcairo2-dev
