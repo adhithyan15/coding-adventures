@@ -7952,6 +7952,55 @@ unchanged at 15 lanes, 1,373 identities, 4,566 slots, zero collisions, and zero
 unknown buckets, and all 13 tranche paths have zero exact overlap across nine
 live open PRs.
 
+### Post-#12895 refresh and Ruby orphan-crate selection
+
+PR #12895 completed 45 terminal acceptable checks: 38 successes, six expected
+skips, and one neutral result. GitHub reported the reviewed branch clean and
+mergeable, so the loop enabled squash auto-merge. GitHub merged reviewed head
+`ad5495ea7cf008d0db6a91137209b935290f7d69` as
+`89364dd43dc165e7a683a74df109d4fb77d40725` at
+`2026-08-26T00:58:42Z` without a manual merge command.
+
+The exact-main schema-3 collision report at
+`297c1f3f72da31a856389b774f5cf7dd11cfb8d9` remains structurally unchanged:
+15 established lanes, 1,373 implementation identities, 4,566 package slots,
+175 high-consensus packages with 276 missing slots, 122 identities in five to
+nine lanes with 926 gaps, 166 identities in two to four lanes with 2,087 gaps,
+910 singletons with 12,740 gaps, and 721 Rust singletons. Canonical collisions
+and unknown language buckets remain zero. OCaml remains correctly emerging at
+zero packages. The intervening human-language and Rust HTML-parser merges add
+no package identity or build-tool contract and do not overlap the next tranche.
+
+The live-PR audit found one newly unowned future family before selection. The
+then-open PR #12908 exposed Rust-only Wasm GC i31 parsing, validation, and
+execution work, including incorrect stack-identity implementations for
+`ref.i31` and `i31.get_s`. The state now registers
+`wasm-gc-i31-language-neutral-conformance` for the bounded neutral fixture
+contract and a dependent, selection-blocked
+`wasm-gc-i31-established-lane-parity` umbrella. Generic WAST execution,
+vendored-corpus provenance, fetching, NOTICE, and baseline authority remain in
+their existing owners. PR #12908 subsequently merged as exact-main revision
+`477e3f742304876fd5c17bcce21d8abf66f0075c`; its implementation remains
+covered by those registered owners. The resulting state graph contains 511
+owners and 773 dependency edges before the selected implementation lands.
+
+The dependency/leverage pass selects
+`build-tool-ruby-orphan-crate-validation-conformance` on branch
+`codex/build-tool-ruby-orphan-crate-validation-conformance`. Its orphan corpus,
+remaining-engine `dist-newstyle` exclusion, and Ruby tracked-artifact substrate
+are merged. Ruby covers 298 reported packages versus Swift's 161, while each
+consumer unlocks the same orphan-crate umbrella descendant. Every live PR has
+zero exact overlap with the six Ruby tranche paths, and no prior branch or PR
+exists. OCaml's process-free core remains collision-unsafe while PRs #12149 and
+#12162 both own the required Go entry-point and validator surfaces.
+
+Before publication, the Ruby branch rebased twice without conflict, finally
+onto exact main `297c1f3f72da31a856389b774f5cf7dd11cfb8d9`. The intervening ADJ
+bookkeeping, Wasm GC i31, Vault, and JV02 merges leave the schema-3 inventory
+unchanged. Merged PR #12912 remains in the existing JV02 neutral/lane owners,
+and merged PR #12911 remains in the existing Vault owners; neither overlaps
+any of the six Ruby tranche paths.
+
 ## Autonomous Loop Protocol
 
 Only one parity PR should be active at a time.

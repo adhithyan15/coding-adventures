@@ -12,6 +12,12 @@ class TestValidator < Minitest::Test
     validation-tracked-artifacts-invalid.json
     validation-tracked-artifacts-unicode-boundaries.json
   ].freeze
+  ORPHAN_CRATE_CASES = %w[
+    validation-orphan-crates-clean.json
+    validation-orphan-crates-unlisted.json
+    validation-orphan-exemptions-invalid.json
+    validation-orphan-exemptions-stale.json
+  ].freeze
   CONFORMANCE_CASES = Pathname(__dir__) / "../../../../specs/fixtures/build-tool-v1/cases"
 
   def test_fails_without_normalized_outputs
@@ -244,6 +250,132 @@ class TestValidator < Minitest::Test
 
       assert_nil BuildTool::Validator.validate_build_contracts(root, packages)
     end
+  end
+
+  ORPHAN_CRATE_CASES.each do |fixture_name|
+    define_method("test_matches_shared_#{fixture_name.delete_suffix(".json").tr("-", "_")}_fixture") do
+      fixture = JSON.parse((CONFORMANCE_CASES / fixture_name).read)
+      snapshot = fixture.fetch("input").fetch("options").fetch("orphan_snapshot")
+      expected = fixture.fetch("expected")
+
+      actual = BuildTool::Validator.validate_orphan_crate_snapshot(snapshot)
+
+      assert_equal expected.fetch("diagnostics"), actual.fetch("diagnostics")
+      assert_equal expected.fetch("result"), actual.except("diagnostics")
+    end
+  end
+
+  def test_orphan_crate_redacts_unsafe_paths_and_rejects_invalid_utf8
+    invalid_utf8 = "code/packages/rust/\xFF".b
+    unsafe_paths = [
+      "",
+      "😀" * 513,
+      "/absolute/secret-project",
+      "C:/host/secret-project",
+      "code/packages/rust/bad<name>",
+      "code/packages/rust/trailing.",
+      "code/packages/rust/CON",
+      invalid_utf8
+    ]
+
+    unsafe_paths.each do |unsafe_path|
+      result = BuildTool::Validator.validate_orphan_crate_snapshot(
+        "directories" => ["code/packages/rust/demo"],
+        "manifests" => [{"path" => "code/packages/rust/demo", "kind" => "package"}],
+        "build_files" => [],
+        "exemptions" => [
+          {"line" => 7, "kind" => "PENDING", "path" => unsafe_path, "reason" => "not allowed"}
+        ]
+      )
+
+      diagnostic = result.fetch("diagnostics").find do |item|
+        item.fetch("code") == "ORPHAN_EXEMPTION_INVALID"
+      end
+      assert_equal(
+        {
+          "code" => "ORPHAN_EXEMPTION_INVALID",
+          "severity" => "error",
+          "path" => "code/BUILD-EXEMPTIONS",
+          "details" => {"line" => 7, "problem" => "PATH_UNSAFE"}
+        },
+        diagnostic
+      )
+      refute_includes JSON.generate(result), unsafe_path if unsafe_path.valid_encoding? && !unsafe_path.empty?
+    end
+  end
+
+  def test_orphan_crate_uses_python_blank_reason_set
+    result = BuildTool::Validator.validate_orphan_crate_snapshot(
+      "directories" => ["code/packages/rust/blank", "code/packages/rust/bom"],
+      "manifests" => [
+        {"path" => "code/packages/rust/blank", "kind" => "package"},
+        {"path" => "code/packages/rust/bom", "kind" => "package"}
+      ],
+      "build_files" => [],
+      "exemptions" => [
+        {"line" => 7, "kind" => "PENDING", "path" => "code/packages/rust/blank", "reason" => "\u001c"},
+        {"line" => 8, "kind" => "PENDING", "path" => "code/packages/rust/bom", "reason" => "\uFEFF"}
+      ]
+    )
+
+    assert_equal 1, result.fetch("pending_exemption_count")
+    assert_equal ["ORPHAN_CRATE_UNLISTED", "ORPHAN_EXEMPTION_INVALID"],
+      result.fetch("diagnostic_codes")
+    assert_equal "REASON_MISSING",
+      result.fetch("diagnostics").last.fetch("details").fetch("problem")
+  end
+
+  def test_orphan_crate_chooses_closest_empty_then_fixed_build_name_order
+    result = BuildTool::Validator.validate_orphan_crate_snapshot(
+      "directories" => ["code/packages/rust/demo/child"],
+      "manifests" => [{"path" => "code/packages/rust/demo/child", "kind" => "package"}],
+      "build_files" => [
+        {"path" => "code/packages/rust/BUILD", "state" => "empty"},
+        {"path" => "code/packages/rust/demo/BUILD_linux", "state" => "empty"},
+        {"path" => "code/packages/rust/demo/BUILD", "state" => "empty"},
+        {"path" => "code/packages/rust/demo2/BUILD", "state" => "runnable"}
+      ],
+      "exemptions" => []
+    )
+
+    assert_equal "code/packages/rust/demo/BUILD",
+      result.fetch("diagnostics").first.fetch("details").fetch("build_path")
+  end
+
+  def test_orphan_crate_reserves_nfc_full_fold_identity_before_policy_precedence
+    result = BuildTool::Validator.validate_orphan_crate_snapshot(
+      "directories" => ["code/packages/rust/Straße"],
+      "manifests" => [{"path" => "code/packages/rust/Straße", "kind" => "package"}],
+      "build_files" => [],
+      "exemptions" => [
+        {"line" => 7, "kind" => "UNKNOWN", "path" => "code/packages/rust/Straße", "reason" => "first"},
+        {"line" => 8, "kind" => "PENDING", "path" => "CODE/PACKAGES/RUST/STRASSE", "reason" => "duplicate"}
+      ]
+    )
+
+    invalid = result.fetch("diagnostics").select do |diagnostic|
+      diagnostic.fetch("code") == "ORPHAN_EXEMPTION_INVALID"
+    end
+    assert_equal [
+      {"line" => 7, "problem" => "UNKNOWN_KIND"},
+      {"line" => 8, "problem" => "DUPLICATE_PATH"}
+    ], invalid.map { |diagnostic| diagnostic.fetch("details") }
+  end
+
+  def test_orphan_crate_uses_ascii_json_unicode_detail_ordering
+    result = BuildTool::Validator.validate_orphan_crate_snapshot(
+      "directories" => [],
+      "manifests" => [],
+      "build_files" => [],
+      "exemptions" => [
+        {"line" => 9, "kind" => "EXCLUDED", "path" => "code/packages/rust/z", "reason" => "removed"},
+        {"line" => 8, "kind" => "EXCLUDED", "path" => "code/packages/rust/😀", "reason" => "removed"},
+        {"line" => 7, "kind" => "EXCLUDED", "path" => "code/packages/rust/é", "reason" => "removed"}
+      ]
+    )
+
+    assert_equal ["code/packages/rust/é", "code/packages/rust/😀", "code/packages/rust/z"],
+      result.fetch("diagnostics").map { |diagnostic| diagnostic.fetch("details").fetch("entry_path") }
   end
 
   TRACKED_ARTIFACT_CASES.each do |fixture_name|
