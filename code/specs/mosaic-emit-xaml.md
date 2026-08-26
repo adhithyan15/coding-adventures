@@ -559,7 +559,13 @@ on first render when the property is its default.
 ## 9. Style application (mosstyle)
 
 The `.msl` source's base `part` properties lower to native attributes and
-scoped text styles. On native Host controls, a `state-when-*` layout
+scoped text styles. Values are XML-escaped (`escape_xaml_attr` — `&`, `"`,
+`<`, `>`) at the point the base attribute fragment is built, the same
+guarantee the `<Setter Value="...">` path always had (#12025). This is the
+single production write path for every base-`part`-derived attribute
+across every primitive, so nothing downstream needs its own escaping.
+
+On native Host controls, a `state-when-*` layout
 predicate plus its matching MSL state block lowers to a WinUI
 `StateTrigger` and `VisualState` setter.
 
