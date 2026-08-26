@@ -8154,11 +8154,11 @@ state graph contains 517 unique owners and 778 complete acyclic edges: 147
 merged, 369 pending, and exactly one in-progress owner, with no active parity
 PR and no merged-to-unmerged dependency edge.
 
-Before publication, the branch rebased three times without conflict, most
-recently onto exact main `ca3646356906cd3f3559ce2016209f6d082f5478`. PRs
+Before publication, the branch rebased four times without conflict, most
+recently onto exact main `53c7c6054f9cd93378726f2348a92ed6514c5948`. PRs
 #12944 and #12949 extend the shared script-ductus authored-data owner; PRs
-#12946 and #12951 extend the
-deterministic HTML frontend owner; PR #12947 supplies the first JavaScript
+#12946 and #12951 extend the deterministic HTML frontend owner; PR #12947
+supplies the first JavaScript
 emitter child under the SIR16 loop-control consumer umbrella; and PR #12948 is
 Language Ladder program-only batching. PR #12917 extends the existing
 TypeScript `human-language-data` singleton classification and leaves its writer
@@ -8166,13 +8166,15 @@ shell in the separate filesystem-authority review. PR #12952 extends the
 Mermaid Gantt neutral and lane owners with pinned implicit IDs and sequential
 tasks. PR #12950 extends the ALGOL IIR owners with exact subtractive-positive-
 zero selector identity. PR #12945 adds Chinese curriculum and generated data
-without changing package source behavior. PR #12949 specifically adds sourced
-Malayalam chillu RR as one zero-lift three-movement arch, loop, and hook run
+without changing package source behavior. Merged PR #12943 adds Spanish A1
+curriculum and generated human-language-data without new package behavior.
+PR #12949 specifically adds sourced Malayalam chillu RR as one zero-lift
+three-movement arch, loop, and hook run
 across the existing curriculum, human-language-data, script-ductus, and
 Language Ladder consumers.
 
-None of those ten commits touches a selected Perl path or changes a package
-identity, BUILD marker, build-tool marker, or dependency surface. All seven
+None of those eleven commits touches a selected Perl path or changes a package
+identity, BUILD marker, build-tool marker, or dependency surface. All eight
 live open PRs have zero exact overlap with this six-path tranche. The post-rebase
 schema-3 report remains 15 established lanes, 1,373 identities, 4,566 slots,
 175 high-consensus packages with 276 gaps, 910 singletons with 12,740 gaps,
@@ -8180,7 +8182,7 @@ schema-3 report remains 15 established lanes, 1,373 identities, 4,566 slots,
 778-edge state graph remains complete and acyclic with exactly one in-progress
 item.
 
-The live-PR audit also classifies two unmerged surfaces before publication.
+The live-PR audit also classifies four unmerged surfaces before publication.
 PR #12955 remains inside the existing ALGOL IIR neutral and applicable-lane
 owners with additive negative-real-zero selector identity. PR #12954 exposes a
 distinct W22 contract that W21 deliberately excluded, so the state registers a
@@ -8189,6 +8191,10 @@ neutral tag/throw contract, plus an applicable-lane umbrella depending on both
 that W22 contract and the W21 lane substrate. Generic inert `exnref` parsing,
 official WAST reporting and baseline data, and native corpus-fetch authority
 remain with the existing WAST, conformance, and host-authority owners.
+Open PR #12956 likewise remains in the shared script-ductus authored-data owner
+with sourced Persian shin geometry and provenance, while PR #12957 remains in
+the Mermaid Gantt neutral and lane owners with repeatable status tags, vertical
+markers, interaction bounds, and deterministic paint projection.
 
 Pinned Strawberry Perl 5.38.2 validation passes all 14 package test files and
 136 tests. `Validator.pm` reaches 100% statement and subroutine coverage and
