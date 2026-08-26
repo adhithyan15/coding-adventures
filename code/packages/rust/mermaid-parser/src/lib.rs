@@ -6059,10 +6059,14 @@ fn parse_gantt_date_format(token: &Token, source: &str) -> Result<GanttDateForma
             ("YYYY", GanttDateFormatPart::Year4), ("MMMM", GanttDateFormatPart::MonthLong),
             ("MMM", GanttDateFormatPart::MonthShort), ("SSS", GanttDateFormatPart::Millisecond),
             ("ZZ", GanttDateFormatPart::TimezoneOffsetCompact),
+            ("hh", GanttDateFormatPart::Hour12Padded),
             ("YY", GanttDateFormatPart::Year2), ("MM", GanttDateFormatPart::Month2),
             ("DD", GanttDateFormatPart::Day2), ("HH", GanttDateFormatPart::Hour24),
             ("mm", GanttDateFormatPart::Minute), ("ss", GanttDateFormatPart::Second),
             ("M", GanttDateFormatPart::Month), ("D", GanttDateFormatPart::Day),
+            ("h", GanttDateFormatPart::Hour12),
+            ("A", GanttDateFormatPart::MeridiemUpper),
+            ("a", GanttDateFormatPart::MeridiemLower),
             ("Z", GanttDateFormatPart::TimezoneOffsetColon),
             ("X", GanttDateFormatPart::UnixSeconds), ("x", GanttDateFormatPart::UnixMilliseconds),
         ];
@@ -6104,11 +6108,15 @@ fn gantt_date_matches_format(value: &str, format: &GanttDateFormat) -> bool {
             GanttDateFormatPart::Month | GanttDateFormatPart::Day => consume_digits(rest, 1, 2),
             GanttDateFormatPart::Month2 | GanttDateFormatPart::Day2 | GanttDateFormatPart::Hour24
                 | GanttDateFormatPart::Minute => consume_digits(rest, 2, 2),
+            GanttDateFormatPart::Hour12 => consume_digits(rest, 1, 2),
+            GanttDateFormatPart::Hour12Padded => consume_digits(rest, 2, 2),
             GanttDateFormatPart::Second if seconds_only => consume_digits(rest, 1, 2),
             GanttDateFormatPart::Second => consume_digits(rest, 2, 2),
             GanttDateFormatPart::Millisecond => consume_digits(rest, 3, 3),
             GanttDateFormatPart::MonthShort => consume_letters(rest, 3, 3),
             GanttDateFormatPart::MonthLong => consume_letters(rest, 3, 9),
+            GanttDateFormatPart::MeridiemUpper => consume_meridiem(rest, true),
+            GanttDateFormatPart::MeridiemLower => consume_meridiem(rest, false),
             GanttDateFormatPart::TimezoneOffsetColon => consume_timezone_offset(rest, true),
             GanttDateFormatPart::TimezoneOffsetCompact => consume_timezone_offset(rest, false),
             GanttDateFormatPart::UnixSeconds | GanttDateFormatPart::UnixMilliseconds => consume_signed_digits(rest),
@@ -6117,6 +6125,15 @@ fn gantt_date_matches_format(value: &str, format: &GanttDateFormat) -> bool {
         rest = &rest[length..];
     }
     rest.is_empty()
+}
+
+fn consume_meridiem(value: &str, uppercase: bool) -> Option<usize> {
+    let valid = if uppercase {
+        value.starts_with("AM") || value.starts_with("PM")
+    } else {
+        value.starts_with("am") || value.starts_with("pm")
+    };
+    valid.then_some(2)
 }
 
 fn consume_timezone_offset(value: &str, colon: bool) -> Option<usize> {
@@ -7145,6 +7162,21 @@ Rel(customer, web, \"Uses\", \"HTTPS\")";
         assert_eq!(diagram.date_format.parts, [GanttDateFormatPart::Second]);
         assert_eq!(diagram.sections[0].tasks[0].start, TaskStart::Date("0".into()));
         assert_eq!(diagram.sections[0].tasks[0].end, Some(TaskEnd::Date("20".into())));
+    }
+
+    #[test]
+    fn gantt_compiles_twelve_hour_clock_formats() {
+        let diagram = parse_gantt(
+            "gantt\ndateFormat YYYY-MM-DD h:mm A\nMorning :am, 2026-03-01 9:30 AM, 1h\nNoon :pm, 2026-03-01 12:30 PM, 1h",
+        ).unwrap();
+        assert!(diagram.date_format.parts.contains(&GanttDateFormatPart::Hour12));
+        assert!(diagram.date_format.parts.contains(&GanttDateFormatPart::MeridiemUpper));
+
+        let padded = parse_gantt(
+            "gantt\ndateFormat YYYY-MM-DD hh:mm a\nEvening :pm, 2026-03-01 09:30 pm, 1h",
+        ).unwrap();
+        assert!(padded.date_format.parts.contains(&GanttDateFormatPart::Hour12Padded));
+        assert!(padded.date_format.parts.contains(&GanttDateFormatPart::MeridiemLower));
     }
 
     #[test]

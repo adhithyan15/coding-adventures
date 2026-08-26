@@ -18,7 +18,7 @@ use diagram_ir::{
 };
 use std::collections::{BTreeSet, HashMap};
 
-pub const VERSION: &str = "0.27.0";
+pub const VERSION: &str = "0.28.0";
 
 // ── Constants ─────────────────────────────────────────────────────────────
 
@@ -233,6 +233,8 @@ fn date_to_days(source: &str, format: &GanttDateFormat) -> Option<f64> {
     let seconds_only = format.parts.as_slice() == [GanttDateFormatPart::Second];
     let (mut year, mut month, mut day) = (1970_i64, 1_i64, 1_i64);
     let (mut hour, mut minute, mut second, mut millisecond) = (0_i64, 0_i64, 0_i64, 0_i64);
+    let mut hour_is_twelve_hour = false;
+    let mut meridiem_is_pm = false;
     let mut timezone_offset_minutes = 0_i64;
     for part in &format.parts {
         match part {
@@ -255,12 +257,26 @@ fn date_to_days(source: &str, format: &GanttDateFormat) -> Option<f64> {
             GanttDateFormatPart::Day => (day, rest) = take_number(rest, 1, 2)?,
             GanttDateFormatPart::Day2 => (day, rest) = take_number(rest, 2, 2)?,
             GanttDateFormatPart::Hour24 => (hour, rest) = take_number(rest, 2, 2)?,
+            GanttDateFormatPart::Hour12 => {
+                (hour, rest) = take_number(rest, 1, 2)?;
+                hour_is_twelve_hour = true;
+            }
+            GanttDateFormatPart::Hour12Padded => {
+                (hour, rest) = take_number(rest, 2, 2)?;
+                hour_is_twelve_hour = true;
+            }
             GanttDateFormatPart::Minute => (minute, rest) = take_number(rest, 2, 2)?,
             GanttDateFormatPart::Second if seconds_only => {
                 (second, rest) = take_number(rest, 1, 2)?;
             }
             GanttDateFormatPart::Second => (second, rest) = take_number(rest, 2, 2)?,
             GanttDateFormatPart::Millisecond => (millisecond, rest) = take_number(rest, 3, 3)?,
+            GanttDateFormatPart::MeridiemUpper => {
+                (meridiem_is_pm, rest) = take_meridiem(rest, true)?;
+            }
+            GanttDateFormatPart::MeridiemLower => {
+                (meridiem_is_pm, rest) = take_meridiem(rest, false)?;
+            }
             GanttDateFormatPart::TimezoneOffsetColon => {
                 (timezone_offset_minutes, rest) = take_timezone_offset(rest, true)?;
             }
@@ -271,6 +287,10 @@ fn date_to_days(source: &str, format: &GanttDateFormat) -> Option<f64> {
         }
     }
     if !rest.is_empty() { return None; }
+    if hour_is_twelve_hour {
+        if !(1..=12).contains(&hour) { return None; }
+        hour = hour % 12 + i64::from(meridiem_is_pm) * 12;
+    }
     if !(1..=12).contains(&month) || !(1..=days_in_month(year, month)).contains(&day) {
         return None;
     }
@@ -279,6 +299,12 @@ fn date_to_days(source: &str, format: &GanttDateFormat) -> Option<f64> {
     Some(days_from_civil(year, month, day) as f64
         + seconds as f64 / 86_400.0 + millisecond as f64 / 86_400_000.0
         - timezone_offset_minutes as f64 / 1_440.0)
+}
+
+fn take_meridiem(source: &str, uppercase: bool) -> Option<(bool, &str)> {
+    let (am, pm) = if uppercase { ("AM", "PM") } else { ("am", "pm") };
+    if let Some(rest) = source.strip_prefix(am) { return Some((false, rest)); }
+    source.strip_prefix(pm).map(|rest| (true, rest))
 }
 
 fn take_timezone_offset(source: &str, colon: bool) -> Option<(i64, &str)> {
@@ -960,7 +986,7 @@ mod tests {
 
     #[test]
     fn version_exists() {
-        assert_eq!(crate::VERSION, "0.27.0");
+        assert_eq!(crate::VERSION, "0.28.0");
     }
 
     #[test]
@@ -1177,6 +1203,41 @@ mod tests {
         }).collect::<Vec<_>>();
         assert_eq!(widths.len(), 2);
         assert!((widths[0] / widths[1] - 4.0).abs() < 0.01);
+    }
+
+    #[test]
+    fn gantt_layout_resolves_twelve_hour_clocks() {
+        let mut diagram = simple_gantt();
+        let TemporalBody::Gantt(gantt) = &mut diagram.body else { unreachable!() };
+        gantt.date_format = GanttDateFormat {
+            source: "YYYY-MM-DD h:mm A".into(),
+            parts: vec![
+                GanttDateFormatPart::Year4,
+                GanttDateFormatPart::Literal("-".into()),
+                GanttDateFormatPart::Month2,
+                GanttDateFormatPart::Literal("-".into()),
+                GanttDateFormatPart::Day2,
+                GanttDateFormatPart::Literal(" ".into()),
+                GanttDateFormatPart::Hour12,
+                GanttDateFormatPart::Literal(":".into()),
+                GanttDateFormatPart::Minute,
+                GanttDateFormatPart::Literal(" ".into()),
+                GanttDateFormatPart::MeridiemUpper,
+            ],
+        };
+        gantt.sections[0].tasks[0].start = TaskStart::Date("2026-03-01 9:30 AM".into());
+        gantt.sections[0].tasks[0].duration = GanttDuration { value: 1.0, unit: GanttDurationUnit::Hours };
+        gantt.sections[0].tasks[1].start = TaskStart::Date("2026-03-01 2:30 PM".into());
+        gantt.sections[0].tasks[1].duration = GanttDuration { value: 1.0, unit: GanttDurationUnit::Hours };
+
+        let layout = layout_temporal_diagram(&diagram, 800.0);
+        let bars = layout.items.iter().filter_map(|item| match item {
+            LayoutedTemporalItem::TaskBar { x, width, .. } => Some((*x, *width)),
+            _ => None,
+        }).collect::<Vec<_>>();
+        assert_eq!(bars.len(), 2);
+        assert!((bars[0].1 - bars[1].1).abs() < 0.01);
+        assert!((bars[1].0 - bars[0].0) / bars[0].1 > 4.9);
     }
 
     #[test]

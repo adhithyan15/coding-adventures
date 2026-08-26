@@ -73,7 +73,8 @@ HTML break variants in titles, sections, and tasks now lower to semantic
 newlines with multiline layout. Colon and compact timezone offsets compile to
 typed parts and normalize into UTC layout geometry. Gantt remains partial while
 single-component second timestamps also retain sub-minute precision through
-layout. Gantt remains partial while locale-specific date tokens and the complete
+layout, and typed 12-hour clocks resolve meridiem markers before layout. Gantt
+remains partial while locale-specific month and weekday tokens and the complete
 pinned visual corpus are still outstanding.
 
 Each supported family lowers into the shared Diagram IR and can continue
