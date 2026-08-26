@@ -3417,21 +3417,36 @@ fn needs_marker(s: &str) -> bool {
 }
 
 /// Per-character encoding for a name containing at least one illegal
-/// character or a leading digit: legal characters (ASCII alphanumeric or
-/// `_`, except a leading digit) pass through verbatim; everything else
-/// becomes `_u{XXXX}_` — its Unicode codepoint as at least four,
-/// zero-padded lowercase hex digits, bracketed by underscores. Only ever
-/// called by [`sanitize_ident`] on a name [`is_valid_c_ident`] has
-/// already rejected, so its own output always ends up
-/// [`ESCAPE_MARKER`]/[`TAG_ESCAPED`]-prefixed — never returned bare.
+/// character or a leading digit: legal characters (ASCII alphanumeric,
+/// EXCEPT a leading digit — and except `_`, see below) pass through
+/// verbatim; everything else, including every literal `_`, becomes
+/// `_u{XXXXXX}_` — its Unicode codepoint as exactly six, zero-padded
+/// lowercase hex digits, bracketed by underscores. Only ever called by
+/// [`sanitize_ident`] on a name [`is_valid_c_ident`] has already
+/// rejected, so its own output always ends up [`ESCAPE_MARKER`]/
+/// [`TAG_ESCAPED`]-prefixed — never returned bare.
+///
+/// # Why every underscore is escaped too
+///
+/// A third `/security-review` round found that letting `_` pass through
+/// verbatim here made this encoding non-injective: `_` is both the
+/// escape token's own delimiter and, if also allowed as an ordinary
+/// legal character, indistinguishable in the output from the `_` that
+/// opens/closes a real token — `escape_body("_u007e_~")` and
+/// `escape_body("~~")` used to both produce `"_u007e__u007e_"`. See
+/// `semantic-ir-to-python::escape_body`'s own doc comment for the full
+/// argument this mirrors. Escaping every `_` too closes this — ordinary
+/// identifiers with underscores are unaffected, since this function only
+/// ever runs on a name already known to need escaping for some other
+/// reason.
 fn escape_body(s: &str) -> String {
     let mut out = String::with_capacity(s.len() + 4);
     for (i, ch) in s.chars().enumerate() {
-        let ok = ch.is_ascii_alphanumeric() || ch == '_';
+        let ok = ch.is_ascii_alphanumeric();
         if ok && !(i == 0 && ch.is_ascii_digit()) {
             out.push(ch);
         } else {
-            let _ = write!(out, "_u{:04x}_", ch as u32);
+            let _ = write!(out, "_u{:06x}_", ch as u32);
         }
     }
     out

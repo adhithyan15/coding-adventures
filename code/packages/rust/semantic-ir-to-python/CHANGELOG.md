@@ -37,6 +37,23 @@ characters (`v`/`e`) immediately after the marker, so they can never
 collide with each other regardless of content — see `sanitize_ident`'s
 own doc comment for the full argument.
 
+**A third `/security-review` round found the escaped sub-case's own
+per-character encoding was still not injective**: `_` was both the
+escape token's own delimiter and, previously, a character that passed
+through verbatim — so a literal `_` in the input was indistinguishable,
+in the output, from the `_` that opens or closes a real escape token.
+`escape_body("_u007e_~")` (the 7 literal characters `_u007e_` followed
+by one real illegal character `~`) and `escape_body("~~")` (two real
+illegal `~` characters) both used to produce the identical
+`"_u007e__u007e_"` — confirmed by actually running the function, not by
+inspection. Fixed by escaping every underscore too (so `_` can never
+appear in the output except as part of a complete, fixed-width token)
+and widening the hex width from `{:04x}` (a minimum, not a true fixed
+width — a codepoint above U+FFFF would still widen it) to a genuinely
+fixed `{:06x}`, wide enough for the entire Unicode range without ever
+truncating or overflowing — see `escape_body`'s own doc comment for the
+full argument.
+
 This changes the exact spelling `sanitize_ident` produces for every
 keyword/reserved/invalid-character case (e.g. `"class"` now sanitizes to
 `"sir_esc_vclass"`, not `"class_"`) — a deliberate, disclosed behavior

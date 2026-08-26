@@ -36,6 +36,14 @@ argument. (The separate `r#`-prefixed branch for ordinary keywords
 remains disjoint from both, since `#` never appears in either sub-case's
 output.)
 
+**A third `/security-review` round found the hex-encoding sub-case's own
+per-character encoding was still not injective**: `_` was both the
+escape token's own delimiter and, previously, a character that passed
+through verbatim. Fixed by escaping every underscore too and widening
+the hex width from a minimum-4 `{:04x}` to a genuinely fixed `{:06x}` —
+see `semantic-ir-to-python::escape_body`'s own doc comment for the full
+argument this mirrors.
+
 This changes the exact spelling `sanitize_ident` produces for
 `self`/`Self`/`super`/`crate` and every invalid-character case (e.g.
 `"self"` now sanitizes to `"__sir_esc_vself"`, not `"__self"`) — a

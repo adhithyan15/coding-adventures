@@ -28,6 +28,14 @@ that happens to escape to that exact same text. Fixed by tagging the two
 marker sub-cases with distinct fixed characters (`v`/`e`) immediately
 after the marker.
 
+**A third `/security-review` round found the escaped sub-case's own
+per-character encoding was still not injective**: mirrors
+`semantic-ir-to-javascript`'s identical follow-up finding — `_` was both
+the escape token's own delimiter and, previously, a character that
+passed through verbatim. Fixed by escaping every underscore too and
+widening the hex width from a minimum-4 `{:04x}` to a genuinely fixed
+`{:06x}`.
+
 This changes the exact spelling `sanitize_ident` produces for every
 reserved-word/invalid-character case (e.g. `"class"` now sanitizes to
 `"_$sir_esc_eclass"`, not `"_$class"`) — a deliberate, disclosed

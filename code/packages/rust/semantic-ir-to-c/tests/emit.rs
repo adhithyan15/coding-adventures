@@ -492,5 +492,19 @@ fn sanitize_ident_is_injective_across_the_verbatim_vs_escaped_collision_this_bac
     // escaping, so escaping always ends up marker-tagged.
     assert_ne!(sanitize_ident("a$"), sanitize_ident("a_u0024_"));
     assert_eq!(sanitize_ident("a_u0024_"), "a_u0024_");
-    assert_eq!(sanitize_ident("a$"), "sir_esc_ea_u0024_");
+    assert_eq!(sanitize_ident("a$"), "sir_esc_ea_u000024_");
+}
+
+#[test]
+fn sanitize_ident_is_injective_across_the_underscore_delimiter_reuse_this_backend_previously_had()
+{
+    // A THIRD `/security-review` round found the fixed-width escape
+    // above still wasn't enough: `_` is both the escape token's own
+    // delimiter AND, under the previous version, a character that
+    // passed through *verbatim* -- so a literal `_` in the input was
+    // indistinguishable from the `_` that opens/closes a real token.
+    // `sanitize_ident("_u007e_~")` and `sanitize_ident("~~")` used to
+    // both produce the identical escaped body. The fix (see
+    // `escape_body`'s own doc comment) escapes every underscore too.
+    assert_ne!(sanitize_ident("_u007e_~"), sanitize_ident("~~"));
 }

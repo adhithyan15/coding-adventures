@@ -2888,6 +2888,13 @@ const TAG_ESCAPED: &str = "e";
 /// sub-case, so they can never collide with each other regardless of
 /// content — see `semantic-ir-to-python::sanitize_ident`'s own doc
 /// comment for the concrete before/after example this mirrors.
+///
+/// **A third round found the hex-encoding sub-case's own per-character
+/// encoding was still not injective**: `_` was both the escape token's
+/// own delimiter and, previously, a character that passed through the
+/// loop below verbatim. The fix: every `_` is now escaped too, as a
+/// fixed-width `_u{6-hex}_` token — see `semantic-ir-to-python::
+/// escape_body`'s own doc comment for the full argument.
 pub fn sanitize_ident(s: &str) -> String {
     if s.is_empty() {
         return format!("{ESCAPE_MARKER}{TAG_ESCAPED}");
@@ -2912,10 +2919,10 @@ pub fn sanitize_ident(s: &str) -> String {
     let mut out = String::from(ESCAPE_MARKER);
     out.push_str(TAG_ESCAPED);
     for ch in s.chars() {
-        if ch.is_ascii_alphanumeric() || ch == '_' {
+        if ch.is_ascii_alphanumeric() {
             out.push(ch);
         } else {
-            let _ = write!(out, "_u{:04x}_", ch as u32);
+            let _ = write!(out, "_u{:06x}_", ch as u32);
         }
     }
     out
@@ -3145,6 +3152,19 @@ mod tests {
             sanitize_ident(verbatim_side),
             "__sir_esc_v__sir_esc__u0024_"
         );
+    }
+
+    #[test]
+    fn sanitize_ident_is_injective_across_the_underscore_delimiter_reuse_this_backend_previously_had(
+    ) {
+        // A THIRD `/security-review` round found the fixed-width escape
+        // still wasn't enough: `_` is both the escape token's own
+        // delimiter AND, previously, a character that passed through
+        // verbatim -- so a literal `_` in the input was indistinguishable
+        // from the `_` that opens/closes a real token. The fix (see
+        // `sanitize_ident`'s own doc comment) escapes every underscore
+        // too.
+        assert_ne!(sanitize_ident("_u007e_~"), sanitize_ident("~~"));
     }
 
     #[test]

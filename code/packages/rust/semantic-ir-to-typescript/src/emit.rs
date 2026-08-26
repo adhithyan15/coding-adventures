@@ -2660,6 +2660,15 @@ const TAG_ESCAPED: &str = "e";
 /// [`TAG_VERBATIM`] and [`TAG_ESCAPED`] are two fixed, distinct single
 /// characters immediately after the marker, one per sub-case, so they
 /// can never collide with each other regardless of content.
+///
+/// **A third round found the escaped sub-case's own per-character
+/// encoding was still not injective**: `_` was both the escape token's
+/// own delimiter and, previously, a character that passed through the
+/// loop below verbatim — see `semantic-ir-to-javascript::sanitize_ident`'s
+/// own doc comment for the concrete before/after example this mirrors.
+/// The fix: every `_` is now escaped too, as a fixed-width `_u{6-hex}_`
+/// token; `$` needed no change, since it plays no role in the token's
+/// own shape.
 pub fn sanitize_ident(s: &str) -> String {
     if s.is_empty() {
         return format!("{ESCAPE_MARKER}{TAG_ESCAPED}");
@@ -2673,10 +2682,10 @@ pub fn sanitize_ident(s: &str) -> String {
     let mut out = String::from(ESCAPE_MARKER);
     out.push_str(TAG_ESCAPED);
     for ch in s.chars() {
-        if ch.is_ascii_alphanumeric() || ch == '_' || ch == '$' {
+        if ch.is_ascii_alphanumeric() || ch == '$' {
             out.push(ch);
         } else {
-            let _ = write!(out, "_u{:04x}_", ch as u32);
+            let _ = write!(out, "_u{:06x}_", ch as u32);
         }
     }
     out
@@ -2897,7 +2906,20 @@ mod tests {
         assert!(r.starts_with("_$"));
         assert!(r.contains("null"));
         // The `?` becomes a fixed-width hex-encoded fragment.
-        assert!(r.contains("_u003f_"));
+        assert!(r.contains("_u00003f_"));
+    }
+
+    #[test]
+    fn sanitize_ident_is_injective_across_the_underscore_delimiter_reuse_this_backend_previously_had(
+    ) {
+        // A THIRD `/security-review` round found the fixed-width escape
+        // still wasn't enough: `_` is both the escape token's own
+        // delimiter AND, previously, a character that passed through
+        // verbatim -- so a literal `_` in the input was indistinguishable
+        // from the `_` that opens/closes a real token. The fix (see
+        // `sanitize_ident`'s own doc comment) escapes every underscore
+        // too.
+        assert_ne!(sanitize_ident("_u007e_~"), sanitize_ident("~~"));
     }
 
     #[test]

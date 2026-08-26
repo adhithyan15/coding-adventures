@@ -35,6 +35,17 @@ tagging the two marker sub-cases with distinct fixed characters (`v`/
 `e`) so they can never collide with each other — see `sanitize_ident`'s
 own doc comment for the full argument.
 
+**A third `/security-review` round found the escaped sub-case's own
+per-character encoding was still not injective**: `_` was both the
+escape token's own delimiter and, previously, a character that passed
+through verbatim — so a literal `_` in the input was indistinguishable
+from the `_` that opens/closes a real escape token (`escape_body("_u007e_~")`
+and `escape_body("~~")` both used to produce the identical
+`"_u007e__u007e_"`). Fixed by escaping every underscore too and widening
+the hex width from a minimum-4 `{:04x}` to a genuinely fixed `{:06x}` —
+see `semantic-ir-to-python::escape_body`'s own doc comment for the full
+argument this mirrors.
+
 This changes the exact spelling `sanitize_ident` produces for every
 uppercase/keyword/`sir_`-namespace/invalid-character case (e.g. `"Foo"`
 now sanitizes to `"sir_esc_vFoo"`, not `"_Foo"`) — a deliberate,

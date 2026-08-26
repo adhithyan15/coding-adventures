@@ -2728,51 +2728,57 @@ pub fn sanitize_ident(s: &str) -> String {
 
 /// Per-character encoding used by every backend's `sanitize_ident` for
 /// the "contains characters illegal in the target language" case: legal
-/// characters (ASCII alphanumeric or `_`) pass through verbatim; every
-/// other character becomes `_u{XXXX}_` — its Unicode codepoint as
-/// **at least four**, zero-padded lowercase hex digits (`{:04x}` pads up
-/// to, but never truncates, so a codepoint above U+FFFF — reachable,
-/// since the parameter is `char` — widens to 5 or 6 digits), bracketed
-/// by underscores on both sides.
+/// characters (ASCII alphanumeric ONLY — not `_`, see below) pass
+/// through verbatim; every other character, including a literal `_`,
+/// becomes `_u{XXXXXX}_` — its Unicode codepoint as **exactly six**,
+/// zero-padded lowercase hex digits (`{:06x}`, wide enough for the
+/// entire Unicode range `0..=0x10FFFF` without ever truncating or
+/// overflowing past 6 digits, so — unlike a `{:04x}` — this really is a
+/// fixed-width token, not just a minimum width), bracketed by
+/// underscores on both sides.
 ///
-/// # Why zero-padded, not the previous unpadded `_{:x}`
+/// # Why every underscore is escaped too — a THIRD `/security-review`
+/// round, closing a self-delimiting gap the first two didn't reach
 ///
-/// The same `/security-review` round that found the keyword collision
-/// above also found this encoding was separately non-injective: with an
-/// unpadded, closing-delimiter-free `_{:x}` escape, two different
-/// invalid inputs could produce the identical escaped string purely
-/// through hex-digit-count ambiguity (e.g. escaping U+0001 immediately
-/// followed by the literal digit `'1'` produces the same three
-/// characters `_11` as escaping the single codepoint U+0011). Padding to
-/// *at least* 4 hex digits, with a trailing `_` closing every escape
-/// token, closes that specific ambiguity: two inputs that differ only in
-/// *how* a given codepoint got escaped can no longer collide, since a
-/// shorter token's closing `_` always lands on a position a longer
-/// token still has an actual hex digit.
+/// Two earlier rounds fixed real collisions in the keyword/reserved-word
+/// marking scheme and its verbatim-vs-escaped tagging. A **third** round
+/// found this encoding itself was still not injective, for a reason
+/// neither of those fixes touches: `_` is both the escape token's own
+/// delimiter *and*, under the previous version, a character that passed
+/// through **verbatim** like any other legal character — so a literal
+/// `_` in the input was indistinguishable, in the output, from the `_`
+/// that opens or closes an actual escape token. Concretely, the two
+/// distinct 8-character raw inputs `"_u007e_~"` (the 7 literal
+/// characters `_u007e_`, followed by one real illegal character `~`)
+/// and `"~~"` (two real illegal `~` characters) both escaped to the
+/// identical `"_u007e__u007e_"` — confirmed by actually compiling and
+/// running the real function, not by inspection. Any legal-alphabet
+/// character can in principle serve as an escape delimiter's stand-in
+/// this way; `_` was exploitable specifically because it was both "the
+/// delimiter" and "a character every caller already treats as legal and
+/// lets through unescaped."
 ///
-/// This does **not** make the encoding fully injective in general — a
-/// deliberately adversarial input containing both an illegal character
-/// *and* literal text that happens to spell another codepoint's own
-/// `_uXXXX_` escape (e.g. the two 8-character strings `"$_u0024_"` and
-/// `"_u0024_$"`, which both encode to `"_u0024__u0024_"`) can still
-/// collide with each other. Every caller only ever reaches this function
-/// once [`sanitize_ident`] has already established the input contains an
-/// illegal character (never once purely-legal input, which is what
-/// closes the *practically reachable* collision class — an escaped name
-/// can never collide with an unescaped passthrough name, since only the
-/// latter can go unmarked), so this residual gap requires an attacker to
-/// construct two specific, mutually look-alike illegal-character
-/// identifiers in the same scope — a meaningfully narrower, lower-
-/// severity risk than the keyword/reserved-word collision this same
-/// `/security-review` round demonstrated with two completely ordinary,
-/// special-character-free names. Tracked as a follow-up, not fixed here.
+/// The fix: stop treating `_` as safe-to-pass-through *within this
+/// escaping function specifically* (it remains a perfectly legal,
+/// unescaped character everywhere else in every backend — ordinary
+/// identifiers with underscores are unaffected, since this function only
+/// ever runs on a name [`sanitize_ident`] has already determined needs
+/// escaping at all). Once every `_` in the output is guaranteed to
+/// originate from an escape token — never a literal pass-through
+/// character — and every token has the same fixed 9-character shape
+/// (`_u` + 6 hex digits + `_`), the encoding becomes genuinely
+/// self-delimiting and therefore injective: scanning left to right, any
+/// `_` can only ever be the start of a complete, unambiguous 9-character
+/// token (since no other source of `_` exists in the output), and every
+/// other character is an ordinary 1-character legal token — so two
+/// different inputs can never produce the same output.
 pub fn escape_body(s: &str) -> String {
     let mut out = String::with_capacity(s.len() + 4);
     for ch in s.chars() {
-        if ch.is_ascii_alphanumeric() || ch == '_' {
+        if ch.is_ascii_alphanumeric() {
             out.push(ch);
         } else {
-            let _ = write!(out, "_u{:04x}_", ch as u32);
+            let _ = write!(out, "_u{:06x}_", ch as u32);
         }
     }
     out
@@ -2978,12 +2984,33 @@ mod tests {
         // escape let two different invalid inputs collide purely
         // through hex-digit-count ambiguity -- escaping U+0001 followed
         // by the literal digit '1' produced the same three characters
-        // (`_11`) as escaping the single codepoint U+0011. Fixed-width,
-        // self-delimiting `_uXXXX_` escapes (see `escape_body`'s own
-        // doc comment) close this.
+        // (`_11`) as escaping the single codepoint U+0011. Fixed-width
+        // `_uXXXXXX_` escapes (see `escape_body`'s own doc comment)
+        // close this.
         let a = format!("x{}1", '\u{1}');
         let b = format!("x{}", '\u{11}');
         assert_ne!(escape_body(&a), escape_body(&b));
+    }
+
+    #[test]
+    fn escape_body_is_injective_across_the_underscore_delimiter_reuse_this_backend_previously_had()
+    {
+        // A THIRD `/security-review` round found the fixed-width fix
+        // above still wasn't enough: `_` is both the escape token's own
+        // delimiter AND, under the previous version, a character that
+        // passed through *verbatim* -- so a literal `_` in the input was
+        // indistinguishable, in the output, from the `_` that opens or
+        // closes a real escape token. `escape_body("_u007e_~")` (the 7
+        // literal characters `_u007e_` followed by one real illegal
+        // character `~`) and `escape_body("~~")` (two real illegal `~`
+        // characters) used to both produce the identical
+        // `"_u007e__u007e_"` -- confirmed by actually running this
+        // function, not by inspection. The fix (see this function's own
+        // doc comment) escapes every underscore too, so `_` can never
+        // appear in the output except as part of a complete, fixed-width
+        // escape token -- genuinely self-delimiting, not just
+        // fixed-width.
+        assert_ne!(escape_body("_u007e_~"), escape_body("~~"));
     }
 
     #[test]

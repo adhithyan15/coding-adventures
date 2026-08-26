@@ -34,6 +34,17 @@ itself, a reserved word always takes the escaped-tag branch, never the
 verbatim one — the tag distinguishes *how* something gets marker-
 prefixed, not *why*.)
 
+**A third `/security-review` round found the escaped sub-case's own
+per-character encoding was still not injective**: `_` was both the
+escape token's own delimiter and, previously, a character that passed
+through verbatim — so a literal `_` in the input was indistinguishable
+from the `_` that opens/closes a real escape token (`escape_body("_u007e_~")`
+and `escape_body("~~")` both used to produce the identical
+`"_u007e__u007e_"`). Fixed by escaping every underscore too and widening
+the hex width from a minimum-4 `{:04x}` to a genuinely fixed `{:06x}` —
+`$` needed no such change, since it plays no role in the token's own
+shape.
+
 This changes the exact spelling `sanitize_ident` produces for every
 reserved-word/invalid-character case (e.g. `"class"` now sanitizes to
 `"_$sir_esc_eclass"`, not `"_$class"`) — a deliberate, disclosed

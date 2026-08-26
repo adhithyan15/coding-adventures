@@ -583,12 +583,12 @@ JavaScript identifiers match `[A-Za-z_$][A-Za-z0-9_$]*` and must not be
 reserved words. SIR names can carry `?`, `!`, `-`, `+`, etc., so
 `sanitize_ident` rewrites anything that does not fit:
 
-| input        | output                    | rule                                    |
-|--------------|---------------------------|------------------------------------------|
-| `hello`      | `hello`                   | already valid → unchanged                |
-| `class`      | `_$sir_esc_eclass`        | reserved word → marker + escaped tag     |
-| `null?`      | `_$sir_esc_enull_u003f_`  | invalid char → marker + escaped tag + hex-encoded |
-| `""` (empty) | `_$sir_esc_e`             | empty → sentinel                         |
+| input        | output                        | rule                                    |
+|--------------|--------------------------------|------------------------------------------|
+| `hello`      | `hello`                        | already valid → unchanged                |
+| `class`      | `_$sir_esc_eclass`             | reserved word → marker + escaped tag     |
+| `null?`      | `_$sir_esc_enull_u00003f_`     | invalid char → marker + escaped tag + hex-encoded |
+| `""` (empty) | `_$sir_esc_e`                  | empty → sentinel                         |
 
 The `_$sir_esc_` marker guarantees a legal leading character. It also
 guarantees **injectivity**, not just avoiding "avoids collisions between
@@ -607,8 +607,14 @@ an unrelated illegal-character name that happens to escape to the exact
 same text — so every marker-prefixed output also carries one more fixed
 tag character (`v` for "kept verbatim", `e` for "ran through per-
 character escaping") immediately after the marker, making the two
-sub-cases disjoint from each other too. See `sanitize_ident`'s own doc
-comment for the full argument.
+sub-cases disjoint from each other too. A THIRD round found the escaped
+sub-case's own per-character encoding was still not injective — `_` was
+both the escape token's own delimiter and a character that passed
+through verbatim, so a literal `_` in the input was indistinguishable
+from an actual token boundary — so every `_` is now escaped too (as a
+fixed-width `_u{6-hex}_` token, wide enough for the full Unicode range),
+never left as a literal pass-through character. See `sanitize_ident`'s
+own doc comment for the full argument.
 
 ## Tests
 

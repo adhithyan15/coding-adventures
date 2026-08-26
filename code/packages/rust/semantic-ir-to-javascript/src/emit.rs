@@ -2020,7 +2020,7 @@ const TAG_ESCAPED: &str = "e";
 /// |--------------|------------------------------|------|
 /// | `hello`      | `hello`                      | already valid → unchanged |
 /// | `class`      | `_$sir_esc_eclass`           | reserved word → marker + escaped tag (`is_valid_js_ident` itself excludes reserved words, so a reserved word always takes this branch, not the verbatim one — see below) |
-/// | `null?`      | `_$sir_esc_enull_u003f_`     | invalid char → marker + escaped tag + hex-encoded |
+/// | `null?`      | `_$sir_esc_enull_u00003f_`   | invalid char → marker + escaped tag + hex-encoded |
 /// | `""` (empty) | `_$sir_esc_e`                | empty → sentinel |
 ///
 /// # Injectivity — why this is more than "escape illegal chars"
@@ -2050,6 +2050,19 @@ const TAG_ESCAPED: &str = "e";
 /// The fix: [`TAG_VERBATIM`] and [`TAG_ESCAPED`] are two fixed, distinct
 /// single characters immediately after the marker, one per sub-case, so
 /// they can never collide with each other regardless of content.
+///
+/// **A third round found the escaped sub-case's own per-character
+/// encoding was still not injective**: `_` was both the escape token's
+/// own delimiter and, previously, a character that passed through the
+/// loop below verbatim — so a literal `_` in the input was
+/// indistinguishable, in the output, from the `_` that opens or closes
+/// a real escape token (e.g. escaping `"_u007e_~"` and `"~~"` used to
+/// produce the identical result). The fix: every `_` is now escaped
+/// too, so it can never appear in the output except as part of a
+/// complete, fixed-width `_u{6-hex}_` token — see `semantic-ir-to-
+/// python::escape_body`'s own doc comment for the full argument. `$`
+/// needed no such change: it plays no role in the escape token's own
+/// shape, so it stays a safe, ordinary pass-through character.
 pub fn sanitize_ident(s: &str) -> String {
     if s.is_empty() {
         return format!("{ESCAPE_MARKER}{TAG_ESCAPED}");
@@ -2063,10 +2076,10 @@ pub fn sanitize_ident(s: &str) -> String {
     let mut out = String::from(ESCAPE_MARKER);
     out.push_str(TAG_ESCAPED);
     for ch in s.chars() {
-        if ch.is_ascii_alphanumeric() || ch == '_' || ch == '$' {
+        if ch.is_ascii_alphanumeric() || ch == '$' {
             out.push(ch);
         } else {
-            let _ = write!(out, "_u{:04x}_", ch as u32);
+            let _ = write!(out, "_u{:06x}_", ch as u32);
         }
     }
     out
@@ -2310,8 +2323,21 @@ mod tests {
         let r = sanitize_ident("null?");
         assert!(r.starts_with("_$"));
         assert!(r.contains("null"));
-        // `?` (U+003F) hex-encodes to the fixed-width `_u003f_`.
-        assert!(r.contains("_u003f_"), "got {r}");
+        // `?` (U+003F) hex-encodes to the fixed-width `_u00003f_`.
+        assert!(r.contains("_u00003f_"), "got {r}");
+    }
+
+    #[test]
+    fn sanitize_ident_is_injective_across_the_underscore_delimiter_reuse_this_backend_previously_had(
+    ) {
+        // A THIRD `/security-review` round found the fixed-width escape
+        // still wasn't enough: `_` is both the escape token's own
+        // delimiter AND, previously, a character that passed through
+        // verbatim -- so a literal `_` in the input was indistinguishable
+        // from the `_` that opens/closes a real token. The fix (see
+        // `sanitize_ident`'s own doc comment) escapes every underscore
+        // too.
+        assert_ne!(sanitize_ident("_u007e_~"), sanitize_ident("~~"));
     }
 
     #[test]
