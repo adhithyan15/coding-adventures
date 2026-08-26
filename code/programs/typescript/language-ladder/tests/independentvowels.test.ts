@@ -135,6 +135,34 @@ describe("Tamil independent vowels in the starter inventory", () => {
 });
 
 describe("shared Perso-Arabic letters retain script-owned provenance", () => {
+  it("keeps Arabic maddah as sourced alif-plus-mark composition", () => {
+    const arabic = SCRIPTS.find((script) => script.script === "arabic")!;
+    const maddah = arabic.marks!.find((entry) => entry.mark === "ٓ")!;
+    expect(maddah.sound).toBe("ʾā (long initial ā)");
+    expect(maddah.example?.combined).toBe("آ");
+    expect(maddah.compositionOrder).toHaveLength(2);
+    expect(maddah.compositionOrder?.[0]).toMatch(/alif carrier downward/i);
+    expect(maddah.compositionOrder?.[1]).toMatch(/maddah above.*horizontal wave/i);
+    expect(maddah.compositionSource?.url).toBe(
+      "https://www.unicode.org/versions/Unicode17.0.0/core-spec/chapter-9/",
+    );
+  });
+
+  it("keeps Persian and Urdu maddah on each script's sourced alif carrier", () => {
+    const persian = SCRIPTS.find((script) => script.script === "perso-arabic")!
+      .marks!.find((entry) => entry.mark === "ٓ")!;
+    const urdu = SCRIPTS.find((script) => script.script === "urdu-nastaliq")!
+      .marks!.find((entry) => entry.mark === "ٓ")!;
+    expect(persian.example?.combined).toBe("آ");
+    expect(urdu.example?.combined).toBe("آ");
+    expect(persian.compositionOrder?.[0]).toMatch(/Persian alif carrier downward/i);
+    expect(urdu.compositionOrder?.[0]).toMatch(/Urdu alif carrier downward/i);
+    expect(persian.compositionSource?.url).toBe(urdu.compositionSource?.url);
+    expect(persian.compositionSource?.variation).toMatch(/Persian curriculum/i);
+    expect(urdu.compositionSource?.variation).toMatch(/Urdu curriculum.*Nastaliq/i);
+  });
+
+
   it("keeps Persian and Urdu چ body-first with independently sourced provenance", () => {
     const persian = SCRIPTS.find((script) => script.script === "perso-arabic")!
       .letters.find((entry) => entry.glyph === "چ")!;

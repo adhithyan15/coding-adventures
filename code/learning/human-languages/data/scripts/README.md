@@ -306,7 +306,13 @@ queue: **و**, not ه, follows ن. Its 02:43–02:45 demonstration loops the sma
   handwritten loop without lifting. Its one-movement learner path preserves
   that single pen-down run while fitting the wider two-counter isolated Noto
   Naskh form and its leftward baseline finish, completing the Persian starter
-  inventory. Urdu **ا** is independently verified from Northwestern's *Zer o
+  inventory. Shared maddah above **ٓ** now follows Unicode 17's canonical
+  decomposition of precomposed **آ** into ALEF plus ARABIC MADDAH ABOVE. The
+  Arabic, Persian, and Urdu rows each compose that encoded mark with their own
+  independently sourced alif carrier. Carrier-first remains an explicit learner
+  convention because Unicode specifies composition and placement, not a
+  universal handwriting sequence or direction. Urdu **ا** is independently
+  verified from Northwestern's *Zer o
   Zabar*: its independent form travels top-to-bottom in one continuous stroke,
   explicitly unlike the bottom-to-top final form. Script-aware ductus identity
   prevents that Urdu source from colliding with Persian **ا** while both paths
