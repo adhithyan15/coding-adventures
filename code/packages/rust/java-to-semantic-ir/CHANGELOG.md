@@ -2,6 +2,37 @@
 
 All notable changes to the `java-to-semantic-ir` crate will be documented in this file.
 
+## [0.15.0] - 2026-08-26
+
+### Added
+
+- Task #66: a *chained* indexed-assignment target (`grid[i][j] = v;`,
+  `grid[i][j] += v;`, `grid[i][j]++;`) — the gap `lower_indexed_assignment`'s
+  own v0.14.0-era doc comment named as deferred and a dedicated regression
+  test used to lock in as rejected. `indexed_assign_target` now recognizes
+  a suffix chain of any length (previously exactly one), the same
+  `is_index_only_suffix` guard `lower_primary_expression`'s own
+  chained-read case already uses.
+- `lower_indexed_assignment` (plain `=`) peels every suffix but the last
+  via the existing `lower_chained_index` and writes through the last
+  suffix's own index — no temp-hoisting needed, since a plain-assignment
+  target is only ever built once.
+- New shared `hoist_indexed_target` helper, generalizing task #59's
+  single-suffix once-only-evaluation temp-binding shape to N suffixes:
+  hoists `primary` and every suffix's own index expression into fresh
+  local temps exactly once, then rebuilds the read-position target chain
+  from those temps' `VarRef`s. `lower_indexed_compound_assignment`
+  (`grid[i][j] += v;`) and `lower_indexed_incdec` (`grid[i][j]++;`) both
+  now call this instead of their own former single-suffix-only inline
+  hoisting — both read the current element *and* write it back, so a
+  non-constant index expression (e.g. `grid[i][next()] += v;`) must still
+  not be evaluated twice, generalized from exactly one index to N.
+- A chained target beyond the array's own dimension count (`xs[0][0] = v;`
+  on a 1-D `int[] xs`) still fails naturally at the first suffix whose
+  `Kind::index_once` finds a non-array kind — no separate bounds check
+  needed, matching `lower_chained_index`'s own existing behavior for the
+  value-position read case.
+
 ## [0.14.0] - 2026-08-26
 
 ### Added

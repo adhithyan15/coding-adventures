@@ -151,10 +151,17 @@ disclosed gaps, tracked as their own follow-up tasks. **The first is
 resolved as task #60**: `lower_primary_expression` gained one more
 suffix-chain shape — every leading suffix `[...]`, the trailing one
 `.length` — delegating the index prefix to the existing
-`lower_chained_index` and wrapping the result in `Expr::SeqLen`. The
-*chained*-indexed-assignment-target gap remains open (a separate,
-assignment-target-only concern task #60 didn't touch). Bare (unlabeled)
-`break`/`continue`
+`lower_chained_index` and wrapping the result in `Expr::SeqLen`. **The
+second is resolved as task #66**: `indexed_assign_target` now recognizes
+a suffix chain of any length (not just exactly one), the same
+`is_index_only_suffix` guard the chained-read case above already uses —
+`grid[i][j] = v;` peels every suffix but the last via the existing
+`lower_chained_index` and writes through the last suffix's own index
+(no temp-hoisting needed, since a plain-assignment target is only ever
+built once); `grid[i][j] += v;`/`grid[i][j]++;` route through a new
+shared `hoist_indexed_target` helper generalizing task #59's own
+single-suffix once-only-evaluation temp-binding shape to N suffixes.
+Bare (unlabeled) `break`/`continue`
 now lower to `Stmt::Break`/`Stmt::Continue` (`Feature::LoopControl`,
 task #64) inside any of `while`/`do`-`while`/classic-`for`/enhanced-`for`
 — a `Lowerer::loop_depth` counter rejects one outside any loop with a
@@ -222,10 +229,9 @@ no functional-interface declarations exist yet), calling a lambda-valued
 *method parameter* (this frontend has no way to declare a method
 parameter of a functional-interface type at all, so this is a boundary of
 what's expressible, not a gap in invocation itself), `var`-inferred multi-
-dimensional array literals, multi-dimensional `new` array-creation forms,
-a *chained* indexed-assignment target (`grid[i][j] = v;` — compound-
-assignment/increment-decrement on a single-suffix indexed target is
-supported as of task #59, see above), a
+dimensional array literals, multi-dimensional `new` array-creation forms
+(a chained indexed-assignment target, `grid[i][j] = v;`, IS supported as
+of task #66, see above), a
 non-constant or reference-typed `new T[N]`, List/Map collection literals,
 the array/String method-call surface beyond `.length`, field access
 other than an array's own `.length`, casts, `instanceof`, the ternary
@@ -286,15 +292,18 @@ JV02 spec's milestone table for what comes next.
   peeled result kind at each level, a single (non-chained) index read on
   a multi-dimensional array giving back a still-indexable sub-array, an
   out-of-dimension chained index rejection, `.length` on a
-  multi-dimensional array, `Feature::Sequences` re-declaration, and both
-  the still-deferred chained-assignment-target rejection and the
-  now-correctly-generalized single-index sub-array assignment), task
+  multi-dimensional array, `Feature::Sequences` re-declaration, and
+  the now-correctly-generalized single-index sub-array assignment), task
   #60's own mixed index-then-`.length` chain shapes (a single leading
   index suffix, two chained leading index suffixes on a 3-D array, a
   scalar-element rejection when the peeled-down target isn't array-typed,
-  a non-`length` trailing dotted name still rejected rather than
-  mis-lowered, and a regression check that a *chained* indexed-assignment
-  target is untouched by this task), and task #54's own indirect-call
+  and a non-`length` trailing dotted name still rejected rather than
+  mis-lowered), task #66's own chained indexed-assignment-target shapes
+  (2-D and 3-D plain-assignment targets lowering to `Stmt::SeqSet`,
+  value-kind-mismatch and beyond-array-dimension rejection, and once-
+  only-evaluation temp-binding shapes for both compound-assignment and
+  incdec on a chained target, mirroring task #59's own single-suffix
+  regression tests), and task #54's own indirect-call
   shapes (zero/single/multi-argument calls with correct argument order,
   the call's own result kind usable in a further expression, a non-main
   method's own local lambda invocation, a captured closure invoked from
