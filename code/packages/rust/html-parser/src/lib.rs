@@ -7350,13 +7350,10 @@ impl HtmlParser {
                     "end tag `</form>` did not match an open element",
                 )
             };
-            let diagnostic = ParserDiagnostic::new(code, message);
-            self.diagnostics
-                .push(if code == "unexpected-form-end-tag-outside-scope" {
-                    diagnostic.at_emission(self.current_token_emission_position)
-                } else {
-                    diagnostic
-                });
+            self.diagnostics.push(
+                ParserDiagnostic::new(code, message)
+                    .at_emission(self.current_token_emission_position),
+            );
             return;
         }
         if self.current_namespace().is_some()
@@ -8137,10 +8134,13 @@ impl HtmlParser {
         self.form_element_pointer_set = false;
 
         if !pointer_was_set {
-            self.diagnostics.push(ParserDiagnostic::new(
-                "unexpected-end-tag",
-                "end tag `</form>` did not match the form element pointer",
-            ));
+            self.diagnostics.push(
+                ParserDiagnostic::new(
+                    "unexpected-end-tag",
+                    "end tag `</form>` did not match the form element pointer",
+                )
+                .at_emission(self.current_token_emission_position),
+            );
             return;
         }
 
@@ -28153,6 +28153,15 @@ mod tests {
         .at_emission(Some(end_tag_position_at(source, "form", occurrence)))
     }
 
+    fn unmatched_form_end_tag(
+        source: &str,
+        occurrence: usize,
+        message: &str,
+    ) -> ParserDiagnostic {
+        ParserDiagnostic::new("unexpected-end-tag", message)
+            .at_emission(Some(end_tag_position_at(source, "form", occurrence)))
+    }
+
     fn nested_anchor_start_tag(source: &str, occurrence: usize) -> ParserDiagnostic {
         ParserDiagnostic::new(
             "nested-anchor-start-tag",
@@ -34083,9 +34092,10 @@ mod tests {
             unmatched.parser_diagnostics,
             vec![
                 generic_foreign_end_tag_mismatch(unmatched_source, "form"),
-                ParserDiagnostic::new(
-                    "unexpected-end-tag",
-                    "end tag `</form>` did not match an open element"
+                unmatched_form_end_tag(
+                    unmatched_source,
+                    0,
+                    "end tag `</form>` did not match an open element",
                 ),
             ]
         );
@@ -34197,6 +34207,116 @@ mod tests {
             .find(|diagnostic| diagnostic.code == "unexpected-form-end-tag-outside-scope")
             .unwrap();
         assert_eq!(form_scope_diagnostic.position, None);
+    }
+
+    #[test]
+    fn positions_unmatched_form_end_tags_at_token_emission() {
+        let ordinary_source = "<!doctype html></form><!--é-->\r\n</form>";
+        let ordinary = parse_html_with_diagnostics(ordinary_source).unwrap();
+        assert_eq!(
+            ordinary
+                .parser_diagnostics
+                .iter()
+                .filter(|diagnostic| diagnostic.code == "unexpected-end-tag")
+                .cloned()
+                .collect::<Vec<_>>(),
+            vec![
+                unmatched_form_end_tag(
+                    ordinary_source,
+                    0,
+                    "end tag `</form>` did not match the form element pointer",
+                ),
+                unmatched_form_end_tag(
+                    ordinary_source,
+                    1,
+                    "end tag `</form>` did not match the form element pointer",
+                ),
+            ]
+        );
+        assert!(ordinary_source.len() > ordinary_source.chars().count());
+
+        let foreign_source =
+            "<!doctype html><!--é-->\r\n<svg><foreignObject></form>X</foreignObject></svg>";
+        let foreign = parse_html_with_diagnostics(foreign_source).unwrap();
+        assert_eq!(
+            foreign.parser_diagnostics,
+            vec![
+                generic_foreign_end_tag_mismatch(foreign_source, "form"),
+                unmatched_form_end_tag(
+                    foreign_source,
+                    0,
+                    "end tag `</form>` did not match an open element",
+                ),
+            ]
+        );
+
+        let fragment_source = "X</form>";
+        let fragment = parse_html_fragment_with_diagnostics(fragment_source).unwrap();
+        assert_eq!(
+            fragment.parser_diagnostics,
+            vec![unmatched_form_end_tag(
+                fragment_source,
+                0,
+                "end tag `</form>` did not match the form element pointer",
+            )]
+        );
+
+        for source in [
+            "<!doctype html></form",
+            "<!doctype html><svg><foreignObject></form",
+        ] {
+            let output = parse_html_with_diagnostics(source).unwrap();
+            assert!(output
+                .parser_diagnostics
+                .iter()
+                .all(|diagnostic| diagnostic.code != "unexpected-end-tag"));
+        }
+
+        let mut ordinary_direct =
+            HtmlParser::with_body_fragment_options(HtmlParseOptions::default());
+        ordinary_direct.process_token(Token::EndTag {
+            name: "form".to_string(),
+        });
+        ordinary_direct.process_token(Token::Eof);
+        assert_eq!(
+            ordinary_direct
+                .diagnostics()
+                .iter()
+                .find(|diagnostic| diagnostic.code == "unexpected-end-tag")
+                .unwrap()
+                .position,
+            None
+        );
+
+        let mut foreign_direct =
+            HtmlParser::with_body_fragment_options(HtmlParseOptions::default());
+        for token in [
+            Token::StartTag {
+                name: "svg".to_string(),
+                attributes: Vec::new(),
+                self_closing: false,
+            },
+            Token::StartTag {
+                name: "foreignObject".to_string(),
+                attributes: Vec::new(),
+                self_closing: false,
+            },
+            Token::EndTag {
+                name: "form".to_string(),
+            },
+            Token::Eof,
+        ] {
+            foreign_direct.process_token(token);
+        }
+        assert_eq!(
+            foreign_direct
+                .diagnostics()
+                .iter()
+                .find(|diagnostic| diagnostic.code == "unexpected-end-tag")
+                .unwrap()
+                .position,
+            None
+        );
     }
 
     #[test]

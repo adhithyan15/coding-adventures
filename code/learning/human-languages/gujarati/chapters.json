@@ -479,6 +479,31 @@
           "GU-CONCEPT-C04-PACHHAMALISHUN-01"
         ]
       }
+    },
+    {
+      "chapter": 19,
+      "title": "Fourth Return: The Doorway Nine",
+      "label": "ch:gu-doorway-r4",
+      "canDo": "I can independently recognize and write the nine Gujarati doorway forms after their fourth expanding interval.",
+      "spineNodes": [
+        "SPINE-EXCHANGE-NAMES"
+      ],
+      "payoff": {
+        "lesson": "GU-R19-doorway-nine-r4",
+        "kind": "production",
+        "summary": "A single zero-atom checkpoint independently scores all nine forms in fresh reading and dictation orders at R4 distances 88 through 80.",
+        "assesses": [
+          "GU-SCRIPT-JA-01",
+          "GU-SCRIPT-O-MATRA-01",
+          "GU-SCRIPT-ANUSVARA-01",
+          "GU-SCRIPT-II-MATRA-01",
+          "GU-SCRIPT-U-MATRA-01",
+          "GU-SCRIPT-CHHA-01",
+          "GU-SCRIPT-KA-01",
+          "GU-SCRIPT-NNA-01",
+          "GU-SCRIPT-SHA-01"
+        ]
+      }
     }
   ]
 }

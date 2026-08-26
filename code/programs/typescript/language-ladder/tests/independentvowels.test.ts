@@ -135,6 +135,32 @@ describe("Tamil independent vowels in the starter inventory", () => {
 });
 
 describe("shared Perso-Arabic letters retain script-owned provenance", () => {
+  it("keeps Persian and Urdu چ body-first with independently sourced provenance", () => {
+    const persian = SCRIPTS.find((script) => script.script === "perso-arabic")!
+      .letters.find((entry) => entry.glyph === "چ")!;
+    const urdu = SCRIPTS.find((script) => script.script === "urdu-nastaliq")!
+      .letters.find((entry) => entry.glyph === "چ")!;
+    expect(persian.sound).toBe("ch");
+    expect(persian.penLifts).toBe(3);
+    expect(persian.strokeOrder).toHaveLength(5);
+    expect(persian.strokeOrder[0]).toMatch(/head.*left to right/i);
+    expect(persian.strokeOrder[2]).toMatch(/lower-left dot/i);
+    expect(persian.strokeOrder[4]).toMatch(/lower-center dot/i);
+    expect(persian.strokeOrderSource?.url).toContain(
+      "laits.utexas.edu/persian_grammar/video",
+    );
+    expect(urdu.sound).toBe("ch");
+    expect(urdu.penLifts).toBe(3);
+    expect(urdu.strokeOrder).toHaveLength(5);
+    expect(urdu.strokeOrder[0]).toMatch(/pointed hooked head/i);
+    expect(urdu.strokeOrder[2]).toMatch(/lower-left dot/i);
+    expect(urdu.strokeOrder[4]).toMatch(/lower-center dot/i);
+    expect(urdu.strokeOrderSource?.url).toBe(
+      "https://openbooks.library.northwestern.edu/zerozabar/chapter/te-mim-jim-che/",
+    );
+    expect(persian.strokeOrderSource?.url).not.toBe(urdu.strokeOrderSource?.url);
+  });
+
   it("keeps Urdu ھ as one sourced two-eyed aspiration path", () => {
     const urdu = SCRIPTS.find((script) => script.script === "urdu-nastaliq")!
       .letters.find((entry) => entry.glyph === "ھ")!;

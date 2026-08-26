@@ -943,7 +943,10 @@ backend immediately) come before the enabler-dependent items.
   Structural integer
   identity writes using `+ 0`, `- 0`, `* 1`, and `div 1` (including valid
   commutative forms and left-associative chains of those operations) receive
-  the same bounded treatment. Integer and real exponentiation whose complete
+  the same bounded treatment. Complete supported integer and boolean identity
+  writes also preserve transitive value and predicate dependencies without
+  adding recursive effect inference; changing writes still invalidate those
+  proofs. Integer and real exponentiation whose complete
   literal exponent chain evaluates to one is also preserving because the
   existing power lowerer returns the base directly without a multiply or
   runtime power call. Dynamic and otherwise non-unit exponents remain

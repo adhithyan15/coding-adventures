@@ -1,6 +1,6 @@
 //! The lowering pass from `coding_adventures_java_parser`'s generic
-//! [`GrammarASTNode`] CST → [`semantic_ir::Module`], **v0.8.0 (JV02
-//! milestone M4b)**.
+//! [`GrammarASTNode`] CST → [`semantic_ir::Module`], **v0.9.0 (JV02
+//! milestone M4c)**.
 //!
 //! # Scope
 //!
@@ -176,10 +176,36 @@
 //!   index). This is exactly the kind of double-evaluation bug this
 //!   crate's own `/security-review` history has caught before (see
 //!   `CHANGELOG.md`'s do-while/for-update entries) — deferred rather than
-//!   risking it, tracked as its own follow-up milestone rather than
-//!   shipped unsound.
+//!   risking it, tracked as its own follow-up task rather than shipped
+//!   unsound.
 //!
-//! **Deliberately out of scope for v0.8.0** (each rejected with an
+//! **Supported (M4c, new):**
+//! - `new` array-creation expressions, both grammar shapes (confirmed via
+//!   direct CST inspection, not assumed): `"new" array_creation_type
+//!   array_dimension_exprs {LBRACKET RBRACKET}` (`new int[5]`, sized/
+//!   uninitialized) and `"new" array_creation_type {LBRACKET RBRACKET}
+//!   array_initializer` (`new int[]{1, 2, 3}`, explicit-type initializer
+//!   — delegates directly to the same `lower_array_initializer` M4a
+//!   built, since it's semantically identical to the bare `{1, 2, 3}`
+//!   declarator-initializer form, just `new`-prefixed with an
+//!   always-explicit element type).
+//! - **`new T[N]` only when `N` is a compile-time-constant, non-negative
+//!   integer literal, capped at [`MAX_SIZED_ARRAY_LEN`] elements**: SIR16
+//!   has no repeat/fill primitive at all (confirmed by an exhaustive grep
+//!   of every `Seq*` node — only `SeqLit`/`SeqIndex`/`SeqLen`/`SeqSet`
+//!   exist), so a non-constant size (`new int[n]` for a variable `n`)
+//!   genuinely cannot be represented without a new SIR primitive that
+//!   doesn't exist yet, and is rejected rather than attempted. The
+//!   element-count cap is a CWE-400/770-style resource-exhaustion guard
+//!   (see that constant's own doc comment) — the same DoS discipline this
+//!   crate's other milestones have already needed. `new T[N]` is also
+//!   only supported for numeric/boolean element kinds — a sized
+//!   reference-typed array (`new String[N]`) is deferred, since real Java
+//!   fills it with `null`, which this frontend's exact element-kind-match
+//!   invariant (every `Expr::SeqLit` item's `Kind` equals the array's own
+//!   declared element `Kind`) doesn't cleanly represent yet.
+//!
+//! **Deliberately out of scope for v0.9.0** (each rejected with an
 //! explicit [`JavaLowerError`], tracked in
 //! [JV02](../../../specs/JV02-java-to-semantic-ir.md)'s own milestone
 //! table): `switch` (SIR has no `Switch`/`Match`/`Case` IR node at all —
@@ -197,11 +223,12 @@
 //! `var`-typed local's initializer, but never called; see `tests/
 //! e2e_python.rs`'s own doc comment on why this makes an execution-proof
 //! test impossible this milestone), untyped or `var`-inferred lambda
-//! parameters, multi-dimensional arrays, compound-assignment/increment-
-//! decrement on an *indexed* target (see M4b's own entry above for why),
-//! the `new`-based array-creation-expression forms, `List`/`Map`
-//! collection literals, field/array *field* access beyond `.length`,
-//! casts, `instanceof`, the ternary conditional, bitwise operators
+//! parameters, multi-dimensional arrays (both array *types* and `new`
+//! array-creation forms), compound-assignment/increment-decrement on an
+//! *indexed* target (see M4b's own entry above for why), a non-constant
+//! or reference-typed `new T[N]` (see M4c's own entry above for why),
+//! `List`/`Map` collection literals, field/array *field* access beyond
+//! `.length`, casts, `instanceof`, the ternary conditional, bitwise operators
 //! (`& | ^ ~ << >> >>>`), increment/decrement or compound assignment
 //! used as a *value* rather than a bare statement, `break`/`continue`
 //! (SIR has no IR primitive for either — every loop body this milestone
@@ -280,6 +307,20 @@ const MAX_TREE_DEPTH: usize = 64;
 /// CWE-674 uncontrolled-recursion DoS, the same class of bug this crate's
 /// other two depth guards already exist to prevent.
 const MAX_STMT_DEPTH: usize = 64;
+
+/// Maximum element count `new T[N]` (M4c's sized-but-uninitialized array
+/// creation) may materialize as a literal `Expr::SeqLit`. Not a real
+/// language limit — a CWE-400/770-style resource-exhaustion guard: since
+/// `N` must already be a compile-time-constant non-negative integer
+/// literal for this milestone to lower it at all (a non-constant `N`
+/// needs a real repeat/fill IR primitive SIR16 doesn't have yet, and is
+/// rejected outright, not attempted), an attacker (or just an honest
+/// typo) supplying a huge literal like `new int[2_000_000_000]` would
+/// otherwise blow up `O(N)` source bytes into `O(N)` emitted IR nodes —
+/// this crate's own established DoS class (see the do-while
+/// exponential-blowup finding in `CHANGELOG.md`'s `[0.3.0]` entry; this
+/// one is linear, not exponential, but still unbounded without a cap).
+const MAX_SIZED_ARRAY_LEN: i64 = 10_000;
 
 /// Synthetic file name used for all spans (the CST does not carry the
 /// original path).
@@ -364,6 +405,24 @@ impl ArrayElemKind {
             ArrayElemKind::Float => Kind::Float,
             ArrayElemKind::Bool => Kind::Bool,
             ArrayElemKind::Str => Kind::Str,
+        }
+    }
+
+    /// The inverse of [`ArrayElemKind::as_kind`]: `None` for any `Kind`
+    /// that isn't itself a valid array element kind this milestone
+    /// (`Kind::Null`/`Void`/`Closure`/`Array(_)` — an array of arrays is
+    /// multi-dimensional, deferred to a later milestone; the others are
+    /// non-value placeholder kinds that can't be an array element at
+    /// all). Shared by every call site that resolves a scalar `Kind` into
+    /// an array's own element kind (`kind_of_type_node`, `lower_array_
+    /// initializer`, and M4c's `lower_new_sized_array`).
+    fn from_kind(kind: Kind) -> Option<ArrayElemKind> {
+        match kind {
+            Kind::Int => Some(ArrayElemKind::Int),
+            Kind::Float => Some(ArrayElemKind::Float),
+            Kind::Bool => Some(ArrayElemKind::Bool),
+            Kind::Str => Some(ArrayElemKind::Str),
+            Kind::Null | Kind::Void | Kind::Closure | Kind::Array(_) => None,
         }
     }
 }
@@ -2105,18 +2164,12 @@ impl Lowerer {
                 _ => return Err(self.err_at(vi, "malformed array element".to_string())),
             };
             let (expr, kind) = self.lower_expr(expr_node, depth + 1)?;
-            let this_elem_kind = match kind {
-                Kind::Int => ArrayElemKind::Int,
-                Kind::Float => ArrayElemKind::Float,
-                Kind::Bool => ArrayElemKind::Bool,
-                Kind::Str => ArrayElemKind::Str,
-                _ => {
-                    return Err(self.err_at(
-                        expr_node,
-                        "array elements must be a primitive or `String` value".to_string(),
-                    ))
-                }
-            };
+            let this_elem_kind = ArrayElemKind::from_kind(kind).ok_or_else(|| {
+                self.err_at(
+                    expr_node,
+                    "array elements must be a primitive or `String` value".to_string(),
+                )
+            })?;
             match elem_kind {
                 Some(k) if k == this_elem_kind => {}
                 Some(_) => {
@@ -2182,18 +2235,13 @@ impl Lowerer {
                 "multi-dimensional arrays are not supported yet (deferred to a later JV02 milestone)".to_string(),
             ));
         }
-        let elem = match self.scalar_kind_of_type_node(type_node)? {
-            Kind::Int => ArrayElemKind::Int,
-            Kind::Float => ArrayElemKind::Float,
-            Kind::Bool => ArrayElemKind::Bool,
-            Kind::Str => ArrayElemKind::Str,
-            other => {
-                return Err(self.err_at(
-                    type_node,
-                    format!("unsupported array element kind `{other:?}`"),
-                ))
-            }
-        };
+        let scalar = self.scalar_kind_of_type_node(type_node)?;
+        let elem = ArrayElemKind::from_kind(scalar).ok_or_else(|| {
+            self.err_at(
+                type_node,
+                format!("unsupported array element kind `{scalar:?}`"),
+            )
+        })?;
         Ok(Kind::Array(elem))
     }
 
@@ -3376,11 +3424,17 @@ impl Lowerer {
         ))
     }
 
-    /// `primary = literal | "this" | ... | LPAREN expression RPAREN |
-    /// NAME ;` — M1 supports exactly three of these alternatives:
-    /// literals, parenthesized sub-expressions, and bare variable
-    /// references. Everything else (`this`, `super`, `switch`
-    /// expressions, object/array construction) is out of scope.
+    /// `primary = literal | "this" | ... | "new" array_creation_type
+    /// array_dimension_exprs {LBRACKET RBRACKET} | "new" array_creation_
+    /// type {LBRACKET RBRACKET} array_initializer | LPAREN expression
+    /// RPAREN | NAME ;` — M1 supports literals, parenthesized
+    /// sub-expressions, and bare variable references; M4c adds the two
+    /// `new`-based array-creation-expression shapes (confirmed via direct
+    /// CST inspection, not assumed from the grammar text alone — see
+    /// `lower_new_sized_array`/`lower_new_array_with_initializer`'s own
+    /// doc comments for the exact children shape each expects).
+    /// Everything else (`this`, `super`, `switch` expressions, object
+    /// construction) remains out of scope.
     fn lower_primary(
         &mut self,
         node: &GrammarASTNode,
@@ -3413,11 +3467,170 @@ impl Lowerer {
             {
                 self.lower_expr(inner, depth + 1)
             }
+            [ASTNodeOrToken::Token(new_tok), ASTNodeOrToken::Node(act), ASTNodeOrToken::Node(dims)]
+                if new_tok.value == "new"
+                    && act.rule_name == "array_creation_type"
+                    && dims.rule_name == "array_dimension_exprs" =>
+            {
+                self.lower_new_sized_array(act, dims, node, depth)
+            }
+            [ASTNodeOrToken::Token(new_tok), ASTNodeOrToken::Node(act), rest @ ..]
+                if new_tok.value == "new" && act.rule_name == "array_creation_type" =>
+            {
+                self.lower_new_array_with_initializer(act, rest, node, depth)
+            }
             _ => Err(self.err_at(
                 node,
                 "unsupported primary expression (JV02 M1 supports only literals, bare variable references, and parenthesized expressions)".to_string(),
             )),
         }
+    }
+
+    /// Lower `"new" array_creation_type array_dimension_exprs` — a sized,
+    /// uninitialized array creation (`new int[5]`) — into an `Expr::
+    /// SeqLit` of `N` zero-valued elements, M4c. `dims` is the
+    /// `array_dimension_exprs` node (`LBRACKET expression RBRACKET
+    /// {LBRACKET expression RBRACKET}` — confirmed via direct CST
+    /// inspection that a *single*-dimension `[5]` produces exactly one
+    /// `expression` child here, with any further dims as additional
+    /// sibling `expression` children of the *same* node, and any jagged
+    /// trailing `[]` dims living as extra tokens on `primary` itself
+    /// (which this function's own caller's fixed 3-child match arm
+    /// already excludes, so only a real single dimension ever reaches
+    /// here).
+    ///
+    /// SIR16 has no repeat/fill primitive (confirmed by an exhaustive
+    /// grep of every `Seq*` node — only `SeqLit`/`SeqIndex`/`SeqLen`/
+    /// `SeqSet` exist), so this can only be lowered when the size
+    /// expression is a compile-time-constant, non-negative integer
+    /// literal — a non-constant size (`new int[n]` for a variable `n`)
+    /// genuinely cannot be represented without a new SIR primitive, and
+    /// is rejected with a clear error rather than attempted (deferred,
+    /// tracked as its own follow-up task). Sized creation of a
+    /// reference-typed array (`new String[n]`) is *also* deferred: real
+    /// Java fills it with `null`, which this frontend's exact
+    /// element-kind-match invariant (every `Expr::SeqLit` item's `Kind`
+    /// equals the array's own declared element `Kind`, established in
+    /// M4a's `lower_array_initializer`) doesn't cleanly represent yet —
+    /// only the numeric/boolean element kinds, whose zero-value *is* a
+    /// same-kind value, are supported this milestone.
+    fn lower_new_sized_array(
+        &mut self,
+        act: &GrammarASTNode,
+        dims: &GrammarASTNode,
+        node: &GrammarASTNode,
+        depth: usize,
+    ) -> Result<(Expr, Kind), JavaLowerError> {
+        let dim_exprs: Vec<&GrammarASTNode> = child_nodes(dims)
+            .into_iter()
+            .filter(|n| n.rule_name == "expression")
+            .collect();
+        if dim_exprs.len() != 1 {
+            return Err(self.err_at(
+                dims,
+                "multi-dimensional array creation is not supported yet (deferred to a later JV02 milestone)".to_string(),
+            ));
+        }
+        let size_node = dim_exprs[0];
+        let (size_expr, size_kind) = self.lower_expr(size_node, depth + 1)?;
+        if size_kind != Kind::Int {
+            return Err(self.err_at(size_node, "an array size must be an `int`".to_string()));
+        }
+        let n = match size_expr {
+            Expr::IntLit { value, .. } => value,
+            _ => {
+                return Err(self.err_at(
+                    size_node,
+                    "a sized array's size must be a compile-time-constant integer literal (a non-constant size needs a repeat/fill IR primitive this frontend does not have yet -- deferred to a later JV02 milestone)".to_string(),
+                ))
+            }
+        };
+        if n < 0 {
+            return Err(self.err_at(size_node, "an array size must not be negative".to_string()));
+        }
+        if n > MAX_SIZED_ARRAY_LEN {
+            return Err(self.err_at(
+                size_node,
+                format!("a sized array creation must not exceed {MAX_SIZED_ARRAY_LEN} elements"),
+            ));
+        }
+        let scalar = self.scalar_kind_of_type_node(act)?;
+        let elem_kind = ArrayElemKind::from_kind(scalar).ok_or_else(|| {
+            self.err_at(act, format!("unsupported array element kind `{scalar:?}`"))
+        })?;
+        let zero_span = self.span_of(size_node);
+        let zero_value = match elem_kind {
+            ArrayElemKind::Int => Expr::IntLit { value: 0, span: zero_span },
+            ArrayElemKind::Float => {
+                self.observed.add(Feature::Floats);
+                Expr::FloatLit { value: 0.0, span: zero_span }
+            }
+            ArrayElemKind::Bool => Expr::BoolLit { value: false, span: zero_span },
+            ArrayElemKind::Str => {
+                return Err(self.err_at(
+                    act,
+                    "sized creation of a reference-typed array (e.g. `new String[n]`) is not supported yet -- only numeric/boolean element kinds are (deferred to a later JV02 milestone)".to_string(),
+                ))
+            }
+        };
+        let items = vec![zero_value; n as usize];
+        self.observed.add(Feature::Sequences);
+        let span = self.span_of(node);
+        Ok((Expr::SeqLit { items, span }, Kind::Array(elem_kind)))
+    }
+
+    /// Lower `"new" array_creation_type {LBRACKET RBRACKET}
+    /// array_initializer` — `new int[]{1, 2, 3}` — M4c. `rest` is
+    /// `primary`'s own remaining children after `"new"` and
+    /// `array_creation_type` (everything from `lower_primary`'s own
+    /// catch-all match arm), expected to be zero-or-more `[`/`]` token
+    /// pairs followed by exactly one `array_initializer` node at the
+    /// end; any other shape (including a jagged/malformed sized-array
+    /// form that fell through `lower_new_sized_array`'s own fixed
+    /// 3-child match arm) is rejected here rather than mis-lowered.
+    ///
+    /// Semantically identical to the bare `{1, 2, 3}` declarator-
+    /// initializer form M4a already supports, just `new`-prefixed with
+    /// its own always-explicit element type (never `var`-inferred, so
+    /// this delegates straight to the same `lower_array_initializer`
+    /// M4a built, passing `Some(elem_kind)` unconditionally).
+    fn lower_new_array_with_initializer(
+        &mut self,
+        act: &GrammarASTNode,
+        rest: &[ASTNodeOrToken],
+        node: &GrammarASTNode,
+        depth: usize,
+    ) -> Result<(Expr, Kind), JavaLowerError> {
+        let (last, brackets) = rest.split_last().ok_or_else(|| {
+            self.err_at(
+                node,
+                "this `new`-based array-creation form is not supported yet (deferred to a later JV02 milestone)".to_string(),
+            )
+        })?;
+        let array_init = match last {
+            ASTNodeOrToken::Node(n) if n.rule_name == "array_initializer" => n,
+            _ => {
+                return Err(self.err_at(
+                    node,
+                    "this `new`-based array-creation form is not supported yet (deferred to a later JV02 milestone)".to_string(),
+                ))
+            }
+        };
+        let bracket_pairs = brackets
+            .iter()
+            .filter(|c| matches!(c, ASTNodeOrToken::Token(t) if t.value == "["))
+            .count();
+        if bracket_pairs != 1 {
+            return Err(self.err_at(
+                node,
+                "multi-dimensional array creation is not supported yet (deferred to a later JV02 milestone)".to_string(),
+            ));
+        }
+        let scalar = self.scalar_kind_of_type_node(act)?;
+        let elem_kind = ArrayElemKind::from_kind(scalar).ok_or_else(|| {
+            self.err_at(act, format!("unsupported array element kind `{scalar:?}`"))
+        })?;
+        self.lower_array_initializer(array_init, Some(elem_kind), depth)
     }
 
     /// Lower a `lambda_expression` (`lambda_parameters ARROW lambda_body`)

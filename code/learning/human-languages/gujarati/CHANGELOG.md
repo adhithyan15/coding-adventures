@@ -2,6 +2,13 @@
 
 ## [Unreleased]
 
+### Added — Gujarati doorway retrieval closes R4 (#12837)
+
+- Add one zero-new-atom Chapter 19 checkpoint at track position 114, where all
+  nine doorway forms are 88–80 lessons past introduction and inside R4.
+- Use fresh shuffled orders and independent **9/9** thresholds for recognition
+  and model-free writing, completing R1–R4 evidence for every form.
+
 ### Added — exact Gujarati R4 bridge D (#12860)
 
 - Add five zero-new-atom Chapter 18 lessons at positions 109–113, returning the

@@ -5647,7 +5647,7 @@ impl Compiler {
         target_name: &str,
         effect_root: &GrammarASTNode,
     ) -> bool {
-        if expr_variable_name(node).as_deref() == Some(name) {
+        if self.selector_expression_unconditionally_preserves_name(node, name) {
             return true;
         }
         if !matches!(node.rule_name.as_str(), "expression" | "arith_expr")
@@ -10413,6 +10413,24 @@ mod tests {
             "test",
         )
         .expect("an exact self-assignment leaves a static assignment dependency unchanged");
+    }
+
+    #[test]
+    fn al4_static_assignment_with_integer_identity_dependency_preserves_while_dependency() {
+        compile_source(
+            "begin integer i, n, limit; n := 3; limit := 3; i := 0; for i := i + 1 while i < n do begin n := limit; limit := 0 + limit * 1 div 1 - 0 end; print(i + 0.25) end",
+            "test",
+        )
+        .expect("an exact integer identity leaves a transitive dependency unchanged");
+    }
+
+    #[test]
+    fn al4_static_predicate_with_boolean_identity_dependency_stays_stable() {
+        compile_source(
+            "begin integer i, n; boolean guard, source; n := 3; guard := false; source := false; i := 0; for i := i + 1 while i < n do begin if guard then n := n + 1; guard := source; source := source and true end; print(i + 0.25) end",
+            "test",
+        )
+        .expect("an exact boolean identity leaves a transitive predicate dependency unchanged");
     }
 
     #[test]
