@@ -2,6 +2,82 @@
 
 All notable changes to the `java-to-semantic-ir` crate will be documented in this file.
 
+## [0.11.0] - 2026-08-26
+
+### Added
+
+- Task #54: wire `Expr::IndirectCall` for invoking a lambda-valued local.
+  A lambda could previously only be *created* (`Expr::MakeClosure`) and
+  passed around — this closes that gap: `f(5)` where `f` is a
+  `Closure`-kinded local now lowers to `Expr::IndirectCall`.
+- `lower_call_expression` now checks `resolve_name` on the bare callee
+  *before* falling back to `method_signatures` — mirrors real Java's own
+  name-resolution priority (a functional-interface-typed local in scope
+  is invoked directly through that binding; a same-named top-level method
+  is not reachable through this call syntax while such a local exists). A
+  local that resolves but isn't `Closure`-kinded (`int x = 1; x();`) is
+  rejected with a clear error rather than silently falling through to a
+  same-named method.
+- `Kind::Closure` changed from a flat unit-like variant to `Kind::
+  Closure(u32)` — an index into a new `Lowerer::closure_signatures: Vec<
+  MethodSig>` side table, interning each lambda's own param kinds and
+  return kind (computed while lowering its body, previously discarded)
+  at the moment the lambda is lowered. Needed so an indirect call can
+  type-check its arguments and pick the right result `Kind`; kept as a
+  small `Copy` index rather than embedding the signature inline on `Kind`
+  itself, which would force it to drop `Copy` — the same concern
+  `Kind::Array` already navigates by staying flat (M4d).
+- A new shared `lower_call_arguments` helper (argument-count/kind
+  checking against an already-resolved `param_kinds`) factors out the
+  logic `lower_call_expression`'s direct- and indirect-call paths both
+  need identically — only how the callee itself resolves, and which
+  `Expr` variant wraps the result, differs between them.
+- 11 new tests in `tests/test_lower.rs` (zero/single/multi-argument
+  calls with correct argument order, the call's own result kind usable
+  in a further expression, a non-`main` method's own local lambda
+  invocation, a captured closure invoked from within a nested lambda,
+  wrong-argument-count and wrong-argument-kind rejection, calling a
+  non-closure local rejection, and `Feature::Closures` re-declaration)
+  plus 4 new execution-proof tests in `tests/e2e_python.rs` — the first
+  real *lambda*-execution proofs this crate has ever had (M3b's own
+  lambda tests could only assert structural validity, never real
+  output): a lambda-valued local invoked with one argument, a multi-
+  argument invocation, a nested lambda invoking a value captured from
+  its own enclosing scope, and the realistic pattern this task exists to
+  enable — the same closure value called repeatedly across loop
+  iterations, its captured, effectively-final state read fresh each
+  time.
+- **Deliberately out of scope**: calling a lambda-valued *method
+  parameter* — this frontend has no way to declare a method parameter of
+  a functional-interface type at all (`kind_of_type_node` only resolves
+  primitive/`String` parameter types), so a `Kind::Closure`-typed
+  parameter is not constructible in the first place; a boundary of what's
+  expressible, not a gap in invocation itself.
+- **Caught by `/security-review` before push (MEDIUM, CWE-704 stale-
+  type-tracking / silent mis-lowering)**: this crate has always tracked
+  each local's `Kind` only at *declaration* time — a plain `=`
+  reassignment lowers the RHS but never re-checks or re-records the
+  declared `Kind` against it. That gap was harmless for every other
+  `Kind` variant (none of them carry state a later expression depends
+  on), but `Kind::Closure(idx)`'s own `idx` is now load-bearing: `x =
+  f;` where `f` and the reassigned closure have different signatures
+  would leave `x`'s recorded index stale, so a later `x(...)` call would
+  type-check against `x`'s *original* signature, not the closure it was
+  actually reassigned to. Confirmed live: `var f = (int x) -> x + 1;
+  var g = () -> 42; f = g; int z = f(5);` compiled cleanly and passed
+  `semantic_ir::validate()` before the fix, emitting an `IndirectCall`
+  that type-checked one `int` argument against a signature the
+  reassigned closure no longer has. Fixed by rejecting reassignment of a
+  `Closure`-kinded local outright, rather than attempting to re-track
+  the index correctly — updating it in place would require rewriting the
+  scope frame the name was originally declared in, not just the
+  innermost one (`declare_local` only ever inserts into
+  `self.locals.last_mut()`, which is the wrong frame whenever the
+  reassignment happens inside a nested block relative to the
+  declaration). `reassigning_a_lambda_valued_local_to_a_different_
+  signature_is_rejected`/`reassigning_a_lambda_valued_local_to_a_non_
+  lambda_value_is_rejected` are the regression tests.
+
 ## [0.10.0] - 2026-08-26
 
 ### Added

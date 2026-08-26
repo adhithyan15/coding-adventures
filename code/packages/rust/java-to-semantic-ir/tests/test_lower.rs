@@ -2150,6 +2150,134 @@ fn return_not_as_the_last_statement_in_a_lambda_body_is_an_error() {
     );
 }
 
+// ── IndirectCall: invoking a lambda-valued local (task #54) ─────────────
+
+#[test]
+fn calling_a_lambda_valued_local_lowers_to_indirect_call() {
+    let m = compile_ok(&wrap("var f = (int x) -> x + 1; int y = f(5);"));
+    match &main_fn(&m).body.stmts[1] {
+        Stmt::LetStarBinding {
+            value: Expr::IndirectCall { target, args, .. },
+            ..
+        } => {
+            assert!(matches!(**target, Expr::VarRef { .. }));
+            assert_eq!(args.len(), 1);
+            assert!(matches!(args[0], Expr::IntLit { value: 5, .. }));
+        }
+        other => panic!("expected an IndirectCall-valued LetStarBinding, got {other:?}"),
+    }
+}
+
+#[test]
+fn calling_a_lambda_valued_local_result_kind_is_the_lambda_s_own_return_kind() {
+    // The call's own result must be usable in an `int`-typed position --
+    // proves the `Kind::Closure` interned signature correctly reports
+    // the lambda's own return kind, not some placeholder.
+    let m = compile_ok(&wrap(
+        "var f = (int x) -> x + 1; int y = f(5); int z = y + 1;",
+    ));
+    assert_eq!(main_fn(&m).body.stmts.len(), 3);
+}
+
+#[test]
+fn zero_argument_lambda_call_lowers_correctly() {
+    let m = compile_ok(&wrap("var f = () -> 42; int y = f();"));
+    match &main_fn(&m).body.stmts[1] {
+        Stmt::LetStarBinding {
+            value: Expr::IndirectCall { args, .. },
+            ..
+        } => assert!(args.is_empty()),
+        other => panic!("expected an IndirectCall-valued LetStarBinding, got {other:?}"),
+    }
+}
+
+#[test]
+fn multi_argument_lambda_call_preserves_argument_order() {
+    let m = compile_ok(&wrap("var f = (int a, int b) -> a - b; int y = f(10, 3);"));
+    match &main_fn(&m).body.stmts[1] {
+        Stmt::LetStarBinding {
+            value: Expr::IndirectCall { args, .. },
+            ..
+        } => {
+            assert!(matches!(args[0], Expr::IntLit { value: 10, .. }));
+            assert!(matches!(args[1], Expr::IntLit { value: 3, .. }));
+        }
+        other => panic!("expected an IndirectCall-valued LetStarBinding, got {other:?}"),
+    }
+}
+
+#[test]
+fn calling_a_lambda_with_the_wrong_argument_count_is_an_error() {
+    let err = compile_source(&wrap("var f = (int x) -> x + 1; f();"), "prog").unwrap_err();
+    assert!(!err.message.is_empty());
+}
+
+#[test]
+fn calling_a_lambda_with_the_wrong_argument_kind_is_an_error() {
+    let err = compile_source(&wrap("var f = (int x) -> x + 1; f(true);"), "prog").unwrap_err();
+    assert!(!err.message.is_empty());
+}
+
+#[test]
+fn calling_a_non_closure_local_is_an_error() {
+    let err = compile_source(&wrap("int x = 1; x();"), "prog").unwrap_err();
+    assert!(!err.message.is_empty());
+}
+
+#[test]
+fn calling_a_lambda_local_inside_a_non_main_method_lowers_correctly() {
+    // Confirms this isn't somehow special-cased to `main`'s own body --
+    // an ordinary method declaring and then invoking its own local
+    // lambda, ending in a tail-position `return` of the call's result.
+    let m = compile_ok(&class_src(
+        "public static void main(String[] args) { } \
+         static int apply(int x) { var f = (int y) -> y * 2; return f(x); }",
+    ));
+    let apply = find_fn(&m, "apply");
+    match &apply.body.value {
+        Expr::IndirectCall { .. } => {}
+        other => panic!("expected apply's body to end in an IndirectCall, got {other:?}"),
+    }
+}
+
+#[test]
+fn calling_a_captured_lambda_from_within_a_nested_lambda_lowers_correctly() {
+    // The captured closure's own signature must still be recoverable
+    // through `resolve_name`'s capture-threading, not just for a bare,
+    // uncaptured local.
+    let m = compile_ok(&wrap(
+        "var f = (int x) -> x + 1; var g = (int y) -> f(y); int z = g(3);",
+    ));
+    assert_eq!(main_fn(&m).body.stmts.len(), 3);
+}
+
+#[test]
+fn feature_closures_is_declared_when_a_lambda_is_invoked() {
+    let m = compile_ok(&wrap("var f = (int x) -> x + 1; f(1);"));
+    assert!(m.manifest.contains(Feature::Closures));
+}
+
+#[test]
+fn reassigning_a_lambda_valued_local_to_a_different_signature_is_rejected() {
+    // Caught by `/security-review`: without this rejection, a later call
+    // site would type-check `f(...)` against `f`'s *original* signature,
+    // not the closure it was actually reassigned to (`Kind::Closure`'s
+    // own interned-signature index goes stale on reassignment, since
+    // this crate only tracks a local's `Kind` at declaration time).
+    let err = compile_source(
+        &wrap("var f = (int x) -> x + 1; var g = () -> 42; f = g; int z = f(5);"),
+        "prog",
+    )
+    .unwrap_err();
+    assert!(!err.message.is_empty());
+}
+
+#[test]
+fn reassigning_a_lambda_valued_local_to_a_non_lambda_value_is_rejected() {
+    let err = compile_source(&wrap("var f = (int x) -> x + 1; f = 5;"), "prog").unwrap_err();
+    assert!(!err.message.is_empty());
+}
+
 // ── M4a: array declarations, indexing reads, .length ─────────────────────
 
 #[test]

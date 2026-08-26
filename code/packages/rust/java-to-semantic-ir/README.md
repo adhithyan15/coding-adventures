@@ -4,7 +4,7 @@ Java CST → narrow-waist Semantic IR. The first frontend for
 [SIR29](../../../specs/SIR29-nominal-static-oop-profile.md), the
 nominal/static-dispatch OOP profile extension of the SIR10 narrow-waist IR.
 See [JV02](../../../specs/JV02-java-to-semantic-ir.md) for this frontend's
-full milestone plan (M0 + M1 + M2a + M2b + M3a + M3b + M4a + M4b + M4c + M4d here, through M9).
+full milestone plan (M0 + M1 + M2a + M2b + M3a + M3b + M4a + M4b + M4c + M4d here, through M9; plus standalone task #54, wiring `Expr::IndirectCall`).
 
 ## Where this fits
 
@@ -34,7 +34,7 @@ let module = compile_source(
 )?;
 ```
 
-## Scope (v0.10.0 — JV02 milestones M0 + M1 + M2a + M2b + M3a + M3b + M4a + M4b + M4c + M4d)
+## Scope (v0.11.0 — JV02 milestones M0 + M1 + M2a + M2b + M3a + M3b + M4a + M4b + M4c + M4d, plus task #54)
 
 Java requires an explicit `class`/`main`-method wrapper at the source level
 (unlike Ruby/Python/JS, which allow bare top-level statements) — this crate
@@ -69,9 +69,27 @@ actually lives), effectively-final enforcement (assigning to or
 incrementing a captured local is rejected, matching real `javac`), and both
 lambda-body shapes — an expression directly, or a block using the same
 tail-position-only `return` rule methods use, but with no declared type to
-validate the returned kind against (M3b — though a lambda value can only be
-*created* and passed around this milestone, never actually *invoked*; see
-below). Single-dimensional array types (`int[]`/`String[]`/etc.) with a
+validate the returned kind against (M3b). A lambda value can now also be
+*invoked* (`f(5)` on a `Closure`-kinded local → `Expr::IndirectCall`, task
+#54): `lower_call_expression` checks `resolve_name` on the bare callee
+*before* falling back to `method_signatures`, mirroring real Java's own
+name-resolution priority — a functional-interface-typed local in scope is
+invoked directly through that binding, and a same-named top-level method
+isn't reachable through this call syntax while such a local exists.
+`Kind::Closure` gained a `u32` index into a new `Lowerer::closure_
+signatures` side table (each lambda's own param kinds + return kind,
+interned when the lambda is lowered) — needed so an indirect call can
+type-check its arguments and pick the right result kind, without
+embedding the signature inline on `Kind` itself (which would force it to
+drop `Copy`, the same concern `Kind::Array` already navigates by staying
+flat). A local that resolves but isn't `Closure`-kinded (`int x = 1;
+x();`) is rejected rather than silently falling through to a same-named
+method. Reassigning a `Closure`-kinded local is also rejected (found by
+`/security-review`): since this crate only tracks a local's `Kind` at
+declaration time, an unrejected reassignment would leave a later call
+site type-checking against the *original* signature's interned index,
+not whatever the variable was actually reassigned to. Single-dimensional
+array types (`int[]`/`String[]`/etc.) with a
 bare `{ ... }` literal initializer (`int[] xs = {1, 2, 3};`, or `var xs =
 {1, 2, 3};` inferring the element kind from the literal itself) lower to
 `Expr::SeqLit`; indexing reads (`xs[i]`) lower to `Expr::SeqIndex`; and
@@ -132,8 +150,10 @@ it exists), qualified calls (`x.foo(...)`), method overloading, an early
 or branched `return` (in a method *or* a lambda), untyped/`var`-inferred
 lambda parameters (Java infers these from the lambda's own target
 functional-interface type, which this frontend has no visibility into —
-no functional-interface declarations exist yet), *invoking* a lambda
-value (`Expr::IndirectCall` isn't wired up), `var`-inferred multi-
+no functional-interface declarations exist yet), calling a lambda-valued
+*method parameter* (this frontend has no way to declare a method
+parameter of a functional-interface type at all, so this is a boundary of
+what's expressible, not a gap in invocation itself), `var`-inferred multi-
 dimensional array literals, multi-dimensional `new` array-creation forms,
 compound-assignment/increment-decrement on an indexed target, a
 non-constant or reference-typed `new T[N]`, List/Map collection literals,
@@ -195,8 +215,14 @@ JV02 spec's milestone table for what comes next.
   suffix-chain rejection, `.length` on a multi-dimensional array,
   `Feature::Sequences` re-declaration, and both the still-deferred
   chained-assignment-target rejection and the now-correctly-generalized
-  single-index sub-array assignment). Every positive test also asserts
-  the lowered `Module` passes `semantic_ir::validate()` — not just that
+  single-index sub-array assignment), and task #54's own indirect-call
+  shapes (zero/single/multi-argument calls with correct argument order,
+  the call's own result kind usable in a further expression, a non-main
+  method's own local lambda invocation, a captured closure invoked from
+  within a nested lambda, wrong-argument-count and wrong-argument-kind
+  rejection, calling a non-closure local rejection, and `Feature::
+  Closures` re-declaration). Every positive test also asserts the
+  lowered `Module` passes `semantic_ir::validate()` — not just that
   lowering itself didn't error.
 - `tests/e2e_python.rs` — execution-proof tests, per JV02's own
   "Verification" section. Real Java source lowers through this crate,
@@ -216,13 +242,12 @@ JV02 spec's milestone table for what comes next.
   (plain or mutual — a genuinely *terminating* recursive call needs a
   base case, which needs a branched/early `return`, out of scope for
   M3a, so any recursive call this milestone can express would recurse
-  forever if actually run), or lambdas (M3b lowers a real, structurally-
-  verified closure value with real capture threading, but has no way to
-  *invoke* it — that needs `Expr::IndirectCall`, not wired up this
-  milestone — so there is nothing a lambda-using program could do that
-  produces *observably different* output than not using one at all) —
-  all four are covered structurally in `tests/test_lower.rs` instead,
-  honestly reflecting what's actually provable at this milestone. M4a
+  forever if actually run) — both are covered structurally in `tests/
+  test_lower.rs` instead, honestly reflecting what's actually provable at
+  that milestone. M3b's own lambdas (real, structurally-verified closure
+  values with real capture threading, but no way to *invoke* them at the
+  time) went unproven the same way — task #54 finally makes a real
+  execution-proof test possible for them; see below. M4a
   adds 4 real execution-proof tests — the first milestone since M3a to
   add any, since unlike lambdas, arrays lower to a primitive
   (`Expr::SeqLit`/`SeqIndex`/`SeqLen`) the Python backend already fully
@@ -243,7 +268,16 @@ JV02 spec's milestone table for what comes next.
   inferred multi-dimensional array literal, a chained (multi-
   dimensional) indexed-assignment target, or compound-assignment/
   increment-decrement on an indexed target (all remain deferred past
-  M4d). Python,
+  M4d). Task #54 adds 4 more, the first *lambda*-execution proofs this
+  crate has ever had: a lambda-valued local invoked with one argument, a
+  multi-argument invocation, a nested lambda invoking a value captured
+  from its own enclosing scope, and the realistic pattern this task
+  exists to enable — the same closure value called repeatedly across
+  loop iterations, its captured, effectively-final state read fresh each
+  time. No execution-proof test exists for calling a lambda-valued
+  *method parameter* (not constructible at all in this frontend's
+  current scope — no functional-interface parameter type exists to
+  declare one). Python,
   not JavaScript: the JavaScript backend does not accept `Feature::
   StringInterpolation` yet, and M1's `+`-based string concatenation needs
   it. The harness redirects `main`'s trailing block value to its last

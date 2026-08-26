@@ -22,9 +22,7 @@ unqualified calls → `Expr::DirectCall`, `return` in tail position only),
 and M3b (lambda expressions with explicitly-typed parameters →
 `Expr::MakeClosure`, hoisting the body to a synthesized top-level
 function; captures discovered on-resolve, effectively-final enforced;
-both lambda-body shapes — though a lambda value can only be created and
-passed around this milestone, never actually invoked, since `Expr::
-IndirectCall` isn't wired up yet), M4a (single-dimensional array
+both lambda-body shapes), M4a (single-dimensional array
 types with a bare `{ ... }` literal initializer → `Expr::SeqLit`,
 indexing reads → `Expr::SeqIndex`, `.length` → `Expr::SeqLen` — SIR16's
 `Sequences` primitives, not SIR22's `NDArrays`/matrix family; see this
@@ -42,10 +40,18 @@ types and explicitly-typed literal declarations, capped at a small
 dimension limit, plus chained index reads via a generalized suffix-chain
 dispatch; a mixed index-then-`.length` chain and a chained indexed-
 assignment target both remain deferred; see this section's own M4d
-entry for why) are merged — see `code/packages/rust/
-java-to-semantic-ir`'s own `CHANGELOG.md` for the exact per-milestone
-construct list and the real correctness bugs each milestone's own test
-suite caught before shipping. M2's own scope split into two PRs (M2a;
+entry for why), and task #54 (wiring `Expr::IndirectCall` — a
+`Closure`-kinded local can now be *invoked*, `f(5)`, not just created and
+passed around; `lower_call_expression` checks local-variable resolution
+ahead of the top-level-method lookup, mirroring real Java's own name-
+resolution priority; `Kind::Closure` gained a `u32` index into a new
+interned-signature side table so an indirect call can type-check its
+own arguments and result — this finally makes a real execution-proof
+test possible for M3b's own lambdas, the first this crate has ever had)
+are merged — see `code/packages/rust/java-to-semantic-ir`'s own
+`CHANGELOG.md` for the exact per-milestone construct list and the real
+correctness bugs each milestone's own test suite caught before shipping.
+M2's own scope split into two PRs (M2a;
 M2b) once implementation revealed how much scope-stack infrastructure
 `if`/`while`/`do`-`while` alone already needed; M3 similarly split into
 M3a and M3b (this section) once research showed M3's combined scope —
@@ -256,12 +262,13 @@ into that at all — no functional-interface declarations exist anywhere
 yet (a later SIR29 milestone) — so the bare-name and untyped-
 parenthesized `lambda_parameters` shapes are rejected rather than
 guessed at, the same "reject rather than mis-lower" discipline this
-crate uses everywhere else. Also out of scope: *invoking* a lowered
-closure value (`Expr::IndirectCall` is not wired up — a lambda can be
-created and passed around, e.g. as a `var`-typed local's initializer,
-but never called), so no execution-proof test exists for this milestone
-(see `tests/e2e_python.rs`'s own doc comment) — only structural
-verification against `semantic_ir::validate()`.
+crate uses everywhere else. *Invoking* a lowered closure value was
+originally out of scope for this milestone (`Expr::IndirectCall` wasn't
+wired up — a lambda could be created and passed around, e.g. as a
+`var`-typed local's initializer, but never called, so no execution-proof
+test existed here — only structural verification against
+`semantic_ir::validate()`); see task #54 (below) for where invocation was
+actually wired up.
 
 **M4a — array declarations, indexing reads, `.length`.** Single-
 dimensional Java arrays of primitive/`String` element type: `int[] xs =
@@ -386,6 +393,34 @@ define, reused rather than redefined; needs qualified-call support,
 itself still out of scope everywhere in this frontend), and `List`/`Map`
 collection literals where a fixed-shape lowering is unambiguous
 (`List.of(...)`, `new ArrayList<>()` + `.add`).
+
+**Task #54 — wire `Expr::IndirectCall` for invoking a lambda-valued
+local.** Not a lettered milestone (a standalone follow-up, picked up
+once the M4a–M4d array arc closed out). Closes M3b's own disclosed gap:
+a `Closure`-kinded local or parameter can now actually be *called*
+(`f(5)`), not just created and passed around. `lower_call_expression`
+checks `resolve_name` on the bare callee before falling back to
+`method_signatures` — mirrors real Java's own name-resolution priority
+(a functional-interface-typed local in scope is invoked directly through
+that binding; a same-named top-level method is not reachable through
+this call syntax while such a local exists). `Kind::Closure` changed
+from a flat unit-like variant to `Kind::Closure(u32)`, an index into a
+new `Lowerer::closure_signatures` side table interning each lambda's own
+param kinds and return kind — needed so an indirect call can type-check
+its arguments and pick the right result kind, kept as a small `Copy`
+index rather than embedding the signature inline on `Kind` itself (the
+same non-recursive-representation concern M4d's own `Kind::Array`
+navigated). This finally makes a real execution-proof test possible for
+M3b's own lambdas — the first this crate has ever had. Calling a
+lambda-valued *method parameter* remains out of scope: this frontend has
+no way to declare one at all (no functional-interface parameter type
+exists), so it's a boundary of what's expressible, not a gap in
+invocation itself. **Caught by `/security-review` before push (MEDIUM,
+CWE-704 stale-type-tracking)**: reassigning a `Closure`-kinded local is
+now rejected outright — this crate only tracks a local's `Kind` at
+declaration time, and `Kind::Closure(idx)`'s own `idx` is load-bearing
+for a later call site's type-checking, so an unrejected reassignment
+would leave that index silently stale.
 
 **M5 — statics/breadth parity groundwork.** Pulled forward from the
 original M9 slot: static field/method access patterns

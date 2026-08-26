@@ -1,6 +1,6 @@
 //! The lowering pass from `coding_adventures_java_parser`'s generic
-//! [`GrammarASTNode`] CST → [`semantic_ir::Module`], **v0.10.0 (JV02
-//! milestone M4d)**.
+//! [`GrammarASTNode`] CST → [`semantic_ir::Module`], **v0.11.0 (task #54:
+//! `Expr::IndirectCall`, invoking a lambda-valued local)**.
 //!
 //! # Scope
 //!
@@ -245,7 +245,36 @@
 //!   alongside compound-assignment/increment-decrement on an indexed
 //!   target.
 //!
-//! **Deliberately out of scope for v0.10.0** (each rejected with an
+//! **Supported (task #54, new):**
+//! - *Invoking* a lambda-valued local or parameter (`var f = (int x) ->
+//!   x + 1; f(5);`) → [`Expr::IndirectCall`]. `lower_call_expression`
+//!   checks `resolve_name` on the bare callee *before* falling back to
+//!   `method_signatures`, mirroring real Java's own name-resolution
+//!   priority: a functional-interface-typed local in scope is invoked
+//!   directly through that binding, and a same-named top-level method is
+//!   not reachable through this call syntax while such a local exists.
+//! - [`Kind::Closure`] gained a `u32` index into a new `Lowerer::
+//!   closure_signatures` side table (each lambda's own param kinds +
+//!   return kind, interned when the lambda is lowered) — needed so an
+//!   indirect call can type-check its arguments and pick the right
+//!   result `Kind`, without embedding the signature inline on `Kind`
+//!   itself (which would force it to drop `Copy`, the same concern
+//!   `Kind::Array` already navigates by staying flat).
+//! - **Reassigning a `Closure`-kinded local is rejected** (`var f = (int
+//!   x) -> x + 1; f = g;`), found by `/security-review`: this crate only
+//!   tracks a local's `Kind` at *declaration* time, and a plain `=`
+//!   reassignment never re-checks or re-records it — harmless for every
+//!   other `Kind`, but `Kind::Closure(idx)`'s own `idx` is load-bearing,
+//!   so an unrejected reassignment would leave a later call site
+//!   type-checking against the *original* signature, not whatever the
+//!   variable was actually reassigned to.
+//! - A local/parameter that resolves but isn't `Closure`-kinded (`int x
+//!   = 1; x();`) is rejected with a clear error rather than silently
+//!   falling through to a same-named method — matching real Java, which
+//!   would also reject this rather than reinterpreting `x` as a method
+//!   reference.
+//!
+//! **Deliberately out of scope for v0.11.0** (each rejected with an
 //! explicit [`JavaLowerError`], tracked in
 //! [JV02](../../../specs/JV02-java-to-semantic-ir.md)'s own milestone
 //! table): `switch` (SIR has no `Switch`/`Match`/`Case` IR node at all —
@@ -257,13 +286,12 @@
 //! (only one method per name is supported — this frontend has no
 //! type-based overload resolution), varargs parameters, fields,
 //! constructors, static/instance initializers, nested types, an early or
-//! branched `return` (in a method *or* a lambda), *invoking* a lambda
-//! value (`Expr::IndirectCall` is not wired up — a lambda can be created
-//! and passed around inside this milestone's own scope, e.g. as a
-//! `var`-typed local's initializer, but never called; see `tests/
-//! e2e_python.rs`'s own doc comment on why this makes an execution-proof
-//! test impossible this milestone), untyped or `var`-inferred lambda
-//! parameters, multi-dimensional `new` array-creation forms (`new
+//! branched `return` (in a method *or* a lambda), untyped or `var`-
+//! inferred lambda parameters, calling a lambda-valued *method
+//! parameter* (this frontend has no way to declare one — no functional-
+//! interface parameter type exists — a boundary of what's expressible,
+//! not a gap in invocation itself), multi-dimensional `new` array-
+//! creation forms (`new
 //! int[2][3]`, `new int[][]{{1,2}}` — M4c's own two shapes stay
 //! single-dimension only), a *chained* indexed-assignment target
 //! (`grid[i][j] = v;`) and compound-assignment/increment-decrement on an
@@ -427,7 +455,19 @@ enum Kind {
     /// declarable type). Like `Void`, no operator recognizes `Closure`
     /// as a valid operand, so any other use falls through to an ordinary
     /// "wrong kind" rejection.
-    Closure,
+    ///
+    /// Carries a `u32` index into `Lowerer::closure_signatures` (a small
+    /// `Copy` handle, not the signature inline) — added when `Expr::
+    /// IndirectCall` was wired up: invoking a closure-typed local needs
+    /// its param/return kinds to type-check the call and pick the right
+    /// result `Kind`, and a plain flat `Closure` (M3b's original shape)
+    /// carried no way to recover which lambda's signature a given local
+    /// actually holds. A `Vec<Kind>`/`Box<MethodSig>` field directly on
+    /// this variant would force `Kind` to drop its `Copy` derive (the
+    /// same concern `Kind::Array` already navigates by staying flat) —
+    /// interning the signature in a side table and storing only its
+    /// index keeps `Kind` itself exactly as small and `Copy` as before.
+    Closure(u32),
     /// A Java array's own kind -- M4a's addition, extended to real
     /// multi-dimensional arrays in M4d. Carries the *element* kind
     /// (`ArrayElemKind`, a small flat `Copy` enum -- not a boxed,
@@ -492,7 +532,7 @@ impl ArrayElemKind {
             Kind::Float => Some(ArrayElemKind::Float),
             Kind::Bool => Some(ArrayElemKind::Bool),
             Kind::Str => Some(ArrayElemKind::Str),
-            Kind::Null | Kind::Void | Kind::Closure | Kind::Array(_, _) => None,
+            Kind::Null | Kind::Void | Kind::Closure(_) | Kind::Array(_, _) => None,
         }
     }
 }
@@ -621,6 +661,15 @@ struct Lowerer {
     /// `lower_program` — mirrors `javascript-to-semantic-ir`'s own
     /// `synthesised` list.
     synthesized_functions: Vec<Function>,
+    /// Every lambda's own call signature (param kinds + return kind),
+    /// indexed by the `u32` a `Kind::Closure(idx)` carries — the side
+    /// table `Kind::Closure`'s own doc comment explains why the
+    /// signature is interned here rather than stored inline. Appended to
+    /// (never removed from) each time a `lambda_expression` is lowered;
+    /// `lower_call_expression`'s own indirect-call path looks a callee's
+    /// signature up here once `resolve_name` reports it resolved to a
+    /// `Closure`-kinded local rather than a real top-level method name.
+    closure_signatures: Vec<MethodSig>,
 }
 
 /// A method's call-site-relevant signature: what `lower_call_expression`
@@ -678,6 +727,7 @@ impl Lowerer {
             closure_stack: Vec::new(),
             lambda_counter: 0,
             synthesized_functions: Vec::new(),
+            closure_signatures: Vec::new(),
         }
     }
 
@@ -2472,6 +2522,34 @@ impl Lowerer {
                         format!("cannot assign to `{name}`: local variables referenced from a lambda body must be effectively final"),
                     ));
                 }
+                // Caught by `/security-review`: this crate tracks each
+                // local's `Kind` only at declaration time -- a plain `=`
+                // reassignment lowers the RHS but never re-checks or
+                // re-records the declared `Kind` against it (a real,
+                // pre-existing gap for every `Kind`, harmless for every
+                // *other* variant since none of them carry state that a
+                // later expression depends on). `Kind::Closure(idx)` is
+                // the one exception: `idx` is load-bearing -- a later
+                // `lower_call_expression` trusts it verbatim to look up
+                // `closure_signatures[idx]` and type-check the call.
+                // Reassigning a closure-typed local would leave that
+                // index silently stale (`var f = (int x) -> x+1; f = ()
+                // -> 42; f();` would still type-check `f`'s call against
+                // its *original* 1-parameter signature, not the 0-
+                // parameter closure `f` now actually holds) -- rejected
+                // outright rather than mis-tracked, since correctly
+                // updating the recorded `Kind` in place would require
+                // rewriting the scope frame the name was originally
+                // declared in, not just the innermost one (`declare_local`
+                // only ever inserts into `self.locals.last_mut()`, which
+                // is wrong whenever the assignment happens inside a
+                // nested block relative to the declaration).
+                if matches!(declared_kind, Kind::Closure(_)) {
+                    return Err(self.err_at(
+                        lvalue_node,
+                        format!("cannot reassign `{name}`: reassigning a lambda-valued variable is not supported yet (deferred to a later JV02 milestone)"),
+                    ));
+                }
                 let span = self.span_of(inner);
                 let value = match op_tok.value.as_str() {
                     "=" => self.lower_expr(rhs_node, 0)?.0,
@@ -3579,42 +3657,54 @@ impl Lowerer {
                 ))
             }
         };
+
+        // A local variable or parameter holding a lambda value takes
+        // priority over a same-named top-level method, mirroring real
+        // Java's own name resolution for a call expression (a local of a
+        // functional-interface type in scope is invoked directly through
+        // that binding; a same-named method is not reachable through
+        // this call syntax at all while such a local is in scope) --
+        // this is the `Expr::IndirectCall` entry point (task #54): a
+        // lambda could only ever be *created* and passed around before
+        // this, never actually invoked.
+        if let Some((kind, scope)) = self.resolve_name(&callee) {
+            let closure_idx = match kind {
+                Kind::Closure(idx) => idx,
+                _ => {
+                    return Err(self.err_at(
+                        node,
+                        format!(
+                            "`{callee}` is a local variable, not a lambda, and cannot be called"
+                        ),
+                    ))
+                }
+            };
+            let sig = self.closure_signatures[closure_idx as usize].clone();
+            let args = self.lower_call_arguments(suffix, &callee, &sig.param_kinds, depth)?;
+            let target_span = self.span_of(primary);
+            let span = self.span_of(node);
+            return Ok((
+                Expr::IndirectCall {
+                    target: Box::new(Expr::VarRef {
+                        name: callee,
+                        scope,
+                        span: target_span,
+                    }),
+                    args,
+                    effects: EffectSet::PURE,
+                    span,
+                },
+                sig.return_kind,
+            ));
+        }
+
         let sig = self.method_signatures.get(&callee).cloned().ok_or_else(|| {
             self.err_at(
                 node,
                 format!("call to unknown method `{callee}` (JV02 M3a can only call a method declared in the same class)"),
             )
         })?;
-
-        let arg_nodes: Vec<&GrammarASTNode> = match self.first_child_named(suffix, "argument_list")
-        {
-            Some(al) => child_nodes(al)
-                .into_iter()
-                .filter(|n| n.rule_name == "expression")
-                .collect(),
-            None => vec![],
-        };
-        if arg_nodes.len() != sig.param_kinds.len() {
-            return Err(self.err_at(
-                node,
-                format!(
-                    "`{callee}` expects {} argument(s), found {}",
-                    sig.param_kinds.len(),
-                    arg_nodes.len()
-                ),
-            ));
-        }
-        let mut args = Vec::with_capacity(arg_nodes.len());
-        for (arg_node, expected_kind) in arg_nodes.iter().zip(sig.param_kinds.iter()) {
-            let (arg_expr, arg_kind) = self.lower_expr(arg_node, depth + 1)?;
-            if arg_kind != *expected_kind {
-                return Err(self.err_at(
-                    arg_node,
-                    format!("argument to `{callee}` has the wrong kind"),
-                ));
-            }
-            args.push(arg_expr);
-        }
+        let args = self.lower_call_arguments(suffix, &callee, &sig.param_kinds, depth)?;
 
         if let Some(callees) = self.call_graph.get_mut(&self.current_method) {
             callees.insert(callee.clone());
@@ -3630,6 +3720,52 @@ impl Lowerer {
             },
             sig.return_kind,
         ))
+    }
+
+    /// Lower a call's own `argument_list` against an already-resolved
+    /// `param_kinds` (a real top-level method's signature, or a
+    /// closure's own interned one) — shared by both `lower_call_
+    /// expression`'s direct- and indirect-call paths, since argument
+    /// count/kind checking is identical either way; only how the callee
+    /// itself resolves (and what `Expr` variant wraps the result)
+    /// differs between them.
+    fn lower_call_arguments(
+        &mut self,
+        suffix: &GrammarASTNode,
+        callee: &str,
+        param_kinds: &[Kind],
+        depth: usize,
+    ) -> Result<Vec<Expr>, JavaLowerError> {
+        let arg_nodes: Vec<&GrammarASTNode> = match self.first_child_named(suffix, "argument_list")
+        {
+            Some(al) => child_nodes(al)
+                .into_iter()
+                .filter(|n| n.rule_name == "expression")
+                .collect(),
+            None => vec![],
+        };
+        if arg_nodes.len() != param_kinds.len() {
+            return Err(self.err_at(
+                suffix,
+                format!(
+                    "`{callee}` expects {} argument(s), found {}",
+                    param_kinds.len(),
+                    arg_nodes.len()
+                ),
+            ));
+        }
+        let mut args = Vec::with_capacity(arg_nodes.len());
+        for (arg_node, expected_kind) in arg_nodes.iter().zip(param_kinds.iter()) {
+            let (arg_expr, arg_kind) = self.lower_expr(arg_node, depth + 1)?;
+            if arg_kind != *expected_kind {
+                return Err(self.err_at(
+                    arg_node,
+                    format!("argument to `{callee}` has the wrong kind"),
+                ));
+            }
+            args.push(arg_expr);
+        }
+        Ok(args)
     }
 
     /// `primary = literal | "this" | ... | "new" array_creation_type
@@ -3904,9 +4040,11 @@ impl Lowerer {
         });
         self.push_scope();
         let mut params = Vec::with_capacity(pairs.len());
+        let mut param_kinds = Vec::with_capacity(pairs.len());
         for (name, kind) in pairs {
             self.declare_param(name.clone(), kind);
             self.observed.add(Feature::DynamicTyping);
+            param_kinds.push(kind);
             params.push(Param {
                 name,
                 sir_type: None,
@@ -3919,7 +4057,7 @@ impl Lowerer {
         let body_result = self.lower_lambda_body(body_node, depth + 1);
         self.pop_scope();
         let closure_frame = self.closure_stack.pop().expect("just pushed above");
-        let (body, _body_kind) = body_result?;
+        let (body, body_kind) = body_result?;
 
         // Collision-check the synthetic name against every real,
         // user-declared method name (`method_signatures` is fully
@@ -3954,13 +4092,24 @@ impl Lowerer {
             span: span.clone(),
         });
 
+        // Intern this lambda's own call signature so a later `Expr::
+        // IndirectCall` through a local holding this closure value can
+        // type-check its arguments and pick the right result `Kind` --
+        // see `Kind::Closure`'s own doc comment for why this lives in a
+        // side table rather than inline on the `Kind` variant itself.
+        let closure_idx = self.closure_signatures.len() as u32;
+        self.closure_signatures.push(MethodSig {
+            param_kinds,
+            return_kind: body_kind,
+        });
+
         Ok((
             Expr::MakeClosure {
                 fn_name,
                 captures: closure_frame.capture_values,
                 span,
             },
-            Kind::Closure,
+            Kind::Closure(closure_idx),
         ))
     }
 

@@ -469,23 +469,96 @@ fn void_method_call_runs_without_crashing_in_python() {
 // claim (the call resolves, `Feature::MutualRecursion` is set correctly)
 // without ever actually running the loop.
 
-// No execution-proof test for JV02 M3b's lambda expressions either, for
-// an analogous reason: this milestone lowers a lambda *literal* to
-// `Expr::MakeClosure` (a real, structurally-verified closure value, with
-// real capture-value threading -- see `tests/test_lower.rs`'s own
-// `nested_lambda_captures_transitively_across_both_boundaries` test), but
-// has no way to *invoke* the resulting value -- that needs `Expr::
-// IndirectCall`, wiring "a bare NAME that resolves to a local holding a
-// closure, not a known method name, calls through the value instead,"
-// which this milestone does not add (a real, disclosed gap, not an
-// oversight -- M3a's own `lower_call_expression` only recognizes callee
-// names present in `method_signatures`). Without invocation, there is
-// nothing a Java program using a lambda this milestone can lower could
-// possibly do that produces *observably different* output than not using
-// one at all, so an execution-proof harness has nothing meaningful to
-// assert on. Every positive lambda test in `tests/test_lower.rs` still
-// asserts the lowered `Module` passes `semantic_ir::validate()`, which is
-// the honest ceiling of what's provable here.
+// ── IndirectCall: invoking a lambda-valued local (task #54) ─────────────
+//
+// JV02 M3b lowered a lambda *literal* to `Expr::MakeClosure` (a real,
+// structurally-verified closure value, with real capture-value threading
+// -- see `tests/test_lower.rs`'s own `nested_lambda_captures_
+// transitively_across_both_boundaries` test) but had no way to *invoke*
+// the resulting value, so no execution-proof test was possible for it --
+// a lambda-using program couldn't produce any observably different
+// output than not using one at all. This task wires `Expr::IndirectCall`:
+// a bare `NAME(args)` callee that resolves (via `resolve_name`) to a
+// local/parameter holding a closure value, rather than a known top-level
+// method name, now calls through that value instead -- unlocking real
+// execution proofs for the first time.
+
+#[test]
+fn calling_a_lambda_valued_local_runs_in_python() {
+    if !python_available() {
+        eprintln!("skipping calling_a_lambda_valued_local_runs_in_python: `python3` not available");
+        return;
+    }
+    let out = run_via_python(
+        "calling_a_lambda_valued_local",
+        &wrap("var f = (int x) -> x + 1; f(5);"),
+    );
+    assert_eq!(out, "6");
+}
+
+#[test]
+fn calling_a_multi_parameter_lambda_runs_in_python() {
+    if !python_available() {
+        eprintln!(
+            "skipping calling_a_multi_parameter_lambda_runs_in_python: `python3` not available"
+        );
+        return;
+    }
+    let out = run_via_python(
+        "calling_a_multi_parameter_lambda",
+        &wrap("var f = (int a, int b) -> a - b; f(10, 3);"),
+    );
+    assert_eq!(out, "7");
+}
+
+#[test]
+fn calling_a_captured_lambda_from_within_a_nested_lambda_runs_in_python() {
+    if !python_available() {
+        eprintln!(
+            "skipping calling_a_captured_lambda_from_within_a_nested_lambda_runs_in_python: `python3` not available"
+        );
+        return;
+    }
+    // `g` captures `f` (itself a closure value) from its own enclosing
+    // scope and invokes it -- exercises capture threading and indirect
+    // invocation together, not just each in isolation.
+    let out = run_via_python(
+        "calling_a_captured_lambda",
+        &wrap("var f = (int x) -> x + 1; var g = (int y) -> f(y) * 2; g(3);"),
+    );
+    assert_eq!(out, "8"); // (3 + 1) * 2
+}
+
+#[test]
+fn lambda_used_as_a_repeated_callback_in_a_loop_runs_in_python() {
+    if !python_available() {
+        eprintln!(
+            "skipping lambda_used_as_a_repeated_callback_in_a_loop_runs_in_python: `python3` not available"
+        );
+        return;
+    }
+    // The realistic pattern lambda invocation exists to enable: the same
+    // closure value called repeatedly across loop iterations, its
+    // captured state (`n`, effectively final) read fresh each time.
+    let out = run_via_python(
+        "lambda_as_a_repeated_callback",
+        &wrap(concat!(
+            "int n = 10; ",
+            "var addN = (int x) -> x + n; ",
+            "int sum = 0; ",
+            "for (int i = 0; i < 3; i++) { sum = sum + addN(i); } ",
+            "sum;"
+        )),
+    );
+    assert_eq!(out, "33"); // (0+10) + (1+10) + (2+10)
+}
+
+// No execution-proof test for calling a lambda-valued *method
+// parameter*: this frontend has no way to declare a method parameter of
+// a functional-interface type at all (`kind_of_type_node` only resolves
+// primitive/`String` parameter types), so a `Kind::Closure`-typed
+// parameter is not constructible in the first place -- not a gap in
+// invocation itself, just a boundary of what can be expressed yet.
 
 // ── M4a: array declarations, indexing reads, .length ─────────────────────
 
