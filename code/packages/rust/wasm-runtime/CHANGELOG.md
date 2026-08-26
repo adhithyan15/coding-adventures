@@ -19,6 +19,24 @@ All notable changes to this package will be documented in this file.
   imported_table.is64() != table_type.is64 { ... }`), checked before
   `limits_compatible`, mirroring the existing memory-import arm's own
   `is64` check exactly (W25).
+- **Security review**: `instantiate()`'s table-allocation loop gains a
+  `total_is64_table_elements` aggregate cap across every `is64` table in
+  the module, mirroring `total_is64_pages` (memory64, W25) — without it,
+  a module could declare up to `MAX_TABLES` (64) separate `is64` tables
+  each individually AT the per-table `MAX_TABLE_ELEMENTS` cap (10,000,000)
+  and still instantiate all of them, ~5.1GB of eager allocation from one
+  small module (the exact "many individually-under-cap tables still
+  totaling too much" shape `wasm-validator`'s own Check 2b comment already
+  names as the reason its 32-bit aggregate exists — `wasm-validator`
+  deliberately excludes `is64` tables from THAT aggregate, since an
+  `is64` table's real spec ceiling has no useful per-item bound to
+  aggregate from at validation time, so the aggregate has to live here,
+  at instantiation, instead). Uses `saturating_add`, not `+=`: unlike
+  `total_is64_pages` (whose addends are already capped at memory64's much
+  smaller `2^48`-page validator ceiling), an `is64` table's `min` is
+  validator-uncapped up to `u64::MAX` itself — a plain `+=` could wrap the
+  running total back under the cap in a release build and defeat the
+  check outright.
 
 See `code/specs/W26-wasm-table64-first-slice.md`.
 

@@ -1404,15 +1404,25 @@ impl Table {
     /// attempt hits this cap, as a real, gracefully-returned `TrapError`,
     /// never a panic or process abort.
     pub fn new_with_is64(initial_size: u64, max_size: Option<u64>, is64: bool) -> Result<Self, TrapError> {
-        if is64 && initial_size > MAX_TABLE_ELEMENTS as u64 {
+        // Security review: the cap is checked UNCONDITIONALLY (not only
+        // when `is64`) -- a 32-bit table's `min` is already
+        // validator-capped at this exact same `MAX_TABLE_ELEMENTS` bound
+        // (`wasm-validator`'s Check 2b), so this is a pure, behavior-
+        // preserving no-op for every module that went through
+        // `validate()` first. Gating the check on `is64` alone would make
+        // this `pub` constructor's own safety depend entirely on a
+        // caller-external invariant living in a different crate (exactly
+        // the kind of check that silently stops holding the next time
+        // that OTHER crate's logic changes) rather than being true by
+        // construction here.
+        if initial_size > MAX_TABLE_ELEMENTS as u64 {
             return Err(TrapError::new(format!(
-                "table of {initial_size} initial elements exceeds this interpreter's practical 64-bit table allocation cap of {MAX_TABLE_ELEMENTS} elements (a real, spec-valid declaration this interpreter still refuses to actually allocate)"
+                "table of {initial_size} initial elements exceeds this interpreter's practical table allocation cap of {MAX_TABLE_ELEMENTS} elements (a real, spec-valid declaration this interpreter still refuses to actually allocate)"
             )));
         }
-        // Safe to narrow to u32 here either way: a 32-bit table's `min`
-        // is already validator-capped at MAX_TABLE_ELEMENTS (Check 2b),
-        // and a 64-bit table's `min` just got checked against the SAME
-        // cap immediately above.
+        // Safe to narrow to u32 here either way: `initial_size` just got
+        // checked against `MAX_TABLE_ELEMENTS` (a `u32`) above,
+        // unconditionally.
         let mut table = Table::new(initial_size as u32, max_size.map(|m| m.min(MAX_TABLE_ELEMENTS as u64) as u32));
         table.is64 = is64;
         Ok(table)
@@ -11488,7 +11498,7 @@ mod tests {
             Err(e) => e,
             Ok(_) => panic!("expected an error, got Ok"),
         };
-        assert!(err.message.contains("practical 64-bit table allocation cap"), "{}", err.message);
+        assert!(err.message.contains("practical table allocation cap"), "{}", err.message);
     }
 
     #[test]

@@ -187,6 +187,25 @@ cap either way).
      stays `is64`-agnostic, comparing only the numeric `u64` fields) — the
      exact same ordering/rationale comment `W25`'s memory-import arm
      already carries.
+   - **Security review addition** (not in the original draft of this
+     spec): a `total_is64_table_elements` aggregate cap across every
+     `is64` table in the module, mirroring `total_is64_pages` (memory64).
+     `wasm-validator`'s Check 2b deliberately excludes `is64` tables from
+     its OWN 32-bit aggregate (an `is64` table's real spec ceiling has no
+     useful per-item bound to aggregate from at validation time) — without
+     a matching aggregate here, at instantiation, a module could declare
+     up to `MAX_TABLES` (64) separate `is64` tables each individually AT
+     the per-table `MAX_TABLE_ELEMENTS` cap and still instantiate all of
+     them (~5.1GB of eager allocation from one small module). Uses
+     `saturating_add`, not `+=`: unlike memory64's `total_is64_pages`
+     (whose addends are already capped at a much smaller `2^48`-page
+     validator ceiling), an `is64` table's `min` is validator-uncapped up
+     to `u64::MAX` itself, so a plain `+=` could wrap the running total
+     back under the cap in a release build and silently defeat the check.
+     `Table::new_with_is64`'s own per-table cap check was also made
+     unconditional (not only under `is64`) for the same class of reason:
+     its safety previously depended entirely on an invariant living in
+     `wasm-validator`, a different crate.
 7. **Vendor `table64.wast` and `memory64-imports.wast` verbatim** (pinned
    SHA `28864811cf03bdbf880733786148feaba339582d`) into `wasm-conformance`,
    add both to `TESTSUITE_FILES`, regenerate the baseline.

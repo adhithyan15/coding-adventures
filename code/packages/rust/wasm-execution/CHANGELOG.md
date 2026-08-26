@@ -20,7 +20,12 @@ All notable changes to this package will be documented in this file.
   (`u64::MAX`) is validation-time-acceptable but has no relation to what
   this interpreter can actually allocate; `new_with_is64` returns a real,
   gracefully-propagated `TrapError` (never a panic/allocator abort) if
-  `is64 && initial_size` exceeds it.
+  `initial_size` exceeds it — checked UNCONDITIONALLY, not only when
+  `is64` (security review: a 32-bit table's `min` is already
+  validator-capped at this exact same bound, so this is a pure,
+  behavior-preserving no-op for every validated module, and removes this
+  `pub` constructor's own safety from depending entirely on an invariant
+  living in a different crate, `wasm-validator`).
 
 See `code/specs/W26-wasm-table64-first-slice.md`.
 

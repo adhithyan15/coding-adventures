@@ -1486,7 +1486,38 @@ impl WasmRuntime {
         // `min` is already validator-capped at `MAX_TABLE_ELEMENTS`
         // itself, so this is a pure behavior-preserving widening for
         // every existing `is64: false` table.
+        //
+        // `total_is64_table_elements` mirrors `total_is64_pages` above --
+        // security review finding: `wasm-validator`'s Check 2b deliberately
+        // excludes `is64` tables from its own 32-bit `total_table_elements`
+        // aggregate (an `is64` table's real spec ceiling, `u64::MAX`, has
+        // no useful per-item bound to aggregate from at validation time),
+        // so WITHOUT an aggregate here, a module could declare up to
+        // `MAX_TABLES` (64) separate `is64` tables each individually AT the
+        // per-table `MAX_TABLE_ELEMENTS` cap (10,000,000) and still
+        // instantiate all of them -- 64 * 10,000,000 * (8 bytes/entry,
+        // `Vec<Option<u32>>`) ~= 5.1GB from one small module, the exact
+        // "many individually-under-cap tables still totaling too much"
+        // shape `wasm-validator`'s own Check 2b comment already names as
+        // the reason its 32-bit aggregate exists. `saturating_add`, NOT
+        // `+=`: unlike `total_is64_pages` (whose addends are already
+        // capped at memory64's much smaller `2^48`-page validator ceiling,
+        // so summing up to `MAX_MEMORIES` of them can never overflow
+        // `u64`), an `is64` table's `min` is validator-uncapped up to
+        // `u64::MAX` itself -- a plain `+=` here could wrap the running
+        // total back under the cap in a release build (`overflow-checks =
+        // false`) and silently defeat this exact check.
+        let mut total_is64_table_elements: u64 = 0;
         for table_type in &module.tables {
+            if table_type.is64 {
+                total_is64_table_elements = total_is64_table_elements.saturating_add(table_type.limits.min);
+                if total_is64_table_elements > wasm_execution::MAX_TABLE_ELEMENTS as u64 {
+                    return Err(TrapError::new(format!(
+                        "total declared 64-bit table elements across this module is at least {total_is64_table_elements}, exceeding this interpreter's practical aggregate cap of {}",
+                        wasm_execution::MAX_TABLE_ELEMENTS
+                    )));
+                }
+            }
             tables.push(Table::new_with_is64(table_type.limits.min, table_type.limits.max, table_type.is64)?);
         }
 
@@ -3050,7 +3081,64 @@ mod tests {
         };
         let validated = runtime.validate(&module).unwrap();
         let err = runtime.instantiate(&validated).err().unwrap();
-        assert!(err.to_string().contains("practical 64-bit table allocation cap"), "{err}");
+        // A single is64 table this far over the cap trips the NEW
+        // aggregate check (below) before `Table::new_with_is64`'s own
+        // per-table check ever runs -- either way, a graceful `TrapError`,
+        // never a panic/allocator abort.
+        assert!(err.to_string().contains("practical aggregate cap"), "{err}");
+    }
+
+    /// Security review finding: `wasm-validator`'s Check 2b excludes `is64`
+    /// tables from its OWN 32-bit `total_table_elements` aggregate (an
+    /// `is64` table's real spec ceiling has no useful per-item bound to
+    /// aggregate from at validation time) -- so instantiation needs its
+    /// OWN aggregate cap across every `is64` table in the module, mirroring
+    /// `total_is64_pages` for memory64 (W25). Two tables each individually
+    /// AT the per-table `MAX_TABLE_ELEMENTS` cap must still be rejected in
+    /// aggregate, even though neither is rejected by `Table::new_with_is64`
+    /// alone.
+    #[test]
+    fn test_instantiate_traps_when_is64_tables_combined_exceed_the_aggregate_cap() {
+        let runtime = WasmRuntime::with_host(Box::new(LinkingTestHost));
+        let module = WasmModule {
+            tables: vec![
+                TableType {
+                    element_type: 0x70,
+                    limits: Limits { min: wasm_execution::MAX_TABLE_ELEMENTS as u64, max: None },
+                    is64: true,
+                },
+                TableType { element_type: 0x70, limits: Limits { min: 1, max: None }, is64: true },
+            ],
+            ..Default::default()
+        };
+        let validated = runtime.validate(&module).unwrap();
+        let err = runtime.instantiate(&validated).err().unwrap();
+        assert!(err.to_string().contains("practical aggregate cap"), "{err}");
+    }
+
+    /// Security review finding: the aggregate MUST use `saturating_add`,
+    /// not a plain `+=` -- an `is64` table's `min` is validator-uncapped up
+    /// to `u64::MAX`, so a naive sum of a `MAX_TABLE_ELEMENTS`-sized table
+    /// and a `u64::MAX` one would silently WRAP back under the cap in a
+    /// release build, defeating the aggregate check outright. This test
+    /// fails (module wrongly instantiates) without `saturating_add`.
+    #[test]
+    fn test_instantiate_aggregate_cap_does_not_wrap_on_overflow() {
+        let runtime = WasmRuntime::with_host(Box::new(LinkingTestHost));
+        let module = WasmModule {
+            tables: vec![
+                TableType {
+                    element_type: 0x70,
+                    limits: Limits { min: wasm_execution::MAX_TABLE_ELEMENTS as u64, max: None },
+                    is64: true,
+                },
+                TableType { element_type: 0x70, limits: Limits { min: u64::MAX, max: None }, is64: true },
+            ],
+            ..Default::default()
+        };
+        let validated = runtime.validate(&module).unwrap();
+        let err = runtime.instantiate(&validated).err().unwrap();
+        assert!(err.to_string().contains("practical aggregate cap"), "{err}");
     }
 
     #[test]
