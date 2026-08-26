@@ -98,6 +98,24 @@ unsafe paths, rejects exact, case, nested, and Unicode compatibility aliases of
 full-uppercase Windows reserved basenames. Regular, symlink, and reparse kinds
 remain inert metadata; the adapter never opens or follows them.
 
+## Orphan-Crate Validation
+
+`CodingAdventures::BuildTool::Validator::validate_orphan_crate_snapshot`
+consumes the four language-neutral orphan fixtures through a native Perl
+hash-and-array boundary. It filters exact artifact components, recognizes a
+runnable BUILD in the manifest directory or a component-wise `code/` ancestor,
+keeps a nearer empty BUILD from masking runnable ancestor coverage, and uses the
+fixed `BUILD`, `BUILD_windows`, `BUILD_mac`, `BUILD_linux`,
+`BUILD_mac_and_linux` precedence.
+
+Exemptions are portable NFC repository-relative paths. The validator redacts
+unsafe spellings, detects duplicates with Unicode 17 full case folding,
+enforces non-blank reasons and Windows reserved basenames, reports stale ledger
+entries, and counts only active `PENDING` records. Diagnostics use Unicode
+scalar path ordering plus canonical ASCII JSON detail ordering. The adapter is
+pure: it never enumerates a checkout, reads a file, consults Git, launches a
+process, reads the environment, follows a link, or accesses the network.
+
 Generated source-embedded Unicode 17.0.0 NFC, NFKC, full default-fold, and
 full-uppercase tables keep policy independent of the installed Perl runtime's
 Unicode data. Regenerate the module and its Unicode License v3 notice with an
@@ -124,7 +142,7 @@ python code/scripts/generate_tracked_artifact_unicode17.py \
 | `Plan.pm` | JSON build plan serialisation |
 | `GlobMatch.pm` | Glob-to-regex conversion for Starlark `srcs` |
 | `StarlarkEval.pm` | Starlark BUILD detection and rule mapping |
-| `Validator.pm` | Build contracts and pure tracked-artifact snapshot policy |
+| `Validator.pm` | Build contracts plus pure tracked-artifact and orphan-crate snapshot policy |
 | `TrackedArtifactUnicode17.pm` | Generated, source-embedded Unicode 17 policy tables |
 
 ## Perl Idioms
@@ -186,7 +204,7 @@ t/07-starlark.t      8 cases — Starlark detection, command generation
 t/08-glob-match.t    8 cases — glob pattern matching
 t/09-plan.t          3 cases — build plan serialisation
 t/10-integration.t   2 cases — end-to-end pipeline
-t/11-validator.t       BUILD and CI metadata contract validation
+t/11-validator.t       BUILD/CI contracts and shared snapshot validation fixtures
 t/12-ci-workflow.t     canonical CI workflow validation
 t/13-resolution-utf8.t shared fixtures — strict Lua rockspec UTF-8 and CLI diagnostics
 ```

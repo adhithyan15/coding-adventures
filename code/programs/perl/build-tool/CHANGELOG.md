@@ -10,6 +10,13 @@ The format follows [Keep a Changelog](https://keepachangelog.com/en/1.0.0/).
 
 ### Added
 
+- A pure orphan-crate snapshot validator independently consumes all four
+  language-neutral fixtures. It applies component-wise ancestor BUILD
+  coverage, fixed filename precedence, exact artifact filtering, portable NFC
+  exemption paths, Unicode 17 full-fold identities, stale-ledger diagnostics,
+  active `PENDING` counts, hostile-path redaction, and canonical portable
+  ordering without gaining filesystem, Git, process, environment, or network
+  authority.
 - A pure tracked-artifact snapshot validator independently consumes all five
   language-neutral fixtures, including redacted portable-path failures,
   Unicode-scalar length and ordering, inert link metadata, Windows reserved
