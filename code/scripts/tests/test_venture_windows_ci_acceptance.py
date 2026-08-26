@@ -120,7 +120,8 @@ class VentureWindowsCIAcceptanceTests(unittest.TestCase):
         )
         self.assertIn(
             "(needs.detect.outputs.needs_rust == 'true' || "
-            "needs.detect.outputs.needs_venture_windows == 'true') "
+            "needs.detect.outputs.needs_venture_windows == 'true' || "
+            "needs.detect.outputs.needs_mosaic_qt_runtime == 'true') "
             "&& runner.os == 'Linux'",
             workflow,
         )
