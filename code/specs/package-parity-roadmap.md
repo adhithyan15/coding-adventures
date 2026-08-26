@@ -8151,8 +8151,8 @@ PRs #12149 and #12162 own required Go entry-point and validator surfaces.
 
 After lifecycle reconciliation, new-owner registration, and selection, the
 state graph contains 517 unique owners and 778 complete acyclic edges: 147
-merged, 369 pending, and exactly one in-progress owner, with no active parity
-PR and no merged-to-unmerged dependency edge.
+merged, 369 pending, and exactly one pr-open owner, with active parity PR
+#12958 and no merged-to-unmerged dependency edge.
 
 Before publication, the branch rebased four times without conflict, most
 recently onto exact main `53c7c6054f9cd93378726f2348a92ed6514c5948`. PRs
@@ -8179,7 +8179,7 @@ live open PRs have zero exact overlap with this six-path tranche. The post-rebas
 schema-3 report remains 15 established lanes, 1,373 identities, 4,566 slots,
 175 high-consensus packages with 276 gaps, 910 singletons with 12,740 gaps,
 721 Rust singletons, zero collisions, and zero unknown buckets. The 517-owner,
-778-edge state graph remains complete and acyclic with exactly one in-progress
+778-edge state graph remains complete and acyclic with exactly one pr-open
 item.
 
 The live-PR audit also classifies four unmerged surfaces before publication.
@@ -8207,6 +8207,13 @@ preserves the five-entry orphan ledger, and reports all 258 as WOULD-BUILD.
 Independent exact-head contract and security reviews are clean after explicit
 fail-closed regressions for malformed exemption reasons and Perl-internal
 surrogate or above-Unicode code points.
+
+Ready-for-review PR #12958 opened from exact independently reviewed head
+`ce9b6c85715a1ee268020477096d718a9f8093c0` after a normal first push from
+exact main `53c7c6054f9cd93378726f2348a92ed6514c5948`. GitHub reports the PR
+open, non-draft, and mergeable. Required checks are queued or in progress, so
+auto-merge remains disabled until every check is terminal and acceptable and
+GitHub reports no conflict.
 
 ## Autonomous Loop Protocol
 
