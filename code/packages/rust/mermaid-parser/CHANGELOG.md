@@ -1,5 +1,9 @@
 # Changelog
 
+## 0.148.0
+
+- Compile Mermaid Gantt `h`, `hh`, `A`, and `a` 12-hour clock tokens into typed semantic date formats.
+
 ## 0.147.0
 
 - Match Mermaid's single-component `ss` Gantt format for one- or two-digit second values.
