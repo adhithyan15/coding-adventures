@@ -87,7 +87,8 @@ Result: `HELLO`
 ### Character Handling Rules
 
 Same as CR00 (Caesar cipher):
-1. Alphabetic characters (A-Z, a-z) are substituted. Case is preserved.
+1. ASCII alphabetic characters (`A-Z`, `a-z`) are substituted. Case is
+   preserved. Non-ASCII letters are not part of this cipher's alphabet.
 2. Non-alphabetic characters pass through unchanged.
 3. Empty strings return empty strings.
 
@@ -102,6 +103,12 @@ redundant.
 
 | Language | Package Directory | Module/Namespace |
 |----------|-------------------|------------------|
+| C# | `code/packages/csharp/atbash-cipher/` | `CodingAdventures.AtbashCipher` |
+| Dart | `code/packages/dart/atbash-cipher/` | `package:coding_adventures_atbash_cipher/atbash_cipher.dart` |
+| F# | `code/packages/fsharp/atbash-cipher/` | `CodingAdventures.AtbashCipher` |
+| Haskell | `code/packages/haskell/atbash-cipher/` | `AtbashCipher` |
+| Java | `code/packages/java/atbash-cipher/` | `com.codingadventures.atbashcipher` |
+| Kotlin | `code/packages/kotlin/atbash-cipher/` | `com.codingadventures.atbashcipher` |
 | Python | `code/packages/python/atbash-cipher/` | `atbash_cipher` |
 | Go | `code/packages/go/atbash-cipher/` | `atbashcipher` |
 | Ruby | `code/packages/ruby/atbash_cipher/` | `CodingAdventures::AtbashCipher` |

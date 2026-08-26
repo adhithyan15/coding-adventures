@@ -8840,6 +8840,85 @@ mergeable. Required checks have not yet populated, so auto-merge remains
 disabled and the loop is monitor-only until every check is terminal and
 acceptable.
 
+PR #13070 completed all 40 final checks at state-recording head
+`b2dc18477d6b232f05af7b54417f8000b698ee3a`: 33 succeeded and seven were
+expected skips, with no failures or pending work. GitHub reported a clean merge
+state, auto-merge was enabled, and the PR merged as
+`1e2ee726573105be54245cba117ef3099765a130` at
+2026-08-26T17:32:54Z without a manual merge command. The exact merged-head
+worktree was clean and removed afterward.
+
+### Post-#13070 inventory and Dart classical-cipher selection
+
+The exact-main schema-3 report remains collision-clean at 15 established
+lanes, 1,373 implementation identities, 4,578 implementation slots, and 1,412
+all-reported identities. The breadth bands are 175 high-consensus identities
+with 270 gaps, 123 five-to-nine identities with 934 gaps, 166 two-to-four
+identities with 2,087 gaps, and 909 singletons with 12,726 gaps. Rust retains
+720 singletons; canonical collisions and unknown language buckets remain zero;
+OCaml remains correctly emerging at zero packages. The six merged JVM slots
+are the only package-directory topology change.
+
+The reopened 14-of-15 frontier now contains eight exact gaps: Dart alone is
+missing `atbash-cipher`, `binary-search-tree`, `fenwick-tree`,
+`scytale-cipher`, `trie`, `uuid`, and `vigenere-cipher`; Swift alone is missing
+`paint-vm-ascii`. All nine live open PRs have zero exact overlap with the
+selected Dart package, CR01-CR03 specification, state, and roadmap surfaces.
+The Swift paint item remains actively owned by PR #12149. The dependency-ready
+OCaml process-free substrate is strategically important but remains
+collision-unsafe while PRs #12149 and #12162 own required Go build-tool
+entry-point and validator surfaces.
+
+The dependency/leverage pass selects
+`dart-current-14-of-15-atbash-scytale-vigenere` on branch
+`codex/dart-classical-ciphers-parity`. Its sole scaffold dependency is merged;
+all three adjacent CR01-CR03 packages are deterministic, dependency-free, and
+empty-capability leaves; and every other established lane implements all
+three. This one-toolchain tranche adds three slots, completes three identities
+at 15/15, and reduces Dart's high-consensus backlog from 101 to 98. Haskell's
+two-package event-loop/brotli tail and the single Dart trie foundation remain
+the next bounded runners-up. The fresh exact-main worktree, target package
+paths, descriptive local and remote branch, and prior PR were absent before
+selection.
+
+The subsequent CR01-CR03 reference audit found three pre-existing behavioral
+ownership gaps before Dart implementation began. A new neutral-fixture owner
+will pin the shared ASCII vectors, Vigenere insufficient-signal behavior, IC
+threshold and tie-breaking, analysis bounds, and the exact long-English corpus.
+Dependent Scytale conformance now owns the split among UTF-16 units, Unicode
+scalars, grapheme clusters, and UTF-8 bytes plus four lanes that trim more than
+the literal U+0020 padding character. Dependent Vigenere conformance owns the
+Go/Python Unicode-key divergence and the Kotlin/Swift Unicode-analysis hazards.
+The current Dart tranche follows the tightened portable contract—Unicode
+scalars and literal-space removal for Scytale, ASCII-only Vigenere processing,
+and key length 1 for insufficient analysis signal—without expanding into those
+cross-lane remediations.
+
+The reconciled graph remains complete and acyclic at 529 owners and 789 edges:
+155 merged, 373 pending, and exactly one in-progress owner, with no
+active parity PR.
+
+The Dart candidate implements the reconciled contract in specification,
+tests, source, and documentation order. Atbash passes eight tests; Scytale and
+Vigenere pass sixteen each. All three format and fatal-analysis gates are clean,
+and LCOV reports 100% production line and function coverage: 8/8 and 3/3,
+52/52 and 9/9, and 93/93 and 20/20. Production dependencies remain empty,
+capability manifests remain empty and schema-valid, and no production
+dependency is outdated. The Go build tool passes all packages, vet, and
+trimpath compilation. Its exact Windows diff plan evaluates 45 Starlark files,
+discovers 89 Dart packages, selects exactly these three independent nodes, and
+the real validated execution builds all three while skipping the other 86.
+
+The collision-checked candidate inventory adds exactly three slots to 4,581,
+reduces high-consensus gaps from 270 to 267 and Dart's share from 101 to 98,
+and completes Atbash, Scytale, and Vigenere at 15/15 with no collision or
+unknown bucket. Parity, capability, state, strict-JSON, README-link, diff,
+dependency, credential, and production-authority checks pass. Independent
+contract, packaging, and security reviews are clean after redacting implicit
+value-object output, pinning trailing non-space padding behavior, and making
+the provisional Vigenere IC heuristic debt explicit under its neutral-fixture
+owner.
+
 ## Autonomous Loop Protocol
 
 Only one parity PR should be active at a time.
