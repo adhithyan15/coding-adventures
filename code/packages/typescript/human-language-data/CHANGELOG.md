@@ -2,6 +2,16 @@
 
 ## Unreleased
 
+### Added - source-verified Chinese language-identity characters
+
+- Add inventory and pinned PRC stroke-order provenance for **汉**, **语**, **文**,
+  and **国**, the new characters required by the beginner language-identity
+  vocabulary cluster.
+- Describe each component boundary, continuous turn, and pen lift so the later
+  writing lessons can introduce the four characters one small step at a time.
+- Pin the CJK font generator's output timestamp so identical inputs regenerate
+  the vendored Noto Sans SC subset byte for byte.
+
 ### Added - source-verified Tamil nga
 
 - Add Tamil **ங** as a detached upright followed by one joined framed body,
@@ -9,6 +19,7 @@
 - Close all 9 affected Tamil realizations while preserving the two-run source
   order through Noto Sans Tamil's right-side detached-upright fit, then rerank
   Japanese hiragana **し** first at 8.
+
 ### Added - source-backed shared maddah above
 
 - Model Arabic, Persian, and Urdu **ٓ** as U+0627 ALEF plus U+0653 ARABIC

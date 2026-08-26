@@ -3018,6 +3018,148 @@ export const DUCTUS: Record<string, LetterDuctus> = {
     ],
     source: chineseCharacterSource("五"),
   },
+  // These four entries preserve Hanzi Writer Data's pinned medians directly.
+  // Their coordinates therefore describe the authoritative stroke centre-lines;
+  // the separately rendered Noto Sans SC outline may vary in width and proportion.
+  [ductusKey("chinese", "汉")]: {
+    script: "chinese",
+    glyph: "汉",
+    strokes: [
+      simpleStroke("draw the upper water dot down and right", [
+        { x: 115, y: 790 }, { x: 190, y: 750 }, { x: 265, y: 700 },
+      ]),
+      simpleStroke("lift, then draw the middle water dot down and right", [
+        { x: 75, y: 520 }, { x: 150, y: 480 }, { x: 225, y: 430 },
+      ]),
+      simpleStroke("lift, then draw the lower water stroke rising up and right", [
+        { x: 100, y: 0 }, { x: 130, y: 60 }, { x: 165, y: 125 },
+        { x: 205, y: 200 }, { x: 250, y: 275 },
+      ]),
+      simpleStroke("lift, draw the upper-right horizontal, then turn and sweep down-left without lifting", [
+        { x: 360, y: 735 }, { x: 550, y: 735 }, { x: 750, y: 735 },
+        { x: 860, y: 725 }, { x: 845, y: 620 }, { x: 810, y: 500 },
+        { x: 760, y: 390 }, { x: 695, y: 285 }, { x: 610, y: 185 },
+        { x: 560, y: 110 }, { x: 490, y: 55 }, { x: 400, y: 5 },
+        { x: 315, y: -20 },
+      ]),
+      simpleStroke("lift, then draw the long right-falling stroke", [
+        { x: 415, y: 700 }, { x: 470, y: 500 }, { x: 540, y: 350 },
+        { x: 620, y: 220 }, { x: 700, y: 130 }, { x: 820, y: 35 },
+        { x: 940, y: -20 },
+      ]),
+    ],
+    source: chineseCharacterSource("汉"),
+  },
+  [ductusKey("chinese", "语")]: {
+    script: "chinese",
+    glyph: "语",
+    strokes: [
+      simpleStroke("draw the speech-radical dot down and right", [
+        { x: 125, y: 780 }, { x: 185, y: 735 }, { x: 250, y: 675 },
+      ]),
+      simpleStroke("lift, draw the speech-radical turn, and finish rising up-right without lifting", [
+        { x: 50, y: 490 }, { x: 100, y: 490 }, { x: 160, y: 490 },
+        { x: 220, y: 490 }, { x: 220, y: 430 }, { x: 220, y: 350 },
+        { x: 220, y: 250 }, { x: 220, y: 130 }, { x: 250, y: 80 },
+        { x: 345, y: 145 },
+      ]),
+      simpleStroke("lift, then draw 五's top horizontal left to right", [
+        { x: 355, y: 775 }, { x: 490, y: 775 }, { x: 625, y: 775 },
+        { x: 760, y: 775 }, { x: 920, y: 775 },
+      ]),
+      simpleStroke("lift, then draw 五's descending second stroke", [
+        { x: 600, y: 740 }, { x: 585, y: 650 }, { x: 555, y: 520 },
+        { x: 520, y: 400 },
+      ]),
+      simpleStroke("lift, then draw 五's horizontal-turning third stroke", [
+        { x: 390, y: 590 }, { x: 500, y: 590 }, { x: 620, y: 590 },
+        { x: 740, y: 590 }, { x: 820, y: 585 }, { x: 810, y: 500 },
+        { x: 790, y: 400 },
+      ]),
+      simpleStroke("lift, then draw 五's long bottom horizontal left to right", [
+        { x: 320, y: 395 }, { x: 440, y: 395 }, { x: 560, y: 395 },
+        { x: 700, y: 395 }, { x: 830, y: 395 }, { x: 950, y: 395 },
+      ]),
+      simpleStroke("lift, then draw 口's left vertical", [
+        { x: 440, y: 260 }, { x: 440, y: 100 }, { x: 440, y: -50 },
+      ]),
+      simpleStroke("lift, then draw 口's top and turn down the right side without lifting", [
+        { x: 440, y: 260 }, { x: 520, y: 260 }, { x: 650, y: 260 },
+        { x: 760, y: 260 }, { x: 850, y: 260 }, { x: 850, y: 100 },
+        { x: 850, y: -45 },
+      ]),
+      simpleStroke("lift, then close 口 along the bottom from left to right", [
+        { x: 440, y: -5 }, { x: 540, y: -5 }, { x: 650, y: -5 },
+        { x: 750, y: -5 }, { x: 850, y: -5 },
+      ]),
+    ],
+    source: chineseCharacterSource("语"),
+  },
+  [ductusKey("chinese", "文")]: {
+    script: "chinese",
+    glyph: "文",
+    strokes: [
+      simpleStroke("draw the top dot down and right", [
+        { x: 440, y: 820 }, { x: 470, y: 770 }, { x: 510, y: 700 },
+      ]),
+      simpleStroke("lift, then draw the horizontal stroke left to right", [
+        { x: 50, y: 625 }, { x: 230, y: 625 }, { x: 400, y: 625 },
+        { x: 570, y: 625 }, { x: 750, y: 625 }, { x: 950, y: 625 },
+      ]),
+      simpleStroke("lift, then draw the long left-falling stroke", [
+        { x: 250, y: 600 }, { x: 275, y: 520 }, { x: 315, y: 440 },
+        { x: 360, y: 370 }, { x: 415, y: 300 }, { x: 475, y: 235 },
+        { x: 500, y: 190 }, { x: 430, y: 130 }, { x: 345, y: 80 },
+        { x: 250, y: 45 }, { x: 150, y: 15 }, { x: 60, y: -5 },
+      ]),
+      simpleStroke("lift, return near the centre, and draw the long right-falling stroke", [
+        { x: 750, y: 600 }, { x: 700, y: 470 }, { x: 625, y: 340 },
+        { x: 520, y: 205 }, { x: 650, y: 105 }, { x: 790, y: 40 },
+        { x: 940, y: -5 },
+      ]),
+    ],
+    source: chineseCharacterSource("文"),
+  },
+  [ductusKey("chinese", "国")]: {
+    script: "chinese",
+    glyph: "国",
+    strokes: [
+      simpleStroke("draw the outer left vertical from top to bottom", [
+        { x: 125, y: 780 }, { x: 125, y: 620 }, { x: 125, y: 460 },
+        { x: 125, y: 300 }, { x: 125, y: 140 }, { x: 125, y: -45 },
+      ]),
+      simpleStroke("lift, then draw the outer top and turn down the right side without lifting", [
+        { x: 125, y: 780 }, { x: 250, y: 780 }, { x: 380, y: 780 },
+        { x: 510, y: 780 }, { x: 640, y: 780 }, { x: 760, y: 780 },
+        { x: 875, y: 780 }, { x: 875, y: 620 }, { x: 875, y: 460 },
+        { x: 875, y: 300 }, { x: 875, y: 140 }, { x: 875, y: -45 },
+      ]),
+      simpleStroke("lift, then draw 玉's top horizontal left to right", [
+        { x: 240, y: 610 }, { x: 340, y: 610 }, { x: 445, y: 610 },
+        { x: 550, y: 610 }, { x: 650, y: 610 }, { x: 755, y: 610 },
+      ]),
+      simpleStroke("lift, then draw 玉's middle horizontal left to right", [
+        { x: 270, y: 405 }, { x: 420, y: 405 }, { x: 575, y: 405 },
+        { x: 730, y: 405 },
+      ]),
+      simpleStroke("lift, then draw 玉's central vertical from top to bottom", [
+        { x: 495, y: 600 }, { x: 495, y: 500 }, { x: 495, y: 400 },
+        { x: 495, y: 290 }, { x: 495, y: 180 },
+      ]),
+      simpleStroke("lift, then draw 玉's bottom horizontal left to right", [
+        { x: 230, y: 180 }, { x: 365, y: 180 }, { x: 500, y: 180 },
+        { x: 640, y: 180 }, { x: 775, y: 180 },
+      ]),
+      simpleStroke("lift, then add 玉's short dot down and right", [
+        { x: 625, y: 330 }, { x: 665, y: 290 }, { x: 705, y: 250 },
+      ]),
+      simpleStroke("lift, then close the outer frame along the bottom left to right", [
+        { x: 125, y: 10 }, { x: 310, y: 10 }, { x: 500, y: 10 },
+        { x: 690, y: 10 }, { x: 875, y: 10 },
+      ]),
+    ],
+    source: chineseCharacterSource("国"),
+  },
   // The four-frame Commons sequence writes the complete left body in one
   // continuous run, lifts for the middle shoulder, descends the right stem,
   // then closes with the short shirorekha: four strokes and three lifts.
