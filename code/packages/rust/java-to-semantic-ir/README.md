@@ -4,7 +4,7 @@ Java CST → narrow-waist Semantic IR. The first frontend for
 [SIR29](../../../specs/SIR29-nominal-static-oop-profile.md), the
 nominal/static-dispatch OOP profile extension of the SIR10 narrow-waist IR.
 See [JV02](../../../specs/JV02-java-to-semantic-ir.md) for this frontend's
-full milestone plan (M0 + M1 + M2a + M2b + M3a + M3b + M4a + M4b + M4c + M4d here, through M9; plus standalone tasks #54, wiring `Expr::IndirectCall`, and #64, `break`/`continue` support).
+full milestone plan (M0 + M1 + M2a + M2b + M3a + M3b + M4a + M4b + M4c + M4d here, through M9; plus standalone tasks #54, wiring `Expr::IndirectCall`, #64, `break`/`continue` support, and #59, compound-assignment/increment-decrement on an indexed array target).
 
 ## Where this fits
 
@@ -34,7 +34,7 @@ let module = compile_source(
 )?;
 ```
 
-## Scope (v0.12.0 — JV02 milestones M0 + M1 + M2a + M2b + M3a + M3b + M4a + M4b + M4c + M4d, plus tasks #54 and #64)
+## Scope (v0.13.0 — JV02 milestones M0 + M1 + M2a + M2b + M3a + M3b + M4a + M4b + M4c + M4d, plus tasks #54, #64, and #59)
 
 Java requires an explicit `class`/`main`-method wrapper at the source level
 (unlike Ruby/Python/JS, which allow bare top-level statements) — this crate
@@ -111,10 +111,17 @@ target (unchanged since M1) and an indexed target (new) are distinguished
 before either is lowered (M4b) — **narrowed during implementation**,
 mirroring the earlier M2→M2a/M2b and M3→M3a/M3b splits: compound
 assignment and increment/decrement on an indexed target (`xs[i] += v;`,
-`xs[i]++;`) remain deferred, since naively lowering either would evaluate
-the index expression twice (once to read, once to write), silently
-double-evaluating any side effect a non-constant index expression carries
-(now its own tracked follow-up task, separate from M4c). `new`-based
+`xs[i]++;`) were deferred at the time, since naively lowering either
+would evaluate `seq`/the index twice (once to read, once to write),
+silently double-evaluating any side effect a non-constant index
+expression carries — **resolved as task #59**: both bind `seq`/the index
+into fresh, once-only-evaluated local temps (`Lowerer::fresh_temp_name`)
+inside a synthetic `Expr::Block`, the same "run this once, then reference
+it more than once" shape the do-while/classic-`for` desugarings below
+already use, then read and write through those temps' own `VarRef`s.
+Plain indexed assignment (`xs[i] = v;`) is unaffected — it only ever
+evaluates `seq`/the index once already, so it still emits a bare
+`Stmt::SeqSet` directly. `new`-based
 array-creation expressions lower via two shapes (M4c): `new int[]{1, 2,
 3}` delegates straight to the same array-literal lowering M4a already
 built (semantically identical, just `new`-prefixed with an
@@ -210,7 +217,9 @@ no functional-interface declarations exist yet), calling a lambda-valued
 parameter of a functional-interface type at all, so this is a boundary of
 what's expressible, not a gap in invocation itself), `var`-inferred multi-
 dimensional array literals, multi-dimensional `new` array-creation forms,
-compound-assignment/increment-decrement on an indexed target, a
+a *chained* indexed-assignment target (`grid[i][j] = v;` — compound-
+assignment/increment-decrement on a single-suffix indexed target is
+supported as of task #59, see above), a
 non-constant or reference-typed `new T[N]`, List/Map collection literals,
 the array/String method-call surface beyond `.length`, field access
 other than an array's own `.length`, casts, `instanceof`, the ternary
@@ -247,9 +256,13 @@ JV02 spec's milestone table for what comes next.
   own indexed-assignment shapes (plain assignment with a constant and a
   variable index, inside a classic `for` loop's own update clause, on a
   `String` array, `Feature::Sequences` re-declaration, index/value kind-
-  mismatch rejection, a plain-name assignment regression check alongside
-  the new indexed path, and the still-deferred compound-assignment/
-  increment-decrement-on-an-indexed-target rejections), and M4c's own
+  mismatch rejection, and a plain-name assignment regression check
+  alongside the new indexed path), task #59's own compound-assignment/
+  increment-decrement-on-an-indexed-target shapes (once-only-evaluation
+  temp-binding shape locked in for both, every `+= -= *= /= %=` operator,
+  prefix/postfix incdec, bitwise-compound-assignment rejection, non-
+  numeric-element rejection, and distinct temp names across sibling
+  statements), and M4c's own
   `new`-array-creation shapes (sized creation for every numeric/boolean
   element kind including a zero-length array, allocate-then-fill-by-index
   alongside M4b's own indexed assignment, negative-size and size-cap

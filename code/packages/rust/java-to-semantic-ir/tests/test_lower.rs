@@ -2993,15 +2993,194 @@ fn field_target_assignment_remains_unsupported() {
 }
 
 #[test]
-fn compound_assignment_on_an_indexed_target_is_still_deferred() {
-    let err = compile_source(&wrap("int[] xs = {1, 2, 3}; xs[0] += 1;"), "prog").unwrap_err();
-    assert!(!err.message.is_empty());
+fn compound_assignment_on_an_indexed_target_lowers_via_once_only_temp_bindings() {
+    // Regression test for the double-evaluation hazard
+    // `lower_indexed_assignment`'s own doc comment used to defer this
+    // exact case over: `xs[i] += v;` reads the current element *and*
+    // writes it back, so `xs` and `i` must each be evaluated exactly
+    // once, not once per read/write use. Locks in the fix's shape: a
+    // synthetic `Expr::Block` binds `seq`/the index into fresh temps
+    // once, then both the read (inside the `+` call) and the write (the
+    // `SeqSet`) go through those temps' own `VarRef`s -- never the
+    // original `xs`/`0` expressions embedded a second time.
+    let m = compile_ok(&wrap("int[] xs = {1, 2, 3}; xs[0] += 10;"));
+    match &main_fn(&m).body.stmts[1] {
+        Stmt::ExprStmt {
+            expr: Expr::Block(block),
+            ..
+        } => {
+            assert_eq!(
+                block.stmts.len(),
+                3,
+                "expected [seq temp binding, index temp binding, SeqSet]"
+            );
+            let seq_tmp = match &block.stmts[0] {
+                Stmt::LetStarBinding {
+                    name,
+                    value: Expr::VarRef { name: src, .. },
+                    ..
+                } => {
+                    assert_eq!(src, "xs");
+                    name.clone()
+                }
+                other => panic!("expected LetStarBinding(VarRef(\"xs\")), got {other:?}"),
+            };
+            let idx_tmp = match &block.stmts[1] {
+                Stmt::LetStarBinding {
+                    name,
+                    value: Expr::IntLit { value: 0, .. },
+                    ..
+                } => name.clone(),
+                other => panic!("expected LetStarBinding(IntLit(0)), got {other:?}"),
+            };
+            assert_ne!(seq_tmp, idx_tmp);
+            match &block.stmts[2] {
+                Stmt::SeqSet {
+                    seq: Expr::VarRef { name: seq_name, .. },
+                    index: Expr::VarRef { name: idx_name, .. },
+                    value: Expr::BuiltinCall { name: op, args, .. },
+                    ..
+                } => {
+                    assert_eq!(seq_name, &seq_tmp);
+                    assert_eq!(idx_name, &idx_tmp);
+                    assert_eq!(op, "+");
+                    match &args[0] {
+                        Expr::SeqIndex { seq, index, .. } => {
+                            assert!(matches!(seq.as_ref(), Expr::VarRef { name, .. } if name == &seq_tmp));
+                            assert!(matches!(index.as_ref(), Expr::VarRef { name, .. } if name == &idx_tmp));
+                        }
+                        other => panic!("expected SeqIndex(seq_tmp, idx_tmp) as lhs, got {other:?}"),
+                    }
+                    assert!(matches!(args[1], Expr::IntLit { value: 10, .. }));
+                }
+                other => panic!("expected SeqSet(seq_tmp, idx_tmp, BuiltinCall(\"+\", ...)), got {other:?}"),
+            }
+        }
+        other => panic!("expected ExprStmt(Block), got {other:?}"),
+    }
 }
 
 #[test]
-fn increment_of_an_indexed_target_is_still_deferred() {
-    let err = compile_source(&wrap("int[] xs = {1, 2, 3}; xs[0]++;"), "prog").unwrap_err();
-    assert!(!err.message.is_empty());
+fn compound_assignment_operators_all_select_the_right_builtin_on_an_indexed_target() {
+    // `/=` on two `int` operands selects `div_trunc`, not a bare `/`,
+    // matching `combine_multiplicative`'s own SIR21 T3b-2 op-name
+    // convention (Java truncates integer division toward zero).
+    for (op, builtin) in [("+=", "+"), ("-=", "-"), ("*=", "*"), ("/=", "div_trunc"), ("%=", "%")] {
+        let m = compile_ok(&wrap(&format!("int[] xs = {{1, 2, 3}}; xs[0] {op} 2;")));
+        match &main_fn(&m).body.stmts[1] {
+            Stmt::ExprStmt {
+                expr: Expr::Block(block),
+                ..
+            } => match &block.stmts[2] {
+                Stmt::SeqSet {
+                    value: Expr::BuiltinCall { name, .. },
+                    ..
+                } => assert_eq!(name, builtin, "operator `{op}` should select builtin `{builtin}`"),
+                other => panic!("expected SeqSet(BuiltinCall), got {other:?} for `{op}`"),
+            },
+            other => panic!("expected ExprStmt(Block), got {other:?} for `{op}`"),
+        }
+    }
+}
+
+#[test]
+fn bitwise_compound_assignment_on_an_indexed_target_is_still_unsupported() {
+    let err = compile_source(&wrap("int[] xs = {1, 2, 3}; xs[0] &= 1;"), "prog").unwrap_err();
+    assert!(
+        err.message.contains("unsupported assignment operator"),
+        "unexpected message: {}",
+        err.message
+    );
+}
+
+#[test]
+fn postfix_increment_of_an_indexed_target_lowers_via_once_only_temp_bindings() {
+    let m = compile_ok(&wrap("int[] xs = {1, 2, 3}; xs[0]++;"));
+    match &main_fn(&m).body.stmts[1] {
+        Stmt::ExprStmt {
+            expr: Expr::Block(block),
+            ..
+        } => {
+            assert_eq!(block.stmts.len(), 3);
+            match &block.stmts[2] {
+                Stmt::SeqSet {
+                    value: Expr::BuiltinCall { name: op, args, .. },
+                    ..
+                } => {
+                    assert_eq!(op, "+");
+                    assert!(matches!(args[1], Expr::IntLit { value: 1, .. }));
+                }
+                other => panic!("expected SeqSet(BuiltinCall(\"+\", ...)), got {other:?}"),
+            }
+        }
+        other => panic!("expected ExprStmt(Block), got {other:?}"),
+    }
+}
+
+#[test]
+fn prefix_decrement_of_an_indexed_target_lowers_to_subtraction() {
+    let m = compile_ok(&wrap("int[] xs = {1, 2, 3}; --xs[0];"));
+    match &main_fn(&m).body.stmts[1] {
+        Stmt::ExprStmt {
+            expr: Expr::Block(block),
+            ..
+        } => match &block.stmts[2] {
+            Stmt::SeqSet {
+                value: Expr::BuiltinCall { name: op, .. },
+                ..
+            } => assert_eq!(op, "-"),
+            other => panic!("expected SeqSet(BuiltinCall(\"-\", ...)), got {other:?}"),
+        },
+        other => panic!("expected ExprStmt(Block), got {other:?}"),
+    }
+}
+
+#[test]
+fn increment_of_a_non_numeric_indexed_target_is_rejected() {
+    let err = compile_source(
+        &wrap("String[] ss = {\"a\", \"b\"}; ss[0]++;"),
+        "prog",
+    )
+    .unwrap_err();
+    assert!(
+        err.message.contains("numeric"),
+        "unexpected message: {}",
+        err.message
+    );
+}
+
+#[test]
+fn each_indexed_compound_assignment_in_a_method_gets_distinct_temp_names() {
+    // `fresh_temp_name`'s own counter must keep advancing across sibling
+    // statements in the same method body, the same way `do_while_counter`
+    // does across sibling do-while loops -- otherwise a second `xs[i] +=
+    // v;` in the same method would shadow the first statement's own
+    // still-in-scope-at-the-frontend-level temp names (harmless at
+    // runtime since each lives in its own synthetic block, but a good
+    // uniqueness invariant to lock in regardless).
+    let m = compile_ok(&wrap("int[] xs = {1, 2, 3}; xs[0] += 1; xs[1] += 1;"));
+    let names_of = |stmt: &Stmt| -> (String, String) {
+        match stmt {
+            Stmt::ExprStmt {
+                expr: Expr::Block(block),
+                ..
+            } => {
+                let seq_name = match &block.stmts[0] {
+                    Stmt::LetStarBinding { name, .. } => name.clone(),
+                    other => panic!("expected LetStarBinding, got {other:?}"),
+                };
+                let idx_name = match &block.stmts[1] {
+                    Stmt::LetStarBinding { name, .. } => name.clone(),
+                    other => panic!("expected LetStarBinding, got {other:?}"),
+                };
+                (seq_name, idx_name)
+            }
+            other => panic!("expected ExprStmt(Block), got {other:?}"),
+        }
+    };
+    let first = names_of(&main_fn(&m).body.stmts[1]);
+    let second = names_of(&main_fn(&m).body.stmts[2]);
+    assert_ne!(first, second);
 }
 
 // ── M4c: new-based array-creation expressions ───────────────────────────

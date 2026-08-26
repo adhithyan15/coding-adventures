@@ -2,6 +2,52 @@
 
 All notable changes to the `java-to-semantic-ir` crate will be documented in this file.
 
+## [0.13.0] - 2026-08-26
+
+### Added
+
+- Task #59: compound-assignment and increment/decrement on an *indexed*
+  array target (`xs[i] += v;`, `xs[i] -= v;`, `xs[i] *= v;`, `xs[i] /= v;`,
+  `xs[i] %= v;`, `xs[i]++;`, `xs[i]--;`, `++xs[i];`, `--xs[i];`). Closes
+  the gap M4b's own scope narrowing split off — see
+  [JV02](../../../specs/JV02-java-to-semantic-ir.md)'s M4b entry for the
+  full history.
+- **The double-evaluation hazard that gap was deferred over is fixed with
+  a temp-variable-hoisting design**, not a "narrow enough to skip"
+  argument: a compound assignment/increment/decrement on an indexed
+  target both *reads* the current element and *writes* it back, so the
+  target's `seq` expression and its index expression must each be
+  evaluated exactly once — not once per read/write use. Naively lowering
+  either directly (or even cloning the already-lowered `Expr` and
+  embedding it twice) would make the *emitted* target-language code
+  evaluate a non-constant index expression (e.g. `xs[next()] += v;`)
+  twice, silently double-evaluating any side effect it carries — the same
+  class of bug this crate's own `/security-review` history has caught
+  before in the do-while and for-update desugarings (see `[0.3.0]`/
+  `[0.4.0]` below). Fixed the same way those desugarings fix it: `seq`/
+  the index are bound into two fresh, collision-checked local temps
+  (`Lowerer::fresh_temp_name`, mirroring `do_while_counter`'s own
+  monotonic-uniqueness role) via `LetStarBinding`s, then read and written
+  through those temps' own `VarRef`s — wrapped in one synthetic
+  `Expr::Block` (`lower_indexed_compound_assignment`/
+  `lower_indexed_incdec`), matching `lower_do_while_statement`/
+  `lower_for_statement`'s own established "run this once, then reference
+  it more than once" shape.
+- Plain indexed assignment (`xs[i] = v;`, M4b) is **unchanged** — it only
+  ever evaluates `seq`/the index once already (no separate read side), so
+  it keeps emitting a bare `Stmt::SeqSet` directly; the temp-hoisting
+  detour applies only to the new compound-assignment/increment-decrement
+  path.
+- Only `+= -= *= /= %=` are supported on an indexed target, matching the
+  bare-name compound-assignment path's own operator set exactly (see M2a)
+  — the bitwise compound-assignment operators (`&= |= ^= <<= >>= >>>=`)
+  remain rejected with the same "unsupported assignment operator ...
+  (deferred to a later JV02 milestone)" message the bare-name path
+  already gives.
+- Incrementing/decrementing a non-numeric indexed element (e.g. a
+  `String[]`) is rejected with a clear "requires a numeric array element"
+  error, mirroring the bare-name incdec path's own numeric-operand check.
+
 ## [0.12.0] - 2026-08-26
 
 ### Added

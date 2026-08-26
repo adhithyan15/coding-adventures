@@ -168,16 +168,18 @@
 //!   existing "reject rather than mis-lower" catch-all, unchanged.
 //! - **Narrowed during implementation, mirroring the M2→M2a/M2b and
 //!   M3→M3a/M3b splits**: compound assignment or increment/decrement on
-//!   an indexed target (`xs[i] += v;`, `xs[i]++;`) is *not* supported this
-//!   milestone, deferred instead — naively lowering it would evaluate the
-//!   index expression twice (once to read the current element, once to
-//!   write the new one), silently double-evaluating any side effect a
-//!   non-constant index expression carries (e.g. a method call as the
-//!   index). This is exactly the kind of double-evaluation bug this
-//!   crate's own `/security-review` history has caught before (see
-//!   `CHANGELOG.md`'s do-while/for-update entries) — deferred rather than
-//!   risking it, tracked as its own follow-up task rather than shipped
-//!   unsound.
+//!   an indexed target (`xs[i] += v;`, `xs[i]++;`) was *not* supported
+//!   this milestone, deferred instead — naively lowering it would
+//!   evaluate the index expression twice (once to read the current
+//!   element, once to write the new one), silently double-evaluating any
+//!   side effect a non-constant index expression carries (e.g. a method
+//!   call as the index). This is exactly the kind of double-evaluation
+//!   bug this crate's own `/security-review` history has caught before
+//!   (see `CHANGELOG.md`'s do-while/for-update entries) — deferred rather
+//!   than risking it, tracked as its own follow-up task rather than
+//!   shipped unsound. **Resolved as task #59** — see
+//!   `lower_indexed_compound_assignment`/`lower_indexed_incdec`'s own doc
+//!   comments for the once-only-evaluation fix.
 //!
 //! **Supported (M4c, new):**
 //! - `new` array-creation expressions, both grammar shapes (confirmed via
@@ -241,9 +243,10 @@
 //!   A *chained* assignment target (`grid[i][j] = v;`) is **not**
 //!   reachable at all — `indexed_assign_target`'s own fixed single-suffix
 //!   match arm doesn't recognize a multi-suffix lvalue, so it falls
-//!   through to the pre-existing bare-name-only rejection, deferred
-//!   alongside compound-assignment/increment-decrement on an indexed
-//!   target.
+//!   through to the pre-existing bare-name-only rejection, still
+//!   deferred (a separate, still-open gap from compound-assignment/
+//!   increment-decrement on a *single*-suffix indexed target, resolved
+//!   as task #59).
 //!
 //! **Supported (task #54, new):**
 //! - *Invoking* a lambda-valued local or parameter (`var f = (int x) ->
@@ -294,8 +297,9 @@
 //! creation forms (`new
 //! int[2][3]`, `new int[][]{{1,2}}` — M4c's own two shapes stay
 //! single-dimension only), a *chained* indexed-assignment target
-//! (`grid[i][j] = v;`) and compound-assignment/increment-decrement on an
-//! indexed target (see M4b's own entry above for why), a mixed index-
+//! (`grid[i][j] = v;` — a single-suffix indexed target's own compound-
+//! assignment/increment-decrement, `xs[i] += v;`/`xs[i]++;`, is
+//! supported as of task #59, see that entry above), a mixed index-
 //! then-`.`/`(` primary-suffix chain (`grid[i].length`, `grid[i].foo()`
 //! — see M4d's own entry above for why), `var`-inferred multi-
 //! dimensional array literals, a non-constant or reference-typed
@@ -693,6 +697,14 @@ struct Lowerer {
     /// signature up here once `resolve_name` reports it resolved to a
     /// `Closure`-kinded local rather than a real top-level method name.
     closure_signatures: Vec<MethodSig>,
+    /// Counter for the synthetic `__idx_seq_N`/`__idx_at_N` temp-variable
+    /// pair each compound-assignment or increment/decrement on an
+    /// *indexed* target lowers to (`xs[i] += v;`, `xs[i]++;`) — see
+    /// `lower_indexed_compound_assignment`/`lower_indexed_incdec`'s own
+    /// doc comments for why the temps exist at all. Mirrors
+    /// `do_while_counter`'s monotonic-uniqueness role, just for a
+    /// different synthetic name; never consulted by name lookup.
+    indexed_temp_counter: usize,
 }
 
 /// A method's call-site-relevant signature: what `lower_call_expression`
@@ -753,6 +765,31 @@ impl Lowerer {
             lambda_counter: 0,
             synthesized_functions: Vec::new(),
             closure_signatures: Vec::new(),
+            indexed_temp_counter: 0,
+        }
+    }
+
+    /// Pick a synthetic local name of the form `{prefix}_{N}` guaranteed
+    /// not to collide with any name currently in scope — used by
+    /// `lower_indexed_compound_assignment`/`lower_indexed_incdec` to name
+    /// the temp bindings that hold an indexed target's `seq`/index
+    /// expressions, evaluated exactly once. Simpler than `fresh_flag_name`
+    /// (no `DeclaredNameCollector` scan of a `body`): those temps live
+    /// only inside a synthetic `Expr::Block` this crate builds itself,
+    /// containing nothing but the `LetStarBinding`s and the one `SeqSet`
+    /// it constructs — there is no arbitrary user-authored body for a
+    /// later declaration to shadow the name from within, unlike the
+    /// do-while flag (which shares scope with the loop body itself). Only
+    /// ambient-scope collision (an already-in-scope real local happening
+    /// to share the candidate name) is possible, so a single
+    /// `lookup_local_with_frame` check is enough.
+    fn fresh_temp_name(&mut self, prefix: &str) -> String {
+        loop {
+            let candidate = format!("{prefix}_{}", self.indexed_temp_counter);
+            self.indexed_temp_counter += 1;
+            if self.lookup_local_with_frame(&candidate).is_none() {
+                return candidate;
+            }
         }
     }
 
@@ -2741,13 +2778,12 @@ impl Lowerer {
                         self.err_at(op_node, "malformed assignment operator".to_string())
                     })?;
                 if let Some((primary, suffix)) = self.indexed_assign_target(lvalue_node, 0)? {
-                    if op_tok.value != "=" {
-                        return Err(self.err_at(
-                            op_node,
-                            "compound assignment on an indexed target (`xs[i] += ...`) is not supported yet (deferred to a later JV02 milestone)".to_string(),
-                        ));
+                    if op_tok.value == "=" {
+                        return self.lower_indexed_assignment(primary, suffix, rhs_node, inner);
                     }
-                    return self.lower_indexed_assignment(primary, suffix, rhs_node, inner);
+                    return self.lower_indexed_compound_assignment(
+                        primary, suffix, op_tok, op_node, rhs_node, inner,
+                    );
                 }
                 let name = self.extract_bare_name(lvalue_node, 0)?;
                 let (declared_kind, declared_scope) =
@@ -2824,6 +2860,9 @@ impl Lowerer {
             }
         }
         if let Some((target_node, op)) = self.bare_incdec_target(inner, 0)? {
+            if let Some((primary, suffix)) = self.indexed_assign_target(target_node, 0)? {
+                return self.lower_indexed_incdec(primary, suffix, op, inner);
+            }
             let name = self.extract_bare_name(target_node, 0)?;
             let (declared_kind, declared_scope) = self.resolve_name(&name).ok_or_else(|| {
                 self.err_at(
@@ -2948,11 +2987,12 @@ impl Lowerer {
     /// `primary`, requiring it to be a bare `NAME` — `foo.bar = x` and any
     /// other non-simple target remain out of scope (rejected here rather
     /// than mis-lowered). Reached only after `indexed_assign_target` (M4b)
-    /// has already ruled out the one other supported target shape
-    /// (`xs[i] = v`) — this function's own error message covers every
-    /// other unsupported case: field targets, and compound-assignment/
-    /// increment-decrement on an *indexed* target (deferred; see
-    /// `lower_expr_statement`'s own `"="`-only check on the indexed path).
+    /// has already ruled out the other supported target shape (`xs[i] =
+    /// v`, `xs[i] += v`, `xs[i]++` — every assignment/incdec operator, not
+    /// just `"="`, since task #59 resolved compound-assignment/increment-
+    /// decrement on an indexed target too) — this function's own error
+    /// message covers every genuinely unsupported case: field targets and
+    /// other qualified targets.
     fn extract_bare_name(
         &self,
         node: &GrammarASTNode,
@@ -2969,7 +3009,7 @@ impl Lowerer {
                 [ASTNodeOrToken::Token(t)] if t.type_ == lexer::token::TokenType::Name => Ok(t.value.clone()),
                 _ => Err(self.err_at(
                     node,
-                    "assignment target must be a simple local variable or a plain indexed array element (`xs[i] = v`) -- field targets, and compound-assignment/increment-decrement on an indexed target, are not supported yet".to_string(),
+                    "assignment target must be a simple local variable or an indexed array element (`xs[i] = v`, `xs[i] += v`, `xs[i]++`) -- field targets and other qualified targets are not supported yet".to_string(),
                 )),
             };
         }
@@ -2977,7 +3017,7 @@ impl Lowerer {
             [ASTNodeOrToken::Node(only)] => self.extract_bare_name(only, depth + 1),
             _ => Err(self.err_at(
                 node,
-                "assignment target must be a simple local variable or a plain indexed array element (`xs[i] = v`) -- field targets, and compound-assignment/increment-decrement on an indexed target, are not supported yet".to_string(),
+                "assignment target must be a simple local variable or an indexed array element (`xs[i] = v`, `xs[i] += v`, `xs[i]++`) -- field targets and other qualified targets are not supported yet".to_string(),
             )),
         }
     }
@@ -3081,6 +3121,219 @@ impl Lowerer {
             seq,
             index,
             value,
+            span,
+        })
+    }
+
+    /// Lower `xs[i] += v;`/`xs[i] -= v;`/etc. (a compound-assignment
+    /// operator on an indexed target) — closes the gap
+    /// `lower_indexed_assignment`'s own doc comment names as deferred: a
+    /// compound assignment reads the current element (`xs[i]`) *and*
+    /// writes it back, so `primary` and the index expression must each be
+    /// evaluated exactly **once**, not once per read/write use — naively
+    /// re-lowering (or even cloning the already-lowered `Expr` and
+    /// embedding it twice) would make the *emitted* target-language code
+    /// evaluate a non-constant index expression (e.g. `xs[next()] +=
+    /// v;`) twice, silently double-evaluating any side effect it carries.
+    /// Fixed the same way `lower_do_while_statement`/
+    /// `lower_for_statement`'s own synthetic control-flow state does:
+    /// bind `seq`/the index into two fresh, unforgeable-by-collision
+    /// local temps (`fresh_temp_name`) *once*, then read and write
+    /// through those temps' own `VarRef`s — wrapped in one synthetic
+    /// `Expr::Block` (matching that same established pattern) so this
+    /// still returns exactly one `Stmt` to `lower_expr_statement`'s
+    /// caller.
+    ///
+    /// `op_tok`/`op_node` are the already-matched assignment-operator
+    /// token/node from `lower_expr_statement`'s own dispatch — reused
+    /// here rather than re-extracted. Only `+= -= *= /= %=` are
+    /// supported, mirroring the plain-name compound-assignment path's own
+    /// operator set exactly (`&= |= ^= <<= >>= >>>=` fall through to the
+    /// same "deferred" rejection that path already gives).
+    fn lower_indexed_compound_assignment(
+        &mut self,
+        primary: &GrammarASTNode,
+        suffix: &GrammarASTNode,
+        op_tok: &lexer::token::Token,
+        op_node: &GrammarASTNode,
+        rhs: &GrammarASTNode,
+        context: &GrammarASTNode,
+    ) -> Result<Stmt, JavaLowerError> {
+        let (seq_expr, seq_kind) = self.lower_expr(primary, 0)?;
+        let result_kind = seq_kind.index_once().ok_or_else(|| {
+            self.err_at(
+                primary,
+                "indexed assignment (`[...] = ...`) is only supported on an array-typed value"
+                    .to_string(),
+            )
+        })?;
+        let index_node = self
+            .first_child_named(suffix, "expression")
+            .ok_or_else(|| self.err_at(suffix, "malformed array index".to_string()))?;
+        let (index_expr, index_kind) = self.lower_expr(index_node, 0)?;
+        if index_kind != Kind::Int {
+            return Err(self.err_at(index_node, "an array index must be an `int`".to_string()));
+        }
+        let (rhs_expr, rhs_kind) = self.lower_expr(rhs, 0)?;
+        let op_char = match op_tok.value.as_str() {
+            "+=" | "-=" | "*=" | "/=" | "%=" => {
+                op_tok.value.chars().next().expect("non-empty operator token")
+            }
+            other => {
+                return Err(self.err_at(
+                    op_node,
+                    format!("unsupported assignment operator `{other}` (deferred to a later JV02 milestone)"),
+                ))
+            }
+        };
+        let span = self.span_of(context);
+        let seq_tmp = self.fresh_temp_name("__idx_seq");
+        let idx_tmp = self.fresh_temp_name("__idx_at");
+        let let_seq = Stmt::LetStarBinding {
+            name: seq_tmp.clone(),
+            sir_type: None,
+            value: seq_expr,
+            span: span.clone(),
+        };
+        let let_idx = Stmt::LetStarBinding {
+            name: idx_tmp.clone(),
+            sir_type: None,
+            value: index_expr,
+            span: span.clone(),
+        };
+        let seq_ref = Expr::VarRef {
+            name: seq_tmp,
+            scope: Scope::Local,
+            span: span.clone(),
+        };
+        let idx_ref = Expr::VarRef {
+            name: idx_tmp,
+            scope: Scope::Local,
+            span: span.clone(),
+        };
+        let lhs_read = Expr::SeqIndex {
+            seq: Box::new(seq_ref.clone()),
+            index: Box::new(idx_ref.clone()),
+            span: span.clone(),
+        };
+        let value = match op_char {
+            '+' | '-' => {
+                self.combine_additive(lhs_read, result_kind, rhs_expr, rhs_kind, op_char, op_node)?.0
+            }
+            '*' | '/' | '%' => {
+                self.combine_multiplicative(lhs_read, result_kind, rhs_expr, rhs_kind, op_char, op_node)?.0
+            }
+            _ => unreachable!("compound assignment operator token was matched but its leading char isn't one of + - * / %"),
+        };
+        let seqset = Stmt::SeqSet {
+            seq: seq_ref,
+            index: idx_ref,
+            value,
+            span: span.clone(),
+        };
+        self.observed.add(Feature::Sequences);
+        Ok(Stmt::ExprStmt {
+            expr: Expr::Block(Box::new(Block {
+                stmts: vec![let_seq, let_idx, seqset],
+                value: Expr::NilLit { span: span.clone() },
+                span: span.clone(),
+            })),
+            span,
+        })
+    }
+
+    /// Lower `xs[i]++;`/`xs[i]--;`/`++xs[i];`/`--xs[i];` (increment or
+    /// decrement on an indexed target) — the other half of the gap
+    /// `lower_indexed_assignment`'s own doc comment names as deferred.
+    /// Desugars to `xs[i] += 1;`/`xs[i] -= 1;` exactly like the bare-name
+    /// incdec path already does (see `lower_expr_statement`'s own
+    /// handling just above), reusing the identical once-only-evaluation
+    /// temp-binding shape `lower_indexed_compound_assignment` uses, for
+    /// the identical reason (a non-constant index expression, e.g.
+    /// `xs[next()]++;`, must not be evaluated twice).
+    fn lower_indexed_incdec(
+        &mut self,
+        primary: &GrammarASTNode,
+        suffix: &GrammarASTNode,
+        op: char,
+        context: &GrammarASTNode,
+    ) -> Result<Stmt, JavaLowerError> {
+        let (seq_expr, seq_kind) = self.lower_expr(primary, 0)?;
+        let result_kind = seq_kind.index_once().ok_or_else(|| {
+            self.err_at(
+                primary,
+                "indexing (`[...]`) is only supported on an array-typed value".to_string(),
+            )
+        })?;
+        if !matches!(result_kind, Kind::Int | Kind::Float) {
+            return Err(self.err_at(
+                suffix,
+                format!("`{op}{op}` requires a numeric array element"),
+            ));
+        }
+        let index_node = self
+            .first_child_named(suffix, "expression")
+            .ok_or_else(|| self.err_at(suffix, "malformed array index".to_string()))?;
+        let (index_expr, index_kind) = self.lower_expr(index_node, 0)?;
+        if index_kind != Kind::Int {
+            return Err(self.err_at(index_node, "an array index must be an `int`".to_string()));
+        }
+        let span = self.span_of(context);
+        let seq_tmp = self.fresh_temp_name("__idx_seq");
+        let idx_tmp = self.fresh_temp_name("__idx_at");
+        let let_seq = Stmt::LetStarBinding {
+            name: seq_tmp.clone(),
+            sir_type: None,
+            value: seq_expr,
+            span: span.clone(),
+        };
+        let let_idx = Stmt::LetStarBinding {
+            name: idx_tmp.clone(),
+            sir_type: None,
+            value: index_expr,
+            span: span.clone(),
+        };
+        let seq_ref = Expr::VarRef {
+            name: seq_tmp,
+            scope: Scope::Local,
+            span: span.clone(),
+        };
+        let idx_ref = Expr::VarRef {
+            name: idx_tmp,
+            scope: Scope::Local,
+            span: span.clone(),
+        };
+        let lhs_read = Expr::SeqIndex {
+            seq: Box::new(seq_ref.clone()),
+            index: Box::new(idx_ref.clone()),
+            span: span.clone(),
+        };
+        let one = if result_kind == Kind::Float {
+            Expr::FloatLit {
+                value: 1.0,
+                span: span.clone(),
+            }
+        } else {
+            Expr::IntLit {
+                value: 1,
+                span: span.clone(),
+            }
+        };
+        let (value, _) =
+            self.combine_additive(lhs_read, result_kind, one, result_kind, op, context)?;
+        let seqset = Stmt::SeqSet {
+            seq: seq_ref,
+            index: idx_ref,
+            value,
+            span: span.clone(),
+        };
+        self.observed.add(Feature::Sequences);
+        Ok(Stmt::ExprStmt {
+            expr: Expr::Block(Box::new(Block {
+                stmts: vec![let_seq, let_idx, seqset],
+                value: Expr::NilLit { span: span.clone() },
+                span: span.clone(),
+            })),
             span,
         })
     }
