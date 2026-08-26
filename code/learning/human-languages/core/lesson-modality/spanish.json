@@ -7,7 +7,7 @@
   "policy": {
     "maxLinearisableTableColumns": 3
   },
-  "sourceHash": "fnv1a64:0c5d906e8dc840a6",
+  "sourceHash": "fnv1a64:636a4530b9f05917",
   "summary": {
     "totalLessons": 966,
     "voice": 912,
@@ -23863,7 +23863,7 @@
         "no-visual-dependency"
       ],
       "coreDrivable": true,
-      "sourceHash": "fnv1a64:494e959fabd8b1ab"
+      "sourceHash": "fnv1a64:261db96ed753cde3"
     },
     {
       "id": "ES-C378-edificio",

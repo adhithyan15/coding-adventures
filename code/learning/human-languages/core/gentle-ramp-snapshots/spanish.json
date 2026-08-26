@@ -3,7 +3,7 @@
   "lessonCount": 966,
   "atomMeasurableLessons": 962,
   "atomMeasurementBlindLessons": 4,
-  "durationViolations": 1,
+  "durationViolations": 0,
   "atomLessonSpikes": 0,
   "atomChapterSpikes": 0,
   "glyphLessonSpikes": 0,
@@ -30,13 +30,6 @@
   "firstWritingPracticeAt": 1,
   "lessonsBeforeWritingPractice": 1,
   "findings": [
-    {
-      "language": "spanish",
-      "kind": "duration",
-      "count": 1,
-      "unit": "lesson(s)",
-      "detail": "split lessons whose effective duration exceeds the five-minute maximum"
-    },
     {
       "language": "spanish",
       "kind": "forward-language",
@@ -75,9 +68,9 @@
   ],
   "next": {
     "language": "spanish",
-    "kind": "duration",
-    "count": 1,
-    "unit": "lesson(s)",
-    "detail": "split lessons whose effective duration exceeds the five-minute maximum"
+    "kind": "forward-language",
+    "count": 341,
+    "unit": "use(s)",
+    "detail": "teach target-language material before load-bearing use"
   }
 }

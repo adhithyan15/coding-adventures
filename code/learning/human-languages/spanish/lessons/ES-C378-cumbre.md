@@ -52,7 +52,7 @@ reviews_of: [ES-C378-prado, ES-C378-volcan]
 
 **la cumbre** — "summit."
 
-Latin **culmen** was the **ridge of a roof** — the beam along the very top,
+Latin **culmen** was the **ridge of a roof** -- the beam along the very top,
 where the two slopes meet. The mountain came later.
 
 Spanish still had the old sense well into the Middle Ages. Berceo, writing
@@ -66,33 +66,27 @@ hold the wreckage together:
 - *nominem* → **nombre**;
 - *culminem* → **cumbre**.
 
-Only the first of those three is real Latin. *Nomen* and *culmen* are neuter
-nouns, and a neuter accusative is the same as its nominative -- so Latin had
-*nomen* and *culmen*, full stop. *Nominem* and *culminem* are **reconstructed**:
-forms nobody ever wrote down, remade later by analogy with words like
-*hominem*, which is real. Dictionaries print a star in front of a form like
-that to say exactly this.
+Only the first of those is real Latin. *Nomen* and *culmen* are neuter, and a
+neuter accusative matches its nominative -- so Latin had *nomen* and *culmen*,
+full stop. The other two are **reconstructed**, remade later by analogy with
+*hominem*. A dictionary prints a star in front of a form like that to say that
+nobody ever wrote it down.
 
-The vowel, on the other hand, misbehaves. Latin *culmen* had a **short u**,
-and a short u normally comes out as *o* in Spanish — *lupum* gives *lobo*,
-*buccam* gives *boca*. By the ordinary route this word should be ***combre***.
-Corominas puts the blame on the *l*, which pulled the vowel upward and then
-vanished into it, the same thing that happened in *mucho* and *escuchar*.
-
-So do not use *cumbre* as your model for what a short u does.
+The vowel is irregular too. A short *u* normally lands as *o* in Spanish, so
+this word should have come out *combre*. Corominas blames the *l*, which
+pulled the vowel upward and then vanished into it. So do not use *cumbre* as
+your model for what a short *u* does.
 
 One last thing, because it is the opposite of what you would guess. The word
-closest to *culmen* is not English **culminate**, which is a late borrowing
-taken straight off *culmen* itself.
+closest to *culmen* is not English **culminate**, a late borrowing taken
+straight off *culmen* itself. It is Latin **columen** -- *culmen* is that word
+with its middle syllable squeezed out, one word in two states of compression.
 
-It is Latin **columen**. *Culmen* is that word with its middle syllable
-squeezed out -- the two are one word in two states of compression.
-
-Latin **columna**, the pillar, is built on the same root by a different route.
-That makes it a **cousin**, not a twin, and the difference is the whole point:
-a twin is one word in two shapes; a cousin is a separate word built from the
-same material. A roof ridge, a pillar and a mountaintop are all
-the thing that stands highest.
+Latin **columna**, the pillar, is built on the same root by a different route,
+which makes it a **cousin** rather than a twin. The difference is the point: a
+twin is one word in two shapes, a cousin is a separate word built from the
+same material. A roof ridge, a pillar and a mountaintop are all the thing that
+stands highest.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

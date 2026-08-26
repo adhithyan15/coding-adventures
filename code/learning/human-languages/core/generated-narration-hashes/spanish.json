@@ -5858,7 +5858,7 @@
     {
       "language": "spanish",
       "chapter": 378,
-      "sourceHash": "fnv1a64:d2ae0ba5f0fba6c4",
+      "sourceHash": "fnv1a64:6dbee9e5bddb8a3d",
       "lessonIds": [
         "ES-C378-selva",
         "ES-C378-prado",
@@ -5870,8 +5870,8 @@
       "drivablePrefix": 5,
       "text": "spanish/narration/ch378.txt",
       "json": "spanish/narration/ch378.json",
-      "textHash": "fnv1a64:efc31776ab7731fd",
-      "jsonHash": "fnv1a64:4b7ae852e6101f86"
+      "textHash": "fnv1a64:e67843d3e52c96bb",
+      "jsonHash": "fnv1a64:e97f5cb08abc1640"
     },
     {
       "language": "spanish",
