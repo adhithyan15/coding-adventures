@@ -1503,10 +1503,17 @@ impl WasmRuntime {
         // `+=`: unlike `total_is64_pages` (whose addends are already
         // capped at memory64's much smaller `2^48`-page validator ceiling,
         // so summing up to `MAX_MEMORIES` of them can never overflow
-        // `u64`), an `is64` table's `min` is validator-uncapped up to
-        // `u64::MAX` itself -- a plain `+=` here could wrap the running
-        // total back under the cap in a release build (`overflow-checks =
-        // false`) and silently defeat this exact check.
+        // `u64`), an `is64` table's own `min` is validator-uncapped up to
+        // `u64::MAX` -- a `+=` overflow here isn't independently
+        // exploitable today (any single addend large enough to wrap the
+        // running total is, by construction, ALSO large enough to trip
+        // `Table::new_with_is64`'s own per-table cap a few lines below,
+        // before any allocation happens), but `saturating_add` costs
+        // nothing and makes this aggregate check self-sufficient rather
+        // than silently relying on that other check to save it -- the
+        // same "don't let one check's correctness depend on a DIFFERENT
+        // check's cap value" reasoning the per-table cap's own
+        // `is64`-unconditional fix (below) already applies.
         let mut total_is64_table_elements: u64 = 0;
         for table_type in &module.tables {
             if table_type.is64 {
@@ -3116,12 +3123,19 @@ mod tests {
         assert!(err.to_string().contains("practical aggregate cap"), "{err}");
     }
 
-    /// Security review finding: the aggregate MUST use `saturating_add`,
-    /// not a plain `+=` -- an `is64` table's `min` is validator-uncapped up
-    /// to `u64::MAX`, so a naive sum of a `MAX_TABLE_ELEMENTS`-sized table
-    /// and a `u64::MAX` one would silently WRAP back under the cap in a
-    /// release build, defeating the aggregate check outright. This test
-    /// fails (module wrongly instantiates) without `saturating_add`.
+    /// Confirms the aggregate itself never wraps and reports the RIGHT
+    /// reason: a table whose own `min` (`u64::MAX`) already exceeds
+    /// `MAX_TABLE_ELEMENTS` is independently caught by
+    /// `Table::new_with_is64`'s own per-table cap regardless of how the
+    /// aggregate is summed, so a plain `+=` here wouldn't let this module
+    /// wrongly instantiate -- but it WOULD wrap the running total (`+=`
+    /// overflow on `u64::MAX` reads as a *release-mode* wraparound, not a
+    /// panic) and misreport the failure as the per-table cap instead of
+    /// the aggregate one, which is what this test's exact error-message
+    /// assertion actually catches. `saturating_add` is kept anyway so this
+    /// aggregate check is correct and self-sufficient on its own terms,
+    /// not dependent on the per-table check happening to catch every case
+    /// that could otherwise overflow it.
     #[test]
     fn test_instantiate_aggregate_cap_does_not_wrap_on_overflow() {
         let runtime = WasmRuntime::with_host(Box::new(LinkingTestHost));
