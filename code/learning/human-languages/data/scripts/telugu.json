@@ -5463,10 +5463,21 @@
       "sound": "ā",
       "role": "vowel",
       "components": [
-        "ఆ  ā — independent vowel (word-initial)"
+        "the hooked left lobe flowing into the broad lower bowl",
+        "the rounded right lobe returning along the inner bar"
       ],
-      "strokeOrder": [],
-      "strokeOrderNote": ""
+      "strokeOrder": [
+        "turn around the hooked left lobe and sweep through the broad lower bowl",
+        "after lifting, turn around the rounded right lobe and return left along the inner bar"
+      ],
+      "strokeOrderNote": "Two pen-down runs: the first forms the hooked left lobe and broad lower bowl; after one lift, the second forms the rounded right lobe and returns along the inner bar.",
+      "penLifts": 1,
+      "strokeOrderSource": {
+        "citation": "Hojaswani LUCIDA and Physics classes, practice Telugu letters with strokes (ఆ letter), 00:00–00:10 (YouTube, 15 September 2024)",
+        "url": "https://www.youtube.com/watch?v=vXdrj1pP6q0",
+        "variation": "The demonstration writes the hooked bowl and rounded right lobe separately, then shows the two runs recombined as ఆ. This is one attested pedagogical order fitted to the bundled Noto Sans Telugu outline; the printed inner bar is included in the second run, and Telugu handwriting may vary."
+      },
+      "notes": "Independent long ā used when a word or syllable begins with the long vowel; it contrasts with short అ and with the dependent vowel sign ా."
     },
     {
       "glyph": "ఇ",
