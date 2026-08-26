@@ -1,0 +1,14 @@
+{
+  "id": "ES-EXT-388-VERB",
+  "stage": "A1",
+  "kind": "required",
+  "category": "vocabulary",
+  "canDo": "I can name empujar, lanzar, borrar and gritar.",
+  "prerequisites": [],
+  "lessons": [
+    "ES-C388-empujar",
+    "ES-C388-lanzar",
+    "ES-C388-borrar",
+    "ES-C388-gritar"
+  ]
+}

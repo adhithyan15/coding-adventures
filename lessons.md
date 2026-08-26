@@ -5220,3 +5220,61 @@ on a ledger of zero, because zero *is* something.
 **Rules:** confirm a parser's storage shape by printing `Object.keys(...)` before indexing
 into it; and every screen that compares against a corpus needs a positive control *and* a
 negative one, because "found no problems" and "looked at nothing" produce identical output.
+
+## A `roots:` ledger only knows what a lesson CHOSE to declare — screen the PROSE too
+
+Two candidate headwords came back clean from a three-way screen (headword list, atom
+ledger, root ledger) and both were already taught. `ES-C288-vuelta` declares
+
+```yaml
+roots: []
+```
+
+and then spends *volvere*, *volume*-as-a-rolled-scroll and *revolve* across its gloss,
+its `etymology_hook` and its body. `ES-C286-dolor` does the same with *dolere*,
+*condolence* and *indolent*. Neither etymon is in the root ledger, because neither
+lesson listed one — so `volver` and `doler` screened as free vocabulary, and a second
+lesson telling the identical story would have shipped.
+
+The root ledger is **opt-in metadata**. The prose is where the teaching actually is.
+
+**Index the text as a fourth ledger**: gloss + `etymology_hook` + body, lowercased and
+NFD-stripped so `saccāre` matches `saccare`, matched on word boundaries against each
+candidate's proposed etymon *and* its intended English payoff. Over one track that is
+~1,000 short documents — a regex sweep, not a search problem.
+
+It caught six more on the same run: `llorar` (*plorare*, already told by `el llanto`),
+`mover` (*movere*, by `el momento`), `pintar` (*pingere*, by `el pimiento`), `firmar`
+(*firmus*, by `enfermo`), `curar` (*secure*, by `seguro`) and `dibujar` (by `el bosque`).
+None was visible to any other screen.
+
+**Expect false positives and read them.** An English-cognate hit may be an incidental
+use of an ordinary word — "collocation" as a taught linguistics term, "increase" in a
+plain sentence — rather than an etymological claim. The SOURCE-etymon hits are
+decisive; the cognate hits are a prompt to go look. Auto-dropping on both costs good
+candidates.
+
+**Generalisable:** whenever a corpus has a structured ledger *and* free text that can
+carry the same commitment, the ledger is a lower bound and the text is the truth.
+Screening against the ledger alone measures how diligently authors filled it in.
+
+## Discharging a criterion can DELETE the only test that proves it works
+
+Authoring sixteen verbs cleared `verb-vocabulary` for Spanish — and Spanish was the
+only track in the corpus that criterion had ever failed. The suite went green with
+`verbVocabularyOf` no longer asserted anywhere: delete the function, delete the
+blocker, and every test still passes.
+
+This is the failure mode of pinning a gate to real corpus data. The pin is excellent
+evidence right up until somebody fixes the corpus, and then it silently becomes no
+evidence at all — with no failing test to announce the transition.
+
+**When a tranche closes a criterion's last real-world failure, it owes the criterion a
+synthetic one in the same PR.** The fixture here is a track that satisfies the criterion
+it partitions *exactly* and misses the composition floor by one, asserting the blocker
+is its sole failure, plus the counterfactual: retag that one lesson and the level is
+attained. Authoring can never turn a fixture green.
+
+Same shape as an assertion pinned to a known-bad number that someone later fixes. Ask,
+whenever a pin goes from red to green: **what was that pin also proving, and is anything
+still proving it?**
