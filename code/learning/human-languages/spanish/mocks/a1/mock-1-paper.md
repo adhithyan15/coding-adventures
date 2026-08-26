@@ -282,6 +282,12 @@ imagen correcta (a, b o c).*
 > **Mensaje 34:** «Estas pastillas son para el dolor de cabeza. Una después de comer.»
 > **Mensaje 35:** «Las clases empiezan a las nueve. Los padres deben esperar fuera.»
 
+**31.** Mensaje 31 → imagen ___
+**32.** Mensaje 32 → imagen ___
+**33.** Mensaje 33 → imagen ___
+**34.** Mensaje 34 → imagen ___
+**35.** Mensaje 35 → imagen ___
+
 ---
 
 ## Tarea 3

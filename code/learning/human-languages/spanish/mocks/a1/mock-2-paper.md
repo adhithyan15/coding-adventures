@@ -279,6 +279,12 @@ imagen correcta (a, b o c).*
 > **Mensaje 34:** «No está permitido hacer fotografías con flash en estas salas. Gracias.»
 > **Mensaje 35:** «Para enviar el paquete al extranjero necesita rellenar este impreso.»
 
+**31.** Mensaje 31 → imagen ___
+**32.** Mensaje 32 → imagen ___
+**33.** Mensaje 33 → imagen ___
+**34.** Mensaje 34 → imagen ___
+**35.** Mensaje 35 → imagen ___
+
 ---
 
 ## Tarea 3
