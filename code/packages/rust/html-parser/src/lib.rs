@@ -8362,7 +8362,7 @@ impl HtmlParser {
             "unexpected-end-tag",
             format!("end tag `</{name}>` did not match an open element"),
         );
-        self.diagnostics.push(if name == "button" {
+        self.diagnostics.push(if matches!(name, "button" | "section") {
             diagnostic.at_emission(self.current_token_emission_position)
         } else {
             diagnostic
@@ -27334,6 +27334,14 @@ mod tests {
         .at_emission(Some(end_tag_position_at(source, "button", occurrence)))
     }
 
+    fn unmatched_section_end_tag(source: &str, occurrence: usize) -> ParserDiagnostic {
+        ParserDiagnostic::new(
+            "unexpected-end-tag",
+            "end tag `</section>` did not match an open element",
+        )
+        .at_emission(Some(end_tag_position_at(source, "section", occurrence)))
+    }
+
     fn marker_end_tag_outside_scope(
         source: &str,
         name: &str,
@@ -33169,14 +33177,12 @@ mod tests {
 
     #[test]
     fn fragment_parsing_keeps_diagnostics_and_parser_options() {
-        let output = parse_html_fragment_with_diagnostics("text</section>").unwrap();
+        let source = "text</section>";
+        let output = parse_html_fragment_with_diagnostics(source).unwrap();
         assert_eq!(output.nodes, vec![Node::text("text")]);
         assert_eq!(
             output.parser_diagnostics,
-            vec![ParserDiagnostic::new(
-                "unexpected-end-tag",
-                "end tag `</section>` did not match an open element"
-            )]
+            vec![unmatched_section_end_tag(source, 0)]
         );
 
         let noscript_nodes = parse_html_fragment_with_options(
@@ -33214,14 +33220,12 @@ mod tests {
 
     #[test]
     fn reports_unmatched_end_tags_without_dropping_content() {
-        let output = parse_html_with_diagnostics("<!doctype html><p>Hello</section>").unwrap();
+        let source = "<!doctype html><p>Hello</section>";
+        let output = parse_html_with_diagnostics(source).unwrap();
 
         assert_eq!(
             output.parser_diagnostics,
-            vec![ParserDiagnostic::new(
-                "unexpected-end-tag",
-                "end tag `</section>` did not match an open element"
-            )]
+            vec![unmatched_section_end_tag(source, 0)]
         );
         let paragraph = element(&body(&output.document).children[0]);
         assert_eq!(paragraph.children, vec![Node::text("Hello")]);
@@ -34092,6 +34096,67 @@ mod tests {
         }
         assert_eq!(
             foreign_direct
+                .diagnostics()
+                .iter()
+                .find(|diagnostic| diagnostic.code == "unexpected-end-tag")
+                .unwrap()
+                .position,
+            None
+        );
+    }
+
+    #[test]
+    fn positions_unmatched_section_end_tags_at_token_emission() {
+        let ordinary_source = "<!doctype html></section><!--é-->\r\n</section>";
+        let ordinary = parse_html_with_diagnostics(ordinary_source).unwrap();
+        assert_eq!(
+            ordinary
+                .parser_diagnostics
+                .iter()
+                .filter(|diagnostic| diagnostic.code == "unexpected-end-tag")
+                .cloned()
+                .collect::<Vec<_>>(),
+            vec![
+                unmatched_section_end_tag(ordinary_source, 0),
+                unmatched_section_end_tag(ordinary_source, 1),
+            ]
+        );
+        assert!(ordinary_source.len() > ordinary_source.chars().count());
+
+        let foreign_source =
+            "<!doctype html><!--é-->\r\n<svg><foreignObject></section>X</foreignObject></svg>";
+        let foreign = parse_html_with_diagnostics(foreign_source).unwrap();
+        assert!(foreign
+            .parser_diagnostics
+            .iter()
+            .all(|diagnostic| diagnostic.code != "unexpected-end-tag"));
+
+        let fragment_source = "X</section>";
+        let fragment = parse_html_fragment_with_diagnostics(fragment_source).unwrap();
+        assert_eq!(
+            fragment.parser_diagnostics,
+            vec![unmatched_section_end_tag(fragment_source, 0)]
+        );
+
+        for source in [
+            "<!doctype html></section",
+            "<!doctype html><svg><foreignObject></section",
+        ] {
+            let output = parse_html_with_diagnostics(source).unwrap();
+            assert!(output
+                .parser_diagnostics
+                .iter()
+                .all(|diagnostic| diagnostic.code != "unexpected-end-tag"));
+        }
+
+        let mut ordinary_direct =
+            HtmlParser::with_body_fragment_options(HtmlParseOptions::default());
+        ordinary_direct.process_token(Token::EndTag {
+            name: "section".to_string(),
+        });
+        ordinary_direct.process_token(Token::Eof);
+        assert_eq!(
+            ordinary_direct
                 .diagnostics()
                 .iter()
                 .find(|diagnostic| diagnostic.code == "unexpected-end-tag")
