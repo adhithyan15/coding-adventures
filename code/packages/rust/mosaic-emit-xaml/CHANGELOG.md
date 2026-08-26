@@ -1,5 +1,46 @@
 # Changelog — mosaic-emit-xaml
 
+## [Unreleased] — security: XML-escape style-fragment values at every attribute sink (#12025)
+
+`build_style_fragment_with_drops` "escaped" mosstyle values with C-string
+escaping (`\`→`\\`, `"`→`\"`) — not XML escaping. `parse_style_fragment`,
+the sole reader used by every downstream consumer, then **stripped that
+backslash-escaping back out** before handing values to callers, so by the
+time a value reached a real `key="value"` XAML attribute it was completely
+unescaped. `mosstyle-compiler`'s token validation only rejects
+`{ } ; NUL CR LF` — `"`, `<`, `>`, `&`, `=` all pass through, so a hostile
+package token (`x" Foo="bar`) could inject attributes into generated XAML.
+Found during #12015's review; disclosed there since practical
+exploitability is low today (no third-party Mosaic package registry
+exists yet — no distribution channel).
+
+Fixed at the single production write path rather than at each of the 8+
+downstream call sites the issue's own writeup names: `build_style_fragment_with_drops`
+now calls the already-correct `escape_xaml_attr` (the same helper the
+`<Setter Value="...">` path has always used) instead of the C-string
+escape, and `parse_style_fragment`'s now-vestigial backslash-unescaping
+branch is removed — a value can no longer contain a literal `"` at all
+once it's escaped at the source, so every consumer (the five
+`parse_style_fragment` callers, and `part_style_attr`'s whole-fragment raw
+splice used by 17 more call sites) is correct with zero further changes.
+Same end state as the issue's prescribed per-sink fix, less code, and
+structurally impossible to miss a site since there's only one producer.
+
+New tests cover all four architecturally distinct consumption paths with a
+value carrying all of `" < > &`: a plain `Box` (`partition_box_style`), a
+`Row` (`partition_flex_grid_style`, #12021's `<Grid>` lowering), a
+`HostButton` (`content_control_style_attr`), and `Image`
+(`part_style_attr`'s raw-splice path) — each asserts the escaped form
+appears and the raw hostile value never does. A fifth test confirms a
+literal backslash (not XML-significant) still round-trips unchanged now
+that the backslash-specific escape/unescape scheme is gone. All 229
+pre-existing tests pass unchanged, since escaping ordinary values (none of
+which contain `"<>&`) is a no-op.
+
+`normalize_xaml_color_value`'s narrower #12015 guard (drops any color
+value containing `"<>&` outright) is unchanged — now redundant-but-harmless
+defense-in-depth specifically for colors, comment updated to say so.
+
 ## [Unreleased] — `dropped_style_properties`: make silently-discarded style properties visible (#12022)
 
 `build_style_fragment` has two points where a mosstyle property produces no
