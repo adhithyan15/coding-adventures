@@ -1,5 +1,9 @@
 # Changelog
 
+## 0.143.0
+
+- Parse Mermaid Gantt millisecond, second, minute, hour, day, and week durations into typed semantic units.
+
 ## 0.142.0
 
 - Compile Gantt `dateFormat` statements into typed semantic parts and reject task dates that do not match the selected format.

@@ -1,5 +1,9 @@
 # Changelog — diagram-to-paint
 
+## 0.78.0
+
+- Validate typed sub-day Gantt duration geometry through Paint instructions and native Metal-to-PNG rendering.
+
 ## 0.77.0
 
 - Validate non-ISO Gantt date/time input through typed temporal layout, backend-neutral Paint instructions, and Metal-to-PNG rendering.

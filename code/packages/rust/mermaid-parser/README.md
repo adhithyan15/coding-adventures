@@ -64,8 +64,11 @@ after the preceding task even across sections. Repeated task tags retain active,
 done, critical, milestone, and vertical-marker semantics independently. Numeric
 calendar formats, short and long month names, bracketed literals, time-of-day
 precision, and Unix second/millisecond formats compile into typed IR and drive
-layout geometry. Gantt remains partial while timezone/locale date tokens plus
-the complete pinned parser and visual corpus are still outstanding.
+layout geometry. Millisecond, second, minute, hour, day, and week durations also
+retain their authored units in typed IR before precise layout conversion. A
+pinned upstream corpus now gates this supported parser surface. Gantt remains
+partial while timezone/locale date tokens, remaining parser edge cases, and the
+complete pinned visual corpus are still outstanding.
 
 Each supported family lowers into the shared Diagram IR and can continue
 through its family layout package:

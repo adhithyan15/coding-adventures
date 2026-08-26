@@ -1,0 +1,34 @@
+{
+  "schema_version": 1,
+  "upstream_commit": "7ecca0cd7f1658ef74f4e7e91f925724ef403bbf",
+  "sources": [
+    "packages/mermaid/src/diagrams/gantt/parser/gantt.spec.js",
+    "packages/mermaid/src/diagrams/gantt/ganttDb.spec.ts"
+  ],
+  "valid": [
+    { "id": "header-only", "source": "gantt" },
+    { "id": "legacy-lowercase-date-format", "source": "gantt\ndateFormat yyyy-mm-dd" },
+    { "id": "inclusive-end-dates", "source": "gantt\ndateFormat YYYY-MM-DD\ninclusiveEndDates" },
+    { "id": "metadata", "source": "gantt\naccTitle: Gantt Diagram\naccDescr: Tasks for Q4\ntitle Project timeline" },
+    { "id": "calendar-controls", "source": "gantt\ndateFormat DD-MM-YYYY\nexcludes weekends\nexcludes 10-02-2025 11-02-2025\nincludes 12-02-2025\nweekday monday\nweekend friday" },
+    { "id": "fixed-dates", "source": "gantt\ndateFormat YYYY-MM-DD\nsection Documentation\nDesign grammar :des1, 2014-01-01, 2014-01-04" },
+    { "id": "relative-ranges", "source": "gantt\nA :a, 2024-01-27, 2024-01-28\nB :b, after a, 2024-01-30\nC :c, 2024-01-20, until a\nD :d, after c, until b" },
+    { "id": "combined-tags", "source": "gantt\nTask :crit, milestone, done, task, 2014-01-01, 2014-01-04" },
+    { "id": "click-callback", "source": "gantt\nVisit :active, cl1, 2014-01-07, 3d\nCallback :cl2, after cl1, 3d\nclick cl1 href \"https://mermaid.js.org/\"\nclick cl2 call ganttTestClick(test0, test1)" },
+    { "id": "duration-days", "source": "gantt\nTask :id1, 2013-01-01, 2d" },
+    { "id": "duration-weeks", "source": "gantt\nTask :id1, 2013-01-01, 2w" },
+    { "id": "duration-hours", "source": "gantt\nTask :id1, 2013-01-01, 2h" },
+    { "id": "duration-minutes", "source": "gantt\nTask :id1, 2013-01-01, 2m" },
+    { "id": "duration-seconds", "source": "gantt\nTask :id1, 2013-01-01, 0.1s" },
+    { "id": "duration-milliseconds", "source": "gantt\ndateFormat x\nTask :id1, 0, 20ms" },
+    { "id": "generated-and-sequential", "source": "gantt\nFirst :2013-01-01, 4d\nSecond :2d" },
+    { "id": "multiple-after", "source": "gantt\nA :a, 2013-01-01, 1d\nB :b, 2013-02-01, 3d\nC :c, after a b, 1d" }
+  ],
+  "invalid": [
+    { "id": "missing-header", "source": "section Build\nTask :a, 2013-01-01, 1d" },
+    { "id": "empty-task", "source": "gantt\nTask :" },
+    { "id": "unknown-after", "source": "gantt\nTask :a, after missing, 1d" },
+    { "id": "cyclic-after", "source": "gantt\nA :a, after b, 1d\nB :b, after a, 1d" },
+    { "id": "bad-duration", "source": "gantt\nTask :a, 2013-01-01, 1f" }
+  ]
+}

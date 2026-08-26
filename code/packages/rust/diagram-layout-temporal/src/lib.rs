@@ -18,7 +18,7 @@ use diagram_ir::{
 };
 use std::collections::{BTreeSet, HashMap};
 
-pub const VERSION: &str = "0.23.0";
+pub const VERSION: &str = "0.24.0";
 
 // ── Constants ─────────────────────────────────────────────────────────────
 
@@ -371,7 +371,7 @@ fn gantt_task_elapsed_duration(
         }
         None => {}
     }
-    gantt_elapsed_duration(start, task.duration_days, diagram)
+    gantt_elapsed_duration(start, task.duration.days(), diagram)
 }
 
 fn gantt_task_end_if_resolved(
@@ -527,7 +527,9 @@ fn layout_gantt(
         .fold(f64::NEG_INFINITY, f64::max);
     let t_min = if t_min.is_infinite() { 0.0 } else { t_min };
     let t_max = if t_max.is_infinite() { t_min + 30.0 } else { t_max };
-    let t_range = (t_max - t_min).max(1.0);
+    // Keep sub-day schedules legible instead of forcing their scale into a
+    // one-day minimum range. One millisecond is Mermaid's finest duration unit.
+    let t_range = (t_max - t_min).max(1.0 / 86_400_000.0);
 
     let plot_w = (cw - LABEL_W - 32.0).max(100.0);
     let x_scale = plot_w / t_range;
@@ -876,7 +878,7 @@ mod tests {
                         GanttTask {
                             id: "t1".into(), label: "Design".into(),
                             start: TaskStart::Date("2026-01-01".into()),
-                            duration_days: 5.0,
+                            duration: GanttDuration { value: 5.0, unit: GanttDurationUnit::Days },
                             end: None,
                             tags: GanttTaskTags { done: true, ..GanttTaskTags::default() },
                             dependencies: vec![],
@@ -887,7 +889,7 @@ mod tests {
                         GanttTask {
                             id: "t2".into(), label: "Build".into(),
                             start: TaskStart::After(vec!["t1".into()]),
-                            duration_days: 3.0,
+                            duration: GanttDuration { value: 3.0, unit: GanttDurationUnit::Days },
                             end: None,
                             tags: GanttTaskTags { active: true, ..GanttTaskTags::default() },
                             dependencies: vec!["t1".into()],
@@ -929,7 +931,7 @@ mod tests {
 
     #[test]
     fn version_exists() {
-        assert_eq!(crate::VERSION, "0.23.0");
+        assert_eq!(crate::VERSION, "0.24.0");
     }
 
     #[test]
@@ -1013,9 +1015,9 @@ mod tests {
         let TemporalBody::Gantt(gantt) = &mut diagram.body else { unreachable!() };
         gantt.config.excludes = vec!["weekends".into()];
         gantt.sections[0].tasks[0].start = TaskStart::Date("2026-01-02".into());
-        gantt.sections[0].tasks[0].duration_days = 2.0;
+        gantt.sections[0].tasks[0].duration = GanttDuration { value: 2.0, unit: GanttDurationUnit::Days };
         gantt.sections[0].tasks[1].start = TaskStart::After(vec!["t1".into()]);
-        let second_duration = gantt.sections[0].tasks[1].duration_days;
+        let second_duration = gantt.sections[0].tasks[1].duration.days();
 
         let layout = layout_temporal_diagram(&diagram, 800.0);
         let bars = layout.items.iter().filter_map(|item| match item {
@@ -1057,7 +1059,7 @@ mod tests {
         gantt.sections[0].tasks[0].start = TaskStart::Date("02 Jan 2026 06:00".into());
         gantt.sections[0].tasks[0].end = Some(TaskEnd::Date("02 Jan 2026 18:00".into()));
         gantt.sections[0].tasks[1].start = TaskStart::Date("03 Jan 2026 06:00".into());
-        gantt.sections[0].tasks[1].duration_days = 0.5;
+        gantt.sections[0].tasks[1].duration = GanttDuration { value: 0.5, unit: GanttDurationUnit::Days };
         let layout = layout_temporal_diagram(&diagram, 800.0);
         let widths = layout.items.iter().filter_map(|item| match item {
             LayoutedTemporalItem::TaskBar { width, .. } => Some(*width), _ => None,
@@ -1072,6 +1074,25 @@ mod tests {
             parts: vec![GanttDateFormatPart::UnixMilliseconds] };
         assert_eq!(date_to_days("0", &format), Some(0.0));
         assert_eq!(date_to_days("86400000", &format), Some(1.0));
+
+        let mut diagram = simple_gantt();
+        let TemporalBody::Gantt(gantt) = &mut diagram.body else { unreachable!() };
+        gantt.date_format = format;
+        gantt.sections[0].tasks[0].start = TaskStart::Date("0".into());
+        gantt.sections[0].tasks[0].duration = GanttDuration {
+            value: 20.0, unit: GanttDurationUnit::Milliseconds,
+        };
+        gantt.sections[0].tasks[1].start = TaskStart::After(vec!["t1".into()]);
+        gantt.sections[0].tasks[1].duration = GanttDuration {
+            value: 5.0, unit: GanttDurationUnit::Milliseconds,
+        };
+        let layout = layout_temporal_diagram(&diagram, 800.0);
+        let bars = layout.items.iter().filter_map(|item| match item {
+            LayoutedTemporalItem::TaskBar { x, width, .. } => Some((*x, *width)),
+            _ => None,
+        }).collect::<Vec<_>>();
+        assert!((bars[1].0 - (bars[0].0 + bars[0].1)).abs() < 0.01);
+        assert!((bars[0].1 / bars[1].1 - 4.0).abs() < 0.01);
     }
 
     #[test]
@@ -1081,7 +1102,7 @@ mod tests {
         gantt.sections[0].tasks[0].start = TaskStart::Date("2026-03-01".into());
         gantt.sections[0].tasks[0].end = Some(TaskEnd::Date("2026-03-03".into()));
         gantt.sections[0].tasks[1].start = TaskStart::Date("2026-03-10".into());
-        gantt.sections[0].tasks[1].duration_days = 1.0;
+        gantt.sections[0].tasks[1].duration = GanttDuration { value: 1.0, unit: GanttDurationUnit::Days };
         let exclusive_layout = layout_temporal_diagram(&exclusive, 800.0);
 
         let TemporalBody::Gantt(gantt) = &mut exclusive.body else { unreachable!() };
@@ -1137,39 +1158,39 @@ mod tests {
         let mut diagram = simple_gantt();
         let TemporalBody::Gantt(gantt) = &mut diagram.body else { unreachable!() };
         gantt.sections[0].tasks[0].start = TaskStart::Date("2026-01-01".into());
-        gantt.sections[0].tasks[0].duration_days = 5.0;
+        gantt.sections[0].tasks[0].duration = GanttDuration { value: 5.0, unit: GanttDurationUnit::Days };
         gantt.sections[0].tasks[1].start = TaskStart::Date("2026-01-03".into());
-        gantt.sections[0].tasks[1].duration_days = 4.0;
+        gantt.sections[0].tasks[1].duration = GanttDuration { value: 4.0, unit: GanttDurationUnit::Days };
         gantt.sections[0].tasks.push(GanttTask {
             id: "t3".into(), label: "Integrate".into(),
             start: TaskStart::After(vec!["t1".into(), "t2".into()]),
-            duration_days: 2.0, end: None, tags: GanttTaskTags::default(),
+            duration: GanttDuration { value: 2.0, unit: GanttDurationUnit::Days }, end: None, tags: GanttTaskTags::default(),
             dependencies: vec!["t1".into(), "t2".into()], link: None,
             callback: None, callback_args: None,
         });
         gantt.sections[0].tasks.push(GanttTask {
             id: "window".into(), label: "Window".into(),
-            start: TaskStart::Date("2025-12-29".into()), duration_days: 0.0,
+            start: TaskStart::Date("2025-12-29".into()), duration: GanttDuration::default(),
             end: Some(TaskEnd::Until(vec!["t1".into(), "t2".into()])),
             tags: GanttTaskTags::default(), dependencies: Vec::new(), link: None,
             callback: None, callback_args: None,
         });
         gantt.sections[0].tasks.push(GanttTask {
             id: "gate".into(), label: "Gate".into(),
-            start: TaskStart::Date("2025-12-30".into()), duration_days: 0.0,
+            start: TaskStart::Date("2025-12-30".into()), duration: GanttDuration::default(),
             end: Some(TaskEnd::Until(vec!["late".into()])),
             tags: GanttTaskTags::default(), dependencies: Vec::new(), link: None,
             callback: None, callback_args: None,
         });
         gantt.sections[0].tasks.push(GanttTask {
             id: "consumer".into(), label: "Consumer".into(),
-            start: TaskStart::After(vec!["gate".into()]), duration_days: 1.0,
+            start: TaskStart::After(vec!["gate".into()]), duration: GanttDuration { value: 1.0, unit: GanttDurationUnit::Days },
             end: None, tags: GanttTaskTags::default(), dependencies: vec!["gate".into()], link: None,
             callback: None, callback_args: None,
         });
         gantt.sections[0].tasks.push(GanttTask {
             id: "late".into(), label: "Late".into(),
-            start: TaskStart::After(vec!["t3".into()]), duration_days: 1.0,
+            start: TaskStart::After(vec!["t3".into()]), duration: GanttDuration { value: 1.0, unit: GanttDurationUnit::Days },
             end: None, tags: GanttTaskTags::default(), dependencies: vec!["t3".into()], link: None,
             callback: None, callback_args: None,
         });

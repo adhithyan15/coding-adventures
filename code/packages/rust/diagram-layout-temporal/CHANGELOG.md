@@ -1,5 +1,9 @@
 # Changelog
 
+## 0.24.0
+
+- Resolve typed sub-day Gantt durations at millisecond precision before backend-neutral temporal layout.
+
 ## 0.23.0
 
 - Resolve typed Gantt calendar, textual-month, time-of-day, and Unix timestamp input formats into backend-neutral temporal geometry.

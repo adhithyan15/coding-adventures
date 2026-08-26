@@ -1060,6 +1060,41 @@ pub enum TaskEnd {
     Until(Vec<String>),
 }
 
+#[derive(Clone, Copy, Debug, PartialEq)]
+pub enum GanttDurationUnit {
+    Milliseconds,
+    Seconds,
+    Minutes,
+    Hours,
+    Days,
+    Weeks,
+}
+
+#[derive(Clone, Copy, Debug, PartialEq)]
+pub struct GanttDuration {
+    pub value: f64,
+    pub unit: GanttDurationUnit,
+}
+
+impl GanttDuration {
+    pub fn days(self) -> f64 {
+        match self.unit {
+            GanttDurationUnit::Milliseconds => self.value / 86_400_000.0,
+            GanttDurationUnit::Seconds => self.value / 86_400.0,
+            GanttDurationUnit::Minutes => self.value / 1_440.0,
+            GanttDurationUnit::Hours => self.value / 24.0,
+            GanttDurationUnit::Days => self.value,
+            GanttDurationUnit::Weeks => self.value * 7.0,
+        }
+    }
+}
+
+impl Default for GanttDuration {
+    fn default() -> Self {
+        Self { value: 0.0, unit: GanttDurationUnit::Days }
+    }
+}
+
 #[derive(Clone, Debug, PartialEq, Default)]
 pub struct GanttTaskTags {
     pub active: bool,
@@ -1074,7 +1109,7 @@ pub struct GanttTask {
     pub id: String,
     pub label: String,
     pub start: TaskStart,
-    pub duration_days: f64,
+    pub duration: GanttDuration,
     pub end: Option<TaskEnd>,
     pub tags: GanttTaskTags,
     pub dependencies: Vec<String>,
@@ -1609,7 +1644,7 @@ mod tests {
             id: "t1".into(),
             label: "D".into(),
             start: TaskStart::Date("2026-01-01".into()),
-            duration_days: 5.0,
+            duration: GanttDuration { value: 5.0, unit: GanttDurationUnit::Days },
             end: None,
             tags: GanttTaskTags { done: true, ..GanttTaskTags::default() },
             dependencies: vec![],
