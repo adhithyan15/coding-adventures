@@ -11,23 +11,24 @@
     "selection_rule": "host-security, credential, native-runtime, and external-approval work may inform classification but is never selected by this parity loop",
     "excluded_delivery_classes": ["onvif", "host-security-hardening", "native-runtime", "external-approval"]
   },
-  "active_pr": {
-    "number": 13013,
-    "url": "https://github.com/adhithyan15/coding-adventures/pull/13013",
-    "branch": "codex/canonical-cbor-jvm-lane-parity",
-    "status": "open"
-  },
+  "active_pr": null,
   "last_inventory": {
-    "revision": "1f62ce37805fa44a2bc00a84758ff1e11f35d7d3",
+    "revision": "1d0c64a9ad9e0e8d9652d605d731de823b21fcc1",
     "schema_version": 3,
     "established_languages": 15,
     "implementation_identities": 1373,
-    "implementation_package_slots": 4566,
+    "implementation_package_slots": 4568,
+    "all_reported_identities": 1412,
     "high_consensus_packages": 175,
     "high_consensus_missing_slots": 276,
-    "singleton_packages": 910,
-    "singleton_missing_slots": 12740,
-    "rust_singletons": 721,
+    "five_to_nine_packages": 122,
+    "five_to_nine_missing_slots": 926,
+    "two_to_four_packages": 167,
+    "two_to_four_missing_slots": 2099,
+    "singleton_packages": 909,
+    "singleton_missing_slots": 12726,
+    "rust_singletons": 720,
+    "ocaml_packages": 0,
     "canonical_collisions": 0,
     "unknown_language_buckets": 0
   },
@@ -3175,10 +3176,12 @@
     {
       "id": "canonical-cbor-dotnet-lane-parity",
       "title": "Port canonical CBOR to the C# and F# lanes",
-      "status": "pending",
+      "status": "in-progress",
       "depends_on": ["canonical-cbor-language-neutral-conformance"],
-      "branch": null,
+      "branch": "codex/canonical-cbor-dotnet-lane-parity",
       "pr_number": null,
+      "selection_revision": "1d0c64a9ad9e0e8d9652d605d731de823b21fcc1",
+      "selection_notes": "Selected only after PR #13013 completed all 40 terminal acceptable checks, GitHub reported the reviewed head clean and mergeable, and squash auto-merge merged reviewed head cef8a8de39f067dd1d1ee3c95636fe3903e16950 as 1d0c64a9ad9e0e8d9652d605d731de823b21fcc1 at 2026-08-26T11:06:51Z without a manual merge command. The exact-main schema-3 inventory is collision-clean at 15 established lanes, 1,373 implementation identities, 4,568 slots, 1,412 all-reported identities, bands 175/276, 122/926, 167/2,099, and 909/12,726, 720 Rust singletons, zero collisions, zero unknown buckets, and OCaml emerging at zero packages. Open PR #13015 exposes a previously unowned Rust memory64 first slice, so the neutral and selection-blocked applicable-lane owners were registered before selection; #13014 fits the existing storage-fs native-authority owner, #13017 remains curriculum-only, and #13018 remains inside script-ductus plus human-language owners. All nine live PRs have zero exact overlap with the expected new C# and F# canonical-CBOR package paths or parity state and roadmap. The neutral CBR01 corpus and Rust, C, C++, Java, and Kotlin references are merged. The paired .NET slice is the strongest collision-safe canonical-CBOR unit because one shared toolchain tranche closes two established lanes. The higher-descendant extra-CI corpus and strategic OCaml process-free core remain collision-unsafe while PRs #12162 and #12149 own their required Go validator and entry-point surfaces. The target local branch, remote branch, and prior PR were absent before creating this fresh exact-main branch.",
       "notes": "Implement CBR01 and the closed canonical-cbor-v1 corpus for the paired .NET lanes with native tests, build metadata, documentation, capability metadata, and exact cross-lane output equality."
     },
     {
@@ -3220,11 +3223,14 @@
     {
       "id": "canonical-cbor-jvm-lane-parity",
       "title": "Port canonical CBOR to the Java and Kotlin lanes",
-      "status": "pr-open",
+      "status": "merged",
       "depends_on": ["canonical-cbor-language-neutral-conformance"],
       "branch": "codex/canonical-cbor-jvm-lane-parity",
       "pr_number": 13013,
       "pr_url": "https://github.com/adhithyan15/coding-adventures/pull/13013",
+      "merged_at": "2026-08-26T11:06:51Z",
+      "final_revision": "cef8a8de39f067dd1d1ee3c95636fe3903e16950",
+      "merge_commit": "1d0c64a9ad9e0e8d9652d605d731de823b21fcc1",
       "opened_at": "2026-08-26T10:36:48Z",
       "opened_revision": "a057ff32f8630ca6dd86445410bce81d01e81f4c",
       "selection_revision": "1f62ce37805fa44a2bc00a84758ff1e11f35d7d3",
@@ -3233,7 +3239,7 @@
       "implementation_revision": "975c4391a029d57e4cc2318c39fee185d932f66a",
       "final_review_revision": "dc90d4e66d26126b1d0bf9386455539208438410",
       "ownership_notes": "The final paginated audit covers all eight open PRs and finds zero exact overlap with the 26 intended branch paths. PR #13009 remains inside script-ductus plus existing curriculum and human-language-data owners. PR #13011 is test-only Mosaic generated-wrapper and artifact-builder degradation evidence inside mosaic-app-bindings-generated-wrapper-review; its target-specific Checkbox, Radio, and Modal allowlists do not create a new portable or build-tool contract. PR #13012 adds deterministic source positions to unmatched HTML block-container end-tag diagnostics inside html-frontend-portable-conformance. PR #13005 is fully classified by the newly registered emitted-identifier neutral and applicable-consumer pair. The remaining older live heads stay within their prior native-authority, validator, Swift, or dependency owners.",
-      "publication_notes": "Opened ready-for-review PR #13013 from clean independently reviewed head a057ff32f8630ca6dd86445410bce81d01e81f4c after a normal first push from exact origin/main 2d7bfa99226e341dee63e997d22dce50a9b57cf2. The target remote branch and prior PR were absent before publication. All eight other open PRs had zero exact overlap across the complete 26-path diff. GitHub reports the PR non-draft and mergeable with required checks queued or in progress, so auto-merge remains disabled and the loop is monitor-only.",
+      "publication_notes": "Opened ready-for-review PR #13013 from clean independently reviewed head a057ff32f8630ca6dd86445410bce81d01e81f4c after a normal first push from exact origin/main 2d7bfa99226e341dee63e997d22dce50a9b57cf2. The target remote branch and prior PR were absent before publication. All eight other open PRs had zero exact overlap across the complete 26-path diff. After the final publication commit cef8a8de39f067dd1d1ee3c95636fe3903e16950, all 40 GitHub checks reached terminal acceptable states: 33 succeeded and seven were expected skips. GitHub reported CLEAN/MERGEABLE, auto-merge was enabled with squash, and GitHub merged the PR as 1d0c64a9ad9e0e8d9652d605d731de823b21fcc1 at 2026-08-26T11:06:51Z without a manual merge command.",
       "validation_notes": "The independent Java and Kotlin packages implement the closed CBR01 value model, checked canonical encoder, and strict decoder and consume all 55 shared canonical-cbor-v1 operations with the same 14 stable identifiers and byte-exact outcomes. Both preserve the full unsigned 64-bit domain, reject malformed UTF-16 before encoding, preflight UTF-8 and map-retention bounds before allocation, enforce shortest arguments, canonical map order and uniqueness, exact one-item decoding, depth 128, the 1,048,576-byte limit, and atomic checked append. Post-rebase gradle clean check, literal Unix BUILD, and exact Windows BUILD-content runs pass in both lanes; Java covers 268 of 276 production lines (97.10%) and Kotlin covers 224 of 228 (98.25%), above their 95% gates. Fixture, capability-taxonomy, and parity-reporter suites pass 21 tests plus 720 subtests. The Go build tool passes all tests, vet, and trimpath compilation; its exact dry plan evaluates 45 Starlark files, discovers 5,075 packages, validates the five-entry orphan ledger, and selects exactly these two packages. The prospective schema-3 inventory remains at 15 established lanes and 1,373 identities while increasing to 4,568 slots: Java 131, Kotlin 130, 175 high-consensus identities with 276 gaps, 122 in five to nine lanes with 926 gaps, 167 in two to four with 2,099 gaps, 909 singletons with 12,726 gaps, 720 Rust singletons, zero collisions, and zero unknown buckets. Java has no runtime dependency; Kotlin resolves only stdlib 2.1.20 plus transitive annotations 13.0. Diff, dependency, credential-pattern, production-authority, and independent semantic/security reviews pass. The final ownership audit registers open PR #13005 under the new neutral and applicable-consumer Semantic IR emitted-identifier owners, producing a unique, complete, acyclic 523-owner/785-edge graph with 150 merged, 372 pending, and one in-progress item.",
       "notes": "Implement CBR01 and the closed canonical-cbor-v1 corpus for the paired JVM lanes with native tests, build metadata, documentation, capability metadata, and exact cross-lane output equality."
     },
@@ -5831,6 +5837,25 @@
       "pr_number": null,
       "selection_blocked": true,
       "notes": "Completion umbrella for applicable execution, validation, WAT/WAST, and conformance lanes after the W24 neutral exnref/_ref/throw_ref contract and W23 cross-instance identity lane substrate close. Decompose into coherent runtime, validation, parser, and corpus children before delivery; preserve exception handle bounds and lifetime, payload and tag identity, result-stack ordering, null trapping, exact blocktype encoding, and explicit concrete-reference exclusions rather than inferring parity from the Rust W24 reference slice or package presence."
+    },
+    {
+      "id": "wasm-memory64-language-neutral-conformance",
+      "title": "Specify the WebAssembly memory64 first slice with language-neutral fixtures",
+      "status": "pending",
+      "depends_on": [],
+      "branch": null,
+      "pr_number": null,
+      "notes": "Discovered during the post-#13013 ownership audit while PR #13015 was open. The Rust W25 reference slice adds 64-bit memory limits and flags, `(memory i64 ...)` text and binary forms, scalar load/store plus memory.size and memory.grow address-width behavior, active data offsets, u64 memarg decoding, min<=max validation, the 2^48-page specification ceiling, and a bounded practical allocation cap across wasm-types, wasm-module-parser, wasm-module-encoder, wasm-validator, wasm-execution, wasm-runtime, wasm-wast-parser, wasm-conformance, and downstream Rust consumers. Existing package identities do not provide behavioral ownership. Define one bounded neutral contract and adversarial corpus for exact encodings, per-memory index width, checked effective-address arithmetic, data-offset typing, structural and practical limits, stable errors, malformed and invalid forms, and deterministic resource rejection. Reuse the existing WAST-parser, portable-conformance, official-corpus, provenance, fetch, NOTICE, baseline, and host-authority owners. Explicitly defer table64 and memory64-imports, bulk memory, SIMD and atomic memory operations, and later duplicated *64.wast families to separately owned follow-ons."
+    },
+    {
+      "id": "wasm-memory64-established-lane-parity",
+      "title": "Bring the WebAssembly memory64 first slice to every applicable established lane",
+      "status": "pending",
+      "depends_on": ["wasm-memory64-language-neutral-conformance"],
+      "branch": null,
+      "pr_number": null,
+      "selection_blocked": true,
+      "notes": "Completion umbrella for applicable type, parser, encoder, validator, execution, runtime, WAT/WAST, conformance, and downstream lanes after the neutral memory64 first-slice contract closes. Decompose into coherent shared-engine or language children before delivery; preserve per-memory 32-bit versus 64-bit address typing, exact u64 limits and offsets, checked arithmetic, structural and practical resource ceilings, and explicit table64, bulk, SIMD, atomic, and broader-corpus exclusions rather than inferring parity from the Rust W25 reference slice or existing package-directory presence."
     },
     {
       "id": "wasm-wast-parser-language-neutral-conformance",
