@@ -47,6 +47,16 @@ defmodule CodingAdventures.ScytaleCipherTest do
     assert ScytaleCipher.decrypt("", 2) == ""
   end
 
+  test "matches portable scalar ragged and literal-space vectors" do
+    assert ScytaleCipher.encrypt("A😀Bé", 3) == "Aé😀 B "
+    assert ScytaleCipher.decrypt("Aé😀 B ", 3) == "A😀Bé"
+    assert ScytaleCipher.encrypt("Ae\u0301B", 3) == "ABe \u0301 "
+    assert ScytaleCipher.decrypt("ABe \u0301 ", 3) == "Ae\u0301B"
+    assert ScytaleCipher.decrypt("ABCDEF", 4) == "ACEFBD"
+    assert ScytaleCipher.decrypt("A\tB ", 2) == "AB\t"
+    assert ScytaleCipher.decrypt("A\u00A0\t \n ", 3) == "A\t\n\u00A0"
+  end
+
   test "decrypt raises on invalid key" do
     assert_raise ArgumentError, fn -> ScytaleCipher.decrypt("HELLO", 0) end
     assert_raise ArgumentError, fn -> ScytaleCipher.decrypt("HI", 3) end
@@ -89,6 +99,14 @@ defmodule CodingAdventures.ScytaleCipherTest do
 
   test "brute force short text returns empty" do
     assert ScytaleCipher.brute_force("AB") == []
+  end
+
+  test "brute force rejects work beyond the quadratic-output limit" do
+    oversized = String.duplicate("A", ScytaleCipher.max_brute_force_text_length() + 1)
+
+    assert_raise ArgumentError, "scytale-brute-force-limit", fn ->
+      ScytaleCipher.brute_force(oversized)
+    end
   end
 
   # --- Padding Tests ---

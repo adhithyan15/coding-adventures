@@ -166,6 +166,7 @@ mod tests {
     #[test]
     fn test_encrypt_empty() {
         assert_eq!(encrypt("", 2).unwrap(), "");
+        assert_eq!(encrypt("", -1).unwrap(), "");
     }
 
     #[test]
@@ -235,7 +236,7 @@ mod tests {
     fn test_brute_force_finds_original() {
         let original = "HELLO WORLD";
         let ct = encrypt(original, 3).unwrap();
-        let results = brute_force(&ct);
+        let results = brute_force(&ct).unwrap();
         let found = results.iter().find(|r| r.key == 3);
         assert!(found.is_some());
         assert_eq!(found.unwrap().text, original);
@@ -243,15 +244,34 @@ mod tests {
 
     #[test]
     fn test_brute_force_returns_all_keys() {
-        let results = brute_force("ABCDEFGHIJ");
+        let results = brute_force("ABCDEFGHIJ").unwrap();
         let keys: Vec<usize> = results.iter().map(|r| r.key).collect();
         assert_eq!(keys, vec![2, 3, 4, 5]);
     }
 
     #[test]
     fn test_brute_force_short_text() {
-        assert!(brute_force("AB").is_empty());
-        assert!(brute_force("ABC").is_empty());
+        assert!(brute_force("AB").unwrap().is_empty());
+        assert!(brute_force("ABC").unwrap().is_empty());
+    }
+
+    #[test]
+    fn test_portable_scalar_ragged_and_padding_vectors() {
+        assert_eq!(encrypt("A😀Bé", 3).unwrap(), "Aé😀 B ");
+        assert_eq!(decrypt("Aé😀 B ", 3).unwrap(), "A😀Bé");
+        assert_eq!(encrypt("Ae\u{0301}B", 3).unwrap(), "ABe \u{0301} ");
+        assert_eq!(decrypt("ABe \u{0301} ", 3).unwrap(), "Ae\u{0301}B");
+        assert_eq!(decrypt("ABCDEF", 4).unwrap(), "ACEFBD");
+        assert_eq!(decrypt("A\tB ", 2).unwrap(), "AB\t");
+        assert_eq!(decrypt("A\u{00a0}\t \n ", 3).unwrap(), "A\t\n\u{00a0}");
+    }
+
+    #[test]
+    fn test_brute_force_rejects_oversized_scalar_input() {
+        assert_eq!(
+            brute_force(&"A".repeat(MAX_BRUTE_FORCE_TEXT_LENGTH + 1)),
+            Err("scytale-brute-force-limit".to_string())
+        );
     }
 
     #[test]

@@ -224,6 +224,10 @@ class TestBruteForce:
             assert isinstance(r["key"], int)
             assert isinstance(r["text"], str)
 
+    def test_brute_force_rejects_oversized_scalar_input(self) -> None:
+        with pytest.raises(ValueError, match="^scytale-brute-force-limit$"):
+            brute_force("A" * 4097)
+
 
 class TestEdgeCases:
     """Edge cases: empty strings, single characters, etc."""
@@ -272,6 +276,15 @@ class TestCharacterPreservation:
         ct = encrypt(text, 2)
         pt = decrypt(ct, 2)
         assert pt == text
+
+    def test_portable_scalar_ragged_and_padding_vectors(self) -> None:
+        assert encrypt("A😀Bé", 3) == "Aé😀 B "
+        assert decrypt("Aé😀 B ", 3) == "A😀Bé"
+        assert encrypt("Ae\u0301B", 3) == "ABe \u0301 "
+        assert decrypt("ABe \u0301 ", 3) == "Ae\u0301B"
+        assert decrypt("ABCDEF", 4) == "ACEFBD"
+        assert decrypt("A\tB ", 2) == "AB\t"
+        assert decrypt("A\u00A0\t \n ", 3) == "A\t\n\u00A0"
 
 
 class TestVersion:

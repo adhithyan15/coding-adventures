@@ -42,6 +42,16 @@ class TestScytaleCipherDecrypt < Minitest::Test
   def test_empty_string
     assert_equal "", CodingAdventures::ScytaleCipher.decrypt("", 2)
   end
+
+  def test_portable_scalar_ragged_and_padding_vectors
+    assert_equal "Aé😀 B ", CodingAdventures::ScytaleCipher.encrypt("A😀Bé", 3)
+    assert_equal "A😀Bé", CodingAdventures::ScytaleCipher.decrypt("Aé😀 B ", 3)
+    assert_equal "ABe \u0301 ", CodingAdventures::ScytaleCipher.encrypt("Ae\u0301B", 3)
+    assert_equal "Ae\u0301B", CodingAdventures::ScytaleCipher.decrypt("ABe \u0301 ", 3)
+    assert_equal "ACEFBD", CodingAdventures::ScytaleCipher.decrypt("ABCDEF", 4)
+    assert_equal "AB\t", CodingAdventures::ScytaleCipher.decrypt("A\tB ", 2)
+    assert_equal "A\t\n\u00A0", CodingAdventures::ScytaleCipher.decrypt("A\u00A0\t \n ", 3)
+  end
 end
 
 class TestScytaleCipherRoundTrip < Minitest::Test
@@ -111,6 +121,13 @@ class TestScytaleCipherBruteForce < Minitest::Test
 
   def test_short_text
     assert_equal [], CodingAdventures::ScytaleCipher.brute_force("AB")
+  end
+
+  def test_rejects_oversized_scalar_input
+    error = assert_raises(ArgumentError) do
+      CodingAdventures::ScytaleCipher.brute_force("A" * 4097)
+    end
+    assert_equal "scytale-brute-force-limit", error.message
   end
 end
 

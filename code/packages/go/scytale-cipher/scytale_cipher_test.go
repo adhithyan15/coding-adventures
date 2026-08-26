@@ -8,6 +8,7 @@ package scytalecipher
 
 import (
 	"errors"
+	"strings"
 	"testing"
 )
 
@@ -166,7 +167,10 @@ func TestBruteForce(t *testing.T) {
 		original := "HELLO WORLD"
 		key := 3
 		ct, _ := Encrypt(original, key)
-		results := BruteForce(ct)
+		results, err := BruteForce(ct)
+		if err != nil {
+			t.Fatalf("BruteForce returned unexpected error: %v", err)
+		}
 
 		found := false
 		for _, r := range results {
@@ -181,7 +185,10 @@ func TestBruteForce(t *testing.T) {
 	})
 
 	t.Run("returns all keys 2 to n/2", func(t *testing.T) {
-		results := BruteForce("ABCDEFGHIJ") // 10 chars
+		results, err := BruteForce("ABCDEFGHIJ") // 10 chars
+		if err != nil {
+			t.Fatalf("BruteForce returned unexpected error: %v", err)
+		}
 		if len(results) != 4 {              // keys 2,3,4,5
 			t.Errorf("Expected 4 results, got %d", len(results))
 		}
@@ -194,11 +201,44 @@ func TestBruteForce(t *testing.T) {
 	})
 
 	t.Run("short text returns nil", func(t *testing.T) {
-		results := BruteForce("AB")
+		results, err := BruteForce("AB")
+		if err != nil {
+			t.Fatalf("BruteForce returned unexpected error: %v", err)
+		}
 		if results != nil {
 			t.Errorf("Expected nil for short text, got %v", results)
 		}
 	})
+
+	t.Run("rejects work beyond the quadratic-output limit", func(t *testing.T) {
+		_, err := BruteForce(strings.Repeat("A", MaxBruteForceTextLength+1))
+		if !errors.Is(err, ErrBruteForceLimit) {
+			t.Fatalf("expected ErrBruteForceLimit, got %v", err)
+		}
+	})
+}
+
+func TestPortableScalarRaggedAndPaddingVectors(t *testing.T) {
+	encrypted, err := Encrypt("A😀Bé", 3)
+	if err != nil || encrypted != "Aé😀 B " {
+		t.Fatalf("Unicode encrypt = %q, %v", encrypted, err)
+	}
+	combining, err := Encrypt("Ae\u0301B", 3)
+	if err != nil || combining != "ABe \u0301 " {
+		t.Fatalf("combining encrypt = %q, %v", combining, err)
+	}
+	for _, testCase := range []struct{ text string; key int; expected string }{
+		{"Aé😀 B ", 3, "A😀Bé"},
+		{"ABe \u0301 ", 3, "Ae\u0301B"},
+		{"ABCDEF", 4, "ACEFBD"},
+		{"A\tB ", 2, "AB\t"},
+		{"A\u00a0\t \n ", 3, "A\t\n\u00a0"},
+	} {
+		actual, decryptErr := Decrypt(testCase.text, testCase.key)
+		if decryptErr != nil || actual != testCase.expected {
+			t.Fatalf("Decrypt(%q, %d) = %q, %v; want %q", testCase.text, testCase.key, actual, decryptErr, testCase.expected)
+		}
+	}
 }
 
 // TestPadding verifies padding behavior.

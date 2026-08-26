@@ -34,6 +34,11 @@ describe("ScytaleCipher", function()
         it("raises on key > text length", function()
             assert.has_error(function() scytale.encrypt("HI", 3) end)
         end)
+
+        it("uses Unicode scalar cells including decomposed combining marks", function()
+            assert.equals("Aé😀 B ", scytale.encrypt("A😀Bé", 3))
+            assert.equals("ABe \u{0301} ", scytale.encrypt("Ae\u{0301}B", 3))
+        end)
     end)
 
     -- Decryption tests
@@ -53,6 +58,14 @@ describe("ScytaleCipher", function()
         it("raises on invalid key", function()
             assert.has_error(function() scytale.decrypt("HELLO", 0) end)
             assert.has_error(function() scytale.decrypt("HI", 3) end)
+        end)
+
+        it("matches ragged, Unicode, and literal-space fixtures", function()
+            assert.equals("A😀Bé", scytale.decrypt("Aé😀 B ", 3))
+            assert.equals("Ae\u{0301}B", scytale.decrypt("ABe \u{0301} ", 3))
+            assert.equals("ACEFBD", scytale.decrypt("ABCDEF", 4))
+            assert.equals("AB\t", scytale.decrypt("A\tB ", 2))
+            assert.equals("A\t\n\u{00A0}", scytale.decrypt("A\u{00A0}\t \n ", 3))
         end)
     end)
 
@@ -101,6 +114,11 @@ describe("ScytaleCipher", function()
 
         it("returns empty for short text", function()
             assert.equals(0, #scytale.brute_force("AB"))
+        end)
+
+        it("rejects work beyond the quadratic-output limit", function()
+            local oversized = string.rep("A", scytale.MAX_BRUTE_FORCE_TEXT_LENGTH + 1)
+            assert.has_error(function() scytale.brute_force(oversized) end, "scytale-brute-force-limit")
         end)
     end)
 
