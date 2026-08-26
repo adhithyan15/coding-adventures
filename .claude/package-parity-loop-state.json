@@ -11,21 +11,16 @@
     "selection_rule": "host-security, credential, native-runtime, and external-approval work may inform classification but is never selected by this parity loop",
     "excluded_delivery_classes": ["onvif", "host-security-hardening", "native-runtime", "external-approval"]
   },
-  "active_pr": {
-    "number": 13095,
-    "url": "https://github.com/adhithyan15/coding-adventures/pull/13095",
-    "branch": "codex/dart-trie-parity",
-    "status": "open"
-  },
+  "active_pr": null,
   "last_inventory": {
-    "revision": "9ae79c55494056324a7518715b005ca8594c4472",
+    "revision": "f7de03cfbecfe2532e18e2112961a5185615eaeb",
     "schema_version": 3,
     "established_languages": 15,
     "implementation_identities": 1373,
-    "implementation_package_slots": 4581,
+    "implementation_package_slots": 4582,
     "all_reported_identities": 1412,
     "high_consensus_packages": 175,
-    "high_consensus_missing_slots": 267,
+    "high_consensus_missing_slots": 266,
     "five_to_nine_packages": 123,
     "five_to_nine_missing_slots": 934,
     "two_to_four_packages": 166,
@@ -2274,10 +2269,12 @@
     {
       "id": "classical-cipher-language-neutral-fixtures-and-analysis-contract",
       "title": "Define CR01-CR03 language-neutral fixtures and exact Vigenere analysis behavior",
-      "status": "pending",
+      "status": "in-progress",
       "depends_on": [],
-      "branch": null,
+      "branch": "codex/classical-cipher-neutral-fixtures",
       "pr_number": null,
+      "selection_revision": "f7de03cfbecfe2532e18e2112961a5185615eaeb",
+      "selection_notes": "Selected after PR #13095 completed all 40 terminal acceptable checks, GitHub reported a clean merge state, and squash auto-merge merged reviewed head fe0fd77c2af7ea8bf5df6b937b0ee08e62536625 as b2a237322f3f595385eb33f80e6793734659c524 at 2026-08-26T20:29:30Z without a manual merge command. The branch was refreshed onto current exact origin/main f7de03cfbecfe2532e18e2112961a5185615eaeb after disjoint mainline changes. The schema-3 report remains collision-clean at 15 established lanes, 1,373 implementation identities, 4,582 slots, and 1,412 all-reported identities; bands are 175/266, 123/934, 166/2,087, and 909/12,726, with 720 Rust singletons, zero collisions, zero unknown buckets, and OCaml emerging at zero packages. No new topology owner was needed. The reference pass did add a Fenwick-tree neutral contract owner before selection because DT06 leaves the numeric domain, negative-size behavior, bounds errors, and findKth monotonic-prefix precondition unresolved. No live PR overlaps the CR01-CR03 specification, neutral-fixture, state, or roadmap slice. This dependency-free fixture owner has the largest bounded leverage because it unlocks both registered Scytale and Vigenere established-lane conformance children; the DT13 neutral corpus unlocks one child, while the remaining Dart ports unlock none. OCaml's process-free substrate remains collision-unsafe while PRs #12149 and #12162 own required Go build-tool entry-point and validator surfaces. No additional registered worktree met the clean exact-merged-head deletion rule.",
       "notes": "Discovered during the post-#13070 reference audit before the Dart CR01-CR03 implementation. No language-neutral CR01-CR03 fixture corpus exists, and Vigenere cryptanalysis diverges: four lanes return key length 2 for insufficient signal while ten return 1; IC selection uses a 95% threshold in eight lanes, 90% in three, and a raw maximum in three; Java and Kotlin alone shorten repeating recovered keys. Pin the ASCII substitution/transposition vectors, insufficient-signal behavior, IC threshold and tie-breaking, exact long-English recovery corpus, analysis bounds, and deterministic diagnostics before dependent cross-lane remediation."
     },
     {
@@ -2319,7 +2316,7 @@
     {
       "id": "dart-current-14-of-15-trie",
       "title": "Port the DT13 trie package to Dart",
-      "status": "pr-open",
+      "status": "merged",
       "depends_on": ["dart-scaffold-capability-schema"],
       "branch": "codex/dart-trie-parity",
       "pr_number": 13095,
@@ -2327,7 +2324,7 @@
       "selection_notes": "Selected after PR #13083 completed all 40 terminal acceptable checks, GitHub reported a clean merge state, and squash auto-merge merged reviewed head 5beb364839614d82e3dc33a2b6321ce1f422f128 as 9ae79c55494056324a7518715b005ca8594c4472 at 2026-08-26T18:48:24Z without a manual merge command. The exact-main schema-3 report is collision-clean at 15 established lanes, 1,373 implementation identities, 4,581 slots, and 1,412 all-reported identities; bands are 175/267, 123/934, 166/2,087, and 909/12,726, with 720 Rust singletons, zero collisions, zero unknown buckets, and OCaml emerging at zero packages. Only the expected three Dart cipher slots changed topology, so no topology owner was required. The reference pass did add explicit neutral-fixture and all-lane conformance owners for DT13 key units, Unicode order, empty-prefix behavior, and nullable-value presence before this implementation began. All seven live open PRs have zero exact overlap with the DT13 specification, Dart trie package, state, and roadmap surfaces. Trie is missing only Dart, its scaffold dependency is merged, and its dependency-free deterministic contract closes one identity at 15/15 while establishing the package prerequisite for the separately tracked Dart LZ78 shared-trie migration. Fenwick tree is an isolated runner-up; binary-search-tree still needs API reconciliation; the Haskell event-loop/Brotli pair is unrelated and higher risk; and the classical-cipher neutral fixture owner remains the next cross-lane conformance tranche. Swift paint-vm-ascii remains owned by open PR #12149. OCaml's process-free substrate remains collision-unsafe while open PRs #12149 and #12162 own required Go build-tool entry-point and validator surfaces.",
       "notes": "Materialized from the remaining Dart-only 14-of-15 frontier after PR #9477. Deliver the standalone generic trie contract first; migrate existing Dart LZ78 duplication separately so the foundational port remains reviewable.",
       "validation_notes": "Implemented the generic DT13 Dart trie in specification, tests, source, and documentation order. Nineteen package tests pass with 109/109 production lines covered; format and fatal analysis are clean. The contract pins Unicode-scalar edges and numeric order without normalization, nullable endpoint presence, empty keys and prefixes, upsert counts, iterative enumeration/deletion/validation, longest-prefix fallback, pruning, and a 50,001-scalar stack-safety case. Independent review findings were resolved by making DT13 pseudocode iterative and nullable-safe, rejecting malformed UTF-16 atomically before insertion and before traversal even after an earlier missing edge, redacting missing-key errors, and streaming longest-prefix traversal so it does not materialize the remaining input. The existing Dart LZ78 downstream suite passes 47 tests and the Dart scaffold generator passes 17 tests. The Go build tool passes all tests and vet; its real exact-diff execution evaluates 45 Starlark files, discovers 90 Dart packages, builds only dart/trie, and skips 89. The schema-3 collision gate reports 1,373 identities, 4,582 slots, 175 high-consensus identities with 266 missing slots, trie at 15/15, zero collisions, and zero unknown buckets. The 531-owner/790-edge state graph is complete and acyclic at 156 merged, 374 pending, and one in-progress owner with no active parity PR.",
-      "publication_notes": "Opened ready-for-review PR #13095 from validated head 0526bd71ca271cc00350efa565e379f2f69ba12d on exact origin/main 7fe720dc8a806232732390aaeb85a115ee208709 after a normal first push. Before publication, origin/main advanced through six disjoint Mosaic, Rust/Wasm, Mermaid, Japanese, Gujarati, and Punjabi changes; every rebase was conflict-free and required no force push. Eleven live open PRs had zero exact path overlap with this 13-file slice at the final ownership audit. GitHub reports the PR non-draft and mergeable; checks are queued or in progress, merge state is blocked only by branch protections, and auto-merge remains disabled until every required check is terminal and acceptable."
+      "publication_notes": "Opened ready-for-review PR #13095 from validated head 0526bd71ca271cc00350efa565e379f2f69ba12d on exact origin/main 7fe720dc8a806232732390aaeb85a115ee208709 after a normal first push. Before publication, origin/main advanced through six disjoint Mosaic, Rust/Wasm, Mermaid, Japanese, Gujarati, and Punjabi changes; every rebase was conflict-free and required no force push. Eleven live open PRs had zero exact path overlap with this 13-file slice at the final ownership audit. The state-recording head fe0fd77c2af7ea8bf5df6b937b0ee08e62536625 completed all 40 reported checks with 33 successes, seven expected skips, and no failures or pending work. GitHub reported the branch clean and mergeable; the loop enabled squash auto-merge, and GitHub merged PR #13095 as b2a237322f3f595385eb33f80e6793734659c524 at 2026-08-26T20:29:30Z without a manual merge command. The exact merged-head worktree was removed after a clean-status and PR-head identity check."
     },
     {
       "id": "dart-lz78-shared-trie-migration",
@@ -2348,13 +2345,22 @@
       "notes": "Materialized from the remaining Dart-only 14-of-15 frontier after PR #9477. Reconcile the cross-lane empty min/max, invalid-rank, comparator, and conceptual tree/binary-tree prerequisite differences before implementation."
     },
     {
+      "id": "fenwick-tree-language-neutral-fixtures-and-index-contract",
+      "title": "Define DT06 language-neutral indexing, numeric, bounds, and order-statistics fixtures",
+      "status": "pending",
+      "depends_on": [],
+      "branch": null,
+      "pr_number": null,
+      "notes": "Discovered during the post-#13095 reference audit before Dart Fenwick-tree selection. DT06 specifies a 1-based integer API but does not close the numeric domain, constructor and bounds error identifiers, or findKth's monotone-prefix precondition. Existing lanes also diverge because Swift clamps negative sizes while TypeScript, C#, and F# reject them, and build/update permit negative values although order-statistic search assumes non-negative frequencies. Pin these semantics and portable fixtures before the Dart port or any all-lane remediation."
+    },
+    {
       "id": "dart-current-14-of-15-fenwick-tree",
       "title": "Port the DT06 Fenwick tree package to Dart",
       "status": "pending",
-      "depends_on": ["dart-scaffold-capability-schema"],
+      "depends_on": ["dart-scaffold-capability-schema", "fenwick-tree-language-neutral-fixtures-and-index-contract"],
       "branch": null,
       "pr_number": null,
-      "notes": "Materialized from the remaining Dart-only 14-of-15 frontier after PR #9477. Deliver the dependency-free prefix-sum structure with shared indexing, numeric, bounds, and error fixtures."
+      "notes": "Materialized from the remaining Dart-only 14-of-15 frontier after PR #9477 and refined by the post-#13095 reference audit. Deliver the dependency-free prefix-sum structure only after the neutral DT06 owner pins indexing, the integer domain, negative-size and bounds errors, and findKth's monotone-prefix precondition."
     },
     {
       "id": "dart-current-14-of-15-uuid",
