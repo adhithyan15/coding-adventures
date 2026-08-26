@@ -213,6 +213,157 @@ BUILD
     );
 };
 
+subtest 'orphan-crate validator consumes every language-neutral fixture' => sub {
+    my $repo_root = abs_path("$Bin/../../../../..");
+    my $cases = "$repo_root/code/specs/fixtures/build-tool-v1/cases";
+
+    for my $name (qw(crates-clean crates-unlisted exemptions-invalid exemptions-stale)) {
+        my $fixture = read_json("$cases/validation-orphan-$name.json");
+        my $snapshot = $fixture->{input}{options}{orphan_snapshot};
+        my $actual = CodingAdventures::BuildTool::Validator::validate_orphan_crate_snapshot(
+            $snapshot,
+        );
+        my %actual_result = %{$actual};
+        delete $actual_result{diagnostics};
+
+        is($actual->{diagnostics}, $fixture->{expected}{diagnostics}, "$name diagnostics match");
+        is(\%actual_result, $fixture->{expected}{result}, "$name result matches");
+    }
+};
+
+subtest 'orphan-crate validator redacts unsafe paths including invalid UTF-8' => sub {
+    my $invalid_utf8 = "code/packages/rust/\xFF";
+    my @unsafe_paths = (
+        '',
+        "😀" x 513,
+        '/absolute/secret-project',
+        'C:/host/secret-project',
+        'code/packages/rust/bad<name>',
+        'code/packages/rust/trailing.',
+        'code/packages/rust/CON',
+        $invalid_utf8,
+    );
+
+    for my $unsafe_path (@unsafe_paths) {
+        my $result = CodingAdventures::BuildTool::Validator::validate_orphan_crate_snapshot({
+            directories => ['code/packages/rust/demo'],
+            manifests => [{ path => 'code/packages/rust/demo', kind => 'package' }],
+            build_files => [],
+            exemptions => [{
+                line => 7,
+                kind => 'PENDING',
+                path => $unsafe_path,
+                reason => 'not allowed',
+            }],
+        });
+        my ($invalid) = grep { $_->{code} eq 'ORPHAN_EXEMPTION_INVALID' }
+            @{$result->{diagnostics}};
+
+        is(
+            $invalid,
+            {
+                code => 'ORPHAN_EXEMPTION_INVALID',
+                severity => 'error',
+                path => 'code/BUILD-EXEMPTIONS',
+                details => { line => 7, problem => 'PATH_UNSAFE' },
+            },
+            'unsafe path is replaced by the fixed ledger diagnostic',
+        );
+        ok(!exists $invalid->{details}{path}, 'raw unsafe path is not retained');
+    }
+};
+
+subtest 'orphan-crate validator uses the exact Python blank-reason set' => sub {
+    my $result = CodingAdventures::BuildTool::Validator::validate_orphan_crate_snapshot({
+        directories => ['code/packages/rust/blank', 'code/packages/rust/bom'],
+        manifests => [
+            { path => 'code/packages/rust/blank', kind => 'package' },
+            { path => 'code/packages/rust/bom', kind => 'package' },
+        ],
+        build_files => [],
+        exemptions => [
+            { line => 7, kind => 'PENDING', path => 'code/packages/rust/blank', reason => "\x{001C}" },
+            { line => 8, kind => 'PENDING', path => 'code/packages/rust/bom', reason => "\x{FEFF}" },
+        ],
+    });
+
+    is($result->{pending_exemption_count}, 1, 'BOM reason remains active and non-blank');
+    is(
+        $result->{diagnostic_codes},
+        ['ORPHAN_CRATE_UNLISTED', 'ORPHAN_EXEMPTION_INVALID'],
+        'blank entry fails closed without suppressing its orphan',
+    );
+    is(
+        $result->{diagnostics}[-1]{details}{problem},
+        'REASON_MISSING',
+        'information-separator reason is blank',
+    );
+};
+
+subtest 'orphan-crate validator chooses closest empty BUILD then fixed name rank' => sub {
+    my $result = CodingAdventures::BuildTool::Validator::validate_orphan_crate_snapshot({
+        directories => ['code/packages/rust/demo/child'],
+        manifests => [{ path => 'code/packages/rust/demo/child', kind => 'package' }],
+        build_files => [
+            { path => 'code/packages/rust/BUILD', state => 'empty' },
+            { path => 'code/packages/rust/demo/BUILD_linux', state => 'empty' },
+            { path => 'code/packages/rust/demo/BUILD', state => 'empty' },
+            { path => 'code/packages/rust/demo2/BUILD', state => 'runnable' },
+        ],
+        exemptions => [],
+    });
+
+    is(
+        $result->{diagnostics}[0]{details}{build_path},
+        'code/packages/rust/demo/BUILD',
+        'component ancestor and fixed BUILD filename order choose the diagnostic path',
+    );
+};
+
+subtest 'orphan-crate validator reserves NFC full-fold identity before precedence' => sub {
+    my $result = CodingAdventures::BuildTool::Validator::validate_orphan_crate_snapshot({
+        directories => ['code/packages/rust/Straße'],
+        manifests => [{ path => 'code/packages/rust/Straße', kind => 'package' }],
+        build_files => [],
+        exemptions => [
+            { line => 7, kind => 'UNKNOWN', path => 'code/packages/rust/Straße', reason => 'first' },
+            { line => 8, kind => 'PENDING', path => 'CODE/PACKAGES/RUST/STRASSE', reason => 'duplicate' },
+        ],
+    });
+    my @invalid = map { $_->{details} }
+        grep { $_->{code} eq 'ORPHAN_EXEMPTION_INVALID' } @{$result->{diagnostics}};
+
+    is(
+        \@invalid,
+        [
+            { line => 7, problem => 'UNKNOWN_KIND' },
+            { line => 8, problem => 'DUPLICATE_PATH' },
+        ],
+        'the first portable spelling reserves the duplicate identity even when otherwise invalid',
+    );
+};
+
+subtest 'orphan-crate validator uses ASCII JSON Unicode detail ordering' => sub {
+    my $accented = 'code/packages/rust/é';
+    my $emoji = 'code/packages/rust/😀';
+    my $result = CodingAdventures::BuildTool::Validator::validate_orphan_crate_snapshot({
+        directories => [],
+        manifests => [],
+        build_files => [],
+        exemptions => [
+            { line => 9, kind => 'EXCLUDED', path => 'code/packages/rust/z', reason => 'removed' },
+            { line => 8, kind => 'EXCLUDED', path => $emoji, reason => 'removed' },
+            { line => 7, kind => 'EXCLUDED', path => $accented, reason => 'removed' },
+        ],
+    });
+
+    is(
+        [map { $_->{details}{entry_path} } @{$result->{diagnostics}}],
+        [$accented, $emoji, 'code/packages/rust/z'],
+        'canonical ASCII JSON details define the portable final sort key',
+    );
+};
+
 subtest 'tracked-artifact validator consumes every language-neutral fixture' => sub {
     my $repo_root = abs_path("$Bin/../../../../..");
     my $cases = "$repo_root/code/specs/fixtures/build-tool-v1/cases";
