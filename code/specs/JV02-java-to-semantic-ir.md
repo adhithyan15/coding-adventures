@@ -480,11 +480,36 @@ with the loop body at all (it lives in a separate wrapped-condition
 this crate previously had to reject (`for (int i = 0; ...; i++) { int i
 = 999; ... }`) is now structurally impossible and no longer rejected —
 more faithful to real Java scoping than the old "append to body" shape
-was. See `java-to-semantic-ir`'s own `CHANGELOG.md` `[0.12.0]` entry for
-the full before/after shapes, and its `tests/loop_control_java_
-execution.rs` for `node`-execution-proof tests (two of which are direct
-termination-regression tests for the bugs above — a reintroduction of
-either would hang the affected test, not fail it cleanly).
+was. **A second `/security-review` round, on this very fix, found a
+THIRD real non-termination bug**: the two new synthetic flag names
+(`__do_while_N`/`__for_first_N`) were plain, legal Java identifiers,
+checked only against locals visible *before* the loop body was lowered
+— but the flag's own *reference* now lives inside the loop's
+*condition*, which several backends (`semantic-ir-to-python`,
+`semantic-ir-to-ruby`) compile with FLAT scoping relative to the body
+(no new scope opens for either). A body-declared local sharing the
+flag's exact name (`__do_while_0` is a legal Java identifier — a real,
+reachable case, not hypothetical) silently re-armed the flag every
+iteration under those backends, reproducing the identical infinite-loop
+shape the fix above exists to close — confirmed by actually executing
+the emitted Python and observing a hang, not by inspection. Fixed by
+making the flag names **unforgeable** rather than merely checked: `#`
+is not a legal Java identifier character (JLS §3.8), so `__do_while#N`/
+`__for_first#N` can never collide with any name real Java source
+declares, under any backend's scoping, at any nesting depth — every
+backend's own `sanitize_ident` already deterministically escapes `#`
+for its target language, so this needed no backend-side change; the
+now-provably-unreachable `lookup_local` collision-retry loop (and the
+`lookup_local` wrapper itself, once nothing else called it) were
+removed rather than left in place. See `java-to-semantic-ir`'s own
+`CHANGELOG.md` `[0.12.0]` entry for the full before/after shapes, its
+`tests/loop_control_java_execution.rs` for `node`-execution-proof tests
+(two of which are direct termination-regression tests for the first two
+bugs above), and its `tests/loop_control_flat_scoping_regression.rs` for
+two more that reproduce the third bug against the real Python backend
+specifically (where it actually manifested), each with a hard 15-second
+wall-clock timeout so a reintroduction fails the test cleanly instead of
+hanging the suite.
 
 **M5 — statics/breadth parity groundwork.** Pulled forward from the
 original M9 slot: static field/method access patterns

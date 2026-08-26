@@ -157,8 +157,20 @@ synthetic "bookkeeping" statement — a guard-flag clear, an update clause —
 to the very end of the lowered body, which a `continue` anywhere earlier
 would skip entirely): both are fixed by moving that bookkeeping *into*
 the loop's own condition expression instead, the one position a
-`continue` can never skip — see `CHANGELOG.md`'s `[0.12.0]` entry for the
-full before/after shapes. Everything else — `switch`
+`continue` can never skip. **A second `/security-review` round on that
+fix found a third bug**: the synthetic flag names it introduced
+(`__do_while_N`/`__for_first_N`) were legal Java identifiers checked
+only against locals visible *before* the loop, but their own reference
+now lives inside the loop's *condition* — which several backends
+(Python, Ruby) compile with flat scoping relative to the body — so a
+body-declared local sharing the flag's exact name silently re-armed it
+every iteration under those backends, the identical infinite-loop shape
+again. Fixed by making the flag names unforgeable (`__do_while#N`/
+`__for_first#N` — `#` is illegal in a Java identifier per JLS §3.8) so
+no real Java source can ever collide with them, under any backend's
+scoping, at any nesting depth — see `CHANGELOG.md`'s `[0.12.0]` entry
+for the full before/after shapes and the real-Python-backend regression
+tests this finding added. Everything else — `switch`
 (SIR still has no IR node for it at all — confirmed by a repo-wide grep,
 not assumed — so this needs its own spec-level design decision before
 any frontend can target it, tracked as task #51; `break`/`continue`
@@ -326,6 +338,18 @@ JV02 spec's milestone table for what comes next.
   the wrong answer; a reintroduction of either bug would hang the
   corresponding test rather than fail it cleanly. Gracefully skips when
   `node` is absent from `PATH`.
+- `tests/loop_control_flat_scoping_regression.rs` (task #64, added by a
+  second `/security-review` round): 2 real-`python3`-execution regression
+  tests for the flag-name-collision bug this file's own module doc
+  comment and `CHANGELOG.md`'s `[0.12.0]` entry describe — the bug never
+  reproduced through the JavaScript backend (real `let`/IIFE scoping
+  there), only through backends that compile a loop condition/body pair
+  with flat scoping, so these tests run the exact reported scenario
+  through the real Python backend instead. Each has a hard 15-second
+  wall-clock timeout (`Command::spawn` + polling `try_wait`, not the
+  unbounded `Command::output()` every other harness here uses) so a
+  reintroduction of this specific bug fails the test cleanly instead of
+  hanging the whole suite. Gracefully skips when `python3` is absent.
 
 ## How it fits in the stack
 

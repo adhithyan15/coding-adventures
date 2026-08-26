@@ -1079,7 +1079,11 @@ fn do_while_desugars_to_a_flag_guarded_while_not_a_body_clone() {
                     value: Expr::BoolLit { value: true, .. },
                     ..
                 } => {
-                    assert!(name.starts_with("__do_while_"));
+                    // `#` is not a legal Java identifier character —
+                    // deliberately unforgeable by real Java source, not
+                    // just checked against it (see the function's own
+                    // doc comment, `/security-review`).
+                    assert!(name.starts_with("__do_while#"));
                 }
                 other => {
                     panic!("expected LetStarBinding(BoolLit(true)) flag declaration, got {other:?}")
@@ -1202,22 +1206,27 @@ fn do_while_flag_name_does_not_collide_with_a_same_named_user_variable() {
 }
 
 #[test]
-fn do_while_flag_name_collision_with_a_body_local_is_now_structurally_impossible() {
+fn do_while_flag_name_is_unforgeable_even_when_the_body_declares_the_underscore_lookalike() {
     // Historical note (this test previously locked in a THIRD round of
-    // /security-review's own fix, `body_declares_name`): when the
-    // flag-clear was appended to the body's own `Block.stmts`, a body
-    // local sharing the flag's exact name could shadow that appended
-    // assignment under real block scoping, so the flag would never
-    // clear -- an infinite loop. Task #64's own fix (see
-    // `lower_do_while_statement`'s doc comment) moves the flag-clear out
-    // of the body entirely, into the wrapped condition expression, to
-    // fix a DIFFERENT bug (`continue` skipping it) -- and as a side
-    // effect, the body can no longer see or shadow the flag at all,
-    // since the two no longer share a scope. `body_declares_name`'s own
-    // collision check is gone (nothing left for it to catch); this test
-    // now instead locks in that a body declaring `__do_while_0` no
-    // longer needs the flag to pick a different name, since there is no
-    // collision risk left to avoid.
+    // /security-review's own fix, `body_declares_name`, and — in an
+    // earlier version of *this* commit — incorrectly claimed the flag
+    // could safely reuse the exact name `__do_while_0` once the
+    // flag-clear moved out of the body's own scope; a FOURTH
+    // /security-review round caught that claim as false: the flag's own
+    // *reference* still lives inside the loop condition, and several
+    // backends (Python, Ruby) compile a SIR condition/body pair with
+    // FLAT scoping — no new scope opened for either — so a body-declared
+    // local named exactly `__do_while_0` would still re-arm the flag to
+    // `true` every iteration under those backends, an infinite loop, the
+    // do-while counterpart of the classic-`for` update-clause bug this
+    // whole fix pass exists to close). The real, correct fix (see
+    // `lower_do_while_statement`'s own doc comment) makes the flag name
+    // unforgeable instead of merely checked: `#` is not a legal Java
+    // identifier character, so `__do_while#0` can never collide with any
+    // name real Java source declares, at any nesting depth, under any
+    // backend's scoping rules — this test locks in that a body
+    // declaring the closest *legal* Java lookalike (`__do_while_0`, with
+    // an underscore) still gets an untouched, distinctly-named flag.
     let m = compile_ok(&wrap(
         "int y = 0; do { boolean __do_while_0 = true; y = y + 1; } while (y < 3); y;",
     ));
@@ -1228,9 +1237,9 @@ fn do_while_flag_name_collision_with_a_body_local_is_now_structurally_impossible
         } => {
             match &block.stmts[0] {
                 Stmt::LetStarBinding { name, .. } => {
-                    assert_eq!(
-                        name, "__do_while_0",
-                        "the flag can safely reuse the counter's first name -- no collision is possible anymore"
+                    assert!(
+                        name.starts_with("__do_while#"),
+                        "flag name must be the unforgeable `#`-based form, got {name:?}"
                     );
                 }
                 other => panic!("expected LetStarBinding flag declaration, got {other:?}"),
@@ -1294,7 +1303,10 @@ fn classic_for_loop_desugars_to_init_flag_then_while() {
                     value: Expr::BoolLit { value: true, .. },
                     ..
                 } => {
-                    assert!(name.starts_with("__for_first_"));
+                    // `#` is not a legal Java identifier character — see
+                    // `do_while_desugars_to_a_flag_guarded_while_not_a_
+                    // body_clone`'s own identical comment.
+                    assert!(name.starts_with("__for_first#"));
                 }
                 other => {
                     panic!("expected LetStarBinding(BoolLit(true)) flag declaration, got {other:?}")

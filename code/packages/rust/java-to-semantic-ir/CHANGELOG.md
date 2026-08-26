@@ -87,6 +87,36 @@ All notable changes to the `java-to-semantic-ir` crate will be documented in thi
     regression tests for the bugs above — a reintroduction of either bug
     would hang the affected test rather than fail it cleanly, the nature
     of a termination-correctness regression test.
+  - **A second `/security-review` round, on the fix above, found a THIRD
+    real bug (HIGH) in that same fix**: both new synthetic flag names
+    (`__do_while_N`/`__for_first_N`) were plain, legal Java identifiers,
+    checked only against `lookup_local` (locals visible *before* the loop
+    body was lowered). Their own *reference*, though, now lives inside
+    the loop's **condition** expression — and several backends compile a
+    SIR condition/body pair with FLAT scoping (no new scope opens for
+    either): `semantic-ir-to-python`'s `emit_block_as_expr` renders both
+    as ordinary Python `:=`/`=` assignments in the *enclosing* scope,
+    and `semantic-ir-to-ruby` is the same. A body-declared local sharing
+    the flag's exact name (a real, reachable case — `__do_while_0` is a
+    legal Java identifier) silently re-arms the flag every iteration
+    under those backends, reproducing the identical infinite-loop shape
+    the fix above exists to close — confirmed by actually executing the
+    emitted Python and observing a hang, not by inspection alone. Fixed
+    by making the flag's own name **unforgeable** rather than merely
+    checked: it now embeds `#`, a character JLS §3.8 forbids in a Java
+    identifier (`__do_while#N`/`__for_first#N`), so no real Java source
+    can ever declare a colliding local, under any backend's scoping
+    rules, at any nesting depth — every backend's own `sanitize_ident`
+    already deterministically escapes the `#` for its target language, so
+    this needs no backend-side change. The now-redundant `lookup_local`
+    collision-retry loop (and, since nothing else called the plain
+    `lookup_local` wrapper, that dead function itself) were removed —
+    collision is structurally impossible, not merely checked-and-avoided.
+    Two new `tests/loop_control_flat_scoping_regression.rs` tests run the
+    exact reported scenario through the real Python backend (not just
+    JavaScript, where the bug never reproduced) with a hard 15-second
+    wall-clock timeout, so a reintroduction of this specific bug fails
+    the test cleanly instead of hanging the suite.
 
 ## [0.11.0] - 2026-08-26
 

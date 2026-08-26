@@ -591,7 +591,7 @@ struct Lowerer {
     /// declared inside a nested block is visible only within that block
     /// and any blocks nested inside *it*, never after it ends nor to a
     /// sibling block. `push_scope`/`pop_scope`/`declare_local`/
-    /// `lookup_local` below are this crate's own mirror of that stack,
+    /// `lookup_local_with_frame` below are this crate's own mirror of that stack,
     /// not merely a leak-prevention bookkeeping list — a Java program can
     /// shadow an outer local with the same name in a nested block-scoped
     /// language (in fact Java forbids that specific case, but this
@@ -790,25 +790,16 @@ impl Lowerer {
             .insert(name, (kind, Scope::Param));
     }
 
-    /// Look up `name`, searching from the innermost scope outward —
-    /// exactly the lexical-shadowing order a real name lookup needs.
-    /// Returns the declaration's `Kind` *and* its `Scope` tag (`Local` or
-    /// `Param`) — see the `locals` field's own doc comment for why both
-    /// matter to every caller that goes on to build a `VarRef`/`Assign`.
-    ///
-    /// A thin wrapper over `lookup_local_with_frame`, dropping the frame
-    /// index that only capture-aware resolution (`resolve_name`) needs —
-    /// kept as its own method so the many M1–M3a call sites that predate
-    /// M3b's lambdas need no change.
-    fn lookup_local(&self, name: &str) -> Option<(Kind, Scope)> {
-        self.lookup_local_with_frame(name).map(|(k, s, _)| (k, s))
-    }
-
-    /// Like `lookup_local`, but also returns the `locals` frame index the
-    /// name was found in — needed by `resolve_name` to decide whether a
-    /// reference crosses a lambda's own `ClosureFrame::locals_mark` (i.e.
-    /// is a genuine capture) or is simply local/param to whichever
-    /// function is currently being lowered.
+    /// Look up `name` *and* the `locals` frame index it was found in,
+    /// searching from the innermost scope outward — exactly the lexical-
+    /// shadowing order a real name lookup needs, and the frame index
+    /// `resolve_name` needs to decide whether a reference crosses a
+    /// lambda's own `ClosureFrame::locals_mark` (i.e. is a genuine
+    /// capture) or is simply local/param to whichever function is
+    /// currently being lowered. Returns the declaration's `Kind` *and*
+    /// its `Scope` tag (`Local` or `Param`) — see the `locals` field's
+    /// own doc comment for why both matter to every caller that goes on
+    /// to build a `VarRef`/`Assign`.
     fn lookup_local_with_frame(&self, name: &str) -> Option<(Kind, Scope, usize)> {
         self.locals
             .iter()
@@ -818,10 +809,7 @@ impl Lowerer {
     }
 
     /// Resolve a bare name for use as a `VarRef`/assignment target,
-    /// capture-aware — the M3b counterpart of `lookup_local`, and what
-    /// every *use* of a resolved name (as opposed to internal kind-only
-    /// checks like the `do`-`while` flag-collision probe) should call
-    /// instead.
+    /// capture-aware — what every *use* of a resolved name should call.
     ///
     /// Mirrors `javascript-to-semantic-ir`'s "on-resolve" capture
     /// discovery: a capture is never pre-scanned for, it simply falls
@@ -1838,12 +1826,30 @@ impl Lowerer {
         self.observed.add(Feature::Loops);
         self.observed.add(Feature::MutableBindings);
 
-        let mut flag_name = format!("__do_while_{}", self.do_while_counter);
+        // `#` is not a legal character in a Java identifier (JLS §3.8), so
+        // no real Java source can ever declare a local named `__do_while#N`
+        // — this makes the flag's name unforgeable by construction,
+        // rather than relying on a collision *check* against real Java
+        // locals (`/security-review` found the flag's own reference now
+        // lives inside the loop *condition*, which several backends
+        // compile with FLAT scoping relative to the loop body — e.g.
+        // `semantic-ir-to-python`'s `emit_block_as_expr` renders both the
+        // condition and the body as ordinary Python assignments, no new
+        // scope opened for either — so a `lookup_local`-only check, which
+        // by this point can no longer see anything the body itself
+        // declares, missed the case where the BODY shadows the flag, not
+        // the other way around: a body-declared local named exactly
+        // `__do_while_0` would re-arm the flag to `true` on every
+        // iteration, making the loop **run forever** regardless of the
+        // real condition — the do-while counterpart of the classic-`for`
+        // update-clause bug this same fix pass already found). Every
+        // backend's own `sanitize_ident` (see e.g. `semantic-ir-to-
+        // javascript::sanitize_ident`) already deterministically escapes
+        // any character outside its target language's own identifier
+        // alphabet, so this name still lowers to a valid, unique
+        // identifier in every backend without any backend-side change.
+        let flag_name = format!("__do_while#{}", self.do_while_counter);
         self.do_while_counter += 1;
-        while self.lookup_local(&flag_name).is_some() {
-            flag_name = format!("__do_while_{}", self.do_while_counter);
-            self.do_while_counter += 1;
-        }
 
         let flag_decl = Stmt::LetStarBinding {
             name: flag_name.clone(),
@@ -2050,12 +2056,21 @@ impl Lowerer {
         let (flag_decl, while_cond) = match update_stmt {
             None => (None, cond),
             Some(update) => {
-                let mut flag_name = format!("__for_first_{}", self.for_counter);
+                // `#` is not a legal character in a Java identifier (JLS
+                // §3.8) — see `lower_do_while_statement`'s own identically-
+                // reasoned flag-name comment (`/security-review`) for why
+                // this name must be unforgeable by a real Java local
+                // rather than merely checked against one: the flag
+                // reference lives inside the loop's own *condition*,
+                // which several backends compile with flat scoping
+                // relative to the body (no new scope opened for either),
+                // so a body-declared local sharing the flag's name would
+                // re-arm it every iteration and skip `update` forever —
+                // an infinite loop, the exact bug class this whole fix
+                // pass exists to close, reached through the fix's own
+                // synthetic name instead of the original bug.
+                let flag_name = format!("__for_first#{}", self.for_counter);
                 self.for_counter += 1;
-                while self.lookup_local(&flag_name).is_some() {
-                    flag_name = format!("__for_first_{}", self.for_counter);
-                    self.for_counter += 1;
-                }
                 let flag_decl = Stmt::LetStarBinding {
                     name: flag_name.clone(),
                     sir_type: None,
