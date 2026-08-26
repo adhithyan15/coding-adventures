@@ -4,7 +4,7 @@
   "chapter": 4,
   "title": "Farewells",
   "drivablePrefix": 0,
-  "sourceHash": "fnv1a64:66f4223ea1fa9fd9",
+  "sourceHash": "fnv1a64:bccc4cbfa76872a4",
   "lessons": [
     {
       "id": "PA-C04-phir",
@@ -343,6 +343,165 @@
             {
               "kind": "speech",
               "text": "What does phir milāṁge literally say, and when would you use it over sat srī akāl? (\"We'll meet again\"; for everyday partings, where sat srī akāl is the formal Sikh greeting-goodbye.)"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "PA-R04-wellbeing-r2",
+      "sequence": 245,
+      "title": "The wellbeing cycle returns at R2",
+      "headword": "(oral R2)",
+      "romanization": "tusī̃ kivēṁ ho — maiṁ ṭhīk hāṁ — koī gall nahīṁ",
+      "gloss": "retrieve the complete wellbeing cycle at R2",
+      "script": "gurmukhi",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:a1111b7e9500ba77",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Keep three oral scores: respectful question, natural reply, and courtesy close. Repair only a missed turn."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "The exchange",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": true,
+              "source": "[PAUSE 1s each]"
+            },
+            {
+              "kind": "prompt",
+              "action": "ASK",
+              "instruction": "tusī̃ kivēṁ ho?",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU ASK: *tusī̃ kivēṁ ho?*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "REPLY",
+              "instruction": "maiṁ ṭhīk hāṁ; then name its first-person m- family",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU REPLY: *maiṁ ṭhīk hāṁ*; then name its first-person *m-* family]"
+            },
+            {
+              "kind": "prompt",
+              "action": "CLOSE",
+              "instruction": "koī gall nahīṁ; then name the negative n- family",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU CLOSE: *koī gall nahīṁ*; then name the negative *n-* family]"
+            },
+            {
+              "kind": "speech",
+              "text": "Romanization records speech only. Gurmukhi reading and writing remain unscored until #13068 closes the load-bearing script runway."
+            },
+            {
+              "kind": "activity",
+              "scored": true,
+              "id": "PA-R04-wellbeing-r2-question",
+              "prompt": "Ask how someone is respectfully aloud, then type the romanized words you said.",
+              "assesses": [
+                "PA-PHRASE-HOW-ARE-YOU-03",
+                "PA-GRAMMAR-TUSI-HO-03"
+              ],
+              "responseSeconds": 12,
+              "acceptedResponses": [
+                "tusī̃ kivēṁ ho?",
+                "tusi kivein ho",
+                "tusi kiven ho"
+              ],
+              "feedback": {
+                "correct": "The respectful question returned at R2.",
+                "incorrect": "Say tusī̃ kivēṁ ho, keeping respectful tusī̃ with ho."
+              }
+            },
+            {
+              "kind": "activity",
+              "scored": true,
+              "id": "PA-R04-wellbeing-r2-reply",
+              "prompt": "Reply I am fine aloud, then say the m-family sound shared by maiṁ and English me/my. Type the romanized reply and sound.",
+              "assesses": [
+                "PA-LEX-MAIN-03",
+                "PA-GRAMMAR-MAIN-HAAN-03",
+                "PA-ETYMON-FIRST-PERSON-M-03",
+                "PA-LEX-THIK-03",
+                "PA-PHRASE-I-AM-FINE-03"
+              ],
+              "responseSeconds": 16,
+              "acceptedResponses": [
+                "maiṁ ṭhīk hāṁ; m-",
+                "main thik haan; m",
+                "mai thik haan; m"
+              ],
+              "feedback": {
+                "correct": "The reply and its first-person m-family both returned at R2.",
+                "incorrect": "Say maiṁ ṭhīk hāṁ, then keep the opening m- shared with me/my."
+              }
+            },
+            {
+              "kind": "activity",
+              "scored": true,
+              "id": "PA-R04-wellbeing-r2-close",
+              "prompt": "Answer thanks with no problem aloud, then name the negative n-sound related to no. Type the romanized reply and sound.",
+              "assesses": [
+                "PA-PHRASE-NO-PROBLEM-03",
+                "PA-ETYMON-NEGATIVE-NE-03"
+              ],
+              "responseSeconds": 16,
+              "acceptedResponses": [
+                "koī gall nahīṁ; n-",
+                "koi gall nahin; n",
+                "koi gal nahi; n"
+              ],
+              "feedback": {
+                "correct": "The courtesy close and negative n-family returned at R2.",
+                "incorrect": "Say koī gall nahīṁ, then keep nahīṁ's opening n-, related to no."
+              }
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Perform the three turns once more without looking back."
             }
           ]
         }

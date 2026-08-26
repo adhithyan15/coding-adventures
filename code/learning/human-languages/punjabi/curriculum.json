@@ -100,10 +100,13 @@
       "spine_node": "SPINE-CHECK-WELLBEING",
       "lessons": [
         "PA-C03-kivein",
-        "PA-C03-tusi-kivein-ho"
+        "PA-C03-tusi-kivein-ho",
+        "PA-R03-wellbeing-r1"
       ],
       "before": [],
-      "inline": [],
+      "inline": [
+        "PA-EXT-020-WELLBEING-R1"
+      ],
       "after": []
     },
     {
@@ -155,12 +158,15 @@
         "PA-C04-milaange",
         "PA-C04-phir",
         "PA-C04-phir-milaange",
+        "PA-R04-wellbeing-r2",
         "PA-C04-rab-raakha"
       ],
       "before": [
         "PA-EXT-009-LANGUAGE-SPECIFIC"
       ],
-      "inline": [],
+      "inline": [
+        "PA-EXT-021-WELLBEING-R2"
+      ],
       "after": []
     },
     {
@@ -188,10 +194,13 @@
         "PA-C07-auna",
         "PA-C07-khana",
         "PA-C07-vekhna",
+        "PA-R07-wellbeing-r3",
         "PA-C07-janna"
       ],
       "before": [],
-      "inline": [],
+      "inline": [
+        "PA-EXT-022-WELLBEING-R3"
+      ],
       "after": []
     },
     {
@@ -843,6 +852,45 @@
       ],
       "lessons": [
         "PA-C03-practice"
+      ]
+    },
+    {
+      "id": "PA-EXT-020-WELLBEING-R1",
+      "stage": "pre-A1",
+      "kind": "required",
+      "category": "assessment",
+      "canDo": "I can orally retrieve the respectful Punjabi wellbeing question's grammar and question-family sound at R1 distance without claiming script credit.",
+      "prerequisites": [
+        "PA-EXT-018-INTRODUCTION-CHECKPOINT"
+      ],
+      "lessons": [
+        "PA-R03-wellbeing-r1"
+      ]
+    },
+    {
+      "id": "PA-EXT-021-WELLBEING-R2",
+      "stage": "pre-A1",
+      "kind": "required",
+      "category": "assessment",
+      "canDo": "I can orally retrieve the complete Punjabi wellbeing cycle at R2 distance without claiming script credit.",
+      "prerequisites": [
+        "PA-EXT-020-WELLBEING-R1"
+      ],
+      "lessons": [
+        "PA-R04-wellbeing-r2"
+      ]
+    },
+    {
+      "id": "PA-EXT-022-WELLBEING-R3",
+      "stage": "pre-A1",
+      "kind": "required",
+      "category": "assessment",
+      "canDo": "I can orally retrieve every Punjabi Chapter 3 wellbeing atom at R3 distance without claiming script credit.",
+      "prerequisites": [
+        "PA-EXT-021-WELLBEING-R2"
+      ],
+      "lessons": [
+        "PA-R07-wellbeing-r3"
       ]
     }
   ]

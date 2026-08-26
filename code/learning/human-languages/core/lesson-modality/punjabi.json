@@ -7,17 +7,17 @@
   "policy": {
     "maxLinearisableTableColumns": 3
   },
-  "sourceHash": "fnv1a64:1bbed7f803820c43",
+  "sourceHash": "fnv1a64:3bcbf4de1ae6dc27",
   "summary": {
-    "totalLessons": 75,
-    "voice": 22,
+    "totalLessons": 78,
+    "voice": 25,
     "sight": 39,
     "pen": 14,
-    "drivableLessons": 22,
-    "drivablePercent": 29,
+    "drivableLessons": 25,
+    "drivablePercent": 32,
     "trackCount": 1,
     "chapterCount": 14,
-    "drivablePrefixTotal": 11,
+    "drivablePrefixTotal": 12,
     "fullyDrivableChapters": 2,
     "unstartableChapters": 11,
     "overriddenLessons": 0,
@@ -26,12 +26,12 @@
   "tracks": [
     {
       "language": "punjabi",
-      "lessonCount": 75,
-      "voice": 22,
+      "lessonCount": 78,
+      "voice": 25,
       "sight": 39,
       "pen": 14,
-      "drivablePercent": 29,
-      "drivablePrefixTotal": 11,
+      "drivablePercent": 32,
+      "drivablePrefixTotal": 12,
       "modalities": [
         "voice",
         "sight",
@@ -75,8 +75,8 @@
         },
         {
           "chapter": 3,
-          "lessonCount": 6,
-          "voice": 2,
+          "lessonCount": 7,
+          "voice": 3,
           "sight": 4,
           "pen": 0,
           "modalities": [
@@ -90,8 +90,8 @@
         },
         {
           "chapter": 4,
-          "lessonCount": 5,
-          "voice": 2,
+          "lessonCount": 6,
+          "voice": 3,
           "sight": 3,
           "pen": 0,
           "modalities": [
@@ -137,14 +137,14 @@
         },
         {
           "chapter": 7,
-          "lessonCount": 6,
-          "voice": 6,
+          "lessonCount": 7,
+          "voice": 7,
           "sight": 0,
           "pen": 0,
           "modalities": [
             "voice"
           ],
-          "drivablePrefix": 6,
+          "drivablePrefix": 7,
           "firstNonVoiceLesson": null,
           "drivable": true,
           "drivableLessonIds": [
@@ -153,6 +153,7 @@
             "PA-C07-auna",
             "PA-C07-khana",
             "PA-C07-vekhna",
+            "PA-R07-wellbeing-r3",
             "PA-C07-janna"
           ]
         },
@@ -761,6 +762,24 @@
       "sourceHash": "fnv1a64:67c1425883cfebc0"
     },
     {
+      "id": "PA-R03-wellbeing-r1",
+      "language": "punjabi",
+      "chapter": 3,
+      "sequence": 175,
+      "modality": "voice",
+      "derived": "voice",
+      "drivable": true,
+      "reasons": [
+        "no-visual-dependency"
+      ],
+      "coreModality": "voice",
+      "coreReasons": [
+        "no-visual-dependency"
+      ],
+      "coreDrivable": true,
+      "sourceHash": "fnv1a64:96efdc6397b9f8e0"
+    },
+    {
       "id": "PA-C03-main",
       "language": "punjabi",
       "chapter": 3,
@@ -900,6 +919,24 @@
       ],
       "coreDrivable": true,
       "sourceHash": "fnv1a64:49e2d83eab58ca6e"
+    },
+    {
+      "id": "PA-R04-wellbeing-r2",
+      "language": "punjabi",
+      "chapter": 4,
+      "sequence": 245,
+      "modality": "voice",
+      "derived": "voice",
+      "drivable": true,
+      "reasons": [
+        "no-visual-dependency"
+      ],
+      "coreModality": "voice",
+      "coreReasons": [
+        "no-visual-dependency"
+      ],
+      "coreDrivable": true,
+      "sourceHash": "fnv1a64:a1111b7e9500ba77"
     },
     {
       "id": "PA-C04-rab-raakha",
@@ -1168,6 +1205,24 @@
       ],
       "coreDrivable": true,
       "sourceHash": "fnv1a64:206f10ac6c1ebf37"
+    },
+    {
+      "id": "PA-R07-wellbeing-r3",
+      "language": "punjabi",
+      "chapter": 7,
+      "sequence": 405,
+      "modality": "voice",
+      "derived": "voice",
+      "drivable": true,
+      "reasons": [
+        "no-visual-dependency"
+      ],
+      "coreModality": "voice",
+      "coreReasons": [
+        "no-visual-dependency"
+      ],
+      "coreDrivable": true,
+      "sourceHash": "fnv1a64:2673e58945cb94b1"
     },
     {
       "id": "PA-C07-janna",
