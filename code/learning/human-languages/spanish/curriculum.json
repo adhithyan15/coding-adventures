@@ -4760,6 +4760,118 @@
         "ES-EXT-359-COUNT"
       ],
       "after": []
+    },
+    {
+      "id": "ES-PATH-360-01",
+      "spine_node": "SPINE-DEFINITE-REFERENCE",
+      "lessons": [
+        "ES-C360-ropa",
+        "ES-C360-vestido",
+        "ES-C360-zapato",
+        "ES-C360-pantalon",
+        "ES-C360-boton"
+      ],
+      "before": [],
+      "inline": [
+        "ES-EXT-360-REF"
+      ],
+      "after": []
+    },
+    {
+      "id": "ES-PATH-361-01",
+      "spine_node": "SPINE-DEFINITE-REFERENCE",
+      "lessons": [
+        "ES-C361-carne",
+        "ES-C361-pescado",
+        "ES-C361-leche",
+        "ES-C361-sal",
+        "ES-C361-aceite"
+      ],
+      "before": [],
+      "inline": [
+        "ES-EXT-361-REF"
+      ],
+      "after": []
+    },
+    {
+      "id": "ES-PATH-362-01",
+      "spine_node": "SPINE-ASK-LOCATION",
+      "lessons": [
+        "ES-C362-tierra",
+        "ES-C362-mar",
+        "ES-C362-aire",
+        "ES-C362-fuego",
+        "ES-C362-luna"
+      ],
+      "before": [],
+      "inline": [
+        "ES-EXT-362-WHERE"
+      ],
+      "after": []
+    },
+    {
+      "id": "ES-PATH-363-01",
+      "spine_node": "SPINE-ASK-LOCATION",
+      "lessons": [
+        "ES-C363-coche",
+        "ES-C363-avion",
+        "ES-C363-barco",
+        "ES-C363-autobus",
+        "ES-C363-bicicleta"
+      ],
+      "before": [],
+      "inline": [
+        "ES-EXT-363-WHERE"
+      ],
+      "after": []
+    },
+    {
+      "id": "ES-PATH-364-01",
+      "spine_node": "SPINE-DEFINITE-REFERENCE",
+      "lessons": [
+        "ES-C364-mujer",
+        "ES-C364-cara",
+        "ES-C364-nariz",
+        "ES-C364-dedo",
+        "ES-C364-corazon"
+      ],
+      "before": [],
+      "inline": [
+        "ES-EXT-364-REF"
+      ],
+      "after": []
+    },
+    {
+      "id": "ES-PATH-365-01",
+      "spine_node": "SPINE-COUNT-ONE-TO-FIVE",
+      "lessons": [
+        "ES-C365-alto",
+        "ES-C365-largo",
+        "ES-C365-ancho",
+        "ES-C365-corto",
+        "ES-C365-lleno"
+      ],
+      "before": [],
+      "inline": [
+        "ES-EXT-365-COUNT"
+      ],
+      "after": []
+    },
+    {
+      "id": "ES-PATH-366-01",
+      "spine_node": "SPINE-DEFINITE-REFERENCE",
+      "lessons": [
+        "ES-C366-caja",
+        "ES-C366-lampara",
+        "ES-C366-almohada",
+        "ES-C366-escalera",
+        "ES-C366-armario"
+      ],
+      "before": [],
+      "inline": [
+        "ES-EXT-366-REF"
+      ],
+      "after": []
     }
   ],
   "spine": {
@@ -4946,7 +5058,9 @@
         "ES-PATH-347-01",
         "ES-PATH-353-01",
         "ES-PATH-354-01",
-        "ES-PATH-355-01"
+        "ES-PATH-355-01",
+        "ES-PATH-362-01",
+        "ES-PATH-363-01"
       ],
       "omits": [],
       "relocates": {}
@@ -5038,7 +5152,11 @@
         "ES-PATH-281-01",
         "ES-PATH-345-01",
         "ES-PATH-350-01",
-        "ES-PATH-358-01"
+        "ES-PATH-358-01",
+        "ES-PATH-360-01",
+        "ES-PATH-361-01",
+        "ES-PATH-364-01",
+        "ES-PATH-366-01"
       ],
       "omits": [],
       "relocates": {}
@@ -5051,7 +5169,8 @@
         "ES-PATH-344-01",
         "ES-PATH-351-01",
         "ES-PATH-352-01",
-        "ES-PATH-359-01"
+        "ES-PATH-359-01",
+        "ES-PATH-365-01"
       ],
       "omits": [],
       "relocates": {}
@@ -9652,6 +9771,111 @@
         "ES-C359-kilo",
         "ES-C359-litro",
         "ES-C359-peso"
+      ]
+    },
+    {
+      "id": "ES-EXT-360-REF",
+      "stage": "A1",
+      "kind": "required",
+      "category": "vocabulary",
+      "canDo": "I can name la ropa, el vestido, el zapato, el pantalón and el botón.",
+      "prerequisites": [],
+      "lessons": [
+        "ES-C360-ropa",
+        "ES-C360-vestido",
+        "ES-C360-zapato",
+        "ES-C360-pantalon",
+        "ES-C360-boton"
+      ]
+    },
+    {
+      "id": "ES-EXT-361-REF",
+      "stage": "A1",
+      "kind": "required",
+      "category": "vocabulary",
+      "canDo": "I can name la carne, el pescado, la leche, la sal and el aceite.",
+      "prerequisites": [],
+      "lessons": [
+        "ES-C361-carne",
+        "ES-C361-pescado",
+        "ES-C361-leche",
+        "ES-C361-sal",
+        "ES-C361-aceite"
+      ]
+    },
+    {
+      "id": "ES-EXT-362-WHERE",
+      "stage": "A1",
+      "kind": "required",
+      "category": "vocabulary",
+      "canDo": "I can name la tierra, el mar, el aire, el fuego and la luna.",
+      "prerequisites": [],
+      "lessons": [
+        "ES-C362-tierra",
+        "ES-C362-mar",
+        "ES-C362-aire",
+        "ES-C362-fuego",
+        "ES-C362-luna"
+      ]
+    },
+    {
+      "id": "ES-EXT-363-WHERE",
+      "stage": "A1",
+      "kind": "required",
+      "category": "vocabulary",
+      "canDo": "I can name el coche, el avión, el barco, el autobús and la bicicleta.",
+      "prerequisites": [],
+      "lessons": [
+        "ES-C363-coche",
+        "ES-C363-avion",
+        "ES-C363-barco",
+        "ES-C363-autobus",
+        "ES-C363-bicicleta"
+      ]
+    },
+    {
+      "id": "ES-EXT-364-REF",
+      "stage": "A1",
+      "kind": "required",
+      "category": "vocabulary",
+      "canDo": "I can name la mujer, la cara, la nariz, el dedo and el corazón.",
+      "prerequisites": [],
+      "lessons": [
+        "ES-C364-mujer",
+        "ES-C364-cara",
+        "ES-C364-nariz",
+        "ES-C364-dedo",
+        "ES-C364-corazon"
+      ]
+    },
+    {
+      "id": "ES-EXT-365-COUNT",
+      "stage": "A1",
+      "kind": "required",
+      "category": "vocabulary",
+      "canDo": "I can name alto, largo, ancho, corto and lleno.",
+      "prerequisites": [],
+      "lessons": [
+        "ES-C365-alto",
+        "ES-C365-largo",
+        "ES-C365-ancho",
+        "ES-C365-corto",
+        "ES-C365-lleno"
+      ]
+    },
+    {
+      "id": "ES-EXT-366-REF",
+      "stage": "A1",
+      "kind": "required",
+      "category": "vocabulary",
+      "canDo": "I can name la caja, la lámpara, la almohada, la escalera and el armario.",
+      "prerequisites": [],
+      "lessons": [
+        "ES-C366-caja",
+        "ES-C366-lampara",
+        "ES-C366-almohada",
+        "ES-C366-escalera",
+        "ES-C366-armario"
       ]
     }
   ],

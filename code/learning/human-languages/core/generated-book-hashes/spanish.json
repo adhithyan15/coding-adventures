@@ -3734,6 +3734,97 @@
         "ES-C359-peso"
       ],
       "tex": "spanish/book/chapters/ch359-el-kilo-y-el-litro.tex"
+    },
+    {
+      "language": "spanish",
+      "chapter": 360,
+      "sourceHash": "fnv1a64:283349b6e9505ee6",
+      "lessonIds": [
+        "ES-C360-ropa",
+        "ES-C360-vestido",
+        "ES-C360-zapato",
+        "ES-C360-pantalon",
+        "ES-C360-boton"
+      ],
+      "tex": "spanish/book/chapters/ch360-la-ropa-y-el-zapato.tex"
+    },
+    {
+      "language": "spanish",
+      "chapter": 361,
+      "sourceHash": "fnv1a64:000d4b540fa7f49a",
+      "lessonIds": [
+        "ES-C361-carne",
+        "ES-C361-pescado",
+        "ES-C361-leche",
+        "ES-C361-sal",
+        "ES-C361-aceite"
+      ],
+      "tex": "spanish/book/chapters/ch361-la-carne-y-la-leche.tex"
+    },
+    {
+      "language": "spanish",
+      "chapter": 362,
+      "sourceHash": "fnv1a64:9822df67521c44ab",
+      "lessonIds": [
+        "ES-C362-tierra",
+        "ES-C362-mar",
+        "ES-C362-aire",
+        "ES-C362-fuego",
+        "ES-C362-luna"
+      ],
+      "tex": "spanish/book/chapters/ch362-la-tierra-y-el-mar.tex"
+    },
+    {
+      "language": "spanish",
+      "chapter": 363,
+      "sourceHash": "fnv1a64:9ff5f812ccd07483",
+      "lessonIds": [
+        "ES-C363-coche",
+        "ES-C363-avion",
+        "ES-C363-barco",
+        "ES-C363-autobus",
+        "ES-C363-bicicleta"
+      ],
+      "tex": "spanish/book/chapters/ch363-el-coche-y-el-avion.tex"
+    },
+    {
+      "language": "spanish",
+      "chapter": 364,
+      "sourceHash": "fnv1a64:742ef553ec2cbc9b",
+      "lessonIds": [
+        "ES-C364-mujer",
+        "ES-C364-cara",
+        "ES-C364-nariz",
+        "ES-C364-dedo",
+        "ES-C364-corazon"
+      ],
+      "tex": "spanish/book/chapters/ch364-la-mujer-y-la-cara.tex"
+    },
+    {
+      "language": "spanish",
+      "chapter": 365,
+      "sourceHash": "fnv1a64:0b6e6eaff87a1a75",
+      "lessonIds": [
+        "ES-C365-alto",
+        "ES-C365-largo",
+        "ES-C365-ancho",
+        "ES-C365-corto",
+        "ES-C365-lleno"
+      ],
+      "tex": "spanish/book/chapters/ch365-alto-y-largo.tex"
+    },
+    {
+      "language": "spanish",
+      "chapter": 366,
+      "sourceHash": "fnv1a64:10552473fc491800",
+      "lessonIds": [
+        "ES-C366-caja",
+        "ES-C366-lampara",
+        "ES-C366-almohada",
+        "ES-C366-escalera",
+        "ES-C366-armario"
+      ],
+      "tex": "spanish/book/chapters/ch366-la-caja-y-la-lampara.tex"
     }
   ]
 }

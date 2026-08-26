@@ -254,13 +254,23 @@ independent Tamil **உ** follows Appendix I Frame 16's three joined movements:
 the compact spiral opens into a broad descending curve, then continues along
 the long baseline to the right without lifting. The Noto Sans Tamil fit keeps
 all three movements in that single source-attested run. The
+Tamil **ங** follows Appendix I Frame 2's two runs: a detached descending
+upright, then five joined movements through the tall frame, rounded inner turn,
+and low return. Noto Sans Tamil moves the handwritten model's detached upright
+to the right and squares the return, so the verified path preserves the cited
+run boundary rather than copying the teaching hand's display geometry. The
 Tamil **ழ** adds Appendix I Frame 7's six numbered movements as three
 pen-down runs: a joined left body and bar, a joined inner upright and broad
 right bowl, and the detached lower hook. Noto Sans Tamil simplifies the
 manual's looped left body and high bar to a retraced upright with a low
 crossbar, so the font-fitted path preserves the source's run boundaries rather
 than copying its display geometry literally. The Tamil starter inventory is
-now fully verified. Persian **ا** adds the first
+now fully verified. Japanese hiragana **し** follows Sirgazil's 23-frame CC0
+animation in one uninterrupted run: descend nearly straight from the top,
+turn around the broad lower curve, and sweep upward to the right. Its two-frame
+Noto Sans JP filmstrip preserves that zero-lift order while fitting the heavier
+printed outline; handwritten curvature and finish height remain explicit
+variation. Persian **ا** adds the first
 right-to-left-script ductus: UT Austin's freehand lesson shows one top-to-bottom
 Naskh stem at 00:08–00:11, with no lift. The adjacent **ب** demonstration at
 00:11–00:15 sweeps its shallow bowl right-to-left, then lifts once for the dot
@@ -1001,10 +1011,10 @@ queue: **و**, not ه, follows ن. Its 02:43–02:45 demonstration loops the sma
   Gujarati path preserves the animation's body-before-first-stem-before-
   trailing-stem order and two-lift evidence while fitting the printed glyph's
   wider stem spacing. The same variation warning remains explicit. The
-  remaining **68**
+  remaining **67**
   prose part orders across three scripts
   (`arabic` 3,
-  `gujarati` 31, `japanese` 34) are explicitly **unverified for pen lifts**.
+  `gujarati` 31, `japanese` 33) are explicitly **unverified for pen lifts**.
   The data validator rejects a lift count without a citation (or a
   citation without a count), and Language Ladder's ductus test proves every
   verified claim has the same cited, font-checked path. That closes `HL-C19`;

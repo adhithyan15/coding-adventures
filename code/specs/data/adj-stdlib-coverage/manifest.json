@@ -1894,6 +1894,21 @@
       "status": {"implementation": "present", "provenance": "source_labeled", "tests": "present", "benchmark": "missing", "crosswalk": "unmapped"}
     },
     {
+      "id": "adj.literacy.k2.other_vowel_team_sound",
+      "title": "Recall the single sound a non-long-vowel-team spelling represents",
+      "band": "K-2",
+      "domain": "literacy",
+      "competency": "recall",
+      "coverage_roots": ["ccss.ela"],
+      "standards": [],
+      "prerequisites": [],
+      "libraries": ["code/specs/data/adj-facts-stdlib/language/other-vowel-team-sound.adj"],
+      "modalities": ["text"],
+      "source_cas_hashes": [],
+      "benchmark_paths": [],
+      "status": {"implementation": "present", "provenance": "source_labeled", "tests": "present", "benchmark": "missing", "crosswalk": "unmapped"}
+    },
+    {
       "id": "adj.literacy.k2.silent_letter_sound",
       "title": "Recall the single speech sound a silent-letter consonant-cluster spelling represents",
       "band": "K-2",
@@ -2143,6 +2158,21 @@
       "standards": [],
       "prerequisites": [],
       "libraries": ["code/specs/data/adj-facts-stdlib/earth-science/weathering-cause-type.adj"],
+      "modalities": ["text"],
+      "source_cas_hashes": [],
+      "benchmark_paths": [],
+      "status": {"implementation": "present", "provenance": "source_labeled", "tests": "present", "benchmark": "missing", "crosswalk": "unmapped"}
+    },
+    {
+      "id": "adj.science.3to5.sedimentary_rock_formation_step",
+      "title": "Recall which numbered stage of sedimentary rock formation a named process belongs to",
+      "band": "3-5",
+      "domain": "science",
+      "competency": "recall",
+      "coverage_roots": ["ngss"],
+      "standards": [],
+      "prerequisites": [],
+      "libraries": ["code/specs/data/adj-facts-stdlib/earth-science/sedimentary-rock-formation-step.adj"],
       "modalities": ["text"],
       "source_cas_hashes": [],
       "benchmark_paths": [],

@@ -19,7 +19,7 @@ use diagram_ir::{
 };
 use std::collections::{BTreeSet, HashMap};
 
-pub const VERSION: &str = "0.18.0";
+pub const VERSION: &str = "0.19.0";
 
 // ── Constants ─────────────────────────────────────────────────────────────
 
@@ -219,15 +219,114 @@ fn wrap_journey_label(label: &str, max_width: f64, font_size: f64) -> String {
 
 // ── Date helpers ──────────────────────────────────────────────────────────
 
-/// Approximate days since a fixed epoch for `YYYY-MM-DD` strings.
-/// Uses 365.25 d/yr and 30.44 d/month — good enough for Gantt bar widths.
 fn date_to_days(s: &str) -> Option<f64> {
     let parts: Vec<&str> = s.split('-').collect();
     if parts.len() != 3 { return None; }
-    let y: f64 = parts[0].parse().ok()?;
-    let m: f64 = parts[1].parse().ok()?;
-    let d: f64 = parts[2].parse().ok()?;
-    Some(y * 365.25 + (m - 1.0) * 30.44 + d)
+    let year: i64 = parts[0].parse().ok()?;
+    let month: i64 = parts[1].parse().ok()?;
+    let day: i64 = parts[2].parse().ok()?;
+    if !(1..=12).contains(&month) || !(1..=days_in_month(year, month)).contains(&day) {
+        return None;
+    }
+    Some(days_from_civil(year, month, day) as f64)
+}
+
+fn days_in_month(year: i64, month: i64) -> i64 {
+    match month {
+        4 | 6 | 9 | 11 => 30,
+        2 if year % 4 == 0 && (year % 100 != 0 || year % 400 == 0) => 29,
+        2 => 28,
+        _ => 31,
+    }
+}
+
+// Proleptic Gregorian conversion, anchored to the Unix epoch.
+fn days_from_civil(year: i64, month: i64, day: i64) -> i64 {
+    let adjusted_year = year - i64::from(month <= 2);
+    let era = adjusted_year.div_euclid(400);
+    let year_of_era = adjusted_year - era * 400;
+    let shifted_month = month + if month > 2 { -3 } else { 9 };
+    let day_of_year = (153 * shifted_month + 2) / 5 + day - 1;
+    let day_of_era = year_of_era * 365 + year_of_era / 4 - year_of_era / 100 + day_of_year;
+    era * 146_097 + day_of_era - 719_468
+}
+
+fn civil_from_days(days: i64) -> (i64, i64, i64) {
+    let zero_day = days + 719_468;
+    let era = zero_day.div_euclid(146_097);
+    let day_of_era = zero_day - era * 146_097;
+    let year_of_era = (day_of_era - day_of_era / 1460 + day_of_era / 36_524 - day_of_era / 146_096) / 365;
+    let mut year = year_of_era + era * 400;
+    let day_of_year = day_of_era - (365 * year_of_era + year_of_era / 4 - year_of_era / 100);
+    let month_prime = (5 * day_of_year + 2) / 153;
+    let day = day_of_year - (153 * month_prime + 2) / 5 + 1;
+    let month = month_prime + if month_prime < 10 { 3 } else { -9 };
+    year += i64::from(month <= 2);
+    (year, month, day)
+}
+
+fn weekday_name(days: i64) -> &'static str {
+    const WEEKDAYS: [&str; 7] = ["monday", "tuesday", "wednesday", "thursday", "friday", "saturday", "sunday"];
+    WEEKDAYS[(days + 3).rem_euclid(7) as usize]
+}
+
+fn gantt_date_is_excluded(day: i64, diagram: &diagram_ir::GanttDiagram) -> bool {
+    let (year, month, date) = civil_from_days(day);
+    let iso_date = format!("{year:04}-{month:02}-{date:02}");
+    if diagram.config.includes.iter().any(|value| value == &iso_date) {
+        return false;
+    }
+    let weekday = weekday_name(day);
+    let weekend_start = diagram.config.weekend.as_deref().unwrap_or("saturday");
+    let is_weekend = match weekend_start {
+        "friday" => matches!(weekday, "friday" | "saturday"),
+        _ => matches!(weekday, "saturday" | "sunday"),
+    };
+    diagram.config.excludes.iter().any(|value| {
+        value == &iso_date || value == weekday || (value == "weekends" && is_weekend)
+    })
+}
+
+fn gantt_elapsed_duration(start: f64, duration: f64, diagram: &diagram_ir::GanttDiagram) -> f64 {
+    if duration < 1.0 || diagram.config.excludes.is_empty() {
+        return duration;
+    }
+    let whole_days = duration.floor() as i64;
+    let fraction = duration - whole_days as f64;
+    let mut elapsed = 0_i64;
+    let mut consumed = 0_i64;
+    while consumed < whole_days && elapsed < 10_000 {
+        elapsed += 1;
+        if !gantt_date_is_excluded(start as i64 + elapsed, diagram) {
+            consumed += 1;
+        }
+    }
+    elapsed as f64 + fraction
+}
+
+fn gantt_tick_days(interval: Option<&str>) -> f64 {
+    let Some(interval) = interval else { return TICK_DAYS; };
+    let compact = interval.trim().to_ascii_lowercase().replace(' ', "");
+    let split = compact.find(|character: char| !character.is_ascii_digit()).unwrap_or(compact.len());
+    let count = compact[..split].parse::<f64>().unwrap_or(1.0).max(1.0);
+    match &compact[split..] {
+        "day" | "days" => count,
+        "week" | "weeks" => count * 7.0,
+        "month" | "months" => count * 30.0,
+        "year" | "years" => count * 365.0,
+        _ => TICK_DAYS,
+    }
+}
+
+fn gantt_axis_label(day: i64, format: Option<&str>, offset: f64) -> String {
+    let Some(format) = format else { return format!("d{offset:.0}"); };
+    let (year, month, date) = civil_from_days(day);
+    const MONTHS: [&str; 12] = ["Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"];
+    format
+        .replace("%Y", &format!("{year:04}"))
+        .replace("%m", &format!("{month:02}"))
+        .replace("%d", &format!("{date:02}"))
+        .replace("%b", MONTHS[(month - 1) as usize])
 }
 
 // ── Gantt layout ──────────────────────────────────────────────────────────
@@ -260,7 +359,12 @@ fn layout_gantt(
                             .find(|t| &t.id == dep_id)
                             .map(|t| t.duration_days)
                             .unwrap_or(0.0);
-                        starts.insert(task.id.clone(), dep_end + dep_dur);
+                        let dep_elapsed = diagram.sections.iter()
+                            .flat_map(|s| s.tasks.iter())
+                            .find(|t| &t.id == dep_id)
+                            .map(|t| gantt_elapsed_duration(dep_end, t.duration_days, diagram))
+                            .unwrap_or(dep_dur);
+                        starts.insert(task.id.clone(), dep_end + dep_elapsed);
                     }
                 }
             }
@@ -271,7 +375,7 @@ fn layout_gantt(
     let t_min = starts.values().cloned().fold(f64::INFINITY, f64::min);
     let t_max = diagram.sections.iter()
         .flat_map(|s| s.tasks.iter())
-        .filter_map(|t| starts.get(&t.id).map(|&s| s + t.duration_days))
+        .filter_map(|t| starts.get(&t.id).map(|&s| s + gantt_elapsed_duration(s, t.duration_days, diagram)))
         .fold(f64::NEG_INFINITY, f64::max);
     let t_min = if t_min.is_infinite() { 0.0 } else { t_min };
     let t_max = if t_max.is_infinite() { t_min + 30.0 } else { t_max };
@@ -299,13 +403,14 @@ fn layout_gantt(
 
     // Axis ticks (weekly).
     let mut tick_day = 0.0;
+    let tick_days = gantt_tick_days(diagram.config.tick_interval.as_deref());
     while tick_day <= t_range {
         let tx = LABEL_W + tick_day * x_scale;
         items.push(LayoutedTemporalItem::TimeAxisTick {
             x: tx, y: y + 4.0,
-            label: format!("d{:.0}", tick_day),
+            label: gantt_axis_label((t_min + tick_day) as i64, diagram.config.axis_format.as_deref(), tick_day),
         });
-        tick_day += TICK_DAYS;
+        tick_day += tick_days;
     }
     y += AXIS_H;
 
@@ -320,7 +425,8 @@ fn layout_gantt(
         for task in &section.tasks {
             let start_day = starts.get(&task.id).copied().unwrap_or(t_min) - t_min;
             let bx = LABEL_W + start_day * x_scale;
-            let bw = (task.duration_days * x_scale).max(4.0);
+            let elapsed_duration = gantt_elapsed_duration(t_min + start_day, task.duration_days, diagram);
+            let bw = (elapsed_duration * x_scale).max(4.0);
             if task.status == TaskStatus::Milestone {
                 items.push(LayoutedTemporalItem::MilestoneMarker {
                     x: bx, y: y + TASK_H / 2.0, label: task.label.clone(),
@@ -569,6 +675,7 @@ mod tests {
                 accessibility_title: None,
                 accessibility_description: None,
                 date_format: "YYYY-MM-DD".into(),
+                config: GanttConfig::default(),
                 sections: vec![GanttSection {
                     label: Some("Phase 1".into()),
                     tasks: vec![
@@ -626,7 +733,7 @@ mod tests {
 
     #[test]
     fn version_exists() {
-        assert_eq!(crate::VERSION, "0.18.0");
+        assert_eq!(crate::VERSION, "0.19.0");
     }
 
     #[test]
@@ -702,6 +809,41 @@ mod tests {
         assert_eq!(interaction.link.as_deref(), Some("https://example.com/design"));
         assert!(interaction.bounds.2 > 0.0);
         assert!(interaction.bounds.3 > 0.0);
+    }
+
+    #[test]
+    fn gantt_calendar_exclusions_extend_bars_and_dependency_starts() {
+        let mut diagram = simple_gantt();
+        let TemporalBody::Gantt(gantt) = &mut diagram.body else { unreachable!() };
+        gantt.config.excludes = vec!["weekends".into()];
+        gantt.sections[0].tasks[0].start = TaskStart::Date("2026-01-02".into());
+        gantt.sections[0].tasks[0].duration_days = 2.0;
+        gantt.sections[0].tasks[1].start = TaskStart::After("t1".into());
+        let second_duration = gantt.sections[0].tasks[1].duration_days;
+
+        let layout = layout_temporal_diagram(&diagram, 800.0);
+        let bars = layout.items.iter().filter_map(|item| match item {
+            LayoutedTemporalItem::TaskBar { x, width, .. } => Some((*x, *width)),
+            _ => None,
+        }).collect::<Vec<_>>();
+        assert_eq!(bars.len(), 2);
+        assert!(bars[0].1 > bars[1].1 / second_duration * 2.0);
+        assert!((bars[1].0 - (bars[0].0 + bars[0].1)).abs() < 0.01);
+    }
+
+    #[test]
+    fn gantt_axis_uses_configured_format_and_interval() {
+        let mut diagram = simple_gantt();
+        let TemporalBody::Gantt(gantt) = &mut diagram.body else { unreachable!() };
+        gantt.config.axis_format = Some("%m/%d".into());
+        gantt.config.tick_interval = Some("1day".into());
+        let layout = layout_temporal_diagram(&diagram, 800.0);
+        let labels = layout.items.iter().filter_map(|item| match item {
+            LayoutedTemporalItem::TimeAxisTick { label, .. } => Some(label.as_str()),
+            _ => None,
+        }).collect::<Vec<_>>();
+        assert!(labels.len() > 2);
+        assert!(labels[0].contains('/'));
     }
 
     #[test]

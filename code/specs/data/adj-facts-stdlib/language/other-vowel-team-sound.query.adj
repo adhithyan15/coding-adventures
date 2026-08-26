@@ -1,0 +1,18 @@
+% ============================================================================
+% other-vowel-team-sound.query.adj — worked recall over the
+% other-vowel-team-sound library.
+% ============================================================================
+% The shape a learner (or an LLM) produces to ANSWER "what sound does this
+% vowel-team spelling make?" (direct) or "which spellings make this sound?"
+% (reverse, many-answer) — it states no fact of its own — it only `import`s
+% the grounded table and asks binding queries.
+% ============================================================================
+
+import "other-vowel-team-sound.adj"
+
+? other_vowel_team_sound(au, $Sound)                 % expect aw_sound (direct)
+? other_vowel_team_sound($Sp, long_u_sound)          % expect ALL FOUR: oo, ew, ui, ue (many spellings, one sound)
+? other_vowel_team_sound(oo, $Sound)                 % expect BOTH short_oo_sound and long_u_sound -- one key, two lessons
+? other_vowel_team_sound(ea_short_e, $Sound)         % expect short_e_sound (the disambiguated "ea" row, direct)
+? other_vowel_team_sound(ea, $Sound)                 % expect abstain -- THIS table asserts nothing about the bare atom `ea` (see header design note); long_vowel_team_sound(ea, $S) in the sibling library still answers long_e_sound
+? other_vowel_team_sound(ey, $Sound)                 % expect abstain -- UFLI tables "ey" under its separate Long Vowel Teams unit (lesson 85), not this Other Vowel Teams page

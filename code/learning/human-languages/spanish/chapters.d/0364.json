@@ -1,0 +1,21 @@
+{
+  "chapter": 364,
+  "title": "The Person, Head To Hand",
+  "label": "ch:la-mujer-y-la-cara",
+  "canDo": "I can say la mujer, la cara, la nariz, el dedo and el corazón, and point at a person and name a part of them.",
+  "spineNodes": [
+    "SPINE-DEFINITE-REFERENCE"
+  ],
+  "payoff": {
+    "lesson": "ES-C364-corazon",
+    "kind": "production",
+    "summary": "Complete ES-C364-corazon: name a person, then a face, a nose, a finger and the thing that beats underneath.",
+    "assesses": [
+      "ES-LEX-C364-REF-26",
+      "ES-LEX-C364-REF-27",
+      "ES-LEX-C364-REF-28",
+      "ES-LEX-C364-REF-29",
+      "ES-LEX-C364-REF-30"
+    ]
+  }
+}

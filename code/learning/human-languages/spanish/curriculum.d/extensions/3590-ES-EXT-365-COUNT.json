@@ -1,0 +1,15 @@
+{
+  "id": "ES-EXT-365-COUNT",
+  "stage": "A1",
+  "kind": "required",
+  "category": "vocabulary",
+  "canDo": "I can name alto, largo, ancho, corto and lleno.",
+  "prerequisites": [],
+  "lessons": [
+    "ES-C365-alto",
+    "ES-C365-largo",
+    "ES-C365-ancho",
+    "ES-C365-corto",
+    "ES-C365-lleno"
+  ]
+}

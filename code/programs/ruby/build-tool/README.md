@@ -16,7 +16,7 @@ This is a standalone program (not a publishable gem) that orchestrates building 
 | `cache`      | JSON cache file for incremental builds              |
 | `executor`   | Parallel execution via threads + Open3              |
 | `reporter`   | Human-readable build report formatting              |
-| `validator`  | Pure tracked-artifact snapshot policy validation     |
+| `validator`  | Pure orphan-crate and tracked-artifact snapshot policy validation |
 
 ## Usage
 
@@ -102,6 +102,27 @@ python code/scripts/generate_tracked_artifact_unicode17.py --check
 The generated Unicode data is redistributed under the Unicode License v3;
 the complete notice is shipped as `UNICODE-LICENSE.txt`.
 
+## Orphan Crate Validation
+
+`BuildTool::Validator.validate_orphan_crate_snapshot` accepts only a closed
+Hash of Cargo-manifest directories, recognized BUILD records, and exemption
+records. It does not enumerate a checkout, inspect Git, read files, launch a
+process, consult environment state, or access the network. This keeps native
+discovery authority outside the language-neutral policy adapter.
+
+The validator derives direct and component-wise ancestor coverage, prefers the
+closest runnable BUILD in the fixed platform-name order, and keeps a nearer
+empty BUILD from masking a runnable ancestor. Exact case-sensitive artifact
+components are excluded. Uncovered and empty crates, malformed exemptions,
+stale ledger entries, and the active PENDING count are returned as stable,
+sorted diagnostics.
+
+Portable exemption paths are NFC repository-relative directories beneath
+`code/`. Invalid paths are always redacted to `code/BUILD-EXEMPTIONS`; raw host
+or hostile values never enter diagnostics. Duplicate identities use pinned
+Unicode 17 NFC plus full case folding, and detail ordering uses Python-compatible
+ASCII JSON so Ruby produces the same result as every other engine.
+
 ## Testing
 
 ```bash
@@ -112,9 +133,10 @@ bundle exec rake test
 The `test/test_identity_registry.rb` and `test/test_resolution_utf8.rb` coverage
 exercise shared language-neutral discovery, dependency, valid-text, and
 invalid-text fixtures plus real CLI subprocesses. `test/test_validator.rb`
-consumes every shared tracked-artifact fixture and covers hostile-path
-redaction, Unicode 17 sentinels, separator normalization, deterministic
-ordering, and inert entry kinds. The full Rake suite enforces the whole-program
+consumes every shared orphan-crate and tracked-artifact fixture and covers
+hostile-path redaction, Unicode 17 sentinels, Python-compatible blank reasons,
+component-wise ancestry, fixed BUILD ranking, separator normalization,
+deterministic ordering, and inert entry kinds. The full Rake suite enforces the whole-program
 coverage threshold. Starlark evaluator tests are mandatory: the suite removes
 ambient `RUBYLIB` and `RUBYOPT` injection in a subprocess and proves that the
 repository-local interpreter loads through the build tool's declared bundle

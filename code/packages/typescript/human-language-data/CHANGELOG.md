@@ -2,6 +2,43 @@
 
 ## Unreleased
 
+### Added - source-verified Japanese hiragana shi
+
+- Add Japanese hiragana **し** as a continuous descent, lower turn, and rising
+  rightward sweep from Sirgazil's 23-frame CC0 animation.
+- Close all 8 affected realizations with a zero-lift Noto Sans JP fit, then
+  rerank Kannada **ಇ** first at 8.
+### Added - Spanish A1 vocabulary tranche 4
+
+- Add thirty-five A1 vocabulary lessons across chapters 360-366, sequences
+  6920-7260, one headword and one new atom per lesson. Spanish moves **479 ->
+  514** distinct headwords at or below A1, against the HL09 3.1 floor of 600.
+- Author entirely against the HL21 shards: seven new `chapters.d/`, seven new
+  `curriculum.d/path/`, seven new `curriculum.d/extensions/`, seven targets in
+  `core/book-generation.d/spanish.json`, and one appended `segments` line in
+  each of the three A1 spine nodes used. The three monoliths are regenerated
+  with `--unshard`, never hand-edited.
+- Hold every content pin exactly: `ruleStatements` stays at 30 of 30,
+  `paradigmTables` at 95, `lessonsWithFindings` at 121, banned words unchanged,
+  and Spanish cross-chapter prose references at zero.
+### Added - source-verified Chinese language-identity characters
+
+- Add inventory and pinned PRC stroke-order provenance for **汉**, **语**, **文**,
+  and **国**, the new characters required by the beginner language-identity
+  vocabulary cluster.
+- Describe each component boundary, continuous turn, and pen lift so the later
+  writing lessons can introduce the four characters one small step at a time.
+- Pin the CJK font generator's output timestamp so identical inputs regenerate
+  the vendored Noto Sans SC subset byte for byte.
+
+### Added - source-verified Tamil nga
+
+- Add Tamil **ங** as a detached upright followed by one joined framed body,
+  inner turn, and low return from Appendix I Frame 2.
+- Close all 9 affected Tamil realizations while preserving the two-run source
+  order through Noto Sans Tamil's right-side detached-upright fit, then rerank
+  Japanese hiragana **し** first at 8.
+
 ### Added - source-backed shared maddah above
 
 - Model Arabic, Persian, and Urdu **ٓ** as U+0627 ALEF plus U+0653 ARABIC

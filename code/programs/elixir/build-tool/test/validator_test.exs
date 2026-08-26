@@ -14,6 +14,12 @@ defmodule BuildTool.ValidatorTest do
     "validation-tracked-artifacts-invalid.json",
     "validation-tracked-artifacts-unicode-boundaries.json"
   ]
+  @orphan_crate_cases [
+    "validation-orphan-crates-clean.json",
+    "validation-orphan-crates-unlisted.json",
+    "validation-orphan-exemptions-invalid.json",
+    "validation-orphan-exemptions-stale.json"
+  ]
 
   setup do
     tmp_dir = Path.join(System.tmp_dir!(), "build_tool_validator_test_#{:rand.uniform(100_000)}")
@@ -194,6 +200,191 @@ defmodule BuildTool.ValidatorTest do
     ]
 
     assert Validator.validate_build_contracts(tmp_dir, packages) == nil
+  end
+
+  for fixture_name <- @orphan_crate_cases do
+    test "matches shared #{fixture_name} fixture" do
+      fixture =
+        @conformance_cases
+        |> Path.join(unquote(fixture_name))
+        |> File.read!()
+        |> Jason.decode!()
+
+      snapshot = get_in(fixture, ["input", "options", "orphan_snapshot"])
+      expected = fixture["expected"]
+      actual = Validator.validate_orphan_crate_snapshot(snapshot)
+
+      assert actual["diagnostics"] == expected["diagnostics"]
+      assert Map.drop(actual, ["diagnostics"]) == expected["result"]
+    end
+  end
+
+  test "orphan crate redacts unsafe paths and rejects invalid UTF-8" do
+    unsafe_paths = [
+      "",
+      String.duplicate("😀", 513),
+      "/absolute/secret-project",
+      "C:/host/secret-project",
+      "code/packages/rust/bad<name>",
+      "code/packages/rust/trailing.",
+      "code/packages/rust/CON",
+      <<0xFF>>
+    ]
+
+    for unsafe_path <- unsafe_paths do
+      result =
+        Validator.validate_orphan_crate_snapshot(%{
+          "directories" => ["code/packages/rust/demo"],
+          "manifests" => [%{"path" => "code/packages/rust/demo", "kind" => "package"}],
+          "build_files" => [],
+          "exemptions" => [
+            %{
+              "line" => 7,
+              "kind" => "PENDING",
+              "path" => unsafe_path,
+              "reason" => "not allowed"
+            }
+          ]
+        })
+
+      diagnostic =
+        Enum.find(result["diagnostics"], &(&1["code"] == "ORPHAN_EXEMPTION_INVALID"))
+
+      assert diagnostic == %{
+               "code" => "ORPHAN_EXEMPTION_INVALID",
+               "severity" => "error",
+               "path" => "code/BUILD-EXEMPTIONS",
+               "details" => %{"line" => 7, "problem" => "PATH_UNSAFE"}
+             }
+
+      if String.valid?(unsafe_path) and unsafe_path != "" do
+        refute String.contains?(Jason.encode!(result), unsafe_path)
+      end
+    end
+  end
+
+  test "orphan crate uses the Python blank-reason set" do
+    result =
+      Validator.validate_orphan_crate_snapshot(%{
+        "directories" => ["code/packages/rust/blank", "code/packages/rust/bom"],
+        "manifests" => [
+          %{"path" => "code/packages/rust/blank", "kind" => "package"},
+          %{"path" => "code/packages/rust/bom", "kind" => "package"}
+        ],
+        "build_files" => [],
+        "exemptions" => [
+          %{
+            "line" => 7,
+            "kind" => "PENDING",
+            "path" => "code/packages/rust/blank",
+            "reason" => "\u001C"
+          },
+          %{
+            "line" => 8,
+            "kind" => "PENDING",
+            "path" => "code/packages/rust/bom",
+            "reason" => "\uFEFF"
+          }
+        ]
+      })
+
+    assert result["pending_exemption_count"] == 1
+
+    assert result["diagnostic_codes"] == [
+             "ORPHAN_CRATE_UNLISTED",
+             "ORPHAN_EXEMPTION_INVALID"
+           ]
+
+    assert get_in(List.last(result["diagnostics"]), ["details", "problem"]) ==
+             "REASON_MISSING"
+  end
+
+  test "orphan crate chooses closest empty BUILD then fixed filename order" do
+    result =
+      Validator.validate_orphan_crate_snapshot(%{
+        "directories" => ["code/packages/rust/demo/child"],
+        "manifests" => [
+          %{"path" => "code/packages/rust/demo/child", "kind" => "package"}
+        ],
+        "build_files" => [
+          %{"path" => "code/packages/rust/BUILD", "state" => "empty"},
+          %{"path" => "code/packages/rust/demo/BUILD_linux", "state" => "empty"},
+          %{"path" => "code/packages/rust/demo/BUILD", "state" => "empty"},
+          %{"path" => "code/packages/rust/demo2/BUILD", "state" => "runnable"}
+        ],
+        "exemptions" => []
+      })
+
+    assert get_in(hd(result["diagnostics"]), ["details", "build_path"]) ==
+             "code/packages/rust/demo/BUILD"
+  end
+
+  test "orphan crate reserves NFC full-fold identity before field precedence" do
+    result =
+      Validator.validate_orphan_crate_snapshot(%{
+        "directories" => ["code/packages/rust/Straße"],
+        "manifests" => [%{"path" => "code/packages/rust/Straße", "kind" => "package"}],
+        "build_files" => [],
+        "exemptions" => [
+          %{
+            "line" => 7,
+            "kind" => "UNKNOWN",
+            "path" => "code/packages/rust/Straße",
+            "reason" => "first"
+          },
+          %{
+            "line" => 8,
+            "kind" => "PENDING",
+            "path" => "CODE/PACKAGES/RUST/STRASSE",
+            "reason" => "duplicate"
+          }
+        ]
+      })
+
+    invalid =
+      result["diagnostics"]
+      |> Enum.filter(&(&1["code"] == "ORPHAN_EXEMPTION_INVALID"))
+      |> Enum.map(& &1["details"])
+
+    assert invalid == [
+             %{"line" => 7, "problem" => "UNKNOWN_KIND"},
+             %{"line" => 8, "problem" => "DUPLICATE_PATH"}
+           ]
+  end
+
+  test "orphan crate uses Python ASCII-JSON Unicode detail ordering" do
+    result =
+      Validator.validate_orphan_crate_snapshot(%{
+        "directories" => [],
+        "manifests" => [],
+        "build_files" => [],
+        "exemptions" => [
+          %{
+            "line" => 9,
+            "kind" => "EXCLUDED",
+            "path" => "code/packages/rust/z",
+            "reason" => "removed"
+          },
+          %{
+            "line" => 8,
+            "kind" => "EXCLUDED",
+            "path" => "code/packages/rust/😀",
+            "reason" => "removed"
+          },
+          %{
+            "line" => 7,
+            "kind" => "EXCLUDED",
+            "path" => "code/packages/rust/é",
+            "reason" => "removed"
+          }
+        ]
+      })
+
+    assert Enum.map(result["diagnostics"], &get_in(&1, ["details", "entry_path"])) == [
+             "code/packages/rust/é",
+             "code/packages/rust/😀",
+             "code/packages/rust/z"
+           ]
   end
 
   for fixture_name <- @tracked_artifact_cases do

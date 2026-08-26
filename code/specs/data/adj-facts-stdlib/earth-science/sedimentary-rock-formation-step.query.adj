@@ -1,0 +1,31 @@
+% ============================================================================
+% sedimentary-rock-formation-step.query.adj — a worked recall over the
+% earth-science sedimentary-rock-formation-step library.
+% ============================================================================
+% The shape a learner (or an LLM) produces to ANSWER "which step of
+% sedimentary rock formation is erosion?" (direct binding) or "which stage
+% comes third?" (reverse binding) — it states no earth-science fact of its
+% own, it only `import`s the grounded table and asks binding queries. The
+% third query runs the relation BACKWARD, binding the step number and
+% recalling the stage. The final two queries demonstrate honest abstention:
+% `deposition` is a real term OTHER K-8 sources use for a stage between
+% erosion and compaction, but the cited page's own paragraph never names it
+% as its own numbered stage; `melting` is a real term the SAME cited page
+% uses, but only for the separate igneous-rock path, not this sedimentary
+% one.
+%
+% Run (from this directory so the relative import resolves):
+%     ../../../../packages/rust/target/debug/adj-lang-cli sedimentary-rock-formation-step.query.adj
+% ============================================================================
+
+import "sedimentary-rock-formation-step.adj"
+
+? sedimentary_rock_formation_step(weathering, $N)    % expect 1 (the process starts here)
+? sedimentary_rock_formation_step(erosion, $N)        % expect 2
+? sedimentary_rock_formation_step($S, 3)              % expect compaction (reverse)
+? sedimentary_rock_formation_step(deposition, $N)     % expect abstain -- the cited
+                                                       %   page never names this as
+                                                       %   its own numbered stage
+? sedimentary_rock_formation_step(melting, $N)        % expect abstain -- a real term
+                                                       %   the same page uses, but only
+                                                       %   for the separate igneous path

@@ -1,6 +1,6 @@
 //! # java-to-semantic-ir
 //!
-//! Java CST → narrow-waist Semantic IR, **v0.9.0**.
+//! Java CST → narrow-waist Semantic IR, **v0.11.0**.
 //!
 //! This is the first frontend for [SIR29](../../../specs/SIR29-nominal-static-oop-profile.md),
 //! the nominal/static-dispatch OOP profile extension of the SIR10 narrow-waist
@@ -33,7 +33,7 @@
 //! assert!(module.functions.iter().any(|f| f.name == "main"));
 //! ```
 //!
-//! ## Scope (v0.9.0 — JV02 milestones M0 + M1 + M2a + M2b + M3a + M3b + M4a + M4b + M4c)
+//! ## Scope (v0.11.0 — JV02 milestones M0 + M1 + M2a + M2b + M3a + M3b + M4a + M4b + M4c + M4d, plus task #54)
 //!
 //! Java requires an explicit `class`/`main`-method wrapper at the source
 //! level (unlike Ruby/Python/JS, which allow bare top-level statements) —
@@ -57,9 +57,11 @@
 //! explicitly-typed parameters (`Expr::MakeClosure`, hoisting the body to
 //! a synthesized top-level function), captures discovered on-resolve
 //! (effectively-final enforced — assigning to a captured local is
-//! rejected), and both lambda-body shapes (M3b, though a lambda value
-//! can only be created and passed around this milestone, never actually
-//! *invoked* — see `lower.rs`'s own module doc comment); single-
+//! rejected), and both lambda-body shapes (M3b) — a lambda value can now
+//! also be *invoked* (`f(5)` on a `Closure`-kinded local → `Expr::
+//! IndirectCall`, task #54, checked ahead of the top-level-method lookup
+//! so a local in scope takes priority, mirroring real Java's own name
+//! resolution); single-
 //! dimensional array types with a bare `{ ... }` literal initializer
 //! (`Expr::SeqLit`), indexing reads (`Expr::SeqIndex`), and `.length`
 //! (`Expr::SeqLen`) — enough for a real `for (int i = 0; i < xs.length;
@@ -72,10 +74,20 @@
 //! `new int[N]` (a compile-time-constant, non-negative, capped-size
 //! sized/uninitialized array, zero-filled — a non-constant size needs a
 //! repeat/fill SIR primitive that doesn't exist yet, so is deferred
-//! rather than attempted). Everything else (`switch`, `break`/`continue`
-//! — SIR has no IR primitive for either — qualified calls, method
-//! overloading, untyped/`var`-inferred lambda parameters, indirect calls
-//! through a closure value, multi-dimensional arrays, a non-constant or
+//! rather than attempted); and real multi-dimensional arrays (M4d) —
+//! array types and explicitly-typed literal declarations (`int[][] grid
+//! = {{1,2},{3,4}}`, including genuinely ragged rows), and chained index
+//! reads (`grid[i][j]`) via a generalized `lower_primary_expression`
+//! suffix-chain dispatch, capped at a small dimension limit. A *mixed*
+//! index-then-`.length` chain (`grid[i].length`) and a *chained*
+//! indexed-assignment target (`grid[i][j] = v;`) remain deferred.
+//! Everything else (`switch`, `break`/`continue` — SIR has no IR
+//! primitive for either — qualified calls, method overloading, untyped/
+//! `var`-inferred lambda parameters, calling a lambda-valued *method
+//! parameter* (no functional-interface parameter type exists to declare
+//! one), `var`-inferred multi-dimensional array literals, multi-
+//! dimensional `new` array-creation forms, compound-assignment/
+//! increment-decrement on an indexed target, a non-constant or
 //! reference-typed `new T[N]`, field/array *field* access beyond
 //! `.length`, casts, additional classes, non-`main` entry shapes) is out
 //! of scope so far and returns a clean [`JavaLowerError`] rather than

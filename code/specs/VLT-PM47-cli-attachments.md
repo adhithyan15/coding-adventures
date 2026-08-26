@@ -861,6 +861,26 @@ distinction is wanted, it is a VLT-PM15 amendment.
 3. A file at exactly `MAX_ATTACHMENT_BYTES` is accepted; one byte more is
    refused with `BoundExceeded`, before any prompt, leaving the vault
    byte-for-byte unchanged.
+
+   This gate used to be proven in `vault-pm-application`'s
+   `attachment::tests` by materializing a real 16 MiB buffer and running it
+   through the full two-layer seal (`chunk_attachment`, 256 real
+   `encrypt_chunk` calls) — about 1.5s in a debug build, for a fact that does
+   not depend on byte content. `chunk_attachment` has exactly one
+   length-dependent behavior — an offset-stepping loop that produces a full
+   chunk per step until the final, possibly-shorter one — and that mechanism
+   is scale-independent, so the gate is now proven in two cheaper, separated
+   halves: **mechanism**, at a small representative multiple of the chunk size
+   (`the_boundary_is_exact_in_mechanism_and_in_arithmetic`, 3 chunks — an exact
+   multiple, so it still exercises the no-stray-trailing-chunk edge case), and
+   **arithmetic**, checking directly that `MAX_ATTACHMENT_BYTES` divides evenly
+   by `ATTACHMENT_CHUNK_BYTES` into exactly `MAX_ATTACHMENT_CHUNKS` — the same
+   arithmetic `chunk_attachment` itself derives its chunk count from, so
+   agreement there is agreement with the real code path, not a restated
+   literal. The original full-scale run is kept as
+   `the_full_scale_ceiling_still_chunks_exactly_at_max_attachment_chunks`,
+   `#[ignore]`d rather than deleted, as a periodic or manual check that the
+   split above has not quietly stopped describing the real ceiling.
 4. Every peer-authored malformation in §3.5 returns a closed error and **no
    test in this slice may provoke a panic** — including a manifest declaring a
    chunk count and a total length far above the ceilings, which must be refused

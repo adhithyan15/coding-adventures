@@ -95,15 +95,30 @@ if (handwritingChunks.length !== 1) {
     `expected one handwriting-tools chunk, found ${handwritingChunks.length}`,
   );
 }
-if (lessonBatches.length >= 400) {
-  failures.push(`${lessonBatches.length} lesson requests exceed the 399-request ceiling`);
+// CEILING -- this is debt; it may fall, never grow.
+//
+// 399 -> 353, LOWERED, in the same commit that raised the grouping `maxSize` in
+// vite.config.ts from 49 kB to 56 kB. Regrouping took the measured count from
+// 401 to 353, so the ceiling follows it down: a ceiling that may fall should
+// fall when it falls, or the slack it keeps becomes room for the next
+// regression to hide in. The count moved because grouping changed, not because
+// the corpus shrank -- it grew by 35 lessons in the same commit.
+//
+// Read this and the `maxSize` beside it as a pair before changing either. The
+// number below is the debt number. `maxSize` is a bundler GROUPING parameter,
+// and raising it is how this number goes DOWN; it is not a second budget to
+// spend. The budget that actually protects the browser is the 500 kB eager
+// chunk limit below, and the largest lesson batch sits at about 11% of it.
+if (lessonBatches.length > 353) {
+  failures.push(`${lessonBatches.length} lesson requests exceed the 353-request ceiling`);
 }
 // Tracks the vite `maxSize` for lesson groups, with a little slack: rolldown
 // caps a batch at the size given but a single module can overshoot it. Raised
-// with the cap itself from 32 kB, to trade request COUNT for request SIZE --
-// see the note in vite.config.ts.
-if (largestLessonBatch > 49_000) {
-  failures.push(`largest lesson batch is ${largestLessonBatch} bytes (limit 49000)`);
+// with the cap itself from 32 kB, and again to 56 kB -- see the note in
+// vite.config.ts. This is not an independent budget; it MIRRORS the grouping
+// parameter, so a batch the bundler did not intend to emit still fails here.
+if (largestLessonBatch > 56_000) {
+  failures.push(`largest lesson batch is ${largestLessonBatch} bytes (limit 56000)`);
 }
 if (largestEagerChunk > 500_000) {
   failures.push(`largest eager chunk is ${largestEagerChunk} bytes (limit 500000)`);

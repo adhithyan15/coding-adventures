@@ -2,6 +2,28 @@
 
 All notable changes to this package are documented here.
 
+## [0.70.0] - 2026-08-25
+
+### Changed
+
+- **Fixed backlog item #23 (VLT-PM47 §9 acceptance gate 3), CI-cost only, no
+  invariant change.** `attachment::tests::empty_and_oversized_inputs_are_
+  refused_without_a_panic` used to materialize a real
+  16 MiB (`MAX_ATTACHMENT_BYTES`) buffer and run it through the full
+  two-layer seal — about 1.5s in a debug build, in a package with 250+
+  otherwise-microsecond unit tests. Split into
+  `the_boundary_is_exact_in_mechanism_and_in_arithmetic` (a 3-chunk
+  representative call proving the offset-stepping loop's boundary mechanism —
+  exact multiples produce no stray trailing chunk — plus a direct check that
+  `expected_chunk_count(MAX_ATTACHMENT_BYTES)` equals `MAX_ATTACHMENT_CHUNKS`,
+  the same arithmetic `chunk_attachment` itself derives its chunk count from)
+  and `the_full_scale_ceiling_still_chunks_exactly_at_max_attachment_chunks`
+  (`#[ignore]`d — the original full-scale assertion, kept as a periodic/manual
+  check rather than deleted). The `empty`/`oversized` rejection assertions are
+  unchanged and stay cheap (the bound is checked before a single chunk is
+  sealed). Measured: this file's `attachment::` test group, 1.52s to 0.28s
+  wall.
+
 ## [0.69.0] - 2026-08-25
 
 ### Added

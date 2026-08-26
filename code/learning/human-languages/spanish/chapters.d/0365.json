@@ -1,0 +1,21 @@
+{
+  "chapter": 365,
+  "title": "How Tall, How Long, How Full",
+  "label": "ch:alto-y-largo",
+  "canDo": "I can say alto, largo, ancho, corto and lleno, and put a measurement on a thing in words rather than numbers.",
+  "spineNodes": [
+    "SPINE-COUNT-ONE-TO-FIVE"
+  ],
+  "payoff": {
+    "lesson": "ES-C365-lleno",
+    "kind": "production",
+    "summary": "Complete ES-C365-lleno: describe a thing by height, length, width and how much is in it.",
+    "assesses": [
+      "ES-LEX-C365-COUNT-21",
+      "ES-LEX-C365-COUNT-22",
+      "ES-LEX-C365-COUNT-23",
+      "ES-LEX-C365-COUNT-24",
+      "ES-LEX-C365-COUNT-25"
+    ]
+  }
+}

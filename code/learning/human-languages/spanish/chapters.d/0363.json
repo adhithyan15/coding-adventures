@@ -1,0 +1,21 @@
+{
+  "chapter": 363,
+  "title": "How You Get There",
+  "label": "ch:el-coche-y-el-avion",
+  "canDo": "I can say el coche, el avión, el barco, el autobús and la bicicleta, and say which one I am taking.",
+  "spineNodes": [
+    "SPINE-ASK-LOCATION"
+  ],
+  "payoff": {
+    "lesson": "ES-C363-bicicleta",
+    "kind": "production",
+    "summary": "Complete ES-C363-bicicleta: name five ways to reach a place, and say which one you are taking.",
+    "assesses": [
+      "ES-LEX-C363-WHERE-41",
+      "ES-LEX-C363-WHERE-42",
+      "ES-LEX-C363-WHERE-43",
+      "ES-LEX-C363-WHERE-44",
+      "ES-LEX-C363-WHERE-45"
+    ]
+  }
+}

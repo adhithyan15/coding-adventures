@@ -681,9 +681,10 @@ fn lower_structural_function(
 }
 
 /// Rewrite the function's `ret` and `return_type` so the result is a concrete
-/// machine type. In the entry function a returned **reference** is unboxed to
-/// `i32` (the process exit code); a returned scalar keeps its width. A non-entry
-/// function that returns a reference keeps it as `ref<any>` for its caller.
+/// machine type. In the entry function a returned **reference** maps `nil` to
+/// process exit code zero and unboxes a non-null atom to `i32`; a returned
+/// scalar keeps its width. A non-entry function that returns a reference keeps
+/// it as `ref<any>` for its caller.
 /// A dynamic type hint that a concrete machine type may replace.
 fn is_narrowable_dynamic_hint(t: &str) -> bool {
     t == "any" || t == "polymorphic" || t == REF_ANY
@@ -706,49 +707,41 @@ fn set_return_representation(func: &mut IIRFunction, is_entry: bool, ref_regs: &
     let returns_ref = ref_regs.contains(&ret_reg);
 
     if is_entry && returns_ref {
-        // Unbox: `%u = unbox %ret_reg : i32 ; ret %u`. But `%ret_reg` can
-        // legitimately be `nil` here — e.g. a `COND` with no matching clause
-        // — and `nil` is the boxed-lisp-value encoding of "no result", not a
-        // programmer error; per the `COND` doc (`lang-aot/tests/wasm_emit.rs`)
-        // it is expected to become exit code 0. `unbox` (`i31.get_s` on wasm)
-        // correctly traps on an actually-null reference (LANG77 W20 fixed
-        // `i31.get_s`/`i31.get_u` from silent no-ops to real, spec-accurate
-        // null checks), so a bare unconditional unbox here would trap on
-        // every nil-returning program instead of exiting 0. Guard it with an
-        // explicit null test first, using only ops every backend (wasm/jvm/
-        // clr/beam) already lowers generically (`is_null`/`jmp_if_false`/
-        // `label`/`jmp`) — nil maps to 0, anything else still unboxes (and a
-        // genuinely wrong non-nil-but-unboxable reference still traps).
-        let is_null_reg = format!("{ret_reg}.isnil");
+        // A nullable Lisp result needs an explicit machine-boundary mapping:
+        // nil is process exit code zero, while a non-null atom may be unboxed.
+        // Keeping the null check here preserves the spec-required trap for a
+        // direct `i31.get_s(ref.null i31)` everywhere else.
         let unboxed = format!("{ret_reg}.unbox");
-        let result_reg = format!("{ret_reg}.retval");
-        let unbox_label = format!("{ret_reg}.do_unbox");
-        let end_label = format!("{ret_reg}.ret_ready");
-        func.instructions.splice(
-            ret_pos..ret_pos,
-            vec![
-                IIRInstr::new(
-                    "is_null",
-                    Some(is_null_reg.clone()),
-                    vec![Operand::Var(ret_reg.clone())],
-                    "bool",
-                ),
-                IIRInstr::new(
-                    "jmp_if_false",
-                    None,
-                    vec![Operand::Var(is_null_reg), Operand::Var(unbox_label.clone())],
-                    "void",
-                ),
-                IIRInstr::new("const", Some(result_reg.clone()), vec![Operand::Int(0)], "i32"),
-                IIRInstr::new("jmp", None, vec![Operand::Var(end_label.clone())], "void"),
-                IIRInstr::new("label", None, vec![Operand::Var(unbox_label)], "void"),
-                IIRInstr::new("unbox", Some(unboxed.clone()), vec![Operand::Var(ret_reg)], "i32"),
-                IIRInstr::new("mov", Some(result_reg.clone()), vec![Operand::Var(unboxed)], "i32"),
-                IIRInstr::new("label", None, vec![Operand::Var(end_label)], "void"),
-            ],
-        );
-        let ret = &mut func.instructions[ret_pos + 8];
-        ret.srcs = vec![Operand::Var(result_reg)];
+        let is_nil = format!("{ret_reg}.is_nil");
+        let non_nil = format!("{ret_reg}.non_nil");
+        let done = format!("{ret_reg}.exit_done");
+        let boundary = vec![
+            IIRInstr::new(
+                "is_null",
+                Some(is_nil.clone()),
+                vec![Operand::Var(ret_reg.clone())],
+                "bool",
+            ),
+            IIRInstr::new(
+                "jmp_if_false",
+                None,
+                vec![Operand::Var(is_nil), Operand::Var(non_nil.clone())],
+                "void",
+            ),
+            IIRInstr::new("const", Some(unboxed.clone()), vec![Operand::Int(0)], "i32"),
+            IIRInstr::new("jmp", None, vec![Operand::Var(done.clone())], "void"),
+            IIRInstr::new("label", None, vec![Operand::Var(non_nil)], "void"),
+            IIRInstr::new(
+                "unbox",
+                Some(unboxed.clone()),
+                vec![Operand::Var(ret_reg)],
+                "i32",
+            ),
+            IIRInstr::new("label", None, vec![Operand::Var(done)], "void"),
+        ];
+        func.instructions.splice(ret_pos..ret_pos, boundary);
+        let ret = &mut func.instructions[ret_pos + 7];
+        ret.srcs = vec![Operand::Var(unboxed)];
         ret.type_hint = "i32".to_string();
         func.return_type = "i32".to_string();
     } else if returns_ref {
@@ -984,33 +977,20 @@ mod tests {
     }
 
     #[test]
-    fn unbox_is_guarded_by_a_null_check_before_ret() {
-        // The entry function's boxed result is nil-checked before unboxing
-        // (nil → exit code 0; anything else → really unbox), not an
-        // unconditional `unbox` feeding `ret` — see `set_return_representation`.
+    fn nullable_entry_result_checks_for_nil_before_unboxing() {
         let mut m = cons_car_module();
         lower_dyn_repr_structural(&mut m);
         let f = &m.functions[0];
-        let ops = f.instructions.iter().map(|i| i.op.as_str()).collect::<Vec<_>>();
-        assert_eq!(
-            ops[ops.len() - 9..],
-            [
-                "is_null",
-                "jmp_if_false",
-                "const",
-                "jmp",
-                "label",
-                "unbox",
-                "mov",
-                "label",
-                "ret",
-            ],
-            "unbox must be guarded by a null check, not fed directly into ret: {ops:?}"
-        );
-        // ret reads the merged (nil-or-unboxed) result register.
         let pos = f.instructions.iter().position(|i| i.op == "ret").unwrap();
+        let boundary = &f.instructions[pos - 7..pos];
+        assert_eq!(
+            boundary.iter().map(|i| i.op.as_str()).collect::<Vec<_>>(),
+            vec!["is_null", "jmp_if_false", "const", "jmp", "label", "unbox", "label"]
+        );
+        assert_eq!(boundary[2].srcs, vec![Operand::Int(0)], "nil maps to exit code zero");
+        // Both paths assign the same exit register read by ret.
         match &f.instructions[pos].srcs[0] {
-            Operand::Var(v) => assert!(v.ends_with(".retval")),
+            Operand::Var(v) => assert!(v.ends_with(".unbox")),
             other => panic!("unexpected ret operand {other:?}"),
         }
     }
@@ -1209,20 +1189,18 @@ mod tests {
         lower_dyn_repr_structural(&mut m);
         let f = &m.functions[0];
         // The jmp_if_false now tests the RAW bool `raw`, not a wrapped truthy reg.
-        let jif = f.instructions.iter().find(|i| i.op == "jmp_if_false").unwrap();
+        let jif_pos = f
+            .instructions
+            .iter()
+            .position(|i| i.op == "jmp_if_false")
+            .unwrap();
+        let jif = &f.instructions[jif_pos];
         assert_eq!(jif.srcs.first(), Some(&Operand::Var("raw".into())),
             "boxed-bool guard must branch on the raw pre-box bool");
-        // No nil-truthiness wrapping was inserted for this *condition* — no
-        // `is_null` feeds the `jmp_if_false`'s guard register (`cond`). (The
-        // entry function's two `ret`s each get their own, unrelated
-        // null-guard `is_null` for the nil→exit-code-0 conversion — see
-        // `unbox_is_guarded_by_a_null_check_before_ret` — so this test only
-        // checks the COND-guard path, not "no is_null anywhere".)
-        assert!(
-            !f.instructions.iter().any(|i| i.op == "is_null"
-                && matches!(i.srcs.first(), Some(Operand::Var(v)) if v == "cond")),
-            "no is_null truthiness wrap for a boxed-bool condition"
-        );
+        // No nil-truthiness wrapping was inserted before this condition. The
+        // entry return boundary may independently test its nullable result.
+        assert!(!f.instructions[..jif_pos].iter().any(|i| i.op == "is_null"),
+            "no is_null truthiness wrap for a boxed-bool condition");
     }
 
     /// Helper: a heap-using function so this pass (not the scalar concretizer)

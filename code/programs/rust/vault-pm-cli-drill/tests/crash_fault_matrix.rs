@@ -91,6 +91,26 @@ const STDIN_INJECTION: &[u8] = b"stdin injected secret\nstdin injected secret\n"
 /// makes the wall clock worse.
 const MAX_WORKERS: usize = 8;
 
+/// The KDF cost every drill process is told to use, via
+/// `VAULT_PM_DRILL_KDF_*` (`coding_adventures_vault_pm_cli`'s `crash-injection`
+/// build only reads these — see `crash.rs`'s `kdf_policy_override`).
+///
+/// This is not the production Argon2id policy — it is the same minimal, still
+/// bound-valid policy this repository's own `vault-pm-cli` unit tests already
+/// use for KDF-adjacent assertions that do not care about KDF strength
+/// (`8 * 1024, 1, 1` — the lower edge of `Argon2idParametersV1::validate`'s
+/// range, not an invented weaker one). Every landing point this file drills
+/// is a durable-write boundary (an atomic `write -> fsync -> rename`); none of
+/// them is a fact about how expensive key derivation was. Swapping the KDF
+/// cost changes wall clock only — the count of landing points, which class
+/// (clean rollback / crash-resumable) each one falls into, and every other
+/// assertion in this file are all pure functions of the ceremony's durable
+/// writes, not of the KDF. See VLT-PM41 §8.1 for the full argument and the
+/// measured before/after.
+const DRILL_KDF_MEMORY_KIB: &str = "8192";
+const DRILL_KDF_ITERATIONS: &str = "1";
+const DRILL_KDF_LANES: &str = "1";
+
 // ---------------------------------------------------------------------------
 // Fixture
 // ---------------------------------------------------------------------------
@@ -127,7 +147,10 @@ impl TestHome {
             .env("HOME", self.0.join("home"))
             .env("XDG_CONFIG_HOME", self.0.join("config"))
             .env("XDG_DATA_HOME", self.0.join("data"))
-            .env("XDG_CACHE_HOME", self.0.join("cache"));
+            .env("XDG_CACHE_HOME", self.0.join("cache"))
+            .env("VAULT_PM_DRILL_KDF_MEMORY_KIB", DRILL_KDF_MEMORY_KIB)
+            .env("VAULT_PM_DRILL_KDF_ITERATIONS", DRILL_KDF_ITERATIONS)
+            .env("VAULT_PM_DRILL_KDF_LANES", DRILL_KDF_LANES);
     }
 
     fn ledger_path(&self) -> PathBuf {

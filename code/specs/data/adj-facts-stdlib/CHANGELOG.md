@@ -5,6 +5,74 @@ landed and why, not a semver-tracked API.
 
 ## Unreleased
 
+- `earth-science/sedimentary-rock-formation-step.adj` (new) — a `table` naming the three
+  ordered stages of sedimentary rock formation and each stage's numbered position:
+  `sedimentary_rock_formation_step(stage, step_number)`, `weathering` → 1, `erosion` → 2,
+  `compaction` → 3. The THIRD instance of the "Earth-processes" Major Gap, after
+  `geology/earth-layer-matter-behavior.adj` and `weathering-cause-type.adj`, and a genuinely
+  NEW axis from every rock table already shipped in this stdlib: `geology/rock-type.adj` and
+  `earth-science/rock-types.adj` each name WHAT a rock type forms FROM in one summary phrase;
+  `weathering-cause-type.adj` sorts individual weathering causes into physical/chemical;
+  `metamorphism-cause.adj` sorts metamorphism causes into a shared effect. None of them states
+  the ORDER the process actually runs in — this table does, the same "named stage → a NUMBER
+  marking its position" shape `water-cycle.adj` already established for a different Earth
+  cycle. Sourced from National Geographic Education's "The Rock Cycle" article (curl-verified
+  byte-for-byte against the raw page's own embedded article JSON before writing), the same
+  source family already cited at `trust consensus` by `biology/consumer-trophic-level.adj`.
+  Deliberately scoped to the sedimentary path only (not named "rock cycle" generally): the same
+  page also describes igneous and metamorphic formation, but neither is a multi-stage,
+  orderable sequence the way the sedimentary path's own three-sentence, hand-off-style
+  paragraph is — only the sedimentary path gets a step count this table can honestly build.
+  Honest abstention on `deposition` (a term OTHER K-8 sources use for a stage here, but never
+  named by this source's own paragraph, which folds it into the erosion/compaction stages'
+  prose instead) and `melting` (a real term the SAME cited page uses, but only for the separate
+  igneous-rock path, not this sedimentary sequence). Runs the relation BACKWARD as a genuine
+  reverse recall (step number → stage). New `sedimentary-rock-formation-step.query.adj` and
+  `facts_sedimentaryrockformationstep_e2e.rs` (3 tests: forward recall + citation check,
+  reverse recall, honest abstention on both excluded terms); new manifest objective
+  `adj.science.3to5.sedimentary_rock_formation_step` added via a surgical text edit (verified
+  with `git diff --stat`, JSON validated before write, and the parsed objective read back out
+  to confirm correctness).
+
+- `language/other-vowel-team-sound.adj` (new) — a `table` naming five lessons of the
+  University of Florida Literacy Institute (UFLI) Foundations Toolbox's "Other Vowel Teams
+  Unit Resources (Lessons 89-94)" page and the single sound each spelling represents:
+  `other_vowel_team_sound(spelling, sound)`. `u`/`oo` → `short_oo_sound` (lesson 89, the
+  repeated short /oo/ heard in "book"); `oo` ALSO carries `long_u_sound` (lesson 90, a
+  genuinely different, longer sound heard in "moon") — the same one-key/many-values shape
+  `digraph-sound.adj`'s own `th` row established; `ew`/`ui`/`ue` join `oo` on `long_u_sound`
+  (lesson 91, the source's own shared `/ū/` notation); `au`/`aw`/`augh` → `aw_sound` (lesson
+  93); and lesson 94 gives two short-vowel exceptions, `ea /ĕ/` and `a /ŏ/`. This is the FIFTH
+  UFLI phonics unit shipped in this stdlib, the direct sequel to `long-vowel-team-sound.adj`'s
+  own Long Vowel Teams unit (84-88) on the same toolbox page family, and it resolves a real,
+  already-flagged collision: the lesson-94 "ea" row ships as the disambiguated atom
+  `ea_short_e`, NOT a bare `ea`, because the bare spelling "ea" already carries a DIFFERENT,
+  genuinely distinct source-cited sound in the sibling `long-vowel-team-sound.adj` library (the
+  steady long-E reading in "team"/"rain" there, vs. this table's short-E reading in
+  "bread"/"head" here) — the identical `ow`/`ow_long_o`-style disambiguation discipline that
+  table's own header already flagged this exact "ea"/short-vowel collision risk as a future-round
+  concern for. A bare-`ea` query against THIS table's predicate honestly abstains, while
+  `long_vowel_team_sound(ea, $S)` against the sibling table is completely unaffected; both
+  empirically verified to coexist without conflict when imported together. This round also
+  resolves the converse of two abstentions `long-vowel-team-sound.adj`'s own header already
+  documented: "au"/"aw" were deliberately not rows there because UFLI tables them under this
+  very unit (lesson 93) — they are genuine rows here instead. Deliberately does NOT
+  disambiguate the bare atom `a` despite its reuse as a row value in several other,
+  categorically unrelated tables (`alphabet.adj`, `vowels.adj`, `morse-code.adj`,
+  `dolch-sight-word-level.adj`, `soil-horizons.adj`, `blood-groups.adj`) — none of them is a
+  sibling phonics spelling-to-sound table, so there is no genuine same-kind collision risk to
+  guard against. Excludes lesson 92 ("Vowel Teams Review 2"), a cumulative review lesson, the
+  same review-lesson exclusion already established for this stdlib. Honest abstention on `ey`
+  (UFLI tables it under the separate Long Vowel Teams unit, lesson 85, not this cited page).
+  curl-fetched directly and confirmed byte-for-byte before writing this file. `trust
+  authoritative` — same tier and source family as `digraph-sound.adj`/`diphthong-sound.adj`/
+  `long-vowel-team-sound.adj`/`silent-letter-sound.adj`. New `other-vowel-team-sound.query.adj`
+  and `facts_othervowelteamsound_e2e.rs` (6 tests: forward recall + citation check, reverse
+  recall binding all four `long_u_sound` spellings, the `oo` one-key-two-sounds shape, the
+  `ea`/`ea_short_e` cross-table heteronym proof, a direct forward recall on the disambiguated
+  atom, and honest abstention on `ey`); new manifest objective
+  `adj.literacy.k2.other_vowel_team_sound`.
+
 - `language/comparative-adjective-rule.adj` (new) — a `table` naming five common English
   comparative-adjective ("-er") formation rules and what each one actually requires:
   `comparative_adjective_rule(rule, description)`, `one_syllable_adjective` →

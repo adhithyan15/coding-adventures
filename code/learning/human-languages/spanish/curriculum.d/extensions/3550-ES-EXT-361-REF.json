@@ -1,0 +1,15 @@
+{
+  "id": "ES-EXT-361-REF",
+  "stage": "A1",
+  "kind": "required",
+  "category": "vocabulary",
+  "canDo": "I can name la carne, el pescado, la leche, la sal and el aceite.",
+  "prerequisites": [],
+  "lessons": [
+    "ES-C361-carne",
+    "ES-C361-pescado",
+    "ES-C361-leche",
+    "ES-C361-sal",
+    "ES-C361-aceite"
+  ]
+}

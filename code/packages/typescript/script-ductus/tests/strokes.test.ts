@@ -48,6 +48,10 @@ const CHINESE_WHAT = DUCTUS[ductusKey("chinese", "什")];
 const CHINESE_PARTICLE_ME = DUCTUS[ductusKey("chinese", "么")];
 const CHINESE_EARLY = DUCTUS[ductusKey("chinese", "早")];
 const CHINESE_UP = DUCTUS[ductusKey("chinese", "上")];
+const CHINESE_HAN = DUCTUS[ductusKey("chinese", "汉")];
+const CHINESE_LANGUAGE = DUCTUS[ductusKey("chinese", "语")];
+const CHINESE_WRITING = DUCTUS[ductusKey("chinese", "文")];
+const CHINESE_COUNTRY = DUCTUS[ductusKey("chinese", "国")];
 const DEVANAGARI_A = DUCTUS[ductusKey("devanagari", "अ")];
 const DEVANAGARI_AA = DUCTUS[ductusKey("devanagari", "आ")];
 const DEVANAGARI_I = DUCTUS[ductusKey("devanagari", "इ")];
@@ -253,6 +257,8 @@ const MALAYALAM_CHILLU_L = DUCTUS[ductusKey("malayalam", "ൽ")];
 const MALAYALAM_CHILLU_N = DUCTUS[ductusKey("malayalam", "ൻ")];
 const MALAYALAM_ZHA = DUCTUS[ductusKey("malayalam", "ഴ")];
 const TAMIL_U = DUCTUS["உ"];
+const TAMIL_NGA = DUCTUS["ங"];
+const JAPANESE_SHI = DUCTUS[ductusKey("japanese", "し")];
 
 const fontForDuctus = (letter: LetterDuctus) => {
   const script = SCRIPTS.find((candidate) => candidate.script === letter.script);
@@ -425,8 +431,8 @@ describe("handwriting ductus", () => {
   it("marks Chinese complete with every current-corpus row source-verified", () => {
     const chinese = SCRIPTS.find((script) => script.script === "chinese")!;
     expect(chinese.complete).toBe(true);
-    expect(chinese.letters).toHaveLength(37);
-    expect(new Set(chinese.letters.map((letter) => letter.glyph)).size).toBe(37);
+    expect(chinese.letters).toHaveLength(41);
+    expect(new Set(chinese.letters.map((letter) => letter.glyph)).size).toBe(41);
     expect(chinese.letters.every((letter) => letter.strokeOrderSource !== undefined)).toBe(true);
   });
 
@@ -653,6 +659,30 @@ describe("handwriting ductus", () => {
       "descend through the broad outer curve and turn left onto the baseline",
       "carry the long baseline straight to the right",
     ]);
+  });
+
+  it("Tamil ங keeps Frame 2's detached upright and joined body separate", () => {
+    expect(penLifts(TAMIL_NGA)).toBe(1);
+    expect(TAMIL_NGA.strokes).toHaveLength(2);
+    expect(TAMIL_NGA.strokes[1].segments.map((segment) => segment.label)).toEqual([
+      "climb the tall left body",
+      "carry the top bar right and return inward",
+      "descend into the rounded inner turn",
+      "carry the low bar to the right",
+      "return left and finish up the inner stem",
+    ]);
+  });
+
+  it("Japanese し descends and sweeps upward right without lifting", () => {
+    expect(penLifts(JAPANESE_SHI)).toBe(0);
+    expect(JAPANESE_SHI.strokes).toHaveLength(1);
+    expect(JAPANESE_SHI.strokes[0].segments.map((segment) => segment.label)).toEqual([
+      "descend nearly straight from the top",
+      "turn around the broad lower curve and sweep upward right",
+    ]);
+    expect(JAPANESE_SHI.source.url).toBe(
+      "https://commons.wikimedia.org/wiki/File:Hiragana_%E3%81%97_stroke_order_animation.gif",
+    );
   });
 
   it("ப descends, crosses the bottom, and rises without lifting", () => {
@@ -4332,6 +4362,18 @@ describe("handwriting ductus", () => {
     expect(verifiedLetterFont("上", CHINESE_UP.source.url)).toBe(
       "_fonts/NotoSansSC-Subset.ttf",
     );
+    expect(verifiedLetterFont("汉", CHINESE_HAN.source.url)).toBe(
+      "_fonts/NotoSansSC-Subset.ttf",
+    );
+    expect(verifiedLetterFont("语", CHINESE_LANGUAGE.source.url)).toBe(
+      "_fonts/NotoSansSC-Subset.ttf",
+    );
+    expect(verifiedLetterFont("文", CHINESE_WRITING.source.url)).toBe(
+      "_fonts/NotoSansSC-Subset.ttf",
+    );
+    expect(verifiedLetterFont("国", CHINESE_COUNTRY.source.url)).toBe(
+      "_fonts/NotoSansSC-Subset.ttf",
+    );
     expect(verifiedLetterFont("अ", DEVANAGARI_A.source.url)).toBe(
       "_fonts/NotoSansDevanagari-Static.ttf",
     );
@@ -4838,6 +4880,66 @@ describe("handwriting ductus", () => {
     expect(src.variation).toMatch(
       /three ordered strokes.*Median 1.*central vertical.*top toward the base.*Median 2.*starts at the vertical.*short middle horizontal left-to-right.*Median 3.*long base horizontal left-to-right.*People's Republic of China stroke order.*Noto Sans SC.*both intervening lifts.*short-before-long horizontal contrast/i,
     );
+  });
+
+  it("Chinese 汉 preserves all five pinned source medians and their lift boundaries", () => {
+    const src = CHINESE_HAN.source;
+    expect(src.url).toBe(
+      "https://raw.githubusercontent.com/chanind/hanzi-writer-data/68d10a4b21150cae5e1ebbd223eed289cf32d90c/data/%E6%B1%89.json",
+    );
+    expect(src.citation).toMatch(/Hanzi Writer Data 汉\.json.*medians 1–5.*snapshot 68d10a4/i);
+    expect(src.variation).toMatch(
+      /five ordered strokes.*Medians 1–3.*氵.*median 4.*turns down-left.*median 5.*falls down-right.*People's Republic of China.*source medians directly.*Noto Sans SC/i,
+    );
+    expect(CHINESE_HAN.strokes).toHaveLength(5);
+    expect(CHINESE_HAN.strokes.map((stroke) => penPath(stroke).length)).toEqual([3, 3, 5, 13, 7]);
+    expect(penLifts(CHINESE_HAN)).toBe(4);
+  });
+
+  it("Chinese 语 preserves the 讠-before-五-before-口 source sequence", () => {
+    const src = CHINESE_LANGUAGE.source;
+    expect(src.url).toBe(
+      "https://raw.githubusercontent.com/chanind/hanzi-writer-data/68d10a4b21150cae5e1ebbd223eed289cf32d90c/data/%E8%AF%AD.json",
+    );
+    expect(src.citation).toMatch(/Hanzi Writer Data 语\.json.*medians 1–9.*snapshot 68d10a4/i);
+    expect(src.variation).toMatch(
+      /nine ordered strokes.*Medians 1–2.*讠.*medians 3–6.*五.*medians 7–9.*口.*bottom-closing.*People's Republic of China.*source medians directly.*Noto Sans SC/i,
+    );
+    expect(CHINESE_LANGUAGE.strokes).toHaveLength(9);
+    expect(CHINESE_LANGUAGE.strokes.map((stroke) => penPath(stroke).length)).toEqual([
+      3, 10, 5, 4, 7, 6, 3, 7, 5,
+    ]);
+    expect(penLifts(CHINESE_LANGUAGE)).toBe(8);
+  });
+
+  it("Chinese 文 preserves its four separately started source medians", () => {
+    const src = CHINESE_WRITING.source;
+    expect(src.url).toBe(
+      "https://raw.githubusercontent.com/chanind/hanzi-writer-data/68d10a4b21150cae5e1ebbd223eed289cf32d90c/data/%E6%96%87.json",
+    );
+    expect(src.citation).toMatch(/Hanzi Writer Data 文\.json.*medians 1–4.*snapshot 68d10a4/i);
+    expect(src.variation).toMatch(
+      /four separately started strokes.*top dot.*horizontal.*left-falling.*right-falling.*People's Republic of China.*source medians directly.*Noto Sans SC/i,
+    );
+    expect(CHINESE_WRITING.strokes).toHaveLength(4);
+    expect(CHINESE_WRITING.strokes.map((stroke) => penPath(stroke).length)).toEqual([3, 6, 12, 7]);
+    expect(penLifts(CHINESE_WRITING)).toBe(3);
+  });
+
+  it("Chinese 国 closes the frame only after all five inner 玉 medians", () => {
+    const src = CHINESE_COUNTRY.source;
+    expect(src.url).toBe(
+      "https://raw.githubusercontent.com/chanind/hanzi-writer-data/68d10a4b21150cae5e1ebbd223eed289cf32d90c/data/%E5%9B%BD.json",
+    );
+    expect(src.citation).toMatch(/Hanzi Writer Data 国\.json.*medians 1–8.*snapshot 68d10a4/i);
+    expect(src.variation).toMatch(
+      /eight ordered strokes.*Medians 1–2.*outer frame.*medians 3–7.*玉.*median 8.*closes.*People's Republic of China.*source medians directly.*Noto Sans SC/i,
+    );
+    expect(CHINESE_COUNTRY.strokes).toHaveLength(8);
+    expect(CHINESE_COUNTRY.strokes.map((stroke) => penPath(stroke).length)).toEqual([
+      6, 12, 6, 4, 5, 5, 3, 5,
+    ]);
+    expect(penLifts(CHINESE_COUNTRY)).toBe(7);
   });
 
   it("Devanagari अ traces its four-run modern form and records the six-stroke variant", () => {
@@ -6479,6 +6581,13 @@ describe("handwriting ductus", () => {
     expect(src.url).toContain("tamilscript");
     expect(src.citation).toMatch(/Appendix I.*Frame 3.*க/);
     expect(src.variation, "must not present one order as the only order").toMatch(/variation|no single/i);
+  });
+
+  it("ங's two-run order traces to Appendix I Frame 2", () => {
+    const src = DUCTUS["ங"].source;
+    expect(src.url).toContain("tamilscript/files/2009/08/hw_lettersinstructions.pdf");
+    expect(src.citation).toMatch(/Appendix I.*Frame 2.*ங.*p\. 191/i);
+    expect(src.variation).toMatch(/detached descending upright.*five joined movements.*detached upright on the right.*two-run order/i);
   });
 
   it("வ's stroke order traces to Frame 9's first row", () => {

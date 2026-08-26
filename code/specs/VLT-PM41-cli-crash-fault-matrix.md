@@ -520,6 +520,56 @@ it. That case sits squarely inside VLT-PM00 §19.4's mark-and-sweep, which
 needs the reachability graph this narrower fix deliberately avoids building,
 and remains Phase 2 work.
 
+**The rotation sweep (section 6.1) was the single slowest unit of this
+repository's CI, even after being parallelized per-cell (508s to 117s
+locally). Resolved without reducing coverage.** Backlog item #20 had already
+declined the obvious next lever once — cutting section 6.1's 48 landing
+points down to a representative subset by equivalence class — because that
+*is* a real coverage reduction: every landing point not chosen stops being
+proven "exactly one passphrase works," which is precisely the property VLT-PM43
+§7 gate 5 exists to state without exception.
+
+Revisiting it, the actual bottleneck was never the landing-point count or the
+real `SIGKILL`. It was that every cell pays up to five *production* Argon2id
+derivations — 64 MiB, 3 iterations — in a debug build, and that cost has
+nothing to do with what a crash-injection cell proves: a durable write's
+before/after landing point is a fact about `write -> fsync -> rename`
+ordering, never about how expensive the KDF that ran earlier in the same
+process happened to be. Two things made that separation exploitable without
+weakening anything:
+
+- `Argon2idParametersV1::validate` already accepts a much cheaper policy
+  (`8 * 1024` KiB, 1 iteration, 1 lane — this crate's own `vault-pm-cli` unit
+  tests already use exactly that combination for KDF-adjacent assertions that
+  do not care about strength), so a "fast but still bound-valid" policy was
+  not invented for this purpose; and
+- the composition root already had the exact seam this needed —
+  `crash.rs`'s `#[cfg(feature = "crash-injection")]` split, the same one that
+  keeps `around_config_create` and friends out of the shipped binary. A third
+  function in that split, `kdf_policy_override`, reads
+  `VAULT_PM_DRILL_KDF_{MEMORY_KIB,ITERATIONS,LANES}` only when this build has
+  the feature compiled in, so the override is dead code in `vault-pm` by
+  construction, exactly like the landing-point instrumentation itself.
+
+`code/programs/rust/vault-pm-cli-drill/tests/crash_fault_matrix.rs` now sets
+those three variables on every drilled process (`TestHome::configure`, one
+choke point, every `Command` in the file goes through it). Every landing
+point of every sweep in this file — generation zero's 34, the shared
+mutation-publication path's 20, the rotation's 48, every other ceremony —
+is still driven through a real `SIGKILL`ed process at every landing point,
+with every assertion unchanged; only the wall-clock cost of the KDF calls
+those real processes make dropped. Measured on one development machine,
+`cargo test` for the whole file: **266.92s to 38.92s**, all 18 tests still
+passing, `took_new` still observed both above zero and below the sweep total
+in the rotation sweep specifically. Per this campaign's standing lesson that
+local timing is a proxy and CI's own run is the ground truth (backlog item
+#26), the PR that lands this records the real GitHub Actions timing rather
+than stopping at the local number.
+
+The equivalence-class cut considered by backlog item #20 was not needed and
+was not taken. The declined shortcut stays declined; nothing here reduces the
+48 landing points or narrows what any of them proves.
+
 ## 9. Acceptance gates
 
 1. The instrumentation package builds, is `deny(missing_docs)` clean, and its

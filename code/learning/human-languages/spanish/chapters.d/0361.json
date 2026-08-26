@@ -1,0 +1,21 @@
+{
+  "chapter": 361,
+  "title": "What Is On The Table",
+  "label": "ch:la-carne-y-la-leche",
+  "canDo": "I can say la carne, el pescado, la leche, la sal and el aceite, and ask for the things a plain meal is made of.",
+  "spineNodes": [
+    "SPINE-DEFINITE-REFERENCE"
+  ],
+  "payoff": {
+    "lesson": "ES-C361-aceite",
+    "kind": "production",
+    "summary": "Complete ES-C361-aceite: name two things you cook and three things you cook them with.",
+    "assesses": [
+      "ES-LEX-C361-REF-21",
+      "ES-LEX-C361-REF-22",
+      "ES-LEX-C361-REF-23",
+      "ES-LEX-C361-REF-24",
+      "ES-LEX-C361-REF-25"
+    ]
+  }
+}

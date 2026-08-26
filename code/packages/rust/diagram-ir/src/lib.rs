@@ -1083,12 +1083,26 @@ pub struct GanttSection {
     pub tasks: Vec<GanttTask>,
 }
 
+#[derive(Clone, Debug, PartialEq, Default)]
+pub struct GanttConfig {
+    pub axis_format: Option<String>,
+    pub tick_interval: Option<String>,
+    pub includes: Vec<String>,
+    pub excludes: Vec<String>,
+    pub inclusive_end_dates: bool,
+    pub top_axis: bool,
+    pub today_marker: Option<String>,
+    pub weekday: Option<String>,
+    pub weekend: Option<String>,
+}
+
 #[derive(Clone, Debug, PartialEq)]
 pub struct GanttDiagram {
     pub title: Option<String>,
     pub accessibility_title: Option<String>,
     pub accessibility_description: Option<String>,
     pub date_format: String,
+    pub config: GanttConfig,
     pub sections: Vec<GanttSection>,
 }
 
@@ -1553,6 +1567,7 @@ mod tests {
                 accessibility_title: None,
                 accessibility_description: None,
                 date_format: "YYYY-MM-DD".into(),
+                config: GanttConfig::default(),
                 sections: vec![GanttSection {
                     label: None,
                     tasks: vec![task],

@@ -47,6 +47,11 @@ const tamilOutline = (character: string): GlyphOutline => {
   return { path: g.path, bounds: boundsOf(g.contours) };
 };
 
+const japaneseOutline = (character: string): GlyphOutline => {
+  const g = parseFont(load("NotoSansJP-Subset.ttf")).glyphFor(character)!;
+  return { path: g.path, bounds: boundsOf(g.contours) };
+};
+
 const naskhOutline = (character: string): GlyphOutline => {
   const g = parseFont(load("NotoNaskhArabic-Static.ttf")).glyphFor(character)!;
   return { path: g.path, bounds: boundsOf(g.contours) };
@@ -122,6 +127,10 @@ const MALAYALAM_ZHA = DUCTUS[ductusKey("malayalam", "ഴ")];
 const malayalamZhaOutline = malayalamOutline("ഴ");
 const KA = DUCTUS["க"];
 const kaOutline = tamilOutline("க");
+const NGA = DUCTUS["ங"];
+const ngaOutline = tamilOutline("ங");
+const JAPANESE_SHI = DUCTUS[ductusKey("japanese", "し")];
+const japaneseShiOutline = japaneseOutline("し");
 const CA = DUCTUS["ச"];
 const caOutline = tamilOutline("ச");
 const TTA = DUCTUS["ட"];
@@ -557,13 +566,14 @@ function collect(node: SvgNode, pick: (n: SvgNode) => boolean, out: SvgNode[] = 
 const byTag = (node: SvgNode, tag: string) => collect(node, (n) => n.tag === tag);
 
 describe("ductusFor — only cited letters have a ductus", () => {
-  it("finds twenty Tamil letters, twelve Persian letters, eighteen Arabic letters, and sixteen Urdu letters", () => {
+  it("finds twenty-one Tamil letters, twelve Persian letters, eighteen Arabic letters, and sixteen Urdu letters", () => {
     expect(ductusFor("ம")?.glyph).toBe("ம");
     expect(ductusFor("அ")?.glyph).toBe("அ");
     expect(ductusFor("ஆ")?.glyph).toBe("ஆ");
     expect(ductusFor("இ")?.glyph).toBe("இ");
     expect(ductusFor("எ")?.glyph).toBe("எ");
     expect(ductusFor("க")?.glyph).toBe("க");
+    expect(ductusFor("ங")?.glyph).toBe("ங");
     expect(ductusFor("ச")?.glyph).toBe("ச");
     expect(ductusFor("ட")?.glyph).toBe("ட");
     expect(ductusFor("வ")?.glyph).toBe("வ");
@@ -1274,6 +1284,46 @@ describe("க — a real cited three-stroke filmstrip", () => {
     expect(done).toHaveLength(2);
     expect(done.map((path) => path.attrs.d)).toEqual([penPathD(KA.strokes[0], 1), penPathD(KA.strokes[1], 1)]);
     expect(pen.attrs.d).toBe(penPathD(KA.strokes[2], 1));
+  });
+});
+
+describe("ங — a detached upright followed by one joined body", () => {
+  const steps = ductusSteps(NGA);
+  const strip = ductusFilmstrip(NGA, ngaOutline);
+
+  it("keeps the five body movements joined after one lift", () => {
+    expect(steps.map((step) => step.strokeIndex)).toEqual([0, 1, 1, 1, 1, 1]);
+    expect(steps.map((step) => step.startsAfterLift)).toEqual([false, true, false, false, false, false]);
+  });
+
+  it("reports six movements in two strokes", () => {
+    expect(strip.frames).toHaveLength(6);
+    expect(strip.penLifts).toBe(1);
+    expect(strip.summary).toBe("2 strokes · 1 pen lift · 6 movements");
+  });
+
+  it("keeps the completed upright visible while the body finishes", () => {
+    const last = strip.frames.at(-1)!;
+    const done = byTag(last, "path").filter((node) => node.attrs.class === "ductus__done");
+    const pen = byTag(last, "path").find((node) => node.attrs.class === "ductus__pen")!;
+    expect(done.map((path) => path.attrs.d)).toEqual([penPathD(NGA.strokes[0], 1)]);
+    expect(pen.attrs.d).toBe(penPathD(NGA.strokes[1], 1));
+  });
+});
+
+describe("し — one continuous descending curve", () => {
+  const steps = ductusSteps(JAPANESE_SHI);
+  const strip = ductusFilmstrip(JAPANESE_SHI, japaneseShiOutline);
+
+  it("keeps both movements in one pen-down run", () => {
+    expect(steps.map((step) => step.strokeIndex)).toEqual([0, 0]);
+    expect(steps.map((step) => step.startsAfterLift)).toEqual([false, false]);
+  });
+
+  it("reports a two-frame zero-lift filmstrip", () => {
+    expect(strip.frames).toHaveLength(2);
+    expect(strip.penLifts).toBe(0);
+    expect(strip.summary).toBe("one unbroken stroke · 2 movements");
   });
 });
 

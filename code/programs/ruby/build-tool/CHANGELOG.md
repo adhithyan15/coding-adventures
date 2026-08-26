@@ -6,6 +6,12 @@ All notable changes to the Ruby build tool are documented in this file.
 
 ### Changed
 
+- Orphan-crate snapshots now use the shared build-tool v1 process-free
+  contract. The pure Hash-in/result-out validator consumes all four
+  language-neutral fixtures, derives direct and component-wise ancestor BUILD
+  coverage, rejects empty BUILDs and malformed or stale exemption entries,
+  reports active PENDING debt, redacts hostile paths, and uses the pinned
+  Unicode 17 substrate for portable identity and deterministic ordering.
 - Tracked-artifact snapshots now use the shared build-tool v1 portable-path
   policy with deterministic, root-redacted diagnostics. The pure in-memory
   validator consumes all five language-neutral fixtures and uses generated,

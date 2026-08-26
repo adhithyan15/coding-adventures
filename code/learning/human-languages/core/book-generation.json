@@ -5576,6 +5576,41 @@
       "output": "spanish/book/chapters/ch359-el-kilo-y-el-litro.tex"
     },
     {
+      "language": "spanish",
+      "chapter": 360,
+      "output": "spanish/book/chapters/ch360-la-ropa-y-el-zapato.tex"
+    },
+    {
+      "language": "spanish",
+      "chapter": 361,
+      "output": "spanish/book/chapters/ch361-la-carne-y-la-leche.tex"
+    },
+    {
+      "language": "spanish",
+      "chapter": 362,
+      "output": "spanish/book/chapters/ch362-la-tierra-y-el-mar.tex"
+    },
+    {
+      "language": "spanish",
+      "chapter": 363,
+      "output": "spanish/book/chapters/ch363-el-coche-y-el-avion.tex"
+    },
+    {
+      "language": "spanish",
+      "chapter": 364,
+      "output": "spanish/book/chapters/ch364-la-mujer-y-la-cara.tex"
+    },
+    {
+      "language": "spanish",
+      "chapter": 365,
+      "output": "spanish/book/chapters/ch365-alto-y-largo.tex"
+    },
+    {
+      "language": "spanish",
+      "chapter": 366,
+      "output": "spanish/book/chapters/ch366-la-caja-y-la-lampara.tex"
+    },
+    {
       "language": "tamil",
       "chapter": 6,
       "output": "tamil/book/chapters/ch06-dative-case.tex",

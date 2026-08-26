@@ -1,26 +1,13 @@
 # Changelog — iir-builtin-lowering
 
-## 0.39.1 - 2026-08-26 - fix: entry-function nil return no longer traps on `unbox`
+## 0.40.0 - 2026-08-25 - nullable structural entry results
 
-WASM's W20 slice (`i31.get_s`/`i31.get_u` real 31-bit mask/sign-extend +
-trap-on-null, replacing prior stack-identity no-ops) surfaced a latent bug in
-`set_return_representation`: the entry function's boxed lisp result was fed
-straight into `unbox` (`i31.get_s` on wasm) before `ret`, with no null check.
-A `COND` with no matching clause legitimately returns `nil` — a real `ref.null
-i31` — which is the correct exit-code-0 case (`lang-aot`'s
-`mccarthy_cond_runs_on_wasm` asserts exactly this), not a programmer error.
-Once `i31.get_s` started trapping on null instead of silently tolerating it,
-every nil-returning program started panicking with "i31.get_s: null i31
-reference" instead of exiting 0.
+The managed structural Lisp representation now maps a nullable entry result
+to process exit code zero before unboxing non-null integer atoms. This keeps
+`nil`-returning `COND` programs compatible with the process boundary while
+preserving the spec-required `i31.get_s` trap on null references elsewhere.
 
-Fixed by guarding the unbox with an explicit null check — `is_null` +
-`jmp_if_false` + `label`/`jmp` (ops every backend, not just wasm, already
-lowers generically) — so `nil` maps to exit code `0` and any other boxed
-value still genuinely unboxes (and a truly-wrong non-nil-but-unboxable
-reference still traps, same as before). This is scoped to the one
-entry-function return-boundary conversion; `unbox` elsewhere (arithmetic
-operand positions) is untouched, since trapping there on an unexpected nil is
-correct, not a bug to paper over.
+## 0.39.0 - 2026-08-18 - lower_dynamic_arith handles a unary `call_builtin "-"` (negate)
 
 `lower_dynamic_arith_function` only ever matched the binary (2-operand) shape
 of a dynamic arithmetic `call_builtin`. Macsyma's `macsyma-iir-compiler`

@@ -1,5 +1,9 @@
 # Changelog
 
+## 0.70.0
+
+- Tokenize Mermaid 11.16.1 Gantt calendar and axis-control statements through the dedicated grammar.
+
 ## 0.67.0
 
 - Add a portable, case-insensitive Mermaid 11.16.1 XY-chart token grammar.

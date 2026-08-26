@@ -2,6 +2,25 @@
 
 All notable changes to this project will be documented in this file.
 
+## [0.4.0] - 2026-08-26
+
+### Added
+
+- The pure Elixir validator now consumes the four shared orphan-crate coverage
+  fixtures through a closed snapshot API. It implements rooted runnable-BUILD
+  coverage, closest empty-BUILD reporting, exact artifact exclusions, portable
+  exemption policy, stale-entry diagnostics, and active pending counts without
+  adding filesystem, Git, process, environment, or network authority.
+- Focused conformance tests cover hostile-path redaction, Python-exact blank
+  reasons, Unicode 17 NFC/full-fold aliases, invalid-field precedence, fixed
+  BUILD filename ranking, and Python-compatible ASCII-JSON detail ordering.
+
+### Changed
+
+- Canonical validator detail ordering now uses explicit ASCII-only JSON string
+  escaping, including UTF-16 surrogate pairs for supplementary scalars, so
+  Elixir diagnostics sort exactly like the language-neutral Python oracle.
+
 ## [0.3.0] - 2026-08-25
 
 ### Changed

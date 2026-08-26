@@ -2,6 +2,27 @@
 
 ## Unreleased
 
+### Added — source-verified Japanese hiragana shi
+
+- Add hiragana **し** as one continuous descent, broad lower turn, and rising
+  rightward sweep from Sirgazil's 23-frame CC0 animation.
+- Pin zero lifts and fit the cited one-run order to the bundled Noto Sans JP
+  outline in a two-movement filmstrip.
+
+### Added — source-verified Chinese language-identity characters
+
+- Add **汉**, **语**, **文**, and **国** from pinned Hanzi Writer Data medians,
+  preserving their exact PRC stroke order, continuous turns, and pen lifts.
+- Record reusable component order for **氵**, **讠**, **五**, **口**, **玉**, and
+  the close-the-frame-last pattern that the learner writing ramp will revisit.
+
+### Added — source-verified Tamil nga
+
+- Add Tamil **ங** as a detached descending upright followed by five joined
+  movements through its framed body, rounded turn, and low return.
+- Pin one lift, Appendix I Frame 2 provenance, and the Noto Sans Tamil fit that
+  moves the handwritten model's detached upright to the right.
+
 ### Added — source-backed shared maddah composition
 
 - Pin Arabic, Persian, and Urdu **ٓ** as an alef carrier plus a separately

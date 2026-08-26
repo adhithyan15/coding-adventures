@@ -1,5 +1,10 @@
 # Changelog
 
+## 0.19.0
+
+- Extend Gantt task bars and dependency starts across excluded calendar days, honoring explicit includes and weekend boundaries.
+- Resolve configured Gantt axis formats and tick intervals into backend-neutral time-axis labels.
+
 ## 0.16.0
 
 - Route GitGraph merge and cherry-pick arcs from resolved source commits instead of event-order guesses.

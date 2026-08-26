@@ -1,0 +1,15 @@
+{
+  "id": "ES-EXT-364-REF",
+  "stage": "A1",
+  "kind": "required",
+  "category": "vocabulary",
+  "canDo": "I can name la mujer, la cara, la nariz, el dedo and el corazón.",
+  "prerequisites": [],
+  "lessons": [
+    "ES-C364-mujer",
+    "ES-C364-cara",
+    "ES-C364-nariz",
+    "ES-C364-dedo",
+    "ES-C364-corazon"
+  ]
+}
