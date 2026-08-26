@@ -42,10 +42,11 @@
 //!
 //! Writes use the standard "write to tmp, fsync, rename" pattern:
 //!
-//! 1. Open `<key>.tmp` for write+truncate.
+//! 1. Open `.wr-<instance>-<seq>.tmp` for write+truncate. The name is
+//!    unique per write and NOT derived from the key — see `key_tmp_path`.
 //! 2. Write header + meta + body.
 //! 3. `fsync` the tmp file.
-//! 4. Atomic-rename `<key>.tmp` → `<key>` (POSIX `rename(2)` is
+//! 4. Atomic-rename the temporary → `<key>` (POSIX `rename(2)` is
 //!    atomic relative to readers).
 //! 5. `fsync` the parent directory so the rename is durable. `delete`
 //!    fsyncs the same parent directory after `remove_file`, for the
@@ -113,9 +114,11 @@
 //!   serialized by this backend's `write_lock`. **Across processes they
 //!   are not**, and the consequence is sharper than "not supported":
 //!   `put` evaluates `if_absent` / `if_revision` against a read and
-//!   *then* writes-fsyncs-renames, with only a per-instance mutex in
-//!   between. Two processes can both pass the check and both rename, so
-//!   a compare-and-swap that should have excluded one of them does not.
+//!   *then* writes-fsyncs-renames. Within a process that whole sequence
+//!   now runs under a lock shared by every backend over the same root, so
+//!   two handles cannot interleave. ACROSS processes nothing excludes
+//!   them: both can pass the check and both rename, so a compare-and-swap
+//!   that should have excluded one of them does not.
 //!
 //!   Closing it needs an `flock`/`O_EXCL` lock spanning check-through-
 //!   rename. Until that lands, any protocol whose *safety* rests on
@@ -177,9 +180,13 @@ pub struct FsStorageBackendSummary {
     ///
     /// Nothing reads them in the meantime: `list()` skips the extension, and
     /// `get()`/`put()` address records by `hex_encode(key)`, which is `[0-9a-f]`
-    /// only and so can never name a `.tmp` file. Growth is bounded at one per
-    /// key, because the tmp path is deterministic and opened with
-    /// `truncate(true)`.
+    /// only and so can never name a `.tmp` file.
+    ///
+    /// Residue is bounded by cleanup on the write path, not by the filename.
+    /// It used to be the latter — one temporary per key, reused via
+    /// `truncate(true)` — but sharing that path let one writer commit another's
+    /// bytes, so temporaries are now unique per write and `put` removes its own
+    /// on every failing path instead.
     pub tmp_files_cleaned_on_initialize: bool,
     /// Whether a parent-directory `fsync` failure (after `rename` or
     /// `remove_file`) is tolerated rather than propagated as an error.
@@ -230,29 +237,72 @@ pub const fn fs_storage_backend_summary() -> FsStorageBackendSummary {
 /// Every write lock handed out so far, keyed by store root.
 ///
 /// A process-wide registry is what makes the lock mean "this store" rather than
-/// "this handle". Entries are never removed: a root is a path, there are not
-/// many of them in a process, and reclaiming one would reintroduce the race it
-/// exists to prevent if a backend were constructed over it again concurrently.
+/// "this handle". Entries are never removed, because production roots are fixed
+/// and constructed at startup rather than per request, so the map stays small
+/// and bounded by deployment shape.
+///
+/// Reclaiming WOULD be safe, contrary to an earlier note here: holding `Weak`
+/// and doing upgrade-or-insert under this same mutex is atomic against every
+/// other construction, and a root with no live `Arc` has no backend left to
+/// exclude. It is simply not worth the machinery.
 static WRITE_LOCKS: Mutex<Option<HashMap<PathBuf, Arc<Mutex<()>>>>> = Mutex::new(None);
 
 /// Return the process-wide write lock for `root`, creating it on first use.
 ///
-/// The key is canonicalised when possible so that two spellings of one
-/// directory -- a relative path and its absolute form, or a symlink and its
-/// target -- share a lock. `canonicalize` requires the path to exist, and a
-/// backend may legitimately be constructed before its root does, so an
-/// un-canonicalisable path falls back to its literal form. That fallback is
-/// conservative in the wrong direction for exotic aliasing, which is why the
-/// cross-process caveat below still stands.
+/// The key must identify the DIRECTORY, not the spelling, and must do so
+/// identically whether or not that directory exists yet. Getting the second
+/// half wrong is not academic: a plain
+/// `canonicalize(root).unwrap_or(root.to_path_buf())` keys on the literal path
+/// before the directory exists and on the canonical one afterwards, and the
+/// daemon constructs its two backends on either side of the `initialize` that
+/// creates the root. With a symlinked component -- macOS `$TMPDIR`, a symlinked
+/// `$HOME` -- the two spellings differ, the two backends get different locks,
+/// and the exclusion this function exists to provide silently does not happen.
+///
+/// So: absolutise lexically, canonicalise the longest ancestor that DOES exist,
+/// and re-append the part that does not. That is stable across creation,
+/// because creating the tail cannot change the canonical form of its ancestors.
 fn write_lock_for_root(root: &Path) -> Arc<Mutex<()>> {
-    let key = fs::canonicalize(root).unwrap_or_else(|_| root.to_path_buf());
     let mut registry = WRITE_LOCKS.lock().unwrap_or_else(PoisonError::into_inner);
     Arc::clone(
         registry
             .get_or_insert_with(HashMap::new)
-            .entry(key)
+            .entry(lock_key(root))
             .or_insert_with(|| Arc::new(Mutex::new(()))),
     )
+}
+
+/// Identify a root by directory rather than by spelling, existence-independently.
+fn lock_key(root: &Path) -> PathBuf {
+    let absolute = if root.is_absolute() {
+        root.to_path_buf()
+    } else {
+        std::env::current_dir()
+            .map(|cwd| cwd.join(root))
+            .unwrap_or_else(|_| root.to_path_buf())
+    };
+
+    let mut missing_tail = Vec::new();
+    let mut cursor = absolute.as_path();
+    loop {
+        if let Ok(existing) = fs::canonicalize(cursor) {
+            let mut key = existing;
+            for component in missing_tail.iter().rev() {
+                key.push(component);
+            }
+            return key;
+        }
+        let Some(parent) = cursor.parent() else {
+            // Nothing along the path exists and there is no parent left. The
+            // literal absolute path is the best identity available, and it is
+            // still stable for this root.
+            return absolute;
+        };
+        if let Some(name) = cursor.file_name() {
+            missing_tail.push(name.to_os_string());
+        }
+        cursor = parent;
+    }
 }
 
 /// Distinguishes backend instances within one process.
@@ -620,24 +670,42 @@ fn write_record_atomic(
     }
 
     // 2. Write tmp.
-    {
-        let mut f = OpenOptions::new()
-            .write(true)
-            .create(true)
-            .truncate(true)
-            .open(tmp)
-            .map_err(io_to_storage)?;
-        f.write_all(MAGIC).map_err(io_to_storage)?;
-        f.write_all(&[VERSION]).map_err(io_to_storage)?;
-        f.write_all(&meta_len.to_be_bytes())
-            .map_err(io_to_storage)?;
-        f.write_all(&meta_bytes).map_err(io_to_storage)?;
-        f.write_all(body).map_err(io_to_storage)?;
-        f.sync_all().map_err(io_to_storage)?;
-    } // f is closed before rename — important on Windows.
+    //
+    // Every failure from here to the rename removes the temporary before
+    // returning. That is new, and it is load-bearing now that temporaries are
+    // unique per write: the old shared `<key>.tmp` was reused and truncated by
+    // the next writer, so residue was self-limiting at one file per key. Unique
+    // names have no such ceiling, so an ENOSPC or EIO between open and rename
+    // would otherwise strand a file that nothing reclaims until a NEW backend
+    // instance initializes -- and `initialize`'s sweep is once per instance, so
+    // a long-lived daemon never sweeps again.
+    let write_result = (|| -> Result<(), StorageError> {
+        {
+            let mut f = OpenOptions::new()
+                .write(true)
+                .create(true)
+                .truncate(true)
+                .open(tmp)
+                .map_err(io_to_storage)?;
+            f.write_all(MAGIC).map_err(io_to_storage)?;
+            f.write_all(&[VERSION]).map_err(io_to_storage)?;
+            f.write_all(&meta_len.to_be_bytes())
+                .map_err(io_to_storage)?;
+            f.write_all(&meta_bytes).map_err(io_to_storage)?;
+            f.write_all(body).map_err(io_to_storage)?;
+            f.sync_all().map_err(io_to_storage)?;
+        } // f is closed before rename — important on Windows.
 
-    // 3. Atomic rename.
-    fs::rename(tmp, final_path).map_err(io_to_storage)?;
+        // 3. Atomic rename.
+        fs::rename(tmp, final_path).map_err(io_to_storage)
+    })();
+
+    if let Err(error) = write_result {
+        // Best effort: if this fails too, the sweep on the next fresh instance
+        // is the backstop. Reporting the original error matters more.
+        let _ = fs::remove_file(tmp);
+        return Err(error);
+    }
 
     // 4. fsync the parent directory so the rename is durable. See
     // `fsync_parent_directory` for why this hard-fails on Unix and is a
@@ -915,9 +983,15 @@ impl StorageBackend for FsStorageBackend {
 
     fn put(&self, input: StoragePutInput) -> Result<StorageRecord, StorageError> {
         input.validate()?;
-        let _guard = self.write_lock.lock().map_err(|_| StorageError::Backend {
-            message: "write lock poisoned".into(),
-        })?;
+        // Recovered rather than propagated, matching `initialize`. The mutex
+        // guards `()`, so a panic cannot leave a half-updated value -- and now
+        // that the lock is shared per root, refusing on poison would disable
+        // every write to this store from every backend in the process, silently
+        // and for the process lifetime, while reads kept working.
+        let _guard = self
+            .write_lock
+            .lock()
+            .unwrap_or_else(PoisonError::into_inner);
 
         let path = self.key_path(&input.namespace, &input.key);
         let tmp = self.key_tmp_path(&input.namespace, &input.key)?;
@@ -987,9 +1061,15 @@ impl StorageBackend for FsStorageBackend {
         key: &str,
         if_revision: Option<&Revision>,
     ) -> Result<(), StorageError> {
-        let _guard = self.write_lock.lock().map_err(|_| StorageError::Backend {
-            message: "write lock poisoned".into(),
-        })?;
+        // Recovered rather than propagated, matching `initialize`. The mutex
+        // guards `()`, so a panic cannot leave a half-updated value -- and now
+        // that the lock is shared per root, refusing on poison would disable
+        // every write to this store from every backend in the process, silently
+        // and for the process lifetime, while reads kept working.
+        let _guard = self
+            .write_lock
+            .lock()
+            .unwrap_or_else(PoisonError::into_inner);
         let path = self.key_path(namespace, key);
         let existing = read_record_full(&path)?;
         match (if_revision, &existing) {
@@ -1775,6 +1855,76 @@ mod tests {
             "{mismatches}/{ROUNDS} rounds committed one writer's bytes under \
              another writer's revision"
         );
+    }
+
+    #[test]
+    fn backends_built_on_either_side_of_initialize_share_a_lock() {
+        // The regression guard for a hole the test above CANNOT catch, because
+        // it builds both backends before either `initialize`.
+        //
+        // `chief-of-staff-daemon` does not do that. It builds one backend,
+        // initializes it (which CREATES the root), and then builds a second
+        // over the same directory. A lock key that canonicalises only when the
+        // path already exists therefore keys the first on the literal path and
+        // the second on the canonical one -- and on macOS, where the temp
+        // directory is reached through a symlink, those differ. The two
+        // backends then hold different locks and exclude nobody.
+        //
+        // The key must not depend on whether the directory exists yet.
+        let root = temp_root();
+        let first = FsStorageBackend::new(&root);
+        first.initialize().unwrap();
+        let second = FsStorageBackend::new(&root);
+        second.initialize().unwrap();
+
+        assert!(
+            Arc::ptr_eq(&first.write_lock, &second.write_lock),
+            "backends over one root must share a lock regardless of whether \
+             the root existed when each was constructed"
+        );
+
+        // And the identity survives spellings that reach the same directory.
+        let relative_ish = root.join("..").join(root.file_name().unwrap());
+        let third = FsStorageBackend::new(&relative_ish);
+        assert!(
+            Arc::ptr_eq(&first.write_lock, &third.write_lock),
+            "two spellings of one directory must share a lock"
+        );
+        let _ = fs::remove_dir_all(&root);
+    }
+
+    #[test]
+    fn a_temporary_is_private_to_one_write_and_not_derived_from_the_key() {
+        // The per-write temporary has no race test of its own -- the per-root
+        // lock already covers the in-process case, so reverting it breaks
+        // nothing there. Its purpose is cross-process, which these tests cannot
+        // reach, so guard the two properties it actually rests on.
+        let root = temp_root();
+        let be = FsStorageBackend::new(&root);
+        be.initialize().unwrap();
+
+        let first = be.key_tmp_path("ns", "k").unwrap();
+        let second = be.key_tmp_path("ns", "k").unwrap();
+        assert_ne!(
+            first, second,
+            "two writes of one key must not share a temporary"
+        );
+
+        // Not derived from the key: a long key must not push the temporary
+        // past NAME_MAX, which is what broke chief-of-staff-host.
+        let long_key = "k".repeat(120);
+        let long = be.key_tmp_path("ns", &long_key).unwrap();
+        let short = be.key_tmp_path("ns", "k").unwrap();
+        assert_eq!(
+            long.file_name().unwrap().len(),
+            short.file_name().unwrap().len(),
+            "temporary name must be constant-length, independent of the key"
+        );
+
+        // Still swept, and still ignorable by readers.
+        assert_eq!(long.extension().and_then(|e| e.to_str()), Some("tmp"));
+        assert!(long.parent().unwrap().ends_with(hex_encode(b"ns")));
+        let _ = fs::remove_dir_all(&root);
     }
 
     #[test]
