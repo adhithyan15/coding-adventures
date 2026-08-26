@@ -39,7 +39,7 @@ describe("real curriculum", () => {
     expect(scripts.devanagari!.complete).toBe(true);
   });
 
-  it("keeps the cross-script closure queue measured after Japanese hiragana ta", () => {
+  it("keeps the cross-script closure queue measured after Tamil dependent long u", () => {
     const candrakkala = scripts.malayalam!.marks!.find((mark) => mark.mark === "്")!;
     expect(candrakkala.role).toBe("virama");
     expect(candrakkala.compositionOrder).toEqual([
@@ -134,6 +134,23 @@ describe("real curriculum", () => {
       /Unicode Standard.*Version 17\.0.*12\.6\.3.*U\+0BC1.*க \+ ு → கு/i,
     );
     expect(tamilU.compositionSource?.variation).toMatch(
+      /encoded carrier-first composition.*normally ligates.*not a universal handwriting direction.*no standalone ductus claim/i,
+    );
+
+    const tamilUu = scripts.tamil!.marks!.find((mark) => mark.mark === "ூ")!;
+    expect(tamilUu.role).toBe("vowel-sign");
+    expect(tamilUu.compositionOrder).toEqual([
+      "write the Tamil consonant carrier first",
+      "add the ū vowel sign to replace its inherent vowel",
+    ]);
+    expect(tamilUu.example).toEqual({ base: "க", combined: "கூ", sound: "kū" });
+    expect(tamilUu.compositionSource?.url).toBe(
+      "https://www.unicode.org/versions/Unicode17.0.0/core-spec/chapter-12/",
+    );
+    expect(tamilUu.compositionSource?.citation).toMatch(
+      /Unicode Standard.*Version 17\.0.*12\.6\.3.*U\+0BC2.*க \+ ூ → கூ/i,
+    );
+    expect(tamilUu.compositionSource?.variation).toMatch(
       /encoded carrier-first composition.*normally ligates.*not a universal handwriting direction.*no standalone ductus claim/i,
     );
 
@@ -811,6 +828,8 @@ describe("real curriculum", () => {
     expect(affected.get("್") ?? 0).toBe(0);
     expect(missingByScript.get("tamil.json")?.has("ு")).toBe(false);
     expect(affected.get("ு") ?? 0).toBe(0);
+    expect(missingByScript.get("tamil.json")?.has("ூ")).toBe(false);
+    expect(affected.get("ூ") ?? 0).toBe(0);
     expect(missingByScript.get("tamil.json")?.has("ீ")).toBe(false);
     expect(affected.get("ீ") ?? 0).toBe(0);
     expect(missingByScript.get("telugu.json")?.has("ం")).toBe(false);
@@ -1093,7 +1112,7 @@ describe("real curriculum", () => {
     expect(affected.get("ی") ?? 0).toBe(0);
     expect(
       [...affected.entries()].sort((left, right) => right[1] - left[1])[0],
-    ).toEqual(["ூ", 5]);
+    ).toEqual(["ٹ", 5]);
   });
 
   it("loaded every track (17+ and growing)", () => {
