@@ -5396,7 +5396,18 @@ fn register_memory(vm: &mut GenericVM) {
         if is64 {
             let base = pop_wasm(vm)?.as_i64().map_err(VMError::from)?;
             let (mem_offset, _memidx) = unpack_memarg_operand(instr);
-            Ok((base as u64 as usize).wrapping_add(mem_offset as usize))
+            // Security review finding: a crafted 64-bit address near
+            // `u64::MAX` plus a nonzero memarg offset must not silently
+            // WRAP into a small, unrelated, possibly genuinely in-bounds
+            // address (turning a real spec-mandated out-of-bounds trap
+            // into an incorrect successful access at the wrong
+            // location) -- `checked_add` rejects the overflow itself as
+            // a clean, immediate out-of-bounds error, the same
+            // "overflow is itself out-of-bounds" discipline `bounds_check`
+            // just below already applies to `offset + width`.
+            (base as u64 as usize)
+                .checked_add(mem_offset as usize)
+                .ok_or_else(|| VMError::from(TrapError::new(format!("out of bounds memory access: address {base} (as u64: {}) + memarg offset {mem_offset} overflows", base as u64))))
         } else {
             let base = pop_wasm(vm)?.as_i32().map_err(VMError::from)?;
             Ok(effective_addr(instr, base))
@@ -13362,6 +13373,41 @@ mod tests {
         });
         let result = engine.call_function(0, &[]).expect("i32.load through memory 1 should succeed");
         assert_eq!(result, vec![WasmValue::I32(99)]);
+    }
+
+    #[test]
+    fn is64_load_with_an_address_near_u64_max_traps_cleanly_instead_of_wrapping() {
+        // Security review finding (W25): `pop_effective_addr`'s is64
+        // branch used to compute `(base as u64 as usize).wrapping_add
+        // (mem_offset as usize)` -- a crafted address near `u64::MAX`
+        // plus a nonzero memarg offset would silently WRAP to a small,
+        // unrelated address instead of the real spec-mandated
+        // out-of-bounds trap, turning what should be a trap into an
+        // incorrect successful (and wrong-location) access. This module
+        // pushes `i64.const -1` (the bit pattern `u64::MAX`) as the
+        // address, then `i32.load offset=1` -- `u64::MAX + 1` overflows
+        // `usize` outright (never mind the memory's own tiny real size),
+        // so this must trap, not silently succeed against address 0.
+        let code = vec![
+            0x42, 0x7F, // i64.const -1 (bit pattern u64::MAX)
+            0x28, 0x00, 0x01, // i32.load align=0 offset=1 (no multi-memory flag, memidx=0)
+            0x0B, // end
+        ];
+        let func_type = FuncType { params: vec![], results: vec![ValueType::I32] };
+        let body = FunctionBody { locals: vec![], code };
+        let mem0 = LinearMemory::new_with_is64(1, None, true).unwrap();
+        let mut engine = WasmExecutionEngine::new(WasmEngineConfig {
+            memories: vec![mem0],
+            tables: vec![],
+            globals: vec![],
+            global_types: vec![],
+            func_types: vec![func_type],
+            func_bodies: vec![Some(body)],
+            host_functions: vec![None],
+        });
+        let err = engine.call_function(0, &[]).expect_err("an overflowing effective address must trap, not silently succeed");
+        let msg = format!("{err}");
+        assert!(msg.contains("out of bounds") || msg.contains("overflow"), "{msg}");
     }
 
     #[test]
