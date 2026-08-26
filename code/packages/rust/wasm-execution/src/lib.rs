@@ -1790,6 +1790,38 @@ pub fn evaluate_const_expr(
                 };
                 result = Some(WasmValue::I32(v & 0x7FFF_FFFF));
             }
+            // `ref.null <heap_type>` (`0xD0`, reference-types proposal --
+            // real corpus vendoring pass, `ref_null.wast`'s own `(global
+            // anyref (ref.null any))`/`(global $null nullref (ref.null
+            // none))` etc.): a real, previously undetected gap -- this
+            // evaluator already handled `ref.null` fine as an ordinary
+            // instruction (`wasm-execution`'s main decode loop) and as an
+            // ELEMENT-segment entry (`wasm-wast-parser`'s own
+            // `Element.function_indices` `None` convention), but never as
+            // a GLOBAL's init expression, so any `(global <reftype>
+            // (ref.null ...))` simply trapped at instantiation instead of
+            // producing the null reference it always evaluates to. Same
+            // "heap-type byte doesn't change runtime behavior, every null
+            // is the same null in this crate's model" reasoning as the
+            // main decode loop's own `0xD0` handler -- see that handler's
+            // doc comment -- so this just needs to skip the immediate
+            // (one byte for every abstract heap type, or `0x63` + a
+            // LEB128 type index for a concrete `(ref.null $t)`) and push
+            // `Ref(None)`.
+            0xD0 => {
+                if pos >= expr.len() {
+                    return Err(TrapError::new("truncated ref.null in constant expression"));
+                }
+                if expr[pos] == 0x63 {
+                    pos += 1;
+                    let (_idx, consumed) = decode_unsigned(expr, pos)
+                        .map_err(|e| TrapError::new(format!("ref.null: {}", e.message)))?;
+                    pos += consumed;
+                } else {
+                    pos += 1;
+                }
+                result = Some(WasmValue::Ref(None));
+            }
             // end
             0x0B => {
                 return result.ok_or_else(|| TrapError::new("empty constant expression"));

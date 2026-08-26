@@ -656,30 +656,38 @@ pub fn validate(module: &WasmModule) -> Result<ValidatedModule, ValidationError>
 
     // ── Check 8: Data segments ──────────────────────────────────────────
     //
-    // Deliberately NOT widened alongside Check 1's memory-count cap
-    // (multi-memory, W16, task #85): `wasm-runtime::instantiate()` only
-    // ever applies a data segment to memory 0, regardless of
-    // `seg.memory_index` (see `code/specs/
-    // W16-wasm-multi-memory-first-slice.md`'s "What does NOT change").
-    // Accepting a segment targeting a non-zero index here would let it
-    // silently land on the WRONG memory at instantiation time instead of
-    // being rejected -- keeping this check at "must be 0" means a module
-    // using this real, spec-legal (but not yet supported HERE) feature
-    // fails loudly at validation instead.
+    // Widened (real corpus vendoring pass -- `address0.wast`/`address1.wast`
+    // and over a dozen other files use a non-zero `memory_index`, e.g.
+    // `(data (memory $mem1) (i32.const 0) "...")`) from the prior "must be
+    // 0" rule to a real bounds check against `total_memories`, mirroring
+    // every other multi-memory check in this file (`memory.init`/
+    // `memory.fill`/etc. in `type_check.rs` already bounds-check the same
+    // way). `wasm-runtime::instantiate()` now applies each ACTIVE segment
+    // to its own `seg.memory_index`, not unconditionally memory 0 -- see
+    // that function's own doc comment.
+    //
+    // A PASSIVE segment (`is_passive`, task #95) carries no real memory
+    // reference at all -- `seg.memory_index` is kept `0`/unset by
+    // convention (see `DataSegment.memory_index`'s own doc comment) and
+    // is never applied to any memory at instantiation time, so it must
+    // never be bounds-checked against `total_memories` here: a passive
+    // segment is legal in a module that declares NO memory whatsoever
+    // (`token.wast`'s own `(data $l "a")` with no `(memory ...)` anywhere
+    // in the module -- the bytes just sit there until some OTHER module's
+    // `memory.init` copies from it). Skipping passive segments entirely
+    // was a real, pre-existing bug this same pass fixed: the old check's
+    // `total_memories == 0 && !module.data.is_empty()` branch didn't look
+    // at `is_passive` at all, so a passive-only, memory-less module was
+    // wrongly rejected here.
     for (i, seg) in module.data.iter().enumerate() {
-        if seg.memory_index != 0 || (total_memories == 0 && !module.data.is_empty()) {
-            if total_memories == 0 {
-                return Err(ValidationError::InvalidDataSegment(format!(
-                    "data segment #{} references memory, but no memory is declared",
-                    i
-                )));
-            }
-            if seg.memory_index != 0 {
-                return Err(ValidationError::InvalidDataSegment(format!(
-                    "data segment #{} references memory index {}, but only index 0 is valid",
-                    i, seg.memory_index
-                )));
-            }
+        if seg.is_passive {
+            continue;
+        }
+        if (seg.memory_index as usize) >= total_memories {
+            return Err(ValidationError::InvalidDataSegment(format!(
+                "data segment #{} references memory index {}, but only {} memories exist",
+                i, seg.memory_index, total_memories
+            )));
         }
     }
 
@@ -1225,7 +1233,7 @@ mod tests {
                 is64: false,
             }],
             data: vec![DataSegment {
-                memory_index: 1, // only index 0 is valid
+                memory_index: 1, // out of bounds -- only memory 0 exists
                 offset_expr: vec![0x41, 0x00, 0x0B],
                 data: vec![0x01],
                 is_passive: false,
@@ -1249,6 +1257,47 @@ mod tests {
                 offset_expr: vec![0x41, 0x00, 0x0B],
                 data: vec![0x01, 0x02],
                 is_passive: false,
+            }],
+            ..Default::default()
+        };
+        assert!(validate(&module).is_ok());
+    }
+
+    // Real corpus vendoring pass (`address0.wast`/`address1.wast` and
+    // over a dozen other files, see `wasm-conformance`'s CHANGELOG):
+    // Check 8 now accepts an active data segment targeting any IN-BOUNDS
+    // memory index, not just 0 -- `wasm-runtime::instantiate()` was
+    // widened in the same pass to actually apply it to that memory.
+    #[test]
+    fn valid_data_segment_targets_non_zero_memory_in_multi_memory_module() {
+        let module = WasmModule {
+            memories: vec![
+                MemoryType { limits: Limits { min: 0, max: None }, shared: false, is64: false },
+                MemoryType { limits: Limits { min: 1, max: None }, shared: false, is64: false },
+            ],
+            data: vec![DataSegment {
+                memory_index: 1,
+                offset_expr: vec![0x41, 0x00, 0x0B],
+                data: vec![0x01, 0x02],
+                is_passive: false,
+            }],
+            ..Default::default()
+        };
+        assert!(validate(&module).is_ok());
+    }
+
+    // Real bug this same pass fixed: a PASSIVE segment (`token.wast`'s own
+    // `(data $l "a")` with no `(memory ...)` anywhere in the module) has no
+    // real memory reference at all and must never be bounds-checked --
+    // legal even when the module declares zero memories.
+    #[test]
+    fn valid_passive_data_segment_in_module_with_no_memory() {
+        let module = WasmModule {
+            data: vec![DataSegment {
+                memory_index: 0, // unset-by-convention; irrelevant when passive
+                offset_expr: vec![],
+                data: vec![0x01, 0x02],
+                is_passive: true,
             }],
             ..Default::default()
         };

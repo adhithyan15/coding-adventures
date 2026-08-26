@@ -2,6 +2,49 @@
 
 All notable changes to this package will be documented in this file.
 
+## [0.2.71] - 2026-08-26 (W27 — census batch: real multi-memory data segments)
+
+### Fixed
+
+- **Check 8 (data segments) widened from "must target memory 0" to a
+  real bounds check against the actual memory count.** The old check
+  rejected ANY active data segment whose `memory_index` wasn't 0 —
+  deliberate at the time (`wasm-runtime::instantiate` only ever applied
+  a segment to memory 0 regardless of its declared index), but a real
+  scope boundary this batch's `wasm-runtime` fix (see that crate's own
+  CHANGELOG) removes. Now: `seg.memory_index >= total_memories` is the
+  only rejection condition, matching every other multi-memory bounds
+  check in this file (`memory.init`/`memory.fill`/etc. in
+  `type_check.rs`).
+- **A real, independently-found bug in the same check: a PASSIVE data
+  segment was wrongly required to reference a real memory.** The old
+  code's `total_memories == 0 && !module.data.is_empty()` branch never
+  looked at `seg.is_passive` at all, so a passive-only module declaring
+  zero memories (the real corpus's own `token.wast`, `(data $l "a")`
+  with no `(memory ...)` anywhere) was incorrectly rejected at
+  validation time. Passive segments are now skipped entirely by this
+  check — they carry no real memory reference (`seg.memory_index` is
+  kept `0`/unset by convention), and are only ever consumed by an
+  explicit `memory.init`, possibly into a DIFFERENT module's memory
+  entirely.
+- Real corpus impact (`wasm-conformance`'s own CHANGELOG has the full
+  per-file accounting): unblocks `address0.wast`/`address1.wast`/
+  `binary0.wast`/`data_drop0.wast`/`float_exprs1.wast`/
+  `float_memory0.wast`/`imports2.wast`/`linking2.wast`/`load0.wast`/
+  `memory_trap1.wast`/`start0.wast`/`store2.wast`/`token.wast`, and
+  incidentally fixed one of the ALREADY-vendored `linking.wast`'s own
+  pre-existing `assert_unlinkable` fails (49/50 → 50/50) as a side
+  effect — confirmed via a full before/after baseline diff that no
+  other already-vendored file's tally changed at all.
+
+### Added
+
+- Two new tests: `valid_data_segment_targets_non_zero_memory_in_multi_
+  memory_module` (the widened acceptance case) and `valid_passive_data_
+  segment_in_module_with_no_memory` (the passive-segment bug fix).
+  `rejects_data_segment_bad_memory_index`'s existing case (now genuinely
+  OUT of bounds, not just "non-zero") still rejects, unchanged.
+
 ## [0.2.70] - 2026-08-26 (W11 addendum — concrete function-type ref subtyping)
 
 ### Added
