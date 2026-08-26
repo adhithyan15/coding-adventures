@@ -96,16 +96,50 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Made parallel filesystem-backend tests allocate distinct temporary roots even
   when the platform clock returns the same timestamp.
 
+- Made revisions unique across backend instances and across restarts, by
+  deriving uniqueness from the instance rather than recovering it from disk.
+  A revision is now `rev-<instance>-<counter>`.
+
+  The previous scheme seeded the counter from the highest revision found on
+  disk, which made the guarantee depend on those records still existing.
+  Deleting the record holding the high-water mark moved it backwards, and the
+  next instance reissued revisions already handed out. Two backends over one
+  root — which `chief-of-staff-daemon` constructs — collided with no deletion at
+  all, since both seeded from the same scan.
+
+  A reissued revision is an ABA on every `if_revision` guard taken against it:
+  a stale token matches a record it was never taken from, so a compare-and-swap
+  that must fail silently succeeds. Structural uniqueness removes the class
+  outright — deletion, a restored backup, a rolled-back store and a second
+  concurrent process are all non-events, and there is no durable bookkeeping to
+  lose or roll back.
+
+  `storage_core` documents `Revision` as an **opaque** compare-and-swap token,
+  so the new form deliberately does not sort. Nothing in the repo ordered them:
+  `revision_to_u64` had no callers outside this crate (it is now deleted), and
+  `vault-revisions` orders its own history by `archived_at_ms`.
+
+- Removed revision recovery from `initialize()` entirely. The walk now sweeps
+  stranded `.tmp` files and opens no record, so it costs O(directory entries)
+  rather than O(bytes in the store) — on the 8 MB state directory #12139
+  measured, the old walk was ~480 ms per call. The delicate reasoning about
+  which read failures could be tolerated went away with the reads: there is no
+  floor left to poison. Directory reads stay total, because the result is
+  cached and a sweep that silently saw nothing would strand temporaries for good.
+
 ### Known limitation
 
-- Revisions are still **not unique across backend instances**, including across
-  a restart. The high-water mark is derived from surviving records, so deleting
-  the record holding it lowers the mark, and a fresh `FsStorageBackend` over the
-  same root re-issues revisions the previous one handed out. The fix above
-  closes this within a single instance; it does not close it across instances.
-  Fixing it properly means not deriving the mark from live records — persisting
-  it, or folding a per-boot epoch into the revision — and is tracked separately.
-  Do not read `initialize()` as a guarantee of global revision uniqueness.
+- **Cross-process write exclusion is still missing, and it is sharper than
+  "unsupported".** `put` evaluates `if_absent`/`if_revision` against a read and
+  *then* writes-fsyncs-renames, with only a per-instance mutex in between, so
+  two processes can both pass the check and both rename. Unique revisions stop a
+  *stale* token from matching; they do not serialise concurrent writers.
+  Closing it needs an `flock`/`O_EXCL` lock spanning check-through-rename.
+
+  Until that lands, any protocol whose safety rests on CAS-based mutual
+  exclusion between processes — D18R leadership fencing, for one — is not sound
+  on this backend and should not assume the storage layer provides an atomic
+  compare-and-swap.
 
 ### Added
 
