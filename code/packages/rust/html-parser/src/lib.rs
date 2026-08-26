@@ -8375,6 +8375,9 @@ impl HtmlParser {
                 | "address"
                 | "blockquote"
                 | "center"
+                | "details"
+                | "dialog"
+                | "summary"
         ) {
             diagnostic.at_emission(self.current_token_emission_position)
         } else {
@@ -27391,6 +27394,18 @@ mod tests {
         .at_emission(Some(end_tag_position_at(source, name, occurrence)))
     }
 
+    fn unmatched_disclosure_end_tag(
+        source: &str,
+        name: &str,
+        occurrence: usize,
+    ) -> ParserDiagnostic {
+        ParserDiagnostic::new(
+            "unexpected-end-tag",
+            format!("end tag `</{name}>` did not match an open element"),
+        )
+        .at_emission(Some(end_tag_position_at(source, name, occurrence)))
+    }
+
     fn marker_end_tag_outside_scope(
         source: &str,
         name: &str,
@@ -34387,6 +34402,83 @@ mod tests {
         );
 
         for name in ["address", "blockquote", "center"] {
+            let foreign_source = format!(
+                "<!doctype html><svg><foreignObject></{name}>X</foreignObject></svg>"
+            );
+            let foreign = parse_html_with_diagnostics(&foreign_source).unwrap();
+            assert!(foreign
+                .parser_diagnostics
+                .iter()
+                .all(|diagnostic| diagnostic.code != "unexpected-end-tag"));
+
+            for source in [
+                format!("<!doctype html></{name}"),
+                format!("<!doctype html><svg><foreignObject></{name}"),
+            ] {
+                let output = parse_html_with_diagnostics(&source).unwrap();
+                assert!(output
+                    .parser_diagnostics
+                    .iter()
+                    .all(|diagnostic| diagnostic.code != "unexpected-end-tag"));
+            }
+
+            let matched_source = format!("<!doctype html><{name}>X</{name}>");
+            let matched = parse_html_with_diagnostics(&matched_source).unwrap();
+            assert!(matched
+                .parser_diagnostics
+                .iter()
+                .all(|diagnostic| diagnostic.code != "unexpected-end-tag"));
+
+            let mut direct =
+                HtmlParser::with_body_fragment_options(HtmlParseOptions::default());
+            direct.process_token(Token::EndTag {
+                name: name.to_string(),
+            });
+            direct.process_token(Token::Eof);
+            assert_eq!(
+                direct
+                    .diagnostics()
+                    .iter()
+                    .find(|diagnostic| diagnostic.code == "unexpected-end-tag")
+                    .unwrap()
+                    .position,
+                None
+            );
+        }
+    }
+
+    #[test]
+    fn positions_unmatched_disclosure_end_tags_at_token_emission() {
+        let ordinary_source =
+            "<!doctype html></details><!--é-->\r\n</details></dialog></summary>";
+        let ordinary = parse_html_with_diagnostics(ordinary_source).unwrap();
+        assert_eq!(
+            ordinary
+                .parser_diagnostics
+                .iter()
+                .filter(|diagnostic| diagnostic.code == "unexpected-end-tag")
+                .cloned()
+                .collect::<Vec<_>>(),
+            vec![
+                unmatched_disclosure_end_tag(ordinary_source, "details", 0),
+                unmatched_disclosure_end_tag(ordinary_source, "details", 1),
+                unmatched_disclosure_end_tag(ordinary_source, "dialog", 0),
+                unmatched_disclosure_end_tag(ordinary_source, "summary", 0),
+            ]
+        );
+        assert!(ordinary_source.len() > ordinary_source.chars().count());
+
+        let fragment_source = "X</dialog></summary>";
+        let fragment = parse_html_fragment_with_diagnostics(fragment_source).unwrap();
+        assert_eq!(
+            fragment.parser_diagnostics,
+            vec![
+                unmatched_disclosure_end_tag(fragment_source, "dialog", 0),
+                unmatched_disclosure_end_tag(fragment_source, "summary", 0),
+            ]
+        );
+
+        for name in ["details", "dialog", "summary"] {
             let foreign_source = format!(
                 "<!doctype html><svg><foreignObject></{name}>X</foreignObject></svg>"
             );
