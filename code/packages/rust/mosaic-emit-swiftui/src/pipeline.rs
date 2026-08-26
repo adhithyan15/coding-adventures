@@ -4893,6 +4893,29 @@ fn has_disallowed_uri_scheme(href: &str) -> bool {
     !ALLOWED.iter().any(|s| s.eq_ignore_ascii_case(prefix))
 }
 
+/// #13110: `href:` can be a literal string OR (as of this fix) a
+/// `slot:` reference -- previously only the literal form was
+/// recognised, and a slot-bound href silently fell back to `"#"` with
+/// no diagnostic (the epic's own recurring "silent drop" bug class).
+/// `Swift(String)` carries the escaped Swift-string CONTENT of a
+/// literal href; `Slot(String)` carries the camelCase Swift property
+/// identifier the slot resolves to. [`HostLinkHref::as_swift_expr`]
+/// turns either into a ready-to-splice Swift expression of type
+/// `String` (a quoted literal or a bare identifier reference).
+enum HostLinkHref {
+    Literal(String),
+    Slot(String),
+}
+
+impl HostLinkHref {
+    fn as_swift_expr(&self) -> String {
+        match self {
+            HostLinkHref::Literal(escaped) => format!("\"{escaped}\""),
+            HostLinkHref::Slot(ident) => ident.clone(),
+        }
+    }
+}
+
 fn emit_host_link(
     node: &LayoutNode,
     indent: usize,
@@ -4902,7 +4925,17 @@ fn emit_host_link(
     let pad = " ".repeat(indent);
     let inner_pad = " ".repeat(indent + 4);
 
-    let href = find_string_prop(node, "href").unwrap_or("#");
+    let href = match find_string_prop(node, "href") {
+        Some(literal) => HostLinkHref::Literal(escape_swift_string(literal)),
+        None => match find_slot_ref_prop(node, "href") {
+            Some(slot) => {
+                let camel = to_camel_case_first_lower(slot);
+                validate_slot_or_field_name(&camel).map_err(PipelineEmitError::UnsafeSlotName)?;
+                HostLinkHref::Slot(camel)
+            }
+            None => HostLinkHref::Literal(escape_swift_string("#")),
+        },
+    };
     let external_false = matches!(find_keyword_prop(node, "external"), Some("false"));
     // #13052: reject rather than escape. `href` is the exact value
     // `Link(destination:)` hands to the OS on tap (see below) -- no
@@ -4911,12 +4944,20 @@ fn emit_host_link(
     // `external: false` routes through a Button + dispatch instead,
     // never constructing a URL, so a routing placeholder like
     // `href: "#"` stays valid there (mirrors the Qt/Compose backends'
-    // identical scoping for #13052).
-    if !external_false && has_disallowed_uri_scheme(href) {
-        return Err(PipelineEmitError::UnsafeUriScheme(href.to_string()));
+    // identical scoping for #13052). A literal href is checked here,
+    // at compile time; a slot-bound href is unknown until runtime, so
+    // it's checked below via a generated safe-URL guard instead.
+    if let HostLinkHref::Literal(escaped) = &href {
+        if !external_false && has_disallowed_uri_scheme(escaped) {
+            return Err(PipelineEmitError::UnsafeUriScheme(escaped.clone()));
+        }
     }
-    let escaped_href = escape_swift_string(href);
-    let label_text = host_link_label_text_expr(node, href)?;
+    let href_label_source = match &href {
+        HostLinkHref::Literal(escaped) => escaped.as_str(),
+        HostLinkHref::Slot(_) => "#",
+    };
+    let label_text = host_link_label_text_expr(node, href_label_source)?;
+    let href_expr = href.as_swift_expr();
 
     let on_activate = find_emit_ref_prop(node, "onActivate");
 
@@ -4927,7 +4968,7 @@ fn emit_host_link(
             Some(emit_name) => {
                 let case = to_camel_case_first_lower(&strip_on_prefix(emit_name));
                 validate_emit_name(&case)?;
-                let args = host_link_event_args(emit_name, emits, for_payload, &escaped_href)?;
+                let args = host_link_event_args(emit_name, emits, for_payload, &href_expr)?;
                 if args.is_empty() {
                     format!("dispatch(.{case})")
                 } else {
@@ -4943,11 +4984,27 @@ fn emit_host_link(
     } else {
         // Default: SwiftUI Link with OS-default open behaviour.
         let mut out = String::new();
-        writeln!(
-            out,
-            "{pad}Link(destination: URL(string: \"{escaped_href}\")!) {{"
-        )
-        .unwrap();
+        let destination = match &href {
+            // A literal href is validated above at compile time, so a
+            // well-formed absolute URL is guaranteed here -- force-
+            // unwrap is safe (the same value could never have reached
+            // this point otherwise).
+            HostLinkHref::Literal(escaped) => format!("URL(string: \"{escaped}\")!"),
+            // A slot-bound href is an unknown runtime value, so it
+            // needs BOTH a validity check (URL(string:) returns nil
+            // for malformed input -- force-unwrapping that would
+            // crash on click) AND the #13052 scheme allowlist. A
+            // disallowed/unparseable value falls back to a fixed,
+            // always-valid, inert URL rather than crashing or
+            // navigating -- the same "no navigation target" outcome
+            // the XAML/Compose backends settled on.
+            HostLinkHref::Slot(ident) => format!(
+                "{{ () -> URL in guard let u = URL(string: {ident}), \
+                 [\"http\", \"https\", \"mailto\"].contains(u.scheme?.lowercased() ?? \"\") \
+                 else {{ return URL(string: \"about:blank\")! }}; return u }}()"
+            ),
+        };
+        writeln!(out, "{pad}Link(destination: {destination}) {{").unwrap();
         writeln!(out, "{inner_pad}{label_text}").unwrap();
         writeln!(out, "{pad}}}").unwrap();
         Ok(out)
@@ -4978,7 +5035,7 @@ fn host_link_event_args(
     emit_name: &str,
     emits: &[EmitDecl],
     for_payload: Option<ForPayloadScope<'_>>,
-    escaped_href: &str,
+    href_expr: &str,
 ) -> Result<String, PipelineEmitError> {
     let Some(emit) = emits.iter().find(|e| e.name == emit_name) else {
         return Ok(String::new());
@@ -4990,7 +5047,7 @@ fn host_link_event_args(
         let param = &emit.params[0];
         let field = to_camel_case_first_lower(&param.name);
         validate_slot_or_field_name(&field).map_err(PipelineEmitError::UnsafeSlotName)?;
-        let expr = host_link_payload_expr(&param.r#type, &field, for_payload, escaped_href)
+        let expr = host_link_payload_expr(&param.r#type, &field, for_payload, href_expr)
             .unwrap_or_else(|| "/* TODO: payload */ fatalError(\"TODO: payload\")".to_string());
         return Ok(format!("{field}: {expr}"));
     }
@@ -5000,7 +5057,7 @@ fn host_link_event_args(
         .map(|param| {
             let field = to_camel_case_first_lower(&param.name);
             validate_slot_or_field_name(&field).map_err(PipelineEmitError::UnsafeSlotName)?;
-            let expr = host_link_payload_expr(&param.r#type, &field, for_payload, escaped_href)
+            let expr = host_link_payload_expr(&param.r#type, &field, for_payload, href_expr)
                 .unwrap_or_else(|| "/* TODO: payload */ fatalError(\"TODO: payload\")".to_string());
             Ok(format!("{field}: {expr}"))
         })
@@ -5008,15 +5065,19 @@ fn host_link_event_args(
         .map(|parts| parts.join(", "))
 }
 
+/// `href_expr` is already a complete Swift expression of type `String`
+/// -- a quoted literal (`"..."`) or a bare slot-property identifier --
+/// per [`HostLinkHref::as_swift_expr`]. It's spliced in as-is, not
+/// re-quoted.
 fn host_link_payload_expr(
     t: &EmitPayloadType,
     field: &str,
     for_payload: Option<ForPayloadScope<'_>>,
-    escaped_href: &str,
+    href_expr: &str,
 ) -> Option<String> {
     if field == "href" {
         return match t {
-            EmitPayloadType::Text => Some(format!("\"{escaped_href}\"")),
+            EmitPayloadType::Text => Some(href_expr.to_string()),
             _ => None,
         };
     }
@@ -5024,7 +5085,7 @@ fn host_link_payload_expr(
         return Some(expr);
     }
     match t {
-        EmitPayloadType::Text => Some(format!("\"{escaped_href}\"")),
+        EmitPayloadType::Text => Some(href_expr.to_string()),
         _ => None,
     }
 }
@@ -10071,6 +10132,76 @@ mod tests {
         assert!(
             !r.contains("URL(string:"),
             "in-app routing path must NOT emit URL open, got:\n{r}"
+        );
+    }
+
+    /// #13110: a slot-bound `href` (previously silently ignored,
+    /// falling back to `"#"`) now resolves to the slot's live value,
+    /// wrapped in a runtime scheme-validated safe-URL closure rather
+    /// than a bare `URL(string:)!` force-unwrap -- a malformed or
+    /// disallowed-scheme runtime value must not crash the app on tap.
+    #[test]
+    fn host_link_slot_bound_href_emits_runtime_safe_url() {
+        let m = component("X", vec![slot("target", SlotType::Text, true)], vec![]);
+        let l = layout_with(
+            "X",
+            container_node(
+                "Box",
+                vec![leaf(
+                    "HostLink",
+                    vec![
+                        prop_slot_ref("href", "target"),
+                        prop_string("label", "Click me"),
+                    ],
+                )],
+            ),
+        );
+        let r = from_pipeline(&m, &l, &empty_style("X")).unwrap().output;
+        assert!(
+            r.contains("URL(string: target)"),
+            "expected the slot's live value to be used, not a literal, got:\n{r}"
+        );
+        assert!(
+            r.contains("[\"http\", \"https\", \"mailto\"].contains(u.scheme?.lowercased() ?? \"\")"),
+            "expected the runtime scheme allowlist guard, got:\n{r}"
+        );
+        assert!(
+            !r.contains("URL(string: \"#\")!"),
+            "must not silently fall back to the literal \"#\" placeholder, got:\n{r}"
+        );
+    }
+
+    /// #13110: a slot-bound `href` with `external: false` dispatches
+    /// the slot's live value (a bare identifier), not a hardcoded
+    /// literal string.
+    #[test]
+    fn host_link_slot_bound_href_with_external_false_dispatches_slot_value() {
+        let m = component(
+            "X",
+            vec![slot("target", SlotType::Text, true)],
+            vec![emit(
+                "onNavigate",
+                vec![param("href", EmitPayloadType::Text)],
+            )],
+        );
+        let l = layout_with(
+            "X",
+            container_node(
+                "Box",
+                vec![leaf(
+                    "HostLink",
+                    vec![
+                        prop_slot_ref("href", "target"),
+                        prop_keyword("external", "false"),
+                        prop_emit_ref("onActivate", "onNavigate"),
+                    ],
+                )],
+            ),
+        );
+        let r = from_pipeline(&m, &l, &empty_style("X")).unwrap().output;
+        assert!(
+            r.contains("Button(action: { dispatch(.navigate(href: target)) })"),
+            "expected dispatch with the bare slot identifier (not a quoted literal), got:\n{r}"
         );
     }
 
