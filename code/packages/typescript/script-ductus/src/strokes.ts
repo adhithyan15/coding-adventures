@@ -14567,6 +14567,65 @@ export const DUCTUS: Record<string, LetterDuctus> = {
     ],
     source: teluguIndependentVowelSource("ఇ"),
   },
+  [ductusKey("telugu", "ఉ")]: {
+    script: "telugu",
+    glyph: "ఉ",
+    strokes: [
+      {
+        segments: [
+          {
+            label: "sweep left across the rounded upper arch",
+            path: [
+              { x: 610, y: 410 }, { x: 550, y: 440 }, { x: 470, y: 465 },
+              { x: 380, y: 468 }, { x: 285, y: 445 }, { x: 205, y: 405 },
+              { x: 145, y: 350 }, { x: 110, y: 285 },
+            ],
+          },
+          {
+            label: "continue down and around the broad lower bowl",
+            path: [
+              { x: 110, y: 285 }, { x: 78, y: 215 }, { x: 78, y: 145 },
+              { x: 105, y: 85 }, { x: 155, y: 45 }, { x: 215, y: 25 },
+              { x: 275, y: 35 }, { x: 325, y: 70 }, { x: 365, y: 115 },
+              { x: 405, y: 75 }, { x: 455, y: 42 },
+            ],
+          },
+          {
+            label: "curl upward around the rounded right lobe without lifting",
+            path: [
+              { x: 455, y: 42 }, { x: 520, y: 20 }, { x: 585, y: 25 },
+              { x: 645, y: 55 }, { x: 685, y: 105 }, { x: 690, y: 155 },
+              { x: 665, y: 205 }, { x: 620, y: 225 }, { x: 575, y: 220 },
+            ],
+          },
+        ],
+      },
+      {
+        segments: [
+          {
+            label: "lift and draw the inner horizontal bar from left to right",
+            path: [
+              { x: 95, y: 282 }, { x: 205, y: 282 }, { x: 320, y: 282 },
+              { x: 440, y: 282 }, { x: 560, y: 282 }, { x: 680, y: 282 },
+              { x: 750, y: 282 },
+            ],
+          },
+        ],
+      },
+      {
+        segments: [
+          {
+            label: "lift again and draw the short upper headstroke downward",
+            path: [
+              { x: 378, y: 610 }, { x: 378, y: 570 }, { x: 378, y: 525 },
+              { x: 378, y: 490 },
+            ],
+          },
+        ],
+      },
+    ],
+    source: teluguIndependentVowelSource("ఉ"),
+  },
   [ductusKey("telugu", "ఎ")]: {
     script: "telugu",
     glyph: "ఎ",

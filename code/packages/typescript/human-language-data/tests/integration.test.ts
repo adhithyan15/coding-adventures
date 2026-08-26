@@ -39,7 +39,7 @@ describe("real curriculum", () => {
     expect(scripts.devanagari!.complete).toBe(true);
   });
 
-  it("keeps the cross-script closure queue measured after Persian and Urdu hah", () => {
+  it("keeps the cross-script closure queue measured after Telugu independent u", () => {
     const candrakkala = scripts.malayalam!.marks!.find((mark) => mark.mark === "്")!;
     expect(candrakkala.role).toBe("virama");
     expect(candrakkala.compositionOrder).toEqual([
@@ -888,6 +888,27 @@ describe("real curriculum", () => {
     );
     expect(missingByScript.get("telugu.json")?.has("ఇ")).toBe(false);
     expect(affected.get("ఇ") ?? 0).toBe(0);
+    const teluguU = scripts.telugu!.independentVowels!.find((entry) => entry.glyph === "ఉ")!;
+    expect(teluguU.sound).toBe("u");
+    expect(teluguU.penLifts).toBe(2);
+    expect(teluguU.strokeOrder).toEqual([
+      "sweep left across the rounded upper arch",
+      "continue down and around the broad lower bowl",
+      "curl upward around the rounded right lobe without lifting",
+      "lift and draw the inner horizontal bar from left to right",
+      "lift again and draw the short upper headstroke downward",
+    ]);
+    expect(teluguU.strokeOrderNote).toMatch(
+      /five numbered movements.*three pen-down runs.*1.?3.*movement 4.*movement 5/i,
+    );
+    expect(teluguU.strokeOrderSource?.citation).toMatch(
+      /Sathish Shanmugam.*independent vowel ఉ.*dot_stroke_v_5_u\.png.*movements 1–5.*version 2\.6/i,
+    );
+    expect(teluguU.strokeOrderSource?.variation).toMatch(
+      /five directional movements.*visible joins.*disconnected printed components.*movements 1.?3.*main body.*movements 4 and 5.*Noto Sans Telugu/i,
+    );
+    expect(missingByScript.get("telugu.json")?.has("ఉ")).toBe(false);
+    expect(affected.get("ఉ") ?? 0).toBe(0);
     expect(missingByScript.get("telugu.json")?.has("ఎ")).toBe(false);
     expect(affected.get("ఎ") ?? 0).toBe(0);
     expect(missingByScript.get("malayalam.json")?.has("അ")).toBe(false);
@@ -1038,7 +1059,7 @@ describe("real curriculum", () => {
     expect(affected.get("ی") ?? 0).toBe(0);
     expect(
       [...affected.entries()].sort((left, right) => right[1] - left[1])[0],
-    ).toEqual(["ఉ", 6]);
+    ).toEqual(["く", 5]);
   });
 
   it("loaded every track (17+ and growing)", () => {
