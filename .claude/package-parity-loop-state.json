@@ -11,21 +11,16 @@
     "selection_rule": "host-security, credential, native-runtime, and external-approval work may inform classification but is never selected by this parity loop",
     "excluded_delivery_classes": ["onvif", "host-security-hardening", "native-runtime", "external-approval"]
   },
-  "active_pr": {
-    "number": 13083,
-    "url": "https://github.com/adhithyan15/coding-adventures/pull/13083",
-    "branch": "codex/dart-classical-ciphers-parity",
-    "status": "open"
-  },
+  "active_pr": null,
   "last_inventory": {
-    "revision": "1e2ee726573105be54245cba117ef3099765a130",
+    "revision": "9ae79c55494056324a7518715b005ca8594c4472",
     "schema_version": 3,
     "established_languages": 15,
     "implementation_identities": 1373,
-    "implementation_package_slots": 4578,
+    "implementation_package_slots": 4581,
     "all_reported_identities": 1412,
     "high_consensus_packages": 175,
-    "high_consensus_missing_slots": 270,
+    "high_consensus_missing_slots": 267,
     "five_to_nine_packages": 123,
     "five_to_nine_missing_slots": 934,
     "two_to_four_packages": 166,
@@ -2261,7 +2256,7 @@
     {
       "id": "dart-current-14-of-15-atbash-scytale-vigenere",
       "title": "Port the CR01-CR03 classical cipher leaves to Dart",
-      "status": "pr-open",
+      "status": "merged",
       "depends_on": ["dart-scaffold-capability-schema"],
       "branch": "codex/dart-classical-ciphers-parity",
       "pr_number": 13083,
@@ -2269,7 +2264,7 @@
       "selection_notes": "Selected after PR #13070 completed all 40 terminal acceptable checks, GitHub reported a clean merge state, and squash auto-merge merged reviewed head b2dc18477d6b232f05af7b54417f8000b698ee3a as 1e2ee726573105be54245cba117ef3099765a130 at 2026-08-26T17:32:54Z without a manual merge command. The exact-main schema-3 report is collision-clean at 15 established lanes, 1,373 implementation identities, 4,578 slots, and 1,412 all-reported identities; bands are 175/270, 123/934, 166/2,087, and 909/12,726, with 720 Rust singletons, zero collisions, zero unknown buckets, and OCaml emerging at zero packages. No topology change beyond the six merged JVM slots appeared, so no new owner was needed. All nine live open PRs have zero exact overlap with this Dart package/spec/state/roadmap slice. The three dependency-free, empty-capability CR01-CR03 leaves are each 14/15 and missing only Dart; one Dart-toolchain tranche closes three identities immediately and is the largest bounded completion gain on the reopened Priority 1 frontier. Haskell event-loop/brotli and Dart trie remain runners-up. OCaml's process-free substrate remains collision-unsafe while PRs #12149 and #12162 own required Go build-tool entry-point and validator surfaces.",
       "notes": "Materialized from the remaining Dart-only 14-of-15 frontier after PR #9477. Deliver atbash-cipher, scytale-cipher, and vigenere-cipher as one adjacent, dependency-free, empty-capability curriculum slice using the shared CR01-CR03 behavior and edge cases.",
       "validation_notes": "Implemented the three adjacent leaves in dependency order: reconciled CR01-CR03 specs and 15-lane matrices, adversarial/public-import tests, pure Dart source, then changelogs, READMEs, capability metadata, and both build fronts. Atbash passes 8 tests; Scytale and Vigenere pass 16 each. All three format and fatal-analysis gates are clean, and coverage records 100% production lines and functions: 8/8 and 3/3, 52/52 and 9/9, and 93/93 and 20/20. Production dependencies remain empty; production imports are Dart core only; no production dependency is outdated. Capability taxonomy and Dart scaffold-capability suites pass 12 tests; the parity reporter passes 10 tests. The Go build tool passes every package, vet, and trimpath compilation. Its exact Windows diff plan evaluates 45 Starlark files, discovers 89 Dart packages, identifies exactly the three changed independent nodes with zero affected dependents, validates every BUILD, and the real plan builds all three with 86 skipped and no failures. The collision-checked schema-3 candidate adds exactly three slots (4,581 total), reduces high-consensus gaps from 270 to 267, reduces Dart's high-consensus gaps from 101 to 98, and brings all three identities to 15/15 with zero collisions or unknown buckets. README links, strict JSON, the 529-owner/789-edge state DAG, diff hygiene, credential, dependency, and production-authority scans are clean. Three independent reviews found Scytale/Vigenere payload disclosure in value-object strings, a missing literal-padding regression, and ambiguous IC wording; redacted representations, a padded trailing-tab proof, and explicit neutral-fixture ownership close all findings.",
-      "publication_notes": "Opened ready-for-review PR #13083 from validated implementation head 73ca4792d31b572bd0ee7097141ea658e7658436 on exact origin/main 5dcdf1c555e1300337998a705658865b47c221da after a normal first push. Before publication, origin/main advanced twice through disjoint Marathi PR #13065 and Punjabi PR #13074 curriculum files; both rebases were conflict-free and required no force push. Eleven live open PRs had zero exact path overlap with this 35-file tranche. GitHub reports the PR non-draft and mergeable; required checks are queued, merge state is blocked only by those pending protections, and auto-merge remains disabled until every required check is terminal and acceptable."
+      "publication_notes": "Opened ready-for-review PR #13083 from validated implementation head 73ca4792d31b572bd0ee7097141ea658e7658436 on exact origin/main 5dcdf1c555e1300337998a705658865b47c221da after a normal first push. Before publication, origin/main advanced twice through disjoint Marathi PR #13065 and Punjabi PR #13074 curriculum files; both rebases were conflict-free and required no force push. Eleven live open PRs had zero exact path overlap with this 35-file tranche. The state-recording head 5beb364839614d82e3dc33a2b6321ce1f422f128 completed all 40 reported checks with 33 successes, seven expected skips, and no failures or pending work. GitHub reported the branch clean and mergeable; the loop enabled squash auto-merge, and GitHub merged PR #13083 as 9ae79c55494056324a7518715b005ca8594c4472 at 2026-08-26T18:48:24Z without a manual merge command. The exact merged-head worktree was removed after a clean-status and PR-head identity check."
     },
     {
       "id": "classical-cipher-language-neutral-fixtures-and-analysis-contract",
@@ -2299,12 +2294,32 @@
       "notes": "Discovered during the post-#13070 reference audit. Go and Python accept Unicode-letter keys and transform non-ASCII text through ASCII arithmetic despite CR03's A-Z/a-z contract; Kotlin cryptanalysis admits Unicode before indexing a 26-slot table; Swift key-length grouping includes Unicode while its other analysis stages are ASCII-only. After the neutral corpus lands, make all established lanes validate ASCII-only keys, transform and advance only on ASCII letters, ignore non-ASCII data consistently in analysis, and adopt the pinned analysis edge behavior."
     },
     {
-      "id": "dart-current-14-of-15-trie",
-      "title": "Port the DT13 trie package to Dart",
+      "id": "trie-language-neutral-fixtures-and-key-contract",
+      "title": "Define DT13 language-neutral fixtures and exact key semantics",
       "status": "pending",
-      "depends_on": ["dart-scaffold-capability-schema"],
+      "depends_on": [],
       "branch": null,
       "pr_number": null,
+      "notes": "Discovered during the post-#13083 reference audit before Dart DT13 implementation. No language-neutral trie corpus exists, and established lanes differ on UTF-16 units, Unicode scalars, and grapheme clusters, deterministic Unicode ordering, empty-prefix behavior, and the distinction between a missing key and a present nullable value. Pin scalar-sequence keys without normalization, scalar numeric lexicographic order, empty-key and empty-prefix semantics, nullable-value presence, deletion pruning, longest-prefix behavior, and resource-bounded long-key vectors before cross-lane remediation."
+    },
+    {
+      "id": "trie-unicode-order-established-lane-conformance",
+      "title": "Converge DT13 key units and deterministic ordering across established lanes",
+      "status": "pending",
+      "depends_on": ["trie-language-neutral-fixtures-and-key-contract"],
+      "branch": null,
+      "pr_number": null,
+      "notes": "Discovered during the post-#13083 reference audit. After the neutral DT13 corpus lands, bring established implementations to Unicode-scalar traversal with no implicit normalization, scalar numeric lexicographic enumeration, explicit endpoint presence independent of nullable values, and the pinned empty-prefix contract. Keep language-specific collection syntax while making observable key/value results portable."
+    },
+    {
+      "id": "dart-current-14-of-15-trie",
+      "title": "Port the DT13 trie package to Dart",
+      "status": "in-progress",
+      "depends_on": ["dart-scaffold-capability-schema"],
+      "branch": "codex/dart-trie-parity",
+      "pr_number": null,
+      "selection_revision": "9ae79c55494056324a7518715b005ca8594c4472",
+      "selection_notes": "Selected after PR #13083 completed all 40 terminal acceptable checks, GitHub reported a clean merge state, and squash auto-merge merged reviewed head 5beb364839614d82e3dc33a2b6321ce1f422f128 as 9ae79c55494056324a7518715b005ca8594c4472 at 2026-08-26T18:48:24Z without a manual merge command. The exact-main schema-3 report is collision-clean at 15 established lanes, 1,373 implementation identities, 4,581 slots, and 1,412 all-reported identities; bands are 175/267, 123/934, 166/2,087, and 909/12,726, with 720 Rust singletons, zero collisions, zero unknown buckets, and OCaml emerging at zero packages. Only the expected three Dart cipher slots changed topology, so no topology owner was required. The reference pass did add explicit neutral-fixture and all-lane conformance owners for DT13 key units, Unicode order, empty-prefix behavior, and nullable-value presence before this implementation began. All seven live open PRs have zero exact overlap with the DT13 specification, Dart trie package, state, and roadmap surfaces. Trie is missing only Dart, its scaffold dependency is merged, and its dependency-free deterministic contract closes one identity at 15/15 while establishing the package prerequisite for the separately tracked Dart LZ78 shared-trie migration. Fenwick tree is an isolated runner-up; binary-search-tree still needs API reconciliation; the Haskell event-loop/Brotli pair is unrelated and higher risk; and the classical-cipher neutral fixture owner remains the next cross-lane conformance tranche. Swift paint-vm-ascii remains owned by open PR #12149. OCaml's process-free substrate remains collision-unsafe while open PRs #12149 and #12162 own required Go build-tool entry-point and validator surfaces.",
       "notes": "Materialized from the remaining Dart-only 14-of-15 frontier after PR #9477. Deliver the standalone generic trie contract first; migrate existing Dart LZ78 duplication separately so the foundational port remains reviewable."
     },
     {
@@ -2314,7 +2329,7 @@
       "depends_on": ["dart-current-14-of-15-trie"],
       "branch": null,
       "pr_number": null,
-      "notes": "Discovered in the post-#9477 dependency audit. Preserve LZ78's public API and compression fixtures while replacing its private trie logic with the shared Dart DT13 package in a separate downstream slice."
+      "notes": "Discovered in the post-#9477 dependency audit and refined by the post-#13083 reference pass. Preserve LZ78's public API and compression fixtures while replacing its private byte-at-a-time trie cursor with the shared Dart DT13 package in a separate downstream slice. DT13's complete-string Trie API alone does not replace the cursor: follow the Python precedent by adding a generic TrieCursor in this migration or by adapting the consumer without widening the foundational DT13 port."
     },
     {
       "id": "dart-current-14-of-15-binary-search-tree",

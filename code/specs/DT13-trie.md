@@ -336,6 +336,38 @@ Typical case: much better than worst case. English words share many prefixes
 than a flat array of all words.
 ```
 
+### Portable Behavior Contract
+
+The examples above use the word "character" informally. For portable package
+behavior, a key is an exact sequence of **Unicode scalar values**:
+
+1. Implementations traverse Unicode scalars, not UTF-8 bytes, UTF-16 code
+   units, or user-perceived grapheme clusters. A supplementary-plane scalar
+   therefore occupies one trie edge.
+2. Keys are not normalized. Precomposed `"é"` and the decomposed sequence
+   `"e\u0301"` are distinct keys.
+3. Ordered results compare scalar values numerically, left to right. When one
+   key is a prefix of another, the shorter key sorts first. No locale-sensitive
+   collation is permitted.
+4. The empty string is a valid key. `starts_with("")` is true exactly when the
+   trie contains at least one key, and `words_with_prefix("")` is identical to
+   `all_words()`.
+5. Endpoint presence is independent of the stored value. A present key may
+   store a nullable value; membership, insertion counts, deletion, and
+   invariant checks must not infer presence from a non-null value.
+6. Inserting an existing key replaces its value without changing the key
+   count. Deleting a missing key is a no-op. Deleting a present key prunes every
+   newly orphaned non-endpoint node while preserving shared prefixes.
+7. Core operations and result enumeration must be safe for long keys without
+   relying on the host call stack. Implementations may enforce an explicit,
+   documented resource bound, but must not fail merely because a valid key is
+   deeper than the host recursion limit.
+
+Several pre-existing lanes do not yet meet every rule above, and DT13 has no
+language-neutral fixture corpus. Those gaps are tracked separately by the
+neutral-fixture and established-lane conformance owners; a new implementation
+must follow this contract rather than copy a host-language divergence.
+
 ## Algorithms (Pure Functions)
 
 ```python
@@ -620,6 +652,33 @@ class Trie(Generic[V]):
         """
         ...
 ```
+
+## Package Matrix
+
+| Language | Package Directory | Public Module |
+|----------|-------------------|---------------|
+| C# | `code/packages/csharp/trie/` | `CodingAdventures.Trie` |
+| Dart | `code/packages/dart/trie/` | `package:coding_adventures_trie/trie.dart` |
+| Elixir | `code/packages/elixir/trie/` | `CodingAdventures.Trie` |
+| F# | `code/packages/fsharp/trie/` | `CodingAdventures.Trie` |
+| Go | `code/packages/go/trie/` | `trie` |
+| Haskell | `code/packages/haskell/trie/` | `Trie` |
+| Java | `code/packages/java/trie/` | `com.codingadventures.trie` |
+| Kotlin | `code/packages/kotlin/trie/` | `com.codingadventures.trie` |
+| Lua | `code/packages/lua/trie/` | `coding_adventures.trie` |
+| Perl | `code/packages/perl/trie/` | `CodingAdventures::Trie` |
+| Python | `code/packages/python/trie/` | `trie` |
+| Ruby | `code/packages/ruby/trie/` | `CodingAdventures::Trie` |
+| Rust | `code/packages/rust/trie/` | `trie` |
+| Swift | `code/packages/swift/trie/` | `Trie` |
+| TypeScript | `code/packages/typescript/trie/` | `@coding-adventures/trie` |
+
+C, C++, and OCaml remain emerging implementation lanes and do not yet join the
+15-lane denominator. The existing C and C++ trie packages and the WASM target
+remain separately classified by the parity reporter.
+
+**Production dependencies:** none. DT02 supplies the conceptual tree model;
+DT13 is deliberately self-contained and does not import a tree package.
 
 ## Composition Model
 
