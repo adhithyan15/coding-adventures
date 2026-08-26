@@ -49,8 +49,11 @@ book-only human validation remain explicit backlog.
   deliberately oral: visible romanization is support, never writing credit,
   and Gurmukhi reading/writing remains blocked on #13068. In the book.
 - **Chapter 3 — How Are You** ([`lessons/PA-C03-*`](./lessons/)): kivēṁ,
-  **tusī̃ kivēṁ ho?**, maiṁ, ṭhīk, koī gall nahīṁ, practice. The copula set;
-  the *hāṁ* "am"/"yes" homophone. In the book.
+  **tusī̃ kivēṁ ho?**, maiṁ, ṭhīk, koī gall nahīṁ, practice. Six canonical
+  micro-lessons move from hearing the respectful question to answering,
+  returning it, and closing a thanks exchange. Listening and speaking are
+  scored separately; visible Gurmukhi and romanization do not earn reading or
+  writing credit before #13068. In the book.
 - **Chapter 4 — Farewells** ([`lessons/PA-C04-*`](./lessons/)): phir, milāṁge,
   **phir milāṁge**, rabb rākhā ("God keep you"; Arabic + Sanskrit), practice.
   In the book.

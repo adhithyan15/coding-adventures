@@ -7,7 +7,7 @@
   "policy": {
     "maxLinearisableTableColumns": 3
   },
-  "sourceHash": "fnv1a64:62474b3387ff157a",
+  "sourceHash": "fnv1a64:1bbed7f803820c43",
   "summary": {
     "totalLessons": 75,
     "voice": 22,
@@ -737,7 +737,7 @@
         "no-visual-dependency"
       ],
       "coreDrivable": true,
-      "sourceHash": "fnv1a64:09a7203d80792994",
+      "sourceHash": "fnv1a64:13feacee070c0589",
       "detachableSegments": [
         "The letters in this word"
       ]
@@ -758,7 +758,7 @@
         "no-visual-dependency"
       ],
       "coreDrivable": true,
-      "sourceHash": "fnv1a64:d3b3ca65e4644c92"
+      "sourceHash": "fnv1a64:67c1425883cfebc0"
     },
     {
       "id": "PA-C03-main",
@@ -776,7 +776,7 @@
         "no-visual-dependency"
       ],
       "coreDrivable": true,
-      "sourceHash": "fnv1a64:643699aead30de28",
+      "sourceHash": "fnv1a64:9bd127d8c66f0e58",
       "detachableSegments": [
         "The letters in this word"
       ]
@@ -797,7 +797,7 @@
         "no-visual-dependency"
       ],
       "coreDrivable": true,
-      "sourceHash": "fnv1a64:dc0a8812af25b22e",
+      "sourceHash": "fnv1a64:d5e5598f7c637bf7",
       "detachableSegments": [
         "The letters in this word"
       ]
@@ -818,7 +818,7 @@
         "no-visual-dependency"
       ],
       "coreDrivable": true,
-      "sourceHash": "fnv1a64:7404aad0e287139a",
+      "sourceHash": "fnv1a64:0c7a33984ed2d729",
       "detachableSegments": [
         "The letters in this word"
       ]
@@ -839,7 +839,7 @@
         "no-visual-dependency"
       ],
       "coreDrivable": true,
-      "sourceHash": "fnv1a64:de8278e80a1fbf85"
+      "sourceHash": "fnv1a64:dce86f6f942229f4"
     },
     {
       "id": "PA-C04-phir",

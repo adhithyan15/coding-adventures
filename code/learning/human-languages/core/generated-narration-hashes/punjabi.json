@@ -54,7 +54,7 @@
     {
       "language": "punjabi",
       "chapter": 3,
-      "sourceHash": "fnv1a64:bfea8e9624729dec",
+      "sourceHash": "fnv1a64:93148f500fc30705",
       "lessonIds": [
         "PA-C03-kivein",
         "PA-C03-tusi-kivein-ho",
@@ -67,8 +67,8 @@
       "drivablePrefix": 0,
       "text": "punjabi/narration/ch03.txt",
       "json": "punjabi/narration/ch03.json",
-      "textHash": "fnv1a64:1e01cb177a1d4f94",
-      "jsonHash": "fnv1a64:2ba723ad40d397dc"
+      "textHash": "fnv1a64:fe92afaea8d8ba0c",
+      "jsonHash": "fnv1a64:c54ac29e2fc7678e"
     },
     {
       "language": "punjabi",

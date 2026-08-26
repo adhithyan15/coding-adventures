@@ -4,14 +4,14 @@
   "chapter": 3,
   "title": "How Are You?",
   "drivablePrefix": 0,
-  "sourceHash": "fnv1a64:bfea8e9624729dec",
+  "sourceHash": "fnv1a64:93148f500fc30705",
   "lessons": [
     {
       "id": "PA-C03-kivein",
       "sequence": 160,
       "title": "ਕਿਵੇਂ (kivēṁ) — \"how,\" another of the k- questions",
       "headword": "ਕਿਵੇਂ",
-      "romanization": "",
+      "romanization": "kivēṁ",
       "gloss": "how",
       "script": "gurmukhi",
       "modality": "sight",
@@ -19,7 +19,7 @@
       "modalityReasons": [
         "script-block"
       ],
-      "sourceHash": "fnv1a64:09a7203d80792994",
+      "sourceHash": "fnv1a64:13feacee070c0589",
       "notice": {
         "modality": "sight",
         "needs": [
@@ -115,6 +115,26 @@
             {
               "kind": "speech",
               "text": "What root do Punjabi's question-words share, and its English family? (The interrogative k-, PIE kʷo-; the wh- words.)"
+            },
+            {
+              "kind": "activity",
+              "scored": true,
+              "id": "PA-C03-kivein-meaning",
+              "prompt": "You hear kivēṁ. Type its meaning and the question-family sound it shares with kī.",
+              "assesses": [
+                "PA-LEX-KIVEIN-03",
+                "PA-ETYMON-QUESTION-K-03"
+              ],
+              "responseSeconds": 10,
+              "acceptedResponses": [
+                "how; k-",
+                "how, k",
+                "how; k"
+              ],
+              "feedback": {
+                "correct": "Right: kivēṁ means how and belongs to Punjabi's k- question family.",
+                "incorrect": "Kivēṁ means how; listen for the opening k- shared with kī."
+              }
             }
           ]
         }
@@ -125,15 +145,15 @@
       "sequence": 170,
       "title": "ਤੁਸੀਂ ਕਿਵੇਂ ਹੋ? (tusī̃ kivēṁ ho?) — \"how are you?\"",
       "headword": "ਤੁਸੀਂ ਕਿਵੇਂ ਹੋ?",
-      "romanization": "",
-      "gloss": "how are you? (respectful)",
+      "romanization": "tusī̃ kivēṁ ho?",
+      "gloss": "how are you? — respectful",
       "script": "gurmukhi",
       "modality": "voice",
       "derivedModality": "voice",
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:d3b3ca65e4644c92",
+      "sourceHash": "fnv1a64:67c1425883cfebc0",
       "notice": null,
       "blocks": [
         {
@@ -160,7 +180,7 @@
           "segments": [
             {
               "kind": "speech",
-              "text": "ਤੁਸੀਂ ਕਿਵੇਂ ਹੋ? = ਤੁਸੀਂ (tusī̃, respectful \"you\") + ਕਿਵੇਂ (kivēṁ, \"how\") + ਹੋ (ho, \"are\") — literally \"you how are?\" Punjabi keeps the verb last, as in Chapter 2. The copula ho is the respectful \"are\" that goes with tusī̃ — its whole set is maiṁ hāṁ (I am), tū̃ haiṁ (you are, familiar), oh hai (he is), tusī̃ ho (you are, respectful)."
+              "text": "ਤੁਸੀਂ ਕਿਵੇਂ ਹੋ? (tusī̃ kivēṁ ho?) = ਤੁਸੀਂ (tusī̃, respectful \"you\") + ਕਿਵੇਂ (kivēṁ, \"how\") + ਹੋ (ho, \"are\") — literally \"you how are?\" Punjabi keeps the verb last, as in Chapter 2. The copula ho is the respectful \"are\" that goes with tusī̃ — its whole set is maiṁ hāṁ (I am), tū̃ haiṁ (you are, familiar), oh hai (he is), tusī̃ ho (you are, respectful)."
             }
           ]
         },
@@ -171,7 +191,7 @@
           "segments": [
             {
               "kind": "speech",
-              "text": "To an elder or stranger: ਤੁਸੀਂ ਕਿਵੇਂ ਹੋ? To a friend (tū̃): ਤੂੰ ਕਿਵੇਂ ਹੈਂ? (tū̃ kivēṁ haiṁ?). Respect takes the plural-shaped tusī̃ … ho."
+              "text": "To an elder or stranger: ਤੁਸੀਂ ਕਿਵੇਂ ਹੋ? (tusī̃ kivēṁ ho?) To a friend (tū̃): ਤੂੰ ਕਿਵੇਂ ਹੈਂ? (tū̃ kivēṁ haiṁ?). Respect takes the plural-shaped tusī̃ … ho."
             }
           ]
         },
@@ -229,6 +249,26 @@
             {
               "kind": "speech",
               "text": "Ask \"how are you?\" respectfully, and say where the verb goes. (Tusī̃ kivēṁ ho?; the verb is last.)"
+            },
+            {
+              "kind": "activity",
+              "scored": true,
+              "id": "PA-C03-tusi-kivein-ho-speaking",
+              "prompt": "Ask how someone is respectfully aloud, then type the romanized words you said.",
+              "assesses": [
+                "PA-PHRASE-HOW-ARE-YOU-03",
+                "PA-GRAMMAR-TUSI-HO-03"
+              ],
+              "responseSeconds": 12,
+              "acceptedResponses": [
+                "tusī̃ kivēṁ ho?",
+                "tusi kivein ho",
+                "tusi kiven ho"
+              ],
+              "feedback": {
+                "correct": "Speaking score: respectful tusī̃ pairs with ho.",
+                "incorrect": "Say tusī̃ kivēṁ ho: respectful you, how, are."
+              }
             }
           ]
         }
@@ -239,7 +279,7 @@
       "sequence": 180,
       "title": "ਮੈਂ (maiṁ) — \"I,\" the m- of the first person",
       "headword": "ਮੈਂ",
-      "romanization": "",
+      "romanization": "maiṁ",
       "gloss": "I",
       "script": "gurmukhi",
       "modality": "sight",
@@ -247,7 +287,7 @@
       "modalityReasons": [
         "script-block"
       ],
-      "sourceHash": "fnv1a64:643699aead30de28",
+      "sourceHash": "fnv1a64:9bd127d8c66f0e58",
       "notice": {
         "modality": "sight",
         "needs": [
@@ -363,6 +403,27 @@
             {
               "kind": "speech",
               "text": "What root links maiṁ, merā, and English me, and what copula does maiṁ take? (The first-person ma-; hāṁ, \"am.\")"
+            },
+            {
+              "kind": "activity",
+              "scored": true,
+              "id": "PA-C03-main-pair",
+              "prompt": "Say Punjabi I, then complete the spoken frame I am: maiṁ...",
+              "assesses": [
+                "PA-LEX-MAIN-03",
+                "PA-GRAMMAR-MAIN-HAAN-03",
+                "PA-ETYMON-FIRST-PERSON-M-03"
+              ],
+              "responseSeconds": 12,
+              "acceptedResponses": [
+                "maiṁ; maiṁ ... hāṁ",
+                "main; main haan",
+                "mai; mai haan"
+              ],
+              "feedback": {
+                "correct": "Right: maiṁ means I, and its copula frame ends in hāṁ.",
+                "incorrect": "Use maiṁ for I and finish the frame with hāṁ, am."
+              }
             }
           ]
         }
@@ -373,15 +434,15 @@
       "sequence": 190,
       "title": "ਠੀਕ (ṭhīk) — \"fine,\" and how to answer",
       "headword": "ਠੀਕ",
-      "romanization": "",
-      "gloss": "fine, well — and the reply \"ਮੈਂ ਠੀਕ ਹਾਂ\"",
+      "romanization": "ṭhīk",
+      "gloss": "fine, well — and the reply maiṁ ṭhīk hāṁ",
       "script": "gurmukhi",
       "modality": "sight",
       "derivedModality": "sight",
       "modalityReasons": [
         "script-block"
       ],
-      "sourceHash": "fnv1a64:dc0a8812af25b22e",
+      "sourceHash": "fnv1a64:d5e5598f7c637bf7",
       "notice": {
         "modality": "sight",
         "needs": [
@@ -434,8 +495,8 @@
         },
         {
           "index": 3,
-          "type": "unknown",
-          "title": "The reply",
+          "type": "grammar",
+          "title": "Grammar Lens: the reply",
           "segments": [
             {
               "kind": "speech",
@@ -500,7 +561,27 @@
             },
             {
               "kind": "speech",
-              "text": "Give the reply to tusī̃ kivēṁ ho?, and say what's special about ṭhīk's origin. (Maiṁ ṭhīk hāṁ; it is a native Indian word, no European cognate.)"
+              "text": "Give the reply to tusī̃ kivēṁ ho? aloud. (Maiṁ ṭhīk hāṁ.)"
+            },
+            {
+              "kind": "activity",
+              "scored": true,
+              "id": "PA-C03-thik-reply",
+              "prompt": "Reply I am fine aloud in Punjabi, then type the romanized words you said.",
+              "assesses": [
+                "PA-LEX-THIK-03",
+                "PA-PHRASE-I-AM-FINE-03"
+              ],
+              "responseSeconds": 12,
+              "acceptedResponses": [
+                "maiṁ ṭhīk hāṁ",
+                "main thik haan",
+                "mai thik haan"
+              ],
+              "feedback": {
+                "correct": "Speaking score: maiṁ ṭhīk hāṁ gives a natural short reply.",
+                "incorrect": "Say maiṁ ṭhīk hāṁ: I, fine, am."
+              }
             }
           ]
         }
@@ -511,15 +592,15 @@
       "sequence": 200,
       "title": "ਕੋਈ ਗੱਲ ਨਹੀਂ (koī gall nahīṁ) — \"it's nothing\"",
       "headword": "ਕੋਈ ਗੱਲ ਨਹੀਂ",
-      "romanization": "",
-      "gloss": "it's nothing / no problem / you're welcome",
+      "romanization": "koī gall nahīṁ",
+      "gloss": "it is nothing; no problem; you are welcome",
       "script": "gurmukhi",
       "modality": "sight",
       "derivedModality": "sight",
       "modalityReasons": [
         "script-block"
       ],
-      "sourceHash": "fnv1a64:7404aad0e287139a",
+      "sourceHash": "fnv1a64:0c7a33984ed2d729",
       "notice": {
         "modality": "sight",
         "needs": [
@@ -566,7 +647,7 @@
           "segments": [
             {
               "kind": "speech",
-              "text": "ਕੋਈ ਗੱਲ ਨਹੀਂ literally means \"[there is] no matter\" — koī (\"any\") + gall (\"matter, thing, talk\") + nahīṁ (\"not\"). It serves as \"it's nothing / no worries / never mind / you're welcome.\" The word ਗੱਲ (gall, \"talk, matter\") is a warm, everyday native Punjabi word — gall karnā (\"to have a chat\"). And ਨਹੀਂ (nahīṁ) you already met in Chapter 1: the ancient negative na-, the same PIE ne behind English no, not, none."
+              "text": "ਕੋਈ ਗੱਲ ਨਹੀਂ (koī gall nahīṁ) literally means \"[there is] no matter\" — koī (\"any\") + gall (\"matter, thing, talk\") + nahīṁ (\"not\"). It serves as \"it's nothing / no worries / never mind / you're welcome.\" The word ਗੱਲ (gall, \"talk, matter\") is a warm, everyday native Punjabi word — gall karnā (\"to have a chat\"). And ਨਹੀਂ (nahīṁ) you already met in Chapter 1: the ancient negative na-, the same PIE ne behind English no, not, none."
             }
           ]
         },
@@ -624,6 +705,26 @@
             {
               "kind": "speech",
               "text": "What does koī gall nahīṁ literally say, and which Chapter-1 word does it reuse? (\"There's no matter\"; nahīṁ, \"not\" — from PIE ne, English no.)"
+            },
+            {
+              "kind": "activity",
+              "scored": true,
+              "id": "PA-C03-koi-gall-nahin-response",
+              "prompt": "Someone says dhannavād. Give the gracious Punjabi reply aloud, then type its romanization.",
+              "assesses": [
+                "PA-PHRASE-NO-PROBLEM-03",
+                "PA-ETYMON-NEGATIVE-NE-03"
+              ],
+              "responseSeconds": 12,
+              "acceptedResponses": [
+                "koī gall nahīṁ",
+                "koi gall nahin",
+                "koi gal nahi"
+              ],
+              "feedback": {
+                "correct": "Speaking score: koī gall nahīṁ answers thanks with no problem.",
+                "incorrect": "Reply koī gall nahīṁ, literally there is no matter."
+              }
             }
           ]
         }
@@ -635,14 +736,14 @@
       "title": "Chapter 3 — The how-are-you exchange",
       "headword": "(dialogue)",
       "romanization": "",
-      "gloss": "Chapter 3 recap — the how-are-you exchange",
+      "gloss": "Chapter 3 oral checkpoint — the how-are-you exchange",
       "script": "gurmukhi",
       "modality": "voice",
       "derivedModality": "voice",
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:de8278e80a1fbf85",
+      "sourceHash": "fnv1a64:dce86f6f942229f4",
       "notice": null,
       "blocks": [
         {
@@ -708,13 +809,55 @@
               "scored": false,
               "responseSeconds": 8,
               "source": "[YOU SAY: the familiar question — *tū̃ kivēṁ haiṁ?*]"
+            },
+            {
+              "kind": "activity",
+              "scored": true,
+              "id": "PA-C03-practice-listening",
+              "prompt": "You hear tusī̃ kivēṁ ho? Type what the respectful speaker wants to know.",
+              "assesses": [
+                "PA-PHRASE-HOW-ARE-YOU-03",
+                "PA-GRAMMAR-TUSI-HO-03"
+              ],
+              "responseSeconds": 10,
+              "acceptedResponses": [
+                "how i am",
+                "how are you",
+                "how i am doing",
+                "how i feel"
+              ],
+              "feedback": {
+                "correct": "Listening score: the speaker respectfully asks how you are.",
+                "incorrect": "Tusī̃ kivēṁ ho asks how you are, using respectful tusī̃ and ho."
+              }
+            },
+            {
+              "kind": "activity",
+              "scored": true,
+              "id": "PA-C03-practice-speaking",
+              "prompt": "Say a polite reply, return the question, and answer thanks aloud; then type the romanized turns.",
+              "assesses": [
+                "PA-PHRASE-HOW-ARE-YOU-03",
+                "PA-PHRASE-I-AM-FINE-03",
+                "PA-PHRASE-NO-PROBLEM-03",
+                "PA-LEX-DHANVAAD-01"
+              ],
+              "responseSeconds": 24,
+              "acceptedResponses": [
+                "maiṁ ṭhīk hāṁ, dhannavād; tusī̃ kivēṁ ho?; koī gall nahīṁ",
+                "main thik haan, dhannavad; tusi kivein ho; koi gall nahin"
+              ],
+              "feedback": {
+                "correct": "Speaking score: answer, returned respectful question, and courtesy close are all present.",
+                "incorrect": "Use three oral turns: maiṁ ṭhīk hāṁ, dhannavād; tusī̃ kivēṁ ho?; koī gall nahīṁ."
+              }
             }
           ]
         },
         {
           "index": 2,
-          "type": "unknown",
-          "title": "The atoms",
+          "type": "guided-production",
+          "title": "Guided Practice — the atoms",
           "segments": [
             {
               "kind": "pause",
@@ -753,8 +896,8 @@
         },
         {
           "index": 3,
-          "type": "unknown",
-          "title": "Roots you now carry",
+          "type": "etymology",
+          "title": "The word, taken apart — roots you now carry",
           "segments": [
             {
               "kind": "pause",
@@ -794,6 +937,16 @@
             {
               "kind": "speech",
               "text": "A stranger asks tusī̃ kivēṁ ho? — give a full, polite reply, and answer their thanks. (Maiṁ ṭhīk hāṁ, dhannavād — and to thanks, koī gall nahīṁ.)"
+            },
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Independent Gurmukhi reading and writing are not scored here. Chapter 3 still contains untaught forms; #13068 must build their visible-model, guided-copy, delayed-copy, and dictation runway before either skill can earn credit. A romanized answer never counts as Gurmukhi writing."
             }
           ]
         }

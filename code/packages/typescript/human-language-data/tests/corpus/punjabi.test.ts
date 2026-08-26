@@ -78,3 +78,32 @@ it("migrates Punjabi Chapter 2 without inventing Gurmukhi writing credit", () =>
   expect(payoff.body).toContain("Independent Gurmukhi reading and writing are **not scored here**");
   expect(payoff.body).toContain("A romanized answer never counts as Gurmukhi writing");
 });
+
+it("migrates Punjabi Chapter 3 as a gentle oral wellbeing exchange", () => {
+  const chapter = loadTrackLessons("punjabi")
+    .sort((left, right) => Number(left.frontmatter.sequence) - Number(right.frontmatter.sequence))
+    .filter((lesson) => lesson.frontmatter.chapter === "3");
+
+  expect(chapter.map((lesson) => lesson.realization.lessonId)).toEqual([
+    "PA-C03-kivein",
+    "PA-C03-tusi-kivein-ho",
+    "PA-C03-main",
+    "PA-C03-thik",
+    "PA-C03-koi-gall-nahin",
+    "PA-C03-practice",
+  ]);
+  expect(chapter.every((lesson) => lesson.frontmatter.schema_version === "2")).toBe(true);
+  expect(
+    chapter.every(
+      (lesson) => Number(lesson.frontmatter["duration.max_seconds"]) <= 240,
+    ),
+  ).toBe(true);
+  expect(chapter.every((lesson) => lesson.frontmatter.skills?.includes("listening"))).toBe(true);
+  expect(chapter.every((lesson) => lesson.frontmatter.skills?.includes("speaking"))).toBe(true);
+  expect(chapter.every((lesson) => !lesson.frontmatter.skills?.includes("writing"))).toBe(true);
+
+  const payoff = chapter.at(-1)!;
+  expect(payoff.body).toContain("return the question");
+  expect(payoff.body).toContain("Independent Gurmukhi reading and writing are **not scored here**");
+  expect(payoff.body).toContain("A romanized answer never counts as Gurmukhi writing");
+});
