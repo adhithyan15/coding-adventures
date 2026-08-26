@@ -31,9 +31,16 @@
 //
 //   1. `type: writing`                        -> pen   (an orthography drill)
 //   2. a `script` block                       -> sight (letter shapes on the page)
-//   2. a sight cue in the prose               -> sight ("look at the chart above")
+//   2. an ANCHORED sight cue in the prose     -> sight ("look at the chart above")
 //   2. a table wider than we can read aloud   -> sight (a paradigm grid)
 //   3. otherwise                              -> voice
+//
+// "Anchored" is doing real work in rule 2. A cue phrase is a pointing expression, and
+// pointing expressions are only about the page when there is something on the page to
+// point at; "Look at what English built on that jar" is an invitation to notice an
+// etymology and "put a fact on the table" is an idiom. Both used to be counted, and
+// authors were rewriting correct prose to get out from under the detector. See
+// `SIGHT_CUE_RULES` for what each phrase has to clear before it counts.
 //
 // Measured over all 1,096 lessons that yields 51 `pen`, and among the rest the
 // single biggest obstacle is the **table**, not the script — which is a tractable
@@ -119,27 +126,72 @@ export const MODALITY_SIGNS: Readonly<Record<Modality, string>> = {
 };
 
 /**
- * Phrases that give away a lesson pointing at something on the page.
+ * How a cue phrase earns the right to be read as a reference to the page.
  *
- * Plain lowercase substrings, matched with `String.includes` — deliberately **not**
- * regular expressions. Cue matching runs over every block of all 1,096 lessons, and
- * an author-supplied phrase list compiled into alternation-heavy patterns is exactly
- * the shape that turns into catastrophic backtracking on a long lesson body. Literal
- * substring search is linear in the text and cannot backtrack at all.
+ * A cue phrase is not evidence on its own. "Look at" is a **pointing expression**, and
+ * a pointing expression only means "use your eyes" when there is something on the page
+ * for it to point AT. The corpus is full of the same words aimed at nothing visible —
+ * *"Look at what English built on that jar"*, *"put a fact on the table"*, *"la mesa —
+ * 'the table'"* — and a detector that cannot tell those from *"look at the chart above"*
+ * is measuring the vocabulary of the prose rather than the demands of the lesson.
  *
- * The list is a floor, not a proof: prose that needs eyes without saying so slips
- * through, which is why the table and script checks sit beside it rather than behind
- * it.
+ * So each phrase declares what would have to be true for it to be a real reference:
+ *
+ *   `self-anchored`  the phrase carries its own deixis. "shown below" says *below*; there
+ *                    is no figurative reading. It always counts.
+ *
+ *   `artifact`       the phrase is a DEFINITE reference to a whole named thing — *the
+ *                    table*, *the chart*. Whether that thing exists is decidable: either
+ *                    the document contains a table (or an image) or it does not. A
+ *                    definite reference to an artifact the page does not contain is not a
+ *                    reference to the page — it is a dining table, a gloss, or an idiom.
+ *                    This direction is SAFE BY CONSTRUCTION: when a lesson holds no
+ *                    table at all, no prose in it can send a reader to one.
+ *
+ *   `instruction`    the phrase is an instruction whose object decides the matter —
+ *                    *look at*, *see the*, *column*. These keep firing by default and are
+ *                    dropped only where the occurrence is demonstrably NOT an instruction
+ *                    about the page (see {@link matchedSightCues}).
+ *
+ * `column` is deliberately an `instruction` and not an `artifact`, though it names part of
+ * a table. "The table" is a whole artifact this module can look for; a *column* is a
+ * part-noun that an author may reasonably use of any aligned display — a run of arrows, a
+ * two-part list — that leaves no Markdown table behind for the structural check to find.
+ * `ES-C56-cion` does exactly that ("Read those without the English column" over a
+ * blockquote). Structure cannot adjudicate `column`, so it is never dropped on structural
+ * grounds.
+ *
+ * The list is still a floor, not a proof: prose that needs eyes without saying so slips
+ * through, which is why the table and script checks sit beside it rather than behind it.
  */
-export const SIGHT_CUES: readonly string[] = [
-  "see the",
-  "look at",
-  "shown below",
-  "the table",
-  "the chart",
-  "column",
-  "written above",
+export type SightCueAnchor = "self-anchored" | "artifact" | "instruction";
+
+/** One cue phrase and the condition under which it counts. */
+export interface SightCueRule {
+  /** Plain lowercase letters and spaces, so it compiles into a pattern unescaped. */
+  readonly phrase: string;
+  readonly anchor: SightCueAnchor;
+}
+
+export const SIGHT_CUE_RULES: readonly SightCueRule[] = [
+  { phrase: "see the", anchor: "instruction" },
+  { phrase: "look at", anchor: "instruction" },
+  { phrase: "shown below", anchor: "self-anchored" },
+  { phrase: "the table", anchor: "artifact" },
+  { phrase: "the chart", anchor: "artifact" },
+  { phrase: "column", anchor: "instruction" },
+  { phrase: "written above", anchor: "self-anchored" },
 ];
+
+/**
+ * The cue phrases alone, in declaration order.
+ *
+ * Kept as a flat list because it is the package's published vocabulary and because the
+ * tests pin its alphabet — every cue is plain lowercase letters and spaces, so it can go
+ * straight into a pattern with no escaping, and a cue containing a regex metacharacter
+ * would be a silent behaviour change.
+ */
+export const SIGHT_CUES: readonly string[] = SIGHT_CUE_RULES.map((rule) => rule.phrase);
 
 /**
  * How many columns a table may have and still be read aloud.
@@ -468,35 +520,255 @@ export function widestTableColumns(text: string): number {
   return widest;
 }
 
-/** Which {@link SIGHT_CUES} appear in the text, in list order. */
-export function matchedSightCues(text: string): string[] {
-  const haystack = text.toLowerCase();
-  // WORD BOUNDARIES, NOT BARE SUBSTRINGS.
-  //
-  // This used `haystack.includes(cue)`, which fires on any occurrence anywhere. Two
-  // consequences, both observed while authoring the Dravidian tracks:
-  //
-  //   * `column` matched "a whole column of the family table" — prose ABOUT a cousin
-  //     list, needing no eyes — and the author rewrote correct writing to appease it.
-  //   * `look at` matched the gloss "to see, to look at" inside a vocabulary entry, and
-  //     silently flipped a lesson to `sight`.
-  //
-  // A cue is meant to catch an instruction to the reader ("look at the chart"), not
-  // every appearance of the word. Word-boundary matching keeps the instruction and drops
-  // the mention: `column` no longer fires inside `columns` or mid-word, and a cue must
-  // stand as its own words.
-  //
-  // This is deliberately still a blunt instrument — it cannot tell "look at the chart"
-  // from "you do not need to look at anything" — and it is meant to be. The pin in
-  // `modality-manifest.test.ts` is what catches a detector that stops detecting; the
-  // cost of a false NEGATIVE (a lesson wrongly advertised as drivable) is a driver being
-  // told to look at something at speed, so the bias stays toward over-reporting.
-  // Every cue is plain lowercase letters and spaces (asserted in the tests), so it can go
-  // straight into a pattern with no escaping. A cue containing a regex metacharacter would
-  // be a silent behaviour change, which is why the test pins the alphabet rather than
-  // trusting the list to stay tame.
-  return SIGHT_CUES.filter((cue) =>
-    new RegExp(`(^|[^a-z])${cue}([^a-z]|$)`).test(haystack),
+/**
+ * A figure of any kind: Markdown image (inline or reference-style), or embedded HTML.
+ *
+ * The alt-text scan is written `(?=([^\]\n]*))\1` rather than the obvious `[^\]]*`. That
+ * is the atomic-group idiom, and it is here for a reason: `!\[[^\]]*\]\(` is greedy and
+ * unanchored, so on a body containing `![` with no later `]` the engine walks to the end
+ * of the text and then backtracks one character at a time, from every `!` in the
+ * document. That is quadratic — measured at 49 seconds on 400 KB of `![` — and lesson
+ * bodies are the one input this module is guaranteed to be pointed at. A lookahead
+ * capture cannot be backtracked into, so the run is matched once and kept.
+ *
+ * The `{0,200}` bound is the other half, and it is the half that actually closed the
+ * hole: a lookahead is already atomic in ECMAScript, so backtracking had stopped, but an
+ * unbounded run still costs O(n) at EVERY `!` in the document — the same quadratic by a
+ * different route. Bounded, 1.6 MB of `![` goes from 49 s to 303 ms.
+ *
+ * The `[^\]\n]` alternative is what keeps the bound from creating a NEW false negative.
+ * A cap that simply fails on long alt text would report "no figure" for a formant chart
+ * carrying a descriptive caption, and every `artifact` cue would then be gated off and
+ * the lesson called drivable — the one direction this module may not fail in. That
+ * branch can only be reached when the lookahead consumed all two hundred characters, so
+ * hitting the cap is itself treated as evidence of a figure, while `![sic] more`,
+ * `![unclosed` and `![` with a newline still correctly read as no figure.
+ *
+ * The HTML alternatives are not decoration. Markdown passes raw HTML through, so a vowel
+ * chart may perfectly well arrive as `<img>` or `<table>`, and missing it would send the
+ * lesson to the driving edition — the one direction this module must never fail in.
+ */
+const PAGE_ARTIFACT =
+  /!\[(?=([^\]\n]{0,200}))\1(?:\][([]|[^\]\n])|<(?:img|table|figure|svg|picture)\b/i;
+
+/**
+ * Whether a document contains anything a cue phrase could be pointing AT.
+ *
+ * Two kinds of thing qualify, because two kinds survive into the rendered page as
+ * something a listener cannot receive: a table, and a figure. (Corpus-wide that is 633
+ * lessons with a table and 1 with an image, so tables carry this rule almost alone — but
+ * a figure is the clearer case of the two, and leaving it out would make the check wrong
+ * in the dangerous direction the day one lands.)
+ *
+ * This is the completeness assumption the `artifact` anchor rests on, so it is written
+ * to over-accept: anything table-shaped or figure-shaped counts, and a false positive
+ * here only costs a lesson its place in the driving edition.
+ */
+export function hasPageArtifact(text: string): boolean {
+  return widestTableColumns(text) > 0 || PAGE_ARTIFACT.test(text);
+}
+
+/**
+ * What the surrounding document offers a cue to point at.
+ *
+ * Passed in rather than recomputed so that a BLOCK is judged against the whole lesson.
+ * A paragraph saying "look at the table" is pointing at a real table even when the table
+ * itself lives in the next block, and a block-local check would call that figurative —
+ * a false negative, which is the direction this module must never fail in.
+ */
+export interface SightCueContext {
+  /** {@link hasPageArtifact} for the enclosing lesson. */
+  hasPageArtifact: boolean;
+}
+
+/**
+ * A wh-clause complement: the pointing expression's object is a PROPOSITION, not a thing.
+ *
+ * "Look at **what** English built on that jar", "Look at **what** is missing", "Look at
+ * **how** the stress moves" — the reader is being asked to notice a fact, and the fact is
+ * carried entirely by the sentences around it. Nothing is being indicated on the page,
+ * so nothing is lost by hearing it instead of seeing it. Leading emphasis markers and an
+ * opening quote are skipped because Markdown puts them between the verb and its object.
+ */
+const PROPOSITIONAL_COMPLEMENT = /[\s*_“"'(]{0,8}(what|how|why|whether|where|when|who)\b/iy;
+
+/**
+ * A wh-clause is only audible when its proposition is.
+ *
+ * "Look at **how** these two letters differ **in shape**" and "Look at **what** the third
+ * **column** does" are wh-clauses, but the fact they point at lives in the layout. So a
+ * propositional complement stops excusing the cue as soon as the clause itself names
+ * something visual. Scanned over a bounded window after the cue, because the clause is a
+ * clause and not a paragraph.
+ */
+const VISUAL_PROPOSITION =
+  /\b(shape|shapes|column|columns|row|rows|chart|table|figure|diagram|grid|letter|letters|accent|spelling|written|page|above|below|left|right)\b/i;
+
+/** How far past a cue the wh-clause is read when testing for a visual proposition. */
+const VISUAL_PROPOSITION_WINDOW = 80;
+
+/**
+ * A short quoted run — a gloss or a citation rather than an instruction.
+ *
+ * Use versus mention. When a lesson writes the Indo-European root \*spek'- as “to look
+ * at, to observe”, or glosses *la mesa* as "the table", the cue words are being QUOTED,
+ * not addressed to the reader. The length cap is what keeps this from swallowing running
+ * prose that merely happens to sit inside quotation marks: a gloss is a word or a phrase,
+ * never a paragraph.
+ *
+ * THE APOSTROPHE IS NOT A QUOTE MARK HERE, and leaving it in cost a whole class of
+ * lessons their sight flag before this was caught. English contractions and possessives
+ * are apostrophes, so treating `'` as both an opening and a closing delimiter lets any
+ * two of them within sixty characters manufacture a "gloss":
+ *
+ *   Don't look at the chart's third bar.
+ *      └────────── "quoted" ──────────┘     -> `look at` silently dropped
+ *
+ * That is unremarkable, correctly written English, no adversary required, and it fails
+ * in the one direction this module may never fail in. The curly `’` is deliberately
+ * absent for the same reason — it is the typographic apostrophe far more often than it
+ * is a closing single quote.
+ */
+const QUOTED_MENTION = /[“"]([^“”"\n]{1,60})[”"]/g;
+
+/**
+ * Every quoted-gloss span in a text, as `[start, end)` offsets.
+ *
+ * Computed ONCE per text rather than per cue occurrence. The obvious implementation
+ * re-slices the enclosing line for every occurrence and re-runs the scan over it, which
+ * is quadratic on a long line — measured at 464 ms for 208 KB, doubling four-fold per
+ * doubling. Scanning the whole text once is exactly equivalent, because the pattern's
+ * inner class excludes newlines and so no match can ever span a line.
+ */
+function quotedSpans(text: string): Array<readonly [number, number]> {
+  const spans: Array<readonly [number, number]> = [];
+  for (const match of text.matchAll(QUOTED_MENTION)) {
+    const start = match.index ?? 0;
+    spans.push([start, start + match[0].length] as const);
+  }
+  return spans;
+}
+
+/**
+ * Cue patterns, compiled once at module load.
+ *
+ * Compiled once rather than per call because cue matching runs over every block of every
+ * lesson in the corpus. Each pattern is a single literal phrase between two boundary
+ * classes — no alternation, no nested quantifier — so it is linear in the text and has no
+ * backtracking behaviour to exploit.
+ */
+const CUE_PATTERNS: ReadonlyMap<string, RegExp> = new Map(
+  SIGHT_CUE_RULES.map((rule) => [
+    rule.phrase,
+    // The phrase is escaped before interpolation even though the tests pin every cue to
+    // `[a-z ]+`. `readonly` is erased at runtime and `SIGHT_CUE_RULES` is exported, so
+    // the alphabet is a convention rather than a guarantee, and a metacharacter reaching
+    // this line would silently become live pattern syntax instead of a literal.
+    // WORD BOUNDARIES, NOT BARE SUBSTRINGS. `haystack.includes(cue)` fired on any
+    // occurrence anywhere: `column` matched inside `columns`, and `look at` matched the
+    // gloss "to see, to look at" inside a vocabulary entry. A cue must stand as its own
+    // words. Matched case-insensitively against the ORIGINAL text rather than against a
+    // lowercased copy, because `toLowerCase()` is not length-preserving for every script
+    // in this corpus and the offsets below have to index the real string.
+    new RegExp(
+      `(^|[^a-zA-Z])(${rule.phrase.replace(/[\\^$.*+?()[\]{}|/]/g, "\\$&")})([^a-zA-Z]|$)`,
+      "gi",
+    ),
+  ]),
+);
+
+// The membership test against `spans` is a MONOTONE CURSOR, not a scan, and the
+// difference is another quadratic. `spans.some(...)` walks the whole list for every cue
+// occurrence, so on a text that is mostly short quotations the cost is
+// occurrences x spans: 80,000 spans took 39.6 seconds where an unquoted text of the same
+// length took 20 ms. Both sequences are ascending — `matchAll` yields spans in order and
+// `exec` yields occurrences in order — so the cursor only ever moves forward and the test
+// is O(1) amortised. Restored to 22 ms. The cursor lives in `cueFires` because it must
+// reset once per cue phrase, which is exactly one rescan of the text.
+
+/**
+ * Whether one cue phrase counts as a reference to the page anywhere in `text`.
+ *
+ * A cue fires when ANY of its occurrences survives; one genuine "look at the chart above"
+ * is not cancelled by three figurative uses elsewhere in the same lesson.
+ */
+function cueFires(
+  text: string,
+  rule: SightCueRule,
+  context: SightCueContext,
+  spans: readonly (readonly [number, number])[],
+): boolean {
+  // A definite reference to an artifact the document does not contain cannot be pointing
+  // at the page. Nothing else in the lesson can change that, so answer before scanning.
+  if (rule.anchor === "artifact" && !context.hasPageArtifact) return false;
+
+  const pattern = CUE_PATTERNS.get(rule.phrase);
+  // Fail loudly. A missing pattern would make the cue silently never fire, which is a
+  // vote for `voice` — the one direction this module is not allowed to guess in.
+  if (pattern === undefined) {
+    throw new Error(`modality: no compiled pattern for sight cue '${rule.phrase}'`);
+  }
+  pattern.lastIndex = 0;
+  let cursor = 0;
+  let match: RegExpExecArray | null;
+  while ((match = pattern.exec(text)) !== null) {
+    const index = (match.index ?? 0) + match[1]!.length;
+    // Step one past the start rather than past the whole match: the trailing boundary
+    // character is allowed to be the leading boundary of the next occurrence. This also
+    // guarantees `lastIndex` strictly increases, so the loop always terminates.
+    pattern.lastIndex = index + 1;
+
+    if (rule.anchor === "self-anchored") return true;
+    // The artifact test runs BEFORE the mention test on purpose. Once the document is
+    // known to hold a table, a quoted "the table" is still pointing at it — dropping it
+    // as a mention would be a guess against the evidence.
+    if (rule.anchor === "artifact") return true;
+
+    // Advance the cursor past every span that ends before this occurrence starts, then
+    // test only the one span that could still contain it.
+    while (cursor < spans.length && spans[cursor]![1] <= index) cursor += 1;
+    const span = spans[cursor];
+    if (span !== undefined && index >= span[0] && index + rule.phrase.length <= span[1]) {
+      continue;
+    }
+
+    const after = index + rule.phrase.length;
+    PROPOSITIONAL_COMPLEMENT.lastIndex = after;
+    if (
+      PROPOSITIONAL_COMPLEMENT.test(text) &&
+      !VISUAL_PROPOSITION.test(text.slice(after, after + VISUAL_PROPOSITION_WINDOW))
+    ) {
+      continue;
+    }
+    return true;
+  }
+  return false;
+}
+
+/**
+ * Which {@link SIGHT_CUES} genuinely point at the page, in list order.
+ *
+ * The bias here is asymmetric on purpose and has not changed: the cost of a false
+ * NEGATIVE — a lesson wrongly advertised as drivable — is a driver told to look at
+ * something at speed, while the cost of a false positive is one lesson missing from the
+ * driving edition. So every rule above drops a cue only where the drop is defensible from
+ * the document's own structure or from the grammar of the sentence, and where neither can
+ * decide, the cue keeps firing. "Look at your collarbone" and "you can still see the
+ * seams" are still counted, because no mechanical test separates them from "look at the
+ * accent" without a lexicon of every thing a page can hold.
+ *
+ * @param context what the enclosing lesson offers a cue to point at. Defaults to reading
+ *   `text` itself, which is the right answer when `text` IS the whole document. It is
+ *   **not** the conservative answer for a fragment — a fragment is less likely to carry
+ *   the table, so the default drops more artifact cues, not fewer. Callers holding a
+ *   piece of a lesson should pass the lesson's own {@link hasPageArtifact}, which is what
+ *   {@link deriveLessonModality} does for every block.
+ */
+export function matchedSightCues(text: string, context?: SightCueContext): string[] {
+  const resolved = context ?? { hasPageArtifact: hasPageArtifact(text) };
+  const spans = quotedSpans(text);
+  return SIGHT_CUE_RULES.filter((rule) => cueFires(text, rule, resolved, spans)).map(
+    (rule) => rule.phrase,
   );
 }
 
@@ -537,6 +809,7 @@ export function deriveBlockModality(
   block: LessonBodyBlock,
   index: number,
   options: ModalityOptions = {},
+  context?: SightCueContext,
 ): BlockModality {
   const maxColumns = options.maxLinearisableTableColumns ?? DEFAULT_LINEARISABLE_TABLE_COLUMNS;
   const text = `${block.title}\n${block.markdown}`;
@@ -545,7 +818,11 @@ export function deriveBlockModality(
   const isWritingBlock = block.type === "writing";
   if (isWritingBlock) reasons.push("writing-block");
   if (block.type === "script") reasons.push("script-block");
-  const cues = matchedSightCues(text);
+  // A block is a FRAGMENT, so when no lesson context is supplied the safe assumption is
+  // that the lesson holds a table this block cannot see — not that it holds none. Reading
+  // the fragment's own text instead would drop artifact cues precisely when the block is
+  // the prose half of a prose-plus-table pair, which is the common shape.
+  const cues = matchedSightCues(text, context ?? { hasPageArtifact: true });
   if (cues.length > 0) reasons.push("sight-cue");
   const wideTable = widestTableColumns(text) > maxColumns;
   if (wideTable) reasons.push("wide-table");
@@ -591,7 +868,17 @@ export function deriveLessonModality(
   const text = lessonText(lesson);
   const reasons: ModalityReasonCode[] = [];
 
-  const blocks = lesson.blocks.map((block, index) => deriveBlockModality(block, index, options));
+  // One judgement about page artifacts for the WHOLE lesson, shared by every derivation
+  // below. A cue in one block routinely points at a table in another — "look at the
+  // table" then the table — so a block asked about its own text alone would call that
+  // figurative and quietly drop a real requirement. The core derivation uses this same
+  // lesson-level answer for the same reason: detaching a block changes what a renderer
+  // reads out, not whether the author was pointing at something real.
+  const cueContext: SightCueContext = { hasPageArtifact: hasPageArtifact(text) };
+
+  const blocks = lesson.blocks.map((block, index) =>
+    deriveBlockModality(block, index, options, cueContext),
+  );
 
   // TWO DIFFERENT QUESTIONS, AND THEY WERE ONE VARIABLE UNTIL NOW.
   //
@@ -627,7 +914,7 @@ export function deriveLessonModality(
   // once one has fired, because the report is more useful when it names every cause.
   const hasScriptBlock = lesson.blocks.some((block) => block.type === "script");
   if (hasScriptBlock) reasons.push("script-block");
-  const cues = matchedSightCues(text);
+  const cues = matchedSightCues(text, cueContext);
   if (cues.length > 0) reasons.push("sight-cue");
   const tableColumns = widestTableColumns(text);
   // Not "is it wider than the limit" but "would the lineariser refuse it" — a
@@ -656,7 +943,7 @@ export function deriveLessonModality(
     (block) => block.type === "script" && !isDetachableBlock(block),
   );
   if (coreScriptBlock) coreReasons.push("script-block");
-  const coreCues = matchedSightCues(coreText);
+  const coreCues = matchedSightCues(coreText, cueContext);
   if (coreCues.length > 0) coreReasons.push("sight-cue");
   const coreWideTable = widestTableColumns(coreText) > maxColumns;
   if (coreWideTable) coreReasons.push("wide-table");

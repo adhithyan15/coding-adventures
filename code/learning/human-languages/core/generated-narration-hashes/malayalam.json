@@ -611,12 +611,12 @@
         "ML-C37-mookku",
         "ML-C37-vaay"
       ],
-      "voiceLessons": 3,
-      "drivablePrefix": 3,
+      "voiceLessons": 4,
+      "drivablePrefix": 4,
       "text": "malayalam/narration/ch37.txt",
       "json": "malayalam/narration/ch37.json",
-      "textHash": "fnv1a64:2d522c9ec267dc4e",
-      "jsonHash": "fnv1a64:93d1b4c4e5d2e42d"
+      "textHash": "fnv1a64:e74f4968bc9ad97a",
+      "jsonHash": "fnv1a64:90305b6205f5509e"
     },
     {
       "language": "malayalam",
@@ -872,12 +872,12 @@
         "ML-C52-flower",
         "ML-C52-garland"
       ],
-      "voiceLessons": 4,
-      "drivablePrefix": 1,
+      "voiceLessons": 5,
+      "drivablePrefix": 5,
       "text": "malayalam/narration/ch52.txt",
       "json": "malayalam/narration/ch52.json",
-      "textHash": "fnv1a64:34bbb1c2bfd4c9ad",
-      "jsonHash": "fnv1a64:90f448dfbe544e49"
+      "textHash": "fnv1a64:470fba40270dccac",
+      "jsonHash": "fnv1a64:304bfece1dbb4a03"
     },
     {
       "language": "malayalam",

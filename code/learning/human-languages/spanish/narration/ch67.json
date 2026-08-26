@@ -3,7 +3,7 @@
   "language": "spanish",
   "chapter": 67,
   "title": "Tener in the Plural, and the Stem-Change Rule",
-  "drivablePrefix": 0,
+  "drivablePrefix": 2,
   "sourceHash": "fnv1a64:713fb61fe4a7123a",
   "lessons": [
     {
@@ -14,20 +14,13 @@
       "romanization": "tenemos · tenéis",
       "gloss": "\"we have,\" \"you all have\" — and the stem change vanishes, for a reason you already know",
       "script": "latin",
-      "modality": "sight",
-      "derivedModality": "sight",
+      "modality": "voice",
+      "derivedModality": "voice",
       "modalityReasons": [
-        "sight-cue"
+        "no-visual-dependency"
       ],
       "sourceHash": "fnv1a64:ab70fce11998dbe9",
-      "notice": {
-        "modality": "sight",
-        "needs": [
-          "your eyes, because the lesson points at something written down"
-        ],
-        "waitUntilStopped": [],
-        "text": "Before we start: this one needs your eyes, so it is not fully a driving lesson. You will want your eyes, because the lesson points at something written down. You can listen to all of it now and come back to the parts that need looking at once you have stopped."
-      },
+      "notice": null,
       "blocks": [
         {
           "index": 0,

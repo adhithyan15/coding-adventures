@@ -10,15 +10,15 @@
   "sourceHash": "fnv1a64:f7fe039ae68bd820",
   "summary": {
     "totalLessons": 88,
-    "voice": 45,
-    "sight": 15,
+    "voice": 46,
+    "sight": 14,
     "pen": 28,
-    "drivableLessons": 45,
-    "drivablePercent": 51,
+    "drivableLessons": 46,
+    "drivablePercent": 52,
     "trackCount": 1,
     "chapterCount": 15,
-    "drivablePrefixTotal": 36,
-    "fullyDrivableChapters": 6,
+    "drivablePrefixTotal": 39,
+    "fullyDrivableChapters": 7,
     "unstartableChapters": 5,
     "overriddenLessons": 0,
     "lessonsWithoutChapter": 0
@@ -27,11 +27,11 @@
     {
       "language": "russian",
       "lessonCount": 88,
-      "voice": 45,
-      "sight": 15,
+      "voice": 46,
+      "sight": 14,
       "pen": 28,
-      "drivablePercent": 51,
-      "drivablePrefixTotal": 36,
+      "drivablePercent": 52,
+      "drivablePrefixTotal": 39,
       "modalities": [
         "voice",
         "sight",
@@ -258,18 +258,20 @@
         {
           "chapter": 13,
           "lessonCount": 4,
-          "voice": 3,
-          "sight": 1,
+          "voice": 4,
+          "sight": 0,
           "pen": 0,
           "modalities": [
-            "voice",
-            "sight"
+            "voice"
           ],
-          "drivablePrefix": 1,
-          "firstNonVoiceLesson": "RU-C13-syr",
-          "drivable": false,
+          "drivablePrefix": 4,
+          "firstNonVoiceLesson": null,
+          "drivable": true,
           "drivableLessonIds": [
-            "RU-C13-moloko"
+            "RU-C13-moloko",
+            "RU-C13-syr",
+            "RU-C13-sok",
+            "RU-C13-sup"
           ]
         },
         {
@@ -1569,17 +1571,17 @@
       "language": "russian",
       "chapter": 13,
       "sequence": 530,
-      "modality": "sight",
-      "derived": "sight",
-      "drivable": false,
+      "modality": "voice",
+      "derived": "voice",
+      "drivable": true,
       "reasons": [
-        "sight-cue"
+        "no-visual-dependency"
       ],
-      "coreModality": "sight",
+      "coreModality": "voice",
       "coreReasons": [
-        "sight-cue"
+        "no-visual-dependency"
       ],
-      "coreDrivable": false,
+      "coreDrivable": true,
       "sourceHash": "fnv1a64:727d159efe18e5df"
     },
     {

@@ -186,12 +186,12 @@
         "FA-C11-pa",
         "FA-C11-zaban"
       ],
-      "voiceLessons": 3,
-      "drivablePrefix": 0,
+      "voiceLessons": 4,
+      "drivablePrefix": 4,
       "text": "persian/narration/ch11.txt",
       "json": "persian/narration/ch11.json",
-      "textHash": "fnv1a64:7e5dec6e313e5b6f",
-      "jsonHash": "fnv1a64:de0712ce793d86a4"
+      "textHash": "fnv1a64:5274c2790a37de92",
+      "jsonHash": "fnv1a64:3365065b61ae00c6"
     },
     {
       "language": "persian",

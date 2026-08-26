@@ -10,15 +10,15 @@
   "sourceHash": "fnv1a64:bd218ea3d91470bb",
   "summary": {
     "totalLessons": 301,
-    "voice": 204,
-    "sight": 30,
+    "voice": 205,
+    "sight": 29,
     "pen": 67,
-    "drivableLessons": 204,
+    "drivableLessons": 205,
     "drivablePercent": 68,
     "trackCount": 1,
     "chapterCount": 64,
-    "drivablePrefixTotal": 179,
-    "fullyDrivableChapters": 32,
+    "drivablePrefixTotal": 185,
+    "fullyDrivableChapters": 33,
     "unstartableChapters": 9,
     "overriddenLessons": 0,
     "lessonsWithoutChapter": 0
@@ -27,11 +27,11 @@
     {
       "language": "tamil",
       "lessonCount": 301,
-      "voice": 204,
-      "sight": 30,
+      "voice": 205,
+      "sight": 29,
       "pen": 67,
       "drivablePercent": 68,
-      "drivablePrefixTotal": 179,
+      "drivablePrefixTotal": 185,
       "modalities": [
         "voice",
         "sight",
@@ -57,19 +57,24 @@
         {
           "chapter": 2,
           "lessonCount": 8,
-          "voice": 7,
-          "sight": 1,
+          "voice": 8,
+          "sight": 0,
           "pen": 0,
           "modalities": [
-            "voice",
-            "sight"
+            "voice"
           ],
-          "drivablePrefix": 2,
-          "firstNonVoiceLesson": "TA-C02-en-peyar",
-          "drivable": false,
+          "drivablePrefix": 8,
+          "firstNonVoiceLesson": null,
+          "drivable": true,
           "drivableLessonIds": [
             "TA-C02-peyar",
-            "TA-C02-en"
+            "TA-C02-en",
+            "TA-C02-en-peyar",
+            "TA-C02-nii-niingal",
+            "TA-C02-enna",
+            "TA-C02-ungal-peyar-enna",
+            "TA-C02-magizhcci",
+            "TA-C02-practice"
           ]
         },
         {
@@ -1457,17 +1462,17 @@
       "language": "tamil",
       "chapter": 2,
       "sequence": 120,
-      "modality": "sight",
-      "derived": "sight",
-      "drivable": false,
+      "modality": "voice",
+      "derived": "voice",
+      "drivable": true,
       "reasons": [
-        "sight-cue"
+        "no-visual-dependency"
       ],
-      "coreModality": "sight",
+      "coreModality": "voice",
       "coreReasons": [
-        "sight-cue"
+        "no-visual-dependency"
       ],
-      "coreDrivable": false,
+      "coreDrivable": true,
       "sourceHash": "fnv1a64:509c10f2dfb45a9a"
     },
     {

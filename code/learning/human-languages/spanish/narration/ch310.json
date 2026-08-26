@@ -325,20 +325,13 @@
       "romanization": "la mesa",
       "gloss": "the table — Latin mensa, the measured board; English borrowed mesa whole for the flat-topped hill",
       "script": "latin",
-      "modality": "sight",
-      "derivedModality": "sight",
+      "modality": "voice",
+      "derivedModality": "voice",
       "modalityReasons": [
-        "sight-cue"
+        "no-visual-dependency"
       ],
       "sourceHash": "fnv1a64:20b290cb967425df",
-      "notice": {
-        "modality": "sight",
-        "needs": [
-          "your eyes, because the lesson points at something written down"
-        ],
-        "waitUntilStopped": [],
-        "text": "Before we start: this one needs your eyes, so it is not fully a driving lesson. You will want your eyes, because the lesson points at something written down. You can listen to all of it now and come back to the parts that need looking at once you have stopped."
-      },
+      "notice": null,
       "blocks": [
         {
           "index": 0,
@@ -482,20 +475,13 @@
       "romanization": "la luz",
       "gloss": "the light — Latin lux, lucem; English keeps it in lucid, translucent and elucidate",
       "script": "latin",
-      "modality": "sight",
-      "derivedModality": "sight",
+      "modality": "voice",
+      "derivedModality": "voice",
       "modalityReasons": [
-        "sight-cue"
+        "no-visual-dependency"
       ],
       "sourceHash": "fnv1a64:cb3bf11b5bac7062",
-      "notice": {
-        "modality": "sight",
-        "needs": [
-          "your eyes, because the lesson points at something written down"
-        ],
-        "waitUntilStopped": [],
-        "text": "Before we start: this one needs your eyes, so it is not fully a driving lesson. You will want your eyes, because the lesson points at something written down. You can listen to all of it now and come back to the parts that need looking at once you have stopped."
-      },
+      "notice": null,
       "blocks": [
         {
           "index": 0,
@@ -639,20 +625,13 @@
       "romanization": "el baño",
       "gloss": "the bathroom — Latin balneum from Greek balaneion; English bath only looks related, and is not",
       "script": "latin",
-      "modality": "sight",
-      "derivedModality": "sight",
+      "modality": "voice",
+      "derivedModality": "voice",
       "modalityReasons": [
-        "sight-cue"
+        "no-visual-dependency"
       ],
       "sourceHash": "fnv1a64:41095b2109cbcd60",
-      "notice": {
-        "modality": "sight",
-        "needs": [
-          "your eyes, because the lesson points at something written down"
-        ],
-        "waitUntilStopped": [],
-        "text": "Before we start: this one needs your eyes, so it is not fully a driving lesson. You will want your eyes, because the lesson points at something written down. You can listen to all of it now and come back to the parts that need looking at once you have stopped."
-      },
+      "notice": null,
       "blocks": [
         {
           "index": 0,

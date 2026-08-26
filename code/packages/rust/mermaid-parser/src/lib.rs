@@ -5946,6 +5946,8 @@ pub fn parse_gantt(source: &str) -> Result<GanttDiagram, ParseError> {
     let mut config = GanttConfig::default();
     let mut sections: Vec<GanttSection> = Vec::new();
     let mut current_section: Option<GanttSection> = None;
+    let mut previous_task_id = None;
+    let mut generated_task_count = 0;
 
     for token in tokens {
         match token.type_name.as_deref() {
@@ -5999,7 +6001,12 @@ pub fn parse_gantt(source: &str) -> Result<GanttDiagram, ParseError> {
                 });
             }
             Some("TASK_STATEMENT") => {
-                let task = parse_gantt_task(&token)?;
+                let task = parse_gantt_task(
+                    &token,
+                    previous_task_id.as_deref(),
+                    &mut generated_task_count,
+                )?;
+                previous_task_id = Some(task.id.clone());
                 let sec = current_section.get_or_insert_with(|| GanttSection {
                     label: None,
                     tasks: vec![],
@@ -6179,9 +6186,13 @@ fn find_gantt_command(source: &str, command: &str) -> Option<usize> {
 
 /// Parse a single Gantt task line.
 ///
-/// Format: `label :status, id, start, duration`
-///    or   `label :id, start, duration`
-fn parse_gantt_task(token: &Token) -> Result<GanttTask, ParseError> {
+/// Formats include explicit IDs (`id, start, end`), generated IDs
+/// (`start, end`), and sequential tasks (`end`) that follow the prior task.
+fn parse_gantt_task(
+    token: &Token,
+    previous_task_id: Option<&str>,
+    generated_task_count: &mut usize,
+) -> Result<GanttTask, ParseError> {
     let colon = token
         .value
         .find(':')
@@ -6192,7 +6203,7 @@ fn parse_gantt_task(token: &Token) -> Result<GanttTask, ParseError> {
         return Err(token_error(token, "Gantt task label cannot be empty"));
     }
 
-    let parts: Vec<&str> = rest.splitn(4, ',').map(str::trim).collect();
+    let parts: Vec<&str> = rest.split(',').map(str::trim).collect();
     if parts.is_empty() || parts[0].is_empty() {
         return Err(token_error(token, "Gantt task data cannot be empty"));
     }
@@ -6208,41 +6219,26 @@ fn parse_gantt_task(token: &Token) -> Result<GanttTask, ParseError> {
         (TaskStatus::Normal, &parts[..])
     };
 
-    if remaining.is_empty() || remaining[0].is_empty() {
-        return Err(token_error(token, "Gantt task id cannot be empty"));
+    if remaining.iter().any(|part| part.is_empty()) {
+        return Err(token_error(token, "Gantt task data cannot be empty"));
     }
-    let id = remaining[0].to_string();
-    let start = if remaining.len() > 1 {
-        let s = remaining[1];
-        if s.starts_with("after ") {
-            let dependencies = gantt_dependency_ids(&s[6..]);
-            if dependencies.is_empty() {
-                return Err(token_error(token, "Gantt after requires at least one task id"));
-            }
-            TaskStart::After(dependencies)
-        } else {
-            TaskStart::Date(s.to_string())
-        }
-    } else {
-        TaskStart::Date("2026-01-01".to_string())
+    let generated_id = |counter: &mut usize| {
+        *counter += 1;
+        format!("task{counter}")
     };
-    let (duration_days, end) = if remaining.len() > 2 {
-        if let Some(duration) = parse_duration(remaining[2]).filter(|duration| *duration >= 0.0) {
-            (duration, None)
-        } else if let Some(ids) = remaining[2].strip_prefix("until ") {
-            let dependencies = gantt_dependency_ids(ids);
-            if dependencies.is_empty() {
-                return Err(token_error(token, "Gantt until requires at least one task id"));
-            }
-            (0.0, Some(TaskEnd::Until(dependencies)))
-        } else if looks_like_gantt_date(remaining[2]) {
-            (0.0, Some(TaskEnd::Date(remaining[2].to_string())))
-        } else {
-            return Err(token_error(token, "invalid Gantt task duration or end date"));
+    let (id, start_data, end_data) = match remaining {
+        [end] => {
+            let previous = previous_task_id.ok_or_else(|| {
+                token_error(token, "sequential Gantt task requires a previous task")
+            })?;
+            (generated_id(generated_task_count), format!("after {previous}"), *end)
         }
-    } else {
-        (1.0, None)
+        [start, end] => (generated_id(generated_task_count), (*start).to_string(), *end),
+        [id, start, end] => ((*id).to_string(), (*start).to_string(), *end),
+        _ => return Err(token_error(token, "invalid Gantt task field count")),
     };
+    let start = parse_gantt_task_start(token, &start_data)?;
+    let (duration_days, end) = parse_gantt_task_end(token, end_data)?;
 
     Ok(GanttTask {
         id,
@@ -6259,6 +6255,37 @@ fn parse_gantt_task(token: &Token) -> Result<GanttTask, ParseError> {
         callback: None,
         callback_args: None,
     })
+}
+
+fn parse_gantt_task_start(token: &Token, value: &str) -> Result<TaskStart, ParseError> {
+    if let Some(ids) = value.strip_prefix("after ") {
+        let dependencies = gantt_dependency_ids(ids);
+        if dependencies.is_empty() {
+            return Err(token_error(token, "Gantt after requires at least one task id"));
+        }
+        Ok(TaskStart::After(dependencies))
+    } else {
+        Ok(TaskStart::Date(value.to_string()))
+    }
+}
+
+fn parse_gantt_task_end(
+    token: &Token,
+    value: &str,
+) -> Result<(f64, Option<TaskEnd>), ParseError> {
+    if let Some(duration) = parse_duration(value).filter(|duration| *duration >= 0.0) {
+        Ok((duration, None))
+    } else if let Some(ids) = value.strip_prefix("until ") {
+        let dependencies = gantt_dependency_ids(ids);
+        if dependencies.is_empty() {
+            return Err(token_error(token, "Gantt until requires at least one task id"));
+        }
+        Ok((0.0, Some(TaskEnd::Until(dependencies))))
+    } else if looks_like_gantt_date(value) {
+        Ok((0.0, Some(TaskEnd::Date(value.to_string()))))
+    } else {
+        Err(token_error(token, "invalid Gantt task duration or end date"))
+    }
 }
 
 fn gantt_dependency_ids(value: &str) -> Vec<String> {
@@ -6879,6 +6906,22 @@ Rel(customer, web, \"Uses\", \"HTTPS\")";
         assert!(parse_gantt("gantt\nA :a, after missing, 1d\n").is_err());
         assert!(parse_gantt("gantt\nA :a, after b, 1d\nB :b, after a, 1d\n").is_err());
         assert!(parse_gantt("gantt\nA :a, 2026-01-01, until missing\n").is_err());
+    }
+
+    #[test]
+    fn gantt_generates_ids_and_preserves_sequential_task_semantics() {
+        let diagram = parse_gantt(
+            "gantt\nsection First\nAnchor :anchor, 2026-03-01, 2d\nGenerated :after anchor, 1d\nsection Second\nSequential :active, 3d\nDated :2026-03-10, 1d\n",
+        ).unwrap();
+        let tasks = diagram.sections.iter().flat_map(|section| &section.tasks).collect::<Vec<_>>();
+        assert_eq!(tasks[1].id, "task1");
+        assert_eq!(tasks[1].start, TaskStart::After(vec!["anchor".into()]));
+        assert_eq!(tasks[2].id, "task2");
+        assert_eq!(tasks[2].start, TaskStart::After(vec!["task1".into()]));
+        assert_eq!(tasks[2].status, TaskStatus::Active);
+        assert_eq!(tasks[3].id, "task3");
+        assert_eq!(tasks[3].start, TaskStart::Date("2026-03-10".into()));
+        assert!(parse_gantt("gantt\nFirst :2d\n").is_err());
     }
 
     #[test]

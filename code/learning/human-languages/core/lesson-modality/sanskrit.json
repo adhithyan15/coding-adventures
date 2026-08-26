@@ -10,15 +10,15 @@
   "sourceHash": "fnv1a64:8d657c99c9b1d702",
   "summary": {
     "totalLessons": 266,
-    "voice": 214,
-    "sight": 38,
+    "voice": 215,
+    "sight": 37,
     "pen": 14,
-    "drivableLessons": 214,
-    "drivablePercent": 80,
+    "drivableLessons": 215,
+    "drivablePercent": 81,
     "trackCount": 1,
     "chapterCount": 51,
-    "drivablePrefixTotal": 201,
-    "fullyDrivableChapters": 35,
+    "drivablePrefixTotal": 203,
+    "fullyDrivableChapters": 36,
     "unstartableChapters": 10,
     "overriddenLessons": 0,
     "lessonsWithoutChapter": 0
@@ -27,11 +27,11 @@
     {
       "language": "sanskrit",
       "lessonCount": 266,
-      "voice": 214,
-      "sight": 38,
+      "voice": 215,
+      "sight": 37,
       "pen": 14,
-      "drivablePercent": 80,
-      "drivablePrefixTotal": 201,
+      "drivablePercent": 81,
+      "drivablePrefixTotal": 203,
       "modalities": [
         "voice",
         "sight",
@@ -518,20 +518,21 @@
         {
           "chapter": 27,
           "lessonCount": 5,
-          "voice": 4,
-          "sight": 1,
+          "voice": 5,
+          "sight": 0,
           "pen": 0,
           "modalities": [
-            "voice",
-            "sight"
+            "voice"
           ],
-          "drivablePrefix": 3,
-          "firstNonVoiceLesson": "SA-C27-true",
-          "drivable": false,
+          "drivablePrefix": 5,
+          "firstNonVoiceLesson": null,
+          "drivable": true,
           "drivableLessonIds": [
             "SA-C27-so-be-it",
             "SA-C27-well-done",
-            "SA-C27-enough"
+            "SA-C27-enough",
+            "SA-C27-true",
+            "SA-C27-thus"
           ]
         },
         {
@@ -3821,17 +3822,17 @@
       "language": "sanskrit",
       "chapter": 27,
       "sequence": 1310,
-      "modality": "sight",
-      "derived": "sight",
-      "drivable": false,
+      "modality": "voice",
+      "derived": "voice",
+      "drivable": true,
       "reasons": [
-        "sight-cue"
+        "no-visual-dependency"
       ],
-      "coreModality": "sight",
+      "coreModality": "voice",
       "coreReasons": [
-        "sight-cue"
+        "no-visual-dependency"
       ],
-      "coreDrivable": false,
+      "coreDrivable": true,
       "sourceHash": "fnv1a64:3a33f4a3194459a7"
     },
     {

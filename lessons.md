@@ -5079,3 +5079,80 @@ changed.
 2. **Count before and after, and make the expected count a number you wrote down first.**
    "135 sections, 135 shards" is a check; "shards and monolith agree" is not, because a
    tool that deletes from both keeps them agreeing.
+
+## Making a safety detector *less* trigger-happy can add a false negative in exactly the direction it exists to prevent
+
+`modality.ts` decides whether a lesson can be done while driving. Its stated bias is to
+over-report `sight`, because a lesson wrongly called drivable sends a driver to a page at
+speed. Issue #12665 was about the opposite failure — figurative prose ("Look at what
+English built on that jar") costing lessons the driving edition — so the whole change was
+a loosening, and every rule added was a new way to say "this cue does not count."
+
+One of them, a use-versus-mention rule dropping cues inside a quoted gloss, accepted `'`
+as both an opening and a closing quote mark. English contractions and possessives are
+apostrophes. Any two within sixty characters forged a "gloss":
+
+    Don't look at the chart's third bar.
+       └───────── "quoted" ──────────┘     -> `look at` silently dropped
+
+That is ordinary English, no adversary. It had already stripped a real lesson
+(`ES-W00-hola-observe`) of its `sight-cue` reason and removed the narration line telling
+a listener the lesson "points at something written down" — and the corpus flip count did
+not move, because the lesson was `pen` for other reasons, so the damage was invisible in
+every summary number I was watching.
+
+- **When a change loosens a safety rule, the review question is not "does it still catch
+  the cases I listed" but "what does it now MISS".** All my tests asserted the new drops
+  were correct. None asked what else got dropped.
+- **A generated artifact is a better diff than a count.** The regeneration showed
+  `"sight-cue"` disappearing from a `reasons` array on a lesson whose modality was
+  unchanged. Diff the reason lists, not just the labels.
+- **Quote-delimiter classes must exclude the apostrophe in English prose**, and the curly
+  `’` too — it is the typographic apostrophe far more often than a closing single quote.
+
+## A regression test for a scan can pass against the bug when the scanned function short-circuits
+
+Fixing an occurrences x spans quadratic, I wrote the timing test as
+`'"a" look at '.repeat(40_000)` — many quoted spans, many cue occurrences. It passed
+instantly against the *unfixed* code. The function returns on the first surviving
+occurrence, and the first `look at` was outside the quotes, so it returned after one
+iteration and never touched the span list.
+
+The shape that exercises it is `'"look at" '.repeat(40_000)`: every occurrence must be
+DROPPED for the loop to run to the end.
+
+**Rule: to benchmark a loop, the input must make the loop run.** For any function with an
+early return, the worst case is the input where the early return never fires — which is
+usually the *negative* result, not the positive one. Check the timing test actually got
+slower against the old code, exactly as you would check a correctness test goes red.
+
+## Lookaheads are already atomic in ECMAScript — the fix for a per-position scan is a BOUND, not an atomic group
+
+`/!\[[^\]]*\]\(/` on a body full of `![` with no `]` took 49 seconds for 400 KB. The
+reflex fix is the atomic-group idiom, `(?=([^\]\n]*))\1`, and I shipped it. It changed
+nothing measurable: 54 seconds after, 54 before.
+
+A lookahead in JS is already atomic — the engine does not backtrack into it — so there was
+no backtracking left to remove. The cost was never backtracking. It was that an unbounded
+`*` scans to end-of-text at EVERY starting position, and `!` appeared 200,000 times.
+`{0,200}` is what made it linear (303 ms on 1.6 MB).
+
+- **Distinguish "backtracks catastrophically" from "does O(n) work per start position".**
+  Only the first is fixed by atomicity; the second needs a bound on the quantifier.
+- **Measure the fix, do not reason about it.** Both readings were one `node -e` away, and
+  the wrong fix survived a security review round because the story was plausible.
+- **A bound on a quantifier is a new false negative unless you handle the cap.** `{0,200}`
+  made a figure with 250 characters of alt text report as "no figure", which gated off the
+  cues that depended on it and marked the lesson drivable. Treat "the cap was reached" as
+  evidence the thing IS there, not evidence it is absent.
+
+## The agent scratchpad is shared across concurrently running agents, including ones in other worktrees
+
+Mid-task, my `scratchpad/measure.mjs` was overwritten by a different agent working in a
+different worktree (`es-a1-t4`) on unrelated Spanish content. Same scratchpad path, same
+generic filename. My measurement script became theirs; a re-run would have silently
+measured something else, or failed in a way that looked like my own bug.
+
+**Give scratchpad files a task-scoped subdirectory** (`scratchpad/<issue-or-slug>/`) and
+copy anything you intend to diff against later into it immediately. Generic names —
+`measure.mjs`, `out.json`, `tmp.txt` — are the ones that collide.

@@ -10,16 +10,16 @@
   "sourceHash": "fnv1a64:fa3074cdad85150c",
   "summary": {
     "totalLessons": 71,
-    "voice": 57,
-    "sight": 3,
+    "voice": 58,
+    "sight": 2,
     "pen": 11,
-    "drivableLessons": 57,
-    "drivablePercent": 80,
+    "drivableLessons": 58,
+    "drivablePercent": 82,
     "trackCount": 1,
     "chapterCount": 15,
-    "drivablePrefixTotal": 48,
-    "fullyDrivableChapters": 11,
-    "unstartableChapters": 3,
+    "drivablePrefixTotal": 52,
+    "fullyDrivableChapters": 12,
+    "unstartableChapters": 2,
     "overriddenLessons": 0,
     "lessonsWithoutChapter": 0
   },
@@ -27,11 +27,11 @@
     {
       "language": "persian",
       "lessonCount": 71,
-      "voice": 57,
-      "sight": 3,
+      "voice": 58,
+      "sight": 2,
       "pen": 11,
-      "drivablePercent": 80,
-      "drivablePrefixTotal": 48,
+      "drivablePercent": 82,
+      "drivablePrefixTotal": 52,
       "modalities": [
         "voice",
         "sight",
@@ -227,17 +227,21 @@
         {
           "chapter": 11,
           "lessonCount": 4,
-          "voice": 3,
-          "sight": 1,
+          "voice": 4,
+          "sight": 0,
           "pen": 0,
           "modalities": [
-            "voice",
-            "sight"
+            "voice"
           ],
-          "drivablePrefix": 0,
-          "firstNonVoiceLesson": "FA-C11-cheshm",
-          "drivable": false,
-          "drivableLessonIds": []
+          "drivablePrefix": 4,
+          "firstNonVoiceLesson": null,
+          "drivable": true,
+          "drivableLessonIds": [
+            "FA-C11-cheshm",
+            "FA-C11-dast",
+            "FA-C11-pa",
+            "FA-C11-zaban"
+          ]
         },
         {
           "chapter": 12,
@@ -1109,17 +1113,17 @@
       "language": "persian",
       "chapter": 11,
       "sequence": 420,
-      "modality": "sight",
-      "derived": "sight",
-      "drivable": false,
+      "modality": "voice",
+      "derived": "voice",
+      "drivable": true,
       "reasons": [
-        "sight-cue"
+        "no-visual-dependency"
       ],
-      "coreModality": "sight",
+      "coreModality": "voice",
       "coreReasons": [
-        "sight-cue"
+        "no-visual-dependency"
       ],
-      "coreDrivable": false,
+      "coreDrivable": true,
       "sourceHash": "fnv1a64:01e2f6f9ce6286f3"
     },
     {
