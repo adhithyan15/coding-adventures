@@ -1147,10 +1147,19 @@ fn collect_native_degradations(
             "accessibility.table-semantics-missing",
             "the backend preserves the visual rows and cells but does not expose native table semantics",
         )),
-        "HostDialog" if backend == Backend::Flutter => Some((
-            "interaction.dialog-placeholder",
-            "the Flutter emitter produces a zero-size TODO placeholder instead of a native dialog",
-        )),
+        // #13010: fixed for the common `modal: true` (default) case --
+        // `host_dialog_has_native_semantics` is false only for the
+        // still-unimplemented `modal: false` shape (Flutter's
+        // `showDialog` is inherently modal).
+        "HostDialog"
+            if backend == Backend::Flutter
+                && !mosaic_emit_flutter::pipeline::host_dialog_has_native_semantics(node) =>
+        {
+            Some((
+                "interaction.dialog-placeholder",
+                "the Flutter emitter produces a zero-size TODO placeholder instead of a native dialog for modal: false (Flutter's showDialog is inherently modal)",
+            ))
+        }
         "HostSlider"
             if backend.is_native()
                 && !matches!(
@@ -6142,12 +6151,16 @@ layout NativeEvents {
 
     #[test]
     fn flutter_specific_placeholders_are_reported() {
+        // #13010: `modal: false` is the one HostDialog shape still
+        // unimplemented on Flutter (showDialog is inherently modal) --
+        // the default/`modal: true` case is fixed and covered
+        // separately by `flutter_modal_dialog_has_no_placeholder_degradation`.
         let pkg = make_package("mosaic-pkg-links", &["Links"]);
         fs::write(
             pkg.path().join("src/Links.mll"),
             r#"layout Links {
   Column [ root ] {
-    HostDialog [ dialog ] { }
+    HostDialog [ dialog ] ( modal: false ) { }
     HostLink ( href: "https://example.com", label: "Example" )
     HostLink ( href: "/settings", label: "Settings", external: false )
   }
@@ -6175,6 +6188,43 @@ layout NativeEvents {
                 .map(|entry| entry.code.as_str())
                 .collect::<Vec<_>>(),
             vec!["interaction.dialog-placeholder", "effect.url-host-missing"]
+        );
+    }
+
+    /// #13010: a `HostDialog` with the default `modal: true` no longer
+    /// reports `interaction.dialog-placeholder` -- it now lowers to a
+    /// real `_MosaicDialogHost` + `AlertDialog`, not a placeholder.
+    #[test]
+    fn flutter_modal_dialog_has_no_placeholder_degradation() {
+        let pkg = make_package("mosaic-pkg-dialog-only", &["DialogOnly"]);
+        fs::write(
+            pkg.path().join("src/DialogOnly.mll"),
+            r#"layout DialogOnly {
+  HostDialog [ root ] { }
+}
+"#,
+        )
+        .unwrap();
+        let out = TempDir::new().unwrap();
+        let report = analyze_package_degradations(
+            &BuildOptions {
+                package_root: pkg.path().to_path_buf(),
+                output_root: out.path().to_path_buf(),
+                backend: Backend::Flutter,
+                emit_project: false,
+                theme: None,
+            },
+            BuildProfile::NativeComplete,
+        )
+        .expect("analysis");
+
+        assert!(
+            report
+                .degradations
+                .iter()
+                .all(|entry| entry.code != "interaction.dialog-placeholder"),
+            "expected no dialog-placeholder degradation for the default modal:true case, got: {:?}",
+            report.degradations
         );
     }
 

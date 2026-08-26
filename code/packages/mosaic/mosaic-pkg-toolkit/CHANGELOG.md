@@ -1,5 +1,15 @@
 # Changelog — mosaic-pkg-toolkit
 
+## [Unreleased] — remove the fixed Flutter Modal allowlist entry (#13010)
+
+`mosaic-emit-flutter` now implements a real native dialog for the
+default `modal: true` shape (#13010), and the toolkit's own `Modal`
+component always authors `modal: true` — so the
+`(Backend::Flutter, "Modal", "interaction.dialog-placeholder")` entry
+in `tests/native_complete_gate.rs`'s `ALLOWED_DEGRADATIONS` is stale.
+Removed it; the gate now genuinely asserts the toolkit is clean on
+Flutter for `Modal`, not just tolerating a known gap.
+
 ## [Unreleased] — confirm XAML Modal's open-host-required allowlist entry is permanent (#13008)
 
 Updated the `#13008` comment in `tests/native_complete_gate.rs`'s
