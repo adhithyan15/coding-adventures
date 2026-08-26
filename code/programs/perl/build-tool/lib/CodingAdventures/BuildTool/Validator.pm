@@ -198,7 +198,8 @@ sub validate_orphan_crate_snapshot {
         if (!defined($kind) || ($kind ne 'EXCLUDED' && $kind ne 'PENDING')) {
             $problem = 'UNKNOWN_KIND';
         }
-        elsif (_python_blank($exemption->{reason})) {
+        elsif (!_valid_orphan_reason($exemption->{reason})
+            || _python_blank($exemption->{reason})) {
             $problem = 'REASON_MISSING';
         }
         elsif ($duplicate) {
@@ -332,8 +333,9 @@ sub _covering_orphan_build {
 
 sub _portable_orphan_path {
     my ($path) = @_;
-    return 0 unless _valid_unicode_text($path);
+    return 0 unless defined($path) && !ref($path);
     return 0 if $path eq '' || length($path) > 2048;
+    return 0 unless _valid_unicode_text($path);
     my @scalars = unpack('U*', $path);
     return 0 if @scalars > 512;
     return 0
@@ -389,11 +391,26 @@ sub _python_blank {
     return 1;
 }
 
+sub _valid_orphan_reason {
+    my ($value) = @_;
+    return 0 unless defined($value) && !ref($value);
+    return 0 if length($value) > 4096;
+    return _valid_unicode_text($value);
+}
+
 sub _valid_unicode_text {
     my ($value) = @_;
     return 0 unless defined($value) && !ref($value);
-    return utf8::valid($value) if utf8::is_utf8($value);
-    return $value !~ /[\x80-\xFF]/;
+    return $value !~ /[\x80-\xFF]/ unless utf8::is_utf8($value);
+    return 0 unless utf8::valid($value);
+
+    pos($value) = 0;
+    while ($value =~ /\G(.)/gcs) {
+        my $codepoint = ord($1);
+        return 0 if ($codepoint >= 0xD800 && $codepoint <= 0xDFFF)
+            || $codepoint > 0x10FFFF;
+    }
+    return 1;
 }
 
 sub _orphan_path_depth {
