@@ -4936,3 +4936,69 @@ ordinal.
 **Generalisable check:** whenever a round-trip has two directions, a byte-comparison of one
 direction is not evidence about the other. Assert on the structure both sides define, not
 on the bytes one side produces.
+
+## Unused capacity in a size-capped bundler group is not headroom
+
+Follow-up to "A grouping parameter is not a budget", and a correction to the reasoning
+recorded there. Raising `maxSize` 49 kB → 56 kB took the lesson-batch count 401 → 353 and
+left 32% of the aggregate cap unused. That 32% was written into a merged PR body as
+"6.29 MB of fill headroom before the batch count can grow again". It is not headroom, and
+the next tranche proved it:
+
+```
+origin/main   353 batches   13,478,418 B   32% of cap unused
++35 lessons   359 batches   13,624,129 B   32% of cap unused
+```
+
+Thirty-five lessons weighing 145,711 B — about **2.6** batches at the cap, and lighter than
+the previous thirty-five — added **six** batches, and the unused fraction did not move at
+all. Rolldown groups by track and *then* splits each track greedily by size, so every other
+track's tail batch is sealed and never revisited. A Spanish tranche can only extend
+Spanish's tail. **Aggregate slack in a partitioned bundler group is stranded by
+construction.**
+
+**Generalisable check:** before treating unused capacity as headroom, ask whether the
+allocator can *reach* it. Summing free space across N independently-sealed partitions
+answers a question nobody asked; the number that predicts growth is the free space in the
+one partition the next write lands in. The same error is available in disk allocators,
+shard maps and connection pools.
+
+## `--shard` renames other people's shards, and `--check` does not ask it to
+
+`doc-shard-cli --shard` regenerates **every** filename from its heading text. Several
+committed shards were named by hand and no longer match what the generator produces —
+one whose heading contains a non-ASCII letter the slug drops, several committed before the
+digest suffix existed. So a routine re-shard after a merge deleted and recreated three
+files this branch never touched, twice, putting unrelated renames into a content diff and
+manufacturing conflicts for whoever else was editing them.
+
+`--check` compares the **bytes of the rebuilt document**, not filenames, and its own comment
+says so explicitly: ordinals are author-chosen by design, so requiring canonical names would
+break the promise that wedging an entry in at `00155-…` needs no renumber.
+
+So after a re-shard: restore every shard that is not yours to its committed name, delete the
+regenerated duplicates, and then run `--unshard` so the monolith is rebuilt from the shard
+set actually on disk. Only the **ordinal** has to be right, because filename order is
+document order.
+
+**The generalisable half:** when a generator is idempotent in *content* but not in *naming*,
+running it wholesale attributes other people's history to your commit. Regenerate the entry
+you added; leave the ones you did not.
+
+## A curriculum gate can silently constrain what may be authored
+
+Chasing "600 headwords at or below A1", ten fully-verified verb candidates were dropped —
+not for duplication, not for etymology, but because **no A1 spine node can host a verb**.
+`vocabularyOf` credits a headword to a level through its curriculum segment's spine node,
+and the three A1 nodes in use are "mark out a specific known thing", "ask where something
+is" and "the numbers one to five". A `canDo` reading "I can say *aprender*, *olvidar* and
+*necesitar*, and mark out which specific thing I mean" is a slot being filled, not a
+capability.
+
+Nothing reports this. The gate counts headwords and is satisfied; the fact that the only
+headwords it can count are nouns and adjectives is invisible to it, and the resulting
+curriculum shape is one nobody chose.
+
+**Generalisable check:** when a metric is defined by a join against a taxonomy, the taxonomy
+silently bounds what can be built. Ask what the metric *cannot* count before assuming a
+shortfall is a content problem.
