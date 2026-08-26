@@ -1036,6 +1036,24 @@ fn type_check_function(ctx: &ModuleContext, func_idx: usize, func_type: &FuncTyp
                 // encoding). Any OTHER heap-type byte still falls back to
                 // `Unknown` -- full subtyping remains outside this
                 // validator phase for every other GC reference type.
+                //
+                // The SAME `0x63` tag byte is also `StructRef`'s own
+                // 2-byte encoding, whose index lives in a DIFFERENT,
+                // offset space (`types.len() + k` -- see `StructRef`'s own
+                // doc comment and `struct_field_count`'s identical
+                // convention). This crate's own `wasm-wast-parser` has no
+                // text-format struct-type declarations at all (so no
+                // TEXT-format `ref.null $StructType` can reach this code
+                // today), but a `0x63`-tagged index at or past
+                // `ctx.module.types.len()` is exactly what a real one
+                // WOULD look like -- so only an index strictly BELOW that
+                // bound is treated as a genuine `ConcreteFuncRef` here; an
+                // index at or past it falls back to the same permissive
+                // `Unknown` every other not-yet-modeled case already gets,
+                // rather than being rejected as out-of-bounds (a security
+                // review round confirmed hard-erroring there would be a
+                // real regression the moment struct-type text declarations
+                // exist, not just a hypothetical one).
                 let heap_type = *code.get(offset).ok_or_else(|| ValidationError::Other(format!("function #{func_idx}: truncated ref.null heap-type immediate")))?;
                 offset += 1;
                 match heap_type {
@@ -1045,13 +1063,11 @@ fn type_check_function(ctx: &ModuleContext, func_idx: usize, func_type: &FuncTyp
                     0x63 => {
                         let (idx, size) = decode_idx(code, offset)?;
                         offset += size;
-                        if idx as usize >= ctx.module.types.len() {
-                            return Err(ValidationError::TypeIndexOutOfBounds(format!(
-                                "function #{func_idx}: ref.null references type index {idx}, but only {} types exist",
-                                ctx.module.types.len()
-                            )));
+                        if (idx as usize) < ctx.module.types.len() {
+                            push_val(&mut stack, ValueType::ConcreteFuncRef(idx));
+                        } else {
+                            stack.push(StackType::Unknown);
                         }
-                        push_val(&mut stack, ValueType::ConcreteFuncRef(idx));
                     }
                     _ => stack.push(StackType::Unknown),
                 }

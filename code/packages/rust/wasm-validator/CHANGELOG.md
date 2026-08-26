@@ -21,11 +21,26 @@ All notable changes to this package will be documented in this file.
   `return_call.wast`/`return_call_indirect.wast` "Result subtyping" tests
   (both the valid and the mirror-image `assert_invalid` direction).
 - `0xD0` (`ref.null`)'s heap-type-immediate decoder gained a `0x63` arm:
-  decodes the trailing `LEB128` type-section index (bounds-checked
-  against `ctx.module.types.len()`) and pushes a real
-  `StackType::Known(ValueType::ConcreteFuncRef(idx))`, instead of falling
-  back to the polymorphic `Unknown` every other unrecognized heap-type
-  byte still does.
+  decodes the trailing `LEB128` type-section index and, when it's `<
+  ctx.module.types.len()`, pushes a real `StackType::Known(ValueType::
+  ConcreteFuncRef(idx))` instead of the polymorphic `Unknown` every other
+  unrecognized heap-type byte still gets. An index `>= types.len()` is
+  left as `Unknown` too (not hard-rejected) — a security-review round
+  found that `0x63` is ALSO `StructRef`'s own tag byte, whose index lives
+  in a different, offset space (`types.len() + k`); erroring on every
+  `>= types.len()` index would incorrectly reject a legitimate struct-type
+  `ref.null` the moment this crate's text-format parser grows struct-type
+  declarations, not just an actually-malformed one.
+- **`validate()` (Check 4c, new)**: a bare NUMERIC `(ref null N)`/
+  `ref.null N` has no declaration-time guarantee its index is in range
+  (unlike a `$name` reference, always assigned an in-range index at
+  declaration time) — `wasm-wast-parser` will happily produce a
+  `ConcreteFuncRef` with an out-of-range index, so structural validation
+  now scans every function signature (`module.types`), global type
+  (declared and imported), and function-body local for one and rejects
+  it with `TypeIndexOutOfBounds`, mirroring the existing Check 4 (a
+  function's own declared type index) for the exact same failure mode.
+  Found in the same security-review round as the `0x63` fix above.
 
 ## [0.2.69] - 2026-08-26 (W26 — table64 proposal, first slice)
 

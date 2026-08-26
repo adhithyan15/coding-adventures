@@ -29,7 +29,7 @@
 //! implementation of the computing stack from transistors to operating systems.
 
 use std::collections::HashSet;
-use wasm_types::{ExternalKind, ImportTypeInfo, WasmModule};
+use wasm_types::{ExternalKind, ImportTypeInfo, ValueType, WasmModule};
 
 mod type_check;
 
@@ -514,6 +514,75 @@ pub fn validate(module: &WasmModule) -> Result<ValidatedModule, ValidationError>
         }
     }
 
+    // ── Check 4c: ConcreteFuncRef type indices inside declared signatures ─
+    //
+    // W11 addendum, security-review round: `wasm-wast-parser` accepts a
+    // BARE NUMERIC `(ref null N)`/`ref.null N` -- unlike a `$name`
+    // reference (always assigned an in-range index at declaration time),
+    // a numeric literal has no such guarantee, and `resolve_idx` itself
+    // never bounds-checks a plain number against anything. Check 4 above
+    // already bounds-checks a FUNCTION's own type index this same way;
+    // this closes the analogous gap for a `ValueType::ConcreteFuncRef`
+    // index embedded ANYWHERE a declared signature can carry one: a
+    // function's own params/results (`module.types`), a global's value
+    // type (both declared and imported), and a function body's locals.
+    // Deliberately does NOT scan `module.struct_types`' own field types --
+    // this crate's `wasm-wast-parser` has no struct-type text-format
+    // declarations at all (see `ValueType::ConcreteFuncRef`'s own doc
+    // comment), so no TEXT-format module can put one there; scanning it
+    // anyway would require the same struct-vs-func index disambiguation
+    // `wasm-validator::type_check`'s `0xD0` handler already documents as
+    // out of scope for this addendum.
+    // Returns the out-of-range index, if `vt` is a `ConcreteFuncRef` whose
+    // index is `>= types_len` -- `None` for every other `ValueType`
+    // (including an in-range `ConcreteFuncRef`).
+    fn out_of_range_concrete_func_ref(vt: &ValueType, types_len: usize) -> Option<u32> {
+        match vt {
+            ValueType::ConcreteFuncRef(idx) if *idx as usize >= types_len => Some(*idx),
+            _ => None,
+        }
+    }
+    for ty in &module.types {
+        for vt in ty.params.iter().chain(ty.results.iter()) {
+            if let Some(idx) = out_of_range_concrete_func_ref(vt, module.types.len()) {
+                return Err(ValidationError::TypeIndexOutOfBounds(format!(
+                    "a function signature's ref.null references type index {idx}, but only {} types exist",
+                    module.types.len()
+                )));
+            }
+        }
+    }
+    for (i, g) in module.globals.iter().enumerate() {
+        if let Some(idx) = out_of_range_concrete_func_ref(&g.global_type.value_type, module.types.len()) {
+            return Err(ValidationError::TypeIndexOutOfBounds(format!(
+                "global #{i}'s ref.null references type index {idx}, but only {} types exist",
+                module.types.len()
+            )));
+        }
+    }
+    for imp in &module.imports {
+        if let ImportTypeInfo::Global(gt) = &imp.type_info {
+            if let Some(idx) = out_of_range_concrete_func_ref(&gt.value_type, module.types.len()) {
+                return Err(ValidationError::TypeIndexOutOfBounds(format!(
+                    "imported global {}.{}'s ref.null references type index {idx}, but only {} types exist",
+                    imp.module_name,
+                    imp.name,
+                    module.types.len()
+                )));
+            }
+        }
+    }
+    for (i, body) in module.code.iter().enumerate() {
+        for vt in &body.locals {
+            if let Some(idx) = out_of_range_concrete_func_ref(vt, module.types.len()) {
+                return Err(ValidationError::TypeIndexOutOfBounds(format!(
+                    "function #{i}'s local ref.null references type index {idx}, but only {} types exist",
+                    module.types.len()
+                )));
+            }
+        }
+    }
+
     // ── Check 5: Code/function count match ──────────────────────────────
     if module.code.len() != module.functions.len() {
         return Err(ValidationError::Other(format!(
@@ -731,6 +800,64 @@ mod tests {
         };
         let err = validate(&module).unwrap_err();
         assert!(matches!(err, ValidationError::TypeIndexOutOfBounds(_)));
+    }
+
+    // ── Check 4c: ConcreteFuncRef bounds (W11 addendum, security-review round) ──
+    //
+    // A bare NUMERIC `(ref null N)` has no declaration-time guarantee its
+    // index is in range (unlike a `$name` reference) -- `wasm-wast-parser`
+    // will happily produce a `ConcreteFuncRef` with an out-of-range index,
+    // so `validate` itself must catch it.
+
+    #[test]
+    fn rejects_out_of_range_concrete_func_ref_in_function_result() {
+        let module = WasmModule {
+            types: vec![FuncType { params: vec![], results: vec![ValueType::ConcreteFuncRef(99)] }],
+            functions: vec![0],
+            code: vec![FunctionBody { locals: vec![], code: vec![0x0B] }],
+            ..Default::default()
+        };
+        let err = validate(&module).unwrap_err();
+        assert!(matches!(err, ValidationError::TypeIndexOutOfBounds(_)), "{err:?}");
+    }
+
+    #[test]
+    fn accepts_in_range_concrete_func_ref_in_function_result() {
+        let module = WasmModule {
+            types: vec![
+                FuncType { params: vec![], results: vec![] },
+                FuncType { params: vec![], results: vec![ValueType::ConcreteFuncRef(0)] },
+            ],
+            functions: vec![1],
+            code: vec![FunctionBody { locals: vec![], code: vec![0xD0, 0x63, 0x00, 0x0B] }],
+            ..Default::default()
+        };
+        assert!(validate(&module).is_ok());
+    }
+
+    #[test]
+    fn rejects_out_of_range_concrete_func_ref_in_global_type() {
+        let module = WasmModule {
+            globals: vec![Global {
+                global_type: GlobalType { value_type: ValueType::ConcreteFuncRef(7), mutable: false },
+                init_expr: vec![0xD0, 0x63, 0x07, 0x0B],
+            }],
+            ..Default::default()
+        };
+        let err = validate(&module).unwrap_err();
+        assert!(matches!(err, ValidationError::TypeIndexOutOfBounds(_)), "{err:?}");
+    }
+
+    #[test]
+    fn rejects_out_of_range_concrete_func_ref_in_local() {
+        let module = WasmModule {
+            types: vec![FuncType { params: vec![], results: vec![] }],
+            functions: vec![0],
+            code: vec![FunctionBody { locals: vec![ValueType::ConcreteFuncRef(5)], code: vec![0x0B] }],
+            ..Default::default()
+        };
+        let err = validate(&module).unwrap_err();
+        assert!(matches!(err, ValidationError::TypeIndexOutOfBounds(_)), "{err:?}");
     }
 
     #[test]
