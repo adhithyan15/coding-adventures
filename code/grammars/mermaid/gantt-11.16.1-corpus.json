@@ -14,6 +14,7 @@
     { "id": "prefixed-section", "source": "gantt\nsection ;Documentation\nsection #Delivery" },
     { "id": "prefixed-task", "source": "gantt\ndateFormat YYYY-MM-DD\nsection Documentation\n;Design grammar:des1, 2014-01-01, 2014-01-04\n#Ship parser:ship, after des1, 1d" },
     { "id": "multiline-labels", "source": "gantt\ntitle Release<br>Plan\nsection Line1<br>Line2<br/>Line3</br />Line4<br\t/>Line5\nTask<br />One :task, 2026-03-01, 1d" },
+    { "id": "timezone-offsets", "source": "gantt\ndateFormat YYYY-MM-DD[T]HH:mmZ\nTask :task, 2026-03-01T10:00+02:00, 2h" },
     { "id": "calendar-controls", "source": "gantt\ndateFormat DD-MM-YYYY\nexcludes weekends\nexcludes 10-02-2025 11-02-2025\nincludes 12-02-2025\nweekday monday\nweekend friday" },
     { "id": "fixed-dates", "source": "gantt\ndateFormat YYYY-MM-DD\nsection Documentation\nDesign grammar :des1, 2014-01-01, 2014-01-04" },
     { "id": "relative-ranges", "source": "gantt\nA :a, 2024-01-27, 2024-01-28\nB :b, after a, 2024-01-30\nC :c, 2024-01-20, until a\nD :d, after c, until b" },

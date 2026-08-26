@@ -1,5 +1,9 @@
 # Changelog — diagram-ir
 
+## 0.84.0
+
+- Represent colon and compact Gantt timezone offsets as typed date-format parts.
+
 ## 0.83.0
 
 - Preserve authored Gantt duration values and millisecond-through-week units in typed semantic IR.

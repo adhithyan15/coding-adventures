@@ -6058,10 +6058,12 @@ fn parse_gantt_date_format(token: &Token, source: &str) -> Result<GanttDateForma
         let known = [
             ("YYYY", GanttDateFormatPart::Year4), ("MMMM", GanttDateFormatPart::MonthLong),
             ("MMM", GanttDateFormatPart::MonthShort), ("SSS", GanttDateFormatPart::Millisecond),
+            ("ZZ", GanttDateFormatPart::TimezoneOffsetCompact),
             ("YY", GanttDateFormatPart::Year2), ("MM", GanttDateFormatPart::Month2),
             ("DD", GanttDateFormatPart::Day2), ("HH", GanttDateFormatPart::Hour24),
             ("mm", GanttDateFormatPart::Minute), ("ss", GanttDateFormatPart::Second),
             ("M", GanttDateFormatPart::Month), ("D", GanttDateFormatPart::Day),
+            ("Z", GanttDateFormatPart::TimezoneOffsetColon),
             ("X", GanttDateFormatPart::UnixSeconds), ("x", GanttDateFormatPart::UnixMilliseconds),
         ];
         if let Some((name, part)) = known.into_iter().find(|(name, _)| remaining.starts_with(name)) {
@@ -6104,12 +6106,28 @@ fn gantt_date_matches_format(value: &str, format: &GanttDateFormat) -> bool {
             GanttDateFormatPart::Millisecond => consume_digits(rest, 3, 3),
             GanttDateFormatPart::MonthShort => consume_letters(rest, 3, 3),
             GanttDateFormatPart::MonthLong => consume_letters(rest, 3, 9),
+            GanttDateFormatPart::TimezoneOffsetColon => consume_timezone_offset(rest, true),
+            GanttDateFormatPart::TimezoneOffsetCompact => consume_timezone_offset(rest, false),
             GanttDateFormatPart::UnixSeconds | GanttDateFormatPart::UnixMilliseconds => consume_signed_digits(rest),
         };
         let Some(length) = consumed else { return false };
         rest = &rest[length..];
     }
     rest.is_empty()
+}
+
+fn consume_timezone_offset(value: &str, colon: bool) -> Option<usize> {
+    if value.starts_with('Z') { return Some(1); }
+    let bytes = value.as_bytes();
+    if !matches!(bytes.first(), Some(b'+') | Some(b'-')) { return None; }
+    let expected = if colon { 6 } else { 5 };
+    if bytes.len() < expected { return None; }
+    if colon && bytes.get(3) != Some(&b':') { return None; }
+    let hour = &value[1..3];
+    let minute = if colon { &value[4..6] } else { &value[3..5] };
+    (hour.bytes().all(|byte| byte.is_ascii_digit())
+        && minute.bytes().all(|byte| byte.is_ascii_digit()))
+        .then_some(expected)
 }
 
 fn consume_digits(value: &str, minimum: usize, maximum: usize) -> Option<usize> {
@@ -7098,6 +7116,22 @@ Rel(customer, web, \"Uses\", \"HTTPS\")";
         let unix = parse_gantt("gantt\ndateFormat X\nTask :t1, 1767225600, 1767312000").unwrap();
         assert!(matches!(unix.sections[0].tasks[0].end, Some(TaskEnd::Date(_))));
         assert!(parse_gantt("gantt\ndateFormat YYYY-QQ\nTask :t1, 2026-01, 1d").is_err());
+    }
+
+    #[test]
+    fn gantt_compiles_timezone_offset_formats() {
+        let colon = parse_gantt(
+            "gantt\ndateFormat YYYY-MM-DD[T]HH:mmZ\nTask :t1, 2026-01-02T04:05+02:30, 1h",
+        ).unwrap();
+        assert!(colon.date_format.parts.contains(&GanttDateFormatPart::TimezoneOffsetColon));
+
+        let compact = parse_gantt(
+            "gantt\ndateFormat YYYY-MM-DD[T]HH:mmZZ\nTask :t1, 2026-01-02T04:05-0730, 1h",
+        ).unwrap();
+        assert!(compact.date_format.parts.contains(&GanttDateFormatPart::TimezoneOffsetCompact));
+        assert!(parse_gantt(
+            "gantt\ndateFormat YYYY-MM-DD[T]HH:mmZ\nTask :t1, 2026-01-02T04:05+0230, 1h",
+        ).is_err());
     }
 
     #[test]
