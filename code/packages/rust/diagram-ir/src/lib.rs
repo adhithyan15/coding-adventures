@@ -1150,6 +1150,7 @@ pub enum GanttDateFormatPart {
     WeekdayLong,
     Day,
     Day2,
+    DayOrdinal,
     Hour24,
     Hour12,
     Hour12Padded,

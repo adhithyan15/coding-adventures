@@ -6064,6 +6064,7 @@ fn parse_gantt_date_format(token: &Token, source: &str) -> Result<GanttDateForma
             ("ZZ", GanttDateFormatPart::TimezoneOffsetCompact),
             ("hh", GanttDateFormatPart::Hour12Padded),
             ("YY", GanttDateFormatPart::Year2), ("MM", GanttDateFormatPart::Month2),
+            ("Do", GanttDateFormatPart::DayOrdinal),
             ("DD", GanttDateFormatPart::Day2), ("HH", GanttDateFormatPart::Hour24),
             ("mm", GanttDateFormatPart::Minute), ("ss", GanttDateFormatPart::Second),
             ("M", GanttDateFormatPart::Month), ("D", GanttDateFormatPart::Day),
@@ -6110,6 +6111,7 @@ fn gantt_date_matches_format(value: &str, format: &GanttDateFormat) -> bool {
             GanttDateFormatPart::Year4 => consume_digits(rest, 4, 4),
             GanttDateFormatPart::Year2 => consume_digits(rest, 2, 2),
             GanttDateFormatPart::Month | GanttDateFormatPart::Day => consume_digits(rest, 1, 2),
+            GanttDateFormatPart::DayOrdinal => consume_ordinal_day(rest),
             GanttDateFormatPart::Month2 | GanttDateFormatPart::Day2 | GanttDateFormatPart::Hour24
                 | GanttDateFormatPart::Minute => consume_digits(rest, 2, 2),
             GanttDateFormatPart::Hour12 => consume_digits(rest, 1, 2),
@@ -6133,6 +6135,19 @@ fn gantt_date_matches_format(value: &str, format: &GanttDateFormat) -> bool {
         rest = &rest[length..];
     }
     rest.is_empty()
+}
+
+fn consume_ordinal_day(value: &str) -> Option<usize> {
+    let digits = consume_digits(value, 1, 2)?;
+    let day = value[..digits].parse::<u8>().ok()?;
+    if !(1..=31).contains(&day) { return None; }
+    let suffix = ordinal_suffix(i64::from(day));
+    value[digits..].starts_with(suffix).then_some(digits + suffix.len())
+}
+
+fn ordinal_suffix(value: i64) -> &'static str {
+    if (11..=13).contains(&(value % 100)) { return "th"; }
+    match value % 10 { 1 => "st", 2 => "nd", 3 => "rd", _ => "th" }
 }
 
 fn consume_meridiem(value: &str, uppercase: bool) -> Option<usize> {
@@ -7152,6 +7167,15 @@ Rel(customer, web, \"Uses\", \"HTTPS\")";
         assert!(one.date_format.parts.contains(&GanttDateFormatPart::Millisecond1));
         let two = parse_gantt("gantt\ndateFormat HH:mm:ss.SS\nTask :t1, 00:00:00.25, 1s").unwrap();
         assert!(two.date_format.parts.contains(&GanttDateFormatPart::Millisecond2));
+    }
+
+    #[test]
+    fn gantt_compiles_and_validates_ordinal_days() {
+        let diagram = parse_gantt(
+            "gantt\ndateFormat Do MMMM YYYY\nRelease :r1, 1st March 2026, 1d",
+        ).unwrap();
+        assert!(diagram.date_format.parts.contains(&GanttDateFormatPart::DayOrdinal));
+        assert!(parse_gantt("gantt\ndateFormat Do MMMM YYYY\nBad :b, 2st March 2026, 1d").is_err());
     }
 
     #[test]

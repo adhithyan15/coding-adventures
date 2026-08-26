@@ -1,5 +1,9 @@
 # Changelog
 
+## 0.151.0
+
+- Compile Mermaid Gantt `Do` ordinal-day tokens into typed semantic date formats.
+
 ## 0.150.0
 
 - Compile Mermaid Gantt `S`, `SS`, and `SSS` fractional-second tokens into typed semantic date formats.
