@@ -815,10 +815,9 @@ fn nested_indexed_for_loop_sums_a_two_dimensional_array_in_python() {
     // The realistic pattern M4d exists to enable: a nested `for` loop
     // walking both dimensions by index, exercising `.length` on both the
     // outer array and each inner row (via an intermediate `row` local --
-    // `grid[i].length` itself, a mixed index-then-dot suffix chain,
-    // remains deferred this milestone, see `mixed_index_then_dot_
-    // suffix_chain_remains_unsupported` in tests/test_lower.rs), plus
-    // chained indexed reads.
+    // `grid[i].length` itself, a mixed index-then-dot suffix chain, was
+    // deferred at M4d's own time, later resolved as task #60 -- see the
+    // dedicated section below), plus chained indexed reads.
     let out = run_via_python(
         "two_dimensional_array_nested_sum",
         &wrap(concat!(
@@ -860,8 +859,72 @@ fn ragged_two_dimensional_array_runs_in_python() {
 }
 
 // No execution-proof test for a `var`-inferred multi-dimensional array
-// literal, indexed assignment on a chained (multi-dimensional) target,
-// or compound-assignment/increment-decrement on an indexed target -- all
-// remain deferred past M4d (see the corresponding rejection tests in
-// `tests/test_lower.rs`, and the follow-up tasks logged when M4c/M4d
-// were scoped down from their own original bundling with those items).
+// literal or indexed assignment on a chained (multi-dimensional) target
+// -- both remain deferred past M4d (see the corresponding rejection
+// tests in `tests/test_lower.rs`, and the follow-up tasks logged when
+// M4c/M4d were scoped down from their own original bundling with those
+// items). Compound-assignment/increment-decrement on an indexed target
+// (task #59) and a mixed index-then-`.length` chain (task #60), also
+// scoped down from that same M4c/M4d bundling, are resolved -- see the
+// dedicated sections above/below.
+
+// ── task #60: mixed index/dot primary-suffix chains ───────────────────
+
+#[test]
+fn mixed_index_then_dot_length_chain_runs_in_python() {
+    if !python_available() {
+        eprintln!(
+            "skipping mixed_index_then_dot_length_chain_runs_in_python: `python3` not available"
+        );
+        return;
+    }
+    let out = run_via_python(
+        "mixed_index_then_dot_length",
+        &wrap("int[][] grid = {{1, 2, 3}, {4, 5}}; grid[0].length;"),
+    );
+    assert_eq!(out, "3");
+}
+
+#[test]
+fn nested_indexed_for_loop_using_mixed_index_dot_length_runs_in_python() {
+    if !python_available() {
+        eprintln!(
+            "skipping nested_indexed_for_loop_using_mixed_index_dot_length_runs_in_python: `python3` not available"
+        );
+        return;
+    }
+    // The realistic pattern task #60 exists to make idiomatic: the same
+    // sum `nested_indexed_for_loop_sums_a_two_dimensional_array_in_
+    // python` computes, but reading each row's own length directly off
+    // the indexed chain (`grid[i].length`) instead of through an
+    // intermediate `row` local.
+    let out = run_via_python(
+        "two_dimensional_array_nested_sum_via_mixed_chain",
+        &wrap(concat!(
+            "int[][] grid = {{1, 2}, {3, 4}, {5, 6}}; ",
+            "int sum = 0; ",
+            "for (int i = 0; i < grid.length; i++) { ",
+            "  for (int j = 0; j < grid[i].length; j++) { ",
+            "    sum = sum + grid[i][j]; ",
+            "  } ",
+            "} ",
+            "sum;"
+        )),
+    );
+    assert_eq!(out, "21"); // 1+2+3+4+5+6
+}
+
+#[test]
+fn chained_index_then_dot_length_on_a_three_dimensional_array_runs_in_python() {
+    if !python_available() {
+        eprintln!(
+            "skipping chained_index_then_dot_length_on_a_three_dimensional_array_runs_in_python: `python3` not available"
+        );
+        return;
+    }
+    let out = run_via_python(
+        "three_dimensional_mixed_index_then_dot_length",
+        &wrap("int[][][] cube = {{{1, 2}}, {{3}}}; cube[0][0].length;"),
+    );
+    assert_eq!(out, "2");
+}
