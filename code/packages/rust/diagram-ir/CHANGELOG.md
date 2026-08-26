@@ -1,5 +1,9 @@
 # Changelog — diagram-ir
 
+## 0.87.0
+
+- Represent one-, two-, and three-digit Gantt fractional seconds as typed date-format parts.
+
 ## 0.86.0
 
 - Represent short and long Gantt weekday names as typed date-format parts.

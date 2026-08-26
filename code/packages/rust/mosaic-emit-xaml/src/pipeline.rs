@@ -9538,6 +9538,17 @@ fn emit_host_scroll(
 /// remains responsible for calling ShowAsync()/Hide() â€” same contract
 /// as before, minus the undeclared-namespace XAML).
 ///
+/// #13008 investigated whether this host-code-behind requirement could
+/// be dropped, the way SwiftUI/Qt/Compose's dialog lowerings avoid it
+/// (`.sheet(isPresented:)`, QML `Popup.visible`, Compose's conditional
+/// `Dialog { }` composition are all natively declarative). It's
+/// confirmed permanent, not a to-do: WinUI3's `ContentDialog` has no
+/// bindable `IsOpen`-style property the way `Popup`/`Flyout`/
+/// `TeachingTip` do, so there is no declarative show/hide surface here
+/// to bind to. Lowering to `Flyout` instead was considered and
+/// rejected â€” `Flyout` isn't a true modal dialog, so it would trade
+/// this gap for a wrong-primitive one rather than closing it.
+///
 /// Fix A3: `Title="{Binding X}"` â†’ `Title="{x:Bind X, Mode=OneWay}"`
 /// to match the rest of the emitter. The `{Binding}` form silently
 /// failed because nothing sets DataContext.
