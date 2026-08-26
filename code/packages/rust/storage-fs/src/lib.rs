@@ -126,6 +126,7 @@
 #![forbid(unsafe_code)]
 #![deny(missing_docs)]
 
+use coding_adventures_csprng::random_array;
 use coding_adventures_json_serializer::serialize as json_serialize;
 use coding_adventures_json_value::{parse as json_parse, JsonNumber, JsonValue};
 use std::collections::HashMap;
@@ -133,7 +134,7 @@ use std::fs::{self, File, OpenOptions};
 use std::io::{self, Read, Write};
 use std::path::{Path, PathBuf};
 use std::sync::atomic::{AtomicBool, AtomicU64, Ordering};
-use std::sync::{Mutex, PoisonError};
+use std::sync::{Mutex, OnceLock, PoisonError};
 use std::time::{SystemTime, UNIX_EPOCH};
 use storage_core::{
     LeaseToken, Revision, StorageBackend, StorageError, StorageLease, StorageListOptions,
@@ -236,42 +237,51 @@ static INSTANCE_SEQUENCE: AtomicU64 = AtomicU64::new(0);
 
 /// Build an identifier unique to one `FsStorageBackend` instance.
 ///
-/// Three components, each covering a case the others do not:
+/// 128 bits from the OS entropy source, plus a process-local counter.
 ///
-/// | Component | Separates |
-/// |---|---|
-/// | process id | two processes running at the same time |
-/// | wall clock (nanos) | the same pid reused after a restart |
-/// | process-local counter | two instances in one process |
+/// The counter is not the interesting half — it only separates two instances
+/// built in one process, which the random draw already does with overwhelming
+/// probability. It is there because it is free and it makes the within-process
+/// case a certainty rather than a probability.
 ///
-/// Together they are unique without coordination and without durable state,
-/// which is the property that matters: there is no file to delete, no mark to
-/// roll back, and no scan to get wrong.
+/// ## Why not pid and the clock
 ///
-/// This is deliberately NOT cryptographic randomness. The requirement is
-/// uniqueness, not unpredictability — a revision is a compare-and-swap token,
-/// not a secret or a capability. An attacker who guesses one gains nothing they
-/// could not get by reading the record, which they must already be able to do
-/// for the guess to matter.
+/// That was the first attempt, and it does not hold. `INSTANCE_SEQUENCE` resets
+/// to zero in every new process, so across processes uniqueness would rest
+/// entirely on `(pid, clock)`, and both are weaker than they look:
 ///
-/// A clock that jumps backwards is survivable: it would take a jump landing on
-/// the exact nanosecond of a previous instance, in the same process, with the
-/// counter also colliding — and the counter never repeats within a process, so
-/// it cannot.
-fn new_instance_id() -> String {
-    let nanos = SystemTime::now()
-        .duration_since(UNIX_EPOCH)
-        .map(|elapsed| elapsed.as_nanos())
-        // A pre-epoch clock is absurd rather than impossible; fall back to a
-        // fixed value and let pid and counter carry uniqueness, instead of
-        // panicking inside a constructor.
-        .unwrap_or(0);
-    format!(
-        "{:x}.{:x}.{:x}",
-        std::process::id(),
-        nanos,
+/// - **Pids repeat.** A container almost always starts its daemon as pid 1, and
+///   a busy host wraps its pid space. Two runs then share a pid.
+/// - **The clock is coarse.** `SystemTime::now()` advances in microsecond steps
+///   on macOS, not nanoseconds — several consecutive constructions land on the
+///   same reading — and it can jump backwards outright.
+/// - **A pre-epoch clock collapsed it entirely.** Falling back to a constant on
+///   `duration_since` failure made the id a pure function of pid and a counter
+///   that always starts at zero, so two runs as pid 1 minted byte-identical
+///   revisions from the first `put`. That is precisely the ABA this design
+///   exists to remove, restored deterministically and silently.
+///
+/// Entropy has none of those failure modes: no ambient state to repeat, nothing
+/// to roll back, and no platform whose resolution it depends on.
+///
+/// ## On failure
+///
+/// A failed entropy draw is fatal to this constructor's contract, so it is
+/// reported rather than papered over. Substituting a predictable value would
+/// reintroduce exactly the collision above, and doing it silently is how the
+/// previous version got this wrong.
+fn new_instance_id() -> Result<String, StorageError> {
+    let random = random_array::<16>().map_err(|error| StorageError::Unavailable {
+        message: format!("fs storage cannot draw instance entropy: {error}"),
+    })?;
+    let mut hex = String::with_capacity(32);
+    for byte in random {
+        hex.push_str(&format!("{byte:02x}"));
+    }
+    Ok(format!(
+        "{hex}.{:x}",
         INSTANCE_SEQUENCE.fetch_add(1, Ordering::Relaxed)
-    )
+    ))
 }
 
 /// Filesystem-backed `StorageBackend`. Wrap a directory and you've
@@ -298,25 +308,21 @@ pub struct FsStorageBackend {
     /// deletion, a restored backup, a rolled-back store and a concurrent second
     /// process are all non-events. Nothing durable has to be maintained,
     /// because there is nothing to lose.
-    instance: String,
+    /// Resolved on first use rather than in `new`, so the constructor stays
+    /// infallible and an entropy failure is a retryable error at the call that
+    /// needed a revision instead of a panic in a constructor.
+    instance: OnceLock<String>,
     revision_counter: AtomicU64,
-    /// Whether the one-time recovery scan in `initialize()` has completed.
-    /// Per backend instance, so a genuine restart (a NEW `FsStorageBackend`
-    /// over the same root) scans again.
+    /// Whether the one-time `.tmp` sweep in `initialize()` has completed.
     ///
-    /// That re-scan recovers a floor, but NOT necessarily the true one, and the
-    /// difference is a live defect rather than a subtlety. `highest` is derived
-    /// from surviving records, so deleting the record that holds the high-water
-    /// mark lowers it; a fresh instance over that root then re-issues revisions
-    /// the previous instance already handed out, and a stale `if_revision`
-    /// compare-and-swap guard passes where it must fail. Caching closes this
-    /// within one instance -- which is what #12139 asked for -- and closes it
-    /// not at all across instances, including two live backends over one root.
+    /// Per backend instance, so a genuine restart sweeps again -- which is the
+    /// realistic recovery path, since stranded temporaries come from a write a
+    /// crash interrupted.
     ///
-    /// The real fix is to stop deriving the high-water mark from live records:
-    /// persist it beside them, or fold a per-boot epoch into the revision. That
-    /// is tracked separately; do not read this flag as a guarantee of global
-    /// revision uniqueness, because it is not one.
+    /// This flag says nothing about revisions. It used to: the walk it guards
+    /// once recovered the revision floor from disk, and caching that was the
+    /// best available answer at the time. Uniqueness is now structural, from the
+    /// instance id, so the flag guards a filesystem sweep and nothing else.
     scanned: AtomicBool,
     /// In-memory leases. Same shape as `InMemoryStorageBackend`'s.
     leases: Mutex<HashMap<String, StorageLease>>,
@@ -330,7 +336,7 @@ impl FsStorageBackend {
         Self {
             root: root.into(),
             write_lock: Mutex::new(()),
-            instance: new_instance_id(),
+            instance: OnceLock::new(),
             revision_counter: AtomicU64::new(0),
             scanned: AtomicBool::new(false),
             leases: Mutex::new(HashMap::new()),
@@ -358,7 +364,23 @@ impl FsStorageBackend {
     /// needs.
     fn next_revision(&self) -> Result<Revision, StorageError> {
         let n = self.revision_counter.fetch_add(1, Ordering::SeqCst) + 1;
-        Revision::new(format!("rev-{}-{:020}", self.instance, n))
+        Revision::new(format!("rev-{}-{:020}", self.instance()?, n))
+    }
+
+    /// This instance's identifier, drawn once.
+    ///
+    /// `OnceLock::set` losing a race is not an error here: whichever draw landed
+    /// is equally valid, and both are unique. Only the value that won is ever
+    /// used, so the instance id never changes once observed.
+    fn instance(&self) -> Result<&str, StorageError> {
+        if let Some(existing) = self.instance.get() {
+            return Ok(existing);
+        }
+        let _ = self.instance.set(new_instance_id()?);
+        Ok(self
+            .instance
+            .get()
+            .expect("instance id is set immediately above"))
     }
 
     fn ns_dir(&self, namespace: &str) -> PathBuf {
@@ -728,8 +750,9 @@ impl StorageBackend for FsStorageBackend {
         // single cheap syscall, so that part stays unconditional.
         fs::create_dir_all(&self.root).map_err(io_to_storage)?;
 
-        // The recovery scan below is the expensive part: it reads the body of
-        // every record in every namespace. `ServiceRegistry::load` and `::list`
+        // The sweep below walks every namespace directory. It no longer opens
+        // any record, so it is O(directory entries) -- but it is still a walk,
+        // and `ServiceRegistry::load`/`::list` both call `initialize()`. `ServiceRegistry::load` and `::list`
         // both call `initialize()`, so on the shipped 5s health-check interval
         // this walk ran several times per reconcile tick -- over a state
         // directory shared by the registry, the audit log, channel state and
@@ -1029,8 +1052,6 @@ impl StorageBackend for FsStorageBackend {
         Ok(Some(lease))
     }
 }
-
-// Parse "rev-NNNN…" → u64.
 
 // ─────────────────────────────────────────────────────────────────────
 // 6. Tests

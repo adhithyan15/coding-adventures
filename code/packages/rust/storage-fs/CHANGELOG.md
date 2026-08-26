@@ -114,6 +114,17 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
   concurrent process are all non-events, and there is no durable bookkeeping to
   lose or roll back.
 
+  The instance identifier is 128 bits of OS entropy, drawn once per backend.
+  An earlier draft derived it from process id, wall clock and a process-local
+  counter, which does not hold: the counter resets in every new process, a
+  container almost always starts its daemon as pid 1, `SystemTime` advances in
+  microsecond steps rather than nanoseconds, and a pre-epoch clock collapsed the
+  whole thing to a function of pid and a counter starting at zero — two runs as
+  pid 1 then minted byte-identical revisions from the first `put`. Entropy has
+  no ambient state to repeat and no platform resolution to depend on. A failed
+  draw is reported rather than substituted for, because substituting silently is
+  exactly how that draft went wrong.
+
   `storage_core` documents `Revision` as an **opaque** compare-and-swap token,
   so the new form deliberately does not sort. Nothing in the repo ordered them:
   `revision_to_u64` had no callers outside this crate (it is now deleted), and
