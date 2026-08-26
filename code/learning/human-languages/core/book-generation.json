@@ -994,6 +994,13 @@
       "scriptCommand": "zh"
     },
     {
+      "language": "chinese",
+      "chapter": 16,
+      "output": "chinese/book/chapters/ch16-language-identity.tex",
+      "unicodeScript": "Han",
+      "scriptCommand": "zh"
+    },
+    {
       "language": "french",
       "chapter": 17,
       "output": "french/book/chapters/ch17-head-and-hand.tex"

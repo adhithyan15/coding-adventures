@@ -38,6 +38,14 @@
   handwriting animation, including the deliberate middle-stem retrace.
 - Close all 8 affected realizations with a zero-lift Noto Sans Kannada fit,
   then rerank Malayalam chillu **ൾ** first at 8.
+### Added - Chinese language identity lessons
+
+- Add fifteen pre-A1 lessons for **字**, **汉字**, and **汉语**, with no lesson
+  longer than five minutes and only three newly counted headwords.
+- Teach **汉** and **语** through observation, tracing, guided copying, delayed
+  recall, compound reading, and audio-only dictation before the final payoff.
+- Finish with two expanding retrieval passes and separately scored listening,
+  speaking, reading, and writing checks for the full three-way identity map.
 ### Added - source-verified Japanese hiragana shi
 
 - Add Japanese hiragana **し** as a continuous descent, lower turn, and rising

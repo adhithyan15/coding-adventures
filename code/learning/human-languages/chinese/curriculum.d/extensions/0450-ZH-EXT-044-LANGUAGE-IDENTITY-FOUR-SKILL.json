@@ -1,0 +1,15 @@
+{
+  "id": "ZH-EXT-044-LANGUAGE-IDENTITY-FOUR-SKILL",
+  "stage": "pre-A1",
+  "kind": "required",
+  "category": "assessment",
+  "canDo": "I can keep 字, 汉字 and 汉语 distinct across spaced retrieval and separate listening, speaking, reading and writing checks.",
+  "prerequisites": [
+    "ZH-EXT-043-LANGUAGE-IDENTITY-SCRIPT"
+  ],
+  "lessons": [
+    "ZH-R16-identity-1",
+    "ZH-R16-identity-2",
+    "ZH-C16-practice"
+  ]
+}

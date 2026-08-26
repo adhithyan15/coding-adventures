@@ -345,6 +345,28 @@
           "ZH-SCRIPT-TONG-01"
         ]
       }
+    },
+    {
+      "chapter": 16,
+      "title": "Character or language?",
+      "label": "ch:zh-language-identity",
+      "canDo": "I can understand, say, read and write 字, 汉字 and 汉语 after gaining 汉 and 语 through source-verified observation, tracing, guided copying and delayed recall.",
+      "spineNodes": [
+        "SPINE-EXCHANGE-NAMES"
+      ],
+      "payoff": {
+        "lesson": "ZH-C16-practice",
+        "kind": "writing",
+        "summary": "Three identity words are retrieved across two expanding reviews, then checked independently in listening, speaking, unassisted reading and no-model writing.",
+        "assesses": [
+          "ZH-PERFORMANCE-LANGUAGE-IDENTITY-THREE-FOUR-SKILL-01",
+          "ZH-LEX-ZI-02",
+          "ZH-LEX-HANZI-01",
+          "ZH-LEX-HANYU-01",
+          "ZH-SCRIPT-HAN-01",
+          "ZH-SCRIPT-YU-01"
+        ]
+      }
     }
   ]
 }
