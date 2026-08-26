@@ -2056,6 +2056,27 @@ impl Lowerer {
         depth: usize,
         disc_kind: Kind,
     ) -> Result<(Vec<SwitchCase>, Option<Vec<Stmt>>), JavaLowerError> {
+        // `switch_block`'s own grammar has TWO alternatives: the
+        // traditional colon form this function lowers (`switch_block_
+        // statement_group`* / trailing `switch_label`*), and Java 14+'s
+        // arrow form (`switch_rule`* — `case 1 -> foo();`), which shares
+        // no children at all with the colon form. Reject the arrow form
+        // explicitly, `/security-review`-caught: without this check, an
+        // arrow-form switch's `switch_rule` children simply don't match
+        // either filter branch below, so `groups` would silently end up
+        // empty and this function would return `(cases: [], default:
+        // None)` with no error at all — every case body silently
+        // discarded rather than cleanly rejected, unlike every other
+        // unsupported switch-label shape this crate rejects (`case
+        // null`, pattern-matching labels, non-last `default` — see
+        // `switch_label_case_constants`'s own doc comment).
+        if let Some(rule_node) = self.first_child_named(switch_block, "switch_rule") {
+            return Err(self.err_at(
+                rule_node,
+                "`switch` arrow-form case labels (`case v -> ...`) are not supported yet"
+                    .to_string(),
+            ));
+        }
         let groups: Vec<&GrammarASTNode> = child_nodes(switch_block)
             .into_iter()
             .filter(|n| {

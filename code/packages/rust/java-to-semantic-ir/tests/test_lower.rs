@@ -1904,6 +1904,29 @@ fn switch_pattern_matching_case_label_is_rejected() {
     );
 }
 
+#[test]
+fn switch_arrow_form_is_rejected_not_silently_dropped() {
+    // `/security-review`-caught: `switch_block`'s own grammar has TWO
+    // alternatives — the colon form this crate lowers, and Java 14+'s
+    // arrow form (`case v -> body;`), which shares no children at all
+    // with the colon form. Before `lower_switch_block`'s own explicit
+    // `switch_rule` check, an arrow-form switch's case bodies were
+    // silently discarded (zero cases, no error) rather than rejected —
+    // this is a correctness regression test for that fix, not just a
+    // rejection-message test: it confirms lowering actually *fails*
+    // rather than succeeding with an empty switch.
+    let err = compile_source(
+        &wrap("int x = 1; int y = 0; switch (x) { case 1 -> y = 1; default -> y = 2; }"),
+        "prog",
+    )
+    .unwrap_err();
+    assert!(
+        err.message.contains("arrow-form"),
+        "unexpected message: {}",
+        err.message
+    );
+}
+
 // ── task #64: `break`/`continue` (SIR16 addendum, Feature::LoopControl) ──
 
 #[test]
