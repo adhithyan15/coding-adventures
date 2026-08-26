@@ -1047,14 +1047,13 @@ TESTSUITE_FILES = [
     # `data.wast` (the SEPARATE extended-const proposal -- `i32.add`/
     # `i32.sub` inside a data segment's offset expression -- needs a real
     # operator stack, not the single-accumulator evaluator this crate's
-    # `evaluate_const_expr` currently is); `elem.wast`/`instance.wast`/
-    # `linking0.wast`/`linking1.wast`/`linking3.wast`/`load1.wast` (a
-    # cross-instance imported memory/table is a CLONE, not a live shared
-    # view -- `RegistryHost::resolve_memory`/`resolve_table`'s own,
-    # already-documented, deliberate limitation; `instance.wast` also
-    # needs the separate `(module definition ...)`/`(module instance
-    # ...)` generative-instantiation directive form this crate has zero
-    # support for); every real `table*64.wast`/`call_indirect64.wast`
+    # `evaluate_const_expr` currently is); `instance.wast` (needs a
+    # separate, not-yet-implemented `(module definition ...)`/`(module
+    # instance ...)` generative-instantiation directive form this crate's
+    # `wasm-wast-parser` has zero grammar support for at all -- see W28's
+    # own PR description; a distinct, self-contained follow-on from the
+    # shared-memory/table fix just below, not blocked BY it); every real
+    # `table*64.wast`/`call_indirect64.wast`
     # (table64 REAL operations -- table.get/set/grow/size/fill/copy/init/
     # call_indirect against an `is64` table -- confirmed still exactly the
     # explicitly-deferred scope boundary W26's own spec drew, not
@@ -1080,7 +1079,63 @@ TESTSUITE_FILES = [
     "imports3.wast",
     "imports4.wast",
     "linking2.wast",
+    # W28: real cross-instance SHARED memory/table storage. Before this
+    # fix, `wasm-runtime::instantiate()` resolved a memory/table import
+    # via `HostInterface::resolve_memory`/`resolve_table`, which handed
+    # back an OWNED, independently-cloned `LinearMemory`/`Table` value --
+    # `RegistryHost::resolve_memory`'s own doc comment named this exact,
+    # already-known limitation. A write through an IMPORTING instance's
+    # memory/table was invisible when read back through the EXPORTING
+    # instance, and vice versa: a genuine interpreter correctness bug for
+    # the common "one module shares its memory/table with several
+    # consumers" pattern, not just a conformance-corpus gap. The fix:
+    # `LinearMemory`/`Table`'s mutable storage now lives behind an
+    # `Rc<RefCell<..>>` (see each struct's own doc comment in `wasm-
+    # execution`), so `#[derive(Clone)]` shares the SAME underlying
+    # storage instead of deep-copying it -- exactly the shape every OTHER
+    # already-vendored file needing multi-memory/multi-table/bulk-memory
+    # semantics already relies on being correct, just never previously
+    # exercised across an IMPORT boundary. Fixing this also surfaced (and
+    # this same PR fixes) a second, previously-unobservable bug: active
+    # element-segment application wrote table entries one at a time
+    # instead of bounds-checking the WHOLE segment upfront, so a segment
+    # that's only PARTIALLY out of bounds could partially write before
+    # trapping -- invisible before this fix (a failed `instantiate()`'s
+    # local, CLONED table was simply dropped), a real correctness gap now
+    # that a shared table's storage genuinely persists past a failed
+    # `instantiate()` call. `linking.wast` (already vendored, unchanged in
+    # this list) is the clearest EXISTING proof this fix is real, not just
+    # newly-passing corpus: its own `assert_return` tally improved from
+    # 48/65 to 54/65 with ZERO new failures anywhere else in the corpus
+    # (216 files, programmatically diffed baseline-to-baseline) -- see
+    # this crate's own CHANGELOG for the exact numbers.
+    #
+    # `elem.wast`/`linking0.wast`/`linking1.wast`/`linking3.wast`/
+    # `load1.wast` newly vendored here are the five real corpus files a
+    # prior investigation identified as blocked on exactly this gap.
+    # `linking0.wast`/`linking3.wast` also exercise a DIFFERENT, DEEPER,
+    # deliberately out-of-scope gap this fix does NOT close: a table
+    # entry is still a bare `u32` function INDEX, resolved against
+    # whichever instance's OWN `func_bodies`/`host_functions` happens to
+    # be executing `call_indirect` -- correct within one instance, but
+    # meaningless once a shared table holds an entry written by a
+    # DIFFERENT instance's local index space. Real cross-instance funcref
+    # IDENTITY (the same class of problem `WasmInstance::tag_identities`
+    # already solves for exception tags, W23, but requiring genuine
+    # cross-instance CALL DISPATCH, not just equality comparison) is a
+    # separate, larger follow-on -- see `Table`'s own doc comment in
+    # `wasm-execution`. `elem.wast` additionally imports heavily from
+    # `spectest` (this crate has no `spectest` host, by design -- see
+    # `RegistryHost`'s own doc comment) and uses declarative (`elem
+    # declare ...`) segments this crate doesn't parse yet, so its overall
+    # pass rate is dominated by those two PRE-EXISTING, unrelated gaps,
+    # not by anything this fix touches.
+    "elem.wast",
+    "linking0.wast",
+    "linking1.wast",
+    "linking3.wast",
     "load0.wast",
+    "load1.wast",
     "load2.wast",
     "local_init.wast",
     "memory_copy0.wast",

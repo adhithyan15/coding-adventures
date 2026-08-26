@@ -2,6 +2,68 @@
 
 All notable changes to this package will be documented in this file.
 
+## [0.6.13] — 2026-08-26 (W28 — real cross-instance shared memory/table + atomic elem-segment application)
+
+### Fixed
+
+- **Imported memory/table is now a genuine shared live view, not a clone**
+  — depends on `wasm-execution` 0.9.73's `LinearMemory`/`Table` becoming
+  `Rc<RefCell<..>>`-backed (see that crate's own CHANGELOG for the full
+  rationale). This crate's own `instantiate()` needed NO code change for
+  this half of the fix: it already just pushes whatever `HostInterface::
+  resolve_memory`/`resolve_table` hands back straight into `WasmInstance::
+  memories`/`tables`, so once those values genuinely share storage on
+  `.clone()`, this crate's existing import-resolution path is correct for
+  free.
+- **Active element-segment application is now atomic per segment.** The
+  `for elem in &module.elements` loop in `instantiate()` used to call
+  `table.set(offset + j, func_idx)?` once per entry, propagating the
+  first out-of-bounds error via `?` as soon as ONE index in the segment
+  was out of range — but by then, every EARLIER entry in that same
+  segment had already been written. This is a real, spec-violating bug
+  (a single active segment must be all-or-nothing; only *earlier,
+  already-applied* segments persist past a *later* segment's trap, not
+  partial entries WITHIN one segment) that was completely unobservable
+  before this same PR's shared-storage fix: a failed `instantiate()`
+  call's local `tables` Vec was simply dropped on error, so a partial
+  write vanished regardless of whether the table was a fresh local one or
+  an independently-CLONED import. It became observable the moment a
+  table's storage started being genuinely SHARED across instances — a
+  partial write to a shared table now persists in the exporting
+  instance's own storage even though the importing instance's
+  `instantiate()` call fails, exactly the shape `linking.wast`'s own
+  already-vendored `assert_trap` directives probe. Fixed by
+  bounds-checking the WHOLE segment (`offset + segment.len() <=
+  table.size()`) BEFORE writing any entry, mirroring `LinearMemory::
+  write_bytes`'s existing upfront-bounds-check-then-one-write shape.
+  Confirmed via `linking.wast`'s own tally: without this second fix, its
+  `assert_trap` count regressed 18/18 -> 17/18 the moment the storage-
+  sharing fix alone landed; with both fixes together, it's back to 18/18
+  AND `assert_return` improved 48/65 -> 54/65, with zero regressions
+  anywhere else in the 216-file corpus (programmatically diffed
+  baseline-to-baseline).
+- **Known, deliberately out-of-scope remaining gap:** `call_indirect`
+  still resolves a table entry (a bare `u32` function index) against the
+  CALLING instance's own function-index space — correct within one
+  instance, but not a genuine cross-instance funcref identity. See
+  `wasm-execution`'s `Table` doc comment for the full explanation; two
+  `assert_return` directives in the newly-vendored `linking0.wast`/
+  `linking3.wast` (see `wasm-conformance`'s CHANGELOG) hit exactly this
+  gap and are the only real `fail`s introduced by vendoring those files.
+
+### Added
+
+- **`wasm-runtime/tests/shared_memory_table_import.rs`** — three new
+  integration tests, each building a two-instance import scenario (module
+  A exports a memory/table, module B imports it) directly against this
+  crate's own `WasmRuntime`/`HostInterface`, bypassing the `.wast` corpus
+  entirely: a write through B's imported memory is visible via A's own
+  `read` export; a `memory.grow` through B's import is visible via A's
+  own `memory.size`; a `table.grow` through B's imported table is visible
+  via A's own `table.size`. All three FAIL against the pre-fix code (the
+  clone-not-share bug reproduced directly, not just inferred from corpus
+  numbers) and PASS after it.
+
 ## [0.6.12] — 2026-08-26 (W27 — census batch: multi-memory data segments + start function)
 
 ### Fixed

@@ -115,7 +115,7 @@ fn test_args_sizes_get() {
 
     assert_eq!(result, vec![WasmValue::I32(0)], "errno should be 0");
 
-    let mem_guard = wasi.memory.lock().unwrap();
+    let mem_guard = wasi.memory.borrow();
     let mem = mem_guard.as_ref().unwrap();
     assert_eq!(read_i32_le(mem, 0), 2, "argc should be 2");
     assert_eq!(read_i32_le(mem, 4), 12, "buf_size should be 12");
@@ -151,7 +151,7 @@ fn test_args_get() {
 
     assert_eq!(result, vec![WasmValue::I32(0)], "errno should be 0");
 
-    let mem_guard = wasi.memory.lock().unwrap();
+    let mem_guard = wasi.memory.borrow();
     let mem = mem_guard.as_ref().unwrap();
 
     // argv[0] should point to offset 100.
@@ -193,7 +193,7 @@ fn test_environ_sizes_get() {
 
     assert_eq!(result, vec![WasmValue::I32(0)]);
 
-    let mem_guard = wasi.memory.lock().unwrap();
+    let mem_guard = wasi.memory.borrow();
     let mem = mem_guard.as_ref().unwrap();
     assert_eq!(read_i32_le(mem, 0), 1, "envc should be 1");
     // "HOME=/home/user" = 15 bytes + 1 null = 16
@@ -220,7 +220,7 @@ fn test_environ_get() {
 
     assert_eq!(result, vec![WasmValue::I32(0)]);
 
-    let mem_guard = wasi.memory.lock().unwrap();
+    let mem_guard = wasi.memory.borrow();
     let mem = mem_guard.as_ref().unwrap();
 
     // environ[0] should point to 200.
@@ -254,7 +254,7 @@ fn test_clock_time_get_realtime() {
 
     assert_eq!(result, vec![WasmValue::I32(0)]);
 
-    let mem_guard = wasi.memory.lock().unwrap();
+    let mem_guard = wasi.memory.borrow();
     let mem = mem_guard.as_ref().unwrap();
     let ts = read_i64_le(mem, 0);
     assert_eq!(ts, 1_700_000_000_000_000_001i64);
@@ -281,7 +281,7 @@ fn test_clock_time_get_monotonic() {
 
     assert_eq!(result, vec![WasmValue::I32(0)]);
 
-    let mem_guard = wasi.memory.lock().unwrap();
+    let mem_guard = wasi.memory.borrow();
     let mem = mem_guard.as_ref().unwrap();
     let ts = read_i64_le(mem, 0);
     assert_eq!(ts, 42_000_000_000i64);
@@ -308,7 +308,7 @@ fn test_clock_res_get() {
 
     assert_eq!(result, vec![WasmValue::I32(0)]);
 
-    let mem_guard = wasi.memory.lock().unwrap();
+    let mem_guard = wasi.memory.borrow();
     let mem = mem_guard.as_ref().unwrap();
     let res = read_i64_le(mem, 0);
     assert_eq!(res, 1_000_000i64);
@@ -334,7 +334,7 @@ fn test_random_get() {
 
     assert_eq!(result, vec![WasmValue::I32(0)]);
 
-    let mem_guard = wasi.memory.lock().unwrap();
+    let mem_guard = wasi.memory.borrow();
     let mem = mem_guard.as_ref().unwrap();
     let bytes = read_bytes(mem, 0, 4);
     assert_eq!(bytes, vec![0xAB, 0xAB, 0xAB, 0xAB]);
@@ -379,7 +379,7 @@ fn test_fd_write_emits_stdout() {
     assert_eq!(result, vec![WasmValue::I32(0)]);
     assert_eq!(output.lock().unwrap().as_str(), "Hi");
 
-    let mem_guard = wasi.memory.lock().unwrap();
+    let mem_guard = wasi.memory.borrow();
     let mem = mem_guard.as_ref().unwrap();
     assert_eq!(read_i32_le(mem, 16), 2);
 }
@@ -417,7 +417,7 @@ fn test_fd_read_reads_stdin_into_guest_memory() {
 
     assert_eq!(result, vec![WasmValue::I32(0)]);
 
-    let mem_guard = wasi.memory.lock().unwrap();
+    let mem_guard = wasi.memory.borrow();
     let mem = mem_guard.as_ref().unwrap();
     assert_eq!(read_i32_le(mem, 16), 2);
     assert_eq!(read_bytes(mem, 32, 2), b"Yo");
@@ -563,7 +563,7 @@ fn test_args_sizes_get_empty() {
 
     assert_eq!(result, vec![WasmValue::I32(0)]);
 
-    let mem_guard = wasi.memory.lock().unwrap();
+    let mem_guard = wasi.memory.borrow();
     let mem = mem_guard.as_ref().unwrap();
     assert_eq!(read_i32_le(mem, 0), 0, "argc should be 0");
     assert_eq!(read_i32_le(mem, 4), 0, "buf_size should be 0");
