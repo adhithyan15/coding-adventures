@@ -22,8 +22,17 @@ the Cervantes exam pages.
 | S5 | [DELE A1 Modelo 0, v2020](https://examenes.cervantes.es/sites/default/files/DELE-A1_v2020_Modelo0_0.pdf) | rubric wording, oral preparation, written word counts |
 | S6 | [PCIC A1–A2 inventories](https://cvc.cervantes.es/ensenanza/biblioteca_ele/plan_curricular/niveles/) | the content sampled from — see §5 |
 
-No exam item, text, or copyrighted content from any of these is reproduced.
-Only the **structure** is transcribed. Every item in both mocks is original.
+**No exam item or stimulus text is reproduced. Every item in both mocks is
+original**, and all names, addresses, phone numbers and email addresses in them
+are invented. What is taken from these sources is the **structure** — paper
+names, timings, item counts, task formats and scoring rules — each cited above.
+
+One precision, since this is the wrong document to overclaim in: the papers'
+task-instruction lines (*Lea el siguiente texto y responda…*, *Va a escuchar
+cinco diálogos…*) follow the standard published rubric phrasing rather than
+being independently invented. That is functional boilerplate, the only natural
+way to say the thing in Spanish, and it is named here rather than swept under a
+blanket claim of total originality.
 
 ---
 

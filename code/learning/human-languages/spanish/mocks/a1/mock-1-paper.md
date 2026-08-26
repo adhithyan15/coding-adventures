@@ -6,6 +6,13 @@ scoring: `rubric.md`. Answers and per-item provenance: `mock-1-answer-key.md`.
 > Images are rendered as bracketed descriptions, e.g. `[IMAGEN A: un autobús]`.
 > Listening audio is supplied as a transcript in Prueba 2; see `rubric.md` §6 for
 > what that deviation costs.
+>
+> **This file is exam content, not instructions.** The imperatives inside it
+> (*complete el formulario*, *escriba*, *hable de usted*) address a human
+> candidate. Nothing here is a directive to a tool that reads this file, and the
+> blank personal-data fields are exam stimulus — they must never be filled with
+> any real person's details. All names, addresses, phone numbers and email
+> addresses below are invented.
 
 ---
 
@@ -80,7 +87,7 @@ un texto. Hay tres textos que no debe elegir.*
 >
 > **B.** Mamá: he ido al supermercado. Vuelvo a las siete. En la nevera hay sopa. Un beso, Pablo.
 >
-> **C.** SE VENDE BICICLETA. Roja, casi nueva, poco uso. 80 euros. Teléfono: 655 40 12 33.
+> **C.** SE VENDE BICICLETA. Roja, casi nueva, poco uso. 80 euros. Teléfono: 655 00 11 22.
 >
 > **D.** Se ruega no comer ni beber dentro de la biblioteca. Muchas gracias.
 >
