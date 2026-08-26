@@ -570,6 +570,16 @@ const independentKhehStrokes = (): Stroke[] => [
   },
 ];
 
+const independentHahStrokes = (headLabel: string): Stroke[] => {
+  const body = independentKhehStrokes()[0]!;
+  return [{
+    segments: [
+      { ...body.segments[0]!, label: headLabel },
+      { ...body.segments[1]!, label: "continue down and around the deep bowl without lifting" },
+    ],
+  }];
+};
+
 const independentFehStrokes = (headLabel: string, bodyLabel: string): Stroke[] => [
   {
     segments: [
@@ -9593,6 +9603,21 @@ export const DUCTUS: Record<string, LetterDuctus> = {
       },
     ],
     source: arabicAlphabetSource("ح"),
+  },
+  // Persian Online and Zer o Zabar independently demonstrate dotless ح as a
+  // single body-first run. Keep those script-scoped sources separate from the
+  // Arabic course's two-run stem-first order above.
+  [ductusKey("perso-arabic", "ح")]: {
+    script: "perso-arabic",
+    glyph: "ح",
+    strokes: independentHahStrokes("draw the short upper head from left to right"),
+    source: persianAlphabetSource("ح"),
+  },
+  [ductusKey("urdu-nastaliq", "ح")]: {
+    script: "urdu-nastaliq",
+    glyph: "ح",
+    strokes: independentHahStrokes("sweep left through the pointed hooked head"),
+    source: urduAlphabetSource("ح"),
   },
   [ductusKey("arabic", "خ")]: {
     script: "arabic",

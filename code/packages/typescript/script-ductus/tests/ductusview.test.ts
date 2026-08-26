@@ -486,6 +486,8 @@ const arabicThaaOutline = naskhOutline("ث");
 const ARABIC_JEEM = ductusFor("ج", "arabic")!;
 const arabicJeemOutline = naskhOutline("ج");
 const ARABIC_HAA = ductusFor("ح", "arabic")!;
+const PERSIAN_HAH = ductusFor("ح", "perso-arabic")!;
+const URDU_BARI_HE = ductusFor("ح", "urdu-nastaliq")!;
 const arabicHaaOutline = naskhOutline("ح");
 const ARABIC_KHAA = ductusFor("خ", "arabic")!;
 const arabicKhaaOutline = naskhOutline("خ");
@@ -6227,6 +6229,27 @@ describe("Arabic ح — a stem-first, dotless filmstrip", () => {
     );
     expect(paths.find((path) => path.attrs.class === "ductus__pen")!.attrs.d).toBe(
       penPathD(ARABIC_HAA.strokes[1], 1),
+    );
+  });
+});
+
+describe("Persian and Urdu ح — independently sourced body-first filmstrips", () => {
+  it.each([
+    ["Persian", PERSIAN_HAH],
+    ["Urdu", URDU_BARI_HE],
+  ])("keeps %s head and bowl in one uninterrupted run", (_name, letter) => {
+    const steps = ductusSteps(letter);
+    const strip = ductusFilmstrip(letter, arabicHaaOutline);
+    expect(steps.map((step) => step.startsAfterLift)).toEqual([false, false]);
+    expect(strip.frames).toHaveLength(2);
+    expect(strip.penLifts).toBe(0);
+    expect(strip.summary).toBe("one unbroken stroke · 2 movements");
+    const paths = byTag(strip.frames[1], "path");
+    expect(paths.find((path) => path.attrs.class === "ductus__glyph")!.attrs.d).toBe(
+      arabicHaaOutline.path,
+    );
+    expect(paths.find((path) => path.attrs.class === "ductus__pen")!.attrs.d).toBe(
+      penPathD(letter.strokes[0], 2),
     );
   });
 });
