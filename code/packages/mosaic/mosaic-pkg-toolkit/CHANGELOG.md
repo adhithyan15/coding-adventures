@@ -1,5 +1,17 @@
 # Changelog — mosaic-pkg-toolkit
 
+## [Unreleased] — confirm XAML Modal's open-host-required allowlist entry is permanent (#13008)
+
+Updated the `#13008` comment in `tests/native_complete_gate.rs`'s
+`ALLOWED_DEGRADATIONS` table from "under investigation" to a confirmed,
+permanent finding: WinUI3's `ContentDialog` has no bindable `IsOpen`
+the way `Popup`/`Flyout`/`TeachingTip` do, so XAML's `HostDialog` genuinely
+cannot avoid requiring host code-behind to show/hide, unlike
+SwiftUI/Qt/Compose's declarative dialog lowerings. No test behavior
+change — the allowlist entry stays, now documented as permanent rather
+than a to-do. See `mosaic-emit-xaml`'s changelog for the full
+investigation. Closes #13008.
+
 ## [Unreleased] — per-atom native-complete gate (#12024)
 
 - New `tests/native_complete_gate.rs`: for each of the five native backends

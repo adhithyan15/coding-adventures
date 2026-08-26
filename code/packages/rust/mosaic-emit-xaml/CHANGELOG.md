@@ -1,5 +1,31 @@
 # Changelog — mosaic-emit-xaml
 
+## [Unreleased] — confirm HostDialog's open-host-required degradation is permanent, not a to-do (#13008)
+
+Investigated whether XAML's `HostDialog` could drop its "host code-behind
+must call `ShowAsync()`/`Hide()`" requirement, matching SwiftUI/Qt/Compose's
+dialog lowerings — none of which report an equivalent degradation, since
+`.sheet(isPresented:)`, QML `Popup.visible`, and Compose's conditional
+`Dialog { }` composition are all natively declarative: the `open:` slot
+drives visibility directly, with no imperative call needed.
+
+Confirmed (against current WinUI3/WinAppSDK docs, plus the multiple
+open community discussions/issues asking Microsoft for exactly this)
+that this is a genuine, permanent WinUI3 API gap, not something Mosaic's
+architecture is missing: `ContentDialog` exposes only imperative
+`ShowAsync()`/`Hide()` and has no bindable `IsOpen`-style dependency
+property, unlike `Popup`/`Flyout`/`TeachingTip`, all of which do.
+Lowering `HostDialog` to `Flyout` instead (which does have `IsOpen`)
+was considered and rejected — `Flyout` isn't a true modal dialog (no
+dimmed overlay, different dismiss semantics), so it would trade this
+degradation for a wrong-primitive one rather than closing it.
+
+No functional change. Updated the doc comment above
+`build_host_dialog_attrs` and the `property.dialog-open-host-required`
+degradation site in `mosaic-package-artifact-builder` to record the
+finding, so it reads as a confirmed, permanent decision rather than an
+open TODO. Closes #13008.
+
 ## [Unreleased] — close the remaining find_prop_value catch-all sites (#13040)
 
 #12126 fixed seven sites where a bare `_ => {}` silently dropped a row
