@@ -34,7 +34,8 @@ payloads.
 - `atbash-transform`: apply the fixed ASCII involution once.
 - `scytale-encrypt`: transpose a Unicode-scalar sequence by columns.
 - `scytale-decrypt`: reconstruct full and ragged column lengths, invert the
-  grid, and remove trailing `U+0020` only.
+  grid, keep decomposed combining marks as independent scalar cells, and remove
+  trailing `U+0020` only.
 - `scytale-brute-force`: return candidates in ascending-key order.
 - `vigenere-encrypt` and `vigenere-decrypt`: transform ASCII letters while
   preserving all other scalars without advancing the key.

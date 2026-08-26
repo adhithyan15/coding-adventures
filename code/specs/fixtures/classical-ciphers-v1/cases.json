@@ -129,6 +129,18 @@
       "expected": { "text": "A😀Bé" }
     },
     {
+      "id": "classical-ciphers-v1-scytale-combining-scalar-encrypt",
+      "operation": "scytale-encrypt",
+      "input": { "text": "Ae\u0301B", "key": 3 },
+      "expected": { "text": "ABe \u0301 " }
+    },
+    {
+      "id": "classical-ciphers-v1-scytale-combining-scalar-decrypt",
+      "operation": "scytale-decrypt",
+      "input": { "text": "ABe \u0301 ", "key": 3 },
+      "expected": { "text": "Ae\u0301B" }
+    },
+    {
       "id": "classical-ciphers-v1-scytale-genuine-trailing-space-encrypt",
       "operation": "scytale-encrypt",
       "input": { "text": "END ", "key": 3 },
