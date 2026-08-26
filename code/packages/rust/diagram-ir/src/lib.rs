@@ -1051,7 +1051,13 @@ pub struct JourneyDiagram {
 #[derive(Clone, Debug, PartialEq)]
 pub enum TaskStart {
     Date(String),
-    After(String),
+    After(Vec<String>),
+}
+
+#[derive(Clone, Debug, PartialEq)]
+pub enum TaskEnd {
+    Date(String),
+    Until(Vec<String>),
 }
 
 #[derive(Clone, Debug, PartialEq, Default)]
@@ -1070,7 +1076,7 @@ pub struct GanttTask {
     pub label: String,
     pub start: TaskStart,
     pub duration_days: f64,
-    pub end_date: Option<String>,
+    pub end: Option<TaskEnd>,
     pub status: TaskStatus,
     pub dependencies: Vec<String>,
     pub link: Option<String>,
@@ -1558,7 +1564,7 @@ mod tests {
             label: "D".into(),
             start: TaskStart::Date("2026-01-01".into()),
             duration_days: 5.0,
-            end_date: None,
+            end: None,
             status: TaskStatus::Done,
             dependencies: vec![],
             link: None,

@@ -1,5 +1,9 @@
 # Changelog
 
+## 0.139.0
+
+- Parse and validate multi-task Gantt `after` and `until` dependencies, rejecting unknown IDs, duplicates, and cyclic start graphs.
+
 ## 0.138.0
 
 - Parse explicit Mermaid Gantt end dates separately from duration expressions for inclusive-end layout.

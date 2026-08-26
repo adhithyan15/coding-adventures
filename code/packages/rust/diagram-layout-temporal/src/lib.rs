@@ -13,13 +13,13 @@
 
 use diagram_ir::{
     DiagramDirection, GitCommitSymbol, GitCommitType, GitDiagram, GitEvent, JourneyDiagram,
-    LayoutedTemporalDiagram, LayoutedTemporalInteraction, LayoutedTemporalItem, TaskStart,
+    LayoutedTemporalDiagram, LayoutedTemporalInteraction, LayoutedTemporalItem, TaskEnd, TaskStart,
     TaskStatus,
     TemporalBody, TemporalDiagram,
 };
 use std::collections::{BTreeSet, HashMap};
 
-pub const VERSION: &str = "0.20.0";
+pub const VERSION: &str = "0.21.0";
 
 // ── Constants ─────────────────────────────────────────────────────────────
 
@@ -308,11 +308,38 @@ fn gantt_task_elapsed_duration(
     start: f64,
     task: &diagram_ir::GanttTask,
     diagram: &diagram_ir::GanttDiagram,
+    starts: &HashMap<String, f64>,
 ) -> f64 {
-    if let Some(end_date) = task.end_date.as_deref().and_then(date_to_days) {
-        return (end_date - start + f64::from(diagram.config.inclusive_end_dates)).max(0.0);
+    match &task.end {
+        Some(TaskEnd::Date(end_date)) => {
+            if let Some(end_date) = date_to_days(end_date) {
+                return (end_date - start + f64::from(diagram.config.inclusive_end_dates)).max(0.0);
+            }
+        }
+        Some(TaskEnd::Until(ids)) => {
+            if let Some(end) = ids.iter().filter_map(|id| starts.get(id)).copied().reduce(f64::min) {
+                return (end - start).max(0.0);
+            }
+        }
+        None => {}
     }
     gantt_elapsed_duration(start, task.duration_days, diagram)
+}
+
+fn gantt_task_end_if_resolved(
+    start: f64,
+    task: &diagram_ir::GanttTask,
+    diagram: &diagram_ir::GanttDiagram,
+    starts: &HashMap<String, f64>,
+) -> Option<f64> {
+    if let Some(TaskEnd::Until(ids)) = &task.end {
+        let referenced_starts = ids
+            .iter()
+            .map(|id| starts.get(id).copied())
+            .collect::<Option<Vec<_>>>()?;
+        return referenced_starts.into_iter().reduce(f64::min);
+    }
+    Some(start + gantt_task_elapsed_duration(start, task, diagram, starts))
 }
 
 fn gantt_tick_days(interval: Option<&str>) -> f64 {
@@ -421,35 +448,34 @@ fn layout_gantt(
             }
         }
     }
-    // Second pass: resolve After dependencies.
-    for section in &diagram.sections {
-        for task in &section.tasks {
-            if let TaskStart::After(ref dep_id) = task.start {
-                if !starts.contains_key(&task.id) {
-                    if let Some(&dep_end) = starts.get(dep_id) {
-                        // Find duration of the dep task.
-                        let dep_dur = diagram.sections.iter()
-                            .flat_map(|s| s.tasks.iter())
-                            .find(|t| &t.id == dep_id)
-                            .map(|t| t.duration_days)
-                            .unwrap_or(0.0);
-                        let dep_elapsed = diagram.sections.iter()
-                            .flat_map(|s| s.tasks.iter())
-                            .find(|t| &t.id == dep_id)
-                            .map(|t| gantt_task_elapsed_duration(dep_end, t, diagram))
-                            .unwrap_or(dep_dur);
-                        starts.insert(task.id.clone(), dep_end + dep_elapsed);
-                    }
+    let tasks = diagram.sections.iter().flat_map(|section| section.tasks.iter()).collect::<Vec<_>>();
+    // Resolve dependency chains to a fixed point. Multi-source `after` starts at
+    // the latest dependency end, matching Mermaid's scheduling semantics.
+    for _ in 0..tasks.len() {
+        let mut changed = false;
+        for task in &tasks {
+            if starts.contains_key(&task.id) { continue; }
+            let TaskStart::After(dependency_ids) = &task.start else { continue; };
+            let dependency_ends = dependency_ids.iter().map(|dependency_id| {
+                let dependency = tasks.iter().find(|candidate| candidate.id == *dependency_id)?;
+                let dependency_start = *starts.get(dependency_id)?;
+                gantt_task_end_if_resolved(dependency_start, dependency, diagram, &starts)
+            }).collect::<Option<Vec<_>>>();
+            if let Some(dependency_ends) = dependency_ends {
+                if let Some(start) = dependency_ends.into_iter().reduce(f64::max) {
+                    starts.insert(task.id.clone(), start);
+                    changed = true;
                 }
             }
         }
+        if !changed { break; }
     }
 
     // Determine time range.
     let t_min = starts.values().cloned().fold(f64::INFINITY, f64::min);
     let t_max = diagram.sections.iter()
         .flat_map(|s| s.tasks.iter())
-        .filter_map(|t| starts.get(&t.id).map(|&s| s + gantt_task_elapsed_duration(s, t, diagram)))
+        .filter_map(|t| starts.get(&t.id).map(|&s| s + gantt_task_elapsed_duration(s, t, diagram, &starts)))
         .fold(f64::NEG_INFINITY, f64::max);
     let t_min = if t_min.is_infinite() { 0.0 } else { t_min };
     let t_max = if t_max.is_infinite() { t_min + 30.0 } else { t_max };
@@ -487,7 +513,7 @@ fn layout_gantt(
         for task in &section.tasks {
             let start_day = starts.get(&task.id).copied().unwrap_or(t_min) - t_min;
             let bx = LABEL_W + start_day * x_scale;
-            let elapsed_duration = gantt_task_elapsed_duration(t_min + start_day, task, diagram);
+            let elapsed_duration = gantt_task_elapsed_duration(t_min + start_day, task, diagram, &starts);
             let bw = (elapsed_duration * x_scale).max(4.0);
             if task.status == TaskStatus::Milestone {
                 items.push(LayoutedTemporalItem::MilestoneMarker {
@@ -765,7 +791,7 @@ mod tests {
                             id: "t1".into(), label: "Design".into(),
                             start: TaskStart::Date("2026-01-01".into()),
                             duration_days: 5.0,
-                            end_date: None,
+                            end: None,
                             status: TaskStatus::Done,
                             dependencies: vec![],
                             link: None,
@@ -774,9 +800,9 @@ mod tests {
                         },
                         GanttTask {
                             id: "t2".into(), label: "Build".into(),
-                            start: TaskStart::After("t1".into()),
+                            start: TaskStart::After(vec!["t1".into()]),
                             duration_days: 3.0,
-                            end_date: None,
+                            end: None,
                             status: TaskStatus::Active,
                             dependencies: vec!["t1".into()],
                             link: None,
@@ -817,7 +843,7 @@ mod tests {
 
     #[test]
     fn version_exists() {
-        assert_eq!(crate::VERSION, "0.20.0");
+        assert_eq!(crate::VERSION, "0.21.0");
     }
 
     #[test]
@@ -902,7 +928,7 @@ mod tests {
         gantt.config.excludes = vec!["weekends".into()];
         gantt.sections[0].tasks[0].start = TaskStart::Date("2026-01-02".into());
         gantt.sections[0].tasks[0].duration_days = 2.0;
-        gantt.sections[0].tasks[1].start = TaskStart::After("t1".into());
+        gantt.sections[0].tasks[1].start = TaskStart::After(vec!["t1".into()]);
         let second_duration = gantt.sections[0].tasks[1].duration_days;
 
         let layout = layout_temporal_diagram(&diagram, 800.0);
@@ -935,7 +961,7 @@ mod tests {
         let mut exclusive = simple_gantt();
         let TemporalBody::Gantt(gantt) = &mut exclusive.body else { unreachable!() };
         gantt.sections[0].tasks[0].start = TaskStart::Date("2026-03-01".into());
-        gantt.sections[0].tasks[0].end_date = Some("2026-03-03".into());
+        gantt.sections[0].tasks[0].end = Some(TaskEnd::Date("2026-03-03".into()));
         gantt.sections[0].tasks[1].start = TaskStart::Date("2026-03-10".into());
         gantt.sections[0].tasks[1].duration_days = 1.0;
         let exclusive_layout = layout_temporal_diagram(&exclusive, 800.0);
@@ -978,7 +1004,7 @@ mod tests {
         let TemporalBody::Gantt(gantt) = &mut diagram.body else { unreachable!() };
         gantt.sections[0].tasks.truncate(1);
         gantt.sections[0].tasks[0].start = TaskStart::Date(iso(today - 1));
-        gantt.sections[0].tasks[0].end_date = Some(iso(today + 1));
+        gantt.sections[0].tasks[0].end = Some(TaskEnd::Date(iso(today + 1)));
         gantt.config.today_marker = Some("stroke:#00aa44,stroke-width:5px,stroke-dasharray:none".into());
         let layout = layout_temporal_diagram(&diagram, 800.0);
         assert!(layout.items.iter().any(|item| matches!(
@@ -986,6 +1012,63 @@ mod tests {
             LayoutedTemporalItem::TodayMarker { stroke, stroke_width, stroke_dash, .. }
                 if stroke == "#00aa44" && *stroke_width == 5.0 && stroke_dash.is_none()
         )));
+    }
+
+    #[test]
+    fn gantt_resolves_multi_source_after_and_until_ranges() {
+        let mut diagram = simple_gantt();
+        let TemporalBody::Gantt(gantt) = &mut diagram.body else { unreachable!() };
+        gantt.sections[0].tasks[0].start = TaskStart::Date("2026-01-01".into());
+        gantt.sections[0].tasks[0].duration_days = 5.0;
+        gantt.sections[0].tasks[1].start = TaskStart::Date("2026-01-03".into());
+        gantt.sections[0].tasks[1].duration_days = 4.0;
+        gantt.sections[0].tasks.push(GanttTask {
+            id: "t3".into(), label: "Integrate".into(),
+            start: TaskStart::After(vec!["t1".into(), "t2".into()]),
+            duration_days: 2.0, end: None, status: TaskStatus::Normal,
+            dependencies: vec!["t1".into(), "t2".into()], link: None,
+            callback: None, callback_args: None,
+        });
+        gantt.sections[0].tasks.push(GanttTask {
+            id: "window".into(), label: "Window".into(),
+            start: TaskStart::Date("2025-12-29".into()), duration_days: 0.0,
+            end: Some(TaskEnd::Until(vec!["t1".into(), "t2".into()])),
+            status: TaskStatus::Normal, dependencies: Vec::new(), link: None,
+            callback: None, callback_args: None,
+        });
+        gantt.sections[0].tasks.push(GanttTask {
+            id: "gate".into(), label: "Gate".into(),
+            start: TaskStart::Date("2025-12-30".into()), duration_days: 0.0,
+            end: Some(TaskEnd::Until(vec!["late".into()])),
+            status: TaskStatus::Normal, dependencies: Vec::new(), link: None,
+            callback: None, callback_args: None,
+        });
+        gantt.sections[0].tasks.push(GanttTask {
+            id: "consumer".into(), label: "Consumer".into(),
+            start: TaskStart::After(vec!["gate".into()]), duration_days: 1.0,
+            end: None, status: TaskStatus::Normal, dependencies: vec!["gate".into()], link: None,
+            callback: None, callback_args: None,
+        });
+        gantt.sections[0].tasks.push(GanttTask {
+            id: "late".into(), label: "Late".into(),
+            start: TaskStart::After(vec!["t3".into()]), duration_days: 1.0,
+            end: None, status: TaskStatus::Normal, dependencies: vec!["t3".into()], link: None,
+            callback: None, callback_args: None,
+        });
+
+        let layout = layout_temporal_diagram(&diagram, 800.0);
+        let bars = layout.items.iter().filter_map(|item| match item {
+            LayoutedTemporalItem::TaskBar { x, width, label, .. } => {
+                Some((label.as_str(), (*x, *width)))
+            }
+            _ => None,
+        }).collect::<HashMap<_, _>>();
+        let (build_x, build_width) = bars["Build"];
+        let integrate_x = bars["Integrate"].0;
+        assert!((integrate_x - (build_x + build_width)).abs() < 0.01);
+        let window_end = bars["Window"].0 + bars["Window"].1;
+        assert!((window_end - bars["Design"].0).abs() < 0.01);
+        assert!((bars["Consumer"].0 - bars["Late"].0).abs() < 0.01);
     }
 
     #[test]
