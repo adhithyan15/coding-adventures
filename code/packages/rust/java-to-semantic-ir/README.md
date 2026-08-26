@@ -34,7 +34,7 @@ let module = compile_source(
 )?;
 ```
 
-## Scope (v0.17.0 — JV02 milestones M0 + M1 + M2a + M2b + M3a + M3b + M4a + M4b + M4c + M4d + M5, plus tasks #54, #59, #60, #64, and #69)
+## Scope (v0.18.0 — JV02 milestones M0 + M1 + M2a + M2b + M3a + M3b + M4a + M4b + M4c + M4d + M5 + M8, plus tasks #54, #59, #60, #64, and #69)
 
 Java requires an explicit `class`/`main`-method wrapper at the source level
 (unlike Ruby/Python/JS, which allow bare top-level statements) — this crate
@@ -253,8 +253,30 @@ Java 21's own pattern-matching switch surface — `case null`/`case null,
 default`, and `case Type t`/`case Type(...)` record/type-deconstruction
 patterns (JEP 440/441) — is cleanly rejected, not silently mis-lowered as
 a plain `default`; real pattern-binding support is a separate, much
-larger future feature. Everything else — a labeled `break`/
-`continue` (SIR has no loop-label vocabulary at all), an *instance*-
+larger future feature. **M8 (task #70)** wires `try`/`catch`/`finally`/
+`throw` to `Stmt::TryCatch`/`RescueClause` (SIR17), reused exactly as
+SIR29 itself specifies — no new core-IR primitive needed, and unblocked
+by task #68's own `NominalClassDef`/`Module` gap since this milestone
+touches none of that surface. Each of `try`'s own block, every `catch`
+clause's own block, and `finally`'s own block lowers independently
+(each already opens/closes its own scope) — unlike `Stmt::Switch`'s own
+deliberately-shared cross-case scope, a `catch` parameter is scoped to
+its own clause only. Java 7+ multi-catch (`catch (IOException |
+SQLException e) { ... }`) maps directly onto `RescueClause.
+exception_types: Vec<String>`. `throw new ExceptionClass(...)` (0 or 1
+constructor arguments) lowers to `Expr::BuiltinCall("raise", [class_name,
+message?])`, reusing the *cross-backend* `"raise"` convention `ruby-to-
+semantic-ir` established (not Ruby-specific — `semantic-ir-to-
+{javascript,python}` both already implement it). Deliberately out of
+scope, rejected cleanly rather than mis-lowered: try-with-resources (SIR
+has no resource-auto-close primitive), rethrowing an arbitrary expression
+(`throw e;` — this frontend can't distinguish "the exact object just
+caught" from any other local, and the fallback `raise` shape a non-
+`Const` argument gets would silently change what actually gets thrown),
+an anonymous exception subclass, generic exception construction, and a
+constructor call with more than one argument. Everything else — a
+labeled `break`/`continue` (SIR has no loop-label vocabulary at all), an
+*instance*-
 qualified call (`x.foo(...)`) or any qualifier other than this
 compilation unit's own class name (`ClassName.staticMethod(args)` on
 *this* class IS supported as of task #67/M5, see below), method
