@@ -8894,9 +8894,9 @@ scalars and literal-space removal for Scytale, ASCII-only Vigenere processing,
 and key length 1 for insufficient analysis signal—without expanding into those
 cross-lane remediations.
 
-The reconciled graph remains complete and acyclic at 529 owners and 789 edges:
-155 merged, 373 pending, and exactly one in-progress owner, with no
-active parity PR.
+At selection time, the reconciled graph was complete and acyclic at 529 owners
+and 789 edges: 155 merged, 373 pending, and exactly one in-progress owner, with
+no active parity PR.
 
 The Dart candidate implements the reconciled contract in specification,
 tests, source, and documentation order. Atbash passes eight tests; Scytale and
@@ -8918,6 +8918,16 @@ contract, packaging, and security reviews are clean after redacting implicit
 value-object output, pinning trailing non-space padding behavior, and making
 the provisional Vigenere IC heuristic debt explicit under its neutral-fixture
 owner.
+
+Ready-for-review PR #13083 publishes the implementation from validated head
+`73ca4792d31b572bd0ee7097141ea658e7658436` on exact `origin/main`
+`5dcdf1c555e1300337998a705658865b47c221da`. The branch rebased cleanly over
+disjoint Marathi PR #13065 and Punjabi PR #13074 curriculum changes before its
+normal first push, and eleven live open PRs have zero exact changed-path
+overlap. GitHub reports the PR non-draft and mergeable. Required checks are
+queued, merge state is blocked only by those protections, and auto-merge
+remains disabled. State is now 155 merged, 373 pending, and exactly one
+`pr-open` owner across the unchanged 529-owner/789-edge acyclic graph.
 
 ## Autonomous Loop Protocol
 
