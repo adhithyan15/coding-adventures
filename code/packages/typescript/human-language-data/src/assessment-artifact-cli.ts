@@ -74,8 +74,27 @@ function entryIfPresent(path: string): ReturnType<typeof lstatSync> | undefined 
  * `assertRealFile`; this is the write side.
  */
 function assertContained(root: string, path: string, what: string): void {
-  const real = realpathSync(path);
-  const realRoot = realpathSync(root);
+  let real: string;
+  let realRoot: string;
+  try {
+    real = realpathSync(path);
+    realRoot = realpathSync(root);
+  } catch (cause) {
+    // Defence in depth, and honestly labelled as such: no CLI path is known to
+    // reach here. A dangling link AT the ceiling directory is refused earlier by
+    // `isDirectory()` (a dangling link lstats as a link), and a dangling `core/`
+    // fails in `loadAssessmentContracts` before any write is attempted, because
+    // the registry lives inside it. The wrapper stays because the alternative is
+    // a raw ENOENT that sends the reader looking for a missing file rather than
+    // for the link that is actually there, and because "unreachable today" is
+    // not a property a future caller preserves.
+    throw new Error(
+      `assessment artifacts: cannot resolve ${what} '${path}' — refusing to write ` +
+        `(${(cause as NodeJS.ErrnoException | null)?.code ?? "no errno"}). ` +
+        `A dangling symbolic link on this path looks exactly like this.`,
+      { cause },
+    );
+  }
   if (real !== realRoot && !real.startsWith(realRoot + sep)) {
     throw new Error(
       `assessment artifacts: ${what} '${path}' resolves outside the curriculum root`,

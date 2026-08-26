@@ -393,6 +393,20 @@ describe("the generator refuses to write through a symlink", () => {
     expect(readdirSync(elsewhere)).toEqual([]);
   });
 
+  it("refuses a DANGLING symlink at the ceiling directory, and says which check caught it", () => {
+    // Security review raised this as a message-quality note, expecting a raw
+    // ENOENT out of `realpath`. It does not get that far: a dangling link
+    // `lstat`s as a link, so `isDirectory()` is false and the earlier, more
+    // specific check refuses it first. Pinned because the note was worth
+    // answering with a measurement rather than an argument — and because the
+    // ordering of the two guards is now load-bearing for this message.
+    if (!canSymlink("junction")) return void expect(process.platform).toBe("win32");
+    rmSync(join(root, ARTIFACT_CEILING_DIR), { recursive: true, force: true });
+    symlinkSync(join(root, "nowhere"), join(root, ARTIFACT_CEILING_DIR), "junction");
+    expect(() => runAssessmentArtifactCli(["--write"], root, undefined, () => {}, () => {}))
+      .toThrow(/is not a real directory — refusing to write through it/);
+  });
+
   it("refuses an ANCESTOR symlink, which lstat alone cannot see", () => {
     // `lstat` vets only the LAST component. The case above links
     // `core/assessment-artifact-ceiling`; this one links `core` itself, so the
