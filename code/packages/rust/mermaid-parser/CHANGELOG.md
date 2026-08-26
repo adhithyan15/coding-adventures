@@ -1,5 +1,9 @@
 # Changelog
 
+## 0.140.0
+
+- Generate pinned Mermaid task IDs for ID-less Gantt declarations and preserve one-field tasks as typed sequential dependencies across sections.
+
 ## 0.139.0
 
 - Parse and validate multi-task Gantt `after` and `until` dependencies, rejecting unknown IDs, duplicates, and cyclic start graphs.

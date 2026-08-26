@@ -84,8 +84,9 @@ axis formats and tick intervals lower to resolved labels rendered by Paint.
 Explicit end dates honor inclusive-end mode, optional top axes complement the
 standard bottom axis, and styled today markers lower to backend-neutral paths.
 Multi-source `after`/`until` ranges resolve through validated dependency lists.
-Full date-format and implicit/sequential task syntax plus the pinned
-parser/visual corpus remain explicitly incomplete.
+ID-less declarations receive pinned generated IDs, and one-field task data
+preserves sequential starts across sections. Full date-format and task-tag
+combinations plus the pinned parser/visual corpus remain explicitly incomplete.
 
 The XY-chart pipeline preserves Mermaid's bounded `xAxis.labelRotation` and
 `yAxis.labelRotation` configuration in semantic chart IR. As in the pinned

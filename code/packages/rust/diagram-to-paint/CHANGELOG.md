@@ -1,5 +1,9 @@
 # Changelog — diagram-to-paint
 
+## 0.75.0
+
+- Validate generated-ID and sequential Gantt task geometry through backend-neutral Paint lowering and Metal-to-PNG rendering.
+
 ## 0.74.0
 
 - Validate multi-source Gantt `after` and `until` geometry through the backend-neutral Paint pipeline and Metal-to-PNG rendering.
