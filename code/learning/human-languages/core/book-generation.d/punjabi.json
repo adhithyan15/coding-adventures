@@ -113,7 +113,10 @@
     {
       "language": "punjabi",
       "chapter": 4,
-      "output": "punjabi/book/chapters/ch04-farewells.tex"
+      "output": "punjabi/book/chapters/ch04-farewells.tex",
+      "embeddedLessonIds": [
+        "PA-R04-wellbeing-r2"
+      ]
     },
     {
       "language": "punjabi",

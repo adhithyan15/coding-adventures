@@ -98,7 +98,12 @@
     {
       "language": "german",
       "chapter": 1,
-      "output": "german/book/chapters/ch01-greetings.tex"
+      "output": "german/book/chapters/ch01-greetings.tex",
+      "omittedLessonIds": [
+        "GE-C01-hallo",
+        "GE-W01-hallo-guided-copy"
+      ],
+      "omissionIssue": 13117
     },
     {
       "language": "german",
