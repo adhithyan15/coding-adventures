@@ -271,8 +271,12 @@ HL-C09's fixed 228 prose entries. The next starter entry, **ت**, repeats the
 right-to-left bowl at 00:22–00:27, lifts to place the left dot above, then lifts
   again for the right dot. The **خ** demonstration at 00:49–00:54 completes its
   short head and deep bowl before lifting once for the dot above; this row stays
-  Persian-scoped rather than borrowing Arabic or Urdu provenance. All four
-  authored paths are checked against their vendored isolated Noto Naskh outlines.
+  Persian-scoped rather than borrowing Arabic or Urdu provenance. The earlier
+  **چ** demonstration at 00:35–00:41 draws that same body first, then lifts for
+  the lower-left, lower-right, and lower-center dots. Its Persian-scoped source
+  remains independent from Urdu **چ**, even though both use the same fitted Noto
+  geometry. All five authored paths are checked against their vendored isolated
+  Noto Naskh outlines.
   The **د** row at 01:04–01:06 folds from
 its upper tip through the shoulder and left along the baseline without lifting.
 The following **ر** row at 01:10–01:12 likewise keeps one pen-down run: descend
@@ -319,7 +323,12 @@ queue: **و**, not ه, follows ن. Its 02:43–02:45 demonstration loops the sma
   prose names the letter for its two eyes, explains its aspiration job, and
   warns about the direction reversal in medial and final forms. The learner
   path preserves that zero-lift order separately from chhoṭī he **ہ**. Urdu
-  **ج** follows from *Zer o Zabar*'s independent handwriting animation: place
+  **چ** comes from *Zer o Zabar*'s independent calligraphic and handwriting
+  animations: draw the pointed jīm-series body in one joined run, then place
+  the lower-left, lower-right, and lower-center dots in that order. The prose
+  confirms the three dots below the head and the *ch* sound; the script-owned
+  path preserves this body-first order separately from **ج**. Urdu **ج**
+  follows from *Zer o Zabar*'s independent handwriting animation: place
   the dot below, lift once, then keep the pointed hooked head, descent, and bowl
   in one continuous run. The chapter's alternate flat head is purely aesthetic,
   so the learner path preserves the pointed form without inventing a different
