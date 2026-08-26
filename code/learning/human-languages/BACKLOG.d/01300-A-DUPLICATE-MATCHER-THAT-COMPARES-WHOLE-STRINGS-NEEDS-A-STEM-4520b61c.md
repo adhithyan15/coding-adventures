@@ -30,7 +30,7 @@ alarm.** That line keeps `el dedo` (inside `alrededor`, which is `retro`),
 `el corazon` (ending in the taught `razon`, which is `ratio`) and `la lampara`
 (containing the taught `para`) while still dropping all four stem cases above.
 
-## The second door: a word the gate already owns but does not count
+### The second door: a word the gate already owns but does not count
 
 Everything above is a near-duplicate the string comparison cannot see. This is
 different in kind, and it is the more dangerous of the two, because **no string
