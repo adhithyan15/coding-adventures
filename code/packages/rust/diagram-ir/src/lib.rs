@@ -1061,13 +1061,12 @@ pub enum TaskEnd {
 }
 
 #[derive(Clone, Debug, PartialEq, Default)]
-pub enum TaskStatus {
-    #[default]
-    Normal,
-    Done,
-    Active,
-    Crit,
-    Milestone,
+pub struct GanttTaskTags {
+    pub active: bool,
+    pub done: bool,
+    pub critical: bool,
+    pub milestone: bool,
+    pub vertical: bool,
 }
 
 #[derive(Clone, Debug, PartialEq)]
@@ -1077,7 +1076,7 @@ pub struct GanttTask {
     pub start: TaskStart,
     pub duration_days: f64,
     pub end: Option<TaskEnd>,
-    pub status: TaskStatus,
+    pub tags: GanttTaskTags,
     pub dependencies: Vec<String>,
     pub link: Option<String>,
     pub callback: Option<String>,
@@ -1244,12 +1243,19 @@ pub enum LayoutedTemporalItem {
         y: f64,
         width: f64,
         height: f64,
-        status: TaskStatus,
+        tags: GanttTaskTags,
         label: String,
     },
     MilestoneMarker {
         x: f64,
         y: f64,
+        tags: GanttTaskTags,
+        label: String,
+    },
+    VerticalMarker {
+        x: f64,
+        y1: f64,
+        y2: f64,
         label: String,
     },
     TodayMarker {
@@ -1565,7 +1571,7 @@ mod tests {
             start: TaskStart::Date("2026-01-01".into()),
             duration_days: 5.0,
             end: None,
-            status: TaskStatus::Done,
+            tags: GanttTaskTags { done: true, ..GanttTaskTags::default() },
             dependencies: vec![],
             link: None,
             callback: None,

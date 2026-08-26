@@ -537,7 +537,8 @@ use diagram_ir::{
     SequenceEvent, SequenceLineStyle, SequenceLink, SequenceNotePlacement, SequenceParticipant,
     SequenceParticipantGroup, SequenceParticipantKind, SequenceProperty, SequenceTextWrap,
     SeriesKind, StructuralDiagram, StructuralGroup, StructuralKind, StructuralNode,
-    StructuralNodeKind, StructuralNodeMetadata, StructuralRelationship, TaskEnd, TaskStart, TaskStatus,
+    GanttTaskTags, StructuralNodeKind, StructuralNodeMetadata, StructuralRelationship, TaskEnd,
+    TaskStart,
     TemporalBody, TemporalDiagram, TemporalKind, XyAxisConfig, XyChartConfig,
 };
 
@@ -6208,16 +6209,12 @@ fn parse_gantt_task(
         return Err(token_error(token, "Gantt task data cannot be empty"));
     }
 
-    // Detect status keywords in the first part.
-    let first = parts[0];
-    let (status, remaining) = if ["done", "active", "crit", "milestone"]
-        .iter()
-        .any(|status| first.eq_ignore_ascii_case(status))
-    {
-        (parse_task_status(first), &parts[1..])
-    } else {
-        (TaskStatus::Normal, &parts[..])
-    };
+    let mut tags = GanttTaskTags::default();
+    let mut first_data = 0;
+    while first_data < parts.len() && apply_gantt_task_tag(parts[first_data], &mut tags) {
+        first_data += 1;
+    }
+    let remaining = &parts[first_data..];
 
     if remaining.iter().any(|part| part.is_empty()) {
         return Err(token_error(token, "Gantt task data cannot be empty"));
@@ -6250,11 +6247,23 @@ fn parse_gantt_task(
         start,
         duration_days,
         end,
-        status,
+        tags,
         link: None,
         callback: None,
         callback_args: None,
     })
+}
+
+fn apply_gantt_task_tag(value: &str, tags: &mut GanttTaskTags) -> bool {
+    match value.to_ascii_lowercase().as_str() {
+        "active" => tags.active = true,
+        "done" => tags.done = true,
+        "crit" => tags.critical = true,
+        "milestone" => tags.milestone = true,
+        "vert" => tags.vertical = true,
+        _ => return false,
+    }
+    true
 }
 
 fn parse_gantt_task_start(token: &Token, value: &str) -> Result<TaskStart, ParseError> {
@@ -6308,16 +6317,6 @@ fn looks_like_gantt_date(value: &str) -> bool {
                 && month.chars().all(|c| c.is_ascii_digit())
                 && day.chars().all(|c| c.is_ascii_digit())
     )
-}
-
-fn parse_task_status(s: &str) -> TaskStatus {
-    match s.to_ascii_lowercase().as_str() {
-        "done" => TaskStatus::Done,
-        "active" => TaskStatus::Active,
-        "crit" => TaskStatus::Crit,
-        "milestone" => TaskStatus::Milestone,
-        _ => TaskStatus::Normal,
-    }
 }
 
 fn parse_duration(s: &str) -> Option<f64> {
@@ -6820,7 +6819,7 @@ Rel(customer, web, \"Uses\", \"HTTPS\")";
     #[test]
     fn gantt_parses_status() {
         let d = parse_gantt(GANTT_SRC).unwrap();
-        assert_eq!(d.sections[0].tasks[0].status, TaskStatus::Done);
+        assert!(d.sections[0].tasks[0].tags.done);
     }
 
     #[test]
@@ -6918,10 +6917,35 @@ Rel(customer, web, \"Uses\", \"HTTPS\")";
         assert_eq!(tasks[1].start, TaskStart::After(vec!["anchor".into()]));
         assert_eq!(tasks[2].id, "task2");
         assert_eq!(tasks[2].start, TaskStart::After(vec!["task1".into()]));
-        assert_eq!(tasks[2].status, TaskStatus::Active);
+        assert!(tasks[2].tags.active);
         assert_eq!(tasks[3].id, "task3");
         assert_eq!(tasks[3].start, TaskStart::Date("2026-03-10".into()));
         assert!(parse_gantt("gantt\nFirst :2d\n").is_err());
+    }
+
+    #[test]
+    fn gantt_preserves_combined_and_vertical_task_tags() {
+        let diagram = parse_gantt(
+            "gantt\nCombined :crit, done, milestone, combined, 2026-03-01, 0d\nDeadline :vert, active, deadline, 2026-03-05, 0d\n",
+        ).unwrap();
+        let tasks = &diagram.sections[0].tasks;
+        assert_eq!(
+            tasks[0].tags,
+            GanttTaskTags {
+                done: true,
+                critical: true,
+                milestone: true,
+                ..GanttTaskTags::default()
+            }
+        );
+        assert_eq!(
+            tasks[1].tags,
+            GanttTaskTags {
+                active: true,
+                vertical: true,
+                ..GanttTaskTags::default()
+            }
+        );
     }
 
     #[test]

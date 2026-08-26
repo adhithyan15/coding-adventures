@@ -1,5 +1,9 @@
 # Changelog — diagram-to-paint
 
+## 0.76.0
+
+- Paint combined active/done/critical Gantt styling and full-height vertical markers through backend-neutral instructions and Metal.
+
 ## 0.75.0
 
 - Validate generated-ID and sequential Gantt task geometry through backend-neutral Paint lowering and Metal-to-PNG rendering.

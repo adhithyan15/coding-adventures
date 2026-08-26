@@ -1,5 +1,9 @@
 # Changelog — diagram-ir
 
+## 0.81.0
+
+- Preserve independent Gantt task tags in semantic IR and add backend-neutral vertical marker layout items.
+
 ## 0.80.0
 
 - Represent multi-task Gantt `after` starts and `until` ends as typed dependency lists.

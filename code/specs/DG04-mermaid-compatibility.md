@@ -85,8 +85,10 @@ Explicit end dates honor inclusive-end mode, optional top axes complement the
 standard bottom axis, and styled today markers lower to backend-neutral paths.
 Multi-source `after`/`until` ranges resolve through validated dependency lists.
 ID-less declarations receive pinned generated IDs, and one-field task data
-preserves sequential starts across sections. Full date-format and task-tag
-combinations plus the pinned parser/visual corpus remain explicitly incomplete.
+preserves sequential starts across sections. Combined active/done/critical/
+milestone tags remain independent, while `vert` tasks lower to full-height
+markers without consuming task rows. Full date-format support plus the pinned
+parser/visual corpus remain explicitly incomplete.
 
 The XY-chart pipeline preserves Mermaid's bounded `xAxis.labelRotation` and
 `yAxis.labelRotation` configuration in semantic chart IR. As in the pinned
