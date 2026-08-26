@@ -9149,16 +9149,28 @@ adds no new owner.
 The next selected owner is
 `scytale-unicode-padding-established-lane-conformance` on
 `codex/scytale-established-lane-conformance`. It is newly dependency-ready after
-the neutral classical-cipher corpus merged, consumes that exact fixture suite,
-and closes one established identity's Unicode-unit, ragged-column, and literal
-U+0020-padding divergence across all 15 lanes. It is the highest-leverage bounded
-successor and materially narrower than the sibling Vigenere cryptanalysis
-convergence. Seven live PRs have zero exact overlap with its package, CR02,
-fixture, state, or roadmap surfaces. OCaml's process-free substrate remains
-collision-unsafe while PRs #12149 and #12162 own required Go build-tool entry
-and validator paths. The reconciled state graph remains complete and acyclic at
-532 owners and 791 edges: 158 merged, 373 pending, and exactly one in-progress
-owner, with no active parity PR.
+the neutral classical-cipher corpus merged, implements the CR02 behavior pinned
+by that suite, and closes one established identity's Unicode-unit,
+ragged-column, and literal U+0020-padding divergence across all 15 lanes. It is
+the highest-leverage bounded successor and materially narrower than the sibling
+Vigenere cryptanalysis convergence. Seven live PRs have zero exact overlap with
+its package, CR02, fixture, state, or roadmap surfaces. OCaml's process-free
+substrate remains collision-unsafe while PRs #12149 and #12162 own required Go
+build-tool entry and validator paths. The reconciled state graph remains
+complete and acyclic at 532 owners and 791 edges: 158 merged, 373 pending, and
+exactly one in-progress owner, with no active parity PR.
+
+The final implementation audit found a distinct test-infrastructure gap before
+publication: the package tests directly exercise the normative Scytale
+semantics, but no lane loads or generatedly consumes all 18 Scytale fixture
+cases and compares each complete expected object. The new pending owner
+`scytale-language-neutral-fixture-established-lane-consumers` depends on this
+behavior-convergence slice and will add bounded test-only JSON consumers or
+dependency-free generated adapters plus a corpus-drift gate across all 15
+lanes. This keeps the current implementation claim honest while preserving the
+fixture README's stronger definition of executable conformance. The addition
+brings the registered graph to 533 owners and 792 edges without changing the
+single in-progress owner.
 
 ## Autonomous Loop Protocol
 

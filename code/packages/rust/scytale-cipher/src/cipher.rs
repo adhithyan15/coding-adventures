@@ -30,10 +30,12 @@ pub struct BruteForceResult {
     pub text: String,
 }
 
+pub const MAX_BRUTE_FORCE_TEXT_LENGTH: usize = 4096;
+
 /// Encrypt text using the Scytale transposition cipher.
 ///
 /// Returns `Err` if key < 2 or key > text length.
-pub fn encrypt(text: &str, key: usize) -> Result<String, String> {
+pub fn encrypt(text: &str, key: isize) -> Result<String, String> {
     if text.is_empty() {
         return Ok(String::new());
     }
@@ -44,6 +46,7 @@ pub fn encrypt(text: &str, key: usize) -> Result<String, String> {
     if key < 2 {
         return Err(format!("Key must be >= 2, got {}", key));
     }
+    let key = key as usize;
     if key > n {
         return Err(format!("Key must be <= text length ({}), got {}", n, key));
     }
@@ -70,7 +73,7 @@ pub fn encrypt(text: &str, key: usize) -> Result<String, String> {
 ///
 /// Trailing padding spaces are stripped.
 /// Returns `Err` if key < 2 or key > text length.
-pub fn decrypt(text: &str, key: usize) -> Result<String, String> {
+pub fn decrypt(text: &str, key: isize) -> Result<String, String> {
     if text.is_empty() {
         return Ok(String::new());
     }
@@ -81,6 +84,7 @@ pub fn decrypt(text: &str, key: usize) -> Result<String, String> {
     if key < 2 {
         return Err(format!("Key must be >= 2, got {}", key));
     }
+    let key = key as usize;
     if key > n {
         return Err(format!("Key must be <= text length ({}), got {}", n, key));
     }
@@ -96,7 +100,11 @@ pub fn decrypt(text: &str, key: usize) -> Result<String, String> {
     let mut offset = 0;
     for c in 0..key {
         col_starts.push(offset);
-        let len = if n.is_multiple_of(key) || c < full_cols { num_rows } else { num_rows - 1 };
+        let len = if n.is_multiple_of(key) || c < full_cols {
+            num_rows
+        } else {
+            num_rows - 1
+        };
         col_lens.push(len);
         offset += len;
     }
@@ -118,17 +126,20 @@ pub fn decrypt(text: &str, key: usize) -> Result<String, String> {
 /// Try all possible Scytale keys and return decryption results.
 ///
 /// Keys range from 2 to len/2.
-pub fn brute_force(text: &str) -> Vec<BruteForceResult> {
+pub fn brute_force(text: &str) -> Result<Vec<BruteForceResult>, String> {
     let n = text.chars().count();
+    if n > MAX_BRUTE_FORCE_TEXT_LENGTH {
+        return Err("scytale-brute-force-limit".to_string());
+    }
     if n < 4 {
-        return Vec::new();
+        return Ok(Vec::new());
     }
 
     let max_key = n / 2;
     let mut results = Vec::with_capacity(max_key - 1);
 
     for candidate_key in 2..=max_key {
-        if let Ok(decrypted) = decrypt(text, candidate_key) {
+        if let Ok(decrypted) = decrypt(text, candidate_key as isize) {
             results.push(BruteForceResult {
                 key: candidate_key,
                 text: decrypted,
@@ -136,7 +147,7 @@ pub fn brute_force(text: &str) -> Vec<BruteForceResult> {
         }
     }
 
-    results
+    Ok(results)
 }
 
 #[cfg(test)]
@@ -215,8 +226,8 @@ mod tests {
             ("12345", 2),
         ];
         for (text, key) in texts {
-            let ct = encrypt(text, key).unwrap();
-            let pt = decrypt(&ct, key).unwrap();
+            let ct = encrypt(text, key as isize).unwrap();
+            let pt = decrypt(&ct, key as isize).unwrap();
             assert_eq!(pt, text, "Round trip failed for key={}", key);
         }
     }
@@ -226,8 +237,8 @@ mod tests {
         let text = "The quick brown fox jumps over the lazy dog!";
         let n = text.chars().count();
         for key in 2..=(n / 2) {
-            let ct = encrypt(text, key).unwrap();
-            let pt = decrypt(&ct, key).unwrap();
+            let ct = encrypt(text, key as isize).unwrap();
+            let pt = decrypt(&ct, key as isize).unwrap();
             assert_eq!(pt, text, "Round trip failed for key={}", key);
         }
     }

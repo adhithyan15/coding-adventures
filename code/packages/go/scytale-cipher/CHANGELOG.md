@@ -1,5 +1,11 @@
 # Changelog
 
+## Unreleased - 2026-08-26
+
+- Pin CR02 Unicode-scalar, combining-sequence, ragged-grid, and literal-padding behavior.
+- Return a checked brute-force result and reject inputs above 4096 scalars before allocation.
+- Add an explicit pure-computation capability profile.
+
 ## 0.1.0 — 2026-04-03
 
 - Initial release.

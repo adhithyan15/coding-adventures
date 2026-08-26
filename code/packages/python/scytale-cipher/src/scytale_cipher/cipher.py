@@ -86,6 +86,8 @@ key and look for readable text. This is what brute_force() does.
 
 import math
 
+MAX_BRUTE_FORCE_TEXT_LENGTH = 4096
+
 
 def encrypt(text: str, key: int) -> str:
     """Encrypt text using the Scytale transposition cipher.
@@ -249,6 +251,8 @@ def brute_force(text: str) -> list[dict[str, int | str]]:
         >>> results[0]
         {'key': 2, 'text': 'ABCDEF'}
     """
+    if len(text) > MAX_BRUTE_FORCE_TEXT_LENGTH:
+        raise ValueError("scytale-brute-force-limit")
     if len(text) < 4:
         return []
 

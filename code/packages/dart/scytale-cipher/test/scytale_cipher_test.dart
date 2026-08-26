@@ -106,7 +106,16 @@ void main() {
 
     test('rejects work beyond the documented quadratic-output limit', () {
       final oversized = List.filled(maxBruteForceTextLength + 1, 'A').join();
-      expect(() => bruteForce(oversized), throwsRangeError);
+      expect(
+        () => bruteForce(oversized),
+        throwsA(
+          isA<RangeError>().having(
+            (error) => error.message,
+            'message',
+            'scytale-brute-force-limit',
+          ),
+        ),
+      );
     });
   });
 }

@@ -39,31 +39,53 @@
 
 local M = {}
 
+M.MAX_BRUTE_FORCE_TEXT_LENGTH = 4096
+
+local function to_scalars(text)
+    local scalars = {}
+    for _, scalar in utf8.codes(text) do
+        scalars[#scalars + 1] = scalar
+    end
+    return scalars
+end
+
+local function from_scalars(scalars)
+    local result = {}
+    for index, scalar in ipairs(scalars) do
+        result[index] = utf8.char(scalar)
+    end
+    return table.concat(result)
+end
+
 --- Encrypt text using the Scytale transposition cipher.
 --- @param text string The plaintext to encrypt
 --- @param key number Number of columns (>= 2, <= #text)
 --- @return string The transposed ciphertext
 function M.encrypt(text, key)
     if text == "" then return "" end
-    local n = #text
+    local scalars = to_scalars(text)
+    local n = #scalars
     assert(key >= 2, "Key must be >= 2, got " .. tostring(key))
     assert(key <= n, "Key must be <= text length (" .. n .. "), got " .. tostring(key))
 
     -- Calculate grid dimensions and pad
     local num_rows = math.ceil(n / key)
     local padded_len = num_rows * key
-    local padded = text .. string.rep(" ", padded_len - n)
+    local padded = {}
+    for index = 1, padded_len do
+        padded[index] = scalars[index] or 0x20
+    end
 
     -- Read column-by-column
     local result = {}
     for col = 0, key - 1 do
         for row = 0, num_rows - 1 do
             local idx = row * key + col + 1  -- Lua is 1-indexed
-            result[#result + 1] = padded:sub(idx, idx)
+            result[#result + 1] = padded[idx]
         end
     end
 
-    return table.concat(result)
+    return from_scalars(result)
 end
 
 --- Decrypt ciphertext encrypted with the Scytale cipher.
@@ -73,7 +95,8 @@ end
 --- @return string The decrypted plaintext
 function M.decrypt(text, key)
     if text == "" then return "" end
-    local n = #text
+    local scalars = to_scalars(text)
+    local n = #scalars
     assert(key >= 2, "Key must be >= 2, got " .. tostring(key))
     assert(key <= n, "Key must be <= text length (" .. n .. "), got " .. tostring(key))
 
@@ -104,21 +127,26 @@ function M.decrypt(text, key)
         for col = 0, key - 1 do
             if row < col_lens[col] then
                 local idx = col_starts[col] + row + 1  -- Lua is 1-indexed
-                result[#result + 1] = text:sub(idx, idx)
+                result[#result + 1] = scalars[idx]
             end
         end
     end
 
     -- Strip trailing padding spaces
-    local joined = table.concat(result)
-    return (joined:gsub("%s+$", ""))
+    while result[#result] == 0x20 do
+        result[#result] = nil
+    end
+    return from_scalars(result)
 end
 
 --- Try all possible keys and return decryption results.
 --- @param text string The ciphertext to brute-force
 --- @return table List of {key=number, text=string} results
 function M.brute_force(text)
-    local n = #text
+    local n = #to_scalars(text)
+    if n > M.MAX_BRUTE_FORCE_TEXT_LENGTH then
+        error("scytale-brute-force-limit", 0)
+    end
     if n < 4 then return {} end
 
     local max_key = math.floor(n / 2)

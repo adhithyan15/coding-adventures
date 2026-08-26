@@ -284,7 +284,7 @@ class TestCharacterPreservation:
         assert decrypt("ABe \u0301 ", 3) == "Ae\u0301B"
         assert decrypt("ABCDEF", 4) == "ACEFBD"
         assert decrypt("A\tB ", 2) == "AB\t"
-        assert decrypt("A\u00A0\t \n ", 3) == "A\t\n\u00A0"
+        assert decrypt("A\u00a0\t \n ", 3) == "A\t\n\u00a0"
 
 
 class TestVersion:

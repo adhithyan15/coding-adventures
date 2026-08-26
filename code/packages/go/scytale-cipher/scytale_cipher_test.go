@@ -189,7 +189,7 @@ func TestBruteForce(t *testing.T) {
 		if err != nil {
 			t.Fatalf("BruteForce returned unexpected error: %v", err)
 		}
-		if len(results) != 4 {              // keys 2,3,4,5
+		if len(results) != 4 { // keys 2,3,4,5
 			t.Errorf("Expected 4 results, got %d", len(results))
 		}
 		expectedKeys := []int{2, 3, 4, 5}
@@ -227,7 +227,11 @@ func TestPortableScalarRaggedAndPaddingVectors(t *testing.T) {
 	if err != nil || combining != "ABe \u0301 " {
 		t.Fatalf("combining encrypt = %q, %v", combining, err)
 	}
-	for _, testCase := range []struct{ text string; key int; expected string }{
+	for _, testCase := range []struct {
+		text     string
+		key      int
+		expected string
+	}{
 		{"Aé😀 B ", 3, "A😀Bé"},
 		{"ABe \u0301 ", 3, "Ae\u0301B"},
 		{"ABCDEF", 4, "ACEFBD"},

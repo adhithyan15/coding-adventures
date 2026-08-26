@@ -1,6 +1,7 @@
 namespace CodingAdventures.ScytaleCipher
 
 open System
+open System.Text
 
 type BruteForceResult = {
     Key: int
@@ -9,6 +10,16 @@ type BruteForceResult = {
 
 [<RequireQualifiedAccess>]
 module ScytaleCipher =
+    [<Literal>]
+    let maxBruteForceTextLength = 4096
+
+    let private scalars (text: string) = text.EnumerateRunes() |> Seq.toArray
+
+    let private scalarString (values: Rune array) =
+        let builder = StringBuilder(values.Length)
+        values |> Array.iter (fun value -> builder.Append(value) |> ignore)
+        builder.ToString()
+
     let private validateKey textLength key =
         if key < 2 then
             invalidArg (nameof key) "Key must be >= 2."
@@ -23,18 +34,20 @@ module ScytaleCipher =
         if text.Length = 0 then
             String.Empty
         else
-            validateKey text.Length key
+            let values = scalars text
+            validateKey values.Length key
 
-            let rowCount = (text.Length + key - 1) / key
+            let rowCount = (values.Length + key - 1) / key
             let paddedLength = rowCount * key
-            let padded = text.PadRight(paddedLength).ToCharArray()
+            let padded = Array.create paddedLength (Rune(' '))
+            Array.Copy(values, padded, values.Length)
 
             [|
                 for column in 0 .. key - 1 do
                     for row in 0 .. rowCount - 1 do
                         padded[(row * key) + column]
             |]
-            |> fun chars -> String(chars)
+            |> scalarString
 
     let decrypt (text: string) (key: int) =
         if isNull text then
@@ -43,10 +56,11 @@ module ScytaleCipher =
         if text.Length = 0 then
             String.Empty
         else
-            validateKey text.Length key
+            let values = scalars text
+            validateKey values.Length key
 
-            let rowCount = (text.Length + key - 1) / key
-            let fullColumns = if text.Length % key = 0 then key else text.Length % key
+            let rowCount = (values.Length + key - 1) / key
+            let fullColumns = if values.Length % key = 0 then key else values.Length % key
             let columnStarts = Array.zeroCreate<int> key
             let columnLengths = Array.zeroCreate<int> key
             let mutable offset = 0
@@ -54,26 +68,35 @@ module ScytaleCipher =
             for column in 0 .. key - 1 do
                 columnStarts[column] <- offset
                 let columnLength =
-                    if text.Length % key = 0 || column < fullColumns then rowCount else rowCount - 1
+                    if values.Length % key = 0 || column < fullColumns then rowCount else rowCount - 1
 
                 columnLengths[column] <- columnLength
                 offset <- offset + columnLength
 
-            let chars = text.ToCharArray()
-
-            [|
+            let plaintext = [|
                 for row in 0 .. rowCount - 1 do
                     for column in 0 .. key - 1 do
                         if row < columnLengths[column] then
-                            chars[columnStarts[column] + row]
+                            values[columnStarts[column] + row]
             |]
-            |> fun chars -> String(chars).TrimEnd(' ')
+            let mutable endIndex = plaintext.Length
+            while endIndex > 0 && plaintext[endIndex - 1].Value = 0x20 do
+                endIndex <- endIndex - 1
+            if endIndex = 0 then
+                String.Empty
+            else
+                plaintext[.. endIndex - 1] |> scalarString
 
     let bruteForce (text: string) =
         if isNull text then
             nullArg (nameof text)
 
-        if text.Length < 4 then
+        let scalarLength = scalars text |> Array.length
+
+        if scalarLength > maxBruteForceTextLength then
+            invalidArg (nameof text) "scytale-brute-force-limit"
+
+        if scalarLength < 4 then
             []
         else
-            [ for key in 2 .. text.Length / 2 -> { Key = key; Text = decrypt text key } ]
+            [ for key in 2 .. scalarLength / 2 -> { Key = key; Text = decrypt text key } ]

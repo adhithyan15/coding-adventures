@@ -2,6 +2,8 @@
 
 Ancient Spartan transposition cipher implementation in Elixir.
 
+This package follows [CR02](../../../specs/CR02-scytale-cipher.md). Grid cells are Unicode scalar values (not grapheme clusters), uneven ciphertext columns are reconstructed explicitly, and only trailing U+0020 padding is removed. `brute_force/1` rejects inputs above 4096 scalars before allocating quadratic candidate output. Production code is deterministic pure computation with no OS capabilities.
+
 ## Usage
 
 ```elixir

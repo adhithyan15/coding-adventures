@@ -45,6 +45,14 @@
 public enum ScytaleCipherError: Error {
     case keyTooSmall(Int)
     case keyTooLarge(Int, textLength: Int)
+    case bruteForceLimit
+}
+
+/// Largest Unicode-scalar input accepted by `bruteForce(_:)`.
+public let maxBruteForceTextLength = 4096
+
+private func scalarString(_ scalars: [Unicode.Scalar]) -> String {
+    String(String.UnicodeScalarView(scalars))
 }
 
 /// A single brute-force decryption result.
@@ -67,8 +75,8 @@ public struct BruteForceResult {
 public func encrypt(_ text: String, key: Int) throws -> String {
     if text.isEmpty { return "" }
 
-    let chars = Array(text)
-    let n = chars.count
+    let scalars = Array(text.unicodeScalars)
+    let n = scalars.count
 
     guard key >= 2 else { throw ScytaleCipherError.keyTooSmall(key) }
     guard key <= n else { throw ScytaleCipherError.keyTooLarge(key, textLength: n) }
@@ -76,11 +84,11 @@ public func encrypt(_ text: String, key: Int) throws -> String {
     // Calculate grid dimensions and pad
     let numRows = (n + key - 1) / key
     let paddedLen = numRows * key
-    var padded = chars
-    padded.append(contentsOf: Array(repeating: Character(" "), count: paddedLen - n))
+    var padded = scalars
+    padded.append(contentsOf: Array(repeating: Unicode.Scalar(0x20)!, count: paddedLen - n))
 
     // Read column-by-column
-    var result = ""
+    var result: [Unicode.Scalar] = []
     result.reserveCapacity(paddedLen)
     for col in 0..<key {
         for row in 0..<numRows {
@@ -88,7 +96,7 @@ public func encrypt(_ text: String, key: Int) throws -> String {
         }
     }
 
-    return result
+    return scalarString(result)
 }
 
 /// Decrypt ciphertext that was encrypted with the Scytale cipher.
@@ -103,8 +111,8 @@ public func encrypt(_ text: String, key: Int) throws -> String {
 public func decrypt(_ text: String, key: Int) throws -> String {
     if text.isEmpty { return "" }
 
-    let chars = Array(text)
-    let n = chars.count
+    let scalars = Array(text.unicodeScalars)
+    let n = scalars.count
 
     guard key >= 2 else { throw ScytaleCipherError.keyTooSmall(key) }
     guard key <= n else { throw ScytaleCipherError.keyTooLarge(key, textLength: n) }
@@ -126,22 +134,22 @@ public func decrypt(_ text: String, key: Int) throws -> String {
     }
 
     // Read row-by-row
-    var result = ""
+    var result: [Unicode.Scalar] = []
     result.reserveCapacity(n)
     for row in 0..<numRows {
         for col in 0..<key {
             if row < colLens[col] {
-                result.append(chars[colStarts[col] + row])
+                result.append(scalars[colStarts[col] + row])
             }
         }
     }
 
     // Strip trailing padding spaces
-    while result.last == " " {
+    while result.last?.value == 0x20 {
         result.removeLast()
     }
 
-    return result
+    return scalarString(result)
 }
 
 /// Try all possible Scytale keys and return decryption results.
@@ -150,17 +158,19 @@ public func decrypt(_ text: String, key: Int) throws -> String {
 ///
 /// - Parameter text: The ciphertext to brute-force.
 /// - Returns: Array of `BruteForceResult` values.
-public func bruteForce(_ text: String) -> [BruteForceResult] {
-    let n = text.count
+/// - Throws: `ScytaleCipherError.bruteForceLimit` when `text` exceeds 4096
+///   Unicode scalar values.
+public func bruteForce(_ text: String) throws -> [BruteForceResult] {
+    let n = text.unicodeScalars.count
+    guard n <= maxBruteForceTextLength else { throw ScytaleCipherError.bruteForceLimit }
     if n < 4 { return [] }
 
     let maxKey = n / 2
     var results: [BruteForceResult] = []
 
     for candidateKey in 2...maxKey {
-        if let decrypted = try? decrypt(text, key: candidateKey) {
-            results.append(BruteForceResult(key: candidateKey, text: decrypted))
-        }
+        let decrypted = try decrypt(text, key: candidateKey)
+        results.append(BruteForceResult(key: candidateKey, text: decrypted))
     }
 
     return results
