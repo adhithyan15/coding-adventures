@@ -4,15 +4,18 @@ typedef TrieEntry<V> = (String, V);
 const _invalidScalarMessage =
     'Trie input must contain only Unicode scalar values.';
 
-Iterable<int> _checkedRunes(String input) sync* {
+Iterable<int> _checkedRunes(String input) {
+  // Validate the complete host string before traversal. This rejects a lone
+  // surrogate even when an earlier scalar is already absent from the trie,
+  // while returning the SDK's lazy rune iterable avoids a full scalar list.
   for (final scalar in input.runes) {
     if (scalar < 0 ||
         scalar > 0x10ffff ||
         (scalar >= 0xd800 && scalar <= 0xdfff)) {
       throw ArgumentError(_invalidScalarMessage);
     }
-    yield scalar;
   }
+  return input.runes;
 }
 
 /// A node in the prefix tree.

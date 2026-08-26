@@ -8985,15 +8985,16 @@ ambiguous worktrees remain preserved.
 
 The Dart candidate implements the generic DT13 contract in specification,
 tests, source, and documentation order. Nineteen package tests pass with
-109/109 production lines covered; formatting and fatal analysis are clean.
+110/110 production lines covered; formatting and fatal analysis are clean.
 The contract pins Unicode-scalar edges and numeric order without normalization,
 nullable endpoint presence, empty keys and prefixes, upsert counts, iterative
 enumeration/deletion/validation, longest-prefix fallback, pruning, and a
 50,001-scalar stack-safety case. Independent contract and security findings
 were resolved by making the reference pseudocode iterative and nullable-safe,
-rejecting malformed UTF-16 atomically before insertion, redacting missing-key
-errors, and streaming longest-prefix traversal so a first-edge miss does not
-materialize the rest of an attacker-controlled input.
+rejecting malformed UTF-16 atomically before insertion and before traversal
+even after an earlier missing edge, redacting missing-key errors, and streaming
+longest-prefix traversal without materializing the rest of an
+attacker-controlled input.
 
 The existing Dart LZ78 downstream suite passes all 47 tests and the Dart
 scaffold generator passes all 17. The Go build tool passes all package tests

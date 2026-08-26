@@ -79,8 +79,13 @@ void main() {
       final trie = Trie<int>()..insert('safe', 1);
       final loneLeadSurrogate = String.fromCharCode(0xd800);
       final loneTrailSurrogate = String.fromCharCode(0xdc00);
+      final trailingSurrogateAfterMiss = 'missing$loneLeadSurrogate';
 
-      for (final invalid in [loneLeadSurrogate, loneTrailSurrogate]) {
+      for (final invalid in [
+        loneLeadSurrogate,
+        loneTrailSurrogate,
+        trailingSurrogateAfterMiss,
+      ]) {
         expect(() => trie.insert(invalid, 2), throwsArgumentError);
         expect(() => trie.search(invalid), throwsArgumentError);
         expect(() => trie.containsKey(invalid), throwsArgumentError);
@@ -210,7 +215,7 @@ void main() {
       expect(trie.longestPrefixMatch(''), ('', 'fallback'));
     });
 
-    test('stops scanning after the first missing scalar', () {
+    test('does not materialize text after the first missing trie edge', () {
       final trie = Trie<int>()..insert('api', 1);
       final hugeMiss = 'z${List<String>.filled(1000000, 'x').join()}';
 
