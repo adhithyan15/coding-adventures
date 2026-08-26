@@ -4,6 +4,199 @@ import Testing
 
 struct ValidatorTests {
     @Test(arguments: [
+        "validation-orphan-crates-clean.json",
+        "validation-orphan-crates-unlisted.json",
+        "validation-orphan-exemptions-invalid.json",
+        "validation-orphan-exemptions-stale.json",
+    ])
+    func orphanValidatorConsumesSharedFixture(_ fixtureName: String) throws {
+        let fixture = try loadSharedOrphanFixture(fixtureName)
+        let result = Validator.validateOrphanCrateSnapshot(fixture.input.options.orphanSnapshot)
+
+        #expect(result.valid == fixture.expected.result.valid)
+        #expect(result.diagnosticCodes == fixture.expected.result.diagnosticCodes)
+        #expect(result.pendingExemptionCount == fixture.expected.result.pendingExemptionCount)
+        #expect(result.diagnostics == fixture.expected.diagnostics)
+    }
+
+    @Test
+    func orphanValidatorRedactsHostilePathsAndBoundsUnicodeScalars() {
+        let unsafePaths = [
+            "",
+            String(repeating: "😀", count: 513),
+            "/absolute/secret-project",
+            "C:/host/secret-project",
+            "code/packages/rust/bad<name>",
+            "code/packages/rust/trailing.",
+            "code/packages/rust/CON",
+        ]
+
+        for unsafePath in unsafePaths {
+            let result = Validator.validateOrphanCrateSnapshot(OrphanSnapshot(
+                directories: ["code/packages/rust/demo"],
+                manifests: [OrphanManifest(path: "code/packages/rust/demo", kind: "package")],
+                buildFiles: [],
+                exemptions: [OrphanExemption(
+                    line: 7,
+                    kind: "PENDING",
+                    path: unsafePath,
+                    reason: "not allowed"
+                )]
+            ))
+
+            #expect(result.diagnostics.contains(OrphanDiagnostic(
+                code: "ORPHAN_EXEMPTION_INVALID",
+                severity: "error",
+                path: "code/BUILD-EXEMPTIONS",
+                details: OrphanDiagnosticDetails(line: 7, problem: "PATH_UNSAFE")
+            )))
+            #expect(!result.diagnostics.contains { $0.path == unsafePath && !unsafePath.isEmpty })
+        }
+    }
+
+    @Test
+    func orphanValidatorUsesPythonBlankReasonSemanticsAndReasonBounds() {
+        let result = Validator.validateOrphanCrateSnapshot(OrphanSnapshot(
+            directories: [
+                "code/packages/rust/blank",
+                "code/packages/rust/bom",
+                "code/packages/rust/missing",
+                "code/packages/rust/oversized",
+            ],
+            manifests: [
+                OrphanManifest(path: "code/packages/rust/blank", kind: "package"),
+                OrphanManifest(path: "code/packages/rust/bom", kind: "package"),
+                OrphanManifest(path: "code/packages/rust/missing", kind: "package"),
+                OrphanManifest(path: "code/packages/rust/oversized", kind: "package"),
+            ],
+            buildFiles: [],
+            exemptions: [
+                OrphanExemption(line: 7, kind: "PENDING", path: "code/packages/rust/blank", reason: "\u{001C}"),
+                OrphanExemption(line: 8, kind: "PENDING", path: "code/packages/rust/bom", reason: "\u{FEFF}"),
+                OrphanExemption(line: 9, kind: "PENDING", path: "code/packages/rust/missing", reason: nil),
+                OrphanExemption(
+                    line: 10,
+                    kind: "PENDING",
+                    path: "code/packages/rust/oversized",
+                    reason: String(repeating: "x", count: 4_097)
+                ),
+            ]
+        ))
+
+        #expect(result.pendingExemptionCount == 1)
+        #expect(result.diagnostics.filter {
+            $0.code == "ORPHAN_EXEMPTION_INVALID" && $0.details.problem == "REASON_MISSING"
+        }.map(\.details.line) == [10, 7, 9])
+    }
+
+    @Test
+    func orphanValidatorChoosesClosestEmptyBuildByFixedRankWithoutPrefixLeakage() {
+        let result = Validator.validateOrphanCrateSnapshot(OrphanSnapshot(
+            directories: [
+                "code/packages/rust/demo/child",
+                "code/packages/rust/demo-covered/child",
+                "code/packages/rust/demo2/child",
+            ],
+            manifests: [
+                OrphanManifest(path: "code/packages/rust/demo/child", kind: "package"),
+                OrphanManifest(path: "code/packages/rust/demo-covered/child", kind: "package"),
+                OrphanManifest(path: "code/packages/rust/demo2/child", kind: "virtual_workspace"),
+            ],
+            buildFiles: [
+                OrphanBuildFile(path: "code/packages/rust/BUILD", state: "empty"),
+                OrphanBuildFile(path: "code/packages/rust/demo/BUILD_linux", state: "empty"),
+                OrphanBuildFile(path: "code/packages/rust/demo/BUILD", state: "empty"),
+                OrphanBuildFile(path: "code/packages/rust/demo-covered/BUILD", state: "empty"),
+                OrphanBuildFile(path: "code/packages/rust/BUILD_linux", state: "runnable"),
+                OrphanBuildFile(path: "code/packages/rust/demo2-sibling/BUILD", state: "runnable"),
+            ],
+            exemptions: []
+        ))
+
+        #expect(result.diagnostics == [])
+
+        let emptyOnly = Validator.validateOrphanCrateSnapshot(OrphanSnapshot(
+            directories: ["code/packages/rust/demo/child"],
+            manifests: [OrphanManifest(path: "code/packages/rust/demo/child", kind: "package")],
+            buildFiles: [
+                OrphanBuildFile(path: "code/packages/rust/BUILD", state: "empty"),
+                OrphanBuildFile(path: "code/packages/rust/demo/BUILD_linux", state: "empty"),
+                OrphanBuildFile(path: "code/packages/rust/demo/BUILD", state: "empty"),
+            ],
+            exemptions: []
+        ))
+        #expect(emptyOnly.diagnostics.first?.details.buildPath == "code/packages/rust/demo/BUILD")
+    }
+
+    @Test
+    func orphanValidatorReservesNFCFullFoldIdentitiesBeforeFieldPrecedence() {
+        let result = Validator.validateOrphanCrateSnapshot(OrphanSnapshot(
+            directories: ["code/packages/rust/Straße"],
+            manifests: [OrphanManifest(path: "code/packages/rust/Straße", kind: "package")],
+            buildFiles: [],
+            exemptions: [
+                OrphanExemption(
+                    line: 7,
+                    kind: "UNKNOWN",
+                    path: "code/packages/rust/Straße",
+                    reason: "first"
+                ),
+                OrphanExemption(
+                    line: 8,
+                    kind: "PENDING",
+                    path: "CODE/PACKAGES/RUST/STRASSE",
+                    reason: "duplicate"
+                ),
+            ]
+        ))
+
+        #expect(result.diagnostics.filter { $0.code == "ORPHAN_EXEMPTION_INVALID" }.map {
+            $0.details.problem
+        } == ["UNKNOWN_KIND", "DUPLICATE_PATH"])
+    }
+
+    @Test
+    func orphanValidatorUsesCanonicalASCIIJSONForUnicodeDetailOrdering() {
+        let deleteControl = "code/packages/rust/\u{007F}"
+        let accented = "code/packages/rust/é"
+        let emoji = "code/packages/rust/😀"
+        let result = Validator.validateOrphanCrateSnapshot(OrphanSnapshot(
+            directories: [],
+            manifests: [],
+            buildFiles: [],
+            exemptions: [
+                OrphanExemption(line: 6, kind: "EXCLUDED", path: deleteControl, reason: "removed"),
+                OrphanExemption(line: 9, kind: "EXCLUDED", path: "code/packages/rust/z", reason: "removed"),
+                OrphanExemption(line: 8, kind: "EXCLUDED", path: emoji, reason: "removed"),
+                OrphanExemption(line: 7, kind: "EXCLUDED", path: accented, reason: "removed"),
+            ]
+        ))
+
+        #expect(result.diagnostics.compactMap(\.details.entryPath) == [
+            deleteControl,
+            accented,
+            emoji,
+            "code/packages/rust/z",
+        ])
+    }
+
+    @Test
+    func orphanValidatorUsesExactCaseSensitiveArtifactComponents() {
+        let result = Validator.validateOrphanCrateSnapshot(OrphanSnapshot(
+            directories: ["code/packages/rust/target/generated", "code/packages/rust/targets/generated"],
+            manifests: [
+                OrphanManifest(path: "code/packages/rust/target/generated", kind: "package"),
+                OrphanManifest(path: "code/packages/rust/targets/generated", kind: "virtual_workspace"),
+            ],
+            buildFiles: [],
+            exemptions: []
+        ))
+
+        #expect(result.diagnostics.map(\.path) == ["code/packages/rust/targets/generated"])
+        #expect(result.diagnostics.first?.details.manifestKind == "virtual_workspace")
+    }
+
+    @Test(arguments: [
         "validation-tracked-artifacts-clean.json",
         "validation-tracked-artifacts-forbidden.json",
         "validation-tracked-artifacts-aliases.json",

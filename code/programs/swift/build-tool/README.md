@@ -15,6 +15,25 @@ This port mirrors the other build-tool implementations in the repo:
 6. Builds independent packages in parallel by dependency level
 7. Emits and consumes JSON build plans for CI
 8. Validates the CI full-build toolchain contract
+9. Validates bounded orphan-crate coverage snapshots and exemption records
+
+## Orphan-crate validation
+
+`Validator.validateOrphanCrateSnapshot` consumes caller-supplied directory,
+Cargo manifest, BUILD-file, and exemption metadata. It requires every source
+manifest to have a direct or ancestor runnable BUILD or one active, reasoned
+`EXCLUDED`/`PENDING` entry. Empty BUILDs remain visible diagnostics, and a
+nearer empty BUILD never masks a runnable ancestor.
+
+The adapter uses the exact case-sensitive artifact registry, validates and
+deduplicates portable exemption paths with the pinned Unicode 17 tables,
+reports stale exemptions, redacts hostile paths to `code/BUILD-EXEMPTIONS`,
+and sorts diagnostics with Unicode-scalar paths plus Python-compatible ASCII
+JSON details. It is deliberately process-free: snapshot validation does not
+enumerate files, follow links, invoke Git, read environment state or
+credentials, launch processes, or access the network. All four shared neutral
+orphan-validation fixtures and focused adversarial boundary tests are required
+by the Swift package test suite.
 
 ## Tracked-artifact validation
 

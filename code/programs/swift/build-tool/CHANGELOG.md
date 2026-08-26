@@ -2,6 +2,13 @@
 
 ## Unreleased
 
+- Add a pure orphan-crate snapshot validator consuming all four shared neutral
+  fixtures. It enforces direct and ancestor BUILD coverage, independent empty
+  BUILD reporting, exact artifact exclusions, portable and reasoned exemption
+  records, NFC full-fold duplicate identities, stale-entry precedence,
+  hostile-path redaction, pending counts, and deterministic Unicode-scalar plus
+  Python-compatible ASCII JSON diagnostic ordering without filesystem,
+  process, environment, credential, link, or network authority.
 - Add a pure tracked-artifact snapshot validator consuming all five shared
   neutral fixtures, with hostile-path redaction, exact problem precedence,
   Unicode-scalar length and ordering, inert entry metadata, and exact
