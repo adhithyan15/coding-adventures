@@ -10,11 +10,11 @@
   "sourceHash": "fnv1a64:d7bc04a893b7400e",
   "summary": {
     "totalLessons": 108,
-    "voice": 46,
-    "sight": 37,
+    "voice": 47,
+    "sight": 36,
     "pen": 25,
-    "drivableLessons": 46,
-    "drivablePercent": 43,
+    "drivableLessons": 47,
+    "drivablePercent": 44,
     "trackCount": 1,
     "chapterCount": 36,
     "drivablePrefixTotal": 32,
@@ -27,10 +27,10 @@
     {
       "language": "arabic",
       "lessonCount": 108,
-      "voice": 46,
-      "sight": 37,
+      "voice": 47,
+      "sight": 36,
       "pen": 25,
-      "drivablePercent": 43,
+      "drivablePercent": 44,
       "drivablePrefixTotal": 32,
       "modalities": [
         "voice",
@@ -89,8 +89,8 @@
         {
           "chapter": 4,
           "lessonCount": 8,
-          "voice": 3,
-          "sight": 2,
+          "voice": 4,
+          "sight": 1,
           "pen": 3,
           "modalities": [
             "voice",
@@ -1535,8 +1535,7 @@
       "drivable": false,
       "reasons": [
         "writing-type",
-        "script-block",
-        "sight-cue"
+        "script-block"
       ],
       "coreModality": "pen",
       "coreReasons": [
@@ -1592,17 +1591,17 @@
       "language": "arabic",
       "chapter": 4,
       "sequence": 410,
-      "modality": "sight",
-      "derived": "sight",
-      "drivable": false,
+      "modality": "voice",
+      "derived": "voice",
+      "drivable": true,
       "reasons": [
-        "sight-cue"
+        "no-visual-dependency"
       ],
-      "coreModality": "sight",
+      "coreModality": "voice",
       "coreReasons": [
-        "sight-cue"
+        "no-visual-dependency"
       ],
-      "coreDrivable": false,
+      "coreDrivable": true,
       "sourceHash": "fnv1a64:b227719d446dd21a"
     },
     {

@@ -10,15 +10,15 @@
   "sourceHash": "fnv1a64:e03499fd4b5b6bc8",
   "summary": {
     "totalLessons": 111,
-    "voice": 102,
-    "sight": 5,
+    "voice": 104,
+    "sight": 3,
     "pen": 4,
-    "drivableLessons": 102,
-    "drivablePercent": 92,
+    "drivableLessons": 104,
+    "drivablePercent": 94,
     "trackCount": 1,
     "chapterCount": 47,
-    "drivablePrefixTotal": 94,
-    "fullyDrivableChapters": 42,
+    "drivablePrefixTotal": 98,
+    "fullyDrivableChapters": 44,
     "unstartableChapters": 3,
     "overriddenLessons": 0,
     "lessonsWithoutChapter": 0
@@ -27,11 +27,11 @@
     {
       "language": "latin",
       "lessonCount": 111,
-      "voice": 102,
-      "sight": 5,
+      "voice": 104,
+      "sight": 3,
       "pen": 4,
-      "drivablePercent": 92,
-      "drivablePrefixTotal": 94,
+      "drivablePercent": 94,
+      "drivablePrefixTotal": 98,
       "modalities": [
         "voice",
         "sight",
@@ -764,20 +764,21 @@
         {
           "chapter": 44,
           "lessonCount": 5,
-          "voice": 4,
-          "sight": 1,
+          "voice": 5,
+          "sight": 0,
           "pen": 0,
           "modalities": [
-            "voice",
-            "sight"
+            "voice"
           ],
-          "drivablePrefix": 3,
-          "firstNonVoiceLesson": "LA-C44-hortus",
-          "drivable": false,
+          "drivablePrefix": 5,
+          "firstNonVoiceLesson": null,
+          "drivable": true,
           "drivableLessonIds": [
             "LA-C44-domus",
             "LA-C44-porta",
-            "LA-C44-murus"
+            "LA-C44-murus",
+            "LA-C44-hortus",
+            "LA-C44-focus"
           ]
         },
         {
@@ -803,20 +804,21 @@
         {
           "chapter": 46,
           "lessonCount": 5,
-          "voice": 4,
-          "sight": 1,
+          "voice": 5,
+          "sight": 0,
           "pen": 0,
           "modalities": [
-            "voice",
-            "sight"
+            "voice"
           ],
-          "drivablePrefix": 3,
-          "firstNonVoiceLesson": "LA-C46-luna",
-          "drivable": false,
+          "drivablePrefix": 5,
+          "firstNonVoiceLesson": null,
+          "drivable": true,
           "drivableLessonIds": [
             "LA-C46-lux",
             "LA-C46-umbra",
-            "LA-C46-stella"
+            "LA-C46-stella",
+            "LA-C46-luna",
+            "LA-C46-somnus"
           ]
         },
         {
@@ -2558,17 +2560,17 @@
       "language": "latin",
       "chapter": 44,
       "sequence": 980,
-      "modality": "sight",
-      "derived": "sight",
-      "drivable": false,
+      "modality": "voice",
+      "derived": "voice",
+      "drivable": true,
       "reasons": [
-        "sight-cue"
+        "no-visual-dependency"
       ],
-      "coreModality": "sight",
+      "coreModality": "voice",
       "coreReasons": [
-        "sight-cue"
+        "no-visual-dependency"
       ],
-      "coreDrivable": false,
+      "coreDrivable": true,
       "sourceHash": "fnv1a64:d8667945c171bcfb"
     },
     {
@@ -2738,17 +2740,17 @@
       "language": "latin",
       "chapter": 46,
       "sequence": 1080,
-      "modality": "sight",
-      "derived": "sight",
-      "drivable": false,
+      "modality": "voice",
+      "derived": "voice",
+      "drivable": true,
       "reasons": [
-        "sight-cue"
+        "no-visual-dependency"
       ],
-      "coreModality": "sight",
+      "coreModality": "voice",
       "coreReasons": [
-        "sight-cue"
+        "no-visual-dependency"
       ],
-      "coreDrivable": false,
+      "coreDrivable": true,
       "sourceHash": "fnv1a64:4d7d31930e31509f"
     },
     {

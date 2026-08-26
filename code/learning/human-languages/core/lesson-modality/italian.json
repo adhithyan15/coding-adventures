@@ -10,16 +10,16 @@
   "sourceHash": "fnv1a64:504f19fb329b5dc6",
   "summary": {
     "totalLessons": 89,
-    "voice": 72,
-    "sight": 15,
+    "voice": 74,
+    "sight": 13,
     "pen": 2,
-    "drivableLessons": 72,
-    "drivablePercent": 81,
+    "drivableLessons": 74,
+    "drivablePercent": 83,
     "trackCount": 1,
     "chapterCount": 25,
-    "drivablePrefixTotal": 54,
-    "fullyDrivableChapters": 14,
-    "unstartableChapters": 8,
+    "drivablePrefixTotal": 58,
+    "fullyDrivableChapters": 15,
+    "unstartableChapters": 7,
     "overriddenLessons": 0,
     "lessonsWithoutChapter": 0
   },
@@ -27,11 +27,11 @@
     {
       "language": "italian",
       "lessonCount": 89,
-      "voice": 72,
-      "sight": 15,
+      "voice": 74,
+      "sight": 13,
       "pen": 2,
-      "drivablePercent": 81,
-      "drivablePrefixTotal": 54,
+      "drivablePercent": 83,
+      "drivablePrefixTotal": 58,
       "modalities": [
         "voice",
         "sight",
@@ -404,17 +404,21 @@
         {
           "chapter": 22,
           "lessonCount": 4,
-          "voice": 2,
-          "sight": 2,
+          "voice": 4,
+          "sight": 0,
           "pen": 0,
           "modalities": [
-            "voice",
-            "sight"
+            "voice"
           ],
-          "drivablePrefix": 0,
-          "firstNonVoiceLesson": "IT-C22-caffe",
-          "drivable": false,
-          "drivableLessonIds": []
+          "drivablePrefix": 4,
+          "firstNonVoiceLesson": null,
+          "drivable": true,
+          "drivableLessonIds": [
+            "IT-C22-caffe",
+            "IT-C22-te",
+            "IT-C22-latte",
+            "IT-C22-zucchero"
+          ]
         },
         {
           "chapter": 23,
@@ -1818,17 +1822,17 @@
       "language": "italian",
       "chapter": 22,
       "sequence": 740,
-      "modality": "sight",
-      "derived": "sight",
-      "drivable": false,
+      "modality": "voice",
+      "derived": "voice",
+      "drivable": true,
       "reasons": [
-        "sight-cue"
+        "no-visual-dependency"
       ],
-      "coreModality": "sight",
+      "coreModality": "voice",
       "coreReasons": [
-        "sight-cue"
+        "no-visual-dependency"
       ],
-      "coreDrivable": false,
+      "coreDrivable": true,
       "sourceHash": "fnv1a64:fd3d3e8c33a31297"
     },
     {
@@ -1872,17 +1876,17 @@
       "language": "italian",
       "chapter": 22,
       "sequence": 770,
-      "modality": "sight",
-      "derived": "sight",
-      "drivable": false,
+      "modality": "voice",
+      "derived": "voice",
+      "drivable": true,
       "reasons": [
-        "sight-cue"
+        "no-visual-dependency"
       ],
-      "coreModality": "sight",
+      "coreModality": "voice",
       "coreReasons": [
-        "sight-cue"
+        "no-visual-dependency"
       ],
-      "coreDrivable": false,
+      "coreDrivable": true,
       "sourceHash": "fnv1a64:a694c02378e7707e"
     },
     {

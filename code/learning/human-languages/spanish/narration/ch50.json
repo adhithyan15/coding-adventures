@@ -3,7 +3,7 @@
   "language": "spanish",
   "chapter": 50,
   "title": "Ser in the Plural",
-  "drivablePrefix": 0,
+  "drivablePrefix": 4,
   "sourceHash": "fnv1a64:241e2396f0abe942",
   "lessons": [
     {
@@ -14,20 +14,13 @@
       "romanization": "somos",
       "gloss": "\"we are\" — from a different Latin verb than soy, and that is why it looks nothing like it",
       "script": "latin",
-      "modality": "sight",
-      "derivedModality": "sight",
+      "modality": "voice",
+      "derivedModality": "voice",
       "modalityReasons": [
-        "sight-cue"
+        "no-visual-dependency"
       ],
       "sourceHash": "fnv1a64:5ef7d493ef0444f5",
-      "notice": {
-        "modality": "sight",
-        "needs": [
-          "your eyes, because the lesson points at something written down"
-        ],
-        "waitUntilStopped": [],
-        "text": "Before we start: this one needs your eyes, so it is not fully a driving lesson. You will want your eyes, because the lesson points at something written down. You can listen to all of it now and come back to the parts that need looking at once you have stopped."
-      },
+      "notice": null,
       "blocks": [
         {
           "index": 0,

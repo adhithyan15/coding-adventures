@@ -36,12 +36,12 @@
         "BN-C02-tomar-naam-ki",
         "BN-C02-practice"
       ],
-      "voiceLessons": 2,
+      "voiceLessons": 3,
       "drivablePrefix": 0,
       "text": "bengali/narration/ch02.txt",
       "json": "bengali/narration/ch02.json",
-      "textHash": "fnv1a64:90786881b184ce52",
-      "jsonHash": "fnv1a64:5a338a6dc643b9e7"
+      "textHash": "fnv1a64:4a932eb9c8e9010d",
+      "jsonHash": "fnv1a64:0bf43366665119ff"
     },
     {
       "language": "bengali",

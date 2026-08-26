@@ -10,11 +10,11 @@
   "sourceHash": "fnv1a64:8bc3da8e8aebe022",
   "summary": {
     "totalLessons": 80,
-    "voice": 14,
-    "sight": 56,
+    "voice": 15,
+    "sight": 55,
     "pen": 10,
-    "drivableLessons": 14,
-    "drivablePercent": 18,
+    "drivableLessons": 15,
+    "drivablePercent": 19,
     "trackCount": 1,
     "chapterCount": 16,
     "drivablePrefixTotal": 7,
@@ -27,10 +27,10 @@
     {
       "language": "bengali",
       "lessonCount": 80,
-      "voice": 14,
-      "sight": 56,
+      "voice": 15,
+      "sight": 55,
       "pen": 10,
-      "drivablePercent": 18,
+      "drivablePercent": 19,
       "drivablePrefixTotal": 7,
       "modalities": [
         "voice",
@@ -56,8 +56,8 @@
         {
           "chapter": 2,
           "lessonCount": 8,
-          "voice": 2,
-          "sight": 6,
+          "voice": 3,
+          "sight": 5,
           "pen": 0,
           "modalities": [
             "voice",
@@ -451,17 +451,17 @@
       "language": "bengali",
       "chapter": 2,
       "sequence": 90,
-      "modality": "sight",
-      "derived": "sight",
-      "drivable": false,
+      "modality": "voice",
+      "derived": "voice",
+      "drivable": true,
       "reasons": [
-        "sight-cue"
+        "no-visual-dependency"
       ],
-      "coreModality": "sight",
+      "coreModality": "voice",
       "coreReasons": [
-        "sight-cue"
+        "no-visual-dependency"
       ],
-      "coreDrivable": false,
+      "coreDrivable": true,
       "sourceHash": "fnv1a64:e858fa3fcf2976a1"
     },
     {

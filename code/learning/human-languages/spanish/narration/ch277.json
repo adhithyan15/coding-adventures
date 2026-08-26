@@ -3,7 +3,7 @@
   "language": "spanish",
   "chapter": 277,
   "title": "Working From Sources --- Credit It, Restate It, Hold Both, Compress",
-  "drivablePrefix": 0,
+  "drivablePrefix": 5,
   "sourceHash": "fnv1a64:b78a75324002e58e",
   "lessons": [
     {
@@ -14,20 +14,13 @@
       "romanization": "según",
       "gloss": "according to — marking whose claim it is",
       "script": "latin",
-      "modality": "sight",
-      "derivedModality": "sight",
+      "modality": "voice",
+      "derivedModality": "voice",
       "modalityReasons": [
-        "sight-cue"
+        "no-visual-dependency"
       ],
       "sourceHash": "fnv1a64:077a23b04271c615",
-      "notice": {
-        "modality": "sight",
-        "needs": [
-          "your eyes, because the lesson points at something written down"
-        ],
-        "waitUntilStopped": [],
-        "text": "Before we start: this one needs your eyes, so it is not fully a driving lesson. You will want your eyes, because the lesson points at something written down. You can listen to all of it now and come back to the parts that need looking at once you have stopped."
-      },
+      "notice": null,
       "blocks": [
         {
           "index": 0,

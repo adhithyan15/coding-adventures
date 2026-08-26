@@ -3,7 +3,7 @@
   "language": "tamil",
   "chapter": 2,
   "title": "Introducing Yourself",
-  "drivablePrefix": 2,
+  "drivablePrefix": 8,
   "sourceHash": "fnv1a64:b55db3804a8a541e",
   "lessons": [
     {
@@ -215,20 +215,13 @@
       "romanization": "eṉ peyar …",
       "gloss": "my name is… (with no \"is\")",
       "script": "tamil",
-      "modality": "sight",
-      "derivedModality": "sight",
+      "modality": "voice",
+      "derivedModality": "voice",
       "modalityReasons": [
-        "sight-cue"
+        "no-visual-dependency"
       ],
       "sourceHash": "fnv1a64:509c10f2dfb45a9a",
-      "notice": {
-        "modality": "sight",
-        "needs": [
-          "your eyes, because the lesson points at something written down"
-        ],
-        "waitUntilStopped": [],
-        "text": "Before we start: this one needs your eyes, so it is not fully a driving lesson. You will want your eyes, because the lesson points at something written down. You can listen to all of it now and come back to the parts that need looking at once you have stopped."
-      },
+      "notice": null,
       "blocks": [
         {
           "index": 0,
