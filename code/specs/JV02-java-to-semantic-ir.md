@@ -30,17 +30,22 @@ section's own M4a entry for why), M4b (plain indexed assignment,
 `xs[i] = v;` → `Stmt::SeqSet`, distinguished from a bare-name assignment
 target by a new check run ahead of the existing bare-name-only
 resolution — compound-assignment/increment-decrement on an indexed
-target remains deferred; see this section's own M4b entry for why), and
+target was initially deferred, later resolved as task #59; see this
+section's own M4b entry for why),
 M4c (`new`-based array-creation expressions — `new int[]{1,2,3}`
 delegating to M4a's own array-literal lowering, and `new int[N]`
 zero-filled sized creation only for a compile-time-constant,
 non-negative, capped-size numeric/boolean `N`; see this section's own
-M4c entry for why), and M4d (real multi-dimensional arrays — array
+M4c entry for why), M4d (real multi-dimensional arrays — array
 types and explicitly-typed literal declarations, capped at a small
 dimension limit, plus chained index reads via a generalized suffix-chain
 dispatch; a mixed index-then-`.length` chain and a chained indexed-
 assignment target both remain deferred; see this section's own M4d
-entry for why), and task #54 (wiring `Expr::IndirectCall` — a
+entry for why), task #59 (compound-assignment/increment-decrement on an
+indexed target, `xs[i] += v;`/`xs[i]++;` — the piece M4b's own scope
+narrowing split off; resolved via a temp-variable-hoisting design, see
+that entry's own "Update" for the exact shape), and task #54 (wiring
+`Expr::IndirectCall` — a
 `Closure`-kinded local can now be *invoked*, `f(5)`, not just created and
 passed around; `lower_call_expression` checks local-variable resolution
 ahead of the top-level-method lookup, mirroring real Java's own name-
@@ -375,6 +380,24 @@ class of correctness bug this frontend's own `/security-review` history
 has caught before in the do-while and for-update desugarings (see
 `code/packages/rust/java-to-semantic-ir`'s own `CHANGELOG.md`,
 `[0.3.0]`/`[0.4.0]`).
+
+**Update**: resolved (task #59). Chose the first of the two options this
+entry posed — a temp-variable-hoisting design, not a "narrow enough to
+skip" argument (this frontend's index expressions are ordinary
+`expression` nodes with no further restriction, so nothing rules out an
+impure one). `lower_indexed_compound_assignment`/`lower_indexed_incdec`
+bind the target's `seq` and index into two fresh temps
+(`fresh_temp_name`, mirroring `do_while_counter`'s own monotonic-
+uniqueness role) via `LetStarBinding`s, then read and write through those
+temps' own `VarRef`s — wrapped in one synthetic `Expr::Block`, the exact
+same established shape `lower_do_while_statement`/`lower_for_statement`
+already use for "run this once, then reference it more than once."
+Plain indexed assignment (`xs[i] = v;`, M4b) is untouched — it only ever
+evaluates `seq`/index once already, so it keeps emitting a bare
+`Stmt::SeqSet` directly, no temp-hoisting needed. Only `+= -= *= /= %=`
+are supported, matching the bare-name compound-assignment path's own
+operator set exactly; the bitwise compound-assignment operators remain
+rejected with the same "deferred" message that path already gives.
 
 **M4d — multi-dimensional arrays.** Deferred from M4b during its own
 scope narrowing (see that entry above). Resolved the design question

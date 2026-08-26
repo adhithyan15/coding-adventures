@@ -674,6 +674,79 @@ fn array_fill_via_indexed_for_loop_runs_in_python() {
     assert_eq!(out, "12"); // 0 + 2 + 4 + 6
 }
 
+// ── task #59: compound-assignment/increment-decrement on an indexed
+//    target ──────────────────────────────────────────────────────────
+//
+// These prove the emitted Python actually computes the right *value* --
+// the finer "seq/index evaluated exactly once, not twice" property these
+// statements exist to fix is proven structurally instead, in
+// `tests/test_lower.rs` (asserting the lowered IR contains exactly one
+// `LetStarBinding` per temp, both the read and the write referencing the
+// same `VarRef`). An execution proof can't add much there: this
+// frontend has no fields, no mutable lambda-capture (effectively-final
+// is enforced), and no incdec-as-a-value, so there is currently no way
+// to write real Java source whose index expression has an observable
+// side effect distinguishing "evaluated once" from "evaluated twice" --
+// and for a *pure* index expression, a buggy double-evaluating lowering
+// would still often compute the same final numeric answer, making a
+// value-based proof weaker here than the structural one anyway.
+
+#[test]
+fn compound_assignment_on_an_indexed_target_runs_in_python() {
+    if !python_available() {
+        eprintln!(
+            "skipping compound_assignment_on_an_indexed_target_runs_in_python: `python3` not available"
+        );
+        return;
+    }
+    let out = run_via_python(
+        "indexed_compound_assignment",
+        &wrap("int[] xs = {1, 2, 3}; xs[1] += 10; xs[1];"),
+    );
+    assert_eq!(out, "12");
+}
+
+#[test]
+fn increment_of_an_indexed_target_runs_in_python() {
+    if !python_available() {
+        eprintln!(
+            "skipping increment_of_an_indexed_target_runs_in_python: `python3` not available"
+        );
+        return;
+    }
+    let out = run_via_python(
+        "indexed_increment",
+        &wrap("int[] xs = {1, 2, 3}; xs[0]++; xs[0]++; xs[0];"),
+    );
+    assert_eq!(out, "3");
+}
+
+#[test]
+fn array_accumulation_via_indexed_compound_assignment_runs_in_python() {
+    // Mirrors `array_fill_via_indexed_for_loop_runs_in_python`'s own
+    // realistic pattern, but for `+=`: accumulate each element's own
+    // index into a running histogram-style array, then sum -- the
+    // pattern this task exists to make idiomatic (`xs[i] += v;` instead
+    // of the M4b-only `xs[i] = xs[i] + v;` workaround).
+    if !python_available() {
+        eprintln!(
+            "skipping array_accumulation_via_indexed_compound_assignment_runs_in_python: `python3` not available"
+        );
+        return;
+    }
+    let out = run_via_python(
+        "array_accumulation_via_indexed_compound_assignment",
+        &wrap(concat!(
+            "int[] xs = {0, 0, 0, 0}; ",
+            "for (int i = 0; i < xs.length; i++) { xs[i] += i + 1; } ",
+            "int sum = 0; ",
+            "for (int i = 0; i < xs.length; i++) { sum += xs[i]; } ",
+            "sum;"
+        )),
+    );
+    assert_eq!(out, "10"); // (1) + (2) + (3) + (4)
+}
+
 // ── M4c: new-based array-creation expressions ─────────────────────────
 
 #[test]
