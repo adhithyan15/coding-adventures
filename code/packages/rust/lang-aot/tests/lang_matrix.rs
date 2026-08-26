@@ -2648,6 +2648,15 @@ const PROGRAMS: &[Prog] = &[
         expect: Expect::Stdout("3.25"),
         backends: &[NativeAot, Llvm, Wasm, Jvm, Clr, Vm, Jit],
     },
+    // ALGOL 60 — the bounded unrolled power path returns exact positive one
+    // for a literal base with a complete zero exponent chain.
+    Prog {
+        lang: Language::Algol60,
+        ext: "alg",
+        src: "begin integer i, n, limit; real choose; boolean other; n := 3; limit := 3; choose := 1.0; other := true; i := 0; for i := i + 1 while i < n do begin n := limit; limit := if choose = 1.0 then limit else limit + 1; choose := if other then choose else 0.0; other := other; choose := choose * (2.0 ^ 0) end; print(i + 0.25) end",
+        expect: Expect::Stdout("3.25"),
+        backends: &[NativeAot, Llvm, Wasm, Jvm, Clr, Vm, Jit],
+    },
     // ALGOL 60 — two unary negations preserve a boolean selector exactly.
     Prog {
         lang: Language::Algol60,
@@ -10718,6 +10727,29 @@ fn algol_real_power_zero_identity_runs_on_every_available_standard_backend() {
             assert!(
                 !toolchain_available,
                 "{backend:?} toolchain is present but the real power-zero selector identity did not run"
+            );
+            continue;
+        };
+        assert_cell(backend, program, result);
+    }
+}
+
+#[test]
+fn algol_real_zero_exponent_unit_runs_on_every_available_standard_backend() {
+    let program = PROGRAMS
+        .iter()
+        .find(|program| {
+            program.lang == Language::Algol60
+                && program.src.contains("choose := choose * (2.0 ^ 0)")
+        })
+        .expect("the ALGOL real zero-exponent unit must remain in the matrix");
+
+    for backend in [NativeAot, Llvm, Wasm, Jvm, Clr, Vm, Jit] {
+        let toolchain_available = toolchain_available(backend);
+        let Some(result) = run(backend, program) else {
+            assert!(
+                !toolchain_available,
+                "{backend:?} toolchain is present but the real zero-exponent unit did not run"
             );
             continue;
         };
