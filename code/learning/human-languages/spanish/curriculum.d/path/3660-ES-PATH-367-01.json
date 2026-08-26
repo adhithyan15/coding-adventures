@@ -1,0 +1,16 @@
+{
+  "id": "ES-PATH-367-01",
+  "spine_node": "SPINE-DEFINITE-REFERENCE",
+  "lessons": [
+    "ES-C367-desayuno",
+    "ES-C367-fruta",
+    "ES-C367-naranja",
+    "ES-C367-patata",
+    "ES-C367-azucar"
+  ],
+  "before": [],
+  "inline": [
+    "ES-EXT-367-REF"
+  ],
+  "after": []
+}

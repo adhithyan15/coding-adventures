@@ -1,0 +1,21 @@
+{
+  "chapter": 367,
+  "title": "Breakfast, Fruit And Something Sweet",
+  "label": "ch:el-desayuno-y-la-fruta",
+  "canDo": "I can say el desayuno, la fruta, la naranja, la patata and el azúcar, and name the first meal of the day and what goes into it.",
+  "spineNodes": [
+    "SPINE-DEFINITE-REFERENCE"
+  ],
+  "payoff": {
+    "lesson": "ES-C367-azucar",
+    "kind": "production",
+    "summary": "Complete ES-C367-azucar: name the first meal of the day and four things that can go into it.",
+    "assesses": [
+      "ES-LEX-C367-REF-36",
+      "ES-LEX-C367-REF-37",
+      "ES-LEX-C367-REF-38",
+      "ES-LEX-C367-REF-39",
+      "ES-LEX-C367-REF-40"
+    ]
+  }
+}

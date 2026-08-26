@@ -1,0 +1,15 @@
+{
+  "id": "ES-EXT-368-REF",
+  "stage": "A1",
+  "kind": "required",
+  "category": "vocabulary",
+  "canDo": "I can name la abeja, la mosca, el cerdo, el lobo and el toro.",
+  "prerequisites": [],
+  "lessons": [
+    "ES-C368-abeja",
+    "ES-C368-mosca",
+    "ES-C368-cerdo",
+    "ES-C368-lobo",
+    "ES-C368-toro"
+  ]
+}

@@ -5656,6 +5656,132 @@
       "json": "spanish/narration/ch366.json",
       "textHash": "fnv1a64:85c7ae60c2d0daf7",
       "jsonHash": "fnv1a64:bcd7fd41c9d17a3c"
+    },
+    {
+      "language": "spanish",
+      "chapter": 367,
+      "sourceHash": "fnv1a64:78fcd77eda73b9b5",
+      "lessonIds": [
+        "ES-C367-desayuno",
+        "ES-C367-fruta",
+        "ES-C367-naranja",
+        "ES-C367-patata",
+        "ES-C367-azucar"
+      ],
+      "voiceLessons": 5,
+      "drivablePrefix": 5,
+      "text": "spanish/narration/ch367.txt",
+      "json": "spanish/narration/ch367.json",
+      "textHash": "fnv1a64:e750a42665d35fec",
+      "jsonHash": "fnv1a64:2d7e86f3861beba8"
+    },
+    {
+      "language": "spanish",
+      "chapter": 368,
+      "sourceHash": "fnv1a64:9b197bb9c3c908fb",
+      "lessonIds": [
+        "ES-C368-abeja",
+        "ES-C368-mosca",
+        "ES-C368-cerdo",
+        "ES-C368-lobo",
+        "ES-C368-toro"
+      ],
+      "voiceLessons": 5,
+      "drivablePrefix": 5,
+      "text": "spanish/narration/ch368.txt",
+      "json": "spanish/narration/ch368.json",
+      "textHash": "fnv1a64:35e451c2261c5ee5",
+      "jsonHash": "fnv1a64:e915232b8941d01b"
+    },
+    {
+      "language": "spanish",
+      "chapter": 369,
+      "sourceHash": "fnv1a64:cd577df29848aef2",
+      "lessonIds": [
+        "ES-C369-rio",
+        "ES-C369-arena",
+        "ES-C369-polvo",
+        "ES-C369-humo",
+        "ES-C369-ceniza"
+      ],
+      "voiceLessons": 5,
+      "drivablePrefix": 5,
+      "text": "spanish/narration/ch369.txt",
+      "json": "spanish/narration/ch369.json",
+      "textHash": "fnv1a64:c2596a3fa0d0e91e",
+      "jsonHash": "fnv1a64:6edad8d755d70a5f"
+    },
+    {
+      "language": "spanish",
+      "chapter": 370,
+      "sourceHash": "fnv1a64:51d2e183b87fddfb",
+      "lessonIds": [
+        "ES-C370-tormenta",
+        "ES-C370-trueno",
+        "ES-C370-hielo",
+        "ES-C370-cueva",
+        "ES-C370-costa"
+      ],
+      "voiceLessons": 5,
+      "drivablePrefix": 5,
+      "text": "spanish/narration/ch370.txt",
+      "json": "spanish/narration/ch370.json",
+      "textHash": "fnv1a64:97fd4abee6c1de91",
+      "jsonHash": "fnv1a64:d719338a8dabc6e2"
+    },
+    {
+      "language": "spanish",
+      "chapter": 371,
+      "sourceHash": "fnv1a64:4590f010f0afe454",
+      "lessonIds": [
+        "ES-C371-pequeno",
+        "ES-C371-gordo",
+        "ES-C371-joven",
+        "ES-C371-lento",
+        "ES-C371-dulce"
+      ],
+      "voiceLessons": 5,
+      "drivablePrefix": 5,
+      "text": "spanish/narration/ch371.txt",
+      "json": "spanish/narration/ch371.json",
+      "textHash": "fnv1a64:7844734ac0628569",
+      "jsonHash": "fnv1a64:4a17d611f9ff3f5f"
+    },
+    {
+      "language": "spanish",
+      "chapter": 372,
+      "sourceHash": "fnv1a64:e8c5a5cffab342ea",
+      "lessonIds": [
+        "ES-C372-gris",
+        "ES-C372-rosa",
+        "ES-C372-oscuro",
+        "ES-C372-palido",
+        "ES-C372-suave"
+      ],
+      "voiceLessons": 5,
+      "drivablePrefix": 5,
+      "text": "spanish/narration/ch372.txt",
+      "json": "spanish/narration/ch372.json",
+      "textHash": "fnv1a64:1fafeee41929a5ec",
+      "jsonHash": "fnv1a64:a86f7fd60565d8dc"
+    },
+    {
+      "language": "spanish",
+      "chapter": 373,
+      "sourceHash": "fnv1a64:9f15d85fd1386577",
+      "lessonIds": [
+        "ES-C373-oro",
+        "ES-C373-botella",
+        "ES-C373-alfombra",
+        "ES-C373-falda",
+        "ES-C373-peine"
+      ],
+      "voiceLessons": 5,
+      "drivablePrefix": 5,
+      "text": "spanish/narration/ch373.txt",
+      "json": "spanish/narration/ch373.json",
+      "textHash": "fnv1a64:3b05e6308d7af4ef",
+      "jsonHash": "fnv1a64:3b5198faa1fdbc49"
     }
   ],
   "findings": []

@@ -1,0 +1,831 @@
+{
+  "version": 1,
+  "language": "spanish",
+  "chapter": 369,
+  "title": "The River, The Sand And The Ash",
+  "drivablePrefix": 5,
+  "sourceHash": "fnv1a64:cd577df29848aef2",
+  "lessons": [
+    {
+      "id": "ES-C369-rio",
+      "sequence": 7370,
+      "title": "el río — and the English river that is not the same word",
+      "headword": "el río",
+      "romanization": "el río",
+      "gloss": "river — Latin rivus, a stream, which gave rival and derive; English river is not this word at all but comes from ripa, a bank, the same word behind arrive",
+      "script": "latin",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:6886817effe67ab5",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Say the wolf, then the bull. (El lobo; el toro.)"
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know first",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "el agua — what runs in it."
+            },
+            {
+              "kind": "speech",
+              "text": "el valle — the shape it cuts."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "pronunciation",
+          "title": "Sounds you'll need",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "RÍ-o, two beats with the weight on the first. The r at the start of a word is rolled, and the written accent keeps the i and the o apart as two separate beats. see pronunciation reference."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "el río — \"the river.\""
+            },
+            {
+              "kind": "speech",
+              "text": "Río is Latin rīvus, a stream. English has two words from it, and both still carry the water:"
+            },
+            {
+              "kind": "speech",
+              "text": "a rival is rīvālis, one of the people drawing on the same stream. Share a watercourse with a neighbour and you will eventually disagree about it, and the Romans built that observation into a noun;"
+            },
+            {
+              "kind": "speech",
+              "text": "to derive is dērīvāre, to lead water off a channel. A derived word has been drawn off from an earlier one the way a ditch is drawn off a river."
+            },
+            {
+              "kind": "speech",
+              "text": "Now the part worth slowing down for. English river is not this word."
+            },
+            {
+              "kind": "speech",
+              "text": "River came through Old French from a different Latin noun, rīpa, which means a bank — the edge, not the water. The French word named the land along the water first and slid across to the water itself later. And that same rīpa sits inside arrive, which began as ad rīpam, \"to the shore\": to arrive was to reach the bank."
+            },
+            {
+              "kind": "speech",
+              "text": "So English river belongs with arrive, and Spanish río belongs with rival. Two words that look alike, mean almost the same thing, and come from two Latin nouns with no relationship to each other at all."
+            },
+            {
+              "kind": "speech",
+              "text": "This is the trap the whole business of etymology exists to catch. Resemblance is not descent. Río and river have four letters in common and nothing else."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "You can now name the water in the landscape: el río está en el valle."
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "el río",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *el río*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "un río",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *un río*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "el río está en el valle",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *el río está en el valle*]"
+            }
+          ]
+        },
+        {
+          "index": 6,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What is a rival, taken literally? (Someone drawing on the same stream.) And is English river the same word as río? (No — it comes from rīpa, a bank, like arrive.)"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "ES-C369-arena",
+      "sequence": 7380,
+      "title": "la arena — the sand that gave its name to the building",
+      "headword": "la arena",
+      "romanization": "la arena",
+      "gloss": "sand — Latin harena, whose origin nobody has settled; English arena is the same word, the sand spread on an amphitheatre floor to soak up what was spilled on it",
+      "script": "latin",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:3c25310ce68ca379",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Say the bull, then the river. (El toro; el río.)"
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know first",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "el mar — what puts it there."
+            },
+            {
+              "kind": "speech",
+              "text": "la orilla — the strip it covers."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "pronunciation",
+          "title": "Sounds you'll need",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "a-RE-na, three beats with the weight on the second. The r between vowels is a single tap. see pronunciation reference."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "la arena — \"sand.\""
+            },
+            {
+              "kind": "speech",
+              "text": "Latin harēna, sand — and after that the trail goes cold. This is one of the words where the reference books shrug."
+            },
+            {
+              "kind": "speech",
+              "text": "The standing guess is Etruscan, the language of the people Rome grew up beside, on the grounds that the ending looks Etruscan. The other piece of evidence is a form fasēna, which the Roman scholar Varro reports as the Sabine version of the word. Neither has ever been made to prove anything, and the verdict printed in the best modern dictionary of Latin origins is: unknown."
+            },
+            {
+              "kind": "speech",
+              "text": "So keep the word and let the ancestry go. It is worth meeting a word that nobody can trace, because most vocabularies contain a few and it is honest to say which ones they are."
+            },
+            {
+              "kind": "speech",
+              "text": "What the word did next is well documented. A Roman amphitheatre had sand spread across its floor, to give footing and to soak up what got spilled on it. People called the floor by the name of what was on it. Then they called the whole building that. English arena is that Latin word for sand, and every political arena, every sporting arena, is named after a surface."
+            },
+            {
+              "kind": "speech",
+              "text": "Spanish kept both jobs. La arena is the beach, and la arena is the bullring."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "You can now name what the beach is made of: la arena."
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "la arena",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *la arena*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "la arena del mar",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *la arena del mar*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "hay arena en la orilla",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *hay arena en la orilla*]"
+            }
+          ]
+        },
+        {
+          "index": 6,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What was spread on the floor of a Roman amphitheatre? (Sand.) And what is the honest answer about where harēna came from? (Nobody knows.)"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "ES-C369-polvo",
+      "sequence": 7390,
+      "title": "el polvo — one Latin word, two English roads",
+      "headword": "el polvo",
+      "romanization": "el polvo",
+      "gloss": "dust — Latin pulvis; English took the same word twice, powder through French with a d that was never in it, and pulverize straight off the Latin",
+      "script": "latin",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:c13ef14dd0ba1401",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Say the river, then sand. (El río; la arena.)"
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know first",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "la tierra — what it comes off."
+            },
+            {
+              "kind": "speech",
+              "text": "limpio — its opposite, in one word."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "pronunciation",
+          "title": "Sounds you'll need",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "POL-vo, two beats with the weight on the first. The v is pronounced the same as a Spanish b, with the lips barely meeting. see pronunciation reference."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "el polvo — \"dust.\""
+            },
+            {
+              "kind": "speech",
+              "text": "Latin pulvis, with the stem pulver-: dust, powder, the fine stuff left when something has been ground or has fallen apart."
+            },
+            {
+              "kind": "speech",
+              "text": "English took that word twice, and the two arrivals do not look alike:"
+            },
+            {
+              "kind": "speech",
+              "text": "powder came through Old French poudre. French had put a d into it that Latin never had — the sort of consonant that grows between an l and an r because it is easier to say than to avoid;"
+            },
+            {
+              "kind": "speech",
+              "text": "pulverize was taken off the written Latin stem centuries later, so it still has the v and no d at all."
+            },
+            {
+              "kind": "speech",
+              "text": "German kept both and gave each a separate job, which makes the split easy to hold on to: Puder is the powder for a face, borrowed from French with the d; Pulver is gunpowder, taken from the Latin with the v. Same word, two doors, two meanings, no confusion."
+            },
+            {
+              "kind": "speech",
+              "text": "One connection you may be offered elsewhere is worth declining. Pollen is sometimes filed with pulvis, on the grounds that both are fine ground stuff. Specialists doubt it, and the objection is a good one: flour and dust are what you get at the two ends of the same milling, and words for them do not reliably share ancestors."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "You can now describe what settles on a shelf: hay polvo."
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "el polvo",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *el polvo*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "hay polvo",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *hay polvo*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "la mesa tiene polvo",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *la mesa tiene polvo*]"
+            }
+          ]
+        },
+        {
+          "index": 6,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Which of powder and pulverize came through French? (Powder — and French added the d.) And which German word is gunpowder? (Pulver.)"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "ES-C369-humo",
+      "sequence": 7400,
+      "title": "el humo — an f that turned into a silent h",
+      "headword": "el humo",
+      "romanization": "el humo",
+      "gloss": "smoke — Latin fumus, a clean example of Latin f- turning into Spanish h-; English has fume, perfume and fumigate from the same word",
+      "script": "latin",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:36654a9027f9cd76",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Say sand, then dust. (La arena; el polvo.)"
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know first",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "el fuego — what makes it."
+            },
+            {
+              "kind": "speech",
+              "text": "la nube — what it looks like from far off."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "pronunciation",
+          "title": "Sounds you'll need",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "HU-mo, two beats with the weight on the first, and the h is completely silent — the word begins on the u. see pronunciation reference."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "el humo — \"smoke.\""
+            },
+            {
+              "kind": "speech",
+              "text": "Latin fūmus, smoke. Spanish writes humo, with a silent h where the f was."
+            },
+            {
+              "kind": "speech",
+              "text": "That h is a gravestone. At one stage Spanish said fumo, then softened the f to a breath, then stopped pronouncing the breath, and kept writing the letter anyway. Medieval texts catch the word mid-fall: fumo on the page long after speakers had begun to let it go. The same change carried Latin facere to hacer and filium to hijo."
+            },
+            {
+              "kind": "speech",
+              "text": "English never had that change, so English still has the f wherever it took the word off the Latin:"
+            },
+            {
+              "kind": "speech",
+              "text": "fume — the vapour itself, and by extension the temper of somebody fuming;"
+            },
+            {
+              "kind": "speech",
+              "text": "fumigate — to treat a place with smoke;"
+            },
+            {
+              "kind": "speech",
+              "text": "fumitory — a small plant whose name means fūmus terrae, smoke of the earth, for its grey-green haze low to the ground."
+            },
+            {
+              "kind": "speech",
+              "text": "The best of them is perfume: per plus the smoke, \"through smoke.\" A perfume was what rose off something burning, and the first English uses of the word mean precisely that — the fumes of a burning substance, incense in a room, not a bottle on a shelf. The bottle came later and kept the word for smoke."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "You can now say what a fire sends up: hay humo."
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "el humo",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *el humo*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "hay humo",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *hay humo*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "el fuego hace humo",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *el fuego hace humo*]"
+            }
+          ]
+        },
+        {
+          "index": 6,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Which Latin letter is the h of humo standing in for? (F.) And what did a perfume originally mean? (Something that rose off a fire — through smoke.)"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "ES-C369-ceniza",
+      "sequence": 7410,
+      "title": "la ceniza — and the cinder that is wearing a costume",
+      "headword": "la ceniza",
+      "romanization": "la ceniza",
+      "gloss": "ash — from Latin cinis; English incinerate is the same word, but English cinder is a Germanic impostor that only borrowed the Latin spelling",
+      "script": "latin",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:bf9e38642c4de826",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Say dust, then smoke. (El polvo; el humo.)"
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know first",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "el fuego — what leaves it behind."
+            },
+            {
+              "kind": "speech",
+              "text": "el humo — the other thing a fire sends out."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "pronunciation",
+          "title": "Sounds you'll need",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ce-NI-za, three beats with the weight on the second. Both the c and the z are the same sound in one accent or another — a soft th in much of Spain, an s across the Americas. see pronunciation reference."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "la ceniza — \"ash.\""
+            },
+            {
+              "kind": "speech",
+              "text": "Latin cinis, with the stem ciner-: ashes. A late spoken form built on it gave Spanish ceniza. English has the same Latin word wherever it borrowed off the page — to incinerate is to reduce to ashes, and a cinerary urn holds what is left after one."
+            },
+            {
+              "kind": "speech",
+              "text": "So English cinder must belong here too. It does not."
+            },
+            {
+              "kind": "speech",
+              "text": "Cinder is Old English sinder, and it meant the slag that comes off iron — a Germanic word, no Latin in it anywhere. It began with an s. Then French cendre, the genuine descendant of cinis, was sitting nearby in the same language, meaning nearly the same thing, and English respelled its own native word with a c to match. The costume has been on for so long that the word looks Latin to everybody who meets it."
+            },
+            {
+              "kind": "speech",
+              "text": "That is worth holding on to, because it is the reverse of the usual mistake. Words that look unrelated often are related. This is one that looks related and is not, and the resemblance was applied on purpose by scribes."
+            },
+            {
+              "kind": "speech",
+              "text": "The girl in the ashes carries the honest version. French calls her Cendrillon, from cendre; Spanish calls her Cenicienta, from ceniza; German calls her Aschenputtel, from Asche. Three languages naming her after the hearth she sleeps by, each out of its own word for ash."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "You can now name what a fire leaves: la ceniza."
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "la ceniza",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *la ceniza*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "la ceniza del fuego",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *la ceniza del fuego*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "hay ceniza",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *hay ceniza*]"
+            }
+          ]
+        },
+        {
+          "index": 6,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Is English cinder from the same word as ceniza? (No — it is Germanic, only respelled to look Latin.) And what is Cenicienta named after? (La ceniza, the ash.)"
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "findings": []
+}
