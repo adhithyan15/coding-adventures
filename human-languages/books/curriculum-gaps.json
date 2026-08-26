@@ -12,7 +12,7 @@
   },
   "summary": {
     "registeredTracks": 23,
-    "totalLessons": 4308,
+    "totalLessons": 4331,
     "authoredBooks": 23,
     "durationViolations": 0,
     "unknownPrerequisites": 0,
@@ -40,9 +40,9 @@
     "tracksWithoutWritingStageEvidence": 5,
     "missingWritingStagePairs": 596,
     "invalidWritingStageEvidence": 0,
-    "drivableLessons": 3624,
+    "drivableLessons": 3635,
     "drivablePercent": 84,
-    "chaptersWithoutDrivablePrefix": 107,
+    "chaptersWithoutDrivablePrefix": 108,
     "unexplainedModalityOverrides": 0
   },
   "duration": {
@@ -3379,7 +3379,8 @@
           14,
           15,
           16,
-          17
+          17,
+          18
         ],
         "bookChapters": [
           1,
@@ -3398,7 +3399,8 @@
           14,
           15,
           16,
-          17
+          17,
+          18
         ],
         "missingBookChapters": [],
         "orphanBookChapters": [],
@@ -3630,9 +3632,9 @@
       {
         "language": "chinese",
         "status": "version-2",
-        "lessonCount": 152,
+        "lessonCount": 175,
         "versions": {
-          "2": 152
+          "2": 175
         }
       },
       {
@@ -4227,8 +4229,8 @@
       },
       {
         "language": "chinese",
-        "bookChapters": 17,
-        "declaredChapters": 17,
+        "bookChapters": 18,
+        "declaredChapters": 18,
         "missingCapability": 0,
         "findings": 0,
         "clean": true
@@ -4395,8 +4397,8 @@
       }
     ],
     "summary": {
-      "bookChapters": 1138,
-      "declaredChapters": 1138,
+      "bookChapters": 1139,
+      "declaredChapters": 1139,
       "chaptersWithoutCapability": 0,
       "payoffsNotClosed": 0,
       "payoffsNotRepresentative": 80,
@@ -4408,9 +4410,9 @@
     }
   },
   "levels": {
-    "totalLessons": 4308,
+    "totalLessons": 4331,
     "byLevel": {
-      "pre-A1": 2769,
+      "pre-A1": 2792,
       "A1": 846,
       "A2": 548,
       "B1": 40,
@@ -4453,9 +4455,9 @@
       },
       {
         "language": "chinese",
-        "lessonCount": 152,
+        "lessonCount": 175,
         "byLevel": {
-          "pre-A1": 136,
+          "pre-A1": 159,
           "A1": 16,
           "A2": 0,
           "B1": 0,
@@ -5237,9 +5239,9 @@
       },
       {
         "language": "chinese",
-        "lessonCount": 152,
-        "measurable": 136,
-        "unmeasurable": 16,
+        "lessonCount": 175,
+        "measurable": 157,
+        "unmeasurable": 18,
         "lessonViolations": 0,
         "chapterViolations": 0
       },
@@ -5866,8 +5868,8 @@
           "language": "chinese",
           "script": "chinese",
           "latinScript": false,
-          "lessonCount": 152,
-          "totalGlyphs": 55,
+          "lessonCount": 175,
+          "totalGlyphs": 58,
           "lessonViolations": 1,
           "systemViolations": 0,
           "lessonsWithForeignScript": 0
@@ -6094,7 +6096,7 @@
     "summary": {
       "lessonViolations": 40,
       "chapterViolations": 23,
-      "unmeasurableLessons": 410,
+      "unmeasurableLessons": 412,
       "measurablePercent": 90,
       "steepestLesson": {
         "lessonId": "BN-C06-numbers-1-5",
@@ -36044,6 +36046,18 @@
         "revisits": 2
       },
       {
+        "atom": "ZH-LEX-JIAREN-01",
+        "language": "chinese",
+        "introducedBy": "ZH-C12-hear-jiaren",
+        "introducedAt": 73,
+        "missed": [
+          "R2",
+          "R3",
+          "R4"
+        ],
+        "revisits": 3
+      },
+      {
         "atom": "ZH-LEX-KOU",
         "language": "chinese",
         "introducedBy": "ZH-C04-kou",
@@ -36176,6 +36190,30 @@
         "revisits": 2
       },
       {
+        "atom": "ZH-PERFORMANCE-FAMILY-SIX-FOUR-SKILL-01",
+        "language": "chinese",
+        "introducedBy": "ZH-C12-practice",
+        "introducedAt": 76,
+        "missed": [
+          "R2",
+          "R3",
+          "R4"
+        ],
+        "revisits": 1
+      },
+      {
+        "atom": "ZH-PERFORMANCE-SCHOOL-SIX-FOUR-SKILL-01",
+        "language": "chinese",
+        "introducedBy": "ZH-C13-practice",
+        "introducedAt": 93,
+        "missed": [
+          "R2",
+          "R3",
+          "R4"
+        ],
+        "revisits": 1
+      },
+      {
         "atom": "ZH-SCRIPT-BU",
         "language": "chinese",
         "introducedBy": "ZH-W04-bu",
@@ -36198,30 +36236,6 @@
           "R4"
         ],
         "revisits": 1
-      },
-      {
-        "atom": "ZH-SCRIPT-HAO",
-        "language": "chinese",
-        "introducedBy": "ZH-C01-hao",
-        "introducedAt": 2,
-        "missed": [
-          "R2",
-          "R3",
-          "R4"
-        ],
-        "revisits": 3
-      },
-      {
-        "atom": "ZH-SCRIPT-JIAN",
-        "language": "chinese",
-        "introducedBy": "ZH-W06-jian",
-        "introducedAt": 37,
-        "missed": [
-          "R2",
-          "R3",
-          "R4"
-        ],
-        "revisits": 2
       },
       {
         "atom": "ZH-SCRIPT-ME",
@@ -53194,26 +53208,26 @@
         "revisits": 3
       },
       {
-        "atom": "ZH-LEX-HAO",
+        "atom": "ZH-LEX-DA-01",
         "language": "chinese",
-        "introducedBy": "ZH-C01-hao",
-        "introducedAt": 2,
+        "introducedBy": "ZH-C13-hear-da",
+        "introducedAt": 77,
         "missed": [
-          "R2",
+          "R3",
           "R4"
         ],
-        "revisits": 8
+        "revisits": 6
       },
       {
-        "atom": "ZH-LEX-JIAREN-01",
+        "atom": "ZH-LEX-DAJIA-01",
         "language": "chinese",
-        "introducedBy": "ZH-C12-hear-jiaren",
-        "introducedAt": 73,
+        "introducedBy": "ZH-C13-hear-dajia",
+        "introducedAt": 80,
         "missed": [
-          "R2",
-          "R3"
+          "R3",
+          "R4"
         ],
-        "revisits": 3
+        "revisits": 4
       },
       {
         "atom": "ZH-LEX-MINGZI",
@@ -53282,6 +53296,17 @@
         "revisits": 5
       },
       {
+        "atom": "ZH-LEX-XIAO-01",
+        "language": "chinese",
+        "introducedBy": "ZH-C14-hear-xiao",
+        "introducedAt": 94,
+        "missed": [
+          "R3",
+          "R4"
+        ],
+        "revisits": 5
+      },
+      {
         "atom": "ZH-LEX-XIAOXUESHENG-01",
         "language": "chinese",
         "introducedBy": "ZH-C14-hear-xiaoxuesheng",
@@ -53315,10 +53340,10 @@
         "revisits": 4
       },
       {
-        "atom": "ZH-PERFORMANCE-FAMILY-SIX-FOUR-SKILL-01",
+        "atom": "ZH-PERFORMANCE-LANGUAGE-IDENTITY-FIVE-FOUR-SKILL-01",
         "language": "chinese",
-        "introducedBy": "ZH-C12-practice",
-        "introducedAt": 76,
+        "introducedBy": "ZH-C17-practice",
+        "introducedAt": 151,
         "missed": [
           "R2",
           "R3"
@@ -53337,15 +53362,26 @@
         "revisits": 1
       },
       {
-        "atom": "ZH-PERFORMANCE-SCHOOL-SIX-FOUR-SKILL-01",
+        "atom": "ZH-SCRIPT-HAO",
         "language": "chinese",
-        "introducedBy": "ZH-C13-practice",
-        "introducedAt": 93,
+        "introducedBy": "ZH-C01-hao",
+        "introducedAt": 2,
         "missed": [
           "R2",
           "R3"
         ],
-        "revisits": 1
+        "revisits": 4
+      },
+      {
+        "atom": "ZH-SCRIPT-JIAN",
+        "language": "chinese",
+        "introducedBy": "ZH-W06-jian",
+        "introducedAt": 37,
+        "missed": [
+          "R2",
+          "R3"
+        ],
+        "revisits": 3
       },
       {
         "atom": "ZH-SCRIPT-NI",
@@ -61554,24 +61590,24 @@
         "revisits": 5
       },
       {
-        "atom": "ZH-LEX-DA-01",
+        "atom": "ZH-LEX-DAXUE-01",
         "language": "chinese",
-        "introducedBy": "ZH-C13-hear-da",
-        "introducedAt": 77,
+        "introducedBy": "ZH-C13-hear-daxue",
+        "introducedAt": 88,
         "missed": [
-          "R3"
+          "R4"
         ],
-        "revisits": 6
+        "revisits": 7
       },
       {
-        "atom": "ZH-LEX-DAJIA-01",
+        "atom": "ZH-LEX-DAXUESHENG-01",
         "language": "chinese",
-        "introducedBy": "ZH-C13-hear-dajia",
-        "introducedAt": 80,
+        "introducedBy": "ZH-C13-hear-daxuesheng",
+        "introducedAt": 90,
         "missed": [
-          "R3"
+          "R4"
         ],
-        "revisits": 4
+        "revisits": 5
       },
       {
         "atom": "ZH-LEX-ERZI-01",
@@ -61582,6 +61618,16 @@
           "R3"
         ],
         "revisits": 7
+      },
+      {
+        "atom": "ZH-LEX-HAO",
+        "language": "chinese",
+        "introducedBy": "ZH-C01-hao",
+        "introducedAt": 2,
+        "missed": [
+          "R2"
+        ],
+        "revisits": 9
       },
       {
         "atom": "ZH-LEX-NU-01",
@@ -61634,16 +61680,6 @@
         "revisits": 6
       },
       {
-        "atom": "ZH-LEX-XIAO-01",
-        "language": "chinese",
-        "introducedBy": "ZH-C14-hear-xiao",
-        "introducedAt": 94,
-        "missed": [
-          "R3"
-        ],
-        "revisits": 5
-      },
-      {
         "atom": "ZH-LEX-XIEXIE",
         "language": "chinese",
         "introducedBy": "ZH-C10-xiexie",
@@ -61654,14 +61690,24 @@
         "revisits": 5
       },
       {
-        "atom": "ZH-LEX-ZAIJIAN",
+        "atom": "ZH-LEX-XUE-01",
         "language": "chinese",
-        "introducedBy": "ZH-C06-zaijian",
-        "introducedAt": 38,
+        "introducedBy": "ZH-C13-hear-xue",
+        "introducedAt": 82,
         "missed": [
           "R4"
         ],
-        "revisits": 6
+        "revisits": 10
+      },
+      {
+        "atom": "ZH-LEX-XUESHENG-01",
+        "language": "chinese",
+        "introducedBy": "ZH-C13-hear-xuesheng",
+        "introducedAt": 85,
+        "missed": [
+          "R4"
+        ],
+        "revisits": 8
       },
       {
         "atom": "ZH-LEX-ZHONG-01",
@@ -61672,6 +61718,26 @@
           "R3"
         ],
         "revisits": 6
+      },
+      {
+        "atom": "ZH-LEX-ZHONGGUO-01",
+        "language": "chinese",
+        "introducedBy": "ZH-C17-hear-zhongguo",
+        "introducedAt": 141,
+        "missed": [
+          "R3"
+        ],
+        "revisits": 6
+      },
+      {
+        "atom": "ZH-LEX-ZHONGWEN-01",
+        "language": "chinese",
+        "introducedBy": "ZH-C17-hear-zhongwen",
+        "introducedAt": 135,
+        "missed": [
+          "R3"
+        ],
+        "revisits": 7
       },
       {
         "atom": "ZH-LEX-ZHONGXUE-01",
@@ -61694,6 +61760,16 @@
         "revisits": 5
       },
       {
+        "atom": "ZH-ORTHO-HANYU-01",
+        "language": "chinese",
+        "introducedBy": "ZH-C16-hanyu",
+        "introducedAt": 132,
+        "missed": [
+          "R3"
+        ],
+        "revisits": 7
+      },
+      {
         "atom": "ZH-ORTHO-SHANGXUE-01",
         "language": "chinese",
         "introducedBy": "ZH-C15-shangxue",
@@ -61714,6 +61790,26 @@
         "revisits": 4
       },
       {
+        "atom": "ZH-ORTHO-ZHONGGUO-01",
+        "language": "chinese",
+        "introducedBy": "ZH-C17-zhongguo",
+        "introducedAt": 145,
+        "missed": [
+          "R3"
+        ],
+        "revisits": 5
+      },
+      {
+        "atom": "ZH-ORTHO-ZHONGWEN-01",
+        "language": "chinese",
+        "introducedBy": "ZH-C17-zhongwen",
+        "introducedAt": 139,
+        "missed": [
+          "R3"
+        ],
+        "revisits": 6
+      },
+      {
         "atom": "ZH-ORTHO-ZHONGXUE-01",
         "language": "chinese",
         "introducedBy": "ZH-C15-zhongxue",
@@ -61722,6 +61818,16 @@
           "R3"
         ],
         "revisits": 5
+      },
+      {
+        "atom": "ZH-PERFORMANCE-LANGUAGE-IDENTITY-THREE-FOUR-SKILL-01",
+        "language": "chinese",
+        "introducedBy": "ZH-C16-practice",
+        "introducedAt": 134,
+        "missed": [
+          "R3"
+        ],
+        "revisits": 4
       },
       {
         "atom": "ZH-PERFORMANCE-SCHOOL-COMPOUNDS-FOUR-SKILL-01",
@@ -61734,10 +61840,30 @@
         "revisits": 2
       },
       {
+        "atom": "ZH-SCRIPT-DA-01",
+        "language": "chinese",
+        "introducedBy": "ZH-W13-da",
+        "introducedAt": 78,
+        "missed": [
+          "R4"
+        ],
+        "revisits": 7
+      },
+      {
         "atom": "ZH-SCRIPT-ER-CHAR-01",
         "language": "chinese",
         "introducedBy": "ZH-W12-er",
         "introducedAt": 66,
+        "missed": [
+          "R3"
+        ],
+        "revisits": 5
+      },
+      {
+        "atom": "ZH-SCRIPT-GUO-01",
+        "language": "chinese",
+        "introducedBy": "ZH-W17-guo-observe",
+        "introducedAt": 142,
         "missed": [
           "R3"
         ],
@@ -61764,6 +61890,16 @@
         "revisits": 5
       },
       {
+        "atom": "ZH-SCRIPT-SHENG-01",
+        "language": "chinese",
+        "introducedBy": "ZH-W13-sheng",
+        "introducedAt": 86,
+        "missed": [
+          "R4"
+        ],
+        "revisits": 12
+      },
+      {
         "atom": "ZH-SCRIPT-TONG-01",
         "language": "chinese",
         "introducedBy": "ZH-W15-tong",
@@ -61772,6 +61908,26 @@
           "R3"
         ],
         "revisits": 4
+      },
+      {
+        "atom": "ZH-SCRIPT-WEN-01",
+        "language": "chinese",
+        "introducedBy": "ZH-W17-wen-observe",
+        "introducedAt": 136,
+        "missed": [
+          "R3"
+        ],
+        "revisits": 5
+      },
+      {
+        "atom": "ZH-SCRIPT-XUE-01",
+        "language": "chinese",
+        "introducedBy": "ZH-W13-xue",
+        "introducedAt": 83,
+        "missed": [
+          "R4"
+        ],
+        "revisits": 19
       },
       {
         "atom": "ZH-TONE-LEXICAL",
@@ -67277,11 +67433,11 @@
       },
       {
         "language": "chinese",
-        "lessonCount": 152,
+        "lessonCount": 175,
         "lessonsWithoutSequence": 0,
         "forwardPrerequisites": 0,
         "forwardReviews": 0,
-        "atomsTaught": 123,
+        "atomsTaught": 134,
         "atomsNeverRevisited": 11,
         "forwardReferences": 0
       },
@@ -67491,14 +67647,14 @@
       "tracksWithUnorderedLessons": 0,
       "forwardPrerequisites": 0,
       "forwardReviews": 0,
-      "atomsTaught": 5453,
+      "atomsTaught": 5464,
       "atomsNeverRevisited": 596,
       "neverRevisitedPercent": 11,
       "missedByWindow": {
         "R1": 1180,
-        "R2": 4061,
-        "R3": 4011,
-        "R4": 2578
+        "R2": 4062,
+        "R3": 4020,
+        "R4": 2587
       },
       "forwardReferences": 681
     }
@@ -67534,10 +67690,10 @@
       {
         "language": "chinese",
         "script": "chinese",
-        "lessonCount": 152,
-        "scriptLessons": 49,
-        "taughtGlyphs": 55,
-        "shownGlyphs": 55,
+        "lessonCount": 175,
+        "scriptLessons": 55,
+        "taughtGlyphs": 58,
+        "shownGlyphs": 58,
         "neverTaughtGlyphs": 0,
         "violations": 4,
         "exposureOnly": 2,
@@ -73477,6 +73633,186 @@
             "stage": "dictation-transcription",
             "level": "pre-A1",
             "sequence": 1580
+          },
+          {
+            "language": "chinese",
+            "lessonId": "ZH-W18-kan-observe",
+            "blockIndex": 2,
+            "blockTitle": "Guided Practice",
+            "stage": "observe-trace",
+            "level": "pre-A1",
+            "sequence": 1600
+          },
+          {
+            "language": "chinese",
+            "lessonId": "ZH-W18-kan-guided",
+            "blockIndex": 1,
+            "blockTitle": "Guided Practice",
+            "stage": "guided-copy",
+            "level": "pre-A1",
+            "sequence": 1610
+          },
+          {
+            "language": "chinese",
+            "lessonId": "ZH-W18-kan-guided",
+            "blockIndex": 2,
+            "blockTitle": "Guided Practice — Spaced Return",
+            "stage": "dictation-transcription",
+            "level": "pre-A1",
+            "sequence": 1610
+          },
+          {
+            "language": "chinese",
+            "lessonId": "ZH-W18-kan-delayed",
+            "blockIndex": 1,
+            "blockTitle": "Guided Practice",
+            "stage": "delayed-copy",
+            "level": "pre-A1",
+            "sequence": 1620
+          },
+          {
+            "language": "chinese",
+            "lessonId": "ZH-W18-kan-delayed",
+            "blockIndex": 2,
+            "blockTitle": "Guided Practice — Spaced Return",
+            "stage": "dictation-transcription",
+            "level": "pre-A1",
+            "sequence": 1620
+          },
+          {
+            "language": "chinese",
+            "lessonId": "ZH-C18-kan",
+            "blockIndex": 2,
+            "blockTitle": "Guided Practice",
+            "stage": "dictation-transcription",
+            "level": "pre-A1",
+            "sequence": 1630
+          },
+          {
+            "language": "chinese",
+            "lessonId": "ZH-C18-kanjian",
+            "blockIndex": 2,
+            "blockTitle": "Guided Practice",
+            "stage": "guided-copy",
+            "level": "pre-A1",
+            "sequence": 1650
+          },
+          {
+            "language": "chinese",
+            "lessonId": "ZH-C18-haokan",
+            "blockIndex": 2,
+            "blockTitle": "Guided Practice",
+            "stage": "guided-copy",
+            "level": "pre-A1",
+            "sequence": 1670
+          },
+          {
+            "language": "chinese",
+            "lessonId": "ZH-R18-looking-three-r1",
+            "blockIndex": 1,
+            "blockTitle": "Guided Practice",
+            "stage": "dictation-transcription",
+            "level": "pre-A1",
+            "sequence": 1680
+          },
+          {
+            "language": "chinese",
+            "lessonId": "ZH-W18-shu-observe",
+            "blockIndex": 2,
+            "blockTitle": "Guided Practice",
+            "stage": "observe-trace",
+            "level": "pre-A1",
+            "sequence": 1700
+          },
+          {
+            "language": "chinese",
+            "lessonId": "ZH-W18-shu-guided",
+            "blockIndex": 1,
+            "blockTitle": "Guided Practice",
+            "stage": "guided-copy",
+            "level": "pre-A1",
+            "sequence": 1710
+          },
+          {
+            "language": "chinese",
+            "lessonId": "ZH-W18-shu-guided",
+            "blockIndex": 2,
+            "blockTitle": "Guided Practice — Spaced Return",
+            "stage": "dictation-transcription",
+            "level": "pre-A1",
+            "sequence": 1710
+          },
+          {
+            "language": "chinese",
+            "lessonId": "ZH-W18-shu-delayed",
+            "blockIndex": 1,
+            "blockTitle": "Guided Practice",
+            "stage": "delayed-copy",
+            "level": "pre-A1",
+            "sequence": 1720
+          },
+          {
+            "language": "chinese",
+            "lessonId": "ZH-W18-shu-delayed",
+            "blockIndex": 2,
+            "blockTitle": "Guided Practice — Spaced Return",
+            "stage": "dictation-transcription",
+            "level": "pre-A1",
+            "sequence": 1720
+          },
+          {
+            "language": "chinese",
+            "lessonId": "ZH-C18-shu",
+            "blockIndex": 2,
+            "blockTitle": "Guided Practice",
+            "stage": "dictation-transcription",
+            "level": "pre-A1",
+            "sequence": 1730
+          },
+          {
+            "language": "chinese",
+            "lessonId": "ZH-C18-kanshu",
+            "blockIndex": 2,
+            "blockTitle": "Guided Practice",
+            "stage": "guided-copy",
+            "level": "pre-A1",
+            "sequence": 1750
+          },
+          {
+            "language": "chinese",
+            "lessonId": "ZH-R18-looking-three-r2",
+            "blockIndex": 1,
+            "blockTitle": "Guided Practice",
+            "stage": "dictation-transcription",
+            "level": "pre-A1",
+            "sequence": 1760
+          },
+          {
+            "language": "chinese",
+            "lessonId": "ZH-R18-book-reading-r1",
+            "blockIndex": 1,
+            "blockTitle": "Guided Practice",
+            "stage": "dictation-transcription",
+            "level": "pre-A1",
+            "sequence": 1770
+          },
+          {
+            "language": "chinese",
+            "lessonId": "ZH-R18-writing-five",
+            "blockIndex": 1,
+            "blockTitle": "Guided Practice",
+            "stage": "dictation-transcription",
+            "level": "pre-A1",
+            "sequence": 1800
+          },
+          {
+            "language": "chinese",
+            "lessonId": "ZH-C18-practice",
+            "blockIndex": 1,
+            "blockTitle": "Guided Practice",
+            "stage": "dictation-transcription",
+            "level": "pre-A1",
+            "sequence": 1810
           }
         ],
         "validEvidence": [
@@ -74073,6 +74409,186 @@
             "stage": "dictation-transcription",
             "level": "pre-A1",
             "sequence": 1580
+          },
+          {
+            "language": "chinese",
+            "lessonId": "ZH-W18-kan-observe",
+            "blockIndex": 2,
+            "blockTitle": "Guided Practice",
+            "stage": "observe-trace",
+            "level": "pre-A1",
+            "sequence": 1600
+          },
+          {
+            "language": "chinese",
+            "lessonId": "ZH-W18-kan-guided",
+            "blockIndex": 1,
+            "blockTitle": "Guided Practice",
+            "stage": "guided-copy",
+            "level": "pre-A1",
+            "sequence": 1610
+          },
+          {
+            "language": "chinese",
+            "lessonId": "ZH-W18-kan-guided",
+            "blockIndex": 2,
+            "blockTitle": "Guided Practice — Spaced Return",
+            "stage": "dictation-transcription",
+            "level": "pre-A1",
+            "sequence": 1610
+          },
+          {
+            "language": "chinese",
+            "lessonId": "ZH-W18-kan-delayed",
+            "blockIndex": 1,
+            "blockTitle": "Guided Practice",
+            "stage": "delayed-copy",
+            "level": "pre-A1",
+            "sequence": 1620
+          },
+          {
+            "language": "chinese",
+            "lessonId": "ZH-W18-kan-delayed",
+            "blockIndex": 2,
+            "blockTitle": "Guided Practice — Spaced Return",
+            "stage": "dictation-transcription",
+            "level": "pre-A1",
+            "sequence": 1620
+          },
+          {
+            "language": "chinese",
+            "lessonId": "ZH-C18-kan",
+            "blockIndex": 2,
+            "blockTitle": "Guided Practice",
+            "stage": "dictation-transcription",
+            "level": "pre-A1",
+            "sequence": 1630
+          },
+          {
+            "language": "chinese",
+            "lessonId": "ZH-C18-kanjian",
+            "blockIndex": 2,
+            "blockTitle": "Guided Practice",
+            "stage": "guided-copy",
+            "level": "pre-A1",
+            "sequence": 1650
+          },
+          {
+            "language": "chinese",
+            "lessonId": "ZH-C18-haokan",
+            "blockIndex": 2,
+            "blockTitle": "Guided Practice",
+            "stage": "guided-copy",
+            "level": "pre-A1",
+            "sequence": 1670
+          },
+          {
+            "language": "chinese",
+            "lessonId": "ZH-R18-looking-three-r1",
+            "blockIndex": 1,
+            "blockTitle": "Guided Practice",
+            "stage": "dictation-transcription",
+            "level": "pre-A1",
+            "sequence": 1680
+          },
+          {
+            "language": "chinese",
+            "lessonId": "ZH-W18-shu-observe",
+            "blockIndex": 2,
+            "blockTitle": "Guided Practice",
+            "stage": "observe-trace",
+            "level": "pre-A1",
+            "sequence": 1700
+          },
+          {
+            "language": "chinese",
+            "lessonId": "ZH-W18-shu-guided",
+            "blockIndex": 1,
+            "blockTitle": "Guided Practice",
+            "stage": "guided-copy",
+            "level": "pre-A1",
+            "sequence": 1710
+          },
+          {
+            "language": "chinese",
+            "lessonId": "ZH-W18-shu-guided",
+            "blockIndex": 2,
+            "blockTitle": "Guided Practice — Spaced Return",
+            "stage": "dictation-transcription",
+            "level": "pre-A1",
+            "sequence": 1710
+          },
+          {
+            "language": "chinese",
+            "lessonId": "ZH-W18-shu-delayed",
+            "blockIndex": 1,
+            "blockTitle": "Guided Practice",
+            "stage": "delayed-copy",
+            "level": "pre-A1",
+            "sequence": 1720
+          },
+          {
+            "language": "chinese",
+            "lessonId": "ZH-W18-shu-delayed",
+            "blockIndex": 2,
+            "blockTitle": "Guided Practice — Spaced Return",
+            "stage": "dictation-transcription",
+            "level": "pre-A1",
+            "sequence": 1720
+          },
+          {
+            "language": "chinese",
+            "lessonId": "ZH-C18-shu",
+            "blockIndex": 2,
+            "blockTitle": "Guided Practice",
+            "stage": "dictation-transcription",
+            "level": "pre-A1",
+            "sequence": 1730
+          },
+          {
+            "language": "chinese",
+            "lessonId": "ZH-C18-kanshu",
+            "blockIndex": 2,
+            "blockTitle": "Guided Practice",
+            "stage": "guided-copy",
+            "level": "pre-A1",
+            "sequence": 1750
+          },
+          {
+            "language": "chinese",
+            "lessonId": "ZH-R18-looking-three-r2",
+            "blockIndex": 1,
+            "blockTitle": "Guided Practice",
+            "stage": "dictation-transcription",
+            "level": "pre-A1",
+            "sequence": 1760
+          },
+          {
+            "language": "chinese",
+            "lessonId": "ZH-R18-book-reading-r1",
+            "blockIndex": 1,
+            "blockTitle": "Guided Practice",
+            "stage": "dictation-transcription",
+            "level": "pre-A1",
+            "sequence": 1770
+          },
+          {
+            "language": "chinese",
+            "lessonId": "ZH-R18-writing-five",
+            "blockIndex": 1,
+            "blockTitle": "Guided Practice",
+            "stage": "dictation-transcription",
+            "level": "pre-A1",
+            "sequence": 1800
+          },
+          {
+            "language": "chinese",
+            "lessonId": "ZH-C18-practice",
+            "blockIndex": 1,
+            "blockTitle": "Guided Practice",
+            "stage": "dictation-transcription",
+            "level": "pre-A1",
+            "sequence": 1810
           }
         ],
         "defects": [],
@@ -83193,7 +83709,7 @@
       "tracks": 23,
       "tracksWithAnyEvidence": 18,
       "tracksCompleteAtPreA1": 13,
-      "evidenceBlocks": 384,
+      "evidenceBlocks": 404,
       "invalidEvidenceBlocks": 0,
       "missingTrackLevelStages": 596
     }
@@ -83368,9 +83884,9 @@
       },
       {
         "language": "chinese",
-        "lessonCount": 152,
-        "atomMeasurableLessons": 136,
-        "atomMeasurementBlindLessons": 16,
+        "lessonCount": 175,
+        "atomMeasurableLessons": 157,
+        "atomMeasurementBlindLessons": 18,
         "durationViolations": 0,
         "atomLessonSpikes": 0,
         "atomChapterSpikes": 0,
@@ -83384,17 +83900,17 @@
         "forwardPrerequisites": 0,
         "forwardReviews": 0,
         "forwardReferences": 0,
-        "atomsTaught": 123,
+        "atomsTaught": 134,
         "atomsNeverRevisited": 11,
-        "reinforcementWindowMisses": 215,
+        "reinforcementWindowMisses": 234,
         "reinforcementMissesByWindow": {
           "R1": 20,
-          "R2": 54,
-          "R3": 79,
-          "R4": 62
+          "R2": 55,
+          "R3": 88,
+          "R4": 71
         },
         "payoffSurprises": 0,
-        "writingPracticeLessons": 53,
+        "writingPracticeLessons": 59,
         "firstWritingPracticeAt": 0,
         "lessonsBeforeWritingPractice": 0,
         "findings": [
@@ -83408,14 +83924,14 @@
           {
             "language": "chinese",
             "kind": "reinforcement",
-            "count": 215,
+            "count": 234,
             "unit": "missed window(s)",
             "detail": "add retrieval at the expanding R1-R4 intervals"
           },
           {
             "language": "chinese",
             "kind": "measurement-blind",
-            "count": 16,
+            "count": 18,
             "unit": "lesson(s)",
             "detail": "migrate undeclared lesson knowledge so gentleness can be measured"
           }
@@ -85532,16 +86048,16 @@
         "detail": "add retrieval at the expanding R1-R4 intervals"
       },
       {
-        "language": "french",
+        "language": "chinese",
         "kind": "reinforcement",
-        "count": 232,
+        "count": 234,
         "unit": "missed window(s)",
         "detail": "add retrieval at the expanding R1-R4 intervals"
       },
       {
-        "language": "chinese",
+        "language": "french",
         "kind": "reinforcement",
-        "count": 215,
+        "count": 232,
         "unit": "missed window(s)",
         "detail": "add retrieval at the expanding R1-R4 intervals"
       },
@@ -85758,7 +86274,7 @@
       {
         "language": "chinese",
         "kind": "measurement-blind",
-        "count": 16,
+        "count": 18,
         "unit": "lesson(s)",
         "detail": "migrate undeclared lesson knowledge so gentleness can be measured"
       },
@@ -85810,7 +86326,7 @@
       "tracksWithDetectedCliffs": 21,
       "tracksWithNoWritingPractice": 0,
       "tracksWhereWritingStartsLate": 6,
-      "atomMeasurementBlindLessons": 410,
+      "atomMeasurementBlindLessons": 412,
       "findings": 119
     }
   },
@@ -85900,8 +86416,8 @@
           },
           {
             "criterion": "vocabulary",
-            "detail": "teaches 39 distinct headwords at or below pre-A1, against 300",
-            "shortfall": 261
+            "detail": "teaches 44 distinct headwords at or below pre-A1, against 300",
+            "shortfall": 256
           },
           {
             "criterion": "verb-vocabulary",
@@ -85910,11 +86426,11 @@
           },
           {
             "criterion": "reinforcement",
-            "detail": "21 atom(s) at or below pre-A1 are revisited fewer than twice",
-            "shortfall": 21
+            "detail": "22 atom(s) at or below pre-A1 are revisited fewer than twice",
+            "shortfall": 22
           }
         ],
-        "vocabulary": 46
+        "vocabulary": 51
       },
       {
         "language": "french",
@@ -86478,11 +86994,11 @@
   },
   "modality": {
     "maxLinearisableTableColumns": 3,
-    "totalLessons": 4308,
-    "voice": 3145,
-    "sight": 577,
-    "pen": 586,
-    "coreVoice": 3624,
+    "totalLessons": 4331,
+    "voice": 3156,
+    "sight": 583,
+    "pen": 592,
+    "coreVoice": 3635,
     "lessonsWithWritingSegments": 312,
     "drivablePercent": 84,
     "tracks": [
@@ -87255,12 +87771,12 @@
       },
       {
         "language": "chinese",
-        "lessonCount": 152,
-        "voice": 87,
-        "sight": 15,
-        "pen": 50,
-        "coreVoice": 91,
-        "drivablePercent": 60,
+        "lessonCount": 175,
+        "voice": 98,
+        "sight": 21,
+        "pen": 56,
+        "coreVoice": 102,
+        "drivablePercent": 58,
         "drivablePrefixTotal": 15,
         "chapters": [
           {
@@ -87533,6 +88049,22 @@
             ],
             "drivablePrefix": 1,
             "firstNonVoiceLesson": "ZH-W17-wen-observe"
+          },
+          {
+            "language": "chinese",
+            "chapter": 18,
+            "lessonCount": 23,
+            "voice": 11,
+            "sight": 6,
+            "pen": 6,
+            "coreVoice": 11,
+            "modalities": [
+              "voice",
+              "sight",
+              "pen"
+            ],
+            "drivablePrefix": 0,
+            "firstNonVoiceLesson": "ZH-C18-hear-kan"
           }
         ]
       },
@@ -103633,7 +104165,7 @@
     "underspentPercent": 96
   },
   "infoDump": {
-    "lessons": 4308,
+    "lessons": 4331,
     "lessonsWithFindings": 121,
     "ruleStatements": 30,
     "paradigmTables": 95,
@@ -103643,10 +104175,10 @@
   "metalanguage": {
     "terms": 54,
     "termsUsed": 53,
-    "lessonsUsingTerms": 4076,
-    "usesBeforeIntroduction": 14046,
-    "technicalUsesBeforeIntroduction": 3514,
-    "technicalLessons": 1890,
+    "lessonsUsingTerms": 4086,
+    "usesBeforeIntroduction": 14060,
+    "technicalUsesBeforeIntroduction": 3515,
+    "technicalLessons": 1891,
     "worstTerms": [
       {
         "term": "verb",
@@ -103654,7 +104186,7 @@
       },
       {
         "term": "noun",
-        "lessons": 622
+        "lessons": 623
       },
       {
         "term": "adjective",
@@ -103675,14 +104207,14 @@
     ]
   },
   "literalMarkup": {
-    "lessonsScanned": 4308,
+    "lessonsScanned": 4331,
     "sourceFindings": 0,
     "renderedFindings": 0
   },
   "glyphCoverage": {
-    "filesScanned": 1322,
+    "filesScanned": 1323,
     "mainCharacters": 126,
-    "scriptCharacters": 716,
+    "scriptCharacters": 719,
     "gaps": 0
   }
 }
