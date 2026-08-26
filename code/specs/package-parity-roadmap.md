@@ -9075,6 +9075,43 @@ and 791 edges: 157 merged, 374 pending, and exactly one in-progress owner, with
 no active parity PR. The fresh branch starts from exact current
 `origin/main` `f7de03cfbecfe2532e18e2112961a5185615eaeb`.
 
+The implementation defines a closed, process-free `classical-ciphers-v1`
+schema and 48-case corpus across all nine operations. CR01-CR03 now pin exact
+portable string units and edge behavior: Atbash's complete ASCII involution;
+Scytale's Unicode-scalar full and ragged grids, U+0020-only trimming,
+ascending brute force, and resource limit; and Vigenere's ASCII-only
+progression, exact 90% shortest-near-maximum IC rule, ascending chi-squared
+tie, insufficient-signal fallback, empty groups, unshortened keys, fixed
+`SECRET` recovery, and analysis limits. The independent Python oracle also
+enforces bounded strict JSON, duplicate-free objects, finite numbers, separate
+schema and fixture depth caps, surrogate and duplicate-ID rejection,
+fragment-local references, payload-blind stable errors, and limit checks before
+repeat expansion. Its six tests execute 48 semantic subtests at 97%
+branch-aware coverage; the canonical-CBOR companion and parity reporter bring
+the focused gate to 20 tests plus those 48 subtests.
+
+Existing Dart Atbash, Scytale, and Vigenere packages pass 8, 16, and 16 tests,
+fatal analysis, and formatting. Their Python 3.13 references pass 33, 45 with
+one expected skip, and 37 tests at 100%, 100%, and 98% coverage. Ruff lint and
+source/test formatting are clean; an unchanged Vigenere README retains two
+pre-existing code-block spacing notices. The Go build tool passes all package
+tests, vet, and trimpath compilation. Its real forced dry run evaluates 45
+Starlark files, validates the five reviewed orphan exemptions, discovers all
+5,089 packages, and reports all 5,089 as `WOULD-BUILD` without changing package
+files. Strict JSON/YAML, Bandit, diff, dependency, credential, raw-control-byte,
+BUILD, state, and collision gates pass.
+
+The branch rebased without conflict onto exact `origin/main`
+`8d5a7f90a649c0a7ba608c3466c6d3ff1b78cf95` after four disjoint Mermaid,
+human-language, Mosaic, and ALGOL changes. The refreshed schema-3 inventory is
+unchanged at 15 established lanes, 1,373 implementation identities, 4,582
+slots, 1,412 all-reported identities, zero collisions, and zero unknown
+buckets. Eight live open PRs have zero exact overlap with the 11 changed paths;
+the complete acyclic state remains 532 owners and 791 edges with 157 merged,
+374 pending, and exactly one in-progress owner. Independent contract, security,
+and ownership reviews identified and verified closure of every focused loader,
+fixture, CI, and wording issue; no publication blocker remains.
+
 ## Autonomous Loop Protocol
 
 Only one parity PR should be active at a time.
