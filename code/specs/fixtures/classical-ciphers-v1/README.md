@@ -39,7 +39,8 @@ paths, interpolate environment values, or accept extension operations.
 
 ## Portable limits
 
-- at most 64 fixture cases and 131,072 encoded fixture bytes;
+- at most 64 fixture cases, 131,072 encoded fixture bytes, and eight levels of
+  fixture nesting;
 - at most 8,193 scalars in a fixture string or fixed repeat descriptor;
 - at most 4,096 scalars for Scytale brute force;
 - at most 8,192 scalars and key length 40 for Vigenère analysis.

@@ -22,6 +22,7 @@
       "required": [
         "max_cases",
         "max_fixture_bytes",
+        "max_fixture_nesting_depth",
         "max_fixture_text_scalars",
         "max_scytale_brute_force_scalars",
         "max_vigenere_analysis_scalars",
@@ -30,6 +31,7 @@
       "properties": {
         "max_cases": { "const": 64 },
         "max_fixture_bytes": { "const": 131072 },
+        "max_fixture_nesting_depth": { "const": 8 },
         "max_fixture_text_scalars": { "const": 8193 },
         "max_scytale_brute_force_scalars": { "const": 4096 },
         "max_vigenere_analysis_scalars": { "const": 8192 },
@@ -98,6 +100,7 @@
     },
     "validation_error_ids": {
       "const": [
+        "fixture-depth-limit",
         "fixture-duplicate-id",
         "fixture-invalid-scalar",
         "fixture-size-limit"

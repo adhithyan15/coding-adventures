@@ -8,5 +8,6 @@
   ascending brute force, and its 4,096-scalar preflight limit.
 - Pin Vigenère ASCII progression, the 90% shortest-near-maximum IC rule,
   smallest-shift chi-squared ties, analysis limits, and full requested keys.
-- Add a fixed long-English `SECRET` recovery vector, stable error IDs, hostile
-  schema mutations, and a semantic-oracle drift gate.
+- Add a fixed long-English `SECRET` recovery vector, stable error IDs, bounded
+  iterative fixture traversal, hostile schema mutations, and a semantic-oracle
+  drift gate.

@@ -4,6 +4,7 @@
   "limits": {
     "max_cases": 64,
     "max_fixture_bytes": 131072,
+    "max_fixture_nesting_depth": 8,
     "max_fixture_text_scalars": 8193,
     "max_scytale_brute_force_scalars": 4096,
     "max_vigenere_analysis_scalars": 8192,
@@ -53,6 +54,7 @@
     "vigenere-key-length-limit"
   ],
   "validation_error_ids": [
+    "fixture-depth-limit",
     "fixture-duplicate-id",
     "fixture-invalid-scalar",
     "fixture-size-limit"

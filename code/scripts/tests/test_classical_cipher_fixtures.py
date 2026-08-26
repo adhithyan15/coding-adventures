@@ -27,20 +27,6 @@ def _has_surrogate(value: str) -> bool:
     return any(0xD800 <= ord(character) <= 0xDFFF for character in value)
 
 
-def _walk_strings(value: object) -> list[str]:
-    if isinstance(value, str):
-        return [value]
-    if isinstance(value, list):
-        return [text for item in value for text in _walk_strings(item)]
-    if isinstance(value, dict):
-        return [
-            text
-            for key, item in value.items()
-            for text in (*_walk_strings(key), *_walk_strings(item))
-        ]
-    return []
-
-
 def _validate_document(document: dict[str, Any], encoded_size: int) -> None:
     limits = document["limits"]
     if encoded_size > limits["max_fixture_bytes"]:
@@ -48,8 +34,19 @@ def _validate_document(document: dict[str, Any], encoded_size: int) -> None:
     ids = [case["id"] for case in document["cases"]]
     if len(ids) != len(set(ids)):
         raise ConformanceError("fixture-duplicate-id")
-    if any(_has_surrogate(text) for text in _walk_strings(document)):
-        raise ConformanceError("fixture-invalid-scalar")
+    stack: list[tuple[object, int]] = [(document, 0)]
+    while stack:
+        value, depth = stack.pop()
+        if depth > limits["max_fixture_nesting_depth"]:
+            raise ConformanceError("fixture-depth-limit")
+        if isinstance(value, str):
+            if _has_surrogate(value):
+                raise ConformanceError("fixture-invalid-scalar")
+        elif isinstance(value, list):
+            stack.extend((item, depth + 1) for item in value)
+        elif isinstance(value, dict):
+            stack.extend((key, depth + 1) for key in value)
+            stack.extend((item, depth + 1) for item in value.values())
 
 
 def _atbash(text: str) -> str:
@@ -349,7 +346,12 @@ class ClassicalCipherFixtureTests(unittest.TestCase):
         )
         self.assertEqual(
             set(self.document["validation_error_ids"]),
-            {"fixture-duplicate-id", "fixture-invalid-scalar", "fixture-size-limit"},
+            {
+                "fixture-depth-limit",
+                "fixture-duplicate-id",
+                "fixture-invalid-scalar",
+                "fixture-size-limit",
+            },
         )
         exercised = {
             case["expected"]["error_id"]
@@ -363,7 +365,7 @@ class ClassicalCipherFixtureTests(unittest.TestCase):
         ):
             self.assertRegex(error_id, r"^[a-z0-9]+(?:-[a-z0-9]+)*$")
 
-    def test_fixture_validation_rejects_duplicate_ids_surrogates_and_size(self) -> None:
+    def test_fixture_validation_rejects_hostile_structure_and_size(self) -> None:
         duplicate = copy.deepcopy(self.document)
         duplicate["cases"][1]["id"] = duplicate["cases"][0]["id"]
         with self.assertRaisesRegex(ConformanceError, "^fixture-duplicate-id$"):
@@ -373,6 +375,14 @@ class ClassicalCipherFixtureTests(unittest.TestCase):
         surrogate["cases"][0]["input"]["text"] = chr(0xD800)
         with self.assertRaisesRegex(ConformanceError, "^fixture-invalid-scalar$"):
             _validate_document(surrogate, len(self.encoded))
+
+        nested: object = "leaf"
+        for _ in range(self.document["limits"]["max_fixture_nesting_depth"] + 1):
+            nested = [nested]
+        depth = copy.deepcopy(self.document)
+        depth["cases"][0]["input"]["text"] = nested
+        with self.assertRaisesRegex(ConformanceError, "^fixture-depth-limit$"):
+            _validate_document(depth, len(self.encoded))
 
         with self.assertRaisesRegex(ConformanceError, "^fixture-size-limit$"):
             _validate_document(
