@@ -556,8 +556,40 @@ C# return type is always `string`; WinUI's compiled-binding implicit
 conversions (verified against a real `dotnet build`, not assumed) make
 this bind correctly even at non-`string` targets like
 `HostNumberInput.value`'s `double` and `Image.src`'s `ImageSource`.
-Issue #13040 tracks the remaining `find_prop_value` sites with the same
-bare-catch-all shape not yet made exhaustive.
+Issue #13040 closed the remaining ~15 sites with the same bare-catch-all
+shape, in two treatments:
+
+- **Full `Expr` support, same pattern as above** (13 sites): `disabled:`
+  → `IsEnabled` (negated) on `HostButton`/`HostCheckbox`/`HostRadio`/
+  `HostNumberInput`/`HostSlider`; `checked:` → `IsChecked` on
+  `HostCheckbox`/`HostRadio`; `read-only:` → `IsReadOnly` on
+  `HostInput`; `indeterminate:` → `IsThreeState` on `HostCheckbox`;
+  `HostSurface.content` → `Content`; `Icon.glyph`/`.name` → `Glyph`;
+  `HostRadio.group` → `GroupName`; `HostTable.dir` → `FlowDirection`
+  (both the native-shape and non-native fallback lowering paths — the
+  existing `rtl`/`ltr` keyword allow-list there is a gate against an
+  *unrecognized static keyword*, not a reason to reject `Expr`
+  wholesale, since `lower_expr_for_xbind` never splices raw text). The
+  five negated `disabled:` sites route through a new
+  `disabled_expr_xbind_path`, composing the lowered expression with the
+  same shared `Not(bool)` helper `disabled_slot_xbind_path` already
+  registers for `SlotRef`; inside a `For` template scope it returns
+  `Unsupported` rather than guessing, since composing that negation
+  with whatever `register_template_helper_binding` already projected
+  onto the row VM isn't implemented or verified.
+- **Exhaustive but `Expr` deliberately deferred** (2 sites):
+  `host_link_href_payload_expr`, used both for `HostLink`'s in-app
+  `Click` payload and `HostRadio`'s `onSelect` `value:` payload. These
+  build a bare C# expression spliced into a code-behind
+  `Dispatch?.Invoke(...)` call at click time — no for-scope awareness,
+  `SlotRef` resolves via `this.<Pascal>`. Real per-row `Expr` support
+  would need the same sender-`DataContext`-cast-to-row-VM-type codegen
+  `host_button_click_payload_expr` already does for its own params, a
+  materially more novel shape with no existing precedent — a real
+  feature addition, not an exhaustiveness fix. Both functions are now
+  exhaustive over `LayoutPropValue` (no `_`); `Expr` returns
+  `PipelineEmitError::UnsupportedExpression` instead of silently
+  falling back to an empty-string payload.
 
 ## 7. Event dispatch contract (UI24)
 

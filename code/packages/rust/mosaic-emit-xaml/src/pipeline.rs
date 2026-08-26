@@ -3043,6 +3043,9 @@ fn emit_host_surface(
     let pad = " ".repeat(indent);
     let inner_pad = " ".repeat(indent + 4);
     let (container_attrs, _) = partition_box_style(node.part_name.as_deref(), part_styles);
+    // #13040: this used to handle only SlotRef -- a literal String
+    // content value silently emitted nothing at all, the same
+    // invisible-drop failure mode as the missing Expr arm.
     let content = match find_prop_value(node, "content") {
         Some(LayoutPropValue::SlotRef(slot)) => {
             format!(
@@ -3050,7 +3053,22 @@ fn emit_host_surface(
                 ctx.slot_xbind_path(slot)
             )
         }
-        _ => String::new(),
+        Some(LayoutPropValue::String(s)) => format!(" Content=\"{}\"", escape_xaml_attr(s)),
+        Some(LayoutPropValue::Expr(src)) => match lower_expr_for_xbind(src, ctx) {
+            ExprLowering::Bindable(path) => {
+                format!(" Content=\"{{x:Bind {path}, Mode=OneWay}}\"")
+            }
+            ExprLowering::Helper(call) => {
+                format!(" Content=\"{{x:Bind {call}, Mode=OneWay}}\"")
+            }
+            ExprLowering::Unsupported(reason) => {
+                return Err(PipelineEmitError::UnsupportedExpression(reason));
+            }
+        },
+        Some(LayoutPropValue::Keyword(_))
+        | Some(LayoutPropValue::Number(_))
+        | Some(LayoutPropValue::EmitRef(_))
+        | None => String::new(),
     };
     Ok(format!(
         "{pad}<Border{container_attrs}>\n{inner_pad}<ContentPresenter{content}/>\n{pad}</Border>\n"
@@ -3641,7 +3659,22 @@ fn emit_icon(
             let pascal = ctx.slot_xbind_path(slot);
             format!(" Glyph=\"{{x:Bind {pascal}, Mode=OneWay}}\"")
         }
-        _ => String::new(),
+        // #13040
+        Some(LayoutPropValue::Expr(src)) => match lower_expr_for_xbind(src, ctx) {
+            ExprLowering::Bindable(path) => {
+                format!(" Glyph=\"{{x:Bind {path}, Mode=OneWay}}\"")
+            }
+            ExprLowering::Helper(call) => {
+                format!(" Glyph=\"{{x:Bind {call}, Mode=OneWay}}\"")
+            }
+            ExprLowering::Unsupported(reason) => {
+                return Err(PipelineEmitError::UnsupportedExpression(reason));
+            }
+        },
+        Some(LayoutPropValue::Keyword(_))
+        | Some(LayoutPropValue::Number(_))
+        | Some(LayoutPropValue::EmitRef(_))
+        | None => String::new(),
     };
     Ok(format!("{pad}<FontIcon{glyph_attr}{style}/>\n"))
 }
@@ -6955,6 +6988,45 @@ fn disabled_slot_xbind_path(slot: &str, ctx: &mut EmitContext<'_>) -> String {
     }
 }
 
+/// #13040: the `Expr` analogue of `disabled_slot_xbind_path` above.
+/// Outside a `For` template scope this is safe in general: negate
+/// whatever `lower_expr_for_xbind` returns with the same shared `Not`
+/// helper `disabled_slot_xbind_path` registers.
+///
+/// Inside a `For` template scope, wrapping the lowered result in
+/// another function call (`Not(...)`) would hit the identical "WinUI's
+/// typed DataTemplate compiler rejects a function binding rooted
+/// through another property" restriction `disabled_slot_xbind_path`'s
+/// own for-scope branch works around by projecting a new row-VM
+/// computed property instead of calling `Not` bare. Doing that
+/// correctly for an arbitrary lowered expression (as opposed to a
+/// single named slot) needs the negation to compose with whatever
+/// `register_template_helper_binding` already projected, which isn't
+/// exercised or verified anywhere yet -- rather than guess at that
+/// composition, this returns `Unsupported` inside a for-scope so the
+/// emitter reports a clear diagnostic instead of risking subtly wrong
+/// generated C#/XAML.
+fn disabled_expr_xbind_path(src: &str, ctx: &mut EmitContext<'_>) -> ExprLowering {
+    if !ctx.for_scope.is_empty() {
+        return ExprLowering::Unsupported(format!(
+            "expression {src:?} used for `disabled:` inside a `For` template is not \
+             yet supported -- only a plain `slot:` reference can be negated there today"
+        ));
+    }
+    match lower_expr_for_xbind(src, ctx) {
+        ExprLowering::Bindable(path) | ExprLowering::Helper(path) => {
+            ctx.add_helper(HelperMethod {
+                name: "Not".to_string(),
+                parameters: vec![("b".to_string(), "bool".to_string())],
+                return_type: "bool".to_string(),
+                body: "!b".to_string(),
+            });
+            ExprLowering::Bindable(format!("Not({path})"))
+        }
+        unsupported => unsupported,
+    }
+}
+
 fn template_helper_argument(parameter: &str, ctx: &EmitContext<'_>) -> String {
     for (position, binding) in ctx.for_scope.iter().enumerate().rev() {
         if kebab_to_pascal_case(&binding.as_name) == parameter {
@@ -7616,7 +7688,23 @@ fn emit_host_input(
         Some(LayoutPropValue::Keyword(k)) if k == "false" => {
             attrs.push_str(" IsReadOnly=\"False\"");
         }
-        _ => {}
+        // #13040
+        Some(LayoutPropValue::Expr(src)) => match lower_expr_for_xbind(src, ctx) {
+            ExprLowering::Bindable(path) => {
+                attrs.push_str(&format!(" IsReadOnly=\"{{x:Bind {path}, Mode=OneWay}}\""));
+            }
+            ExprLowering::Helper(call) => {
+                attrs.push_str(&format!(" IsReadOnly=\"{{x:Bind {call}, Mode=OneWay}}\""));
+            }
+            ExprLowering::Unsupported(reason) => {
+                return Err(PipelineEmitError::UnsupportedExpression(reason));
+            }
+        },
+        Some(LayoutPropValue::String(_))
+        | Some(LayoutPropValue::Keyword(_))
+        | Some(LayoutPropValue::Number(_))
+        | Some(LayoutPropValue::EmitRef(_))
+        | None => {}
     }
 
     // placeholder: literal/slot/expr
@@ -7847,7 +7935,24 @@ fn emit_host_button(
         Some(LayoutPropValue::Keyword(k)) if k == "false" => {
             attrs.push_str(" IsEnabled=\"True\"");
         }
-        _ => {}
+        // #13040: same polarity-flip Not(bool) helper as the SlotRef arm
+        // above, applied to a lowered expression instead of a slot.
+        Some(LayoutPropValue::Expr(src)) => match disabled_expr_xbind_path(src, ctx) {
+            ExprLowering::Bindable(path) => {
+                attrs.push_str(&format!(" IsEnabled=\"{{x:Bind {path}, Mode=OneWay}}\""));
+            }
+            ExprLowering::Helper(call) => {
+                attrs.push_str(&format!(" IsEnabled=\"{{x:Bind {call}, Mode=OneWay}}\""));
+            }
+            ExprLowering::Unsupported(reason) => {
+                return Err(PipelineEmitError::UnsupportedExpression(reason));
+            }
+        },
+        Some(LayoutPropValue::String(_))
+        | Some(LayoutPropValue::Keyword(_))
+        | Some(LayoutPropValue::Number(_))
+        | Some(LayoutPropValue::EmitRef(_))
+        | None => {}
     }
 
     // onClick â†’ Click handler
@@ -8228,38 +8333,66 @@ fn host_link_click_payload_expr(
     emit_name: &str,
     node: &LayoutNode,
     ctx: &EmitContext<'_>,
-) -> Option<String> {
-    let params = ctx.emit_payloads.get(emit_name)?;
+) -> Result<Option<String>, PipelineEmitError> {
+    let Some(params) = ctx.emit_payloads.get(emit_name) else {
+        return Ok(None);
+    };
     if params.is_empty() {
-        return None;
+        return Ok(None);
     }
     if params.len() != 1 {
-        return None;
+        return Ok(None);
     }
 
     let (param_name, param_type) = &params[0];
     if param_name == "href" && param_type == "string" {
-        return Some(host_link_href_payload_expr(node, ctx));
+        return host_link_href_payload_expr(node, ctx).map(Some);
     }
     if let Some(expr) = host_button_click_payload_expr(emit_name, ctx) {
-        return Some(expr);
+        return Ok(Some(expr));
     }
     if param_type == "string" {
-        return Some(host_link_href_payload_expr(node, ctx));
+        return host_link_href_payload_expr(node, ctx).map(Some);
     }
-    None
+    Ok(None)
 }
 
-fn host_link_href_payload_expr(node: &LayoutNode, ctx: &EmitContext<'_>) -> String {
+/// #13040: made exhaustive over `LayoutPropValue`, but `Expr` is
+/// deliberately NOT wired to a real value here. Unlike every XAML-
+/// attribute-shaped site this issue closes, this function builds a bare
+/// C# expression spliced into a code-behind `Dispatch?.Invoke(...)`
+/// call fired once at click time -- `SlotRef` resolves via
+/// `this.<Pascal>` (a *component-level* property reference) since this
+/// function has no for-scope awareness at all. Real per-row `Expr`
+/// support (`value: (row[1])` as a click payload) needs the same
+/// sender-`DataContext`-cast-to-row-VM-type codegen
+/// `host_button_click_payload_expr` already does for its own params --
+/// a materially different, more novel code shape with no existing
+/// precedent for an arbitrary expression, and a real feature addition
+/// rather than a "make the match exhaustive" fix. Returns a clear
+/// diagnostic instead of silently falling back to `""` the way the
+/// other now-explicit variants below still do -- an author who wrote
+/// an expression here deserves to know it wasn't honoured, not have it
+/// silently become an empty string.
+fn host_link_href_payload_expr(
+    node: &LayoutNode,
+    ctx: &EmitContext<'_>,
+) -> Result<String, PipelineEmitError> {
     match find_prop_value(node, "href") {
-        Some(LayoutPropValue::String(s)) => {
-            format!("\"{}\"", escape_csharp_string(s))
-        }
+        Some(LayoutPropValue::String(s)) => Ok(format!("\"{}\"", escape_csharp_string(s))),
         Some(LayoutPropValue::SlotRef(slot)) => {
             let pascal = ctx.slot_property_name(slot);
-            format!("this.{pascal}")
+            Ok(format!("this.{pascal}"))
         }
-        _ => "\"\"".to_string(),
+        Some(LayoutPropValue::Expr(src)) => Err(PipelineEmitError::UnsupportedExpression(format!(
+            "expression {src:?} used as a HostLink click payload (`href` on an \
+             `external: false` link) is not yet supported -- only a literal string \
+             or a `slot:` reference can be dispatched as the click payload today"
+        ))),
+        Some(LayoutPropValue::Keyword(_))
+        | Some(LayoutPropValue::Number(_))
+        | Some(LayoutPropValue::EmitRef(_))
+        | None => Ok("\"\"".to_string()),
     }
 }
 
@@ -8320,7 +8453,23 @@ fn emit_host_checkbox(
         Some(LayoutPropValue::Keyword(k)) if k == "false" => {
             attrs.push_str(" IsChecked=\"False\"");
         }
-        _ => {}
+        // #13040
+        Some(LayoutPropValue::Expr(src)) => match lower_expr_for_xbind(src, ctx) {
+            ExprLowering::Bindable(path) => {
+                attrs.push_str(&format!(" IsChecked=\"{{x:Bind {path}, Mode=OneWay}}\""));
+            }
+            ExprLowering::Helper(call) => {
+                attrs.push_str(&format!(" IsChecked=\"{{x:Bind {call}, Mode=OneWay}}\""));
+            }
+            ExprLowering::Unsupported(reason) => {
+                return Err(PipelineEmitError::UnsupportedExpression(reason));
+            }
+        },
+        Some(LayoutPropValue::String(_))
+        | Some(LayoutPropValue::Keyword(_))
+        | Some(LayoutPropValue::Number(_))
+        | Some(LayoutPropValue::EmitRef(_))
+        | None => {}
     }
 
     // IsEnabled from `disabled:` (polarity flip; reuses HostButton's
@@ -8336,7 +8485,24 @@ fn emit_host_checkbox(
         Some(LayoutPropValue::Keyword(k)) if k == "false" => {
             attrs.push_str(" IsEnabled=\"True\"");
         }
-        _ => {}
+        // #13040: same polarity-flip Not(bool) helper as the SlotRef arm
+        // above, applied to a lowered expression instead of a slot.
+        Some(LayoutPropValue::Expr(src)) => match disabled_expr_xbind_path(src, ctx) {
+            ExprLowering::Bindable(path) => {
+                attrs.push_str(&format!(" IsEnabled=\"{{x:Bind {path}, Mode=OneWay}}\""));
+            }
+            ExprLowering::Helper(call) => {
+                attrs.push_str(&format!(" IsEnabled=\"{{x:Bind {call}, Mode=OneWay}}\""));
+            }
+            ExprLowering::Unsupported(reason) => {
+                return Err(PipelineEmitError::UnsupportedExpression(reason));
+            }
+        },
+        Some(LayoutPropValue::String(_))
+        | Some(LayoutPropValue::Keyword(_))
+        | Some(LayoutPropValue::Number(_))
+        | Some(LayoutPropValue::EmitRef(_))
+        | None => {}
     }
 
     // IsThreeState + tri-state from `indeterminate:`. The visual
@@ -8344,10 +8510,18 @@ fn emit_host_checkbox(
     // "show as indeterminate" toggle is driven via code-behind reading
     // the bound slot. v1 emits the bare IsThreeState attr; the host
     // owns IsChecked transitions.
+    // #13040: same "can't know the runtime value at compile time, so
+    // enable three-state mode conservatively" treatment already applied
+    // to SlotRef -- an Expr-valued indeterminate is equally unknowable
+    // at compile time.
     let enable_three_state = match find_prop_value(node, "indeterminate") {
-        Some(LayoutPropValue::SlotRef(_)) => true,
+        Some(LayoutPropValue::SlotRef(_)) | Some(LayoutPropValue::Expr(_)) => true,
         Some(LayoutPropValue::Keyword(k)) if k == "true" => true,
-        _ => false,
+        Some(LayoutPropValue::Keyword(_))
+        | Some(LayoutPropValue::String(_))
+        | Some(LayoutPropValue::Number(_))
+        | Some(LayoutPropValue::EmitRef(_))
+        | None => false,
     };
     if enable_three_state {
         attrs.push_str(" IsThreeState=\"True\"");
@@ -8476,7 +8650,22 @@ fn emit_host_radio(
         Some(LayoutPropValue::String(s)) => {
             attrs.push_str(&format!(" GroupName=\"{}\"", escape_xaml_attr(s)));
         }
-        _ => {}
+        // #13040
+        Some(LayoutPropValue::Expr(src)) => match lower_expr_for_xbind(src, ctx) {
+            ExprLowering::Bindable(path) => {
+                attrs.push_str(&format!(" GroupName=\"{{x:Bind {path}, Mode=OneWay}}\""));
+            }
+            ExprLowering::Helper(call) => {
+                attrs.push_str(&format!(" GroupName=\"{{x:Bind {call}, Mode=OneWay}}\""));
+            }
+            ExprLowering::Unsupported(reason) => {
+                return Err(PipelineEmitError::UnsupportedExpression(reason));
+            }
+        },
+        Some(LayoutPropValue::Keyword(_))
+        | Some(LayoutPropValue::Number(_))
+        | Some(LayoutPropValue::EmitRef(_))
+        | None => {}
     }
 
     // IsChecked from `checked:`.
@@ -8491,7 +8680,23 @@ fn emit_host_radio(
         Some(LayoutPropValue::Keyword(k)) if k == "false" => {
             attrs.push_str(" IsChecked=\"False\"");
         }
-        _ => {}
+        // #13040
+        Some(LayoutPropValue::Expr(src)) => match lower_expr_for_xbind(src, ctx) {
+            ExprLowering::Bindable(path) => {
+                attrs.push_str(&format!(" IsChecked=\"{{x:Bind {path}, Mode=OneWay}}\""));
+            }
+            ExprLowering::Helper(call) => {
+                attrs.push_str(&format!(" IsChecked=\"{{x:Bind {call}, Mode=OneWay}}\""));
+            }
+            ExprLowering::Unsupported(reason) => {
+                return Err(PipelineEmitError::UnsupportedExpression(reason));
+            }
+        },
+        Some(LayoutPropValue::String(_))
+        | Some(LayoutPropValue::Keyword(_))
+        | Some(LayoutPropValue::Number(_))
+        | Some(LayoutPropValue::EmitRef(_))
+        | None => {}
     }
 
     // IsEnabled from `disabled:` (same as HostCheckbox / HostButton).
@@ -8506,20 +8711,53 @@ fn emit_host_radio(
         Some(LayoutPropValue::Keyword(k)) if k == "false" => {
             attrs.push_str(" IsEnabled=\"True\"");
         }
-        _ => {}
+        // #13040: same polarity-flip Not(bool) helper as the SlotRef arm
+        // above, applied to a lowered expression instead of a slot.
+        Some(LayoutPropValue::Expr(src)) => match disabled_expr_xbind_path(src, ctx) {
+            ExprLowering::Bindable(path) => {
+                attrs.push_str(&format!(" IsEnabled=\"{{x:Bind {path}, Mode=OneWay}}\""));
+            }
+            ExprLowering::Helper(call) => {
+                attrs.push_str(&format!(" IsEnabled=\"{{x:Bind {call}, Mode=OneWay}}\""));
+            }
+            ExprLowering::Unsupported(reason) => {
+                return Err(PipelineEmitError::UnsupportedExpression(reason));
+            }
+        },
+        Some(LayoutPropValue::String(_))
+        | Some(LayoutPropValue::Keyword(_))
+        | Some(LayoutPropValue::Number(_))
+        | Some(LayoutPropValue::EmitRef(_))
+        | None => {}
     }
 
     // Checked handler from `onSelect:`. Pre-compute the value: payload
     // (C# string literal or property reference) so the handler body
     // dispatches the right shape.
     if let Some(LayoutPropValue::EmitRef(emit_name)) = find_prop_value(node, "onSelect") {
+        // #13040: same scope decision as `host_link_href_payload_expr`
+        // -- this builds a bare C# click-payload expression with no
+        // for-scope awareness, a materially different code shape from
+        // the XAML-attribute Expr sites this issue otherwise closes.
+        // An expression here gets a clear diagnostic, not a silent ""
+        // payload.
         let value_expr: String = match find_prop_value(node, "value") {
             Some(LayoutPropValue::String(s)) => format!("\"{}\"", escape_csharp_string(s)),
             Some(LayoutPropValue::SlotRef(slot)) => {
                 let pascal = ctx.slot_property_name(slot);
                 format!("this.{pascal}")
             }
-            _ => "\"\"".to_string(),
+            Some(LayoutPropValue::Expr(src)) => {
+                return Err(PipelineEmitError::UnsupportedExpression(format!(
+                    "expression {src:?} used as a HostRadio onSelect `value:` click \
+                     payload is not yet supported -- only a literal string or a \
+                     `slot:` reference can be dispatched as the click payload today"
+                )));
+            }
+            Some(LayoutPropValue::Keyword(_))
+            | Some(LayoutPropValue::Number(_))
+            | Some(LayoutPropValue::EmitRef(_))
+            | None => "\"\"".to_string(),
         };
 
         let emit_case = strip_on_prefix(emit_name);
@@ -8625,7 +8863,24 @@ fn emit_host_slider(
         Some(LayoutPropValue::Keyword(value)) if value == "false" => {
             attrs.push_str(" IsEnabled=\"True\"");
         }
-        _ => {}
+        // #13040: same polarity-flip Not(bool) helper as the SlotRef arm
+        // above, applied to a lowered expression instead of a slot.
+        Some(LayoutPropValue::Expr(src)) => match disabled_expr_xbind_path(src, ctx) {
+            ExprLowering::Bindable(path) => {
+                attrs.push_str(&format!(" IsEnabled=\"{{x:Bind {path}, Mode=OneWay}}\""));
+            }
+            ExprLowering::Helper(call) => {
+                attrs.push_str(&format!(" IsEnabled=\"{{x:Bind {call}, Mode=OneWay}}\""));
+            }
+            ExprLowering::Unsupported(reason) => {
+                return Err(PipelineEmitError::UnsupportedExpression(reason));
+            }
+        },
+        Some(LayoutPropValue::String(_))
+        | Some(LayoutPropValue::Keyword(_))
+        | Some(LayoutPropValue::Number(_))
+        | Some(LayoutPropValue::EmitRef(_))
+        | None => {}
     }
 
     if let Some(LayoutPropValue::EmitRef(emit_name)) = find_prop_value(node, "onChange") {
@@ -8912,7 +9167,7 @@ fn emit_host_link(
             let case_pascal = kebab_to_pascal_case(&strip_on_prefix(emit_name));
             let component = ctx.component_name;
             let event_ctor =
-                if let Some(payload_expr) = host_link_click_payload_expr(emit_name, node, ctx) {
+                if let Some(payload_expr) = host_link_click_payload_expr(emit_name, node, ctx)? {
                     format!("new {component}Event.{case_pascal}({payload_expr})")
                 } else {
                     format!("new {component}Event.{case_pascal}()")
@@ -9163,7 +9418,24 @@ fn emit_host_number_input(
         Some(LayoutPropValue::Keyword(k)) if k == "false" => {
             attrs.push_str(" IsEnabled=\"True\"");
         }
-        _ => {}
+        // #13040: same polarity-flip Not(bool) helper as the SlotRef arm
+        // above, applied to a lowered expression instead of a slot.
+        Some(LayoutPropValue::Expr(src)) => match disabled_expr_xbind_path(src, ctx) {
+            ExprLowering::Bindable(path) => {
+                attrs.push_str(&format!(" IsEnabled=\"{{x:Bind {path}, Mode=OneWay}}\""));
+            }
+            ExprLowering::Helper(call) => {
+                attrs.push_str(&format!(" IsEnabled=\"{{x:Bind {call}, Mode=OneWay}}\""));
+            }
+            ExprLowering::Unsupported(reason) => {
+                return Err(PipelineEmitError::UnsupportedExpression(reason));
+            }
+        },
+        Some(LayoutPropValue::String(_))
+        | Some(LayoutPropValue::Keyword(_))
+        | Some(LayoutPropValue::Number(_))
+        | Some(LayoutPropValue::EmitRef(_))
+        | None => {}
     }
 
     // onChange â†’ ValueChanged code-behind handler.
@@ -9606,6 +9878,11 @@ fn emit_native_host_table(
     let table_type = format!("{component}MosaicTable");
     let header_path = ctx.slot_property_name(shape.header_slot);
     let rows_path = ctx.slot_property_name(shape.rows_slot);
+    // #13040: `dir` already intentionally silently ignores an
+    // unrecognized Keyword value (only "rtl"/"ltr" mean anything) --
+    // that allow-list is about keyword *values*, not about rejecting
+    // an entire LayoutPropValue kind, so Expr gets a real FlowDirection
+    // binding here rather than joining the "silently ignored" bucket.
     let flow_direction_attr = match find_prop_value(node, "dir") {
         Some(LayoutPropValue::SlotRef(slot)) => {
             let property = ctx.slot_property_name(slot);
@@ -9623,7 +9900,21 @@ fn emit_native_host_table(
             "ltr" => " FlowDirection=\"LeftToRight\"".to_string(),
             _ => String::new(),
         },
-        _ => String::new(),
+        Some(LayoutPropValue::Expr(src)) => match lower_expr_for_xbind(src, ctx) {
+            ExprLowering::Bindable(path) => {
+                format!(" FlowDirection=\"{{x:Bind {path}, Mode=OneWay}}\"")
+            }
+            ExprLowering::Helper(call) => {
+                format!(" FlowDirection=\"{{x:Bind {call}, Mode=OneWay}}\"")
+            }
+            ExprLowering::Unsupported(reason) => {
+                return Err(PipelineEmitError::UnsupportedExpression(reason));
+            }
+        },
+        Some(LayoutPropValue::String(_))
+        | Some(LayoutPropValue::Number(_))
+        | Some(LayoutPropValue::EmitRef(_))
+        | None => String::new(),
     };
     let table_name = node
         .part_name
@@ -9764,7 +10055,30 @@ fn emit_host_table(
             "auto" => String::new(),
             _ => String::new(),
         },
-        _ => String::new(),
+        // #13040: the keyword allow-list just above is the security
+        // gate against an arbitrary *static* keyword string reaching
+        // the XAML attribute -- it says nothing about rejecting an
+        // entire LayoutPropValue kind. A slot-bound FlowDirection was
+        // already fully dynamic (arm above); an Expr-bound one is no
+        // more permissive, since lower_expr_for_xbind never splices
+        // attacker-influenced text either -- it always resolves to a
+        // compiler-generated C# path or helper call, never the raw
+        // expression source.
+        Some(LayoutPropValue::Expr(src)) => match lower_expr_for_xbind(src, ctx) {
+            ExprLowering::Bindable(path) => {
+                format!(" FlowDirection=\"{{x:Bind {path}, Mode=OneWay}}\"")
+            }
+            ExprLowering::Helper(call) => {
+                format!(" FlowDirection=\"{{x:Bind {call}, Mode=OneWay}}\"")
+            }
+            ExprLowering::Unsupported(reason) => {
+                return Err(PipelineEmitError::UnsupportedExpression(reason));
+            }
+        },
+        Some(LayoutPropValue::String(_))
+        | Some(LayoutPropValue::Number(_))
+        | Some(LayoutPropValue::EmitRef(_))
+        | None => String::new(),
     };
 
     // -- 1. Find each section sub-tag at most once. --
@@ -18230,6 +18544,391 @@ mod tests {
             !r.code_behind.contains("private bool Expr_"),
             "DataTemplate x:Bind cannot resolve page-level helper methods:\n{}",
             r.code_behind
+        );
+    }
+
+    // ── #13040 ──────────────────────────────────────────────────────
+    // The ~15 remaining `find_prop_value(node, "...")` sites #12126
+    // deliberately left out. Groups A-D below get full `Expr` support
+    // via the same `lower_expr_for_xbind` pattern proven by #12126;
+    // Group E (the two click-payload C# string builders) gets an
+    // exhaustive match with `Expr` explicitly routed to a diagnostic
+    // instead of a silently-empty payload.
+
+    /// Group A/B/C, row-scoped subset: `HostCheckbox.checked`,
+    /// `HostCheckbox.indeterminate`, `HostRadio.checked`,
+    /// `HostRadio.group`, `HostInput.read-only`, `HostSurface.content`
+    /// (both `String` and `Expr`, since `String` was an audit finding
+    /// with no prior arm at all), and `Icon.glyph` — every one of
+    /// these previously fell into a bare `_ => {}` and silently
+    /// dropped the attribute when given a row expression.
+    #[test]
+    fn expr_valued_props_bind_at_row_scoped_group_a_b_c_sites() {
+        fn expr_prop(name: &str) -> LayoutProp {
+            LayoutProp {
+                name: name.to_string(),
+                value: LayoutPropValue::Expr("row[1]".to_string()),
+            }
+        }
+
+        let c = component(
+            "Foo",
+            vec![slot(
+                "rows",
+                SlotType::List(Box::new(ListInnerType::List(Box::new(
+                    ListInnerType::Text,
+                )))),
+                true,
+            )],
+            vec![],
+        );
+        let l = layout_with_root(
+            "Foo",
+            LayoutNode {
+                tag: "Column".to_string(),
+                part_name: None,
+                props: Vec::new(),
+                children: vec![for_node(
+                    LayoutPropValue::SlotRef("rows".to_string()),
+                    "row",
+                    None,
+                    vec![
+                        LayoutNode {
+                            tag: "HostCheckbox".to_string(),
+                            part_name: None,
+                            props: vec![expr_prop("checked"), expr_prop("indeterminate")],
+                            children: Vec::new(),
+                        },
+                        LayoutNode {
+                            tag: "HostRadio".to_string(),
+                            part_name: None,
+                            props: vec![expr_prop("checked"), expr_prop("group")],
+                            children: Vec::new(),
+                        },
+                        LayoutNode {
+                            tag: "HostInput".to_string(),
+                            part_name: None,
+                            props: vec![expr_prop("read-only")],
+                            children: Vec::new(),
+                        },
+                        LayoutNode {
+                            tag: "HostSurface".to_string(),
+                            part_name: None,
+                            props: vec![LayoutProp {
+                                name: "content".to_string(),
+                                value: LayoutPropValue::String("literal".to_string()),
+                            }],
+                            children: Vec::new(),
+                        },
+                        LayoutNode {
+                            tag: "Icon".to_string(),
+                            part_name: None,
+                            props: vec![expr_prop("glyph")],
+                            children: Vec::new(),
+                        },
+                    ],
+                )],
+            },
+        );
+        let r = compile(&c, &l, &empty_style("Foo"));
+
+        for (site, needle) in [
+            ("HostCheckbox.checked", " IsChecked=\"{x:Bind"),
+            ("HostCheckbox.indeterminate", " IsThreeState=\"True\""),
+            ("HostRadio.group", " GroupName=\"{x:Bind"),
+            ("HostInput.read-only", " IsReadOnly=\"{x:Bind"),
+            ("HostSurface.content (String)", " Content=\"literal\""),
+            ("Icon.glyph", " Glyph=\"{x:Bind"),
+        ] {
+            assert!(
+                r.xaml.contains(needle),
+                "{site}: expected {needle:?} in emitted XAML, found none. full XAML:\n{}",
+                r.xaml
+            );
+        }
+
+        // Both HostCheckbox and HostRadio bind `checked` — assert both
+        // fired, not just one clobbering the other's assertion.
+        let checked_bindings = r.xaml.matches(" IsChecked=\"{x:Bind").count();
+        assert_eq!(
+            checked_bindings, 2,
+            "expected both HostCheckbox and HostRadio checked to bind, got {checked_bindings}:\n{}",
+            r.xaml
+        );
+    }
+
+    /// `HostSurface.content` given a row `Expr` (not a literal) also
+    /// lowers to a binding — separate test since the row-scoped test
+    /// above already used `content` for the `String` audit finding.
+    #[test]
+    fn host_surface_content_expr_binds() {
+        let c = component(
+            "Foo",
+            vec![slot(
+                "rows",
+                SlotType::List(Box::new(ListInnerType::Text)),
+                true,
+            )],
+            vec![],
+        );
+        let l = layout_with_root(
+            "Foo",
+            for_node(
+                LayoutPropValue::SlotRef("rows".to_string()),
+                "row",
+                None,
+                vec![LayoutNode {
+                    tag: "HostSurface".to_string(),
+                    part_name: None,
+                    props: vec![LayoutProp {
+                        name: "content".to_string(),
+                        value: LayoutPropValue::Expr("row".to_string()),
+                    }],
+                    children: Vec::new(),
+                }],
+            ),
+        );
+        let r = compile(&c, &l, &empty_style("Foo"));
+        assert!(
+            r.xaml.contains(" Content=\"{x:Bind"),
+            "expected a row-expression HostSurface.content to lower to a binding:\n{}",
+            r.xaml
+        );
+    }
+
+    /// Group D: `HostTable.dir` given a row-independent `Expr` (a
+    /// plain `slot: ...` reference, expressible outside a `For`)
+    /// lowers to a `FlowDirection` binding on both the native-shape
+    /// path (`emit_native_host_table`, exercised via the existing
+    /// `host_table_with_dir` fixture which always emits a
+    /// `HostTableBody`) and the non-native fallback path
+    /// (`emit_host_table`, exercised via a bare `HostTable` with no
+    /// children so `xaml_native_table_shape` returns `None`).
+    #[test]
+    fn host_table_dir_expr_binds_flow_direction_native_shape() {
+        let c = component(
+            "Foo",
+            vec![SlotDecl {
+                name: "layout-direction".to_string(),
+                r#type: SlotType::Text,
+                required: true,
+                default: None,
+            }],
+            vec![],
+        );
+        let l = host_table_with_dir(LayoutPropValue::Expr("slot: layout-direction".to_string()));
+        let r = compile(&c, &l, &empty_style("Foo"));
+        assert!(
+            r.xaml
+                .contains("FlowDirection=\"{x:Bind LayoutDirection, Mode=OneWay}\""),
+            "expected an Expr-valued dir to lower to a FlowDirection binding on the \
+             native-shape table, got:\n{}",
+            r.xaml
+        );
+    }
+
+    #[test]
+    fn host_table_dir_expr_binds_flow_direction_fallback_shape() {
+        let c = component(
+            "Foo",
+            vec![SlotDecl {
+                name: "layout-direction".to_string(),
+                r#type: SlotType::Text,
+                required: true,
+                default: None,
+            }],
+            vec![],
+        );
+        let l = layout_with_root(
+            "Foo",
+            LayoutNode {
+                tag: "HostTable".to_string(),
+                part_name: None,
+                props: vec![LayoutProp {
+                    name: "dir".to_string(),
+                    value: LayoutPropValue::Expr("slot: layout-direction".to_string()),
+                }],
+                children: Vec::new(),
+            },
+        );
+        let r = compile(&c, &l, &empty_style("Foo"));
+        assert!(
+            r.xaml
+                .contains("FlowDirection=\"{x:Bind LayoutDirection, Mode=OneWay}\""),
+            "expected an Expr-valued dir to lower to a FlowDirection binding on the \
+             non-native fallback table, got:\n{}",
+            r.xaml
+        );
+    }
+
+    /// Group A negated subset: `disabled:` on all five host controls
+    /// that support it, given an `Expr` outside a `For` scope, lowers
+    /// through the shared `Not(bool)` helper — the same polarity flip
+    /// `disabled_slot_xbind_path` already does for `SlotRef`.
+    #[test]
+    fn disabled_expr_negates_via_shared_not_helper_outside_for_scope() {
+        fn disabled_expr(tag: &str) -> LayoutNode {
+            LayoutNode {
+                tag: tag.to_string(),
+                part_name: None,
+                props: vec![LayoutProp {
+                    name: "disabled".to_string(),
+                    value: LayoutPropValue::Expr("slot: editable".to_string()),
+                }],
+                children: Vec::new(),
+            }
+        }
+
+        let c = component("Foo", vec![slot("editable", SlotType::Bool, true)], vec![]);
+        let l = layout_with_root(
+            "Foo",
+            LayoutNode {
+                tag: "Column".to_string(),
+                part_name: None,
+                props: Vec::new(),
+                children: vec![
+                    disabled_expr("HostButton"),
+                    disabled_expr("HostCheckbox"),
+                    disabled_expr("HostRadio"),
+                    disabled_expr("HostNumberInput"),
+                    disabled_expr("HostSlider"),
+                ],
+            },
+        );
+        let r = compile(&c, &l, &empty_style("Foo"));
+
+        let bound = r
+            .xaml
+            .matches(" IsEnabled=\"{x:Bind Not(Editable), Mode=OneWay}\"")
+            .count();
+        assert_eq!(
+            bound, 5,
+            "expected all five disabled-capable controls to negate the row-independent \
+             expression via the shared Not(bool) helper, got {bound}:\n{}",
+            r.xaml
+        );
+        assert!(
+            r.code_behind.contains("bool Not(bool b)"),
+            "expected the shared Not(bool) helper to be registered exactly once:\n{}",
+            r.code_behind
+        );
+    }
+
+    /// #13040's own documented scope decision: `disabled:` given an
+    /// `Expr` *inside* a `For` template scope is not supported — the
+    /// negation would need to compose with whatever
+    /// `register_template_helper_binding` already projected onto the
+    /// row VM, which isn't implemented. This must fail with a clear
+    /// `UnsupportedExpression` diagnostic, not silently drop the
+    /// attribute or panic.
+    #[test]
+    fn disabled_expr_inside_for_scope_is_unsupported() {
+        let c = component(
+            "Foo",
+            vec![slot(
+                "rows",
+                SlotType::List(Box::new(ListInnerType::Bool)),
+                true,
+            )],
+            vec![],
+        );
+        let l = layout_with_root(
+            "Foo",
+            for_node(
+                LayoutPropValue::SlotRef("rows".to_string()),
+                "row",
+                None,
+                vec![LayoutNode {
+                    tag: "HostButton".to_string(),
+                    part_name: None,
+                    props: vec![LayoutProp {
+                        name: "disabled".to_string(),
+                        value: LayoutPropValue::Expr("row".to_string()),
+                    }],
+                    children: Vec::new(),
+                }],
+            ),
+        );
+        let err = from_pipeline(&c, &l, &empty_style("Foo"), None, &opts()).unwrap_err();
+        assert!(
+            matches!(err, PipelineEmitError::UnsupportedExpression(ref reason) if reason.contains("disabled")),
+            "expected an UnsupportedExpression diagnostic naming `disabled:`, got: {err:?}"
+        );
+    }
+
+    /// Group E: an `Expr`-valued HostLink `href` used as an in-app
+    /// click payload (`external: false` + `onActivate`) now produces a
+    /// clear `UnsupportedExpression` diagnostic instead of silently
+    /// dispatching an empty-string payload.
+    #[test]
+    fn host_link_href_expr_click_payload_is_unsupported() {
+        let c = component(
+            "X",
+            vec![],
+            vec![EmitDecl {
+                name: "onNavigate".to_string(),
+                params: vec![EmitParam {
+                    name: "href".to_string(),
+                    r#type: EmitPayloadType::Text,
+                }],
+            }],
+        );
+        let l = link_in_box(vec![
+            LayoutProp {
+                name: "href".to_string(),
+                value: LayoutPropValue::Expr("slot: target".to_string()),
+            },
+            LayoutProp {
+                name: "external".to_string(),
+                value: LayoutPropValue::Keyword("false".to_string()),
+            },
+            LayoutProp {
+                name: "onActivate".to_string(),
+                value: LayoutPropValue::EmitRef("onNavigate".to_string()),
+            },
+        ]);
+        let err = from_pipeline(&c, &l, &empty_style("X"), None, &opts()).unwrap_err();
+        assert!(
+            matches!(err, PipelineEmitError::UnsupportedExpression(ref reason) if reason.contains("HostLink")),
+            "expected an UnsupportedExpression diagnostic naming HostLink, got: {err:?}"
+        );
+    }
+
+    /// Group E: an `Expr`-valued HostRadio `onSelect` `value:` click
+    /// payload gets the identical treatment — a clear diagnostic, not
+    /// a silent `""` payload.
+    #[test]
+    fn host_radio_on_select_value_expr_click_payload_is_unsupported() {
+        let c = component(
+            "Foo",
+            vec![],
+            vec![emit(
+                "onSelect",
+                vec![param("choice", EmitPayloadType::Text)],
+            )],
+        );
+        let l = layout_with_root(
+            "Foo",
+            LayoutNode {
+                tag: "HostRadio".to_string(),
+                part_name: None,
+                props: vec![
+                    LayoutProp {
+                        name: "value".to_string(),
+                        value: LayoutPropValue::Expr("slot: choice".to_string()),
+                    },
+                    LayoutProp {
+                        name: "onSelect".to_string(),
+                        value: LayoutPropValue::EmitRef("onSelect".to_string()),
+                    },
+                ],
+                children: Vec::new(),
+            },
+        );
+        let err = from_pipeline(&c, &l, &empty_style("Foo"), None, &opts()).unwrap_err();
+        assert!(
+            matches!(err, PipelineEmitError::UnsupportedExpression(ref reason) if reason.contains("HostRadio")),
+            "expected an UnsupportedExpression diagnostic naming HostRadio, got: {err:?}"
         );
     }
 }
