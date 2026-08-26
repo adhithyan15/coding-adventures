@@ -2,6 +2,44 @@
 
 All notable changes to this package will be documented in this file.
 
+## [0.6.10] — 2026-08-26 (W26 — table64 proposal, first slice)
+
+### Changed
+
+- `instantiate()`'s module-declared-table allocation now calls
+  `Table::new_with_is64` (fallible) instead of an outright truncating `as
+  u32` cast on `table_type.limits.min` — the cast was a real, previously
+  latent correctness bug: an `is64` table's spec-valid `min` (up to
+  `u64::MAX`, per W26) is now reachable past `u32::MAX` for the first
+  time, and would have silently produced a wrong-sized table instead of
+  failing loudly. Returns a real, graceful `TrapError` (never a panic) if
+  an `is64` table's `min` exceeds `wasm_execution::MAX_TABLE_ELEMENTS`,
+  this interpreter's own practical instantiation-time cap.
+- Table-import linking gains an `is64` mismatch check (`if
+  imported_table.is64() != table_type.is64 { ... }`), checked before
+  `limits_compatible`, mirroring the existing memory-import arm's own
+  `is64` check exactly (W25).
+- **Security review**: `instantiate()`'s table-allocation loop gains a
+  `total_is64_table_elements` aggregate cap across every `is64` table in
+  the module, mirroring `total_is64_pages` (memory64, W25) — without it,
+  a module could declare up to `MAX_TABLES` (64) separate `is64` tables
+  each individually AT the per-table `MAX_TABLE_ELEMENTS` cap (10,000,000)
+  and still instantiate all of them, ~5.1GB of eager allocation from one
+  small module (the exact "many individually-under-cap tables still
+  totaling too much" shape `wasm-validator`'s own Check 2b comment already
+  names as the reason its 32-bit aggregate exists — `wasm-validator`
+  deliberately excludes `is64` tables from THAT aggregate, since an
+  `is64` table's real spec ceiling has no useful per-item bound to
+  aggregate from at validation time, so the aggregate has to live here,
+  at instantiation, instead). Uses `saturating_add`, not `+=`: unlike
+  `total_is64_pages` (whose addends are already capped at memory64's much
+  smaller `2^48`-page validator ceiling), an `is64` table's `min` is
+  validator-uncapped up to `u64::MAX` itself — a plain `+=` could wrap the
+  running total back under the cap in a release build and defeat the
+  check outright.
+
+See `code/specs/W26-wasm-table64-first-slice.md`.
+
 ## [0.6.9] — 2026-08-26 (W25 — memory64 proposal, first slice)
 
 ### Changed

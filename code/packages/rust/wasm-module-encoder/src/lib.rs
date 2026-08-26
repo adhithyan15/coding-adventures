@@ -203,13 +203,11 @@ fn encode_func_type(func_type: &FuncType) -> Vec<u8> {
     bytes
 }
 
-/// Encodes a TABLE's limits (memory needs its own encoder -- see
-/// `encode_memory_type` below -- since tables never carry `is64`; `min`/
-/// `max` here are always narrowed to `u32`, safe because `table64`, the
-/// 64-bit-indexed-table proposal, is out of scope -- see `code/specs/
-/// W25-wasm-memory64-first-slice.md`'s "Explicitly out of scope" -- and no
-/// real `TableType` this crate ever builds sets a `Limits` value outside
-/// `u32`'s range).
+/// Encodes a TABLE's limits when `is64` is `false` (the overwhelmingly
+/// common case) -- `min`/`max` narrowed to `u32`. `encode_table_type` below
+/// dispatches to this only for a 32-bit table; an `is64` table (table64
+/// proposal, W26) uses its own `u64leb`-encoding path instead, mirroring
+/// `encode_memory_type`'s own `is64` branch.
 fn encode_limits(limits: &Limits) -> Vec<u8> {
     let mut bytes = Vec::new();
     match limits.max {
@@ -253,9 +251,23 @@ fn encode_memory_type(memory_type: &MemoryType) -> Vec<u8> {
     bytes
 }
 
+/// Mirrors `encode_memory_type`'s own `is64` branch (W25), minus the
+/// `shared` bit (tables never carry one, WASM18's threads proposal has no
+/// shared-table concept) -- table64 proposal, W26: `flags` bit 2 (`0x04`)
+/// set means `min`/`max` are `u64leb` instead of `u32leb`.
 fn encode_table_type(table_type: &TableType) -> Vec<u8> {
+    const IS64_FLAG: u8 = 0x04;
     let mut bytes = vec![table_type.element_type];
-    bytes.extend(encode_limits(&table_type.limits));
+    if table_type.is64 {
+        let has_max = table_type.limits.max.is_some();
+        bytes.push((has_max as u8) | IS64_FLAG);
+        bytes.extend(encode_u64(table_type.limits.min));
+        if let Some(max) = table_type.limits.max {
+            bytes.extend(encode_u64(max));
+        }
+    } else {
+        bytes.extend(encode_limits(&table_type.limits));
+    }
     bytes
 }
 
@@ -958,6 +970,50 @@ mod tests {
     }
 
     #[test]
+    fn encodes_table64_flag_and_wide_limits_round_trip() {
+        // W26 (table64 proposal): the `is64` bit (flags bit 2) on a TABLE
+        // this time, plus a `min`/`max` value genuinely past `u32::MAX` --
+        // a real, spec-valid 64-bit table's own ceiling is `u64::MAX` (see
+        // `code/specs/W26-wasm-table64-first-slice.md`), unlike memory64's
+        // much smaller `2^48`-page ceiling.
+        let big: u64 = (u32::MAX as u64) + 1000;
+        let module = WasmModule {
+            tables: vec![TableType {
+                element_type: 0x70,
+                limits: Limits { min: big, max: Some(big + 5) },
+                is64: true,
+            }],
+            ..Default::default()
+        };
+        let encoded = encode_module(&module).unwrap();
+        let parsed = WasmModuleParser::parse(&encoded).unwrap();
+        assert_eq!(parsed.tables, module.tables);
+        assert!(parsed.tables[0].is64);
+        assert_eq!(parsed.tables[0].limits.min, big);
+        assert_eq!(parsed.tables[0].limits.max, Some(big + 5));
+    }
+
+    #[test]
+    fn encodes_table64_import_flag_round_trip() {
+        let module = WasmModule {
+            imports: vec![Import {
+                module_name: "env".to_string(),
+                name: "table64".to_string(),
+                kind: ExternalKind::Table,
+                type_info: ImportTypeInfo::Table(TableType {
+                    element_type: 0x70,
+                    limits: Limits { min: 1, max: Some(4) },
+                    is64: true,
+                }),
+            }],
+            ..Default::default()
+        };
+        let encoded = encode_module(&module).unwrap();
+        let parsed = WasmModuleParser::parse(&encoded).unwrap();
+        assert_eq!(parsed.imports, module.imports);
+    }
+
+    #[test]
     fn encodes_shared_memory_import_flag_round_trip() {
         let module = WasmModule {
             imports: vec![Import {
@@ -1004,6 +1060,7 @@ mod tests {
                             min: 1,
                             max: Some(4),
                         },
+                        is64: false,
                     }),
                 },
                 Import {

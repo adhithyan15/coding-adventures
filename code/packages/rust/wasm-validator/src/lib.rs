@@ -375,45 +375,66 @@ pub fn validate(module: &WasmModule) -> Result<ValidatedModule, ValidationError>
     // ── Check 2b: Table limits ≤ MAX_TABLE_ELEMENTS ─────────────────────
     //
     // Security review (task #96): unlike Check 1b above, this is NOT a
-    // real spec requirement -- WASM's own spec allows a table `min` up to
-    // `2^32 - 1` -- it's this interpreter's own implementation-defined
-    // resource limit, matching `Table::new`'s eager `vec![None; min]`
-    // allocation cost. See `MAX_TABLE_ELEMENTS`'s own doc comment for the
-    // full reasoning, including why raising `MAX_TABLES` from 1 to 64
-    // (this same task) made an unvalidated `min` a real amplified DoS
-    // vector worth closing now rather than leaving as a pre-existing gap.
+    // real spec requirement for a 32-bit table -- WASM's own spec allows a
+    // 32-bit table `min` up to `2^32 - 1` -- it's this interpreter's own
+    // implementation-defined resource limit, matching `Table::new`'s eager
+    // `vec![None; min]` allocation cost. See `MAX_TABLE_ELEMENTS`'s own doc
+    // comment for the full reasoning, including why raising `MAX_TABLES`
+    // from 1 to 64 (this same task) made an unvalidated `min` a real
+    // amplified DoS vector worth closing now rather than leaving as a
+    // pre-existing gap.
+    //
+    // W26 (table64 proposal): an `is64` table's REAL spec ceiling is
+    // `u64::MAX` (verified live against the reference interpreter's own
+    // `interpreter/valid/valid.ml::check_tabletype` -- table64's ceiling is
+    // NOT the same `2^48`-page bound memory64 uses; tables aren't measured
+    // in byte-multiplying "pages", so the proposal imposes no equivalent
+    // artificial cap). No `u64` value can ever exceed `u64::MAX`, so this
+    // per-item check is unconditionally satisfied for `is64` tables --
+    // skipped explicitly below (not silently applied and coincidentally
+    // passing) -- and `is64` tables are excluded from the 32-bit aggregate
+    // for the same reason `W25`'s Check 1b excludes `is64` memories: the
+    // aggregate is calibrated for the 32-bit case, where the practical
+    // allocation ceiling and this check's bound coincide; that's no longer
+    // true once `is64` can legitimately declare a `min` this interpreter
+    // will refuse to actually allocate (see `Table::new_with_is64`'s own
+    // separate, real practical cap at INSTANTIATION time instead).
     //
     // Same aggregate-vs-per-item gap as Check 1b above (2nd round
     // finding): 64 tables each at `MAX_TABLE_ELEMENTS` would still total
     // ~5.1GB from one small module. Tracks a running total across every
-    // table (imported + declared) and caps the SUM at the same
+    // 32-bit table (imported + declared) and caps the SUM at the same
     // `MAX_TABLE_ELEMENTS` bound too -- still permits any single table at
     // its full implementation-defined max, just not many of them at once.
     let mut total_table_elements: u64 = 0;
     for (i, tt) in module.tables.iter().enumerate() {
-        if tt.limits.min > wasm_execution::MAX_TABLE_ELEMENTS as u64 {
+        if !tt.is64 && tt.limits.min > wasm_execution::MAX_TABLE_ELEMENTS as u64 {
             return Err(ValidationError::Other(format!(
                 "table #{i}: declared minimum {} elements exceeds this interpreter's resource limit of {}",
                 tt.limits.min,
                 wasm_execution::MAX_TABLE_ELEMENTS
             )));
         }
-        total_table_elements += tt.limits.min;
+        if !tt.is64 {
+            total_table_elements += tt.limits.min;
+        }
     }
     for imp in &module.imports {
         if let ImportTypeInfo::Table(tt) = &imp.type_info {
-            if tt.limits.min > wasm_execution::MAX_TABLE_ELEMENTS as u64 {
+            if !tt.is64 && tt.limits.min > wasm_execution::MAX_TABLE_ELEMENTS as u64 {
                 return Err(ValidationError::Other(format!(
                     "imported table {}.{}: declared minimum {} elements exceeds this interpreter's resource limit of {}",
                     imp.module_name, imp.name, tt.limits.min, wasm_execution::MAX_TABLE_ELEMENTS
                 )));
             }
-            total_table_elements += tt.limits.min;
+            if !tt.is64 {
+                total_table_elements += tt.limits.min;
+            }
         }
     }
     if total_table_elements > wasm_execution::MAX_TABLE_ELEMENTS as u64 {
         return Err(ValidationError::Other(format!(
-            "total declared elements across all tables is {total_table_elements}, exceeding the aggregate cap of {}",
+            "total declared elements across all 32-bit tables is {total_table_elements}, exceeding the aggregate cap of {}",
             wasm_execution::MAX_TABLE_ELEMENTS
         )));
     }
@@ -896,7 +917,7 @@ mod tests {
     fn rejects_too_many_tables() {
         let module = WasmModule {
             tables: (0..=wasm_execution::MAX_TABLES)
-                .map(|_| TableType { element_type: 0x70, limits: Limits { min: 1, max: None } })
+                .map(|_| TableType { element_type: 0x70, limits: Limits { min: 1, max: None }, is64: false })
                 .collect(),
             ..Default::default()
         };
@@ -911,7 +932,7 @@ mod tests {
     fn accepts_up_to_max_tables() {
         let module = WasmModule {
             tables: (0..wasm_execution::MAX_TABLES)
-                .map(|_| TableType { element_type: 0x70, limits: Limits { min: 1, max: None } })
+                .map(|_| TableType { element_type: 0x70, limits: Limits { min: 1, max: None }, is64: false })
                 .collect(),
             ..Default::default()
         };
@@ -930,7 +951,7 @@ mod tests {
             tables: vec![TableType {
                 element_type: 0x70,
                 limits: Limits { min: wasm_execution::MAX_TABLE_ELEMENTS as u64 + 1, max: None },
-            }],
+             is64: false,}],
             ..Default::default()
         };
         let err = validate(&module).unwrap_err();
@@ -943,7 +964,7 @@ mod tests {
             tables: vec![TableType {
                 element_type: 0x70,
                 limits: Limits { min: wasm_execution::MAX_TABLE_ELEMENTS as u64, max: None },
-            }],
+             is64: false,}],
             ..Default::default()
         };
         assert!(validate(&module).is_ok());
@@ -961,13 +982,65 @@ mod tests {
                 TableType {
                     element_type: 0x70,
                     limits: Limits { min: wasm_execution::MAX_TABLE_ELEMENTS as u64, max: None },
+                    is64: false,
                 },
-                TableType { element_type: 0x70, limits: Limits { min: 1, max: None } },
+                TableType { element_type: 0x70, limits: Limits { min: 1, max: None }, is64: false },
             ],
             ..Default::default()
         };
         let err = validate(&module).unwrap_err();
         assert!(matches!(err, ValidationError::Other(_)), "{err:?}");
+    }
+
+    // ── table64 (W26) Check 2b is64-awareness ────────────────────────────
+
+    /// table64's own real spec ceiling is `u64::MAX` (verified live
+    /// against the reference interpreter's `check_tabletype`), NOT the
+    /// same `2^48`-page bound memory64 uses -- see code/specs/
+    /// W26-wasm-table64-first-slice.md. An `is64` table whose `min` is far
+    /// past this interpreter's own `MAX_TABLE_ELEMENTS` implementation
+    /// resource limit must still validate successfully (only actual
+    /// instantiation enforces a practical cap, via
+    /// `Table::new_with_is64`).
+    #[test]
+    fn accepts_an_is64_table_declaring_far_more_than_max_table_elements() {
+        let module = WasmModule {
+            tables: vec![TableType { element_type: 0x70, limits: Limits { min: u64::MAX, max: None }, is64: true }],
+            ..Default::default()
+        };
+        assert!(validate(&module).is_ok(), "{:?}", validate(&module));
+    }
+
+    /// A plain (`is64: false`) table declaring more than `MAX_TABLE_ELEMENTS`
+    /// must still be rejected exactly as before -- this slice's `is64`
+    /// branch must not accidentally loosen the existing 32-bit check.
+    #[test]
+    fn still_rejects_a_32bit_table_declaring_more_than_max_table_elements() {
+        let module = WasmModule {
+            tables: vec![TableType {
+                element_type: 0x70,
+                limits: Limits { min: wasm_execution::MAX_TABLE_ELEMENTS as u64 + 1, max: None },
+                is64: false,
+            }],
+            ..Default::default()
+        };
+        let err = validate(&module).unwrap_err();
+        assert!(matches!(err, ValidationError::Other(_)), "{err:?}");
+    }
+
+    /// An `is64` table's `min` must NOT be added to the 32-bit aggregate --
+    /// a huge `is64` table's `min` alongside a small, otherwise-fine 32-bit
+    /// table must not spuriously trip the 32-bit aggregate cap.
+    #[test]
+    fn is64_table_min_is_excluded_from_the_32bit_aggregate() {
+        let module = WasmModule {
+            tables: vec![
+                TableType { element_type: 0x70, limits: Limits { min: u64::MAX, max: None }, is64: true },
+                TableType { element_type: 0x70, limits: Limits { min: 1, max: None }, is64: false },
+            ],
+            ..Default::default()
+        };
+        assert!(validate(&module).is_ok(), "{:?}", validate(&module));
     }
 
     #[test]
@@ -1082,7 +1155,7 @@ mod tests {
             tables: vec![TableType {
                 element_type: 0x70,
                 limits: Limits { min: 10, max: None },
-            }],
+             is64: false,}],
             elements: vec![Element {
                 table_index: 1, // only 0 is valid
                 offset_expr: vec![0x41, 0x00, 0x0B],
@@ -1104,7 +1177,7 @@ mod tests {
             tables: vec![TableType {
                 element_type: 0x70,
                 limits: Limits { min: 10, max: None },
-            }],
+             is64: false,}],
             elements: vec![Element {
                 table_index: 0,
                 offset_expr: vec![0x41, 0x00, 0x0B],
@@ -1126,7 +1199,7 @@ mod tests {
             tables: vec![TableType {
                 element_type: 0x70,
                 limits: Limits { min: 10, max: None },
-            }],
+             is64: false,}],
             elements: vec![Element {
                 table_index: 0,
                 offset_expr: vec![0x41, 0x00, 0x0B],
@@ -1282,10 +1355,10 @@ mod tests {
                 type_info: ImportTypeInfo::Table(TableType {
                     element_type: 0x70,
                     limits: Limits { min: 1, max: None },
-                }),
+                 is64: false,}),
             }],
             tables: (0..wasm_execution::MAX_TABLES)
-                .map(|_| TableType { element_type: 0x70, limits: Limits { min: 1, max: None } })
+                .map(|_| TableType { element_type: 0x70, limits: Limits { min: 1, max: None }, is64: false })
                 .collect(),
             ..Default::default()
         };
