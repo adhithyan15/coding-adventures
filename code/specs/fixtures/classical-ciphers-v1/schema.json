@@ -1,0 +1,392 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://coding-adventures.dev/schemas/classical-ciphers-v1.json",
+  "title": "CR01-CR03 classical cipher conformance corpus",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "schema_version",
+    "profile",
+    "limits",
+    "analysis",
+    "operation_error_ids",
+    "validation_error_ids",
+    "cases"
+  ],
+  "properties": {
+    "schema_version": { "const": 1 },
+    "profile": { "const": "cr01-cr03-portable-v1" },
+    "limits": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "max_cases",
+        "max_fixture_bytes",
+        "max_fixture_text_scalars",
+        "max_scytale_brute_force_scalars",
+        "max_vigenere_analysis_scalars",
+        "max_vigenere_key_length"
+      ],
+      "properties": {
+        "max_cases": { "const": 64 },
+        "max_fixture_bytes": { "const": 131072 },
+        "max_fixture_text_scalars": { "const": 8193 },
+        "max_scytale_brute_force_scalars": { "const": 4096 },
+        "max_vigenere_analysis_scalars": { "const": 8192 },
+        "max_vigenere_key_length": { "const": 40 }
+      }
+    },
+    "analysis": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "english_frequencies",
+        "ic_near_max_ratio",
+        "key_length_tie_break",
+        "chi_squared_tie_break",
+        "insufficient_signal_key_length",
+        "empty_group_key_letter",
+        "shorten_repeating_key"
+      ],
+      "properties": {
+        "english_frequencies": {
+          "const": [
+            0.08167,
+            0.01492,
+            0.02782,
+            0.04253,
+            0.12702,
+            0.02228,
+            0.02015,
+            0.06094,
+            0.06966,
+            0.00153,
+            0.00772,
+            0.04025,
+            0.02406,
+            0.06749,
+            0.07507,
+            0.01929,
+            0.00095,
+            0.05987,
+            0.06327,
+            0.09056,
+            0.02758,
+            0.00978,
+            0.02360,
+            0.00150,
+            0.01974,
+            0.00074
+          ]
+        },
+        "ic_near_max_ratio": { "const": 0.9 },
+        "key_length_tie_break": { "const": "smallest-near-maximum" },
+        "chi_squared_tie_break": { "const": "smallest-shift" },
+        "insufficient_signal_key_length": { "const": 1 },
+        "empty_group_key_letter": { "const": "A" },
+        "shorten_repeating_key": { "const": false }
+      }
+    },
+    "operation_error_ids": {
+      "const": [
+        "scytale-invalid-key",
+        "scytale-brute-force-limit",
+        "vigenere-invalid-key",
+        "vigenere-analysis-limit",
+        "vigenere-key-length-limit"
+      ]
+    },
+    "validation_error_ids": {
+      "const": [
+        "fixture-duplicate-id",
+        "fixture-invalid-scalar",
+        "fixture-size-limit"
+      ]
+    },
+    "cases": {
+      "type": "array",
+      "minItems": 32,
+      "maxItems": 64,
+      "items": { "$ref": "#/$defs/case" }
+    }
+  },
+  "$defs": {
+    "text": { "type": "string", "maxLength": 8193 },
+    "caseId": {
+      "type": "string",
+      "pattern": "^classical-ciphers-v1-[a-z0-9]+(?:-[a-z0-9]+)*$"
+    },
+    "operationError": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["error_id"],
+      "properties": {
+        "error_id": {
+          "enum": [
+            "scytale-invalid-key",
+            "scytale-brute-force-limit",
+            "vigenere-invalid-key",
+            "vigenere-analysis-limit",
+            "vigenere-key-length-limit"
+          ]
+        }
+      }
+    },
+    "textResult": {
+      "oneOf": [
+        {
+          "type": "object",
+          "additionalProperties": false,
+          "required": ["text"],
+          "properties": { "text": { "$ref": "#/$defs/text" } }
+        },
+        { "$ref": "#/$defs/operationError" }
+      ]
+    },
+    "keyLengthResult": {
+      "oneOf": [
+        {
+          "type": "object",
+          "additionalProperties": false,
+          "required": ["key_length"],
+          "properties": { "key_length": { "type": "integer", "minimum": 1, "maximum": 40 } }
+        },
+        { "$ref": "#/$defs/operationError" }
+      ]
+    },
+    "keyResult": {
+      "oneOf": [
+        {
+          "type": "object",
+          "additionalProperties": false,
+          "required": ["key"],
+          "properties": { "key": { "type": "string", "maxLength": 40, "pattern": "^[A-Z]*$" } }
+        },
+        { "$ref": "#/$defs/operationError" }
+      ]
+    },
+    "breakResult": {
+      "oneOf": [
+        {
+          "type": "object",
+          "additionalProperties": false,
+          "required": ["key", "plaintext"],
+          "properties": {
+            "key": { "type": "string", "minLength": 1, "maxLength": 40, "pattern": "^[A-Z]+$" },
+            "plaintext": { "$ref": "#/$defs/text" }
+          }
+        },
+        { "$ref": "#/$defs/operationError" }
+      ]
+    },
+    "candidate": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["key", "text"],
+      "properties": {
+        "key": { "type": "integer", "minimum": 2, "maximum": 2048 },
+        "text": { "$ref": "#/$defs/text" }
+      }
+    },
+    "bruteForceResult": {
+      "oneOf": [
+        {
+          "type": "object",
+          "additionalProperties": false,
+          "required": ["candidates"],
+          "properties": {
+            "candidates": {
+              "type": "array",
+              "maxItems": 2047,
+              "items": { "$ref": "#/$defs/candidate" }
+            }
+          }
+        },
+        { "$ref": "#/$defs/operationError" }
+      ]
+    },
+    "directTextInput": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["text"],
+      "properties": { "text": { "$ref": "#/$defs/text" } }
+    },
+    "scytaleInput": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["text", "key"],
+      "properties": {
+        "text": { "$ref": "#/$defs/text" },
+        "key": { "type": "integer", "minimum": -1, "maximum": 8194 }
+      }
+    },
+    "repeatTextInput": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["repeat_scalar", "repeat_count"],
+      "properties": {
+        "repeat_scalar": { "type": "string", "minLength": 1, "maxLength": 1 },
+        "repeat_count": { "type": "integer", "minimum": 0, "maximum": 8193 }
+      }
+    },
+    "bruteForceInput": {
+      "oneOf": [
+        { "$ref": "#/$defs/directTextInput" },
+        { "$ref": "#/$defs/repeatTextInput" }
+      ]
+    },
+    "vigenereTransformInput": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["text", "key"],
+      "properties": {
+        "text": { "$ref": "#/$defs/text" },
+        "key": { "type": "string", "maxLength": 41 }
+      }
+    },
+    "analysisDirectInput": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["ciphertext", "max_length"],
+      "properties": {
+        "ciphertext": { "$ref": "#/$defs/text" },
+        "max_length": { "type": "integer", "minimum": -1, "maximum": 41 }
+      }
+    },
+    "analysisRepeatInput": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["repeat_scalar", "repeat_count", "max_length"],
+      "properties": {
+        "repeat_scalar": { "type": "string", "minLength": 1, "maxLength": 1 },
+        "repeat_count": { "type": "integer", "minimum": 0, "maximum": 8193 },
+        "max_length": { "type": "integer", "minimum": -1, "maximum": 41 }
+      }
+    },
+    "findKeyLengthInput": {
+      "oneOf": [
+        { "$ref": "#/$defs/analysisDirectInput" },
+        { "$ref": "#/$defs/analysisRepeatInput" }
+      ]
+    },
+    "findKeyDirectInput": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["ciphertext", "key_length"],
+      "properties": {
+        "ciphertext": { "$ref": "#/$defs/text" },
+        "key_length": { "type": "integer", "minimum": -1, "maximum": 41 }
+      }
+    },
+    "findKeyRepeatInput": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["repeat_scalar", "repeat_count", "key_length"],
+      "properties": {
+        "repeat_scalar": { "type": "string", "minLength": 1, "maxLength": 1 },
+        "repeat_count": { "type": "integer", "minimum": 0, "maximum": 8193 },
+        "key_length": { "type": "integer", "minimum": -1, "maximum": 41 }
+      }
+    },
+    "findKeyInput": {
+      "oneOf": [
+        { "$ref": "#/$defs/findKeyDirectInput" },
+        { "$ref": "#/$defs/findKeyRepeatInput" }
+      ]
+    },
+    "breakDirectInput": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["ciphertext"],
+      "properties": { "ciphertext": { "$ref": "#/$defs/text" } }
+    },
+    "case": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["id", "operation", "input", "expected"],
+      "properties": {
+        "id": { "$ref": "#/$defs/caseId" },
+        "operation": {
+          "enum": [
+            "atbash-transform",
+            "scytale-encrypt",
+            "scytale-decrypt",
+            "scytale-brute-force",
+            "vigenere-encrypt",
+            "vigenere-decrypt",
+            "vigenere-find-key-length",
+            "vigenere-find-key",
+            "vigenere-break"
+          ]
+        },
+        "input": { "type": "object" },
+        "expected": { "type": "object" }
+      },
+      "allOf": [
+        {
+          "if": { "properties": { "operation": { "const": "atbash-transform" } } },
+          "then": {
+            "properties": {
+              "input": { "$ref": "#/$defs/directTextInput" },
+              "expected": { "$ref": "#/$defs/textResult" }
+            }
+          }
+        },
+        {
+          "if": { "properties": { "operation": { "enum": ["scytale-encrypt", "scytale-decrypt"] } } },
+          "then": {
+            "properties": {
+              "input": { "$ref": "#/$defs/scytaleInput" },
+              "expected": { "$ref": "#/$defs/textResult" }
+            }
+          }
+        },
+        {
+          "if": { "properties": { "operation": { "const": "scytale-brute-force" } } },
+          "then": {
+            "properties": {
+              "input": { "$ref": "#/$defs/bruteForceInput" },
+              "expected": { "$ref": "#/$defs/bruteForceResult" }
+            }
+          }
+        },
+        {
+          "if": { "properties": { "operation": { "enum": ["vigenere-encrypt", "vigenere-decrypt"] } } },
+          "then": {
+            "properties": {
+              "input": { "$ref": "#/$defs/vigenereTransformInput" },
+              "expected": { "$ref": "#/$defs/textResult" }
+            }
+          }
+        },
+        {
+          "if": { "properties": { "operation": { "const": "vigenere-find-key-length" } } },
+          "then": {
+            "properties": {
+              "input": { "$ref": "#/$defs/findKeyLengthInput" },
+              "expected": { "$ref": "#/$defs/keyLengthResult" }
+            }
+          }
+        },
+        {
+          "if": { "properties": { "operation": { "const": "vigenere-find-key" } } },
+          "then": {
+            "properties": {
+              "input": { "$ref": "#/$defs/findKeyInput" },
+              "expected": { "$ref": "#/$defs/keyResult" }
+            }
+          }
+        },
+        {
+          "if": { "properties": { "operation": { "const": "vigenere-break" } } },
+          "then": {
+            "properties": {
+              "input": { "$ref": "#/$defs/breakDirectInput" },
+              "expected": { "$ref": "#/$defs/breakResult" }
+            }
+          }
+        }
+      ]
+    }
+  }
+}
