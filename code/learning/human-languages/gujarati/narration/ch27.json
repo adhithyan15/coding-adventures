@@ -1,0 +1,460 @@
+{
+  "version": 1,
+  "language": "gujarati",
+  "chapter": 27,
+  "title": "Village and Shop Complete Ten",
+  "drivablePrefix": 1,
+  "sourceHash": "fnv1a64:5c30d8f23a8b8521",
+  "lessons": [
+    {
+      "id": "GU-C23-hear-gaam",
+      "sequence": 1090,
+      "title": "ગામ (gām) — hear village first",
+      "headword": "ગામ",
+      "romanization": "gām",
+      "gloss": "village, heard before it is shown as a reading target",
+      "script": "gujarati",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:93c5a041485168fd",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "Recall shahar, city. Now listen twice: gām. It means village."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "Choose city or village as you hear shahar or gām, then say gām once."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "Source: Cambridge: village."
+            },
+            {
+              "kind": "activity",
+              "scored": true,
+              "id": "GU-C23-hear-gaam-recall",
+              "prompt": "What does gām mean?",
+              "assesses": [
+                "GU-LEX-GAAM-01"
+              ],
+              "responseSeconds": 8,
+              "acceptedResponses": [
+                "village",
+                "a village"
+              ],
+              "feedback": {
+                "correct": "Right: gām means village.",
+                "incorrect": "Listen once more: gām — village."
+              }
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "GU-C23-gaam",
+      "sequence": 1100,
+      "title": "ગામ (gām) — village on the page",
+      "headword": "ગામ",
+      "romanization": "gām",
+      "gloss": "village, now read and written with familiar signs",
+      "script": "gujarati",
+      "modality": "pen",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:8cda7b312c6bdd62",
+      "notice": {
+        "modality": "pen",
+        "needs": [],
+        "waitUntilStopped": [],
+        "text": "Before we start: this one needs your hands, so it is not a driving lesson. You can listen to all of it now and come back to the parts that need looking at once you have stopped."
+      },
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "Say gām from village, then look: ગામ — gām — village."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "Study ગામ (gām) for five seconds, hide it, and write it once. Check only after the word is complete."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "Source: Cambridge: village."
+            },
+            {
+              "kind": "activity",
+              "scored": true,
+              "id": "GU-C23-gaam-delayed",
+              "prompt": "Write village after hiding the model.",
+              "assesses": [
+                "GU-LEX-GAAM-01",
+                "GU-SCRIPT-GAAM-01"
+              ],
+              "responseSeconds": 18,
+              "acceptedResponses": [
+                "ગામ"
+              ],
+              "feedback": {
+                "correct": "ગામ is village.",
+                "incorrect": "Look once more, hide the model, and retry ગામ."
+              }
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "GU-C23-hear-dukaan",
+      "sequence": 1110,
+      "title": "દુકાન (dukān) — hear shop first",
+      "headword": "દુકાન",
+      "romanization": "dukān",
+      "gloss": "shop, heard before it is shown as a reading target",
+      "script": "gujarati",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:920685e01f1e7ab2",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "Listen twice: dukān. It means shop. Hear the short u before the long final ā."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "Point to the shop when you hear dukān, then say dukān from the meaning."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "Source: Cambridge: shop."
+            },
+            {
+              "kind": "activity",
+              "scored": true,
+              "id": "GU-C23-hear-dukaan-recall",
+              "prompt": "What does dukān mean?",
+              "assesses": [
+                "GU-LEX-DUKAAN-01"
+              ],
+              "responseSeconds": 8,
+              "acceptedResponses": [
+                "shop",
+                "a shop",
+                "store",
+                "a store"
+              ],
+              "feedback": {
+                "correct": "Right: dukān means shop.",
+                "incorrect": "Listen once more: dukān — shop."
+              }
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "GU-C23-dukaan",
+      "sequence": 1120,
+      "title": "દુકાન (dukān) — shop on the page",
+      "headword": "દુકાન",
+      "romanization": "dukān",
+      "gloss": "shop, now read and written with familiar signs",
+      "script": "gujarati",
+      "modality": "pen",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:f358a5d0a46c69f7",
+      "notice": {
+        "modality": "pen",
+        "needs": [],
+        "waitUntilStopped": [],
+        "text": "Before we start: this one needs your hands, so it is not a driving lesson. You can listen to all of it now and come back to the parts that need looking at once you have stopped."
+      },
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "Say dukān from shop, then look: દુકાન — dukān — shop."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "Copy દુકાન (dukān) once. Point to the ુ under દ, then read the complete word."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "Source: Cambridge: shop."
+            },
+            {
+              "kind": "activity",
+              "scored": true,
+              "id": "GU-C23-dukaan-copy",
+              "prompt": "Copy the Gujarati word for shop once.",
+              "assesses": [
+                "GU-LEX-DUKAAN-01",
+                "GU-SCRIPT-DUKAAN-01"
+              ],
+              "responseSeconds": 18,
+              "acceptedResponses": [
+                "દુકાન"
+              ],
+              "feedback": {
+                "correct": "દુકાન is shop.",
+                "incorrect": "Keep the u sign under the first letter: દુકાન."
+              }
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "GU-R23-map-ten",
+      "sequence": 1130,
+      "title": "Retrieve the ten-word map",
+      "headword": "બજાર — ઘર — મંદિર — હાથ — પૈસા — શહેર — શાળા — રસ્તો — ગામ — દુકાન",
+      "romanization": "bajār — ghar — mandir — hāth — paisā — shahar — shāḷā — rasto — gām — dukān",
+      "gloss": "ten concrete words in mixed retrieval",
+      "script": "gujarati",
+      "modality": "pen",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:13061b53c064a079",
+      "notice": {
+        "modality": "pen",
+        "needs": [],
+        "waitUntilStopped": [],
+        "text": "Before we start: this one needs your hands, so it is not a driving lesson. You can listen to all of it now and come back to the parts that need looking at once you have stopped."
+      },
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 20,
+              "perItem": false,
+              "source": "[PAUSE 20s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Recall the old five cards, then city, school, road, village, and shop."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "Hear ten cards in mixed order, say each from its meaning, read all ten, then write village and shop without looking."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "Sources: Cambridge: village and shop."
+            },
+            {
+              "kind": "activity",
+              "scored": true,
+              "id": "GU-R23-map-ten-recall",
+              "prompt": "Write village and shop in that order.",
+              "assesses": [
+                "GU-LEX-GAAM-01",
+                "GU-LEX-DUKAAN-01"
+              ],
+              "responseSeconds": 25,
+              "acceptedResponses": [
+                "ગામ — દુકાન",
+                "ગામ દુકાન"
+              ],
+              "feedback": {
+                "correct": "Village and shop remain distinct.",
+                "incorrect": "Repair only the missed card, then retry the pair."
+              }
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "GU-C23-map-ten",
+      "sequence": 1140,
+      "title": "Payoff — ten words in four skills",
+      "headword": "બજાર — ઘર — મંદિર — હાથ — પૈસા — શહેર — શાળા — રસ્તો — ગામ — દુકાન",
+      "romanization": "bajār — ghar — mandir — hāth — paisā — shahar — shāḷā — rasto — gām — dukān",
+      "gloss": "ten-word non-compensatory four-skill payoff",
+      "script": "gujarati",
+      "modality": "pen",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:257ad49a453bc471",
+      "notice": {
+        "modality": "pen",
+        "needs": [],
+        "waitUntilStopped": [],
+        "text": "Before we start: this one needs your hands, so it is not a driving lesson. You can listen to all of it now and come back to the parts that need looking at once you have stopped."
+      },
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 20,
+              "perItem": false,
+              "source": "[PAUSE 20s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Name the first five words, then the five new map words."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "Identify ten heard words, produce ten words from meaning cues, match ten printed cards, and write four words named aloud. Pass listening, speaking, reading, and writing separately; one strong skill cannot compensate for another."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "Sources: Cambridge: city, school, road, village, and shop."
+            },
+            {
+              "kind": "activity",
+              "scored": true,
+              "id": "GU-C23-map-ten-payoff",
+              "prompt": "After all four skills pass, write city, school, road, village, and shop in order.",
+              "assesses": [
+                "GU-PERFORMANCE-MAP-TEN-FOUR-SKILL-01"
+              ],
+              "responseSeconds": 45,
+              "acceptedResponses": [
+                "શહેર — શાળા — રસ્તો — ગામ — દુકાન",
+                "શહેર શાળા રસ્તો ગામ દુકાન"
+              ],
+              "feedback": {
+                "correct": "The ten-word runway passes in all four skills.",
+                "incorrect": "Repair only the failed word or skill, then retry that part."
+              }
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "findings": []
+}

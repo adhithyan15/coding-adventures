@@ -1,0 +1,21 @@
+{
+  "chapter": 27,
+  "title": "Village and Shop Complete Ten",
+  "label": "ch:gu-village-shop-ten",
+  "canDo": "I can hear, say, read, and write ten concrete Gujarati words, including village and shop.",
+  "spineNodes": [
+    "SPINE-POLITE-REQUEST-REPAIR"
+  ],
+  "payoff": {
+    "lesson": "GU-C23-map-ten",
+    "kind": "four-skill-vocabulary-map",
+    "summary": "Village and shop enter meaning-first, then mix with the prior eight words before a non-compensatory four-skill payoff.",
+    "assesses": [
+      "GU-LEX-GAAM-01",
+      "GU-SCRIPT-GAAM-01",
+      "GU-LEX-DUKAAN-01",
+      "GU-SCRIPT-DUKAAN-01",
+      "GU-PERFORMANCE-MAP-TEN-FOUR-SKILL-01"
+    ]
+  }
+}

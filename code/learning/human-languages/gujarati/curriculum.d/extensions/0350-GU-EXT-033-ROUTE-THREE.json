@@ -1,0 +1,19 @@
+{
+  "id": "GU-EXT-033-ROUTE-THREE",
+  "stage": "pre-A1",
+  "kind": "required",
+  "category": "vocabulary",
+  "canDo": "I can hear, say, read, and write city, school, and road.",
+  "prerequisites": [
+    "GU-EXT-032-TRAVEL-FIVE"
+  ],
+  "lessons": [
+    "GU-C22-hear-shahar",
+    "GU-C22-shahar",
+    "GU-C22-hear-shaalaa",
+    "GU-C22-shaalaa",
+    "GU-C22-hear-rasto",
+    "GU-C22-rasto",
+    "GU-C22-route-three"
+  ]
+}
