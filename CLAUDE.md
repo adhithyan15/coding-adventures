@@ -15,7 +15,8 @@
    - Ruby require ordering: dependencies must be required before own modules
    - TypeScript: chain-install transitive `file:` deps in BUILD files
    - Go: run `go mod tidy` in ALL transitively dependent packages after adding a new module
-   - Every package needs BUILD, README.md, CHANGELOG.md in every language
+   - Every package needs BUILD and README.md in every language, plus either a
+     CHANGELOG.md or a sharded CHANGELOG.d/_meta.md entry point
 8. **Document mistakes** — If a mistake is made or a CI failure occurs, add it to lessons.md immediately. Don't wait until later.
 
 ## Repo Standards
@@ -24,7 +25,9 @@
 9. **Specs must stay in sync** — After implementing a package, review the spec. If implementation diverged from the spec, update the spec and explicitly call out what changed and why in the commit message.
 10. **Publishable packages** — Every package must have a proper pyproject.toml with src layout, ready for PyPI/RubyGems/npm.
 11. **>80% test coverage** — Every package must have extensive unit tests. Coverage must WELL exceed 80%. Target 95%+ for libraries, 80%+ for programs.
-12. **Changelogs required** — Every package must have a CHANGELOG.md updated before pushing, with detailed accounting of changes.
+12. **Changelogs required** — Every package must have a CHANGELOG.md, or a
+    sharded CHANGELOG.d/ with a _meta.md entry point, updated before pushing
+    with detailed accounting of changes.
 13. **Package READMEs** — Every package must have its own README.md describing what it does, how it fits in the stack, and usage examples.
 14. **Literate programming** — All code must use Knuth-style literate programming. Explanations, truth tables, diagrams, analogies, and examples belong inline with the code. Someone new to programming should be able to learn from reading the source.
 15. **Linting required** — All Python code must pass ruff. All Ruby code must pass standardrb. All Go code must pass go vet.
