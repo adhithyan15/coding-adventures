@@ -2011,28 +2011,87 @@ fn emit_float_literal(out: &mut String, value: f64) {
     }
 }
 
+/// Reserved marker prefix for every non-passthrough output of
+/// [`sanitize_ident`]. See that function's own doc comment for why this
+/// exists and what it guarantees.
+const ESCAPE_MARKER: &str = "sir_esc_";
+
+/// Tag immediately following [`ESCAPE_MARKER`] for a name kept verbatim
+/// (a keyword, a builtin, or a valid name that merely starts with the
+/// marker). Distinct from [`TAG_ESCAPED`] so the two escaped sub-cases
+/// can never collide with each other — see `sanitize_ident`'s own doc
+/// comment.
+const TAG_VERBATIM: &str = "v";
+
+/// Tag immediately following [`ESCAPE_MARKER`] for a name run through
+/// per-character escaping (contains an illegal character), or the
+/// empty-input sentinel.
+const TAG_ESCAPED: &str = "e";
+
 /// Sanitize a SIR identifier for Go.
 ///
-/// Go identifiers match `[A-Za-z_][A-Za-z0-9_]*`.  Keywords get an
-/// underscore suffix.  Invalid characters get `_<hex>` encoding.
-/// Empty → `_sir_empty`.
+/// Go identifiers match `[A-Za-z_][A-Za-z0-9_]*`.
+///
+/// # Injectivity — why this function is more than "escape illegal chars"
+///
+/// A `/security-review` finding (task #65) proved the *previous* version
+/// of this function was not injective: it escaped a Go-keyword collision
+/// by appending a trailing `_` (`"func"` -> `"func_"`), but a completely
+/// ordinary, unrelated SIR local literally named `func_` passed through
+/// **unchanged** — so two distinct raw SIR names collided on the same
+/// emitted Go identifier, silently aliasing two variables into one with
+/// no error anywhere in the pipeline.
+///
+/// The fix makes the passthrough and non-passthrough output sets
+/// **disjoint by construction**: every non-passthrough case (keyword,
+/// builtin, invalid syntax, or a name that already starts with the
+/// marker) is prefixed with [`ESCAPE_MARKER`], and any raw name that
+/// already starts with that marker is *itself* routed into the escaped
+/// case rather than allowed to pass through.
+///
+/// **A second `/security-review` round found this alone was still not
+/// enough**, the same way it wasn't for `semantic-ir-to-python`: a
+/// *valid*, marker-prefixed name kept verbatim after the marker could
+/// still collide with a *different*, illegal-character name that
+/// happens to per-character-escape to that exact same text. The fix:
+/// [`TAG_VERBATIM`] and [`TAG_ESCAPED`] are two fixed, distinct single
+/// characters immediately after the marker, one per sub-case, so they
+/// can never collide with each other regardless of content — see
+/// `semantic-ir-to-python::sanitize_ident`'s own doc comment for the
+/// concrete before/after example this mirrors.
+///
+/// **A third `/security-review` round found the escaped sub-case's own
+/// per-character encoding was still not injective**: `_` was both the
+/// escape token's own delimiter and, previously, a character that
+/// passed through the loop below verbatim — so a literal `_` in the
+/// input was indistinguishable, in the output, from the `_` that opens
+/// or closes a real escape token (e.g. escaping `"_u007e_~"` and `"~~"`
+/// used to produce the identical result). The fix: every `_` is now
+/// escaped too, so it can never appear in the output except as part of
+/// a complete, fixed-width `_u{6-hex}_` token — see
+/// `semantic-ir-to-python::escape_body`'s own doc comment for the full
+/// argument.
 pub fn sanitize_ident(s: &str) -> String {
     if s.is_empty() {
-        return "_sir_empty".to_string();
+        return format!("{ESCAPE_MARKER}{TAG_ESCAPED}");
     }
-    if is_valid_go_ident(s) && !is_go_keyword(s) && !is_go_builtin(s) {
+    if is_valid_go_ident(s)
+        && !is_go_keyword(s)
+        && !is_go_builtin(s)
+        && !s.starts_with(ESCAPE_MARKER)
+    {
         return s.to_string();
     }
-    if is_go_keyword(s) || is_go_builtin(s) {
-        return format!("{}_", s);
+    if is_valid_go_ident(s) {
+        return format!("{ESCAPE_MARKER}{TAG_VERBATIM}{s}");
     }
-    let mut out = String::with_capacity(s.len() + 4);
-    out.push('_');
+    let mut out = String::from(ESCAPE_MARKER);
+    out.push_str(TAG_ESCAPED);
     for ch in s.chars() {
-        if ch.is_ascii_alphanumeric() || ch == '_' {
+        if ch.is_ascii_alphanumeric() {
             out.push(ch);
         } else {
-            let _ = write!(out, "_{:x}", ch as u32);
+            let _ = write!(out, "_u{:06x}_", ch as u32);
         }
     }
     out
@@ -2176,14 +2235,62 @@ mod tests {
     #[test]
     fn sanitize_idents() {
         assert_eq!(sanitize_ident("hello"), "hello");
-        assert_eq!(sanitize_ident(""), "_sir_empty");
-        assert_eq!(sanitize_ident("func"), "func_");
-        assert_eq!(sanitize_ident("type"), "type_");
-        assert_eq!(sanitize_ident("int"), "int_"); // builtin predeclared
-        assert_eq!(sanitize_ident("print"), "print_"); // predeclared
+        assert_eq!(sanitize_ident(""), "sir_esc_e");
+        assert_eq!(sanitize_ident("func"), "sir_esc_vfunc");
+        assert_eq!(sanitize_ident("type"), "sir_esc_vtype");
+        assert_eq!(sanitize_ident("int"), "sir_esc_vint"); // builtin predeclared
+        assert_eq!(sanitize_ident("print"), "sir_esc_vprint"); // predeclared
         let r = sanitize_ident("null?");
-        assert!(r.starts_with('_'));
+        assert!(r.starts_with("sir_esc_e"));
         assert!(r.contains("null"));
+    }
+
+    #[test]
+    fn sanitize_ident_is_injective_across_the_keyword_collision_this_backend_previously_had() {
+        // task #65 (/security-review): a Java local named `func` (a Go
+        // keyword) and a completely unrelated local named `func_` used
+        // to both sanitize to the identical Go name `func_` -- two
+        // distinct SIR locals silently aliased onto one Go variable,
+        // with no error anywhere in the pipeline. The fix (see
+        // `sanitize_ident`'s own doc comment) makes the two outputs
+        // provably different.
+        assert_ne!(sanitize_ident("func"), sanitize_ident("func_"));
+        assert_eq!(sanitize_ident("func_"), "func_");
+    }
+
+    #[test]
+    fn sanitize_ident_never_lets_a_raw_name_pass_through_as_the_escape_marker_itself() {
+        let escaped_keyword = sanitize_ident("func"); // "sir_esc_vfunc"
+        assert_ne!(sanitize_ident(&escaped_keyword), escaped_keyword);
+        assert!(sanitize_ident(&escaped_keyword).starts_with("sir_esc_"));
+    }
+
+    #[test]
+    fn sanitize_ident_is_injective_across_the_verbatim_vs_escaped_collision_this_backend_previously_had(
+    ) {
+        // A SECOND `/security-review` round found the marker alone
+        // wasn't enough: a marker-prefixed-but-otherwise-legal name kept
+        // verbatim could still collide with an illegal-character name
+        // that happens to escape to that exact same text. The fix (see
+        // `sanitize_ident`'s own doc comment) tags the two sub-cases
+        // with distinct fixed characters so they can never collide.
+        let verbatim_side = "sir_esc__u0024_";
+        let escaped_side = "sir_esc_$";
+        assert_ne!(sanitize_ident(verbatim_side), sanitize_ident(escaped_side));
+        assert_eq!(sanitize_ident(verbatim_side), "sir_esc_vsir_esc__u0024_");
+    }
+
+    #[test]
+    fn sanitize_ident_is_injective_across_the_underscore_delimiter_reuse_this_backend_previously_had(
+    ) {
+        // A THIRD `/security-review` round found the fixed-width escape
+        // still wasn't enough: `_` is both the escape token's own
+        // delimiter AND, previously, a character that passed through
+        // verbatim -- so a literal `_` in the input was indistinguishable
+        // from the `_` that opens/closes a real token. The fix (see
+        // `sanitize_ident`'s own doc comment) escapes every underscore
+        // too.
+        assert_ne!(sanitize_ident("_u007e_~"), sanitize_ident("~~"));
     }
 
     #[test]

@@ -1,5 +1,56 @@
 # Changelog
 
+## 0.54.1 — Security fix: `sanitize_ident` was not injective
+
+Task #65 (`/security-review`, discovered while auditing `java-to-
+semantic-ir`'s own loop-control synthetic-flag naming): this backend's
+`sanitize_ident` escaped a reserved-word collision with a `_$` prefix
+(`"class"` -> `"_$class"`), and its own doc comment claimed "a source
+`_$class` is itself valid, so no collision" — but that reasoning was
+wrong: a raw SIR name literally spelled `_$class` **is** valid
+JavaScript and **is** unreserved, so it passed through unchanged as
+`_$class` too — the exact same string the escaped keyword produced. Two
+distinct raw SIR names collided on the same emitted identifier, silently
+aliasing two variables into one with no error anywhere in the pipeline.
+
+Fixed by making the passthrough and escaped output sets disjoint by
+construction: every non-passthrough case is now prefixed with a
+reserved `_$sir_esc_` marker, and any raw name that already starts with
+that marker is itself routed into the escaped case rather than allowed
+to pass through — see `sanitize_ident`'s own doc comment for the full,
+corrected argument. Also switched the illegal-character escape from
+unpadded `_{hex}` to fixed-width `_u{4-hex}_`, closing a separate
+hex-digit-count ambiguity the same review round found.
+
+**A second `/security-review` round found the marker alone still wasn't
+enough**: a valid, marker-prefixed name kept verbatim after the marker
+could still collide with a different, illegal-character name that
+happens to escape to that exact same text. Fixed by tagging the two
+marker sub-cases with distinct fixed characters (`v`/`e`) immediately
+after the marker, so they can never collide with each other regardless
+of content — see `sanitize_ident`'s own doc comment for the full
+argument. (Since `is_valid_js_ident` already excludes reserved words
+itself, a reserved word always takes the escaped-tag branch, never the
+verbatim one — the tag distinguishes *how* something gets marker-
+prefixed, not *why*.)
+
+**A third `/security-review` round found the escaped sub-case's own
+per-character encoding was still not injective**: `_` was both the
+escape token's own delimiter and, previously, a character that passed
+through verbatim — so a literal `_` in the input was indistinguishable
+from the `_` that opens/closes a real escape token (`escape_body("_u007e_~")`
+and `escape_body("~~")` both used to produce the identical
+`"_u007e__u007e_"`). Fixed by escaping every underscore too and widening
+the hex width from a minimum-4 `{:04x}` to a genuinely fixed `{:06x}` —
+`$` needed no such change, since it plays no role in the token's own
+shape.
+
+This changes the exact spelling `sanitize_ident` produces for every
+reserved-word/invalid-character case (e.g. `"class"` now sanitizes to
+`"_$sir_esc_eclass"`, not `"_$class"`) — a deliberate, disclosed
+behavior change: the old spellings were exactly the ones proven to
+collide.
+
 ## 0.54.0 — SIR16 addendum Slice 1: `Feature::LoopControl` (`break`/`continue`)
 
 First backend to accept `Feature::LoopControl` (`semantic-ir` v0.27.0's new

@@ -1,5 +1,67 @@
 # Changelog
 
+## 0.17.1 — Security fix: `sanitize_ident` was not injective
+
+Task #65 (`/security-review`, discovered while auditing `java-to-
+semantic-ir`'s own loop-control synthetic-flag naming): this backend's
+`sanitize_ident` escaped a Python-keyword collision with a bare trailing
+underscore (`"lambda"` -> `"lambda_"`), but a completely ordinary,
+unrelated SIR local literally named `lambda_` passed through
+**unchanged** — so two distinct raw SIR names collided on the same
+emitted Python identifier, silently aliasing two variables into one with
+no error anywhere in the pipeline (confirmed by actually compiling and
+running the resulting program). `semantic_ir::validate()` reported no
+issue; nothing in the pipeline would have caught this.
+
+Fixed by making the passthrough and escaped output sets disjoint by
+construction: every non-passthrough case is prefixed with a reserved
+`sir_esc_` marker, and any raw name that already starts with that marker
+is itself routed into the escaped case rather than allowed to pass
+through — see `sanitize_ident`'s own doc comment for the full argument.
+Also switched the illegal-character escape from unpadded `_{hex}` to
+fixed-width `_u{4-hex}_`, closing a separate hex-digit-count ambiguity
+the same review round found (see `escape_body`'s own doc comment for
+what this closes and the narrower, lower-severity residual gap that
+remains, tracked separately).
+
+**A second `/security-review` round found the marker alone still wasn't
+enough**: within the marker-prefixed branch, "keep verbatim" (a keyword,
+or a marker-prefixed-but-otherwise-legal name) and "escape it" (a name
+with an illegal character) are two different sub-cases whose outputs
+still weren't disjoint from each other — e.g. the perfectly ordinary,
+marker-prefixed, all-legal name `sir_esc__u0024_` and the illegal-
+character name `sir_esc_$` both used to sanitize to the identical
+`sir_esc_sir_esc__u0024_`, reopening the exact bug class one level
+deeper. Fixed by tagging the two sub-cases with distinct fixed
+characters (`v`/`e`) immediately after the marker, so they can never
+collide with each other regardless of content — see `sanitize_ident`'s
+own doc comment for the full argument.
+
+**A third `/security-review` round found the escaped sub-case's own
+per-character encoding was still not injective**: `_` was both the
+escape token's own delimiter and, previously, a character that passed
+through verbatim — so a literal `_` in the input was indistinguishable,
+in the output, from the `_` that opens or closes a real escape token.
+`escape_body("_u007e_~")` (the 7 literal characters `_u007e_` followed
+by one real illegal character `~`) and `escape_body("~~")` (two real
+illegal `~` characters) both used to produce the identical
+`"_u007e__u007e_"` — confirmed by actually running the function, not by
+inspection. Fixed by escaping every underscore too (so `_` can never
+appear in the output except as part of a complete, fixed-width token)
+and widening the hex width from `{:04x}` (a minimum, not a true fixed
+width — a codepoint above U+FFFF would still widen it) to a genuinely
+fixed `{:06x}`, wide enough for the entire Unicode range without ever
+truncating or overflowing — see `escape_body`'s own doc comment for the
+full argument.
+
+This changes the exact spelling `sanitize_ident` produces for every
+keyword/reserved/invalid-character case (e.g. `"class"` now sanitizes to
+`"sir_esc_vclass"`, not `"class_"`) — a deliberate, disclosed behavior
+change, not a bug: the old spellings were exactly the ones proven to
+collide. Nothing in this backend's own emitted-code *shape* changes
+otherwise (still valid, still readable Python), only which exact
+identifier string a colliding name maps to.
+
 ## 0.17.0 — SIR23 Tier A pattern matcher (Phase A Slice 4)
 
 Part of the SIR22/SIR23 backend-expansion initiative (`code/specs/

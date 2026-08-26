@@ -583,16 +583,38 @@ JavaScript identifiers match `[A-Za-z_$][A-Za-z0-9_$]*` and must not be
 reserved words. SIR names can carry `?`, `!`, `-`, `+`, etc., so
 `sanitize_ident` rewrites anything that does not fit:
 
-| input        | output      | rule                              |
-|--------------|-------------|-----------------------------------|
-| `hello`      | `hello`     | already valid → unchanged         |
-| `class`      | `_$class`   | reserved word → `_$` prefix       |
-| `null?`      | `_$null_3f` | invalid char → `_$` + hex-encoded |
-| `""` (empty) | `_$empty`   | empty → sentinel                  |
+| input        | output                        | rule                                    |
+|--------------|--------------------------------|------------------------------------------|
+| `hello`      | `hello`                        | already valid → unchanged                |
+| `class`      | `_$sir_esc_eclass`             | reserved word → marker + escaped tag     |
+| `null?`      | `_$sir_esc_enull_u00003f_`     | invalid char → marker + escaped tag + hex-encoded |
+| `""` (empty) | `_$sir_esc_e`                  | empty → sentinel                         |
 
-The `_$` prefix guarantees a legal leading character and avoids
-collisions between distinct invalid inputs (each non-`[A-Za-z0-9_$]`
-character hex-encodes to `_<codepoint>`).
+The `_$sir_esc_` marker guarantees a legal leading character. It also
+guarantees **injectivity**, not just avoiding "avoids collisions between
+distinct invalid inputs" as an earlier version of this table claimed: a
+`/security-review` finding (task #65) proved that claim false — a raw
+SIR name like `_$class` is itself a valid, unreserved JavaScript
+identifier, so under the old scheme it passed through unchanged as the
+exact same string the escaped keyword `class` produced, silently
+aliasing two distinct SIR locals onto one JavaScript variable. The fix:
+any raw name that already starts with the marker is *itself* routed
+into the escaped case rather than allowed to pass through, so
+passthrough output can never start with the marker and escaped output
+always does. A SECOND review round found the marker alone still wasn't
+enough — a valid, marker-prefixed name kept verbatim could collide with
+an unrelated illegal-character name that happens to escape to the exact
+same text — so every marker-prefixed output also carries one more fixed
+tag character (`v` for "kept verbatim", `e` for "ran through per-
+character escaping") immediately after the marker, making the two
+sub-cases disjoint from each other too. A THIRD round found the escaped
+sub-case's own per-character encoding was still not injective — `_` was
+both the escape token's own delimiter and a character that passed
+through verbatim, so a literal `_` in the input was indistinguishable
+from an actual token boundary — so every `_` is now escaped too (as a
+fixed-width `_u{6-hex}_` token, wide enough for the full Unicode range),
+never left as a literal pass-through character. See `sanitize_ident`'s
+own doc comment for the full argument.
 
 ## Tests
 

@@ -3326,30 +3326,128 @@ fn f64_c_literal(value: f64) -> String {
     }
 }
 
+/// Reserved marker prefix for every non-passthrough output of
+/// [`sanitize_ident`]. See that function's own doc comment for why this
+/// exists and what it guarantees.
+const ESCAPE_MARKER: &str = "sir_esc_";
+
+/// Tag immediately following [`ESCAPE_MARKER`] for a name kept verbatim
+/// (a keyword, a reserved macro/name, or a valid name that merely starts
+/// with the marker/`_sir`). Distinct from [`TAG_ESCAPED`] so the two
+/// escaped sub-cases can never collide with each other — see
+/// `sanitize_ident`'s own doc comment.
+const TAG_VERBATIM: &str = "v";
+
+/// Tag immediately following [`ESCAPE_MARKER`] for a name run through
+/// [`escape_body`] (contains an illegal character or a leading digit),
+/// or the empty-input sentinel (`escape_body("")` is itself `""`, so
+/// this tag alone, followed by nothing, uniquely signals the empty
+/// case).
+const TAG_ESCAPED: &str = "e";
+
 /// Map a SIR identifier into a valid C identifier: non-`[A-Za-z0-9_]` chars are
-/// escaped, a leading digit is escaped, C keywords get a trailing `_`, and the
-/// runtime's own namespace is kept clear.
+/// escaped, a leading digit is escaped, and C keywords / reserved macros /
+/// this backend's own reserved names get [`ESCAPE_MARKER`] prepended.
+///
+/// # Injectivity — why this function is more than "escape illegal chars"
+///
+/// A `/security-review` finding (task #65) proved the *previous* version
+/// of this function was not injective: it escaped a C-keyword collision
+/// by appending a trailing `_` (`"min"` -> `"min_"`, since `min` is a
+/// reserved macro on some platforms), but a completely ordinary,
+/// unrelated SIR local literally named `min_` passed through
+/// **unchanged** — so two distinct raw SIR names collided on the same
+/// emitted C identifier, silently aliasing two variables into one with
+/// no error anywhere in the pipeline.
+///
+/// The fix makes the passthrough and non-passthrough output sets
+/// **disjoint by construction**: every non-passthrough case (keyword,
+/// reserved macro, this backend's own reserved names, or already
+/// starting with the marker) gets [`ESCAPE_MARKER`] prepended, so
+/// non-passthrough output always starts with it and passthrough output
+/// never does.
+///
+/// **A second `/security-review` round found this alone was still not
+/// enough**, the same way it wasn't for `semantic-ir-to-python`/`-ruby`:
+/// the previous version computed the escaped body *first,
+/// unconditionally*, then only decided whether to add the marker based
+/// on the *result* — so a genuinely invalid input (illegal character)
+/// whose escaped form didn't happen to need a marker was returned
+/// completely unmarked, colliding with an ordinary raw name of that same
+/// spelling. The fix restructures the decision to check validity
+/// *before* escaping, and tags the two marker sub-cases with distinct
+/// fixed characters ([`TAG_VERBATIM`]/[`TAG_ESCAPED`]) so they can never
+/// collide with each other regardless of content — see
+/// `semantic-ir-to-python::sanitize_ident`'s own doc comment for the
+/// concrete before/after example this mirrors.
 pub fn sanitize_ident(s: &str) -> String {
-    let mut out = String::new();
+    if is_valid_c_ident(s) && !needs_marker(s) && !s.starts_with(ESCAPE_MARKER) {
+        return s.to_string();
+    }
+    if is_valid_c_ident(s) {
+        return format!("{ESCAPE_MARKER}{TAG_VERBATIM}{s}");
+    }
+    format!("{ESCAPE_MARKER}{TAG_ESCAPED}{}", escape_body(s))
+}
+
+/// A syntactically legal, non-empty C identifier shape: ASCII
+/// alphanumeric or `_`, first character not a digit. Does not check
+/// keyword/reserved-macro/reserved-name status — that's [`needs_marker`]'s
+/// job, checked only once this returns `true`.
+fn is_valid_c_ident(s: &str) -> bool {
+    if s.is_empty() {
+        return false;
+    }
+    s.chars()
+        .enumerate()
+        .all(|(i, ch)| (ch.is_ascii_alphanumeric() || ch == '_') && !(i == 0 && ch.is_ascii_digit()))
+}
+
+/// Whether a syntactically-valid C identifier still needs the escape
+/// marker: a C keyword, a reserved platform macro (`min`/`max`), this
+/// backend's own reserved names, or already starting with the runtime's
+/// `_sir` namespace.
+fn needs_marker(s: &str) -> bool {
+    is_c_keyword(s)
+        || is_reserved_macro(s)
+        || s.starts_with("_sir")
+        || s == "main"
+        || s == "user_main"
+        || s == "sir_user_init"
+}
+
+/// Per-character encoding for a name containing at least one illegal
+/// character or a leading digit: legal characters (ASCII alphanumeric,
+/// EXCEPT a leading digit — and except `_`, see below) pass through
+/// verbatim; everything else, including every literal `_`, becomes
+/// `_u{XXXXXX}_` — its Unicode codepoint as exactly six, zero-padded
+/// lowercase hex digits, bracketed by underscores. Only ever called by
+/// [`sanitize_ident`] on a name [`is_valid_c_ident`] has already
+/// rejected, so its own output always ends up [`ESCAPE_MARKER`]/
+/// [`TAG_ESCAPED`]-prefixed — never returned bare.
+///
+/// # Why every underscore is escaped too
+///
+/// A third `/security-review` round found that letting `_` pass through
+/// verbatim here made this encoding non-injective: `_` is both the
+/// escape token's own delimiter and, if also allowed as an ordinary
+/// legal character, indistinguishable in the output from the `_` that
+/// opens/closes a real token — `escape_body("_u007e_~")` and
+/// `escape_body("~~")` used to both produce `"_u007e__u007e_"`. See
+/// `semantic-ir-to-python::escape_body`'s own doc comment for the full
+/// argument this mirrors. Escaping every `_` too closes this — ordinary
+/// identifiers with underscores are unaffected, since this function only
+/// ever runs on a name already known to need escaping for some other
+/// reason.
+fn escape_body(s: &str) -> String {
+    let mut out = String::with_capacity(s.len() + 4);
     for (i, ch) in s.chars().enumerate() {
-        let ok = ch.is_ascii_alphanumeric() || ch == '_';
+        let ok = ch.is_ascii_alphanumeric();
         if ok && !(i == 0 && ch.is_ascii_digit()) {
             out.push(ch);
         } else {
-            let _ = write!(out, "_u{:04x}_", ch as u32);
+            let _ = write!(out, "_u{:06x}_", ch as u32);
         }
-    }
-    if out.is_empty() {
-        out.push('_');
-    }
-    if is_c_keyword(&out)
-        || is_reserved_macro(&out)
-        || out.starts_with("_sir")
-        || out == "main"
-        || out == "user_main"
-        || out == "sir_user_init"
-    {
-        out.push('_');
     }
     out
 }

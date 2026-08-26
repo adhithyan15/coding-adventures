@@ -1,5 +1,51 @@
 # Changelog
 
+## 0.42.1 — Security fix: `sanitize_ident` was not injective
+
+Task #65 (`/security-review`, discovered while auditing `java-to-
+semantic-ir`'s own loop-control synthetic-flag naming): this backend's
+`sanitize_ident` escaped a Go-keyword/predeclared-identifier collision
+with a bare trailing underscore (`"func"` -> `"func_"`), but a
+completely ordinary, unrelated SIR local literally named `func_` passed
+through **unchanged** — so two distinct raw SIR names collided on the
+same emitted Go identifier, silently aliasing two variables into one
+with no error anywhere in the pipeline.
+
+Fixed by making the passthrough and marked output sets disjoint by
+construction: every non-passthrough case is prefixed with a reserved
+`sir_esc_` marker, and any raw name that already starts with that
+marker is itself routed into the marked case rather than allowed to
+pass through — see `sanitize_ident`'s own doc comment for the full
+argument. Also switched the illegal-character escape from unpadded
+`_{hex}` to fixed-width `_u{4-hex}_`, closing a separate hex-digit-count
+ambiguity the same review round found.
+
+**A second `/security-review` round found the marker alone still wasn't
+enough**: a *valid*, marker-prefixed name kept verbatim after the marker
+could still collide with a *different*, illegal-character name that
+happens to escape to that exact same text. Fixed by tagging the two
+marker sub-cases with distinct fixed characters (`v`/`e`) immediately
+after the marker, so they can never collide with each other regardless
+of content — see `sanitize_ident`'s own doc comment for the full
+argument.
+
+**A third `/security-review` round found the escaped sub-case's own
+per-character encoding was still not injective**: `_` was both the
+escape token's own delimiter and, previously, a character that passed
+through verbatim — so a literal `_` in the input was indistinguishable
+from the `_` that opens/closes a real escape token (`escape_body("_u007e_~")`
+and `escape_body("~~")` both used to produce the identical
+`"_u007e__u007e_"`). Fixed by escaping every underscore too and widening
+the hex width from a minimum-4 `{:04x}` to a genuinely fixed `{:06x}` —
+see `semantic-ir-to-python::escape_body`'s own doc comment for the full
+argument this mirrors.
+
+This changes the exact spelling `sanitize_ident` produces for every
+keyword/predeclared-identifier/invalid-character case (e.g. `"func"` now
+sanitizes to `"sir_esc_vfunc"`, not `"func_"`) — a deliberate, disclosed
+behavior change: the old spellings were exactly the ones proven to
+collide.
+
 ## 0.42.0 — SIR23 Tier A pattern matcher (second-wave backend rollout, Phase A Slice 4)
 
 Implements the 7-node SIR23 Tier A slice — the symbolic-expression

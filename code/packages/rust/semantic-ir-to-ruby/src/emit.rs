@@ -2079,28 +2079,138 @@ fn emit_symbol(name: &str) -> String {
     }
 }
 
+/// Reserved marker prefix for every non-passthrough output of
+/// [`sanitize_ident`]. See that function's own doc comment for why this
+/// exists and what it guarantees. Deliberately starts with `sir_` — a
+/// superset of this backend's own pre-existing `sir_`-namespace
+/// reservation, so every name this marker's own logic must already avoid
+/// colliding with (the runtime helper namespace) is automatically
+/// covered too.
+const ESCAPE_MARKER: &str = "sir_esc_";
+
+/// Tag immediately following [`ESCAPE_MARKER`] for a name kept verbatim
+/// (a keyword, a leading-uppercase name, or a valid name that merely
+/// starts with `sir_`). Distinct from [`TAG_ESCAPED`] so the two escaped
+/// sub-cases can never collide with each other — see `sanitize_ident`'s
+/// own doc comment.
+const TAG_VERBATIM: &str = "v";
+
+/// Tag immediately following [`ESCAPE_MARKER`] for a name run through
+/// [`escape_body`] (contains an illegal character or a leading digit),
+/// or the empty-input sentinel (`escape_body("")` is itself `""`, so
+/// this tag alone, followed by nothing, uniquely signals the empty
+/// case).
+const TAG_ESCAPED: &str = "e";
+
 /// Map a SIR identifier to a valid Ruby local/method identifier.  Ruby locals
-/// may not start with an uppercase letter (that is a constant) or a digit, and
-/// keywords / the runtime `sir_` namespace are suffixed with `_`.
+/// may not start with an uppercase letter (that is a constant) or a digit.
+///
+/// # Injectivity — why this function is more than "escape illegal chars"
+///
+/// A `/security-review` finding (task #65) proved the *previous* version
+/// of this function was not injective: it escaped a leading-uppercase
+/// name (which Ruby would otherwise treat as a constant) by prefixing a
+/// single underscore (`"Foo"` -> `"_Foo"`), but a completely ordinary,
+/// unrelated SIR local literally named `_Foo` passed through
+/// **unchanged** — so two distinct raw SIR names collided on the same
+/// emitted Ruby identifier, silently aliasing two variables into one
+/// with no error anywhere in the pipeline (confirmed by actually
+/// compiling and running the resulting program). The same flaw applied
+/// to the keyword-suffix and `sir_`-prefix disambiguation rules below.
+///
+/// The fix makes the passthrough and non-passthrough output sets
+/// **disjoint by construction**: every non-passthrough case (leading
+/// uppercase, a keyword, already starting with the reserved `sir_`
+/// namespace — which now includes [`ESCAPE_MARKER`] itself — or an
+/// actually-invalid name) gets [`ESCAPE_MARKER`] prepended, so non-
+/// passthrough output always starts with it and passthrough output
+/// never does.
+///
+/// **A second `/security-review` round found this alone was still not
+/// enough**, the same way it wasn't for `semantic-ir-to-python`: a
+/// *valid*, `sir_`-prefixed name kept verbatim after the marker could
+/// still collide with a *different*, illegal-character name that
+/// happens to [`escape_body`] to that exact same text — the previous
+/// version of this function computed the escaped body **first,
+/// unconditionally**, then decided whether to add the marker based on
+/// the *result*, so a genuinely invalid input whose escaped form didn't
+/// happen to need a marker was returned completely unmarked, exactly
+/// like an ordinary passthrough name of that same spelling. The fix
+/// restructures the decision to check validity *before* escaping (so
+/// escaping only ever runs on names already known to need the marker),
+/// and tags the two marker sub-cases with distinct fixed characters
+/// ([`TAG_VERBATIM`]/[`TAG_ESCAPED`]) so they can never collide with
+/// each other regardless of content — see `semantic-ir-to-python::
+/// sanitize_ident`'s own doc comment for the concrete before/after
+/// example this mirrors.
 pub fn sanitize_ident(s: &str) -> String {
-    let mut out = String::new();
+    if is_valid_ruby_ident(s) && !needs_marker(s) && !s.starts_with(ESCAPE_MARKER) {
+        return s.to_string();
+    }
+    if is_valid_ruby_ident(s) {
+        // A leading-uppercase name, a keyword, or a valid name starting
+        // with `sir_` — every character is already legal, so no further
+        // per-character escaping is needed; the marker + tag alone
+        // disambiguates.
+        return format!("{ESCAPE_MARKER}{TAG_VERBATIM}{s}");
+    }
+    format!("{ESCAPE_MARKER}{TAG_ESCAPED}{}", escape_body(s))
+}
+
+/// A syntactically legal, non-empty Ruby local identifier shape: ASCII
+/// alphanumeric or `_`, first character not a digit. Does not check
+/// leading case, keyword status, or the `sir_` namespace — those are
+/// [`needs_marker`]'s job, checked only once this returns `true`.
+fn is_valid_ruby_ident(s: &str) -> bool {
+    if s.is_empty() {
+        return false;
+    }
+    s.chars()
+        .enumerate()
+        .all(|(i, ch)| (ch.is_ascii_alphanumeric() || ch == '_') && !(i == 0 && ch.is_ascii_digit()))
+}
+
+/// Whether a syntactically-valid Ruby identifier still needs the escape
+/// marker: a leading uppercase letter (Ruby would otherwise treat it as
+/// a constant), a genuine Ruby keyword, or already starting with the
+/// runtime's own reserved `sir_` namespace.
+fn needs_marker(s: &str) -> bool {
+    s.chars().next().is_some_and(|c| c.is_ascii_uppercase()) || is_ruby_keyword(s) || s.starts_with("sir_")
+}
+
+/// Per-character encoding for a name containing at least one illegal
+/// character or a leading digit: legal characters (ASCII alphanumeric,
+/// EXCEPT a leading digit — and except `_`, see below) pass through
+/// verbatim; everything else, including every literal `_`, becomes
+/// `_u{XXXXXX}_` — its Unicode codepoint as exactly six, zero-padded
+/// lowercase hex digits, bracketed by underscores. Only ever called by
+/// [`sanitize_ident`] on a name [`is_valid_ruby_ident`] has already
+/// rejected, so its own output always ends up [`ESCAPE_MARKER`]/
+/// [`TAG_ESCAPED`]-prefixed — never returned bare.
+///
+/// # Why every underscore is escaped too
+///
+/// A third `/security-review` round found that letting `_` pass through
+/// verbatim here made this encoding non-injective: `_` is both the
+/// escape token's own delimiter and, if also allowed as an ordinary
+/// legal character, indistinguishable in the output from the `_` that
+/// opens/closes a real token — `escape_body("_u007e_~")` and
+/// `escape_body("~~")` used to both produce `"_u007e__u007e_"`. See
+/// `semantic-ir-to-python::escape_body`'s own doc comment for the full
+/// argument this mirrors. Escaping every `_` too (so it can never appear
+/// in the output except as part of a complete, fixed-width token) closes
+/// this — ordinary identifiers with underscores are unaffected, since
+/// this function only ever runs on a name already known to need
+/// escaping for some other reason.
+fn escape_body(s: &str) -> String {
+    let mut out = String::with_capacity(s.len() + 4);
     for (i, ch) in s.chars().enumerate() {
-        let ok = ch.is_ascii_alphanumeric() || ch == '_';
+        let ok = ch.is_ascii_alphanumeric();
         if ok && !(i == 0 && ch.is_ascii_digit()) {
             out.push(ch);
         } else {
-            let _ = write!(out, "_u{:04x}_", ch as u32);
+            let _ = write!(out, "_u{:06x}_", ch as u32);
         }
-    }
-    if out.is_empty() {
-        out.push('_');
-    }
-    // A leading uppercase would make it a constant; prefix an underscore.
-    if out.chars().next().is_some_and(|c| c.is_ascii_uppercase()) {
-        out.insert(0, '_');
-    }
-    if is_ruby_keyword(&out) || out.starts_with("sir_") {
-        out.push('_');
     }
     out
 }

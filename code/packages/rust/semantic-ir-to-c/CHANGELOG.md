@@ -1,5 +1,55 @@
 # Changelog
 
+## 0.42.1 — Security fix: `sanitize_ident` was not injective
+
+Task #65 (`/security-review`, discovered while auditing `java-to-
+semantic-ir`'s own loop-control synthetic-flag naming): this backend's
+`sanitize_ident` escaped a C-keyword/reserved-macro collision with a
+bare trailing underscore (`"min"` -> `"min_"`), but a completely
+ordinary, unrelated SIR local literally named `min_` passed through
+**unchanged** — so two distinct raw SIR names collided on the same
+emitted C identifier, silently aliasing two variables into one with no
+error anywhere in the pipeline.
+
+Fixed by making the passthrough and marked output sets disjoint by
+construction: every non-passthrough case is prefixed with a reserved
+`sir_esc_` marker, and any raw name that already starts with that
+marker is itself routed into the marked case rather than allowed to
+pass through — see `sanitize_ident`'s own doc comment for the full
+argument. Also switched the illegal-character escape from unpadded
+`_{hex}` to fixed-width `_u{4-hex}_`, closing a separate hex-digit-count
+ambiguity the same review round found.
+
+**A second `/security-review` round found the marker alone still wasn't
+enough**: the *previous* version of this function computed the escaped
+body first, unconditionally, then only decided whether to add the
+marker based on the *result* — so a genuinely invalid input (illegal
+character) whose escaped form didn't happen to need a marker was
+returned completely unmarked, colliding with an ordinary raw name of
+that same spelling (e.g. `sanitize_ident("a$")` and
+`sanitize_ident("a_u0024_")` both used to produce `"a_u0024_"`). Fixed
+by restructuring the function to check validity *before* escaping, and
+tagging the two marker sub-cases with distinct fixed characters (`v`/
+`e`) so they can never collide with each other — see `sanitize_ident`'s
+own doc comment for the full argument.
+
+**A third `/security-review` round found the escaped sub-case's own
+per-character encoding was still not injective**: `_` was both the
+escape token's own delimiter and, previously, a character that passed
+through verbatim — so a literal `_` in the input was indistinguishable
+from the `_` that opens/closes a real escape token (`escape_body("_u007e_~")`
+and `escape_body("~~")` both used to produce the identical
+`"_u007e__u007e_"`). Fixed by escaping every underscore too and widening
+the hex width from a minimum-4 `{:04x}` to a genuinely fixed `{:06x}` —
+see `semantic-ir-to-python::escape_body`'s own doc comment for the full
+argument this mirrors.
+
+This changes the exact spelling `sanitize_ident` produces for every
+keyword/reserved-macro/reserved-name/invalid-character case (e.g.
+`"int"` now sanitizes to `"sir_esc_vint"`, not `"int_"`) — a deliberate,
+disclosed behavior change: the old spellings were exactly the ones
+proven to collide.
+
 ## 0.42.0 — SIR23 Tier A pattern matcher (Phase A Slice 4, second-wave backend rollout)
 
 Implements SIR23's Tier A pattern matcher: `Expr::SymSymbol`/`SymRational`/
