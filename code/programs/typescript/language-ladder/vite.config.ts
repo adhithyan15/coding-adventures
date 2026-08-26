@@ -8,6 +8,11 @@ import path from "node:path";
 // so the dev server must be told the repo root is a legal place to read from.
 const repoRoot = path.resolve(__dirname, "../../../..");
 
+// How many chapters share one lazy lesson batch. See the long note on the
+// lesson group below, and scripts/check-bundle.mjs, which derives its request
+// budget from this number rather than hardcoding a count.
+export const LESSON_BAND_CHAPTERS = 5;
+
 export default defineConfig({
   // Relative base → the built index.html works when opened from any path
   // (local file, GitHub Pages sub-path, etc.) without a deploy-specific prefix.
@@ -25,46 +30,83 @@ export default defineConfig({
           groups: [
             {
               // A frontier import should stay small, but corpus-wide modes must
-              // not fan out to one request per lesson. Rolldown first groups by
-              // track, then caps each batch by size.
+              // not fan out to one request per lesson.
               //
-              // The cap was 32 kB, and the Spanish C2 chapters pushed the corpus
-              // to exactly 400 batches -- one over the 399-request ceiling in
-              // scripts/check-bundle.mjs. Raising that ceiling would have bought
-              // one PR of room and made the app slower; raising the cap fixes the
-              // shape. Keep the grouping cap aligned with the independently
-              // enforced emitted-batch ceiling: that lets Rolldown fill the
-              // final batch for each language instead of stranding usable bytes
-              // in undersized tail chunks, without weakening either request or
-              // response-size gates.
+              // Batches are grouped by a CHAPTER RANGE -- five chapters of one
+              // track's lesson series -- with a size cap kept only as a
+              // backstop. That is issue #12918, and it replaces a grouping that
+              // was track-then-size.
               //
-              // 49 kB -> 56 kB. SECOND occurrence of that same recurrence, from
-              // the Spanish A1 vocabulary tranche that took the corpus to 401
-              // batches. Measured on that corpus:
+              // WHY THE OLD SHAPE KEPT FAILING. Grouping by track and splitting
+              // by size makes the batch count a function of corpus BYTES, so it
+              // walked into the request ceiling every few content tranches. It
+              // was answered twice by raising this cap, 32 kB -> 49 kB and
+              // 49 kB -> 56 kB, and each bump looked sufficient because the
+              // report showed a large unused fraction of the aggregate cap --
+              // 32% after the second one, read at the time as headroom the next
+              // tranches could grow into.
               //
-              //     cap 49 kB   401 batches   47,976 B largest
-              //     cap 56 kB   353 batches   54,688 B largest
+              // It was not headroom. Rolldown groups by track and THEN splits
+              // that track greedily by size, so every other track's tail batch
+              // is sealed and never revisited. A Spanish tranche can only ever
+              // extend Spanish's tail. Aggregate slack is stranded by
+              // construction, and the measurement that settles it is that
+              // adding 35 lessons weighing 145,711 B -- about 2.6 batches at the
+              // 56 kB cap, and LIGHTER than the 35 that landed in the previous
+              // tranche -- added SIX batches while the unused fraction sat
+              // unchanged at 32%. A number that does not move when the thing it
+              // supposedly measures does is not a measurement.
               //
-              // Note which way the numbers move. This is a GROUPING parameter,
-              // not a budget. Raising it takes the request count DOWN by 48, and
-              // the request-count ceiling in check-bundle.mjs is lowered to the
-              // measured 353 in the same commit -- a ceiling that may fall should
-              // fall when it falls. Nothing was relaxed to squeeze past a gate:
-              // the gate is met with more margin than before, and 54,688 B is
-              // about 11% of the 500 kB chunk budget that is the constraint
-              // actually protecting the browser.
+              // WHAT THE CHAPTER RANGE BUYS. A band gains a batch only when a
+              // track passes a chapter multiple, not when it gains lessons, so
+              // the count follows chapters instead of bytes. Measured on the
+              // corpus at the time of the change:
               //
-              // If you are here for a THIRD bump: stop, and do issue #12918
-              // instead. Batches are grouped by track-then-size, so the count
-              // tracks corpus bytes linearly and this recurs every few content
-              // tranches. Grouping by a chapter range -- something a reader
-              // actually navigates -- makes it grow sublinearly and ends this.
+              //     grouping              batches  largest   p90      median
+              //     track + 56 kB cap         353   54,688   52,598   40,529
+              //     5-chapter + 256 kB cap    281  200,124   90,225   40,731
+              //     10-chapter + 256 kB cap   166  221,470  156,358   75,875
+              //
+              // FIVE and not ten, deliberately. Ten halves the count again, but
+              // the number that costs a reader anything is the payload of the
+              // batch their next lesson lands in, not how many batches exist.
+              // A five-chapter band holds the median batch at 40,731 B -- within
+              // 500 bytes of what the size-capped grouping already delivered --
+              // while a ten-chapter band nearly doubles it. The count is amply
+              // solved at 281; buying a further halving with double the
+              // per-open payload is the wrong direction.
+              //
+              // THE CAP IS A BACKSTOP, NOT THE SPLITTER. At 256 kB it binds on
+              // exactly one band in the whole corpus, which is what keeps the
+              // count equal to the band count plus one rather than drifting back
+              // toward byte-linear. Lowering it re-introduces the old shape a
+              // little at a time; check the batches-vs-bands gap in
+              // scripts/check-bundle.mjs before touching it.
+              //
+              // THE SERIES LETTER IS PART OF THE KEY. 599 of the corpus's 4,154
+              // lesson files are not `XX-C<digits>` -- writing lessons
+              // (`AR-W00-…`) and review lessons (`ES-R02-…`) among them. A
+              // pattern matching only `-C` returns null for every one of them,
+              // drops them out of the lesson group, and undercounts the request
+              // budget by however many chunks they land in elsewhere. That
+              // mistake was made and measured while preparing this change: it
+              // reported 197 batches where the honest figure was 281.
               name(moduleId) {
                 const normalized = moduleId.replaceAll("\\", "/");
-                const match = /human-languages\/([^/]+)\/lessons\//.exec(normalized);
-                return match?.[1] ? `lessons-${match[1]}` : null;
+                const match =
+                  /human-languages\/([^/]+)\/lessons\/[A-Za-z]{2}-([A-Za-z])(\d+)/.exec(
+                    normalized,
+                  );
+                if (!match?.[1]) return null;
+                const series = (match[2] ?? "x").toUpperCase();
+                const band = Math.floor(Number(match[3] ?? 0) / LESSON_BAND_CHAPTERS) *
+                  LESSON_BAND_CHAPTERS;
+                return `lessons-${match[1]}-${series}${band}`;
               },
-              maxSize: 56_000,
+              // Backstop only -- see the note above. Mirrored by
+              // scripts/check-bundle.mjs, which fails a batch the bundler did
+              // not intend to emit.
+              maxSize: 262_144,
             },
             {
               name: "script-data",
