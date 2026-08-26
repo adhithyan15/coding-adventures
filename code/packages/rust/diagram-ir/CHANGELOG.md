@@ -1,5 +1,9 @@
 # Changelog — diagram-ir
 
+## 0.82.0
+
+- Represent Gantt input date formats as typed semantic parts rather than an inert string.
+
 ## 0.81.0
 
 - Preserve independent Gantt task tags in semantic IR and add backend-neutral vertical marker layout items.

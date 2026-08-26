@@ -1,5 +1,9 @@
 # Changelog
 
+## 0.142.0
+
+- Compile Gantt `dateFormat` statements into typed semantic parts and reject task dates that do not match the selected format.
+
 ## 0.141.0
 
 - Parse repeated Gantt `active`, `done`, `crit`, `milestone`, and `vert` tags without collapsing their independent semantics.
