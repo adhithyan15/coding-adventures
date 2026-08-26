@@ -12,13 +12,13 @@
 //! place commit nodes and merge arcs.
 
 use diagram_ir::{
-    DiagramDirection, GitCommitSymbol, GitCommitType, GitDiagram, GitEvent, JourneyDiagram,
+    DiagramDirection, GanttDateFormat, GanttDateFormatPart, GitCommitSymbol, GitCommitType, GitDiagram, GitEvent, JourneyDiagram,
     LayoutedTemporalDiagram, LayoutedTemporalInteraction, LayoutedTemporalItem, TaskEnd, TaskStart,
     TemporalBody, TemporalDiagram,
 };
 use std::collections::{BTreeSet, HashMap};
 
-pub const VERSION: &str = "0.22.0";
+pub const VERSION: &str = "0.23.0";
 
 // ── Constants ─────────────────────────────────────────────────────────────
 
@@ -218,16 +218,65 @@ fn wrap_journey_label(label: &str, max_width: f64, font_size: f64) -> String {
 
 // ── Date helpers ──────────────────────────────────────────────────────────
 
-fn date_to_days(s: &str) -> Option<f64> {
-    let parts: Vec<&str> = s.split('-').collect();
-    if parts.len() != 3 { return None; }
-    let year: i64 = parts[0].parse().ok()?;
-    let month: i64 = parts[1].parse().ok()?;
-    let day: i64 = parts[2].parse().ok()?;
+fn date_to_days(source: &str, format: &GanttDateFormat) -> Option<f64> {
+    if format.parts.as_slice() == [GanttDateFormatPart::UnixSeconds] {
+        return source.parse::<f64>().ok().map(|seconds| seconds / 86_400.0);
+    }
+    if format.parts.as_slice() == [GanttDateFormatPart::UnixMilliseconds] {
+        return source.parse::<f64>().ok().map(|milliseconds| milliseconds / 86_400_000.0);
+    }
+    let mut rest = source;
+    let (mut year, mut month, mut day) = (1970_i64, 1_i64, 1_i64);
+    let (mut hour, mut minute, mut second, mut millisecond) = (0_i64, 0_i64, 0_i64, 0_i64);
+    for part in &format.parts {
+        match part {
+            GanttDateFormatPart::Literal(literal) => rest = rest.strip_prefix(literal)?,
+            GanttDateFormatPart::Year4 => (year, rest) = take_number(rest, 4, 4)?,
+            GanttDateFormatPart::Year2 => {
+                let (short_year, next) = take_number(rest, 2, 2)?;
+                year = if short_year <= 68 { 2000 + short_year } else { 1900 + short_year };
+                rest = next;
+            }
+            GanttDateFormatPart::Month => (month, rest) = take_number(rest, 1, 2)?,
+            GanttDateFormatPart::Month2 => (month, rest) = take_number(rest, 2, 2)?,
+            GanttDateFormatPart::MonthShort | GanttDateFormatPart::MonthLong => {
+                let maximum = if matches!(part, GanttDateFormatPart::MonthShort) { 3 } else { 9 };
+                let length = rest.bytes().take(maximum).take_while(u8::is_ascii_alphabetic).count();
+                if length < 3 { return None; }
+                month = month_number(&rest[..length])?;
+                rest = &rest[length..];
+            }
+            GanttDateFormatPart::Day => (day, rest) = take_number(rest, 1, 2)?,
+            GanttDateFormatPart::Day2 => (day, rest) = take_number(rest, 2, 2)?,
+            GanttDateFormatPart::Hour24 => (hour, rest) = take_number(rest, 2, 2)?,
+            GanttDateFormatPart::Minute => (minute, rest) = take_number(rest, 2, 2)?,
+            GanttDateFormatPart::Second => (second, rest) = take_number(rest, 2, 2)?,
+            GanttDateFormatPart::Millisecond => (millisecond, rest) = take_number(rest, 3, 3)?,
+            GanttDateFormatPart::UnixSeconds | GanttDateFormatPart::UnixMilliseconds => return None,
+        }
+    }
+    if !rest.is_empty() { return None; }
     if !(1..=12).contains(&month) || !(1..=days_in_month(year, month)).contains(&day) {
         return None;
     }
-    Some(days_from_civil(year, month, day) as f64)
+    if hour > 23 || minute > 59 || second > 59 || millisecond > 999 { return None; }
+    let seconds = hour * 3600 + minute * 60 + second;
+    Some(days_from_civil(year, month, day) as f64
+        + seconds as f64 / 86_400.0 + millisecond as f64 / 86_400_000.0)
+}
+
+fn take_number(source: &str, minimum: usize, maximum: usize) -> Option<(i64, &str)> {
+    let length = source.bytes().take(maximum).take_while(u8::is_ascii_digit).count();
+    if length < minimum { return None; }
+    Some((source[..length].parse().ok()?, &source[length..]))
+}
+
+fn month_number(source: &str) -> Option<i64> {
+    const MONTHS: [&str; 12] = ["january", "february", "march", "april", "may", "june",
+        "july", "august", "september", "october", "november", "december"];
+    let lowercase = source.to_ascii_lowercase();
+    MONTHS.iter().position(|month| *month == lowercase || month.starts_with(&lowercase))
+        .map(|index| index as i64 + 1)
 }
 
 fn days_in_month(year: i64, month: i64) -> i64 {
@@ -311,7 +360,7 @@ fn gantt_task_elapsed_duration(
 ) -> f64 {
     match &task.end {
         Some(TaskEnd::Date(end_date)) => {
-            if let Some(end_date) = date_to_days(end_date) {
+            if let Some(end_date) = date_to_days(end_date, &diagram.date_format) {
                 return (end_date - start + f64::from(diagram.config.inclusive_end_dates)).max(0.0);
             }
         }
@@ -441,7 +490,7 @@ fn layout_gantt(
     for section in &diagram.sections {
         for task in &section.tasks {
             if let TaskStart::Date(ref ds) = task.start {
-                if let Some(d) = date_to_days(ds) {
+                if let Some(d) = date_to_days(ds, &diagram.date_format) {
                     starts.insert(task.id.clone(), d);
                 }
             }
@@ -819,7 +868,7 @@ mod tests {
                 title: Some("Project".into()),
                 accessibility_title: None,
                 accessibility_description: None,
-                date_format: "YYYY-MM-DD".into(),
+                date_format: GanttDateFormat::default(),
                 config: GanttConfig::default(),
                 sections: vec![GanttSection {
                     label: Some("Phase 1".into()),
@@ -880,7 +929,7 @@ mod tests {
 
     #[test]
     fn version_exists() {
-        assert_eq!(crate::VERSION, "0.22.0");
+        assert_eq!(crate::VERSION, "0.23.0");
     }
 
     #[test]
@@ -991,6 +1040,38 @@ mod tests {
         }).collect::<Vec<_>>();
         assert!(labels.len() > 2);
         assert!(labels[0].contains('/'));
+    }
+
+    #[test]
+    fn gantt_layout_resolves_typed_non_iso_dates_and_times() {
+        let mut diagram = simple_gantt();
+        let TemporalBody::Gantt(gantt) = &mut diagram.body else { unreachable!() };
+        gantt.date_format = GanttDateFormat {
+            source: "DD MMM YYYY HH:mm".into(),
+            parts: vec![GanttDateFormatPart::Day2, GanttDateFormatPart::Literal(" ".into()),
+                GanttDateFormatPart::MonthShort, GanttDateFormatPart::Literal(" ".into()),
+                GanttDateFormatPart::Year4, GanttDateFormatPart::Literal(" ".into()),
+                GanttDateFormatPart::Hour24, GanttDateFormatPart::Literal(":".into()),
+                GanttDateFormatPart::Minute],
+        };
+        gantt.sections[0].tasks[0].start = TaskStart::Date("02 Jan 2026 06:00".into());
+        gantt.sections[0].tasks[0].end = Some(TaskEnd::Date("02 Jan 2026 18:00".into()));
+        gantt.sections[0].tasks[1].start = TaskStart::Date("03 Jan 2026 06:00".into());
+        gantt.sections[0].tasks[1].duration_days = 0.5;
+        let layout = layout_temporal_diagram(&diagram, 800.0);
+        let widths = layout.items.iter().filter_map(|item| match item {
+            LayoutedTemporalItem::TaskBar { width, .. } => Some(*width), _ => None,
+        }).collect::<Vec<_>>();
+        assert_eq!(widths.len(), 2);
+        assert!((widths[0] - widths[1]).abs() < 0.01);
+    }
+
+    #[test]
+    fn gantt_layout_resolves_unix_millisecond_dates() {
+        let format = GanttDateFormat { source: "x".into(),
+            parts: vec![GanttDateFormatPart::UnixMilliseconds] };
+        assert_eq!(date_to_days("0", &format), Some(0.0));
+        assert_eq!(date_to_days("86400000", &format), Some(1.0));
     }
 
     #[test]

@@ -529,7 +529,7 @@ fn token_name(token: &Token) -> &str {
 
 use diagram_ir::{
     Axis, AxisKind, ChartDataPoint, ChartDiagram, ChartKind, ChartOrientation, ChartSeries,
-    Compartment, CompartmentKind, GanttConfig, GanttDiagram, GanttSection, GanttTask, GitBranch, GitCommitType,
+    Compartment, CompartmentKind, GanttConfig, GanttDateFormat, GanttDateFormatPart, GanttDiagram, GanttSection, GanttTask, GitBranch, GitCommitType,
     GitDiagram, GitEvent, JourneyConfig, JourneyDiagram, JourneySection, JourneyTask, PieSlice,
     QuadrantConfig, QuadrantPoint, RelKind, RequirementElementMetadata, RequirementKind,
     RequirementMetadata, RequirementRisk, RequirementVerifyMethod, SankeyFlow, SankeyNode,
@@ -5940,7 +5940,7 @@ pub fn parse_gantt(source: &str) -> Result<GanttDiagram, ParseError> {
         line: 1,
         col: 1,
     })?;
-    let mut date_format = "YYYY-MM-DD".to_string();
+    let mut date_format = GanttDateFormat::default();
     let mut title = None;
     let mut accessibility_title = None;
     let mut accessibility_description = None;
@@ -5967,7 +5967,7 @@ pub fn parse_gantt(source: &str) -> Result<GanttDiagram, ParseError> {
                 accessibility_description = Some(token.value[open + 1..close].trim().to_string());
             }
             Some("DATE_FORMAT_STATEMENT") => {
-                date_format = token.value["dateFormat".len()..].trim().to_string();
+                date_format = parse_gantt_date_format(&token, token.value["dateFormat".len()..].trim())?;
             }
             Some("AXIS_FORMAT_STATEMENT") => {
                 config.axis_format = Some(gantt_statement_value(&token, "axisFormat"));
@@ -6006,6 +6006,7 @@ pub fn parse_gantt(source: &str) -> Result<GanttDiagram, ParseError> {
                     &token,
                     previous_task_id.as_deref(),
                     &mut generated_task_count,
+                    &date_format,
                 )?;
                 previous_task_id = Some(task.id.clone());
                 let sec = current_section.get_or_insert_with(|| GanttSection {
@@ -6033,6 +6034,91 @@ pub fn parse_gantt(source: &str) -> Result<GanttDiagram, ParseError> {
         config,
         sections,
     })
+}
+
+fn parse_gantt_date_format(token: &Token, source: &str) -> Result<GanttDateFormat, ParseError> {
+    if source.is_empty() { return Err(token_error(token, "Gantt dateFormat cannot be empty")); }
+    let mut parts = Vec::new();
+    let mut index = 0;
+    while index < source.len() {
+        let remaining = &source[index..];
+        if let Some(literal) = remaining.strip_prefix('[') {
+            let close = literal.find(']').ok_or_else(|| token_error(token, "unterminated Gantt dateFormat literal"))?;
+            parts.push(GanttDateFormatPart::Literal(literal[..close].to_string()));
+            index += close + 2;
+            continue;
+        }
+        let known = [
+            ("YYYY", GanttDateFormatPart::Year4), ("MMMM", GanttDateFormatPart::MonthLong),
+            ("MMM", GanttDateFormatPart::MonthShort), ("SSS", GanttDateFormatPart::Millisecond),
+            ("YY", GanttDateFormatPart::Year2), ("MM", GanttDateFormatPart::Month2),
+            ("DD", GanttDateFormatPart::Day2), ("HH", GanttDateFormatPart::Hour24),
+            ("mm", GanttDateFormatPart::Minute), ("ss", GanttDateFormatPart::Second),
+            ("M", GanttDateFormatPart::Month), ("D", GanttDateFormatPart::Day),
+            ("X", GanttDateFormatPart::UnixSeconds), ("x", GanttDateFormatPart::UnixMilliseconds),
+        ];
+        if let Some((name, part)) = known.into_iter().find(|(name, _)| remaining.starts_with(name)) {
+            parts.push(part);
+            index += name.len();
+            continue;
+        }
+        let character = remaining.chars().next().expect("index is within source");
+        if character.is_ascii_alphabetic() {
+            return Err(token_error(token, format!("unsupported Gantt dateFormat token starting at {remaining:?}")));
+        }
+        match parts.last_mut() {
+            Some(GanttDateFormatPart::Literal(literal)) => literal.push(character),
+            _ => parts.push(GanttDateFormatPart::Literal(character.to_string())),
+        }
+        index += character.len_utf8();
+    }
+    let timestamp_parts = parts.iter().filter(|part| matches!(part,
+        GanttDateFormatPart::UnixSeconds | GanttDateFormatPart::UnixMilliseconds)).count();
+    if timestamp_parts > 0 && parts.len() != 1 {
+        return Err(token_error(token, "Gantt Unix timestamp formats cannot be combined"));
+    }
+    Ok(GanttDateFormat { source: source.to_string(), parts })
+}
+
+fn gantt_date_matches_format(value: &str, format: &GanttDateFormat) -> bool {
+    let mut rest = value;
+    for part in &format.parts {
+        let consumed = match part {
+            GanttDateFormatPart::Literal(literal) => {
+                let Some(next) = rest.strip_prefix(literal) else { return false };
+                rest = next;
+                continue;
+            }
+            GanttDateFormatPart::Year4 => consume_digits(rest, 4, 4),
+            GanttDateFormatPart::Year2 => consume_digits(rest, 2, 2),
+            GanttDateFormatPart::Month | GanttDateFormatPart::Day => consume_digits(rest, 1, 2),
+            GanttDateFormatPart::Month2 | GanttDateFormatPart::Day2 | GanttDateFormatPart::Hour24
+                | GanttDateFormatPart::Minute | GanttDateFormatPart::Second => consume_digits(rest, 2, 2),
+            GanttDateFormatPart::Millisecond => consume_digits(rest, 3, 3),
+            GanttDateFormatPart::MonthShort => consume_letters(rest, 3, 3),
+            GanttDateFormatPart::MonthLong => consume_letters(rest, 3, 9),
+            GanttDateFormatPart::UnixSeconds | GanttDateFormatPart::UnixMilliseconds => consume_signed_digits(rest),
+        };
+        let Some(length) = consumed else { return false };
+        rest = &rest[length..];
+    }
+    rest.is_empty()
+}
+
+fn consume_digits(value: &str, minimum: usize, maximum: usize) -> Option<usize> {
+    let count = value.bytes().take(maximum).take_while(u8::is_ascii_digit).count();
+    (count >= minimum).then_some(count)
+}
+
+fn consume_letters(value: &str, minimum: usize, maximum: usize) -> Option<usize> {
+    let count = value.bytes().take(maximum).take_while(u8::is_ascii_alphabetic).count();
+    (count >= minimum).then_some(count)
+}
+
+fn consume_signed_digits(value: &str) -> Option<usize> {
+    let sign = usize::from(value.starts_with(['+', '-']));
+    let digits = value[sign..].bytes().take_while(u8::is_ascii_digit).count();
+    (digits > 0).then_some(sign + digits)
 }
 
 fn validate_gantt_dependencies(sections: &[GanttSection]) -> Result<(), ParseError> {
@@ -6193,6 +6279,7 @@ fn parse_gantt_task(
     token: &Token,
     previous_task_id: Option<&str>,
     generated_task_count: &mut usize,
+    date_format: &GanttDateFormat,
 ) -> Result<GanttTask, ParseError> {
     let colon = token
         .value
@@ -6234,8 +6321,8 @@ fn parse_gantt_task(
         [id, start, end] => ((*id).to_string(), (*start).to_string(), *end),
         _ => return Err(token_error(token, "invalid Gantt task field count")),
     };
-    let start = parse_gantt_task_start(token, &start_data)?;
-    let (duration_days, end) = parse_gantt_task_end(token, end_data)?;
+    let start = parse_gantt_task_start(token, &start_data, date_format)?;
+    let (duration_days, end) = parse_gantt_task_end(token, end_data, date_format)?;
 
     Ok(GanttTask {
         id,
@@ -6266,32 +6353,35 @@ fn apply_gantt_task_tag(value: &str, tags: &mut GanttTaskTags) -> bool {
     true
 }
 
-fn parse_gantt_task_start(token: &Token, value: &str) -> Result<TaskStart, ParseError> {
+fn parse_gantt_task_start(token: &Token, value: &str, date_format: &GanttDateFormat) -> Result<TaskStart, ParseError> {
     if let Some(ids) = value.strip_prefix("after ") {
         let dependencies = gantt_dependency_ids(ids);
         if dependencies.is_empty() {
             return Err(token_error(token, "Gantt after requires at least one task id"));
         }
         Ok(TaskStart::After(dependencies))
-    } else {
+    } else if gantt_date_matches_format(value, date_format) {
         Ok(TaskStart::Date(value.to_string()))
+    } else {
+        Err(token_error(token, "Gantt task start does not match dateFormat"))
     }
 }
 
 fn parse_gantt_task_end(
     token: &Token,
     value: &str,
+    date_format: &GanttDateFormat,
 ) -> Result<(f64, Option<TaskEnd>), ParseError> {
-    if let Some(duration) = parse_duration(value).filter(|duration| *duration >= 0.0) {
-        Ok((duration, None))
-    } else if let Some(ids) = value.strip_prefix("until ") {
+    if let Some(ids) = value.strip_prefix("until ") {
         let dependencies = gantt_dependency_ids(ids);
         if dependencies.is_empty() {
             return Err(token_error(token, "Gantt until requires at least one task id"));
         }
         Ok((0.0, Some(TaskEnd::Until(dependencies))))
-    } else if looks_like_gantt_date(value) {
+    } else if gantt_date_matches_format(value, date_format) {
         Ok((0.0, Some(TaskEnd::Date(value.to_string()))))
+    } else if let Some(duration) = parse_duration(value).filter(|duration| *duration >= 0.0) {
+        Ok((duration, None))
     } else {
         Err(token_error(token, "invalid Gantt task duration or end date"))
     }
@@ -6303,20 +6393,6 @@ fn gantt_dependency_ids(value: &str) -> Vec<String> {
         .filter(|id| !id.is_empty())
         .map(str::to_string)
         .collect()
-}
-
-fn looks_like_gantt_date(value: &str) -> bool {
-    let mut parts = value.split('-');
-    matches!(
-        (parts.next(), parts.next(), parts.next(), parts.next()),
-        (Some(year), Some(month), Some(day), None)
-            if year.len() == 4
-                && month.len() == 2
-                && day.len() == 2
-                && year.chars().all(|c| c.is_ascii_digit())
-                && month.chars().all(|c| c.is_ascii_digit())
-                && day.chars().all(|c| c.is_ascii_digit())
-    )
 }
 
 fn parse_duration(s: &str) -> Option<f64> {
@@ -6946,6 +7022,30 @@ Rel(customer, web, \"Uses\", \"HTTPS\")";
                 ..GanttTaskTags::default()
             }
         );
+    }
+
+    #[test]
+    fn gantt_compiles_and_enforces_non_iso_date_formats() {
+        let diagram = parse_gantt(
+            "gantt\ndateFormat DD/MM/YYYY HH:mm\nsection Build\nTask :t1, 02/01/2026 06:30, 03/01/2026 18:45",
+        ).unwrap();
+        assert_eq!(diagram.date_format.source, "DD/MM/YYYY HH:mm");
+        assert!(diagram.date_format.parts.contains(&GanttDateFormatPart::Hour24));
+        assert!(matches!(diagram.sections[0].tasks[0].end,
+            Some(TaskEnd::Date(ref value)) if value == "03/01/2026 18:45"));
+        assert!(parse_gantt("gantt\ndateFormat DD/MM/YYYY\nTask :t1, 2026-01-02, 1d")
+            .unwrap_err().message.contains("does not match dateFormat"));
+    }
+
+    #[test]
+    fn gantt_compiles_text_month_literals_and_unix_formats() {
+        let named = parse_gantt(
+            "gantt\ndateFormat D MMMM YYYY [at] HH:mm:ss.SSS\nTask :t1, 2 January 2026 at 04:05:06.007, 1d",
+        ).unwrap();
+        assert!(named.date_format.parts.contains(&GanttDateFormatPart::MonthLong));
+        let unix = parse_gantt("gantt\ndateFormat X\nTask :t1, 1767225600, 1767312000").unwrap();
+        assert!(matches!(unix.sections[0].tasks[0].end, Some(TaskEnd::Date(_))));
+        assert!(parse_gantt("gantt\ndateFormat YYYY-QQ\nTask :t1, 2026-01, 1d").is_err());
     }
 
     #[test]

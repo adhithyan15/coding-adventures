@@ -1103,11 +1103,51 @@ pub struct GanttConfig {
 }
 
 #[derive(Clone, Debug, PartialEq)]
+pub enum GanttDateFormatPart {
+    Literal(String),
+    Year4,
+    Year2,
+    Month,
+    Month2,
+    MonthShort,
+    MonthLong,
+    Day,
+    Day2,
+    Hour24,
+    Minute,
+    Second,
+    Millisecond,
+    UnixSeconds,
+    UnixMilliseconds,
+}
+
+#[derive(Clone, Debug, PartialEq)]
+pub struct GanttDateFormat {
+    pub source: String,
+    pub parts: Vec<GanttDateFormatPart>,
+}
+
+impl Default for GanttDateFormat {
+    fn default() -> Self {
+        Self {
+            source: "YYYY-MM-DD".into(),
+            parts: vec![
+                GanttDateFormatPart::Year4,
+                GanttDateFormatPart::Literal("-".into()),
+                GanttDateFormatPart::Month2,
+                GanttDateFormatPart::Literal("-".into()),
+                GanttDateFormatPart::Day2,
+            ],
+        }
+    }
+}
+
+#[derive(Clone, Debug, PartialEq)]
 pub struct GanttDiagram {
     pub title: Option<String>,
     pub accessibility_title: Option<String>,
     pub accessibility_description: Option<String>,
-    pub date_format: String,
+    pub date_format: GanttDateFormat,
     pub config: GanttConfig,
     pub sections: Vec<GanttSection>,
 }
@@ -1584,7 +1624,7 @@ mod tests {
                 title: None,
                 accessibility_title: None,
                 accessibility_description: None,
-                date_format: "YYYY-MM-DD".into(),
+                date_format: GanttDateFormat::default(),
                 config: GanttConfig::default(),
                 sections: vec![GanttSection {
                     label: None,

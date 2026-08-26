@@ -1,5 +1,9 @@
 # Changelog
 
+## 0.23.0
+
+- Resolve typed Gantt calendar, textual-month, time-of-day, and Unix timestamp input formats into backend-neutral temporal geometry.
+
 ## 0.22.0
 
 - Preserve combined Gantt task tags through layout and lower `vert` tasks to full-height markers without consuming task rows.

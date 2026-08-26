@@ -61,9 +61,11 @@ stroke configuration resolves into backend-neutral path geometry. Multi-task
 earliest referenced start; unknown IDs and cyclic start graphs fail parsing.
 ID-less declarations receive pinned `taskN` IDs, and one-field task data starts
 after the preceding task even across sections. Repeated task tags retain active,
-done, critical, milestone, and vertical-marker semantics independently. Gantt
-remains partial while full date-format support plus the complete pinned parser
-and visual corpus are still outstanding.
+done, critical, milestone, and vertical-marker semantics independently. Numeric
+calendar formats, short and long month names, bracketed literals, time-of-day
+precision, and Unix second/millisecond formats compile into typed IR and drive
+layout geometry. Gantt remains partial while timezone/locale date tokens plus
+the complete pinned parser and visual corpus are still outstanding.
 
 Each supported family lowers into the shared Diagram IR and can continue
 through its family layout package:

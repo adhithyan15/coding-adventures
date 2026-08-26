@@ -781,9 +781,10 @@ line "Target" [35, 50, 68, 82]"##,
     #[test]
     fn render_mermaid_gantt_to_png() {
         let gantt = parse_gantt(
-            "gantt\naccTitle: Native Gantt\naccDescr: Gantt rendered through Metal\ntitle Release timeline\ndateFormat YYYY-MM-DD\naxisFormat %m/%d\ntickInterval 1day\ninclusiveEndDates\ntopAxis\ntodayMarker off\nexcludes weekends\nincludes 2026-01-03\nsection Build\nParser :done, parser, 2026-01-01, 2026-01-04\nclick parser href \"https://example.com/parser\" call inspectTask(parser)\nWindow :window, 2025-12-29, until parser docs\nPaint :crit, active, paint, after parser docs, 3d\nsection Ship\nDocs :docs, 2026-01-02, 2d\nReview :after docs, 1d\nPackage :active, 1d\nDeadline :vert, deadline, 2026-01-06, 0d\nRelease :crit, done, milestone, release, after task2, 0d",
+            "gantt\naccTitle: Native Gantt\naccDescr: Gantt rendered through Metal\ntitle Release timeline\ndateFormat DD/MM/YYYY HH:mm\naxisFormat %m/%d\ntickInterval 1day\ninclusiveEndDates\ntopAxis\ntodayMarker off\nexcludes weekends\nincludes 2026-01-03\nsection Build\nParser :done, parser, 01/01/2026 06:00, 04/01/2026 18:00\nclick parser href \"https://example.com/parser\" call inspectTask(parser)\nWindow :window, 29/12/2025 06:00, until parser docs\nPaint :crit, active, paint, after parser docs, 3d\nsection Ship\nDocs :docs, 02/01/2026 06:00, 2d\nReview :after docs, 1d\nPackage :active, 1d\nDeadline :vert, deadline, 06/01/2026 12:00, 0d\nRelease :crit, done, milestone, release, after task2, 0d",
         )
         .expect("Mermaid Gantt parse failed");
+        assert_eq!(gantt.date_format.source, "DD/MM/YYYY HH:mm");
         let temporal = TemporalDiagram {
             kind: TemporalKind::Gantt,
             title: gantt.title.clone(),

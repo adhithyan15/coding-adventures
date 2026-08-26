@@ -1,5 +1,9 @@
 # Changelog — diagram-to-paint
 
+## 0.77.0
+
+- Validate non-ISO Gantt date/time input through typed temporal layout, backend-neutral Paint instructions, and Metal-to-PNG rendering.
+
 ## 0.76.0
 
 - Paint combined active/done/critical Gantt styling and full-height vertical markers through backend-neutral instructions and Metal.
