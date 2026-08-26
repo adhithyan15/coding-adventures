@@ -105,6 +105,13 @@ pub enum PipelineEmitError {
     UnsafeSlotName(String),
     UnsafeEmitName(String),
     UnknownPrimitive(String),
+    /// #13052: a `HostLink.href` literal uses an explicit URI scheme
+    /// outside the `http`/`https`/`mailto` allowlist, checked when
+    /// `external` is not `false` (the path a real `launchUrl` call
+    /// will eventually use -- currently still a `/* TODO: launchUrl(...)
+    /// */` comment, but this is checked preventatively ahead of that
+    /// landing rather than waiting for it to become a live gap).
+    UnsafeUriScheme(String),
 }
 
 impl std::fmt::Display for PipelineEmitError {
@@ -126,6 +133,10 @@ impl std::fmt::Display for PipelineEmitError {
             PipelineEmitError::UnknownPrimitive(t) => write!(
                 f,
                 "moslayout primitive '{t}' is not yet supported by the Flutter pipeline emitter"
+            ),
+            PipelineEmitError::UnsafeUriScheme(href) => write!(
+                f,
+                "HostLink href {href:?} does not use an allowed URI scheme (http, https, mailto)"
             ),
         }
     }
@@ -4340,6 +4351,48 @@ fn emit_host_table(
 /// list before being interpolated into comments, so a malicious
 /// keyword like `false*/dispatch(evil())/*` can't terminate the
 /// `/* ... */` block-comment early.
+/// #13052: does `href` carry an explicit URI scheme outside the
+/// `http`/`https`/`mailto` allowlist? A relative reference (no scheme
+/// at all -- `"#"`, `"/about"`) returns `false`. Only a *present,
+/// disallowed* scheme (`javascript:`, `data:`, `intent:`, a custom
+/// protocol handler, ...) returns `true`. A colon appearing after a
+/// `/`, `?`, or `#` is data, not a scheme separator.
+///
+/// Security-review hardening: normalizes exactly like the WHATWG URL
+/// parser does before looking for a scheme -- trims leading/trailing
+/// C0-control-or-space and strips every embedded tab/CR/LF. Without
+/// this, `" javascript:alert(1)"` or `"java\tscript:alert(1)"` fails
+/// the alphabetic-first-character check below and gets classified as
+/// "no scheme, therefore a safe relative reference." A first review
+/// pass of #13052 missed this; caught and fixed in the same PR.
+fn has_disallowed_uri_scheme(href: &str) -> bool {
+    let normalized: String = href
+        .trim_matches(|c: char| (c as u32) <= 0x20)
+        .chars()
+        .filter(|c| !matches!(c, '\t' | '\r' | '\n'))
+        .collect();
+    let href = normalized.as_str();
+    let Some(colon) = href.find(':') else {
+        return false;
+    };
+    let prefix = &href[..colon];
+    if prefix.is_empty() || prefix.contains(['/', '?', '#']) {
+        return false;
+    }
+    let mut chars = prefix.chars();
+    let Some(first) = chars.next() else {
+        return false;
+    };
+    if !first.is_ascii_alphabetic() {
+        return false;
+    }
+    if !chars.all(|c| c.is_ascii_alphanumeric() || c == '+' || c == '-' || c == '.') {
+        return false;
+    }
+    const ALLOWED: [&str; 3] = ["http", "https", "mailto"];
+    !ALLOWED.iter().any(|s| s.eq_ignore_ascii_case(prefix))
+}
+
 fn emit_host_link(
     node: &LayoutNode,
     indent: usize,
@@ -4349,13 +4402,28 @@ fn emit_host_link(
 ) -> Result<String, PipelineEmitError> {
     let pad = " ".repeat(indent);
 
+    // external — keyword allow-list. Defaults to `true` (open in OS
+    // browser via url_launcher). `false` means in-app routing; host
+    // handles via onActivate, no `launchUrl` comment is emitted.
+    let external = find_keyword_prop(node, "external")
+        .map(|v| !matches!(v, "false")) // anything other than "false" → true
+        .unwrap_or(true);
+
     // href — slot ref takes priority over literal (slot refs are
     // identifiers we validated upstream; literals get escape_dart_string).
+    // #13052: reject a literal that carries an explicit disallowed
+    // scheme when `external` can reach the eventual `launchUrl` call
+    // -- no escaping makes an unsafe scheme safe. `external: false`
+    // never reaches that call (dispatch-only), so a routing
+    // placeholder like `href: "#"` stays valid there.
     let href_expr: String = if let Some(slot) = find_slot_ref_prop(node, "href") {
         let camel = to_camel_case_first_lower(slot);
         validate_slot_or_field_name(&camel)?;
         camel
     } else if let Some(s) = find_string_prop(node, "href") {
+        if external && has_disallowed_uri_scheme(s) {
+            return Err(PipelineEmitError::UnsafeUriScheme(s.to_string()));
+        }
         format!("\"{}\"", escape_dart_string(s))
     } else {
         "\"\"".to_string()
@@ -4375,13 +4443,6 @@ fn emit_host_link(
     } else {
         "Text(\"\")".to_string()
     };
-
-    // external — keyword allow-list. Defaults to `true` (open in OS
-    // browser via url_launcher). `false` means in-app routing; host
-    // handles via onActivate, no `launchUrl` comment is emitted.
-    let external = find_keyword_prop(node, "external")
-        .map(|v| !matches!(v, "false")) // anything other than "false" → true
-        .unwrap_or(true);
 
     // target — keyword allow-list (defensive). Maps to comment-only
     // hint today; Flutter's url_launcher mode is host-controlled.
@@ -6591,6 +6652,138 @@ mod tests {
         assert!(
             out.contains("Text(\"Anthropic\")"),
             "expected `Text(\"Anthropic\")`, got:\n{out}"
+        );
+    }
+
+    /// #13052: a literal `href` carrying an explicit disallowed URI
+    /// scheme is rejected at compile time when `external` is not
+    /// `false` -- the path a real `launchUrl` call will eventually
+    /// use (currently still a TODO comment, checked preventatively).
+    #[test]
+    fn host_link_disallowed_scheme_href_is_rejected() {
+        for hostile in [
+            "javascript:alert(1)",
+            "data:text/html,<script>alert(1)</script>",
+            "intent:#Intent;action=android.intent.action.VIEW;end",
+            "file:///etc/passwd",
+        ] {
+            let m = component("X", vec![], vec![]);
+            let l = layout(
+                "X",
+                node_with(
+                    "HostLink",
+                    vec![LayoutProp {
+                        name: "href".into(),
+                        value: LayoutPropValue::String(hostile.to_string()),
+                    }],
+                    vec![],
+                ),
+            );
+            let err = from_pipeline(&m, &l, &empty_style("X")).unwrap_err();
+            assert!(
+                matches!(err, PipelineEmitError::UnsafeUriScheme(ref h) if h == hostile),
+                "expected UnsafeUriScheme for {hostile:?}, got: {err:?}"
+            );
+        }
+    }
+
+    /// #13052 security-review finding: a scheme hidden behind leading
+    /// whitespace or an embedded tab/CR/LF must still be rejected --
+    /// a naive scan sees no alphabetic first character and
+    /// misclassifies it as "no scheme, therefore safe," but a real
+    /// consumer normalizes that whitespace away before parsing the
+    /// scheme, so it's really a disallowed scheme.
+    #[test]
+    fn host_link_scheme_hidden_by_whitespace_is_still_rejected() {
+        for hostile in [
+            " javascript:alert(1)",
+            "java\tscript:alert(1)",
+            "java\nscript:alert(1)",
+            "\tjavascript:alert(1)",
+        ] {
+            let m = component("X", vec![], vec![]);
+            let l = layout(
+                "X",
+                node_with(
+                    "HostLink",
+                    vec![LayoutProp {
+                        name: "href".into(),
+                        value: LayoutPropValue::String(hostile.to_string()),
+                    }],
+                    vec![],
+                ),
+            );
+            let err = from_pipeline(&m, &l, &empty_style("X")).unwrap_err();
+            assert!(
+                matches!(err, PipelineEmitError::UnsafeUriScheme(ref h) if h == hostile),
+                "expected UnsafeUriScheme for whitespace-obscured {hostile:?}, got: {err:?}"
+            );
+        }
+    }
+
+    /// #13052: allowed schemes and relative references (no scheme at
+    /// all -- the common in-app-routing shape) stay valid.
+    #[test]
+    fn host_link_allowed_or_relative_href_still_compiles() {
+        for safe in [
+            "http://example.com",
+            "https://example.com",
+            "HTTPS://example.com",
+            "mailto:hello@example.com",
+            "#",
+            "/about",
+        ] {
+            let m = component("X", vec![], vec![]);
+            let l = layout(
+                "X",
+                node_with(
+                    "HostLink",
+                    vec![LayoutProp {
+                        name: "href".into(),
+                        value: LayoutPropValue::String(safe.to_string()),
+                    }],
+                    vec![],
+                ),
+            );
+            let out = from_pipeline(&m, &l, &empty_style("X")).unwrap().output;
+            assert!(
+                out.contains(&format!("Uri.parse(\"{safe}\")")),
+                "expected {safe:?} to still compile, got:\n{out}"
+            );
+        }
+    }
+
+    /// #13052: a disallowed scheme with `external: false` stays valid
+    /// -- that path never reaches the eventual `launchUrl` call (it's
+    /// dispatch-only), matching the native-widget backends' scoping.
+    #[test]
+    fn host_link_disallowed_scheme_href_stays_valid_with_external_false() {
+        let m = component("X", vec![], vec![emit("onNavigate", vec![])]);
+        let l = layout(
+            "X",
+            node_with(
+                "HostLink",
+                vec![
+                    LayoutProp {
+                        name: "href".into(),
+                        value: LayoutPropValue::String("javascript:alert(1)".into()),
+                    },
+                    LayoutProp {
+                        name: "external".into(),
+                        value: LayoutPropValue::Keyword("false".into()),
+                    },
+                    LayoutProp {
+                        name: "onActivate".into(),
+                        value: LayoutPropValue::EmitRef("onNavigate".into()),
+                    },
+                ],
+                vec![],
+            ),
+        );
+        let r = from_pipeline(&m, &l, &empty_style("X"));
+        assert!(
+            r.is_ok(),
+            "expected a disallowed scheme with external:false to compile, got: {r:?}"
         );
     }
 
