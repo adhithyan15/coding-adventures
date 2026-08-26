@@ -16,8 +16,8 @@ mosstyle base styling:
 | UI29 primitive | XAML lowering |
 |---|---|
 | `Box`       | `<Border>` (or `<ContentPresenter>` when no padding/background) |
-| `Row`       | `<StackPanel Orientation="Horizontal">` |
-| `Column`    | `<StackPanel Orientation="Vertical">` |
+| `Row`       | `<Grid>` + one `ColumnDefinition` per child, with flex sizing (§3.1) |
+| `Column`    | `<Grid>` + one `RowDefinition` per child, with flex sizing (§3.1) |
 | `Stack`     | `<Grid>` (single cell, all children stack on z-axis) |
 | `Text`      | `<TextBlock>` |
 | `Image`     | `<Image Source="..."/>` |
