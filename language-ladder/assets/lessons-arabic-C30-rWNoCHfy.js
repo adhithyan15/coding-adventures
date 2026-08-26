@@ -1,0 +1,1707 @@
+import{t as e}from"./rolldown-runtime-DK3Fl9T5.js";var t=e({default:()=>n}),n=`---
+schema_version: 2
+id: AR-C30-akala
+spine_node: SPINE-SAY-WHAT-I-DO
+sequence: 770
+chapter: 30
+type: word
+headword: أكل
+gloss: "he ate" — no new letters, no English cousin, and a Hebrew twin close enough to hear; the sixth verb, closing the set
+concept_tag: VERB-EAT
+romanization: akala
+prerequisites: [AR-C30-arafa]
+sounds: [alif-hamza, rtl-known-letters]
+roots: [a-k-l]
+etymology_hook: "أكل (akala, 'he ate') sits on the plain root أ-ك-ل and yields أَكْل (akl, 'food'), مَأْكُولات (maʾkūlāt, 'foodstuffs') and آكِل (ākil, 'an eater', where alif and hamza fuse into the long آ); it has NO English cousin — Arabic and English are unrelated — but its Hebrew twin אָכַל (akhal, 'he ate') is the same three consonants, the family resemblance already met in salām/shalom and yad/yad"
+duration:
+  max_seconds: 240
+requires:
+  knowledge: [AR-CONCEPT-C30-ARAFA-02]
+introduces:
+  knowledge: [AR-CONCEPT-C30-AKALA-01, AR-CONCEPT-C30-AKALA-02]
+practises:
+  knowledge: [AR-CONCEPT-C30-AKALA-01, AR-CONCEPT-C30-AKALA-02, AR-CONCEPT-C30-ARAFA-02]
+skills: [listening, speaking, reading]
+modes: [interpretive, interpersonal, presentational, mediation]
+strands: [meaning-input, meaning-output, language-focus]
+register: neutral
+variety: modern-standard-arabic
+reviews_of: [AR-C30-arafa, AR-C28-dhahaba]
+---
+
+# أكل (akala) — "he ate," and an honest word about cousins
+
+## Warm-up
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+[PAUSE 2s] The sixth and last verb of the set — and the one that needs no
+new letters at all, which is what a course built on words rather than
+alphabets eventually earns you.
+
+## You'll want to know — The letters in this word
+<!-- hl-knowledge: introduces=[AR-CONCEPT-C30-AKALA-01]; assesses=[] -->
+
+**Nothing new.** Every shape here has been taught already.
+
+- **أ** — *alif* with **hamza** riding on top, the glottal catch, opening
+  the word with a clean *a*.
+- **ك** (*kāf*) — the angular *k*.
+- **ل** (*lām*) — the tall hook.
+
+Right to left: *a-ka-la*. Six chapters ago this word would have needed a
+lesson of its own just to be sounded out; now it reads itself.
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[AR-CONCEPT-C30-AKALA-02]; assesses=[] -->
+
+**أَكَلَ** (*akala*) = "**he ate**." Root **أ-ك-ل**, and the plain *faʿala*
+shape once more. Its family runs through the patterns already collected:
+
+- **أَكْل** (*akl*) — "**eating**," and so "**food**."
+- **مَأْكُولات** (*maʾkūlāt*) — "**foodstuffs**," the **done-to** shape
+  from *maqūl*, made plural: the things that get eaten.
+- **آكِل** (*ākil*) — "an **eater**," the **doer** shape, where the root's
+  own *alif* and the pattern's *alif* fuse into the long **آ**.
+
+Now the honest part, because a false cousin is worse than none:
+**there is no English relative of this word.** Arabic and English are not
+related languages, and almost none of these six verbs has an English
+descendant — what English took from Arabic were nouns for goods and
+sciences, not everyday verbs. What *akala* does have is a **Semitic** twin:
+Hebrew **אָכַל** (*akhal*), "he ate," the same three consonants in the same
+order, with the Hebrew noun *okhel*, "food," standing beside Arabic *akl* —
+the same family resemblance heard in *salām* and *shalom*, and in *yad* and
+*yad*.
+
+## Guided Practice
+<!-- hl-knowledge: introduces=[]; assesses=[AR-CONCEPT-C30-AKALA-01, AR-CONCEPT-C30-AKALA-02, AR-CONCEPT-C30-ARAFA-02] -->
+
+[PAUSE 1s]
+- [YOU SAY: "akala" — he ate — then "akl," food]
+- [YOU SAY: the two patterns — "ākil," an eater; "maʾkūlāt," foodstuffs]
+- [YOU SAY: the honest cousin — no English relative, but Hebrew "akhal"]
+- [YOU SAY: all six — dhahaba, jāʾa, qāla, raʾā, ʿarafa, akala]
+
+## Wrap-up Recall
+<!-- hl-knowledge: introduces=[]; assesses=[AR-CONCEPT-C30-AKALA-01, AR-CONCEPT-C30-AKALA-02, AR-CONCEPT-C30-ARAFA-02] -->
+
+[PAUSE 3s] What two pattern-shapes give **آكِل** and **مَأْكُولات**, and
+what do they mean? (**Doer** and **done-to** — "an eater" and "foodstuffs.")
+Does *akala* have an English cousin? (**No** — Arabic and English are
+unrelated; claiming one would be inventing it.) What is its Semitic twin?
+(**Hebrew אָכַל**, *akhal*, "he ate.")
+`,r=e({default:()=>i}),i=`---
+schema_version: 2
+id: AR-C30-arafa
+spine_node: SPINE-SAY-WHAT-I-DO
+sequence: 760
+chapter: 30
+type: word
+headword: عرف
+gloss: "he knew, he recognised" — one of Arabic's two words for knowing, whose root reached Spain and named a palace in Granada
+concept_tag: VERB-KNOW
+romanization: ʿarafa
+prerequisites: [AR-C29-raa]
+sounds: [faa, ayn-pharyngeal, rtl-known-letters]
+roots: [a-r-f]
+etymology_hook: "عرف (ʿarafa) is knowing a person or place — recognising — as against عَلِمَ (ʿalima), knowing a fact, a split Spanish and French also make and English does not; its root gives مَعْرِفة (maʿrifa, 'knowledge') and العَرِيف (al-ʿarīf, 'the one who knows'), which Spanish borrowed as alarife, 'master builder', and which is usually read inside the name of the Generalife palace in Granada"
+duration:
+  max_seconds: 240
+requires:
+  knowledge: []
+introduces:
+  knowledge: [AR-CONCEPT-C30-ARAFA-01, AR-CONCEPT-C30-ARAFA-02]
+practises:
+  knowledge: [AR-CONCEPT-C30-ARAFA-01, AR-CONCEPT-C30-ARAFA-02]
+skills: [listening, speaking, reading]
+modes: [interpretive, interpersonal, presentational, mediation]
+strands: [meaning-input, meaning-output, language-focus]
+register: neutral
+variety: modern-standard-arabic
+reviews_of: [AR-C29-raa]
+---
+
+# عرف (ʿarafa) — "he knew," and a root that crossed into Spain
+
+## Warm-up
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+[PAUSE 2s] Back to a plain, regular root after three weak ones — and to a
+word that split into two where English has only one.
+
+## You'll want to know — The letters in this word
+<!-- hl-knowledge: introduces=[AR-CONCEPT-C30-ARAFA-01]; assesses=[] -->
+
+One new letter, and it belongs to a family already half-known.
+
+- **ع** (*ʿayn*) — the throat-tightening sound with no English equal, met in
+  *ʿalaykum* and *ʿafwan*.
+- **ر** (*rāʾ*) — the tapped *r*, a non-joiner.
+- **ف** (*fāʾ*) — the new one: a small loop with a tail, carrying **one dot
+  above**, sounding like English *f*. Its partner is **ق** (*qāf*) from the
+  *qāla* lesson: mid-word the two bodies are the same shape, and only the
+  dots separate them — **one** dot for *f*, **two** for *q*. A fourth
+  dots-family.
+
+Right to left: *ʿayn*, *rāʾ*, *fāʾ* — *ʿa-ra-fa*.
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[AR-CONCEPT-C30-ARAFA-02]; assesses=[] -->
+
+**عَرَفَ** (*ʿarafa*) = "**he knew, he recognised**" — the plain *faʿala*
+shape, no weak letters, root **ع-ر-ف**. Its family:
+
+- **مَعْرِفة** (*maʿrifa*) — "**knowledge**," the *ma-* shape.
+- **عُرْف** (*ʿurf*) — "**custom**," what is commonly known.
+- **العَرِيف** (*al-ʿarīf*) — "**the one who knows**," the expert or
+  overseer. Spanish took the word in during the centuries of Arab rule and
+  keeps it as **alarife**, "master builder." The palace gardens above
+  Granada, the **Generalife**, are usually read as **جَنّة العَرِيف**
+  (*jannat al-ʿarīf*), "the garden of the ʿarīf" — though scholars disagree
+  about that second element, so treat it as the leading reading, not a
+  settled one.
+
+Arabic splits "know" in two. **عَرَفَ** is knowing a *person* or a *place* —
+recognising. Knowing a *fact* is a different verb, **عَلِمَ** (*ʿalima*).
+Spanish cuts the same way with *conocer* and *saber*, French with
+*connaître* and *savoir*; English collapses both into one word. That second
+root gives **عالِم** (*ʿālim*), "a scholar," whose plural **عُلَماء**
+(*ʿulamāʾ*) English borrowed as **ulema**.
+
+## Guided Practice
+<!-- hl-knowledge: introduces=[]; assesses=[AR-CONCEPT-C30-ARAFA-01, AR-CONCEPT-C30-ARAFA-02] -->
+
+[PAUSE 1s]
+- [YOU SAY: the dots — ف one dot, ق two dots, one body between them]
+- [YOU SAY: "ʿarafa" — he recognised — beside "ʿalima," he knew a fact]
+- [YOU SAY: the loan — al-ʿarīf, Spanish alarife, the Generalife in Granada]
+
+## Wrap-up Recall
+<!-- hl-knowledge: introduces=[]; assesses=[AR-CONCEPT-C30-ARAFA-01, AR-CONCEPT-C30-ARAFA-02] -->
+
+[PAUSE 3s] What tells **ف** and **ق** apart? (**The dots** — one above for
+*f*, two for *q*.) Which of Arabic's two "know" verbs is *ʿarafa*, and what
+languages make the same split? (**Recognising a person or place**, against
+*ʿalima* for a fact — as **Spanish** *conocer/saber* and **French**
+*connaître/savoir* do.) What Spanish word and what Granada palace carry
+**al-ʿarīf**? (**Alarife**, "master builder," and the **Generalife**.)
+`,a=e({default:()=>o}),o=`---
+schema_version: 2
+id: AR-C31-fahima
+spine_node: SPINE-SAY-WHAT-I-DO
+sequence: 780
+chapter: 31
+type: word
+headword: فهم
+gloss: "he understood" — the first verb whose middle vowel is not an a, marking it a state rather than a deed, and the done-to shape that turns it into the word for a concept
+concept_tag: VERB-UNDERSTAND
+romanization: fahima
+prerequisites: [AR-C30-akala]
+sounds: [waw, faa, rtl-known-letters]
+roots: [f-h-m]
+etymology_hook: "فهم (fahima, 'he understood') runs a-i-a rather than a-a-a — the فَعِلَ (faʿila) shape Arabic keeps for states rather than deeds — and its root ف-ه-م yields فَهْم (fahm, 'understanding') and مَفْهوم (mafhūm), the done-to shape met in mashkūr and maqūl, which as a noun is 'a concept', a thing that has been understood; English fathom is Germanic and no relative, and this root, like أكل, has no English cousin at all"
+duration:
+  max_seconds: 240
+requires:
+  knowledge: [AR-CONCEPT-C30-AKALA-02]
+introduces:
+  knowledge: [AR-CONCEPT-C31-FAHIMA-01, AR-CONCEPT-C31-FAHIMA-02]
+practises:
+  knowledge: [AR-CONCEPT-C31-FAHIMA-01, AR-CONCEPT-C31-FAHIMA-02, AR-CONCEPT-C30-AKALA-01, AR-CONCEPT-C30-AKALA-02, AR-CONCEPT-C30-ARAFA-01, AR-CONCEPT-C30-ARAFA-02]
+skills: [listening, speaking, reading]
+modes: [interpretive, interpersonal, presentational, mediation]
+strands: [meaning-input, meaning-output, language-focus]
+register: neutral
+variety: modern-standard-arabic
+reviews_of: [AR-C30-akala, AR-C30-arafa]
+---
+
+# فهم (fahima) — "he understood," and the vowel that makes a state
+
+## Warm-up
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+[PAUSE 2s] Six verbs so far, every one of them a deed. This one is not: it
+happens inside a person — and Arabic marks that in the vowels.
+
+## The letters in this word
+<!-- hl-knowledge: introduces=[AR-CONCEPT-C31-FAHIMA-01]; assesses=[] -->
+
+Nothing new in **فهم** itself: **ف** (*fāʾ*, one dot), **ه** (*hāʾ*) and
+**م** (*mīm*), with *fāʾ*'s two-dotted partner **ق** the pair sorted out in
+*ʿarafa*. That is twice running — **أكل** needed no new letters either.
+
+One letter does need naming, because every word-family ahead reaches for it:
+**و** (*wāw*). You have read it unnamed inside **قَوْل** (*qawl*), "a
+saying." It is a **non-joiner**, a small loop with a tail under the line, and
+it holds two jobs — the consonant *w*, and the long vowel **ū**.
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[AR-CONCEPT-C31-FAHIMA-02]; assesses=[] -->
+
+**فَهِمَ** (*fahima*) = "**he understood**." Root **ف-ه-م**.
+
+Listen to the middle vowel. *Dhahaba*, *qāla*, *ʿarafa* and *akala* all ran
+*a-a-a*, the **فَعَلَ** (*faʿala*) shape. *Fahima* runs *a-i-a*: **فَعِلَ**
+(*faʿila*), which Arabic keeps for **states** rather than deeds.
+Understanding is not performed; it arrives.
+
+- **فَهْم** (*fahm*) — "**understanding**," the bare thing.
+- **مَفْهوم** (*mafhūm*) — "**understood**," the **done-to** shape of
+  *mashkūr* and *maqūl*, its long *ū* riding that **و**. As a noun it is "**a
+  concept**": a thing that has been understood.
+
+And the flat statement *akala* insisted on holds here too: **ف-ه-م has no
+English relative.** *Fathom* is Germanic; the resemblance is noise. No Hebrew
+twin worth the claim, either.
+
+## Guided Practice
+<!-- hl-knowledge: introduces=[]; assesses=[AR-CONCEPT-C31-FAHIMA-01, AR-CONCEPT-C31-FAHIMA-02, AR-CONCEPT-C30-AKALA-01, AR-CONCEPT-C30-AKALA-02, AR-CONCEPT-C30-ARAFA-01, AR-CONCEPT-C30-ARAFA-02] -->
+
+[PAUSE 1s]
+- [YOU SAY: two words needing no new letters — akala, then fahima]
+- [YOU SAY: the two shapes — akala, a-a-a; fahima, a-i-a]
+- [YOU SAY: "fahima," he understood — then fahm, understanding; mafhūm, a concept]
+- [YOU SAY: the dots once more — ف one, ق two, one body between them]
+- [YOU SAY: three roots, three ideas — maʿrifa, knowledge; fahm, understanding; akl, food]
+- [YOU SAY: the honest line — no English cousin here, as with akala]
+
+## Wrap-up Recall
+<!-- hl-knowledge: introduces=[]; assesses=[AR-CONCEPT-C31-FAHIMA-01, AR-CONCEPT-C31-FAHIMA-02, AR-CONCEPT-C30-AKALA-02, AR-CONCEPT-C30-ARAFA-01] -->
+
+[PAUSE 3s] Which vowel of *fahima* differs from *akala*, and what does it
+mark? (**The middle *i*** — **فَعِلَ**, a state rather than a deed.) What is
+**مَفْهوم**? (**"Understood," and so "a concept"** — the done-to shape of
+*maqūl* and *mashkūr*.) Does *fahima* have an English cousin? (**No** —
+*fathom* is Germanic.) Which letter was named here, and where had you read
+it? (**و**, *wāw* — inside *qawl*.)
+`,s=e({default:()=>c}),c=`---
+schema_version: 2
+id: AR-C31-kataba
+spine_node: SPINE-SAY-WHAT-I-DO
+sequence: 810
+chapter: 31
+type: word
+headword: كتب
+gloss: "he wrote" — the chapter's payoff, where one root and the patterns you already own hand you a book, a writer, an office and a library with nothing new to memorise
+concept_tag: VERB-WRITE
+romanization: kataba
+prerequisites: [AR-C31-saala]
+sounds: [joining-letters, ta-marbuta, rtl-known-letters]
+roots: [k-t-b]
+etymology_hook: "كتب (kataba, 'he wrote') is the root Arabic grammarians reach for first, and it fills every pattern this track has taught: كِتاب (kitāb, 'a book'), كاتِب (kātib, 'a writer', the doer shape of qāʾil), مَكْتوب (maktūb, 'written' — and in speech, fate, the done-to shape of maqūl), مَكْتَب (maktab, 'a desk, an office', the ma- place shape of madhhab and masjid) and مَكْتَبة (maktaba, 'a library'); no English word descends from ك-ت-ب, but English ketubah comes from the same Semitic root through Hebrew כָּתַב (katav), and ketubbah is maktūb's own pattern standing in the other language"
+duration:
+  max_seconds: 240
+requires:
+  knowledge: [AR-CONCEPT-C31-SAALA-01, AR-CONCEPT-C31-QARAA-02]
+introduces:
+  knowledge: [AR-CONCEPT-C31-KATABA-01, AR-CONCEPT-C31-KATABA-02]
+practises:
+  knowledge: [AR-CONCEPT-C31-KATABA-01, AR-CONCEPT-C31-KATABA-02, AR-CONCEPT-C31-SAALA-01, AR-CONCEPT-C31-QARAA-02, AR-CONCEPT-C31-FAHIMA-02, AR-CONCEPT-C29-QALA-02, AR-CONCEPT-C28-DHAHABA-02]
+skills: [listening, speaking, reading]
+modes: [interpretive, interpersonal, presentational, mediation]
+strands: [meaning-input, meaning-output, language-focus]
+register: neutral
+variety: modern-standard-arabic
+reviews_of: [AR-C31-saala, AR-C31-qaraa, AR-C31-fahima, AR-C29-qala, AR-C28-dhahaba]
+---
+
+# كتب (kataba) — "he wrote," and the root that furnishes a library
+
+## Warm-up
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+[PAUSE 2s] The chapter closes on the root every Arabic grammar reaches for
+first. Three letters — and you already own every pattern they need.
+
+## The letters in this word
+<!-- hl-knowledge: introduces=[AR-CONCEPT-C31-KATABA-01]; assesses=[] -->
+
+**ك** (*kāf*), **ت** (*tāʾ*, two dots) and **ب** (*bāʾ*, one dot below) were
+taught long ago. New is how they sit together: **all three join**, so **كتب**
+is one unbroken run of pen — unlike **ذهب**, where *dhāl* refuses to connect,
+or **أكل**, where the *alif* stands off alone.
+
+One old mark earns its keep too: put **ة** (*tāʾ marbūṭa*) on **مَكْتَب**
+(*maktab*) and you get **مَكْتَبة** (*maktaba*). One letter, and an office
+becomes a library.
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[AR-CONCEPT-C31-KATABA-02]; assesses=[] -->
+
+**كَتَبَ** (*kataba*) = "**he wrote**." Root **ك-ت-ب**, plain *faʿala* shape.
+Now pour it through the patterns this track has handed you:
+
+- **كِتاب** (*kitāb*) — "a **book**." A written thing.
+- **كاتِب** (*kātib*) — "a **writer**," the **doer** shape of *qāʾil* and
+  *qāriʾ*.
+- **مَكْتوب** (*maktūb*) — "**written**," the **done-to** shape of *maqūl*
+  and *mafhūm* — and in speech, what has been written for you: **fate**.
+- **مَكْتَب** (*maktab*) — the ***ma-*** **place** shape of *madhhab* and
+  *masjid*: the place of writing, a **desk**, an **office**.
+- **مَكْتَبة** (*maktaba*) — that place plus **ة**: a **library**.
+
+Five words off one root, not one of them learned separately. That is the
+whole return on the root system, collected in one lesson.
+
+No English word descends from **ك-ت-ب**. English does hold one from the same
+**Semitic** root, by way of Hebrew: a **ketubah**, the written Jewish
+marriage contract — **כְּתוּבָּה** (*ketubbah*), "a written thing," from
+**כָּתַב** (*katav*), "he wrote." That is *maktūb*'s own pattern in the other
+language.
+
+## Guided Practice
+<!-- hl-knowledge: introduces=[]; assesses=[AR-CONCEPT-C31-KATABA-01, AR-CONCEPT-C31-KATABA-02, AR-CONCEPT-C31-SAALA-01, AR-CONCEPT-C31-QARAA-02, AR-CONCEPT-C31-FAHIMA-02, AR-CONCEPT-C29-QALA-02, AR-CONCEPT-C28-DHAHABA-02] -->
+
+[PAUSE 1s]
+- [YOU SAY: three joined letters — kāf, tāʾ, bāʾ — "kataba," he wrote]
+- [YOU SAY: the doers — qāʾil, qāriʾ, kātib]
+- [YOU SAY: the done-to run — maqūl, mafhūm, maqrūʾ, maktūb]
+- [YOU SAY: the ma- place shape — madhhab, masʾala, maktab]
+- [YOU SAY: the letter that moves — maktab, an office; maktaba, a library]
+- [YOU SAY: the Semitic twin — Hebrew katav, English ketubah]
+
+## Wrap-up Recall
+<!-- hl-knowledge: introduces=[]; assesses=[AR-CONCEPT-C31-KATABA-01, AR-CONCEPT-C31-KATABA-02, AR-CONCEPT-C31-SAALA-01, AR-CONCEPT-C31-QARAA-02, AR-CONCEPT-C29-QALA-02, AR-CONCEPT-C28-DHAHABA-02] -->
+
+[PAUSE 3s] Name five words built here from **ك-ت-ب**. (***Kitāb***,
+***kātib***, ***maktūb***, ***maktab***, ***maktaba***.) Which pattern gives
+"office," and which two earlier words wear it? (**The *ma-* place shape** —
+*madhhab* and *masʾala*.) Which two earlier words share *kātib*'s doer shape?
+(***Qāʾil*** and ***qāriʾ***.) What single letter turns an office into a
+library? (**ة**.) Which English word comes from this root? (**None** — but
+**ketubah** comes from its Hebrew twin *katav*.)
+`,l=e({default:()=>u}),u=`---
+schema_version: 2
+id: AR-C31-qaraa
+spine_node: SPINE-SAY-WHAT-I-DO
+sequence: 790
+chapter: 31
+type: word
+headword: قرأ
+gloss: "he read, he recited" — hamza's three seats sorted out at last, and the one root in this chapter that really did give English a word
+concept_tag: VERB-READ
+romanization: qaraʾa
+prerequisites: [AR-C31-fahima]
+sounds: [hamza-seats, hamza-final, rtl-known-letters]
+roots: [q-r-a]
+etymology_hook: "قرأ (qaraʾa) is 'he read' by way of 'he recited aloud', root ق-ر-أ, and it fills the shapes already owned — قارِئ (qāriʾ, 'a reader'), مَقْروء (maqrūʾ, 'read'), قِراءة (qirāʾa, 'reading') — and one more that English owns outright: قُرْآن (qurʾān), 'the recitation', written Quran or Koran; Hebrew's twin קָרָא (qara), 'he called, he read', is the closer relative, since what crossed into English from this root was the name of a book, never the verb"
+duration:
+  max_seconds: 240
+requires:
+  knowledge: [AR-CONCEPT-C31-FAHIMA-01, AR-CONCEPT-C31-FAHIMA-02]
+introduces:
+  knowledge: [AR-CONCEPT-C31-QARAA-01, AR-CONCEPT-C31-QARAA-02]
+practises:
+  knowledge: [AR-CONCEPT-C31-QARAA-01, AR-CONCEPT-C31-QARAA-02, AR-CONCEPT-C31-FAHIMA-01, AR-CONCEPT-C31-FAHIMA-02, AR-CONCEPT-C30-AKALA-02]
+skills: [listening, speaking, reading]
+modes: [interpretive, interpersonal, presentational, mediation]
+strands: [meaning-input, meaning-output, language-focus]
+register: neutral
+variety: modern-standard-arabic
+reviews_of: [AR-C31-fahima, AR-C30-akala]
+---
+
+# قرأ (qaraʾa) — "he recited," and the word English spells Quran
+
+## Warm-up
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+[PAUSE 2s] One root in this chapter did give English a word — exactly one,
+and it is not the word for reading.
+
+## The letters in this word
+<!-- hl-knowledge: introduces=[AR-CONCEPT-C31-QARAA-01]; assesses=[] -->
+
+**ق** (*qāf*, two dots) and **ر** (*rāʾ*) are yours. The third is **أ**,
+*hamza* on an *alif* seat, closing the word.
+
+Hamza is the homeless consonant. It has a sound of its own — the catch in
+"uh-oh" — but usually no letter, so it borrows a **seat**, and which seat
+depends on the vowels around it:
+
+- **أ** — hamza on **ا**, as in **قَرَأَ** and in **أنت**.
+- **ؤ** — hamza on **و**, the letter named last lesson.
+- **ئ** — hamza on **ي**, which gives up its dots to carry it.
+- **ء** — and where no seat suits, hamza alone on the line, closing **جاء**.
+
+Four spellings, one consonant. The seat is bookkeeping; the hamza is the
+sound.
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[AR-CONCEPT-C31-QARAA-02]; assesses=[] -->
+
+**قَرَأَ** (*qaraʾa*) = "**he read**" — nearer the root's heart, "**he
+recited aloud**." Reading here is done with the voice. Root **ق-ر-أ**, plain
+*faʿala* shape.
+
+- **قارِئ** (*qāriʾ*) — "a **reader**," the **doer** shape of *qāʾil*, hamza
+  on its dotless *yāʾ* seat.
+- **مَقْروء** (*maqrūʾ*) — "**read**," the **done-to** shape of *mafhūm*,
+  long *ū* on the **و**, hamza left seatless at the end.
+- **قُرْآن** (*qurʾān*) — "**the recitation**," the thing recited. English
+  writes it **Quran**, or **Koran**. Its long **آ** is the alif-and-hamza
+  fusion already met in **آكِل** (*ākil*), "an eater."
+
+That single loan is the shape of the whole story. Arabic gave English
+*algebra*, *alcohol*, *coffee*, *sugar* and *admiral* — goods and sciences,
+nouns nearly every one. Out of **ق-ر-أ** travelled not "to read" but the name
+of a book. The nearer relative is Hebrew **קָרָא** (*qara*), "he read."
+
+## Guided Practice
+<!-- hl-knowledge: introduces=[]; assesses=[AR-CONCEPT-C31-QARAA-01, AR-CONCEPT-C31-QARAA-02, AR-CONCEPT-C31-FAHIMA-01, AR-CONCEPT-C31-FAHIMA-02, AR-CONCEPT-C30-AKALA-02] -->
+
+[PAUSE 1s]
+- [YOU SAY: hamza's seats — أ on alif, ؤ on wāw, ئ on dotless yāʾ, ء on nothing]
+- [YOU SAY: "qaraʾa," he recited — then qāriʾ, a reader]
+- [YOU SAY: the done-to pair — mafhūm, a concept; maqrūʾ, read — both on wāw]
+- [YOU SAY: the borrowed word — qurʾān, "the recitation," English Quran]
+- [YOU SAY: the fused alif — ākil, an eater; qurʾān]
+
+## Wrap-up Recall
+<!-- hl-knowledge: introduces=[]; assesses=[AR-CONCEPT-C31-QARAA-01, AR-CONCEPT-C31-QARAA-02, AR-CONCEPT-C31-FAHIMA-01, AR-CONCEPT-C30-AKALA-02] -->
+
+[PAUSE 3s] Which three seats can hamza take, and what happens to the *yāʾ*
+when it serves? (**ا, و and ي** — the *yāʾ* **drops its dots**: ئ.) Which
+English word descends from **ق-ر-أ**, and what does it mean in Arabic?
+(**Quran** — "**the recitation**.") Which letter carries the long *ū* of
+**مَقْروء**? (**و**.) Which earlier word shares the fused **آ**? (**آكِل**,
+*ākil*, "an eater.")
+`,d=e({default:()=>f}),f=`---
+schema_version: 2
+id: AR-C31-saala
+spine_node: SPINE-SAY-WHAT-I-DO
+sequence: 800
+chapter: 31
+type: word
+headword: سأل
+gloss: "he asked" — one root that builds a question, a problem, an asker and the word for being answerable, plus the Hebrew twin hiding inside the name Saul
+concept_tag: VERB-ASK
+romanization: saʾala
+prerequisites: [AR-C31-qaraa]
+sounds: [hamza-medial, hamza-seats, rtl-known-letters]
+roots: [s-a-l]
+etymology_hook: "سأل (saʾala, 'he asked') sits on س-أ-ل and shows hamza changing seats without changing sound — سَأَلَ on alif, سُؤال (suʾāl, 'a question') on wāw, سائِل (sāʾil, 'an asker') on dotless yāʾ; the ma- shapes give مَسْأَلة (masʾala, 'a matter, a problem') and مَسْؤول (masʾūl), literally 'asked-of' and so 'responsible'; the Hebrew twin שָׁאַל (shaʾal) carries the same s-against-sh swap as salām and shalom, and its participle is the name שָׁאוּל, English Saul, 'asked for'"
+duration:
+  max_seconds: 240
+requires:
+  knowledge: [AR-CONCEPT-C31-QARAA-01, AR-CONCEPT-C31-QARAA-02]
+introduces:
+  knowledge: [AR-CONCEPT-C31-SAALA-01]
+practises:
+  knowledge: [AR-CONCEPT-C31-SAALA-01, AR-CONCEPT-C31-QARAA-01, AR-CONCEPT-C31-QARAA-02, AR-CONCEPT-C31-FAHIMA-01]
+skills: [listening, speaking, reading]
+modes: [interpretive, interpersonal, presentational, mediation]
+strands: [meaning-input, meaning-output, language-focus]
+register: neutral
+variety: modern-standard-arabic
+reviews_of: [AR-C31-qaraa, AR-C31-fahima]
+---
+
+# سأل (saʾala) — "he asked," and the Arabic word for answerable
+
+## Warm-up
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+[PAUSE 2s] Hamza sat at the end of the last word. Here it sits in the middle
+— and as the vowels shift around it, it changes seats without changing sound
+at all.
+
+## The letters in this word
+<!-- hl-knowledge: introduces=[]; assesses=[AR-CONCEPT-C31-QARAA-01, AR-CONCEPT-C31-FAHIMA-01] -->
+
+Nothing new: **س** (*sīn*), **أ** (hamza on its *alif* seat) and **ل**
+(*lām*). Right to left, *sa-ʾa-la*.
+
+What is worth doing is watching that seat move while the root holds still:
+
+- **سَأَلَ** (*saʾala*) — the *a* keeps hamza on **ا**.
+- **سُؤال** (*suʾāl*) — the *u* pulls it onto **و**.
+- **سائِل** (*sāʾil*) — the *i* pulls it onto dotless **ي**.
+
+One consonant, one root, three spellings — exactly the rule laid out with
+*qaraʾa*, now doing its work inside a single family.
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[AR-CONCEPT-C31-SAALA-01]; assesses=[] -->
+
+**سَأَلَ** (*saʾala*) = "**he asked**." Root **س-أ-ل**, the plain *faʿala*
+shape.
+
+- **سُؤال** (*suʾāl*) — "**a question**."
+- **سائِل** (*sāʾil*) — "an **asker**," the doer shape that also gave
+  *qāriʾ*, "a reader."
+- **مَسْأَلة** (*masʾala*) — the ***ma-*** shape: "a **matter**, a
+  **problem**" — a thing asked about.
+- **مَسْؤول** (*masʾūl*) — the **done-to** shape, literally "**asked-of**,"
+  and so "**responsible**"; as a noun, "**an official**." Arabic builds
+  accountability out of being the one who gets questioned, which is a fair
+  account of what accountability is.
+
+The Hebrew twin is exact: **שָׁאַל** (*shaʾal*), "he asked" — Arabic *s*
+against Hebrew *sh*, the same swap heard between *salām* and *shalom*. Its
+passive participle is the name **שָׁאוּל** (*Shaʾul*), English **Saul**:
+"asked for." From the Arabic root, English took nothing.
+
+## Guided Practice
+<!-- hl-knowledge: introduces=[]; assesses=[AR-CONCEPT-C31-SAALA-01, AR-CONCEPT-C31-QARAA-01, AR-CONCEPT-C31-QARAA-02, AR-CONCEPT-C31-FAHIMA-01] -->
+
+[PAUSE 1s]
+- [YOU SAY: the seat moving — saʾala on alif, suʾāl on wāw, sāʾil on dotless yāʾ]
+- [YOU SAY: "saʾala" — he asked — then suʾāl, a question]
+- [YOU SAY: the two doers — qāriʾ, a reader; sāʾil, an asker]
+- [YOU SAY: masʾala, a matter — masʾūl, asked-of, and so responsible]
+- [YOU SAY: the twins — Arabic saʾala, Hebrew shaʾal, and the name Saul]
+
+## Wrap-up Recall
+<!-- hl-knowledge: introduces=[]; assesses=[AR-CONCEPT-C31-SAALA-01, AR-CONCEPT-C31-QARAA-01, AR-CONCEPT-C31-QARAA-02] -->
+
+[PAUSE 3s] Which three seats does hamza take across *saʾala*, *suʾāl* and
+*sāʾil*? (**Alif, wāw, dotless yāʾ** — one consonant, three spellings.) What
+does **مَسْؤول** mean literally, and what does it mean in use? (**"Asked-of"**
+— and so **responsible**, or an official.) Which two words here wear the doer
+shape? (***Sāʾil***, an asker, and ***qāriʾ***, a reader.) What does the name
+**Saul** mean? (**"Asked for"** — from Hebrew *shaʾal*, twin of **سَأَلَ**.)
+`,p=e({default:()=>m}),m=`---
+schema_version: 2
+id: AR-C32-ahabba
+spine_node: SPINE-SAY-WHAT-I-DO
+sequence: 850
+chapter: 32
+type: word
+headword: أحبّ
+gloss: "he loved" — the chapter's payoff, closing the ladder of four verb shapes, and the root behind the ḥabībī of every second Arabic song
+concept_tag: VERB-LIKE-LOVE
+romanization: ʾaḥabba
+prerequisites: [AR-C32-saada]
+sounds: [haa-pharyngeal, shadda, alif-hamza, rtl-known-letters]
+roots: [h-b-b]
+etymology_hook: "أحبّ (ʾaḥabba, 'he loved') is root ح-ب-ب under أَفْعَلَ, Form IV, whose أَ prefix makes a root bring about its own idea; the family is حُبّ (ḥubb, 'love'), حَبيب (ḥabīb, 'beloved') with its feminine حَبيبة and the 'my' ending of ismī giving ḥabībī, and مَحْبوب (maḥbūb, 'well-liked') on the done-to shape of maktūb; Hebrew's usual verb for loving, אָהַב (ahav), is NOT a relative, while חָבִיב (ḥaviv, 'dear') is exactly ḥabīb, and no English word descends from the root at all"
+duration:
+  max_seconds: 240
+requires:
+  knowledge: [AR-CONCEPT-C32-SAADA-01, AR-CONCEPT-C32-SAADA-02]
+introduces:
+  knowledge: [AR-CONCEPT-C32-AHABBA-01, AR-CONCEPT-C32-AHABBA-02]
+practises:
+  knowledge: [AR-CONCEPT-C32-AHABBA-01, AR-CONCEPT-C32-AHABBA-02, AR-CONCEPT-C32-SAADA-01, AR-CONCEPT-C32-SAADA-02, AR-CONCEPT-C32-FAKKARA-02, AR-CONCEPT-C32-AKHADHA-02, AR-CONCEPT-C28-DHAHABA-02]
+skills: [listening, speaking, reading]
+modes: [interpretive, interpersonal, presentational, mediation]
+strands: [meaning-input, meaning-output, language-focus]
+register: neutral
+variety: modern-standard-arabic
+reviews_of: [AR-C32-saada, AR-C32-fakkara, AR-C32-akhadha, AR-C28-dhahaba]
+---
+
+# أحبّ (ʾaḥabba) — "he loved," and the four shapes together
+
+## Warm-up
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+[PAUSE 2s] The last verb of the chapter, and the last of its four shapes:
+plain, doubled, stretched — and now prefixed.
+
+## The letters in this word
+<!-- hl-knowledge: introduces=[AR-CONCEPT-C32-AHABBA-01]; assesses=[AR-CONCEPT-C32-SAADA-01] -->
+
+Three letter-shapes for four consonants. **أ** (hamza on its *alif* seat),
+**ح** (*ḥāʾ*, the hook family's undotted member, a hard breath from deep in
+the throat) and **ب** (*bāʾ*) — with the **shadda** on that final **ب**
+doubling it: **أَحَبَّ** is *ʾa-ḥab-ba*.
+
+The mark is the one that rode the **ك** of **فَكَّرَ**, doing a different
+job: there it built a new verb, here it only spells a root whose last two
+letters are the same.
+
+On the page the word breaks after the *alif* — **أ**, then **حبّ** — the
+two-piece split of **ساعد** and **أخذ** once again.
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[AR-CONCEPT-C32-AHABBA-02]; assesses=[] -->
+
+**أَحَبَّ** (*ʾaḥabba*) = "**he loved**," and more mildly "he liked." Root
+**ح-ب-ب**.
+
+The **أَ** on the front is **Form IV**, **أَفْعَلَ** (*ʾafʿala*): the prefix
+that makes a root **bring about** its own idea. Love, on this account, is
+something a person causes.
+
+- **حُبّ** (*ḥubb*) — "**love**."
+- **حَبيب** (*ḥabīb*) — "**beloved**," feminine **حَبيبة** (*ḥabība*); add
+  the "my" ending of **اسمي** (*ismī*) and it is **حَبيبي** (*ḥabībī*), "my
+  beloved."
+- **مَحْبوب** (*maḥbūb*) — "**beloved, well-liked**," the **done-to** shape
+  of *maktūb* and *maʾkhūdh*.
+
+Hebrew's ordinary verb for loving, **אָהַב** (*ahav*), is **not** a relative.
+The real twin is **חָבִיב** (*ḥaviv*), "dear," which is *ḥabīb* exactly. No
+English word descends from **ح-ب-ب**: *ḥabībī* travels through music, not
+dictionaries.
+
+## Guided Practice
+<!-- hl-knowledge: introduces=[]; assesses=[AR-CONCEPT-C32-AHABBA-01, AR-CONCEPT-C32-AHABBA-02, AR-CONCEPT-C32-SAADA-01, AR-CONCEPT-C32-SAADA-02, AR-CONCEPT-C32-FAKKARA-02, AR-CONCEPT-C32-AKHADHA-02, AR-CONCEPT-C28-DHAHABA-02] -->
+
+[PAUSE 1s]
+- [YOU SAY: the chapter's four — ʾakhadha, fakkara, sāʿada, ʾaḥabba]
+- [YOU SAY: the four shapes — plain, doubled, stretched, ʾa- prefix]
+- [YOU SAY: "ʾaḥabba," he loved — then ḥubb, love; ḥabīb, beloved]
+- [YOU SAY: the pieces — أ alone, then حبّ, as ساعد split into سا and عد]
+- [YOU SAY: the done-to run — maktūb, maʾkhūdh, maḥbūb]
+- [YOU SAY: the ma- place shape from the first verb lesson — madhhab, maktab]
+- [YOU SAY: the rebuilt doers — mufakkir; musāʿid]
+
+## Wrap-up Recall
+<!-- hl-knowledge: introduces=[]; assesses=[AR-CONCEPT-C32-AHABBA-01, AR-CONCEPT-C32-AHABBA-02, AR-CONCEPT-C32-SAADA-02, AR-CONCEPT-C32-FAKKARA-02, AR-CONCEPT-C32-AKHADHA-02, AR-CONCEPT-C28-DHAHABA-02] -->
+
+[PAUSE 3s] Name this chapter's four verbs and the shape each wears.
+(***ʾAkhadha*** plain, ***fakkara*** doubled, ***sāʿada*** stretched,
+***ʾaḥabba*** prefixed — Forms I to IV.) What does Form IV's **أَ** do?
+(**Makes the root bring about its own idea**.) Why does **أحبّ** carry a
+shadda, and is it *fakkara*'s reason? (**Because the root's last two letters
+are both ب** — **not** a Form II doubling.) Which Hebrew word is *ḥabīb*, and
+which root first showed you the *ma-* shapes? (***חָבִיב*** — while *ahav* is
+no relation — and **ذ-ه-ب**, in *madhhab*.)
+`,h=e({default:()=>g}),g=`---
+schema_version: 2
+id: AR-C32-akhadha
+spine_node: SPINE-SAY-WHAT-I-DO
+sequence: 820
+chapter: 32
+type: word
+headword: أخذ
+gloss: "he took" — the last plain-shaped verb in the book, kept as the control against the three rebuilt verbs that follow, with a Hebrew twin reached by two regular consonant swaps
+concept_tag: VERB-TAKE
+romanization: ʾakhadha
+prerequisites: [AR-C31-kataba]
+sounds: [alif-hamza, khaa, dhal, rtl-known-letters]
+roots: [a-kh-dh]
+etymology_hook: "أخذ (ʾakhadha, 'he took') is the bare فَعَلَ shape on root أ-خ-ذ, giving أَخْذ (akhdh, 'taking'), آخِذ (ākhidh, 'one taking', where the root's alif and the pattern's alif fuse into long آ exactly as in آكِل) and مَأْخوذ (maʾkhūdh, 'taken', the done-to shape of maktūb); its Hebrew twin is אָחַז (ʾaḥaz, 'he seized'), reached by two regular swaps — Arabic خ answers Hebrew ח, Arabic ذ answers Hebrew ז — and nothing came into English from either side"
+duration:
+  max_seconds: 240
+requires:
+  knowledge: [AR-CONCEPT-C31-KATABA-01, AR-CONCEPT-C31-KATABA-02]
+introduces:
+  knowledge: [AR-CONCEPT-C32-AKHADHA-01, AR-CONCEPT-C32-AKHADHA-02]
+practises:
+  knowledge: [AR-CONCEPT-C32-AKHADHA-01, AR-CONCEPT-C32-AKHADHA-02, AR-CONCEPT-C31-KATABA-01, AR-CONCEPT-C31-KATABA-02, AR-CONCEPT-C30-AKALA-01, AR-CONCEPT-C30-AKALA-02, AR-CONCEPT-C28-DHAHABA-01]
+skills: [listening, speaking, reading]
+modes: [interpretive, interpersonal, presentational, mediation]
+strands: [meaning-input, meaning-output, language-focus]
+register: neutral
+variety: modern-standard-arabic
+reviews_of: [AR-C31-kataba, AR-C30-akala, AR-C28-dhahaba]
+---
+
+# أخذ (ʾakhadha) — "he took," and the last of the plain verbs
+
+## Warm-up
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+[PAUSE 2s] The last chapter changed the **vowels** inside a root. This one
+changes the **shape** of the verb itself — a doubled letter, a stretched
+vowel, a prefix. The verb here is the plain one, kept to measure the other
+three against.
+
+## The letters in this word
+<!-- hl-knowledge: introduces=[AR-CONCEPT-C32-AKHADHA-01]; assesses=[AR-CONCEPT-C31-KATABA-01, AR-CONCEPT-C30-AKALA-01, AR-CONCEPT-C28-DHAHABA-01] -->
+
+No new letters, and three worth re-reading:
+
+- **أ** — hamza on its *alif* seat, opening the word as it opens **أكل**.
+- **خ** (*khāʾ*) — the hook family's **one dot above**, the *ch* of Scottish
+  "loch."
+- **ذ** (*dhāl*) — *dāl* with **one dot above**, the *th* of "this," the
+  letter that opened **ذهب**.
+
+Right to left: *ʾa-kha-dha*. Note what the page does with it. **كتب** ran as
+one unbroken piece; **أخذ** cannot, because *alif* is a non-joiner. It breaks
+into **أ** and **خذ** — the two-piece shape of **ذهب**.
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[AR-CONCEPT-C32-AKHADHA-02]; assesses=[] -->
+
+**أَخَذَ** (*ʾakhadha*) = "**he took**." Root **أ-خ-ذ**, the plain
+**فَعَلَ** shape — the last verb in this book to wear it unaltered.
+
+- **أَخْذ** (*akhdh*) — "**taking**."
+- **آخِذ** (*ākhidh*) — "one **taking**," the **doer** shape of *kātib*,
+  where the root's own *alif* and the pattern's fuse into long **آ** —
+  the fusion seen in **آكِل** (*ākil*), "an eater."
+- **مَأْخوذ** (*maʾkhūdh*) — "**taken**," the **done-to** shape of *maktūb*.
+
+Its Hebrew twin is **אָחַז** (*ʾaḥaz*), "he seized." Two regular swaps carry
+you across: Arabic **خ** answers Hebrew **ח**, and Arabic **ذ** answers
+Hebrew **ז**. Those are standing correspondences between the languages, not
+guesses about this pair. English took nothing from either.
+
+## Guided Practice
+<!-- hl-knowledge: introduces=[]; assesses=[AR-CONCEPT-C32-AKHADHA-01, AR-CONCEPT-C32-AKHADHA-02, AR-CONCEPT-C31-KATABA-01, AR-CONCEPT-C31-KATABA-02, AR-CONCEPT-C30-AKALA-01, AR-CONCEPT-C30-AKALA-02, AR-CONCEPT-C28-DHAHABA-01] -->
+
+[PAUSE 1s]
+- [YOU SAY: the letters — hamza on alif, khāʾ, dhāl — "ʾakhadha," he took]
+- [YOU SAY: the same opening — أكل, then أخذ, hamza on its alif seat]
+- [YOU SAY: which words break — kataba into one piece, ʾakhadha and dhahaba into two]
+- [YOU SAY: the dot that makes dhāl — dāl, then dhāl, the th of "this"]
+- [YOU SAY: the fused alif — ākil, an eater; ākhidh, one taking]
+- [YOU SAY: the done-to pair — maktūb, written; maʾkhūdh, taken]
+
+## Wrap-up Recall
+<!-- hl-knowledge: introduces=[]; assesses=[AR-CONCEPT-C32-AKHADHA-01, AR-CONCEPT-C32-AKHADHA-02, AR-CONCEPT-C31-KATABA-01, AR-CONCEPT-C30-AKALA-02, AR-CONCEPT-C28-DHAHABA-01] -->
+
+[PAUSE 3s] Which letter keeps **أخذ** from running as one piece, and which
+Chapter 31 verb did run as one? (**The *alif***, a non-joiner — against
+**كتب**.) What turns **د** into **ذ**? (**One dot above** — *d* becomes the
+*th* of "this.") Which two words fuse their alifs into **آ**? (***Ākil***
+and ***ākhidh***.) Which Hebrew consonants answer Arabic **خ** and **ذ**?
+(**ח** and **ז** — in **אָחַז**, *ʾaḥaz*.)
+`,_=e({default:()=>v}),v=`---
+schema_version: 2
+id: AR-C32-fakkara
+spine_node: SPINE-SAY-WHAT-I-DO
+sequence: 830
+chapter: 32
+type: word
+headword: فكّر
+gloss: "he thought" — the first verb that is not a bare root at all, but a root rebuilt by doubling its middle letter, and the mu- doer that comes with the rebuild
+concept_tag: VERB-THINK
+romanization: fakkara
+prerequisites: [AR-C32-akhadha]
+sounds: [shadda, faa, rtl-known-letters]
+roots: [f-k-r]
+etymology_hook: "فكّر (fakkara, 'he thought, he pondered') is root ف-ك-ر with its middle consonant doubled by a shadda — فَعَّلَ, the shape grammarians call Form II, which does a root hard, repeatedly, or to something else; beside it stand فِكْر (fikr, 'thought'), فِكْرة (fikra, 'an idea'), تَفْكير (tafkīr, 'thinking') and مُفَكِّر (mufakkir, 'a thinker'), whose مُ prefix is Form II's own doer shape in place of the long ā of kātib and qāriʾ; there is no English cousin and no Hebrew twin worth claiming"
+duration:
+  max_seconds: 240
+requires:
+  knowledge: [AR-CONCEPT-C32-AKHADHA-02]
+introduces:
+  knowledge: [AR-CONCEPT-C32-FAKKARA-01, AR-CONCEPT-C32-FAKKARA-02]
+practises:
+  knowledge: [AR-CONCEPT-C32-FAKKARA-01, AR-CONCEPT-C32-FAKKARA-02, AR-CONCEPT-C32-AKHADHA-02, AR-CONCEPT-C31-KATABA-02]
+skills: [listening, speaking, reading]
+modes: [interpretive, interpersonal, presentational, mediation]
+strands: [meaning-input, meaning-output, language-focus]
+register: neutral
+variety: modern-standard-arabic
+reviews_of: [AR-C32-akhadha, AR-C31-kataba]
+---
+
+# فكّر (fakkara) — "he thought," and a root rebuilt by doubling
+
+## Warm-up
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+[PAUSE 2s] Every verb so far has been a bare root with vowels poured between
+its letters. Arabic can also **rebuild** a root, and the first way it does so
+is by doubling one letter.
+
+## The letters in this word
+<!-- hl-knowledge: introduces=[AR-CONCEPT-C32-FAKKARA-01]; assesses=[] -->
+
+**ف**, **ك** and **ر** are all yours, and all three join, so **فكّر** runs as
+one piece.
+
+The new thing is not a letter but a mark: **ّ** (*shadda*), the little *w*
+riding the **ك** of **فَكَّرَ**. It says "**sound this consonant twice**" —
+*fak-ka-ra*, not *fa-ka-ra*. You met it among the ḥarakāt and on the tail of
+*shukran*; here it is load-bearing, because that doubling is the whole
+difference between one verb and another.
+
+Everyday Arabic prints no *shadda*, as it prints no short vowels; the reader
+supplies it.
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[AR-CONCEPT-C32-FAKKARA-02]; assesses=[] -->
+
+**فَكَّرَ** (*fakkara*) = "**he thought**, he pondered." Root **ف-ك-ر**.
+
+Doubling a root's middle consonant is no irregularity. It is a pattern with a
+name and a job: **فَعَّلَ** (*faʿʿala*), which grammarians number **Form
+II**, and it generally means doing the root **hard**, **repeatedly**, or **to
+something else**. *Fakkara* is thinking worked at, while the bare root holds
+the raw material:
+
+- **فِكْر** (*fikr*) — "**thought**," thinking as such.
+- **فِكْرة** (*fikra*) — "**an idea**," one thought, closed by the same **ة**
+  that made a library out of an office.
+- **تَفْكير** (*tafkīr*) — "**thinking**," the activity, on Form II's own
+  noun shape.
+- **مُفَكِّر** (*mufakkir*) — "**a thinker**." Form II builds its doer with a
+  **مُ** (*mu-*) prefix, not the long *ā* of *kātib*. A rebuilt verb gets a
+  rebuilt doer.
+
+No English cousin here, and no Hebrew twin worth the claim.
+
+## Guided Practice
+<!-- hl-knowledge: introduces=[]; assesses=[AR-CONCEPT-C32-FAKKARA-01, AR-CONCEPT-C32-FAKKARA-02, AR-CONCEPT-C32-AKHADHA-02, AR-CONCEPT-C31-KATABA-02] -->
+
+[PAUSE 1s]
+- [YOU SAY: the doubling — fa-ka-ra, then fak-ka-ra, shadda on the kāf]
+- [YOU SAY: "fakkara," he thought — then fikr, thought; fikra, an idea]
+- [YOU SAY: plain beside rebuilt — ʾakhadha, then fakkara]
+- [YOU SAY: the two doers — kātib, a writer; mufakkir, a thinker]
+- [YOU SAY: the done-to shape holding steady — maktūb, maʾkhūdh]
+
+## Wrap-up Recall
+<!-- hl-knowledge: introduces=[]; assesses=[AR-CONCEPT-C32-FAKKARA-01, AR-CONCEPT-C32-FAKKARA-02, AR-CONCEPT-C32-AKHADHA-02, AR-CONCEPT-C31-KATABA-02] -->
+
+[PAUSE 3s] What does the **shadda** instruct, and which letter carries it in
+**فَكَّرَ**? (**Double the consonant** — it rides the **ك**.) What is Form
+II, and what does it do to a root? (**فَعَّلَ**, middle letter **doubled** —
+the root done hard, repeatedly, or to something else.) How does Form II build
+its doer, against *kataba* and *ʾakhadha*? (**مُفَكِّر** with **mu-**,
+against **كاتِب** and **آخِذ** with a long *ā*.)
+`,y=e({default:()=>b}),b=`---
+schema_version: 2
+id: AR-C32-saada
+spine_node: SPINE-SAY-WHAT-I-DO
+sequence: 840
+chapter: 32
+type: word
+headword: ساعد
+gloss: "he helped" — a root that means good fortune, stretched by one long vowel into a verb aimed at somebody else, and the family name behind the word Saudi
+concept_tag: VERB-HELP
+romanization: sāʿada
+prerequisites: [AR-C32-fakkara]
+sounds: [ayn-pharyngeal, long-vowel-alif, non-joiner, rtl-known-letters]
+roots: [s-a-d]
+etymology_hook: "ساعد (sāʿada, 'he helped') is root س-ع-د — which by itself means good fortune, giving سَعيد (saʿīd, 'happy', the name Saeed) and سَعادة (saʿāda, 'happiness') — stretched into فاعَلَ, Form III, the shape that aims a root at another person; hence مُساعَدة (musāʿada, 'help') and مُساعِد (musāʿid, 'an assistant') on the same mu- doer as mufakkir; the family name آل سُعود (Āl Saʿūd) is what English spells in Saudi Arabia, and Hebrew's סָעַד (saʿad, 'to sustain') is the twin, whose מִסְעָדָה is a restaurant"
+duration:
+  max_seconds: 240
+requires:
+  knowledge: [AR-CONCEPT-C32-FAKKARA-01, AR-CONCEPT-C32-FAKKARA-02]
+introduces:
+  knowledge: [AR-CONCEPT-C32-SAADA-01, AR-CONCEPT-C32-SAADA-02]
+practises:
+  knowledge: [AR-CONCEPT-C32-SAADA-01, AR-CONCEPT-C32-SAADA-02, AR-CONCEPT-C32-FAKKARA-01, AR-CONCEPT-C32-FAKKARA-02, AR-CONCEPT-C32-AKHADHA-01, AR-CONCEPT-C30-ARAFA-01]
+skills: [listening, speaking, reading]
+modes: [interpretive, interpersonal, presentational, mediation]
+strands: [meaning-input, meaning-output, language-focus]
+register: neutral
+variety: modern-standard-arabic
+reviews_of: [AR-C32-fakkara, AR-C32-akhadha, AR-C30-arafa]
+---
+
+# ساعد (sāʿada) — "he helped," from a root meaning good fortune
+
+## Warm-up
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+[PAUSE 2s] The second way Arabic rebuilds a root is gentler than doubling:
+it stretches a vowel. What comes out is a verb pointed at somebody else.
+
+## The letters in this word
+<!-- hl-knowledge: introduces=[AR-CONCEPT-C32-SAADA-01]; assesses=[AR-CONCEPT-C32-AKHADHA-01, AR-CONCEPT-C30-ARAFA-01] -->
+
+Nothing new: **س** (*sīn*), **ا** (*alif*, here carrying long *ā*), **ع**
+(*ʿayn*) and **د** (*dāl*).
+
+Two things are worth noticing. **ساعد** breaks in two — **سا**, then **عد** —
+because *alif* will not join forwards, the split that broke **أخذ** and
+**ذهب** while **كتب** ran whole. And **ع** sits **inside** a word here,
+joined on both sides, where in **عرف** it opened one: the *ʿayn* changes
+shape by position more than almost any letter, while its throat-tightening
+sound never changes.
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[AR-CONCEPT-C32-SAADA-02]; assesses=[] -->
+
+**ساعَدَ** (*sāʿada*) = "**he helped**." Root **س-ع-د** — which on its own
+does not mean helping at all. It means **good fortune**:
+
+- **سَعيد** (*saʿīd*) — "**happy**, fortunate," also the name **Saeed**.
+- **سَعادة** (*saʿāda*) — "**happiness**."
+
+Stretch the vowel after the first root letter — **فاعَلَ** (*fāʿala*),
+**Form III** — and the verb turns outward: doing the root **with** or
+**toward** another person. *Sāʿada* is bringing your good fortune to bear on
+somebody. That is Arabic's account of helping.
+
+- **مُساعَدة** (*musāʿada*) — "**help, assistance**."
+- **مُساعِد** (*musāʿid*) — "**an assistant**," on the same **مُ** doer
+  prefix that gave *mufakkir*.
+
+English carries one name from this root: the ruling family **آل سُعود** (*Āl
+Saʿūd*) is what is said in **Saudi** Arabia — a family name, not a borrowed
+verb. Hebrew's **סָעַד** (*saʿad*), "to sustain," is the twin; a
+**מִסְעָדָה** (*misʿada*) is a restaurant.
+
+## Guided Practice
+<!-- hl-knowledge: introduces=[]; assesses=[AR-CONCEPT-C32-SAADA-01, AR-CONCEPT-C32-SAADA-02, AR-CONCEPT-C32-FAKKARA-01, AR-CONCEPT-C32-FAKKARA-02, AR-CONCEPT-C32-AKHADHA-01, AR-CONCEPT-C30-ARAFA-01] -->
+
+[PAUSE 1s]
+- [YOU SAY: the pieces — سا, then عد — "sāʿada," he helped]
+- [YOU SAY: which break — ʾakhadha and sāʿada in two, kataba in one]
+- [YOU SAY: the ʿayn opening ʿarafa, then joined inside sāʿada]
+- [YOU SAY: the root before the help — saʿīd, happy; saʿāda, happiness]
+- [YOU SAY: doubled against stretched — fakkara's shadda, sāʿada's long ā]
+- [YOU SAY: the two mu- doers — mufakkir, a thinker; musāʿid, an assistant]
+
+## Wrap-up Recall
+<!-- hl-knowledge: introduces=[]; assesses=[AR-CONCEPT-C32-SAADA-01, AR-CONCEPT-C32-SAADA-02, AR-CONCEPT-C32-FAKKARA-01, AR-CONCEPT-C32-FAKKARA-02] -->
+
+[PAUSE 3s] What does Form III do to a root, and to its meaning? (**Stretches
+the vowel after the first letter** — **فاعَلَ** — and aims the action **at
+somebody else**.) What does **س-ع-د** mean before it means helping? (**Good
+fortune** — *saʿīd*, "happy.") Which mark makes *fakkara* Form II, and does
+*sāʿada* carry one? (**The shadda** on the **ك** — and **no**.) Which English
+place-name carries this root? (**Saudi** Arabia, from **آل سُعود**.)
+`,x=e({default:()=>S}),S=`---
+schema_version: 2
+id: AR-C33-halib
+spine_node: SPINE-POLITE-REQUEST-REPAIR
+sequence: 870
+chapter: 33
+type: word
+headword: حليب
+gloss: "milk" — the opposite case to shāy: a home-grown noun sitting straight on the verb for milking, and a Hebrew twin that is the same word
+concept_tag: AR-DRINK-MILK
+romanization: ḥalīb
+prerequisites: [AR-C33-shay, AR-W07-hook-family-ha-kha]
+sounds: [haa-pharyngeal, long-ii, rtl-known-letters]
+roots: [h-l-b]
+etymology_hook: "حليب (ḥalīb, 'milk') sits on the root ح-ل-ب, whose verb حَلَبَ (ḥalaba) means 'he milked', so the noun is 'the milked thing' — the same verb-to-noun transparency as خبز (khubz) on خ-ب-ز, 'to bake'; Hebrew חָלָב (ḥalav, 'milk') is the same Semitic root, while the Syrian city حَلَب (Ḥalab, Aleppo) only looks related, since the name is attested in Bronze Age records long before Arabic and the milk story told about it is folk etymology"
+duration:
+  max_seconds: 240
+requires:
+  knowledge: [AR-CONCEPT-C33-SHAY-02]
+introduces:
+  knowledge: [AR-CONCEPT-C33-HALIB-01, AR-CONCEPT-C33-HALIB-02]
+practises:
+  knowledge: [AR-CONCEPT-C33-HALIB-01, AR-CONCEPT-C33-HALIB-02, AR-CONCEPT-C33-SHAY-01, AR-CONCEPT-C33-SHAY-02, AR-CONCEPT-C13-MAA-KHUBZ-02, AR-CONCEPT-W07-HOOK-FAMILY-HA-KHA-01, AR-CONCEPT-C32-AHABBA-01]
+skills: [listening, speaking, reading]
+modes: [interpretive, interpersonal, presentational, mediation]
+strands: [meaning-input, meaning-output, language-focus]
+register: neutral
+variety: modern-standard-arabic
+reviews_of: [AR-C33-shay, AR-C13-maa-khubz, AR-W07-hook-family-ha-kha]
+---
+
+# حليب (ḥalīb) — "milk," and the verb underneath it
+
+## Warm-up
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+[PAUSE 2s] Yesterday's word had no root to stand on. This one has a root so
+plain you can hear the verb inside the noun.
+
+## The letters in this word
+<!-- hl-knowledge: introduces=[AR-CONCEPT-C33-HALIB-01]; assesses=[AR-CONCEPT-W07-HOOK-FAMILY-HA-KHA-01, AR-CONCEPT-C32-AHABBA-01] -->
+
+Nothing new again. **ح** (*ḥāʾ*) is the undotted member of the hook-and-tail
+family — the body it shares with **خ** (*khāʾ*, one dot above) and **ج**
+(*jīm*, one dot below). It is the hard breath from deep in the throat that
+opens **أحبّ** (*ʾaḥabba*).
+
+Then **ل** (*lām*), **ي** (*yāʾ*) carrying the long **ī**, and **ب** (*bāʾ*).
+
+All four join, so **حليب** runs as one unbroken stroke — the opposite of
+**شاي**, which had to stop at its *alif*.
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[AR-CONCEPT-C33-HALIB-02]; assesses=[AR-CONCEPT-C13-MAA-KHUBZ-02] -->
+
+**حَليب** (*ḥalīb*) = "**milk**." Root **ح-ل-ب**, and its verb is **حَلَبَ**
+(*ḥalaba*), "**he milked**." So the noun is simply the milked thing.
+
+You have met this exact transparency before. **خبز** (*khubz*, bread) sits on
+**خ-ب-ز**, "to bake": the baked thing. Arabic does this constantly — name the
+action, and the everyday noun falls out of it.
+
+The pattern *ḥalīb* wears, **فَعيل** (*faʿīl*), is one to keep. It takes a root
+and hands back a quality or a result you can hold.
+
+Hebrew has the word unchanged: **חָלָב** (*ḥalav*), "milk," the same root doing
+the same job — the family resemblance already heard in *salām* and *shalom*.
+
+One caution, because a good story is not the same as a true one. The Syrian
+city **حَلَب** (*Ḥalab*, English **Aleppo**) is often explained as a milk name.
+It is not: *Ḥalab* appears in Bronze Age records centuries before Arabic was
+written, so the milk account is a later invention hung on a name that already
+existed. No English word descends from **ح-ل-ب** at all.
+
+## Guided Practice
+<!-- hl-knowledge: introduces=[]; assesses=[AR-CONCEPT-C33-HALIB-01, AR-CONCEPT-C33-HALIB-02, AR-CONCEPT-C33-SHAY-01, AR-CONCEPT-C33-SHAY-02, AR-CONCEPT-C13-MAA-KHUBZ-02, AR-CONCEPT-W07-HOOK-FAMILY-HA-KHA-01] -->
+
+[PAUSE 1s]
+- [YOU SAY: the hook family — ḥāʾ no dot, khāʾ one above, jīm one below]
+- [YOU SAY: ḥāʾ, lām, yāʾ, bāʾ — "ḥalīb," milk]
+- [YOU SAY: the verb under it — "ḥalaba," he milked]
+- [YOU SAY: the same move in bread — khubz, from kh-b-z, to bake]
+- [YOU SAY: the pattern — faʿīl, as in ḥalīb]
+- [YOU SAY: the borrowed one against the built one — shāy, then ḥalīb]
+- [YOU SAY: the Hebrew twin — ḥalav]
+
+## Wrap-up Recall
+<!-- hl-knowledge: introduces=[]; assesses=[AR-CONCEPT-C33-HALIB-01, AR-CONCEPT-C33-HALIB-02, AR-CONCEPT-C33-SHAY-02, AR-CONCEPT-C13-MAA-KHUBZ-02] -->
+
+[PAUSE 3s] What does the root **ح-ل-ب** mean as a verb? (**To milk** — so
+*ḥalīb* is the milked thing.) Which earlier word works the same way? (***Khubz***
+— bread, from *kh-b-z*, to bake.) Which of the chapter's words so far has no
+root at all? (***Shāy*** — it was borrowed.) Is Aleppo named for milk?
+(**No** — the name is far older than Arabic; that story is folk etymology.)
+`,C=e({default:()=>w}),w=`---
+schema_version: 2
+id: AR-C33-qahwa
+spine_node: SPINE-POLITE-REQUEST-REPAIR
+sequence: 890
+chapter: 33
+type: word
+headword: قهوة
+gloss: "coffee" — the chapter's payoff, where the tied tāʾ finally earns its keep as Arabic's visible gender marker, and where you can order everything the chapter taught
+concept_tag: AR-DRINK-COFFEE
+romanization: qahwa
+prerequisites: [AR-C33-sukkar, AR-W11-ha-and-ta-marbuta, AR-C04-al-salama, AR-C23-afwan]
+sounds: [qaf, ta-marbuta, rtl-known-letters]
+roots: [q-h-w]
+etymology_hook: "قهوة (qahwa, 'coffee') ends in ة (tāʾ marbūṭa), the tied tāʾ that marks a noun feminine — the same ending that turns مَكْتَب (maktab, an office) into مَكْتَبة (maktaba, a library) and that sits on السلامة (as-salāma); the word travelled out of Arabic through Ottoman Turkish kahve into Italian caffè, French café, German Kaffee and English coffee, so a learner meeting قهوة is meeting a word their own language already borrowed"
+duration:
+  max_seconds: 240
+requires:
+  knowledge: [AR-CONCEPT-C33-SUKKAR-02]
+introduces:
+  knowledge: [AR-CONCEPT-C33-QAHWA-01, AR-CONCEPT-C33-QAHWA-02]
+practises:
+  knowledge: [AR-CONCEPT-C33-QAHWA-01, AR-CONCEPT-C33-QAHWA-02, AR-CONCEPT-C33-SUKKAR-01, AR-CONCEPT-C33-SUKKAR-02, AR-CONCEPT-C33-HALIB-02, AR-CONCEPT-C33-SHAY-02, AR-CONCEPT-W11-HA-AND-TA-MARBUTA-02, AR-CONCEPT-C04-AL-SALAMA-01, AR-CONCEPT-C06-MIN-FADLIK-01, AR-CONCEPT-C23-AFWAN-01, AR-CONCEPT-C33-HALIB-01]
+skills: [listening, speaking, reading]
+modes: [interpretive, interpersonal, presentational, mediation]
+strands: [meaning-input, meaning-output, language-focus]
+register: neutral
+variety: modern-standard-arabic
+reviews_of: [AR-C33-sukkar, AR-C33-halib, AR-C33-shay, AR-W11-ha-and-ta-marbuta, AR-C04-al-salama, AR-C06-min-fadlik, AR-C23-afwan]
+---
+
+# قهوة (qahwa) — "coffee," the tied tāʾ, and asking for all of it
+
+## Warm-up
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+[PAUSE 2s] The chapter closes on a word your own language already borrowed —
+and on the small letter at its end that tells you the word is feminine.
+
+## The letters in this word
+<!-- hl-knowledge: introduces=[AR-CONCEPT-C33-QAHWA-01]; assesses=[AR-CONCEPT-W11-HA-AND-TA-MARBUTA-02, AR-CONCEPT-C33-SUKKAR-01] -->
+
+Nothing new. **ق** (*qāf*, two dots above), the *k* made far back in the
+throat; **ه** (*hāʾ*), the loop that changes shape wherever it stands; **و**
+(*wāw*), a non-joiner like *rā*; and then **ة**.
+
+**ة** is the **tāʾ marbūṭa**, the "tied *tāʾ*" — an **ه** with *tāʾ*'s two
+dots on it. It appears only at the end of a word.
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[AR-CONCEPT-C33-QAHWA-02]; assesses=[AR-CONCEPT-C04-AL-SALAMA-01, AR-CONCEPT-C33-HALIB-02, AR-CONCEPT-C33-SHAY-02] -->
+
+**قَهْوة** (*qahwa*) = "**coffee**."
+
+Here is what the **ة** buys you. Arabic nouns carry **gender**, and Arabic
+usually **shows** you which is which: a noun ending in **ة** is almost always
+**feminine**. That is a rule you apply on sight, not a list to memorise.
+
+You have watched it work already:
+
+- **مَكْتَب** (*maktab*), an office, becomes **مَكْتَبة** (*maktaba*), a
+  library.
+- **سَلام** (*salām*), peace, becomes **السَّلامة** (*as-salāma*), the safety —
+  the root **س-ل-م** wearing an ending and a pattern.
+
+So *qahwa* is feminine, while *shāy*, *ḥalīb* and *sukkar* are masculine — and
+the ending alone told you.
+
+The road out of Arabic is short and well lit. Ottoman **Turkish** took *qahwa*
+as **kahve**; Venetian traders took *kahve* as Italian **caffè**; from Italian
+came French **café**, German **Kaffee** and English **coffee**. The English
+word in your mouth is this Arabic one.
+
+## Guided Practice
+<!-- hl-knowledge: introduces=[]; assesses=[AR-CONCEPT-C33-QAHWA-01, AR-CONCEPT-C33-QAHWA-02, AR-CONCEPT-C33-SUKKAR-01, AR-CONCEPT-C33-SUKKAR-02, AR-CONCEPT-C33-HALIB-02, AR-CONCEPT-C33-SHAY-02, AR-CONCEPT-W11-HA-AND-TA-MARBUTA-02, AR-CONCEPT-C04-AL-SALAMA-01, AR-CONCEPT-C06-MIN-FADLIK-01, AR-CONCEPT-C23-AFWAN-01, AR-CONCEPT-C33-HALIB-01] -->
+
+[PAUSE 1s]
+- [YOU SAY: qāf, hāʾ, wāw, tāʾ marbūṭa — "qahwa," coffee]
+- [YOU SAY: the tied tāʾ — an hāʾ wearing tāʾ's two dots, only at a word's end]
+- [YOU SAY: what it marks — feminine; maktab becomes maktaba, salām becomes as-salāma]
+- [YOU SAY: gendered — qahwa feminine; shāy, ḥalīb, sukkar masculine]
+- [YOU SAY: order each — "shāy, min faḍlik"; "qahwa, min faḍlik"; "ḥalīb, min faḍlik"; "sukkar, min faḍlik"]
+- [YOU SAY: the answer to thanks — "ʿafwan," think nothing of it]
+- [YOU SAY: ḥalīb joined throughout, sukkar's rā broke, and the wāw breaks here]
+- [YOU SAY: built against borrowed — ḥalaba gave ḥalīb; shāy and sukkar gave nothing]
+
+## Wrap-up Recall
+<!-- hl-knowledge: introduces=[]; assesses=[AR-CONCEPT-C33-QAHWA-01, AR-CONCEPT-C33-QAHWA-02, AR-CONCEPT-C33-SUKKAR-02, AR-CONCEPT-C33-HALIB-02, AR-CONCEPT-C33-SHAY-02, AR-CONCEPT-W11-HA-AND-TA-MARBUTA-02, AR-CONCEPT-C06-MIN-FADLIK-01, AR-CONCEPT-C23-AFWAN-01] -->
+
+[PAUSE 3s] Which of this chapter's words is feminine, and how can you tell?
+(***Qahwa*** — **it ends in ة**.) Name two earlier words with that ending.
+(***Maktaba*** and ***as-salāma***.) Ask for each drink politely.
+(***Shāy***, ***qahwa***, ***ḥalīb***, ***sukkar*** — each with ***min
+faḍlik***, "from your grace.") What do you answer when someone thanks you?
+(***ʿAfwan***.) Which word here was built from a verb? (***Ḥalīb***, from
+*ḥalaba* — the others travelled in.)
+`,T=e({default:()=>E}),E=`---
+schema_version: 2
+id: AR-C33-shay
+spine_node: SPINE-POLITE-REQUEST-REPAIR
+sequence: 860
+chapter: 33
+type: word
+headword: شاي
+gloss: "tea" — the first noun in this book with no Arabic root at all, and a word that reached Arabic and English from the same Chinese original by two different roads
+concept_tag: AR-DRINK-TEA
+romanization: shāy
+prerequisites: [AR-C32-ahabba]
+sounds: [shin, long-alif, rtl-known-letters]
+roots: [borrowed-no-arabic-root]
+etymology_hook: "شاي (shāy, 'tea') is a borrowed word with no Arabic root and therefore no pattern family — unlike كتب, which fills كِتاب, كاتِب and مَكْتَبة from one root; Arabic took it through Persian چای (chāy) from the northern Chinese chá, while English took the same Chinese word through the coastal Hokkien form tê carried by Dutch traders, so shāy and tea are the two ends of one word"
+duration:
+  max_seconds: 240
+requires:
+  knowledge: [AR-CONCEPT-C32-AHABBA-02]
+introduces:
+  knowledge: [AR-CONCEPT-C33-SHAY-01, AR-CONCEPT-C33-SHAY-02]
+practises:
+  knowledge: [AR-CONCEPT-C33-SHAY-01, AR-CONCEPT-C33-SHAY-02, AR-CONCEPT-C32-AHABBA-01, AR-CONCEPT-C32-AHABBA-02, AR-CONCEPT-C31-KATABA-02]
+skills: [listening, speaking, reading]
+modes: [interpretive, interpersonal, presentational, mediation]
+strands: [meaning-input, meaning-output, language-focus]
+register: neutral
+variety: modern-standard-arabic
+reviews_of: [AR-C32-ahabba, AR-C31-kataba]
+---
+
+# شاي (shāy) — "tea," and a word with no root
+
+## Warm-up
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+[PAUSE 2s] Every Arabic word you have taken apart so far had a root under it.
+This one does not — and that absence is the lesson.
+
+## The letters in this word
+<!-- hl-knowledge: introduces=[AR-CONCEPT-C33-SHAY-01]; assesses=[AR-CONCEPT-C32-AHABBA-01] -->
+
+Nothing new. **ش** (*shīn*) has been on the page since **شكرا** (*shukran*):
+the *sīn* skeleton with three dots above it. Then **ا** (*alif*), the
+non-joiner, and **ي** (*yāʾ*).
+
+So **شاي** breaks where *alif* forces it to break: **شا**, then **ي**. That is
+the same two-piece split you met in **أحبّ** — **أ** standing alone, then
+**حبّ**.
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[AR-CONCEPT-C33-SHAY-02]; assesses=[AR-CONCEPT-C31-KATABA-02] -->
+
+**شاي** (*shāy*) = "**tea**."
+
+Now the honest part. Take **كتب** (*kataba*): its root pours into **كِتاب**
+(*kitāb*, a book), **كاتِب** (*kātib*, a writer), **مَكْتَب** (*maktab*, an
+office) and **مَكْتَبة** (*maktaba*, a library). Try that with *shāy* and
+nothing comes out. There is no shape it fills, no doer, no place, no done-to.
+
+That is because **shāy is borrowed**, and a borrowed word arrives without a
+root. Arabic took it through Persian **چای** (*chāy*), which took it from the
+**northern Chinese** *chá*.
+
+Your own language took the same Chinese word by the other road. Traders on the
+southern coast of China said it *tê*, Dutch ships carried that form to Europe,
+and it became English **tea**, French **thé**, German **Tee**. Overland through
+Persia it stayed *chá*: Russian **chay**, Turkish **çay**, Arabic
+**shāy**.
+
+So *shāy* and *tea* are not merely similar. They are the two ends of one word,
+separated by which way it left China.
+
+## Guided Practice
+<!-- hl-knowledge: introduces=[]; assesses=[AR-CONCEPT-C33-SHAY-01, AR-CONCEPT-C33-SHAY-02, AR-CONCEPT-C32-AHABBA-01, AR-CONCEPT-C32-AHABBA-02, AR-CONCEPT-C31-KATABA-02] -->
+
+[PAUSE 1s]
+- [YOU SAY: shīn, alif, yāʾ — "shāy," tea]
+- [YOU SAY: where it breaks — shā, then yāʾ, as أحبّ broke after the alif]
+- [YOU SAY: what a root gives — kitāb, kātib, maktab, maktaba]
+- [YOU SAY: what shāy gives — nothing, because it was borrowed]
+- [YOU SAY: the overland road — Chinese chá, Persian chāy, Arabic shāy]
+- [YOU SAY: the sea road — Hokkien tê, Dutch, English tea]
+
+## Wrap-up Recall
+<!-- hl-knowledge: introduces=[]; assesses=[AR-CONCEPT-C33-SHAY-01, AR-CONCEPT-C33-SHAY-02, AR-CONCEPT-C32-AHABBA-02, AR-CONCEPT-C31-KATABA-02] -->
+
+[PAUSE 3s] Why can you not build a word family from **شاي**? (**It has no
+Arabic root** — it was borrowed, and borrowed words arrive without one.) Name
+what **ك-ت-ب** builds, for contrast. (***Kitāb***, ***kātib***, ***maktab***,
+***maktaba***.) Which language handed *shāy* to Arabic, and which language did
+that one take it from? (**Persian**, from **Chinese**.) Is English *tea* a
+relative? (**Yes** — the same Chinese word, carried by sea rather than
+overland.)
+`,D=e({default:()=>O}),O=`---
+schema_version: 2
+id: AR-C33-sukkar
+spine_node: SPINE-POLITE-REQUEST-REPAIR
+sequence: 880
+chapter: 33
+type: word
+headword: سكر
+gloss: "sugar" — a word that crossed Asia and Europe, and the one that shows Arabic's own al- fused onto the front of a Spanish noun
+concept_tag: AR-DRINK-SUGAR
+romanization: sukkar
+prerequisites: [AR-C33-halib, AR-W08-kaf-and-ra]
+sounds: [shadda, rtl-known-letters]
+roots: [borrowed-sanskrit-sarkara]
+etymology_hook: "سُكَّر (sukkar, 'sugar') is borrowed, from Persian shakar, from Sanskrit śarkarā, 'grit, gravel' — sugar named for the coarse grains it comes in; Arabic passed it to medieval Latin as succarum and from there to Italian zucchero, French sucre and English sugar, while Spanish azúcar keeps Arabic's own article al- welded onto the front, the same fusion visible in algebra and alcohol; its shadda doubles a letter the word itself owns, the أحبّ reason rather than the فكّر reason"
+duration:
+  max_seconds: 240
+requires:
+  knowledge: [AR-CONCEPT-C33-HALIB-02]
+introduces:
+  knowledge: [AR-CONCEPT-C33-SUKKAR-01, AR-CONCEPT-C33-SUKKAR-02]
+practises:
+  knowledge: [AR-CONCEPT-C33-SUKKAR-01, AR-CONCEPT-C33-SUKKAR-02, AR-CONCEPT-C33-HALIB-01, AR-CONCEPT-C33-HALIB-02, AR-CONCEPT-C33-SHAY-02, AR-CONCEPT-W08-KAF-AND-RA-01, AR-CONCEPT-W08-KAF-AND-RA-02, AR-CONCEPT-C32-AHABBA-01, AR-CONCEPT-C33-SHAY-01]
+skills: [listening, speaking, reading]
+modes: [interpretive, interpersonal, presentational, mediation]
+strands: [meaning-input, meaning-output, language-focus]
+register: neutral
+variety: modern-standard-arabic
+reviews_of: [AR-C33-halib, AR-C33-shay, AR-W08-kaf-and-ra, AR-C32-ahabba]
+---
+
+# سكر (sukkar) — "sugar," and an Arabic article stuck to a Spanish word
+
+## Warm-up
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+[PAUSE 2s] Another traveller — and this one left a piece of Arabic grammar
+behind in Spain.
+
+## The letters in this word
+<!-- hl-knowledge: introduces=[AR-CONCEPT-C33-SUKKAR-01]; assesses=[AR-CONCEPT-W08-KAF-AND-RA-01, AR-CONCEPT-W08-KAF-AND-RA-02, AR-CONCEPT-C32-AHABBA-01] -->
+
+Nothing new. **س** (*sīn*), the low comb; **ك** (*kāf*), the angular *k*; and
+**ر** (*rā*), the little downward curve that **breaks** — a non-joiner, like
+*alif*. So **سكر** joins from *sīn* to *kāf*, and *rā* hangs off the end.
+
+Written fully it is **سُكَّر**, and the mark over the **ك** is the **shadda**.
+You have seen it do two jobs. On **فكّر** (*fakkara*) it built a new verb out
+of an old root. Here it does the quieter job it did on **أحبّ**: it spells a
+letter the word already owns twice over — *suk-kar*.
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[AR-CONCEPT-C33-SUKKAR-02]; assesses=[AR-CONCEPT-C33-HALIB-02, AR-CONCEPT-C33-SHAY-02] -->
+
+**سُكَّر** (*sukkar*) = "**sugar**." Like *shāy*, and unlike *ḥalīb*, it is
+**borrowed**: no Arabic root, no family of shapes.
+
+Its road west starts in **Sanskrit**, where **śarkarā** meant "grit,
+gravel" — sugar named for its coarse grains. **Persian**
+took it as *shakar*, Arabic as *sukkar*, and Arabic carried it into medieval
+**Latin** as *succarum*. From there: Italian **zucchero**, French **sucre**,
+German **Zucker**, English **sugar**.
+
+Then **Spanish**, which shows what the others hide. Spanish for sugar is
+**azúcar** — and that opening *a-z-* is Arabic's own **الـ** (*al-*), the
+article, welded onto the front of the noun. Spanish borrowed **al-sukkar**
+whole and never took it apart.
+
+You know why the *l* vanished: **س** is a **sun letter**, so *al-* + *sukkar*
+is said **as-sukkar**, as *al-* + *salām* is said **as-salām**. Spanish kept
+the sound, not the spelling. English holds *algebra* and *alcohol*.
+
+## Guided Practice
+<!-- hl-knowledge: introduces=[]; assesses=[AR-CONCEPT-C33-SUKKAR-01, AR-CONCEPT-C33-SUKKAR-02, AR-CONCEPT-C33-HALIB-01, AR-CONCEPT-C33-HALIB-02, AR-CONCEPT-C33-SHAY-02, AR-CONCEPT-W08-KAF-AND-RA-01, AR-CONCEPT-W08-KAF-AND-RA-02, AR-CONCEPT-C32-AHABBA-01, AR-CONCEPT-C33-SHAY-01] -->
+
+[PAUSE 1s]
+- [YOU SAY: sīn, kāf, rā — and rā breaks, so nothing joins after it]
+- [YOU SAY: "sukkar," sugar — the shadda doubling the kāf, suk-kar]
+- [YOU SAY: the shadda's two jobs — fakkara built a verb, ʾaḥabba spelled one]
+- [YOU SAY: the road — Sanskrit śarkarā, Persian shakar, Arabic sukkar]
+- [YOU SAY: the article that stayed — as-sukkar, Spanish azúcar]
+- [YOU SAY: the sun letter — al- plus salām said as-salām]
+- [YOU SAY: borrowed, borrowed, built — shāy, sukkar, ḥalīb]
+- [YOU SAY: the letters before it — shīn, alif, yāʾ; then ḥāʾ, lām, yāʾ, bāʾ]
+
+## Wrap-up Recall
+<!-- hl-knowledge: introduces=[]; assesses=[AR-CONCEPT-C33-SUKKAR-01, AR-CONCEPT-C33-SUKKAR-02, AR-CONCEPT-C33-HALIB-02, AR-CONCEPT-C33-SHAY-02, AR-CONCEPT-C32-AHABBA-01] -->
+
+[PAUSE 3s] Which letter in **سكر** refuses to join what follows? (***Rā***.)
+What is the shadda doing here, and which earlier verb used it the same way?
+(**Only spelling a doubled letter** — as in ***ʾaḥabba***, not as in
+*fakkara*.) What language did *sukkar* come from before Persian? (**Sanskrit**
+— *śarkarā*, "grit.") What is hiding at the front of Spanish **azúcar**?
+(**Arabic *al-***, said *as-* before a sun letter.)
+`,k=e({default:()=>A}),A=`---
+schema_version: 2
+id: AR-C34-jubn
+spine_node: SPINE-POLITE-REQUEST-REPAIR
+sequence: 920
+chapter: 34
+type: word
+headword: جبن
+gloss: "cheese" — and an honest limit on the root system, because the very same three letters also spell cowardice and the two are not one idea
+concept_tag: AR-FOOD-CHEESE
+romanization: jubn
+prerequisites: [AR-C34-lahm, AR-W07-hook-family-ha-kha]
+sounds: [jim, rtl-known-letters]
+roots: [j-b-n]
+etymology_hook: "جُبْن (jubn, 'cheese') is written with the same letters as جُبْن ('cowardice', whose جَبان jabān is 'a coward'), and Arabic lexicographers list these as separate entries rather than one idea — a needed correction to the habit of reading every shared spelling as a shared root; Arabic's cheese word did not reach English, which took cheese from Latin cāseus, while the جِبْنة (jibna) of everyday speech shows the same tied tāʾ that marks قهوة feminine"
+duration:
+  max_seconds: 240
+requires:
+  knowledge: [AR-CONCEPT-C34-LAHM-02]
+introduces:
+  knowledge: [AR-CONCEPT-C34-JUBN-01, AR-CONCEPT-C34-JUBN-02]
+practises:
+  knowledge: [AR-CONCEPT-C34-JUBN-01, AR-CONCEPT-C34-JUBN-02, AR-CONCEPT-C34-LAHM-01, AR-CONCEPT-C34-LAHM-02, AR-CONCEPT-C34-MILH-02, AR-CONCEPT-C33-QAHWA-02, AR-CONCEPT-W07-HOOK-FAMILY-HA-KHA-01, AR-CONCEPT-C34-MILH-01]
+skills: [listening, speaking, reading]
+modes: [interpretive, interpersonal, presentational, mediation]
+strands: [meaning-input, meaning-output, language-focus]
+register: neutral
+variety: modern-standard-arabic
+reviews_of: [AR-C34-lahm, AR-C34-milh, AR-C33-qahwa, AR-W07-hook-family-ha-kha]
+---
+
+# جبن (jubn) — "cheese," and where the root system stops
+
+## Warm-up
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+[PAUSE 2s] The root system has been paying you back for chapters. This word is
+where it politely declines to.
+
+## The letters in this word
+<!-- hl-knowledge: introduces=[AR-CONCEPT-C34-JUBN-01]; assesses=[AR-CONCEPT-W07-HOOK-FAMILY-HA-KHA-01, AR-CONCEPT-C34-LAHM-01] -->
+
+Nothing new. **ج** (*jīm*) is the third of the hook-and-tail family: the body
+of **ح** (*ḥāʾ*) and **خ** (*khāʾ*), marked by one dot **below**. Then **ب**
+(*bāʾ*), one dot below, and **ن** (*nūn*), one dot above.
+
+Dots are the whole difference here, as they were between the *ḥāʾ* of **لحم**
+and the *khāʾ* of **خبز**.
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[AR-CONCEPT-C34-JUBN-02]; assesses=[AR-CONCEPT-C34-LAHM-02, AR-CONCEPT-C34-MILH-02, AR-CONCEPT-C33-QAHWA-02] -->
+
+**جُبْن** (*jubn*) = "**cheese**." In everyday speech you will more often hear
+**جِبْنة** (*jibna*) — and that ending is the **ة** you now recognise on
+sight, doing its usual work.
+
+Now the honest part, because you have been taught to trust roots and this is
+where that trust needs a limit.
+
+**جُبْن** also means "**cowardice**," and **جَبان** (*jabān*) is "**a
+coward**." Same letters, same order. So is a cheese a coward?
+
+**No.** Arabic's dictionaries list these as **separate entries** — words spelled
+alike, not one idea branching. Compare a real root: **م-ل-ح** carries salt into
+*mallāḥ*, the sailor of salt water, and into *malīḥ*, a salty compliment. You
+can feel the thread. Between cheese and cowardice there is none, and inventing
+one would be the mistake the milk story made of Aleppo.
+
+Two words can share three letters by accident. Arabic has many roots and few
+letters.
+
+English took none of this: **cheese** comes from Latin **cāseus**.
+
+## Guided Practice
+<!-- hl-knowledge: introduces=[]; assesses=[AR-CONCEPT-C34-JUBN-01, AR-CONCEPT-C34-JUBN-02, AR-CONCEPT-C34-LAHM-01, AR-CONCEPT-C34-LAHM-02, AR-CONCEPT-C34-MILH-02, AR-CONCEPT-C33-QAHWA-02, AR-CONCEPT-W07-HOOK-FAMILY-HA-KHA-01, AR-CONCEPT-C34-MILH-01] -->
+
+[PAUSE 1s]
+- [YOU SAY: jīm, bāʾ, nūn — "jubn," cheese]
+- [YOU SAY: the hook family by dots — ḥāʾ none, khāʾ one above, jīm one below]
+- [YOU SAY: the everyday form — jibna, with the tied tāʾ]
+- [YOU SAY: the accident — jubn is also cowardice, jabān a coward]
+- [YOU SAY: the verdict — separate words, not one root branching]
+- [YOU SAY: a real branching — milḥ, mallāḥ, malīḥ]
+- [YOU SAY: meat and salt — laḥm, milḥ, the same shapes reordered]
+
+## Wrap-up Recall
+<!-- hl-knowledge: introduces=[]; assesses=[AR-CONCEPT-C34-JUBN-01, AR-CONCEPT-C34-JUBN-02, AR-CONCEPT-C34-LAHM-02, AR-CONCEPT-C34-MILH-02, AR-CONCEPT-C33-QAHWA-02] -->
+
+[PAUSE 3s] What separates **ج** from **ح** and **خ**? (**One dot below**.)
+What else do the letters of *jubn* spell? (**Cowardice** — *jabān* is a
+coward.) Are cheese and cowardice one root? (**No** — separate words that look
+alike.) Name a root that really does branch. (**م-ل-ح** — *milḥ*, *mallāḥ*,
+*malīḥ*.) What does the ending on *jibna* tell you? (**Feminine**, as *qahwa*
+is.)
+`,j=e({default:()=>M}),M=`---
+schema_version: 2
+id: AR-C34-lahm
+spine_node: SPINE-POLITE-REQUEST-REPAIR
+sequence: 910
+chapter: 34
+type: word
+headword: لحم
+gloss: "meat" — one Semitic root that Arabic settled on meat and Hebrew settled on bread, with Bethlehem sitting on the seam between them
+concept_tag: AR-FOOD-MEAT
+romanization: laḥm
+prerequisites: [AR-C34-milh, AR-W07-hook-family-ha-kha]
+sounds: [haa-pharyngeal, rtl-known-letters]
+roots: [l-h-m]
+etymology_hook: "لَحْم (laḥm, 'meat') and Hebrew לֶחֶם (leḥem, 'bread') are the same Semitic root ل-ح-م, which named the staple food and let each people fill it with whatever their staple was; the town Arabic calls بيت لحم (Bayt Laḥm) is the town Hebrew calls בֵּית לֶחֶם (Bēt Leḥem) and English calls Bethlehem, so the seam runs straight through a place name English already owns, while خبز (khubz) shows Arabic naming bread from its own root خ-ب-ز instead"
+duration:
+  max_seconds: 240
+requires:
+  knowledge: [AR-CONCEPT-C34-MILH-02]
+introduces:
+  knowledge: [AR-CONCEPT-C34-LAHM-01, AR-CONCEPT-C34-LAHM-02]
+practises:
+  knowledge: [AR-CONCEPT-C34-LAHM-01, AR-CONCEPT-C34-LAHM-02, AR-CONCEPT-C34-MILH-01, AR-CONCEPT-C34-MILH-02, AR-CONCEPT-C33-QAHWA-02, AR-CONCEPT-C13-MAA-KHUBZ-02, AR-CONCEPT-W07-HOOK-FAMILY-HA-KHA-01, AR-CONCEPT-C33-QAHWA-01]
+skills: [listening, speaking, reading]
+modes: [interpretive, interpersonal, presentational, mediation]
+strands: [meaning-input, meaning-output, language-focus]
+register: neutral
+variety: modern-standard-arabic
+reviews_of: [AR-C34-milh, AR-C33-qahwa, AR-C13-maa-khubz, AR-W07-hook-family-ha-kha]
+---
+
+# لحم (laḥm) — "meat," and the town on the seam
+
+## Warm-up
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+[PAUSE 2s] This word and its Hebrew twin are the same root — and they mean
+different foods. There is a town whose name proves it.
+
+## The letters in this word
+<!-- hl-knowledge: introduces=[AR-CONCEPT-C34-LAHM-01]; assesses=[AR-CONCEPT-W07-HOOK-FAMILY-HA-KHA-01, AR-CONCEPT-C34-MILH-01] -->
+
+Nothing new, and something pleasing: **لحم** is **ملح** read the other way
+about. The same shapes — **ل** (*lām*), **ح** (*ḥāʾ*), **م** (*mīm*) — in a
+different order, and so a different root and a different word.
+
+That is the root system stated as plainly as it can be. The letters are not the
+word. The **order** is the word.
+
+Here *ḥāʾ* sits in the **middle**, so it wears its joined-both-sides shape:
+neither *ḥalīb*'s open opening nor *milḥ*'s tailed ending.
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[AR-CONCEPT-C34-LAHM-02]; assesses=[AR-CONCEPT-C13-MAA-KHUBZ-02, AR-CONCEPT-C34-MILH-02] -->
+
+**لَحْم** (*laḥm*) = "**meat**." Root **ل-ح-م**.
+
+Now the twin, and it is the best one in this book. Hebrew's **לֶחֶם**
+(*leḥem*) is the same root — and it means **bread**.
+
+Neither language changed the meaning. The old Semitic root named **the staple
+food**, and each people filled it with whatever theirs was: meat where herds
+mattered, bread where grain did.
+
+English already owns the proof. The town is **بيت لحم** (*Bayt Laḥm*) in Arabic
+and **בֵּית לֶחֶם** (*Bēt Leḥem*) in Hebrew — one name, in which *bayt* and
+*bēt* both mean "a house of." English calls it **Bethlehem**: house of bread on
+one side of the seam, house of meat on the other.
+
+And notice what Arabic did **not** do. It had this root available for bread and
+did not use it. Arabic's bread is **خبز** (*khubz*), built on **خ-ب-ز**, "to
+bake" — the baked thing, as *ḥalīb* is the milked thing.
+
+## Guided Practice
+<!-- hl-knowledge: introduces=[]; assesses=[AR-CONCEPT-C34-LAHM-01, AR-CONCEPT-C34-LAHM-02, AR-CONCEPT-C34-MILH-01, AR-CONCEPT-C34-MILH-02, AR-CONCEPT-C33-QAHWA-02, AR-CONCEPT-C13-MAA-KHUBZ-02, AR-CONCEPT-W07-HOOK-FAMILY-HA-KHA-01, AR-CONCEPT-C33-QAHWA-01] -->
+
+[PAUSE 1s]
+- [YOU SAY: lām, ḥāʾ, mīm — "laḥm," meat]
+- [YOU SAY: the same shapes reordered — mīm, lām, ḥāʾ is "milḥ," salt]
+- [YOU SAY: ḥāʾ in the middle, joined on both sides]
+- [YOU SAY: the twin that shifted — laḥm is meat, Hebrew leḥem is bread]
+- [YOU SAY: the town on the seam — Bayt Laḥm, Bēt Leḥem, Bethlehem]
+- [YOU SAY: Arabic's own bread — khubz, from kh-b-z, to bake]
+- [YOU SAY: the salt root's reach — mallāḥ, malīḥ]
+- [YOU SAY: qahwa's letters and its feminine ending — qāf, hāʾ, wāw, tāʾ marbūṭa]
+
+## Wrap-up Recall
+<!-- hl-knowledge: introduces=[]; assesses=[AR-CONCEPT-C34-LAHM-01, AR-CONCEPT-C34-LAHM-02, AR-CONCEPT-C34-MILH-02, AR-CONCEPT-C33-QAHWA-02, AR-CONCEPT-C13-MAA-KHUBZ-02] -->
+
+[PAUSE 3s] What separates **لحم** from **ملح**? (**Only the order of the
+letters** — the whole root system.) What does Hebrew *leḥem* mean, and why is
+that no contradiction? (**Bread** — the root named the **staple food**.) Which
+English place name carries both? (**Bethlehem**.) What is Arabic's own word for
+bread, and where from? (***Khubz***, from **خ-ب-ز**, "to bake.")
+`,N=e({default:()=>P}),P=`---
+schema_version: 2
+id: AR-C34-milh
+spine_node: SPINE-POLITE-REQUEST-REPAIR
+sequence: 900
+chapter: 34
+type: word
+headword: ملح
+gloss: "salt" — a plain Semitic word whose root also gives Arabic its sailor and its word for handsome, and which shows ḥāʾ in its final shape
+concept_tag: AR-FOOD-SALT
+romanization: milḥ
+prerequisites: [AR-C33-qahwa, AR-W07-hook-family-ha-kha]
+sounds: [haa-pharyngeal-final, rtl-known-letters]
+roots: [m-l-h]
+etymology_hook: "مِلْح (milḥ, 'salt') sits on the root م-ل-ح, which also yields مَلّاح (mallāḥ, 'a sailor' — the man of the salt water) and مَليح (malīḥ, 'handsome, pleasant'), so the root runs from a mineral to the sea to a compliment; Hebrew מֶלַח (melaḥ, 'salt') is the same word, and English took none of it — the English salt line comes from Latin sāl, an entirely separate family"
+duration:
+  max_seconds: 240
+requires:
+  knowledge: [AR-CONCEPT-C33-QAHWA-02]
+introduces:
+  knowledge: [AR-CONCEPT-C34-MILH-01, AR-CONCEPT-C34-MILH-02]
+practises:
+  knowledge: [AR-CONCEPT-C34-MILH-01, AR-CONCEPT-C34-MILH-02, AR-CONCEPT-C33-QAHWA-01, AR-CONCEPT-C33-QAHWA-02, AR-CONCEPT-C33-SUKKAR-02, AR-CONCEPT-W07-HOOK-FAMILY-HA-KHA-01, AR-CONCEPT-C33-HALIB-02, AR-CONCEPT-C33-SUKKAR-01]
+skills: [listening, speaking, reading]
+modes: [interpretive, interpersonal, presentational, mediation]
+strands: [meaning-input, meaning-output, language-focus]
+register: neutral
+variety: modern-standard-arabic
+reviews_of: [AR-C33-qahwa, AR-C33-sukkar, AR-C33-halib, AR-W07-hook-family-ha-kha]
+---
+
+# ملح (milḥ) — "salt," and the sailor hiding in it
+
+## Warm-up
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+[PAUSE 2s] A word for something you can hold in one hand — whose root
+stretches from a mineral to the open sea to a compliment.
+
+## The letters in this word
+<!-- hl-knowledge: introduces=[AR-CONCEPT-C34-MILH-01]; assesses=[AR-CONCEPT-W07-HOOK-FAMILY-HA-KHA-01, AR-CONCEPT-C33-QAHWA-01] -->
+
+Nothing new, but one shape is worth a second look. **م** (*mīm*), **ل**
+(*lām*), **ح** (*ḥāʾ*) — all three join, so **ملح** is one run of pen.
+
+The **ح** is the hook-and-tail letter that opened **حليب** (*ḥalīb*), but at
+the **end** of a word it grows its full tail and swings below the line: open at
+the start of *ḥalīb*, closed and tailed at the end of *milḥ*.
+
+**قهوة** made the same point at the other end of a word: **ة** exists only in
+final position.
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[AR-CONCEPT-C34-MILH-02]; assesses=[AR-CONCEPT-C33-SUKKAR-02, AR-CONCEPT-C33-HALIB-02] -->
+
+**مِلْح** (*milḥ*) = "**salt**." Root **م-ل-ح**, and this is a root that has
+gone travelling inside its own language:
+
+- **مَلّاح** (*mallāḥ*) — "**a sailor**." The man of the salt water. It wears
+  the doubled *lām* shape Arabic keeps for trades and habits.
+- **مَليح** (*malīḥ*) — "**handsome, pleasant**." Salty, said of a person.
+  Arabic reached for the same idea English reaches for when it calls a person
+  *the salt of the earth*.
+
+Note *malīḥ*'s shape: **فَعيل** (*faʿīl*), the same pattern that gave you
+**حَليب** (*ḥalīb*). A root plus that pattern hands back a quality.
+
+Hebrew has **מֶלַח** (*melaḥ*), "salt," unchanged — one more Semitic twin.
+English is **not** in this family: *salt* comes down from Latin **sāl** and its
+Germanic cousins. And unlike *sukkar*, nothing here was borrowed.
+
+## Guided Practice
+<!-- hl-knowledge: introduces=[]; assesses=[AR-CONCEPT-C34-MILH-01, AR-CONCEPT-C34-MILH-02, AR-CONCEPT-C33-QAHWA-01, AR-CONCEPT-C33-QAHWA-02, AR-CONCEPT-C33-SUKKAR-02, AR-CONCEPT-W07-HOOK-FAMILY-HA-KHA-01, AR-CONCEPT-C33-HALIB-02, AR-CONCEPT-C33-SUKKAR-01] -->
+
+[PAUSE 1s]
+- [YOU SAY: mīm, lām, ḥāʾ — "milḥ," salt]
+- [YOU SAY: ḥāʾ in two places — opening ḥalīb, closing milḥ with its tail]
+- [YOU SAY: the root's reach — mallāḥ, a sailor; malīḥ, handsome]
+- [YOU SAY: the faʿīl pattern twice — ḥalīb, malīḥ]
+- [YOU SAY: the Hebrew twin — melaḥ; and no English relative, only Latin sāl]
+- [YOU SAY: the borrowed one for contrast — sukkar, from Sanskrit by way of Persian]
+- [YOU SAY: the letters just behind — sīn, kāf, rā; qāf, hāʾ, wāw, tāʾ marbūṭa]
+
+## Wrap-up Recall
+<!-- hl-knowledge: introduces=[]; assesses=[AR-CONCEPT-C34-MILH-01, AR-CONCEPT-C34-MILH-02, AR-CONCEPT-C33-QAHWA-02, AR-CONCEPT-C33-SUKKAR-02, AR-CONCEPT-C33-HALIB-02] -->
+
+[PAUSE 3s] What else does **م-ل-ح** give besides salt? (***Mallāḥ***, a
+sailor, and ***malīḥ***, handsome.) Which pattern do *malīḥ* and *ḥalīb*
+share? (***Faʿīl***.) Why does the **ح** of *milḥ* not look like the **ح** of
+*ḥalīb*? (**It is at the end of the word**, so it takes its full tailed
+shape.) Does English *salt* belong to this family? (**No** — it descends from
+Latin *sāl*.)
+`,F=e({default:()=>I}),I=`---
+schema_version: 2
+id: AR-C34-taam
+spine_node: SPINE-POLITE-REQUEST-REPAIR
+sequence: 930
+chapter: 34
+type: word
+headword: طعام
+gloss: "food" — the chapter's payoff, where a root you have never met hands you the word for restaurant free of charge, because you already own the pattern
+concept_tag: AR-FOOD-GENERAL
+romanization: ṭaʿām
+prerequisites: [AR-C34-jubn]
+sounds: [taa-emphatic, ayn, rtl-known-letters]
+roots: [t-a-m]
+etymology_hook: "طَعام (ṭaʿām, 'food') is the root ط-ع-م, whose verb طَعِمَ (ṭaʿima) is 'he tasted' and whose noun طَعْم (ṭaʿm) is 'taste'; poured into the ma- place shape already met in مَكْتَب (maktab, an office) and مَذْهَب (madhhab), it gives مَطْعَم (maṭʿam, 'a restaurant' — the place of eating), so the learner generates the word rather than memorising it; its ط is the emphatic partner of ت, joining the ص of صباح and the ض of من فضلك"
+duration:
+  max_seconds: 240
+requires:
+  knowledge: [AR-CONCEPT-C34-JUBN-02]
+introduces:
+  knowledge: [AR-CONCEPT-C34-TAAM-01, AR-CONCEPT-C34-TAAM-02]
+practises:
+  knowledge: [AR-CONCEPT-C34-TAAM-01, AR-CONCEPT-C34-TAAM-02, AR-CONCEPT-C34-JUBN-01, AR-CONCEPT-C34-JUBN-02, AR-CONCEPT-C34-LAHM-02, AR-CONCEPT-C34-MILH-02, AR-CONCEPT-C31-KATABA-02, AR-CONCEPT-C30-AKALA-02, AR-CONCEPT-C13-MAA-KHUBZ-01, AR-CONCEPT-C06-MIN-FADLIK-01, AR-CONCEPT-C34-LAHM-01]
+skills: [listening, speaking, reading]
+modes: [interpretive, interpersonal, presentational, mediation]
+strands: [meaning-input, meaning-output, language-focus]
+register: neutral
+variety: modern-standard-arabic
+reviews_of: [AR-C34-jubn, AR-C34-lahm, AR-C34-milh, AR-C31-kataba, AR-C30-akala, AR-C13-maa-khubz, AR-C06-min-fadlik]
+---
+
+# طعام (ṭaʿām) — "food," and a restaurant you can build yourself
+
+## Warm-up
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+[PAUSE 2s] A new root, a new letter — and a word you will not have to be
+taught, because you already own the shape it comes in.
+
+## The letters in this word
+<!-- hl-knowledge: introduces=[AR-CONCEPT-C34-TAAM-01]; assesses=[AR-CONCEPT-C34-JUBN-01] -->
+
+One letter to name at last. **ط** is **ṭāʾ**, the **emphatic** partner of
+**ت** (*tāʾ*): the same *t*, said with the tongue flat, so the syllable goes
+dark around it.
+
+Arabic keeps a small set of emphatic pairs, and you have met the others without
+being told they were a set:
+
+- **ص** (*ṣād*) is the emphatic **س** (*sīn*) — the ص of **صباح** (*ṣabāḥ*).
+- **ض** (*ḍād*) is the emphatic **د** (*dāl*) — the ض of **من فضلك** (*min
+  faḍlik*).
+- **ط** (*ṭāʾ*) is the emphatic **ت** (*tāʾ*) — this one.
+
+Then **ع** (*ʿayn*), the throat sound already named, **ا** (*alif*) and **م**
+(*mīm*). *Ṭāʾ* joins; *alif* does not, so **طعام** runs **طعا**, then **م**.
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[AR-CONCEPT-C34-TAAM-02]; assesses=[AR-CONCEPT-C31-KATABA-02, AR-CONCEPT-C30-AKALA-02] -->
+
+**طَعام** (*ṭaʿām*) = "**food**." Root **ط-ع-م**, whose verb **طَعِمَ**
+(*ṭaʿima*) means "**he tasted**," and whose bare noun **طَعْم** (*ṭaʿm*) is
+"**taste, flavour**."
+
+So Arabic has two ways to speak of eating. **أَكَلَ** (*akala*) is the plain
+act — he ate. **ط-ع-م** goes through the tongue: tasting, and so the food that
+gets tasted.
+
+Now take the **مَـ place shape** you own. It made **مَكْتَب** (*maktab*), the
+place of writing, from **ك-ت-ب**, and **مَذْهَب** (*madhhab*) from **ذ-ه-ب**.
+Put **ط-ع-م** through it:
+
+**مَطْعَم** (*maṭʿam*) — the place of eating. **A restaurant.**
+
+Nobody taught you that word. The pattern did.
+
+## Guided Practice
+<!-- hl-knowledge: introduces=[]; assesses=[AR-CONCEPT-C34-TAAM-01, AR-CONCEPT-C34-TAAM-02, AR-CONCEPT-C34-JUBN-01, AR-CONCEPT-C34-JUBN-02, AR-CONCEPT-C34-LAHM-02, AR-CONCEPT-C34-MILH-02, AR-CONCEPT-C31-KATABA-02, AR-CONCEPT-C30-AKALA-02, AR-CONCEPT-C13-MAA-KHUBZ-01, AR-CONCEPT-C06-MIN-FADLIK-01, AR-CONCEPT-C34-LAHM-01] -->
+
+[PAUSE 1s]
+- [YOU SAY: ṭāʾ, ʿayn, alif, mīm — "ṭaʿām," food]
+- [YOU SAY: the emphatic set — ṣād under sīn, ḍād under dāl, ṭāʾ under tāʾ]
+- [YOU SAY: where you had them — ṣabāḥ, min faḍlik, now ṭaʿām]
+- [YOU SAY: the verb and the bare noun — ṭaʿima, he tasted; ṭaʿm, taste]
+- [YOU SAY: two ways to eat — akala the act, ṭaʿima the tasting]
+- [YOU SAY: the ma- place shape — madhhab, maktab, so maṭʿam, a restaurant]
+- [YOU SAY: the chapter's foods — milḥ, laḥm reversing its letters, jubn, ṭaʿām]
+- [YOU SAY: order them — "laḥm, min faḍlik"; "jubn, min faḍlik"]
+- [YOU SAY: and the odd old one — māʾ, water, whose plural miyāh keeps no pattern]
+
+## Wrap-up Recall
+<!-- hl-knowledge: introduces=[]; assesses=[AR-CONCEPT-C34-TAAM-01, AR-CONCEPT-C34-TAAM-02, AR-CONCEPT-C34-JUBN-02, AR-CONCEPT-C34-LAHM-02, AR-CONCEPT-C34-MILH-02, AR-CONCEPT-C31-KATABA-02, AR-CONCEPT-C13-MAA-KHUBZ-01, AR-CONCEPT-C06-MIN-FADLIK-01] -->
+
+[PAUSE 3s] Which plain letter is **ط** the emphatic partner of, and name the
+other pairs. (**ت** — with **ص** under **س** and **ض** under **د**.) What does
+**ط-ع-م** mean as a verb? (**To taste**.) Build "restaurant" from it, and name
+the earlier words in that shape. (***Maṭʿam*** — like ***maktab*** and
+***madhhab***.) Ask for the chapter's foods politely. (***Milḥ***, ***laḥm***,
+***jubn***, ***ṭaʿām*** — each with ***min faḍlik***, "from your grace.") Which
+everyday word keeps no pattern at all? (***Māʾ*** — its plural *miyāh* is
+irregular.)
+`;export{r as _,D as a,x as c,h as d,p as f,a as g,s as h,k as i,y as l,l as m,N as n,T as o,d as p,j as r,C as s,F as t,_ as u,t as v};
