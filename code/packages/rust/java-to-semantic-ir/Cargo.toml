@@ -1,8 +1,8 @@
 [package]
 name = "java-to-semantic-ir"
-version = "0.10.0"
+version = "0.11.0"
 edition = "2021"
-description = "Java (GrammarASTNode CST) → narrow-waist Semantic IR. JV02 frontend, milestone M4d: multi-dimensional arrays."
+description = "Java (GrammarASTNode CST) → narrow-waist Semantic IR. JV02 frontend, task #54: wire Expr::IndirectCall for invoking a lambda-valued local."
 
 [dependencies]
 coding-adventures-java-lexer = { path = "../java-lexer" }
