@@ -1,5 +1,11 @@
 # Changelog — `lang-aot`
 
+## 0.248.0 - 2026-08-26 (ALGOL nested real signed-unit identities)
+
+The ALGOL matrix now preserves a finite-real selector through a grouped
+literal-only signed-unit product on all seven standard backends. Compiler
+regressions keep nested odd-sign and non-unit expressions conservative.
+
 ## 0.247.0 - 2026-08-25 (ALGOL real signed-unit selector chains)
 
 The ALGOL matrix now preserves a finite-real selector through an even pair of
