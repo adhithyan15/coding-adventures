@@ -143,6 +143,40 @@ All notable changes to the `java-to-semantic-ir` crate will be documented in thi
     JavaScript, where the bug never reproduced) with a hard 15-second
     wall-clock timeout, so a reintroduction of any of these three bugs
     fails the affected test cleanly instead of hanging the suite.
+  - **A THIRD `/security-review` round, on `fresh_flag_name` itself,
+    found a FOURTH real bug (HIGH)**: both of `fresh_flag_name`'s checks
+    (`lookup_local_with_frame` and `DeclaredNameCollector`) compare a
+    candidate flag name against a real Java local's *raw source
+    spelling* — sound only if every backend's `sanitize_ident` is the
+    identity function on both strings being compared. That holds for
+    `fresh_flag_name`'s own `[A-Za-z0-9_]`-only candidates, but not for
+    an arbitrary Java local: `$` is a legal Java identifier character
+    (JLS §3.8) this crate's own lexer accepts, and `semantic-ir-to-
+    python::sanitize_ident` escapes it to a plain hex-digit string (e.g.
+    `_24`), so a Java local named `_do_while$` sanitizes to
+    `_do_while_24` — a string that can coincide exactly with some
+    `__do_while_N` candidate even though the two *raw* names share no
+    resemblance, defeating both of `fresh_flag_name`'s checks at once
+    (they never compared the sanitized forms). Confirmed by actually
+    executing the emitted Python and observing a hang, same as every
+    prior round. Fixed by a new `Lowerer::reject_dollar_sign_identifier`,
+    called at every one of the four points this crate turns a Java
+    `NAME` token into a declared local/parameter name (`formal_parameter_
+    kind_name_pairs`, `lambda_parameter_kind_name`, `lower_enhanced_for_
+    statement`, and the shared local-variable-declarator path used by
+    both plain declarations and a classic `for`'s own `for_init`) — this
+    restores the invariant `fresh_flag_name`'s design actually needs
+    (every declarable name lives in `[A-Za-z0-9_]`, the one alphabet
+    every backend's `sanitize_ident` treats as its own identity) by
+    construction, rather than teaching this backend-agnostic frontend
+    every backend's own escaping scheme. `$`-containing identifiers are
+    vanishingly rare in hand-written Java (real-world use is almost
+    exclusively compiler-generated synthetic names), so this is a
+    narrow, disclosed scope boundary in the same spirit as this crate's
+    many other "not supported yet" rejections. Five new `tests/
+    test_lower.rs` tests (`dollar_sign_in_*_is_rejected`) cover all four
+    call sites plus the classic-`for`-init-declarator path specifically
+    (the shared function's *second* caller, not just the first).
 
 ## [0.11.0] - 2026-08-26
 

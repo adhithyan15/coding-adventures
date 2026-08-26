@@ -33,6 +33,30 @@
 //! any collision — see `lower_do_while_statement`'s and `fresh_flag_
 //! name`'s own doc comments for the full story.
 //!
+//! A THIRD `/security-review` round then found a FOURTH real bug in that
+//! design: `fresh_flag_name`'s two checks both compare a candidate name
+//! against a real Java local's *raw source spelling*, which is sound
+//! only if every backend's `sanitize_ident` is the identity function on
+//! both strings being compared — true for `fresh_flag_name`'s own
+//! `[A-Za-z0-9_]`-only candidates, but NOT for an arbitrary Java local:
+//! `$` is a legal Java identifier character (JLS §3.8) this crate's own
+//! lexer accepts, and Python's `sanitize_ident` escapes it to a plain
+//! digit string, so a Java local named e.g. `_do_while$` can sanitize to
+//! the exact same Python identifier as some `__do_while_N` candidate —
+//! two *different* raw Java names colliding once emitted, defeating both
+//! of `fresh_flag_name`'s raw-string-only checks at once. Confirmed by
+//! actually executing the emitted Python and observing a hang, same as
+//! every prior round. Fixed by rejecting `$` in a declared Java
+//! identifier at lowering time — see `reject_dollar_sign_identifier`'s
+//! own doc comment for why this restores the invariant `fresh_flag_
+//! name`'s design actually needs, and `tests/test_lower.rs`'s
+//! `dollar_sign_in_*_is_rejected` tests for the regression coverage.
+//! Those tests live at the IR/lowering level, not here: `$` is now
+//! rejected before `compile_source` ever returns a `Module`, so there is
+//! no lowered program left to run through the Python backend at all —
+//! unlike the third-round finding below, which the backend still has to
+//! defend against because both operands of that collision are legal.
+//!
 //! This test proves the fix holds against the ACTUAL Python backend (the
 //! one the original finding reproduced against), not just against
 //! `semantic-ir::validate()` or the JavaScript backend `loop_control_

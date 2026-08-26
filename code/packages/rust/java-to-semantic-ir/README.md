@@ -172,15 +172,30 @@ third `/security-review` round proved that false too**: every flat-
 scoping backend's `sanitize_ident` escapes `#` into an ordinary, legal-
 identifier string a real Java program *can* declare directly (Python's
 hex-escape turns `__do_while#0` into `___do_while_230`), reproducing the
-identical hang through the escaped form. The real fix (`fresh_flag_
-name`) drops the unforgeable-character idea entirely and instead checks
-a plain candidate name directly against both the ambient scope
-(`lookup_local_with_frame`) and everything the loop's own lowered body
-declares at any nesting depth (`DeclaredNameCollector`, riding `semantic-
-ir`'s shared `Visitor`), retrying the next counter value on either kind
-of collision — see `CHANGELOG.md`'s `[0.12.0]` entry for the full
-before/after shapes and the real-Python-backend regression tests this
-finding added. Everything else — `switch`
+identical hang through the escaped form. The fix at that point
+(`fresh_flag_name`) dropped the unforgeable-character idea entirely and
+instead checked a plain candidate name directly against both the
+ambient scope (`lookup_local_with_frame`) and everything the loop's own
+lowered body declares at any nesting depth (`DeclaredNameCollector`,
+riding `semantic-ir`'s shared `Visitor`). **A third `/security-review`
+round found that this still wasn't enough**: both of those checks
+compare a candidate's *raw* string against a real local's *raw* string
+— sound only when every backend's `sanitize_ident` is the identity
+function on both, which is true for `fresh_flag_name`'s own plain
+candidates but not for every real Java local. `$` is a legal Java
+identifier character (JLS §3.8) this crate's own lexer accepts, and
+Python's `sanitize_ident` escapes it to a plain digit string, so a local
+named `_do_while$` can sanitize to the exact same Python name as some
+`__do_while_N` candidate — two *different* raw Java names colliding
+once emitted, defeating both raw-string checks at once (confirmed again
+by executing the emitted Python). The final fix rejects `$` in a
+declared Java identifier at lowering time (`reject_dollar_sign_
+identifier`, called at all four points this crate turns a Java `NAME`
+token into a declared name), restoring the invariant `fresh_flag_name`'s
+design actually needs rather than teaching this frontend every backend's
+own escaping scheme — see `CHANGELOG.md`'s `[0.12.0]` entry for the full
+before/after shapes and the regression tests each round added.
+Everything else — `switch`
 (SIR still has no IR node for it at all — confirmed by a repo-wide grep,
 not assumed — so this needs its own spec-level design decision before
 any frontend can target it, tracked as task #51; `break`/`continue`
@@ -261,7 +276,14 @@ JV02 spec's milestone table for what comes next.
   method's own local lambda invocation, a captured closure invoked from
   within a nested lambda, wrong-argument-count and wrong-argument-kind
   rejection, calling a non-closure local rejection, and `Feature::
-  Closures` re-declaration). Every positive test also asserts the
+  Closures` re-declaration), and task #64's own loop-control shapes
+  (break/continue in every loop kind, innermost-loop targeting when
+  nested, outside-any-loop and lambda-boundary rejection, labeled-form
+  rejection, the do-while/classic-for flag-collision regressions for
+  both the ambient-scope and body-declared directions, and the five
+  `dollar_sign_in_*_is_rejected` tests — see `reject_dollar_sign_
+  identifier`'s own doc comment for why `$` is rejected in a declared
+  Java identifier at all). Every positive test also asserts the
   lowered `Module` passes `semantic_ir::validate()` — not just that
   lowering itself didn't error.
 - `tests/e2e_python.rs` — execution-proof tests, per JV02's own

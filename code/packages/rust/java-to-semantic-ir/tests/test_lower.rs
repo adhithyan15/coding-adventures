@@ -1430,6 +1430,83 @@ fn classic_for_loop_flag_name_skips_ahead_when_an_outer_local_declares_the_first
 }
 
 #[test]
+fn dollar_sign_in_a_local_variable_name_is_rejected() {
+    // Round 3 of /security-review, on `fresh_flag_name` (the fix above):
+    // `$` is a legal Java identifier character (JLS §3.8) this crate's
+    // own lexer accepts, but `semantic-ir-to-python::sanitize_ident`
+    // escapes it to a plain digit string (`_24`) that a DIFFERENT raw
+    // Java identifier (no `$` at all) can spell directly -- so two
+    // distinct raw Java names can collide once a backend emits them,
+    // defeating `fresh_flag_name`'s raw-string-only collision check
+    // (confirmed by /security-review actually executing the emitted
+    // Python and observing a hang, using a local literally named
+    // `_do_while$` with enough decoys to force the flag counter to a
+    // colliding value). Rather than teach this backend-agnostic frontend
+    // every backend's own escaping scheme, `$` is rejected at the
+    // source: see `reject_dollar_sign_identifier`'s own doc comment.
+    let err = compile_source(&wrap("int x$ = 1; x$;"), "prog").unwrap_err();
+    assert!(
+        err.message.contains('$'),
+        "unexpected message: {}",
+        err.message
+    );
+}
+
+#[test]
+fn dollar_sign_in_an_enhanced_for_loop_variable_is_rejected() {
+    let err = compile_source(
+        &wrap("int[] xs = {1, 2, 3}; for (int i$ : xs) { }"),
+        "prog",
+    )
+    .unwrap_err();
+    assert!(
+        err.message.contains('$'),
+        "unexpected message: {}",
+        err.message
+    );
+}
+
+#[test]
+fn dollar_sign_in_a_classic_for_init_declarator_is_rejected() {
+    // `lower_variable_declarator` is shared between plain local
+    // declarations and a classic `for`'s own `for_init` declaration --
+    // this exercises the SECOND caller, not just the first.
+    let err = compile_source(&wrap("for (int i$ = 0; i$ < 3; i$++) { }"), "prog").unwrap_err();
+    assert!(
+        err.message.contains('$'),
+        "unexpected message: {}",
+        err.message
+    );
+}
+
+#[test]
+fn dollar_sign_in_a_method_parameter_name_is_rejected() {
+    let err = compile_source(
+        &class_src(
+            "public static void main(String[] args) { } \
+             static int f(int x$) { return x$; }",
+        ),
+        "prog",
+    )
+    .unwrap_err();
+    assert!(
+        err.message.contains('$'),
+        "unexpected message: {}",
+        err.message
+    );
+}
+
+#[test]
+fn dollar_sign_in_a_lambda_parameter_name_is_rejected() {
+    let err = compile_source(&wrap("var f = (int x$) -> x$ + 1;"), "prog").unwrap_err();
+    assert!(
+        err.message.contains('$'),
+        "unexpected message: {}",
+        err.message
+    );
+}
+
+#[test]
 fn classic_for_loop_init_variable_does_not_leak_past_the_loop() {
     let err =
         compile_source(&wrap("for (int i = 0; i < 5; i++) { } int y = i;"), "prog").unwrap_err();

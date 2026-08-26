@@ -1222,6 +1222,7 @@ impl Lowerer {
                     _ => None,
                 })
                 .ok_or_else(|| self.err_at(fp, "malformed parameter (missing name)".to_string()))?;
+            self.reject_dollar_sign_identifier(&name_tok.value, fp)?;
             out.push((name_tok.value.clone(), kind));
         }
         Ok(out)
@@ -2313,6 +2314,7 @@ impl Lowerer {
                 )
             })?;
         let var_name = var_name_tok.value.clone();
+        self.reject_dollar_sign_identifier(&var_name, node)?;
         let iter_node = self.first_child_named(node, "expression").ok_or_else(|| {
             self.err_at(
                 node,
@@ -2438,6 +2440,7 @@ impl Lowerer {
                 )
             })?;
         let name = name_tok.value.clone();
+        self.reject_dollar_sign_identifier(&name, declarator)?;
 
         let initializer = self.first_child_named(declarator, "variable_initializer").ok_or_else(|| {
             self.err_at(
@@ -4521,6 +4524,7 @@ impl Lowerer {
             })?;
         match self.first_child_named(lp, "type") {
             Some(ty) if single_segment_class_type_name(ty) != Some("var") => {
+                self.reject_dollar_sign_identifier(&name_tok.value, lp)?;
                 Ok((name_tok.value.clone(), self.kind_of_type_node(ty)?))
             }
             _ => Err(self.err_at(
@@ -4613,6 +4617,69 @@ impl Lowerer {
             line: node.start_line.unwrap_or(1),
             column: node.start_column.unwrap_or(1),
         }
+    }
+
+    /// Reject a declared local/parameter/loop-variable name containing
+    /// `$` — legal in a real Java identifier (JLS §3.8's `NAME` grammar,
+    /// which this crate's own lexer accepts: `[a-zA-Z_$][a-zA-Z0-9_$]*`)
+    /// but rejected here, at every point this crate turns a Java `NAME`
+    /// token into a declared SIR local's name (see this method's four
+    /// call sites: `formal_parameter_kind_name_pairs`, `lambda_parameter_
+    /// kind_name`, `lower_enhanced_for_statement`, and the local-variable-
+    /// declarator path in `lower_var_declaration_node`'s callee).
+    ///
+    /// # Why this exists — round 3 of `/security-review`
+    ///
+    /// `fresh_flag_name` (see its own doc comment) picks a loop-control
+    /// guard-flag name and checks it directly against every real Java
+    /// local's *raw source spelling*, on the stated assumption that two
+    /// different raw Java identifiers can never collide once a backend
+    /// emits them — true only if every backend's `sanitize_ident` is the
+    /// identity function on both names being compared. That holds for
+    /// plain `[A-Za-z0-9_]` names (what `fresh_flag_name` itself always
+    /// produces), but a *third* `/security-review` round proved it false
+    /// for a raw Java name containing `$`: `semantic-ir-to-python::
+    /// sanitize_ident` escapes `$` (not part of Python's own identifier
+    /// alphabet) to `_24` (its hex code point), so a Java local named
+    /// e.g. `_do_while$` sanitizes to `_do_while_24` — a string with no
+    /// resemblance to the raw name `fresh_flag_name`'s collision checks
+    /// actually compared against, but one that can coincide *exactly*
+    /// with a `__do_while_N` candidate for some `N`, reintroducing the
+    /// identical flat-scoping collision the last three rounds fixed —
+    /// confirmed by actually executing the emitted Python and observing
+    /// a hang.
+    ///
+    /// Rather than teach this backend-agnostic frontend every backend's
+    /// own escaping scheme (which would need updating every time a new
+    /// backend or a new escaping rule is added), this closes the gap at
+    /// the source: no Java identifier containing `$` can be declared as
+    /// a SIR local at all, which restores the invariant `fresh_flag_
+    /// name`'s own design actually needs — every declarable name lives
+    /// in `[A-Za-z0-9_]`, the one alphabet every backend's `sanitize_
+    /// ident` treats as its own identity — by construction rather than
+    /// by continuing to chase individual backends' escaping quirks.
+    /// `$`-containing identifiers are vanishingly rare in hand-written
+    /// Java (real-world use is almost exclusively compiler-generated
+    /// synthetic names, e.g. inner-class-accessor methods), so this is a
+    /// narrow, disclosed scope boundary in the same spirit as this
+    /// crate's many other "not supported yet" rejections — not a
+    /// meaningful loss of real-world Java coverage.
+    fn reject_dollar_sign_identifier(
+        &self,
+        name: &str,
+        node: &GrammarASTNode,
+    ) -> Result<(), JavaLowerError> {
+        if name.contains('$') {
+            return Err(self.err_at(
+                node,
+                format!(
+                    "identifier `{name}` contains `$`, which is not supported yet (deferred — \
+                     see `reject_dollar_sign_identifier`'s own doc comment for why this is a \
+                     security-motivated restriction, not an oversight)"
+                ),
+            ));
+        }
+        Ok(())
     }
 }
 

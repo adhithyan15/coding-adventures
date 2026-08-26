@@ -522,15 +522,40 @@ flat-scoping backend shares with everything the loop references from
 outside it too. The now-dead `lookup_local` collision-retry loop from
 the first attempt (and, since nothing else called the plain
 `lookup_local` wrapper, that function itself) were removed in favor of
-this single shared mechanism. See `java-to-semantic-ir`'s own
-`CHANGELOG.md` `[0.12.0]` entry for the full before/after shapes, its
-`tests/loop_control_java_execution.rs` for `node`-execution-proof tests
-(two of which are direct termination-regression tests for the first two
-bugs above), and its `tests/loop_control_flat_scoping_regression.rs` for
-two more that reproduce the third bug against the real Python backend
-specifically (where it actually manifested), each with a hard 15-second
-wall-clock timeout so a reintroduction fails the test cleanly instead of
-hanging the suite.
+this single shared mechanism. **A third `/security-review` round, on
+`fresh_flag_name` itself, found a FOURTH real bug**: both of its checks
+compare a candidate name against a real Java local's *raw* source
+spelling — sound only when every backend's `sanitize_ident` is the
+identity function on both strings, true for `fresh_flag_name`'s own
+plain `[A-Za-z0-9_]`-only candidates but not for an arbitrary Java
+local. `$` is a legal Java identifier character (JLS §3.8) this crate's
+own lexer accepts, and Python's `sanitize_ident` escapes it to a plain
+hex-digit string, so a local named `_do_while$` can sanitize to the
+exact same Python name as some `__do_while_N` candidate — two
+*different* raw Java names colliding once emitted, defeating both
+raw-string checks at once (confirmed again by executing the emitted
+Python). Fixed by a new `Lowerer::reject_dollar_sign_identifier`,
+called at every one of the four points this crate turns a Java `NAME`
+token into a declared local/parameter name, which restores the
+invariant `fresh_flag_name`'s design actually needs (every declarable
+name lives in `[A-Za-z0-9_]`) by construction rather than teaching this
+backend-agnostic frontend every backend's own escaping scheme —
+`$`-containing identifiers are vanishingly rare in hand-written Java
+(real-world use is almost exclusively compiler-generated synthetic
+names), so this is a narrow, disclosed scope boundary in the same
+spirit as this crate's many other "not supported yet" rejections. See
+`java-to-semantic-ir`'s own `CHANGELOG.md` `[0.12.0]` entry for the full
+before/after shapes, its `tests/loop_control_java_execution.rs` for
+`node`-execution-proof tests (two of which are direct termination-
+regression tests for the first two bugs above), its `tests/loop_control_
+flat_scoping_regression.rs` for two more that reproduce the third bug
+against the real Python backend specifically (where it actually
+manifested), each with a hard 15-second wall-clock timeout so a
+reintroduction fails the test cleanly instead of hanging the suite, and
+its `tests/test_lower.rs`'s five `dollar_sign_in_*_is_rejected` tests
+for the fourth bug's own regression coverage — at the IR/lowering level,
+since `$` is now rejected before a `Module` is ever produced, leaving
+nothing for the fourth bug's own fix to run through a backend at all.
 
 **M5 — statics/breadth parity groundwork.** Pulled forward from the
 original M9 slot: static field/method access patterns
