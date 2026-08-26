@@ -39,7 +39,7 @@ describe("real curriculum", () => {
     expect(scripts.devanagari!.complete).toBe(true);
   });
 
-  it("keeps the cross-script closure queue measured after Malayalam chillu RR", () => {
+  it("keeps the cross-script closure queue measured after Persian shin", () => {
     const candrakkala = scripts.malayalam!.marks!.find((mark) => mark.mark === "്")!;
     expect(candrakkala.role).toBe("virama");
     expect(candrakkala.compositionOrder).toEqual([
@@ -832,9 +832,24 @@ describe("real curriculum", () => {
     );
     expect(missingByScript.get("kannada.json")?.has("ಇ")).toBe(false);
     expect(affected.get("ಇ") ?? 0).toBe(0);
+    const persianShin = scripts["perso-arabic"]!.letters.find((entry) => entry.glyph === "ش")!;
+    expect(persianShin.sound).toBe("sh");
+    expect(persianShin.penLifts).toBe(3);
+    expect(persianShin.strokeOrder).toEqual([
+      "form the three teeth from right to left",
+      "flow into the final bowl without lifting",
+      "lift, then place the lower-left dot",
+      "lift again and place the lower-right dot",
+      "lift again and place the centered upper dot",
+    ]);
+    expect(persianShin.strokeOrderSource?.citation).toMatch(
+      /Persian Online.*ش.*01:29–01:35/i,
+    );
+    expect(missingByScript.get("perso-arabic.json")?.has("ش")).toBe(false);
+    expect(affected.get("ش") ?? 0).toBe(0);
     expect(
       [...affected.entries()].sort((left, right) => right[1] - left[1])[0],
-    ).toEqual(["ش", 8]);
+    ).toEqual(["ఆ", 8]);
   });
 
   it("loaded every track (17+ and growing)", () => {
