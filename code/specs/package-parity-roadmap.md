@@ -8225,7 +8225,7 @@ enabled squash auto-merge. GitHub merged it as
 `2026-08-26T06:43:58Z` without a manual merge command.
 
 The collision-checked exact-main schema-3 report, refreshed after clean rebases,
-most recently onto `6e425d80b47a01b118c7636005e2d4158a5d0a46`, remains structurally
+most recently onto `773ecf8b1b3485ef68c428b892c8e4a3d3d81f4b`, remains structurally
 unchanged:
 15 established lanes, 1,373 implementation identities, 4,566 package slots,
 175 high-consensus packages with 276 missing slots, 122 identities in five to
@@ -8270,12 +8270,17 @@ is deterministic HTML frontend behavior, and #12973 is script-ductus plus
 curriculum and `human-language-data` work. None changes a package identity or
 BUILD/build-tool marker.
 
+PR #12966 then merged as `773ecf8b1b` without changing the inventory. Its Rust
+W23 reference behavior remains classified by the newly registered
+cross-instance tag-identity neutral and lane owners plus the existing Wasm
+conformance and host-authority owners.
+
 The dependency/leverage pass selects
 `build-tool-haskell-orphan-crate-validation-conformance` on branch
 `codex/build-tool-haskell-orphan-crate-validation-conformance`. Its neutral
 orphan corpus and Haskell tracked-artifact substrate are merged. Haskell is the
 widest remaining orphan consumer at 204 reported packages versus Swift at 161;
-both advance the same completion umbrella. All nine live PRs have zero exact
+both advance the same completion umbrella. All eight live PRs have zero exact
 overlap with the expected Haskell validator, tests, README, changelog, state,
 and roadmap surfaces. The target local branch, remote branch, and prior PR were
 absent before the fresh exact-main worktree was created. The higher-descendant
