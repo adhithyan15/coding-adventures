@@ -1154,6 +1154,87 @@ export const DUCTUS: Record<string, LetterDuctus> = {
     ],
     source: japanese.letters.find((letter) => letter.glyph === "み")!.strokeOrderSource!,
   },
+  // Sirgazil's 33-frame animation writes せ in three pen-down runs: the long
+  // horizontal, the left stem and base curve, then the right stem and hook.
+  // These medians preserve that two-lift order in the bundled Noto Sans JP
+  // print outline.
+  [ductusKey("japanese", "せ")]: {
+    script: "japanese",
+    glyph: "せ",
+    strokes: [
+      {
+        segments: [
+          {
+            label: "draw the long crossing horizontal from left to right",
+            path: [
+              { x: 70, y: 460 },
+              { x: 190, y: 468 },
+              { x: 320, y: 478 },
+              { x: 460, y: 490 },
+              { x: 600, y: 503 },
+              { x: 740, y: 515 },
+              { x: 890, y: 530 },
+            ],
+          },
+        ],
+      },
+      {
+        segments: [
+          {
+            label: "descend through the left crossing",
+            path: [
+              { x: 300, y: 710 },
+              { x: 300, y: 620 },
+              { x: 300, y: 520 },
+              { x: 300, y: 420 },
+              { x: 300, y: 310 },
+              { x: 300, y: 205 },
+              { x: 305, y: 125 },
+            ],
+          },
+          {
+            label: "curve right along the base",
+            path: [
+              { x: 305, y: 125 },
+              { x: 325, y: 70 },
+              { x: 375, y: 40 },
+              { x: 455, y: 25 },
+              { x: 560, y: 22 },
+              { x: 675, y: 25 },
+              { x: 790, y: 40 },
+            ],
+          },
+        ],
+      },
+      {
+        segments: [
+          {
+            label: "descend through the right crossing",
+            path: [
+              { x: 698, y: 735 },
+              { x: 698, y: 650 },
+              { x: 698, y: 560 },
+              { x: 697, y: 470 },
+              { x: 696, y: 380 },
+              { x: 692, y: 305 },
+            ],
+          },
+          {
+            label: "hook left at the finish",
+            path: [
+              { x: 692, y: 305 },
+              { x: 680, y: 270 },
+              { x: 650, y: 255 },
+              { x: 610, y: 255 },
+              { x: 565, y: 260 },
+              { x: 525, y: 268 },
+            ],
+          },
+        ],
+      },
+    ],
+    source: japanese.letters.find((letter) => letter.glyph === "せ")!.strokeOrderSource!,
+  },
   // Sirgazil's つ animation supplies the one-run movement. Unicode identifies
   // U+3063 as small tsu; these medians preserve that movement while fitting it
   // explicitly to the bundled smaller Noto Sans JP glyph.
