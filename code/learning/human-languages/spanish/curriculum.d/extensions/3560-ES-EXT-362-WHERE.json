@@ -1,0 +1,15 @@
+{
+  "id": "ES-EXT-362-WHERE",
+  "stage": "A1",
+  "kind": "required",
+  "category": "vocabulary",
+  "canDo": "I can name la tierra, el mar, el aire, el fuego and la luna.",
+  "prerequisites": [],
+  "lessons": [
+    "ES-C362-tierra",
+    "ES-C362-mar",
+    "ES-C362-aire",
+    "ES-C362-fuego",
+    "ES-C362-luna"
+  ]
+}

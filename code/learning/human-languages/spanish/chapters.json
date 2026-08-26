@@ -7087,6 +7087,153 @@
           "ES-LEX-C359-COUNT-20"
         ]
       }
+    },
+    {
+      "chapter": 360,
+      "title": "What You Put On",
+      "label": "ch:la-ropa-y-el-zapato",
+      "canDo": "I can say la ropa, el vestido, el zapato, el pantalón and el botón, and name what someone is wearing.",
+      "spineNodes": [
+        "SPINE-DEFINITE-REFERENCE"
+      ],
+      "payoff": {
+        "lesson": "ES-C360-boton",
+        "kind": "production",
+        "summary": "Complete ES-C360-boton: name four things a person has on, and the one small thing that holds them shut.",
+        "assesses": [
+          "ES-LEX-C360-REF-16",
+          "ES-LEX-C360-REF-17",
+          "ES-LEX-C360-REF-18",
+          "ES-LEX-C360-REF-19",
+          "ES-LEX-C360-REF-20"
+        ]
+      }
+    },
+    {
+      "chapter": 361,
+      "title": "What Is On The Table",
+      "label": "ch:la-carne-y-la-leche",
+      "canDo": "I can say la carne, el pescado, la leche, la sal and el aceite, and ask for the things a plain meal is made of.",
+      "spineNodes": [
+        "SPINE-DEFINITE-REFERENCE"
+      ],
+      "payoff": {
+        "lesson": "ES-C361-aceite",
+        "kind": "production",
+        "summary": "Complete ES-C361-aceite: name two things you cook and three things you cook them with.",
+        "assesses": [
+          "ES-LEX-C361-REF-21",
+          "ES-LEX-C361-REF-22",
+          "ES-LEX-C361-REF-23",
+          "ES-LEX-C361-REF-24",
+          "ES-LEX-C361-REF-25"
+        ]
+      }
+    },
+    {
+      "chapter": 362,
+      "title": "Earth, Sea And Sky",
+      "label": "ch:la-tierra-y-el-mar",
+      "canDo": "I can say la tierra, el mar, el aire, el fuego and la luna, and say which of them a place is near.",
+      "spineNodes": [
+        "SPINE-ASK-LOCATION"
+      ],
+      "payoff": {
+        "lesson": "ES-C362-luna",
+        "kind": "production",
+        "summary": "Complete ES-C362-luna: place a thing against earth, sea, air and fire, and name what is overhead at night.",
+        "assesses": [
+          "ES-LEX-C362-WHERE-36",
+          "ES-LEX-C362-WHERE-37",
+          "ES-LEX-C362-WHERE-38",
+          "ES-LEX-C362-WHERE-39",
+          "ES-LEX-C362-WHERE-40"
+        ]
+      }
+    },
+    {
+      "chapter": 363,
+      "title": "How You Get There",
+      "label": "ch:el-coche-y-el-avion",
+      "canDo": "I can say el coche, el avión, el barco, el autobús and la bicicleta, and say which one I am taking.",
+      "spineNodes": [
+        "SPINE-ASK-LOCATION"
+      ],
+      "payoff": {
+        "lesson": "ES-C363-bicicleta",
+        "kind": "production",
+        "summary": "Complete ES-C363-bicicleta: name five ways to reach a place, and say which one you are taking.",
+        "assesses": [
+          "ES-LEX-C363-WHERE-41",
+          "ES-LEX-C363-WHERE-42",
+          "ES-LEX-C363-WHERE-43",
+          "ES-LEX-C363-WHERE-44",
+          "ES-LEX-C363-WHERE-45"
+        ]
+      }
+    },
+    {
+      "chapter": 364,
+      "title": "The Person, Head To Hand",
+      "label": "ch:la-mujer-y-la-cara",
+      "canDo": "I can say la mujer, la cara, la nariz, el dedo and el corazón, and point at a person and name a part of them.",
+      "spineNodes": [
+        "SPINE-DEFINITE-REFERENCE"
+      ],
+      "payoff": {
+        "lesson": "ES-C364-corazon",
+        "kind": "production",
+        "summary": "Complete ES-C364-corazon: name a person, then a face, a nose, a finger and the thing that beats underneath.",
+        "assesses": [
+          "ES-LEX-C364-REF-26",
+          "ES-LEX-C364-REF-27",
+          "ES-LEX-C364-REF-28",
+          "ES-LEX-C364-REF-29",
+          "ES-LEX-C364-REF-30"
+        ]
+      }
+    },
+    {
+      "chapter": 365,
+      "title": "How Tall, How Long, How Full",
+      "label": "ch:alto-y-largo",
+      "canDo": "I can say alto, largo, ancho, corto and lleno, and put a measurement on a thing in words rather than numbers.",
+      "spineNodes": [
+        "SPINE-COUNT-ONE-TO-FIVE"
+      ],
+      "payoff": {
+        "lesson": "ES-C365-lleno",
+        "kind": "production",
+        "summary": "Complete ES-C365-lleno: describe a thing by height, length, width and how much is in it.",
+        "assesses": [
+          "ES-LEX-C365-COUNT-21",
+          "ES-LEX-C365-COUNT-22",
+          "ES-LEX-C365-COUNT-23",
+          "ES-LEX-C365-COUNT-24",
+          "ES-LEX-C365-COUNT-25"
+        ]
+      }
+    },
+    {
+      "chapter": 366,
+      "title": "Around The Room",
+      "label": "ch:la-caja-y-la-lampara",
+      "canDo": "I can say la caja, la lámpara, la almohada, la escalera and el armario, and name the furniture of an ordinary room.",
+      "spineNodes": [
+        "SPINE-DEFINITE-REFERENCE"
+      ],
+      "payoff": {
+        "lesson": "ES-C366-armario",
+        "kind": "production",
+        "summary": "Complete ES-C366-armario: name five things in a room, and say what each of them holds or does.",
+        "assesses": [
+          "ES-LEX-C366-REF-31",
+          "ES-LEX-C366-REF-32",
+          "ES-LEX-C366-REF-33",
+          "ES-LEX-C366-REF-34",
+          "ES-LEX-C366-REF-35"
+        ]
+      }
     }
   ]
 }

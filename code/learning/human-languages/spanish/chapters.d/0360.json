@@ -1,0 +1,21 @@
+{
+  "chapter": 360,
+  "title": "What You Put On",
+  "label": "ch:la-ropa-y-el-zapato",
+  "canDo": "I can say la ropa, el vestido, el zapato, el pantalón and el botón, and name what someone is wearing.",
+  "spineNodes": [
+    "SPINE-DEFINITE-REFERENCE"
+  ],
+  "payoff": {
+    "lesson": "ES-C360-boton",
+    "kind": "production",
+    "summary": "Complete ES-C360-boton: name four things a person has on, and the one small thing that holds them shut.",
+    "assesses": [
+      "ES-LEX-C360-REF-16",
+      "ES-LEX-C360-REF-17",
+      "ES-LEX-C360-REF-18",
+      "ES-LEX-C360-REF-19",
+      "ES-LEX-C360-REF-20"
+    ]
+  }
+}

@@ -1,0 +1,16 @@
+{
+  "id": "ES-PATH-360-01",
+  "spine_node": "SPINE-DEFINITE-REFERENCE",
+  "lessons": [
+    "ES-C360-ropa",
+    "ES-C360-vestido",
+    "ES-C360-zapato",
+    "ES-C360-pantalon",
+    "ES-C360-boton"
+  ],
+  "before": [],
+  "inline": [
+    "ES-EXT-360-REF"
+  ],
+  "after": []
+}

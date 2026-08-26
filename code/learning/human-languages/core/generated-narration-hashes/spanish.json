@@ -5530,6 +5530,132 @@
       "json": "spanish/narration/ch359.json",
       "textHash": "fnv1a64:30aa6b7ee2145cd8",
       "jsonHash": "fnv1a64:3cdae6db35fba209"
+    },
+    {
+      "language": "spanish",
+      "chapter": 360,
+      "sourceHash": "fnv1a64:c6a4871501220cd0",
+      "lessonIds": [
+        "ES-C360-ropa",
+        "ES-C360-vestido",
+        "ES-C360-zapato",
+        "ES-C360-pantalon",
+        "ES-C360-boton"
+      ],
+      "voiceLessons": 5,
+      "drivablePrefix": 5,
+      "text": "spanish/narration/ch360.txt",
+      "json": "spanish/narration/ch360.json",
+      "textHash": "fnv1a64:ffd1c7e1ab0fd694",
+      "jsonHash": "fnv1a64:c47c60ad5bcf50df"
+    },
+    {
+      "language": "spanish",
+      "chapter": 361,
+      "sourceHash": "fnv1a64:17c11259237cefc8",
+      "lessonIds": [
+        "ES-C361-carne",
+        "ES-C361-pescado",
+        "ES-C361-leche",
+        "ES-C361-sal",
+        "ES-C361-aceite"
+      ],
+      "voiceLessons": 5,
+      "drivablePrefix": 5,
+      "text": "spanish/narration/ch361.txt",
+      "json": "spanish/narration/ch361.json",
+      "textHash": "fnv1a64:4d11f1e029a22205",
+      "jsonHash": "fnv1a64:936d7f600d6a4afa"
+    },
+    {
+      "language": "spanish",
+      "chapter": 362,
+      "sourceHash": "fnv1a64:03b7b8da92c4b814",
+      "lessonIds": [
+        "ES-C362-tierra",
+        "ES-C362-mar",
+        "ES-C362-aire",
+        "ES-C362-fuego",
+        "ES-C362-luna"
+      ],
+      "voiceLessons": 5,
+      "drivablePrefix": 5,
+      "text": "spanish/narration/ch362.txt",
+      "json": "spanish/narration/ch362.json",
+      "textHash": "fnv1a64:4a3b38ec3b7c6181",
+      "jsonHash": "fnv1a64:3fb4478be30a63b5"
+    },
+    {
+      "language": "spanish",
+      "chapter": 363,
+      "sourceHash": "fnv1a64:154925d9c5e30230",
+      "lessonIds": [
+        "ES-C363-coche",
+        "ES-C363-avion",
+        "ES-C363-barco",
+        "ES-C363-autobus",
+        "ES-C363-bicicleta"
+      ],
+      "voiceLessons": 5,
+      "drivablePrefix": 5,
+      "text": "spanish/narration/ch363.txt",
+      "json": "spanish/narration/ch363.json",
+      "textHash": "fnv1a64:e6f535616b32cb4f",
+      "jsonHash": "fnv1a64:569ef0c470f2b0f8"
+    },
+    {
+      "language": "spanish",
+      "chapter": 364,
+      "sourceHash": "fnv1a64:8d2b894b6bf2caab",
+      "lessonIds": [
+        "ES-C364-mujer",
+        "ES-C364-cara",
+        "ES-C364-nariz",
+        "ES-C364-dedo",
+        "ES-C364-corazon"
+      ],
+      "voiceLessons": 5,
+      "drivablePrefix": 5,
+      "text": "spanish/narration/ch364.txt",
+      "json": "spanish/narration/ch364.json",
+      "textHash": "fnv1a64:d54f002ce7217806",
+      "jsonHash": "fnv1a64:4423033a684787ba"
+    },
+    {
+      "language": "spanish",
+      "chapter": 365,
+      "sourceHash": "fnv1a64:b8fbae0bb863a7e0",
+      "lessonIds": [
+        "ES-C365-alto",
+        "ES-C365-largo",
+        "ES-C365-ancho",
+        "ES-C365-corto",
+        "ES-C365-lleno"
+      ],
+      "voiceLessons": 5,
+      "drivablePrefix": 5,
+      "text": "spanish/narration/ch365.txt",
+      "json": "spanish/narration/ch365.json",
+      "textHash": "fnv1a64:8cba2b1ea5193271",
+      "jsonHash": "fnv1a64:c646394cebddff2b"
+    },
+    {
+      "language": "spanish",
+      "chapter": 366,
+      "sourceHash": "fnv1a64:b559102a70f4971d",
+      "lessonIds": [
+        "ES-C366-caja",
+        "ES-C366-lampara",
+        "ES-C366-almohada",
+        "ES-C366-escalera",
+        "ES-C366-armario"
+      ],
+      "voiceLessons": 5,
+      "drivablePrefix": 5,
+      "text": "spanish/narration/ch366.txt",
+      "json": "spanish/narration/ch366.json",
+      "textHash": "fnv1a64:85c7ae60c2d0daf7",
+      "jsonHash": "fnv1a64:bcd7fd41c9d17a3c"
     }
   ],
   "findings": []

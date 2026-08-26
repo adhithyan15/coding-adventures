@@ -1,0 +1,16 @@
+{
+  "id": "ES-PATH-365-01",
+  "spine_node": "SPINE-COUNT-ONE-TO-FIVE",
+  "lessons": [
+    "ES-C365-alto",
+    "ES-C365-largo",
+    "ES-C365-ancho",
+    "ES-C365-corto",
+    "ES-C365-lleno"
+  ],
+  "before": [],
+  "inline": [
+    "ES-EXT-365-COUNT"
+  ],
+  "after": []
+}

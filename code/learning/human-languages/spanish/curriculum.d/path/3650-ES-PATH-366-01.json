@@ -1,0 +1,16 @@
+{
+  "id": "ES-PATH-366-01",
+  "spine_node": "SPINE-DEFINITE-REFERENCE",
+  "lessons": [
+    "ES-C366-caja",
+    "ES-C366-lampara",
+    "ES-C366-almohada",
+    "ES-C366-escalera",
+    "ES-C366-armario"
+  ],
+  "before": [],
+  "inline": [
+    "ES-EXT-366-REF"
+  ],
+  "after": []
+}

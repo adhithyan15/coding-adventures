@@ -1,0 +1,867 @@
+{
+  "version": 1,
+  "language": "spanish",
+  "chapter": 360,
+  "title": "What You Put On",
+  "drivablePrefix": 5,
+  "sourceHash": "fnv1a64:c6a4871501220cd0",
+  "lessons": [
+    {
+      "id": "ES-C360-ropa",
+      "sequence": 6920,
+      "title": "la ropa — the clothes that started out as loot",
+      "headword": "la ropa",
+      "romanization": "la ropa",
+      "gloss": "clothes — Germanic raupa, plunder, beside raupjan, to pluck or strip; rob, reave and bereave still take, and robe made the same slide from spoils to garment on its own",
+      "script": "latin",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:d02900a1709d9f32",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Say the litre, then the weight. (El litro; el peso.)"
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know first",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "la tienda — the place where you go and get it."
+            },
+            {
+              "kind": "speech",
+              "text": "comprar — the verb you will pair with it constantly."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "pronunciation",
+          "title": "Sounds you'll need",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "RO-pa, two beats with the weight on the first. The opening r is trilled, rolled at the front of the mouth, not the soft English one. see pronunciation reference."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "la ropa — \"clothes.\""
+            },
+            {
+              "kind": "speech",
+              "text": "This word begins with an armed band walking away from a burning village. Germanic raupa meant booty: the plunder, the pile you carry off. The verb standing beside it, raupjan, meant to pluck or to strip."
+            },
+            {
+              "kind": "speech",
+              "text": "What did raiders actually take? Not stone, not furniture. Cloth — bolts of it, cloaks, coats. Cloth was light, valuable, and easy to sell on. So the word for loot narrowed to the word for cloth goods, and then narrowed again to the things a person puts on."
+            },
+            {
+              "kind": "speech",
+              "text": "English holds the older end of the same root:"
+            },
+            {
+              "kind": "speech",
+              "text": "to rob is to take the plunder, arriving through Old French rober;"
+            },
+            {
+              "kind": "speech",
+              "text": "to reave, and to be bereaved, is to be stripped of something;"
+            },
+            {
+              "kind": "speech",
+              "text": "German still has rauben, to rob."
+            },
+            {
+              "kind": "speech",
+              "text": "Here is the part worth carrying away. Old French robe also meant booty first, and it also drifted to mean a garment. Two languages, no contact between them on this point, and the same slide runs twice: what was taken becomes what is worn. Put on a robe and you are wearing spoils, in the same sense that ropa is spoils."
+            },
+            {
+              "kind": "speech",
+              "text": "One trap, and it catches beginners often: ropa is not English rope. Rope is Old English rāp, a wholly separate word that happens to have landed on nearly the same sounds."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "You can name the whole category of what a person wears, in one word: la ropa."
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "la ropa",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *la ropa*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "la ropa nueva",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *la ropa nueva*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "la ropa de la tienda",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *la ropa de la tienda*]"
+            }
+          ]
+        },
+        {
+          "index": 6,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What did Germanic raupa mean before it meant clothes? (Plunder, booty.) And which English garment made the same slide on its own? (A robe, which meant spoils first.)"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "ES-C360-vestido",
+      "sequence": 6930,
+      "title": "el vestido — the dress that is a past participle",
+      "headword": "el vestido",
+      "romanization": "el vestido",
+      "gloss": "dress — Latin vestire, to clothe, its past participle standing alone as a noun; vest, invest, divest and travesty are all still clothing something, and wear is the inherited cousin",
+      "script": "latin",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:701504e473c71c1d",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Say the weight, then the clothes. (El peso; la ropa.)"
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know first",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "la fiesta — the occasion this word turns up at."
+            },
+            {
+              "kind": "speech",
+              "text": "la bolsa — another thing you carry or wear, already yours."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "pronunciation",
+          "title": "Sounds you'll need",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "bes-TI-do, three beats with the weight on the middle one. The v is made with the lips of a b, and the d between vowels goes soft, close to the th of this. see pronunciation reference."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "el vestido — \"the dress.\""
+            },
+            {
+              "kind": "speech",
+              "text": "Latin vestis was a garment and vestīre was to clothe. Spanish then did something economical: it reached for the past participle of that verb — the form meaning having been clothed — and let it stand up on its own as a noun. A vestido is, in its bones, a clothed-thing. The garment is named after the act that put it on."
+            },
+            {
+              "kind": "speech",
+              "text": "English borrowed the verb instead of the participle, and borrowed it more than once:"
+            },
+            {
+              "kind": "speech",
+              "text": "a vest came through French and Italian veste;"
+            },
+            {
+              "kind": "speech",
+              "text": "to invest was investīre, to clothe someone in an office — the cloth is still there in a bishop's investiture;"
+            },
+            {
+              "kind": "speech",
+              "text": "to divest is to strip that clothing back off;"
+            },
+            {
+              "kind": "speech",
+              "text": "a travesty is Italian travestīre, to dress across, meaning a disguise, and then a grotesque imitation of the thing disguised."
+            },
+            {
+              "kind": "speech",
+              "text": "The money sense of invest came later, out of Italian banking: you clothe your capital in something. The ceremony came first."
+            },
+            {
+              "kind": "speech",
+              "text": "One label that looks like family and is not. Transvestite was coined in German in 1910, by Magnus Hirschfeld, out of Latin parts. That is modern manufacture, not a word handed down."
+            },
+            {
+              "kind": "speech",
+              "text": "And the quiet cousin is one you use daily without noticing: to wear. It comes down the Germanic line from the same ancient root the Romans built vestis on — grown alongside Latin rather than borrowed from it."
+            },
+            {
+              "kind": "speech",
+              "text": "The trap: un vestido is a dress. It is not a vest."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "You can name a garment by the act that put it on: el vestido."
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "el vestido",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *el vestido*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "un vestido nuevo",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *un vestido nuevo*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "el vestido de la fiesta",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *el vestido de la fiesta*]"
+            }
+          ]
+        },
+        {
+          "index": 6,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What form of vestīre is vestido? (The past participle — the clothed one.) And what did invest mean before money got involved? (To clothe a person in an office.)"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "ES-C360-zapato",
+      "sequence": 6940,
+      "title": "el zapato — the shoe nobody can trace",
+      "headword": "el zapato",
+      "romanization": "el zapato",
+      "gloss": "shoe — origin genuinely unknown; Portuguese sapato, Catalan sabata, French savate, Italian ciabatta and Arabic sabbat all share it, and the famous sabotage story attached to it is false",
+      "script": "latin",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:12bcc9fbdf992145",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Say the clothes, then the dress. (La ropa; el vestido.)"
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know first",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "el pie — the part of you this goes on."
+            },
+            {
+              "kind": "speech",
+              "text": "caminar — what you do once it is on."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "pronunciation",
+          "title": "Sounds you'll need",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "sa-PA-to, three beats with the weight on the middle one. Across most of the Spanish-speaking world the z is said as a clear s. see pronunciation reference."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "el zapato — \"the shoe.\""
+            },
+            {
+              "kind": "speech",
+              "text": "Nearly every word you have met has a paper trail. This one has none."
+            },
+            {
+              "kind": "speech",
+              "text": "Zapato has relatives everywhere. Portuguese says sapato. Catalan and Occitan say sabata. French has savate, a worn-out old shoe — and the name of a kicking sport. Italian has ciabatta, which means an old slipper and also a bread, the loaf being named for the same flat floppy shape. Arabic has sabbat. A shoe-word ran across the western Mediterranean and settled in languages that are not related to each other."
+            },
+            {
+              "kind": "speech",
+              "text": "Where did it start? Corominas, who spent a career on Spanish etymology, could not resolve it. A Turkic or Iranian source gets proposed from time to time, but that is speculation rather than a finding. The honest answer is that the trail goes cold."
+            },
+            {
+              "kind": "speech",
+              "text": "There is one more thing to unlearn here, and it is famous. You have probably heard that sabotage comes from French workers hurling wooden shoes into machinery to wreck it. It does not. French saboter meant to bungle a job, or to clatter about noisily in clogs — careless, loud, useless work. The shoe-in-the-gears tale was assembled in the twentieth century and no document supports it."
+            },
+            {
+              "kind": "speech",
+              "text": "So this word teaches two things at once: a shoe that half a continent shares, and a beloved etymology that turns out to be a story people enjoyed telling."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "You can name what goes on the foot, and you can name one famous etymology that is false: el zapato."
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "el zapato",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *el zapato*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "un zapato nuevo",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *un zapato nuevo*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "los zapatos y la ropa",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *los zapatos y la ropa*]"
+            }
+          ]
+        },
+        {
+          "index": 6,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Where does zapato come from? (Nobody has managed to trace it.) And what is wrong with the wooden-shoe account of sabotage? (It was invented in the twentieth century; saboter meant to bungle a job or clatter about in clogs.)"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "ES-C360-pantalon",
+      "sequence": 6950,
+      "title": "el pantalón — the trousers named after a stage character",
+      "headword": "el pantalón",
+      "romanization": "el pantalón",
+      "gloss": "trousers — French pantalon, from Pantalone, the Venetian comic stock character and his long tight legwear; English pantaloons, clipped to pants, is the very same word",
+      "script": "latin",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:15ce0e6960bc4973",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Say the dress, then the shoe. (El vestido; el zapato.)"
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know first",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "la pierna — the part of you this goes on."
+            },
+            {
+              "kind": "speech",
+              "text": "la rodilla — the joint the old kind of legwear stopped at."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "pronunciation",
+          "title": "Sounds you'll need",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "pan-ta-LON, three beats with the weight on the last one — the accent mark is there to say so. see pronunciation reference."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "el pantalón — \"trousers.\""
+            },
+            {
+              "kind": "speech",
+              "text": "This garment is named after a man who never existed."
+            },
+            {
+              "kind": "speech",
+              "text": "The Venetian comic stage worked from a small cast of fixed characters, and one of them was Pantalone: an old miser, forever scheming, forever outwitted. His costume was as fixed as his temper, and its memorable feature was his legwear — long, narrow, running the whole way down to the foot, at a time when other men's legwear stopped at the knee. Audiences began calling that style by his name."
+            },
+            {
+              "kind": "speech",
+              "text": "French took the character's name over as pantalon, meaning the garment itself. Spanish took the word from French in the seventeen hundreds."
+            },
+            {
+              "kind": "speech",
+              "text": "Where did the character get his own name? The usual account sends it to San Pantaleone, a saint with a strong following in Venice. Pantaleon is Greek: pan-, all, plus leon, lion. That step is an inference from Venetian naming habits rather than a documented handover, so hold it lightly. The Greek pieces themselves are solid — pan- is the pan- of panorama, and leon is the lion inside the name Leonard."
+            },
+            {
+              "kind": "speech",
+              "text": "English walked the same road at the same time. Pantaloons came in whole, then got clipped down to pants. So the word printed on the label of your trousers and el pantalón are one word wearing two lengths."
+            },
+            {
+              "kind": "speech",
+              "text": "A small habit worth copying: Spanish is content with un pantalón, one of them, where English insists on a plural pair."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "You can name the garment for the legs, and say it in the singular the way Spanish prefers: el pantalón."
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "el pantalón",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *el pantalón*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "un pantalón nuevo",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *un pantalón nuevo*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "el pantalón y el zapato",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *el pantalón y el zapato*]"
+            }
+          ]
+        },
+        {
+          "index": 6,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Who was Pantalone? (A stock character of the Venetian comic stage, whose long tight legwear got named after him.) And which English word is the same word, clipped short? (Pants, from pantaloons.)"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "ES-C360-boton",
+      "sequence": 6960,
+      "title": "el botón — the fastener that is still a bud",
+      "headword": "el botón",
+      "romanization": "el botón",
+      "gloss": "button — Old French boton, a thing that pushes out, from bouter, to thrust, taken from Germanic botan, to strike; button, buttress, rebut, abut and the butting of a goat all still push, and beat is the inherited cousin",
+      "script": "latin",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:3b2c91cddd56b061",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Say the shoe, then the trousers. (El zapato; el pantalón.)"
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know first",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "la mano — what you need to work one."
+            },
+            {
+              "kind": "speech",
+              "text": "la flor — the other thing this word names."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "pronunciation",
+          "title": "Sounds you'll need",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "bo-TON, two beats with the weight on the second. The b is soft here, the lips barely closing on it. see pronunciation reference."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "el botón — \"the button.\""
+            },
+            {
+              "kind": "speech",
+              "text": "Start with the verb, not the noun. Old French bouter meant to thrust, to push, to shove; French had taken it from a Germanic word, bōtan, to strike. Out of that verb came the noun boton: a thing that pushes out."
+            },
+            {
+              "kind": "speech",
+              "text": "Notice what that describes. It is a shape, not a job. It says nothing about fastening, nothing about cloth. It says only: this sticks out."
+            },
+            {
+              "kind": "speech",
+              "text": "Which is why one word covers two objects that resemble each other in no other way. A botón on a shirt sticks out. And a botón on a rose bush — a bud, tight and rounded, pushing its way out of the stem — sticks out in precisely the same manner. Spanish was never asked to choose between the two, and Old French was not either; boton carried both from the beginning."
+            },
+            {
+              "kind": "speech",
+              "text": "The pushing surfaces all over English:"
+            },
+            {
+              "kind": "speech",
+              "text": "a buttress pushes back against a leaning wall;"
+            },
+            {
+              "kind": "speech",
+              "text": "to rebut is to push a claim back at the person making it;"
+            },
+            {
+              "kind": "speech",
+              "text": "to abut is to push up against;"
+            },
+            {
+              "kind": "speech",
+              "text": "a goat butts you: it strikes, with its head."
+            },
+            {
+              "kind": "speech",
+              "text": "And beat is the cousin that came down the Germanic line rather than through France — the same striking, inherited instead of borrowed."
+            },
+            {
+              "kind": "speech",
+              "text": "A caution, because English is untidy here. The other butts — a barrel, the butt of a joke, the one you sit on — are separate words with separate histories. Only the striking one belongs to this family."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "You can name the thing on your shirt and the bud on a stem with one word: el botón."
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "el botón",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *el botón*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "un botón nuevo",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *un botón nuevo*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "el botón de la flor",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *el botón de la flor*]"
+            }
+          ]
+        },
+        {
+          "index": 6,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What did bouter mean? (To thrust or push.) And why does botón also name a flower bud? (Because the word means a thing that juts out, and a bud does exactly that.)"
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "findings": []
+}

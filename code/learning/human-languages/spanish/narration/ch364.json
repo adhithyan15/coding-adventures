@@ -1,0 +1,795 @@
+{
+  "version": 1,
+  "language": "spanish",
+  "chapter": 364,
+  "title": "The Person, Head To Hand",
+  "drivablePrefix": 5,
+  "sourceHash": "fnv1a64:8d2b894b6bf2caab",
+  "lessons": [
+    {
+      "id": "ES-C364-mujer",
+      "sequence": 7120,
+      "title": "la mujer — the Latin woman-word English never took",
+      "headword": "la mujer",
+      "romanization": "la mujer",
+      "gloss": "woman, and also wife — Latin mulier, whose own origin is unexplained; English took almost nothing from it beyond the rare muliebrity, while Latin homo gave human, homage and homicide",
+      "script": "latin",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:c39df71a20ea8e11",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Say the bus, then the bicycle. (El autobús; la bicicleta.)"
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know first",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "la persona — the general word for a human being, which this narrows."
+            },
+            {
+              "kind": "speech",
+              "text": "la esposa — the other way Spanish names a wife, and the contrast matters here."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "pronunciation",
+          "title": "Sounds you'll need",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "mu-JER, two beats with the weight on the second. The j is the jota, scraped at the back of the throat. see pronunciation reference."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "la mujer — \"the woman.\""
+            },
+            {
+              "kind": "speech",
+              "text": "Latin had two everyday words for a human being, and they had very different luck. Homō meant a person, and it travelled everywhere: English human, humane, homicide, and homage — a man declaring himself another man's man — all descend from it, some through French, some lifted straight out of Latin by scholars. Mulier meant a woman, and it went almost nowhere."
+            },
+            {
+              "kind": "speech",
+              "text": "Count what English got. There is muliebrity, \"womanhood\", whose earliest evidence is around 1592 and which never became common; muliebral is rarer still. That is close to the whole harvest. A word Romans used constantly, for half of everybody, left English an empty shelf."
+            },
+            {
+              "kind": "speech",
+              "text": "Spanish kept it and wore it down: mulier became mujer, the middle of the word hardening into that scraped jota. Portuguese, Catalan and Italian kept it too. French alone let it go, replacing it with femme, from Latin fēmina."
+            },
+            {
+              "kind": "speech",
+              "text": "And where did mulier itself come from? Nobody knows. The Romans guessed mollior, \"softer\" — a tidy story, and wrong, because the sounds do not line up. A rival guess ties it to mulgēre, \"to milk\", with no more support than the first. Modern handbooks print the word and leave the origin line blank, which is an honest thing for a dictionary to do."
+            },
+            {
+              "kind": "speech",
+              "text": "One practical note. Mujer carries two senses at once, \"woman\" and \"wife\", and only the sentence around it tells you which one is meant."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "You can name a human being and then narrow it: la persona, la mujer."
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "la mujer",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *la mujer*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "una mujer",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *una mujer*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "la mujer de la casa",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *la mujer de la casa*]"
+            }
+          ]
+        },
+        {
+          "index": 6,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What did English take from Latin mulier? (Almost nothing — the rare word muliebrity.) And where does mulier itself come from? (Unexplained; the softer story is a Roman folk etymology.)"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "ES-C364-cara",
+      "sequence": 7130,
+      "title": "la cara — the face that is also expensive",
+      "headword": "la cara",
+      "romanization": "la cara",
+      "gloss": "face — Late Latin cara, generally traced to Greek kara head though the trail is not clean; the identical cara meaning expensive is a separate root, carus, which gave English charity, caress and cherish",
+      "script": "latin",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:401bd88e2dffc55c",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Say the bicycle, then the woman. (La bicicleta; la mujer.)"
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know first",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "el ojo — one of the parts this word gathers together."
+            },
+            {
+              "kind": "speech",
+              "text": "la boca — the other part already named, which sits in the same place."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "pronunciation",
+          "title": "Sounds you'll need",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "CA-ra, two beats with the weight on the first. The single r is a quick tap, the tongue brushing the ridge behind the teeth once. see pronunciation reference."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "la cara — \"the face.\""
+            },
+            {
+              "kind": "speech",
+              "text": "Begin with the half that is solid. Spanish has two words with this exact shape, and they have nothing to do with each other."
+            },
+            {
+              "kind": "speech",
+              "text": "The second one is an adjective. Caro means \"expensive\", from Latin cārus, \"dear\" — dear in both English senses, costly and beloved. That root was generous to English: charity is cāritās, dearness; cherish comes through Old French cherir; caress arrives from Italian carezza by way of French. Say the adjective first and you get una cara cara, an expensive face, a phrase Spaniards actually use and a small proof that the two words run independently. The same noun gives cara o cruz, the Spanish way of saying heads or tails."
+            },
+            {
+              "kind": "speech",
+              "text": "Now the noun, and here the ground goes soft. Late Latin cara \"face\" is generally traced to Greek kára, \"head\". That is the majority account and it is worth carrying. It is also contested from inside the field: Corominas pointed out that kára is a poetic word in Greek rather than a workaday one, that no secure trace of it turns up in the everyday Latin that fed Romance, and that the word surfaces in the wrong places across Romance for a Greek borrowing. So the honest version is this: usually derived from Greek kára, with the trail broken somewhere in the middle."
+            },
+            {
+              "kind": "speech",
+              "text": "A word you use fifty times a day, whose family tree carries a question mark — and a twin meaning \"costly\" that is no relation at all."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "You can name three things that sit together: el ojo, la boca, la cara."
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "la cara",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *la cara*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "una cara",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *una cara*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "la cara de la mujer",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *la cara de la mujer*]"
+            }
+          ]
+        },
+        {
+          "index": 6,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What else does cara mean, and from which root? (Expensive, from Latin cārus — the root of charity and cherish.) And how firm is the Greek origin of the face-word? (It is the usual account, but the trail is not clean.)"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "ES-C364-nariz",
+      "sequence": 7140,
+      "title": "la nariz — the nostril word that swallowed the nose",
+      "headword": "la nariz",
+      "romanization": "la nariz",
+      "gloss": "nose — Latin nāris, which meant nostril and usually came in the plural nārēs; English nose is the inherited cousin, nasal the borrowed one, and meter las narices keeps the Latin plural alive",
+      "script": "latin",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:beb815bc91a0ddbe",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Say the woman, then the face. (La mujer; la cara.)"
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know first",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "la boca — the neighbouring opening, already named."
+            },
+            {
+              "kind": "speech",
+              "text": "el oído — another opening in the head, and another word built on what it does."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "pronunciation",
+          "title": "Sounds you'll need",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "na-RIZ, two beats with the weight on the second. In much of Spain that final z is a soft th; across Latin America it is a clean s. see pronunciation reference."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "la nariz — \"the nose.\""
+            },
+            {
+              "kind": "speech",
+              "text": "Latin kept the thing apart from its openings. Nāsus was the nose. Nāris was a nostril, and it mostly turned up in the plural, nārēs, since you have two of them. Spanish then did something unexpected with that pair: it held on to the nostril word and let the nose word go. Nariz is nāris, its shape nudged along the way by nāsus sitting close by."
+            },
+            {
+              "kind": "speech",
+              "text": "The plural did not vanish either. Spanish still says meter las narices for poking your nose into someone else's business — nostrils, plural, counted exactly as a Roman would have counted them. A two-thousand-year-old habit of number, preserved inside an idiom about being nosy."
+            },
+            {
+              "kind": "speech",
+              "text": "English kept the other branch, and took it through two different doors. Nose was inherited: Old English nosu, a Germanic cousin of nāsus, not a loan from it — the two words came down side by side from one ancient source. Nasal is the loan, pulled out of Latin nāsālis by writers who wanted a technical word. Then nostril is Old English nosthyrl, a nose-hole, where only the first half is the cousin; the -thyrl is kin to through and to thrill, which once meant to pierce. And nozzle is homegrown, a small English diminutive of nose, with no Latin anywhere in it."
+            },
+            {
+              "kind": "speech",
+              "text": "So English ended up with the nose. Spanish, strictly speaking, ended up with the nostrils."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "You can name three openings in a head: la boca, el oído, la nariz."
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "la nariz",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *la nariz*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "una nariz",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *una nariz*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "la nariz y la boca",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *la nariz y la boca*]"
+            }
+          ]
+        },
+        {
+          "index": 6,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Which Latin word gave nariz, and what did it mean? (Nāris, a nostril.) And what does meter las narices preserve? (The Latin plural — nostrils rather than nose.)"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "ES-C364-dedo",
+      "sequence": 7150,
+      "title": "el dedo — the finger inside anything digital",
+      "headword": "el dedo",
+      "romanization": "el dedo",
+      "gloss": "finger, and equally toe — Latin digitus; digit became a numeral because people count on fingers, and digital reached the computer through the numerals rather than through the hand",
+      "script": "latin",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:73ef942051c91c47",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Say the face, then the nose. (La cara; la nariz.)"
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know first",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "la mano — where five of these live."
+            },
+            {
+              "kind": "speech",
+              "text": "el pie — where the other five live, since Spanish uses one word for both."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "pronunciation",
+          "title": "Sounds you'll need",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "DE-do, two beats with the weight on the first. Both ds are soft, the tongue barely touching, nearer the th of this than an English d. see pronunciation reference."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "el dedo — \"the finger.\""
+            },
+            {
+              "kind": "speech",
+              "text": "Latin digitus covered fingers and toes with a single word, and Spanish inherited the arrangement: dedo does both jobs, and you add a phrase when it matters which end of a person you mean."
+            },
+            {
+              "kind": "speech",
+              "text": "The English side of the family took a detour through arithmetic. A digit began as a finger and became a numeral, for the plain reason that hands are the first counting device anyone owns — ten fingers are why the numerals run out at ten and start over. Once digit had settled into \"numeral\", digital was built on that sense: discrete numbers, counted one at a time, as against a smoothly sliding quantity. So the word in digital camera reaches you through counting, not through hands. Finger, then number, then machine — and the middle step is the one everybody forgets."
+            },
+            {
+              "kind": "speech",
+              "text": "Two more relatives are worth having. Prestidigitation, a conjuror's sleight of hand, is \"quick-fingered\". And digitalis, the heart drug, is named for the foxglove, whose flowers are finger-shaped little tubes you could slip over a fingertip."
+            },
+            {
+              "kind": "speech",
+              "text": "One collision to clear, because the shape invites it. Spanish alrededor, \"around\", appears to have a dedo buried in the middle. It does not. That word is built on Latin retrō, \"backwards\"; the sounds got shuffled on their way into Spanish and threw off a lookalike. Coincidence, not kinship."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "You can name a hand, a foot, and what sticks out of both: la mano, el pie, el dedo."
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "el dedo",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *el dedo*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "un dedo",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *un dedo*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "los dedos de la mano",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *los dedos de la mano*]"
+            }
+          ]
+        },
+        {
+          "index": 6,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Why does digit mean a numeral? (Because people count on their fingers.) And is alrededor related to dedo? (No — it is built on Latin retrō, backwards.)"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "ES-C364-corazon",
+      "sequence": 7160,
+      "title": "el corazón — the heart you bring things back to",
+      "headword": "el corazón",
+      "romanization": "el corazón",
+      "gloss": "heart — Latin cor, cordis with a Spanish augmentative ending; cordial, courage, accord and discord are all hearts, and record is literally to bring a thing back to the heart",
+      "script": "latin",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:32a2ca9b253e961e",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Say the nose, then the finger. (La nariz; el dedo.)"
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know first",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "el pecho — the part of the body this one sits inside."
+            },
+            {
+              "kind": "speech",
+              "text": "la sangre — what this organ moves, already named."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "pronunciation",
+          "title": "Sounds you'll need",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "co-ra-ZON, three beats with the weight on the last, which is what the written accent marks. The single r is one quick tap. see pronunciation reference."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "el corazón — \"the heart.\""
+            },
+            {
+              "kind": "speech",
+              "text": "Latin cor, whose stem is cord-, is a short word that got everywhere. French kept it small as coeur, Italian as cuore. Spanish did something else: it hung an augmentative ending on it, the kind of ending that makes a thing bigger, and came away with corazón — a great heart where the neighbours kept a plain one."
+            },
+            {
+              "kind": "speech",
+              "text": "English is thick with cord-. Cordial is \"of the heart\", which slid from heartfelt to a warming drink you press on a guest. Courage is what your heart holds. Accord is two hearts brought together, concord the same, and discord is hearts pulled apart. But record is the pick of them. Latin recordārī meant to remember: re- plus cor(d)-, \"to bring back to the heart\", on the ancient view that memory lived in the chest rather than the skull. The later senses — a written record, a vinyl record, a world record — all grew out of \"a thing that helps you remember\"."
+            },
+            {
+              "kind": "speech",
+              "text": "And Spanish kept the original meaning. Recordar is still the plain daily verb for remembering, while English record wandered off into filing cabinets and turntables."
+            },
+            {
+              "kind": "speech",
+              "text": "Clear one collision before it catches you. That -razón at the end is not the word razón. Razón descends from Latin ratiō, from rērī, \"to reckon\", which also gave English ratio, reason and rational. What corazón holds is cor with an ending fastened on. The overlap is an accident of sound."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "You can name what is under the skin and what moves through it: el pecho, la sangre, el corazón."
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "el corazón",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *el corazón*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "un corazón",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *un corazón*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "el corazón y la sangre",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *el corazón y la sangre*]"
+            }
+          ]
+        },
+        {
+          "index": 6,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does record literally mean? (To bring a thing back to the heart.) And is corazón made of co- plus razón? (No — it is cor with a Spanish ending; razón is a different root entirely.)"
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "findings": []
+}
