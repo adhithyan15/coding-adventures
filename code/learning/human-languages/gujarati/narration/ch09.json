@@ -2,25 +2,34 @@
   "version": 1,
   "language": "gujarati",
   "chapter": 9,
-  "title": "Six Verbs at the Core",
-  "drivablePrefix": 6,
-  "sourceHash": "fnv1a64:ef0ae11d245f03b2",
+  "title": "The First Verbs",
+  "drivablePrefix": 0,
+  "sourceHash": "fnv1a64:d9f462c7baa6aea7",
   "lessons": [
     {
-      "id": "GU-C07-hovun",
-      "sequence": 360,
-      "title": "હોવું (hovũ) — \"to be,\" and the neuter that names every Gujarati verb",
-      "headword": "હોવું",
-      "romanization": "hovũ",
-      "gloss": "to be — and the neuter ending that names every Gujarati verb",
+      "id": "GU-C05-bolvun",
+      "sequence": 280,
+      "title": "બોલવું (bolvũ) — \"to speak,\" your first full verb",
+      "headword": "બોલવું",
+      "romanization": "",
+      "gloss": "to speak",
       "script": "gujarati",
-      "modality": "voice",
-      "derivedModality": "voice",
+      "modality": "sight",
+      "derivedModality": "sight",
       "modalityReasons": [
-        "no-visual-dependency"
+        "script-block"
       ],
-      "sourceHash": "fnv1a64:a604443b35162936",
-      "notice": null,
+      "sourceHash": "fnv1a64:e4bfb840e02e06df",
+      "notice": {
+        "modality": "sight",
+        "needs": [
+          "your eyes, for letter shapes on the page"
+        ],
+        "waitUntilStopped": [
+          "The letters in this word"
+        ],
+        "text": "Before we start: this one needs your eyes, so it is not fully a driving lesson. You will want your eyes, for letter shapes on the page. You can listen to everything else now — leave the section called The letters in this word until you have stopped, and I will say so again when we reach it."
+      },
       "blocks": [
         {
           "index": 0,
@@ -35,240 +44,60 @@
             },
             {
               "kind": "speech",
-              "text": "You already end a Gujarati sentence with છે chhe, \"is.\" Here is the whole verb behind English \"to be\" — and the ending that names every other Gujarati verb."
+              "text": "So far, \"to be.\" Here is a verb that does something — in a shape you'll see on every Gujarati verb."
             }
           ]
         },
         {
           "index": 1,
-          "type": "input",
-          "title": "You'll want to know first — one word",
+          "type": "script",
+          "title": "The letters in this word",
           "segments": [
             {
               "kind": "speech",
-              "text": "હોવું — hovũ — to be."
-            },
-            {
-              "kind": "speech",
-              "text": "Left to right: હ is ha, and the sign ો on it makes ho; then વ va, with the small ુ under it for vu; and the dot ં on top sends that last vowel through the nose."
-            },
-            {
-              "kind": "speech",
-              "text": "Take the final piece -વું -vũ off, and the stem is left: હો- ho-."
-            }
-          ]
-        },
-        {
-          "index": 2,
-          "type": "grammar",
-          "title": "Grammar Lens: the ending is a neuter",
-          "segments": [
-            {
-              "kind": "speech",
-              "text": "Gujarati sorts words into three genders where Hindi next door keeps two: masculine -o, feminine -ī, and the third one, neuter, -ũ — sāro, sārī, sārũ, three shapes of \"good.\""
-            },
-            {
-              "kind": "speech",
-              "text": "That third gender is where -વું comes from. -વું -vũ is a neuter ending, so every Gujarati verb is named in the neuter. English names a verb by putting a word in front, \"to be\"; Gujarati names it by putting its third gender on the end — and hands you the stem for free every time."
-            }
-          ]
-        },
-        {
-          "index": 3,
-          "type": "etymology",
-          "title": "The word, taken apart — one job, two different verbs",
-          "segments": [
-            {
-              "kind": "speech",
-              "text": "hovũ comes from Sanskrit bhavati, \"becomes,\" on the root bhū-. Middle Indo-Aryan thinned that bh- to h-, so bhavati wore down to hoi and then to hovũ. The root is Indo-European, bheu- \"grow, become,\" and English is full of it: be, been, and — through \"the place where one dwells\" — build, booth, bower. Latin held it as futūrus, English's future; Greek as phúsis, English's physics."
-            },
-            {
-              "kind": "speech",
-              "text": "But છે chhe is not from that root at all. It comes through Old Gujarati achhaï from a Sanskrit verb of dwelling, abiding — staying put rather than becoming — and its cousins are Bengali āche and Marathi āhe. Hindi's hai continues Sanskrit asti \"is,\" the same ancient verb as English is."
-            },
-            {
-              "kind": "speech",
-              "text": "So English is and Hindi hai are relatives; Gujarati chhe is not one of them. English plays the same trick, running be, am, is, was off several old verbs at once."
-            }
-          ]
-        },
-        {
-          "index": 4,
-          "type": "guided-production",
-          "title": "Guided Practice",
-          "segments": [
-            {
-              "kind": "prompt",
-              "action": "SAY",
-              "instruction": "hovũ — to be",
-              "spoken": true,
-              "scored": false,
-              "responseSeconds": 8,
-              "source": "[YOU SAY: **hovũ** — to be]"
-            },
-            {
-              "kind": "prompt",
-              "action": "STRIP",
-              "instruction": "hovũ minus -vũ leaves the stem ho-",
-              "spoken": true,
-              "scored": false,
-              "responseSeconds": 8,
-              "source": "[YOU STRIP: **hovũ** minus **-vũ** leaves the stem **ho-**]"
-            },
-            {
-              "kind": "prompt",
-              "action": "NAME",
-              "instruction": "the gender of -vũ — neuter, the third one",
-              "spoken": true,
-              "scored": false,
-              "responseSeconds": 8,
-              "source": "[YOU NAME: the gender of **-vũ** — neuter, the third one]"
-            },
-            {
-              "kind": "prompt",
-              "action": "SPLIT",
-              "instruction": "chhe from a verb of dwelling; hai and English is from another",
-              "spoken": true,
-              "scored": false,
-              "responseSeconds": 8,
-              "source": "[YOU SPLIT: **chhe** from a verb of dwelling; *hai* and English **is** from another]"
-            }
-          ]
-        },
-        {
-          "index": 5,
-          "type": "recall",
-          "title": "Wrap-up Recall",
-          "segments": [
-            {
-              "kind": "pause",
-              "seconds": 3,
-              "perItem": false,
-              "source": "[PAUSE 3s]"
-            },
-            {
-              "kind": "speech",
-              "text": "Which ending names a Gujarati verb, and which of the three genders is it? (-vũ, neuter.) What is left of hovũ once it comes off? (Ho-.) Does chhe share an ancestor with Hindi hai? (No — hai goes with English is; chhe comes from a verb of dwelling.)"
-            },
-            {
-              "kind": "speech",
-              "text": "Sources: Wiktionary: હોવું (hovũ); Wiktionary: છે."
-            }
-          ]
-        }
-      ]
-    },
-    {
-      "id": "GU-C07-javun",
-      "sequence": 370,
-      "title": "જવું (javũ) — \"to go,\" and a y that turned into a j",
-      "headword": "જવું",
-      "romanization": "javũ",
-      "gloss": "to go — and the Sanskrit y- that Prakrit turned into j-",
-      "script": "gujarati",
-      "modality": "voice",
-      "derivedModality": "voice",
-      "modalityReasons": [
-        "no-visual-dependency"
-      ],
-      "sourceHash": "fnv1a64:c8def2d7d18ed825",
-      "notice": null,
-      "blocks": [
-        {
-          "index": 0,
-          "type": "warmup",
-          "title": "Warm-up",
-          "segments": [
-            {
-              "kind": "pause",
-              "seconds": 2,
-              "perItem": false,
-              "source": "[PAUSE 2s]"
-            },
-            {
-              "kind": "speech",
-              "text": "Name the ending that titles every Gujarati verb, and take it off hovũ. Here is the second verb wearing it."
-            }
-          ]
-        },
-        {
-          "index": 1,
-          "type": "input",
-          "title": "You'll want to know first — one word",
-          "segments": [
-            {
-              "kind": "speech",
-              "text": "જવું — javũ — to go."
-            },
-            {
-              "kind": "speech",
-              "text": "Left to right: જ is ja — it carries a built-in a, because a Gujarati consonant with no vowel sign on it always does. Then the familiar વું -vũ. Two pieces, and you have met the second one already: જ + વું."
-            },
-            {
-              "kind": "speech",
-              "text": "Strip the ending and the stem is જ- ja-, which stretches to જા- jā- the moment a person-ending follows it."
+              "text": "બો (bo) + લ (la) + વું (vũ, with the nasal) becomes બોલવું (bolvũ)."
             }
           ]
         },
         {
           "index": 2,
           "type": "etymology",
-          "title": "The word, taken apart — the y that became a j",
+          "title": "The word, taken apart",
           "segments": [
             {
               "kind": "speech",
-              "text": "javũ continues Sanskrit yāti, \"goes,\" on the root yā-. The consonant changed on the way: Prakrit turned word-initial Sanskrit y- into j-, right across the middle period. That is a decoding tool worth keeping, because it runs through the whole vocabulary:"
-            },
-            {
-              "kind": "speech",
-              "text": "Sanskrit yoga becomes Gujarati jog."
-            },
-            {
-              "kind": "speech",
-              "text": "Sanskrit yamunā (the river) becomes Jamnā."
-            },
-            {
-              "kind": "speech",
-              "text": "Sanskrit yava \"barley\" becomes jav."
-            },
-            {
-              "kind": "speech",
-              "text": "Sanskrit yuvan \"young\" becomes jovān \"a young man\"."
-            },
-            {
-              "kind": "speech",
-              "text": "So a Gujarati word starting in j- often has a Sanskrit y- standing behind it."
-            },
-            {
-              "kind": "speech",
-              "text": "This particular root left little in English — honest news, and better said than faked. Its clearest survival outside India is Sanskrit yāna \"vehicle, journey,\" the word inside Mahayana, \"the great vehicle.\""
+              "text": "બોલવું (bolvũ, \"to speak\") is a native Indo-Aryan verb (the same bol- as Hindi bolnā and Punjabi bolṇā). Its ending -વું (-vũ) is Gujarati's infinitive marker — the \"to ___\" form: bol-vũ \"to speak,\" maḷ-vũ \"to meet\" (from maḷīshũ), āv-vũ \"to come\" (behind āvjo). Strip the -vũ and you have the stem (bol-)."
             }
           ]
         },
         {
           "index": 3,
           "type": "grammar",
-          "title": "Grammar Lens: stem, then person, then the copula",
+          "title": "Grammar Lens: stem + person + copula",
           "segments": [
             {
               "kind": "speech",
-              "text": "Gujarati builds its plain present out of three pieces in a fixed order — stem, an ending that says who, and the copula you already own:"
+              "text": "To say \"I speak,\" Gujarati adds a person-ending to the stem and follows it with the copula:"
             },
             {
               "kind": "speech",
-              "text": "hũ jāũ chhũ — I go."
+              "text": "hũ bolũ chhũ — I speak."
             },
             {
               "kind": "speech",
-              "text": "tame jāo chho — you go, respectfully."
+              "text": "tũ bole chhe — you speak (familiar)."
             },
             {
               "kind": "speech",
-              "text": "te jāy chhe — he goes, she goes."
+              "text": "tame bolo chho — you speak (respectful)."
             },
             {
               "kind": "speech",
-              "text": "The copula is the piece that shifts: chhũ, chho, chhe. It is chhe doing that work, not Hindi's hai — the tell you traced last time. And a man and a woman say these identically: the plain present carries no gender at all."
+              "text": "te bole chhe — he/she speaks."
+            },
+            {
+              "kind": "speech",
+              "text": "The simple present is the same for a man or a woman — Gujarati saves its three genders for adjectives and the past tense, not the plain present."
             }
           ]
         },
@@ -278,49 +107,37 @@
           "title": "Guided Practice",
           "segments": [
             {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
               "kind": "prompt",
               "action": "SAY",
-              "instruction": "javũ — to go",
+              "instruction": "\"bolvũ\"",
               "spoken": true,
               "scored": false,
               "responseSeconds": 8,
-              "source": "[YOU SAY: **javũ** — to go]"
+              "source": "[YOU SAY: \"bolvũ\"]"
             },
             {
               "kind": "prompt",
-              "action": "STRIP",
-              "instruction": "javũ minus -vũ leaves ja-",
+              "action": "SAY",
+              "instruction": "the infinitive ending every Gujarati verb takes (-vũ)",
               "spoken": true,
               "scored": false,
               "responseSeconds": 8,
-              "source": "[YOU STRIP: **javũ** minus **-vũ** leaves **ja-**]"
+              "source": "[YOU SAY: the infinitive ending every Gujarati verb takes (*-vũ*)]"
             },
             {
               "kind": "prompt",
-              "action": "BUILD",
-              "instruction": "hũ jāũ chhũ — I go",
+              "action": "SAY",
+              "instruction": "\"I speak\" — hũ bolũ chhũ",
               "spoken": true,
               "scored": false,
               "responseSeconds": 8,
-              "source": "[YOU BUILD: **hũ jāũ chhũ** — I go]"
-            },
-            {
-              "kind": "prompt",
-              "action": "TRACE",
-              "instruction": "Sanskrit yāti becomes javũ, the y- becoming j-",
-              "spoken": false,
-              "scored": false,
-              "responseSeconds": 8,
-              "source": "[YOU TRACE: Sanskrit *yāti* → **javũ**, the *y-* becoming *j-*]"
-            },
-            {
-              "kind": "prompt",
-              "action": "APPLY",
-              "instruction": "yoga becomes jog, yava becomes jav",
-              "spoken": true,
-              "scored": false,
-              "responseSeconds": 8,
-              "source": "[YOU APPLY: *yoga* → **jog**, *yava* → **jav**]"
+              "source": "[YOU SAY: \"I speak\" — *hũ bolũ chhũ*]"
             }
           ]
         },
@@ -337,30 +154,429 @@
             },
             {
               "kind": "speech",
-              "text": "What happened to Sanskrit y- at the front of a word? (Prakrit made it j-.) Which three pieces make the Gujarati present? (Stem, person-ending, copula.) Say \"I go.\" (Hũ jāũ chhũ.) Which of those three words is the copula, and which language does it not match? (Chhũ; Hindi.)"
-            },
-            {
-              "kind": "speech",
-              "text": "Source: Wiktionary: જવું (javũ)."
+              "text": "What ending marks a Gujarati infinitive, and how do you say \"I speak\"? (-vũ; hũ bolũ chhũ.)"
             }
           ]
         }
       ]
     },
     {
-      "id": "GU-C07-aavvun",
-      "sequence": 380,
-      "title": "આવવું (āvvũ) — \"to come,\" which began as \"to reach\"",
-      "headword": "આવવું",
-      "romanization": "āvvũ",
-      "gloss": "to come — from a root meaning “reach,” and a cousin of the word copula",
+      "id": "GU-C05-hun-gujarati-bolun-chhun",
+      "sequence": 290,
+      "title": "હું ગુજરાતી બોલું છું (hũ gujarātī bolũ chhũ) — \"I speak Gujarati\"",
+      "headword": "હું ગુજરાતી બોલું છું",
+      "romanization": "",
+      "gloss": "I speak Gujarati",
+      "script": "gujarati",
+      "modality": "sight",
+      "derivedModality": "sight",
+      "modalityReasons": [
+        "script-block"
+      ],
+      "sourceHash": "fnv1a64:23e9fd067fd9d11a",
+      "notice": {
+        "modality": "sight",
+        "needs": [
+          "your eyes, for letter shapes on the page"
+        ],
+        "waitUntilStopped": [
+          "The letters in this word"
+        ],
+        "text": "Before we start: this one needs your eyes, so it is not fully a driving lesson. You will want your eyes, for letter shapes on the page. You can listen to everything else now — leave the section called The letters in this word until you have stopped, and I will say so again when we reach it."
+      },
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Your first complete, moving sentence — and the language names itself after a people who arrived on horseback."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "script",
+          "title": "The letters in this word",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ગુજરાતી (gujarātī): ગુ (gu) + જ (ja) + રા (rā) + તી (tī)."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The sentence, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "હું ગુજરાતી બોલું છું = હું (hũ, \"I\") + ગુજરાતી (gujarātī, the object) + બોલું છું (bolũ chhũ, \"speak\") — \"I Gujarati speak,\" verb last. The name ગુજરાત (Gujarāt) comes from the Gurjar — a people who entered western India around the 6th–8th centuries and gave their name to the land (Gurjara-deśa becomes Gujarāt); gujarātī is \"[the language] of Gujarat.\" So the language is named after a people, and the region after them in turn."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "grammar",
+          "title": "Grammar Lens: no gender in the plain present",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "Bolũ chhũ is the same whether a man or a woman says it — Gujarati's three genders live in its adjectives (sāro/sārī/sārũ) and its past tense, but the simple present \"I speak\" is gender-free. And because chhũ already carries \"I,\" you could drop hũ: gujarātī bolũ chhũ."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "\"hũ gujarātī bolũ chhũ\"",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: \"hũ gujarātī bolũ chhũ\"]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "what Gujarāt is named after (the Gurjar people)",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: what *Gujarāt* is named after (the *Gurjar* people)]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "does \"I speak\" change for a man vs. a woman? (No — not in the plain present)",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: does \"I speak\" change for a man vs. a woman? (No — not in the plain present)]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Say \"I speak Gujarati,\" and give the origin of the name. (Hũ gujarātī bolũ chhũ; from the Gurjar people, who named the land Gujarat.)"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "GU-C05-kaam-karvun",
+      "sequence": 300,
+      "title": "કામ કરવું (kām karvũ) — \"to work\"",
+      "headword": "કામ કરવું",
+      "romanization": "",
+      "gloss": "to work (lit. \"work-do\")",
+      "script": "gujarati",
+      "modality": "sight",
+      "derivedModality": "sight",
+      "modalityReasons": [
+        "script-block"
+      ],
+      "sourceHash": "fnv1a64:9d8f53f51b4fd216",
+      "notice": {
+        "modality": "sight",
+        "needs": [
+          "your eyes, for letter shapes on the page"
+        ],
+        "waitUntilStopped": [
+          "The letters in this word"
+        ],
+        "text": "Before we start: this one needs your eyes, so it is not fully a driving lesson. You will want your eyes, for letter shapes on the page. You can listen to everything else now — leave the section called The letters in this word until you have stopped, and I will say so again when we reach it."
+      },
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "The last verb of the chapter — from the single most productive root in the whole family, one you have met before."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "script",
+          "title": "The letters in this word",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "કામ (kām, \"work\"): કા (kā) + મ (ma). કરવું (karvũ, \"to do\"): ક (ka) + ર (ra) + વું (vũ)."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "કરવું (karvũ, \"to do, to make\") is from Sanskrit √કૃ (√kṛ, \"to do\"), from PIE kʷer- — one of Sanskrit's most productive roots, met in namaskār (\"the making of a bow\") and karma (\"a thing done\"). And કામ (kām, \"work\") is itself from Sanskrit karma — so \"work-do\" is, at root, \"kṛ-thing kṛ-do.\" Like Hindi, Gujarati builds compound verbs as noun + કરવું:"
+            },
+            {
+              "kind": "speech",
+              "text": "કામ કરવું (kām karvũ) = \"work-do\" = \"to work\"."
+            },
+            {
+              "kind": "speech",
+              "text": "વાત કરવી (vāt karvī) = \"to converse\" (vāt, \"talk\")."
+            },
+            {
+              "kind": "speech",
+              "text": "So hũ kām karũ chhũ = \"I work.\" Learn karvũ and a whole grammar of \"do-verbs\" opens up — the same one behind Hindi's kām karnā and Bengali's kāj karā."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "\"kām karvũ\" (to work)",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: \"kām karvũ\" (to work)]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "\"I work\" — hũ kām karũ chhũ",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: \"I work\" — *hũ kām karũ chhũ*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "the Chapter-1 word that shares its root (namaskār-style — actually ābhār? no; recall karma, from kṛ)",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: the Chapter-1 word that shares its root (*namaskār*-style — actually *ābhār*? no; recall *karma*, from *kṛ*)]"
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What Sanskrit root is karvũ from, and what is kām (\"work\") from? (√kṛ, \"to do\"; kām from Sanskrit karma — both from kṛ.)"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "GU-C05-rahevun",
+      "sequence": 310,
+      "title": "રહેવું (rahevũ) — \"to live, to stay\"",
+      "headword": "રહેવું",
+      "romanization": "",
+      "gloss": "to live, to stay",
+      "script": "gujarati",
+      "modality": "sight",
+      "derivedModality": "sight",
+      "modalityReasons": [
+        "script-block"
+      ],
+      "sourceHash": "fnv1a64:0eb645d5e3d9eb8c",
+      "notice": {
+        "modality": "sight",
+        "needs": [
+          "your eyes, for letter shapes on the page"
+        ],
+        "waitUntilStopped": [
+          "The letters in this word"
+        ],
+        "text": "Before we start: this one needs your eyes, so it is not fully a driving lesson. You will want your eyes, for letter shapes on the page. You can listen to everything else now — leave the section called The letters in this word until you have stopped, and I will say so again when we reach it."
+      },
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "A second verb, so you can say where you live."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "script",
+          "title": "The letters in this word",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ર (ra) + હે (he) + વું (vũ) becomes રહેવું (rahevũ). The familiar -vũ infinitive."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "રહેવું (rahevũ, \"to live, to remain, to stay\") is from Sanskrit રહ્ (rah-, \"to remain\") — the same root as Hindi rahnā and Punjabi rahiṇā. \"I live in Ahmedabad\" is હું અમદાવાદમાં રહું છું (hũ Amdāvādmā rahũ chhũ) — stem rah- + person + copula, exactly like bolvũ."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "grammar",
+          "title": "Grammar Lens: \"in\" comes after the noun",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "અમદાવાદમાં (Amdāvādmā) = Ahmedabad + -માં (-mā, \"in\"), glued to the end of the noun. Gujarati, like Hindi, uses postpositions where English uses prepositions: \"Ahmedabad-in I live,\" the verb last."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "\"rahevũ\"",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: \"rahevũ\"]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "\"I live in Ahmedabad\" — hũ Amdāvādmā rahũ chhũ",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: \"I live in Ahmedabad\" — *hũ Amdāvādmā rahũ chhũ*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "where \"in\" (-mā) sits — glued to the end of the noun",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: where \"in\" (*-mā*) sits — glued to the end of the noun]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What root is rahevũ from, and where does \"in\" go? (Sanskrit rah- \"to remain\"; -mā \"in\" attaches to the end of the noun.)"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "GU-C05-practice",
+      "sequence": 320,
+      "title": "Chapter 7 — The first verbs",
+      "headword": "(dialogue)",
+      "romanization": "",
+      "gloss": "Chapter 7 recap — the first verbs",
       "script": "gujarati",
       "modality": "voice",
       "derivedModality": "voice",
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:5e0c6a36df1dca1b",
+      "sourceHash": "fnv1a64:e7e035ad8e88d2e8",
       "notice": null,
       "blocks": [
         {
@@ -376,170 +592,103 @@
             },
             {
               "kind": "speech",
-              "text": "Say \"I go\" in Gujarati, then strip javũ to its stem. Here is the verb that points the other way."
+              "text": "No new words. Three verbs, one engine — build real sentences about yourself."
             }
           ]
         },
         {
           "index": 1,
-          "type": "input",
-          "title": "You'll want to know first — one word",
+          "type": "guided-production",
+          "title": "How to answer — build the sentences",
           "segments": [
             {
-              "kind": "speech",
-              "text": "આવવું — āvvũ — to come."
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": true,
+              "source": "[PAUSE 1s each]"
             },
             {
-              "kind": "speech",
-              "text": "It opens with આ, the standalone letter for long ā — Gujarati uses a full letter, not a sign, when a word begins with its vowel. Then વ va, a second વ, the ુ, and the nasal dot."
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "\"I speak Gujarati\" — hũ gujarātī bolũ chhũ",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: \"I speak Gujarati\" — *hũ gujarātī bolũ chhũ*]"
             },
             {
-              "kind": "speech",
-              "text": "Two વ in a row, each belonging to a different piece: the first closes the stem આવ- āv-, the second opens the ending -વું -vũ you now know by heart."
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "\"I live in Ahmedabad\" — hũ Amdāvādmā rahũ chhũ",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: \"I live in Ahmedabad\" — *hũ Amdāvādmā rahũ chhũ*]"
             },
             {
-              "kind": "speech",
-              "text": "The present runs as before: hũ āvũ chhũ, \"I come.\""
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "\"I work\" — hũ kām karũ chhũ",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: \"I work\" — *hũ kām karũ chhũ*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "\"you (resp.) speak Gujarati\" — tame gujarātī bolo chho",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: \"you (resp.) speak Gujarati\" — *tame gujarātī bolo chho*]"
             }
           ]
         },
         {
           "index": 2,
-          "type": "etymology",
-          "title": "The word, taken apart — \"come\" was once \"reach\"",
+          "type": "grammar",
+          "title": "Grammar lens — the engine",
           "segments": [
             {
-              "kind": "speech",
-              "text": "āvvũ comes through Old Gujarati āvivaũ and Prakrit āvei from Sanskrit āpayati, on the root āp-, \"to reach, to attain.\" Gujarati's \"come\" is not built from \"go\" at all. It is built from arriving — reaching the place where the speaker already is."
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
             },
             {
-              "kind": "speech",
-              "text": "That root is Indo-European, and Latin holds it as apere, \"to fasten, to reach for.\" English took the family whole: apt (\"fitted\"), aptitude, adapt, adept, inept. Put co- \"together\" in front and Latin makes cōpula, \"the thing that fastens two things into one\" — which English borrowed in two shapes: worn down into couple, and kept whole as the grammarian's copula."
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "the ending every infinitive carries (-vũ)",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: the ending every infinitive carries (*-vũ*)]"
             },
             {
-              "kind": "speech",
-              "text": "So the Gujarati verb for coming and the technical name for what chhe does at the end of your sentences are, far enough back, one root."
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "the shape of the present (stem + person + the copula chhũ/chhe/chho)",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: the shape of the present (stem + person + the copula *chhũ/chhe/chho*)]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "where the verb sits, and where \"in\" sits (verb last; -mā after the noun)",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: where the verb sits, and where \"in\" sits (verb last; *-mā* after the noun)]"
             }
           ]
         },
         {
           "index": 3,
           "type": "notice",
-          "title": "What you've built: the p that softened to a v",
-          "segments": [
-            {
-              "kind": "speech",
-              "text": "One regular change did most of the work between āpayati and āvei: a single Sanskrit p standing between two vowels softened to v. It happened right across the vocabulary, so it decodes far more than this verb:"
-            },
-            {
-              "kind": "speech",
-              "text": "Sanskrit dīpa \"lamp\" becomes dīva becomes Gujarati divo."
-            },
-            {
-              "kind": "speech",
-              "text": "Sanskrit kūpa \"well\" becomes Gujarati kūvo."
-            },
-            {
-              "kind": "speech",
-              "text": "And dīpa is half of દિવાળી divāḷī — dīpa plus āvalī, \"a row of lamps.\" The festival carries the sound change in its own name."
-            }
-          ]
-        },
-        {
-          "index": 4,
-          "type": "guided-production",
-          "title": "Guided Practice",
-          "segments": [
-            {
-              "kind": "prompt",
-              "action": "SAY",
-              "instruction": "āvvũ — to come",
-              "spoken": true,
-              "scored": false,
-              "responseSeconds": 8,
-              "source": "[YOU SAY: **āvvũ** — to come]"
-            },
-            {
-              "kind": "prompt",
-              "action": "SPLIT",
-              "instruction": "āv- plus -vũ, the two વ belonging to different pieces",
-              "spoken": true,
-              "scored": false,
-              "responseSeconds": 8,
-              "source": "[YOU SPLIT: **āv-** plus **-vũ**, the two વ belonging to different pieces]"
-            },
-            {
-              "kind": "prompt",
-              "action": "BUILD",
-              "instruction": "hũ āvũ chhũ — I come",
-              "spoken": true,
-              "scored": false,
-              "responseSeconds": 8,
-              "source": "[YOU BUILD: **hũ āvũ chhũ** — I come]"
-            },
-            {
-              "kind": "prompt",
-              "action": "TRACE",
-              "instruction": "Sanskrit āp- \"reach\" becomes āvvũ, and becomes English apt, couple",
-              "spoken": false,
-              "scored": false,
-              "responseSeconds": 8,
-              "source": "[YOU TRACE: Sanskrit *āp-* \"reach\" → **āvvũ**, and → English **apt**, **couple**]"
-            },
-            {
-              "kind": "prompt",
-              "action": "APPLY",
-              "instruction": "dīpa becomes divo, kūpa becomes kūvo",
-              "spoken": true,
-              "scored": false,
-              "responseSeconds": 8,
-              "source": "[YOU APPLY: *dīpa* → *divo*, *kūpa* → *kūvo*]"
-            }
-          ]
-        },
-        {
-          "index": 5,
-          "type": "recall",
-          "title": "Wrap-up Recall",
-          "segments": [
-            {
-              "kind": "pause",
-              "seconds": 3,
-              "perItem": false,
-              "source": "[PAUSE 3s]"
-            },
-            {
-              "kind": "speech",
-              "text": "What did the root behind āvvũ originally mean? (\"Reach, attain.\") What happens to a single Sanskrit p between vowels? (It softens to v.) Which English word for a joining verb is a cousin of āvvũ? (Copula.) Say \"I come.\" (Hũ āvũ chhũ.)"
-            },
-            {
-              "kind": "speech",
-              "text": "Source: Wiktionary: આવવું (āvvũ)."
-            }
-          ]
-        }
-      ]
-    },
-    {
-      "id": "GU-C07-khaavun",
-      "sequence": 390,
-      "title": "ખાવું (khāvũ) — \"to eat,\" and a family that stops before English",
-      "headword": "ખાવું",
-      "romanization": "khāvũ",
-      "gloss": "to eat — the verb whose family reaches its Indian sisters and stops there",
-      "script": "gujarati",
-      "modality": "voice",
-      "derivedModality": "voice",
-      "modalityReasons": [
-        "no-visual-dependency"
-      ],
-      "sourceHash": "fnv1a64:d1c6f9ae0d59d349",
-      "notice": null,
-      "blocks": [
-        {
-          "index": 0,
-          "type": "warmup",
-          "title": "Warm-up",
+          "title": "What you've built — roots you now carry",
           "segments": [
             {
               "kind": "pause",
@@ -549,97 +698,19 @@
             },
             {
               "kind": "speech",
-              "text": "Say \"to come,\" then name the ending it shares with every other Gujarati verb. The fourth verb takes a new letter with it."
-            }
-          ]
-        },
-        {
-          "index": 1,
-          "type": "input",
-          "title": "You'll want to know first — one word",
-          "segments": [
-            {
-              "kind": "speech",
-              "text": "ખાવું — khāvũ — to eat."
+              "text": "bolvũ \"to speak\" (native; bol-, like Hindi/Punjabi)."
             },
             {
               "kind": "speech",
-              "text": "The new letter is ખ, kha: a k with a puff of breath straight after it. English makes that puff without noticing — hold a hand in front of your mouth and say kite. Gujarati notices, and gives the puffed and unpuffed sounds separate letters, ખ and ક."
+              "text": "rahevũ \"to live\" from rah- \"to remain\"."
             },
             {
               "kind": "speech",
-              "text": "Then the long-ā sign ા, and the ending you know: ખા- khā- plus -વું -vũ. The present is hũ khāũ chhũ, \"I eat.\""
-            }
-          ]
-        },
-        {
-          "index": 2,
-          "type": "etymology",
-          "title": "The word, taken apart — where the family stops",
-          "segments": [
-            {
-              "kind": "speech",
-              "text": "khāvũ comes from Sanskrit khādati, \"chews, eats.\" Prakrit kept it as khādi, and then the single d between vowels wore away — the same erosion that has been thinning these verbs all along — leaving the bare stem khā-."
+              "text": "karvũ \"to do\" from √kṛ; kām \"work\" from karma (both from kṛ)."
             },
             {
               "kind": "speech",
-              "text": "Its sisters are all alive: Hindi khānā, Punjabi khāṇā, Marathi khāṇe, Bengali khāoyā. One verb, five modern shapes."
-            },
-            {
-              "kind": "speech",
-              "text": "And there the family stops. Scholars reconstruct an Indo-European root behind khādati, but it left nothing in English — no cousin, no borrowing, not even a worn-down one. That is worth saying out loud rather than reaching for a lookalike, because this whole method rests on hanging a new word on a word you already own, and a cousin that is not really a cousin is worse than none at all. Some words you take on their own terms. Khāvũ is one of them, and its five sisters are anchor enough."
-            }
-          ]
-        },
-        {
-          "index": 3,
-          "type": "guided-production",
-          "title": "Guided Practice",
-          "segments": [
-            {
-              "kind": "prompt",
-              "action": "SAY",
-              "instruction": "khāvũ — to eat, with the breath after the k",
-              "spoken": true,
-              "scored": false,
-              "responseSeconds": 8,
-              "source": "[YOU SAY: **khāvũ** — to eat, with the breath after the *k*]"
-            },
-            {
-              "kind": "prompt",
-              "action": "CONTRAST",
-              "instruction": "ખ puffed, ક unpuffed",
-              "spoken": true,
-              "scored": false,
-              "responseSeconds": 8,
-              "source": "[YOU CONTRAST: **ખ** puffed, **ક** unpuffed]"
-            },
-            {
-              "kind": "prompt",
-              "action": "BUILD",
-              "instruction": "hũ khāũ chhũ — I eat",
-              "spoken": true,
-              "scored": false,
-              "responseSeconds": 8,
-              "source": "[YOU BUILD: **hũ khāũ chhũ** — I eat]"
-            },
-            {
-              "kind": "prompt",
-              "action": "TRACE",
-              "instruction": "Sanskrit khādati becomes khādi becomes khāvũ, the d worn away",
-              "spoken": false,
-              "scored": false,
-              "responseSeconds": 8,
-              "source": "[YOU TRACE: Sanskrit *khādati* → *khādi* → **khāvũ**, the *d* worn away]"
-            },
-            {
-              "kind": "prompt",
-              "action": "ADMIT",
-              "instruction": "no honest English cousin — and that is the right answer",
-              "spoken": true,
-              "scored": false,
-              "responseSeconds": 8,
-              "source": "[YOU ADMIT: no honest English cousin — and that is the right answer]"
+              "text": "gujarātī from the Gurjar people, who named the land Gujarat."
             }
           ]
         },
@@ -656,326 +727,7 @@
             },
             {
               "kind": "speech",
-              "text": "What separates ખ from ક? (A puff of breath.) Which Sanskrit verb is behind khāvũ, and what happened to its d? (Khādati; it wore away between the vowels.) Which English word is its cousin? (None — and pretending otherwise would be worse than admitting it.) Say \"I eat.\" (Hũ khāũ chhũ.)"
-            },
-            {
-              "kind": "speech",
-              "text": "Source: Wiktionary: ખાવું (khāvũ)."
-            }
-          ]
-        }
-      ]
-    },
-    {
-      "id": "GU-C07-jovun",
-      "sequence": 400,
-      "title": "જોવું (jovũ) — \"to see,\" one mark away from \"to go\"",
-      "headword": "જોવું",
-      "romanization": "jovũ",
-      "gloss": "to see — one vowel sign away from “to go,” and an origin still argued over",
-      "script": "gujarati",
-      "modality": "voice",
-      "derivedModality": "voice",
-      "modalityReasons": [
-        "no-visual-dependency"
-      ],
-      "sourceHash": "fnv1a64:3c96c349f22f7c00",
-      "notice": null,
-      "blocks": [
-        {
-          "index": 0,
-          "type": "warmup",
-          "title": "Warm-up",
-          "segments": [
-            {
-              "kind": "pause",
-              "seconds": 2,
-              "perItem": false,
-              "source": "[PAUSE 2s]"
-            },
-            {
-              "kind": "speech",
-              "text": "Two verbs back: how do you say \"to go,\" and how do you say \"to eat\"? The fifth verb is the nearest neighbour javũ has."
-            }
-          ]
-        },
-        {
-          "index": 1,
-          "type": "input",
-          "title": "You'll want to know first — one word",
-          "segments": [
-            {
-              "kind": "speech",
-              "text": "જોવું — jovũ — to see."
-            },
-            {
-              "kind": "speech",
-              "text": "જ ja, wearing the sign ો that turns it into jo; then the ending વું -vũ. The stem is જો- jo-, and the present runs as it always has: hũ joũ chhũ, \"I see.\""
-            }
-          ]
-        },
-        {
-          "index": 2,
-          "type": "notice",
-          "title": "What you've built: one mark apart",
-          "segments": [
-            {
-              "kind": "speech",
-              "text": "Set the two words side by side and the whole difference is one small mark:"
-            },
-            {
-              "kind": "speech",
-              "text": "જવું javũ — to go. Bare જ, carrying its built-in a."
-            },
-            {
-              "kind": "speech",
-              "text": "જોવું jovũ — to see. The same જ, with ો on it."
-            },
-            {
-              "kind": "speech",
-              "text": "Add that one sign and going becomes seeing. In the mouth the contrast is just as small and just as total — ja against jo — so this is a pair worth saying aloud until the vowels separate cleanly. Gujarati will keep doing this: the consonants carry the word, and a single vowel mark decides which word it is."
-            }
-          ]
-        },
-        {
-          "index": 3,
-          "type": "etymology",
-          "title": "The word, taken apart — an origin still argued over",
-          "segments": [
-            {
-              "kind": "speech",
-              "text": "jovũ continues a Prakrit verb joaï, \"looks.\" Where joaï itself came from is genuinely unsettled, and it is more useful to say so than to pick a winner."
-            },
-            {
-              "kind": "speech",
-              "text": "The usual account takes it from Sanskrit dyotate, \"shines\" — sight arriving by way of light. That is a well-worn path: Greek phaínō \"shine\" produced phainómenon, \"a thing that shows itself,\" which English borrowed as phenomenon, and from the same family phantom and fantasy. A second account brings in an older verb of watching and waiting for, the one behind Hindi johnā, \"to watch out for.\" The two may simply have run together; forms do that."
-            },
-            {
-              "kind": "speech",
-              "text": "So: probable, not proven. Etymology has error bars like any other science, and a lesson that hides them is teaching you to trust the wrong things."
-            }
-          ]
-        },
-        {
-          "index": 4,
-          "type": "guided-production",
-          "title": "Guided Practice",
-          "segments": [
-            {
-              "kind": "prompt",
-              "action": "SAY",
-              "instruction": "jovũ — to see",
-              "spoken": true,
-              "scored": false,
-              "responseSeconds": 8,
-              "source": "[YOU SAY: **jovũ** — to see]"
-            },
-            {
-              "kind": "prompt",
-              "action": "CONTRAST",
-              "instruction": "javũ go, jovũ see — one mark, one vowel",
-              "spoken": true,
-              "scored": false,
-              "responseSeconds": 8,
-              "source": "[YOU CONTRAST: **javũ** go, **jovũ** see — one mark, one vowel]"
-            },
-            {
-              "kind": "prompt",
-              "action": "BUILD",
-              "instruction": "hũ joũ chhũ — I see",
-              "spoken": true,
-              "scored": false,
-              "responseSeconds": 8,
-              "source": "[YOU BUILD: **hũ joũ chhũ** — I see]"
-            },
-            {
-              "kind": "prompt",
-              "action": "HEDGE",
-              "instruction": "jovũ probably from \"shines\" — probable, not proven",
-              "spoken": true,
-              "scored": false,
-              "responseSeconds": 8,
-              "source": "[YOU HEDGE: *jovũ* probably from \"shines\" — probable, not proven]"
-            },
-            {
-              "kind": "prompt",
-              "action": "RUN",
-              "instruction": "hovũ, javũ, āvvũ, khāvũ, jovũ",
-              "spoken": true,
-              "scored": false,
-              "responseSeconds": 8,
-              "source": "[YOU RUN: **hovũ**, **javũ**, **āvvũ**, **khāvũ**, **jovũ**]"
-            }
-          ]
-        },
-        {
-          "index": 5,
-          "type": "recall",
-          "title": "Wrap-up Recall",
-          "segments": [
-            {
-              "kind": "pause",
-              "seconds": 3,
-              "perItem": false,
-              "source": "[PAUSE 3s]"
-            },
-            {
-              "kind": "speech",
-              "text": "What single mark separates javũ from jovũ? (The ો sign: ja becomes jo.) Say \"I see.\" (Hũ joũ chhũ.) How settled is the origin of jovũ? (Not settled — probably from a verb meaning \"shines,\" possibly merged with one meaning \"watch out for.\")"
-            },
-            {
-              "kind": "speech",
-              "text": "Source: Wiktionary: જોવું (jovũ)."
-            }
-          ]
-        }
-      ]
-    },
-    {
-      "id": "GU-C07-jaanvun",
-      "sequence": 410,
-      "title": "જાણવું (jāṇvũ) — \"to know,\" a word English has been carrying all along",
-      "headword": "જાણવું",
-      "romanization": "jāṇvũ",
-      "gloss": "to know — the word English has been carrying all along",
-      "script": "gujarati",
-      "modality": "voice",
-      "derivedModality": "voice",
-      "modalityReasons": [
-        "no-visual-dependency"
-      ],
-      "sourceHash": "fnv1a64:62f3a3bb75a879e4",
-      "notice": null,
-      "blocks": [
-        {
-          "index": 0,
-          "type": "warmup",
-          "title": "Warm-up",
-          "segments": [
-            {
-              "kind": "pause",
-              "seconds": 2,
-              "perItem": false,
-              "source": "[PAUSE 2s]"
-            },
-            {
-              "kind": "speech",
-              "text": "Run the five you have — hovũ, javũ, āvvũ, khāvũ, jovũ — and pull the ending off each one. The sixth is the closest of them all to English."
-            }
-          ]
-        },
-        {
-          "index": 1,
-          "type": "input",
-          "title": "You'll want to know first — one word",
-          "segments": [
-            {
-              "kind": "speech",
-              "text": "જાણવું — jāṇvũ — to know."
-            },
-            {
-              "kind": "speech",
-              "text": "જ ja with the long-ā sign ા on it gives jā. Then a new letter: ણ, an n made with the tongue tip curled back onto the roof of the mouth — a retroflex, written ṇ. Gujarati inherited a whole set of these curled sounds from Sanskrit, and you have met one before in ળ ḷ."
-            },
-            {
-              "kind": "speech",
-              "text": "Then the ending. જાણ- jāṇ- plus -વું -vũ, and the present is hũ jāṇũ chhũ, \"I know.\""
-            }
-          ]
-        },
-        {
-          "index": 2,
-          "type": "etymology",
-          "title": "The word, taken apart — the widest family in the chapter",
-          "segments": [
-            {
-              "kind": "speech",
-              "text": "jāṇvũ comes from Sanskrit jānāti, \"knows,\" on the root jñā-. The retroflex is Prakrit's work: a single n between vowels was pulled back onto the roof of the mouth, so jānāti became jāṇadi and then jāṇvũ."
-            },
-            {
-              "kind": "speech",
-              "text": "The root is Indo-European, gnō- \"to know,\" and English is stuffed with it."
-            },
-            {
-              "kind": "speech",
-              "text": "Straight down the Germanic line: know, knowledge, can — which once meant \"to know how\" — cunning, ken, and uncouth, literally \"un-known.\" Borrowed from Latin (g)nōscere: notice, note, notion, cognition, recognize, acquaint, noble (\"well-known\"), and ignore, which is \"not to know.\" Borrowed from Greek gnōsis: diagnosis, prognosis, agnostic."
-            },
-            {
-              "kind": "speech",
-              "text": "Two verbs ago the family stopped before English entirely. This one runs three dozen words deep. Jāṇvũ is not a stranger: it is a first cousin of the plainest word English owns for the same idea, and every one of those borrowings is another peg to hang it on."
-            }
-          ]
-        },
-        {
-          "index": 3,
-          "type": "guided-production",
-          "title": "Guided Practice",
-          "segments": [
-            {
-              "kind": "prompt",
-              "action": "SAY",
-              "instruction": "jāṇvũ — to know, with the tongue curled back on the ṇ",
-              "spoken": true,
-              "scored": false,
-              "responseSeconds": 8,
-              "source": "[YOU SAY: **jāṇvũ** — to know, with the tongue curled back on the *ṇ*]"
-            },
-            {
-              "kind": "prompt",
-              "action": "BUILD",
-              "instruction": "hũ jāṇũ chhũ — I know",
-              "spoken": true,
-              "scored": false,
-              "responseSeconds": 8,
-              "source": "[YOU BUILD: **hũ jāṇũ chhũ** — I know]"
-            },
-            {
-              "kind": "prompt",
-              "action": "RUN",
-              "instruction": "all six — hovũ, javũ, āvvũ, khāvũ, jovũ, jāṇvũ — stripping each stem",
-              "spoken": true,
-              "scored": false,
-              "responseSeconds": 8,
-              "source": "[YOU RUN: all six — *hovũ, javũ, āvvũ, khāvũ, jovũ, jāṇvũ* — stripping each stem]"
-            },
-            {
-              "kind": "prompt",
-              "action": "BUILD",
-              "instruction": "hũ jāũ chhũ, hũ āvũ chhũ, hũ khāũ chhũ, hũ joũ chhũ",
-              "spoken": true,
-              "scored": false,
-              "responseSeconds": 8,
-              "source": "[YOU BUILD: **hũ jāũ chhũ**, **hũ āvũ chhũ**, **hũ khāũ chhũ**, **hũ joũ chhũ**]"
-            },
-            {
-              "kind": "prompt",
-              "action": "CONNECT",
-              "instruction": "jāṇvũ from jñā- becomes English know, notice, diagnosis",
-              "spoken": true,
-              "scored": false,
-              "responseSeconds": 8,
-              "source": "[YOU CONNECT: **jāṇvũ** ← *jñā-* → English **know**, **notice**, **diagnosis**]"
-            }
-          ]
-        },
-        {
-          "index": 4,
-          "type": "recall",
-          "title": "Wrap-up Recall",
-          "segments": [
-            {
-              "kind": "pause",
-              "seconds": 3,
-              "perItem": false,
-              "source": "[PAUSE 3s]"
-            },
-            {
-              "kind": "speech",
-              "text": "Name all six verbs and take the ending off each. (Ho-, ja-, āv-, khā-, jo-, jāṇ-; the ending is the neuter -vũ.) Which English verb is the same word as jāṇvũ? (Know.) What makes the ણ different from a plain n? (The tongue curls back.) Say \"I know.\" (Hũ jāṇũ chhũ.)"
-            },
-            {
-              "kind": "speech",
-              "text": "Source: Wiktionary: જાણવું (jāṇvũ)."
+              "text": "In one breath, tell me your language, your city, and your work in Gujarati. (Hũ gujarātī bolũ chhũ. Hũ … rahũ chhũ. Hũ kām karũ chhũ.)"
             }
           ]
         }

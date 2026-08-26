@@ -2,9 +2,9 @@
 schema_version: 2
 id: GU-R15-nna-r4
 spine_node: SPINE-EXCHANGE-NAMES
-sequence: 650
+sequence: 660
 delivery: script
-chapter: 15
+chapter: 17
 type: writing
 headword: ણ ન
 romanization: retroflex nna — na

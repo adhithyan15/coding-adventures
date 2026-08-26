@@ -2,29 +2,34 @@
   "version": 1,
   "language": "gujarati",
   "chapter": 16,
-  "title": "Fourth Return: The Introduction",
+  "title": "Eye, Ear, Mouth, and Nose",
   "drivablePrefix": 0,
-  "sourceHash": "fnv1a64:fcf8033884a643c0",
+  "sourceHash": "fnv1a64:6628bcfb28a4119b",
   "lessons": [
     {
-      "id": "GU-R16-naam-r4",
-      "sequence": 680,
-      "title": "Nām returns at R4",
-      "headword": "નામ",
-      "romanization": "nām",
-      "gloss": "retrieve name at its fourth spacing window",
+      "id": "GU-C12-aankh",
+      "sequence": 590,
+      "title": "આંખ (āṅkh) — an eye, and a nasal that is not what it looks like",
+      "headword": "આંખ",
+      "romanization": "āṅkh",
+      "gloss": "eye — a straight cousin of the English word, and a nasal mark that is not the neuter tell you might expect",
       "script": "gujarati",
-      "modality": "pen",
-      "derivedModality": "pen",
+      "modality": "sight",
+      "derivedModality": "sight",
       "modalityReasons": [
-        "writing-block"
+        "script-block"
       ],
-      "sourceHash": "fnv1a64:a882bacce3112341",
+      "sourceHash": "fnv1a64:197fac7dccc75d8f",
       "notice": {
-        "modality": "pen",
-        "needs": [],
-        "waitUntilStopped": [],
-        "text": "Before we start: this one needs your hands, so it is not a driving lesson. You can listen to all of it now and come back to the parts that need looking at once you have stopped."
+        "modality": "sight",
+        "needs": [
+          "your eyes, for letter shapes on the page"
+        ],
+        "waitUntilStopped": [
+          "The letters in this word",
+          "Guided Practice"
+        ],
+        "text": "Before we start: this one needs your eyes, so it is not fully a driving lesson. You will want your eyes, for letter shapes on the page. You can listen to everything else now — leave the sections called The letters in this word and Guided Practice until you have stopped, and I will say so again when we reach it."
       },
       "blocks": [
         {
@@ -34,83 +39,94 @@
           "segments": [
             {
               "kind": "pause",
-              "seconds": 5,
+              "seconds": 2,
               "perItem": false,
-              "source": "[PAUSE 5s]"
+              "source": "[PAUSE 2s]"
             },
             {
               "kind": "speech",
-              "text": "Before looking, say the Gujarati word that is a cousin of English name."
+              "text": "બહેન (bahen) closed a chapter about people. This chapter checks on how someone is — starting with the parts of the body a friend might actually ask about."
             }
           ]
         },
         {
           "index": 1,
+          "type": "input",
+          "title": "You'll want to know first — one word",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "આંખ — āṅkh — eye."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "script",
+          "title": "The letters in this word",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "આ the independent long-ā, then the nasal dot ં sitting on top of it — exactly the medial anusvāra you first read inside વાંચવું, doing the same job here, in the middle of a noun rather than a verb — then ખ, the aspirated k. Note what this nasal is NOT: it does not mark આંખ (āṅkh) as neuter — the word is feminine. A nasal dot in the middle of a word is a sound, present or absent as pronunciation happens to need it; it is a different thing entirely from the grammatical -ũ ending you will meet again soon, and this chapter keeps the two apart on purpose."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "etymology",
+          "title": "The word, taken apart — the same word as \"eye,\" unbroken",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "āṅkh is inherited from Sauraseni Prakrit akkhi, from Sanskrit akṣi, \"eye.\" The root is Indo-European h₃ekʷ-, \"eye; to see,\" and it survives unbroken in English eye itself, in Latin oculus (behind ocular), and in Greek ósse. This is bhāī's kind of cousin, not bahen's: a straight line back to the same ancestor, no borrowing and no detour."
+            }
+          ]
+        },
+        {
+          "index": 4,
           "type": "guided-production",
           "title": "Guided Practice",
           "segments": [
             {
               "kind": "prompt",
               "action": "SAY",
-              "instruction": "chhe — nām — mārũ",
+              "instruction": "āṅkh — eye",
               "spoken": true,
               "scored": false,
               "responseSeconds": 8,
-              "source": "[YOU SAY: *chhe — nām — mārũ*]"
+              "source": "[YOU SAY: **āṅkh** — eye]"
             },
             {
-              "kind": "speech",
-              "text": "Point to the item meaning name, then uncover નામ (nām) and read it once. Position 97 is 61 lessons after its introduction at position 36, so this response closes the word's R4 window."
+              "kind": "prompt",
+              "action": "MATCH",
+              "instruction": "the medial nasal here against the one in વાંચવું",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU MATCH: the medial nasal here against the one in **વાંચવું**]"
             },
             {
-              "kind": "activity",
-              "scored": true,
-              "id": "GU-R16-naam-r4-listening",
-              "prompt": "Without looking at Gujarati, hear this row: chhe — nām — mārũ. Which item means name?",
-              "assesses": [
-                "GU-CONCEPT-C02-NAAM-01"
-              ],
-              "responseSeconds": 20,
-              "acceptedResponses": [
-                "nām"
-              ],
-              "feedback": {
-                "correct": "Nām returned by sound and meaning.",
-                "incorrect": "Hear nām once with its meaning, cover the help, and answer again."
-              }
+              "kind": "prompt",
+              "action": "STATE",
+              "instruction": "is this nasal a gender marker? (No.) Is āṅkh neuter? (No — feminine.)",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU STATE: is this nasal a gender marker? (No.) Is **āṅkh** neuter? (No — feminine.)]"
+            },
+            {
+              "kind": "prompt",
+              "action": "TRACE",
+              "instruction": "PIE h₃ekʷ- becomes Sanskrit akṣi becomes આંખ (āṅkh), and becomes English eye",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU TRACE: PIE *h₃ekʷ-* → Sanskrit *akṣi* → **આંખ**, and → English **eye**]"
             }
           ]
         },
         {
-          "index": 2,
-          "type": "writing",
-          "title": "Writing — from sound",
-          "segments": [
-            {
-              "kind": "speech",
-              "text": "Cover every Gujarati model and write nām. Score listening/recognition and writing separately; each needs 1/1."
-            },
-            {
-              "kind": "activity",
-              "scored": true,
-              "id": "GU-R16-naam-r4-writing",
-              "prompt": "Cover every Gujarati model. Write nām from sound.",
-              "assesses": [
-                "GU-CONCEPT-C02-NAAM-01"
-              ],
-              "responseSeconds": 25,
-              "acceptedResponses": [
-                "નામ"
-              ],
-              "feedback": {
-                "correct": "You retrieved nām independently in Gujarati script.",
-                "incorrect": "Check નામ once, cover it, and rewrite only that word."
-              }
-            }
-          ]
-        },
-        {
-          "index": 3,
+          "index": 5,
           "type": "recall",
           "title": "Wrap-up Recall",
           "segments": [
@@ -122,31 +138,39 @@
             },
             {
               "kind": "speech",
-              "text": "What is nām's English cousin? (name.)"
+              "text": "Give the word for \"eye.\" (Āṅkh.) Which English word is the same word by unbroken descent? (Eye.) Does the nasal dot in āṅkh mean the word is neuter? (No — āṅkh is feminine; the dot is only a sound.)"
+            },
+            {
+              "kind": "speech",
+              "text": "Sources: Wiktionary: આંખ (āṅkh); Wiktionary: Sanskrit akshi."
             }
           ]
         }
       ]
     },
     {
-      "id": "GU-R16-maarun-r4",
-      "sequence": 690,
-      "title": "Mārũ returns with nām",
-      "headword": "મારું",
-      "romanization": "mārũ",
-      "gloss": "retrieve my at its fourth spacing window",
+      "id": "GU-C12-kaan",
+      "sequence": 600,
+      "title": "કાન (kān) — an ear whose own root is unsettled",
+      "headword": "કાન",
+      "romanization": "kān",
+      "gloss": "ear — a word Sanskrit itself could not settle the origin of, and one that changed gender on the way to Gujarati",
       "script": "gujarati",
-      "modality": "pen",
-      "derivedModality": "pen",
+      "modality": "sight",
+      "derivedModality": "sight",
       "modalityReasons": [
-        "writing-block"
+        "script-block"
       ],
-      "sourceHash": "fnv1a64:c2f79cd0ea05fb14",
+      "sourceHash": "fnv1a64:74b3d53b26a97064",
       "notice": {
-        "modality": "pen",
-        "needs": [],
-        "waitUntilStopped": [],
-        "text": "Before we start: this one needs your hands, so it is not a driving lesson. You can listen to all of it now and come back to the parts that need looking at once you have stopped."
+        "modality": "sight",
+        "needs": [
+          "your eyes, for letter shapes on the page"
+        ],
+        "waitUntilStopped": [
+          "The letters in this word"
+        ],
+        "text": "Before we start: this one needs your eyes, so it is not fully a driving lesson. You will want your eyes, for letter shapes on the page. You can listen to everything else now — leave the section called The letters in this word until you have stopped, and I will say so again when we reach it."
       },
       "blocks": [
         {
@@ -156,85 +180,105 @@
           "segments": [
             {
               "kind": "pause",
-              "seconds": 5,
+              "seconds": 2,
               "perItem": false,
-              "source": "[PAUSE 5s]"
+              "source": "[PAUSE 2s]"
             },
             {
               "kind": "speech",
-              "text": "Say my name without looking: mārũ nām."
+              "text": "આંખ (āṅkh) traced back cleanly to a confirmed Indo-European root. The next body part will not be nearly as tidy."
             }
           ]
         },
         {
           "index": 1,
+          "type": "input",
+          "title": "You'll want to know first — one word",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "કાન — kān — ear."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "script",
+          "title": "The letters in this word",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ક ka, ા long-ā, ન na. All three already yours."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "grammar",
+          "title": "Grammar Lens: a gender that changed on the way here",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "કાન is feminine in Gujarati. Its Sanskrit ancestor, karṇa, was masculine. Nothing about inheriting a word guarantees its gender comes along unchanged — મિત્ર kept Sanskrit's masculine, but kān did not keep karṇa's. Gender, like the gender of આંખ (āṅkh) or બહેન, has to be learned with each noun as it stands today, not projected backward from what its ancestor was — the same caution રોટલી's chapter drew from its own -ī ending."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "etymology",
+          "title": "The word, taken apart — where even Sanskrit scholars disagree",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "kān is inherited from Old Gujarati kāna, through Apabhramsa and Prakrit kaṇṇa, from Sanskrit karṇa, \"ear.\" Past that point, no agreement exists. Proposed origins include a root for \"defect\" (with \"ear\" as a later, narrower sense), a root meaning \"point\" or \"spike,\" a root meaning \"handle\" or \"grip,\" and a connection to śṛṇoti, \"to hear.\" None of these has won out. Kān joins roṭlī as a second word in your Gujarati vocabulary whose Sanskrit form is certain and whose deeper root is not — the honest answer, said plainly rather than picked at random."
+            }
+          ]
+        },
+        {
+          "index": 5,
           "type": "guided-production",
           "title": "Guided Practice",
           "segments": [
             {
               "kind": "prompt",
               "action": "SAY",
-              "instruction": "mārũ nām",
+              "instruction": "kān — ear, and āṅkh — eye",
               "spoken": true,
               "scored": false,
               "responseSeconds": 8,
-              "source": "[YOU SAY: *mārũ nām*]"
+              "source": "[YOU SAY: **kān** — ear, and **āṅkh** — eye]"
             },
             {
-              "kind": "speech",
-              "text": "Give each meaning, then read મારું નામ (nām) once. Position 98 is 61 lessons after mārũ first appeared at position 37, closing its R4 window without adding a form."
+              "kind": "prompt",
+              "action": "STATE",
+              "instruction": "karṇa's Sanskrit gender against kān's Gujarati gender (masculine becomes feminine)",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU STATE: *karṇa*'s Sanskrit gender against *kān*'s Gujarati gender (masculine → feminine)]"
             },
             {
-              "kind": "activity",
-              "scored": true,
-              "id": "GU-R16-maarun-r4-listening",
-              "prompt": "Hear mārũ nām. Which word means my, and which means name?",
-              "assesses": [
-                "GU-CONCEPT-C02-MAARUN-01",
-                "GU-CONCEPT-C02-NAAM-01"
-              ],
-              "responseSeconds": 25,
-              "acceptedResponses": [
-                "mārũ means my; nām means name"
-              ],
-              "feedback": {
-                "correct": "The two-word owner phrase stayed in order.",
-                "incorrect": "Hear mārũ — my, nām — name once, then answer again without help."
-              }
+              "kind": "prompt",
+              "action": "NAME",
+              "instruction": "two of the four disputed origins scholars have proposed for karṇa",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU NAME: two of the four disputed origins scholars have proposed for *karṇa*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "CONTRAST",
+              "instruction": "āṅkh's confirmed PIE root against kān's unsettled one",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU CONTRAST: *āṅkh*'s confirmed PIE root against *kān*'s unsettled one]"
             }
           ]
         },
         {
-          "index": 2,
-          "type": "writing",
-          "title": "Writing — from sound",
-          "segments": [
-            {
-              "kind": "speech",
-              "text": "Write the two-word phrase with every model covered. Listening and writing each need 2/2; repair only a missed word."
-            },
-            {
-              "kind": "activity",
-              "scored": true,
-              "id": "GU-R16-maarun-r4-writing",
-              "prompt": "Cover every Gujarati model. Write mārũ nām from sound.",
-              "assesses": [
-                "GU-CONCEPT-C02-MAARUN-01",
-                "GU-CONCEPT-C02-NAAM-01"
-              ],
-              "responseSeconds": 30,
-              "acceptedResponses": [
-                "મારું નામ"
-              ],
-              "feedback": {
-                "correct": "You wrote my name independently.",
-                "incorrect": "Check only the missed word, cover both words, and rewrite the phrase."
-              }
-            }
-          ]
-        },
-        {
-          "index": 3,
+          "index": 6,
           "type": "recall",
           "title": "Wrap-up Recall",
           "segments": [
@@ -246,31 +290,39 @@
             },
             {
               "kind": "speech",
-              "text": "Why is the form mārũ? (Nām is neuter.)"
+              "text": "Give the word for \"ear.\" (Kān.) Did its gender change between Sanskrit and Gujarati? (Yes — masculine to feminine.) Is karṇa's own root settled? (No — several proposals, no agreement.)"
+            },
+            {
+              "kind": "speech",
+              "text": "Sources: Wiktionary: કાન (kān); Wiktionary: Sanskrit karna."
             }
           ]
         }
       ]
     },
     {
-      "id": "GU-R16-chhe-r4",
-      "sequence": 700,
-      "title": "Chhe returns to the final slot",
-      "headword": "છે",
-      "romanization": "chhe",
-      "gloss": "retrieve the Gujarati copula at its fourth spacing window",
+      "id": "GU-C12-modhu",
+      "sequence": 610,
+      "title": "મોઢું (moḍhũ) — the tell you have been hearing all along",
+      "headword": "મોઢું",
+      "romanization": "moḍhũ",
+      "gloss": "mouth — the clearest example yet of Gujarati's neuter tell, the nasalized -ũ you have been hearing on every verb",
       "script": "gujarati",
-      "modality": "pen",
-      "derivedModality": "pen",
+      "modality": "sight",
+      "derivedModality": "sight",
       "modalityReasons": [
-        "writing-block"
+        "script-block"
       ],
-      "sourceHash": "fnv1a64:bae9bf85e4a715f0",
+      "sourceHash": "fnv1a64:019775d8e4269b4e",
       "notice": {
-        "modality": "pen",
-        "needs": [],
-        "waitUntilStopped": [],
-        "text": "Before we start: this one needs your hands, so it is not a driving lesson. You can listen to all of it now and come back to the parts that need looking at once you have stopped."
+        "modality": "sight",
+        "needs": [
+          "your eyes, for letter shapes on the page"
+        ],
+        "waitUntilStopped": [
+          "The letters in this word"
+        ],
+        "text": "Before we start: this one needs your eyes, so it is not fully a driving lesson. You will want your eyes, for letter shapes on the page. You can listen to everything else now — leave the section called The letters in this word until you have stopped, and I will say so again when we reach it."
       },
       "blocks": [
         {
@@ -280,85 +332,105 @@
           "segments": [
             {
               "kind": "pause",
-              "seconds": 5,
+              "seconds": 2,
               "perItem": false,
-              "source": "[PAUSE 5s]"
+              "source": "[PAUSE 2s]"
             },
             {
               "kind": "speech",
-              "text": "Say Gujarati is once. Remember that it waits at the end."
+              "text": "કાન (kān)'s own gender shifted away from Sanskrit's. The next body part wears its gender in plain sight — the same nasalized ending you have heard on nearly every verb in this book."
             }
           ]
         },
         {
           "index": 1,
+          "type": "input",
+          "title": "You'll want to know first — one word",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "મોઢું — moḍhũ — mouth."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "script",
+          "title": "The letters in this word",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "મ ma, ો the o sign, then a new letter: ઢ, the retroflex aspirated ḍh — curl the tongue back as for ટ and ણ, and add the puff of breath that made ધ aspirated. Then ું, u with the nasal dot. Mo-ḍhũ."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "grammar",
+          "title": "Grammar Lens: the neuter tell, named plainly",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "Every verb infinitive in this book ends in the neuter -વું: hovũ, javũ, jāṇvũ, lakhvũ — a whole word class marked by that one nasalized ending. મોઢું shows the same ending doing the same job on a noun: moḍhũ is neuter, and the nasalized -ũ is the single most recognizable tell for it. Not every neuter noun wears it — પાણી and later nāk do not — but when you do see or hear a word end this way, neuter is the way to bet. And do not confuse it with આંખ (āṅkh)'s nasal: that one sat in the middle of a feminine word and marked nothing about gender at all. This one sits at the end, and it does."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "etymology",
+          "title": "The word, taken apart — a mouth, and a doublet with its own formal twin",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "moḍhũ is inherited from Sauraseni Prakrit muha, from Sanskrit mukha, \"mouth, face.\" It has a formal doublet, મુખ mukh, borrowed directly from the same Sanskrit word the way kuṭumb was — the everyday and the formal register, side by side, from one ancestor reached by two different roads. Past Sanskrit, mukha's own root is not agreed upon — a second open question, alongside karṇa's, rather than a guess dressed up as an answer."
+            }
+          ]
+        },
+        {
+          "index": 5,
           "type": "guided-production",
           "title": "Guided Practice",
           "segments": [
             {
               "kind": "prompt",
               "action": "SAY",
-              "instruction": "nām — chhe",
+              "instruction": "moḍhũ — mouth",
               "spoken": true,
               "scored": false,
               "responseSeconds": 8,
-              "source": "[YOU SAY: *nām — chhe*]"
+              "source": "[YOU SAY: **moḍhũ** — mouth]"
             },
             {
-              "kind": "speech",
-              "text": "Identify is, then read નામ (nām) … છે. Position 99 is 61 lessons after chhe appeared at position 38, so the copula's R4 window closes here."
+              "kind": "prompt",
+              "action": "STATE",
+              "instruction": "what gender the -ũ ending marks, and one verb infinitive that wears the same ending",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU STATE: what gender the *-ũ* ending marks, and one verb infinitive that wears the same ending]"
             },
             {
-              "kind": "activity",
-              "scored": true,
-              "id": "GU-R16-chhe-r4-listening",
-              "prompt": "Hear nām — chhe. Which item is the copula is, and where does it sit?",
-              "assesses": [
-                "GU-CONCEPT-C02-CHHE-01",
-                "GU-CONCEPT-C02-NAAM-01"
-              ],
-              "responseSeconds": 25,
-              "acceptedResponses": [
-                "chhe; it sits at the end"
-              ],
-              "feedback": {
-                "correct": "You retrieved Gujarati chhe and its sentence-final position.",
-                "incorrect": "Hear nām — chhe once more, then answer without looking."
-              }
+              "kind": "prompt",
+              "action": "CONTRAST",
+              "instruction": "moḍhũ's end-of-word nasal against āṅkh's middle-of-word one",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU CONTRAST: *moḍhũ*'s end-of-word nasal against *āṅkh*'s middle-of-word one]"
+            },
+            {
+              "kind": "prompt",
+              "action": "NAME",
+              "instruction": "moḍhũ's formal doublet, and how it reached Gujarati (borrowed whole, like kuṭumb)",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU NAME: *moḍhũ*'s formal doublet, and how it reached Gujarati (borrowed whole, like *kuṭumb*)]"
             }
           ]
         },
         {
-          "index": 2,
-          "type": "writing",
-          "title": "Writing — from sound",
-          "segments": [
-            {
-              "kind": "speech",
-              "text": "Write the frame with every model covered. Score the two words separately from listening; repair only the missed one."
-            },
-            {
-              "kind": "activity",
-              "scored": true,
-              "id": "GU-R16-chhe-r4-writing",
-              "prompt": "Cover every Gujarati model. Write nām … chhe from sound, leaving a name-sized gap.",
-              "assesses": [
-                "GU-CONCEPT-C02-CHHE-01",
-                "GU-CONCEPT-C02-NAAM-01"
-              ],
-              "responseSeconds": 30,
-              "acceptedResponses": [
-                "નામ ... છે"
-              ],
-              "feedback": {
-                "correct": "The copula returned in its Gujarati final slot.",
-                "incorrect": "Check only the missed word, cover the model, and rewrite the frame."
-              }
-            }
-          ]
-        },
-        {
-          "index": 3,
+          "index": 6,
           "type": "recall",
           "title": "Wrap-up Recall",
           "segments": [
@@ -370,31 +442,40 @@
             },
             {
               "kind": "speech",
-              "text": "Is chhe Hindi hai? (No; it is Gujarati's own copula.)"
+              "text": "Give the word for \"mouth.\" (Moḍhũ.) What gender does its -ũ ending mark? (Neuter.) Name the formal doublet of moḍhũ. (મુખ, mukh.)"
+            },
+            {
+              "kind": "speech",
+              "text": "Sources: Wiktionary: મોં; Wiktionary: Sanskrit mukha."
             }
           ]
         }
       ]
     },
     {
-      "id": "GU-R16-my-name-is-r4",
-      "sequence": 710,
-      "title": "The whole name frame returns at R4",
-      "headword": "મારું નામ … છે",
-      "romanization": "mārũ nām … chhe",
-      "gloss": "retrieve my name is at its fourth spacing window",
+      "id": "GU-C12-naak",
+      "sequence": 620,
+      "title": "નાક (nāk) — the whole face, run back",
+      "headword": "નાક",
+      "romanization": "nāk",
+      "gloss": "nose — the fourth body word, closing the chapter by running the whole face back through gender, sound, and certainty",
       "script": "gujarati",
-      "modality": "pen",
-      "derivedModality": "pen",
+      "modality": "sight",
+      "derivedModality": "sight",
       "modalityReasons": [
-        "writing-block"
+        "script-block"
       ],
-      "sourceHash": "fnv1a64:e6784bbde8fbe3ba",
+      "sourceHash": "fnv1a64:76574f69c55936ac",
       "notice": {
-        "modality": "pen",
-        "needs": [],
-        "waitUntilStopped": [],
-        "text": "Before we start: this one needs your hands, so it is not a driving lesson. You can listen to all of it now and come back to the parts that need looking at once you have stopped."
+        "modality": "sight",
+        "needs": [
+          "your eyes, for letter shapes on the page"
+        ],
+        "waitUntilStopped": [
+          "The letters in this word",
+          "Guided Practice"
+        ],
+        "text": "Before we start: this one needs your eyes, so it is not fully a driving lesson. You will want your eyes, for letter shapes on the page. You can listen to everything else now — leave the sections called The letters in this word and Guided Practice until you have stopped, and I will say so again when we reach it."
       },
       "blocks": [
         {
@@ -404,89 +485,114 @@
           "segments": [
             {
               "kind": "pause",
-              "seconds": 6,
+              "seconds": 2,
               "perItem": false,
-              "source": "[PAUSE 6s]"
+              "source": "[PAUSE 2s]"
             },
             {
               "kind": "speech",
-              "text": "Assemble my — name — Mira — is aloud in Gujarati."
+              "text": "આંખ (āṅkh), કાન (kān), મોઢું (moḍhũ) — eye, ear, mouth. One more completes the face, and this one closes the chapter by tying its ending back to a pattern from three chapters ago."
             }
           ]
         },
         {
           "index": 1,
+          "type": "input",
+          "title": "You'll want to know first — one word",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "નાક — nāk — nose."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "script",
+          "title": "The letters in this word",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ન na, ા long-ā, ક ka. Every letter already familiar — nāk's only new information is the word itself."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "grammar",
+          "title": "Grammar Lens: closing the chapter's gender count",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "નાક is neuter, like મોઢું — but unlike moḍhũ, it carries no nasalized -ũ at all. Run the whole face: āṅkh feminine, kān feminine, moḍhũ neuter with the tell, nāk neuter without it. Two neuters, only one of them wearing the ending that names the class. This is exactly why last lesson called the nasalized -ũ a tell, not a rule: it is the loudest signal Gujarati gives you for neuter, and it is still only sometimes there — the same caution roṭlī and pāṇī already taught you about -ī, and kān's Grammar Lens taught you about gender and inheritance more generally."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "etymology",
+          "title": "The word, taken apart — the last unbroken cousin in the chapter",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "nāk is inherited from Prakrit ṇakka, from Sanskrit nas, \"nose,\" with a suffix added along the way — the retroflex ṇ here is the same sound-shift you first met turning jānāti into jāṇvũ, a single letter's worth of difference deciding a great deal, the way one mark once told javũ apart from jovũ. The root is Indo-European nehas-, unbroken in English nose, Latin nāsus (behind nasal), and Lithuanian nósis. Like āṅkh, nāk needed no ship and no loan to reach you — only the ordinary work of sound change, the same work that once put a nasal dot in the middle of વાંચવું and, this chapter, in the middle of આંખ."
+            }
+          ]
+        },
+        {
+          "index": 5,
           "type": "guided-production",
           "title": "Guided Practice",
           "segments": [
             {
               "kind": "prompt",
               "action": "SAY",
-              "instruction": "mārũ nām Mīrā chhe",
+              "instruction": "all four face words — āṅkh, kān, moḍhũ, nāk",
               "spoken": true,
               "scored": false,
               "responseSeconds": 8,
-              "source": "[YOU SAY: *mārũ nām Mīrā chhe*]"
+              "source": "[YOU SAY: all four face words — **āṅkh**, **kān**, **moḍhũ**, **nāk**]"
             },
             {
-              "kind": "speech",
-              "text": "Give its meaning and point to the final verb in મારું (mārũ) નામ (nām) મીરા છે (chhe). Position 100 is exactly 61 lessons after the frame was assembled at position 39, closing its R4 window."
+              "kind": "prompt",
+              "action": "SORT",
+              "instruction": "gender of each — feminine, feminine, neuter, neuter",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SORT: gender of each — feminine, feminine, neuter, neuter]"
             },
             {
-              "kind": "activity",
-              "scored": true,
-              "id": "GU-R16-my-name-is-r4-listening",
-              "prompt": "Hear mārũ nām Mīrā chhe. Give the meaning and name the final verb.",
-              "assesses": [
-                "GU-CONCEPT-C02-CHHE-01",
-                "GU-CONCEPT-C02-MAARUN-01",
-                "GU-CONCEPT-C02-MAARUNNAAMCHHE-01",
-                "GU-CONCEPT-C02-NAAM-01"
-              ],
-              "responseSeconds": 30,
-              "acceptedResponses": [
-                "my name is mira; chhe is the final verb"
-              ],
-              "feedback": {
-                "correct": "The complete frame and Gujarati word order returned.",
-                "incorrect": "Hear the four-part frame once more, then answer without help."
-              }
+              "kind": "prompt",
+              "action": "STATE",
+              "instruction": "which of the two neuters carries the -ũ tell, and which does not",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU STATE: which of the two neuters carries the *-ũ* tell, and which does not]"
+            },
+            {
+              "kind": "prompt",
+              "action": "TRACE",
+              "instruction": "PIE nehas- becomes Sanskrit nas becomes નાક (nāk), and becomes English nose",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU TRACE: PIE *nehas-* → Sanskrit *nas* → **નાક**, and → English **nose**]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "the medial nasal in વાંચવું, and the one-mark contrast between જવું and જોવું",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: the medial nasal in **વાંચવું**, and the one-mark contrast between **જવું** and **જોવું**]"
             }
           ]
         },
         {
-          "index": 2,
-          "type": "writing",
-          "title": "Writing — from sound",
-          "segments": [
-            {
-              "kind": "speech",
-              "text": "Write the one sentence with every model covered. Listening and writing each need 4/4; repair only a missed word."
-            },
-            {
-              "kind": "activity",
-              "scored": true,
-              "id": "GU-R16-my-name-is-r4-writing",
-              "prompt": "Cover every Gujarati model. Write My name is Mira from the heard Gujarati cue mārũ nām Mīrā chhe.",
-              "assesses": [
-                "GU-CONCEPT-C02-CHHE-01",
-                "GU-CONCEPT-C02-MAARUN-01",
-                "GU-CONCEPT-C02-MAARUNNAAMCHHE-01",
-                "GU-CONCEPT-C02-NAAM-01"
-              ],
-              "responseSeconds": 45,
-              "acceptedResponses": [
-                "મારું નામ મીરા છે"
-              ],
-              "feedback": {
-                "correct": "You wrote the complete name frame independently.",
-                "incorrect": "Check only the missed word, cover the line, and rewrite the sentence."
-              }
-            }
-          ]
-        },
-        {
-          "index": 3,
+          "index": 6,
           "type": "recall",
           "title": "Wrap-up Recall",
           "segments": [
@@ -498,263 +604,11 @@
             },
             {
               "kind": "speech",
-              "text": "Give the same frame with your own name."
-            }
-          ]
-        }
-      ]
-    },
-    {
-      "id": "GU-R16-anand-r4",
-      "sequence": 720,
-      "title": "Ānand returns to close the introduction",
-      "headword": "તમને મળીને આનંદ થયો",
-      "romanization": "tamne maḷīne ānand thayo",
-      "gloss": "retrieve pleased to meet you at its fourth spacing window",
-      "script": "gujarati",
-      "modality": "pen",
-      "derivedModality": "pen",
-      "modalityReasons": [
-        "writing-block"
-      ],
-      "sourceHash": "fnv1a64:387abccf88718958",
-      "notice": {
-        "modality": "pen",
-        "needs": [],
-        "waitUntilStopped": [],
-        "text": "Before we start: this one needs your hands, so it is not a driving lesson. You can listen to all of it now and come back to the parts that need looking at once you have stopped."
-      },
-      "blocks": [
-        {
-          "index": 0,
-          "type": "warmup",
-          "title": "Warm-up",
-          "segments": [
-            {
-              "kind": "pause",
-              "seconds": 6,
-              "perItem": false,
-              "source": "[PAUSE 6s]"
+              "text": "Give the word for \"nose.\" (Nāk.) Which English word is the same word by unbroken descent? (Nose.) Name this chapter's four body words and their genders. (Āṅkh f., kān f., moḍhũ n., nāk n.) Which neuter noun wears the nasalized -ũ tell, and which does not? (Moḍhũ does; nāk does not.)"
             },
             {
               "kind": "speech",
-              "text": "Give your name aloud, then pause where a warm closing line belongs."
-            }
-          ]
-        },
-        {
-          "index": 1,
-          "type": "guided-production",
-          "title": "Guided Practice",
-          "segments": [
-            {
-              "kind": "prompt",
-              "action": "SAY",
-              "instruction": "mārũ nām Arun chhe — tamne maḷīne ānand thayo",
-              "spoken": true,
-              "scored": false,
-              "responseSeconds": 8,
-              "source": "[YOU SAY: *mārũ nām Arun chhe — tamne maḷīne ānand thayo*]"
-            },
-            {
-              "kind": "speech",
-              "text": "Identify each line, then read તમને મળીને આનંદ થયો (tamne maḷīne ānand thayo) once. Position 101 is 61 lessons after this closing appeared at position 40, so its R4 window closes here."
-            },
-            {
-              "kind": "activity",
-              "scored": true,
-              "id": "GU-R16-anand-r4-listening",
-              "prompt": "Hear mārũ nām Arun chhe / tamne maḷīne ānand thayo. Which line gives a name, and which closes warmly?",
-              "assesses": [
-                "GU-CONCEPT-C02-ANAND-01",
-                "GU-CONCEPT-C02-MAARUNNAAMCHHE-01"
-              ],
-              "responseSeconds": 35,
-              "acceptedResponses": [
-                "the first gives a name; the second means pleased to meet you"
-              ],
-              "feedback": {
-                "correct": "You followed the two-line introduction by sound and meaning.",
-                "incorrect": "Hear each line once with its role, then classify them again without help."
-              }
-            }
-          ]
-        },
-        {
-          "index": 2,
-          "type": "writing",
-          "title": "Writing — from sound",
-          "segments": [
-            {
-              "kind": "speech",
-              "text": "Write the key closing word and the name frame with every model covered. Score the two written items separately from listening; each needs 2/2."
-            },
-            {
-              "kind": "activity",
-              "scored": true,
-              "id": "GU-R16-anand-r4-writing",
-              "prompt": "Cover every Gujarati model. Write the key closing word ānand, then write mārũ nām … chhe as a separate frame.",
-              "assesses": [
-                "GU-CONCEPT-C02-ANAND-01",
-                "GU-CONCEPT-C02-MAARUNNAAMCHHE-01"
-              ],
-              "responseSeconds": 45,
-              "acceptedResponses": [
-                "આનંદ / મારું નામ ... છે"
-              ],
-              "feedback": {
-                "correct": "Both the warm close and the name frame returned independently.",
-                "incorrect": "Check only the missed item, cover both models, and rewrite that item."
-              }
-            }
-          ]
-        },
-        {
-          "index": 3,
-          "type": "recall",
-          "title": "Wrap-up Recall",
-          "segments": [
-            {
-              "kind": "pause",
-              "seconds": 3,
-              "perItem": false,
-              "source": "[PAUSE 3s]"
-            },
-            {
-              "kind": "speech",
-              "text": "What does ānand mean literally? (Joy or bliss.)"
-            }
-          ]
-        }
-      ]
-    },
-    {
-      "id": "GU-R16-wellbeing-r3",
-      "sequence": 730,
-      "title": "After names, the wellbeing exchange returns",
-      "headword": "તમે કેમ છો? હું મજામાં છું। વાંધો નહીં।",
-      "romanization": "tame kem chho? hũ majāmā chhũ. vāndho nahĩ.",
-      "gloss": "retrieve the how-are-you exchange after a durable interval",
-      "script": "gujarati",
-      "modality": "pen",
-      "derivedModality": "pen",
-      "modalityReasons": [
-        "writing-block"
-      ],
-      "sourceHash": "fnv1a64:464489d58319d4c6",
-      "notice": {
-        "modality": "pen",
-        "needs": [],
-        "waitUntilStopped": [],
-        "text": "Before we start: this one needs your hands, so it is not a driving lesson. You can listen to all of it now and come back to the parts that need looking at once you have stopped."
-      },
-      "blocks": [
-        {
-          "index": 0,
-          "type": "warmup",
-          "title": "Warm-up",
-          "segments": [
-            {
-              "kind": "pause",
-              "seconds": 7,
-              "perItem": false,
-              "source": "[PAUSE 7s]"
-            },
-            {
-              "kind": "speech",
-              "text": "After exchanging names, ask How are you? without looking."
-            }
-          ]
-        },
-        {
-          "index": 1,
-          "type": "guided-production",
-          "title": "Guided Practice",
-          "segments": [
-            {
-              "kind": "prompt",
-              "action": "SAY",
-              "instruction": "vāndho nahĩ — tame kem chho — hũ majāmā chhũ",
-              "spoken": true,
-              "scored": false,
-              "responseSeconds": 8,
-              "source": "[YOU SAY: *vāndho nahĩ — tame kem chho — hũ majāmā chhũ*]"
-            },
-            {
-              "kind": "speech",
-              "text": "Rebuild question, answer, courtesy. Position 41 introduced nothing, so position 102 closes the open R3 windows for this real dialogue instead of inventing a matching atom."
-            },
-            {
-              "kind": "activity",
-              "scored": true,
-              "id": "GU-R16-wellbeing-r3-listening",
-              "prompt": "Hear the shuffled lines: vāndho nahĩ / tame kem chho / hũ majāmā chhũ. Put them in question, answer, courtesy order.",
-              "assesses": [
-                "GU-CONCEPT-C03-HUN-01",
-                "GU-CONCEPT-C03-KEM-01",
-                "GU-CONCEPT-C03-MAJAA-01",
-                "GU-CONCEPT-C03-PRACTICE-01",
-                "GU-CONCEPT-C03-TAMEKEMCHHO-01",
-                "GU-CONCEPT-C03-VANDHONAHI-01"
-              ],
-              "responseSeconds": 45,
-              "acceptedResponses": [
-                "tame kem chho? / hũ majāmā chhũ. / vāndho nahĩ."
-              ],
-              "feedback": {
-                "correct": "You rebuilt the wellbeing exchange from sound and meaning.",
-                "incorrect": "Check only the misplaced line, then order all three again without looking."
-              }
-            }
-          ]
-        },
-        {
-          "index": 2,
-          "type": "writing",
-          "title": "Writing — from sound",
-          "segments": [
-            {
-              "kind": "speech",
-              "text": "Write the three lines from meaning with every model covered. Listening order and written production each need 3/3; repair only a missed line."
-            },
-            {
-              "kind": "activity",
-              "scored": true,
-              "id": "GU-R16-wellbeing-r3-writing",
-              "prompt": "Cover every Gujarati model. Write: How are you? / I am well. / No problem.",
-              "assesses": [
-                "GU-CONCEPT-C03-HUN-01",
-                "GU-CONCEPT-C03-KEM-01",
-                "GU-CONCEPT-C03-MAJAA-01",
-                "GU-CONCEPT-C03-PRACTICE-01",
-                "GU-CONCEPT-C03-TAMEKEMCHHO-01",
-                "GU-CONCEPT-C03-VANDHONAHI-01"
-              ],
-              "responseSeconds": 60,
-              "acceptedResponses": [
-                "તમે કેમ છો? / હું મજામાં છું। / વાંધો નહીં।"
-              ],
-              "feedback": {
-                "correct": "You produced the complete wellbeing exchange independently.",
-                "incorrect": "Check only the missed line, cover it, and write that line once more from meaning."
-              }
-            }
-          ]
-        },
-        {
-          "index": 3,
-          "type": "recall",
-          "title": "Wrap-up Recall",
-          "segments": [
-            {
-              "kind": "pause",
-              "seconds": 3,
-              "perItem": false,
-              "source": "[PAUSE 3s]"
-            },
-            {
-              "kind": "speech",
-              "text": "Ask and answer once more aloud."
+              "text": "Sources: Wiktionary: નાક (nāk); Wiktionary: Sanskrit nas."
             }
           ]
         }

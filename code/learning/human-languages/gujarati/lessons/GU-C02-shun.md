@@ -2,8 +2,8 @@
 schema_version: 2
 id: GU-C02-shun
 spine_node: SPINE-EXCHANGE-NAMES
-sequence: 130
-chapter: 4
+sequence: 140
+chapter: 6
 type: word
 headword: શું
 gloss: what

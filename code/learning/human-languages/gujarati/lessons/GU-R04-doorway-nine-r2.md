@@ -2,17 +2,17 @@
 schema_version: 2
 id: GU-R04-doorway-nine-r2
 spine_node: SPINE-EXCHANGE-NAMES
-sequence: 115
+sequence: 155
 delivery: script
-chapter: 4
+chapter: 6
 type: writing
 headword: જ ો ં ી ુ છ ક ણ શ
 romanization: ja — o sign — nasal mark — long-ii sign — u sign — chha — ka — retroflex nna — sha
 gloss: retrieve the nine doorway forms at the first expanding interval
-prerequisites: [GU-C02-anand, GU-R03-doorway-three-r1]
+prerequisites: [GU-C02-tamarun-naam-shun-chhe, GU-R05-second-four-r1]
 sounds: []
 roots: []
-etymology_hook: The full doorway row returns after five meaning lessons, still without adding a new form.
+etymology_hook: The full doorway row returns after the first complete name exchange, still without adding a new form.
 duration:
   max_seconds: 240
 requires:

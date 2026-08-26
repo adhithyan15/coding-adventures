@@ -1,24 +1,20 @@
 {
   "chapter": 5,
-  "title": "How Are You?",
-  "label": "ch:responding",
-  "canDo": "I can ask how someone is in Gujarati, answer naturally, and return the question.",
+  "title": "Four More Forms Before Your Name",
+  "label": "ch:gu-first-use-forms-b",
+  "canDo": "I can read and write four more Gujarati consonants before they appear in the first name exchange: લ, પ, ચ, and બ.",
   "spineNodes": [
-    "SPINE-EXCHANGE-NAMES",
-    "SPINE-CHECK-WELLBEING",
-    "SPINE-COURTESY-THANK"
+    "SPINE-EXCHANGE-NAMES"
   ],
   "payoff": {
-    "lesson": "GU-C03-practice",
+    "lesson": "GU-R05-second-four-r1",
     "kind": "task",
-    "summary": "Complete GU-C03-practice, the canonical closing checkpoint, and demonstrate the chapter promise: ask how someone is in Gujarati, answer naturally, and return the question.",
+    "summary": "With every model covered, read લ, પ, ચ, and બ and write each one from a spoken sound cue, keeping reading and writing scores separate.",
     "assesses": [
-      "GU-CONCEPT-C03-HUN-01",
-      "GU-CONCEPT-C03-KEM-01",
-      "GU-CONCEPT-C03-MAJAA-01",
-      "GU-CONCEPT-C03-PRACTICE-01",
-      "GU-CONCEPT-C03-TAMEKEMCHHO-01",
-      "GU-CONCEPT-C03-VANDHONAHI-01"
+      "GU-SCRIPT-LA-01",
+      "GU-SCRIPT-PA-01",
+      "GU-SCRIPT-CHA-01",
+      "GU-SCRIPT-BA-01"
     ]
   }
 }

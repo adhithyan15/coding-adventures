@@ -2,24 +2,24 @@
   "version": 1,
   "language": "gujarati",
   "chapter": 6,
-  "title": "Farewells",
+  "title": "Introducing Yourself",
   "drivablePrefix": 0,
-  "sourceHash": "fnv1a64:0e63a21a9e1c3ac0",
+  "sourceHash": "fnv1a64:89b86cf28ba6c1e1",
   "lessons": [
     {
-      "id": "GU-C04-malishun",
-      "sequence": 220,
-      "title": "મળીશું (maḷīshũ) — \"(we) will meet\"",
-      "headword": "મળીશું",
+      "id": "GU-C02-naam",
+      "sequence": 81,
+      "title": "નામ (nām) — \"name,\" a word older than Europe",
+      "headword": "નામ",
       "romanization": "",
-      "gloss": "(we) will meet",
+      "gloss": "name",
       "script": "gujarati",
       "modality": "sight",
       "derivedModality": "sight",
       "modalityReasons": [
         "script-block"
       ],
-      "sourceHash": "fnv1a64:baa9bb0b7f906102",
+      "sourceHash": "fnv1a64:79f11d5b152d023b",
       "notice": {
         "modality": "sight",
         "needs": [
@@ -44,7 +44,7 @@
             },
             {
               "kind": "speech",
-              "text": "A future-tense verb — the other half of \"see you again.\""
+              "text": "The first word of the introduction — and a bridge between India and Europe."
             }
           ]
         },
@@ -55,7 +55,7 @@
           "segments": [
             {
               "kind": "speech",
-              "text": "મ (ma) + ળી (ḷī, with the retroflex ળ ḷ) + શું (shũ) becomes મળીશું (maḷīshũ)."
+              "text": "ન (na) + ા (long ā) + મ (ma) becomes નામ (nām)."
             }
           ]
         },
@@ -66,18 +66,148 @@
           "segments": [
             {
               "kind": "speech",
-              "text": "મળીશું (maḷīshũ, \"we will meet\") is the future of મળવું (maḷvũ, \"to meet\"), from Sanskrit મિલ્ (mil-, \"to join, unite\") — the same root as Hindi milnā and Punjabi milṇā. Note the retroflex ળ (ḷ): Gujarati keeps this extra letter — like Marathi and the Dravidian south, and unlike Hindi. The ending -શું (-shũ) is the \"we will\" future."
+              "text": "નામ (nām, \"name\") from Sanskrit નામન્ (nāman), from Proto-Indo-European h₃nómn (its final n syllabic) — the same root as English name, Latin nōmen ( becomes noun), Greek onoma, and Hindi nām. Gujarati nām and English name are cousins from before either language existed."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "\"nām\"",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: \"nām\"]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "the family — nām / English name / Latin nōmen",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: the family — *nām* / English *name* / Latin *nōmen*]"
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What root is nām from, and its English cousin? (Sanskrit nāman / PIE h₃nómn; English name.)"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "GU-C02-maarun",
+      "sequence": 90,
+      "title": "મારું (mārũ) — \"my,\" and gender again",
+      "headword": "મારું",
+      "romanization": "",
+      "gloss": "my (neuter; also મારો m. / મારી f.)",
+      "script": "gujarati",
+      "modality": "sight",
+      "derivedModality": "sight",
+      "modalityReasons": [
+        "script-block"
+      ],
+      "sourceHash": "fnv1a64:9cbab530ca6894ae",
+      "notice": {
+        "modality": "sight",
+        "needs": [
+          "your eyes, for letter shapes on the page"
+        ],
+        "waitUntilStopped": [
+          "The letters in this word"
+        ],
+        "text": "Before we start: this one needs your eyes, so it is not fully a driving lesson. You will want your eyes, for letter shapes on the page. You can listen to everything else now — leave the section called The letters in this word until you have stopped, and I will say so again when we reach it."
+      },
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "The word that makes the name yours — and, like sārũ, it changes with gender."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "script",
+          "title": "The letters in this word",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "મા (mā) + રું (rũ, with the nasal) becomes મારું (mārũ)."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "મારું (mārũ, \"my\") is on the first-person root ma- — the same ma-/me- behind English me, my, mine, Latin meus, and Hindi merā. Gujarati's \"my\" and English's \"my\" are, at the root, one word."
             }
           ]
         },
         {
           "index": 3,
           "type": "grammar",
-          "title": "Grammar Lens: the future is an ending",
+          "title": "Grammar Lens: \"my\" agrees in all three genders",
           "segments": [
             {
               "kind": "speech",
-              "text": "Gujarati marks the future with an ending on the stem: maḷ- (\"meet\") + -īshũ (\"we will\") becomes maḷīshũ. No helper-word like English \"will.\""
+              "text": "Because nām (\"name\") is neuter, \"my name\" is મારું નામ (mārũ nām) — the neuter mārũ. The full set:"
+            },
+            {
+              "kind": "speech",
+              "text": "મારો (māro) — masculine (e.g. māro dēsh, \"my country\")."
+            },
+            {
+              "kind": "speech",
+              "text": "મારી (mārī) — feminine (e.g. mārī bhāṣā, \"my language\")."
+            },
+            {
+              "kind": "speech",
+              "text": "મારું (mārũ) — neuter (e.g. mārũ nām, \"my name\")."
+            },
+            {
+              "kind": "speech",
+              "text": "Every possessive works this way — three forms, chosen by the noun's gender. It is the thread you first pulled in the earlier sārũ lesson."
             }
           ]
         },
@@ -95,29 +225,29 @@
             {
               "kind": "prompt",
               "action": "SAY",
-              "instruction": "\"maḷīshũ\"",
+              "instruction": "the three — māro (m.) / mārī (f.) / mārũ (n.)",
               "spoken": true,
               "scored": false,
               "responseSeconds": 8,
-              "source": "[YOU SAY: \"maḷīshũ\"]"
+              "source": "[YOU SAY: the three — *māro* (m.) / *mārī* (f.) / *mārũ* (n.)]"
             },
             {
               "kind": "prompt",
               "action": "SAY",
-              "instruction": "the verb it's from (maḷvũ, \"to meet,\" from Sanskrit mil-)",
+              "instruction": "\"my name\" and why (mārũ nām — nām is neuter)",
               "spoken": true,
               "scored": false,
               "responseSeconds": 8,
-              "source": "[YOU SAY: the verb it's from (*maḷvũ*, \"to meet,\" ← Sanskrit *mil-*)]"
+              "source": "[YOU SAY: \"my name\" and why (*mārũ nām* — *nām* is neuter)]"
             },
             {
               "kind": "prompt",
               "action": "SAY",
-              "instruction": "the extra letter it shows (retroflex ળ, ḷ)",
+              "instruction": "the m- family (mārũ, English me, my)",
               "spoken": true,
               "scored": false,
               "responseSeconds": 8,
-              "source": "[YOU SAY: the extra letter it shows (retroflex ળ, *ḷ*)]"
+              "source": "[YOU SAY: the m- family (*mārũ*, English *me*, *my*)]"
             }
           ]
         },
@@ -134,26 +264,26 @@
             },
             {
               "kind": "speech",
-              "text": "What verb is maḷīshũ from, and what special letter does it use? (Maḷvũ \"to meet\"; the retroflex ળ ḷ, which Hindi lacks.)"
+              "text": "Which form of \"my\" goes with nām, and why? (Mārũ — the neuter, because nām is a neuter noun.)"
             }
           ]
         }
       ]
     },
     {
-      "id": "GU-C04-kaale",
-      "sequence": 230,
-      "title": "કાલે મળીશું (kāle maḷīshũ) — \"see you tomorrow\"",
-      "headword": "કાલે મળીશું",
+      "id": "GU-C02-chhe",
+      "sequence": 100,
+      "title": "છે (chhe) — \"is,\" a copula all Gujarati's own",
+      "headword": "છે",
       "romanization": "",
-      "gloss": "see you tomorrow (and the કાલ puzzle)",
+      "gloss": "is (the copula)",
       "script": "gujarati",
       "modality": "sight",
       "derivedModality": "sight",
       "modalityReasons": [
         "script-block"
       ],
-      "sourceHash": "fnv1a64:7de641a79d230269",
+      "sourceHash": "fnv1a64:09c8c715d0bf6b33",
       "notice": {
         "modality": "sight",
         "needs": [
@@ -178,7 +308,7 @@
             },
             {
               "kind": "speech",
-              "text": "A goodbye for tomorrow — built on a word that means both tomorrow and yesterday."
+              "text": "The little verb \"is\" — and here it is a word you will not recognise from Hindi."
             }
           ]
         },
@@ -189,7 +319,7 @@
           "segments": [
             {
               "kind": "speech",
-              "text": "કા (kā) + લે (le) becomes કાલે (kāle, \"on [the] kāl\"). The base is કાલ (kāl)."
+              "text": "છ (chha, a breathy ch) + ે (the e-sign) becomes છે (chhe). One syllable."
             }
           ]
         },
@@ -200,12 +330,23 @@
           "segments": [
             {
               "kind": "speech",
-              "text": "કાલ (kāl) means both \"tomorrow\" and \"yesterday\" — the day on either side of today — from Sanskrit કાલ (kāla, \"time\"). (It is the very same kāla behind Hindi's kal, Bengali's kāl, and Punjabi's akāl \"timeless.\") The verb's tense tells which: kāle maḷīshũ (future becomes \"tomorrow we'll meet\"), kāle maḷyā (past becomes \"we met yesterday\"). So કાલે મળીશું = \"tomorrow we'll meet\" = \"see you tomorrow.\""
+              "text": "છે (chhe, \"is\") is Gujarati's copula — and, unusually, it is not the hai of Hindi or the asti of Sanskrit. It grew from an Old Gujarati form (achhaï) along its own path, so it is one of the words that most quickly marks a sentence as Gujarati rather than Hindi. Hear its forms first: hũ chhũ (\"I am\"), tũ chhe (\"you are,\" familiar), તે છે (te chhe, \"he/she/it is\"), and tame chho (\"you are,\" respectful). The later pronoun lessons will put the first, familiar-you, and respectful-you forms into Gujarati script gently."
             }
           ]
         },
         {
           "index": 3,
+          "type": "grammar",
+          "title": "Grammar Lens: the verb goes last",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "Gujarati is subject–object–verb, like all its Indo-Aryan sisters: \"my name Arun is.\" Chhe sits at the end of the sentence, where English puts \"is\" in the middle."
+            }
+          ]
+        },
+        {
+          "index": 4,
           "type": "guided-production",
           "title": "Guided Practice",
           "segments": [
@@ -218,34 +359,34 @@
             {
               "kind": "prompt",
               "action": "SAY",
-              "instruction": "\"kāle maḷīshũ\"",
+              "instruction": "\"chhe\"",
               "spoken": true,
               "scored": false,
               "responseSeconds": 8,
-              "source": "[YOU SAY: \"kāle maḷīshũ\"]"
+              "source": "[YOU SAY: \"chhe\"]"
             },
             {
               "kind": "prompt",
               "action": "SAY",
-              "instruction": "the puzzle — kāl means both tomorrow and yesterday",
+              "instruction": "the copula set — hũ chhũ (I am), tame chho (you are), te chhe (is)",
               "spoken": true,
               "scored": false,
               "responseSeconds": 8,
-              "source": "[YOU SAY: the puzzle — *kāl* means both **tomorrow** and **yesterday**]"
+              "source": "[YOU SAY: the copula set — *hũ chhũ* (I am), *tame chho* (you are), *te chhe* (is)]"
             },
             {
               "kind": "prompt",
               "action": "SAY",
-              "instruction": "the root and its cousins (kāla \"time\"; Hindi kal, Punjabi akāl)",
+              "instruction": "what makes chhe special (it's Gujarati's own, not Hindi's hai)",
               "spoken": true,
               "scored": false,
               "responseSeconds": 8,
-              "source": "[YOU SAY: the root and its cousins (*kāla* \"time\"; Hindi *kal*, Punjabi *akāl*)]"
+              "source": "[YOU SAY: what makes *chhe* special (it's Gujarati's own, not Hindi's *hai*)]"
             }
           ]
         },
         {
-          "index": 4,
+          "index": 5,
           "type": "recall",
           "title": "Wrap-up Recall",
           "segments": [
@@ -257,140 +398,26 @@
             },
             {
               "kind": "speech",
-              "text": "What two opposite days does kāl mean, and what tells them apart? (Both tomorrow and yesterday; the verb's tense.)"
+              "text": "What is chhe, and how does it differ from Hindi? (Gujarati's copula, \"is\"; it is not Hindi's hai — a distinctively Gujarati word.)"
             }
           ]
         }
       ]
     },
     {
-      "id": "GU-C04-pachha",
-      "sequence": 240,
-      "title": "પાછા (pāchhā) — \"again, back\"",
-      "headword": "પાછા",
+      "id": "GU-C02-maarun-naam-chhe",
+      "sequence": 110,
+      "title": "મારું નામ … છે (mārũ nām … chhe) — \"my name is…\"",
+      "headword": "મારું નામ … છે",
       "romanization": "",
-      "gloss": "again, back",
-      "script": "gujarati",
-      "modality": "sight",
-      "derivedModality": "sight",
-      "modalityReasons": [
-        "script-block"
-      ],
-      "sourceHash": "fnv1a64:f1a892d104241659",
-      "notice": {
-        "modality": "sight",
-        "needs": [
-          "your eyes, for letter shapes on the page"
-        ],
-        "waitUntilStopped": [
-          "The letters in this word"
-        ],
-        "text": "Before we start: this one needs your eyes, so it is not fully a driving lesson. You will want your eyes, for letter shapes on the page. You can listen to everything else now — leave the section called The letters in this word until you have stopped, and I will say so again when we reach it."
-      },
-      "blocks": [
-        {
-          "index": 0,
-          "type": "warmup",
-          "title": "Warm-up",
-          "segments": [
-            {
-              "kind": "pause",
-              "seconds": 2,
-              "perItem": false,
-              "source": "[PAUSE 2s]"
-            },
-            {
-              "kind": "speech",
-              "text": "One small word turns a goodbye into \"till next time.\" You already have the other half — āvjo (\"come again\") — from the earlier courtesy chapter."
-            }
-          ]
-        },
-        {
-          "index": 1,
-          "type": "script",
-          "title": "The letters in this word",
-          "segments": [
-            {
-              "kind": "speech",
-              "text": "પા (pā) + છા (chhā) becomes પાછા (pāchhā)."
-            }
-          ]
-        },
-        {
-          "index": 2,
-          "type": "etymology",
-          "title": "The word, taken apart",
-          "segments": [
-            {
-              "kind": "speech",
-              "text": "પાછા (pāchhā, \"back, again, returning\") is from Sanskrit પશ્ચાત્ (paścāt, \"behind, afterward\") — the same \"behind/after\" root behind English post- words, distantly. It carries the sense of return: pāchhā āvvũ (\"to come back\"), pāchhā jāvũ (\"to go back\"). Add it to \"we'll meet\" and you get the warm goodbye of the next lesson."
-            }
-          ]
-        },
-        {
-          "index": 3,
-          "type": "guided-production",
-          "title": "Guided Practice",
-          "segments": [
-            {
-              "kind": "pause",
-              "seconds": 1,
-              "perItem": false,
-              "source": "[PAUSE 1s]"
-            },
-            {
-              "kind": "prompt",
-              "action": "SAY",
-              "instruction": "\"pāchhā\"",
-              "spoken": true,
-              "scored": false,
-              "responseSeconds": 8,
-              "source": "[YOU SAY: \"pāchhā\"]"
-            },
-            {
-              "kind": "prompt",
-              "action": "SAY",
-              "instruction": "what it adds to a goodbye (\"again / back\")",
-              "spoken": true,
-              "scored": false,
-              "responseSeconds": 8,
-              "source": "[YOU SAY: what it adds to a goodbye (\"again / back\")]"
-            }
-          ]
-        },
-        {
-          "index": 4,
-          "type": "recall",
-          "title": "Wrap-up Recall",
-          "segments": [
-            {
-              "kind": "pause",
-              "seconds": 3,
-              "perItem": false,
-              "source": "[PAUSE 3s]"
-            },
-            {
-              "kind": "speech",
-              "text": "What does pāchhā mean, and what sense does it carry? (\"Back / again\"; the sense of return — pāchhā āvvũ, \"to come back.\")"
-            }
-          ]
-        }
-      ]
-    },
-    {
-      "id": "GU-C04-pachha-malishun",
-      "sequence": 250,
-      "title": "પાછા મળીશું (pāchhā maḷīshũ) — \"we'll meet again\"",
-      "headword": "પાછા મળીશું",
-      "romanization": "",
-      "gloss": "we'll meet again (goodbye)",
+      "gloss": "my name is…",
       "script": "gujarati",
       "modality": "voice",
       "derivedModality": "voice",
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:8a24f93775a03d30",
+      "sourceHash": "fnv1a64:9d3035c93c66a404",
       "notice": null,
       "blocks": [
         {
@@ -406,23 +433,34 @@
             },
             {
               "kind": "speech",
-              "text": "The warm, explicit goodbye — the companion of the earlier āvjo."
+              "text": "Three atoms you now own, assembled into a first sentence."
             }
           ]
         },
         {
           "index": 1,
-          "type": "etymology",
-          "title": "The phrase, taken apart",
+          "type": "input",
+          "title": "The two words — assembled",
           "segments": [
             {
               "kind": "speech",
-              "text": "પાછા મળીશું = પાછા (pāchhā, \"again\") + મળીશું (maḷīshũ, \"we will meet\") — \"we'll meet again.\" Where the earlier આવજો (āvjo) is the quick, warm \"come again,\" pāchhā maḷīshũ spells out the promise: we will meet once more. It is the same \"promise of return\" the whole subcontinent prefers (Hindi phir milenge, Bengali āshi, Tamil pōy varugiṟēṉ)."
+              "text": "મારું (my, neuter) + નામ (name) + your name + છે (is) = mārũ nām … chhe, \"my name is…\" Mārũ nām Arun chhe. becomes \"My name is Arun.\""
             }
           ]
         },
         {
           "index": 2,
+          "type": "grammar",
+          "title": "Grammar Lens: the verb goes last",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "Gujarati keeps the verb at the end — \"my name Arun is.\" Note too that mārũ is neuter to agree with nām (neuter): the agreement you learned two lessons ago is already doing its quiet work."
+            }
+          ]
+        },
+        {
+          "index": 3,
           "type": "guided-production",
           "title": "Guided Practice",
           "segments": [
@@ -435,29 +473,730 @@
             {
               "kind": "prompt",
               "action": "SAY",
-              "instruction": "the warm goodbye — pāchhā maḷīshũ",
+              "instruction": "\"mārũ nām … chhe\" with your name",
               "spoken": true,
               "scored": false,
               "responseSeconds": 8,
-              "source": "[YOU SAY: the warm goodbye — *pāchhā maḷīshũ*]"
+              "source": "[YOU SAY: \"mārũ nām … chhe\" with your name]"
             },
             {
               "kind": "prompt",
               "action": "SAY",
-              "instruction": "the two words it's built from (pāchhā + maḷīshũ)",
+              "instruction": "why mārũ (neuter) and where chhe sits (agrees with nām; verb last)",
               "spoken": true,
               "scored": false,
               "responseSeconds": 8,
-              "source": "[YOU SAY: the two words it's built from (*pāchhā* + *maḷīshũ*)]"
+              "source": "[YOU SAY: why *mārũ* (neuter) and where *chhe* sits (agrees with *nām*; verb last)]"
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Give your name in Gujarati, and say where the verb goes. (Mārũ nām … chhe; the verb chhe is last.)"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "GU-C02-anand",
+      "sequence": 120,
+      "title": "તમને મળીને આનંદ થયો (tamne maḷīne ānand thayo) — \"pleased to meet you\"",
+      "headword": "તમને મળીને આનંદ થયો",
+      "romanization": "",
+      "gloss": "pleased to meet you (lit. \"meeting you, joy happened\")",
+      "script": "gujarati",
+      "modality": "sight",
+      "derivedModality": "sight",
+      "modalityReasons": [
+        "script-block"
+      ],
+      "sourceHash": "fnv1a64:f2435431cb54710d",
+      "notice": {
+        "modality": "sight",
+        "needs": [
+          "your eyes, for letter shapes on the page"
+        ],
+        "waitUntilStopped": [
+          "The letters in this word"
+        ],
+        "text": "Before we start: this one needs your eyes, so it is not fully a driving lesson. You will want your eyes, for letter shapes on the page. You can listen to everything else now — leave the section called The letters in this word until you have stopped, and I will say so again when we reach it."
+      },
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "The warm close of an introduction — a word that means bliss itself."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "script",
+          "title": "The letters in this word",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "The key word is આનંદ (ānand): આ + ન + ં (the nasal) + દ (da)."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "તમને મળીને આનંદ થયો = તમને (tamne, \"to you\") + મળીને (maḷīne, \"having met\") + આનંદ થયો (ānand thayo, \"joy happened\") — literally \"having met you, joy happened.\" The key word આનંદ (ānand, \"joy, bliss\") is Sanskrit — ā- (\"fully\") + nand (\"to rejoice\") — the ānanda of sat-cit-ānanda (\"being-consciousness-bliss\"), and a common Gujarati name. So a simple greeting reaches, as Sanskrit did, for the word for the deepest happiness."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
             },
             {
               "kind": "prompt",
               "action": "SAY",
-              "instruction": "the Chapter-1 goodbye it partners (āvjo)",
+              "instruction": "\"tamne maḷīne ānand thayo\"",
               "spoken": true,
               "scored": false,
               "responseSeconds": 8,
-              "source": "[YOU SAY: the Chapter-1 goodbye it partners (*āvjo*)]"
+              "source": "[YOU SAY: \"tamne maḷīne ānand thayo\"]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "the key word and its meaning (ānand, \"joy/bliss\")",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: the key word and its meaning (*ānand*, \"joy/bliss\")]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "what it's built from (ā- \"fully\" + nand \"to rejoice\")",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: what it's built from (*ā-* \"fully\" + *nand* \"to rejoice\")]"
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does the phrase literally say, and what is ānand? (\"Having met you, joy happened\"; Sanskrit ānanda, \"bliss.\")"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "GU-C02-tu-tame",
+      "sequence": 130,
+      "title": "તું / તમે (tũ / tame) — \"you,\" familiar and respectful",
+      "headword": "તું / તમે",
+      "romanization": "",
+      "gloss": "you (familiar / respectful)",
+      "script": "gujarati",
+      "modality": "sight",
+      "derivedModality": "sight",
+      "modalityReasons": [
+        "script-block"
+      ],
+      "sourceHash": "fnv1a64:1b8b1a7327830ccc",
+      "notice": {
+        "modality": "sight",
+        "needs": [
+          "your eyes, for letter shapes on the page"
+        ],
+        "waitUntilStopped": [
+          "The letters in this word",
+          "Script retrieval"
+        ],
+        "text": "Before we start: this one needs your eyes, so it is not fully a driving lesson. You will want your eyes, for letter shapes on the page. You can listen to everything else now — leave the sections called The letters in this word and Script retrieval until you have stopped, and I will say so again when we reach it."
+      },
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "To ask a name you need \"you\" — and Gujarati grades respect the way French does."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "script",
+          "title": "The letters in this word",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "તું (tũ): ત (ta) + the u-sign + nasal. તમે (tame): ત + મ + ે."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "તું (tũ, familiar \"you\") from Sanskrit tvam, from PIE tū — the same root as English archaic thou, Latin tū, French tu, and Hindi tū. તમે (tame, respectful \"you\") is grammatically plural — courtesy-by-plural, like French vous and Hindi āp. For a first meeting, use તમે; it takes the plural copula chho (tame … chho)."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "\"tũ\" (familiar) and \"tame\" (respectful)",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: \"tũ\" (familiar) and \"tame\" (respectful)]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "the English cousin of tũ (thou)",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: the English cousin of *tũ* (**thou**)]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "which you use on first meeting (tame)",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: which you use on first meeting (*tame*)]"
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "script",
+          "title": "Script retrieval",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "Hide the earlier model for ર. Write it once, compare it, and repair only one part if needed."
+            },
+            {
+              "kind": "activity",
+              "scored": true,
+              "id": "GU-C02-tu-tame-ra-retrieval",
+              "prompt": "Without looking back, write ર once.",
+              "assesses": [
+                "GU-SCRIPT-RA-01"
+              ],
+              "responseSeconds": 12,
+              "acceptedResponses": [
+                "ર"
+              ],
+              "feedback": {
+                "correct": "Good: one careful retrieval is enough.",
+                "incorrect": "Look at ર once, hide it, and write it one time."
+              }
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Which \"you\" is respectful, and what English word is tũ cousin to? (Tame; archaic thou, from PIE tū.)"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "GU-C02-shun",
+      "sequence": 140,
+      "title": "શું (shũ) — \"what\"",
+      "headword": "શું",
+      "romanization": "",
+      "gloss": "what",
+      "script": "gujarati",
+      "modality": "sight",
+      "derivedModality": "sight",
+      "modalityReasons": [
+        "script-block"
+      ],
+      "sourceHash": "fnv1a64:09beb22cc43aaf16",
+      "notice": {
+        "modality": "sight",
+        "needs": [
+          "your eyes, for letter shapes on the page"
+        ],
+        "waitUntilStopped": [
+          "The letters in this word",
+          "Script retrieval"
+        ],
+        "text": "Before we start: this one needs your eyes, so it is not fully a driving lesson. You will want your eyes, for letter shapes on the page. You can listen to everything else now — leave the sections called The letters in this word and Script retrieval until you have stopped, and I will say so again when we reach it."
+      },
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "The question-word — and the one Gujarati question that does not start with k-."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "script",
+          "title": "The letters in this word",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "શ (sha) + the u-sign + nasal becomes શું (shũ)."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "શું (shũ, \"what\") descends, by a winding road, from the Sanskrit interrogative stem ક- (ka-, PIE kʷo-) — the root behind English what, Latin quis, and Hindi kyā. Most of Gujarati's questions still show that k- plainly — kem (how), કોણ (kōṇ, who), ક્યાં (kyā̃, where), ક્યારે (kyāre, when) — but \"what\" wore down into this sh- form. So shũ is the odd cousin in a k- family."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "\"shũ\"",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: \"shũ\"]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "the k- question family it belongs to (kem, kōṇ, kyā̃, kyāre)",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: the k- question family it belongs to (*kem, kōṇ, kyā̃, kyāre*)]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "its distant English cousin (what)",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: its distant English cousin (*what*)]"
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "script",
+          "title": "Script retrieval",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "Hide the earlier model for દ. Write it once, compare, make at most one repair, and stop."
+            },
+            {
+              "kind": "activity",
+              "scored": true,
+              "id": "GU-C02-shun-da-retrieval",
+              "prompt": "Without looking back, write દ once.",
+              "assesses": [
+                "GU-SCRIPT-DA-01"
+              ],
+              "responseSeconds": 12,
+              "acceptedResponses": [
+                "દ"
+              ],
+              "feedback": {
+                "correct": "Good: one careful retrieval is enough.",
+                "incorrect": "Look at દ once, hide it, and write it one time."
+              }
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does shũ mean, and what root does it share with English what? (\"What\"; the interrogative ka- / PIE kʷo- — worn to sh- in Gujarati.)"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "GU-C02-tamarun-naam-shun-chhe",
+      "sequence": 150,
+      "title": "તમારું નામ શું છે? (tamārũ nām shũ chhe?) — \"what's your name?\"",
+      "headword": "તમારું નામ શું છે?",
+      "romanization": "",
+      "gloss": "what's your name?",
+      "script": "gujarati",
+      "modality": "sight",
+      "derivedModality": "sight",
+      "modalityReasons": [
+        "script-block"
+      ],
+      "sourceHash": "fnv1a64:70bf7aef7b310e86",
+      "notice": {
+        "modality": "sight",
+        "needs": [
+          "your eyes, for letter shapes on the page"
+        ],
+        "waitUntilStopped": [
+          "Script retrieval"
+        ],
+        "text": "Before we start: this one needs your eyes, so it is not fully a driving lesson. You will want your eyes, for letter shapes on the page. You can listen to everything else now — leave the section called Script retrieval until you have stopped, and I will say so again when we reach it."
+      },
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Turn the introduction around — ask, instead of tell."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "The two words — assembled",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "તમારું (tamārũ, \"your,\" the respectful possessive from tame, neuter to match nām) + નામ (name) + શું (what) + છે (is) becomes literally \"your name what is?\" Gujarati keeps the verb last and drops the question-word shũ into the object slot."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "grammar",
+          "title": "Grammar Lens: answering, and the familiar form",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "Answer with the sentence you built: Mārũ nām Arun chhe. The familiar version swaps tamārũ for તારું (tārũ, \"your,\" from tũ): tārũ nām shũ chhe? Note mārũ / tārũ / tamārũ — \"my / your / your (resp.)\" — all take the neuter -ũ before nām."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "the respectful question — tamārũ nām shũ chhe?",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: the respectful question — *tamārũ nām shũ chhe?*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "answer it — mārũ nām … chhe",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: answer it — *mārũ nām … chhe*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "the familiar \"your\" (tārũ)",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: the familiar \"your\" (*tārũ*)]"
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "script",
+          "title": "Script retrieval",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "Hide the earlier model for વ. Write it once, compare, and stop after one possible repair."
+            },
+            {
+              "kind": "activity",
+              "scored": true,
+              "id": "GU-C02-tamarun-naam-shun-chhe-va-retrieval",
+              "prompt": "Without looking back, write વ once.",
+              "assesses": [
+                "GU-SCRIPT-VA-01"
+              ],
+              "responseSeconds": 12,
+              "acceptedResponses": [
+                "વ"
+              ],
+              "feedback": {
+                "correct": "Good: one careful retrieval is enough.",
+                "incorrect": "Look at વ once, hide it, and write it one time."
+              }
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Ask \"what's your name?\" respectfully. (Tamārũ nām shũ chhe?; the verb chhe is last.)"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "GU-R04-doorway-nine-r2",
+      "sequence": 155,
+      "title": "The nine-form doorway returns",
+      "headword": "જ ો ં ી ુ છ ક ણ શ",
+      "romanization": "ja — o sign — nasal mark — long-ii sign — u sign — chha — ka — retroflex nna — sha",
+      "gloss": "retrieve the nine doorway forms at the first expanding interval",
+      "script": "gujarati",
+      "modality": "pen",
+      "derivedModality": "pen",
+      "modalityReasons": [
+        "writing-type",
+        "writing-block"
+      ],
+      "sourceHash": "fnv1a64:8717aa6d5dc2a69d",
+      "notice": {
+        "modality": "pen",
+        "needs": [
+          "a pen and something to write on"
+        ],
+        "waitUntilStopped": [],
+        "text": "Before we start: this one needs your hands, so it is not a driving lesson. You will want a pen and something to write on. You can listen to all of it now and come back to the parts that need looking at once you have stopped."
+      },
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 15,
+              "perItem": false,
+              "source": "[PAUSE 15s]"
+            },
+            {
+              "kind": "speech",
+              "text": "With no model, write ક ણ શ once. Check only the form you missed, if any, then put the model away again."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "Read the visible row once. Keep the four marks and five consonants distinct; score 8/9 before moving to writing."
+            },
+            {
+              "kind": "activity",
+              "scored": true,
+              "id": "GU-R04-doorway-nine-r2-reading",
+              "prompt": "Read these nine forms aloud in order: જ ો ં ી ુ છ ક ણ શ (ja — o sign — nasal mark — long-ii sign — u sign — chha — ka — retroflex nna — sha).",
+              "assesses": [
+                "GU-SCRIPT-JA-01",
+                "GU-SCRIPT-O-MATRA-01",
+                "GU-SCRIPT-ANUSVARA-01",
+                "GU-SCRIPT-II-MATRA-01",
+                "GU-SCRIPT-U-MATRA-01",
+                "GU-SCRIPT-CHHA-01",
+                "GU-SCRIPT-KA-01",
+                "GU-SCRIPT-NNA-01",
+                "GU-SCRIPT-SHA-01"
+              ],
+              "responseSeconds": 45,
+              "acceptedResponses": [
+                "ja; o sign; nasal mark; long-ii sign; u sign; chha; ka; retroflex nna; sha"
+              ],
+              "feedback": {
+                "correct": "All nine forms were identified at the expanding interval.",
+                "incorrect": "Repair only the missed card, then read the complete row once more."
+              }
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "writing",
+          "title": "Writing — from sound",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "Cover every form. Write the nine spoken cues in their taught order. Writing also needs 8/9; the reading score cannot compensate for it."
+            },
+            {
+              "kind": "activity",
+              "scored": true,
+              "id": "GU-R04-doorway-nine-r2-dictation",
+              "prompt": "Cover the row. Write from these cues: ja, attached o, nasal dot, attached long ii, attached u, chha, ka, retroflex nna, sha.",
+              "assesses": [
+                "GU-SCRIPT-JA-01",
+                "GU-SCRIPT-O-MATRA-01",
+                "GU-SCRIPT-ANUSVARA-01",
+                "GU-SCRIPT-II-MATRA-01",
+                "GU-SCRIPT-U-MATRA-01",
+                "GU-SCRIPT-CHHA-01",
+                "GU-SCRIPT-KA-01",
+                "GU-SCRIPT-NNA-01",
+                "GU-SCRIPT-SHA-01"
+              ],
+              "responseSeconds": 60,
+              "acceptedResponses": [
+                "જ ો ં ી ુ છ ક ણ શ"
+              ],
+              "feedback": {
+                "correct": "The entire doorway row returned without a visible model.",
+                "incorrect": "Check only each missed form, cover every model, and retry the row once."
+              }
             }
           ]
         },
@@ -474,26 +1213,26 @@
             },
             {
               "kind": "speech",
-              "text": "What does pāchhā maḷīshũ literally say, and how does it relate to āvjo? (\"We'll meet again\"; it's the explicit form of Ch.1's \"come again\" goodbye.)"
+              "text": "Name the four marks, then write the five consonants without looking."
             }
           ]
         }
       ]
     },
     {
-      "id": "GU-C04-practice",
-      "sequence": 260,
-      "title": "Chapter 6 — The farewells",
+      "id": "GU-C02-practice",
+      "sequence": 160,
+      "title": "Chapter 4 — The introduction exchange",
       "headword": "(dialogue)",
       "romanization": "",
-      "gloss": "Chapter 6 recap — the farewells",
+      "gloss": "Chapter 4 recap — the introduction exchange",
       "script": "gujarati",
       "modality": "voice",
       "derivedModality": "voice",
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:02453b57ecd42092",
+      "sourceHash": "fnv1a64:aad17847cd47f004",
       "notice": null,
       "blocks": [
         {
@@ -509,14 +1248,14 @@
             },
             {
               "kind": "speech",
-              "text": "No new words. Three ways to part — none of them a blunt \"goodbye.\""
+              "text": "No new words. The whole introduction, assembled from atoms you now own."
             }
           ]
         },
         {
           "index": 1,
-          "type": "culture-pragmatics",
-          "title": "Why it's said this way — the farewells",
+          "type": "input",
+          "title": "The exchange",
           "segments": [
             {
               "kind": "pause",
@@ -527,29 +1266,38 @@
             {
               "kind": "prompt",
               "action": "SAY",
-              "instruction": "the quick \"come again\" from the earlier courtesy chapter — āvjo",
+              "instruction": "\"My name is Mira.\" — mārũ nām Mira chhe.",
               "spoken": true,
               "scored": false,
               "responseSeconds": 8,
-              "source": "[YOU SAY: the quick \"come again\" from the earlier courtesy chapter — *āvjo*]"
+              "source": "[YOU SAY: \"My name is Mira.\" — *mārũ nām Mira chhe.*]"
             },
             {
               "kind": "prompt",
               "action": "SAY",
-              "instruction": "the explicit \"we'll meet again\" — pāchhā maḷīshũ",
+              "instruction": "\"What's your name?\" — tamārũ nām shũ chhe?",
               "spoken": true,
               "scored": false,
               "responseSeconds": 8,
-              "source": "[YOU SAY: the explicit \"we'll meet again\" — *pāchhā maḷīshũ*]"
+              "source": "[YOU SAY: \"What's your name?\" — *tamārũ nām shũ chhe?*]"
             },
             {
               "kind": "prompt",
               "action": "SAY",
-              "instruction": "\"see you tomorrow\" — kāle maḷīshũ",
+              "instruction": "\"My name is Arun.\" — mārũ nām Arun chhe.",
               "spoken": true,
               "scored": false,
               "responseSeconds": 8,
-              "source": "[YOU SAY: \"see you tomorrow\" — *kāle maḷīshũ*]"
+              "source": "[YOU SAY: \"My name is Arun.\" — *mārũ nām Arun chhe.*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "\"Pleased to meet you.\" — tamne maḷīne ānand thayo.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: \"Pleased to meet you.\" — *tamne maḷīne ānand thayo.*]"
             }
           ]
         },
@@ -567,29 +1315,29 @@
             {
               "kind": "prompt",
               "action": "SAY",
-              "instruction": "\"again\" and \"(we) will meet\" (pāchhā, maḷīshũ)",
+              "instruction": "\"name,\" \"my,\" \"is\" (nām, mārũ, chhe)",
               "spoken": true,
               "scored": false,
               "responseSeconds": 8,
-              "source": "[YOU SAY: \"again\" and \"(we) will meet\" (*pāchhā*, *maḷīshũ*)]"
+              "source": "[YOU SAY: \"name,\" \"my,\" \"is\" (*nām*, *mārũ*, *chhe*)]"
             },
             {
               "kind": "prompt",
               "action": "SAY",
-              "instruction": "the word that means BOTH tomorrow and yesterday (kāl)",
+              "instruction": "the two \"you\" levels (tũ / tame)",
               "spoken": true,
               "scored": false,
               "responseSeconds": 8,
-              "source": "[YOU SAY: the word that means BOTH tomorrow and yesterday (*kāl*)]"
+              "source": "[YOU SAY: the two \"you\" levels (*tũ* / *tame*)]"
             },
             {
               "kind": "prompt",
               "action": "SAY",
-              "instruction": "the retroflex letter in maḷīshũ (ળ, ḷ)",
+              "instruction": "\"what,\" and where the verb sits (shũ; the verb is last)",
               "spoken": true,
               "scored": false,
               "responseSeconds": 8,
-              "source": "[YOU SAY: the retroflex letter in *maḷīshũ* (ળ, *ḷ*)]"
+              "source": "[YOU SAY: \"what,\" and where the verb sits (*shũ*; the verb is last)]"
             }
           ]
         },
@@ -606,15 +1354,19 @@
             },
             {
               "kind": "speech",
-              "text": "āvjo (\"goodbye\") = \"come [again],\" from āvvũ \"to come\"."
+              "text": "nām from Sanskrit nāman becomes English name."
             },
             {
               "kind": "speech",
-              "text": "maḷīshũ from maḷvũ \"to meet\" (Sanskrit mil-); the retroflex ળ."
+              "text": "mārũ from ma- becomes English my; agrees in three genders (māro/mārī/mārũ)."
             },
             {
               "kind": "speech",
-              "text": "kāl from kāla \"time\" (Hindi kal, Punjabi akāl)."
+              "text": "chhe — Gujarati's own copula (not Hindi's hai)."
+            },
+            {
+              "kind": "speech",
+              "text": "shũ from ka- becomes English what; tũ from tū becomes thou."
             }
           ]
         },
@@ -631,7 +1383,7 @@
             },
             {
               "kind": "speech",
-              "text": "You're leaving a friend and will see them tomorrow. Give the goodbye and the \"tomorrow\" version. (Āvjo — and kāle maḷīshũ.)"
+              "text": "Introduce yourself and ask a stranger's name in Gujarati. (Mārũ nām … chhe. Tamārũ nām shũ chhe?)"
             }
           ]
         }

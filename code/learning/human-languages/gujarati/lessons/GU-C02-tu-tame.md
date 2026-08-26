@@ -2,8 +2,8 @@
 schema_version: 2
 id: GU-C02-tu-tame
 spine_node: SPINE-EXCHANGE-NAMES
-sequence: 120
-chapter: 4
+sequence: 130
+chapter: 6
 type: word
 headword: તું / તમે
 gloss: you (familiar / respectful)

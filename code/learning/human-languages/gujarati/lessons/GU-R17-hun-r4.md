@@ -2,8 +2,8 @@
 schema_version: 2
 id: GU-R17-hun-r4
 spine_node: SPINE-EXCHANGE-NAMES
-sequence: 780
-chapter: 17
+sequence: 790
+chapter: 19
 type: practice
 headword: હું
 romanization: hũ

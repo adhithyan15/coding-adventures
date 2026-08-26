@@ -92,6 +92,46 @@
     },
     {
       "chapter": 4,
+      "title": "Four Forms Before Your Name",
+      "label": "ch:gu-first-use-forms-a",
+      "canDo": "I can read and write four Gujarati forms before they appear in the first name exchange: ળ, થ, અ, and િ.",
+      "spineNodes": [
+        "SPINE-EXCHANGE-NAMES"
+      ],
+      "payoff": {
+        "lesson": "GU-R04-first-four-r1",
+        "kind": "task",
+        "summary": "With every model covered, read ળ, થ, અ, and િ and write each one from a spoken sound or role cue, keeping reading and writing scores separate.",
+        "assesses": [
+          "GU-SCRIPT-LLA-01",
+          "GU-SCRIPT-THA-01",
+          "GU-SCRIPT-INDEPENDENT-A-01",
+          "GU-SCRIPT-I-MATRA-01"
+        ]
+      }
+    },
+    {
+      "chapter": 5,
+      "title": "Four More Forms Before Your Name",
+      "label": "ch:gu-first-use-forms-b",
+      "canDo": "I can read and write four more Gujarati consonants before they appear in the first name exchange: લ, પ, ચ, and બ.",
+      "spineNodes": [
+        "SPINE-EXCHANGE-NAMES"
+      ],
+      "payoff": {
+        "lesson": "GU-R05-second-four-r1",
+        "kind": "task",
+        "summary": "With every model covered, read લ, પ, ચ, and બ and write each one from a spoken sound cue, keeping reading and writing scores separate.",
+        "assesses": [
+          "GU-SCRIPT-LA-01",
+          "GU-SCRIPT-PA-01",
+          "GU-SCRIPT-CHA-01",
+          "GU-SCRIPT-BA-01"
+        ]
+      }
+    },
+    {
+      "chapter": 6,
       "title": "Introducing Yourself",
       "label": "ch:introductions",
       "canDo": "I can introduce myself in Gujarati, give my name, and understand the other person's name.",
@@ -116,7 +156,7 @@
       }
     },
     {
-      "chapter": 5,
+      "chapter": 7,
       "title": "How Are You?",
       "label": "ch:responding",
       "canDo": "I can ask how someone is in Gujarati, answer naturally, and return the question.",
@@ -140,7 +180,7 @@
       }
     },
     {
-      "chapter": 6,
+      "chapter": 8,
       "title": "Farewells",
       "label": "ch:farewells",
       "canDo": "I can end a Gujarati conversation politely and choose a farewell that fits the situation.",
@@ -162,7 +202,7 @@
       }
     },
     {
-      "chapter": 7,
+      "chapter": 9,
       "title": "The First Verbs",
       "label": "ch:first-verbs",
       "canDo": "I can build short present-tense Gujarati sentences with the chapter's first verbs.",
@@ -184,7 +224,7 @@
       }
     },
     {
-      "chapter": 8,
+      "chapter": 10,
       "title": "Numbers One to Five",
       "label": "ch:numbers-one-to-five",
       "canDo": "I can count from one to five in headless Gujarati script and explain why બે starts with b where its neighbours start with d, and why ત્રણ has an r that Hindi tīn does not.",
@@ -207,7 +247,7 @@
       }
     },
     {
-      "chapter": 9,
+      "chapter": 11,
       "title": "Six Verbs at the Core",
       "label": "ch:gu-core-verbs",
       "canDo": "I can name six everyday Gujarati verbs by the neuter -વું ending they all share, strip that ending to reach the stem, and say what I do with stem, person-ending, and the copula છે.",
@@ -232,7 +272,7 @@
       }
     },
     {
-      "chapter": 10,
+      "chapter": 12,
       "title": "The Mind and the Page",
       "label": "ch:gu-mind-and-page",
       "canDo": "I can say that I think, understand, read and write in Gujarati, hear and write the nasal that sits in the middle of વાંચવું, and name what each of the four roots was doing before it meant a mental act — ranging about, waking up, speaking, and scratching.",
@@ -265,7 +305,7 @@
       }
     },
     {
-      "chapter": 11,
+      "chapter": 13,
       "title": "Taking, Asking, Helping, Liking",
       "label": "ch:gu-doing-verbs",
       "canDo": "I can take, ask, help and say what I like in Gujarati, explain why મદદ કરવી ends in the feminine -ી while કામ કરવું ends in the neuter, and say why મને ગુજરાતી ગમે છે leaves no room for me as its subject.",
@@ -301,7 +341,7 @@
       }
     },
     {
-      "chapter": 12,
+      "chapter": 14,
       "title": "Water, Tea, Milk, and Bread",
       "label": "ch:gu-request-food-drink",
       "canDo": "I can politely ask for water, tea, milk, or bread in Gujarati, name which of the four is a loanword and which have no settled root beyond Sanskrit, and explain why a word ending in -ī is not automatically feminine.",
@@ -329,7 +369,7 @@
       }
     },
     {
-      "chapter": 13,
+      "chapter": 15,
       "title": "Friend and Family",
       "label": "ch:gu-friend-and-family",
       "canDo": "I can name a friend, a family, a brother, and a sister in Gujarati, explain which of these words was inherited whole from Sanskrit rather than worn down by sound change, and say which sibling word is genuinely a cousin of its English counterpart and which is not.",
@@ -356,7 +396,7 @@
       }
     },
     {
-      "chapter": 14,
+      "chapter": 16,
       "title": "Eye, Ear, Mouth, and Nose",
       "label": "ch:gu-face-parts",
       "canDo": "I can name the eye, ear, mouth, and nose in Gujarati, tell a nasal that only marks a sound from one that marks the neuter gender, and say which two of the four are unbroken cousins of their English counterparts.",
@@ -385,7 +425,7 @@
       }
     },
     {
-      "chapter": 15,
+      "chapter": 17,
       "title": "Fourth Return: Script and Names",
       "label": "ch:gu-r4-script-names",
       "canDo": "I can retrieve five Gujarati doorway forms at their fourth spacing window, distinguish each from a nearby familiar form, and independently read and write a complete name exchange after a long interval.",
@@ -409,7 +449,7 @@
       }
     },
     {
-      "chapter": 16,
+      "chapter": 18,
       "title": "Fourth Return: The Introduction",
       "label": "ch:gu-r4-introduction",
       "canDo": "I can retrieve name, my, the Gujarati copula, my-name-is, and pleased-to-meet-you at their fourth spacing window, write each response without a model, and continue into a familiar wellbeing exchange.",
@@ -434,7 +474,7 @@
       }
     },
     {
-      "chapter": 17,
+      "chapter": 19,
       "title": "Fourth Return: Respectful Questions",
       "label": "ch:gu-r4-respectful-questions",
       "canDo": "I can retrieve familiar and respectful you, what, the respectful name question, the introduction exchange, I, and how at their fourth spacing window, and write each response without a model.",
@@ -456,7 +496,7 @@
       }
     },
     {
-      "chapter": 18,
+      "chapter": 20,
       "title": "Fourth Return: Wellbeing and Farewells",
       "label": "ch:gu-r4-wellbeing-farewells",
       "canDo": "I can retrieve and write the respectful wellbeing exchange and two familiar farewells without a model.",
@@ -481,7 +521,7 @@
       }
     },
     {
-      "chapter": 19,
+      "chapter": 21,
       "title": "Fourth Return: The Doorway Nine",
       "label": "ch:gu-doorway-r4",
       "canDo": "I can independently recognize and write the nine Gujarati doorway forms after their fourth expanding interval.",

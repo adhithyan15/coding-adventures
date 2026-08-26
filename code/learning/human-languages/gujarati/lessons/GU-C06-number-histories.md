@@ -2,8 +2,8 @@
 schema_version: 2
 id: GU-C06-number-histories
 spine_node: SPINE-COUNT-ONE-TO-FIVE
-sequence: 350
-chapter: 8
+sequence: 360
+chapter: 10
 type: etymology
 headword: બે · ત્રણ
 romanization: be · traṇ

@@ -2,8 +2,8 @@
 schema_version: 2
 id: GU-C08-samajvun
 spine_node: SPINE-SAY-WHAT-I-DO
-sequence: 430
-chapter: 10
+sequence: 440
+chapter: 12
 type: word
 headword: સમજવું
 romanization: samajvũ

@@ -1,36 +1,25 @@
 {
   "chapter": 11,
-  "title": "Taking, Asking, Helping, Liking",
-  "label": "ch:gu-doing-verbs",
-  "canDo": "I can take, ask, help and say what I like in Gujarati, explain why મદદ કરવી ends in the feminine -ી while કામ કરવું ends in the neuter, and say why મને ગુજરાતી ગમે છે leaves no room for me as its subject.",
+  "title": "Six Verbs at the Core",
+  "label": "ch:gu-core-verbs",
+  "canDo": "I can name six everyday Gujarati verbs by the neuter -વું ending they all share, strip that ending to reach the stem, and say what I do with stem, person-ending, and the copula છે.",
   "spineNodes": [
     "SPINE-SAY-WHAT-I-DO"
   ],
   "payoff": {
-    "lesson": "GU-C09-gamvun",
+    "lesson": "GU-C07-jaanvun",
     "kind": "production",
-    "summary": "Say મને ગુજરાતી ગમે છે and hear that you are not its subject, set it against હું ગુજરાતી બોલું છું where you are, trace ગમવું back to gamyate — the passive of gam- 'to go', so the verb was born without a doer and is English come besides — and run the chapter's four verbs back with where each came from: Sanskrit prek- behind pūchhvũ, lebh- behind levũ, Arabic madad through Persian, and the feminine ending madad forces onto karvī.",
+    "summary": "The sixth verb runs the whole chapter at once: strip the neuter -વું from all six infinitives, hold the retroflex ણ that Prakrit pulled back from a plain n, put the stem into hũ jāṇũ chhũ, and connect jāṇvũ to the English know it is genuinely cousin to.",
     "assesses": [
-      "GU-LEX-GAMVU",
-      "GU-GRAMMAR-DATIVE-LIKING",
-      "GU-ETYMON-GAM-GO",
-      "GU-LEX-MADAD-KARVI",
-      "GU-ETYMON-MADAD-ARABIC",
-      "GU-GRAMMAR-INFINITIVE-OBJECT-GENDER",
-      "GU-LEX-PUCHHVU",
-      "GU-ETYMON-PRACH-ASK",
-      "GU-LEX-LEVU",
-      "GU-ETYMON-LABH-GAIN",
-      "GU-LEX-AAVVU",
-      "GU-ETYMON-AAVVU-REACH",
+      "GU-LEX-HOVU",
       "GU-LEX-JAVU",
-      "GU-SOUND-PRAKRIT-Y-TO-J",
-      "GU-SOUND-DHY-JJH-J",
-      "GU-LEX-JAANVU",
-      "GU-ETYMON-JAANVU-KNOW",
-      "GU-SCRIPT-HEADLESS-CLUE",
+      "GU-LEX-AAVVU",
+      "GU-LEX-KHAAVU",
+      "GU-LEX-JOVU",
       "GU-GRAMMAR-VU-NEUTER-INFINITIVE",
-      "GU-GRAMMAR-PRESENT-STEM-PERSON-COPULA"
+      "GU-GRAMMAR-PRESENT-STEM-PERSON-COPULA",
+      "GU-LEX-JAANVU",
+      "GU-ETYMON-JAANVU-KNOW"
     ]
   }
 }

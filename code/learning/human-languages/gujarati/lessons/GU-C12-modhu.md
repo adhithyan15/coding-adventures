@@ -2,8 +2,8 @@
 schema_version: 2
 id: GU-C12-modhu
 spine_node: SPINE-CHECK-WELLBEING
-sequence: 600
-chapter: 14
+sequence: 610
+chapter: 16
 type: word
 headword: મોઢું
 romanization: moḍhũ

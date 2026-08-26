@@ -2,8 +2,8 @@
 schema_version: 2
 id: GU-C03-majaa
 spine_node: SPINE-CHECK-WELLBEING
-sequence: 190
-chapter: 5
+sequence: 200
+chapter: 7
 type: word
 headword: મજા
 gloss: enjoyment, fun — and the reply "હું મજામાં છું"
