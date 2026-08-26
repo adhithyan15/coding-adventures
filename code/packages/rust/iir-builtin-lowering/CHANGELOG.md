@@ -1,5 +1,64 @@
 # Changelog — iir-builtin-lowering
 
+## 0.41.0 - 2026-08-26 - fix: raw-model closure body with no heap evidence of its own never got concretized
+
+`closure_identity_returns_captured_value` (`lang-aot`'s
+`tests/e6d7a_wasm_closures.rs`) has been failing on `((lambda (x) x) 42)` —
+"the minimal apply" — for at least four consecutive PRs in this campaign,
+each re-confirming it as pre-existing/unrelated via a `git stash` comparison
+and moving on without fixing it. Root-caused and fixed for real this time.
+
+Two compounding bugs, both in how a Twig/Nib **raw-model** closure body (one
+whose parameters and return value are plain machine words, not the
+uniform-`anyref` tagged model — see `closure_heap.rs`'s own doc comment)
+is classified and type-checked once its own body has **no heap evidence at
+all**:
+
+1. `lower_dyn_repr_structural::lisp_functions` (this pass's own per-function
+   partition of "does this function use the tagged/heap value model")
+   correctly excludes such a body (e.g. `fn __lambda_0(x: any) { ret x }` —
+   no `alloc`/`box`/heap builtin anywhere), leaving it for
+   `lang-aot::concretize_scalar_any_for_wasm` to concretize instead. But that
+   sibling pass recomputed its OWN separate whole-module heuristic ("does ANY
+   function anywhere in the module show heap evidence?") instead of reusing
+   this pass's partition — and the module's synthesized closure dispatcher
+   (`__dyn_call_closure`) always shows heap evidence elsewhere in the same
+   module, so the whole-module check skipped concretizing *every* function,
+   including this one. `lisp_functions` is now `pub` (re-exported from the
+   crate root) specifically so `concretize_scalar_any_for_wasm` can partition
+   against the exact same set instead of a disagreeing heuristic — the two
+   passes together are supposed to leave every function's value concretely
+   typed, and now they structurally cannot disagree about which one owns a
+   given function.
+2. Even with (1) fixed, the synthesized dispatcher's own `call` to such a
+   body (`closure_heap::build_dispatcher`) hardcodes the call's type hint to
+   `ref<any>` unconditionally (it runs before this pass and cannot yet know
+   which bodies will turn out raw vs. tagged) — a real mismatch once the
+   callee is concretized to a genuine `i64` machine return. `iir-to-wasm` saw
+   a `box`'s source claim `ref<any>` while the real WASM `call` it lowers to
+   actually pushes an `i64` (`TypeMismatch: expected Anyref, found I64`).
+   `lower_structural_function` now corrects a stale `ref<...>`-hinted `call`
+   to a callee it has independently determined is NOT on the tagged model,
+   letting the existing defensive `any`/`polymorphic` sweep concretize it
+   correctly. Deliberately NOT fixed in `closure_heap.rs` itself — that pass
+   is shared with the native/LLVM pipeline (its own doc comment says so), and
+   an earlier attempt to make the hardcoded hint conditional there
+   passed the WASM case but broke `closures_run_on_native`/`_llvm` (42 → 80),
+   confirming the native tagged-word model needs a different, unrelated
+   invariant from this hint that this fix does not touch.
+
+`concretize_scalar_any_for_wasm` (in `lang-aot`) also gained the missing
+parameter-narrowing step its JVM twin (`concretize_scalar_any_for_jvm`)
+already had — narrowing only the return type and instruction hints left a
+newly-reachable raw closure body's own parameter at `any`, which `iir-to-wasm`
+falls back to mapping as `i32`, a second real mismatch against the
+dispatcher's already-unboxed `i64` argument.
+
+New regression test in `dyn_repr_structural.rs`:
+`stale_ref_any_hint_on_a_call_to_a_non_lisp_callee_is_corrected`, exercising
+the fix directly on the IIR shape, independent of the full compile-and-run
+integration test in `lang-aot`.
+
 ## 0.40.0 - 2026-08-25 - nullable structural entry results
 
 The managed structural Lisp representation now maps a nullable entry result

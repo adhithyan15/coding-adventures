@@ -196,7 +196,26 @@ fn has_lisp_param(func: &IIRFunction) -> bool {
 /// function that `call`s a lisp function is itself lisp (its call site must box
 /// the args and treat the result as a reference). For a McCarthy module every
 /// function ends up lisp; a Twig module's pure-scalar functions never enter.
-pub(crate) fn lisp_functions(module: &IIRModule) -> HashSet<String> {
+///
+/// `pub` (not `pub(crate)`): reused across crates by
+/// `lang-aot::concretize_scalar_any_for_wasm`, which needs the exact same
+/// per-function partition this pass uses. That pass used to run its own
+/// separate whole-module heuristic ("does ANY function anywhere in the module
+/// show heap evidence?"), which agreed with this one almost everywhere but
+/// disagreed for a closure body with no heap evidence of its own — e.g. a
+/// Twig `(lambda (x) x)` compiled to `fn __lambda_0(x: any) { ret x }`, no
+/// `alloc`/`box`/heap-builtin anywhere in it. This function correctly leaves
+/// such a body out of the lisp set (it is a raw-model closure body, not a
+/// tagged one), but the OTHER pass's whole-module heuristic saw heap evidence
+/// elsewhere in the same module (the synthesized closure dispatcher) and
+/// skipped concretizing *every* function, including this one — so its `ret`
+/// instruction's `"any"` type hint reached `iir-to-wasm`'s validator
+/// unconcretized and was rejected outright
+/// (`closure_identity_returns_captured_value`). Sharing one function for both
+/// passes' partitions makes that kind of disagreement structurally
+/// impossible: a function is either in this set or it isn't, and both passes
+/// now ask the identical question.
+pub fn lisp_functions(module: &IIRModule) -> HashSet<String> {
     seeded_lisp_functions(module, true)
 }
 
@@ -440,6 +459,28 @@ fn lower_structural_function(
         // (The loose wasm model tolerated the stale hint; the JVM does not.)
         if is_lisp_call {
             instr.type_hint = REF_ANY.to_string();
+        } else if instr.op == "call" && instr.type_hint.starts_with("ref<") {
+            // The callee is NOT on the tagged/uniform-anyref model (`is_lisp_call`
+            // above is false) — yet the call is hinted as a reference anyway.
+            // The one real source of this today is `closure_heap::build_dispatcher`
+            // synthesizing `__dyn_call_closure`: it hardcodes every dispatch-table
+            // call to `ref<any>` because at the time it runs (before this pass, and
+            // shared with the native pipeline — see its own comment) it cannot yet
+            // know which closure bodies will turn out raw vs. tagged. When the
+            // callee later turns out to have NO heap evidence of its own — e.g. the
+            // identity closure `(lambda (x) x)`, whose entire body is `ret x` — the
+            // stale `ref<any>` hint here would otherwise survive unchanged even
+            // after `concretize_scalar_any_for_wasm` (this crate's sibling scalar
+            // pass) narrows that callee's actual return type to `i64`, so the value
+            // that lands on the machine stack no longer matches what this
+            // instruction claims. Retyping it to the generic dynamic placeholder
+            // lets it be swept to a concrete type below (step 4) exactly like any
+            // other stray `any`/`polymorphic` hint, instead of lying about being a
+            // reference (`closure_identity_returns_captured_value`: previously
+            // `iir-to-wasm` saw `box`'s source claim `ref<any>` while the actual
+            // WASM `call` it lowers to pushes an `i64` — `TypeMismatch: expected
+            // Anyref, found I64`).
+            instr.type_hint = "any".to_string();
         }
     }
 
@@ -1316,5 +1357,80 @@ mod tests {
         );
         let load = f.instructions.iter().find(|i| i.op == "field_load").unwrap();
         assert!(matches!(&load.srcs[0], Operand::Var(v) if v == "x"));
+    }
+
+    /// Regression for `closure_identity_returns_captured_value`: a closure body
+    /// with NO heap evidence of its own (`fn __lambda_0(x: any) { ret x }` — the
+    /// IIR shape of a Twig `(lambda (x) x)`) is a genuinely raw-model function,
+    /// correctly excluded from `lisp_funcs`. Its only caller, the synthesized
+    /// `__dyn_call_closure` dispatcher (`closure_heap::build_dispatcher`),
+    /// hardcodes every dispatch-table `call`'s type hint to `ref<any>` because it
+    /// runs before this pass and cannot yet know which bodies stay raw — so the
+    /// dispatcher's `call __lambda_0(...)` starts out claiming a reference result
+    /// even though its callee is not lisp. Left uncorrected, that stale hint
+    /// reaches `iir-to-wasm` unchanged (the callee is separately concretized to a
+    /// real `i64` return by `concretize_scalar_any_for_wasm`, a sibling pass this
+    /// one never touches), producing a genuine call-site type mismatch. This
+    /// pass must retype that stale hint away from `ref<any>` — verified here
+    /// directly on the IIR, independent of the full compile-to-wasm-and-run
+    /// integration test in `lang-aot`.
+    #[test]
+    fn stale_ref_any_hint_on_a_call_to_a_non_lisp_callee_is_corrected() {
+        // __lambda_0: no heap ops, no lisp param — genuinely raw/non-lisp.
+        let lambda = IIRFunction::new(
+            "__lambda_0",
+            vec![("x".into(), "any".into())],
+            "any",
+            vec![IIRInstr::new("ret", None, vec![Operand::Var("x".into())], "any")],
+        );
+        // __dyn_call_closure: heap-using (alloc/field_load), so IS lisp — and it
+        // calls __lambda_0 with the dispatcher's hardcoded `ref<any>` hint, exactly
+        // as `build_dispatcher` emits it, regardless of the callee's real model.
+        let dispatcher = IIRFunction::new(
+            "__dyn_call_closure",
+            vec![("clo".into(), REF_ANY.into()), ("args".into(), REF_ANY.into())],
+            REF_ANY,
+            vec![
+                IIRInstr::new("field_load", Some("caps".into()), vec![Operand::Var("clo".into()), Operand::Int(1)], REF_ANY),
+                {
+                    let mut a = IIRInstr::new("alloc", Some("_scratch".into()), vec![], REF_PAIR);
+                    a.may_alloc = true;
+                    a
+                },
+                IIRInstr::new(
+                    "call",
+                    Some("cd_res_0".into()),
+                    vec![Operand::Var("__lambda_0".into()), Operand::Var("caps".into())],
+                    REF_ANY, // the stale hardcoded hint under test
+                ),
+                IIRInstr::new("ret", None, vec![Operand::Var("cd_res_0".into())], REF_ANY),
+            ],
+        );
+        let mut m = IIRModule::new("m", "twig");
+        m.entry_point = Some("main".to_string());
+        m.functions = vec![lambda, dispatcher];
+
+        lower_dyn_repr_structural(&mut m);
+
+        // __lambda_0 is untouched by this pass — it is not lisp, and stays that
+        // way for `concretize_scalar_any_for_wasm` to narrow separately.
+        let lam = m.functions.iter().find(|f| f.name == "__lambda_0").unwrap();
+        assert_eq!(lam.return_type, "any", "non-lisp callee is out of scope for this pass");
+        assert_eq!(lam.instructions[0].type_hint, "any");
+
+        // The dispatcher's call to it no longer claims a reference result —
+        // the stale `ref<any>` must be gone (swept to a concrete machine type by
+        // this function's own defensive sweep, since the dispatcher itself is
+        // lisp).
+        let disp = m.functions.iter().find(|f| f.name == "__dyn_call_closure").unwrap();
+        let call = disp.instructions.iter().find(|i| i.op == "call").unwrap();
+        assert_ne!(
+            call.type_hint, REF_ANY,
+            "a call to a non-lisp callee must not keep claiming ref<any>"
+        );
+        assert_eq!(
+            call.type_hint, "i64",
+            "the stray hint should be swept to a concrete machine type"
+        );
     }
 }
