@@ -8598,6 +8598,9 @@ fn literal_numeric_zero(node: &GrammarASTNode) -> Option<f64> {
             _ => None,
         };
     }
+    if let Some(value) = literal_power_zero(node) {
+        return Some(value);
+    }
     let tokens = direct_tokens(node);
     if tokens.len() == 1 {
         match tokens[0].effective_type_name() {
@@ -8639,6 +8642,35 @@ fn literal_numeric_zero(node: &GrammarASTNode) -> Option<f64> {
     (tokens.is_empty() && child_nodes.len() == 1)
         .then(|| literal_numeric_zero(child_nodes[0]))
         .flatten()
+}
+
+fn literal_power_zero(node: &GrammarASTNode) -> Option<f64> {
+    let sequence = pieces(node);
+    if sequence.len() < 3 || sequence.len().is_multiple_of(2) {
+        return None;
+    }
+    let mut operands = Vec::new();
+    for (index, piece) in sequence.iter().enumerate() {
+        if index.is_multiple_of(2) {
+            let Piece::Node(operand) = piece else {
+                return None;
+            };
+            operands.push(*operand);
+        } else if !matches!(piece, Piece::Op(op) if matches!(op.as_str(), "^" | "**")) {
+            return None;
+        }
+    }
+    let (base, exponents) = operands.split_first()?;
+    let exponent = literal_nonneg_integer_power_chain(exponents)?;
+    if exponent == 0 {
+        return None;
+    }
+    let base = literal_numeric_zero(base)?;
+    if exponent.is_multiple_of(2) {
+        Some(0.0)
+    } else {
+        Some(base)
+    }
 }
 
 /// Return the name of a bare scalar variable node. Array elements are kept
@@ -11102,8 +11134,30 @@ mod tests {
     }
 
     #[test]
+    fn al4_real_power_zero_selector_writes_stay_stable() {
+        for write in [
+            "choose - ((-0.0) ^ 2)",
+            "choose - ((+0.0) ** 3)",
+            "choose + ((-0.0) ^ 3)",
+            "choose - ((-0.0) ^ 2 ^ 1)",
+        ] {
+            compile_source(
+                &format!(
+                    "begin integer i, n, limit; real choose; boolean other; n := 3; limit := 3; choose := 1.0; other := true; i := 0; for i := i + 1 while i < n do begin n := limit; limit := if choose = 1.0 then limit else limit + 1; choose := if other then choose else 0.0; other := other; choose := {write} end; print(i + 0.25) end"
+                ),
+                "test",
+            )
+            .unwrap_or_else(|_| panic!("real power-zero write {write:?} must stay stable"));
+        }
+    }
+
+    #[test]
     fn al4_real_negative_zero_subtraction_remains_conservative() {
-        for write in ["choose - (-0.0)", "choose - ((-0.0) + (-0.0))"] {
+        for write in [
+            "choose - (-0.0)",
+            "choose - ((-0.0) + (-0.0))",
+            "choose - ((-0.0) ^ 3)",
+        ] {
             let err = compile_source(
                 &format!(
                     "begin integer i, n, limit; real choose; boolean other; n := 3; limit := 3; choose := 1.0; other := true; i := 0; for i := i + 1 while i < n do begin n := limit; limit := if choose = 1.0 then limit else limit + 1; choose := if other then choose else 0.0; other := other; choose := {write} end; print(i + 0.25) end"
@@ -11175,7 +11229,13 @@ mod tests {
 
     #[test]
     fn al4_real_non_identity_power_selector_writes_remain_conservative() {
-        for write in ["choose ^ 0", "1.0 ^ choose", "choose ^ 1.0"] {
+        for write in [
+            "choose ^ 0",
+            "1.0 ^ choose",
+            "choose ^ 1.0",
+            "choose - ((-0.0) ^ 0)",
+            "choose + ((-0.0) ^ 2)",
+        ] {
             let err = compile_source(
                 &format!(
                     "begin integer i, n, limit; real choose; boolean other; n := 3; limit := 3; choose := 1.0; other := true; i := 0; for i := i + 1 while i < n do begin n := limit; limit := if choose = 1.0 then limit else limit + 1; choose := if other then choose else 0.0; other := other; choose := {write} end; print(i + 0.25) end"
