@@ -2225,16 +2225,95 @@ fn field_declaration_in_class_body_is_an_error() {
 }
 
 #[test]
-fn qualified_call_remains_unsupported() {
+fn qualified_static_method_call_on_own_class_lowers_to_direct_call() {
+    // Task #67 (M5): `Main.add(1, 2)` where `Main` is literally the one
+    // class this compilation unit declares -- a self-reference -- now
+    // lowers exactly like the bare call `add(1, 2)` already does.
+    let m = compile_ok(&class_src(
+        "static int add(int a, int b) { return a + b; } \
+         public static void main(String[] args) { int r = Main.add(1, 2); }",
+    ));
+    match &main_fn(&m).body.stmts[0] {
+        Stmt::LetStarBinding { name, value, .. } => {
+            assert_eq!(name, "r");
+            match value {
+                Expr::DirectCall { fn_name, args, .. } => {
+                    assert_eq!(fn_name, "add");
+                    assert_eq!(args.len(), 2);
+                }
+                other => panic!("expected DirectCall, got {other:?}"),
+            }
+        }
+        other => panic!("expected LetStarBinding, got {other:?}"),
+    }
+}
+
+#[test]
+fn qualified_static_void_method_call_as_a_bare_statement_lowers_to_expr_stmt() {
+    let m = compile_ok(&class_src(
+        "static void greet() { } \
+         public static void main(String[] args) { Main.greet(); }",
+    ));
+    match &main_fn(&m).body.stmts[0] {
+        Stmt::ExprStmt {
+            expr: Expr::DirectCall { fn_name, .. },
+            ..
+        } => assert_eq!(fn_name, "greet"),
+        other => panic!("expected ExprStmt(DirectCall), got {other:?}"),
+    }
+}
+
+#[test]
+fn qualified_call_on_a_different_class_name_is_rejected() {
+    // `Main` is the only class this compilation unit declares -- any
+    // other qualifier (an external class, a JDK type like `Math`) has
+    // no import/library-catalog concept to resolve against at all.
     let err = compile_source(
         &class_src(
-            "static int add(int a, int b) { return a + b; } \
-             public static void main(String[] args) { Main.add(1, 2); }",
+            "public static void main(String[] args) { double x = Math.abs(1); }",
         ),
         "prog",
     )
     .unwrap_err();
-    assert!(!err.message.is_empty());
+    assert!(
+        err.message.contains("Math"),
+        "unexpected message: {}",
+        err.message
+    );
+}
+
+#[test]
+fn qualified_call_to_an_unknown_method_on_own_class_is_rejected() {
+    let err = compile_source(
+        &class_src("public static void main(String[] args) { Main.doesNotExist(); }"),
+        "prog",
+    )
+    .unwrap_err();
+    assert!(
+        err.message.contains("unknown method"),
+        "unexpected message: {}",
+        err.message
+    );
+}
+
+#[test]
+fn qualified_call_to_a_non_static_method_is_rejected() {
+    // Real Java rejects `ClassName.instanceMethod()` too -- this
+    // frontend has no reason to be looser about a construct it can
+    // already fully type-check (`MethodSig::is_static`, task #67).
+    let err = compile_source(
+        &class_src(
+            "int instanceHelper() { return 1; } \
+             public static void main(String[] args) { Main.instanceHelper(); }",
+        ),
+        "prog",
+    )
+    .unwrap_err();
+    assert!(
+        err.message.contains("static"),
+        "unexpected message: {}",
+        err.message
+    );
 }
 
 // ── M3b: lambda expressions ──────────────────────────────────────────────

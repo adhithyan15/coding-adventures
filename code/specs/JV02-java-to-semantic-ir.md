@@ -55,7 +55,15 @@ target-dispatch concern task #60 did not touch; resolved by generalizing
 `indexed_assign_target` to a suffix chain of any length and, for the
 compound-assignment/incdec cases, generalizing task #59's own temp-
 hoisting design from exactly one suffix to N; see that entry's own
-"Update"), and task #54 (wiring
+"Update"), task #67/M5 (a qualified *static* method call self-reference,
+`ClassName.staticMethod(args)`, where `ClassName` is literally the one
+class this compilation unit declares; per `semantic-ir`'s own
+`Expr::VirtualCall` doc comment a static call needs no new SIR node, so
+this reuses M3a's existing `method_signatures`/`Expr::DirectCall` path
+unchanged, gated by a new `MethodSig::is_static` check rejecting a
+qualified call to a non-static method the way real Java does; see this
+section's own M5 entry for the exact shape and what was scoped out), and
+task #54 (wiring
 `Expr::IndirectCall` — a
 `Closure`-kinded local can now be *invoked*, `f(5)`, not just created and
 passed around; `lower_call_expression` checks local-variable resolution
@@ -116,9 +124,11 @@ position a `continue` can never skip — see `java-to-semantic-ir`'s own
 standalone follow-up task split off from M4d's own chained-indexed-
 assignment-target gap is resolved as of task #66 — see this section's
 own task #60/#66 entries above and `java-to-semantic-ir`'s own
-`CHANGELOG.md` `[0.15.0]` entry for the exact shape. M5 onward, plus the
-standalone follow-up task split off from M4c (a non-constant or
-reference-typed `new T[N]`), are pending.
+`CHANGELOG.md` `[0.15.0]` entry for the exact shape. M5 (a qualified
+static method call self-reference) is resolved as of task #67 — see
+this section's own M5 entry below and `CHANGELOG.md`'s `[0.16.0]`
+entry. M6 onward, plus the standalone follow-up task split off from M4c
+(a non-constant or reference-typed `new T[N]`), are pending.
 
 ## Motivation
 
@@ -626,7 +636,37 @@ nothing for the fourth bug's own fix to run through a backend at all.
 original M9 slot: static field/method access patterns
 (`ClassName.field`, `ClassName.staticMethod()`) that M6/M7 need as
 building blocks, so class-body lowering (next) isn't blocked re-deriving
-static-access shape mid-milestone.
+static-access shape mid-milestone. **Update**: narrowed during
+implementation research (task #67), the same "verify against current
+repo state, don't assume from the spec's own placeholder text" discipline
+M4's own narrowing used. `ClassName.field` turned out to need field
+declarations and a new SIR field-access node, neither of which exist
+yet — `collect_class_methods` rejects every class-body member that
+isn't a `method_declaration`, and `semantic-ir`'s own `Expr` enum has no
+`FieldGet`/`StaticFieldGet` variant at all (confirmed by a full grep, not
+assumed) — so static field access is dropped from M5 entirely, deferred
+to alongside a future M6 (fields need to exist before *any* field access,
+static or instance, can be represented). `ClassName.staticMethod(args)`
+resolved as task #67: per `semantic-ir`'s own `Expr::VirtualCall` doc
+comment, a static call needs no new SIR node at all — it compiles to an
+ordinary `Expr::DirectCall` against a mangled top-level identity — and
+since this frontend has no receiver/object model until M6 (M3a already
+lowers every method, static or instance, identically, flat top-level),
+`ClassName.staticMethod(args)` on the *one* class this frontend itself
+is compiling is semantically identical to the bare call
+`staticMethod(args)` M3a already handles. Scoped to a **self-reference
+only**: `ClassName` must literally be this compilation unit's own class
+(a new `Lowerer::class_name`, captured once in `lower_program` but never
+previously needed); any other qualifier — another user class, or an
+external/JDK static like `Math.abs(...)`/`System.out` — is rejected
+outright, since this frontend has no import/library-catalog concept to
+resolve one against at all. A new `MethodSig::is_static` (set from the
+method declaration's own `static` modifier, previously untracked since
+nothing needed it) additionally rejects `ClassName.instanceMethod()` —
+real Java rejects this too, and there was no reason to be looser about a
+construct this frontend can already fully type-check. See
+`java-to-semantic-ir`'s own `CHANGELOG.md` `[0.16.0]` entry for the
+exact shape.
 
 **M6 — classes.** `class Name { fields; constructors; methods; this }` →
 `Stmt::NominalClassDef` with nested `Stmt::MethodDef`s (SIR29's own

@@ -2,6 +2,43 @@
 
 All notable changes to the `java-to-semantic-ir` crate will be documented in this file.
 
+## [0.16.0] - 2026-08-26
+
+### Added
+
+- Task #67 (M5): a qualified *static* method call on this compilation
+  unit's own class, `ClassName.staticMethod(args)` — the next lettered
+  milestone per the JV02 spec's own "Status" section. Scope narrowed
+  after research: `ClassName.field` (static *field* access) needs field
+  declarations and a new SIR field-access node, neither of which exist
+  yet — dropped from M5, deferred to alongside a future M6. This slice
+  covers only static *method* calls, and only a self-reference (the one
+  class this frontend itself is compiling) — an external/JDK static like
+  `Math.abs(...)`/`System.out` has no import/library-catalog concept
+  to resolve against and stays rejected.
+- New `Lowerer::class_name: String`, captured once in `lower_program`
+  via a new `class_name_of` helper (mirrors `method_name`'s own "first
+  direct-child `NAME` token" technique) — the class was already parsed
+  (`collect_bounded(..., "class_declaration", ...)`) but its own name
+  was never captured before, since nothing needed it until now.
+- New `MethodSig::is_static: bool`, computed by a new `method_is_static`
+  helper that scans a `method_declaration`'s own `method_modifier`
+  children for the `static` keyword. `ClassName.staticMethod(args)`
+  rejects a resolved-but-non-static method with a clear "not `static`"
+  error rather than silently allowing it — real Java rejects
+  `ClassName.instanceMethod()` too, and this frontend has no reason to
+  be looser about a construct it can already fully type-check.
+- New `lower_primary_expression` match arm recognizing the
+  `[primary, dot_suffix, call_suffix]` shape (a bare `NAME` receiver,
+  a `.` suffix, a `(...)` suffix) and delegating to a new
+  `lower_static_method_call`. Per `semantic-ir`'s own `Expr::VirtualCall`
+  doc comment, a *static* call needs no new SIR node at all — it's an
+  ordinary `Expr::DirectCall` against a mangled top-level identity, so
+  `ClassName.staticMethod(args)` on this frontend's own class reuses
+  M3a's existing `method_signatures` table and `lower_call_arguments`
+  path unchanged, just reached through a qualified suffix chain instead
+  of a bare name.
+
 ## [0.15.0] - 2026-08-26
 
 ### Added

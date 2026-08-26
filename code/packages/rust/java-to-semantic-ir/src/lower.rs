@@ -708,6 +708,15 @@ struct Lowerer {
     /// `do_while_counter`'s monotonic-uniqueness role, just for a
     /// different synthetic name; never consulted by name lookup.
     indexed_temp_counter: usize,
+    /// The single top-level class's own name, captured once in
+    /// `lower_program` — M5's own addition (task #67), previously parsed
+    /// (via `collect_bounded(..., "class_declaration", ...)`) but never
+    /// captured, since nothing before M5 needed it. Consulted only by
+    /// `lower_static_method_call` to recognize `ClassName.staticMethod(
+    /// args)` as a *self*-reference to this same compilation unit's own
+    /// class -- an external/JDK static (`Math.PI`, `System.out`) is a
+    /// different `class_ref` and stays rejected.
+    class_name: String,
 }
 
 /// A method's call-site-relevant signature: what `lower_call_expression`
@@ -721,6 +730,14 @@ struct MethodSig {
     param_kinds: Vec<Kind>,
     /// `Kind::Void` for a method with no return value.
     return_kind: Kind,
+    /// Whether the method declared the `static` modifier — M5's own
+    /// addition, unused before task #67. `main` is always `true` (real
+    /// Java requires it). Consulted only by `lower_static_method_call`,
+    /// to reject `ClassName.instanceMethod()` the same way real
+    /// `javac` does, rather than silently allowing it just because
+    /// this frontend has no receiver/`this` model to actually enforce
+    /// instance semantics with yet.
+    is_static: bool,
 }
 
 /// One entry per currently-open lambda body (see `Lowerer::closure_stack`).
@@ -769,6 +786,7 @@ impl Lowerer {
             synthesized_functions: Vec::new(),
             closure_signatures: Vec::new(),
             indexed_temp_counter: 0,
+            class_name: String::new(),
         }
     }
 
@@ -1014,6 +1032,13 @@ impl Lowerer {
             _ => return Err(self.err_at(program, format!("expected exactly one top-level class declaration, found {} (JV02 M0 supports exactly one)", class_decls.len()))),
         };
 
+        self.class_name = self.class_name_of(class_decl).ok_or_else(|| {
+            self.err_at(
+                class_decl,
+                "malformed class declaration (missing name)".to_string(),
+            )
+        })?;
+
         let method_decls = self.collect_class_methods(class_decl)?;
 
         // Pass 1: register every method's name + call signature before
@@ -1135,6 +1160,26 @@ impl Lowerer {
         Ok(methods)
     }
 
+    /// Extract `class_decl`'s own name -- M5's own addition (task #67).
+    /// `class_declaration`'s grammar production is `{class_modifier}
+    /// "class" NAME [extends class_type] [implements interface_type_
+    /// list] class_body`: the class's own name is the *only* bare `NAME`
+    /// token appearing as a direct child (an `extends`/`implements`
+    /// clause, if present, nests its own type names one level deeper
+    /// inside a `class_type`/`interface_type_list` node, never as a
+    /// direct child here) -- mirrors `method_name`'s identical "first
+    /// direct-child `NAME` token" technique for `method_declarator`.
+    fn class_name_of(&self, class_decl: &GrammarASTNode) -> Option<String> {
+        for child in &class_decl.children {
+            if let ASTNodeOrToken::Token(t) = child {
+                if t.type_ == lexer::token::TokenType::Name {
+                    return Some(t.value.clone());
+                }
+            }
+        }
+        None
+    }
+
     fn method_name(&self, method_decl: &GrammarASTNode) -> Option<String> {
         let declarator = self.first_child_named(method_decl, "method_declarator")?;
         for child in &declarator.children {
@@ -1164,6 +1209,7 @@ impl Lowerer {
             return Ok(MethodSig {
                 param_kinds: vec![],
                 return_kind: Kind::Void,
+                is_static: true,
             });
         }
         let declarator = self
@@ -1183,6 +1229,23 @@ impl Lowerer {
         Ok(MethodSig {
             param_kinds,
             return_kind,
+            is_static: self.method_is_static(decl),
+        })
+    }
+
+    /// Whether `decl` (a `method_declaration`) carries the `static`
+    /// modifier — M5's own addition. `method_declaration`'s own grammar
+    /// production is `{method_modifier} result_type method_declarator
+    /// ...`, so every modifier is a direct child `method_modifier` node
+    /// wrapping exactly one keyword token; this just scans those for
+    /// `"static"`.
+    fn method_is_static(&self, decl: &GrammarASTNode) -> bool {
+        decl.children.iter().any(|c| match c {
+            ASTNodeOrToken::Node(n) if n.rule_name == "method_modifier" => n
+                .children
+                .iter()
+                .any(|mc| matches!(mc, ASTNodeOrToken::Token(t) if t.value == "static")),
+            _ => false,
         })
     }
 
@@ -4075,11 +4138,105 @@ impl Lowerer {
                     depth,
                 )
             }
+            [ASTNodeOrToken::Node(primary), ASTNodeOrToken::Node(dot_suffix), ASTNodeOrToken::Node(call_suffix)]
+                if matches!(primary.children.as_slice(), [ASTNodeOrToken::Token(t)] if t.type_ == lexer::token::TokenType::Name)
+                    && dot_suffix.rule_name == "primary_suffix"
+                    && matches!(dot_suffix.children.first(), Some(ASTNodeOrToken::Token(t)) if t.value == ".")
+                    && call_suffix.rule_name == "primary_suffix"
+                    && matches!(call_suffix.children.first(), Some(ASTNodeOrToken::Token(t)) if t.value == "(") =>
+            {
+                self.lower_static_method_call(primary, dot_suffix, call_suffix, node, depth)
+            }
             _ => Err(self.err_at(
                 node,
                 "field access, method calls with more than one suffix, and other primary suffixes are not supported yet (deferred to a later JV02 milestone)".to_string(),
             )),
         }
+    }
+
+    /// Lower `ClassName.staticMethod(args)` -- M5 (task #67). `semantic-
+    /// ir`'s own `Expr::VirtualCall` doc comment is explicit that a
+    /// *static* call needs no new node at all: it's an ordinary
+    /// `Expr::DirectCall` against a mangled top-level identity. Since
+    /// this frontend has no receiver/object model until M6 (M3a already
+    /// lowers every method -- static or instance -- identically, flat
+    /// top-level), `ClassName.staticMethod(args)` on the *one* class
+    /// this frontend itself is compiling is semantically identical to
+    /// the bare call `staticMethod(args)` M3a already handles -- same
+    /// `method_signatures` table, same `Expr::DirectCall`, just reached
+    /// through a qualified suffix chain instead of a bare name.
+    ///
+    /// Two things this function checks that a bare call doesn't need to:
+    /// `class_ref` must literally be this compilation unit's own class
+    /// (`self.class_name`) -- any other name is rejected outright, since
+    /// this frontend has no import/library-catalog concept at all and
+    /// cannot resolve an *external* static (`Math.PI`, `System.out`,
+    /// another user class) to anything; and the resolved method must
+    /// itself be declared `static` -- `MethodSig::is_static`, M5's own
+    /// new field -- since real Java rejects `ClassName.instanceMethod()`
+    /// too, and this frontend has no reason to be looser about a
+    /// construct it can already fully type-check.
+    fn lower_static_method_call(
+        &mut self,
+        primary: &GrammarASTNode,
+        dot_suffix: &GrammarASTNode,
+        call_suffix: &GrammarASTNode,
+        node: &GrammarASTNode,
+        depth: usize,
+    ) -> Result<(Expr, Kind), JavaLowerError> {
+        let class_ref = match primary.children.as_slice() {
+            [ASTNodeOrToken::Token(t)] if t.type_ == lexer::token::TokenType::Name => {
+                t.value.as_str()
+            }
+            _ => unreachable!(
+                "lower_primary_expression's own guard already confirmed primary is a bare NAME token"
+            ),
+        };
+        if class_ref != self.class_name {
+            return Err(self.err_at(
+                primary,
+                format!(
+                    "`{class_ref}.` is not supported yet -- only a static call on `{}` itself (this compilation unit's own class) is supported so far (an external class or JDK type like `Math`/`System` is deferred to a later JV02 milestone)",
+                    self.class_name
+                ),
+            ));
+        }
+        let method_name = dot_suffix
+            .children
+            .iter()
+            .find_map(|c| match c {
+                ASTNodeOrToken::Token(t) if t.type_ == lexer::token::TokenType::Name => {
+                    Some(t.value.as_str())
+                }
+                _ => None,
+            })
+            .ok_or_else(|| self.err_at(dot_suffix, "malformed qualified method reference".to_string()))?;
+        let sig = self.method_signatures.get(method_name).cloned().ok_or_else(|| {
+            self.err_at(
+                node,
+                format!("call to unknown method `{method_name}` (JV02 M3a/M5 can only call a method declared in the same class)"),
+            )
+        })?;
+        if !sig.is_static {
+            return Err(self.err_at(
+                node,
+                format!("`{method_name}` is not `static` -- a qualified call (`{class_ref}.{method_name}(...)`) requires a static method (instance method calls are deferred to a later JV02 milestone)"),
+            ));
+        }
+        let args = self.lower_call_arguments(call_suffix, method_name, &sig.param_kinds, depth)?;
+        if let Some(callees) = self.call_graph.get_mut(&self.current_method) {
+            callees.insert(method_name.to_string());
+        }
+        let span = self.span_of(node);
+        Ok((
+            Expr::DirectCall {
+                fn_name: method_name.to_string(),
+                args,
+                effects: EffectSet::PURE,
+                span,
+            },
+            sig.return_kind,
+        ))
     }
 
     /// Lower an array-index-read suffix, `xs[i]` (`primary_suffix =
@@ -4764,6 +4921,11 @@ impl Lowerer {
         self.closure_signatures.push(MethodSig {
             param_kinds,
             return_kind: body_kind,
+            // `is_static` is meaningless for a lambda's own interned
+            // signature -- `lower_static_method_call` (M5) only ever
+            // reads it from `method_signatures`, never from
+            // `closure_signatures`.
+            is_static: false,
         });
 
         Ok((

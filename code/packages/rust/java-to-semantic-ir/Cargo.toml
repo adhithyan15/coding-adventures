@@ -1,8 +1,8 @@
 [package]
 name = "java-to-semantic-ir"
-version = "0.15.0"
+version = "0.16.0"
 edition = "2021"
-description = "Java (GrammarASTNode CST) → narrow-waist Semantic IR. JV02 frontend, task #66: chained indexed-assignment targets (grid[i][j] = v, += v, ++)."
+description = "Java (GrammarASTNode CST) → narrow-waist Semantic IR. JV02 frontend, task #67 (M5): qualified static method call self-reference (ClassName.staticMethod(args))."
 
 [dependencies]
 coding-adventures-java-lexer = { path = "../java-lexer" }
