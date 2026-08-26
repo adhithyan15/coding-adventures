@@ -39,7 +39,7 @@ describe("real curriculum", () => {
     expect(scripts.devanagari!.complete).toBe(true);
   });
 
-  it("keeps the cross-script closure queue measured after Japanese hiragana shi", () => {
+  it("keeps the cross-script closure queue measured after Kannada independent i", () => {
     const candrakkala = scripts.malayalam!.marks!.find((mark) => mark.mark === "്")!;
     expect(candrakkala.role).toBe("virama");
     expect(candrakkala.compositionOrder).toEqual([
@@ -768,9 +768,26 @@ describe("real curriculum", () => {
     );
     expect(missingByScript.get("japanese.json")?.has("し")).toBe(false);
     expect(affected.get("し") ?? 0).toBe(0);
+    const kannadaI = scripts.kannada!.independentVowels!.find((entry) => entry.glyph === "ಇ")!;
+    expect(kannadaI.sound).toBe("i");
+    expect(kannadaI.penLifts).toBe(0);
+    expect(kannadaI.strokeOrder).toEqual([
+      "climb the left upright, turn over the first arch, and descend the middle stem",
+      "without lifting, retrace the middle stem upward and turn over the second arch",
+      "without lifting, descend through the broad outer curve and turn left along the base",
+      "without lifting, close the lower loop and sweep out to the right",
+    ]);
+    expect(kannadaI.strokeOrderSource?.citation).toMatch(
+      /Yogesh.*Animation of hand-writing Kannada character.*ಇ.*98 frames.*4\.6 seconds.*Wikimedia Commons.*26 December 2015/i,
+    );
+    expect(kannadaI.strokeOrderSource?.variation).toMatch(
+      /one uninterrupted run.*first arch.*retrace.*second arch.*outer curve.*lower loop.*Noto Sans Kannada.*zero-lift order/i,
+    );
+    expect(missingByScript.get("kannada.json")?.has("ಇ")).toBe(false);
+    expect(affected.get("ಇ") ?? 0).toBe(0);
     expect(
       [...affected.entries()].sort((left, right) => right[1] - left[1])[0],
-    ).toEqual(["ಇ", 8]);
+    ).toEqual(["ൾ", 8]);
   });
 
   it("loaded every track (17+ and growing)", () => {

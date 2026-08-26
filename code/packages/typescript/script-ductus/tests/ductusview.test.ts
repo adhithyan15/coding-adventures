@@ -115,6 +115,8 @@ const TELUGU_A = DUCTUS[ductusKey("telugu", "అ")];
 const teluguAOutline = teluguOutline("అ");
 const KANNADA_A = DUCTUS[ductusKey("kannada", "ಅ")];
 const kannadaAOutline = kannadaOutline("ಅ");
+const KANNADA_I = DUCTUS[ductusKey("kannada", "ಇ")];
+const kannadaIOutline = kannadaOutline("ಇ");
 const MALAYALAM_E = DUCTUS[ductusKey("malayalam", "എ")];
 const malayalamEOutline = malayalamOutline("എ");
 const MALAYALAM_A = DUCTUS[ductusKey("malayalam", "അ")];
@@ -1006,6 +1008,22 @@ describe("Kannada ಅ — four movements in one unbroken run", () => {
   });
 
   it("reports one stroke, zero lifts, and four movements", () => {
+    expect(strip.frames).toHaveLength(4);
+    expect(strip.penLifts).toBe(0);
+    expect(strip.summary).toBe("one unbroken stroke · 4 movements");
+  });
+});
+
+describe("Kannada ಇ — one retraced four-movement run", () => {
+  const steps = ductusSteps(KANNADA_I);
+  const strip = ductusFilmstrip(KANNADA_I, kannadaIOutline);
+
+  it("keeps every movement in the same pen-down run", () => {
+    expect(steps.map((step) => step.strokeIndex)).toEqual([0, 0, 0, 0]);
+    expect(steps.map((step) => step.startsAfterLift)).toEqual([false, false, false, false]);
+  });
+
+  it("reports four movements without a lift", () => {
     expect(strip.frames).toHaveLength(4);
     expect(strip.penLifts).toBe(0);
     expect(strip.summary).toBe("one unbroken stroke · 4 movements");
