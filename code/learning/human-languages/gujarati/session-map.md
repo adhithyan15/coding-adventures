@@ -1,4 +1,4 @@
-# Session Map - Gujarati Chapters 1-25
+# Session Map - Gujarati Chapters 1-27
 
 This is the contributor-facing inventory of the canonical Gujarati reading
 order. Every session is a lesson designed for five minutes or less. The
@@ -16,8 +16,8 @@ The ramp is deliberately uneven in quantity but gentle in difficulty:
   continuing independent reading and writing.
 - Chapters 19-23 provide genuine distant R3/R4 retrieval rather than adjacent
   review labels.
-- Chapters 24-25 begin the next vocabulary tranche with oral-first acquisition,
-  source-backed sign teaching, and separately visible four-skill checks.
+- Chapters 24-27 begin the next vocabulary tranche with oral-first acquisition,
+  familiar-script writing practice, and separately visible four-skill checks.
 
 ## Canonical session inventory
 
@@ -51,10 +51,12 @@ canonical `sequence` order.
 | 135 | 23 | Fourth Return: The Doorway Nine | `GU-R19-doorway-nine-r4` |
 | 136-143 | 24 | A First Three-Place Map | `GU-C20-hear-bajar` -> `GU-C20-bajar` -> `GU-C20-hear-ghar` -> `GU-W20-gha` -> `GU-C20-ghar` -> `GU-C20-hear-mandir` -> `GU-C20-mandir` -> `GU-C20-places-three` |
 | 144-150 | 25 | Hand and Money Join the Map | `GU-C21-hear-haath` -> `GU-C21-haath` -> `GU-C21-hear-paisa` -> `GU-W21-ai-matra` -> `GU-C21-paisa` -> `GU-R21-travel-five` -> `GU-C21-travel-five` |
+| 151-157 | 26 | City, School, and Road | `GU-C22-hear-shahar` -> `GU-C22-shahar` -> `GU-C22-hear-shaalaa` -> `GU-C22-shaalaa` -> `GU-C22-hear-rasto` -> `GU-C22-rasto` -> `GU-C22-route-three` |
+| 158-163 | 27 | Village and Shop Complete Ten | `GU-C23-hear-gaam` -> `GU-C23-gaam` -> `GU-C23-hear-dukaan` -> `GU-C23-dukaan` -> `GU-R23-map-ten` -> `GU-C23-map-ten` |
 
 ## Current boundary
 
-The current book contains 25 chapters and 150 lessons. It teaches all 41
+The current book contains 27 chapters and 163 lessons. It teaches all 41
 Gujarati forms that the book shows, includes the complete pre-A1 writing-stage
 ladder, and carries the doorway and conversation material through measured
 distant retrieval. It has begun, but has not completed, the 300-headword

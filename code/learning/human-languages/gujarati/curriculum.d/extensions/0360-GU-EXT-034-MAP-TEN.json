@@ -1,0 +1,18 @@
+{
+  "id": "GU-EXT-034-MAP-TEN",
+  "stage": "pre-A1",
+  "kind": "required",
+  "category": "vocabulary",
+  "canDo": "I can hear, say, read, and write ten concrete words, including village and shop.",
+  "prerequisites": [
+    "GU-EXT-033-ROUTE-THREE"
+  ],
+  "lessons": [
+    "GU-C23-hear-gaam",
+    "GU-C23-gaam",
+    "GU-C23-hear-dukaan",
+    "GU-C23-dukaan",
+    "GU-R23-map-ten",
+    "GU-C23-map-ten"
+  ]
+}

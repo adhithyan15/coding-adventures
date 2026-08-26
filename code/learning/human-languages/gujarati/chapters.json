@@ -630,6 +630,50 @@
           "GU-PERFORMANCE-TRAVEL-FIVE-FOUR-SKILL-01"
         ]
       }
+    },
+    {
+      "chapter": 26,
+      "title": "City, School, and Road",
+      "label": "ch:gu-city-school-road",
+      "canDo": "I can hear, say, read, and write city, school, and road in Gujarati.",
+      "spineNodes": [
+        "SPINE-POLITE-REQUEST-REPAIR"
+      ],
+      "payoff": {
+        "lesson": "GU-C22-route-three",
+        "kind": "four-skill-vocabulary-map",
+        "summary": "Each place enters through sound and meaning before familiar script carries reading and writing; the checkpoint scores all four skills separately.",
+        "assesses": [
+          "GU-LEX-SHAHAR-01",
+          "GU-SCRIPT-SHAHAR-01",
+          "GU-LEX-SHAALAA-01",
+          "GU-SCRIPT-SHAALAA-01",
+          "GU-LEX-RASTO-01",
+          "GU-SCRIPT-RASTO-01",
+          "GU-PERFORMANCE-ROUTE-THREE-FOUR-SKILL-01"
+        ]
+      }
+    },
+    {
+      "chapter": 27,
+      "title": "Village and Shop Complete Ten",
+      "label": "ch:gu-village-shop-ten",
+      "canDo": "I can hear, say, read, and write ten concrete Gujarati words, including village and shop.",
+      "spineNodes": [
+        "SPINE-POLITE-REQUEST-REPAIR"
+      ],
+      "payoff": {
+        "lesson": "GU-C23-map-ten",
+        "kind": "four-skill-vocabulary-map",
+        "summary": "Village and shop enter meaning-first, then mix with the prior eight words before a non-compensatory four-skill payoff.",
+        "assesses": [
+          "GU-LEX-GAAM-01",
+          "GU-SCRIPT-GAAM-01",
+          "GU-LEX-DUKAAN-01",
+          "GU-SCRIPT-DUKAAN-01",
+          "GU-PERFORMANCE-MAP-TEN-FOUR-SKILL-01"
+        ]
+      }
     }
   ]
 }

@@ -198,6 +198,20 @@
       "output": "gujarati/book/chapters/ch25-hand-money-map.tex",
       "unicodeScript": "Gujarati",
       "scriptCommand": "gu"
+    },
+    {
+      "language": "gujarati",
+      "chapter": 26,
+      "output": "gujarati/book/chapters/ch26-city-school-road.tex",
+      "unicodeScript": "Gujarati",
+      "scriptCommand": "gu"
+    },
+    {
+      "language": "gujarati",
+      "chapter": 27,
+      "output": "gujarati/book/chapters/ch27-village-shop-ten.tex",
+      "unicodeScript": "Gujarati",
+      "scriptCommand": "gu"
     }
   ]
 }

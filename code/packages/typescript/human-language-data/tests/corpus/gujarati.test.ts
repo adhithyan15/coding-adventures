@@ -134,6 +134,8 @@ it("pins Gujarati's meaning-first opening script spine", () => {
     ["23", 1],
     ["24", 8],
     ["25", 7],
+    ["26", 7],
+    ["27", 6],
   ]);
 });
 
@@ -291,6 +293,13 @@ it("pins Gujarati's complete pre-A1 writing runway", () => {
     "delayed-copy",
     "guided-copy",
     "delayed-copy",
+    "dictation-transcription",
+    "guided-copy",
+    "delayed-copy",
+    "guided-copy",
+    "dictation-transcription",
+    "delayed-copy",
+    "guided-copy",
     "dictation-transcription",
   ]);
 });
@@ -622,7 +631,7 @@ it("closes Gujarati doorway R4 at position 134", () => {
   const beforeCheckpoint = measureContinuity(ordered.slice(0, 134));
   const afterCheckpoint = measureContinuity(lessons);
   expect(beforeCheckpoint.reinforcement.flatMap((defect) => defect.missed)).toHaveLength(248);
-  expect(afterCheckpoint.reinforcement.flatMap((defect) => defect.missed)).toHaveLength(260);
+  expect(afterCheckpoint.reinforcement.flatMap((defect) => defect.missed)).toHaveLength(294);
   expect(
     afterCheckpoint.reinforcement.filter(
       (defect) => doorway.includes(defect.atom) && defect.missed.includes("R4"),
@@ -662,6 +671,18 @@ it("pins Gujarati-owned objective activities", () => {
     "GU-C21-hear-paisa-recall",
     "GU-C21-paisa-write",
     "GU-C21-travel-five-payoff",
+    "GU-C22-hear-rasto-recall",
+    "GU-C22-hear-shaalaa-recall",
+    "GU-C22-hear-shahar-recall",
+    "GU-C22-rasto-copy",
+    "GU-C22-route-three-payoff",
+    "GU-C22-shaalaa-delayed",
+    "GU-C22-shahar-copy",
+    "GU-C23-dukaan-copy",
+    "GU-C23-gaam-delayed",
+    "GU-C23-hear-dukaan-recall",
+    "GU-C23-hear-gaam-recall",
+    "GU-C23-map-ten-payoff",
     "GU-R03-doorway-three-r1-dictation",
     "GU-R03-doorway-three-r1-reading",
     "GU-R04-doorway-nine-r2-dictation",
@@ -727,6 +748,7 @@ it("pins Gujarati-owned objective activities", () => {
     "GU-R19-doorway-nine-r4-dictation",
     "GU-R19-doorway-nine-r4-reading",
     "GU-R21-travel-five-recall",
+    "GU-R23-map-ten-recall",
     "GU-W01-aa-matra-observe-check",
     "GU-W01-ha-observe-check",
     "GU-W01-haa-delayed-copy-check",

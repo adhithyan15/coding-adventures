@@ -32,14 +32,15 @@ and book-only human pass evidence remain backlog.
 
 ## Current authored boundary
 
-Canonical data currently contains **25 chapters and 150 lessons**. All 150
+Canonical data currently contains **27 chapters and 163 lessons**. All 163
 lessons are mapped and generated, and every lesson stays within the five-minute
 cap. The pre-A1 writing-stage contract is complete, all 41 Gujarati forms shown
 by the current book are explicitly taught, and the exact script inventory has
 no never-taught glyphs.
 
-That is a solid pre-A1 foundation, not a finished course. Current measured debt
-includes 260 expanding-retrieval windows, six atoms never revisited, two lesson
+That is a solid pre-A1 foundation, not a finished course. The exact pre-A1
+headword inventory now contains 44 words. Current measured debt includes 294
+expanding-retrieval windows, six atoms never revisited, two lesson
 atom spikes, one chapter atom spike, two script-closure findings, and one
 measurement-blind lesson. Vocabulary breadth, grammar, listening volume,
 connected reading, free writing, speaking, every later level, and examination
@@ -52,7 +53,7 @@ materials still require substantial expansion.
 | 8-10 | Exchange names, check wellbeing, and take leave. |
 | 11-18 | Use first verbs and numbers, then build small domains around thought, reading, food, family, and the body. |
 | 19-23 | Retrieve early script and conversation atoms at genuine third and fourth spacing windows. |
-| 24-25 | Hear, say, read, and write a first concrete map of places, hand, and money. |
+| 24-27 | Hear, say, read, and write ten concrete map words through separate four-skill checks. |
 
 The exact chapter titles, lesson ranges, and ordered lesson IDs are in the
 [session map](session-map.md). The [roadmap](roadmap.md) separates this authored

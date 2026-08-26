@@ -1,8 +1,8 @@
 {
   "language": "gujarati",
-  "lessonCount": 150,
-  "atomMeasurableLessons": 149,
-  "atomMeasurementBlindLessons": 1,
+  "lessonCount": 163,
+  "atomMeasurableLessons": 161,
+  "atomMeasurementBlindLessons": 2,
   "durationViolations": 0,
   "atomLessonSpikes": 2,
   "atomChapterSpikes": 1,
@@ -16,17 +16,17 @@
   "forwardPrerequisites": 0,
   "forwardReviews": 0,
   "forwardReferences": 0,
-  "atomsTaught": 161,
+  "atomsTaught": 173,
   "atomsNeverRevisited": 6,
-  "reinforcementWindowMisses": 260,
+  "reinforcementWindowMisses": 294,
   "reinforcementMissesByWindow": {
-    "R1": 23,
-    "R2": 91,
-    "R3": 101,
-    "R4": 45
+    "R1": 26,
+    "R2": 98,
+    "R3": 109,
+    "R4": 61
   },
   "payoffSurprises": 0,
-  "writingPracticeLessons": 122,
+  "writingPracticeLessons": 130,
   "firstWritingPracticeAt": 1,
   "lessonsBeforeWritingPractice": 1,
   "findings": [
@@ -47,14 +47,14 @@
     {
       "language": "gujarati",
       "kind": "reinforcement",
-      "count": 260,
+      "count": 294,
       "unit": "missed window(s)",
       "detail": "add retrieval at the expanding R1-R4 intervals"
     },
     {
       "language": "gujarati",
       "kind": "measurement-blind",
-      "count": 1,
+      "count": 2,
       "unit": "lesson(s)",
       "detail": "migrate undeclared lesson knowledge so gentleness can be measured"
     }
