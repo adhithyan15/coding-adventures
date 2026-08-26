@@ -39,7 +39,7 @@ describe("real curriculum", () => {
     expect(scripts.devanagari!.complete).toBe(true);
   });
 
-  it("keeps the cross-script closure queue measured after shared maddah above", () => {
+  it("keeps the cross-script closure queue measured after Tamil nga", () => {
     const candrakkala = scripts.malayalam!.marks!.find((mark) => mark.mark === "്")!;
     expect(candrakkala.role).toBe("virama");
     expect(candrakkala.compositionOrder).toEqual([
@@ -338,6 +338,25 @@ describe("real curriculum", () => {
     );
     expect(tamilIndependentU.strokeOrderSource?.variation).toMatch(
       /Frame 16.*upper spiral.*descending outer curve.*rightward baseline.*three joined movements.*varies by school.*continuous order.*Noto Sans Tamil/i,
+    );
+
+    const tamilNga = scripts.tamil!.letters.find((entry) => entry.glyph === "ங")!;
+    expect(tamilNga.sound).toBe("ṅa");
+    expect(tamilNga.role).toBe("consonant");
+    expect(tamilNga.penLifts).toBe(1);
+    expect(tamilNga.strokeOrder).toEqual([
+      "draw the detached upright straight down — then lift once",
+      "set the pen low on the left and climb the tall body",
+      "without lifting, carry the top bar right and return to the inner upright",
+      "without lifting, descend into the rounded inner turn",
+      "without lifting, carry the low bar to the right",
+      "without lifting, return along the low bar to the left and finish up the inner stem — and only now lift",
+    ]);
+    expect(tamilNga.strokeOrderSource?.citation).toMatch(
+      /Tamil Script Learners Manual.*Appendix I.*Frame 2.*ங.*University of Texas at Austin.*p\. 191/i,
+    );
+    expect(tamilNga.strokeOrderSource?.variation).toMatch(
+      /detached descending upright.*five joined movements.*Noto Sans Tamil.*detached upright on the right.*varies by school.*two-run order/i,
     );
 
     const tamilRetroflexLa = scripts.tamil!.letters.find((entry) => entry.glyph === "ள")!;
@@ -731,9 +750,11 @@ describe("real curriculum", () => {
     expect(affected.get("ف") ?? 0).toBe(0);
     expect(missingByScript.get("kannada.json")?.has("ಅ")).toBe(false);
     expect(affected.get("ಅ") ?? 0).toBe(0);
+    expect(missingByScript.get("tamil.json")?.has("ங")).toBe(false);
+    expect(affected.get("ங") ?? 0).toBe(0);
     expect(
       [...affected.entries()].sort((left, right) => right[1] - left[1])[0],
-    ).toEqual(["ங", 9]);
+    ).toEqual(["し", 8]);
   });
 
   it("loaded every track (17+ and growing)", () => {

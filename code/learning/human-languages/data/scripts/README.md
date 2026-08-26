@@ -254,6 +254,11 @@ independent Tamil **உ** follows Appendix I Frame 16's three joined movements:
 the compact spiral opens into a broad descending curve, then continues along
 the long baseline to the right without lifting. The Noto Sans Tamil fit keeps
 all three movements in that single source-attested run. The
+Tamil **ங** follows Appendix I Frame 2's two runs: a detached descending
+upright, then five joined movements through the tall frame, rounded inner turn,
+and low return. Noto Sans Tamil moves the handwritten model's detached upright
+to the right and squares the return, so the verified path preserves the cited
+run boundary rather than copying the teaching hand's display geometry. The
 Tamil **ழ** adds Appendix I Frame 7's six numbered movements as three
 pen-down runs: a joined left body and bar, a joined inner upright and broad
 right bowl, and the detached lower hook. Noto Sans Tamil simplifies the

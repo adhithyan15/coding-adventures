@@ -5,6 +5,18 @@ Findings from the pre-A1 tranche work were recorded in commit messages and PR
 bodies, which are durable and searchable, but a reader opening this file found
 nothing. The entries below are the ones that change how the work is done.
 
+## HL-C10Z — Tamil ங closes the Frame 2 nasal gap
+
+After shared maddah above landed, Tamil nga **ங** led the measured queue at
+**9 affected realizations**. Sankaran Radhakrishnan's UT Austin *Tamil Script
+Learners Manual*, Appendix I, Frame 2 shows a detached descending upright
+before five joined movements build the framed body and low return.
+
+The bundled Noto Sans Tamil face moves the detached upright to the right and
+squares the handwritten return, so the font-fitted path preserves Frame 2's
+two pen-down runs rather than copying the display geometry literally. The new
+canonical row and ductus close all 9 gaps. Japanese hiragana **し** now leads
+the measured queue at **8 affected realizations**.
 ## HL-C10Y — Shared maddah above closes the alef-plus-mark gap
 
 After Persian and Urdu **چ** landed, maddah above **ٓ** led the measured queue
