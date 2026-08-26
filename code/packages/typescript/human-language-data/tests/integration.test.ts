@@ -39,7 +39,7 @@ describe("real curriculum", () => {
     expect(scripts.devanagari!.complete).toBe(true);
   });
 
-  it("keeps the cross-script closure queue measured after Telugu independent i", () => {
+  it("keeps the cross-script closure queue measured after Malayalam independent i", () => {
     const candrakkala = scripts.malayalam!.marks!.find((mark) => mark.mark === "്")!;
     expect(candrakkala.role).toBe("virama");
     expect(candrakkala.compositionOrder).toEqual([
@@ -251,6 +251,25 @@ describe("real curriculum", () => {
     );
     expect(malayalamA.strokeOrderSource?.variation).toMatch(
       /word-initial forms.*click-to-play handwriting clip.*left-and-central body.*one lifted right-side run.*outer arch.*lower inner loop.*Noto Sans Malayalam/i,
+    );
+
+    const malayalamI = scripts.malayalam!.independentVowels!.find((entry) => entry.glyph === "ഇ")!;
+    expect(malayalamI.sound).toBe("i");
+    expect(malayalamI.penLifts).toBe(0);
+    expect(malayalamI.strokeOrder).toEqual([
+      "begin at the compact inner tip, turn outward around the left spiral, and descend the central stem",
+      "without lifting, retrace the central stem and sweep around the broad right lobe",
+      "without lifting, curl left below the line",
+      "without lifting, carry the finishing baseline to the right",
+    ]);
+    expect(malayalamI.strokeOrderSource?.url).toBe(
+      "https://malayalam.la.utexas.edu/resources/the-malayalam-script/",
+    );
+    expect(malayalamI.strokeOrderSource?.citation).toMatch(
+      /Donald R\. Davis Jr\..*The Malayalam Script.*Initial Vowels.*ഇ.*00:00.?00:04.*University of Texas at Austin/i,
+    );
+    expect(malayalamI.strokeOrderSource?.variation).toMatch(
+      /word-initial forms.*i\.mp4.*compact inner tip.*left spiral.*descends and retraces the central stem.*broad right lobe.*below the line.*finishing baseline right.*zero-lift.*Noto Sans Malayalam/i,
     );
 
     const malayalamChilluL = scripts.malayalam!.finalConsonants!.find((entry) => entry.glyph === "ൽ")!;
@@ -880,7 +899,7 @@ describe("real curriculum", () => {
     expect(affected.get("ش") ?? 0).toBe(0);
     expect(
       [...affected.entries()].sort((left, right) => right[1] - left[1])[0],
-    ).toEqual(["ഇ", 7]);
+    ).toEqual(["ഉ", 7]);
   });
 
   it("loaded every track (17+ and growing)", () => {

@@ -68,6 +68,27 @@ describe("independent (word-initial) vowels", () => {
     expect(iv.filter((_, index) => index !== 0 && index !== 2).every((v) => v.strokeOrder.length === 0)).toBe(true);
   });
 
+  it("keeps Malayalam independent അ and ഇ sourced while the remaining vowels stay unverified", () => {
+    const malayalam = SCRIPTS.find((s) => s.script === "malayalam")!;
+    const iv = malayalam.independentVowels!;
+    expect(iv[0]!.glyph).toBe("അ");
+    expect(iv[0]!.strokeOrder).toHaveLength(5);
+    expect(iv[0]!.penLifts).toBe(1);
+    expect(iv[0]!.strokeOrderSource?.url).toBe(
+      "https://malayalam.la.utexas.edu/resources/the-malayalam-script/",
+    );
+    expect(iv[2]!.glyph).toBe("ഇ");
+    expect(iv[2]!.strokeOrder).toHaveLength(4);
+    expect(iv[2]!.penLifts).toBe(0);
+    expect(iv[2]!.strokeOrderSource?.url).toBe(
+      "https://malayalam.la.utexas.edu/resources/the-malayalam-script/",
+    );
+    expect(iv[6]!.glyph).toBe("എ");
+    expect(iv[6]!.strokeOrder).toHaveLength(3);
+    expect(iv[6]!.penLifts).toBe(1);
+    expect(iv.filter((_, index) => ![0, 2, 6].includes(index)).every((v) => v.strokeOrder.length === 0)).toBe(true);
+  });
+
   it("CONTROL: they are SEPARATE from the syllabary — letters, isSyllabary and the matrix are untouched", () => {
     const telugu = SCRIPTS.find((s) => s.script === "telugu")!;
     // None of the independent-vowel glyphs leak into the consonant syllable list…
