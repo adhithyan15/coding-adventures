@@ -92,6 +92,19 @@ Same as CR00 (Caesar cipher):
 2. Non-alphabetic characters pass through unchanged.
 3. Empty strings return empty strings.
 
+### Language-neutral conformance
+
+`code/specs/fixtures/classical-ciphers-v1/cases.json` is the normative
+executable corpus for CR01 through CR03. For Atbash it pins the complete ASCII
+uppercase and lowercase mappings, case preservation, the self-inverse
+property, empty input, and byte-for-byte passthrough of punctuation, control
+characters, and non-ASCII Unicode scalar values. Implementations must consume
+the `atbash-transform` cases without normalizing or re-encoding the input.
+
+The corpus is static data with no runtime authority. Its schema, bounded
+limits, and semantic oracle are validated by
+`code/scripts/tests/test_classical_cipher_fixtures.py`.
+
 ### Why No `brute_force` or `frequency_analysis`?
 
 Atbash has no key, so brute force is meaningless — there is only one possible

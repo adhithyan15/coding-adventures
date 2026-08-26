@@ -144,9 +144,26 @@ The `brute_force` function tries every possible key from 2 to `len(text) / 2`
 (inclusive). For each key, it decrypts the ciphertext and returns a list of
 `{key, decrypted_text}` pairs. This demonstrates that the Scytale has a very
 small key space (roughly `n/2` possibilities), making it trivially breakable.
-Because the returned candidates contain quadratic total text in the worst
-case, implementations may reject inputs beyond a documented resource limit;
-they must do so before building the candidate list.
+Results are ordered by ascending key. Because the returned candidates contain
+quadratic total text in the worst case, the portable contract rejects inputs
+longer than 4,096 Unicode scalar values before building the candidate list.
+Conformance adapters report the payload-blind error ID
+`scytale-brute-force-limit`; public APIs may map it to the language's standard
+range or argument error without including input data.
+
+### Language-neutral conformance
+
+`code/specs/fixtures/classical-ciphers-v1/cases.json` is the normative
+executable corpus for CR01 through CR03. Scytale cases pin Unicode-scalar grid
+coordinates, exact `U+0020` padding and removal, intentional loss of genuine
+trailing spaces, retention of tabs, newlines, and non-breaking spaces, empty
+input before key validation, and ascending brute-force results. The stable
+conformance error ID for a non-empty text with a key below 2 or above the text's
+scalar length is `scytale-invalid-key`.
+
+The corpus is static data with no runtime authority. Its schema, bounded
+limits, and semantic oracle are validated by
+`code/scripts/tests/test_classical_cipher_fixtures.py`.
 
 ## Package Matrix
 

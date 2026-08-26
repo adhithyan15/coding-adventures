@@ -45,10 +45,12 @@ Breaking Vigenère requires two steps:
   - Average the ICs
 - The correct key length usually has a strong average IC near English
   (~0.0667), while random text is nearer 0.0385. Multiples of the true key can
-  also score strongly. The exact near-maximum threshold and tie-breaking rule
-  remain explicitly owned by the pending CR01-CR03 language-neutral fixture
-  contract; current implementations must document their provisional heuristic
-  and cover the shared long-English recovery vectors.
+  also score strongly. Compute every candidate from 2 through
+  `min(max_length, floor(ascii_letter_count / 2))`. Average only groups with at
+  least two letters. If there is no candidate or the best score is zero, return
+  1. Otherwise return the smallest candidate whose score is at least 90% of
+  the maximum score. This shortest-near-maximum rule is exact; implementations
+  must not apply an additional multiple filter.
 
 **Step 2: Find each key letter** using chi-squared:
 - For each position in the key (0..k-1):
@@ -56,6 +58,11 @@ Breaking Vigenère requires two steps:
   - Try all 26 possible shifts
   - The shift producing the lowest chi-squared against English
     frequencies is the key letter for that position
+- Try shifts in ascending order from 0 through 25 and retain the smallest shift
+  on an exact chi-squared tie. An empty group contributes `A`.
+- Return exactly `key_length` uppercase letters. Do not shorten a recovered key
+  to a repeating sub-period; callers that request a multiple receive the full
+  repeated key.
 
 ## Interface Contract
 
@@ -74,8 +81,33 @@ Breaking Vigenère requires two steps:
 - Key must be non-empty and contain only A-Z/a-z
 
 Cryptanalysis likewise considers only ASCII letters. Implementations may
-reject analysis parameters or ciphertexts beyond a documented resource limit;
-they must do so before allocating work proportional to the rejected value.
+analyze at most 8,192 Unicode scalar values and must reject longer input before
+allocating groups or other work proportional to it. `max_length` and
+`key_length` values above 40 are rejected before ciphertext analysis. A
+`max_length` below 2 returns the insufficient-signal result 1; a non-positive
+`key_length` returns the empty key. Encryption and decryption validate the key
+before processing even an empty text.
+
+Conformance adapters use these payload-blind error IDs:
+
+- `vigenere-invalid-key` for an empty key or a key containing anything outside
+  ASCII `A-Z`/`a-z`;
+- `vigenere-analysis-limit` for ciphertext above 8,192 Unicode scalar values;
+- `vigenere-key-length-limit` for `max_length` or `key_length` above 40.
+
+### Language-neutral conformance
+
+`code/specs/fixtures/classical-ciphers-v1/cases.json` is the normative
+executable corpus for CR01 through CR03. It pins ASCII-only transformation and
+key advancement, insufficient-signal result 1, the 90% IC threshold and
+smallest-candidate tie rule, the smallest-shift chi-squared tie, analysis
+bounds, no implicit repeating-key shortening, and byte-exact recovery of a
+fixed long-English plaintext and `SECRET` key. The corpus also owns the exact
+26-value English frequency table used below.
+
+The corpus is static data with no runtime authority. Its schema, bounded
+limits, and semantic oracle are validated by
+`code/scripts/tests/test_classical_cipher_fixtures.py`.
 
 ## Worked Example
 
