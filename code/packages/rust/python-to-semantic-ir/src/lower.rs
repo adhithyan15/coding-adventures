@@ -4174,6 +4174,31 @@ fn collect_callees_stmt(stmt: &Stmt, out: &mut HashSet<String>) {
         // `break`/`continue` today; neither carries a child `Expr` with
         // a call to collect.
         Stmt::Break { .. } | Stmt::Continue { .. } => {}
+        // Switch statement (task #51) compile-compat stub: this frontend
+        // never emits `Stmt::Switch` today, but walk into every nested
+        // `Stmt`/`Expr` slot it carries anyway — same treatment as the
+        // SIR29 arms above — so a `DirectCall` nested inside one would
+        // still be found if a future lowering path ever produced this
+        // node.
+        Stmt::Switch {
+            discriminant,
+            cases,
+            default,
+            ..
+        } => {
+            collect_callees_expr(discriminant, out);
+            for case in cases {
+                collect_callees_expr(&case.value, out);
+                for s in &case.body {
+                    collect_callees_stmt(s, out);
+                }
+            }
+            if let Some(default) = default {
+                for s in default {
+                    collect_callees_stmt(s, out);
+                }
+            }
+        }
     }
 }
 

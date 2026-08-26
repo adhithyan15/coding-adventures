@@ -304,6 +304,27 @@ where
         crate::nodes::Stmt::Break { .. } | crate::nodes::Stmt::Continue { .. } => {
             // No nested expression to recurse into.
         }
+        crate::nodes::Stmt::Switch {
+            discriminant,
+            cases,
+            default,
+            ..
+        } => {
+            // Task #51: recurse into the discriminant, every case's own
+            // value + body, and the optional default body.
+            walk_intrinsics_in_expr(discriminant, f, depth + 1);
+            for case in cases {
+                walk_intrinsics_in_expr(&case.value, f, depth + 1);
+                for s in &case.body {
+                    walk_intrinsics_in_stmt(s, f, depth + 1);
+                }
+            }
+            if let Some(def) = default {
+                for s in def {
+                    walk_intrinsics_in_stmt(s, f, depth + 1);
+                }
+            }
+        }
     }
 }
 

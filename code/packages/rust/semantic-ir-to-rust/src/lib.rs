@@ -632,6 +632,36 @@ fn const_ref_in_stmt(s: &Stmt) -> Option<BackendError> {
         // the capability check" treatment as the SIR29 arm above. Neither
         // statement carries an `Expr` to scan for a `Const` reference.
         Stmt::Break { .. } | Stmt::Continue { .. } => None,
+        // Switch statement (task #51): `Feature::Switch` is not in this
+        // backend's accepted-features list, so `check_module` rejects
+        // any module using it before this analysis ever runs. Still
+        // scan `discriminant`, each case's `value` and `body`, and
+        // `default` faithfully — same "never takes a rejected
+        // elsewhere shortcut" style as the `IndexSet` arm above.
+        Stmt::Switch {
+            discriminant,
+            cases,
+            default,
+            ..
+        } => {
+            if let Some(e) = const_ref_in_expr(discriminant) {
+                return Some(e);
+            }
+            for case in cases {
+                if let Some(e) = const_ref_in_expr(&case.value) {
+                    return Some(e);
+                }
+                if let Some(e) = const_ref_in_stmts(&case.body) {
+                    return Some(e);
+                }
+            }
+            if let Some(default) = default {
+                if let Some(e) = const_ref_in_stmts(default) {
+                    return Some(e);
+                }
+            }
+            None
+        }
     }
 }
 

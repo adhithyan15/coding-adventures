@@ -877,6 +877,18 @@ fn emit_stmt(out: &mut String, s: &Stmt, indent: usize) {
         Stmt::Continue { .. } => {
             let _ = writeln!(out, "{pad}continue;");
         }
+        // Switch statement (task #51) — `Switch` not accepted by this
+        // backend yet; unreachable in a validated module (capability
+        // check rejects it). Real codegen is deferred to a future
+        // follow-up task, mirroring `Feature::LoopControl`'s own
+        // rollout (this backend adopted that one first among all
+        // backends, in task #62 — a natural next candidate for
+        // `Feature::Switch` too, once this IR-landing PR merges).
+        Stmt::Switch { span, .. } => {
+            panic!(
+                "javascript backend reached a Stmt::Switch node at {span} — capability check should have rejected it"
+            );
+        }
     }
 }
 

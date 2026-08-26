@@ -2,6 +2,89 @@
 
 All notable changes to the `semantic-ir` crate are documented here.
 
+## 0.28.0 — SIR30: switch statement (task #51)
+
+Implements [SIR30](../../../specs/SIR30-switch-statement.md) — the core
+IR previously had **zero** `Stmt` for `switch`/`case`, confirmed by an
+exhaustive grep during `java-to-semantic-ir`'s own M2a milestone (tracked
+as task #51 ever since, referenced across multiple `JV02` spec sections).
+Additive only: every existing SIR10/SIR16/SIR17/SIR18/SIR21/SIR22/SIR23/
+SIR26/SIR29 module remains valid; no existing `Expr`/`Stmt`/`SirType`/
+`Feature` variant, validator rule, or backend behaviour changed. Mirrors
+SIR29's own "spec + pure-additive IR diff, zero backend behavior change"
+Slice 0 shape, and this crate's own `[0.27.0]` `Feature::LoopControl`
+rollout specifically — no backend accepts `Feature::Switch` yet; every
+existing backend's exhaustive `Stmt` match (and two frontends' own
+internal `Stmt`-exhaustive traversal passes) gained a compile-forced
+reject arm instead.
+
+**New `Stmt` variant** (`nodes.rs`): `Switch { discriminant: Box<Expr>,
+cases: Vec<SwitchCase>, default: Option<Vec<Stmt>>, span }` — a
+C-family-style switch with real fall-through semantics (Java/
+JavaScript's own), not the non-fall-through `case`/`match` shape
+MATLAB/IDL/Ruby use (a frontend targeting one of those can always emit
+an explicit trailing `Stmt::Break` per case to simulate it; the reverse
+— representing real fall-through with a non-fall-through primitive —
+isn't a narrowing, it's a correctness trap). `default`, if present, is
+always the textually-last case for both match-order and fallthrough-
+order purposes — a dedicated field, not a `cases` entry, so a non-last
+`default` is structurally unrepresentable rather than merely
+disallowed by a runtime check.
+
+**New `SwitchCase` struct** (`nodes.rs`): `{ value: Expr, body:
+Vec<Stmt>, span }`. No dedicated multi-value-label shape — an
+empty-bodied case naturally falls through into the next, so `case 1:
+case 2: foo(); break;` is just two `SwitchCase` entries.
+
+**New `Feature` flag** (`manifest.rs`): `Switch` — a module contains a
+`Stmt::Switch`. Kept separate from `Feature::LoopControl` (despite
+`Break` now being valid inside a switch too — see below) for the
+identical reason `LoopControl` was split from `Loops`: a brand-new node
+no backend has ever emitted before needs an explicit backend opt-in,
+not a silent expansion of what an existing feature flag promises.
+
+**Validator** (`validator.rs`): `LoopKind` (introduced for
+`Feature::LoopControl`) gained a third variant, `Switch`, pushed/popped
+around a `Switch`'s own body walk exactly like `While`/`ForEach` push
+`Safe` — reusing the *existing* `loop_stack` nesting-order logic rather
+than a parallel mechanism, since "does `break` target the switch or an
+outer loop" is fundamentally the same nesting question `loop_stack`
+already answers for loop-inside-loop. `Stmt::Break`'s own check now
+accepts `LoopKind::Switch` at the top of the stack, same as `Safe`.
+`Stmt::Continue`'s own check changed shape: rather than consulting only
+`loop_stack.last()`, it now walks the stack from the innermost entry
+**skipping past any `Switch` frames**, to find the nearest *actual*
+loop — matching every C-family language's rule that `continue` never
+targets a switch, even when a switch is the more deeply nested
+construct. The entire switch body (every case plus `default`) shares
+ONE flat local-env scope, matching real `javac`'s own (well-known-
+gotcha) rule that a local declared in an earlier case is lexically in
+scope for every later case regardless of actual fall-through path.
+
+**`walker.rs`/`backend.rs`/`text/printer.rs`**: each gained a
+`Stmt::Switch` traversal/printing arm following the exact shape their
+own existing `Stmt::TryCatch` arm already uses for a bare `Vec<Stmt>`
+body with no trailing value slot.
+
+**Backend/frontend compile-exhaustiveness fixes** (mechanical,
+zero-behavior-change): `semantic-ir-to-{javascript,typescript,python,
+ruby,go,c,rust}` and `{python,ruby}-to-semantic-ir`'s own internal
+`Stmt`-exhaustive traversal passes each gained the identical
+"capability check should have rejected it" panic arm (or an existing
+file's own equivalent no-op convention for a frontend-internal pass)
+every SIR29 node already carries at its own initial landing.
+
+**New tests** (`validator.rs`): 11 new tests covering a simple switch
+with `default`, `break` inside a switch (valid), `continue` inside a
+switch with no enclosing loop (rejected), `continue` correctly skipping
+a switch frame to reach an enclosing `while`, the reverse pairing
+(`break`/`continue` inside a switch inside a `for-range`, confirming
+`break` still targets the switch while `continue` still gets the
+existing `for-range` rejection), cross-case local-variable visibility
+(the `javac` scoping gotcha, both the positive case and the
+does-not-leak-past-the-switch negative case), discriminant scope-
+timing, and `default`'s own body being validated (not skipped).
+
 ## 0.27.0 — SIR16 addendum: bare loop-control statements (`break`/`continue`)
 
 Implements the "Loop control" addendum to

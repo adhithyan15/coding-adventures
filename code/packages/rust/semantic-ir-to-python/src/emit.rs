@@ -206,6 +206,15 @@ fn collect_ancestry_in_stmt(
         // nothing to walk — a bare `break`/`continue` can never itself
         // contain a `ClassDef`.
         Stmt::Break { .. } | Stmt::Continue { .. } => {}
+        // Switch statement (task #51): rejected by `check_module` before
+        // this backend ever emits (no `Feature::Switch` in
+        // `accepts_features`) — compile-exhaustiveness fix only.
+        Stmt::Switch { span, .. } => {
+            panic!(
+                "python backend reached a Stmt::Switch node at {} — capability check should have rejected it",
+                span
+            );
+        }
     }
 }
 
@@ -398,6 +407,15 @@ fn stmt_uses_builtin(s: &Stmt, name: &str) -> bool {
         // SIR16 addendum: `Stmt::Break`/`Stmt::Continue` carry no
         // expression, so they can never "use" any builtin.
         Stmt::Break { .. } | Stmt::Continue { .. } => false,
+        // Switch statement (task #51): rejected by `check_module` before
+        // this backend ever emits (no `Feature::Switch` in
+        // `accepts_features`) — compile-exhaustiveness fix only.
+        Stmt::Switch { span, .. } => {
+            panic!(
+                "python backend reached a Stmt::Switch node at {} — capability check should have rejected it",
+                span
+            );
+        }
     }
 }
 
@@ -1224,6 +1242,15 @@ fn emit_stmt_inner(out: &mut String, s: &Stmt, indent: usize, env: &mut TypeEnv)
         }
         Stmt::Continue { .. } => {
             let _ = writeln!(out, "{pad}continue");
+        }
+        // Switch statement (task #51): rejected by `check_module` before
+        // this backend ever emits (no `Feature::Switch` in
+        // `accepts_features`) — compile-exhaustiveness fix only.
+        Stmt::Switch { span, .. } => {
+            panic!(
+                "python backend reached a Stmt::Switch node at {} — capability check should have rejected it",
+                span
+            );
         }
     }
 }
@@ -2488,6 +2515,17 @@ fn emit_block_as_expr(out: &mut String, b: &Block, indent: usize, env: &mut Type
             Stmt::Break { span, .. } | Stmt::Continue { span, .. } => {
                 panic!(
                     "python backend reached a Stmt::Break/Continue node at {} in a value-producing block — the block's value would be reachable only after the break/continue already unwound, which no Python expression form (walrus tuple or lifted `def`) can represent; deferred, see the task tracker's \"break/continue inside a value-position If/Block\" entry",
+                    span
+                );
+            }
+            // Switch statement (task #51): rejected by `check_module`
+            // before this backend ever emits (no `Feature::Switch` in
+            // `accepts_features`) — compile-exhaustiveness fix only,
+            // unlike the `Break`/`Continue` arm just above this is
+            // unreachable regardless of value-producing context.
+            Stmt::Switch { span, .. } => {
+                panic!(
+                    "python backend reached a Stmt::Switch node at {} — capability check should have rejected it",
                     span
                 );
             }
