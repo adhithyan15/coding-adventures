@@ -171,14 +171,14 @@ impl HostInterface for RegistryHost {
         table
     }
 
-    fn resolve_tag(&self, module_name: &str, name: &str) -> Option<FuncType> {
+    fn resolve_tag(&self, module_name: &str, name: &str) -> Option<(FuncType, u64)> {
         let (instance_rc, index) = self.find_export(module_name, name, ExternalKind::Tag)?;
         let instance = instance_rc.borrow();
         // `instance.tags[index]` -- the COMBINED imported+defined tag
         // index space `WasmInstance::tags` builds at instantiation time,
         // NOT `instance.module.tags` (module-DEFINED tags only, like
         // `module.functions`; see that field's own doc comment). Using
-        // the module-only field here was a real bug (W-next): any
+        // the module-only field here was a real bug (W22): any
         // exporting module with tag imports of its own would resolve an
         // exported LOCAL tag at the wrong, off-by-import-count slot.
         // Resolved through the EXPORTING module's own type section
@@ -187,7 +187,15 @@ impl HostInterface for RegistryHost {
         // instantiate`'s own `ImportTypeInfo::Tag` arm, which compares
         // this against ITS OWN `module.types[type_idx]`).
         let type_idx = *instance.tags.get(index as usize)?;
-        instance.module.types.get(type_idx as usize).cloned()
+        let func_type = instance.module.types.get(type_idx as usize).cloned()?;
+        // The exporting instance's own already-minted canonical identity
+        // (W23) for this tag, same index space as `instance.tags` above
+        // -- returned alongside the type so the IMPORTING instance adopts
+        // it verbatim (see `HostInterface::resolve_tag`'s own doc
+        // comment), letting a `throw` in this ("test") instance be
+        // caught by a `try_table` in the instance that imports it.
+        let identity = *instance.tag_identities.get(index as usize)?;
+        Some((func_type, identity))
     }
 }
 

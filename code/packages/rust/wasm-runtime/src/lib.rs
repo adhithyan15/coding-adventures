@@ -26,6 +26,7 @@
 //! This crate is part of the coding-adventures monorepo, a ground-up
 //! implementation of the computing stack from transistors to operating systems.
 
+use std::sync::atomic::{AtomicU64, Ordering};
 use std::sync::{Arc, Mutex};
 use std::time::{Instant, SystemTime, UNIX_EPOCH};
 
@@ -1115,6 +1116,25 @@ pub struct WasmInstance {
     /// INDICES here rather than resolved `FuncType`s, since `wasm-
     /// execution::WasmExecutionContext::tags` wants the former).
     pub tags: Vec<u32>,
+    /// Canonical, cross-instance-safe tag identity per tag (W23), same
+    /// combined index space as `tags` above: `tag_identities[N]` is tag
+    /// `N`'s real identity. A module-DEFINED tag gets a freshly minted,
+    /// never-repeating identity (from the process-wide [`NEXT_TAG_IDENTITY`]
+    /// counter) exactly ONCE, at `instantiate()` time — unlike
+    /// `wasm_execution::WasmExecutionContext::instance_id` (reminted every
+    /// top-level call), this must survive across every later call on the
+    /// SAME instance, since the whole point is that the same real tag
+    /// keeps comparing equal to itself. An IMPORTED tag adopts the
+    /// identity [`HostInterface::resolve_tag`] returns for it verbatim
+    /// (the exporting instance's own already-minted identity), rather
+    /// than minting an unrelated new one — this is what lets a `throw` in
+    /// one module instance be caught by a `try_table` in another that
+    /// imported the SAME tag (see `code/specs/
+    /// W23-wasm-exceptions-cross-instance-tag-identity.md`). Threaded into
+    /// the execution engine by `build_engine` via
+    /// `wasm_execution::WasmExecutionEngine::set_tag_identities`, mirroring
+    /// `tags`/`set_tags` exactly.
+    pub tag_identities: Vec<u64>,
     /// Export map: name -> (kind, index).
     pub exports: Vec<(String, ExternalKind, u32)>,
     /// Persistent v128 (SIMD) value storage for this instance's whole
@@ -1146,6 +1166,18 @@ pub struct WasmInstance {
     /// like `dropped_data_segments` is.
     pub dropped_elements: Vec<bool>,
 }
+
+/// Process-wide counter minting a fresh, never-repeating canonical tag
+/// identity (W23) each time `instantiate()` builds a module-DEFINED tag's
+/// entry in `WasmInstance::tag_identities`. Starts at `1` so `0` stays
+/// reserved as "no real identity assigned" (mirroring
+/// `wasm_execution::WasmExecutionContext::instance_id`'s own `0`-reserved
+/// convention) -- see that field's own doc comment for why a tag's
+/// identity must be minted once per real DEFINITION (persisting across
+/// every call on the same instance), not once per call. `Relaxed`
+/// ordering suffices: uniqueness, not cross-thread visibility of any
+/// OTHER state, is the only property tag-identity comparison relies on.
+static NEXT_TAG_IDENTITY: AtomicU64 = AtomicU64::new(1);
 
 /// Build a link-error `TrapError` for a failed import (WASM05/W10) --
 /// self-authored, capability-gap-shaped text (this crate's existing
@@ -1257,6 +1289,10 @@ impl WasmRuntime {
         // `wasm-validator`'s OWN identically-shaped `tag_types` in
         // `type_check.rs::build_module_context`, which this mirrors).
         let mut tags: Vec<u32> = Vec::new();
+        // Combined imported + module-defined tag IDENTITY space (W23),
+        // index-aligned with `tags` above -- see
+        // `WasmInstance::tag_identities`'s own doc comment.
+        let mut tag_identities: Vec<u64> = Vec::new();
 
         // Resolve imports.
         for imp in &module.imports {
@@ -1338,7 +1374,14 @@ impl WasmRuntime {
                 // needs, matching every other import kind.
                 ImportTypeInfo::Tag(type_idx) => {
                     let expected = module.types[*type_idx as usize].clone();
-                    let actual = self
+                    // (W23) `resolve_tag` now also returns the exporting
+                    // instance's own already-minted canonical identity for
+                    // this tag -- adopted here VERBATIM (not re-minted),
+                    // so this instance's own throw/catch of the imported
+                    // tag compares equal to the exporter's, across the
+                    // instance boundary. See `WasmInstance::tag_identities`'s
+                    // own doc comment.
+                    let (actual, identity) = self
                         .host
                         .as_ref()
                         .and_then(|h| h.resolve_tag(&imp.module_name, &imp.name))
@@ -1347,6 +1390,7 @@ impl WasmRuntime {
                         return Err(link_error("incompatible import type", imp));
                     }
                     tags.push(*type_idx);
+                    tag_identities.push(identity);
                 }
             }
         }
@@ -1358,10 +1402,14 @@ impl WasmRuntime {
             host_functions.push(None);
         }
 
-        // Add module-defined tags (W-next), completing the combined
-        // index space `tags` above started with imports.
+        // Add module-defined tags, completing the combined index space
+        // `tags` above started with imports. Each gets a freshly minted,
+        // never-repeating canonical identity (W23) -- see
+        // `NEXT_TAG_IDENTITY`'s own doc comment for why this must happen
+        // exactly once per real instantiation, not once per call.
         for &type_idx in &module.tags {
             tags.push(type_idx);
+            tag_identities.push(NEXT_TAG_IDENTITY.fetch_add(1, Ordering::Relaxed));
         }
 
         // Allocate every locally-declared memory (multi-memory, W16, task
@@ -1463,6 +1511,7 @@ impl WasmRuntime {
             func_bodies,
             host_functions,
             tags,
+            tag_identities,
             exports,
             v128_heap,
             dropped_data_segments,
@@ -1675,6 +1724,14 @@ impl WasmRuntime {
         // reading `ctx.tags` for anything observable; W21 itself never
         // read this field at runtime, so this went undetected until now.
         engine.set_tags(instance.tags.clone());
+
+        // Thread the module's canonical, cross-instance-safe tag
+        // identities (W23), same combined index space as `set_tags`
+        // immediately above -- see `WasmInstance::tag_identities`'s own
+        // doc comment for why this must be `instance.tag_identities`
+        // (persistent, minted once at `instantiate()` time) rather than
+        // anything recomputed per call.
+        engine.set_tag_identities(instance.tag_identities.clone());
 
         // Thread the instance's persistent v128 heap into the engine (see
         // `code/specs/W15-wasm-v128-persistent-storage.md`) -- same
@@ -2471,8 +2528,14 @@ mod tests {
     /// Resolves a tag matching whatever `WasmModule` the test below
     /// declares itself importing (mirrors `TestHost`'s own
     /// `resolve_function`, but for `HostInterface::resolve_tag`).
+    /// `identity` (W23) is the fixed canonical identity this host reports
+    /// for the exported tag -- a real `wasm-runtime` embedder like
+    /// `wasm-conformance`'s `RegistryHost` would read this from the
+    /// exporting `WasmInstance::tag_identities`, but a hand-built test
+    /// host can just supply a fixed value directly.
     struct TagTestHost {
         tag_type: FuncType,
+        identity: u64,
     }
 
     impl HostInterface for TagTestHost {
@@ -2488,9 +2551,9 @@ mod tests {
         fn resolve_table(&self, _module_name: &str, _name: &str) -> Option<Table> {
             None
         }
-        fn resolve_tag(&self, module_name: &str, name: &str) -> Option<FuncType> {
+        fn resolve_tag(&self, module_name: &str, name: &str) -> Option<(FuncType, u64)> {
             if module_name == "test" && name == "e0" {
-                Some(self.tag_type.clone())
+                Some((self.tag_type.clone(), self.identity))
             } else {
                 None
             }
@@ -2510,7 +2573,7 @@ mod tests {
         // the wrong slot for every module with at least one tag import.
         let empty_type = FuncType { params: vec![], results: vec![] };
         let i32_type = FuncType { params: vec![ValueType::I32], results: vec![] };
-        let runtime = WasmRuntime::with_host(Box::new(TagTestHost { tag_type: empty_type.clone() }));
+        let runtime = WasmRuntime::with_host(Box::new(TagTestHost { tag_type: empty_type.clone(), identity: 999 }));
         let module = WasmModule {
             types: vec![empty_type.clone(), i32_type.clone()],
             imports: vec![Import {
@@ -2532,6 +2595,42 @@ mod tests {
         // local tag 1 (type 0)] -- imports first, then declared, exactly
         // matching `wasm-validator`'s own `tag_types` construction.
         assert_eq!(instance.tags, vec![0, 1, 0]);
+        // Combined IDENTITY space (W23): the import adopts the host's
+        // reported identity verbatim; the two LOCAL tags each get their
+        // own freshly minted, non-zero, MUTUALLY DIFFERENT identity.
+        assert_eq!(instance.tag_identities.len(), 3);
+        assert_eq!(instance.tag_identities[0], 999, "an imported tag must adopt the exporter's own identity verbatim");
+        assert_ne!(instance.tag_identities[1], 0, "a module-defined tag must get a real, non-zero identity");
+        assert_ne!(instance.tag_identities[2], 0, "a module-defined tag must get a real, non-zero identity");
+        assert_ne!(
+            instance.tag_identities[1], instance.tag_identities[2],
+            "two DIFFERENT module-defined tags must never share an identity"
+        );
+    }
+
+    #[test]
+    fn instantiate_mints_a_fresh_identity_per_instantiate_call_never_reused() {
+        // Regression test (W23): two SEPARATE `instantiate()` calls on the
+        // SAME module must NOT produce the same tag identity -- otherwise
+        // an exception thrown by one completely unrelated instance could
+        // be wrongly caught by another instance's `try_table`, just
+        // because they happened to instantiate the same module.
+        let empty_type = FuncType { params: vec![], results: vec![] };
+        let runtime = WasmRuntime::new();
+        let module = WasmModule {
+            types: vec![empty_type],
+            tags: vec![0],
+            ..Default::default()
+        };
+        let validated = runtime.validate(&module).unwrap();
+        let instance_a = runtime.instantiate(&validated).unwrap();
+        let instance_b = runtime.instantiate(&validated).unwrap();
+        assert_ne!(instance_a.tag_identities[0], 0);
+        assert_ne!(instance_b.tag_identities[0], 0);
+        assert_ne!(
+            instance_a.tag_identities[0], instance_b.tag_identities[0],
+            "two separate instantiations of the same module must never share a tag identity"
+        );
     }
 
     #[test]
@@ -2541,7 +2640,7 @@ mod tests {
         // Host actually exports an EMPTY-param tag; the importing module
         // expects one with an i32 param -- must be rejected as a link
         // failure, not silently accepted.
-        let runtime = WasmRuntime::with_host(Box::new(TagTestHost { tag_type: empty_type }));
+        let runtime = WasmRuntime::with_host(Box::new(TagTestHost { tag_type: empty_type, identity: 1 }));
         let module = WasmModule {
             types: vec![wrong_type],
             imports: vec![Import {
