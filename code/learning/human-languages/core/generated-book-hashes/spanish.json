@@ -719,7 +719,7 @@
     {
       "language": "spanish",
       "chapter": 70,
-      "sourceHash": "fnv1a64:654194eddc937149",
+      "sourceHash": "fnv1a64:7feff06b2d6fce20",
       "lessonIds": [
         "ES-C12-hacer",
         "ES-C12-decir",
@@ -1634,7 +1634,7 @@
     {
       "language": "spanish",
       "chapter": 166,
-      "sourceHash": "fnv1a64:d4ed08bb81edad81",
+      "sourceHash": "fnv1a64:9bd6b5263ecbc7c2",
       "lessonIds": [
         "ES-C37-abrir",
         "ES-C37-cerrar",
@@ -1712,7 +1712,7 @@
     {
       "language": "spanish",
       "chapter": 174,
-      "sourceHash": "fnv1a64:fc94c308d9cc5210",
+      "sourceHash": "fnv1a64:bc7ba51d27e6e4a8",
       "lessonIds": [
         "ES-C40-esperar",
         "ES-C40-contestar",
