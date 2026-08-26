@@ -2,6 +2,59 @@
 
 All notable changes to this package will be documented in this file.
 
+## [0.9.68] - 2026-08-26 (Exceptions proposal, fourth slice W24: real exnref, catch_ref/catch_all_ref, throw_ref)
+
+### Added
+
+- `WasmExecutionContext::exception_heap: Vec<ExceptionPayload>` — a real
+  `exnref` heap, the same "handle into a per-call heap" shape `gc_heap`/
+  `v128_heap` already use for their own non-numeric reference kinds. A
+  `catch_ref`/`catch_all_ref` clause that matches now pushes a genuine
+  `WasmValue::Ref(Some(handle))` (via new `push_caught_exception`,
+  bounded by new `MAX_EXCEPTION_HEAP_LEN` = 1,000,000, mirroring
+  `push_v128`/`MAX_V128_HEAP_LEN`'s own security-review shape) instead of
+  never being selected as a match at all.
+- `throw_ref` (`0x0A`) opcode handler: pops a `WasmValue::Ref` (an
+  `exnref`), traps `"null exception reference"` if null, otherwise looks
+  up the full `ExceptionPayload` it names in `ctx.exception_heap` and
+  re-raises it verbatim (same tag, tag identity, and argument values) via
+  `TrapError::exception_with_payload` — a real re-throw, not a fresh
+  unrelated exception.
+
+### Changed
+
+- `try_catch_exception`: `CatchClauseKind::CatchRef`/`CatchAllRef` now
+  match under the EXACT same rule as their non-`_ref` counterparts
+  (`catch_clause_tag_matches`/unconditional, respectively) instead of
+  never matching. On a match, `CatchRef` pushes the tag's argument values
+  THEN a reified `exnref`; `CatchAllRef` pushes only the reified `exnref`.
+- `ValueType::default_for(Exnref)` and `CatchClauseKind`'s own doc
+  comments updated to describe the new real semantics (previously
+  documented as permanently inert).
+- Blocktype decoding (`decode_function_body`'s `"blocktype"` operand
+  decoder and `block_arity`) now recognizes `0x69` (`exnref`) as a
+  single-value shorthand blocktype byte, alongside the existing `0x7B`/
+  `0x70`/`0x6F` (v128/funcref/externref) special cases — the same real,
+  previously-undetected gap those three closed once already (WASM17/SIMD),
+  now hit by `throw_ref.wast`'s own `(block $h (result exnref) ...)`
+  shape: without this, the byte fell through to the type-index branch and
+  misread trailing bytes as a bogus type index.
+
+### Fixed
+
+- **Security review finding**: the `exnref` blocktype byte above was
+  originally `0xE9` (matching this crate's — incorrect — pre-existing
+  `ValueType::Exnref` wire byte), which has its LEB128 continuation bit
+  SET, making it indistinguishable from the leading byte of a genuine
+  multi-byte type index: a module declaring 234+ types could trigger a
+  silent blocktype misparse (attacker-reachable, since type-section size
+  is entirely module-controlled). Fixed at the source — `wasm-types`
+  0.1.9 corrects `ValueType::Exnref`'s wire encoding to `0x69` (the real
+  spec-correct single-byte SLEB128 encoding of `-0x17`, continuation bit
+  clear) — and this crate's two blocktype-decode sites updated to match.
+
+See `code/specs/W24-wasm-exceptions-exnref-catch-ref.md`.
+
 ## [0.9.67] - 2026-08-26 (Exceptions proposal, third slice W23: cross-instance tag identity)
 
 ### Added

@@ -337,6 +337,24 @@ fn decode_blocktype(module: &WasmModule, code: &[u8], offset: usize) -> Result<(
         0x7B => Ok((vec![], vec![ValueType::V128], 1)),
         0x70 => Ok((vec![], vec![ValueType::Funcref], 1)),
         0x6F => Ok((vec![], vec![ValueType::Externref], 1)),
+        // `exnref` (`0x69`, W24): the same real gap the three cases above
+        // already fixed once for v128/funcref/externref, now hit by a
+        // single-value `(block (result exnref) ...)` blocktype -- the real
+        // corpus's own shape (`throw_ref.wast`'s `(block $h (result
+        // exnref) ...)`). Security review (W24): this crate originally
+        // special-cased `0xE9` here (this repo's ORIGINAL, incorrect
+        // `ValueType::Exnref` byte -- the value's two's-complement-mod-256
+        // representation, not its SLEB128 encoding). That was a real,
+        // attacker-reachable bug: `0xE9`'s LEB128 continuation bit is SET
+        // (`>= 0x80`), so it's indistinguishable from the leading byte of a
+        // genuine multi-byte type-index encoding -- any module declaring
+        // 234+ types could trigger a silent blocktype misparse. Fixed at
+        // the source (`wasm-types::ValueType::Exnref::byte_tag`/`encode`,
+        // now `0x69` -- the correct SLEB128 single-byte encoding of
+        // `-0x17`, continuation bit clear, so it can only ever be a
+        // complete standalone value, never a type-index prefix). See
+        // `code/specs/W24-wasm-exceptions-exnref-catch-ref.md`.
+        0x69 => Ok((vec![], vec![ValueType::Exnref], 1)),
         _ => {
             let (idx, size) = decode_signed(code, offset).map_err(|e| ValidationError::Other(format!("bad blocktype immediate: {e}")))?;
             let ty = module
@@ -1050,6 +1068,21 @@ fn type_check_function(ctx: &ModuleContext, func_idx: usize, func_type: &FuncTyp
                 pop_expect_many(&mut stack, frame!(), &tag_type.params)?;
                 mark_unreachable(&mut stack, frame_mut!());
             }
+            0x0A => {
+                // `throw_ref` (W24 — exceptions proposal, fourth slice):
+                // pops a real `exnref` (produced by a `catch_ref`/
+                // `catch_all_ref` clause) and re-raises the exception it
+                // names. Real spec type: `[t* (ref null exn)] -> [t2*]` —
+                // same "pop one operand, then the rest of this block is
+                // unreachable" shape `throw`/`unreachable`/`br`/`return`
+                // already use above, since control never falls through
+                // past it either. `throw_ref.wast`'s own two
+                // `assert_invalid` cases (`(func (throw_ref))`, `(func
+                // (block (throw_ref)))`, both "type mismatch") are exactly
+                // this: an empty stack has nothing to pop.
+                pop_expect(&mut stack, frame!(), ValueType::Exnref)?;
+                mark_unreachable(&mut stack, frame_mut!());
+            }
             0x1F => {
                 // `try_table` (W21 — exceptions proposal): decodes exactly
                 // like `block` (0x02) -- same blocktype immediate, same
@@ -1070,12 +1103,20 @@ fn type_check_function(ctx: &ModuleContext, func_idx: usize, func_type: &FuncTyp
                 // out-of-bounds hazards a hostile module could otherwise
                 // use to reach an unvalidated index later, even though no
                 // vendored corpus file currently exercises either failure
-                // mode. Catch-target type-arity matching (the tag's params
-                // vs. the label's own declared types) is NOT checked --
-                // an explicit, narrower scope reduction, not an oversight:
-                // no directive in this slice's corpus needs it, and adding
-                // it produces no additional real pass/fail against `tag.
-                // wast`/`throw.wast` today.
+                // mode. Catch-target type-arity matching for PLAIN `catch`/
+                // `catch_all` (the tag's params vs. the label's own
+                // declared types) is still NOT checked -- unchanged W21/W22
+                // scope reduction, deliberately left alone here (no
+                // regression risk to already-passing `catch`/`catch_all`
+                // directives). `catch_ref`/`catch_all_ref` (W24) DO get a
+                // real arity/type check below, since it's exactly what
+                // distinguishes a legitimately-typed target from an
+                // invalid one now that they push a genuine `exnref` (see
+                // `code/specs/W24-wasm-exceptions-exnref-catch-ref.md`,
+                // and `try_table.wast`'s own `catch_ref`/`catch_all_ref`
+                // `assert_invalid` cases, e.g. `(tag) (func (try_table
+                // (catch_ref 0 0)))` "type mismatch": the target label
+                // expects no values, but `catch_ref` would push `exnref`).
                 let (params, results, bt_size) = decode_blocktype(ctx.module, code, offset)?;
                 offset += bt_size;
                 let (catch_count, cc_size) = decode_idx(code, offset)?;
@@ -1088,21 +1129,31 @@ fn type_check_function(ctx: &ModuleContext, func_idx: usize, func_type: &FuncTyp
                             // catch / catch_ref: tag idx, then label idx.
                             let (tag_idx, tsz) = decode_idx(code, offset)?;
                             offset += tsz;
-                            if tag_idx as usize >= ctx.tag_types.len() {
-                                err!("try_table catch clause references unknown tag {tag_idx}");
-                            }
+                            let tag_params = ctx.tag_types.get(tag_idx as usize).map(|t| t.params.clone()).ok_or_else(|| {
+                                ValidationError::Other(format!("function #{func_idx}: try_table catch clause references unknown tag {tag_idx}"))
+                            })?;
                             let (label_idx, lsz) = decode_idx(code, offset)?;
                             offset += lsz;
-                            if resolve_label_target(control_stack.len(), label_idx).is_none() {
-                                err!("try_table catch clause label target {label_idx} out of range");
+                            let target = resolve_label_target(control_stack.len(), label_idx).ok_or_else(|| {
+                                ValidationError::Other(format!("function #{func_idx}: try_table catch clause label target {label_idx} out of range"))
+                            })?;
+                            if clause_kind == 0x01 {
+                                let mut expected = tag_params;
+                                expected.push(ValueType::Exnref);
+                                if label_types(&control_stack[target]) != expected.as_slice() {
+                                    err!("try_table catch_ref clause: target label type does not match tag params + exnref");
+                                }
                             }
                         }
                         0x02 | 0x03 => {
                             // catch_all / catch_all_ref: label idx only.
                             let (label_idx, lsz) = decode_idx(code, offset)?;
                             offset += lsz;
-                            if resolve_label_target(control_stack.len(), label_idx).is_none() {
-                                err!("try_table catch_all clause label target {label_idx} out of range");
+                            let target = resolve_label_target(control_stack.len(), label_idx).ok_or_else(|| {
+                                ValidationError::Other(format!("function #{func_idx}: try_table catch_all clause label target {label_idx} out of range"))
+                            })?;
+                            if clause_kind == 0x03 && label_types(&control_stack[target]) != [ValueType::Exnref] {
+                                err!("try_table catch_all_ref clause: target label type does not match [exnref]");
                             }
                         }
                         other => err!("try_table: unknown catch clause kind {other}"),

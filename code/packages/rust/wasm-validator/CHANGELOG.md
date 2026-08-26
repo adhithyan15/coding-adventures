@@ -2,6 +2,42 @@
 
 All notable changes to this package will be documented in this file.
 
+## [0.2.67] - 2026-08-26 (Exceptions proposal, fourth slice W24: throw_ref + catch_ref/catch_all_ref arity)
+
+### Added
+
+- `throw_ref` (`0x0A`) type rule: pops one `Exnref`, then marks the rest
+  of the block unreachable — the same "pop one operand, dead code after"
+  shape `throw`/`unreachable`/`br`/`return` already use.
+- `try_table` (`0x1F`)'s `catch_ref`/`catch_all_ref` clauses now get a
+  real arity/type check: the target label's declared type must equal
+  EXACTLY the tag's params (`catch_ref`) or nothing (`catch_all_ref`)
+  followed by `Exnref` — catching `try_table.wast`'s own real
+  `assert_invalid` cases (a target label that doesn't account for the
+  `exnref` a matching clause now genuinely pushes). Plain `catch`/
+  `catch_all` are deliberately left unchanged (still no arity check,
+  W21/W22's own scope) — no regression risk to already-passing
+  directives.
+
+### Fixed
+
+- `decode_blocktype`: `0x69` (`exnref`) recognized as a single-value
+  shorthand blocktype byte — the same real gap `0x7B`/`0x70`/`0x6F`
+  (v128/funcref/externref) closed once already, now hit by a real corpus
+  shape (`throw_ref.wast`'s `(block $h (result exnref) ...)`). Previously
+  fell through to the signed-LEB128 type-index branch and misread
+  trailing bytes as a bogus type index.
+- **Security review finding**: this arm was originally keyed on `0xE9`
+  (matching `wasm-types`' then-incorrect `ValueType::Exnref` wire byte),
+  which has its LEB128 continuation bit SET — indistinguishable from the
+  leading byte of a genuine multi-byte type index, so a module declaring
+  234+ types could trigger a silent blocktype misparse. Fixed at the
+  source: `wasm-types` 0.1.9 corrects the wire byte to `0x69` (continuation
+  bit clear, spec-correct SLEB128 encoding of `-0x17`), and this arm
+  updated to match.
+
+See `code/specs/W24-wasm-exceptions-exnref-catch-ref.md`.
+
 ## [0.2.66] - 2026-08-25 (Exceptions proposal, first slice W21: tag/throw/try_table type rules)
 
 ### Added

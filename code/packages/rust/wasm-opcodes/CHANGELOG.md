@@ -2,6 +2,15 @@
 
 All notable changes to this package will be documented in this file.
 
+## [0.2.57] - 2026-08-26 - W24: exceptions proposal, fourth slice (exnref/catch_ref/throw_ref)
+
+### Added
+
+- `throw_ref` (`0x0A`, no immediate) — W21 explicitly left this byte
+  unregistered ("deliberately NOT modeled here"); this slice registers it
+  now that `wasm-execution` gives it a real handler (pop a reified
+  `exnref`, re-raise the exception it names).
+
 ## [0.2.56] - 2026-08-25 - W21: exceptions proposal, tag/throw first slice
 
 ### Added
