@@ -36,7 +36,7 @@ use diagram_ir::{
     LayoutedSequenceDiagram, LayoutedSequenceItem, LayoutedStructuralDiagram,
     LayoutedTemporalDiagram, LayoutedTemporalItem, Orientation, Point, RelKind, SequenceArrowhead,
     SequenceBlockKind, SequenceCentralConnection, SequenceLineStyle, SequenceParticipantKind,
-    SequenceProperty, TaskStatus, TextAlign as GeoTextAlign,
+    GanttTaskTags, SequenceProperty, TextAlign as GeoTextAlign,
 };
 use layout_ir::{Color, Content, FontSpec, PositionedNode, TextAlign, TextContent};
 use layout_to_paint::{layout_to_paint, LayoutToPaintOptions};
@@ -2751,19 +2751,19 @@ where
                 y,
                 width,
                 height,
-                status,
+                tags,
                 label,
             } => {
-                let color = task_status_color(status);
+                let (fill, stroke, stroke_width) = gantt_task_colors(tags);
                 instructions.push(PaintInstruction::Rect(PaintRect {
                     base: PaintBase::default(),
                     x: *x,
                     y: *y,
                     width: *width,
                     height: *height,
-                    fill: Some(color.into()),
-                    stroke: None,
-                    stroke_width: None,
+                    fill: Some(fill.into()),
+                    stroke: stroke.map(str::to_string),
+                    stroke_width,
                     corner_radius: Some(2.0),
                     stroke_dash: None,
                     stroke_dash_offset: None,
@@ -2783,8 +2783,9 @@ where
                     },
                 ));
             }
-            LayoutedTemporalItem::MilestoneMarker { x, y, label } => {
+            LayoutedTemporalItem::MilestoneMarker { x, y, tags, label } => {
                 let s = 8.0;
+                let (fill, stroke, stroke_width) = gantt_task_colors(tags);
                 instructions.push(PaintInstruction::Path(PaintPath {
                     base: PaintBase::default(),
                     commands: vec![
@@ -2794,10 +2795,10 @@ where
                         PathCommand::LineTo { x: x - s, y: *y },
                         PathCommand::Close,
                     ],
-                    fill: Some("#111827".into()),
+                    fill: Some(fill.into()),
                     fill_rule: None,
-                    stroke: None,
-                    stroke_width: None,
+                    stroke: stroke.map(str::to_string),
+                    stroke_width,
                     stroke_cap: None,
                     stroke_join: None,
                     stroke_dash: None,
@@ -2816,6 +2817,22 @@ where
                         b: 39,
                         a: 255,
                     },
+                ));
+            }
+            LayoutedTemporalItem::VerticalMarker { x, y1, y2, label } => {
+                instructions.push(PaintInstruction::Path(line_path(
+                    &[Point { x: *x, y: *y1 }, Point { x: *x, y: *y2 }],
+                    "#6b7280",
+                    2.0,
+                )));
+                text_children.push(text_node(
+                    label,
+                    x - 60.0,
+                    y2 + 2.0,
+                    120.0,
+                    ls * 1.2,
+                    lf.clone(),
+                    Color { r: 75, g: 85, b: 99, a: 255 },
                 ));
             }
             LayoutedTemporalItem::TodayMarker {
@@ -3208,13 +3225,20 @@ where
     }
 }
 
-fn task_status_color(status: &TaskStatus) -> &'static str {
-    match status {
-        TaskStatus::Normal => "#3b82f6",
-        TaskStatus::Done => "#22c55e",
-        TaskStatus::Active => "#f59e0b",
-        TaskStatus::Crit => "#ef4444",
-        TaskStatus::Milestone => "#111827",
+fn gantt_task_colors(tags: &GanttTaskTags) -> (&'static str, Option<&'static str>, Option<f64>) {
+    let fill = if tags.active {
+        "#f59e0b"
+    } else if tags.done {
+        "#22c55e"
+    } else if tags.critical {
+        "#ef4444"
+    } else {
+        "#3b82f6"
+    };
+    if tags.critical {
+        (fill, Some("#b91c1c"), Some(2.0))
+    } else {
+        (fill, None, None)
     }
 }
 

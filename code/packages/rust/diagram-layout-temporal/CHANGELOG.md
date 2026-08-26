@@ -1,5 +1,9 @@
 # Changelog
 
+## 0.22.0
+
+- Preserve combined Gantt task tags through layout and lower `vert` tasks to full-height markers without consuming task rows.
+
 ## 0.21.0
 
 - Resolve chained and multi-source Gantt starts to the latest dependency end and `until` ranges to the earliest referenced start.

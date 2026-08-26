@@ -14,12 +14,11 @@
 use diagram_ir::{
     DiagramDirection, GitCommitSymbol, GitCommitType, GitDiagram, GitEvent, JourneyDiagram,
     LayoutedTemporalDiagram, LayoutedTemporalInteraction, LayoutedTemporalItem, TaskEnd, TaskStart,
-    TaskStatus,
     TemporalBody, TemporalDiagram,
 };
 use std::collections::{BTreeSet, HashMap};
 
-pub const VERSION: &str = "0.21.0";
+pub const VERSION: &str = "0.22.0";
 
 // ── Constants ─────────────────────────────────────────────────────────────
 
@@ -502,6 +501,7 @@ fn layout_gantt(
     }
     let marker_top = y;
 
+    let mut vertical_markers = Vec::new();
     // Sections and tasks.
     for section in &diagram.sections {
         if let Some(ref lbl) = section.label {
@@ -515,14 +515,25 @@ fn layout_gantt(
             let bx = LABEL_W + start_day * x_scale;
             let elapsed_duration = gantt_task_elapsed_duration(t_min + start_day, task, diagram, &starts);
             let bw = (elapsed_duration * x_scale).max(4.0);
-            if task.status == TaskStatus::Milestone {
+            if task.tags.vertical {
+                vertical_markers.push((
+                    bx,
+                    task.id.clone(),
+                    task.label.clone(),
+                    task.link.clone(),
+                    task.callback.clone(),
+                    task.callback_args.clone(),
+                ));
+                continue;
+            }
+            if task.tags.milestone {
                 items.push(LayoutedTemporalItem::MilestoneMarker {
-                    x: bx, y: y + TASK_H / 2.0, label: task.label.clone(),
+                    x: bx, y: y + TASK_H / 2.0, tags: task.tags.clone(), label: task.label.clone(),
                 });
             } else {
                 items.push(LayoutedTemporalItem::TaskBar {
                     x: bx, y, width: bw, height: TASK_H,
-                    status: task.status.clone(),
+                    tags: task.tags.clone(),
                     label: task.label.clone(),
                 });
             }
@@ -540,8 +551,34 @@ fn layout_gantt(
     }
 
     let chart_bottom = y;
-    append_gantt_axis(&mut items, y + 4.0, t_min, t_range, x_scale, diagram, false);
-    y += AXIS_H;
+    let vertical_label_height = if vertical_markers.is_empty() { 0.0 } else { 20.0 };
+    for (x, task_id, label, link, callback, callback_args) in vertical_markers {
+        items.push(LayoutedTemporalItem::VerticalMarker {
+            x,
+            y1: marker_top,
+            y2: chart_bottom,
+            label,
+        });
+        if link.is_some() || callback.is_some() {
+            interactions.push(LayoutedTemporalInteraction {
+                task_id,
+                bounds: (x - 8.0, marker_top, 16.0, chart_bottom - marker_top),
+                link,
+                callback,
+                callback_args,
+            });
+        }
+    }
+    append_gantt_axis(
+        &mut items,
+        y + vertical_label_height + 4.0,
+        t_min,
+        t_range,
+        x_scale,
+        diagram,
+        false,
+    );
+    y += AXIS_H + vertical_label_height;
 
     if diagram.config.today_marker.as_deref() != Some("off") {
         let today = current_epoch_day() as f64;
@@ -792,7 +829,7 @@ mod tests {
                             start: TaskStart::Date("2026-01-01".into()),
                             duration_days: 5.0,
                             end: None,
-                            status: TaskStatus::Done,
+                            tags: GanttTaskTags { done: true, ..GanttTaskTags::default() },
                             dependencies: vec![],
                             link: None,
                             callback: None,
@@ -803,7 +840,7 @@ mod tests {
                             start: TaskStart::After(vec!["t1".into()]),
                             duration_days: 3.0,
                             end: None,
-                            status: TaskStatus::Active,
+                            tags: GanttTaskTags { active: true, ..GanttTaskTags::default() },
                             dependencies: vec!["t1".into()],
                             link: None,
                             callback: None,
@@ -843,7 +880,7 @@ mod tests {
 
     #[test]
     fn version_exists() {
-        assert_eq!(crate::VERSION, "0.21.0");
+        assert_eq!(crate::VERSION, "0.22.0");
     }
 
     #[test]
@@ -1025,7 +1062,7 @@ mod tests {
         gantt.sections[0].tasks.push(GanttTask {
             id: "t3".into(), label: "Integrate".into(),
             start: TaskStart::After(vec!["t1".into(), "t2".into()]),
-            duration_days: 2.0, end: None, status: TaskStatus::Normal,
+            duration_days: 2.0, end: None, tags: GanttTaskTags::default(),
             dependencies: vec!["t1".into(), "t2".into()], link: None,
             callback: None, callback_args: None,
         });
@@ -1033,26 +1070,26 @@ mod tests {
             id: "window".into(), label: "Window".into(),
             start: TaskStart::Date("2025-12-29".into()), duration_days: 0.0,
             end: Some(TaskEnd::Until(vec!["t1".into(), "t2".into()])),
-            status: TaskStatus::Normal, dependencies: Vec::new(), link: None,
+            tags: GanttTaskTags::default(), dependencies: Vec::new(), link: None,
             callback: None, callback_args: None,
         });
         gantt.sections[0].tasks.push(GanttTask {
             id: "gate".into(), label: "Gate".into(),
             start: TaskStart::Date("2025-12-30".into()), duration_days: 0.0,
             end: Some(TaskEnd::Until(vec!["late".into()])),
-            status: TaskStatus::Normal, dependencies: Vec::new(), link: None,
+            tags: GanttTaskTags::default(), dependencies: Vec::new(), link: None,
             callback: None, callback_args: None,
         });
         gantt.sections[0].tasks.push(GanttTask {
             id: "consumer".into(), label: "Consumer".into(),
             start: TaskStart::After(vec!["gate".into()]), duration_days: 1.0,
-            end: None, status: TaskStatus::Normal, dependencies: vec!["gate".into()], link: None,
+            end: None, tags: GanttTaskTags::default(), dependencies: vec!["gate".into()], link: None,
             callback: None, callback_args: None,
         });
         gantt.sections[0].tasks.push(GanttTask {
             id: "late".into(), label: "Late".into(),
             start: TaskStart::After(vec!["t3".into()]), duration_days: 1.0,
-            end: None, status: TaskStatus::Normal, dependencies: vec!["t3".into()], link: None,
+            end: None, tags: GanttTaskTags::default(), dependencies: vec!["t3".into()], link: None,
             callback: None, callback_args: None,
         });
 
@@ -1069,6 +1106,35 @@ mod tests {
         let window_end = bars["Window"].0 + bars["Window"].1;
         assert!((window_end - bars["Design"].0).abs() < 0.01);
         assert!((bars["Consumer"].0 - bars["Late"].0).abs() < 0.01);
+    }
+
+    #[test]
+    fn gantt_combined_tags_and_vertical_markers_survive_layout() {
+        let mut diagram = simple_gantt();
+        let TemporalBody::Gantt(gantt) = &mut diagram.body else { unreachable!() };
+        gantt.sections[0].tasks[0].tags = GanttTaskTags {
+            active: true,
+            critical: true,
+            ..GanttTaskTags::default()
+        };
+        gantt.sections[0].tasks[1].tags.vertical = true;
+
+        let layout = layout_temporal_diagram(&diagram, 800.0);
+        assert!(layout.items.iter().any(|item| matches!(
+            item,
+            LayoutedTemporalItem::TaskBar { tags, .. }
+                if tags.active && tags.critical
+        )));
+        assert!(layout.items.iter().any(|item| matches!(
+            item,
+            LayoutedTemporalItem::VerticalMarker { y1, y2, label, .. }
+                if y2 > y1 && label == "Build"
+        )));
+        assert_eq!(layout.items.iter().filter(|item| matches!(
+            item,
+            LayoutedTemporalItem::TaskBar { .. }
+                | LayoutedTemporalItem::MilestoneMarker { .. }
+        )).count(), 1);
     }
 
     #[test]
