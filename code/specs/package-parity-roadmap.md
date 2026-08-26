@@ -8734,13 +8734,43 @@ at 1,373 implementation identities and 1,412 all-reported identities while
 raising slots to 4,571 and reducing five-to-nine missing slots to 935, with
 zero collisions and zero unknown buckets.
 
-Ready-for-review PR #13037 opened from reviewed head
-`4a8dea41c3b5ed6931d552eb924c3a8ab9223b0f` after a clean three-commit
-rebase onto exact `origin/main`
-`2295edd5975b43d5a3081e7eb1d7f5ca7afc43c1` and full local revalidation.
-GitHub reports the PR open, non-draft, and mergeable. Required CI and CodeQL
-checks are queued or in progress, so auto-merge remains disabled and the loop
-is monitor-only until they are terminal and acceptable.
+PR #13037 completed all 41 final checks successfully or acceptably after a
+focused TypeScript-project inventory repair at reviewed head
+`14c5060bfe2b53ce6003a1aa25ab1e5f9f2fb708`. GitHub reported a clean merge
+state, auto-merge was enabled, and the PR merged as
+`848f43c20b4d30544a3d9f9c50ae4a10c6e2b63d` without a manual merge command.
+
+### Post-#13037 inventory and Python canonical-CBOR selection
+
+The exact-main schema-3 report remains collision-clean at 15 established
+lanes, 1,373 implementation identities, and 1,412 all-reported identities.
+The TypeScript package raises implementation slots to 4,571 and advances
+canonical-CBOR to six established lanes, leaving the breadth bands at 175
+high-consensus identities with 276 gaps, 123 five-to-nine identities with 935
+gaps, 166 two-to-four identities with 2,087 gaps, and 909 singletons with
+12,726 gaps. Rust retains 720 singletons; canonical collisions and unknown
+language buckets remain zero; OCaml remains emerging at zero packages. The ten
+reporter tests pass.
+
+All nine live PRs are classified under existing Mermaid Gantt, script-ductus
+and human-language, Semantic IR LoopControl, Chief approval, Go build-tool,
+Swift cowsay, or stale zero-file owners. None touches the Python canonical-CBOR
+target, its neutral corpus or specification, parity state, or this roadmap. A
+fresh breadth audit also found the `java-kotlin-high-consensus` umbrella's zstd
+lead stale because zstd is already complete in all 15 lanes. The remaining
+lz78, deflate, and state-machine frontier is now a bounded pending paired-JVM
+child: each identity is 13/15 and missing only Java and Kotlin.
+
+The dependency/leverage pass selects `canonical-cbor-python-lane-parity` on
+branch `codex/canonical-cbor-python-lane-parity`. Python is the largest
+remaining canonical-CBOR lane at 502 packages with 391 Rust overlaps. Its sole
+dependency is merged; the closed 55-case CBR01 corpus and eight independent
+reference implementations are available; and this zero-production-dependency
+slice advances the AND-gated canonical-CBOR umbrella that unlocks three Vault
+portability roots. The fresh exact-main worktree, package path, local branch,
+remote branch, and prior PR were absent before selection. The reconciled graph
+is complete and acyclic at 526 owners and 787 edges: 153 merged, 372 pending,
+and exactly one in-progress owner, with no active parity PR.
 
 ## Autonomous Loop Protocol
 

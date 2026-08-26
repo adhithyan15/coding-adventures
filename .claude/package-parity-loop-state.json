@@ -11,23 +11,18 @@
     "selection_rule": "host-security, credential, native-runtime, and external-approval work may inform classification but is never selected by this parity loop",
     "excluded_delivery_classes": ["onvif", "host-security-hardening", "native-runtime", "external-approval"]
   },
-  "active_pr": {
-    "number": 13037,
-    "url": "https://github.com/adhithyan15/coding-adventures/pull/13037",
-    "branch": "codex/canonical-cbor-typescript-lane-parity",
-    "status": "open"
-  },
+  "active_pr": null,
   "last_inventory": {
-    "revision": "ce4c3aa0c522e354653a2a4205b8dc5534c40f89",
+    "revision": "848f43c20b4d30544a3d9f9c50ae4a10c6e2b63d",
     "schema_version": 3,
     "established_languages": 15,
     "implementation_identities": 1373,
-    "implementation_package_slots": 4570,
+    "implementation_package_slots": 4571,
     "all_reported_identities": 1412,
     "high_consensus_packages": 175,
     "high_consensus_missing_slots": 276,
     "five_to_nine_packages": 123,
-    "five_to_nine_missing_slots": 936,
+    "five_to_nine_missing_slots": 935,
     "two_to_four_packages": 166,
     "two_to_four_missing_slots": 2087,
     "singleton_packages": 909,
@@ -1567,10 +1562,19 @@
       "id": "java-kotlin-high-consensus",
       "title": "Close paired Java/Kotlin high-consensus families",
       "status": "pending",
+      "depends_on": ["java-kotlin-high-consensus-lz78-deflate-state-machine"],
+      "branch": null,
+      "pr_number": null,
+      "notes": "Umbrella owner for paired JVM high-consensus closure. The post-#13037 inventory found the zstd lead stale because zstd is already 15/15, and materialized the remaining lz78, deflate, and state-machine frontier as a bounded child before the next selection."
+    },
+    {
+      "id": "java-kotlin-high-consensus-lz78-deflate-state-machine",
+      "title": "Port lz78, deflate, and state-machine to Java and Kotlin",
+      "status": "pending",
       "depends_on": [],
       "branch": null,
       "pr_number": null,
-      "notes": "Start with lz78/deflate, zstd, and state-machine, then move through shared dependency chains."
+      "notes": "Discovered in the collision-checked 848f43c20b post-merge inventory. Each identity is present in thirteen established lanes and missing only Java and Kotlin, so one paired-JVM tranche adds six portable slots and completes all three identities while sharing one toolchain and cross-lane fixture review."
     },
     {
       "id": "python-parser-self-hosting-applicability",
@@ -3279,10 +3283,12 @@
     {
       "id": "canonical-cbor-python-lane-parity",
       "title": "Port canonical CBOR to Python",
-      "status": "pending",
+      "status": "in-progress",
       "depends_on": ["canonical-cbor-language-neutral-conformance"],
-      "branch": null,
+      "branch": "codex/canonical-cbor-python-lane-parity",
       "pr_number": null,
+      "selection_revision": "848f43c20b4d30544a3d9f9c50ae4a10c6e2b63d",
+      "selection_notes": "Selected only after PR #13037 completed all 41 terminal acceptable checks, GitHub reported a clean merge state, and squash auto-merge merged reviewed head 14c5060bfe2b53ce6003a1aa25ab1e5f9f2fb708 as 848f43c20b4d30544a3d9f9c50ae4a10c6e2b63d at 2026-08-26T13:47:21Z without a manual merge command. The exact-main schema-3 report is collision-clean at 15 established lanes, 1,373 implementation identities, 4,571 slots, and 1,412 all-reported identities; bands are 175/276, 123/935, 166/2,087, and 909/12,726, with 720 Rust singletons, zero collisions, zero unknown buckets, and OCaml emerging at zero packages. The ten reporter tests pass. Nine live PRs are classified under existing Mermaid Gantt, script-ductus and human-language, Semantic IR LoopControl, Chief approval, Go build-tool, Swift cowsay, or stale zero-file owners; none touches the Python canonical-CBOR target, neutral corpus/spec, state, or roadmap. The refresh also materializes the newly bounded Java/Kotlin lz78/deflate/state-machine child and corrects its umbrella's stale zstd lead before selection. Python is the largest remaining canonical-CBOR lane at 502 packages and 391 Rust overlaps; its sole dependency is merged, the 55-case CBR01 corpus and six established plus two emerging independent implementations are available, and this bounded zero-production-dependency slice advances the AND-gated canonical-CBOR umbrella that unlocks three Vault portability roots. The target path, local branch, remote branch, and prior PR were absent before creating this fresh exact-main branch.",
       "notes": "Implement the closed canonical-CBOR contract in Python and consume every language-neutral case."
     },
     {
@@ -3306,7 +3312,7 @@
     {
       "id": "canonical-cbor-typescript-lane-parity",
       "title": "Port canonical CBOR to TypeScript",
-      "status": "pr-open",
+      "status": "merged",
       "depends_on": ["canonical-cbor-language-neutral-conformance"],
       "branch": "codex/canonical-cbor-typescript-lane-parity",
       "pr_number": 13037,
@@ -3318,8 +3324,10 @@
       "security_notes": "Three independent read-only audits identified runtime readonly mutation, subclass getter/type-erasure bypasses, null-singleton replacement, near-max sparse-array partial append, unchecked erased decode/container inputs, and a permissive fixture suffix. Each issue has a focused regression and is fixed. The final security re-review reports no remaining actionable security or conformance finding.",
       "pr_opened_at": "2026-08-26T13:12:35Z",
       "pr_opened_head_revision": "4a8dea41c3b5ed6931d552eb924c3a8ab9223b0f",
-      "publication_notes": "Ready-for-review PR #13037 opened against exact origin/main 2295edd5975b43d5a3081e7eb1d7f5ca7afc43c1 after a clean three-commit rebase and full local revalidation. GitHub reports the PR open, non-draft, and mergeable. CI and CodeQL checks are queued or in progress, so auto-merge remains disabled and the loop is monitor-only until every required check is terminal and acceptable.",
-      "notes": "Implemented and published the closed canonical-CBOR contract in TypeScript with bigint-safe uint64 behavior and every language-neutral case; PR #13037 is the sole active parity PR."
+      "publication_notes": "Ready-for-review PR #13037 opened against exact origin/main 2295edd5975b43d5a3081e7eb1d7f5ca7afc43c1 after a clean three-commit rebase and full local revalidation. A focused CI repair updated the TypeScript tsconfig portability inventory to include the new shared-config project; all 16 focused tests passed at repair head 14c5060bfe2b53ce6003a1aa25ab1e5f9f2fb708. All 41 final checks completed successfully or acceptably, GitHub reported a clean merge state, and auto-merge was enabled.",
+      "merged_at": "2026-08-26T13:47:21Z",
+      "merge_revision": "848f43c20b4d30544a3d9f9c50ae4a10c6e2b63d",
+      "notes": "Merged PR #13037 delivers the closed canonical-CBOR contract in TypeScript with bigint-safe uint64 behavior and every language-neutral case."
     },
     {
       "id": "vault-pm-audit-portable-conformance",
