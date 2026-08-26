@@ -233,6 +233,8 @@ subtest 'orphan-crate validator consumes every language-neutral fixture' => sub 
 
 subtest 'orphan-crate validator redacts unsafe paths including invalid UTF-8' => sub {
     my $invalid_utf8 = "code/packages/rust/\xFF";
+    my $surrogate = 'code/packages/rust/' . chr(0xD800);
+    my $above_unicode = 'code/packages/rust/' . chr(0x110000);
     my @unsafe_paths = (
         '',
         "😀" x 513,
@@ -242,6 +244,8 @@ subtest 'orphan-crate validator redacts unsafe paths including invalid UTF-8' =>
         'code/packages/rust/trailing.',
         'code/packages/rust/CON',
         $invalid_utf8,
+        $surrogate,
+        $above_unicode,
     );
 
     for my $unsafe_path (@unsafe_paths) {
@@ -298,6 +302,43 @@ subtest 'orphan-crate validator uses the exact Python blank-reason set' => sub {
         'REASON_MISSING',
         'information-separator reason is blank',
     );
+};
+
+subtest 'orphan-crate validator rejects malformed or oversized reasons' => sub {
+    my @cases = (
+        ['missing', {}],
+        ['undefined', { reason => undef }],
+        ['reference', { reason => [] }],
+        ['invalid UTF-8', { reason => "\xFF" }],
+        ['oversized', { reason => 'x' x 4097 }],
+    );
+
+    for my $case (@cases) {
+        my ($name, $reason_fields) = @{$case};
+        my $result = CodingAdventures::BuildTool::Validator::validate_orphan_crate_snapshot({
+            directories => ['code/packages/rust/demo'],
+            manifests => [{ path => 'code/packages/rust/demo', kind => 'package' }],
+            build_files => [],
+            exemptions => [{
+                line => 7,
+                kind => 'PENDING',
+                path => 'code/packages/rust/demo',
+                %{$reason_fields},
+            }],
+        });
+
+        is($result->{pending_exemption_count}, 0, "$name reason does not suppress the orphan");
+        is(
+            $result->{diagnostic_codes},
+            ['ORPHAN_CRATE_UNLISTED', 'ORPHAN_EXEMPTION_INVALID'],
+            "$name reason fails closed",
+        );
+        is(
+            $result->{diagnostics}[-1]{details},
+            { line => 7, problem => 'REASON_MISSING' },
+            "$name reason uses the fixed safe diagnostic",
+        );
+    }
 };
 
 subtest 'orphan-crate validator chooses closest empty BUILD then fixed name rank' => sub {
