@@ -529,7 +529,7 @@ fn token_name(token: &Token) -> &str {
 
 use diagram_ir::{
     Axis, AxisKind, ChartDataPoint, ChartDiagram, ChartKind, ChartOrientation, ChartSeries,
-    Compartment, CompartmentKind, GanttConfig, GanttDateFormat, GanttDateFormatPart, GanttDiagram, GanttSection, GanttTask, GitBranch, GitCommitType,
+    Compartment, CompartmentKind, GanttConfig, GanttDateFormat, GanttDateFormatPart, GanttDiagram, GanttDuration, GanttDurationUnit, GanttSection, GanttTask, GitBranch, GitCommitType,
     GitDiagram, GitEvent, JourneyConfig, JourneyDiagram, JourneySection, JourneyTask, PieSlice,
     QuadrantConfig, QuadrantPoint, RelKind, RequirementElementMetadata, RequirementKind,
     RequirementMetadata, RequirementRisk, RequirementVerifyMethod, SankeyFlow, SankeyNode,
@@ -6038,6 +6038,9 @@ pub fn parse_gantt(source: &str) -> Result<GanttDiagram, ParseError> {
 
 fn parse_gantt_date_format(token: &Token, source: &str) -> Result<GanttDateFormat, ParseError> {
     if source.is_empty() { return Err(token_error(token, "Gantt dateFormat cannot be empty")); }
+    if source == "yyyy-mm-dd" {
+        return Ok(GanttDateFormat { source: source.into(), ..GanttDateFormat::default() });
+    }
     let mut parts = Vec::new();
     let mut index = 0;
     while index < source.len() {
@@ -6322,7 +6325,7 @@ fn parse_gantt_task(
         _ => return Err(token_error(token, "invalid Gantt task field count")),
     };
     let start = parse_gantt_task_start(token, &start_data, date_format)?;
-    let (duration_days, end) = parse_gantt_task_end(token, end_data, date_format)?;
+    let (duration, end) = parse_gantt_task_end(token, end_data, date_format)?;
 
     Ok(GanttTask {
         id,
@@ -6332,7 +6335,7 @@ fn parse_gantt_task(
             TaskStart::Date(_) => Vec::new(),
         },
         start,
-        duration_days,
+        duration,
         end,
         tags,
         link: None,
@@ -6371,16 +6374,16 @@ fn parse_gantt_task_end(
     token: &Token,
     value: &str,
     date_format: &GanttDateFormat,
-) -> Result<(f64, Option<TaskEnd>), ParseError> {
+) -> Result<(GanttDuration, Option<TaskEnd>), ParseError> {
     if let Some(ids) = value.strip_prefix("until ") {
         let dependencies = gantt_dependency_ids(ids);
         if dependencies.is_empty() {
             return Err(token_error(token, "Gantt until requires at least one task id"));
         }
-        Ok((0.0, Some(TaskEnd::Until(dependencies))))
+        Ok((GanttDuration::default(), Some(TaskEnd::Until(dependencies))))
     } else if gantt_date_matches_format(value, date_format) {
-        Ok((0.0, Some(TaskEnd::Date(value.to_string()))))
-    } else if let Some(duration) = parse_duration(value).filter(|duration| *duration >= 0.0) {
+        Ok((GanttDuration::default(), Some(TaskEnd::Date(value.to_string()))))
+    } else if let Some(duration) = parse_duration(value).filter(|duration| duration.value >= 0.0) {
         Ok((duration, None))
     } else {
         Err(token_error(token, "invalid Gantt task duration or end date"))
@@ -6395,17 +6398,15 @@ fn gantt_dependency_ids(value: &str) -> Vec<String> {
         .collect()
 }
 
-fn parse_duration(s: &str) -> Option<f64> {
+fn parse_duration(s: &str) -> Option<GanttDuration> {
     let s = s.trim();
-    if let Some(rest) = s.strip_suffix('d') {
-        rest.parse().ok()
-    } else if let Some(rest) = s.strip_suffix('w') {
-        rest.parse::<f64>().ok().map(|w| w * 7.0)
-    } else if let Some(rest) = s.strip_suffix('h') {
-        rest.parse::<f64>().ok().map(|h| h / 24.0)
-    } else {
-        s.parse().ok()
-    }
+    let units = [("ms", GanttDurationUnit::Milliseconds), ("s", GanttDurationUnit::Seconds),
+        ("m", GanttDurationUnit::Minutes), ("h", GanttDurationUnit::Hours),
+        ("d", GanttDurationUnit::Days), ("w", GanttDurationUnit::Weeks)];
+    let (number, unit) = units.into_iter().find_map(|(suffix, unit)|
+        s.strip_suffix(suffix).map(|number| (number, unit)))
+        .unwrap_or((s, GanttDurationUnit::Days));
+    Some(GanttDuration { value: number.parse().ok()?, unit })
 }
 
 // ── Tests ─────────────────────────────────────────────────────────────────
@@ -6965,7 +6966,7 @@ Rel(customer, web, \"Uses\", \"HTTPS\")";
         ).unwrap();
         let task = &diagram.sections[0].tasks[0];
         assert_eq!(task.end, Some(TaskEnd::Date("2026-03-03".into())));
-        assert_eq!(task.duration_days, 0.0);
+        assert_eq!(task.duration, GanttDuration::default());
     }
 
     #[test]
@@ -7046,6 +7047,18 @@ Rel(customer, web, \"Uses\", \"HTTPS\")";
         let unix = parse_gantt("gantt\ndateFormat X\nTask :t1, 1767225600, 1767312000").unwrap();
         assert!(matches!(unix.sections[0].tasks[0].end, Some(TaskEnd::Date(_))));
         assert!(parse_gantt("gantt\ndateFormat YYYY-QQ\nTask :t1, 2026-01, 1d").is_err());
+    }
+
+    #[test]
+    fn gantt_preserves_sub_day_duration_units() {
+        let diagram = parse_gantt(
+            "gantt\ndateFormat x\nA :a, 0, 20ms\nB :b, after a, 0.1s\nC :c, after b, 2m\nD :d, after c, 3h",
+        ).unwrap();
+        let tasks = &diagram.sections[0].tasks;
+        assert_eq!(tasks[0].duration, GanttDuration { value: 20.0, unit: GanttDurationUnit::Milliseconds });
+        assert_eq!(tasks[1].duration, GanttDuration { value: 0.1, unit: GanttDurationUnit::Seconds });
+        assert_eq!(tasks[2].duration, GanttDuration { value: 2.0, unit: GanttDurationUnit::Minutes });
+        assert_eq!(tasks[3].duration, GanttDuration { value: 3.0, unit: GanttDurationUnit::Hours });
     }
 
     #[test]
