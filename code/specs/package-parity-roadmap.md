@@ -8363,6 +8363,73 @@ structurally unchanged: 1,373 established implementation identities, 4,566
 package slots, 1,412 all-reported identities, zero collisions, and zero unknown
 buckets. No newly eligible unowned gap displaced the selected Swift validator.
 
+The branch rebased cleanly once more during validation onto exact `origin/main`
+`87c2f6564c0944d8fd47fccd041b1a9ba6e4b801`. Intervening #12977 remains
+inside the ALGOL IIR neutral and Rust lane owners, and #12978 remains inside
+the deterministic HTML frontend owner. Neither changes a package identity,
+BUILD marker, or selected Swift path.
+
+The Swift implementation consumes all four neutral orphan fixtures through a
+pure caller-bounded snapshot API. Focused tests cover exact artifact names,
+direct and ancestor runnable coverage, nearer-empty nonmasking, closest-empty
+BUILD rank, path redaction and scalar bounds, Python blank reasons, NFC
+full-fold duplicate reservation before field precedence, stale precedence,
+pending counts, and Python-compatible ASCII JSON ordering for DEL, accented,
+and supplementary-plane details. A test-first compile failed on the missing
+API before implementation. Swift 6.3.3 then passes all 40 package tests in
+normal, parallel, coverage, literal Unix BUILD, and exact Windows BUILD-content
+modes. `Validator.swift` reaches 98.21% line and 94.69% function coverage; the
+release build, package description, and zero-external-dependency graph pass.
+
+The neutral corpus validates 111 cases and 269 files, its execution contract
+validates, and all 201 conformance tests pass with 23 expected platform skips.
+The Go oracle passes module verification, all tests, vet, and trimpath build;
+its real forced Swift dry plan evaluates 45 Starlark BUILD files, validates the
+five reviewed orphan exemptions, discovers 165 packages, and reports all 165
+as `WOULD-BUILD`. Reporter tests pass 10 of 10, the inventory remains collision
+clean, and the 519-owner/781-edge graph remains unique, complete, acyclic, and
+free of merged-to-unmerged edges at 149 merged, 369 pending, and one
+in-progress item. Diff hygiene, credential-pattern scanning, dependency scope,
+and process/filesystem/environment/network authority review pass. Swift 6.3.3
+strict formatting remains an inherited baseline-red gate because the repository
+has no swift-format configuration; the exact-main versions of the three touched
+Swift files already produce 1,021 diagnostics, so unrelated formatter churn was
+not introduced.
+
+The final live-PR audit registers the newly unowned W24 WebAssembly exception
+slice before publication. PR #12981 adds real abstract `exnref` handles,
+`catch_ref`, `catch_all_ref`, `throw_ref`, null-reference trapping, corrected
+blocktype encoding, and the pinned `throw_ref.wast` corpus; W21 through W23
+explicitly stop short of that behavior. A new neutral W24 owner therefore
+depends on W23 identity conformance, while its selection-blocked established-
+lane umbrella depends on both neutral W24 and the W23 lane umbrella. This grows
+the graph to 521 owners and 784 edges: 149 merged, 371 pending, and exactly one
+in-progress owner. The graph remains unique, complete, acyclic, and free of
+merged-to-unmerged edges, and W24 does not displace the dependency-ready Swift
+validator.
+
+The other live heads remain classified by existing owners. PR #12980 extends
+the Mosaic generated-wrapper review with target-specific XAML lowering;
+#12982 extends script-ductus plus curriculum and `human-language-data`; #12983
+extends Mermaid Gantt portable and lane conformance; #12985 is Gujarati
+curriculum, generated-book, and `human-language-data` work; and the spec-only
+#12986 is human-language curriculum planning. The older live #12165, #12162,
+#12149, and #7821 remain inside their registered authority, build, or dependency
+owners. All ten live PRs have zero exact overlap with the seven Swift tranche
+paths.
+
+Immediately before publication, the complete three-commit branch rebased
+without conflict onto exact `origin/main`
+`4bc1649d28948a6daa609ef1f00239063a10f12b`. PR #12981 merged as
+`6604df1f9d` inside the newly registered W24 pair and existing Wasm owners;
+#12982 merged as `9591aa6e44` inside script-ductus, curriculum, and
+`human-language-data`; #12980 merged as `72ccc71aa8` inside the Mosaic
+generated-wrapper review; and #12983 merged as `4bc1649d28` inside Mermaid
+Gantt neutral and lane owners. The regenerated collision-checked inventory and
+all ten reporter tests remain unchanged and clean. The new live #12987 remains
+inside the ALGOL IIR neutral and Rust lane owners. The resulting seven live PRs
+still have zero exact overlap with the seven Swift tranche paths.
+
 ## Autonomous Loop Protocol
 
 Only one parity PR should be active at a time.
