@@ -13,7 +13,7 @@
   },
   "active_pr": null,
   "last_inventory": {
-    "revision": "385bf43d85a20719469ac1c1d9daebed1590533e",
+    "revision": "8afaaa6e597031d62b43f0c2b0df13389f3f3981",
     "schema_version": 3,
     "established_languages": 15,
     "implementation_identities": 1373,
@@ -4921,6 +4921,13 @@
       "pr_number": null,
       "selection_revision": "385bf43d85a20719469ac1c1d9daebed1590533e",
       "selection_notes": "Selected only after PR #12958 completed all 40 terminal acceptable checks, GitHub reported the reviewed branch clean and mergeable, and squash auto-merge merged reviewed head e6f2d31009ce4e0aae639a5951791853f3b0c93c as a0cb099a58f58ee619e909fed6a42720a704d21f at 2026-08-26T06:43:58Z without a manual merge command. The collision-checked exact-main schema-3 report at 385bf43d85a20719469ac1c1d9daebed1590533e remains 15 established lanes, 1,373 implementation identities, 4,566 package slots, 175 high-consensus packages with 276 gaps, 122 identities in five to nine lanes with 926 gaps, 166 identities in two to four lanes with 2,087 gaps, 910 singletons with 12,740 gaps, 721 Rust singletons, zero canonical collisions, and zero unknown buckets; OCaml remains correctly emerging at zero packages. Merged PRs #12954 through #12957 remain under the registered W22, ALGOL IIR, Mermaid Gantt, and script-ductus owners. Merged PR #12959 extends the existing deterministic HTML frontend owner with unmatched disclosure-end diagnostic positioning and adds no package identity or BUILD/build-tool marker. No newly unowned eligible portable gap is exposed. Both Haskell prerequisites are merged. Haskell is the widest remaining orphan consumer at 204 reported packages versus Swift at 161, and each advances the same completion umbrella. All six live PRs have zero exact overlap with the expected Haskell source, test, documentation, state, and roadmap paths; the target local branch, remote branch, and prior PR were absent before creating the fresh exact-main worktree. OCaml remains collision-unsafe while PRs #12149 and #12162 own required Go entry-point and validator surfaces.",
+      "rebase_revision": "8afaaa6e597031d62b43f0c2b0df13389f3f3981",
+      "rebase_notes": "Rebased without conflict before publication onto exact origin/main 8afaaa6e597031d62b43f0c2b0df13389f3f3981. Intervening merged PR #12960 remains inside the ALGOL IIR neutral and lane owners; #12961 remains curriculum and generated human-language-data under its existing singleton classification; #12962 remains inside the Mermaid Gantt neutral and lane owners; and #12965 remains inside the script-ductus neutral and lane owners plus existing curriculum and human-language-data consumers. None changes a package identity or BUILD/build-tool marker, and the refreshed collision-checked report is structurally unchanged with zero collisions and zero unknown buckets. All eight live PRs have zero exact overlap with the six selected Haskell paths.",
+      "test_revision": "44b1bceadd478be03bb40ae4ea5039605917e024",
+      "implementation_revision": "44b1bceadd478be03bb40ae4ea5039605917e024",
+      "validation_revision": "44b1bceadd478be03bb40ae4ea5039605917e024",
+      "security_review_revision": "44b1bceadd478be03bb40ae4ea5039605917e024",
+      "validation_notes": "The pure Haskell adapter consumes all four orphan-crate fixtures and preserves exact artifact filtering, component-aware ancestor BUILD coverage and rank, nearer-empty nonmasking, NFC/full-fold identities, full-uppercase Windows reserved names, exemption field precedence and stale cleanup, Python-compatible blank reasons, Unicode-scalar ordering, canonical ASCII JSON details, fixed hostile-input redaction, and active PENDING counts without filesystem, Git, process, environment, network, credential, or link authority. Independent review exposed and the implementation closed two edge cases before publication: bounded spine checks now reject lazy paths at scalar 513 and reasons at scalar 4,097 without forcing hostile tails, and U+007F is escaped as \\u007f for Python-compatible canonical ordering. Exact-main GHC 9.4.8 validation passes 55 examples with zero failures through direct Cabal, literal BUILD, and Windows BUILD entry points; cabal check and cabal build all pass. Excluding generated Unicode tables and test modules, HPC reports 76% expressions, 69% alternatives, 86% local declarations, and 57% top-level declarations. HLint 3.8 reports the same nine inherited hints as exact main and zero new hints. The neutral corpus validates 111 cases and 269 files; all 201 conformance tests pass with 23 expected Windows skips; and the execution contract validates. The Go build tool passes module verification, all tests, vet, and trimpath build; a forced Haskell dry plan evaluates 45 Starlark BUILD files, discovers 207 packages, validates the five-entry orphan ledger, and reports all 207 WOULD-BUILD. The collision-checked schema-3 report remains 15 lanes, 1,373 identities, 4,566 slots, 1,412 all-reported packages, zero collisions, and zero unknown buckets with OCaml emerging at zero packages. The refreshed 519-owner, 781-edge state graph is unique, dependency-complete, acyclic, and free of merged-to-unmerged edges with 148 merged, 370 pending, and exactly one in-progress owner.",
       "notes": "Consume the closed process-free orphan-crate snapshot and diagnostics in the Haskell engine without adding filesystem enumeration or process authority."
     },
     {
@@ -5726,6 +5733,28 @@
       "pr_number": null,
       "selection_blocked": true,
       "notes": "Completion umbrella for applicable execution, runtime, type, and WAT/WAST lanes after both the W22 neutral matching contract and W21 tag/throw lane substrate close. Decompose into coherent runtime and parser children before delivery; preserve instance-gated tag identity, ordered handler choice, typed payloads, uncaught-exception classification, and explicit exclusions rather than inferring parity from the Rust W22 reference slice or existing package-directory presence."
+    },
+    {
+      "id": "wasm-exceptions-cross-instance-tag-identity-language-neutral-conformance",
+      "title": "Specify Wasm cross-instance tag identity and catch matching with language-neutral fixtures",
+      "status": "pending",
+      "depends_on": ["wasm-exceptions-catch-clause-matching-language-neutral-conformance"],
+      "branch": null,
+      "pr_number": null,
+      "notes": "Discovered during the Haskell orphan-validator pre-publication audit while PR #12966 was open. The Rust W23 reference slice canonicalizes per-definition tag identities across imports and instances, matches catch clauses by that identity, keeps catch_all unconditional across instances, and clears three inherited try_table.wast exclusions. W22 explicitly excluded cross-instance identity, so its same-instance owner cannot absorb this behavior. Define one bounded neutral contract and adversarial corpus for imported alias identity, distinct definitions with equal signatures, multi-instance propagation, identity-based catch selection, unconditional catch_all behavior, stable diagnostics, and bounded execution. Reuse the existing Wasm portable-conformance, official-corpus, provenance, baseline, and host-authority owners for generic grading, corpus, and native-host surfaces rather than duplicating them."
+    },
+    {
+      "id": "wasm-exceptions-cross-instance-tag-identity-established-lane-parity",
+      "title": "Bring Wasm cross-instance tag identity and catch matching to every applicable established lane",
+      "status": "pending",
+      "depends_on": [
+        "wasm-exceptions-cross-instance-tag-identity-language-neutral-conformance",
+        "wasm-exceptions-catch-clause-matching-established-lane-parity"
+      ],
+      "branch": null,
+      "pr_number": null,
+      "selection_blocked": true,
+      "notes": "Completion umbrella for applicable execution, runtime, validation, and WAT/WAST lanes after the W23 neutral identity contract and W22 catch-matching lane substrate close. Decompose into coherent runtime and corpus children before delivery; preserve definition identity across import aliases and instance boundaries, keep catch_all unconditional, and do not infer parity from the Rust W23 reference slice or existing package-directory presence."
     },
     {
       "id": "wasm-wast-parser-language-neutral-conformance",

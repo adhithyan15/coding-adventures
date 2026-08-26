@@ -8224,8 +8224,9 @@ enabled squash auto-merge. GitHub merged it as
 `a0cb099a58f58ee619e909fed6a42720a704d21f` at
 `2026-08-26T06:43:58Z` without a manual merge command.
 
-The collision-checked exact-main schema-3 report at
-`385bf43d85a20719469ac1c1d9daebed1590533e` remains structurally unchanged:
+The collision-checked exact-main schema-3 report, refreshed after a clean
+rebase onto `8afaaa6e597031d62b43f0c2b0df13389f3f3981`, remains structurally
+unchanged:
 15 established lanes, 1,373 implementation identities, 4,566 package slots,
 175 high-consensus packages with 276 missing slots, 122 identities in five to
 nine lanes with 926 gaps, 166 identities in two to four lanes with 2,087 gaps,
@@ -8240,26 +8241,66 @@ Merged PR #12955 remains inside the ALGOL IIR neutral and lane owners. Merged
 PR #12956 remains curriculum and shared script-ductus authored data. Merged PR
 #12957 remains inside the Mermaid Gantt neutral and lane owners. Merged PR
 #12959 extends the existing deterministic HTML frontend owner with unmatched
-disclosure-end diagnostic positions. Open PR #12960 remains inside the ALGOL
-IIR owners, while open PR #12961 is curriculum and generated
-`human-language-data` under the existing singleton classification. None adds
-or removes a package identity or BUILD/build-tool marker, and no newly unowned
-eligible portable gap remains.
+disclosure-end diagnostic positions. Merged PR #12960 remains inside the ALGOL
+IIR owners; merged PR #12961 is curriculum and generated `human-language-data`
+under the existing singleton classification; merged PR #12962 remains inside
+the Mermaid Gantt neutral and lane owners; and merged PR #12965 remains inside
+the script-ductus neutral and lane owners plus existing curriculum and
+`human-language-data` consumers. None adds or removes a package identity or
+BUILD/build-tool marker, and no newly unowned eligible portable gap remains.
+
+The live-PR audit adds one newly discovered owner pair before publication.
+PR #12966's Rust W23 slice introduces cross-instance Wasm tag identity,
+identity-based `catch`, and unconditional cross-instance `catch_all`; W22
+explicitly excluded that behavior. The state now registers a neutral W23
+contract depending on the W22 neutral contract and a selection-blocked lane
+umbrella depending on both neutral W23 and lane W22. PR #12963 remains inside
+the JV02 portable/lane and Semantic-IR loop-control consumer owners; its
+skip-on-missing-Node execution checks broaden the existing extra-CI
+toolchain-declaration owners. PR #12964 remains inside the deterministic HTML
+frontend owner. PR #12968 remains inside the human-language-data generator
+filesystem-authority and human-language-books untrusted-input host-authority
+owners. None changes a package identity or BUILD/build-tool marker.
 
 The dependency/leverage pass selects
 `build-tool-haskell-orphan-crate-validation-conformance` on branch
 `codex/build-tool-haskell-orphan-crate-validation-conformance`. Its neutral
 orphan corpus and Haskell tracked-artifact substrate are merged. Haskell is the
 widest remaining orphan consumer at 204 reported packages versus Swift at 161;
-both advance the same completion umbrella. All six live PRs have zero exact
+both advance the same completion umbrella. All eight live PRs have zero exact
 overlap with the expected Haskell validator, tests, README, changelog, state,
 and roadmap surfaces. The target local branch, remote branch, and prior PR were
 absent before the fresh exact-main worktree was created. The higher-descendant
 extra-CI corpus and strategic OCaml process-free substrate remain
 collision-unsafe while PRs #12149 and #12162 own their required Go entry-point
 and validator surfaces. After lifecycle reconciliation and selection, the
-graph contains 517 unique owners and 778 complete acyclic edges: 148 merged,
-368 pending, and exactly one in-progress owner, with no active parity PR.
+graph contains 519 unique owners and 781 complete acyclic edges: 148 merged,
+370 pending, and exactly one in-progress owner, with no active parity PR.
+
+The Haskell implementation is one pure typed snapshot adapter and consumes all
+four neutral orphan-crate fixtures. It preserves exact artifact filtering,
+component-aware ancestor BUILD coverage and filename rank, nearer-empty
+nonmasking, NFC and Unicode 17 full-fold identities, Windows reserved names,
+exemption precedence and staleness, Python-compatible blank reasons, scalar
+ordering, canonical ASCII JSON details, fixed hostile-input redaction, and
+active PENDING counts without adding filesystem, Git, process, environment,
+network, credential, or link authority. Independent review caught two
+pre-publication edge cases: scalar limits now use bounded spine checks that do
+not force hostile lazy tails, and U+007F is escaped as `\\u007f` for
+Python-compatible canonical ordering.
+
+Exact-main GHC 9.4.8 validation passes 55 examples with zero failures through
+direct Cabal, literal `BUILD`, and Windows `BUILD_windows` entry points;
+`cabal check` and `cabal build all` also pass. Excluding generated Unicode
+tables and test modules, HPC reports 76% expressions, 69% alternatives, 86%
+local declarations, and 57% top-level declarations. Installed HLint 3.8
+reports the same nine inherited hints as exact main and zero new hints. The
+neutral corpus validates 111 cases and 269 files, all 201 conformance tests
+pass with 23 expected Windows skips, and the execution contract validates.
+The Go build tool passes module verification, all tests, vet, and trimpath
+build. A forced Haskell dry plan evaluates 45 Starlark BUILD files, discovers
+207 packages, validates the five-entry orphan ledger, and reports all 207
+`WOULD-BUILD`. The final report and 519-owner/781-edge graph remain clean.
 
 ## Autonomous Loop Protocol
 
