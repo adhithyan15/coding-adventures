@@ -1,5 +1,9 @@
 # Changelog
 
+## 0.30.0
+
+- Resolve typed one-, two-, and three-digit Gantt fractional seconds into precise backend-neutral geometry.
+
 ## 0.29.0
 
 - Resolve and validate typed English weekday names before backend-neutral Gantt layout.

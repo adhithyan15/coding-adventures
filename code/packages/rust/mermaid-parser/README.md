@@ -75,6 +75,8 @@ typed parts and normalize into UTC layout geometry. Gantt remains partial while
 single-component second timestamps also retain sub-minute precision through
 layout, and typed 12-hour clocks resolve meridiem markers before layout. Gantt
 also validates typed English short and long weekday names against resolved dates.
+One-, two-, and three-digit fractional-second tokens retain their authored
+precision before backend-neutral temporal layout.
 It remains partial while non-English locale data and the complete pinned visual
 corpus are still outstanding.
 

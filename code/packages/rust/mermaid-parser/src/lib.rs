@@ -6059,6 +6059,7 @@ fn parse_gantt_date_format(token: &Token, source: &str) -> Result<GanttDateForma
             ("YYYY", GanttDateFormatPart::Year4), ("MMMM", GanttDateFormatPart::MonthLong),
             ("dddd", GanttDateFormatPart::WeekdayLong),
             ("MMM", GanttDateFormatPart::MonthShort), ("SSS", GanttDateFormatPart::Millisecond),
+            ("SS", GanttDateFormatPart::Millisecond2),
             ("ddd", GanttDateFormatPart::WeekdayShort),
             ("ZZ", GanttDateFormatPart::TimezoneOffsetCompact),
             ("hh", GanttDateFormatPart::Hour12Padded),
@@ -6066,6 +6067,7 @@ fn parse_gantt_date_format(token: &Token, source: &str) -> Result<GanttDateForma
             ("DD", GanttDateFormatPart::Day2), ("HH", GanttDateFormatPart::Hour24),
             ("mm", GanttDateFormatPart::Minute), ("ss", GanttDateFormatPart::Second),
             ("M", GanttDateFormatPart::Month), ("D", GanttDateFormatPart::Day),
+            ("S", GanttDateFormatPart::Millisecond1),
             ("h", GanttDateFormatPart::Hour12),
             ("A", GanttDateFormatPart::MeridiemUpper),
             ("a", GanttDateFormatPart::MeridiemLower),
@@ -6114,6 +6116,8 @@ fn gantt_date_matches_format(value: &str, format: &GanttDateFormat) -> bool {
             GanttDateFormatPart::Hour12Padded => consume_digits(rest, 2, 2),
             GanttDateFormatPart::Second if seconds_only => consume_digits(rest, 1, 2),
             GanttDateFormatPart::Second => consume_digits(rest, 2, 2),
+            GanttDateFormatPart::Millisecond1 => consume_digits(rest, 1, 1),
+            GanttDateFormatPart::Millisecond2 => consume_digits(rest, 2, 2),
             GanttDateFormatPart::Millisecond => consume_digits(rest, 3, 3),
             GanttDateFormatPart::MonthShort => consume_letters(rest, 3, 3),
             GanttDateFormatPart::MonthLong => consume_letters(rest, 3, 9),
@@ -7140,6 +7144,14 @@ Rel(customer, web, \"Uses\", \"HTTPS\")";
         let unix = parse_gantt("gantt\ndateFormat X\nTask :t1, 1767225600, 1767312000").unwrap();
         assert!(matches!(unix.sections[0].tasks[0].end, Some(TaskEnd::Date(_))));
         assert!(parse_gantt("gantt\ndateFormat YYYY-QQ\nTask :t1, 2026-01, 1d").is_err());
+    }
+
+    #[test]
+    fn gantt_compiles_fractional_second_formats() {
+        let one = parse_gantt("gantt\ndateFormat HH:mm:ss.S\nTask :t1, 00:00:00.5, 1s").unwrap();
+        assert!(one.date_format.parts.contains(&GanttDateFormatPart::Millisecond1));
+        let two = parse_gantt("gantt\ndateFormat HH:mm:ss.SS\nTask :t1, 00:00:00.25, 1s").unwrap();
+        assert!(two.date_format.parts.contains(&GanttDateFormatPart::Millisecond2));
     }
 
     #[test]

@@ -18,7 +18,7 @@ use diagram_ir::{
 };
 use std::collections::{BTreeSet, HashMap};
 
-pub const VERSION: &str = "0.29.0";
+pub const VERSION: &str = "0.30.0";
 
 // ── Constants ─────────────────────────────────────────────────────────────
 
@@ -281,6 +281,14 @@ fn date_to_days(source: &str, format: &GanttDateFormat) -> Option<f64> {
                 (second, rest) = take_number(rest, 1, 2)?;
             }
             GanttDateFormatPart::Second => (second, rest) = take_number(rest, 2, 2)?,
+            GanttDateFormatPart::Millisecond1 => {
+                (millisecond, rest) = take_number(rest, 1, 1)?;
+                millisecond *= 100;
+            }
+            GanttDateFormatPart::Millisecond2 => {
+                (millisecond, rest) = take_number(rest, 2, 2)?;
+                millisecond *= 10;
+            }
             GanttDateFormatPart::Millisecond => (millisecond, rest) = take_number(rest, 3, 3)?,
             GanttDateFormatPart::MeridiemUpper => {
                 (meridiem_is_pm, rest) = take_meridiem(rest, true)?;
@@ -1008,7 +1016,7 @@ mod tests {
 
     #[test]
     fn version_exists() {
-        assert_eq!(crate::VERSION, "0.29.0");
+        assert_eq!(crate::VERSION, "0.30.0");
     }
 
     #[test]
@@ -1280,6 +1288,19 @@ mod tests {
         let monday = date_to_days("Mon 2026-03-02", &format).expect("valid Monday");
         assert_eq!(monday - sunday, 1.0);
         assert!(date_to_days("Mon 2026-03-01", &format).is_none());
+    }
+
+    #[test]
+    fn gantt_layout_scales_fractional_second_precision() {
+        for (part, value, expected_milliseconds) in [
+            (GanttDateFormatPart::Millisecond1, "5", 500.0),
+            (GanttDateFormatPart::Millisecond2, "25", 250.0),
+            (GanttDateFormatPart::Millisecond, "125", 125.0),
+        ] {
+            let format = GanttDateFormat { source: "fraction".into(), parts: vec![part] };
+            let days = date_to_days(value, &format).expect("valid fractional second");
+            assert!((days * 86_400_000.0 - expected_milliseconds).abs() < 0.001);
+        }
     }
 
     #[test]
