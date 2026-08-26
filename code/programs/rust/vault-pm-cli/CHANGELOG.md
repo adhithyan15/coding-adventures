@@ -2,6 +2,13 @@
 
 ## Unreleased
 
+- `the_shipped_executable_contains_no_crash_injection` (VLT-PM41 §4.6 guard
+  rail) now also scans for `VAULT_PM_DRILL_KDF_{MEMORY_KIB,ITERATIONS,LANES}`
+  alongside the original `VAULT_PM_CRASH_AT`/`VAULT_PM_CRASH_TRACE`, following
+  `coding_adventures_vault_pm_cli`'s new `crash.rs::kdf_policy_override`
+  (backlog item #20) into this test's coverage — same
+  `#[cfg(feature = "crash-injection")]` split, same guarantee, same test.
+
 - Command surface gains `storage add|list|check|migrate`
   (`VLT-PM50-cli-storage-migration.md`, `VLT-PM00` §23 item 14, the last item
   of Phase 1B). Added `real_cli_storage_add_check_and_migrate_a_real_vault`

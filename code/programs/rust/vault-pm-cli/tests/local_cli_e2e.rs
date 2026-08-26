@@ -82,13 +82,25 @@ impl Drop for TestHome {
 /// The drill therefore lives in a separate crate,
 /// `code/programs/rust/vault-pm-cli-drill`, whose binary is `vault-pm-drill`.
 /// This test is the guard rail on that decision: it reads the binary this
-/// crate actually produced and fails if either injection variable name appears
+/// crate actually produced and fails if any injection variable name appears
 /// anywhere in it. It runs in a build that does have dev-dependencies
 /// resolved, which is precisely the configuration the mistake shows up in.
+///
+/// The KDF-cost-override variables (`VAULT_PM_DRILL_KDF_*`, VLT-PM41 §8.1)
+/// join the original two here for the same reason: `crash.rs`'s
+/// `kdf_policy_override` is behind the identical `#[cfg(feature =
+/// "crash-injection")]` split as the landing-point instrumentation, so the
+/// same guarantee — and the same test — covers both.
 #[test]
 fn the_shipped_executable_contains_no_crash_injection() {
     let binary = fs::read(env!("CARGO_BIN_EXE_vault-pm")).unwrap();
-    for forbidden in [b"VAULT_PM_CRASH_AT".as_slice(), b"VAULT_PM_CRASH_TRACE"] {
+    for forbidden in [
+        b"VAULT_PM_CRASH_AT".as_slice(),
+        b"VAULT_PM_CRASH_TRACE",
+        b"VAULT_PM_DRILL_KDF_MEMORY_KIB",
+        b"VAULT_PM_DRILL_KDF_ITERATIONS",
+        b"VAULT_PM_DRILL_KDF_LANES",
+    ] {
         assert!(
             !binary
                 .windows(forbidden.len())

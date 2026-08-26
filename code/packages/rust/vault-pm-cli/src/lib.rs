@@ -743,11 +743,15 @@ impl CliHost for NativeCliHost {
     }
 
     fn generation_zero_kdf(&self) -> (u32, u32, u8) {
-        (
+        // `crash::kdf_policy_override` is only ever `Some` when this build has
+        // the `crash-injection` feature compiled in — never in the shipped
+        // `vault-pm` — and only when the drill's own test harness set the
+        // three `VAULT_PM_DRILL_KDF_*` variables. See VLT-PM41 §8.1.
+        crash::kdf_policy_override().unwrap_or((
             PRODUCTION_KDF_MEMORY_KIB,
             PRODUCTION_KDF_ITERATIONS,
             PRODUCTION_KDF_LANES,
-        )
+        ))
     }
 }
 

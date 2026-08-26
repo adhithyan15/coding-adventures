@@ -155,13 +155,45 @@ so the only way to parallelize is to let each cell build its own fixture. That
 costs a little more total work and buys back the worker count in wall clock:
 508s to 117s locally, coverage unchanged.
 
+## The KDF cost is overhead, not coverage, and now runs at test cost
+
+Parallelizing bought back the worker count, but the KDF itself — 64 MiB, 3
+iterations, in a debug build — was still real work every worker paid, on every
+cell, of every sweep in this file, not just the rotation. None of that cost is
+what a crash-injection cell proves: a landing point's clean-or-resumable
+classification is a fact about `write -> fsync -> rename` ordering, never
+about how expensive the KDF that ran earlier in the same process happened to
+be. Backlog item #20 had once declined the obvious next lever — cutting the
+rotation sweep's 48 landing points to a representative subset by equivalence
+class — because that *is* a real coverage reduction, and it still is. It was
+not needed here: the actual bottleneck was the KDF cost, not the landing-point
+count, and that cost was separable from what the sweep proves.
+
+Every process this file drives now carries
+`VAULT_PM_DRILL_KDF_{MEMORY_KIB,ITERATIONS,LANES}` (set once, in
+`TestHome::configure`), which `coding_adventures_vault_pm_cli`'s
+`crash-injection` build reads in place of its production Argon2id policy — see
+`crash.rs`'s `kdf_policy_override`. The values (`8 * 1024` KiB, 1 iteration, 1
+lane) are not a weaker policy invented for this purpose; they are the same
+minimal, still bound-valid Argon2id parameters this repository's own
+`vault-pm-cli` unit tests already use for KDF-adjacent assertions that do not
+care about strength. Reading the override only when `crash-injection` is
+compiled in keeps it out of the shipped `vault-pm` the same way the
+landing-point instrumentation itself is kept out — by construction, not by
+convention. See `code/specs/VLT-PM41-cli-crash-fault-matrix.md` §8.1 for the
+full argument.
+
+Every landing point of every sweep is still swept — the rotation's 48, the
+generation-zero sweep's 34, the shared mutation-publication path's 20, every
+other ceremony — through a real `SIGKILL`ed process, with every assertion
+unchanged. Measured on one development machine, this file's whole `cargo test`
+run: **266.92s to 38.92s**. (Local timing is a proxy, not the ground truth —
+see this campaign's standing lesson on CI-vs-local timing drift — so the PR
+that lands this also records the real CI run's number.)
+
 ## Verification
 
 ```bash
 bash BUILD
 cargo clippy --manifest-path Cargo.toml --all-targets -- -D warnings
 ```
-
-Each cell pays a production Argon2id derivation per unlock, so the
-generation-zero sweep runs its cells across worker threads. The whole file is
-roughly two minutes.

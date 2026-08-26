@@ -39,6 +39,18 @@
 //! the application layer is deliberately storage-agnostic and owns no
 //! filesystem authority, so it is not the layer that knows what "durable"
 //! means. The composition root is.
+//!
+//! # The KDF policy override
+//!
+//! Same feature split, one more seam: [`kdf_policy_override`]. VLT-PM41 §8.1
+//! records why it exists — in short, `vault-pm-cli-drill`'s crash/fault
+//! matrix drives *production* Argon2id derivations through real killed
+//! processes, and the landing-point count and clean/resumable classification
+//! a cell lands in are both pure functions of how many durable writes a
+//! ceremony performs, never of how expensive the KDF was to derive. Reading
+//! this only when `crash-injection` is compiled in means the override is
+//! read-only-by-construction dead code in the shipped `vault-pm` — the same
+//! guarantee [`around_config_create`] and friends already have.
 
 #[cfg(not(feature = "crash-injection"))]
 mod imp {
@@ -75,6 +87,14 @@ mod imp {
     #[inline]
     pub fn around_attachment_artifact<T>(action: impl FnOnce() -> T) -> T {
         action()
+    }
+
+    /// The product build never reads an override: no counter, no
+    /// environment variable, no dependency, exactly like the `around_*`
+    /// combinators above.
+    #[inline]
+    pub fn kdf_policy_override() -> Option<(u32, u32, u8)> {
+        None
     }
 }
 
@@ -113,9 +133,37 @@ mod imp {
     pub fn around_attachment_artifact<T>(action: impl FnOnce() -> T) -> T {
         around(DurableStep::AttachmentArtifact, action)
     }
+
+    /// Read `VAULT_PM_DRILL_KDF_{MEMORY_KIB,ITERATIONS,LANES}`, all three or
+    /// none — a partial override would silently fall back to a mix of the
+    /// caller's chosen cost and the production default, which is a strength
+    /// nobody asked for and would defeat the whole point of documenting the
+    /// tradeoff explicitly. Malformed values panic rather than silently
+    /// falling back, on the same principle `VAULT_PM_CRASH_AT` parsing uses:
+    /// this variable exists for one caller (the drill's own test harness),
+    /// so a bad value is this crate's bug, not a hostile environment to
+    /// tolerate.
+    pub fn kdf_policy_override() -> Option<(u32, u32, u8)> {
+        let memory_kib = std::env::var("VAULT_PM_DRILL_KDF_MEMORY_KIB").ok()?;
+        let iterations = std::env::var("VAULT_PM_DRILL_KDF_ITERATIONS")
+            .expect("VAULT_PM_DRILL_KDF_MEMORY_KIB set without VAULT_PM_DRILL_KDF_ITERATIONS");
+        let lanes = std::env::var("VAULT_PM_DRILL_KDF_LANES")
+            .expect("VAULT_PM_DRILL_KDF_MEMORY_KIB set without VAULT_PM_DRILL_KDF_LANES");
+        Some((
+            memory_kib
+                .parse()
+                .expect("VAULT_PM_DRILL_KDF_MEMORY_KIB must be a decimal u32"),
+            iterations
+                .parse()
+                .expect("VAULT_PM_DRILL_KDF_ITERATIONS must be a decimal u32"),
+            lanes
+                .parse()
+                .expect("VAULT_PM_DRILL_KDF_LANES must be a decimal u8"),
+        ))
+    }
 }
 
 pub(crate) use imp::{
     around_attachment_artifact, around_config_create, around_config_replace,
-    around_export_artifact, backend, LocalBackend,
+    around_export_artifact, backend, kdf_policy_override, LocalBackend,
 };
