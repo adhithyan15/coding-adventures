@@ -49,9 +49,21 @@ index-then-`.length` primary-suffix chain, `grid[i].length` — the piece
 M4d's own scope narrowing split off; resolved by generalizing
 `lower_primary_expression`'s suffix-chain dispatch to recognize an
 all-index prefix with a trailing `.length` suffix, see that entry's own
-"Update"; a *chained* indexed-assignment target remains its own
-still-open gap, a structurally separate assignment-target-dispatch
-concern task #60 did not touch), and task #54 (wiring
+"Update"), task #66 (a *chained* indexed-assignment target,
+`grid[i][j] = v;`/`+= v;`/`++;` — the structurally separate assignment-
+target-dispatch concern task #60 did not touch; resolved by generalizing
+`indexed_assign_target` to a suffix chain of any length and, for the
+compound-assignment/incdec cases, generalizing task #59's own temp-
+hoisting design from exactly one suffix to N; see that entry's own
+"Update"), task #67/M5 (a qualified *static* method call self-reference,
+`ClassName.staticMethod(args)`, where `ClassName` is literally the one
+class this compilation unit declares; per `semantic-ir`'s own
+`Expr::VirtualCall` doc comment a static call needs no new SIR node, so
+this reuses M3a's existing `method_signatures`/`Expr::DirectCall` path
+unchanged, gated by a new `MethodSig::is_static` check rejecting a
+qualified call to a non-static method the way real Java does; see this
+section's own M5 entry for the exact shape and what was scoped out), and
+task #54 (wiring
 `Expr::IndirectCall` — a
 `Closure`-kinded local can now be *invoked*, `f(5)`, not just created and
 passed around; `lower_call_expression` checks local-variable resolution
@@ -108,9 +120,15 @@ bookkeeping into the loop's own condition expression instead, the one
 position a `continue` can never skip — see `java-to-semantic-ir`'s own
 `CHANGELOG.md` `[0.12.0]` entry for the full shapes). A labeled `break`/
 `continue` remains rejected (SIR has no loop-label vocabulary at all).
-`switch` itself remains fully unaddressed — tracked as task #51. M5
-onward, plus the standalone follow-up tasks split off from M4c and M4d,
-are pending.
+`switch` itself remains fully unaddressed — tracked as task #51. The
+standalone follow-up task split off from M4d's own chained-indexed-
+assignment-target gap is resolved as of task #66 — see this section's
+own task #60/#66 entries above and `java-to-semantic-ir`'s own
+`CHANGELOG.md` `[0.15.0]` entry for the exact shape. M5 (a qualified
+static method call self-reference) is resolved as of task #67 — see
+this section's own M5 entry below and `CHANGELOG.md`'s `[0.16.0]`
+entry. M6 onward, plus the standalone follow-up task split off from M4c
+(a non-constant or reference-typed `new T[N]`), are pending.
 
 ## Motivation
 
@@ -442,10 +460,26 @@ No suffix-chain/method-call-dispatch overlap risk materialized — a
 qualified method call (`grid[i].foo(...)`) remains categorically
 unreachable regardless, since no method-call surface exists on an array
 at all in this frontend. A *chained* indexed-assignment target
-(`grid[i][j] = v;`) remains unreachable — a structurally separate gap
-in the assignment-*target* dispatch (`indexed_assign_target`'s own fixed
-single-suffix match arm), not the value-position suffix-chain dispatch
-task #60 touched — still its own open follow-up.
+(`grid[i][j] = v;`) remained unreachable at the time — a structurally
+separate gap in the assignment-*target* dispatch (`indexed_assign_
+target`'s own fixed single-suffix match arm), not the value-position
+suffix-chain dispatch task #60 touched — split off into its own
+standalone follow-up task. **Update**: resolved (task #66).
+`indexed_assign_target` now recognizes a suffix chain of any length (the
+same `is_index_only_suffix` guard `lower_primary_expression`'s own
+chained-read case above already uses), returning the primary alongside
+the *whole* suffix slice rather than exactly one suffix node. A plain
+assignment (`grid[i][j] = v;`) peels every suffix but the last via the
+existing `lower_chained_index` and writes through the last suffix's own
+index — no temp-hoisting needed, since a plain-assignment target is only
+ever built once. Compound-assignment/incdec on a chained target
+(`grid[i][j] += v;`/`grid[i][j]++;`) route through a new shared
+`hoist_indexed_target` helper that generalizes task #59's own single-
+suffix once-only-evaluation temp-binding design to N suffixes: hoist
+`primary` and every suffix's own index expression into fresh local temps
+exactly once, then rebuild the read-position target chain from those
+temps' `VarRef`s — the identical double-evaluation hazard task #59
+guarded against, just no longer bounded to exactly one index.
 Multi-dimensional `new`-based array creation (`new int[2][3]`, `new
 int[][]{{1,2}}`) remains out of scope too — M4c's own two shapes stay
 single-dimension only by construction, unaffected by this milestone.
@@ -602,7 +636,37 @@ nothing for the fourth bug's own fix to run through a backend at all.
 original M9 slot: static field/method access patterns
 (`ClassName.field`, `ClassName.staticMethod()`) that M6/M7 need as
 building blocks, so class-body lowering (next) isn't blocked re-deriving
-static-access shape mid-milestone.
+static-access shape mid-milestone. **Update**: narrowed during
+implementation research (task #67), the same "verify against current
+repo state, don't assume from the spec's own placeholder text" discipline
+M4's own narrowing used. `ClassName.field` turned out to need field
+declarations and a new SIR field-access node, neither of which exist
+yet — `collect_class_methods` rejects every class-body member that
+isn't a `method_declaration`, and `semantic-ir`'s own `Expr` enum has no
+`FieldGet`/`StaticFieldGet` variant at all (confirmed by a full grep, not
+assumed) — so static field access is dropped from M5 entirely, deferred
+to alongside a future M6 (fields need to exist before *any* field access,
+static or instance, can be represented). `ClassName.staticMethod(args)`
+resolved as task #67: per `semantic-ir`'s own `Expr::VirtualCall` doc
+comment, a static call needs no new SIR node at all — it compiles to an
+ordinary `Expr::DirectCall` against a mangled top-level identity — and
+since this frontend has no receiver/object model until M6 (M3a already
+lowers every method, static or instance, identically, flat top-level),
+`ClassName.staticMethod(args)` on the *one* class this frontend itself
+is compiling is semantically identical to the bare call
+`staticMethod(args)` M3a already handles. Scoped to a **self-reference
+only**: `ClassName` must literally be this compilation unit's own class
+(a new `Lowerer::class_name`, captured once in `lower_program` but never
+previously needed); any other qualifier — another user class, or an
+external/JDK static like `Math.abs(...)`/`System.out` — is rejected
+outright, since this frontend has no import/library-catalog concept to
+resolve one against at all. A new `MethodSig::is_static` (set from the
+method declaration's own `static` modifier, previously untracked since
+nothing needed it) additionally rejects `ClassName.instanceMethod()` —
+real Java rejects this too, and there was no reason to be looser about a
+construct this frontend can already fully type-check. See
+`java-to-semantic-ir`'s own `CHANGELOG.md` `[0.16.0]` entry for the
+exact shape.
 
 **M6 — classes.** `class Name { fields; constructors; methods; this }` →
 `Stmt::NominalClassDef` with nested `Stmt::MethodDef`s (SIR29's own

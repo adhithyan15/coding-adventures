@@ -1,152 +1,63 @@
-# Session Map — Gujarati Chapters 1–13
+# Session Map - Gujarati Chapters 1-25
 
-Same spaced-repetition schedule as the other tracks (a word from session *N*
-resurfaces at *N+1, N+3, N+7, N+15*). Lessons named by slug; this map is the
-authoritative order.
+This is the contributor-facing inventory of the canonical Gujarati reading
+order. Every session is a lesson designed for five minutes or less. The
+authoritative sequence numbers live in lesson frontmatter; chapter titles and
+payoffs live in [`chapters.json`](./chapters.json). A corpus test compares the
+ordered IDs below with those sources so this map cannot silently fall behind.
 
-The Gujarati script — the "headless" script, Devanagari without the top line —
-is learned inline. The first greeting is heard for meaning before ten tiny,
-model-supported script sessions make its first load-bearing read possible.
+The ramp is deliberately uneven in quantity but gentle in difficulty:
 
-## Chapter 1 — Namaste, Piece by Piece
+- Chapters 1-2 begin with oral meaning, then teach only the signs needed for
+  the first greetings and written answer.
+- Chapters 3-7 finish every Gujarati form shown by the current book before the
+  first name exchange asks for unsupported decoding.
+- Chapters 8-18 build conversations, core verbs, nouns, and etymology while
+  continuing independent reading and writing.
+- Chapters 19-23 provide genuine distant R3/R4 retrieval rather than adjacent
+  review labels.
+- Chapters 24-25 begin the next vocabulary tranche with oral-first acquisition,
+  source-backed sign teaching, and separately visible four-skill checks.
 
-| Session | Lesson | Word | Root / hook |
-|---|---|---|---|
-| 1 | namaste | *namaste* | hear the greeting and its "a bow to you" memory hook; no decoding yet |
-| 2 | ha | હ | trace one consonant with its inherent *a*; no top line |
-| 3 | aa-matra | ા | trace the attached long-*ā* sign only after **હ** |
-| 4 | aa | આ | trace the same vowel in its independent, word-opening form |
-| 5 | na | ન | trace the greeting's first consonant and build the syllable *nā* |
-| 6 | ma | મ | trace the greeting's second consonant |
-| 7 | sa | સ | trace the consonant that will begin the greeting's cluster |
-| 8 | ta | ત | trace the dental consonant that completes the cluster |
-| 9 | e-matra | ે | trace the above-letter vowel sign and build *te* |
-| 10 | virama | ્ | trace the vowel-deleting mark and join *s+t* |
-| 11 | namaste-read | નમસ્તે | copy the visible greeting only after all six load-bearing pieces are known |
+## Canonical session inventory
 
-## Chapter 2 — Courtesy and Responses
+The session range is consecutive. Within each row, lesson IDs appear in exact
+canonical `sequence` order.
 
-| Session | Lesson | Word | Root / hook |
-|---|---|---|---|
-| 12 | aabhaar | આભાર | "thanks" ← *ā*+*bhṛ* "to bear"; cousin of English *bear*, Portuguese *obrigado* |
-| 13 | aavjo | આવજો | "goodbye" = "come again," polite imperative of *āvvũ* "to come" |
-| 14 | haa-naa | હા / ના | "yes / no"; *nā* ← PIE *ne (English *no*) |
-| 15 | haa-guided-copy | હા | copy the known answer once with both pieces visible |
-| 16 | haa-delayed-copy | હા | look, hide, write, compare, and repair one place |
-| 17 | haa-dictation | હા | hear *hā* and write it with no visible model |
-| 18 | saarun | સારું | "good/okay" ← Sanskrit *sāra*; the **three genders** *sāro/sārī/sārũ* |
-| 19 | practice | (recap) | the five greetings, the script contrast, and one independent **હા** retrieval |
+| Sessions | Chapter | Title | Ordered lesson IDs |
+|---|---:|---|---|
+| 1-11 | 1 | Namaste, Piece by Piece | `GU-C01-namaste` -> `GU-W01-ha` -> `GU-W01-aa-matra` -> `GU-W01-aa` -> `GU-W01-na` -> `GU-W01-ma` -> `GU-W01-sa` -> `GU-W01-ta` -> `GU-W01-e-matra` -> `GU-W01-virama` -> `GU-W01-namaste-read` |
+| 12-26 | 2 | Courtesy and Responses | `GU-W02-ra` -> `GU-W02-da` -> `GU-W02-va` -> `GU-W02-ya` -> `GU-W02-bha` -> `GU-W02-dha` -> `GU-W02-vocalic-r` -> `GU-C01-aabhaar` -> `GU-C01-aavjo` -> `GU-C01-haa-naa` -> `GU-W01-haa-guided-copy` -> `GU-W01-haa-delayed-copy` -> `GU-W01-haa-dictation` -> `GU-C01-saarun` -> `GU-C01-practice` |
+| 27-36 | 3 | Nine Doorway Forms | `GU-W03-ja` -> `GU-W03-o-matra` -> `GU-W03-anusvara` -> `GU-W03-ii-matra` -> `GU-W03-u-matra` -> `GU-W03-chha` -> `GU-W03-ka` -> `GU-W03-nna` -> `GU-W03-sha` -> `GU-R03-doorway-three-r1` |
+| 37-41 | 4 | Four Forms Before Your Name | `GU-W04-lla` -> `GU-W04-tha` -> `GU-W04-independent-a` -> `GU-W04-i-matra` -> `GU-R04-first-four-r1` |
+| 42-46 | 5 | Four More Forms Before Your Name | `GU-W05-la` -> `GU-W05-pa` -> `GU-W05-cha` -> `GU-W05-ba` -> `GU-R05-second-four-r1` |
+| 47-51 | 6 | Four Final Forms Before the Verbs | `GU-W06-ga` -> `GU-W06-independent-e` -> `GU-W06-kha` -> `GU-W06-independent-u` -> `GU-R06-first-four-r1` |
+| 52-56 | 7 | The Last Four Shown Forms | `GU-W07-uu-matra` -> `GU-W07-tta` -> `GU-W07-independent-ii` -> `GU-W07-ddha` -> `GU-R07-second-four-r1` |
+| 57-66 | 8 | Introducing Yourself | `GU-C02-naam` -> `GU-C02-maarun` -> `GU-C02-chhe` -> `GU-C02-maarun-naam-chhe` -> `GU-C02-anand` -> `GU-C02-tu-tame` -> `GU-C02-shun` -> `GU-C02-tamarun-naam-shun-chhe` -> `GU-R04-doorway-nine-r2` -> `GU-C02-practice` |
+| 67-72 | 9 | How Are You? | `GU-C03-hun` -> `GU-C03-kem` -> `GU-C03-tame-kem-chho` -> `GU-C03-majaa` -> `GU-C03-vandho-nahi` -> `GU-C03-practice` |
+| 73-77 | 10 | Farewells | `GU-C04-malishun` -> `GU-C04-kaale` -> `GU-C04-pachha` -> `GU-C04-pachha-malishun` -> `GU-C04-practice` |
+| 78-82 | 11 | The First Verbs | `GU-C05-bolvun` -> `GU-C05-hun-gujarati-bolun-chhun` -> `GU-C05-kaam-karvun` -> `GU-C05-rahevun` -> `GU-C05-practice` |
+| 83-84 | 12 | Numbers One to Five | `GU-C06-numbers-1-5` -> `GU-C06-number-histories` |
+| 85-90 | 13 | Six Verbs at the Core | `GU-C07-hovun` -> `GU-C07-javun` -> `GU-C07-aavvun` -> `GU-C07-khaavun` -> `GU-C07-jovun` -> `GU-C07-jaanvun` |
+| 91-94 | 14 | The Mind and the Page | `GU-C08-vicharvun` -> `GU-C08-samajvun` -> `GU-C08-vanchvun` -> `GU-C08-lakhvun` |
+| 95-98 | 15 | Taking, Asking, Helping, Liking | `GU-C09-levun` -> `GU-C09-puchhvun` -> `GU-C09-madad-karvi` -> `GU-C09-gamvun` |
+| 99-102 | 16 | Water, Tea, Milk, and Bread | `GU-C10-paani` -> `GU-C10-chaa` -> `GU-C10-dudh` -> `GU-C10-rotli` |
+| 103-107 | 17 | Friend and Family | `GU-C11-mitra` -> `GU-C11-kutumb` -> `GU-C11-bhai` -> `GU-C11-bahen` -> `GU-R13-doorway-nine-r3` |
+| 108-111 | 18 | Eye, Ear, Mouth, and Nose | `GU-C12-aankh` -> `GU-C12-kaan` -> `GU-C12-modhu` -> `GU-C12-naak` |
+| 112-117 | 19 | Fourth Return: Script and Names | `GU-R15-u-matra-r4` -> `GU-R15-chha-r4` -> `GU-R15-ka-r4` -> `GU-R15-nna-r4` -> `GU-R15-sha-r4` -> `GU-R15-name-exchange-r3` |
+| 118-123 | 20 | Fourth Return: The Introduction | `GU-R16-naam-r4` -> `GU-R16-maarun-r4` -> `GU-R16-chhe-r4` -> `GU-R16-my-name-is-r4` -> `GU-R16-anand-r4` -> `GU-R16-wellbeing-r3` |
+| 124-129 | 21 | Fourth Return: Respectful Questions | `GU-R17-you-r4` -> `GU-R17-shun-r4` -> `GU-R17-whats-your-name-r4` -> `GU-R17-introduction-r4` -> `GU-R17-hun-r4` -> `GU-R17-kem-r4` |
+| 130-134 | 22 | Fourth Return: Wellbeing and Farewells | `GU-R18-how-are-you-r4` -> `GU-R18-majaa-r4` -> `GU-R18-no-problem-r4` -> `GU-R18-wellbeing-r4` -> `GU-R18-farewell-r4` |
+| 135 | 23 | Fourth Return: The Doorway Nine | `GU-R19-doorway-nine-r4` |
+| 136-143 | 24 | A First Three-Place Map | `GU-C20-hear-bajar` -> `GU-C20-bajar` -> `GU-C20-hear-ghar` -> `GU-W20-gha` -> `GU-C20-ghar` -> `GU-C20-hear-mandir` -> `GU-C20-mandir` -> `GU-C20-places-three` |
+| 144-150 | 25 | Hand and Money Join the Map | `GU-C21-hear-haath` -> `GU-C21-haath` -> `GU-C21-hear-paisa` -> `GU-W21-ai-matra` -> `GU-C21-paisa` -> `GU-R21-travel-five` -> `GU-C21-travel-five` |
 
-## Chapter 3 — Introducing Yourself
+## Current boundary
 
-| Session | Lesson | Word | Root / hook |
-|---|---|---|---|
-| 20 | naam | નામ | "name" ← PIE *h₃nómn̥* (English *name*) |
-| 21 | maarun | મારું | "my" ← *ma-* (English *me/my*); neuter to agree with *nām* |
-| 22 | chhe | છે | "is" — Gujarati's **own** copula, not Hindi *hai*; verb goes last |
-| 23 | maarun-naam-chhe | મારું નામ … છે | "my name is…" assembled |
-| 24 | anand | આનંદ | "joy" ← Sanskrit *ānanda*; "pleased to meet you" |
-| 25 | tu-tame | તું / તમે | familiar / respectful "you"; courtesy-by-plural |
-| 26 | shun | શું | "what"; the odd *sh-* cousin in a *k-* question family |
-| 27 | tamarun-naam-shun-chhe | તમારું નામ શું છે? | "what's your name?" assembled |
-| 28 | practice | (recap) | the whole introduction exchange |
-
-## Chapter 4 — How Are You
-
-| Session | Lesson | Word | Root / hook |
-|---|---|---|---|
-| 29 | hun | હું | "I" ← *aham* → Latin *ego*, English *I*; takes *chhũ* |
-| 30 | kem | કેમ | "how" ← *ka-* (PIE *kʷo-*); the everyday hello *kem chho?* |
-| 31 | tame-kem-chho | તમે કેમ છો? | "how are you?"; *chho* = respectful copula |
-| 32 | majaa | મજા | "enjoyment" — **Persian** *maza*; the trade-language layer |
-| 33 | vandho-nahi | વાંધો નહીં | "no problem" = "no objection"; *nahī* ← PIE *ne |
-| 34 | practice | (recap) | the whole how-are-you exchange |
-
-## Chapter 5 — Farewells
-
-| Session | Lesson | Word | Root / hook |
-|---|---|---|---|
-| 35 | malishun | મળીશું | "(we) will meet" ← *maḷvũ* (*mil-*); the retroflex ળ ḷ |
-| 36 | kaale | કાલે | "tomorrow" ← *kāl* (*kāla* "time"); both "tomorrow" and "yesterday" |
-| 37 | pachha | પાછા | "again, back" ← Sanskrit *paścāt* |
-| 38 | pachha-malishun | પાછા મળીશું | "we'll meet again" — the promise of return |
-| 39 | practice | (recap) | the farewells |
-
-## Chapter 6 — The First Verbs
-
-| Session | Lesson | Word | Root / hook |
-|---|---|---|---|
-| 40 | bolvun | બોલવું | "to speak"; the *-vũ* infinitive; stem + person + copula |
-| 41 | hun-gujarati-bolun-chhun | હું ગુજરાતી બોલું છું | "I speak Gujarati"; *gujarātī* ← the Gurjar people |
-| 42 | kaam-karvun | કામ કરવું | "to work"; *karvũ* ← *kṛ* (root of *namaskār*, *karma*) |
-| 43 | rahevun | રહેવું | "to live" ← Sanskrit *rah-*; the postposition *-mā* ("in") |
-| 44 | practice | (recap) | three verbs, one engine — sentences about yourself |
-
-## Chapter 7 — Numbers 1–5
-
-| Session | Lesson | Word | Root / hook |
-|---|---|---|---|
-| 45 | numbers-1-5 | એક, બે, ત્રણ, ચાર, પાંચ | retrieve the five forms and the headless-script clue; notice surprising *be* and *traṇ* |
-| 46 | number-histories | બે · ત્રણ | *be* continues *dvé* through *dv → bb → b*; *traṇ* regained an *r* after Prakrit lost it |
-
-## Chapter 8 — Six Verbs at the Core
-
-| Session | Lesson | Word | Root / hook |
-|---|---|---|---|
-| 47 | hovun | હોવું | "to be"; **-વું is a neuter ending** — every verb is named in the third gender. *hovũ* ← *bhavati* (English *be*); **chhe** is a different verb from Hindi *hai* |
-| 48 | javun | જવું | "to go" ← Sanskrit *yāti*; Prakrit turned word-initial *y-* into *j-*; stem + person + copula |
-| 49 | aavvun | આવવું | "to come" ← *āpayati*, root *āp-* "reach" (English *apt*, *couple*, **copula**); single *p* between vowels softened to *v* |
-| 50 | khaavun | ખાવું | "to eat" ← *khādati*; five living Indo-Aryan sisters and **no honest English cousin** |
-| 51 | jovun | જોવું | "to see"; one vowel sign away from *javũ*; origin flagged as probable, not proven |
-| 52 | jaanvun | જાણવું | "to know" ← *jānāti*, root *jñā-*, PIE \**gnō-* — *know, cunning, notice, diagnosis*. Chapter payoff |
-
-## Chapter 9 — The Mind and the Page
-
-| Session | Lesson | Word | Root / hook |
-|---|---|---|---|
-| 53 | vicharvun | વિચારવું | "to think"; the noun *vichār* with a verb ending put on it — *vi-* + *car-* "range about", PIE \**kwel-* "turn" (English *wheel*, *cycle*, *colony*); built rather than inherited, like *traṇ*'s restored *r* |
-| 54 | samajvun | સમજવું | "to understand" ← *sambudhyate*, root *budh-* "to wake" — the root of **buddha**, English *bode*, *forbid*; *dhy* → *jjh* → *j*, assimilate then simplify, as *dv* → *bb* → *b* did in *be* |
-| 55 | vanchvun | વાંચવું | "to read" ← *vācayati* "to **make** speak", causative of *vac-* (Latin *vōx* → English *voice*, *vowel*, *advocate*); the nasal dot sits in the **middle** of the word, as in *pā̃ch* |
-| 56 | lakhvun | લખવું | "to write" ← *likhati*, and *likh-* meant **to scratch** — Sanskrit *rekhā* "a line"; no secure English cousin, and the lesson says so. Chapter payoff: *hũ mārũ nām lakhũ chhũ* |
-
-## Chapter 10 — Taking, Asking, Helping, Liking
-
-| Session | Lesson | Word | Root / hook |
-|---|---|---|---|
-| 57 | levun | લેવું | "to take" ← *labhate*, PIE \**lebh-* "work, harvest, gain" — not seizing but earning; Latin *labor* often linked and also rejected, so **probable, not proven** |
-| 58 | puchhvun | પૂછવું | "to ask" ← *pṛcchati*, PIE \**prek-* — the verb English kept only for **praying** (*pray*, *precarious*, German *fragen*); its **p** survived because it stands at the front of the word |
-| 59 | madad-karvi | મદદ કરવી | "to help"; Arabic *madad* through Persian, root *m-d-d* "to extend" — a hand held out. **કરવી** is **feminine**, not neuter, because *madad* is a feminine noun |
-| 60 | gamvun | ગમવું | "to like" ← *gamyate*, the **passive** of *gam-* "to go" (English **come**) — born without a doer, so *mane gujarātī game chhe* has no room for *hũ*. Chapter payoff |
-
-## Chapter 11 — Water, Tea, Milk, and Bread
-
-| Session | Lesson | Word | Root / hook |
-|---|---|---|---|
-| 61 | paani | પાણી | "water" ← Sanskrit *pānīya*, "drinkable"; build the polite request before changing its noun |
-| 62 | chaa | ચા | "tea" travelled overland from Chinese *chá*, the same route reflected in Hindi and Persian |
-| 63 | dudh | દૂધ | "milk" continues Sanskrit *dugdha*; keep the inherited word separate from the request frame |
-| 64 | rotli | રોટલી | "flatbread"; practise the fourth request while keeping the word's deeper origin honestly unsettled |
-
-## Chapter 12 — Friend and Family
-
-| Session | Lesson | Word | Root / hook |
-|---|---|---|---|
-| 65 | mitra | મિત્ર | "friend" is the learned Sanskrit word *mitra*; connect its old bond or alliance sense to a person |
-| 66 | kutumb | કુટુંબ | "family" is a learned borrowing of Sanskrit *kuṭumba*, carried into Gujarati largely whole |
-| 67 | bhai | ભાઈ | "brother" continues the same Indo-European family as English *brother* |
-| 68 | bahen | બહેન | "sister" follows a different inherited path; do not invent an English cousin from its present shape |
-
-## Chapter 13 — Eye, Ear, Mouth, and Nose
-
-| Session | Lesson | Word | Root / hook |
-|---|---|---|---|
-| 69 | aankh | આંખ | "eye" continues the old *akṣi* family and is a real cousin of English *eye* |
-| 70 | kaan | કાન | "ear" continues Sanskrit *karṇa* while its earlier origin remains uncertain |
-| 71 | modhu | મોઢું | "mouth" makes the nasalized neuter ending visible; contrast that ending with a lexical nasal |
-| 72 | naak | નાક | "nose" closes the face set and reconnects Sanskrit *nāsā* with English *nose* |
-
-## Next
-
-Close the remaining pre-A1 script gaps before adding more load-bearing Gujarati
-text, then add real retrieval at the measured R1, R2, and R3 windows. Every new
-step remains five minutes or less and continues the same sound-to-sign ramp.
+The current book contains 25 chapters and 150 lessons. It teaches all 41
+Gujarati forms that the book shows, includes the complete pre-A1 writing-stage
+ladder, and carries the doorway and conversation material through measured
+distant retrieval. It has begun, but has not completed, the 300-headword
+pre-A1 vocabulary target. Later vocabulary, composition, timed mocks, rubrics,
+calibration, and book-only learner evidence remain explicit backlog rather than
+present-tense readiness claims.

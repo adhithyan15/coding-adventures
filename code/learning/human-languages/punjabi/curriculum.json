@@ -80,16 +80,19 @@
       "spine_node": "SPINE-EXCHANGE-NAMES",
       "lessons": [
         "PA-C02-naam",
-        "PA-C02-hai",
-        "PA-C02-ki",
         "PA-C02-mera",
+        "PA-C02-hai",
         "PA-C02-mera-naam-hai",
-        "PA-C02-khushi",
         "PA-C02-tu-tusi",
-        "PA-C02-tuhada-naam-ki-hai"
+        "PA-C02-ki",
+        "PA-C02-tuhada-naam-ki-hai",
+        "PA-C02-khushi",
+        "PA-C02-practice"
       ],
       "before": [],
-      "inline": [],
+      "inline": [
+        "PA-EXT-018-INTRODUCTION-CHECKPOINT"
+      ],
       "after": []
     },
     {
@@ -801,6 +804,19 @@
         "PA-W01-ta",
         "PA-W01-e-matra",
         "PA-W01-namaste-read"
+      ]
+    },
+    {
+      "id": "PA-EXT-018-INTRODUCTION-CHECKPOINT",
+      "stage": "pre-A1",
+      "kind": "required",
+      "category": "assessment",
+      "canDo": "I can understand and perform a short Punjabi introduction orally while keeping untaught Gurmukhi reading and writing explicitly uncredited.",
+      "prerequisites": [
+        "PA-EXT-003-HAAN-WRITING"
+      ],
+      "lessons": [
+        "PA-C02-practice"
       ]
     }
   ]

@@ -2,8 +2,8 @@
 schema_version: 2
 id: MR-C11-mitra
 spine_node: SPINE-EXCHANGE-NAMES
-sequence: 540
-chapter: 12
+sequence: 560
+chapter: 14
 type: word
 headword: मित्र
 romanization: mitra
@@ -80,7 +80,7 @@ can hear the difference.
 - [YOU NAME: the god-name that shares this root — **Mithra**]
 - [YOU SAY: **mitra**, then **bhākarī** — a learned word beside a native one
   whose own root went no further back than "a heap, a lump"]
-- [YOU RECALL: Chapter 11's four requests and their three genders — **pāṇī**
+- [YOU RECALL: Chapter 13's four requests and their three genders — **pāṇī**
   neuter, **chahā** masculine, **dūdh** neuter, **bhākarī** feminine]
 
 ## Wrap-up Recall

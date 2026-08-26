@@ -1,0 +1,16 @@
+{
+  "id": "MR-EXT-022-SCRIPT-DURABLE",
+  "stage": "pre-A1",
+  "kind": "required",
+  "category": "script",
+  "canDo": "I can retrieve all twelve doorway signs after a durable gap without receiving a new model first.",
+  "prerequisites": [
+    "MR-EXT-021-SCRIPT-DOORWAY"
+  ],
+  "lessons": [
+    "MR-R09-script-a-r3",
+    "MR-R09-script-b-r3",
+    "MR-R09-script-c-r3",
+    "MR-R09-script-d-r3"
+  ]
+}

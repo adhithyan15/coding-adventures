@@ -1,221 +1,143 @@
-Marathi, chapter 15: Family Memory at Real Distance.
-12 lessons. All 12 can be done entirely by ear.
+Marathi, chapter 15: Eye, Ear, Mouth, and Nose.
+4 lessons. The first lesson already needs your eyes or your hands, so save this one for when you have stopped.
 
 
-Lesson 1 of 12.
-After a gap — मित्र (mitra).
+Lesson 1 of 4.
+डोळा (ḍoḷā) — the letter you've heard since Chapter 7, formally.
+
+Before we start: this one needs your eyes, so it is not fully a driving lesson. You will want your eyes, for letter shapes on the page. You can listen to everything else now — leave the section called The letters in this word until you have stopped, and I will say so again when we reach it.
 
 Warm-up.
-[pause 5 seconds]
-Friend. Old root meaning to bind. Borrowed whole from Sanskrit. Say the three answers: मित्र (mitra) — bind — tatsama.
+[pause 2 seconds]
+मित्र, कुटुंब, भाऊ, बहीण (mitra, kuṭumb, bhāū, bahīṇ) — the people you'd introduce. This chapter turns to the body you'd ask after when you check how someone is.
+
+You'll want to know: डोळा.
+डोळा — ḍoḷā — eye (masculine).
+
+The letters in this word.
+ड you have from āvaḍṇe; ो the familiar o mark, from bolṇe. Then ळ — the retroflex "l" you first met, unlabeled, inside Chapter 7's काळजी. Formally: tongue curled back, same place as ट and ण. Standard Hindi dropped this sound centuries ago; Marathi kept it, sharing it with the Dravidian languages to the south and with Gujarati. Ḍo-ḷā.
+
+The word, taken apart — not the old eye-word at all.
+डोळा (ḍoḷā) continues Maharastri Prakrit ḍola, "eye," from Sanskrit दोल dola — "a swing, a swinging." Somewhere in Prakrit, "a swinging thing" came to mean "eye," and that word pushed out the one you might expect: the true inherited Indo-Aryan eye-word is Sanskrit अक्षि/अक्ष akṣi/akṣa, from Indo-European h₃ekʷ-, the very cousin of Latin oculus and English eye. Hindi's आँख ā̃kh continues that old word, worn down through Prakrit acchi. Marathi's eye is not that word at all — it is a replacement, built on something that once just meant swing.
 
 Guided Practice.
 [pause 1 second]
-Answer once, then repair only the missing piece.
-[question — say your answer, then pause 18 seconds]
-Complete: friend = __; old root = __; borrowing type = __.
+[your turn — say: ḍoḷā — eye]
+[pause 8 seconds for the answer]
+[your turn — say: what its Sanskrit root actually meant — "a swing"]
+[pause 8 seconds for the answer]
+[your turn — name: the word Marathi's eye-word replaced — akṣi, Hindi's āṅkh]
+[pause 8 seconds for the answer]
+[your turn — say: what you do with your डोळे — pāhṇe, "to see," Chapter 10's verb whose own root was Indo-European spek-]
+[pause 8 seconds for the answer]
+[your turn — recall: Chapter 14's tatsama/tadbhava split — मित्र, कुटुंब taken up whole, भाऊ, बहीण worn down — and कुटुंब's own neuter gender against Hindi's masculine]
+[pause 8 seconds for the answer]
 
 Wrap-up Recall.
-[pause 2 seconds]
-Say मित्र (mitra) once more, then stop.
+[pause 3 seconds]
+What did डोळा (ḍoḷā)'s Sanskrit root originally mean? (A swing.) Is डोळा (ḍoḷā) the same word as Hindi's आँख? (No — Marathi replaced the old eye-word entirely.) What Marathi letter appears in डोळा (ḍoḷā) that Hindi lost? (ळ, the retroflex l.)
+Sources: Wiktionary: डोळा (ḍoḷā); Wiktionary: दोल.
 
 
-Lesson 2 of 12.
-After a gap — कुटुंब (kutumb).
+Lesson 2 of 4.
+कान (kān) — an ear, and a cluster you've seen simplify before.
+
+Before we start: this one needs your eyes, so it is not fully a driving lesson. You will want your eyes, for letter shapes on the page. You can listen to everything else now — leave the sections called The letters in this word and Guided Practice until you have stopped, and I will say so again when we reach it.
 
 Warm-up.
-[pause 5 seconds]
-Family. Marathi gender. Answer: कुटुंब (kutumb) — neuter.
+[pause 2 seconds]
+डोळा (ḍoḷā) — its own root turned out to be a surprise, a swing, not the old eye-word. This next word has a different kind of surprise: not what it meant, but how its middle got simpler.
+
+You'll want to know: कान.
+कान — kān — ear (masculine).
+
+The letters in this word.
+Nothing new. क, ा, न are all familiar from Chapter 1 onward. Kā-n.
+
+Sounds you'll need: a cluster ground down, like Chapter 9's दोन.
+कान continues Sanskrit कर्ण karṇa. Getting there took the same kind of step Chapter 9 traced in दोन: Prakrit could not keep Sanskrit's consonant cluster rṇ intact, so it simplified — not by copying a neighbor this time, but by doubling the surviving consonant, rṇ becomes ṇṇ, giving Prakrit कण्ण kaṇṇa. Old Marathi then simplified the geminate back down to one ṇ with a lengthened vowel: kāna. Different cluster, different path, same underlying habit — Prakrit does not tolerate what Sanskrit could pack into one syllable.
+
+The word, taken apart — a disputed root.
+Past Sanskrit, कर्ण's own origin is genuinely disputed among scholars — proposals connect it to a word for "point, spike," to a root for "handle, grip," even to the verb "to hear," but none has won general acceptance. Rather than choose one and present it as settled, this lesson names the dispute and stops there, the same honest gap Chapter 14 named for कुटुंब, and the same restraint that kept बहीण from being handed a false cousin — बहीण looks like it should match English sister, and does not.
 
 Guided Practice.
 [pause 1 second]
-Answer once, then repair only the missing piece.
-[question — say your answer, then pause 15 seconds]
-Give family in Marathi and its Marathi gender.
+[your turn — say: kān — ear]
+[pause 8 seconds for the answer]
+[once you have stopped driving — trace: karṇa becomes kaṇṇa becomes kāna, the cluster ground down and then simplified again]
+[your turn — say: ḍoḷā, kān — eye, ear]
+[pause 8 seconds for the answer]
 
 Wrap-up Recall.
-[pause 2 seconds]
-Say कुटुंब (kutumb) once more.
+[pause 3 seconds]
+What did Prakrit do to Sanskrit कर्ण's rṇ cluster? (Doubled it to ṇṇ, then Old Marathi simplified that back to one ṇ.) Is कर्ण's root beyond Sanskrit settled? (No — disputed.) Which Chapter 9 word also showed a consonant cluster changing shape? (दोन, whose final n came from copying तीन.)
+Sources: Wiktionary: कान (kān).
 
 
-Lesson 3 of 12.
-Sibling retrieval — brother and sister — one secure English cousin and one unrelated root.
+Lesson 3 of 4.
+तोंड (tõḍ) — the mouth, and the formal word standing behind it.
+
+Before we start: this one needs your eyes, so it is not fully a driving lesson. You will want your eyes, for letter shapes on the page. You can listen to everything else now — leave the section called The letters in this word until you have stopped, and I will say so again when we reach it.
 
 Warm-up.
-[pause 4 seconds]
-Say brother, sister: भाऊ, बहीण.
+[pause 2 seconds]
+डोळा (ḍoḷā), कान (kān) — eye, ear. Recall how कान (kān)'s middle got simpler — rṇ doubled to ṇṇ, then simplified again. One more word before the chapter's closing one.
 
-The two words and their histories.
-भाऊ is a secure cousin of English brother. Do not extend that claim to बहीण and English sister; those roots are unrelated.
+You'll want to know: तोंड.
+तोंड — tõḍ — mouth (neuter).
+
+The letters in this word.
+Nothing new. त, ो, ं, ड are all familiar. Tõ-ḍ, the anusvāra nasalizing the o.
+
+The word, taken apart — the everyday word, and its formal twin.
+तोंड (tõḍ) continues Maharastri Prakrit तुंड tuṃḍa, from Sanskrit तुण्ड tuṇḍa, "mouth, snout, beak" — a tadbhava, worn down the way भाऊ was. Marathi keeps a second, formal word for the same thing: मुख mukh, borrowed whole from Sanskrit exactly the way मित्र and कुटुंब were — the same everyday-versus-formal split कुटुंब's chapter didn't need to show you for a body part until now. You'll hear तोंड (tõḍ) in daily speech and मुख in writing, formal address, and words like mukhya, "chief, principal" — literally "at the mouth/face of things."
 
 Guided Practice.
 [pause 1 second]
-Answer once, then repair only the missing piece.
-[question — say your answer, then pause 18 seconds]
-Say brother and sister, then name the one securely related to English.
+[your turn — say: tõḍ — mouth]
+[pause 8 seconds for the answer]
+[your turn — name: its formal doublet — mukh]
+[pause 8 seconds for the answer]
+[your turn — say: three so far — ḍoḷā, kān, tõḍ]
+[pause 8 seconds for the answer]
 
 Wrap-up Recall.
-[pause 2 seconds]
-भाऊ, बहीण.
+[pause 3 seconds]
+What is तोंड (tõḍ)'s formal Sanskrit doublet? (मुख, mukh.) Is तोंड (tõḍ) itself borrowed whole or worn down? (Worn down — a tadbhava, like भाऊ.)
+Sources: Wiktionary: तोंड (tõḍ).
 
 
-Lesson 4 of 12.
-Eye and ear retrieval — eye and ear — retrieve two face words and the Marathi retroflex lateral.
+Lesson 4 of 4.
+नाक (nāk) — the face, completed.
+
+Before we start: this one needs your eyes, so it is not fully a driving lesson. You will want your eyes, for letter shapes on the page. You can listen to everything else now — leave the section called The letters in this word until you have stopped, and I will say so again when we reach it.
 
 Warm-up.
-[pause 4 seconds]
-Eye: डोळा. Ear: कान. In डोळा, keep ळ retroflex; do not replace it with ordinary ल.
+[pause 2 seconds]
+डोळा, कान, तोंड (ḍoḷā, kān, tõḍ) — say them. One face part left, and it is the one with the plainest history of the four.
+
+You'll want to know: नाक.
+नाक — nāk — nose (neuter).
+
+The letters in this word.
+Nothing new. न, ा, क — all familiar since Chapter 1. Nā-k.
+
+The word, taken apart — the secure cousin of "nose".
+नाक (nāk) continues Prakrit णक्क ṇakka, "nose," built on Sanskrit नस् nas-, "nose," plus a suffix. You may have met the other Sanskrit route to "nose," नासिका nāsikā, elsewhere — Marathi's नाक (nāk) took the shorter one, straight from the bare root. Either way the destination is the same Indo-European neh₂s-, which English inherited directly as nose. Of this chapter's four words, नाक (nāk) is the one whose English cousin needs no qualification at all.
+
+Why it's said this way — four words, four kinds of history.
+Run the face back one more time, and notice each word told a different kind of story: डोळा (ḍoḷā) replaced its old Indo-Aryan word entirely, with something that once just meant swing; कान (kān)'s root is honestly disputed, even though its rṇ becomes ṇṇ becomes ṇ path is not; तोंड (tõḍ) keeps a formal Sanskrit doublet, मुख, standing beside it; and नाक (nāk) is the plainest of the four — a straight, secure line to Sanskrit and to English both. Not every word in a family carries the same amount of history, and knowing which is which is worth more than assuming they all match.
 
 Guided Practice.
 [pause 1 second]
-Answer once, then repair only the missing piece.
-[question — say your answer, then pause 18 seconds]
-Give eye and ear in Marathi; identify the special consonant in dola.
+[your turn — say: all four, with gender — ḍoḷā m, kān m, tõḍ n, nāk n]
+[pause 8 seconds for the answer]
+[your turn — name: which is a secure English cousin (nāk), which replaced its old word (ḍoḷā), which is disputed (kān), which has a formal doublet (tõḍ)]
+[pause 8 seconds for the answer]
+[your turn — say: what you do with your डोळे — pāhṇe, "to see"]
+[pause 8 seconds for the answer]
 
 Wrap-up Recall.
-[pause 2 seconds]
-डोळा, कान.
-
-
-Lesson 5 of 12.
-Mouth and nose retrieval — mouth and nose — retrieve the everyday mouth word and its formal doublet.
-
-Warm-up.
-[pause 4 seconds]
-Everyday mouth is तोंड; formal मुख stands beside it. Nose is नाक.
-
-Guided Practice.
-[pause 1 second]
-Answer once, then repair only the missing piece.
-[question — say your answer, then pause 18 seconds]
-Give everyday mouth, its formal doublet, and nose.
-
-Wrap-up Recall.
-[pause 2 seconds]
-तोंड, नाक.
-
-
-Lesson 6 of 12.
-Three request nouns — water, tea, and milk — three tiny request nouns from memory.
-
-Warm-up.
-[pause 5 seconds]
-Say water, tea, milk in order: पाणी, चहा, दूध.
-
-Guided Practice.
-[pause 1 second]
-Answer once, then repair only the missing piece.
-[question — say your answer, then pause 15 seconds]
-Give water, tea, and milk in Marathi.
-
-Wrap-up Recall.
-[pause 2 seconds]
-Repeat once, then stop.
-
-
-Lesson 7 of 12.
-Three doing verbs — take, ask, and help — three action verbs retrieved without a model.
-
-Warm-up.
-[pause 5 seconds]
-Take: घेणे. Ask: विचारणे. Help: मदत करणे.
-
-Guided Practice.
-[pause 1 second]
-Answer once, then repair only the missing piece.
-[question — say your answer, then pause 18 seconds]
-Give take, ask, and help in Marathi.
-
-Wrap-up Recall.
-[pause 2 seconds]
-Repeat the trio once.
-
-
-Lesson 8 of 12.
-Three mind-and-page verbs — think, understand, and write — three mind-and-page verbs.
-
-Warm-up.
-[pause 5 seconds]
-Think: विचार करणे. Understand: समजणे. Write: लिहिणे.
-
-Guided Practice.
-[pause 1 second]
-Answer once, then repair only the missing piece.
-[question — say your answer, then pause 18 seconds]
-Give think, understand, and write in Marathi.
-
-Wrap-up Recall.
-[pause 2 seconds]
-Repeat once.
-
-
-Lesson 9 of 12.
-Three core verbs — be, go, and come — the three core motion-and-state verbs.
-
-Warm-up.
-[pause 5 seconds]
-Be: असणे. Go: जाणे. Come: येणे.
-
-Guided Practice.
-[pause 1 second]
-Answer once, then repair only the missing piece.
-[question — say your answer, then pause 15 seconds]
-Give be, go, and come in Marathi.
-
-Wrap-up Recall.
-[pause 2 seconds]
-Repeat once.
-
-
-Lesson 10 of 12.
-Durable retrieval — मित्र (mitra).
-
-Warm-up.
-[pause 6 seconds]
-Recover the word for friend, its old root meaning, and the name for a Sanskrit form borrowed whole.
-
-Guided Practice.
-[pause 1 second]
-Answer once, then repair only the missing piece.
-[question — say your answer, then pause 20 seconds]
-After the long gap: friend; root meaning; borrowing type.
-
-Wrap-up Recall.
-[pause 2 seconds]
-मित्र (mitra). One clean retrieval is enough.
-
-
-Lesson 11 of 12.
-Count, then notice — one to five — count and recover Marathi's diagnostic sound history.
-
-Warm-up.
-[pause 6 seconds]
-Count one through five. Then say चार with Marathi tsā-, and remember that a language can innovate in one place while retaining an older feature in another.
-
-Guided Practice.
-[pause 1 second]
-Answer once, then repair only the missing piece.
-[question — say your answer, then pause 20 seconds]
-Count one to five and give Marathi's diagnostic pronunciation of four.
-
-Wrap-up Recall.
-[pause 2 seconds]
-Count once more without looking.
-
-
-Lesson 12 of 12.
-Durable family comparison — friend and family — durable comparison of five Chapter 12 memories.
-
-Warm-up.
-[pause 7 seconds]
-Friend: मित्र (mitra); old root to bind; tatsama. Family: कुटुंब (kutumb); neuter in Marathi.
-
-Guided Practice.
-[pause 1 second]
-Answer once, then repair only the missing piece.
-[question — say your answer, then pause 24 seconds]
-Give the five-part durable comparison for mitra and kutumb.
-
-Wrap-up Recall.
-[pause 2 seconds]
-मित्र (mitra), कुटुंब (kutumb). End the session here.
+[pause 3 seconds]
+Which English word is नाक's most secure cousin? (Nose.) Sort the four face words by their history — replaced, disputed, twinned, secure. (Ḍoḷā replaced its old word; kān's root is disputed; tõḍ has the formal doublet mukh; nāk is the secure one.) What Chapter 10 verb names what your eyes do? (Pāhṇe, "to see.")
+Sources: Wiktionary: नाक (nāk).

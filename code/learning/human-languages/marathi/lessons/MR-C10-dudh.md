@@ -2,8 +2,8 @@
 schema_version: 2
 id: MR-C10-dudh
 spine_node: SPINE-POLITE-REQUEST-REPAIR
-sequence: 520
-chapter: 11
+sequence: 540
+chapter: 13
 type: word
 headword: दूध
 romanization: dūdh

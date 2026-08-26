@@ -119,18 +119,24 @@ Result (after stripping trailing pad): `"HELLO WORLD"`
 
 ### Character Handling Rules
 
-1. **ALL characters are preserved** — spaces, punctuation, digits, and
-   letters are all transposed. Unlike substitution ciphers, no character
-   is "special" in a transposition cipher.
+1. **All Unicode scalar values are transposed without substitution** — spaces,
+   punctuation, digits, letters, and non-ASCII data all participate. Length,
+   key bounds, grid positions, and brute-force limits are counted in Unicode
+   scalar values, not UTF-8 bytes, UTF-16 code units, or grapheme clusters.
+   Inputs containing an unpaired UTF-16 surrogate are outside the portable
+   string contract.
 
 2. **Padding**: When the text length is not evenly divisible by the key,
-   the last row is padded with space characters to fill the grid.
+   the last row is padded with ASCII space characters (`U+0020`) to fill the
+   grid. Decryption removes every trailing `U+0020`, so plaintext that already
+   ends in spaces is intentionally not losslessly recoverable. Leading and
+   internal spaces remain data.
 
 3. **Empty strings** return empty strings.
 
-4. **Key validation**: Key must be >= 2 (a key of 1 is the identity).
-   Key must be <= len(text). Invalid keys should raise an error or
-   return the input unchanged, depending on language convention.
+4. **Key validation**: For non-empty text, key must be >= 2 (a key of 1 is
+   the identity) and <= len(text). Invalid keys raise the language's standard
+   argument error. Empty text returns empty text before key validation.
 
 ### Brute Force
 
@@ -138,11 +144,20 @@ The `brute_force` function tries every possible key from 2 to `len(text) / 2`
 (inclusive). For each key, it decrypts the ciphertext and returns a list of
 `{key, decrypted_text}` pairs. This demonstrates that the Scytale has a very
 small key space (roughly `n/2` possibilities), making it trivially breakable.
+Because the returned candidates contain quadratic total text in the worst
+case, implementations may reject inputs beyond a documented resource limit;
+they must do so before building the candidate list.
 
 ## Package Matrix
 
 | Language | Package Directory | Module/Namespace |
 |----------|-------------------|------------------|
+| C# | `code/packages/csharp/scytale-cipher/` | `CodingAdventures.ScytaleCipher` |
+| Dart | `code/packages/dart/scytale-cipher/` | `package:coding_adventures_scytale_cipher/scytale_cipher.dart` |
+| F# | `code/packages/fsharp/scytale-cipher/` | `CodingAdventures.ScytaleCipher` |
+| Haskell | `code/packages/haskell/scytale-cipher/` | `ScytaleCipher` |
+| Java | `code/packages/java/scytale-cipher/` | `com.codingadventures.scytalecipher` |
+| Kotlin | `code/packages/kotlin/scytale-cipher/` | `com.codingadventures.scytalecipher` |
 | Python | `code/packages/python/scytale-cipher/` | `scytale_cipher` |
 | Go | `code/packages/go/scytale-cipher/` | `scytalecipher` |
 | Ruby | `code/packages/ruby/scytale_cipher/` | `CodingAdventures::ScytaleCipher` |

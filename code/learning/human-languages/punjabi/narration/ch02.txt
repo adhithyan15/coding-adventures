@@ -15,7 +15,7 @@ The letters in this word.
 ਨ (na) + ਾ (the kannā, long-ā sign) + ਂ (the bindi, a nasal dot) becomes ਨਾਂ (nāṁ). A single nasalised syllable.
 
 The word, taken apart.
-ਨਾਂ (nāṁ, "name") from Sanskrit ਨਾਮਨ੍ (nāman), from Proto-Indo-European h₃nómn̥ — the same ancient root as English name, Latin nōmen (English noun, nominate), and Greek onoma. So Punjabi nāṁ and English name are cousins from before either language existed. (The Hindi form is nām; Punjabi nasalises the ending to nāṁ.)
+ਨਾਂ (nāṁ, "name") from Sanskrit ਨਾਮਨ੍ (nāman), from Proto-Indo-European h₃nómn (with a syllabic final n) — the same ancient root as English name, Latin nōmen (English noun, nominate), and Greek onoma. So Punjabi nāṁ and English name are cousins from before either language existed. (The Hindi form is nām; Punjabi nasalises the ending to nāṁ.)
 
 Guided Practice.
 [pause 1 second]
@@ -26,7 +26,9 @@ Guided Practice.
 
 Wrap-up Recall.
 [pause 3 seconds]
-What Sanskrit and PIE roots is nāṁ from, and its English cousins? (Nāman / h₃nómn̥; name, noun, nominate.)
+What Sanskrit and PIE roots is nāṁ from, and its English cousins? (Nāman / h₃nómn, with a syllabic final n; name, noun, nominate.)
+[question — say your answer, then pause 8 seconds]
+You hear nāṁ. Type its English meaning.
 
 
 Lesson 2 of 9.
@@ -59,6 +61,8 @@ Guided Practice.
 Wrap-up Recall.
 [pause 3 seconds]
 What root links merā and English my, and what is its feminine form? (The first-person ma-; merī.)
+[question — say your answer, then pause 8 seconds]
+You hear merā nāṁ. Which word means my?
 
 
 Lesson 3 of 9.
@@ -91,6 +95,8 @@ Guided Practice.
 Wrap-up Recall.
 [pause 3 seconds]
 What root is hai from, and where does the verb sit in a Punjabi sentence? (Sanskrit asti / PIE h₁es-; at the end.)
+[question — say your answer, then pause 10 seconds]
+Complete merā nāṁ Arun... and say where Punjabi puts this verb.
 
 
 Lesson 4 of 9.
@@ -100,7 +106,7 @@ Warm-up.
 [pause 2 seconds]
 Three atoms you now own, assembled into a first sentence.
 
-The phrase, assembled.
+The exchange — assembled.
 ਮੇਰਾ (my) + ਨਾਂ (name) + your name + ਹੈ (is) = merā nāṁ … hai, "my name is…" Merā nāṁ Arun hai. becomes "My name is Arun."
 
 Grammar Lens: the verb goes last.
@@ -116,6 +122,8 @@ Guided Practice.
 Wrap-up Recall.
 [pause 3 seconds]
 Give your name in Punjabi, and say where the verb sits. (Merā nāṁ … hai; the verb is last.)
+[question — say your answer, then pause 12 seconds]
+Say my name is Mira in Punjabi, then type the romanized sentence you said.
 
 
 Lesson 5 of 9.
@@ -131,7 +139,7 @@ The letters in this word.
 ਤੂੰ: ਤ (ta) + ੂ (long ū) + ਂ (nasal bindi) becomes tū̃. ਤੁਸੀਂ: tu + sī̃, a longer, plural-shaped word.
 
 The word, taken apart.
-ਤੂੰ (tū̃, familiar "you") from Sanskrit tvam, from PIE tū — the same root as English archaic thou, Latin tū, French tu. ਤੁਸੀਂ (tusī̃, respectful "you") is grammatically plural — the same courtesy-by-plural you meet in French vous and Hindi āp.
+ਤੂੰ (tū̃, familiar "you") from Sanskrit tvam, from PIE tū — the same root as English archaic thou, Latin tū, French tu. ਤੁਸੀਂ (tusī̃, respectful "you") is grammatically plural — the same courtesy-by-plural used by French vous and Hindi āp.
 
 Grammar Lens: two levels of "you".
 ਤੂੰ (tū̃) — familiar: friends, children, intimates.
@@ -150,6 +158,8 @@ Guided Practice.
 Wrap-up Recall.
 [pause 3 seconds]
 Which "you" is respectful, and what English word is tū̃ cousin to? (Tusī̃; archaic thou, from PIE tū.)
+[question — say your answer, then pause 8 seconds]
+Which Punjabi you belongs in a first meeting: tū̃ or tusī̃?
 
 
 Lesson 6 of 9.
@@ -179,6 +189,8 @@ Guided Practice.
 Wrap-up Recall.
 [pause 3 seconds]
 What root do Punjabi's question-words share, and its English family? (The interrogative k-, PIE kʷo-; the wh- words.)
+[question — say your answer, then pause 8 seconds]
+You hear kī in a question. Type its English meaning.
 
 
 Lesson 7 of 9.
@@ -188,8 +200,8 @@ Warm-up.
 [pause 2 seconds]
 Turn the introduction around — ask, instead of tell.
 
-The phrase, assembled.
-ਤੁਹਾਡਾ (tuhāḍā, "your," the respectful possessive from tusī̃) + ਨਾਂ (name) + ਕੀ (what) + ਹੈ (is) becomes literally "your name what is?" Punjabi keeps the verb last again, and simply drops the question-word kī into the object slot.
+The exchange — assembled.
+ਤੁਹਾਡਾ (tuhāḍā, "your," the respectful possessive from tusī̃) + ਨਾਂ (nāṁ) (name) + ਕੀ (what) + ਹੈ (hai) (is) becomes literally "your name what is?" Punjabi keeps the verb last again, and simply drops the question-word kī into the object slot.
 
 Grammar Lens: answering.
 Answer it with the sentence you built: Merā nāṁ Arun hai. The familiar version swaps tuhāḍā for ਤੇਰਾ (terā, "your," from tū̃): terā nāṁ kī hai?
@@ -206,6 +218,8 @@ Guided Practice.
 Wrap-up Recall.
 [pause 3 seconds]
 Ask someone's name respectfully, and note where the verb sits. (Tuhāḍā nāṁ kī hai?; the verb is last.)
+[question — say your answer, then pause 14 seconds]
+Ask what is your name respectfully in Punjabi, then type the romanized question you said.
 
 
 Lesson 8 of 9.
@@ -235,6 +249,8 @@ Guided Practice.
 Wrap-up Recall.
 [pause 3 seconds]
 What does the phrase literally mean, and where does khushī come from? ("Having met you, happiness happened"; Persian khush, "happy" — Punjabi's second vocabulary.)
+[question — say your answer, then pause 12 seconds]
+You hear khushī hoī after an introduction. Give its use and source.
 
 
 Lesson 9 of 9.
@@ -254,8 +270,12 @@ The exchange.
 [pause 8 seconds for the answer]
 [your turn — say: "Pleased to meet you." — tuhānū̃ mil ke khushī hoī.]
 [pause 8 seconds for the answer]
+[question — say your answer, then pause 10 seconds]
+You hear tuhāḍā nāṁ kī hai? Type what the speaker wants to know.
+[question — say your answer, then pause 24 seconds]
+Say a three-turn introduction aloud, then type the romanized turns you said.
 
-The atoms.
+Guided Practice — the atoms.
 [pause 2 seconds]
 [your turn — say: "name," "my," "is" (nāṁ, merā, hai)]
 [pause 8 seconds for the answer]
@@ -264,7 +284,7 @@ The atoms.
 [your turn — say: "what" and where the verb sits (kī; the verb is last)]
 [pause 8 seconds for the answer]
 
-Roots you now carry.
+The word, taken apart — roots you now carry.
 [pause 2 seconds]
 nāṁ from Sanskrit nāman becomes English name.
 merā from ma- becomes English my; hai from asti becomes English is.
@@ -272,5 +292,7 @@ kī from ka- becomes English what; tū̃ from tū becomes thou.
 khushī from Persian — Punjabi's second vocabulary.
 
 Wrap-up Recall.
+[pause 2 seconds]
+Independent Gurmukhi reading and writing are not scored here. Chapter 2 still contains untaught forms; #13068 must build their visible-model, guided-copy, delayed-copy, and dictation runway before either skill can earn credit. A romanized answer never counts as Gurmukhi writing.
 [pause 3 seconds]
 Introduce yourself and ask a stranger's name in Punjabi. (Merā nāṁ … hai. Tuhāḍā nāṁ kī hai?)

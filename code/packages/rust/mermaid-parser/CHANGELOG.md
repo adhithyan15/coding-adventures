@@ -1,5 +1,9 @@
 # Changelog
 
+## 0.149.0
+
+- Compile Mermaid Gantt `ddd` and `dddd` weekday-name tokens into typed semantic date formats.
+
 ## 0.148.0
 
 - Compile Mermaid Gantt `h`, `hh`, `A`, and `a` 12-hour clock tokens into typed semantic date formats.

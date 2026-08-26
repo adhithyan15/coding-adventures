@@ -32,7 +32,7 @@
     {
       "language": "punjabi",
       "chapter": 2,
-      "sourceHash": "fnv1a64:9b6b1cd9e51fae7e",
+      "sourceHash": "fnv1a64:a1160de7afbd017f",
       "lessonIds": [
         "PA-C02-naam",
         "PA-C02-mera",
@@ -48,8 +48,8 @@
       "drivablePrefix": 0,
       "text": "punjabi/narration/ch02.txt",
       "json": "punjabi/narration/ch02.json",
-      "textHash": "fnv1a64:1b9afcda9bbc0776",
-      "jsonHash": "fnv1a64:1867966d199aa211"
+      "textHash": "fnv1a64:09cb8f5de3e3ed20",
+      "jsonHash": "fnv1a64:0bf160ef199afa36"
     },
     {
       "language": "punjabi",

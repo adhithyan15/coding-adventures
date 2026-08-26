@@ -9,10 +9,10 @@ before the whole; and a book you can read straight through.
 - **Gurmukhi, taught inline.** Punjabi is **Indo-Aryan** (like Hindi, Marathi,
   Bengali), written in **Gurmukhi** — "from the mouth of the Guru," the script
   the Sikh Gurus shaped for their scriptures. A vendored Noto Sans Gurmukhi
-  font renders it; each word lesson spells out exactly the letters that word
-  needs — the older lessons under a *"The letters in this word"* heading, the
-  schema-v2 ones inside *"You'll want to know first — one word"* — and a reader
-  who already reads Gurmukhi simply skims it. No reading course.
+  font renders it. Displaying a word is not treated as teaching its letters:
+  the gentle reading-and-writing runway teaches each load-bearing sign before
+  it is scored, while learners who already read Gurmukhi can skim those steps.
+  The remaining script-closure debt is tracked explicitly in #13068.
 - **Two vocabularies, front and centre.** The recurring thread is Punjab's
   place on the road between Persia and India: "thank you" is both the
   Sanskritic **dhannavād** and the Perso-Arabic **shukrīā**, and the script
@@ -44,7 +44,10 @@ book-only human validation remain explicit backlog.
   In the book.
 - **Chapter 2 — Introducing Yourself** ([`lessons/PA-C02-*`](./lessons/)): nāṁ,
   merā, hai, **merā nāṁ … hai**, tū̃/tusī̃, kī, **tuhāḍā nāṁ kī hai?**, khushī,
-  practice. Every atom traced; SOV order; two-level "you". In the book.
+  practice. Nine canonical sound-and-meaning-first micro-lessons teach SOV
+  order and the two-level "you" through listening and speaking. The payoff is
+  deliberately oral: visible romanization is support, never writing credit,
+  and Gurmukhi reading/writing remains blocked on #13068. In the book.
 - **Chapter 3 — How Are You** ([`lessons/PA-C03-*`](./lessons/)): kivēṁ,
   **tusī̃ kivēṁ ho?**, maiṁ, ṭhīk, koī gall nahīṁ, practice. The copula set;
   the *hāṁ* "am"/"yes" homophone. In the book.

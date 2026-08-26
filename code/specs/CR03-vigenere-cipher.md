@@ -39,12 +39,16 @@ Reverse the process: shift each letter backward by the keyword amount.
 Breaking Vigenère requires two steps:
 
 **Step 1: Find the key length** using Index of Coincidence (IC):
-- For each candidate key length k (2..40):
+- For each candidate key length k (2..`max_length`, at most 40):
   - Split ciphertext into k groups (every k-th letter)
   - Calculate IC of each group
   - Average the ICs
-- The key length where average IC is closest to English (~0.0667)
-  is likely correct (random text has IC ~0.0385)
+- The correct key length usually has a strong average IC near English
+  (~0.0667), while random text is nearer 0.0385. Multiples of the true key can
+  also score strongly. The exact near-maximum threshold and tie-breaking rule
+  remain explicitly owned by the pending CR01-CR03 language-neutral fixture
+  contract; current implementations must document their provisional heuristic
+  and cover the shared long-English recovery vectors.
 
 **Step 2: Find each key letter** using chi-squared:
 - For each position in the key (0..k-1):
@@ -59,15 +63,19 @@ Breaking Vigenère requires two steps:
 |----------|-----------|-------------|
 | `encrypt` | `(plaintext: str, key: str) -> str` | Vigenère encrypt. Key must be alphabetic. |
 | `decrypt` | `(ciphertext: str, key: str) -> str` | Vigenère decrypt. |
-| `find_key_length` | `(ciphertext: str, max_length: int = 20) -> int` | Estimate key length via IC analysis. |
+| `find_key_length` | `(ciphertext: str, max_length: int = 20) -> int` | Estimate key length via IC analysis; `max_length` is capped at 40. |
 | `find_key` | `(ciphertext: str, key_length: int) -> str` | Find key letters via chi-squared analysis. |
 | `break_cipher` | `(ciphertext: str) -> (key: str, plaintext: str)` | Full automatic break: find length, then key, then decrypt. |
 
 ### Character Handling
 - Preserve case: uppercase stays uppercase, lowercase stays lowercase
-- Non-alphabetic characters pass through unchanged
-- Keyword position only advances on alphabetic characters
+- Non-ASCII characters and other non-alphabetic characters pass through unchanged
+- Keyword position only advances on ASCII alphabetic characters
 - Key must be non-empty and contain only A-Z/a-z
+
+Cryptanalysis likewise considers only ASCII letters. Implementations may
+reject analysis parameters or ciphertexts beyond a documented resource limit;
+they must do so before allocating work proportional to the rejected value.
 
 ## Worked Example
 
@@ -106,7 +114,7 @@ Recovered key: "SECRET"
 
 ## Parity Test Vectors
 
-All 9 languages must produce identical results:
+All established implementation lanes must produce identical results:
 
 - `encrypt("ATTACKATDAWN", "LEMON")` → `"LXFOPVEFRNHR"`
 - `decrypt("LXFOPVEFRNHR", "LEMON")` → `"ATTACKATDAWN"`
@@ -120,6 +128,12 @@ All 9 languages must produce identical results:
 
 | Language | Package Directory | Module/Namespace |
 |----------|-------------------|------------------|
+| C# | `code/packages/csharp/vigenere-cipher/` | `CodingAdventures.VigenereCipher` |
+| Dart | `code/packages/dart/vigenere-cipher/` | `package:coding_adventures_vigenere_cipher/vigenere_cipher.dart` |
+| F# | `code/packages/fsharp/vigenere-cipher/` | `CodingAdventures.VigenereCipher` |
+| Haskell | `code/packages/haskell/vigenere-cipher/` | `VigenereCipher` |
+| Java | `code/packages/java/vigenere-cipher/` | `com.codingadventures.vigenerecipher` |
+| Kotlin | `code/packages/kotlin/vigenere-cipher/` | `com.codingadventures.vigenerecipher` |
 | Python | `code/packages/python/vigenere-cipher/` | `vigenere_cipher` |
 | Go | `code/packages/go/vigenere-cipher/` | `vigenerecipher` |
 | Ruby | `code/packages/ruby/vigenere_cipher/` | `CodingAdventures::VigenereCipher` |

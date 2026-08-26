@@ -1,182 +1,275 @@
-Marathi, chapter 5: Farewells.
-6 lessons. The first lesson already needs your eyes or your hands, so save this one for when you have stopped.
+Marathi, chapter 5: Introducing Yourself.
+9 lessons. The first lesson already needs your eyes or your hands, so save this one for when you have stopped.
 
 
-Lesson 1 of 6.
-पुन्हा (punhā) — "again".
+Lesson 1 of 9.
+नाव (nāv) — "name".
 
 Before we start: this one needs your eyes, so it is not fully a driving lesson. You will want your eyes, for letter shapes on the page. You can listen to everything else now — leave the section called The letters in this word until you have stopped, and I will say so again when we reach it.
 
 Warm-up.
 [pause 2 seconds]
-Chapter 2 gave you the goodbye yeto ("I'll come [again]"). Now the explicit word for again, to build the warm "see you again."
+To introduce yourself you need one word first: name. In Marathi it is नाव (nāv) — and it is a very old word wearing a Marathi coat.
 
 The letters in this word.
-(Skim if you read Devanagari.) पु (pu) + न्हा (nhā, the न na joined by a halant to ह ha with the long-ā stroke) becomes पुन्हा punhā.
+(Skim if you read Devanagari.) ना (nā, the न na with the ा long-ā stroke) + व (va) becomes नाव nāv. Two letters, read left to right.
 
 The word, taken apart.
-पुन्हा (punhā, "again") comes from Sanskrit पुनर् (punar, "again, back"). That punar is a genuine Indo-European cousin of Latin re- in the sense of "back/again," and it echoes in Hindi phir and the puna- of punarjanma ("rebirth"). To say a thing punhā is to send it round once more.
+नाव (nāv) comes from Sanskrit नामन् (nāman, "name"). Watch the small Marathi sound-shift: the Sanskrit -m- softened to -v-, so nām became nāv. (Hindi kept the m: nām.) That Sanskrit nāman traces back to the same ancient root, h₃nómn̥, that gave English name and noun, Latin nōmen, Greek onoma. A cousin from before either language had a name for itself.
 
 Why it's said this way.
-Marathi's goodbyes lean on again and meet rather than on farewell — the parting is framed as a return, never an ending. This word is the hinge of that idea.
+Marathi softens many old Sanskrit consonants this way — m leaning to v, hard sounds going soft. Spotting the shift lets you read a Sanskrit word straight into its Marathi form.
 
 Guided Practice.
 [pause 1 second]
-[your turn — say: "punhā" — again]
+[your turn — say: "nāv" — name]
 [pause 8 seconds for the answer]
-[your turn — say: its Sanskrit source (punar) and the punarjanma echo]
+[your turn — say: the English cousin from the same root ("name")]
 [pause 8 seconds for the answer]
 
 Wrap-up Recall.
 [pause 3 seconds]
-What does punhā mean, and from what Sanskrit word? ("Again"; from punar.)
+What is nāv, and what happened to the m of Sanskrit nām? ("Name"; it softened to v — a Marathi sound-shift.)
 
 
-Lesson 2 of 6.
-भेटू (bheṭū) — "(let's / we'll) meet".
+Lesson 2 of 9.
+माझं (mājhaṁ) — "my".
 
 Before we start: this one needs your eyes, so it is not fully a driving lesson. You will want your eyes, for letter shapes on the page. You can listen to everything else now — leave the section called The letters in this word until you have stopped, and I will say so again when we reach it.
 
 Warm-up.
 [pause 2 seconds]
-The other half of the goodbye: meet. You already brushed past it in bheṭūn ānand jhālā ("pleased to meet you").
+"My name." The word for my — and it changes shape with the gender of what it owns.
 
 The letters in this word.
-(Skim if you read Devanagari.) भे (bhe) + टू (ṭū, the retroflex ट ṭa with the long-u stroke) becomes भेटू bheṭū. Note the retroflex ट (ṭa) — the tongue curls back to the roof of the mouth.
+(Skim if you read Devanagari.) मा (mā) + झं (jhaṁ, the झ jha with an anusvara ं for the light nasal) becomes माझं mājhaṁ.
 
 The word, taken apart.
-भेटू (bheṭū) is a form of the verb भेटणे (bheṭṇe, "to meet"). As भेटू it means "let's meet / (we) will meet" — the hopeful, forward-looking mood you want in a goodbye. It is a native Marathi verb (the bheṭ- stem also gives bheṭ, "a meeting, a visit").
+माझं (mājhaṁ, "my") sits on the first-person root ma- — the very root behind English me, my, mine, Latin meus, and Hindi merā. One tiny syllable, ma, marks "belonging to me" across the whole Indo-European family.
 
-Grammar Lens: one verb, first-person-plural wish.
-भेटू carries a built-in "we/let's" — no separate word for "we" is needed, the verb form says it. This is the same -ū ending you'll feel in other "let's ___" verbs. Unlike the present tense (yeto/yete), this future-wish form does not split by gender — men and women both say bheṭū.
+Grammar Lens: "my" agrees in three genders.
+Marathi keeps three genders, and "my" picks its ending from the noun: माझा (mājhā, masculine), माझी (mājhī, feminine), माझं (mājhaṁ, neuter). The word नाव (nāv, "name") is neuter, so "my name" is माझं नाव (mājhaṁ nāv). You met this gender-agreement idea already with the goodbye yeto/yete; it runs through the whole language.
 
 Guided Practice.
 [pause 1 second]
-[your turn — say: "bheṭū" — (we'll) meet]
+[your turn — say: "mājhā / mājhī / mājhaṁ" — the three genders of "my"]
 [pause 8 seconds for the answer]
-[your turn — say: the fuller verb it comes from (bheṭṇe, to meet)]
+[your turn — say: "mājhaṁ nāv" — my name (neuter, to match nāv)]
 [pause 8 seconds for the answer]
 
 Wrap-up Recall.
 [pause 3 seconds]
-What does bheṭū pack into one word? ("(we/let's) will meet" — the "we" lives in the verb ending.)
+Why is "my name" mājhaṁ nāv and not mājhā nāv? (nāv is neuter, so "my" takes the neuter form mājhaṁ.)
 
 
-Lesson 3 of 6.
-पुन्हा भेटू (punhā bheṭū) — "see you again".
-
-Warm-up.
-[pause 2 seconds]
-Assemble the two atoms into the standard warm goodbye.
-
-The phrase, assembled.
-पुन्हा (punhā, again) + भेटू (bheṭū, we'll meet) becomes पुन्हा भेटू — "we'll meet again." Two words, and the whole promise of return is spoken.
-This is the fuller, explicit twin of Chapter 2's येतो (yeto, "I'll come [again]"). Both refuse a final "farewell": one says I'll come back, the other we'll meet again — the subcontinent's shared goodbye-as-promise (Hindi phir milenge, Bengali āshi, Tamil pōy varugiṟēṉ).
-
-Why it's said this way.
-You can stack them for warmth: येतो, पुन्हा भेटू (yeto, punhā bheṭū) — "I'll be going; we'll meet again." Neither word contains "goodbye"; the parting is all return.
-
-Guided Practice.
-[pause 1 second]
-[your turn — say: "punhā bheṭū" — see you again]
-[pause 8 seconds for the answer]
-[your turn — say: it stacked with the Chapter-1 goodbye (yeto, punhā bheṭū)]
-[pause 8 seconds for the answer]
-
-Wrap-up Recall.
-[pause 3 seconds]
-What does punhā bheṭū literally promise? ("We'll meet again" — return, not farewell.)
-
-
-Lesson 4 of 6.
-उद्या भेटू (udyā bheṭū) — "see you tomorrow".
+Lesson 3 of 9.
+आहे (āhe) — "is".
 
 Before we start: this one needs your eyes, so it is not fully a driving lesson. You will want your eyes, for letter shapes on the page. You can listen to everything else now — leave the section called The letters in this word until you have stopped, and I will say so again when we reach it.
 
 Warm-up.
 [pause 2 seconds]
-Swap "again" for "tomorrow" and you have a dated goodbye.
+The little verb that finishes almost every Marathi sentence about what something is — and, in Marathi, it comes last.
 
 The letters in this word.
-(Skim if you read Devanagari.) उ (u, standalone vowel) + द्या (dyā, द da joined by a halant to य ya with the long-ā stroke) becomes उद्या udyā.
+(Skim if you read Devanagari.) आ (ā, the standalone long-ā vowel, used when a word begins with a vowel) + हे (he) becomes आहे āhe.
 
-The phrase, assembled.
-उद्या (udyā, "tomorrow") + भेटू (bheṭū, we'll meet) becomes उद्या भेटू — "we'll meet tomorrow."
-उद्या comes from Sanskrit श्वः (śvaḥ) by way of a later udya-; unlike Hindi's kal (which means both tomorrow and yesterday), Marathi keeps tomorrow and yesterday as two distinct words — udyā (tomorrow) vs. काल (kāl, yesterday). No ambiguity about which way time is pointing.
+The word, taken apart.
+आहे (āhe, "is") descends from Sanskrit अस्ति (ásti, "is"), on the root √as ("to be"). That same √as / PIE h₁es- is the ancestor of Latin est, German ist, and English is itself — the deepest, oldest verb in the family, worn down to āhe in Marathi.
 
-Why it's said this way.
-Because bheṭū already carries the future wish, you simply front it with when: udyā bheṭū (tomorrow), punhā bheṭū (again). The verb does the tense; the first word sets the day.
+Grammar Lens: the verb goes last.
+Marathi is a subject–object–verb language: "my name Mira is." The copula आहे sits at the end, where English puts it in the middle. It changes with the subject — you will meet आहेस (āhes, "you are") and आहात (āhāt, "you are," respectful) in Chapter 5.
 
 Guided Practice.
 [pause 1 second]
-[your turn — say: "udyā bheṭū" — see you tomorrow]
+[your turn — say: "āhe" — is]
 [pause 8 seconds for the answer]
-[your turn — say: the tomorrow/yesterday pair Marathi keeps apart (udyā / kāl)]
+[your turn — say: the English cousin from the same root ("is")]
 [pause 8 seconds for the answer]
 
 Wrap-up Recall.
 [pause 3 seconds]
-How does Marathi's udyā differ from Hindi's kal? (udyā is only "tomorrow"; Marathi uses a separate word kāl for "yesterday.")
+Where does āhe sit in a Marathi sentence, and what English word is its cousin? (At the end; English is, both from √as.)
 
 
-Lesson 5 of 6.
-काळजी घ्या (kāḷjī ghyā) — "take care".
+Lesson 4 of 9.
+माझं नाव … आहे (mājhaṁ nāv … āhe) — "my name is…"
+
+Warm-up.
+[pause 2 seconds]
+Now assemble the three atoms you just met into your first full sentence about yourself.
+
+The phrase, assembled.
+माझं (mājhaṁ, my) + नाव (nāv, name) + [your name] + आहे (āhe, is) becomes माझं नाव मीरा आहे (mājhaṁ nāv Mīrā āhe) — "my name is Mira."
+Notice the shape:
+माझं is neuter, agreeing with the neuter नाव.
+The verb आहे comes last — "my name Mira is."
+A man or a woman says it the same way here; the gender lived in mājhaṁ (matching nāv), which is settled.
+
+Why it's said this way.
+Marathi drops nothing and reorders everything to English eyes: possessor, thing, value, then is. Learn this frame and you can swap in any name — or, later, any fact about yourself.
+
+Guided Practice.
+[pause 1 second]
+[your turn — say: "mājhaṁ nāv Mīrā āhe" — my name is Mira]
+[pause 8 seconds for the answer]
+[your turn — say: it with your own name in the blank]
+[pause 8 seconds for the answer]
+
+Wrap-up Recall.
+[pause 3 seconds]
+Put "my name is Arun" into Marathi. (mājhaṁ nāv Arun āhe.)
+
+
+Lesson 5 of 9.
+तू / तुम्ही (tū / tumhī) — "you".
 
 Before we start: this one needs your eyes, so it is not fully a driving lesson. You will want your eyes, for letter shapes on the page. You can listen to everything else now — leave the section called The letters in this word until you have stopped, and I will say so again when we reach it.
 
 Warm-up.
 [pause 2 seconds]
-One last, tender goodbye — the Marathi "take care," and with it a letter unique to Marathi's corner of Devanagari.
+Before you can ask someone their name, you need "you" — and Marathi gives you two, one warm, one respectful.
 
 The letters in this word.
-(Skim if you read Devanagari.) काळजी carries the letter ळ (ḷa) — a retroflex "l," the tongue curled back. Standard Hindi dropped this sound; Marathi (like the Dravidian south and Gujarati) keeps it, and it appears in many everyday Marathi words. का + ळ + जी becomes kāḷjī. Then घ्या (ghyā, "take," respectful).
+(Skim if you read Devanagari.) तू (tū, the त ta with the long-u stroke ू). And तुम्ही (tumhī): तु + म्ही (mhī, the म ma with a halant joining ह ha).
 
-The phrase, assembled.
-काळजी (kāḷjī, "care, concern") + घ्या (ghyā, "take," the respectful imperative) becomes काळजी घ्या — "take care." To a friend, the familiar imperative: काळजी घे (kāḷjī ghe).
+The word, taken apart.
+तू (tū, familiar "you") comes from Sanskrit त्वम् (tvam), from PIE tū — the very root of English archaic thou, Latin tū, French tu, and Hindi tū. The respectful तुम्ही (tumhī) is grammatically plural: you honour one person by addressing them as many, exactly as French does with vous. It takes the plural verb आहात (āhāt), not āhes.
 
-Why it's said this way.
-Where punhā bheṭū looks ahead to the next meeting, kāḷjī ghyā looks after the person in between — "mind yourself until then." The respectful घ्या (ghyā) matches the तुम्ही register from Chapter 3; the familiar घे (ghe) matches तू.
+Grammar Lens: two "you"s, a choice of respect.
+तू (tū) — a friend, a child, someone close.
+तुम्ही (tumhī) — an elder, a stranger, anyone you show courtesy to.
+Choosing between them is a small act of politeness Marathi makes you perform every time you speak to someone.
 
 Guided Practice.
 [pause 1 second]
-[your turn — say: "kāḷjī ghyā" (respectful) / "kāḷjī ghe" (to a friend)]
+[your turn — say: "tū" (close) / "tumhī" (respectful)]
 [pause 8 seconds for the answer]
-[your turn — say: the retroflex ळ (ḷa) Marathi keeps that Hindi lost]
+[your turn — say: the English cousin of tū ("thou")]
 [pause 8 seconds for the answer]
 
 Wrap-up Recall.
 [pause 3 seconds]
-Which special Marathi letter sits in kāḷjī, and who else keeps it? (The retroflex ळ ḷa; also kept by the Dravidian languages and Gujarati.)
+Which "you" for a teacher, and why? (tumhī — the respectful plural, courtesy-by-plural like French vous.)
 
 
-Lesson 6 of 6.
-Chapter 5 recap — farewells.
+Lesson 6 of 9.
+काय (kāy) — "what".
+
+Before we start: this one needs your eyes, so it is not fully a driving lesson. You will want your eyes, for letter shapes on the page. You can listen to everything else now — leave the section called The letters in this word until you have stopped, and I will say so again when we reach it.
 
 Warm-up.
 [pause 2 seconds]
-The parting words, together — none of them a bare "goodbye."
+One more atom before the question "what's your name?" — the word what itself.
 
-The farewells.
+The letters in this word.
+(Skim if you read Devanagari.) का (kā) + य (ya) becomes काय kāy.
+
+The word, taken apart.
+काय (kāy, "what") grows from the ancient interrogative stem ka-, from PIE kʷo- — the very root behind English wh- words (what, who, when, where, why) and Latin qu- (quis, quid). Marathi keeps the k- plainly across its whole question family: काय (kāy, what), कोण (koṇ, who), कुठे (kuṭhe, where), का (kā, why), कसं (kasaṁ, how — Chapter 6). Learn to hear that opening k- and you can spot a Marathi question coming.
+
+Why it's said this way.
+English wh-, Latin qu-, and Marathi k- are three coats on one 5,000-year-old question-root — the family resemblance survives the different spellings.
+
+Guided Practice.
+[pause 1 second]
+[your turn — say: "kāy" — what]
+[pause 8 seconds for the answer]
+[your turn — say: three more Marathi k- questions (koṇ, kuṭhe, kā)]
+[pause 8 seconds for the answer]
+
+Wrap-up Recall.
+[pause 3 seconds]
+What do Marathi kāy, English what, and Latin quid share? (One PIE question-root kʷo-.)
+
+
+Lesson 7 of 9.
+तुमचं नाव काय आहे? (tumchaṁ nāv kāy āhe?) — "what's your name?"
+
+Warm-up.
+[pause 2 seconds]
+Now turn the question outward — ask someone else's name.
+
+The phrase, assembled.
+तुमचं (tumchaṁ, "your," neuter to match nāv) + नाव (nāv, name) + काय (kāy, what) + आहे (āhe, is) becomes तुमचं नाव काय आहे? — literally "your name what is?", verb last.
+The "your" mirrors the "my" set you learned:
+माझं (mājhaṁ) — my.
+तुमचं (tumchaṁ) — your (respectful, from tumhī).
+तुझं (tujhaṁ) — your (familiar, from tū).
+All three are shown here in the neuter, agreeing with the neuter नाव (nāv).
+
+Why it's said this way.
+To a friend you would say तुझं नाव काय आहे? (tujhaṁ nāv kāy āhe?), swapping the respectful tumchaṁ for the familiar tujhaṁ — the same tū / tumhī choice of respect, now on the possessive.
+
+Guided Practice.
+[pause 1 second]
+[your turn — say: "tumchaṁ nāv kāy āhe?" — what's your name? (respectful)]
+[pause 8 seconds for the answer]
+[your turn — say: the familiar version (tujhaṁ nāv kāy āhe?)]
+[pause 8 seconds for the answer]
+
+Wrap-up Recall.
+[pause 3 seconds]
+Give the respectful and familiar "your name" forms. (tumchaṁ / tujhaṁ — both neuter before nāv.)
+
+
+Lesson 8 of 9.
+भेटून आनंद झाला (bheṭūn ānand jhālā) — "pleased to meet you".
+
+Warm-up.
+[pause 2 seconds]
+Names exchanged — now the warm close of a first meeting.
+
+The phrase, assembled.
+भेटून (bheṭūn, "having met") + आनंद (ānand, "joy") + झाला (jhālā, "happened") becomes literally "having met [you], joy happened." Marathi does not say "I am pleased"; it says the joy itself occurred.
+
+The word, taken apart.
+The heart of it is आनंद (ānand, "joy, bliss"), pure Sanskrit: आ- (ā-, "fully") + नन्द (nand, "to rejoice"). It is the ānanda of the scriptural phrase sat-cit-ānanda ("being–consciousness–bliss") — and one of the most common given names across India. So a Marathi speaker meets you and names the feeling joy.
+
+Why it's said this way.
+The verb झाला (jhālā, "happened/became") also carries gender — jhālā by default here for the event ānand. And भेटून (bheṭūn) is built on भेटणे (bheṭṇe, "to meet") — a verb you will meet again in Chapter 7's goodbye, punhā bheṭū ("we'll meet again").
+
+Guided Practice.
+[pause 1 second]
+[your turn — say: "bheṭūn ānand jhālā" — pleased to meet you]
+[pause 8 seconds for the answer]
+[your turn — say: what ānand literally means ("joy")]
+[pause 8 seconds for the answer]
+
+Wrap-up Recall.
+[pause 3 seconds]
+Literally, what does a Marathi speaker say when meeting you? ("Having met you, joy happened" — bheṭūn ānand jhālā.)
+
+
+Lesson 9 of 9.
+Chapter 5 recap — introducing yourself.
+
+Warm-up.
+[pause 2 seconds]
+Run the whole first exchange, atom by atom, then whole.
+
+The whole exchange.
 [a table of 4 rows, read aloud]
-Marathi: येतो / येते. Say it: yeto / yete. English: I'll be going. ("I come again").
-Marathi: पुन्हा भेटू. Say it: punhā bheṭū. English: See you again.
-Marathi: उद्या भेटू. Say it: udyā bheṭū. English: See you tomorrow.
-Marathi: काळजी घ्या. Say it: kāḷjī ghyā. English: Take care.
+Marathi: माझं नाव मीरा आहे. Say it: mājhaṁ nāv Mīrā āhe. English: My name is Mira.
+Marathi: तुमचं नाव काय आहे? Say it: tumchaṁ nāv kāy āhe? English: What's your name?
+Marathi: माझं नाव अरुण आहे. Say it: mājhaṁ nāv Aruṇ āhe. English: My name is Arun.
+Marathi: भेटून आनंद झाला. Say it: bheṭūn ānand jhālā. English: Pleased to meet you.
 
 Atoms banked this chapter.
-पुन्हा (punhā) — again; Sanskrit punar.
-भेटू (bheṭū) — (we'll) meet; the "we" lives in the verb; from bheṭṇe.
-उद्या (udyā) — tomorrow (distinct from kāl, yesterday).
-काळजी घ्या (kāḷjī ghyā) — take care; the retroflex ळ Marathi keeps.
-Register: घ्या (ghyā, respectful) vs घे (ghe, familiar) — the tumhī / tū choice again.
+नाव (nāv) — name; Sanskrit nāman becomes English name (the m softened to v in Marathi).
+माझं (mājhaṁ) — my; root ma- becomes English me/my; three genders mājhā/mājhī/mājhaṁ.
+आहे (āhe) — is; Sanskrit ásti (√as) becomes English is; the verb comes last.
+तू / तुम्ही (tū / tumhī) — familiar / respectful "you"; tū becomes thou; courtesy-by-plural.
+काय (kāy) — what; PIE kʷo-, the k- question family.
+आनंद (ānand) — joy; Sanskrit ānanda.
 
 Guided Practice.
 [pause 1 second]
-[your turn — say: all four farewells in a row]
+[your turn — say: the full four-line exchange, both parts]
 [pause 8 seconds for the answer]
-[your turn — say: a stacked goodbye — yeto, punhā bheṭū, kāḷjī ghyā]
+[your turn — say: "my name is [you]" and "what's your name?" to a friend (tujhaṁ)]
 [pause 8 seconds for the answer]
 
 Wrap-up Recall.
 [pause 3 seconds]
-What do every Marathi goodbye have in common? (None says "farewell" — each is a return or a caring wish.) Next chapter: the first real verbs — mī marāṭhī bolto.
+What two Marathi distinctives showed up again this chapter? (Three genders on mājhaṁ; the verb āhe going last.) Next chapter: tumhī kase āhāt? — "how are you?"

@@ -1,46 +1,46 @@
 {
   "language": "marathi",
-  "lessonCount": 89,
-  "atomMeasurableLessons": 63,
+  "lessonCount": 111,
+  "atomMeasurableLessons": 85,
   "atomMeasurementBlindLessons": 26,
   "durationViolations": 0,
   "atomLessonSpikes": 1,
   "atomChapterSpikes": 0,
   "glyphLessonSpikes": 2,
   "scriptSystemSpikes": 0,
-  "scriptClosureViolations": 60,
-  "neverTaughtGlyphs": 36,
+  "scriptClosureViolations": 51,
+  "neverTaughtGlyphs": 24,
   "orderDefects": 0,
   "lessonsWithoutSequence": 0,
   "unknownPrerequisites": 0,
   "forwardPrerequisites": 0,
   "forwardReviews": 0,
-  "forwardReferences": 6,
-  "atomsTaught": 85,
+  "forwardReferences": 5,
+  "atomsTaught": 98,
   "atomsNeverRevisited": 2,
-  "reinforcementWindowMisses": 103,
+  "reinforcementWindowMisses": 121,
   "reinforcementMissesByWindow": {
-    "R1": 8,
-    "R2": 43,
-    "R3": 45,
-    "R4": 7
+    "R1": 9,
+    "R2": 44,
+    "R3": 53,
+    "R4": 15
   },
   "payoffSurprises": 0,
-  "writingPracticeLessons": 54,
+  "writingPracticeLessons": 66,
   "firstWritingPracticeAt": 0,
   "lessonsBeforeWritingPractice": 0,
   "findings": [
     {
       "language": "marathi",
       "kind": "forward-language",
-      "count": 6,
+      "count": 5,
       "unit": "use(s)",
       "detail": "teach target-language material before load-bearing use"
     },
     {
       "language": "marathi",
       "kind": "script-closure",
-      "count": 36,
+      "count": 24,
       "unit": "glyph(s)",
       "detail": "teach every load-bearing glyph before asking the learner to decode it"
     },
@@ -61,7 +61,7 @@
     {
       "language": "marathi",
       "kind": "reinforcement",
-      "count": 103,
+      "count": 121,
       "unit": "missed window(s)",
       "detail": "add retrieval at the expanding R1-R4 intervals"
     },
@@ -76,7 +76,7 @@
   "next": {
     "language": "marathi",
     "kind": "forward-language",
-    "count": 6,
+    "count": 5,
     "unit": "use(s)",
     "detail": "teach target-language material before load-bearing use"
   }

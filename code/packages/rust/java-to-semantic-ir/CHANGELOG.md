@@ -2,6 +2,74 @@
 
 All notable changes to the `java-to-semantic-ir` crate will be documented in this file.
 
+## [0.16.0] - 2026-08-26
+
+### Added
+
+- Task #67 (M5): a qualified *static* method call on this compilation
+  unit's own class, `ClassName.staticMethod(args)` — the next lettered
+  milestone per the JV02 spec's own "Status" section. Scope narrowed
+  after research: `ClassName.field` (static *field* access) needs field
+  declarations and a new SIR field-access node, neither of which exist
+  yet — dropped from M5, deferred to alongside a future M6. This slice
+  covers only static *method* calls, and only a self-reference (the one
+  class this frontend itself is compiling) — an external/JDK static like
+  `Math.abs(...)`/`System.out` has no import/library-catalog concept
+  to resolve against and stays rejected.
+- New `Lowerer::class_name: String`, captured once in `lower_program`
+  via a new `class_name_of` helper (mirrors `method_name`'s own "first
+  direct-child `NAME` token" technique) — the class was already parsed
+  (`collect_bounded(..., "class_declaration", ...)`) but its own name
+  was never captured before, since nothing needed it until now.
+- New `MethodSig::is_static: bool`, computed by a new `method_is_static`
+  helper that scans a `method_declaration`'s own `method_modifier`
+  children for the `static` keyword. `ClassName.staticMethod(args)`
+  rejects a resolved-but-non-static method with a clear "not `static`"
+  error rather than silently allowing it — real Java rejects
+  `ClassName.instanceMethod()` too, and this frontend has no reason to
+  be looser about a construct it can already fully type-check.
+- New `lower_primary_expression` match arm recognizing the
+  `[primary, dot_suffix, call_suffix]` shape (a bare `NAME` receiver,
+  a `.` suffix, a `(...)` suffix) and delegating to a new
+  `lower_static_method_call`. Per `semantic-ir`'s own `Expr::VirtualCall`
+  doc comment, a *static* call needs no new SIR node at all — it's an
+  ordinary `Expr::DirectCall` against a mangled top-level identity, so
+  `ClassName.staticMethod(args)` on this frontend's own class reuses
+  M3a's existing `method_signatures` table and `lower_call_arguments`
+  path unchanged, just reached through a qualified suffix chain instead
+  of a bare name.
+
+## [0.15.0] - 2026-08-26
+
+### Added
+
+- Task #66: a *chained* indexed-assignment target (`grid[i][j] = v;`,
+  `grid[i][j] += v;`, `grid[i][j]++;`) — the gap `lower_indexed_assignment`'s
+  own v0.14.0-era doc comment named as deferred and a dedicated regression
+  test used to lock in as rejected. `indexed_assign_target` now recognizes
+  a suffix chain of any length (previously exactly one), the same
+  `is_index_only_suffix` guard `lower_primary_expression`'s own
+  chained-read case already uses.
+- `lower_indexed_assignment` (plain `=`) peels every suffix but the last
+  via the existing `lower_chained_index` and writes through the last
+  suffix's own index — no temp-hoisting needed, since a plain-assignment
+  target is only ever built once.
+- New shared `hoist_indexed_target` helper, generalizing task #59's
+  single-suffix once-only-evaluation temp-binding shape to N suffixes:
+  hoists `primary` and every suffix's own index expression into fresh
+  local temps exactly once, then rebuilds the read-position target chain
+  from those temps' `VarRef`s. `lower_indexed_compound_assignment`
+  (`grid[i][j] += v;`) and `lower_indexed_incdec` (`grid[i][j]++;`) both
+  now call this instead of their own former single-suffix-only inline
+  hoisting — both read the current element *and* write it back, so a
+  non-constant index expression (e.g. `grid[i][next()] += v;`) must still
+  not be evaluated twice, generalized from exactly one index to N.
+- A chained target beyond the array's own dimension count (`xs[0][0] = v;`
+  on a 1-D `int[] xs`) still fails naturally at the first suffix whose
+  `Kind::index_once` finds a non-array kind — no separate bounds check
+  needed, matching `lower_chained_index`'s own existing behavior for the
+  value-position read case.
+
 ## [0.14.0] - 2026-08-26
 
 ### Added

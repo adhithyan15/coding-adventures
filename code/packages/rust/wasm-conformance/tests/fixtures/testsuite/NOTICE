@@ -174,6 +174,10 @@ Fetched:       2026-08-13 (initial slice, W05/PR3), extended 2026-08-14 (WASM08)
                access. Closes the lane-load/store family entirely and,
                with it, the larger load_extend/load_splat/load_zero/
                lane-load-store epic started in PR40)
+               extended 2026-08-26 (task #61 -- imports.wast, real module
+               linking's own import/export corpus, unblocked by the
+               W21-W24 exceptions-proposal `tag` infra, same pinned
+               commit, no re-pin -- see below),
 Fetch method:  code/packages/rust/wasm-conformance/tests/fixtures/fetch_testsuite.py
 
 The pinned commit was resolved via:
@@ -2294,6 +2298,36 @@ min-max-check fix, -2 not_yet_supported); `assert_return` rose from pass
 reconciles exactly, file by file, against the full baseline diff -- zero
 regressions anywhere in the corpus (no file's `pass` count decreased, and
 no new `fail` appeared anywhere).
+
+`imports.wast` (task #61) closes out a backlog item logged during W10:
+that spec's own attempt to vendor this file found it failed to PARSE
+entirely, because its "auxiliary modules to import from" preamble
+declares `(tag ...)`/`(tag (import ...) ...)`/`(export "x" (tag $y))` --
+WebAssembly-exceptions-proposal syntax `wasm-wast-parser` had no grammar
+support for at all at the time (see this crate's own CHANGELOG 0.1.15
+entry, "Deferred, not silently dropped"). The W21-W24 exceptions-proposal
+epic (real `tag` definitions, `tag` imports/exports, and cross-instance
+tag identity) closed that gap as a side effect, not a deliberate target
+of this vendoring pass -- re-fetching and re-running the file live
+confirmed it now parses in full (218 directives, 0 parse errors) before
+any code in this repo changed. All 93 `assert_unlinkable` directives
+(module +43/25nys, register +6, assert_unlinkable +93, assert_invalid
++1, assert_malformed +16nys, assert_return +26nys, assert_trap +8nys)
+grade real `Pass` or an already-established `NotYetSupported` category
+-- zero new `Fail` anywhere in the file, including every tag-specific
+case (`(tag (import "test" "tag-i32")))` missing-import, `(tag (import
+"test" "tag-i32") (param f32))` signature mismatch, and a `func`-vs-
+`tag` kind mismatch). The `NotYetSupported` directives are pre-existing,
+already-documented gaps unrelated to tags: imports from the
+unimplemented `spectest` host module (explicitly out of scope, see
+`RegistryHost`'s own doc comment and W10's "Explicitly out of scope"),
+and `assert_malformed` cases needing "imports must precede all other
+definitions" ordering validation this crate's parser doesn't do -- the
+same "text parsed without error" gap already present in `align.wast`/
+`block.wast`/`func.wast`/a dozen other already-vendored files. No code
+change was needed to vendor this file; every delta above reconciles
+exactly against `imports.wast`'s own per-file tally, and every other
+already-vendored file's counts are byte-for-byte unchanged.
 
 The vendored files are licensed under the Apache License, Version 2.0 --
 see the accompanying LICENSE file, itself vendored verbatim from the same

@@ -2,25 +2,34 @@
   "version": 1,
   "language": "marathi",
   "chapter": 7,
-  "title": "Numbers One to Five",
-  "drivablePrefix": 2,
-  "sourceHash": "fnv1a64:b2fe7e381b1f6be0",
+  "title": "Farewells",
+  "drivablePrefix": 0,
+  "sourceHash": "fnv1a64:4f49dcb297120106",
   "lessons": [
     {
-      "id": "MR-C06-numbers-1-5",
-      "sequence": 340,
-      "title": "एक, दोन, तीन, चार, पाच — one to five",
-      "headword": "एक दोन तीन चार पाच",
-      "romanization": "ek don tīn chār pāch",
-      "gloss": "one to five — nearly Hindi's, with two tells in the spelling and one in the sound",
+      "id": "MR-C04-punha",
+      "sequence": 135,
+      "title": "पुन्हा (punhā) — \"again\"",
+      "headword": "पुन्हा",
+      "romanization": "",
+      "gloss": "again (punhā)",
       "script": "devanagari",
-      "modality": "voice",
-      "derivedModality": "voice",
+      "modality": "sight",
+      "derivedModality": "sight",
       "modalityReasons": [
-        "no-visual-dependency"
+        "script-block"
       ],
-      "sourceHash": "fnv1a64:18141b5d810bc130",
-      "notice": null,
+      "sourceHash": "fnv1a64:fdee625a2e4bafa3",
+      "notice": {
+        "modality": "sight",
+        "needs": [
+          "your eyes, for letter shapes on the page"
+        ],
+        "waitUntilStopped": [
+          "The letters in this word"
+        ],
+        "text": "Before we start: this one needs your eyes, so it is not fully a driving lesson. You will want your eyes, for letter shapes on the page. You can listen to everything else now — leave the section called The letters in this word until you have stopped, and I will say so again when we reach it."
+      },
       "blocks": [
         {
           "index": 0,
@@ -35,202 +44,40 @@
             },
             {
               "kind": "speech",
-              "text": "Marathi and Hindi both use Devanagari and both descend from Sanskrit, so their numbers look almost identical. Almost is where the interest is."
+              "text": "Chapter 4 gave you the goodbye yeto (\"I'll come [again]\"). Now the explicit word for again, to build the warm \"see you again.\""
             }
           ]
         },
         {
           "index": 1,
-          "type": "input",
-          "title": "You'll want to know: the five",
+          "type": "script",
+          "title": "The letters in this word",
           "segments": [
             {
-              "kind": "table",
-              "headers": [
-                "",
-                "Marathi",
-                "said"
-              ],
-              "columns": 3,
-              "rowCount": 5,
-              "utterances": [
-                "1. Marathi: एक. said: ek.",
-                "2. Marathi: दोन. said: don.",
-                "3. Marathi: तीन. said: tīn.",
-                "4. Marathi: चार. said: chār — but see below.",
-                "5. Marathi: पाच. said: pāch."
-              ]
+              "kind": "speech",
+              "text": "(Skim if you read Devanagari.) पु (pu) + न्हा (nhā, the न na joined by a halant to ह ha with the long-ā stroke) becomes पुन्हा punhā."
             }
           ]
         },
         {
           "index": 2,
-          "type": "notice",
-          "title": "What you've built: three Marathi tells",
-          "segments": [
-            {
-              "kind": "speech",
-              "text": "Set them against Hindi. Two differences are visible and one is audible:"
-            },
-            {
-              "kind": "table",
-              "headers": [
-                "number",
-                "Hindi",
-                "Marathi"
-              ],
-              "columns": 3,
-              "rowCount": 3,
-              "utterances": [
-                "number: 2. Hindi: दो do. Marathi: दोन don: final n.",
-                "number: 5. Hindi: पाँच pāṁch. Marathi: पाच pāch: no nasal mark.",
-                "number: 4. Hindi: चार chār. Marathi: चार tsār: same spelling, different sound."
-              ]
-            },
-            {
-              "kind": "speech",
-              "text": "Do not explain all three histories yet. First make the five forms automatic; the next lesson earns the deeper comparison."
-            }
-          ]
-        },
-        {
-          "index": 3,
-          "type": "guided-production",
-          "title": "Guided Practice",
-          "segments": [
-            {
-              "kind": "pause",
-              "seconds": 1,
-              "perItem": false,
-              "source": "[PAUSE 1s]"
-            },
-            {
-              "kind": "prompt",
-              "action": "SAY",
-              "instruction": "\"ek, don, tīn, tsār, pāch\"",
-              "spoken": true,
-              "scored": false,
-              "responseSeconds": 8,
-              "source": "[YOU SAY: \"ek, don, tīn, tsār, pāch\"]"
-            },
-            {
-              "kind": "prompt",
-              "action": "SAY",
-              "instruction": "the visible tells — don has n; pāch has no nasal mark",
-              "spoken": true,
-              "scored": false,
-              "responseSeconds": 8,
-              "source": "[YOU SAY: the visible tells — *don* has *n*; *pāch* has no nasal mark]"
-            },
-            {
-              "kind": "prompt",
-              "action": "SAY",
-              "instruction": "the audible tell — written chār, Marathi tsār",
-              "spoken": true,
-              "scored": false,
-              "responseSeconds": 8,
-              "source": "[YOU SAY: the audible tell — written *chār*, Marathi *tsār*]"
-            }
-          ]
-        },
-        {
-          "index": 4,
-          "type": "recall",
-          "title": "Wrap-up Recall",
-          "segments": [
-            {
-              "kind": "pause",
-              "seconds": 3,
-              "perItem": false,
-              "source": "[PAUSE 3s]"
-            },
-            {
-              "kind": "speech",
-              "text": "Count to five in Marathi. (Ek, don, tīn, tsār, pāch.) Where does Marathi add a letter compared with Hindi? (दोन, don.) Which form drops a nasal mark? (पाच, pāch.) What differs in चार without differing in spelling? (Marathi's च is nearer ts before ā.) Next: explain where those differences came from."
-            }
-          ]
-        }
-      ]
-    },
-    {
-      "id": "MR-C06-number-differences",
-      "sequence": 350,
-      "title": "Why Marathi two rhymes with three",
-      "headword": "दोन · तीन · पाच · चार",
-      "romanization": "don · tīn · pāch · chār",
-      "gloss": "why Marathi two rhymes with three, and why Hindi preserves a different piece of five",
-      "script": "devanagari",
-      "modality": "voice",
-      "derivedModality": "voice",
-      "modalityReasons": [
-        "no-visual-dependency"
-      ],
-      "sourceHash": "fnv1a64:add6bc3e5849a5c7",
-      "notice": null,
-      "blocks": [
-        {
-          "index": 0,
-          "type": "warmup",
-          "title": "Warm-up",
-          "segments": [
-            {
-              "kind": "pause",
-              "seconds": 2,
-              "perItem": false,
-              "source": "[PAUSE 2s]"
-            },
-            {
-              "kind": "speech",
-              "text": "Count once: ek, don, tīn, tsār, pāch. Which two words end in n? (Don and tīn.)"
-            }
-          ]
-        },
-        {
-          "index": 1,
           "type": "etymology",
-          "title": "The word, taken apart — दोन borrowed from “three”",
+          "title": "The word, taken apart",
           "segments": [
             {
               "kind": "speech",
-              "text": "The tempting guess is that Marathi दोन don kept something Hindi दो do lost. It did not."
-            },
-            {
-              "kind": "speech",
-              "text": "Sanskrit's neuter word for three, त्रीणि trī́ṇi, became Prakrit tiṇṇi. In three, the ṇ genuinely belongs to the word. The doubled consonant is a Prakrit trade for the lost r."
-            },
-            {
-              "kind": "speech",
-              "text": "The word for two was then reshaped to match its neighbour: Prakrit doṇṇi copied the shape of tiṇṇi. Marathi don's final n is therefore an innovation, a rhyme borrowed from the number next door. Hindi do simply never took it."
-            },
-            {
-              "kind": "speech",
-              "text": "English numbers did this too: four acquired its initial f- by analogy with five. Familiar sequences pull neighbouring words toward one another."
-            }
-          ]
-        },
-        {
-          "index": 2,
-          "type": "notice",
-          "title": "What you've built: पाच and the nasal Hindi kept",
-          "segments": [
-            {
-              "kind": "speech",
-              "text": "Marathi पाच pāch and Hindi पाँच pāṁch tell the opposite story. Hindi's chandrabindu ँ records the nasal of Sanskrit pañca; Marathi's spelling drops it."
-            },
-            {
-              "kind": "speech",
-              "text": "So neither language is simply “older.” Marathi innovated in don, while Hindi retained an older feature in pāṁch. Comparing both descendants reveals the history that either one alone could hide."
+              "text": "पुन्हा (punhā, \"again\") comes from Sanskrit पुनर् (punar, \"again, back\"). That punar is a genuine Indo-European cousin of Latin re- in the sense of \"back/again,\" and it echoes in Hindi phir and the puna- of punarjanma (\"rebirth\"). To say a thing punhā is to send it round once more."
             }
           ]
         },
         {
           "index": 3,
-          "type": "pronunciation",
-          "title": "Sounds you'll need: चार and the change its spelling hides",
+          "type": "culture-pragmatics",
+          "title": "Why it's said this way",
           "segments": [
             {
               "kind": "speech",
-              "text": "Both write चार, but Marathi pronounces च before ā nearer ts: tsār. The letters stayed aligned while the sound moved."
+              "text": "Marathi's goodbyes lean on again and meet rather than on farewell — the parting is framed as a return, never an ending. This word is the hinge of that idea."
             }
           ]
         },
@@ -248,38 +95,20 @@
             {
               "kind": "prompt",
               "action": "SAY",
-              "instruction": "the borrowed rhyme — tiṇṇi … doṇṇi",
+              "instruction": "\"punhā\" — again",
               "spoken": true,
               "scored": false,
               "responseSeconds": 8,
-              "source": "[YOU SAY: the borrowed rhyme — *tiṇṇi … doṇṇi*]"
+              "source": "[YOU SAY: \"punhā\" — again]"
             },
             {
               "kind": "prompt",
               "action": "SAY",
-              "instruction": "innovation — Marathi don's final n",
+              "instruction": "its Sanskrit source (punar) and the punarjanma echo",
               "spoken": true,
               "scored": false,
               "responseSeconds": 8,
-              "source": "[YOU SAY: innovation — Marathi *don*'s final *n*]"
-            },
-            {
-              "kind": "prompt",
-              "action": "SAY",
-              "instruction": "retention — Hindi pāṁch's nasal",
-              "spoken": true,
-              "scored": false,
-              "responseSeconds": 8,
-              "source": "[YOU SAY: retention — Hindi *pāṁch*'s nasal]"
-            },
-            {
-              "kind": "prompt",
-              "action": "SAY",
-              "instruction": "same spelling, shifted sound — chār / tsār",
-              "spoken": true,
-              "scored": false,
-              "responseSeconds": 8,
-              "source": "[YOU SAY: same spelling, shifted sound — *chār / tsār*]"
+              "source": "[YOU SAY: its Sanskrit source (*punar*) and the *punarjanma* echo]"
             }
           ]
         },
@@ -296,26 +125,628 @@
             },
             {
               "kind": "speech",
-              "text": "Did Marathi don preserve an ancient ending? (No: two copied three.) Which language retains Sanskrit pañca's nasal in writing? (Hindi.) Why can neither daughter be called simply older? (Each changed or retained a different feature.) What does Marathi change without respelling चार? (Ch shifts toward ts before ā.)"
+              "text": "What does punhā mean, and from what Sanskrit word? (\"Again\"; from punar.)"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "MR-C04-bhetu",
+      "sequence": 140,
+      "title": "भेटू (bheṭū) — \"(let's / we'll) meet\"",
+      "headword": "भेटू",
+      "romanization": "",
+      "gloss": "(we'll) meet (bheṭū)",
+      "script": "devanagari",
+      "modality": "sight",
+      "derivedModality": "sight",
+      "modalityReasons": [
+        "script-block"
+      ],
+      "sourceHash": "fnv1a64:01d7b19e3d9ed293",
+      "notice": {
+        "modality": "sight",
+        "needs": [
+          "your eyes, for letter shapes on the page"
+        ],
+        "waitUntilStopped": [
+          "The letters in this word"
+        ],
+        "text": "Before we start: this one needs your eyes, so it is not fully a driving lesson. You will want your eyes, for letter shapes on the page. You can listen to everything else now — leave the section called The letters in this word until you have stopped, and I will say so again when we reach it."
+      },
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
             },
             {
-              "kind": "activity",
-              "scored": true,
-              "id": "MR-C06-number-differences-don-ending",
-              "prompt": "Did Marathi don preserve an ancient final n?",
-              "assesses": [
-                "MR-ETYMON-DON-ANALOGY"
-              ],
+              "kind": "speech",
+              "text": "The other half of the goodbye: meet. You already brushed past it in bheṭūn ānand jhālā (\"pleased to meet you\")."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "script",
+          "title": "The letters in this word",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "(Skim if you read Devanagari.) भे (bhe) + टू (ṭū, the retroflex ट ṭa with the long-u stroke) becomes भेटू bheṭū. Note the retroflex ट (ṭa) — the tongue curls back to the roof of the mouth."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "भेटू (bheṭū) is a form of the verb भेटणे (bheṭṇe, \"to meet\"). As भेटू it means \"let's meet / (we) will meet\" — the hopeful, forward-looking mood you want in a goodbye. It is a native Marathi verb (the bheṭ- stem also gives bheṭ, \"a meeting, a visit\")."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "grammar",
+          "title": "Grammar Lens: one verb, first-person-plural wish",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "भेटू carries a built-in \"we/let's\" — no separate word for \"we\" is needed, the verb form says it. This is the same -ū ending you'll feel in other \"let's ___\" verbs. Unlike the present tense (yeto/yete), this future-wish form does not split by gender — men and women both say bheṭū."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "\"bheṭū\" — (we'll) meet",
+              "spoken": true,
+              "scored": false,
               "responseSeconds": 8,
-              "acceptedResponses": [
-                "no",
-                "no it copied three",
-                "it copied the pattern of three"
+              "source": "[YOU SAY: \"bheṭū\" — (we'll) meet]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "the fuller verb it comes from (bheṭṇe, to meet)",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: the fuller verb it comes from (*bheṭṇe*, to meet)]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does bheṭū pack into one word? (\"(we/let's) will meet\" — the \"we\" lives in the verb ending.)"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "MR-C04-punha-bhetu",
+      "sequence": 145,
+      "title": "पुन्हा भेटू (punhā bheṭū) — \"see you again\"",
+      "headword": "पुन्हा भेटू",
+      "romanization": "",
+      "gloss": "see you again (punhā bheṭū)",
+      "script": "devanagari",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:98a77fb7594e6782",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Assemble the two atoms into the standard warm goodbye."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "unknown",
+          "title": "The phrase, assembled",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "पुन्हा (punhā, again) + भेटू (bheṭū, we'll meet) becomes पुन्हा भेटू — \"we'll meet again.\" Two words, and the whole promise of return is spoken."
+            },
+            {
+              "kind": "speech",
+              "text": "This is the fuller, explicit twin of Chapter 4's येतो (yeto, \"I'll come [again]\"). Both refuse a final \"farewell\": one says I'll come back, the other we'll meet again — the subcontinent's shared goodbye-as-promise (Hindi phir milenge, Bengali āshi, Tamil pōy varugiṟēṉ)."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "culture-pragmatics",
+          "title": "Why it's said this way",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "You can stack them for warmth: येतो, पुन्हा भेटू (yeto, punhā bheṭū) — \"I'll be going; we'll meet again.\" Neither word contains \"goodbye\"; the parting is all return."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "\"punhā bheṭū\" — see you again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: \"punhā bheṭū\" — see you again]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "it stacked with the Chapter-1 goodbye (yeto, punhā bheṭū)",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: it stacked with the Chapter-1 goodbye (*yeto, punhā bheṭū*)]"
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does punhā bheṭū literally promise? (\"We'll meet again\" — return, not farewell.)"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "MR-C04-udya-bhetu",
+      "sequence": 150,
+      "title": "उद्या भेटू (udyā bheṭū) — \"see you tomorrow\"",
+      "headword": "उद्या भेटू",
+      "romanization": "",
+      "gloss": "see you tomorrow (udyā bheṭū)",
+      "script": "devanagari",
+      "modality": "sight",
+      "derivedModality": "sight",
+      "modalityReasons": [
+        "script-block"
+      ],
+      "sourceHash": "fnv1a64:bfadb080898fa44b",
+      "notice": {
+        "modality": "sight",
+        "needs": [
+          "your eyes, for letter shapes on the page"
+        ],
+        "waitUntilStopped": [
+          "The letters in this word"
+        ],
+        "text": "Before we start: this one needs your eyes, so it is not fully a driving lesson. You will want your eyes, for letter shapes on the page. You can listen to everything else now — leave the section called The letters in this word until you have stopped, and I will say so again when we reach it."
+      },
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Swap \"again\" for \"tomorrow\" and you have a dated goodbye."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "script",
+          "title": "The letters in this word",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "(Skim if you read Devanagari.) उ (u, standalone vowel) + द्या (dyā, द da joined by a halant to य ya with the long-ā stroke) becomes उद्या udyā."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "unknown",
+          "title": "The phrase, assembled",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "उद्या (udyā, \"tomorrow\") + भेटू (bheṭū, we'll meet) becomes उद्या भेटू — \"we'll meet tomorrow.\""
+            },
+            {
+              "kind": "speech",
+              "text": "उद्या comes from Sanskrit श्वः (śvaḥ) by way of a later udya-; unlike Hindi's kal (which means both tomorrow and yesterday), Marathi keeps tomorrow and yesterday as two distinct words — udyā (tomorrow) vs. काल (kāl, yesterday). No ambiguity about which way time is pointing."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "culture-pragmatics",
+          "title": "Why it's said this way",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "Because bheṭū already carries the future wish, you simply front it with when: udyā bheṭū (tomorrow), punhā bheṭū (again). The verb does the tense; the first word sets the day."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "\"udyā bheṭū\" — see you tomorrow",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: \"udyā bheṭū\" — see you tomorrow]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "the tomorrow/yesterday pair Marathi keeps apart (udyā / kāl)",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: the tomorrow/yesterday pair Marathi keeps apart (*udyā / kāl*)]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "How does Marathi's udyā differ from Hindi's kal? (udyā is only \"tomorrow\"; Marathi uses a separate word kāl for \"yesterday.\")"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "MR-C04-kalji-ghya",
+      "sequence": 155,
+      "title": "काळजी घ्या (kāḷjī ghyā) — \"take care\"",
+      "headword": "काळजी घ्या",
+      "romanization": "",
+      "gloss": "take care (kāḷjī ghyā)",
+      "script": "devanagari",
+      "modality": "sight",
+      "derivedModality": "sight",
+      "modalityReasons": [
+        "script-block"
+      ],
+      "sourceHash": "fnv1a64:7222c61c1dc86b53",
+      "notice": {
+        "modality": "sight",
+        "needs": [
+          "your eyes, for letter shapes on the page"
+        ],
+        "waitUntilStopped": [
+          "The letters in this word"
+        ],
+        "text": "Before we start: this one needs your eyes, so it is not fully a driving lesson. You will want your eyes, for letter shapes on the page. You can listen to everything else now — leave the section called The letters in this word until you have stopped, and I will say so again when we reach it."
+      },
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "One last, tender goodbye — the Marathi \"take care,\" and with it a letter unique to Marathi's corner of Devanagari."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "script",
+          "title": "The letters in this word",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "(Skim if you read Devanagari.) काळजी carries the letter ळ (ḷa) — a retroflex \"l,\" the tongue curled back. Standard Hindi dropped this sound; Marathi (like the Dravidian south and Gujarati) keeps it, and it appears in many everyday Marathi words. का + ळ + जी becomes kāḷjī. Then घ्या (ghyā, \"take,\" respectful)."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "unknown",
+          "title": "The phrase, assembled",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "काळजी (kāḷjī, \"care, concern\") + घ्या (ghyā, \"take,\" the respectful imperative) becomes काळजी घ्या — \"take care.\" To a friend, the familiar imperative: काळजी घे (kāḷjī ghe)."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "culture-pragmatics",
+          "title": "Why it's said this way",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "Where punhā bheṭū looks ahead to the next meeting, kāḷjī ghyā looks after the person in between — \"mind yourself until then.\" The respectful घ्या (ghyā) matches the तुम्ही register from Chapter 5; the familiar घे (ghe) matches तू."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "\"kāḷjī ghyā\" (respectful) / \"kāḷjī ghe\" (to a friend)",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: \"kāḷjī ghyā\" (respectful) / \"kāḷjī ghe\" (to a friend)]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "the retroflex ळ (ḷa) Marathi keeps that Hindi lost",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: the retroflex ळ (*ḷa*) Marathi keeps that Hindi lost]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Which special Marathi letter sits in kāḷjī, and who else keeps it? (The retroflex ळ ḷa; also kept by the Dravidian languages and Gujarati.)"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "MR-C04-practice",
+      "sequence": 160,
+      "title": "Chapter 7 recap — farewells",
+      "headword": "(recap)",
+      "romanization": "",
+      "gloss": "Chapter 7 recap — farewells",
+      "script": "devanagari",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:190872edfc97583e",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "The parting words, together — none of them a bare \"goodbye.\""
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "unknown",
+          "title": "The farewells",
+          "segments": [
+            {
+              "kind": "table",
+              "headers": [
+                "Marathi",
+                "Say it",
+                "English"
               ],
-              "feedback": {
-                "correct": "Correct: don's final n arose by analogy with the word for three.",
-                "incorrect": "No. Marathi two copied the pattern of three; the final n is not an ancient ending."
-              }
+              "columns": 3,
+              "rowCount": 4,
+              "utterances": [
+                "Marathi: येतो / येते. Say it: yeto / yete. English: I'll be going. (\"I come again\").",
+                "Marathi: पुन्हा भेटू. Say it: punhā bheṭū. English: See you again.",
+                "Marathi: उद्या भेटू. Say it: udyā bheṭū. English: See you tomorrow.",
+                "Marathi: काळजी घ्या. Say it: kāḷjī ghyā. English: Take care."
+              ]
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "unknown",
+          "title": "Atoms banked this chapter",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "पुन्हा (punhā) — again; Sanskrit punar."
+            },
+            {
+              "kind": "speech",
+              "text": "भेटू (bheṭū) — (we'll) meet; the \"we\" lives in the verb; from bheṭṇe."
+            },
+            {
+              "kind": "speech",
+              "text": "उद्या (udyā) — tomorrow (distinct from kāl, yesterday)."
+            },
+            {
+              "kind": "speech",
+              "text": "काळजी घ्या (kāḷjī ghyā) — take care; the retroflex ळ Marathi keeps."
+            },
+            {
+              "kind": "speech",
+              "text": "Register: घ्या (ghyā, respectful) vs घे (ghe, familiar) — the tumhī / tū choice again."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "all four farewells in a row",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: all four farewells in a row]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "a stacked goodbye — yeto, punhā bheṭū, kāḷjī ghyā",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: a stacked goodbye — *yeto, punhā bheṭū, kāḷjī ghyā*]"
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What do every Marathi goodbye have in common? (None says \"farewell\" — each is a return or a caring wish.) Next chapter: the first real verbs — mī marāṭhī bolto."
             }
           ]
         }

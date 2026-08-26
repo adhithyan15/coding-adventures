@@ -7,7 +7,7 @@
   "policy": {
     "maxLinearisableTableColumns": 3
   },
-  "sourceHash": "fnv1a64:c3cc3ea52946e553",
+  "sourceHash": "fnv1a64:62474b3387ff157a",
   "summary": {
     "totalLessons": 75,
     "voice": 22,
@@ -557,7 +557,7 @@
         "no-visual-dependency"
       ],
       "coreDrivable": true,
-      "sourceHash": "fnv1a64:7bf8ae26798a135f",
+      "sourceHash": "fnv1a64:973aad1bb953e9b9",
       "detachableSegments": [
         "The letters in this word"
       ]
@@ -578,7 +578,7 @@
         "no-visual-dependency"
       ],
       "coreDrivable": true,
-      "sourceHash": "fnv1a64:c7f9fabf5c007270",
+      "sourceHash": "fnv1a64:137292eb187e119c",
       "detachableSegments": [
         "The letters in this word"
       ]
@@ -599,7 +599,7 @@
         "no-visual-dependency"
       ],
       "coreDrivable": true,
-      "sourceHash": "fnv1a64:5daccefa0110cc86",
+      "sourceHash": "fnv1a64:bb95417168841d79",
       "detachableSegments": [
         "The letters in this word"
       ]
@@ -620,7 +620,7 @@
         "no-visual-dependency"
       ],
       "coreDrivable": true,
-      "sourceHash": "fnv1a64:63378f5513133299"
+      "sourceHash": "fnv1a64:0e29f514855dd0d1"
     },
     {
       "id": "PA-C02-tu-tusi",
@@ -638,7 +638,7 @@
         "no-visual-dependency"
       ],
       "coreDrivable": true,
-      "sourceHash": "fnv1a64:acd2cf2d1eb84998",
+      "sourceHash": "fnv1a64:5b68d4e45e8970fb",
       "detachableSegments": [
         "The letters in this word"
       ]
@@ -659,7 +659,7 @@
         "no-visual-dependency"
       ],
       "coreDrivable": true,
-      "sourceHash": "fnv1a64:1d30f46f7b103247",
+      "sourceHash": "fnv1a64:67db2d8205a27276",
       "detachableSegments": [
         "The letters in this word"
       ]
@@ -680,7 +680,7 @@
         "no-visual-dependency"
       ],
       "coreDrivable": true,
-      "sourceHash": "fnv1a64:46ae1a3294fd8f6a"
+      "sourceHash": "fnv1a64:ed73bdd53864f9c8"
     },
     {
       "id": "PA-C02-khushi",
@@ -698,7 +698,7 @@
         "no-visual-dependency"
       ],
       "coreDrivable": true,
-      "sourceHash": "fnv1a64:825b94b81299bf10",
+      "sourceHash": "fnv1a64:6da03ed7064f491c",
       "detachableSegments": [
         "The letters in this word"
       ]
@@ -719,7 +719,7 @@
         "no-visual-dependency"
       ],
       "coreDrivable": true,
-      "sourceHash": "fnv1a64:abeab0324c331eb4"
+      "sourceHash": "fnv1a64:0830fb96cca7cb95"
     },
     {
       "id": "PA-C03-kivein",

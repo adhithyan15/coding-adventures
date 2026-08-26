@@ -2,8 +2,8 @@
 schema_version: 2
 id: MR-C06-number-differences
 spine_node: SPINE-COUNT-ONE-TO-FIVE
-sequence: 350
-chapter: 7
+sequence: 370
+chapter: 9
 type: etymology
 headword: दोन · तीन · पाच · चार
 romanization: don · tīn · pāch · chār

@@ -708,6 +708,15 @@ struct Lowerer {
     /// `do_while_counter`'s monotonic-uniqueness role, just for a
     /// different synthetic name; never consulted by name lookup.
     indexed_temp_counter: usize,
+    /// The single top-level class's own name, captured once in
+    /// `lower_program` — M5's own addition (task #67), previously parsed
+    /// (via `collect_bounded(..., "class_declaration", ...)`) but never
+    /// captured, since nothing before M5 needed it. Consulted only by
+    /// `lower_static_method_call` to recognize `ClassName.staticMethod(
+    /// args)` as a *self*-reference to this same compilation unit's own
+    /// class -- an external/JDK static (`Math.PI`, `System.out`) is a
+    /// different `class_ref` and stays rejected.
+    class_name: String,
 }
 
 /// A method's call-site-relevant signature: what `lower_call_expression`
@@ -721,6 +730,14 @@ struct MethodSig {
     param_kinds: Vec<Kind>,
     /// `Kind::Void` for a method with no return value.
     return_kind: Kind,
+    /// Whether the method declared the `static` modifier — M5's own
+    /// addition, unused before task #67. `main` is always `true` (real
+    /// Java requires it). Consulted only by `lower_static_method_call`,
+    /// to reject `ClassName.instanceMethod()` the same way real
+    /// `javac` does, rather than silently allowing it just because
+    /// this frontend has no receiver/`this` model to actually enforce
+    /// instance semantics with yet.
+    is_static: bool,
 }
 
 /// One entry per currently-open lambda body (see `Lowerer::closure_stack`).
@@ -769,6 +786,7 @@ impl Lowerer {
             synthesized_functions: Vec::new(),
             closure_signatures: Vec::new(),
             indexed_temp_counter: 0,
+            class_name: String::new(),
         }
     }
 
@@ -1014,6 +1032,13 @@ impl Lowerer {
             _ => return Err(self.err_at(program, format!("expected exactly one top-level class declaration, found {} (JV02 M0 supports exactly one)", class_decls.len()))),
         };
 
+        self.class_name = self.class_name_of(class_decl).ok_or_else(|| {
+            self.err_at(
+                class_decl,
+                "malformed class declaration (missing name)".to_string(),
+            )
+        })?;
+
         let method_decls = self.collect_class_methods(class_decl)?;
 
         // Pass 1: register every method's name + call signature before
@@ -1135,6 +1160,26 @@ impl Lowerer {
         Ok(methods)
     }
 
+    /// Extract `class_decl`'s own name -- M5's own addition (task #67).
+    /// `class_declaration`'s grammar production is `{class_modifier}
+    /// "class" NAME [extends class_type] [implements interface_type_
+    /// list] class_body`: the class's own name is the *only* bare `NAME`
+    /// token appearing as a direct child (an `extends`/`implements`
+    /// clause, if present, nests its own type names one level deeper
+    /// inside a `class_type`/`interface_type_list` node, never as a
+    /// direct child here) -- mirrors `method_name`'s identical "first
+    /// direct-child `NAME` token" technique for `method_declarator`.
+    fn class_name_of(&self, class_decl: &GrammarASTNode) -> Option<String> {
+        for child in &class_decl.children {
+            if let ASTNodeOrToken::Token(t) = child {
+                if t.type_ == lexer::token::TokenType::Name {
+                    return Some(t.value.clone());
+                }
+            }
+        }
+        None
+    }
+
     fn method_name(&self, method_decl: &GrammarASTNode) -> Option<String> {
         let declarator = self.first_child_named(method_decl, "method_declarator")?;
         for child in &declarator.children {
@@ -1164,6 +1209,7 @@ impl Lowerer {
             return Ok(MethodSig {
                 param_kinds: vec![],
                 return_kind: Kind::Void,
+                is_static: true,
             });
         }
         let declarator = self
@@ -1183,6 +1229,23 @@ impl Lowerer {
         Ok(MethodSig {
             param_kinds,
             return_kind,
+            is_static: self.method_is_static(decl),
+        })
+    }
+
+    /// Whether `decl` (a `method_declaration`) carries the `static`
+    /// modifier — M5's own addition. `method_declaration`'s own grammar
+    /// production is `{method_modifier} result_type method_declarator
+    /// ...`, so every modifier is a direct child `method_modifier` node
+    /// wrapping exactly one keyword token; this just scans those for
+    /// `"static"`.
+    fn method_is_static(&self, decl: &GrammarASTNode) -> bool {
+        decl.children.iter().any(|c| match c {
+            ASTNodeOrToken::Node(n) if n.rule_name == "method_modifier" => n
+                .children
+                .iter()
+                .any(|mc| matches!(mc, ASTNodeOrToken::Token(t) if t.value == "static")),
+            _ => false,
         })
     }
 
@@ -2780,12 +2843,12 @@ impl Lowerer {
                     .ok_or_else(|| {
                         self.err_at(op_node, "malformed assignment operator".to_string())
                     })?;
-                if let Some((primary, suffix)) = self.indexed_assign_target(lvalue_node, 0)? {
+                if let Some((primary, suffixes)) = self.indexed_assign_target(lvalue_node, 0)? {
                     if op_tok.value == "=" {
-                        return self.lower_indexed_assignment(primary, suffix, rhs_node, inner);
+                        return self.lower_indexed_assignment(primary, suffixes, rhs_node, inner);
                     }
                     return self.lower_indexed_compound_assignment(
-                        primary, suffix, op_tok, op_node, rhs_node, inner,
+                        primary, suffixes, op_tok, op_node, rhs_node, inner,
                     );
                 }
                 let name = self.extract_bare_name(lvalue_node, 0)?;
@@ -2863,8 +2926,8 @@ impl Lowerer {
             }
         }
         if let Some((target_node, op)) = self.bare_incdec_target(inner, 0)? {
-            if let Some((primary, suffix)) = self.indexed_assign_target(target_node, 0)? {
-                return self.lower_indexed_incdec(primary, suffix, op, inner);
+            if let Some((primary, suffixes)) = self.indexed_assign_target(target_node, 0)? {
+                return self.lower_indexed_incdec(primary, suffixes, op, inner);
             }
             let name = self.extract_bare_name(target_node, 0)?;
             let (declared_kind, declared_scope) = self.resolve_name(&name).ok_or_else(|| {
@@ -3027,22 +3090,27 @@ impl Lowerer {
 
     /// Walk an assignment target's `unary_expression` chain down to either
     /// a bare `primary` (a simple local-variable target, handled by
-    /// `extract_bare_name`) or a `primary_expression` matching M4b's new
-    /// indexed-assignment shape (`xs[i]`, exactly one `[...]` suffix) --
-    /// returns `Some((primary, suffix))` only for the latter, so
-    /// `lower_expr_statement` can distinguish "plain name assignment"
-    /// (unchanged) from "indexed assignment" (new) before falling through
-    /// to `extract_bare_name`'s existing rejection for every other shape.
-    /// A *qualified* indexed target (chaining more than the one `[...]`
-    /// suffix) does not match here -- `primary_expression`'s own
-    /// multi-suffix shape falls straight through to `Ok(None)` below, the
-    /// same "reject rather than mis-lower" outcome `extract_bare_name`
-    /// already gives every other unsupported multi-suffix target.
+    /// `extract_bare_name`) or a `primary_expression` matching M4b's
+    /// indexed-assignment shape, generalized to a *chained* target
+    /// (`xs[i]`, `grid[i][j]`, … -- one or more `[...]` suffixes, every
+    /// one index-only) -- returns `Some((primary, suffixes))` only for
+    /// the latter, so `lower_expr_statement` can distinguish "plain name
+    /// assignment" (unchanged) from "indexed assignment" (new) before
+    /// falling through to `extract_bare_name`'s existing rejection for
+    /// every other shape. `suffixes` is always non-empty when `Some`;
+    /// callers treat its *last* element as the write index and any
+    /// leading elements as read-only peels down to the write target,
+    /// mirroring `lower_primary_expression`'s own `is_index_only_suffix`
+    /// guard for the value-position chained-read case. A suffix chain
+    /// mixing in a `.`/`(` suffix anywhere (a qualified call, field
+    /// access, etc.) still falls through to `Ok(None)` below, the same
+    /// "reject rather than mis-lower" outcome `extract_bare_name` already
+    /// gives every other unsupported target shape.
     fn indexed_assign_target<'a>(
         &self,
         node: &'a GrammarASTNode,
         depth: usize,
-    ) -> Result<Option<(&'a GrammarASTNode, &'a GrammarASTNode)>, JavaLowerError> {
+    ) -> Result<Option<(&'a GrammarASTNode, &'a [ASTNodeOrToken])>, JavaLowerError> {
         if depth >= MAX_EXPR_DEPTH {
             return Err(self.err_at(
                 node,
@@ -3050,13 +3118,9 @@ impl Lowerer {
             ));
         }
         if node.rule_name == "primary_expression" {
-            if let [ASTNodeOrToken::Node(primary), ASTNodeOrToken::Node(suffix)] =
-                node.children.as_slice()
-            {
-                if suffix.rule_name == "primary_suffix"
-                    && matches!(suffix.children.first(), Some(ASTNodeOrToken::Token(t)) if t.value == "[")
-                {
-                    return Ok(Some((primary, suffix)));
+            if let [ASTNodeOrToken::Node(primary), rest @ ..] = node.children.as_slice() {
+                if !rest.is_empty() && rest.iter().all(is_index_only_suffix) {
+                    return Ok(Some((primary, rest)));
                 }
             }
             return Ok(None);
@@ -3070,33 +3134,156 @@ impl Lowerer {
         }
     }
 
-    /// Lower `xs[i] = v;` (`primary` indexed by `suffix`, assigned `rhs`)
-    /// into `Stmt::SeqSet` -- M4b, generalized in M4d via `Kind::
-    /// index_once` the same way `lower_index_get` is: on a multi-
-    /// dimensional array, `grid[i] = v;` assigns a whole sub-array
-    /// (`v` must itself be `Kind::Array(elem, dims - 1)`), matching real
-    /// Java's own "an array of arrays" semantics. `primary` must resolve
-    /// to an array-typed value; the index must resolve to `Kind::Int`;
-    /// `rhs` must resolve to exactly the peeled-once result kind (no
-    /// implicit widening -- matches this crate's existing "reject rather
-    /// than mis-lower" discipline for every other kind-mismatch case). A
-    /// *chained* indexed-assignment target (`grid[i][j] = v;`) never
-    /// reaches this function at all -- `indexed_assign_target`'s own
-    /// fixed single-suffix match arm doesn't recognize a multi-suffix
-    /// lvalue, so it falls through to `extract_bare_name`'s existing
-    /// rejection, deferred to its own follow-up task alongside compound-
-    /// assignment/increment-decrement on an indexed target.
+    /// Hoist a (possibly chained) indexed-assignment target's own
+    /// `primary` and every suffix's index expression into fresh
+    /// once-only-evaluated local temps, then rebuild the read-position
+    /// target chain (`seq_ref`/`idx_ref`) from those temps' `VarRef`s --
+    /// shared by `lower_indexed_compound_assignment`/
+    /// `lower_indexed_incdec`, both of which read the current element and
+    /// write it back, so every evaluation on the way there (`primary`,
+    /// and each `[...]` suffix's own index expression) must happen
+    /// exactly once, not once per read/write use (the same
+    /// double-evaluation hazard task #59's own single-suffix version of
+    /// this hoisting already guards against -- generalized here to N
+    /// suffixes instead of exactly one). `lower_indexed_assignment`
+    /// (plain `=`) does *not* use this helper: a plain assignment target
+    /// is only ever built once, so embedding each lowered sub-expression
+    /// directly (no hoisting) is already single-evaluation-safe.
+    ///
+    /// `suffixes` must be non-empty (guaranteed by every caller reaching
+    /// this via `indexed_assign_target`'s own non-empty return). Returns
+    /// `(let_bindings, seq_ref, idx_ref, kind_before_final_index)` --
+    /// `let_bindings` must be spliced in before whatever statement reads
+    /// `seq_ref`/`idx_ref`; `kind_before_final_index` is the peeled kind
+    /// *before* applying the last suffix's own index (i.e. `primary`'s
+    /// kind after `suffixes.len() - 1` peels) -- each caller applies its
+    /// own final `Kind::index_once` with its own error message, since
+    /// `lower_indexed_compound_assignment` and `lower_indexed_incdec`
+    /// word that rejection differently.
+    fn hoist_indexed_target(
+        &mut self,
+        primary: &GrammarASTNode,
+        suffixes: &[ASTNodeOrToken],
+        span: &Span,
+    ) -> Result<(Vec<Stmt>, Expr, Expr, Kind), JavaLowerError> {
+        let (seq_expr, mut kind) = self.lower_expr(primary, 0)?;
+        let seq_tmp = self.fresh_temp_name("__idx_seq");
+        let mut let_bindings = vec![Stmt::LetStarBinding {
+            name: seq_tmp.clone(),
+            sir_type: None,
+            value: seq_expr,
+            span: span.clone(),
+        }];
+        let mut seq_ref = Expr::VarRef {
+            name: seq_tmp,
+            scope: Scope::Local,
+            span: span.clone(),
+        };
+        let mut idx_ref: Option<Expr> = None;
+        // `suffixes` must be non-empty -- guaranteed by every caller
+        // reaching this via `indexed_assign_target`'s own non-empty
+        // return (see this function's own doc comment). Guarded
+        // defensively so a future edit that loosens that guarantee fails
+        // a debug assertion rather than silently underflowing here.
+        debug_assert!(
+            !suffixes.is_empty(),
+            "hoist_indexed_target requires a non-empty suffix chain"
+        );
+        let last = suffixes.len() - 1;
+        for (i, suffix) in suffixes.iter().enumerate() {
+            let suffix = match suffix {
+                ASTNodeOrToken::Node(s) => s,
+                ASTNodeOrToken::Token(_) => unreachable!(
+                    "indexed_assign_target only ever returns index-only suffixes, which `is_index_only_suffix` guarantees are Nodes"
+                ),
+            };
+            let index_node = self
+                .first_child_named(suffix, "expression")
+                .ok_or_else(|| self.err_at(suffix, "malformed array index".to_string()))?;
+            let (index_expr, index_kind) = self.lower_expr(index_node, 0)?;
+            if index_kind != Kind::Int {
+                return Err(self.err_at(index_node, "an array index must be an `int`".to_string()));
+            }
+            let idx_tmp = self.fresh_temp_name("__idx_at");
+            let_bindings.push(Stmt::LetStarBinding {
+                name: idx_tmp.clone(),
+                sir_type: None,
+                value: index_expr,
+                span: span.clone(),
+            });
+            let this_idx_ref = Expr::VarRef {
+                name: idx_tmp,
+                scope: Scope::Local,
+                span: span.clone(),
+            };
+            if i < last {
+                let peeled = kind.index_once().ok_or_else(|| {
+                    self.err_at(
+                        primary,
+                        "indexing (`[...]`) is only supported on an array-typed value".to_string(),
+                    )
+                })?;
+                seq_ref = Expr::SeqIndex {
+                    seq: Box::new(seq_ref),
+                    index: Box::new(this_idx_ref),
+                    span: span.clone(),
+                };
+                kind = peeled;
+            } else {
+                idx_ref = Some(this_idx_ref);
+            }
+        }
+        self.observed.add(Feature::Sequences);
+        Ok((
+            let_bindings,
+            seq_ref,
+            idx_ref.expect("suffixes is non-empty, so the loop's last iteration always sets idx_ref"),
+            kind,
+        ))
+    }
+
+    /// Lower `xs[i] = v;`/`grid[i][j] = v;` (`primary` indexed by one or
+    /// more chained `suffixes`, assigned `rhs`) into `Stmt::SeqSet` --
+    /// M4b, generalized in M4d via `Kind::index_once` the same way
+    /// `lower_index_get` is: on a multi-dimensional array, `grid[i] = v;`
+    /// assigns a whole sub-array (`v` must itself be `Kind::Array(elem,
+    /// dims - 1)`), matching real Java's own "an array of arrays"
+    /// semantics. `primary` must resolve to an array-typed value; every
+    /// index expression must resolve to `Kind::Int`; `rhs` must resolve
+    /// to exactly the fully-peeled result kind (no implicit widening --
+    /// matches this crate's existing "reject rather than mis-lower"
+    /// discipline for every other kind-mismatch case). A *chained* target
+    /// (`suffixes.len() > 1`) peels every suffix but the last via
+    /// `lower_chained_index` (unchanged from its own value-position use)
+    /// and writes through the last suffix's own index -- no temp-hoisting
+    /// needed here, unlike `lower_indexed_compound_assignment`/
+    /// `lower_indexed_incdec`: a plain assignment target is built exactly
+    /// once, so embedding each lowered sub-expression directly is already
+    /// single-evaluation-safe.
     ///
     /// `context` is the enclosing `assignment_expression` node, used only
     /// for this statement's own span.
     fn lower_indexed_assignment(
         &mut self,
         primary: &GrammarASTNode,
-        suffix: &GrammarASTNode,
+        suffixes: &[ASTNodeOrToken],
         rhs: &GrammarASTNode,
         context: &GrammarASTNode,
     ) -> Result<Stmt, JavaLowerError> {
-        let (seq, seq_kind) = self.lower_expr(primary, 0)?;
+        // `suffixes` must be non-empty -- guaranteed by every caller
+        // reaching this via `indexed_assign_target`'s own non-empty
+        // return. Guarded defensively so a future edit that loosens that
+        // guarantee fails a debug assertion rather than silently
+        // underflowing the `suffixes.len() - 1` slice bound below.
+        debug_assert!(
+            !suffixes.is_empty(),
+            "lower_indexed_assignment requires a non-empty suffix chain"
+        );
+        let (seq, seq_kind) = if suffixes.len() == 1 {
+            self.lower_expr(primary, 0)?
+        } else {
+            self.lower_chained_index(primary, &suffixes[..suffixes.len() - 1], primary, 0)?
+        };
         let result_kind = seq_kind.index_once().ok_or_else(|| {
             self.err_at(
                 primary,
@@ -3104,9 +3291,15 @@ impl Lowerer {
                     .to_string(),
             )
         })?;
+        let last_suffix = match suffixes.last() {
+            Some(ASTNodeOrToken::Node(s)) => s,
+            _ => unreachable!(
+                "indexed_assign_target only ever returns index-only suffixes, which `is_index_only_suffix` guarantees are Nodes"
+            ),
+        };
         let index_node = self
-            .first_child_named(suffix, "expression")
-            .ok_or_else(|| self.err_at(suffix, "malformed array index".to_string()))?;
+            .first_child_named(last_suffix, "expression")
+            .ok_or_else(|| self.err_at(last_suffix, "malformed array index".to_string()))?;
         let (index, index_kind) = self.lower_expr(index_node, 0)?;
         if index_kind != Kind::Int {
             return Err(self.err_at(index_node, "an array index must be an `int`".to_string()));
@@ -3128,24 +3321,20 @@ impl Lowerer {
         })
     }
 
-    /// Lower `xs[i] += v;`/`xs[i] -= v;`/etc. (a compound-assignment
-    /// operator on an indexed target) — closes the gap
+    /// Lower `xs[i] += v;`/`grid[i][j] -= v;`/etc. (a compound-assignment
+    /// operator on a possibly-chained indexed target) — closes the gap
     /// `lower_indexed_assignment`'s own doc comment names as deferred: a
-    /// compound assignment reads the current element (`xs[i]`) *and*
-    /// writes it back, so `primary` and the index expression must each be
-    /// evaluated exactly **once**, not once per read/write use — naively
-    /// re-lowering (or even cloning the already-lowered `Expr` and
+    /// compound assignment reads the current element *and* writes it
+    /// back, so `primary` and every suffix's own index expression must
+    /// each be evaluated exactly **once**, not once per read/write use —
+    /// naively re-lowering (or even cloning an already-lowered `Expr` and
     /// embedding it twice) would make the *emitted* target-language code
     /// evaluate a non-constant index expression (e.g. `xs[next()] +=
     /// v;`) twice, silently double-evaluating any side effect it carries.
-    /// Fixed the same way `lower_do_while_statement`/
-    /// `lower_for_statement`'s own synthetic control-flow state does:
-    /// bind `seq`/the index into two fresh, unforgeable-by-collision
-    /// local temps (`fresh_temp_name`) *once*, then read and write
-    /// through those temps' own `VarRef`s — wrapped in one synthetic
-    /// `Expr::Block` (matching that same established pattern) so this
-    /// still returns exactly one `Stmt` to `lower_expr_statement`'s
-    /// caller.
+    /// Fixed via `hoist_indexed_target`'s shared temp-hoisting (task #59's
+    /// original single-suffix version, generalized to N suffixes) —
+    /// wrapped in one synthetic `Expr::Block` so this still returns
+    /// exactly one `Stmt` to `lower_expr_statement`'s caller.
     ///
     /// `op_tok`/`op_node` are the already-matched assignment-operator
     /// token/node from `lower_expr_statement`'s own dispatch — reused
@@ -3156,28 +3345,12 @@ impl Lowerer {
     fn lower_indexed_compound_assignment(
         &mut self,
         primary: &GrammarASTNode,
-        suffix: &GrammarASTNode,
+        suffixes: &[ASTNodeOrToken],
         op_tok: &lexer::token::Token,
         op_node: &GrammarASTNode,
         rhs: &GrammarASTNode,
         context: &GrammarASTNode,
     ) -> Result<Stmt, JavaLowerError> {
-        let (seq_expr, seq_kind) = self.lower_expr(primary, 0)?;
-        let result_kind = seq_kind.index_once().ok_or_else(|| {
-            self.err_at(
-                primary,
-                "indexed assignment (`[...] = ...`) is only supported on an array-typed value"
-                    .to_string(),
-            )
-        })?;
-        let index_node = self
-            .first_child_named(suffix, "expression")
-            .ok_or_else(|| self.err_at(suffix, "malformed array index".to_string()))?;
-        let (index_expr, index_kind) = self.lower_expr(index_node, 0)?;
-        if index_kind != Kind::Int {
-            return Err(self.err_at(index_node, "an array index must be an `int`".to_string()));
-        }
-        let (rhs_expr, rhs_kind) = self.lower_expr(rhs, 0)?;
         let op_char = match op_tok.value.as_str() {
             "+=" | "-=" | "*=" | "/=" | "%=" => {
                 op_tok.value.chars().next().expect("non-empty operator token")
@@ -3190,30 +3363,16 @@ impl Lowerer {
             }
         };
         let span = self.span_of(context);
-        let seq_tmp = self.fresh_temp_name("__idx_seq");
-        let idx_tmp = self.fresh_temp_name("__idx_at");
-        let let_seq = Stmt::LetStarBinding {
-            name: seq_tmp.clone(),
-            sir_type: None,
-            value: seq_expr,
-            span: span.clone(),
-        };
-        let let_idx = Stmt::LetStarBinding {
-            name: idx_tmp.clone(),
-            sir_type: None,
-            value: index_expr,
-            span: span.clone(),
-        };
-        let seq_ref = Expr::VarRef {
-            name: seq_tmp,
-            scope: Scope::Local,
-            span: span.clone(),
-        };
-        let idx_ref = Expr::VarRef {
-            name: idx_tmp,
-            scope: Scope::Local,
-            span: span.clone(),
-        };
+        let (mut stmts, seq_ref, idx_ref, kind_before_final_index) =
+            self.hoist_indexed_target(primary, suffixes, &span)?;
+        let result_kind = kind_before_final_index.index_once().ok_or_else(|| {
+            self.err_at(
+                primary,
+                "indexed assignment (`[...] = ...`) is only supported on an array-typed value"
+                    .to_string(),
+            )
+        })?;
+        let (rhs_expr, rhs_kind) = self.lower_expr(rhs, 0)?;
         let lhs_read = Expr::SeqIndex {
             seq: Box::new(seq_ref.clone()),
             index: Box::new(idx_ref.clone()),
@@ -3228,16 +3387,15 @@ impl Lowerer {
             }
             _ => unreachable!("compound assignment operator token was matched but its leading char isn't one of + - * / %"),
         };
-        let seqset = Stmt::SeqSet {
+        stmts.push(Stmt::SeqSet {
             seq: seq_ref,
             index: idx_ref,
             value,
             span: span.clone(),
-        };
-        self.observed.add(Feature::Sequences);
+        });
         Ok(Stmt::ExprStmt {
             expr: Expr::Block(Box::new(Block {
-                stmts: vec![let_seq, let_idx, seqset],
+                stmts,
                 value: Expr::NilLit { span: span.clone() },
                 span: span.clone(),
             })),
@@ -3245,67 +3403,44 @@ impl Lowerer {
         })
     }
 
-    /// Lower `xs[i]++;`/`xs[i]--;`/`++xs[i];`/`--xs[i];` (increment or
-    /// decrement on an indexed target) — the other half of the gap
-    /// `lower_indexed_assignment`'s own doc comment names as deferred.
-    /// Desugars to `xs[i] += 1;`/`xs[i] -= 1;` exactly like the bare-name
-    /// incdec path already does (see `lower_expr_statement`'s own
-    /// handling just above), reusing the identical once-only-evaluation
-    /// temp-binding shape `lower_indexed_compound_assignment` uses, for
-    /// the identical reason (a non-constant index expression, e.g.
-    /// `xs[next()]++;`, must not be evaluated twice).
+    /// Lower `xs[i]++;`/`grid[i][j]--;`/`++xs[i];`/`--grid[i][j];`
+    /// (increment or decrement on a possibly-chained indexed target) —
+    /// the other half of the gap `lower_indexed_assignment`'s own doc
+    /// comment names as deferred. Desugars to `xs[i] += 1;`/`xs[i] -=
+    /// 1;` exactly like the bare-name incdec path already does (see
+    /// `lower_expr_statement`'s own handling just above), reusing the
+    /// identical `hoist_indexed_target` once-only-evaluation temp-binding
+    /// shape `lower_indexed_compound_assignment` uses, for the identical
+    /// reason (a non-constant index expression, e.g. `xs[next()]++;`,
+    /// must not be evaluated twice).
     fn lower_indexed_incdec(
         &mut self,
         primary: &GrammarASTNode,
-        suffix: &GrammarASTNode,
+        suffixes: &[ASTNodeOrToken],
         op: char,
         context: &GrammarASTNode,
     ) -> Result<Stmt, JavaLowerError> {
-        let (seq_expr, seq_kind) = self.lower_expr(primary, 0)?;
-        let result_kind = seq_kind.index_once().ok_or_else(|| {
+        let span = self.span_of(context);
+        let (mut stmts, seq_ref, idx_ref, kind_before_final_index) =
+            self.hoist_indexed_target(primary, suffixes, &span)?;
+        let result_kind = kind_before_final_index.index_once().ok_or_else(|| {
             self.err_at(
                 primary,
                 "indexing (`[...]`) is only supported on an array-typed value".to_string(),
             )
         })?;
         if !matches!(result_kind, Kind::Int | Kind::Float) {
+            let last_suffix = match suffixes.last() {
+                Some(ASTNodeOrToken::Node(s)) => s,
+                _ => unreachable!(
+                    "indexed_assign_target only ever returns index-only suffixes, which `is_index_only_suffix` guarantees are Nodes"
+                ),
+            };
             return Err(self.err_at(
-                suffix,
+                last_suffix,
                 format!("`{op}{op}` requires a numeric array element"),
             ));
         }
-        let index_node = self
-            .first_child_named(suffix, "expression")
-            .ok_or_else(|| self.err_at(suffix, "malformed array index".to_string()))?;
-        let (index_expr, index_kind) = self.lower_expr(index_node, 0)?;
-        if index_kind != Kind::Int {
-            return Err(self.err_at(index_node, "an array index must be an `int`".to_string()));
-        }
-        let span = self.span_of(context);
-        let seq_tmp = self.fresh_temp_name("__idx_seq");
-        let idx_tmp = self.fresh_temp_name("__idx_at");
-        let let_seq = Stmt::LetStarBinding {
-            name: seq_tmp.clone(),
-            sir_type: None,
-            value: seq_expr,
-            span: span.clone(),
-        };
-        let let_idx = Stmt::LetStarBinding {
-            name: idx_tmp.clone(),
-            sir_type: None,
-            value: index_expr,
-            span: span.clone(),
-        };
-        let seq_ref = Expr::VarRef {
-            name: seq_tmp,
-            scope: Scope::Local,
-            span: span.clone(),
-        };
-        let idx_ref = Expr::VarRef {
-            name: idx_tmp,
-            scope: Scope::Local,
-            span: span.clone(),
-        };
         let lhs_read = Expr::SeqIndex {
             seq: Box::new(seq_ref.clone()),
             index: Box::new(idx_ref.clone()),
@@ -3324,16 +3459,15 @@ impl Lowerer {
         };
         let (value, _) =
             self.combine_additive(lhs_read, result_kind, one, result_kind, op, context)?;
-        let seqset = Stmt::SeqSet {
+        stmts.push(Stmt::SeqSet {
             seq: seq_ref,
             index: idx_ref,
             value,
             span: span.clone(),
-        };
-        self.observed.add(Feature::Sequences);
+        });
         Ok(Stmt::ExprStmt {
             expr: Expr::Block(Box::new(Block {
-                stmts: vec![let_seq, let_idx, seqset],
+                stmts,
                 value: Expr::NilLit { span: span.clone() },
                 span: span.clone(),
             })),
@@ -4004,11 +4138,105 @@ impl Lowerer {
                     depth,
                 )
             }
+            [ASTNodeOrToken::Node(primary), ASTNodeOrToken::Node(dot_suffix), ASTNodeOrToken::Node(call_suffix)]
+                if matches!(primary.children.as_slice(), [ASTNodeOrToken::Token(t)] if t.type_ == lexer::token::TokenType::Name)
+                    && dot_suffix.rule_name == "primary_suffix"
+                    && matches!(dot_suffix.children.first(), Some(ASTNodeOrToken::Token(t)) if t.value == ".")
+                    && call_suffix.rule_name == "primary_suffix"
+                    && matches!(call_suffix.children.first(), Some(ASTNodeOrToken::Token(t)) if t.value == "(") =>
+            {
+                self.lower_static_method_call(primary, dot_suffix, call_suffix, node, depth)
+            }
             _ => Err(self.err_at(
                 node,
                 "field access, method calls with more than one suffix, and other primary suffixes are not supported yet (deferred to a later JV02 milestone)".to_string(),
             )),
         }
+    }
+
+    /// Lower `ClassName.staticMethod(args)` -- M5 (task #67). `semantic-
+    /// ir`'s own `Expr::VirtualCall` doc comment is explicit that a
+    /// *static* call needs no new node at all: it's an ordinary
+    /// `Expr::DirectCall` against a mangled top-level identity. Since
+    /// this frontend has no receiver/object model until M6 (M3a already
+    /// lowers every method -- static or instance -- identically, flat
+    /// top-level), `ClassName.staticMethod(args)` on the *one* class
+    /// this frontend itself is compiling is semantically identical to
+    /// the bare call `staticMethod(args)` M3a already handles -- same
+    /// `method_signatures` table, same `Expr::DirectCall`, just reached
+    /// through a qualified suffix chain instead of a bare name.
+    ///
+    /// Two things this function checks that a bare call doesn't need to:
+    /// `class_ref` must literally be this compilation unit's own class
+    /// (`self.class_name`) -- any other name is rejected outright, since
+    /// this frontend has no import/library-catalog concept at all and
+    /// cannot resolve an *external* static (`Math.PI`, `System.out`,
+    /// another user class) to anything; and the resolved method must
+    /// itself be declared `static` -- `MethodSig::is_static`, M5's own
+    /// new field -- since real Java rejects `ClassName.instanceMethod()`
+    /// too, and this frontend has no reason to be looser about a
+    /// construct it can already fully type-check.
+    fn lower_static_method_call(
+        &mut self,
+        primary: &GrammarASTNode,
+        dot_suffix: &GrammarASTNode,
+        call_suffix: &GrammarASTNode,
+        node: &GrammarASTNode,
+        depth: usize,
+    ) -> Result<(Expr, Kind), JavaLowerError> {
+        let class_ref = match primary.children.as_slice() {
+            [ASTNodeOrToken::Token(t)] if t.type_ == lexer::token::TokenType::Name => {
+                t.value.as_str()
+            }
+            _ => unreachable!(
+                "lower_primary_expression's own guard already confirmed primary is a bare NAME token"
+            ),
+        };
+        if class_ref != self.class_name {
+            return Err(self.err_at(
+                primary,
+                format!(
+                    "`{class_ref}.` is not supported yet -- only a static call on `{}` itself (this compilation unit's own class) is supported so far (an external class or JDK type like `Math`/`System` is deferred to a later JV02 milestone)",
+                    self.class_name
+                ),
+            ));
+        }
+        let method_name = dot_suffix
+            .children
+            .iter()
+            .find_map(|c| match c {
+                ASTNodeOrToken::Token(t) if t.type_ == lexer::token::TokenType::Name => {
+                    Some(t.value.as_str())
+                }
+                _ => None,
+            })
+            .ok_or_else(|| self.err_at(dot_suffix, "malformed qualified method reference".to_string()))?;
+        let sig = self.method_signatures.get(method_name).cloned().ok_or_else(|| {
+            self.err_at(
+                node,
+                format!("call to unknown method `{method_name}` (JV02 M3a/M5 can only call a method declared in the same class)"),
+            )
+        })?;
+        if !sig.is_static {
+            return Err(self.err_at(
+                node,
+                format!("`{method_name}` is not `static` -- a qualified call (`{class_ref}.{method_name}(...)`) requires a static method (instance method calls are deferred to a later JV02 milestone)"),
+            ));
+        }
+        let args = self.lower_call_arguments(call_suffix, method_name, &sig.param_kinds, depth)?;
+        if let Some(callees) = self.call_graph.get_mut(&self.current_method) {
+            callees.insert(method_name.to_string());
+        }
+        let span = self.span_of(node);
+        Ok((
+            Expr::DirectCall {
+                fn_name: method_name.to_string(),
+                args,
+                effects: EffectSet::PURE,
+                span,
+            },
+            sig.return_kind,
+        ))
     }
 
     /// Lower an array-index-read suffix, `xs[i]` (`primary_suffix =
@@ -4693,6 +4921,11 @@ impl Lowerer {
         self.closure_signatures.push(MethodSig {
             param_kinds,
             return_kind: body_kind,
+            // `is_static` is meaningless for a lambda's own interned
+            // signature -- `lower_static_method_call` (M5) only ever
+            // reads it from `method_signatures`, never from
+            // `closure_signatures`.
+            is_static: false,
         });
 
         Ok((

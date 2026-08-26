@@ -1,25 +1,23 @@
 {
   "chapter": 10,
-  "title": "Taking, Asking, Helping, Liking",
-  "label": "ch:mr-doing-verbs",
-  "canDo": "I can take, ask, help and say what I like and what I love in Marathi, build a fresh verb by putting करणे behind a noun, and say why मला मराठी आवडते has no room for me as its subject while मी प्रेम करतो does.",
+  "title": "The Core Verbs",
+  "label": "ch:mr-core-verbs",
+  "canDo": "I can use six everyday Marathi verbs, pick the present-tense ending that agrees with my subject's gender, end every sentence on the verb, and say that I know something the way Marathi says it — with the knower in the dative and आहे closing the line.",
   "spineNodes": [
     "SPINE-SAY-WHAT-I-DO"
   ],
   "payoff": {
-    "lesson": "MR-C09-avadne",
-    "kind": "production",
-    "summary": "Say मला मराठी आवडते and hear that you are not its subject, set it against मी प्रेम करतो where you are, place both beside मला मराठी येते and मला मराठी समजते so one frame carries three meanings, and run the chapter's four verbs back with where each came from — Sanskrit ग्रह् beside English grab, विचार doing double duty as thought and question, Arabic मदद through Persian, and आवडणे with no Sanskrit ancestor to claim.",
+    "lesson": "MR-C07-mahit-asne",
+    "kind": "task",
+    "summary": "Say मला माहीत आहे and मला मराठी येते unprompted: the knower in the dative, the verb agreeing with its own subject rather than with the speaker, and आहे closing the sentence — the whole chapter's machinery in two lines.",
     "assesses": [
-      "MR-LEX-GHENE",
-      "MR-ETYMON-GRAH-GRAB",
-      "MR-LEX-VICHARNE",
-      "MR-ETYMON-VICHAR-THINK-ASK",
-      "MR-LEX-MADAT-KARNE",
-      "MR-ETYMON-MADAT-ARABIC",
-      "MR-LEX-AVADNE",
-      "MR-GRAMMAR-DATIVE-LIKING",
-      "MR-LEX-PREM-KARNE"
+      "MR-LEX-ASNE-AAHE",
+      "MR-GRAMMAR-AAHE-LAST",
+      "MR-LEX-JANE",
+      "MR-GRAMMAR-PRESENT-GENDER",
+      "MR-LEX-YENE",
+      "MR-LEX-MAHIT-JANNE",
+      "MR-GRAMMAR-DATIVE-KNOWLEDGE"
     ]
   }
 }

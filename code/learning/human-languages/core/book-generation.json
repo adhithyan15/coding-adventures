@@ -2920,70 +2920,91 @@
     {
       "language": "marathi",
       "chapter": 2,
-      "output": "marathi/book/chapters/ch02-courtesy-responses.tex",
+      "output": "marathi/book/chapters/ch02-thanks-script-a.tex",
       "unicodeScript": "Devanagari",
       "scriptCommand": "mr"
     },
     {
       "language": "marathi",
-      "chapter": 7,
-      "output": "marathi/book/chapters/ch07-numbers-1-5.tex",
+      "chapter": 3,
+      "output": "marathi/book/chapters/ch03-thanks-script-b.tex",
       "unicodeScript": "Devanagari",
       "scriptCommand": "mr"
     },
     {
       "language": "marathi",
-      "chapter": 8,
-      "output": "marathi/book/chapters/ch08-core-verbs.tex",
+      "chapter": 4,
+      "output": "marathi/book/chapters/ch04-courtesy-responses.tex",
       "unicodeScript": "Devanagari",
       "scriptCommand": "mr"
     },
     {
       "language": "marathi",
       "chapter": 9,
-      "output": "marathi/book/chapters/ch09-mind-and-page.tex",
+      "output": "marathi/book/chapters/ch09-numbers-1-5.tex",
       "unicodeScript": "Devanagari",
       "scriptCommand": "mr"
     },
     {
       "language": "marathi",
       "chapter": 10,
-      "output": "marathi/book/chapters/ch10-doing-verbs.tex",
+      "output": "marathi/book/chapters/ch10-core-verbs.tex",
       "unicodeScript": "Devanagari",
       "scriptCommand": "mr"
     },
     {
       "language": "marathi",
       "chapter": 11,
-      "output": "marathi/book/chapters/ch11-request-food-drink.tex",
+      "output": "marathi/book/chapters/ch11-mind-and-page.tex",
       "unicodeScript": "Devanagari",
       "scriptCommand": "mr"
     },
     {
       "language": "marathi",
       "chapter": 12,
-      "output": "marathi/book/chapters/ch12-friend-and-family.tex",
+      "output": "marathi/book/chapters/ch12-doing-verbs.tex",
       "unicodeScript": "Devanagari",
       "scriptCommand": "mr"
     },
     {
       "language": "marathi",
       "chapter": 13,
-      "output": "marathi/book/chapters/ch13-face-parts.tex",
+      "output": "marathi/book/chapters/ch13-request-food-drink.tex",
       "unicodeScript": "Devanagari",
       "scriptCommand": "mr"
     },
     {
       "language": "marathi",
       "chapter": 14,
-      "output": "marathi/book/chapters/ch14-heart.tex",
+      "output": "marathi/book/chapters/ch14-friend-and-family.tex",
       "unicodeScript": "Devanagari",
       "scriptCommand": "mr"
     },
     {
       "language": "marathi",
       "chapter": 15,
-      "output": "marathi/book/chapters/ch15-family-memory.tex",
+      "output": "marathi/book/chapters/ch15-face-parts.tex",
+      "unicodeScript": "Devanagari",
+      "scriptCommand": "mr"
+    },
+    {
+      "language": "marathi",
+      "chapter": 16,
+      "output": "marathi/book/chapters/ch16-heart.tex",
+      "unicodeScript": "Devanagari",
+      "scriptCommand": "mr"
+    },
+    {
+      "language": "marathi",
+      "chapter": 17,
+      "output": "marathi/book/chapters/ch17-family-memory.tex",
+      "unicodeScript": "Devanagari",
+      "scriptCommand": "mr"
+    },
+    {
+      "language": "marathi",
+      "chapter": 18,
+      "output": "marathi/book/chapters/ch18-doorway-script-distance.tex",
       "unicodeScript": "Devanagari",
       "scriptCommand": "mr"
     },
@@ -3348,6 +3369,13 @@
       "language": "punjabi",
       "chapter": 1,
       "output": "punjabi/book/chapters/ch01-greetings.tex",
+      "unicodeScript": "Gurmukhi",
+      "scriptCommand": "pa"
+    },
+    {
+      "language": "punjabi",
+      "chapter": 2,
+      "output": "punjabi/book/chapters/ch02-introductions.tex",
       "unicodeScript": "Gurmukhi",
       "scriptCommand": "pa"
     },
@@ -6879,23 +6907,23 @@
     },
     {
       "language": "marathi",
-      "chapter": 3,
-      "output": "marathi/book/chapters/ch03-introductions.tex"
-    },
-    {
-      "language": "marathi",
-      "chapter": 4,
-      "output": "marathi/book/chapters/ch04-responding.tex"
-    },
-    {
-      "language": "marathi",
       "chapter": 5,
-      "output": "marathi/book/chapters/ch05-farewells.tex"
+      "output": "marathi/book/chapters/ch05-introductions.tex"
     },
     {
       "language": "marathi",
       "chapter": 6,
-      "output": "marathi/book/chapters/ch06-first-verbs.tex"
+      "output": "marathi/book/chapters/ch06-responding.tex"
+    },
+    {
+      "language": "marathi",
+      "chapter": 7,
+      "output": "marathi/book/chapters/ch07-farewells.tex"
+    },
+    {
+      "language": "marathi",
+      "chapter": 8,
+      "output": "marathi/book/chapters/ch08-first-verbs.tex"
     },
     {
       "language": "persian",
@@ -6906,11 +6934,6 @@
       "language": "portuguese",
       "chapter": 1,
       "output": "portuguese/book/chapters/ch01-greetings.tex"
-    },
-    {
-      "language": "punjabi",
-      "chapter": 2,
-      "output": "punjabi/book/chapters/ch02-introductions.tex"
     },
     {
       "language": "punjabi",

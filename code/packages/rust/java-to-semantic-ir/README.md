@@ -151,10 +151,33 @@ disclosed gaps, tracked as their own follow-up tasks. **The first is
 resolved as task #60**: `lower_primary_expression` gained one more
 suffix-chain shape — every leading suffix `[...]`, the trailing one
 `.length` — delegating the index prefix to the existing
-`lower_chained_index` and wrapping the result in `Expr::SeqLen`. The
-*chained*-indexed-assignment-target gap remains open (a separate,
-assignment-target-only concern task #60 didn't touch). Bare (unlabeled)
-`break`/`continue`
+`lower_chained_index` and wrapping the result in `Expr::SeqLen`. **The
+second is resolved as task #66**: `indexed_assign_target` now recognizes
+a suffix chain of any length (not just exactly one), the same
+`is_index_only_suffix` guard the chained-read case above already uses —
+`grid[i][j] = v;` peels every suffix but the last via the existing
+`lower_chained_index` and writes through the last suffix's own index
+(no temp-hoisting needed, since a plain-assignment target is only ever
+built once); `grid[i][j] += v;`/`grid[i][j]++;` route through a new
+shared `hoist_indexed_target` helper generalizing task #59's own
+single-suffix once-only-evaluation temp-binding shape to N suffixes.
+**M5 (task #67)** adds a qualified *static* method call self-reference,
+`ClassName.staticMethod(args)`, where `ClassName` is literally the one
+class this compilation unit declares — a new `Lowerer::class_name`
+(captured once in `lower_program`) confirms the qualifier really is a
+self-reference, and a new `MethodSig::is_static` (set from a method
+declaration's own `static` modifier) confirms the resolved method isn't
+an instance method, rejecting `ClassName.instanceMethod()` the way real
+Java does. Per `semantic-ir`'s own `Expr::VirtualCall` doc comment, a
+*static* call needs no new SIR node — it's an ordinary `Expr::DirectCall`
+against a mangled top-level identity — so once both checks pass, this
+reuses M3a's existing `method_signatures`/`lower_call_arguments` path
+completely unchanged, just reached through a qualified suffix chain.
+`ClassName.field` (static *field* access) and any external/JDK static
+(`Math.abs(...)`, `System.out`) remain out of scope — the former needs
+field declarations and a new SIR field-access node that don't exist yet
+(deferred to alongside a future M6), the latter has no import/library-
+catalog concept to resolve against at all. Bare (unlabeled) `break`/`continue`
 now lower to `Stmt::Break`/`Stmt::Continue` (`Feature::LoopControl`,
 task #64) inside any of `while`/`do`-`while`/classic-`for`/enhanced-`for`
 — a `Lowerer::loop_depth` counter rejects one outside any loop with a
@@ -213,8 +236,11 @@ Everything else — `switch`
 not assumed — so this needs its own spec-level design decision before
 any frontend can target it, tracked as task #51; `break`/`continue`
 themselves are supported as of task #64, see below), a labeled `break`/
-`continue` (SIR has no loop-label vocabulary at all), qualified calls
-(`x.foo(...)`), method overloading, an early
+`continue` (SIR has no loop-label vocabulary at all), an *instance*-
+qualified call (`x.foo(...)`) or any qualifier other than this
+compilation unit's own class name (`ClassName.staticMethod(args)` on
+*this* class IS supported as of task #67/M5, see below), method
+overloading, an early
 or branched `return` (in a method *or* a lambda), untyped/`var`-inferred
 lambda parameters (Java infers these from the lambda's own target
 functional-interface type, which this frontend has no visibility into —
@@ -222,10 +248,9 @@ no functional-interface declarations exist yet), calling a lambda-valued
 *method parameter* (this frontend has no way to declare a method
 parameter of a functional-interface type at all, so this is a boundary of
 what's expressible, not a gap in invocation itself), `var`-inferred multi-
-dimensional array literals, multi-dimensional `new` array-creation forms,
-a *chained* indexed-assignment target (`grid[i][j] = v;` — compound-
-assignment/increment-decrement on a single-suffix indexed target is
-supported as of task #59, see above), a
+dimensional array literals, multi-dimensional `new` array-creation forms
+(a chained indexed-assignment target, `grid[i][j] = v;`, IS supported as
+of task #66, see above), a
 non-constant or reference-typed `new T[N]`, List/Map collection literals,
 the array/String method-call surface beyond `.length`, field access
 other than an array's own `.length`, casts, `instanceof`, the ternary
@@ -286,15 +311,24 @@ JV02 spec's milestone table for what comes next.
   peeled result kind at each level, a single (non-chained) index read on
   a multi-dimensional array giving back a still-indexable sub-array, an
   out-of-dimension chained index rejection, `.length` on a
-  multi-dimensional array, `Feature::Sequences` re-declaration, and both
-  the still-deferred chained-assignment-target rejection and the
-  now-correctly-generalized single-index sub-array assignment), task
+  multi-dimensional array, `Feature::Sequences` re-declaration, and
+  the now-correctly-generalized single-index sub-array assignment), task
   #60's own mixed index-then-`.length` chain shapes (a single leading
   index suffix, two chained leading index suffixes on a 3-D array, a
   scalar-element rejection when the peeled-down target isn't array-typed,
-  a non-`length` trailing dotted name still rejected rather than
-  mis-lowered, and a regression check that a *chained* indexed-assignment
-  target is untouched by this task), and task #54's own indirect-call
+  and a non-`length` trailing dotted name still rejected rather than
+  mis-lowered), task #66's own chained indexed-assignment-target shapes
+  (2-D and 3-D plain-assignment targets lowering to `Stmt::SeqSet`,
+  value-kind-mismatch and beyond-array-dimension rejection, and once-
+  only-evaluation temp-binding shapes for both compound-assignment and
+  incdec on a chained target, mirroring task #59's own single-suffix
+  regression tests), task #67's own qualified-static-call shapes (a
+  static method call on this compilation unit's own class lowering to
+  the same `Expr::DirectCall` shape as an unqualified call, a void
+  static call as a bare statement, rejection of a qualifier that isn't
+  this class's own name, rejection of a call to an unknown method on
+  this class, and rejection of a qualified call to a non-`static`
+  method), and task #54's own indirect-call
   shapes (zero/single/multi-argument calls with correct argument order,
   the call's own result kind usable in a further expression, a non-main
   method's own local lambda invocation, a captured closure invoked from

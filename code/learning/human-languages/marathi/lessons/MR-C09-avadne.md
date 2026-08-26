@@ -2,8 +2,8 @@
 schema_version: 2
 id: MR-C09-avadne
 spine_node: SPINE-SAY-WHAT-I-DO
-sequence: 490
-chapter: 10
+sequence: 510
+chapter: 12
 type: word
 headword: आवडणे
 romanization: āvaḍṇe
@@ -80,7 +80,7 @@ it, and from that English has **friend** — the one loved — and **free**.
 ## Why it's said this way
 <!-- hl-knowledge: introduces=[]; assesses=[MR-HISTORY-SELECTIVE-RETENTION, MR-ETYMON-DON-ANALOGY, MR-ETYMON-PAACH-NASAL-RETENTION] -->
 
-Chapter 7's rule holds here: neither language is simply older. Marathi's **दोन**
+Chapter 9's rule holds here: neither language is simply older. Marathi's **दोन**
 took its final *n* by copying **तीन** — an innovation. Hindi's **पाँच** kept a
 nasal Marathi dropped — a retention. Now a verb: Marathi kept its native word for
 liking, Hindi took a Persian one.

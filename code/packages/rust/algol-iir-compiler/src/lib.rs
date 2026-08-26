@@ -8569,8 +8569,7 @@ fn literal_power_unit_is_negative(node: &GrammarASTNode) -> Option<bool> {
         }
     }
     let (base, exponents) = operands.split_first()?;
-    let exponent = literal_nonneg_integer_power_chain(exponents)?;
-    if exponent == 0
+    if literal_nonnegative_integral_power_chain(exponents) == Some(0)
         && (literal_integer_value(base).is_some()
             || expr_real_literal_text(base)
                 .and_then(|literal| literal.parse::<f64>().ok())
@@ -8579,6 +8578,7 @@ fn literal_power_unit_is_negative(node: &GrammarASTNode) -> Option<bool> {
     {
         return Some(false);
     }
+    let exponent = literal_nonneg_integer_power_chain(exponents)?;
     let base_is_negative = literal_numeric_unit_is_negative(base)?;
     Some(base_is_negative && !exponent.is_multiple_of(2))
 }
@@ -11261,6 +11261,8 @@ mod tests {
             "choose / (((8.0 / 2.0) - 4.0) ** 0)",
             "((2.0 ^ 3) ^ 0) * choose",
             "choose * (((-2.0) * (-3.0)) ^ 0 ^ 1)",
+            "choose * ((2.0 + 3.0) ^ 0.0)",
+            "choose / ((-4.0) ** 0.0 ^ 1)",
         ] {
             compile_source(
                 &format!(
@@ -11278,6 +11280,7 @@ mod tests {
     fn al4_real_non_identity_power_selector_writes_remain_conservative() {
         for write in [
             "choose ^ 0",
+            "choose ^ 0.0",
             "1.0 ^ choose",
             "choose ^ 1.0",
             "choose - ((-0.0) ^ 0)",

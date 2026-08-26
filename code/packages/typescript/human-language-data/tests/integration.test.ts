@@ -39,7 +39,7 @@ describe("real curriculum", () => {
     expect(scripts.devanagari!.complete).toBe(true);
   });
 
-  it("keeps the cross-script closure queue measured after Japanese hiragana ta", () => {
+  it("keeps the cross-script closure queue measured after Urdu retroflex tte", () => {
     const candrakkala = scripts.malayalam!.marks!.find((mark) => mark.mark === "്")!;
     expect(candrakkala.role).toBe("virama");
     expect(candrakkala.compositionOrder).toEqual([
@@ -134,6 +134,23 @@ describe("real curriculum", () => {
       /Unicode Standard.*Version 17\.0.*12\.6\.3.*U\+0BC1.*க \+ ு → கு/i,
     );
     expect(tamilU.compositionSource?.variation).toMatch(
+      /encoded carrier-first composition.*normally ligates.*not a universal handwriting direction.*no standalone ductus claim/i,
+    );
+
+    const tamilUu = scripts.tamil!.marks!.find((mark) => mark.mark === "ூ")!;
+    expect(tamilUu.role).toBe("vowel-sign");
+    expect(tamilUu.compositionOrder).toEqual([
+      "write the Tamil consonant carrier first",
+      "add the ū vowel sign to replace its inherent vowel",
+    ]);
+    expect(tamilUu.example).toEqual({ base: "க", combined: "கூ", sound: "kū" });
+    expect(tamilUu.compositionSource?.url).toBe(
+      "https://www.unicode.org/versions/Unicode17.0.0/core-spec/chapter-12/",
+    );
+    expect(tamilUu.compositionSource?.citation).toMatch(
+      /Unicode Standard.*Version 17\.0.*12\.6\.3.*U\+0BC2.*க \+ ூ → கூ/i,
+    );
+    expect(tamilUu.compositionSource?.variation).toMatch(
       /encoded carrier-first composition.*normally ligates.*not a universal handwriting direction.*no standalone ductus claim/i,
     );
 
@@ -785,6 +802,23 @@ describe("real curriculum", () => {
       /bowl first.*right-to-left.*lower-left dot.*lower-right dot.*lower-center dot.*three pen lifts.*triangular arrangement.*two-dot side.*main line.*Noto Naskh fallback.*Nastaliq.*Urdu-specific/i,
     );
 
+    const urduTte = scripts["urdu-nastaliq"]!.letters.find((letter) => letter.glyph === "ٹ")!;
+    expect(urduTte.sound).toBe("ṭ");
+    expect(urduTte.penLifts).toBe(1);
+    expect(urduTte.strokeOrder).toEqual([
+      "sweep the independent be-series bowl from right to left",
+      "after one lift, draw the small retroflex mark downward, back upward, and down again to close its loop",
+    ]);
+    expect(urduTte.strokeOrderSource?.url).toBe(
+      "https://openbooks.library.northwestern.edu/zerozabar/chapter/fe-qaf-te-dal-re/",
+    );
+    expect(urduTte.strokeOrderSource?.citation).toMatch(
+      /Zer o Zabar.*independent ٹ.*Ṭe instructions.*Northwestern/i,
+    );
+    expect(urduTte.strokeOrderSource?.variation).toMatch(
+      /be-series body.*upper retroflex mark.*two pen-down runs.*dental te.*small to'e-shaped mark.*down.*back up.*down again.*loop.*body-first.*one-lift.*Noto Naskh fallback.*Nastaliq.*Urdu retroflex/i,
+    );
+
     const gaps = validate({ taxonomy, lessons, scripts }).filter(
       (issue) => issue.level === "warning" && issue.code === "uncovered-glyphs",
     );
@@ -811,6 +845,8 @@ describe("real curriculum", () => {
     expect(affected.get("್") ?? 0).toBe(0);
     expect(missingByScript.get("tamil.json")?.has("ு")).toBe(false);
     expect(affected.get("ு") ?? 0).toBe(0);
+    expect(missingByScript.get("tamil.json")?.has("ூ")).toBe(false);
+    expect(affected.get("ூ") ?? 0).toBe(0);
     expect(missingByScript.get("tamil.json")?.has("ீ")).toBe(false);
     expect(affected.get("ீ") ?? 0).toBe(0);
     expect(missingByScript.get("telugu.json")?.has("ం")).toBe(false);
@@ -1091,9 +1127,11 @@ describe("real curriculum", () => {
     );
     expect(missingByScript.get("perso-arabic.json")?.has("ی")).toBe(false);
     expect(affected.get("ی") ?? 0).toBe(0);
+    expect(missingByScript.get("urdu-nastaliq.json")?.has("ٹ")).toBe(false);
+    expect(affected.get("ٹ") ?? 0).toBe(0);
     expect(
       [...affected.entries()].sort((left, right) => right[1] - left[1])[0],
-    ).toEqual(["ூ", 5]);
+    ).toEqual(["っ", 4]);
   });
 
   it("loaded every track (17+ and growing)", () => {

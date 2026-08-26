@@ -2,24 +2,24 @@
   "version": 1,
   "language": "marathi",
   "chapter": 5,
-  "title": "Farewells",
+  "title": "Introducing Yourself",
   "drivablePrefix": 0,
-  "sourceHash": "fnv1a64:35abd74430d16a3f",
+  "sourceHash": "fnv1a64:91cac9f01782b313",
   "lessons": [
     {
-      "id": "MR-C04-punha",
-      "sequence": 115,
-      "title": "पुन्हा (punhā) — \"again\"",
-      "headword": "पुन्हा",
+      "id": "MR-C02-naav",
+      "sequence": 60,
+      "title": "नाव (nāv) — \"name\"",
+      "headword": "नाव",
       "romanization": "",
-      "gloss": "again (punhā)",
+      "gloss": "name (nāv)",
       "script": "devanagari",
       "modality": "sight",
       "derivedModality": "sight",
       "modalityReasons": [
         "script-block"
       ],
-      "sourceHash": "fnv1a64:ef579435c9a994ef",
+      "sourceHash": "fnv1a64:476e95c5a9d2fdd4",
       "notice": {
         "modality": "sight",
         "needs": [
@@ -44,7 +44,7 @@
             },
             {
               "kind": "speech",
-              "text": "Chapter 2 gave you the goodbye yeto (\"I'll come [again]\"). Now the explicit word for again, to build the warm \"see you again.\""
+              "text": "To introduce yourself you need one word first: name. In Marathi it is नाव (nāv) — and it is a very old word wearing a Marathi coat."
             }
           ]
         },
@@ -55,7 +55,7 @@
           "segments": [
             {
               "kind": "speech",
-              "text": "(Skim if you read Devanagari.) पु (pu) + न्हा (nhā, the न na joined by a halant to ह ha with the long-ā stroke) becomes पुन्हा punhā."
+              "text": "(Skim if you read Devanagari.) ना (nā, the न na with the ा long-ā stroke) + व (va) becomes नाव nāv. Two letters, read left to right."
             }
           ]
         },
@@ -66,7 +66,7 @@
           "segments": [
             {
               "kind": "speech",
-              "text": "पुन्हा (punhā, \"again\") comes from Sanskrit पुनर् (punar, \"again, back\"). That punar is a genuine Indo-European cousin of Latin re- in the sense of \"back/again,\" and it echoes in Hindi phir and the puna- of punarjanma (\"rebirth\"). To say a thing punhā is to send it round once more."
+              "text": "नाव (nāv) comes from Sanskrit नामन् (nāman, \"name\"). Watch the small Marathi sound-shift: the Sanskrit -m- softened to -v-, so nām became nāv. (Hindi kept the m: nām.) That Sanskrit nāman traces back to the same ancient root, h₃nómn̥, that gave English name and noun, Latin nōmen, Greek onoma. A cousin from before either language had a name for itself."
             }
           ]
         },
@@ -77,7 +77,7 @@
           "segments": [
             {
               "kind": "speech",
-              "text": "Marathi's goodbyes lean on again and meet rather than on farewell — the parting is framed as a return, never an ending. This word is the hinge of that idea."
+              "text": "Marathi softens many old Sanskrit consonants this way — m leaning to v, hard sounds going soft. Spotting the shift lets you read a Sanskrit word straight into its Marathi form."
             }
           ]
         },
@@ -95,20 +95,20 @@
             {
               "kind": "prompt",
               "action": "SAY",
-              "instruction": "\"punhā\" — again",
+              "instruction": "\"nāv\" — name",
               "spoken": true,
               "scored": false,
               "responseSeconds": 8,
-              "source": "[YOU SAY: \"punhā\" — again]"
+              "source": "[YOU SAY: \"nāv\" — name]"
             },
             {
               "kind": "prompt",
               "action": "SAY",
-              "instruction": "its Sanskrit source (punar) and the punarjanma echo",
+              "instruction": "the English cousin from the same root (\"name\")",
               "spoken": true,
               "scored": false,
               "responseSeconds": 8,
-              "source": "[YOU SAY: its Sanskrit source (*punar*) and the *punarjanma* echo]"
+              "source": "[YOU SAY: the English cousin from the same root (\"name\")]"
             }
           ]
         },
@@ -125,26 +125,26 @@
             },
             {
               "kind": "speech",
-              "text": "What does punhā mean, and from what Sanskrit word? (\"Again\"; from punar.)"
+              "text": "What is nāv, and what happened to the m of Sanskrit nām? (\"Name\"; it softened to v — a Marathi sound-shift.)"
             }
           ]
         }
       ]
     },
     {
-      "id": "MR-C04-bhetu",
-      "sequence": 120,
-      "title": "भेटू (bheṭū) — \"(let's / we'll) meet\"",
-      "headword": "भेटू",
+      "id": "MR-C02-majhe",
+      "sequence": 65,
+      "title": "माझं (mājhaṁ) — \"my\"",
+      "headword": "माझं",
       "romanization": "",
-      "gloss": "(we'll) meet (bheṭū)",
+      "gloss": "my (mājhaṁ, neuter)",
       "script": "devanagari",
       "modality": "sight",
       "derivedModality": "sight",
       "modalityReasons": [
         "script-block"
       ],
-      "sourceHash": "fnv1a64:2f9fb60c326e3157",
+      "sourceHash": "fnv1a64:512f9b79e8094637",
       "notice": {
         "modality": "sight",
         "needs": [
@@ -169,7 +169,7 @@
             },
             {
               "kind": "speech",
-              "text": "The other half of the goodbye: meet. You already brushed past it in bheṭūn ānand jhālā (\"pleased to meet you\")."
+              "text": "\"My name.\" The word for my — and it changes shape with the gender of what it owns."
             }
           ]
         },
@@ -180,7 +180,7 @@
           "segments": [
             {
               "kind": "speech",
-              "text": "(Skim if you read Devanagari.) भे (bhe) + टू (ṭū, the retroflex ट ṭa with the long-u stroke) becomes भेटू bheṭū. Note the retroflex ट (ṭa) — the tongue curls back to the roof of the mouth."
+              "text": "(Skim if you read Devanagari.) मा (mā) + झं (jhaṁ, the झ jha with an anusvara ं for the light nasal) becomes माझं mājhaṁ."
             }
           ]
         },
@@ -191,18 +191,18 @@
           "segments": [
             {
               "kind": "speech",
-              "text": "भेटू (bheṭū) is a form of the verb भेटणे (bheṭṇe, \"to meet\"). As भेटू it means \"let's meet / (we) will meet\" — the hopeful, forward-looking mood you want in a goodbye. It is a native Marathi verb (the bheṭ- stem also gives bheṭ, \"a meeting, a visit\")."
+              "text": "माझं (mājhaṁ, \"my\") sits on the first-person root ma- — the very root behind English me, my, mine, Latin meus, and Hindi merā. One tiny syllable, ma, marks \"belonging to me\" across the whole Indo-European family."
             }
           ]
         },
         {
           "index": 3,
           "type": "grammar",
-          "title": "Grammar Lens: one verb, first-person-plural wish",
+          "title": "Grammar Lens: \"my\" agrees in three genders",
           "segments": [
             {
               "kind": "speech",
-              "text": "भेटू carries a built-in \"we/let's\" — no separate word for \"we\" is needed, the verb form says it. This is the same -ū ending you'll feel in other \"let's ___\" verbs. Unlike the present tense (yeto/yete), this future-wish form does not split by gender — men and women both say bheṭū."
+              "text": "Marathi keeps three genders, and \"my\" picks its ending from the noun: माझा (mājhā, masculine), माझी (mājhī, feminine), माझं (mājhaṁ, neuter). The word नाव (nāv, \"name\") is neuter, so \"my name\" is माझं नाव (mājhaṁ nāv). You met this gender-agreement idea already with the goodbye yeto/yete; it runs through the whole language."
             }
           ]
         },
@@ -220,20 +220,20 @@
             {
               "kind": "prompt",
               "action": "SAY",
-              "instruction": "\"bheṭū\" — (we'll) meet",
+              "instruction": "\"mājhā / mājhī / mājhaṁ\" — the three genders of \"my\"",
               "spoken": true,
               "scored": false,
               "responseSeconds": 8,
-              "source": "[YOU SAY: \"bheṭū\" — (we'll) meet]"
+              "source": "[YOU SAY: \"mājhā / mājhī / mājhaṁ\" — the three genders of \"my\"]"
             },
             {
               "kind": "prompt",
               "action": "SAY",
-              "instruction": "the fuller verb it comes from (bheṭṇe, to meet)",
+              "instruction": "\"mājhaṁ nāv\" — my name (neuter, to match nāv)",
               "spoken": true,
               "scored": false,
               "responseSeconds": 8,
-              "source": "[YOU SAY: the fuller verb it comes from (*bheṭṇe*, to meet)]"
+              "source": "[YOU SAY: \"mājhaṁ nāv\" — my name (neuter, to match *nāv*)]"
             }
           ]
         },
@@ -250,26 +250,151 @@
             },
             {
               "kind": "speech",
-              "text": "What does bheṭū pack into one word? (\"(we/let's) will meet\" — the \"we\" lives in the verb ending.)"
+              "text": "Why is \"my name\" mājhaṁ nāv and not mājhā nāv? (nāv is neuter, so \"my\" takes the neuter form mājhaṁ.)"
             }
           ]
         }
       ]
     },
     {
-      "id": "MR-C04-punha-bhetu",
-      "sequence": 125,
-      "title": "पुन्हा भेटू (punhā bheṭū) — \"see you again\"",
-      "headword": "पुन्हा भेटू",
+      "id": "MR-C02-aahe",
+      "sequence": 70,
+      "title": "आहे (āhe) — \"is\"",
+      "headword": "आहे",
       "romanization": "",
-      "gloss": "see you again (punhā bheṭū)",
+      "gloss": "is (āhe)",
+      "script": "devanagari",
+      "modality": "sight",
+      "derivedModality": "sight",
+      "modalityReasons": [
+        "script-block"
+      ],
+      "sourceHash": "fnv1a64:121161f4d6e48ee4",
+      "notice": {
+        "modality": "sight",
+        "needs": [
+          "your eyes, for letter shapes on the page"
+        ],
+        "waitUntilStopped": [
+          "The letters in this word"
+        ],
+        "text": "Before we start: this one needs your eyes, so it is not fully a driving lesson. You will want your eyes, for letter shapes on the page. You can listen to everything else now — leave the section called The letters in this word until you have stopped, and I will say so again when we reach it."
+      },
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "The little verb that finishes almost every Marathi sentence about what something is — and, in Marathi, it comes last."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "script",
+          "title": "The letters in this word",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "(Skim if you read Devanagari.) आ (ā, the standalone long-ā vowel, used when a word begins with a vowel) + हे (he) becomes आहे āhe."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "आहे (āhe, \"is\") descends from Sanskrit अस्ति (ásti, \"is\"), on the root √as (\"to be\"). That same √as / PIE h₁es- is the ancestor of Latin est, German ist, and English is itself — the deepest, oldest verb in the family, worn down to āhe in Marathi."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "grammar",
+          "title": "Grammar Lens: the verb goes last",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "Marathi is a subject–object–verb language: \"my name Mira is.\" The copula आहे sits at the end, where English puts it in the middle. It changes with the subject — you will meet आहेस (āhes, \"you are\") and आहात (āhāt, \"you are,\" respectful) in Chapter 5."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "\"āhe\" — is",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: \"āhe\" — is]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "the English cousin from the same root (\"is\")",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: the English cousin from the same root (\"is\")]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Where does āhe sit in a Marathi sentence, and what English word is its cousin? (At the end; English is, both from √as.)"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "MR-C02-majhe-naav-aahe",
+      "sequence": 75,
+      "title": "माझं नाव … आहे (mājhaṁ nāv … āhe) — \"my name is…\"",
+      "headword": "माझं नाव … आहे",
+      "romanization": "",
+      "gloss": "my name is… (mājhaṁ nāv … āhe)",
       "script": "devanagari",
       "modality": "voice",
       "derivedModality": "voice",
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:5465c238a230cb42",
+      "sourceHash": "fnv1a64:f64dd8b1d7a1678b",
       "notice": null,
       "blocks": [
         {
@@ -285,7 +410,7 @@
             },
             {
               "kind": "speech",
-              "text": "Assemble the two atoms into the standard warm goodbye."
+              "text": "Now assemble the three atoms you just met into your first full sentence about yourself."
             }
           ]
         },
@@ -296,11 +421,23 @@
           "segments": [
             {
               "kind": "speech",
-              "text": "पुन्हा (punhā, again) + भेटू (bheṭū, we'll meet) becomes पुन्हा भेटू — \"we'll meet again.\" Two words, and the whole promise of return is spoken."
+              "text": "माझं (mājhaṁ, my) + नाव (nāv, name) + [your name] + आहे (āhe, is) becomes माझं नाव मीरा आहे (mājhaṁ nāv Mīrā āhe) — \"my name is Mira.\""
             },
             {
               "kind": "speech",
-              "text": "This is the fuller, explicit twin of Chapter 2's येतो (yeto, \"I'll come [again]\"). Both refuse a final \"farewell\": one says I'll come back, the other we'll meet again — the subcontinent's shared goodbye-as-promise (Hindi phir milenge, Bengali āshi, Tamil pōy varugiṟēṉ)."
+              "text": "Notice the shape:"
+            },
+            {
+              "kind": "speech",
+              "text": "माझं is neuter, agreeing with the neuter नाव."
+            },
+            {
+              "kind": "speech",
+              "text": "The verb आहे comes last — \"my name Mira is.\""
+            },
+            {
+              "kind": "speech",
+              "text": "A man or a woman says it the same way here; the gender lived in mājhaṁ (matching nāv), which is settled."
             }
           ]
         },
@@ -311,7 +448,7 @@
           "segments": [
             {
               "kind": "speech",
-              "text": "You can stack them for warmth: येतो, पुन्हा भेटू (yeto, punhā bheṭū) — \"I'll be going; we'll meet again.\" Neither word contains \"goodbye\"; the parting is all return."
+              "text": "Marathi drops nothing and reorders everything to English eyes: possessor, thing, value, then is. Learn this frame and you can swap in any name — or, later, any fact about yourself."
             }
           ]
         },
@@ -329,20 +466,20 @@
             {
               "kind": "prompt",
               "action": "SAY",
-              "instruction": "\"punhā bheṭū\" — see you again",
+              "instruction": "\"mājhaṁ nāv Mīrā āhe\" — my name is Mira",
               "spoken": true,
               "scored": false,
               "responseSeconds": 8,
-              "source": "[YOU SAY: \"punhā bheṭū\" — see you again]"
+              "source": "[YOU SAY: \"mājhaṁ nāv Mīrā āhe\" — my name is Mira]"
             },
             {
               "kind": "prompt",
               "action": "SAY",
-              "instruction": "it stacked with the Chapter-1 goodbye (yeto, punhā bheṭū)",
+              "instruction": "it with your own name in the blank",
               "spoken": true,
               "scored": false,
               "responseSeconds": 8,
-              "source": "[YOU SAY: it stacked with the Chapter-1 goodbye (*yeto, punhā bheṭū*)]"
+              "source": "[YOU SAY: it with your own name in the blank]"
             }
           ]
         },
@@ -359,26 +496,26 @@
             },
             {
               "kind": "speech",
-              "text": "What does punhā bheṭū literally promise? (\"We'll meet again\" — return, not farewell.)"
+              "text": "Put \"my name is Arun\" into Marathi. (mājhaṁ nāv Arun āhe.)"
             }
           ]
         }
       ]
     },
     {
-      "id": "MR-C04-udya-bhetu",
-      "sequence": 130,
-      "title": "उद्या भेटू (udyā bheṭū) — \"see you tomorrow\"",
-      "headword": "उद्या भेटू",
+      "id": "MR-C02-tu-tumhi",
+      "sequence": 80,
+      "title": "तू / तुम्ही (tū / tumhī) — \"you\"",
+      "headword": "तू / तुम्ही",
       "romanization": "",
-      "gloss": "see you tomorrow (udyā bheṭū)",
+      "gloss": "you (tū familiar / tumhī respectful)",
       "script": "devanagari",
       "modality": "sight",
       "derivedModality": "sight",
       "modalityReasons": [
         "script-block"
       ],
-      "sourceHash": "fnv1a64:83fcac3954db36c3",
+      "sourceHash": "fnv1a64:2ab2d25b9c2a695f",
       "notice": {
         "modality": "sight",
         "needs": [
@@ -403,7 +540,7 @@
             },
             {
               "kind": "speech",
-              "text": "Swap \"again\" for \"tomorrow\" and you have a dated goodbye."
+              "text": "Before you can ask someone their name, you need \"you\" — and Marathi gives you two, one warm, one respectful."
             }
           ]
         },
@@ -414,33 +551,37 @@
           "segments": [
             {
               "kind": "speech",
-              "text": "(Skim if you read Devanagari.) उ (u, standalone vowel) + द्या (dyā, द da joined by a halant to य ya with the long-ā stroke) becomes उद्या udyā."
+              "text": "(Skim if you read Devanagari.) तू (tū, the त ta with the long-u stroke ू). And तुम्ही (tumhī): तु + म्ही (mhī, the म ma with a halant joining ह ha)."
             }
           ]
         },
         {
           "index": 2,
-          "type": "unknown",
-          "title": "The phrase, assembled",
+          "type": "etymology",
+          "title": "The word, taken apart",
           "segments": [
             {
               "kind": "speech",
-              "text": "उद्या (udyā, \"tomorrow\") + भेटू (bheṭū, we'll meet) becomes उद्या भेटू — \"we'll meet tomorrow.\""
-            },
-            {
-              "kind": "speech",
-              "text": "उद्या comes from Sanskrit श्वः (śvaḥ) by way of a later udya-; unlike Hindi's kal (which means both tomorrow and yesterday), Marathi keeps tomorrow and yesterday as two distinct words — udyā (tomorrow) vs. काल (kāl, yesterday). No ambiguity about which way time is pointing."
+              "text": "तू (tū, familiar \"you\") comes from Sanskrit त्वम् (tvam), from PIE tū — the very root of English archaic thou, Latin tū, French tu, and Hindi tū. The respectful तुम्ही (tumhī) is grammatically plural: you honour one person by addressing them as many, exactly as French does with vous. It takes the plural verb आहात (āhāt), not āhes."
             }
           ]
         },
         {
           "index": 3,
-          "type": "culture-pragmatics",
-          "title": "Why it's said this way",
+          "type": "grammar",
+          "title": "Grammar Lens: two \"you\"s, a choice of respect",
           "segments": [
             {
               "kind": "speech",
-              "text": "Because bheṭū already carries the future wish, you simply front it with when: udyā bheṭū (tomorrow), punhā bheṭū (again). The verb does the tense; the first word sets the day."
+              "text": "तू (tū) — a friend, a child, someone close."
+            },
+            {
+              "kind": "speech",
+              "text": "तुम्ही (tumhī) — an elder, a stranger, anyone you show courtesy to."
+            },
+            {
+              "kind": "speech",
+              "text": "Choosing between them is a small act of politeness Marathi makes you perform every time you speak to someone."
             }
           ]
         },
@@ -458,20 +599,20 @@
             {
               "kind": "prompt",
               "action": "SAY",
-              "instruction": "\"udyā bheṭū\" — see you tomorrow",
+              "instruction": "\"tū\" (close) / \"tumhī\" (respectful)",
               "spoken": true,
               "scored": false,
               "responseSeconds": 8,
-              "source": "[YOU SAY: \"udyā bheṭū\" — see you tomorrow]"
+              "source": "[YOU SAY: \"tū\" (close) / \"tumhī\" (respectful)]"
             },
             {
               "kind": "prompt",
               "action": "SAY",
-              "instruction": "the tomorrow/yesterday pair Marathi keeps apart (udyā / kāl)",
+              "instruction": "the English cousin of tū (\"thou\")",
               "spoken": true,
               "scored": false,
               "responseSeconds": 8,
-              "source": "[YOU SAY: the tomorrow/yesterday pair Marathi keeps apart (*udyā / kāl*)]"
+              "source": "[YOU SAY: the English cousin of *tū* (\"thou\")]"
             }
           ]
         },
@@ -488,26 +629,26 @@
             },
             {
               "kind": "speech",
-              "text": "How does Marathi's udyā differ from Hindi's kal? (udyā is only \"tomorrow\"; Marathi uses a separate word kāl for \"yesterday.\")"
+              "text": "Which \"you\" for a teacher, and why? (tumhī — the respectful plural, courtesy-by-plural like French vous.)"
             }
           ]
         }
       ]
     },
     {
-      "id": "MR-C04-kalji-ghya",
-      "sequence": 135,
-      "title": "काळजी घ्या (kāḷjī ghyā) — \"take care\"",
-      "headword": "काळजी घ्या",
+      "id": "MR-C02-kaay",
+      "sequence": 85,
+      "title": "काय (kāy) — \"what\"",
+      "headword": "काय",
       "romanization": "",
-      "gloss": "take care (kāḷjī ghyā)",
+      "gloss": "what (kāy)",
       "script": "devanagari",
       "modality": "sight",
       "derivedModality": "sight",
       "modalityReasons": [
         "script-block"
       ],
-      "sourceHash": "fnv1a64:7a413a1afd407d0b",
+      "sourceHash": "fnv1a64:ee3bcb2a21f4cb89",
       "notice": {
         "modality": "sight",
         "needs": [
@@ -532,7 +673,7 @@
             },
             {
               "kind": "speech",
-              "text": "One last, tender goodbye — the Marathi \"take care,\" and with it a letter unique to Marathi's corner of Devanagari."
+              "text": "One more atom before the question \"what's your name?\" — the word what itself."
             }
           ]
         },
@@ -543,18 +684,18 @@
           "segments": [
             {
               "kind": "speech",
-              "text": "(Skim if you read Devanagari.) काळजी carries the letter ळ (ḷa) — a retroflex \"l,\" the tongue curled back. Standard Hindi dropped this sound; Marathi (like the Dravidian south and Gujarati) keeps it, and it appears in many everyday Marathi words. का + ळ + जी becomes kāḷjī. Then घ्या (ghyā, \"take,\" respectful)."
+              "text": "(Skim if you read Devanagari.) का (kā) + य (ya) becomes काय kāy."
             }
           ]
         },
         {
           "index": 2,
-          "type": "unknown",
-          "title": "The phrase, assembled",
+          "type": "etymology",
+          "title": "The word, taken apart",
           "segments": [
             {
               "kind": "speech",
-              "text": "काळजी (kāḷjī, \"care, concern\") + घ्या (ghyā, \"take,\" the respectful imperative) becomes काळजी घ्या — \"take care.\" To a friend, the familiar imperative: काळजी घे (kāḷjī ghe)."
+              "text": "काय (kāy, \"what\") grows from the ancient interrogative stem ka-, from PIE kʷo- — the very root behind English wh- words (what, who, when, where, why) and Latin qu- (quis, quid). Marathi keeps the k- plainly across its whole question family: काय (kāy, what), कोण (koṇ, who), कुठे (kuṭhe, where), का (kā, why), कसं (kasaṁ, how — Chapter 6). Learn to hear that opening k- and you can spot a Marathi question coming."
             }
           ]
         },
@@ -565,7 +706,7 @@
           "segments": [
             {
               "kind": "speech",
-              "text": "Where punhā bheṭū looks ahead to the next meeting, kāḷjī ghyā looks after the person in between — \"mind yourself until then.\" The respectful घ्या (ghyā) matches the तुम्ही register from Chapter 3; the familiar घे (ghe) matches तू."
+              "text": "English wh-, Latin qu-, and Marathi k- are three coats on one 5,000-year-old question-root — the family resemblance survives the different spellings."
             }
           ]
         },
@@ -583,20 +724,20 @@
             {
               "kind": "prompt",
               "action": "SAY",
-              "instruction": "\"kāḷjī ghyā\" (respectful) / \"kāḷjī ghe\" (to a friend)",
+              "instruction": "\"kāy\" — what",
               "spoken": true,
               "scored": false,
               "responseSeconds": 8,
-              "source": "[YOU SAY: \"kāḷjī ghyā\" (respectful) / \"kāḷjī ghe\" (to a friend)]"
+              "source": "[YOU SAY: \"kāy\" — what]"
             },
             {
               "kind": "prompt",
               "action": "SAY",
-              "instruction": "the retroflex ळ (ḷa) Marathi keeps that Hindi lost",
+              "instruction": "three more Marathi k- questions (koṇ, kuṭhe, kā)",
               "spoken": true,
               "scored": false,
               "responseSeconds": 8,
-              "source": "[YOU SAY: the retroflex ळ (*ḷa*) Marathi keeps that Hindi lost]"
+              "source": "[YOU SAY: three more Marathi *k-* questions (*koṇ, kuṭhe, kā*)]"
             }
           ]
         },
@@ -613,26 +754,267 @@
             },
             {
               "kind": "speech",
-              "text": "Which special Marathi letter sits in kāḷjī, and who else keeps it? (The retroflex ळ ḷa; also kept by the Dravidian languages and Gujarati.)"
+              "text": "What do Marathi kāy, English what, and Latin quid share? (One PIE question-root kʷo-.)"
             }
           ]
         }
       ]
     },
     {
-      "id": "MR-C04-practice",
-      "sequence": 140,
-      "title": "Chapter 5 recap — farewells",
+      "id": "MR-C02-tumche-naav-kaay-aahe",
+      "sequence": 90,
+      "title": "तुमचं नाव काय आहे? (tumchaṁ nāv kāy āhe?) — \"what's your name?\"",
+      "headword": "तुमचं नाव काय आहे?",
+      "romanization": "",
+      "gloss": "what's your name? (tumchaṁ nāv kāy āhe?)",
+      "script": "devanagari",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:ea7939a9386d6cba",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Now turn the question outward — ask someone else's name."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "unknown",
+          "title": "The phrase, assembled",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "तुमचं (tumchaṁ, \"your,\" neuter to match nāv) + नाव (nāv, name) + काय (kāy, what) + आहे (āhe, is) becomes तुमचं नाव काय आहे? — literally \"your name what is?\", verb last."
+            },
+            {
+              "kind": "speech",
+              "text": "The \"your\" mirrors the \"my\" set you learned:"
+            },
+            {
+              "kind": "speech",
+              "text": "माझं (mājhaṁ) — my."
+            },
+            {
+              "kind": "speech",
+              "text": "तुमचं (tumchaṁ) — your (respectful, from tumhī)."
+            },
+            {
+              "kind": "speech",
+              "text": "तुझं (tujhaṁ) — your (familiar, from tū)."
+            },
+            {
+              "kind": "speech",
+              "text": "All three are shown here in the neuter, agreeing with the neuter नाव (nāv)."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "culture-pragmatics",
+          "title": "Why it's said this way",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "To a friend you would say तुझं नाव काय आहे? (tujhaṁ nāv kāy āhe?), swapping the respectful tumchaṁ for the familiar tujhaṁ — the same tū / tumhī choice of respect, now on the possessive."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "\"tumchaṁ nāv kāy āhe?\" — what's your name? (respectful)",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: \"tumchaṁ nāv kāy āhe?\" — what's your name? (respectful)]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "the familiar version (tujhaṁ nāv kāy āhe?)",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: the familiar version (*tujhaṁ nāv kāy āhe?*)]"
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Give the respectful and familiar \"your name\" forms. (tumchaṁ / tujhaṁ — both neuter before nāv.)"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "MR-C02-anand",
+      "sequence": 95,
+      "title": "भेटून आनंद झाला (bheṭūn ānand jhālā) — \"pleased to meet you\"",
+      "headword": "भेटून आनंद झाला",
+      "romanization": "",
+      "gloss": "pleased to meet you (bheṭūn ānand jhālā)",
+      "script": "devanagari",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:15b70c478bebe8f9",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Names exchanged — now the warm close of a first meeting."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "unknown",
+          "title": "The phrase, assembled",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "भेटून (bheṭūn, \"having met\") + आनंद (ānand, \"joy\") + झाला (jhālā, \"happened\") becomes literally \"having met [you], joy happened.\" Marathi does not say \"I am pleased\"; it says the joy itself occurred."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "The heart of it is आनंद (ānand, \"joy, bliss\"), pure Sanskrit: आ- (ā-, \"fully\") + नन्द (nand, \"to rejoice\"). It is the ānanda of the scriptural phrase sat-cit-ānanda (\"being–consciousness–bliss\") — and one of the most common given names across India. So a Marathi speaker meets you and names the feeling joy."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "culture-pragmatics",
+          "title": "Why it's said this way",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "The verb झाला (jhālā, \"happened/became\") also carries gender — jhālā by default here for the event ānand. And भेटून (bheṭūn) is built on भेटणे (bheṭṇe, \"to meet\") — a verb you will meet again in Chapter 7's goodbye, punhā bheṭū (\"we'll meet again\")."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "\"bheṭūn ānand jhālā\" — pleased to meet you",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: \"bheṭūn ānand jhālā\" — pleased to meet you]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "what ānand literally means (\"joy\")",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: what *ānand* literally means (\"joy\")]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Literally, what does a Marathi speaker say when meeting you? (\"Having met you, joy happened\" — bheṭūn ānand jhālā.)"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "MR-C02-practice",
+      "sequence": 100,
+      "title": "Chapter 5 recap — introducing yourself",
       "headword": "(recap)",
       "romanization": "",
-      "gloss": "Chapter 5 recap — farewells",
+      "gloss": "Chapter 5 recap — introducing yourself",
       "script": "devanagari",
       "modality": "voice",
       "derivedModality": "voice",
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:555d999957d990bc",
+      "sourceHash": "fnv1a64:6caf1f4491f5251e",
       "notice": null,
       "blocks": [
         {
@@ -648,14 +1030,14 @@
             },
             {
               "kind": "speech",
-              "text": "The parting words, together — none of them a bare \"goodbye.\""
+              "text": "Run the whole first exchange, atom by atom, then whole."
             }
           ]
         },
         {
           "index": 1,
           "type": "unknown",
-          "title": "The farewells",
+          "title": "The whole exchange",
           "segments": [
             {
               "kind": "table",
@@ -667,10 +1049,10 @@
               "columns": 3,
               "rowCount": 4,
               "utterances": [
-                "Marathi: येतो / येते. Say it: yeto / yete. English: I'll be going. (\"I come again\").",
-                "Marathi: पुन्हा भेटू. Say it: punhā bheṭū. English: See you again.",
-                "Marathi: उद्या भेटू. Say it: udyā bheṭū. English: See you tomorrow.",
-                "Marathi: काळजी घ्या. Say it: kāḷjī ghyā. English: Take care."
+                "Marathi: माझं नाव मीरा आहे. Say it: mājhaṁ nāv Mīrā āhe. English: My name is Mira.",
+                "Marathi: तुमचं नाव काय आहे? Say it: tumchaṁ nāv kāy āhe? English: What's your name?",
+                "Marathi: माझं नाव अरुण आहे. Say it: mājhaṁ nāv Aruṇ āhe. English: My name is Arun.",
+                "Marathi: भेटून आनंद झाला. Say it: bheṭūn ānand jhālā. English: Pleased to meet you."
               ]
             }
           ]
@@ -682,23 +1064,27 @@
           "segments": [
             {
               "kind": "speech",
-              "text": "पुन्हा (punhā) — again; Sanskrit punar."
+              "text": "नाव (nāv) — name; Sanskrit nāman becomes English name (the m softened to v in Marathi)."
             },
             {
               "kind": "speech",
-              "text": "भेटू (bheṭū) — (we'll) meet; the \"we\" lives in the verb; from bheṭṇe."
+              "text": "माझं (mājhaṁ) — my; root ma- becomes English me/my; three genders mājhā/mājhī/mājhaṁ."
             },
             {
               "kind": "speech",
-              "text": "उद्या (udyā) — tomorrow (distinct from kāl, yesterday)."
+              "text": "आहे (āhe) — is; Sanskrit ásti (√as) becomes English is; the verb comes last."
             },
             {
               "kind": "speech",
-              "text": "काळजी घ्या (kāḷjī ghyā) — take care; the retroflex ळ Marathi keeps."
+              "text": "तू / तुम्ही (tū / tumhī) — familiar / respectful \"you\"; tū becomes thou; courtesy-by-plural."
             },
             {
               "kind": "speech",
-              "text": "Register: घ्या (ghyā, respectful) vs घे (ghe, familiar) — the tumhī / tū choice again."
+              "text": "काय (kāy) — what; PIE kʷo-, the k- question family."
+            },
+            {
+              "kind": "speech",
+              "text": "आनंद (ānand) — joy; Sanskrit ānanda."
             }
           ]
         },
@@ -716,20 +1102,20 @@
             {
               "kind": "prompt",
               "action": "SAY",
-              "instruction": "all four farewells in a row",
+              "instruction": "the full four-line exchange, both parts",
               "spoken": true,
               "scored": false,
               "responseSeconds": 8,
-              "source": "[YOU SAY: all four farewells in a row]"
+              "source": "[YOU SAY: the full four-line exchange, both parts]"
             },
             {
               "kind": "prompt",
               "action": "SAY",
-              "instruction": "a stacked goodbye — yeto, punhā bheṭū, kāḷjī ghyā",
+              "instruction": "\"my name is [you]\" and \"what's your name?\" to a friend (tujhaṁ)",
               "spoken": true,
               "scored": false,
               "responseSeconds": 8,
-              "source": "[YOU SAY: a stacked goodbye — *yeto, punhā bheṭū, kāḷjī ghyā*]"
+              "source": "[YOU SAY: \"my name is [you]\" and \"what's your name?\" to a friend (*tujhaṁ*)]"
             }
           ]
         },
@@ -746,7 +1132,7 @@
             },
             {
               "kind": "speech",
-              "text": "What do every Marathi goodbye have in common? (None says \"farewell\" — each is a return or a caring wish.) Next chapter: the first real verbs — mī marāṭhī bolto."
+              "text": "What two Marathi distinctives showed up again this chapter? (Three genders on mājhaṁ; the verb āhe going last.) Next chapter: tumhī kase āhāt? — \"how are you?\""
             }
           ]
         }

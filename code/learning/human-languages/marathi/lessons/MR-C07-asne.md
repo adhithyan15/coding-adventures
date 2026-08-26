@@ -2,8 +2,8 @@
 schema_version: 2
 id: MR-C07-asne
 spine_node: SPINE-SAY-WHAT-I-DO
-sequence: 360
-chapter: 8
+sequence: 380
+chapter: 10
 type: word
 headword: असणे
 romanization: asṇe

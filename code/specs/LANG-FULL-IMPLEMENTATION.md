@@ -975,8 +975,10 @@ backend immediately) come before the enabler-dependent items.
   even, including grouped literal-only unit products, quotients, and bounded
   powers. The bounded unrolled power path also yields an exact positive unit
   for a finite literal-only numeric base, including grouped arithmetic, with a
-  complete zero exponent chain. Odd-sign chains, dynamic or non-finite power
-  bases, non-unit operands, and division by a selector remain conservative.
+  complete zero exponent chain. Such a chain may contain bounded nonnegative
+  integral real literals as well as integer literals. Odd-sign chains, dynamic
+  or non-finite power bases, non-unit operands, and division by a selector
+  remain conservative.
   Subtraction of positive numeric zero is also preserving, including
   left-associative chains, as is addition of negative real zero, because each
   retains the sign bit of negative zero. Literal-only grouped zero sums,

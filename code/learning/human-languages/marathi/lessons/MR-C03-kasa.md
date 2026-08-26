@@ -1,7 +1,7 @@
 ---
 id: MR-C03-kasa
-sequence: 85
-chapter: 4
+sequence: 105
+chapter: 6
 type: word
 headword: कसा / कशी / कसं
 gloss: how (kasā m. / kaśī f. / kasaṁ n.)
