@@ -161,7 +161,23 @@ a suffix chain of any length (not just exactly one), the same
 built once); `grid[i][j] += v;`/`grid[i][j]++;` route through a new
 shared `hoist_indexed_target` helper generalizing task #59's own
 single-suffix once-only-evaluation temp-binding shape to N suffixes.
-Bare (unlabeled) `break`/`continue`
+**M5 (task #67)** adds a qualified *static* method call self-reference,
+`ClassName.staticMethod(args)`, where `ClassName` is literally the one
+class this compilation unit declares — a new `Lowerer::class_name`
+(captured once in `lower_program`) confirms the qualifier really is a
+self-reference, and a new `MethodSig::is_static` (set from a method
+declaration's own `static` modifier) confirms the resolved method isn't
+an instance method, rejecting `ClassName.instanceMethod()` the way real
+Java does. Per `semantic-ir`'s own `Expr::VirtualCall` doc comment, a
+*static* call needs no new SIR node — it's an ordinary `Expr::DirectCall`
+against a mangled top-level identity — so once both checks pass, this
+reuses M3a's existing `method_signatures`/`lower_call_arguments` path
+completely unchanged, just reached through a qualified suffix chain.
+`ClassName.field` (static *field* access) and any external/JDK static
+(`Math.abs(...)`, `System.out`) remain out of scope — the former needs
+field declarations and a new SIR field-access node that don't exist yet
+(deferred to alongside a future M6), the latter has no import/library-
+catalog concept to resolve against at all. Bare (unlabeled) `break`/`continue`
 now lower to `Stmt::Break`/`Stmt::Continue` (`Feature::LoopControl`,
 task #64) inside any of `while`/`do`-`while`/classic-`for`/enhanced-`for`
 — a `Lowerer::loop_depth` counter rejects one outside any loop with a
@@ -220,8 +236,11 @@ Everything else — `switch`
 not assumed — so this needs its own spec-level design decision before
 any frontend can target it, tracked as task #51; `break`/`continue`
 themselves are supported as of task #64, see below), a labeled `break`/
-`continue` (SIR has no loop-label vocabulary at all), qualified calls
-(`x.foo(...)`), method overloading, an early
+`continue` (SIR has no loop-label vocabulary at all), an *instance*-
+qualified call (`x.foo(...)`) or any qualifier other than this
+compilation unit's own class name (`ClassName.staticMethod(args)` on
+*this* class IS supported as of task #67/M5, see below), method
+overloading, an early
 or branched `return` (in a method *or* a lambda), untyped/`var`-inferred
 lambda parameters (Java infers these from the lambda's own target
 functional-interface type, which this frontend has no visibility into —
@@ -303,7 +322,13 @@ JV02 spec's milestone table for what comes next.
   value-kind-mismatch and beyond-array-dimension rejection, and once-
   only-evaluation temp-binding shapes for both compound-assignment and
   incdec on a chained target, mirroring task #59's own single-suffix
-  regression tests), and task #54's own indirect-call
+  regression tests), task #67's own qualified-static-call shapes (a
+  static method call on this compilation unit's own class lowering to
+  the same `Expr::DirectCall` shape as an unqualified call, a void
+  static call as a bare statement, rejection of a qualifier that isn't
+  this class's own name, rejection of a call to an unknown method on
+  this class, and rejection of a qualified call to a non-`static`
+  method), and task #54's own indirect-call
   shapes (zero/single/multi-argument calls with correct argument order,
   the call's own result kind usable in a further expression, a non-main
   method's own local lambda invocation, a captured closure invoked from
