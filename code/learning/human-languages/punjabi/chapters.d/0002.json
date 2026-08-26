@@ -9,8 +9,19 @@
   "payoff": {
     "lesson": "PA-C02-practice",
     "kind": "task",
-    "summary": "Complete PA-C02-practice, the canonical closing checkpoint, and demonstrate the chapter promise: introduce myself in Punjabi, give my name, and understand the other person's name.",
-    "assesses": [],
-    "note": "This legacy schema-v1 chapter has no typed knowledge atoms yet. The payoff is anchored to real canonical lesson content, but its representativeness remains authored rather than atom-scored until migration."
+    "summary": "Complete separate oral listening and speaking checks for a respectful Punjabi introduction. Independent Gurmukhi reading and writing remain explicitly blocked until #13068 teaches the forms; romanization earns no script credit.",
+    "assesses": [
+      "PA-LEX-NAAM-02",
+      "PA-LEX-MERA-02",
+      "PA-LEX-HAI-02",
+      "PA-GRAMMAR-VERB-LAST-02",
+      "PA-PHRASE-MY-NAME-02",
+      "PA-LEX-YOU-REGISTER-02",
+      "PA-LEX-KI-02",
+      "PA-PHRASE-YOUR-NAME-02",
+      "PA-PHRASE-KHUSHI-HOI-02",
+      "PA-ETYMON-KHUSH-PERSIAN-02"
+    ],
+    "note": "This migrated chapter measures its real oral capability without claiming untaught Gurmukhi production. Issue #13068 owns the prerequisite script and writing runway."
   }
 }

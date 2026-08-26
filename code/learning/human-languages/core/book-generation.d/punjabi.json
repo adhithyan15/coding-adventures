@@ -33,6 +33,13 @@
     },
     {
       "language": "punjabi",
+      "chapter": 2,
+      "output": "punjabi/book/chapters/ch02-introductions.tex",
+      "unicodeScript": "Gurmukhi",
+      "scriptCommand": "pa"
+    },
+    {
+      "language": "punjabi",
       "chapter": 6,
       "output": "punjabi/book/chapters/ch06-numbers-1-5.tex",
       "unicodeScript": "Gurmukhi",
@@ -96,11 +103,6 @@
     }
   ],
   "handwritten": [
-    {
-      "language": "punjabi",
-      "chapter": 2,
-      "output": "punjabi/book/chapters/ch02-introductions.tex"
-    },
     {
       "language": "punjabi",
       "chapter": 3,

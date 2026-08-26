@@ -2,7 +2,7 @@
   "language": "punjabi",
   "lessonCount": 75,
   "byLevel": {
-    "pre-A1": 51,
+    "pre-A1": 52,
     "A1": 4,
     "A2": 14,
     "B1": 0,
@@ -10,6 +10,6 @@
     "C1": 0,
     "C2": 0
   },
-  "unmapped": 6,
+  "unmapped": 5,
   "reach": "A2"
 }

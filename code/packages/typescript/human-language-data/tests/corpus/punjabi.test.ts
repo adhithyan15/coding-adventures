@@ -47,3 +47,34 @@ it("pins Punjabi's complete pre-A1 writing runway", () => {
     "dictation-transcription",
   ]);
 });
+
+it("migrates Punjabi Chapter 2 without inventing Gurmukhi writing credit", () => {
+  const chapter = loadTrackLessons("punjabi")
+    .sort((left, right) => Number(left.frontmatter.sequence) - Number(right.frontmatter.sequence))
+    .filter((lesson) => lesson.frontmatter.chapter === "2");
+
+  expect(chapter.map((lesson) => lesson.realization.lessonId)).toEqual([
+    "PA-C02-naam",
+    "PA-C02-mera",
+    "PA-C02-hai",
+    "PA-C02-mera-naam-hai",
+    "PA-C02-tu-tusi",
+    "PA-C02-ki",
+    "PA-C02-tuhada-naam-ki-hai",
+    "PA-C02-khushi",
+    "PA-C02-practice",
+  ]);
+  expect(chapter.every((lesson) => lesson.frontmatter.schema_version === "2")).toBe(true);
+  expect(
+    chapter.every(
+      (lesson) => Number(lesson.frontmatter["duration.max_seconds"]) <= 240,
+    ),
+  ).toBe(true);
+  expect(chapter.every((lesson) => lesson.frontmatter.skills?.includes("listening"))).toBe(true);
+  expect(chapter.every((lesson) => lesson.frontmatter.skills?.includes("speaking"))).toBe(true);
+  expect(chapter.every((lesson) => !lesson.frontmatter.skills?.includes("writing"))).toBe(true);
+
+  const payoff = chapter.at(-1)!;
+  expect(payoff.body).toContain("Independent Gurmukhi reading and writing are **not scored here**");
+  expect(payoff.body).toContain("A romanized answer never counts as Gurmukhi writing");
+});
