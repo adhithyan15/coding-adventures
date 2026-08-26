@@ -127,6 +127,8 @@ const MALAYALAM_CHILLU_N = DUCTUS[ductusKey("malayalam", "ൻ")];
 const malayalamChilluNOutline = malayalamOutline("ൻ");
 const MALAYALAM_CHILLU_LL = DUCTUS[ductusKey("malayalam", "ൾ")];
 const malayalamChilluLLOutline = malayalamOutline("ൾ");
+const MALAYALAM_CHILLU_RR = DUCTUS[ductusKey("malayalam", "ർ")];
+const malayalamChilluRROutline = malayalamOutline("ർ");
 const MALAYALAM_ZHA = DUCTUS[ductusKey("malayalam", "ഴ")];
 const malayalamZhaOutline = malayalamOutline("ഴ");
 const KA = DUCTUS["க"];
@@ -1152,6 +1154,30 @@ describe("Malayalam ൾ — one joined run through both bowls and the chillu hoo
     const pen = byTag(last, "path").find((path) => path.attrs.class === "ductus__pen")!;
     expect(done).toHaveLength(0);
     expect(pen.attrs.d).toBe(penPathD(MALAYALAM_CHILLU_LL.strokes[0], 1));
+  });
+});
+
+describe("Malayalam ർ — one joined run through the arch, loop, and chillu hook", () => {
+  const steps = ductusSteps(MALAYALAM_CHILLU_RR);
+  const strip = ductusFilmstrip(MALAYALAM_CHILLU_RR, malayalamChilluRROutline);
+
+  it("keeps every movement in stroke zero without a lift", () => {
+    expect(steps.map((step) => step.startsAfterLift)).toEqual([false, false, false]);
+    expect(steps.map((step) => step.strokeIndex)).toEqual([0, 0, 0]);
+  });
+
+  it("reports three movements in one stroke", () => {
+    expect(strip.frames).toHaveLength(3);
+    expect(strip.penLifts).toBe(0);
+    expect(strip.summary).toBe("one unbroken stroke · 3 movements");
+  });
+
+  it("finishes the one-run path at the above-line hook", () => {
+    const last = strip.frames[2];
+    const done = byTag(last, "path").filter((path) => path.attrs.class === "ductus__done");
+    const pen = byTag(last, "path").find((path) => path.attrs.class === "ductus__pen")!;
+    expect(done).toHaveLength(0);
+    expect(pen.attrs.d).toBe(penPathD(MALAYALAM_CHILLU_RR.strokes[0], 1));
   });
 });
 

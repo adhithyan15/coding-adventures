@@ -53,6 +53,13 @@
   rather than merely excluding path separators — Rollup's filename sanitiser
   leaves `#` and `%`, which produce assets a browser truncates at the fragment.
 
+## Unreleased — source-verified Malayalam chillu RR
+
+- Teach Malayalam **ർ** as one uninterrupted three-movement run from
+  Sriveenkat's 57-frame Gayathri-font stroke-order animation.
+- Close 8 affected realizations, preserve zero lifts in the Noto Sans Malayalam
+  filmstrip, and rerank shared Arabic-family **ش** next at 8.
+
 ## Unreleased — source-verified Malayalam chillu LL
 
 - Teach Malayalam **ൾ** as one uninterrupted four-movement run from
