@@ -11,23 +11,18 @@
     "selection_rule": "host-security, credential, native-runtime, and external-approval work may inform classification but is never selected by this parity loop",
     "excluded_delivery_classes": ["onvif", "host-security-hardening", "native-runtime", "external-approval"]
   },
-  "active_pr": {
-    "number": 13049,
-    "url": "https://github.com/adhithyan15/coding-adventures/pull/13049",
-    "branch": "codex/canonical-cbor-python-lane-parity",
-    "status": "open"
-  },
+  "active_pr": null,
   "last_inventory": {
-    "revision": "848f43c20b4d30544a3d9f9c50ae4a10c6e2b63d",
+    "revision": "c04af4ec8c9db002a651e349af726e391650c253",
     "schema_version": 3,
     "established_languages": 15,
     "implementation_identities": 1373,
-    "implementation_package_slots": 4571,
+    "implementation_package_slots": 4572,
     "all_reported_identities": 1412,
     "high_consensus_packages": 175,
     "high_consensus_missing_slots": 276,
     "five_to_nine_packages": 123,
-    "five_to_nine_missing_slots": 935,
+    "five_to_nine_missing_slots": 934,
     "two_to_four_packages": 166,
     "two_to_four_missing_slots": 2087,
     "singleton_packages": 909,
@@ -1575,11 +1570,15 @@
     {
       "id": "java-kotlin-high-consensus-lz78-deflate-state-machine",
       "title": "Port lz78, deflate, and state-machine to Java and Kotlin",
-      "status": "pending",
+      "status": "in-progress",
       "depends_on": [],
-      "branch": null,
+      "branch": "codex/java-kotlin-lz78-deflate-state-machine-parity",
       "pr_number": null,
-      "notes": "Discovered in the collision-checked 848f43c20b post-merge inventory. Each identity is present in thirteen established lanes and missing only Java and Kotlin, so one paired-JVM tranche adds six portable slots and completes all three identities while sharing one toolchain and cross-lane fixture review."
+      "selection_revision": "c04af4ec8c9db002a651e349af726e391650c253",
+      "selection_notes": "Selected only after PR #13049 completed all 41 terminal acceptable checks, GitHub reported a clean merge state, and squash auto-merge merged reviewed head 18a6fe2f3923bfe33d3111e7c64de1bc6e31344c as c04af4ec8c9db002a651e349af726e391650c253 at 2026-08-26T15:07:41Z without a manual merge command. The exact-main schema-3 report is collision-clean at 15 established lanes, 1,373 implementation identities, 4,572 slots, and 1,412 all-reported identities; bands are 175/276, 123/934, 166/2,087, and 909/12,726, with 720 Rust singletons, zero collisions, zero unknown buckets, and OCaml emerging at zero packages. Nine live PRs are classified outside this portable slice and no other parity PR is active. No additional package identity or ownership gap appeared beyond the expected Python canonical-CBOR slot. This bounded paired-JVM tranche has no unmet dependency, adds six missing slots with one toolchain and shared cross-lane review, completes three 13-of-15 identities, and directly advances the roadmap's high-consensus and Java/Kotlin parity priorities.",
+      "rebase_notes": "Rebased cleanly twice before publication from the c04af4ec8c selection base onto exact origin/main b232ffbfb8e349355a92d987209e85640e36fabb. The intervening W26 table64, Japanese and Gujarati curriculum, Rust Algol literal, and Mermaid Gantt meridiem changes have zero exact candidate-path overlap and add no package identity in this slice. After the first rebase, all six exact BUILD_windows command contracts rebuilt from cleaned outputs and passed their package tests and JaCoCo gates; shared parity/capability tests, the collision-checked inventory, Go build-tool tests, and go vet also passed again. The final Mermaid-only advance was then rechecked for path overlap, diff hygiene, and inventory collisions.",
+      "validation_notes": "The six-package candidate passes 34 Java/Kotlin package tests and every 95% JaCoCo line gate. Java line coverage is 99.10% lz78, 96.25% deflate, and 98.46% state-machine; Kotlin line coverage is 97.78%, 97.70%, and 96.98% respectively. Both BUILD_windows command contracts pass for all six roots. LZ78 matches the published exact token and wire vectors and rejects hostile output lengths before large allocation. DEFLATE uses an in-package package-merge dynamic planner, exact-bit fixed/dynamic selection over one LZSS stream, exact fixed vectors, and independent JDK-inflater round trips. State-machine matches the F01 record surface and semantics, including full end-of-input PDA epsilon traces and modal target reset, with defensive snapshots plus trace, subset, stack, and trace-state-cell budgets. Shared parity/capability validation passes 22 tests and 744 subtests; the Go build tool passes all packages, vet, and a trimpath build. The schema-3 candidate inventory is collision-clean at 1,373 implementation identities, 4,578 slots, and 1,412 all-reported identities; the high-consensus band is 175 identities with 270 gaps, and lz78, deflate, and state-machine are each present in all 15 established lanes. Independent contract, metadata, and security re-reviews are clean after their findings were fixed.",
+      "notes": "Discovered in the collision-checked 848f43c20b post-merge inventory and reconfirmed at c04af4ec8c. Each identity is present in thirteen established lanes and missing only Java and Kotlin, so one paired-JVM tranche adds six portable slots and completes all three identities while sharing one toolchain and cross-lane fixture review."
     },
     {
       "id": "python-parser-self-hosting-applicability",
@@ -3288,7 +3287,7 @@
     {
       "id": "canonical-cbor-python-lane-parity",
       "title": "Port canonical CBOR to Python",
-      "status": "pr-open",
+      "status": "merged",
       "depends_on": ["canonical-cbor-language-neutral-conformance"],
       "branch": "codex/canonical-cbor-python-lane-parity",
       "pr_number": 13049,
@@ -3299,7 +3298,9 @@
       "security_notes": "Two independent read-only reviews found a payload-retaining UnicodeDecodeError chain, hostile unbounded iterable consumption, bytearray-subclass rollback bypass, and one permissive generated-fixture suffix. Focused fixes now raise invalid-UTF8 errors outside the handler, accept only exact list/tuple containers, require an exact built-in bytearray destination, and parse the generated fixture grammar exactly. Both independent re-reviews report no remaining actionable security or CBR01 finding. Bandit 1.8.6 reports zero issues across 477 source lines, required capabilities remain empty, production dependencies remain empty, and the diff contains no credential-like assignments.",
       "pr_opened_at": "2026-08-26T14:26:30Z",
       "pr_opened_head_revision": "e94a3d680e0c70a5d64165d6ec59fed76318e6dc",
-      "publication_notes": "Ready-for-review PR #13049 opened against exact origin/main 5d30513d12e0ece69a083577c342184c24cf9f83 after two clean rebases and full local revalidation. GitHub reports the PR open, non-draft, and mergeable. CI and CodeQL checks are queued, so auto-merge remains disabled and the loop is monitor-only until every required check is terminal and acceptable.",
+      "merged_at": "2026-08-26T15:07:41Z",
+      "merged_revision": "c04af4ec8c9db002a651e349af726e391650c253",
+      "publication_notes": "Ready-for-review PR #13049 opened against exact origin/main 5d30513d12e0ece69a083577c342184c24cf9f83 after two clean rebases and full local revalidation. All 41 final checks completed successfully or acceptably at reviewed head 18a6fe2f3923bfe33d3111e7c64de1bc6e31344c; GitHub reported a clean merge state, auto-merge was enabled, and the PR merged as c04af4ec8c9db002a651e349af726e391650c253 without a manual merge command.",
       "notes": "Implemented the closed canonical-CBOR contract in Python with full uint64 support, canonical map order, strict decoding, bounded atomic encoding, defensive ownership, and every language-neutral case."
     },
     {
