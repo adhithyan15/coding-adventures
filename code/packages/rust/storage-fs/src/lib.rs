@@ -134,7 +134,7 @@ use std::fs::{self, File, OpenOptions};
 use std::io::{self, Read, Write};
 use std::path::{Path, PathBuf};
 use std::sync::atomic::{AtomicBool, AtomicU64, Ordering};
-use std::sync::{Mutex, OnceLock, PoisonError};
+use std::sync::{Arc, Mutex, OnceLock, PoisonError};
 use std::time::{SystemTime, UNIX_EPOCH};
 use storage_core::{
     LeaseToken, Revision, StorageBackend, StorageError, StorageLease, StorageListOptions,
@@ -227,6 +227,34 @@ pub const fn fs_storage_backend_summary() -> FsStorageBackendSummary {
 // 2. Backend struct
 // ─────────────────────────────────────────────────────────────────────
 
+/// Every write lock handed out so far, keyed by store root.
+///
+/// A process-wide registry is what makes the lock mean "this store" rather than
+/// "this handle". Entries are never removed: a root is a path, there are not
+/// many of them in a process, and reclaiming one would reintroduce the race it
+/// exists to prevent if a backend were constructed over it again concurrently.
+static WRITE_LOCKS: Mutex<Option<HashMap<PathBuf, Arc<Mutex<()>>>>> = Mutex::new(None);
+
+/// Return the process-wide write lock for `root`, creating it on first use.
+///
+/// The key is canonicalised when possible so that two spellings of one
+/// directory -- a relative path and its absolute form, or a symlink and its
+/// target -- share a lock. `canonicalize` requires the path to exist, and a
+/// backend may legitimately be constructed before its root does, so an
+/// un-canonicalisable path falls back to its literal form. That fallback is
+/// conservative in the wrong direction for exotic aliasing, which is why the
+/// cross-process caveat below still stands.
+fn write_lock_for_root(root: &Path) -> Arc<Mutex<()>> {
+    let key = fs::canonicalize(root).unwrap_or_else(|_| root.to_path_buf());
+    let mut registry = WRITE_LOCKS.lock().unwrap_or_else(PoisonError::into_inner);
+    Arc::clone(
+        registry
+            .get_or_insert_with(HashMap::new)
+            .entry(key)
+            .or_insert_with(|| Arc::new(Mutex::new(()))),
+    )
+}
+
 /// Distinguishes backend instances within one process.
 ///
 /// The process id separates concurrent processes and the clock separates
@@ -288,9 +316,18 @@ fn new_instance_id() -> Result<String, StorageError> {
 /// got a persistent vault store with crash-safe writes.
 pub struct FsStorageBackend {
     root: PathBuf,
-    /// Mutex serialises all writes within this process; needed so
-    /// the revision counter advances monotonically.
-    write_lock: Mutex<()>,
+    /// Serialises writes to THIS ROOT across the whole process.
+    ///
+    /// Shared, not per-instance, and that distinction is the fix rather than a
+    /// detail. `put` evaluates its `if_absent`/`if_revision` check against a
+    /// read and only then renames; a per-instance mutex excludes nobody else,
+    /// so two backends over one root both passed the check and both wrote.
+    /// `chief-of-staff-daemon` holds exactly that shape -- two
+    /// `FsStorageBackend`s over one state directory.
+    ///
+    /// Keyed by root, so two backends over the same directory contend and two
+    /// over different directories do not.
+    write_lock: Arc<Mutex<()>>,
     /// Distinguishes THIS backend instance's revisions from every other
     /// instance's, over this root or any other.
     ///
@@ -313,6 +350,8 @@ pub struct FsStorageBackend {
     /// needed a revision instead of a panic in a constructor.
     instance: OnceLock<String>,
     revision_counter: AtomicU64,
+    /// Makes each write's temporary file private to that write.
+    tmp_counter: AtomicU64,
     /// Whether the one-time `.tmp` sweep in `initialize()` has completed.
     ///
     /// Per backend instance, so a genuine restart sweeps again -- which is the
@@ -333,11 +372,13 @@ impl FsStorageBackend {
     /// Build a backend rooted at `root`. The directory is created
     /// on first `initialize()` if it doesn't exist.
     pub fn new(root: impl Into<PathBuf>) -> Self {
+        let root = root.into();
         Self {
-            root: root.into(),
-            write_lock: Mutex::new(()),
+            write_lock: write_lock_for_root(&root),
+            root,
             instance: OnceLock::new(),
             revision_counter: AtomicU64::new(0),
+            tmp_counter: AtomicU64::new(0),
             scanned: AtomicBool::new(false),
             leases: Mutex::new(HashMap::new()),
             lease_counter: AtomicU64::new(0),
@@ -391,10 +432,33 @@ impl FsStorageBackend {
         self.ns_dir(namespace).join(hex_encode(key.as_bytes()))
     }
 
-    fn key_tmp_path(&self, namespace: &str, key: &str) -> PathBuf {
-        let mut p = self.key_path(namespace, key);
-        p.set_extension("tmp");
-        p
+    /// Path of a temporary that belongs to exactly ONE write.
+    ///
+    /// This used to be `<key>.tmp` — the same path for every writer of that
+    /// key — and sharing it is a silent-corruption primitive rather than an
+    /// untidy one. Two backends over one root write the same key: A writes its
+    /// temporary, B truncates and rewrites that same temporary, and A then
+    /// renames it into place. The record now holds B's BYTES under A's
+    /// REVISION, which A has already returned to its caller, so every
+    /// `if_revision` guard later taken against that revision protects content
+    /// it was never derived from. Reproduced at 1/40 rounds with 4 MiB bodies.
+    ///
+    /// The name is deliberately NOT derived from the key. A rename is atomic
+    /// only within a directory, so that is all the temporary must share with
+    /// its destination — and hex encoding already doubles a key's length, so
+    /// appending to it overflowed `NAME_MAX` on keys that were fine before
+    /// (`File name too long`, hit by `chief-of-staff-host`). A constant-length
+    /// name sidesteps that, and incidentally fixes the same latent overflow the
+    /// old `<key>.tmp` had for keys near the limit.
+    ///
+    /// The `.tmp` extension is preserved so `initialize`'s sweep still
+    /// recognises these, and the leading `.wr-` cannot collide with a record:
+    /// key filenames are `hex_encode`d, hence `[0-9a-f]` only.
+    fn key_tmp_path(&self, namespace: &str, _key: &str) -> Result<PathBuf, StorageError> {
+        let sequence = self.tmp_counter.fetch_add(1, Ordering::Relaxed);
+        Ok(self
+            .ns_dir(namespace)
+            .join(format!(".wr-{}-{sequence:x}.tmp", self.instance()?)))
     }
 }
 
@@ -856,7 +920,7 @@ impl StorageBackend for FsStorageBackend {
         })?;
 
         let path = self.key_path(&input.namespace, &input.key);
-        let tmp = self.key_tmp_path(&input.namespace, &input.key);
+        let tmp = self.key_tmp_path(&input.namespace, &input.key)?;
 
         // CAS check.
         let existing = read_record_full(&path)?;
@@ -1498,7 +1562,7 @@ mod tests {
         be.initialize().unwrap();
         be.put(put_input("ns", "k", b"v")).unwrap();
         // Manually fabricate a stranded .tmp file.
-        let stranded = be.key_tmp_path("ns", "ghost");
+        let stranded = be.key_tmp_path("ns", "ghost").unwrap();
         fs::create_dir_all(stranded.parent().unwrap()).unwrap();
         fs::write(&stranded, b"partial garbage that should be removed").unwrap();
         assert!(stranded.exists());
@@ -1572,6 +1636,145 @@ mod tests {
             seen.iter().map(|r| r.as_str()).collect::<Vec<_>>()
         );
         let _ = fs::remove_dir_all(&root);
+    }
+
+    #[test]
+    fn two_backends_over_one_root_cannot_both_win_if_absent() {
+        // `if_absent` is a compare-and-swap: exactly one caller may create a
+        // record. `put` honours that under `write_lock` -- but `write_lock` is
+        // PER INSTANCE, so two backends over one root each hold their own and
+        // exclude nobody. Both read "absent", both decide they won, and both
+        // rename over the same path.
+        //
+        // Barrier-aligned and repeated, because a race that only sometimes
+        // loses is still a race. `chief-of-staff-daemon` holds exactly this
+        // shape: two `FsStorageBackend`s over one state directory.
+        use std::sync::mpsc;
+        use std::sync::{Arc, Barrier};
+
+        let mut both_won = 0;
+        const ROUNDS: usize = 40;
+
+        for round in 0..ROUNDS {
+            let root = temp_root();
+            let a = Arc::new(FsStorageBackend::new(&root));
+            let b = Arc::new(FsStorageBackend::new(&root));
+            a.initialize().unwrap();
+            b.initialize().unwrap();
+
+            let barrier = Arc::new(Barrier::new(2));
+            let (tx, rx) = mpsc::channel();
+            let key = format!("contested{round}");
+
+            let handles: Vec<_> = [a, b]
+                .into_iter()
+                .map(|backend| {
+                    let barrier = Arc::clone(&barrier);
+                    let tx = tx.clone();
+                    let key = key.clone();
+                    std::thread::spawn(move || {
+                        let mut input = put_input("ns", &key, b"v");
+                        input.if_absent = true;
+                        barrier.wait();
+                        let _ = tx.send(backend.put(input).is_ok());
+                    })
+                })
+                .collect();
+            for handle in handles {
+                handle.join().unwrap();
+            }
+            drop(tx);
+
+            let winners = rx.iter().filter(|won| *won).count();
+            if winners > 1 {
+                both_won += 1;
+            }
+            let _ = fs::remove_dir_all(&root);
+        }
+
+        assert_eq!(
+            both_won, 0,
+            "{both_won}/{ROUNDS} rounds had TWO winners of one `if_absent` \
+             create; a compare-and-swap that does not exclude is not one"
+        );
+    }
+
+    #[test]
+    fn a_concurrent_write_cannot_leave_a_revision_describing_another_writer_body() {
+        // The sharper property, and the one that survives the tmp-path
+        // collision above. Two backends over one root write the SAME key
+        // concurrently. The tmp path is deterministic per key, so they share
+        // it: A can write its temporary, B truncate and rewrite that same
+        // temporary, and A then rename it into place -- committing B's BYTES
+        // under A's REVISION, which A has already returned to its caller.
+        //
+        // A record whose revision came from one write and whose body came from
+        // another is worse than a lost update: every `if_revision` guard taken
+        // against that revision now protects content it was never derived from.
+        use std::sync::mpsc;
+        use std::sync::{Arc, Barrier};
+
+        let mut mismatches = 0;
+        const ROUNDS: usize = 40;
+
+        for round in 0..ROUNDS {
+            let root = temp_root();
+            let a = Arc::new(FsStorageBackend::new(&root));
+            let b = Arc::new(FsStorageBackend::new(&root));
+            a.initialize().unwrap();
+            b.initialize().unwrap();
+
+            let key = format!("shared{round}");
+            let barrier = Arc::new(Barrier::new(2));
+            let (tx, rx) = mpsc::channel();
+
+            let handles: Vec<_> = [
+                (a, vec![b'a'; 4 * 1024 * 1024]),
+                (b, vec![b'b'; 4 * 1024 * 1024]),
+            ]
+            .into_iter()
+            .map(|(backend, body)| {
+                let barrier = Arc::clone(&barrier);
+                let tx = tx.clone();
+                let key = key.clone();
+                let body = body.clone();
+                std::thread::spawn(move || {
+                    let input = put_input("ns", &key, &body);
+                    barrier.wait();
+                    if let Ok(record) = backend.put(input) {
+                        let _ = tx.send((record.revision.as_str().to_string(), body));
+                    }
+                })
+            })
+            .collect();
+            for handle in handles {
+                handle.join().unwrap();
+            }
+            drop(tx);
+
+            let claimed: Vec<_> = rx.iter().collect();
+            let probe = FsStorageBackend::new(&root);
+            probe.initialize().unwrap();
+            if let Some(stored) = probe.get("ns", &key).unwrap() {
+                let stored_revision = stored.revision.as_str().to_string();
+                // Whoever's revision is on disk must also own the bytes.
+                if let Some((_, expected_body)) = claimed
+                    .iter()
+                    .find(|(revision, _)| *revision == stored_revision)
+                {
+                    if stored.body != *expected_body {
+                        mismatches += 1;
+                    }
+                }
+            }
+            let _ = fs::remove_dir_all(&root);
+        }
+
+        assert_eq!(
+            mismatches, 0,
+            "{mismatches}/{ROUNDS} rounds committed one writer's bytes under \
+             another writer's revision"
+        );
     }
 
     #[test]
