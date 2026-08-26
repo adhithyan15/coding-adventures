@@ -69,8 +69,9 @@ retain their authored units in typed IR before precise layout conversion. A
 pinned upstream corpus now gates this supported parser surface. Semicolon- and
 hash-prefixed titles, sections, and task labels follow the pinned upstream
 grammar while lowering to clean semantic labels. Gantt remains partial while
-timezone/locale date tokens, multiline label edge cases, and the complete
-pinned visual corpus are still outstanding.
+HTML break variants in titles, sections, and tasks now lower to semantic
+newlines with multiline layout. Gantt remains partial while timezone/locale
+date tokens and the complete pinned visual corpus are still outstanding.
 
 Each supported family lowers into the shared Diagram IR and can continue
 through its family layout package:

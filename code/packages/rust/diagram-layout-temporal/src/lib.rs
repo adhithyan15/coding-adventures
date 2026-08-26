@@ -18,7 +18,7 @@ use diagram_ir::{
 };
 use std::collections::{BTreeSet, HashMap};
 
-pub const VERSION: &str = "0.24.0";
+pub const VERSION: &str = "0.25.0";
 
 // ── Constants ─────────────────────────────────────────────────────────────
 
@@ -41,6 +41,10 @@ const JOURNEY_SECTION_FILLS: &[&str] = &[
     "#191970", "#8b008b", "#4b0082", "#2f4f4f", "#800000", "#8b4513", "#00008b",
 ];
 const JOURNEY_SECTION_COLORS: &[&str] = &["#ffffff"];
+
+fn multiline_height(label: &str, base_height: f64, line_height: f64) -> f64 {
+    base_height + label.lines().count().saturating_sub(1) as f64 * line_height
+}
 
 /// Lay out a `TemporalDiagram` on a canvas of `cw` pixels wide.
 pub fn layout_temporal_diagram(d: &TemporalDiagram, cw: f64) -> LayoutedTemporalDiagram {
@@ -540,10 +544,11 @@ fn layout_gantt(
 
     // Title
     if let Some(ref t) = title {
+        let title_height = multiline_height(t, AXIS_H, 20.0);
         items.push(LayoutedTemporalItem::SectionHeader {
-            x: 0.0, y: 0.0, width: cw, height: AXIS_H, label: t.clone(),
+            x: 0.0, y: 0.0, width: cw, height: title_height, label: t.clone(),
         });
-        y += AXIS_H;
+        y += title_height;
     }
 
     if diagram.config.top_axis {
@@ -556,12 +561,14 @@ fn layout_gantt(
     // Sections and tasks.
     for section in &diagram.sections {
         if let Some(ref lbl) = section.label {
+            let section_height = multiline_height(lbl, SECTION_H, 20.0);
             items.push(LayoutedTemporalItem::SectionHeader {
-                x: 0.0, y, width: cw, height: SECTION_H, label: lbl.clone(),
+                x: 0.0, y, width: cw, height: section_height, label: lbl.clone(),
             });
-            y += SECTION_H;
+            y += section_height;
         }
         for task in &section.tasks {
+            let task_height = multiline_height(&task.label, TASK_H, 14.0);
             let start_day = starts.get(&task.id).copied().unwrap_or(t_min) - t_min;
             let bx = LABEL_W + start_day * x_scale;
             let elapsed_duration = gantt_task_elapsed_duration(t_min + start_day, task, diagram, &starts);
@@ -579,11 +586,11 @@ fn layout_gantt(
             }
             if task.tags.milestone {
                 items.push(LayoutedTemporalItem::MilestoneMarker {
-                    x: bx, y: y + TASK_H / 2.0, tags: task.tags.clone(), label: task.label.clone(),
+                    x: bx, y: y + task_height / 2.0, tags: task.tags.clone(), label: task.label.clone(),
                 });
             } else {
                 items.push(LayoutedTemporalItem::TaskBar {
-                    x: bx, y, width: bw, height: TASK_H,
+                    x: bx, y, width: bw, height: task_height,
                     tags: task.tags.clone(),
                     label: task.label.clone(),
                 });
@@ -591,13 +598,13 @@ fn layout_gantt(
             if task.link.is_some() || task.callback.is_some() {
                 interactions.push(LayoutedTemporalInteraction {
                     task_id: task.id.clone(),
-                    bounds: (bx, y, bw.max(16.0), TASK_H),
+                    bounds: (bx, y, bw.max(16.0), task_height),
                     link: task.link.clone(),
                     callback: task.callback.clone(),
                     callback_args: task.callback_args.clone(),
                 });
             }
-            y += TASK_H + TASK_GAP;
+            y += task_height + TASK_GAP;
         }
     }
 
@@ -931,7 +938,7 @@ mod tests {
 
     #[test]
     fn version_exists() {
-        assert_eq!(crate::VERSION, "0.24.0");
+        assert_eq!(crate::VERSION, "0.25.0");
     }
 
     #[test]
@@ -975,6 +982,32 @@ mod tests {
                 label == "Phase 1"
             } else { false }
         }));
+    }
+
+    #[test]
+    fn gantt_multiline_labels_reserve_backend_neutral_rows() {
+        let mut diagram = simple_gantt();
+        diagram.title = Some("Release\nPlan".into());
+        let TemporalBody::Gantt(gantt) = &mut diagram.body else { unreachable!() };
+        gantt.sections[0].label = Some("Build\nCore".into());
+        gantt.sections[0].tasks[0].label = "Parser\nCore".into();
+
+        let layout = layout_temporal_diagram(&diagram, 800.0);
+        assert!(layout.items.iter().any(|item| matches!(
+            item,
+            LayoutedTemporalItem::SectionHeader { label, height, .. }
+                if label == "Release\nPlan" && *height == 48.0
+        )));
+        assert!(layout.items.iter().any(|item| matches!(
+            item,
+            LayoutedTemporalItem::SectionHeader { label, height, .. }
+                if label == "Build\nCore" && *height == 44.0
+        )));
+        assert!(layout.items.iter().any(|item| matches!(
+            item,
+            LayoutedTemporalItem::TaskBar { label, height, .. }
+                if label == "Parser\nCore" && *height == 34.0
+        )));
     }
 
     #[test]

@@ -1,5 +1,9 @@
 # Changelog
 
+## 0.145.0
+
+- Lower Mermaid Gantt HTML line-break variants in titles, sections, and tasks to semantic newlines.
+
 ## 0.144.0
 
 - Match Mermaid Gantt's semicolon- and hash-prefixed title, section, and task label grammar while preserving clean semantic labels.
