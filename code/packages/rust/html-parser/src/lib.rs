@@ -7410,10 +7410,13 @@ impl HtmlParser {
                     .at_emission(self.current_token_emission_position),
                 );
             } else {
-                self.diagnostics.push(ParserDiagnostic::new(
-                    "unexpected-end-tag",
-                    "end tag `</button>` did not match an open element",
-                ));
+                self.diagnostics.push(
+                    ParserDiagnostic::new(
+                        "unexpected-end-tag",
+                        "end tag `</button>` did not match an open element",
+                    )
+                    .at_emission(self.current_token_emission_position),
+                );
             }
             return;
         }
@@ -8355,10 +8358,15 @@ impl HtmlParser {
             return;
         }
 
-        self.diagnostics.push(ParserDiagnostic::new(
+        let diagnostic = ParserDiagnostic::new(
             "unexpected-end-tag",
             format!("end tag `</{name}>` did not match an open element"),
-        ));
+        );
+        self.diagnostics.push(if name == "button" {
+            diagnostic.at_emission(self.current_token_emission_position)
+        } else {
+            diagnostic
+        });
     }
 
     fn generate_implied_end_tags_above(&mut self, lower_bound: usize) {
@@ -27318,6 +27326,14 @@ mod tests {
         .at_emission(Some(end_tag_position_at(source, "button", occurrence)))
     }
 
+    fn unmatched_button_end_tag(source: &str, occurrence: usize) -> ParserDiagnostic {
+        ParserDiagnostic::new(
+            "unexpected-end-tag",
+            "end tag `</button>` did not match an open element",
+        )
+        .at_emission(Some(end_tag_position_at(source, "button", occurrence)))
+    }
+
     fn marker_end_tag_outside_scope(
         source: &str,
         name: &str,
@@ -33896,10 +33912,7 @@ mod tests {
             unmatched.parser_diagnostics,
             vec![
                 generic_foreign_end_tag_mismatch(unmatched_source, "button"),
-                ParserDiagnostic::new(
-                    "unexpected-end-tag",
-                    "end tag `</button>` did not match an open element"
-                ),
+                unmatched_button_end_tag(unmatched_source, 0),
             ]
         );
         let boundary = find_element_by_id(&unmatched.document.children, "boundary").unwrap();
@@ -33992,6 +34005,100 @@ mod tests {
             .find(|diagnostic| diagnostic.code == "unexpected-end-tag-in-foreign-content")
             .unwrap();
         assert_eq!(diagnostic.position, None);
+    }
+
+    #[test]
+    fn positions_unmatched_button_end_tags_at_token_emission() {
+        let ordinary_source = "<!doctype html></button><!--é-->\r\n</button>";
+        let ordinary = parse_html_with_diagnostics(ordinary_source).unwrap();
+        assert_eq!(
+            ordinary
+                .parser_diagnostics
+                .iter()
+                .filter(|diagnostic| diagnostic.code == "unexpected-end-tag")
+                .cloned()
+                .collect::<Vec<_>>(),
+            vec![
+                unmatched_button_end_tag(ordinary_source, 0),
+                unmatched_button_end_tag(ordinary_source, 1),
+            ]
+        );
+        assert!(ordinary_source.len() > ordinary_source.chars().count());
+
+        let foreign_source =
+            "<!doctype html><!--é-->\r\n<svg><foreignObject></button>X</foreignObject></svg>";
+        let foreign = parse_html_with_diagnostics(foreign_source).unwrap();
+        assert_eq!(
+            foreign.parser_diagnostics,
+            vec![
+                generic_foreign_end_tag_mismatch(foreign_source, "button"),
+                unmatched_button_end_tag(foreign_source, 0),
+            ]
+        );
+
+        let fragment_source = "X</button>";
+        let fragment = parse_html_fragment_with_diagnostics(fragment_source).unwrap();
+        assert_eq!(
+            fragment.parser_diagnostics,
+            vec![unmatched_button_end_tag(fragment_source, 0)]
+        );
+
+        for source in [
+            "<!doctype html></button",
+            "<!doctype html><svg><foreignObject></button",
+        ] {
+            let output = parse_html_with_diagnostics(source).unwrap();
+            assert!(output
+                .parser_diagnostics
+                .iter()
+                .all(|diagnostic| diagnostic.code != "unexpected-end-tag"));
+        }
+
+        let mut ordinary_direct =
+            HtmlParser::with_body_fragment_options(HtmlParseOptions::default());
+        ordinary_direct.process_token(Token::EndTag {
+            name: "button".to_string(),
+        });
+        ordinary_direct.process_token(Token::Eof);
+        assert_eq!(
+            ordinary_direct
+                .diagnostics()
+                .iter()
+                .find(|diagnostic| diagnostic.code == "unexpected-end-tag")
+                .unwrap()
+                .position,
+            None
+        );
+
+        let mut foreign_direct =
+            HtmlParser::with_body_fragment_options(HtmlParseOptions::default());
+        for token in [
+            Token::StartTag {
+                name: "svg".to_string(),
+                attributes: Vec::new(),
+                self_closing: false,
+            },
+            Token::StartTag {
+                name: "foreignObject".to_string(),
+                attributes: Vec::new(),
+                self_closing: false,
+            },
+            Token::EndTag {
+                name: "button".to_string(),
+            },
+            Token::Eof,
+        ] {
+            foreign_direct.process_token(token);
+        }
+        assert_eq!(
+            foreign_direct
+                .diagnostics()
+                .iter()
+                .find(|diagnostic| diagnostic.code == "unexpected-end-tag")
+                .unwrap()
+                .position,
+            None
+        );
     }
 
     #[test]
