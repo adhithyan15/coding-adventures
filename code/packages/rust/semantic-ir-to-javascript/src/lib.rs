@@ -137,6 +137,20 @@ const ACCEPTED_FEATURES: &[Feature] = &[
     Feature::Maps,
     Feature::MutableBindings,
     Feature::Loops,
+    // SIR16 addendum: bare loop-control statements. `Stmt::Break`/
+    // `Stmt::Continue` lower to a bare native `break;`/`continue;` — a
+    // trivial 1:1 emission, since this backend's `While`/`ForEach`
+    // lowering (`emit.rs`'s corresponding arms) already emits a real,
+    // inline native loop with no closure boundary in the way (unlike
+    // e.g. `semantic-ir-to-ruby`'s `ForRange`, which hoists its body into
+    // a lambda). `ForRange` is NOT listed as a safe host here — the
+    // validator itself already refuses to accept `Break`/`Continue`
+    // whose nearest enclosing loop is a `ForRange`, for reasons that
+    // apply regardless of which backend ultimately emits the module
+    // (see `Feature::LoopControl`'s own doc comment in
+    // `semantic-ir::manifest`), so this backend never needs to reason
+    // about that case at all.
+    Feature::LoopControl,
     // P2d: default parameters — JavaScript native default params have
     // exactly SIR's call-time, param-scope semantics, so `emit` lowers a
     // `Param { default: Some(_) }` to a native `name = <default>` and a

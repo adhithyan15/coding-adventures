@@ -1063,6 +1063,121 @@ fn for_each_over_sequence() {
     }
 }
 
+// ── SIR16 addendum: loop control (`break`/`continue`) ──────────────────
+
+fn if_stmt(cond: Expr, then_stmts: Vec<Stmt>) -> Stmt {
+    Stmt::ExprStmt {
+        expr: Expr::If {
+            cond: Box::new(cond),
+            then_branch: Box::new(Block {
+                stmts: then_stmts,
+                value: Expr::NilLit { span: sp() },
+                span: sp(),
+            }),
+            else_branch: Box::new(Block {
+                stmts: vec![],
+                value: Expr::NilLit { span: sp() },
+                span: sp(),
+            }),
+            span: sp(),
+        },
+        span: sp(),
+    }
+}
+
+#[test]
+fn while_loop_continue_skips_even_numbers_and_break_stops_at_seven() {
+    // let i = 0; let sum = 0;
+    // while (i < 10) {
+    //   i = i + 1;
+    //   if (i % 2 = 0) { continue; }   // skip even i
+    //   if (i > 7) { break; }          // stop once i exceeds 7
+    //   sum = sum + i;
+    // }
+    // print(sum);  → 1 + 3 + 5 + 7 = 16
+    let body = Block {
+        stmts: vec![
+            Stmt::Assign {
+                name: "i".into(),
+                scope: Scope::Local,
+                value: bc("+", vec![local("i"), int(1)]),
+                span: sp(),
+            },
+            if_stmt(
+                bc("=", vec![bc("%", vec![local("i"), int(2)]), int(0)]),
+                vec![Stmt::Continue { span: sp() }],
+            ),
+            if_stmt(bc(">", vec![local("i"), int(7)]), vec![Stmt::Break { span: sp() }]),
+            Stmt::Assign {
+                name: "sum".into(),
+                scope: Scope::Local,
+                value: bc("+", vec![local("sum"), local("i")]),
+                span: sp(),
+            },
+        ],
+        value: Expr::NilLit { span: sp() },
+        span: sp(),
+    };
+    let stmts = vec![
+        let_("i", int(0)),
+        let_("sum", int(0)),
+        Stmt::While { cond: bc("<", vec![local("i"), int(10)]), body, span: sp() },
+        print(local("sum")),
+    ];
+    let module = module_with_main(
+        stmts,
+        Expr::NilLit { span: sp() },
+        &[Feature::Loops, Feature::LoopControl, Feature::MutableBindings],
+    );
+    if let Some(stdout) = run_module(&module, "loop_control_while") {
+        assert_eq!(stdout, "16");
+    }
+}
+
+#[test]
+fn for_each_loop_break_stops_iteration_before_the_matching_element() {
+    // let sum = 0;
+    // for x in [1, 2, 3, 4, 5] {
+    //   if (x = 3) { break; }
+    //   sum = sum + x;
+    // }
+    // print(sum);  → 1 + 2 = 3 (the loop never adds 3, 4, or 5)
+    let body = Block {
+        stmts: vec![
+            if_stmt(bc("=", vec![local("x"), int(3)]), vec![Stmt::Break { span: sp() }]),
+            Stmt::Assign {
+                name: "sum".into(),
+                scope: Scope::Local,
+                value: bc("+", vec![local("sum"), local("x")]),
+                span: sp(),
+            },
+        ],
+        value: Expr::NilLit { span: sp() },
+        span: sp(),
+    };
+    let stmts = vec![
+        let_("sum", int(0)),
+        Stmt::ForEach {
+            var: "x".into(),
+            iter: Expr::SeqLit {
+                items: vec![int(1), int(2), int(3), int(4), int(5)],
+                span: sp(),
+            },
+            body,
+            span: sp(),
+        },
+        print(local("sum")),
+    ];
+    let module = module_with_main(
+        stmts,
+        Expr::NilLit { span: sp() },
+        &[Feature::Loops, Feature::LoopControl, Feature::MutableBindings, Feature::Sequences],
+    );
+    if let Some(stdout) = run_module(&module, "loop_control_foreach") {
+        assert_eq!(stdout, "3");
+    }
+}
+
 // ── P2d: default parameters (hand-built module) ────────────────────────
 
 #[test]

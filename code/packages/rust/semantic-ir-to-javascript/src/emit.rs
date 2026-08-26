@@ -582,6 +582,40 @@ fn emit_stmt(out: &mut String, s: &Stmt, indent: usize) {
                 out.push_str(", __Sir.Symbolic.unwrap(__Sir.Symbolic.evalTerm(");
                 emit_expr(out, inner, indent);
                 out.push_str(")));\n");
+            } else if let Expr::If {
+                cond,
+                then_branch,
+                else_branch,
+                ..
+            } = expr
+            {
+                // A bare `if` used for effect only (its value is
+                // discarded — this is `Stmt::ExprStmt`, which never
+                // captures a value at all) gets a REAL native
+                // `if (...) { … } else { … }` statement here, not the
+                // ternary-shaped `(cond ? (() => { … })() : (() => {
+                // … })())` the generic `emit_expr` path below produces
+                // for `Expr::If` in *value* position.
+                //
+                // This isn't just a style improvement: that generic path
+                // wraps each branch in an arrow-function IIFE so it can
+                // return a value, and `break`/`continue` (SIR16 addendum)
+                // cannot cross a JS function boundary — `if (cond) {
+                // break; }` inside a `while` is the single most common
+                // way source code uses `break`/`continue` at all, so
+                // routing it through the IIFE path made every such
+                // program a `node` `SyntaxError: Illegal break/continue
+                // statement`, not just a stylistic wart. Found while
+                // adding the first real consumer of `Feature::
+                // LoopControl` for this backend.
+                out.push_str(&pad);
+                out.push_str("if (__Sir.truthy(");
+                emit_expr(out, cond, indent);
+                out.push_str(")) {\n");
+                emit_block_as_stmts(out, then_branch, indent + 2);
+                let _ = writeln!(out, "{pad}}} else {{");
+                emit_block_as_stmts(out, else_branch, indent + 2);
+                let _ = writeln!(out, "{pad}}}");
             } else {
                 out.push_str(&pad);
                 emit_expr(out, expr, indent);
@@ -828,14 +862,20 @@ fn emit_stmt(out: &mut String, s: &Stmt, indent: usize) {
                 "javascript backend reached a SIR29 nominal-OOP node at {span} — capability check should have rejected it"
             );
         }
-        // SIR16 addendum: `LoopControl` not accepted by this backend yet
-        // — unreachable in a validated module (capability check rejects
-        // it). A future PR wiring this backend to `Feature::LoopControl`
-        // would replace this arm with real `break;`/`continue;` emission.
-        Stmt::Break { span, .. } | Stmt::Continue { span, .. } => {
-            panic!(
-                "javascript backend reached a Stmt::Break/Continue node at {span} — capability check should have rejected it"
-            );
+        // SIR16 addendum: bare loop-control statements. A trivial 1:1
+        // emission — `While`/`ForEach`'s bodies above are already inlined
+        // directly into a real native loop with no closure boundary in
+        // the way, so a bare `break;`/`continue;` here always targets
+        // the correct enclosing JS loop. The validator itself guarantees
+        // the nearest enclosing loop is never a `ForRange` (see
+        // `Feature::LoopControl`'s doc comment in `semantic-ir::
+        // manifest`), so there's no case this backend needs to reject or
+        // special-case here.
+        Stmt::Break { .. } => {
+            let _ = writeln!(out, "{pad}break;");
+        }
+        Stmt::Continue { .. } => {
+            let _ = writeln!(out, "{pad}continue;");
         }
     }
 }
@@ -3175,6 +3215,39 @@ mod tests {
         assert!(out.contains("i = __Sir.plus(i, 1);"));
         // The trailing nil body value is dropped.
         assert!(!out.contains("null;"), "got {out}");
+        assert!(out.trim_end().ends_with('}'));
+    }
+
+    #[test]
+    fn emit_break_is_bare_break() {
+        assert_eq!(emit_s(&Stmt::Break { span: s() }), "break;\n");
+    }
+
+    #[test]
+    fn emit_continue_is_bare_continue() {
+        assert_eq!(emit_s(&Stmt::Continue { span: s() }), "continue;\n");
+    }
+
+    #[test]
+    fn emit_while_with_break_and_continue_in_body() {
+        // `while (true) { if (x) { continue; } if (y) { break; } }` —
+        // both statements land inside the native `while`'s body, at the
+        // loop body's own indentation.
+        let st = Stmt::While {
+            cond: Expr::BoolLit {
+                value: true,
+                span: s(),
+            },
+            body: Block {
+                stmts: vec![Stmt::Continue { span: s() }, Stmt::Break { span: s() }],
+                value: Expr::NilLit { span: s() },
+                span: s(),
+            },
+            span: s(),
+        };
+        let out = emit_s(&st);
+        assert!(out.contains("  continue;\n"), "got {out}");
+        assert!(out.contains("  break;\n"), "got {out}");
         assert!(out.trim_end().ends_with('}'));
     }
 
