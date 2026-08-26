@@ -8644,10 +8644,10 @@ two selected slots: 1,373 identities, 4,570 slots, 1,412 all-reported
 identities, breadth bands 175/276, 123/936, 166/2,087, and 909/12,726, 720 Rust
 singletons, zero collisions, and zero unknown buckets. Global `last_inventory`
 remains pinned to the exact merged main baseline until publication merges.
-The two branch commits then rebased conflict-free over the merged W25
-memory64, Spanish and Kannada curriculum, Java semantic-IR, and HTML-parser
-changes through exact `origin/main`
-`aac64f186ed9dfe2c1303b9cc20284dd9f87f0ef`; every current open PR remains
+The three branch commits then rebased conflict-free over all intervening W25
+memory64, curriculum, Java semantic-IR, storage-fs, and HTML-parser changes
+through exact `origin/main`
+`bb6ae0c70e8000a28b9eaa0d6fc06c821bfbb43b`; all six current open PRs remain
 exact-path disjoint from the selected package, state, and roadmap surfaces.
 
 ## Autonomous Loop Protocol
