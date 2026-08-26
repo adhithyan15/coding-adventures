@@ -12,24 +12,24 @@
     "excluded_delivery_classes": ["onvif", "host-security-hardening", "native-runtime", "external-approval"]
   },
   "active_pr": {
-    "number": 13026,
-    "url": "https://github.com/adhithyan15/coding-adventures/pull/13026",
-    "branch": "codex/canonical-cbor-dotnet-lane-parity",
+    "number": 13037,
+    "url": "https://github.com/adhithyan15/coding-adventures/pull/13037",
+    "branch": "codex/canonical-cbor-typescript-lane-parity",
     "status": "open"
   },
   "last_inventory": {
-    "revision": "1d0c64a9ad9e0e8d9652d605d731de823b21fcc1",
+    "revision": "ce4c3aa0c522e354653a2a4205b8dc5534c40f89",
     "schema_version": 3,
     "established_languages": 15,
     "implementation_identities": 1373,
-    "implementation_package_slots": 4568,
+    "implementation_package_slots": 4570,
     "all_reported_identities": 1412,
     "high_consensus_packages": 175,
     "high_consensus_missing_slots": 276,
-    "five_to_nine_packages": 122,
-    "five_to_nine_missing_slots": 926,
-    "two_to_four_packages": 167,
-    "two_to_four_missing_slots": 2099,
+    "five_to_nine_packages": 123,
+    "five_to_nine_missing_slots": 936,
+    "two_to_four_packages": 166,
+    "two_to_four_missing_slots": 2087,
     "singleton_packages": 909,
     "singleton_missing_slots": 12726,
     "rust_singletons": 720,
@@ -1256,7 +1256,7 @@
       ],
       "branch": null,
       "pr_number": null,
-      "notes": "Wire structured Starlark context/commands and complete the B05 Windows executor contract. The orphan-corpus audit additionally owns three pure conformance repairs here: classify an existing exemption directory whose Cargo.toml disappeared as stale, reject rather than clean portable ledger syntax containing backslashes, dot segments, redundant separators, or normalized aliases, and treat blank, # comment-only, or REM comment-only platform BUILD files as empty. Host no-follow, reparse, and regular-file collection remains separately owned by the selection-blocked scanner security review."
+      "notes": "Wire structured Starlark context/commands and complete the B05 Windows executor contract. The orphan-corpus audit additionally owns three pure conformance repairs here: classify an existing exemption directory whose Cargo.toml disappeared as stale, reject rather than clean portable ledger syntax containing backslashes, dot segments, redundant separators, or normalized aliases, and treat blank, # comment-only, or REM comment-only platform BUILD files as empty. Open PRs #12162 and #12149 temporarily own overlapping Go validator and entry-point surfaces; their dependency-comment parsing, BuildContent plan reconstruction, worktree .git-file root discovery, and raw Windows command-line semantics remain part of this canonical Go contract rather than a new portable family. Host no-follow, reparse, and regular-file collection remains separately owned by the selection-blocked scanner security review."
     },
     {
       "id": "build-tool-existing-remediation",
@@ -2879,7 +2879,7 @@
       "branch": null,
       "pr_number": null,
       "selection_blocked": true,
-      "notes": "Discovered in the collision-checked c12372bc8784 inventory after merged PR #10257 added Rust mosaic-app-bindings without a capability manifest. Merged PRs #10270, #10275, #10279, and #10284 extend its generated Compose/JNA, SwiftUI/C-loader, XAML NativeLibrary, Flutter FFI, and Qt QLibrary hosts; #10261, #10290, #10294, and #10299 extend the native emitters and artifact-builder integration. Merged PRs #10304 and #10308 add customizable Qt Controls styling and collision-safe signal-name generation without adding identities. Merged PR #10464 adds native Compose HostLink emission over mosaic-emit-compose, mosaic-compile, and UI38. Review opaque runtime-handle and returned-buffer ownership, dynamic-library and environment discovery, event sequencing, JSON decoding, generated-source reproducibility, target build evidence, and truthful capability metadata. Keep the deterministic Mosaic protocol with the portable runtime owner; do not manufacture fifteen reimplementations of generated native wrappers. This wrapper-applicability review is excluded from autonomous parity selection."
+      "notes": "Discovered in the collision-checked c12372bc8784 inventory after merged PR #10257 added Rust mosaic-app-bindings without a capability manifest. Merged PRs #10270, #10275, #10279, and #10284 extend its generated Compose/JNA, SwiftUI/C-loader, XAML NativeLibrary, Flutter FFI, and Qt QLibrary hosts; #10261, #10290, #10294, and #10299 extend the native emitters and artifact-builder integration. Merged PRs #10304 and #10308 add customizable Qt Controls styling and collision-safe signal-name generation without adding identities. Merged PR #10464 adds native Compose HostLink emission over mosaic-emit-compose, mosaic-compile, and UI38. Open PR #13011 adds test-only five-backend native-complete and degradation evidence for the same generated wrappers and artifact-builder boundary; it does not create a portable package or build-tool contract. Review opaque runtime-handle and returned-buffer ownership, dynamic-library and environment discovery, event sequencing, JSON decoding, generated-source reproducibility, target build evidence, and truthful capability metadata. Keep the deterministic Mosaic protocol with the portable runtime owner; do not manufacture fifteen reimplementations of generated native wrappers. This wrapper-applicability review is excluded from autonomous parity selection."
     },
     {
       "id": "smart-home-axis-snapshot-host-native-authority-review",
@@ -3181,7 +3181,7 @@
     {
       "id": "canonical-cbor-dotnet-lane-parity",
       "title": "Port canonical CBOR to the C# and F# lanes",
-      "status": "pr-open",
+      "status": "merged",
       "depends_on": ["canonical-cbor-language-neutral-conformance"],
       "branch": "codex/canonical-cbor-dotnet-lane-parity",
       "pr_number": 13026,
@@ -3193,7 +3193,11 @@
       "notes": "Implement CBR01 and the closed canonical-cbor-v1 corpus for the paired .NET lanes with native tests, build metadata, documentation, capability metadata, and exact cross-lane output equality.",
       "implementation_notes": "Added independent dependency-free C# and F# canonical-CBOR implementations that consume the complete closed canonical-cbor-v1 fixture corpus. Both lanes implement unsigned, negative, bytes, text, arrays, maps, tags, booleans, and null; strict shortest-form definite-length decoding; exact single-item consumption; canonical length-first unsigned map-key ordering; duplicate and out-of-order map-key rejection; strict UTF-8 and UTF-16 scalar validation; 128-level nesting and a 1,048,576-byte encoder output bound; defensive byte and collection ownership; stable payload-blind diagnostics; and transactional MemoryStream append at destination length. The F# facade adds safe typed views over its private value union. Exact BUILD and BUILD_windows fronts, capability manifests, package documentation, changelogs, release metadata, and adversarial direct tests accompany each package without sharing production code or adding filesystem, process, environment, credential, clock, random, or network authority.",
       "validation_notes": "The C# and F# packages each pass eight focused tests covering all 55 language-neutral corpus cases plus strictness, overflow, depth, output-bound, duplicate-key, Unicode, defensive-copy, and rewound-append regressions through both the literal Unix BUILD and BUILD_windows fronts. C# coverage is 98.19% line, 87.15% branch, and 100% method; F# coverage is 98.08% line, 95.47% branch, and 100% method. Warning-free .NET 9 release builds and release packs succeed with embedded README files; the production projects have no third-party dependency, while FSharp.Core is the SDK/runtime closure. The Go build tool passes all package tests, vet, module verification, and trimpath compilation, then a fresh binary evaluates the repository plan and forced C# and F# dry runs with 201 and 200 WOULD-BUILD packages. The neutral capability taxonomy, Haskell capability mirror, OCaml lock suite, package-parity reporter, strict JSON, collision, formatting, dependency, credential-pattern, production-authority, packaging, diff, and security gates pass. The refreshed branch report adds exactly the two selected package slots while retaining 1,373 identities, 1,412 all-reported identities, 720 Rust singletons, zero collisions, and zero unknown buckets. Independent C# and F# correctness/security reviews found no remaining issue after closure of append-position, F# safe-view/null, exact generated-fixture grammar, tag-depth coverage, release-artifact hygiene, and resource-bound findings. The three commits rebased conflict-free over all intervening W25 memory64, curriculum, Java semantic-IR, storage-fs, and HTML-parser changes through exact origin/main bb6ae0c70e8000a28b9eaa0d6fc06c821bfbb43b; all six current open PRs have zero exact path overlap with the selected package, state, or roadmap surfaces.",
-      "publication_notes": "Opened ready-for-review PR #13026 from clean independently reviewed head c2dc51b86e003f75ac42df5097d723dafe9c1c65 after a normal first push from exact origin/main bb6ae0c70e8000a28b9eaa0d6fc06c821bfbb43b. The target remote branch and prior PR were absent before publication. All six other open PRs had zero exact overlap across the complete 24-path diff. GitHub reports the PR non-draft and mergeable with required checks queued or in progress, so auto-merge remains disabled and the loop is monitor-only."
+      "publication_notes": "Opened ready-for-review PR #13026 from clean independently reviewed head c2dc51b86e003f75ac42df5097d723dafe9c1c65 after a normal first push from exact origin/main bb6ae0c70e8000a28b9eaa0d6fc06c821bfbb43b. The target remote branch and prior PR were absent before publication. All six other open PRs had zero exact overlap across the complete 24-path diff. GitHub reports the PR non-draft and mergeable with required checks queued or in progress, so auto-merge remains disabled and the loop is monitor-only.",
+      "merged_head_revision": "00a5c729c3ea0fdbba8d2c2063b5c3badd8ca658",
+      "merged_at": "2026-08-26T12:25:25Z",
+      "merge_revision": "ce4c3aa0c522e354653a2a4205b8dc5534c40f89",
+      "merge_notes": "All 40 reported checks reached terminal acceptable conclusions with no failure or pending work. GitHub reported the reviewed head clean and mergeable; the loop enabled squash auto-merge, and GitHub merged PR #13026 without a manual merge command."
     },
     {
       "id": "canonical-cbor-dart-lane-parity",
@@ -3302,11 +3306,20 @@
     {
       "id": "canonical-cbor-typescript-lane-parity",
       "title": "Port canonical CBOR to TypeScript",
-      "status": "pending",
+      "status": "pr-open",
       "depends_on": ["canonical-cbor-language-neutral-conformance"],
-      "branch": null,
-      "pr_number": null,
-      "notes": "Implement the closed canonical-CBOR contract in TypeScript and consume every language-neutral case."
+      "branch": "codex/canonical-cbor-typescript-lane-parity",
+      "pr_number": 13037,
+      "selection_revision": "ce4c3aa0c522e354653a2a4205b8dc5534c40f89",
+      "selection_notes": "Selected only after PR #13026 completed all 40 terminal acceptable checks and GitHub merged reviewed head 00a5c729c3ea0fdbba8d2c2063b5c3badd8ca658 through squash auto-merge as ce4c3aa0c522e354653a2a4205b8dc5534c40f89 at 2026-08-26T12:25:25Z without a manual merge command. The collision-checked exact-main schema-3 report remains 15 established lanes, 1,373 implementation identities, and 1,412 all-reported identities while the C# and F# packages raise slots to 4,570 and move canonical-cbor from the two-to-four band into five-to-nine: bands 175/276, 123/936, 166/2,087, and 909/12,726, with 720 Rust singletons, zero collisions, zero unknown buckets, and OCaml emerging at zero packages. The ten reporter tests pass. All seven live PRs are classified before selection: #13028 extends the existing Rust singleton/lang-aot owner; #13027 remains inside script-ductus, human-language-data, curriculum, and generator-authority owners; #13011 remains inside the selection-blocked Mosaic generated-wrapper review; #12162 and #12149 temporarily overlap the canonical Go build-tool owner and Swift cowsay owner; and #7821 is stale with no reported files. The Go dependency-comment, plan reconstruction, worktree-root, and Windows command-line behavior is explicitly reconciled into build-tool-go-oracle, so no eligible unowned gap remains. No live PR touches canonical-CBOR packages, its neutral corpus/spec, state, or roadmap. TypeScript is the largest remaining established canonical-CBOR lane at 446 packages with 331 Rust overlaps and zero high-consensus gaps, has the complete local Node/npm/pnpm toolchain, and closes one of the ten remaining children without shared production code. Higher-descendant OCaml and extra-CI items remain collision-unsafe on Go surfaces owned by #12162 and #12149. The target path, local branch, remote branch, and prior PR were absent before creating the fresh exact-main worktree.",
+      "implementation_revision": "cc6729e698cd1e7295544763d34da038e7ea0e13",
+      "implementation_notes": "Added code/packages/typescript/canonical-cbor as a zero-production-dependency native CBR01 codec. The immutable value algebra preserves all uint64 arguments as bigint, stages checked encoding atomically, sorts and deduplicates complete encoded keys, uses fatal UTF-8 with explicit lone-surrogate rejection, applies exact 128/129 depth and 1,048,576-byte encoder-only boundaries, rejects hostile declared lengths before allocation, and exposes the closed 14-ID payload-blind error taxonomy. Runtime-private frozen storage, encoder-side invariant revalidation, erased-JavaScript boundary checks, a private frozen null singleton, destination-capacity preflight, defensive copies, and closed fixture parsing address the independent security review findings.",
+      "validation_notes": "All 55 shared canonical-cbor-v1 cases and the TypeScript adversarial suite pass as 12 Vitest tests. The final Unix BUILD passes npm ci, tsc, and V8 coverage at 95.83% statements, 92.30% branches, 100% functions, and 96.61% lines. The Go build tool discovers 477 TypeScript packages, resolves exactly one changed and one affected package, validates BUILD metadata and orphan-crate policy, and executes canonical-cbor's BUILD_windows successfully with 476 packages skipped. Focused Go discovery, resolver, validator, cmdrender, and executor suites pass; the ten parity reporter tests and seven capability-taxonomy tests pass. npm reports zero vulnerabilities and an empty production dependency tree. The candidate schema-3 parity inventory is collision-clean with zero unknown buckets, 1,373 implementation identities, 1,412 all-reported identities, 4,571 slots, and the five-to-nine band reduced to 935 missing slots.",
+      "security_notes": "Three independent read-only audits identified runtime readonly mutation, subclass getter/type-erasure bypasses, null-singleton replacement, near-max sparse-array partial append, unchecked erased decode/container inputs, and a permissive fixture suffix. Each issue has a focused regression and is fixed. The final security re-review reports no remaining actionable security or conformance finding.",
+      "pr_opened_at": "2026-08-26T13:12:35Z",
+      "pr_opened_head_revision": "4a8dea41c3b5ed6931d552eb924c3a8ab9223b0f",
+      "publication_notes": "Ready-for-review PR #13037 opened against exact origin/main 2295edd5975b43d5a3081e7eb1d7f5ca7afc43c1 after a clean three-commit rebase and full local revalidation. GitHub reports the PR open, non-draft, and mergeable. CI and CodeQL checks are queued or in progress, so auto-merge remains disabled and the loop is monitor-only until every required check is terminal and acceptable.",
+      "notes": "Implemented and published the closed canonical-CBOR contract in TypeScript with bigint-safe uint64 behavior and every language-neutral case; PR #13037 is the sole active parity PR."
     },
     {
       "id": "vault-pm-audit-portable-conformance",

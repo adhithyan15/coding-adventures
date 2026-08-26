@@ -1,0 +1,20 @@
+{
+  "chapter": 388,
+  "title": "Push, Throw, Rub Out, Shout",
+  "label": "ch:empujar-y-lanzar",
+  "canDo": "I can say empujar, lanzar, borrar and gritar, and name four everyday actions.",
+  "spineNodes": [
+    "SPINE-NAME-EVERYDAY-ACTIONS"
+  ],
+  "payoff": {
+    "lesson": "ES-C388-gritar",
+    "kind": "production",
+    "summary": "Complete ES-C388-gritar: name four everyday actions, and say one thing you would do with each.",
+    "assesses": [
+      "ES-LEX-EMPUJAR",
+      "ES-LEX-LANZAR",
+      "ES-LEX-BORRAR",
+      "ES-LEX-GRITAR"
+    ]
+  }
+}

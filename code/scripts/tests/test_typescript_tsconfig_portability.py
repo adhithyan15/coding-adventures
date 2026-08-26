@@ -408,10 +408,11 @@ console.log(prose, nested);
         # +1: chief-of-staff-channel-crypto, the portable D18F message profile.
         # +1: chief-of-staff-channel-store, the durable D18P profile.
         # +1: chief-of-staff-channel-epoch-activation, the D18T coordinator.
-        self.assertEqual(summary.total_projects, 464)
-        self.assertEqual(summary.shared_projects, 287)
-        self.assertEqual(summary.inherited_root_dir, 129)
-        self.assertEqual(summary.inherited_out_dir, 132)
+        # +1: canonical-cbor, the native CBR01 encoder/decoder lane.
+        self.assertEqual(summary.total_projects, 465)
+        self.assertEqual(summary.shared_projects, 288)
+        self.assertEqual(summary.inherited_root_dir, 130)
+        self.assertEqual(summary.inherited_out_dir, 133)
         self.assertEqual(summary.standalone_emit_projects, 147)
         self.assertEqual(summary.isolated_standalone_projects, 147)
         self.assertEqual(summary.unbounded_root_projects, 0)
@@ -451,7 +452,8 @@ console.log(prose, nested);
         # compiler (downstream consumers exercised while verifying the
         # runtime-grammar-loading fix) had no package-lock.json committed
         # before; running `npm install` to test them produced one.
-        self.assertEqual(summary.locked_compilers, 458)
+        # +1: canonical-cbor locks the shared TypeScript compiler toolchain.
+        self.assertEqual(summary.locked_compilers, 459)
 
 
 if __name__ == "__main__":

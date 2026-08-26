@@ -214,3 +214,168 @@ fn loops_and_mutable_bindings_compile_and_run() {
     // 5. Best-effort cleanup (ignore errors — temp dir is ephemeral).
     let _ = std::fs::remove_file(&src_path);
 }
+
+// ── SIR16 addendum: loop control (`break`/`continue`), task #63 ────────
+
+/// `if (cond) { then_stmts } else {}` as a bare statement — the exact
+/// shape whose value-position codegen used to route through Go's
+/// `func() Value {...}()` IIFE lift before `emit_stmt`'s own
+/// `Stmt::ExprStmt`/`Expr::If` special case fixed it.
+fn if_stmt(cond: Expr, then_stmts: Vec<Stmt>) -> Stmt {
+    Stmt::ExprStmt {
+        expr: Expr::If {
+            cond: Box::new(cond),
+            then_branch: Box::new(Block {
+                stmts: then_stmts,
+                value: Expr::NilLit { span: s() },
+                span: s(),
+            }),
+            else_branch: Box::new(Block {
+                stmts: vec![],
+                value: Expr::NilLit { span: s() },
+                span: s(),
+            }),
+            span: s(),
+        },
+        span: s(),
+    }
+}
+
+fn loop_control_module(name: &str, main_stmts: Vec<Stmt>) -> Module {
+    Module {
+        name: name.into(),
+        manifest: FeatureManifest::from_features(&[
+            Feature::ConsoleIO,
+            Feature::Strings,
+            Feature::MutableBindings,
+            Feature::Loops,
+            Feature::LoopControl,
+        ]),
+        imports: vec![],
+        exports: vec![],
+        functions: vec![Function {
+            name: "main".into(),
+            params: vec![],
+            return_type: None,
+            captures: vec![],
+            body: Block {
+                stmts: main_stmts,
+                value: Expr::NilLit { span: s() },
+                span: s(),
+            },
+            effects: EffectSet::PURE.with(Effect::MayPrint),
+            metadata: Metadata::new(),
+            span: s(),
+        }],
+        globals: vec![],
+        metadata: Metadata::new()
+            .with_source_language("test")
+            .with_sir_version(semantic_ir::CURRENT_SIR_VERSION),
+        span: s(),
+    }
+}
+
+/// Run a hand-built module through `go run`, returning trimmed stdout.
+/// `None` when `go` is unavailable. Mirrors
+/// `loops_and_mutable_bindings_compile_and_run`'s own harness above,
+/// factored out so both new tests below can share it.
+fn run_via_go(module: &Module, tag: &str) -> Option<String> {
+    if !go_available() {
+        eprintln!("skipping {tag}: go not on PATH");
+        return None;
+    }
+    let artifact = compile(module).expect("module should compile to Go source");
+    let dir = std::env::temp_dir();
+    let nonce = std::process::id();
+    let src_path = dir.join(format!("sir_go_lc_{tag}_{nonce}.go"));
+    std::fs::write(&src_path, &artifact.source).expect("write temp source");
+    let run_out = Command::new("go").arg("run").arg(&src_path).output().expect("invoke go run");
+    if !run_out.status.success() {
+        let stderr = String::from_utf8_lossy(&run_out.stderr);
+        let _ = std::fs::remove_file(&src_path);
+        panic!(
+            "emitted Go failed to compile/run for `{tag}`:\n--- stderr ---\n{stderr}\n--- source ---\n{}",
+            artifact.source,
+        );
+    }
+    let _ = std::fs::remove_file(&src_path);
+    Some(String::from_utf8_lossy(&run_out.stdout).trim_end().to_string())
+}
+
+#[test]
+fn while_loop_continue_skips_five_and_break_stops_past_seven() {
+    // n := 0; sum := 0
+    // for _sir_truthy(n < 10) {
+    //   n = n + 1
+    //   if (n = 5) { continue }
+    //   if (n > 7) { break }
+    //   sum = sum + n
+    // }
+    // print(sum)  → 1+2+3+4 (skip 5) +6+7 = 23, then break at n=8
+    let body = Block {
+        stmts: vec![
+            assign_local("n", call("+", vec![var_local("n"), ilit(1)])),
+            if_stmt(
+                call("=", vec![var_local("n"), ilit(5)]),
+                vec![Stmt::Continue { span: s() }],
+            ),
+            if_stmt(call(">", vec![var_local("n"), ilit(7)]), vec![Stmt::Break { span: s() }]),
+            assign_local("sum", call("+", vec![var_local("sum"), var_local("n")])),
+        ],
+        value: Expr::NilLit { span: s() },
+        span: s(),
+    };
+    let main_stmts = vec![
+        let_local("n", ilit(0)),
+        let_local("sum", ilit(0)),
+        Stmt::While { cond: call("<", vec![var_local("n"), ilit(10)]), body, span: s() },
+        print_stmt(var_local("sum")),
+    ];
+    let module = loop_control_module("loop_control_while", main_stmts);
+    if let Some(stdout) = run_via_go(&module, "loop_control_while") {
+        assert_eq!(stdout, "23");
+    }
+}
+
+#[test]
+fn for_each_loop_break_stops_iteration_before_the_matching_element() {
+    // sum := 0
+    // for x := range _sir_seq_iter([1,2,3,4,5]) {
+    //   if (x = 3) { break }
+    //   sum = sum + x
+    // }
+    // print(sum)  → 1 + 2 = 3 (the loop never adds 3, 4, or 5)
+    let body = Block {
+        stmts: vec![
+            if_stmt(call("=", vec![var_local("x"), ilit(3)]), vec![Stmt::Break { span: s() }]),
+            assign_local("sum", call("+", vec![var_local("sum"), var_local("x")])),
+        ],
+        value: Expr::NilLit { span: s() },
+        span: s(),
+    };
+    let main_stmts = vec![
+        let_local("sum", ilit(0)),
+        Stmt::ForEach {
+            var: "x".into(),
+            iter: Expr::SeqLit {
+                items: vec![ilit(1), ilit(2), ilit(3), ilit(4), ilit(5)],
+                span: s(),
+            },
+            body,
+            span: s(),
+        },
+        print_stmt(var_local("sum")),
+    ];
+    let mut module = loop_control_module("loop_control_foreach", main_stmts);
+    module.manifest = FeatureManifest::from_features(&[
+        Feature::ConsoleIO,
+        Feature::Strings,
+        Feature::MutableBindings,
+        Feature::Loops,
+        Feature::LoopControl,
+        Feature::Sequences,
+    ]);
+    if let Some(stdout) = run_via_go(&module, "loop_control_foreach") {
+        assert_eq!(stdout, "3");
+    }
+}

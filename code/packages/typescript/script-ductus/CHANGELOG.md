@@ -1,6 +1,28 @@
 # Changelog
 
+### Added — source-verified Telugu independent u
+
+- Add Telugu independent **ఉ** as five source-backed movements grouped into
+  three pen-down runs: the joined upper-arch/bowl/right-lobe body, the separate
+  inner horizontal bar, and the separate upper headstroke.
+- Preserve the packaged tracing guide's two lifts while fitting all three
+  disconnected printed components to the bundled Noto Sans Telugu outline.
+
 ## Unreleased
+
+### Added — source-verified Chinese 看 and 书
+
+- Add learner pen paths for **看** and **书**, preserving the cited PRC stroke
+  order while fitting every run to the bundled Noto Sans SC outlines.
+- Cover both characters with provenance, font-selection, stroke-count,
+  pen-lift, on-ink, and whole-glyph geometry tests.
+
+### Added — source-verified Persian and Urdu hah
+
+- Add script-scoped Persian and Urdu **ح** as independently sourced body-first,
+  zero-lift head-and-bowl runs.
+- Keep both paths separate from Arabic **ح**'s source-specific two-run order
+  while fitting the same bundled Noto Naskh fallback outline.
 
 ### Added — source-verified Malayalam independent aa
 

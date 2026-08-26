@@ -15,7 +15,7 @@ describe("independent (word-initial) vowels", () => {
     expect(iv.map((v) => v.sound)).toEqual(
       ["a", "ā", "i", "ī", "u", "ū", "e", "ē", "o", "ō", "ai", "au", "r̥"],
     );
-    // Independent vowels are vowels, not syllables. అ, ఆ, ఇ, and ఎ have crossed
+    // Independent vowels are vowels, not syllables. అ, ఆ, ఇ, ఉ, and ఎ have crossed
     // the source-and-font gate; every other row remains free of fabricated ductus.
     expect(iv.every((v) => v.role === "vowel")).toBe(true);
     expect(iv[0]!.strokeOrder).toHaveLength(4);
@@ -33,12 +33,15 @@ describe("independent (word-initial) vowels", () => {
     expect(iv[2]!.strokeOrderSource?.url).toBe(
       "https://www.youtube.com/watch?v=MKvmq1hFVIE",
     );
+    expect(iv[4]!.strokeOrder).toHaveLength(5);
+    expect(iv[4]!.penLifts).toBe(2);
+    expect(iv[4]!.strokeOrderSource?.citation).toMatch(/dot_stroke_v_5_u\.png.*movements 1–5.*version 2\.6/i);
     expect(iv[6]!.strokeOrder).toHaveLength(3);
     expect(iv[6]!.penLifts).toBe(1);
     expect(iv[6]!.strokeOrderSource?.url).toBe(
       "https://write-telugu-alphabets.en.aptoide.com/app",
     );
-    expect(iv.filter((_, index) => ![0, 1, 2, 6].includes(index)).every((v) => v.strokeOrder.length === 0)).toBe(true);
+    expect(iv.filter((_, index) => ![0, 1, 2, 4, 6].includes(index)).every((v) => v.strokeOrder.length === 0)).toBe(true);
     // The vocalic-R vowel is ISO-15919 r̥ = r + U+0325 (ring below), not IAST ṛ.
     expect([...iv[12]!.sound].map((c) => c.codePointAt(0))).toEqual([0x72, 0x325]);
   });
@@ -264,6 +267,23 @@ describe("shared Perso-Arabic letters retain script-owned provenance", () => {
       "https://openbooks.library.northwestern.edu/zerozabar/chapter/te-mim-jim-che/",
     );
     expect(persian.strokeOrderSource?.url).not.toBe(urdu.strokeOrderSource?.url);
+  });
+
+  it("keeps Persian and Urdu ح zero-lift with independently sourced provenance", () => {
+    const persian = SCRIPTS.find((script) => script.script === "perso-arabic")!
+      .letters.find((entry) => entry.glyph === "ح")!;
+    const urdu = SCRIPTS.find((script) => script.script === "urdu-nastaliq")!
+      .letters.find((entry) => entry.glyph === "ح")!;
+    expect(persian.sound).toBe("h");
+    expect(urdu.sound).toBe("h");
+    expect(persian.penLifts).toBe(0);
+    expect(urdu.penLifts).toBe(0);
+    expect(persian.strokeOrder).toHaveLength(2);
+    expect(urdu.strokeOrder).toHaveLength(2);
+    expect(persian.strokeOrder[0]).toMatch(/head.*left to right/i);
+    expect(urdu.strokeOrder[0]).toMatch(/pointed hooked head/i);
+    expect(persian.strokeOrderSource?.url).not.toBe(urdu.strokeOrderSource?.url);
+    expect(urdu.notes).toMatch(/baṛī he.*Arabic-derived.*chhoṭī he.*do-chashmī he/i);
   });
 
   it("keeps Urdu ھ as one sourced two-eyed aspiration path", () => {

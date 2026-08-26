@@ -18,7 +18,7 @@ use diagram_ir::{
 };
 use std::collections::{BTreeSet, HashMap};
 
-pub const VERSION: &str = "0.26.0";
+pub const VERSION: &str = "0.27.0";
 
 // ── Constants ─────────────────────────────────────────────────────────────
 
@@ -230,6 +230,7 @@ fn date_to_days(source: &str, format: &GanttDateFormat) -> Option<f64> {
         return source.parse::<f64>().ok().map(|milliseconds| milliseconds / 86_400_000.0);
     }
     let mut rest = source;
+    let seconds_only = format.parts.as_slice() == [GanttDateFormatPart::Second];
     let (mut year, mut month, mut day) = (1970_i64, 1_i64, 1_i64);
     let (mut hour, mut minute, mut second, mut millisecond) = (0_i64, 0_i64, 0_i64, 0_i64);
     let mut timezone_offset_minutes = 0_i64;
@@ -255,6 +256,9 @@ fn date_to_days(source: &str, format: &GanttDateFormat) -> Option<f64> {
             GanttDateFormatPart::Day2 => (day, rest) = take_number(rest, 2, 2)?,
             GanttDateFormatPart::Hour24 => (hour, rest) = take_number(rest, 2, 2)?,
             GanttDateFormatPart::Minute => (minute, rest) = take_number(rest, 2, 2)?,
+            GanttDateFormatPart::Second if seconds_only => {
+                (second, rest) = take_number(rest, 1, 2)?;
+            }
             GanttDateFormatPart::Second => (second, rest) = take_number(rest, 2, 2)?,
             GanttDateFormatPart::Millisecond => (millisecond, rest) = take_number(rest, 3, 3)?,
             GanttDateFormatPart::TimezoneOffsetColon => {
@@ -956,7 +960,7 @@ mod tests {
 
     #[test]
     fn version_exists() {
-        assert_eq!(crate::VERSION, "0.26.0");
+        assert_eq!(crate::VERSION, "0.27.0");
     }
 
     #[test]
@@ -1151,6 +1155,28 @@ mod tests {
         assert_eq!(bars.len(), 2);
         assert!((bars[0].0 - bars[1].0).abs() < 0.01);
         assert!((bars[0].1 - bars[1].1).abs() < 0.01);
+    }
+
+    #[test]
+    fn gantt_layout_resolves_seconds_only_ranges() {
+        let mut diagram = simple_gantt();
+        let TemporalBody::Gantt(gantt) = &mut diagram.body else { unreachable!() };
+        gantt.date_format = GanttDateFormat {
+            source: "ss".into(),
+            parts: vec![GanttDateFormatPart::Second],
+        };
+        gantt.sections[0].tasks[0].start = TaskStart::Date("0".into());
+        gantt.sections[0].tasks[0].end = Some(TaskEnd::Date("20".into()));
+        gantt.sections[0].tasks[1].start = TaskStart::After(vec!["t1".into()]);
+        gantt.sections[0].tasks[1].duration = GanttDuration { value: 5.0, unit: GanttDurationUnit::Seconds };
+
+        let layout = layout_temporal_diagram(&diagram, 800.0);
+        let widths = layout.items.iter().filter_map(|item| match item {
+            LayoutedTemporalItem::TaskBar { width, .. } => Some(*width),
+            _ => None,
+        }).collect::<Vec<_>>();
+        assert_eq!(widths.len(), 2);
+        assert!((widths[0] / widths[1] - 4.0).abs() < 0.01);
     }
 
     #[test]

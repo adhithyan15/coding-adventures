@@ -52,6 +52,8 @@ const CHINESE_HAN = DUCTUS[ductusKey("chinese", "汉")];
 const CHINESE_LANGUAGE = DUCTUS[ductusKey("chinese", "语")];
 const CHINESE_WRITING = DUCTUS[ductusKey("chinese", "文")];
 const CHINESE_COUNTRY = DUCTUS[ductusKey("chinese", "国")];
+const CHINESE_LOOK = DUCTUS[ductusKey("chinese", "看")];
+const CHINESE_BOOK = DUCTUS[ductusKey("chinese", "书")];
 const DEVANAGARI_A = DUCTUS[ductusKey("devanagari", "अ")];
 const DEVANAGARI_AA = DUCTUS[ductusKey("devanagari", "आ")];
 const DEVANAGARI_I = DUCTUS[ductusKey("devanagari", "इ")];
@@ -200,6 +202,8 @@ const ARABIC_TAA = DUCTUS[ductusKey("arabic", "ت")];
 const ARABIC_THAA = DUCTUS[ductusKey("arabic", "ث")];
 const ARABIC_JEEM = DUCTUS[ductusKey("arabic", "ج")];
 const ARABIC_HAA = DUCTUS[ductusKey("arabic", "ح")];
+const PERSIAN_HAH = DUCTUS[ductusKey("perso-arabic", "ح")];
+const URDU_BARI_HE = DUCTUS[ductusKey("urdu-nastaliq", "ح")];
 const ARABIC_KHAA = DUCTUS[ductusKey("arabic", "خ")];
 const PERSIAN_KHEH = DUCTUS[ductusKey("perso-arabic", "خ")];
 const URDU_KHE = DUCTUS[ductusKey("urdu-nastaliq", "خ")];
@@ -257,6 +261,7 @@ const KANNADA_E = DUCTUS[ductusKey("kannada", "ಎ")];
 const TELUGU_A = DUCTUS[ductusKey("telugu", "అ")];
 const TELUGU_AA = DUCTUS[ductusKey("telugu", "ఆ")];
 const TELUGU_I = DUCTUS[ductusKey("telugu", "ఇ")];
+const TELUGU_U = DUCTUS[ductusKey("telugu", "ఉ")];
 const TELUGU_E = DUCTUS[ductusKey("telugu", "ఎ")];
 const MALAYALAM_A = DUCTUS[ductusKey("malayalam", "അ")];
 const MALAYALAM_AA = DUCTUS[ductusKey("malayalam", "ആ")];
@@ -444,8 +449,8 @@ describe("handwriting ductus", () => {
   it("marks Chinese complete with every current-corpus row source-verified", () => {
     const chinese = SCRIPTS.find((script) => script.script === "chinese")!;
     expect(chinese.complete).toBe(true);
-    expect(chinese.letters).toHaveLength(41);
-    expect(new Set(chinese.letters.map((letter) => letter.glyph)).size).toBe(41);
+    expect(chinese.letters).toHaveLength(43);
+    expect(new Set(chinese.letters.map((letter) => letter.glyph)).size).toBe(43);
     expect(chinese.letters.every((letter) => letter.strokeOrderSource !== undefined)).toBe(true);
   });
 
@@ -773,6 +778,20 @@ describe("handwriting ductus", () => {
       ["turn around the broad outer bowl"],
       ["form the compact upper-left lobe"],
       ["form the angled upper-right shoulder"],
+    ]);
+  });
+
+  it("Telugu ఉ groups five source-verified movements into three pen-down runs", () => {
+    expect(penLifts(TELUGU_U)).toBe(2);
+    expect(TELUGU_U.strokes).toHaveLength(3);
+    expect(TELUGU_U.strokes.map((stroke) => stroke.segments.map((segment) => segment.label))).toEqual([
+      [
+        "sweep left across the rounded upper arch",
+        "continue down and around the broad lower bowl",
+        "curl upward around the rounded right lobe without lifting",
+      ],
+      ["lift and draw the inner horizontal bar from left to right"],
+      ["lift again and draw the short upper headstroke downward"],
     ]);
   });
 
@@ -3917,6 +3936,20 @@ describe("handwriting ductus", () => {
     );
   });
 
+  it("Persian and Urdu independent ح keep separate sources for one body-first run", () => {
+    for (const letter of [PERSIAN_HAH, URDU_BARI_HE]) {
+      expect(penLifts(letter)).toBe(0);
+      expect(letter.strokes).toHaveLength(1);
+      expect(letter.strokes[0].segments).toHaveLength(2);
+      expect(letter.strokes[0].segments[0].path.at(-1)).toEqual(
+        letter.strokes[0].segments[1].path[0],
+      );
+    }
+    expect(PERSIAN_HAH.source.url).not.toBe(URDU_BARI_HE.source.url);
+    expect(PERSIAN_HAH.source.citation).toMatch(/Persian Online.*ح.*00:42.?00:46/i);
+    expect(URDU_BARI_HE.source.citation).toMatch(/Zer o Zabar.*baṛī he.*ح/i);
+  });
+
   it("Arabic independent خ draws its body first, then lifts once for the upper dot", () => {
     expect(penLifts(ARABIC_KHAA)).toBe(1);
     expect(ARABIC_KHAA.strokes).toHaveLength(2);
@@ -4473,6 +4506,9 @@ describe("handwriting ductus", () => {
     expect(verifiedLetterFont("ఇ", TELUGU_I.source.url)).toBe(
       "_fonts/NotoSansTelugu-Static.ttf",
     );
+    expect(verifiedLetterFont("ఉ", TELUGU_U.source.url)).toBe(
+      "_fonts/NotoSansTelugu-Static.ttf",
+    );
     expect(verifiedLetterFont("ఎ", TELUGU_E.source.url)).toBe(
       "_fonts/NotoSansTelugu-Static.ttf",
     );
@@ -4574,6 +4610,12 @@ describe("handwriting ductus", () => {
       "_fonts/NotoSansSC-Subset.ttf",
     );
     expect(verifiedLetterFont("国", CHINESE_COUNTRY.source.url)).toBe(
+      "_fonts/NotoSansSC-Subset.ttf",
+    );
+    expect(verifiedLetterFont("看", CHINESE_LOOK.source.url)).toBe(
+      "_fonts/NotoSansSC-Subset.ttf",
+    );
+    expect(verifiedLetterFont("书", CHINESE_BOOK.source.url)).toBe(
       "_fonts/NotoSansSC-Subset.ttf",
     );
     expect(verifiedLetterFont("अ", DEVANAGARI_A.source.url)).toBe(
@@ -5142,6 +5184,36 @@ describe("handwriting ductus", () => {
       6, 12, 6, 4, 5, 5, 3, 5,
     ]);
     expect(penLifts(CHINESE_COUNTRY)).toBe(7);
+  });
+
+  it("Chinese 看 preserves the four upper medians before all five 目 medians", () => {
+    const src = CHINESE_LOOK.source;
+    expect(src.url).toBe(
+      "https://raw.githubusercontent.com/chanind/hanzi-writer-data/68d10a4b21150cae5e1ebbd223eed289cf32d90c/data/%E7%9C%8B.json",
+    );
+    expect(src.citation).toMatch(/Hanzi Writer Data 看\.json.*medians 1–9.*snapshot 68d10a4/i);
+    expect(src.variation).toMatch(
+      /nine ordered strokes.*Medians 1–4.*upper hand-like.*medians 5–9.*目.*People's Republic of China.*ordered sequence.*fitting.*Noto Sans SC/i,
+    );
+    expect(CHINESE_LOOK.strokes).toHaveLength(9);
+    expect(CHINESE_LOOK.strokes.map((stroke) => penPath(stroke).length)).toEqual([
+      7, 5, 5, 9, 6, 9, 5, 5, 5,
+    ]);
+    expect(penLifts(CHINESE_LOOK)).toBe(8);
+  });
+
+  it("Chinese 书 preserves both folds before the upright and final dot", () => {
+    const src = CHINESE_BOOK.source;
+    expect(src.url).toBe(
+      "https://raw.githubusercontent.com/chanind/hanzi-writer-data/68d10a4b21150cae5e1ebbd223eed289cf32d90c/data/%E4%B9%A6.json",
+    );
+    expect(src.citation).toMatch(/Hanzi Writer Data 书\.json.*medians 1–4.*snapshot 68d10a4/i);
+    expect(src.variation).toMatch(
+      /four ordered strokes.*two upper folding strokes.*central upright.*final upper-right dot.*People's Republic of China.*ordered sequence.*fitting.*Noto Sans SC/i,
+    );
+    expect(CHINESE_BOOK.strokes).toHaveLength(4);
+    expect(CHINESE_BOOK.strokes.map((stroke) => penPath(stroke).length)).toEqual([8, 13, 6, 5]);
+    expect(penLifts(CHINESE_BOOK)).toBe(3);
   });
 
   it("Devanagari अ traces its four-run modern form and records the six-stroke variant", () => {

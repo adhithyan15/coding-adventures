@@ -117,6 +117,8 @@ const TELUGU_AA = DUCTUS[ductusKey("telugu", "ఆ")];
 const teluguAaOutline = teluguOutline("ఆ");
 const TELUGU_I = DUCTUS[ductusKey("telugu", "ఇ")];
 const teluguIOutline = teluguOutline("ఇ");
+const TELUGU_U = DUCTUS[ductusKey("telugu", "ఉ")];
+const teluguUOutline = teluguOutline("ఉ");
 const KANNADA_A = DUCTUS[ductusKey("kannada", "ಅ")];
 const kannadaAOutline = kannadaOutline("ಅ");
 const KANNADA_AA = DUCTUS[ductusKey("kannada", "ಆ")];
@@ -486,6 +488,8 @@ const arabicThaaOutline = naskhOutline("ث");
 const ARABIC_JEEM = ductusFor("ج", "arabic")!;
 const arabicJeemOutline = naskhOutline("ج");
 const ARABIC_HAA = ductusFor("ح", "arabic")!;
+const PERSIAN_HAH = ductusFor("ح", "perso-arabic")!;
+const URDU_BARI_HE = ductusFor("ح", "urdu-nastaliq")!;
 const arabicHaaOutline = naskhOutline("ح");
 const ARABIC_KHAA = ductusFor("خ", "arabic")!;
 const arabicKhaaOutline = naskhOutline("خ");
@@ -1073,6 +1077,33 @@ describe("Telugu ఇ — three source-verified component runs", () => {
       penPathD(TELUGU_I.strokes[1], 1),
     ]);
     expect(pen.attrs.d).toBe(penPathD(TELUGU_I.strokes[2], 1));
+  });
+});
+
+describe("Telugu ఉ — joined body plus two separate printed components", () => {
+  const steps = ductusSteps(TELUGU_U);
+  const strip = ductusFilmstrip(TELUGU_U, teluguUOutline);
+
+  it("places lifts before the inner bar and upper headstroke", () => {
+    expect(steps.map((step) => step.startsAfterLift)).toEqual([false, false, false, true, true]);
+    expect(steps.map((step) => step.strokeIndex)).toEqual([0, 0, 0, 1, 2]);
+  });
+
+  it("reports five movements in three strokes", () => {
+    expect(strip.frames).toHaveLength(5);
+    expect(strip.penLifts).toBe(2);
+    expect(strip.summary).toBe("3 strokes · 2 pen lifts · 5 movements");
+  });
+
+  it("keeps both earlier runs visible while drawing the headstroke", () => {
+    const last = strip.frames[4];
+    const done = byTag(last, "path").filter((path) => path.attrs.class === "ductus__done");
+    const pen = byTag(last, "path").find((path) => path.attrs.class === "ductus__pen")!;
+    expect(done.map((path) => path.attrs.d)).toEqual([
+      penPathD(TELUGU_U.strokes[0], 1),
+      penPathD(TELUGU_U.strokes[1], 1),
+    ]);
+    expect(pen.attrs.d).toBe(penPathD(TELUGU_U.strokes[2], 1));
   });
 });
 
@@ -6227,6 +6258,27 @@ describe("Arabic ح — a stem-first, dotless filmstrip", () => {
     );
     expect(paths.find((path) => path.attrs.class === "ductus__pen")!.attrs.d).toBe(
       penPathD(ARABIC_HAA.strokes[1], 1),
+    );
+  });
+});
+
+describe("Persian and Urdu ح — independently sourced body-first filmstrips", () => {
+  it.each([
+    ["Persian", PERSIAN_HAH],
+    ["Urdu", URDU_BARI_HE],
+  ])("keeps %s head and bowl in one uninterrupted run", (_name, letter) => {
+    const steps = ductusSteps(letter);
+    const strip = ductusFilmstrip(letter, arabicHaaOutline);
+    expect(steps.map((step) => step.startsAfterLift)).toEqual([false, false]);
+    expect(strip.frames).toHaveLength(2);
+    expect(strip.penLifts).toBe(0);
+    expect(strip.summary).toBe("one unbroken stroke · 2 movements");
+    const paths = byTag(strip.frames[1], "path");
+    expect(paths.find((path) => path.attrs.class === "ductus__glyph")!.attrs.d).toBe(
+      arabicHaaOutline.path,
+    );
+    expect(paths.find((path) => path.attrs.class === "ductus__pen")!.attrs.d).toBe(
+      penPathD(letter.strokes[0], 2),
     );
   });
 });

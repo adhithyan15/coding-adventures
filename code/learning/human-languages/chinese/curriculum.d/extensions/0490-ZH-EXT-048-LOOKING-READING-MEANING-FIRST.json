@@ -1,0 +1,17 @@
+{
+  "id": "ZH-EXT-048-LOOKING-READING-MEANING-FIRST",
+  "stage": "pre-A1",
+  "kind": "required",
+  "category": "vocabulary",
+  "canDo": "I can hear and say 看, 看见, 好看, 书 and 看书 before relying on their written forms.",
+  "prerequisites": [
+    "ZH-EXT-047-LANGUAGE-COUNTRY-FOUR-SKILL"
+  ],
+  "lessons": [
+    "ZH-C18-hear-kan",
+    "ZH-C18-hear-kanjian",
+    "ZH-C18-hear-haokan",
+    "ZH-C18-hear-shu",
+    "ZH-C18-hear-kanshu"
+  ]
+}

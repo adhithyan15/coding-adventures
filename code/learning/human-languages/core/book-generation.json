@@ -1008,6 +1008,13 @@
       "scriptCommand": "zh"
     },
     {
+      "language": "chinese",
+      "chapter": 18,
+      "output": "chinese/book/chapters/ch18-looking-reading.tex",
+      "unicodeScript": "Han",
+      "scriptCommand": "zh"
+    },
+    {
       "language": "french",
       "chapter": 17,
       "output": "french/book/chapters/ch17-head-and-hand.tex"
@@ -5741,6 +5748,26 @@
       "language": "spanish",
       "chapter": 384,
       "output": "spanish/book/chapters/ch384-enviar-y-subir.tex"
+    },
+    {
+      "language": "spanish",
+      "chapter": 385,
+      "output": "spanish/book/chapters/ch385-usar-y-tocar.tex"
+    },
+    {
+      "language": "spanish",
+      "chapter": 386,
+      "output": "spanish/book/chapters/ch386-vender-y-servir.tex"
+    },
+    {
+      "language": "spanish",
+      "chapter": 387,
+      "output": "spanish/book/chapters/ch387-quemar-y-cruzar.tex"
+    },
+    {
+      "language": "spanish",
+      "chapter": 388,
+      "output": "spanish/book/chapters/ch388-empujar-y-lanzar.tex"
     },
     {
       "language": "tamil",

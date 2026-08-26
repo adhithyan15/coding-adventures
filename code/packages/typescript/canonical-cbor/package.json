@@ -1,0 +1,21 @@
+{
+  "name": "@coding-adventures/canonical-cbor",
+  "version": "0.1.0",
+  "description": "Deterministic, bounded canonical CBOR encoding and decoding",
+  "type": "module",
+  "main": "src/index.ts",
+  "scripts": {
+    "build": "tsc",
+    "test": "vitest run",
+    "test:coverage": "vitest run --coverage"
+  },
+  "author": "Adhithya Rajasekaran",
+  "license": "MIT",
+  "dependencies": {},
+  "devDependencies": {
+    "@types/node": "^24.0.0",
+    "@vitest/coverage-v8": "^4.1.0",
+    "typescript": "^5.0.0",
+    "vitest": "^4.1.0"
+  }
+}

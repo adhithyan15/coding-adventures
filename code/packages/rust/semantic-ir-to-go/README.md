@@ -85,6 +85,22 @@ SIR-v1 parity**.  Go is the fifth and last backend to reach v1.
 With all six SIR16 features wired up, `accepts_features` is in lockstep
 with emit — every declared feature has a real (non-panicking) emit path.
 
+### SIR16 addendum — loop control (`LoopControl`, task #63)
+
+`Stmt::Break`/`Stmt::Continue` emit bare native `break`/`continue`
+(`While`/`ForRange`/`ForEach` already emit real inline loops with no
+closure boundary in the way, so this is a trivial 1:1 emission). The one
+real wrinkle: a bare `if` used as a *statement*
+(`Stmt::ExprStmt{Expr::If{..}}`) is special-cased in `emit_stmt` to emit
+a native `if ... { … } else { … }` rather than falling through to
+`Expr::If`'s generic value-position codegen — Go has no expression-
+position `if`, so that codegen lifts the whole thing to an anonymous
+`func() Value { ... }()` literal, and `break`/`continue` cannot cross
+that literal's own boundary. `if (cond) { break; }` is the single most
+common way source code uses either statement at all. Mirrors
+`semantic-ir-to-javascript`'s (task #62) and `semantic-ir-to-typescript`'s
+(task #63) own identically-shaped fix.
+
 ### SIR19 — default parameters (`DefaultParams`)
 
 Go has no native optional/default parameters and emitted functions are

@@ -1610,10 +1610,23 @@ fn build_style_fragment_with_drops(
         };
         upsert_style_attr(&mut parts, key, value);
     }
+    // X8/#12025: `escape_xaml_attr` does real XML attribute escaping
+    // (`&`/`"`/`<`/`>`), not the C-string-style backslash escaping this
+    // used to do. That old scheme protected nothing: `parse_style_fragment`
+    // (below) stripped the backslashes back out before any downstream
+    // consumer ever saw the value, so a value containing `"` reached a
+    // real XAML attribute completely unescaped — able to terminate the
+    // attribute and inject markup. Fixing it here, once, at the single
+    // production write path for `PartStyleEntry.base_fragment`, means
+    // every consumer (five `parse_style_fragment` callers, plus
+    // `part_style_attr`'s whole-fragment raw splice used by 17 more sites)
+    // is correct with no further changes: escaped values can no longer
+    // contain a literal `"`, which is also exactly what keeps this
+    // fragment's own `Key="Value"` delimiter structure parseable.
     let fragment = parts
         .into_iter()
         .map(|(key, value)| {
-            let escaped = value.replace('\\', "\\\\").replace('"', "\\\"");
+            let escaped = escape_xaml_attr(&value);
             format!("{key}=\"{escaped}\"")
         })
         .collect::<Vec<_>>()
@@ -1966,17 +1979,15 @@ fn is_color_setter(setter: &str) -> bool {
 /// vs `DarkGray` â€” also normalise to PascalCase.
 fn normalize_xaml_color_value(s: &str) -> Option<String> {
     let trimmed = s.trim();
-    // Defence in depth. Several arms below fall through to returning the
-    // stylesheet value verbatim, and the base-style-fragment path that
-    // consumes it does not XML-escape (unlike the `<Setter>` path, which
-    // wraps values in `escape_xaml_attr`). A value carrying `"`, `<`, `>`
-    // or `&` can therefore terminate the attribute it is written into and
-    // inject markup. mosstyle's own token validation permits all four.
-    //
-    // No legitimate colour literal contains any of them, so refusing them
-    // here costs nothing and closes this function as an injection source.
-    // The general fix — escaping at every attribute sink — is broader than
-    // this change and tracked separately.
+    // Defence in depth. #12025 fixed the general case — the base-style-
+    // fragment path now applies `escape_xaml_attr` at the point the
+    // fragment is built (`build_style_fragment_with_drops`), same as the
+    // `<Setter>` path already did — so this guard is no longer the only
+    // thing standing between a hostile colour token and markup injection.
+    // Kept anyway: no legitimate colour literal contains `"`, `<`, `>`, or
+    // `&`, so refusing them here costs nothing, and a value this
+    // implausible is more usefully rejected outright than silently
+    // encoded into something that still isn't a real colour.
     if trimmed.contains(['"', '<', '>', '&']) {
         return None;
     }
@@ -2838,24 +2849,24 @@ fn parse_style_fragment(frag: &str) -> Vec<(String, String)> {
             break;
         }
         chars.next(); // consume opening '"'
-                      // Read the value up to the next un-escaped '"'. Values that
-                      // contain `\"` (escaped) are unusual but handled.
+                      // Read the value up to the next '"'. #12025: this
+                      // used to special-case `\"` as an escaped quote,
+                      // matching `build_style_fragment_with_drops`'s old
+                      // C-string-style escaping — that escaping is gone
+                      // now (replaced with real `escape_xaml_attr` XML
+                      // escaping at the point the fragment is built), so
+                      // a value can no longer contain a literal `"` at
+                      // all: it always arrives here already encoded as
+                      // `&quot;`. No backslash handling is needed or
+                      // correct to keep.
         let mut value = String::new();
         while let Some(&c) = chars.peek() {
             if c == '"' {
                 chars.next();
                 break;
             }
-            if c == '\\' {
-                chars.next();
-                if let Some(&n) = chars.peek() {
-                    value.push(n);
-                    chars.next();
-                }
-            } else {
-                value.push(c);
-                chars.next();
-            }
+            value.push(c);
+            chars.next();
         }
         if !key.is_empty() {
             out.push((key, value));
@@ -10652,6 +10663,159 @@ mod tests {
         let r = compile(&c, &l, &empty_style("Foo"));
         assert!(
             r.xaml.contains("Text=\"say &quot;hi&quot;\""),
+            "got:\n{}",
+            r.xaml
+        );
+    }
+
+    // ── issue #12025: base_fragment style values escape at every
+    //    consumption path, not just literal Text content ──
+
+    /// A hostile mosstyle value carrying all four XML-significant
+    /// characters. Its escaped form must appear literally in the output;
+    /// none of `"`/`<`/`>`/`&` may appear raw — a raw `"` in particular
+    /// would terminate the attribute early and let the rest inject markup.
+    const HOSTILE_STYLE_VALUE: &str = "foo\"bar<baz>&qux";
+    const ESCAPED_HOSTILE_STYLE_VALUE: &str = "foo&quot;bar&lt;baz&gt;&amp;qux";
+
+    fn assert_hostile_value_escaped_not_injected(xaml: &str) {
+        assert!(
+            xaml.contains(ESCAPED_HOSTILE_STYLE_VALUE),
+            "expected the escaped value to appear literally, got:\n{xaml}"
+        );
+        assert!(
+            !xaml.contains(HOSTILE_STYLE_VALUE),
+            "the raw, unescaped hostile value must never appear, got:\n{xaml}"
+        );
+    }
+
+    /// `partition_box_style` → `emit_container`'s `<Border>` path.
+    #[test]
+    fn box_style_escapes_hostile_value() {
+        let c = component("Foo", vec![], vec![]);
+        let l = layout_with_root(
+            "Foo",
+            LayoutNode {
+                tag: "Box".to_string(),
+                part_name: Some("card".to_string()),
+                props: Vec::new(),
+                children: Vec::new(),
+            },
+        );
+        let s = style_for_box("card", vec![("opacity", HOSTILE_STYLE_VALUE)]);
+        let r = compile(&c, &l, &s);
+        assert_hostile_value_escaped_not_injected(&r.xaml);
+    }
+
+    /// `partition_flex_grid_style` (issue #12021's `<Grid>` lowering).
+    #[test]
+    fn row_style_escapes_hostile_value() {
+        let c = component("Foo", vec![], vec![]);
+        let l = layout_with_root(
+            "Foo",
+            LayoutNode {
+                tag: "Row".to_string(),
+                part_name: Some("toolbar".to_string()),
+                props: Vec::new(),
+                children: Vec::new(),
+            },
+        );
+        let s = style_for_box("toolbar", vec![("opacity", HOSTILE_STYLE_VALUE)]);
+        let r = compile(&c, &l, &s);
+        assert_hostile_value_escaped_not_injected(&r.xaml);
+    }
+
+    /// `content_control_style_attr` (`HostButton`'s `<Button>` lowering).
+    #[test]
+    fn host_button_style_escapes_hostile_value() {
+        let c = component("Foo", vec![], vec![]);
+        let l = layout_with_root(
+            "Foo",
+            LayoutNode {
+                tag: "HostButton".to_string(),
+                part_name: Some("submit".to_string()),
+                props: vec![LayoutProp {
+                    name: "label".to_string(),
+                    value: LayoutPropValue::String("Submit".to_string()),
+                }],
+                children: Vec::new(),
+            },
+        );
+        let s = style_for_box("submit", vec![("opacity", HOSTILE_STYLE_VALUE)]);
+        let r = compile(&c, &l, &s);
+        assert_hostile_value_escaped_not_injected(&r.xaml);
+    }
+
+    /// `part_style_attr`'s whole-fragment raw splice — the path used by
+    /// `Image`/`Spacer`/`Divider` and 14 other primitives that never call
+    /// `parse_style_fragment` at all.
+    #[test]
+    fn image_style_escapes_hostile_value() {
+        let c = component("Foo", vec![], vec![]);
+        let l = layout_with_root(
+            "Foo",
+            LayoutNode {
+                tag: "Image".to_string(),
+                part_name: Some("thumb".to_string()),
+                props: Vec::new(),
+                children: Vec::new(),
+            },
+        );
+        let s = style_for_box("thumb", vec![("opacity", HOSTILE_STYLE_VALUE)]);
+        let r = compile(&c, &l, &s);
+        assert_hostile_value_escaped_not_injected(&r.xaml);
+    }
+
+    /// `drag_control_style_attr` (`HostDraggable`/`HostDropTarget`'s
+    /// `<ContentControl>` lowering) — direct unit test rather than full
+    /// emission, since `HostDraggable` needs several required props
+    /// (`drag-key`, etc.) unrelated to what this is testing.
+    #[test]
+    fn drag_control_style_attr_escapes_hostile_value() {
+        let style = style_for_box("handle", vec![("opacity", HOSTILE_STYLE_VALUE)]);
+        let part_styles = build_part_style_map(&style);
+        let node = LayoutNode {
+            tag: "HostDraggable".to_string(),
+            part_name: Some("handle".to_string()),
+            props: Vec::new(),
+            children: Vec::new(),
+        };
+        let (attrs, _spacing) = drag_control_style_attr(&node, &part_styles);
+        assert_hostile_value_escaped_not_injected(&attrs);
+    }
+
+    /// `partition_stack_panel_style` (still used by the `HostTable` row-
+    /// section emitter, `emit_host_table_rows` — table rows aren't flex
+    /// containers, so they didn't move to `partition_flex_grid_style` in
+    /// #12021). Direct unit test for the same reason as the one above.
+    #[test]
+    fn partition_stack_panel_style_escapes_hostile_value() {
+        let style = style_for_box("row", vec![("opacity", HOSTILE_STYLE_VALUE)]);
+        let part_styles = build_part_style_map(&style);
+        let (wrapper, stack, _text) = partition_stack_panel_style(Some("row"), &part_styles);
+        assert_hostile_value_escaped_not_injected(&format!("{wrapper}{stack}"));
+    }
+
+    /// `parse_style_fragment` no longer needs (or has) backslash-escape
+    /// handling — confirm a value containing a literal backslash round-
+    /// trips as itself (backslash isn't XML-significant, so
+    /// `escape_xaml_attr` passes it through unchanged).
+    #[test]
+    fn style_value_with_literal_backslash_round_trips_unchanged() {
+        let c = component("Foo", vec![], vec![]);
+        let l = layout_with_root(
+            "Foo",
+            LayoutNode {
+                tag: "Box".to_string(),
+                part_name: Some("path".to_string()),
+                props: Vec::new(),
+                children: Vec::new(),
+            },
+        );
+        let s = style_for_box("path", vec![("background", "C:\\images\\bg.png")]);
+        let r = compile(&c, &l, &s);
+        assert!(
+            r.xaml.contains("Background=\"C:\\images\\bg.png\""),
             "got:\n{}",
             r.xaml
         );
