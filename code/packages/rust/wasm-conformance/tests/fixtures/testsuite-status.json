@@ -1680,6 +1680,62 @@
         "not_yet_supported": 0
       }
     },
+    "i31.wast": {
+      "action": {
+        "pass": 1,
+        "fail": 0,
+        "trap": 0,
+        "not_yet_supported": 7
+      },
+      "assert_exhaustion": {
+        "pass": 0,
+        "fail": 0,
+        "trap": 0,
+        "not_yet_supported": 0
+      },
+      "assert_invalid": {
+        "pass": 0,
+        "fail": 0,
+        "trap": 0,
+        "not_yet_supported": 0
+      },
+      "assert_malformed": {
+        "pass": 0,
+        "fail": 0,
+        "trap": 0,
+        "not_yet_supported": 0
+      },
+      "assert_return": {
+        "pass": 20,
+        "fail": 0,
+        "trap": 0,
+        "not_yet_supported": 35
+      },
+      "assert_trap": {
+        "pass": 2,
+        "fail": 0,
+        "trap": 0,
+        "not_yet_supported": 0
+      },
+      "assert_unlinkable": {
+        "pass": 0,
+        "fail": 0,
+        "trap": 0,
+        "not_yet_supported": 0
+      },
+      "module": {
+        "pass": 3,
+        "fail": 0,
+        "trap": 0,
+        "not_yet_supported": 4
+      },
+      "register": {
+        "pass": 1,
+        "fail": 0,
+        "trap": 0,
+        "not_yet_supported": 0
+      }
+    },
     "i32.wast": {
       "action": {
         "pass": 0,
@@ -7563,10 +7619,10 @@
   },
   "aggregate": {
     "action": {
-      "pass": 145,
+      "pass": 146,
       "fail": 0,
       "trap": 0,
-      "not_yet_supported": 29
+      "not_yet_supported": 36
     },
     "assert_exhaustion": {
       "pass": 5,
@@ -7587,13 +7643,13 @@
       "not_yet_supported": 538
     },
     "assert_return": {
-      "pass": 44693,
+      "pass": 44713,
       "fail": 17,
       "trap": 0,
-      "not_yet_supported": 545
+      "not_yet_supported": 580
     },
     "assert_trap": {
-      "pass": 1478,
+      "pass": 1480,
       "fail": 0,
       "trap": 0,
       "not_yet_supported": 938
@@ -7605,13 +7661,13 @@
       "not_yet_supported": 0
     },
     "module": {
-      "pass": 1275,
+      "pass": 1278,
       "fail": 1,
       "trap": 0,
-      "not_yet_supported": 67
+      "not_yet_supported": 71
     },
     "register": {
-      "pass": 10,
+      "pass": 11,
       "fail": 2,
       "trap": 0,
       "not_yet_supported": 2

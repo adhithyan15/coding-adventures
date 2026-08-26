@@ -706,6 +706,16 @@ fn value_matches_expected(actual: &WasmValue, v128_bytes: Option<V128Bytes>, exp
         // result, so the type ambiguity doesn't cause false passes against
         // the vendored corpus.
         Expected::RefFuncAny => matches!(actual, WasmValue::Ref(Some(_))),
+        // Bare `(ref.i31)` (W20) -- matches ANY i31ref. This repo carries
+        // an i31ref as its plain (already 31-bit-masked) `i32` payload on
+        // the value stack (never a `WasmValue::Ref`, see `wasm-execution`'s
+        // own `0xFB` handler doc comment), so "is this some i31ref at all"
+        // is just "is this an I32" at this layer -- the real testsuite only
+        // ever uses this wildcard where the static result type is already
+        // known to be an i31ref, so the representation ambiguity (an I32
+        // result that ISN'T meant to be an i31 would also match) doesn't
+        // cause a false pass against the vendored corpus.
+        Expected::RefI31Any => matches!(actual, WasmValue::I32(_)),
         Expected::NanCanonicalF32 => {
             matches!(actual, WasmValue::F32(a) if (a.to_bits() & !F32_SIGN_BIT) == F32_CANONICAL_NAN_UNSIGNED)
         }
@@ -963,6 +973,18 @@ mod tests {
             "#,
         );
         assert_eq!(results[1], (DirectiveKind::AssertReturn, DirectiveOutcome::Pass));
+    }
+
+    #[test]
+    fn ref_i31_any_matches_i32_but_not_a_ref_or_other_numeric_type() {
+        // W20 -- an i31ref is carried as its plain (masked) i32 payload on
+        // this repo's value stack, never a `WasmValue::Ref` (see
+        // `wasm-execution`'s own `0xFB` handler doc comment).
+        assert!(value_matches_expected(&WasmValue::I32(0), None, &Expected::RefI31Any));
+        assert!(value_matches_expected(&WasmValue::I32(-1), None, &Expected::RefI31Any));
+        assert!(!value_matches_expected(&WasmValue::I64(0), None, &Expected::RefI31Any));
+        assert!(!value_matches_expected(&WasmValue::Ref(Some(0)), None, &Expected::RefI31Any));
+        assert!(!value_matches_expected(&WasmValue::Ref(None), None, &Expected::RefI31Any));
     }
 
     #[test]

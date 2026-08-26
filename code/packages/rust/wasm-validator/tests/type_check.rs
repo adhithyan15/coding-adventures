@@ -3356,3 +3356,40 @@ fn v128_load64_lane_with_the_multi_memory_flag_bit_set_validates_and_decodes_con
     }
     assert_eq!(decoded[3].opcode, 0x0B, "the trailing `end` must be recognized as its own instruction, not swallowed into the SIMD op's operand");
 }
+
+// ── W20: i31ref GC opcodes (ref.i31 / i31.get_s / i31.get_u) ──────────────
+
+#[test]
+fn valid_i31_get_u_pops_i31ref_pushes_i32() {
+    assert_valid("(module (func (param i32) (result i32) (i31.get_u (ref.i31 (local.get 0)))))");
+}
+
+#[test]
+fn valid_i31_get_s_pops_i31ref_pushes_i32() {
+    assert_valid("(module (func (param i32) (result i32) (i31.get_s (ref.i31 (local.get 0)))))");
+}
+
+#[test]
+fn valid_i31_get_u_on_ref_null_i31() {
+    // Statically valid (a null i31ref is still an i31ref) -- the null trap
+    // is a RUNTIME concern (`wasm-execution`'s `pop_i31_payload`), not a
+    // validation-time rejection.
+    assert_valid("(module (func (result i32) (i31.get_u (ref.null i31))))");
+}
+
+#[test]
+fn valid_i31_ref_type_in_params_results_locals_and_globals() {
+    assert_valid(
+        "(module
+           (global $g (ref i31) (ref.i31 (i32.const 2)))
+           (global $m (mut (ref i31)) (ref.i31 (i32.const 3)))
+           (func (param $r i31ref) (result i32) (local (ref null i31))
+             (local.set 1 (local.get 0))
+             (i31.get_u (local.get 1))))",
+    );
+}
+
+#[test]
+fn invalid_i31_get_u_on_empty_stack_is_rejected() {
+    assert_invalid("(module (func (result i32) (i31.get_u)))");
+}

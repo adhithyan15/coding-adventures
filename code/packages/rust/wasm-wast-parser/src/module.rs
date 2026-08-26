@@ -203,13 +203,26 @@ fn parse_value_type(expr: &SExpr) -> Result<ValueType, WastParseError> {
     // `(ref func)` and concrete `(ref null $t)` / `(ref $t)` forms are
     // deliberately NOT recognized -- see `code/specs/
     // W08-wasm-funcref-externref.md`'s "explicitly out of scope" section.
+    //
+    // `(ref i31)` / `(ref null i31)` (W20): unlike `func`/`extern` above,
+    // this crate does NOT distinguish the null and non-null spellings for
+    // `i31` -- both map to the same `ValueType::I31ref`, the same
+    // simplification this repo's `WasmValue::Ref`/`i31ref` representation
+    // already makes elsewhere (see `code/specs/
+    // W20-wasm-gc-i31-conformance.md`). This is a deliberate scope choice,
+    // not an oversight: a real non-null/nullable distinction would need a
+    // second `ValueType` variant this repo's type system doesn't have.
     if let Some(items) = expr.as_list() {
         if items.len() == 3 && items[0].as_atom() == Some("ref") && items[1].as_atom() == Some("null") {
             return match items[2].as_atom() {
                 Some("func") => Ok(ValueType::Funcref),
                 Some("extern") => Ok(ValueType::Externref),
+                Some("i31") => Ok(ValueType::I31ref),
                 _ => Err(WastParseError::UnexpectedToken { pos: expr.pos(), found: "list".to_string(), expected: "a value type" }),
             };
+        }
+        if items.len() == 2 && items[0].as_atom() == Some("ref") && items[1].as_atom() == Some("i31") {
+            return Ok(ValueType::I31ref);
         }
         return Err(WastParseError::UnexpectedToken { pos: expr.pos(), found: "list".to_string(), expected: "a value type" });
     }
@@ -226,24 +239,27 @@ fn parse_value_type(expr: &SExpr) -> Result<ValueType, WastParseError> {
         "v128" => Ok(ValueType::V128),
         "funcref" => Ok(ValueType::Funcref),
         "externref" => Ok(ValueType::Externref),
+        "i31ref" => Ok(ValueType::I31ref),
         other => Err(WastParseError::UnexpectedToken { pos: expr.pos(), found: other.to_string(), expected: "a value type" }),
     }
 }
 
-/// Parse a `ref.null` heap-type immediate keyword (`func` or `extern`) into
-/// its binary heap-type byte. This crate only recognizes the two abstract
-/// heap types `funcref`/`externref` need (WASM17); a concrete `$t` heap
-/// type is deliberately out of scope (see `parse_value_type`'s doc comment).
+/// Parse a `ref.null` heap-type immediate keyword (`func`, `extern`, or
+/// `i31` -- W20) into its binary heap-type byte. This crate only
+/// recognizes the abstract heap types its own reference-type slice needs
+/// (WASM17's `func`/`extern`, W20's `i31`); a concrete `$t` heap type is
+/// deliberately out of scope (see `parse_value_type`'s doc comment).
 fn parse_ref_null_heap_type(expr: &SExpr) -> Result<u8, WastParseError> {
     let s = expr.as_atom().ok_or(WastParseError::UnexpectedToken {
         pos: expr.pos(),
         found: "list".to_string(),
-        expected: "a heap type (func or extern)",
+        expected: "a heap type (func, extern, or i31)",
     })?;
     match s {
         "func" => Ok(0x70),
         "extern" => Ok(0x6F),
-        other => Err(WastParseError::UnexpectedToken { pos: expr.pos(), found: other.to_string(), expected: "a heap type (func or extern)" }),
+        "i31" => Ok(0x6C),
+        other => Err(WastParseError::UnexpectedToken { pos: expr.pos(), found: other.to_string(), expected: "a heap type (func, extern, or i31)" }),
     }
 }
 
@@ -1665,6 +1681,28 @@ fn encode_stream_instr(
         out.push(0xD1);
         return Ok(0);
     }
+    // `ref.i31` / `i31.get_s` / `i31.get_u` (WasmGC's `0xFB`-prefixed i31
+    // family, W20): like `ref.null`/`ref.is_null` above, none of these are
+    // registered in `wasm_opcodes::OPCODES` (a two-byte prefix encoding
+    // this crate's own single-byte opcode table doesn't model), so all
+    // three are intercepted here before the `get_opcode_by_name` lookup.
+    // Each takes exactly one stack operand (already on the stack by the
+    // time this flat/stream instruction runs) and no immediate at all.
+    if name == "ref.i31" {
+        out.push(0xFB);
+        out.push(0x1C);
+        return Ok(0);
+    }
+    if name == "i31.get_s" {
+        out.push(0xFB);
+        out.push(0x1D);
+        return Ok(0);
+    }
+    if name == "i31.get_u" {
+        out.push(0xFB);
+        out.push(0x1E);
+        return Ok(0);
+    }
     // Atomic memory operations (`0xFE`-prefixed, threads proposal --
     // WASM18): like `ref.null`/`ref.is_null` above, these aren't in
     // `wasm_opcodes::OPCODES` (a two-byte prefix encoding, same reason
@@ -2721,6 +2759,28 @@ fn encode_flat_instr(
     if name == "ref.is_null" {
         encode_instr_list(args, icx, out)?;
         out.push(0xD1);
+        return Ok(());
+    }
+    // `ref.i31` / `i31.get_s` / `i31.get_u` (W20): see the matching comment
+    // in `encode_stream_instr`. All three take exactly one stack operand
+    // (recursed into via `encode_instr_list`, same shape as `ref.is_null`
+    // above) and no immediate.
+    if name == "ref.i31" {
+        encode_instr_list(args, icx, out)?;
+        out.push(0xFB);
+        out.push(0x1C);
+        return Ok(());
+    }
+    if name == "i31.get_s" {
+        encode_instr_list(args, icx, out)?;
+        out.push(0xFB);
+        out.push(0x1D);
+        return Ok(());
+    }
+    if name == "i31.get_u" {
+        encode_instr_list(args, icx, out)?;
+        out.push(0xFB);
+        out.push(0x1E);
         return Ok(());
     }
     // Atomic memory operations (WASM18): see the matching comment in
@@ -5313,6 +5373,54 @@ mod tests {
         // local.get 0 (0x20 0x00); ref.is_null (0xD1); end.
         assert_eq!(code_of(&folded, 0), &[0x20, 0x00, 0xD1, 0x0B]);
         assert_eq!(code_of(&flat, 0), &[0x20, 0x00, 0xD1, 0x0B]);
+    }
+
+    #[test]
+    fn ref_i31_and_i31_get_s_get_u_folded_and_flat() {
+        // ref.i31 (0xFB 0x1C); i31.get_s (0xFB 0x1D); i31.get_u (0xFB 0x1E).
+        let folded = parse_module(
+            "(module
+               (func (param i32) (result i32) (i31.get_s (ref.i31 (local.get 0))))
+               (func (param i32) (result i32) (i31.get_u (ref.i31 (local.get 0)))))",
+        )
+        .unwrap();
+        let flat = parse_module(
+            "(module
+               (func (param i32) (result i32) local.get 0 ref.i31 i31.get_s)
+               (func (param i32) (result i32) local.get 0 ref.i31 i31.get_u))",
+        )
+        .unwrap();
+        assert_eq!(code_of(&folded, 0), &[0x20, 0x00, 0xFB, 0x1C, 0xFB, 0x1D, 0x0B]);
+        assert_eq!(code_of(&folded, 1), &[0x20, 0x00, 0xFB, 0x1C, 0xFB, 0x1E, 0x0B]);
+        assert_eq!(code_of(&flat, 0), &[0x20, 0x00, 0xFB, 0x1C, 0xFB, 0x1D, 0x0B]);
+        assert_eq!(code_of(&flat, 1), &[0x20, 0x00, 0xFB, 0x1C, 0xFB, 0x1E, 0x0B]);
+    }
+
+    #[test]
+    fn i31_value_type_syntax_in_params_results_locals_and_globals() {
+        // `(ref i31)`, `(ref null i31)`, and bare `i31ref` must all parse as
+        // the same `ValueType::I31ref` -- this crate deliberately doesn't
+        // distinguish null/non-null (see `parse_value_type`'s own doc
+        // comment).
+        let m = parse_module(
+            "(module
+               (global $g (ref i31) (ref.i31 (i32.const 1)))
+               (global $m (mut (ref null i31)) (ref.i31 (i32.const 2)))
+               (func (param $a i31ref) (param $b (ref i31)) (param $c (ref null i31))
+                     (result i32) (local (ref i31))
+                 (i31.get_u (local.get 0))))",
+        )
+        .unwrap();
+        assert_eq!(m.globals[0].global_type.value_type, wasm_types::ValueType::I31ref);
+        assert_eq!(m.globals[1].global_type.value_type, wasm_types::ValueType::I31ref);
+        assert_eq!(m.types[0].params, vec![wasm_types::ValueType::I31ref; 3]);
+    }
+
+    #[test]
+    fn ref_null_i31_encodes_heap_type_byte_0x6c() {
+        let m = parse_module("(module (func (result i32) (i31.get_u (ref.null i31))))").unwrap();
+        // ref.null (0xD0) heap_type=0x6C (i31); i31.get_u (0xFB 0x1E); end.
+        assert_eq!(code_of(&m, 0), &[0xD0, 0x6C, 0xFB, 0x1E, 0x0B]);
     }
 
     #[test]

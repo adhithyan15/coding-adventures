@@ -894,12 +894,21 @@ fn type_check_function(ctx: &ModuleContext, func_idx: usize, func_type: &FuncTyp
                         push_val(&mut stack, ValueType::I32);
                     }
                     0x1C => {
-                        // i31.new: pops I32, pushes i31ref.
+                        // ref.i31 (W20; this crate previously called it
+                        // i31.new): pops I32, pushes i31ref.
                         pop_expect(&mut stack, frame!(), ValueType::I32)?;
                         stack.push(StackType::Unknown);
                     }
                     0x1D => {
                         // i31.get_s: pops i31ref, pushes I32.
+                        pop_val(&mut stack, frame!())?;
+                        push_val(&mut stack, ValueType::I32);
+                    }
+                    0x1E => {
+                        // i31.get_u (W20, new): pops i31ref, pushes I32 —
+                        // identical type-rule shape to i31.get_s (0x1D);
+                        // the unsigned-vs-signed distinction is purely a
+                        // runtime concern.
                         pop_val(&mut stack, frame!())?;
                         push_val(&mut stack, ValueType::I32);
                     }

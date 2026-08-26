@@ -2,6 +2,41 @@
 
 All notable changes to this package will be documented in this file.
 
+## [0.9.64] - 2026-08-25 (GC epic, first slice W20: real i31ref box/unbox semantics + i31.get_u)
+
+### Fixed
+
+- **`ref.i31`/`i31.get_s` (WasmGC `0xFB` sub-opcodes `0x1C`/`0x1D`) were
+  literal stack-identity no-ops**, correct only by coincidence for the
+  small, always-positive, bit-30-clear integers this repo's own LANG77
+  Lisp-compiler tests happened to box (7, 9, 42, ...). Fixed to real
+  spec semantics: `ref.i31` masks its `i32` operand to the low 31 bits
+  (`& 0x7FFF_FFFF`); `i31.get_s` sign-extends from bit 30
+  (`(v << 1) as i32 >> 1`) after checking for a null reference. Verified
+  against `i31.wast`'s own real test vectors (e.g.
+  `i31.get_s(0x7fff_ffff)` must be `-1`, which the old no-op behavior got
+  wrong). See `code/specs/W20-wasm-gc-i31-conformance.md`.
+
+### Added
+
+- `i31.get_u` (WasmGC `0xFB` sub-opcode `0x1E`, new): pops a non-null
+  `i31ref`, zero-extends (masks to 31 bits), pushes the result. Same
+  null-reference trap (`"null i31 reference"`) as `i31.get_s`.
+- `evaluate_const_expr` (the separate, restricted constant-expression
+  evaluator used for global initializers): added `0xFB 0x1C` (`ref.i31`)
+  support, needed by `i31.wast`'s `(global $i (ref i31) (ref.i31
+  (i32.const 2)))`. Any other `0xFB` sub-opcode in a constant expression
+  is still a clean error.
+- New `pop_i31_payload` helper: pops a value expected to be a plain `i32`
+  i31ref payload, trapping cleanly on a null reference (`WasmValue::
+  Ref(None)`, which `ref.null i31` still produces, exactly like every
+  other heap type's null) or any other type mismatch.
+- Unit tests: `ref.i31`'s masking, `i31.get_s`'s sign-extension and
+  `i31.get_u`'s zero-extension (using the exact `0xaaaa_aaaa`/
+  `0xcaaa_aaaa`/`0x7fff_ffff` vectors `i31.wast` itself uses), both
+  opcodes' null-reference trap, and `evaluate_const_expr`'s new
+  `ref.i31` support (including rejecting an unrelated `0xFB` sub-opcode).
+
 ## [0.9.63] - 2026-08-25 (Relaxed SIMD epic PR6: i16x8/i32x4.relaxed_dot_i8x16_i7x16_s/_add_s)
 
 ### Added
