@@ -1,7 +1,7 @@
 {
   "language": "chinese",
-  "lessonCount": 135,
-  "atomMeasurableLessons": 119,
+  "lessonCount": 152,
+  "atomMeasurableLessons": 136,
   "atomMeasurementBlindLessons": 16,
   "durationViolations": 0,
   "atomLessonSpikes": 0,
@@ -16,17 +16,17 @@
   "forwardPrerequisites": 0,
   "forwardReviews": 0,
   "forwardReferences": 0,
-  "atomsTaught": 116,
-  "atomsNeverRevisited": 14,
-  "reinforcementWindowMisses": 216,
+  "atomsTaught": 123,
+  "atomsNeverRevisited": 11,
+  "reinforcementWindowMisses": 215,
   "reinforcementMissesByWindow": {
     "R1": 20,
     "R2": 54,
-    "R3": 80,
+    "R3": 79,
     "R4": 62
   },
   "payoffSurprises": 0,
-  "writingPracticeLessons": 46,
+  "writingPracticeLessons": 53,
   "firstWritingPracticeAt": 0,
   "lessonsBeforeWritingPractice": 0,
   "findings": [
@@ -40,7 +40,7 @@
     {
       "language": "chinese",
       "kind": "reinforcement",
-      "count": 216,
+      "count": 215,
       "unit": "missed window(s)",
       "detail": "add retrieval at the expanding R1-R4 intervals"
     },

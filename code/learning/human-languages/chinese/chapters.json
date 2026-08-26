@@ -367,6 +367,30 @@
           "ZH-SCRIPT-YU-01"
         ]
       }
+    },
+    {
+      "chapter": 17,
+      "title": "Language or country?",
+      "label": "ch:zh-language-country",
+      "canDo": "I can understand, say, read and write 中文 and 中国, keep all five identity words distinct, and score listening, speaking, reading and writing separately.",
+      "spineNodes": [
+        "SPINE-EXCHANGE-NAMES"
+      ],
+      "payoff": {
+        "lesson": "ZH-C17-practice",
+        "kind": "writing",
+        "summary": "Two new identity words and the three earlier forms return at expanding intervals before separate listening, speaking, cold reading and no-model writing scores.",
+        "assesses": [
+          "ZH-PERFORMANCE-LANGUAGE-IDENTITY-FIVE-FOUR-SKILL-01",
+          "ZH-PERFORMANCE-LANGUAGE-IDENTITY-THREE-FOUR-SKILL-01",
+          "ZH-LEX-ZHONGWEN-01",
+          "ZH-ORTHO-ZHONGWEN-01",
+          "ZH-LEX-ZHONGGUO-01",
+          "ZH-ORTHO-ZHONGGUO-01",
+          "ZH-SCRIPT-WEN-01",
+          "ZH-SCRIPT-GUO-01"
+        ]
+      }
     }
   ]
 }

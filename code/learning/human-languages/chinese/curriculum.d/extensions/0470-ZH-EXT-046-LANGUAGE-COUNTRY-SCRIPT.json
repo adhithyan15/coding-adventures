@@ -1,0 +1,20 @@
+{
+  "id": "ZH-EXT-046-LANGUAGE-COUNTRY-SCRIPT",
+  "stage": "pre-A1",
+  "kind": "required",
+  "category": "script",
+  "canDo": "I can read and write 文 and 国, then build 中文 and 中国 after tracing, guided copying and delayed copying.",
+  "prerequisites": [
+    "ZH-EXT-045-LANGUAGE-COUNTRY-MEANING-FIRST"
+  ],
+  "lessons": [
+    "ZH-W17-wen-observe",
+    "ZH-W17-wen-guided",
+    "ZH-W17-wen-delayed",
+    "ZH-C17-zhongwen",
+    "ZH-W17-guo-observe",
+    "ZH-W17-guo-guided",
+    "ZH-W17-guo-delayed",
+    "ZH-C17-zhongguo"
+  ]
+}
