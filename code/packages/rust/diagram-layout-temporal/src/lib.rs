@@ -18,7 +18,7 @@ use diagram_ir::{
 };
 use std::collections::{BTreeSet, HashMap};
 
-pub const VERSION: &str = "0.30.0";
+pub const VERSION: &str = "0.31.0";
 
 // ── Constants ─────────────────────────────────────────────────────────────
 
@@ -267,6 +267,7 @@ fn date_to_days(source: &str, format: &GanttDateFormat) -> Option<f64> {
             }
             GanttDateFormatPart::Day => (day, rest) = take_number(rest, 1, 2)?,
             GanttDateFormatPart::Day2 => (day, rest) = take_number(rest, 2, 2)?,
+            GanttDateFormatPart::DayOrdinal => (day, rest) = take_ordinal_day(rest)?,
             GanttDateFormatPart::Hour24 => (hour, rest) = take_number(rest, 2, 2)?,
             GanttDateFormatPart::Hour12 => {
                 (hour, rest) = take_number(rest, 1, 2)?;
@@ -329,6 +330,17 @@ fn take_letters(source: &str, minimum: usize, maximum: usize) -> Option<(&str, &
     let length = source.bytes().take(maximum).take_while(u8::is_ascii_alphabetic).count();
     if length < minimum { return None; }
     Some((&source[..length], &source[length..]))
+}
+
+fn take_ordinal_day(source: &str) -> Option<(i64, &str)> {
+    let (day, rest) = take_number(source, 1, 2)?;
+    if !(1..=31).contains(&day) { return None; }
+    Some((day, rest.strip_prefix(ordinal_suffix(day))?))
+}
+
+fn ordinal_suffix(value: i64) -> &'static str {
+    if (11..=13).contains(&(value % 100)) { return "th"; }
+    match value % 10 { 1 => "st", 2 => "nd", 3 => "rd", _ => "th" }
 }
 
 fn take_meridiem(source: &str, uppercase: bool) -> Option<(bool, &str)> {
@@ -1016,7 +1028,7 @@ mod tests {
 
     #[test]
     fn version_exists() {
-        assert_eq!(crate::VERSION, "0.30.0");
+        assert_eq!(crate::VERSION, "0.31.0");
     }
 
     #[test]
@@ -1301,6 +1313,24 @@ mod tests {
             let days = date_to_days(value, &format).expect("valid fractional second");
             assert!((days * 86_400_000.0 - expected_milliseconds).abs() < 0.001);
         }
+    }
+
+    #[test]
+    fn gantt_layout_resolves_ordinal_days() {
+        let format = GanttDateFormat {
+            source: "Do MMMM YYYY".into(),
+            parts: vec![
+                GanttDateFormatPart::DayOrdinal,
+                GanttDateFormatPart::Literal(" ".into()),
+                GanttDateFormatPart::MonthLong,
+                GanttDateFormatPart::Literal(" ".into()),
+                GanttDateFormatPart::Year4,
+            ],
+        };
+        let first = date_to_days("1st March 2026", &format).expect("valid ordinal day");
+        let second = date_to_days("2nd March 2026", &format).expect("valid ordinal day");
+        assert_eq!(second - first, 1.0);
+        assert!(date_to_days("11st March 2026", &format).is_none());
     }
 
     #[test]

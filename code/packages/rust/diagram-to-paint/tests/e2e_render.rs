@@ -990,6 +990,35 @@ line "Target" [35, 50, 68, 82]"##,
         write_png(&fractional_pixels, "/tmp/mermaid_gantt_fractional_e2e.png")
             .expect("fractional-second PNG write failed");
         assert!(!fractional_scene.instructions.is_empty());
+
+        let ordinal = parse_gantt(
+            "gantt\ntitle Ordinal release\ndateFormat Do MMMM YYYY\nsection Ship\nRelease :r1, 1st March 2026, 1d",
+        )
+        .expect("ordinal-day Mermaid Gantt parse failed");
+        let ordinal_layout = layout_temporal_diagram(
+            &TemporalDiagram {
+                kind: TemporalKind::Gantt,
+                title: ordinal.title.clone(),
+                body: TemporalBody::Gantt(ordinal),
+            },
+            800.0,
+        );
+        let ordinal_scene = diagram_to_paint_temporal(
+            &ordinal_layout,
+            &DiagramToPaintOptions {
+                background: layout_ir::Color { r: 255, g: 255, b: 255, a: 255 },
+                device_pixel_ratio: 2.0,
+                label_font: font_spec("Helvetica", 12.0),
+                title_font: font_spec("Helvetica", 16.0),
+                shaper: &shaper,
+                metrics: &metrics,
+                resolver: &resolver,
+            },
+        );
+        let ordinal_pixels = render(&ordinal_scene);
+        write_png(&ordinal_pixels, "/tmp/mermaid_gantt_ordinal_e2e.png")
+            .expect("ordinal-day PNG write failed");
+        assert!(!ordinal_scene.instructions.is_empty());
     }
 
     #[test]

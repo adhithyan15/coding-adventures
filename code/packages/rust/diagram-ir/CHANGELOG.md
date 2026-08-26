@@ -1,5 +1,9 @@
 # Changelog — diagram-ir
 
+## 0.88.0
+
+- Represent Gantt ordinal calendar days as a typed date-format part.
+
 ## 0.87.0
 
 - Represent one-, two-, and three-digit Gantt fractional seconds as typed date-format parts.

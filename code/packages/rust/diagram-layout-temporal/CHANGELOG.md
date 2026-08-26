@@ -1,5 +1,9 @@
 # Changelog
 
+## 0.31.0
+
+- Resolve and validate typed Gantt ordinal days before backend-neutral temporal layout.
+
 ## 0.30.0
 
 - Resolve typed one-, two-, and three-digit Gantt fractional seconds into precise backend-neutral geometry.
