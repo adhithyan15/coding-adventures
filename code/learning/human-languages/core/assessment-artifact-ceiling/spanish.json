@@ -3,9 +3,6 @@
   "language": "spanish",
   "note": "GENERATED — do not hand-edit. Regenerate with `npm run generate:assessment-artifacts`. This is a CEILING on unbuilt assessment artifacts (HL16/HL20): it may fall and may never grow. Adding a contract reference to a file that does not exist fails CI; building one of these artifacts also fails CI until this list is regenerated to drop it.",
   "unbuiltArtifacts": [
-    "mocks/a1/mock-1-answer-key.md",
-    "mocks/a1/mock-2-answer-key.md",
-    "mocks/a1/rubric.md",
     "mocks/a2/mock-1-answer-key.md",
     "mocks/a2/mock-2-answer-key.md",
     "mocks/a2/rubric.md",
