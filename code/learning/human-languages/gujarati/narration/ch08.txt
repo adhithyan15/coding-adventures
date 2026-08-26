@@ -1,81 +1,150 @@
-Gujarati, chapter 8: Numbers One to Five.
-2 lessons. All 2 can be done entirely by ear.
+Gujarati, chapter 8: Farewells.
+5 lessons. The first lesson already needs your eyes or your hands, so save this one for when you have stopped.
 
 
-Lesson 1 of 2.
-એક, બે, ત્રણ, ચાર, પાંચ — one to five.
+Lesson 1 of 5.
+મળીશું (maḷīshũ) — "(we) will meet".
+
+Before we start: this one needs your eyes, so it is not fully a driving lesson. You will want your eyes, for letter shapes on the page. You can listen to everything else now — leave the section called The letters in this word until you have stopped, and I will say so again when we reach it.
 
 Warm-up.
 [pause 2 seconds]
-Three of these will look familiar from any other Indian language. Two won't — and both have a reason.
+A future-tense verb — the other half of "see you again."
 
-You'll want to know: the five.
-[a table of 5 rows, read aloud]
-1. Gujarati: એક. said: ek.
-2. Gujarati: બે. said: be.
-3. Gujarati: ત્રણ. said: traṇ.
-4. Gujarati: ચાર. said: chār.
-5. Gujarati: પાંચ. said: pā̃ch.
-Notice the script: Gujarati is Devanagari without the top line. Same letters, same system — the shirorekhā simply isn't drawn. If you've done the Hindi writing track you can feel the relationship immediately.
+The letters in this word.
+મ (ma) + ળી (ḷī, with the retroflex ળ ḷ) + શું (shũ) becomes મળીશું (maḷīshũ).
 
-What you've built: two surprises and a headless script.
-Most neighbouring languages have a d in “two,” but Gujarati says બે be. Hindi says tīn for “three,” but Gujarati says ત્રણ traṇ, with an r.
-Do not carry both histories while the count is still new. Make the five forms automatic first; the next prerequisite-ordered lesson explains why be and traṇ took those shapes.
+The word, taken apart.
+મળીશું (maḷīshũ, "we will meet") is the future of મળવું (maḷvũ, "to meet"), from Sanskrit મિલ્ (mil-, "to join, unite") — the same root as Hindi milnā and Punjabi milṇā. Note the retroflex ળ (ḷ): Gujarati keeps this extra letter — like Marathi and the Dravidian south, and unlike Hindi. The ending -શું (-shũ) is the "we will" future.
+
+Grammar Lens: the future is an ending.
+Gujarati marks the future with an ending on the stem: maḷ- ("meet") + -īshũ ("we will") becomes maḷīshũ. No helper-word like English "will."
 
 Guided Practice.
 [pause 1 second]
-[your turn — say: "ek, be, traṇ, chār, pā̃ch"]
+[your turn — say: "maḷīshũ"]
 [pause 8 seconds for the answer]
-[your turn — say: the odd two — Gujarati be and traṇ]
+[your turn — say: the verb it's from (maḷvũ, "to meet," from Sanskrit mil-)]
 [pause 8 seconds for the answer]
-[your turn — say: the script clue — Devanagari shapes without a top line]
+[your turn — say: the extra letter it shows (retroflex ળ, ḷ)]
 [pause 8 seconds for the answer]
 
 Wrap-up Recall.
 [pause 3 seconds]
-Count to five in Gujarati. (Ek, be, traṇ, chār, pā̃ch.) Why does બે look unlike its neighbours? (It begins with b, not d.) What does ત્રણ contain that Hindi tīn does not? (r.) What is visibly missing from the Gujarati script? (The top line: the shirorekhā is not drawn.) Next: trace the two surprising number histories.
+What verb is maḷīshũ from, and what special letter does it use? (Maḷvũ "to meet"; the retroflex ળ ḷ, which Hindi lacks.)
 
 
-Lesson 2 of 2.
-Two number histories: be and traṇ — why Gujarati two begins with b and why three regained an r.
+Lesson 2 of 5.
+કાલે મળીશું (kāle maḷīshũ) — "see you tomorrow".
+
+Before we start: this one needs your eyes, so it is not fully a driving lesson. You will want your eyes, for letter shapes on the page. You can listen to everything else now — leave the section called The letters in this word until you have stopped, and I will say so again when we reach it.
 
 Warm-up.
 [pause 2 seconds]
-Count once: ek, be, traṇ, chār, pā̃ch. Which two forms look least like Hindi or Marathi? (Be and traṇ.)
+A goodbye for tomorrow — built on a word that means both tomorrow and yesterday.
 
-The word, taken apart — બે from a different ancestor.
-Sanskrit had gendered forms of “two,” and its daughters selected different parts of that paradigm:
-[a table of 5 rows, read aloud]
-language: Sanskrit. “two”: dváu (masc.), dvé (fem. and neut.) route: —.
-language: Hindi. “two”: do. route: masculine side.
-language: Marathi. “two”: don. route: masculine side, plus an analogical -n.
-language: Bengali. “two”: dui. route: disyllabic Prakrit duve.
-language: Gujarati. “two”: be. route: feminine/neuter dvé side.
-Gujarati બે is not a corruption of do. It is a different inheritance from the same Sanskrit paradigm.
-The initial cluster changed too. In dv-, the dental d adopted the labial place of the following v: dv becomes bb becomes b. The first consonant was remade in the shape of its neighbour, then the double simplified.
+The letters in this word.
+કા (kā) + લે (le) becomes કાલે (kāle, "on [the] kāl"). The base is કાલ (kāl).
 
-The word, taken apart — ત્રણ and the r that came back.
-[a table of 4 rows, read aloud]
-stage: Sanskrit neuter. “three”: trī́ṇi.
-stage: Prakrit. “three”: tiṇṇi: r already gone.
-stage: Hindi. “three”: tīn.
-stage: Gujarati. “three”: traṇ: r present again.
-The shared ṇ shows that Hindi and Gujarati both descend from neuter trī́ṇi through Prakrit tiṇṇi. By that stage, the r was gone and its weight had moved into doubled ṇṇ. Hindi later simplified the double and lengthened the vowel.
-Gujarati's tr- is generally treated as restored from Sanskrit, not carried through unbroken. Sanskrit remained a literary language and continued to reshape its descendants. Traṇ looks older than tīn, but it is closer because speakers put the r back.
+The word, taken apart.
+કાલ (kāl) means both "tomorrow" and "yesterday" — the day on either side of today — from Sanskrit કાલ (kāla, "time"). (It is the very same kāla behind Hindi's kal, Bengali's kāl, and Punjabi's akāl "timeless.") The verb's tense tells which: kāle maḷīshũ (future becomes "tomorrow we'll meet"), kāle maḷyā (past becomes "we met yesterday"). So કાલે મળીશું = "tomorrow we'll meet" = "see you tomorrow."
 
 Guided Practice.
 [pause 1 second]
-[your turn — say: Gujarati's selected form — feminine/neuter dvé]
+[your turn — say: "kāle maḷīshũ"]
 [pause 8 seconds for the answer]
-[your turn — say: the sound path — dv becomes bb becomes b]
+[your turn — say: the puzzle — kāl means both tomorrow and yesterday]
 [pause 8 seconds for the answer]
-[your turn — say: the r path — trī́ṇi becomes tiṇṇi becomes traṇ]
-[pause 8 seconds for the answer]
-[your turn — say: inherited continuously or restored — restored]
+[your turn — say: the root and its cousins (kāla "time"; Hindi kal, Punjabi akāl)]
 [pause 8 seconds for the answer]
 
 Wrap-up Recall.
 [pause 3 seconds]
-Why be, not Hindi do? (Different Sanskrit forms.) What changed in dv becomes b? (D became labial beside v; the double simplified.) Did traṇ keep r? (No: Sanskrit restored Prakrit's lost r.) How can a newer form look older? (Learned restoration.)
-[question — say your answer, then pause 8 seconds]
-Does Gujarati be descend from the same Sanskrit form as Hindi do?
+What two opposite days does kāl mean, and what tells them apart? (Both tomorrow and yesterday; the verb's tense.)
+
+
+Lesson 3 of 5.
+પાછા (pāchhā) — "again, back".
+
+Before we start: this one needs your eyes, so it is not fully a driving lesson. You will want your eyes, for letter shapes on the page. You can listen to everything else now — leave the section called The letters in this word until you have stopped, and I will say so again when we reach it.
+
+Warm-up.
+[pause 2 seconds]
+One small word turns a goodbye into "till next time." You already have the other half — āvjo ("come again") — from the earlier courtesy chapter.
+
+The letters in this word.
+પા (pā) + છા (chhā) becomes પાછા (pāchhā).
+
+The word, taken apart.
+પાછા (pāchhā, "back, again, returning") is from Sanskrit પશ્ચાત્ (paścāt, "behind, afterward") — the same "behind/after" root behind English post- words, distantly. It carries the sense of return: pāchhā āvvũ ("to come back"), pāchhā jāvũ ("to go back"). Add it to "we'll meet" and you get the warm goodbye of the next lesson.
+
+Guided Practice.
+[pause 1 second]
+[your turn — say: "pāchhā"]
+[pause 8 seconds for the answer]
+[your turn — say: what it adds to a goodbye ("again / back")]
+[pause 8 seconds for the answer]
+
+Wrap-up Recall.
+[pause 3 seconds]
+What does pāchhā mean, and what sense does it carry? ("Back / again"; the sense of return — pāchhā āvvũ, "to come back.")
+
+
+Lesson 4 of 5.
+પાછા મળીશું (pāchhā maḷīshũ) — "we'll meet again".
+
+Warm-up.
+[pause 2 seconds]
+The warm, explicit goodbye — the companion of the earlier āvjo.
+
+The phrase, taken apart.
+પાછા મળીશું = પાછા (pāchhā, "again") + મળીશું (maḷīshũ, "we will meet") — "we'll meet again." Where the earlier આવજો (āvjo) is the quick, warm "come again," pāchhā maḷīshũ spells out the promise: we will meet once more. It is the same "promise of return" the whole subcontinent prefers (Hindi phir milenge, Bengali āshi, Tamil pōy varugiṟēṉ).
+
+Guided Practice.
+[pause 1 second]
+[your turn — say: the warm goodbye — pāchhā maḷīshũ]
+[pause 8 seconds for the answer]
+[your turn — say: the two words it's built from (pāchhā + maḷīshũ)]
+[pause 8 seconds for the answer]
+[your turn — say: the Chapter-1 goodbye it partners (āvjo)]
+[pause 8 seconds for the answer]
+
+Wrap-up Recall.
+[pause 3 seconds]
+What does pāchhā maḷīshũ literally say, and how does it relate to āvjo? ("We'll meet again"; it's the explicit form of Ch.1's "come again" goodbye.)
+
+
+Lesson 5 of 5.
+Chapter 6 — The farewells.
+
+Warm-up.
+[pause 2 seconds]
+No new words. Three ways to part — none of them a blunt "goodbye."
+
+Why it's said this way — the farewells.
+[pause 1 second after each]
+[your turn — say: the quick "come again" from the earlier courtesy chapter — āvjo]
+[pause 8 seconds for the answer]
+[your turn — say: the explicit "we'll meet again" — pāchhā maḷīshũ]
+[pause 8 seconds for the answer]
+[your turn — say: "see you tomorrow" — kāle maḷīshũ]
+[pause 8 seconds for the answer]
+
+The word, taken apart — the atoms.
+[pause 2 seconds]
+[your turn — say: "again" and "(we) will meet" (pāchhā, maḷīshũ)]
+[pause 8 seconds for the answer]
+[your turn — say: the word that means BOTH tomorrow and yesterday (kāl)]
+[pause 8 seconds for the answer]
+[your turn — say: the retroflex letter in maḷīshũ (ળ, ḷ)]
+[pause 8 seconds for the answer]
+
+What you've built — roots you now carry.
+[pause 2 seconds]
+āvjo ("goodbye") = "come [again]," from āvvũ "to come".
+maḷīshũ from maḷvũ "to meet" (Sanskrit mil-); the retroflex ળ.
+kāl from kāla "time" (Hindi kal, Punjabi akāl).
+
+Wrap-up Recall.
+[pause 3 seconds]
+You're leaving a friend and will see them tomorrow. Give the goodbye and the "tomorrow" version. (Āvjo — and kāle maḷīshũ.)

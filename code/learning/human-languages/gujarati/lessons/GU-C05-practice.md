@@ -2,8 +2,8 @@
 schema_version: 2
 id: GU-C05-practice
 spine_node: SPINE-SAY-WHAT-I-DO
-sequence: 310
-chapter: 7
+sequence: 320
+chapter: 9
 type: practice
 headword: (dialogue)
 gloss: Chapter 7 recap — the first verbs

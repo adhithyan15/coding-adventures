@@ -1,0 +1,17 @@
+{
+  "id": "GU-EXT-031-FIRST-USE-SCRIPT-A",
+  "stage": "pre-A1",
+  "kind": "required",
+  "category": "script",
+  "canDo": "I can trace, copy, recall, read, and write ળ, થ, અ, and િ before any name-exchange lesson uses them.",
+  "prerequisites": [
+    "GU-EXT-018-DOORWAY-SCRIPT"
+  ],
+  "lessons": [
+    "GU-W04-lla",
+    "GU-W04-tha",
+    "GU-W04-independent-a",
+    "GU-W04-i-matra",
+    "GU-R04-first-four-r1"
+  ]
+}

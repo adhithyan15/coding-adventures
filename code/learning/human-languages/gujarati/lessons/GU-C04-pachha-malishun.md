@@ -2,8 +2,8 @@
 schema_version: 2
 id: GU-C04-pachha-malishun
 spine_node: SPINE-TAKE-LEAVE
-sequence: 250
-chapter: 6
+sequence: 260
+chapter: 8
 type: phrase
 headword: પાછા મળીશું
 gloss: we'll meet again (goodbye)

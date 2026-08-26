@@ -2,8 +2,8 @@
 schema_version: 2
 id: GU-C03-practice
 spine_node: SPINE-CHECK-WELLBEING
-sequence: 210
-chapter: 5
+sequence: 220
+chapter: 7
 type: practice
 headword: (dialogue)
 gloss: Chapter 5 recap — the how-are-you exchange

@@ -2,8 +2,8 @@
 schema_version: 2
 id: GU-C10-paani
 spine_node: SPINE-POLITE-REQUEST-REPAIR
-sequence: 500
-chapter: 12
+sequence: 510
+chapter: 14
 type: word
 headword: પાણી
 romanization: pāṇī

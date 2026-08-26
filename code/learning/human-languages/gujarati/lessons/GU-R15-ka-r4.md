@@ -2,9 +2,9 @@
 schema_version: 2
 id: GU-R15-ka-r4
 spine_node: SPINE-EXCHANGE-NAMES
-sequence: 640
+sequence: 650
 delivery: script
-chapter: 15
+chapter: 17
 type: writing
 headword: ક જ
 romanization: ka — ja

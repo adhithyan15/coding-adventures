@@ -2,9 +2,9 @@
 schema_version: 2
 id: GU-R13-doorway-nine-r3
 spine_node: SPINE-EXCHANGE-NAMES
-sequence: 575
+sequence: 585
 delivery: script
-chapter: 13
+chapter: 15
 type: writing
 headword: ણ જ ુ શ ં ક ો છ ી
 romanization: retroflex nna — ja — u sign — sha — nasal mark — ka — o sign — chha — long-ii sign

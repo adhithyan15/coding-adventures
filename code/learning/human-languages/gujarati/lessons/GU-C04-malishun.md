@@ -2,8 +2,8 @@
 schema_version: 2
 id: GU-C04-malishun
 spine_node: SPINE-TAKE-LEAVE
-sequence: 220
-chapter: 6
+sequence: 230
+chapter: 8
 type: word
 headword: મળીશું
 gloss: (we) will meet

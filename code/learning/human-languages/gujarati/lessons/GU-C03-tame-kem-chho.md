@@ -2,8 +2,8 @@
 schema_version: 2
 id: GU-C03-tame-kem-chho
 spine_node: SPINE-CHECK-WELLBEING
-sequence: 180
-chapter: 5
+sequence: 190
+chapter: 7
 type: phrase
 headword: તમે કેમ છો?
 gloss: how are you? (respectful)

@@ -1,146 +1,165 @@
-Gujarati, chapter 15: Fourth Return: Script and Names.
-6 lessons. The first lesson already needs your eyes or your hands, so save this one for when you have stopped.
+Gujarati, chapter 15: Friend and Family.
+5 lessons. The first lesson already needs your eyes or your hands, so save this one for when you have stopped.
 
 
-Lesson 1 of 6.
-The short-u hook returns at R4 — retrieve the short-u sign at its fourth spacing window.
+Lesson 1 of 5.
+મિત્ર (mitra) — a friend, and the word inside your own "please".
 
-Before we start: this one needs your hands, so it is not a driving lesson. You will want a pen and something to write on and your eyes, because the lesson points at something written down. You can listen to all of it now and come back to the parts that need looking at once you have stopped.
+Before we start: this one needs your eyes, so it is not fully a driving lesson. You will want your eyes, for letter shapes on the page. You can listen to everything else now — leave the sections called The letters in this word and Guided Practice until you have stopped, and I will say so again when we reach it.
 
 Warm-up.
-[pause 5 seconds]
-Say short u once. Picture its small hook below a consonant before you look at any form.
+[pause 2 seconds]
+Last chapter asked politely for roṭlī with meherbānī karīne. That phrase is about to turn out to share its root with the very first word of this new chapter.
+
+You'll want to know first — one word.
+મિત્ર — mitra — friend.
+
+The letters in this word.
+મ ma, િ the short-i sign written before the consonant it belongs to — the same leftward quirk you saw open vichārvũ — then a conjunct: ત્ર — ત ta with the virama ્ stripping its vowel, joined straight into ર ra. Mi-tra, two syllables, the second one a cluster.
+
+The word, taken apart — the friend hiding inside "please".
+mitra is Sanskrit for "friend," from Proto-Indo-Iranian mitras, "(that which) causes binding" — a covenant word before it was a friendship word. Its exact twin is Avestan Mithra, the god of contracts and given word, whose name lived on in Middle Persian as Mihr.
+That is not a dead end. મહેરબાની, the "kindness" you built meherbānī karīne from last chapter, is Persian mihrbānī — built on that very same Mihr. So મિત્ર (mitra), inherited straight down from Sanskrit, and મહેરબાની, borrowed centuries later from Persian, are cousins by the same Indo-Iranian root — one word for "friend," the other for "favor," both once naming the same idea of a bond that holds.
 
 Guided Practice.
-Read ુ ી (short-u sign — long-ii sign) ુ once and score recognition 3/3. The short-u sign introduced at position 30 has now travelled 61 lessons to position 91: this closes its R4 window. Repair only a missed sign.
-[question — say your answer, then pause 25 seconds]
-Read this shuffled sign row aloud: ુ ી (short-u sign — long-ii sign) ુ.
-
-Writing — from sound.
-Keep the visible row covered. Write the three sound cues, then score writing 3/3 separately. A perfect reading score cannot replace the written one.
-[question — say your answer, then pause 35 seconds]
-Cover every model. Write: long-ii sign, short-u sign, short-u sign.
+[your turn — say: mitra — friend]
+[pause 8 seconds for the answer]
+[once you have stopped driving — trace: Proto-Indo-Iranian mitras becomes Avestan Mithra becomes Persian Mihr becomes મહેરબાની]
+[your turn — connect: મિત્ર (mitra) and મહેરબાની — same ancient root, two different doors into Gujarati]
+[pause 8 seconds for the answer]
+[your turn — run: roṭlī, meherbānī karīne once more, now naming the "friend" root inside it]
+[pause 8 seconds for the answer]
 
 Wrap-up Recall.
 [pause 3 seconds]
-Where does ુ sit? (Below its consonant.)
+Give the word for "friend." (Mitra.) Which other Gujarati word you already know shares its root, and through which language did each arrive? (મહેરબાની — mitra inherited from Sanskrit, meherbānī borrowed from Persian mihr.) What did the shared root originally mean? ("To bind," a covenant.)
+Sources: Wiktionary: મિત્ર (mitra); Wiktionary: Mithra.
 
 
-Lesson 2 of 6.
-Chha returns beside sha — retrieve chha at its fourth spacing window.
+Lesson 2 of 5.
+કુટુંબ (kuṭumb) — a word that skipped the sound changes.
+
+Before we start: this one needs your eyes, so it is not fully a driving lesson. You will want your eyes, for letter shapes on the page. You can listen to everything else now — leave the sections called The letters in this word and Guided Practice until you have stopped, and I will say so again when we reach it.
+
+Warm-up.
+[pause 2 seconds]
+મિત્ર (mitra) reached Gujarati the long way, worn down through Prakrit like nearly every word you own. The word for the group a friend gets folded into took a different road entirely.
+
+You'll want to know first — one word.
+કુટુંબ — kuṭumb — family.
+
+The letters in this word.
+ક ka, ુ the short-u sign below it, then ટ — the same retroflex ṭ you first curled back in roṭlī, here doing the same job again. ું closes it: u with the nasal dot on top, then બ ba. Ku-ṭu-m-b.
+
+Grammar Lens: taken whole, not worn down.
+You have seen Sanskrit reach back into Gujarati once before: ત્રણ's r, restored after Prakrit had already dropped it — a repair, made to a word that had kept changing the whole time. કુટુંબ is a different kind of contact. Gujarati did not inherit this word through the centuries of sound change that gave you pāṇī or be; it took the Sanskrit word up directly, close to whole, the way a modern language reaches for a ready-made technical term instead of growing one on its own. Linguists call an inherited word like pāṇī tadbhava, "born from that," and a direct borrowing like this one tatsama, "same as that" — kuṭumb is tatsama.
+
+The word, taken apart — a family word borrowed by Sanskrit itself.
+Here the trail runs further than usual, in an unexpected direction. Sanskrit kuṭumba is itself thought to be a loanword, taken from a Dravidian source and compared to Tamil kuṭimai, "family, lineage," both built on kuṭi, "hut." A word that looks purely Sanskrit, and that Gujarati then borrowed as purely Sanskrit, may have entered Sanskrit from a completely different family of languages first. The chain of ownership runs Dravidian becomes Sanskrit becomes Gujarati, with no step skipped and no step certain beyond reasonable comparison.
+
+Guided Practice.
+[your turn — say: kuṭumb — family]
+[pause 8 seconds for the answer]
+[your turn — contrast: tadbhava pāṇī (worn down over time) against tatsama kuṭumb (taken whole)]
+[pause 8 seconds for the answer]
+[your turn — match: this "taken whole" idea against traṇ's restored r — both are Sanskrit reaching forward, in different ways]
+[pause 8 seconds for the answer]
+[once you have stopped driving — trace: proposed Dravidian kuṭi "hut" becomes Sanskrit kuṭumba becomes કુટુંબ]
+
+Wrap-up Recall.
+[pause 3 seconds]
+Give the word for "family." (Kuṭumb.) Is it tadbhava or tatsama? (Tatsama — borrowed whole from Sanskrit, not worn down through Prakrit.) Where does Sanskrit's own kuṭumba likely come from? (Dravidian, compared to Tamil kuṭimai.)
+Sources: Wiktionary: કુટુંબ (kuṭumb); Wiktionary: Sanskrit kutumba.
+
+
+Lesson 3 of 5.
+ભાઈ (bhāī) — the same word as "brother," unbroken.
+
+Before we start: this one needs your eyes, so it is not fully a driving lesson. You will want your eyes, for letter shapes on the page. You can listen to everything else now — leave the sections called The letters in this word and Guided Practice until you have stopped, and I will say so again when we reach it.
+
+Warm-up.
+[pause 2 seconds]
+કુટુંબ (kuṭumb) was taken up whole, close to the finished Sanskrit shape. The two words for its members run the opposite way — worn all the way down, the ordinary path nearly every Gujarati word has followed.
+
+You'll want to know first — one word.
+ભાઈ — bhāī — brother.
+
+The letters in this word.
+ભ bha, the aspirated b, with the long-ā sign ા, then ઈ, the independent long-ī vowel standing on its own rather than attached to a consonant. Bhā-ī, two syllables, no consonant closing the second.
+
+The word, taken apart — no disguise at all.
+bhāī is inherited, through Prakrit bhāi, from Sanskrit bhrātṛ. Its root is Indo-European bʰréh₂tēr, and this is one of the cleanest cognate sets Indo-European linguistics has: Sanskrit bhrātṛ, English brother, Latin frāter, Greek phrātēr, Russian brat — every one of them the same word, carried down by ordinary sound change in every branch rather than borrowed by any of them. Where kuṭumb skipped the centuries of change that shape tadbhava words, bhāī is the textbook case of what those centuries do: the consonant cluster bhr- simplified once the r dropped, exactly the kind of wearing-down that gave you pāṇī from pānīya.
+
+Guided Practice.
+[your turn — say: bhāī — brother]
+[pause 8 seconds for the answer]
+[once you have stopped driving — trace: PIE bʰréh₂tēr becomes Sanskrit bhrātṛ becomes ભાઈ (bhāī), and becomes English brother]
+[your turn — contrast: bhāī worn down over centuries against kuṭumb taken up whole]
+[pause 8 seconds for the answer]
+[your turn — name: two other languages whose word for "brother" is the same cognate (Latin frāter, Greek phrātēr, or Russian brat)]
+[pause 8 seconds for the answer]
+
+Wrap-up Recall.
+[pause 3 seconds]
+Give the word for "brother." (Bhāī.) Which English word is the very same word, by unbroken descent, not borrowing? (Brother.) Is bhāī tadbhava or tatsama — worn down, or taken whole like kuṭumb? (Tadbhava — worn down.)
+Sources: Wiktionary: ભાઈ (bhāī); Wiktionary: bʰréh₂tēr.
+
+
+Lesson 4 of 5.
+બહેન (bahen) — the sister who is not "sister"'s cousin.
+
+Before we start: this one needs your eyes, so it is not fully a driving lesson. You will want your eyes, for letter shapes on the page. You can listen to everything else now — leave the sections called The letters in this word and Guided Practice until you have stopped, and I will say so again when we reach it.
+
+Warm-up.
+[pause 2 seconds]
+ભાઈ (bhāī) is English brother, unbroken, down to the root. Do not assume the sibling pair matches. This chapter's last word breaks the pattern.
+
+You'll want to know first — one word.
+બહેન — bahen — sister.
+
+The letters in this word.
+બ ba, હ ha, ે the e sign above the consonant, then ન na. Ba-hen, every letter already yours from earlier chapters.
+
+The word, taken apart — a different root entirely.
+Here is the surprise: બહેન (bahen) is not bhāī's counterpart the way English sister is brother's. English sister, Latin soror, and Sanskrit svasṛ all descend from one shared PIE root, swésōr. Gujarati's word for sister does not use that root at all.
+bahen comes from Sanskrit bhaginī, through Prakrit bhaginī. Scholars connect bhaginī to bhaga, "good fortune, a share" — the same bhaga behind bhāgya, "fate" — plus a feminine suffix, so "sister" may originally have meant something closer to "the one who shares." That connection is debated rather than settled, the way roṭlī's root was: some scholars accept the bhaga link, others have argued against it. What is certain is what it is not: unlike bhāī, bahen is no relation to English sister at all — and unlike the disputed-but-real mitra/meherbānī pair, this dial lands on "unrelated," full stop.
+
+Guided Practice.
+[your turn — say: bahen — sister, and bhāī — brother]
+[pause 8 seconds for the answer]
+[your turn — contrast: bhāī — same root as English brother; bahen — a different Sanskrit word entirely, not sister's cousin]
+[pause 8 seconds for the answer]
+[once you have stopped driving — trace: proposed bhaga "share, fortune" becomes bhaginī becomes બહેન (bahen)]
+[your turn — run: all four family words — mitra, kuṭumb, bhāī, bahen — inherited/borrowed, direct/indirect]
+[pause 8 seconds for the answer]
+[your turn — recall: મિત્ર (mitra) and મહેરબાની's shared root from the last chapter, and કુટુંબ (kuṭumb)'s proposed Dravidian root]
+[pause 8 seconds for the answer]
+
+Wrap-up Recall.
+[pause 3 seconds]
+Give the word for "sister." (Bahen.) Is it the same root as English sister? (No — that connection belongs to bhāī/brother instead.) What does bahen probably come from? (Sanskrit bhaginī, disputedly tied to bhaga, "share.") Name this chapter's four people and things: friend, family, brother, sister. (Mitra, kuṭumb, bhāī, bahen.)
+Sources: Wiktionary: બહેન (bahen); Wiktionary: Sanskrit bhagini.
+
+
+Lesson 5 of 5.
+The doorway nine return in a new order — retrieve the nine doorway forms after a durable interval.
 
 Before we start: this one needs your hands, so it is not a driving lesson. You will want a pen and something to write on. You can listen to all of it now and come back to the parts that need looking at once you have stopped.
 
 Warm-up.
-[pause 5 seconds]
-Picture chha: two high lobes around a broad lower body.
+[pause 10 seconds]
+Without looking back, write ja, the nasal mark, and ka. Check only a missed form, cover the model again, and make one repair.
 
 Guided Practice.
-Read શ છ છ once and score recognition 3/3. Chha moved from position 31 to position 92, exactly 61 lessons, so its R4 window closes here.
-[question — say your answer, then pause 25 seconds]
-Read this shuffled consonant row aloud: શ છ છ.
-
-Writing — from sound.
-With every model covered, write the three cues and score writing 3/3 on its own. Repair only a missed form.
-[question — say your answer, then pause 40 seconds]
-Cover every model. Write: chha, sha, chha.
-
-Wrap-up Recall.
-[pause 3 seconds]
-Which form has two high lobes? (છ, chha.)
-
-
-Lesson 3 of 6.
-Ka returns beside ja — retrieve ka at its fourth spacing window.
-
-Before we start: this one needs your hands, so it is not a driving lesson. You will want a pen and something to write on. You can listen to all of it now and come back to the parts that need looking at once you have stopped.
-
-Warm-up.
-[pause 5 seconds]
-Picture ka: its compact upper turn leads into the lower body.
-
-Guided Practice.
-Read ક જ (ka — ja) ક once and score recognition 3/3. Ka moved from position 32 to position 93, exactly 61 lessons, closing its R4 window.
-[question — say your answer, then pause 25 seconds]
-Read this shuffled consonant row aloud: ક જ (ka — ja) ક.
-
-Writing — from sound.
-Cover every model, write the cues, and score writing 3/3 independently. Repair only a missed form.
-[question — say your answer, then pause 40 seconds]
-Cover every model. Write: ja, ka, ka.
-
-Wrap-up Recall.
-[pause 3 seconds]
-Write ka once more without looking. (ક).
-
-
-Lesson 4 of 6.
-Retroflex nna returns beside na — retrieve retroflex nna at its fourth spacing window.
-
-Before we start: this one needs your hands, so it is not a driving lesson. You will want a pen and something to write on. You can listen to all of it now and come back to the parts that need looking at once you have stopped.
-
-Warm-up.
-[pause 5 seconds]
-Say retroflex nna and picture ણ before looking.
-
-Guided Practice.
-Read ન ણ ણ once and score recognition 3/3. Retroflex nna moved from position 33 to position 94, exactly 61 lessons, closing its R4 window.
-[question — say your answer, then pause 25 seconds]
-Read this shuffled consonant row aloud: ન ણ ણ.
-
-Writing — from sound.
-Cover every model, write the three cues, and score writing 3/3 separately. Repair only a missed form.
-[question — say your answer, then pause 40 seconds]
-Cover every model. Write: retroflex nna, na, retroflex nna.
-
-Wrap-up Recall.
-[pause 3 seconds]
-Which form answers the retroflex cue? (ણ).
-
-
-Lesson 5 of 6.
-Sha returns beside sa — retrieve sha at its fourth spacing window.
-
-Before we start: this one needs your hands, so it is not a driving lesson. You will want a pen and something to write on. You can listen to all of it now and come back to the parts that need looking at once you have stopped.
-
-Warm-up.
-[pause 5 seconds]
-Say sha, then picture શ without drawing it yet.
-
-Guided Practice.
-Read શ સ (sha — sa) શ once and score recognition 3/3. Sha moved from position 34 to position 95, exactly 61 lessons, so its R4 window closes here.
-[question — say your answer, then pause 25 seconds]
-Read this shuffled consonant row aloud: શ સ (sha — sa) શ.
-
-Writing — from sound.
-Cover every model, write the cues, and score writing 3/3 independently. Repair only a missed form.
-[question — say your answer, then pause 40 seconds]
-Cover every model. Write: sa, sha, sha.
-
-Wrap-up Recall.
-[pause 3 seconds]
-Write sha once more from sound. (શ).
-
-
-Lesson 6 of 6.
-The name exchange returns after a long interval — retrieve the introduction exchange after a long interval.
-
-Before we start: this one needs your hands, so it is not a driving lesson. You can listen to all of it now and come back to the parts that need looking at once you have stopped.
-
-Warm-up.
-[pause 8 seconds]
-With the page covered, say the three pieces for my name is: mārũ — nām — chhe.
-
-Guided Practice.
-Read the three lines once and score meaning retrieval 3/3. Position 35 was already a zero-atom checkpoint, so position 96 uses the open slot to close R3 name-exchange debt rather than pretending to retrieve a nonexistent new atom.
+Read the shuffled row once. Identify each form on sight; do not rebuild the original doorway order. Record the reading score before the row is covered; repair only missed forms, then reach 9/9 once.
 [question — say your answer, then pause 45 seconds]
-Read the shuffled lines and give each meaning: તમને મળીને આનંદ થયો. / તમારું નામ શું છે? / મારું નામ મીરા છે.
+Read this shuffled row aloud: ણ જ ુ શ ં ક ો છ ી (retroflex nna — ja — u sign — sha — nasal mark — ka — o sign — chha — long-ii sign).
 
 Writing — from sound.
-Cover every Gujarati model and write the three English-cued lines. Score written production 3/3 separately from reading; repair only a missed line.
+Keep every model covered. Write the nine sound cues in their new order, then score the writing response separately from reading. Writing also needs 9/9; the reading score cannot compensate for it. Repair only missed forms.
 [question — say your answer, then pause 60 seconds]
-Cover every Gujarati model. Write: My name is Arun. / What is your name? / Pleased to meet you.
+Cover every model. Write from these cues: nasal mark, sha, attached u, ja, ka, attached long ii, chha, retroflex nna, attached o.
 
 Wrap-up Recall.
 [pause 3 seconds]
-Which you belongs in this polite exchange? (tame.)
+How many marks and consonants returned? (Four marks and five consonants.)

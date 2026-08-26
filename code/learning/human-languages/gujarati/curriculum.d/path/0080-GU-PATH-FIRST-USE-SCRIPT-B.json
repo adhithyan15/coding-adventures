@@ -1,0 +1,16 @@
+{
+  "id": "GU-PATH-FIRST-USE-SCRIPT-B",
+  "spine_node": "SPINE-EXCHANGE-NAMES",
+  "lessons": [
+    "GU-W05-la",
+    "GU-W05-pa",
+    "GU-W05-cha",
+    "GU-W05-ba",
+    "GU-R05-second-four-r1"
+  ],
+  "before": [],
+  "inline": [],
+  "after": [
+    "GU-EXT-032-FIRST-USE-SCRIPT-B"
+  ]
+}

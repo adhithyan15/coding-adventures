@@ -2,8 +2,8 @@
 schema_version: 2
 id: GU-R15-name-exchange-r3
 spine_node: SPINE-EXCHANGE-NAMES
-sequence: 670
-chapter: 15
+sequence: 680
+chapter: 17
 type: practice
 headword: મારું નામ … છે। તમારું નામ શું છે?
 romanization: mārũ nām … chhe. tamārũ nām shũ chhe?

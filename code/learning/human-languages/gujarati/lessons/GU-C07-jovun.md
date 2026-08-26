@@ -2,8 +2,8 @@
 schema_version: 2
 id: GU-C07-jovun
 spine_node: SPINE-SAY-WHAT-I-DO
-sequence: 400
-chapter: 9
+sequence: 410
+chapter: 11
 type: word
 headword: જોવું
 romanization: jovũ

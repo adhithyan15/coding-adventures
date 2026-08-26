@@ -1,27 +1,36 @@
 {
   "chapter": 13,
-  "title": "Friend and Family",
-  "label": "ch:gu-friend-and-family",
-  "canDo": "I can name a friend, a family, a brother, and a sister in Gujarati, explain which of these words was inherited whole from Sanskrit rather than worn down by sound change, and say which sibling word is genuinely a cousin of its English counterpart and which is not.",
+  "title": "Taking, Asking, Helping, Liking",
+  "label": "ch:gu-doing-verbs",
+  "canDo": "I can take, ask, help and say what I like in Gujarati, explain why મદદ કરવી ends in the feminine -ી while કામ કરવું ends in the neuter, and say why મને ગુજરાતી ગમે છે leaves no room for me as its subject.",
   "spineNodes": [
-    "SPINE-EXCHANGE-NAMES"
+    "SPINE-SAY-WHAT-I-DO"
   ],
   "payoff": {
-    "lesson": "GU-C11-bahen",
+    "lesson": "GU-C09-gamvun",
     "kind": "production",
-    "summary": "The chapter closes on બહેન, deliberately not a cousin of English sister: the reader produces મિત્ર, કુટુંબ, ભાઈ and બહેન, names ભાઈ as English brother's unbroken cousin against બહેન's unrelated (disputed bhaga-based) root, and names કુટુંબ as taken up whole from Sanskrit rather than worn down like the other three — while recalling that મિત્ર and મહેરબાની, taught a chapter apart, share the same ancient Indo-Iranian root.",
+    "summary": "Say મને ગુજરાતી ગમે છે and hear that you are not its subject, set it against હું ગુજરાતી બોલું છું where you are, trace ગમવું back to gamyate — the passive of gam- 'to go', so the verb was born without a doer and is English come besides — and run the chapter's four verbs back with where each came from: Sanskrit prek- behind pūchhvũ, lebh- behind levũ, Arabic madad through Persian, and the feminine ending madad forces onto karvī.",
     "assesses": [
-      "GU-LEX-MITRA",
-      "GU-ETYMON-MITRA-BIND",
-      "GU-LEX-KUTUMB",
-      "GU-ETYMON-KUTUMB-DRAVIDIAN",
-      "GU-GRAMMAR-LEARNED-BORROWING",
-      "GU-LEX-BHAI",
-      "GU-ETYMON-BHAI-BROTHER",
-      "GU-LEX-BAHEN",
-      "GU-ETYMON-BAHEN-BHAGA",
-      "GU-PHRASE-MEHERBANI-KARINE",
-      "GU-HISTORY-LEARNED-RESTORATION"
+      "GU-LEX-GAMVU",
+      "GU-GRAMMAR-DATIVE-LIKING",
+      "GU-ETYMON-GAM-GO",
+      "GU-LEX-MADAD-KARVI",
+      "GU-ETYMON-MADAD-ARABIC",
+      "GU-GRAMMAR-INFINITIVE-OBJECT-GENDER",
+      "GU-LEX-PUCHHVU",
+      "GU-ETYMON-PRACH-ASK",
+      "GU-LEX-LEVU",
+      "GU-ETYMON-LABH-GAIN",
+      "GU-LEX-AAVVU",
+      "GU-ETYMON-AAVVU-REACH",
+      "GU-LEX-JAVU",
+      "GU-SOUND-PRAKRIT-Y-TO-J",
+      "GU-SOUND-DHY-JJH-J",
+      "GU-LEX-JAANVU",
+      "GU-ETYMON-JAANVU-KNOW",
+      "GU-SCRIPT-HEADLESS-CLUE",
+      "GU-GRAMMAR-VU-NEUTER-INFINITIVE",
+      "GU-GRAMMAR-PRESENT-STEM-PERSON-COPULA"
     ]
   }
 }

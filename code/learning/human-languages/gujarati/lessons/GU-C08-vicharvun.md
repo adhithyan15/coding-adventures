@@ -2,8 +2,8 @@
 schema_version: 2
 id: GU-C08-vicharvun
 spine_node: SPINE-SAY-WHAT-I-DO
-sequence: 420
-chapter: 10
+sequence: 430
+chapter: 12
 type: word
 headword: વિચારવું
 romanization: vichārvũ
