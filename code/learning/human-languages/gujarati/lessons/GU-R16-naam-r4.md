@@ -2,8 +2,8 @@
 schema_version: 2
 id: GU-R16-naam-r4
 spine_node: SPINE-EXCHANGE-NAMES
-sequence: 690
-chapter: 18
+sequence: 700
+chapter: 20
 type: practice
 headword: નામ
 romanization: nām

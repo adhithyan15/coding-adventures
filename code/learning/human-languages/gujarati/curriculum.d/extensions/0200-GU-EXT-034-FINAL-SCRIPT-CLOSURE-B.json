@@ -1,0 +1,17 @@
+{
+  "id": "GU-EXT-034-FINAL-SCRIPT-CLOSURE-B",
+  "stage": "pre-A1",
+  "kind": "required",
+  "category": "script",
+  "canDo": "I can trace, copy, recall, read, and write ૂ, ટ, ઈ, and ઢ before any later lesson asks me to decode them.",
+  "prerequisites": [
+    "GU-EXT-033-FINAL-SCRIPT-CLOSURE-A"
+  ],
+  "lessons": [
+    "GU-W07-uu-matra",
+    "GU-W07-tta",
+    "GU-W07-independent-ii",
+    "GU-W07-ddha",
+    "GU-R07-second-four-r1"
+  ]
+}

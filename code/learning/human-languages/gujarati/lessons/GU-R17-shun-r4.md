@@ -2,8 +2,8 @@
 schema_version: 2
 id: GU-R17-shun-r4
 spine_node: SPINE-EXCHANGE-NAMES
-sequence: 760
-chapter: 19
+sequence: 770
+chapter: 21
 type: practice
 headword: શું
 romanization: shũ

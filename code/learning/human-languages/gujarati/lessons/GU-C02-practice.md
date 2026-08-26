@@ -2,8 +2,8 @@
 schema_version: 2
 id: GU-C02-practice
 spine_node: SPINE-EXCHANGE-NAMES
-sequence: 160
-chapter: 6
+sequence: 170
+chapter: 8
 type: practice
 headword: (dialogue)
 gloss: Chapter 4 recap — the introduction exchange

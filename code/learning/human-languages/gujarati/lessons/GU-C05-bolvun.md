@@ -2,8 +2,8 @@
 schema_version: 2
 id: GU-C05-bolvun
 spine_node: SPINE-SAY-WHAT-I-DO
-sequence: 280
-chapter: 9
+sequence: 290
+chapter: 11
 type: word
 headword: બોલવું
 gloss: to speak

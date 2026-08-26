@@ -2,275 +2,24 @@
   "version": 1,
   "language": "gujarati",
   "chapter": 20,
-  "title": "Fourth Return: Wellbeing and Farewells",
+  "title": "Fourth Return: The Introduction",
   "drivablePrefix": 0,
-  "sourceHash": "fnv1a64:5330793ae35423de",
+  "sourceHash": "fnv1a64:d117be795acf1a28",
   "lessons": [
     {
-      "id": "GU-R18-how-are-you-r4",
-      "sequence": 810,
-      "title": "The respectful wellbeing question returns at R4",
-      "headword": "તમે કેમ છો?",
-      "romanization": "tame kem chho?",
-      "gloss": "retrieve the respectful wellbeing question at its fourth spacing window",
+      "id": "GU-R16-naam-r4",
+      "sequence": 700,
+      "title": "Nām returns at R4",
+      "headword": "નામ",
+      "romanization": "nām",
+      "gloss": "retrieve name at its fourth spacing window",
       "script": "gujarati",
       "modality": "pen",
       "derivedModality": "pen",
       "modalityReasons": [
         "writing-block"
       ],
-      "sourceHash": "fnv1a64:3ea1ef1988434d5c",
-      "notice": {
-        "modality": "pen",
-        "needs": [],
-        "waitUntilStopped": [],
-        "text": "Before we start: this one needs your hands, so it is not a driving lesson. You can listen to all of it now and come back to the parts that need looking at once you have stopped."
-      },
-      "blocks": [
-        {
-          "index": 0,
-          "type": "warmup",
-          "title": "Warm-up",
-          "segments": [
-            {
-              "kind": "pause",
-              "seconds": 6,
-              "perItem": false,
-              "source": "[PAUSE 6s]"
-            },
-            {
-              "kind": "speech",
-              "text": "Ask a new acquaintance How are you? without looking."
-            }
-          ]
-        },
-        {
-          "index": 1,
-          "type": "guided-production",
-          "title": "Guided Practice",
-          "segments": [
-            {
-              "kind": "prompt",
-              "action": "SAY",
-              "instruction": "tũ kem chhe? — tame kem chho?",
-              "spoken": true,
-              "scored": false,
-              "responseSeconds": 8,
-              "source": "[YOU SAY: *tũ kem chhe? — tame kem chho?*]"
-            },
-            {
-              "kind": "speech",
-              "text": "Choose the respectful question. The pronoun and copula agree as one frame."
-            },
-            {
-              "kind": "activity",
-              "scored": true,
-              "id": "GU-R18-how-are-you-r4-listening",
-              "prompt": "Hear: tũ kem chhe? / tame kem chho? Which question respectfully asks how a new acquaintance is?",
-              "assesses": [
-                "GU-CONCEPT-C02-TUTAME-01",
-                "GU-CONCEPT-C03-KEM-01",
-                "GU-CONCEPT-C03-TAMEKEMCHHO-01"
-              ],
-              "responseSeconds": 25,
-              "acceptedResponses": [
-                "tame kem chho?"
-              ],
-              "feedback": {
-                "correct": "Tame and chho travel together in the respectful question.",
-                "incorrect": "Hear the respectful question once, cover the help, and choose again."
-              }
-            }
-          ]
-        },
-        {
-          "index": 2,
-          "type": "writing",
-          "title": "Writing — from sound",
-          "segments": [
-            {
-              "kind": "speech",
-              "text": "Write the three-word question from meaning. Score listening choice and writing separately."
-            },
-            {
-              "kind": "activity",
-              "scored": true,
-              "id": "GU-R18-how-are-you-r4-writing",
-              "prompt": "Cover every Gujarati model. Write the respectful question: How are you?",
-              "assesses": [
-                "GU-CONCEPT-C02-TUTAME-01",
-                "GU-CONCEPT-C03-KEM-01",
-                "GU-CONCEPT-C03-TAMEKEMCHHO-01"
-              ],
-              "responseSeconds": 35,
-              "acceptedResponses": [
-                "તમે કેમ છો?"
-              ],
-              "feedback": {
-                "correct": "You produced the respectful question independently.",
-                "incorrect": "Check only the missed word, cover it, and write the question again."
-              }
-            }
-          ]
-        },
-        {
-          "index": 3,
-          "type": "recall",
-          "title": "Wrap-up Recall",
-          "segments": [
-            {
-              "kind": "pause",
-              "seconds": 3,
-              "perItem": false,
-              "source": "[PAUSE 3s]"
-            },
-            {
-              "kind": "speech",
-              "text": "Ask the respectful question once more aloud."
-            }
-          ]
-        }
-      ]
-    },
-    {
-      "id": "GU-R18-majaa-r4",
-      "sequence": 820,
-      "title": "The wellbeing answer returns at R4",
-      "headword": "હું મજામાં છું।",
-      "romanization": "hũ majāmā chhũ.",
-      "gloss": "retrieve the wellbeing answer at its fourth spacing window",
-      "script": "gujarati",
-      "modality": "pen",
-      "derivedModality": "pen",
-      "modalityReasons": [
-        "writing-block"
-      ],
-      "sourceHash": "fnv1a64:e712b3b1290f781c",
-      "notice": {
-        "modality": "pen",
-        "needs": [],
-        "waitUntilStopped": [],
-        "text": "Before we start: this one needs your hands, so it is not a driving lesson. You can listen to all of it now and come back to the parts that need looking at once you have stopped."
-      },
-      "blocks": [
-        {
-          "index": 0,
-          "type": "warmup",
-          "title": "Warm-up",
-          "segments": [
-            {
-              "kind": "pause",
-              "seconds": 6,
-              "perItem": false,
-              "source": "[PAUSE 6s]"
-            },
-            {
-              "kind": "speech",
-              "text": "Answer tame kem chho? with I am well before looking."
-            }
-          ]
-        },
-        {
-          "index": 1,
-          "type": "guided-production",
-          "title": "Guided Practice",
-          "segments": [
-            {
-              "kind": "prompt",
-              "action": "SAY",
-              "instruction": "tame kem chho? — hũ majāmā chhũ",
-              "spoken": true,
-              "scored": false,
-              "responseSeconds": 8,
-              "source": "[YOU SAY: *tame kem chho? — hũ majāmā chhũ*]"
-            },
-            {
-              "kind": "speech",
-              "text": "Choose the answer, then say the question and answer as a pair."
-            },
-            {
-              "kind": "activity",
-              "scored": true,
-              "id": "GU-R18-majaa-r4-listening",
-              "prompt": "Hear: tame kem chho? / hũ majāmā chhũ. Which line is the wellbeing answer?",
-              "assesses": [
-                "GU-CONCEPT-C03-HUN-01",
-                "GU-CONCEPT-C03-MAJAA-01",
-                "GU-CONCEPT-C03-TAMEKEMCHHO-01"
-              ],
-              "responseSeconds": 25,
-              "acceptedResponses": [
-                "hũ majāmā chhũ."
-              ],
-              "feedback": {
-                "correct": "You recognized the answer as a complete response.",
-                "incorrect": "Hear the answer once with I am well, cover the help, and choose again."
-              }
-            }
-          ]
-        },
-        {
-          "index": 2,
-          "type": "writing",
-          "title": "Writing — from sound",
-          "segments": [
-            {
-              "kind": "speech",
-              "text": "Write the answer from meaning. Listening recognition and written production each have their own score."
-            },
-            {
-              "kind": "activity",
-              "scored": true,
-              "id": "GU-R18-majaa-r4-writing",
-              "prompt": "Cover every Gujarati model. Write: I am well.",
-              "assesses": [
-                "GU-CONCEPT-C03-HUN-01",
-                "GU-CONCEPT-C03-MAJAA-01"
-              ],
-              "responseSeconds": 40,
-              "acceptedResponses": [
-                "હું મજામાં છું।"
-              ],
-              "feedback": {
-                "correct": "You produced the wellbeing answer independently.",
-                "incorrect": "Check only the missed word, cover it, and write the answer again."
-              }
-            }
-          ]
-        },
-        {
-          "index": 3,
-          "type": "recall",
-          "title": "Wrap-up Recall",
-          "segments": [
-            {
-              "kind": "pause",
-              "seconds": 3,
-              "perItem": false,
-              "source": "[PAUSE 3s]"
-            },
-            {
-              "kind": "speech",
-              "text": "What does majā literally evoke? (Enjoyment or relish.)"
-            }
-          ]
-        }
-      ]
-    },
-    {
-      "id": "GU-R18-no-problem-r4",
-      "sequence": 830,
-      "title": "No problem returns at R4",
-      "headword": "વાંધો નહીં।",
-      "romanization": "vāndho nahĩ.",
-      "gloss": "retrieve no problem at its fourth spacing window",
-      "script": "gujarati",
-      "modality": "pen",
-      "derivedModality": "pen",
-      "modalityReasons": [
-        "writing-block"
-      ],
-      "sourceHash": "fnv1a64:da78ebc4049ed6d8",
+      "sourceHash": "fnv1a64:f305c9a7e5d7e81b",
       "notice": {
         "modality": "pen",
         "needs": [],
@@ -291,7 +40,7 @@
             },
             {
               "kind": "speech",
-              "text": "Someone says ābhār. Give the gracious reply before looking."
+              "text": "Before looking, say the Gujarati word that is a cousin of English name."
             }
           ]
         },
@@ -303,33 +52,31 @@
             {
               "kind": "prompt",
               "action": "SAY",
-              "instruction": "ābhār — vāndho nahĩ",
+              "instruction": "chhe — nām — mārũ",
               "spoken": true,
               "scored": false,
               "responseSeconds": 8,
-              "source": "[YOU SAY: *ābhār — vāndho nahĩ*]"
+              "source": "[YOU SAY: *chhe — nām — mārũ*]"
             },
             {
               "kind": "speech",
-              "text": "Give the reply. Remember that nahĩ carries the old negative also heard in nā."
+              "text": "Point to the item meaning name, then uncover નામ (nām) and read it once. Position 97 is 61 lessons after its introduction at position 36, so this response closes the word's R4 window."
             },
             {
               "kind": "activity",
               "scored": true,
-              "id": "GU-R18-no-problem-r4-listening",
-              "prompt": "Hear: ābhār / vāndho nahĩ. Which line answers thanks with no problem?",
+              "id": "GU-R16-naam-r4-listening",
+              "prompt": "Without looking at Gujarati, hear this row: chhe — nām — mārũ. Which item means name?",
               "assesses": [
-                "GU-CONCEPT-C01-AABHAAR-01",
-                "GU-CONCEPT-C01-HAANAA-01",
-                "GU-CONCEPT-C03-VANDHONAHI-01"
+                "GU-CONCEPT-C02-NAAM-01"
               ],
               "responseSeconds": 20,
               "acceptedResponses": [
-                "vāndho nahĩ."
+                "nām"
               ],
               "feedback": {
-                "correct": "Vāndho nahĩ is the gracious reply.",
-                "incorrect": "Hear vāndho nahĩ once with no problem, cover the help, and choose again."
+                "correct": "Nām returned by sound and meaning.",
+                "incorrect": "Hear nām once with its meaning, cover the help, and answer again."
               }
             }
           ]
@@ -341,23 +88,23 @@
           "segments": [
             {
               "kind": "speech",
-              "text": "Write the reply from meaning. Score the listening choice and the two written words separately."
+              "text": "Cover every Gujarati model and write nām. Score listening/recognition and writing separately; each needs 1/1."
             },
             {
               "kind": "activity",
               "scored": true,
-              "id": "GU-R18-no-problem-r4-writing",
-              "prompt": "Cover every Gujarati model. Write: No problem.",
+              "id": "GU-R16-naam-r4-writing",
+              "prompt": "Cover every Gujarati model. Write nām from sound.",
               "assesses": [
-                "GU-CONCEPT-C03-VANDHONAHI-01"
+                "GU-CONCEPT-C02-NAAM-01"
               ],
-              "responseSeconds": 35,
+              "responseSeconds": 25,
               "acceptedResponses": [
-                "વાંધો નહીં।"
+                "નામ"
               ],
               "feedback": {
-                "correct": "You produced the courteous reply independently.",
-                "incorrect": "Check only the missed word, cover it, and write the reply again."
+                "correct": "You retrieved nām independently in Gujarati script.",
+                "incorrect": "Check નામ once, cover it, and rewrite only that word."
               }
             }
           ]
@@ -375,26 +122,26 @@
             },
             {
               "kind": "speech",
-              "text": "Say thanks / no problem as a two-line exchange."
+              "text": "What is nām's English cousin? (name.)"
             }
           ]
         }
       ]
     },
     {
-      "id": "GU-R18-wellbeing-r4",
-      "sequence": 840,
-      "title": "The wellbeing exchange returns at R4",
-      "headword": "તમે કેમ છો? હું મજામાં છું। વાંધો નહીં।",
-      "romanization": "tame kem chho? hũ majāmā chhũ. vāndho nahĩ.",
-      "gloss": "retrieve the wellbeing exchange at its fourth spacing window",
+      "id": "GU-R16-maarun-r4",
+      "sequence": 710,
+      "title": "Mārũ returns with nām",
+      "headword": "મારું",
+      "romanization": "mārũ",
+      "gloss": "retrieve my at its fourth spacing window",
       "script": "gujarati",
       "modality": "pen",
       "derivedModality": "pen",
       "modalityReasons": [
         "writing-block"
       ],
-      "sourceHash": "fnv1a64:b80b9200793411e1",
+      "sourceHash": "fnv1a64:484988c0bbc01a28",
       "notice": {
         "modality": "pen",
         "needs": [],
@@ -409,13 +156,13 @@
           "segments": [
             {
               "kind": "pause",
-              "seconds": 7,
+              "seconds": 5,
               "perItem": false,
-              "source": "[PAUSE 7s]"
+              "source": "[PAUSE 5s]"
             },
             {
               "kind": "speech",
-              "text": "Picture a question, a positive answer, and a courteous close."
+              "text": "Say my name without looking: mārũ nām."
             }
           ]
         },
@@ -427,35 +174,32 @@
             {
               "kind": "prompt",
               "action": "SAY",
-              "instruction": "vāndho nahĩ — hũ majāmā chhũ — tame kem chho",
+              "instruction": "mārũ nām",
               "spoken": true,
               "scored": false,
               "responseSeconds": 8,
-              "source": "[YOU SAY: *vāndho nahĩ — hũ majāmā chhũ — tame kem chho*]"
+              "source": "[YOU SAY: *mārũ nām*]"
             },
             {
               "kind": "speech",
-              "text": "Rebuild question, answer, courtesy close."
+              "text": "Give each meaning, then read મારું નામ (nām) once. Position 98 is 61 lessons after mārũ first appeared at position 37, closing its R4 window without adding a form."
             },
             {
               "kind": "activity",
               "scored": true,
-              "id": "GU-R18-wellbeing-r4-listening",
-              "prompt": "Hear the shuffled lines: vāndho nahĩ / hũ majāmā chhũ / tame kem chho. Put them in question, answer, courtesy order.",
+              "id": "GU-R16-maarun-r4-listening",
+              "prompt": "Hear mārũ nām. Which word means my, and which means name?",
               "assesses": [
-                "GU-CONCEPT-C03-HUN-01",
-                "GU-CONCEPT-C03-MAJAA-01",
-                "GU-CONCEPT-C03-PRACTICE-01",
-                "GU-CONCEPT-C03-TAMEKEMCHHO-01",
-                "GU-CONCEPT-C03-VANDHONAHI-01"
+                "GU-CONCEPT-C02-MAARUN-01",
+                "GU-CONCEPT-C02-NAAM-01"
               ],
-              "responseSeconds": 45,
+              "responseSeconds": 25,
               "acceptedResponses": [
-                "tame kem chho? / hũ majāmā chhũ. / vāndho nahĩ."
+                "mārũ means my; nām means name"
               ],
               "feedback": {
-                "correct": "You rebuilt the complete wellbeing exchange.",
-                "incorrect": "Check only the misplaced line, then order all three again without looking."
+                "correct": "The two-word owner phrase stayed in order.",
+                "incorrect": "Hear mārũ — my, nām — name once, then answer again without help."
               }
             }
           ]
@@ -467,27 +211,24 @@
           "segments": [
             {
               "kind": "speech",
-              "text": "Write all three lines from meaning. Listening order and written production each need 3/3."
+              "text": "Write the two-word phrase with every model covered. Listening and writing each need 2/2; repair only a missed word."
             },
             {
               "kind": "activity",
               "scored": true,
-              "id": "GU-R18-wellbeing-r4-writing",
-              "prompt": "Cover every Gujarati model. Write: How are you? / I am well. / No problem.",
+              "id": "GU-R16-maarun-r4-writing",
+              "prompt": "Cover every Gujarati model. Write mārũ nām from sound.",
               "assesses": [
-                "GU-CONCEPT-C03-HUN-01",
-                "GU-CONCEPT-C03-MAJAA-01",
-                "GU-CONCEPT-C03-PRACTICE-01",
-                "GU-CONCEPT-C03-TAMEKEMCHHO-01",
-                "GU-CONCEPT-C03-VANDHONAHI-01"
+                "GU-CONCEPT-C02-MAARUN-01",
+                "GU-CONCEPT-C02-NAAM-01"
               ],
-              "responseSeconds": 60,
+              "responseSeconds": 30,
               "acceptedResponses": [
-                "તમે કેમ છો? / હું મજામાં છું। / વાંધો નહીં।"
+                "મારું નામ"
               ],
               "feedback": {
-                "correct": "You produced the full exchange independently.",
-                "incorrect": "Check only the missed line, cover it, and write that line again."
+                "correct": "You wrote my name independently.",
+                "incorrect": "Check only the missed word, cover both words, and rewrite the phrase."
               }
             }
           ]
@@ -505,26 +246,150 @@
             },
             {
               "kind": "speech",
-              "text": "Perform the exchange once more aloud."
+              "text": "Why is the form mārũ? (Nām is neuter.)"
             }
           ]
         }
       ]
     },
     {
-      "id": "GU-R18-farewell-r4",
-      "sequence": 850,
-      "title": "We will meet returns at R4",
-      "headword": "પાછા મળીશું। કાલે મળીશું।",
-      "romanization": "pāchhā maḷīshũ. kāle maḷīshũ.",
-      "gloss": "retrieve we will meet at R4 and the farewell exchange at R3",
+      "id": "GU-R16-chhe-r4",
+      "sequence": 720,
+      "title": "Chhe returns to the final slot",
+      "headword": "છે",
+      "romanization": "chhe",
+      "gloss": "retrieve the Gujarati copula at its fourth spacing window",
       "script": "gujarati",
       "modality": "pen",
       "derivedModality": "pen",
       "modalityReasons": [
         "writing-block"
       ],
-      "sourceHash": "fnv1a64:594b7b743d414ba8",
+      "sourceHash": "fnv1a64:362bec01a950adfd",
+      "notice": {
+        "modality": "pen",
+        "needs": [],
+        "waitUntilStopped": [],
+        "text": "Before we start: this one needs your hands, so it is not a driving lesson. You can listen to all of it now and come back to the parts that need looking at once you have stopped."
+      },
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 5,
+              "perItem": false,
+              "source": "[PAUSE 5s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Say Gujarati is once. Remember that it waits at the end."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "nām — chhe",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *nām — chhe*]"
+            },
+            {
+              "kind": "speech",
+              "text": "Identify is, then read નામ (nām) … છે. Position 99 is 61 lessons after chhe appeared at position 38, so the copula's R4 window closes here."
+            },
+            {
+              "kind": "activity",
+              "scored": true,
+              "id": "GU-R16-chhe-r4-listening",
+              "prompt": "Hear nām — chhe. Which item is the copula is, and where does it sit?",
+              "assesses": [
+                "GU-CONCEPT-C02-CHHE-01",
+                "GU-CONCEPT-C02-NAAM-01"
+              ],
+              "responseSeconds": 25,
+              "acceptedResponses": [
+                "chhe; it sits at the end"
+              ],
+              "feedback": {
+                "correct": "You retrieved Gujarati chhe and its sentence-final position.",
+                "incorrect": "Hear nām — chhe once more, then answer without looking."
+              }
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "writing",
+          "title": "Writing — from sound",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "Write the frame with every model covered. Score the two words separately from listening; repair only the missed one."
+            },
+            {
+              "kind": "activity",
+              "scored": true,
+              "id": "GU-R16-chhe-r4-writing",
+              "prompt": "Cover every Gujarati model. Write nām … chhe from sound, leaving a name-sized gap.",
+              "assesses": [
+                "GU-CONCEPT-C02-CHHE-01",
+                "GU-CONCEPT-C02-NAAM-01"
+              ],
+              "responseSeconds": 30,
+              "acceptedResponses": [
+                "નામ ... છે"
+              ],
+              "feedback": {
+                "correct": "The copula returned in its Gujarati final slot.",
+                "incorrect": "Check only the missed word, cover the model, and rewrite the frame."
+              }
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Is chhe Hindi hai? (No; it is Gujarati's own copula.)"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "GU-R16-my-name-is-r4",
+      "sequence": 730,
+      "title": "The whole name frame returns at R4",
+      "headword": "મારું નામ … છે",
+      "romanization": "mārũ nām … chhe",
+      "gloss": "retrieve my name is at its fourth spacing window",
+      "script": "gujarati",
+      "modality": "pen",
+      "derivedModality": "pen",
+      "modalityReasons": [
+        "writing-block"
+      ],
+      "sourceHash": "fnv1a64:5ff34c5e1dbb5361",
       "notice": {
         "modality": "pen",
         "needs": [],
@@ -545,7 +410,7 @@
             },
             {
               "kind": "speech",
-              "text": "Say we will meet before looking."
+              "text": "Assemble my — name — Mira — is aloud in Gujarati."
             }
           ]
         },
@@ -557,35 +422,34 @@
             {
               "kind": "prompt",
               "action": "SAY",
-              "instruction": "kāle maḷīshũ — pāchhā maḷīshũ",
+              "instruction": "mārũ nām Mīrā chhe",
               "spoken": true,
               "scored": false,
               "responseSeconds": 8,
-              "source": "[YOU SAY: *kāle maḷīshũ — pāchhā maḷīshũ*]"
+              "source": "[YOU SAY: *mārũ nām Mīrā chhe*]"
             },
             {
               "kind": "speech",
-              "text": "Give each meaning. Maḷīshũ is the shared future verb; kāle and pāchhā choose the farewell."
+              "text": "Give its meaning and point to the final verb in મારું (mārũ) નામ (nām) મીરા છે (chhe). Position 100 is exactly 61 lessons after the frame was assembled at position 39, closing its R4 window."
             },
             {
               "kind": "activity",
               "scored": true,
-              "id": "GU-R18-farewell-r4-listening",
-              "prompt": "Hear: kāle maḷīshũ / pāchhā maḷīshũ. Which line means we will meet again, and which means see you tomorrow?",
+              "id": "GU-R16-my-name-is-r4-listening",
+              "prompt": "Hear mārũ nām Mīrā chhe. Give the meaning and name the final verb.",
               "assesses": [
-                "GU-CONCEPT-C04-KAALE-01",
-                "GU-CONCEPT-C04-MALISHUN-01",
-                "GU-CONCEPT-C04-PACHHA-01",
-                "GU-CONCEPT-C04-PACHHAMALISHUN-01",
-                "GU-CONCEPT-C04-PRACTICE-01"
+                "GU-CONCEPT-C02-CHHE-01",
+                "GU-CONCEPT-C02-MAARUN-01",
+                "GU-CONCEPT-C02-MAARUNNAAMCHHE-01",
+                "GU-CONCEPT-C02-NAAM-01"
               ],
-              "responseSeconds": 40,
+              "responseSeconds": 30,
               "acceptedResponses": [
-                "pāchhā maḷīshũ = we will meet again; kāle maḷīshũ = see you tomorrow."
+                "my name is mira; chhe is the final verb"
               ],
               "feedback": {
-                "correct": "You distinguished the two familiar farewells by meaning.",
-                "incorrect": "Hear pāchhā with again and kāle with tomorrow once, cover the help, and answer again."
+                "correct": "The complete frame and Gujarati word order returned.",
+                "incorrect": "Hear the four-part frame once more, then answer without help."
               }
             }
           ]
@@ -597,27 +461,26 @@
           "segments": [
             {
               "kind": "speech",
-              "text": "Write both farewells from meaning. Score listening meanings and writing separately. This also closes the coherent farewell atoms' R3 windows."
+              "text": "Write the one sentence with every model covered. Listening and writing each need 4/4; repair only a missed word."
             },
             {
               "kind": "activity",
               "scored": true,
-              "id": "GU-R18-farewell-r4-writing",
-              "prompt": "Cover every Gujarati model. Write: We will meet again. / See you tomorrow.",
+              "id": "GU-R16-my-name-is-r4-writing",
+              "prompt": "Cover every Gujarati model. Write My name is Mira from the heard Gujarati cue mārũ nām Mīrā chhe.",
               "assesses": [
-                "GU-CONCEPT-C04-KAALE-01",
-                "GU-CONCEPT-C04-MALISHUN-01",
-                "GU-CONCEPT-C04-PACHHA-01",
-                "GU-CONCEPT-C04-PACHHAMALISHUN-01",
-                "GU-CONCEPT-C04-PRACTICE-01"
+                "GU-CONCEPT-C02-CHHE-01",
+                "GU-CONCEPT-C02-MAARUN-01",
+                "GU-CONCEPT-C02-MAARUNNAAMCHHE-01",
+                "GU-CONCEPT-C02-NAAM-01"
               ],
-              "responseSeconds": 55,
+              "responseSeconds": 45,
               "acceptedResponses": [
-                "પાછા મળીશું। / કાલે મળીશું।"
+                "મારું નામ મીરા છે"
               ],
               "feedback": {
-                "correct": "You produced both farewells independently.",
-                "incorrect": "Check only the missed line, cover it, and write that line again."
+                "correct": "You wrote the complete name frame independently.",
+                "incorrect": "Check only the missed word, cover the line, and rewrite the sentence."
               }
             }
           ]
@@ -635,7 +498,263 @@
             },
             {
               "kind": "speech",
-              "text": "Which verb is shared by both lines? (મળીશું, maḷīshũ.)"
+              "text": "Give the same frame with your own name."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "GU-R16-anand-r4",
+      "sequence": 740,
+      "title": "Ānand returns to close the introduction",
+      "headword": "તમને મળીને આનંદ થયો",
+      "romanization": "tamne maḷīne ānand thayo",
+      "gloss": "retrieve pleased to meet you at its fourth spacing window",
+      "script": "gujarati",
+      "modality": "pen",
+      "derivedModality": "pen",
+      "modalityReasons": [
+        "writing-block"
+      ],
+      "sourceHash": "fnv1a64:c181c7ca33f482bb",
+      "notice": {
+        "modality": "pen",
+        "needs": [],
+        "waitUntilStopped": [],
+        "text": "Before we start: this one needs your hands, so it is not a driving lesson. You can listen to all of it now and come back to the parts that need looking at once you have stopped."
+      },
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 6,
+              "perItem": false,
+              "source": "[PAUSE 6s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Give your name aloud, then pause where a warm closing line belongs."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "mārũ nām Arun chhe — tamne maḷīne ānand thayo",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *mārũ nām Arun chhe — tamne maḷīne ānand thayo*]"
+            },
+            {
+              "kind": "speech",
+              "text": "Identify each line, then read તમને મળીને આનંદ થયો (tamne maḷīne ānand thayo) once. Position 101 is 61 lessons after this closing appeared at position 40, so its R4 window closes here."
+            },
+            {
+              "kind": "activity",
+              "scored": true,
+              "id": "GU-R16-anand-r4-listening",
+              "prompt": "Hear mārũ nām Arun chhe / tamne maḷīne ānand thayo. Which line gives a name, and which closes warmly?",
+              "assesses": [
+                "GU-CONCEPT-C02-ANAND-01",
+                "GU-CONCEPT-C02-MAARUNNAAMCHHE-01"
+              ],
+              "responseSeconds": 35,
+              "acceptedResponses": [
+                "the first gives a name; the second means pleased to meet you"
+              ],
+              "feedback": {
+                "correct": "You followed the two-line introduction by sound and meaning.",
+                "incorrect": "Hear each line once with its role, then classify them again without help."
+              }
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "writing",
+          "title": "Writing — from sound",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "Write the key closing word and the name frame with every model covered. Score the two written items separately from listening; each needs 2/2."
+            },
+            {
+              "kind": "activity",
+              "scored": true,
+              "id": "GU-R16-anand-r4-writing",
+              "prompt": "Cover every Gujarati model. Write the key closing word ānand, then write mārũ nām … chhe as a separate frame.",
+              "assesses": [
+                "GU-CONCEPT-C02-ANAND-01",
+                "GU-CONCEPT-C02-MAARUNNAAMCHHE-01"
+              ],
+              "responseSeconds": 45,
+              "acceptedResponses": [
+                "આનંદ / મારું નામ ... છે"
+              ],
+              "feedback": {
+                "correct": "Both the warm close and the name frame returned independently.",
+                "incorrect": "Check only the missed item, cover both models, and rewrite that item."
+              }
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does ānand mean literally? (Joy or bliss.)"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "GU-R16-wellbeing-r3",
+      "sequence": 750,
+      "title": "After names, the wellbeing exchange returns",
+      "headword": "તમે કેમ છો? હું મજામાં છું। વાંધો નહીં।",
+      "romanization": "tame kem chho? hũ majāmā chhũ. vāndho nahĩ.",
+      "gloss": "retrieve the how-are-you exchange after a durable interval",
+      "script": "gujarati",
+      "modality": "pen",
+      "derivedModality": "pen",
+      "modalityReasons": [
+        "writing-block"
+      ],
+      "sourceHash": "fnv1a64:523bedbc9d901429",
+      "notice": {
+        "modality": "pen",
+        "needs": [],
+        "waitUntilStopped": [],
+        "text": "Before we start: this one needs your hands, so it is not a driving lesson. You can listen to all of it now and come back to the parts that need looking at once you have stopped."
+      },
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 7,
+              "perItem": false,
+              "source": "[PAUSE 7s]"
+            },
+            {
+              "kind": "speech",
+              "text": "After exchanging names, ask How are you? without looking."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "vāndho nahĩ — tame kem chho — hũ majāmā chhũ",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *vāndho nahĩ — tame kem chho — hũ majāmā chhũ*]"
+            },
+            {
+              "kind": "speech",
+              "text": "Rebuild question, answer, courtesy. Position 41 introduced nothing, so position 102 closes the open R3 windows for this real dialogue instead of inventing a matching atom."
+            },
+            {
+              "kind": "activity",
+              "scored": true,
+              "id": "GU-R16-wellbeing-r3-listening",
+              "prompt": "Hear the shuffled lines: vāndho nahĩ / tame kem chho / hũ majāmā chhũ. Put them in question, answer, courtesy order.",
+              "assesses": [
+                "GU-CONCEPT-C03-HUN-01",
+                "GU-CONCEPT-C03-KEM-01",
+                "GU-CONCEPT-C03-MAJAA-01",
+                "GU-CONCEPT-C03-PRACTICE-01",
+                "GU-CONCEPT-C03-TAMEKEMCHHO-01",
+                "GU-CONCEPT-C03-VANDHONAHI-01"
+              ],
+              "responseSeconds": 45,
+              "acceptedResponses": [
+                "tame kem chho? / hũ majāmā chhũ. / vāndho nahĩ."
+              ],
+              "feedback": {
+                "correct": "You rebuilt the wellbeing exchange from sound and meaning.",
+                "incorrect": "Check only the misplaced line, then order all three again without looking."
+              }
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "writing",
+          "title": "Writing — from sound",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "Write the three lines from meaning with every model covered. Listening order and written production each need 3/3; repair only a missed line."
+            },
+            {
+              "kind": "activity",
+              "scored": true,
+              "id": "GU-R16-wellbeing-r3-writing",
+              "prompt": "Cover every Gujarati model. Write: How are you? / I am well. / No problem.",
+              "assesses": [
+                "GU-CONCEPT-C03-HUN-01",
+                "GU-CONCEPT-C03-KEM-01",
+                "GU-CONCEPT-C03-MAJAA-01",
+                "GU-CONCEPT-C03-PRACTICE-01",
+                "GU-CONCEPT-C03-TAMEKEMCHHO-01",
+                "GU-CONCEPT-C03-VANDHONAHI-01"
+              ],
+              "responseSeconds": 60,
+              "acceptedResponses": [
+                "તમે કેમ છો? / હું મજામાં છું। / વાંધો નહીં।"
+              ],
+              "feedback": {
+                "correct": "You produced the complete wellbeing exchange independently.",
+                "incorrect": "Check only the missed line, cover it, and write that line once more from meaning."
+              }
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Ask and answer once more aloud."
             }
           ]
         }

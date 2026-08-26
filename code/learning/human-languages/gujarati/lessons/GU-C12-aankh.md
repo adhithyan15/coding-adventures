@@ -2,8 +2,8 @@
 schema_version: 2
 id: GU-C12-aankh
 spine_node: SPINE-CHECK-WELLBEING
-sequence: 590
-chapter: 16
+sequence: 600
+chapter: 18
 type: word
 headword: આંખ
 romanization: āṅkh

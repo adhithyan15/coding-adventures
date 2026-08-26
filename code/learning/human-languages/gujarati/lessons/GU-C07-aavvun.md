@@ -2,8 +2,8 @@
 schema_version: 2
 id: GU-C07-aavvun
 spine_node: SPINE-SAY-WHAT-I-DO
-sequence: 390
-chapter: 11
+sequence: 400
+chapter: 13
 type: word
 headword: આવવું
 romanization: āvvũ

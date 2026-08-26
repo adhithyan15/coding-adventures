@@ -137,6 +137,38 @@
       ]
     },
     {
+      "id": "GU-PATH-FINAL-SCRIPT-CLOSURE-A",
+      "spine_node": "SPINE-EXCHANGE-NAMES",
+      "lessons": [
+        "GU-W06-ga",
+        "GU-W06-independent-e",
+        "GU-W06-kha",
+        "GU-W06-independent-u",
+        "GU-R06-first-four-r1"
+      ],
+      "before": [],
+      "inline": [],
+      "after": [
+        "GU-EXT-033-FINAL-SCRIPT-CLOSURE-A"
+      ]
+    },
+    {
+      "id": "GU-PATH-FINAL-SCRIPT-CLOSURE-B",
+      "spine_node": "SPINE-EXCHANGE-NAMES",
+      "lessons": [
+        "GU-W07-uu-matra",
+        "GU-W07-tta",
+        "GU-W07-independent-ii",
+        "GU-W07-ddha",
+        "GU-R07-second-four-r1"
+      ],
+      "before": [],
+      "inline": [],
+      "after": [
+        "GU-EXT-034-FINAL-SCRIPT-CLOSURE-B"
+      ]
+    },
+    {
       "id": "GU-PATH-005",
       "spine_node": "SPINE-EXCHANGE-NAMES",
       "lessons": [
@@ -522,6 +554,8 @@
       "segments": [
         "GU-PATH-FIRST-USE-SCRIPT-A",
         "GU-PATH-FIRST-USE-SCRIPT-B",
+        "GU-PATH-FINAL-SCRIPT-CLOSURE-A",
+        "GU-PATH-FINAL-SCRIPT-CLOSURE-B",
         "GU-PATH-005",
         "GU-PATH-014",
         "GU-PATH-C2P",
@@ -613,6 +647,15 @@
       ],
       "relocates": {}
     },
+    "SPINE-NAME-EVERYDAY-ACTIONS": {
+      "segments": [],
+      "omits": [
+        "VERB-DRINK",
+        "VERB-GIVE",
+        "VERB-PUT"
+      ],
+      "relocates": {}
+    },
     "SPINE-SAY-WHAT-I-DO": {
       "segments": [
         "GU-PATH-016",
@@ -630,11 +673,8 @@
         "VERB-HEAR",
         "VERB-LEARN",
         "VERB-CAN",
-        "VERB-GIVE",
         "VERB-BRING",
         "VERB-GET",
-        "VERB-PUT",
-        "VERB-DRINK",
         "VERB-SLEEP",
         "VERB-LIVE",
         "VERB-WORK",
@@ -1113,6 +1153,40 @@
         "GU-W05-cha",
         "GU-W05-ba",
         "GU-R05-second-four-r1"
+      ]
+    },
+    {
+      "id": "GU-EXT-033-FINAL-SCRIPT-CLOSURE-A",
+      "stage": "pre-A1",
+      "kind": "required",
+      "category": "script",
+      "canDo": "I can trace, copy, recall, read, and write ગ, એ, ખ, and ઉ before any later lesson asks me to decode them.",
+      "prerequisites": [
+        "GU-EXT-032-FIRST-USE-SCRIPT-B"
+      ],
+      "lessons": [
+        "GU-W06-ga",
+        "GU-W06-independent-e",
+        "GU-W06-kha",
+        "GU-W06-independent-u",
+        "GU-R06-first-four-r1"
+      ]
+    },
+    {
+      "id": "GU-EXT-034-FINAL-SCRIPT-CLOSURE-B",
+      "stage": "pre-A1",
+      "kind": "required",
+      "category": "script",
+      "canDo": "I can trace, copy, recall, read, and write ૂ, ટ, ઈ, and ઢ before any later lesson asks me to decode them.",
+      "prerequisites": [
+        "GU-EXT-033-FINAL-SCRIPT-CLOSURE-A"
+      ],
+      "lessons": [
+        "GU-W07-uu-matra",
+        "GU-W07-tta",
+        "GU-W07-independent-ii",
+        "GU-W07-ddha",
+        "GU-R07-second-four-r1"
       ]
     },
     {

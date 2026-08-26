@@ -1,25 +1,22 @@
 {
   "chapter": 21,
-  "title": "Fourth Return: The Doorway Nine",
-  "label": "ch:gu-doorway-r4",
-  "canDo": "I can independently recognize and write the nine Gujarati doorway forms after their fourth expanding interval.",
+  "title": "Fourth Return: Respectful Questions",
+  "label": "ch:gu-r4-respectful-questions",
+  "canDo": "I can retrieve familiar and respectful you, what, the respectful name question, the introduction exchange, I, and how at their fourth spacing window, and write each response without a model.",
   "spineNodes": [
-    "SPINE-EXCHANGE-NAMES"
+    "SPINE-EXCHANGE-NAMES",
+    "SPINE-CHECK-WELLBEING"
   ],
   "payoff": {
-    "lesson": "GU-R19-doorway-nine-r4",
+    "lesson": "GU-R17-kem-r4",
     "kind": "production",
-    "summary": "A single zero-atom checkpoint independently scores all nine forms in fresh reading and dictation orders at R4 distances 88 through 80.",
+    "summary": "The chapter closes without a new atom: six exact R4 returns rebuild respectful name and wellbeing questions one small contrast at a time, ending with independent written production.",
     "assesses": [
-      "GU-SCRIPT-JA-01",
-      "GU-SCRIPT-O-MATRA-01",
-      "GU-SCRIPT-ANUSVARA-01",
-      "GU-SCRIPT-II-MATRA-01",
-      "GU-SCRIPT-U-MATRA-01",
-      "GU-SCRIPT-CHHA-01",
-      "GU-SCRIPT-KA-01",
-      "GU-SCRIPT-NNA-01",
-      "GU-SCRIPT-SHA-01"
+      "GU-CONCEPT-C02-SHUN-01",
+      "GU-CONCEPT-C02-TAMARUNNAAMSHUNCHHE-01",
+      "GU-CONCEPT-C02-TUTAME-01",
+      "GU-CONCEPT-C03-HUN-01",
+      "GU-CONCEPT-C03-KEM-01"
     ]
   }
 }

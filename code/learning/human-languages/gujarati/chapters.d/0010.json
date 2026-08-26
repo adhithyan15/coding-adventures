@@ -1,23 +1,22 @@
 {
   "chapter": 10,
-  "title": "Numbers One to Five",
-  "label": "ch:numbers-one-to-five",
-  "canDo": "I can count from one to five in headless Gujarati script and explain why બે starts with b where its neighbours start with d, and why ત્રણ has an r that Hindi tīn does not.",
+  "title": "Farewells",
+  "label": "ch:farewells",
+  "canDo": "I can end a Gujarati conversation politely and choose a farewell that fits the situation.",
   "spineNodes": [
-    "SPINE-COUNT-ONE-TO-FIVE"
+    "SPINE-TAKE-LEAVE"
   ],
   "payoff": {
-    "lesson": "GU-C06-number-histories",
+    "lesson": "GU-C04-practice",
     "kind": "task",
-    "summary": "Take the two odd numerals apart: બે descends from the feminine/neuter dvé by dv → bb → b, while ત્રણ's r is a learned restoration from Sanskrit, put back after Prakrit tiṇṇi had already dropped it.",
+    "summary": "Complete GU-C04-practice, the canonical closing checkpoint, and demonstrate the chapter promise: end a Gujarati conversation politely and choose a farewell that fits the situation.",
     "assesses": [
-      "GU-LEX-NUMBERS-ONE-TO-FIVE",
-      "GU-FORM-BE-INITIAL-B",
-      "GU-FORM-TRAN-R",
-      "GU-ETYMON-BE-DVE-SELECTION",
-      "GU-SOUND-DV-BB-B",
-      "GU-ETYMON-TRAN-R-RESTORATION",
-      "GU-HISTORY-LEARNED-RESTORATION"
+      "GU-CONCEPT-C01-AAVJO-01",
+      "GU-CONCEPT-C04-KAALE-01",
+      "GU-CONCEPT-C04-MALISHUN-01",
+      "GU-CONCEPT-C04-PACHHA-01",
+      "GU-CONCEPT-C04-PACHHAMALISHUN-01",
+      "GU-CONCEPT-C04-PRACTICE-01"
     ]
   }
 }

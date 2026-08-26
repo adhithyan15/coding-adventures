@@ -2,8 +2,8 @@
 schema_version: 2
 id: GU-R18-no-problem-r4
 spine_node: SPINE-COURTESY-THANK
-sequence: 830
-chapter: 20
+sequence: 840
+chapter: 22
 type: practice
 headword: વાંધો નહીં।
 romanization: vāndho nahĩ.

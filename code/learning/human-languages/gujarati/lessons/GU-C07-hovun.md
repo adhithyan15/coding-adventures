@@ -2,8 +2,8 @@
 schema_version: 2
 id: GU-C07-hovun
 spine_node: SPINE-SAY-WHAT-I-DO
-sequence: 370
-chapter: 11
+sequence: 380
+chapter: 13
 type: word
 headword: હોવું
 romanization: hovũ

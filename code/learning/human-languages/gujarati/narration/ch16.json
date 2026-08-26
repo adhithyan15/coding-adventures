@@ -2,24 +2,24 @@
   "version": 1,
   "language": "gujarati",
   "chapter": 16,
-  "title": "Eye, Ear, Mouth, and Nose",
+  "title": "Water, Tea, Milk, and Bread",
   "drivablePrefix": 0,
-  "sourceHash": "fnv1a64:6628bcfb28a4119b",
+  "sourceHash": "fnv1a64:2ccc380f758c3760",
   "lessons": [
     {
-      "id": "GU-C12-aankh",
-      "sequence": 590,
-      "title": "આંખ (āṅkh) — an eye, and a nasal that is not what it looks like",
-      "headword": "આંખ",
-      "romanization": "āṅkh",
-      "gloss": "eye — a straight cousin of the English word, and a nasal mark that is not the neuter tell you might expect",
+      "id": "GU-C10-paani",
+      "sequence": 520,
+      "title": "પાણી (pāṇī) — the first thing you'll actually ask for",
+      "headword": "પાણી",
+      "romanization": "pāṇī",
+      "gloss": "water — Gujarati's first noun for something you would actually ask for, and the phrase that asks for it politely",
       "script": "gujarati",
       "modality": "sight",
       "derivedModality": "sight",
       "modalityReasons": [
         "script-block"
       ],
-      "sourceHash": "fnv1a64:197fac7dccc75d8f",
+      "sourceHash": "fnv1a64:ddc6e6e6bf7af240",
       "notice": {
         "modality": "sight",
         "needs": [
@@ -45,7 +45,7 @@
             },
             {
               "kind": "speech",
-              "text": "બહેન (bahen) closed a chapter about people. This chapter checks on how someone is — starting with the parts of the body a friend might actually ask about."
+              "text": "Gamvũ let you say what you like; madad karvī let you ask for help. This chapter asks for something smaller and more frequent: a drink."
             }
           ]
         },
@@ -56,7 +56,7 @@
           "segments": [
             {
               "kind": "speech",
-              "text": "આંખ — āṅkh — eye."
+              "text": "પાણી — pāṇī — water."
             }
           ]
         },
@@ -67,213 +67,85 @@
           "segments": [
             {
               "kind": "speech",
-              "text": "આ the independent long-ā, then the nasal dot ં sitting on top of it — exactly the medial anusvāra you first read inside વાંચવું, doing the same job here, in the middle of a noun rather than a verb — then ખ, the aspirated k. Note what this nasal is NOT: it does not mark આંખ (āṅkh) as neuter — the word is feminine. A nasal dot in the middle of a word is a sound, present or absent as pronunciation happens to need it; it is a different thing entirely from the grammatical -ũ ending you will meet again soon, and this chapter keeps the two apart on purpose."
+              "text": "પ pa, ા the long-ā sign, ણ the retroflex ṇ you already curled back in jāṇvũ, then ી long-ī. No bar runs across the top of any of them — the headless tell, working the same way in a noun as it did in a verb."
             }
           ]
         },
         {
           "index": 3,
-          "type": "etymology",
-          "title": "The word, taken apart — the same word as \"eye,\" unbroken",
+          "type": "grammar",
+          "title": "Grammar Lens: asking politely",
           "segments": [
             {
               "kind": "speech",
-              "text": "āṅkh is inherited from Sauraseni Prakrit akkhi, from Sanskrit akṣi, \"eye.\" The root is Indo-European h₃ekʷ-, \"eye; to see,\" and it survives unbroken in English eye itself, in Latin oculus (behind ocular), and in Greek ósse. This is bhāī's kind of cousin, not bahen's: a straight line back to the same ancestor, no borrowing and no detour."
+              "text": "પાણી, મહેરબાની કરીને. — pāṇī, meherbānī karīne. — Water, please."
+            },
+            {
+              "kind": "speech",
+              "text": "મહેરબાની કરીને meherbānī karīne is built from મહેરબાની, \"kindness\" or \"favor,\" plus કરીને, \"having done\" — the same કરીને/કરવી family you met in મદદ કરવી, \"to do a favor of help.\" Literally: \"having done a kindness.\" Name the item, add this, and you have a complete polite request with no verb for \"give\" needed at all — the pattern this whole chapter will reuse."
             }
           ]
         },
         {
           "index": 4,
+          "type": "etymology",
+          "title": "The word, taken apart — the oldest drinking word you own",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "pāṇī comes from Sanskrit pānīya, \"that which is to be drunk,\" built on pā-, \"to drink.\" That root is Indo-European, peh₃(i)-, and English holds two disguised pieces of it: potion and poison both come through Latin potare, \"to drink\" — a poison, etymologically, is just a drink gone wrong. Greek turned the same idea into sympotēs, \"one who drinks together,\" which English keeps as symposium. Pāṇī is not a stranger to those words; it is what \"to drink\" looks like when it never left the family that gave you jāṇvũ's Sanskrit cousin jñā-."
+            }
+          ]
+        },
+        {
+          "index": 5,
           "type": "guided-production",
           "title": "Guided Practice",
           "segments": [
             {
               "kind": "prompt",
               "action": "SAY",
-              "instruction": "āṅkh — eye",
+              "instruction": "pāṇī — water",
               "spoken": true,
               "scored": false,
               "responseSeconds": 8,
-              "source": "[YOU SAY: **āṅkh** — eye]"
+              "source": "[YOU SAY: **pāṇī** — water]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "pāṇī, meherbānī karīne. — water, please",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: **pāṇī, meherbānī karīne.** — water, please]"
             },
             {
               "kind": "prompt",
               "action": "MATCH",
-              "instruction": "the medial nasal here against the one in વાંચવું",
+              "instruction": "karīne against madad karvī's own kar- root",
               "spoken": true,
               "scored": false,
               "responseSeconds": 8,
-              "source": "[YOU MATCH: the medial nasal here against the one in **વાંચવું**]"
-            },
-            {
-              "kind": "prompt",
-              "action": "STATE",
-              "instruction": "is this nasal a gender marker? (No.) Is āṅkh neuter? (No — feminine.)",
-              "spoken": true,
-              "scored": false,
-              "responseSeconds": 8,
-              "source": "[YOU STATE: is this nasal a gender marker? (No.) Is **āṅkh** neuter? (No — feminine.)]"
+              "source": "[YOU MATCH: **karīne** against **madad karvī**'s own **kar-** root]"
             },
             {
               "kind": "prompt",
               "action": "TRACE",
-              "instruction": "PIE h₃ekʷ- becomes Sanskrit akṣi becomes આંખ (āṅkh), and becomes English eye",
+              "instruction": "pā- \"to drink\" becomes pāṇī, and becomes potion, poison, symposium",
               "spoken": false,
               "scored": false,
               "responseSeconds": 8,
-              "source": "[YOU TRACE: PIE *h₃ekʷ-* → Sanskrit *akṣi* → **આંખ**, and → English **eye**]"
-            }
-          ]
-        },
-        {
-          "index": 5,
-          "type": "recall",
-          "title": "Wrap-up Recall",
-          "segments": [
-            {
-              "kind": "pause",
-              "seconds": 3,
-              "perItem": false,
-              "source": "[PAUSE 3s]"
-            },
-            {
-              "kind": "speech",
-              "text": "Give the word for \"eye.\" (Āṅkh.) Which English word is the same word by unbroken descent? (Eye.) Does the nasal dot in āṅkh mean the word is neuter? (No — āṅkh is feminine; the dot is only a sound.)"
-            },
-            {
-              "kind": "speech",
-              "text": "Sources: Wiktionary: આંખ (āṅkh); Wiktionary: Sanskrit akshi."
-            }
-          ]
-        }
-      ]
-    },
-    {
-      "id": "GU-C12-kaan",
-      "sequence": 600,
-      "title": "કાન (kān) — an ear whose own root is unsettled",
-      "headword": "કાન",
-      "romanization": "kān",
-      "gloss": "ear — a word Sanskrit itself could not settle the origin of, and one that changed gender on the way to Gujarati",
-      "script": "gujarati",
-      "modality": "sight",
-      "derivedModality": "sight",
-      "modalityReasons": [
-        "script-block"
-      ],
-      "sourceHash": "fnv1a64:74b3d53b26a97064",
-      "notice": {
-        "modality": "sight",
-        "needs": [
-          "your eyes, for letter shapes on the page"
-        ],
-        "waitUntilStopped": [
-          "The letters in this word"
-        ],
-        "text": "Before we start: this one needs your eyes, so it is not fully a driving lesson. You will want your eyes, for letter shapes on the page. You can listen to everything else now — leave the section called The letters in this word until you have stopped, and I will say so again when we reach it."
-      },
-      "blocks": [
-        {
-          "index": 0,
-          "type": "warmup",
-          "title": "Warm-up",
-          "segments": [
-            {
-              "kind": "pause",
-              "seconds": 2,
-              "perItem": false,
-              "source": "[PAUSE 2s]"
-            },
-            {
-              "kind": "speech",
-              "text": "આંખ (āṅkh) traced back cleanly to a confirmed Indo-European root. The next body part will not be nearly as tidy."
-            }
-          ]
-        },
-        {
-          "index": 1,
-          "type": "input",
-          "title": "You'll want to know first — one word",
-          "segments": [
-            {
-              "kind": "speech",
-              "text": "કાન — kān — ear."
-            }
-          ]
-        },
-        {
-          "index": 2,
-          "type": "script",
-          "title": "The letters in this word",
-          "segments": [
-            {
-              "kind": "speech",
-              "text": "ક ka, ા long-ā, ન na. All three already yours."
-            }
-          ]
-        },
-        {
-          "index": 3,
-          "type": "grammar",
-          "title": "Grammar Lens: a gender that changed on the way here",
-          "segments": [
-            {
-              "kind": "speech",
-              "text": "કાન is feminine in Gujarati. Its Sanskrit ancestor, karṇa, was masculine. Nothing about inheriting a word guarantees its gender comes along unchanged — મિત્ર kept Sanskrit's masculine, but kān did not keep karṇa's. Gender, like the gender of આંખ (āṅkh) or બહેન, has to be learned with each noun as it stands today, not projected backward from what its ancestor was — the same caution રોટલી's chapter drew from its own -ī ending."
-            }
-          ]
-        },
-        {
-          "index": 4,
-          "type": "etymology",
-          "title": "The word, taken apart — where even Sanskrit scholars disagree",
-          "segments": [
-            {
-              "kind": "speech",
-              "text": "kān is inherited from Old Gujarati kāna, through Apabhramsa and Prakrit kaṇṇa, from Sanskrit karṇa, \"ear.\" Past that point, no agreement exists. Proposed origins include a root for \"defect\" (with \"ear\" as a later, narrower sense), a root meaning \"point\" or \"spike,\" a root meaning \"handle\" or \"grip,\" and a connection to śṛṇoti, \"to hear.\" None of these has won out. Kān joins roṭlī as a second word in your Gujarati vocabulary whose Sanskrit form is certain and whose deeper root is not — the honest answer, said plainly rather than picked at random."
-            }
-          ]
-        },
-        {
-          "index": 5,
-          "type": "guided-production",
-          "title": "Guided Practice",
-          "segments": [
-            {
-              "kind": "prompt",
-              "action": "SAY",
-              "instruction": "kān — ear, and āṅkh — eye",
-              "spoken": true,
-              "scored": false,
-              "responseSeconds": 8,
-              "source": "[YOU SAY: **kān** — ear, and **āṅkh** — eye]"
+              "source": "[YOU TRACE: *pā-* \"to drink\" → **pāṇī**, and → **potion**, **poison**, **symposium**]"
             },
             {
               "kind": "prompt",
-              "action": "STATE",
-              "instruction": "karṇa's Sanskrit gender against kān's Gujarati gender (masculine becomes feminine)",
+              "action": "RUN",
+              "instruction": "mane gujarātī game chhe, then pāṇī, meherbānī karīne — liking and requesting, side by side",
               "spoken": true,
               "scored": false,
               "responseSeconds": 8,
-              "source": "[YOU STATE: *karṇa*'s Sanskrit gender against *kān*'s Gujarati gender (masculine → feminine)]"
-            },
-            {
-              "kind": "prompt",
-              "action": "NAME",
-              "instruction": "two of the four disputed origins scholars have proposed for karṇa",
-              "spoken": true,
-              "scored": false,
-              "responseSeconds": 8,
-              "source": "[YOU NAME: two of the four disputed origins scholars have proposed for *karṇa*]"
-            },
-            {
-              "kind": "prompt",
-              "action": "CONTRAST",
-              "instruction": "āṅkh's confirmed PIE root against kān's unsettled one",
-              "spoken": true,
-              "scored": false,
-              "responseSeconds": 8,
-              "source": "[YOU CONTRAST: *āṅkh*'s confirmed PIE root against *kān*'s unsettled one]"
+              "source": "[YOU RUN: **mane gujarātī game chhe**, then **pāṇī, meherbānī karīne** — liking and requesting, side by side]"
             }
           ]
         },
@@ -290,182 +162,30 @@
             },
             {
               "kind": "speech",
-              "text": "Give the word for \"ear.\" (Kān.) Did its gender change between Sanskrit and Gujarati? (Yes — masculine to feminine.) Is karṇa's own root settled? (No — several proposals, no agreement.)"
+              "text": "Ask for water politely. (Pāṇī, meherbānī karīne.) What does meherbānī karīne mean word for word? (\"Having done a kindness.\") Which two English words for a drink, and one for a whole gathering of them, share pāṇī's root? (Potion, poison, symposium.)"
             },
             {
               "kind": "speech",
-              "text": "Sources: Wiktionary: કાન (kān); Wiktionary: Sanskrit karna."
+              "text": "Sources: Wiktionary: પાણી (pāṇī); Wiktionary: મહેરબાની."
             }
           ]
         }
       ]
     },
     {
-      "id": "GU-C12-modhu",
-      "sequence": 610,
-      "title": "મોઢું (moḍhũ) — the tell you have been hearing all along",
-      "headword": "મોઢું",
-      "romanization": "moḍhũ",
-      "gloss": "mouth — the clearest example yet of Gujarati's neuter tell, the nasalized -ũ you have been hearing on every verb",
+      "id": "GU-C10-chaa",
+      "sequence": 530,
+      "title": "ચા (chā) — the tea that went overland",
+      "headword": "ચા",
+      "romanization": "chā",
+      "gloss": "tea — a word that took the overland road out of China, so it rhymes with Hindi and Persian rather than with English",
       "script": "gujarati",
       "modality": "sight",
       "derivedModality": "sight",
       "modalityReasons": [
         "script-block"
       ],
-      "sourceHash": "fnv1a64:019775d8e4269b4e",
-      "notice": {
-        "modality": "sight",
-        "needs": [
-          "your eyes, for letter shapes on the page"
-        ],
-        "waitUntilStopped": [
-          "The letters in this word"
-        ],
-        "text": "Before we start: this one needs your eyes, so it is not fully a driving lesson. You will want your eyes, for letter shapes on the page. You can listen to everything else now — leave the section called The letters in this word until you have stopped, and I will say so again when we reach it."
-      },
-      "blocks": [
-        {
-          "index": 0,
-          "type": "warmup",
-          "title": "Warm-up",
-          "segments": [
-            {
-              "kind": "pause",
-              "seconds": 2,
-              "perItem": false,
-              "source": "[PAUSE 2s]"
-            },
-            {
-              "kind": "speech",
-              "text": "કાન (kān)'s own gender shifted away from Sanskrit's. The next body part wears its gender in plain sight — the same nasalized ending you have heard on nearly every verb in this book."
-            }
-          ]
-        },
-        {
-          "index": 1,
-          "type": "input",
-          "title": "You'll want to know first — one word",
-          "segments": [
-            {
-              "kind": "speech",
-              "text": "મોઢું — moḍhũ — mouth."
-            }
-          ]
-        },
-        {
-          "index": 2,
-          "type": "script",
-          "title": "The letters in this word",
-          "segments": [
-            {
-              "kind": "speech",
-              "text": "મ ma, ો the o sign, then a new letter: ઢ, the retroflex aspirated ḍh — curl the tongue back as for ટ and ણ, and add the puff of breath that made ધ aspirated. Then ું, u with the nasal dot. Mo-ḍhũ."
-            }
-          ]
-        },
-        {
-          "index": 3,
-          "type": "grammar",
-          "title": "Grammar Lens: the neuter tell, named plainly",
-          "segments": [
-            {
-              "kind": "speech",
-              "text": "Every verb infinitive in this book ends in the neuter -વું: hovũ, javũ, jāṇvũ, lakhvũ — a whole word class marked by that one nasalized ending. મોઢું shows the same ending doing the same job on a noun: moḍhũ is neuter, and the nasalized -ũ is the single most recognizable tell for it. Not every neuter noun wears it — પાણી and later nāk do not — but when you do see or hear a word end this way, neuter is the way to bet. And do not confuse it with આંખ (āṅkh)'s nasal: that one sat in the middle of a feminine word and marked nothing about gender at all. This one sits at the end, and it does."
-            }
-          ]
-        },
-        {
-          "index": 4,
-          "type": "etymology",
-          "title": "The word, taken apart — a mouth, and a doublet with its own formal twin",
-          "segments": [
-            {
-              "kind": "speech",
-              "text": "moḍhũ is inherited from Sauraseni Prakrit muha, from Sanskrit mukha, \"mouth, face.\" It has a formal doublet, મુખ mukh, borrowed directly from the same Sanskrit word the way kuṭumb was — the everyday and the formal register, side by side, from one ancestor reached by two different roads. Past Sanskrit, mukha's own root is not agreed upon — a second open question, alongside karṇa's, rather than a guess dressed up as an answer."
-            }
-          ]
-        },
-        {
-          "index": 5,
-          "type": "guided-production",
-          "title": "Guided Practice",
-          "segments": [
-            {
-              "kind": "prompt",
-              "action": "SAY",
-              "instruction": "moḍhũ — mouth",
-              "spoken": true,
-              "scored": false,
-              "responseSeconds": 8,
-              "source": "[YOU SAY: **moḍhũ** — mouth]"
-            },
-            {
-              "kind": "prompt",
-              "action": "STATE",
-              "instruction": "what gender the -ũ ending marks, and one verb infinitive that wears the same ending",
-              "spoken": true,
-              "scored": false,
-              "responseSeconds": 8,
-              "source": "[YOU STATE: what gender the *-ũ* ending marks, and one verb infinitive that wears the same ending]"
-            },
-            {
-              "kind": "prompt",
-              "action": "CONTRAST",
-              "instruction": "moḍhũ's end-of-word nasal against āṅkh's middle-of-word one",
-              "spoken": true,
-              "scored": false,
-              "responseSeconds": 8,
-              "source": "[YOU CONTRAST: *moḍhũ*'s end-of-word nasal against *āṅkh*'s middle-of-word one]"
-            },
-            {
-              "kind": "prompt",
-              "action": "NAME",
-              "instruction": "moḍhũ's formal doublet, and how it reached Gujarati (borrowed whole, like kuṭumb)",
-              "spoken": true,
-              "scored": false,
-              "responseSeconds": 8,
-              "source": "[YOU NAME: *moḍhũ*'s formal doublet, and how it reached Gujarati (borrowed whole, like *kuṭumb*)]"
-            }
-          ]
-        },
-        {
-          "index": 6,
-          "type": "recall",
-          "title": "Wrap-up Recall",
-          "segments": [
-            {
-              "kind": "pause",
-              "seconds": 3,
-              "perItem": false,
-              "source": "[PAUSE 3s]"
-            },
-            {
-              "kind": "speech",
-              "text": "Give the word for \"mouth.\" (Moḍhũ.) What gender does its -ũ ending mark? (Neuter.) Name the formal doublet of moḍhũ. (મુખ, mukh.)"
-            },
-            {
-              "kind": "speech",
-              "text": "Sources: Wiktionary: મોં; Wiktionary: Sanskrit mukha."
-            }
-          ]
-        }
-      ]
-    },
-    {
-      "id": "GU-C12-naak",
-      "sequence": 620,
-      "title": "નાક (nāk) — the whole face, run back",
-      "headword": "નાક",
-      "romanization": "nāk",
-      "gloss": "nose — the fourth body word, closing the chapter by running the whole face back through gender, sound, and certainty",
-      "script": "gujarati",
-      "modality": "sight",
-      "derivedModality": "sight",
-      "modalityReasons": [
-        "script-block"
-      ],
-      "sourceHash": "fnv1a64:76574f69c55936ac",
+      "sourceHash": "fnv1a64:4ae5e529c59c884d",
       "notice": {
         "modality": "sight",
         "needs": [
@@ -491,7 +211,7 @@
             },
             {
               "kind": "speech",
-              "text": "આંખ (āṅkh), કાન (kān), મોઢું (moḍhũ) — eye, ear, mouth. One more completes the face, and this one closes the chapter by tying its ending back to a pattern from three chapters ago."
+              "text": "Pāṇī, meherbānī karīne — water, please. The next drink uses the exact same pattern, and its own name has traveled further than water's ever needed to."
             }
           ]
         },
@@ -502,7 +222,11 @@
           "segments": [
             {
               "kind": "speech",
-              "text": "નાક — nāk — nose."
+              "text": "ચા — chā — tea."
+            },
+            {
+              "kind": "speech",
+              "text": "ચા, મહેરબાની કરીને. — chā, meherbānī karīne. — Tea, please."
             }
           ]
         },
@@ -513,29 +237,332 @@
           "segments": [
             {
               "kind": "speech",
-              "text": "ન na, ા long-ā, ક ka. Every letter already familiar — nāk's only new information is the word itself."
+              "text": "ચ cha — the same letter that opened chār, \"four,\" and sat inside vichār — plus the long-ā sign. Two letters, both already yours."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "etymology",
+          "title": "The word, taken apart — the word that went by land, not by sea",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ચા is a loanword — unlike pāṇī, which Gujarati has owned since Sanskrit. It came through Classical Persian chā, from Mandarin Chinese chá. That is the overland route, out through Central Asia and Persia: Hindi and Urdu chāy, Russian chai, Turkish çay all took the same road and the same syllable."
+            },
+            {
+              "kind": "speech",
+              "text": "There is another route entirely. Chinese merchants on the coast spoke a different dialect, Hokkien, where the same word is tê. Dutch sailors picked that form up by sea and carried it into Europe: English tea, French thé, German Tee. One plant, one original Chinese word, and two pronunciations of it, sorted by whether a language met the word on a caravan route or a ship's deck. Gujarati's chā and English tea are, in that exact sense, the same word taken two different ways out of the same country."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "chā — tea, and chā, meherbānī karīne — tea, please",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: **chā** — tea, and **chā, meherbānī karīne** — tea, please]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RUN",
+              "instruction": "both requests — pāṇī, meherbānī karīne; chā, meherbānī karīne",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RUN: both requests — **pāṇī, meherbānī karīne**; **chā, meherbānī karīne**]"
+            },
+            {
+              "kind": "prompt",
+              "action": "TRACE",
+              "instruction": "Chinese chá becomes Persian chā becomes ચા, the overland road",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU TRACE: Chinese *chá* → Persian *chā* → **ચા**, the overland road]"
+            },
+            {
+              "kind": "prompt",
+              "action": "NAME",
+              "instruction": "one language that took the sea road instead, and its word (English, tea)",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU NAME: one language that took the sea road instead, and its word (English, **tea**)]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Ask for tea politely. (Chā, meherbānī karīne.) Did chā come by land or by sea? (Land — through Persian, from Mandarin.) Which English word for the same plant took the sea route instead, and through which language? (Tea, through Dutch.)"
+            },
+            {
+              "kind": "speech",
+              "text": "Sources: Wiktionary: ચા (chā); Etymonline: chai."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "GU-C10-dudh",
+      "sequence": 540,
+      "title": "દૂધ (dūdh) — a verb frozen into a noun",
+      "headword": "દૂધ",
+      "romanization": "dūdh",
+      "gloss": "milk — inherited straight from Sanskrit, and a root English keeps in an unexpected word",
+      "script": "gujarati",
+      "modality": "sight",
+      "derivedModality": "sight",
+      "modalityReasons": [
+        "script-block"
+      ],
+      "sourceHash": "fnv1a64:65687e304abcea55",
+      "notice": {
+        "modality": "sight",
+        "needs": [
+          "your eyes, for letter shapes on the page"
+        ],
+        "waitUntilStopped": [
+          "The letters in this word",
+          "Guided Practice"
+        ],
+        "text": "Before we start: this one needs your eyes, so it is not fully a driving lesson. You will want your eyes, for letter shapes on the page. You can listen to everything else now — leave the sections called The letters in this word and Guided Practice until you have stopped, and I will say so again when we reach it."
+      },
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "પાણી (pāṇī) was never borrowed. ચા (chā) came the long way from China. The third drink is, like water, entirely Gujarati's own — but it got that way differently."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know first — one word",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "દૂધ — dūdh — milk."
+            },
+            {
+              "kind": "speech",
+              "text": "દૂધ, મહેરબાની કરીને. — dūdh, meherbānī karīne. — Milk, please."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "script",
+          "title": "The letters in this word",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "દ da, ૂ the long-ū sign below it, then ધ dha — the aspirated d, the same puff of breath that made ખ the aspirated k and ભ the aspirated b. You have met the letter itself before, in વાંધો નહીં."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "etymology",
+          "title": "The word, taken apart — the verb that became its own product",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "dūdh comes from Sanskrit dugdha, and dugdha is not, at root, a noun at all — it is the past participle of duh-, \"to milk,\" so it means literally \"milked.\" The action came first; the word for the substance is just that verb, frozen. It is the same trick gamvũ played with \"to please,\" run on a different part of speech: a verb collapsing into the thing it names."
+            },
+            {
+              "kind": "speech",
+              "text": "The Indo-European root is dheugh-, \"to be fit, useful, of avail.\" Its Germanic descendant did not go on to mean milk in English at all — it survives in doughty, \"valiant, capable,\" from Old English dohtig, \"of good use.\" Dūdh and doughty are cousins by way of a root that once meant simply being of use — milk as the useful thing, valor as the useful person."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "dūdh — milk, and dūdh, meherbānī karīne — milk, please",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: **dūdh** — milk, and **dūdh, meherbānī karīne** — milk, please]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RUN",
+              "instruction": "all three requests so far — pāṇī, chā, dūdh, each with meherbānī karīne",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RUN: all three requests so far — **pāṇī**, **chā**, **dūdh**, each with *meherbānī karīne*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "TRACE",
+              "instruction": "duh- \"to milk\" becomes dugdha \"milked\" becomes dūdh, and becomes English doughty",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU TRACE: *duh-* \"to milk\" → *dugdha* \"milked\" → **dūdh**, and → English **doughty**]"
+            },
+            {
+              "kind": "prompt",
+              "action": "NAME",
+              "instruction": "which of the three drinks is a loanword (ચા (chā)) and which two are not",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU NAME: which of the three drinks is a loanword (**ચા**) and which two are not]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Ask for milk politely. (Dūdh, meherbānī karīne.) What part of speech was dugdha before it became a noun for milk? (A past participle — \"milked.\") Which unexpected English word for bravery shares its root with dūdh? (Doughty.)"
+            },
+            {
+              "kind": "speech",
+              "text": "Sources: Wiktionary: દૂધ (dūdh); Etymonline: doughty."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "GU-C10-rotli",
+      "sequence": 550,
+      "title": "રોટલી (roṭlī) — a request pattern, run four times",
+      "headword": "રોટલી",
+      "romanization": "roṭlī",
+      "gloss": "flatbread — the fourth request, an honest dead end for its origin, and the letter -ī does not always mean what you'd guess",
+      "script": "gujarati",
+      "modality": "sight",
+      "derivedModality": "sight",
+      "modalityReasons": [
+        "script-block"
+      ],
+      "sourceHash": "fnv1a64:c7067d4c89678238",
+      "notice": {
+        "modality": "sight",
+        "needs": [
+          "your eyes, for letter shapes on the page"
+        ],
+        "waitUntilStopped": [
+          "The letters in this word"
+        ],
+        "text": "Before we start: this one needs your eyes, so it is not fully a driving lesson. You will want your eyes, for letter shapes on the page. You can listen to everything else now — leave the section called The letters in this word until you have stopped, and I will say so again when we reach it."
+      },
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Three drinks, one pattern: pāṇī, chā, dūdh, each followed by meherbānī karīne. The fourth request is food, not drink, and it closes the chapter by finally breaking a pattern instead of continuing one."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know first — one word",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "રોટલી — roṭlī — flatbread."
+            },
+            {
+              "kind": "speech",
+              "text": "રોટલી, મહેરબાની કરીને. — roṭlī, meherbānī karīne. — Bread, please."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "script",
+          "title": "The letters in this word",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ર ra, ો the o sign, then a new letter: ટ, a retroflex ṭ — the tongue curls back the way it does for ણ, but here it stops the airflow instead of letting it through the nose. Then લ la, and ી long-ī. Headless throughout, like every letter you've met."
             }
           ]
         },
         {
           "index": 3,
           "type": "grammar",
-          "title": "Grammar Lens: closing the chapter's gender count",
+          "title": "Grammar Lens: an -ī that does not mean \"feminine, guaranteed\"",
           "segments": [
             {
               "kind": "speech",
-              "text": "નાક is neuter, like મોઢું — but unlike moḍhũ, it carries no nasalized -ũ at all. Run the whole face: āṅkh feminine, kān feminine, moḍhũ neuter with the tell, nāk neuter without it. Two neuters, only one of them wearing the ending that names the class. This is exactly why last lesson called the nasalized -ũ a tell, not a rule: it is the loudest signal Gujarati gives you for neuter, and it is still only sometimes there — the same caution roṭlī and pāṇī already taught you about -ī, and kān's Grammar Lens taught you about gender and inheritance more generally."
+              "text": "રોટલી (roṭlī) is feminine, and its ending fits: many Gujarati nouns ending in -ī are feminine, the same -ī you saw mark the feminine adjective ending in sārī. But you already own the counter-example: પાણી also ends in -ī, and pāṇī is neuter. The ending is a hint worth noticing, not a rule you can trust blind — every noun's gender has to be learned with the noun, the way madad karvī forced કરવી into its feminine shape only because madad itself was feminine, not because of any ending on karvī alone."
             }
           ]
         },
         {
           "index": 4,
           "type": "etymology",
-          "title": "The word, taken apart — the last unbroken cousin in the chapter",
+          "title": "The word, taken apart — where the trail runs out",
           "segments": [
             {
               "kind": "speech",
-              "text": "nāk is inherited from Prakrit ṇakka, from Sanskrit nas, \"nose,\" with a suffix added along the way — the retroflex ṇ here is the same sound-shift you first met turning jānāti into jāṇvũ, a single letter's worth of difference deciding a great deal, the way one mark once told javũ apart from jovũ. The root is Indo-European nehas-, unbroken in English nose, Latin nāsus (behind nasal), and Lithuanian nósis. Like āṅkh, nāk needed no ship and no loan to reach you — only the ordinary work of sound change, the same work that once put a nasal dot in the middle of વાંચવું and, this chapter, in the middle of આંખ."
+              "text": "roṭlī is inherited from Sanskrit roṭikā, \"a kind of bread.\" That much is certain. What roṭikā itself comes from is not: the standard comparative dictionaries weigh an unattested root meaning \"to strike against\" against another meaning \"to crush,\" and neither Turner nor Mayrhofer picks a winner."
+            },
+            {
+              "kind": "speech",
+              "text": "That gives this chapter its own three-way dial, the same shape jāṇvũ, levũ, and khāvũ once drew for verbs: pāṇī and dūdh are inherited straight from Sanskrit with a full etymology behind them; chā is a loan, traceable to Mandarin by a known road; roṭlī is inherited too, but its own root is where recorded history simply stops."
             }
           ]
         },
@@ -547,47 +574,38 @@
             {
               "kind": "prompt",
               "action": "SAY",
-              "instruction": "all four face words — āṅkh, kān, moḍhũ, nāk",
+              "instruction": "roṭlī, meherbānī karīne — bread, please",
               "spoken": true,
               "scored": false,
               "responseSeconds": 8,
-              "source": "[YOU SAY: all four face words — **āṅkh**, **kān**, **moḍhũ**, **nāk**]"
+              "source": "[YOU SAY: **roṭlī, meherbānī karīne** — bread, please]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RUN",
+              "instruction": "all four requests — pāṇī, chā, dūdh, roṭlī, each with meherbānī karīne",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RUN: all four requests — **pāṇī**, **chā**, **dūdh**, **roṭlī**, each with *meherbānī karīne*]"
             },
             {
               "kind": "prompt",
               "action": "SORT",
-              "instruction": "gender of each — feminine, feminine, neuter, neuter",
+              "instruction": "inherited with a known root (pāṇī, dūdh), loaned (chā), inherited with an unknown root (roṭlī)",
               "spoken": true,
               "scored": false,
               "responseSeconds": 8,
-              "source": "[YOU SORT: gender of each — feminine, feminine, neuter, neuter]"
+              "source": "[YOU SORT: inherited with a known root (**pāṇī**, **dūdh**), loaned (**chā**), inherited with an unknown root (**roṭlī**)]"
             },
             {
               "kind": "prompt",
-              "action": "STATE",
-              "instruction": "which of the two neuters carries the -ũ tell, and which does not",
+              "action": "CONTRAST",
+              "instruction": "roṭlī feminine by its -ī, pāṇī neuter despite its -ī",
               "spoken": true,
               "scored": false,
               "responseSeconds": 8,
-              "source": "[YOU STATE: which of the two neuters carries the *-ũ* tell, and which does not]"
-            },
-            {
-              "kind": "prompt",
-              "action": "TRACE",
-              "instruction": "PIE nehas- becomes Sanskrit nas becomes નાક (nāk), and becomes English nose",
-              "spoken": false,
-              "scored": false,
-              "responseSeconds": 8,
-              "source": "[YOU TRACE: PIE *nehas-* → Sanskrit *nas* → **નાક**, and → English **nose**]"
-            },
-            {
-              "kind": "prompt",
-              "action": "RECALL",
-              "instruction": "the medial nasal in વાંચવું, and the one-mark contrast between જવું and જોવું",
-              "spoken": true,
-              "scored": false,
-              "responseSeconds": 8,
-              "source": "[YOU RECALL: the medial nasal in **વાંચવું**, and the one-mark contrast between **જવું** and **જોવું**]"
+              "source": "[YOU CONTRAST: **roṭlī** feminine by its **-ī**, **pāṇī** neuter despite its **-ī**]"
             }
           ]
         },
@@ -604,11 +622,11 @@
             },
             {
               "kind": "speech",
-              "text": "Give the word for \"nose.\" (Nāk.) Which English word is the same word by unbroken descent? (Nose.) Name this chapter's four body words and their genders. (Āṅkh f., kān f., moḍhũ n., nāk n.) Which neuter noun wears the nasalized -ũ tell, and which does not? (Moḍhũ does; nāk does not.)"
+              "text": "Ask for bread politely. (Roṭlī, meherbānī karīne.) Does roṭikā's own root have a settled answer? (No — the dictionaries disagree and leave it open.) Name one Gujarati noun ending in -ī that is feminine and one that is neuter. (Roṭlī; pāṇī.) Run all four requests from this chapter. (Pāṇī, chā, dūdh, roṭlī, each with meherbānī karīne.)"
             },
             {
               "kind": "speech",
-              "text": "Sources: Wiktionary: નાક (nāk); Wiktionary: Sanskrit nas."
+              "text": "Sources: Wiktionary: રોટલી (roṭlī); Wiktionary: Sanskrit rotika."
             }
           ]
         }

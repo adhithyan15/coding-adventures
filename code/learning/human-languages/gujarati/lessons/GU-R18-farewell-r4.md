@@ -2,8 +2,8 @@
 schema_version: 2
 id: GU-R18-farewell-r4
 spine_node: SPINE-TAKE-LEAVE
-sequence: 850
-chapter: 20
+sequence: 860
+chapter: 22
 type: practice
 headword: પાછા મળીશું। કાલે મળીશું।
 romanization: pāchhā maḷīshũ. kāle maḷīshũ.

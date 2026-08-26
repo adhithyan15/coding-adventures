@@ -1,0 +1,17 @@
+{
+  "id": "GU-EXT-033-FINAL-SCRIPT-CLOSURE-A",
+  "stage": "pre-A1",
+  "kind": "required",
+  "category": "script",
+  "canDo": "I can trace, copy, recall, read, and write ગ, એ, ખ, and ઉ before any later lesson asks me to decode them.",
+  "prerequisites": [
+    "GU-EXT-032-FIRST-USE-SCRIPT-B"
+  ],
+  "lessons": [
+    "GU-W06-ga",
+    "GU-W06-independent-e",
+    "GU-W06-kha",
+    "GU-W06-independent-u",
+    "GU-R06-first-four-r1"
+  ]
+}
