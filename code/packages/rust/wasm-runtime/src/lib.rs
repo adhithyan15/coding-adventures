@@ -1101,6 +1101,20 @@ pub struct WasmInstance {
     pub func_bodies: Vec<Option<FunctionBody>>,
     /// Resolved imported host functions.
     pub host_functions: Vec<Option<Box<dyn HostFunction>>>,
+    /// Combined imported + module-defined tag index space (W-next), each
+    /// entry a TYPE index into `func_types`... no -- into THIS instance's
+    /// own `module.types` (the tag's declared param/result signature).
+    /// Unlike `module.tags` (which, like `module.functions`, holds only
+    /// module-DEFINED tags -- imports live separately in `module.
+    /// imports`), this field is the FULL combined space, "imports first,
+    /// then module-defined", matching every other index space
+    /// (`func_types`/`global_types`/etc.) on this struct. See
+    /// `instantiate()`'s own construction and `wasm-validator`'s
+    /// identically-shaped `tag_types` in `type_check.rs::
+    /// build_module_context` (which this mirrors, just carrying type
+    /// INDICES here rather than resolved `FuncType`s, since `wasm-
+    /// execution::WasmExecutionContext::tags` wants the former).
+    pub tags: Vec<u32>,
     /// Export map: name -> (kind, index).
     pub exports: Vec<(String, ExternalKind, u32)>,
     /// Persistent v128 (SIMD) value storage for this instance's whole
@@ -1234,6 +1248,15 @@ impl WasmRuntime {
         let mut globals: Vec<WasmValue> = Vec::new();
         let mut memories: Vec<LinearMemory> = Vec::new();
         let mut tables: Vec<Table> = Vec::new();
+        // Combined imported + module-defined tag index space (W-next),
+        // mirroring `func_types`'s own "imports first, then declared"
+        // construction just below -- `module.tags` ALONE (like `module.
+        // functions`) holds only module-DEFINED tags' type indices,
+        // imports living separately in `module.imports`; this Vec is the
+        // full combined space `wasm-execution`'s `ctx.tags` needs (see
+        // `wasm-validator`'s OWN identically-shaped `tag_types` in
+        // `type_check.rs::build_module_context`, which this mirrors).
+        let mut tags: Vec<u32> = Vec::new();
 
         // Resolve imports.
         for imp in &module.imports {
@@ -1301,25 +1324,29 @@ impl WasmRuntime {
                     global_types.push(gtype);
                     globals.push(gval);
                 }
-                // W21 (exceptions proposal): `HostInterface` has no
-                // `resolve_tag` method -- real host-provided (or real
-                // cross-module, via `wasm-conformance`'s own `RegistryHost`
-                // `HostInterface` impl) tag-import resolution is a real,
-                // separate generalization this slice doesn't need (its own
-                // corpus's tag-IMPORTING module, `tag.wast`'s second
-                // module, has no subsequent `invoke`/`assert_return`
-                // exercising it at all -- only the `Directive::Module`
-                // itself is graded, and a clean link-time failure here
-                // grades that one module `NotYetSupported`, a real
-                // capability gap, not a crash or a silently-wrong pass).
-                ImportTypeInfo::Tag(_) => {
-                    // "unknown import" (not a bespoke message) deliberately
-                    // reuses `wasm-conformance`'s own `is_link_error`
-                    // substring classifier (that crate's `lib.rs`) so this
-                    // grades as the same "real capability gap, not a bug"
-                    // `NotYetSupported` outcome every other unresolvable
-                    // import already gets, instead of a hard `Fail`/`Trap`.
-                    return Err(link_error("unknown import (tag imports are not yet resolvable -- W21, real capability gap, not a bug)", imp));
+                // Tag imports (exceptions proposal; W21 added the
+                // structural bookkeeping, W-next adds real resolution) --
+                // same shape as `Function` above: ask the host for the
+                // real tag type, then check it against what THIS module's
+                // own import declaration expects. Unlike `func_types`/
+                // `global_types`/etc. above, nothing needs accumulating
+                // into a fresh local Vec here -- `module.tags` (the
+                // combined imported+defined tag index space W21 already
+                // has the parser build, "imports first, then declaration
+                // order") is already complete; this arm exists purely to
+                // perform the real LINK compatibility check a tag import
+                // needs, matching every other import kind.
+                ImportTypeInfo::Tag(type_idx) => {
+                    let expected = module.types[*type_idx as usize].clone();
+                    let actual = self
+                        .host
+                        .as_ref()
+                        .and_then(|h| h.resolve_tag(&imp.module_name, &imp.name))
+                        .ok_or_else(|| link_error("unknown import", imp))?;
+                    if actual != expected {
+                        return Err(link_error("incompatible import type", imp));
+                    }
+                    tags.push(*type_idx);
                 }
             }
         }
@@ -1329,6 +1356,12 @@ impl WasmRuntime {
             func_types.push(module.types[type_idx as usize].clone());
             func_bodies.push(module.code.get(i).cloned());
             host_functions.push(None);
+        }
+
+        // Add module-defined tags (W-next), completing the combined
+        // index space `tags` above started with imports.
+        for &type_idx in &module.tags {
+            tags.push(type_idx);
         }
 
         // Allocate every locally-declared memory (multi-memory, W16, task
@@ -1429,6 +1462,7 @@ impl WasmRuntime {
             func_types,
             func_bodies,
             host_functions,
+            tags,
             exports,
             v128_heap,
             dropped_data_segments,
@@ -1475,11 +1509,18 @@ impl WasmRuntime {
                 // GC support. This lossy path is `call()`'s pre-existing
                 // legacy behavior; `call_typed()` should be used instead
                 // when a real `WasmValue::Ref` needs to be passed.
+                // `Exnref` (W-next) joins this same lossy-legacy-path
+                // placeholder group -- never a real value in this repo
+                // (see its own doc comment), and no vendored corpus
+                // directive ever passes one as a top-level `invoke`
+                // argument (only ever appears as a `try_table` catch
+                // target's declared block-result type).
                 ValueType::Anyref
                 | ValueType::I31ref
                 | ValueType::StructRef(_)
                 | ValueType::Funcref
-                | ValueType::Externref => WasmValue::I32(arg as i32),
+                | ValueType::Externref
+                | ValueType::Exnref => WasmValue::I32(arg as i32),
                 // v128 (SIMD): same lossy-legacy-path placeholder as the
                 // reference types above -- `call()`'s i64 round-trip
                 // cannot represent a 128-bit value at all; use `call_typed()`
@@ -1617,6 +1658,23 @@ impl WasmRuntime {
         // `call_indirect $type` checks the callee against what the call
         // site actually declared instead of skipping the check.
         engine.set_type_section(instance.module.types.clone());
+
+        // Thread the module's tag section (W-next: real catch-clause
+        // matching) so `throw`/`catch` know each tag's declared param
+        // types -- same optional-setter pattern as `set_type_section`
+        // immediately above.
+        // `instance.tags` (the COMBINED imported+defined index space
+        // built at `instantiate()` time), NOT `instance.module.tags`
+        // (which, like `module.functions`, holds only module-DEFINED
+        // tags' type indices -- imports live separately in `module.
+        // imports`). Passing the module-only field here was a real bug
+        // (W-next): `throw $tag`/`catch $tag` encode the COMBINED index
+        // space, so a module with any tag IMPORTS looked up every
+        // LOCALLY-declared tag's type at the WRONG (off-by-import-count)
+        // slot -- silent until real tag/type lookups (this slice) started
+        // reading `ctx.tags` for anything observable; W21 itself never
+        // read this field at runtime, so this went undetected until now.
+        engine.set_tags(instance.tags.clone());
 
         // Thread the instance's persistent v128 heap into the engine (see
         // `code/specs/W15-wasm-v128-persistent-storage.md`) -- same
@@ -2403,6 +2461,99 @@ mod tests {
         let mut instance = runtime.instantiate(&validated).unwrap();
         let result = runtime.call(&mut instance, "call_double", &[5]).unwrap();
         assert_eq!(result, vec![10]);
+    }
+
+    // ══════════════════════════════════════════════════════════════════════
+    // W-next: real catch-clause matching -- tag import resolution +
+    // combined tag index space
+    // ══════════════════════════════════════════════════════════════════════
+
+    /// Resolves a tag matching whatever `WasmModule` the test below
+    /// declares itself importing (mirrors `TestHost`'s own
+    /// `resolve_function`, but for `HostInterface::resolve_tag`).
+    struct TagTestHost {
+        tag_type: FuncType,
+    }
+
+    impl HostInterface for TagTestHost {
+        fn resolve_function(&self, _module_name: &str, _name: &str) -> Option<Box<dyn HostFunction>> {
+            None
+        }
+        fn resolve_global(&self, _module_name: &str, _name: &str) -> Option<(GlobalType, WasmValue)> {
+            None
+        }
+        fn resolve_memory(&self, _module_name: &str, _name: &str) -> Option<LinearMemory> {
+            None
+        }
+        fn resolve_table(&self, _module_name: &str, _name: &str) -> Option<Table> {
+            None
+        }
+        fn resolve_tag(&self, module_name: &str, name: &str) -> Option<FuncType> {
+            if module_name == "test" && name == "e0" {
+                Some(self.tag_type.clone())
+            } else {
+                None
+            }
+        }
+    }
+
+    #[test]
+    fn instantiate_builds_the_combined_tag_index_space_imports_first_then_declared() {
+        // Regression test (W-next): a module importing ONE tag, then
+        // declaring TWO more of its own with a DIFFERENT param shape, must
+        // end up with `WasmInstance::tags` holding the FULL combined
+        // index space (imports first, then declared) -- `module.tags`
+        // ALONE (like `module.functions`) holds only the two
+        // module-DEFINED entries, which is exactly the field a real bug
+        // read directly before this test existed: any lookup by the
+        // COMBINED index (what `throw`/`catch` actually encode) landed on
+        // the wrong slot for every module with at least one tag import.
+        let empty_type = FuncType { params: vec![], results: vec![] };
+        let i32_type = FuncType { params: vec![ValueType::I32], results: vec![] };
+        let runtime = WasmRuntime::with_host(Box::new(TagTestHost { tag_type: empty_type.clone() }));
+        let module = WasmModule {
+            types: vec![empty_type.clone(), i32_type.clone()],
+            imports: vec![Import {
+                module_name: "test".to_string(),
+                name: "e0".to_string(),
+                kind: ExternalKind::Tag,
+                type_info: ImportTypeInfo::Tag(0), // type 0 = empty_type
+            }],
+            // Two module-DEFINED tags: index 0 -> i32_type, index 1 -> empty_type
+            // (deliberately NOT both the same type, so a wrong index
+            // produces an observably wrong `tags` entry, not a
+            // coincidentally-correct one).
+            tags: vec![1, 0],
+            ..Default::default()
+        };
+        let validated = runtime.validate(&module).unwrap();
+        let instance = runtime.instantiate(&validated).unwrap();
+        // Combined space: [imported tag (type 0), local tag 0 (type 1),
+        // local tag 1 (type 0)] -- imports first, then declared, exactly
+        // matching `wasm-validator`'s own `tag_types` construction.
+        assert_eq!(instance.tags, vec![0, 1, 0]);
+    }
+
+    #[test]
+    fn instantiate_rejects_a_tag_import_with_an_incompatible_type() {
+        let wrong_type = FuncType { params: vec![ValueType::I32], results: vec![] };
+        let empty_type = FuncType { params: vec![], results: vec![] };
+        // Host actually exports an EMPTY-param tag; the importing module
+        // expects one with an i32 param -- must be rejected as a link
+        // failure, not silently accepted.
+        let runtime = WasmRuntime::with_host(Box::new(TagTestHost { tag_type: empty_type }));
+        let module = WasmModule {
+            types: vec![wrong_type],
+            imports: vec![Import {
+                module_name: "test".to_string(),
+                name: "e0".to_string(),
+                kind: ExternalKind::Tag,
+                type_info: ImportTypeInfo::Tag(0),
+            }],
+            ..Default::default()
+        };
+        let validated = runtime.validate(&module).unwrap();
+        assert!(runtime.instantiate(&validated).is_err(), "an incompatible tag import must fail to link");
     }
 
     // ══════════════════════════════════════════════════════════════════════

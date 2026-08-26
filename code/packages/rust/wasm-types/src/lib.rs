@@ -184,6 +184,25 @@ pub enum ValueType {
     /// Ref`'s GC-heap handles. See `code/specs/
     /// W13-wasm-simd-v128-first-slice.md` for the full design.
     V128,
+
+    /// `exnref` — `(ref null exn)`, a nullable reference to a caught
+    /// exception (exceptions proposal; real spec type opcode `-0x17`, i.e.
+    /// unsigned byte `0xE9`).
+    ///
+    /// Recognized ONLY so a module that mentions this type (e.g. a
+    /// `catch_ref`/`catch_all_ref` target block's declared result type)
+    /// still PARSES and STRUCTURALLY VALIDATES — this repo's exceptions
+    /// support (W21, W-next) never actually produces or consumes a real
+    /// `exnref` VALUE (no `catch_ref`/`catch_all_ref` clause is ever
+    /// selected as a match; see `wasm-execution`'s `try_catch_exception`
+    /// doc comment), so this variant is deliberately inert: it exists so a
+    /// module mixing `exnref`-typed functions alongside ordinary
+    /// `catch`/`catch_all`-only ones (the real testsuite's own
+    /// `try_table.wast` does exactly this, all in ONE module) doesn't fail
+    /// to build as a WHOLE and lose real conformance credit for the
+    /// functions that don't need `exnref` at all — see `code/specs/
+    /// W22-wasm-exceptions-catch-clause-matching.md`'s own scope section.
+    Exnref,
 }
 
 impl ValueType {
@@ -210,6 +229,7 @@ impl ValueType {
             ValueType::Funcref => Some(0x70),
             ValueType::Externref => Some(0x6F),
             ValueType::V128 => Some(0x7B),
+            ValueType::Exnref => Some(0xE9),
         }
     }
 
@@ -245,6 +265,7 @@ impl ValueType {
             ValueType::Funcref => vec![0x70],
             ValueType::Externref => vec![0x6F],
             ValueType::V128 => vec![0x7B],
+            ValueType::Exnref => vec![0xE9],
         }
     }
 }

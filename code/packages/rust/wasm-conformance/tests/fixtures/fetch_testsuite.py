@@ -853,6 +853,18 @@ TESTSUITE_FILES = [
     # spec-accurate scope, not a bug.
     "tag.wast",
     "throw.wast",
+    # Exceptions proposal, second slice (W-next -- see code/specs/
+    # W22-wasm-exceptions-catch-clause-matching.md): real, same-instance
+    # `catch`/`catch_all` matching. `try_table.wast` -- the largest of the
+    # four exceptions-proposal corpus files -- now grades real `Pass` for
+    # every directive that only needs `catch`/`catch_all` (no `catch_ref`/
+    # `catch_all_ref`/`exnref`, and no CROSS-MODULE tag identity -- see
+    # that spec's own scope section for the exact boundary and why both
+    # are separate, later slices). `throw.wast`'s own held-out
+    # `test-throw-1-2` directive (W21's one deliberate `Fail`) now grades
+    # real `Pass` too, from this SAME implementation -- no separate
+    # vendoring needed, since that file was already vendored.
+    "try_table.wast",
 ]
 
 # Reference-types/threads-proposal files whose UPSTREAM path lives under
