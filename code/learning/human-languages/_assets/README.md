@@ -11,8 +11,8 @@ gates on both.
 - [`LICENSE.md`](./LICENSE.md) — the recorded licensing decision and the required
   sidecar fields. **No asset ships without a sidecar and a recorded licence.**
 
-Nothing lives here yet; the pipeline is tracked as HL-C12 in
-[`../BACKLOG.md`](../BACKLOG.md).
+Nothing lives here yet; the pipeline is tracked as HL-C12 in the
+[`../BACKLOG.d/`](../BACKLOG.d/) shard directory.
 
 ## The three figure classes
 

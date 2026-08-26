@@ -2,6 +2,52 @@
 
 All notable changes to this package will be documented in this file.
 
+## [0.9.67] - 2026-08-26 (Exceptions proposal, third slice W23: cross-instance tag identity)
+
+### Added
+
+- `ExceptionPayload` gains `tag_identity: u64` — a canonical, globally-
+  unique tag identity (`0` = "none configured"), alongside the existing
+  `instance_id`/`tag_idx`. `TrapError::exception_with_payload` takes it as
+  a new parameter; the sentinel-prefixed `VMError` wire format
+  (`encode_exception_payload`/`decode_exception_payload`) carries it as a
+  new length-delimited field.
+- `WasmExecutionContext`/`WasmExecutionEngine` gain `tag_identities: Vec<u64>`
+  (same combined tag-index space as `tags`), threaded via a new optional
+  setter `WasmExecutionEngine::set_tag_identities`, mirroring `set_tags`
+  exactly. `throw` now also carries `ctx.tag_identities[tag_idx]` (or `0`
+  if unconfigured) in the exception it raises.
+- `HostInterface::resolve_tag`'s return type changes from `Option<FuncType>`
+  to `Option<(FuncType, u64)>` — the exporting instance's own canonical
+  tag identity, adopted verbatim by an importer (see `wasm-runtime`'s own
+  changelog for how it's minted/threaded).
+
+### Changed
+
+- `try_catch_exception`'s old `instance_id == 0 || instance_id !=
+  ctx.instance_id` early-return gate is REMOVED. A `catch` clause now
+  matches via real tag-identity comparison (`catch_clause_tag_matches`,
+  new), falling back to the old same-context raw-index comparison only
+  when no real identity was configured on either side (every pre-existing
+  hand-built unit test that never calls `set_tag_identities`) — this keeps
+  every W21/W22 unit test passing unmodified. A `catch_all` clause now
+  matches UNCONDITIONALLY, including a foreign exception that crossed a
+  cross-instance host-function call boundary, matching the real spec's
+  own "`try_table` catches foreign exceptions... as well" rule (previously
+  wrongly refused by the same gate this removes).
+- `ExceptionPayload::instance_id`/`WasmExecutionContext::instance_id` are
+  no longer read by any matching logic — still minted and carried
+  (nothing depended on removing them), doc comments updated to say so.
+
+### Fixed
+
+- Real corpus: `try_table.wast`'s `catch-imported`, `catch-imported-alias`,
+  and `imported-mismatch` `assert_return` directives — the exact three
+  cross-instance cases W22 named and deliberately deferred — now pass for
+  real (`assert_return` 25/13/5 pass/fail/not-yet-supported → 28/10/5; no
+  other file's stats moved). See `code/specs/
+  W23-wasm-exceptions-cross-instance-tag-identity.md`.
+
 ## [0.9.66] - 2026-08-25 (Exceptions proposal, second slice W22: real catch/catch_all matching)
 
 ### Added

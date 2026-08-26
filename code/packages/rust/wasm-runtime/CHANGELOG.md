@@ -2,6 +2,40 @@
 
 All notable changes to this package will be documented in this file.
 
+## [0.6.8] — 2026-08-26 (W23 — exceptions proposal, cross-instance tag identity)
+
+### Added
+
+- `WasmInstance::tag_identities: Vec<u64>` (new field): a canonical,
+  cross-instance-safe identity per tag, same combined imported+defined
+  index space as `tags`. A module-DEFINED tag gets a freshly minted,
+  never-repeating identity (the new process-wide `NEXT_TAG_IDENTITY`
+  counter) exactly once, at `instantiate()` time — persists across every
+  later call on the same instance, unlike `wasm_execution::
+  WasmExecutionContext::instance_id` (reminted every top-level call). An
+  IMPORTED tag adopts the identity `HostInterface::resolve_tag` returns
+  for it verbatim, rather than minting an unrelated new one.
+- `build_engine` threads it into the execution engine via the new
+  `wasm_execution::WasmExecutionEngine::set_tag_identities`, mirroring
+  `set_tags` exactly.
+
+### Changed
+
+- `HostInterface::resolve_tag`'s return type changes from
+  `Option<FuncType>` to `Option<(FuncType, u64)>` (see `wasm-execution`'s
+  own changelog) — `instantiate()`'s `ImportTypeInfo::Tag` arm now reads
+  both the type (link-compatibility check, unchanged) and the identity
+  (adopted into `tag_identities`).
+
+### Fixed
+
+- This is what makes a `throw` in one module instance catchable by a
+  `try_table` in another instance that imported the SAME tag (via
+  `register`/module linking) — see `code/specs/
+  W23-wasm-exceptions-cross-instance-tag-identity.md` for the full
+  investigation and `wasm-conformance`'s changelog for the measured
+  corpus win.
+
 ## [0.6.7] — 2026-08-25 (W22 — exceptions proposal, real catch/catch_all matching)
 
 ### Added

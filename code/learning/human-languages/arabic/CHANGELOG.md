@@ -310,7 +310,7 @@
   565 legacy lessons corpus-wide carry one) and one the validator cannot check
   for collisions outside schema v2. Slots 10–260 are reserved below Chapter 3's
   270 for whoever does it. Full analysis in
-  [`../BACKLOG.md`](../BACKLOG.md#findings-from-hl-c30).
+  the [`../BACKLOG.d/`](../BACKLOG.d/) history.
 
 ## Chapter capability ledger for Chapters 3–27 (2026-08-06)
 

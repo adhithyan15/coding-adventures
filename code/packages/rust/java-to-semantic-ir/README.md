@@ -4,7 +4,7 @@ Java CST → narrow-waist Semantic IR. The first frontend for
 [SIR29](../../../specs/SIR29-nominal-static-oop-profile.md), the
 nominal/static-dispatch OOP profile extension of the SIR10 narrow-waist IR.
 See [JV02](../../../specs/JV02-java-to-semantic-ir.md) for this frontend's
-full milestone plan (M0 + M1 + M2a + M2b + M3a + M3b + M4a + M4b + M4c + M4d here, through M9; plus standalone task #54, wiring `Expr::IndirectCall`).
+full milestone plan (M0 + M1 + M2a + M2b + M3a + M3b + M4a + M4b + M4c + M4d here, through M9; plus standalone tasks #54, wiring `Expr::IndirectCall`, and #64, `break`/`continue` support).
 
 ## Where this fits
 
@@ -34,7 +34,7 @@ let module = compile_source(
 )?;
 ```
 
-## Scope (v0.11.0 — JV02 milestones M0 + M1 + M2a + M2b + M3a + M3b + M4a + M4b + M4c + M4d, plus task #54)
+## Scope (v0.12.0 — JV02 milestones M0 + M1 + M2a + M2b + M3a + M3b + M4a + M4b + M4c + M4d, plus tasks #54 and #64)
 
 Java requires an explicit `class`/`main`-method wrapper at the source level
 (unlike Ruby/Python/JS, which allow bare top-level statements) — this crate
@@ -141,12 +141,67 @@ rejection (the chained-index dispatch only fires when *every* suffix is
 `[...]`-shaped — the sub-array's own `.length` remains reachable via an
 intermediate local), and a *chained* indexed-assignment target
 (`grid[i][j] = v;`) is not reachable at all — both real, disclosed gaps,
-tracked as their own follow-up tasks. Everything else — `switch`/`break`/
-`continue` (SIR has no IR node for any of the three — confirmed by a
-repo-wide grep, not assumed — so this needs a spec-level design decision
-before any frontend can target it; note a bare `for (;;)` loop genuinely
-cannot terminate without `break`, a real and permanent limitation until
-it exists), qualified calls (`x.foo(...)`), method overloading, an early
+tracked as their own follow-up tasks. Bare (unlabeled) `break`/`continue`
+now lower to `Stmt::Break`/`Stmt::Continue` (`Feature::LoopControl`,
+task #64) inside any of `while`/`do`-`while`/classic-`for`/enhanced-`for`
+— a `Lowerer::loop_depth` counter rejects one outside any loop with a
+Java-flavored diagnostic, and is explicitly reset around a lambda body's
+or a method body's own lowering so a `break`/`continue` written directly
+inside either never resolves against an outer loop the declaration
+merely happens to be lexically nested in (real Java forbids this too). A
+labeled `break foo;`/`continue foo;` is rejected cleanly — SIR has no
+loop-label vocabulary. Wiring `continue` support surfaced two genuine,
+`/security-review`-caught non-termination bugs already latent in this
+crate's own `do`-`while` and classic-`for` desugarings (both appended a
+synthetic "bookkeeping" statement — a guard-flag clear, an update clause —
+to the very end of the lowered body, which a `continue` anywhere earlier
+would skip entirely): both are fixed by moving that bookkeeping *into*
+the loop's own condition expression instead, the one position a
+`continue` can never skip. **A second `/security-review` round on that
+fix found a third bug**: the synthetic flag names it introduced
+(`__do_while_N`/`__for_first_N`) were legal Java identifiers checked
+only against locals visible *before* the loop, but their own reference
+now lives inside the loop's *condition* — which several backends
+(Python, Ruby) compile with flat scoping relative to the body — so a
+body-declared local sharing the flag's exact name silently re-armed it
+every iteration under those backends, the identical infinite-loop shape
+again. A first attempted fix tried making the flag names unforgeable
+(`__do_while#N`/`__for_first#N` — `#` is illegal in a Java identifier
+per JLS §3.8), reasoning no real Java source could ever spell them — **a
+third `/security-review` round proved that false too**: every flat-
+scoping backend's `sanitize_ident` escapes `#` into an ordinary, legal-
+identifier string a real Java program *can* declare directly (Python's
+hex-escape turns `__do_while#0` into `___do_while_230`), reproducing the
+identical hang through the escaped form. The fix at that point
+(`fresh_flag_name`) dropped the unforgeable-character idea entirely and
+instead checked a plain candidate name directly against both the
+ambient scope (`lookup_local_with_frame`) and everything the loop's own
+lowered body declares at any nesting depth (`DeclaredNameCollector`,
+riding `semantic-ir`'s shared `Visitor`). **A third `/security-review`
+round found that this still wasn't enough**: both of those checks
+compare a candidate's *raw* string against a real local's *raw* string
+— sound only when every backend's `sanitize_ident` is the identity
+function on both, which is true for `fresh_flag_name`'s own plain
+candidates but not for every real Java local. `$` is a legal Java
+identifier character (JLS §3.8) this crate's own lexer accepts, and
+Python's `sanitize_ident` escapes it to a plain digit string, so a local
+named `_do_while$` can sanitize to the exact same Python name as some
+`__do_while_N` candidate — two *different* raw Java names colliding
+once emitted, defeating both raw-string checks at once (confirmed again
+by executing the emitted Python). The final fix rejects `$` in a
+declared Java identifier at lowering time (`reject_dollar_sign_
+identifier`, called at all four points this crate turns a Java `NAME`
+token into a declared name), restoring the invariant `fresh_flag_name`'s
+design actually needs rather than teaching this frontend every backend's
+own escaping scheme — see `CHANGELOG.md`'s `[0.12.0]` entry for the full
+before/after shapes and the regression tests each round added.
+Everything else — `switch`
+(SIR still has no IR node for it at all — confirmed by a repo-wide grep,
+not assumed — so this needs its own spec-level design decision before
+any frontend can target it, tracked as task #51; `break`/`continue`
+themselves are supported as of task #64, see below), a labeled `break`/
+`continue` (SIR has no loop-label vocabulary at all), qualified calls
+(`x.foo(...)`), method overloading, an early
 or branched `return` (in a method *or* a lambda), untyped/`var`-inferred
 lambda parameters (Java infers these from the lambda's own target
 functional-interface type, which this frontend has no visibility into —
@@ -221,7 +276,14 @@ JV02 spec's milestone table for what comes next.
   method's own local lambda invocation, a captured closure invoked from
   within a nested lambda, wrong-argument-count and wrong-argument-kind
   rejection, calling a non-closure local rejection, and `Feature::
-  Closures` re-declaration). Every positive test also asserts the
+  Closures` re-declaration), and task #64's own loop-control shapes
+  (break/continue in every loop kind, innermost-loop targeting when
+  nested, outside-any-loop and lambda-boundary rejection, labeled-form
+  rejection, the do-while/classic-for flag-collision regressions for
+  both the ambient-scope and body-declared directions, and the five
+  `dollar_sign_in_*_is_rejected` tests — see `reject_dollar_sign_
+  identifier`'s own doc comment for why `$` is rejected in a declared
+  Java identifier at all). Every positive test also asserts the
   lowered `Module` passes `semantic_ir::validate()` — not just that
   lowering itself didn't error.
 - `tests/e2e_python.rs` — execution-proof tests, per JV02's own
@@ -292,6 +354,34 @@ JV02 spec's milestone table for what comes next.
   `python3` is a toolchain other cross-language backend tests in this
   repo already depend on. Gracefully skips when `python3` is absent from
   `PATH`.
+- `tests/loop_control_java_execution.rs` (task #64): 6 `node`-execution-
+  proof tests for `break`/`continue`, mirroring `e2e_python.rs`'s own
+  "observe via `main`'s return value" harness but targeting the
+  JavaScript backend instead — as of this crate's own v0.12.0, JavaScript
+  is the only backend that accepts `Feature::LoopControl` (task #62), and
+  none of these tests use string concatenation, so JS's own
+  `StringInterpolation` gap (the reason `e2e_python.rs` picked Python)
+  doesn't apply. Covers a `while` combining both `continue` and `break`,
+  an enhanced-`for` `break`, and nested `while` loops proving `break`/
+  `continue` each target only the *innermost* enclosing loop, not an
+  outer one. Two tests are direct termination-regression tests for the
+  `do`-`while`/classic-`for` bugs `CHANGELOG.md`'s `[0.12.0]` entry
+  documents — before the fix, each hung forever rather than returning
+  the wrong answer; a reintroduction of either bug would hang the
+  corresponding test rather than fail it cleanly. Gracefully skips when
+  `node` is absent from `PATH`.
+- `tests/loop_control_flat_scoping_regression.rs` (task #64, added by a
+  second `/security-review` round): 2 real-`python3`-execution regression
+  tests for the flag-name-collision bug this file's own module doc
+  comment and `CHANGELOG.md`'s `[0.12.0]` entry describe — the bug never
+  reproduced through the JavaScript backend (real `let`/IIFE scoping
+  there), only through backends that compile a loop condition/body pair
+  with flat scoping, so these tests run the exact reported scenario
+  through the real Python backend instead. Each has a hard 15-second
+  wall-clock timeout (`Command::spawn` + polling `try_wait`, not the
+  unbounded `Command::output()` every other harness here uses) so a
+  reintroduction of this specific bug fails the test cleanly instead of
+  hanging the whole suite. Gracefully skips when `python3` is absent.
 
 ## How it fits in the stack
 

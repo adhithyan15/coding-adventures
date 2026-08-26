@@ -2,6 +2,182 @@
 
 All notable changes to the `java-to-semantic-ir` crate will be documented in this file.
 
+## [0.12.0] - 2026-08-26
+
+### Added
+
+- Task #64: `break`/`continue` support. `Stmt::Break`/`Stmt::Continue`
+  (`semantic-ir` v0.27.0's SIR16 addendum, `Feature::LoopControl`) now
+  lower from a bare `break_statement`/`continue_statement` inside a
+  `while`/`do`-`while`/classic-`for`/enhanced-`for` body — the exact gap
+  M2a's own research first identified ("`break`/`continue` have the
+  identical gap [as `switch`]... tracked as its own backlog item").
+  `switch` itself remains fully unsupported (no SIR IR node at all yet —
+  a separate, larger design problem, still tracked as task #51).
+- Bare (unlabeled) only, matching SIR's own bare-only primitive: a
+  labeled `break foo;`/`continue foo;` is rejected cleanly
+  ("labeled ... is not supported yet (deferred)") rather than
+  mis-targeting the wrong enclosing loop — SIR v0 has no loop-label
+  vocabulary at all.
+- New `Lowerer::loop_depth: usize`, incremented/decremented around every
+  loop body's own lowering. `break`/`continue` outside any loop is
+  rejected with a Java-flavored `` `break`/`continue` outside a loop ``
+  diagnostic — the shared `semantic-ir` validator's own `loop_stack`
+  independently enforces the same rule, but this gives a clearer error
+  before ever reaching that shared, more generic check. `loop_depth` is
+  explicitly reset to `0` (save/restore) around a lambda body's own
+  lowering and a method body's own lowering, so a `break`/`continue`
+  written directly inside either can never resolve against a loop the
+  lambda/method *declaration* merely happens to be lexically nested in —
+  real Java forbids this too (`list.forEach(x -> { break; })` inside an
+  enclosing loop is a `javac` compile error, not a jump to that loop).
+
+### Fixed
+
+- **Found while wiring `continue` support, not by inspection beforehand
+  — two real, `/security-review`-caught bugs, both now-live consequences
+  of a "trailing bookkeeping statement" shape this crate's own `do`-
+  `while` and classic-`for` desugarings already used, which was
+  inert only because `continue` had no lowering to reach it with until
+  this same PR added one:**
+  - **`lower_do_while_statement`** appended its synthetic guard flag's
+    clear (`__do_while_N = false;`) to the end of the lowered body — a
+    `continue` anywhere earlier in that body (SIR's own `Stmt::Continue`
+    jumps straight to re-evaluating the loop's `cond`) skipped it
+    entirely, leaving the flag permanently `true`. Since the loop
+    condition was `flag || C`, that made the loop **run forever**
+    regardless of `C`'s real value, from the very first `continue` a
+    real Java `do`/`while` executes. Fixed by moving the flag-clear
+    *into* the condition itself (`flag ? ({ flag = false; true }) : (C)`)
+    — the one position a `continue` can never skip.
+  - **`lower_for_statement_inner`** appended the update clause (`i++`)
+    to the end of the lowered body the same way — a `continue` skipped
+    the update, so `i` never advanced on any iteration containing an
+    early `continue`. For `for (int i = 0; i < N; i++) { if (i % 2 == 0)
+    continue; ... }`, this hangs on the very first (`i == 0`) iteration,
+    not an edge case. Fixed the same way: wrap `update` into the
+    condition, gated by a one-shot `__for_first_N` "have we run the
+    first check yet" flag (`flag ? ({ flag = false; C }) : ({ update; C
+    })`) so `update` always runs on the way back into the condition,
+    including via `continue`.
+  - Both fixes are applied unconditionally (every `do`/`while`, every
+    `for` with an update clause) rather than only when the body is known
+    to contain a `continue` — mirrors `do`/`while`'s own pre-existing
+    flag-guard discipline (already applied to every `do`/`while`
+    regardless of need) rather than adding a new "does this body contain
+    a `continue` targeting *this* loop" scanner whose own correctness
+    would itself be a new thing to get right.
+  - A useful side effect of the classic-`for` fix: moving `update` out
+    of the body's own lowered `Block.stmts` and into a separate wrapped-
+    condition `Expr::Block` means `update`'s target name can no longer
+    collide with a local the body declares directly (real Java's own
+    `for`-header scope was never inside the body's scope to begin with —
+    this is actually *more* faithful to Java's real scoping than the
+    old "append to body" shape was). The collision-rejection check this
+    crate previously needed for that scenario (`for (int i = 0; ...;
+    i++) { int i = 999; ... }`) is no longer needed and has been
+    removed; that source now compiles instead of being rejected (real
+    `javac` still rejects it for its own, unrelated reason — Java's
+    `for`-header variable is in scope for the body too, a general
+    duplicate-declaration rule this frontend does not otherwise enforce).
+  - Six new `tests/loop_control_java_execution.rs` `node`-execution-proof
+    tests exercise real `continue`/`break` behavior end-to-end (Java →
+    SIR → JavaScript → `node`) via the JavaScript backend, the first to
+    accept `Feature::LoopControl` (task #62). Two are direct termination
+    regression tests for the bugs above — a reintroduction of either bug
+    would hang the affected test rather than fail it cleanly, the nature
+    of a termination-correctness regression test.
+  - **A second `/security-review` round, on the fix above, found a THIRD
+    real bug (HIGH) in that same fix**: both new synthetic flag names
+    (`__do_while_N`/`__for_first_N`) were plain, legal Java identifiers,
+    checked only against `lookup_local` (locals visible *before* the loop
+    body was lowered). Their own *reference*, though, now lives inside
+    the loop's **condition** expression — and several backends compile a
+    SIR condition/body pair with FLAT scoping (no new scope opens for
+    either): `semantic-ir-to-python`'s `emit_block_as_expr` renders both
+    as ordinary Python `:=`/`=` assignments in the *enclosing* scope,
+    and `semantic-ir-to-ruby` is the same. A body-declared local sharing
+    the flag's exact name (a real, reachable case — `__do_while_0` is a
+    legal Java identifier) silently re-arms the flag every iteration
+    under those backends, reproducing the identical infinite-loop shape
+    the fix above exists to close — confirmed by actually executing the
+    emitted Python and observing a hang, not by inspection alone.
+  - **First attempted fix (superseded below)**: embed `#`, a character
+    JLS §3.8 forbids in a Java identifier, into the flag's own name
+    (`__do_while#N`/`__for_first#N`), reasoning that no real Java source
+    could ever spell it. **A THIRD `/security-review` round proved that
+    reasoning false**: every flat-scoping backend's `sanitize_ident`
+    exists precisely to turn an arbitrary string into a legal identifier
+    by escaping illegal characters, so `sanitize_ident("__do_while#0")`
+    produces an ordinary, `#`-free string (`___do_while_230` under
+    Python's hex-escape scheme) that a real Java program *can* declare
+    directly — reproducing the identical hang through the escaped form,
+    confirmed again by actually executing the emitted Python.
+  - **The real, final fix**: `fresh_flag_name` (shared by both
+    desugarings) drops any attempt at an unforgeable name and instead
+    picks a plain, escape-free candidate (`__do_while_N`/`__for_first_N`
+    again), then checks it directly against **both** (1) the ambient
+    scope at the loop's call site, via the existing `lookup_local_with_
+    frame` lookup, and (2) every name the loop's own lowered body
+    declares at any nesting depth, via a new `DeclaredNameCollector`
+    riding `semantic-ir`'s shared, already depth-guarded `Visitor`
+    (`walker.rs`) rather than a bespoke re-implementation of SIR's own
+    tree shape — retrying the next counter value on any collision. Both
+    checks are necessary: the ambient check alone misses a body-declared
+    local (the loop's own scope frame has already been popped by the
+    time the flag name is picked); the body-declared check alone misses
+    an *outer* local of the same name that the body only reads/writes,
+    never redeclares — still a real collision, since the flag lives in
+    the same synthetic `Expr::Block` a flat-scoping backend shares with
+    everything the loop references from outside it too. The now-dead
+    `lookup_local` collision-retry loop from the very first attempt (and,
+    since nothing else called the plain `lookup_local` wrapper, that
+    function itself) were removed in favor of this single shared
+    mechanism.
+  - New/rewritten tests lock in both halves of the check directly at the
+    IR level (`classic_for_loop_flag_name_skips_ahead_when_the_body_
+    declares_the_first_candidate_name` and its `_an_outer_local_
+    declares_` sibling, plus the `do_while_` equivalents), and two
+    `tests/loop_control_flat_scoping_regression.rs` tests run the
+    original reported scenario through the real Python backend (not just
+    JavaScript, where the bug never reproduced) with a hard 15-second
+    wall-clock timeout, so a reintroduction of any of these three bugs
+    fails the affected test cleanly instead of hanging the suite.
+  - **A THIRD `/security-review` round, on `fresh_flag_name` itself,
+    found a FOURTH real bug (HIGH)**: both of `fresh_flag_name`'s checks
+    (`lookup_local_with_frame` and `DeclaredNameCollector`) compare a
+    candidate flag name against a real Java local's *raw source
+    spelling* — sound only if every backend's `sanitize_ident` is the
+    identity function on both strings being compared. That holds for
+    `fresh_flag_name`'s own `[A-Za-z0-9_]`-only candidates, but not for
+    an arbitrary Java local: `$` is a legal Java identifier character
+    (JLS §3.8) this crate's own lexer accepts, and `semantic-ir-to-
+    python::sanitize_ident` escapes it to a plain hex-digit string (e.g.
+    `_24`), so a Java local named `_do_while$` sanitizes to
+    `_do_while_24` — a string that can coincide exactly with some
+    `__do_while_N` candidate even though the two *raw* names share no
+    resemblance, defeating both of `fresh_flag_name`'s checks at once
+    (they never compared the sanitized forms). Confirmed by actually
+    executing the emitted Python and observing a hang, same as every
+    prior round. Fixed by a new `Lowerer::reject_dollar_sign_identifier`,
+    called at every one of the four points this crate turns a Java
+    `NAME` token into a declared local/parameter name (`formal_parameter_
+    kind_name_pairs`, `lambda_parameter_kind_name`, `lower_enhanced_for_
+    statement`, and the shared local-variable-declarator path used by
+    both plain declarations and a classic `for`'s own `for_init`) — this
+    restores the invariant `fresh_flag_name`'s design actually needs
+    (every declarable name lives in `[A-Za-z0-9_]`, the one alphabet
+    every backend's `sanitize_ident` treats as its own identity) by
+    construction, rather than teaching this backend-agnostic frontend
+    every backend's own escaping scheme. `$`-containing identifiers are
+    vanishingly rare in hand-written Java (real-world use is almost
+    exclusively compiler-generated synthetic names), so this is a
+    narrow, disclosed scope boundary in the same spirit as this crate's
+    many other "not supported yet" rejections. Five new `tests/
+    test_lower.rs` tests (`dollar_sign_in_*_is_rejected`) cover all four
+    call sites plus the classic-`for`-init-declarator path specifically
+    (the shared function's *second* caller, not just the first).
+
 ## [0.11.0] - 2026-08-26
 
 ### Added

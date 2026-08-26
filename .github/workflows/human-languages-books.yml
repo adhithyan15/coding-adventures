@@ -66,16 +66,42 @@ jobs:
         run: |
           set -euo pipefail
 
+          # The Markdown shard directories are append-only history. The old
+          # generated monolith caught a dropped shard only because it went
+          # stale; after removing that merge hot spot, preserve the same
+          # fail-closed deletion signal directly from Git's PR diff.
+          if [ "$EVENT_NAME" = "pull_request" ]; then
+            if [[ ! "$PR_BASE_SHA" =~ ^[0-9a-f]{40}$ ]] || \
+               [[ ! "$PR_HEAD_SHA" =~ ^[0-9a-f]{40}$ ]]; then
+              echo "::error::Pull-request base or head SHA is invalid."
+              exit 1
+            fi
+            deleted_doc_shards=$(git diff --diff-filter=D --name-only \
+              "$PR_BASE_SHA...$PR_HEAD_SHA" -- \
+              'code/learning/human-languages/BACKLOG.d/*.md' \
+              'code/packages/typescript/human-language-data/CHANGELOG.d/*.md')
+            if [ -n "$deleted_doc_shards" ]; then
+              echo "::error::Markdown history shards are append-only; restore these deleted files:"
+              printf '%s\n' "$deleted_doc_shards"
+              exit 1
+            fi
+          fi
+
+          # These paths are render targets, not repository content. Refuse a
+          # future merge that accidentally recreates either shared hot spot.
+          tracked_doc_monoliths=$(git ls-files -- \
+            code/learning/human-languages/BACKLOG.md \
+            code/packages/typescript/human-language-data/CHANGELOG.md)
+          if [ -n "$tracked_doc_monoliths" ]; then
+            echo "::error::Generated Markdown aggregates must remain untracked:"
+            printf '%s\n' "$tracked_doc_monoliths"
+            exit 1
+          fi
+
           if [ "$EVENT_NAME" != "pull_request" ]; then
             echo "books=true" >> "$GITHUB_OUTPUT"
             echo "A non-pull-request run always builds the publication bundle."
             exit 0
-          fi
-
-          if [[ ! "$PR_BASE_SHA" =~ ^[0-9a-f]{40}$ ]] || \
-             [[ ! "$PR_HEAD_SHA" =~ ^[0-9a-f]{40}$ ]]; then
-            echo "::error::Pull-request base or head SHA is invalid."
-            exit 1
           fi
 
           set +e
@@ -271,14 +297,11 @@ jobs:
           # prefers `.d/`, so a resurrected monolith is not merely redundant: it
           # is edited, committed, and silently ignored.
           npm run check:shards
-          # HL22: BACKLOG.d/ and CHANGELOG.d/ are the source of truth for
-          # the two Markdown documents every human-languages author touches —
-          # 100 and 75 of the last 200 commits respectively. Nothing READS
-          # either monolith programmatically; they survive because seven docs
-          # link BACKLOG.md by relative path (two by section anchor, none
-          # validated by CI) and because CLAUDE.md requires a CHANGELOG.md in
-          # every package. Same rule as above: a derived file nothing verifies
-          # is worse than no file. Regenerate with `npm run unshard:docs`.
+          # HL22/HL23: BACKLOG.d/ and CHANGELOG.d/ are the source of truth for
+          # the two Markdown histories every human-languages author touches.
+          # Their generated monoliths are deliberately untracked; this validates
+          # shard shape/order and any optional local rendered view. The detect
+          # job separately forbids shard deletion and tracked render targets.
           npm run check:doc-shards
           mkdir -p "$GITHUB_WORKSPACE/dist/human-languages/books"
           npm run --silent report -- --format json \

@@ -333,8 +333,8 @@
 
 use parser::grammar_parser::{ASTNodeOrToken, GrammarASTNode};
 use semantic_ir::{
-    Block, Capture, CaptureValue, EffectSet, Expr, Feature, FeatureManifest, Function, Metadata,
-    Module, Param, ParamKind, Scope, Span, Stmt,
+    walk_stmt_default, Block, Capture, CaptureValue, EffectSet, Expr, Feature, FeatureManifest,
+    Function, Metadata, Module, Param, ParamKind, Scope, Span, Stmt, Visitor,
 };
 use std::collections::{HashMap, HashSet};
 
@@ -591,7 +591,7 @@ struct Lowerer {
     /// declared inside a nested block is visible only within that block
     /// and any blocks nested inside *it*, never after it ends nor to a
     /// sibling block. `push_scope`/`pop_scope`/`declare_local`/
-    /// `lookup_local` below are this crate's own mirror of that stack,
+    /// `lookup_local_with_frame` below are this crate's own mirror of that stack,
     /// not merely a leak-prevention bookkeeping list — a Java program can
     /// shadow an outer local with the same name in a nested block-scoped
     /// language (in fact Java forbids that specific case, but this
@@ -614,6 +614,29 @@ struct Lowerer {
     /// own doc comment. Guarantees uniqueness across sibling do-while
     /// statements in the same function; never consulted by name lookup.
     do_while_counter: usize,
+    /// Counter for the synthetic "have we run the update clause yet"
+    /// flag a classic `for` loop with a non-empty update clause lowers
+    /// to (`__for_first_0`, `__for_first_1`, …) — see
+    /// `lower_for_statement_inner`'s own doc comment. Mirrors
+    /// `do_while_counter`'s uniqueness role for a different synthetic
+    /// name; never consulted by name lookup.
+    for_counter: usize,
+    /// Depth of syntactically-enclosing Java loops (`while`/`do`-`while`/
+    /// classic or enhanced `for`) around the statement currently being
+    /// lowered — `0` means "not inside a loop at all". `lower_break_
+    /// statement`/`lower_continue_statement` consult this to reject a
+    /// `break`/`continue` outside any loop with a Java-flavored error,
+    /// mirroring `javac`'s own diagnostic rather than relying solely on
+    /// the shared `semantic-ir` validator's more generic one. Saved to
+    /// `0` and restored (never just incremented past) around a lambda
+    /// body's own lowering (`lower_lambda_expression`) and a method
+    /// body's own lowering (`lower_method_declaration`) — real Java
+    /// forbids `break`/`continue` from reaching an outer loop across
+    /// either of those boundaries, so a bare `break;` written directly
+    /// inside a lambda passed to, say, `list.forEach(x -> { break; })`
+    /// must be rejected even though that lambda happens to be lexically
+    /// nested inside an enclosing loop.
+    loop_depth: usize,
     /// Every method's resolved call signature (parameter kinds + return
     /// kind), computed in a first pass over the class body before *any*
     /// method body is lowered — mirrors `python-to-semantic-ir`'s/
@@ -721,6 +744,8 @@ impl Lowerer {
             observed: FeatureManifest::new(),
             locals: Vec::new(),
             do_while_counter: 0,
+            for_counter: 0,
+            loop_depth: 0,
             method_signatures: HashMap::new(),
             current_method: String::new(),
             call_graph: HashMap::new(),
@@ -765,25 +790,16 @@ impl Lowerer {
             .insert(name, (kind, Scope::Param));
     }
 
-    /// Look up `name`, searching from the innermost scope outward —
-    /// exactly the lexical-shadowing order a real name lookup needs.
-    /// Returns the declaration's `Kind` *and* its `Scope` tag (`Local` or
-    /// `Param`) — see the `locals` field's own doc comment for why both
-    /// matter to every caller that goes on to build a `VarRef`/`Assign`.
-    ///
-    /// A thin wrapper over `lookup_local_with_frame`, dropping the frame
-    /// index that only capture-aware resolution (`resolve_name`) needs —
-    /// kept as its own method so the many M1–M3a call sites that predate
-    /// M3b's lambdas need no change.
-    fn lookup_local(&self, name: &str) -> Option<(Kind, Scope)> {
-        self.lookup_local_with_frame(name).map(|(k, s, _)| (k, s))
-    }
-
-    /// Like `lookup_local`, but also returns the `locals` frame index the
-    /// name was found in — needed by `resolve_name` to decide whether a
-    /// reference crosses a lambda's own `ClosureFrame::locals_mark` (i.e.
-    /// is a genuine capture) or is simply local/param to whichever
-    /// function is currently being lowered.
+    /// Look up `name` *and* the `locals` frame index it was found in,
+    /// searching from the innermost scope outward — exactly the lexical-
+    /// shadowing order a real name lookup needs, and the frame index
+    /// `resolve_name` needs to decide whether a reference crosses a
+    /// lambda's own `ClosureFrame::locals_mark` (i.e. is a genuine
+    /// capture) or is simply local/param to whichever function is
+    /// currently being lowered. Returns the declaration's `Kind` *and*
+    /// its `Scope` tag (`Local` or `Param`) — see the `locals` field's
+    /// own doc comment for why both matter to every caller that goes on
+    /// to build a `VarRef`/`Assign`.
     fn lookup_local_with_frame(&self, name: &str) -> Option<(Kind, Scope, usize)> {
         self.locals
             .iter()
@@ -792,11 +808,83 @@ impl Lowerer {
             .find_map(|(i, frame)| frame.get(name).map(|&(k, s)| (k, s, i)))
     }
 
+    /// Picks a synthetic guard-flag name of the form `{prefix}_{N}`
+    /// (starting at `*counter`, incrementing `*counter` past every
+    /// candidate tried, including the one finally chosen) that collides
+    /// with **neither**:
+    ///
+    /// 1. any name currently visible in the *ambient* scope at the call
+    ///    site (an outer local, a parameter, ...) — checked via `self.
+    ///    lookup_local_with_frame`, the same lookup every ordinary name
+    ///    reference goes through; nor
+    /// 2. any name `body` itself *declares*, anywhere within it (inside a
+    ///    nested `if`, `while`, `for`, ...) — checked via
+    ///    `DeclaredNameCollector`, since those declarations live in a
+    ///    scope frame this crate has already popped by the time the
+    ///    caller (`lower_do_while_statement`/`lower_for_statement_inner`)
+    ///    picks the flag name, so `lookup_local_with_frame` alone can't
+    ///    see them.
+    ///
+    /// Both checks are necessary: (1) alone misses a body-declared local
+    /// shadowing the flag (a `do`/`while`/`for` body scope has already
+    /// closed by the time this runs); (2) alone misses an *outer* local
+    /// of the same name that the body only reads/writes, never
+    /// redeclares (`do { flag_name = flag_name + 1; } while (...)`) —
+    /// still a real collision, since the flag lives in the very same
+    /// synthetic `Expr::Block` as the loop, which several backends
+    /// (`semantic-ir-to-python`, `semantic-ir-to-ruby`) compile as one
+    /// flat scope shared with everything the loop references from
+    /// outside it too.
+    ///
+    /// # Why a name-uniqueness check, not an unforgeable-character trick
+    ///
+    /// An earlier version of this fix used `#` (illegal in a Java
+    /// identifier per JLS §3.8) in the flag's own name, reasoning that no
+    /// real Java source could ever spell it. A second `/security-review`
+    /// round proved that reasoning false: every backend's `sanitize_ident`
+    /// (e.g. `semantic-ir-to-python::sanitize_ident`) exists precisely to
+    /// turn an *arbitrary* string into a legal identifier in its target
+    /// language by escaping illegal characters — so `sanitize_ident("__do_
+    /// while#0")` produces an ordinary, `#`-free string (e.g.
+    /// `___do_while_230` under Python's hex-escape scheme) that a real
+    /// Java program CAN declare directly. Since `sanitize_ident` is
+    /// idempotent on names that are already legal (the overwhelming
+    /// majority of real Java identifiers, which use only ASCII
+    /// letters/digits/underscore — a subset of both Python's and Ruby's
+    /// own identifier alphabets), a plain, escape-free candidate name
+    /// collides with a real Java local if and only if that local's raw
+    /// source name is *exactly* the candidate string — no backend-
+    /// specific escaping knowledge is needed to detect that. This method
+    /// checks the candidate directly against real Java names instead,
+    /// retrying with the next counter value on a hit, which closes the
+    /// hole completely rather than relying on a name no real Java source
+    /// is expected to spell.
+    ///
+    /// Takes the starting counter *by value* and returns `(name,
+    /// next_counter)` rather than a `&mut usize` in/out parameter: the
+    /// caller reads its own `do_while_counter`/`for_counter` field
+    /// (a plain `Copy` read, not a borrow) before calling, so this
+    /// `&self` method and the caller's later `self.do_while_counter =
+    /// next` assignment never overlap as simultaneous borrows of `self`.
+    fn fresh_flag_name(&self, prefix: &str, start_counter: usize, body: &Block) -> (String, usize) {
+        let mut collector = DeclaredNameCollector {
+            names: HashSet::new(),
+        };
+        collector.visit_block(body, 0);
+        let mut counter = start_counter;
+        loop {
+            let candidate = format!("{prefix}_{counter}");
+            counter += 1;
+            if self.lookup_local_with_frame(&candidate).is_none()
+                && !collector.names.contains(&candidate)
+            {
+                return (candidate, counter);
+            }
+        }
+    }
+
     /// Resolve a bare name for use as a `VarRef`/assignment target,
-    /// capture-aware — the M3b counterpart of `lookup_local`, and what
-    /// every *use* of a resolved name (as opposed to internal kind-only
-    /// checks like the `do`-`while` flag-collision probe) should call
-    /// instead.
+    /// capture-aware — what every *use* of a resolved name should call.
     ///
     /// Mirrors `javascript-to-semantic-ir`'s "on-resolve" capture
     /// discovery: a capture is never pre-scanned for, it simply falls
@@ -1134,6 +1222,7 @@ impl Lowerer {
                     _ => None,
                 })
                 .ok_or_else(|| self.err_at(fp, "malformed parameter (missing name)".to_string()))?;
+            self.reject_dollar_sign_identifier(&name_tok.value, fp)?;
             out.push((name_tok.value.clone(), kind));
         }
         Ok(out)
@@ -1211,13 +1300,25 @@ impl Lowerer {
             .get(name)
             .expect("signature already computed in pass 1")
             .return_kind;
+        // A method's own body is its own statement-flow boundary — same
+        // reasoning as `lower_lambda_expression`'s identical save/
+        // restore, applied here defensively: `self` is shared across
+        // every method in the module (see `lower_program`'s own
+        // sequential-methods loop), and every loop arm already
+        // increments/decrements `loop_depth` in balanced pairs, so in
+        // practice this is always already `0` on entry here. The
+        // explicit reset makes that an enforced invariant rather than an
+        // implicit one a future refactor could quietly break.
+        let saved_loop_depth = std::mem::take(&mut self.loop_depth);
         let body = match self.lower_method_body_block(block, return_kind, 0) {
             Ok(b) => b,
             Err(e) => {
+                self.loop_depth = saved_loop_depth;
                 self.pop_scope();
                 return Err(e);
             }
         };
+        self.loop_depth = saved_loop_depth;
         self.pop_scope();
 
         Ok(Function {
@@ -1562,11 +1663,72 @@ impl Lowerer {
                 })?;
             return self.lower_expr_statement(expression);
         }
+        if let Some(break_stmt) = self.first_child_named(statement, "break_statement") {
+            return self.lower_break_statement(break_stmt);
+        }
+        if let Some(continue_stmt) = self.first_child_named(statement, "continue_statement") {
+            return self.lower_continue_statement(continue_stmt);
+        }
         Err(self.err_at(
             statement,
-            "unsupported statement kind (JV02 M2b supports variable declarations, assignment, if/while/do-while/for/enhanced-for, and bare expression statements — switch/break/continue have no SIR IR yet, everything else is deferred further)"
+            "unsupported statement kind (JV02 supports variable declarations, assignment, if/while/do-while/for/enhanced-for, bare break/continue, and bare expression statements — switch still has no SIR IR at all, everything else is deferred further)"
                 .to_string(),
         ))
+    }
+
+    /// `break_statement = "break" [ NAME ] SEMICOLON ;`. Lowers to
+    /// `Stmt::Break` — bare (unlabeled) only, matching SIR's own
+    /// bare-only `Stmt::Break`/`Stmt::Continue` (see the SIR16 addendum's
+    /// "Loop control" section: SIR v0 has no loop-label vocabulary at
+    /// all). A labeled `break foo;` is rejected cleanly rather than
+    /// mis-targeting the wrong enclosing loop. Rejects a bare `break;`
+    /// outside any loop with a Java-flavored diagnostic — the shared
+    /// `semantic-ir` validator would also catch this (its own `loop_
+    /// stack` tracking independently enforces the same rule), but
+    /// `self.loop_depth` lets this frontend give a clearer error before
+    /// ever reaching that shared, more generic check.
+    fn lower_break_statement(
+        &mut self,
+        node: &GrammarASTNode,
+    ) -> Result<Stmt, JavaLowerError> {
+        let span = self.span_of(node);
+        if let Some(label) = label_token(node) {
+            return Err(self.err_at(
+                node,
+                format!(
+                    "labeled `break {label};` is not supported yet (deferred — SIR has no loop-label vocabulary; only a bare `break;` targeting the nearest enclosing loop is supported)"
+                ),
+            ));
+        }
+        if self.loop_depth == 0 {
+            return Err(self.err_at(node, "`break` outside a loop".to_string()));
+        }
+        self.observed.add(Feature::LoopControl);
+        Ok(Stmt::Break { span })
+    }
+
+    /// `continue_statement = "continue" [ NAME ] SEMICOLON ;`. Mirrors
+    /// `lower_break_statement` exactly — see its own doc comment for the
+    /// bare-only and outside-a-loop rejection rationale, both identical
+    /// here.
+    fn lower_continue_statement(
+        &mut self,
+        node: &GrammarASTNode,
+    ) -> Result<Stmt, JavaLowerError> {
+        let span = self.span_of(node);
+        if let Some(label) = label_token(node) {
+            return Err(self.err_at(
+                node,
+                format!(
+                    "labeled `continue {label};` is not supported yet (deferred — SIR has no loop-label vocabulary; only a bare `continue;` targeting the nearest enclosing loop is supported)"
+                ),
+            ));
+        }
+        if self.loop_depth == 0 {
+            return Err(self.err_at(node, "`continue` outside a loop".to_string()));
+        }
+        self.observed.add(Feature::LoopControl);
+        Ok(Stmt::Continue { span })
     }
 
     /// `if_statement = "if" LPAREN expression RPAREN statement [ "else"
@@ -1648,7 +1810,10 @@ impl Lowerer {
             .ok_or_else(|| {
                 self.err_at(while_stmt, "malformed `while` (missing body)".to_string())
             })?;
-        let body = self.lower_body(body_stmt, depth + 1)?;
+        self.loop_depth += 1;
+        let body = self.lower_body(body_stmt, depth + 1);
+        self.loop_depth -= 1;
+        let body = body?;
         self.observed.add(Feature::Loops);
         Ok(Stmt::While { cond, body, span })
     }
@@ -1657,8 +1822,8 @@ impl Lowerer {
     /// RPAREN SEMICOLON ;`. SIR's `Stmt::While` is pretest-only (there is
     /// no do-while primitive), so this desugars `do S while (C);` to a
     /// synthetic flag-guarded pretest loop — `boolean __do_while_N =
-    /// true; while (__do_while_N || C) { S; __do_while_N = false; }` —
-    /// lowering `S` exactly **once**.
+    /// true; while (__do_while_N ? ({ __do_while_N = false; true }) : (C))
+    /// { S }` — lowering `S` exactly **once**.
     ///
     /// An earlier version instead built the more literal `{ S; while (C)
     /// S }` shape by lowering `S` once and *cloning* its already-lowered
@@ -1674,16 +1839,43 @@ impl Lowerer {
     /// rewrite here has no clone at all, so emitted IR size is always
     /// linear in source size.
     ///
+    /// **The flag-clear lives inside the loop *condition*, not appended
+    /// to the body** — a second correctness bug, distinct from the
+    /// cloning DoS above, found while wiring `Stmt::Continue` support
+    /// (task #64): an earlier version of this same rewrite instead used
+    /// `while (__do_while_N || C) { S; __do_while_N = false; }`, with the
+    /// flag-clear appended as `S`'s own trailing statement. SIR's
+    /// `Stmt::Continue` jumps straight back to re-evaluating a `While`'s
+    /// own `cond` — so a `continue` anywhere inside `S` (before reaching
+    /// that trailing statement) would skip the flag-clear entirely,
+    /// leaving `__do_while_N` permanently `true`. Since `flag || C`
+    /// short-circuits once `flag` is `true`, `C` would then never even be
+    /// evaluated again — an unconditional infinite loop regardless of
+    /// `C`'s real value, on the very first `continue` a real Java
+    /// `do`/`while` executes. This was inert (unreachable) before this
+    /// crate had any way to lower `continue` at all; wiring that support
+    /// is exactly what would have made it live. Embedding the flag-clear
+    /// in the condition itself — the one place a `continue` can never
+    /// skip — closes this the same way `lower_for_statement_inner`'s own
+    /// analogous update-clause fix does (see that function's doc
+    /// comment for the general pattern this mirrors).
+    ///
     /// `__do_while_N`'s uniqueness comes from `do_while_counter` (a
     /// monotonic per-`Lowerer` counter — two sibling do-while statements
-    /// in the same function must not share a flag) *and* a collision
-    /// check against every currently-visible name via `lookup_local`:
-    /// the flag lives in the enclosing scope for the duration of the
-    /// synthetic `Expr::Block` (it is not itself scope-pushed), so it
-    /// must not collide with any real Java local already in scope at
-    /// this point — `__do_while_0` is a legal Java identifier, so a
-    /// program that happens to declare a variable by that exact name is
-    /// a real, reachable case, not a hypothetical one.
+    /// in the same function must not share a flag) *and* [`fresh_flag_
+    /// name`]'s collision check against every name `body` itself declares
+    /// (at any nesting depth): the flag's own reference lives inside the
+    /// loop's *condition*, which several backends (`semantic-ir-to-
+    /// python`, `semantic-ir-to-ruby`) compile with FLAT scoping relative
+    /// to the body — no new scope opens for either — so a body-declared
+    /// local sharing the flag's exact name would re-arm it to `true` on
+    /// every iteration, making the loop **run forever** regardless of the
+    /// real condition. `__do_while_0` is a legal Java identifier, so a
+    /// program that happens to declare a body-local by that exact name is
+    /// a real, reachable case, not a hypothetical one — see `fresh_flag_
+    /// name`'s own doc comment for why a plain, escape-free name plus a
+    /// direct collision check is the fix, not an attempted "unforgeable"
+    /// character.
     fn lower_do_while_statement(
         &mut self,
         node: &GrammarASTNode,
@@ -1693,7 +1885,10 @@ impl Lowerer {
         let body_stmt = self.first_child_named(node, "statement").ok_or_else(|| {
             self.err_at(node, "malformed `do`/`while` (missing body)".to_string())
         })?;
-        let mut body = self.lower_body(body_stmt, depth + 1)?;
+        self.loop_depth += 1;
+        let body = self.lower_body(body_stmt, depth + 1);
+        self.loop_depth -= 1;
+        let body = body?;
         let cond_node = self.first_child_named(node, "expression").ok_or_else(|| {
             self.err_at(
                 node,
@@ -1708,74 +1903,15 @@ impl Lowerer {
             ));
         }
         self.observed.add(Feature::Loops);
-        self.observed.add(Feature::ShortCircuit);
         self.observed.add(Feature::MutableBindings);
 
-        // Desugar `do S while (C);` to a flag-guarded pretest loop, NOT a
-        // literal "run S once, then while (C) S" duplication of S's own
-        // already-lowered IR. An earlier version of this desugaring did
-        // clone the lowered body for the once-executed copy — caught by
-        // `/security-review` as a real resource-exhaustion DoS: cloning
-        // duplicates whatever nested do-while structure S *itself*
-        // already contains, so N levels of nested do-while (valid,
-        // ordinary, brace-less Java source — no adversarial tree needed)
-        // produce O(2^N) emitted IR nodes from O(N) source bytes, the
-        // same amplification-attack shape as XML "billion laughs". The
-        // `MAX_STMT_DEPTH` guard does not catch this: the blowup happens
-        // on each stack frame's *return* (the clone), not from the call-
-        // stack depth itself, which stays correctly bounded throughout.
-        //
-        // This rewrite lowers S exactly once — no cloning — so emitted
-        // IR size is always linear in source size, regardless of
-        // nesting depth:
-        //
-        //   boolean __do_while_N = true;
-        //   while (__do_while_N || C) { S; __do_while_N = false; }
-        //
-        // `__do_while_N`'s uniqueness comes from a per-`Lowerer` counter
-        // (`do_while_counter`), not just its `__`-prefix: two sibling
-        // do-while statements in the same function must not share a
-        // flag. It is never *declared* via `declare_local` (real Java
-        // source can never look this name up), but it still must not
-        // *collide* with a real Java local visible at either of the two
-        // points it's referenced — `__do_while_0` is a legal Java
-        // identifier, so a program that happens to declare a variable by
-        // that exact name is a real, reachable case, checked against
-        // two different scopes for two different reasons (both caught
-        // by `/security-review`, in two separate rounds — an earlier
-        // version checked neither):
-        //  - `lookup_local` — the *ambient* scope active right here,
-        //    before `S` is lowered — covers a same-named local declared
-        //    in an *enclosing* scope (the flag declaration and its
-        //    `flag || C` reference both live in that ambient scope).
-        //  - `body_declares_name` — `S`'s own *top-level* statements
-        //    (already lowered into `body.stmts` above) — covers a
-        //    same-named local `S` declares directly (not nested inside
-        //    a further sub-block of `S`, which would be a distinct,
-        //    already-popped inner scope of its own): the appended
-        //    `__do_while_N = false;` flag-clear lives at exactly that
-        //    top level, so it's the one place body-local collisions can
-        //    actually reach it. `lookup_local` alone can't see this: by
-        //    the time this code runs, `lower_body`'s own scope for `S`
-        //    has already been pushed *and popped* (that's the correct,
-        //    real Java scope boundary — a `do`/`while` body's own locals
-        //    must not leak past it), so a name `S` declares is already
-        //    gone from `self.locals` again. Missing this check would
-        //    leave the flag-clear assignment resolving to `S`'s own
-        //    shadowing local under any backend with real block scoping
-        //    (unlike this crate's own Python execution-proof harness,
-        //    whose flat function-level scoping happens not to manifest
-        //    the bug for the cases tried) — silently leaving the outer
-        //    flag never cleared, so `flag || C` never goes false: an
-        //    infinite loop, the same DoS-by-nontermination class as the
-        //    exponential-blowup finding this desugaring already fixed
-        //    once, reached a different way.
-        let mut flag_name = format!("__do_while_{}", self.do_while_counter);
-        self.do_while_counter += 1;
-        while self.lookup_local(&flag_name).is_some() || body_declares_name(&body, &flag_name) {
-            flag_name = format!("__do_while_{}", self.do_while_counter);
-            self.do_while_counter += 1;
-        }
+        // See `fresh_flag_name`'s own doc comment for why this checks
+        // both ambient scope and every name `body` declares (at any
+        // nesting depth), not an attempt to pick a name no real Java
+        // source could spell.
+        let (flag_name, next_counter) =
+            self.fresh_flag_name("__do_while", self.do_while_counter, &body);
+        self.do_while_counter = next_counter;
 
         let flag_decl = Stmt::LetStarBinding {
             name: flag_name.clone(),
@@ -1791,20 +1927,36 @@ impl Lowerer {
             scope: Scope::Local,
             span: span.clone(),
         };
-        let loop_cond = Expr::LogicalOr {
-            lhs: Box::new(flag_ref),
-            rhs: Box::new(cond),
+        // `flag ? ({ flag = false; true }) : (C)` — on the first
+        // condition check, unconditionally clear the flag and enter the
+        // body (do-while always runs `S` at least once); every
+        // subsequent check (including one reached via `continue`, which
+        // jumps straight here) evaluates the real condition `C`.
+        let loop_cond = Expr::If {
+            cond: Box::new(flag_ref),
+            then_branch: Box::new(Block {
+                stmts: vec![Stmt::Assign {
+                    name: flag_name,
+                    scope: Scope::Local,
+                    value: Expr::BoolLit {
+                        value: false,
+                        span: span.clone(),
+                    },
+                    span: span.clone(),
+                }],
+                value: Expr::BoolLit {
+                    value: true,
+                    span: span.clone(),
+                },
+                span: span.clone(),
+            }),
+            else_branch: Box::new(Block {
+                stmts: vec![],
+                value: cond,
+                span: span.clone(),
+            }),
             span: span.clone(),
         };
-        body.stmts.push(Stmt::Assign {
-            name: flag_name,
-            scope: Scope::Local,
-            value: Expr::BoolLit {
-                value: false,
-                span: span.clone(),
-            },
-            span: span.clone(),
-        });
 
         Ok(Stmt::ExprStmt {
             expr: Expr::Block(Box::new(Block {
@@ -1832,11 +1984,61 @@ impl Lowerer {
     /// `c-to-semantic-ir`'s own precedent for C's identically-general
     /// `for` (chosen over `javascript-to-semantic-ir`'s stricter
     /// canonical-`ForRange`-only-else-reject approach, since Java's
-    /// classic `for` is highly variable in shape):
+    /// classic `for` is highly variable in shape).
     ///
-    ///   { init; while (cond) { S; update; } }
+    /// When there is no update clause (`for (init; cond;) S`, or `for
+    /// (;;)`), the shape is the obvious `{ init; while (cond) { S } }` —
+    /// nothing for a `continue` inside `S` to skip, since SIR's own
+    /// `Stmt::Continue` already jumps straight back to re-evaluating
+    /// `cond`, exactly matching Java's own `continue` target here.
     ///
-    /// wrapped in one synthetic `Expr::Block` — matching `do`/`while`'s
+    /// **When there IS an update clause**, the naive `{ init; while
+    /// (cond) { S; update; } }` shape (this crate's own earlier version)
+    /// is wrong the moment `S` can contain a `continue`: SIR's `Stmt::
+    /// Continue` jumps to re-evaluating `cond`, which would skip the
+    /// appended `update` entirely — an inert bug before this crate had
+    /// any way to lower `continue` at all (task #64 is what first makes
+    /// it live), but a real one now. Java's own `continue` inside a
+    /// classic `for`'s body jumps to `update`, THEN re-checks `cond` — a
+    /// different target than a bare `while`'s `continue` altogether, so
+    /// this needs its own rewrite, not just "append `update`, like
+    /// before":
+    ///
+    ///   init;
+    ///   boolean __for_first_N = true;
+    ///   while (__for_first_N ? ({ __for_first_N = false; cond })
+    ///                         : ({ update; cond })) {
+    ///     S
+    ///   }
+    ///
+    /// mirroring `lower_do_while_statement`'s own analogous flag-guard
+    /// fix (see that function's doc comment for the shared reasoning):
+    /// embedding `update` inside the loop *condition* itself puts it at
+    /// the one position a `continue` can never skip, since that's
+    /// exactly where `continue` re-enters. The flag suppresses `update`
+    /// on the very first check only (Java's `for` never runs `update`
+    /// before the first `cond` test) and is cleared unconditionally the
+    /// first time through — same one-shot-flag idiom `do`/`while`'s own
+    /// fix uses, applied to gate `update` instead of the loop-entry
+    /// pretest. Applied unconditionally whenever an update clause is
+    /// present, not only when `S` is known to contain a `continue` —
+    /// mirrors `do`/`while`'s own flag guard, which is likewise applied
+    /// to every `do`/`while` regardless of whether it happens to need
+    /// it, rather than adding a "does this body contain a `continue`
+    /// targeting *this* loop" scanner whose own correctness would be a
+    /// new thing to get right.
+    ///
+    /// A useful side effect of moving `update` out of `S`'s own lowered
+    /// `Block.stmts` and into this separate wrapped-condition `Expr::
+    /// Block`: `update`'s target name can no longer collide with a local
+    /// `S` declares directly (real Java's own `for`-header scope was
+    /// never inside `S`'s scope to begin with — this rewrite is actually
+    /// *more* faithful to Java's real scoping than the old "append to
+    /// body" shape was), so the update-target/body-local collision check
+    /// the no-update-clause-needed-none codepath still had to run is no
+    /// longer needed at all.
+    ///
+    /// Wrapped in one synthetic `Expr::Block` — matching `do`/`while`'s
     /// own established wrapping pattern — so `init`'s own scope (the loop
     /// variable, if it's a declaration) spans the whole construct but
     /// ends exactly where Java's own `for` scope does, not the
@@ -1896,56 +2098,91 @@ impl Lowerer {
         let body_stmt = self
             .first_child_named(node, "statement")
             .ok_or_else(|| self.err_at(node, "malformed `for` (missing body)".to_string()))?;
-        let mut body = self.lower_body(body_stmt, depth + 1)?;
-        if let Some(u) = update_stmt {
-            // `update` is spliced onto the *end* of `body.stmts`, sharing
-            // one flat scope with whatever `body` itself already declared
-            // at its own top level — by the time we're here, `lower_body`
-            // has already pushed and popped `body`'s own scope (the
-            // correct real Java scope boundary), so `self.lookup_local`
-            // can no longer see anything `body` declared. If `body`
-            // redeclares the exact name `update` assigns to (e.g. `for
-            // (int i = 0; i < 3; i++) { int i = 999; ... }`), that
-            // redeclaration would shadow the real loop control variable
-            // for the appended update under any backend with real block
-            // scoping — the update would silently mutate the *body's own*
-            // local instead, leaving the real loop variable permanently
-            // unincremented (an infinite loop) — caught by
-            // `/security-review`, the same "collision checked before the
-            // colliding scope existed" bug class `lower_do_while_statement`
-            // already needed two rounds of fixes for. Real Java rejects
-            // this exact source outright (`variable i is already
-            // defined`), so rejecting it here loses no real program's
-            // ability to compile; `Stmt::Assign` is the only shape
-            // `update_stmt` collision-checking needs to cover, since
-            // that's the only shape `lower_for_update`
-            // (`lower_expr_statement`) ever produces for an assignment/
-            // compound-assignment/increment-decrement update clause — an
-            // update clause that's just a bare value expression
-            // (`Stmt::ExprStmt`, e.g. a pointless `for (...; ...; 5)`)
-            // assigns to no name at all, so there is nothing to collide.
-            if let Stmt::Assign { name, .. } = &u {
-                if body_declares_name(&body, name) {
-                    return Err(self.err_at(
-                        node,
-                        format!(
-                            "the `for` loop's own update clause target `{name}` is shadowed by a variable the loop body declares directly — rename one of them"
-                        ),
-                    ));
-                }
-            }
-            body.stmts.push(u);
-        }
+        self.loop_depth += 1;
+        let body = self.lower_body(body_stmt, depth + 1);
+        self.loop_depth -= 1;
+        let body = body?;
         self.observed.add(Feature::Loops);
 
+        // No update clause: SIR's own `Stmt::Continue` already jumps
+        // straight to re-evaluating `cond`, exactly matching Java's own
+        // `continue` target here — nothing further needed, no flag.
+        //
+        // An update clause: wrap it into the condition itself, gated by
+        // a one-shot "have we run the first check yet" flag — see this
+        // function's own doc comment (on `lower_for_statement`) for why
+        // appending `update` to `body.stmts` (this crate's earlier
+        // approach) is wrong the moment `body` can contain a `continue`,
+        // and why embedding it in the condition fixes that the same way
+        // `lower_do_while_statement`'s own analogous fix does.
+        let (flag_decl, while_cond) = match update_stmt {
+            None => (None, cond),
+            Some(update) => {
+                // See `fresh_flag_name`'s own doc comment (and `lower_do_
+                // while_statement`'s identically-reasoned flag-name
+                // comment) for why this is a direct collision check
+                // against every name `body` declares, not an attempt to
+                // pick a name no real Java source could spell: the flag
+                // reference lives inside the loop's own *condition*,
+                // which several backends compile with flat scoping
+                // relative to the body (no new scope opened for either),
+                // so an unchecked body-declared local sharing the flag's
+                // name would re-arm it every iteration and skip `update`
+                // forever — an infinite loop.
+                let (flag_name, next_counter) =
+                    self.fresh_flag_name("__for_first", self.for_counter, &body);
+                self.for_counter = next_counter;
+                let flag_decl = Stmt::LetStarBinding {
+                    name: flag_name.clone(),
+                    sir_type: None,
+                    value: Expr::BoolLit {
+                        value: true,
+                        span: span.clone(),
+                    },
+                    span: span.clone(),
+                };
+                let flag_ref = Expr::VarRef {
+                    name: flag_name.clone(),
+                    scope: Scope::Local,
+                    span: span.clone(),
+                };
+                let wrapped_cond = Expr::If {
+                    cond: Box::new(flag_ref),
+                    then_branch: Box::new(Block {
+                        stmts: vec![Stmt::Assign {
+                            name: flag_name,
+                            scope: Scope::Local,
+                            value: Expr::BoolLit {
+                                value: false,
+                                span: span.clone(),
+                            },
+                            span: span.clone(),
+                        }],
+                        value: cond.clone(),
+                        span: span.clone(),
+                    }),
+                    else_branch: Box::new(Block {
+                        stmts: vec![update],
+                        value: cond,
+                        span: span.clone(),
+                    }),
+                    span: span.clone(),
+                };
+                (Some(flag_decl), wrapped_cond)
+            }
+        };
+
         let while_stmt = Stmt::While {
-            cond,
+            cond: while_cond,
             body,
             span: span.clone(),
         };
         let mut outer_stmts = Vec::new();
         if let Some(i) = init_stmt {
             outer_stmts.push(i);
+        }
+        if let Some(f) = flag_decl {
+            outer_stmts.push(f);
         }
         outer_stmts.push(while_stmt);
         Ok(Stmt::ExprStmt {
@@ -2077,6 +2314,7 @@ impl Lowerer {
                 )
             })?;
         let var_name = var_name_tok.value.clone();
+        self.reject_dollar_sign_identifier(&var_name, node)?;
         let iter_node = self.first_child_named(node, "expression").ok_or_else(|| {
             self.err_at(
                 node,
@@ -2090,7 +2328,9 @@ impl Lowerer {
 
         self.push_scope();
         self.declare_local(var_name.clone(), var_kind);
+        self.loop_depth += 1;
         let body = self.lower_body(body_stmt, depth + 1);
+        self.loop_depth -= 1;
         self.pop_scope();
         let body = body?;
 
@@ -2200,6 +2440,7 @@ impl Lowerer {
                 )
             })?;
         let name = name_tok.value.clone();
+        self.reject_dollar_sign_identifier(&name, declarator)?;
 
         let initializer = self.first_child_named(declarator, "variable_initializer").ok_or_else(|| {
             self.err_at(
@@ -4054,7 +4295,19 @@ impl Lowerer {
             });
         }
 
+        // A lambda body is its own statement-flow boundary: real Java
+        // forbids a `break`/`continue` inside a lambda from targeting a
+        // loop the lambda literal merely happens to be lexically nested
+        // in (e.g. `list.forEach(x -> { break; })` inside an enclosing
+        // `while` is a `javac` compile error, not a jump to that outer
+        // loop). Save/restore `loop_depth` to `0` around the body
+        // lowering so `lower_break_statement`/`lower_continue_statement`
+        // correctly reject a bare `break`/`continue` written directly in
+        // this lambda's own body, regardless of how deeply the lambda
+        // *literal* itself is nested inside real Java loops.
+        let saved_loop_depth = std::mem::take(&mut self.loop_depth);
         let body_result = self.lower_lambda_body(body_node, depth + 1);
+        self.loop_depth = saved_loop_depth;
         self.pop_scope();
         let closure_frame = self.closure_stack.pop().expect("just pushed above");
         let (body, body_kind) = body_result?;
@@ -4271,6 +4524,7 @@ impl Lowerer {
             })?;
         match self.first_child_named(lp, "type") {
             Some(ty) if single_segment_class_type_name(ty) != Some("var") => {
+                self.reject_dollar_sign_identifier(&name_tok.value, lp)?;
                 Ok((name_tok.value.clone(), self.kind_of_type_node(ty)?))
             }
             _ => Err(self.err_at(
@@ -4364,6 +4618,69 @@ impl Lowerer {
             column: node.start_column.unwrap_or(1),
         }
     }
+
+    /// Reject a declared local/parameter/loop-variable name containing
+    /// `$` — legal in a real Java identifier (JLS §3.8's `NAME` grammar,
+    /// which this crate's own lexer accepts: `[a-zA-Z_$][a-zA-Z0-9_$]*`)
+    /// but rejected here, at every point this crate turns a Java `NAME`
+    /// token into a declared SIR local's name (see this method's four
+    /// call sites: `formal_parameter_kind_name_pairs`, `lambda_parameter_
+    /// kind_name`, `lower_enhanced_for_statement`, and the local-variable-
+    /// declarator path in `lower_var_declaration_node`'s callee).
+    ///
+    /// # Why this exists — round 3 of `/security-review`
+    ///
+    /// `fresh_flag_name` (see its own doc comment) picks a loop-control
+    /// guard-flag name and checks it directly against every real Java
+    /// local's *raw source spelling*, on the stated assumption that two
+    /// different raw Java identifiers can never collide once a backend
+    /// emits them — true only if every backend's `sanitize_ident` is the
+    /// identity function on both names being compared. That holds for
+    /// plain `[A-Za-z0-9_]` names (what `fresh_flag_name` itself always
+    /// produces), but a *third* `/security-review` round proved it false
+    /// for a raw Java name containing `$`: `semantic-ir-to-python::
+    /// sanitize_ident` escapes `$` (not part of Python's own identifier
+    /// alphabet) to `_24` (its hex code point), so a Java local named
+    /// e.g. `_do_while$` sanitizes to `_do_while_24` — a string with no
+    /// resemblance to the raw name `fresh_flag_name`'s collision checks
+    /// actually compared against, but one that can coincide *exactly*
+    /// with a `__do_while_N` candidate for some `N`, reintroducing the
+    /// identical flat-scoping collision the last three rounds fixed —
+    /// confirmed by actually executing the emitted Python and observing
+    /// a hang.
+    ///
+    /// Rather than teach this backend-agnostic frontend every backend's
+    /// own escaping scheme (which would need updating every time a new
+    /// backend or a new escaping rule is added), this closes the gap at
+    /// the source: no Java identifier containing `$` can be declared as
+    /// a SIR local at all, which restores the invariant `fresh_flag_
+    /// name`'s own design actually needs — every declarable name lives
+    /// in `[A-Za-z0-9_]`, the one alphabet every backend's `sanitize_
+    /// ident` treats as its own identity — by construction rather than
+    /// by continuing to chase individual backends' escaping quirks.
+    /// `$`-containing identifiers are vanishingly rare in hand-written
+    /// Java (real-world use is almost exclusively compiler-generated
+    /// synthetic names, e.g. inner-class-accessor methods), so this is a
+    /// narrow, disclosed scope boundary in the same spirit as this
+    /// crate's many other "not supported yet" rejections — not a
+    /// meaningful loss of real-world Java coverage.
+    fn reject_dollar_sign_identifier(
+        &self,
+        name: &str,
+        node: &GrammarASTNode,
+    ) -> Result<(), JavaLowerError> {
+        if name.contains('$') {
+            return Err(self.err_at(
+                node,
+                format!(
+                    "identifier `{name}` contains `$`, which is not supported yet (deferred — \
+                     see `reject_dollar_sign_identifier`'s own doc comment for why this is a \
+                     security-motivated restriction, not an oversight)"
+                ),
+            ));
+        }
+        Ok(())
+    }
 }
 
 /// Two kinds are compatible operands for `==`/`!=` if they're both
@@ -4374,19 +4691,6 @@ fn kinds_compatible_for_compare(a: Kind, b: Kind) -> bool {
         (a, b),
         (Kind::Bool, Kind::Bool) | (Kind::Int | Kind::Float, Kind::Int | Kind::Float)
     )
-}
-
-/// Does `block`'s own *top-level* statement list declare a local named
-/// `name`? Deliberately shallow — does not recurse into a nested
-/// sub-block's own statements, since those live in a distinct,
-/// already-scope-popped-by-the-time-this-runs frame of their own (see
-/// `lower_do_while_statement`'s own doc comment for why only the
-/// top level matters for its particular collision check).
-fn body_declares_name(block: &Block, name: &str) -> bool {
-    block.stmts.iter().any(|s| match s {
-        Stmt::LetBinding { name: n, .. } | Stmt::LetStarBinding { name: n, .. } => n == name,
-        _ => false,
-    })
 }
 
 /// The [`Kind`] of an `Expr` freshly produced by `lower_literal` — only
@@ -4472,6 +4776,53 @@ fn is_index_only_suffix(c: &ASTNodeOrToken) -> bool {
             if s.rule_name == "primary_suffix"
                 && matches!(s.children.first(), Some(ASTNodeOrToken::Token(t)) if t.value == "[")
     )
+}
+
+/// `break_statement`/`continue_statement`'s own optional trailing `NAME`
+/// — the Java label a labeled `break foo;`/`continue foo;` targets, if
+/// present. `None` for the bare (unlabeled) form. Used by
+/// `lower_break_statement`/`lower_continue_statement` to reject the
+/// labeled form cleanly (SIR has no loop-label vocabulary).
+fn label_token(node: &GrammarASTNode) -> Option<&str> {
+    node.children.iter().find_map(|c| match c {
+        ASTNodeOrToken::Token(t) if t.type_ == lexer::token::TokenType::Name => {
+            Some(t.value.as_str())
+        }
+        _ => None,
+    })
+}
+
+/// Collects every name a lowered loop body declares as a local — via
+/// `Stmt::LetBinding`/`LetStarBinding` directly, or a `ForRange`/`ForEach`
+/// loop variable — at any nesting depth (inside a nested `if`, `while`,
+/// `for`, etc.). Used by [`fresh_flag_name`] to guarantee a synthetic
+/// guard-flag name can never collide with a real Java local.
+///
+/// Rides `semantic_ir::Visitor`'s shared, already-depth-guarded traversal
+/// (`walker.rs`) rather than a bespoke recursive walk over `Stmt`/`Expr`:
+/// this crate's own `Expr::If`/`Expr::Block` (how a bare Java `if`
+/// statement and a nested block both lower — see `lower_statement`'s
+/// `if`/`else` handling) already nest further declarations the walker
+/// must see, and any future SIR node this crate starts emitting inside a
+/// loop body is covered automatically, without a second traversal to keep
+/// in sync with `nodes.rs`.
+struct DeclaredNameCollector {
+    names: HashSet<String>,
+}
+
+impl Visitor for DeclaredNameCollector {
+    fn visit_stmt(&mut self, s: &Stmt, depth: usize) {
+        match s {
+            Stmt::LetBinding { name, .. } | Stmt::LetStarBinding { name, .. } => {
+                self.names.insert(name.clone());
+            }
+            Stmt::ForRange { var, .. } | Stmt::ForEach { var, .. } => {
+                self.names.insert(var.clone());
+            }
+            _ => {}
+        }
+        walk_stmt_default(self, s, depth);
+    }
 }
 
 fn child_nodes(node: &GrammarASTNode) -> Vec<&GrammarASTNode> {

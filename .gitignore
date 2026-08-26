@@ -81,6 +81,12 @@ build_output.txt
 /build-tool.exe
 /.tmp/
 
+# Human-languages Markdown aggregates are local rendered views. Their `.d/`
+# directories are the committed source of truth; tracking these two files
+# recreates the merge hot spots that sharding exists to remove.
+/code/learning/human-languages/BACKLOG.md
+/code/packages/typescript/human-language-data/CHANGELOG.md
+
 # IDE
 .vscode/
 .idea/
