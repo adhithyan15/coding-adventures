@@ -755,7 +755,7 @@ class UnicodeDownloadBoundaryTests(unittest.TestCase):
             )
             self.assertEqual(invocation["env"]["SDKROOT"], str(reviewed_sdk))
         else:
-            self.assertNotIn("PATH", invocation["env"])
+            self.assertEqual(invocation["env"]["PATH"], "/usr/bin:/bin")
             self.assertNotIn("SDKROOT", invocation["env"])
 
     def test_swift_self_check_requires_exact_scalar_sequences(self) -> None:
@@ -789,6 +789,20 @@ class UnicodeDownloadBoundaryTests(unittest.TestCase):
 
         self.assertEqual(validated, entrypoint.absolute())
         self.assertEqual(validated.name, "swift")
+
+    def test_swift_posix_environment_exposes_only_system_linker_paths(self) -> None:
+        with tempfile.TemporaryDirectory() as temporary:
+            temporary_path = Path(temporary)
+            swiftc = Path("C:/reviewed-swift/usr/bin/swiftc")
+            with mock.patch.object(generator.os, "name", "posix"):
+                environment = generator._swift_self_check_environment(
+                    swiftc,
+                    temporary_path,
+                )
+
+        self.assertEqual(environment["PATH"], "/usr/bin:/bin")
+        self.assertNotIn("HOME", environment)
+        self.assertNotIn("SDKROOT", environment)
 
     def test_bounded_process_discards_output_past_the_limit(self) -> None:
         with tempfile.TemporaryDirectory() as temporary:

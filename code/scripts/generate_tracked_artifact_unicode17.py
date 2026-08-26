@@ -3726,7 +3726,7 @@ def _swift_driver_entrypoint(executable: Path, label: str) -> Path:
 
 
 def _swift_self_check_environment(swiftc: Path, temporary_path: Path) -> dict[str, str]:
-    """Provide only pinned toolchain and contained temporary state to Swift."""
+    """Provide only reviewed tool paths and contained temporary state to Swift."""
     environment = {
         name: value
         for name in ("SystemRoot", "WINDIR")
@@ -3742,6 +3742,10 @@ def _swift_self_check_environment(swiftc: Path, temporary_path: Path) -> dict[st
             (str(swiftc.parent), str(_swift_windows_runtime_directory(swiftc)))
         )
         environment["SDKROOT"] = str(_swift_windows_sdk_directory(swiftc))
+    else:
+        # swiftc dispatches the platform linker through PATH. Admit only the
+        # root-owned system tool directories, never the caller's search path.
+        environment["PATH"] = "/usr/bin:/bin"
     return environment
 
 
