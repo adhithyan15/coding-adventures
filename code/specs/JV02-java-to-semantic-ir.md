@@ -28,37 +28,45 @@ IndirectCall` isn't wired up yet), M4a (single-dimensional array
 types with a bare `{ ... }` literal initializer → `Expr::SeqLit`,
 indexing reads → `Expr::SeqIndex`, `.length` → `Expr::SeqLen` — SIR16's
 `Sequences` primitives, not SIR22's `NDArrays`/matrix family; see this
-section's own M4a entry for why), and M4b (plain indexed assignment,
+section's own M4a entry for why), M4b (plain indexed assignment,
 `xs[i] = v;` → `Stmt::SeqSet`, distinguished from a bare-name assignment
 target by a new check run ahead of the existing bare-name-only
 resolution — compound-assignment/increment-decrement on an indexed
-target remains deferred; see this section's own M4b entry for why) are
-merged — see `code/packages/rust/java-to-semantic-ir`'s own
-`CHANGELOG.md` for the exact per-milestone construct list and the real
-correctness bugs each milestone's own test suite caught before shipping.
-M2's own scope split into two PRs (M2a; M2b) once implementation
-revealed how much scope-stack infrastructure `if`/`while`/`do`-`while`
-alone already needed; M3 similarly split into M3a and M3b (this section)
-once research showed M3's combined scope — multi-function tables, typed
-params, tail-position return, *and* lambda capture analysis — was
-comparably large to M2's own combined scope; M4 was likewise narrowed
-into M4a (merged) and M4b (this section, merged) once design research
-(grammar probing + a direct read of `semantic-ir`'s own node/validator/
-backend source) showed the original undifferentiated M4 scope — arrays,
-`new`-based array creation, indexed assignment, multi-dimensional
-arrays, `String` methods, and `List`/`Map` literals, all at once — was
-comparably large to M2's and M3's own combined scopes; M4b was narrowed
-*again* during its own implementation (indexed assignment alone turning
-out comparably sized to M4a) into this section's own M4b (plain indexed
-assignment only, merged) plus M4c (`new`-based array creation and
-compound-assignment/increment-decrement on an indexed target, pending)
-and M4d (multi-dimensional arrays, pending) — see those entries below.
-`switch` was also discovered, during M2a, to have no corresponding SIR
-IR node at all (confirmed by a repo-wide grep, not assumed) — it needs
-its own spec-level design decision (Java's fall-through semantics in
-particular) before any frontend can target it, tracked as a separate
-backlog item rather than folded into "M2"/"M3" implicitly; `break`/
-`continue` have the identical gap. M4c onward are pending.
+target remains deferred; see this section's own M4b entry for why), and
+M4c (`new`-based array-creation expressions — `new int[]{1,2,3}`
+delegating to M4a's own array-literal lowering, and `new int[N]`
+zero-filled sized creation only for a compile-time-constant,
+non-negative, capped-size numeric/boolean `N`; see this section's own
+M4c entry for why) are merged — see `code/packages/rust/
+java-to-semantic-ir`'s own `CHANGELOG.md` for the exact per-milestone
+construct list and the real correctness bugs each milestone's own test
+suite caught before shipping. M2's own scope split into two PRs (M2a;
+M2b) once implementation revealed how much scope-stack infrastructure
+`if`/`while`/`do`-`while` alone already needed; M3 similarly split into
+M3a and M3b (this section) once research showed M3's combined scope —
+multi-function tables, typed params, tail-position return, *and* lambda
+capture analysis — was comparably large to M2's own combined scope; M4
+was likewise narrowed into M4a (merged) and M4b (merged) once design
+research (grammar probing + a direct read of `semantic-ir`'s own node/
+validator/backend source) showed the original undifferentiated M4 scope
+— arrays, `new`-based array creation, indexed assignment, multi-
+dimensional arrays, `String` methods, and `List`/`Map` literals, all at
+once — was comparably large to M2's and M3's own combined scopes; M4b
+was narrowed *again* during its own implementation (indexed assignment
+alone turning out comparably sized to M4a) into M4b (plain indexed
+assignment only, merged) plus M4c (this section, `new`-based array
+creation, merged — its own original bundling with compound-assignment/
+increment-decrement on an indexed target was narrowed *yet again* once
+implementation revealed those were two structurally unrelated pieces of
+work; that piece is now its own standalone follow-up task, not a
+lettered sub-milestone) and M4d (multi-dimensional arrays, pending) —
+see those entries below. `switch` was also discovered, during M2a, to
+have no corresponding SIR IR node at all (confirmed by a repo-wide grep,
+not assumed) — it needs its own spec-level design decision (Java's
+fall-through semantics in particular) before any frontend can target it,
+tracked as a separate backlog item rather than folded into "M2"/"M3"
+implicitly; `break`/`continue` have the identical gap. M4d onward are
+pending.
 
 ## Motivation
 
@@ -292,21 +300,42 @@ as the index) — the same class of correctness bug this frontend's own
 for-update desugarings (see `code/packages/rust/java-to-semantic-ir`'s
 own `CHANGELOG.md`, `[0.3.0]`/`[0.4.0]`).
 
-**M4c — `new`-based array creation; compound-assignment/increment-
-decrement on an indexed target.** Deferred from M4b during its own scope
-narrowing (see that entry above). `new int[5]` (sized, uninitialized —
-needs a per-element-kind fill-value convention) and `new int[]{1,2,3}`
-(explicit array-creation-type + initializer, semantically identical to
-the bare `{1,2,3}` form M4a already supports, just `new`-prefixed) are
-new primary-expression forms — confirmed via empirical probing, not
-assumed, that both currently fall through cleanly to this frontend's
-existing "unsupported primary expression" rejection. Revisit here
-whether compound-assignment/increment-decrement on an indexed target
-belongs in this same slice or needs its own — it needs either a
-temp-variable-hoisting design (to evaluate the index expression exactly
-once) or a determination that this frontend's currently-reachable index
-expressions are narrow enough in practice to skip that safely; either
-way it's a real design question, not a mechanical extension of M4b.
+**M4c — `new`-based array-creation expressions.** Deferred from M4b
+during its own scope narrowing (see that entry above); narrowed *again*
+during its own implementation once compound-assignment/increment-
+decrement on an indexed target turned out to be a structurally unrelated
+piece of work (split off into its own standalone follow-up task rather
+than a lettered sub-milestone — see below). `new int[]{1,2,3}` (explicit
+array-creation-type + initializer, semantically identical to the bare
+`{1,2,3}` form M4a already supports, just `new`-prefixed) delegates
+directly to M4a's own `lower_array_initializer`. `new int[5]` (sized,
+uninitialized) lowers to a zero-filled `Expr::SeqLit`, but only when the
+size is a compile-time-constant, non-negative integer literal under a
+`MAX_SIZED_ARRAY_LEN` element-count cap (a CWE-400/770-style resource-
+exhaustion guard) and the element kind is numeric or boolean — SIR16 has
+no repeat/fill primitive (confirmed by an exhaustive grep of every
+`Seq*` node), so a non-constant size genuinely cannot be represented
+without a new SIR primitive that doesn't exist yet, and a reference-
+typed sized array would need real Java's own `null`-fill semantics,
+which this frontend's exact element-kind-match invariant doesn't
+cleanly represent yet — both rejected rather than attempted. Both new
+`primary`-expression shapes were confirmed via empirical CST probing,
+not assumed from the grammar text alone.
+
+**Also tracked as its own follow-up task (not a lettered sub-
+milestone), split off from M4c during its own scope narrowing**:
+compound-assignment/increment-decrement on an indexed target (`xs[i] +=
+v;`, `xs[i]++;`) — it needs either a temp-variable-hoisting design (to
+evaluate the index expression exactly once) or a determination that this
+frontend's currently-reachable index expressions are narrow enough in
+practice to skip that safely; naively lowering either without one of
+those would evaluate the index expression twice (once to read, once to
+write), silently double-evaluating any side effect a non-constant index
+expression carries (e.g. a method call used as the index) — the same
+class of correctness bug this frontend's own `/security-review` history
+has caught before in the do-while and for-update desugarings (see
+`code/packages/rust/java-to-semantic-ir`'s own `CHANGELOG.md`,
+`[0.3.0]`/`[0.4.0]`).
 
 **M4d — multi-dimensional arrays.** Deferred from M4b during its own
 scope narrowing (see that entry above). `int[][] grid` and deeper

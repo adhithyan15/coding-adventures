@@ -2357,15 +2357,6 @@ fn feature_sequences_is_declared_when_an_array_is_lowered() {
 }
 
 #[test]
-fn new_array_creation_expression_is_deferred() {
-    // `new int[5]` / `new int[]{1,2,3}` -- deferred to task #56 (M4b);
-    // only the bare `{1,2,3}` literal-as-declarator-initializer form is
-    // supported this milestone.
-    let err = compile_source(&wrap("int[] xs = new int[5];"), "prog").unwrap_err();
-    assert!(!err.message.is_empty());
-}
-
-#[test]
 fn c_style_array_declarator_still_rejected() {
     // `int xs[] = {1, 2, 3};` -- the C-style declarator-suffix form
     // remains out of scope regardless of M4a (only the `int[] xs`
@@ -2471,12 +2462,176 @@ fn increment_of_an_indexed_target_is_still_deferred() {
     assert!(!err.message.is_empty());
 }
 
+// ── M4c: new-based array-creation expressions ───────────────────────────
+
 #[test]
-fn new_array_creation_expression_remains_deferred() {
-    // `new int[5]` / `new int[]{1,2,3}` remain deferred to a follow-up
-    // milestone (M4c) -- only the bare `{1,2,3}` literal-as-declarator-
-    // initializer form is supported.
-    let err = compile_source(&wrap("int[] xs = new int[5];"), "prog").unwrap_err();
+fn new_sized_int_array_lowers_to_zero_filled_seqlit() {
+    let m = compile_ok(&wrap("int[] xs = new int[3];"));
+    match &main_fn(&m).body.stmts[0] {
+        Stmt::LetStarBinding {
+            value: Expr::SeqLit { items, .. },
+            ..
+        } => {
+            assert_eq!(items.len(), 3);
+            for item in items {
+                assert!(matches!(item, Expr::IntLit { value: 0, .. }));
+            }
+        }
+        other => panic!("expected a SeqLit-valued LetStarBinding, got {other:?}"),
+    }
+}
+
+#[test]
+fn new_sized_float_array_fills_with_zero_point_zero() {
+    let m = compile_ok(&wrap("double[] xs = new double[2];"));
+    match &main_fn(&m).body.stmts[0] {
+        Stmt::LetStarBinding {
+            value: Expr::SeqLit { items, .. },
+            ..
+        } => {
+            assert_eq!(items.len(), 2);
+            for item in items {
+                assert!(matches!(item, Expr::FloatLit { value, .. } if *value == 0.0));
+            }
+        }
+        other => panic!("expected a SeqLit-valued LetStarBinding, got {other:?}"),
+    }
+}
+
+#[test]
+fn new_sized_boolean_array_fills_with_false() {
+    let m = compile_ok(&wrap("boolean[] flags = new boolean[2];"));
+    match &main_fn(&m).body.stmts[0] {
+        Stmt::LetStarBinding {
+            value: Expr::SeqLit { items, .. },
+            ..
+        } => {
+            assert_eq!(items.len(), 2);
+            for item in items {
+                assert!(matches!(item, Expr::BoolLit { value: false, .. }));
+            }
+        }
+        other => panic!("expected a SeqLit-valued LetStarBinding, got {other:?}"),
+    }
+}
+
+#[test]
+fn new_sized_array_of_zero_length_lowers_to_an_empty_seqlit() {
+    let m = compile_ok(&wrap("int[] xs = new int[0];"));
+    match &main_fn(&m).body.stmts[0] {
+        Stmt::LetStarBinding {
+            value: Expr::SeqLit { items, .. },
+            ..
+        } => assert!(items.is_empty()),
+        other => panic!("expected a SeqLit-valued LetStarBinding, got {other:?}"),
+    }
+}
+
+#[test]
+fn new_sized_array_used_alongside_a_real_index_write_loop() {
+    // The realistic pattern M4b (indexed assignment) and M4c (sized
+    // creation) together exist to enable: allocate, then fill by index.
+    let m = compile_ok(&wrap(
+        "int[] xs = new int[3]; for (int i = 0; i < 3; i++) { xs[i] = i; }",
+    ));
+    assert_eq!(main_fn(&m).body.stmts.len(), 2);
+}
+
+#[test]
+fn new_sized_array_with_negative_size_is_an_error() {
+    let err = compile_source(&wrap("int[] xs = new int[-1];"), "prog").unwrap_err();
+    assert!(!err.message.is_empty());
+}
+
+#[test]
+fn new_sized_array_exceeding_the_size_cap_is_an_error() {
+    let err = compile_source(&wrap("int[] xs = new int[100000];"), "prog").unwrap_err();
+    assert!(!err.message.is_empty());
+}
+
+#[test]
+fn new_sized_array_with_a_non_constant_size_is_deferred() {
+    let err = compile_source(&wrap("int n = 3; int[] xs = new int[n];"), "prog").unwrap_err();
+    assert!(!err.message.is_empty());
+}
+
+#[test]
+fn new_sized_array_of_strings_is_deferred() {
+    let err = compile_source(&wrap("String[] xs = new String[3];"), "prog").unwrap_err();
+    assert!(!err.message.is_empty());
+}
+
+#[test]
+fn new_sized_multi_dimensional_array_is_deferred() {
+    let err = compile_source(&wrap("int[][] grid = new int[2][3];"), "prog").unwrap_err();
+    assert!(!err.message.is_empty());
+}
+
+#[test]
+fn new_array_with_initializer_lowers_to_seqlit() {
+    let m = compile_ok(&wrap("int[] xs = new int[]{1, 2, 3};"));
+    match &main_fn(&m).body.stmts[0] {
+        Stmt::LetStarBinding {
+            value: Expr::SeqLit { items, .. },
+            ..
+        } => assert_eq!(items.len(), 3),
+        other => panic!("expected a SeqLit-valued LetStarBinding, got {other:?}"),
+    }
+}
+
+#[test]
+fn new_array_with_initializer_of_strings_lowers_correctly() {
+    let m = compile_ok(&wrap("String[] xs = new String[]{\"a\", \"b\"};"));
+    match &main_fn(&m).body.stmts[0] {
+        Stmt::LetStarBinding {
+            value: Expr::SeqLit { items, .. },
+            ..
+        } => assert_eq!(items.len(), 2),
+        other => panic!("expected a SeqLit-valued LetStarBinding, got {other:?}"),
+    }
+}
+
+#[test]
+fn new_array_with_initializer_element_kind_mismatch_is_an_error() {
+    let err = compile_source(&wrap("int[] xs = new int[]{1, true, 3};"), "prog").unwrap_err();
+    assert!(!err.message.is_empty());
+}
+
+#[test]
+fn new_array_with_empty_initializer_lowers_to_empty_seqlit() {
+    let m = compile_ok(&wrap("int[] xs = new int[]{};"));
+    match &main_fn(&m).body.stmts[0] {
+        Stmt::LetStarBinding {
+            value: Expr::SeqLit { items, .. },
+            ..
+        } => assert!(items.is_empty()),
+        other => panic!("expected a SeqLit-valued LetStarBinding, got {other:?}"),
+    }
+}
+
+#[test]
+fn new_multi_dimensional_array_with_initializer_is_deferred() {
+    let err = compile_source(&wrap("int[][] grid = new int[][]{{1, 2}};"), "prog").unwrap_err();
+    assert!(!err.message.is_empty());
+}
+
+#[test]
+fn feature_sequences_is_declared_when_a_sized_array_is_created() {
+    let m = compile_ok(&wrap("int[] xs = new int[2];"));
+    assert!(m.manifest.contains(Feature::Sequences));
+}
+
+#[test]
+fn new_object_construction_remains_unsupported() {
+    // `new ClassName(...)` -- a different `primary` alternative entirely
+    // (its second child is `class_type`, not `array_creation_type`), and
+    // must remain rejected exactly as before M4c's own new match arms
+    // were added.
+    let err = compile_source(
+        &class_src("public static void main(String[] args) { Object o = new Object(); }"),
+        "prog",
+    )
+    .unwrap_err();
     assert!(!err.message.is_empty());
 }
 

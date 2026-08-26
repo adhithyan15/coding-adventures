@@ -1,8 +1,8 @@
 [package]
 name = "java-to-semantic-ir"
-version = "0.8.0"
+version = "0.9.0"
 edition = "2021"
-description = "Java (GrammarASTNode CST) → narrow-waist Semantic IR. JV02 frontend, milestone M4b: indexed array assignment."
+description = "Java (GrammarASTNode CST) → narrow-waist Semantic IR. JV02 frontend, milestone M4c: new-based array-creation expressions."
 
 [dependencies]
 coding-adventures-java-lexer = { path = "../java-lexer" }
