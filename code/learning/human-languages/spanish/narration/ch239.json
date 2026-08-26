@@ -4,7 +4,7 @@
   "chapter": 239,
   "title": "Veo a María --- The Little A That Guards People",
   "drivablePrefix": 0,
-  "sourceHash": "fnv1a64:ba5f45225c5a8a77",
+  "sourceHash": "fnv1a64:b3ee646703217cc5",
   "lessons": [
     {
       "id": "ES-C62-veo-a-maria",
@@ -19,7 +19,7 @@
       "modalityReasons": [
         "sight-cue"
       ],
-      "sourceHash": "fnv1a64:487c05dc3907b900",
+      "sourceHash": "fnv1a64:073af979dcb16884",
       "notice": {
         "modality": "sight",
         "needs": [

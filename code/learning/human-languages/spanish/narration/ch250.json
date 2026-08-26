@@ -4,7 +4,7 @@
   "chapter": 250,
   "title": "Review --- Four Small Things",
   "drivablePrefix": 1,
-  "sourceHash": "fnv1a64:b042a039aa1c399b",
+  "sourceHash": "fnv1a64:f1add5c1b59edeb8",
   "lessons": [
     {
       "id": "ES-C64-repaso-tonicos",
@@ -19,7 +19,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:08d1637be328b071",
+      "sourceHash": "fnv1a64:fbabc0de79c6979a",
       "notice": null,
       "blocks": [
         {

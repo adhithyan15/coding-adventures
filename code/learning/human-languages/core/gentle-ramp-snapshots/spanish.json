@@ -17,13 +17,13 @@
   "forwardReviews": 0,
   "forwardReferences": 343,
   "atomsTaught": 1265,
-  "atomsNeverRevisited": 119,
-  "reinforcementWindowMisses": 3462,
+  "atomsNeverRevisited": 112,
+  "reinforcementWindowMisses": 3445,
   "reinforcementMissesByWindow": {
-    "R1": 222,
-    "R2": 1088,
-    "R3": 1113,
-    "R4": 1039
+    "R1": 211,
+    "R2": 1084,
+    "R3": 1112,
+    "R4": 1038
   },
   "payoffSurprises": 26,
   "writingPracticeLessons": 14,
@@ -47,7 +47,7 @@
     {
       "language": "spanish",
       "kind": "reinforcement",
-      "count": 3462,
+      "count": 3445,
       "unit": "missed window(s)",
       "detail": "add retrieval at the expanding R1-R4 intervals"
     },

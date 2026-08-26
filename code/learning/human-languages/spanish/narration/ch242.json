@@ -4,7 +4,7 @@
   "chapter": 242,
   "title": "Comisteis, Tuvisteis --- The Last Gap Closes",
   "drivablePrefix": 1,
-  "sourceHash": "fnv1a64:39e81f483da71d6e",
+  "sourceHash": "fnv1a64:606a411eaf50be43",
   "lessons": [
     {
       "id": "ES-C63-comisteis",
@@ -19,7 +19,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:5c866751a7306760",
+      "sourceHash": "fnv1a64:d15a48b02a4594df",
       "notice": null,
       "blocks": [
         {
