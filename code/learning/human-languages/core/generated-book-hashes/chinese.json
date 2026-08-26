@@ -289,6 +289,37 @@
         "ZH-C17-practice"
       ],
       "tex": "chinese/book/chapters/ch17-language-country.tex"
+    },
+    {
+      "language": "chinese",
+      "chapter": 18,
+      "sourceHash": "fnv1a64:46b1c19d1b8fd417",
+      "lessonIds": [
+        "ZH-C18-hear-kan",
+        "ZH-W18-kan-observe",
+        "ZH-W18-kan-guided",
+        "ZH-W18-kan-delayed",
+        "ZH-C18-kan",
+        "ZH-C18-hear-kanjian",
+        "ZH-C18-kanjian",
+        "ZH-C18-hear-haokan",
+        "ZH-C18-haokan",
+        "ZH-R18-looking-three-r1",
+        "ZH-C18-hear-shu",
+        "ZH-W18-shu-observe",
+        "ZH-W18-shu-guided",
+        "ZH-W18-shu-delayed",
+        "ZH-C18-shu",
+        "ZH-C18-hear-kanshu",
+        "ZH-C18-kanshu",
+        "ZH-R18-looking-three-r2",
+        "ZH-R18-book-reading-r1",
+        "ZH-R18-listening-five",
+        "ZH-R18-reading-five",
+        "ZH-R18-writing-five",
+        "ZH-C18-practice"
+      ],
+      "tex": "chinese/book/chapters/ch18-looking-reading.tex"
     }
   ]
 }

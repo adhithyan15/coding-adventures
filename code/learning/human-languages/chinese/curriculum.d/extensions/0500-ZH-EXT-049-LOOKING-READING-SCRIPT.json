@@ -1,0 +1,23 @@
+{
+  "id": "ZH-EXT-049-LOOKING-READING-SCRIPT",
+  "stage": "pre-A1",
+  "kind": "required",
+  "category": "script",
+  "canDo": "I can read and write 看 and 书, then build 看见, 好看 and 看书 after tracing, guided copying and delayed copying.",
+  "prerequisites": [
+    "ZH-EXT-048-LOOKING-READING-MEANING-FIRST"
+  ],
+  "lessons": [
+    "ZH-W18-kan-observe",
+    "ZH-W18-kan-guided",
+    "ZH-W18-kan-delayed",
+    "ZH-C18-kan",
+    "ZH-C18-kanjian",
+    "ZH-C18-haokan",
+    "ZH-W18-shu-observe",
+    "ZH-W18-shu-guided",
+    "ZH-W18-shu-delayed",
+    "ZH-C18-shu",
+    "ZH-C18-kanshu"
+  ]
+}

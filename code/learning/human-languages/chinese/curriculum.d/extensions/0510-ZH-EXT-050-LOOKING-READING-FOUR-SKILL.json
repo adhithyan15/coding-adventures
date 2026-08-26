@@ -1,0 +1,19 @@
+{
+  "id": "ZH-EXT-050-LOOKING-READING-FOUR-SKILL",
+  "stage": "pre-A1",
+  "kind": "required",
+  "category": "assessment",
+  "canDo": "I can keep the five looking and reading forms distinct across expanding retrieval and separate four-skill scores.",
+  "prerequisites": [
+    "ZH-EXT-049-LOOKING-READING-SCRIPT"
+  ],
+  "lessons": [
+    "ZH-R18-looking-three-r1",
+    "ZH-R18-looking-three-r2",
+    "ZH-R18-book-reading-r1",
+    "ZH-R18-listening-five",
+    "ZH-R18-reading-five",
+    "ZH-R18-writing-five",
+    "ZH-C18-practice"
+  ]
+}
