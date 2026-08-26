@@ -34,7 +34,7 @@ let module = compile_source(
 )?;
 ```
 
-## Scope (v0.18.0 — JV02 milestones M0 + M1 + M2a + M2b + M3a + M3b + M4a + M4b + M4c + M4d + M5 + M8, plus tasks #54, #59, #60, #64, and #69)
+## Scope (v0.19.0 — JV02 milestones M0 + M1 + M2a + M2b + M3a + M3b + M4a + M4b + M4c + M4d + M5 + M8, plus tasks #54, #59, #60, #64, #69, #71, and #72)
 
 Java requires an explicit `class`/`main`-method wrapper at the source level
 (unlike Ruby/Python/JS, which allow bare top-level statements) — this crate
@@ -293,13 +293,30 @@ dimensional array literals, multi-dimensional `new` array-creation forms
 of task #66, see above), a
 non-constant or reference-typed `new T[N]`, List/Map collection literals,
 the array/String method-call surface beyond `.length`, field access
-other than an array's own `.length`, casts, `instanceof`, the ternary
-conditional, bitwise/shift operators, fields/constructors/nested types,
+other than an array's own `.length`, casts, `instanceof`,
+bitwise/shift operators (the ternary conditional `cond ? a : b` IS
+supported as of task #72, lowering to `Expr::If` in value position —
+see below), fields/constructors/nested types,
 and every SIR29 construct (`NominalClassDef`/`InterfaceDef`/`MethodDef`/
 `VirtualCall`) — is out of scope so far and returns a clean
 `JavaLowerError` rather than being silently mis-lowered. See
 `src/lower.rs`'s own module doc comment for the exact boundary, and the
 JV02 spec's milestone table for what comes next.
+
+**Task #72** wires the ternary conditional operator (`cond ? a : b`) to
+`Expr::If` used in value position (the same node `if`/`else` statements
+already lower to — see that node's own doc comment: "the IR's
+conditional is an expression with no statement-level counterpart"), each
+branch's own lowered operand becoming that branch's `Block.value`. The
+condition must be `Kind::Bool`; the two branches must lower to a
+compatible `Kind` — exact match, or real Java's own symmetric numeric
+promotion for a mismatched `Int`/`Float` pair (`true ? 1 : 2.0` has type
+`double`), kept accepted the same way task #71's own directional
+int-widening-to-float exception is (with the identical disclosed caveat:
+no real numeric conversion is inserted, since SIR's own `Expr::Convert`
+only ever converts between integer widths) — every other `Kind` pair is
+a clean rejection, since real Java's ternary does not auto-stringify
+mismatched branches the way `+` does.
 
 ### Testing
 

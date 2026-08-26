@@ -4237,17 +4237,87 @@ impl Lowerer {
     }
 
     /// `conditional_expression = logical_or_expression [ QUESTION
-    /// assignment_expression COLON assignment_expression ] ;`
+    /// assignment_expression COLON assignment_expression ] ;` — task #72.
+    /// Lowers `cond ? then : else` to `Expr::If` used in **value**
+    /// position: unlike `lower_if_statement`'s own `Stmt::ExprStmt`-
+    /// wrapped `Expr::If` (a statement-position `if` has no result
+    /// anyone consumes, so its two branches are bare `Block`s with a
+    /// `NilLit` value), this one's `then_branch`/`else_branch` each wrap
+    /// the real lowered operand as their own `Block.value` with an empty
+    /// `stmts` — `Expr::If` is *the same node* either way (see its own
+    /// doc comment: "the IR's conditional is an expression with no
+    /// statement-level counterpart"), only how this frontend uses the
+    /// two `Block`s differs.
+    ///
+    /// Both branches must lower to a compatible `Kind`: exact match, or
+    /// real Java's own symmetric numeric promotion for a mismatched
+    /// `Int`/`Float` pair (`true ? 1 : 2.0` has type `double` regardless
+    /// of which branch is which) — kept accepted here the same way task
+    /// #71's own directional int-widening-to-float exception is, and
+    /// with the identical disclosed caveat: no real numeric conversion
+    /// is inserted (SIR's `Expr::Convert`/SIR26 only ever converts
+    /// between *integer* widths), so the `Int`-kinded branch's own
+    /// emitted value stays whatever `lower_expr` produced for it — only
+    /// this frontend's own bookkeeping result `Kind` becomes `Float`.
+    /// Every other `Kind` pair (real Java's ternary does *not*
+    /// auto-stringify mismatched branches the way `+` does) is a clean
+    /// rejection, not a mis-lowering.
     fn lower_conditional_expression(
         &mut self,
         node: &GrammarASTNode,
         depth: usize,
     ) -> Result<(Expr, Kind), JavaLowerError> {
-        match node.children.as_slice() {
-            [ASTNodeOrToken::Node(only)] => self.lower_expr(only, depth + 1),
+        match child_nodes(node).as_slice() {
+            [only] => self.lower_expr(only, depth + 1),
+            [cond_node, then_node, else_node] => {
+                let span = self.span_of(node);
+                let (cond, cond_kind) = self.lower_expr(cond_node, depth + 1)?;
+                if cond_kind != Kind::Bool {
+                    return Err(self.err_at(
+                        cond_node,
+                        "the ternary conditional's own condition must be boolean".to_string(),
+                    ));
+                }
+                let (then_value, then_kind) = self.lower_expr(then_node, depth + 1)?;
+                let (else_value, else_kind) = self.lower_expr(else_node, depth + 1)?;
+                let result_kind = if then_kind == else_kind {
+                    then_kind
+                } else if matches!(
+                    (then_kind, else_kind),
+                    (Kind::Int, Kind::Float) | (Kind::Float, Kind::Int)
+                ) {
+                    Kind::Float
+                } else {
+                    return Err(self.err_at(
+                        node,
+                        format!(
+                            "the ternary conditional's two branches must have compatible kinds (got `{then_kind:?}` and `{else_kind:?}`)"
+                        ),
+                    ));
+                };
+                let then_span = self.span_of(then_node);
+                let else_span = self.span_of(else_node);
+                Ok((
+                    Expr::If {
+                        cond: Box::new(cond),
+                        then_branch: Box::new(Block {
+                            stmts: vec![],
+                            value: then_value,
+                            span: then_span,
+                        }),
+                        else_branch: Box::new(Block {
+                            stmts: vec![],
+                            value: else_value,
+                            span: else_span,
+                        }),
+                        span: span.clone(),
+                    },
+                    result_kind,
+                ))
+            }
             _ => Err(self.err_at(
                 node,
-                "the ternary conditional operator (`?:`) is not supported yet (deferred to a later JV02 milestone)".to_string(),
+                "malformed ternary conditional expression".to_string(),
             )),
         }
     }
