@@ -2,6 +2,37 @@
 
 All notable changes to this package will be documented in this file.
 
+## [0.2.55] - 2026-08-25 - Relaxed SIMD epic PR6: i16x8/i32x4.relaxed_dot_i8x16_i7x16_s/_add_s
+
+### Added
+
+- 2 new `SIMD_OPS` entries, the FIFTEENTH/SIXTEENTH relaxed-simd opcodes
+  (see `code/specs/W19-wasm-relaxed-simd-first-slice.md`):
+  `i16x8.relaxed_dot_i8x16_i7x16_s` (`0x112`),
+  `i32x4.relaxed_dot_i8x16_i7x16_add_s` (`0x113`) -- 252 SIMD opcodes
+  total, up from 250. These are the LAST two entries in the whole
+  19-opcode relaxed-simd range; only the deliberately-deferred
+  `relaxed_trunc` family (`0x101`-`0x104`, zero real `assert_return`
+  directives in its corpus file) remains unimplemented after this PR.
+- New `SimdOpKind::RelaxedDotI8x16I7x16S` (BINARY, `(v128, v128) ->
+  v128`) and `SimdOpKind::RelaxedDotI8x16I7x16AddS` (TERNARY, `(v128,
+  v128, v128) -> v128` -- the FIRST relaxed-simd ternary op whose third
+  operand is a genuine numeric accumulator, not a bitwise mask or a
+  second fused-arithmetic input) variants.
+- Sub-opcode values confirmed live against the relaxed-simd Overview.md
+  encoding table every other relaxed-simd row cites. Both LEB128-encode
+  as 2-byte sequences: `0x112` -> `[0x92, 0x02]`, `0x113` -> `[0x93,
+  0x02]`.
+- Semantic choice ("signed * signed" -- both operands read as plain
+  signed `i8` throughout) hand-verified against the real vendored
+  `relaxed_dot_product.wast` corpus (pinned `WebAssembly/testsuite` SHA
+  `28864811cf03bdbf880733786148feaba339582d`): its one 3-way `either`
+  case (for the plain binary op) and one 4-way `either` case (for the
+  accumulating ternary op) each land on one literal alternative under
+  this choice, and every other (non-`either`) exact case matches
+  bit-for-bit.
+- New tests: `simd_relaxed_dot_product_has_the_real_verified_sub_opcode_values`.
+
 ## [0.2.54] - 2026-08-25 - Relaxed SIMD epic PR5: f32x4/f64x2.relaxed_madd/relaxed_nmadd
 
 ### Added

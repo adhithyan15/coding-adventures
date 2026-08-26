@@ -2,6 +2,23 @@
 
 All notable changes to this package will be documented in this file.
 
+## [0.2.64] - 2026-08-25 (Relaxed SIMD epic PR6: i16x8/i32x4.relaxed_dot_i8x16_i7x16_s/_add_s)
+
+### Added
+
+- `SimdOpKind::RelaxedDotI8x16I7x16S` joins the existing BINARY `(v128,
+  v128) -> v128` type-rule arm (`DotI16x8S` etc.) -- pop two `V128`s,
+  push one `V128`. The narrower `i8x16` input width and the "signed *
+  signed" semantic choice for its `i7x16`-named operand are both
+  runtime concerns, invisible to the type checker.
+- `SimdOpKind::RelaxedDotI8x16I7x16AddS` joins the existing TERNARY
+  `(v128, v128, v128) -> v128` type-rule arm (`Bitselect`/
+  `RelaxedMaddF32x4` etc.) -- pop three `V128`s, push one `V128`. The
+  FIRST ternary op in this arm whose third operand is a genuine numeric
+  accumulator rather than a bitwise mask or a second fused-arithmetic
+  input is, like every other numeric distinction in this match, entirely
+  invisible at the type level.
+
 ## [0.2.63] - 2026-08-25 (Relaxed SIMD epic PR5: f32x4/f64x2.relaxed_madd/relaxed_nmadd)
 
 ### Added

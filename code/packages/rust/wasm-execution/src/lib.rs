@@ -7350,6 +7350,104 @@ fn register_simd(vm: &mut GenericVM) {
                 let handle = push_v128(ctx, result)?;
                 push_wasm(vm, WasmValue::V128(handle));
             }
+            SimdOpKind::RelaxedDotI8x16I7x16S => {
+                // i16x8.relaxed_dot_i8x16_i7x16_s (relaxed SIMD epic PR6
+                // -- see `code/specs/
+                // W19-wasm-relaxed-simd-first-slice.md`): reinterpret
+                // BOTH popped v128s as 16 `i8` lanes each; for each of the
+                // 8 result lanes `i`, compute `a[2i] * b[2i] + a[2i+1] *
+                // b[2i+1]` -- the exact same per-pair multiply-accumulate
+                // shape as `DotI16x8S` above, just one lane width
+                // narrower on the input side (8-bit instead of 16-bit)
+                // with a correspondingly narrower (`i16x8` instead of
+                // `i32x4`) result. BINARY (pop two v128s, push one).
+                //
+                // Semantic choice (hand-verified against the real
+                // vendored `relaxed_dot_product.wast` corpus, pinned
+                // `WebAssembly/testsuite` SHA
+                // `28864811cf03bdbf880733786148feaba339582d`): both
+                // operands are read as plain SIGNED `i8` throughout (the
+                // "signed * signed" reading in the corpus's own
+                // annotations) -- see `SimdOpKind::RelaxedDotI8x16I7x16S`'s
+                // doc comment in wasm-opcodes for the full derivation.
+                // This lands on the middle alternative of the corpus's
+                // one 3-way `either` case and matches every other (exact)
+                // case bit-for-bit, since their operand values are all
+                // non-negative and signed/unsigned interpretation cannot
+                // differ for them.
+                let rhs_handle = pop_wasm(vm)?.as_v128_handle().map_err(VMError::from)?;
+                let lhs_handle = pop_wasm(vm)?.as_v128_handle().map_err(VMError::from)?;
+                let rhs = *ctx
+                    .v128_heap
+                    .get(rhs_handle as usize)
+                    .ok_or_else(|| VMError::GenericError("v128 operand: heap handle out of range".into()))?;
+                let lhs = *ctx
+                    .v128_heap
+                    .get(lhs_handle as usize)
+                    .ok_or_else(|| VMError::GenericError("v128 operand: heap handle out of range".into()))?;
+
+                let lane8 = |b: &[u8; 16], i: usize| b[i] as i8 as i32;
+
+                let mut result = [0u8; 16];
+                for i in 0..8 {
+                    let out = (lane8(&lhs, i * 2) * lane8(&rhs, i * 2))
+                        .wrapping_add(lane8(&lhs, i * 2 + 1) * lane8(&rhs, i * 2 + 1));
+                    result[i * 2..i * 2 + 2].copy_from_slice(&(out as i16).to_le_bytes());
+                }
+
+                let handle = push_v128(ctx, result)?;
+                push_wasm(vm, WasmValue::V128(handle));
+            }
+            SimdOpKind::RelaxedDotI8x16I7x16AddS => {
+                // i32x4.relaxed_dot_i8x16_i7x16_add_s (relaxed SIMD epic
+                // PR6): TERNARY -- the first two operands feed the exact
+                // same per-pair signed-`i8` multiply-accumulate as
+                // `RelaxedDotI8x16I7x16S` above, widened to `i32` and
+                // pairwise-folded two-at-a-time (so each of the 4 result
+                // lanes sums FOUR `i8`x`i8` products, one full `i8x16`
+                // group of 4), then added into the third operand's `i32x4`
+                // accumulator lanes. Computed with `i32` arithmetic
+                // throughout (never truncating through `i16` first), so
+                // no intermediate saturation step is needed -- matching
+                // the corpus's "signed * signed" reading applied
+                // end-to-end (see `SimdOpKind::RelaxedDotI8x16I7x16AddS`'s
+                // doc comment in wasm-opcodes for the full derivation,
+                // hand-verified against `relaxed_dot_product.wast`'s own
+                // 4-way `either` case). Pop order mirrors every other
+                // ternary SIMD op in this match (`RelaxedMaddF32x4` etc.):
+                // accumulator `c` popped first, then `b`, then `a`.
+                let c_handle = pop_wasm(vm)?.as_v128_handle().map_err(VMError::from)?;
+                let b_handle = pop_wasm(vm)?.as_v128_handle().map_err(VMError::from)?;
+                let a_handle = pop_wasm(vm)?.as_v128_handle().map_err(VMError::from)?;
+                let c = *ctx
+                    .v128_heap
+                    .get(c_handle as usize)
+                    .ok_or_else(|| VMError::GenericError("v128 operand: heap handle out of range".into()))?;
+                let b = *ctx
+                    .v128_heap
+                    .get(b_handle as usize)
+                    .ok_or_else(|| VMError::GenericError("v128 operand: heap handle out of range".into()))?;
+                let a = *ctx
+                    .v128_heap
+                    .get(a_handle as usize)
+                    .ok_or_else(|| VMError::GenericError("v128 operand: heap handle out of range".into()))?;
+
+                let lane8 = |buf: &[u8; 16], i: usize| buf[i] as i8 as i32;
+                let lane32 = |buf: &[u8; 16], i: usize| i32::from_le_bytes(buf[i * 4..i * 4 + 4].try_into().unwrap());
+
+                let mut result = [0u8; 16];
+                for i in 0..4 {
+                    let dot = (lane8(&a, i * 4) * lane8(&b, i * 4))
+                        .wrapping_add(lane8(&a, i * 4 + 1) * lane8(&b, i * 4 + 1))
+                        .wrapping_add(lane8(&a, i * 4 + 2) * lane8(&b, i * 4 + 2))
+                        .wrapping_add(lane8(&a, i * 4 + 3) * lane8(&b, i * 4 + 3));
+                    let out = dot.wrapping_add(lane32(&c, i));
+                    result[i * 4..i * 4 + 4].copy_from_slice(&out.to_le_bytes());
+                }
+
+                let handle = push_v128(ctx, result)?;
+                push_wasm(vm, WasmValue::V128(handle));
+            }
             SimdOpKind::ExtractLaneI8x16S | SimdOpKind::ExtractLaneI8x16U => {
                 // i8x16.extract_lane_s/_u (SIMD widen PR18): pop a v128,
                 // read the `aux`-selected `i8` lane back out as a plain
@@ -18853,6 +18951,234 @@ mod tests {
         assert_eq!(
             r1[0], r2[0],
             "two f32x4.relaxed_madd calls with identical operands must produce bit-identical results"
+        );
+    }
+
+    // ── Relaxed SIMD epic PR6: i16x8.relaxed_dot_i8x16_i7x16_s /
+    // i32x4.relaxed_dot_i8x16_i7x16_add_s -- see code/specs/
+    // W19-wasm-relaxed-simd-first-slice.md ───────────────────────────────
+
+    /// `i16x8.relaxed_dot_i8x16_i7x16_s` (sub-opcode `0x112`,
+    /// `[0x92, 0x02]`): the real vendored `relaxed_dot_product.wast`
+    /// corpus's exact (non-`either`) cases, hand-verified against the
+    /// pinned `WebAssembly/testsuite` SHA
+    /// `28864811cf03bdbf880733786148feaba339582d`. Both operand values
+    /// are non-negative in these two cases, so signed-vs-unsigned
+    /// interpretation cannot differ -- these pin down the plain
+    /// per-pair multiply-accumulate arithmetic, independent of the
+    /// `either` semantic choice exercised by the test below.
+    #[test]
+    fn i16x8_relaxed_dot_i8x16_i7x16_s_matches_the_real_corpus_exact_cases() {
+        let run = |a: [i8; 16], b: [i8; 16]| -> [i16; 8] {
+            let mut code = vec![0xFD, 0x0C];
+            code.extend(v128_const_bytes_i8x16(a));
+            code.extend([0xFD, 0x0C]);
+            code.extend(v128_const_bytes_i8x16(b));
+            code.extend([0xFD, 0x92, 0x02]); // i16x8.relaxed_dot_i8x16_i7x16_s
+            code.push(0x0B);
+            let mut engine = simd_engine_returning_v128(code);
+            let (_, bytes) = engine.call_function_with_v128(0, &[]).unwrap();
+            let V128Bytes(raw) = bytes[0].expect("result must be a v128");
+            let mut lanes = [0i16; 8];
+            for (i, lane) in lanes.iter_mut().enumerate() {
+                *lane = i16::from_le_bytes(raw[i * 2..i * 2 + 2].try_into().unwrap());
+            }
+            lanes
+        };
+
+        // "Simple values to ensure things are functional": 0..15 dot 0..15.
+        let simple_a: [i8; 16] = std::array::from_fn(|i| i as i8);
+        assert_eq!(
+            run(simple_a, simple_a),
+            [1, 13, 41, 85, 145, 221, 313, 421],
+            "0..15 dot 0..15 must match the corpus's plain exact case"
+        );
+
+        // "Test max and min i8 values": a=[-128,-128,127,127,0,...],
+        // b=[127,127,127,127,0,...] -> [-32512, 32258, 0, 0, 0, 0, 0, 0].
+        let mut a = [0i8; 16];
+        a[0] = -128;
+        a[1] = -128;
+        a[2] = 127;
+        a[3] = 127;
+        let mut b = [0i8; 16];
+        b[0] = 127;
+        b[1] = 127;
+        b[2] = 127;
+        b[3] = 127;
+        assert_eq!(
+            run(a, b),
+            [-32512, 32258, 0, 0, 0, 0, 0, 0],
+            "max/min i8 case must match the corpus's plain exact case bit-for-bit"
+        );
+    }
+
+    /// `i16x8.relaxed_dot_i8x16_i7x16_s`: the real corpus's one genuinely
+    /// ambiguous `either` case -- `a=[-128,-128,0,...],
+    /// b=[-127,-127,0,...]` -- whose 3 alternatives are annotated in the
+    /// corpus's own comments as "signed * unsigned" (`-32768`, saturated),
+    /// "signed * signed" (`32512`), "unsigned * unsigned" (`33024`). This
+    /// repo's implementation treats both operands as plain signed `i8`
+    /// throughout, so it must land on the MIDDLE alternative, `32512`
+    /// (see `SimdOpKind::RelaxedDotI8x16I7x16S`'s own doc comment in
+    /// wasm-opcodes for the full derivation).
+    #[test]
+    fn i16x8_relaxed_dot_i8x16_i7x16_s_matches_the_signed_signed_either_alternative() {
+        let mut a = [0i8; 16];
+        a[0] = -128;
+        a[1] = -128;
+        let mut b = [0i8; 16];
+        b[0] = -127;
+        b[1] = -127;
+
+        let mut code = vec![0xFD, 0x0C];
+        code.extend(v128_const_bytes_i8x16(a));
+        code.extend([0xFD, 0x0C]);
+        code.extend(v128_const_bytes_i8x16(b));
+        code.extend([0xFD, 0x92, 0x02]);
+        code.push(0x0B);
+        let mut engine = simd_engine_returning_v128(code);
+        let (_, bytes) = engine.call_function_with_v128(0, &[]).unwrap();
+        let V128Bytes(raw) = bytes[0].expect("result must be a v128");
+        let lane0 = i16::from_le_bytes(raw[0..2].try_into().unwrap());
+        assert_eq!(
+            lane0, 32512,
+            "signed*signed must be -128*-127 + -128*-127 = 32512, the corpus's middle either alternative"
+        );
+    }
+
+    /// `i32x4.relaxed_dot_i8x16_i7x16_add_s` (sub-opcode `0x113`,
+    /// `[0x93, 0x02]`): the real corpus's exact (non-`either`) cases --
+    /// TERNARY, so the third `v128` operand (an `i32x4` accumulator) is
+    /// added to the widened, pairwise-folded dot product of the first
+    /// two `i8x16` operands.
+    #[test]
+    fn i32x4_relaxed_dot_i8x16_i7x16_add_s_matches_the_real_corpus_exact_cases() {
+        let run = |a: [i8; 16], b: [i8; 16], acc: [i32; 4]| -> [i32; 4] {
+            let mut code = vec![0xFD, 0x0C];
+            code.extend(v128_const_bytes_i8x16(a));
+            code.extend([0xFD, 0x0C]);
+            code.extend(v128_const_bytes_i8x16(b));
+            code.extend([0xFD, 0x0C]);
+            code.extend(v128_const_bytes(acc));
+            code.extend([0xFD, 0x93, 0x02]); // i32x4.relaxed_dot_i8x16_i7x16_add_s
+            code.push(0x0B);
+            let mut engine = simd_engine_returning_v128(code);
+            let (_, bytes) = engine.call_function_with_v128(0, &[]).unwrap();
+            let V128Bytes(raw) = bytes[0].expect("result must be a v128");
+            let mut lanes = [0i32; 4];
+            for (i, lane) in lanes.iter_mut().enumerate() {
+                *lane = i32::from_le_bytes(raw[i * 4..i * 4 + 4].try_into().unwrap());
+            }
+            lanes
+        };
+
+        // "Simple values to ensure things are functional": 0..15 dot
+        // 0..15, accumulator [0,1,2,3] -> [14, 127, 368, 737].
+        let simple: [i8; 16] = std::array::from_fn(|i| i as i8);
+        assert_eq!(
+            run(simple, simple, [0, 1, 2, 3]),
+            [14, 127, 368, 737],
+            "0..15 dot 0..15 plus [0,1,2,3] must match the corpus's plain exact case"
+        );
+
+        // "Test max and min i8 values": a=[-128x4,127x4,0x8],
+        // b=[127x8,0x8], acc=[1,2,3,4] -> [-65023, 64518, 3, 4].
+        let mut a = [0i8; 16];
+        for v in a.iter_mut().take(4) {
+            *v = -128;
+        }
+        for v in a.iter_mut().skip(4).take(4) {
+            *v = 127;
+        }
+        let mut b = [0i8; 16];
+        for v in b.iter_mut().take(8) {
+            *v = 127;
+        }
+        assert_eq!(
+            run(a, b, [1, 2, 3, 4]),
+            [-65023, 64518, 3, 4],
+            "max/min i8 case must match the corpus's plain exact case bit-for-bit"
+        );
+    }
+
+    /// `i32x4.relaxed_dot_i8x16_i7x16_add_s`: the real corpus's one
+    /// genuinely ambiguous `either` case -- `a=[-128x4,0x12],
+    /// b=[-127x4,0x12]`, `acc=[1,2,3,4]` -- whose 4 alternatives are
+    /// annotated in the corpus's own comments as "signed * unsigned"
+    /// (`-66047`), "signed * unsigned with intermediate saturation"
+    /// (`-65535`), "signed * signed" (`65025`), "unsigned * unsigned"
+    /// (`66049`). This repo's "signed * signed" implementation must land
+    /// on the THIRD alternative, `65025`.
+    #[test]
+    fn i32x4_relaxed_dot_i8x16_i7x16_add_s_matches_the_signed_signed_either_alternative() {
+        let mut a = [0i8; 16];
+        for v in a.iter_mut().take(4) {
+            *v = -128;
+        }
+        let mut b = [0i8; 16];
+        for v in b.iter_mut().take(4) {
+            *v = -127;
+        }
+
+        let mut code = vec![0xFD, 0x0C];
+        code.extend(v128_const_bytes_i8x16(a));
+        code.extend([0xFD, 0x0C]);
+        code.extend(v128_const_bytes_i8x16(b));
+        code.extend([0xFD, 0x0C]);
+        code.extend(v128_const_bytes([1, 2, 3, 4]));
+        code.extend([0xFD, 0x93, 0x02]);
+        code.push(0x0B);
+        let mut engine = simd_engine_returning_v128(code);
+        let (_, bytes) = engine.call_function_with_v128(0, &[]).unwrap();
+        let V128Bytes(raw) = bytes[0].expect("result must be a v128");
+        let lane0 = i32::from_le_bytes(raw[0..4].try_into().unwrap());
+        assert_eq!(
+            lane0, 65025,
+            "signed*signed must be 4*(-128*-127) + 1 = 65025, the corpus's third either alternative"
+        );
+    }
+
+    /// The real corpus's own `*_cmp` assertions (see
+    /// `f32x4_relaxed_madd_is_self_consistent_across_repeated_invocations`
+    /// above for the same discipline applied to `relaxed_madd`): two
+    /// calls to either relaxed-dot-product opcode with identical operands
+    /// must produce bit-identical results.
+    #[test]
+    fn relaxed_dot_product_family_is_self_consistent_across_repeated_invocations() {
+        let a: [i8; 16] = std::array::from_fn(|i| (i as i8).wrapping_sub(8));
+        let b: [i8; 16] = std::array::from_fn(|i| (i as i8).wrapping_sub(4));
+
+        let mut binary_code = vec![0xFD, 0x0C];
+        binary_code.extend(v128_const_bytes_i8x16(a));
+        binary_code.extend([0xFD, 0x0C]);
+        binary_code.extend(v128_const_bytes_i8x16(b));
+        binary_code.extend([0xFD, 0x92, 0x02]);
+        binary_code.push(0x0B);
+        let mut first = simd_engine_returning_v128(binary_code.clone());
+        let (_, r1) = first.call_function_with_v128(0, &[]).unwrap();
+        let mut second = simd_engine_returning_v128(binary_code);
+        let (_, r2) = second.call_function_with_v128(0, &[]).unwrap();
+        assert_eq!(
+            r1[0], r2[0],
+            "two i16x8.relaxed_dot_i8x16_i7x16_s calls with identical operands must produce bit-identical results"
+        );
+
+        let mut ternary_code = vec![0xFD, 0x0C];
+        ternary_code.extend(v128_const_bytes_i8x16(a));
+        ternary_code.extend([0xFD, 0x0C]);
+        ternary_code.extend(v128_const_bytes_i8x16(b));
+        ternary_code.extend([0xFD, 0x0C]);
+        ternary_code.extend(v128_const_bytes([1, 2, 3, 4]));
+        ternary_code.extend([0xFD, 0x93, 0x02]);
+        ternary_code.push(0x0B);
+        let mut third = simd_engine_returning_v128(ternary_code.clone());
+        let (_, r3) = third.call_function_with_v128(0, &[]).unwrap();
+        let mut fourth = simd_engine_returning_v128(ternary_code);
+        let (_, r4) = fourth.call_function_with_v128(0, &[]).unwrap();
+        assert_eq!(
+            r3[0], r4[0],
+            "two i32x4.relaxed_dot_i8x16_i7x16_add_s calls with identical operands must produce bit-identical results"
         );
     }
 

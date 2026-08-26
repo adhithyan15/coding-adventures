@@ -2093,6 +2093,64 @@ gradeable, `NotYetSupported` unchanged at 67); `assert_return` rose from
 unchanged at 545). No other already-vendored file's stats changed --
 zero regressions.
 
+extended 2026-08-25 (relaxed SIMD epic PR6 -- see code/specs/
+               W19-wasm-relaxed-simd-first-slice.md -- relaxed_dot_
+               product.wast, `i16x8.relaxed_dot_i8x16_i7x16_s` (sub-opcode
+               0x112), `i32x4.relaxed_dot_i8x16_i7x16_add_s` (sub-opcode
+               0x113), same pinned commit, no re-pin): the SIXTH and LAST
+               substantive file from the relaxed-simd proposal,
+               byte-identical (5935 bytes) against a fresh re-fetch at
+               this pinned SHA. Lives at the testsuite repo ROOT like
+               every other file above, no `PROPOSAL_FILES` entry needed.
+               Grades 1/1 `module` and 10/10 `assert_return`, ALL REAL
+               passes, ZERO `NotYetSupported`. The FIRST relaxed-simd
+               family whose ternary member
+               (`relaxed_dot_i8x16_i7x16_add_s`) accumulates into a
+               genuine numeric third operand rather than a bitwise mask
+               (`relaxed_laneselect.wast`) or a second arithmetic input to
+               one fused op (`relaxed_madd_nmadd.wast`). This file's
+               `either` groups are the different signed/unsigned readings
+               a host's native dot-product instruction might apply to the
+               second operand (the "i7x16" half of the opcode names) --
+               e.g. for the plain binary op with
+               `a=[-128,-128,0,...], b=[-127,-127,0,...]`, the file's own
+               comments annotate the 3 alternatives as "signed * unsigned"
+               (`-32768`, saturated), "signed * signed" (`32512`),
+               "unsigned * unsigned" (`33024`); the accumulating ternary
+               op's corresponding case is a 4-way `either` (adding a
+               fourth "signed * unsigned with intermediate PMADDUBSW-style
+               saturation" alternative). Hand-verified against every
+               `either` group in the file that this repo's chosen
+               implementation -- treating BOTH operands as plain signed
+               `i8` throughout ("signed * signed") -- lands on one literal
+               alternative in each case (the middle one for the binary op,
+               the third for the ternary op) and matches every non-
+               `either` exact case bit-for-bit, since those cases' operand
+               values are all non-negative (signed/unsigned interpretation
+               cannot differ for them). The file's own `*_cmp`/
+               "test-consistent-nondeterminism" assertions also pass,
+               confirming this deterministic choice is self-consistent
+               across repeated invocations -- no actual nondeterminism,
+               just one fixed valid choice, same discipline as PR1-PR5.
+               Verified this choice is platform-independent by running the
+               same conformance suite under Linux/x86_64 via Docker
+               (`rust:latest`, `--platform linux/amd64`) in addition to
+               native macOS/ARM64 -- both agree bit-for-bit, because the
+               implementation is pure integer arithmetic (`wrapping_mul`/
+               `wrapping_add` over `i32`), with no floating-point rounding
+               or platform-dependent SIMD intrinsics involved. This closes
+               the entire 19-opcode relaxed-simd range's substantive
+               scope: only `i32x4_relaxed_trunc.wast` (flagged since PR1
+               as having ZERO real assert_return directives at this pinned
+               SHA) remains unimplemented in the whole `0x100`-`0x113`
+               range.
+
+Aggregate `module` rose from 1274/1275 to 1275/1276 (+1 pass, +1
+gradeable, `NotYetSupported` unchanged at 67); `assert_return` rose from
+44683/44700 to 44693/44710 (+10 pass, +10 gradeable, `NotYetSupported`
+unchanged at 545). No other already-vendored file's stats changed --
+zero regressions.
+
 The vendored files are licensed under the Apache License, Version 2.0 --
 see the accompanying LICENSE file, itself vendored verbatim from the same
 pinned commit.

@@ -798,6 +798,28 @@ TESTSUITE_FILES = [
     # are each a later PR's scope, same one-opcode-family-per-PR cadence
     # the base SIMD epic (PR1-PR47) established.
     "relaxed_madd_nmadd.wast",
+    # Relaxed SIMD epic PR6 (see code/specs/
+    # W19-wasm-relaxed-simd-first-slice.md): relaxed_dot_product.wast --
+    # `i16x8.relaxed_dot_i8x16_i7x16_s` (sub-opcode 0x112),
+    # `i32x4.relaxed_dot_i8x16_i7x16_add_s` (sub-opcode 0x113 -- the FIRST
+    # relaxed-simd family whose ternary member accumulates into a genuine
+    # numeric third operand rather than a bitwise mask or a second
+    # arithmetic input to one fused op), the SIXTH and LAST substantive
+    # relaxed-simd PR (5935 bytes, confirmed byte-identical against the
+    # same pinned SHA). Hand-verified this repo's "signed * signed"
+    # implementation (both operands read as plain signed `i8` throughout,
+    # never masked/unsigned) against every `either` group in this file --
+    # a 3-way `either` for the plain BINARY op, a 4-way `either` for the
+    # accumulating TERNARY op -- lands on one literal alternative in each
+    # (the middle one and the third one respectively; see
+    # `SimdOpKind::RelaxedDotI8x16I7x16S`/`RelaxedDotI8x16I7x16AddS`'s own
+    # doc comments for the full derivation) and matches every non-`either`
+    # exact case bit-for-bit. This closes the entire 19-opcode relaxed-
+    # simd range's substantive scope: only `i32x4_relaxed_trunc.wast`
+    # (flagged since PR1 as having ZERO real `assert_return` directives at
+    # this pinned SHA) remains unimplemented in the whole `0x100`-`0x113`
+    # range.
+    "relaxed_dot_product.wast",
 ]
 
 # Reference-types/threads-proposal files whose UPSTREAM path lives under

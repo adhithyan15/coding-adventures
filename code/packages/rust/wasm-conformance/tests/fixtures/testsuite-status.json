@@ -3136,6 +3136,62 @@
         "not_yet_supported": 0
       }
     },
+    "relaxed_dot_product.wast": {
+      "action": {
+        "pass": 0,
+        "fail": 0,
+        "trap": 0,
+        "not_yet_supported": 0
+      },
+      "assert_exhaustion": {
+        "pass": 0,
+        "fail": 0,
+        "trap": 0,
+        "not_yet_supported": 0
+      },
+      "assert_invalid": {
+        "pass": 0,
+        "fail": 0,
+        "trap": 0,
+        "not_yet_supported": 0
+      },
+      "assert_malformed": {
+        "pass": 0,
+        "fail": 0,
+        "trap": 0,
+        "not_yet_supported": 0
+      },
+      "assert_return": {
+        "pass": 10,
+        "fail": 0,
+        "trap": 0,
+        "not_yet_supported": 0
+      },
+      "assert_trap": {
+        "pass": 0,
+        "fail": 0,
+        "trap": 0,
+        "not_yet_supported": 0
+      },
+      "assert_unlinkable": {
+        "pass": 0,
+        "fail": 0,
+        "trap": 0,
+        "not_yet_supported": 0
+      },
+      "module": {
+        "pass": 1,
+        "fail": 0,
+        "trap": 0,
+        "not_yet_supported": 0
+      },
+      "register": {
+        "pass": 0,
+        "fail": 0,
+        "trap": 0,
+        "not_yet_supported": 0
+      }
+    },
     "relaxed_laneselect.wast": {
       "action": {
         "pass": 0,
@@ -7531,7 +7587,7 @@
       "not_yet_supported": 538
     },
     "assert_return": {
-      "pass": 44683,
+      "pass": 44693,
       "fail": 17,
       "trap": 0,
       "not_yet_supported": 545
@@ -7549,7 +7605,7 @@
       "not_yet_supported": 0
     },
     "module": {
-      "pass": 1274,
+      "pass": 1275,
       "fail": 1,
       "trap": 0,
       "not_yet_supported": 67

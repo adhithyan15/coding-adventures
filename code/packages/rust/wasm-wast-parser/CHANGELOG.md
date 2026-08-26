@@ -1,5 +1,21 @@
 # Changelog — wasm-wast-parser
 
+## 0.1.74 — 2026-08-25 — Relaxed SIMD epic PR6: i16x8/i32x4.relaxed_dot_i8x16_i7x16_s/_add_s
+
+### Added
+
+- `SimdOpKind::RelaxedDotI8x16I7x16S`/`RelaxedDotI8x16I7x16AddS` joined
+  the existing no-immediate SIMD match arm in both `module.rs` encoding
+  functions (the same arm `DotI16x8S`/`RelaxedMaddF32x4` and every
+  earlier relaxed-simd opcode are already in) -- these 2 opcodes (one
+  BINARY, one TERNARY) take no immediate beyond the opcode byte itself;
+  operand count is driven by the S-expression recursion, not the
+  encoder, so no special-casing was needed.
+- New test: `simd_relaxed_dot_product_family_encodes_the_real_sub_opcodes`,
+  confirming `i16x8.relaxed_dot_i8x16_i7x16_s`/
+  `i32x4.relaxed_dot_i8x16_i7x16_add_s` encode as `[0xFD, 0x92, 0x02]`/
+  `[0xFD, 0x93, 0x02]` respectively.
+
 ## 0.1.73 — 2026-08-25 — Relaxed SIMD epic PR5: f32x4/f64x2.relaxed_madd/relaxed_nmadd
 
 ### Added

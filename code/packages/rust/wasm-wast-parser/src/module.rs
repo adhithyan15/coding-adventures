@@ -2080,7 +2080,19 @@ fn encode_stream_instr(
             | wasm_opcodes::SimdOpKind::RelaxedMaddF32x4
             | wasm_opcodes::SimdOpKind::RelaxedNmaddF32x4
             | wasm_opcodes::SimdOpKind::RelaxedMaddF64x2
-            | wasm_opcodes::SimdOpKind::RelaxedNmaddF64x2 => {
+            | wasm_opcodes::SimdOpKind::RelaxedNmaddF64x2
+            | wasm_opcodes::SimdOpKind::RelaxedDotI8x16I7x16S
+            | wasm_opcodes::SimdOpKind::RelaxedDotI8x16I7x16AddS => {
+                // `i16x8.relaxed_dot_i8x16_i7x16_s`/
+                // `i32x4.relaxed_dot_i8x16_i7x16_add_s` (relaxed SIMD epic
+                // PR6 -- see code/specs/
+                // W19-wasm-relaxed-simd-first-slice.md) join too: BINARY
+                // and TERNARY respectively, same no-immediate encoding
+                // shape as `DotI16x8S`/`RelaxedMaddF32x4` above -- the
+                // "signed * signed" semantic choice and the accumulating
+                // variant's genuinely-new numeric-accumulator third
+                // operand (see their own doc comments in wasm-opcodes)
+                // are both entirely invisible at this encoding level.
                 // `f32x4.relaxed_madd`/`relaxed_nmadd`,
                 // `f64x2.relaxed_madd`/`relaxed_nmadd` (relaxed SIMD epic
                 // PR5 -- see code/specs/
@@ -3099,7 +3111,19 @@ fn encode_flat_instr(
             | wasm_opcodes::SimdOpKind::RelaxedMaddF32x4
             | wasm_opcodes::SimdOpKind::RelaxedNmaddF32x4
             | wasm_opcodes::SimdOpKind::RelaxedMaddF64x2
-            | wasm_opcodes::SimdOpKind::RelaxedNmaddF64x2 => {
+            | wasm_opcodes::SimdOpKind::RelaxedNmaddF64x2
+            | wasm_opcodes::SimdOpKind::RelaxedDotI8x16I7x16S
+            | wasm_opcodes::SimdOpKind::RelaxedDotI8x16I7x16AddS => {
+                // `i16x8.relaxed_dot_i8x16_i7x16_s`/
+                // `i32x4.relaxed_dot_i8x16_i7x16_add_s` (relaxed SIMD epic
+                // PR6 -- see code/specs/
+                // W19-wasm-relaxed-simd-first-slice.md) join too: BINARY
+                // and TERNARY respectively, same no-immediate encoding
+                // shape as `DotI16x8S`/`RelaxedMaddF32x4` above -- the
+                // "signed * signed" semantic choice and the accumulating
+                // variant's genuinely-new numeric-accumulator third
+                // operand (see their own doc comments in wasm-opcodes)
+                // are both entirely invisible at this encoding level.
                 // `f32x4.relaxed_madd`/`relaxed_nmadd`,
                 // `f64x2.relaxed_madd`/`relaxed_nmadd` (relaxed SIMD epic
                 // PR5 -- see code/specs/
@@ -5863,6 +5887,38 @@ mod tests {
         assert!(code_of(&m, 1).windows(3).any(|w| w == [0xFD, 0x86, 0x02]), "f32x4.relaxed_nmadd: {:?}", code_of(&m, 1));
         assert!(code_of(&m, 2).windows(3).any(|w| w == [0xFD, 0x87, 0x02]), "f64x2.relaxed_madd: {:?}", code_of(&m, 2));
         assert!(code_of(&m, 3).windows(3).any(|w| w == [0xFD, 0x88, 0x02]), "f64x2.relaxed_nmadd: {:?}", code_of(&m, 3));
+    }
+
+    #[test]
+    fn simd_relaxed_dot_product_family_encodes_the_real_sub_opcodes() {
+        // Relaxed SIMD epic PR6 (see code/specs/
+        // W19-wasm-relaxed-simd-first-slice.md):
+        // `i16x8.relaxed_dot_i8x16_i7x16_s` (sub-opcode 0x112, BINARY),
+        // `i32x4.relaxed_dot_i8x16_i7x16_add_s` (sub-opcode 0x113,
+        // TERNARY) -- both `>= 0x100` so 2-byte LEB128, same shape as
+        // every other relaxed-simd opcode. Same "no immediate beyond the
+        // opcode byte itself" encoder bucket as `i32x4.dot_i16x8_s`/
+        // `f32x4.relaxed_madd` above -- operand count (2 vs. 3) is driven
+        // by the S-expression recursion, not the encoder, so no
+        // special-casing was needed to add this family. This is the LAST
+        // relaxed-simd family in the epic's substantive scope -- only the
+        // zero-assertion `relaxed_trunc` family remains after this.
+        let m = parse_module(
+            r#"(module
+                 (func (param v128 v128) (result v128) (i16x8.relaxed_dot_i8x16_i7x16_s (local.get 0) (local.get 1)))
+                 (func (param v128 v128 v128) (result v128) (i32x4.relaxed_dot_i8x16_i7x16_add_s (local.get 0) (local.get 1) (local.get 2))))"#,
+        )
+        .unwrap();
+        assert!(
+            code_of(&m, 0).windows(3).any(|w| w == [0xFD, 0x92, 0x02]),
+            "i16x8.relaxed_dot_i8x16_i7x16_s: {:?}",
+            code_of(&m, 0)
+        );
+        assert!(
+            code_of(&m, 1).windows(3).any(|w| w == [0xFD, 0x93, 0x02]),
+            "i32x4.relaxed_dot_i8x16_i7x16_add_s: {:?}",
+            code_of(&m, 1)
+        );
     }
 
     #[test]
