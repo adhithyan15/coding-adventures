@@ -39,7 +39,7 @@ describe("real curriculum", () => {
     expect(scripts.devanagari!.complete).toBe(true);
   });
 
-  it("keeps the cross-script closure queue measured after Malayalam independent u", () => {
+  it("keeps the cross-script closure queue measured after Persian yeh", () => {
     const candrakkala = scripts.malayalam!.marks!.find((mark) => mark.mark === "്")!;
     expect(candrakkala.role).toBe("virama");
     expect(candrakkala.compositionOrder).toEqual([
@@ -915,9 +915,24 @@ describe("real curriculum", () => {
     );
     expect(missingByScript.get("perso-arabic.json")?.has("ش")).toBe(false);
     expect(affected.get("ش") ?? 0).toBe(0);
+    const persianYeh = scripts["perso-arabic"]!.letters.find((entry) => entry.glyph === "ی")!;
+    expect(persianYeh.sound).toBe("y / i");
+    expect(persianYeh.penLifts).toBe(0);
+    expect(persianYeh.strokeOrder).toEqual([
+      "sweep left from the upper right and descend through the S curve",
+      "continue around the below-baseline bowl and finish at its rising tip without lifting",
+    ]);
+    expect(persianYeh.strokeOrderSource?.citation).toMatch(
+      /Persian Online.*closing ی.*02:55–02:58/i,
+    );
+    expect(persianYeh.strokeOrderSource?.variation).toMatch(
+      /uninterrupted dotless S-shaped run.*upper right.*below-baseline bowl.*without lifting.*Persian-scoped.*Urdu/i,
+    );
+    expect(missingByScript.get("perso-arabic.json")?.has("ی")).toBe(false);
+    expect(affected.get("ی") ?? 0).toBe(0);
     expect(
       [...affected.entries()].sort((left, right) => right[1] - left[1])[0],
-    ).toEqual(["ی", 7]);
+    ).toEqual(["も", 6]);
   });
 
   it("loaded every track (17+ and growing)", () => {
