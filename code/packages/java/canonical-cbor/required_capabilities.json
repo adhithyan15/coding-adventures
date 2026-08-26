@@ -5,4 +5,3 @@
   "capabilities": [],
   "justification": "Pure in-memory canonical CBOR transforms; fixture loading and coverage are test-only."
 }
-

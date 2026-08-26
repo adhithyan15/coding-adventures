@@ -55,10 +55,22 @@ public sealed interface CborValue permits CborValue.Unsigned, CborValue.Negative
         }
     }
 
-    /** Major type 3. Java strings always provide Unicode scalar text to the encoder. */
+    /** Major type 3. Lone UTF-16 surrogates are outside the scalar value model. */
     record Text(String value) implements CborValue {
         public Text {
             Objects.requireNonNull(value, "value");
+            for (int index = 0; index < value.length(); index++) {
+                char unit = value.charAt(index);
+                if (Character.isHighSurrogate(unit)) {
+                    if (index + 1 >= value.length()
+                            || !Character.isLowSurrogate(value.charAt(index + 1))) {
+                        throw new IllegalArgumentException("canonical-cbor: text is not Unicode scalar data");
+                    }
+                    index++;
+                } else if (Character.isLowSurrogate(unit)) {
+                    throw new IllegalArgumentException("canonical-cbor: text is not Unicode scalar data");
+                }
+            }
         }
     }
 
@@ -99,4 +111,3 @@ public sealed interface CborValue permits CborValue.Unsigned, CborValue.Negative
         INSTANCE
     }
 }
-

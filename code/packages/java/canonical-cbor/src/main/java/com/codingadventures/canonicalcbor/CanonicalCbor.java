@@ -73,8 +73,10 @@ public final class CanonicalCbor {
                 writeArgument(2, payload.length);
                 writeBytes(payload);
             } else if (value instanceof CborValue.Text text) {
+                long length = utf8Length(text.value());
+                ensureFits((long) argumentSize(length) + length);
                 byte[] payload = text.value().getBytes(StandardCharsets.UTF_8);
-                writeArgument(3, payload.length);
+                writeArgument(3, length);
                 writeBytes(payload);
             } else if (value instanceof CborValue.Array array) {
                 writeArgument(4, array.values().size());
@@ -96,11 +98,20 @@ public final class CanonicalCbor {
         }
 
         private void writeMap(CborValue.Map map, int depth) throws CborException {
+            long minimumSize = (long) argumentSize(map.entries().size())
+                    + (long) map.entries().size() * 2;
+            ensureFits(minimumSize);
             List<EncodedEntry> entries = new ArrayList<>(map.entries().size());
+            long retainedKeyBytes = 0;
             for (CborValue.MapEntry entry : map.entries()) {
                 Encoder keyEncoder = new Encoder();
                 keyEncoder.writeValue(entry.key(), depth + 1);
-                entries.add(new EncodedEntry(keyEncoder.bytes(), entry.value()));
+                byte[] key = keyEncoder.bytes();
+                retainedKeyBytes += key.length;
+                long lowerBound = (long) argumentSize(map.entries().size())
+                        + map.entries().size() + retainedKeyBytes;
+                ensureFits(lowerBound);
+                entries.add(new EncodedEntry(key, entry.value()));
             }
             entries.sort(Comparator.comparingInt((EncodedEntry entry) -> entry.key.length)
                     .thenComparing((left, right) -> compareUnsigned(left.key, right.key)));
@@ -137,6 +148,12 @@ public final class CanonicalCbor {
                 for (int shift = 56; shift >= 0; shift -= 8) {
                     writeByte((int) (argument >>> shift));
                 }
+            }
+        }
+
+        private void ensureFits(long additionalBytes) throws CborException {
+            if (additionalBytes > MAX_ENCODED_BYTES - output.size()) {
+                throw error("encode-too-large");
             }
         }
 
@@ -308,6 +325,40 @@ public final class CanonicalCbor {
         return length != 0 ? length : compareUnsigned(left, right);
     }
 
+    private static int argumentSize(long argument) {
+        if (Long.compareUnsigned(argument, 23) <= 0) {
+            return 1;
+        }
+        if (Long.compareUnsigned(argument, 0xff) <= 0) {
+            return 2;
+        }
+        if (Long.compareUnsigned(argument, 0xffff) <= 0) {
+            return 3;
+        }
+        if (Long.compareUnsigned(argument, 0xffff_ffffL) <= 0) {
+            return 5;
+        }
+        return 9;
+    }
+
+    private static long utf8Length(String text) {
+        long length = 0;
+        for (int index = 0; index < text.length(); index++) {
+            char unit = text.charAt(index);
+            if (unit <= 0x7f) {
+                length++;
+            } else if (unit <= 0x7ff) {
+                length += 2;
+            } else if (Character.isHighSurrogate(unit)) {
+                length += 4;
+                index++;
+            } else {
+                length += 3;
+            }
+        }
+        return length;
+    }
+
     private static int compareUnsigned(byte[] left, byte[] right) {
         for (int i = 0; i < Math.min(left.length, right.length); i++) {
             int comparison = Integer.compare(left[i] & 0xff, right[i] & 0xff);
@@ -318,4 +369,3 @@ public final class CanonicalCbor {
         return Integer.compare(left.length, right.length);
     }
 }
-

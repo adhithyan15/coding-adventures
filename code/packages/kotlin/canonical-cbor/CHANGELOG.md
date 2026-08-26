@@ -7,6 +7,7 @@
 - Enforce the portable depth and output limits, atomic checked append,
   deterministic map ordering, duplicate rejection, strict UTF-8, and stable
   payload-blind errors.
+- Reject malformed host UTF-16 instead of replacement-encoding it, and
+  preflight UTF-8 plus accumulated map-key storage against the output bound.
 - Consume all 55 language-neutral vectors with exact byte assertions and a
   95% line-coverage gate.
-

@@ -22,7 +22,25 @@ sealed interface CborValue {
         override fun toString(): String = "Bytes(length=${storage.size})"
     }
 
-    data class Text(val value: String) : CborValue
+    data class Text(val value: String) : CborValue {
+        init {
+            var index = 0
+            while (index < value.length) {
+                val unit = value[index]
+                if (unit.isHighSurrogate()) {
+                    require(index + 1 < value.length && value[index + 1].isLowSurrogate()) {
+                        "canonical-cbor: text is not Unicode scalar data"
+                    }
+                    index += 2
+                } else {
+                    require(!unit.isLowSurrogate()) {
+                        "canonical-cbor: text is not Unicode scalar data"
+                    }
+                    index++
+                }
+            }
+        }
+    }
     data class Array(val values: List<CborValue>) : CborValue {
         constructor(vararg values: CborValue) : this(values.toList())
     }
@@ -33,4 +51,3 @@ sealed interface CborValue {
     data class Bool(val value: Boolean) : CborValue
     data object Null : CborValue
 }
-

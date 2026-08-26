@@ -100,6 +100,25 @@ class PortableConformanceTest {
         assertThrows(IllegalArgumentException.class, () -> new CborException("unknown-id"));
     }
 
+    @Test
+    void textRejectsUnpairedSurrogatesWithoutReplacementEncoding() throws Exception {
+        assertThrows(IllegalArgumentException.class, () -> new CborValue.Text("\ud800"));
+        assertThrows(IllegalArgumentException.class, () -> new CborValue.Text("\udc00"));
+        assertArrayEquals(fromHex("64f09f9880"),
+                CanonicalCbor.encodeChecked(new CborValue.Text("\ud83d\ude00")));
+    }
+
+    @Test
+    void oversizedUtf8IsRejectedBeforePublishing() {
+        CborValue.Text value = new CborValue.Text("\u0800".repeat(400_000));
+        assertError("encode-too-large", () -> CanonicalCbor.encodeChecked(value), "large-text");
+        ByteArrayOutputStream destination = new ByteArrayOutputStream();
+        destination.write(0xaa);
+        assertError("encode-too-large",
+                () -> CanonicalCbor.encodeIntoChecked(value, destination), "large-text-append");
+        assertArrayEquals(new byte[]{(byte) 0xaa}, destination.toByteArray());
+    }
+
     private static void assertError(String id, ThrowingAction action, String caseId) {
         CborException error = assertThrows(CborException.class, action::run, caseId);
         assertEquals(id, error.id(), caseId);

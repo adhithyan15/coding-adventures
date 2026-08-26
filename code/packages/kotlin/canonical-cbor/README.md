@@ -2,7 +2,7 @@
 
 This package is the Kotlin implementation of
 [`CBR01`](../../../specs/CBR01-canonical-cbor.md): a from-scratch,
-zero-production-dependency codec for RFC 8949 section 4.2.3
+no-third-party-production-dependency codec for RFC 8949 section 4.2.3
 length-first deterministic CBOR.
 
 The supported value model contains unsigned and negative 64-bit arguments,
@@ -39,11 +39,15 @@ content equality.
   unsupported simple values, and invalid UTF-8.
 - Nesting is capped at 128. Checked encoding publishes no bytes when the
   complete result would exceed 1,048,576 bytes.
+- Text construction rejects unpaired UTF-16 surrogates, and UTF-8 size is
+  preflighted before allocating an encoded payload. Map-key retention is
+  bounded by the same complete-item limit.
 - `CborException.id` exposes the 14 stable CBR01 identifiers. Messages begin
   with `canonical-cbor:` and never include input bytes, lengths, keys, or
   offsets.
 - Production code performs pure in-memory computation. The shared JSON corpus
-  is read only by tests.
+  is read only by tests. Its only runtime library is Kotlin's standard library,
+  the Kotlin/JVM equivalent of the language runtime used by other lanes.
 
 ## Validation
 
@@ -52,4 +56,3 @@ content equality.
 both compare every successful operation to the same exact expected bytes, so
 their cross-lane equality is checked byte-for-byte rather than by decoded
 meaning alone.
-

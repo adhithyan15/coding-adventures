@@ -87,6 +87,24 @@ class PortableConformanceTest {
         assertFailsWith<IllegalArgumentException> { CborException("unknown-id") }
     }
 
+    @Test
+    fun `text rejects unpaired surrogates without replacement encoding`() {
+        assertFailsWith<IllegalArgumentException> { CborValue.Text("\ud800") }
+        assertFailsWith<IllegalArgumentException> { CborValue.Text("\udc00") }
+        assertContentEquals(fromHex("64f09f9880"), CanonicalCbor.encodeChecked(CborValue.Text("\ud83d\ude00")))
+    }
+
+    @Test
+    fun `oversized UTF-8 is rejected before publishing`() {
+        val value = CborValue.Text("\u0800".repeat(400_000))
+        assertError("encode-too-large", "large-text") { CanonicalCbor.encodeChecked(value) }
+        val destination = ByteArrayOutputStream().apply { write(0xaa) }
+        assertError("encode-too-large", "large-text-append") {
+            CanonicalCbor.encodeIntoChecked(value, destination)
+        }
+        assertContentEquals(byteArrayOf(0xaa.toByte()), destination.toByteArray())
+    }
+
     private fun assertError(id: String, caseId: String, action: () -> Unit) {
         val error = assertFailsWith<CborException>(caseId) { action() }
         assertEquals(id, error.id, caseId)

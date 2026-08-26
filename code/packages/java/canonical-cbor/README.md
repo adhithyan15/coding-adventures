@@ -39,6 +39,9 @@ therefore preserve all 64 wire bits in a signed `long`; callers may use
   unsupported simple values, and invalid UTF-8.
 - Nesting is capped at 128. Checked encoding publishes no bytes when the
   complete result would exceed 1,048,576 bytes.
+- Text construction rejects unpaired UTF-16 surrogates, and UTF-8 size is
+  preflighted before allocating an encoded payload. Map-key retention is
+  bounded by the same complete-item limit.
 - `CborException.id()` exposes the 14 stable CBR01 identifiers. Messages begin
   with `canonical-cbor:` and never include input bytes, lengths, keys, or
   offsets.
@@ -52,4 +55,3 @@ therefore preserve all 64 wire bits in a signed `long`; callers may use
 both compare every successful operation to the same exact expected bytes, so
 their cross-lane equality is checked byte-for-byte rather than by decoded
 meaning alone.
-

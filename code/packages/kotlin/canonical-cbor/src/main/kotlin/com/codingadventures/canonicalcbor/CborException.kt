@@ -22,4 +22,3 @@ class CborException(val id: String) : Exception(messageFor(id)) {
         }
     }
 }
-

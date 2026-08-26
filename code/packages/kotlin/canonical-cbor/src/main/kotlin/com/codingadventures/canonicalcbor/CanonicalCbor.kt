@@ -53,8 +53,10 @@ object CanonicalCbor {
                     writeBytes(value.rawValue)
                 }
                 is CborValue.Text -> {
+                    val length = utf8Length(value.value)
+                    ensureFits(argumentSize(length.toULong()).toLong() + length)
                     val payload = value.value.toByteArray(StandardCharsets.UTF_8)
-                    writeArgument(3, payload.size.toULong())
+                    writeArgument(3, length.toULong())
                     writeBytes(payload)
                 }
                 is CborValue.Array -> {
@@ -72,10 +74,19 @@ object CanonicalCbor {
         }
 
         private fun writeMap(map: CborValue.Map, depth: Int) {
+            val minimumSize = argumentSize(map.entries.size.toULong()).toLong() +
+                map.entries.size.toLong() * 2
+            ensureFits(minimumSize)
+            var retainedKeyBytes = 0L
             val entries = map.entries.map { entry ->
                 val keyEncoder = Encoder()
                 keyEncoder.writeValue(entry.key, depth + 1)
-                EncodedEntry(keyEncoder.bytes(), entry.value)
+                val key = keyEncoder.bytes()
+                retainedKeyBytes += key.size
+                val lowerBound = argumentSize(map.entries.size.toULong()).toLong() +
+                    map.entries.size + retainedKeyBytes
+                ensureFits(lowerBound)
+                EncodedEntry(key, entry.value)
             }.sortedWith { left, right -> compareLengthFirst(left.key, right.key) }
 
             entries.zipWithNext().forEach { (left, right) ->
@@ -110,6 +121,10 @@ object CanonicalCbor {
                     for (shift in 56 downTo 0 step 8) writeByte((argument shr shift).toInt())
                 }
             }
+        }
+
+        private fun ensureFits(additionalBytes: Long) {
+            if (additionalBytes > MAX_ENCODED_BYTES - output.size()) fail("encode-too-large")
         }
 
         private fun writeByte(value: Int) {
@@ -237,6 +252,33 @@ object CanonicalCbor {
         return if (length != 0) length else compareUnsigned(left, right)
     }
 
+    private fun argumentSize(argument: ULong): Int = when {
+        argument <= 23u -> 1
+        argument <= 0xffu -> 2
+        argument <= 0xffffu -> 3
+        argument <= 0xffff_ffffu -> 5
+        else -> 9
+    }
+
+    private fun utf8Length(text: String): Long {
+        var length = 0L
+        var index = 0
+        while (index < text.length) {
+            val unit = text[index]
+            when {
+                unit.code <= 0x7f -> length++
+                unit.code <= 0x7ff -> length += 2
+                unit.isHighSurrogate() -> {
+                    length += 4
+                    index++
+                }
+                else -> length += 3
+            }
+            index++
+        }
+        return length
+    }
+
     private fun compareUnsigned(left: ByteArray, right: ByteArray): Int {
         for (index in 0 until minOf(left.size, right.size)) {
             val comparison = (left[index].toInt() and 0xff).compareTo(right[index].toInt() and 0xff)
@@ -245,4 +287,3 @@ object CanonicalCbor {
         return left.size.compareTo(right.size)
     }
 }
-
