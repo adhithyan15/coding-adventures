@@ -2,6 +2,13 @@
 
 ## Unreleased
 
+### Added — source-verified Japanese hiragana shi
+
+- Add hiragana **し** as one continuous descent, broad lower turn, and rising
+  rightward sweep from Sirgazil's 23-frame CC0 animation.
+- Pin zero lifts and fit the cited one-run order to the bundled Noto Sans JP
+  outline in a two-movement filmstrip.
+
 ### Added — source-verified Chinese language-identity characters
 
 - Add **汉**, **语**, **文**, and **国** from pinned Hanzi Writer Data medians,
