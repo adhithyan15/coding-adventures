@@ -1,5 +1,9 @@
 # Changelog — diagram-ir
 
+## 0.78.0
+
+- Preserve Mermaid Gantt calendar exclusions, includes, weekend boundaries, and axis controls in semantic temporal IR.
+
 ## 0.68.0
 
 - Preserve Mermaid XY x/y-axis label, title, and spine visibility, typography, padding, and width configuration.

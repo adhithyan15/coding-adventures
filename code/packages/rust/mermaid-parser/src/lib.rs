@@ -529,7 +529,7 @@ fn token_name(token: &Token) -> &str {
 
 use diagram_ir::{
     Axis, AxisKind, ChartDataPoint, ChartDiagram, ChartKind, ChartOrientation, ChartSeries,
-    Compartment, CompartmentKind, GanttDiagram, GanttSection, GanttTask, GitBranch, GitCommitType,
+    Compartment, CompartmentKind, GanttConfig, GanttDiagram, GanttSection, GanttTask, GitBranch, GitCommitType,
     GitDiagram, GitEvent, JourneyConfig, JourneyDiagram, JourneySection, JourneyTask, PieSlice,
     QuadrantConfig, QuadrantPoint, RelKind, RequirementElementMetadata, RequirementKind,
     RequirementMetadata, RequirementRisk, RequirementVerifyMethod, SankeyFlow, SankeyNode,
@@ -5943,6 +5943,7 @@ pub fn parse_gantt(source: &str) -> Result<GanttDiagram, ParseError> {
     let mut title = None;
     let mut accessibility_title = None;
     let mut accessibility_description = None;
+    let mut config = GanttConfig::default();
     let mut sections: Vec<GanttSection> = Vec::new();
     let mut current_section: Option<GanttSection> = None;
 
@@ -5964,6 +5965,29 @@ pub fn parse_gantt(source: &str) -> Result<GanttDiagram, ParseError> {
             }
             Some("DATE_FORMAT_STATEMENT") => {
                 date_format = token.value["dateFormat".len()..].trim().to_string();
+            }
+            Some("AXIS_FORMAT_STATEMENT") => {
+                config.axis_format = Some(gantt_statement_value(&token, "axisFormat"));
+            }
+            Some("TICK_INTERVAL_STATEMENT") => {
+                config.tick_interval = Some(gantt_statement_value(&token, "tickInterval"));
+            }
+            Some("INCLUDES_STATEMENT") => {
+                merge_gantt_calendar_tokens(&mut config.includes, &gantt_statement_value(&token, "includes"));
+            }
+            Some("EXCLUDES_STATEMENT") => {
+                merge_gantt_calendar_tokens(&mut config.excludes, &gantt_statement_value(&token, "excludes"));
+            }
+            Some("INCLUSIVE_END_DATES") => config.inclusive_end_dates = true,
+            Some("TOP_AXIS") => config.top_axis = true,
+            Some("TODAY_MARKER_STATEMENT") => {
+                config.today_marker = Some(gantt_statement_value(&token, "todayMarker"));
+            }
+            Some("WEEKDAY_STATEMENT") => {
+                config.weekday = Some(gantt_statement_value(&token, "weekday").to_ascii_lowercase());
+            }
+            Some("WEEKEND_STATEMENT") => {
+                config.weekend = Some(gantt_statement_value(&token, "weekend").to_ascii_lowercase());
             }
             Some("SECTION_STATEMENT") => {
                 if let Some(section) = current_section.take() {
@@ -5997,8 +6021,25 @@ pub fn parse_gantt(source: &str) -> Result<GanttDiagram, ParseError> {
         accessibility_title,
         accessibility_description,
         date_format,
+        config,
         sections,
     })
+}
+
+fn gantt_statement_value(token: &Token, keyword: &str) -> String {
+    token.value[keyword.len()..].trim().to_string()
+}
+
+fn merge_gantt_calendar_tokens(target: &mut Vec<String>, source: &str) {
+    for value in source
+        .to_ascii_lowercase()
+        .split(|character: char| character.is_whitespace() || character == ',')
+        .filter(|value| !value.is_empty())
+    {
+        if !target.iter().any(|existing| existing == value) {
+            target.push(value.to_string());
+        }
+    }
 }
 
 fn gantt_metadata_value(token: &Token) -> Option<String> {
@@ -6701,6 +6742,22 @@ Rel(customer, web, \"Uses\", \"HTTPS\")";
 
         assert!(parse_gantt("gantt\nclick missing href \"https://example.com\"\n").is_err());
         assert!(parse_gantt("gantt\nTask :t1, 2026-03-01, 1d\nclick t1\n").is_err());
+    }
+
+    #[test]
+    fn gantt_preserves_calendar_and_axis_controls() {
+        let diagram = parse_gantt(
+            "gantt\naxisFormat %m/%d\ntickInterval 2weeks\nexcludes weekends, 2026-01-01\nexcludes monday\nincludes 2026-01-03, 2026-01-03\ninclusiveEndDates\ntopAxis\ntodayMarker off\nweekday monday\nweekend friday\nTask :t1, 2026-01-01, 2d\n",
+        ).unwrap();
+        assert_eq!(diagram.config.axis_format.as_deref(), Some("%m/%d"));
+        assert_eq!(diagram.config.tick_interval.as_deref(), Some("2weeks"));
+        assert_eq!(diagram.config.excludes, ["weekends", "2026-01-01", "monday"]);
+        assert_eq!(diagram.config.includes, ["2026-01-03"]);
+        assert!(diagram.config.inclusive_end_dates);
+        assert!(diagram.config.top_axis);
+        assert_eq!(diagram.config.today_marker.as_deref(), Some("off"));
+        assert_eq!(diagram.config.weekday.as_deref(), Some("monday"));
+        assert_eq!(diagram.config.weekend.as_deref(), Some("friday"));
     }
 
     #[test]
