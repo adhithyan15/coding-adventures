@@ -39,7 +39,7 @@ describe("real curriculum", () => {
     expect(scripts.devanagari!.complete).toBe(true);
   });
 
-  it("keeps the cross-script closure queue measured after Telugu long e", () => {
+  it("keeps the cross-script closure queue measured after Urdu be", () => {
     const candrakkala = scripts.malayalam!.marks!.find((mark) => mark.mark === "്")!;
     expect(candrakkala.role).toBe("virama");
     expect(candrakkala.compositionOrder).toEqual([
@@ -800,6 +800,23 @@ describe("real curriculum", () => {
       /pointed hooked head.*deep bowl.*one uninterrupted body-first stroke.*Arabic-derived words.*Noto Naskh fallback.*Nastaliq.*Urdu-specific/i,
     );
 
+    const urduBe = scripts["urdu-nastaliq"]!.letters.find((letter) => letter.glyph === "ب")!;
+    expect(urduBe.sound).toBe("b");
+    expect(urduBe.penLifts).toBe(1);
+    expect(urduBe.strokeOrder).toEqual([
+      "sweep the independent be-series bowl from right to left",
+      "after one lift, place the single dot below",
+    ]);
+    expect(urduBe.strokeOrderSource?.url).toBe(
+      "https://openbooks.library.northwestern.edu/zerozabar/chapter/be-kaf-and-short-vowels/",
+    );
+    expect(urduBe.strokeOrderSource?.citation).toMatch(
+      /Zer o Zabar.*independent ب.*Be instructions.*Northwestern/i,
+    );
+    expect(urduBe.strokeOrderSource?.variation).toMatch(
+      /bowl first.*right-to-left.*single dot below.*one lift.*shallow curve.*main line.*dots.*Noto Naskh fallback.*Nastaliq.*Urdu-specific/i,
+    );
+
     const urduPe = scripts["urdu-nastaliq"]!.letters.find((letter) => letter.glyph === "پ")!;
     expect(urduPe.sound).toBe("p");
     expect(urduPe.penLifts).toBe(3);
@@ -1168,9 +1185,11 @@ describe("real curriculum", () => {
     expect(affected.get("ظ") ?? 0).toBe(0);
     expect(missingByScript.get("perso-arabic.json")?.has("ک")).toBe(false);
     expect(affected.get("ک") ?? 0).toBe(0);
+    expect(missingByScript.get("urdu-nastaliq.json")?.has("ب")).toBe(false);
+    expect(affected.get("ب") ?? 0).toBe(0);
     expect(
       [...affected.entries()].sort((left, right) => right[1] - left[1])[0],
-    ).toEqual(["ب", 4]);
+    ).toEqual(["ね", 3]);
   });
 
   it("loaded every track (17+ and growing)", () => {

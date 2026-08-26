@@ -303,6 +303,28 @@ describe("shared Perso-Arabic letters retain script-owned provenance", () => {
     );
   });
 
+  it("keeps Arabic, Persian, and Urdu ب separate while Urdu preserves main-line-first order", () => {
+    const arabic = SCRIPTS.find((script) => script.script === "arabic")!
+      .letters.find((entry) => entry.glyph === "ب")!;
+    const persian = SCRIPTS.find((script) => script.script === "perso-arabic")!
+      .letters.find((entry) => entry.glyph === "ب")!;
+    const urdu = SCRIPTS.find((script) => script.script === "urdu-nastaliq")!
+      .letters.find((entry) => entry.glyph === "ب")!;
+    expect(urdu.penLifts).toBe(1);
+    expect(urdu.strokeOrder).toEqual([
+      "sweep the independent be-series bowl from right to left",
+      "after one lift, place the single dot below",
+    ]);
+    expect(urdu.strokeOrderSource?.url).toBe(
+      "https://openbooks.library.northwestern.edu/zerozabar/chapter/be-kaf-and-short-vowels/",
+    );
+    expect(new Set([
+      arabic.strokeOrderSource?.url,
+      persian.strokeOrderSource?.url,
+      urdu.strokeOrderSource?.url,
+    ]).size).toBe(3);
+  });
+
   it("keeps Persian and Urdu پ separate while both preserve the four-stroke triangle order", () => {
     const persian = SCRIPTS.find((script) => script.script === "perso-arabic")!
       .letters.find((entry) => entry.glyph === "پ")!;

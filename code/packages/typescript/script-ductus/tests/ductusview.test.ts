@@ -543,6 +543,8 @@ const URDU_SHIN = ductusFor("ش", "urdu-nastaliq")!;
 const urduShinOutline = naskhOutline("ش");
 const URDU_FE = ductusFor("ف", "urdu-nastaliq")!;
 const urduFeOutline = naskhOutline("ف");
+const URDU_BEH = ductusFor("ب", "urdu-nastaliq")!;
+const urduBehOutline = naskhOutline("ب");
 const URDU_PEH = ductusFor("پ", "urdu-nastaliq")!;
 const urduPehOutline = naskhOutline("پ");
 const URDU_KAF = ductusFor("ک", "urdu-nastaliq")!;
@@ -723,12 +725,14 @@ describe("ductusFor — only cited letters have a ductus", () => {
     expect(persian?.source.url).not.toBe(urdu?.source.url);
   });
 
-  it("keeps the shared Arabic and Persian ب independently addressable", () => {
+  it("keeps the shared Arabic, Persian, and Urdu ب independently addressable", () => {
     const arabic = ductusFor("ب", "arabic");
     const persian = ductusFor("ب", "perso-arabic");
+    const urdu = ductusFor("ب", "urdu-nastaliq");
     expect(arabic?.script).toBe("arabic");
     expect(persian?.script).toBe("perso-arabic");
-    expect(arabic?.source.url).not.toBe(persian?.source.url);
+    expect(urdu?.script).toBe("urdu-nastaliq");
+    expect(new Set([arabic?.source.url, persian?.source.url, urdu?.source.url]).size).toBe(3);
   });
 
   it("keeps the shared Arabic, Persian, and Urdu س independently addressable", () => {
@@ -7351,6 +7355,39 @@ describe("Persian پ — the shared bowl followed by three separate dots", () =>
     expect(paths.find((path) => path.attrs.class === "ductus__pen")!.attrs.d).toBe(
       penPathD(PERSIAN_PEH.strokes[3], 1),
     );
+  });
+});
+
+describe("Urdu ب — the independent be-series bowl followed by its lower dot", () => {
+  const steps = ductusSteps(URDU_BEH);
+  const strip = ductusFilmstrip(URDU_BEH, urduBehOutline);
+
+  it("keeps the main line in one run, then places the dot after one lift", () => {
+    expect(steps.map((step) => step.label)).toEqual([
+      "sweep the independent be-series bowl from right to left",
+      "after one lift, place the single dot below",
+    ]);
+    expect(steps.map((step) => step.startsAfterLift)).toEqual([false, true]);
+    expect(steps.map((step) => step.strokeIndex)).toEqual([0, 1]);
+  });
+
+  it("reports two movements separated by one pen lift", () => {
+    expect(strip.frames).toHaveLength(2);
+    expect(strip.penLifts).toBe(1);
+    expect(strip.summary).toBe("2 strokes · 1 pen lift · 2 movements");
+  });
+
+  it("draws the Noto Naskh outline and keeps its Urdu source separate", () => {
+    const paths = byTag(strip.frames[1], "path");
+    expect(paths.find((path) => path.attrs.class === "ductus__glyph")!.attrs.d).toBe(
+      urduBehOutline.path,
+    );
+    expect(paths.filter((path) => path.attrs.class === "ductus__done")).toHaveLength(1);
+    expect(paths.find((path) => path.attrs.class === "ductus__pen")!.attrs.d).toBe(
+      penPathD(URDU_BEH.strokes[1], 1),
+    );
+    expect(URDU_BEH.source.url).not.toBe(ARABIC_BAA.source.url);
+    expect(URDU_BEH.source.url).not.toBe(PERSIAN_BEH.source.url);
   });
 });
 
