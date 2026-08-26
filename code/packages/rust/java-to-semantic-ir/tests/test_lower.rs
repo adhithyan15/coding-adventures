@@ -3595,19 +3595,170 @@ fn mixed_index_then_dot_non_length_field_remains_unsupported() {
 }
 
 #[test]
-fn chained_indexed_assignment_target_still_remains_unsupported() {
-    // Regression check: task #60 only touches the *value*-position
-    // suffix-chain dispatch (`lower_primary_expression`), not the
-    // assignment-target dispatch (`indexed_assign_target`) -- a chained
-    // indexed-assignment target (`grid[i][j] = v;`) is a structurally
-    // separate gap (still its own single-suffix-only match arm) and must
-    // remain rejected exactly as before.
+fn chained_indexed_assignment_target_lowers_to_seqset() {
+    // Task #66: `grid[i][j] = v;` -- `indexed_assign_target` now
+    // recognizes a suffix chain of any length, peeling every suffix but
+    // the last via `lower_chained_index` and writing through the last
+    // suffix's own index. No temp-hoisting needed here (unlike compound-
+    // assignment/incdec below) since a plain assignment target is only
+    // ever built once.
+    let m = compile_ok(&wrap("int[][] grid = {{1, 2}, {3, 4}}; grid[0][1] = 9;"));
+    match &main_fn(&m).body.stmts[1] {
+        Stmt::SeqSet { seq, index, value, .. } => {
+            match seq {
+                Expr::SeqIndex { seq: inner, index: outer_idx, .. } => {
+                    assert!(matches!(inner.as_ref(), Expr::VarRef { name, .. } if name == "grid"));
+                    assert!(matches!(outer_idx.as_ref(), Expr::IntLit { value: 0, .. }));
+                }
+                other => panic!("expected seq = SeqIndex(grid, 0), got {other:?}"),
+            }
+            assert!(matches!(index, Expr::IntLit { value: 1, .. }));
+            assert!(matches!(value, Expr::IntLit { value: 9, .. }));
+        }
+        other => panic!("expected Stmt::SeqSet, got {other:?}"),
+    }
+}
+
+#[test]
+fn triply_chained_indexed_assignment_target_lowers_to_seqset() {
+    // A 3-D chain (`cube[i][j][k] = v;`) peels two leading suffixes and
+    // writes through the third -- exercises `lower_chained_index` with
+    // more than one leading suffix, not just the 2-D minimum case above.
+    let m = compile_ok(&wrap(
+        "int[][][] cube = {{{1, 2}}}; cube[0][0][1] = 7;",
+    ));
+    match &main_fn(&m).body.stmts[1] {
+        Stmt::SeqSet { seq, value, .. } => {
+            assert!(matches!(seq, Expr::SeqIndex { seq: outer, .. } if matches!(outer.as_ref(), Expr::SeqIndex { .. })));
+            assert!(matches!(value, Expr::IntLit { value: 7, .. }));
+        }
+        other => panic!("expected Stmt::SeqSet, got {other:?}"),
+    }
+}
+
+#[test]
+fn chained_indexed_assignment_value_kind_mismatch_is_still_rejected() {
+    // `result_kind` is still derived correctly for a chained target --
+    // assigning a whole sub-array where a scalar `int` is expected must
+    // still fail, exactly like the single-suffix case already does.
     let err = compile_source(
-        &wrap("int[][] grid = {{1, 2}}; grid[0][0] = 9;"),
+        &wrap("int[][] grid = {{1, 2}}; grid[0][0] = new int[]{1};"),
         "prog",
     )
     .unwrap_err();
-    assert!(!err.message.is_empty());
+    assert!(
+        err.message.contains("does not match"),
+        "unexpected message: {}",
+        err.message
+    );
+}
+
+#[test]
+fn chained_indexed_assignment_beyond_the_array_dimension_is_rejected() {
+    // `xs[0][0] = v;` on a 1-D array: the leading `[0]` peel already
+    // exhausts `xs`'s only dimension, so the *second* suffix's own
+    // `index_once` call inside `lower_chained_index` fails naturally --
+    // no separate bounds check needed, matching `lower_chained_index`'s
+    // own doc comment.
+    let err = compile_source(&wrap("int[] xs = {1, 2, 3}; xs[0][0] = 9;"), "prog").unwrap_err();
+    assert!(
+        err.message.contains("array-typed value"),
+        "unexpected message: {}",
+        err.message
+    );
+}
+
+#[test]
+fn chained_compound_assignment_on_an_indexed_target_lowers_via_once_only_temp_bindings() {
+    // Task #66: `grid[i][j] += v;` -- the compound-assignment analogue of
+    // the plain-assignment case above, generalizing task #59's
+    // once-only-evaluation temp-hoisting (`hoist_indexed_target`) from
+    // exactly one suffix to two: `grid`, `i`, and `j` must each be
+    // evaluated exactly once even though `grid[i][j]` is read *and*
+    // written.
+    let m = compile_ok(&wrap("int[][] grid = {{1, 2}}; grid[0][1] += 5;"));
+    match &main_fn(&m).body.stmts[1] {
+        Stmt::ExprStmt {
+            expr: Expr::Block(block),
+            ..
+        } => {
+            assert_eq!(
+                block.stmts.len(),
+                4,
+                "expected [seq temp, idx0 temp, idx1 temp, SeqSet]"
+            );
+            let seq_tmp = match &block.stmts[0] {
+                Stmt::LetStarBinding {
+                    name,
+                    value: Expr::VarRef { name: src, .. },
+                    ..
+                } => {
+                    assert_eq!(src, "grid");
+                    name.clone()
+                }
+                other => panic!("expected LetStarBinding(VarRef(\"grid\")), got {other:?}"),
+            };
+            let idx0_tmp = match &block.stmts[1] {
+                Stmt::LetStarBinding {
+                    name,
+                    value: Expr::IntLit { value: 0, .. },
+                    ..
+                } => name.clone(),
+                other => panic!("expected LetStarBinding(IntLit(0)), got {other:?}"),
+            };
+            let idx1_tmp = match &block.stmts[2] {
+                Stmt::LetStarBinding {
+                    name,
+                    value: Expr::IntLit { value: 1, .. },
+                    ..
+                } => name.clone(),
+                other => panic!("expected LetStarBinding(IntLit(1)), got {other:?}"),
+            };
+            assert_ne!(seq_tmp, idx0_tmp);
+            assert_ne!(idx0_tmp, idx1_tmp);
+            match &block.stmts[3] {
+                Stmt::SeqSet {
+                    seq: Expr::SeqIndex { seq: base, index: outer_idx, .. },
+                    index: Expr::VarRef { name: idx_name, .. },
+                    value: Expr::BuiltinCall { name: op, args, .. },
+                    ..
+                } => {
+                    assert!(matches!(base.as_ref(), Expr::VarRef { name, .. } if name == &seq_tmp));
+                    assert!(matches!(outer_idx.as_ref(), Expr::VarRef { name, .. } if name == &idx0_tmp));
+                    assert_eq!(idx_name, &idx1_tmp);
+                    assert_eq!(op, "+");
+                    assert!(matches!(args[1], Expr::IntLit { value: 5, .. }));
+                }
+                other => panic!("expected SeqSet(SeqIndex(seq_tmp, idx0_tmp), idx1_tmp, BuiltinCall), got {other:?}"),
+            }
+        }
+        other => panic!("expected ExprStmt(Block), got {other:?}"),
+    }
+}
+
+#[test]
+fn chained_incdec_of_an_indexed_target_lowers_via_once_only_temp_bindings() {
+    // Task #66: `grid[i][j]++;` -- the incdec analogue.
+    let m = compile_ok(&wrap("int[][] grid = {{1, 2}}; grid[0][1]++;"));
+    match &main_fn(&m).body.stmts[1] {
+        Stmt::ExprStmt {
+            expr: Expr::Block(block),
+            ..
+        } => {
+            assert_eq!(block.stmts.len(), 4);
+            match &block.stmts[3] {
+                Stmt::SeqSet {
+                    value: Expr::BuiltinCall { name: op, args, .. },
+                    ..
+                } => {
+                    assert_eq!(op, "+");
+                    assert!(matches!(args[1], Expr::IntLit { value: 1, .. }));
+                }
+                other => panic!("expected SeqSet(BuiltinCall(\"+\", ...)), got {other:?}"),
+            }
+        }
+        other => panic!("expected ExprStmt(Block), got {other:?}"),
+    }
 }
 
 #[test]
@@ -3628,16 +3779,6 @@ fn dot_length_on_a_two_dimensional_array_returns_the_outer_length() {
 fn feature_sequences_is_declared_when_a_multi_dimensional_array_is_lowered() {
     let m = compile_ok(&wrap("int[][] grid = {{1, 2}};"));
     assert!(m.manifest.contains(Feature::Sequences));
-}
-
-#[test]
-fn multi_dimensional_indexed_assignment_remains_deferred() {
-    // `grid[i][j] = v;` -- a chained assignment target -- remains
-    // deferred alongside compound-assignment/increment-decrement on an
-    // indexed target (see `lower_indexed_assignment`'s own doc comment).
-    let err =
-        compile_source(&wrap("int[][] grid = {{1, 2}}; grid[0][0] = 9;"), "prog").unwrap_err();
-    assert!(!err.message.is_empty());
 }
 
 #[test]
