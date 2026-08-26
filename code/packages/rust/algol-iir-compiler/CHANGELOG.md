@@ -1,5 +1,11 @@
 # Changelog
 
+## 0.209.0 — 2026-08-26 — zero-exponent literal expressions
+
+Bounded zero-exponent unit recognition now accepts finite literal-only
+arithmetic bases, including grouped sums, products, quotients, and powers.
+Dynamic and non-finite bases remain conservative.
+
 ## 0.208.0 — 2026-08-26 — real zero-exponent units
 
 Exact signed-unit recognition now accepts a finite numeric literal raised by a
