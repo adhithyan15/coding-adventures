@@ -1,5 +1,9 @@
 # Changelog
 
+## 0.27.0
+
+- Resolve single-component Gantt second timestamps into precise backend-neutral task geometry.
+
 ## 0.26.0
 
 - Resolve typed Gantt timezone offsets into UTC-normalized backend-neutral task geometry.

@@ -6091,6 +6091,7 @@ fn parse_gantt_date_format(token: &Token, source: &str) -> Result<GanttDateForma
 
 fn gantt_date_matches_format(value: &str, format: &GanttDateFormat) -> bool {
     let mut rest = value;
+    let seconds_only = format.parts.as_slice() == [GanttDateFormatPart::Second];
     for part in &format.parts {
         let consumed = match part {
             GanttDateFormatPart::Literal(literal) => {
@@ -6102,7 +6103,9 @@ fn gantt_date_matches_format(value: &str, format: &GanttDateFormat) -> bool {
             GanttDateFormatPart::Year2 => consume_digits(rest, 2, 2),
             GanttDateFormatPart::Month | GanttDateFormatPart::Day => consume_digits(rest, 1, 2),
             GanttDateFormatPart::Month2 | GanttDateFormatPart::Day2 | GanttDateFormatPart::Hour24
-                | GanttDateFormatPart::Minute | GanttDateFormatPart::Second => consume_digits(rest, 2, 2),
+                | GanttDateFormatPart::Minute => consume_digits(rest, 2, 2),
+            GanttDateFormatPart::Second if seconds_only => consume_digits(rest, 1, 2),
+            GanttDateFormatPart::Second => consume_digits(rest, 2, 2),
             GanttDateFormatPart::Millisecond => consume_digits(rest, 3, 3),
             GanttDateFormatPart::MonthShort => consume_letters(rest, 3, 3),
             GanttDateFormatPart::MonthLong => consume_letters(rest, 3, 9),
@@ -7132,6 +7135,16 @@ Rel(customer, web, \"Uses\", \"HTTPS\")";
         assert!(parse_gantt(
             "gantt\ndateFormat YYYY-MM-DD[T]HH:mmZ\nTask :t1, 2026-01-02T04:05+0230, 1h",
         ).is_err());
+    }
+
+    #[test]
+    fn gantt_accepts_single_component_seconds_format() {
+        let diagram = parse_gantt(
+            "gantt\ndateFormat ss\nsection Network Request\nRTT :rtt, 0, 20",
+        ).unwrap();
+        assert_eq!(diagram.date_format.parts, [GanttDateFormatPart::Second]);
+        assert_eq!(diagram.sections[0].tasks[0].start, TaskStart::Date("0".into()));
+        assert_eq!(diagram.sections[0].tasks[0].end, Some(TaskEnd::Date("20".into())));
     }
 
     #[test]
