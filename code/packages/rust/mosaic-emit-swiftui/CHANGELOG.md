@@ -4,6 +4,41 @@ All notable changes to this package will be documented in this file.
 
 ## [Unreleased]
 
+### Fixed - HostLink.href now supports a slot:-bound value (#13110)
+
+`emit_host_link` only ever matched a literal `String` href
+(`find_string_prop` was the sole source) — a `slot:`-bound href
+silently fell back to the `"#"` placeholder with no diagnostic, the
+epic's own recurring "silent drop" failure class (#12017). Every other
+native backend (XAML, Qt, Compose, Flutter) already supported this.
+
+Added `find_slot_ref_prop(node, "href")` handling, introducing a small
+`HostLinkHref` enum (`Literal`/`Slot`) so the same value threads
+correctly through both consumption sites: the `Link(destination:)` URL
+and the `onActivate` dispatch payload (previously always emitted a
+hardcoded quoted string for the payload — for a slot-bound href it now
+emits the bare property reference instead, so the host receives the
+slot's live value, not a fixed placeholder).
+
+A slot-bound href is an unknown runtime value, so it can't be scheme-
+validated at compile time the way a literal is (#13052) — and
+`URL(string:)` returns `nil` for malformed input, so the previous
+bare `!` force-unwrap pattern would have crashed the app on tap for
+any invalid runtime value. Both are handled by a small inline
+runtime-validated closure: `guard let u = URL(string: <slot>), ["http",
+"https", "mailto"].contains(u.scheme?.lowercased() ?? "") else {
+return URL(string: "about:blank")! }; return u`. A malformed or
+disallowed-scheme value falls back to a fixed, always-valid, inert
+URL rather than crashing or navigating — the same "no navigation
+target" outcome the XAML/Compose backends settled on for their own
+runtime guards.
+
+Verified with a real `swiftc` compile-and-run of the exact generated
+closure expression (not just Rust-level string assertions): an
+allowed scheme passes through unchanged, a disallowed scheme
+(`javascript:`) and a malformed string both safely produce
+`about:blank`.
+
 ### Security - validate literal HostLink.href's URI scheme (#13052)
 
 Follow-up to #12038 (the identical XAML gap). `Link(destination: URL(string:
