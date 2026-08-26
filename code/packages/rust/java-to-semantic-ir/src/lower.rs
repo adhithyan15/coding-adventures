@@ -3117,6 +3117,15 @@ impl Lowerer {
             span: span.clone(),
         };
         let mut idx_ref: Option<Expr> = None;
+        // `suffixes` must be non-empty -- guaranteed by every caller
+        // reaching this via `indexed_assign_target`'s own non-empty
+        // return (see this function's own doc comment). Guarded
+        // defensively so a future edit that loosens that guarantee fails
+        // a debug assertion rather than silently underflowing here.
+        debug_assert!(
+            !suffixes.is_empty(),
+            "hoist_indexed_target requires a non-empty suffix chain"
+        );
         let last = suffixes.len() - 1;
         for (i, suffix) in suffixes.iter().enumerate() {
             let suffix = match suffix {
@@ -3198,6 +3207,15 @@ impl Lowerer {
         rhs: &GrammarASTNode,
         context: &GrammarASTNode,
     ) -> Result<Stmt, JavaLowerError> {
+        // `suffixes` must be non-empty -- guaranteed by every caller
+        // reaching this via `indexed_assign_target`'s own non-empty
+        // return. Guarded defensively so a future edit that loosens that
+        // guarantee fails a debug assertion rather than silently
+        // underflowing the `suffixes.len() - 1` slice bound below.
+        debug_assert!(
+            !suffixes.is_empty(),
+            "lower_indexed_assignment requires a non-empty suffix chain"
+        );
         let (seq, seq_kind) = if suffixes.len() == 1 {
             self.lower_expr(primary, 0)?
         } else {
