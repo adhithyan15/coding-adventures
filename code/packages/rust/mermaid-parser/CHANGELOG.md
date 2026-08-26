@@ -1,5 +1,9 @@
 # Changelog
 
+## 0.146.0
+
+- Compile Mermaid Gantt `Z` and `ZZ` timezone-offset tokens into typed semantic date formats.
+
 ## 0.145.0
 
 - Lower Mermaid Gantt HTML line-break variants in titles, sections, and tasks to semantic newlines.

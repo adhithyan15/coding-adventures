@@ -85,6 +85,17 @@ The TypeScript backend accepts these SIR features:
   module never gains the dependency). `A * A` (matrix product) emits
   `__SirArray.matmul(A, A)`; APL's `+/A` (reduce) emits
   `__SirArray.reduce("Add", A)`.
+- `LoopControl` (SIR16 addendum, task #63) — `Stmt::Break`/`Stmt::Continue`
+  emit bare native `break;`/`continue;` (`While`/`ForRange`/`ForEach`
+  already emit real inline loops with no closure boundary in the way, so
+  this is a trivial 1:1 emission). The one real wrinkle: a bare `if` used
+  as a *statement* (`Stmt::ExprStmt{Expr::If{..}}`) is special-cased in
+  `emit_stmt` to emit a native `if (...) { … } else { … }` rather than
+  falling through to `Expr::If`'s generic value-position ternary+IIFE
+  codegen — `break`/`continue` cannot cross that IIFE's own function
+  boundary, and `if (cond) { break; }` is the single most common way
+  source code uses either statement at all. Mirrors
+  `semantic-ir-to-javascript`'s own identically-shaped fix (task #62).
 - `ConsoleIO` (SIR28) — `__sys_write__("stdout"|"stderr",
   "none"|"per_value"|"once", unpackArrays, ...values)` emits
   `__Sir.write(...)`, a plain pass-through (no compile-time literal

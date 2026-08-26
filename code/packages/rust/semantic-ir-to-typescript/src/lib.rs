@@ -92,6 +92,24 @@ const ACCEPTED_FEATURES: &[Feature] = &[
     // `for`-each → `for…of`), per code/specs/sir-runtime.md.
     Feature::MutableBindings,
     Feature::Loops,
+    // SIR16 addendum: bare loop-control statements. `Stmt::Break`/
+    // `Stmt::Continue` lower to a bare native `break;`/`continue;` — a
+    // trivial 1:1 emission, since this backend's `While`/`ForRange`/
+    // `ForEach` lowering (`emit.rs`'s corresponding arms) already emits a
+    // real, inline native loop with no closure boundary in the way.
+    // `ForRange` is NOT listed as a safe host here — the validator itself
+    // already refuses to accept `Break`/`Continue` whose nearest
+    // enclosing loop is a `ForRange`, for reasons that apply regardless
+    // of which backend ultimately emits the module (see `Feature::
+    // LoopControl`'s own doc comment in `semantic-ir::manifest`), so this
+    // backend never needs to reason about that case at all. Mirrors
+    // `semantic-ir-to-javascript`'s own identically-reasoned rollout
+    // (task #62) — including that task's own found-while-implementing
+    // fix (a bare `if` used as a statement must emit a real native
+    // `if`/`else`, not the value-position ternary+IIFE shape, since
+    // `break`/`continue` can't cross a function boundary); see
+    // `emit_stmt`'s `Stmt::ExprStmt` arm.
+    Feature::LoopControl,
     // SIR17 OOP & scopes — class/module declarations register in the
     // OOP runtime; instance/class vars route through its stores; consts
     // are module-level bindings; `is_a?`-style dispatch goes through

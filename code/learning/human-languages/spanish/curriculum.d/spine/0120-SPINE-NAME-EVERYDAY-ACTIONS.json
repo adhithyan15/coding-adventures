@@ -4,7 +4,11 @@
     "ES-PATH-381-01",
     "ES-PATH-382-01",
     "ES-PATH-383-01",
-    "ES-PATH-384-01"
+    "ES-PATH-384-01",
+    "ES-PATH-385-01",
+    "ES-PATH-386-01",
+    "ES-PATH-387-01",
+    "ES-PATH-388-01"
   ],
   "omits": [
     "VERB-GIVE"

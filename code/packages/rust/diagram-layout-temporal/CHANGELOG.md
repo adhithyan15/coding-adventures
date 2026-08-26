@@ -1,5 +1,9 @@
 # Changelog
 
+## 0.26.0
+
+- Resolve typed Gantt timezone offsets into UTC-normalized backend-neutral task geometry.
+
 ## 0.25.0
 
 - Reserve backend-neutral row geometry for multiline Mermaid Gantt titles, sections, and task labels.

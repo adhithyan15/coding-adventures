@@ -70,8 +70,10 @@ pinned upstream corpus now gates this supported parser surface. Semicolon- and
 hash-prefixed titles, sections, and task labels follow the pinned upstream
 grammar while lowering to clean semantic labels. Gantt remains partial while
 HTML break variants in titles, sections, and tasks now lower to semantic
-newlines with multiline layout. Gantt remains partial while timezone/locale
-date tokens and the complete pinned visual corpus are still outstanding.
+newlines with multiline layout. Colon and compact timezone offsets compile to
+typed parts and normalize into UTC layout geometry. Gantt remains partial while
+locale-specific date tokens and the complete pinned visual corpus are still
+outstanding.
 
 Each supported family lowers into the shared Diagram IR and can continue
 through its family layout package:

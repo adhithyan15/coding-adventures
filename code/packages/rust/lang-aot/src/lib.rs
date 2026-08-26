@@ -664,46 +664,58 @@ pub fn compile_source_to_llvm_with_target(
 /// **not** touch functions that use the heap (cons cells, symbols) — those
 /// need the boxed-`anyref` value model, a follow-up slice (L3b-3a-3).
 fn concretize_scalar_any_for_wasm(module: &mut IIRModule) {
-    // `box`/`unbox` are heap-model evidence too. The old code caught them
-    // incidentally, because a `ref<any>` instruction hint counted as evidence;
-    // now that it does not, a module whose ONLY tagged-model signal is a
-    // box/unbox pair would be narrowed while those ops survive.
-    const HEAP_OPS: &[&str] =
-        &["alloc", "field_load", "field_store", "is_null", "box", "unbox"];
-    // Both spellings: the frontend's names, and the `dyn_*` names the earlier
-    // representation passes rename them to. Whichever form survives to this
-    // point is unfakeable evidence that the function is on the tagged value
-    // model — unlike a `ref<any>` type hint, which only says the value is
-    // dynamic. `(ATOM 7)` reaches here as `dyn_pair_p`/`dyn_not` and has no
-    // other evidence, so omitting these names silently narrowed a tagged
-    // program to machine ints.
-    const LISP_BUILTINS: &[&str] = &[
-        "cons", "car", "cdr", "pair?", "not", "equal?", "make_symbol", "make_nil", "null?",
-        "dyn_cons", "dyn_car", "dyn_cdr", "dyn_pair_p", "dyn_null_p", "dyn_not", "dyn_equal",
-        "dyn_box_int", "dyn_unbox_int", "dyn_truthy", "dyn_to_exit_code",
-    ];
-
-    // Whole-module, not per-function — a `call` couples caller and callee value
-    // models, so narrowing a caller whose callee keeps a tagged boundary emits a
-    // caller that stores a reference into a machine-typed local.
-    let module_uses_lisp = module.functions.iter().any(|func| {
-        func.params.iter().any(|(_, t)| is_tagged_boundary_param(t))
-            || func.instructions.iter().any(|i| {
-                HEAP_OPS.contains(&i.op.as_str())
-                    || (i.op == "call_builtin"
-                        && matches!(i.srcs.first(),
-                            Some(interpreter_ir::Operand::Var(n)) if LISP_BUILTINS.contains(&n.as_str())))
-                    || is_heap_evidence_hint(&i.type_hint)
-            })
-    });
+    // Per-function, using the EXACT SAME partition `lower_dyn_repr_structural`
+    // (the sibling structural/boxing pass) uses to decide which functions get
+    // the uniform-anyref treatment — `iir_builtin_lowering::lisp_functions`,
+    // which seeds from heap ops / lisp params per function and then closes
+    // under *calling* (a caller of a lisp function is itself lisp, which is
+    // the caller/callee-coupling safety net a `call` needs: see that
+    // function's own doc comment).
+    //
+    // This used to be a separate whole-module heuristic here ("does ANY
+    // function anywhere in the module show heap evidence?"), which mostly
+    // agreed with `lower_dyn_repr_structural`'s per-function partition but
+    // disagreed for a closure body with no heap evidence of its own — e.g. a
+    // Twig `(lambda (x) x)` compiles to `fn __lambda_0(x: any) { ret x }`,
+    // whose body has no `alloc`/`box`/heap-builtin anywhere. The structural
+    // pass correctly left it alone (it is a raw-model closure body, not a
+    // tagged one — its only caller, the synthesized closure dispatcher,
+    // already unboxes the argument and re-boxes the result around it). But
+    // the whole-module check here saw heap evidence elsewhere in the SAME
+    // module (that dispatcher) and skipped concretizing every function,
+    // including this one — so its `ret x` instruction's `"any"` type hint
+    // reached `iir-to-wasm`'s validator unconcretized and was rejected
+    // outright: `ValidationFailed(["UntypedInstruction: ... has type_hint
+    // \"any\""])` (`closure_identity_returns_captured_value`). Reusing one
+    // function for both passes' partitions makes that disagreement
+    // structurally impossible: a function is either lisp or it isn't, and
+    // both passes now ask the identical question.
+    let lisp_funcs = iir_builtin_lowering::lisp_functions(module);
     for func in &mut module.functions {
-        let uses_lisp = module_uses_lisp;
-        if uses_lisp {
+        if lisp_funcs.contains(&func.name) {
             continue; // boxed-anyref value model — out of scope for the scalar slice.
         }
         // Pure scalar function: every `any`/`polymorphic` value is an i64.
         if is_narrowable_dynamic(&func.return_type) {
             func.return_type = "i64".to_string();
+        }
+        // Concretize the **parameters** too, not just the return type and the
+        // instruction hints — mirroring `concretize_scalar_any_for_jvm`'s own
+        // param loop (same reasoning: a caller/callee signature must agree).
+        // This was unreachable dead code for as long as this pass never
+        // actually touched a closure body (every such function was skipped by
+        // the old whole-module check above); now that a raw-model closure
+        // body like `fn __lambda_0(x: any) { ret x }` reaches this loop, its
+        // `x: any` param needs concretizing exactly like its `ret` does — the
+        // synthesized dispatcher already calls it with an unboxed `i64`
+        // argument (see `closure_heap::build_dispatcher`'s `extract` helper),
+        // so leaving the declared param type at `any` (which `iir-to-wasm`
+        // falls back to mapping as `i32`) produced a real call-site type
+        // mismatch: `TypeMismatch: expected I64, found I32`.
+        for (_, ty) in &mut func.params {
+            if is_narrowable_dynamic(ty) {
+                *ty = "i64".to_string();
+            }
         }
         for instr in &mut func.instructions {
             if is_narrowable_dynamic(&instr.type_hint) {

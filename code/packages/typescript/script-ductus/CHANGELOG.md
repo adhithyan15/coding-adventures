@@ -9,6 +9,13 @@
 - Cover both characters with provenance, font-selection, stroke-count,
   pen-lift, on-ink, and whole-glyph geometry tests.
 
+### Added — source-verified Persian and Urdu hah
+
+- Add script-scoped Persian and Urdu **ح** as independently sourced body-first,
+  zero-lift head-and-bowl runs.
+- Keep both paths separate from Arabic **ح**'s source-specific two-run order
+  while fitting the same bundled Noto Naskh fallback outline.
+
 ### Added — source-verified Malayalam independent aa
 
 - Add Malayalam **ആ** as two source-backed pen-down runs: draw the left outer

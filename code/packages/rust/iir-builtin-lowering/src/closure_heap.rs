@@ -456,6 +456,20 @@ fn build_dispatcher(dispatch: &[Dispatch], params_are_boxed: bool) -> IIRFunctio
             }
         }
         let resv = format!("cd_res_{k}");
+        // This `call`'s type hint is deliberately `ref<any>` regardless of
+        // `params_are_boxed`/whether `d.fn_name` turns out to stay on the raw
+        // or the tagged model — this pass runs on BOTH the native and the WASM
+        // pipeline (see the module doc comment), and the two disagree on how
+        // to react to a callee that turns out raw: WASM's
+        // `lower_dyn_repr_structural` retypes a non-lisp callee's call result
+        // itself (see that pass, which now also corrects this exact hint —
+        // `closure_identity_returns_captured_value`), while the native
+        // pipeline's tagged-word model does not need to (every value, raw or
+        // boxed, is the same machine word there) and regressed when this hint
+        // was changed here instead (`closures_run_on_native`/`_llvm` dropped
+        // from 42 to 80 — some `box`/`unbox` pairing keyed off this hint
+        // stopped matching). So the correction belongs in the WASM-specific
+        // consumer of this IIR, not in this shared emitter.
         instrs.push(IIRInstr::new("call", Some(resv.clone()), call_srcs, REF_ANY));
         instrs.push(IIRInstr::new("ret", None, vec![Operand::Var(resv)], REF_ANY));
         instrs.push(IIRInstr::new("label", None, vec![Operand::Var(next)], "void"));

@@ -1152,6 +1152,8 @@ pub enum GanttDateFormatPart {
     Minute,
     Second,
     Millisecond,
+    TimezoneOffsetColon,
+    TimezoneOffsetCompact,
     UnixSeconds,
     UnixMilliseconds,
 }

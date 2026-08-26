@@ -5165,6 +5165,66 @@
         "ES-EXT-384-VERB"
       ],
       "after": []
+    },
+    {
+      "id": "ES-PATH-385-01",
+      "spine_node": "SPINE-NAME-EVERYDAY-ACTIONS",
+      "lessons": [
+        "ES-C385-usar",
+        "ES-C385-tocar",
+        "ES-C385-mezclar",
+        "ES-C385-colgar"
+      ],
+      "before": [],
+      "inline": [
+        "ES-EXT-385-VERB"
+      ],
+      "after": []
+    },
+    {
+      "id": "ES-PATH-386-01",
+      "spine_node": "SPINE-NAME-EVERYDAY-ACTIONS",
+      "lessons": [
+        "ES-C386-vender",
+        "ES-C386-servir",
+        "ES-C386-gastar",
+        "ES-C386-crecer"
+      ],
+      "before": [],
+      "inline": [
+        "ES-EXT-386-VERB"
+      ],
+      "after": []
+    },
+    {
+      "id": "ES-PATH-387-01",
+      "spine_node": "SPINE-NAME-EVERYDAY-ACTIONS",
+      "lessons": [
+        "ES-C387-quemar",
+        "ES-C387-cruzar",
+        "ES-C387-volar",
+        "ES-C387-girar"
+      ],
+      "before": [],
+      "inline": [
+        "ES-EXT-387-VERB"
+      ],
+      "after": []
+    },
+    {
+      "id": "ES-PATH-388-01",
+      "spine_node": "SPINE-NAME-EVERYDAY-ACTIONS",
+      "lessons": [
+        "ES-C388-empujar",
+        "ES-C388-lanzar",
+        "ES-C388-borrar",
+        "ES-C388-gritar"
+      ],
+      "before": [],
+      "inline": [
+        "ES-EXT-388-VERB"
+      ],
+      "after": []
     }
   ],
   "spine": {
@@ -5488,7 +5548,11 @@
         "ES-PATH-381-01",
         "ES-PATH-382-01",
         "ES-PATH-383-01",
-        "ES-PATH-384-01"
+        "ES-PATH-384-01",
+        "ES-PATH-385-01",
+        "ES-PATH-386-01",
+        "ES-PATH-387-01",
+        "ES-PATH-388-01"
       ],
       "omits": [
         "VERB-GIVE"
@@ -10463,6 +10527,62 @@
         "ES-C384-subir",
         "ES-C384-morir",
         "ES-C384-olvidar"
+      ]
+    },
+    {
+      "id": "ES-EXT-385-VERB",
+      "stage": "A1",
+      "kind": "required",
+      "category": "vocabulary",
+      "canDo": "I can name usar, tocar, mezclar and colgar.",
+      "prerequisites": [],
+      "lessons": [
+        "ES-C385-usar",
+        "ES-C385-tocar",
+        "ES-C385-mezclar",
+        "ES-C385-colgar"
+      ]
+    },
+    {
+      "id": "ES-EXT-386-VERB",
+      "stage": "A1",
+      "kind": "required",
+      "category": "vocabulary",
+      "canDo": "I can name vender, servir, gastar and crecer.",
+      "prerequisites": [],
+      "lessons": [
+        "ES-C386-vender",
+        "ES-C386-servir",
+        "ES-C386-gastar",
+        "ES-C386-crecer"
+      ]
+    },
+    {
+      "id": "ES-EXT-387-VERB",
+      "stage": "A1",
+      "kind": "required",
+      "category": "vocabulary",
+      "canDo": "I can name quemar, cruzar, volar and girar.",
+      "prerequisites": [],
+      "lessons": [
+        "ES-C387-quemar",
+        "ES-C387-cruzar",
+        "ES-C387-volar",
+        "ES-C387-girar"
+      ]
+    },
+    {
+      "id": "ES-EXT-388-VERB",
+      "stage": "A1",
+      "kind": "required",
+      "category": "vocabulary",
+      "canDo": "I can name empujar, lanzar, borrar and gritar.",
+      "prerequisites": [],
+      "lessons": [
+        "ES-C388-empujar",
+        "ES-C388-lanzar",
+        "ES-C388-borrar",
+        "ES-C388-gritar"
       ]
     }
   ],

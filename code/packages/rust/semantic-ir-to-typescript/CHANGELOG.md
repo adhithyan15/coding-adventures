@@ -1,5 +1,55 @@
 # Changelog
 
+## 0.15.0 — Accept `Feature::LoopControl` (task #63)
+
+Second backend (after `semantic-ir-to-javascript`, task #62) to accept
+the SIR16 addendum's `Stmt::Break`/`Stmt::Continue`. `While`/`ForRange`/
+`ForEach` already emit real inline native loops with no closure boundary
+in the way, so a bare `break;`/`continue;` is a trivial 1:1 emission —
+see `Feature::LoopControl`'s own doc comment for why `ForRange` needs no
+special handling (the shared validator already refuses to accept
+`Break`/`Continue` whose nearest enclosing loop is a `ForRange`,
+regardless of backend).
+
+**Found while wiring this backend to the feature, not by inspection
+beforehand — confirmed, not just suspected, since this exact bug was
+already flagged (with direct code inspection) against this backend
+before the fix landed**: `Stmt::ExprStmt { expr: Expr::If { .. } }` (a
+bare `if` used as a statement) was routed through `Expr::If`'s generic
+value-position codegen — a `cond ? (block_as_expr) : (block_as_expr)`
+ternary, where `emit_block_as_expr` wraps any non-empty-stmts branch in
+an arrow-function IIFE so it can `return` a value. A `break`/`continue`
+inside that IIFE cannot cross the function boundary — `if (cond) {
+break; }` inside a loop is the single most common way source code uses
+`break`/`continue` at all, so every such program was a `node`
+`SyntaxError: Illegal break statement`, not a hypothetical edge case.
+Fixed by special-casing that shape in `emit_stmt`'s `Stmt::ExprStmt` arm
+to emit a real native `if (...) { … } else { … }` statement instead —
+correct regardless of `LoopControl`, since the value was already being
+discarded. Mirrors `semantic-ir-to-javascript`'s own identically-shaped
+fix (task #62) exactly.
+
+Three other `match Stmt` traversal helpers (`collect_ancestry_in_stmt`,
+`stmt_uses_builtin`, `collect_stmt_assigned`) had their own
+compile-exhaustiveness-only `Stmt::Break`/`Stmt::Continue` panic arms —
+each replaced with the correct no-op/`false` behavior (neither variant
+carries a nested expression or statement, so there is nothing for any of
+these three scans to find), since a validated module can now legitimately
+contain one.
+
+New tests: 4 unit tests (`emit.rs`) locking in the bare `break;`/
+`continue;` emission, `break`/`continue` inside a native `while` body at
+the correct indentation, and — the crux of the fix — that a bare `if`
+used as a statement emits a real native `if`/`else`, never a
+ternary/IIFE. 2 new `node`-execution-proof tests (`tests/run_with_node.rs`)
+mirroring `semantic-ir-to-javascript`'s own two loop-control proofs in
+spirit (a `while`+`continue`+`break` accumulation, a `for`-each+`break`
+early exit), adapted to avoid the `%` operator — a genuine, pre-existing
+gap in `sir-runtime-core`'s own builtin dispatch table (confirmed by
+direct inspection of `runtime.ts`, unrelated to loop control) that would
+otherwise fail these tests for a reason having nothing to do with
+`break`/`continue`.
+
 ## 0.14.1 — Security fix: `sanitize_ident` was not injective
 
 Task #65 (`/security-review`, discovered while auditing `java-to-
