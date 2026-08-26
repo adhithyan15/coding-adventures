@@ -5,45 +5,6 @@ Findings from the pre-A1 tranche work were recorded in commit messages and PR
 bodies, which are durable and searchable, but a reader opening this file found
 nothing. The entries below are the ones that change how the work is done.
 
-## HL-C10Z — Tamil ங closes the Frame 2 nasal gap
-
-After shared maddah above landed, Tamil nga **ங** led the measured queue at
-**9 affected realizations**. Sankaran Radhakrishnan's UT Austin *Tamil Script
-Learners Manual*, Appendix I, Frame 2 shows a detached descending upright
-before five joined movements build the framed body and low return.
-
-The bundled Noto Sans Tamil face moves the detached upright to the right and
-squares the handwritten return, so the font-fitted path preserves Frame 2's
-two pen-down runs rather than copying the display geometry literally. The new
-canonical row and ductus close all 9 gaps. Japanese hiragana **し** now leads
-the measured queue at **8 affected realizations**.
-## HL-C10Y — Shared maddah above closes the alef-plus-mark gap
-
-After Persian and Urdu **چ** landed, maddah above **ٓ** led the measured queue
-at **9 affected realizations**: three Persian and six Urdu. Unicode 17 identifies
-U+0653 as a special harakat mark, says modern Arabic-script use normally places
-it above alef, and canonically decomposes precomposed **آ** into U+0627 ALEF
-followed by U+0653 ARABIC MADDAH ABOVE.
-
-The new Persian and Urdu mark rows compose that shared encoded evidence with
-each script's independently sourced alif carrier; the existing Arabic row gains
-the same explicit composition boundary. No universal handwriting direction is
-claimed. All 9 measured gaps close, and Tamil nga **ங** is now the next measured
-glyph at **9 affected realizations**.
-
-## HL-C10X — Persian and Urdu چ close the body-first three-dot gap
-
-After Urdu **ھ** landed, che **چ** led the measured queue at **9 affected
-realizations**: six Persian and three Urdu. Persian Online's freehand lesson and
-Northwestern's independent *Zer o Zabar* animations both draw the jīm-series
-body first, then place the lower-left, lower-right, and lower-center dots. The
-two sources independently preserve their script-owned provenance.
-
-The new Persian- and Urdu-scoped rows close all 9 gaps with three lifts while
-sharing only the Noto fallback geometry and preserving **ج**'s independently
-sourced dot-first order. Maddah above **ٓ** is now the next measured glyph at
-**9 affected realizations**.
-
 ## A duplicate matcher that compares whole strings needs a stem rule, not a longer delimiter list
 
 `vocabularyOf` compares full headword strings, so a near-duplicate does not fail
@@ -83,6 +44,45 @@ so `vocabularyOf`, which is restricted to `word`/`phrase`, does not see it.
 Adding `dar` as a new headword would have INCREMENTED the A1 count while
 re-teaching a lexeme the course already owns. Checking the headword list is not
 enough; the atom ledger has to be checked too.
+## HL-C10Z — Tamil ங closes the Frame 2 nasal gap
+
+After shared maddah above landed, Tamil nga **ங** led the measured queue at
+**9 affected realizations**. Sankaran Radhakrishnan's UT Austin *Tamil Script
+Learners Manual*, Appendix I, Frame 2 shows a detached descending upright
+before five joined movements build the framed body and low return.
+
+The bundled Noto Sans Tamil face moves the detached upright to the right and
+squares the handwritten return, so the font-fitted path preserves Frame 2's
+two pen-down runs rather than copying the display geometry literally. The new
+canonical row and ductus close all 9 gaps. Japanese hiragana **し** now leads
+the measured queue at **8 affected realizations**.
+## HL-C10Y — Shared maddah above closes the alef-plus-mark gap
+
+After Persian and Urdu **چ** landed, maddah above **ٓ** led the measured queue
+at **9 affected realizations**: three Persian and six Urdu. Unicode 17 identifies
+U+0653 as a special harakat mark, says modern Arabic-script use normally places
+it above alef, and canonically decomposes precomposed **آ** into U+0627 ALEF
+followed by U+0653 ARABIC MADDAH ABOVE.
+
+The new Persian and Urdu mark rows compose that shared encoded evidence with
+each script's independently sourced alif carrier; the existing Arabic row gains
+the same explicit composition boundary. No universal handwriting direction is
+claimed. All 9 measured gaps close, and Tamil nga **ங** is now the next measured
+glyph at **9 affected realizations**.
+
+## HL-C10X — Persian and Urdu چ close the body-first three-dot gap
+
+After Urdu **ھ** landed, che **چ** led the measured queue at **9 affected
+realizations**: six Persian and three Urdu. Persian Online's freehand lesson and
+Northwestern's independent *Zer o Zabar* animations both draw the jīm-series
+body first, then place the lower-left, lower-right, and lower-center dots. The
+two sources independently preserve their script-owned provenance.
+
+The new Persian- and Urdu-scoped rows close all 9 gaps with three lifts while
+sharing only the Noto fallback geometry and preserving **ج**'s independently
+sourced dot-first order. Maddah above **ٓ** is now the next measured glyph at
+**9 affected realizations**.
+
 ## HL-C10W — Urdu ھ closes the two-eyed aspiration gap
 
 After Urdu **پ** landed, do-chashmī he **ھ** led the measured queue at **10
