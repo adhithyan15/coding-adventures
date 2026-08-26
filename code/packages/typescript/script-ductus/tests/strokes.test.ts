@@ -253,6 +253,7 @@ const MALAYALAM_CHILLU_L = DUCTUS[ductusKey("malayalam", "ൽ")];
 const MALAYALAM_CHILLU_N = DUCTUS[ductusKey("malayalam", "ൻ")];
 const MALAYALAM_ZHA = DUCTUS[ductusKey("malayalam", "ഴ")];
 const TAMIL_U = DUCTUS["உ"];
+const TAMIL_NGA = DUCTUS["ங"];
 
 const fontForDuctus = (letter: LetterDuctus) => {
   const script = SCRIPTS.find((candidate) => candidate.script === letter.script);
@@ -652,6 +653,18 @@ describe("handwriting ductus", () => {
       "sweep outward around the compact upper spiral",
       "descend through the broad outer curve and turn left onto the baseline",
       "carry the long baseline straight to the right",
+    ]);
+  });
+
+  it("Tamil ங keeps Frame 2's detached upright and joined body separate", () => {
+    expect(penLifts(TAMIL_NGA)).toBe(1);
+    expect(TAMIL_NGA.strokes).toHaveLength(2);
+    expect(TAMIL_NGA.strokes[1].segments.map((segment) => segment.label)).toEqual([
+      "climb the tall left body",
+      "carry the top bar right and return inward",
+      "descend into the rounded inner turn",
+      "carry the low bar to the right",
+      "return left and finish up the inner stem",
     ]);
   });
 
@@ -6479,6 +6492,13 @@ describe("handwriting ductus", () => {
     expect(src.url).toContain("tamilscript");
     expect(src.citation).toMatch(/Appendix I.*Frame 3.*க/);
     expect(src.variation, "must not present one order as the only order").toMatch(/variation|no single/i);
+  });
+
+  it("ங's two-run order traces to Appendix I Frame 2", () => {
+    const src = DUCTUS["ங"].source;
+    expect(src.url).toContain("tamilscript/files/2009/08/hw_lettersinstructions.pdf");
+    expect(src.citation).toMatch(/Appendix I.*Frame 2.*ங.*p\. 191/i);
+    expect(src.variation).toMatch(/detached descending upright.*five joined movements.*detached upright on the right.*two-run order/i);
   });
 
   it("வ's stroke order traces to Frame 9's first row", () => {
