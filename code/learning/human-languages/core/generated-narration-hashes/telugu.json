@@ -735,12 +735,12 @@
         "TE-C46-salt",
         "TE-C46-book"
       ],
-      "voiceLessons": 4,
-      "drivablePrefix": 0,
+      "voiceLessons": 5,
+      "drivablePrefix": 5,
       "text": "telugu/narration/ch46.txt",
       "json": "telugu/narration/ch46.json",
-      "textHash": "fnv1a64:fcf2d576cc7f8a8a",
-      "jsonHash": "fnv1a64:f8680cb2f24ab83b"
+      "textHash": "fnv1a64:02b399bcec3968fa",
+      "jsonHash": "fnv1a64:c406fb8aad7d8360"
     },
     {
       "language": "telugu",

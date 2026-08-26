@@ -970,9 +970,11 @@ backend immediately) come before the enabler-dependent items.
   its selector; a changing branch remains conservative and does not extend the
   ten-level proof budget. For finite real
   selectors, multiplication and division by exact positive one are likewise
-  preserving, including left-associative chains of those operations; additive
-  zero remains conservative because it can change the sign bit of negative
-  zero. Other real arithmetic and computed selector
+  preserving, including left-associative chains of those operations.
+  Subtraction of positive numeric zero is also preserving, including
+  left-associative chains, because it retains the sign bit of negative zero;
+  addition of positive zero and subtraction of negative real zero remain
+  conservative because either can change that bit. Other real arithmetic and computed selector
   assignments, differing,
   computed, or otherwise
   unsupported selector-dependency writes, dynamically selected differing selector leaves,

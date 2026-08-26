@@ -3,7 +3,7 @@
   "language": "italian",
   "chapter": 22,
   "title": "Coffee, Tea, Milk, and Sugar",
-  "drivablePrefix": 0,
+  "drivablePrefix": 4,
   "sourceHash": "fnv1a64:77ad59126ebc23a1",
   "lessons": [
     {
@@ -14,20 +14,13 @@
       "romanization": "il caffè",
       "gloss": "coffee — the pan-European word Italy took from an Ottoman drink",
       "script": "latin",
-      "modality": "sight",
-      "derivedModality": "sight",
+      "modality": "voice",
+      "derivedModality": "voice",
       "modalityReasons": [
-        "sight-cue"
+        "no-visual-dependency"
       ],
       "sourceHash": "fnv1a64:fd3d3e8c33a31297",
-      "notice": {
-        "modality": "sight",
-        "needs": [
-          "your eyes, because the lesson points at something written down"
-        ],
-        "waitUntilStopped": [],
-        "text": "Before we start: this one needs your eyes, so it is not fully a driving lesson. You will want your eyes, because the lesson points at something written down. You can listen to all of it now and come back to the parts that need looking at once you have stopped."
-      },
+      "notice": null,
       "blocks": [
         {
           "index": 0,
@@ -429,20 +422,13 @@
       "romanization": "lo zucchero",
       "gloss": "sugar — Arabic again, but by the French road this time, not the Turkish one",
       "script": "latin",
-      "modality": "sight",
-      "derivedModality": "sight",
+      "modality": "voice",
+      "derivedModality": "voice",
       "modalityReasons": [
-        "sight-cue"
+        "no-visual-dependency"
       ],
       "sourceHash": "fnv1a64:a694c02378e7707e",
-      "notice": {
-        "modality": "sight",
-        "needs": [
-          "your eyes, because the lesson points at something written down"
-        ],
-        "waitUntilStopped": [],
-        "text": "Before we start: this one needs your eyes, so it is not fully a driving lesson. You will want your eyes, because the lesson points at something written down. You can listen to all of it now and come back to the parts that need looking at once you have stopped."
-      },
+      "notice": null,
       "blocks": [
         {
           "index": 0,

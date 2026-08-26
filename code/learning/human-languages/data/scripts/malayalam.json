@@ -5985,6 +5985,29 @@
         "variation": "The 65-frame Gayathri-font animation draws ൾ in one uninterrupted run: descend around the left bowl, climb the central rise, carry the upper shoulder right, sweep clockwise around the right loop, then rise into the finishing hook above the line. This is one attested pedagogical order fitted to the bundled Noto Sans Malayalam outline; bowl width, loop roundness, and hook height vary by hand, but the zero-lift order remains the same."
       },
       "notes": "Atomic Malayalam chillu LL (U+0D7E): a vowel-free retroflex lateral final consonant, not the base ള with its inherent a."
+    },
+    {
+      "glyph": "ർ",
+      "sound": "r",
+      "role": "consonant",
+      "components": [
+        "the rising left arch and upper shoulder",
+        "the clockwise right loop and inner return",
+        "the above-line chillu hook"
+      ],
+      "strokeOrder": [
+        "climb around the left arch and carry the upper shoulder right",
+        "without lifting, sweep clockwise around the right loop and return to the upper crossing",
+        "without lifting, rise into the chillu hook and curl left above the line"
+      ],
+      "strokeOrderNote": "Three visible movements in one continuous pen-down run: the left arch flows through the right loop and finishes with the chillu hook above the line.",
+      "penLifts": 0,
+      "strokeOrderSource": {
+        "citation": "Sriveenkat, Ml ർ order.gif, Malayalam chillu RR stroke-order animation, 00:03.0–00:08.5 (Wikimedia Commons, 2 July 2023)",
+        "url": "https://commons.wikimedia.org/wiki/File:Ml_%E0%B5%BC_order.gif",
+        "variation": "The 57-frame Gayathri-font animation draws ർ in one uninterrupted run: climb from the lower-left tip around the left arch, carry the upper shoulder right, sweep clockwise around the right loop and return through its inner side, then rise into the finishing hook above the line. This is one attested pedagogical order fitted to the bundled Noto Sans Malayalam outline; arch width, loop roundness, and hook height vary by hand, but the zero-lift order remains the same."
+      },
+      "notes": "Atomic Malayalam chillu RR (U+0D7C): a vowel-free final consonant, not the base ര with its inherent a."
     }
   ],
   "marks": [

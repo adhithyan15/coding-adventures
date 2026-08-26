@@ -10,15 +10,15 @@
   "sourceHash": "fnv1a64:5b80082b234a5b4d",
   "summary": {
     "totalLessons": 270,
-    "voice": 184,
-    "sight": 37,
+    "voice": 186,
+    "sight": 35,
     "pen": 49,
-    "drivableLessons": 184,
-    "drivablePercent": 68,
+    "drivableLessons": 186,
+    "drivablePercent": 69,
     "trackCount": 1,
     "chapterCount": 66,
-    "drivablePrefixTotal": 174,
-    "fullyDrivableChapters": 39,
+    "drivablePrefixTotal": 179,
+    "fullyDrivableChapters": 41,
     "unstartableChapters": 9,
     "overriddenLessons": 0,
     "lessonsWithoutChapter": 0
@@ -27,11 +27,11 @@
     {
       "language": "malayalam",
       "lessonCount": 270,
-      "voice": 184,
-      "sight": 37,
+      "voice": 186,
+      "sight": 35,
       "pen": 49,
-      "drivablePercent": 68,
-      "drivablePrefixTotal": 174,
+      "drivablePercent": 69,
+      "drivablePrefixTotal": 179,
       "modalities": [
         "voice",
         "sight",
@@ -652,20 +652,20 @@
         {
           "chapter": 37,
           "lessonCount": 4,
-          "voice": 3,
-          "sight": 1,
+          "voice": 4,
+          "sight": 0,
           "pen": 0,
           "modalities": [
-            "voice",
-            "sight"
+            "voice"
           ],
-          "drivablePrefix": 3,
-          "firstNonVoiceLesson": "ML-C37-vaay",
-          "drivable": false,
+          "drivablePrefix": 4,
+          "firstNonVoiceLesson": null,
+          "drivable": true,
           "drivableLessonIds": [
             "ML-C37-kannu",
             "ML-C37-chevi",
-            "ML-C37-mookku"
+            "ML-C37-mookku",
+            "ML-C37-vaay"
           ]
         },
         {
@@ -940,18 +940,21 @@
         {
           "chapter": 52,
           "lessonCount": 5,
-          "voice": 4,
-          "sight": 1,
+          "voice": 5,
+          "sight": 0,
           "pen": 0,
           "modalities": [
-            "voice",
-            "sight"
+            "voice"
           ],
-          "drivablePrefix": 1,
-          "firstNonVoiceLesson": "ML-C52-chair",
-          "drivable": false,
+          "drivablePrefix": 5,
+          "firstNonVoiceLesson": null,
+          "drivable": true,
           "drivableLessonIds": [
-            "ML-C52-door"
+            "ML-C52-door",
+            "ML-C52-chair",
+            "ML-C52-kolam",
+            "ML-C52-flower",
+            "ML-C52-garland"
           ]
         },
         {
@@ -4047,17 +4050,17 @@
       "language": "malayalam",
       "chapter": 37,
       "sequence": 870,
-      "modality": "sight",
-      "derived": "sight",
-      "drivable": false,
+      "modality": "voice",
+      "derived": "voice",
+      "drivable": true,
       "reasons": [
-        "sight-cue"
+        "no-visual-dependency"
       ],
-      "coreModality": "sight",
+      "coreModality": "voice",
       "coreReasons": [
-        "sight-cue"
+        "no-visual-dependency"
       ],
-      "coreDrivable": false,
+      "coreDrivable": true,
       "sourceHash": "fnv1a64:e62438e27a72e689"
     },
     {
@@ -5184,17 +5187,17 @@
       "language": "malayalam",
       "chapter": 52,
       "sequence": 1500,
-      "modality": "sight",
-      "derived": "sight",
-      "drivable": false,
+      "modality": "voice",
+      "derived": "voice",
+      "drivable": true,
       "reasons": [
-        "sight-cue"
+        "no-visual-dependency"
       ],
-      "coreModality": "sight",
+      "coreModality": "voice",
       "coreReasons": [
-        "sight-cue"
+        "no-visual-dependency"
       ],
-      "coreDrivable": false,
+      "coreDrivable": true,
       "sourceHash": "fnv1a64:4aaf18e45d38fbe2"
     },
     {

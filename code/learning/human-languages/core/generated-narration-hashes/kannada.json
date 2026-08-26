@@ -109,12 +109,12 @@
         "KA-S01-letter-na",
         "KA-S110-letter-ba"
       ],
-      "voiceLessons": 1,
-      "drivablePrefix": 0,
+      "voiceLessons": 2,
+      "drivablePrefix": 1,
       "text": "kannada/narration/ch06.txt",
       "json": "kannada/narration/ch06.json",
-      "textHash": "fnv1a64:91e5c73d564a5bcd",
-      "jsonHash": "fnv1a64:099ca7a4ff4a4437"
+      "textHash": "fnv1a64:ef8fa3d49259b5f7",
+      "jsonHash": "fnv1a64:0870763860950da0"
     },
     {
       "language": "kannada",
@@ -754,12 +754,12 @@
         "KA-C47-finger",
         "KA-C47-stomach"
       ],
-      "voiceLessons": 4,
-      "drivablePrefix": 2,
+      "voiceLessons": 5,
+      "drivablePrefix": 5,
       "text": "kannada/narration/ch47.txt",
       "json": "kannada/narration/ch47.json",
-      "textHash": "fnv1a64:55f7514808121ba9",
-      "jsonHash": "fnv1a64:19d3f3b274030a63"
+      "textHash": "fnv1a64:528cd76c9c71914f",
+      "jsonHash": "fnv1a64:2c1b762fec8d3bd8"
     },
     {
       "language": "kannada",

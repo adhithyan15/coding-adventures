@@ -1,0 +1,15 @@
+{
+  "id": "ZH-EXT-042-LANGUAGE-IDENTITY-MEANING-FIRST",
+  "stage": "pre-A1",
+  "kind": "required",
+  "category": "vocabulary",
+  "canDo": "I can hear and say 字, 汉字 and 汉语 before I have to master their new written parts.",
+  "prerequisites": [
+    "ZH-EXT-041-SCHOOL-COMPOUNDS-FOUR-SKILL"
+  ],
+  "lessons": [
+    "ZH-C16-hear-zi",
+    "ZH-C16-hear-hanzi",
+    "ZH-C16-hear-hanyu"
+  ]
+}

@@ -14605,6 +14605,46 @@ export const DUCTUS: Record<string, LetterDuctus> = {
     ],
     source: malayalamAlphabetSource("ൾ"),
   },
+  // Sriveenkat's 57-frame animation draws chillu ർ in one uninterrupted run:
+  // the rising left arch flows through the right loop and inner return, then
+  // climbs through the crossing into the above-line hook.
+  [ductusKey("malayalam", "ർ")]: {
+    script: "malayalam",
+    glyph: "ർ",
+    strokes: [
+      {
+        segments: [
+          {
+            label: "climb around the left arch and carry the upper shoulder right",
+            path: [
+              { x: 220, y: 25 }, { x: 160, y: 75 }, { x: 105, y: 155 },
+              { x: 78, y: 255 }, { x: 92, y: 355 }, { x: 145, y: 450 },
+              { x: 235, y: 515 }, { x: 345, y: 540 }, { x: 445, y: 510 },
+            ],
+          },
+          {
+            label: "sweep clockwise around the right loop and return to the upper crossing",
+            path: [
+              { x: 445, y: 510 }, { x: 545, y: 495 }, { x: 625, y: 430 },
+              { x: 672, y: 335 }, { x: 680, y: 225 }, { x: 650, y: 125 },
+              { x: 590, y: 48 }, { x: 510, y: 22 }, { x: 430, y: 52 },
+              { x: 370, y: 130 }, { x: 340, y: 215 }, { x: 348, y: 300 },
+              { x: 385, y: 390 }, { x: 440, y: 470 }, { x: 485, y: 505 },
+            ],
+          },
+          {
+            label: "rise into the chillu hook and curl left above the line",
+            path: [
+              { x: 485, y: 505 }, { x: 530, y: 555 }, { x: 570, y: 620 },
+              { x: 582, y: 675 }, { x: 558, y: 720 }, { x: 510, y: 752 },
+              { x: 455, y: 765 }, { x: 410, y: 758 }, { x: 380, y: 748 },
+            ],
+          },
+        ],
+      },
+    ],
+    source: malayalamAlphabetSource("ർ"),
+  },
   // Sriveenkat's 47-frame animation draws ഴ as one uninterrupted run: the
   // left entry arch reaches the lower junction, turns clockwise around the
   // right loop, and descends through its inner return into the lower hook.

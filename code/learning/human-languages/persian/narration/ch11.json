@@ -3,7 +3,7 @@
   "language": "persian",
   "chapter": 11,
   "title": "Eye, Hand, Foot, Tongue",
-  "drivablePrefix": 0,
+  "drivablePrefix": 4,
   "sourceHash": "fnv1a64:8f4fa561dca27999",
   "lessons": [
     {
@@ -14,20 +14,13 @@
       "romanization": "cheshm",
       "gloss": "eye — the body part behind the family a doctor's question would ask about",
       "script": "perso-arabic",
-      "modality": "sight",
-      "derivedModality": "sight",
+      "modality": "voice",
+      "derivedModality": "voice",
       "modalityReasons": [
-        "sight-cue"
+        "no-visual-dependency"
       ],
       "sourceHash": "fnv1a64:01e2f6f9ce6286f3",
-      "notice": {
-        "modality": "sight",
-        "needs": [
-          "your eyes, because the lesson points at something written down"
-        ],
-        "waitUntilStopped": [],
-        "text": "Before we start: this one needs your eyes, so it is not fully a driving lesson. You will want your eyes, because the lesson points at something written down. You can listen to all of it now and come back to the parts that need looking at once you have stopped."
-      },
+      "notice": null,
       "blocks": [
         {
           "index": 0,

@@ -10,16 +10,16 @@
   "sourceHash": "fnv1a64:6aa4cfb7dca97371",
   "summary": {
     "totalLessons": 242,
-    "voice": 185,
-    "sight": 33,
+    "voice": 187,
+    "sight": 31,
     "pen": 24,
-    "drivableLessons": 185,
-    "drivablePercent": 76,
+    "drivableLessons": 187,
+    "drivablePercent": 77,
     "trackCount": 1,
     "chapterCount": 66,
-    "drivablePrefixTotal": 174,
-    "fullyDrivableChapters": 40,
-    "unstartableChapters": 10,
+    "drivablePrefixTotal": 178,
+    "fullyDrivableChapters": 41,
+    "unstartableChapters": 9,
     "overriddenLessons": 0,
     "lessonsWithoutChapter": 0
   },
@@ -27,11 +27,11 @@
     {
       "language": "kannada",
       "lessonCount": 242,
-      "voice": 185,
-      "sight": 33,
+      "voice": 187,
+      "sight": 31,
       "pen": 24,
-      "drivablePercent": 76,
-      "drivablePrefixTotal": 174,
+      "drivablePercent": 77,
+      "drivablePrefixTotal": 178,
       "modalities": [
         "voice",
         "sight",
@@ -115,18 +115,20 @@
         {
           "chapter": 6,
           "lessonCount": 5,
-          "voice": 1,
-          "sight": 2,
+          "voice": 2,
+          "sight": 1,
           "pen": 2,
           "modalities": [
             "voice",
             "sight",
             "pen"
           ],
-          "drivablePrefix": 0,
-          "firstNonVoiceLesson": "KA-C06-dative-ge",
+          "drivablePrefix": 1,
+          "firstNonVoiceLesson": "KA-C06-dative-stacking",
           "drivable": false,
-          "drivableLessonIds": []
+          "drivableLessonIds": [
+            "KA-C06-dative-ge"
+          ]
         },
         {
           "chapter": 7,
@@ -834,19 +836,21 @@
         {
           "chapter": 47,
           "lessonCount": 5,
-          "voice": 4,
-          "sight": 1,
+          "voice": 5,
+          "sight": 0,
           "pen": 0,
           "modalities": [
-            "voice",
-            "sight"
+            "voice"
           ],
-          "drivablePrefix": 2,
-          "firstNonVoiceLesson": "KA-C47-hair",
-          "drivable": false,
+          "drivablePrefix": 5,
+          "firstNonVoiceLesson": null,
+          "drivable": true,
           "drivableLessonIds": [
             "KA-C47-leg",
-            "KA-C47-tooth"
+            "KA-C47-tooth",
+            "KA-C47-hair",
+            "KA-C47-finger",
+            "KA-C47-stomach"
           ]
         },
         {
@@ -1845,17 +1849,17 @@
       "language": "kannada",
       "chapter": 6,
       "sequence": 310,
-      "modality": "sight",
-      "derived": "sight",
-      "drivable": false,
+      "modality": "voice",
+      "derived": "voice",
+      "drivable": true,
       "reasons": [
-        "sight-cue"
+        "no-visual-dependency"
       ],
-      "coreModality": "sight",
+      "coreModality": "voice",
       "coreReasons": [
-        "sight-cue"
+        "no-visual-dependency"
       ],
-      "coreDrivable": false,
+      "coreDrivable": true,
       "sourceHash": "fnv1a64:2992f91067cb3eae"
     },
     {
@@ -4074,17 +4078,17 @@
       "language": "kannada",
       "chapter": 47,
       "sequence": 1210,
-      "modality": "sight",
-      "derived": "sight",
-      "drivable": false,
+      "modality": "voice",
+      "derived": "voice",
+      "drivable": true,
       "reasons": [
-        "sight-cue"
+        "no-visual-dependency"
       ],
-      "coreModality": "sight",
+      "coreModality": "voice",
       "coreReasons": [
-        "sight-cue"
+        "no-visual-dependency"
       ],
-      "coreDrivable": false,
+      "coreDrivable": true,
       "sourceHash": "fnv1a64:024a58c29052981e"
     },
     {

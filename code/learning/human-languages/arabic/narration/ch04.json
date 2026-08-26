@@ -366,16 +366,14 @@
       "derivedModality": "pen",
       "modalityReasons": [
         "writing-type",
-        "script-block",
-        "sight-cue"
+        "script-block"
       ],
       "sourceHash": "fnv1a64:44b336c3ea8b6fcb",
       "notice": {
         "modality": "pen",
         "needs": [
           "a pen and something to write on",
-          "your eyes, for letter shapes on the page",
-          "your eyes, because the lesson points at something written down"
+          "your eyes, for letter shapes on the page"
         ],
         "waitUntilStopped": [
           "Script — Part 1 — مع (maʿa, \"with\")",
@@ -384,7 +382,7 @@
           "Script — Assemble it — right to left",
           "Guided Practice"
         ],
-        "text": "Before we start: this one needs your hands, so it is not a driving lesson. You will want a pen and something to write on, your eyes, for letter shapes on the page and your eyes, because the lesson points at something written down. You can listen to everything else now — leave the sections called Script — Part 1 — مع (maʿa, \"with\"), Script — Part 2 — السلامة (as-salāma, \"the safety\"), Script — The root s-l-m, one more time, Script — Assemble it — right to left and Guided Practice until you have stopped, and I will say so again when we reach it."
+        "text": "Before we start: this one needs your hands, so it is not a driving lesson. You will want a pen and something to write on and your eyes, for letter shapes on the page. You can listen to everything else now — leave the sections called Script — Part 1 — مع (maʿa, \"with\"), Script — Part 2 — السلامة (as-salāma, \"the safety\"), Script — The root s-l-m, one more time, Script — Assemble it — right to left and Guided Practice until you have stopped, and I will say so again when we reach it."
       },
       "blocks": [
         {
@@ -903,20 +901,13 @@
       "romanization": "maʿa s-salāma",
       "gloss": "goodbye — literally 'with safety', closing the greeting arc on the root that opened it",
       "script": "arabic",
-      "modality": "sight",
-      "derivedModality": "sight",
+      "modality": "voice",
+      "derivedModality": "voice",
       "modalityReasons": [
-        "sight-cue"
+        "no-visual-dependency"
       ],
       "sourceHash": "fnv1a64:b227719d446dd21a",
-      "notice": {
-        "modality": "sight",
-        "needs": [
-          "your eyes, because the lesson points at something written down"
-        ],
-        "waitUntilStopped": [],
-        "text": "Before we start: this one needs your eyes, so it is not fully a driving lesson. You will want your eyes, because the lesson points at something written down. You can listen to all of it now and come back to the parts that need looking at once you have stopped."
-      },
+      "notice": null,
       "blocks": [
         {
           "index": 0,
