@@ -37,13 +37,36 @@ alarm.** That line keeps `el dedo` (inside `alrededor`, which is `retro`),
 `el corazon` (ending in the taught `razon`, which is `ratio`) and `la lampara`
 (containing the taught `para`) while still dropping all four stem cases above.
 
-There is a second, sharper miss worth recording separately. **A word can already
-be taught under a headword the vocabulary gate does not count at all.** `dar` is
-introduced as the atom `ES-LEX-DAR` by `ES-C65-di`, whose `type` is `grammar` --
-so `vocabularyOf`, which is restricted to `word`/`phrase`, does not see it.
-Adding `dar` as a new headword would have INCREMENTED the A1 count while
-re-teaching a lexeme the course already owns. Checking the headword list is not
-enough; the atom ledger has to be checked too.
+## The second door: a word the gate already owns but does not count
+
+Everything above is a near-duplicate the string comparison cannot see. This is
+different in kind, and it is the more dangerous of the two, because **no string
+rule of any sophistication could have caught it.**
+
+`dar` is not a headword anywhere in the Spanish track. It passes every test in
+the section above: no article to strip, no compound to split, no shared stem, no
+spent root. By every available check it is a free word.
+
+It is not. `ES-C65-di` introduces the atom **`ES-LEX-DAR`** -- the course
+teaches `dar`, and has for three hundred chapters. What hides it is that
+`ES-C65-di` has `type: grammar`, and `vocabularyOf` is restricted to
+`word`/`phrase` precisely so that drill titles and grammar labels cannot inflate
+a vocabulary count. That restriction is correct and should stay. Its side effect
+is that a lexeme introduced by a grammar lesson is **owned but uncounted**.
+
+Adding `dar` as a new `word` headword would therefore have **raised the A1
+number by one while re-teaching a word the learner already has**. That is the
+same failure direction as a near-duplicate -- the gate going up without the
+learner gaining anything -- arriving through an entirely different door. A
+tranche that diffs only against the headword list walks into it every time, and
+never sees why.
+
+**The check that is missing:** a candidate has to be tested against the *atom*
+ledger, across ALL lesson types, and not only against the headword list.
+`grep -l "ES-LEX-<WORD>" lessons/*.md` finds it by hand today. Doing it in
+`validate.ts` -- flagging a new `word` lesson whose headword matches a lexical
+atom that some other lesson already introduces -- would close it permanently for
+every track, and costs one pass over the corpus.
 ## HL-C10Z — Tamil ங closes the Frame 2 nasal gap
 
 After shared maddah above landed, Tamil nga **ங** led the measured queue at

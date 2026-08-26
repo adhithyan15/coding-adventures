@@ -102,3 +102,22 @@ reader what "the course" had already taught them -- a claim a reader holding one
 volume cannot check. `standalone-book` catches exactly that, and the fix
 re-anchored each on the reader's own experience rather than reaching for a
 vaguer word.
+
+## The one gate this tranche had to move, and which way it moved
+
+`language-ladder` splits lesson content into lazy batches and fails above a
+request-count ceiling. Thirty-five lesson files took the measured count from 397
+to **401**, over a ceiling of 399.
+
+The fix was not to raise that ceiling. Lesson batches are grouped by track and
+then split by a `maxSize`, and that `maxSize` is a bundler grouping parameter
+rather than a budget: raising it 49 kB -> 56 kB takes the count **401 -> 353**.
+So the request ceiling was **lowered to the measured 353** in the same commit --
+it moved down by 46 while the corpus grew by 35 lessons. The largest emitted
+batch goes 47,976 -> 54,688 bytes, about 11% of the 500 kB eager-chunk budget
+that is the limit actually protecting the browser, and which did not move.
+
+This is the second time content growth has walked into that ceiling; the first
+was answered the same way, at 32 kB -> 49 kB. A third should not happen, and
+issue #12918 carries the structural fix -- group batches by a chapter range,
+something a reader actually navigates, so the count grows sublinearly.
