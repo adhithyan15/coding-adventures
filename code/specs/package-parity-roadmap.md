@@ -9172,6 +9172,28 @@ fixture README's stronger definition of executable conformance. The addition
 brings the registered graph to 533 owners and 792 edges without changing the
 single in-progress owner.
 
+The implementation now converges every established Scytale package on Unicode
+scalar cells, explicit full and ragged column reconstruction, U+0020-only
+padding removal, empty-before-validation behavior, stable errors, ascending
+brute force, and the 4,096-scalar preflight. Package tests pass in all 15 lanes;
+coverage is above 80% wherever a lane has a coverage gate, and Java/Kotlin now
+gate line coverage explicitly. TypeScript's Unix and Windows BUILD fronts use
+`npm ci`, compile the public API, run 26 tests at 100% coverage, and retain an
+audited range-consistent `nanoid` security patch with zero reported npm
+vulnerabilities. Empty schema-v1 capability manifests preserve the packages'
+process-free, filesystem-free, network-free authority profile.
+
+After a conflict-free rebase over five disjoint mainline commits to exact
+`origin/main` `5fb2ef7d5d858b6144075eb95e162908f4b26cbb`, a fresh build-tool
+plan evaluated 45 Starlark files, discovered 5,089 packages, selected exactly
+the 15 established Scytale packages, and built all 15 while skipping 5,074.
+The collision gate remains at 15 established lanes, 1,373 identities, 4,582
+slots, and zero collisions or unknown buckets. Ten live PRs have zero overlap
+with the 87 changed paths. Independent reviews are clean after focused Dart,
+Elixir, Swift, JVM coverage, TypeScript build, README, and generated-artifact
+fixes. Exact cleanup of generated plans, coverage, dependency, and compiler
+caches reduced the active worktree from about 1.3 GiB to 778 MiB.
+
 ## Autonomous Loop Protocol
 
 Only one parity PR should be active at a time.
