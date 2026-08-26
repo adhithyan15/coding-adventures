@@ -977,11 +977,12 @@ backend immediately) come before the enabler-dependent items.
   conservative.
   Subtraction of positive numeric zero is also preserving, including
   left-associative chains, as is addition of negative real zero, because each
-  retains the sign bit of negative zero. Literal-only grouped zero sums and
-  differences receive the same treatment according to their exact resulting
-  zero sign. Addition of positive zero and subtraction of negative real zero
-  remain conservative because either can change that bit. Other real arithmetic and computed selector
-  assignments, differing,
+  retains the sign bit of negative zero. Literal-only grouped zero sums,
+  differences, and bounded positive powers receive the same treatment
+  according to their exact resulting zero sign. Addition of positive zero,
+  subtraction of negative real zero, and zero exponents remain conservative
+  because they are not exact preserving operands. Other real arithmetic and
+  computed selector assignments, differing,
   computed, or otherwise
   unsupported selector-dependency writes, dynamically selected differing selector leaves,
   dynamically selected differing dependency leaves, loop controls, and
