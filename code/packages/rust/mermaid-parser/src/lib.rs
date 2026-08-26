@@ -5953,7 +5953,9 @@ pub fn parse_gantt(source: &str) -> Result<GanttDiagram, ParseError> {
     for token in tokens {
         match token.type_name.as_deref() {
             Some("TITLE_STATEMENT") => {
-                title = Some(token.value["title".len()..].trim().to_string());
+                title = Some(normalize_gantt_prefixed_label(
+                    token.value["title".len()..].trim(),
+                ));
             }
             Some("ACC_TITLE_STATEMENT") => {
                 accessibility_title = gantt_metadata_value(&token);
@@ -5997,7 +5999,9 @@ pub fn parse_gantt(source: &str) -> Result<GanttDiagram, ParseError> {
                     sections.push(section);
                 }
                 current_section = Some(GanttSection {
-                    label: Some(token.value["section".len()..].trim().to_string()),
+                    label: Some(normalize_gantt_prefixed_label(
+                        token.value["section".len()..].trim(),
+                    )),
                     tasks: vec![],
                 });
             }
@@ -6202,6 +6206,13 @@ fn gantt_metadata_value(token: &Token) -> Option<String> {
         .map(|(_, value)| value.trim().to_string())
 }
 
+fn normalize_gantt_prefixed_label(value: &str) -> String {
+    value
+        .trim_start_matches([';', '#'])
+        .trim_start()
+        .to_string()
+}
+
 fn apply_gantt_interaction(
     token: &Token,
     sections: &mut [GanttSection],
@@ -6288,7 +6299,7 @@ fn parse_gantt_task(
         .value
         .find(':')
         .expect("task statement grammar requires ':'");
-    let label = token.value[..colon].trim().to_string();
+    let label = normalize_gantt_prefixed_label(token.value[..colon].trim());
     let rest = token.value[colon + 1..].trim();
     if label.is_empty() {
         return Err(token_error(token, "Gantt task label cannot be empty"));
@@ -6926,6 +6937,31 @@ Rel(customer, web, \"Uses\", \"HTTPS\")";
         assert!(parse_gantt("section Delivery\nRelease :r1, 2026-03-01, 1d").is_err());
         assert!(parse_gantt("gantt\nRelease :done,").is_err());
         assert!(parse_gantt("gantt\nRelease :r1, 2026-03-01, forever").is_err());
+    }
+
+    #[test]
+    fn gantt_grammar_accepts_prefixed_title_section_and_task_labels() {
+        let semicolon = parse_gantt(
+            "gantt\ntitle ;Release plan\nsection ;Build\n;Parser :parser, 2026-03-01, 1d",
+        )
+        .unwrap();
+        assert_eq!(semicolon.title.as_deref(), Some("Release plan"));
+        assert_eq!(semicolon.sections[0].label.as_deref(), Some("Build"));
+        assert_eq!(semicolon.sections[0].tasks[0].label, "Parser");
+
+        let hash = parse_gantt(
+            "gantt\ntitle #Release plan\nsection #Build\n#Parser :parser, 2026-03-01, 1d",
+        )
+        .unwrap();
+        assert_eq!(hash.title.as_deref(), Some("Release plan"));
+        assert_eq!(hash.sections[0].label.as_deref(), Some("Build"));
+        assert_eq!(hash.sections[0].tasks[0].label, "Parser");
+
+        let delimited = parse_gantt(
+            "gantt;title ;Release plan;section ;Build;Parser :parser, 2026-03-01, 1d",
+        )
+        .unwrap();
+        assert_eq!(delimited.sections[0].tasks[0].label, "Parser");
     }
 
     #[test]
