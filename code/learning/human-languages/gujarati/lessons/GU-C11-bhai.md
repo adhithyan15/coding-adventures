@@ -2,8 +2,8 @@
 schema_version: 2
 id: GU-C11-bhai
 spine_node: SPINE-EXCHANGE-NAMES
-sequence: 570
-chapter: 15
+sequence: 580
+chapter: 17
 type: word
 headword: ભાઈ
 romanization: bhāī

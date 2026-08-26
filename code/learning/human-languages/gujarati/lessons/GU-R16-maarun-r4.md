@@ -2,8 +2,8 @@
 schema_version: 2
 id: GU-R16-maarun-r4
 spine_node: SPINE-EXCHANGE-NAMES
-sequence: 700
-chapter: 18
+sequence: 710
+chapter: 20
 type: practice
 headword: મારું
 romanization: mārũ

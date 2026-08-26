@@ -1,212 +1,137 @@
-Gujarati, chapter 7: How Are You?.
-6 lessons. The first lesson already needs your eyes or your hands, so save this one for when you have stopped.
+Gujarati, chapter 7: The Last Four Shown Forms.
+5 lessons. The first lesson already needs your eyes or your hands, so save this one for when you have stopped.
 
 
-Lesson 1 of 6.
-હું (hũ) — "I".
+Lesson 1 of 5.
+ૂ — the long-ū sign.
 
-Before we start: this one needs your eyes, so it is not fully a driving lesson. You will want your eyes, for letter shapes on the page. You can listen to everything else now — leave the sections called The letters in this word and Script retrieval until you have stopped, and I will say so again when we reach it.
+Before we start: this one needs your hands, so it is not a driving lesson. You will want a pen and something to write on and your eyes, for letter shapes on the page. You can listen to everything else now — leave the section called Script — meet one form until you have stopped, and I will say so again when we reach it.
 
 Warm-up.
-[pause 2 seconds]
-To answer "how are you?" you first need "I." In the name exchange you learned mārũ ("my"); here is its owner.
+Write મુ once with the short-u hook below મ. Put it away. Long ū uses a longer below-hook, but it still needs a consonant host.
 
-The letters in this word.
-હ (ha) + the u-sign + nasal becomes હું (hũ). One nasal syllable.
+Script — meet one form.
+Keep મૂ visible. The sign ૂ attaches below the consonant as a longer hook. Read મૂ as mū: consonant first, then long vowel.
 
-The word, taken apart.
-હું (hũ, "I") descends from Sanskrit અહમ્ (aham, "I"), worn down through Old Gujarati (haũ) to hũ. That aham is from Proto-Indo-European h₁eǵ(H)om — the ancestor of Latin ego and English I. So Gujarati's hũ, Latin ego, and English I are one ancient word. Its possessive is the મારું (mārũ, "my") from that name exchange.
+Writing — notice and trace.
+Finger-trace only the longer below-hook in મૂ, then air-trace it once. Keep the hook below the host and make its extra length visible.
 
-Grammar Lens: "I" plus the copula.
-Hũ takes the copula છું (chhũ, "am"): hũ … chhũ. So the answer to tame kem chho? begins હું (hũ …).
+Writing — copy with the model.
+Copy visible મૂ once. Compare મુ / મૂ and repair only the hook length if the two forms look alike.
+
+Writing — recall after hiding.
+Hide the model and write mū once. Uncover મૂ, compare, and stop after one repair.
+[question — say your answer, then pause 20 seconds]
+Hide the model and write mū with the long-ū sign.
+
+Wrap-up Recall.
+[pause 3 seconds]
+Point to long ū in મુ મૂ, then write only its dependent sign.
+Source: Unicode Gujarati chart; placement and example follow data/scripts/gujarati.json.
+
+
+Lesson 2 of 5.
+ટ (ṭa) — retroflex tta.
+
+Before we start: this one needs your hands, so it is not a driving lesson. You will want a pen and something to write on and your eyes, for letter shapes on the page. You can listen to everything else now — leave the section called Script — meet one form until you have stopped, and I will say so again when we reach it.
+
+Warm-up.
+Read મૂ once and point to its long-ū sign. Then write dental ત once and say ta with the tongue at the teeth. Curl the tongue back for retroflex tta, then put the old shapes away.
+
+Script — meet one form.
+Keep ટ (ṭa) visible. Sweep across the rounded upper turn, bend diagonally down through the middle, then circle the broad lower bowl and finish on its right side without lifting.
+
+Writing — notice and trace.
+Finger-trace ટ (ṭa) once, then air-trace it once. Notice upper turn, diagonal middle, lower bowl; no pen lift.
+
+Writing — copy with the model.
+Copy visible ટ (ṭa) once. Compare only the diagonal middle and lower bowl; repair one landmark if needed.
+
+Writing — recall after hiding.
+Hide the model and write retroflex tta once. Uncover ટ (ṭa), compare, and stop after one repair.
+[question — say your answer, then pause 20 seconds]
+Hide the model and write retroflex tta from memory.
+
+Wrap-up Recall.
+[pause 3 seconds]
+Read ત ટ (ṭa) aloud and keep dental ta apart from retroflex tta.
+Sources: Gujarati Alphabet Writing Practice and the Unicode Gujarati chart.
+
+
+Lesson 3 of 5.
+ઈ — independent long ī.
+
+Before we start: this one needs your hands, so it is not a driving lesson. You will want a pen and something to write on and your eyes, for letter shapes on the page. You can listen to everything else now — leave the section called Script — meet one form until you have stopped, and I will say so again when we reach it.
+
+Warm-up.
+Write attached long-ī sign ી once and say “needs a consonant.” Put it away. Long ī standing alone needs a whole letter.
+
+Script — meet one form.
+Keep ઈ (ī) visible. Circle the small upper-left loop to the middle crossing, continue around the broad lower loop, then rise along the right and curl around the extended top hook without lifting.
+
+Writing — notice and trace.
+Finger-trace ઈ (ī) once, then air-trace it once. Notice upper loop, middle crossing, lower loop, extended top curl; no pen lift.
+
+Writing — copy with the model.
+Copy visible ઈ (ī) once. Compare only the middle crossing and top curl; repair one landmark if needed.
+
+Writing — recall after hiding.
+Hide the model and write independent long ī once. Uncover ઈ, compare, and stop after one repair.
+[question — say your answer, then pause 20 seconds]
+Hide the model and write independent long ii from memory.
+
+Wrap-up Recall.
+[pause 3 seconds]
+Point to the whole vowel in ઈ (ī) ી, then point to the attached sign.
+Sources: Gujarati Alphabet Writing Practice and the Unicode Gujarati chart.
+
+
+Lesson 4 of 5.
+ઢ (ḍha) — retroflex ddha.
+
+Before we start: this one needs your hands, so it is not a driving lesson. You will want a pen and something to write on and your eyes, for letter shapes on the page. You can listen to everything else now — leave the section called Script — meet one form until you have stopped, and I will say so again when we reach it.
+
+Warm-up.
+Write dental ધ once and say dha with the tongue at the teeth. Curl the tongue back and keep the breathy release for retroflex ddha.
+
+Script — meet one form.
+Keep ઢ (ḍha) visible. Sweep right across the high shoulder, descend through the middle and circle the broad outer lower bowl, then continue around the small inner loop without lifting.
+
+Writing — notice and trace.
+Finger-trace ઢ (ḍha) once, then air-trace it once. Notice high shoulder, outer bowl, inner loop; no pen lift.
+
+Writing — copy with the model.
+Copy visible ઢ (ḍha) once. Compare only the outer bowl and inner loop; repair one landmark if needed.
+
+Writing — recall after hiding.
+Hide the model and write retroflex ddha once. Uncover ઢ (ḍha), compare, and stop after one repair.
+[question — say your answer, then pause 20 seconds]
+Hide the model and write retroflex aspirated ddha from memory.
+
+Wrap-up Recall.
+[pause 3 seconds]
+Read ધ ઢ (ḍha) aloud and keep dental dha apart from retroflex ddha.
+Sources: Gujarati Alphabet Writing Practice and the Unicode Gujarati chart.
+
+
+Lesson 5 of 5.
+ૂ (ū) — ટ (ṭa) — ઈ (ī) — ઢ (ḍha) (attached long uu — retroflex tta — independent long ii — retroflex ddha): the final four return.
+
+Before we start: this one needs your hands, so it is not a driving lesson. You will want a pen and something to write on and your eyes, because the lesson points at something written down. You can listen to all of it now and come back to the parts that need looking at once you have stopped.
+
+Warm-up.
+Keep the four cards visible. Point as you say attached long ū, retroflex tta, independent long ī, and retroflex aspirated ddha.
 
 Guided Practice.
-[pause 1 second]
-[your turn — say: "hũ"]
-[pause 8 seconds for the answer]
-[your turn — say: the family — hũ / Latin ego / English I]
-[pause 8 seconds for the answer]
-[your turn — say: "hũ … chhũ" — I am …]
-[pause 8 seconds for the answer]
+Read the row once from left to right. Name ૂ (ū) as an attached sign and ઈ (ī) as an independent vowel. Record a reading score out of four.
+[question — say your answer, then pause 25 seconds]
+Read these four forms aloud in order: ૂ (ū) ટ (ṭa) ઈ (ī) ઢ (ḍha).
 
-Script retrieval.
-Hide the earlier model for ય. Write it once, compare, and repair only one part if needed.
-[question — say your answer, then pause 12 seconds]
-Without looking back, write ય once.
+Writing — from sound or role.
+Cover every model. Write the four cues in order. Record a separate writing score out of four; a reading point cannot replace a written form. Aim for 4/4 in each column, with one focused repair allowed.
+[question — say your answer, then pause 40 seconds]
+Cover every model. Write from these cues: attached long uu, retroflex tta, independent long ii, retroflex aspirated ddha.
 
 Wrap-up Recall.
 [pause 3 seconds]
-What Sanskrit word is hũ from, and its cousins? (Aham; Latin ego, English I.)
-
-
-Lesson 2 of 6.
-કેમ (kem) — "how," a proper k- question.
-
-Before we start: this one needs your eyes, so it is not fully a driving lesson. You will want your eyes, for letter shapes on the page. You can listen to everything else now — leave the sections called The letters in this word and Script retrieval until you have stopped, and I will say so again when we reach it.
-
-Warm-up.
-[pause 2 seconds]
-Where shũ ("what") hid its k-, this one wears it plainly — and it opens the most Gujarati of greetings.
-
-The letters in this word.
-ક (ka) + ે (the e-sign) + મ (ma) becomes કેમ (kem).
-
-The word, taken apart.
-કેમ (kem, "how"; also "why") is from the interrogative stem ક- (ka-), PIE kʷo- — the same root behind English wh- and Latin qu-. It heads the plain k- family Gujarati mostly kept: kem (how), kōṇ (who), kyā̃ (where), kyāre (when). And કેમ છો? (kem chho?, "how are you?") is, for most Gujaratis, the real everyday hello — warmer than namaste.
-
-Guided Practice.
-[pause 1 second]
-[your turn — say: "kem"]
-[pause 8 seconds for the answer]
-[your turn — say: the k- question family — kem, kōṇ, kyā̃, kyāre]
-[pause 8 seconds for the answer]
-
-Script retrieval.
-Hide the earlier model for ભ. Write it once, compare, and stop after one possible repair.
-[question — say your answer, then pause 12 seconds]
-Without looking back, write ભ once.
-
-Wrap-up Recall.
-[pause 3 seconds]
-What root does kem share with English how/what? (The interrogative ka-, PIE kʷo-.)
-
-
-Lesson 3 of 6.
-તમે કેમ છો? (tame kem chho?) — "how are you?"
-
-Before we start: this one needs your eyes, so it is not fully a driving lesson. You will want your eyes, for letter shapes on the page. You can listen to everything else now — leave the section called Script retrieval until you have stopped, and I will say so again when we reach it.
-
-Warm-up.
-[pause 2 seconds]
-The greeting most Gujaratis actually use — three words you already own.
-
-The phrase, taken apart.
-તમે કેમ છો? = તમે (tame, respectful "you") + કેમ (kem, "how") + છો (chho, "are") — literally "you how are?", the verb last. Chho is the respectful/plural form of the copula chhe you met in the name exchange (hũ chhũ I am / tame chho you are). To a friend (tũ): તું કેમ છે? (tũ kem chhe?).
-
-Grammar Lens: match the "you" to the copula.
-Respectful: તમે કેમ છો? (tame … chho).
-Familiar: તું કેમ છે? (tũ … chhe).
-Same pattern as every Indo-Aryan track: the "you" and its verb-form travel together.
-
-Guided Practice.
-[pause 1 second]
-[your turn — say: the respectful greeting — tame kem chho?]
-[pause 8 seconds for the answer]
-[your turn — say: the familiar version — tũ kem chhe?]
-[pause 8 seconds for the answer]
-[your turn — say: where the verb sits (at the end)]
-[pause 8 seconds for the answer]
-
-Script retrieval.
-Hide the earlier model for ધ. Write it once, compare, make at most one repair, and stop.
-[question — say your answer, then pause 12 seconds]
-Without looking back, write ધ once.
-
-Wrap-up Recall.
-[pause 3 seconds]
-Give the everyday Gujarati "how are you?", and its copula form. (Tame kem chho?; chho — the respectful form of chhe.)
-
-
-Lesson 4 of 6.
-મજા (majā) — "enjoyment," and how to answer.
-
-Before we start: this one needs your eyes, so it is not fully a driving lesson. You will want your eyes, for letter shapes on the page. You can listen to everything else now — leave the sections called The letters in this word and Script retrieval until you have stopped, and I will say so again when we reach it.
-
-Warm-up.
-[pause 2 seconds]
-The word that answers "how are you?" — and it comes not from Sanskrit but from Persia.
-
-The letters in this word.
-મ (ma) + જા (jā) becomes મજા (majā).
-
-The word, taken apart.
-મજા (majā, "enjoyment, fun, relish, pleasure") is not Sanskrit — it is Perso-Arabic, from Persian maza ("taste, relish"). Gujaratis, a great trading people, wove thousands of Persian and Arabic words into their speech over centuries of commerce across the Arabian Sea — and even "how are you" is answered with one. To say "I'm well," Gujarati says હું મજામાં છું (hũ majāmā chhũ) — literally "I am in enjoyment" (majā + -mā "in" + chhũ "am").
-
-The exchange — the reply.
-— tame kem chho? ("How are you?") — majāmā, ābhār. ("Well [lit. 'in enjoyment'], thank you.")
-
-Guided Practice.
-[pause 1 second]
-[your turn — say: "majā"]
-[pause 8 seconds for the answer]
-[your turn — say: the full reply — hũ majāmā chhũ]
-[pause 8 seconds for the answer]
-[your turn — say: which heritage majā belongs to (Persian, not Sanskrit)]
-[pause 8 seconds for the answer]
-
-Script retrieval.
-Hide the earlier model for ૃ. Write the below-consonant sign once, compare, and stop after one possible repair.
-[question — say your answer, then pause 12 seconds]
-Without looking back, write the vowel sign ૃ once.
-
-Wrap-up Recall.
-[pause 3 seconds]
-How does Gujarati say "I'm well," and where does majā come from? (Hũ majāmā chhũ, "I'm in enjoyment"; Persian maza, "taste/relish.")
-
-
-Lesson 5 of 6.
-વાંધો નહીં (vāndho nahĩ) — "no problem".
-
-Before we start: this one needs your eyes, so it is not fully a driving lesson. You will want your eyes, for letter shapes on the page. You can listen to everything else now — leave the section called The letters in this word until you have stopped, and I will say so again when we reach it.
-
-Warm-up.
-[pause 2 seconds]
-When someone thanks you — or apologises — this is the easy, gracious reply.
-
-The letters in this word.
-વાંધો (vāndho, "objection, problem" — with the nasal on વાં) + નહીં (nahĩ, "not") becomes vāndho nahĩ.
-
-The word, taken apart.
-વાંધો નહીં literally means "[there is] no objection" — vāndho ("objection, difficulty, harm") + નહીં (nahĩ, "not / no"). It serves as "it's okay / no worries / no problem / you're welcome." The negative નહીં (nahĩ) is the fuller form of the ના (nā) from the earlier yes/no lesson — both from the ancient na-, Proto-Indo-European ne, behind English no, not, and Hindi nahīṁ.
-
-Guided Practice.
-[pause 1 second]
-[your turn — say: "vāndho nahĩ"]
-[pause 8 seconds for the answer]
-[your turn — say: what it literally means ("no objection")]
-[pause 8 seconds for the answer]
-[your turn — say: the exchange — ābhār / vāndho nahĩ]
-[pause 8 seconds for the answer]
-
-Wrap-up Recall.
-[pause 3 seconds]
-What does vāndho nahĩ literally say, and what ancient root is its nahĩ from? ("No objection"; PIE ne — English no/not.)
-
-
-Lesson 6 of 6.
-Chapter 5 — The how-are-you exchange.
-
-Warm-up.
-[pause 2 seconds]
-No new words. The whole responding cycle, from atoms you now own.
-
-The exchange.
-[pause 1 second after each]
-[your turn — say: "How are you?" (the everyday hello) — tame kem chho?]
-[pause 8 seconds for the answer]
-[your turn — say: "I'm well, thank you." — hũ majāmā chhũ, ābhār.]
-[pause 8 seconds for the answer]
-[your turn — say: "No problem / you're welcome." — vāndho nahĩ.]
-[pause 8 seconds for the answer]
-[your turn — say: the familiar question — tũ kem chhe?]
-[pause 8 seconds for the answer]
-
-The word, taken apart — the atoms.
-[pause 2 seconds]
-[your turn — say: the k- question-word for "how" (kem)]
-[pause 8 seconds for the answer]
-[your turn — say: "I" and its copula (hũ, chhũ)]
-[pause 8 seconds for the answer]
-[your turn — say: which of your words is Persian, not Sanskrit (majā)]
-[pause 8 seconds for the answer]
-
-What you've built — roots you now carry.
-[pause 2 seconds]
-kem from the interrogative k- (PIE kʷo-), cousin of English how/what.
-hũ from Sanskrit aham becomes Latin ego, English I.
-majā from Persian maza, "taste/relish" — the trade-language layer.
-nahĩ from PIE ne, English no (in vāndho nahĩ).
-
-Wrap-up Recall.
-[pause 3 seconds]
-Someone greets you with tame kem chho? — reply that you're well and thank them. (Hũ majāmā chhũ, ābhār — and to their thanks, vāndho nahĩ.)
+Write the attached sign and independent vowel from sound, then name which one needs a consonant host.

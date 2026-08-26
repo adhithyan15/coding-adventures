@@ -2,8 +2,8 @@
 schema_version: 2
 id: GU-C12-kaan
 spine_node: SPINE-CHECK-WELLBEING
-sequence: 600
-chapter: 16
+sequence: 610
+chapter: 18
 type: word
 headword: કાન
 romanization: kān

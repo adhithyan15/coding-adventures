@@ -1,25 +1,22 @@
 {
   "chapter": 11,
-  "title": "Six Verbs at the Core",
-  "label": "ch:gu-core-verbs",
-  "canDo": "I can name six everyday Gujarati verbs by the neuter -વું ending they all share, strip that ending to reach the stem, and say what I do with stem, person-ending, and the copula છે.",
+  "title": "The First Verbs",
+  "label": "ch:first-verbs",
+  "canDo": "I can build short present-tense Gujarati sentences with the chapter's first verbs.",
   "spineNodes": [
     "SPINE-SAY-WHAT-I-DO"
   ],
   "payoff": {
-    "lesson": "GU-C07-jaanvun",
-    "kind": "production",
-    "summary": "The sixth verb runs the whole chapter at once: strip the neuter -વું from all six infinitives, hold the retroflex ણ that Prakrit pulled back from a plain n, put the stem into hũ jāṇũ chhũ, and connect jāṇvũ to the English know it is genuinely cousin to.",
+    "lesson": "GU-C05-practice",
+    "kind": "task",
+    "summary": "Complete GU-C05-practice, the canonical closing checkpoint, and demonstrate the chapter promise: build short present-tense Gujarati sentences with the chapter's first verbs.",
     "assesses": [
-      "GU-LEX-HOVU",
-      "GU-LEX-JAVU",
-      "GU-LEX-AAVVU",
-      "GU-LEX-KHAAVU",
-      "GU-LEX-JOVU",
-      "GU-GRAMMAR-VU-NEUTER-INFINITIVE",
-      "GU-GRAMMAR-PRESENT-STEM-PERSON-COPULA",
-      "GU-LEX-JAANVU",
-      "GU-ETYMON-JAANVU-KNOW"
+      "GU-CONCEPT-C03-HUN-01",
+      "GU-CONCEPT-C05-BOLVUN-01",
+      "GU-CONCEPT-C05-HUNGUJARATIBOLUNCHHUN-01",
+      "GU-CONCEPT-C05-KAAMKARVUN-01",
+      "GU-CONCEPT-C05-PRACTICE-01",
+      "GU-CONCEPT-C05-RAHEVUN-01"
     ]
   }
 }

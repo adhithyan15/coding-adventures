@@ -1,28 +1,33 @@
 {
   "chapter": 14,
-  "title": "Water, Tea, Milk, and Bread",
-  "label": "ch:gu-request-food-drink",
-  "canDo": "I can politely ask for water, tea, milk, or bread in Gujarati, name which of the four is a loanword and which have no settled root beyond Sanskrit, and explain why a word ending in -ī is not automatically feminine.",
+  "title": "The Mind and the Page",
+  "label": "ch:gu-mind-and-page",
+  "canDo": "I can say that I think, understand, read and write in Gujarati, hear and write the nasal that sits in the middle of વાંચવું, and name what each of the four roots was doing before it meant a mental act — ranging about, waking up, speaking, and scratching.",
   "spineNodes": [
-    "SPINE-POLITE-REQUEST-REPAIR"
+    "SPINE-SAY-WHAT-I-DO"
   ],
   "payoff": {
-    "lesson": "GU-C10-rotli",
+    "lesson": "GU-C08-lakhvun",
     "kind": "production",
-    "summary": "The chapter closes on રોટલી, the request that breaks the drink pattern: the reader produces all four requests with મહેરબાની કરીને, sorts પાણી and દૂધ (inherited, known root) against ચા (loaned from Chinese by the overland route) against રોટલી (inherited, root unknown), and uses પાણી's neuter gender despite its -ī ending to show that રોટલી's own feminine -ī is a hint, not a rule.",
+    "summary": "Say હું મારું નામ લખું છું, run the chapter's four verbs back with the four things their roots meant — vichārvũ from a root meaning to range about, samajvũ from one meaning to wake, vā̃chvũ from one meaning to speak, lakhvũ from one meaning to scratch — place the medial nasal of vā̃ch- and the assimilate-then-simplify path from dhy to j, and say which of the four honestly has no English cousin at all.",
     "assesses": [
-      "GU-LEX-PAANI",
-      "GU-PHRASE-MEHERBANI-KARINE",
-      "GU-ETYMON-PAANI-DRINK",
-      "GU-LEX-CHA",
-      "GU-ETYMON-CHA-CHINESE",
-      "GU-HISTORY-TEA-CHA-ISOGLOSS",
-      "GU-LEX-DUDH",
-      "GU-ETYMON-DUDH-DUGDHA",
-      "GU-LEX-ROTLI",
-      "GU-ETYMON-ROTLI-UNKNOWN",
-      "GU-GRAMMAR-GENDER-NOT-BY-ENDING",
-      "GU-SCRIPT-HEADLESS-CLUE"
+      "GU-LEX-LAKHVU",
+      "GU-ETYMON-LIKH-SCRATCH",
+      "GU-LEX-VANCHVU",
+      "GU-ETYMON-VAC-VOICE",
+      "GU-SCRIPT-ANUSVARA-MEDIAL",
+      "GU-LEX-SAMAJVU",
+      "GU-ETYMON-BUDH-AWAKE",
+      "GU-SOUND-DHY-JJH-J",
+      "GU-LEX-VICHARVU",
+      "GU-ETYMON-VICHAR-TURN",
+      "GU-LEX-KHAAVU",
+      "GU-ETYMON-KHAAVU-NO-ENGLISH-COUSIN",
+      "GU-ETYMON-JOVU-UNSETTLED",
+      "GU-LEX-JAANVU",
+      "GU-ETYMON-JAANVU-KNOW",
+      "GU-GRAMMAR-VU-NEUTER-INFINITIVE",
+      "GU-GRAMMAR-PRESENT-STEM-PERSON-COPULA"
     ]
   }
 }

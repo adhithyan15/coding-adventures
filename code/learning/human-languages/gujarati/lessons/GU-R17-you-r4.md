@@ -2,8 +2,8 @@
 schema_version: 2
 id: GU-R17-you-r4
 spine_node: SPINE-EXCHANGE-NAMES
-sequence: 750
-chapter: 19
+sequence: 760
+chapter: 21
 type: practice
 headword: તું / તમે
 romanization: tũ / tame

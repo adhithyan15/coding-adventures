@@ -67,22 +67,24 @@ it("pins Gujarati's meaning-first opening script spine", () => {
     ["3", 10],
     ["4", 5],
     ["5", 5],
-    ["6", 10],
-    ["7", 6],
-    ["8", 5],
-    ["9", 5],
-    ["10", 2],
-    ["11", 6],
-    ["12", 4],
-    ["13", 4],
+    ["6", 5],
+    ["7", 5],
+    ["8", 10],
+    ["9", 6],
+    ["10", 5],
+    ["11", 5],
+    ["12", 2],
+    ["13", 6],
     ["14", 4],
-    ["15", 5],
+    ["15", 4],
     ["16", 4],
-    ["17", 6],
-    ["18", 6],
+    ["17", 5],
+    ["18", 4],
     ["19", 6],
-    ["20", 5],
-    ["21", 1],
+    ["20", 6],
+    ["21", 6],
+    ["22", 5],
+    ["23", 1],
   ]);
 });
 
@@ -183,6 +185,32 @@ it("pins Gujarati's complete pre-A1 writing runway", () => {
     "delayed-copy",
     "dictation-transcription",
     "dictation-transcription",
+    "observe-trace",
+    "guided-copy",
+    "delayed-copy",
+    "observe-trace",
+    "guided-copy",
+    "delayed-copy",
+    "observe-trace",
+    "guided-copy",
+    "delayed-copy",
+    "observe-trace",
+    "guided-copy",
+    "delayed-copy",
+    "dictation-transcription",
+    "observe-trace",
+    "guided-copy",
+    "delayed-copy",
+    "observe-trace",
+    "guided-copy",
+    "delayed-copy",
+    "observe-trace",
+    "guided-copy",
+    "delayed-copy",
+    "observe-trace",
+    "guided-copy",
+    "delayed-copy",
+    "dictation-transcription",
     "dictation-transcription",
     "dictation-transcription",
     "dictation-transcription",
@@ -238,7 +266,7 @@ it("closes R3 for every Gujarati doorway form after the first name exchange", ()
       );
       return checkpointIndex - introducedAt;
     }),
-  ).toEqual([28, 27, 26, 25, 24, 23, 22, 21, 20]);
+  ).toEqual([38, 37, 36, 35, 34, 33, 32, 31, 30]);
 
   const stillMissingR3 = measureContinuity(lessons).reinforcement.filter(
     (defect) => doorway.has(defect.atom) && defect.missed.includes("R3"),
@@ -246,7 +274,7 @@ it("closes R3 for every Gujarati doorway form after the first name exchange", ()
   expect(stillMissingR3).toEqual([]);
 });
 
-it("pins Gujarati R4 bridge A at positions 101 through 106", () => {
+it("pins Gujarati R4 bridge A at positions 111 through 116", () => {
   const lessons = loadTrackLessons("gujarati");
   const ordered = [...lessons].sort(
     (left, right) => Number(left.frontmatter.sequence) - Number(right.frontmatter.sequence),
@@ -259,9 +287,9 @@ it("pins Gujarati R4 bridge A at positions 101 through 106", () => {
     "GU-R15-sha-r4",
     "GU-R15-name-exchange-r3",
   ];
-  expect(ordered.slice(101, 107).map((lesson) => lesson.realization.lessonId)).toEqual(bridgeIds);
+  expect(ordered.slice(111, 117).map((lesson) => lesson.realization.lessonId)).toEqual(bridgeIds);
   expect(
-    ordered.slice(101, 107).every((lesson) =>
+    ordered.slice(111, 117).every((lesson) =>
       ((lesson.frontmatter["introduces.knowledge"] ?? []) as string[]).length === 0,
     ),
   ).toBe(true);
@@ -278,18 +306,18 @@ it("pins Gujarati R4 bridge A at positions 101 through 106", () => {
       const introducedAt = ordered.findIndex((lesson) =>
         ((lesson.frontmatter["introduces.knowledge"] ?? []) as string[]).includes(atom),
       );
-      return 101 + offset - introducedAt;
+      return 111 + offset - introducedAt;
     }),
-  ).toEqual([71, 71, 71, 71, 71]);
+  ).toEqual([81, 81, 81, 81, 81]);
 
-  const stillMissingR4 = measureContinuity(ordered.slice(0, 107)).reinforcement.filter(
+  const stillMissingR4 = measureContinuity(ordered.slice(0, 117)).reinforcement.filter(
     (defect) => exactR4.includes(defect.atom) && defect.missed.includes("R4"),
   );
   expect(stillMissingR4).toEqual([]);
 
-  const beforeBridge = measureContinuity(ordered.slice(0, 101));
-  const afterBridge = measureContinuity(ordered.slice(0, 107));
-  const priorTrackEnd = 100;
+  const beforeBridge = measureContinuity(ordered.slice(0, 111));
+  const afterBridge = measureContinuity(ordered.slice(0, 117));
+  const priorTrackEnd = 110;
   const firstEligibleDistance = new Map(
     REINFORCEMENT_WINDOWS.map((window) => [window.name, window.from]),
   );
@@ -298,11 +326,11 @@ it("pins Gujarati R4 bridge A at positions 101 through 106", () => {
       (window) => defect.introducedAt + firstEligibleDistance.get(window)! <= priorTrackEnd,
     ),
   ).length;
-  expect(beforeBridge.reinforcement.flatMap((defect) => defect.missed)).toHaveLength(182);
-  expect(priorWindowMissesAfterBridge).toBe(171);
+  expect(beforeBridge.reinforcement.flatMap((defect) => defect.missed)).toHaveLength(201);
+  expect(priorWindowMissesAfterBridge).toBe(188);
 });
 
-it("pins Gujarati R4 bridge B at positions 107 through 112", () => {
+it("pins Gujarati R4 bridge B at positions 117 through 122", () => {
   const lessons = loadTrackLessons("gujarati");
   const ordered = [...lessons].sort(
     (left, right) => Number(left.frontmatter.sequence) - Number(right.frontmatter.sequence),
@@ -315,9 +343,9 @@ it("pins Gujarati R4 bridge B at positions 107 through 112", () => {
     "GU-R16-anand-r4",
     "GU-R16-wellbeing-r3",
   ];
-  expect(ordered.slice(107, 113).map((lesson) => lesson.realization.lessonId)).toEqual(bridgeIds);
+  expect(ordered.slice(117, 123).map((lesson) => lesson.realization.lessonId)).toEqual(bridgeIds);
   expect(
-    ordered.slice(107, 113).every((lesson) =>
+    ordered.slice(117, 123).every((lesson) =>
       ((lesson.frontmatter["introduces.knowledge"] ?? []) as string[]).length === 0,
     ),
   ).toBe(true);
@@ -334,7 +362,7 @@ it("pins Gujarati R4 bridge B at positions 107 through 112", () => {
       const introducedAt = ordered.findIndex((lesson) =>
         ((lesson.frontmatter["introduces.knowledge"] ?? []) as string[]).includes(atom),
       );
-      return 107 + offset - introducedAt;
+      return 117 + offset - introducedAt;
     }),
   ).toEqual([61, 61, 61, 61, 61]);
 
@@ -346,7 +374,7 @@ it("pins Gujarati R4 bridge B at positions 107 through 112", () => {
     "GU-CONCEPT-C03-TAMEKEMCHHO-01",
     "GU-CONCEPT-C03-VANDHONAHI-01",
   ]);
-  const continuity = measureContinuity(ordered.slice(0, 113));
+  const continuity = measureContinuity(ordered.slice(0, 123));
   expect(
     continuity.reinforcement.filter(
       (defect) => exactR4.includes(defect.atom) && defect.missed.includes("R4"),
@@ -358,8 +386,8 @@ it("pins Gujarati R4 bridge B at positions 107 through 112", () => {
     ),
   ).toEqual([]);
 
-  const beforeBridge = measureContinuity(ordered.slice(0, 107));
-  const priorTrackEnd = 106;
+  const beforeBridge = measureContinuity(ordered.slice(0, 117));
+  const priorTrackEnd = 116;
   const firstEligibleDistance = new Map(
     REINFORCEMENT_WINDOWS.map((window) => [window.name, window.from]),
   );
@@ -368,11 +396,11 @@ it("pins Gujarati R4 bridge B at positions 107 through 112", () => {
       (window) => defect.introducedAt + firstEligibleDistance.get(window)! <= priorTrackEnd,
     ),
   ).length;
-  expect(beforeBridge.reinforcement.flatMap((defect) => defect.missed)).toHaveLength(201);
-  expect(priorWindowMissesAfterBridge).toBe(195);
+  expect(beforeBridge.reinforcement.flatMap((defect) => defect.missed)).toHaveLength(216);
+  expect(priorWindowMissesAfterBridge).toBe(210);
 });
 
-it("pins Gujarati R4 bridge C at positions 113 through 118", () => {
+it("pins Gujarati R4 bridge C at positions 123 through 128", () => {
   const lessons = loadTrackLessons("gujarati");
   const ordered = [...lessons].sort(
     (left, right) => Number(left.frontmatter.sequence) - Number(right.frontmatter.sequence),
@@ -385,9 +413,9 @@ it("pins Gujarati R4 bridge C at positions 113 through 118", () => {
     "GU-R17-hun-r4",
     "GU-R17-kem-r4",
   ];
-  expect(ordered.slice(113, 119).map((lesson) => lesson.realization.lessonId)).toEqual(bridgeIds);
+  expect(ordered.slice(123, 129).map((lesson) => lesson.realization.lessonId)).toEqual(bridgeIds);
   expect(
-    ordered.slice(113, 119).every((lesson) =>
+    ordered.slice(123, 129).every((lesson) =>
       ((lesson.frontmatter["introduces.knowledge"] ?? []) as string[]).length === 0,
     ),
   ).toBe(true);
@@ -405,19 +433,19 @@ it("pins Gujarati R4 bridge C at positions 113 through 118", () => {
       const introducedAt = ordered.findIndex((lesson) =>
         ((lesson.frontmatter["introduces.knowledge"] ?? []) as string[]).includes(atom),
       );
-      return 113 + offset - introducedAt;
+      return 123 + offset - introducedAt;
     }),
   ).toEqual([62, 62, 62, 61, 61, 61]);
 
-  const continuity = measureContinuity(ordered.slice(0, 119));
+  const continuity = measureContinuity(ordered.slice(0, 129));
   expect(
     continuity.reinforcement.filter(
       (defect) => exactR4.includes(defect.atom) && defect.missed.includes("R4"),
     ),
   ).toEqual([]);
 
-  const beforeBridge = measureContinuity(ordered.slice(0, 113));
-  const priorTrackEnd = 112;
+  const beforeBridge = measureContinuity(ordered.slice(0, 123));
+  const priorTrackEnd = 122;
   const firstEligibleDistance = new Map(
     REINFORCEMENT_WINDOWS.map((window) => [window.name, window.from]),
   );
@@ -426,11 +454,11 @@ it("pins Gujarati R4 bridge C at positions 113 through 118", () => {
       (window) => defect.introducedAt + firstEligibleDistance.get(window)! <= priorTrackEnd,
     ),
   ).length;
-  expect(beforeBridge.reinforcement.flatMap((defect) => defect.missed)).toHaveLength(217);
-  expect(priorWindowMissesAfterBridge).toBe(214);
+  expect(beforeBridge.reinforcement.flatMap((defect) => defect.missed)).toHaveLength(231);
+  expect(priorWindowMissesAfterBridge).toBe(228);
 });
 
-it("pins Gujarati R4 bridge D at positions 119 through 123", () => {
+it("pins Gujarati R4 bridge D at positions 129 through 133", () => {
   const lessons = loadTrackLessons("gujarati");
   const ordered = [...lessons].sort(
     (left, right) => Number(left.frontmatter.sequence) - Number(right.frontmatter.sequence),
@@ -442,9 +470,9 @@ it("pins Gujarati R4 bridge D at positions 119 through 123", () => {
     "GU-R18-wellbeing-r4",
     "GU-R18-farewell-r4",
   ];
-  expect(ordered.slice(119, 124).map((lesson) => lesson.realization.lessonId)).toEqual(bridgeIds);
+  expect(ordered.slice(129, 134).map((lesson) => lesson.realization.lessonId)).toEqual(bridgeIds);
   expect(
-    ordered.slice(119, 124).every((lesson) =>
+    ordered.slice(129, 134).every((lesson) =>
       ((lesson.frontmatter["introduces.knowledge"] ?? []) as string[]).length === 0,
     ),
   ).toBe(true);
@@ -461,7 +489,7 @@ it("pins Gujarati R4 bridge D at positions 119 through 123", () => {
       const introducedAt = ordered.findIndex((lesson) =>
         ((lesson.frontmatter["introduces.knowledge"] ?? []) as string[]).includes(atom),
       );
-      return 119 + offset - introducedAt;
+      return 129 + offset - introducedAt;
     }),
   ).toEqual([61, 61, 61, 61, 61]);
 
@@ -476,11 +504,11 @@ it("pins Gujarati R4 bridge D at positions 119 through 123", () => {
       const introducedAt = ordered.findIndex((lesson) =>
         ((lesson.frontmatter["introduces.knowledge"] ?? []) as string[]).includes(atom),
       );
-      return 123 - introducedAt;
+      return 133 - introducedAt;
     }),
   ).toEqual([60, 59, 58, 57]);
 
-  const continuity = measureContinuity(ordered.slice(0, 124));
+  const continuity = measureContinuity(ordered.slice(0, 134));
   expect(
     continuity.reinforcement.filter(
       (defect) => exactR4.includes(defect.atom) && defect.missed.includes("R4"),
@@ -492,8 +520,8 @@ it("pins Gujarati R4 bridge D at positions 119 through 123", () => {
     ),
   ).toEqual([]);
 
-  const beforeBridge = measureContinuity(ordered.slice(0, 119));
-  const priorTrackEnd = 118;
+  const beforeBridge = measureContinuity(ordered.slice(0, 129));
+  const priorTrackEnd = 128;
   const firstEligibleDistance = new Map(
     REINFORCEMENT_WINDOWS.map((window) => [window.name, window.from]),
   );
@@ -502,11 +530,11 @@ it("pins Gujarati R4 bridge D at positions 119 through 123", () => {
       (window) => defect.introducedAt + firstEligibleDistance.get(window)! <= priorTrackEnd,
     ),
   ).length;
-  expect(beforeBridge.reinforcement.flatMap((defect) => defect.missed)).toHaveLength(231);
-  expect(priorWindowMissesAfterBridge).toBe(225);
+  expect(beforeBridge.reinforcement.flatMap((defect) => defect.missed)).toHaveLength(245);
+  expect(priorWindowMissesAfterBridge).toBe(239);
 });
 
-it("closes Gujarati doorway R4 at position 124", () => {
+it("closes Gujarati doorway R4 at position 134", () => {
   const lessons = loadTrackLessons("gujarati");
   const ordered = [...lessons].sort(
     (left, right) => Number(left.frontmatter.sequence) - Number(right.frontmatter.sequence),
@@ -522,7 +550,7 @@ it("closes Gujarati doorway R4 at position 124", () => {
     "GU-SCRIPT-NNA-01",
     "GU-SCRIPT-SHA-01",
   ];
-  const checkpoint = ordered[124]!;
+  const checkpoint = ordered[134]!;
   expect(checkpoint.realization.lessonId).toBe("GU-R19-doorway-nine-r4");
   expect(checkpoint.frontmatter["introduces.knowledge"]).toEqual([]);
   expect(
@@ -530,14 +558,14 @@ it("closes Gujarati doorway R4 at position 124", () => {
       const introducedAt = ordered.findIndex((lesson) =>
         ((lesson.frontmatter["introduces.knowledge"] ?? []) as string[]).includes(atom),
       );
-      return 124 - introducedAt;
+      return 134 - introducedAt;
     }),
-  ).toEqual([98, 97, 96, 95, 94, 93, 92, 91, 90]);
+  ).toEqual([108, 107, 106, 105, 104, 103, 102, 101, 100]);
 
-  const beforeCheckpoint = measureContinuity(ordered.slice(0, 124));
+  const beforeCheckpoint = measureContinuity(ordered.slice(0, 134));
   const afterCheckpoint = measureContinuity(lessons);
-  expect(beforeCheckpoint.reinforcement.flatMap((defect) => defect.missed)).toHaveLength(234);
-  expect(afterCheckpoint.reinforcement.flatMap((defect) => defect.missed)).toHaveLength(226);
+  expect(beforeCheckpoint.reinforcement.flatMap((defect) => defect.missed)).toHaveLength(248);
+  expect(afterCheckpoint.reinforcement.flatMap((defect) => defect.missed)).toHaveLength(247);
   expect(
     afterCheckpoint.reinforcement.filter(
       (defect) => doorway.includes(defect.atom) && defect.missed.includes("R4"),
@@ -575,6 +603,10 @@ it("pins Gujarati-owned objective activities", () => {
     "GU-R05-second-four-r1-doorway-three-r2-dictation",
     "GU-R05-second-four-r1-doorway-three-r2-reading",
     "GU-R05-second-four-r1-reading",
+    "GU-R06-first-four-r1-dictation",
+    "GU-R06-first-four-r1-reading",
+    "GU-R07-second-four-r1-dictation",
+    "GU-R07-second-four-r1-reading",
     "GU-R13-doorway-nine-r3-dictation",
     "GU-R13-doorway-nine-r3-reading",
     "GU-R15-chha-r4-dictation",
@@ -658,5 +690,13 @@ it("pins Gujarati-owned objective activities", () => {
     "GU-W05-cha-recall",
     "GU-W05-la-recall",
     "GU-W05-pa-recall",
+    "GU-W06-ga-recall",
+    "GU-W06-independent-e-recall",
+    "GU-W06-independent-u-recall",
+    "GU-W06-kha-recall",
+    "GU-W07-ddha-recall",
+    "GU-W07-independent-ii-recall",
+    "GU-W07-tta-recall",
+    "GU-W07-uu-matra-recall",
   ]);
 });

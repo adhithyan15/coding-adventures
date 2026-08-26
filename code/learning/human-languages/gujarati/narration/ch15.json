@@ -2,24 +2,24 @@
   "version": 1,
   "language": "gujarati",
   "chapter": 15,
-  "title": "Friend and Family",
+  "title": "Taking, Asking, Helping, Liking",
   "drivablePrefix": 0,
-  "sourceHash": "fnv1a64:52e547dea1dab8dc",
+  "sourceHash": "fnv1a64:4a1525d8fc09e591",
   "lessons": [
     {
-      "id": "GU-C11-mitra",
-      "sequence": 550,
-      "title": "મિત્ર (mitra) — a friend, and the word inside your own \"please\"",
-      "headword": "મિત્ર",
-      "romanization": "mitra",
-      "gloss": "friend — a word this chapter will link to the very phrase you used to ask for water",
+      "id": "GU-C09-levun",
+      "sequence": 480,
+      "title": "લેવું (levũ) — \"to take,\" and a family tree with an argument in it",
+      "headword": "લેવું",
+      "romanization": "levũ",
+      "gloss": "to take — the shortest verb yet, and a family tree that is disputed rather than empty",
       "script": "gujarati",
       "modality": "sight",
       "derivedModality": "sight",
       "modalityReasons": [
         "script-block"
       ],
-      "sourceHash": "fnv1a64:9f556e4379629e2a",
+      "sourceHash": "fnv1a64:83b4fd6ca5c79d27",
       "notice": {
         "modality": "sight",
         "needs": [
@@ -45,7 +45,7 @@
             },
             {
               "kind": "speech",
-              "text": "Last chapter asked politely for roṭlī with meherbānī karīne. That phrase is about to turn out to share its root with the very first word of this new chapter."
+              "text": "Lakhvũ and vā̃chvũ — and what was lakh- doing before it wrote anything? (Scratching.) The next verb is shorter than either."
             }
           ]
         },
@@ -56,7 +56,11 @@
           "segments": [
             {
               "kind": "speech",
-              "text": "મિત્ર — mitra — friend."
+              "text": "લેવું — levũ — to take."
+            },
+            {
+              "kind": "speech",
+              "text": "Take the ending off and almost nothing is left: the stem is one syllable, લે- le-."
             }
           ]
         },
@@ -67,175 +71,45 @@
           "segments": [
             {
               "kind": "speech",
-              "text": "મ ma, િ the short-i sign written before the consonant it belongs to — the same leftward quirk you saw open vichārvũ — then a conjunct: ત્ર — ત ta with the virama ્ stripping its vowel, joined straight into ર ra. Mi-tra, two syllables, the second one a cluster."
-            }
-          ]
-        },
-        {
-          "index": 3,
-          "type": "etymology",
-          "title": "The word, taken apart — the friend hiding inside \"please\"",
-          "segments": [
-            {
-              "kind": "speech",
-              "text": "mitra is Sanskrit for \"friend,\" from Proto-Indo-Iranian mitras, \"(that which) causes binding\" — a covenant word before it was a friendship word. Its exact twin is Avestan Mithra, the god of contracts and given word, whose name lived on in Middle Persian as Mihr."
-            },
-            {
-              "kind": "speech",
-              "text": "That is not a dead end. મહેરબાની, the \"kindness\" you built meherbānī karīne from last chapter, is Persian mihrbānī — built on that very same Mihr. So મિત્ર (mitra), inherited straight down from Sanskrit, and મહેરબાની, borrowed centuries later from Persian, are cousins by the same Indo-Iranian root — one word for \"friend,\" the other for \"favor,\" both once naming the same idea of a bond that holds."
-            }
-          ]
-        },
-        {
-          "index": 4,
-          "type": "guided-production",
-          "title": "Guided Practice",
-          "segments": [
-            {
-              "kind": "prompt",
-              "action": "SAY",
-              "instruction": "mitra — friend",
-              "spoken": true,
-              "scored": false,
-              "responseSeconds": 8,
-              "source": "[YOU SAY: **mitra** — friend]"
-            },
-            {
-              "kind": "prompt",
-              "action": "TRACE",
-              "instruction": "Proto-Indo-Iranian mitras becomes Avestan Mithra becomes Persian Mihr becomes મહેરબાની",
-              "spoken": false,
-              "scored": false,
-              "responseSeconds": 8,
-              "source": "[YOU TRACE: Proto-Indo-Iranian *mitras* → Avestan **Mithra** → Persian **Mihr** → **મહેરબાની**]"
-            },
-            {
-              "kind": "prompt",
-              "action": "CONNECT",
-              "instruction": "મિત્ર (mitra) and મહેરબાની — same ancient root, two different doors into Gujarati",
-              "spoken": true,
-              "scored": false,
-              "responseSeconds": 8,
-              "source": "[YOU CONNECT: **મિત્ર** and **મહેરબાની** — same ancient root, two different doors into Gujarati]"
-            },
-            {
-              "kind": "prompt",
-              "action": "RUN",
-              "instruction": "roṭlī, meherbānī karīne once more, now naming the \"friend\" root inside it",
-              "spoken": true,
-              "scored": false,
-              "responseSeconds": 8,
-              "source": "[YOU RUN: **roṭlī, meherbānī karīne** once more, now naming the \"friend\" root inside it]"
-            }
-          ]
-        },
-        {
-          "index": 5,
-          "type": "recall",
-          "title": "Wrap-up Recall",
-          "segments": [
-            {
-              "kind": "pause",
-              "seconds": 3,
-              "perItem": false,
-              "source": "[PAUSE 3s]"
-            },
-            {
-              "kind": "speech",
-              "text": "Give the word for \"friend.\" (Mitra.) Which other Gujarati word you already know shares its root, and through which language did each arrive? (મહેરબાની — mitra inherited from Sanskrit, meherbānī borrowed from Persian mihr.) What did the shared root originally mean? (\"To bind,\" a covenant.)"
-            },
-            {
-              "kind": "speech",
-              "text": "Sources: Wiktionary: મિત્ર (mitra); Wiktionary: Mithra."
-            }
-          ]
-        }
-      ]
-    },
-    {
-      "id": "GU-C11-kutumb",
-      "sequence": 560,
-      "title": "કુટુંબ (kuṭumb) — a word that skipped the sound changes",
-      "headword": "કુટુંબ",
-      "romanization": "kuṭumb",
-      "gloss": "family — the whole group, and a word that arrived in Gujarati already finished rather than growing there",
-      "script": "gujarati",
-      "modality": "sight",
-      "derivedModality": "sight",
-      "modalityReasons": [
-        "script-block"
-      ],
-      "sourceHash": "fnv1a64:5a8ca7d1bcf6be96",
-      "notice": {
-        "modality": "sight",
-        "needs": [
-          "your eyes, for letter shapes on the page"
-        ],
-        "waitUntilStopped": [
-          "The letters in this word",
-          "Guided Practice"
-        ],
-        "text": "Before we start: this one needs your eyes, so it is not fully a driving lesson. You will want your eyes, for letter shapes on the page. You can listen to everything else now — leave the sections called The letters in this word and Guided Practice until you have stopped, and I will say so again when we reach it."
-      },
-      "blocks": [
-        {
-          "index": 0,
-          "type": "warmup",
-          "title": "Warm-up",
-          "segments": [
-            {
-              "kind": "pause",
-              "seconds": 2,
-              "perItem": false,
-              "source": "[PAUSE 2s]"
-            },
-            {
-              "kind": "speech",
-              "text": "મિત્ર (mitra) reached Gujarati the long way, worn down through Prakrit like nearly every word you own. The word for the group a friend gets folded into took a different road entirely."
-            }
-          ]
-        },
-        {
-          "index": 1,
-          "type": "input",
-          "title": "You'll want to know first — one word",
-          "segments": [
-            {
-              "kind": "speech",
-              "text": "કુટુંબ — kuṭumb — family."
-            }
-          ]
-        },
-        {
-          "index": 2,
-          "type": "script",
-          "title": "The letters in this word",
-          "segments": [
-            {
-              "kind": "speech",
-              "text": "ક ka, ુ the short-u sign below it, then ટ — the same retroflex ṭ you first curled back in roṭlī, here doing the same job again. ું closes it: u with the nasal dot on top, then બ ba. Ku-ṭu-m-b."
+              "text": "લે is લ la, met in lakhvũ one lesson ago, wearing the sign ે that turns it into le — the same sign sitting on છે chhe at the end of your sentences. Then વું."
             }
           ]
         },
         {
           "index": 3,
           "type": "grammar",
-          "title": "Grammar Lens: taken whole, not worn down",
+          "title": "Grammar Lens: the stem relaxes when a person arrives",
           "segments": [
             {
               "kind": "speech",
-              "text": "You have seen Sanskrit reach back into Gujarati once before: ત્રણ's r, restored after Prakrit had already dropped it — a repair, made to a word that had kept changing the whole time. કુટુંબ is a different kind of contact. Gujarati did not inherit this word through the centuries of sound change that gave you pāṇī or be; it took the Sanskrit word up directly, close to whole, the way a modern language reaches for a ready-made technical term instead of growing one on its own. Linguists call an inherited word like pāṇī tadbhava, \"born from that,\" and a direct borrowing like this one tatsama, \"same as that\" — kuṭumb is tatsama."
+              "text": "હું લઉં છું — hũ laũ chhũ — \"I take.\""
+            },
+            {
+              "kind": "speech",
+              "text": "The stem was le- and its vowel has relaxed to a under the person-ending. That is the old rule seen from the other side: javũ's stem ja- stretched to jā- when a person-ending arrived. A one-syllable stem is the piece most likely to move; the ending and the copula behind it never do."
             }
           ]
         },
         {
           "index": 4,
           "type": "etymology",
-          "title": "The word, taken apart — a family word borrowed by Sanskrit itself",
+          "title": "The word, taken apart — probable, not proven",
           "segments": [
             {
               "kind": "speech",
-              "text": "Here the trail runs further than usual, in an unexpected direction. Sanskrit kuṭumba is itself thought to be a loanword, taken from a Dravidian source and compared to Tamil kuṭimai, \"family, lineage,\" both built on kuṭi, \"hut.\" A word that looks purely Sanskrit, and that Gujarati then borrowed as purely Sanskrit, may have entered Sanskrit from a completely different family of languages first. The chain of ownership runs Dravidian becomes Sanskrit becomes Gujarati, with no step skipped and no step certain beyond reasonable comparison."
+              "text": "levũ comes through Prakrit lei from Sanskrit labhate, \"takes, gains, obtains\" — the bh worn away between the vowels, as a d was in khāvũ. The root is Indo-European, lebh-, and its meaning is worth holding: not \"seize\" but \"work, harvest, gain, profit.\" Taking, named as what you have earned."
+            },
+            {
+              "kind": "speech",
+              "text": "The secure cousins are outside English: Lithuanian lõbis, \"treasure,\" and Greek láphura, \"spoils of war.\" Both keep the sense of a thing gained rather than grabbed."
+            },
+            {
+              "kind": "speech",
+              "text": "Then the argument. Latin labor, \"toil\" — English's labour, laboratory, elaborate — is often traced to this same root, which would make working and taking one word. That link is contested, and at least one standard authority rejects it. So: probable, not proven, exactly as jovũ was."
+            },
+            {
+              "kind": "speech",
+              "text": "Three settings on one dial. Jāṇvũ is certain — it is English know. Levũ and jovũ are disputed. Khāvũ has nothing, and you say so."
             }
           ]
         },
@@ -247,38 +121,47 @@
             {
               "kind": "prompt",
               "action": "SAY",
-              "instruction": "kuṭumb — family",
+              "instruction": "levũ, then hũ laũ chhũ — the stem relaxing under the ending",
               "spoken": true,
               "scored": false,
               "responseSeconds": 8,
-              "source": "[YOU SAY: **kuṭumb** — family]"
-            },
-            {
-              "kind": "prompt",
-              "action": "CONTRAST",
-              "instruction": "tadbhava pāṇī (worn down over time) against tatsama kuṭumb (taken whole)",
-              "spoken": true,
-              "scored": false,
-              "responseSeconds": 8,
-              "source": "[YOU CONTRAST: **tadbhava** *pāṇī* (worn down over time) against **tatsama** *kuṭumb* (taken whole)]"
+              "source": "[YOU SAY: **levũ**, then **hũ laũ chhũ** — the stem relaxing under the ending]"
             },
             {
               "kind": "prompt",
               "action": "MATCH",
-              "instruction": "this \"taken whole\" idea against traṇ's restored r — both are Sanskrit reaching forward, in different ways",
+              "instruction": "le- to la- here, ja- to jā- in javũ",
               "spoken": true,
               "scored": false,
               "responseSeconds": 8,
-              "source": "[YOU MATCH: this \"taken whole\" idea against *traṇ*'s restored *r* — both are Sanskrit reaching forward, in different ways]"
+              "source": "[YOU MATCH: *le-* to *la-* here, *ja-* to *jā-* in **javũ**]"
             },
             {
               "kind": "prompt",
               "action": "TRACE",
-              "instruction": "proposed Dravidian kuṭi \"hut\" becomes Sanskrit kuṭumba becomes કુટુંબ",
+              "instruction": "labhate \"gains\" becomes levũ, the bh worn away",
               "spoken": false,
               "scored": false,
               "responseSeconds": 8,
-              "source": "[YOU TRACE: proposed Dravidian *kuṭi* \"hut\" → Sanskrit *kuṭumba* → **કુટુંબ**]"
+              "source": "[YOU TRACE: *labhate* \"gains\" → **levũ**, the *bh* worn away]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SORT",
+              "instruction": "jāṇvũ certain and English know; levũ and jovũ disputed; khāvũ nothing",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SORT: **jāṇvũ** certain and English **know**; **levũ** and **jovũ** disputed; **khāvũ** nothing]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RUN",
+              "instruction": "vā̃chvũ, lakhvũ, levũ",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RUN: **vā̃chvũ**, **lakhvũ**, **levũ**]"
             }
           ]
         },
@@ -295,30 +178,30 @@
             },
             {
               "kind": "speech",
-              "text": "Give the word for \"family.\" (Kuṭumb.) Is it tadbhava or tatsama? (Tatsama — borrowed whole from Sanskrit, not worn down through Prakrit.) Where does Sanskrit's own kuṭumba likely come from? (Dravidian, compared to Tamil kuṭimai.)"
+              "text": "Say \"I take.\" (Hũ laũ chhũ.) Did the root behind levũ mean seizing or earning? (Earning: \"work, harvest, gain.\") Is English labour a cousin? (Possibly — the link is both made and rejected, so probable, not proven.) Which verb of yours has a certain English cousin, and which has none? (Jāṇvũ is know; khāvũ has none.)"
             },
             {
               "kind": "speech",
-              "text": "Sources: Wiktionary: કુટુંબ (kuṭumb); Wiktionary: Sanskrit kutumba."
+              "text": "Source: Wiktionary: લેવું (levũ)."
             }
           ]
         }
       ]
     },
     {
-      "id": "GU-C11-bhai",
-      "sequence": 570,
-      "title": "ભાઈ (bhāī) — the same word as \"brother,\" unbroken",
-      "headword": "ભાઈ",
-      "romanization": "bhāī",
-      "gloss": "brother — the plainest possible cousin of the English word for the very same person",
+      "id": "GU-C09-puchhvun",
+      "sequence": 490,
+      "title": "પૂછવું (pūchhvũ) — \"to ask,\" the verb English kept for praying",
+      "headword": "પૂછવું",
+      "romanization": "pūchhvũ",
+      "gloss": "to ask — the verb English kept only for praying, and a p that stayed put because of where it stood",
       "script": "gujarati",
       "modality": "sight",
       "derivedModality": "sight",
       "modalityReasons": [
         "script-block"
       ],
-      "sourceHash": "fnv1a64:bc2eb569e5aaaf0d",
+      "sourceHash": "fnv1a64:8d4dc97de727d58a",
       "notice": {
         "modality": "sight",
         "needs": [
@@ -344,7 +227,7 @@
             },
             {
               "kind": "speech",
-              "text": "કુટુંબ (kuṭumb) was taken up whole, close to the finished Sanskrit shape. The two words for its members run the opposite way — worn all the way down, the ordinary path nearly every Gujarati word has followed."
+              "text": "Hũ laũ chhũ — did the root behind levũ mean seizing or earning? (Earning.) Here is the verb for the one thing you cannot take: an answer."
             }
           ]
         },
@@ -355,7 +238,11 @@
           "segments": [
             {
               "kind": "speech",
-              "text": "ભાઈ — bhāī — brother."
+              "text": "પૂછવું — pūchhvũ — to ask."
+            },
+            {
+              "kind": "speech",
+              "text": "The stem is પૂછ- pūchh-, and the present holds no surprises: hũ pūchhũ chhũ, \"I ask.\""
             }
           ]
         },
@@ -366,221 +253,102 @@
           "segments": [
             {
               "kind": "speech",
-              "text": "ભ bha, the aspirated b, with the long-ā sign ા, then ઈ, the independent long-ī vowel standing on its own rather than attached to a consonant. Bhā-ī, two syllables, no consonant closing the second."
+              "text": "પ is pa, counted with in પાંચ pā̃ch. On it sits a new sign: ૂ, the long ū, a heavier hook than the short ુ on every -વું. Two different vowels, not two speeds of one. Then છ chha, opening છે chhe."
             }
           ]
         },
         {
           "index": 3,
-          "type": "etymology",
-          "title": "The word, taken apart — no disguise at all",
+          "type": "notice",
+          "title": "What you've built: a p that stayed because of where it stood",
           "segments": [
             {
               "kind": "speech",
-              "text": "bhāī is inherited, through Prakrit bhāi, from Sanskrit bhrātṛ. Its root is Indo-European bʰréh₂tēr, and this is one of the cleanest cognate sets Indo-European linguistics has: Sanskrit bhrātṛ, English brother, Latin frāter, Greek phrātēr, Russian brat — every one of them the same word, carried down by ordinary sound change in every branch rather than borrowed by any of them. Where kuṭumb skipped the centuries of change that shape tadbhava words, bhāī is the textbook case of what those centuries do: the consonant cluster bhr- simplified once the r dropped, exactly the kind of wearing-down that gave you pāṇī from pānīya."
+              "text": "You know a rule that eats p: a single Sanskrit p between two vowels softened to v. It is how āpayati, on a root meaning \"reach,\" became આવવું āvvũ."
+            },
+            {
+              "kind": "speech",
+              "text": "So why does pūchhvũ still open with a hard પ? Because the condition is the whole rule: that p is not between vowels, it is at the front of the word, where nothing softened it. Count to five for the same shelter — પાંચ pā̃ch keeps its p."
+            },
+            {
+              "kind": "speech",
+              "text": "A sound law you can only recite is a fact. One whose condition you can check is a tool."
             }
           ]
         },
         {
           "index": 4,
-          "type": "guided-production",
-          "title": "Guided Practice",
+          "type": "etymology",
+          "title": "The word, taken apart — asking a person, asking a god",
           "segments": [
             {
-              "kind": "prompt",
-              "action": "SAY",
-              "instruction": "bhāī — brother",
-              "spoken": true,
-              "scored": false,
-              "responseSeconds": 8,
-              "source": "[YOU SAY: **bhāī** — brother]"
+              "kind": "speech",
+              "text": "pūchhvũ comes from Sanskrit pṛcchati, \"asks,\" on the Indo-European root prek-, \"to ask.\" This one paid out generously."
             },
             {
-              "kind": "prompt",
-              "action": "TRACE",
-              "instruction": "PIE bʰréh₂tēr becomes Sanskrit bhrātṛ becomes ભાઈ (bhāī), and becomes English brother",
-              "spoken": false,
-              "scored": false,
-              "responseSeconds": 8,
-              "source": "[YOU TRACE: PIE *bʰréh₂tēr* → Sanskrit *bhrātṛ* → **ભાઈ**, and → English **brother**]"
+              "kind": "speech",
+              "text": "Latin took it as precārī, \"to beg, to entreat,\" and English has the family: pray, prayer, deprecate. Latin also made precārius, \"held only so long as another allows it,\" English's precarious — a thing you keep by asking. German still says fragen, Persian porsīdan."
             },
             {
-              "kind": "prompt",
-              "action": "CONTRAST",
-              "instruction": "bhāī worn down over centuries against kuṭumb taken up whole",
-              "spoken": true,
-              "scored": false,
-              "responseSeconds": 8,
-              "source": "[YOU CONTRAST: *bhāī* worn down over centuries against *kuṭumb* taken up whole]"
-            },
-            {
-              "kind": "prompt",
-              "action": "NAME",
-              "instruction": "two other languages whose word for \"brother\" is the same cognate (Latin frāter, Greek phrātēr, or Russian brat)",
-              "spoken": true,
-              "scored": false,
-              "responseSeconds": 8,
-              "source": "[YOU NAME: two other languages whose word for \"brother\" is the same cognate (Latin *frāter*, Greek *phrātēr*, or Russian *brat*)]"
+              "kind": "speech",
+              "text": "English is the odd one out. Its own inherited cousin, Old English frignan, died out and ask came from elsewhere, so the root survives in English only in its religious clothes. Saying hũ pūchhũ chhũ, you use the verb English kept for praying."
             }
           ]
         },
         {
           "index": 5,
-          "type": "recall",
-          "title": "Wrap-up Recall",
-          "segments": [
-            {
-              "kind": "pause",
-              "seconds": 3,
-              "perItem": false,
-              "source": "[PAUSE 3s]"
-            },
-            {
-              "kind": "speech",
-              "text": "Give the word for \"brother.\" (Bhāī.) Which English word is the very same word, by unbroken descent, not borrowing? (Brother.) Is bhāī tadbhava or tatsama — worn down, or taken whole like kuṭumb? (Tadbhava — worn down.)"
-            },
-            {
-              "kind": "speech",
-              "text": "Sources: Wiktionary: ભાઈ (bhāī); Wiktionary: bʰréh₂tēr."
-            }
-          ]
-        }
-      ]
-    },
-    {
-      "id": "GU-C11-bahen",
-      "sequence": 580,
-      "title": "બહેન (bahen) — the sister who is not \"sister\"'s cousin",
-      "headword": "બહેન",
-      "romanization": "bahen",
-      "gloss": "sister — which, unlike its brother, is not the same word as the English one at all",
-      "script": "gujarati",
-      "modality": "sight",
-      "derivedModality": "sight",
-      "modalityReasons": [
-        "script-block"
-      ],
-      "sourceHash": "fnv1a64:ecb426ab8708b7c2",
-      "notice": {
-        "modality": "sight",
-        "needs": [
-          "your eyes, for letter shapes on the page"
-        ],
-        "waitUntilStopped": [
-          "The letters in this word",
-          "Guided Practice"
-        ],
-        "text": "Before we start: this one needs your eyes, so it is not fully a driving lesson. You will want your eyes, for letter shapes on the page. You can listen to everything else now — leave the sections called The letters in this word and Guided Practice until you have stopped, and I will say so again when we reach it."
-      },
-      "blocks": [
-        {
-          "index": 0,
-          "type": "warmup",
-          "title": "Warm-up",
-          "segments": [
-            {
-              "kind": "pause",
-              "seconds": 2,
-              "perItem": false,
-              "source": "[PAUSE 2s]"
-            },
-            {
-              "kind": "speech",
-              "text": "ભાઈ (bhāī) is English brother, unbroken, down to the root. Do not assume the sibling pair matches. This chapter's last word breaks the pattern."
-            }
-          ]
-        },
-        {
-          "index": 1,
-          "type": "input",
-          "title": "You'll want to know first — one word",
-          "segments": [
-            {
-              "kind": "speech",
-              "text": "બહેન — bahen — sister."
-            }
-          ]
-        },
-        {
-          "index": 2,
-          "type": "script",
-          "title": "The letters in this word",
-          "segments": [
-            {
-              "kind": "speech",
-              "text": "બ ba, હ ha, ે the e sign above the consonant, then ન na. Ba-hen, every letter already yours from earlier chapters."
-            }
-          ]
-        },
-        {
-          "index": 3,
-          "type": "etymology",
-          "title": "The word, taken apart — a different root entirely",
-          "segments": [
-            {
-              "kind": "speech",
-              "text": "Here is the surprise: બહેન (bahen) is not bhāī's counterpart the way English sister is brother's. English sister, Latin soror, and Sanskrit svasṛ all descend from one shared PIE root, swésōr. Gujarati's word for sister does not use that root at all."
-            },
-            {
-              "kind": "speech",
-              "text": "bahen comes from Sanskrit bhaginī, through Prakrit bhaginī. Scholars connect bhaginī to bhaga, \"good fortune, a share\" — the same bhaga behind bhāgya, \"fate\" — plus a feminine suffix, so \"sister\" may originally have meant something closer to \"the one who shares.\" That connection is debated rather than settled, the way roṭlī's root was: some scholars accept the bhaga link, others have argued against it. What is certain is what it is not: unlike bhāī, bahen is no relation to English sister at all — and unlike the disputed-but-real mitra/meherbānī pair, this dial lands on \"unrelated,\" full stop."
-            }
-          ]
-        },
-        {
-          "index": 4,
           "type": "guided-production",
           "title": "Guided Practice",
           "segments": [
             {
               "kind": "prompt",
               "action": "SAY",
-              "instruction": "bahen — sister, and bhāī — brother",
+              "instruction": "pūchhvũ, then hũ pūchhũ chhũ — I ask",
               "spoken": true,
               "scored": false,
               "responseSeconds": 8,
-              "source": "[YOU SAY: **bahen** — sister, and **bhāī** — brother]"
+              "source": "[YOU SAY: **pūchhvũ**, then **hũ pūchhũ chhũ** — I ask]"
             },
             {
               "kind": "prompt",
               "action": "CONTRAST",
-              "instruction": "bhāī — same root as English brother; bahen — a different Sanskrit word entirely, not sister's cousin",
+              "instruction": "short ુ in -વું, long ૂ in પૂ",
               "spoken": true,
               "scored": false,
               "responseSeconds": 8,
-              "source": "[YOU CONTRAST: *bhāī* — same root as English *brother*; *bahen* — a different Sanskrit word entirely, not *sister*'s cousin]"
+              "source": "[YOU CONTRAST: short **ુ** in **-વું**, long **ૂ** in **પૂ**]"
+            },
+            {
+              "kind": "prompt",
+              "action": "EXPLAIN",
+              "instruction": "why āvvũ lost its p, and pūchhvũ and pā̃ch kept theirs",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU EXPLAIN: why **āvvũ** lost its *p*, and **pūchhvũ** and **pā̃ch** kept theirs]"
             },
             {
               "kind": "prompt",
               "action": "TRACE",
-              "instruction": "proposed bhaga \"share, fortune\" becomes bhaginī becomes બહેન (bahen)",
+              "instruction": "pṛcchati becomes pūchhvũ, and becomes pray, precarious, fragen",
               "spoken": false,
               "scored": false,
               "responseSeconds": 8,
-              "source": "[YOU TRACE: proposed *bhaga* \"share, fortune\" → *bhaginī* → **બહેન**]"
+              "source": "[YOU TRACE: *pṛcchati* → **pūchhvũ**, and → **pray**, **precarious**, *fragen*]"
             },
             {
               "kind": "prompt",
               "action": "RUN",
-              "instruction": "all four family words — mitra, kuṭumb, bhāī, bahen — inherited/borrowed, direct/indirect",
+              "instruction": "lakhvũ, levũ from lebh-, pūchhvũ",
               "spoken": true,
               "scored": false,
               "responseSeconds": 8,
-              "source": "[YOU RUN: all four family words — **mitra**, **kuṭumb**, **bhāī**, **bahen** — inherited/borrowed, direct/indirect]"
-            },
-            {
-              "kind": "prompt",
-              "action": "RECALL",
-              "instruction": "મિત્ર (mitra) and મહેરબાની's shared root from the last chapter, and કુટુંબ (kuṭumb)'s proposed Dravidian root",
-              "spoken": true,
-              "scored": false,
-              "responseSeconds": 8,
-              "source": "[YOU RECALL: **મિત્ર** and **મહેરબાની**'s shared root from the last chapter, and **કુટુંબ**'s proposed Dravidian root]"
+              "source": "[YOU RUN: **lakhvũ**, **levũ** from *lebh-*, **pūchhvũ**]"
             }
           ]
         },
         {
-          "index": 5,
+          "index": 6,
           "type": "recall",
           "title": "Wrap-up Recall",
           "segments": [
@@ -592,38 +360,40 @@
             },
             {
               "kind": "speech",
-              "text": "Give the word for \"sister.\" (Bahen.) Is it the same root as English sister? (No — that connection belongs to bhāī/brother instead.) What does bahen probably come from? (Sanskrit bhaginī, disputedly tied to bhaga, \"share.\") Name this chapter's four people and things: friend, family, brother, sister. (Mitra, kuṭumb, bhāī, bahen.)"
+              "text": "Say \"I ask.\" (Hũ pūchhũ chhũ.) Why did pūchhvũ's p survive when the one inside āvvũ's ancestor did not, and which number of yours is sheltered the same way? (It stands at the front, not between vowels; pā̃ch.) Which English word for addressing a god is its cousin? (Pray.)"
             },
             {
               "kind": "speech",
-              "text": "Sources: Wiktionary: બહેન (bahen); Wiktionary: Sanskrit bhagini."
+              "text": "Source: Wiktionary: પૂછવું (pūchhvũ)."
             }
           ]
         }
       ]
     },
     {
-      "id": "GU-R13-doorway-nine-r3",
-      "sequence": 585,
-      "title": "The doorway nine return in a new order",
-      "headword": "ણ જ ુ શ ં ક ો છ ી",
-      "romanization": "retroflex nna — ja — u sign — sha — nasal mark — ka — o sign — chha — long-ii sign",
-      "gloss": "retrieve the nine doorway forms after a durable interval",
+      "id": "GU-C09-madad-karvi",
+      "sequence": 500,
+      "title": "મદદ કરવી (madad karvī) — \"to help,\" which is a hand held out",
+      "headword": "મદદ કરવી",
+      "romanization": "madad karvī",
+      "gloss": "to help — an Arabic word that came by way of Persian, and the one place the verb ending stops being neuter",
       "script": "gujarati",
-      "modality": "pen",
-      "derivedModality": "pen",
+      "modality": "sight",
+      "derivedModality": "sight",
       "modalityReasons": [
-        "writing-type",
-        "writing-block"
+        "script-block"
       ],
-      "sourceHash": "fnv1a64:c0bd386200a782c6",
+      "sourceHash": "fnv1a64:4072437c2a3827f8",
       "notice": {
-        "modality": "pen",
+        "modality": "sight",
         "needs": [
-          "a pen and something to write on"
+          "your eyes, for letter shapes on the page"
         ],
-        "waitUntilStopped": [],
-        "text": "Before we start: this one needs your hands, so it is not a driving lesson. You will want a pen and something to write on. You can listen to all of it now and come back to the parts that need looking at once you have stopped."
+        "waitUntilStopped": [
+          "The letters in this word",
+          "Guided Practice"
+        ],
+        "text": "Before we start: this one needs your eyes, so it is not fully a driving lesson. You will want your eyes, for letter shapes on the page. You can listen to everything else now — leave the sections called The letters in this word and Guided Practice until you have stopped, and I will say so again when we reach it."
       },
       "blocks": [
         {
@@ -633,90 +403,129 @@
           "segments": [
             {
               "kind": "pause",
-              "seconds": 10,
+              "seconds": 2,
               "perItem": false,
-              "source": "[PAUSE 10s]"
+              "source": "[PAUSE 2s]"
             },
             {
               "kind": "speech",
-              "text": "Without looking back, write ja, the nasal mark, and ka. Check only a missed form, cover the model again, and make one repair."
+              "text": "Pūchhvũ and levũ — and which English word for talking to a god is pūchhvũ's cousin? (Pray.) Now, what you do once someone has asked."
             }
           ]
         },
         {
           "index": 1,
-          "type": "guided-production",
-          "title": "Guided Practice",
+          "type": "input",
+          "title": "You'll want to know first — one phrase",
           "segments": [
             {
               "kind": "speech",
-              "text": "Read the shuffled row once. Identify each form on sight; do not rebuild the original doorway order. Record the reading score before the row is covered; repair only missed forms, then reach 9/9 once."
+              "text": "મદદ કરવી — madad karvī — to help."
             },
             {
-              "kind": "activity",
-              "scored": true,
-              "id": "GU-R13-doorway-nine-r3-reading",
-              "prompt": "Read this shuffled row aloud: ણ જ ુ શ ં ક ો છ ી (retroflex nna — ja — u sign — sha — nasal mark — ka — o sign — chha — long-ii sign).",
-              "assesses": [
-                "GU-SCRIPT-JA-01",
-                "GU-SCRIPT-O-MATRA-01",
-                "GU-SCRIPT-ANUSVARA-01",
-                "GU-SCRIPT-II-MATRA-01",
-                "GU-SCRIPT-U-MATRA-01",
-                "GU-SCRIPT-CHHA-01",
-                "GU-SCRIPT-KA-01",
-                "GU-SCRIPT-NNA-01",
-                "GU-SCRIPT-SHA-01"
-              ],
-              "responseSeconds": 45,
-              "acceptedResponses": [
-                "retroflex nna; ja; u sign; sha; nasal mark; ka; o sign; chha; long-ii sign"
-              ],
-              "feedback": {
-                "correct": "All nine forms survived the long interval and the new order.",
-                "incorrect": "Repair only the missed card, then read the shuffled row once more."
-              }
+              "kind": "speech",
+              "text": "Two words. મદદ madad is a noun, \"help\"; કરવું karvũ is \"to do,\" yours since kām karvũ. Gujarati helps by doing help."
+            },
+            {
+              "kind": "speech",
+              "text": "હું મદદ કરું છું — hũ madad karũ chhũ — \"I help.\""
             }
           ]
         },
         {
           "index": 2,
-          "type": "writing",
-          "title": "Writing — from sound",
+          "type": "script",
+          "title": "The letters in this word",
           "segments": [
             {
               "kind": "speech",
-              "text": "Keep every model covered. Write the nine sound cues in their new order, then score the writing response separately from reading. Writing also needs 9/9; the reading score cannot compensate for it. Repair only missed forms."
-            },
-            {
-              "kind": "activity",
-              "scored": true,
-              "id": "GU-R13-doorway-nine-r3-dictation",
-              "prompt": "Cover every model. Write from these cues: nasal mark, sha, attached u, ja, ka, attached long ii, chha, retroflex nna, attached o.",
-              "assesses": [
-                "GU-SCRIPT-JA-01",
-                "GU-SCRIPT-O-MATRA-01",
-                "GU-SCRIPT-ANUSVARA-01",
-                "GU-SCRIPT-II-MATRA-01",
-                "GU-SCRIPT-U-MATRA-01",
-                "GU-SCRIPT-CHHA-01",
-                "GU-SCRIPT-KA-01",
-                "GU-SCRIPT-NNA-01",
-                "GU-SCRIPT-SHA-01"
-              ],
-              "responseSeconds": 60,
-              "acceptedResponses": [
-                "ં શ ુ જ ક ી છ ણ ો"
-              ],
-              "feedback": {
-                "correct": "All nine forms returned from sound in a second new order.",
-                "incorrect": "Check only each missed form, cover every model, and retry those cues once."
-              }
+              "text": "મદદ is three bare consonants with their built-in a: મ ma, then a doubled દ da — the દ that ends ānand. In કરવી the last letter wears the long ી you met in maḷīshũ, and that ી is what this lesson is about."
             }
           ]
         },
         {
           "index": 3,
+          "type": "grammar",
+          "title": "Grammar Lens: the ending that stopped being neuter",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "Every Gujarati verb so far has been named in the neuter: -વું -vũ, the third of the three genders, the -ũ of sārũ and mārũ. This one is not. કરવી karvī wears -ī, the feminine of sārī and mārī, because મદદ is a feminine noun and the infinitive agrees with what is done:"
+            },
+            {
+              "kind": "speech",
+              "text": "કામ કરવું kām karvũ — \"to work.\" Kām is neuter, so karvũ."
+            },
+            {
+              "kind": "speech",
+              "text": "મદદ કરવી madad karvī — \"to help.\" Madad is feminine, so karvī."
+            },
+            {
+              "kind": "speech",
+              "text": "Gujarati keeps three genders where Hindi next door keeps two, and here that system does visible work. You have watched gender decide a form once before, at the other end of a word's life: બે be comes down from Sanskrit's feminine and neuter dvé, not the masculine dváu. Gender chose the ancestor there; it chooses the ending here."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "etymology",
+          "title": "The word, taken apart — help as a hand extended",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "મદદ is not Sanskrit at all. It is Arabic madad, borrowed through Persian, on the root m-d-d, \"to stretch out, to extend\" — whose plainest sentence is \"extend your hand.\" Madad is a thing held out: a hand, or reinforcements sent to an army."
+            },
+            {
+              "kind": "speech",
+              "text": "It belongs to a layer you have tasted. Gujarati was a great trading tongue of the Arabian Sea, and the Persian and Arabic that settled into it is the layer answering \"how are you\" with મજા majā."
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "madad karvī, then hũ madad karũ chhũ — I help",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: **madad karvī**, then **hũ madad karũ chhũ** — I help]"
+            },
+            {
+              "kind": "prompt",
+              "action": "CONTRAST",
+              "instruction": "kām karvũ neuter, madad karvī feminine — the noun decides",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU CONTRAST: **kām karvũ** neuter, **madad karvī** feminine — the noun decides]"
+            },
+            {
+              "kind": "prompt",
+              "action": "TRACE",
+              "instruction": "Arabic m-d-d \"extend\" becomes Persian becomes madad, beside majā",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU TRACE: Arabic *m-d-d* \"extend\" → Persian → **madad**, beside **majā**]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RUN",
+              "instruction": "levũ, pūchhvũ, madad karvī — gender picking an ending here, an ancestor in be",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RUN: **levũ**, **pūchhvũ**, **madad karvī** — gender picking an ending here, an ancestor in **be**]"
+            }
+          ]
+        },
+        {
+          "index": 6,
           "type": "recall",
           "title": "Wrap-up Recall",
           "segments": [
@@ -728,7 +537,201 @@
             },
             {
               "kind": "speech",
-              "text": "How many marks and consonants returned? (Four marks and five consonants.)"
+              "text": "Say \"I help.\" (Hũ madad karũ chhũ.) Why karvī and not karvũ? (મદદ is feminine; kām is neuter.) Where is madad from, and which count of yours was also shaped by gender? (Arabic through Persian, a root meaning \"to stretch out\"; be, from dvé.)"
+            },
+            {
+              "kind": "speech",
+              "text": "Sources: Wiktionary: મદદ; Wiktionary: Arabic madad."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "GU-C09-gamvun",
+      "sequence": 510,
+      "title": "ગમવું (gamvũ) — \"to like,\" which is not something you do",
+      "headword": "ગમવું",
+      "romanization": "gamvũ",
+      "gloss": "to like — the chapter's payoff, a verb that will not let you be its subject, born as the passive of \"to go\"",
+      "script": "gujarati",
+      "modality": "sight",
+      "derivedModality": "sight",
+      "modalityReasons": [
+        "script-block"
+      ],
+      "sourceHash": "fnv1a64:294bad6e7fccd371",
+      "notice": {
+        "modality": "sight",
+        "needs": [
+          "your eyes, for letter shapes on the page"
+        ],
+        "waitUntilStopped": [
+          "The letters in this word",
+          "Guided Practice"
+        ],
+        "text": "Before we start: this one needs your eyes, so it is not fully a driving lesson. You will want your eyes, for letter shapes on the page. You can listen to everything else now — leave the sections called The letters in this word and Guided Practice until you have stopped, and I will say so again when we reach it."
+      },
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Three verbs from this chapter: levũ, pūchhvũ, madad karvī. Each let you act. The fourth will not."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know first — one word",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ગમવું — gamvũ — to like."
+            },
+            {
+              "kind": "speech",
+              "text": "The infinitive wears the neuter -વું like every verb you own. What comes next does not."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "script",
+          "title": "The letters in this word",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ગ ga opened gujarātī, મ ma has been everywhere, then વું — three shapes floating free, no bar across their tops, the fastest tell of Gujarati."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "grammar",
+          "title": "Grammar Lens: you are not the subject of this sentence",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "મને ગુજરાતી ગમે છે — mane gujarātī game chhe — I like Gujarati."
+            },
+            {
+              "kind": "speech",
+              "text": "Word for word: \"to me Gujarati pleases.\" No hũ anywhere. મને mane is \"to me,\" carrying the -ને -ne of તમને tamne."
+            },
+            {
+              "kind": "speech",
+              "text": "હું ગુજરાતી બોલું છું — I speak Gujarati. I am the doer."
+            },
+            {
+              "kind": "speech",
+              "text": "મને ગુજરાતી ગમે છે — I like Gujarati. Gujarati is."
+            },
+            {
+              "kind": "speech",
+              "text": "The verb answers to gujarātī, not to me — the instinct behind madad karvī. Spanish reaches this shape in me gusta, Tamil in enakku piḍikkum, neither borrowing from Gujarati nor from each other. Hindi and Urdu use the Persian loan pasand; gamvũ is Gujarati's own inherited word."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "etymology",
+          "title": "The word, taken apart — liking was born a passive",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "gamvũ is Old Gujarati gamaï, \"to please,\" from Prakrit gammaï, \"is known,\" from Sanskrit gamyate — the passive of gam-, \"to go.\" \"It is gone to\" became \"it is grasped\" became \"it pleases.\" The word was born doerless and never took one."
+            },
+            {
+              "kind": "speech",
+              "text": "Two things you hold fall into place. Gammaï meant \"is known,\" the work of જાણવું jāṇvũ. And gamyate holds a y that did not become j: that rule was for Sanskrit y- at the front of a word, as in javũ. This one stood against an m, was swallowed into it, and the doubled mm thinned — assimilate, then simplify, as samajvũ did."
+            },
+            {
+              "kind": "speech",
+              "text": "The root is gwem-, and English come is the same word; Latin venīre gave advent, venue, invent. Āvvũ runs off another root, one that meant \"to reach.\""
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "prompt",
+              "action": "PRODUCE",
+              "instruction": "mane gujarātī game chhe, then hũ gujarātī bolũ chhũ — naming the doer in each",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU PRODUCE: **mane gujarātī game chhe**, then **hũ gujarātī bolũ chhũ** — naming the doer in each]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RUN",
+              "instruction": "levũ from lebh- \"gain\", pūchhvũ from prek- \"ask\", madad from Arabic through Persian, gamvũ from a passive — and why karvī ends in -ī",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RUN: **levũ** from *lebh-* \"gain\", **pūchhvũ** from *prek-* \"ask\", **madad** from Arabic through Persian, **gamvũ** from a passive — and why *karvī* ends in *-ī*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "TRACE",
+              "instruction": "gam- \"go\" becomes gamyate becomes gamvũ, and becomes come, advent",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU TRACE: *gam-* \"go\" → *gamyate* → **gamvũ**, and → **come**, **advent**]"
+            },
+            {
+              "kind": "prompt",
+              "action": "EXPLAIN",
+              "instruction": "why gamyate's y did not become j as javũ's did",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU EXPLAIN: why *gamyate*'s *y* did not become *j* as *javũ*'s did]"
+            },
+            {
+              "kind": "prompt",
+              "action": "MATCH",
+              "instruction": "gammaï \"is known\" against jāṇvũ and know; gam- against āvvũ's \"reach\"",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU MATCH: *gammaï* \"is known\" against **jāṇvũ** and **know**; *gam-* against *āvvũ*'s \"reach\"]"
+            }
+          ]
+        },
+        {
+          "index": 6,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Say \"I like Gujarati,\" and name its subject. (Mane gujarātī game chhe; Gujarati.) Which Sanskrit form is gamvũ from, what kind is it, and which English verb is the same word? (Gamyate, the passive of gam-; come.) Why madad karvī? (Madad is feminine.)"
+            },
+            {
+              "kind": "speech",
+              "text": "Sources: Wiktionary: ગમવું (gamvũ); Wiktionary: Sanskrit gamyate."
             }
           ]
         }

@@ -2,8 +2,8 @@
 schema_version: 2
 id: GU-R17-introduction-r4
 spine_node: SPINE-EXCHANGE-NAMES
-sequence: 780
-chapter: 19
+sequence: 790
+chapter: 21
 type: practice
 headword: તમારું નામ શું છે? મારું નામ મીરા છે।
 romanization: tamārũ nām shũ chhe? mārũ nām Mīrā chhe.

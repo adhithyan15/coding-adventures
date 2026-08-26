@@ -2,8 +2,8 @@
 schema_version: 2
 id: GU-C06-numbers-1-5
 spine_node: SPINE-COUNT-ONE-TO-FIVE
-sequence: 350
-chapter: 10
+sequence: 360
+chapter: 12
 type: word
 headword: એક બે ત્રણ ચાર પાંચ
 romanization: ek be traṇ chār pā̃ch

@@ -2,8 +2,8 @@
 schema_version: 2
 id: GU-C05-kaam-karvun
 spine_node: SPINE-SAY-WHAT-I-DO
-sequence: 300
-chapter: 9
+sequence: 310
+chapter: 11
 type: word
 headword: કામ કરવું
 gloss: to work (lit. "work-do")
