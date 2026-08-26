@@ -9,8 +9,8 @@
 // whose green output is silence cannot be told apart from a gate that was never
 // invoked, and this repository has shipped several of those.
 // ---------------------------------------------------------------------------
-import { lstatSync, mkdirSync, writeFileSync } from "node:fs";
-import { dirname, resolve } from "node:path";
+import { lstatSync, mkdirSync, realpathSync, writeFileSync } from "node:fs";
+import { dirname, resolve, sep } from "node:path";
 import { pathToFileURL } from "node:url";
 
 import {
@@ -45,12 +45,64 @@ function entryIfPresent(path: string): ReturnType<typeof lstatSync> | undefined 
  * `mkdirSync(..., { recursive: true })` succeed silently against a link and put
  * every shard outside the tree.
  *
- * `book-cli.ts` already carries this guard for the generated `.tex`, and
- * `shard.ts` states the rule it comes from: a guard living only inside the
+ * Two checks, because `lstat` alone is not enough and the difference is the
+ * mistake this repository has now made four times:
+ *
+ *   1. `lstat` the last component of the directory and of the file. Catches a
+ *      link AT `core/assessment-artifact-ceiling` or at `<track>.json`.
+ *   2. `realpath` the directory and re-assert containment. `lstat` vets only
+ *      the LAST component, so `<root>/core` is still walked through
+ *      transparently — a committed `core -> /somewhere/else` passes check 1
+ *      (the lstat lands on a real directory inside the linked-to tree) and puts
+ *      every shard outside the root. That attack is self-consistent: if `core/`
+ *      is the link then `loadLanguageRegistry` reads `core/languages.json`
+ *      through it too, so the attacker also controls the registry driving the
+ *      write. Resolving the whole chain is the only check that covers every
+ *      component at once.
+ *
+ * Containment is compared by PREFIX, not by escape-shape. Inferring "escaped"
+ * from a leading `../` is the win32 hole `manifest-path.ts` documents at
+ * length: `path.relative()` cannot express a journey between two roots as `..`
+ * steps, so it returns `D:\evil` and `\\server\share\evil` unchanged and an
+ * upward-escape check waves them through. `realpathSync` resolves NTFS
+ * junctions, which is the live case — Windows is this repo's primary
+ * development platform, and a junction needs no privilege to create.
+ *
+ * `book-cli.ts` carries both halves of this for the generated `.tex`, and
+ * `shard.ts` states the rule they come from: a guard living only inside the
  * reader is a guard the writer forgets. `readCeiling`'s read side is covered by
  * `assertRealFile`; this is the write side.
  */
-function writeCeilingFile(path: string, contents: string): void {
+function assertContained(root: string, path: string, what: string): void {
+  const real = realpathSync(path);
+  const realRoot = realpathSync(root);
+  if (real !== realRoot && !real.startsWith(realRoot + sep)) {
+    throw new Error(
+      `assessment artifacts: ${what} '${path}' resolves outside the curriculum root`,
+    );
+  }
+}
+
+/**
+ * The deepest ancestor of `path` that exists — what `mkdirSync` will build from.
+ *
+ * Containment has to be asserted against THIS, before the `mkdirSync`, or the
+ * check runs too late: `mkdirSync(…, { recursive: true })` would already have
+ * created the directory inside the linked-to tree, and refusing afterwards
+ * leaves a stray directory outside the root. Refusing to write is the point;
+ * refusing to have written anything at all is the same point, done properly.
+ */
+function nearestExisting(path: string): string {
+  let current = path;
+  while (!entryIfPresent(current)) {
+    const parent = dirname(current);
+    if (parent === current) return current;
+    current = parent;
+  }
+  return current;
+}
+
+function writeCeilingFile(root: string, path: string, contents: string): void {
   const directory = dirname(path);
   const existingDirectory = entryIfPresent(directory);
   if (existingDirectory && !existingDirectory.isDirectory()) {
@@ -58,7 +110,14 @@ function writeCeilingFile(path: string, contents: string): void {
       `assessment artifacts: '${directory}' is not a real directory — refusing to write through it`,
     );
   }
+  // Before the mkdir, against whatever is actually there — catches the linked
+  // `core/` whose own lstat looks like an ordinary directory.
+  assertContained(root, nearestExisting(directory), "ceiling directory");
   mkdirSync(directory, { recursive: true });
+  // And again after, against the directory itself. Redundant in the common
+  // case, and the cheap way to keep the guard honest if a future edit moves the
+  // mkdir or the two checks drift apart.
+  assertContained(root, directory, "ceiling directory");
   const existing = entryIfPresent(path);
   if (existing && !existing.isFile()) {
     throw new Error(
@@ -79,7 +138,11 @@ const KIND_ORDER = [
 export function runAssessmentArtifactCli(
   args = process.argv.slice(2),
   root = defaultCurriculumRoot(),
-  write: (path: string, contents: string) => void = writeCeilingFile,
+  // Closes over `root` — a default parameter may reference an earlier one, and
+  // the containment check needs the root the caller actually passed rather than
+  // a second, possibly different, `defaultCurriculumRoot()`.
+  write: (path: string, contents: string) => void =
+    (path, contents) => writeCeilingFile(root, path, contents),
   out: (text: string) => void = (text) => process.stdout.write(text),
   err: (text: string) => void = (text) => process.stderr.write(text),
 ): number {

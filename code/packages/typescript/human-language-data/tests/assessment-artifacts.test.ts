@@ -392,6 +392,33 @@ describe("the generator refuses to write through a symlink", () => {
       .toThrow(/not a real directory — refusing to write through it/);
     expect(readdirSync(elsewhere)).toEqual([]);
   });
+
+  it("refuses an ANCESTOR symlink, which lstat alone cannot see", () => {
+    // `lstat` vets only the LAST component. The case above links
+    // `core/assessment-artifact-ceiling`; this one links `core` itself, so the
+    // lstat lands on a real directory inside the linked-to tree, returns
+    // isDirectory() === true, and every shard is written outside the root. Only
+    // resolving the whole chain catches it — which is why `writeCeilingFile`
+    // carries BOTH halves of book-cli's guard rather than just the cheap one.
+    //
+    // Self-consistent attack: with `core` linked, `loadLanguageRegistry` reads
+    // `core/languages.json` through the link too, so the fixture is set up the
+    // way a real one would be — the registry that drives the write lives in the
+    // linked-to tree.
+    if (!canSymlink("junction")) return void expect(process.platform).toBe("win32");
+    const outside = mkdtempSync(join(tmpdir(), "hl-outside-"));
+    try {
+      cpSync(join(root, "core"), outside, { recursive: true });
+      rmSync(join(root, "core"), { recursive: true, force: true });
+      symlinkSync(outside, join(root, "core"), "junction");
+      expect(() => runAssessmentArtifactCli(["--write"], root, undefined, () => {}, () => {}))
+        .toThrow(/resolves outside the curriculum root/);
+      expect(readdirSync(outside).sort()).toEqual(["assessment-policy.json", "languages.json"]);
+    } finally {
+      rmSync(join(root, "core"), { recursive: true, force: true });
+      rmSync(outside, { recursive: true, force: true });
+    }
+  });
 });
 
 // --- the live corpus ---------------------------------------------------------
