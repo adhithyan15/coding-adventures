@@ -8552,6 +8552,13 @@ review; and PR #13012 adds deterministic source positions to unmatched HTML
 block-container diagnostics inside `html-frontend-portable-conformance`. None
 requires another package-parity owner or edge.
 
+Ready-for-review PR #13013 opened from clean independently reviewed head
+`a057ff32f8630ca6dd86445410bce81d01e81f4c` after a normal first push from
+exact main `2d7bfa99226e341dee63e997d22dce50a9b57cf2`. The target remote
+branch and prior PR were absent, and all eight other open PRs had zero exact
+overlap. GitHub reports the PR non-draft and mergeable with checks queued or in
+progress, so auto-merge remains disabled while the loop monitors CI.
+
 ## Autonomous Loop Protocol
 
 Only one parity PR should be active at a time.
