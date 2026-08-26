@@ -558,6 +558,44 @@ fn block_references_any_name(block: &Block, names: &HashSet<String>) -> bool {
             // frontend today): `break`/`continue` carry no `Expr` at all,
             // so there is nothing to scan for a `VarRef`.
             Stmt::Break { .. } | Stmt::Continue { .. } => {}
+            // Switch statement (task #51) compile-compat stub (never
+            // emitted by this frontend today): recurse into the
+            // discriminant, each case's value and body, and the optional
+            // default body — same synthetic-Block-per-statement scan the
+            // `TryCatch` arm above uses for its own nested `Vec<Stmt>`
+            // positions.
+            Stmt::Switch {
+                discriminant,
+                cases,
+                default,
+                ..
+            } => {
+                let scan = |stmts: &[Stmt]| -> bool {
+                    stmts.iter().any(|inner| {
+                        let synthetic = Block {
+                            stmts: vec![inner.clone()],
+                            value: Expr::NilLit {
+                                span: inner.span().clone(),
+                            },
+                            span: inner.span().clone(),
+                        };
+                        block_references_any_name(&synthetic, names)
+                    })
+                };
+                if expr_references_any_name(discriminant, names) {
+                    return true;
+                }
+                for case in cases {
+                    if expr_references_any_name(&case.value, names) || scan(&case.body) {
+                        return true;
+                    }
+                }
+                if let Some(default) = default {
+                    if scan(default) {
+                        return true;
+                    }
+                }
+            }
         }
     }
     false
@@ -4066,6 +4104,30 @@ impl Lowerer {
             // emits `break`/`continue` today, and neither carries a child
             // `Expr` to rewrite a `yield` inside of.
             Stmt::Break { .. } | Stmt::Continue { .. } => false,
+            // Switch statement (task #51) compile-compat stub: this
+            // frontend never emits `Stmt::Switch` today, but a `case`/
+            // `default` body executes directly in the enclosing scope
+            // (unlike a class/method body), so descend into it exactly
+            // like the `TryCatch` arm above — a nested `yield` would
+            // still be found and rewritten if a future lowering path
+            // ever produced this node inside a `yield`-bearing method
+            // body.
+            Stmt::Switch {
+                discriminant,
+                cases,
+                default,
+                ..
+            } => {
+                let mut found = Self::rewrite_yields_in_expr(discriminant, block_scope);
+                for case in cases {
+                    found |= Self::rewrite_yields_in_expr(&mut case.value, block_scope);
+                    found |= Self::rewrite_yields_in_stmts(&mut case.body, block_scope);
+                }
+                if let Some(default) = default {
+                    found |= Self::rewrite_yields_in_stmts(default, block_scope);
+                }
+                found
+            }
         }
     }
 
@@ -4501,6 +4563,31 @@ impl Lowerer {
             // SIR16 addendum compile-compat stub: this frontend never
             // emits `break`/`continue` today; neither binds a name.
             Stmt::Break { .. } | Stmt::Continue { .. } => {}
+            // Switch statement (task #51) compile-compat stub (never
+            // emitted by this frontend today): a `case`/`default` body
+            // binds names in the same enclosing scope (no hoisting, no
+            // new closure boundary), so recurse into the discriminant
+            // and every case/default statement exactly like the
+            // `TryCatch` arm above.
+            Stmt::Switch {
+                discriminant,
+                cases,
+                default,
+                ..
+            } => {
+                Self::collect_bound_names_in_expr(discriminant, out);
+                for case in cases {
+                    Self::collect_bound_names_in_expr(&case.value, out);
+                    for s in &case.body {
+                        Self::collect_bound_names_in_stmt(s, out);
+                    }
+                }
+                if let Some(default) = default {
+                    for s in default {
+                        Self::collect_bound_names_in_stmt(s, out);
+                    }
+                }
+            }
         }
     }
 
@@ -4686,6 +4773,31 @@ impl Lowerer {
             // emits `break`/`continue` today; neither carries a child
             // `Expr` to recapture a free read inside of.
             Stmt::Break { .. } | Stmt::Continue { .. } => {}
+            // Switch statement (task #51) compile-compat stub (never
+            // emitted by this frontend today): recurse into the
+            // discriminant, each case's value and body, and the optional
+            // default body — same treatment as the `TryCatch` arm above
+            // — so a free outer-local read nested inside one is still
+            // recaptured.
+            Stmt::Switch {
+                discriminant,
+                cases,
+                default,
+                ..
+            } => {
+                Self::recapture_reads_in_expr(discriminant, is_free, found);
+                for case in cases {
+                    Self::recapture_reads_in_expr(&mut case.value, is_free, found);
+                    for s in &mut case.body {
+                        Self::recapture_reads_in_stmt(s, is_free, found);
+                    }
+                }
+                if let Some(default) = default {
+                    for s in default {
+                        Self::recapture_reads_in_stmt(s, is_free, found);
+                    }
+                }
+            }
         }
     }
 
@@ -4915,6 +5027,27 @@ impl Lowerer {
             // emits `break`/`continue` today; neither carries a child
             // `Expr` with a call to normalize.
             Stmt::Break { .. } | Stmt::Continue { .. } => {}
+            // Switch statement (task #51) compile-compat stub (never
+            // emitted by this frontend today): normalize the
+            // discriminant and each case's value, then descend into
+            // every case body and the optional default body exactly
+            // like the `TryCatch` arm above, so a call nested inside
+            // one is still threaded/normalized.
+            Stmt::Switch {
+                discriminant,
+                cases,
+                default,
+                ..
+            } => {
+                Self::normalize_calls_in_expr(discriminant, ctx);
+                for case in cases {
+                    Self::normalize_calls_in_expr(&mut case.value, ctx);
+                    Self::normalize_calls_in_stmts(&mut case.body, ctx);
+                }
+                if let Some(default) = default {
+                    Self::normalize_calls_in_stmts(default, ctx);
+                }
+            }
         }
     }
 
@@ -5297,6 +5430,26 @@ impl Lowerer {
             // SIR16 addendum compile-compat stub: this frontend never
             // emits `break`/`continue` today; neither binds a name.
             Stmt::Break { .. } | Stmt::Continue { .. } => {}
+            // Switch statement (task #51) compile-compat stub (never
+            // emitted by this frontend today): recurse into the
+            // discriminant, each case's value and body, and the
+            // optional default body — same treatment as the `TryCatch`
+            // arm above — so a name bound inside one is still found.
+            Stmt::Switch {
+                discriminant,
+                cases,
+                default,
+                ..
+            } => {
+                Self::collect_bound_names_expr(discriminant, out);
+                for case in cases {
+                    Self::collect_bound_names_expr(&case.value, out);
+                    Self::collect_bound_names_stmts(&case.body, out);
+                }
+                if let Some(default) = default {
+                    Self::collect_bound_names_stmts(default, out);
+                }
+            }
         }
     }
 

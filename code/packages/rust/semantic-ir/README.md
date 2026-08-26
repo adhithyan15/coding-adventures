@@ -158,6 +158,18 @@ What's covered:
   frontend or implemented by any backend — see
   [SIR16](../../../specs/SIR16-ir-extensions-for-python-and-javascript.md)'s
   "Loop control (addendum)" section.
+- SIR30 switch statement: `Stmt::Switch { discriminant, cases:
+  Vec<SwitchCase>, default: Option<Vec<Stmt>>, span }`
+  (`Feature::Switch`) — a C-family-style switch with real fall-through
+  semantics (Java/JavaScript's own), not the non-fall-through `case`/
+  `match` shape MATLAB/IDL/Ruby use. `Stmt::Break` is valid directly
+  inside a `Switch` (extends `Feature::LoopControl`'s own `loop_stack`
+  with a new `LoopKind::Switch`); `Stmt::Continue` still requires an
+  actual enclosing loop, skipping past any `Switch` frame to find one.
+  `default`, if present, is always the textually-last case (a dedicated
+  field, not a `cases` entry, so a non-last `default` is structurally
+  unrepresentable). Not yet emitted by any frontend or implemented by
+  any backend — see [SIR30](../../../specs/SIR30-switch-statement.md).
 - EffectSet bitset
 - FeatureManifest
 - Textual form (printer; parser deferred)

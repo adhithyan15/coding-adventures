@@ -443,6 +443,12 @@ fn collect_stmt_assigned(s: &Stmt, out: &mut HashSet<String>) {
         // "rejected at the capability check" treatment as the SIR29 arm
         // above; neither carries an `Assign` to collect.
         Stmt::Break { .. } | Stmt::Continue { .. } => {}
+        // Switch statement (task #51): `Feature::Switch` is not in this
+        // backend's accepted-features list, so `check_module` rejects
+        // any module using it before this traversal ever runs — same
+        // "rejected at the capability check" treatment as the SIR29 arm
+        // above.
+        Stmt::Switch { .. } => {}
         // SIR22 array/matrix indexed assignment: `target`, each index
         // argument, and `value` can each nest an `Assign` (e.g.
         // `A(i) = (foo := 1)`), so recurse into all three — same
@@ -892,6 +898,12 @@ fn emit_stmt(out: &mut String, s: &Stmt, indent: usize) {
         // backend yet — same rationale as the SIR29 arm just above.
         Stmt::Break { span, .. } | Stmt::Continue { span, .. } => {
             panic!("rust backend reached a Stmt::Break/Continue node at {} — capability check should have rejected it", span);
+        }
+        // Switch statement (task #51): rejected by `check_module` before
+        // this backend ever emits (no `Feature::Switch` in
+        // `accepts_features`) — compile-exhaustiveness fix only.
+        Stmt::Switch { span, .. } => {
+            panic!("rust backend reached a Stmt::Switch node at {} — capability check should have rejected it", span);
         }
         // `begin … rescue … ensure … end` → a `catch_unwind` region.  See
         // `emit_try_catch` for the full mapping and its ensure-ordering
@@ -2791,6 +2803,12 @@ fn emit_stmt_inline(out: &mut String, s: &Stmt, indent: usize) {
         // so a validated module never reaches here.
         Stmt::Break { span, .. } | Stmt::Continue { span, .. } => {
             panic!("rust backend (inline) reached a Stmt::Break/Continue node at {} — capability check should have rejected it", span);
+        }
+        // Switch statement (task #51): same treatment as the non-inline
+        // `emit_stmt` arm above — not in `ACCEPTED_FEATURES`, so a
+        // validated module never reaches here.
+        Stmt::Switch { span, .. } => {
+            panic!("rust backend (inline) reached a Stmt::Switch node at {} — capability check should have rejected it", span);
         }
     }
 }

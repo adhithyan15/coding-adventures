@@ -210,6 +210,15 @@ fn collect_ancestry_in_stmt(
         // to walk — a bare `break;`/`continue;` can never itself contain
         // a `ClassDef`.
         Stmt::Break { .. } | Stmt::Continue { .. } => {}
+        // Switch statement (task #51): rejected by `check_module` before
+        // this backend ever emits (no `Feature::Switch` in
+        // `accepts_features`) — compile-exhaustiveness fix only.
+        Stmt::Switch { span, .. } => {
+            panic!(
+                "typescript backend reached a Stmt::Switch node at {} — capability check should have rejected it",
+                span
+            );
+        }
     }
 }
 
@@ -394,6 +403,14 @@ fn stmt_uses_builtin(s: &Stmt, name: &str) -> bool {
         // SIR16 addendum: `Stmt::Break`/`Stmt::Continue` carry no
         // expression, so they can never "use" any builtin.
         Stmt::Break { .. } | Stmt::Continue { .. } => false,
+        // Switch statement (task #51): rejected by `check_module` before
+        // this backend ever emits — compile-exhaustiveness fix only.
+        Stmt::Switch { span, .. } => {
+            panic!(
+                "typescript backend reached a Stmt::Switch node at {} — capability check should have rejected it",
+                span
+            );
+        }
     }
 }
 
@@ -946,6 +963,14 @@ fn collect_stmt_assigned(s: &Stmt, out: &mut HashSet<String>) {
         // SIR16 addendum: `Stmt::Break`/`Stmt::Continue` carry no
         // expression, so they can never assign a local.
         Stmt::Break { .. } | Stmt::Continue { .. } => {}
+        // Switch statement (task #51): rejected by `check_module` before
+        // this backend ever emits — compile-exhaustiveness fix only.
+        Stmt::Switch { span, .. } => {
+            panic!(
+                "typescript backend reached a Stmt::Switch node at {} — capability check should have rejected it",
+                span
+            );
+        }
     }
 }
 
@@ -1533,6 +1558,18 @@ fn emit_stmt(out: &mut String, s: &Stmt, indent: usize) {
         }
         Stmt::Continue { .. } => {
             let _ = writeln!(out, "{pad}continue;");
+        }
+        // Switch statement (task #51): rejected by `check_module` before
+        // this backend ever emits (no `Feature::Switch` in
+        // `accepts_features`) — compile-exhaustiveness fix only, not
+        // real support. Real codegen is deferred to a future follow-up
+        // task, mirroring `Feature::LoopControl`'s own rollout (this
+        // backend adopted that one in task #63, alongside Go/Python).
+        Stmt::Switch { span, .. } => {
+            panic!(
+                "typescript backend reached a Stmt::Switch node at {} — capability check should have rejected it",
+                span
+            );
         }
     }
 }

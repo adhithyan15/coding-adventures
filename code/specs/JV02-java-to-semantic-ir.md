@@ -120,7 +120,14 @@ bookkeeping into the loop's own condition expression instead, the one
 position a `continue` can never skip — see `java-to-semantic-ir`'s own
 `CHANGELOG.md` `[0.12.0]` entry for the full shapes). A labeled `break`/
 `continue` remains rejected (SIR has no loop-label vocabulary at all).
-`switch` itself remains fully unaddressed — tracked as task #51. The
+`switch` itself remains unaddressed *by this frontend* — but the core-IR
+gap task #51 named is now resolved: `Stmt::Switch`/`SwitchCase`/
+`Feature::Switch` landed at the core-IR level (see
+[SIR30](SIR30-switch-statement.md)), mirroring `Feature::LoopControl`'s
+own two-stage rollout — no backend accepts the feature yet, and this
+frontend does not yet emit the node either; wiring Java's own `switch`
+statement to it is its own, separately-tracked follow-up task, now
+unblocked rather than waiting on a spec-level design decision. The
 standalone follow-up task split off from M4d's own chained-indexed-
 assignment-target gap is resolved as of task #66 — see this section's
 own task #60/#66 entries above and `java-to-semantic-ir`'s own
@@ -263,8 +270,11 @@ backlog item, not M2-blocking. `break`/`continue` had the identical gap
 at M2a time; fully resolved as of task #64 — see the "Implementation
 progress" note near the top of this spec for the full story (core-IR
 primitive, first backend, this frontend's own consumption plus two
-non-termination bugs fixed along the way). `switch` itself remains its
-own, separately-tracked (task #51) unresolved backlog item.
+non-termination bugs fixed along the way). `switch` itself now has a
+core-IR primitive to target ([SIR30](SIR30-switch-statement.md),
+resolving task #51's own spec-level design question) — wiring this
+frontend's own `switch` statement lowering to it remains a separate,
+still-unaddressed follow-up task.
 
 **M3 — methods / calls / lambdas.** Static and instance top-level-
 function-shaped methods (still not class-nested — that's M6), calls,
@@ -535,7 +545,9 @@ lowering — real Java forbids a `break`/`continue` written directly
 inside either from targeting a loop the *declaration* merely happens to
 be lexically nested in. A labeled `break foo;`/`continue foo;` is
 rejected cleanly (SIR has no loop-label vocabulary at all); `switch`
-itself remains its own separately-tracked (task #51) unresolved gap.
+itself now has a core-IR primitive to target ([SIR30](SIR30-switch-statement.md))
+but this frontend's own lowering to it remains a separate,
+still-unaddressed follow-up task.
 **Found while wiring `continue` support, not by inspection beforehand —
 two real, `/security-review`-caught non-termination bugs**: both
 `lower_do_while_statement` and `lower_for_statement_inner` appended a

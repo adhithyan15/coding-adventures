@@ -48,6 +48,7 @@ use std::fmt;
 /// | `VirtualDispatch`          | an `Expr::VirtualCall` node           |
 /// | `ErasedGenerics`           | a `SirType::TypeParam`                |
 /// | `LoopControl`              | a `Stmt::Break` or `Stmt::Continue`   |
+/// | `Switch`                   | a `Stmt::Switch`                      |
 #[derive(Debug, Clone, Copy, PartialEq, Eq, Hash)]
 pub enum Feature {
     Closures,
@@ -296,6 +297,22 @@ pub enum Feature {
     /// section of
     /// [SIR16](../../../../specs/SIR16-ir-extensions-for-python-and-javascript.md).
     LoopControl,
+    // ── Switch statement (task #51) ─────────────────────────────────
+    /// The module contains a `Stmt::Switch` node — a C-family-style
+    /// switch statement with real fall-through semantics. Kept as its
+    /// own feature (not folded into `LoopControl`, despite `Break`
+    /// being valid inside a switch the same way it's valid inside a
+    /// loop) for the identical reason `LoopControl` itself was split
+    /// from `Loops`: this is a brand-new node no backend has ever
+    /// needed to emit before, so a backend must explicitly opt in
+    /// rather than `Loops`/`LoopControl` silently growing a promise
+    /// their existing implementations don't keep. A backend accepting
+    /// this promises real fall-through codegen, `default` handling,
+    /// and honouring `Stmt::Break` as a valid switch-exit (not just a
+    /// loop-exit) — see `Stmt::Switch`'s own doc comment for the full
+    /// design, including why `default` is scoped to the textually-last
+    /// case only.
+    Switch,
 }
 
 impl Feature {
@@ -347,6 +364,7 @@ impl Feature {
         Feature::VirtualDispatch,
         Feature::ErasedGenerics,
         Feature::LoopControl,
+        Feature::Switch,
     ];
 
     /// Kebab-case name for the SIR text format.
@@ -398,6 +416,7 @@ impl Feature {
             Feature::VirtualDispatch => "virtual-dispatch",
             Feature::ErasedGenerics => "erased-generics",
             Feature::LoopControl => "loop-control",
+            Feature::Switch => "switch",
         }
     }
 

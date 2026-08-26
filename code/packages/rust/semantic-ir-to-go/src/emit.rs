@@ -618,6 +618,15 @@ fn emit_stmt(out: &mut String, s: &Stmt, indent: usize) {
         Stmt::Continue { .. } => {
             let _ = writeln!(out, "{}continue", pad);
         }
+        // Switch statement (task #51): rejected by `check_module` before
+        // this backend ever emits (no `Feature::Switch` in
+        // `accepts_features`) — compile-exhaustiveness fix only.
+        Stmt::Switch { span, .. } => {
+            panic!(
+                "go backend reached a Stmt::Switch node at {} — capability check should have rejected it",
+                span
+            );
+        }
     }
 }
 
