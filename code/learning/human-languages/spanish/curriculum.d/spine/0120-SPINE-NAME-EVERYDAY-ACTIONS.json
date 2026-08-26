@@ -1,6 +1,10 @@
 {
   "segments": [
-    "ES-PATH-A1-BEBER"
+    "ES-PATH-A1-BEBER",
+    "ES-PATH-381-01",
+    "ES-PATH-382-01",
+    "ES-PATH-383-01",
+    "ES-PATH-384-01"
   ],
   "omits": [
     "VERB-GIVE"

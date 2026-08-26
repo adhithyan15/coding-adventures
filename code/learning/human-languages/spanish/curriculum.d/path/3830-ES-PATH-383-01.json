@@ -1,0 +1,15 @@
+{
+  "id": "ES-PATH-383-01",
+  "spine_node": "SPINE-NAME-EVERYDAY-ACTIONS",
+  "lessons": [
+    "ES-C383-guardar",
+    "ES-C383-dejar",
+    "ES-C383-sacar",
+    "ES-C383-buscar"
+  ],
+  "before": [],
+  "inline": [
+    "ES-EXT-383-VERB"
+  ],
+  "after": []
+}

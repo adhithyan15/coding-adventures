@@ -1,0 +1,675 @@
+{
+  "version": 1,
+  "language": "spanish",
+  "chapter": 383,
+  "title": "Two Words From Outside, and Two Nobody Can Place",
+  "drivablePrefix": 4,
+  "sourceHash": "fnv1a64:7b0c04d76994d7a2",
+  "lessons": [
+    {
+      "id": "ES-C383-guardar",
+      "sequence": 8050,
+      "title": "guardar — why English has both ward and guard",
+      "headword": "guardar",
+      "romanization": "guardar",
+      "gloss": "to keep — Germanic wardon, to watch over; the w- became gu- in Spanish, which is why ward and guard are the same word twice",
+      "script": "latin",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:7f5affda431a8bdf",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Say to pay, then to stay. (Pagar; quedar.)"
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know first",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "la llave — something you keep."
+            },
+            {
+              "kind": "speech",
+              "text": "la casa — where you keep it."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "pronunciation",
+          "title": "Sounds you'll need",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "guar-DAR, two beats with the weight on the second. Gu- before a is a hard g followed by a real w glide. see pronunciation reference."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "guardar — \"to keep, to put away.\""
+            },
+            {
+              "kind": "speech",
+              "text": "This one is not Latin. It comes from a Germanic verb wardōn, to watch over — the same root as English ward, in the sense of watching and protecting."
+            },
+            {
+              "kind": "speech",
+              "text": "The interesting part is the first sound. Latin and its descendants had no w- at the start of a word, so when Germanic words arrived, Romance speakers reached for the nearest thing they had and produced gu-. Wardōn became guardar."
+            },
+            {
+              "kind": "speech",
+              "text": "Now watch what that does to English, which borrowed from both sides."
+            },
+            {
+              "kind": "speech",
+              "text": "English already had ward from its own Germanic stock. Then it borrowed the French version of the very same word and got guard. Both are in the dictionary, meaning almost the same thing, and most speakers never notice."
+            },
+            {
+              "kind": "speech",
+              "text": "The pattern repeats down the whole family:"
+            },
+            {
+              "kind": "speech",
+              "text": "a warden and a guardian."
+            },
+            {
+              "kind": "speech",
+              "text": "a reward and a regard."
+            },
+            {
+              "kind": "speech",
+              "text": "warranty and guarantee."
+            },
+            {
+              "kind": "speech",
+              "text": "and the names William and Guillermo, which are one name."
+            },
+            {
+              "kind": "speech",
+              "text": "Each pair is one word that entered English twice, once before the sound change and once after. Whenever you meet an English pair where one has w- and the other gu-, you are looking at this."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "You can now name the action: guardar. And you can spot a w-/gu- pair on sight."
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "guardar",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *guardar*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "guardar la llave",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *guardar la llave*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "guardar en casa",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *guardar en casa*]"
+            }
+          ]
+        },
+        {
+          "index": 6,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Why does Spanish have gu- where Germanic had w-? (Romance had no word-initial w-.) Name a pair. (Ward and guard.)"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "ES-C383-dejar",
+      "sequence": 8060,
+      "title": "dejar — the d- was borrowed from another verb",
+      "headword": "dejar",
+      "romanization": "dejar",
+      "gloss": "to leave — Latin laxare, to loosen, through an older Spanish lejar; the d- is borrowed from dar",
+      "script": "latin",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:ed617eec1ada2c80",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Say to stay, then to keep. (Quedar; guardar.)"
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know first",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "la puerta — something you leave open."
+            },
+            {
+              "kind": "speech",
+              "text": "guardar — the opposite move."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "pronunciation",
+          "title": "Sounds you'll need",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "de-JAR, two beats with the weight on the second. The j is the rasping sound made at the back of the mouth, not an English j. see pronunciation reference."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "dejar — \"to leave, to let.\""
+            },
+            {
+              "kind": "speech",
+              "text": "The root is Latin laxare, to loosen or slacken, from laxus, loose. Leaving something alone is loosening your grip on it, and letting somebody do something is slackening the rein."
+            },
+            {
+              "kind": "speech",
+              "text": "But laxare does not give you dejar, and the gap is the lesson. Latin l- gives Spanish l-, and older Spanish had exactly what you would predict: lejar. That form is written down."
+            },
+            {
+              "kind": "speech",
+              "text": "So where did the d- come from? The Academy's dictionary answers it in three words — infl. por dar. Dar, to give, is one of the commonest verbs in the language, and it sat close to lejar in meaning and in use. Its opening consonant leaked across. The word was pulled out of shape by a neighbour."
+            },
+            {
+              "kind": "speech",
+              "text": "That kind of change has no rule behind it. It happens because two words keep company, and it is worth seeing once, because a sound law would never have predicted this d."
+            },
+            {
+              "kind": "speech",
+              "text": "English took laxare several times: relax, lax, and — through French — leash, which is a thing you slacken. Laxative is the same idea applied somewhere else entirely."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "You can now name the action: dejar. And you know one word can reshape another."
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "dejar",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *dejar*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "dejar la puerta",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *dejar la puerta*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "guardar y dejar",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *guardar y dejar*]"
+            }
+          ]
+        },
+        {
+          "index": 6,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What did laxare mean? (To loosen.) And which verb lent dejar its d-? (Dar.)"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "ES-C383-sacar",
+      "sequence": 8070,
+      "title": "sacar — an argument that is still open",
+      "headword": "sacar",
+      "romanization": "sacar",
+      "gloss": "to take out — origin unsettled; not from saco meaning bag, though a Latin saccus meaning filter may be behind both",
+      "script": "latin",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:8e83f2b68778831a",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Say to keep, then to leave. (Guardar; dejar.)"
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know first",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "el dinero — something you take out."
+            },
+            {
+              "kind": "speech",
+              "text": "dejar — a near neighbour in meaning."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "pronunciation",
+          "title": "Sounds you'll need",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "sa-CAR, two beats with the weight on the second. The c before a is a hard k. see pronunciation reference."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "sacar — \"to take out.\""
+            },
+            {
+              "kind": "speech",
+              "text": "This is a word where the honest answer is that scholars disagree, and it is worth watching them disagree."
+            },
+            {
+              "kind": "speech",
+              "text": "Start with what is settled — a negative. Sacar is not a verb built on saco, a bag, in the plain way it looks like it might be. Making a verb from saco would give you something meaning to put into a sack, which is the opposite of what sacar means. Corominas dismissed the attempt to rescue that reading as a desperate expedient."
+            },
+            {
+              "kind": "speech",
+              "text": "From there the road forks."
+            },
+            {
+              "kind": "speech",
+              "text": "Corominas proposed Gothic sakan, to go to law, to dispute — the idea being a legal one, taking something out by judgement. The Academy's dictionary follows him, with Quizá in front of it."
+            },
+            {
+              "kind": "speech",
+              "text": "A long line of Romance scholars prefers Latin saccare. That looks like the bag again, and it is not: alongside the bag, Latin saccus named a filter, and the verb saccare is written down only in the sense of filtering — straining wine, straining water. Taking out by filtering is a very different picture from taking out by lawsuit."
+            },
+            {
+              "kind": "speech",
+              "text": "So the bag may be a distant relative after all, by way of a strainer rather than a sack. Nobody has closed the question. What you can say safely is the negative, and that saquear, to plunder, really does come from saco."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "You can now name the action: sacar. And you can hold two proposals without picking one."
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "sacar",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *sacar*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "sacar el dinero",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *sacar el dinero*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "guardar y sacar",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *guardar y sacar*]"
+            }
+          ]
+        },
+        {
+          "index": 6,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What is the settled part? (That sacar is not a plain verb from saco, a bag.) What did Latin saccus mean besides a bag? (A filter.)"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "ES-C383-buscar",
+      "sequence": 8080,
+      "title": "buscar — one of the commonest verbs, and nobody knows",
+      "headword": "buscar",
+      "romanization": "buscar",
+      "gloss": "to look for — of unknown origin; English busker is the one relative anybody can point to",
+      "script": "latin",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:b2a9e7cadd143e4f",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Say to leave, then to take out. (Dejar; sacar.)"
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know first",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "la llave — something you look for."
+            },
+            {
+              "kind": "speech",
+              "text": "la calle — where you look."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "pronunciation",
+          "title": "Sounds you'll need",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "bus-CAR, two beats with the weight on the second. The opening b is soft between vowels and firmer at the start of a phrase. see pronunciation reference."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "buscar — \"to look for.\""
+            },
+            {
+              "kind": "speech",
+              "text": "Every lesson so far has ended somewhere. This one does not, and that is the point of it."
+            },
+            {
+              "kind": "speech",
+              "text": "Buscar is one of the most-used verbs in Spanish. It is written down in the eleventh century. And Corominas, whose dictionary is the standard work on Spanish origins, gives his verdict as de origen desconocido — of unknown origin. That is his strongest negative label, stronger than calling something uncertain."
+            },
+            {
+              "kind": "speech",
+              "text": "He does float an idea. Perhaps, he asks, a Celtic word about winning or conquering? Then he answers his own question: the hypothesis, though possible, is very risky. Two modern dictionaries of reconstructed Celtic list what that root became in each language, and buscar is on neither list."
+            },
+            {
+              "kind": "speech",
+              "text": "There is a second story you may meet, connecting buscar to bosque, a wood, as though searching were foraging. The dates refuse it. Bosque does not appear in Castilian until the fifteenth century, four hundred years after buscar is already in use. A word cannot descend from one that arrives later."
+            },
+            {
+              "kind": "speech",
+              "text": "One relative can be pointed at, and it is English. To busk meant to go about seeking, and a busker — a street performer — is one who goes about seeking. The dictionaries name buscar in that chain. It tells you nothing about where buscar began, and it is the one thread that holds."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "You can now name four more everyday actions: guardar, dejar, sacar, buscar. Say which one you do most."
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "buscar",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *buscar*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "buscar la llave",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *buscar la llave*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "guardar, dejar, sacar, buscar",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *guardar, dejar, sacar, buscar*]"
+            }
+          ]
+        },
+        {
+          "index": 6,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What is Corominas's verdict on buscar? (Of unknown origin.) Why can it not come from bosque? (Bosque arrives four centuries later.)"
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "findings": []
+}

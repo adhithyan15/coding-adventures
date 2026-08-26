@@ -1,0 +1,20 @@
+{
+  "chapter": 383,
+  "title": "Two Words From Outside, and Two Nobody Can Place",
+  "label": "ch:guardar-y-dejar",
+  "canDo": "I can say guardar, dejar, sacar and buscar, and name four everyday actions.",
+  "spineNodes": [
+    "SPINE-NAME-EVERYDAY-ACTIONS"
+  ],
+  "payoff": {
+    "lesson": "ES-C383-buscar",
+    "kind": "production",
+    "summary": "Complete ES-C383-buscar: name four everyday actions, and say which one you do most.",
+    "assesses": [
+      "ES-LEX-GUARDAR",
+      "ES-LEX-DEJAR",
+      "ES-LEX-SACAR",
+      "ES-LEX-BUSCAR"
+    ]
+  }
+}

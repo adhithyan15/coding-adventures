@@ -5105,6 +5105,66 @@
         "ES-EXT-380-COUNT"
       ],
       "after": []
+    },
+    {
+      "id": "ES-PATH-381-01",
+      "spine_node": "SPINE-NAME-EVERYDAY-ACTIONS",
+      "lessons": [
+        "ES-C381-lavar",
+        "ES-C381-romper",
+        "ES-C381-saltar",
+        "ES-C381-sonar"
+      ],
+      "before": [],
+      "inline": [
+        "ES-EXT-381-VERB"
+      ],
+      "after": []
+    },
+    {
+      "id": "ES-PATH-382-01",
+      "spine_node": "SPINE-NAME-EVERYDAY-ACTIONS",
+      "lessons": [
+        "ES-C382-empezar",
+        "ES-C382-acabar",
+        "ES-C382-pagar",
+        "ES-C382-quedar"
+      ],
+      "before": [],
+      "inline": [
+        "ES-EXT-382-VERB"
+      ],
+      "after": []
+    },
+    {
+      "id": "ES-PATH-383-01",
+      "spine_node": "SPINE-NAME-EVERYDAY-ACTIONS",
+      "lessons": [
+        "ES-C383-guardar",
+        "ES-C383-dejar",
+        "ES-C383-sacar",
+        "ES-C383-buscar"
+      ],
+      "before": [],
+      "inline": [
+        "ES-EXT-383-VERB"
+      ],
+      "after": []
+    },
+    {
+      "id": "ES-PATH-384-01",
+      "spine_node": "SPINE-NAME-EVERYDAY-ACTIONS",
+      "lessons": [
+        "ES-C384-enviar",
+        "ES-C384-subir",
+        "ES-C384-morir",
+        "ES-C384-olvidar"
+      ],
+      "before": [],
+      "inline": [
+        "ES-EXT-384-VERB"
+      ],
+      "after": []
     }
   ],
   "spine": {
@@ -5424,7 +5484,11 @@
     },
     "SPINE-NAME-EVERYDAY-ACTIONS": {
       "segments": [
-        "ES-PATH-A1-BEBER"
+        "ES-PATH-A1-BEBER",
+        "ES-PATH-381-01",
+        "ES-PATH-382-01",
+        "ES-PATH-383-01",
+        "ES-PATH-384-01"
       ],
       "omits": [
         "VERB-GIVE"
@@ -10343,6 +10407,62 @@
         "ES-C380-feo",
         "ES-C380-ultimo",
         "ES-C380-necesario"
+      ]
+    },
+    {
+      "id": "ES-EXT-381-VERB",
+      "stage": "A1",
+      "kind": "required",
+      "category": "vocabulary",
+      "canDo": "I can name lavar, romper, saltar and soñar.",
+      "prerequisites": [],
+      "lessons": [
+        "ES-C381-lavar",
+        "ES-C381-romper",
+        "ES-C381-saltar",
+        "ES-C381-sonar"
+      ]
+    },
+    {
+      "id": "ES-EXT-382-VERB",
+      "stage": "A1",
+      "kind": "required",
+      "category": "vocabulary",
+      "canDo": "I can name empezar, acabar, pagar and quedar.",
+      "prerequisites": [],
+      "lessons": [
+        "ES-C382-empezar",
+        "ES-C382-acabar",
+        "ES-C382-pagar",
+        "ES-C382-quedar"
+      ]
+    },
+    {
+      "id": "ES-EXT-383-VERB",
+      "stage": "A1",
+      "kind": "required",
+      "category": "vocabulary",
+      "canDo": "I can name guardar, dejar, sacar and buscar.",
+      "prerequisites": [],
+      "lessons": [
+        "ES-C383-guardar",
+        "ES-C383-dejar",
+        "ES-C383-sacar",
+        "ES-C383-buscar"
+      ]
+    },
+    {
+      "id": "ES-EXT-384-VERB",
+      "stage": "A1",
+      "kind": "required",
+      "category": "vocabulary",
+      "canDo": "I can name enviar, subir, morir and olvidar.",
+      "prerequisites": [],
+      "lessons": [
+        "ES-C384-enviar",
+        "ES-C384-subir",
+        "ES-C384-morir",
+        "ES-C384-olvidar"
       ]
     }
   ],

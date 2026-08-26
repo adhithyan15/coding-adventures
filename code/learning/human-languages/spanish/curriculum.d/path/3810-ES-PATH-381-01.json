@@ -1,0 +1,15 @@
+{
+  "id": "ES-PATH-381-01",
+  "spine_node": "SPINE-NAME-EVERYDAY-ACTIONS",
+  "lessons": [
+    "ES-C381-lavar",
+    "ES-C381-romper",
+    "ES-C381-saltar",
+    "ES-C381-sonar"
+  ],
+  "before": [],
+  "inline": [
+    "ES-EXT-381-VERB"
+  ],
+  "after": []
+}

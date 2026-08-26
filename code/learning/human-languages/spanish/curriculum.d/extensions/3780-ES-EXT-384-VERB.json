@@ -1,0 +1,14 @@
+{
+  "id": "ES-EXT-384-VERB",
+  "stage": "A1",
+  "kind": "required",
+  "category": "vocabulary",
+  "canDo": "I can name enviar, subir, morir and olvidar.",
+  "prerequisites": [],
+  "lessons": [
+    "ES-C384-enviar",
+    "ES-C384-subir",
+    "ES-C384-morir",
+    "ES-C384-olvidar"
+  ]
+}

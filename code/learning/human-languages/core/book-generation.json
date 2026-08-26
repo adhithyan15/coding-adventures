@@ -5723,6 +5723,26 @@
       "output": "spanish/book/chapters/ch380-simpatico-y-alegre.tex"
     },
     {
+      "language": "spanish",
+      "chapter": 381,
+      "output": "spanish/book/chapters/ch381-lavar-y-romper.tex"
+    },
+    {
+      "language": "spanish",
+      "chapter": 382,
+      "output": "spanish/book/chapters/ch382-acabar-y-empezar.tex"
+    },
+    {
+      "language": "spanish",
+      "chapter": 383,
+      "output": "spanish/book/chapters/ch383-guardar-y-dejar.tex"
+    },
+    {
+      "language": "spanish",
+      "chapter": 384,
+      "output": "spanish/book/chapters/ch384-enviar-y-subir.tex"
+    },
+    {
       "language": "tamil",
       "chapter": 6,
       "output": "tamil/book/chapters/ch06-dative-case.tex",

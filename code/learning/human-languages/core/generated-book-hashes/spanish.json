@@ -4007,6 +4007,54 @@
         "ES-C380-necesario"
       ],
       "tex": "spanish/book/chapters/ch380-simpatico-y-alegre.tex"
+    },
+    {
+      "language": "spanish",
+      "chapter": 381,
+      "sourceHash": "fnv1a64:02a1fee4fa7fd2a7",
+      "lessonIds": [
+        "ES-C381-lavar",
+        "ES-C381-romper",
+        "ES-C381-saltar",
+        "ES-C381-sonar"
+      ],
+      "tex": "spanish/book/chapters/ch381-lavar-y-romper.tex"
+    },
+    {
+      "language": "spanish",
+      "chapter": 382,
+      "sourceHash": "fnv1a64:35a6c3da246cc4ba",
+      "lessonIds": [
+        "ES-C382-empezar",
+        "ES-C382-acabar",
+        "ES-C382-pagar",
+        "ES-C382-quedar"
+      ],
+      "tex": "spanish/book/chapters/ch382-acabar-y-empezar.tex"
+    },
+    {
+      "language": "spanish",
+      "chapter": 383,
+      "sourceHash": "fnv1a64:568f5e6949d1ffc0",
+      "lessonIds": [
+        "ES-C383-guardar",
+        "ES-C383-dejar",
+        "ES-C383-sacar",
+        "ES-C383-buscar"
+      ],
+      "tex": "spanish/book/chapters/ch383-guardar-y-dejar.tex"
+    },
+    {
+      "language": "spanish",
+      "chapter": 384,
+      "sourceHash": "fnv1a64:f200fe9b9b085cac",
+      "lessonIds": [
+        "ES-C384-enviar",
+        "ES-C384-subir",
+        "ES-C384-morir",
+        "ES-C384-olvidar"
+      ],
+      "tex": "spanish/book/chapters/ch384-enviar-y-subir.tex"
     }
   ]
 }
