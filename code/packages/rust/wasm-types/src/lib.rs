@@ -155,6 +155,30 @@ pub enum ValueType {
     /// `StructRef(1)` and is encoded as `[0x63, 0x01]`.
     StructRef(u32),
 
+    /// `(ref null $t)` where `$t` names a concrete **function** type
+    /// (function-references proposal) -- the analogous nullable concrete
+    /// reference to [`ValueType::StructRef`], but into the function-type
+    /// index space instead of the struct-type one.
+    ///
+    /// Needed for exactly one narrow real-corpus construct (WASM11-B, see
+    /// `code/specs/W11-wasm-tail-calls.md`'s addendum): a helper function
+    /// declared `(func $f (result (ref null $t)) (ref.null $t))`, whose
+    /// result is then used where `funcref` is expected via `return_call`/
+    /// `return_call_indirect` (valid, since a nullable ref to a SPECIFIC
+    /// function type is a subtype of the general `funcref`) or where the
+    /// reverse is attempted (invalid -- `funcref` is NOT a subtype of a
+    /// specific concrete function type). This crate does not otherwise
+    /// track per-function-type identity anywhere else; this variant exists
+    /// only to make that one subtyping direction checkable.
+    ///
+    /// The `u32` payload indexes [`WasmModule::types`] directly (0..N-1)
+    /// -- the SAME index space a plain `(type $t)` reference elsewhere
+    /// already resolves to, unlike `StructRef`'s `+ types.len()`-offset
+    /// struct-type index. Encoded the same 2-byte shape as `StructRef`:
+    /// `0x63` followed by `LEB128(idx)` -- see `StructRef`'s own doc
+    /// comment for why the two never collide despite sharing a tag byte.
+    ConcreteFuncRef(u32),
+
     /// `funcref` — nullable reference to a function (reference-types
     /// proposal; also WASM 1.0's implicit, hardcoded table element type).
     ///
@@ -240,6 +264,7 @@ impl ValueType {
             ValueType::Anyref => Some(0x6E),
             ValueType::I31ref => Some(0x6C),
             ValueType::StructRef(_) => None,
+            ValueType::ConcreteFuncRef(_) => None,
             ValueType::Funcref => Some(0x70),
             ValueType::Externref => Some(0x6F),
             ValueType::V128 => Some(0x7B),
@@ -272,6 +297,13 @@ impl ValueType {
             ValueType::I31ref => vec![0x6C],
             ValueType::StructRef(idx) => {
                 // 0x63 = nullable concrete reference tag.
+                let mut bytes = vec![0x63u8];
+                bytes.extend(encode_unsigned(*idx as u64));
+                bytes
+            }
+            ValueType::ConcreteFuncRef(idx) => {
+                // Same 2-byte shape as StructRef -- see ConcreteFuncRef's
+                // own doc comment for why the two never collide.
                 let mut bytes = vec![0x63u8];
                 bytes.extend(encode_unsigned(*idx as u64));
                 bytes
@@ -1003,6 +1035,9 @@ mod tests {
         assert_eq!(ValueType::StructRef(0).encode(), vec![0x63, 0x00], "struct ref tag");
         // StructRef(1) → [0x63, 0x01]
         assert_eq!(ValueType::StructRef(1).encode(), vec![0x63, 0x01]);
+        // ConcreteFuncRef shares StructRef's 2-byte encoding shape.
+        assert_eq!(ValueType::ConcreteFuncRef(0).encode(), vec![0x63, 0x00], "concrete func ref tag");
+        assert_eq!(ValueType::ConcreteFuncRef(1).encode(), vec![0x63, 0x01]);
         // Reference-types proposal (WASM17): funcref / externref.
         assert_eq!(ValueType::Funcref.encode(), vec![0x70], "funcref tag");
         assert_eq!(ValueType::Externref.encode(), vec![0x6F], "externref tag");
@@ -1018,6 +1053,8 @@ mod tests {
         assert_eq!(ValueType::I31ref.byte_tag(), Some(0x6C));
         // StructRef has no single-byte tag.
         assert_eq!(ValueType::StructRef(0).byte_tag(), None);
+        // Neither does ConcreteFuncRef.
+        assert_eq!(ValueType::ConcreteFuncRef(0).byte_tag(), None);
         assert_eq!(ValueType::Funcref.byte_tag(), Some(0x70));
         assert_eq!(ValueType::Externref.byte_tag(), Some(0x6F));
     }
@@ -1030,6 +1067,18 @@ mod tests {
         assert_ne!(ValueType::Funcref, ValueType::Externref);
         assert_ne!(ValueType::Funcref, ValueType::Anyref);
         assert_ne!(ValueType::Externref, ValueType::Anyref);
+    }
+
+    #[test]
+    fn value_type_concrete_func_ref_distinct_from_struct_ref_and_funcref() {
+        // ConcreteFuncRef and StructRef are DIFFERENT Rust enum variants
+        // (even though they share a binary tag byte, see ConcreteFuncRef's
+        // own doc comment) -- PartialEq must never conflate them, and
+        // neither should compare equal to the general `Funcref`.
+        assert_ne!(ValueType::ConcreteFuncRef(0), ValueType::StructRef(0));
+        assert_ne!(ValueType::ConcreteFuncRef(0), ValueType::Funcref);
+        assert_ne!(ValueType::ConcreteFuncRef(0), ValueType::ConcreteFuncRef(1));
+        assert_eq!(ValueType::ConcreteFuncRef(3), ValueType::ConcreteFuncRef(3));
     }
 
     // ── Test 2: ExternalKind byte values ─────────────────────────────────────

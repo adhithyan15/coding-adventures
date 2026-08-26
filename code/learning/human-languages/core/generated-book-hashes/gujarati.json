@@ -351,6 +351,35 @@
         "GU-C21-travel-five"
       ],
       "tex": "gujarati/book/chapters/ch25-hand-money-map.tex"
+    },
+    {
+      "language": "gujarati",
+      "chapter": 26,
+      "sourceHash": "fnv1a64:8b61d3ff603d5d2f",
+      "lessonIds": [
+        "GU-C22-hear-shahar",
+        "GU-C22-shahar",
+        "GU-C22-hear-shaalaa",
+        "GU-C22-shaalaa",
+        "GU-C22-hear-rasto",
+        "GU-C22-rasto",
+        "GU-C22-route-three"
+      ],
+      "tex": "gujarati/book/chapters/ch26-city-school-road.tex"
+    },
+    {
+      "language": "gujarati",
+      "chapter": 27,
+      "sourceHash": "fnv1a64:e2b557d05872debc",
+      "lessonIds": [
+        "GU-C23-hear-gaam",
+        "GU-C23-gaam",
+        "GU-C23-hear-dukaan",
+        "GU-C23-dukaan",
+        "GU-R23-map-ten",
+        "GU-C23-map-ten"
+      ],
+      "tex": "gujarati/book/chapters/ch27-village-shop-ten.tex"
     }
   ]
 }

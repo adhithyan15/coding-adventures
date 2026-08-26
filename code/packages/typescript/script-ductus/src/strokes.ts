@@ -961,6 +961,44 @@ export const DUCTUS: Record<string, LetterDuctus> = {
     ],
     source: japanese.letters.find((letter) => letter.glyph === "た")!.strokeOrderSource!,
   },
+  // Sirgazil's つ animation supplies the one-run movement. Unicode identifies
+  // U+3063 as small tsu; these medians preserve that movement while fitting it
+  // explicitly to the bundled smaller Noto Sans JP glyph.
+  [ductusKey("japanese", "っ")]: {
+    script: "japanese",
+    glyph: "っ",
+    strokes: [
+      {
+        segments: [
+          {
+            label: "begin at the upper left and sweep right across the high shoulder",
+            path: [
+              { x: 180, y: 360 },
+              { x: 280, y: 390 },
+              { x: 380, y: 425 },
+              { x: 480, y: 450 },
+              { x: 600, y: 470 },
+              { x: 700, y: 430 },
+              { x: 780, y: 350 },
+            ],
+          },
+          {
+            label: "round down the right side and finish by sweeping left along the lower curve",
+            path: [
+              { x: 780, y: 350 },
+              { x: 810, y: 280 },
+              { x: 780, y: 200 },
+              { x: 700, y: 110 },
+              { x: 600, y: 60 },
+              { x: 500, y: 30 },
+              { x: 390, y: 15 },
+            ],
+          },
+        ],
+      },
+    ],
+    source: japanese.letters.find((letter) => letter.glyph === "っ")!.strokeOrderSource!,
+  },
   // Sirgazil's 28-frame animation writes も in three pen-down runs: descend
   // through the stem and broad lower bowl, then lift for each left-to-right
   // horizontal. These medians preserve that order while fitting the bundled

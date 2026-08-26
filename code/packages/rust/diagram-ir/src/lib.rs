@@ -1146,6 +1146,8 @@ pub enum GanttDateFormatPart {
     Month2,
     MonthShort,
     MonthLong,
+    WeekdayShort,
+    WeekdayLong,
     Day,
     Day2,
     Hour24,

@@ -178,6 +178,14 @@ Fetched:       2026-08-13 (initial slice, W05/PR3), extended 2026-08-14 (WASM08)
                linking's own import/export corpus, unblocked by the
                W21-W24 exceptions-proposal `tag` infra, same pinned
                commit, no re-pin -- see below),
+               extended 2026-08-26 (W11 addendum -- return_call.wast/
+               return_call_indirect.wast, the tail-call proposal's own
+               real corpus files, blocked since W11 on a single narrow
+               "Result subtyping" construct -- a nullable reference to a
+               CONCRETE function type, `(ref null $t)`/`ref.null $t` --
+               unblocked by `wasm_types::ValueType::ConcreteFuncRef` and
+               a matching one-directional validator subtyping rule, same
+               pinned commit, no re-pin -- see below),
 Fetch method:  code/packages/rust/wasm-conformance/tests/fixtures/fetch_testsuite.py
 
 The pinned commit was resolved via:
@@ -2328,6 +2336,63 @@ same "text parsed without error" gap already present in `align.wast`/
 change was needed to vendor this file; every delta above reconciles
 exactly against `imports.wast`'s own per-file tally, and every other
 already-vendored file's counts are byte-for-byte unchanged.
+
+`return_call.wast`/`return_call_indirect.wast` (W11 addendum) close out
+the one backlog item W11's own spec explicitly left open: both files
+were fetched and read in full while writing that spec, and both parsed
+almost entirely with already-supported grammar except for ONE construct,
+present in each -- a "Result subtyping" helper declaring `(func $f
+(result (ref null $t)) (ref.null $t))`, a NULLABLE reference to a
+CONCRETE function type. That's function-references-proposal grammar
+distinct from (and much narrower than) the non-null `(ref $t)`/`call_ref`
+wall this repo has never had (WASM17's funcref/externref work doesn't
+reach it, and this addendum still doesn't). Fixed with a new
+`wasm_types::ValueType::ConcreteFuncRef(u32)` variant (a nullable ref
+into the FUNC-type index space, the direct analogue of the pre-existing
+`StructRef(u32)`'s struct-type index space -- see that variant's own doc
+comment for why the two never collide despite sharing a `0x63` binary
+tag), `wasm-wast-parser` support for `(ref null $t)` as a value type and
+`ref.null $t` as an instruction (both resolving `$t` via the same
+`type_names` map every other `(type $t)` reference already uses), and a
+`wasm-validator` subtyping rule: a concrete function-type ref IS a
+`funcref`, but a bare `funcref` is NOT a specific concrete one -- checked
+in BOTH directions by the real corpus (`return_call`/`return_call_
+indirect`'s own "Result subtyping" `assert_return` exercises the valid
+direction, a sibling `assert_invalid` exercises the mirror-image invalid
+one). `wasm-execution`'s bytecode decoder also needed a real fix: its
+`ref.null` immediate skip was a hardcoded single byte, which would have
+silently corrupted decoding of the new instruction's variable-length
+`0x63 <LEB128(idx)>` immediate by treating half of it as the START of
+the next instruction.
+
+Real, measured numbers (zero new `fail` anywhere in either file):
+`return_call.wast` -- module 2/2 pass (+1 not_yet_supported), assert_
+invalid 12/12 pass, assert_return 0/34 (all not_yet_supported).
+`return_call_indirect.wast` -- module 2/2 pass (+1 nys), assert_invalid
+15/17 pass (+2 nys), assert_return 0/43, assert_trap 0/7, assert_
+malformed 0/11 (all not_yet_supported). Every `assert_return` (and
+`return_call_indirect.wast`'s `assert_trap`) not_yet_supported directive
+cascades from the SAME pre-existing, deliberate gap every other
+spectest-importing vendored file already has: both files' main module
+does `(import "spectest" "print_i32_f32" ...)`, and this crate has no
+`spectest` host by design (see `RegistryHost`'s own doc comment). The 11
+`assert_malformed` not_yet_supported directives are a separate,
+pre-existing gap (strict `param`/`result`/`type` clause ordering in an
+inline `call_indirect`/`return_call_indirect` signature, unenforced by
+this crate's parser, the same "text parses when the spec says it
+shouldn't" class of gap several already-vendored files have) -- not
+something this addendum's scope covers fixing. The 2 `assert_invalid`
+not_yet_supported directives in `return_call_indirect.wast` are two more
+pre-existing, unrelated validator gaps (confirmed by running the file
+and inspecting which two, not assumed): one expects a return_call_
+indirect's correctly-unreachable "result" to still be rejected when a
+LATER instruction tries to consume it as a real value (this crate's
+dead-code polymorphism is deliberately permissive there, the same
+`unreached-invalid.wast` gap category), the other expects an indirect
+call through an `externref`-typed table to be rejected (this crate
+doesn't check a table's element type is `funcref` before an indirect
+call). Neither is new, and neither is this addendum's own concrete-
+function-ref subtyping work.
 
 The vendored files are licensed under the Apache License, Version 2.0 --
 see the accompanying LICENSE file, itself vendored verbatim from the same

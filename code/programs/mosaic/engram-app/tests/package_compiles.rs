@@ -1604,21 +1604,28 @@ fn native_project_shells_expose_engram_host_contract() {
     assert_contains(&qml, "function applyMosaicResponse(response)");
     assert_contains(&qml, "lastHostIntent = response.hostIntent;");
     assert_contains(&qml, "mosaicRoot[key] = props[key];");
+    // Stale expectation predating mosaic-emit-qt wrapping the handler body
+    // in `function(event) { ... }`; mosaic-emit-qt's own test
+    // (`qml_root_exposes_optional_mosaic_host_bridge`) already expects the
+    // current form.
     assert_contains(
         &qml,
-        "onMosaicEvent: applyMosaicResponse(mosaicHost ? mosaicHost.handleEvent(event) : null)",
+        "onMosaicEvent: function(event) { applyMosaicResponse(mosaicHost ? mosaicHost.handleEvent(event) : null) }",
+    );
+    // Same stale-expectation pattern as onMosaicEvent above: emit
+    // handlers are wrapped in `function(...) { ... }` by
+    // emit_mosaic_event_handler, not called bare.
+    assert_contains(
+        &qml,
+        "onImportAnki: function() { mosaicEvent({ \"event\": \"onImportAnki\" }) }",
     );
     assert_contains(
         &qml,
-        "onImportAnki: mosaicEvent({ \"event\": \"onImportAnki\" })",
+        "onPruneUnusedMedia: function() { mosaicEvent({ \"event\": \"onPruneUnusedMedia\" }) }",
     );
     assert_contains(
         &qml,
-        "onPruneUnusedMedia: mosaicEvent({ \"event\": \"onPruneUnusedMedia\" })",
-    );
-    assert_contains(
-        &qml,
-        "onSelectDeck: mosaicEvent({ \"event\": \"onSelectDeck\", \"value\": value })",
+        "onSelectDeck: function(value) { mosaicEvent({ \"event\": \"onSelectDeck\", \"value\": value }) }",
     );
     assert_contains(&qml, "signal exportAnki()");
     assert_contains(&qml, "signal addNote()");
@@ -1692,15 +1699,15 @@ fn native_project_shells_expose_engram_host_contract() {
     );
     assert_contains(
         &qt_cmake,
-        "find_package(Qt6 6.7 REQUIRED COMPONENTS Quick QmlImportScanner Widgets)",
+        "find_package(Qt6 6.8 REQUIRED COMPONENTS Quick QuickControls2 QmlImportScanner Widgets)",
     );
     assert_contains(
         &qt_cmake,
-        "target_link_libraries(EngramApp PRIVATE Qt6::Quick Qt6::Widgets)",
+        "target_link_libraries(EngramApp PRIVATE Qt6::Quick Qt6::QuickControls2 Qt6::Widgets)",
     );
     assert_contains(
         &qt_cmake,
-        "foreach(_mosaic_native_library IN ITEMS engram_capi.dll libengram_capi.dylib libengram_capi.so)",
+        "foreach(_mosaic_native_library IN ITEMS engram_capi.dll libengram_capi.dylib libengram_capi.so venture_browser_qt.dll libventure_browser_qt.dylib libventure_browser_qt.so)",
     );
     assert!(
         tmp.path().join("qt").join("MosaicHost.h").exists()
@@ -1990,7 +1997,7 @@ fn native_project_shells_expose_engram_host_contract() {
     assert_contains(&xaml_markup, "MaxWidth=\"980\"");
     assert_contains(
         &xaml_markup,
-        "<ContentControl Visibility=\"{x:Bind AnswerVisible, Converter={StaticResource BoolToVisibilityConverter}}\">\n                                    <StackPanel Orientation=\"Vertical\">",
+        "<ContentControl Visibility=\"{x:Bind AnswerVisible, Converter={StaticResource BoolToVisibilityConverter}, Mode=OneWay}\">\n                                                <StackPanel Orientation=\"Vertical\">",
     );
     assert_contains(
         &xaml_markup,
@@ -2425,7 +2432,13 @@ fn native_project_shells_expose_engram_host_contract() {
     let xaml_csproj = fs::read_to_string(tmp.path().join("xaml").join("EngramApp.csproj"))
         .expect("xaml/EngramApp.csproj");
     assert_contains(&xaml_csproj, "CopyMosaicNativeHostLibraries");
-    assert_contains(&xaml_csproj, "$(MSBuildProjectDirectory)\\*.dll");
+    // #12026 (mosaic-emit-xaml): narrowed from a `*.dll` glob (a
+    // DLL-planting primitive) to the one exact, known runtime filename.
+    assert_contains(&xaml_csproj, "$(MSBuildProjectDirectory)\\mosaic_app.dll");
+    assert!(
+        !xaml_csproj.contains("$(MSBuildProjectDirectory)\\*.dll"),
+        "the broad *.dll glob over the project directory must not reappear:\n{xaml_csproj}"
+    );
     assert_contains(&xaml_main_window, "Status: sample props loaded");
 
     let capi_header = fs::read_to_string(

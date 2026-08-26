@@ -2,6 +2,16 @@
 
 All notable changes to this package will be documented in this file.
 
+## [0.6.11] — 2026-08-26 (W11 addendum — concrete function-type refs)
+
+### Changed
+
+- `call()`'s legacy i64 param-conversion path gained a
+  `ValueType::ConcreteFuncRef(_)` arm (same lossy `WasmValue::I32`
+  placeholder every other reference type already gets there — see
+  `wasm-types` 0.1.12's `ConcreteFuncRef`). No behavior change for any
+  existing type; needed only to keep this exhaustive match compiling.
+
 ## [0.6.10] — 2026-08-26 (W26 — table64 proposal, first slice)
 
 ### Changed

@@ -16,12 +16,27 @@
     "GU-W21-ai-matra",
     "GU-C21-paisa",
     "GU-R21-travel-five",
-    "GU-C21-travel-five"
+    "GU-C21-travel-five",
+    "GU-C22-hear-shahar",
+    "GU-C22-shahar",
+    "GU-C22-hear-shaalaa",
+    "GU-C22-shaalaa",
+    "GU-C22-hear-rasto",
+    "GU-C22-rasto",
+    "GU-C22-route-three",
+    "GU-C23-hear-gaam",
+    "GU-C23-gaam",
+    "GU-C23-hear-dukaan",
+    "GU-C23-dukaan",
+    "GU-R23-map-ten",
+    "GU-C23-map-ten"
   ],
   "before": [],
   "inline": [
     "GU-EXT-031-PLACES-THREE",
-    "GU-EXT-032-TRAVEL-FIVE"
+    "GU-EXT-032-TRAVEL-FIVE",
+    "GU-EXT-033-ROUTE-THREE",
+    "GU-EXT-034-MAP-TEN"
   ],
   "after": []
 }

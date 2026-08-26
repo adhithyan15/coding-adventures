@@ -1,0 +1,23 @@
+{
+  "chapter": 26,
+  "title": "City, School, and Road",
+  "label": "ch:gu-city-school-road",
+  "canDo": "I can hear, say, read, and write city, school, and road in Gujarati.",
+  "spineNodes": [
+    "SPINE-POLITE-REQUEST-REPAIR"
+  ],
+  "payoff": {
+    "lesson": "GU-C22-route-three",
+    "kind": "four-skill-vocabulary-map",
+    "summary": "Each place enters through sound and meaning before familiar script carries reading and writing; the checkpoint scores all four skills separately.",
+    "assesses": [
+      "GU-LEX-SHAHAR-01",
+      "GU-SCRIPT-SHAHAR-01",
+      "GU-LEX-SHAALAA-01",
+      "GU-SCRIPT-SHAALAA-01",
+      "GU-LEX-RASTO-01",
+      "GU-SCRIPT-RASTO-01",
+      "GU-PERFORMANCE-ROUTE-THREE-FOUR-SKILL-01"
+    ]
+  }
+}
