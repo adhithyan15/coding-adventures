@@ -200,6 +200,34 @@ floor (§10).
 `flex-grow` values other than `1`, `align-items: flex-end`/`baseline`,
 and `justify-content` values other than `space-between`.
 
+### 3.2 Reporting dropped style properties (issue #12022)
+
+Style lowering (`build_style_fragment`) drops a property with no record
+at two points: the property name has no XAML setter at all
+(`css_property_to_xaml_setter` returns `None`), or the value can't be
+translated into a form the markup compiler accepts
+(`translate_xaml_value` returns `None` — a non-100% percentage length,
+an unsupported CSS unit, `currentColor`, …). Neither point used to
+leave a trace; `pub fn dropped_style_properties(style: &StyleDef) ->
+Vec<DroppedStyleProperty>` (`mosaic-emit-xaml::pipeline`) makes both
+visible, one entry per dropped `(part, property, value, reason)`.
+
+This is a *reporting* function, not a lowering change — nothing about
+emitted XAML output is affected. `mosaic-package-artifact-builder`'s
+degradation analyzer calls it per component/variant (the same shape it
+already uses for `host_table_has_native_semantics` and friends) and
+surfaces the results as `styleDegradations` in `mosaic-degradations.json`
+— see that crate's docs for why this list is deliberately kept separate
+from `degradations` (non-gating) rather than folded in.
+
+**Exclusions**, so the report doesn't false-positive on properties §3.1
+already handles through a side channel: `align-items`/`justify-content`
+are excluded only when their value is one `FlexHints` actually consumes
+(`"center"` / `"space-between"` respectively — any other value IS
+reported, since nothing consumes it); `flex-grow` is excluded
+unconditionally (fully boolean-handled today, nothing recognisable as
+"lost").
+
 ## 4. Host* primitives
 
 ### 4.1 `HostInput`
