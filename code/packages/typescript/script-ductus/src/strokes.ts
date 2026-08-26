@@ -14660,6 +14660,71 @@ export const DUCTUS: Record<string, LetterDuctus> = {
     ],
     source: malayalamIndependentVowelSource("ഇ"),
   },
+  // Davis's five-second initial-vowel clip writes ഉ in one uninterrupted run:
+  // the compact left spiral expands into the broad upper and right lobe, then
+  // curls below the line and finishes along the baseline.
+  [ductusKey("malayalam", "ഉ")]: {
+    script: "malayalam",
+    glyph: "ഉ",
+    strokes: [
+      {
+        segments: [
+          {
+            label: "turn outward around the compact left spiral and carry the upper arch right",
+            path: [
+              { x: 215, y: 380 },
+              { x: 275, y: 390 },
+              { x: 325, y: 355 },
+              { x: 350, y: 305 },
+              { x: 345, y: 250 },
+              { x: 315, y: 200 },
+              { x: 260, y: 160 },
+              { x: 205, y: 145 },
+              { x: 145, y: 180 },
+              { x: 95, y: 240 },
+              { x: 80, y: 310 },
+              { x: 100, y: 395 },
+              { x: 160, y: 470 },
+              { x: 245, y: 520 },
+              { x: 335, y: 535 },
+              { x: 420, y: 520 },
+            ],
+          },
+          {
+            label: "descend around the broad right lobe and curl left below the line",
+            path: [
+              { x: 420, y: 520 },
+              { x: 500, y: 480 },
+              { x: 570, y: 420 },
+              { x: 610, y: 340 },
+              { x: 610, y: 260 },
+              { x: 580, y: 170 },
+              { x: 520, y: 100 },
+              { x: 430, y: 55 },
+              { x: 340, y: 35 },
+              { x: 260, y: 35 },
+              { x: 200, y: 20 },
+              { x: 145, y: -15 },
+              { x: 105, y: -65 },
+              { x: 115, y: -110 },
+              { x: 160, y: -150 },
+              { x: 240, y: -165 },
+            ],
+          },
+          {
+            label: "carry the finishing baseline to the right",
+            path: [
+              { x: 240, y: -165 },
+              { x: 360, y: -165 },
+              { x: 500, y: -165 },
+              { x: 610, y: -165 },
+            ],
+          },
+        ],
+      },
+    ],
+    source: malayalamIndependentVowelSource("ഉ"),
+  },
   // Sriveenkat's 97-frame animation draws chillu ൽ as one uninterrupted run:
   // the left entry arch flows clockwise around the central loop, crosses the
   // upper shoulder into the right loop, then rises into the above-line hook.
