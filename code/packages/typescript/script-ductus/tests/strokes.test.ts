@@ -284,6 +284,7 @@ const TAMIL_NGA = DUCTUS["ங"];
 const JAPANESE_SHI = DUCTUS[ductusKey("japanese", "し")];
 const JAPANESE_KU = DUCTUS[ductusKey("japanese", "く")];
 const JAPANESE_TA = DUCTUS[ductusKey("japanese", "た")];
+const JAPANESE_NE = DUCTUS[ductusKey("japanese", "ね")];
 const JAPANESE_SMALL_TSU = DUCTUS[ductusKey("japanese", "っ")];
 const JAPANESE_MO = DUCTUS[ductusKey("japanese", "も")];
 
@@ -635,6 +636,8 @@ describe("handwriting ductus", () => {
           // lower-loop return, plus Kannada ಆ's loop-to-bowl and loop-to-bar
           // joins, while Malayalam ആ circles its right loop and descender in
           // one uninterrupted run across Noto's separated print contours.
+          // Japanese ね likewise keeps the source's continuous second run as
+          // it crosses Noto's separated bar, diagonal return, and loop shapes.
           // Permit only those documented bridges; every other authored path
           // retains the stricter general-purpose floor.
           const minimumInkFit = letter.script === "gujarati" && letter.glyph === "હ"
@@ -649,6 +652,8 @@ describe("handwriting ductus", () => {
                 ? 0.89
               : letter.script === "kannada" && letter.glyph === "ಆ"
                 ? 0.92
+              : letter.script === "japanese" && letter.glyph === "ね"
+                ? 0.88
               : 0.97;
           expect(frac, `stroke ${s} strays off the glyph`).toBeGreaterThan(minimumInkFit);
         }
@@ -743,6 +748,23 @@ describe("handwriting ductus", () => {
     expect(JAPANESE_TA.source.url).toBe(
       "https://commons.wikimedia.org/wiki/File:Hiragana_%E3%81%9F_stroke_order_animation.gif",
     );
+  });
+
+  it("Japanese ね draws the vertical before the crossing hook and loop", () => {
+    expect(penLifts(JAPANESE_NE)).toBe(1);
+    expect(JAPANESE_NE.strokes).toHaveLength(2);
+    expect(JAPANESE_NE.strokes.map((stroke) => stroke.segments.map((segment) => segment.label))).toEqual([
+      ["descend through the short left vertical"],
+      [
+        "sweep left from the upper right across the vertical",
+        "hook down along the diagonal and return to the crossing",
+        "finish clockwise around the lower-right loop",
+      ],
+    ]);
+    expect(JAPANESE_NE.source.url).toBe(
+      "https://commons.wikimedia.org/wiki/File:Hiragana_%E3%81%AD_stroke_order_animation.gif",
+    );
+    expect(JAPANESE_NE.source.citation).toMatch(/Sirgazil.*ね.*35 frames.*3\.5 seconds/i);
   });
 
   it("Japanese small っ scales つ's one-run movement to its own glyph", () => {
