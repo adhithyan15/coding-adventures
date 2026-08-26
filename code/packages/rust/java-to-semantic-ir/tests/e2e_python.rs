@@ -641,9 +641,81 @@ fn new_array_with_initializer_runs_in_python() {
     assert_eq!(out, "20");
 }
 
-// No execution-proof test for multi-dimensional arrays, a non-constant
-// sized-array creation, sized creation of a reference-typed array, or
-// compound-assignment/increment-decrement on an indexed target -- all
-// remain deferred past M4c (see the corresponding rejection tests in
-// `tests/test_lower.rs`, and the follow-up tasks logged when M4c was
-// scoped down from its own original bundling with those items).
+// ── M4d: multi-dimensional arrays ──────────────────────────────────────
+
+#[test]
+fn two_dimensional_array_literal_and_chained_index_read_run_in_python() {
+    if !python_available() {
+        eprintln!(
+            "skipping two_dimensional_array_literal_and_chained_index_read_run_in_python: `python3` not available"
+        );
+        return;
+    }
+    let out = run_via_python(
+        "two_dimensional_chained_index",
+        &wrap("int[][] grid = {{1, 2, 3}, {4, 5, 6}}; grid[1][2];"),
+    );
+    assert_eq!(out, "6");
+}
+
+#[test]
+fn nested_indexed_for_loop_sums_a_two_dimensional_array_in_python() {
+    if !python_available() {
+        eprintln!(
+            "skipping nested_indexed_for_loop_sums_a_two_dimensional_array_in_python: `python3` not available"
+        );
+        return;
+    }
+    // The realistic pattern M4d exists to enable: a nested `for` loop
+    // walking both dimensions by index, exercising `.length` on both the
+    // outer array and each inner row (via an intermediate `row` local --
+    // `grid[i].length` itself, a mixed index-then-dot suffix chain,
+    // remains deferred this milestone, see `mixed_index_then_dot_
+    // suffix_chain_remains_unsupported` in tests/test_lower.rs), plus
+    // chained indexed reads.
+    let out = run_via_python(
+        "two_dimensional_array_nested_sum",
+        &wrap(concat!(
+            "int[][] grid = {{1, 2}, {3, 4}, {5, 6}}; ",
+            "int sum = 0; ",
+            "for (int i = 0; i < grid.length; i++) { ",
+            "  int[] row = grid[i]; ",
+            "  for (int j = 0; j < row.length; j++) { ",
+            "    sum = sum + row[j]; ",
+            "  } ",
+            "} ",
+            "sum;"
+        )),
+    );
+    assert_eq!(out, "21"); // 1+2+3+4+5+6
+}
+
+#[test]
+fn ragged_two_dimensional_array_runs_in_python() {
+    if !python_available() {
+        eprintln!("skipping ragged_two_dimensional_array_runs_in_python: `python3` not available");
+        return;
+    }
+    // Java arrays are genuinely ragged -- each row is its own
+    // independent array, so rows of differing length are legal and must
+    // actually run correctly, not just structurally lower. Uses
+    // intermediate `row0`/`row1` locals for the same reason the nested-
+    // loop test above does (`grid[0].length` itself is deferred).
+    let out = run_via_python(
+        "ragged_two_dimensional_array",
+        &wrap(concat!(
+            "int[][] grid = {{1, 2, 3}, {4}}; ",
+            "int[] row0 = grid[0]; ",
+            "int[] row1 = grid[1]; ",
+            "row0.length + row1.length;"
+        )),
+    );
+    assert_eq!(out, "4"); // 3 + 1
+}
+
+// No execution-proof test for a `var`-inferred multi-dimensional array
+// literal, indexed assignment on a chained (multi-dimensional) target,
+// or compound-assignment/increment-decrement on an indexed target -- all
+// remain deferred past M4d (see the corresponding rejection tests in
+// `tests/test_lower.rs`, and the follow-up tasks logged when M4c/M4d
+// were scoped down from their own original bundling with those items).

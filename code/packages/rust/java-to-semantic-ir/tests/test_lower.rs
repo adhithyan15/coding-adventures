@@ -2230,13 +2230,21 @@ fn string_array_literal_lowers_correctly() {
 }
 
 #[test]
-fn multi_dimensional_array_type_is_unsupported() {
-    let err = compile_source(&wrap("int[][] grid = {};"), "prog").unwrap_err();
-    assert!(
-        err.message.contains("multi-dimensional"),
-        "unexpected message: {}",
-        err.message
-    );
+fn multi_dimensional_array_type_is_now_supported_since_m4d() {
+    // `kind_of_type_node` gained multi-dimensional array-type support in
+    // M4d; an empty 2-D array literal (`{}`, zero outer elements) now
+    // lowers cleanly as a natural consequence of that shared function --
+    // this is the positive-test replacement for M4a's own
+    // `multi_dimensional_array_type_is_unsupported`, which this
+    // milestone's own scope change made stale.
+    let m = compile_ok(&wrap("int[][] grid = {};"));
+    match &main_fn(&m).body.stmts[0] {
+        Stmt::LetStarBinding {
+            value: Expr::SeqLit { items, .. },
+            ..
+        } => assert!(items.is_empty()),
+        other => panic!("expected a SeqLit-valued LetStarBinding, got {other:?}"),
+    }
 }
 
 #[test]
@@ -2633,6 +2641,233 @@ fn new_object_construction_remains_unsupported() {
     )
     .unwrap_err();
     assert!(!err.message.is_empty());
+}
+
+// ── M4d: multi-dimensional arrays ───────────────────────────────────────
+
+#[test]
+fn two_dimensional_array_literal_lowers_to_nested_seqlit() {
+    let m = compile_ok(&wrap("int[][] grid = {{1, 2}, {3, 4}};"));
+    match &main_fn(&m).body.stmts[0] {
+        Stmt::LetStarBinding {
+            value: Expr::SeqLit { items, .. },
+            ..
+        } => {
+            assert_eq!(items.len(), 2);
+            for row in items {
+                assert!(matches!(row, Expr::SeqLit { .. }));
+            }
+            match &items[0] {
+                Expr::SeqLit { items: row0, .. } => {
+                    assert!(matches!(row0[0], Expr::IntLit { value: 1, .. }));
+                    assert!(matches!(row0[1], Expr::IntLit { value: 2, .. }));
+                }
+                other => panic!("expected a nested SeqLit, got {other:?}"),
+            }
+        }
+        other => panic!("expected a SeqLit-valued LetStarBinding, got {other:?}"),
+    }
+}
+
+#[test]
+fn three_dimensional_array_literal_lowers_correctly() {
+    let m = compile_ok(&wrap("int[][][] cube = {{{1}}};"));
+    assert!(matches!(
+        &main_fn(&m).body.stmts[0],
+        Stmt::LetStarBinding {
+            value: Expr::SeqLit { .. },
+            ..
+        }
+    ));
+}
+
+#[test]
+fn ragged_two_dimensional_array_literal_lowers_correctly() {
+    // Java arrays are genuinely ragged (each inner array is its own
+    // independent object) -- rows of differing length are legal.
+    let m = compile_ok(&wrap("int[][] grid = {{1, 2, 3}, {4}};"));
+    match &main_fn(&m).body.stmts[0] {
+        Stmt::LetStarBinding {
+            value: Expr::SeqLit { items, .. },
+            ..
+        } => {
+            let (Expr::SeqLit { items: row0, .. }, Expr::SeqLit { items: row1, .. }) =
+                (&items[0], &items[1])
+            else {
+                panic!("expected two nested SeqLit rows");
+            };
+            assert_eq!(row0.len(), 3);
+            assert_eq!(row1.len(), 1);
+        }
+        other => panic!("expected a SeqLit-valued LetStarBinding, got {other:?}"),
+    }
+}
+
+#[test]
+fn two_dimensional_string_array_literal_lowers_correctly() {
+    let m = compile_ok(&wrap("String[][] grid = {{\"a\", \"b\"}};"));
+    assert!(matches!(
+        &main_fn(&m).body.stmts[0],
+        Stmt::LetStarBinding {
+            value: Expr::SeqLit { .. },
+            ..
+        }
+    ));
+}
+
+#[test]
+fn two_dimensional_array_element_kind_mismatch_is_an_error() {
+    let err = compile_source(&wrap("int[][] grid = {{1, 2}, {true}};"), "prog").unwrap_err();
+    assert!(!err.message.is_empty());
+}
+
+#[test]
+fn scalar_element_where_a_nested_array_is_expected_is_an_error() {
+    let err = compile_source(&wrap("int[][] grid = {1, 2};"), "prog").unwrap_err();
+    assert!(!err.message.is_empty());
+}
+
+#[test]
+fn var_inferred_two_dimensional_array_literal_remains_deferred() {
+    // `var`-inferred multi-dimensional array literals are deferred this
+    // milestone (see `lower_array_initializer`'s own doc comment) --
+    // only an explicitly-typed declared array type infers nested dims.
+    let err = compile_source(&wrap("var grid = {{1, 2}, {3, 4}};"), "prog").unwrap_err();
+    assert!(!err.message.is_empty());
+}
+
+#[test]
+fn array_type_exceeding_the_dimension_cap_is_an_error() {
+    // `MAX_ARRAY_DIMS` is 8 (private to `src/lower.rs`, not visible from
+    // this integration test) -- 9 dimensions is one past the cap.
+    let ty = "int".to_string() + &"[]".repeat(9);
+    let err = compile_source(&wrap(&format!("{ty} xs = null;")), "prog").unwrap_err();
+    assert!(!err.message.is_empty());
+}
+
+#[test]
+fn chained_index_read_on_a_two_dimensional_array_lowers_correctly() {
+    let m = compile_ok(&wrap(
+        "int[][] grid = {{1, 2}, {3, 4}}; int y = grid[1][0];",
+    ));
+    match &main_fn(&m).body.stmts[1] {
+        Stmt::LetStarBinding {
+            value: Expr::SeqIndex { seq, index, .. },
+            ..
+        } => {
+            assert!(matches!(**seq, Expr::SeqIndex { .. }));
+            assert!(matches!(**index, Expr::IntLit { value: 0, .. }));
+        }
+        other => panic!("expected a SeqIndex-valued LetStarBinding, got {other:?}"),
+    }
+}
+
+#[test]
+fn chained_index_read_result_kind_is_the_fully_peeled_element_kind() {
+    // `grid[i][j]` on an `int[][]` must be usable in an `int`-typed
+    // position -- proves the chained fold's own result kind is the
+    // scalar element kind, not still an array kind.
+    let m = compile_ok(&wrap(
+        "int[][] grid = {{1, 2}}; int y = grid[0][0]; int z = y + 1;",
+    ));
+    assert_eq!(main_fn(&m).body.stmts.len(), 3);
+}
+
+#[test]
+fn single_index_read_on_a_two_dimensional_array_gives_an_array_valued_result() {
+    // `grid[i]` alone (a single suffix, `lower_index_get`'s own case)
+    // must peel exactly one dimension, leaving a still-indexable
+    // one-dimensional array -- not the fully scalar element kind.
+    let m = compile_ok(&wrap(
+        "int[][] grid = {{1, 2}, {3, 4}}; int[] row = grid[0]; int y = row[1];",
+    ));
+    assert_eq!(main_fn(&m).body.stmts.len(), 3);
+}
+
+#[test]
+fn three_dimensional_chained_index_read_lowers_correctly() {
+    let m = compile_ok(&wrap("int[][][] cube = {{{1, 2}}}; int y = cube[0][0][1];"));
+    match &main_fn(&m).body.stmts[1] {
+        Stmt::LetStarBinding {
+            value: Expr::SeqIndex { seq, .. },
+            ..
+        } => {
+            // Two levels of nested SeqIndex inside the outermost one.
+            match &**seq {
+                Expr::SeqIndex { seq: inner, .. } => {
+                    assert!(matches!(**inner, Expr::SeqIndex { .. }))
+                }
+                other => panic!("expected a nested SeqIndex, got {other:?}"),
+            }
+        }
+        other => panic!("expected a SeqIndex-valued LetStarBinding, got {other:?}"),
+    }
+}
+
+#[test]
+fn chained_index_beyond_the_array_s_own_dimension_count_is_an_error() {
+    let err = compile_source(&wrap("int[] xs = {1}; int y = xs[0][0];"), "prog").unwrap_err();
+    assert!(!err.message.is_empty());
+}
+
+#[test]
+fn mixed_index_then_dot_suffix_chain_remains_unsupported() {
+    // `grid[0].length` chains a `[` suffix then a `.` suffix -- since
+    // `lower_chained_index` is reached only when *every* suffix in a
+    // 2+-suffix chain is `[...]`-shaped (`is_index_only_suffix`'s own
+    // guard), a mixed chain still falls through to the pre-existing
+    // multi-suffix catch-all rejection, exactly as before M4d. The same
+    // sub-array's `.length` remains reachable via an intermediate local
+    // (see `single_index_read_on_a_two_dimensional_array_gives_an_
+    // array_valued_result`) -- a real, disclosed scope boundary, not an
+    // oversight.
+    let err = compile_source(
+        &wrap("int[][] grid = {{1}}; int y = grid[0].length;"),
+        "prog",
+    )
+    .unwrap_err();
+    assert!(!err.message.is_empty());
+}
+
+#[test]
+fn dot_length_on_a_two_dimensional_array_returns_the_outer_length() {
+    let m = compile_ok(&wrap(
+        "int[][] grid = {{1, 2}, {3, 4}, {5, 6}}; int n = grid.length;",
+    ));
+    match &main_fn(&m).body.stmts[1] {
+        Stmt::LetStarBinding {
+            value: Expr::SeqLen { .. },
+            ..
+        } => {}
+        other => panic!("expected a SeqLen-valued LetStarBinding, got {other:?}"),
+    }
+}
+
+#[test]
+fn feature_sequences_is_declared_when_a_multi_dimensional_array_is_lowered() {
+    let m = compile_ok(&wrap("int[][] grid = {{1, 2}};"));
+    assert!(m.manifest.contains(Feature::Sequences));
+}
+
+#[test]
+fn multi_dimensional_indexed_assignment_remains_deferred() {
+    // `grid[i][j] = v;` -- a chained assignment target -- remains
+    // deferred alongside compound-assignment/increment-decrement on an
+    // indexed target (see `lower_indexed_assignment`'s own doc comment).
+    let err =
+        compile_source(&wrap("int[][] grid = {{1, 2}}; grid[0][0] = 9;"), "prog").unwrap_err();
+    assert!(!err.message.is_empty());
+}
+
+#[test]
+fn single_index_assignment_on_a_two_dimensional_array_lowers_correctly() {
+    // `grid[i] = v;` (a whole sub-array assignment, not chained) IS
+    // supported -- `indexed_assign_target`'s own single-suffix match arm
+    // already handles it; `v` must itself be an array value.
+    let m = compile_ok(&wrap(
+        "int[][] grid = {{1, 2}, {3, 4}}; grid[0] = new int[]{9, 9};",
+    ));
+    assert!(matches!(main_fn(&m).body.stmts[1], Stmt::SeqSet { .. }));
 }
 
 // ── depth-guard regression (CWE-674, found by /security-review) ────────

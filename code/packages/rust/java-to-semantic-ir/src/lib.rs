@@ -1,6 +1,6 @@
 //! # java-to-semantic-ir
 //!
-//! Java CST → narrow-waist Semantic IR, **v0.9.0**.
+//! Java CST → narrow-waist Semantic IR, **v0.10.0**.
 //!
 //! This is the first frontend for [SIR29](../../../specs/SIR29-nominal-static-oop-profile.md),
 //! the nominal/static-dispatch OOP profile extension of the SIR10 narrow-waist
@@ -33,7 +33,7 @@
 //! assert!(module.functions.iter().any(|f| f.name == "main"));
 //! ```
 //!
-//! ## Scope (v0.9.0 — JV02 milestones M0 + M1 + M2a + M2b + M3a + M3b + M4a + M4b + M4c)
+//! ## Scope (v0.10.0 — JV02 milestones M0 + M1 + M2a + M2b + M3a + M3b + M4a + M4b + M4c + M4d)
 //!
 //! Java requires an explicit `class`/`main`-method wrapper at the source
 //! level (unlike Ruby/Python/JS, which allow bare top-level statements) —
@@ -72,10 +72,19 @@
 //! `new int[N]` (a compile-time-constant, non-negative, capped-size
 //! sized/uninitialized array, zero-filled — a non-constant size needs a
 //! repeat/fill SIR primitive that doesn't exist yet, so is deferred
-//! rather than attempted). Everything else (`switch`, `break`/`continue`
-//! — SIR has no IR primitive for either — qualified calls, method
-//! overloading, untyped/`var`-inferred lambda parameters, indirect calls
-//! through a closure value, multi-dimensional arrays, a non-constant or
+//! rather than attempted); and real multi-dimensional arrays (M4d) —
+//! array types and explicitly-typed literal declarations (`int[][] grid
+//! = {{1,2},{3,4}}`, including genuinely ragged rows), and chained index
+//! reads (`grid[i][j]`) via a generalized `lower_primary_expression`
+//! suffix-chain dispatch, capped at a small dimension limit. A *mixed*
+//! index-then-`.length` chain (`grid[i].length`) and a *chained*
+//! indexed-assignment target (`grid[i][j] = v;`) remain deferred.
+//! Everything else (`switch`, `break`/`continue` — SIR has no IR
+//! primitive for either — qualified calls, method overloading, untyped/
+//! `var`-inferred lambda parameters, indirect calls through a closure
+//! value, `var`-inferred multi-dimensional array literals, multi-
+//! dimensional `new` array-creation forms, compound-assignment/
+//! increment-decrement on an indexed target, a non-constant or
 //! reference-typed `new T[N]`, field/array *field* access beyond
 //! `.length`, casts, additional classes, non-`main` entry shapes) is out
 //! of scope so far and returns a clean [`JavaLowerError`] rather than

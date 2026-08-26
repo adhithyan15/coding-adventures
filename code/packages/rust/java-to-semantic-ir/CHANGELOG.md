@@ -2,6 +2,88 @@
 
 All notable changes to the `java-to-semantic-ir` crate will be documented in this file.
 
+## [0.10.0] - 2026-08-26
+
+### Added
+
+- JV02 milestone M4d: multi-dimensional arrays.
+- `Kind::Array` gained a dimension count (`u8`, alongside its existing
+  `ArrayElemKind`), capped at a new `MAX_ARRAY_DIMS = 8` constant — a
+  multi-dimensional Java array is representationally just a nested
+  sequence of sequences (a `SeqLit` of `SeqLit`s), so this stays a flat,
+  non-recursive `Copy` type, deliberately *not* a boxed `Kind::
+  Array(Box<Kind>)` (the same reasoning M4a's own `Kind::Array`
+  originally used to justify staying single-dimensional, now extended
+  rather than abandoned). A new `Kind::index_once` method peels exactly
+  one dimension (`dims > 1` → `Kind::Array(elem, dims - 1)`; `dims == 1`
+  → the plain element kind), shared by every indexing call site.
+- `kind_of_type_node` now accepts `1..=MAX_ARRAY_DIMS` bracket pairs
+  (previously only exactly `1`), producing `Kind::Array(elem, dims)`;
+  more than `MAX_ARRAY_DIMS` is rejected.
+- `lower_array_initializer` gained a recursive multi-dimensional branch:
+  an explicitly-declared array type with `dims > 1` requires every
+  element be itself a nested `array_initializer`, recursing one
+  dimension shallower each time until the existing single-dimensional
+  base case is reached — genuinely ragged rows (`{{1,2,3},{4}}`) are
+  legal, matching real Java semantics. `var`-inferred multi-dimensional
+  array literals remain deferred (inferring dims from a literal's own,
+  possibly-ragged nesting is real added complexity this milestone
+  doesn't need); only an explicit declared type infers nested dims.
+- Chained index reads (`grid[i][j]`, `cube[i][j][k]`) via a new
+  `lower_primary_expression` dispatch arm: a `primary_expression` with
+  2-or-more suffixes reaches a new `lower_chained_index` only when
+  *every* suffix is `[...]`-shaped (`is_index_only_suffix`) — a chain
+  mixing in a `.`/`(` suffix anywhere still falls through to the
+  pre-existing multi-suffix rejection, unchanged. `lower_index_get`
+  (the single-suffix path) and `lower_indexed_assignment` (M4b's own
+  `grid[i] = v;`) were both generalized to use `Kind::index_once` too, so
+  a single index on a multi-dimensional array correctly yields a
+  still-indexable sub-array value rather than the flat element kind.
+- **Narrowed during design and implementation**: a *mixed* index-then-
+  `.length` chain (`grid[i].length`) is **not** supported this
+  milestone — `lower_chained_index`'s own all-`[...]` requirement means
+  it's never reached for a chain ending in `.length`, so this still
+  falls through to the pre-existing rejection (the sub-array's own
+  `.length` remains reachable via an intermediate local: `int[] row =
+  grid[i]; row.length;`). Tracked as its own follow-up task (#60) rather
+  than generalizing the suffix-chain fold further this milestone. A
+  *chained* indexed-assignment target (`grid[i][j] = v;`) is also not
+  reachable — `indexed_assign_target`'s own fixed single-suffix match arm
+  doesn't recognize a multi-suffix lvalue — deferred alongside compound-
+  assignment/increment-decrement on an indexed target (task #59, split
+  off during M4c). Multi-dimensional `new`-based array creation (`new
+  int[2][3]`, `new int[][]{{1,2}}`) remains out of scope too — M4c's own
+  two shapes stay single-dimension only by construction, unaffected by
+  this milestone's changes.
+- A small `is_index_only_suffix` free function and a refactored
+  `ArrayElemKind::from_kind`/`kind_of_type_node`/`lower_array_
+  initializer`/`lower_new_sized_array` call-site update for the new
+  2-tuple `Kind::Array` shape — mechanical arity changes throughout,
+  verified by the full existing test suite staying green (196 of 197
+  pre-existing tests passed unchanged; the one exception,
+  `multi_dimensional_array_type_is_unsupported`, was repurposed into a
+  positive test since multi-dimensional array *types* are now correctly
+  supported, mirroring the same "stale rejection test becomes a positive
+  test" pattern M4c already used for `array_parameter_type_is_now_
+  supported_since_m4a`/M4c-equivalent renames).
+- 18 new tests in `tests/test_lower.rs` (2-D and 3-D literal
+  declarations, ragged rows, `String`-element 2-D arrays, element-kind
+  mismatch across nested rows, a scalar where a nested array was
+  expected, `var`-inference deferral, the dimension-cap rejection,
+  chained index reads at 2 and 3 levels with the correctly-peeled result
+  kind at each level, a single non-chained index read on a multi-
+  dimensional array giving back a still-indexable sub-array, an
+  out-of-dimension chained-index rejection, the mixed index-then-`.`
+  suffix-chain rejection, `.length` on a multi-dimensional array,
+  `Feature::Sequences` re-declaration, the still-deferred chained-
+  assignment-target rejection, and the now-correctly-generalized single-
+  index sub-array assignment) plus 3 new execution-proof tests in
+  `tests/e2e_python.rs` (a 2-D literal with a chained index read; a
+  nested indexed `for`-loop summing a 2-D array via an intermediate row
+  local, since `grid[i].length` itself is deferred; and a genuinely
+  ragged 2-D array's two rows' differing lengths summed via intermediate
+  locals).
+
 ## [0.9.0] - 2026-08-26
 
 ### Added
