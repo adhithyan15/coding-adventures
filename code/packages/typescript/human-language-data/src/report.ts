@@ -786,16 +786,35 @@ export function renderCurriculumGapReport(report: CurriculumGapReport): string {
           // filter are the same number by construction (a track STOPS at exactly one
           // level), so naming them costs nothing in truthfulness and the count is
           // still printed beside the names.
-          `levels ATTAINED (HL09 §3.1): ${CEFR_LEVELS.filter((l) => report.levelGate!.summary.attainedByLevel[l] > 0)
-            .map((l) => {
-              const names = report
-                .levelGate!.tracks.filter((t) => t.attained === l)
-                .map((t) => t.language)
-                .sort();
-              return `${names.length} track${names.length === 1 ? "" : "s"} at ${l} (${names.join(", ")})`;
-            })
-            .join(", ") || "none"}; ` +
-            `${report.levelGate!.summary.tracksOverstating} track(s) touch a level they have not attained`,
+          //
+          // "ATTAINED" is what this line used to say, and it was the same class of
+          // error the whole module exists to fix — one rung up. `touches` was
+          // being read as `attained`; now `attained` was being read as a claim
+          // about a READER. Every one of §3.1's criteria measures the CORPUS:
+          // headword counts, verb counts, spine-node realization, reinforcement
+          // windows, writing-stage evidence blocks. Not one of them scores a
+          // person. "Spanish has attained pre-A1" therefore says a book covers
+          // pre-A1, in a sentence shaped like "a reader of this book is a pre-A1
+          // speaker" — and no exam item has ever been marked against any track.
+          //
+          // So the headline says what was measured, and the line under it says
+          // what was not. The gate is unchanged; only the label is. Weakening a
+          // criterion to match the humbler wording would be the same mistake in
+          // the opposite direction.
+          `levels with STRUCTURAL COVERAGE COMPLETE (HL09 §3.1 — coverage complete, performance UNVERIFIED): ` +
+            `${CEFR_LEVELS.filter((l) => report.levelGate!.summary.attainedByLevel[l] > 0)
+              .map((l) => {
+                const names = report
+                  .levelGate!.tracks.filter((t) => t.attained === l)
+                  .map((t) => t.language)
+                  .sort();
+                return `${names.length} track${names.length === 1 ? "" : "s"} at ${l} (${names.join(", ")})`;
+              })
+              .join(", ") || "none"}; ` +
+            `${report.levelGate!.summary.tracksOverstating} track(s) touch a level whose coverage is not complete`,
+          `  ^ these five criteria measure the CORPUS — headwords, verbs, spine nodes, ` +
+            `reinforcement windows, writing stages. None measures a learner. No track has had a ` +
+            `single exam item scored against it, so no line above claims a reader can pass anything.`,
         ]
       : []),
     ...(report.chapters

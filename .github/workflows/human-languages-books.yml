@@ -303,6 +303,25 @@ jobs:
           # shard shape/order and any optional local rendered view. The detect
           # job separately forbids shard deletion and tracked render targets.
           npm run check:doc-shards
+          # HL20 §6b: every artifact `<track>/assessment.json` promises must be a
+          # file that is there. Thirteen tracks named 351 mocks, rubrics, answer
+          # keys and task-shape inventories that do not exist, and every gate was
+          # green, because the loader checked that `answerKey` was a non-empty
+          # string and nothing checked that the string led anywhere.
+          #
+          # This step runs HERE, in the job triggered by
+          # code/learning/human-languages/**, and not only as a vitest case,
+          # because the build tool's diff detection maps changed files to
+          # PACKAGES: an edit to a track's assessment.json touches no package
+          # directory, so the package's own suite would never be rebuilt and the
+          # gate would go dark on exactly the change it exists to catch. The
+          # vitest case in tests/assessment-artifacts.test.ts remains, and covers
+          # the other direction — a change to the checker itself.
+          #
+          # `--check` prints its measurement on success as well as failure, so a
+          # green run says a number and cannot be confused with a step that was
+          # skipped.
+          npm run check:assessment-artifacts
           mkdir -p "$GITHUB_WORKSPACE/dist/human-languages/books"
           npm run --silent report -- --format json \
             > "$GITHUB_WORKSPACE/dist/human-languages/books/curriculum-gaps.json"

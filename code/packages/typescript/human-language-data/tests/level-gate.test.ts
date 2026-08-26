@@ -259,13 +259,32 @@ describe("the first rung anybody actually climbed", () => {
     // track. Pinning the sentence rather than the count is deliberate: a count is
     // satisfied by any track at all, and the claim being made is about Spanish.
     const rendered = renderCurriculumGapReport(realReport());
-    const line = rendered.split(/\r?\n/).find((l) => l.startsWith("levels ATTAINED"))!;
+    const line = rendered.split(/\r?\n/).find((l) => l.startsWith("levels with STRUCTURAL COVERAGE"))!;
     expect(line).toBeDefined();
     expect(line).not.toContain("none");
     expect(line).toContain("1 track at pre-A1 (spanish)");
     // And the plural agrees with the count, which nothing could have caught while the
     // populated branch of this line had never once run.
     expect(line).not.toContain("1 tracks");
+  });
+
+  it("does not print the word ATTAINED, because §3.1 measures a corpus", () => {
+    // The vocabulary-of-attainment fix. Every §3.1 criterion counts something
+    // about the BOOK — headwords, verbs, spine nodes, reinforcement windows,
+    // writing stages — and none of them scores a learner. "levels ATTAINED"
+    // reads as a claim about what a reader can do, and Spanish was about to
+    // print it having never had one exam item marked against it.
+    //
+    // Asserting the word is ABSENT, not merely that the new one is present:
+    // a rename that left the old phrasing on some other line would satisfy the
+    // positive assertion above and change nothing a reader sees.
+    const rendered = renderCurriculumGapReport(realReport());
+    expect(rendered).not.toContain("ATTAINED");
+    expect(rendered).toContain("coverage complete, performance UNVERIFIED");
+    // And the distinction is spelled out, not left to be inferred from a
+    // heading. The disclaimer is the load-bearing half of this change.
+    expect(rendered).toContain("None measures a learner.");
+    expect(rendered).toContain("no line above claims a reader can pass anything");
   });
 
   it("has SATISFIED criterion 2b at A1 — the composition blocker is discharged", () => {

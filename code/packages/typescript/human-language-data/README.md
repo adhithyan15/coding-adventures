@@ -221,7 +221,7 @@ modality.tracks[0].chapters[0];        // { drivablePrefix: 5, firstNonVoiceLess
 deriveLessonModality(lessons[0]).reasons; // ["wide-table"] — why it needs eyes
 ```
 
-### Attaining a level, versus touching one (HL09 §3.1)
+### Structural coverage, versus touching a level (HL09 §3.1)
 
 ```ts
 import { runLevelGate } from "@coding-adventures/human-language-data";
@@ -241,8 +241,40 @@ stage proved. Every criterion is scoped **at or below
 the level** — Spanish teaches 113 headwords in total but only **44** at or below
 pre-A1, and it is the 44 the gate judges.
 
-**Zero of 23 tracks have attained even pre-A1.** That gap between the two numbers is
-what let "Spanish reaches A2" stand on fourteen present-tense lessons.
+That gap between the two numbers is what let "Spanish reaches A2" stand on fourteen
+present-tense lessons.
+
+**`attained` is a property of the corpus, not of a reader.** Read the criteria again:
+spine nodes realized, headwords taught, verb headwords taught, lessons over budget,
+atoms revisited. Every one counts something about the *book*; not one of them requires
+a person to answer a question. The field keeps its name for compatibility, but the
+report prints **`levels with STRUCTURAL COVERAGE COMPLETE … performance UNVERIFIED`**
+and says underneath that no track has had a single exam item scored against it. A
+`mock-performance` criterion is sketched in HL09 §3.2 and deliberately not implemented,
+pending the first scored mock.
+
+### Assessment contracts may not promise files that do not exist (HL20 §6b)
+
+```bash
+npm run check:assessment-artifacts     # fail on any unpinned dangling reference
+npm run generate:assessment-artifacts  # lower the per-track ceilings
+```
+
+Every `<track>/assessment.json` names paths: a task-shape inventory per skill, and a
+rubric and answer key per timed mock. Until this gate, nothing checked the paths led
+anywhere — 13 of 23 tracks carried a contract, all 13 dangled, and between them they
+named 351 artifacts that were not on disk.
+
+The known set is pinned per track under `core/assessment-artifact-ceiling/`. It is a
+**ceiling**, not a licence: a dangling reference outside the pin fails, and a pinned
+path that gets *built* also fails, so the pin has to be lowered rather than left to
+rot into a floor. The pin is a set of paths rather than a count, because a count is
+satisfied by paying one debt and taking on another.
+
+Presence is probed with `artifactExists`, not `existsSync`: only `ENOENT`/`ENOTDIR`
+mean absent, and every other errno throws naming itself. "The file is not there" and
+"I was not allowed to look" need different responses from a human, so they must not
+arrive as the same boolean.
 
 ### What to do next — the computed backlog (HL15)
 
