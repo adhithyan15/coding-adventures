@@ -276,6 +276,21 @@ module PortableConformanceTests =
         Assert.Equal(Some 1UL, CborValue.tryUnsigned tagged)
         bytesEqual (fromHex "6161") (CanonicalCbor.encodeChecked (CborValue.text "a"))
         bytesEqual (fromHex "62c3a9") (CanonicalCbor.encodeChecked (CborValue.text "é"))
+        let nestedTag =
+            [ 1 .. CanonicalCbor.MaxNestingDepth ]
+            |> List.fold (fun value _ -> CborValue.tag 0UL value) CborValue.nullValue
+        let nestedTagWire =
+            Array.append
+                (Array.replicate CanonicalCbor.MaxNestingDepth 0xc0uy)
+                [| 0xf6uy |]
+        bytesEqual nestedTagWire (CanonicalCbor.encodeChecked nestedTag)
+        bytesEqual nestedTagWire (CanonicalCbor.encodeChecked (CanonicalCbor.decode nestedTagWire))
+        assertError "encode-too-deep" (fun () -> CanonicalCbor.encodeChecked (CborValue.tag 0UL nestedTag) |> ignore)
+        let tooDeepTagWire =
+            Array.append
+                (Array.replicate (CanonicalCbor.MaxNestingDepth + 1) 0xc0uy)
+                [| 0xf6uy |]
+        assertError "too-deep" (fun () -> CanonicalCbor.decode tooDeepTagWire |> ignore)
         for count in [ 24; 256; 65_536 ] do
             let encoded =
                 Seq.replicate count CborValue.nullValue

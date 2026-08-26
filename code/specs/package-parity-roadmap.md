@@ -8636,7 +8636,7 @@ the literal Unix and Windows BUILD fronts: eight tests per package. C# reaches
 95.47% branch, and 100% method coverage. Warning-free .NET 9 release builds and
 release packs, capability and OCaml-lock suites, the Go build tool's tests,
 vet, module verification, trimpath build, full repository plan, and forced C#
-and F# dry plans all pass. The forced plans report 202 and 201 WOULD-BUILD
+and F# dry plans all pass. The forced plans report 201 and 200 WOULD-BUILD
 packages respectively. Reporter, collision, strict-JSON, dependency,
 credential, production-authority, formatting, packaging, diff, and independent
 security reviews are clean. The branch inventory therefore adds exactly the
@@ -8644,6 +8644,11 @@ two selected slots: 1,373 identities, 4,570 slots, 1,412 all-reported
 identities, breadth bands 175/276, 123/936, 166/2,087, and 909/12,726, 720 Rust
 singletons, zero collisions, and zero unknown buckets. Global `last_inventory`
 remains pinned to the exact merged main baseline until publication merges.
+The two branch commits then rebased conflict-free over the merged W25
+memory64, Spanish and Kannada curriculum, Java semantic-IR, and HTML-parser
+changes through exact `origin/main`
+`aac64f186ed9dfe2c1303b9cc20284dd9f87f0ef`; every current open PR remains
+exact-path disjoint from the selected package, state, and roadmap surfaces.
 
 ## Autonomous Loop Protocol
 

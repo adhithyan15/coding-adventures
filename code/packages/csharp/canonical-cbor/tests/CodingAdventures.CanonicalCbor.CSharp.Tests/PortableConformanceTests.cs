@@ -188,6 +188,20 @@ public sealed class PortableConformanceTests
 
         Assert.Equal(FromHex("6161"), CanonicalCbor.EncodeChecked(new CborText("a")));
         Assert.Equal(FromHex("62c3a9"), CanonicalCbor.EncodeChecked(new CborText("é")));
+        CborValue nestedTag = CborNull.Instance;
+        for (int depth = 0; depth < CanonicalCbor.MaxNestingDepth; depth++)
+        {
+            nestedTag = new CborTag(0, nestedTag);
+        }
+        byte[] nestedTagWire = Enumerable.Repeat((byte)0xc0, CanonicalCbor.MaxNestingDepth)
+            .Append((byte)0xf6).ToArray();
+        Assert.Equal(nestedTagWire, CanonicalCbor.EncodeChecked(nestedTag));
+        Assert.Equal(nestedTagWire, CanonicalCbor.EncodeChecked(CanonicalCbor.Decode(nestedTagWire)));
+        CborValue tooDeepTag = new CborTag(0, nestedTag);
+        AssertError("encode-too-deep", () => CanonicalCbor.EncodeChecked(tooDeepTag), "tag-depth");
+        AssertError("too-deep", () => CanonicalCbor.Decode(
+            Enumerable.Repeat((byte)0xc0, CanonicalCbor.MaxNestingDepth + 1)
+                .Append((byte)0xf6).ToArray()), "tag-depth");
         foreach (int count in new[] { 24, 256, 65_536 })
         {
             Assert.Equal(count, ((CborArray)CanonicalCbor.Decode(CanonicalCbor.EncodeChecked(
