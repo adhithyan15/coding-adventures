@@ -8380,6 +8380,8 @@ impl HtmlParser {
                 | "center"
                 | "details"
                 | "dialog"
+                | "div"
+                | "fieldset"
                 | "summary"
                 | "dir"
                 | "dl"
@@ -8388,8 +8390,10 @@ impl HtmlParser {
                 | "ul"
                 | "figcaption"
                 | "figure"
+                | "hgroup"
                 | "listing"
                 | "pre"
+                | "search"
         ) {
             diagnostic.at_emission(self.current_token_emission_position)
         } else {
@@ -27454,6 +27458,18 @@ mod tests {
         .at_emission(Some(end_tag_position_at(source, name, occurrence)))
     }
 
+    fn unmatched_block_container_end_tag(
+        source: &str,
+        name: &str,
+        occurrence: usize,
+    ) -> ParserDiagnostic {
+        ParserDiagnostic::new(
+            "unexpected-end-tag",
+            format!("end tag `</{name}>` did not match an open element"),
+        )
+        .at_emission(Some(end_tag_position_at(source, name, occurrence)))
+    }
+
     fn marker_end_tag_outside_scope(
         source: &str,
         name: &str,
@@ -34772,6 +34788,85 @@ mod tests {
         );
 
         for name in ["pre", "listing"] {
+            let foreign_source = format!(
+                "<!doctype html><svg><foreignObject></{name}>X</foreignObject></svg>"
+            );
+            let foreign = parse_html_with_diagnostics(&foreign_source).unwrap();
+            assert!(foreign
+                .parser_diagnostics
+                .iter()
+                .all(|diagnostic| diagnostic.code != "unexpected-end-tag"));
+
+            for source in [
+                format!("<!doctype html></{name}"),
+                format!("<!doctype html><svg><foreignObject></{name}"),
+            ] {
+                let output = parse_html_with_diagnostics(&source).unwrap();
+                assert!(output
+                    .parser_diagnostics
+                    .iter()
+                    .all(|diagnostic| diagnostic.code != "unexpected-end-tag"));
+            }
+
+            let matched_source = format!("<!doctype html><{name}>X</{name}>");
+            let matched = parse_html_with_diagnostics(&matched_source).unwrap();
+            assert!(matched
+                .parser_diagnostics
+                .iter()
+                .all(|diagnostic| diagnostic.code != "unexpected-end-tag"));
+
+            let mut direct =
+                HtmlParser::with_body_fragment_options(HtmlParseOptions::default());
+            direct.process_token(Token::EndTag {
+                name: name.to_string(),
+            });
+            direct.process_token(Token::Eof);
+            assert_eq!(
+                direct
+                    .diagnostics()
+                    .iter()
+                    .find(|diagnostic| diagnostic.code == "unexpected-end-tag")
+                    .unwrap()
+                    .position,
+                None
+            );
+        }
+    }
+
+    #[test]
+    fn positions_unmatched_block_container_end_tags_at_token_emission() {
+        let ordinary_source =
+            "<!doctype html></div><!--é-->\r\n</div></fieldset></hgroup></search>";
+        let ordinary = parse_html_with_diagnostics(ordinary_source).unwrap();
+        assert_eq!(
+            ordinary
+                .parser_diagnostics
+                .iter()
+                .filter(|diagnostic| diagnostic.code == "unexpected-end-tag")
+                .cloned()
+                .collect::<Vec<_>>(),
+            vec![
+                unmatched_block_container_end_tag(ordinary_source, "div", 0),
+                unmatched_block_container_end_tag(ordinary_source, "div", 1),
+                unmatched_block_container_end_tag(ordinary_source, "fieldset", 0),
+                unmatched_block_container_end_tag(ordinary_source, "hgroup", 0),
+                unmatched_block_container_end_tag(ordinary_source, "search", 0),
+            ]
+        );
+        assert!(ordinary_source.len() > ordinary_source.chars().count());
+
+        let fragment_source = "X</fieldset></hgroup></search>";
+        let fragment = parse_html_fragment_with_diagnostics(fragment_source).unwrap();
+        assert_eq!(
+            fragment.parser_diagnostics,
+            vec![
+                unmatched_block_container_end_tag(fragment_source, "fieldset", 0),
+                unmatched_block_container_end_tag(fragment_source, "hgroup", 0),
+                unmatched_block_container_end_tag(fragment_source, "search", 0),
+            ]
+        );
+
+        for name in ["div", "fieldset", "hgroup", "search"] {
             let foreign_source = format!(
                 "<!doctype html><svg><foreignObject></{name}>X</foreignObject></svg>"
             );
