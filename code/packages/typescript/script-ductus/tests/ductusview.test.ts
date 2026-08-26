@@ -115,6 +115,8 @@ const TELUGU_A = DUCTUS[ductusKey("telugu", "అ")];
 const teluguAOutline = teluguOutline("అ");
 const TELUGU_AA = DUCTUS[ductusKey("telugu", "ఆ")];
 const teluguAaOutline = teluguOutline("ఆ");
+const TELUGU_I = DUCTUS[ductusKey("telugu", "ఇ")];
+const teluguIOutline = teluguOutline("ఇ");
 const KANNADA_A = DUCTUS[ductusKey("kannada", "ಅ")];
 const kannadaAOutline = kannadaOutline("ಅ");
 const KANNADA_I = DUCTUS[ductusKey("kannada", "ಇ")];
@@ -1029,6 +1031,34 @@ describe("Telugu ఆ — two source-verified component runs", () => {
     expect(done).toHaveLength(1);
     expect(done[0].attrs.d).toBe(penPathD(TELUGU_AA.strokes[0], 1));
     expect(pen.attrs.d).toBe(penPathD(TELUGU_AA.strokes[1], 1));
+  });
+});
+
+describe("Telugu ఇ — three source-verified component runs", () => {
+  const steps = ductusSteps(TELUGU_I);
+  const strip = ductusFilmstrip(TELUGU_I, teluguIOutline);
+
+  it("places lifts before the two upper components", () => {
+    expect(steps.map((step) => step.startsAfterLift)).toEqual([false, true, true]);
+    expect(steps.map((step) => step.strokeIndex)).toEqual([0, 1, 2]);
+  });
+
+  it("reports three movements in three strokes", () => {
+    expect(strip.frames).toHaveLength(3);
+    expect(strip.penLifts).toBe(2);
+    expect(strip.summary).toBe("3 strokes · 2 pen lifts · 3 movements");
+  });
+
+  it("keeps both earlier components visible while drawing the shoulder", () => {
+    const last = strip.frames[2];
+    const done = byTag(last, "path").filter((path) => path.attrs.class === "ductus__done");
+    const pen = byTag(last, "path").find((path) => path.attrs.class === "ductus__pen")!;
+    expect(done).toHaveLength(2);
+    expect(done.map((path) => path.attrs.d)).toEqual([
+      penPathD(TELUGU_I.strokes[0], 1),
+      penPathD(TELUGU_I.strokes[1], 1),
+    ]);
+    expect(pen.attrs.d).toBe(penPathD(TELUGU_I.strokes[2], 1));
   });
 });
 
