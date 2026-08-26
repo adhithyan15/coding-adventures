@@ -1,5 +1,75 @@
 # Changelog — mosaic-emit-xaml
 
+## [Unreleased] — close the remaining find_prop_value catch-all sites (#13040)
+
+#12126 fixed seven sites where a bare `_ => {}` silently dropped a row
+`Expr` value; it deliberately left ~15 more sites with the identical
+shape out of scope to keep that PR reviewable. This closes all of them,
+grouped by how deep the fix goes:
+
+- **Full `Expr` support, same `lower_expr_for_xbind` pattern as #12126**
+  (13 sites): `disabled:` → `IsEnabled` (negated) on `HostButton`,
+  `HostCheckbox`, `HostRadio`, `HostNumberInput`, `HostSlider`;
+  `checked:` → `IsChecked` on `HostCheckbox`/`HostRadio`; `read-only:` →
+  `IsReadOnly` on `HostInput`; `indeterminate:` → `IsThreeState` on
+  `HostCheckbox`; `HostSurface.content` → `Content` (which also had no
+  `String` arm at all — an audit finding, not just the `Expr` gap);
+  `Icon.glyph`/`.name` → `Glyph`; `HostRadio.group` → `GroupName`;
+  `HostTable.dir` → `FlowDirection` on both the native-shape and
+  non-native fallback lowering paths.
+
+  The five negated `disabled:` sites route through a new
+  `disabled_expr_xbind_path`, the `Expr` analogue of the existing
+  `disabled_slot_xbind_path` — it composes a lowered expression with
+  the same shared `Not(bool)` C# helper `SlotRef` already used, wrapped
+  in `x:Bind Not(...), Mode=OneWay`. Inside a `For` template scope this
+  returns `Unsupported` rather than guessing: WinUI's typed
+  `DataTemplate` compiler rejects a function binding rooted through
+  another property, and `disabled_slot_xbind_path`'s own for-scope
+  branch works around that for a plain slot by projecting a new row-VM
+  computed property — composing that projection with an arbitrary
+  lowered expression isn't implemented or verified anywhere, so an
+  `Expr`-valued `disabled:` inside a `For` gets a clear diagnostic
+  instead of risking subtly wrong generated C#/XAML.
+
+  `HostTable.dir`'s existing keyword allow-list (`rtl`/`ltr` only,
+  everything else silently dropped) is a security gate against an
+  *unrecognized static keyword string* reaching the XAML attribute —
+  not a reason to reject `Expr` wholesale. `lower_expr_for_xbind` never
+  splices attacker-influenced text directly; it always resolves to a
+  compiler-generated path or helper call, so `Expr` gets the same real
+  `FlowDirection` binding every other XAML-attribute site in this fix
+  gets, while the keyword allow-list's own narrowness is untouched.
+
+- **Exhaustive but `Expr` deliberately deferred, with a clear
+  diagnostic instead of a silent empty payload** (2 sites):
+  `host_link_href_payload_expr` (used both for `HostLink`'s in-app
+  `Click` payload and `HostRadio`'s `onSelect` `value:` payload). These
+  build a bare C# expression spliced into a code-behind
+  `Dispatch?.Invoke(...)` call fired once at click time — a materially
+  different code shape from every XAML-attribute-bind site above.
+  `SlotRef` resolves via `this.<Pascal>` (component-level, no
+  for-scope awareness at all); real per-row `Expr` support here would
+  need the same sender-`DataContext`-cast-to-row-VM-type codegen
+  `host_button_click_payload_expr` already does for its own params — a
+  materially different, more novel code shape with no existing
+  precedent for an arbitrary expression, and a real feature addition
+  rather than a "make the match exhaustive" fix. Both functions are now
+  exhaustive over every `LayoutPropValue` variant (no `_`); `Expr`
+  explicitly returns `PipelineEmitError::UnsupportedExpression` rather
+  than silently falling back to `""` the way it did before — an author
+  who wrote an expression here deserves to know it wasn't honoured, not
+  have it silently become an empty click payload.
+
+Verified with 8 new tests plus a real `dotnet build` against a probe
+project exercising the two least mechanically-obvious translations: the
+`disabled:` → `Not(bool)`-helper composition (genuinely new C# codegen,
+not just a new attribute) and `HostTable.dir`'s `FlowDirection` `Expr`
+path. Both compiled clean, 0 warnings, 0 errors, and the emitted XAML
+matched what the unit tests already asserted
+(`IsEnabled="{x:Bind Not(Editable), Mode=OneWay}"` and
+`FlowDirection="{x:Bind Dir, Mode=OneWay}"`).
+
 ## [Unreleased] — security: narrow CopyMosaicNativeHostLibraries from a *.dll glob to the known runtime filename (#12026)
 
 The generated `.csproj`'s `CopyMosaicNativeHostLibraries` MSBuild target
