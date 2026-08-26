@@ -8001,6 +8001,41 @@ unchanged. Merged PR #12912 remains in the existing JV02 neutral/lane owners,
 and merged PR #12911 remains in the existing Vault owners; neither overlaps
 any of the six Ruby tranche paths.
 
+### Post-#12920 refresh and Elixir orphan-crate selection
+
+PR #12920 completed all 41 terminal acceptable checks. GitHub reported the
+reviewed branch clean and mergeable, so the loop enabled squash auto-merge.
+GitHub merged reviewed head
+`ee7306c67eaf421076d821f3742fe81604860ed2` as
+`47c7ef94e31558fb5b32d0345009513a698f0f0a` at
+`2026-08-26T02:18:52Z` without a manual merge command.
+
+The collision-checked exact-main schema-3 report remains structurally
+unchanged: 15 established lanes, 1,373 implementation identities, 4,566
+package slots, 175 high-consensus packages with 276 missing slots, 122
+identities in five to nine lanes with 926 gaps, 166 identities in two to four
+lanes with 2,087 gaps, 910 singletons with 12,740 gaps, and 721 Rust
+singletons. Canonical collisions and unknown language buckets remain zero.
+OCaml remains correctly emerging at zero packages.
+
+The intervening Tamil ductus and ADJ vowel-team changes are curriculum or
+adjacent automation only. Live ALGOL, JV02, and HTML-parser work remains inside
+its existing owners. The commit and live-PR audits therefore found no newly
+unowned eligible portable gap. PRs #12149 and #12162 still overlap the Go
+entry-point and validator surfaces required by the OCaml process-free core, so
+that strategically important tranche remains collision-unsafe.
+
+The dependency/leverage pass selects
+`build-tool-elixir-orphan-crate-validation-conformance` on branch
+`codex/build-tool-elixir-orphan-crate-validation-conformance`. Its neutral
+orphan corpus and Elixir tracked-artifact substrate are merged. Each remaining
+orphan consumer unlocks the same completion umbrella, so breadth breaks the
+tie: Elixir covers 279 reported packages versus Lua 252, Perl 251, Haskell
+204, and Swift 161. All twelve live PRs have zero exact overlap with the six
+expected Elixir validator, test, documentation, state, and roadmap paths. The
+target local branch, remote branch, and prior PR were absent before creating
+the fresh exact-main worktree.
+
 ## Autonomous Loop Protocol
 
 Only one parity PR should be active at a time.
