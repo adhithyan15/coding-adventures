@@ -1,5 +1,82 @@
 # Changelog — mosaic-emit-xaml
 
+## [Unreleased] — fix seven more silent Expr-drop sites, make their matches exhaustive (#12126)
+
+Continuation of the `label`-match `Expr`-drop bug fixed twice already
+(#12045 on `HostButton`, #12121 on `HostCheckbox`/`HostRadio`/`HostLink`):
+a `find_prop_value(node, "...")` match ending in a bare `_ => {}` silently
+swallows `LayoutPropValue::Expr` (e.g. `text: ( row[1] )`), so a
+row-expression-valued prop emits no attribute at all and the control
+renders with that attribute simply absent — invisible rather than
+obviously broken.
+
+Seven more sites had the identical shape:
+
+- `HostTooltip.text` (`ToolTipService.ToolTip`)
+- `HostInput.value` (`Text`, was `Mode=TwoWay` for `SlotRef` — the new
+  `Expr` arm is `Mode=OneWay`; see below)
+- `HostInput.placeholder` (`PlaceholderText`) — this one was an `if let`
+  handling only `String`, not even a `match`; converting it to an
+  exhaustive `match` for the `Expr` fix also surfaced and fixed a missing
+  `SlotRef` arm found along the way (a slot-valued placeholder silently
+  emitted nothing either, same failure mode, different variant)
+- `HostNumberInput.value` (`Value`, same `TwoWay`→`OneWay` reasoning)
+- `HostDialog.title` (`Title`, shared by both `emit_host_dialog` and
+  `emit_host_dialog_as_root`)
+- `a11y-label` on `Text` and `HostSlider` (`AutomationProperties.Name`)
+- `Image.src` (`Source`)
+
+All seven now route through the same `lower_expr_for_xbind` helper the
+already-fixed `label` sites use, and every one of the seven matches is
+now **exhaustive** over `LayoutPropValue`'s six variants (no `_`
+anywhere) — mirroring `emit_text`'s `content` match, the one site in the
+file already written this way. A future 7th `LayoutPropValue` variant is
+now a compiler error at these sites, not silent runtime blankness.
+
+**`TwoWay` → `OneWay` for the `Expr` arm at the two two-way sites.**
+`Mode=TwoWay` needs an assignable target for user-edit writeback. A
+`row[1]`-style indexer lowers to `ExprLowering::Helper`, a C# **method
+call** — not an lvalue — so `x:Bind Expr_xxx(Row), Mode=TwoWay` would not
+compile. Every other `Expr`-arm precedent in the file already uses
+`OneWay` for the same reason, regardless of what the target property
+allows for a plain `SlotRef`.
+
+**`HostNumberInput.value` (`double`) and `Image.src` (`ImageSource`)
+bind a `string`-returning helper — verified against a real build, not
+assumed.** `lower_expr_for_xbind`'s `Helper` case always returns a C#
+`string` (indexing into a `list<list<text>>` row yields a `string` cell).
+Compiled a probe `.mil`/`.mll`/`.msl` component through the real
+`mosaic-compile --backend xaml --emit-project` → `dotnet build` pipeline
+with both an `Expr`-valued `HostNumberInput.value` and `Image.src` inside
+a `For`: **build succeeded**, with only the expected `WMC1506` warning
+(the same "OneWay binding step can't itself raise notifications" warning
+every other `Expr`-arm site already produces, benign since row-VM
+rebuilds re-evaluate it regardless — see the existing `Text.content` Expr
+arm's own comment). Confirms WinUI's compiled-binding implicit
+`string`→`double` and `string`→`ImageSource` conversions apply to a
+`Helper`-lowered method-call binding target, not just a plain property
+path — no special-cased numeric-returning helper variant was needed.
+
+Two new tests: `row_expression_valued_props_bind_at_every_remaining_drop_site`
+covers all seven sites in one layout (a `For` over `list<list<text>>`
+rows, each control's target prop set to `( row[1] )`), asserting each
+attribute lowers to an `x:Bind` rather than being omitted, plus a count
+assertion that both `a11y-label` sites (`Text` and `HostSlider`) fired
+independently since they share a target attribute name.
+`host_input_placeholder_binds_slot_ref` covers the incidental `SlotRef`
+gap found while fixing the `Expr` gap at the same site. All 236
+pre-existing tests still pass.
+
+Filed a follow-up issue (#13040) for ~15 more `find_prop_value` sites with
+the same bare-catch-all shape found by the survey that scoped this fix,
+deliberately left out of this PR — most aren't specifically about `Expr`
+(`disabled`/`checked`/`indeterminate` need boolean-`Keyword` handling,
+`group` needs its own semantic decision, table `dir` is an intentional
+allow-list), so bundling them would have tripled this diff without adding
+review value.
+
+Closes #12126.
+
 ## [Unreleased] — security: XML-escape style-fragment values at every attribute sink (#12025)
 
 `build_style_fragment_with_drops` "escaped" mosstyle values with C-string

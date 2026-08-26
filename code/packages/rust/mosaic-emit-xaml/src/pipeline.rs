@@ -3395,7 +3395,35 @@ fn emit_text(
             )
             .unwrap();
         }
-        _ => {}
+        Some(LayoutPropValue::Expr(src)) => {
+            // #12126: same OneWay reasoning as the SlotRef arm above — an
+            // expression can read live component slots via a generated
+            // helper, so a name computed once at template-realize time
+            // would go stale.
+            match lower_expr_for_xbind(src, ctx) {
+                ExprLowering::Bindable(path) => {
+                    write!(
+                        accessibility_attrs,
+                        " AutomationProperties.Name=\"{{x:Bind {path}, Mode=OneWay}}\""
+                    )
+                    .unwrap();
+                }
+                ExprLowering::Helper(call) => {
+                    write!(
+                        accessibility_attrs,
+                        " AutomationProperties.Name=\"{{x:Bind {call}, Mode=OneWay}}\""
+                    )
+                    .unwrap();
+                }
+                ExprLowering::Unsupported(reason) => {
+                    return Err(PipelineEmitError::UnsupportedExpression(reason));
+                }
+            }
+        }
+        Some(LayoutPropValue::Keyword(_))
+        | Some(LayoutPropValue::Number(_))
+        | Some(LayoutPropValue::EmitRef(_))
+        | None => {}
     }
     match find_prop_keyword(node, "a11y-role") {
         Some("heading") => accessibility_attrs
@@ -3496,7 +3524,28 @@ fn emit_image(
             format!(" Source=\"{{x:Bind {}, Mode=OneWay}}\"", ctx.slot_xbind_path(slot))
         }
         Some(LayoutPropValue::String(s)) => format!(" Source=\"{}\"", escape_xaml_attr(s)),
-        _ => String::new(),
+        Some(LayoutPropValue::Expr(src)) => {
+            // #12126: same OneWay reasoning as the SlotRef arm above. The
+            // helper/path this lowers to yields a `string`; XAML's x:Bind
+            // compiler applies its documented implicit `string ->
+            // ImageSource` conversion for compiled bindings, the same
+            // conversion a literal `Source="images/foo.png"` relies on.
+            match lower_expr_for_xbind(src, ctx) {
+                ExprLowering::Bindable(path) => {
+                    format!(" Source=\"{{x:Bind {path}, Mode=OneWay}}\"")
+                }
+                ExprLowering::Helper(call) => {
+                    format!(" Source=\"{{x:Bind {call}, Mode=OneWay}}\"")
+                }
+                ExprLowering::Unsupported(reason) => {
+                    return Err(PipelineEmitError::UnsupportedExpression(reason));
+                }
+            }
+        }
+        Some(LayoutPropValue::Keyword(_))
+        | Some(LayoutPropValue::Number(_))
+        | Some(LayoutPropValue::EmitRef(_))
+        | None => String::new(),
     };
     Ok(format!("{pad}<Image{source_attr}{style}/>\n"))
 }
@@ -7498,7 +7547,29 @@ fn emit_host_input(
         Some(LayoutPropValue::String(s)) => {
             attrs.push_str(&format!(" Text=\"{}\"", escape_xaml_attr(s)));
         }
-        _ => {}
+        Some(LayoutPropValue::Expr(src)) => {
+            // #12126: unlike the SlotRef arm above, this is OneWay, not
+            // TwoWay. `Mode=TwoWay` needs a settable target for user
+            // edits to write back to; an indexer expression like
+            // `row[1]` lowers to a C# *method call*
+            // (`ExprLowering::Helper`), which is not an lvalue, so
+            // `x:Bind Expr_xxx(Row), Mode=TwoWay` would not compile.
+            match lower_expr_for_xbind(src, ctx) {
+                ExprLowering::Bindable(path) => {
+                    attrs.push_str(&format!(" Text=\"{{x:Bind {path}, Mode=OneWay}}\""));
+                }
+                ExprLowering::Helper(call) => {
+                    attrs.push_str(&format!(" Text=\"{{x:Bind {call}, Mode=OneWay}}\""));
+                }
+                ExprLowering::Unsupported(reason) => {
+                    return Err(PipelineEmitError::UnsupportedExpression(reason));
+                }
+            }
+        }
+        Some(LayoutPropValue::Keyword(_))
+        | Some(LayoutPropValue::Number(_))
+        | Some(LayoutPropValue::EmitRef(_))
+        | None => {}
     }
 
     // read-only: slot/keyword
@@ -7516,9 +7587,40 @@ fn emit_host_input(
         _ => {}
     }
 
-    // placeholder: literal
-    if let Some(LayoutPropValue::String(s)) = find_prop_value(node, "placeholder") {
-        attrs.push_str(&format!(" PlaceholderText=\"{}\"", escape_xaml_attr(s)));
+    // placeholder: literal/slot/expr
+    match find_prop_value(node, "placeholder") {
+        Some(LayoutPropValue::String(s)) => {
+            attrs.push_str(&format!(" PlaceholderText=\"{}\"", escape_xaml_attr(s)));
+        }
+        Some(LayoutPropValue::SlotRef(slot)) => {
+            // #12126: this arm was missing entirely — a slot-valued
+            // placeholder silently emitted no `PlaceholderText` at all.
+            // OneWay, matching HostNumberInput's sibling `placeholder`
+            // handling: a placeholder isn't a two-way-bound value.
+            let pascal = ctx.slot_xbind_path(slot);
+            attrs.push_str(&format!(
+                " PlaceholderText=\"{{x:Bind {pascal}, Mode=OneWay}}\""
+            ));
+        }
+        Some(LayoutPropValue::Expr(src)) => match lower_expr_for_xbind(src, ctx) {
+            ExprLowering::Bindable(path) => {
+                attrs.push_str(&format!(
+                    " PlaceholderText=\"{{x:Bind {path}, Mode=OneWay}}\""
+                ));
+            }
+            ExprLowering::Helper(call) => {
+                attrs.push_str(&format!(
+                    " PlaceholderText=\"{{x:Bind {call}, Mode=OneWay}}\""
+                ));
+            }
+            ExprLowering::Unsupported(reason) => {
+                return Err(PipelineEmitError::UnsupportedExpression(reason));
+            }
+        },
+        Some(LayoutPropValue::Keyword(_))
+        | Some(LayoutPropValue::Number(_))
+        | Some(LayoutPropValue::EmitRef(_))
+        | None => {}
     }
 
     // max-length: number
@@ -8449,7 +8551,25 @@ fn emit_host_slider(
                 ctx.slot_xbind_path(slot)
             ));
         }
-        _ => {}
+        Some(LayoutPropValue::Expr(src)) => match lower_expr_for_xbind(src, ctx) {
+            ExprLowering::Bindable(path) => {
+                attrs.push_str(&format!(
+                    " AutomationProperties.Name=\"{{x:Bind {path}, Mode=OneWay}}\""
+                ));
+            }
+            ExprLowering::Helper(call) => {
+                attrs.push_str(&format!(
+                    " AutomationProperties.Name=\"{{x:Bind {call}, Mode=OneWay}}\""
+                ));
+            }
+            ExprLowering::Unsupported(reason) => {
+                return Err(PipelineEmitError::UnsupportedExpression(reason));
+            }
+        },
+        Some(LayoutPropValue::Keyword(_))
+        | Some(LayoutPropValue::Number(_))
+        | Some(LayoutPropValue::EmitRef(_))
+        | None => {}
     }
 
     for (prop, attr, default) in [
@@ -8765,7 +8885,21 @@ fn emit_host_tooltip(
             let pascal = ctx.slot_xbind_path(slot);
             format!(" ToolTipService.ToolTip=\"{{x:Bind {pascal}, Mode=OneWay}}\"")
         }
-        _ => String::new(),
+        Some(LayoutPropValue::Expr(src)) => match lower_expr_for_xbind(src, ctx) {
+            ExprLowering::Bindable(path) => {
+                format!(" ToolTipService.ToolTip=\"{{x:Bind {path}, Mode=OneWay}}\"")
+            }
+            ExprLowering::Helper(call) => {
+                format!(" ToolTipService.ToolTip=\"{{x:Bind {call}, Mode=OneWay}}\"")
+            }
+            ExprLowering::Unsupported(reason) => {
+                return Err(PipelineEmitError::UnsupportedExpression(reason));
+            }
+        },
+        Some(LayoutPropValue::Keyword(_))
+        | Some(LayoutPropValue::Number(_))
+        | Some(LayoutPropValue::EmitRef(_))
+        | None => String::new(),
     };
 
     if node.children.is_empty() {
@@ -8821,7 +8955,31 @@ fn emit_host_number_input(
         Some(LayoutPropValue::Number(n)) => {
             attrs.push_str(&format!(" Value=\"{n}\""));
         }
-        _ => {}
+        Some(LayoutPropValue::Expr(src)) => {
+            // #12126: OneWay, not TwoWay (same reasoning as HostInput's
+            // value fix above — a Helper-lowered indexer is a method
+            // call, not an lvalue). `NumberBox.Value` is a C# `double`;
+            // the generated helper for a row-cell indexer like
+            // `row[1]` returns the cell's own element type, which is
+            // `string` when the slot is `list<list<text>>` — the same
+            // implicit-conversion story as `Image.src`'s `ImageSource`
+            // target below, verified against a real `dotnet build`.
+            match lower_expr_for_xbind(src, ctx) {
+                ExprLowering::Bindable(path) => {
+                    attrs.push_str(&format!(" Value=\"{{x:Bind {path}, Mode=OneWay}}\""));
+                }
+                ExprLowering::Helper(call) => {
+                    attrs.push_str(&format!(" Value=\"{{x:Bind {call}, Mode=OneWay}}\""));
+                }
+                ExprLowering::Unsupported(reason) => {
+                    return Err(PipelineEmitError::UnsupportedExpression(reason));
+                }
+            }
+        }
+        Some(LayoutPropValue::String(_))
+        | Some(LayoutPropValue::Keyword(_))
+        | Some(LayoutPropValue::EmitRef(_))
+        | None => {}
     }
 
     // min/max/step â†’ Minimum/Maximum/SmallChange numeric literals.
@@ -8835,7 +8993,7 @@ fn emit_host_number_input(
         attrs.push_str(&format!(" SmallChange=\"{n}\""));
     }
 
-    // placeholder: string or slot.
+    // placeholder: string, slot, or expr.
     match find_prop_value(node, "placeholder") {
         Some(LayoutPropValue::String(s)) => {
             attrs.push_str(&format!(" PlaceholderText=\"{}\"", escape_xaml_attr(s)));
@@ -8844,7 +9002,25 @@ fn emit_host_number_input(
             let pascal = ctx.slot_xbind_path(slot);
             attrs.push_str(&format!(" PlaceholderText=\"{{x:Bind {pascal}, Mode=OneWay}}\""));
         }
-        _ => {}
+        Some(LayoutPropValue::Expr(src)) => match lower_expr_for_xbind(src, ctx) {
+            ExprLowering::Bindable(path) => {
+                attrs.push_str(&format!(
+                    " PlaceholderText=\"{{x:Bind {path}, Mode=OneWay}}\""
+                ));
+            }
+            ExprLowering::Helper(call) => {
+                attrs.push_str(&format!(
+                    " PlaceholderText=\"{{x:Bind {call}, Mode=OneWay}}\""
+                ));
+            }
+            ExprLowering::Unsupported(reason) => {
+                return Err(PipelineEmitError::UnsupportedExpression(reason));
+            }
+        },
+        Some(LayoutPropValue::Number(_))
+        | Some(LayoutPropValue::Keyword(_))
+        | Some(LayoutPropValue::EmitRef(_))
+        | None => {}
     }
 
     // disabled: slot polarity-flip (Not helper) or literal keyword.
@@ -8976,7 +9152,7 @@ fn build_host_dialog_attrs(
     let mut attrs = String::new();
     let mut comments: Vec<String> = Vec::new();
 
-    // title: slot/string â€” Fix A3 + A4.
+    // title: slot/string/expr â€” Fix A3 + A4.
     match find_prop_value(node, "title") {
         Some(LayoutPropValue::SlotRef(slot)) => {
             let path = ctx.slot_xbind_path(slot);
@@ -8988,7 +9164,21 @@ fn build_host_dialog_attrs(
         Some(LayoutPropValue::String(s)) => {
             attrs.push_str(&format!(" Title=\"{}\"", escape_xaml_attr(s)));
         }
-        _ => {}
+        Some(LayoutPropValue::Expr(src)) => match lower_expr_for_xbind(src, ctx) {
+            ExprLowering::Bindable(path) => {
+                attrs.push_str(&format!(" Title=\"{{x:Bind {path}, Mode=OneWay}}\""));
+            }
+            ExprLowering::Helper(call) => {
+                attrs.push_str(&format!(" Title=\"{{x:Bind {call}, Mode=OneWay}}\""));
+            }
+            ExprLowering::Unsupported(reason) => {
+                return Err(PipelineEmitError::UnsupportedExpression(reason));
+            }
+        },
+        Some(LayoutPropValue::Keyword(_))
+        | Some(LayoutPropValue::Number(_))
+        | Some(LayoutPropValue::EmitRef(_))
+        | None => {}
     }
 
     // open: slot/keyword â€” Fix A2: NO `mos:Dialog.IsOpen` emission.
@@ -13914,6 +14104,156 @@ mod tests {
             bindings,
             CONTENT_CONTROLS.len(),
             "expected every row-expression label to lower to a binding, got {bindings}:\n{}",
+            r.xaml
+        );
+    }
+
+    /// #12126: seven more sites had the identical shape as the label
+    /// matches above — a bare `_ => {}` catch-all silently swallowing
+    /// `LayoutPropValue::Expr` — but for different attributes:
+    /// `HostTooltip.text`, `HostInput.value`/`.placeholder`,
+    /// `HostNumberInput.value`, `HostDialog.title`, `a11y-label` on
+    /// `Text`/`HostSlider`, and `Image.src`. Each is fixed here by
+    /// routing through the same `lower_expr_for_xbind` helper the label
+    /// sites use, and each match is now exhaustive over every
+    /// `LayoutPropValue` variant (no `_`), so a future 7th variant is a
+    /// compile error at these sites instead of silent runtime blankness.
+    #[test]
+    fn row_expression_valued_props_bind_at_every_remaining_drop_site() {
+        fn expr_prop(name: &str) -> LayoutProp {
+            LayoutProp {
+                name: name.to_string(),
+                value: LayoutPropValue::Expr("row[1]".to_string()),
+            }
+        }
+
+        let c = component(
+            "Foo",
+            vec![slot(
+                "rows",
+                SlotType::List(Box::new(ListInnerType::List(Box::new(
+                    ListInnerType::Text,
+                )))),
+                true,
+            )],
+            vec![],
+        );
+        let l = layout_with_root(
+            "Foo",
+            LayoutNode {
+                tag: "Column".to_string(),
+                part_name: None,
+                props: Vec::new(),
+                children: vec![for_node(
+                    LayoutPropValue::SlotRef("rows".to_string()),
+                    "row",
+                    None,
+                    vec![
+                        LayoutNode {
+                            tag: "HostTooltip".to_string(),
+                            part_name: None,
+                            props: vec![expr_prop("text")],
+                            children: Vec::new(),
+                        },
+                        LayoutNode {
+                            tag: "HostInput".to_string(),
+                            part_name: None,
+                            props: vec![expr_prop("value"), expr_prop("placeholder")],
+                            children: Vec::new(),
+                        },
+                        LayoutNode {
+                            tag: "HostNumberInput".to_string(),
+                            part_name: None,
+                            props: vec![expr_prop("value")],
+                            children: Vec::new(),
+                        },
+                        LayoutNode {
+                            tag: "HostDialog".to_string(),
+                            part_name: None,
+                            props: vec![expr_prop("title")],
+                            children: Vec::new(),
+                        },
+                        LayoutNode {
+                            tag: "Text".to_string(),
+                            part_name: None,
+                            props: vec![expr_prop("a11y-label")],
+                            children: Vec::new(),
+                        },
+                        LayoutNode {
+                            tag: "HostSlider".to_string(),
+                            part_name: None,
+                            props: vec![expr_prop("a11y-label")],
+                            children: Vec::new(),
+                        },
+                        LayoutNode {
+                            tag: "Image".to_string(),
+                            part_name: None,
+                            props: vec![expr_prop("src")],
+                            children: Vec::new(),
+                        },
+                    ],
+                )],
+            },
+        );
+        let r = compile(&c, &l, &empty_style("Foo"));
+
+        for (site, needle) in [
+            ("HostTooltip.text", " ToolTipService.ToolTip=\"{x:Bind"),
+            ("HostInput.value", " Text=\"{x:Bind"),
+            ("HostInput.placeholder", " PlaceholderText=\"{x:Bind"),
+            ("HostNumberInput.value", " Value=\"{x:Bind"),
+            ("HostDialog.title", " Title=\"{x:Bind"),
+            ("Image.src", " Source=\"{x:Bind"),
+        ] {
+            assert!(
+                r.xaml.contains(needle),
+                "{site}: expected a row-expression value to lower to an \
+                 x:Bind, found none. full XAML:\n{}",
+                r.xaml
+            );
+        }
+
+        // Both `Text.a11y-label` and `HostSlider.a11y-label` share the
+        // same target attribute — assert both fired, not just one.
+        let a11y_bindings = r
+            .xaml
+            .matches(" AutomationProperties.Name=\"{x:Bind")
+            .count();
+        assert_eq!(
+            a11y_bindings, 2,
+            "expected both Text and HostSlider a11y-label to bind, got {a11y_bindings}:\n{}",
+            r.xaml
+        );
+    }
+
+    /// #12126 audit finding (not in the issue's own list, found while
+    /// fixing the neighbouring `Expr` gap): `HostInput.placeholder` had
+    /// no `SlotRef` arm at all — a slot-valued placeholder silently
+    /// emitted no `PlaceholderText` attribute, the same invisible-drop
+    /// failure mode as the `Expr` sites, just via a different variant.
+    #[test]
+    fn host_input_placeholder_binds_slot_ref() {
+        let c = component(
+            "Foo",
+            vec![slot("hint", SlotType::Text, true)],
+            vec![],
+        );
+        let l = layout_with_root(
+            "Foo",
+            LayoutNode {
+                tag: "HostInput".to_string(),
+                part_name: None,
+                props: vec![LayoutProp {
+                    name: "placeholder".to_string(),
+                    value: LayoutPropValue::SlotRef("hint".to_string()),
+                }],
+                children: Vec::new(),
+            },
+        );
+        let r = compile(&c, &l, &empty_style("Foo"));
+        assert!(
+            r.xaml.contains(" PlaceholderText=\"{x:Bind Hint, Mode=OneWay}\""),
+            "got:\n{}",
             r.xaml
         );
     }

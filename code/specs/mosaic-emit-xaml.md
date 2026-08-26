@@ -498,6 +498,32 @@ silently producing wrong XAML.
 The helper method names use a deterministic hash of the expression source so
 that two identical expressions in the same component dedupe to one helper.
 
+### 6.3.1 Sites that consume `Expr` (issue #12126)
+
+Every `find_prop_value(node, "...")` match that lowers a prop to an XAML
+attribute must route the `LayoutPropValue::Expr` arm through this
+lowering and must be **exhaustive** over `LayoutPropValue`'s variants (no
+`_` catch-all) — a bare `_ => {}` silently drops the attribute for any
+value not already given an explicit arm, which renders a control with
+that attribute simply absent rather than raising a diagnostic. As of
+#12126 the following sites are fixed and exhaustive: `Text.content`
+(pre-existing, the template for the others), `Text.a11y-label`,
+`HostSlider.a11y-label`, `HostTooltip.text`, `HostInput.value`,
+`HostInput.placeholder`, `HostNumberInput.value`, `HostDialog.title`,
+`Image.src`, and the four content-control `label` matches
+(`HostButton`/`HostCheckbox`/`HostRadio`/`HostLink`, fixed earlier in
+#12045/#12121). `Mode` follows what the *source* can support, not what
+the target attribute allows: every `Expr` arm uses `Mode=OneWay`, even at
+otherwise-`TwoWay` targets (`HostInput.value`, `HostNumberInput.value`),
+because an indexer expression lowers to a `Helper` — a C# method call,
+not an assignable path, so `Mode=TwoWay` would not compile. A helper's
+C# return type is always `string`; WinUI's compiled-binding implicit
+conversions (verified against a real `dotnet build`, not assumed) make
+this bind correctly even at non-`string` targets like
+`HostNumberInput.value`'s `double` and `Image.src`'s `ImageSource`.
+Issue #13040 tracks the remaining `find_prop_value` sites with the same
+bare-catch-all shape not yet made exhaustive.
+
 ## 7. Event dispatch contract (UI24)
 
 Unchanged from the pre-UI29 draft. For a component with `n ≥ 0` emits the
