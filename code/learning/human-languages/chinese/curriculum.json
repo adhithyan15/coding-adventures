@@ -304,6 +304,34 @@
         "ZH-EXT-041-SCHOOL-COMPOUNDS-FOUR-SKILL"
       ],
       "after": []
+    },
+    {
+      "id": "ZH-PATH-015",
+      "spine_node": "SPINE-EXCHANGE-NAMES",
+      "lessons": [
+        "ZH-C16-hear-zi",
+        "ZH-C16-zi",
+        "ZH-C16-hear-hanzi",
+        "ZH-W16-han-observe",
+        "ZH-W16-han-guided",
+        "ZH-W16-han-delayed",
+        "ZH-C16-hanzi",
+        "ZH-C16-hear-hanyu",
+        "ZH-R16-identity-1",
+        "ZH-W16-yu-observe",
+        "ZH-W16-yu-guided",
+        "ZH-W16-yu-delayed",
+        "ZH-C16-hanyu",
+        "ZH-R16-identity-2",
+        "ZH-C16-practice"
+      ],
+      "before": [],
+      "inline": [
+        "ZH-EXT-042-LANGUAGE-IDENTITY-MEANING-FIRST",
+        "ZH-EXT-043-LANGUAGE-IDENTITY-SCRIPT",
+        "ZH-EXT-044-LANGUAGE-IDENTITY-FOUR-SKILL"
+      ],
+      "after": []
     }
   ],
   "spine": {
@@ -345,7 +373,8 @@
         "ZH-PATH-011",
         "ZH-PATH-012",
         "ZH-PATH-013",
-        "ZH-PATH-014"
+        "ZH-PATH-014",
+        "ZH-PATH-015"
       ],
       "omits": [
         "PRONOUN-ME",
@@ -1296,6 +1325,57 @@
         "ZH-R15-school-map-3",
         "ZH-R15-school-map-4",
         "ZH-C15-practice"
+      ]
+    },
+    {
+      "id": "ZH-EXT-042-LANGUAGE-IDENTITY-MEANING-FIRST",
+      "stage": "pre-A1",
+      "kind": "required",
+      "category": "vocabulary",
+      "canDo": "I can hear and say 字, 汉字 and 汉语 before I have to master their new written parts.",
+      "prerequisites": [
+        "ZH-EXT-041-SCHOOL-COMPOUNDS-FOUR-SKILL"
+      ],
+      "lessons": [
+        "ZH-C16-hear-zi",
+        "ZH-C16-hear-hanzi",
+        "ZH-C16-hear-hanyu"
+      ]
+    },
+    {
+      "id": "ZH-EXT-043-LANGUAGE-IDENTITY-SCRIPT",
+      "stage": "pre-A1",
+      "kind": "required",
+      "category": "script",
+      "canDo": "I can read and write 字, 汉字 and 汉语 after observing, tracing, copying and recalling each new character.",
+      "prerequisites": [
+        "ZH-EXT-042-LANGUAGE-IDENTITY-MEANING-FIRST"
+      ],
+      "lessons": [
+        "ZH-C16-zi",
+        "ZH-W16-han-observe",
+        "ZH-W16-han-guided",
+        "ZH-W16-han-delayed",
+        "ZH-C16-hanzi",
+        "ZH-W16-yu-observe",
+        "ZH-W16-yu-guided",
+        "ZH-W16-yu-delayed",
+        "ZH-C16-hanyu"
+      ]
+    },
+    {
+      "id": "ZH-EXT-044-LANGUAGE-IDENTITY-FOUR-SKILL",
+      "stage": "pre-A1",
+      "kind": "required",
+      "category": "assessment",
+      "canDo": "I can keep 字, 汉字 and 汉语 distinct across spaced retrieval and separate listening, speaking, reading and writing checks.",
+      "prerequisites": [
+        "ZH-EXT-043-LANGUAGE-IDENTITY-SCRIPT"
+      ],
+      "lessons": [
+        "ZH-R16-identity-1",
+        "ZH-R16-identity-2",
+        "ZH-C16-practice"
       ]
     }
   ]
