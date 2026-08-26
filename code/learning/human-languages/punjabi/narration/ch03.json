@@ -4,7 +4,7 @@
   "chapter": 3,
   "title": "How Are You?",
   "drivablePrefix": 0,
-  "sourceHash": "fnv1a64:93148f500fc30705",
+  "sourceHash": "fnv1a64:bc09dda5bba4d90e",
   "lessons": [
     {
       "id": "PA-C03-kivein",
@@ -269,6 +269,122 @@
                 "correct": "Speaking score: respectful tusī̃ pairs with ho.",
                 "incorrect": "Say tusī̃ kivēṁ ho: respectful you, how, are."
               }
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "PA-R03-wellbeing-r1",
+      "sequence": 175,
+      "title": "The respectful question returns at R1",
+      "headword": "(oral R1)",
+      "romanization": "tusī̃ kivēṁ ho — k-",
+      "gloss": "retrieve the respectful copula and question-family sound at R1",
+      "script": "gurmukhi",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:96efdc6397b9f8e0",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "No new words and no script test. Answer aloud before recording the romanization."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "respectful you are — tusī̃... ho",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: respectful **you are** — *tusī̃ ... ho*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "kī, kivēṁ; keep their opening k-",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *kī, kivēṁ*; keep their opening *k-*]"
+            },
+            {
+              "kind": "speech",
+              "text": "The typed romanization records an answer already spoken aloud. It earns no Gurmukhi reading or writing credit."
+            },
+            {
+              "kind": "activity",
+              "scored": true,
+              "id": "PA-R03-wellbeing-r1-ho",
+              "prompt": "Say the copula that pairs with respectful tusī̃ in the wellbeing question, then type only the romanized sound you said.",
+              "assesses": [
+                "PA-GRAMMAR-TUSI-HO-03"
+              ],
+              "responseSeconds": 8,
+              "acceptedResponses": [
+                "ho"
+              ],
+              "feedback": {
+                "correct": "Right: respectful tusī̃ pairs with ho.",
+                "incorrect": "Say tusī̃ kivēṁ ho once, then keep only ho."
+              }
+            },
+            {
+              "kind": "activity",
+              "scored": true,
+              "id": "PA-R03-wellbeing-r1-question-k",
+              "prompt": "Say the opening sound shared by Punjabi kī and kivēṁ, then type that sound.",
+              "assesses": [
+                "PA-ETYMON-QUESTION-K-03"
+              ],
+              "responseSeconds": 8,
+              "acceptedResponses": [
+                "k-",
+                "k"
+              ],
+              "feedback": {
+                "correct": "Right: kī and kivēṁ belong to the k- question family.",
+                "incorrect": "Say kī, kivēṁ slowly and keep their opening k-."
+              }
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Complete tusī̃ kivēṁ...? (ho) and name the question-family sound (k-)."
             }
           ]
         }

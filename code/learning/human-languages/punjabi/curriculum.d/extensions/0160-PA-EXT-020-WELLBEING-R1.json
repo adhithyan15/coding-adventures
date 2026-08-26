@@ -1,0 +1,13 @@
+{
+  "id": "PA-EXT-020-WELLBEING-R1",
+  "stage": "pre-A1",
+  "kind": "required",
+  "category": "assessment",
+  "canDo": "I can orally retrieve the respectful Punjabi wellbeing question's grammar and question-family sound at R1 distance without claiming script credit.",
+  "prerequisites": [
+    "PA-EXT-018-INTRODUCTION-CHECKPOINT"
+  ],
+  "lessons": [
+    "PA-R03-wellbeing-r1"
+  ]
+}

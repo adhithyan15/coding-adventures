@@ -43,10 +43,11 @@
     {
       "language": "punjabi",
       "chapter": 3,
-      "sourceHash": "fnv1a64:e5ddb23b5782e324",
+      "sourceHash": "fnv1a64:d0c41b891c0d5f87",
       "lessonIds": [
         "PA-C03-kivein",
         "PA-C03-tusi-kivein-ho",
+        "PA-R03-wellbeing-r1",
         "PA-C03-main",
         "PA-C03-thik",
         "PA-C03-koi-gall-nahin",
@@ -67,13 +68,14 @@
     {
       "language": "punjabi",
       "chapter": 7,
-      "sourceHash": "fnv1a64:68a1b3c7a03f963e",
+      "sourceHash": "fnv1a64:6b0203231bb164eb",
       "lessonIds": [
         "PA-C07-hona",
         "PA-C07-jana",
         "PA-C07-auna",
         "PA-C07-khana",
         "PA-C07-vekhna",
+        "PA-R07-wellbeing-r3",
         "PA-C07-janna"
       ],
       "tex": "punjabi/book/chapters/ch07-core-verbs.tex"

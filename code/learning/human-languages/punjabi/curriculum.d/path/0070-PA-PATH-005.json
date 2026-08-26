@@ -3,9 +3,12 @@
   "spine_node": "SPINE-CHECK-WELLBEING",
   "lessons": [
     "PA-C03-kivein",
-    "PA-C03-tusi-kivein-ho"
+    "PA-C03-tusi-kivein-ho",
+    "PA-R03-wellbeing-r1"
   ],
   "before": [],
-  "inline": [],
+  "inline": [
+    "PA-EXT-020-WELLBEING-R1"
+  ],
   "after": []
 }

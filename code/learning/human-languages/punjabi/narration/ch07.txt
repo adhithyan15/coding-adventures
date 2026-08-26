@@ -1,8 +1,8 @@
 Punjabi, chapter 7: Six Verbs at the Core.
-6 lessons. All 6 can be done entirely by ear.
+7 lessons. All 7 can be done entirely by ear.
 
 
-Lesson 1 of 6.
+Lesson 1 of 7.
 ਹੋਣਾ (hoṇā) — “to be,” and the two old verbs braided inside it.
 
 Warm-up.
@@ -37,7 +37,7 @@ Wrap-up Recall.
 Which ending names a Punjabi verb, and what is left of hoṇā once you take it off? (-ṇā; the stem ho-.) And why do hoṇā and hai not resemble each other at all? (They are two different ancient verbs braided into one — the bhū- verb and the as- verb, exactly as English braids be with is.)
 
 
-Lesson 2 of 6.
+Lesson 2 of 7.
 ਜਾਣਾ (jāṇā) — “to go,” and a sound law you can run yourself.
 
 Warm-up.
@@ -71,7 +71,7 @@ Wrap-up Recall.
 Which Sanskrit verb is jāṇā, and what happened to its first sound? (Yāti, “goes”; the y- became j-.) Give one more word the same change caught. (Jog, javān, or Jamnā.)
 
 
-Lesson 3 of 6.
+Lesson 3 of 7.
 ਆਉਣਾ (āuṇā) — “to come,” which is “go” pointed back at you.
 
 Warm-up.
@@ -101,7 +101,7 @@ Wrap-up Recall.
 What two pieces are inside āuṇā? (The prefix ā-, “toward,” and the old verb gam-, “go.”) Which everyday English verb is that second piece? (Come.)
 
 
-Lesson 4 of 6.
+Lesson 4 of 7.
 ਖਾਣਾ (khāṇā) — “to eat,” and the tone hiding one letter away.
 
 Warm-up.
@@ -136,7 +136,7 @@ Wrap-up Recall.
 What separates kòṛā “horse” from koṛā “whip”? (Pitch alone — the first dips and rises.) Where did that pitch come from? (From ਘ, an old breathy gh that stopped being breathy.) And does khāṇā carry one? (No — ਖ kh has no voice to lose.)
 
 
-Lesson 5 of 6.
+Lesson 5 of 7.
 ਵੇਖਣਾ (vekhṇā) — “to see,” a verb built out of the eye itself.
 
 Warm-up.
@@ -166,7 +166,32 @@ Wrap-up Recall.
 What noun is hiding inside vekhṇā? (The eye — Sanskrit akṣi, behind the verb īkṣ-.) Name two English words off that root. (Any of eye, window, ocular, optic, autopsy.) And what is the Hindi-shaped twin of this verb? (Dekhṇā.)
 
 
-Lesson 6 of 6.
+Lesson 6 of 7.
+Every wellbeing atom returns at R3 — retrieve every Chapter 3 wellbeing atom at R3.
+
+Warm-up.
+[pause 3 seconds]
+No new language. Listen once, then speak two short turns. Keep each score independent and repair only a miss.
+
+The exchange.
+Listen to tusī̃ kivēṁ ho? and give its meaning before repeating it.
+Reply maiṁ ṭhīk hāṁ from the English cue alone.
+Answer thanks with koī gall nahīṁ.
+Name the three small root cues: question k-, first-person m-, negative n-.
+Romanization is only a machine-readable record of prior speech. It is not Gurmukhi reading or writing evidence.
+[question — say your answer, then pause 18 seconds]
+You hear tusī̃ kivēṁ ho? Say its meaning, identify respectful ho, and name kivēṁ's k-question-family sound. Then type those spoken answers.
+[question — say your answer, then pause 16 seconds]
+Reply I am fine aloud, then name maiṁ's first-person m-family. Type the romanized reply and sound.
+[question — say your answer, then pause 16 seconds]
+Answer thanks with no problem aloud, then name nahīṁ's negative n-family. Type the romanized reply and sound.
+
+Wrap-up Recall.
+[pause 3 seconds]
+Ask, answer, and close the exchange once more from meaning alone.
+
+
+Lesson 7 of 7.
 ਜਾਣਨਾ (jāṇnā) — “to know,” one letter from “to go”.
 
 Warm-up.

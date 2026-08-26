@@ -53,7 +53,9 @@ book-only human validation remain explicit backlog.
   micro-lessons move from hearing the respectful question to answering,
   returning it, and closing a thanks exchange. Listening and speaking are
   scored separately; visible Gurmukhi and romanization do not earn reading or
-  writing credit before #13068. In the book.
+  writing credit before #13068. Three later oral checkpoints retrieve every
+  Chapter 3 atom at R1, R2, and R3 distance without adding new language or
+  awarding script credit. In the book.
 - **Chapter 4 — Farewells** ([`lessons/PA-C04-*`](./lessons/)): phir, milāṁge,
   **phir milāṁge**, rabb rākhā ("God keep you"; Arabic + Sanskrit), practice.
   In the book.
@@ -73,7 +75,8 @@ book-only human validation remain explicit backlog.
   **tone** — the lost breathy consonants left a pitch behind (*kòṛā* horse
   against *koṛā* whip); "see" is built on the word for the **eye**; and "know"
   is one held *n* away from "go" and the same word as English *know*. All six
-  are voice-only lessons. In the book.
+  are voice-only lessons; the chapter also hosts the distant R3 wellbeing
+  return. In the book.
 
 - **Chapter 8 — The Mind, the Page, and the Falling Tone**
   ([`lessons/PA-C08-*`](./lessons/)): sochṇā, samajhṇā, paṛhnā, likhṇā — think,
