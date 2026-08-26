@@ -165,6 +165,22 @@ The chapter list comes from `core/book-generation.json` — **both** `targets[]`
 and `handwritten[]`, merged by chapter number. Using `targets` alone silently
 drops every hand-authored chapter.
 
+Handwritten chapters also fail closed against canonical schema-v2 lessons. Each
+such lesson must appear in exactly one manifest state:
+
+- `embeddedLessonIds` means the lesson is learner-visible in the protected TeX
+  body. The body must carry both `% canonical-insertion: <lesson-id>` and
+  `\label{lesson:<lesson-id>}` evidence.
+- `omittedLessonIds` is explicit migration debt and requires a positive
+  `omissionIssue` pointing to its dependency-linked GitHub issue.
+
+`npm run check:books` rejects undeclared lessons, stale or cross-chapter IDs,
+duplicate states, issue-less omission debt, and embedded lessons without body
+evidence. Narration, hashes, activities, answer keys, and source comments cannot
+substitute for learner-visible book content. The pinned starting debt is 45
+lessons across nine languages in #13117; that count may only move downward as
+the handwritten bodies are repaired or fully generated.
+
 Nothing checks that the LaTeX actually *compiles*; `check:books` only proves the
 bytes match the generator. That gap is real — `src/book.ts`'s escape map was
 once found missing a `ǵ`, which only a compiler catches. So:

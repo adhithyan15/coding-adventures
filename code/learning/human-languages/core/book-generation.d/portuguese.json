@@ -156,7 +156,12 @@
     {
       "language": "portuguese",
       "chapter": 1,
-      "output": "portuguese/book/chapters/ch01-greetings.tex"
+      "output": "portuguese/book/chapters/ch01-greetings.tex",
+      "omittedLessonIds": [
+        "PT-C01-ola",
+        "PT-W01-ola-guided-copy"
+      ],
+      "omissionIssue": 13117
     }
   ]
 }

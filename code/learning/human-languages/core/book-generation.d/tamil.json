@@ -380,7 +380,12 @@
     {
       "language": "tamil",
       "chapter": 1,
-      "output": "tamil/book/chapters/ch01-greetings.tex"
+      "output": "tamil/book/chapters/ch01-greetings.tex",
+      "omittedLessonIds": [
+        "TA-C01-vanakkam",
+        "TA-W00-va-guided-copy"
+      ],
+      "omissionIssue": 13117
     },
     {
       "language": "tamil",
@@ -395,12 +400,20 @@
     {
       "language": "tamil",
       "chapter": 4,
-      "output": "tamil/book/chapters/ch04-farewells.tex"
+      "output": "tamil/book/chapters/ch04-farewells.tex",
+      "omittedLessonIds": [
+        "TA-W01-curves-va-ka"
+      ],
+      "omissionIssue": 13117
     },
     {
       "language": "tamil",
       "chapter": 5,
-      "output": "tamil/book/chapters/ch05-first-verbs.tex"
+      "output": "tamil/book/chapters/ch05-first-verbs.tex",
+      "omittedLessonIds": [
+        "TA-W01-abugida-va-ka"
+      ],
+      "omissionIssue": 13117
     }
   ]
 }

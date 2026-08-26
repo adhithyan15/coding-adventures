@@ -11,6 +11,7 @@ import { join } from "node:path";
 import { tmpdir } from "node:os";
 import { afterEach, describe, expect, it, vi } from "vitest";
 import {
+  assertHandwrittenLessonCoverage,
   generatedBookOutputs,
   handwrittenBookChapters,
   runBookGeneration,
@@ -420,6 +421,69 @@ Read`,
   });
 });
 
+describe("handwritten schema-v2 lesson coverage", () => {
+  function configure(
+    root: string,
+    declaration: Record<string, unknown>,
+  ): string {
+    const configPath = join(root, "core", "book-generation.json");
+    const config = JSON.parse(readFileSync(configPath, "utf8"));
+    config.handwritten = [{
+      language: "test",
+      chapter: 1,
+      output: "test/book/chapters/ch01-handwritten.tex",
+      ...declaration,
+    }];
+    writeFileSync(configPath, `${JSON.stringify(config)}\n`);
+    const chapter = join(root, "test", "book", "chapters", "ch01-handwritten.tex");
+    mkdirSync(join(root, "test", "book", "chapters"), { recursive: true });
+    return chapter;
+  }
+
+  it("fails closed on a new schema-v2 lesson with no coverage declaration", () => {
+    const root = fixture();
+    configure(root, {});
+    expect(() => assertHandwrittenLessonCoverage(root)).toThrow(
+      /canonical schema-v2 lesson\(s\) missing from handwritten coverage ledger: TEST-C01-hello/,
+    );
+  });
+
+  it("permits only issue-owned omission debt", () => {
+    const root = fixture();
+    configure(root, { omittedLessonIds: ["TEST-C01-hello"] });
+    expect(() => assertHandwrittenLessonCoverage(root)).toThrow(/positive omissionIssue/);
+
+    configure(root, { omittedLessonIds: ["TEST-C01-hello"], omissionIssue: 13117 });
+    expect(() => assertHandwrittenLessonCoverage(root)).not.toThrow();
+  });
+
+  it("requires learner-visible marker and label evidence for an embedded lesson", () => {
+    const root = fixture();
+    const chapter = configure(root, { embeddedLessonIds: ["TEST-C01-hello"] });
+    writeFileSync(chapter, "\\chapter{Hello}\n");
+    expect(() => assertHandwrittenLessonCoverage(root)).toThrow(/canonical-insertion marker/);
+
+    writeFileSync(chapter, "% canonical-insertion: TEST-C01-hello\n\\chapter{Hello}\n");
+    expect(() => assertHandwrittenLessonCoverage(root)).toThrow(
+      /lacks \\label\{lesson:TEST-C01-hello\}/,
+    );
+
+    writeFileSync(
+      chapter,
+      "% canonical-insertion: TEST-C01-hello\n\\chapter{Hello}\n\\label{lesson:TEST-C01-hello}\n",
+    );
+    expect(() => assertHandwrittenLessonCoverage(root)).not.toThrow();
+  });
+
+  it("rejects stale or cross-chapter lesson ids in the ledger", () => {
+    const root = fixture();
+    configure(root, { omittedLessonIds: ["TEST-C99-not-here"], omissionIssue: 13117 });
+    expect(() => assertHandwrittenLessonCoverage(root)).toThrow(
+      /is not a canonical schema-v2 lesson in this chapter/,
+    );
+  });
+});
+
 // ---------------------------------------------------------------------------
 // The hand-written half of the books.
 //
@@ -433,7 +497,17 @@ describe("hand-written chapters", () => {
   const handwritten = handwrittenBookChapters(root);
   const config = JSON.parse(
     readFileSync(join(root, "core", "book-generation.json"), "utf8"),
-  ) as { targets: { language: string; chapter: number; output: string }[] };
+  ) as {
+    targets: { language: string; chapter: number; output: string }[];
+    handwritten?: Array<{
+      language: string;
+      chapter: number;
+      output: string;
+      embeddedLessonIds?: string[];
+      omittedLessonIds?: string[];
+      omissionIssue?: number;
+    }>;
+  };
 
   /** Pull the printed title out of `\chapter{...}`, honouring nested braces. */
   function chapterTitle(tex: string): string | undefined {
@@ -467,6 +541,36 @@ describe("hand-written chapters", () => {
         `${entry.output} is hand-written but the generator claims it`,
       ).toBe(false);
     }
+  });
+
+  it("pins today's omission debt to dependency-linked issue 13117", () => {
+    const debt = (config.handwritten ?? []).filter(
+      (entry) => (entry.omittedLessonIds?.length ?? 0) > 0,
+    );
+    expect(debt.every((entry) => entry.omissionIssue === 13117)).toBe(true);
+    expect(debt.reduce((total, entry) => total + entry.omittedLessonIds!.length, 0)).toBe(45);
+    expect(
+      Object.fromEntries(
+        [...new Set(debt.map((entry) => entry.language))]
+          .sort()
+          .map((language) => [
+            language,
+            debt
+              .filter((entry) => entry.language === language)
+              .reduce((total, entry) => total + entry.omittedLessonIds!.length, 0),
+          ]),
+      ),
+    ).toEqual({
+      arabic: 12,
+      french: 4,
+      german: 2,
+      italian: 2,
+      malayalam: 12,
+      persian: 3,
+      portuguese: 2,
+      tamil: 4,
+      urdu: 4,
+    });
   });
 
   it("keeps the generator's claim honest against the committed files themselves", () => {
