@@ -1,0 +1,104 @@
+% ============================================================================
+% comparative-adjective-rule — common English comparative-adjective
+% formation rules and what each one actually requires (adj-facts-stdlib,
+% LANGUAGE).
+% ============================================================================
+% Turning an adjective into its comparative form ("smarter", "bigger",
+% "drier") is governed by a small set of named rules, each covering a
+% different spelling pattern the base adjective falls into — the SAME
+% formation-rule SHAPE `superlative-adjective-rule.adj` already ships for
+% "-est", but for "-er" instead, a distinct grammar-rule predicate that was
+% genuinely uncovered anywhere in this stdlib before this file. Recall is a
+% binding query:
+%
+%     ? comparative_adjective_rule(adjective_ending_in_y, $D)
+%       % change_y_to_i_before_er
+%
+% A native `table` (ADJ-TABLES RS-5): each `row` lowers to a ground
+% relation `comparative_adjective_rule(rule, description)` carrying the
+% source citation, so the lookup above is the ordinary SLD binding query —
+% the engine returns the description WITH its source, on the CPU, with
+% zero model calls, and abstains on any rule not one of these five
+% source-cited examples. The query also runs BACKWARD — bind a description
+% and recall which rule it names:
+%
+%     ? comparative_adjective_rule($R, add_er_suffix)
+%       % one_syllable_adjective
+%
+% NAMING — why this is a NEW predicate (`comparative_adjective_rule`), not
+% an extension of either sibling table: `superlative-adjective-rule.adj`
+% covers ONLY "-est" formation (confirmed by that table's own header and
+% by `suffix-meaning.adj`'s Thread-20 correction note) — a genuinely
+% different grammar rule, not this one restated. `suffix-meaning.adj`
+% separately ships the AGENTIVE "-er" sense (`_er_agentive` -> "one who;
+% person connected with", as in "teacher") — a derivational SUFFIX-MEANING
+% fact, categorically different from a comparative-degree GRAMMAR RULE
+% about adjective SPELLING. Shipping this as its own new predicate with a
+% distinct name, rather than as a bare `_er` row bolted onto either
+% existing table, means a recall against `comparative_adjective_rule` can
+% never be confused with a recall against `suffix_meaning` or
+% `superlative_adjective_rule` — there is no atom-label collision to
+% disambiguate in the first place, unlike the `ow`/`ow_long_o` and
+% `_er_agentive`/bare-`_er` cases earlier in this stdlib. (`suffix-meaning
+% .adj`'s own Thread-19/20 backlog notes flagged exactly this predicate as
+% the intended home for comparative `-er`, reserving the bare atom `_er`
+% for it since `_er_agentive` is the only `-er`-shaped atom that table
+% ships.)
+%
+% Provenance: quoted verbatim from Grammarly's "What Are Comparative
+% Adjectives? Definition and Examples" article, "5 spelling rules for
+% forming comparative adjectives" section, which states each rule
+% directly:
+%
+%     rule (this table's atom label)                    description (this table's atom label)   rule quote (verbatim)
+%     ---------------------------------------------------  -----------------------------------------  --------------------------------------------------------------------------------
+%     one_syllable_adjective                                add_er_suffix                               "For most adjectives with one syllable, simply add the suffix –er at the
+%                                                                                                          end of the word without changing the spelling."
+%     one_syllable_adjective_ending_in_e                    add_r_only                                  "If a one-syllable adjective already ends in -e, just add an –r at the
+%                                                                                                          end. You don't need to add another e."
+%     one_syllable_consonant_vowel_consonant                double_final_consonant_before_er            "Be careful of one-syllable adjectives with the last three letters in a
+%                                                                                                          consonant-vowel-consonant format, like big or thin. For these, you have
+%                                                                                                          to double the last consonant and then add –er."
+%     adjective_ending_in_y                                 change_y_to_i_before_er                     "If an adjective with either one or two syllables ends in a -y, first
+%                                                                                                          change the y into an i and then add –er."
+%     two_syllable_adjective_ending_in_er_ow_or_le          add_er_or_r_without_spelling_change         "If an adjective with two syllables ends with -er (like bitter) or -ow
+%                                                                                                          (like narrow), you can just add –er to the end without changing the
+%                                                                                                          spelling (bitterer or narrower). If a two-syllable adjective ends in
+%                                                                                                          -le, you can just add –r without adding a second e."
+%
+% curl-fetched the raw page directly and read it byte-for-byte before
+% writing this file (not just an AI-summarized WebFetch) — confirmed all
+% five quoted sentences appear verbatim in the page's own "5 spelling
+% rules for forming comparative adjectives" section. `trust consensus` —
+% Grammarly is a reputable, widely-cited grammar-content company, the same
+% tier this stdlib already reserves for other non-.gov language sources
+% and the exact same source family `superlative-adjective-rule.adj` itself
+% already cites for the sibling "-est" rule set.
+%
+% A sixth rule the SAME page states — long ("two-or-more-syllable")
+% adjectives use "more" instead of "-er" — is deliberately NOT a row here,
+% for the identical reason `superlative-adjective-rule.adj` excludes its
+% own "-est" article's analogous "most" rule: the page's own supporting
+% text for it ("Adjectives with two syllables except those that end in
+% -er, -ow, -le, or -y") is a bullet-list fragment, not a clean quotable
+% sentence, so a recall on it would require paraphrasing rather than
+% quoting. A rule not one of these five — including that "more" rule, and
+% any other adjective-comparison behavior — is deliberately NOT a row, so
+% a recall ABSTAINS on it rather than inventing a description. (See
+% ../README.md; feedback_nothing_human_authored,
+% feedback_adj_only_shipped_artifacts.)
+% ============================================================================
+
+table comparative_adjective_rule {
+    columns rule, description
+
+    row (one_syllable_adjective, add_er_suffix)
+    row (one_syllable_adjective_ending_in_e, add_r_only)
+    row (one_syllable_consonant_vowel_consonant, double_final_consonant_before_er)
+    row (adjective_ending_in_y, change_y_to_i_before_er)
+    row (two_syllable_adjective_ending_in_er_ow_or_le, add_er_or_r_without_spelling_change)
+
+    source "For most adjectives with one syllable, simply add the suffix –er at the end of the word without changing the spelling."
+    locator "https://www.grammarly.com/blog/parts-of-speech/comparative-adjectives/"
+    trust consensus
+}
