@@ -48,7 +48,7 @@ The build tool follows an 11-step pipeline:
 | `BuildTool.Cache` | Agent-based JSON build cache with atomic writes |
 | `BuildTool.Executor` | Parallel build execution with progress tracking |
 | `BuildTool.Reporter` | Fixed-width report table formatting |
-| `BuildTool.Validator` | Pure build-contract and tracked-artifact validation |
+| `BuildTool.Validator` | Pure build-contract, orphan-crate, and tracked-artifact validation |
 | `BuildTool.TrackedArtifactUnicode17` | Generated, source-embedded Unicode 17 policy tables |
 
 ## Usage
@@ -91,6 +91,29 @@ mix escript.build
 | `--language` | `all` | Filter to a specific language |
 | `--diff-base` | `origin/main` | Git ref to diff against |
 | `--cache-file` | `.build-cache.json` | Path to cache file |
+
+## Orphan-crate validation
+
+`BuildTool.Validator.validate_orphan_crate_snapshot/1` accepts one closed,
+caller-supplied snapshot of Cargo manifest directories, relevant BUILD states,
+and `code/BUILD-EXEMPTIONS` records. It returns the shared validation result and
+deterministically ordered diagnostics without enumerating a checkout, opening a
+path, invoking Git, reading environment state, launching a process, or using
+the network.
+
+Coverage is component-wise: a runnable BUILD in the manifest directory or an
+ancestor through `code/` covers the manifest, and a nearer empty BUILD cannot
+mask a runnable ancestor. Exact artifact components such as `target`,
+`node_modules`, `_build`, `deps`, `.build`, `dist-newstyle`, and `.cargo` stay
+outside the bounded scan. Uncovered manifests produce unlisted or empty-BUILD
+diagnostics unless a valid active `EXCLUDED` or `PENDING` record applies.
+
+Exemption paths use the same portable, host-independent path policy on every
+platform. Unsafe values are redacted to `code/BUILD-EXEMPTIONS`; aliases are
+detected with the generated Unicode 17 NFC and full-fold tables; Windows
+reserved names use the generated full-uppercase table; and blank reasons match
+Python's exact whitespace set. Stale exemptions remain visible, while the
+result separately reports the count of valid non-stale `PENDING` entries.
 
 ## Tracked-artifact validation
 
@@ -135,10 +158,11 @@ mix test
 mix test --cover
 ```
 
-`test/validator_test.exs` consumes all five language-neutral tracked-artifact
-fixtures and adds focused coverage for version drift, invalid-path precedence
-and redaction, scalar length and ordering, pinned Unicode 17 sentinels, and all
-three inert entry kinds.
+`test/validator_test.exs` consumes all four language-neutral orphan-crate
+fixtures and all five tracked-artifact fixtures. Focused tests cover exemption
+precedence, hostile-path redaction, Python blank reasons and ASCII-JSON detail
+ordering, rooted BUILD selection, Unicode 17 full-fold aliases, tracked version
+drift, scalar path boundaries, pinned Unicode sentinels, and inert entry kinds.
 
 ## Dependencies
 

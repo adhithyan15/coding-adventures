@@ -6,6 +6,42 @@ defmodule BuildTool.Validator do
   @tracked_artifact_component_identity "node_modules"
   @tracked_artifact_redacted_path "repository"
   @tracked_artifact_unicode_version TrackedArtifactUnicode17.unicode_version()
+  @orphan_scan_root "code"
+  @orphan_ledger_path "code/BUILD-EXEMPTIONS"
+  @orphan_build_names [
+    "BUILD",
+    "BUILD_windows",
+    "BUILD_mac",
+    "BUILD_linux",
+    "BUILD_mac_and_linux"
+  ]
+  @orphan_build_rank @orphan_build_names |> Enum.with_index() |> Map.new()
+  @orphan_skip_components MapSet.new([
+                            ".git",
+                            "target",
+                            "node_modules",
+                            "vendor",
+                            ".venv",
+                            "_build",
+                            "deps",
+                            ".build",
+                            "dist-newstyle",
+                            ".cargo"
+                          ])
+  @python_blank_codepoints MapSet.new(
+                             Enum.to_list(0x0009..0x000D) ++
+                               Enum.to_list(0x001C..0x0020) ++
+                               [
+                                 0x0085,
+                                 0x00A0,
+                                 0x1680,
+                                 0x2028,
+                                 0x2029,
+                                 0x202F,
+                                 0x205F,
+                                 0x3000
+                               ] ++ Enum.to_list(0x2000..0x200A)
+                           )
   @unsafe_tracked_artifact_scalars MapSet.new(~c[<>:"|?*])
   @windows_reserved_basenames MapSet.new(
                                 ["CON", "PRN", "AUX", "NUL", "CONIN$", "CONOUT$", "CLOCK$"] ++
@@ -158,17 +194,337 @@ defmodule BuildTool.Validator do
     end
   end
 
+  # Validate a closed Cargo/BUILD/ledger snapshot without touching the host.
+  #
+  # The values are inert records supplied by a separately reviewed discovery
+  # layer. Keeping the policy here pure makes filesystem, Git, process,
+  # environment, and network authority impossible to acquire accidentally.
+  def validate_orphan_crate_snapshot(snapshot) do
+    manifests =
+      snapshot
+      |> Map.fetch!("manifests")
+      |> Enum.reject(&orphan_artifact_path?(Map.fetch!(&1, "path")))
+
+    directories = snapshot |> Map.fetch!("directories") |> MapSet.new()
+    manifest_by_path = Map.new(manifests, &{Map.fetch!(&1, "path"), &1})
+    build_files = Map.fetch!(snapshot, "build_files")
+
+    coverage =
+      Map.new(manifests, fn manifest ->
+        path = Map.fetch!(manifest, "path")
+        {path, covering_orphan_build(build_files, path, "runnable")}
+      end)
+
+    empty_builds =
+      Map.new(manifests, fn manifest ->
+        path = Map.fetch!(manifest, "path")
+        {path, covering_orphan_build(build_files, path, "empty")}
+      end)
+
+    {diagnostics, _seen, valid_exemptions} =
+      snapshot
+      |> Map.fetch!("exemptions")
+      |> Enum.reduce({[], MapSet.new(), []}, fn exemption, {diagnostics, seen, valid} ->
+        path = Map.fetch!(exemption, "path")
+        {path_problem, identity} = orphan_path_problem_and_identity(path)
+        duplicate = not is_nil(identity) and MapSet.member?(seen, identity)
+
+        seen =
+          if is_nil(identity) or duplicate do
+            seen
+          else
+            MapSet.put(seen, identity)
+          end
+
+        problem =
+          cond do
+            Map.fetch!(exemption, "kind") not in ["EXCLUDED", "PENDING"] ->
+              "UNKNOWN_KIND"
+
+            python_blank?(Map.fetch!(exemption, "reason")) ->
+              "REASON_MISSING"
+
+            duplicate ->
+              "DUPLICATE_PATH"
+
+            true ->
+              path_problem
+          end
+
+        if is_nil(problem) do
+          {diagnostics, seen, [exemption | valid]}
+        else
+          diagnostic = %{
+            "code" => "ORPHAN_EXEMPTION_INVALID",
+            "severity" => "error",
+            "path" => @orphan_ledger_path,
+            "details" => %{
+              "line" => Map.fetch!(exemption, "line"),
+              "problem" => problem
+            }
+          }
+
+          {[diagnostic | diagnostics], seen, valid}
+        end
+      end)
+
+    {diagnostics, active_exemptions, pending_exemption_count} =
+      Enum.reduce(
+        valid_exemptions,
+        {diagnostics, %{}, 0},
+        fn exemption, {diagnostics, active, pending_count} ->
+          path = Map.fetch!(exemption, "path")
+
+          stale_problem =
+            cond do
+              not MapSet.member?(directories, path) -> "MISSING_DIRECTORY"
+              not Map.has_key?(manifest_by_path, path) -> "NO_MANIFEST"
+              not is_nil(Map.fetch!(coverage, path)) -> "COVERED"
+              true -> nil
+            end
+
+          if is_nil(stale_problem) do
+            pending_count =
+              if Map.fetch!(exemption, "kind") == "PENDING",
+                do: pending_count + 1,
+                else: pending_count
+
+            {diagnostics, Map.put(active, path, exemption), pending_count}
+          else
+            diagnostic = %{
+              "code" => "ORPHAN_EXEMPTION_STALE",
+              "severity" => "error",
+              "path" => @orphan_ledger_path,
+              "details" => %{
+                "entry_path" => path,
+                "kind" => Map.fetch!(exemption, "kind"),
+                "line" => Map.fetch!(exemption, "line"),
+                "problem" => stale_problem
+              }
+            }
+
+            {[diagnostic | diagnostics], active, pending_count}
+          end
+        end
+      )
+
+    diagnostics =
+      Enum.reduce(manifests, diagnostics, fn manifest, diagnostics ->
+        path = Map.fetch!(manifest, "path")
+
+        if not is_nil(Map.fetch!(coverage, path)) or Map.has_key?(active_exemptions, path) do
+          diagnostics
+        else
+          diagnostic = orphan_manifest_diagnostic(manifest, Map.fetch!(empty_builds, path))
+          [diagnostic | diagnostics]
+        end
+      end)
+      |> Enum.sort_by(&orphan_diagnostic_sort_key/1)
+
+    diagnostic_codes =
+      diagnostics
+      |> Enum.map(&Map.fetch!(&1, "code"))
+      |> Enum.uniq()
+      |> Enum.sort_by(&String.to_charlist/1)
+
+    %{
+      "valid" => diagnostics == [],
+      "diagnostic_codes" => diagnostic_codes,
+      "pending_exemption_count" => pending_exemption_count,
+      "diagnostics" => diagnostics
+    }
+  end
+
+  defp orphan_manifest_diagnostic(manifest, nil) do
+    %{
+      "code" => "ORPHAN_CRATE_UNLISTED",
+      "severity" => "error",
+      "path" => Map.fetch!(manifest, "path"),
+      "details" => %{"manifest_kind" => Map.fetch!(manifest, "kind")}
+    }
+  end
+
+  defp orphan_manifest_diagnostic(manifest, empty_build) do
+    %{
+      "code" => "ORPHAN_CRATE_EMPTY_BUILD",
+      "severity" => "error",
+      "path" => Map.fetch!(manifest, "path"),
+      "details" => %{
+        "build_path" => Map.fetch!(empty_build, "path"),
+        "manifest_kind" => Map.fetch!(manifest, "kind")
+      }
+    }
+  end
+
+  defp covering_orphan_build(build_files, manifest_path, state) do
+    build_files
+    |> Enum.filter(fn build_file ->
+      path = Map.fetch!(build_file, "path")
+      {parent, name} = portable_parent_and_basename(path)
+
+      Map.fetch!(build_file, "state") == state and
+        under_orphan_scan_root?(parent) and
+        (manifest_path == parent or String.starts_with?(manifest_path, parent <> "/")) and
+        Map.has_key?(@orphan_build_rank, name)
+    end)
+    |> Enum.min_by(
+      fn build_file ->
+        path = Map.fetch!(build_file, "path")
+        {parent, name} = portable_parent_and_basename(path)
+
+        {
+          -length(String.split(parent, "/", trim: false)),
+          Map.fetch!(@orphan_build_rank, name),
+          String.to_charlist(path)
+        }
+      end,
+      fn -> nil end
+    )
+  end
+
+  defp portable_parent_and_basename(path) do
+    parts = String.split(path, "/", trim: false)
+    {parts |> Enum.drop(-1) |> Enum.join("/"), List.last(parts)}
+  end
+
+  defp orphan_path_problem_and_identity(path) do
+    if portable_orphan_path?(path) do
+      identity = path |> TrackedArtifactUnicode17.nfc() |> TrackedArtifactUnicode17.casefold()
+
+      problem =
+        cond do
+          not under_orphan_scan_root?(path) -> "PATH_OUTSIDE_SCAN"
+          orphan_artifact_path?(path) -> "PATH_ARTIFACT"
+          true -> nil
+        end
+
+      {problem, identity}
+    else
+      {"PATH_UNSAFE", nil}
+    end
+  end
+
+  defp portable_orphan_path?(path) when is_binary(path) do
+    if String.valid?(path) do
+      segments = String.split(path, "/", trim: false)
+
+      path != "" and
+        length(String.to_charlist(path)) <= 512 and
+        TrackedArtifactUnicode17.nfc(path) == path and
+        not String.starts_with?(path, "/") and
+        not String.contains?(path, "\\") and
+        not String.contains?(path, "//") and
+        not Regex.match?(~r/^[A-Za-z]:/, path) and
+        not unsafe_orphan_path?(path) and
+        Enum.all?(segments, &portable_orphan_segment?/1)
+    else
+      false
+    end
+  end
+
+  defp portable_orphan_path?(_path), do: false
+
+  defp unsafe_orphan_path?(path) do
+    path
+    |> String.to_charlist()
+    |> Enum.any?(fn scalar ->
+      scalar < 0x20 or MapSet.member?(@unsafe_tracked_artifact_scalars, scalar)
+    end)
+  end
+
+  defp portable_orphan_segment?(segment) do
+    basename = segment |> String.split(".", parts: 2) |> hd()
+
+    segment != "" and
+      segment not in [".", ".."] and
+      not String.ends_with?(segment, [" ", "."]) and
+      not MapSet.member?(
+        @windows_reserved_basenames,
+        TrackedArtifactUnicode17.full_uppercase(basename)
+      )
+  end
+
+  defp under_orphan_scan_root?(path),
+    do: path == @orphan_scan_root or String.starts_with?(path, @orphan_scan_root <> "/")
+
+  defp orphan_artifact_path?(path) do
+    path
+    |> String.split("/", trim: false)
+    |> Enum.any?(&MapSet.member?(@orphan_skip_components, &1))
+  end
+
+  defp python_blank?(value) when is_binary(value) do
+    String.valid?(value) and
+      value
+      |> String.to_charlist()
+      |> Enum.all?(&MapSet.member?(@python_blank_codepoints, &1))
+  end
+
+  defp python_blank?(_value), do: false
+
+  defp orphan_diagnostic_sort_key(diagnostic) do
+    {
+      diagnostic |> Map.fetch!("code") |> String.to_charlist(),
+      diagnostic |> Map.fetch!("path") |> String.to_charlist(),
+      [],
+      diagnostic |> Map.fetch!("details") |> canonical_details() |> String.to_charlist()
+    }
+  end
+
   defp canonical_details(details) do
     body =
       details
       |> Map.keys()
       |> Enum.sort()
       |> Enum.map(fn key ->
-        "#{Jason.encode!(key)}: #{Jason.encode!(Map.fetch!(details, key))}"
+        "#{python_ascii_json_string(key)}: #{python_ascii_json_value(Map.fetch!(details, key))}"
       end)
       |> Enum.join(", ")
 
     "{#{body}}"
+  end
+
+  defp python_ascii_json_value(value) when is_binary(value),
+    do: python_ascii_json_string(value)
+
+  defp python_ascii_json_value(value) when is_integer(value), do: Integer.to_string(value)
+  defp python_ascii_json_value(value), do: Jason.encode!(value)
+
+  defp python_ascii_json_string(value) do
+    escaped =
+      value
+      |> String.to_charlist()
+      |> Enum.map_join(&python_ascii_json_scalar/1)
+
+    "\"#{escaped}\""
+  end
+
+  defp python_ascii_json_scalar(?\"), do: "\\\""
+  defp python_ascii_json_scalar(?\\), do: "\\\\"
+  defp python_ascii_json_scalar(0x08), do: "\\b"
+  defp python_ascii_json_scalar(0x0C), do: "\\f"
+  defp python_ascii_json_scalar(?\n), do: "\\n"
+  defp python_ascii_json_scalar(?\r), do: "\\r"
+  defp python_ascii_json_scalar(?\t), do: "\\t"
+
+  defp python_ascii_json_scalar(scalar) when scalar in 0x20..0x7E,
+    do: <<scalar::utf8>>
+
+  defp python_ascii_json_scalar(scalar) when scalar <= 0xFFFF,
+    do: "\\u" <> python_json_hex(scalar)
+
+  defp python_ascii_json_scalar(scalar) do
+    supplementary = scalar - 0x10000
+    high = 0xD800 + Bitwise.bsr(supplementary, 10)
+    low = 0xDC00 + Bitwise.band(supplementary, 0x3FF)
+    "\\u#{python_json_hex(high)}\\u#{python_json_hex(low)}"
+  end
+
+  defp python_json_hex(value) do
+    value
+    |> Integer.to_string(16)
+    |> String.downcase()
+    |> String.pad_leading(4, "0")
   end
 
   def validate_ci_full_build_toolchains(repo_root, packages) do
