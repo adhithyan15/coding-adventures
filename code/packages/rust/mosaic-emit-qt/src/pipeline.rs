@@ -3916,17 +3916,23 @@ fn emit_host_link_qml(
     let on_activate = find_emit_ref_prop(node, "onActivate");
 
     // #13052: reject rather than escape. Only validate when `href` can
-    // actually reach `Qt.openUrlExternally(link)` -- when `external:
-    // false`, the handler dispatches only and never touches `link`
-    // (the href is purely cosmetic rich-text at that point, same as
-    // XAML's in-app-routing path never reaching `NavigateUri`), so an
-    // `href: "#"`-style routing placeholder stays valid there. No
-    // escaping done further down makes an unsafe scheme safe, so this
-    // has to reject rather than sanitize. Mirrors the XAML backend's
+    // actually reach `Qt.openUrlExternally(link)`. Per the
+    // `handler_body` match below, that's every combination EXCEPT
+    // `external: false` + `onActivate` present (dispatch-only) --
+    // critically, `external: false` with NO `onActivate` still falls
+    // to the `(_, None) => Qt.openUrlExternally(link)` arm, so
+    // `external_false` alone is not a safe exemption (a first review
+    // pass of #13052 got this wrong; caught and fixed in the same
+    // PR). Only that one dispatch-only combination lets an
+    // `href: "#"`-style routing placeholder skip validation -- every
+    // other shape reaches the sink and must be checked. No escaping
+    // done further down makes an unsafe scheme safe, so this has to
+    // reject rather than sanitize. Mirrors the XAML backend's
     // `NavigateUri` fix (#12038). There is no dynamic (`slot:`) href
     // path in this backend today, so this compile-time check on the
     // literal is the only validation needed.
-    if !external_false && !has_allowed_uri_scheme(href) {
+    let reaches_open_url_externally = !(external_false && on_activate.is_some());
+    if reaches_open_url_externally && !has_allowed_uri_scheme(href) {
         return Err(PipelineEmitError::UnsafeUriScheme(href.to_string()));
     }
 
@@ -9806,6 +9812,77 @@ mod tests {
             r.is_ok(),
             "expected `href: \"#\"` with external:false to compile, got: {r:?}"
         );
+    }
+
+    /// #13052 security-review finding: `external: false` alone is NOT
+    /// a safe exemption from scheme validation. Per `handler_body`'s
+    /// match, `external: false` WITHOUT `onActivate` still falls to
+    /// the `(_, None) => Qt.openUrlExternally(link)` arm -- only the
+    /// combination of `external: false` AND `onActivate` present is
+    /// truly dispatch-only. A disallowed-scheme href with
+    /// `external: false` and no `onActivate` must still be rejected.
+    #[test]
+    fn host_link_disallowed_scheme_href_rejected_with_external_false_and_no_on_activate() {
+        let m = component("X", vec![], vec![]);
+        let l = LayoutDef {
+            component_name: "X".to_string(),
+            root: LayoutNode {
+                tag: "HostLink".to_string(),
+                part_name: None,
+                props: vec![
+                    LayoutProp {
+                        name: "href".to_string(),
+                        value: LayoutPropValue::String("javascript:alert(1)".to_string()),
+                    },
+                    LayoutProp {
+                        name: "external".to_string(),
+                        value: LayoutPropValue::Keyword("false".to_string()),
+                    },
+                ],
+                children: Vec::new(),
+            },
+        };
+        let err = from_pipeline(&m, &l, &empty_style("X")).unwrap_err();
+        assert!(
+            matches!(err, PipelineEmitError::UnsafeUriScheme(ref h) if h == "javascript:alert(1)"),
+            "expected UnsafeUriScheme even with external:false and no onActivate \
+             (that combination still reaches Qt.openUrlExternally), got: {err:?}"
+        );
+    }
+
+    /// #13052 security-review finding: a scheme hidden behind leading
+    /// whitespace or an embedded tab/CR/LF must still be rejected --
+    /// a naive scan sees no alphabetic first character and
+    /// misclassifies it as "no scheme, therefore safe," but Qt's own
+    /// URL handling normalizes that whitespace away just like a
+    /// browser does, so it's really a disallowed scheme.
+    #[test]
+    fn host_link_scheme_hidden_by_whitespace_is_still_rejected() {
+        for hostile in [
+            " javascript:alert(1)",
+            "java\tscript:alert(1)",
+            "java\nscript:alert(1)",
+            "\tjavascript:alert(1)",
+        ] {
+            let m = component("X", vec![], vec![]);
+            let l = LayoutDef {
+                component_name: "X".to_string(),
+                root: LayoutNode {
+                    tag: "HostLink".to_string(),
+                    part_name: None,
+                    props: vec![LayoutProp {
+                        name: "href".to_string(),
+                        value: LayoutPropValue::String(hostile.to_string()),
+                    }],
+                    children: Vec::new(),
+                },
+            };
+            let err = from_pipeline(&m, &l, &empty_style("X")).unwrap_err();
+            assert!(
+                matches!(err, PipelineEmitError::UnsafeUriScheme(ref h) if h == hostile),
+                "expected UnsafeUriScheme for whitespace-obscured {hostile:?}, got: {err:?}"
+            );
+        }
     }
 
     /// UI29-4 Qt test 1a — SECURITY REGRESSION: a `\` or `"` in the

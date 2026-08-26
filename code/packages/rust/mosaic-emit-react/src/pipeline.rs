@@ -2115,7 +2115,26 @@ fn layout_contains_slot_bound_host_link_href(root: &LayoutNode) -> bool {
 /// or `#` is data, not a scheme separator (matches how browsers parse
 /// it too), so `"path/to:thing"` is a relative reference, not a
 /// scheme.
+///
+/// Security-review hardening: normalizes exactly like the WHATWG URL
+/// parser does before looking for a scheme -- trims leading/trailing
+/// C0-control-or-space and strips every embedded tab/CR/LF. Without
+/// this, `" javascript:alert(1)"` or `"java\tscript:alert(1)"` fails
+/// the alphabetic-first-character check below and gets classified as
+/// "no scheme, therefore a safe relative reference" -- but a real
+/// browser strips that same whitespace before parsing the scheme, so
+/// it actually navigates as `javascript:`. A first review pass of
+/// #13052 missed this; caught and fixed in the same PR. The matching
+/// runtime `isSafeUri` JS helper below normalizes identically, so a
+/// literal and a slot-bound href of the same value get the same
+/// verdict.
 fn has_disallowed_uri_scheme(href: &str) -> bool {
+    let normalized: String = href
+        .trim_matches(|c: char| (c as u32) <= 0x20)
+        .chars()
+        .filter(|c| !matches!(c, '\t' | '\r' | '\n'))
+        .collect();
+    let href = normalized.as_str();
     let Some(colon) = href.find(':') else {
         return false;
     };
@@ -2145,7 +2164,16 @@ fn has_disallowed_uri_scheme(href: &str) -> bool {
 /// the same verdict.
 fn emit_uri_scheme_helper() -> String {
     r#"function isSafeUri(raw) {
-  const match = /^([a-zA-Z][a-zA-Z0-9+.-]*):/.exec(String(raw ?? ""));
+  // Normalize like the WHATWG URL parser does before scheme detection:
+  // trim leading/trailing C0-control-or-space, strip every embedded
+  // tab/CR/LF. Without this, " javascript:alert(1)" would fail the
+  // scheme regex below and be treated as a safe relative reference,
+  // even though a browser strips that same whitespace and navigates
+  // it as javascript:.
+  const normalized = String(raw ?? "")
+    .replace(/^[\u0000-\u0020]+|[\u0000-\u0020]+$/g, "")
+    .replace(/[\t\r\n]/g, "");
+  const match = /^([a-zA-Z][a-zA-Z0-9+.-]*):/.exec(normalized);
   if (!match) return true;
   const scheme = match[1].toLowerCase();
   return scheme === "http" || scheme === "https" || scheme === "mailto";
@@ -8833,6 +8861,34 @@ mod tests {
         }
     }
 
+    /// #13052 security-review finding: a scheme hidden behind leading
+    /// whitespace or an embedded tab/CR/LF must still be rejected --
+    /// a naive scan sees no alphabetic first character and
+    /// misclassifies it as "no scheme, therefore safe," but a real
+    /// browser normalizes that whitespace away before parsing the
+    /// scheme, so it's really a disallowed scheme. Checked for both
+    /// the compile-time literal path and the runtime isSafeUri path.
+    #[test]
+    fn host_link_scheme_hidden_by_whitespace_is_still_rejected() {
+        for hostile in [
+            " javascript:alert(1)",
+            "java\tscript:alert(1)",
+            "java\nscript:alert(1)",
+            "\tjavascript:alert(1)",
+        ] {
+            let m = component("X", vec![], vec![]);
+            let l = host_link_layout(vec![LayoutProp {
+                name: "href".into(),
+                value: LayoutPropValue::String(hostile.to_string()),
+            }]);
+            let err = from_pipeline(&m, &l, &empty_style("X")).unwrap_err();
+            assert!(
+                matches!(err, PipelineEmitError::UnsafeUriScheme(ref h) if h == hostile),
+                "expected UnsafeUriScheme for whitespace-obscured {hostile:?}, got: {err:?}"
+            );
+        }
+    }
+
     /// #13052: allowed schemes and relative references (no scheme at
     /// all -- the common in-app-routing shape) stay valid.
     #[test]
@@ -8879,6 +8935,15 @@ mod tests {
         assert!(
             out.contains("href={isSafeUri(target) ? target : \"#\"}"),
             "expected the slot-bound href to be runtime-guarded, got:\n{out}"
+        );
+        // Round-2 security-review regression: the runtime helper must
+        // strip the FULL C0-control-or-space range before scheme
+        // detection, not just JS whitespace -- a narrower check misses
+        // control bytes like 0x01/0x1B, letting a hidden scheme slip
+        // through as `no scheme found`.
+        assert!(
+            out.contains("[\\u0000-\\u0020]"),
+            "expected the full C0-control-or-space range in the isSafeUri normalization, got:\n{out}"
         );
     }
 

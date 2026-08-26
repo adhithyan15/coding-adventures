@@ -512,7 +512,16 @@ private fun _mosaicHostLink(
 }
 
 private fun _mosaicIsSafeUri(raw: String): Boolean {
-    val schemeMatch = Regex("^([a-zA-Z][a-zA-Z0-9+.-]*):").find(raw) ?: return true
+    // #13052 hardening: normalize like the WHATWG URL parser does
+    // before scheme detection -- trim leading/trailing C0-control-or-
+    // space (code <= 0x20, not just Kotlin's narrower `isWhitespace`
+    // class -- a round-2 review caught that gap), strip every
+    // embedded tab/CR/LF. Without this, a scheme hidden behind a
+    // control byte (e.g. "javascript:...") reads as "no scheme,
+    // therefore safe," but a real consumer strips that byte and
+    // navigates it as javascript:.
+    val normalized = raw.trim { it.code <= 0x20 }.replace(Regex("[\t\r\n]"), "")
+    val schemeMatch = Regex("^([a-zA-Z][a-zA-Z0-9+.-]*):").find(normalized) ?: return true
     val scheme = schemeMatch.groupValues[1].lowercase()
     return scheme == "http" || scheme == "https" || scheme == "mailto"
 }
@@ -3704,7 +3713,24 @@ fn host_link_href_expr(node: &LayoutNode) -> Result<Option<String>, PipelineEmit
 /// runtime guard, which only gates the `external == true` branch).
 /// Only a *present, disallowed* scheme (`javascript:`, `data:`,
 /// `intent:`, a custom protocol handler, ...) returns `true`.
+///
+/// Security-review hardening: normalizes exactly like the WHATWG URL
+/// parser does before looking for a scheme -- trims leading/trailing
+/// C0-control-or-space and strips every embedded tab/CR/LF. Without
+/// this, `" javascript:alert(1)"` or `"java\tscript:alert(1)"` fails
+/// the alphabetic-first-character check below and gets classified as
+/// "no scheme, therefore a safe relative reference" -- but a real
+/// consumer strips that same whitespace before parsing the scheme, so
+/// it actually navigates as `javascript:`. A first review pass of
+/// #13052 missed this; caught and fixed in the same PR. The matching
+/// runtime `_mosaicIsSafeUri` Kotlin helper normalizes identically.
 fn has_disallowed_uri_scheme(href: &str) -> bool {
+    let normalized: String = href
+        .trim_matches(|c: char| (c as u32) <= 0x20)
+        .chars()
+        .filter(|c| !matches!(c, '\t' | '\r' | '\n'))
+        .collect();
+    let href = normalized.as_str();
     let Some(colon) = href.find(':') else {
         return false;
     };
@@ -6426,6 +6452,44 @@ mod tests {
         }
     }
 
+    /// #13052 security-review finding: a scheme hidden behind leading
+    /// whitespace or an embedded tab/CR/LF must still be rejected --
+    /// a naive scan sees no alphabetic first character and
+    /// misclassifies it as "no scheme, therefore safe," but a real
+    /// consumer normalizes that whitespace away before parsing the
+    /// scheme, so it's really a disallowed scheme.
+    #[test]
+    fn host_link_scheme_hidden_by_whitespace_is_still_rejected() {
+        for hostile in [
+            " javascript:alert(1)",
+            "java\tscript:alert(1)",
+            "java\nscript:alert(1)",
+            "\tjavascript:alert(1)",
+        ] {
+            let m = component("X", vec![], vec![]);
+            let l = layout(
+                "X",
+                node(
+                    "HostLink",
+                    vec![LayoutProp {
+                        name: "href".into(),
+                        value: LayoutPropValue::String(hostile.to_string()),
+                    }],
+                    vec![],
+                ),
+            );
+            let err = from_pipeline(&m, &l, &empty_style("X")).unwrap_err();
+            // Debug-formatted in the error message, so compare against
+            // `{hostile:?}` rather than the raw string -- a `\t`/`\n`
+            // byte renders as the two-character escape there.
+            let needle = format!("{hostile:?}");
+            assert!(
+                matches!(err, PipelineEmitError::UnsupportedHostLink(ref reason) if reason.contains(&needle)),
+                "expected UnsupportedHostLink for whitespace-obscured {hostile:?}, got: {err:?}"
+            );
+        }
+    }
+
     /// #13052: allowed schemes and relative references (no scheme at
     /// all -- the common in-app-routing shape) stay valid.
     #[test]
@@ -6484,6 +6548,16 @@ mod tests {
         assert!(
             out.contains("} else if (!_mosaicIsSafeUri(href)) {"),
             "expected LinkAnnotation.Url to be gated on the runtime check, got:\n{out}"
+        );
+        // Round-2 security-review regression: the runtime helper must
+        // strip the FULL C0-control-or-space range before scheme
+        // detection, not Kotlin's narrower `isWhitespace`-based
+        // `trim()` -- a narrower check misses control bytes like
+        // 0x01/0x1B, letting a hidden scheme slip through as "no
+        // scheme found."
+        assert!(
+            out.contains("raw.trim { it.code <= 0x20 }"),
+            "expected the full C0-control-or-space range in _mosaicIsSafeUri's normalization, got:\n{out}"
         );
     }
 

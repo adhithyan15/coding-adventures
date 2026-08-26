@@ -22,6 +22,17 @@ This project follows [Semantic Versioning](https://semver.org/).
   both paths, since a relative href never reaches `uriHandler.openUri` as
   an external target regardless (only the `external == true` branch is
   gated).
+- Two rounds of security review caught two real gaps in the scheme
+  detection, both fixed before merge: a leading space or embedded
+  tab/CR/LF made the first-character-alphabetic check fail and
+  misclassified the string as "no scheme, therefore safe" -- but a real
+  consumer strips that whitespace before parsing the scheme, so it's
+  really the dangerous scheme it looks like. The first fix trimmed
+  leading/trailing whitespace via Kotlin's `trim()`, but a second review
+  round found `trim()`'s default `isWhitespace`-based predicate doesn't
+  cover the full C0-control range a real consumer strips (control bytes
+  like 0x01/0x1B bypassed it) -- `_mosaicIsSafeUri` now uses
+  `raw.trim { it.code <= 0x20 }`, matching the Rust-side check exactly.
 
 ### Fixed
 

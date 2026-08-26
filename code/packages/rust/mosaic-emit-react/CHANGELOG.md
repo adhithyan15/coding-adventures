@@ -23,6 +23,20 @@ hook-import gating pattern) and every slot-bound `href={x}` becomes
 all (`"#"`, `"/about"`) is unaffected in both paths — the common
 in-app-routing shape.
 
+Two rounds of security review caught two real gaps in the scheme
+detection, both fixed here: a leading space or embedded tab/CR/LF (e.g.
+`" javascript:alert(1)"`) made the first-character-alphabetic check fail
+and misclassified the string as "no scheme, therefore safe" — but a
+browser strips that whitespace before parsing the scheme, so it's really
+`javascript:`. The first fix trimmed leading/trailing whitespace, but a
+second review round found that JS `\s` only covers whitespace-class
+characters, not the full C0-control range a browser actually strips
+(e.g. `\x01`, `\x1B` bypassed it) — the `isSafeUri` helper's normalization
+now strips the full C0-control-or-space range (codepoints 0x00-0x20) at
+each end, matching the Rust-side check exactly. Verified by extracting the
+real generated helper text via a Rust test and executing it under Node.js
+against both bypass classes, not just asserted.
+
 ### Added - UI36: `background` joins the bindable-property list
 
 UI36's `dynamic_size_style` hard-listed exactly six literal size properties

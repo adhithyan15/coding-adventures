@@ -4357,7 +4357,21 @@ fn emit_host_table(
 /// disallowed* scheme (`javascript:`, `data:`, `intent:`, a custom
 /// protocol handler, ...) returns `true`. A colon appearing after a
 /// `/`, `?`, or `#` is data, not a scheme separator.
+///
+/// Security-review hardening: normalizes exactly like the WHATWG URL
+/// parser does before looking for a scheme -- trims leading/trailing
+/// C0-control-or-space and strips every embedded tab/CR/LF. Without
+/// this, `" javascript:alert(1)"` or `"java\tscript:alert(1)"` fails
+/// the alphabetic-first-character check below and gets classified as
+/// "no scheme, therefore a safe relative reference." A first review
+/// pass of #13052 missed this; caught and fixed in the same PR.
 fn has_disallowed_uri_scheme(href: &str) -> bool {
+    let normalized: String = href
+        .trim_matches(|c: char| (c as u32) <= 0x20)
+        .chars()
+        .filter(|c| !matches!(c, '\t' | '\r' | '\n'))
+        .collect();
+    let href = normalized.as_str();
     let Some(colon) = href.find(':') else {
         return false;
     };
@@ -6669,6 +6683,40 @@ mod tests {
             assert!(
                 matches!(err, PipelineEmitError::UnsafeUriScheme(ref h) if h == hostile),
                 "expected UnsafeUriScheme for {hostile:?}, got: {err:?}"
+            );
+        }
+    }
+
+    /// #13052 security-review finding: a scheme hidden behind leading
+    /// whitespace or an embedded tab/CR/LF must still be rejected --
+    /// a naive scan sees no alphabetic first character and
+    /// misclassifies it as "no scheme, therefore safe," but a real
+    /// consumer normalizes that whitespace away before parsing the
+    /// scheme, so it's really a disallowed scheme.
+    #[test]
+    fn host_link_scheme_hidden_by_whitespace_is_still_rejected() {
+        for hostile in [
+            " javascript:alert(1)",
+            "java\tscript:alert(1)",
+            "java\nscript:alert(1)",
+            "\tjavascript:alert(1)",
+        ] {
+            let m = component("X", vec![], vec![]);
+            let l = layout(
+                "X",
+                node_with(
+                    "HostLink",
+                    vec![LayoutProp {
+                        name: "href".into(),
+                        value: LayoutPropValue::String(hostile.to_string()),
+                    }],
+                    vec![],
+                ),
+            );
+            let err = from_pipeline(&m, &l, &empty_style("X")).unwrap_err();
+            assert!(
+                matches!(err, PipelineEmitError::UnsafeUriScheme(ref h) if h == hostile),
+                "expected UnsafeUriScheme for whitespace-obscured {hostile:?}, got: {err:?}"
             );
         }
     }

@@ -19,10 +19,19 @@ Added `has_allowed_uri_scheme` (mirrors XAML's function of the same name —
 allowlists `http`/`https`/`mailto`, RFC-3986-shaped scheme/authority
 parsing) and a new `PipelineEmitError::UnsafeUriScheme` variant. Rejects a
 literal disallowed scheme at compile time — the only href path this backend
-has today (no `slot:`-bound href exists yet). Only checked when `external`
-is not `false`: that path dispatches only and never references `link`/
-`Qt.openUrlExternally` at all, so a routing placeholder like `href: "#"`
-stays valid there, matching XAML's identical in-app-routing exemption.
+has today (no `slot:`-bound href exists yet).
+
+Two rounds of security review caught two real bugs before merge, both
+fixed here: (1) the exemption for `external: false` was checked on
+`external_false` alone, but `handler_body`'s `(_, None) => Qt.openUrlExternally(link)`
+arm means `external: false` **without** `onActivate` still reaches the
+sink — the real exemption is `external: false` **and** `onActivate`
+present together (`reaches_open_url_externally`, computed explicitly
+rather than inferred from `external_false` alone); (2) every real
+toolkit `HostLink` (`Breadcrumb`/`Nav`/`Navbar`/`Pagination`) pairs
+`href: "#"` + `external: false` with `onActivate`, so this tightening
+doesn't affect any shipping component — verified by grep before
+landing, not just asserted.
 
 ### Fixed - generated components collapsed to zero size in any QML layout
 
