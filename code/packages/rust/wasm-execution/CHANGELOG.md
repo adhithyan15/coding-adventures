@@ -2,6 +2,100 @@
 
 All notable changes to this package will be documented in this file.
 
+## [0.9.73] - 2026-08-26 (W28 — shared, live `LinearMemory`/`Table` storage across instances)
+
+### Fixed
+
+- **Real interpreter correctness bug: an imported memory or table was a
+  CLONE, not a shared live view.** `LinearMemory` and `Table` both used
+  `#[derive(Clone)]` over plain owned fields (`data: Vec<u8>`/
+  `current_pages: u32` for memory, `elements: Vec<Option<u32>>` for
+  tables). `wasm-runtime`'s `instantiate()` resolves a memory/table import
+  through `HostInterface::resolve_memory`/`resolve_table`, which hands
+  back an owned VALUE that gets pushed directly into the importing
+  instance's own `WasmInstance::memories`/`tables` — so every clone was a
+  full, independent copy. A write through the IMPORTING instance's memory/
+  table was invisible when read back through the EXPORTING instance, and
+  vice versa: wrong for any real multi-module WASM program using a
+  shared-memory/shared-table import (a common pattern — a "libc"-style
+  module sharing its memory with several consumer modules), not just a
+  conformance-corpus gap. `wasm-conformance`'s own `RegistryHost::
+  resolve_memory`/`resolve_table` had already named this exact limitation
+  in their doc comments.
+- **Fix: `LinearMemory`/`Table`'s mutable storage now lives behind
+  `Rc<RefCell<..>>`.** New private `MemoryStorage { data, current_pages }`
+  and `TableStorage { elements }` structs hold everything a `grow`/store/
+  `table.set` can actually mutate; `LinearMemory`/`Table` each hold
+  `inner: Rc<RefCell<..Storage>>` plus their immutable-after-construction
+  fields (`max_pages`/`is64` for memory, `max_size`/`is64` for tables)
+  outside the `RefCell`. `#[derive(Clone)]` on the outer struct is now
+  EXACTLY the right shape: cloning clones the `Rc` pointer, giving a
+  second handle onto the SAME underlying storage, not a second copy of
+  the bytes/elements. Every public method signature is unchanged (`&self`/
+  `&mut self` exactly as before) — only the body now goes through one
+  `borrow()`/`borrow_mut()` per call, scoped to a single statement, never
+  held across two calls. The two raw-pointer-based cross-object
+  primitives (`LinearMemory::copy_between`, `Table::copy_between`, both
+  pre-existing `unsafe fn`s for `memory.copy $dst $src`/`table.copy $dst
+  $src` when `$dst`/`$src` may alias the SAME object) remain sound
+  unchanged: they already read the source range into an owned temporary
+  `Vec` via one scoped borrow BEFORE taking a separate borrow for the
+  destination write, so the two `RefCell` borrows never overlap even when
+  `dst`/`src` share the same underlying `Rc<RefCell<..>>` (self-copy, or
+  now also a shared cross-instance import).
+- **Also fixed, surfaced BY this change: active element-segment
+  application was not atomic per segment.** `wasm-runtime::instantiate()`
+  applied each active element segment's entries one `Table::set` call at
+  a time, propagating the first out-of-bounds error immediately — correct
+  for a segment that's entirely out of bounds, but wrong for one that's
+  only PARTIALLY out of bounds: earlier entries in that same segment had
+  already been written by the time the trap fired, violating the real
+  spec's per-segment atomicity (a single active segment is all-or-nothing;
+  only *earlier, already-fully-applied* segments are guaranteed to persist
+  past a *later* segment's trap — see `linking.wast`'s own "unlike the v1
+  spec" comment). This was unobservable before this same PR's storage fix:
+  a failed `instantiate()` call's local `tables` Vec (holding an
+  independent CLONE of any imported table) was simply dropped on error, so
+  a partial write vanished along with it regardless. It stopped being
+  unobservable the moment table storage became genuinely shared — a
+  partial write to a SHARED table now persists in the exporting instance's
+  own storage even though the importing instance's `instantiate()` call
+  fails. Fixed in `wasm-runtime` (see that crate's own CHANGELOG) by
+  bounds-checking the WHOLE segment against `table.size()` before writing
+  any entry, matching `LinearMemory::write_bytes`'s existing upfront-
+  bounds-check shape (a single check before one `copy_from_slice`, never a
+  byte-at-a-time loop that could partially write before trapping).
+- **Known, deliberately out-of-scope remaining gap:** this fix makes a
+  table's raw entries (bare `u32` function indices) and size genuinely
+  shared and observable cross-instance, but `call_indirect` still resolves
+  a table entry against the CALLING instance's own `func_bodies`/
+  `host_functions` index space. A funcref written into a SHARED table by
+  one module and `call_indirect`-invoked through a DIFFERENT module needs
+  real cross-instance function IDENTITY (the same class of problem
+  `WasmInstance::tag_identities` already solves for exception tags, W23,
+  but requiring genuine cross-instance CALL DISPATCH, not just equality
+  comparison) — a separate, larger follow-on. See `Table`'s own doc
+  comment. `linking0.wast`/`linking3.wast` (newly vendored, see `wasm-
+  conformance`'s CHANGELOG) each have exactly one `assert_return` that
+  hits this remaining gap.
+- Real corpus impact (`wasm-conformance`, same date): the already-vendored
+  `linking.wast`'s `assert_return` tally improved from 48/65 to 54/65 with
+  ZERO new failures anywhere else in the 216-file corpus (programmatically
+  diffed baseline-to-baseline before pushing). Five new files vendored:
+  `elem.wast`, `linking0.wast`, `linking1.wast`, `linking3.wast`,
+  `load1.wast` — see that crate's own CHANGELOG for per-file numbers.
+
+### Added
+
+- New unit tests directly exercising `LinearMemory`/`Table`'s shared-clone
+  semantics stay in `wasm-runtime` (see that crate's own CHANGELOG) since
+  they need a real `WasmInstance`/`HostInterface` to build the import
+  scenario; this crate's own existing memory/table unit tests were updated
+  in place (not added to) where they previously reached into the
+  now-relocated `data`/`elements`/`current_pages` fields directly (e.g.
+  `mem.data[..]` -> `mem.inner.borrow().data[..]`) — no behavioral change,
+  same assertions.
+
 ## [0.9.72] - 2026-08-26 (W27 — census batch: `ref.null` in a global's const-expr)
 
 ### Fixed

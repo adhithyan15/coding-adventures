@@ -233,3 +233,56 @@ design below, not silently mis-graded.
   `RefCell` double-borrow panic path is a clean, non-exploitable panic
   — not a silent memory-safety issue — if ever triggered by a future
   vendored file).
+
+## W28 Addendum — real shared memory/table storage (2026-08-26)
+
+This spec's original scope covered function and global import linking
+end-to-end (real cross-instance call, real type/limits checking) but left
+memory and table imports resolving to an independently-CLONED value —
+`RegistryHost::resolve_memory`/`resolve_table`'s own doc comments named
+this explicitly as a deliberate, deferred limitation at the time ("None
+of the corpus vendored so far exercises [shared mutation]... revisit if a
+future vendored file needs it"). `elem.wast`/`instance.wast`/
+`linking0.wast`/`linking1.wast`/`linking3.wast`/`load1.wast` are exactly
+that future need.
+
+**The fix, in one sentence**: `wasm-execution`'s `LinearMemory`/`Table`
+moved their mutable storage (`data`+`current_pages` for memory,
+`elements` for tables) behind `Rc<RefCell<..>>`, so `#[derive(Clone)]` —
+which `HostInterface::resolve_memory`/`resolve_table`'s existing
+`.cloned()` call sites already relied on — now shares the underlying
+storage instead of deep-copying it. No change was needed to
+`wasm-runtime::instantiate()`'s import-resolution path itself, nor to
+`wasm-conformance::RegistryHost`: both already just pass through whatever
+value `resolve_memory`/`resolve_table` return, so once that value
+genuinely shares storage, the existing code became correct for free. See
+`wasm-execution`'s own CHANGELOG (0.9.73) for the full field-level design
+(including why the two pre-existing raw-pointer `copy_between` primitives
+for `memory.copy $dst $src`/`table.copy $dst $src` self-aliasing remain
+sound unchanged) and `wasm-runtime`'s own CHANGELOG (0.6.13) for a second,
+previously-unobservable bug this same fix surfaced and also fixes
+(non-atomic per-segment active element-segment application).
+
+**Still explicitly out of scope, discovered while vendoring
+`linking0.wast`/`linking3.wast`**: a table entry is a bare `u32` function
+index, meaningful only within whichever instance's OWN function-index
+space is currently executing `call_indirect`. A funcref written into a
+now-genuinely-SHARED table by one module, then `call_indirect`-invoked
+through a DIFFERENT module that imported it, resolves against the WRONG
+instance's function space — correct within one instance (the overwhelming
+common case), wrong across a shared-table boundary. This needs real
+cross-instance function IDENTITY for table entries — the same class of
+problem `WasmInstance::tag_identities` (W23) already solves for exception
+tags, but requiring genuine cross-instance CALL DISPATCH (like
+`wasm-conformance`'s existing `CrossModuleFunction` already provides for
+plain function IMPORTS), not just equality comparison. Not designed or
+implemented here; a future PR's problem, same as this spec's own original
+"mutual/circular cross-instance calls" and "deeper module-reinstantiation"
+out-of-scope items above.
+
+`instance.wast` was investigated but not vendored: it needs a `(module
+definition $M ...)` / `(module instance $I1 $M)` generative-instantiation
+directive form `wasm-wast-parser`'s script grammar has zero support for
+at all — a distinct, self-contained grammar-plus-`Executor` feature, not
+blocked by the storage-sharing fix above, just out of scope for this
+addendum.

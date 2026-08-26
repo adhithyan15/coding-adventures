@@ -26,8 +26,10 @@
 //! This crate is part of the coding-adventures monorepo, a ground-up
 //! implementation of the computing stack from transistors to operating systems.
 
+use std::cell::RefCell;
+use std::rc::Rc;
 use std::sync::atomic::{AtomicU64, Ordering};
-use std::sync::{Arc, Mutex};
+use std::sync::Arc;
 use std::time::{Instant, SystemTime, UNIX_EPOCH};
 
 use wasm_execution::{
@@ -364,8 +366,27 @@ impl HostFunction for EnosysFunc {
 /// Memory-accessing functions (args_get, environ_get, clock_time_get,
 /// clock_res_get, random_get) need to write directly into WASM linear
 /// memory. Since `HostFunction::call` has no memory parameter, we use a
-/// shared `Arc<Mutex<LinearMemory>>` that is populated by the runtime
+/// shared `Rc<RefCell<LinearMemory>>` that is populated by the runtime
 /// **before** the first WASM call. See `WasiEnv::attach_memory`.
+///
+/// `Rc<RefCell<..>>`, not `Arc<Mutex<..>>` (W28): `LinearMemory` itself is
+/// now `Rc<RefCell<..>>`-backed internally (see `wasm-execution`'s own
+/// CHANGELOG) so that an imported memory shares live storage with its
+/// exporting instance, rather than a `#[derive(Clone)]` producing an
+/// independent copy. That makes `LinearMemory` — and therefore `WasiEnv`,
+/// which holds one — no longer `Send`/`Sync`: wrapping a non-`Send` type
+/// in `Arc<Mutex<..>>` would be a real, `clippy::arc_with_non_send_sync`-
+/// flagged soundness hazard (an `Rc`'s non-atomic refcount has no
+/// synchronization against a DIFFERENT, unrelated clone of the same
+/// memory held elsewhere without going through this same `Mutex`), not
+/// just a lint to silence. `HostFunction`/`HostInterface` (see
+/// `wasm-execution`) have never required `Send` — `wasm-conformance`'s
+/// own `CrossModuleFunction` already holds an `Rc<RefCell<WasmInstance>>`
+/// — so this is a correctness fix, not a capability this crate actually
+/// used: nothing in this repo shares a single `WasiEnv` across real OS
+/// threads (confirmed by checking every consumer — `brainfuck-wasm-
+/// compiler`/`ir-to-wasm-compiler`'s own tests each construct one
+/// `WasiEnv` and use it entirely on one thread).
 pub struct WasiEnv {
     /// Command-line arguments.
     pub args: Vec<String>,
@@ -375,7 +396,7 @@ pub struct WasiEnv {
 
     /// Shared handle to WASM linear memory. Populated via `attach_memory`
     /// after instantiation.
-    pub memory: Arc<Mutex<Option<LinearMemory>>>,
+    pub memory: Rc<RefCell<Option<LinearMemory>>>,
 
     /// Injected clock.
     pub clock: Arc<dyn WasiClock>,
@@ -418,7 +439,7 @@ impl WasiEnv {
         WasiEnv {
             args: cfg.args,
             env: cfg.env,
-            memory: Arc::new(Mutex::new(None)),
+            memory: Rc::new(RefCell::new(None)),
             clock: Arc::from(cfg.clock),
             random: Arc::from(cfg.random),
             stdout_callback,
@@ -433,13 +454,13 @@ impl WasiEnv {
     /// Call this after `WasmRuntime::instantiate` but before executing any
     /// WASM that calls WASI memory functions.
     pub fn attach_memory(&self, mem: LinearMemory) {
-        *self.memory.lock().unwrap() = Some(mem);
+        *self.memory.borrow_mut() = Some(mem);
     }
 
     /// Retrieve the memory after execution (so the caller can inspect it or
     /// put it back into the `WasmInstance`).
     pub fn take_memory(&self) -> Option<LinearMemory> {
-        self.memory.lock().unwrap().take()
+        self.memory.borrow_mut().take()
     }
 }
 
@@ -452,12 +473,12 @@ impl HostInterface for WasiEnv {
         match name {
             // ── Tier 1: stdio + process termination ───────────────────────
             "fd_write" => Some(Box::new(FdWriteFunc {
-                memory: Arc::clone(&self.memory),
+                memory: Rc::clone(&self.memory),
                 stdout_callback: Arc::clone(&self.stdout_callback),
                 stderr_callback: Arc::clone(&self.stderr_callback),
             })),
             "fd_read" => Some(Box::new(FdReadFunc {
-                memory: Arc::clone(&self.memory),
+                memory: Rc::clone(&self.memory),
                 stdin_callback: Arc::clone(&self.stdin_callback),
             })),
             "proc_exit" => Some(Box::new(ProcExitFunc)),
@@ -465,37 +486,37 @@ impl HostInterface for WasiEnv {
             // ── Tier 3: arguments ─────────────────────────────────────────
             "args_sizes_get" => Some(Box::new(ArgsSizesGetFunc {
                 args: self.args.clone(),
-                memory: Arc::clone(&self.memory),
+                memory: Rc::clone(&self.memory),
             })),
             "args_get" => Some(Box::new(ArgsGetFunc {
                 args: self.args.clone(),
-                memory: Arc::clone(&self.memory),
+                memory: Rc::clone(&self.memory),
             })),
 
             // ── Tier 3: environment ───────────────────────────────────────
             "environ_sizes_get" => Some(Box::new(EnvironSizesGetFunc {
                 env: self.env.clone(),
-                memory: Arc::clone(&self.memory),
+                memory: Rc::clone(&self.memory),
             })),
             "environ_get" => Some(Box::new(EnvironGetFunc {
                 env: self.env.clone(),
-                memory: Arc::clone(&self.memory),
+                memory: Rc::clone(&self.memory),
             })),
 
             // ── Tier 3: clock ─────────────────────────────────────────────
             "clock_res_get" => Some(Box::new(ClockResGetFunc {
                 clock: Arc::clone(&self.clock),
-                memory: Arc::clone(&self.memory),
+                memory: Rc::clone(&self.memory),
             })),
             "clock_time_get" => Some(Box::new(ClockTimeGetFunc {
                 clock: Arc::clone(&self.clock),
-                memory: Arc::clone(&self.memory),
+                memory: Rc::clone(&self.memory),
             })),
 
             // ── Tier 3: random ────────────────────────────────────────────
             "random_get" => Some(Box::new(RandomGetFunc {
                 random: Arc::clone(&self.random),
-                memory: Arc::clone(&self.memory),
+                memory: Rc::clone(&self.memory),
             })),
 
             // ── Tier 3: scheduler ─────────────────────────────────────────
@@ -556,14 +577,14 @@ fn write_i32_le(memory: &mut LinearMemory, ptr: usize, value: i32) -> Result<(),
 
 fn with_linear_memory<T>(
     provided: Option<&mut LinearMemory>,
-    shared: &Arc<Mutex<Option<LinearMemory>>>,
+    shared: &Rc<RefCell<Option<LinearMemory>>>,
     action: impl FnOnce(&mut LinearMemory) -> Result<T, TrapError>,
 ) -> Result<T, TrapError> {
     if let Some(memory) = provided {
         return action(memory);
     }
 
-    let mut guard = shared.lock().unwrap();
+    let mut guard = shared.borrow_mut();
     let memory = guard
         .as_mut()
         .ok_or_else(|| TrapError::new("no memory attached"))?;
@@ -593,7 +614,7 @@ fn read_guest_bytes(
 // ── Tier 1: fd_write ────────────────────────────────────────────────────────
 
 struct FdWriteFunc {
-    memory: Arc<Mutex<Option<LinearMemory>>>,
+    memory: Rc<RefCell<Option<LinearMemory>>>,
     stdout_callback: Arc<dyn Fn(&str) + Send + Sync>,
     stderr_callback: Arc<dyn Fn(&str) + Send + Sync>,
 }
@@ -652,7 +673,7 @@ impl HostFunction for FdWriteFunc {
 // ── Tier 1: fd_read ─────────────────────────────────────────────────────────
 
 struct FdReadFunc {
-    memory: Arc<Mutex<Option<LinearMemory>>>,
+    memory: Rc<RefCell<Option<LinearMemory>>>,
     stdin_callback: Arc<dyn Fn(usize) -> Vec<u8> + Send + Sync>,
 }
 
@@ -731,7 +752,7 @@ impl HostFunction for FdReadFunc {
 /// the null terminator `\0`).
 struct ArgsSizesGetFunc {
     args: Vec<String>,
-    memory: Arc<Mutex<Option<LinearMemory>>>,
+    memory: Rc<RefCell<Option<LinearMemory>>>,
 }
 
 impl HostFunction for ArgsSizesGetFunc {
@@ -785,7 +806,7 @@ impl HostFunction for ArgsSizesGetFunc {
 /// Each pointer in the argv array points into `argv_buf`.
 struct ArgsGetFunc {
     args: Vec<String>,
-    memory: Arc<Mutex<Option<LinearMemory>>>,
+    memory: Rc<RefCell<Option<LinearMemory>>>,
 }
 
 impl HostFunction for ArgsGetFunc {
@@ -830,7 +851,7 @@ impl HostFunction for ArgsGetFunc {
 /// Each env var is a `"KEY=VALUE"` string.
 struct EnvironSizesGetFunc {
     env: Vec<String>,
-    memory: Arc<Mutex<Option<LinearMemory>>>,
+    memory: Rc<RefCell<Option<LinearMemory>>>,
 }
 
 impl HostFunction for EnvironSizesGetFunc {
@@ -868,7 +889,7 @@ impl HostFunction for EnvironSizesGetFunc {
 /// Same layout as `args_get` but for environment variables.
 struct EnvironGetFunc {
     env: Vec<String>,
-    memory: Arc<Mutex<Option<LinearMemory>>>,
+    memory: Rc<RefCell<Option<LinearMemory>>>,
 }
 
 impl HostFunction for EnvironGetFunc {
@@ -916,7 +937,7 @@ impl HostFunction for EnvironGetFunc {
 /// this clock can distinguish?" For most OS clocks this is 1 ms (1_000_000 ns).
 struct ClockResGetFunc {
     clock: Arc<dyn WasiClock>,
-    memory: Arc<Mutex<Option<LinearMemory>>>,
+    memory: Rc<RefCell<Option<LinearMemory>>>,
 }
 
 impl HostFunction for ClockResGetFunc {
@@ -966,7 +987,7 @@ impl HostFunction for ClockResGetFunc {
 /// always returns the best available precision.
 struct ClockTimeGetFunc {
     clock: Arc<dyn WasiClock>,
-    memory: Arc<Mutex<Option<LinearMemory>>>,
+    memory: Rc<RefCell<Option<LinearMemory>>>,
 }
 
 impl HostFunction for ClockTimeGetFunc {
@@ -1014,7 +1035,7 @@ impl HostFunction for ClockTimeGetFunc {
 /// a getrandom- or ring-backed implementation if that matters.
 struct RandomGetFunc {
     random: Arc<dyn WasiRandom>,
-    memory: Arc<Mutex<Option<LinearMemory>>>,
+    memory: Rc<RefCell<Option<LinearMemory>>>,
 }
 
 impl HostFunction for RandomGetFunc {
@@ -1597,6 +1618,40 @@ impl WasmRuntime {
             if let Some(table) = tables.get_mut(elem.table_index as usize) {
                 let offset = evaluate_const_expr(&elem.offset_expr, &globals, &mut v128_heap)?;
                 let offset_num = offset.as_i32().map_err(|e| TrapError::new(e.message))? as u32;
+                // Bounds-check the WHOLE segment before writing ANY entry
+                // (W28) -- real per-segment atomicity, matching
+                // `LinearMemory::write_bytes`'s own upfront-bounds-check
+                // shape (a single `bounds_check` before the one
+                // `copy_from_slice`, never a byte-at-a-time loop that could
+                // partially write before trapping). The loop below used to
+                // call `table.set` one entry at a time and propagate the
+                // first out-of-bounds error via `?` -- correct for a
+                // segment that's ENTIRELY out of bounds, but WRONG for one
+                // that's only PARTIALLY out of bounds: entries before the
+                // first bad index had already been written by the time the
+                // trap fired. That partial write used to be unobservable
+                // for an IMPORTED table (the whole failed `instantiate()`
+                // call, including its local `tables` Vec holding an
+                // independent CLONE of the import, was simply dropped on
+                // error) but is a real, spec-violating bug now that a
+                // shared table's storage (W28's `Rc<RefCell<TableStorage>>`)
+                // genuinely persists past a failed `instantiate()` call --
+                // the exporting instance still holds the same storage, so
+                // a partial write would otherwise leak through. The real
+                // spec's own per-segment atomicity (see the "unlike the v1
+                // spec" comment on `linking.wast`'s later `assert_trap`
+                // cases: EARLIER, already-fully-applied segments persist
+                // past a LATER segment's trap, but a single segment is
+                // itself all-or-nothing) requires exactly this upfront
+                // check.
+                let count = elem.function_indices.len() as u32;
+                let table_size = table.size();
+                if offset_num.checked_add(count).is_none_or(|end| end > table_size) {
+                    return Err(TrapError::new(format!(
+                        "out of bounds table access: elements {offset_num}..{}, table size={table_size}",
+                        offset_num as u64 + count as u64
+                    )));
+                }
                 for (j, &func_idx) in elem.function_indices.iter().enumerate() {
                     table.set(offset_num + j as u32, func_idx)?;
                 }
@@ -2338,7 +2393,7 @@ mod tests {
     #[test]
     fn test_wasi_host_alias_creation() {
         let host = WasiHost::new(WasiConfig::default());
-        assert!(host.memory.lock().unwrap().is_none());
+        assert!(host.memory.borrow().is_none());
     }
 
     #[test]

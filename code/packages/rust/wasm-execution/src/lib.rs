@@ -51,7 +51,9 @@
 mod gc;
 
 use std::any::Any;
+use std::cell::RefCell;
 use std::collections::HashMap;
+use std::rc::Rc;
 use std::sync::atomic::{AtomicU64, Ordering};
 
 use virtual_machine::{
@@ -879,6 +881,18 @@ fn restore_caller_frame(vm: &mut GenericVM, ctx: &mut WasmExecutionContext, fram
 /// Bytes per WASM memory page: 64 KiB.
 pub const PAGE_SIZE: usize = 65536;
 
+/// The mutable part of a [`LinearMemory`]'s state: the raw bytes plus the
+/// current page count. Lives behind an `Rc<RefCell<..>>` on `LinearMemory`
+/// itself (see that struct's own `inner` field doc comment) -- this is
+/// exactly the part that must be SHARED, not cloned, when a memory is
+/// imported across a module boundary.
+struct MemoryStorage {
+    /// The raw byte storage.
+    data: Vec<u8>,
+    /// Current page count.
+    current_pages: u32,
+}
+
 /// Linear memory — a contiguous, byte-addressable array of bytes.
 ///
 /// This is WASM's heap. Memory is measured in "pages" (64 KiB each).
@@ -889,13 +903,54 @@ pub const PAGE_SIZE: usize = 65536;
 /// │  Page 0 (0x0000 - 0xFFFF)  │  Page 1 (0x10000 - 0x1FFFF) │ ...
 /// └─────────────────────────────┴─────────────────────────────┘
 /// ```
+///
+/// ## Cross-instance sharing (W28)
+///
+/// When module A exports a memory and module B imports it, `wasm-runtime`'s
+/// `instantiate()` resolves that import through `HostInterface::
+/// resolve_memory`, which hands back an owned `LinearMemory` VALUE that
+/// gets pushed directly into B's own `WasmInstance::memories`. Before this
+/// struct's storage lived behind an `Rc<RefCell<..>>`, `#[derive(Clone)]`
+/// on a plain `data: Vec<u8>` field made that an independent, byte-for-byte
+/// COPY: a write through B's imported memory was invisible when read back
+/// through A's own (exporting) instance, and vice versa -- a genuine
+/// interpreter correctness bug for the very common "shared-memory-between-
+/// modules" pattern (see `code/specs/W10-wasm-real-linking-and-unlinkable.md`
+/// and its W28 addendum), not just a conformance-corpus gap.
+///
+/// The fix: `data`/`current_pages` (everything `grow`/a store instruction
+/// can actually mutate) now live inside one shared [`MemoryStorage`],
+/// reached through `inner: Rc<RefCell<MemoryStorage>>`. `#[derive(Clone)]`
+/// on `LinearMemory` itself is *exactly* the right shape once `inner` is an
+/// `Rc`: cloning a `LinearMemory` (whatever the caller's reason -- import
+/// resolution, a `WasmEngineConfig`/`WasmEngineState` round-trip, a plain
+/// test helper) clones the `Rc` POINTER, giving a second handle onto the
+/// SAME underlying storage, not a second copy of the bytes. `max_pages`/
+/// `is64` stay OUTSIDE `inner`, as plain fields: both are fixed at
+/// construction time (`grow` only ever changes `current_pages`, never the
+/// declared ceiling or the 32-vs-64-bit addressing mode), so every clone
+/// already agrees on their value -- keeping them out of the `RefCell`
+/// avoids an unnecessary `borrow()` on every `max_pages()`/`is64()` call.
+///
+/// Every `&mut self` method below still takes `&mut self` (not `&self`),
+/// even though the mutation actually happens through `inner.borrow_mut()`
+/// (interior mutability): keeping the `&mut self` signature preserves the
+/// exact same public API every existing caller already compiles against,
+/// and still gives the ordinary Rust borrow-checker guarantee that no OTHER
+/// `LinearMemory` VALUE with the same `&mut` access can be live at the same
+/// call site -- only genuinely DIFFERENT `LinearMemory` values (e.g. a
+/// second instance's own copy of the same imported memory) can ever race
+/// for `inner`'s runtime borrow check, and single-threaded, one-instruction-
+/// at-a-time interpretation means even that never happens concurrently, only
+/// sequentially (see `bounds_check`/`copy_between`'s own notes on this).
 #[derive(Clone)]
 pub struct LinearMemory {
-    /// The raw byte storage.
-    data: Vec<u8>,
-    /// Current page count.
-    current_pages: u32,
+    /// Shared, live mutable storage -- see this struct's own doc comment
+    /// for why this is `Rc<RefCell<..>>` rather than a plain owned field.
+    inner: Rc<RefCell<MemoryStorage>>,
     /// Maximum page count (None = no limit other than spec max 65536).
+    /// Immutable after construction; see the struct doc comment for why
+    /// this lives outside `inner`.
     max_pages: Option<u32>,
     /// Whether this memory uses 64-bit addressing (memory64 proposal,
     /// W25) -- `true` means `memory.size`/`memory.grow` and every load/
@@ -903,7 +958,9 @@ pub struct LinearMemory {
     /// addresses instead of `i32`. See `code/specs/
     /// W25-wasm-memory64-first-slice.md`. Always `false` for a memory
     /// built via the plain [`new`](Self::new) constructor; only
-    /// [`new_with_is64`](Self::new_with_is64) can set it.
+    /// [`new_with_is64`](Self::new_with_is64) can set it. Immutable after
+    /// construction; see the struct doc comment for why this lives
+    /// outside `inner`.
     is64: bool,
 }
 
@@ -912,8 +969,7 @@ impl LinearMemory {
     pub fn new(initial_pages: u32, max_pages: Option<u32>) -> Self {
         let size = initial_pages as usize * PAGE_SIZE;
         LinearMemory {
-            data: vec![0u8; size],
-            current_pages: initial_pages,
+            inner: Rc::new(RefCell::new(MemoryStorage { data: vec![0u8; size], current_pages: initial_pages })),
             max_pages,
             is64: false,
         }
@@ -983,13 +1039,12 @@ impl LinearMemory {
     /// this: any overflow is treated as an immediate out-of-bounds trap,
     /// exactly as if it were an ordinary too-large offset.
     fn bounds_check(&self, offset: usize, width: usize) -> Result<(), TrapError> {
+        let len = self.inner.borrow().data.len();
         match offset.checked_add(width) {
-            Some(end) if end <= self.data.len() => Ok(()),
+            Some(end) if end <= len => Ok(()),
             _ => Err(TrapError::new(format!(
                 "out of bounds memory access: offset={}, size={}, memory_size={}",
-                offset,
-                width,
-                self.data.len()
+                offset, width, len
             ))),
         }
     }
@@ -999,11 +1054,12 @@ impl LinearMemory {
     /// Load a 32-bit signed integer (little-endian).
     pub fn load_i32(&self, offset: usize) -> Result<i32, TrapError> {
         self.bounds_check(offset, 4)?;
+        let inner = self.inner.borrow();
         Ok(i32::from_le_bytes([
-            self.data[offset],
-            self.data[offset + 1],
-            self.data[offset + 2],
-            self.data[offset + 3],
+            inner.data[offset],
+            inner.data[offset + 1],
+            inner.data[offset + 2],
+            inner.data[offset + 3],
         ]))
     }
 
@@ -1011,18 +1067,19 @@ impl LinearMemory {
     pub fn load_i64(&self, offset: usize) -> Result<i64, TrapError> {
         self.bounds_check(offset, 8)?;
         let mut bytes = [0u8; 8];
-        bytes.copy_from_slice(&self.data[offset..offset + 8]);
+        bytes.copy_from_slice(&self.inner.borrow().data[offset..offset + 8]);
         Ok(i64::from_le_bytes(bytes))
     }
 
     /// Load a 32-bit float (little-endian).
     pub fn load_f32(&self, offset: usize) -> Result<f32, TrapError> {
         self.bounds_check(offset, 4)?;
+        let inner = self.inner.borrow();
         Ok(f32::from_le_bytes([
-            self.data[offset],
-            self.data[offset + 1],
-            self.data[offset + 2],
-            self.data[offset + 3],
+            inner.data[offset],
+            inner.data[offset + 1],
+            inner.data[offset + 2],
+            inner.data[offset + 3],
         ]))
     }
 
@@ -1030,7 +1087,7 @@ impl LinearMemory {
     pub fn load_f64(&self, offset: usize) -> Result<f64, TrapError> {
         self.bounds_check(offset, 8)?;
         let mut bytes = [0u8; 8];
-        bytes.copy_from_slice(&self.data[offset..offset + 8]);
+        bytes.copy_from_slice(&self.inner.borrow().data[offset..offset + 8]);
         Ok(f64::from_le_bytes(bytes))
     }
 
@@ -1041,7 +1098,7 @@ impl LinearMemory {
     pub fn load_v128(&self, offset: usize) -> Result<[u8; 16], TrapError> {
         self.bounds_check(offset, 16)?;
         let mut bytes = [0u8; 16];
-        bytes.copy_from_slice(&self.data[offset..offset + 16]);
+        bytes.copy_from_slice(&self.inner.borrow().data[offset..offset + 16]);
         Ok(bytes)
     }
 
@@ -1050,25 +1107,27 @@ impl LinearMemory {
     /// Load 1 byte, sign-extend to i32.
     pub fn load_i32_8s(&self, offset: usize) -> Result<i32, TrapError> {
         self.bounds_check(offset, 1)?;
-        Ok(self.data[offset] as i8 as i32)
+        Ok(self.inner.borrow().data[offset] as i8 as i32)
     }
 
     /// Load 1 byte, zero-extend to i32.
     pub fn load_i32_8u(&self, offset: usize) -> Result<i32, TrapError> {
         self.bounds_check(offset, 1)?;
-        Ok(self.data[offset] as i32)
+        Ok(self.inner.borrow().data[offset] as i32)
     }
 
     /// Load 2 bytes (LE), sign-extend to i32.
     pub fn load_i32_16s(&self, offset: usize) -> Result<i32, TrapError> {
         self.bounds_check(offset, 2)?;
-        Ok(i16::from_le_bytes([self.data[offset], self.data[offset + 1]]) as i32)
+        let inner = self.inner.borrow();
+        Ok(i16::from_le_bytes([inner.data[offset], inner.data[offset + 1]]) as i32)
     }
 
     /// Load 2 bytes (LE), zero-extend to i32.
     pub fn load_i32_16u(&self, offset: usize) -> Result<i32, TrapError> {
         self.bounds_check(offset, 2)?;
-        Ok(u16::from_le_bytes([self.data[offset], self.data[offset + 1]]) as i32)
+        let inner = self.inner.borrow();
+        Ok(u16::from_le_bytes([inner.data[offset], inner.data[offset + 1]]) as i32)
     }
 
     // ── Narrow loads for i64 ──────────────────────────────────────────
@@ -1076,46 +1135,50 @@ impl LinearMemory {
     /// Load 1 byte, sign-extend to i64.
     pub fn load_i64_8s(&self, offset: usize) -> Result<i64, TrapError> {
         self.bounds_check(offset, 1)?;
-        Ok(self.data[offset] as i8 as i64)
+        Ok(self.inner.borrow().data[offset] as i8 as i64)
     }
 
     /// Load 1 byte, zero-extend to i64.
     pub fn load_i64_8u(&self, offset: usize) -> Result<i64, TrapError> {
         self.bounds_check(offset, 1)?;
-        Ok(self.data[offset] as i64)
+        Ok(self.inner.borrow().data[offset] as i64)
     }
 
     /// Load 2 bytes (LE), sign-extend to i64.
     pub fn load_i64_16s(&self, offset: usize) -> Result<i64, TrapError> {
         self.bounds_check(offset, 2)?;
-        Ok(i16::from_le_bytes([self.data[offset], self.data[offset + 1]]) as i64)
+        let inner = self.inner.borrow();
+        Ok(i16::from_le_bytes([inner.data[offset], inner.data[offset + 1]]) as i64)
     }
 
     /// Load 2 bytes (LE), zero-extend to i64.
     pub fn load_i64_16u(&self, offset: usize) -> Result<i64, TrapError> {
         self.bounds_check(offset, 2)?;
-        Ok(u16::from_le_bytes([self.data[offset], self.data[offset + 1]]) as i64)
+        let inner = self.inner.borrow();
+        Ok(u16::from_le_bytes([inner.data[offset], inner.data[offset + 1]]) as i64)
     }
 
     /// Load 4 bytes (LE), sign-extend to i64.
     pub fn load_i64_32s(&self, offset: usize) -> Result<i64, TrapError> {
         self.bounds_check(offset, 4)?;
+        let inner = self.inner.borrow();
         Ok(i32::from_le_bytes([
-            self.data[offset],
-            self.data[offset + 1],
-            self.data[offset + 2],
-            self.data[offset + 3],
+            inner.data[offset],
+            inner.data[offset + 1],
+            inner.data[offset + 2],
+            inner.data[offset + 3],
         ]) as i64)
     }
 
     /// Load 4 bytes (LE), zero-extend to i64.
     pub fn load_i64_32u(&self, offset: usize) -> Result<i64, TrapError> {
         self.bounds_check(offset, 4)?;
+        let inner = self.inner.borrow();
         Ok(u32::from_le_bytes([
-            self.data[offset],
-            self.data[offset + 1],
-            self.data[offset + 2],
-            self.data[offset + 3],
+            inner.data[offset],
+            inner.data[offset + 1],
+            inner.data[offset + 2],
+            inner.data[offset + 3],
         ]) as i64)
     }
 
@@ -1125,7 +1188,7 @@ impl LinearMemory {
     pub fn store_i32(&mut self, offset: usize, value: i32) -> Result<(), TrapError> {
         self.bounds_check(offset, 4)?;
         let bytes = value.to_le_bytes();
-        self.data[offset..offset + 4].copy_from_slice(&bytes);
+        self.inner.borrow_mut().data[offset..offset + 4].copy_from_slice(&bytes);
         Ok(())
     }
 
@@ -1133,7 +1196,7 @@ impl LinearMemory {
     pub fn store_i64(&mut self, offset: usize, value: i64) -> Result<(), TrapError> {
         self.bounds_check(offset, 8)?;
         let bytes = value.to_le_bytes();
-        self.data[offset..offset + 8].copy_from_slice(&bytes);
+        self.inner.borrow_mut().data[offset..offset + 8].copy_from_slice(&bytes);
         Ok(())
     }
 
@@ -1141,7 +1204,7 @@ impl LinearMemory {
     pub fn store_f32(&mut self, offset: usize, value: f32) -> Result<(), TrapError> {
         self.bounds_check(offset, 4)?;
         let bytes = value.to_le_bytes();
-        self.data[offset..offset + 4].copy_from_slice(&bytes);
+        self.inner.borrow_mut().data[offset..offset + 4].copy_from_slice(&bytes);
         Ok(())
     }
 
@@ -1149,7 +1212,7 @@ impl LinearMemory {
     pub fn store_f64(&mut self, offset: usize, value: f64) -> Result<(), TrapError> {
         self.bounds_check(offset, 8)?;
         let bytes = value.to_le_bytes();
-        self.data[offset..offset + 8].copy_from_slice(&bytes);
+        self.inner.borrow_mut().data[offset..offset + 8].copy_from_slice(&bytes);
         Ok(())
     }
 
@@ -1158,7 +1221,7 @@ impl LinearMemory {
     /// Store the low 8 bits of an i32.
     pub fn store_i32_8(&mut self, offset: usize, value: i32) -> Result<(), TrapError> {
         self.bounds_check(offset, 1)?;
-        self.data[offset] = value as u8;
+        self.inner.borrow_mut().data[offset] = value as u8;
         Ok(())
     }
 
@@ -1166,14 +1229,14 @@ impl LinearMemory {
     pub fn store_i32_16(&mut self, offset: usize, value: i32) -> Result<(), TrapError> {
         self.bounds_check(offset, 2)?;
         let bytes = (value as i16).to_le_bytes();
-        self.data[offset..offset + 2].copy_from_slice(&bytes);
+        self.inner.borrow_mut().data[offset..offset + 2].copy_from_slice(&bytes);
         Ok(())
     }
 
     /// Store the low 8 bits of an i64.
     pub fn store_i64_8(&mut self, offset: usize, value: i64) -> Result<(), TrapError> {
         self.bounds_check(offset, 1)?;
-        self.data[offset] = value as u8;
+        self.inner.borrow_mut().data[offset] = value as u8;
         Ok(())
     }
 
@@ -1181,7 +1244,7 @@ impl LinearMemory {
     pub fn store_i64_16(&mut self, offset: usize, value: i64) -> Result<(), TrapError> {
         self.bounds_check(offset, 2)?;
         let bytes = (value as i16).to_le_bytes();
-        self.data[offset..offset + 2].copy_from_slice(&bytes);
+        self.inner.borrow_mut().data[offset..offset + 2].copy_from_slice(&bytes);
         Ok(())
     }
 
@@ -1189,7 +1252,7 @@ impl LinearMemory {
     pub fn store_i64_32(&mut self, offset: usize, value: i64) -> Result<(), TrapError> {
         self.bounds_check(offset, 4)?;
         let bytes = (value as i32).to_le_bytes();
-        self.data[offset..offset + 4].copy_from_slice(&bytes);
+        self.inner.borrow_mut().data[offset..offset + 4].copy_from_slice(&bytes);
         Ok(())
     }
 
@@ -1197,7 +1260,8 @@ impl LinearMemory {
 
     /// Grow memory by `delta_pages`. Returns old page count on success, -1 on failure.
     pub fn grow(&mut self, delta_pages: u32) -> i32 {
-        let old_pages = self.current_pages;
+        let mut inner = self.inner.borrow_mut();
+        let old_pages = inner.current_pages;
         let new_pages = old_pages as u64 + delta_pages as u64;
 
         if let Some(max) = self.max_pages {
@@ -1218,14 +1282,14 @@ impl LinearMemory {
         }
 
         let new_size = new_pages as usize * PAGE_SIZE;
-        self.data.resize(new_size, 0);
-        self.current_pages = new_pages as u32;
+        inner.data.resize(new_size, 0);
+        inner.current_pages = new_pages as u32;
         old_pages as i32
     }
 
     /// Current size in pages.
     pub fn size(&self) -> u32 {
-        self.current_pages
+        self.inner.borrow().current_pages
     }
 
     /// Declared maximum size in pages, if any (link-time limits
@@ -1237,7 +1301,7 @@ impl LinearMemory {
     /// Write raw bytes into memory at offset.
     pub fn write_bytes(&mut self, offset: usize, data: &[u8]) -> Result<(), TrapError> {
         self.bounds_check(offset, data.len())?;
-        self.data[offset..offset + data.len()].copy_from_slice(data);
+        self.inner.borrow_mut().data[offset..offset + data.len()].copy_from_slice(data);
         Ok(())
     }
 
@@ -1263,16 +1327,17 @@ impl LinearMemory {
         // slip through (the ordinary `bounds_check` adds without checking). Defense in
         // depth — the caller already truncates operands to 32 bits — so this method is
         // safe against out-of-bounds indexing regardless of how it is invoked.
+        let mut inner = self.inner.borrow_mut();
         let src_end = src.checked_add(len);
         let dest_end = dest.checked_add(len);
         match (src_end, dest_end) {
-            (Some(se), Some(de)) if se <= self.data.len() && de <= self.data.len() => {
-                self.data.copy_within(src..se, dest);
+            (Some(se), Some(de)) if se <= inner.data.len() && de <= inner.data.len() => {
+                inner.data.copy_within(src..se, dest);
                 Ok(())
             }
             _ => Err(TrapError::new(format!(
                 "out of bounds memory.copy: dest={dest}, src={src}, len={len}, memory_size={}",
-                self.data.len()
+                inner.data.len()
             ))),
         }
     }
@@ -1297,22 +1362,33 @@ impl LinearMemory {
     /// pointers to a `LinearMemory` for the whole call (satisfied by every
     /// call site, which resolves them from `ctx.memories: Vec<*mut
     /// LinearMemory>` -- pointers into a `Vec` that outlives the call).
-    /// Correct even when they point at the SAME `LinearMemory` (a self-
-    /// copy with potentially overlapping ranges): the source range is
-    /// read into a temporary `Vec` BEFORE any destination write happens,
-    /// so it never observes a partially-overwritten source -- the same
-    /// overlap-safe (memmove) semantics `copy`'s own `copy_within` gives
-    /// for the single-buffer case. Same zero-length-still-bounds-checked
+    /// Correct even when they point at the SAME `LinearMemory`, OR at two
+    /// DIFFERENT `LinearMemory` VALUES that happen to share the same
+    /// underlying `Rc<RefCell<MemoryStorage>>` (W28: a memory imported
+    /// across a module boundary) -- either way, this reads the source
+    /// range into an owned, temporary `Vec` via one scoped `borrow()`
+    /// (dropped at the end of that statement) BEFORE taking a separate
+    /// `borrow_mut()` for the destination write, so the two `RefCell`
+    /// borrows never overlap even when they're the same `RefCell`. Not
+    /// just panic-safety: this also gives the correct overlap-safe
+    /// (memmove) semantics `copy`'s own `copy_within` gives for the
+    /// single-buffer case, since the source is fully read out before any
+    /// destination byte is written. Same zero-length-still-bounds-checked
     /// discipline `copy`/`fill` above established.
     pub unsafe fn copy_between(dst_mem: *mut LinearMemory, src_mem: *const LinearMemory, dest: usize, src: usize, len: usize) -> Result<(), TrapError> {
         let src_end = src.checked_add(len);
         let dest_end = dest.checked_add(len);
-        let src_len = unsafe { (*src_mem).data.len() };
-        let dst_len = unsafe { (*dst_mem).data.len() };
+        let src_len = unsafe { (*src_mem).inner.borrow().data.len() };
+        let dst_len = unsafe { (*dst_mem).inner.borrow().data.len() };
         match (src_end, dest_end) {
             (Some(se), Some(de)) if se <= src_len && de <= dst_len => {
-                let bytes: Vec<u8> = unsafe { (&(*src_mem).data)[src..se].to_vec() };
-                unsafe { (&mut (*dst_mem).data)[dest..de].copy_from_slice(&bytes) };
+                // This `borrow()` is scoped to just this statement -- it is
+                // dropped before the `borrow_mut()` below runs, so this is
+                // safe even when `src_mem`/`dst_mem` share the same
+                // underlying `Rc<RefCell<..>>` (self-copy, or a shared
+                // cross-instance import).
+                let bytes: Vec<u8> = unsafe { (*src_mem).inner.borrow().data[src..se].to_vec() };
+                unsafe { (*dst_mem).inner.borrow_mut().data[dest..de].copy_from_slice(&bytes) };
                 Ok(())
             }
             _ => Err(TrapError::new(format!(
@@ -1327,14 +1403,15 @@ impl LinearMemory {
     /// zero-length-still-bounds-checked fix explained in `copy`'s own doc
     /// comment (`dest` must be `<= data.len()` even when `len == 0`).
     pub fn fill(&mut self, dest: usize, value: u8, len: usize) -> Result<(), TrapError> {
+        let mut inner = self.inner.borrow_mut();
         match dest.checked_add(len) {
-            Some(dest_end) if dest_end <= self.data.len() => {
-                self.data[dest..dest_end].fill(value);
+            Some(dest_end) if dest_end <= inner.data.len() => {
+                inner.data[dest..dest_end].fill(value);
                 Ok(())
             }
             _ => Err(TrapError::new(format!(
                 "out of bounds memory.fill: dest={dest}, len={len}, memory_size={}",
-                self.data.len()
+                inner.data.len()
             ))),
         }
     }
@@ -1344,15 +1421,59 @@ impl LinearMemory {
 // Section 4: Table — function reference array
 // ══════════════════════════════════════════════════════════════════════════════
 
+/// The mutable part of a [`Table`]'s state: just the element Vec. Lives
+/// behind an `Rc<RefCell<..>>` on `Table` itself (see that struct's own
+/// `inner` field doc comment) -- the same shared-storage shape
+/// `MemoryStorage`/`LinearMemory` use, and for the identical reason: this
+/// is exactly the part that must be SHARED, not cloned, when a table is
+/// imported across a module boundary.
+struct TableStorage {
+    /// Elements: `Some(func_index)` or `None` (uninitialized).
+    elements: Vec<Option<u32>>,
+}
+
 /// A table of function references for indirect calls.
 ///
 /// WASM 1.0 tables hold nullable function indices. The `call_indirect`
 /// instruction looks up a function reference by table index, then calls it.
+///
+/// ## Cross-instance sharing (W28)
+///
+/// Mirrors `LinearMemory`'s own W28 fix exactly (see that struct's doc
+/// comment for the full rationale): when module A exports a table and
+/// module B imports it, a `table.set`/active element segment applied
+/// through either instance's copy of this struct must be visible through
+/// the other's `table.get`/`table.size`/`call_indirect` -- they are the
+/// SAME table, not two independent copies that happen to start out equal.
+/// `elements` (the only field `table.set`/`grow`/`fill`/`copy` ever
+/// mutate) now lives inside a shared [`TableStorage`], reached through
+/// `inner: Rc<RefCell<TableStorage>>`; `#[derive(Clone)]` on `Table` itself
+/// clones the `Rc` pointer, not the element Vec. `max_size`/`is64` stay
+/// OUTSIDE `inner` as plain fields, same reasoning as `LinearMemory::
+/// max_pages`/`is64`: both are fixed at construction time, so every clone
+/// already agrees on their value.
+///
+/// Known, deliberately out-of-scope remaining gap (see this crate's own
+/// `code/specs/W10-wasm-real-linking-and-unlinkable.md` W28 addendum):
+/// this fix makes a table's raw entries (bare `u32` function indices) and
+/// its size genuinely shared and observable cross-instance, but
+/// `call_indirect` still resolves a table entry against the CALLING
+/// instance's own `func_bodies`/`host_functions` index space. A real
+/// funcref written into a SHARED table by one module and then
+/// `call_indirect`-invoked through a DIFFERENT module needs actual
+/// cross-instance function IDENTITY for table entries (the same class of
+/// problem `WasmInstance::tag_identities` already solves for exception
+/// tags, but requiring genuine cross-instance DISPATCH, not just equality
+/// comparison) -- a separate, larger follow-on, not part of this storage-
+/// sharing fix.
 #[derive(Clone)]
 pub struct Table {
-    /// Elements: `Some(func_index)` or `None` (uninitialized).
-    elements: Vec<Option<u32>>,
-    /// Maximum table size, enforced by `grow` (task #98).
+    /// Shared, live mutable storage -- see this struct's own doc comment
+    /// for why this is `Rc<RefCell<..>>` rather than a plain owned field.
+    inner: Rc<RefCell<TableStorage>>,
+    /// Maximum table size, enforced by `grow` (task #98). Immutable after
+    /// construction; see the struct doc comment for why this lives
+    /// outside `inner`.
     max_size: Option<u32>,
     /// Whether this table uses 64-bit addressing (table64 proposal, W26)
     /// -- mirrors `LinearMemory::is64` (W25) exactly. `elements`/`max_size`
@@ -1365,7 +1486,8 @@ pub struct Table {
     /// bounded well under any `u64` range by [`MAX_TABLE_ELEMENTS`],
     /// enforced by [`new_with_is64`](Self::new_with_is64)). Always `false`
     /// via the plain [`new`](Self::new) constructor; only
-    /// `new_with_is64` can set it.
+    /// `new_with_is64` can set it. Immutable after construction; see the
+    /// struct doc comment for why this lives outside `inner`.
     is64: bool,
 }
 
@@ -1373,7 +1495,7 @@ impl Table {
     /// Create a new table with `initial_size` null entries.
     pub fn new(initial_size: u32, max_size: Option<u32>) -> Self {
         Table {
-            elements: vec![None; initial_size as usize],
+            inner: Rc::new(RefCell::new(TableStorage { elements: vec![None; initial_size as usize] })),
             max_size,
             is64: false,
         }
@@ -1437,32 +1559,34 @@ impl Table {
 
     /// Get the function index at the given table index.
     pub fn get(&self, index: u32) -> Result<Option<u32>, TrapError> {
-        if index as usize >= self.elements.len() {
+        let inner = self.inner.borrow();
+        if index as usize >= inner.elements.len() {
             return Err(TrapError::new(format!(
                 "out of bounds table access: index={}, table size={}",
                 index,
-                self.elements.len()
+                inner.elements.len()
             )));
         }
-        Ok(self.elements[index as usize])
+        Ok(inner.elements[index as usize])
     }
 
     /// Set the function index at the given table index.
     pub fn set(&mut self, index: u32, func_index: Option<u32>) -> Result<(), TrapError> {
-        if index as usize >= self.elements.len() {
+        let mut inner = self.inner.borrow_mut();
+        if index as usize >= inner.elements.len() {
             return Err(TrapError::new(format!(
                 "out of bounds table access: index={}, table size={}",
                 index,
-                self.elements.len()
+                inner.elements.len()
             )));
         }
-        self.elements[index as usize] = func_index;
+        inner.elements[index as usize] = func_index;
         Ok(())
     }
 
     /// Current table size.
     pub fn size(&self) -> u32 {
-        self.elements.len() as u32
+        self.inner.borrow().elements.len() as u32
     }
 
     /// Declared maximum size, if any (link-time limits compatibility
@@ -1494,7 +1618,8 @@ impl Table {
     /// `u64` arithmetic throughout so a huge `delta` can't wrap `usize`/
     /// `u32` addition and slip past any of the three checks.
     pub fn grow(&mut self, delta: u32, init: Option<u32>) -> i32 {
-        let old_size = self.elements.len() as u32;
+        let mut inner = self.inner.borrow_mut();
+        let old_size = inner.elements.len() as u32;
         let new_size = old_size as u64 + delta as u64;
         if let Some(max) = self.max_size {
             if new_size > max as u64 {
@@ -1507,7 +1632,7 @@ impl Table {
         if new_size > i32::MAX as u64 {
             return -1;
         }
-        self.elements.resize(new_size as usize, init);
+        inner.elements.resize(new_size as usize, init);
         old_size as i32
     }
 
@@ -1521,14 +1646,15 @@ impl Table {
     pub fn fill(&mut self, dest: u32, value: Option<u32>, len: u32) -> Result<(), TrapError> {
         let dest = dest as usize;
         let len = len as usize;
+        let mut inner = self.inner.borrow_mut();
         match dest.checked_add(len) {
-            Some(dest_end) if dest_end <= self.elements.len() => {
-                self.elements[dest..dest_end].fill(value);
+            Some(dest_end) if dest_end <= inner.elements.len() => {
+                inner.elements[dest..dest_end].fill(value);
                 Ok(())
             }
             _ => Err(TrapError::new(format!(
                 "out of bounds table access: dest={dest}, len={len}, table size={}",
-                self.elements.len()
+                inner.elements.len()
             ))),
         }
     }
@@ -1570,17 +1696,18 @@ impl Table {
         let len = len as usize;
         let src_end = src.checked_add(len);
         let dest_end = dest.checked_add(len);
-        // Explicit (not autoref'd) `&`/`&mut` -- each scoped to the
-        // narrowest block that needs it, so the two never overlap even
-        // when `dst_table`/`src_table` point at the SAME `Table` (a
-        // self-copy): the shared borrow that reads `entries` ends before
-        // the mutable borrow that writes it is ever formed.
-        let src_len = unsafe { (*src_table).elements.len() };
-        let dst_len = unsafe { (*dst_table).elements.len() };
+        let src_len = unsafe { (*src_table).inner.borrow().elements.len() };
+        let dst_len = unsafe { (*dst_table).inner.borrow().elements.len() };
         match (src_end, dest_end) {
             (Some(se), Some(de)) if se <= src_len && de <= dst_len => {
-                let entries: Vec<Option<u32>> = unsafe { (&(*src_table).elements)[src..se].to_vec() };
-                unsafe { (&mut (*dst_table).elements)[dest..de].clone_from_slice(&entries) };
+                // This `borrow()` is scoped to just this statement -- it is
+                // dropped before the `borrow_mut()` below runs, so this is
+                // safe even when `src_table`/`dst_table` share the same
+                // underlying `Rc<RefCell<..>>` (self-copy, or a shared
+                // cross-instance import; see `LinearMemory::copy_between`'s
+                // identical note).
+                let entries: Vec<Option<u32>> = unsafe { (*src_table).inner.borrow().elements[src..se].to_vec() };
+                unsafe { (*dst_table).inner.borrow_mut().elements[dest..de].clone_from_slice(&entries) };
                 Ok(())
             }
             _ => Err(TrapError::new(format!(
@@ -13129,7 +13256,7 @@ mod tests {
         let mut mem = LinearMemory::new(1, None);
         assert_eq!(mem.grow(2), 1); // old pages = 1
         assert_eq!(mem.size(), 3);
-        assert_eq!(mem.data.len(), 3 * PAGE_SIZE);
+        assert_eq!(mem.inner.borrow().data.len(), 3 * PAGE_SIZE);
     }
 
     #[test]
@@ -13600,8 +13727,8 @@ mod tests {
         });
         engine.call_function(0, &[]).expect("memory.fill through memory 1 should succeed");
         let state = engine.into_state();
-        assert_eq!(&state.memories[0].data[0..4], &[0, 0, 0, 0], "memory 0 must be untouched");
-        assert_eq!(&state.memories[1].data[0..4], &[7, 7, 7, 7], "memory 1 must be filled");
+        assert_eq!(&state.memories[0].inner.borrow().data[0..4], &[0, 0, 0, 0], "memory 0 must be untouched");
+        assert_eq!(&state.memories[1].inner.borrow().data[0..4], &[7, 7, 7, 7], "memory 1 must be filled");
     }
 
     #[test]
@@ -13669,8 +13796,8 @@ mod tests {
         engine.set_dropped_data_segments(vec![false]);
         engine.call_function(0, &[]).expect("memory.init through memory 1 should succeed");
         let state = engine.into_state();
-        assert_eq!(&state.memories[0].data[0..2], &[0, 0], "memory 0 must be untouched");
-        assert_eq!(&state.memories[1].data[0..2], &[0xAA, 0xBB], "memory 1 must hold the segment's bytes");
+        assert_eq!(&state.memories[0].inner.borrow().data[0..2], &[0, 0], "memory 0 must be untouched");
+        assert_eq!(&state.memories[1].inner.borrow().data[0..2], &[0xAA, 0xBB], "memory 1 must hold the segment's bytes");
     }
 
     // ══════════════════════════════════════════════════════════════════════
@@ -20022,15 +20149,16 @@ mod tests {
         mem.write_bytes(0, b"HELLO").unwrap();
         // Non-overlapping forward copy: "HELLO" at 0 → 8.
         mem.copy(8, 0, 5).unwrap();
-        assert_eq!(&mem.data[8..13], b"HELLO");
+        assert_eq!(&mem.inner.borrow().data[8..13], b"HELLO");
         // Overlapping copy (dest > src, ranges overlap) must use memmove semantics.
         mem.write_bytes(0, b"ABCDEF").unwrap();
         mem.copy(2, 0, 4).unwrap(); // ABCDEF → AB ABCD
-        assert_eq!(&mem.data[0..6], b"ABABCD");
+        assert_eq!(&mem.inner.borrow().data[0..6], b"ABABCD");
         // Zero-length copy at exactly the end of memory (one-past-the-end,
         // the same convention as a Rust slice's exclusive upper bound) is a
         // no-op, matching the real spec.
-        assert!(mem.copy(mem.data.len(), mem.data.len(), 0).is_ok());
+        let mem_len = mem.inner.borrow().data.len();
+        assert!(mem.copy(mem_len, mem_len, 0).is_ok());
         // Task #94 (found vendoring memory_copy.wast): a zero-length copy
         // whose dest/src is PAST the end of memory must still trap -- it is
         // NOT exempt from bounds-checking just because nothing is copied.
@@ -20062,10 +20190,11 @@ mod tests {
     fn linear_memory_fill_writes_the_byte_and_bounds_checks() {
         let mut mem = LinearMemory::new(1, None);
         mem.fill(0, 0xAA, 5).unwrap();
-        assert_eq!(&mem.data[0..5], &[0xAA; 5]);
-        assert_eq!(mem.data[5], 0); // untouched beyond the filled range
+        assert_eq!(&mem.inner.borrow().data[0..5], &[0xAA; 5]);
+        assert_eq!(mem.inner.borrow().data[5], 0); // untouched beyond the filled range
         // Zero-length fill at exactly the end of memory is a no-op.
-        assert!(mem.fill(mem.data.len(), 0, 0).is_ok());
+        let mem_len = mem.inner.borrow().data.len();
+        assert!(mem.fill(mem_len, 0, 0).is_ok());
         // Task #94 (same fix as `copy`, above): a zero-length fill whose
         // dest is PAST the end of memory must still trap.
         assert!(mem.fill(999_999, 0, 0).is_err());
@@ -20318,7 +20447,7 @@ mod tests {
             .call_function(0, &[WasmValue::I32(10), WasmValue::I32(1), WasmValue::I32(2)])
             .unwrap();
         let state = engine.into_state();
-        assert_eq!(&state.memories[0].data[10..12], &[0xBB, 0xCC]);
+        assert_eq!(&state.memories[0].inner.borrow().data[10..12], &[0xBB, 0xCC]);
     }
 
     /// Smoke test for task #97's `table.init`/`table.copy`/`elem.drop`:
