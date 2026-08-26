@@ -50,8 +50,12 @@ accessibility metadata survive through temporal layout and backend-neutral
 PaintScene metadata. A native Metal fixture validates the pipeline to PNG.
 Task-scoped `click` commands preserve quoted links and callback names and
 arguments in semantic IR; temporal layout resolves task hit bounds, and Paint
-scenes expose backend-neutral link and callback metadata. Gantt remains partial
-while calendar exclusions, axis configuration, and the complete pinned parser
+scenes expose backend-neutral link and callback metadata. Calendar `includes`
+and `excludes` controls now preserve explicit dates, weekdays, and configurable
+Friday/Saturday weekend boundaries. Exclusions extend task bars and dependent
+starts, while `axisFormat` and `tickInterval` resolve native time-axis labels
+before Paint lowering. Gantt remains partial while full date-format coverage,
+inclusive-end/top-axis/today-marker rendering, and the complete pinned parser
 corpus are still outstanding.
 
 Each supported family lowers into the shared Diagram IR and can continue

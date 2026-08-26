@@ -1,5 +1,9 @@
 # Changelog — diagram-to-paint
 
+## 0.72.0
+
+- Validate configured Gantt calendar geometry and formatted daily axis labels through native Metal-to-PNG rendering.
+
 ## 0.62.0
 
 - Lower resolved Mermaid XY axis label font sizes and spine widths into backend-neutral Paint glyphs and paths.

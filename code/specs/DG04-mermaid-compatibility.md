@@ -78,7 +78,11 @@ semantic IR, deterministic task-bar layout, Paint instructions, and a Metal PNG
 fixture. The family remains partial until the remaining calendar, axis,
 and pinned upstream corpus surface is represented and validated. Gantt task
 `click` links and callbacks already lower through semantic IR to resolved task
-bounds and backend-neutral PaintScene metadata.
+bounds and backend-neutral PaintScene metadata. Calendar includes/excludes and
+weekend boundaries now extend task and dependency geometry, and configured
+axis formats and tick intervals lower to resolved labels rendered by Paint.
+Inclusive-end, top-axis, today-marker, and the full pinned corpus remain
+explicitly incomplete.
 
 The XY-chart pipeline preserves Mermaid's bounded `xAxis.labelRotation` and
 `yAxis.labelRotation` configuration in semantic chart IR. As in the pinned

@@ -1,6 +1,6 @@
 //! Grammar-driven lexers for Mermaid diagram families.
 
-pub const VERSION: &str = "0.69.0";
+pub const VERSION: &str = "0.70.0";
 
 use grammar_tools::token_grammar::parse_token_grammar;
 use lexer::grammar_lexer::GrammarLexer;
@@ -307,7 +307,7 @@ mod tests {
 
     #[test]
     fn version_exists() {
-        assert_eq!(VERSION, "0.69.0");
+        assert_eq!(VERSION, "0.70.0");
     }
 
     #[test]
@@ -346,6 +346,21 @@ mod tests {
         assert!(names.contains(&"SECTION_STATEMENT"));
         assert!(names.contains(&"TASK_STATEMENT"));
         assert!(names.contains(&"CLICK_STATEMENT"));
+    }
+
+    #[test]
+    fn tokenizes_gantt_calendar_and_axis_controls() {
+        let tokens = try_tokenize_mermaid_gantt(
+            "gantt\naxisFormat %m/%d\ntickInterval 1week\nexcludes weekends, 2026-01-01\nincludes 2026-01-03\ninclusiveEndDates\ntopAxis\ntodayMarker off\nweekday monday\nweekend friday\n",
+        ).unwrap();
+        let names = tokens.iter().filter_map(|token| token.type_name.as_deref()).collect::<Vec<_>>();
+        for expected in [
+            "AXIS_FORMAT_STATEMENT", "TICK_INTERVAL_STATEMENT", "EXCLUDES_STATEMENT",
+            "INCLUDES_STATEMENT", "INCLUSIVE_END_DATES", "TOP_AXIS",
+            "TODAY_MARKER_STATEMENT", "WEEKDAY_STATEMENT", "WEEKEND_STATEMENT",
+        ] {
+            assert!(names.contains(&expected), "missing {expected}: {names:?}");
+        }
     }
 
     #[test]

@@ -1,5 +1,9 @@
 # Changelog
 
+## 0.137.0
+
+- Parse Gantt includes, excludes, weekend boundaries, axis formats, tick intervals, and remaining calendar control statements into typed IR.
+
 ## 0.126.0
 
 - Preserve nested Mermaid XY x/y-axis label, title, and spine configuration independently.
