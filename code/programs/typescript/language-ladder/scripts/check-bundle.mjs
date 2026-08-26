@@ -1,5 +1,6 @@
 import { lstat, readdir, readFile, stat } from "node:fs/promises";
 import path from "node:path";
+import { bandChunkName, lessonBand } from "../lesson-bands.mjs";
 
 const assetsDir = path.resolve("dist/assets");
 const names = await readdir(assetsDir);
@@ -42,9 +43,15 @@ const BUNDLED_EXTENSIONS = new Set([
   ".ts", ".tsx", ".js", ".mjs", ".css", ".html",
 ]);
 
+// `lstat`, not `stat`. This walk is unbounded in depth, and `stat` resolves
+// links -- so a symlink cycle anywhere under src/ or the corpus recurses until
+// it exhausts file descriptors or the stack. A link's own mtime is not
+// interesting here anyway; what matters is the files the bundler reads.
+// Pre-existing, fixed in this pass because it is the same hazard the new corpus
+// walk below is being guarded against and it would be odd to fix only one.
 async function newestMtime(target) {
-  const info = await stat(target).catch(() => null);
-  if (!info) return 0;
+  const info = await lstat(target).catch(() => null);
+  if (!info || info.isSymbolicLink()) return 0;
   if (!info.isDirectory()) {
     return BUNDLED_EXTENSIONS.has(path.extname(target)) ? info.mtimeMs : 0;
   }
@@ -95,7 +102,7 @@ if (handwritingChunks.length !== 1) {
     `expected one handwriting-tools chunk, found ${handwritingChunks.length}`,
   );
 }
-// THE REQUEST BUDGET IS DERIVED, NOT HARDCODED (#12918).
+// THE REQUEST BUDGET IS DERIVED FROM THE CORPUS, NOT HARDCODED (#12918).
 //
 // This was a constant, and the constant was the problem. Lesson batches used to
 // be grouped by track and split by size, which made the emitted count a function
@@ -105,80 +112,47 @@ if (handwritingChunks.length !== 1) {
 // real grouping regression tomorrow: 353 was met on a corpus that only needed
 // 281, so 72 batches of drift would have passed unremarked.
 //
-// Batches are now grouped by a chapter range (see vite.config.ts). One band is
-// one track's lesson series over LESSON_BAND_CHAPTERS chapters, so the number of
-// bands is a property of the CORPUS and can be counted here directly. The gate
-// compares what the bundler emitted against what the grouping says it should
-// have emitted.
+// Batches are now grouped by a chapter range (see lesson-bands.mjs). One band is
+// one track's lesson series over LESSON_BAND_CHAPTERS chapters, so what the
+// bundler should have emitted is a property of the CORPUS and is computed here
+// rather than remembered.
 //
-// What that buys, and why it ends the recurrence:
-//
-//   * adding lessons inside an existing band moves neither side -> passes;
-//   * adding chapters moves both sides together -> passes;
-//   * a grouping regression moves only the emitted count -> FAILS, at any
-//     corpus size, which a constant could not do.
-//
-// BAND_SPLIT_SLACK is the debt number, and it is small and meaningful: it counts
-// how many bands are dense enough that the 256 kB backstop in vite.config.ts has
-// to split them. Measured at 1, and stable at 1 across a 35-lesson tranche. It
-// may fall, never grow. If it grows, the backstop is doing the splitter's job
-// again and the band width is what should change, not this number.
-const BAND_SPLIT_SLACK = 1;
-
-// Read the band width from the bundler config rather than restating it, so the
-// two cannot drift.
-const viteConfig = await readFile(path.resolve("vite.config.ts"), "utf8");
-const bandWidth = Number(
-  /export const LESSON_BAND_CHAPTERS = (\d+);/.exec(viteConfig)?.[1] ?? 0,
-);
-if (!Number.isInteger(bandWidth) || bandWidth <= 0) {
-  console.error(
-    "bundle check: could not read LESSON_BAND_CHAPTERS from vite.config.ts — " +
-      "the request budget is derived from it and cannot be computed without it.",
-  );
-  process.exit(1);
-}
-
+//   * adding lessons inside an existing band changes nothing -> passes;
+//   * adding chapters adds a band AND a chunk -> passes;
+//   * a grouping regression breaks the correspondence -> FAILS, at any corpus
+//     size, which a constant could not do.
 // One entry per (track, lesson series, chapter band) the corpus actually holds.
+// The parsing is imported, not restated, so this cannot disagree with the
+// bundler about which files are lessons or which band they fall in.
 //
-// The series letter is part of the key on purpose. 599 of the corpus's lesson
-// files are not `XX-C<digits>` — writing lessons (`AR-W00-…`) and review
-// lessons (`ES-R02-…`) among them — and a pattern matching only `-C` drops
-// every one of them, undercounting both sides of this comparison.
+// EVERY GUARD HERE POINTS THE SAME WAY, AND IT IS WORTH SAYING WHICH WAY. This
+// gate fails when the emitted chunks do not match the bands. Anything that
+// invents a band makes room for a chunk nobody authored, so it makes the gate
+// pass when it should fail -- the only failure mode of a CI check that matters.
+//
+// `isDirectory()` is false for a symlink when the entry came from
+// `withFileTypes`, so a symlinked TRACK is already skipped. The `lessons` hop
+// takes a path rather than a dirent, so it is the one that would follow a link:
+// `<track>/lessons -> /anywhere` would enumerate a directory outside the
+// repository and mint a band per plausible filename found there. Vite's glob
+// resolves symlinks, so those modules would not even become lesson chunks --
+// budget up, emission flat, gate looser.
 const corpusRoot = path.resolve("../../../learning/human-languages");
-const bands = new Set();
+const bands = new Map();
 let lessonFiles = 0;
 // A missing corpus root must reach the anti-vacuity guard below carrying a
-// diagnosis, not escape as an unhandled ENOENT stack trace. The exit code was
-// never in doubt either way, but "no such file or directory, scandir" sends the
-// reader to the filesystem when the answer is that this gate cannot derive a
-// budget without a corpus to derive it from.
+// diagnosis, not escape as an unhandled ENOENT stack trace.
 let tracks = [];
 try {
   tracks = await readdir(corpusRoot, { withFileTypes: true });
 } catch {
   tracks = [];
 }
-// EVERY GUARD BELOW POINTS THE SAME WAY, AND IT IS WORTH SAYING WHICH WAY.
-//
-// This gate fails when `batches > bands + slack`. So anything that inflates the
-// BAND count raises the budget and makes the gate pass when it should fail —
-// which is the only failure mode of a CI check that matters. Nothing here is
-// defending the build; it is defending the check's own trustworthiness.
-//
-// `isDirectory()` is false for a symlink when the entry came from
-// `withFileTypes`, so a symlinked track is already skipped above. The inner
-// `readdir` is the one that would follow a link, because it takes a path rather
-// than a dirent — the same trap the `lstatSync` guards elsewhere in this file
-// were written for. A symlinked `lessons/` pointing back at another track would
-// duplicate every one of its bands under a second track name and silently buy
-// the budget a few dozen batches of slack.
-const MAX_CHAPTER_DIGITS = 6;
 for (const track of tracks) {
   if (!track.isDirectory() || track.name.startsWith(".")) continue;
   const lessonDir = path.join(corpusRoot, track.name, "lessons");
-  // `lstat`, not `stat`: `stat` resolves the link and would report the TARGET
-  // as a directory, which is exactly the case being refused.
+  // `lstat`, not `stat`: `stat` resolves the link and reports the TARGET as a
+  // directory, which is exactly the case being refused.
   let lessonDirInfo;
   try {
     lessonDirInfo = await lstat(lessonDir);
@@ -190,23 +164,19 @@ for (const track of tracks) {
   try {
     entries = await readdir(lessonDir, { withFileTypes: true });
   } catch {
-    continue; // a track with no readable lessons/ directory yet
+    continue;
   }
   for (const entry of entries) {
     // `isFile()` is likewise false for a symlink, so a link farm inside one
     // track cannot mint bands either.
     if (!entry.isFile() || !entry.name.endsWith(".md")) continue;
     lessonFiles += 1;
-    // The digit run is bounded so `Number()` cannot reach Infinity or leave the
-    // safe-integer range: `Math.floor(Infinity / bandWidth) * bandWidth` is
-    // `Infinity`, which is a perfectly good Set key and would add a band nobody
-    // authored. A chapter number needing seven digits is not a chapter number.
-    const match = new RegExp(`^[A-Za-z]{2}-([A-Za-z])(\\d{1,${MAX_CHAPTER_DIGITS}})(?!\\d)`).exec(
-      entry.name,
-    );
-    if (!match) continue;
-    const band = Math.floor(Number(match[2]) / bandWidth) * bandWidth;
-    bands.add(`${track.name}|${match[1].toUpperCase()}|${band}`);
+    const found = lessonBand(track.name, entry.name);
+    if (!found) continue;
+    // Rollup appends `-<hash>.js`, and its hashes contain `-` and `_`, so a
+    // filename cannot be parsed back into a band unambiguously. Match forwards
+    // on the prefix instead: that direction has no ambiguity at all.
+    bands.set(`${bandChunkName(found)}-`, 0);
   }
 }
 // Anti-vacuity: an empty or unreadable corpus would make the budget zero and
@@ -219,12 +189,52 @@ if (lessonFiles === 0 || bands.size === 0) {
   process.exit(1);
 }
 
-const requestBudget = bands.size + BAND_SPLIT_SLACK;
-if (lessonBatches.length > requestBudget) {
+// COMPARE THE SETS, NOT THE COUNTS.
+//
+// An earlier version of this gate compared `lessonBatches.length` against
+// `bands.size + slack` and threw the identities away. That passes a regression
+// which reshapes the grouping without changing the total -- one band's modules
+// scattered into another's chunk while a third splits -- and the data to catch
+// it was already in hand. It also sat at zero margin, so the pressure on the
+// next legitimate backstop split would have been to bump the slack rather than
+// look at the band width.
+const unexplained = [];
+for (const name of lessonBatches) {
+  const prefix = [...bands.keys()].find((candidate) => name.startsWith(candidate));
+  if (prefix === undefined) unexplained.push(name);
+  else bands.set(prefix, bands.get(prefix) + 1);
+}
+const missing = [...bands].filter(([, count]) => count === 0).map(([prefix]) => prefix);
+const split = [...bands].filter(([, count]) => count > 1);
+const extraChunks = split.reduce((sum, [, count]) => sum + count - 1, 0);
+
+if (unexplained.length > 0) {
   failures.push(
-    `${lessonBatches.length} lesson batches exceed the derived budget of ` +
-      `${requestBudget} (${bands.size} chapter bands + ${BAND_SPLIT_SLACK} split). ` +
-      `Grouping has drifted back toward splitting by size — see vite.config.ts.`,
+    `${unexplained.length} lesson batch(es) match no chapter band in the corpus, ` +
+      `e.g. ${unexplained.slice(0, 3).join(", ")}. Grouping and the corpus disagree ` +
+      `about which files are lessons — see lesson-bands.mjs.`,
+  );
+}
+if (missing.length > 0) {
+  failures.push(
+    `${missing.length} chapter band(s) produced no lesson batch, ` +
+      `e.g. ${missing.slice(0, 3).join(", ")}. Modules have been absorbed into ` +
+      `another band's chunk.`,
+  );
+}
+// BAND_SPLIT_SLACK is the debt number, and it is a small honest one: how many
+// EXTRA chunks the 256 kB backstop in vite.config.ts has to carve out of bands
+// too dense to ship whole. Measured at 1 (Spanish chapters 5-9), and stable at 1
+// across a 35-lesson tranche. It may fall, never grow. If it grows, the backstop
+// has started doing the splitter's job again and the BAND WIDTH is what should
+// change -- not this number. The message names the band so that is a decision
+// rather than a bump.
+const BAND_SPLIT_SLACK = 1;
+if (extraChunks > BAND_SPLIT_SLACK) {
+  failures.push(
+    `the size backstop split ${extraChunks} band(s) beyond the ${BAND_SPLIT_SLACK} ` +
+      `allowed: ${split.map(([prefix, count]) => `${prefix} into ${count}`).join(", ")}. ` +
+      `Reduce LESSON_BAND_CHAPTERS rather than raising this number.`,
   );
 }
 // Mirrors the `maxSize` BACKSTOP in vite.config.ts, so a batch the bundler did
@@ -248,7 +258,7 @@ if (failures.length > 0) {
   process.exitCode = 1;
 } else {
   console.log(
-    `bundle check: ${lessonBatches.length} lesson batches (budget ${requestBudget} = ${bands.size} bands + ${BAND_SPLIT_SLACK}), ` +
+    `bundle check: ${lessonBatches.length} lesson batches over ${bands.size} chapter bands${extraChunks > 0 ? ` (+${extraChunks} backstop split: ${split.map(([p]) => p).join(", ")})` : ""}, ` +
       `${largestLessonBatch} byte max lesson batch, ` +
       `${largestEagerChunk} byte max eager chunk`,
   );

@@ -1,5 +1,9 @@
 import { defineConfig } from "vite";
 import path from "node:path";
+// How lesson batches are grouped lives in ONE module, imported by both this
+// config and scripts/check-bundle.mjs. The gate used to recover the band width
+// by regex-ing this file, which a comment mentioning the constant could shadow.
+import { bandChunkNameForModuleId } from "./lesson-bands.mjs";
 
 // The per-letter script data (glyph, components, stroke order) is the SAME data
 // the HL01 layer publishes, at code/learning/human-languages/data/scripts/*.json.
@@ -7,11 +11,6 @@ import path from "node:path";
 // can never drift from the curriculum. They live outside this package's folder,
 // so the dev server must be told the repo root is a legal place to read from.
 const repoRoot = path.resolve(__dirname, "../../../..");
-
-// How many chapters share one lazy lesson batch. See the long note on the
-// lesson group below, and scripts/check-bundle.mjs, which derives its request
-// budget from this number rather than hardcoding a count.
-export const LESSON_BAND_CHAPTERS = 5;
 
 export default defineConfig({
   // Relative base → the built index.html works when opened from any path
@@ -83,26 +82,11 @@ export default defineConfig({
               // little at a time; check the batches-vs-bands gap in
               // scripts/check-bundle.mjs before touching it.
               //
-              // THE SERIES LETTER IS PART OF THE KEY. 599 of the corpus's 4,154
-              // lesson files are not `XX-C<digits>` -- writing lessons
-              // (`AR-W00-…`) and review lessons (`ES-R02-…`) among them. A
-              // pattern matching only `-C` returns null for every one of them,
-              // drops them out of the lesson group, and undercounts the request
-              // budget by however many chunks they land in elsewhere. That
-              // mistake was made and measured while preparing this change: it
-              // reported 197 batches where the honest figure was 281.
-              name(moduleId) {
-                const normalized = moduleId.replaceAll("\\", "/");
-                const match =
-                  /human-languages\/([^/]+)\/lessons\/[A-Za-z]{2}-([A-Za-z])(\d+)/.exec(
-                    normalized,
-                  );
-                if (!match?.[1]) return null;
-                const series = (match[2] ?? "x").toUpperCase();
-                const band = Math.floor(Number(match[3] ?? 0) / LESSON_BAND_CHAPTERS) *
-                  LESSON_BAND_CHAPTERS;
-                return `lessons-${match[1]}-${series}${band}`;
-              },
+              // The pattern itself, the series letter it must capture, the track-name
+              // whitelist and the digit bound all live in lesson-bands.mjs, next
+              // to the band arithmetic that consumes them, so the gate cannot
+              // drift from the bundler about which files exist.
+              name: bandChunkNameForModuleId,
               // Backstop only -- see the note above. Mirrored by
               // scripts/check-bundle.mjs, which fails a batch the bundler did
               // not intend to emit.

@@ -31,6 +31,27 @@
 - Report the derived budget on success as well as failure, and fail with a
   diagnosis rather than an unhandled `ENOENT` when the curriculum tree cannot be
   read.
+- Define the grouping ONCE, in `lesson-bands.mjs`, imported by both the bundler
+  config and the gate. The gate previously recovered the band width by
+  regex-ing `vite.config.ts`, and `exec` takes the first match anywhere in the
+  file including comments — so a comment quoting the old value handed the
+  checker a band width of 1 while the bundler used 5, inflating the budget from
+  281 to 1,158 and letting a full byte-linear regression pass. An import cannot
+  be shadowed by a comment.
+- Compare the emitted chunks against the derived bands as SETS rather than
+  comparing counts, so a regression that reshapes the grouping without changing
+  the total is caught, and the one legitimate backstop split is named
+  (`lessons-spanish-C5-`) instead of hiding inside a bare slack number.
+- Refuse symlinks in the corpus walk (`lstat`, and `isFile()` on entries): a
+  symlinked `lessons/` directory would enumerate a tree outside the repository
+  and mint bands for it, raising the budget while the bundler — whose glob
+  resolves symlinks — emitted nothing to match. Also switch the pre-existing
+  staleness walk from `stat` to `lstat`, since it recurses unbounded and a
+  symlink cycle would exhaust the stack.
+- Bound the chapter digit run, so a long enough one cannot reach `Infinity` and
+  mint a `lessons-<track>-CInfinity` band, and whitelist track directory names
+  rather than merely excluding path separators — Rollup's filename sanitiser
+  leaves `#` and `%`, which produce assets a browser truncates at the fragment.
 
 ## Unreleased — source-verified Kannada independent i
 
