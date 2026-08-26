@@ -1,9 +1,13 @@
 ## Unreleased — A1 reinforcement, the half that needed no prose
 
 Spanish's `reinforcement` blocker at A1 stood at **83** atoms revisited fewer
-than twice (HL09 §3.1 criterion 4). It is now **60**. Twenty-three atoms closed,
-**no lesson added, and not one word of new prose written** — because in every
-case the corpus was already revisiting the atom and had never said so.
+than twice (HL09 §3.1 criterion 4). It is now **60**. Twenty-six atoms gained a
+revisit and twenty-three of them closed, **with no lesson added and not one word
+of new prose written** — because in every case the corpus was already revisiting
+the atom and had never said so.
+
+The three that did not close needed **two** further revisits and found only one
+honest carrier each; they are marked in the table below and stay in the count.
 
 **This does not close the criterion.** `reinforcement(-60)` remains Spanish's
 sole A1 blocker, and Spanish stays `attained: pre-A1`, `inProgressAt: A1`.
@@ -38,7 +42,7 @@ the lesson spends.
 | `ES-GRAMMAR-OBJECT-SETS-OVERLAP` | `ES-C46-sintesis-dar-y-decir` | the *lo/la/los/las* against *le/les* contrast, in full |
 | `ES-LEX-O` | `ES-C61-repaso-juntores` | "*Siete u ocho.* — *O* steps aside as ***u***" |
 | `ES-LEX-MALO` | `ES-C60-repaso-grado` | "***Mal*** … is *malo* with its ending bitten off" |
-| `ES-LEX-CON` | `ES-C64-repaso-tonicos` | "*¿Vienes conmigo?* — the two that fuse" |
+| `ES-LEX-CON` **(still open)** | `ES-C64-repaso-tonicos` | "*¿Vienes conmigo?* — the two that fuse" |
 | `ES-GRAMMAR-CONTRACTION-OBLIGATORY` | `ES-C61-o` | "*a el* into *al*, and now *o* into *u*" |
 | `ES-GRAMMAR-DEMONSTRATIVE-BEFORE-NOUN` | `ES-C59-ese` | "*Este libro* is the one in my hand." |
 | `ES-GRAMMAR-DEMONSTRATIVE-AQUEL` | `ES-C65-ahi-alli` | "three pointing words: *este*, *ese*, *aquel*" |
@@ -46,12 +50,13 @@ the lesson spends.
 | `ES-GRAMMAR-QUIEN-PEOPLE-ONLY` | `ES-C62-veo-a-maria` | "Remember what happened to *quién*" |
 | `ES-GRAMMAR-GERUND-MEANING` | `ES-C62-comiendo`, `ES-C62-estoy-hablando` | "*Hablar* gave *hablando*"; "***Estoy hablando.***" |
 | `ES-GRAMMAR-GERUND-TWO-ENDINGS` | `ES-C62-estoy-hablando` | the *Estoy **comiendo*** row |
-| `ES-GRAMMAR-PERSONAL-A-WHY` | `ES-C62-repaso-gerundio` | "*Veo a María*, but *veo la casa.*" |
+| `ES-GRAMMAR-PERSONAL-A-WHY` **(still open)** | `ES-C62-repaso-gerundio` | "*Veo a María*, but *veo la casa.*" |
 | `ES-GRAMMAR-PRETERITE-AR-COMPLETE` | `ES-C63-comisteis`, `ES-C63-repaso-paradigmas` | "*Hablasteis*. Now the other two families."; "The form the book owed you longest." |
 | `ES-ORTHOGRAPHY-MI-ACCENT` | `ES-C64-conmigo` | "*Para mí*, *para ti*." |
-| `ES-GRAMMAR-VOCATIVE-NOT-OBJECT` | `ES-C64-repaso-tonicos` | "*María, ven.* — a comma, and that is the whole grammar" |
+| `ES-GRAMMAR-VOCATIVE-NOT-OBJECT` **(still open)** | `ES-C64-repaso-tonicos` | "*María, ven.* — a comma, and that is the whole grammar" |
 | `ES-GRAMMAR-INDEFINITE-PLURAL-AGAINST-BARE` | `ES-C67-uno-otro` | "*Un libro* — one book. *Unos libros* — some books." |
 | `ES-GRAMMAR-POSSESSIVE-GENDER-AGREEMENT-SINGULAR` | `ES-C65-vuestro` | "*Nuestra casa* — our house." |
+| `ES-EVIDENCE-PERRO-04` | `ES-C40-sintesis-describir` | "**el perro** — *the* dog. A particular one." |
 | `ES-GRAMMAR-IR-PRESENT-3PL` | `ES-C55-comieron` | the *comer / comen / comieron* paradigm row |
 
 ### About a third of the screen's proposals were rejected, on purpose
