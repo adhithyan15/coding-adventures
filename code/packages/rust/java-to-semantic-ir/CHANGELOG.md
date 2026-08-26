@@ -2,6 +2,35 @@
 
 All notable changes to the `java-to-semantic-ir` crate will be documented in this file.
 
+## [0.18.1] - 2026-08-26
+
+### Fixed
+
+- Task #71 (found while implementing task #70's own exceptions work,
+  unrelated to it): `lower_variable_declarator` used to trust an
+  *explicitly*-declared local variable's own type unconditionally,
+  never checking the initializer's actual `Kind` against it at all —
+  `int y = "hello";` compiled with **zero** error. Now rejects any
+  declared/initializer `Kind` mismatch, with two deliberate exceptions
+  matching real Java's own legal syntax:
+  - int-widening-to-float (`double d = 5;`, JLS 5.1.2's primitive
+    widening conversion) — directional only; the reverse (`int x =
+    5.0;`) is still rejected, matching real Java's own requirement for
+    an explicit narrowing cast. **Does not insert a real numeric
+    conversion** (SIR's own `Expr::Convert`, SIR26, only ever converts
+    between *integer* widths — there is no int-to-float primitive at
+    all): the emitted value for `double d = 5;` remains an `IntLit`,
+    only this frontend's own bookkeeping `Kind` becomes `Float`. A
+    disclosed, currently-unobservable gap (this frontend has no
+    output/print primitive wired up at all yet), not silently swept
+    under this fix.
+  - `null` initializing a *reference*-kinded declaration (`String s =
+    null;`, `int[] xs = null;`) — real Java permits `null` for any
+    reference type but rejects it for a primitive (`int x = null;` is a
+    `javac` compile error).
+- New tests cover the original bug, the widening/narrowing asymmetry,
+  and the primitive-vs-reference `null` distinction.
+
 ## [0.18.0] - 2026-08-26
 
 ### Added
