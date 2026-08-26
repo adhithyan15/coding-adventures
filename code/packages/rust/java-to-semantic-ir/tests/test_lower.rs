@@ -4371,3 +4371,262 @@ fn deeply_nested_lambda_expressions_report_depth_error_not_stack_overflow() {
         err.message
     );
 }
+
+// ── task #70 (M8): exceptions (try/catch/finally/throw → Stmt::TryCatch) ─
+
+#[test]
+fn try_catch_lowers_to_stmt_try_catch_and_declares_feature_exceptions() {
+    let m = compile_ok(&wrap(
+        "int x = 0; try { x = 1; } catch (RuntimeException e) { x = 2; }",
+    ));
+    assert!(m.manifest.contains(Feature::Exceptions));
+    match &main_fn(&m).body.stmts[1] {
+        Stmt::TryCatch {
+            body,
+            rescues,
+            ensure_body,
+            ..
+        } => {
+            assert_eq!(body.len(), 1);
+            assert_eq!(rescues.len(), 1);
+            assert_eq!(rescues[0].exception_types, vec!["RuntimeException"]);
+            assert_eq!(rescues[0].binding, Some("e".to_string()));
+            assert_eq!(rescues[0].body.len(), 1);
+            assert!(ensure_body.is_none());
+        }
+        other => panic!("expected TryCatch, got {other:?}"),
+    }
+}
+
+#[test]
+fn try_finally_with_no_catch_lowers_correctly() {
+    let m = compile_ok(&wrap("int x = 0; try { x = 1; } finally { x = 2; }"));
+    match &main_fn(&m).body.stmts[1] {
+        Stmt::TryCatch {
+            rescues,
+            ensure_body,
+            ..
+        } => {
+            assert!(rescues.is_empty());
+            assert_eq!(ensure_body.as_ref().unwrap().len(), 1);
+        }
+        other => panic!("expected TryCatch, got {other:?}"),
+    }
+}
+
+#[test]
+fn try_catch_finally_all_three_lower_correctly() {
+    let m = compile_ok(&wrap(concat!(
+        "int x = 0; ",
+        "try { x = 1; } ",
+        "catch (RuntimeException e) { x = 2; } ",
+        "finally { x = 3; }"
+    )));
+    match &main_fn(&m).body.stmts[1] {
+        Stmt::TryCatch {
+            body,
+            rescues,
+            ensure_body,
+            ..
+        } => {
+            assert_eq!(body.len(), 1);
+            assert_eq!(rescues.len(), 1);
+            assert_eq!(ensure_body.as_ref().unwrap().len(), 1);
+        }
+        other => panic!("expected TryCatch, got {other:?}"),
+    }
+}
+
+#[test]
+fn multiple_catch_clauses_lower_to_multiple_rescue_clauses_in_order() {
+    let m = compile_ok(&wrap(concat!(
+        "int x = 0; ",
+        "try { x = 1; } ",
+        "catch (RuntimeException e) { x = 2; } ",
+        "catch (Exception e) { x = 3; }"
+    )));
+    match &main_fn(&m).body.stmts[1] {
+        Stmt::TryCatch { rescues, .. } => {
+            assert_eq!(rescues.len(), 2);
+            assert_eq!(rescues[0].exception_types, vec!["RuntimeException"]);
+            assert_eq!(rescues[1].exception_types, vec!["Exception"]);
+        }
+        other => panic!("expected TryCatch, got {other:?}"),
+    }
+}
+
+#[test]
+fn java_7_multi_catch_lowers_to_one_rescue_clause_with_multiple_exception_types() {
+    // `catch (IOException | RuntimeException e) { ... }` — maps directly
+    // onto `RescueClause.exception_types: Vec<String>`.
+    let m = compile_ok(&wrap(concat!(
+        "int x = 0; ",
+        "try { x = 1; } ",
+        "catch (IOException | RuntimeException e) { x = 2; }"
+    )));
+    match &main_fn(&m).body.stmts[1] {
+        Stmt::TryCatch { rescues, .. } => {
+            assert_eq!(rescues.len(), 1);
+            assert_eq!(
+                rescues[0].exception_types,
+                vec!["IOException".to_string(), "RuntimeException".to_string()]
+            );
+        }
+        other => panic!("expected TryCatch, got {other:?}"),
+    }
+}
+
+#[test]
+fn try_with_resources_is_rejected() {
+    let err = compile_source(&wrap("try (AutoCloseable r = null) { }"), "prog").unwrap_err();
+    assert!(
+        err.message.contains("try"),
+        "unexpected message: {}",
+        err.message
+    );
+}
+
+#[test]
+fn a_local_declared_inside_a_try_body_does_not_leak_past_it() {
+    let err = compile_source(
+        &wrap("try { int y = 5; } catch (RuntimeException e) { } int z = y;"),
+        "prog",
+    )
+    .unwrap_err();
+    assert!(!err.message.is_empty());
+}
+
+#[test]
+fn the_catch_bound_variable_does_not_leak_past_its_own_clause() {
+    let err = compile_source(
+        &wrap("try { } catch (RuntimeException e) { } int z = e;"),
+        "prog",
+    )
+    .unwrap_err();
+    assert!(!err.message.is_empty());
+}
+
+#[test]
+fn the_catch_bound_variable_from_one_clause_is_not_visible_in_a_later_clause() {
+    // Unlike `Stmt::Switch`'s own deliberately-shared cross-case scope
+    // (task #51), each `catch` clause is independently scoped — matches
+    // `RescueClause.binding`'s own "in scope within `body` only" contract.
+    let err = compile_source(
+        &wrap(concat!(
+            "try { } ",
+            "catch (RuntimeException e) { } ",
+            "catch (Exception ex) { int z = e; }"
+        )),
+        "prog",
+    )
+    .unwrap_err();
+    assert!(!err.message.is_empty());
+}
+
+#[test]
+fn throw_new_exception_class_with_no_message_lowers_to_raise_builtin_call() {
+    let m = compile_ok(&wrap("throw new RuntimeException();"));
+    assert!(m.manifest.contains(Feature::Exceptions));
+    assert!(m.manifest.contains(Feature::Constants));
+    match &main_fn(&m).body.stmts[0] {
+        Stmt::ExprStmt {
+            expr: Expr::BuiltinCall { name, args, .. },
+            ..
+        } => {
+            assert_eq!(name, "raise");
+            assert_eq!(args.len(), 1);
+            match &args[0] {
+                Expr::VarRef { name, scope, .. } => {
+                    assert_eq!(name, "RuntimeException");
+                    assert_eq!(*scope, Scope::Const);
+                }
+                other => panic!("expected a Const VarRef, got {other:?}"),
+            }
+        }
+        other => panic!("expected an ExprStmt wrapping a raise BuiltinCall, got {other:?}"),
+    }
+}
+
+#[test]
+fn throw_new_exception_class_with_a_message_lowers_to_raise_builtin_call_with_two_args() {
+    let m = compile_ok(&wrap("throw new RuntimeException(\"boom\");"));
+    match &main_fn(&m).body.stmts[0] {
+        Stmt::ExprStmt {
+            expr: Expr::BuiltinCall { name, args, .. },
+            ..
+        } => {
+            assert_eq!(name, "raise");
+            assert_eq!(args.len(), 2);
+            assert!(matches!(&args[1], Expr::StrLit { value, .. } if value == "boom"));
+        }
+        other => panic!("expected an ExprStmt wrapping a raise BuiltinCall, got {other:?}"),
+    }
+}
+
+#[test]
+fn throw_inside_a_try_body_lowers_correctly() {
+    compile_ok(&wrap(concat!(
+        "try { throw new RuntimeException(\"x\"); } ",
+        "catch (RuntimeException e) { }"
+    )));
+}
+
+#[test]
+fn throw_new_exception_with_a_non_string_message_is_rejected() {
+    let err = compile_source(&wrap("throw new RuntimeException(1);"), "prog").unwrap_err();
+    assert!(
+        err.message.contains("String"),
+        "unexpected message: {}",
+        err.message
+    );
+}
+
+#[test]
+fn throw_new_exception_with_more_than_one_argument_is_rejected() {
+    let err = compile_source(
+        &wrap("throw new RuntimeException(\"msg\", \"cause\");"),
+        "prog",
+    )
+    .unwrap_err();
+    assert!(
+        err.message.contains("at most one"),
+        "unexpected message: {}",
+        err.message
+    );
+}
+
+#[test]
+fn rethrowing_a_bare_variable_is_rejected_not_mis_lowered_as_a_message() {
+    // `throw e;` (rethrowing a caught exception) must NOT silently
+    // become `raise("RuntimeError", e)` (the fallback shape a non-`Const`
+    // `raise` argument gets — see `lower_throw_statement`'s own doc
+    // comment) — that would change *what* actually gets thrown. This
+    // frontend can't tell "the exact object just caught" from any other
+    // local, so it rejects rethrow entirely rather than risk that.
+    let err = compile_source(
+        &wrap("try { } catch (RuntimeException e) { throw e; }"),
+        "prog",
+    )
+    .unwrap_err();
+    assert!(
+        err.message.contains("rethrow"),
+        "unexpected message: {}",
+        err.message
+    );
+}
+
+#[test]
+fn throw_of_a_bare_string_literal_is_rejected() {
+    let err = compile_source(&wrap("throw \"boom\";"), "prog").unwrap_err();
+    assert!(!err.message.is_empty());
+}
+
+#[test]
+fn throw_new_anonymous_exception_subclass_is_rejected() {
+    let err = compile_source(&wrap("throw new RuntimeException() { };"), "prog").unwrap_err();
+    assert!(
+        err.message.contains("anonymous"),
+        "unexpected message: {}",
+        err.message
+    );
+}
