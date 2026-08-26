@@ -1,0 +1,15 @@
+% ============================================================================
+% comparative-adjective-rule.query.adj — worked recall over the
+% comparative-adjective-rule library.
+% ============================================================================
+% The shape a learner (or an LLM) produces to ANSWER "what does this
+% comparative rule require?" (direct) or "which rule requires this?"
+% (reverse) — it states no fact of its own — it only `import`s the
+% grounded table and asks binding queries.
+% ============================================================================
+
+import "comparative-adjective-rule.adj"
+
+? comparative_adjective_rule(adjective_ending_in_y, $D)   % expect change_y_to_i_before_er (direct)
+? comparative_adjective_rule($R, add_er_suffix)           % expect one_syllable_adjective (reverse)
+? comparative_adjective_rule(two_syllable_adjective_not_ending_in_er_ow_le_or_y, $D)   % expect abstain -- a real rule the source covers (use "more" instead), but not one of the five tabled here
