@@ -8703,6 +8703,37 @@ The reconciled graph remains complete and acyclic at 525 owners and 786 edges:
 152 merged, 372 pending, and exactly one in-progress owner, with no active
 parity PR.
 
+### TypeScript canonical-CBOR implementation
+
+Commit `cc6729e698cd1e7295544763d34da038e7ea0e13` adds the native
+`code/packages/typescript/canonical-cbor` package without production
+dependencies. Its immutable value algebra keeps the complete unsigned 64-bit
+domain in `bigint`; the checked encoder stages output, orders and deduplicates
+complete encoded map keys, and applies the exact depth and byte limits. The
+decoder consumes exactly one item, uses fatal UTF-8, rejects hostile declared
+lengths before allocation, and exposes only the fourteen static CBR01 errors.
+
+The 55 shared cases and TypeScript adversarial coverage pass as 12 Vitest
+tests. Both front doors are real: the final Unix `BUILD` passes `npm ci`,
+`tsc`, and V8 coverage at 95.83% statements, 92.30% branches, 100% functions,
+and 96.61% lines; the Go build tool discovers 477 TypeScript packages, resolves
+exactly one changed and affected package, and executes its `BUILD_windows`
+successfully with the other 476 skipped. Focused Go discovery, resolver,
+validator, command-rendering, and executor suites pass, as do the ten parity
+reporter tests and seven capability-taxonomy tests. npm reports zero
+vulnerabilities and an empty production dependency tree.
+
+Independent review found and drove regressions for JavaScript runtime mutation,
+subclass and erased-type bypasses, replaceable null singleton state, sparse
+array append capacity, unchecked decode/container inputs, allocation ordering,
+and permissive generated-fixture suffixes. Private frozen storage plus
+encoder-side revalidation, exact runtime boundaries, preflight checks, and
+closed grammar repair every finding; the final security review reports no
+remaining actionable issue. The collision-checked candidate inventory stays
+at 1,373 implementation identities and 1,412 all-reported identities while
+raising slots to 4,571 and reducing five-to-nine missing slots to 935, with
+zero collisions and zero unknown buckets.
+
 ## Autonomous Loop Protocol
 
 Only one parity PR should be active at a time.
