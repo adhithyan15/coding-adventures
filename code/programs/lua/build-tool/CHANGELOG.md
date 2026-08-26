@@ -4,6 +4,11 @@
 
 ### Added
 
+- A pure orphan-crate snapshot validator now independently consumes all four
+  language-neutral fixtures, with artifact filtering, fixed ancestor BUILD
+  precedence, redacted portable-path and ledger failures, Unicode full-fold
+  duplicate identities, stale exemptions, active pending counts, and stable
+  ASCII-canonical diagnostic ordering.
 - A pure tracked-artifact snapshot validator now independently consumes the
   five language-neutral fixtures, including redacted portable-path failures,
   Unicode-scalar boundaries and ordering, inert link metadata, and exact,
