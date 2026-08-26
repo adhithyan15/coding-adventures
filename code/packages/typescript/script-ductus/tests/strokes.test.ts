@@ -268,6 +268,7 @@ const MALAYALAM_ZHA = DUCTUS[ductusKey("malayalam", "ഴ")];
 const TAMIL_U = DUCTUS["உ"];
 const TAMIL_NGA = DUCTUS["ங"];
 const JAPANESE_SHI = DUCTUS[ductusKey("japanese", "し")];
+const JAPANESE_MO = DUCTUS[ductusKey("japanese", "も")];
 
 const fontForDuctus = (letter: LetterDuctus) => {
   const script = SCRIPTS.find((candidate) => candidate.script === letter.script);
@@ -691,6 +692,19 @@ describe("handwriting ductus", () => {
     ]);
     expect(JAPANESE_SHI.source.url).toBe(
       "https://commons.wikimedia.org/wiki/File:Hiragana_%E3%81%97_stroke_order_animation.gif",
+    );
+  });
+
+  it("Japanese も draws its bowl before two lifted left-to-right bars", () => {
+    expect(penLifts(JAPANESE_MO)).toBe(2);
+    expect(JAPANESE_MO.strokes).toHaveLength(3);
+    expect(JAPANESE_MO.strokes.map((stroke) => stroke.segments.map((segment) => segment.label))).toEqual([
+      ["descend and turn around the broad lower bowl to the rising right tip"],
+      ["draw the upper horizontal from left to right across the stem"],
+      ["draw the lower horizontal from left to right across the stem"],
+    ]);
+    expect(JAPANESE_MO.source.url).toBe(
+      "https://commons.wikimedia.org/wiki/File:Hiragana_%E3%82%82_stroke_order_animation.gif",
     );
   });
 

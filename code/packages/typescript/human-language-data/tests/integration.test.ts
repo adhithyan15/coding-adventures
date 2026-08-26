@@ -39,7 +39,7 @@ describe("real curriculum", () => {
     expect(scripts.devanagari!.complete).toBe(true);
   });
 
-  it("keeps the cross-script closure queue measured after Persian yeh", () => {
+  it("keeps the cross-script closure queue measured after Japanese mo", () => {
     const candrakkala = scripts.malayalam!.marks!.find((mark) => mark.mark === "്")!;
     expect(candrakkala.role).toBe("virama");
     expect(candrakkala.compositionOrder).toEqual([
@@ -883,6 +883,23 @@ describe("real curriculum", () => {
     );
     expect(missingByScript.get("japanese.json")?.has("し")).toBe(false);
     expect(affected.get("し") ?? 0).toBe(0);
+    const japaneseMo = scripts.japanese!.letters.find((entry) => entry.glyph === "も")!;
+    expect(japaneseMo.sound).toBe("mo");
+    expect(japaneseMo.role).toBe("hiragana");
+    expect(japaneseMo.penLifts).toBe(2);
+    expect(japaneseMo.strokeOrder).toEqual([
+      "descend from the top and turn around the broad lower bowl to the rising right tip",
+      "lift, then draw the upper horizontal from left to right across the stem",
+      "lift again and draw the lower horizontal from left to right across the stem",
+    ]);
+    expect(japaneseMo.strokeOrderSource?.citation).toMatch(
+      /Sirgazil.*Hiragana も stroke order animation\.gif.*28 frames.*2\.8 seconds.*Wikimedia Commons.*1 October 2009/i,
+    );
+    expect(japaneseMo.strokeOrderSource?.variation).toMatch(
+      /three pen-down runs.*two lifts.*descending stem.*broad lower bowl.*upper and lower bars.*left to right.*Noto Sans JP.*three-run order/i,
+    );
+    expect(missingByScript.get("japanese.json")?.has("も")).toBe(false);
+    expect(affected.get("も") ?? 0).toBe(0);
     const kannadaI = scripts.kannada!.independentVowels!.find((entry) => entry.glyph === "ಇ")!;
     expect(kannadaI.sound).toBe("i");
     expect(kannadaI.penLifts).toBe(0);
@@ -932,7 +949,7 @@ describe("real curriculum", () => {
     expect(affected.get("ی") ?? 0).toBe(0);
     expect(
       [...affected.entries()].sort((left, right) => right[1] - left[1])[0],
-    ).toEqual(["も", 6]);
+    ).toEqual(["ಎ", 6]);
   });
 
   it("loaded every track (17+ and growing)", () => {
