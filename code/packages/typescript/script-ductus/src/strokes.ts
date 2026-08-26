@@ -14008,6 +14008,53 @@ export const DUCTUS: Record<string, LetterDuctus> = {
     ],
     source: kannadaIndependentVowelSource("ಅ"),
   },
+  // Yogesh's 98-frame animation writes independent vowel ಇ in one pen-down
+  // run. The middle stem is deliberately retraced: the first arch descends it,
+  // the second movement climbs it again before flowing through the right arch,
+  // outer descent, lower loop, and exit.
+  [ductusKey("kannada", "ಇ")]: {
+    script: "kannada",
+    glyph: "ಇ",
+    strokes: [
+      {
+        segments: [
+          {
+            label: "climb the left upright, turn over the first arch, and descend the middle stem",
+            path: [
+              { x: 82, y: 365 }, { x: 78, y: 430 }, { x: 120, y: 510 },
+              { x: 180, y: 525 }, { x: 245, y: 505 }, { x: 315, y: 450 },
+              { x: 335, y: 365 },
+            ],
+          },
+          {
+            label: "retrace the middle stem upward and turn over the second arch",
+            path: [
+              { x: 335, y: 365 }, { x: 345, y: 445 }, { x: 395, y: 510 },
+              { x: 480, y: 525 }, { x: 555, y: 485 }, { x: 620, y: 395 },
+              { x: 632, y: 310 },
+            ],
+          },
+          {
+            label: "descend through the broad outer curve and turn left along the base",
+            path: [
+              { x: 632, y: 310 }, { x: 620, y: 225 }, { x: 585, y: 140 },
+              { x: 520, y: 70 }, { x: 430, y: 28 }, { x: 330, y: 20 },
+              { x: 240, y: 45 }, { x: 175, y: 95 }, { x: 165, y: 140 },
+            ],
+          },
+          {
+            label: "close the lower loop and sweep out to the right",
+            path: [
+              { x: 165, y: 140 }, { x: 205, y: 200 }, { x: 270, y: 240 },
+              { x: 325, y: 245 }, { x: 390, y: 220 }, { x: 470, y: 165 },
+              { x: 540, y: 90 }, { x: 610, y: 20 },
+            ],
+          },
+        ],
+      },
+    ],
+    source: kannadaIndependentVowelSource("ಇ"),
+  },
   [ductusKey("telugu", "అ")]: {
     script: "telugu",
     glyph: "అ",
