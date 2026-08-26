@@ -81,7 +81,9 @@ and pinned upstream corpus surface is represented and validated. Gantt task
 bounds and backend-neutral PaintScene metadata. Calendar includes/excludes and
 weekend boundaries now extend task and dependency geometry, and configured
 axis formats and tick intervals lower to resolved labels rendered by Paint.
-Inclusive-end, top-axis, today-marker, and the full pinned corpus remain
+Explicit end dates honor inclusive-end mode, optional top axes complement the
+standard bottom axis, and styled today markers lower to backend-neutral paths.
+Full date-format/dependency syntax and the pinned parser/visual corpus remain
 explicitly incomplete.
 
 The XY-chart pipeline preserves Mermaid's bounded `xAxis.labelRotation` and

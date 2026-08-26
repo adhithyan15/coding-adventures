@@ -54,9 +54,11 @@ scenes expose backend-neutral link and callback metadata. Calendar `includes`
 and `excludes` controls now preserve explicit dates, weekdays, and configurable
 Friday/Saturday weekend boundaries. Exclusions extend task bars and dependent
 starts, while `axisFormat` and `tickInterval` resolve native time-axis labels
-before Paint lowering. Gantt remains partial while full date-format coverage,
-inclusive-end/top-axis/today-marker rendering, and the complete pinned parser
-corpus are still outstanding.
+before Paint lowering. Explicit end dates honor `inclusiveEndDates`; a standard
+bottom axis and optional `topAxis` lower independently, and `todayMarker`
+stroke configuration resolves into backend-neutral path geometry. Gantt remains
+partial while full date-format and task-dependency syntax coverage plus the
+complete pinned parser and visual corpus are still outstanding.
 
 Each supported family lowers into the shared Diagram IR and can continue
 through its family layout package:

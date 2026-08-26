@@ -2690,7 +2690,7 @@ where
                     1.5,
                 )));
             }
-            LayoutedTemporalItem::TimeAxisTick { x, y, label } => {
+            LayoutedTemporalItem::TimeAxisTick { x, y, label, label_above } => {
                 instructions.push(PaintInstruction::Path(line_path(
                     &[Point { x: *x, y: *y - 4.0 }, Point { x: *x, y: *y }],
                     "#374151",
@@ -2699,7 +2699,7 @@ where
                 text_children.push(text_node(
                     label,
                     x - 20.0,
-                    *y + 2.0,
+                    if *label_above { *y - ls * 1.2 - 2.0 } else { *y + 2.0 },
                     40.0,
                     ls * 1.2,
                     lf.clone(),
@@ -2818,7 +2818,14 @@ where
                     },
                 ));
             }
-            LayoutedTemporalItem::TodayMarker { x, y1, y2 } => {
+            LayoutedTemporalItem::TodayMarker {
+                x,
+                y1,
+                y2,
+                stroke,
+                stroke_width,
+                stroke_dash,
+            } => {
                 instructions.push(PaintInstruction::Path(PaintPath {
                     base: PaintBase::default(),
                     commands: vec![
@@ -2827,11 +2834,11 @@ where
                     ],
                     fill: Some("none".into()),
                     fill_rule: None,
-                    stroke: Some("#ef4444".into()),
-                    stroke_width: Some(2.0),
+                    stroke: Some(stroke.clone()),
+                    stroke_width: Some(*stroke_width),
                     stroke_cap: None,
                     stroke_join: None,
-                    stroke_dash: Some(vec![6.0, 3.0]),
+                    stroke_dash: stroke_dash.clone(),
                     stroke_dash_offset: None,
                 }));
             }
@@ -4000,6 +4007,37 @@ mod tests {
         assert!(scene.instructions.iter().any(|instruction| matches!(
             instruction,
             PaintInstruction::GlyphRun(run) if run.font_size == 22.0
+        )));
+    }
+
+    #[test]
+    fn today_marker_style_lowers_to_backend_neutral_path() {
+        let shaper = FakeShaper;
+        let metrics = FakeMetrics;
+        let resolver = FakeResolver;
+        let opts = make_opts(&shaper, &metrics, &resolver);
+        let layout = diagram_ir::LayoutedTemporalDiagram {
+            width: 320.0,
+            height: 180.0,
+            accessibility_title: None,
+            accessibility_description: None,
+            interactions: Vec::new(),
+            items: vec![diagram_ir::LayoutedTemporalItem::TodayMarker {
+                x: 160.0,
+                y1: 20.0,
+                y2: 160.0,
+                stroke: "#00aa44".into(),
+                stroke_width: 5.0,
+                stroke_dash: None,
+            }],
+        };
+        let scene = diagram_to_paint_temporal(&layout, &opts);
+        assert!(scene.instructions.iter().any(|instruction| matches!(
+            instruction,
+            PaintInstruction::Path(path)
+                if path.stroke.as_deref() == Some("#00aa44")
+                    && path.stroke_width == Some(5.0)
+                    && path.stroke_dash.is_none()
         )));
     }
 

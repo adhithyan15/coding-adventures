@@ -19,7 +19,7 @@ use diagram_ir::{
 };
 use std::collections::{BTreeSet, HashMap};
 
-pub const VERSION: &str = "0.19.0";
+pub const VERSION: &str = "0.20.0";
 
 // ── Constants ─────────────────────────────────────────────────────────────
 
@@ -304,6 +304,17 @@ fn gantt_elapsed_duration(start: f64, duration: f64, diagram: &diagram_ir::Gantt
     elapsed as f64 + fraction
 }
 
+fn gantt_task_elapsed_duration(
+    start: f64,
+    task: &diagram_ir::GanttTask,
+    diagram: &diagram_ir::GanttDiagram,
+) -> f64 {
+    if let Some(end_date) = task.end_date.as_deref().and_then(date_to_days) {
+        return (end_date - start + f64::from(diagram.config.inclusive_end_dates)).max(0.0);
+    }
+    gantt_elapsed_duration(start, task.duration_days, diagram)
+}
+
 fn gantt_tick_days(interval: Option<&str>) -> f64 {
     let Some(interval) = interval else { return TICK_DAYS; };
     let compact = interval.trim().to_ascii_lowercase().replace(' ', "");
@@ -327,6 +338,69 @@ fn gantt_axis_label(day: i64, format: Option<&str>, offset: f64) -> String {
         .replace("%m", &format!("{month:02}"))
         .replace("%d", &format!("{date:02}"))
         .replace("%b", MONTHS[(month - 1) as usize])
+}
+
+fn append_gantt_axis(
+    items: &mut Vec<LayoutedTemporalItem>,
+    y: f64,
+    t_min: f64,
+    t_range: f64,
+    x_scale: f64,
+    diagram: &diagram_ir::GanttDiagram,
+    label_above: bool,
+) {
+    items.push(LayoutedTemporalItem::TimeAxisSpine {
+        x1: LABEL_W, y1: y, x2: LABEL_W + t_range * x_scale, y2: y,
+    });
+    let mut tick_day = 0.0;
+    let tick_days = gantt_tick_days(diagram.config.tick_interval.as_deref());
+    while tick_day <= t_range {
+        items.push(LayoutedTemporalItem::TimeAxisTick {
+            x: LABEL_W + tick_day * x_scale,
+            y: if label_above { y } else { y + 4.0 },
+            label: gantt_axis_label(
+                (t_min + tick_day) as i64,
+                diagram.config.axis_format.as_deref(),
+                tick_day,
+            ),
+            label_above,
+        });
+        tick_day += tick_days;
+    }
+}
+
+fn today_marker_style(source: Option<&str>) -> (String, f64, Option<Vec<f64>>) {
+    let mut stroke = "#ef4444".to_string();
+    let mut stroke_width = 2.0;
+    let mut stroke_dash = Some(vec![6.0, 3.0]);
+    if let Some(source) = source {
+        for declaration in source.split([',', ';']) {
+            let Some((name, value)) = declaration.split_once(':') else { continue };
+            match name.trim().to_ascii_lowercase().as_str() {
+                "stroke" => stroke = value.trim().to_string(),
+                "stroke-width" => {
+                    if let Ok(width) = value.trim().trim_end_matches("px").parse::<f64>() {
+                        stroke_width = width.max(0.0);
+                    }
+                }
+                "stroke-dasharray" if value.trim().eq_ignore_ascii_case("none") => stroke_dash = None,
+                "stroke-dasharray" => {
+                    let dash = value.split_whitespace().filter_map(|part| part.parse().ok()).collect::<Vec<_>>();
+                    if !dash.is_empty() { stroke_dash = Some(dash); }
+                }
+                _ => {}
+            }
+        }
+    }
+    (stroke, stroke_width, stroke_dash)
+}
+
+fn current_epoch_day() -> i64 {
+    use std::time::{SystemTime, UNIX_EPOCH};
+    SystemTime::now()
+        .duration_since(UNIX_EPOCH)
+        .map(|duration| (duration.as_secs() / 86_400) as i64)
+        .unwrap_or(0)
 }
 
 // ── Gantt layout ──────────────────────────────────────────────────────────
@@ -362,7 +436,7 @@ fn layout_gantt(
                         let dep_elapsed = diagram.sections.iter()
                             .flat_map(|s| s.tasks.iter())
                             .find(|t| &t.id == dep_id)
-                            .map(|t| gantt_elapsed_duration(dep_end, t.duration_days, diagram))
+                            .map(|t| gantt_task_elapsed_duration(dep_end, t, diagram))
                             .unwrap_or(dep_dur);
                         starts.insert(task.id.clone(), dep_end + dep_elapsed);
                     }
@@ -375,7 +449,7 @@ fn layout_gantt(
     let t_min = starts.values().cloned().fold(f64::INFINITY, f64::min);
     let t_max = diagram.sections.iter()
         .flat_map(|s| s.tasks.iter())
-        .filter_map(|t| starts.get(&t.id).map(|&s| s + gantt_elapsed_duration(s, t.duration_days, diagram)))
+        .filter_map(|t| starts.get(&t.id).map(|&s| s + gantt_task_elapsed_duration(s, t, diagram)))
         .fold(f64::NEG_INFINITY, f64::max);
     let t_min = if t_min.is_infinite() { 0.0 } else { t_min };
     let t_max = if t_max.is_infinite() { t_min + 30.0 } else { t_max };
@@ -396,23 +470,11 @@ fn layout_gantt(
         y += AXIS_H;
     }
 
-    // Time axis spine.
-    items.push(LayoutedTemporalItem::TimeAxisSpine {
-        x1: LABEL_W, y1: y, x2: cw - 16.0, y2: y,
-    });
-
-    // Axis ticks (weekly).
-    let mut tick_day = 0.0;
-    let tick_days = gantt_tick_days(diagram.config.tick_interval.as_deref());
-    while tick_day <= t_range {
-        let tx = LABEL_W + tick_day * x_scale;
-        items.push(LayoutedTemporalItem::TimeAxisTick {
-            x: tx, y: y + 4.0,
-            label: gantt_axis_label((t_min + tick_day) as i64, diagram.config.axis_format.as_deref(), tick_day),
-        });
-        tick_day += tick_days;
+    if diagram.config.top_axis {
+        append_gantt_axis(&mut items, y + AXIS_H - 4.0, t_min, t_range, x_scale, diagram, true);
+        y += AXIS_H;
     }
-    y += AXIS_H;
+    let marker_top = y;
 
     // Sections and tasks.
     for section in &diagram.sections {
@@ -425,7 +487,7 @@ fn layout_gantt(
         for task in &section.tasks {
             let start_day = starts.get(&task.id).copied().unwrap_or(t_min) - t_min;
             let bx = LABEL_W + start_day * x_scale;
-            let elapsed_duration = gantt_elapsed_duration(t_min + start_day, task.duration_days, diagram);
+            let elapsed_duration = gantt_task_elapsed_duration(t_min + start_day, task, diagram);
             let bw = (elapsed_duration * x_scale).max(4.0);
             if task.status == TaskStatus::Milestone {
                 items.push(LayoutedTemporalItem::MilestoneMarker {
@@ -448,6 +510,26 @@ fn layout_gantt(
                 });
             }
             y += TASK_H + TASK_GAP;
+        }
+    }
+
+    let chart_bottom = y;
+    append_gantt_axis(&mut items, y + 4.0, t_min, t_range, x_scale, diagram, false);
+    y += AXIS_H;
+
+    if diagram.config.today_marker.as_deref() != Some("off") {
+        let today = current_epoch_day() as f64;
+        if (t_min..=t_max).contains(&today) {
+            let (stroke, stroke_width, stroke_dash) =
+                today_marker_style(diagram.config.today_marker.as_deref());
+            items.push(LayoutedTemporalItem::TodayMarker {
+                x: LABEL_W + (today - t_min) * x_scale,
+                y1: marker_top,
+                y2: chart_bottom,
+                stroke,
+                stroke_width,
+                stroke_dash,
+            });
         }
     }
 
@@ -683,6 +765,7 @@ mod tests {
                             id: "t1".into(), label: "Design".into(),
                             start: TaskStart::Date("2026-01-01".into()),
                             duration_days: 5.0,
+                            end_date: None,
                             status: TaskStatus::Done,
                             dependencies: vec![],
                             link: None,
@@ -693,6 +776,7 @@ mod tests {
                             id: "t2".into(), label: "Build".into(),
                             start: TaskStart::After("t1".into()),
                             duration_days: 3.0,
+                            end_date: None,
                             status: TaskStatus::Active,
                             dependencies: vec!["t1".into()],
                             link: None,
@@ -733,7 +817,7 @@ mod tests {
 
     #[test]
     fn version_exists() {
-        assert_eq!(crate::VERSION, "0.19.0");
+        assert_eq!(crate::VERSION, "0.20.0");
     }
 
     #[test]
@@ -844,6 +928,64 @@ mod tests {
         }).collect::<Vec<_>>();
         assert!(labels.len() > 2);
         assert!(labels[0].contains('/'));
+    }
+
+    #[test]
+    fn gantt_inclusive_end_dates_extend_explicit_date_bars() {
+        let mut exclusive = simple_gantt();
+        let TemporalBody::Gantt(gantt) = &mut exclusive.body else { unreachable!() };
+        gantt.sections[0].tasks[0].start = TaskStart::Date("2026-03-01".into());
+        gantt.sections[0].tasks[0].end_date = Some("2026-03-03".into());
+        gantt.sections[0].tasks[1].start = TaskStart::Date("2026-03-10".into());
+        gantt.sections[0].tasks[1].duration_days = 1.0;
+        let exclusive_layout = layout_temporal_diagram(&exclusive, 800.0);
+
+        let TemporalBody::Gantt(gantt) = &mut exclusive.body else { unreachable!() };
+        gantt.config.inclusive_end_dates = true;
+        let inclusive_layout = layout_temporal_diagram(&exclusive, 800.0);
+        let width = |layout: &LayoutedTemporalDiagram| layout.items.iter().find_map(|item| match item {
+            LayoutedTemporalItem::TaskBar { width, .. } => Some(*width),
+            _ => None,
+        }).unwrap();
+        assert!(width(&inclusive_layout) > width(&exclusive_layout));
+    }
+
+    #[test]
+    fn gantt_top_axis_adds_a_second_resolved_axis() {
+        let mut diagram = simple_gantt();
+        let TemporalBody::Gantt(gantt) = &mut diagram.body else { unreachable!() };
+        gantt.config.top_axis = true;
+        let layout = layout_temporal_diagram(&diagram, 800.0);
+        assert_eq!(layout.items.iter().filter(|item| matches!(
+            item, LayoutedTemporalItem::TimeAxisSpine { .. }
+        )).count(), 2);
+        assert!(layout.items.iter().any(|item| matches!(
+            item, LayoutedTemporalItem::TimeAxisTick { label_above: true, .. }
+        )));
+        assert!(layout.items.iter().any(|item| matches!(
+            item, LayoutedTemporalItem::TimeAxisTick { label_above: false, .. }
+        )));
+    }
+
+    #[test]
+    fn gantt_today_marker_resolves_style_without_backend_css() {
+        let today = current_epoch_day();
+        let iso = |day| {
+            let (year, month, date) = civil_from_days(day);
+            format!("{year:04}-{month:02}-{date:02}")
+        };
+        let mut diagram = simple_gantt();
+        let TemporalBody::Gantt(gantt) = &mut diagram.body else { unreachable!() };
+        gantt.sections[0].tasks.truncate(1);
+        gantt.sections[0].tasks[0].start = TaskStart::Date(iso(today - 1));
+        gantt.sections[0].tasks[0].end_date = Some(iso(today + 1));
+        gantt.config.today_marker = Some("stroke:#00aa44,stroke-width:5px,stroke-dasharray:none".into());
+        let layout = layout_temporal_diagram(&diagram, 800.0);
+        assert!(layout.items.iter().any(|item| matches!(
+            item,
+            LayoutedTemporalItem::TodayMarker { stroke, stroke_width, stroke_dash, .. }
+                if stroke == "#00aa44" && *stroke_width == 5.0 && stroke_dash.is_none()
+        )));
     }
 
     #[test]
