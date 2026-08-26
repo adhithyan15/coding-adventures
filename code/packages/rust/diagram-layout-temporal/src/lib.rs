@@ -18,7 +18,7 @@ use diagram_ir::{
 };
 use std::collections::{BTreeSet, HashMap};
 
-pub const VERSION: &str = "0.28.0";
+pub const VERSION: &str = "0.29.0";
 
 // ── Constants ─────────────────────────────────────────────────────────────
 
@@ -236,6 +236,7 @@ fn date_to_days(source: &str, format: &GanttDateFormat) -> Option<f64> {
     let mut hour_is_twelve_hour = false;
     let mut meridiem_is_pm = false;
     let mut timezone_offset_minutes = 0_i64;
+    let mut named_weekday = None;
     for part in &format.parts {
         match part {
             GanttDateFormatPart::Literal(literal) => rest = rest.strip_prefix(literal)?,
@@ -253,6 +254,16 @@ fn date_to_days(source: &str, format: &GanttDateFormat) -> Option<f64> {
                 if length < 3 { return None; }
                 month = month_number(&rest[..length])?;
                 rest = &rest[length..];
+            }
+            GanttDateFormatPart::WeekdayShort => {
+                let (weekday, next) = take_letters(rest, 3, 3)?;
+                named_weekday = Some(weekday.to_ascii_lowercase());
+                rest = next;
+            }
+            GanttDateFormatPart::WeekdayLong => {
+                let (weekday, next) = take_letters(rest, 6, 9)?;
+                named_weekday = Some(weekday.to_ascii_lowercase());
+                rest = next;
             }
             GanttDateFormatPart::Day => (day, rest) = take_number(rest, 1, 2)?,
             GanttDateFormatPart::Day2 => (day, rest) = take_number(rest, 2, 2)?,
@@ -295,10 +306,21 @@ fn date_to_days(source: &str, format: &GanttDateFormat) -> Option<f64> {
         return None;
     }
     if hour > 23 || minute > 59 || second > 59 || millisecond > 999 { return None; }
+    let civil_day = days_from_civil(year, month, day);
+    if let Some(named_weekday) = named_weekday {
+        let actual = weekday_name(civil_day);
+        if actual != named_weekday && !actual.starts_with(&named_weekday) { return None; }
+    }
     let seconds = hour * 3600 + minute * 60 + second;
-    Some(days_from_civil(year, month, day) as f64
+    Some(civil_day as f64
         + seconds as f64 / 86_400.0 + millisecond as f64 / 86_400_000.0
         - timezone_offset_minutes as f64 / 1_440.0)
+}
+
+fn take_letters(source: &str, minimum: usize, maximum: usize) -> Option<(&str, &str)> {
+    let length = source.bytes().take(maximum).take_while(u8::is_ascii_alphabetic).count();
+    if length < minimum { return None; }
+    Some((&source[..length], &source[length..]))
 }
 
 fn take_meridiem(source: &str, uppercase: bool) -> Option<(bool, &str)> {
@@ -986,7 +1008,7 @@ mod tests {
 
     #[test]
     fn version_exists() {
-        assert_eq!(crate::VERSION, "0.28.0");
+        assert_eq!(crate::VERSION, "0.29.0");
     }
 
     #[test]
@@ -1238,6 +1260,26 @@ mod tests {
         assert_eq!(bars.len(), 2);
         assert!((bars[0].1 - bars[1].1).abs() < 0.01);
         assert!((bars[1].0 - bars[0].0) / bars[0].1 > 4.9);
+    }
+
+    #[test]
+    fn gantt_layout_validates_named_weekdays() {
+        let format = GanttDateFormat {
+            source: "ddd YYYY-MM-DD".into(),
+            parts: vec![
+                GanttDateFormatPart::WeekdayShort,
+                GanttDateFormatPart::Literal(" ".into()),
+                GanttDateFormatPart::Year4,
+                GanttDateFormatPart::Literal("-".into()),
+                GanttDateFormatPart::Month2,
+                GanttDateFormatPart::Literal("-".into()),
+                GanttDateFormatPart::Day2,
+            ],
+        };
+        let sunday = date_to_days("Sun 2026-03-01", &format).expect("valid Sunday");
+        let monday = date_to_days("Mon 2026-03-02", &format).expect("valid Monday");
+        assert_eq!(monday - sunday, 1.0);
+        assert!(date_to_days("Mon 2026-03-01", &format).is_none());
     }
 
     #[test]

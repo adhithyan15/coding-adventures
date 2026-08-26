@@ -1,5 +1,9 @@
 # Changelog — diagram-ir
 
+## 0.86.0
+
+- Represent short and long Gantt weekday names as typed date-format parts.
+
 ## 0.85.0
 
 - Represent padded and unpadded 12-hour Gantt clocks plus uppercase and lowercase meridiem markers in typed date formats.
