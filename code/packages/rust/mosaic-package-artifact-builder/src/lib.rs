@@ -5877,7 +5877,10 @@ layout NativeEvents {
 
         let project = fs::read_to_string(out.path().join("xaml/Card.csproj")).unwrap();
         assert!(project.contains("CopyMosaicNativeHostLibraries"));
-        assert!(project.contains("$(MSBuildProjectDirectory)\\*.dll"));
+        // #12026 (mosaic-emit-xaml): narrowed from a `*.dll` glob (a
+        // DLL-planting primitive) to the one exact, known runtime filename.
+        assert!(project.contains("$(MSBuildProjectDirectory)\\mosaic_app.dll"));
+        assert!(!project.contains("$(MSBuildProjectDirectory)\\*.dll"));
 
         let bundled = out.path().join("xaml/mosaic_app.dll");
         assert_eq!(fs::read(&bundled).unwrap(), b"mosaic-xaml-test-runtime");
