@@ -8036,6 +8036,68 @@ expected Elixir validator, test, documentation, state, and roadmap paths. The
 target local branch, remote branch, and prior PR were absent before creating
 the fresh exact-main worktree.
 
+### Post-#12933 refresh and Lua orphan-crate selection
+
+PR #12933 completed all 41 terminal acceptable checks. GitHub reported the
+reviewed branch clean and mergeable, so the loop enabled squash auto-merge.
+GitHub merged reviewed head
+`f0097f2a36d40d312b4d43687e8c92c7c4c63681` as
+`e89a78ee93e7e6750a7362fd29d7a1cac10f002b` at
+`2026-08-26T03:30:44Z` without a manual merge command.
+
+The collision-checked exact-main schema-3 report remains structurally
+unchanged: 15 established lanes, 1,373 implementation identities, 4,566
+package slots, 175 high-consensus packages with 276 missing slots, 122
+identities in five to nine lanes with 926 gaps, 166 identities in two to four
+lanes with 2,087 gaps, 910 singletons with 12,740 gaps, and 721 Rust
+singletons. Canonical collisions and unknown language buckets remain zero.
+OCaml remains correctly emerging at zero packages.
+
+Every intervening change is classified before selection. Merged PR #12928
+broadens the existing Mermaid Gantt owner with inclusive and exclusive date
+ranges, weekend boundaries, axis date formatting, tick intervals, and
+deterministic calendar geometry and paint. Spanish A1 and ADJ sedimentary-rock
+changes are curriculum or adjacent automation only and create no portable
+package identity.
+
+Open PR #12929 exposes a newly unowned Rust-only WebAssembly exception family,
+so the refresh registers
+`wasm-exceptions-tag-throw-language-neutral-conformance` for tag index spaces,
+tag types, `throw`, `try_table`, uncaught-exception classification, catch-table
+shapes, stable diagnostics, and bounds. A dependent, selection-blocked
+`wasm-exceptions-tag-throw-established-lane-parity` owns the applicable-lane
+completion work. Generic WAST parsing, conformance reporting, official-corpus
+provenance, fetching, NOTICE, baseline writes, and host authority remain with
+their existing owners.
+
+The dependency/leverage pass selects
+`build-tool-lua-orphan-crate-validation-conformance` on branch
+`codex/build-tool-lua-orphan-crate-validation-conformance`. Its neutral orphan
+corpus and Lua tracked-artifact substrate are merged. Each remaining orphan
+consumer unlocks the same completion umbrella, so breadth breaks the tie: Lua
+covers 252 reported packages versus Perl 251, Haskell 204, and Swift 161. All
+ten live PRs have zero exact overlap with the six expected Lua validator, test,
+documentation, state, and roadmap paths. The target local branch, remote
+branch, and prior PR were absent before creating the fresh exact-main
+worktree. OCaml's process-free core remains collision-unsafe while PRs #12149
+and #12162 own required Go entry-point and validator surfaces.
+
+Before publication, the branch rebased without conflict onto exact main
+`b4dbb28496f299f335fdda14021e61ab5d126614`. Intervening ALGOL mixed numeric
+folding, Japanese hiragana ductus, ADJ shipment bookkeeping, and HTML unmatched
+sectioning diagnostics stay within existing owners. Merged PR #12936 extends
+the existing Mermaid Gantt owner with explicit axis-end dates and
+inclusive/exclusive end behavior across the same parser, IR, temporal-layout,
+and paint roots. The refreshed collision report keeps all schema-3 counts
+unchanged and retains zero collisions and unknown buckets.
+
+The refresh also corrected the state graph's one historical lifecycle
+inversion: the still-pending standalone-integrity umbrella now depends on its
+merged Lua child, instead of the merged child depending on pending work. The
+W21 exception owner now records all changed Wasm type, opcode, module,
+validator, execution, runtime, WAST, conformance, and IIR-lowering surfaces;
+the IIR exception builtins remain part of that same semantic family.
+
 ## Autonomous Loop Protocol
 
 Only one parity PR should be active at a time.

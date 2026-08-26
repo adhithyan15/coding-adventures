@@ -12,13 +12,13 @@
     "excluded_delivery_classes": ["onvif", "host-security-hardening", "native-runtime", "external-approval"]
   },
   "active_pr": {
-    "number": 12933,
-    "url": "https://github.com/adhithyan15/coding-adventures/pull/12933",
-    "branch": "codex/build-tool-elixir-orphan-crate-validation-conformance",
+    "number": 12940,
+    "url": "https://github.com/adhithyan15/coding-adventures/pull/12940",
+    "branch": "codex/build-tool-lua-orphan-crate-validation-conformance",
     "status": "open"
   },
   "last_inventory": {
-    "revision": "69dbce5501b871cf524ba65029a4e0b7b472d341",
+    "revision": "b4dbb28496f299f335fdda14021e61ab5d126614",
     "schema_version": 3,
     "established_languages": 15,
     "implementation_identities": 1373,
@@ -505,7 +505,7 @@
       "id": "build-file-standalone-integrity",
       "title": "Repair stale BUILD_windows standalone prerequisite declarations",
       "status": "pending",
-      "depends_on": [],
+      "depends_on": ["build-file-standalone-integrity-lua"],
       "branch": null,
       "pr_number": null,
       "notes": "The rebased Go oracle full dry-run originally reported 73 pre-existing validation gaps: 12 Python, 3 Swift, and 58 TypeScript. The TypeScript children are now merged and the exact post-#9912 baseline is 17 diagnostics: two Perl, 12 Python, and three Swift. The Python validator separately reports 10 Lua BUILD_windows gaps, already materialized as a child wave. Deliver only the explicit dependency-shaped children and preserve the broader July 29 audit queue for Dart, Kotlin, and related packages."
@@ -550,7 +550,7 @@
       "id": "build-file-standalone-integrity-lua",
       "title": "Repair the Lua BUILD_windows standalone prerequisite wave",
       "status": "merged",
-      "depends_on": ["build-file-standalone-integrity"],
+      "depends_on": [],
       "branch": "codex/lua-build-windows-standalone",
       "pr_number": 10110,
       "notes": "Materialized during Python build-tool validation after the rockspec encoding repair. Ten Lua packages whose canonical BUILD recipes bootstrap siblings lack BUILD_windows standalone recipes: brainfuck_ir_compiler, brainfuck_wasm_compiler, correlation_vector, ir_to_wasm_compiler, ir_to_wasm_validator, json_serializer, ls00, qr-code, wasm_module_encoder, and zstd. Rebased cleanly onto origin/main 005c38161e before implementation, onto post-#10093 origin/main 4833046722, onto post-#10103 origin/main 6c27df28af, onto post-#10106 origin/main 16a9192aaf, onto post-#10108 origin/main cb09f5b9ee, and onto post-#10109 origin/main 1ab517497f after each refreshed collision-clean 1,264-identity/4,420-slot inventory left this item as the coherent root. The implementation adds all ten standalone recipes with 67 ordered sibling installs, closes clean-tree transitive prerequisites, and makes the ZStd CLI interop tests Windows-native. Fresh isolated LuaRocks validation passes 351 tests with zero failures, errors, or pending cases; wasm_module_encoder production coverage is 90.50%. Python build-tool validation is clean across 4,829 packages; its full 353-test suite passes at 85.26% coverage. Lua build-tool validation passes 61 tests at 73.95% aggregate coverage. Go test, vet, build, and module verification pass; full repository validation retains the exact unrelated 17-diagnostic Perl/Python/Swift baseline and reports zero Lua diagnostics. Changed-file luacheck, luac, parity collisions, state graph, diff, credential scan, and direct security review pass. Ready-for-review PR #10110 owned this delivery and merged externally as 03f0d5f7a1 on 2026-08-09."
@@ -4869,7 +4869,7 @@
     {
       "id": "build-tool-elixir-orphan-crate-validation-conformance",
       "title": "Make the Elixir build tool consume orphan-crate validation",
-      "status": "pr-open",
+      "status": "merged",
       "depends_on": [
         "build-tool-orphan-crate-validation-corpus",
         "build-tool-elixir-tracked-artifact-validation-conformance"
@@ -4887,7 +4887,11 @@
       "final_review_revision": "99776e1f1a61dba4680b4629beef15d1ee1133b3",
       "validation_notes": "The Elixir engine now exposes one pure Map-in/result-out orphan-crate snapshot validator and consumes all four language-neutral orphan fixtures. It implements exact artifact-manifest filtering; direct and component-wise ancestor BUILD coverage with fixed filename rank; nearer-empty-BUILD nonmasking; portable NFC paths and hostile-path redaction; Python-exact blank-reason handling; Unicode 17 full-fold duplicate identities and uppercase Windows reserved names; exemption and stale-entry precedence; active PENDING counts; deterministic scalar sorting; and Python-compatible ASCII-only canonical detail JSON, without adding filesystem, Git, process, environment, network, or credential authority. Test-first execution initially failed with nine expected undefined-entry-point failures. The focused validator passes 29 tests at 93.57% coverage; the full package and literal BUILD_windows front pass 239 tests with two expected skips, while the unchanged package-wide 90% threshold remains red at its pre-existing 56.24% because legacy CLI, GitDiff, and Resolver modules are unexercised. Changed-file formatting, warnings-as-errors compilation, escript build, dependency hygiene, and Hex advisory audit pass; full-package formatting retains only unrelated pre-existing findings. The Unicode 17 generator reproduces the Elixir runtime with 968 combining, 5,914 decomposition, 965 composition, 1,585 folding, and 1,581 uppercase entries. The neutral corpus validates 111 cases and 269 files; 146 conformance, package-parity, capability, Haskell, and OCaml-lock tests plus 928 subtests pass with two expected Windows skips. The Go build tool passes all packages, vet, module verification, and trimpath compilation; a real forced Elixir dry plan evaluates 45 Starlark BUILD files, discovers 285 packages, preserves the five-entry orphan ledger, and reports all 285 WOULD-BUILD. The exact-base schema-3 inventory remains 15 lanes, 1,373 identities, 4,566 slots, zero collisions, and zero unknown buckets; the 511-owner, 773-edge state graph is unique, dependency-complete, and acyclic with exactly one pr-open owner. Diff, dependency, credential-pattern, generated-artifact, and production-authority checks pass. A senior read-only security review found no vulnerability in one round. The branch rebased twice without conflict, finally onto exact origin/main 69dbce5501b871cf524ba65029a4e0b7b472d341 after four package-neutral curriculum, HTML-parser, and JV02 commits with zero exact overlap across the six changed paths.",
       "publication_notes": "Opened ready-for-review PR #12933 from clean, independently security-reviewed head d9460f7c7ebd1b7ba2b00624455726f9c8142120 after a normal first push from exact origin/main 69dbce5501b871cf524ba65029a4e0b7b472d341. Immediately before publication, the target remote branch and prior PR were absent, all six changed paths had zero exact overlap across eleven other live open PRs, and GitHub reported the PR non-draft and mergeable. Required checks are queued or running, so auto-merge remains disabled until every check is terminal and acceptable and GitHub reports no conflict.",
-      "notes": "Consume the closed process-free orphan-crate snapshot and diagnostics in the Elixir engine without adding filesystem enumeration or process authority."
+      "notes": "Consume the closed process-free orphan-crate snapshot and diagnostics in the Elixir engine without adding filesystem enumeration or process authority.",
+      "final_revision": "f0097f2a36d40d312b4d43687e8c92c7c4c63681",
+      "merge_revision": "e89a78ee93e7e6750a7362fd29d7a1cac10f002b",
+      "merged_at": "2026-08-26T03:30:44Z",
+      "merge_notes": "All 41 reported checks reached terminal acceptable conclusions with no failures or pending work. GitHub reported the branch clean and mergeable; the loop enabled squash auto-merge, and GitHub merged PR #12933 without a manual merge command."
     },
     {
       "id": "build-tool-haskell-orphan-crate-validation-conformance",
@@ -4904,13 +4908,26 @@
     {
       "id": "build-tool-lua-orphan-crate-validation-conformance",
       "title": "Make the Lua build tool consume orphan-crate validation",
-      "status": "pending",
+      "status": "pr-open",
       "depends_on": [
         "build-tool-orphan-crate-validation-corpus",
         "build-tool-lua-tracked-artifact-validation-conformance"
       ],
-      "branch": null,
-      "pr_number": null,
+      "branch": "codex/build-tool-lua-orphan-crate-validation-conformance",
+      "pr_number": 12940,
+      "pr_url": "https://github.com/adhithyan15/coding-adventures/pull/12940",
+      "opened_at": "2026-08-26T04:09:11Z",
+      "opened_revision": "31a20338001ba24afb1048e976b2f65f526c8a5d",
+      "selection_revision": "e89a78ee93e7e6750a7362fd29d7a1cac10f002b",
+      "selection_notes": "Selected only after PR #12933 completed all 41 terminal acceptable checks and GitHub merged reviewed head f0097f2a36d40d312b4d43687e8c92c7c4c63681 through squash auto-merge as e89a78ee93e7e6750a7362fd29d7a1cac10f002b at 2026-08-26T03:30:44Z without a manual merge command. The collision-checked exact-main schema-3 report remains 15 established lanes, 1,373 implementation identities, 4,566 package slots, 175 high-consensus packages with 276 gaps, 122 identities in five to nine lanes with 926 gaps, 166 identities in two to four lanes with 2,087 gaps, 910 singletons with 12,740 gaps, 721 Rust singletons, zero canonical collisions, and zero unknown buckets; OCaml remains correctly emerging at zero packages. Merged PR #12928 broadens the existing Mermaid Gantt owner with includes/excludes, weekend boundaries, axis formatting, tick intervals, and deterministic calendar geometry and paint. Spanish A1 and ADJ sedimentary-rock changes are curriculum or adjacent automation only. Open PR #12929 exposes a newly unowned Rust-only Wasm exception-semantic family, so the refresh registers a neutral tag/throw/try_table contract and dependent lane umbrella before selection; generic WAST, corpus, provenance, and host-authority work remains in existing owners. All Lua prerequisites are merged. Lua is the widest remaining orphan consumer at 252 reported packages versus Perl 251, Haskell 204, and Swift 161; each unlocks the same completion umbrella. The six expected Lua tranche paths have zero exact overlap across all ten live PRs, and the target local branch, remote branch, and prior PR were absent before creating the fresh exact-main worktree. OCaml remains collision-unsafe while PRs #12149 and #12162 own required Go entry-point and validator surfaces.",
+      "rebase_revision": "b4dbb28496f299f335fdda14021e61ab5d126614",
+      "rebase_notes": "Rebased without conflict before publication onto exact origin/main b4dbb28496f299f335fdda14021e61ab5d126614. Intervening ALGOL mixed numeric folding, Japanese hiragana ductus, ADJ shipment bookkeeping, HTML unmatched-sectioning diagnostics, and Mermaid Gantt axis-end controls remain inside existing owners and do not change the schema-3 inventory. The historical merged-child-to-pending-umbrella standalone-integrity edge was reversed during the refresh so dependency lifecycle direction is truthful.",
+      "test_revision": "2ac5b673ca75e6c12967c9ac333973975721cc41",
+      "implementation_revision": "863ed85988c5f46d693c320bae8b9c7a4ea7ae54",
+      "validation_revision": "84f6a532acb5d03aa857599cd85625b4f6bb9810",
+      "final_review_revision": "31a20338001ba24afb1048e976b2f65f526c8a5d",
+      "validation_notes": "The Lua engine now exposes one pure table-in/table-out orphan-crate snapshot validator and consumes all four language-neutral fixtures. It implements exact artifact filtering; direct and component-wise ancestor BUILD coverage with fixed filename rank; nearer-empty-BUILD nonmasking; portable NFC paths and hostile-path redaction; Python-exact blank-reason handling; Unicode 17 full-fold duplicate identities and uppercase Windows reserved names; exemption and stale-entry precedence; active PENDING counts; Unicode-scalar code/path sorting; and Python-compatible ASCII canonical detail ordering without filesystem, Git, process, environment, network, credential, or link authority. Test-first execution passed 72 existing tests and failed at the nine intended missing entry-point calls; the completed pinned-Lua suite passes 81 tests with 96.81% validator coverage and 99.42% test-file coverage. The literal Unix BUILD front passes the same 81 tests and BUILD_windows emits its intentional Windows skip. Changed Lua source and tests pass luacheck with Busted globals declared; default lint retains only four unrelated pre-existing long-line warnings in unchanged validator code. Official SHA-256-verified Lua 5.4.7 was built locally, and the Unicode generator/runtime check reproduces 968 combining, 5,914 decomposition, 965 composition, 1,585 folding, and 1,581 uppercase entries. The neutral corpus validates 111 cases and 269 files; 244 repository contract tests plus 1,034 subtests pass with 25 expected platform/authority skips. The Go build tool passes module verification, all tests, vet, and trimpath compilation; a real forced Lua dry plan evaluates 45 Starlark BUILD files, discovers 259 packages, preserves the five-entry orphan ledger, and reports all 259 WOULD-BUILD. The exact-base schema-3 inventory remains 15 lanes, 1,373 identities, 4,566 slots, zero collisions, and zero unknown buckets; the 513-owner, 774-edge state graph is unique, dependency-complete, acyclic, and free of merged-to-unmerged edges with exactly one pr-open owner. The six changed paths have no dependency or BUILD metadata delta, credential-pattern hit, generated artifact, or production authority call, and had zero exact overlap across nine live PRs immediately before publication; the target remote branch and prior PR were absent at that publication boundary. A senior security review and an independent contract/fixture audit found no vulnerability or semantic divergence.",
+      "publication_notes": "Opened ready-for-review PR #12940 from exact independently security-reviewed head 31a20338001ba24afb1048e976b2f65f526c8a5d after a normal first push from exact origin/main b4dbb28496f299f335fdda14021e61ab5d126614. Immediately before publication, all six changed paths had zero exact overlap across nine live PRs, and the target remote branch and prior PR were absent. GitHub reports the PR non-draft, open, and mergeable. Required checks are queued, so auto-merge remains disabled until every check is terminal and acceptable and GitHub reports no conflict.",
       "notes": "Consume the closed process-free orphan-crate snapshot and diagnostics in the Lua engine without adding filesystem enumeration or process authority."
     },
     {
@@ -5631,6 +5648,25 @@
       "notes": "Completion umbrella for applicable execution, validation, and WAT/WAST lanes after the neutral i31 contract closes. Decompose into coherent runtime and parser children before delivery; preserve null-trap and 31-bit signed/unsigned semantics, and do not infer parity from existing package identities or the Rust W20 reference slice."
     },
     {
+      "id": "wasm-exceptions-tag-throw-language-neutral-conformance",
+      "title": "Specify Wasm tag, throw, and try_table semantics with language-neutral fixtures",
+      "status": "pending",
+      "depends_on": [],
+      "branch": null,
+      "pr_number": null,
+      "notes": "Discovered during the post-PR #12933 audit while PR #12929 was open. The Rust W21 slice adds tag and imported-plus-defined tag index spaces, tag parameter types, tag/throw/try_table text and binary forms, validator stack behavior, uncaught-exception classification distinct from traps, and catch, catch_ref, catch_all, and catch_all_ref table shapes across wasm-types, wasm-opcodes, wasm-module-parser, wasm-module-encoder, wasm-validator, wasm-execution, wasm-runtime, wasm-wast-parser, wasm-conformance, and iir-builtin-lowering, but those identities' package presence is not behavioral parity. Treat the exception-builtin IIR lowering as part of this same semantic family rather than a new package owner. Define one bounded neutral contract for encodings, index resolution, stack effects, stable diagnostics, uncaught exception payloads, catch-table target typing, malformed and invalid forms, and resource limits. Reuse the existing WAST-parser, portable-conformance, official-corpus, provenance, fetch, NOTICE, baseline, and host-authority owners rather than duplicating syntax, directive, or native corpus authority. Keep real in-engine catching, rethrow, throw_ref, exnref, GC continuation work, and broader exception proposals outside the first bounded slice unless their prerequisites are explicitly owned."
+    },
+    {
+      "id": "wasm-exceptions-tag-throw-established-lane-parity",
+      "title": "Bring Wasm tag, throw, and try_table semantics to every applicable established lane",
+      "status": "pending",
+      "depends_on": ["wasm-exceptions-tag-throw-language-neutral-conformance"],
+      "branch": null,
+      "pr_number": null,
+      "selection_blocked": true,
+      "notes": "Completion umbrella for applicable opcode, validation, execution, and WAT/WAST lanes after the neutral exception contract closes. Decompose into coherent semantic and runtime children before delivery, preserve the distinction between uncaught exceptions and traps, and do not infer cross-lane support from the Rust W21 reference slice or existing package-directory presence."
+    },
+    {
       "id": "wasm-wast-parser-language-neutral-conformance",
       "title": "Define language-neutral WAT/WAST parser conformance",
       "status": "pending",
@@ -5694,7 +5730,7 @@
       "depends_on": [],
       "branch": null,
       "pr_number": null,
-      "notes": "Discovered after merged PR #12867 introduced the first Mermaid Gantt grammar and tokens plus deterministic Rust parser, diagram IR, temporal layout, and paint projection across mermaid-parser, diagram-ir, diagram-layout-temporal, and diagram-to-paint. Define one language-neutral contract and adversarial fixture corpus for directives, task syntax, sections, dates and durations, dependencies, milestone and status semantics, stable diagnostics, deterministic temporal geometry, theme projection, and resource bounds before treating the Rust reference pipeline as portable coverage. Keep this separate from the existing sequence and XY chart owners because Gantt has distinct grammar, IR, scheduling, and layout semantics."
+      "notes": "Discovered after merged PR #12867 introduced the first Mermaid Gantt grammar and tokens plus deterministic Rust parser, diagram IR, temporal layout, and paint projection across mermaid-parser, diagram-ir, diagram-layout-temporal, and diagram-to-paint. Merged PR #12928 broadens the same pipeline with inclusive and exclusive date ranges, weekend boundaries, axis date formatting, tick interval controls, and deterministic calendar geometry and paint projection; retain those controls, precedence rules, boundary cases, validation, and stable rendering in this same owner. Merged PR #12936 adds explicit axis-end dates plus inclusive/exclusive end semantics across the same parser, IR, layout, and paint roots; retain invalid-date, reversed-range, boundary, duration, geometry, and rendering cases here. Define one language-neutral contract and adversarial fixture corpus for directives, task syntax, sections, dates and durations, dependencies, milestone and status semantics, calendar controls, stable diagnostics, deterministic temporal geometry, theme projection, and resource bounds before treating the Rust reference pipeline as portable coverage. Keep this separate from the existing sequence and XY chart owners because Gantt has distinct grammar, IR, scheduling, and layout semantics."
     },
     {
       "id": "mermaid-gantt-chart-established-lane-parity",

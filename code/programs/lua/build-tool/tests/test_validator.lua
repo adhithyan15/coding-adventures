@@ -12,6 +12,12 @@ local tracked_artifact_cases = {
     "validation-tracked-artifacts-invalid.json",
     "validation-tracked-artifacts-unicode-boundaries.json",
 }
+local orphan_crate_cases = {
+    "validation-orphan-crates-clean.json",
+    "validation-orphan-crates-unlisted.json",
+    "validation-orphan-exemptions-invalid.json",
+    "validation-orphan-exemptions-stale.json",
+}
 local conformance_cases = "../../../../specs/fixtures/build-tool-v1/cases"
 
 local function read_file(pathname)
@@ -250,6 +256,165 @@ luarocks make --local --deps-mode=none coding-adventures-safe-pkg-0.1.0-1.rocksp
             assert.are.same(fixture.expected.diagnostics, actual)
         end)
     end
+
+    for _, fixture_name in ipairs(orphan_crate_cases) do
+        it("matches shared " .. fixture_name:gsub("%.json$", "") .. " fixture", function()
+            local fixture = load_fixture(fixture_name)
+            local snapshot = fixture.input.options.orphan_snapshot
+            local actual = Validator.validate_orphan_crate_snapshot(snapshot)
+
+            assert.are.same(fixture.expected.diagnostics, actual.diagnostics)
+            actual.diagnostics = nil
+            assert.are.same(fixture.expected.result, actual)
+        end)
+    end
+
+    it("redacts unsafe orphan exemption paths, including invalid UTF-8", function()
+        local unsafe_paths = {
+            "",
+            string.rep("\240\159\152\128", 513),
+            "/absolute/secret-project",
+            "C:/host/secret-project",
+            "code/packages/rust/bad<name>",
+            "code/packages/rust/trailing.",
+            "code/packages/rust/CON",
+            "code/packages/rust/\255",
+        }
+
+        for _, unsafe_path in ipairs(unsafe_paths) do
+            local result = Validator.validate_orphan_crate_snapshot({
+                directories = {"code/packages/rust/demo"},
+                manifests = {{path = "code/packages/rust/demo", kind = "package"}},
+                build_files = {},
+                exemptions = {{
+                    line = 7,
+                    kind = "PENDING",
+                    path = unsafe_path,
+                    reason = "not allowed",
+                }},
+            })
+
+            local invalid
+            for _, diagnostic in ipairs(result.diagnostics) do
+                if diagnostic.code == "ORPHAN_EXEMPTION_INVALID" then
+                    invalid = diagnostic
+                    break
+                end
+            end
+            assert.are.same({
+                code = "ORPHAN_EXEMPTION_INVALID",
+                severity = "error",
+                path = "code/BUILD-EXEMPTIONS",
+                details = {line = 7, problem = "PATH_UNSAFE"},
+            }, invalid)
+            assert.is_nil(invalid.details.path)
+        end
+    end)
+
+    it("uses the exact Python blank-reason code point set", function()
+        local result = Validator.validate_orphan_crate_snapshot({
+            directories = {"code/packages/rust/blank", "code/packages/rust/bom"},
+            manifests = {
+                {path = "code/packages/rust/blank", kind = "package"},
+                {path = "code/packages/rust/bom", kind = "package"},
+            },
+            build_files = {},
+            exemptions = {
+                {
+                    line = 7,
+                    kind = "PENDING",
+                    path = "code/packages/rust/blank",
+                    reason = utf8.char(0x001C),
+                },
+                {
+                    line = 8,
+                    kind = "PENDING",
+                    path = "code/packages/rust/bom",
+                    reason = utf8.char(0xFEFF),
+                },
+            },
+        })
+
+        assert.are.equal(1, result.pending_exemption_count)
+        assert.are.same(
+            {"ORPHAN_CRATE_UNLISTED", "ORPHAN_EXEMPTION_INVALID"},
+            result.diagnostic_codes
+        )
+        assert.are.equal("REASON_MISSING", result.diagnostics[#result.diagnostics].details.problem)
+    end)
+
+    it("chooses the closest empty BUILD with the fixed filename rank", function()
+        local result = Validator.validate_orphan_crate_snapshot({
+            directories = {"code/packages/rust/demo/child"},
+            manifests = {{path = "code/packages/rust/demo/child", kind = "package"}},
+            build_files = {
+                {path = "code/packages/rust/BUILD", state = "empty"},
+                {path = "code/packages/rust/demo/BUILD_linux", state = "empty"},
+                {path = "code/packages/rust/demo/BUILD", state = "empty"},
+                {path = "code/packages/rust/demo2/BUILD", state = "runnable"},
+            },
+            exemptions = {},
+        })
+
+        assert.are.equal(
+            "code/packages/rust/demo/BUILD",
+            result.diagnostics[1].details.build_path
+        )
+    end)
+
+    it("reserves NFC full-fold identities before policy precedence", function()
+        local result = Validator.validate_orphan_crate_snapshot({
+            directories = {"code/packages/rust/Stra\195\159e"},
+            manifests = {{path = "code/packages/rust/Stra\195\159e", kind = "package"}},
+            build_files = {},
+            exemptions = {
+                {
+                    line = 7,
+                    kind = "UNKNOWN",
+                    path = "code/packages/rust/Stra\195\159e",
+                    reason = "first",
+                },
+                {
+                    line = 8,
+                    kind = "PENDING",
+                    path = "CODE/PACKAGES/RUST/STRASSE",
+                    reason = "duplicate",
+                },
+            },
+        })
+
+        local invalid_details = {}
+        for _, diagnostic in ipairs(result.diagnostics) do
+            if diagnostic.code == "ORPHAN_EXEMPTION_INVALID" then
+                invalid_details[#invalid_details + 1] = diagnostic.details
+            end
+        end
+        assert.are.same({
+            {line = 7, problem = "UNKNOWN_KIND"},
+            {line = 8, problem = "DUPLICATE_PATH"},
+        }, invalid_details)
+    end)
+
+    it("uses ASCII JSON ordering for Unicode diagnostic details", function()
+        local accented = "code/packages/rust/\195\169"
+        local emoji = "code/packages/rust/\240\159\152\128"
+        local result = Validator.validate_orphan_crate_snapshot({
+            directories = {},
+            manifests = {},
+            build_files = {},
+            exemptions = {
+                {line = 9, kind = "EXCLUDED", path = "code/packages/rust/z", reason = "removed"},
+                {line = 8, kind = "EXCLUDED", path = emoji, reason = "removed"},
+                {line = 7, kind = "EXCLUDED", path = accented, reason = "removed"},
+            },
+        })
+
+        local paths = {}
+        for _, diagnostic in ipairs(result.diagnostics) do
+            paths[#paths + 1] = diagnostic.details.entry_path
+        end
+        assert.are.same({accented, emoji, "code/packages/rust/z"}, paths)
+    end)
 
     it("rejects Unicode version drift before entries", function()
         assert.are.equal("17.0.0", Validator.TRACKED_ARTIFACT_UNICODE_VERSION)
