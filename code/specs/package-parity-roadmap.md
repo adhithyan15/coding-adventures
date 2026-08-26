@@ -9124,6 +9124,42 @@ remains disabled until every required check is terminal and acceptable. State
 is now 157 merged, 374 pending, and exactly one `pr-open` owner across the
 unchanged complete and acyclic 532-owner/791-edge graph.
 
+PR #13112's final state-recording head
+`681cab6d2991f52d2ec7def9a1847deb03036ba2` completed all 40 reported checks:
+33 passed and seven were expected skips, with no failure or pending check.
+GitHub reported the branch clean and mergeable. The loop enabled squash
+auto-merge, and GitHub merged the PR as
+`7b43338ebe0e7caa55cda1e06bd0324ae9d1a6e7` at
+2026-08-26T21:59:52Z without a manual merge command. Its clean worktree matched
+the exact reviewed head and was removed after the successor worktree existed.
+
+Before successor selection, `origin/main` advanced through disjoint Urdu
+curriculum and Rust Wasm-runtime changes to exact
+`523f5ac925b23a8682f199e1a1838be745d6833a`. Neither merge added an
+implementation package identity. The regenerated schema-3 inventory therefore
+remains collision-clean at 15 established lanes, 1,373 implementation
+identities, 4,582 slots, and 1,412 all-reported identities. The four bands remain
+175/266, 123/934, 166/2,087, and 909/12,726; Rust has 720 singletons, OCaml is
+still emerging at zero packages, and collisions and unknown buckets remain
+zero. The exact 14/15 frontier remains Dart binary-search-tree, Fenwick tree,
+and UUID plus externally owned Swift paint-vm-ascii. The ragged Scytale review
+finding is already captured by its registered conformance owner, so the refresh
+adds no new owner.
+
+The next selected owner is
+`scytale-unicode-padding-established-lane-conformance` on
+`codex/scytale-established-lane-conformance`. It is newly dependency-ready after
+the neutral classical-cipher corpus merged, consumes that exact fixture suite,
+and closes one established identity's Unicode-unit, ragged-column, and literal
+U+0020-padding divergence across all 15 lanes. It is the highest-leverage bounded
+successor and materially narrower than the sibling Vigenere cryptanalysis
+convergence. Seven live PRs have zero exact overlap with its package, CR02,
+fixture, state, or roadmap surfaces. OCaml's process-free substrate remains
+collision-unsafe while PRs #12149 and #12162 own required Go build-tool entry
+and validator paths. The reconciled state graph remains complete and acyclic at
+532 owners and 791 edges: 158 merged, 373 pending, and exactly one in-progress
+owner, with no active parity PR.
+
 ## Autonomous Loop Protocol
 
 Only one parity PR should be active at a time.
