@@ -12,7 +12,7 @@
   },
   "summary": {
     "registeredTracks": 23,
-    "totalLessons": 4381,
+    "totalLessons": 4383,
     "authoredBooks": 23,
     "durationViolations": 0,
     "unknownPrerequisites": 0,
@@ -3593,9 +3593,9 @@
       {
         "language": "gujarati",
         "status": "version-2",
-        "lessonCount": 163,
+        "lessonCount": 165,
         "versions": {
-          "2": 163
+          "2": 165
         }
       },
       {
@@ -4414,9 +4414,9 @@
     }
   },
   "levels": {
-    "totalLessons": 4381,
+    "totalLessons": 4383,
     "byLevel": {
-      "pre-A1": 2840,
+      "pre-A1": 2842,
       "A1": 850,
       "A2": 548,
       "B1": 40,
@@ -4504,9 +4504,9 @@
       },
       {
         "language": "gujarati",
-        "lessonCount": 163,
+        "lessonCount": 165,
         "byLevel": {
-          "pre-A1": 142,
+          "pre-A1": 144,
           "A1": 2,
           "A2": 19,
           "B1": 0,
@@ -5267,9 +5267,9 @@
       },
       {
         "language": "gujarati",
-        "lessonCount": 163,
-        "measurable": 160,
-        "unmeasurable": 3,
+        "lessonCount": 165,
+        "measurable": 161,
+        "unmeasurable": 4,
         "lessonViolations": 2,
         "chapterViolations": 1
       },
@@ -5902,7 +5902,7 @@
           "language": "gujarati",
           "script": "gujarati",
           "latinScript": false,
-          "lessonCount": 163,
+          "lessonCount": 165,
           "totalGlyphs": 43,
           "lessonViolations": 0,
           "systemViolations": 0,
@@ -6100,7 +6100,7 @@
     "summary": {
       "lessonViolations": 40,
       "chapterViolations": 23,
-      "unmeasurableLessons": 399,
+      "unmeasurableLessons": 400,
       "measurablePercent": 91,
       "steepestLesson": {
         "lessonId": "BN-C06-numbers-1-5",
@@ -22997,6 +22997,30 @@
         "revisits": 0
       },
       {
+        "atom": "GU-ETYMON-BE-DVE-SELECTION",
+        "language": "gujarati",
+        "introducedBy": "GU-C06-number-histories",
+        "introducedAt": 83,
+        "missed": [
+          "R1",
+          "R3",
+          "R4"
+        ],
+        "revisits": 1
+      },
+      {
+        "atom": "GU-ETYMON-CHHE-DWELL",
+        "language": "gujarati",
+        "introducedBy": "GU-C07-hovun",
+        "introducedAt": 84,
+        "missed": [
+          "R2",
+          "R3",
+          "R4"
+        ],
+        "revisits": 1
+      },
+      {
         "atom": "GU-ETYMON-NAAK-NOSE",
         "language": "gujarati",
         "introducedBy": "GU-C12-naak",
@@ -23019,6 +23043,18 @@
           "R3"
         ],
         "revisits": 0
+      },
+      {
+        "atom": "GU-ETYMON-TRAN-R-RESTORATION",
+        "language": "gujarati",
+        "introducedBy": "GU-C06-number-histories",
+        "introducedAt": 83,
+        "missed": [
+          "R1",
+          "R3",
+          "R4"
+        ],
+        "revisits": 1
       },
       {
         "atom": "GU-FORM-BE-INITIAL-B",
@@ -23255,6 +23291,18 @@
         "introducedAt": 9,
         "missed": [
           "R2",
+          "R3",
+          "R4"
+        ],
+        "revisits": 1
+      },
+      {
+        "atom": "GU-SOUND-DV-BB-B",
+        "language": "gujarati",
+        "introducedBy": "GU-C06-number-histories",
+        "introducedAt": 83,
+        "missed": [
+          "R1",
           "R3",
           "R4"
         ],
@@ -41578,17 +41626,6 @@
         "revisits": 2
       },
       {
-        "atom": "GU-ETYMON-BE-DVE-SELECTION",
-        "language": "gujarati",
-        "introducedBy": "GU-C06-number-histories",
-        "introducedAt": 83,
-        "missed": [
-          "R1",
-          "R3"
-        ],
-        "revisits": 1
-      },
-      {
         "atom": "GU-ETYMON-BHAI-BROTHER",
         "language": "gujarati",
         "introducedBy": "GU-C11-bhai",
@@ -41620,17 +41657,6 @@
           "R3"
         ],
         "revisits": 2
-      },
-      {
-        "atom": "GU-ETYMON-CHHE-DWELL",
-        "language": "gujarati",
-        "introducedBy": "GU-C07-hovun",
-        "introducedAt": 84,
-        "missed": [
-          "R2",
-          "R3"
-        ],
-        "revisits": 1
       },
       {
         "atom": "GU-ETYMON-DUDH-DUGDHA",
@@ -41776,17 +41802,6 @@
         "revisits": 2
       },
       {
-        "atom": "GU-ETYMON-TRAN-R-RESTORATION",
-        "language": "gujarati",
-        "introducedBy": "GU-C06-number-histories",
-        "introducedAt": 83,
-        "missed": [
-          "R1",
-          "R3"
-        ],
-        "revisits": 1
-      },
-      {
         "atom": "GU-ETYMON-VAC-VOICE",
         "language": "gujarati",
         "introducedBy": "GU-C08-vanchvun",
@@ -41886,6 +41901,17 @@
         "revisits": 1
       },
       {
+        "atom": "GU-HISTORY-LEARNED-RESTORATION",
+        "language": "gujarati",
+        "introducedBy": "GU-C06-number-histories",
+        "introducedAt": 83,
+        "missed": [
+          "R1",
+          "R4"
+        ],
+        "revisits": 2
+      },
+      {
         "atom": "GU-HISTORY-TEA-CHA-ISOGLOSS",
         "language": "gujarati",
         "introducedBy": "GU-C10-chaa",
@@ -41961,6 +41987,17 @@
           "R3"
         ],
         "revisits": 1
+      },
+      {
+        "atom": "GU-LEX-HOVU",
+        "language": "gujarati",
+        "introducedBy": "GU-C07-hovun",
+        "introducedAt": 84,
+        "missed": [
+          "R3",
+          "R4"
+        ],
+        "revisits": 2
       },
       {
         "atom": "GU-LEX-JOVU",
@@ -42181,17 +42218,6 @@
           "R3"
         ],
         "revisits": 5
-      },
-      {
-        "atom": "GU-SOUND-DV-BB-B",
-        "language": "gujarati",
-        "introducedBy": "GU-C06-number-histories",
-        "introducedAt": 83,
-        "missed": [
-          "R1",
-          "R3"
-        ],
-        "revisits": 1
       },
       {
         "atom": "GU-SOUND-PRAKRIT-P-TO-V",
@@ -56925,14 +56951,14 @@
         "revisits": 12
       },
       {
-        "atom": "GU-HISTORY-LEARNED-RESTORATION",
+        "atom": "GU-GRAMMAR-VU-NEUTER-INFINITIVE",
         "language": "gujarati",
-        "introducedBy": "GU-C06-number-histories",
-        "introducedAt": 83,
+        "introducedBy": "GU-C07-hovun",
+        "introducedAt": 84,
         "missed": [
-          "R1"
+          "R4"
         ],
-        "revisits": 2
+        "revisits": 15
       },
       {
         "atom": "GU-LEX-AAVVU",
@@ -56965,14 +56991,14 @@
         "revisits": 6
       },
       {
-        "atom": "GU-LEX-HOVU",
+        "atom": "GU-LEX-HAATH-01",
         "language": "gujarati",
-        "introducedBy": "GU-C07-hovun",
-        "introducedAt": 84,
+        "introducedBy": "GU-C21-hear-haath",
+        "introducedAt": 143,
         "missed": [
           "R3"
         ],
-        "revisits": 2
+        "revisits": 5
       },
       {
         "atom": "GU-LEX-JAANVU",
@@ -57025,24 +57051,14 @@
         "revisits": 3
       },
       {
-        "atom": "GU-LEX-RASTO-01",
+        "atom": "GU-PERFORMANCE-MAP-TEN-FOUR-SKILL-01",
         "language": "gujarati",
-        "introducedBy": "GU-C22-hear-rasto",
-        "introducedAt": 154,
+        "introducedBy": "GU-C23-map-ten",
+        "introducedAt": 163,
         "missed": [
-          "R2"
+          "R1"
         ],
-        "revisits": 2
-      },
-      {
-        "atom": "GU-LEX-SHAALAA-01",
-        "language": "gujarati",
-        "introducedBy": "GU-C22-hear-shaalaa",
-        "introducedAt": 152,
-        "missed": [
-          "R2"
-        ],
-        "revisits": 2
+        "revisits": 0
       },
       {
         "atom": "GU-PERFORMANCE-PLACES-THREE-FOUR-SKILL-01",
@@ -57053,16 +57069,6 @@
           "R3"
         ],
         "revisits": 3
-      },
-      {
-        "atom": "GU-PERFORMANCE-ROUTE-THREE-FOUR-SKILL-01",
-        "language": "gujarati",
-        "introducedBy": "GU-C22-route-three",
-        "introducedAt": 156,
-        "missed": [
-          "R1"
-        ],
-        "revisits": 2
       },
       {
         "atom": "GU-PERFORMANCE-TRAVEL-FIVE-FOUR-SKILL-01",
@@ -57155,6 +57161,16 @@
         "revisits": 5
       },
       {
+        "atom": "GU-SCRIPT-GAAM-01",
+        "language": "gujarati",
+        "introducedBy": "GU-C23-gaam",
+        "introducedAt": 159,
+        "missed": [
+          "R2"
+        ],
+        "revisits": 2
+      },
+      {
         "atom": "GU-SCRIPT-GHA-01",
         "language": "gujarati",
         "introducedBy": "GU-W20-gha",
@@ -57183,6 +57199,16 @@
           "R4"
         ],
         "revisits": 13
+      },
+      {
+        "atom": "GU-SCRIPT-HAATH-01",
+        "language": "gujarati",
+        "introducedBy": "GU-C21-haath",
+        "introducedAt": 144,
+        "missed": [
+          "R3"
+        ],
+        "revisits": 3
       },
       {
         "atom": "GU-SCRIPT-MANDIR-01",
@@ -57223,36 +57249,6 @@
           "R4"
         ],
         "revisits": 4
-      },
-      {
-        "atom": "GU-SCRIPT-RASTO-01",
-        "language": "gujarati",
-        "introducedBy": "GU-C22-rasto",
-        "introducedAt": 155,
-        "missed": [
-          "R2"
-        ],
-        "revisits": 1
-      },
-      {
-        "atom": "GU-SCRIPT-SHAALAA-01",
-        "language": "gujarati",
-        "introducedBy": "GU-C22-shaalaa",
-        "introducedAt": 153,
-        "missed": [
-          "R2"
-        ],
-        "revisits": 1
-      },
-      {
-        "atom": "GU-SCRIPT-SHAHAR-01",
-        "language": "gujarati",
-        "introducedBy": "GU-C22-shahar",
-        "introducedAt": 151,
-        "missed": [
-          "R1"
-        ],
-        "revisits": 1
       },
       {
         "atom": "GU-SCRIPT-TA-01",
@@ -68000,7 +67996,7 @@
       },
       {
         "language": "gujarati",
-        "lessonCount": 163,
+        "lessonCount": 165,
         "lessonsWithoutSequence": 0,
         "forwardPrerequisites": 0,
         "forwardReviews": 0,
@@ -68188,10 +68184,10 @@
       "atomsNeverRevisited": 590,
       "neverRevisitedPercent": 11,
       "missedByWindow": {
-        "R1": 1175,
-        "R2": 4078,
-        "R3": 4055,
-        "R4": 2623
+        "R1": 1174,
+        "R2": 4075,
+        "R3": 4057,
+        "R4": 2630
       },
       "forwardReferences": 680
     }
@@ -68240,8 +68236,8 @@
       {
         "language": "gujarati",
         "script": "gujarati",
-        "lessonCount": 163,
-        "scriptLessons": 76,
+        "lessonCount": 165,
+        "scriptLessons": 78,
         "taughtGlyphs": 43,
         "shownGlyphs": 43,
         "neverTaughtGlyphs": 0,
@@ -77031,6 +77027,15 @@
           },
           {
             "language": "gujarati",
+            "lessonId": "GU-R23-route-three-r1",
+            "blockIndex": 2,
+            "blockTitle": "Writing — from meaning, with every model covered",
+            "stage": "dictation-transcription",
+            "level": "pre-A1",
+            "sequence": 1095
+          },
+          {
+            "language": "gujarati",
             "lessonId": "GU-C23-gaam",
             "blockIndex": 1,
             "blockTitle": "Guided Practice",
@@ -77055,6 +77060,15 @@
             "stage": "dictation-transcription",
             "level": "pre-A1",
             "sequence": 1140
+          },
+          {
+            "language": "gujarati",
+            "lessonId": "GU-R23-shaalaa-rasto-r2",
+            "blockIndex": 2,
+            "blockTitle": "Writing — from meaning, with every model covered",
+            "stage": "dictation-transcription",
+            "level": "pre-A1",
+            "sequence": 1150
           }
         ],
         "validEvidence": [
@@ -78446,6 +78460,15 @@
           },
           {
             "language": "gujarati",
+            "lessonId": "GU-R23-route-three-r1",
+            "blockIndex": 2,
+            "blockTitle": "Writing — from meaning, with every model covered",
+            "stage": "dictation-transcription",
+            "level": "pre-A1",
+            "sequence": 1095
+          },
+          {
+            "language": "gujarati",
             "lessonId": "GU-C23-gaam",
             "blockIndex": 1,
             "blockTitle": "Guided Practice",
@@ -78470,6 +78493,15 @@
             "stage": "dictation-transcription",
             "level": "pre-A1",
             "sequence": 1140
+          },
+          {
+            "language": "gujarati",
+            "lessonId": "GU-R23-shaalaa-rasto-r2",
+            "blockIndex": 2,
+            "blockTitle": "Writing — from meaning, with every model covered",
+            "stage": "dictation-transcription",
+            "level": "pre-A1",
+            "sequence": 1150
           }
         ],
         "defects": [],
@@ -84652,7 +84684,7 @@
       "tracks": 23,
       "tracksWithAnyEvidence": 18,
       "tracksCompleteAtPreA1": 13,
-      "evidenceBlocks": 432,
+      "evidenceBlocks": 434,
       "invalidEvidenceBlocks": 0,
       "missingTrackLevelStages": 596
     }
@@ -85041,9 +85073,9 @@
       },
       {
         "language": "gujarati",
-        "lessonCount": 163,
-        "atomMeasurableLessons": 160,
-        "atomMeasurementBlindLessons": 3,
+        "lessonCount": 165,
+        "atomMeasurableLessons": 161,
+        "atomMeasurementBlindLessons": 4,
         "durationViolations": 0,
         "atomLessonSpikes": 2,
         "atomChapterSpikes": 1,
@@ -85059,15 +85091,15 @@
         "forwardReferences": 0,
         "atomsTaught": 173,
         "atomsNeverRevisited": 6,
-        "reinforcementWindowMisses": 294,
+        "reinforcementWindowMisses": 299,
         "reinforcementMissesByWindow": {
-          "R1": 26,
-          "R2": 98,
-          "R3": 109,
-          "R4": 61
+          "R1": 25,
+          "R2": 95,
+          "R3": 111,
+          "R4": 68
         },
         "payoffSurprises": 0,
-        "writingPracticeLessons": 138,
+        "writingPracticeLessons": 140,
         "firstWritingPracticeAt": 1,
         "lessonsBeforeWritingPractice": 1,
         "findings": [
@@ -85088,14 +85120,14 @@
           {
             "language": "gujarati",
             "kind": "reinforcement",
-            "count": 294,
+            "count": 299,
             "unit": "missed window(s)",
             "detail": "add retrieval at the expanding R1-R4 intervals"
           },
           {
             "language": "gujarati",
             "kind": "measurement-blind",
-            "count": 3,
+            "count": 4,
             "unit": "lesson(s)",
             "detail": "migrate undeclared lesson knowledge so gentleness can be measured"
           }
@@ -86972,7 +87004,7 @@
       {
         "language": "gujarati",
         "kind": "reinforcement",
-        "count": 294,
+        "count": 299,
         "unit": "missed window(s)",
         "detail": "add retrieval at the expanding R1-R4 intervals"
       },
@@ -87236,6 +87268,13 @@
         "detail": "migrate undeclared lesson knowledge so gentleness can be measured"
       },
       {
+        "language": "gujarati",
+        "kind": "measurement-blind",
+        "count": 4,
+        "unit": "lesson(s)",
+        "detail": "migrate undeclared lesson knowledge so gentleness can be measured"
+      },
+      {
         "language": "persian",
         "kind": "measurement-blind",
         "count": 4,
@@ -87246,13 +87285,6 @@
         "language": "spanish",
         "kind": "measurement-blind",
         "count": 4,
-        "unit": "lesson(s)",
-        "detail": "migrate undeclared lesson knowledge so gentleness can be measured"
-      },
-      {
-        "language": "gujarati",
-        "kind": "measurement-blind",
-        "count": 3,
         "unit": "lesson(s)",
         "detail": "migrate undeclared lesson knowledge so gentleness can be measured"
       },
@@ -87269,7 +87301,7 @@
       "tracksWithDetectedCliffs": 21,
       "tracksWithNoWritingPractice": 0,
       "tracksWhereWritingStartsLate": 6,
-      "atomMeasurementBlindLessons": 399,
+      "atomMeasurementBlindLessons": 400,
       "findings": 119
     }
   },
@@ -87456,8 +87488,8 @@
           },
           {
             "criterion": "reinforcement",
-            "detail": "26 atom(s) at or below pre-A1 are revisited fewer than twice (12 etymology hook(s) waived)",
-            "shortfall": 26
+            "detail": "24 atom(s) at or below pre-A1 are revisited fewer than twice (12 etymology hook(s) waived)",
+            "shortfall": 24
           }
         ],
         "vocabulary": 63
@@ -87937,12 +87969,12 @@
   },
   "modality": {
     "maxLinearisableTableColumns": 3,
-    "totalLessons": 4381,
+    "totalLessons": 4383,
     "voice": 3176,
     "sight": 582,
-    "pen": 623,
+    "pen": 625,
     "coreVoice": 3654,
-    "lessonsWithWritingSegments": 324,
+    "lessonsWithWritingSegments": 326,
     "drivablePercent": 83,
     "tracks": [
       {
@@ -89950,12 +89982,12 @@
       },
       {
         "language": "gujarati",
-        "lessonCount": 163,
+        "lessonCount": 165,
         "voice": 25,
         "sight": 43,
-        "pen": 95,
+        "pen": 97,
         "coreVoice": 86,
-        "drivablePercent": 53,
+        "drivablePercent": 52,
         "drivablePrefixTotal": 74,
         "chapters": [
           {
@@ -90350,10 +90382,10 @@
           {
             "language": "gujarati",
             "chapter": 27,
-            "lessonCount": 6,
+            "lessonCount": 8,
             "voice": 2,
             "sight": 0,
-            "pen": 4,
+            "pen": 6,
             "coreVoice": 2,
             "modalities": [
               "voice",
@@ -90361,7 +90393,7 @@
               "pen"
             ],
             "drivablePrefix": 1,
-            "firstNonVoiceLesson": "GU-C23-gaam"
+            "firstNonVoiceLesson": "GU-R23-route-three-r1"
           }
         ]
       },
@@ -105217,7 +105249,7 @@
     "underspentPercent": 96
   },
   "infoDump": {
-    "lessons": 4381,
+    "lessons": 4383,
     "lessonsWithFindings": 121,
     "ruleStatements": 30,
     "paradigmTables": 95,
@@ -105227,8 +105259,8 @@
   "metalanguage": {
     "terms": 54,
     "termsUsed": 53,
-    "lessonsUsingTerms": 4119,
-    "usesBeforeIntroduction": 14099,
+    "lessonsUsingTerms": 4121,
+    "usesBeforeIntroduction": 14103,
     "technicalUsesBeforeIntroduction": 3516,
     "technicalLessons": 1892,
     "worstTerms": [
@@ -105259,7 +105291,7 @@
     ]
   },
   "literalMarkup": {
-    "lessonsScanned": 4381,
+    "lessonsScanned": 4383,
     "sourceFindings": 0,
     "renderedFindings": 0
   },
