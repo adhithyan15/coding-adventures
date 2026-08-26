@@ -39,7 +39,7 @@ describe("real curriculum", () => {
     expect(scripts.devanagari!.complete).toBe(true);
   });
 
-  it("keeps the cross-script closure queue measured after Persian and Urdu che", () => {
+  it("keeps the cross-script closure queue measured after shared maddah above", () => {
     const candrakkala = scripts.malayalam!.marks!.find((mark) => mark.mark === "്")!;
     expect(candrakkala.role).toBe("virama");
     expect(candrakkala.compositionOrder).toEqual([
@@ -690,6 +690,10 @@ describe("real curriculum", () => {
     expect(missingByScript.get("perso-arabic.json")?.has("چ")).toBe(false);
     expect(missingByScript.get("urdu-nastaliq.json")?.has("چ")).toBe(false);
     expect(affected.get("چ") ?? 0).toBe(0);
+    expect(missingByScript.get("arabic.json")?.has("ٓ") ?? false).toBe(false);
+    expect(missingByScript.get("perso-arabic.json")?.has("ٓ")).toBe(false);
+    expect(missingByScript.get("urdu-nastaliq.json")?.has("ٓ")).toBe(false);
+    expect(affected.get("ٓ") ?? 0).toBe(0);
     expect(missingByScript.get("tamil.json")?.has("ச")).toBe(false);
     expect(affected.get("ச") ?? 0).toBe(0);
     expect(missingByScript.get("tamil.json")?.has("ட")).toBe(false);
@@ -729,7 +733,7 @@ describe("real curriculum", () => {
     expect(affected.get("ಅ") ?? 0).toBe(0);
     expect(
       [...affected.entries()].sort((left, right) => right[1] - left[1])[0],
-    ).toEqual(["ٓ", 9]);
+    ).toEqual(["ங", 9]);
   });
 
   it("loaded every track (17+ and growing)", () => {

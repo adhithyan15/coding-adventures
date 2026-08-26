@@ -513,7 +513,7 @@ describe("handwriting ductus", () => {
 
   it("models seated Hamza as sourced carrier composition, not duplicate letters", () => {
     const arabic = SCRIPTS.find((script) => script.script === "arabic")!;
-    const hamzaMarks = arabic.marks!.filter((mark) => mark.compositionSource !== undefined);
+    const hamzaMarks = arabic.marks!.filter((mark) => ["ٔ", "ٕ"].includes(mark.mark));
     expect(hamzaMarks.map((mark) => mark.mark)).toEqual(["ٔ", "ٕ"]);
     expect(hamzaMarks.flatMap((mark) => mark.examples!.map((example) => example.combined))).toEqual([
       "أ",
@@ -539,6 +539,54 @@ describe("handwriting ductus", () => {
       }
     }
     expect(DUCTUS[ductusKey("arabic", "ء")]).toBeDefined();
+  });
+
+  it("models alif maddah as sourced alef-plus-mark composition", () => {
+    const arabic = SCRIPTS.find((script) => script.script === "arabic")!;
+    const maddah = arabic.marks!.find((mark) => mark.mark === "ٓ")!;
+    expect(maddah.role).toBe("diacritic");
+    expect(maddah.attachesAs).toMatch(/maddah above.*alif carrier/i);
+    expect(maddah.example).toEqual({ base: "ا", combined: "آ", sound: "ʾā" });
+    expect(maddah.example!.combined.normalize("NFD")).toBe(
+      `${maddah.example!.base}${maddah.mark}`,
+    );
+    expect(maddah.compositionOrder).toEqual([
+      "write the source-verified alif carrier downward according to its normal positional rule",
+      "add maddah above as a short horizontal wave",
+    ]);
+    expect(maddah.compositionSource?.url).toBe(
+      "https://www.unicode.org/versions/Unicode17.0.0/core-spec/chapter-9/",
+    );
+    expect(maddah.compositionSource?.citation).toMatch(
+      /Unicode Standard.*Version 17\.0.*§9\.2.*U\+0622.*U\+0627.*U\+0653/i,
+    );
+    expect(maddah.compositionSource?.variation).toMatch(
+      /special harakat.*above alef.*\/ʾaa\/.*canonically decomposes.*carrier.*wave-shaped mark.*not a universal handwriting sequence.*learner convention/i,
+    );
+    expect(arabic.letters.some((letter) => letter.glyph === "آ")).toBe(false);
+    expect(DUCTUS[ductusKey("arabic", "ا")]).toBeDefined();
+  });
+
+  it("keeps Persian and Urdu maddah on their independently sourced alif carriers", () => {
+    const persian = SCRIPTS.find((script) => script.script === "perso-arabic")!;
+    const urdu = SCRIPTS.find((script) => script.script === "urdu-nastaliq")!;
+    const persianMaddah = persian.marks!.find((mark) => mark.mark === "ٓ")!;
+    const urduMaddah = urdu.marks!.find((mark) => mark.mark === "ٓ")!;
+    for (const mark of [persianMaddah, urduMaddah]) {
+      expect(mark.example!.combined.normalize("NFD")).toBe(`${mark.example!.base}${mark.mark}`);
+      expect(mark.compositionOrder).toHaveLength(2);
+      expect(mark.compositionSource?.url).toBe(
+        "https://www.unicode.org/versions/Unicode17.0.0/core-spec/chapter-9/",
+      );
+      expect(mark.compositionSource?.variation).toMatch(
+        /separately source-verified.*alif.*wave-shaped mark.*not a universal handwriting sequence.*learner convention/i,
+      );
+    }
+    expect(DUCTUS["ا"]).toBeDefined();
+    expect(DUCTUS[ductusKey("urdu-nastaliq", "ا")]).toBeDefined();
+    expect(persianMaddah.sound).toMatch(/â/);
+    expect(urduMaddah.sound).toMatch(/long aa/i);
+    expect(urduMaddah.compositionSource?.variation).toMatch(/Nastaliq.*Naskh fallback/i);
   });
 
   for (const letter of letters) {
