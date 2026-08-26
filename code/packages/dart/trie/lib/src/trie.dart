@@ -68,9 +68,8 @@ final class Trie<V> {
   void insert(String key, V value) {
     // Validate the complete key before changing any node so malformed UTF-16
     // cannot leave a partially inserted path behind.
-    final scalars = _checkedRunes(key).toList(growable: false);
     var node = _root;
-    for (final scalar in scalars) {
+    for (final scalar in _checkedRunes(key)) {
       node = node.children.putIfAbsent(scalar, _TrieNode<V>.new);
     }
 

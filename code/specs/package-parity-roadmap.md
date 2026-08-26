@@ -8985,7 +8985,7 @@ ambiguous worktrees remain preserved.
 
 The Dart candidate implements the generic DT13 contract in specification,
 tests, source, and documentation order. Nineteen package tests pass with
-110/110 production lines covered; formatting and fatal analysis are clean.
+109/109 production lines covered; formatting and fatal analysis are clean.
 The contract pins Unicode-scalar edges and numeric order without normalization,
 nullable endpoint presence, empty keys and prefixes, upsert counts, iterative
 enumeration/deletion/validation, longest-prefix fallback, pruning, and a
