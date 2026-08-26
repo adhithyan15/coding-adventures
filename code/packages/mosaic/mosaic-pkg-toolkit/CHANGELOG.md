@@ -1,5 +1,35 @@
 # Changelog — mosaic-pkg-toolkit
 
+## [Unreleased] — per-atom native-complete gate (#12024)
+
+- New `tests/native_complete_gate.rs`: for each of the five native backends
+  (SwiftUI, Qt, XAML, Flutter, Compose), runs `mosaic-package-artifact-builder`'s
+  real degradation analyzer against the whole package (all 21 components in one
+  pass) and asserts nothing unexpected was dropped. Before this, the toolkit
+  atoms had zero native verification of their own — the only native check
+  anywhere was the whole-app TaskApp CI gate, which measures capability
+  coverage across 21 components' worth of surface at once and never actually
+  renders (see #12022/#12023).
+- Also asserts `style_degradations` (issue #12022's new report field) is empty
+  — the toolkit is already clean there, unlike TaskApp, which authors real
+  `box-shadow`/`border-style` gaps.
+- The toolkit is not fully degradation-clean yet: running the analyzer found 9
+  pre-existing native-UI capability gaps across all five backends, none
+  introduced here — `Checkbox`'s indeterminate state ignored on SwiftUI/
+  Flutter/Compose (#13006), `Radio`'s group mutual-exclusion ignored on
+  SwiftUI/Qt/Flutter/Compose (#13007), XAML `Modal` documenting a required
+  app code-behind to open (#13008, under investigation whether this is
+  inherent or fixable), and Flutter `Modal` rendering as a zero-size TODO
+  placeholder (#13010). Each is real native-UI feature work, not something
+  fixable as a side effect of wiring this gate. All 9 are explicitly
+  allowlisted in the test file, each line pointing at its tracking issue —
+  anything NOT on that list, on any component existing or new, fails
+  immediately. Filed the 4 tracking issues (grouped by gap, not by backend)
+  as part of this PR.
+- Added `mosaic-package-artifact-builder` as a dev-dependency (this crate
+  intentionally sits outside the main `code/packages/rust` workspace already,
+  so this is additive).
+
 ## [Unreleased] — accessible Spinner primitive wiring
 
 - Spinner now passes its public `aria-label` slot into the semantic `Icon`.

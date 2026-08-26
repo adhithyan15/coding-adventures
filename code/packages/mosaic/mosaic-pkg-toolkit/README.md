@@ -124,6 +124,20 @@ Smoke tests assert every exported component's `.mil` / `.mll` /
 `.msl` triple round-trips through the three IR compilers, and that
 the manifest is internally consistent.
 
+`native_complete_gate.rs` (issue #12024) goes one step further: for
+each of the five native backends (SwiftUI, Qt, XAML, Flutter,
+Compose) it runs the real `mosaic-package-artifact-builder`
+degradation analyzer against the whole package and asserts nothing
+*unexpected* was dropped — the atom-level counterpart to the
+whole-app TaskApp CI gate, which mixes 21 components' worth of
+failure surface into one signal. The toolkit isn't fully
+degradation-clean yet: 9 pre-existing native-UI gaps (native
+indeterminate checkbox state, native radio-group mutual exclusion,
+Modal's dialog lifecycle on XAML and Flutter — see #13006, #13007,
+#13008, #13010) are explicitly allowlisted in the test file, each
+pointing at its own tracking issue. Anything not on that list — on
+any component, existing or new — fails the test immediately.
+
 ## Why kernel-only?
 
 The toolkit composes purely from UI29 kernel primitives — no per-

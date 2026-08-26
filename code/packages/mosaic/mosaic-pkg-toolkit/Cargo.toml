@@ -28,11 +28,17 @@ publish     = false
 path = "src/lib.rs"
 
 [dev-dependencies]
-mosmodel-compiler   = { path = "../../rust/mosmodel-compiler" }
-moslayout-compiler  = { path = "../../rust/moslayout-compiler" }
-mosstyle-compiler   = { path = "../../rust/mosstyle-compiler" }
-toml                = "0.8"
+mosmodel-compiler              = { path = "../../rust/mosmodel-compiler" }
+moslayout-compiler             = { path = "../../rust/moslayout-compiler" }
+mosstyle-compiler               = { path = "../../rust/mosstyle-compiler" }
+mosaic-package-artifact-builder = { path = "../../rust/mosaic-package-artifact-builder" }
+toml                            = "0.8"
+tempfile                        = "3"
 
 [[test]]
 name = "package_compiles"
 path = "tests/package_compiles.rs"
+
+[[test]]
+name = "native_complete_gate"
+path = "tests/native_complete_gate.rs"
