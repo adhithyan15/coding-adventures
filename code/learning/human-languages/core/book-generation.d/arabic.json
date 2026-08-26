@@ -231,7 +231,7 @@
       "language": "arabic",
       "chapter": 1,
       "output": "arabic/book/chapters/ch01-greetings.tex",
-      "omittedLessonIds": [
+      "embeddedLessonIds": [
         "AR-C01-salam",
         "AR-W00-sin-lam",
         "AR-W00-alif-mim-salam",
@@ -243,17 +243,15 @@
         "AR-W00-kaf-waw-alaykum",
         "AR-W00-full-greeting-recall",
         "AR-C01-practice"
-      ],
-      "omissionIssue": 13117
+      ]
     },
     {
       "language": "arabic",
       "chapter": 2,
       "output": "arabic/book/chapters/ch02-introductions.tex",
-      "omittedLessonIds": [
+      "embeddedLessonIds": [
         "AR-W06-sukun-shadda-tanwin"
-      ],
-      "omissionIssue": 13117
+      ]
     }
   ]
 }
