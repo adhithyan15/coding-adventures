@@ -735,6 +735,53 @@ const independentCheStrokes = (
   ] }] },
 ];
 
+const independentYehStrokes = (
+  upperLabel = "descend from the upper right through the independent S curve",
+  bowlLabel = "continue left around the below-baseline bowl and finish at its rising tip",
+): Stroke[] => [
+  {
+    segments: [
+      {
+        label: upperLabel,
+        path: [
+          { x: 548, y: 285 },
+          { x: 510, y: 288 },
+          { x: 472, y: 270 },
+          { x: 430, y: 238 },
+          { x: 395, y: 205 },
+          { x: 365, y: 168 },
+          { x: 345, y: 125 },
+          { x: 330, y: 82 },
+          { x: 340, y: 45 },
+          { x: 375, y: 25 },
+          { x: 420, y: 8 },
+          { x: 470, y: -2 },
+          { x: 520, y: -24 },
+          { x: 555, y: -55 },
+        ],
+      },
+      {
+        label: bowlLabel,
+        path: [
+          { x: 555, y: -55 },
+          { x: 535, y: -98 },
+          { x: 495, y: -145 },
+          { x: 445, y: -188 },
+          { x: 390, y: -218 },
+          { x: 325, y: -238 },
+          { x: 255, y: -238 },
+          { x: 190, y: -218 },
+          { x: 140, y: -180 },
+          { x: 105, y: -130 },
+          { x: 90, y: -78 },
+          { x: 94, y: -25 },
+          { x: 105, y: 28 },
+        ],
+      },
+    ],
+  },
+];
+
 export const DUCTUS: Record<string, LetterDuctus> = {
   // Sirgazil's 23-frame animation writes hiragana し in one uninterrupted
   // motion: descend from the top, turn around the broad lower curve, and sweep
@@ -11574,50 +11621,20 @@ export const DUCTUS: Record<string, LetterDuctus> = {
   [ductusKey("urdu-nastaliq", "ی")]: {
     script: "urdu-nastaliq",
     glyph: "ی",
-    strokes: [
-      {
-        segments: [
-          {
-            label: "descend from the upper right through the independent S curve",
-            path: [
-              { x: 548, y: 285 },
-              { x: 510, y: 288 },
-              { x: 472, y: 270 },
-              { x: 430, y: 238 },
-              { x: 395, y: 205 },
-              { x: 365, y: 168 },
-              { x: 345, y: 125 },
-              { x: 330, y: 82 },
-              { x: 340, y: 45 },
-              { x: 375, y: 25 },
-              { x: 420, y: 8 },
-              { x: 470, y: -2 },
-              { x: 520, y: -24 },
-              { x: 555, y: -55 },
-            ],
-          },
-          {
-            label: "continue left around the below-baseline bowl and finish at its rising tip",
-            path: [
-              { x: 555, y: -55 },
-              { x: 535, y: -98 },
-              { x: 495, y: -145 },
-              { x: 445, y: -188 },
-              { x: 390, y: -218 },
-              { x: 325, y: -238 },
-              { x: 255, y: -238 },
-              { x: 190, y: -218 },
-              { x: 140, y: -180 },
-              { x: 105, y: -130 },
-              { x: 90, y: -78 },
-              { x: 94, y: -25 },
-              { x: 105, y: 28 },
-            ],
-          },
-        ],
-      },
-    ],
+    strokes: independentYehStrokes(),
     source: urduAlphabetSource("ی"),
+  },
+  // Persian Online independently demonstrates the same dotless isolated body
+  // as one continuous S-shaped run. Share only the Noto fallback geometry;
+  // the scoped key keeps its Persian source separate from the Urdu record.
+  [ductusKey("perso-arabic", "ی")]: {
+    script: "perso-arabic",
+    glyph: "ی",
+    strokes: independentYehStrokes(
+      "sweep left from the upper right and descend through the S curve",
+      "continue around the below-baseline bowl and finish at its rising tip without lifting",
+    ),
+    source: persianAlphabetSource("ی"),
   },
   [ductusKey("urdu-nastaliq", "ے")]: {
     script: "urdu-nastaliq",

@@ -287,4 +287,18 @@ describe("shared Perso-Arabic letters retain script-owned provenance", () => {
     expect(urdu.strokeOrder).toHaveLength(3);
     expect(persian.strokeOrderSource?.url).not.toBe(urdu.strokeOrderSource?.url);
   });
+
+  it("keeps Persian and Urdu ی as separately sourced zero-lift independent forms", () => {
+    const persian = SCRIPTS.find((script) => script.script === "perso-arabic")!
+      .letters.find((entry) => entry.glyph === "ی")!;
+    const urdu = SCRIPTS.find((script) => script.script === "urdu-nastaliq")!
+      .letters.find((entry) => entry.glyph === "ی")!;
+    expect(persian.penLifts).toBe(0);
+    expect(urdu.penLifts).toBe(0);
+    expect(persian.strokeOrder).toHaveLength(2);
+    expect(urdu.strokeOrder).toHaveLength(2);
+    expect(persian.strokeOrder[0]).toMatch(/upper right.*S curve/i);
+    expect(urdu.strokeOrder[0]).toMatch(/upper right.*S curve/i);
+    expect(persian.strokeOrderSource?.url).not.toBe(urdu.strokeOrderSource?.url);
+  });
 });

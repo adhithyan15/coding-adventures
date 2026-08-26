@@ -248,6 +248,7 @@ const URDU_GHUNNA = DUCTUS[ductusKey("urdu-nastaliq", "ں")];
 const URDU_HE = DUCTUS[ductusKey("urdu-nastaliq", "ہ")];
 const URDU_DO_CHASHMI_HE = DUCTUS[ductusKey("urdu-nastaliq", "ھ")];
 const URDU_YE = DUCTUS[ductusKey("urdu-nastaliq", "ی")];
+const PERSIAN_YEH = DUCTUS[ductusKey("perso-arabic", "ی")];
 const URDU_BARI_YE = DUCTUS[ductusKey("urdu-nastaliq", "ے")];
 const KANNADA_A = DUCTUS[ductusKey("kannada", "ಅ")];
 const KANNADA_I = DUCTUS[ductusKey("kannada", "ಇ")];
@@ -3751,6 +3752,18 @@ describe("handwriting ductus", () => {
     expect(bowl.at(-1)!.y).toBeGreaterThan(bowl[0].y);
   });
 
+  it("Persian independent ی keeps the same Noto path with separate provenance", () => {
+    expect(PERSIAN_YEH.script).toBe("perso-arabic");
+    expect(penLifts(PERSIAN_YEH)).toBe(0);
+    expect(PERSIAN_YEH.strokes).toHaveLength(1);
+    expect(PERSIAN_YEH.strokes[0].segments).toHaveLength(2);
+    expect(PERSIAN_YEH.strokes.map((stroke) => stroke.segments.map((segment) => segment.path))).toEqual(
+      URDU_YE.strokes.map((stroke) => stroke.segments.map((segment) => segment.path)),
+    );
+    expect(PERSIAN_YEH.source.url).toContain("laits.utexas.edu/persian_grammar/video");
+    expect(PERSIAN_YEH.source.url).not.toBe(URDU_YE.source.url);
+  });
+
   it("Urdu independent ے folds its broad bowl back underneath without lifting", () => {
     expect(URDU_BARI_YE.script).toBe("urdu-nastaliq");
     expect(penLifts(URDU_BARI_YE)).toBe(0);
@@ -4406,6 +4419,9 @@ describe("handwriting ductus", () => {
     );
     expect(verifiedLetterFont("ഉ", MALAYALAM_U.source.url)).toBe(
       "_fonts/NotoSansMalayalam-Static.ttf",
+    );
+    expect(verifiedLetterFont("ی", PERSIAN_YEH.source.url)).toBe(
+      "_fonts/NotoNaskhArabic-Static.ttf",
     );
     expect(verifiedLetterFont("ൽ", MALAYALAM_CHILLU_L.source.url)).toBe(
       "_fonts/NotoSansMalayalam-Static.ttf",
@@ -7378,6 +7394,17 @@ describe("handwriting ductus", () => {
     );
     expect(src.variation).toMatch(
       /one uninterrupted dotless S-shaped body.*upper right.*descend through the upper curve.*sweep left around the below-baseline bowl.*rising tip.*without lifting.*independent and final chhoṭī ye.*ī sound.*initial and medial.*be-series tooth.*two dots below.*do not belong to the independent form.*Noto Naskh.*Nastaliq/i,
+    );
+  });
+
+  it("Persian independent ی traces to Persian Online's closing freehand demonstration", () => {
+    const src = PERSIAN_YEH.source;
+    expect(src.url).toBe(
+      "https://laits.utexas.edu/persian_grammar/video/gr/kooroshalphabet",
+    );
+    expect(src.citation).toMatch(/Persian Online.*closing ی.*02:55–02:58.*Texas/i);
+    expect(src.variation).toMatch(
+      /one uninterrupted dotless S-shaped run.*upper right.*sweep left.*central turn.*below-baseline bowl.*rising tip.*without lifting.*initial and medial.*be-series tooth.*Noto Naskh.*Persian-scoped.*Urdu/i,
     );
   });
 
