@@ -134,9 +134,16 @@ split directly (`cfg!(windows)`) rather than the old unconditional `true`.
 2. Walks every namespace dir and removes any stranded `.tmp`
    files — these are the result of crashes during steps 1–3
    above and don't represent committed state.
-3. Scans every committed record file to find the highest
-   revision number, then seeds the in-memory revision counter
-   so monotonic numbering survives process restart.
+   This is the whole of `initialize()`. It opens no record.
+
+   It used to do more: step 3 scanned every committed record to
+   find the highest revision and seeded the in-memory counter from
+   it, so numbering continued across a restart. That was removed,
+   because a floor derived from *surviving* records moves backwards
+   when the record holding it is deleted, and the next instance then
+   reissues revisions already handed out. Revisions now carry a
+   per-instance identifier instead, so uniqueness does not depend on
+   what is still on disk.
 
 ## Public API
 
@@ -168,7 +175,8 @@ impl StorageBackend for FsStorageBackend {
 |--------------------------------------------------------------------------------|------------------------------------------------------|---------------------------------------------------------------------|
 | Reader observes a half-applied put                                             | Atomic `rename(2)` after `fsync` of `<key>.tmp`      | covered structurally; specific test would require concurrent reader |
 | Crash mid-write strands `<key>.tmp`                                            | `initialize()` cleans `.tmp` files                   | `initialize_removes_stranded_tmp_files`                             |
-| Restart resets the revision counter and reuses revisions                       | `initialize()` scans for the highest existing revision and seeds | `restart_picks_up_revision_counter`                                 |
+| Restart or a second instance reuses a revision, so a stale CAS passes           | `rev-<instance>-<counter>`; uniqueness is structural, not recovered | `a_restart_never_reissues_a_revision_even_after_deletions`, `two_backends_over_one_root_cannot_mint_the_same_revision`, `a_stale_compare_and_swap_from_another_instance_is_rejected` |
+| Two processes both pass a CAS check and both write                             | **NOT DEFENDED.** `put` checks then renames with only a per-instance mutex between; needs `flock`/`O_EXCL` spanning check-through-rename | — |
 | Concurrent put-of-same-key races                                               | Per-process `Mutex` on writes                        | covered by trait contract; cross-process is out of scope            |
 | Wrong CAS revision overwrites                                                  | `if_revision` mismatch → `Conflict`                  | `put_with_wrong_if_revision_conflicts`, `put_with_if_revision_against_missing_record_conflicts`, `delete_with_wrong_if_revision_conflicts` |
 | Corrupted file contents (someone edits the bytes)                              | Magic + version check; `Backend` error on mismatch   | `corrupted_magic_returns_backend_error`, `truncated_file_returns_backend_error` |
