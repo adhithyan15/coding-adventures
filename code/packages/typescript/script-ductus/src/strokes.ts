@@ -980,6 +980,180 @@ export const DUCTUS: Record<string, LetterDuctus> = {
     ],
     source: japanese.letters.find((letter) => letter.glyph === "た")!.strokeOrderSource!,
   },
+  // Sirgazil's 35-frame animation writes ね in two pen-down runs: the short
+  // left vertical first, then the crossing hooked sweep and lower-right loop.
+  // These medians preserve that one-lift order while fitting the bundled Noto
+  // Sans JP print outline.
+  [ductusKey("japanese", "ね")]: {
+    script: "japanese",
+    glyph: "ね",
+    strokes: [
+      {
+        segments: [{
+          label: "descend through the short left vertical",
+          path: [
+            { x: 333, y: 775 },
+            { x: 331, y: 690 },
+            { x: 326, y: 590 },
+            { x: 320, y: 480 },
+            { x: 314, y: 370 },
+            { x: 307, y: 260 },
+            { x: 305, y: 150 },
+            { x: 305, y: 30 },
+          ],
+        }],
+      },
+      {
+        segments: [
+          {
+            label: "sweep left from the upper right across the vertical",
+            path: [
+              { x: 350, y: 600 },
+              { x: 300, y: 590 },
+              { x: 250, y: 582 },
+              { x: 200, y: 575 },
+              { x: 145, y: 568 },
+              { x: 100, y: 565 },
+            ],
+          },
+          {
+            label: "hook down along the diagonal and return to the crossing",
+            path: [
+              { x: 100, y: 565 },
+              { x: 170, y: 555 },
+              { x: 245, y: 505 },
+              { x: 290, y: 440 },
+              { x: 260, y: 360 },
+              { x: 210, y: 285 },
+              { x: 155, y: 205 },
+              { x: 90, y: 115 },
+              { x: 145, y: 190 },
+              { x: 205, y: 275 },
+              { x: 265, y: 360 },
+              { x: 320, y: 425 },
+            ],
+          },
+          {
+            label: "finish clockwise around the lower-right loop",
+            path: [
+              { x: 320, y: 425 },
+              { x: 390, y: 490 },
+              { x: 470, y: 545 },
+              { x: 560, y: 585 },
+              { x: 650, y: 615 },
+              { x: 720, y: 605 },
+              { x: 780, y: 550 },
+              { x: 820, y: 470 },
+              { x: 835, y: 380 },
+              { x: 835, y: 285 },
+              { x: 815, y: 205 },
+              { x: 770, y: 145 },
+              { x: 705, y: 105 },
+              { x: 635, y: 95 },
+              { x: 570, y: 115 },
+              { x: 525, y: 155 },
+              { x: 535, y: 205 },
+              { x: 585, y: 235 },
+              { x: 650, y: 240 },
+              { x: 725, y: 220 },
+              { x: 800, y: 185 },
+              { x: 875, y: 125 },
+              { x: 940, y: 65 },
+            ],
+          },
+        ],
+      },
+    ],
+    source: japanese.letters.find((letter) => letter.glyph === "ね")!.strokeOrderSource!,
+  },
+  // Sirgazil's 29-frame animation writes み in two pen-down runs: the top bar,
+  // diagonal, and lower-left loop first, then the high-right curve and outward
+  // sweep. These medians preserve that one-lift order in the bundled Noto Sans
+  // JP print outline.
+  [ductusKey("japanese", "み")]: {
+    script: "japanese",
+    glyph: "み",
+    strokes: [
+      {
+        segments: [
+          {
+            label: "draw the top bar from left to right",
+            path: [
+              { x: 235, y: 695 },
+              { x: 320, y: 695 },
+              { x: 410, y: 700 },
+              { x: 500, y: 705 },
+              { x: 575, y: 712 },
+            ],
+          },
+          {
+            label: "descend diagonally into the lower-left loop",
+            path: [
+              { x: 575, y: 712 },
+              { x: 535, y: 625 },
+              { x: 490, y: 525 },
+              { x: 445, y: 425 },
+              { x: 400, y: 325 },
+              { x: 355, y: 225 },
+              { x: 310, y: 145 },
+              { x: 260, y: 95 },
+              { x: 205, y: 75 },
+            ],
+          },
+          {
+            label: "continue around the loop and sweep out through the middle",
+            path: [
+              { x: 205, y: 75 },
+              { x: 145, y: 75 },
+              { x: 105, y: 115 },
+              { x: 105, y: 175 },
+              { x: 120, y: 235 },
+              { x: 165, y: 295 },
+              { x: 230, y: 345 },
+              { x: 310, y: 385 },
+              { x: 405, y: 405 },
+              { x: 500, y: 405 },
+              { x: 600, y: 380 },
+              { x: 700, y: 340 },
+              { x: 800, y: 295 },
+              { x: 900, y: 235 },
+            ],
+          },
+        ],
+      },
+      {
+        segments: [
+          {
+            label: "begin high on the right and curve down to the left",
+            path: [
+              { x: 805, y: 500 },
+              { x: 805, y: 420 },
+              { x: 790, y: 330 },
+              { x: 765, y: 240 },
+              { x: 730, y: 155 },
+              { x: 685, y: 85 },
+              { x: 625, y: 25 },
+              { x: 545, y: -25 },
+            ],
+          },
+          {
+            label: "turn upward at the finish",
+            path: [
+              { x: 545, y: -25 },
+              { x: 610, y: 35 },
+              { x: 670, y: 110 },
+              { x: 720, y: 185 },
+              { x: 765, y: 245 },
+              { x: 815, y: 260 },
+              { x: 875, y: 235 },
+              { x: 925, y: 205 },
+            ],
+          },
+        ],
+      },
+    ],
+    source: japanese.letters.find((letter) => letter.glyph === "み")!.strokeOrderSource!,
+  },
   // Sirgazil's つ animation supplies the one-run movement. Unicode identifies
   // U+3063 as small tsu; these medians preserve that movement while fitting it
   // explicitly to the bundled smaller Noto Sans JP glyph.

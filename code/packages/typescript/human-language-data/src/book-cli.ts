@@ -27,6 +27,7 @@ import {
   loadLessons,
   loadTrackChapters,
 } from "./loader.js";
+import type { ParsedLesson } from "./parse.js";
 import { summarizeModality } from "./modality.js";
 import {
   BACKMATTER_TEX,
@@ -88,6 +89,12 @@ interface ConfiguredHandwrittenBookChapter {
   language: string;
   chapter: number;
   output: string;
+  /** Canonical schema-v2 lessons visibly inserted into this protected body. */
+  embeddedLessonIds?: string[];
+  /** Known canonical schema-v2 lessons still absent from this protected body. */
+  omittedLessonIds?: string[];
+  /** Dependency-linked GitHub issue that owns every `omittedLessonIds` entry. */
+  omissionIssue?: number;
 }
 
 /** A handwritten declaration resolved against its canonical chapter capability. */
@@ -297,6 +304,94 @@ function readAuthoredFragment(root: string, path: string): string {
   return readFileSync(real, "utf8");
 }
 
+/**
+ * Fail closed when schema-v2 curriculum and a protected handwritten chapter diverge.
+ *
+ * Generated chapters derive their complete lesson inventory from the canonical corpus.
+ * Handwritten chapters cannot do that without overwriting authored prose, so their
+ * manifest entry must instead partition every schema-v2 lesson into one of two explicit
+ * states:
+ *
+ * - `embeddedLessonIds`: learner-visible in the body, proven by a canonical insertion
+ *   marker and lesson label;
+ * - `omittedLessonIds`: known migration debt owned by a dependency-linked issue.
+ *
+ * The partition is exact. A new lesson therefore cannot appear only in narration,
+ * hashes, activities, or an answer key while `check:books` stays green.
+ */
+function assertHandwrittenLessonCoverageFrom(
+  root: string,
+  config: BookGenerationConfig,
+  lessons: ParsedLesson[],
+): void {
+  const byChapter = new Map<string, ParsedLesson[]>();
+  for (const lesson of lessons) {
+    if (lesson.frontmatter.schema_version !== "2") continue;
+    const chapter = Number(lesson.frontmatter.chapter);
+    if (!Number.isInteger(chapter)) continue;
+    const key = `${lesson.language}#${chapter}`;
+    const entries = byChapter.get(key) ?? [];
+    entries.push(lesson);
+    byChapter.set(key, entries);
+  }
+
+  for (const entry of config.handwritten ?? []) {
+    const key = `${entry.language}#${entry.chapter}`;
+    const canonical = byChapter.get(key) ?? [];
+    const canonicalIds = new Set(canonical.map((lesson) => lesson.realization.lessonId));
+    const embedded = entry.embeddedLessonIds ?? [];
+    const omitted = entry.omittedLessonIds ?? [];
+    const declared = [...embedded, ...omitted];
+
+    if (new Set(declared).size !== declared.length) {
+      throw new Error(`${entry.language} chapter ${entry.chapter}: handwritten lesson declarations contain duplicates`);
+    }
+    for (const lessonId of declared) {
+      if (!canonicalIds.has(lessonId)) {
+        throw new Error(
+          `${entry.language} chapter ${entry.chapter}: handwritten declaration '${lessonId}' is not a canonical schema-v2 lesson in this chapter`,
+        );
+      }
+    }
+    const undeclared = [...canonicalIds].filter((lessonId) => !declared.includes(lessonId));
+    if (undeclared.length > 0) {
+      throw new Error(
+        `${entry.language} chapter ${entry.chapter}: canonical schema-v2 lesson(s) missing from handwritten coverage ledger: ${undeclared.sort().join(", ")}`,
+      );
+    }
+    if (omitted.length > 0 && (!Number.isInteger(entry.omissionIssue) || entry.omissionIssue! < 1)) {
+      throw new Error(
+        `${entry.language} chapter ${entry.chapter}: omitted handwritten lessons require a positive omissionIssue`,
+      );
+    }
+    if (omitted.length === 0 && entry.omissionIssue !== undefined) {
+      throw new Error(
+        `${entry.language} chapter ${entry.chapter}: omissionIssue is present but omittedLessonIds is empty`,
+      );
+    }
+    if (embedded.length === 0) continue;
+
+    const tex = readAuthoredFragment(root, safeOutput(root, entry.output));
+    for (const lessonId of embedded) {
+      if (!tex.includes(`% canonical-insertion: ${lessonId}`)) {
+        throw new Error(
+          `${entry.output}: embedded lesson '${lessonId}' lacks a canonical-insertion marker`,
+        );
+      }
+      if (!tex.includes(`\\label{lesson:${lessonId}}`)) {
+        throw new Error(
+          `${entry.output}: embedded lesson '${lessonId}' lacks \\label{lesson:${lessonId}}`,
+        );
+      }
+    }
+  }
+}
+
+/** Public audit entry point used by focused tests and maintenance tooling. */
+export function assertHandwrittenLessonCoverage(root = defaultCurriculumRoot()): void {
+  assertHandwrittenLessonCoverageFrom(root, loadConfig(root), loadLessons(root));
+}
+
 export function generatedBookOutputs(root = defaultCurriculumRoot()): Map<string, string> {
   const capabilities = chapterCapabilityIndex(root);
   const config = loadConfig(root);
@@ -317,6 +412,7 @@ export function generatedBookOutputs(root = defaultCurriculumRoot()): Map<string
     throw new Error("book-generation.json must declare an HTTP(S) sourceBaseUrl");
   }
   const lessons = loadLessons(root);
+  assertHandwrittenLessonCoverageFrom(root, config, lessons);
   const policy = loadChapterPolicy(root);
   const modality = summarizeModality(lessons, {
     maxLinearisableTableColumns: policy.maxLinearisableTableColumns,
