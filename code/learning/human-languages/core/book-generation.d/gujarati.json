@@ -149,6 +149,13 @@
       "output": "gujarati/book/chapters/ch18-r4-wellbeing-farewells.tex",
       "unicodeScript": "Gujarati",
       "scriptCommand": "gu"
+    },
+    {
+      "language": "gujarati",
+      "chapter": 19,
+      "output": "gujarati/book/chapters/ch19-doorway-r4.tex",
+      "unicodeScript": "Gujarati",
+      "scriptCommand": "gu"
     }
   ]
 }

@@ -7,29 +7,29 @@
   "policy": {
     "maxLinearisableTableColumns": 3
   },
-  "sourceHash": "fnv1a64:a8fe6e2b8bc939a5",
+  "sourceHash": "fnv1a64:2fcf5141e4767f4c",
   "summary": {
-    "totalLessons": 114,
+    "totalLessons": 115,
     "voice": 15,
     "sight": 43,
-    "pen": 56,
+    "pen": 57,
     "drivableLessons": 15,
     "drivablePercent": 13,
     "trackCount": 1,
-    "chapterCount": 18,
+    "chapterCount": 19,
     "drivablePrefixTotal": 9,
     "fullyDrivableChapters": 2,
-    "unstartableChapters": 15,
+    "unstartableChapters": 16,
     "overriddenLessons": 0,
     "lessonsWithoutChapter": 0
   },
   "tracks": [
     {
       "language": "gujarati",
-      "lessonCount": 114,
+      "lessonCount": 115,
       "voice": 15,
       "sight": 43,
-      "pen": 56,
+      "pen": 57,
       "drivablePercent": 13,
       "drivablePrefixTotal": 9,
       "modalities": [
@@ -313,6 +313,21 @@
           ],
           "drivablePrefix": 0,
           "firstNonVoiceLesson": "GU-R18-how-are-you-r4",
+          "drivable": false,
+          "drivableLessonIds": []
+        },
+        {
+          "chapter": 19,
+          "lessonCount": 1,
+          "voice": 0,
+          "sight": 0,
+          "pen": 1,
+          "modalities": [
+            "sight",
+            "pen"
+          ],
+          "drivablePrefix": 0,
+          "firstNonVoiceLesson": "GU-R19-doorway-nine-r4",
           "drivable": false,
           "drivableLessonIds": []
         }
@@ -2832,6 +2847,29 @@
       "detachableSegments": [
         "Writing — from sound"
       ]
+    },
+    {
+      "id": "GU-R19-doorway-nine-r4",
+      "language": "gujarati",
+      "chapter": 19,
+      "sequence": 850,
+      "modality": "pen",
+      "derived": "pen",
+      "drivable": false,
+      "reasons": [
+        "writing-type",
+        "writing-block"
+      ],
+      "coreModality": "pen",
+      "coreReasons": [
+        "writing-type"
+      ],
+      "coreDrivable": false,
+      "sourceHash": "fnv1a64:ea6990a9a0090da7",
+      "detachableSegments": [
+        "Writing — from sound"
+      ],
+      "delivery": "script"
     }
   ],
   "findings": []
