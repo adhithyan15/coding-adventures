@@ -8559,6 +8559,97 @@ branch and prior PR were absent, and all eight other open PRs had zero exact
 overlap. GitHub reports the PR non-draft and mergeable with checks queued or in
 progress, so auto-merge remains disabled while the loop monitors CI.
 
+## Post-#13013 Refresh and .NET Canonical-CBOR Selection
+
+Final reviewed head `cef8a8de39f067dd1d1ee3c95636fe3903e16950`
+completed all 40 reported checks with 33 successes and seven expected skips.
+GitHub reported the branch clean and mergeable, so the loop enabled squash
+auto-merge; GitHub merged PR #13013 as
+`1d0c64a9ad9e0e8d9652d605d731de823b21fcc1` at 2026-08-26T11:06:51Z
+without a manual merge command. The clean merged-head worktree was then
+removed, reclaiming 724,619,264 bytes while preserving active, dirty,
+detached, open-PR, and ambiguous checkouts.
+
+The fresh exact-main schema-3 report remains collision-clean at 15 established
+lanes and 1,373 implementation identities, while the merged JVM packages raise
+the implementation slot count from 4,566 to 4,568. The report contains 1,412
+all-reported identities. The breadth bands are now 175 identities in ten to
+fifteen lanes with 276 gaps, 122 in five to nine with 926 gaps, 167 in two to
+four with 2,099 gaps, and 909 singletons with 12,726 gaps, including 720 Rust
+singletons. Java reports 131 packages and Kotlin 130. Canonical collisions and
+unknown language buckets remain zero. OCaml remains correctly emerging at zero
+packages and therefore does not yet widen the established-language
+denominator. The reporter's ten focused tests pass on the exact merge.
+
+The ownership refresh classifies every live head before selection. PR #13014
+fits `storage-fs-persistent-revision-floor-native-authority-review`; #13017 is
+human-language curriculum and generated-book work; #13018 remains inside the
+script-ductus, curriculum, `human-language-data`, and Language Ladder owners;
+and #13011 remains inside the Mosaic generated-wrapper review. The older
+#12165, #12162, #12149, and #7821 remain within their registered Chief,
+build-file/build-tool, Swift, or dependency owners.
+
+Open PR #13015 exposes one newly unowned portable family. Its Rust W25 slice
+adds memory64 limits, encodings, validation, execution, runtime, WAT/WAST, and
+official-corpus evidence across existing package identities. The new
+`wasm-memory64-language-neutral-conformance` owner therefore binds exact 32-
+versus 64-bit memory index behavior, `u64` limits and memarg offsets, binary
+flags, scalar load/store plus size/grow stack typing, active-data offsets,
+checked effective-address arithmetic, `min <= max`, the `2^48` specification
+ceiling, a bounded practical allocation ceiling, stable errors, and resource
+rejection. Its selection-blocked
+`wasm-memory64-established-lane-parity` child requires decomposition after the
+neutral corpus closes. The pair reuses existing parser, portable-conformance,
+official-corpus, provenance, fetch, NOTICE, baseline, and native-host owners;
+table64 and imports, bulk memory, SIMD, atomics, and the wider `*64.wast` family
+remain explicitly outside this first slice.
+
+The dependency/leverage pass selects `canonical-cbor-dotnet-lane-parity` on
+branch `codex/canonical-cbor-dotnet-lane-parity`. The CBR01 neutral corpus and
+independent Rust, C, C++, Java, and Kotlin references are merged. The paired
+.NET tranche is the strongest collision-safe canonical-CBOR unit because one
+shared toolchain review closes two established lanes at once and directly
+advances the durable all-language denominator. All nine live PRs have zero
+exact overlap with the expected new C# and F# package directories or parity
+state and roadmap. The target local branch, remote branch, and prior PR were
+absent before the fresh exact-main branch was created. The extra-CI corpus and
+strategic OCaml process-free core remain collision-unsafe while PRs #12162 and
+#12149 own their required Go validator and entry-point surfaces. After the W25
+registration and .NET selection, the graph contains 525 unique owners and 786
+complete acyclic edges: 151 merged, 373 pending, and exactly one in-progress
+owner, with no active parity PR.
+
+The selected implementation now adds independent dependency-free C# and F#
+packages for the complete closed `canonical-cbor-v1` corpus. Each native engine
+supports the full CBR01 data model, shortest-form definite decoding, exact
+single-item consumption, canonical length-first unsigned map-key ordering,
+duplicate and out-of-order key rejection, strict Unicode, bounded nesting and
+encoder output, defensive ownership, stable payload-blind errors, and
+transactional `MemoryStream` append at destination length. The F# public
+facade exposes safe typed views over its private value union. Neither engine
+shares production code or adds filesystem, process, environment, credential,
+clock, random, or network authority.
+
+All 55 neutral cases plus adversarial direct probes pass in both lanes through
+the literal Unix and Windows BUILD fronts: eight tests per package. C# reaches
+98.19% line, 87.15% branch, and 100% method coverage; F# reaches 98.08% line,
+95.47% branch, and 100% method coverage. Warning-free .NET 9 release builds and
+release packs, capability and OCaml-lock suites, the Go build tool's tests,
+vet, module verification, trimpath build, full repository plan, and forced C#
+and F# dry plans all pass. The forced plans report 201 and 200 WOULD-BUILD
+packages respectively. Reporter, collision, strict-JSON, dependency,
+credential, production-authority, formatting, packaging, diff, and independent
+security reviews are clean. The branch inventory therefore adds exactly the
+two selected slots: 1,373 identities, 4,570 slots, 1,412 all-reported
+identities, breadth bands 175/276, 123/936, 166/2,087, and 909/12,726, 720 Rust
+singletons, zero collisions, and zero unknown buckets. Global `last_inventory`
+remains pinned to the exact merged main baseline until publication merges.
+The three branch commits then rebased conflict-free over all intervening W25
+memory64, curriculum, Java semantic-IR, storage-fs, and HTML-parser changes
+through exact `origin/main`
+`bb6ae0c70e8000a28b9eaa0d6fc06c821bfbb43b`; all six current open PRs remain
+exact-path disjoint from the selected package, state, and roadmap surfaces.
+
 ## Autonomous Loop Protocol
 
 Only one parity PR should be active at a time.
