@@ -138,6 +138,57 @@ Loops are *statements*, not expressions — they have no value.  The
 frontend uses an explicit `NilLit` as the value of a block whose final
 content is a loop.
 
+### Loop control (addendum)
+
+```text
+Stmt::Break { span: Span }
+Stmt::Continue { span: Span }
+```
+
+Bare (unlabeled) only — SIR v0 has no loop-label vocabulary, so a source
+language's labeled `break`/`continue` (Java `break outer;`) has no
+lowering yet; a frontend encountering one rejects cleanly rather than
+mis-targeting the wrong loop. Gated by `Feature::LoopControl`, deliberately
+split from `Feature::Loops` (every existing backend already declares
+`Loops` for plain `While`/`ForRange`/`ForEach`, and none of them implement
+`break`/`continue` emission yet — folding this into `Loops` would either
+force every backend to gain, or fake, that support overnight, or silently
+redefine what `Loops` has always promised).
+
+**Validator enforcement**: a `Break`/`Continue` with no enclosing loop at
+all is an error (`"break"/"continue" outside a loop`). More subtly, one
+whose *nearest* enclosing loop is a `ForRange` is *also* an error, even
+though `ForRange` shares `Feature::Loops` with `While`/`ForEach` — this
+restriction exists because, as implemented today, several backends lower
+`ForRange` to a `while` loop with the step increment appended *after* the
+body (so a bare `continue` would skip it — `semantic-ir-to-{c,rust,
+typescript,javascript}`), while `semantic-ir-to-ruby` instead hoists the
+body into a `->(){ }` lambda where a bare `break` doesn't propagate to the
+enclosing loop at all (Ruby `break` inside a `lambda`, unlike inside a
+`proc`/block, only returns from that lambda's own `.call`). Those two
+failure modes don't even agree on which statement is unsafe, so the
+validator rejects *both* uniformly whenever the nearest loop is a
+`ForRange`, rather than making its own correctness depend on a specific
+backend's lowering strategy. A `Break`/`Continue` nested inside a `While`/
+`ForEach` that itself sits inside an outer `ForRange` is fine — only the
+*nearest* enclosing loop's kind matters (`while (...) { for i in 0..10 {
+break; } }`-shaped nesting is unaffected).
+
+Only the syntactic nearest-enclosing-loop matters, not a lexically-outer
+one across a statement-flow boundary: a `Break`/`Continue` inside a
+`Stmt::MethodDef` body or a `MakeClosure`-hoisted top-level `Function`
+never resolves against a loop the *declaration* happens to be nested in —
+each of those bodies is validated with its own fresh loop-tracking state.
+
+**Backend status (as of this addendum)**: no backend accepts
+`Feature::LoopControl` yet — this addendum lands the IR/validator surface
+only (mirrors SIR29's own Slice 0), so every backend's `ACCEPTED_FEATURES`
+list omits it and a module using `Break`/`Continue` is cleanly rejected at
+the capability check on every target. Real per-backend emission (a
+mechanical `break;`/`continue;` on every language surveyed here, all of
+which have a native equivalent) is a follow-up, per-backend, once a real
+consumer frontend exists.
+
 ### Sequences
 
 ```text

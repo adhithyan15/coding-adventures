@@ -554,6 +554,10 @@ fn block_references_any_name(block: &Block, names: &HashSet<String>) -> bool {
                     }
                 }
             }
+            // SIR16 addendum compile-compat stub (never emitted by this
+            // frontend today): `break`/`continue` carry no `Expr` at all,
+            // so there is nothing to scan for a `VarRef`.
+            Stmt::Break { .. } | Stmt::Continue { .. } => {}
         }
     }
     false
@@ -4058,6 +4062,10 @@ impl Lowerer {
             | Stmt::NominalClassDef { .. }
             | Stmt::InterfaceDef { .. }
             | Stmt::MethodDef { .. } => false,
+            // SIR16 addendum compile-compat stub: this frontend never
+            // emits `break`/`continue` today, and neither carries a child
+            // `Expr` to rewrite a `yield` inside of.
+            Stmt::Break { .. } | Stmt::Continue { .. } => false,
         }
     }
 
@@ -4490,6 +4498,9 @@ impl Lowerer {
             | Stmt::NominalClassDef { .. }
             | Stmt::InterfaceDef { .. }
             | Stmt::MethodDef { .. } => {}
+            // SIR16 addendum compile-compat stub: this frontend never
+            // emits `break`/`continue` today; neither binds a name.
+            Stmt::Break { .. } | Stmt::Continue { .. } => {}
         }
     }
 
@@ -4671,6 +4682,10 @@ impl Lowerer {
             | Stmt::NominalClassDef { .. }
             | Stmt::InterfaceDef { .. }
             | Stmt::MethodDef { .. } => {}
+            // SIR16 addendum compile-compat stub: this frontend never
+            // emits `break`/`continue` today; neither carries a child
+            // `Expr` to recapture a free read inside of.
+            Stmt::Break { .. } | Stmt::Continue { .. } => {}
         }
     }
 
@@ -4896,6 +4911,10 @@ impl Lowerer {
                     Self::normalize_calls_in_stmts(eb, ctx);
                 }
             }
+            // SIR16 addendum compile-compat stub: this frontend never
+            // emits `break`/`continue` today; neither carries a child
+            // `Expr` with a call to normalize.
+            Stmt::Break { .. } | Stmt::Continue { .. } => {}
         }
     }
 
@@ -5275,6 +5294,9 @@ impl Lowerer {
                     Self::collect_bound_names_stmts(eb, out);
                 }
             }
+            // SIR16 addendum compile-compat stub: this frontend never
+            // emits `break`/`continue` today; neither binds a name.
+            Stmt::Break { .. } | Stmt::Continue { .. } => {}
         }
     }
 

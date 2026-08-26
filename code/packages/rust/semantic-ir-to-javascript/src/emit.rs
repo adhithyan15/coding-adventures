@@ -828,6 +828,15 @@ fn emit_stmt(out: &mut String, s: &Stmt, indent: usize) {
                 "javascript backend reached a SIR29 nominal-OOP node at {span} — capability check should have rejected it"
             );
         }
+        // SIR16 addendum: `LoopControl` not accepted by this backend yet
+        // — unreachable in a validated module (capability check rejects
+        // it). A future PR wiring this backend to `Feature::LoopControl`
+        // would replace this arm with real `break;`/`continue;` emission.
+        Stmt::Break { span, .. } | Stmt::Continue { span, .. } => {
+            panic!(
+                "javascript backend reached a Stmt::Break/Continue node at {span} — capability check should have rejected it"
+            );
+        }
     }
 }
 

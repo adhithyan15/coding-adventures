@@ -626,6 +626,12 @@ fn const_ref_in_stmt(s: &Stmt) -> Option<BackendError> {
             }
             const_ref_in_expr(value)
         }
+        // SIR16 addendum: `Feature::LoopControl` is not in this backend's
+        // accepted-features list, so `check_module` rejects any module
+        // using these before this analysis ever runs — same "rejected at
+        // the capability check" treatment as the SIR29 arm above. Neither
+        // statement carries an `Expr` to scan for a `Const` reference.
+        Stmt::Break { .. } | Stmt::Continue { .. } => None,
     }
 }
 

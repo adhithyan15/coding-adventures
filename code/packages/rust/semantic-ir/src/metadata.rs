@@ -68,7 +68,18 @@ use std::fmt;
 ///   `java-to-semantic-ir` (not yet started) is the first planned
 ///   consumer.  See
 ///   [SIR29](../../../../specs/SIR29-nominal-static-oop-profile.md).
-pub const CURRENT_SIR_VERSION: &str = "5";
+/// - `"6"` — SIR16 addendum: bare loop-control statements. Two new
+///   `Stmt` variants (`Break`/`Continue`) and one new `Feature` flag
+///   (`LoopControl`). Purely additive; every existing backend's
+///   exhaustive `Stmt` match gains a compile-forced reject arm (no
+///   backend accepts `Feature::LoopControl` yet — see each backend's own
+///   `ACCEPTED_FEATURES`). Same "adding a feature is a v.bump" policy
+///   bumps `"5"` → `"6"`. No frontend crate emits these yet;
+///   `java-to-semantic-ir` is the first planned consumer (it currently
+///   has no way to lower a Java loop containing `break`/`continue` at
+///   all). See the "Loop control" section of
+///   [SIR16](../../../../specs/SIR16-ir-extensions-for-python-and-javascript.md).
+pub const CURRENT_SIR_VERSION: &str = "6";
 
 /// Advisory metadata.  All fields are optional.
 #[derive(Debug, Clone, PartialEq, Eq, Default)]
@@ -159,7 +170,7 @@ mod tests {
             .with_sir_version(CURRENT_SIR_VERSION);
         assert_eq!(m.source_language.as_deref(), Some("twig"));
         assert_eq!(m.source_version.as_deref(), Some("0.7"));
-        assert_eq!(m.sir_version.as_deref(), Some("5"));
+        assert_eq!(m.sir_version.as_deref(), Some("6"));
         assert!(!m.is_empty());
     }
 
@@ -184,13 +195,12 @@ mod tests {
     }
 
     #[test]
-    fn current_sir_version_is_five() {
-        // Bumped 4 → 5 in SIR29 (the nominal/static-dispatch OOP
-        // profile: three new `Stmt` variants, one new `Expr` variant,
-        // two new `SirType` variants, four new `Feature` flags — new
-        // SIR text tokens), following the same "adding a feature is a
-        // v.bump" policy that moved 3 → 4 in the SIR22 addendum, 2 → 3
-        // in SIR23, and 1 → 2 in SIR22.
-        assert_eq!(CURRENT_SIR_VERSION, "5");
+    fn current_sir_version_is_six() {
+        // Bumped 5 → 6 in the SIR16 addendum (bare loop-control
+        // statements: two new `Stmt` variants, one new `Feature` flag —
+        // new SIR text tokens), following the same "adding a feature is
+        // a v.bump" policy that moved 4 → 5 in SIR29, 3 → 4 in the SIR22
+        // addendum, 2 → 3 in SIR23, and 1 → 2 in SIR22.
+        assert_eq!(CURRENT_SIR_VERSION, "6");
     }
 }
