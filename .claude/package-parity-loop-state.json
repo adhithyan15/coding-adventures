@@ -11,14 +11,9 @@
     "selection_rule": "host-security, credential, native-runtime, and external-approval work may inform classification but is never selected by this parity loop",
     "excluded_delivery_classes": ["onvif", "host-security-hardening", "native-runtime", "external-approval"]
   },
-  "active_pr": {
-    "number": 12958,
-    "url": "https://github.com/adhithyan15/coding-adventures/pull/12958",
-    "branch": "codex/build-tool-perl-orphan-crate-validation-conformance",
-    "status": "open"
-  },
+  "active_pr": null,
   "last_inventory": {
-    "revision": "53c7c6054f9cd93378726f2348a92ed6514c5948",
+    "revision": "385bf43d85a20719469ac1c1d9daebed1590533e",
     "schema_version": 3,
     "established_languages": 15,
     "implementation_identities": 1373,
@@ -4917,13 +4912,15 @@
     {
       "id": "build-tool-haskell-orphan-crate-validation-conformance",
       "title": "Make the Haskell build tool consume orphan-crate validation",
-      "status": "pending",
+      "status": "in-progress",
       "depends_on": [
         "build-tool-orphan-crate-validation-corpus",
         "build-tool-haskell-tracked-artifact-validation-conformance"
       ],
-      "branch": null,
+      "branch": "codex/build-tool-haskell-orphan-crate-validation-conformance",
       "pr_number": null,
+      "selection_revision": "385bf43d85a20719469ac1c1d9daebed1590533e",
+      "selection_notes": "Selected only after PR #12958 completed all 40 terminal acceptable checks, GitHub reported the reviewed branch clean and mergeable, and squash auto-merge merged reviewed head e6f2d31009ce4e0aae639a5951791853f3b0c93c as a0cb099a58f58ee619e909fed6a42720a704d21f at 2026-08-26T06:43:58Z without a manual merge command. The collision-checked exact-main schema-3 report at 385bf43d85a20719469ac1c1d9daebed1590533e remains 15 established lanes, 1,373 implementation identities, 4,566 package slots, 175 high-consensus packages with 276 gaps, 122 identities in five to nine lanes with 926 gaps, 166 identities in two to four lanes with 2,087 gaps, 910 singletons with 12,740 gaps, 721 Rust singletons, zero canonical collisions, and zero unknown buckets; OCaml remains correctly emerging at zero packages. Merged PRs #12954 through #12957 remain under the registered W22, ALGOL IIR, Mermaid Gantt, and script-ductus owners. Merged PR #12959 extends the existing deterministic HTML frontend owner with unmatched disclosure-end diagnostic positioning and adds no package identity or BUILD/build-tool marker. No newly unowned eligible portable gap is exposed. Both Haskell prerequisites are merged. Haskell is the widest remaining orphan consumer at 204 reported packages versus Swift at 161, and each advances the same completion umbrella. All six live PRs have zero exact overlap with the expected Haskell source, test, documentation, state, and roadmap paths; the target local branch, remote branch, and prior PR were absent before creating the fresh exact-main worktree. OCaml remains collision-unsafe while PRs #12149 and #12162 own required Go entry-point and validator surfaces.",
       "notes": "Consume the closed process-free orphan-crate snapshot and diagnostics in the Haskell engine without adding filesystem enumeration or process authority."
     },
     {
@@ -4958,7 +4955,7 @@
     {
       "id": "build-tool-perl-orphan-crate-validation-conformance",
       "title": "Make the Perl build tool consume orphan-crate validation",
-      "status": "pr-open",
+      "status": "merged",
       "depends_on": [
         "build-tool-orphan-crate-validation-corpus",
         "build-tool-perl-tracked-artifact-validation-conformance"
@@ -4978,7 +4975,11 @@
       "final_review_revision": "ce9b6c85715a1ee268020477096d718a9f8093c0",
       "validation_notes": "The Perl engine now exposes one pure hash/array-in, hash/array-out orphan-crate snapshot validator and consumes all four language-neutral fixtures. It implements exact artifact filtering; component-aware ancestor BUILD coverage with fixed filename rank and nearer-empty-BUILD nonmasking; NFC portable paths; Unicode 17 full-fold duplicate identities and uppercase Windows reserved names; exemption precedence, staleness, and active PENDING counts; Unicode-scalar code/path sorting; Python-compatible ASCII canonical detail ordering; JSON booleans; and fixed hostile-input diagnostics without filesystem, Git, process, environment, network, credential, or link authority. Test-first runs captured both the missing adapter and the later malformed-reason/non-scalar fail-open cases before implementation. The completed pinned Strawberry Perl 5.38.2 suite passes 14 files and 136 tests; Validator.pm reaches 100% statement and subroutine, 78.3% branch, 63.3% condition, and 83.5% total coverage. Literal dependency installation succeeds, the generic test front passes, and the exact Windows BUILD command emits its intentional fork-unavailable skip. Severity-5 Perl::Critic leaves the selected test clean and reports the same nine inherited Validator.pm findings as exact main, with only line shifts. The neutral corpus validates 111 cases and 269 files; all 201 build-tool conformance tests pass with 23 expected Windows skips; and the execution contract validates. The canonical Go tool passes module verification, all tests, vet, and trimpath compilation; a real forced Perl dry plan evaluates 45 Starlark BUILD files, discovers 258 packages, preserves the five-entry orphan ledger, and reports all 258 WOULD-BUILD. The collision-checked schema-3 inventory remains 15 established lanes, 1,373 implementation identities, 4,566 package slots, zero collisions, and zero unknown buckets; OCaml remains correctly emerging at zero packages. The 517-owner, 778-edge state graph is unique, dependency-complete, acyclic, and free of merged-to-unmerged edges with 147 merged, 369 pending, and exactly one pr-open owner. The exact six-path diff has no workflow, dependency, lock, BUILD metadata, credential, or generated-artifact delta; the CPAN dependency audit exposes only inherited runtime/core advisories and JSON::PP has no advisory record. Independent exact-head security/authority/supply-chain and contract/fixture reviews found no remaining findings after the malformed-reason and Unicode-scalar fixes.",
       "rebase_notes": "Rebased four times without conflict before publication, most recently onto exact origin/main 53c7c6054f9cd93378726f2348a92ed6514c5948. Merged PRs #12944 and #12949 extend the shared script-ductus authored-data owner; #12946 and #12951 extend the deterministic HTML frontend owner; #12947 supplies the first JavaScript-emitter child under the SIR16 consumer umbrella; #12948 is Language Ladder program-only batching; #12917 extends the existing TypeScript human-language-data singleton classification plus its separate generator-authority boundary; #12952 extends the Mermaid Gantt neutral/parity owners; #12950 extends the ALGOL IIR neutral/parity owners; #12945 is Chinese curriculum/generated data without new source behavior; and merged PR #12943 is Spanish A1 curriculum/generated human-language-data without new package behavior. PR #12949 specifically adds sourced Malayalam chillu RR as one zero-lift three-movement arch, loop, and hook run across the existing curriculum, human-language-data, script-ductus, and Language Ladder consumers. Open PR #12955 remains inside the ALGOL IIR neutral/parity owners; #12954 exposes newly registered W22 neutral and applicable-lane catch-matching owners plus existing WAST, conformance-corpus, and host-authority surfaces; #12956 remains in the shared script-ductus authored-data owner; and #12957 remains in the Mermaid Gantt neutral/parity owners. None changes a selected Perl path, package identity, BUILD marker, build-tool marker, or dependency surface. All eight then-live open PRs had zero exact overlap with the six-path tranche before PR #12958 opened. The post-rebase schema-3 inventory remains 15 lanes, 1,373 identities, 4,566 slots, zero collisions, and zero unknown buckets.",
-      "publication_notes": "Opened ready-for-review PR #12958 from exact independently reviewed head ce9b6c85715a1ee268020477096d718a9f8093c0 after a normal first push from exact origin/main 53c7c6054f9cd93378726f2348a92ed6514c5948. Immediately before publication, all six changed paths had zero exact overlap across eight then-live open PRs, the target remote branch and prior PR were absent, and two independent exact-head audits found no publication or security blocker. GitHub reports the PR non-draft, open, and mergeable; required checks are queued or in progress, merge state is blocked, and auto-merge remains disabled until every required check is terminal and acceptable and GitHub reports no conflict."
+      "publication_notes": "Opened ready-for-review PR #12958 from exact independently reviewed head ce9b6c85715a1ee268020477096d718a9f8093c0 after a normal first push from exact origin/main 53c7c6054f9cd93378726f2348a92ed6514c5948. Immediately before publication, all six changed paths had zero exact overlap across eight then-live open PRs, the target remote branch and prior PR were absent, and two independent exact-head audits found no publication or security blocker. GitHub reported the PR non-draft, open, and mergeable while required checks ran; auto-merge remained disabled until all checks were terminal and acceptable and GitHub reported no conflict.",
+      "final_revision": "e6f2d31009ce4e0aae639a5951791853f3b0c93c",
+      "merge_revision": "a0cb099a58f58ee619e909fed6a42720a704d21f",
+      "merged_at": "2026-08-26T06:43:58Z",
+      "merge_notes": "All 40 reported checks reached terminal acceptable conclusions: 33 succeeded and seven were intentionally skipped. GitHub reported the branch clean and mergeable; the loop enabled squash auto-merge, and GitHub merged PR #12958 without a manual merge command."
     },
     {
       "id": "build-tool-python-orphan-crate-validation-conformance",

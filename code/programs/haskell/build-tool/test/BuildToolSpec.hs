@@ -3,6 +3,7 @@
 module BuildToolSpec (buildToolSpec) where
 
 import Control.Monad (forM_)
+import Data.Char (chr)
 import Data.Aeson
     ( FromJSON(..)
     , Object
@@ -26,6 +27,11 @@ data TrackedArtifactFixture = TrackedArtifactFixture
     , fixtureDiagnostics :: [TrackedArtifactDiagnostic]
     }
 
+data OrphanFixture = OrphanFixture
+    { orphanFixtureSnapshot :: OrphanSnapshot
+    , orphanFixtureResult :: OrphanValidationResult
+    }
+
 instance FromJSON TrackedArtifactFixture where
     parseJSON = withObject "tracked artifact fixture" $ \object -> do
         input <- object .: "input" :: Parser Object
@@ -38,6 +44,31 @@ instance FromJSON TrackedArtifactFixture where
             <$> snapshot .: "unicode_version"
             <*> mapM parseTrackedEntry entryValues
             <*> mapM parseTrackedDiagnostic diagnosticValues
+
+instance FromJSON OrphanFixture where
+    parseJSON = withObject "orphan fixture" $ \object -> do
+        input <- object .: "input" :: Parser Object
+        options <- input .: "options" :: Parser Object
+        snapshot <- options .: "orphan_snapshot" :: Parser Object
+        expected <- object .: "expected" :: Parser Object
+        expectedResult <- expected .: "result" :: Parser Object
+        manifestValues <- snapshot .: "manifests" :: Parser [Value]
+        buildFileValues <- snapshot .: "build_files" :: Parser [Value]
+        exemptionValues <- snapshot .: "exemptions" :: Parser [Value]
+        diagnosticValues <- expected .: "diagnostics" :: Parser [Value]
+        parsedSnapshot <-
+            OrphanSnapshot
+                <$> snapshot .: "directories"
+                <*> mapM parseOrphanManifest manifestValues
+                <*> mapM parseOrphanBuildFile buildFileValues
+                <*> mapM parseOrphanExemption exemptionValues
+        parsedResult <-
+            OrphanValidationResult
+                <$> expectedResult .: "valid"
+                <*> expectedResult .: "diagnostic_codes"
+                <*> expectedResult .: "pending_exemption_count"
+                <*> mapM parseOrphanDiagnostic diagnosticValues
+        pure (OrphanFixture parsedSnapshot parsedResult)
 
 parseTrackedEntry :: Value -> Parser TrackedArtifactEntry
 parseTrackedEntry = withObject "tracked artifact entry" $ \object ->
@@ -58,6 +89,55 @@ parseTrackedDiagnostic = withObject "tracked artifact diagnostic" $ \object -> d
                 <*> details .: "entry_kind"
                 <*> details .:? "problem"
             )
+
+parseOrphanManifest :: Value -> Parser OrphanManifest
+parseOrphanManifest = withObject "orphan manifest" $ \object ->
+    OrphanManifest
+        <$> object .: "path"
+        <*> object .: "kind"
+
+parseOrphanBuildFile :: Value -> Parser OrphanBuildFile
+parseOrphanBuildFile = withObject "orphan BUILD" $ \object ->
+    OrphanBuildFile
+        <$> object .: "path"
+        <*> object .: "state"
+
+parseOrphanExemption :: Value -> Parser OrphanExemption
+parseOrphanExemption = withObject "orphan exemption" $ \object ->
+    OrphanExemption
+        <$> object .: "line"
+        <*> object .: "kind"
+        <*> object .: "path"
+        <*> object .:? "reason"
+
+parseOrphanDiagnostic :: Value -> Parser OrphanDiagnostic
+parseOrphanDiagnostic = withObject "orphan diagnostic" $ \object -> do
+    code <- object .: "code"
+    severity <- object .: "severity"
+    path <- object .: "path"
+    details <- object .: "details" :: Parser Object
+    parsedDetails <-
+        case code of
+            "ORPHAN_CRATE_EMPTY_BUILD" ->
+                OrphanCrateDiagnosticDetails
+                    <$> details .:? "build_path"
+                    <*> details .: "manifest_kind"
+            "ORPHAN_CRATE_UNLISTED" ->
+                OrphanCrateDiagnosticDetails
+                    <$> details .:? "build_path"
+                    <*> details .: "manifest_kind"
+            "ORPHAN_EXEMPTION_INVALID" ->
+                OrphanInvalidExemptionDetails
+                    <$> details .: "line"
+                    <*> details .: "problem"
+            "ORPHAN_EXEMPTION_STALE" ->
+                OrphanStaleExemptionDetails
+                    <$> details .: "entry_path"
+                    <*> details .: "kind"
+                    <*> details .: "line"
+                    <*> details .: "problem"
+            _ -> fail ("unknown orphan diagnostic code: " ++ code)
+    pure (OrphanDiagnostic code severity path parsedDetails)
 
 buildToolSpec :: Spec
 buildToolSpec = do
@@ -175,6 +255,156 @@ buildToolSpec = do
                     , invalidDiagnostic 2 "regular" "UNSAFE_CHARACTER"
                     ]
 
+    describe "orphan crate validation" $ do
+        forM_ orphanFixtureNames $ \fixtureName ->
+            it ("consumes shared fixture " ++ fixtureName) $ do
+                fixture <- loadOrphanFixture fixtureName
+                validateOrphanCrateSnapshot (orphanFixtureSnapshot fixture)
+                    `shouldBe` orphanFixtureResult fixture
+
+        it "redacts hostile exemption paths, including surrogate Chars" $ do
+            let unsafePaths =
+                    [ ""
+                    , replicate 513 '\x1F600'
+                    , "/absolute/secret-project"
+                    , "C:/host/secret-project"
+                    , "code/packages/rust/bad<name>"
+                    , "code/packages/rust/trailing."
+                    , "code/packages/rust/CON"
+                    , "code/packages/rust/" ++ [chr 0xD800]
+                    ]
+            forM_ unsafePaths $ \unsafePath -> do
+                let result =
+                        validateOrphanCrateSnapshot
+                            ( OrphanSnapshot
+                                ["code/packages/rust/demo"]
+                                [OrphanManifest "code/packages/rust/demo" "package"]
+                                []
+                                [OrphanExemption 7 "PENDING" unsafePath (Just "not allowed")]
+                            )
+                    invalidDiagnostics =
+                        [ diagnostic
+                        | diagnostic <- orphanResultDiagnostics result
+                        , orphanDiagnosticCode diagnostic == "ORPHAN_EXEMPTION_INVALID"
+                        ]
+                invalidDiagnostics
+                    `shouldBe`
+                    [ OrphanDiagnostic
+                        "ORPHAN_EXEMPTION_INVALID"
+                        "error"
+                        "code/BUILD-EXEMPTIONS"
+                        (OrphanInvalidExemptionDetails 7 "PATH_UNSAFE")
+                    ]
+
+        it "uses the exact Python blank-reason set" $ do
+            let result =
+                    validateOrphanCrateSnapshot
+                        ( OrphanSnapshot
+                            ["code/packages/rust/blank", "code/packages/rust/bom"]
+                            [ OrphanManifest "code/packages/rust/blank" "package"
+                            , OrphanManifest "code/packages/rust/bom" "package"
+                            ]
+                            []
+                            [ OrphanExemption 7 "PENDING" "code/packages/rust/blank" (Just "\x1C")
+                            , OrphanExemption 8 "PENDING" "code/packages/rust/bom" (Just "\xFEFF")
+                            ]
+                        )
+            orphanResultPendingExemptionCount result `shouldBe` 1
+            orphanResultDiagnosticCodes result
+                `shouldBe` ["ORPHAN_CRATE_UNLISTED", "ORPHAN_EXEMPTION_INVALID"]
+            orphanResultDiagnostics result
+                `shouldContain`
+                [ OrphanDiagnostic
+                    "ORPHAN_EXEMPTION_INVALID"
+                    "error"
+                    "code/BUILD-EXEMPTIONS"
+                    (OrphanInvalidExemptionDetails 7 "REASON_MISSING")
+                ]
+
+        it "rejects missing, oversized, and non-scalar exemption reasons" $ do
+            let invalidReasons = [Nothing, Just (replicate 4097 'x'), Just [chr 0xD800]]
+            forM_ invalidReasons $ \invalidReason -> do
+                let result =
+                        validateOrphanCrateSnapshot
+                            ( OrphanSnapshot
+                                ["code/packages/rust/demo"]
+                                [OrphanManifest "code/packages/rust/demo" "package"]
+                                []
+                                [OrphanExemption 7 "PENDING" "code/packages/rust/demo" invalidReason]
+                            )
+                orphanResultPendingExemptionCount result `shouldBe` 0
+                orphanResultDiagnosticCodes result
+                    `shouldBe` ["ORPHAN_CRATE_UNLISTED", "ORPHAN_EXEMPTION_INVALID"]
+
+        it "chooses the closest empty BUILD and fixed filename rank" $ do
+            let result =
+                    validateOrphanCrateSnapshot
+                        ( OrphanSnapshot
+                            ["code/packages/rust/demo/child"]
+                            [OrphanManifest "code/packages/rust/demo/child" "package"]
+                            [ OrphanBuildFile "code/packages/rust/BUILD" "empty"
+                            , OrphanBuildFile "code/packages/rust/demo/BUILD_linux" "empty"
+                            , OrphanBuildFile "code/packages/rust/demo/BUILD" "empty"
+                            , OrphanBuildFile "code/packages/rust/demo2/BUILD" "runnable"
+                            ]
+                            []
+                        )
+            orphanResultDiagnostics result
+                `shouldBe`
+                [ OrphanDiagnostic
+                    "ORPHAN_CRATE_EMPTY_BUILD"
+                    "error"
+                    "code/packages/rust/demo/child"
+                    (OrphanCrateDiagnosticDetails (Just "code/packages/rust/demo/BUILD") "package")
+                ]
+
+        it "reserves NFC full-fold identities before field precedence" $ do
+            let result =
+                    validateOrphanCrateSnapshot
+                        ( OrphanSnapshot
+                            ["code/packages/rust/Stra\x00DF\&e"]
+                            [OrphanManifest "code/packages/rust/Stra\x00DF\&e" "package"]
+                            []
+                            [ OrphanExemption 7 "UNKNOWN" "code/packages/rust/Stra\x00DF\&e" (Just "first")
+                            , OrphanExemption 8 "PENDING" "CODE/PACKAGES/RUST/STRASSE" (Just "duplicate")
+                            ]
+                        )
+                invalidDetails =
+                    [ details
+                    | OrphanDiagnostic
+                        { orphanDiagnosticCode = "ORPHAN_EXEMPTION_INVALID"
+                        , orphanDiagnosticDetails = details
+                        } <- orphanResultDiagnostics result
+                    ]
+            invalidDetails
+                `shouldBe`
+                [ OrphanInvalidExemptionDetails 7 "UNKNOWN_KIND"
+                , OrphanInvalidExemptionDetails 8 "DUPLICATE_PATH"
+                ]
+
+        it "uses canonical ASCII JSON ordering for Unicode details" $ do
+            let accented = "code/packages/rust/\x00E9"
+                emoji = "code/packages/rust/\x1F600"
+                result =
+                    validateOrphanCrateSnapshot
+                        ( OrphanSnapshot
+                            []
+                            []
+                            []
+                            [ OrphanExemption 9 "EXCLUDED" "code/packages/rust/z" (Just "removed")
+                            , OrphanExemption 8 "EXCLUDED" emoji (Just "removed")
+                            , OrphanExemption 7 "EXCLUDED" accented (Just "removed")
+                            ]
+                        )
+                stalePaths =
+                    [ entryPath
+                    | OrphanDiagnostic
+                        { orphanDiagnosticDetails =
+                            OrphanStaleExemptionDetails entryPath _ _ _
+                        } <- orphanResultDiagnostics result
+                    ]
+            stalePaths `shouldBe` [accented, emoji, "code/packages/rust/z"]
+
 trackedArtifactFixtureNames :: [FilePath]
 trackedArtifactFixtureNames =
     [ "validation-tracked-artifacts-clean.json"
@@ -186,6 +416,29 @@ trackedArtifactFixtureNames =
 
 loadTrackedArtifactFixture :: FilePath -> IO TrackedArtifactFixture
 loadTrackedArtifactFixture fixtureName = do
+    maybeRoot <- findRepoRoot Nothing
+    repoRoot <- maybe (fail "could not locate repository root for fixtures") pure maybeRoot
+    let fixturePath =
+            repoRoot
+                </> "code"
+                </> "specs"
+                </> "fixtures"
+                </> "build-tool-v1"
+                </> "cases"
+                </> fixtureName
+    bytes <- BS.readFile fixturePath
+    either (fail . ("invalid shared fixture: " ++)) pure (eitherDecodeStrict' bytes)
+
+orphanFixtureNames :: [FilePath]
+orphanFixtureNames =
+    [ "validation-orphan-crates-clean.json"
+    , "validation-orphan-crates-unlisted.json"
+    , "validation-orphan-exemptions-invalid.json"
+    , "validation-orphan-exemptions-stale.json"
+    ]
+
+loadOrphanFixture :: FilePath -> IO OrphanFixture
+loadOrphanFixture fixtureName = do
     maybeRoot <- findRepoRoot Nothing
     repoRoot <- maybe (fail "could not locate repository root for fixtures") pure maybeRoot
     let fixturePath =

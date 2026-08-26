@@ -8215,6 +8215,52 @@ open, non-draft, and mergeable. Required checks are queued or in progress, so
 auto-merge remains disabled until every check is terminal and acceptable and
 GitHub reports no conflict.
 
+### Post-#12958 refresh and Haskell orphan-crate selection
+
+PR #12958 completed all 40 terminal acceptable checks: 33 succeeded and seven
+were expected skips. GitHub reported reviewed head
+`e6f2d31009ce4e0aae639a5951791853f3b0c93c` clean and mergeable, so the loop
+enabled squash auto-merge. GitHub merged it as
+`a0cb099a58f58ee619e909fed6a42720a704d21f` at
+`2026-08-26T06:43:58Z` without a manual merge command.
+
+The collision-checked exact-main schema-3 report at
+`385bf43d85a20719469ac1c1d9daebed1590533e` remains structurally unchanged:
+15 established lanes, 1,373 implementation identities, 4,566 package slots,
+175 high-consensus packages with 276 missing slots, 122 identities in five to
+nine lanes with 926 gaps, 166 identities in two to four lanes with 2,087 gaps,
+910 singletons with 12,740 gaps, and 721 Rust singletons. The all-reported
+union remains 1,412. Canonical collisions and unknown language buckets remain
+zero, and OCaml remains correctly emerging at zero packages.
+
+Every intervening change is classified before selection. Merged PR #12954 is
+owned by the registered W22 catch-matching neutral and applicable-lane owners
+plus the existing WAST, conformance, provenance, and host-authority owners.
+Merged PR #12955 remains inside the ALGOL IIR neutral and lane owners. Merged
+PR #12956 remains curriculum and shared script-ductus authored data. Merged PR
+#12957 remains inside the Mermaid Gantt neutral and lane owners. Merged PR
+#12959 extends the existing deterministic HTML frontend owner with unmatched
+disclosure-end diagnostic positions. Open PR #12960 remains inside the ALGOL
+IIR owners, while open PR #12961 is curriculum and generated
+`human-language-data` under the existing singleton classification. None adds
+or removes a package identity or BUILD/build-tool marker, and no newly unowned
+eligible portable gap remains.
+
+The dependency/leverage pass selects
+`build-tool-haskell-orphan-crate-validation-conformance` on branch
+`codex/build-tool-haskell-orphan-crate-validation-conformance`. Its neutral
+orphan corpus and Haskell tracked-artifact substrate are merged. Haskell is the
+widest remaining orphan consumer at 204 reported packages versus Swift at 161;
+both advance the same completion umbrella. All six live PRs have zero exact
+overlap with the expected Haskell validator, tests, README, changelog, state,
+and roadmap surfaces. The target local branch, remote branch, and prior PR were
+absent before the fresh exact-main worktree was created. The higher-descendant
+extra-CI corpus and strategic OCaml process-free substrate remain
+collision-unsafe while PRs #12149 and #12162 own their required Go entry-point
+and validator surfaces. After lifecycle reconciliation and selection, the
+graph contains 517 unique owners and 778 complete acyclic edges: 148 merged,
+368 pending, and exactly one in-progress owner, with no active parity PR.
+
 ## Autonomous Loop Protocol
 
 Only one parity PR should be active at a time.
