@@ -8782,6 +8782,64 @@ collisions or unknown buckets. GitHub reports the PR open, non-draft, and
 mergeable; CI and CodeQL are queued, so auto-merge remains disabled until every
 required check is terminal and acceptable.
 
+PR #13049 completed all 41 final checks successfully or acceptably at reviewed
+head `18a6fe2f3923bfe33d3111e7c64de1bc6e31344c`. GitHub reported a clean
+merge state, auto-merge was enabled, and the PR merged as
+`c04af4ec8c9db002a651e349af726e391650c253` without a manual merge command.
+
+### Post-#13049 inventory and paired-JVM high-consensus selection
+
+The exact-main schema-3 report remains collision-clean at 15 established
+lanes, 1,373 implementation identities, 4,572 implementation slots, and 1,412
+all-reported identities. The breadth bands are 175 high-consensus identities
+with 276 gaps, 123 five-to-nine identities with 934 gaps, 166 two-to-four
+identities with 2,087 gaps, and 909 singletons with 12,726 gaps. Rust retains
+720 singletons; canonical collisions and unknown language buckets remain zero;
+OCaml remains emerging at zero packages. The expected Python canonical-CBOR
+slot is the only topology change, so this refresh adds no newly discovered
+owner.
+
+Nine live PRs are classified outside this portable slice, and no other parity
+PR is active. The dependency/leverage pass selects
+`java-kotlin-high-consensus-lz78-deflate-state-machine` on branch
+`codex/java-kotlin-lz78-deflate-state-machine-parity`. The item has no unmet
+dependency, shares one JVM toolchain and cross-lane review boundary, adds six
+missing implementation slots, and completes three identities that are each
+already present in the other thirteen established lanes. That is the largest
+bounded completion gain among the immediately ready high-consensus items and
+directly advances the Java and Kotlin parity requirement. At selection, the
+reconciled graph remains complete and acyclic at 526 owners and 787 edges: 154
+merged, 371 pending, and exactly one in-progress owner, with no active parity
+PR.
+
+### Java/Kotlin lz78, deflate, and state-machine candidate
+
+The paired JVM candidate adds all six selected package slots. LZ78 implements
+the published token and big-endian wire vectors with dictionary and hostile
+output limits. DEFLATE constructs fixed and dynamic candidates from one LZSS
+stream, builds length-limited trees with package-merge, compares exact bit
+costs, and emits raw RFC 1951 streams accepted by an independent JDK inflater.
+State-machine covers DFA, NFA/subset conversion, minimization, PDA, and modal
+behavior with defensive snapshots and explicit trace, subset, stack, and
+trace-state-cell budgets.
+
+All six Gradle suites and their JaCoCo gates pass: 34 tests total, with line
+coverage from 96.25% through 99.10% in Java and 96.98% through 97.78% in
+Kotlin. Both BUILD_windows command contracts pass. Shared reporter and
+capability validation passes 22 tests and 744 subtests; the Go build tool passes
+all packages, vet, and a trimpath build. The schema-3 candidate inventory is
+collision-clean at 1,373 implementation identities and 4,578 slots, with the
+high-consensus gap count reduced from 276 to 270 and lz78, deflate, and
+state-machine each complete in all 15 established lanes. Independent contract,
+metadata, and security reviews are clean after their findings were closed.
+
+Ready-for-review PR #13070 publishes the candidate from reviewed head
+`267c78332aa96684f0bf729a35d2957297d33767` on exact `origin/main`
+`b232ffbfb8e349355a92d987209e85640e36fabb`. GitHub reports it non-draft and
+mergeable. Required checks have not yet populated, so auto-merge remains
+disabled and the loop is monitor-only until every check is terminal and
+acceptable.
+
 ## Autonomous Loop Protocol
 
 Only one parity PR should be active at a time.

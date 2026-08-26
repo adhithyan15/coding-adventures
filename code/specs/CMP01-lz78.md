@@ -479,6 +479,8 @@ that may appear when input ends mid-dictionary-match.
 | Lua        | `coding_adventures.lz78`                   | `busted .`              |
 | Perl       | `CodingAdventures::LZ78`                   | `prove -l -v t/`        |
 | Swift      | `LZ78`                                     | `swift test`            |
+| Java       | `com.codingadventures.lz78`                | `gradle test`           |
+| Kotlin     | `com.codingadventures.lz78`                | `gradle test`           |
 
 No external dependencies in any language. Each package embeds its own
 byte-indexed trie for the dictionary.

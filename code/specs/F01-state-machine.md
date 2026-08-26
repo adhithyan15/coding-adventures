@@ -1124,6 +1124,18 @@ class PDAInternalState:
 - **Reset:** all modes reset, initial mode restored
 - **Invalid trigger:** trigger with no mode transition defined → error
 
+## Package Matrix
+
+| Language | Package | Build command | Depends on |
+|---|---|---|---|
+| Java | `com.codingadventures.statemachine` | `gradle test` | `directed-graph` |
+| Kotlin | `com.codingadventures.statemachine` | `gradle test` | `directed-graph` |
+
+Both JVM packages expose the same DFA, NFA, minimization, PDA, modal-machine,
+trace, validation, and visualization contract described above. Their public
+collections are defensive snapshots so callers cannot mutate machine
+definitions or traces behind the validator.
+
 ## Future Extensions
 
 - **`.states` file parser in grammar-tools:** Parse the canonical
