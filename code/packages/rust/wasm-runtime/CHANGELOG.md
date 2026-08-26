@@ -2,6 +2,36 @@
 
 All notable changes to this package will be documented in this file.
 
+## [0.6.7] — 2026-08-25 (W22 — exceptions proposal, real catch/catch_all matching)
+
+### Added
+
+- `HostInterface::resolve_tag` (new, default `None` so existing
+  implementors keep compiling unchanged) — resolves an imported tag's
+  real declared type. `instantiate()`'s `ImportTypeInfo::Tag` arm
+  (previously an unconditional link failure, W21) now asks the host for
+  it and checks compatibility against the importing module's own
+  declaration, exactly like `Function` imports already do.
+- `WasmInstance::tags: Vec<u32>` (new field): the COMBINED
+  imported+defined tag index space ("imports first, then declared"),
+  built during `instantiate()` the same way `func_types` already is.
+
+### Fixed
+
+- A real, previously-latent bug: `build_engine` was passing
+  `instance.module.tags` (module-DEFINED tags only — like
+  `module.functions`, imports live separately in `module.imports`) to
+  `wasm-execution::WasmExecutionEngine::set_tags`, which expects the
+  COMBINED index space `throw`/`catch` actually encode. Any module
+  declaring at least one tag import got every LOCAL tag's type looked up
+  at the wrong (off-by-import-count) slot. `wasm-validator` already built
+  its own correctly-combined `tag_types`; this crate did not. Silent
+  until W22's real payload-popping became the first code path to
+  actually read it — reproduced directly against the real testsuite's
+  own `try_table.wast` (`catch-complex-1`/`catch-complex-2`, which
+  declare tag imports before several differently-typed local tags). See
+  `code/specs/W22-wasm-exceptions-catch-clause-matching.md`.
+
 ## [0.6.6] — 2026-08-25 (W21 — exceptions proposal, tag/throw first slice)
 
 ### Added

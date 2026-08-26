@@ -294,6 +294,9 @@ mod tests {
             dropped_data_segments: Vec::new(),
             elements: Vec::new(),
             dropped_elements: Vec::new(),
+            tags: Vec::new(),
+            try_table_infos: Vec::new(),
+            instance_id: 0,
         }
     }
 
@@ -454,6 +457,7 @@ mod tests {
             br_table_targets: Vec::new(),
             gc_ops: Vec::new(),
             simd_consts: Vec::new(),
+            try_table_infos: Vec::new(),
         });
 
         let marked = mark(&vm, &ctx);

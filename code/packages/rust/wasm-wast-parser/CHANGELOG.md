@@ -1,5 +1,14 @@
 # Changelog — wasm-wast-parser
 
+## 0.1.77 — 2026-08-25 — Exceptions proposal, second slice W22: `exnref` recognized (inert)
+
+### Added
+
+- `"exnref"` recognized in `parse_value_type` (`ValueType::Exnref`, new
+  in `wasm-types` 0.1.8) — purely so a module mentioning it still parses
+  as a whole; no new runtime semantics. See `code/specs/
+  W22-wasm-exceptions-catch-clause-matching.md`.
+
 ## 0.1.76 — 2026-08-25 — Exceptions proposal, first slice W21: tag/throw/try_table text syntax
 
 ### Added
