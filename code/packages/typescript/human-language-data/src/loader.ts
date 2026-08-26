@@ -64,6 +64,7 @@ import {
   type AssessmentContract,
   type AssessmentPolicy,
 } from "./assessment.js";
+import { artifactExists } from "./artifact-presence.js";
 import type { LedgerLetter, LetterLedger } from "./letter-ledger.js";
 import type {
   BookChapter,
@@ -147,24 +148,45 @@ export function loadAssessmentPolicy(root = defaultCurriculumRoot()): Assessment
   return parseAssessmentPolicy(readLedgerFile(join(root, "core", "assessment-policy.json")));
 }
 
+export interface LoadedAssessmentContract {
+  language: string;
+  contract: AssessmentContract;
+}
+
 /**
- * Tracks whose complete assessment contract is present and valid.
+ * Every track whose assessment contract is present and valid, parsed once.
  *
  * Absence is backlog. Invalidity is an error: treating a malformed contract as
  * absent would send the next contributor to create a second file while hiding
  * the broken one already in the tree.
+ *
+ * The presence probe is `artifactExists`, not `existsSync`, and the difference
+ * is the whole point. `existsSync` answers "false" to both "no such file" and
+ * "I was not allowed to look", so an unreadable `assessment.json` would read as
+ * a track that has not written one yet — and the track would vanish from every
+ * audit built on this list, taking its debt with it. Only ENOENT/ENOTDIR mean
+ * absent here; anything else throws naming the errno.
  */
-export function listAssessmentContracts(root = defaultCurriculumRoot()): string[] {
+export function loadAssessmentContracts(
+  root = defaultCurriculumRoot(),
+): LoadedAssessmentContract[] {
   const policy = loadAssessmentPolicy(root);
   const registry = loadLanguageRegistry(root);
-  const out: string[] = [];
+  const out: LoadedAssessmentContract[] = [];
   for (const track of registry.languages) {
     const path = join(root, track.id, "assessment.json");
-    if (!existsSync(path)) continue;
-    parseAssessmentContract(readLedgerFile(path), track.id, policy);
-    out.push(track.id);
+    if (!artifactExists(path)) continue;
+    out.push({
+      language: track.id,
+      contract: parseAssessmentContract(readLedgerFile(path), track.id, policy),
+    });
   }
   return out;
+}
+
+/** Track ids whose complete assessment contract is present and valid. */
+export function listAssessmentContracts(root = defaultCurriculumRoot()): string[] {
+  return loadAssessmentContracts(root).map((entry) => entry.language);
 }
 
 export interface ExternalExamCapstoneStatus {
@@ -178,28 +200,21 @@ export interface ExternalExamCapstoneStatus {
 
 /** Declared non-CEFR-mapped external capstones and whether their artifacts exist. */
 export function listExternalExamCapstones(root = defaultCurriculumRoot()): ExternalExamCapstoneStatus[] {
-  const policy = loadAssessmentPolicy(root);
-  const registry = loadLanguageRegistry(root);
   const out: ExternalExamCapstoneStatus[] = [];
-  for (const track of registry.languages) {
-    const contractPath = join(root, track.id, "assessment.json");
-    if (!existsSync(contractPath)) continue;
-    const contract: AssessmentContract = parseAssessmentContract(
-      readLedgerFile(contractPath),
-      track.id,
-      policy,
-    );
+  for (const { language, contract } of loadAssessmentContracts(root)) {
     for (const capstone of contract.externalCapstones) {
       const references = [
         ...Object.values(capstone.skills).flatMap((skill) => skill.taskInventory),
         ...Object.values(capstone.additionalComponents).flatMap((component) => component.taskInventory),
         ...capstone.fullMocks.flatMap((mock) => [mock.rubric, mock.answerKey]),
       ];
+      // `artifactExists`, not `existsSync`: an EACCES here would have reported a
+      // capstone's artifacts as missing on the strength of never having looked.
       const missingArtifacts = [...new Set(references
         .map((reference) => reference.split("#", 1)[0]!)
-        .filter((reference) => !existsSync(join(root, track.id, reference))))];
+        .filter((reference) => !artifactExists(join(root, language, reference))))];
       out.push({
-        language: track.id,
+        language,
         id: capstone.id,
         requiredAfterLevel: capstone.requiredAfterLevel,
         name: capstone.target.name,

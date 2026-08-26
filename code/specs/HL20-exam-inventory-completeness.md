@@ -132,6 +132,40 @@ This is the intended shape of progress under §4: a dimension flips only when it
 own source closes, the file stays partial while any dimension is open, and the
 measured point coverage moves independently of both.
 
+## 6b. The same failure, one layer down: a contract that promises nothing real
+
+§1's rule is *presence is not completeness*. There is a weaker form of the same
+error that survived it: **a reference is not an artifact.**
+
+`<track>/assessment.json` names, per level, the task-shape inventory each skill
+is measured against and the timed mock, rubric and answer key that constitute
+HL16's evidence. The loader checked that each was a non-empty, safely relative
+string. It never checked that the string led anywhere.
+
+Measured on 2026-08-26 across all 23 registered tracks: 13 carry a contract,
+**all 13 dangle**, and between them they name **351 distinct artifacts that do
+not exist** — 276 mock papers, rubrics and answer keys, and 75 task-shape
+inventories. No `mocks/` directory exists anywhere in the repository. Every gate
+was green.
+
+That is worse than an empty contract, for §1's exact reason: a level that names
+two timed mocks with a rubric and an answer key reads as *stronger* evidence
+than one that names none.
+
+The check is now a ratchet rather than a cliff, because failing 351 artifacts
+today would make `main` permanently red over years of authoring work:
+
+- the known set is pinned per track under `core/assessment-artifact-ceiling/`;
+- a dangling reference that is **not** pinned fails CI, in any track;
+- a pinned path that now **exists** also fails CI, telling the author to lower
+  the pin — a ceiling nobody is forced to lower stops distinguishing *still
+  owed* from *paid years ago*;
+- the pin is a **set of paths**, not a count, so paying one debt while taking on
+  another is caught. A count is satisfied by the swap.
+
+A ceiling is debt, never a licence. The corresponding backlog is the artifacts
+themselves, and it does not shrink because it has been written down.
+
 ## 7. Acceptance tests
 
 The gate is complete when tests prove that:
@@ -141,5 +175,13 @@ The gate is complete when tests prove that:
 3. partial inventories still produce measured exam-point coverage;
 4. partial inventories remain in the `exam-inventory` queue with “complete the
    partial” wording;
-5. only all-complete inventories suppress that queue item; and
-6. the real-corpus report names complete and partial counts separately.
+5. only all-complete inventories suppress that queue item;
+6. the real-corpus report names complete and partial counts separately;
+7. §6b: a contract referencing an artifact that does not exist fails, an
+   unpinned dangler fails while a pinned one does not, a paid pin fails, and a
+   satisfied contract passes — the counterfactual matters, because a check only
+   ever observed failing is as unproven as one only ever observed passing; and
+8. §6b: "absent" and "could not determine" stay distinct. Only `ENOENT` and
+   `ENOTDIR` mean absent; every other errno throws, naming it. `existsSync`
+   collapses all of them into `false`, which is a statement about the
+   repository that a failed `stat` is in no position to make.
