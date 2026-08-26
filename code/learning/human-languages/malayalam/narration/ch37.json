@@ -3,7 +3,7 @@
   "language": "malayalam",
   "chapter": 37,
   "title": "Face Words",
-  "drivablePrefix": 3,
+  "drivablePrefix": 4,
   "sourceHash": "fnv1a64:7286ede620318904",
   "lessons": [
     {
@@ -395,20 +395,13 @@
       "romanization": "vāy",
       "gloss": "mouth — the word Chapter 33 already named, only to rule it out",
       "script": "malayalam",
-      "modality": "sight",
-      "derivedModality": "sight",
+      "modality": "voice",
+      "derivedModality": "voice",
       "modalityReasons": [
-        "sight-cue"
+        "no-visual-dependency"
       ],
       "sourceHash": "fnv1a64:e62438e27a72e689",
-      "notice": {
-        "modality": "sight",
-        "needs": [
-          "your eyes, because the lesson points at something written down"
-        ],
-        "waitUntilStopped": [],
-        "text": "Before we start: this one needs your eyes, so it is not fully a driving lesson. You will want your eyes, because the lesson points at something written down. You can listen to all of it now and come back to the parts that need looking at once you have stopped."
-      },
+      "notice": null,
       "blocks": [
         {
           "index": 0,

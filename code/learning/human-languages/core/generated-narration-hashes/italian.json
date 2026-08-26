@@ -360,12 +360,12 @@
         "IT-C22-latte",
         "IT-C22-zucchero"
       ],
-      "voiceLessons": 2,
-      "drivablePrefix": 0,
+      "voiceLessons": 4,
+      "drivablePrefix": 4,
       "text": "italian/narration/ch22.txt",
       "json": "italian/narration/ch22.json",
-      "textHash": "fnv1a64:ea42855fc0460295",
-      "jsonHash": "fnv1a64:7e327e6039848643"
+      "textHash": "fnv1a64:3c328d60decec1f5",
+      "jsonHash": "fnv1a64:8a1fa07606ed99d1"
     },
     {
       "language": "italian",

@@ -177,17 +177,122 @@ describe("sight cues match words, not substrings", () => {
     expect(matchedSightCues("see the chart below")).toContain("see the");
   });
 
-  it("does NOT distinguish a mention from an instruction, and that is known", () => {
-    // Honest limit. "a whole column of the family table" needs no eyes, and this still
-    // flags it, because `column` stands there as its own word. Telling a mention from an
-    // instruction is a semantic problem this lexical scan cannot solve, and the cost
-    // asymmetry says to keep over-reporting: a lesson wrongly called drivable is worse
-    // than one wrongly called sight. Recorded so the next author knows it is a decision.
-    expect(matchedSightCues("a whole column of the family table")).toContain("column");
-  });
-
   it("keeps every cue plain lowercase, since they go into a pattern unescaped", () => {
     for (const cue of SIGHT_CUES) expect(cue).toMatch(/^[a-z ]+$/);
+  });
+});
+
+// ---------------------------------------------------------------------------
+// Anchoring (HL-C? / issue #12665)
+// ---------------------------------------------------------------------------
+//
+// Word boundaries stopped `column` matching inside `columns`, but they could not tell
+// "look at the chart above" from "Look at what English built on that jar". Both are the
+// word `look at` standing as its own word, and the corpus is full of the second kind:
+// 96 lessons were `sight` on a prose cue and nothing else, and hand-reading them found
+// the majority pointing at nothing on the page — idioms ("put a fact on the table"),
+// glosses (*la mesa* — "the table"), and invitations to notice a fact.
+//
+// The fix is NOT a longer list of phrases to exclude — that is the enumerate-the-cases
+// mistake, and the next figurative sentence an author writes defeats it. It is a claim
+// about what a pointing expression needs in order to be pointing: something to point at.
+const TABLE = "| word | gloss |\n|---|---|\n| día | day |";
+
+describe("a sight cue must be anchored to something on the page", () => {
+  it("drops a definite reference to an artifact the document does not contain", () => {
+    // THE CORE CLAIM, and it is safe by construction: a lesson holding no table cannot
+    // send a reader to one, whatever its prose says. All three of these are real corpus
+    // sentences that used to cost their lesson the driving edition.
+    expect(matchedSightCues("you put a fact on the table and stood behind it")).toEqual([]);
+    expect(matchedSightCues('**la mesa** — "the table." Latin **mensa** was the table')).toEqual(
+      [],
+    );
+    expect(matchedSightCues("the table, the cupboard and the window")).toEqual([]);
+  });
+
+  it("CONTROL: keeps the same reference when the document DOES contain the artifact", () => {
+    // The identical sentence, with a table under it. This is the pair that proves the
+    // rule is reading structure rather than just deleting a phrase from the list.
+    expect(matchedSightCues(`Read the table.\n${TABLE}`)).toContain("the table");
+    expect(matchedSightCues(`Read the chart.\n${TABLE}`)).toContain("the chart");
+    expect(matchedSightCues("look at the chart above\n![figure](f.png)")).toContain("the chart");
+  });
+
+  it("drops a pointing expression whose object is a proposition, not a thing", () => {
+    // "Look at what X" asks the reader to notice a fact carried by the surrounding
+    // sentences. Nothing is indicated on the page, so nothing is lost by hearing it.
+    // The first is the sentence from the issue; the rest are corpus sentences.
+    expect(matchedSightCues("Look at what English built on that jar")).toEqual([]);
+    expect(matchedSightCues("Look at what is missing: there is no verb")).toEqual([]);
+    expect(matchedSightCues("Look at how the stress moves off the stem")).toEqual([]);
+  });
+
+  it("CONTROL: keeps a pointing expression aimed at an actual object", () => {
+    // A false NEGATIVE here is a driver told to look at something at speed, so these
+    // are the assertions that matter most in this file.
+    expect(matchedSightCues("Now look at the two forms")).toContain("look at");
+    expect(matchedSightCues("Look at the accent: tê-te")).toContain("look at");
+    expect(matchedSightCues("Look at 女儿, cover it, and write it from memory")).toContain(
+      "look at",
+    );
+  });
+
+  it("drops a cue that is being quoted rather than addressed to the reader", () => {
+    // Use versus mention. The root \*spek'- is glossed “to look at, to observe”; the
+    // lesson is citing words, not instructing anyone.
+    expect(matchedSightCues("from the root “to look at, to observe”")).toEqual([]);
+    // ...but a quotation long enough to be running prose is not a gloss, and still counts.
+    expect(
+      matchedSightCues(
+        '"Now look at the two forms and notice which one carries the written accent, then say both"',
+      ),
+    ).toContain("look at");
+  });
+
+  it("keeps a self-anchored cue unconditionally, because it names its own direction", () => {
+    // "below" is not open to a figurative reading the way "look at" is.
+    expect(matchedSightCues("the forms shown below")).toContain("shown below");
+    expect(matchedSightCues("the letter written above")).toContain("written above");
+  });
+
+  it("still over-reports `column`, on purpose, because structure cannot adjudicate it", () => {
+    // THE DELIBERATE FALSE POSITIVE. `column` names part of a table, so the obvious move
+    // is to anchor it to a table the way `the table` is anchored. That is wrong: an
+    // author may reasonably call any aligned display a column, and `ES-C56-cion` does
+    // exactly that over a blockquote ("Read those without the English column") with no
+    // Markdown table anywhere in the lesson. Anchoring it would have sent that lesson to
+    // the driving edition with an instruction no listener can follow. It keeps firing,
+    // and "a whole column of the family table" keeps costing its lesson the car — the
+    // price of not guessing in the dangerous direction.
+    expect(matchedSightCues("a whole column of the family table")).toContain("column");
+    expect(matchedSightCues("Read those without the English column")).toContain("column");
+  });
+
+  it("still over-reports a figurative `look at` with a concrete object, on purpose", () => {
+    // The residual, recorded so the next author knows it was a decision and not an
+    // oversight. "Look at your collarbone" needs no eyes on THIS page, but no mechanical
+    // test separates it from "Look at the accent" without a lexicon of every thing a page
+    // can hold — and a wrong guess sends a driver to a page they cannot read.
+    expect(matchedSightCues("Look at your collarbone. It is the clavicle")).toContain("look at");
+    expect(matchedSightCues("you can still see the seams in its everyday forms")).toContain(
+      "see the",
+    );
+  });
+
+  it("judges a block against its whole lesson, not against its own text", () => {
+    // A cue in one block routinely points at a table in another. Judging the block alone
+    // would call that figurative and drop a real requirement — a false negative.
+    const entry = deriveLessonModality(
+      lesson({
+        id: "ES-C99",
+        body: `## Warm-up\n\nRead the table.\n\n## Paradigm\n\n${TABLE}`,
+      }),
+    );
+    expect(entry.sightCues).toContain("the table");
+    // The cue is in the first block ("Warm-up"); the table is in the second.
+    expect(entry.blocks[0]?.title).toBe("Warm-up");
+    expect(entry.blocks[0]?.modality).toBe("sight");
+    expect(entry.blocks[0]?.reasons).toContain("sight-cue");
   });
 });
 
@@ -738,9 +843,18 @@ describe("text scanning helpers", () => {
   });
 
   it("matches sight cues case-insensitively, in list order", () => {
-    expect(matchedSightCues("LOOK AT the chart")).toEqual(["look at", "the chart"]);
+    // `the chart` is an ARTIFACT cue, so it needs a chart to be pointing at; with a table
+    // present both fire, and the order is the declaration order of SIGHT_CUE_RULES.
+    expect(matchedSightCues("LOOK AT the chart\n| a | b |\n|---|---|\n| c | d |")).toEqual([
+      "look at",
+      "the chart",
+    ]);
     expect(matchedSightCues("say it aloud")).toEqual([]);
-    for (const cue of SIGHT_CUES) expect(matchedSightCues(`x ${cue} y`)).toContain(cue);
+    // Every cue still fires on a bare occurrence once its anchor is satisfied. The
+    // artifact cues get a table; the rest need nothing.
+    for (const cue of SIGHT_CUES) {
+      expect(matchedSightCues(`x ${cue} y`, { hasPageArtifact: true })).toContain(cue);
+    }
   });
 });
 

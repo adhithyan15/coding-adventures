@@ -10,16 +10,16 @@
   "sourceHash": "fnv1a64:5e3ea7f5e27ceca3",
   "summary": {
     "totalLessons": 276,
-    "voice": 212,
-    "sight": 40,
+    "voice": 213,
+    "sight": 39,
     "pen": 24,
-    "drivableLessons": 212,
+    "drivableLessons": 213,
     "drivablePercent": 77,
     "trackCount": 1,
     "chapterCount": 73,
-    "drivablePrefixTotal": 198,
-    "fullyDrivableChapters": 46,
-    "unstartableChapters": 11,
+    "drivablePrefixTotal": 203,
+    "fullyDrivableChapters": 47,
+    "unstartableChapters": 10,
     "overriddenLessons": 0,
     "lessonsWithoutChapter": 0
   },
@@ -27,11 +27,11 @@
     {
       "language": "telugu",
       "lessonCount": 276,
-      "voice": 212,
-      "sight": 40,
+      "voice": 213,
+      "sight": 39,
       "pen": 24,
       "drivablePercent": 77,
-      "drivablePrefixTotal": 198,
+      "drivablePrefixTotal": 203,
       "modalities": [
         "voice",
         "sight",
@@ -809,17 +809,22 @@
         {
           "chapter": 46,
           "lessonCount": 5,
-          "voice": 4,
-          "sight": 1,
+          "voice": 5,
+          "sight": 0,
           "pen": 0,
           "modalities": [
-            "voice",
-            "sight"
+            "voice"
           ],
-          "drivablePrefix": 0,
-          "firstNonVoiceLesson": "TE-C46-fruit",
-          "drivable": false,
-          "drivableLessonIds": []
+          "drivablePrefix": 5,
+          "firstNonVoiceLesson": null,
+          "drivable": true,
+          "drivableLessonIds": [
+            "TE-C46-fruit",
+            "TE-C46-cloth",
+            "TE-C46-lamp",
+            "TE-C46-salt",
+            "TE-C46-book"
+          ]
         },
         {
           "chapter": 47,
@@ -4084,17 +4089,17 @@
       "language": "telugu",
       "chapter": 46,
       "sequence": 1130,
-      "modality": "sight",
-      "derived": "sight",
-      "drivable": false,
+      "modality": "voice",
+      "derived": "voice",
+      "drivable": true,
       "reasons": [
-        "sight-cue"
+        "no-visual-dependency"
       ],
-      "coreModality": "sight",
+      "coreModality": "voice",
       "coreReasons": [
-        "sight-cue"
+        "no-visual-dependency"
       ],
-      "coreDrivable": false,
+      "coreDrivable": true,
       "sourceHash": "fnv1a64:3c36a216075d6ba3"
     },
     {

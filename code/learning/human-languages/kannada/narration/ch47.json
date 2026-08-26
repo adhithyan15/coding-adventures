@@ -3,7 +3,7 @@
   "language": "kannada",
   "chapter": 47,
   "title": "The Leg and the Tooth",
-  "drivablePrefix": 2,
+  "drivablePrefix": 5,
   "sourceHash": "fnv1a64:c58e8e1da40d31c4",
   "lessons": [
     {
@@ -262,20 +262,13 @@
       "romanization": "kūdalu",
       "gloss": "hair",
       "script": "kannada",
-      "modality": "sight",
-      "derivedModality": "sight",
+      "modality": "voice",
+      "derivedModality": "voice",
       "modalityReasons": [
-        "sight-cue"
+        "no-visual-dependency"
       ],
       "sourceHash": "fnv1a64:024a58c29052981e",
-      "notice": {
-        "modality": "sight",
-        "needs": [
-          "your eyes, because the lesson points at something written down"
-        ],
-        "waitUntilStopped": [],
-        "text": "Before we start: this one needs your eyes, so it is not fully a driving lesson. You will want your eyes, because the lesson points at something written down. You can listen to all of it now and come back to the parts that need looking at once you have stopped."
-      },
+      "notice": null,
       "blocks": [
         {
           "index": 0,

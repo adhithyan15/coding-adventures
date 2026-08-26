@@ -3,7 +3,7 @@
   "language": "spanish",
   "chapter": 76,
   "title": "Deriving the Rest",
-  "drivablePrefix": 1,
+  "drivablePrefix": 3,
   "sourceHash": "fnv1a64:f7a004f42511272b",
   "lessons": [
     {
@@ -179,20 +179,13 @@
       "romanization": "hacemos · hacen",
       "gloss": "the -go verbs in the plural — where the oddity simply is not",
       "script": "latin",
-      "modality": "sight",
-      "derivedModality": "sight",
+      "modality": "voice",
+      "derivedModality": "voice",
       "modalityReasons": [
-        "sight-cue"
+        "no-visual-dependency"
       ],
       "sourceHash": "fnv1a64:889b5b78e3a53f91",
-      "notice": {
-        "modality": "sight",
-        "needs": [
-          "your eyes, because the lesson points at something written down"
-        ],
-        "waitUntilStopped": [],
-        "text": "Before we start: this one needs your eyes, so it is not fully a driving lesson. You will want your eyes, because the lesson points at something written down. You can listen to all of it now and come back to the parts that need looking at once you have stopped."
-      },
+      "notice": null,
       "blocks": [
         {
           "index": 0,

@@ -99,12 +99,12 @@
         "AR-C04-ila-liqaa",
         "AR-C04-practice"
       ],
-      "voiceLessons": 3,
+      "voiceLessons": 4,
       "drivablePrefix": 0,
       "text": "arabic/narration/ch04.txt",
       "json": "arabic/narration/ch04.json",
-      "textHash": "fnv1a64:b2a07549bfc696c0",
-      "jsonHash": "fnv1a64:d50a2928a3e97c56"
+      "textHash": "fnv1a64:d2f2e8b249b95a7e",
+      "jsonHash": "fnv1a64:90f185aa36dc1e37"
     },
     {
       "language": "arabic",

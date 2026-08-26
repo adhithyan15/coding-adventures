@@ -233,12 +233,12 @@
         "RU-C13-sok",
         "RU-C13-sup"
       ],
-      "voiceLessons": 3,
-      "drivablePrefix": 1,
+      "voiceLessons": 4,
+      "drivablePrefix": 4,
       "text": "russian/narration/ch13.txt",
       "json": "russian/narration/ch13.json",
-      "textHash": "fnv1a64:7166c40b7c4e2106",
-      "jsonHash": "fnv1a64:781792177b4209d9"
+      "textHash": "fnv1a64:66918c28ee35b27e",
+      "jsonHash": "fnv1a64:4801c5a58542009e"
     },
     {
       "language": "russian",
