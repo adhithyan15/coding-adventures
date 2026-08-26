@@ -1,5 +1,10 @@
 # Changelog — diagram-to-paint
 
+## 0.73.0
+
+- Lower resolved top/bottom Gantt ticks and styled today markers into backend-neutral Paint glyphs and paths.
+- Validate inclusive explicit end dates and dual axes through Metal-to-PNG rendering.
+
 ## 0.72.0
 
 - Validate configured Gantt calendar geometry and formatted daily axis labels through native Metal-to-PNG rendering.

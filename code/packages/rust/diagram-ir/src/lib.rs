@@ -1070,6 +1070,7 @@ pub struct GanttTask {
     pub label: String,
     pub start: TaskStart,
     pub duration_days: f64,
+    pub end_date: Option<String>,
     pub status: TaskStatus,
     pub dependencies: Vec<String>,
     pub link: Option<String>,
@@ -1223,6 +1224,7 @@ pub enum LayoutedTemporalItem {
         x: f64,
         y: f64,
         label: String,
+        label_above: bool,
     },
     SectionHeader {
         x: f64,
@@ -1248,6 +1250,9 @@ pub enum LayoutedTemporalItem {
         x: f64,
         y1: f64,
         y2: f64,
+        stroke: String,
+        stroke_width: f64,
+        stroke_dash: Option<Vec<f64>>,
     },
     BranchLane {
         x1: f64,
@@ -1553,6 +1558,7 @@ mod tests {
             label: "D".into(),
             start: TaskStart::Date("2026-01-01".into()),
             duration_days: 5.0,
+            end_date: None,
             status: TaskStatus::Done,
             dependencies: vec![],
             link: None,
