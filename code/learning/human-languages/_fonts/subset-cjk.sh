@@ -13,6 +13,13 @@ cd "$(dirname "$0")"
 # if upstream changes, the build fails loudly rather than vendoring new bytes.
 readonly EXPECTED_SHA="a3041811a78c361b1de50f953c805e0244951c21c5bd412f7232ef0d899af0da"
 
+# fontTools otherwise stamps the output's OpenType `head.modified` field with
+# the wall clock on every save. Pin it to the upstream font's creation instant
+# (2021-04-29T08:53:59Z) so identical source bytes and character sets produce
+# identical subset bytes on every run.
+readonly FONT_SOURCE_DATE_EPOCH="1619686439"
+export SOURCE_DATE_EPOCH="$FONT_SOURCE_DATE_EPOCH"
+
 # Private, unpredictable work dir — no world-writable /tmp paths (avoids symlink
 # pre-planting and cache-poisoning on shared/CI hosts).
 WORK="$(mktemp -d)"
