@@ -61,6 +61,7 @@
     { "mark": "ુ", "sound": "u", "role": "vowel-sign", "attachesAs": "a small hook below the consonant", "example": { "base": "ત", "combined": "તુ", "sound": "tu" } },
     { "mark": "ૂ", "sound": "ū", "role": "vowel-sign", "attachesAs": "a longer hook below the consonant", "example": { "base": "મ", "combined": "મૂ", "sound": "mū" } },
     { "mark": "ે", "sound": "e", "role": "vowel-sign", "attachesAs": "a stroke above the consonant", "example": { "base": "ક", "combined": "કે", "sound": "ke" } },
+    { "mark": "ૈ", "sound": "ai", "role": "vowel-sign", "attachesAs": "two stacked strokes above the consonant", "example": { "base": "પ", "combined": "પૈ", "sound": "pai" } },
     { "mark": "ો", "sound": "o", "role": "vowel-sign", "attachesAs": "the ā bar on the right plus a stroke above", "example": { "base": "છ", "combined": "છો", "sound": "cho" } },
     { "mark": "ં", "sound": "ṃ (nasal)", "role": "nasal", "attachesAs": "an anusvāra dot above, nasalizing the syllable", "example": { "base": "હ", "combined": "હં", "sound": "haṃ" } },
     { "mark": "્", "sound": "(vowel killer)", "role": "virama", "attachesAs": "a stroke below that removes the inherent 'a' and forms a conjunct with the next consonant", "example": { "base": "ક", "combined": "ક્", "sound": "k" } },

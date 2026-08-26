@@ -2,6 +2,22 @@
 
 All notable changes to this package will be documented in this file.
 
+## [0.1.11] - 2026-08-26 (W26 — table64 proposal, first slice)
+
+### Changed
+
+- **`TableType` gains `pub is64: bool`** (table64 proposal): whether this
+  table uses 64-bit addressing, mirroring `MemoryType::is64` (W25) exactly.
+  Defaults to `false` at every existing call site — no behavior change for
+  any 32-bit table. `Limits` (already widened to `u64` in W25) is reused
+  as-is — table64's own real spec ceiling is `u64::MAX`, verified live
+  against the reference interpreter's `check_tabletype`, not the smaller
+  `2^48`-page bound memory64 uses.
+
+See `code/specs/W26-wasm-table64-first-slice.md` for the full slice
+(binary/text encoding, validator/executor address-width plumbing, vendored
+`table64.wast` and `memory64-imports.wast`).
+
 ## [0.1.10] - 2026-08-26 (W25 — memory64 proposal, first slice)
 
 ### Changed

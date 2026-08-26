@@ -584,6 +584,52 @@
           "GU-SCRIPT-SHA-01"
         ]
       }
+    },
+    {
+      "chapter": 24,
+      "title": "A First Three-Place Map",
+      "label": "ch:gu-first-three-places",
+      "canDo": "I can hear, say, read, and write market, home, and temple in Gujarati.",
+      "spineNodes": [
+        "SPINE-POLITE-REQUEST-REPAIR"
+      ],
+      "payoff": {
+        "lesson": "GU-C20-places-three",
+        "kind": "four-skill-vocabulary-map",
+        "summary": "Seven one-atom lessons keep meaning ahead of print, isolate the one required consonant, then score all three words in listening, speaking, reading, and writing.",
+        "assesses": [
+          "GU-LEX-BAJAR-01",
+          "GU-SCRIPT-BAJAR-01",
+          "GU-LEX-GHAR-01",
+          "GU-SCRIPT-GHA-01",
+          "GU-SCRIPT-GHAR-01",
+          "GU-LEX-MANDIR-01",
+          "GU-SCRIPT-MANDIR-01",
+          "GU-PERFORMANCE-PLACES-THREE-FOUR-SKILL-01"
+        ]
+      }
+    },
+    {
+      "chapter": 25,
+      "title": "Hand and Money Join the Map",
+      "label": "ch:gu-hand-money-map",
+      "canDo": "I can hear, say, read, and write five concrete Gujarati words, including hand and money.",
+      "spineNodes": [
+        "SPINE-POLITE-REQUEST-REPAIR"
+      ],
+      "payoff": {
+        "lesson": "GU-C21-travel-five",
+        "kind": "four-skill-vocabulary-map",
+        "summary": "Hand and money enter meaning-first; one isolated ai-sign lesson unlocks પૈસા before the five-word checkpoint scores all four skills separately.",
+        "assesses": [
+          "GU-LEX-HAATH-01",
+          "GU-SCRIPT-HAATH-01",
+          "GU-LEX-PAISA-01",
+          "GU-SCRIPT-AI-MATRA-01",
+          "GU-SCRIPT-PAISA-01",
+          "GU-PERFORMANCE-TRAVEL-FIVE-FOUR-SKILL-01"
+        ]
+      }
     }
   ]
 }

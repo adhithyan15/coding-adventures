@@ -1,0 +1,24 @@
+{
+  "chapter": 24,
+  "title": "A First Three-Place Map",
+  "label": "ch:gu-first-three-places",
+  "canDo": "I can hear, say, read, and write market, home, and temple in Gujarati.",
+  "spineNodes": [
+    "SPINE-POLITE-REQUEST-REPAIR"
+  ],
+  "payoff": {
+    "lesson": "GU-C20-places-three",
+    "kind": "four-skill-vocabulary-map",
+    "summary": "Seven one-atom lessons keep meaning ahead of print, isolate the one required consonant, then score all three words in listening, speaking, reading, and writing.",
+    "assesses": [
+      "GU-LEX-BAJAR-01",
+      "GU-SCRIPT-BAJAR-01",
+      "GU-LEX-GHAR-01",
+      "GU-SCRIPT-GHA-01",
+      "GU-SCRIPT-GHAR-01",
+      "GU-LEX-MANDIR-01",
+      "GU-SCRIPT-MANDIR-01",
+      "GU-PERFORMANCE-PLACES-THREE-FOUR-SKILL-01"
+    ]
+  }
+}

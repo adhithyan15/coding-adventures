@@ -584,6 +584,17 @@ pub struct TableType {
     pub element_type: u8,
     /// The size constraints on this table.
     pub limits: Limits,
+    /// Whether this table uses 64-bit addressing (table64 proposal, W26:
+    /// `(table i64 ...)` in text, binary `limits` flags bit `0x04` — the
+    /// same flag bit `MemoryType::is64`, W25, already recognizes). When
+    /// `true`, an eventual `table.get`/`table.set`/`table.grow`/
+    /// `table.size`/`call_indirect` against this table would use an `i64`
+    /// index instead of `i32` — W26 itself only wires the *declaration*
+    /// and import-linking-compatibility surface, not those instructions
+    /// (see `code/specs/W26-wasm-table64-first-slice.md`'s "Explicitly out
+    /// of scope"). Defaults to `false`, matching every pre-existing
+    /// (32-bit) table.
+    pub is64: bool,
 }
 
 // ──────────────────────────────────────────────────────────────────────────────
@@ -1134,9 +1145,28 @@ mod tests {
         let tt = TableType {
             element_type: FUNCREF,
             limits: Limits { min: 0, max: None },
+            is64: false,
         };
         assert_eq!(tt.element_type, 0x70);
         assert_eq!(tt.element_type, FUNCREF);
+    }
+
+    // ── Test 10b: TableType with 64-bit addressing (W26 / table64) ───────────
+
+    #[test]
+    fn table_type_is64_construction() {
+        // A real, spec-valid 64-bit table's limits can exceed u32::MAX --
+        // see code/specs/W26-wasm-table64-first-slice.md (table64's own
+        // real spec ceiling is u64::MAX, unlike memory64's 2^48 pages).
+        let big: u64 = (u32::MAX as u64) + 1;
+        let tt = TableType {
+            element_type: FUNCREF,
+            limits: Limits { min: big, max: Some(big * 2) },
+            is64: true,
+        };
+        assert!(tt.is64);
+        assert_eq!(tt.limits.min, big);
+        assert_eq!(tt.limits.max, Some(big * 2));
     }
 
     // ── Test 11: GlobalType mutable and immutable ─────────────────────────────
@@ -1177,6 +1207,7 @@ mod tests {
             type_info: ImportTypeInfo::Table(TableType {
                 element_type: FUNCREF,
                 limits: Limits { min: 0, max: None },
+                is64: false,
             }),
         };
         assert_eq!(imp.kind, ExternalKind::Table);

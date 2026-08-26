@@ -463,7 +463,7 @@ fn collect_symbols(fields: &[&SExpr], ctx: &mut ModuleCtx) -> Result<(), WastPar
                     insert_unique(&mut ctx.table_names, name, idx, f.pos(), "table")?;
                 }
             }
-            ctx.module.tables.push(TableType { element_type: FUNCREF, limits: Limits { min: 0, max: None } });
+            ctx.module.tables.push(TableType { element_type: FUNCREF, limits: Limits { min: 0, max: None }, is64: false }); // fixed in pass 2
         } else if f.is_keyword_list("memory") {
             let items = f.as_list().unwrap();
             if let Some(name) = items.get(1).and_then(|e| e.as_atom()) {
@@ -557,20 +557,25 @@ fn build_import_shell(items: &[SExpr], desc: &[SExpr], kind: &str) -> Result<Imp
     let type_info = match kind {
         "func" => ImportTypeInfo::Function(0), // fixed in pass 2 once the type is known
         "table" => {
-            // `desc` is `(table $name? limits reftype)` -- was previously
-            // discarded entirely (a `FUNCREF`/zero-limits placeholder,
-            // never fixed up afterward), same class of bug as the
-            // declared-table case above (task #96): an imported table's
-            // REAL limits and element type must come from the source, not
-            // a stub.
+            // `desc` is `(table $name? i64? limits reftype)` -- was
+            // previously discarded entirely (a `FUNCREF`/zero-limits
+            // placeholder, never fixed up afterward), same class of bug as
+            // the declared-table case above (task #96): an imported
+            // table's REAL limits and element type must come from the
+            // source, not a stub.
             let limits_start = if desc.get(1).and_then(|e| e.as_atom()).is_some_and(|s| s.starts_with('$')) { 2 } else { 1 };
             let rest = &desc[limits_start..];
+            // W26 (table64 proposal): same leading-`i64`-keyword shape
+            // `parse_memory_limits` (W25) already established for imported
+            // memories, applied here for an imported table.
+            let is64 = rest.first().and_then(|e| e.as_atom()) == Some("i64");
+            let rest = if is64 { &rest[1..] } else { rest };
             // Task #99: same hex-aware shape check as the declared-table
             // and `parse_limits` call sites -- an imported table with a
             // hex limit (`(import "m" "t" (table 0x10 funcref))`) hit the
             // identical ascii-digit-only bug here too.
             let digit_count = rest.iter().take_while(|e| e.as_atom().is_some_and(looks_like_uint_literal)).count();
-            let limits = parse_limits(&rest[..digit_count])?;
+            let limits = if is64 { parse_limits64(&rest[..digit_count])? } else { parse_limits(&rest[..digit_count])? };
             let reftype = expect_get(rest, digit_count)?;
             let element_type = match reftype.as_atom() {
                 Some("funcref") => wasm_types::FUNCREF,
@@ -583,7 +588,7 @@ fn build_import_shell(items: &[SExpr], desc: &[SExpr], kind: &str) -> Result<Imp
                     })
                 }
             };
-            ImportTypeInfo::Table(TableType { element_type, limits })
+            ImportTypeInfo::Table(TableType { element_type, limits, is64 })
         }
         "memory" => {
             // `desc` is `(memory $name? limits... shared?)` -- same
@@ -1205,6 +1210,15 @@ fn build_func(fields: &[SExpr], ctx: &mut ModuleCtx, func_idx: usize, code_idx: 
 /// comment explains for functions/code, needed here for the identical
 /// reason once a module can combine a table import with a real table.
 fn build_table_limits_and_elements(rest: &[SExpr], table_idx: u32, storage_idx: u32, ctx: &mut ModuleCtx) -> Result<(), WastParseError> {
+    // W26 (table64 proposal): an `i64` keyword immediately here (before the
+    // limit numbers) marks a 64-bit-indexed table -- the identical leading-
+    // keyword shape `build_memory_limits_and_data`'s own `i64` strip
+    // (W25/memory64) already established. Stripped once, up front, so
+    // neither branch below has to know about it individually.
+    let is64 = rest.first().and_then(|e| e.as_atom()) == Some("i64");
+    let rest = if is64 { &rest[1..] } else { rest };
+    ctx.module.tables[storage_idx as usize].is64 = is64;
+
     // Task #99: this used the same ascii-digit-only check `parse_limits`
     // itself used to have, so a hex limit like `(table 0x10 0xffff_ffff
     // funcref)` fell into the WRONG branch below entirely (mistaking the
@@ -1223,7 +1237,7 @@ fn build_table_limits_and_elements(rest: &[SExpr], table_idx: u32, storage_idx: 
         // declared -- real (not just multi-table) corpus files with an
         // `externref` table hit this.
         let digit_count = rest.iter().take_while(|e| e.as_atom().is_some_and(looks_like_uint_literal)).count();
-        ctx.module.tables[storage_idx as usize].limits = parse_limits(&rest[..digit_count])?;
+        ctx.module.tables[storage_idx as usize].limits = if is64 { parse_limits64(&rest[..digit_count])? } else { parse_limits(&rest[..digit_count])? };
         let reftype = expect_get(rest, digit_count)?;
         ctx.module.tables[storage_idx as usize].element_type = match reftype.as_atom() {
             Some("funcref") => wasm_types::FUNCREF,
@@ -4463,6 +4477,69 @@ mod tests {
     fn table_limits_accept_hex_literals_with_underscore_separators() {
         let m = parse_module("(module (table 0x10 0xffff_ffff funcref))").unwrap();
         assert_eq!(m.tables[0].limits, Limits { min: 0x10, max: Some(0xFFFF_FFFF) });
+    }
+
+    // ── table64 (W26) ─────────────────────────────────────────────────────
+
+    #[test]
+    fn table_i64_sets_is64() {
+        let m = parse_module("(module (table i64 1 funcref))").unwrap();
+        assert!(m.tables[0].is64);
+        assert_eq!(m.tables[0].limits, Limits { min: 1, max: None });
+    }
+
+    #[test]
+    fn table_i64_with_max_sets_is64_and_both_limits() {
+        let m = parse_module("(module (table i64 1 2 funcref))").unwrap();
+        assert!(m.tables[0].is64);
+        assert_eq!(m.tables[0].limits, Limits { min: 1, max: Some(2) });
+    }
+
+    #[test]
+    fn named_table_i64_sets_is64() {
+        let m = parse_module("(module (table $t i64 1 funcref))").unwrap();
+        assert!(m.tables[0].is64);
+    }
+
+    #[test]
+    fn plain_table_stays_is64_false() {
+        let m = parse_module("(module (table 1 funcref))").unwrap();
+        assert!(!m.tables[0].is64);
+    }
+
+    #[test]
+    fn table_i64_accepts_a_value_past_u32_max() {
+        // table64's own real spec ceiling is u64::MAX (see code/specs/
+        // W26-wasm-table64-first-slice.md), unlike memory64's much
+        // smaller 2^48-page ceiling -- this repo's own vendored
+        // table64.wast declares `(table i64 0xffff_ffff_ffff_ffff funcref)`.
+        let m = parse_module("(module (table i64 0xffff_ffff_ffff_ffff funcref))").unwrap();
+        assert!(m.tables[0].is64);
+        assert_eq!(m.tables[0].limits.min, u64::MAX);
+    }
+
+    #[test]
+    fn imported_table_i64_sets_is64() {
+        let m = parse_module(r#"(module (import "m" "t" (table i64 3 10 funcref)))"#).unwrap();
+        let ImportTypeInfo::Table(tt) = &m.imports[0].type_info else {
+            panic!("expected a table import, got {:?}", m.imports[0].type_info);
+        };
+        assert!(tt.is64);
+        assert_eq!(tt.limits, Limits { min: 3, max: Some(10) });
+    }
+
+    #[test]
+    fn inline_import_table_i64_sets_is64() {
+        // The WAT inline-import abbreviation: `(table $t (import "m" "n")
+        // i64 10 funcref)` desugars to `(import "m" "n" (table $t i64 10
+        // funcref))` -- the `i64` keyword sits AFTER the inline `(import
+        // ...)` clause here, unlike the explicit form above.
+        let m = parse_module(r#"(module (table $t (import "m" "t") i64 10 funcref))"#).unwrap();
+        let ImportTypeInfo::Table(tt) = &m.imports[0].type_info else {
+            panic!("expected a table import, got {:?}", m.imports[0].type_info);
+        };
+        assert!(tt.is64);
+        assert_eq!(tt.limits, Limits { min: 10, max: None });
     }
 
     #[test]

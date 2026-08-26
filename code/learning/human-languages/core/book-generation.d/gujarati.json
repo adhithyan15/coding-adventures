@@ -184,6 +184,20 @@
       "output": "gujarati/book/chapters/ch23-doorway-r4.tex",
       "unicodeScript": "Gujarati",
       "scriptCommand": "gu"
+    },
+    {
+      "language": "gujarati",
+      "chapter": 24,
+      "output": "gujarati/book/chapters/ch24-first-three-places.tex",
+      "unicodeScript": "Gujarati",
+      "scriptCommand": "gu"
+    },
+    {
+      "language": "gujarati",
+      "chapter": 25,
+      "output": "gujarati/book/chapters/ch25-hand-money-map.tex",
+      "unicodeScript": "Gujarati",
+      "scriptCommand": "gu"
     }
   ]
 }
