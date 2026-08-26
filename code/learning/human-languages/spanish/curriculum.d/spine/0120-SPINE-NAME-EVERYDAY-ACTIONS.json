@@ -1,0 +1,11 @@
+{
+  "segments": [
+    "ES-PATH-A1-BEBER"
+  ],
+  "omits": [
+    "VERB-GIVE"
+  ],
+  "relocates": {
+    "VERB-PUT": "SPINE-SAY-WHAT-I-DO"
+  }
+}

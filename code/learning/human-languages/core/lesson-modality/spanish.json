@@ -7,7 +7,7 @@
   "policy": {
     "maxLinearisableTableColumns": 3
   },
-  "sourceHash": "fnv1a64:636a4530b9f05917",
+  "sourceHash": "fnv1a64:207bfe9e30c37bee",
   "summary": {
     "totalLessons": 966,
     "voice": 912,
@@ -8477,7 +8477,7 @@
         "no-visual-dependency"
       ],
       "coreDrivable": true,
-      "sourceHash": "fnv1a64:fb2e752a7013fbc6"
+      "sourceHash": "fnv1a64:a73db5ca449d1f01"
     },
     {
       "id": "ES-C07-que",

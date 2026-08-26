@@ -1,0 +1,9 @@
+{
+  "segments": [],
+  "omits": [
+    "VERB-DRINK",
+    "VERB-GIVE",
+    "VERB-PUT"
+  ],
+  "relocates": {}
+}

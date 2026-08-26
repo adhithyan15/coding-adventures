@@ -394,7 +394,16 @@
       "id": "ES-PATH-029",
       "spine_node": "SPINE-SAY-WHAT-I-DO",
       "lessons": [
-        "ES-C07-vivir",
+        "ES-C07-vivir"
+      ],
+      "before": [],
+      "inline": [],
+      "after": []
+    },
+    {
+      "id": "ES-PATH-A1-BEBER",
+      "spine_node": "SPINE-NAME-EVERYDAY-ACTIONS",
+      "lessons": [
         "ES-C07-beber"
       ],
       "before": [],
@@ -5413,6 +5422,17 @@
       "omits": [],
       "relocates": {}
     },
+    "SPINE-NAME-EVERYDAY-ACTIONS": {
+      "segments": [
+        "ES-PATH-A1-BEBER"
+      ],
+      "omits": [
+        "VERB-GIVE"
+      ],
+      "relocates": {
+        "VERB-PUT": "SPINE-SAY-WHAT-I-DO"
+      }
+    },
     "SPINE-SAY-WHAT-I-DO": {
       "segments": [
         "ES-PATH-028-CION",
@@ -5467,8 +5487,7 @@
         "VERB-PRESENT-HABITUAL",
         "VERB-SEE",
         "VERB-KNOW",
-        "VERB-LEARN",
-        "VERB-GIVE"
+        "VERB-LEARN"
       ],
       "relocates": {
         "VERB-SPEAK": "SPINE-POLITE-REQUEST-REPAIR",

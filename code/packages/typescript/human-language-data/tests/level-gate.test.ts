@@ -4,7 +4,12 @@ import { describe, expect, it } from "vitest";
 import { loadEverything, loadChapterPolicy, loadTrackChapters } from "../src/loader.js";
 import { parseLesson } from "../src/parse.js";
 import { buildCurriculumGapReport, renderCurriculumGapReport } from "../src/report.js";
-import { LEVEL_VOCABULARY, runLevelGate, isEtymologyAtom } from "../src/level-gate.js";
+import {
+  LEVEL_VOCABULARY,
+  LEVEL_VERB_VOCABULARY,
+  runLevelGate,
+  isEtymologyAtom,
+} from "../src/level-gate.js";
 import { summarizeLevels, levelRank, lessonSpineNodes, CEFR_LEVELS } from "../src/levels.js";
 import type { CefrLevel } from "../src/levels.js";
 import { measureRamp } from "../src/ramp.js";
@@ -262,6 +267,35 @@ describe("the first rung anybody actually climbed", () => {
     // populated branch of this line had never once run.
     expect(line).not.toContain("1 tracks");
   });
+
+  it("blocks Spanish at A1 on COMPOSITION, while its total is within sixteen", () => {
+    // HL23's finding, made into a gate. Spanish teaches 584 of the 600 headwords
+    // A1 asks for — close enough that criterion 2 alone would certify A1 after one
+    // more tranche — and SEVEN of those headwords are verbs. Criterion 2b is the
+    // one that says so, and it must be visibly RED until the lexicon is authored.
+    //
+    // The shortfall is pinned rather than merely asserted non-zero, because a
+    // criterion that fails is not evidence of anything on its own: it has to fail
+    // by the amount the corpus actually justifies. This number must FALL as verbs
+    // are authored, and every tranche that moves it updates the pin here.
+    const spanish = realReport().levelGate!.tracks.find((t) => t.language === "spanish")!;
+    expect(spanish.inProgressAt).toBe("A1");
+    const verbs = spanish.blockers.find((b) => b.criterion === "verb-vocabulary");
+    expect(verbs).toBeDefined();
+    expect(verbs!.shortfall).toBe(32);
+    expect(verbs!.detail).toContain("8 distinct verb headwords at or below A1");
+
+    // And the criterion it partitions is still short too, by a different amount —
+    // proof the two numbers are measuring different things rather than one being a
+    // restatement of the other.
+    expect(spanish.blockers.find((b) => b.criterion === "vocabulary")?.shortfall).toBe(15);
+
+    // Critically: pre-A1 is NOT perturbed. Spanish is the only track holding any
+    // level at all, so a new criterion that revoked it would be a regression
+    // dressed as a gate. Six verb headwords at or below pre-A1 against a floor of
+    // five — one of margin, and that margin is why the floor is not higher.
+    expect(spanish.attained).toBe("pre-A1");
+  });
 });
 
 describe("etymology is a hook, not a skill", () => {
@@ -408,6 +442,12 @@ describe("the criteria themselves", () => {
   });
 
   it("cannot attain an otherwise complete level while its required writing stage is unproved", () => {
+    // This fixture exists to isolate ONE criterion, so it has to satisfy every
+    // other one — otherwise the assertion below passes or fails for a reason the
+    // test is not about. The first `LEVEL_VERB_VOCABULARY["pre-A1"]` lessons are
+    // therefore verb-tagged, which is what the composition criterion (2b) asks
+    // for; the rest stay nouns. Headwords are distinct either way, so the total
+    // is still exactly `LEVEL_VOCABULARY["pre-A1"]`.
     const lessons = Array.from({ length: LEVEL_VOCABULARY["pre-A1"] }, (_, index) =>
       parseLesson(`---
 id: AA-${String(index + 1).padStart(3, "0")}
@@ -415,7 +455,7 @@ chapter: 1
 type: word
 headword: word-${index + 1}
 gloss: word ${index + 1}
-concept_tag: AA-WORD-${index + 1}
+concept_tag: ${index < LEVEL_VERB_VOCABULARY["pre-A1"] ? "AA-VERB" : "AA-WORD"}-${index + 1}
 ---
 
 word ${index + 1}
@@ -498,6 +538,20 @@ word ${index + 1}
     const values = Object.values(LEVEL_VOCABULARY);
     for (let i = 1; i < values.length; i += 1) {
       expect(values[i]!).toBeGreaterThan(values[i - 1]!);
+    }
+  });
+
+  it("keeps the verb targets ascending, and below the totals they partition", () => {
+    // Two properties, and the second is the one worth having. A verb floor above
+    // the vocabulary target it is a subset of would be unsatisfiable by any corpus
+    // — the gate would fail every track forever and nobody could tell that from a
+    // gate working correctly on a corpus nobody had authored yet.
+    const verbs = Object.values(LEVEL_VERB_VOCABULARY);
+    for (let i = 1; i < verbs.length; i += 1) {
+      expect(verbs[i]!).toBeGreaterThan(verbs[i - 1]!);
+    }
+    for (const level of CEFR_LEVELS) {
+      expect(LEVEL_VERB_VOCABULARY[level]).toBeLessThan(LEVEL_VOCABULARY[level]);
     }
   });
 

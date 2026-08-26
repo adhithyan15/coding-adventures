@@ -238,13 +238,18 @@ describe("the committed corpus", () => {
 
   it("pins the first strand snapshot, including the three ladders nobody has climbed", () => {
     const summary = summarizeStrands(loadCurriculumSpine(), loadChapterPolicy().maxNewAtomsPerChapter);
-    expect(summary.totalNodes).toBe(33);
+    // 33 -> 34, and LEXICON 2 -> 3: HL23 adds `SPINE-NAME-EVERYDAY-ACTIONS`, an A1
+    // LEXICON node holding the first six everyday-action concepts split off
+    // `SPINE-SAY-WHAT-I-DO` — the first slice of HL09 §11 item 5. The pin moves
+    // because the spine gained a commitment, which is exactly what it is here to
+    // report; it is not loosened.
+    expect(summary.totalNodes).toBe(34);
 
     const byStrand = Object.fromEntries(summary.strands.map((s) => [s.strand, s.nodes]));
     expect(byStrand).toEqual({
       FUNCTION: 14,
       GRAMMAR: 7,
-      LEXICON: 2,
+      LEXICON: 3,
       SOUND: 0,
       ETYMOLOGY: 0,
       CULTURE: 3,
@@ -260,9 +265,17 @@ describe("the committed corpus", () => {
     expect(summary.emptyStrands).toEqual(["SOUND", "ETYMOLOGY", "IDIOM"]);
   });
 
-  it("still measures the 42-concept node HL09 section 1 diagnosed", () => {
+  it("still measures the node HL09 section 1 diagnosed, now six concepts lighter", () => {
     const summary = summarizeStrands(loadCurriculumSpine(), loadChapterPolicy().maxNewAtomsPerChapter);
-    expect(summary.largestNode).toEqual({ nodeId: "SPINE-SAY-WHAT-I-DO", concepts: 42 });
+    // 42 -> 39. HL23 moved VERB-DRINK, VERB-GIVE and VERB-PUT onto the new A1
+    // `SPINE-NAME-EVERYDAY-ACTIONS`. This is the first slice of HL09 §11 item 5,
+    // and a deliberately small one: a concept can only leave this node when every
+    // lesson realizing it moves too, because `validateCurriculum` demotes a lesson
+    // to "local support" the moment its concept's owner stops being its segment's
+    // node. These three were the ones no other track had to be edited to release.
+    // 39 is still 3x the chapter atom ceiling, so the node stays the corpus's
+    // worst offender and stays pinned below.
+    expect(summary.largestNode).toEqual({ nodeId: "SPINE-SAY-WHAT-I-DO", concepts: 39 });
 
     // Recorded debt, report-only: HL-C81 splits these. Until then the count is
     // pinned so it cannot grow quietly.

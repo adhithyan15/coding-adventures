@@ -534,6 +534,15 @@
       ],
       "relocates": {}
     },
+    "SPINE-NAME-EVERYDAY-ACTIONS": {
+      "segments": [],
+      "omits": [
+        "VERB-DRINK",
+        "VERB-GIVE",
+        "VERB-PUT"
+      ],
+      "relocates": {}
+    },
     "SPINE-SAY-WHAT-I-DO": {
       "segments": [
         "FR-PATH-010",
@@ -552,12 +561,9 @@
         "VERB-SEE",
         "VERB-KNOW",
         "VERB-LEARN",
-        "VERB-GIVE",
         "VERB-BRING",
         "VERB-GET",
-        "VERB-PUT",
         "VERB-EAT",
-        "VERB-DRINK",
         "VERB-PLAY",
         "VERB-WAIT",
         "VERB-ANSWER",

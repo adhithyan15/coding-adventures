@@ -199,6 +199,21 @@
       ]
     },
     {
+      "id": "SPINE-NAME-EVERYDAY-ACTIONS",
+      "stage": "A1",
+      "strand": "LEXICON",
+      "canDo": "I can name common everyday actions.",
+      "prerequisites": [
+        "SPINE-EXCHANGE-NAMES"
+      ],
+      "core": true,
+      "concepts": [
+        "VERB-DRINK",
+        "VERB-GIVE",
+        "VERB-PUT"
+      ]
+    },
+    {
       "id": "SPINE-SAY-WHAT-I-DO",
       "stage": "A2",
       "strand": "GRAMMAR",
@@ -226,13 +241,10 @@
         "VERB-READ",
         "VERB-WRITE",
         "VERB-CAN",
-        "VERB-GIVE",
         "VERB-TAKE",
         "VERB-BRING",
         "VERB-GET",
-        "VERB-PUT",
         "VERB-EAT",
-        "VERB-DRINK",
         "VERB-SLEEP",
         "VERB-LIVE",
         "VERB-WORK",

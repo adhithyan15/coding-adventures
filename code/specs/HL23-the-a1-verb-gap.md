@@ -1,8 +1,10 @@
 # HL23 — The A1 verb gap
 
-**Status:** decision document. Nothing here is implemented, and nothing here
-should be implemented until the owner has chosen an option. The spine, the track
-ledgers and the lesson corpus are untouched by the commit that carries this file.
+**Status:** decision document, **amended after implementation** — see §8. The
+owner chose Option C (§4). The first slice is implemented; §8 records the
+constraint that made this document's costing of Option C wrong, and re-prices
+the remainder. Sections 1-7 are left as written, because a decision document
+that is quietly edited to agree with what happened is not evidence of anything.
 
 **Tracking:** #12984. **Measured against:** `origin/main` @ `3c442dcf16`
 (Spanish A1 vocabulary tranche 6).
@@ -550,3 +552,107 @@ reproducible from the quoted rules and the corpus at `3c442dcf16`.
 
 The next action is the owner's choice among §4, plus the three open decisions in
 §5. Implementation follows that choice, per the repo's specs-before-code rule.
+
+---
+
+## 8. Amendment — what Option C actually costs *(added after the first slice)*
+
+§4 priced every option at "23 ledger entries per new node", and §3.4 named the
+two rules that make a spine change a 23-track change. **There is a third rule,
+it is the expensive one, and this document missed it.**
+
+### 8.1 The rule
+
+`curriculum.ts`, in the pass that classifies every lesson sitting in a path
+segment:
+
+```ts
+const isSharedContent =
+  CONTENT_TYPES.has(lesson.realization.type) &&
+  conceptOwner.get(lesson.realization.concept) === placement.node;
+const count = extensionLessonCount.get(lessonId) ?? 0;
+if (!isSharedContent && count === 0) {
+  error(
+    "unclassified-curriculum-extension-lesson",
+    `${curriculum.language}: ${lessonId} is local support but belongs to no extension node`,
+  );
+}
+```
+
+A lesson in a path segment is either the **canonical realization** of one of
+that node's own concepts, or it is **local support** and must belong to an
+extension node. There is no third category.
+
+So moving a concept from node X to node Y **reclassifies every lesson realizing
+it**. A lesson that was shared content of X becomes local support of X, and
+unless it is already inside an extension, it is an error. §3.1 was therefore
+right that nothing forbids a verb at A1 and right that `relocates` is sanctioned
+— but `relocates` only works for a lesson that is *already packaged as an
+extension*, which is why `ES-C10-ir` survives and `ES-C07-comer` does not.
+
+The consequence for Option C: **a concept cannot leave `SPINE-SAY-WHAT-I-DO`
+unless every lesson realizing it, in every track, moves with it or is demoted
+into an extension.** That is not a ledger edit. It is a lesson migration.
+
+### 8.2 The measured price, per concept
+
+Realizing lessons that are **not** already extension-resident — i.e. the lessons
+that would have to be moved or re-packaged before the concept can be released:
+
+| concept | lessons to move | tracks | note |
+|---|---|---|---|
+| `VERB-CAN`, `VERB-GIVE`, `VERB-PUT` | **0** | — | free; all realizers already extension-resident |
+| `VERB-INFINITIVE`, `VERB-PRESENT-HABITUAL` | **0** | — | free, but grammatical — they *are* the A2 node's `canDo` |
+| `VERB-DRINK` | 1 | spanish | the only everyday action costing a single track |
+| `VERB-BUY`, `VERB-PLAY`, `VERB-WAIT`, `VERB-MEET`, `VERB-ANSWER`, `VERB-BRING`, `VERB-GET` | 2 | italian, spanish | |
+| `VERB-SLEEP`, `VERB-WALK`, `VERB-OPEN`, `VERB-CLOSE`, `VERB-RUN`, `VERB-SIT`, `VERB-STAND` | 3 | french, german, spanish | |
+| `VERB-SEE` | 4 | gujarati, malayalam, punjabi, sanskrit | |
+| `VERB-EAT`, `VERB-COME`, `VERB-KNOW` | 5 | +gujarati, malayalam, punjabi, sanskrit | |
+| `VERB-LIVE` | 5 | french, german, hindi, italian, spanish | **plus two hard errors** — see below |
+| `VERB-THINK`, `VERB-UNDERSTAND`, `VERB-READ`, `VERB-WRITE`, `VERB-TAKE`, `VERB-ASK`, `VERB-HELP`, `VERB-LIKE-LOVE` | 9 | nine tracks each | |
+
+`VERB-LIVE` is worse than its row suggests. `FR-C05-habiter` and `GE-C05-wohnen`
+carry no explicit `spine_node`, so re-parenting the concept also changes their
+`canonicalOwner` and they fail `misplaced-shared-realization` as well —
+a second, independent error class on the same two lessons.
+
+**§4's estimate of Option C was wrong by a category, not by a margin.** The
+recommended six-concept set (`VERB-EAT`, `VERB-DRINK`, `VERB-SLEEP`,
+`VERB-LIVE`, `VERB-WALK`, `VERB-BUY`) costs **19 lesson migrations across 13
+tracks**, plus two `misplaced-shared-realization` repairs. A PR series is not a
+cheaper option that got more expensive; it is a different option, and it should
+be chosen deliberately rather than inherited from a number in a table.
+
+### 8.3 What the first slice actually shipped
+
+`SPINE-NAME-EVERYDAY-ACTIONS`, stage A1, strand LEXICON:
+
+> **I can name common everyday actions.**
+
+carrying **three** concepts — `VERB-DRINK`, `VERB-GIVE`, `VERB-PUT`. Chosen
+because they are the everyday actions releasable without editing another track:
+the first costs one Spanish-only segment split (`ES-PATH-029` held exactly two
+lessons, so `ES-C07-beber` became `ES-PATH-A1-BEBER` under the new node), and
+the other two cost nothing at all.
+
+`SPINE-SAY-WHAT-I-DO` goes **42 → 39**. That is a real slice of `HL09` §11 item
+5 and visibly not the whole of it; 39 is still more than three times the chapter
+atom ceiling, so the node stays the spine's worst offender and stays pinned.
+
+Deliberately **not** done, and the reasons matter:
+
+- **The 26 misfiled A1 grammar lessons stay where they are.** The plural present
+  paradigm under `SPINE-ASK-LOCATION`, and the gerunds, imperfect, preterite,
+  subject-verb agreement and infinitive-as-subject under
+  `SPINE-DEFINITE-REFERENCE`, are **morphology**, and this node's `canDo` claims
+  only **naming**. Relocating them would have required widening the `canDo` to
+  cover both — which is precisely the compound, unchosen capability statement
+  §5 rejected Option B for producing. They are misfiled today, this node does
+  not fix them, and the fix is a GRAMMAR rung of its own in a later slice.
+- **The three standing fictions stay too.** `VERB-SPEAK` and `VERB-WORK` are
+  pre-A1 lessons, and §3.5's four headwords of slack is the entire budget any
+  future slice has; `VERB-GO` was left with them so the trio moves together
+  when a rung exists that honestly covers it.
+- **No canonical concept was minted.** The six candidate verbs of §5 decision 3
+  ship namespaced. Promoting them asks all 23 tracks to answer for them, which
+  is a commitment this slice has no reason to make on their behalf.
