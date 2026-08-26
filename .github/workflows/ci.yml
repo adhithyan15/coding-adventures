@@ -24,7 +24,9 @@
 #       every official Unicode 17 normalization/casing vector.
 #   11. unicode17-haskell-conformance: runs the generated Haskell tables against
 #       every official Unicode 17 normalization/casing vector.
-#   12. build: Installs only the needed toolchains, then runs the build.
+#   12. unicode17-swift-conformance: runs the generated Swift tables against
+#       every official Unicode 17 normalization/casing vector.
+#   13. build: Installs only the needed toolchains, then runs the build.
 #
 # This saves 3-5 minutes on language-specific changes by skipping
 # unneeded toolchain installations (e.g., Rust tarpaulin, Elixir/Erlang).
@@ -784,7 +786,35 @@ jobs:
             --runghc-executable "$runghc_executable" \
             --ghc-executable "$ghc_executable"
 
-  # ── Job 12: Build and test ─────────────────────────────────────
+  # ── Job 12: Unicode 17 generated Swift conformance ─────────────
+  unicode17-swift-conformance:
+    name: Unicode 17 generated Swift conformance
+    runs-on: ubuntu-24.04
+    permissions:
+      contents: read
+    steps:
+      - name: Checkout
+        uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262 # v4
+        with:
+          persist-credentials: false
+
+      - name: Verify generated Swift against every official Unicode 17 vector
+        shell: bash
+        run: |
+          # The Swift driver dispatches by argv[0], so retain these entrypoint names.
+          swift_executable="$(command -v swift)"
+          swiftc_executable="$(command -v swiftc)"
+          test -x "$swift_executable"
+          test -x "$swiftc_executable"
+          test "$("$swift_executable" --version | sed -n '1p')" = "Swift version 6.3.3 (swift-6.3.3-RELEASE)"
+          test "$("$swiftc_executable" --version | sed -n '1p')" = "Swift version 6.3.3 (swift-6.3.3-RELEASE)"
+          python3 code/scripts/generate_tracked_artifact_unicode17.py \
+            --check \
+            --self-check-runtime swift \
+            --swift-executable "$swift_executable" \
+            --swiftc-executable "$swiftc_executable"
+
+  # ── Job 13: Build and test ─────────────────────────────────────
   #
   # Installs only the toolchains flagged by the detect job, then
   # compiles the build tool and runs the incremental build.
@@ -2071,7 +2101,7 @@ jobs:
           if [ "$RUNNER_OS" = "Windows" ]; then BT=./build-tool.exe; else BT=./build-tool; fi
           $BT -root . -plan-file build-plan.json -shard-index "${{ matrix.shard_index }}" -force -validate-build-files -clippy -language all
 
-  # ── Job 13: CI gate ────────────────────────────────────────────
+  # ── Job 14: CI gate ────────────────────────────────────────────
   #
   # A single, always-present status check that summarizes the result of
   # every real job. The `build` job is a DYNAMIC matrix — its `build (…)`
@@ -2088,7 +2118,7 @@ jobs:
   # dependency failed, so it can report the failure rather than being skipped.
   ci-gate:
     name: ${{ github.event_name == 'pull_request' && 'CI gate' || 'CI push gate' }}
-    needs: [detect, phy00-phy01-fixture-consumers, d18f-message-conformance, d18p-channel-conformance, d18q-channel-key-grant-conformance, d18t-durable-epoch-activation-conformance, ruby-grammar-regen-check, unicode17-elixir-conformance, unicode17-lua-conformance, unicode17-perl-conformance, unicode17-haskell-conformance, build]
+    needs: [detect, phy00-phy01-fixture-consumers, d18f-message-conformance, d18p-channel-conformance, d18q-channel-key-grant-conformance, d18t-durable-epoch-activation-conformance, ruby-grammar-regen-check, unicode17-elixir-conformance, unicode17-lua-conformance, unicode17-perl-conformance, unicode17-haskell-conformance, unicode17-swift-conformance, build]
     if: always()
     runs-on: ubuntu-latest
     steps:
@@ -2106,11 +2136,12 @@ jobs:
           UNICODE17_LUA_RESULT: ${{ needs['unicode17-lua-conformance'].result }}
           UNICODE17_PERL_RESULT: ${{ needs['unicode17-perl-conformance'].result }}
           UNICODE17_HASKELL_RESULT: ${{ needs['unicode17-haskell-conformance'].result }}
+          UNICODE17_SWIFT_RESULT: ${{ needs['unicode17-swift-conformance'].result }}
           BUILD_RESULT: ${{ needs.build.result }}
         run: |
-          echo "detect=$DETECT_RESULT phy=$PHY_RESULT d18f=$D18F_RESULT d18p=$D18P_RESULT d18q=$D18Q_RESULT d18t=$D18T_RESULT ruby_grammar_regen=$RUBY_GRAMMAR_REGEN_RESULT unicode17_elixir=$UNICODE17_ELIXIR_RESULT unicode17_lua=$UNICODE17_LUA_RESULT unicode17_perl=$UNICODE17_PERL_RESULT unicode17_haskell=$UNICODE17_HASKELL_RESULT build=$BUILD_RESULT"
+          echo "detect=$DETECT_RESULT phy=$PHY_RESULT d18f=$D18F_RESULT d18p=$D18P_RESULT d18q=$D18Q_RESULT d18t=$D18T_RESULT ruby_grammar_regen=$RUBY_GRAMMAR_REGEN_RESULT unicode17_elixir=$UNICODE17_ELIXIR_RESULT unicode17_lua=$UNICODE17_LUA_RESULT unicode17_perl=$UNICODE17_PERL_RESULT unicode17_haskell=$UNICODE17_HASKELL_RESULT unicode17_swift=$UNICODE17_SWIFT_RESULT build=$BUILD_RESULT"
           fail=0
-          for r in "$DETECT_RESULT" "$PHY_RESULT" "$D18F_RESULT" "$D18P_RESULT" "$D18Q_RESULT" "$D18T_RESULT" "$RUBY_GRAMMAR_REGEN_RESULT" "$UNICODE17_ELIXIR_RESULT" "$UNICODE17_LUA_RESULT" "$UNICODE17_PERL_RESULT" "$UNICODE17_HASKELL_RESULT" "$BUILD_RESULT"; do
+          for r in "$DETECT_RESULT" "$PHY_RESULT" "$D18F_RESULT" "$D18P_RESULT" "$D18Q_RESULT" "$D18T_RESULT" "$RUBY_GRAMMAR_REGEN_RESULT" "$UNICODE17_ELIXIR_RESULT" "$UNICODE17_LUA_RESULT" "$UNICODE17_PERL_RESULT" "$UNICODE17_HASKELL_RESULT" "$UNICODE17_SWIFT_RESULT" "$BUILD_RESULT"; do
             case "$r" in
               success|skipped) ;;
               *) echo "::error::a required job did not pass (result: $r)"; fail=1 ;;

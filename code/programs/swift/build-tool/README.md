@@ -16,6 +16,22 @@ This port mirrors the other build-tool implementations in the repo:
 7. Emits and consumes JSON build plans for CI
 8. Validates the CI full-build toolchain contract
 
+## Tracked-artifact validation
+
+`Validator.validateTrackedArtifactSnapshot` consumes an already bounded,
+inert list of tracked repository paths. It rejects non-portable paths with a
+fixed redacted diagnostic and detects exact, nested, separator-normalized,
+case, and Unicode-compatibility aliases of `node_modules`. Regular files,
+symlinks, and reparse points remain inert metadata: this pure adapter does not
+enumerate a checkout, follow a link, invoke Git, read a path or environment
+variable, launch a process, or access the network.
+
+Generated source-embedded Unicode 17.0.0 tables provide exact NFC, NFKC,
+full-case-fold, and full-uppercase behavior independently of the host OS and
+Swift runtime. All five language-neutral tracked-artifact fixtures plus the
+official Unicode normalization, folding, and uppercase vectors are checked in
+tests and required CI.
+
 ## Metadata safety
 
 Lua `.rockspec` files are decoded as strict UTF-8 before dependency parsing.
