@@ -27,4 +27,14 @@
   against the original text rather than a lowercased copy, because
   `toLowerCase()` is not length-preserving for every script in this corpus and
   the offsets the anchoring tests use have to index the real string.
+- The gloss rule treats only `"` and the curly pair as quote marks. An earlier
+  draft also accepted `'`, which let any two contractions within sixty
+  characters forge a gloss and swallow the cue inside it — "Don't look at the
+  chart's third bar" lost `look at`, and `ES-W00-hola-observe` lost the
+  narration line telling a listener the lesson points at something written down.
+- `hasPageArtifact` recognises HTML `<img>`/`<table>`/`<figure>` and
+  reference-style images as well as pipe tables, since the `artifact` anchor's
+  safety rests on that test being complete; and its alt-text scan is bounded and
+  atomic, because the unbounded form walked to end-of-text from every `!` in the
+  body (49 s on 400 KB of `![`, now ~70 ms, with a test pinning the class).
 

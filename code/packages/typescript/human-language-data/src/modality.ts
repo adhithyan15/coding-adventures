@@ -531,16 +531,25 @@ export function widestTableColumns(text: string): number {
  * bodies are the one input this module is guaranteed to be pointed at. A lookahead
  * capture cannot be backtracked into, so the run is matched once and kept.
  *
- * The `{0,200}` bound is the other half, and the atomic group alone is not enough
- * without it: an unbounded run still costs O(n) at EVERY `!` in the document even when
- * it never backtracks, which is the same quadratic by a different route. Alt text is a
- * caption; two hundred characters is far past any real one.
+ * The `{0,200}` bound is the other half, and it is the half that actually closed the
+ * hole: a lookahead is already atomic in ECMAScript, so backtracking had stopped, but an
+ * unbounded run still costs O(n) at EVERY `!` in the document — the same quadratic by a
+ * different route. Bounded, 1.6 MB of `![` goes from 49 s to 303 ms.
+ *
+ * The `[^\]\n]` alternative is what keeps the bound from creating a NEW false negative.
+ * A cap that simply fails on long alt text would report "no figure" for a formant chart
+ * carrying a descriptive caption, and every `artifact` cue would then be gated off and
+ * the lesson called drivable — the one direction this module may not fail in. That
+ * branch can only be reached when the lookahead consumed all two hundred characters, so
+ * hitting the cap is itself treated as evidence of a figure, while `![sic] more`,
+ * `![unclosed` and `![` with a newline still correctly read as no figure.
  *
  * The HTML alternatives are not decoration. Markdown passes raw HTML through, so a vowel
  * chart may perfectly well arrive as `<img>` or `<table>`, and missing it would send the
  * lesson to the driving edition — the one direction this module must never fail in.
  */
-const PAGE_ARTIFACT = /!\[(?=([^\]\n]{0,200}))\1\][([]|<(?:img|table|figure|svg|picture)\b/i;
+const PAGE_ARTIFACT =
+  /!\[(?=([^\]\n]{0,200}))\1(?:\][([]|[^\]\n])|<(?:img|table|figure|svg|picture)\b/i;
 
 /**
  * Whether a document contains anything a cue phrase could be pointing AT.
@@ -668,14 +677,14 @@ const CUE_PATTERNS: ReadonlyMap<string, RegExp> = new Map(
   ]),
 );
 
-/** Whether the cue at `[index, index + length)` sits inside one of the quoted spans. */
-function isQuotedMention(
-  spans: readonly (readonly [number, number])[],
-  index: number,
-  length: number,
-): boolean {
-  return spans.some(([start, end]) => index >= start && index + length <= end);
-}
+// The membership test against `spans` is a MONOTONE CURSOR, not a scan, and the
+// difference is another quadratic. `spans.some(...)` walks the whole list for every cue
+// occurrence, so on a text that is mostly short quotations the cost is
+// occurrences x spans: 80,000 spans took 39.6 seconds where an unquoted text of the same
+// length took 20 ms. Both sequences are ascending — `matchAll` yields spans in order and
+// `exec` yields occurrences in order — so the cursor only ever moves forward and the test
+// is O(1) amortised. Restored to 22 ms. The cursor lives in `cueFires` because it must
+// reset once per cue phrase, which is exactly one rescan of the text.
 
 /**
  * Whether one cue phrase counts as a reference to the page anywhere in `text`.
@@ -700,6 +709,7 @@ function cueFires(
     throw new Error(`modality: no compiled pattern for sight cue '${rule.phrase}'`);
   }
   pattern.lastIndex = 0;
+  let cursor = 0;
   let match: RegExpExecArray | null;
   while ((match = pattern.exec(text)) !== null) {
     const index = (match.index ?? 0) + match[1]!.length;
@@ -713,7 +723,14 @@ function cueFires(
     // known to hold a table, a quoted "the table" is still pointing at it — dropping it
     // as a mention would be a guess against the evidence.
     if (rule.anchor === "artifact") return true;
-    if (isQuotedMention(spans, index, rule.phrase.length)) continue;
+
+    // Advance the cursor past every span that ends before this occurrence starts, then
+    // test only the one span that could still contain it.
+    while (cursor < spans.length && spans[cursor]![1] <= index) cursor += 1;
+    const span = spans[cursor];
+    if (span !== undefined && index >= span[0] && index + rule.phrase.length <= span[1]) {
+      continue;
+    }
 
     const after = index + rule.phrase.length;
     PROPOSITIONAL_COMPLEMENT.lastIndex = after;

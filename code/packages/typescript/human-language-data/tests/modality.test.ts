@@ -318,6 +318,19 @@ describe("a sight cue must be anchored to something on the page", () => {
     expect(matchedSightCues("![vowel chart][fig1] — the chart shows it")).toContain("the chart");
   });
 
+  it("counts a figure whose alt text is longer than the scan bound", () => {
+    // The bound that fixed the quadratic must not become a false negative of its own. A
+    // formant chart with a descriptive caption can easily pass 200 characters, and
+    // reporting "no figure" there would gate off every artifact cue and call the lesson
+    // drivable. Hitting the cap is treated as evidence of a figure, not absence of one.
+    const longAlt = `![${"a vowel formant chart, ".repeat(30)}](chart.png)`;
+    expect(longAlt.length).toBeGreaterThan(200);
+    expect(matchedSightCues(`${longAlt}\n\nthe chart shows it`)).toContain("the chart");
+    // ...while the things that merely look like an image opener still do not count.
+    expect(matchedSightCues("![unclosed and the table")).toEqual([]);
+    expect(matchedSightCues("![sic] more prose about the table")).toEqual([]);
+  });
+
   it("scans a pathological body in linear time", () => {
     // The alt-text scan was `!\[[^\]]*\]\(`, which walks to end-of-text from every `!` in
     // the document: 400 KB of "![" took 49 seconds. The same body now takes ~70 ms.
@@ -330,6 +343,11 @@ describe("a sight cue must be anchored to something on the page", () => {
     const started = Date.now();
     expect(matchedSightCues("![".repeat(200_000))).toEqual([]);
     expect(matchedSightCues("look at what ".repeat(20_000))).toEqual([]);
+    // ...and the quoted-span membership test, which was the second place the same
+    // quadratic hid. The cue must be INSIDE the quotes: an occurrence that fires returns
+    // immediately, so only a text where every occurrence is dropped walks the whole span
+    // list. That shape took 39.6 s at 80,000 spans; a monotone cursor makes it ~6 ms.
+    expect(matchedSightCues('"look at" '.repeat(40_000))).toEqual([]);
     expect(Date.now() - started).toBeLessThan(15_000);
   });
 
