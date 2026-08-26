@@ -910,6 +910,32 @@ TESTSUITE_FILES = [
     # exactly what this slice builds.
     "table64.wast",
     "memory64-imports.wast",
+    # Real module linking, `imports.wast` (task #61 -- originally logged as
+    # "blocked on tag/exceptions-proposal parsing", now closed out): this
+    # file's own "auxiliary modules to import from" preamble declares
+    # `(tag ...)`/`(tag (import ...) ...)`/`(export "x" (tag $y))`, which
+    # `wasm-wast-parser` had zero grammar support for when W10 first tried
+    # to vendor it (see that spec's "Deferred, not silently dropped" note
+    # and this crate's own CHANGELOG 0.1.15 entry) -- the file failed to
+    # PARSE entirely, not just grade poorly. The W21-W24 exceptions-
+    # proposal epic (real `tag` definitions, `tag` imports/exports, and
+    # cross-instance tag identity via `HostInterface::resolve_tag`) closes
+    # that gap incidentally; re-fetching and re-running this file live
+    # confirms it now parses in full (218 directives, zero parse error)
+    # and grades honestly: all 93 `assert_unlinkable` cases -- including
+    # the tag-specific ones (`(tag (import "test" "tag-i32")))`,
+    # `(tag (import "test" "tag-i32") (param f32))` type-mismatch, a
+    # `func`-vs-`tag` kind-mismatch) -- real `Pass`, zero `Fail` anywhere
+    # in the whole file. The remaining `NotYetSupported` directives are
+    # ALL pre-existing, already-documented, unrelated-to-tags capability
+    # gaps this crate already carries elsewhere: imports from the
+    # unimplemented `spectest` host module (explicitly out of scope, see
+    # `RegistryHost`'s own doc comment and W10's "Explicitly out of
+    # scope"), and `assert_malformed` cases needing "imports must precede
+    # all other definitions" ordering validation `wasm-wast-parser`
+    # doesn't do (the same "text parsed without error" gap already
+    # present in `align.wast`/`block.wast`/`func.wast`/a dozen others).
+    "imports.wast",
 ]
 
 # Reference-types/threads-proposal files whose UPSTREAM path lives under
