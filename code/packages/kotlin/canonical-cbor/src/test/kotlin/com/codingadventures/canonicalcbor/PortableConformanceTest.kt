@@ -65,9 +65,26 @@ class PortableConformanceTest {
     @Test
     fun `errors never reflect payload bytes`() {
         val error = assertFailsWith<CborException> { CanonicalCbor.decode(fromHex("63e298")) }
-        assertEquals("unexpected-eof", error.id)
+        assertEquals("length-too-large", error.id)
         assertTrue(error.message!!.startsWith("canonical-cbor:"))
         assertTrue(!error.message!!.contains("e298"))
+    }
+
+    @Test
+    fun `public values defend bytes and checked append publishes atomically`() {
+        val source = byteArrayOf(1, 2, 3)
+        val value = CborValue.Bytes(source)
+        source[0] = 9
+        assertContentEquals(byteArrayOf(1, 2, 3), value.value)
+        assertEquals(CborValue.Bytes(byteArrayOf(1, 2, 3)), value)
+        assertEquals(CborValue.Bytes(byteArrayOf(1, 2, 3)).hashCode(), value.hashCode())
+        assertEquals("Bytes(length=3)", value.toString())
+        assertEquals(CborValue.Array(listOf(CborValue.Null)), CborValue.Array(CborValue.Null))
+
+        val destination = ByteArrayOutputStream().apply { write(0xaa) }
+        CanonicalCbor.encodeIntoChecked(CborValue.Unsigned(24u), destination)
+        assertContentEquals(fromHex("aa1818"), destination.toByteArray())
+        assertFailsWith<IllegalArgumentException> { CborException("unknown-id") }
     }
 
     private fun assertError(id: String, caseId: String, action: () -> Unit) {
@@ -137,4 +154,3 @@ class PortableConformanceTest {
         }
     }
 }
-

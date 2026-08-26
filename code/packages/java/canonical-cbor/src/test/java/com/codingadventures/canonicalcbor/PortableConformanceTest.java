@@ -78,9 +78,26 @@ class PortableConformanceTest {
     void errorsNeverReflectPayloadBytes() {
         CborException error = assertThrows(CborException.class,
                 () -> CanonicalCbor.decode(fromHex("63e298")));
-        assertEquals("unexpected-eof", error.id());
+        assertEquals("length-too-large", error.id());
         assertTrue(error.getMessage().startsWith("canonical-cbor:"));
         assertTrue(!error.getMessage().contains("e298"));
+    }
+
+    @Test
+    void publicValuesDefendBytesAndCheckedAppendPublishesAtomically() throws Exception {
+        byte[] source = new byte[]{1, 2, 3};
+        CborValue.Bytes value = new CborValue.Bytes(source);
+        source[0] = 9;
+        assertArrayEquals(new byte[]{1, 2, 3}, value.value());
+        assertEquals(new CborValue.Bytes(new byte[]{1, 2, 3}), value);
+        assertEquals(new CborValue.Bytes(new byte[]{1, 2, 3}).hashCode(), value.hashCode());
+        assertEquals("Bytes[length=3]", value.toString());
+
+        ByteArrayOutputStream destination = new ByteArrayOutputStream();
+        destination.write(0xaa);
+        CanonicalCbor.encodeIntoChecked(new CborValue.Unsigned(24), destination);
+        assertArrayEquals(fromHex("aa1818"), destination.toByteArray());
+        assertThrows(IllegalArgumentException.class, () -> new CborException("unknown-id"));
     }
 
     private static void assertError(String id, ThrowingAction action, String caseId) {
@@ -173,4 +190,3 @@ class PortableConformanceTest {
         void run() throws Exception;
     }
 }
-
