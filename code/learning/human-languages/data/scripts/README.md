@@ -270,7 +270,12 @@ animation in one uninterrupted run: descend nearly straight from the top,
 turn around the broad lower curve, and sweep upward to the right. Its two-frame
 Noto Sans JP filmstrip preserves that zero-lift order while fitting the heavier
 printed outline; handwritten curvature and finish height remain explicit
-variation. Hiragana **も** follows Sirgazil's 28-frame CC0 animation in three
+variation. Hiragana **く** follows Sirgazil's 20-frame CC0 animation in one
+uninterrupted run: sweep down and left from the upper right into the sharp
+central turn, then continue down and right to the lower tip. Its two-frame Noto
+Sans JP filmstrip preserves that zero-lift order while recording handwritten
+curvature and turn sharpness as variation. Hiragana **も** follows Sirgazil's
+28-frame CC0 animation in three
 pen-down runs: the descending stem turns around the broad lower bowl, then the
 upper and lower bars cross it from left to right after two lifts. Its
 three-frame Noto Sans JP filmstrip keeps that order while recording handwritten

@@ -153,6 +153,8 @@ const NGA = DUCTUS["ங"];
 const ngaOutline = tamilOutline("ங");
 const JAPANESE_SHI = DUCTUS[ductusKey("japanese", "し")];
 const japaneseShiOutline = japaneseOutline("し");
+const JAPANESE_KU = DUCTUS[ductusKey("japanese", "く")];
+const japaneseKuOutline = japaneseOutline("く");
 const JAPANESE_MO = DUCTUS[ductusKey("japanese", "も")];
 const japaneseMoOutline = japaneseOutline("も");
 const CA = DUCTUS["ச"];
@@ -1569,6 +1571,22 @@ describe("ங — a detached upright followed by one joined body", () => {
 describe("し — one continuous descending curve", () => {
   const steps = ductusSteps(JAPANESE_SHI);
   const strip = ductusFilmstrip(JAPANESE_SHI, japaneseShiOutline);
+
+  it("keeps both movements in one pen-down run", () => {
+    expect(steps.map((step) => step.strokeIndex)).toEqual([0, 0]);
+    expect(steps.map((step) => step.startsAfterLift)).toEqual([false, false]);
+  });
+
+  it("reports a two-frame zero-lift filmstrip", () => {
+    expect(strip.frames).toHaveLength(2);
+    expect(strip.penLifts).toBe(0);
+    expect(strip.summary).toBe("one unbroken stroke · 2 movements");
+  });
+});
+
+describe("く — one continuous angled turn", () => {
+  const steps = ductusSteps(JAPANESE_KU);
+  const strip = ductusFilmstrip(JAPANESE_KU, japaneseKuOutline);
 
   it("keeps both movements in one pen-down run", () => {
     expect(steps.map((step) => step.strokeIndex)).toEqual([0, 0]);
