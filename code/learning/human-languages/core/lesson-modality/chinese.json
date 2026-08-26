@@ -7,30 +7,30 @@
   "policy": {
     "maxLinearisableTableColumns": 3
   },
-  "sourceHash": "fnv1a64:5f8348ade126a246",
+  "sourceHash": "fnv1a64:8b42dba381b94b1e",
   "summary": {
-    "totalLessons": 152,
-    "voice": 87,
-    "sight": 15,
-    "pen": 50,
-    "drivableLessons": 87,
-    "drivablePercent": 57,
+    "totalLessons": 175,
+    "voice": 98,
+    "sight": 21,
+    "pen": 56,
+    "drivableLessons": 98,
+    "drivablePercent": 56,
     "trackCount": 1,
-    "chapterCount": 17,
+    "chapterCount": 18,
     "drivablePrefixTotal": 8,
     "fullyDrivableChapters": 0,
-    "unstartableChapters": 11,
+    "unstartableChapters": 12,
     "overriddenLessons": 0,
     "lessonsWithoutChapter": 0
   },
   "tracks": [
     {
       "language": "chinese",
-      "lessonCount": 152,
-      "voice": 87,
-      "sight": 15,
-      "pen": 50,
-      "drivablePercent": 57,
+      "lessonCount": 175,
+      "voice": 98,
+      "sight": 21,
+      "pen": 56,
+      "drivablePercent": 56,
       "drivablePrefixTotal": 8,
       "modalities": [
         "voice",
@@ -322,6 +322,22 @@
           "drivableLessonIds": [
             "ZH-C17-hear-zhongwen"
           ]
+        },
+        {
+          "chapter": 18,
+          "lessonCount": 23,
+          "voice": 11,
+          "sight": 6,
+          "pen": 6,
+          "modalities": [
+            "voice",
+            "sight",
+            "pen"
+          ],
+          "drivablePrefix": 0,
+          "firstNonVoiceLesson": "ZH-C18-hear-kan",
+          "drivable": false,
+          "drivableLessonIds": []
         }
       ]
     }
@@ -3294,6 +3310,438 @@
       ],
       "coreDrivable": false,
       "sourceHash": "fnv1a64:bdda503ac26aca98"
+    },
+    {
+      "id": "ZH-C18-hear-kan",
+      "language": "chinese",
+      "chapter": 18,
+      "sequence": 1590,
+      "modality": "sight",
+      "derived": "sight",
+      "drivable": false,
+      "reasons": [
+        "sight-cue"
+      ],
+      "coreModality": "sight",
+      "coreReasons": [
+        "sight-cue"
+      ],
+      "coreDrivable": false,
+      "sourceHash": "fnv1a64:efd58fca76bd0b36"
+    },
+    {
+      "id": "ZH-W18-kan-observe",
+      "language": "chinese",
+      "chapter": 18,
+      "sequence": 1600,
+      "modality": "pen",
+      "derived": "pen",
+      "drivable": false,
+      "reasons": [
+        "writing-type",
+        "script-block"
+      ],
+      "coreModality": "pen",
+      "coreReasons": [
+        "writing-type"
+      ],
+      "coreDrivable": false,
+      "sourceHash": "fnv1a64:3a2b15d8e09beb83",
+      "detachableSegments": [
+        "Script — the shape"
+      ],
+      "delivery": "script"
+    },
+    {
+      "id": "ZH-W18-kan-guided",
+      "language": "chinese",
+      "chapter": 18,
+      "sequence": 1610,
+      "modality": "pen",
+      "derived": "pen",
+      "drivable": false,
+      "reasons": [
+        "writing-type"
+      ],
+      "coreModality": "pen",
+      "coreReasons": [
+        "writing-type"
+      ],
+      "coreDrivable": false,
+      "sourceHash": "fnv1a64:0618044bb23ee058",
+      "delivery": "script"
+    },
+    {
+      "id": "ZH-W18-kan-delayed",
+      "language": "chinese",
+      "chapter": 18,
+      "sequence": 1620,
+      "modality": "pen",
+      "derived": "pen",
+      "drivable": false,
+      "reasons": [
+        "writing-type",
+        "sight-cue"
+      ],
+      "coreModality": "pen",
+      "coreReasons": [
+        "writing-type",
+        "sight-cue"
+      ],
+      "coreDrivable": false,
+      "sourceHash": "fnv1a64:4590f39305138dcb",
+      "delivery": "script"
+    },
+    {
+      "id": "ZH-C18-kan",
+      "language": "chinese",
+      "chapter": 18,
+      "sequence": 1630,
+      "modality": "sight",
+      "derived": "sight",
+      "drivable": false,
+      "reasons": [
+        "sight-cue"
+      ],
+      "coreModality": "sight",
+      "coreReasons": [
+        "sight-cue"
+      ],
+      "coreDrivable": false,
+      "sourceHash": "fnv1a64:5728a57127879b95"
+    },
+    {
+      "id": "ZH-C18-hear-kanjian",
+      "language": "chinese",
+      "chapter": 18,
+      "sequence": 1640,
+      "modality": "voice",
+      "derived": "voice",
+      "drivable": true,
+      "reasons": [
+        "no-visual-dependency"
+      ],
+      "coreModality": "voice",
+      "coreReasons": [
+        "no-visual-dependency"
+      ],
+      "coreDrivable": true,
+      "sourceHash": "fnv1a64:4859d0169922ad26"
+    },
+    {
+      "id": "ZH-C18-kanjian",
+      "language": "chinese",
+      "chapter": 18,
+      "sequence": 1650,
+      "modality": "voice",
+      "derived": "voice",
+      "drivable": true,
+      "reasons": [
+        "no-visual-dependency"
+      ],
+      "coreModality": "voice",
+      "coreReasons": [
+        "no-visual-dependency"
+      ],
+      "coreDrivable": true,
+      "sourceHash": "fnv1a64:a08ad01f803a0ba1"
+    },
+    {
+      "id": "ZH-C18-hear-haokan",
+      "language": "chinese",
+      "chapter": 18,
+      "sequence": 1660,
+      "modality": "sight",
+      "derived": "sight",
+      "drivable": false,
+      "reasons": [
+        "sight-cue"
+      ],
+      "coreModality": "sight",
+      "coreReasons": [
+        "sight-cue"
+      ],
+      "coreDrivable": false,
+      "sourceHash": "fnv1a64:18d0e9f329ce9320"
+    },
+    {
+      "id": "ZH-C18-haokan",
+      "language": "chinese",
+      "chapter": 18,
+      "sequence": 1670,
+      "modality": "sight",
+      "derived": "sight",
+      "drivable": false,
+      "reasons": [
+        "sight-cue"
+      ],
+      "coreModality": "sight",
+      "coreReasons": [
+        "sight-cue"
+      ],
+      "coreDrivable": false,
+      "sourceHash": "fnv1a64:c0ef82ffe194f096"
+    },
+    {
+      "id": "ZH-R18-looking-three-r1",
+      "language": "chinese",
+      "chapter": 18,
+      "sequence": 1680,
+      "modality": "voice",
+      "derived": "voice",
+      "drivable": true,
+      "reasons": [
+        "no-visual-dependency"
+      ],
+      "coreModality": "voice",
+      "coreReasons": [
+        "no-visual-dependency"
+      ],
+      "coreDrivable": true,
+      "sourceHash": "fnv1a64:ac42c487d97008c0"
+    },
+    {
+      "id": "ZH-C18-hear-shu",
+      "language": "chinese",
+      "chapter": 18,
+      "sequence": 1690,
+      "modality": "voice",
+      "derived": "voice",
+      "drivable": true,
+      "reasons": [
+        "no-visual-dependency"
+      ],
+      "coreModality": "voice",
+      "coreReasons": [
+        "no-visual-dependency"
+      ],
+      "coreDrivable": true,
+      "sourceHash": "fnv1a64:90f375b28ada21e6"
+    },
+    {
+      "id": "ZH-W18-shu-observe",
+      "language": "chinese",
+      "chapter": 18,
+      "sequence": 1700,
+      "modality": "pen",
+      "derived": "pen",
+      "drivable": false,
+      "reasons": [
+        "writing-type",
+        "script-block"
+      ],
+      "coreModality": "pen",
+      "coreReasons": [
+        "writing-type"
+      ],
+      "coreDrivable": false,
+      "sourceHash": "fnv1a64:1778a00075fcf88d",
+      "detachableSegments": [
+        "Script — the shape"
+      ],
+      "delivery": "script"
+    },
+    {
+      "id": "ZH-W18-shu-guided",
+      "language": "chinese",
+      "chapter": 18,
+      "sequence": 1710,
+      "modality": "pen",
+      "derived": "pen",
+      "drivable": false,
+      "reasons": [
+        "writing-type"
+      ],
+      "coreModality": "pen",
+      "coreReasons": [
+        "writing-type"
+      ],
+      "coreDrivable": false,
+      "sourceHash": "fnv1a64:74f0b1f638c6eb1e",
+      "delivery": "script"
+    },
+    {
+      "id": "ZH-W18-shu-delayed",
+      "language": "chinese",
+      "chapter": 18,
+      "sequence": 1720,
+      "modality": "pen",
+      "derived": "pen",
+      "drivable": false,
+      "reasons": [
+        "writing-type",
+        "sight-cue"
+      ],
+      "coreModality": "pen",
+      "coreReasons": [
+        "writing-type",
+        "sight-cue"
+      ],
+      "coreDrivable": false,
+      "sourceHash": "fnv1a64:dfceb9607529a4fd",
+      "delivery": "script"
+    },
+    {
+      "id": "ZH-C18-shu",
+      "language": "chinese",
+      "chapter": 18,
+      "sequence": 1730,
+      "modality": "voice",
+      "derived": "voice",
+      "drivable": true,
+      "reasons": [
+        "no-visual-dependency"
+      ],
+      "coreModality": "voice",
+      "coreReasons": [
+        "no-visual-dependency"
+      ],
+      "coreDrivable": true,
+      "sourceHash": "fnv1a64:848f3539d335f7f3"
+    },
+    {
+      "id": "ZH-C18-hear-kanshu",
+      "language": "chinese",
+      "chapter": 18,
+      "sequence": 1740,
+      "modality": "voice",
+      "derived": "voice",
+      "drivable": true,
+      "reasons": [
+        "no-visual-dependency"
+      ],
+      "coreModality": "voice",
+      "coreReasons": [
+        "no-visual-dependency"
+      ],
+      "coreDrivable": true,
+      "sourceHash": "fnv1a64:5e01116b3a4da36f"
+    },
+    {
+      "id": "ZH-C18-kanshu",
+      "language": "chinese",
+      "chapter": 18,
+      "sequence": 1750,
+      "modality": "sight",
+      "derived": "sight",
+      "drivable": false,
+      "reasons": [
+        "sight-cue"
+      ],
+      "coreModality": "sight",
+      "coreReasons": [
+        "sight-cue"
+      ],
+      "coreDrivable": false,
+      "sourceHash": "fnv1a64:6fe1fcad9f309f60"
+    },
+    {
+      "id": "ZH-R18-looking-three-r2",
+      "language": "chinese",
+      "chapter": 18,
+      "sequence": 1760,
+      "modality": "voice",
+      "derived": "voice",
+      "drivable": true,
+      "reasons": [
+        "no-visual-dependency"
+      ],
+      "coreModality": "voice",
+      "coreReasons": [
+        "no-visual-dependency"
+      ],
+      "coreDrivable": true,
+      "sourceHash": "fnv1a64:5f8f535721b392dc"
+    },
+    {
+      "id": "ZH-R18-book-reading-r1",
+      "language": "chinese",
+      "chapter": 18,
+      "sequence": 1770,
+      "modality": "voice",
+      "derived": "voice",
+      "drivable": true,
+      "reasons": [
+        "no-visual-dependency"
+      ],
+      "coreModality": "voice",
+      "coreReasons": [
+        "no-visual-dependency"
+      ],
+      "coreDrivable": true,
+      "sourceHash": "fnv1a64:9bc38b09ff62a023"
+    },
+    {
+      "id": "ZH-R18-listening-five",
+      "language": "chinese",
+      "chapter": 18,
+      "sequence": 1780,
+      "modality": "voice",
+      "derived": "voice",
+      "drivable": true,
+      "reasons": [
+        "no-visual-dependency"
+      ],
+      "coreModality": "voice",
+      "coreReasons": [
+        "no-visual-dependency"
+      ],
+      "coreDrivable": true,
+      "sourceHash": "fnv1a64:cc6a0627adb973aa"
+    },
+    {
+      "id": "ZH-R18-reading-five",
+      "language": "chinese",
+      "chapter": 18,
+      "sequence": 1790,
+      "modality": "voice",
+      "derived": "voice",
+      "drivable": true,
+      "reasons": [
+        "no-visual-dependency"
+      ],
+      "coreModality": "voice",
+      "coreReasons": [
+        "no-visual-dependency"
+      ],
+      "coreDrivable": true,
+      "sourceHash": "fnv1a64:02112ecd97e67cb3"
+    },
+    {
+      "id": "ZH-R18-writing-five",
+      "language": "chinese",
+      "chapter": 18,
+      "sequence": 1800,
+      "modality": "voice",
+      "derived": "voice",
+      "drivable": true,
+      "reasons": [
+        "no-visual-dependency"
+      ],
+      "coreModality": "voice",
+      "coreReasons": [
+        "no-visual-dependency"
+      ],
+      "coreDrivable": true,
+      "sourceHash": "fnv1a64:a13e3b99ca5af0db"
+    },
+    {
+      "id": "ZH-C18-practice",
+      "language": "chinese",
+      "chapter": 18,
+      "sequence": 1810,
+      "modality": "sight",
+      "derived": "sight",
+      "drivable": false,
+      "reasons": [
+        "sight-cue"
+      ],
+      "coreModality": "sight",
+      "coreReasons": [
+        "sight-cue"
+      ],
+      "coreDrivable": false,
+      "sourceHash": "fnv1a64:bdf2ae3b45783454"
     }
   ],
   "findings": []

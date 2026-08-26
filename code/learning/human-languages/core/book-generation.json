@@ -1008,6 +1008,13 @@
       "scriptCommand": "zh"
     },
     {
+      "language": "chinese",
+      "chapter": 18,
+      "output": "chinese/book/chapters/ch18-looking-reading.tex",
+      "unicodeScript": "Han",
+      "scriptCommand": "zh"
+    },
+    {
       "language": "french",
       "chapter": 17,
       "output": "french/book/chapters/ch17-head-and-hand.tex"
