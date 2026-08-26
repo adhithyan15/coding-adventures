@@ -1666,21 +1666,22 @@ Completed in the Swift lane: `wasm-simulator`, `cli-builder`,
 The historical Priority 1 cohort is complete, but later Haskell work promoted
 13 packages into a new 14-of-15 frontier. Merged PR #9383 closed `trig` and
 `wave`, merged PR #9477 closed `matrix`, `loss-functions`, and
-`feature-normalization`, and this branch closes `document-ast`, so the remaining
-seven current gaps are Dart-only:
+`feature-normalization`, and the subsequent document/cipher waves closed
+`document-ast`, `atbash-cipher`, `scytale-cipher`, and `vigenere-cipher`. The
+exact post-#13083 inventory leaves five current gaps:
 
 - deterministic data structures: `binary-search-tree`, `fenwick-tree`, and
-  `trie`;
-- leaf ciphers: `atbash-cipher`, `scytale-cipher`, and `vigenere-cipher`;
-- utility leaf: `uuid`.
+  `trie`, all missing only Dart;
+- utility leaf: Dart `uuid`;
+- rendering leaf: Swift `paint-vm-ascii`, already owned by open PR #12149.
 
 Merged PR #9375 closed the generator-level prerequisite found by the post-#9363
 fixture audit. Dart's native scaffold generator now emits byte-stable,
 schema-v1 empty library profiles and truthful generated-program stdout
 profiles, while declaring its own reviewed runtime authority. Existing
 nonempty Dart profiles remain owned by the legacy migration review. Close the
-remaining seven-package frontier as small coherent PRs on top of that scaffold
-contract.
+remaining four unowned Dart packages as small coherent PRs on top of that
+scaffold contract; do not duplicate the live Swift owner.
 
 Merged PR #9383 completed the first child item: the zero-dependency PHY00
 `trig` leaf and its direct PHY01 `wave` consumer. This closed two Dart-only
@@ -1691,11 +1692,12 @@ Merged PR #9477 completed the ML child item with the independent `matrix`,
 `loss-functions`, and `feature-normalization` leaves. The post-merge leverage
 pass selected `document-ast` next: its types-only TE00 model has 68 exact
 cross-repository consumers and unlocks substantially more follow-on parity work
-than the remaining cipher and data-structure leaves. This branch delivers that
+than the then-remaining cipher and data-structure leaves. That branch delivered the
 sealed, immutable 24-node model with exhaustive discriminator, containment,
-value-semantics, and coverage checks. The cipher trio, trie,
-binary-search-tree, fenwick-tree, and UUID are explicit remaining child items;
-the existing Dart LZ78 private-trie migration is tracked separately.
+value-semantics, and coverage checks. PR #13083 subsequently delivered the
+CR01-CR03 cipher trio. Trie, binary-search-tree, fenwick-tree, and UUID remain
+explicit child items; the existing Dart LZ78 private-trie migration is tracked
+separately.
 
 The post-merge governance audit found no repository-verifiable Layer 5 approval
 for #9375's nonempty generator profile: GitHub reports no review decision, and
@@ -1756,25 +1758,26 @@ grammar sources rather than independently handwritten.
 
 ## Priority 2: Complete The High-Consensus Core
 
-The 172 packages present in at least ten implementation languages need 275
-ports to reach all 15. After Priority 1, select work in this order:
+The exact post-#13083 inventory has 175 packages present in at least ten
+implementation languages and 267 missing slots to reach all 15. After Priority
+1, select work in this order:
 
 | Language lane | Current high-consensus gaps | Pairing rule |
 |---|---:|---|
 | C# | 0 | Complete; paired native package wave |
-| Dart | 105 | Close the reopened 14-of-15 set, then dependencies before consumers |
-| Elixir | 0 | Complete; retain as a reference lane and run conformance fixtures |
+| Dart | 98 | Close the reopened 14-of-15 set, then dependencies before consumers |
+| Elixir | 1 | Close `image-codec-png`, then retain as a reference lane |
 | F# | 0 | Complete; paired native package wave |
 | Go | 0 | Complete; primary build-tool and portable-core reference lane |
-| Haskell | 2 | Finish the generic `event-loop` and pure `brotli` gaps |
-| Java | 58 | Move with Kotlin |
-| Kotlin | 58 | Move with Java |
-| Lua | 0 | Complete; retain as a reference lane and remediate build-tool drift |
-| Perl | 0 | Complete; retain as a reference lane and remediate build-tool drift |
+| Haskell | 4 | Finish `event-loop`/`brotli`, then `ct-compare`/`image-codec-png` |
+| Java | 53 | Move with Kotlin |
+| Kotlin | 53 | Move with Java |
+| Lua | 1 | Close `ct-compare`, then remediate build-tool drift |
+| Perl | 2 | Close `ct-compare` and `image-codec-png`, then build-tool drift |
 | Python | 1 | Classify the remaining self-hosted `python-parser` carefully |
-| Ruby | 0 | Complete; retain as a reference lane and run conformance fixtures |
-| Rust | 0 | Complete; reference lane for broad and singleton families |
-| Swift | 51 | Data structures and generated frontends before native app surfaces |
+| Ruby | 1 | Close `image-codec-png`, then retain as a reference lane |
+| Rust | 1 | Close `image-codec-png`; reference broad and singleton families |
+| Swift | 52 | Data structures and generated frontends before native app surfaces |
 | TypeScript | 0 | Complete; reference lane for web-capable portable contracts |
 
 Zero-gap lanes remain active reference and conformance lanes; they are not
@@ -8928,6 +8931,94 @@ overlap. GitHub reports the PR non-draft and mergeable. Required checks are
 queued, merge state is blocked only by those protections, and auto-merge
 remains disabled. State is now 155 merged, 373 pending, and exactly one
 `pr-open` owner across the unchanged 529-owner/789-edge acyclic graph.
+
+PR #13083 completed all 40 final checks at state-recording head
+`5beb364839614d82e3dc33a2b6321ce1f422f128`: 33 succeeded and seven were
+expected skips, with no failures or pending work. GitHub reported a clean
+merge state, auto-merge was enabled, and the PR merged as
+`9ae79c55494056324a7518715b005ca8594c4472` at 2026-08-26T18:48:24Z without a
+manual merge command. The exact merged-head worktree was removed afterward.
+
+### Post-#13083 inventory and Dart trie selection
+
+The exact-main schema-3 report is collision-clean at 15 established lanes,
+1,373 implementation identities, 4,581 implementation slots, and 1,412
+all-reported identities. The breadth bands are 175 high-consensus identities
+with 267 gaps, 123 five-to-nine identities with 934 gaps, 166 two-to-four
+identities with 2,087 gaps, and 909 singletons with 12,726 gaps. Rust retains
+720 singletons; canonical collisions and unknown language buckets remain zero;
+OCaml remains correctly emerging at zero packages. Relative to the post-#13070
+snapshot, only the expected Dart Atbash, Scytale, and Vigenere slots were
+added. No identity, language bucket, or unowned topology gap appeared. The
+reference pass did find two semantic backlog owners before implementation:
+one for a language-neutral DT13 corpus and exact key contract, followed by one
+for established-lane Unicode-scalar and deterministic-order conformance.
+
+The reopened 14-of-15 frontier now contains five exact gaps: Dart alone is
+missing `binary-search-tree`, `fenwick-tree`, `trie`, and `uuid`; Swift alone
+is missing `paint-vm-ascii`. Open PR #12149 continues to own the Swift package.
+All seven live open PRs have zero exact changed-path overlap with the DT13
+specification, the prospective Dart trie package, state, or roadmap. The
+process-free OCaml substrate remains collision-unsafe while open PRs #12149 and
+#12162 both own required Go build-tool entry-point and validator surfaces.
+
+The dependency/leverage pass selects `dart-current-14-of-15-trie` on branch
+`codex/dart-trie-parity`. Its Dart scaffold dependency is merged; the pure
+deterministic package needs no production dependency or runtime authority; and
+one slot completes DT13 at 15/15. It also establishes the package prerequisite
+for the separately tracked Dart LZ78 shared-trie migration. That downstream
+migration must still reconcile LZ78's byte-at-a-time cursor with DT13's
+complete-string API, following the Python `TrieCursor` precedent or adapting
+the consumer in its own PR. Fenwick tree is an isolated runner-up;
+binary-search-tree still needs comparator, empty-result, rank, and conceptual
+prerequisite reconciliation; and the unrelated Haskell event-loop/Brotli pair
+has a larger authority and malformed-input surface. The classical-cipher
+neutral fixture owner remains the next cross-lane conformance tranche because
+it unlocks both Scytale and Vigenere remediation.
+
+At selection time, the reconciled graph is complete and acyclic at 531 owners
+and 790 edges: 156 merged, 374 pending, and exactly one in-progress owner, with
+no active parity PR. The fresh worktree starts from exact
+`9ae79c55494056324a7518715b005ca8594c4472`; no other registered worktree meets
+the clean exact-merged-head deletion rule, so dirty, detached, open-PR, and
+ambiguous worktrees remain preserved.
+
+The Dart candidate implements the generic DT13 contract in specification,
+tests, source, and documentation order. Nineteen package tests pass with
+109/109 production lines covered; formatting and fatal analysis are clean.
+The contract pins Unicode-scalar edges and numeric order without normalization,
+nullable endpoint presence, empty keys and prefixes, upsert counts, iterative
+enumeration/deletion/validation, longest-prefix fallback, pruning, and a
+50,001-scalar stack-safety case. Independent contract and security findings
+were resolved by making the reference pseudocode iterative and nullable-safe,
+rejecting malformed UTF-16 atomically before insertion and before traversal
+even after an earlier missing edge, redacting missing-key errors, and streaming
+longest-prefix traversal without materializing the rest of an
+attacker-controlled input.
+
+The existing Dart LZ78 downstream suite passes all 47 tests and the Dart
+scaffold generator passes all 17. The Go build tool passes all package tests
+and vet; its real exact-diff execution evaluates 45 Starlark files, discovers
+90 Dart packages, builds only `dart/trie`, and skips the other 89. The
+collision-checked candidate report adds exactly one slot to 4,582, reduces
+high-consensus gaps from 267 to 266 and Dart's share from 98 to 97, and
+completes trie at 15/15 with zero canonical collisions or unknown buckets.
+Capability, dependency, README-link, state, diff, and credential checks are
+clean. The state graph remains complete and acyclic at 531 owners and 790
+edges: 156 merged, 374 pending, and exactly one in-progress owner, with no
+active parity PR.
+
+Ready-for-review PR #13095 publishes the implementation from validated head
+`0526bd71ca271cc00350efa565e379f2f69ba12d` on exact `origin/main`
+`7fe720dc8a806232732390aaeb85a115ee208709`. The branch rebased cleanly over
+six disjoint Mosaic, Rust/Wasm, Mermaid, Japanese, Gujarati, and Punjabi
+changes before its normal first push; no force push was needed. Eleven live
+open PRs had zero
+exact changed-path overlap at the final ownership audit. GitHub reports the PR
+non-draft and mergeable. Checks are queued or in progress, merge state is
+blocked only by branch protections, and auto-merge remains disabled. State is
+now 156 merged, 374 pending, and exactly one `pr-open` owner across the
+unchanged complete and acyclic 531-owner/790-edge graph.
 
 ## Autonomous Loop Protocol
 

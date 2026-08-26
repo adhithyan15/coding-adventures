@@ -1,0 +1,16 @@
+name: coding_adventures_trie
+description: >
+  Pure Dart DT13 prefix tree with exact lookup, ordered prefix search,
+  longest-prefix matching, deletion pruning, and invariant validation.
+version: 0.1.0
+repository: https://github.com/adhithyan15/coding-adventures
+publish_to: none
+
+environment:
+  sdk: ^3.0.0
+
+dependencies: {}
+
+dev_dependencies:
+  coverage: ^1.15.0
+  test: ^1.25.0
