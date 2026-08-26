@@ -1,5 +1,9 @@
 # Changelog
 
+## 0.147.0
+
+- Match Mermaid's single-component `ss` Gantt format for one- or two-digit second values.
+
 ## 0.146.0
 
 - Compile Mermaid Gantt `Z` and `ZZ` timezone-offset tokens into typed semantic date formats.
