@@ -5794,10 +5794,23 @@
       "sound": "i",
       "role": "vowel",
       "components": [
-        "ഇ  i — independent vowel (word-initial)"
+        "compact left spiral",
+        "central rise into a broad right lobe",
+        "below-line curl and finishing baseline"
       ],
-      "strokeOrder": [],
-      "strokeOrderNote": ""
+      "strokeOrder": [
+        "begin at the compact inner tip, turn outward around the left spiral, and descend the central stem",
+        "without lifting, retrace the central stem and sweep around the broad right lobe",
+        "without lifting, curl left below the line",
+        "without lifting, carry the finishing baseline to the right"
+      ],
+      "penLifts": 0,
+      "strokeOrderNote": "Independent short i. Keep the compact left spiral distinct from the broad right lobe, let the lower curl descend below the shared letter line, and finish with the long rightward baseline. Do not confuse this word-initial form with long ഈ or dependent ി.",
+      "strokeOrderSource": {
+        "citation": "Donald R. Davis Jr., The Malayalam Script, Initial Vowels, ഇ handwriting clip, 00:00–00:04 (University of Texas at Austin)",
+        "url": "https://malayalam.la.utexas.edu/resources/the-malayalam-script/",
+        "variation": "The page identifies initial vowels as word-initial forms and directly links the four-second i.mp4 handwriting clip. The clip visibly begins at the compact inner tip, expands around the left spiral, descends and retraces the central stem, continues without a lift around the broad right lobe, then curls below the line and carries the finishing baseline right. This is one attested zero-lift pedagogical order fitted to the bundled Noto Sans Malayalam outline."
+      }
     },
     {
       "glyph": "ഈ",
