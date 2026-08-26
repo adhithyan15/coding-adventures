@@ -11,7 +11,12 @@
     "selection_rule": "host-security, credential, native-runtime, and external-approval work may inform classification but is never selected by this parity loop",
     "excluded_delivery_classes": ["onvif", "host-security-hardening", "native-runtime", "external-approval"]
   },
-  "active_pr": null,
+  "active_pr": {
+    "number": 12974,
+    "url": "https://github.com/adhithyan15/coding-adventures/pull/12974",
+    "branch": "codex/build-tool-haskell-orphan-crate-validation-conformance",
+    "status": "open"
+  },
   "last_inventory": {
     "revision": "773ecf8b1b3485ef68c428b892c8e4a3d3d81f4b",
     "schema_version": 3,
@@ -4912,13 +4917,16 @@
     {
       "id": "build-tool-haskell-orphan-crate-validation-conformance",
       "title": "Make the Haskell build tool consume orphan-crate validation",
-      "status": "in-progress",
+      "status": "pr-open",
       "depends_on": [
         "build-tool-orphan-crate-validation-corpus",
         "build-tool-haskell-tracked-artifact-validation-conformance"
       ],
       "branch": "codex/build-tool-haskell-orphan-crate-validation-conformance",
-      "pr_number": null,
+      "pr_number": 12974,
+      "pr_url": "https://github.com/adhithyan15/coding-adventures/pull/12974",
+      "opened_at": "2026-08-26T07:45:25Z",
+      "opened_revision": "67f8d42a66c44e5ddda09d3eef091effb06e2d1d",
       "selection_revision": "385bf43d85a20719469ac1c1d9daebed1590533e",
       "selection_notes": "Selected only after PR #12958 completed all 40 terminal acceptable checks, GitHub reported the reviewed branch clean and mergeable, and squash auto-merge merged reviewed head e6f2d31009ce4e0aae639a5951791853f3b0c93c as a0cb099a58f58ee619e909fed6a42720a704d21f at 2026-08-26T06:43:58Z without a manual merge command. The collision-checked exact-main schema-3 report at 385bf43d85a20719469ac1c1d9daebed1590533e remains 15 established lanes, 1,373 implementation identities, 4,566 package slots, 175 high-consensus packages with 276 gaps, 122 identities in five to nine lanes with 926 gaps, 166 identities in two to four lanes with 2,087 gaps, 910 singletons with 12,740 gaps, 721 Rust singletons, zero canonical collisions, and zero unknown buckets; OCaml remains correctly emerging at zero packages. Merged PRs #12954 through #12957 remain under the registered W22, ALGOL IIR, Mermaid Gantt, and script-ductus owners. Merged PR #12959 extends the existing deterministic HTML frontend owner with unmatched disclosure-end diagnostic positioning and adds no package identity or BUILD/build-tool marker. No newly unowned eligible portable gap is exposed. Both Haskell prerequisites are merged. Haskell is the widest remaining orphan consumer at 204 reported packages versus Swift at 161, and each advances the same completion umbrella. All six live PRs have zero exact overlap with the expected Haskell source, test, documentation, state, and roadmap paths; the target local branch, remote branch, and prior PR were absent before creating the fresh exact-main worktree. OCaml remains collision-unsafe while PRs #12149 and #12162 own required Go entry-point and validator surfaces.",
       "rebase_revision": "773ecf8b1b3485ef68c428b892c8e4a3d3d81f4b",
@@ -4928,6 +4936,8 @@
       "validation_revision": "a29ade59a8d255f111396f34fe410d2cf60ee9cb",
       "security_review_revision": "a29ade59a8d255f111396f34fe410d2cf60ee9cb",
       "validation_notes": "The pure Haskell adapter consumes all four orphan-crate fixtures and preserves exact artifact filtering, component-aware ancestor BUILD coverage and rank, nearer-empty nonmasking, NFC/full-fold identities, full-uppercase Windows reserved names, exemption field precedence and stale cleanup, Python-compatible blank reasons, Unicode-scalar ordering, canonical ASCII JSON details, fixed hostile-input redaction, and active PENDING counts without filesystem, Git, process, environment, network, credential, or link authority. Independent review exposed and the implementation closed two edge cases before publication: bounded spine checks now reject lazy paths at scalar 513 and reasons at scalar 4,097 without forcing hostile tails, and U+007F is escaped as \\u007f for Python-compatible canonical ordering. Exact-main GHC 9.4.8 validation passes 55 examples with zero failures through direct Cabal, literal BUILD, and Windows BUILD entry points; cabal check and cabal build all pass. Excluding generated Unicode tables and test modules, HPC reports 76% expressions, 69% alternatives, 86% local declarations, and 57% top-level declarations. HLint 3.8 reports the same nine inherited hints as exact main and zero new hints. The neutral corpus validates 111 cases and 269 files; all 201 conformance tests pass with 23 expected Windows skips; and the execution contract validates. The Go build tool passes module verification, all tests, vet, and trimpath build; a forced Haskell dry plan evaluates 45 Starlark BUILD files, discovers 207 packages, validates the five-entry orphan ledger, and reports all 207 WOULD-BUILD. The collision-checked schema-3 report remains 15 lanes, 1,373 identities, 4,566 slots, 1,412 all-reported packages, zero collisions, and zero unknown buckets with OCaml emerging at zero packages. The refreshed 519-owner, 781-edge state graph is unique, dependency-complete, acyclic, and free of merged-to-unmerged edges with 148 merged, 370 pending, and exactly one in-progress owner.",
+      "final_review_revision": "67f8d42a66c44e5ddda09d3eef091effb06e2d1d",
+      "publication_notes": "Opened ready-for-review PR #12974 from exact independently reviewed head 67f8d42a66c44e5ddda09d3eef091effb06e2d1d after a normal first push from exact origin/main 773ecf8b1b3485ef68c428b892c8e4a3d3d81f4b. Immediately before publication, all six changed paths had zero exact overlap across eight live PRs, the target remote branch and prior PR were absent, and independent exact-head security/authority/contract and lifecycle audits found no remaining blocker. GitHub reports the PR non-draft, open, and mergeable; required checks are queued or in progress, merge state is blocked, and auto-merge remains disabled until every required check is terminal and acceptable and GitHub reports no conflict.",
       "notes": "Consume the closed process-free orphan-crate snapshot and diagnostics in the Haskell engine without adding filesystem enumeration or process authority."
     },
     {

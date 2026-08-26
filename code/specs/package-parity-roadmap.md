@@ -8315,6 +8315,13 @@ build. A forced Haskell dry plan evaluates 45 Starlark BUILD files, discovers
 207 packages, validates the five-entry orphan ledger, and reports all 207
 `WOULD-BUILD`. The final report and 519-owner/781-edge graph remain clean.
 
+Ready-for-review PR #12974 opened from exact independently reviewed head
+`67f8d42a66c44e5ddda09d3eef091effb06e2d1d` after a normal first push from
+exact main `773ecf8b1b3485ef68c428b892c8e4a3d3d81f4b`. GitHub reports it open,
+non-draft, and mergeable. Required checks are queued or in progress, so
+auto-merge remains disabled until every check is terminal and acceptable and
+GitHub reports no conflict.
+
 ## Autonomous Loop Protocol
 
 Only one parity PR should be active at a time.
