@@ -3,8 +3,11 @@ schema_version: 2
 id: GU-C21-paisa
 spine_node: SPINE-POLITE-REQUEST-REPAIR
 sequence: 990
+delivery: script
+modality: pen
+modality_reason: The delayed-copy activity requires handwriting; its machine-readable stage is not visible to prose cue derivation.
 chapter: 25
-type: word
+type: writing
 headword: પૈસા
 romanization: paisā
 gloss: money, read and written after the ai sign

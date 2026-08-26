@@ -3,8 +3,11 @@ schema_version: 2
 id: GU-R21-travel-five
 spine_node: SPINE-POLITE-REQUEST-REPAIR
 sequence: 1000
+delivery: script
+modality: pen
+modality_reason: Mixed retrieval includes required model-free writing, so the complete lesson needs a pen even though its oral core is drivable.
 chapter: 25
-type: practice-mix
+type: writing
 headword: બજાર — ઘર — મંદિર — હાથ — પૈસા
 romanization: bajār — ghar — mandir — hāth — paisā
 gloss: five concrete place, body, and money words

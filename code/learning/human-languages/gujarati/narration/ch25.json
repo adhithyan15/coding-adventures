@@ -3,8 +3,8 @@
   "language": "gujarati",
   "chapter": 25,
   "title": "Hand and Money Join the Map",
-  "drivablePrefix": 3,
-  "sourceHash": "fnv1a64:ea4c51c41fd60c30",
+  "drivablePrefix": 1,
+  "sourceHash": "fnv1a64:3f214bb0d11b178c",
   "lessons": [
     {
       "id": "GU-C21-hear-haath",
@@ -83,13 +83,20 @@
       "romanization": "hāth",
       "gloss": "hand, read and written",
       "script": "gujarati",
-      "modality": "voice",
-      "derivedModality": "voice",
+      "modality": "pen",
+      "derivedModality": "pen",
       "modalityReasons": [
-        "no-visual-dependency"
+        "writing-type"
       ],
-      "sourceHash": "fnv1a64:7672285a8e39b9eb",
-      "notice": null,
+      "sourceHash": "fnv1a64:c67811afa66f857b",
+      "notice": {
+        "modality": "pen",
+        "needs": [
+          "a pen and something to write on"
+        ],
+        "waitUntilStopped": [],
+        "text": "Before we start: this one needs your hands, so it is not a driving lesson. You will want a pen and something to write on. You can listen to all of it now and come back to the parts that need looking at once you have stopped."
+      },
       "blocks": [
         {
           "index": 0,
@@ -299,13 +306,20 @@
       "romanization": "paisā",
       "gloss": "money, read and written after the ai sign",
       "script": "gujarati",
-      "modality": "voice",
-      "derivedModality": "voice",
+      "modality": "pen",
+      "derivedModality": "pen",
       "modalityReasons": [
-        "no-visual-dependency"
+        "writing-type"
       ],
-      "sourceHash": "fnv1a64:9331739576b3c3e8",
-      "notice": null,
+      "sourceHash": "fnv1a64:a60d96237de12a24",
+      "notice": {
+        "modality": "pen",
+        "needs": [
+          "a pen and something to write on"
+        ],
+        "waitUntilStopped": [],
+        "text": "Before we start: this one needs your hands, so it is not a driving lesson. You will want a pen and something to write on. You can listen to all of it now and come back to the parts that need looking at once you have stopped."
+      },
       "blocks": [
         {
           "index": 0,
@@ -372,13 +386,20 @@
       "romanization": "bajār — ghar — mandir — hāth — paisā",
       "gloss": "five concrete place, body, and money words",
       "script": "gujarati",
-      "modality": "voice",
-      "derivedModality": "voice",
+      "modality": "pen",
+      "derivedModality": "pen",
       "modalityReasons": [
-        "no-visual-dependency"
+        "writing-type"
       ],
-      "sourceHash": "fnv1a64:367762e308249f9b",
-      "notice": null,
+      "sourceHash": "fnv1a64:e8d92bf645e9348f",
+      "notice": {
+        "modality": "pen",
+        "needs": [
+          "a pen and something to write on"
+        ],
+        "waitUntilStopped": [],
+        "text": "Before we start: this one needs your hands, so it is not a driving lesson. You will want a pen and something to write on. You can listen to all of it now and come back to the parts that need looking at once you have stopped."
+      },
       "blocks": [
         {
           "index": 0,
@@ -451,13 +472,20 @@
       "romanization": "bajār — ghar — mandir — hāth — paisā",
       "gloss": "five-word non-compensatory four-skill payoff",
       "script": "gujarati",
-      "modality": "voice",
-      "derivedModality": "voice",
+      "modality": "pen",
+      "derivedModality": "pen",
       "modalityReasons": [
-        "no-visual-dependency"
+        "writing-type"
       ],
-      "sourceHash": "fnv1a64:cc96b36d820b4010",
-      "notice": null,
+      "sourceHash": "fnv1a64:9ecfd6b279c50770",
+      "notice": {
+        "modality": "pen",
+        "needs": [
+          "a pen and something to write on"
+        ],
+        "waitUntilStopped": [],
+        "text": "Before we start: this one needs your hands, so it is not a driving lesson. You will want a pen and something to write on. You can listen to all of it now and come back to the parts that need looking at once you have stopped."
+      },
       "blocks": [
         {
           "index": 0,

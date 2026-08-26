@@ -3,8 +3,11 @@ schema_version: 2
 id: GU-C20-ghar
 spine_node: SPINE-POLITE-REQUEST-REPAIR
 sequence: 910
+delivery: script
+modality: pen
+modality_reason: The delayed-copy activity requires handwriting; its machine-readable stage is not visible to prose cue derivation.
 chapter: 24
-type: word
+type: writing
 headword: ઘર
 romanization: ghar
 gloss: home; house, read and written

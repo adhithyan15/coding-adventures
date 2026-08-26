@@ -3,8 +3,11 @@ schema_version: 2
 id: GU-C21-travel-five
 spine_node: SPINE-POLITE-REQUEST-REPAIR
 sequence: 1010
+delivery: script
+modality: pen
+modality_reason: The non-compensatory payoff includes required dictation, so the complete lesson needs a pen even though its oral core is drivable.
 chapter: 25
-type: practice-mix
+type: writing
 headword: બજાર — ઘર — મંદિર — હાથ — પૈસા
 romanization: bajār — ghar — mandir — hāth — paisā
 gloss: five-word non-compensatory four-skill payoff

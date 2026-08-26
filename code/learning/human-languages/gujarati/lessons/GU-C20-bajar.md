@@ -3,8 +3,11 @@ schema_version: 2
 id: GU-C20-bajar
 spine_node: SPINE-POLITE-REQUEST-REPAIR
 sequence: 890
+delivery: script
+modality: pen
+modality_reason: The guided-copy activity requires handwriting; its machine-readable stage is not visible to prose cue derivation.
 chapter: 24
-type: word
+type: writing
 headword: બજાર
 romanization: bajār
 gloss: market, now read and written with familiar signs
