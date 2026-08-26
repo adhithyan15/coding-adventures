@@ -781,7 +781,7 @@ line "Target" [35, 50, 68, 82]"##,
     #[test]
     fn render_mermaid_gantt_to_png() {
         let gantt = parse_gantt(
-            "gantt\naccTitle: Native Gantt\naccDescr: Gantt rendered through Metal\ntitle Release timeline\ndateFormat YYYY-MM-DD\naxisFormat %m/%d\ntickInterval 1day\ninclusiveEndDates\ntopAxis\ntodayMarker off\nexcludes weekends\nincludes 2026-01-03\nsection Build\nParser :done, parser, 2026-01-01, 2026-01-04\nclick parser href \"https://example.com/parser\" call inspectTask(parser)\nWindow :window, 2025-12-29, until parser docs\nPaint :active, paint, after parser docs, 3d\nsection Ship\nDocs :docs, 2026-01-02, 2d\nReview :after docs, 1d\nPackage :active, 1d\nRelease :milestone, release, after task2, 0d",
+            "gantt\naccTitle: Native Gantt\naccDescr: Gantt rendered through Metal\ntitle Release timeline\ndateFormat YYYY-MM-DD\naxisFormat %m/%d\ntickInterval 1day\ninclusiveEndDates\ntopAxis\ntodayMarker off\nexcludes weekends\nincludes 2026-01-03\nsection Build\nParser :done, parser, 2026-01-01, 2026-01-04\nclick parser href \"https://example.com/parser\" call inspectTask(parser)\nWindow :window, 2025-12-29, until parser docs\nPaint :crit, active, paint, after parser docs, 3d\nsection Ship\nDocs :docs, 2026-01-02, 2d\nReview :after docs, 1d\nPackage :active, 1d\nDeadline :vert, deadline, 2026-01-06, 0d\nRelease :crit, done, milestone, release, after task2, 0d",
         )
         .expect("Mermaid Gantt parse failed");
         let temporal = TemporalDiagram {
@@ -799,6 +799,11 @@ line "Target" [35, 50, 68, 82]"##,
             item,
             diagram_ir::LayoutedTemporalItem::TimeAxisSpine { .. }
         )).count(), 2);
+        assert!(layout.items.iter().any(|item| matches!(
+            item,
+            diagram_ir::LayoutedTemporalItem::VerticalMarker { label, .. }
+                if label == "Deadline"
+        )));
 
         let shaper = CoreTextShaper;
         let metrics = CoreTextMetrics;
@@ -826,6 +831,19 @@ line "Target" [35, 50, 68, 82]"##,
         assert!(pixels.width > 0);
         assert!(pixels.height > 0);
         assert!(!scene.instructions.is_empty());
+        assert!(scene.instructions.iter().any(|instruction| matches!(
+            instruction,
+            PaintInstruction::Rect(rect)
+                if rect.fill.as_deref() == Some("#f59e0b")
+                    && rect.stroke.as_deref() == Some("#b91c1c")
+                    && rect.stroke_width == Some(2.0)
+        )));
+        assert!(scene.instructions.iter().any(|instruction| matches!(
+            instruction,
+            PaintInstruction::Path(path)
+                if path.stroke.as_deref() == Some("#6b7280")
+                    && path.commands.len() == 2
+        )));
         let metadata = scene.metadata.as_ref().expect("accessibility metadata");
         assert_eq!(metadata["accessibility.title"], "Native Gantt");
         assert_eq!(

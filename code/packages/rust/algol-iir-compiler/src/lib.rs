@@ -6189,7 +6189,8 @@ impl Compiler {
                 matches!(
                     (&sequence[index], &sequence[index + 1]),
                     (Piece::Op(op), Piece::Node(rhs))
-                        if op == "-" && literal_positive_numeric_zero(rhs)
+                        if (op == "-" && literal_positive_numeric_zero(rhs))
+                            || (op == "+" && literal_negative_real_zero(rhs))
                 )
             });
         }
@@ -6199,33 +6200,37 @@ impl Compiler {
             return false;
         }
         let mut preserves = self.real_identity_expression_preserves_name(first, name);
-        let mut is_one = literal_numeric_one(first);
+        let mut negated = false;
+        let mut unit_is_negative = literal_numeric_unit_is_negative(first);
         for index in (1..sequence.len()).step_by(2) {
             let (Piece::Op(op), Piece::Node(rhs)) = (&sequence[index], &sequence[index + 1]) else {
                 return false;
             };
             let rhs_preserves = self.real_identity_expression_preserves_name(rhs, name);
-            let rhs_is_one = literal_numeric_one(rhs);
+            let rhs_unit_is_negative = literal_numeric_unit_is_negative(rhs);
             if preserves {
-                if !rhs_is_one {
+                let Some(rhs_is_negative) = rhs_unit_is_negative else {
                     return false;
-                }
-            } else if is_one {
-                if op == "*" {
-                    if rhs_preserves {
-                        preserves = true;
-                        is_one = false;
-                    } else if !rhs_is_one {
+                };
+                negated ^= rhs_is_negative;
+            } else if let Some(is_negative) = unit_is_negative {
+                if rhs_preserves {
+                    if op != "*" {
                         return false;
                     }
-                } else if !rhs_is_one {
+                    preserves = true;
+                    negated = is_negative;
+                    unit_is_negative = None;
+                } else if let Some(rhs_is_negative) = rhs_unit_is_negative {
+                    unit_is_negative = Some(is_negative ^ rhs_is_negative);
+                } else {
                     return false;
                 }
             } else {
                 return false;
             }
         }
-        preserves
+        preserves && !negated
     }
 
     fn collect_static_predicate_dependencies(
@@ -8487,26 +8492,38 @@ fn literal_integer_value(node: &GrammarASTNode) -> Option<i64> {
         .flatten()
 }
 
-fn literal_numeric_one(node: &GrammarASTNode) -> bool {
+fn literal_numeric_unit_is_negative(node: &GrammarASTNode) -> Option<bool> {
     if let Some(child) = single_parenthesized_child(node) {
-        return literal_numeric_one(child);
+        return literal_numeric_unit_is_negative(child);
     }
-    if let Some(("+", child)) = single_signed_child(node) {
-        return literal_numeric_one(child);
+    if let Some((sign, child)) = single_signed_child(node) {
+        let negative = literal_numeric_unit_is_negative(child)?;
+        return match sign {
+            "+" => Some(negative),
+            "-" => Some(!negative),
+            _ => None,
+        };
     }
     let tokens = direct_tokens(node);
     if tokens.len() == 1 {
         return match tokens[0].effective_type_name() {
-            "INTEGER_LIT" => tokens[0].value.parse::<i64>() == Ok(1),
+            "INTEGER_LIT" => (tokens[0].value.parse::<i64>() == Ok(1)).then_some(false),
             "REAL_LIT" => tokens[0]
                 .value
                 .parse::<f64>()
-                .is_ok_and(|value| value.to_bits() == 1.0f64.to_bits()),
-            _ => false,
+                .ok()
+                .and_then(|value| match value.to_bits() {
+                    bits if bits == 1.0f64.to_bits() => Some(false),
+                    bits if bits == (-1.0f64).to_bits() => Some(true),
+                    _ => None,
+                }),
+            _ => None,
         };
     }
     let child_nodes = direct_nodes(node);
-    tokens.is_empty() && child_nodes.len() == 1 && literal_numeric_one(child_nodes[0])
+    (tokens.is_empty() && child_nodes.len() == 1)
+        .then(|| literal_numeric_unit_is_negative(child_nodes[0]))
+        .flatten()
 }
 
 fn literal_positive_numeric_zero(node: &GrammarASTNode) -> bool {
@@ -8535,6 +8552,12 @@ fn literal_positive_numeric_zero(node: &GrammarASTNode) -> bool {
     tokens.is_empty()
         && child_nodes.len() == 1
         && literal_positive_numeric_zero(child_nodes[0])
+}
+
+fn literal_negative_real_zero(node: &GrammarASTNode) -> bool {
+    expr_real_literal_text(node)
+        .and_then(|literal| literal.parse::<f64>().ok())
+        .is_some_and(|value| value.to_bits() == (-0.0f64).to_bits())
 }
 
 /// Return the name of a bare scalar variable node. Array elements are kept
@@ -10956,6 +10979,24 @@ mod tests {
     }
 
     #[test]
+    fn al4_real_additive_negative_zero_selector_writes_stay_stable() {
+        for write in [
+            "choose + (-0.0)",
+            "choose + (-(0.0))",
+            "choose + (-0.0) + (-0.0)",
+            "((choose + (-0.0)))",
+        ] {
+            compile_source(
+                &format!(
+                    "begin integer i, n, limit; real choose; boolean other; n := 3; limit := 3; choose := 1.0; other := true; i := 0; for i := i + 1 while i < n do begin n := limit; limit := if choose = 1.0 then limit else limit + 1; choose := if other then choose else 0.0; other := other; choose := {write} end; print(i + 0.25) end"
+                ),
+                "test",
+            )
+            .unwrap_or_else(|_| panic!("real additive-negative-zero write {write:?} must stay stable"));
+        }
+    }
+
+    #[test]
     fn al4_real_subtractive_zero_selector_writes_stay_stable() {
         for write in [
             "choose - 0.0",
@@ -11018,6 +11059,25 @@ mod tests {
     }
 
     #[test]
+    fn al4_real_even_negative_unit_selector_writes_stay_stable() {
+        for write in [
+            "choose * (-1.0) * (-1.0)",
+            "choose / (-1.0) / (-1.0)",
+            "(-1.0) * choose * (-1.0)",
+            "(-1.0) / (-1.0) * choose",
+            "((choose * (-(+1.0)) / (-1)))",
+        ] {
+            compile_source(
+                &format!(
+                    "begin integer i, n, limit; real choose; boolean other; n := 3; limit := 3; choose := 1.0; other := true; i := 0; for i := i + 1 while i < n do begin n := limit; limit := if choose = 1.0 then limit else limit + 1; choose := if other then choose else 0.0; other := other; choose := {write} end; print(i + 0.25) end"
+                ),
+                "test",
+            )
+            .unwrap_or_else(|_| panic!("real even-negative-unit write {write:?} must stay stable"));
+        }
+    }
+
+    #[test]
     fn al4_real_non_identity_power_selector_writes_remain_conservative() {
         for write in ["choose ^ 0", "1.0 ^ choose", "choose ^ 1.0"] {
             let err = compile_source(
@@ -11047,6 +11107,9 @@ mod tests {
             "choose * 1.0 * 2.0",
             "(choose * 2.0)",
             "choose * (-1.0)",
+            "choose / (-1.0)",
+            "(-1.0) * choose",
+            "choose * (-1.0) / 1.0",
             "1.0 / choose * 1.0",
         ] {
             let err = compile_source(

@@ -1001,6 +1001,13 @@
       "scriptCommand": "zh"
     },
     {
+      "language": "chinese",
+      "chapter": 17,
+      "output": "chinese/book/chapters/ch17-language-country.tex",
+      "unicodeScript": "Han",
+      "scriptCommand": "zh"
+    },
+    {
       "language": "french",
       "chapter": 17,
       "output": "french/book/chapters/ch17-head-and-hand.tex"

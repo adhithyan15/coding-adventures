@@ -249,6 +249,14 @@ fn parse_value_type(expr: &SExpr) -> Result<ValueType, WastParseError> {
         "funcref" => Ok(ValueType::Funcref),
         "externref" => Ok(ValueType::Externref),
         "i31ref" => Ok(ValueType::I31ref),
+        // `exnref` (exceptions proposal, W-next): recognized so a module
+        // mixing `exnref`-typed functions (`catch_ref`/`catch_all_ref`
+        // targets) alongside ordinary `catch`/`catch_all`-only ones -- the
+        // real testsuite's own `try_table.wast` does exactly this, all in
+        // ONE module -- still PARSES as a whole. See
+        // `wasm_types::ValueType::Exnref`'s own doc comment for why this
+        // is deliberately inert (no real `exnref` value is ever produced).
+        "exnref" => Ok(ValueType::Exnref),
         other => Err(WastParseError::UnexpectedToken { pos: expr.pos(), found: other.to_string(), expected: "a value type" }),
     }
 }

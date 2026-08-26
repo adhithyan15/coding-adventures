@@ -11925,6 +11925,83 @@ export const DUCTUS: Record<string, LetterDuctus> = {
     ],
     source: persianAlphabetSource("س"),
   },
+  [ductusKey("perso-arabic", "ش")]: {
+    script: "perso-arabic",
+    glyph: "ش",
+    strokes: [
+      {
+        segments: [
+          {
+            label: "form the three teeth from right to left",
+            path: [
+              { x: 923, y: 310 },
+              { x: 935, y: 120 },
+              { x: 925, y: 70 },
+              { x: 870, y: 45 },
+              { x: 770, y: 75 },
+              { x: 748, y: 110 },
+              { x: 748, y: 230 },
+              { x: 690, y: 65 },
+              { x: 640, y: 45 },
+              { x: 540, y: 55 },
+              { x: 478, y: 190 },
+              { x: 515, y: 20 },
+            ],
+          },
+          {
+            label: "flow into the final bowl without lifting",
+            path: [
+              { x: 515, y: 20 },
+              { x: 515, y: -25 },
+              { x: 470, y: -125 },
+              { x: 370, y: -205 },
+              { x: 250, y: -230 },
+              { x: 145, y: -180 },
+              { x: 92, y: -95 },
+              { x: 110, y: 35 },
+            ],
+          },
+        ],
+      },
+      {
+        segments: [
+          {
+            label: "lift, then place the lower-left dot",
+            path: [
+              { x: 610, y: 360 },
+              { x: 648, y: 410 },
+              { x: 686, y: 365 },
+            ],
+          },
+        ],
+      },
+      {
+        segments: [
+          {
+            label: "lift again and place the lower-right dot",
+            path: [
+              { x: 753, y: 370 },
+              { x: 792, y: 423 },
+              { x: 830, y: 376 },
+            ],
+          },
+        ],
+      },
+      {
+        segments: [
+          {
+            label: "lift again and place the centered upper dot",
+            path: [
+              { x: 684, y: 446 },
+              { x: 720, y: 494 },
+              { x: 757, y: 446 },
+            ],
+          },
+        ],
+      },
+    ],
+    source: persianAlphabetSource("ش"),
+  },
   "ل": {
     script: "perso-arabic",
     glyph: "ل",

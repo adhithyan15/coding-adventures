@@ -2,6 +2,22 @@
 
 All notable changes to this package will be documented in this file.
 
+## [0.1.8] - 2026-08-25 (W22 — exceptions proposal: real catch/catch_all matching)
+
+### Added
+
+- `ValueType::Exnref` — the exceptions proposal's `exnref` type (real
+  spec byte `-0x17`, i.e. unsigned `0xE9`). Deliberately inert: recognized
+  purely so a module MENTIONING it (e.g. a `catch_ref`/`catch_all_ref`
+  target block's declared result type) still parses/validates as a
+  whole, since W14's per-module build isolation means one unrecognized
+  value type anywhere in a module fails the ENTIRE module — and the real
+  testsuite's own `try_table.wast` mixes `exnref`-typed functions
+  alongside ordinary `catch`/`catch_all`-only ones in the SAME module.
+  Never a real runtime value in this repo (no `catch_ref`/`catch_all_ref`
+  clause is ever selected as a match — see `wasm-execution`'s own
+  changelog). See `code/specs/W22-wasm-exceptions-catch-clause-matching.md`.
+
 ## [0.1.7] - 2026-08-25 (W21 — exceptions proposal: tag/throw first slice)
 
 ### Added

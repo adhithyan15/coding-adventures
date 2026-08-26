@@ -48,6 +48,13 @@
   256 kB backstop untouched.
 - All seven chapters narrate as five-of-five drivable, and all 35 lessons
   resolve to `voice` in the modality manifest.
+### Added - source-verified Persian shin
+
+- Add Persian **ش** as a continuous teeth-and-bowl body followed by separate
+  lower-left, lower-right, and centered upper dots from the Persian Online
+  freehand lesson.
+- Correct the adjacent Persian **س** source timestamp, close all 8 affected
+  shin realizations, and rerank Telugu independent **ఆ** first at 8.
 ### Added - source-verified Malayalam chillu RR
 
 - Add Malayalam **ർ** as one continuous three-movement run from Sriveenkat's
@@ -85,6 +92,15 @@
   65-frame Gayathri-font stroke-order animation.
 - Close all 8 affected realizations with a zero-lift Noto Sans Malayalam fit,
   then rerank Malayalam chillu RR **ർ** first at 8.
+### Added - Chinese language and country payoff
+
+- Add seventeen pre-A1 lessons for **中文** and **中国**, with every lesson under
+  five minutes and only two newly counted headwords.
+- Teach **文** and **国** through source-pinned observation, tracing, guided
+  copying, delayed copying, compound reading, and no-model dictation.
+- Return the three Chapter 16 forms at genuine longer intervals, give both new
+  compounds R1 and R2 retrieval, and score listening, speaking, cold reading,
+  and no-model writing independently across all five identity words.
 ### Added - source-verified Kannada independent i
 
 - Add Kannada **ಇ** as one continuous four-movement run from Yogesh's 98-frame

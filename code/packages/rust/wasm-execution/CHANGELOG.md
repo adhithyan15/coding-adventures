@@ -2,6 +2,54 @@
 
 All notable changes to this package will be documented in this file.
 
+## [0.9.66] - 2026-08-25 (Exceptions proposal, second slice W22: real catch/catch_all matching)
+
+### Added
+
+- Real, same-instance `catch`/`catch_all` matching: `try_table` no longer
+  unconditionally propagates an exception uncaught. `TrapError` gains
+  `exception: Option<ExceptionPayload>` (`instance_id`, `tag_idx`,
+  `values`) alongside `is_exception`; `TrapError::exception_with_payload`
+  is the new constructor real `throw` uses (pops the tag's real declared
+  param values via a new `WasmExecutionContext::tags: Vec<u32>` field,
+  wired the same optional-setter way `type_section` already is).
+- `decode_function_body`'s `try_table` (`0x1F`) branch now builds a real
+  `TryTableInfo { block_type, catches: Vec<CatchClause> }` (previously
+  decoded and discarded, W21) via a new per-function side-table
+  (`ctx.try_table_infos`), mirroring the existing `br_table_targets`/
+  `gc_ops` precedent. `Label` gains `catches: Vec<CatchClause>`.
+- `try_catch_exception` (new): the ONE choke point every instruction
+  handler's `Result` passes through searches the current frame's
+  `label_stack` innermost-to-outermost for a matching `catch`/`catch_all`
+  clause (first listed wins), pushes the tag's payload for `catch`, and
+  branches via the existing `execute_branch` — `catch_ref`/
+  `catch_all_ref` clauses are structurally present but never selected (no
+  `exnref` value is ever produced this slice).
+- Cross-instance exceptions are deliberately never matched: a fresh
+  `instance_id` per `WasmExecutionEngine::new` gates every match attempt,
+  so an exception that crossed a nested cross-module host-function call
+  boundary never produces a false-positive match on a coincidentally-equal
+  raw tag index.
+- `WasmExecutionEngine::set_tags` (new optional setter, mirrors
+  `set_type_section`).
+- `ValueType::Exnref` (new, deliberately inert — see `wasm-types`'s own
+  changelog) plumbed through `WasmValue::default_for` and
+  `wasm-runtime`'s legacy `call()` i64 round-trip.
+- `DEDICATED_STACK_SIZE` doubled 8 MiB → 16 MiB: adding per-frame state
+  to the recursive `call_function_inner` dispatch path measurably eroded
+  `MAX_CALL_DEPTH`'s existing ~1.5x safety margin, reproducibly
+  overflowing the real thread stack on the vendored `call_indirect.wast`.
+  `MAX_CALL_DEPTH` itself is deliberately left unchanged (see
+  `code/specs/W22-wasm-exceptions-catch-clause-matching.md`).
+
+### Fixed
+
+- `call_function_inner`'s dispatch loop keeps its catch-or-propagate
+  logic inlined (not a call to the new shared `run_dispatch_loop`, which
+  `call_function_impl`'s non-recursive top-level entry uses instead) —
+  the recursive path is stack-depth-sensitive; see `DEDICATED_STACK_SIZE`
+  above for why this distinction is load-bearing, not stylistic.
+
 ## [0.9.65] - 2026-08-25 (Exceptions proposal, first slice W21: tag/throw real conformance)
 
 ### Added

@@ -1,5 +1,9 @@
 # Changelog
 
+## 0.141.0
+
+- Parse repeated Gantt `active`, `done`, `crit`, `milestone`, and `vert` tags without collapsing their independent semantics.
+
 ## 0.140.0
 
 - Generate pinned Mermaid task IDs for ID-less Gantt declarations and preserve one-field tasks as typed sequential dependencies across sections.

@@ -52,6 +52,7 @@ mod gc;
 
 use std::any::Any;
 use std::collections::HashMap;
+use std::sync::atomic::{AtomicU64, Ordering};
 
 use virtual_machine::{
     CodeObject, GenericVM, Instruction, Operand, TypedVMValue, VMError, VMResult, Value,
@@ -266,11 +267,16 @@ impl WasmValue {
             // An `i31ref` is its `i32` payload, so its zero value is I32(0).
             ValueType::I31ref => WasmValue::I32(0),
             // Nullable reference types (GC and funcref/externref alike)
-            // default to the null reference.
+            // default to the null reference. `Exnref` (W-next) is the same
+            // shape (nullable reference, `(ref null exn)`) -- never a REAL
+            // value in this repo (see its own doc comment), but a `(local
+            // $x exnref)` still needs SOME default, and null is the only
+            // spec-correct one.
             ValueType::Anyref
             | ValueType::StructRef(_)
             | ValueType::Funcref
-            | ValueType::Externref => WasmValue::Ref(None),
+            | ValueType::Externref
+            | ValueType::Exnref => WasmValue::Ref(None),
             // Handle 0 is the permanently-reserved all-zero v128 (see
             // `v128_heap`'s own doc comment) -- no allocation needed here,
             // unlike a GC struct's default, since `default_for` has no
@@ -353,17 +359,56 @@ pub struct TrapError {
     /// Human-readable description of what caused the trap.
     pub message: String,
     /// `true` when this error is a WASM **exception** (the exceptions
-    /// proposal's `throw`, propagated uncaught — W21), as opposed to an
-    /// ordinary trap (`unreachable`, out-of-bounds memory access, integer
-    /// division by zero, etc.). The real spec treats these as genuinely
-    /// different outcomes (`try_table` never catches a trap, only an
-    /// exception; a conformance harness's `assert_trap` and
-    /// `assert_exception` directives must not accept each other's case)
-    /// even though both currently unwind through this repo's call stack
-    /// via the exact same `Result::Err(TrapError)` propagation. Defaults
-    /// to `false` via [`TrapError::new`] — every existing trap site is
-    /// unaffected; only [`TrapError::exception`] (new) sets it `true`.
+    /// proposal's `throw`, W21), as opposed to an ordinary trap
+    /// (`unreachable`, out-of-bounds memory access, integer division by
+    /// zero, etc.). The real spec treats these as genuinely different
+    /// outcomes (`try_table` never catches a trap, only an exception; a
+    /// conformance harness's `assert_trap` and `assert_exception`
+    /// directives must not accept each other's case) even though both
+    /// unwind through this repo's call stack via the exact same
+    /// `Result::Err(TrapError)` propagation whenever no catch clause ends
+    /// up matching. Defaults to `false` via [`TrapError::new`] — every
+    /// existing trap site is unaffected; only [`TrapError::exception`]/
+    /// [`TrapError::exception_with_payload`] set it `true`.
     pub is_exception: bool,
+    /// The exception's real payload — which tag it carries and its
+    /// argument values — present whenever this `TrapError` was built via
+    /// [`TrapError::exception_with_payload`] (real `throw`, W-next: catch-
+    /// clause matching). `None` for an ordinary trap, and for the older,
+    /// payload-less [`TrapError::exception`] constructor (kept for
+    /// backward compatibility / tests that only ever checked
+    /// `is_exception`) — a `None` payload can never be matched by any
+    /// `try_table` catch clause (see [`try_catch_exception`]), so it
+    /// always propagates exactly like this crate's pre-catch-matching
+    /// (W21) behavior did.
+    pub exception: Option<ExceptionPayload>,
+}
+
+/// A thrown WASM exception's real, comparable payload (W-next: real
+/// `catch`/`catch_all` matching, building on W21's deliberately non-
+/// catching first slice — see `code/specs/W21-wasm-exceptions-tag-throw-
+/// slice.md` for that slice's own scope, and this slice's own spec doc for
+/// why catch-clause matching is now separable).
+#[derive(Debug, Clone, PartialEq)]
+pub struct ExceptionPayload {
+    /// Identifies WHICH `WasmExecutionContext` this exception was thrown
+    /// from — a fresh value minted per [`WasmExecutionEngine::new`] call
+    /// (see [`WasmExecutionContext::instance_id`]'s own doc comment).
+    /// `try_catch_exception` refuses to match a catch clause against an
+    /// exception whose `instance_id` differs from the CURRENTLY EXECUTING
+    /// context's own — the deliberate, documented scope boundary that
+    /// keeps this slice's same-instance-only catching from ever
+    /// producing a false-positive match on a coincidentally-equal raw tag
+    /// index thrown by an unrelated module instance (e.g. across a
+    /// `wasm-conformance` `CrossModuleFunction` call boundary).
+    pub instance_id: u64,
+    /// The tag index (in the THROWING function's own module's combined
+    /// tag index space) this exception was created with.
+    pub tag_idx: u32,
+    /// The tag's declared argument values, popped off the stack by
+    /// `throw` in declaration order — what a matching `catch` clause
+    /// pushes back onto the stack.
+    pub values: Vec<WasmValue>,
 }
 
 impl TrapError {
@@ -372,17 +417,43 @@ impl TrapError {
         TrapError {
             message: message.into(),
             is_exception: false,
+            exception: None,
         }
     }
 
     /// Create a `TrapError` representing an uncaught WASM **exception**
-    /// (W21 — the exceptions proposal's `throw`), not an ordinary trap.
-    /// See [`TrapError::is_exception`]'s own doc comment for why this
-    /// distinction matters.
+    /// (W21 — the exceptions proposal's `throw`) with no comparable
+    /// payload — kept for backward compatibility (existing tests that
+    /// only ever check `is_exception`); real `throw` execution (W-next)
+    /// uses [`Self::exception_with_payload`] instead, since a payload-less
+    /// exception can never be caught (see [`ExceptionPayload`]'s own doc
+    /// comment). See [`TrapError::is_exception`]'s own doc comment for why
+    /// the exception/trap distinction matters.
     pub fn exception(message: impl Into<String>) -> Self {
         TrapError {
             message: message.into(),
             is_exception: true,
+            exception: None,
+        }
+    }
+
+    /// Create a `TrapError` representing a real, catchable WASM exception
+    /// (W-next): carries the tag identity and argument values a matching
+    /// `try_table` `catch`/`catch_all` clause needs.
+    pub fn exception_with_payload(
+        message: impl Into<String>,
+        instance_id: u64,
+        tag_idx: u32,
+        values: Vec<WasmValue>,
+    ) -> Self {
+        TrapError {
+            message: message.into(),
+            is_exception: true,
+            exception: Some(ExceptionPayload {
+                instance_id,
+                tag_idx,
+                values,
+            }),
         }
     }
 }
@@ -399,12 +470,27 @@ impl From<TrapError> for VMError {
     fn from(e: TrapError) -> Self {
         if e.is_exception {
             // `VMError` (`virtual-machine`, a generic cross-language-
-            // frontend shared type) has no room for a real boolean flag,
-            // so `is_exception` is round-tripped through the message
-            // string itself via a sentinel prefix -- recovered by
-            // `vm_error_to_trap_error` at the one place a `VMError`
-            // crosses back into a public `TrapError` (W21).
-            VMError::GenericError(format!("{EXCEPTION_SENTINEL}{}", e.message))
+            // frontend shared type) has no room for a real struct payload,
+            // so both `is_exception` AND (W-next) the exception's real,
+            // comparable payload (`instance_id`/`tag_idx`/`values`) are
+            // round-tripped through the message string itself via a
+            // sentinel prefix plus a length-delimited encoding -- recovered
+            // by `vm_error_to_trap_error`/`decode_exception_from_vmerror`
+            // at the two places a `VMError` needs to be read back as a
+            // real exception (W21 originally just needed the flag; this
+            // slice extends the SAME mechanism to carry the payload real
+            // catch-clause matching needs, rather than inventing a second
+            // one).
+            let payload = e.exception.as_ref();
+            VMError::GenericError(format!(
+                "{EXCEPTION_SENTINEL}{}",
+                encode_exception_payload(
+                    payload.map(|p| p.instance_id).unwrap_or(0),
+                    payload.map(|p| p.tag_idx).unwrap_or(0),
+                    payload.map(|p| p.values.as_slice()).unwrap_or(&[]),
+                    &e.message,
+                )
+            ))
         } else {
             VMError::GenericError(e.message)
         }
@@ -418,10 +504,121 @@ impl From<TrapError> for VMError {
 /// make an accidental real-message collision vanishingly unlikely.
 const EXCEPTION_SENTINEL: &str = "\u{1}wasm-exception\u{1}";
 
+/// Field separator used ONLY within the structured prefix
+/// `encode_exception_payload` builds after [`EXCEPTION_SENTINEL`] (W-next)
+/// -- another control character no legitimate trap/exception message
+/// would contain. Every structured field (`instance_id`, `tag_idx`, the
+/// value count, then that many encoded values) is read by
+/// `decode_exception_payload` via [`take_delim_field`], which peels off
+/// EXACTLY one field at a time from the front; the free-form `message`
+/// is never split on this separator at all -- it's simply "everything
+/// left over" after the last structured field is consumed, so a message
+/// that happens to CONTAIN this character (impossible today, since every
+/// message this crate builds is a fixed string or interpolates only
+/// numbers/opcodes, but not assumed away) still round-trips correctly,
+/// unlike a naive whole-string `split(EXCEPTION_FIELD_SEP)` would.
+const EXCEPTION_FIELD_SEP: char = '\u{2}';
+
+/// Encode a thrown exception's real payload (W-next) into the wire format
+/// [`From<TrapError> for VMError`] places after [`EXCEPTION_SENTINEL`]:
+/// `{instance_id}{SEP}{tag_idx}{SEP}{n}{SEP}{v_0}{SEP}...{SEP}{v_{n-1}}{SEP}{message}`.
+/// Each value is itself encoded via [`encode_wasm_value`] (never contains
+/// [`EXCEPTION_FIELD_SEP`] — see that function). `message` is written
+/// LAST and never escaped, so it may contain absolutely anything
+/// (including a stray separator character) without corrupting the parse —
+/// see [`EXCEPTION_FIELD_SEP`]'s own doc comment.
+fn encode_exception_payload(instance_id: u64, tag_idx: u32, values: &[WasmValue], message: &str) -> String {
+    let mut out = format!("{instance_id}{EXCEPTION_FIELD_SEP}{tag_idx}{EXCEPTION_FIELD_SEP}{}", values.len());
+    for v in values {
+        out.push(EXCEPTION_FIELD_SEP);
+        out.push_str(&encode_wasm_value(v));
+    }
+    out.push(EXCEPTION_FIELD_SEP);
+    out.push_str(message);
+    out
+}
+
+/// Encode a single [`WasmValue`] for [`encode_exception_payload`] — a
+/// short type tag, a colon, then the value's bits as hex. Never contains
+/// [`EXCEPTION_FIELD_SEP`] (hex digits and `:` only), so
+/// [`take_delim_field`] always recovers exactly one encoded value per
+/// call.
+fn encode_wasm_value(v: &WasmValue) -> String {
+    match v {
+        WasmValue::I32(x) => format!("i:{:x}", *x as u32),
+        WasmValue::I64(x) => format!("l:{:x}", *x as u64),
+        WasmValue::F32(x) => format!("f:{:x}", x.to_bits()),
+        WasmValue::F64(x) => format!("d:{:x}", x.to_bits()),
+        WasmValue::Ref(None) => "r:-".to_string(),
+        WasmValue::Ref(Some(h)) => format!("r:{h:x}"),
+        WasmValue::V128(h) => format!("v:{h:x}"),
+    }
+}
+
+/// Decode one [`encode_wasm_value`]-encoded field back into a
+/// [`WasmValue`]. Returns `None` on any malformed input (an out-of-range
+/// or non-hex field) rather than panicking — this decodes a string that
+/// round-tripped through `Display`/`format!`, not attacker-controlled
+/// bytes directly, but staying defensive costs nothing here.
+fn decode_wasm_value(field: &str) -> Option<WasmValue> {
+    let (tag, rest) = field.split_once(':')?;
+    match tag {
+        "i" => Some(WasmValue::I32(u32::from_str_radix(rest, 16).ok()? as i32)),
+        "l" => Some(WasmValue::I64(u64::from_str_radix(rest, 16).ok()? as i64)),
+        "f" => Some(WasmValue::F32(f32::from_bits(u32::from_str_radix(rest, 16).ok()?))),
+        "d" => Some(WasmValue::F64(f64::from_bits(u64::from_str_radix(rest, 16).ok()?))),
+        "r" if rest == "-" => Some(WasmValue::Ref(None)),
+        "r" => Some(WasmValue::Ref(Some(u32::from_str_radix(rest, 16).ok()?))),
+        "v" => Some(WasmValue::V128(u32::from_str_radix(rest, 16).ok()?)),
+        _ => None,
+    }
+}
+
+/// Peel exactly one [`EXCEPTION_FIELD_SEP`]-terminated field off the front
+/// of `*rest`, advancing `*rest` past it. Returns `None` (leaving `*rest`
+/// untouched) if no separator remains — the caller is responsible for
+/// knowing how many structured fields to expect before treating whatever
+/// is left as the free-form message.
+fn take_delim_field<'a>(rest: &mut &'a str) -> Option<&'a str> {
+    let pos = rest.find(EXCEPTION_FIELD_SEP)?;
+    let (field, tail) = rest.split_at(pos);
+    *rest = &tail[EXCEPTION_FIELD_SEP.len_utf8()..];
+    Some(field)
+}
+
+/// Decode [`encode_exception_payload`]'s wire format back into
+/// `(instance_id, tag_idx, values, message)`. `None` on any structural
+/// malformation (should never happen for a string this crate itself
+/// encoded, but this is reached from a `VMError`'s `Display` output that
+/// crossed a generic, cross-language-frontend crate boundary, so a
+/// defensive `None` beats a panic).
+fn decode_exception_payload(encoded: &str) -> Option<(u64, u32, Vec<WasmValue>, String)> {
+    let mut rest = encoded;
+    let instance_id: u64 = take_delim_field(&mut rest)?.parse().ok()?;
+    let tag_idx: u32 = take_delim_field(&mut rest)?.parse().ok()?;
+    // Security: `n` is parsed from a string ONLY this crate's own
+    // `encode_exception_payload` ever produces (never raw attacker/module
+    // bytes), and there it always equals a real tag's declared param
+    // count -- small and validator-bounded. Still loop-bounded by
+    // `take_delim_field` returning `None` the moment real fields run out
+    // (mirroring `try_table`'s own `catch_count` guard elsewhere in this
+    // file), so even a hypothetically-corrupted huge `n` can't spin more
+    // than `encoded.len()` iterations.
+    let n: usize = take_delim_field(&mut rest)?.parse().ok()?;
+    let mut values = Vec::with_capacity(n.min(64));
+    for _ in 0..n {
+        let field = take_delim_field(&mut rest)?;
+        values.push(decode_wasm_value(field)?);
+    }
+    Some((instance_id, tag_idx, values, rest.to_string()))
+}
+
 /// Reconstruct a [`TrapError`] from a [`VMError`] that crossed the shared
 /// `virtual-machine` crate's generic error boundary, recovering the
-/// `is_exception` flag [`From<TrapError> for VMError`] encoded into the
-/// message via [`EXCEPTION_SENTINEL`] (W21). A drop-in replacement for the
+/// `is_exception` flag AND (W-next) the real exception payload
+/// [`From<TrapError> for VMError`] encoded into the message via
+/// [`EXCEPTION_SENTINEL`]/[`encode_exception_payload`] (W21 originally
+/// just needed the flag). A drop-in replacement for the
 /// `TrapError::new(format!("{e}"))` shape every trap-producing call site in
 /// this crate already used before this — not a new code path, just the one
 /// that also recognizes an exception.
@@ -442,8 +639,143 @@ const EXCEPTION_SENTINEL: &str = "\u{1}wasm-exception\u{1}";
 fn vm_error_to_trap_error(e: VMError) -> TrapError {
     let full = format!("{e}");
     match full.strip_prefix("Error: ").and_then(|msg| msg.strip_prefix(EXCEPTION_SENTINEL)) {
-        Some(rest) => TrapError::exception(rest.to_string()),
+        Some(rest) => match decode_exception_payload(rest) {
+            Some((instance_id, tag_idx, values, message)) if instance_id != 0 || tag_idx != 0 || !values.is_empty() => {
+                TrapError::exception_with_payload(message, instance_id, tag_idx, values)
+            }
+            Some((_, _, _, message)) => TrapError::exception(message),
+            None => TrapError::exception(rest.to_string()),
+        },
         None => TrapError::new(full),
+    }
+}
+
+/// At the ONE choke point where every instruction handler's `Result` is
+/// consumed inside a WASM dispatch loop ([`run_dispatch_loop`]), decide
+/// whether an exception-flagged error should be CAUGHT by an active
+/// `try_table` frame in the CURRENTLY EXECUTING function (walking
+/// `ctx.label_stack` from innermost to outermost) — W-next, real catch-
+/// clause matching, building on W21's deliberately non-catching first
+/// slice (`code/specs/W21-wasm-exceptions-tag-throw-slice.md`).
+///
+/// Returns `Ok(true)` if caught: `vm.pc`/`vm.typed_stack`/
+/// `ctx.label_stack` are already updated exactly as if a `br` to the
+/// matching clause's label had executed (with the tag's argument values
+/// pushed first, for a `catch` — not for `catch_all`). Returns `Ok(false)`
+/// if not caught here: nothing was touched, and the caller must propagate
+/// `err` onward unchanged (after restoring ITS OWN caller's saved frame —
+/// see `call_function_inner`'s own call site). `Err` only if the matched
+/// clause's own branch bookkeeping fails, which real corpus modules never
+/// hit (arity mismatches are ruled out by `wasm-validator`'s bounds/arity
+/// checks on `try_table`'s catch clauses).
+fn try_catch_exception(vm: &mut GenericVM, ctx: &mut WasmExecutionContext, err: &VMError) -> VMResult<bool> {
+    let full = format!("{err}");
+    let Some(rest) = full.strip_prefix("Error: ").and_then(|msg| msg.strip_prefix(EXCEPTION_SENTINEL)) else {
+        return Ok(false); // not an exception at all -- an ordinary trap is never caught (real spec rule).
+    };
+    let Some((instance_id, tag_idx, values, _message)) = decode_exception_payload(rest) else {
+        return Ok(false);
+    };
+    // Cross-instance exceptions are deliberately never matched — see
+    // `ExceptionPayload::instance_id`'s own doc comment for why this
+    // refusal is what makes same-instance-only catching SAFE rather than
+    // silently wrong.
+    if instance_id == 0 || instance_id != ctx.instance_id {
+        return Ok(false);
+    }
+    for try_label_idx in (0..ctx.label_stack.len()).rev() {
+        let matched = ctx.label_stack[try_label_idx].catches.iter().find(|c| match c.kind {
+            CatchClauseKind::Catch => c.tag_idx == tag_idx,
+            CatchClauseKind::CatchAll => true,
+            // `catch_ref`/`catch_all_ref` need a real `exnref` value this
+            // slice never produces (see this slice's own spec doc) — these
+            // clauses are structurally present (parsed, validated) but
+            // never SELECTED as a match here, exactly as honest as W21's
+            // own "try_table never matches" default, just now scoped down
+            // to only these two clause kinds instead of all four.
+            CatchClauseKind::CatchRef | CatchClauseKind::CatchAllRef => false,
+        });
+        if let Some(clause) = matched.cloned() {
+            // The clause's label depth was resolved by the text/binary
+            // format RELATIVE TO try_table's OWN ENCLOSING scope (parsed
+            // BEFORE try_table's own label was pushed — see
+            // `wasm-wast-parser`'s `parse_try_table_catches` doc comment,
+            // and `wasm-validator`'s matching `resolve_label_target`
+            // call for the SAME catch clause, also performed before its
+            // own `push_ctrl`). So a clause depth `d` names the REAL
+            // `ctx.label_stack` index `try_label_idx - 1 - d` (the "virtual"
+            // stack with try_table's own frame removed, depth-0-at-the-top
+            // convention). `execute_branch`'s OWN convention picks real
+            // index `ctx.label_stack.len() - 1 - label_index` for whatever
+            // `label_index` it's given — equating the two and solving for
+            // `label_index` gives `ctx.label_stack.len() - try_label_idx +
+            // d` (NOT `- 1 -`: try_table's own frame is skipped by the "-
+            // try_label_idx" term alone, since real index `try_label_idx`
+            // itself -- try_table's own label -- is exactly the one entry
+            // the virtual/real mapping omits).
+            if clause.kind == CatchClauseKind::Catch {
+                for v in &values {
+                    push_wasm(vm, *v);
+                }
+            }
+            let branch_depth = ctx.label_stack.len() - try_label_idx + clause.label_rel_depth as usize;
+            execute_branch(vm, ctx, branch_depth)?;
+            return Ok(true);
+        }
+    }
+    Ok(false)
+}
+
+/// Run every instruction of `code` from `vm.pc` until it halts or falls
+/// off the end, performing W-next's real exception catching at each
+/// dispatched instruction that fails. Shared by `call_function_inner`'s
+/// own nested-call dispatch loop and `call_function_impl`'s top-level
+/// dedicated-thread loop (WASM10) — both previously delegated this same
+/// job to the generic, wasm-agnostic `GenericVM::execute_with_context`
+/// (the shared `virtual-machine` crate), which has no notion of a WASM
+/// exception to catch and, being a cross-language-frontend shared type,
+/// is not the place to add one. Inlined once here instead of duplicating
+/// the catch-or-propagate logic at both call sites.
+fn run_dispatch_loop(vm: &mut GenericVM, ctx: &mut WasmExecutionContext, code: &CodeObject) -> VMResult<()> {
+    while !vm.halted && vm.pc < code.instructions.len() {
+        let instr = code.instructions[vm.pc].clone();
+        let Some(handler) = vm.context_handlers.get(&instr.opcode).copied() else {
+            return Err(VMError::InvalidOpcode(format!(
+                "no handler for opcode 0x{:02X}",
+                instr.opcode
+            )));
+        };
+        if let Err(e) = handler(vm, &instr, code, ctx) {
+            if !try_catch_exception(vm, ctx, &e)? {
+                return Err(e);
+            }
+            // Caught: `vm.pc`/the stack/`ctx.label_stack` were already
+            // updated by `try_catch_exception` exactly as a `br` would;
+            // fall through to the top of this same loop.
+        }
+    }
+    Ok(())
+}
+
+/// Restore the ENCLOSING caller's saved frame into `ctx`/`vm`'s live state.
+/// Shared by `call_function_inner`'s success path (a callee returned
+/// normally, or completed a WASM16 tail-call chain) and its failure path
+/// (W-next: an exception that was NOT caught by anything in the callee's
+/// own `label_stack`, unwinding further up the Rust call stack) — both
+/// need the exact same restoration before control (or the propagating
+/// error) leaves this invocation, so the ENCLOSING `call_function_inner`'s
+/// own `run_dispatch_loop` choke point sees correctly-restored state when
+/// IT performs its own catch search.
+fn restore_caller_frame(vm: &mut GenericVM, ctx: &mut WasmExecutionContext, frame: SavedFrame) {
+    ctx.typed_locals = frame.locals;
+    ctx.label_stack = frame.label_stack;
+    ctx.control_flow_map = frame.control_flow_map;
+    ctx.br_table_targets = frame.br_table_targets;
+    ctx.gc_ops = frame.gc_ops;
+    ctx.simd_consts = frame.simd_consts;
+    ctx.try_table_infos = frame.try_table_infos;
+    while vm.typed_stack.len() > frame.stack_height {
+        let _ = vm.pop_typed();
     }
 }
 
@@ -1049,6 +1381,23 @@ pub trait HostInterface {
     /// Resolve an imported table.
     fn resolve_table(&self, module_name: &str, name: &str) -> Option<Table>;
 
+    /// Resolve an imported tag (exceptions proposal, W-next), returning the
+    /// tag's real declared type (its `params`; `results` is always empty
+    /// per the real spec rule `wasm-validator` already enforces) so the
+    /// importing module's own declared expectation can be checked for
+    /// compatibility, exactly like [`Self::resolve_function`] does for
+    /// `HostFunction::func_type()`.
+    ///
+    /// Defaults to `None` (an unresolvable import, same as every other
+    /// `resolve_*` method returning `None`) so existing `HostInterface`
+    /// implementors that predate tag imports (this repo's own WASI stub
+    /// among them) don't need a source change just to keep compiling —
+    /// only a host that actually wants to link tag imports (`wasm-
+    /// conformance`'s `RegistryHost`, W-next) needs to override this.
+    fn resolve_tag(&self, _module_name: &str, _name: &str) -> Option<FuncType> {
+        None
+    }
+
     /// Bind the current instance memory into the host before a call executes.
     fn set_memory(&self, _memory: LinearMemory) {}
 
@@ -1363,6 +1712,66 @@ pub enum DecodedOperand {
     /// their own sub-opcode + aux value(s), so the single `0xFC` handler
     /// can dispatch *and* read both indices from one place.
     BulkMemory { sub: u8, data_idx: u32, aux: u8 },
+    /// `try_table`'s full decoded shape (W-next: real catch-clause
+    /// matching) — the SAME blocktype `block`/`loop`/`if` decode, PLUS the
+    /// catch-clause list W21 originally decoded-then-discarded (see that
+    /// slice's own `decode_function_body` doc comment). Carried as its own
+    /// rich variant (not spilled inline like `Gc`'s two plain `u32`s)
+    /// because the catch-clause list is variable-length — `convert_operand`
+    /// spills the whole `TryTableInfo` into a side-table (`ctx.
+    /// try_table_infos`), exactly the same "index into a per-function Vec"
+    /// treatment `BrTable`'s own `br_table_targets` already gets.
+    TryTable(TryTableInfo),
+}
+
+/// One `try_table` catch clause's kind — the binary format's own
+/// `clause_kind` byte (W-next, extending W21's structural-only parse).
+#[derive(Debug, Clone, Copy, PartialEq, Eq)]
+pub enum CatchClauseKind {
+    /// `catch $tag $label` (`0x00`): matches `$tag` exactly, pushes its
+    /// argument values, branches to `$label`.
+    Catch,
+    /// `catch_ref $tag $label` (`0x01`): like `Catch`, plus reifies the
+    /// exception into an `exnref` pushed after the argument values. This
+    /// slice never produces an `exnref` (see this slice's own spec doc),
+    /// so a clause of this kind is parsed/validated but never SELECTED as
+    /// a match by [`try_catch_exception`] — structurally present, never
+    /// chosen, exactly like W21's own "try_table never matches" default,
+    /// just narrowed to these two kinds only.
+    CatchRef,
+    /// `catch_all $label` (`0x02`): matches ANY tag, pushes nothing.
+    CatchAll,
+    /// `catch_all_ref $label` (`0x03`): like `CatchAll`, plus reifies the
+    /// exception into an `exnref` — same "never selected" treatment as
+    /// [`Self::CatchRef`].
+    CatchAllRef,
+}
+
+/// One decoded `try_table` catch clause (W-next).
+#[derive(Debug, Clone, Copy, PartialEq)]
+pub struct CatchClause {
+    pub kind: CatchClauseKind,
+    /// The tag index for `Catch`/`CatchRef`; `0` (unused) for
+    /// `CatchAll`/`CatchAllRef`.
+    pub tag_idx: u32,
+    /// The clause's label index EXACTLY as encoded in the binary — i.e.
+    /// resolved relative to `try_table`'s own ENCLOSING scope, not to
+    /// `try_table` itself (see `wasm-wast-parser`'s
+    /// `parse_try_table_catches` doc comment, and
+    /// `try_catch_exception`'s own doc comment for how execution adjusts
+    /// for the "+1" this convention needs once `try_table`'s own `Label`
+    /// is live on `ctx.label_stack`).
+    pub label_rel_depth: u32,
+}
+
+/// A single `try_table` occurrence's full decoded shape (W-next):
+/// its blocktype (same encoding `block`/`loop`/`if` use) plus its real
+/// catch-clause list, in file order (first-listed clause wins a tie —
+/// see `try_catch_exception`'s own doc comment).
+#[derive(Debug, Clone, PartialEq)]
+pub struct TryTableInfo {
+    pub block_type: i64,
+    pub catches: Vec<CatchClause>,
 }
 
 /// Decode all instructions in a function body.
@@ -1797,32 +2206,28 @@ pub fn decode_function_body(body: &FunctionBody) -> Vec<DecodedInstruction> {
 
         // ── `try_table` (`0x1F <blocktype> <catch_count> <catch>*`) ────────────
         //
-        // W21 (exceptions proposal): control-flow-shaped exactly like `block`
-        // (0x02) -- same blocktype immediate -- but with a variable-length
-        // catch-clause list in between the blocktype and the body that this
-        // table's generic `immediates` metadata can't express (see
-        // `wasm_opcodes::OPCODES`'s own `try_table` doc comment). Decoded
-        // here, same "single-byte opcode with its own custom immediate
-        // shape" precedent as `0xD0`/`ref.null` just above: the blocktype
-        // reuses the exact SAME decode path `block`/`loop`/`if` already go
-        // through (`decode_immediates(code, offset, &["blocktype"])`), then
-        // the catch-clause list is read and DISCARDED -- this repo's
-        // `try_table` never matches a catch clause at runtime (an uncaught
-        // exception propagates straight through it exactly like it would
-        // through a plain `block`; see `code/specs/
-        // W21-wasm-exceptions-tag-throw-slice.md` for why this is honest,
-        // spec-accurate behavior, not a shortcut), so nothing about the
-        // catch clauses needs to survive into the decoded instruction
-        // stream. The one `DecodedInstruction` this produces carries the
-        // SAME `DecodedOperand::Int(blocktype)` shape `block`'s own handler
-        // reads via `operand_int` -- `register_context_opcode(0x1F, ...)`
-        // is a near-verbatim copy of `0x02`'s handler for exactly that
-        // reason.
+        // W21 (exceptions proposal) decoded this opcode's blocktype but
+        // discarded its catch-clause list entirely, since that slice's
+        // `try_table` never matched a catch clause at runtime (see
+        // `code/specs/W21-wasm-exceptions-tag-throw-slice.md`). W-next
+        // (real catch-clause matching) needs that list PRESERVED, not
+        // discarded, so `execute_branch`-style catching can compare a
+        // thrown tag against each clause's own tag/label. Same "single-byte
+        // opcode with its own custom immediate shape" precedent as
+        // `0xD0`/`ref.null`: the blocktype reuses the exact SAME decode path
+        // `block`/`loop`/`if` already go through, and the catch-clause list
+        // is now built into a real `TryTableInfo` (see that struct's own
+        // doc comment) instead of being read-and-thrown-away.
         if opcode_byte == 0x1F {
             let (blocktype_operand, bt_size) = decode_immediates(code, offset, &["blocktype"]);
             offset += bt_size;
+            let block_type = match blocktype_operand {
+                DecodedOperand::Int(v) => v,
+                _ => 0x40, // defensive fallback: empty blocktype (never reached -- `decode_immediates(..., &["blocktype"])` always returns `Int`).
+            };
             let (catch_count, cc_size) = decode_leb_u32(code, offset);
             offset += cc_size;
+            let mut catches = Vec::new();
             // Security: `catch_count` is an attacker-controlled LEB128 value
             // (up to ~4.3 billion) that a truncated/malformed body can
             // declare regardless of how many real bytes actually follow --
@@ -1838,7 +2243,9 @@ pub fn decode_function_body(body: &FunctionBody) -> Vec<DecodedInstruction> {
             // `validate()`-gated `instantiate()` first. Breaking the moment
             // real bytes run out bounds total loop cost by `code.len()`
             // (each further iteration consumes at least one real byte),
-            // never by the attacker-declared count alone.
+            // never by the attacker-declared count alone. Also caps the
+            // `catches` Vec itself the same way (never larger than the
+            // number of real iterations actually run).
             for _ in 0..catch_count {
                 if offset >= code.len() {
                     break;
@@ -1848,23 +2255,33 @@ pub fn decode_function_body(body: &FunctionBody) -> Vec<DecodedInstruction> {
                 match clause_kind {
                     0x00 | 0x01 => {
                         // catch / catch_ref: tag idx, then label idx.
-                        let (_tag_idx, tsz) = decode_leb_u32(code, offset);
+                        let (tag_idx, tsz) = decode_leb_u32(code, offset);
                         offset += tsz;
-                        let (_label_idx, lsz) = decode_leb_u32(code, offset);
+                        let (label_idx, lsz) = decode_leb_u32(code, offset);
                         offset += lsz;
+                        catches.push(CatchClause {
+                            kind: if clause_kind == 0x00 { CatchClauseKind::Catch } else { CatchClauseKind::CatchRef },
+                            tag_idx,
+                            label_rel_depth: label_idx,
+                        });
                     }
                     _ => {
                         // catch_all / catch_all_ref (and any malformed
                         // kind byte, defensively treated the same way):
                         // label idx only.
-                        let (_label_idx, lsz) = decode_leb_u32(code, offset);
+                        let (label_idx, lsz) = decode_leb_u32(code, offset);
                         offset += lsz;
+                        catches.push(CatchClause {
+                            kind: if clause_kind == 0x02 { CatchClauseKind::CatchAll } else { CatchClauseKind::CatchAllRef },
+                            tag_idx: 0,
+                            label_rel_depth: label_idx,
+                        });
                     }
                 }
             }
             instructions.push(DecodedInstruction {
                 opcode: 0x1F,
-                operand: blocktype_operand,
+                operand: DecodedOperand::TryTable(TryTableInfo { block_type, catches }),
             });
             continue;
         }
@@ -2121,6 +2538,12 @@ pub struct Label {
     pub stack_height: usize,
     /// Whether this is a loop label (branches backward).
     pub is_loop: bool,
+    /// This label's `try_table` catch clauses (W-next), in file order —
+    /// empty for every `block`/`loop`/`if` label, and for the function's
+    /// own implicit outer label. Only ever non-empty for a label pushed by
+    /// the `0x1F` (`try_table`) handler. See [`try_catch_exception`] for
+    /// how this is searched when an exception propagates.
+    pub catches: Vec<CatchClause>,
 }
 
 /// A saved call frame for function calls.
@@ -2141,6 +2564,11 @@ pub struct SavedFrame {
     /// The caller's `v128.const` literal table, saved so the callee can
     /// overwrite `ctx.simd_consts` and restore it on return (SIMD).
     pub simd_consts: Vec<[u8; 16]>,
+    /// The caller's `try_table` info table, saved so the callee can
+    /// overwrite `ctx.try_table_infos` and restore it on return (W-next) —
+    /// same per-function side-table save/restore shape as
+    /// `br_table_targets`/`gc_ops`/`simd_consts` above.
+    pub try_table_infos: Vec<TryTableInfo>,
 }
 
 /// A heap-allocated WasmGC struct object — the engine's representation of one
@@ -2304,7 +2732,43 @@ pub struct WasmExecutionContext {
     /// `table.init` on a dropped segment traps. Module-global and
     /// persistent across calls, never reset per call.
     pub dropped_elements: Vec<bool>,
+    /// The module's tag section, indexed by the combined imported+defined
+    /// tag index space (W21's `wasm_types::WasmModule::tags` shape,
+    /// mirrored here): `tags[N]` is tag `N`'s function-type index into
+    /// `types` — its `params` are the tag's declared argument types, what
+    /// `throw`/`catch` pop/push. Empty unless the embedder set it via
+    /// [`WasmExecutionEngine::set_tags`]; `throw` on an out-of-bounds tag
+    /// index (should never happen post-validation) degrades to "no
+    /// declared params" rather than panicking.
+    pub tags: Vec<u32>,
+    /// Per-function `try_table` info table (W-next: real catch-clause
+    /// matching) — same per-function side-table save/restore shape as
+    /// `br_table_targets`/`gc_ops`/`simd_consts` above. Each `try_table`
+    /// instruction stores an index into this Vec as its operand.
+    pub try_table_infos: Vec<TryTableInfo>,
+    /// A value that's unique to THIS `WasmExecutionContext` (freshly
+    /// minted per [`WasmExecutionEngine::new`] call — see
+    /// [`ExceptionPayload::instance_id`]'s own doc comment for why this
+    /// exists and how [`try_catch_exception`] uses it: an exception is
+    /// only ever eligible to be caught by a `try_table` in the SAME
+    /// `WasmExecutionContext` it was thrown from, never one that crossed
+    /// a nested cross-instance host-function call boundary (e.g.
+    /// `wasm-conformance`'s `CrossModuleFunction`). `0` is never assigned
+    /// by [`NEXT_INSTANCE_ID`] (which starts at `1`), so it's reserved as
+    /// an always-fails-to-match sentinel for any hand-built `ctx` a test
+    /// constructs directly without going through `WasmExecutionEngine::new`.
+    pub instance_id: u64,
 }
+
+/// Process-wide counter minting a fresh, never-repeating
+/// [`WasmExecutionContext::instance_id`] each time
+/// [`WasmExecutionEngine::new`] builds a context (W-next). Starts at `1`
+/// so `0` stays reserved as "no real instance" (see that field's own doc
+/// comment) — `Relaxed` ordering is sufficient since uniqueness (never two
+/// contexts sharing an id), not cross-thread visibility of any OTHER
+/// state, is the only property `try_catch_exception`'s comparison relies
+/// on.
+static NEXT_INSTANCE_ID: AtomicU64 = AtomicU64::new(1);
 
 /// `call_function`'s own call-stack recursion ceiling. WASM's `call`/
 /// `call_indirect` recurse through this crate's *Rust* call stack one
@@ -2383,13 +2847,30 @@ pub struct WasmExecutionContext {
 const MAX_CALL_DEPTH: usize = 1200;
 
 /// The stack size `call_function` gives its internally-spawned dedicated
-/// execution thread (WASM10). 8 MiB — 16x the 512 KiB floor the original
-/// (caller-stack-dependent) `MAX_CALL_DEPTH` was bisected against — chosen
-/// as a generous, round starting point, then [`MAX_CALL_DEPTH`] was
-/// re-measured directly against THIS value rather than assumed via linear
-/// scaling. If this ever changes, `MAX_CALL_DEPTH` must be re-bisected
-/// again the same way, not just recomputed by ratio.
-const DEDICATED_STACK_SIZE: usize = 8 * 1024 * 1024;
+/// execution thread (WASM10). Originally 8 MiB — 16x the 512 KiB floor the
+/// original (caller-stack-dependent) `MAX_CALL_DEPTH` was bisected against,
+/// then [`MAX_CALL_DEPTH`] re-measured directly against that value (see its
+/// own doc comment: safe at depth 1820, overflows at 1830, in an 8 MiB
+/// debug build).
+///
+/// **Doubled to 16 MiB (W-next: real catch-clause matching)**: adding
+/// per-frame state every nested `call_function_inner` recursion carries
+/// (`Label::catches`, `SavedFrame::try_table_infos`, and the exception-
+/// catching dispatch logic itself) measurably eroded that ~1.5x safety
+/// margin — the vendored `call_indirect.wast` (whose own recursive test
+/// needs a depth close to [`MAX_CALL_DEPTH`]'s ceiling) started overflowing
+/// the real OS thread stack again before this fix, confirmed via the same
+/// "run the actual corpus" method the original bisection used, not a
+/// theoretical concern. Doubling the stack while leaving
+/// [`MAX_CALL_DEPTH`] itself UNCHANGED (rather than raising the depth
+/// ceiling to match, which WOULD need a full re-bisection per this
+/// constant's own historical doc comment below) restores comfortable
+/// margin the cheap way: a thread stack reservation costs address space,
+/// not resident memory, until actually used, so doubling it has no real
+/// runtime cost. Re-confirmed clean end-to-end: the full vendored corpus
+/// (`cargo run --bin wasm_conformance_report`), including
+/// `call_indirect.wast`, now completes without a stack overflow.
+const DEDICATED_STACK_SIZE: usize = 16 * 1024 * 1024;
 
 /// Caps how many WASM10 dedicated threads may be nested inside one
 /// another via cross-module host calls (e.g. `wasm-conformance`'s
@@ -2581,6 +3062,7 @@ fn convert_operand(
     br_table_targets: &mut Vec<Vec<u32>>,
     gc_ops: &mut Vec<GcOp>,
     simd_consts: &mut Vec<[u8; 16]>,
+    try_table_infos: &mut Vec<TryTableInfo>,
 ) -> Option<Operand> {
     match operand {
         DecodedOperand::None => None,
@@ -2673,6 +3155,16 @@ fn convert_operand(
         }
         DecodedOperand::BulkMemory { sub, data_idx, aux } => {
             Some(Operand::Index(((*sub as usize) << 32) | ((*aux as usize) << 40) | (*data_idx as usize)))
+        }
+        // `try_table` (W-next): same side-table-plus-index treatment as
+        // `BrTable`/`Gc` above -- its variable-length catch-clause list
+        // doesn't fit in one packed `usize`, so the whole `TryTableInfo`
+        // (blocktype + catches) is spilled into `try_table_infos` and the
+        // operand becomes that Vec's index.
+        DecodedOperand::TryTable(info) => {
+            let idx = try_table_infos.len();
+            try_table_infos.push(info.clone());
+            Some(Operand::Index(idx))
         }
     }
 }
@@ -8841,6 +9333,7 @@ fn register_control(vm: &mut GenericVM) {
             target_pc: end_pc,
             stack_height: vm.typed_stack.len(),
             is_loop: false,
+            catches: Vec::new(),
         });
         vm.advance_pc();
         Ok(None)
@@ -8858,6 +9351,7 @@ fn register_control(vm: &mut GenericVM) {
             target_pc: loop_pc, // loops branch backward
             stack_height: vm.typed_stack.len(),
             is_loop: true,
+            catches: Vec::new(),
         });
         vm.advance_pc();
         Ok(None)
@@ -8879,6 +9373,7 @@ fn register_control(vm: &mut GenericVM) {
             target_pc: end_pc,
             stack_height: vm.typed_stack.len(),
             is_loop: false,
+            catches: Vec::new(),
         });
         if condition != 0 {
             vm.advance_pc();
@@ -8891,21 +9386,26 @@ fn register_control(vm: &mut GenericVM) {
         Ok(None)
     });
 
-    // try_table (0x1F, W21 -- exceptions proposal): a near-verbatim copy of
-    // `block` (0x02)'s own handler just above -- see this repo's `decode_
-    // function_body`'s own `0x1F` doc comment for why this is honest,
-    // spec-accurate behavior for a `try_table` that never matches a catch
-    // clause: an uncaught exception (or an ordinary trap) thrown inside its
-    // body propagates straight out, exactly like it would out of a plain
-    // `block`, since nothing here (or anywhere else in this repo) ever
-    // intercepts an `Err` mid-block. No catch-clause bytes reach this
-    // handler at all -- `decode_function_body` already consumed and
-    // discarded them, leaving only the SAME `DecodedOperand::Int(blocktype)`
-    // shape `block`'s handler reads.
+    // try_table (0x1F): W21 first built this as a near-verbatim copy of
+    // `block` (0x02)'s own handler -- control-flow-shaped identically,
+    // never matching any catch clause. W-next (real catch-clause
+    // matching) keeps that control-flow shape (a `try_table` with no
+    // matching clause still behaves exactly like `block` for an
+    // exception that propagates past it — real spec rule), but now reads
+    // its operand as an INDEX into `ctx.try_table_infos` (populated by
+    // `decode_function_body`/`convert_operand`, W-next) instead of the
+    // raw blocktype directly, and attaches the resolved `TryTableInfo`'s
+    // catch-clause list to the pushed `Label` so `try_catch_exception`
+    // has something to search when an exception propagates through this
+    // frame.
     vm.register_context_opcode(0x1F, |vm, instr, _code, ctx| {
         let ctx = get_ctx(ctx);
-        let block_type = operand_int(instr);
-        let (param_arity, arity) = block_arity(block_type, &ctx.types);
+        let idx = operand_int(instr) as usize;
+        let info = ctx.try_table_infos.get(idx).cloned().unwrap_or(TryTableInfo {
+            block_type: 0x40, // empty blocktype -- defensive fallback, never reached for a validated module.
+            catches: Vec::new(),
+        });
+        let (param_arity, arity) = block_arity(info.block_type, &ctx.types);
         let end_pc = ctx
             .control_flow_map
             .get(&vm.pc)
@@ -8917,28 +9417,46 @@ fn register_control(vm: &mut GenericVM) {
             target_pc: end_pc,
             stack_height: vm.typed_stack.len(),
             is_loop: false,
+            catches: info.catches,
         });
         vm.advance_pc();
         Ok(None)
     });
 
-    // throw (0x08, W21 -- exceptions proposal): unconditionally raises an
-    // uncaught WASM exception -- this repo implements no catch-clause
-    // matching (see `try_table`'s own doc comment just above), so `throw`
-    // ALWAYS propagates all the way out to the top-level `call_function`
-    // caller, exactly like any other trap already does via `?`-based
-    // `Result` propagation through `call_function_inner`'s nested Rust call
-    // stack. Deliberately does not bother popping/validating the tag's own
-    // argument values off `vm.typed_stack` first -- `wasm-validator`
-    // already proved they were there at validation time, and execution
-    // terminates immediately either way (nothing after a `throw` ever
-    // runs), so there is no observable difference between popping them and
-    // not.
-    vm.register_context_opcode(0x08, |_vm, instr, _code, _ctx| {
-        let tag_idx = operand_int(instr);
-        Err(VMError::from(TrapError::exception(format!(
-            "uncaught wasm exception (tag {tag_idx})"
-        ))))
+    // throw (0x08): creates and throws a real, catchable WASM exception
+    // (W-next). W21 originally made this an unconditional, payload-less
+    // `Err` (this repo implemented no catch-clause matching yet, so
+    // popping the tag's argument values off the stack first would have
+    // had no observable effect). Real catching needs those values --
+    // they're what a matching `catch` clause pushes back -- so this pops
+    // exactly the tag's declared param count/types (looked up via
+    // `ctx.tags`/`ctx.types`, the same combined tag index space
+    // `wasm-validator` already checked at validation time) and carries
+    // them, plus this context's own `instance_id`, in the resulting
+    // `TrapError`'s payload. If nothing along the propagation path
+    // matches (see `try_catch_exception`), this still propagates all the
+    // way out to the top-level `call_function` caller exactly like W21's
+    // version did.
+    vm.register_context_opcode(0x08, |vm, instr, _code, ctx| {
+        let ctx = get_ctx(ctx);
+        let tag_idx = operand_int(instr) as u32;
+        let param_types: Vec<ValueType> = ctx
+            .tags
+            .get(tag_idx as usize)
+            .and_then(|&type_idx| ctx.types.get(type_idx as usize))
+            .map(|ft| ft.params.clone())
+            .unwrap_or_default();
+        let mut values = Vec::with_capacity(param_types.len());
+        for _ in 0..param_types.len() {
+            values.push(pop_wasm(vm)?);
+        }
+        values.reverse();
+        Err(VMError::from(TrapError::exception_with_payload(
+            format!("uncaught wasm exception (tag {tag_idx})"),
+            ctx.instance_id,
+            tag_idx,
+            values,
+        )))
     });
 
     // else (0x05)
@@ -9293,6 +9811,7 @@ fn call_function_inner(
                 br_table_targets: std::mem::take(&mut ctx.br_table_targets),
                 gc_ops: std::mem::take(&mut ctx.gc_ops),
                 simd_consts: std::mem::take(&mut ctx.simd_consts),
+                try_table_infos: std::mem::take(&mut ctx.try_table_infos),
             });
             frame_pushed = true;
         }
@@ -9316,10 +9835,16 @@ fn call_function_inner(
         let mut callee_br_table_targets: Vec<Vec<u32>> = Vec::new();
         let mut callee_gc_ops: Vec<GcOp> = Vec::new();
         let mut callee_simd_consts: Vec<[u8; 16]> = Vec::new();
+        let mut callee_try_table_infos: Vec<TryTableInfo> = Vec::new();
         let mut vm_instructions: Vec<Instruction> = Vec::new();
         for d in &decoded {
-            let operand =
-                convert_operand(&d.operand, &mut callee_br_table_targets, &mut callee_gc_ops, &mut callee_simd_consts);
+            let operand = convert_operand(
+                &d.operand,
+                &mut callee_br_table_targets,
+                &mut callee_gc_ops,
+                &mut callee_simd_consts,
+                &mut callee_try_table_infos,
+            );
             vm_instructions.push(Instruction {
                 opcode: d.opcode,
                 operand,
@@ -9330,6 +9855,7 @@ fn call_function_inner(
         ctx.br_table_targets = callee_br_table_targets;
         ctx.gc_ops = callee_gc_ops;
         ctx.simd_consts = callee_simd_consts;
+        ctx.try_table_infos = callee_try_table_infos;
 
         // A WASM function body is itself an implicit outer `block` whose label is
         // the function's own end (spec: "execution of an instruction sequence
@@ -9351,6 +9877,7 @@ fn call_function_inner(
             target_pc: vm_instructions.len(),
             stack_height: vm.typed_stack.len(),
             is_loop: false,
+            catches: Vec::new(),
         });
 
         // Set up callee code and jump to start.
@@ -9365,22 +9892,53 @@ fn call_function_inner(
 
         vm.pc = 0;
 
-        // Execute callee with the same context.
+        // Execute callee with the same context. Deliberately NOT a call to
+        // the shared `run_dispatch_loop` helper (used by
+        // `call_function_impl`'s own, non-recursive top-level entry) --
+        // this loop is itself on `call_function_inner`'s own recursion
+        // path (a nested WASM `call` re-enters this whole function), so
+        // wrapping it in one more Rust function call would add one more
+        // stack frame's worth of overhead to EVERY nested call level.
+        // Confirmed to matter in practice: extracting this loop into a
+        // separate function during W-next's development overflowed the
+        // real OS thread stack partway through the vendored
+        // `call_indirect.wast` (a deep, but not `MAX_CALL_DEPTH`-exceeding,
+        // recursive-call test) -- `MAX_CALL_DEPTH`/`DEDICATED_STACK_SIZE`
+        // were tuned against the depth-to-frame-size ratio of THIS
+        // inlined shape, and a real regression, not a theoretical one,
+        // resulted from changing it. Same catch-or-propagate logic
+        // `run_dispatch_loop` documents, just inlined here instead of
+        // shared.
         while !vm.halted && vm.pc < callee_code.instructions.len() {
             let instr = callee_code.instructions[vm.pc].clone();
-            let pc_before = vm.pc;
-
-            if let Some(handler) = vm.context_handlers.get(&instr.opcode).copied() {
-                handler(vm, &instr, &callee_code, ctx)?;
-            } else {
+            let Some(handler) = vm.context_handlers.get(&instr.opcode).copied() else {
                 return Err(VMError::InvalidOpcode(format!(
                     "no handler for opcode 0x{:02X}",
                     instr.opcode
                 )));
+            };
+            if let Err(e) = handler(vm, &instr, &callee_code, ctx) {
+                if try_catch_exception(vm, ctx, &e)? {
+                    // Caught: `vm.pc`/the stack/`ctx.label_stack` were
+                    // already updated by `try_catch_exception` exactly as
+                    // a `br` would; fall through to the top of this loop.
+                    continue;
+                }
+                // W-next: nothing in THIS invocation's own `label_stack`
+                // caught the exception. Restore the CALLER's saved frame
+                // before propagating further -- the same restoration the
+                // success path below performs -- so the ENCLOSING
+                // `call_function_inner` (or `call_function_impl`'s
+                // top-level loop) sees correctly-restored state when IT
+                // runs its own catch search at the next choke point up
+                // the Rust call stack.
+                if frame_pushed {
+                    if let Some(frame) = ctx.saved_frames.pop() {
+                        restore_caller_frame(vm, ctx, frame);
+                    }
+                }
+                return Err(e);
             }
-
-            // Check for nested calls that might have changed things
-            let _ = pc_before;
         }
 
         // WASM16: did the inner loop halt because of a real
@@ -9409,19 +9967,9 @@ fn call_function_inner(
     // Restore caller state.
     if frame_pushed {
         if let Some(frame) = ctx.saved_frames.pop() {
-            ctx.typed_locals = frame.locals;
-            ctx.label_stack = frame.label_stack;
-            ctx.control_flow_map = frame.control_flow_map;
-            ctx.br_table_targets = frame.br_table_targets;
-            ctx.gc_ops = frame.gc_ops;
-            ctx.simd_consts = frame.simd_consts;
-
-            // Truncate stack to caller's height.
-            while vm.typed_stack.len() > frame.stack_height {
-                let _ = vm.pop_typed();
-            }
-
-            vm.pc = frame.return_pc;
+            let return_pc = frame.return_pc;
+            restore_caller_frame(vm, ctx, frame);
+            vm.pc = return_pc;
         } else {
             vm.pc = saved_pc + 1;
         }
@@ -9520,6 +10068,13 @@ pub struct WasmExecutionEngine {
     /// `call_indirect`'s handler); set with
     /// [`WasmExecutionEngine::set_type_section`].
     type_section: Vec<FuncType>,
+    /// The module's tag section (W-next: real catch-clause matching),
+    /// indexed by the combined imported+defined tag index space —
+    /// mirrors `type_section`'s own optional-setter pattern exactly, for
+    /// the identical reason (a mandatory `WasmEngineConfig` field would
+    /// force every tag-agnostic existing construction site to supply it).
+    /// Empty by default; set with [`WasmExecutionEngine::set_tags`].
+    tags: Vec<u32>,
     /// GC bookkeeping from the most recently completed [`Self::call_function`]
     /// (W04). `gc_heap` itself isn't persisted here — it's rebuilt fresh every
     /// call, same as `struct_field_counts` isn't — but the *counters* (live
@@ -9576,6 +10131,7 @@ impl WasmExecutionEngine {
             host_functions: config.host_functions,
             struct_field_counts: Vec::new(),
             type_section: Vec::new(),
+            tags: Vec::new(),
             last_gc_state: gc::GcState::default(),
             v128_heap: vec![[0u8; 16]],
             data_segments: Vec::new(),
@@ -9609,6 +10165,20 @@ impl WasmExecutionEngine {
     /// (see its handler). Returns `&mut self` for chaining.
     pub fn set_type_section(&mut self, types: Vec<FuncType>) -> &mut Self {
         self.type_section = types;
+        self
+    }
+
+    /// Register the module's tag section (W-next: real catch-clause
+    /// matching), indexed by the combined imported+defined tag index
+    /// space: `tags[N]` is tag `N`'s function-type index into whatever
+    /// [`Self::set_type_section`] was given. Needed for `throw`/`catch` to
+    /// know a tag's declared param types (how many values to pop/push).
+    /// Same optional-setter pattern as [`Self::set_type_section`], for the
+    /// identical reason. Left unset, `throw` treats every tag as having no
+    /// declared params (see that handler). Returns `&mut self` for
+    /// chaining.
+    pub fn set_tags(&mut self, tags: Vec<u32>) -> &mut Self {
+        self.tags = tags;
         self
     }
 
@@ -9828,6 +10398,19 @@ impl WasmExecutionEngine {
             dropped_data_segments: self.dropped_data_segments.clone(),
             elements: self.elements.clone(),
             dropped_elements: self.dropped_elements.clone(),
+            tags: self.tags.clone(),
+            try_table_infos: Vec::new(),
+            // A fresh id per `call_function_impl` invocation (W-next) --
+            // see `WasmExecutionContext::instance_id`'s own doc comment.
+            // Rebuilt once per top-level call (this whole `ctx` is), which
+            // is exactly the granularity `try_catch_exception` needs: every
+            // nested call WITHIN this one invocation shares this same
+            // `ctx` (and so this same id), while any nested cross-instance
+            // call (a fresh `WasmRuntime::call_typed` on a DIFFERENT
+            // instance, e.g. `wasm-conformance`'s `CrossModuleFunction`)
+            // builds its own separate `ctx` via its own separate
+            // `call_function_impl` call, getting a different id.
+            instance_id: NEXT_INSTANCE_ID.fetch_add(1, Ordering::Relaxed),
         };
 
         // Reset and execute.
@@ -9990,9 +10573,16 @@ impl WasmExecutionEngine {
                                 let mut br_table_targets: Vec<Vec<u32>> = Vec::new();
                                 let mut gc_ops: Vec<GcOp> = Vec::new();
                                 let mut simd_consts: Vec<[u8; 16]> = Vec::new();
+                                let mut try_table_infos: Vec<TryTableInfo> = Vec::new();
                                 let mut vm_instructions: Vec<Instruction> = Vec::new();
                                 for d in &decoded {
-                                    let operand = convert_operand(&d.operand, &mut br_table_targets, &mut gc_ops, &mut simd_consts);
+                                    let operand = convert_operand(
+                                        &d.operand,
+                                        &mut br_table_targets,
+                                        &mut gc_ops,
+                                        &mut simd_consts,
+                                        &mut try_table_infos,
+                                    );
                                     vm_instructions.push(Instruction {
                                         opcode: d.opcode,
                                         operand,
@@ -10001,6 +10591,7 @@ impl WasmExecutionEngine {
                                 ctx.br_table_targets = br_table_targets;
                                 ctx.gc_ops = gc_ops;
                                 ctx.simd_consts = simd_consts;
+                                ctx.try_table_infos = try_table_infos;
 
                                 // Initialize locals.
                                 let mut typed_locals: Vec<WasmValue> = current_args;
@@ -10030,6 +10621,7 @@ impl WasmExecutionEngine {
                                     target_pc: vm_instructions.len(),
                                     stack_height: 0,
                                     is_loop: false,
+                                    catches: Vec::new(),
                                 }];
 
                                 let code = CodeObject {
@@ -10040,12 +10632,15 @@ impl WasmExecutionEngine {
 
                                 vm.pc = 0;
                                 vm.halted = false;
-                                // `ctx` is already `&mut WasmExecutionContext` here (obtained
-                                // via `ctx_ptr`) -- pass it directly, relying on Rust's
-                                // implicit reborrow, NOT `&mut ctx` (which would build a
-                                // `&mut &mut WasmExecutionContext` and break
-                                // `execute_with_context`'s downcast).
-                                if let Err(e) = vm.execute_with_context(&code, ctx) {
+                                // `run_dispatch_loop` (W-next), not the generic,
+                                // wasm-agnostic `GenericVM::execute_with_context` --
+                                // see that function's own doc comment for why this
+                                // top-level dedicated-thread entry point needs the
+                                // SAME WASM-specific exception-catching dispatch loop
+                                // `call_function_inner`'s nested-call path uses,
+                                // rather than the shared `virtual-machine` crate's
+                                // catch-agnostic one.
+                                if let Err(e) = run_dispatch_loop(vm, ctx, &code) {
                                     break Err(e);
                                 }
 
@@ -10700,15 +11295,17 @@ mod tests {
     }
 
     #[test]
-    fn test_try_table_never_catches_a_thrown_exception_it_propagates_uncaught() {
+    fn test_try_table_with_a_matching_catch_clause_now_catches_the_thrown_exception() {
         // try_table (0x1F) blocktype=empty (0x40); catch_count=1, ONE real
-        // `catch` clause naming tag 0, label 0 (its own enclosing scope);
-        // body: throw tag 0; end (try_table); end (function). Even though
-        // the catch clause's tag matches exactly what's thrown, this repo's
-        // `try_table` never looks for a match (see `code/specs/
-        // W21-wasm-exceptions-tag-throw-slice.md`) -- the exception must
-        // propagate all the way out, uncaught, as a real exception (not a
-        // plain trap).
+        // `catch` clause naming tag 0, label 0 (its own enclosing scope,
+        // the function's own implicit outer block); body: throw tag 0;
+        // end (try_table); end (function). W21 deliberately never looked
+        // for a match here (see `code/specs/
+        // W21-wasm-exceptions-tag-throw-slice.md`); W-next builds real
+        // catch-clause matching, so this exact shape -- the catch clause's
+        // tag matches exactly what's thrown -- now catches, branching to
+        // label 0 (the function's own end) and returning normally instead
+        // of propagating an exception.
         let func_type = FuncType { params: vec![], results: vec![] };
         let body = FunctionBody {
             locals: vec![],
@@ -10723,8 +11320,204 @@ mod tests {
             func_bodies: vec![Some(body)],
             host_functions: vec![None],
         });
+        engine.set_tags(vec![0]);
+        let result = engine.call_function(0, &[]).unwrap();
+        assert_eq!(result, Vec::<WasmValue>::new(), "a matching catch clause must catch the exception and return normally, not propagate it");
+    }
+
+    #[test]
+    fn test_try_table_with_a_non_matching_catch_clause_still_propagates_uncaught() {
+        // Same shape as the matching-catch test just above, except the
+        // catch clause names tag 1 while `throw` uses tag 0 -- real spec
+        // semantics: a `catch` clause only matches ITS OWN declared tag, so
+        // a non-matching tag must still propagate all the way out
+        // uncaught, exactly like W21's original (pre-catching) behavior
+        // for every case.
+        let func_type = FuncType { params: vec![], results: vec![] };
+        let body = FunctionBody {
+            locals: vec![],
+            code: vec![0x1F, 0x40, 0x01, 0x00, 0x01, 0x00, 0x08, 0x00, 0x0B, 0x0B],
+        };
+        let mut engine = WasmExecutionEngine::new(WasmEngineConfig {
+            memories: Vec::new(),
+            tables: vec![],
+            globals: vec![],
+            global_types: vec![],
+            func_types: vec![func_type],
+            func_bodies: vec![Some(body)],
+            host_functions: vec![None],
+        });
+        engine.set_tags(vec![0, 0]);
         let err = engine.call_function(0, &[]).unwrap_err();
-        assert!(err.is_exception, "an exception thrown inside try_table's body must propagate out as a real exception, not a plain trap");
+        assert!(err.is_exception, "an exception thrown inside try_table's body, not matched by any catch clause, must propagate out as a real exception, not a plain trap");
+    }
+
+    #[test]
+    fn test_try_table_catch_delivers_the_thrown_payload_to_the_catch_target() {
+        // (block $h (result i32) (try_table (catch $tag0 $h) (i32.const 7)
+        // (throw $tag0))) -- real spec rule: a matching `catch` clause
+        // pushes the tag's argument values back onto the stack before
+        // branching, so the caught `7` becomes the block's (and hence the
+        // function's) result.
+        let tag_type = FuncType { params: vec![ValueType::I32], results: vec![] };
+        let func_type = FuncType { params: vec![], results: vec![ValueType::I32] };
+        let body = FunctionBody {
+            locals: vec![],
+            code: vec![
+                0x02, 0x7F, // block $h (result i32)
+                0x1F, 0x40, 0x01, 0x00, 0x00, 0x00, // try_table (catch tag=0 label=0)
+                0x41, 0x07, // i32.const 7
+                0x08, 0x00, // throw tag 0
+                0x0B, // end try_table
+                0x0B, // end block $h
+                0x0B, // function terminator
+            ],
+        };
+        let mut engine = WasmExecutionEngine::new(WasmEngineConfig {
+            memories: Vec::new(),
+            tables: vec![],
+            globals: vec![],
+            global_types: vec![],
+            func_types: vec![func_type],
+            func_bodies: vec![Some(body)],
+            host_functions: vec![None],
+        });
+        engine.set_type_section(vec![tag_type]);
+        engine.set_tags(vec![0]);
+        let result = engine.call_function(0, &[]).unwrap();
+        assert_eq!(result, vec![WasmValue::I32(7)], "a matching `catch` clause must deliver the thrown i32 payload to its target label");
+    }
+
+    #[test]
+    fn test_try_table_catch_all_matches_any_tag() {
+        // (block $h (try_table (catch_all $h) (throw $tag0))) -- `catch_all`
+        // matches ANY thrown tag (no tag comparison at all), pushing no
+        // values.
+        let func_type = FuncType { params: vec![], results: vec![] };
+        let body = FunctionBody {
+            locals: vec![],
+            code: vec![
+                0x02, 0x40, // block $h (empty)
+                0x1F, 0x40, 0x01, 0x02, 0x00, // try_table (catch_all label=0)
+                0x08, 0x00, // throw tag 0
+                0x0B, // end try_table
+                0x0B, // end block $h
+                0x0B, // function terminator
+            ],
+        };
+        let mut engine = WasmExecutionEngine::new(WasmEngineConfig {
+            memories: Vec::new(),
+            tables: vec![],
+            globals: vec![],
+            global_types: vec![],
+            func_types: vec![func_type],
+            func_bodies: vec![Some(body)],
+            host_functions: vec![None],
+        });
+        engine.set_tags(vec![0]);
+        let result = engine.call_function(0, &[]).unwrap();
+        assert_eq!(result, Vec::<WasmValue>::new(), "catch_all must catch a thrown exception regardless of its tag");
+    }
+
+    #[test]
+    fn test_throw_from_a_called_function_is_caught_by_the_callers_try_table() {
+        // Mirrors the real testsuite's own `throw.wast` `test-throw-1-2`
+        // shape (the one case W21 deliberately left out of scope): a
+        // SEPARATE function ($throw-1-2) throws with a 2-value i32 payload,
+        // and the CALLER's `try_table` -- wrapping a `call` to it, not the
+        // `throw` itself -- catches it. This is the architecturally
+        // load-bearing case: the exception must propagate up through a
+        // real nested `call_function` invocation (unwinding that callee's
+        // own Rust-recursion frame) before the catch machinery ever runs,
+        // proving `run_dispatch_loop`'s choke point fires at every level of
+        // the call chain, not just for a `throw` inside the SAME function
+        // as its `try_table`.
+        let tag_type = FuncType { params: vec![ValueType::I32, ValueType::I32], results: vec![] };
+        let block_type = FuncType { params: vec![], results: vec![ValueType::I32, ValueType::I32] };
+        let caller_type = FuncType { params: vec![], results: vec![ValueType::I32, ValueType::I32] };
+        let callee_type = FuncType { params: vec![], results: vec![] };
+        let callee_body = FunctionBody {
+            locals: vec![],
+            code: vec![
+                0x41, 0x01, // i32.const 1
+                0x41, 0x02, // i32.const 2
+                0x08, 0x00, // throw tag 0
+                0x0B, // function terminator
+            ],
+        };
+        let caller_body = FunctionBody {
+            locals: vec![],
+            code: vec![
+                0x02, 0x01, // block $h (type index 1: result i32 i32)
+                0x1F, 0x40, 0x01, 0x00, 0x00, 0x00, // try_table (catch tag=0 label=0)
+                0x10, 0x01, // call function 1 ($throw-1-2)
+                0x0B, // end try_table
+                0x0B, // end block $h
+                0x0B, // function terminator
+            ],
+        };
+        let mut engine = WasmExecutionEngine::new(WasmEngineConfig {
+            memories: Vec::new(),
+            tables: vec![],
+            globals: vec![],
+            global_types: vec![],
+            func_types: vec![caller_type, callee_type],
+            func_bodies: vec![Some(caller_body), Some(callee_body)],
+            host_functions: vec![None, None],
+        });
+        engine.set_type_section(vec![tag_type, block_type]);
+        engine.set_tags(vec![0]);
+        let result = engine.call_function(0, &[]).unwrap();
+        assert_eq!(
+            result,
+            vec![WasmValue::I32(1), WasmValue::I32(2)],
+            "an exception thrown by a CALLED function must be caught by the CALLER's try_table, with its payload delivered"
+        );
+    }
+
+    #[test]
+    fn test_try_table_first_matching_catch_clause_wins_among_multiple() {
+        // Mirrors the real testsuite's `try_table.wast` `duplicated-catches`
+        // shape: two `catch` clauses for the SAME tag, targeting different
+        // labels -- the FIRST one listed must win, even though the second
+        // one would also structurally match.
+        //   (block $outer1                      ; depth 1 from inside try_table
+        //     (block $outer2                    ; depth 0
+        //       (try_table (catch $tag0 $outer2) (catch $tag0 $outer1)
+        //         (throw $tag0)))
+        //     (return (i32.const 2)))
+        //   (return (i32.const 3))
+        let func_type = FuncType { params: vec![], results: vec![ValueType::I32] };
+        let body = FunctionBody {
+            locals: vec![],
+            code: vec![
+                0x02, 0x40, // block $outer1 (empty)
+                0x02, 0x40, // block $outer2 (empty)
+                0x1F, 0x40, 0x02, // try_table (catch_count=2)
+                0x00, 0x00, 0x00, // catch tag=0 label=0 ($outer2)
+                0x00, 0x00, 0x01, // catch tag=0 label=1 ($outer1)
+                0x08, 0x00, // throw tag 0
+                0x0B, // end try_table
+                0x0B, // end $outer2
+                0x41, 0x02, // i32.const 2
+                0x0F, // return
+                0x0B, // end $outer1
+                0x41, 0x03, // i32.const 3
+                0x0F, // return
+            ],
+        };
+        let mut engine = WasmExecutionEngine::new(WasmEngineConfig {
+            memories: Vec::new(),
+            tables: vec![],
+            globals: vec![],
+            global_types: vec![],
+            func_types: vec![func_type],
+            func_bodies: vec![Some(body)],
+            host_functions: vec![None],
+        });
+        engine.set_tags(vec![0]);
+        let result = engine.call_function(0, &[]).unwrap();
+        assert_eq!(result, vec![WasmValue::I32(2)], "the FIRST matching catch clause must win, even when a later one also matches");
     }
 
     #[test]
