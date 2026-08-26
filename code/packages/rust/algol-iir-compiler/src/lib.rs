@@ -8153,7 +8153,7 @@ fn literal_power_identity_base(
     }
     let (base, exponents) = operands.split_first()?;
     let exponent = if allow_integral_real_exponents {
-        literal_nonnegative_integral_power_chain(exponents)
+        literal_nonnegative_integral_arithmetic_power_chain(exponents)
     } else {
         literal_nonneg_integer_power_chain(exponents)
     };
@@ -8211,6 +8211,42 @@ fn literal_nonnegative_integral_power_chain(nodes: &[&GrammarASTNode]) -> Option
             let value = literal_integral_real_exponent(node)?;
             (value >= 0).then_some(value as u32)
         })
+    };
+    let mut value = exponent_value(last)? as u64;
+
+    for node in prefix.iter().rev() {
+        let base = exponent_value(node)? as u64;
+        value = base.checked_pow(value.try_into().ok()?)?;
+        if value > MAX_POW_UNROLL_EXPONENT as u64 {
+            return None;
+        }
+    }
+
+    Some(value as u32)
+}
+
+fn literal_nonnegative_integral_arithmetic_power_chain(
+    nodes: &[&GrammarASTNode],
+) -> Option<u32> {
+    let (last, prefix) = nodes.split_last()?;
+    let exponent_value = |node: &GrammarASTNode| {
+        if let Some(value) = literal_nonneg_integer_exponent(node) {
+            return Some(value);
+        }
+        if let Some(value) = literal_integral_real_exponent(node) {
+            return (value >= 0).then_some(value as u32);
+        }
+        if !recursive_tokens(node)
+            .iter()
+            .any(|token| token.effective_type_name() == "REAL_LIT" || token.value == "/")
+        {
+            return None;
+        }
+        let value = expr_static_real_arithmetic_value_with(node, &|_| None)?;
+        (value.fract() == 0.0
+            && value >= 0.0
+            && value <= MAX_POW_UNROLL_EXPONENT as f64)
+            .then_some(value as u32)
     };
     let mut value = exponent_value(last)? as u64;
 
@@ -11200,6 +11236,9 @@ mod tests {
             "choose ^ 1.0",
             "choose ** (+1.0)",
             "choose ^ 1.0 ^ 1",
+            "choose ^ (2.0 - 1.0)",
+            "choose ** ((2.0 * 2.0) / 4.0)",
+            "choose ^ (3.0 - 2.0) ^ (2.0 - 1.0)",
             "+choose",
             "(choose)",
             "choose * (1.0)",
@@ -11294,6 +11333,8 @@ mod tests {
             "choose ^ 0.0",
             "1.0 ^ choose",
             "choose ^ 2.0",
+            "choose ^ (3.0 - 1.0)",
+            "choose ^ (2 - 1)",
             "choose - ((-0.0) ^ 0)",
             "choose + ((-0.0) ^ 2)",
         ] {
