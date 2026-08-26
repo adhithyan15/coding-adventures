@@ -131,7 +131,8 @@ until you look at the distribution:
 | C1 | 4 | 4 each | placeholder |
 | C2 | 4 | 4 each | placeholder |
 
-`SPINE-SAY-WHAT-I-DO` declares 42 concepts. `SPINE-TALK-ABOUT-PAST` declares
+`SPINE-SAY-WHAT-I-DO` declared 42 concepts when this was written and declares
+**35** today, after `HL23`'s two re-staging slices. `SPINE-TALK-ABOUT-PAST` declares
 **one**, and stands for the entire past tense of Spanish. Both cannot be one rung
 of the same ladder, and HL09 §1 already named this as the mechanism behind the
 false A2 claim.
@@ -163,7 +164,10 @@ STAGE          pre-A1 · A1 · A2 · B1 · B2 · C1 · C2          (7, fixed, ex
 ### 3.3 The split of `SPINE-SAY-WHAT-I-DO`
 
 Worked as the template for every oversized node. 42 concepts becomes nine nodes
-across two stages:
+across two stages. Seven of the 42 have since left, to the A1
+`SPINE-NAME-EVERYDAY-ACTIONS` rather than to the nodes sketched below — see
+`HL23` §8.3 and §9.2 — so the node stands at 35 and the target shape here is
+still the target:
 
 | new node | stage | strand | concepts | realized by |
 |---|---|---|---|---|
