@@ -554,9 +554,14 @@
       "omits": [
         "VERB-DRINK",
         "VERB-GIVE",
-        "VERB-PUT"
+        "VERB-PUT",
+        "VERB-DO-MAKE",
+        "VERB-OPEN",
+        "VERB-CLOSE"
       ],
-      "relocates": {}
+      "relocates": {
+        "VERB-BUY": "SPINE-SAY-WHAT-I-DO"
+      }
     },
     "SPINE-SAY-WHAT-I-DO": {
       "segments": [
@@ -569,7 +574,6 @@
       "omits": [
         "VERB-INFINITIVE",
         "VERB-PRESENT-HABITUAL",
-        "VERB-DO-MAKE",
         "VERB-SPEAK",
         "VERB-HEAR",
         "VERB-LEARN",
@@ -581,9 +585,7 @@
         "VERB-WALK",
         "VERB-RUN",
         "VERB-SIT",
-        "VERB-STAND",
-        "VERB-OPEN",
-        "VERB-CLOSE"
+        "VERB-STAND"
       ],
       "relocates": {}
     },

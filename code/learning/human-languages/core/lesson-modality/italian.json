@@ -7,7 +7,7 @@
   "policy": {
     "maxLinearisableTableColumns": 3
   },
-  "sourceHash": "fnv1a64:504f19fb329b5dc6",
+  "sourceHash": "fnv1a64:8cbbcd3634016e81",
   "summary": {
     "totalLessons": 89,
     "voice": 74,
@@ -1725,7 +1725,7 @@
         "no-visual-dependency"
       ],
       "coreDrivable": true,
-      "sourceHash": "fnv1a64:0b8050f28b31c1da"
+      "sourceHash": "fnv1a64:a6d50888a958631f"
     },
     {
       "id": "IT-C20-aspettare",

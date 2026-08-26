@@ -1,0 +1,11 @@
+{
+  "id": "GE-PATH-A1-OEFFNEN-SCHLIESSEN",
+  "spine_node": "SPINE-NAME-EVERYDAY-ACTIONS",
+  "lessons": [
+    "GE-C27-oeffnen",
+    "GE-C27-schliessen"
+  ],
+  "before": [],
+  "inline": [],
+  "after": []
+}

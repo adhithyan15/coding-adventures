@@ -237,13 +237,22 @@
         "HI-C05-bolna",
         "HI-C05-bolta-hun",
         "HI-C05-rahna",
-        "HI-C05-karna",
         "HI-C05-main-hindi-bolta-hun"
       ],
       "before": [],
       "inline": [
         "HI-EXT-028-LANGUAGE-SPECIFIC"
       ],
+      "after": []
+    },
+    {
+      "id": "HI-PATH-A1-KARNA",
+      "spine_node": "SPINE-NAME-EVERYDAY-ACTIONS",
+      "lessons": [
+        "HI-C05-karna"
+      ],
+      "before": [],
+      "inline": [],
       "after": []
     },
     {
@@ -1122,11 +1131,16 @@
       "relocates": {}
     },
     "SPINE-NAME-EVERYDAY-ACTIONS": {
-      "segments": [],
+      "segments": [
+        "HI-PATH-A1-KARNA"
+      ],
       "omits": [
         "VERB-DRINK",
         "VERB-GIVE",
-        "VERB-PUT"
+        "VERB-PUT",
+        "VERB-BUY",
+        "VERB-OPEN",
+        "VERB-CLOSE"
       ],
       "relocates": {}
     },
@@ -1163,10 +1177,7 @@
         "VERB-STAND",
         "VERB-WAIT",
         "VERB-ANSWER",
-        "VERB-MEET",
-        "VERB-BUY",
-        "VERB-OPEN",
-        "VERB-CLOSE"
+        "VERB-MEET"
       ],
       "relocates": {}
     },

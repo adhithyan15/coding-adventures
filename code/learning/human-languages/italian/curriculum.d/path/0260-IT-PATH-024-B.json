@@ -1,10 +1,9 @@
 {
-  "id": "ES-PATH-036",
+  "id": "IT-PATH-024-B",
   "spine_node": "SPINE-SAY-WHAT-I-DO",
   "lessons": [
-    "ES-C40-esperar",
-    "ES-C40-contestar",
-    "ES-C40-comprar"
+    "IT-C20-aspettare",
+    "IT-C20-incontrare"
   ],
   "before": [],
   "inline": [],

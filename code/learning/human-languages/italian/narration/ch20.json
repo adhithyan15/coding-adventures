@@ -4,7 +4,7 @@
   "chapter": 20,
   "title": "Carrying, Buying, Waiting, Meeting",
   "drivablePrefix": 4,
-  "sourceHash": "fnv1a64:8e8b66cfd72012b7",
+  "sourceHash": "fnv1a64:2b54f4b269353dc6",
   "lessons": [
     {
       "id": "IT-C20-portare",
@@ -204,7 +204,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:0b8050f28b31c1da",
+      "sourceHash": "fnv1a64:a6d50888a958631f",
       "notice": null,
       "blocks": [
         {

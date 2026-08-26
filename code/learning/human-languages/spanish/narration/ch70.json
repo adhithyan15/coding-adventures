@@ -4,7 +4,7 @@
   "chapter": 70,
   "title": "Hacer, Decir, and the -go Verb Club",
   "drivablePrefix": 2,
-  "sourceHash": "fnv1a64:045d3b208b4fdd0e",
+  "sourceHash": "fnv1a64:e855a8fe180ee066",
   "lessons": [
     {
       "id": "ES-C12-hacer",
@@ -19,7 +19,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:feecbbc0bce0b11e",
+      "sourceHash": "fnv1a64:7417fd6e16c01507",
       "notice": null,
       "blocks": [
         {

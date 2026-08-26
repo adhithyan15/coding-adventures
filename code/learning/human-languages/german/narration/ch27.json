@@ -4,7 +4,7 @@
   "chapter": 27,
   "title": "Going, Running, Opening, Closing",
   "drivablePrefix": 4,
-  "sourceHash": "fnv1a64:1bd7e0838fb35899",
+  "sourceHash": "fnv1a64:f0750333b7cb5b57",
   "lessons": [
     {
       "id": "GE-C27-gehen",
@@ -437,7 +437,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:6077fbe3623e96ba",
+      "sourceHash": "fnv1a64:1d968eb670945a45",
       "notice": null,
       "blocks": [
         {
@@ -644,7 +644,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:7fbdf7b45126355b",
+      "sourceHash": "fnv1a64:3a010511b57a5214",
       "notice": null,
       "blocks": [
         {

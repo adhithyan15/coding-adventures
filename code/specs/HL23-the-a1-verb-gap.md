@@ -1,6 +1,6 @@
 # HL23 — The A1 verb gap
 
-**Status:** decision document, **amended after implementation** — see §8. The
+**Status:** decision document, **amended twice after implementation** — see §8 and §9. The
 owner chose Option C (§4). The first slice is implemented; §8 records the
 constraint that made this document's costing of Option C wrong, and re-prices
 the remainder. Sections 1-7 are left as written, because a decision document
@@ -656,3 +656,104 @@ Deliberately **not** done, and the reasons matter:
 - **No canonical concept was minted.** The six candidate verbs of §5 decision 3
   ship namespaced. Promoting them asks all 23 tracks to answer for them, which
   is a commitment this slice has no reason to make on their behalf.
+
+---
+
+## 9. Amendment — the second slice, and what §8.2 does not price *(added after the DELE sitting)*
+
+§8 was written before anything had been *sat*. `mocks/a1/sitting-2026-08-26.md`
+then sat both A1 mocks and returned **`NO APTO` on both**, with Grupo 1 at 3,00
+and 0,00 against a 30,00 bar. **62 of its 86 failed objective items involve a
+missing high-frequency verb.** That converts this document's subject from a
+composition concern into a measured failure, and it changes which concepts are
+worth what.
+
+### 9.1 §8.2's table has holes, and they are where the value is
+
+§8.2 prices 30 of the node's concepts. It is silent on six: `VERB-BE`,
+`VERB-HAVE`, `VERB-DO-MAKE`, `VERB-SAY`, `VERB-HEAR` and `VERB-LEARN`. Three of
+those are on the sitting's most-missed list. Measured the same way — realizing
+lessons that are not already extension-resident:
+
+| concept | Spanish | lessons to move | tracks | note |
+|---|---|---|---|---|
+| `VERB-LEARN` | *(none)* | 1 | german | `GE-C05-lernen` carries no explicit `spine_node` |
+| `VERB-SAY` | `decir` | 1 | persian | Spanish realizer is already extension-resident |
+| `VERB-DO-MAKE` | `hacer` | 2 | german, hindi | `GE-C05-machen` carries no explicit `spine_node` |
+| `VERB-HAVE` | `tener` | 3 | french, german, spanish | **empties `GE-PATH-018`**; `FR-C14-avoir` and `GE-C14-haben` carry no explicit `spine_node`, so both take a second `misplaced-shared-realization` error — the `VERB-LIVE` shape again |
+| `VERB-HEAR` | `oír` | 3 | french, german, spanish | |
+| `VERB-BE` | `ser` | 8 | french, german, gujarati, malayalam, persian, punjabi, sanskrit, spanish | **empties `GE-PATH-021`** |
+
+The consequential line is `VERB-DO-MAKE`. It ties for the **most-needed verb on
+the exam** (9 items, with `gustar`) and costs **two** foreign lessons — cheaper
+than every 3-track row §8.2 does price. A table that omits it understates the
+best move available.
+
+### 9.2 What the second slice shipped
+
+Four concepts moved to `SPINE-NAME-EVERYDAY-ACTIONS`, stage A1, strand LEXICON,
+whose `canDo` — *"I can name common everyday actions"* — already covers all four
+with **no wording changed**:
+
+`VERB-DO-MAKE` (`hacer`, 9 items) · `VERB-BUY` (`comprar`, 5) ·
+`VERB-OPEN` (`abrir`, 4) · `VERB-CLOSE` (`cerrar`, 3).
+
+Price paid: **11 lesson migrations across 5 tracks** (french, german, hindi,
+italian, spanish), plus 23 tracks × 2 nodes of realization ledger. Spanish goes
+**617 → 621** headwords and **40 → 44** verbs at or below A1. **pre-A1 stays at
+304** — §3.5's four headwords of slack are untouched, because this slice moves
+A2 → A1 only.
+
+`SPINE-SAY-WHAT-I-DO` goes **39 → 35** concepts. Still the spine's worst
+`over-ceiling` node, still pinned.
+
+### 9.3 Deliberately not done, and why
+
+- **`poder` and `tener` stay at A2**, though they are the 4th and 3rd
+  most-missed verbs and `VERB-CAN` costs literally nothing in foreign lessons.
+  Being *able* to do a thing is not an everyday action, and *having* a thing is
+  not one either; putting them on this node means widening its `canDo` to cover
+  naming **and** ability **and** possession, which is precisely the compound,
+  unchosen capability statement §5 rejected Option B for producing. They need
+  their own rungs. The syllabus already asks for one: PCIC `A1-F2-16` (*ask
+  about ability*) and `A1-F2-17` (*express ability*) are enumerated A1 points
+  and both are currently `probe: null` — **unmapped** — in
+  `exam-inventory-es-a1.json`. A `SPINE-SAY-WHAT-I-CAN-DO` rung is therefore
+  justified by the inventory rather than invented to hold a verb.
+- **`porque` stays at B1.** It sits under `SPINE-NARRATE-EVENTS`, not under this
+  node, so it is a different migration with a different price.
+- **`gustar` stays at A2.** Joint most-needed verb on the exam, and the single
+  most expensive row in §8.2: `VERB-LIKE-LOVE` is 9 lessons across 9 tracks.
+  It deserves a slice of its own rather than a corner of this one.
+
+### 9.4 The re-sat result, and the thing it settles
+
+Both mocks were re-sat against the new corpus with the same harness and the same
+rule. **Both still return `NO APTO`.**
+
+| | Grupo 1 | Grupo 2 | |
+|---|---|---|---|
+| mock 1, before → after | 4,00 → **5,00** / 50 | 11,58 → **11,58** / 50 | NO APTO |
+| mock 2, before → after | 0,00 → **5,17** / 50 | 5,00 → **11,67** / 50 | NO APTO |
+
+Objective items failed: 84 → **82** of 100.
+
+This is the expected shape, not a disappointment: the sitting's own §5 already
+granted **all 34** high-frequency verbs as a counterfactual and still failed both
+groups in both mocks. Its measured minimum is ~136 lexemes — about 34 verbs
+**and about 100 everyday nouns**. So §4's framing needs one correction carried
+forward: **re-staging the verb cluster is necessary and is not sufficient.**
+A future slice that moves the remaining verbs and stops there will still sit
+`NO APTO`, and should say so in advance rather than discover it.
+
+One methodological note, because it bears on how much weight the numbers above
+carry. The sitting's scoring scripts were scratchpad artifacts (§8 of that
+document) and were not committed. They were rebuilt from its description and
+calibrated against its published result before use: the reconstruction
+reproduces the pinned 689 headwords / 756 lessons at or below A1, 810 headwords
+and 78 verbs at or below A2, and the project's own 40-verb count, and it
+reproduces **six of the eight published paper scores exactly** — every
+production paper, and both of mock 2's group totals. It differs on two by
+exactly one objective item each, in the generous direction. The before/after
+figures above are therefore both taken on the reconstruction, so the comparison
+is like-for-like even where the reconstruction and the original disagree.

@@ -3,7 +3,12 @@
   "omits": [
     "VERB-DRINK",
     "VERB-GIVE",
-    "VERB-PUT"
+    "VERB-PUT",
+    "VERB-DO-MAKE",
+    "VERB-OPEN",
+    "VERB-CLOSE"
   ],
-  "relocates": {}
+  "relocates": {
+    "VERB-BUY": "SPINE-SAY-WHAT-I-DO"
+  }
 }

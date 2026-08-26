@@ -433,7 +433,7 @@
     {
       "language": "french",
       "chapter": 27,
-      "sourceHash": "fnv1a64:fc777a6455d5895e",
+      "sourceHash": "fnv1a64:fac2103c6400493d",
       "lessonIds": [
         "FR-C27-sasseoir",
         "FR-C27-se-lever",
@@ -445,7 +445,7 @@
       "text": "french/narration/ch27.txt",
       "json": "french/narration/ch27.json",
       "textHash": "fnv1a64:540928ae7f019d25",
-      "jsonHash": "fnv1a64:3ba4f55eaf90446d"
+      "jsonHash": "fnv1a64:6fe943b3fcfba970"
     },
     {
       "language": "french",

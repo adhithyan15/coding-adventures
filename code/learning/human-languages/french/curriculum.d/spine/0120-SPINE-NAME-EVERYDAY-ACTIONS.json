@@ -1,9 +1,13 @@
 {
-  "segments": [],
+  "segments": [
+    "FR-PATH-A1-OUVRIR-FERMER"
+  ],
   "omits": [
     "VERB-DRINK",
     "VERB-GIVE",
-    "VERB-PUT"
+    "VERB-PUT",
+    "VERB-DO-MAKE",
+    "VERB-BUY"
   ],
   "relocates": {}
 }

@@ -25,8 +25,7 @@
     "VERB-PLAY",
     "VERB-WAIT",
     "VERB-ANSWER",
-    "VERB-MEET",
-    "VERB-BUY"
+    "VERB-MEET"
   ],
   "relocates": {}
 }
