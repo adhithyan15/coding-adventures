@@ -1,0 +1,437 @@
+import{t as e}from"./rolldown-runtime-DK3Fl9T5.js";var t=e({default:()=>n}),n=`---
+schema_version: 2
+id: LA-C36-salve-post-meridiem
+spine_node: SPINE-TIME-OF-DAY
+sequence: 610
+chapter: 36
+type: phrase
+headword: salvē (post merīdiem)
+gloss: why no two-word good-afternoon phrase exists — Latin has no simplex afternoon noun, and a grammatical three-word workaround is not attested as a greeting
+concept_tag: GREETING-AFTERNOON
+prerequisites: [LA-C35-meridies, LA-C01-salve]
+sounds: [macron-long-vowel, v-as-w]
+roots: [medius-latin, dies-latin]
+etymology_hook: "bonum post merīdiem cannot work like bonam noctem because post merīdiem is a prepositional phrase, not a noun; bonum tempus pōmerīdiānum is grammatical but is not attested as a greeting"
+duration:
+  max_seconds: 240
+requires:
+  knowledge: [LA-PHONO-MERIDIES-01, LA-PRAGMATICS-MERIDIES-02, LA-ETYMON-MERIDIES-03, LA-PHONO-SALVE-01, LA-ETYMON-SALVE-02, LA-GRAMMAR-SALVE-03]
+introduces:
+  knowledge: [LA-PRAGMATICS-SALVE-POST-MERIDIEM-01]
+practises:
+  knowledge: [LA-PHONO-MERIDIES-01, LA-PRAGMATICS-MERIDIES-02, LA-ETYMON-MERIDIES-03, LA-PHONO-SALVE-01, LA-ETYMON-SALVE-02, LA-GRAMMAR-SALVE-03, LA-PRAGMATICS-SALVE-POST-MERIDIEM-01]
+skills: [listening, speaking, reading]
+modes: [interpretive, interpersonal, presentational, mediation]
+strands: [meaning-input, meaning-output, language-focus]
+register: neutral
+variety: classical
+reviews_of: [LA-C35-meridies, LA-C01-salve]
+---
+
+# salvē (post merīdiem) — the one that isn't there
+
+## Warm-up
+<!-- hl-knowledge: introduces=[]; assesses=[LA-PHONO-MERIDIES-01, LA-PRAGMATICS-MERIDIES-02, LA-ETYMON-MERIDIES-03, LA-PHONO-SALVE-01, LA-ETYMON-SALVE-02, LA-GRAMMAR-SALVE-03] -->
+
+[PAUSE 2s] Three lessons in a row, you've met a modern phrase built on
+real (if sometimes invisible) Latin grammar for "good ___." This lesson
+is different: there's honestly nothing to build.
+
+## Why it's said this way: Be honest: no two-word phrase exists here
+<!-- hl-knowledge: introduces=[LA-PRAGMATICS-SALVE-POST-MERIDIEM-01]; assesses=[] -->
+
+**Bonam noctem**, **bonum māne**, and **bonum vesperum** are all modern,
+pedagogical phrases — not classically attested — but each pairs *bonus*
+directly with a **single noun** in the accusative: *noctem*, *māne*,
+*vesperum*. "Good afternoon" can't take that same shape, because you
+already learned last lesson that Latin has **no simplex noun** for
+"afternoon" at all — there's no *afternoonem* for *bonus* to modify.
+**Bonum post merīdiem** doesn't work: *post merīdiem* ("after noon") is
+a whole **prepositional phrase**, not a noun, so *bonus* has nothing to
+agree with. A three-word workaround, **bonum tempus pōmerīdiānum**
+("good afternoon time"), actually **is** grammatical — *pōmerīdiānus*
+("of the afternoon") is a real word Cicero himself uses, and here
+*bonus* agrees with a genuine noun, *tempus* ("time"). But it's a
+**periphrasis**, not a direct two-word match for the other three
+phrases — and it isn't itself attested anywhere as something Romans
+actually said as a greeting.
+
+## Guided Practice
+<!-- hl-knowledge: introduces=[]; assesses=[LA-PHONO-MERIDIES-01, LA-PRAGMATICS-MERIDIES-02, LA-ETYMON-MERIDIES-03, LA-PHONO-SALVE-01, LA-ETYMON-SALVE-02, LA-GRAMMAR-SALVE-03, LA-PRAGMATICS-SALVE-POST-MERIDIEM-01] -->
+
+[PAUSE 1s]
+- [YOU SAY: why "bonum post merīdiem" doesn't work — no noun for bonus
+  to agree with; why "bonum tempus pōmerīdiānum" DOES work, but isn't
+  attested as a real greeting]
+- [YOU SAY: the grammatical adjective — pōmerīdiānum, "of the afternoon"]
+
+## Wrap-up Recall
+<!-- hl-knowledge: introduces=[]; assesses=[LA-PHONO-MERIDIES-01, LA-PRAGMATICS-MERIDIES-02, LA-ETYMON-MERIDIES-03, LA-PHONO-SALVE-01, LA-ETYMON-SALVE-02, LA-GRAMMAR-SALVE-03, LA-PRAGMATICS-SALVE-POST-MERIDIEM-01] -->
+
+[PAUSE 3s] Does Latin have a two-word phrase for "good afternoon" the
+way it has *bonum vesperum* for evening? (**No** — Latin has no simplex
+noun for "afternoon" for *bonus* to pair with.) Is there ANY grammatical
+Latin phrase at all? (**Yes** — *bonum tempus pōmerīdiānum* is real
+grammar, but a three-word periphrasis, not attested as an actual
+greeting.) What did Romans say in the afternoon instead? (**Salvē** —
+the same everyday greeting from Chapter 1.) Why doesn't *bonum post
+merīdiem* work grammatically? (*Post merīdiem* is a whole prepositional
+phrase, not a single noun *bonus* can agree with.)
+`,r=e({default:()=>i}),i=`---
+schema_version: 2
+id: LA-C36-timeless-salve
+spine_node: SPINE-TIME-OF-DAY
+sequence: 620
+chapter: 36
+type: culture
+headword: salvē / salvēte
+gloss: the everyday greeting works at any time of day, so Romans did not need a dedicated afternoon formula
+concept_tag: GREETING-AFTERNOON
+prerequisites: [LA-C36-salve-post-meridiem]
+sounds: [macron-long-vowel, v-as-w]
+roots: [salvere]
+etymology_hook: "salvē ('be well!') and plural salvēte are everyday greetings without a built-in time boundary; the absence of a dedicated good-afternoon formula is therefore not a conversational gap"
+duration:
+  max_seconds: 240
+requires:
+  knowledge: [LA-PRAGMATICS-SALVE-POST-MERIDIEM-01]
+introduces:
+  knowledge: [LA-PRAGMATICS-TIMELESS-SALVE-01]
+practises:
+  knowledge: [LA-PRAGMATICS-SALVE-POST-MERIDIEM-01, LA-PRAGMATICS-TIMELESS-SALVE-01]
+skills: [listening, speaking, reading]
+modes: [interpretive, interpersonal, presentational, mediation]
+strands: [meaning-input, meaning-output, language-focus]
+register: neutral
+variety: classical
+reviews_of: [LA-C36-salve-post-meridiem, LA-C01-salve]
+---
+
+# salvē — the greeting that does not watch the clock
+
+## Warm-up
+<!-- hl-knowledge: introduces=[]; assesses=[LA-PRAGMATICS-SALVE-POST-MERIDIEM-01] -->
+
+[PAUSE 2s] Latin cannot build a neat two-word "good afternoon." What did
+Romans actually need in that time slot? Nothing beyond a greeting you
+already know.
+
+## Why it's said this way: One everyday greeting, any time
+<!-- hl-knowledge: introduces=[LA-PRAGMATICS-TIMELESS-SALVE-01]; assesses=[] -->
+
+**Salvē** to one person and **salvēte** to several people mean "be well."
+Neither form contains a morning, afternoon, or evening boundary. Romans
+could use the greeting whenever they met someone.
+
+English encourages a learner to search for four matched clock-based
+formulas. Latin everyday greetings do not divide the day that way. The
+missing afternoon formula is therefore not a hole in Roman conversation.
+
+The time-of-day arc now has three different kinds of evidence:
+
+- a real institution, the morning **salūtātiō**
+- grammatical but modern phrases such as **bonam noctem**
+- no dedicated formula at all for afternoon—just **salvē**
+
+Learning those differences is more faithful than forcing four symmetrical
+translations into Latin.
+
+## Guided Practice
+<!-- hl-knowledge: introduces=[]; assesses=[LA-PRAGMATICS-SALVE-POST-MERIDIEM-01, LA-PRAGMATICS-TIMELESS-SALVE-01] -->
+
+[PAUSE 1s]
+- [YOU SAY: "salvē" — be well, to one person]
+- [YOU SAY: "salvēte" — be well, to several people]
+- [YOU SAY: the time restriction — none]
+
+## Wrap-up Recall
+<!-- hl-knowledge: introduces=[]; assesses=[LA-PRAGMATICS-SALVE-POST-MERIDIEM-01, LA-PRAGMATICS-TIMELESS-SALVE-01] -->
+
+[PAUSE 3s] What can one Roman say on meeting another in the afternoon?
+(**Salvē.**) What is the plural? (**Salvēte.**) Do these words encode a
+time of day? (**No.**) Why is there no conversational gap? (**The everyday
+greeting already works whenever people meet.**)
+`,a=e({default:()=>o}),o=`---
+schema_version: 2
+id: LA-C37-dico
+spine_node: SPINE-SAY-WHAT-I-DO
+sequence: 680
+chapter: 37
+type: word
+headword: dīcō, dīcere
+gloss: "I say" — a verb that originally meant "point out", which is why English got both dictionary and teach from it
+concept_tag: VERB-SAY
+prerequisites: [LA-C37-venio, LA-C01-vale]
+sounds: [macron-long-vowel, c-as-k]
+roots: [dicere-latin]
+etymology_hook: "dīcere ('to say') began as PIE *deyḱ- ('to point out, show'); Latin gives dictate, dictionary, verdict, predict, contradict and valedictorian (valē dīcere, 'to say farewell'), Germanic gives teach and token, and Greek deiknumi gives paradigm"
+duration:
+  max_seconds: 240
+requires:
+  knowledge: [LA-LEX-VENIO-01, LA-ETYMON-VALE-02]
+introduces:
+  knowledge: [LA-LEX-DICO-01, LA-ETYMON-DICO-02]
+practises:
+  knowledge: [LA-LEX-VENIO-01, LA-ETYMON-VALE-02, LA-LEX-DICO-01, LA-ETYMON-DICO-02]
+skills: [listening, speaking, reading]
+modes: [interpretive, interpersonal, presentational, mediation]
+strands: [meaning-input, meaning-output, language-focus]
+register: neutral
+variety: classical
+reviews_of: [LA-C37-venio, LA-C01-vale]
+---
+
+# dīcō — saying began as pointing
+
+## Warm-up
+<!-- hl-knowledge: introduces=[]; assesses=[LA-LEX-VENIO-01, LA-ETYMON-VALE-02] -->
+
+[PAUSE 2s] You know **valē**, the farewell from Chapter 1. Learn the verb
+for "say," and one of English's grandest school words falls open.
+
+## You'll want to know: dīcō — "I say"
+<!-- hl-knowledge: introduces=[LA-LEX-DICO-01]; assesses=[] -->
+
+**Dīcō** means "**I say**" or "I tell." The dictionary form is **dīcere**.
+The *c* is always hard, as in English "keep," so this is *DEE-koh*.
+
+- **dīcō** — I say
+- **dīcis** — you say, to one person
+- **dīcit** — he says, she says
+- **dīcimus** — we say
+- **dīcitis** — you say, to several people
+- **dīcunt** — they say
+
+Latin also had a near-twin with a short *i*, **dicāre**, "to proclaim
+formally, to consecrate." That sibling — not *dīcere* itself — is where
+**dedicate** and **abdicate** come from.
+
+## The word, taken apart: from pointing a finger to giving a word
+<!-- hl-knowledge: introduces=[LA-ETYMON-DICO-02]; assesses=[] -->
+
+The Proto-Indo-European root ***\\*deyḱ-*** meant "to point out, to show."
+Saying is a late specialisation of showing, and the family keeps both senses
+visible.
+
+Pointing survives in **index** ("the pointer," which is also the name of the
+forefinger) and **indicate**. Saying dominates the rest: **dictate**,
+**dictator**, **dictionary**, **diction**, **edict**, **predict**,
+**contradict**, and **benediction** ("speaking well"). A **verdict** is
+*vērē dictum*, "truly said." A **judge** is a *iūdex*, from *iūs* ("law")
+plus this root — the one who points out the law.
+
+One word ties the chapter back to your first: a **valedictorian** is the
+person who says *valē*, the farewell you learned in Chapter 1.
+
+The Germanic branch kept the older sense. English **teach** descends from
+Old English *tæcan*, "to show," and **token** from *tācen*, "a sign" — both
+from the same root as *dīcō*. Greek *deíknumi* ("I show") gives
+**paradigm**, literally "a thing shown side by side."
+
+## Guided Practice
+<!-- hl-knowledge: introduces=[]; assesses=[LA-LEX-VENIO-01, LA-ETYMON-VALE-02, LA-LEX-DICO-01, LA-ETYMON-DICO-02] -->
+
+[PAUSE 1s]
+- [YOU SAY: "dīcō" — I say, with a hard c]
+- [YOU SAY: "dīcis, dīcit" — you say, he or she says]
+- [YOU SAY: "dīcimus, dīcitis, dīcunt" — we, you all, they]
+- [YOU SAY: the English relatives — dictionary, verdict, predict, teach]
+
+## Wrap-up Recall
+<!-- hl-knowledge: introduces=[]; assesses=[LA-LEX-VENIO-01, LA-ETYMON-VALE-02, LA-LEX-DICO-01, LA-ETYMON-DICO-02] -->
+
+[PAUSE 3s] How does Latin say "I say"? (**Dīcō**, hard c.) "They say"?
+(**Dīcunt**.) What did the root originally mean? (**To point out, to
+show**.) What does a **valedictorian** literally do? (**Says valē**, the
+farewell.) Which everyday English verb keeps the old "show" sense?
+(**Teach**.)
+`,s=e({default:()=>c}),c=`---
+schema_version: 2
+id: LA-C37-do
+spine_node: SPINE-SAY-WHAT-I-DO
+sequence: 710
+chapter: 37
+type: word
+headword: dō, dare
+gloss: "I give" — the last of the chapter's eight verbs, and the one that gave English data, date, tradition and dose
+concept_tag: VERB-GIVE
+prerequisites: [LA-C37-scio]
+sounds: [macron-long-vowel, macron-none-short-vowel]
+roots: [dare-latin]
+etymology_hook: "dō, dare ('to give') comes from PIE *deh₃-, giving donate, pardon, data, date, dative, dowry and tradition (trāns + dare, 'to hand over'), plus Greek dose and anecdote; English give is NOT from this root, and Latin compounds in -dere such as addere belong to a different root meaning 'to put'"
+duration:
+  max_seconds: 260
+requires:
+  knowledge: [LA-LEX-SUM-01, LA-LEX-HABEO-01, LA-LEX-EO-01, LA-LEX-VENIO-01, LA-LEX-DICO-01, LA-LEX-VIDEO-01, LA-LEX-SCIO-01]
+introduces:
+  knowledge: [LA-LEX-DO-01, LA-ETYMON-DO-02]
+practises:
+  knowledge: [LA-LEX-SUM-01, LA-LEX-HABEO-01, LA-LEX-EO-01, LA-LEX-VENIO-01, LA-LEX-DICO-01, LA-LEX-VIDEO-01, LA-LEX-SCIO-01, LA-LEX-DO-01, LA-ETYMON-DO-02]
+skills: [listening, speaking, reading]
+modes: [interpretive, interpersonal, presentational, mediation]
+strands: [meaning-input, meaning-output, language-focus]
+register: neutral
+variety: classical
+reviews_of: [LA-C37-sum, LA-C37-habeo, LA-C37-eo, LA-C37-venio, LA-C37-dico, LA-C37-video, LA-C37-scio]
+---
+
+# dō — the eighth verb, and the whole set together
+
+## Warm-up
+<!-- hl-knowledge: introduces=[]; assesses=[LA-LEX-SUM-01, LA-LEX-HABEO-01, LA-LEX-EO-01, LA-LEX-VENIO-01, LA-LEX-DICO-01, LA-LEX-VIDEO-01, LA-LEX-SCIO-01] -->
+
+[PAUSE 2s] Seven verbs so far: to be, to have, to go, to come, to say, to
+see, to know. One remains, and then the set closes.
+
+## You'll want to know: dō — "I give"
+<!-- hl-knowledge: introduces=[LA-LEX-DO-01]; assesses=[] -->
+
+**Dō** means "**I give**." The dictionary form is **dare**, and the *a* in
+it is short — *DAH-reh*, not *DAH-ray*. That short vowel is unusual and
+marks *dare* out as irregular.
+
+- **dō** — I give
+- **dās** — you give, to one person
+- **dat** — he gives, she gives
+- **damus** — we give
+- **datis** — you give, to several people
+- **dant** — they give
+
+## The word, taken apart: what was given
+<!-- hl-knowledge: introduces=[LA-ETYMON-DO-02]; assesses=[] -->
+
+The root is Proto-Indo-European ***\\*deh₃-***, "to give." From the noun
+*dōnum* ("a gift") English takes **donate**, **donor**, **condone**, and
+**pardon** (*per-dōnāre*, "to give thoroughly, to forgive").
+
+From the participle *datum*, "a thing given," come **data** and **dative**,
+the giving case — and also **date**. A Roman letter closed with *data
+Rōmae*, "given at Rome," followed by the day; the word for "given" became
+the word for the day itself.
+
+*Trāns* plus *dare* makes *trādere*, "to hand over," and that single
+compound splits into **tradition** (handed down), **traitor** and
+**treason** (handed over to the enemy), **betray**, and **extradite**.
+*Dōs*, *dōtis* ("dowry") gives **dowry** and **endow**. Greek *dídōmi*
+supplies **dose** and **anecdote** ("things not given out").
+
+Two flags. English **give** is not from this root, despite the matching
+sense — it is Germanic and separate. And Latin compounds ending in *-dere*
+— *addere* ("to add"), *condere* ("to found") — belong to a **different**
+root, ***\\*dʰeh₁-*** ("to put"), the one behind Greek *títhēmi* and English
+**theme** and **thesis**. So **add** is not a relative of *dare*.
+
+## Guided Practice
+<!-- hl-knowledge: introduces=[]; assesses=[LA-LEX-SUM-01, LA-LEX-HABEO-01, LA-LEX-EO-01, LA-LEX-VENIO-01, LA-LEX-DICO-01, LA-LEX-VIDEO-01, LA-LEX-SCIO-01, LA-LEX-DO-01, LA-ETYMON-DO-02] -->
+
+[PAUSE 1s]
+- [YOU SAY: "dō, dās, dat" — I give, you give, he or she gives]
+- [YOU SAY: the eight "I" forms — sum, habeō, eō, veniō, dīcō, videō, sciō, dō]
+- [YOU SAY: the eight "he or she" forms — est, habet, it, venit, dīcit, videt, scit, dat]
+- [YOU SAY: the English relatives of dare — donate, data, date, tradition]
+
+## Wrap-up Recall
+<!-- hl-knowledge: introduces=[]; assesses=[LA-LEX-SUM-01, LA-LEX-HABEO-01, LA-LEX-EO-01, LA-LEX-VENIO-01, LA-LEX-DICO-01, LA-LEX-VIDEO-01, LA-LEX-SCIO-01, LA-LEX-DO-01, LA-ETYMON-DO-02] -->
+
+[PAUSE 3s] Give the eight "I" forms of this chapter. (**Sum, habeō, eō,
+veniō, dīcō, videō, sciō, dō**.) Now the eight "he or she" forms. (**Est,
+habet, it, venit, dīcit, videt, scit, dat**.) Which English words come from
+*datum*, "a thing given"? (**Data**, **dative**, and **date**.) What does
+*trādere* literally mean? (**To hand over** — hence *tradition* and
+*traitor*.) Is English *give* a relative? (**No.**)
+`,l=e({default:()=>u}),u=`---
+schema_version: 2
+id: LA-C37-eo
+spine_node: SPINE-SAY-WHAT-I-DO
+sequence: 660
+chapter: 37
+type: word
+headword: eō, īre
+gloss: "I go" — the shortest verb in Latin, whose bare stem is a single vowel
+concept_tag: VERB-GO
+prerequisites: [LA-C37-habeo]
+sounds: [macron-long-vowel, macron-none-short-vowel]
+roots: [ire-latin]
+etymology_hook: "eō and īre come from PIE *h₁ey- ('to go'); the third-person form exit ('he goes out') entered English whole as a stage direction, and the same root supplies transit, initial, ambition, perish, sudden, itinerary and — through Greek — the word ion"
+duration:
+  max_seconds: 240
+requires:
+  knowledge: [LA-LEX-HABEO-01]
+introduces:
+  knowledge: [LA-LEX-EO-01, LA-ETYMON-EO-02]
+practises:
+  knowledge: [LA-LEX-HABEO-01, LA-LEX-EO-01, LA-ETYMON-EO-02]
+skills: [listening, speaking, reading]
+modes: [interpretive, interpersonal, presentational, mediation]
+strands: [meaning-input, meaning-output, language-focus]
+register: neutral
+variety: classical
+reviews_of: [LA-C37-habeo]
+---
+
+# eō — a whole verb in one vowel
+
+## Warm-up
+<!-- hl-knowledge: introduces=[]; assesses=[LA-LEX-HABEO-01] -->
+
+[PAUSE 2s] **Habeō** gave you a comfortable two-syllable stem. The next verb
+has almost no stem at all — and you have been reading one of its forms in
+English theatres your whole life.
+
+## You'll want to know: eō — "I go"
+<!-- hl-knowledge: introduces=[LA-LEX-EO-01]; assesses=[] -->
+
+**Eō** means "**I go**." The dictionary form is **īre**, "to go." Strip the
+endings and what remains is a single vowel, *i-*.
+
+- **eō** — I go
+- **īs** — you go, to one person
+- **it** — he goes, she goes, it goes
+- **īmus** — we go
+- **ītis** — you go, to several people
+- **eunt** — they go
+
+Two cautions worth hearing once. Latin **it** means "he or she goes" and has
+no connection to English "it." And the long *ī* of **īs** is a held vowel,
+which is what keeps it distinct from other short words.
+
+## The word, taken apart: the root that never stopped travelling
+<!-- hl-knowledge: introduces=[LA-ETYMON-EO-02]; assesses=[] -->
+
+The root is Proto-Indo-European ***\\*h₁ey-***, "to go." Latin prefixed it
+relentlessly, and English took the results wholesale.
+
+**Exit** is not derived from a Latin verb — it *is* one: *exit*, "he or she
+goes out," borrowed straight from Roman stage directions. Alongside it come
+**transit** and **transient** (*trāns*, "across"), **initial** and
+**initiate** (*in-īre*, "to go in," hence *initium*, "a beginning"),
+**perish** (*per-īre*, "to go away utterly"), **circuit** (*circum*,
+"around"), and **obituary** (*ob-īre*, "to go to meet" one's death).
+
+Two are less obvious. **Ambition** is *ambīre*, "to go around" — what a
+Roman candidate did, walking the city to canvass for votes. **Sudden** is
+*subitus*, from *sub-īre*, "to come up from underneath," unnoticed until it
+arrives. The related noun *iter*, *itineris* ("a journey"), gives
+**itinerary**.
+
+Beyond Latin, the Greek participle *ión* ("going") was borrowed by Michael
+Faraday in 1834 to name a particle that travels through a solution: **ion**.
+
+## Guided Practice
+<!-- hl-knowledge: introduces=[]; assesses=[LA-LEX-HABEO-01, LA-LEX-EO-01, LA-ETYMON-EO-02] -->
+
+[PAUSE 1s]
+- [YOU SAY: "eō" — I go]
+- [YOU SAY: "īs, it" — you go, he or she goes]
+- [YOU SAY: "īmus, ītis, eunt" — we, you all, they]
+- [YOU SAY: the English relatives — exit, transit, initial, perish, sudden]
+
+## Wrap-up Recall
+<!-- hl-knowledge: introduces=[]; assesses=[LA-LEX-HABEO-01, LA-LEX-EO-01, LA-ETYMON-EO-02] -->
+
+[PAUSE 3s] How does Latin say "I go"? (**Eō**.) "They go"? (**Eunt**.) What
+does Latin **it** mean? (**He or she goes** — not English "it".) Which
+English stage direction is an untouched Latin verb form? (**Exit**.) What
+did a Roman candidate literally do to earn the word **ambition**? (**Go
+around**, canvassing the city.)
+`;export{t as a,r as i,s as n,a as r,l as t};

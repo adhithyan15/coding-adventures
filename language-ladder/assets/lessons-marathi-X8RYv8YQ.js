@@ -1,0 +1,195 @@
+import{t as e}from"./rolldown-runtime-DK3Fl9T5.js";var t=e({default:()=>n}),n=`---
+schema_version: 2
+id: MR-W01-ra
+spine_node: SPINE-MEET-GREET
+sequence: 17
+delivery: script
+chapter: 1
+type: writing
+headword: र
+romanization: "ra"
+gloss: "the last consonant of the greeting"
+prerequisites: [MR-W01-virama]
+sounds: []
+roots: []
+etymology_hook: "Devanagari hangs its letters from a head-line, the shirorekha; Gujarati is the same script with that line erased."
+duration:
+  max_seconds: 200
+requires:
+  knowledge: [MR-SCRIPT-HA-01, MR-SCRIPT-O-MATRA-01, MR-SCRIPT-NA-01, MR-SCRIPT-AA-MATRA-01, MR-SCRIPT-II-MATRA-01, MR-SCRIPT-MA-01, MR-SCRIPT-SA-01, MR-SCRIPT-KA-01, MR-SCRIPT-VIRAMA-01]
+introduces:
+  knowledge: [MR-SCRIPT-RA-01]
+practises:
+  knowledge: [MR-SCRIPT-HA-01, MR-SCRIPT-O-MATRA-01, MR-SCRIPT-NA-01, MR-SCRIPT-AA-MATRA-01, MR-SCRIPT-II-MATRA-01, MR-SCRIPT-MA-01, MR-SCRIPT-SA-01, MR-SCRIPT-KA-01, MR-SCRIPT-VIRAMA-01, MR-SCRIPT-RA-01]
+skills: [reading, writing]
+modes: [interpretive, presentational]
+strands: [meaning-input, language-focus]
+register: neutral
+variety: standard
+reviews_of: [MR-W01-virama]
+---
+# र — the last consonant of the greeting
+
+## Warm-up
+<!-- hl-knowledge: introduces=[]; assesses=[MR-SCRIPT-HA-01, MR-SCRIPT-O-MATRA-01, MR-SCRIPT-NA-01, MR-SCRIPT-AA-MATRA-01, MR-SCRIPT-II-MATRA-01, MR-SCRIPT-MA-01, MR-SCRIPT-SA-01, MR-SCRIPT-KA-01, MR-SCRIPT-VIRAMA-01] -->
+
+[PAUSE 2s] Write the piece from the previous lesson before adding another.
+
+## Script
+<!-- hl-knowledge: introduces=[MR-SCRIPT-RA-01]; assesses=[MR-SCRIPT-HA-01, MR-SCRIPT-O-MATRA-01, MR-SCRIPT-NA-01, MR-SCRIPT-AA-MATRA-01, MR-SCRIPT-II-MATRA-01, MR-SCRIPT-MA-01, MR-SCRIPT-SA-01, MR-SCRIPT-KA-01, MR-SCRIPT-VIRAMA-01] -->
+
+> र
+
+**ra** — a light tap of the tongue, closer to the *r* in Spanish *pero* than to an
+English *r*.
+
+That is the last piece. Everything the greeting needs is now something you can
+write from memory.
+
+## Guided Practice
+<!-- hl-knowledge: introduces=[]; assesses=[MR-SCRIPT-HA-01, MR-SCRIPT-O-MATRA-01, MR-SCRIPT-NA-01, MR-SCRIPT-AA-MATRA-01, MR-SCRIPT-II-MATRA-01, MR-SCRIPT-MA-01, MR-SCRIPT-SA-01, MR-SCRIPT-KA-01, MR-SCRIPT-VIRAMA-01, MR-SCRIPT-RA-01] -->
+
+- [YOU WRITE: र]
+- [YOU READ: every piece this chapter has given you so far, in order]
+
+## Wrap-up Recall
+<!-- hl-knowledge: introduces=[]; assesses=[MR-SCRIPT-HA-01, MR-SCRIPT-O-MATRA-01, MR-SCRIPT-NA-01, MR-SCRIPT-AA-MATRA-01, MR-SCRIPT-II-MATRA-01, MR-SCRIPT-MA-01, MR-SCRIPT-SA-01, MR-SCRIPT-KA-01, MR-SCRIPT-VIRAMA-01, MR-SCRIPT-RA-01] -->
+
+[PAUSE 3s] How is **र** made? (A **light tap** of the tongue, not an English *r*.)
+
+Source: [Unicode Devanagari chart](https://www.unicode.org/charts/PDF/U0900.pdf).
+`,r=e({default:()=>i}),i=`---
+schema_version: 2
+id: MR-W01-sa
+spine_node: SPINE-MEET-GREET
+sequence: 14
+delivery: script
+chapter: 1
+type: writing
+headword: स
+romanization: "sa"
+gloss: "the consonant sa"
+prerequisites: [MR-W01-ma]
+sounds: []
+roots: []
+etymology_hook: "Devanagari hangs its letters from a head-line, the shirorekha; Gujarati is the same script with that line erased."
+duration:
+  max_seconds: 200
+requires:
+  knowledge: [MR-SCRIPT-HA-01, MR-SCRIPT-O-MATRA-01, MR-SCRIPT-NA-01, MR-SCRIPT-AA-MATRA-01, MR-SCRIPT-II-MATRA-01, MR-SCRIPT-MA-01]
+introduces:
+  knowledge: [MR-SCRIPT-SA-01]
+practises:
+  knowledge: [MR-SCRIPT-HA-01, MR-SCRIPT-O-MATRA-01, MR-SCRIPT-NA-01, MR-SCRIPT-AA-MATRA-01, MR-SCRIPT-II-MATRA-01, MR-SCRIPT-MA-01, MR-SCRIPT-SA-01]
+skills: [reading, writing]
+modes: [interpretive, presentational]
+strands: [meaning-input, language-focus]
+register: neutral
+variety: standard
+reviews_of: [MR-W01-ma]
+---
+# स — the consonant sa
+
+## Warm-up
+<!-- hl-knowledge: introduces=[]; assesses=[MR-SCRIPT-HA-01, MR-SCRIPT-O-MATRA-01, MR-SCRIPT-NA-01, MR-SCRIPT-AA-MATRA-01, MR-SCRIPT-II-MATRA-01, MR-SCRIPT-MA-01] -->
+
+[PAUSE 2s] Write the piece from the previous lesson before adding another.
+
+## Script
+<!-- hl-knowledge: introduces=[MR-SCRIPT-SA-01]; assesses=[MR-SCRIPT-HA-01, MR-SCRIPT-O-MATRA-01, MR-SCRIPT-NA-01, MR-SCRIPT-AA-MATRA-01, MR-SCRIPT-II-MATRA-01, MR-SCRIPT-MA-01] -->
+
+> स
+
+**sa** — the *s* of English *sit*, plus the inherent vowel.
+
+Four consonants. You are most of the way to a word you have been saying since your
+very first lesson, and the only piece of machinery still missing is the one that
+handles two consonants pressed together.
+
+## Guided Practice
+<!-- hl-knowledge: introduces=[]; assesses=[MR-SCRIPT-HA-01, MR-SCRIPT-O-MATRA-01, MR-SCRIPT-NA-01, MR-SCRIPT-AA-MATRA-01, MR-SCRIPT-II-MATRA-01, MR-SCRIPT-MA-01, MR-SCRIPT-SA-01] -->
+
+- [YOU WRITE: स]
+- [YOU READ: every piece this chapter has given you so far, in order]
+
+## Wrap-up Recall
+<!-- hl-knowledge: introduces=[]; assesses=[MR-SCRIPT-HA-01, MR-SCRIPT-O-MATRA-01, MR-SCRIPT-NA-01, MR-SCRIPT-AA-MATRA-01, MR-SCRIPT-II-MATRA-01, MR-SCRIPT-MA-01, MR-SCRIPT-SA-01] -->
+
+[PAUSE 3s] What is the inherent vowel in **स**? (**a** — *sa*.)
+
+Source: [Unicode Devanagari chart](https://www.unicode.org/charts/PDF/U0900.pdf).
+`,a=e({default:()=>o}),o=`---
+schema_version: 2
+id: MR-W01-virama
+spine_node: SPINE-MEET-GREET
+sequence: 16
+delivery: script
+chapter: 1
+type: writing
+headword: ्
+romanization: "(virama)"
+gloss: "the mark that DELETES the inherent vowel and glues two consonants together"
+prerequisites: [MR-W01-ka]
+sounds: []
+roots: []
+etymology_hook: "Devanagari hangs its letters from a head-line, the shirorekha; Gujarati is the same script with that line erased."
+duration:
+  max_seconds: 200
+requires:
+  knowledge: [MR-SCRIPT-HA-01, MR-SCRIPT-O-MATRA-01, MR-SCRIPT-NA-01, MR-SCRIPT-AA-MATRA-01, MR-SCRIPT-II-MATRA-01, MR-SCRIPT-MA-01, MR-SCRIPT-SA-01, MR-SCRIPT-KA-01]
+introduces:
+  knowledge: [MR-SCRIPT-VIRAMA-01]
+practises:
+  knowledge: [MR-SCRIPT-HA-01, MR-SCRIPT-O-MATRA-01, MR-SCRIPT-NA-01, MR-SCRIPT-AA-MATRA-01, MR-SCRIPT-II-MATRA-01, MR-SCRIPT-MA-01, MR-SCRIPT-SA-01, MR-SCRIPT-KA-01, MR-SCRIPT-VIRAMA-01]
+skills: [reading, writing]
+modes: [interpretive, presentational]
+strands: [meaning-input, language-focus]
+register: neutral
+variety: standard
+reviews_of: [MR-W01-ka]
+---
+# ् — the mark that DELETES the inherent vowel and glues two consonants together
+
+## Warm-up
+<!-- hl-knowledge: introduces=[]; assesses=[MR-SCRIPT-HA-01, MR-SCRIPT-O-MATRA-01, MR-SCRIPT-NA-01, MR-SCRIPT-AA-MATRA-01, MR-SCRIPT-II-MATRA-01, MR-SCRIPT-MA-01, MR-SCRIPT-SA-01, MR-SCRIPT-KA-01] -->
+
+[PAUSE 2s] Write the piece from the previous lesson before adding another.
+
+## Script
+<!-- hl-knowledge: introduces=[MR-SCRIPT-VIRAMA-01]; assesses=[MR-SCRIPT-HA-01, MR-SCRIPT-O-MATRA-01, MR-SCRIPT-NA-01, MR-SCRIPT-AA-MATRA-01, MR-SCRIPT-II-MATRA-01, MR-SCRIPT-MA-01, MR-SCRIPT-SA-01, MR-SCRIPT-KA-01] -->
+
+The inherent vowel is a nuisance when you do not want it. If a word presses two
+consonants together with no vowel between them, writing them plainly would insert
+an *a* that is not there.
+
+So there is a mark that **removes** it:
+
+> ्
+
+This is the **virama**, and it sits under a consonant meaning: *no vowel here.*
+
+Then something happens that no European alphabet does. A consonant stripped of its
+vowel usually does not sit there bare — it **fuses** with the consonant after it
+into one joined shape, a **conjunct**:
+
+> **स** + **्** + **क** → **स्क**
+
+*ska*, one cluster. Look closely and both letters are still in there. **Conjuncts
+are not new characters to memorise** — they are two you already know, joined, and
+the head-line runs straight across the join.
+
+## Guided Practice
+<!-- hl-knowledge: introduces=[]; assesses=[MR-SCRIPT-HA-01, MR-SCRIPT-O-MATRA-01, MR-SCRIPT-NA-01, MR-SCRIPT-AA-MATRA-01, MR-SCRIPT-II-MATRA-01, MR-SCRIPT-MA-01, MR-SCRIPT-SA-01, MR-SCRIPT-KA-01, MR-SCRIPT-VIRAMA-01] -->
+
+- [YOU WRITE: ्]
+- [YOU READ: every piece this chapter has given you so far, in order]
+
+## Wrap-up Recall
+<!-- hl-knowledge: introduces=[]; assesses=[MR-SCRIPT-HA-01, MR-SCRIPT-O-MATRA-01, MR-SCRIPT-NA-01, MR-SCRIPT-AA-MATRA-01, MR-SCRIPT-II-MATRA-01, MR-SCRIPT-MA-01, MR-SCRIPT-SA-01, MR-SCRIPT-KA-01, MR-SCRIPT-VIRAMA-01] -->
+
+[PAUSE 3s] What does the virama do? (**Removes the inherent vowel**.) What usually happens
+to a consonant that loses its vowel? (It **joins** the next into a conjunct.) And
+are conjuncts new letters? (**No** — two known letters, fused.)
+
+Source: [Unicode Devanagari chart](https://www.unicode.org/charts/PDF/U0900.pdf).
+`;export{r as n,t as r,a as t};
