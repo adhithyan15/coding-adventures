@@ -8154,22 +8154,22 @@ state graph contains 515 unique owners and 775 complete acyclic edges: 147
 merged, 367 pending, and exactly one in-progress owner, with no active parity
 PR and no merged-to-unmerged dependency edge.
 
-Before publication, the branch rebased without conflict onto exact main
-`f75f387fcd437a4524d548c9471d026b4d0f0d90`. Merged PR #12944 extends the
-existing shared script-ductus authored-data owner with sourced Malayalam chillu
-LL and its curriculum, data, package, and Language Ladder checks. Merged PR
-#12946 extends the deterministic HTML frontend owner with exact unmatched
-landmark end-tag positions across normal, Unicode, CRLF, template, fragment,
-and foreign-content contexts. Merged PR #12947 supplies the first concrete
-JavaScript-emitter child under the registered SIR16 loop-control consumer
-umbrella; the neutral contract and remaining applicable lanes stay pending.
-PR #12948 changes only the existing Language Ladder lesson batching and
-request-budget implementation and adds no package identity or new portable
-contract.
+Before publication, the branch rebased twice without conflict, most recently
+onto exact main `399a7c6bc43212c233c08e6171ced6220feb2ac6`. PR #12944 extends
+the shared script-ductus authored-data owner; PRs #12946 and #12951 extend the
+deterministic HTML frontend owner; PR #12947 supplies the first JavaScript
+emitter child under the SIR16 loop-control consumer umbrella; and PR #12948 is
+Language Ladder program-only batching. PR #12917 extends the existing
+TypeScript `human-language-data` singleton classification and leaves its writer
+shell in the separate filesystem-authority review. PR #12952 extends the
+Mermaid Gantt neutral and lane owners with pinned implicit IDs and sequential
+tasks. PR #12950 extends the ALGOL IIR owners with exact subtractive-positive-
+zero selector identity. PR #12945 adds Chinese curriculum and generated data
+without changing package source behavior.
 
-None of those four commits touches a selected Perl path or changes a package
-identity, BUILD marker, build-tool marker, or dependency surface. All eleven
-live PRs have zero exact overlap with this six-path tranche. The post-rebase
+None of those nine commits touches a selected Perl path or changes a package
+identity, BUILD marker, build-tool marker, or dependency surface. All five
+live open PRs have zero exact overlap with this six-path tranche. The post-rebase
 schema-3 report remains 15 established lanes, 1,373 identities, 4,566 slots,
 175 high-consensus packages with 276 gaps, 910 singletons with 12,740 gaps,
 721 Rust singletons, zero collisions, and zero unknown buckets. The 515-owner,
