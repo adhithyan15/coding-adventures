@@ -46,6 +46,21 @@ The overall native-complete milestone remains open while ignored properties,
 events, styles, effects, and
 accessibility metadata are added to the inventory.
 
+Dropped *style* properties (issue #12022) are a separate, non-gating list:
+`DegradationReport::style_degradations`, written to the same JSON report as
+`styleDegradations`. XAML's stylesheet lowering (`mosaic-emit-xaml::pipeline
+::dropped_style_properties`) reports every mosstyle property it silently
+discarded — currently over a hundred distinct properties across the
+package-expanded TaskApp, from `box-shadow` (30 uses, no WinUI CSS-shaped
+shadow) down to absolute positioning and per-side border shorthands. These
+are deliberately kept OUT of `degradations`/`nativeComplete`: several are
+real, already-accepted gaps (elevation tokens, dashed borders) that the
+currently-green `native-complete` builds for TaskApp and
+`mosaic-pkg-rating-controls` already ship with, and folding them into the
+gating list today would break those builds rather than fix anything. Only
+XAML is wired so far — SwiftUI/Compose/Qt/Flutter's own style lowering
+hasn't been audited and gains no new degradations from this.
+
 Flutter, Compose, Qt, SwiftUI, and XAML drag primitives are no longer reported as
 inert: those emitters use native pointer/touch drag targets plus the UI35
 keyboard, accepted-drop, component-scoping, and announcement contracts.

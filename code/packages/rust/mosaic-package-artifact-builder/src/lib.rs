@@ -173,6 +173,18 @@ pub struct DegradationReport {
     pub backend: String,
     pub native_complete: bool,
     pub degradations: Vec<Degradation>,
+    /// Style properties the backend's stylesheet lowering silently dropped
+    /// (issue #12022) — e.g. `box-shadow` on XAML, which has no WinUI
+    /// `<Setter>` equivalent. Reported so nothing vanishes without a
+    /// record, but deliberately kept OUT of `degradations`/
+    /// `native_complete`: some of these (XAML's `box-shadow`, `border-
+    /// style: dashed`) are real, currently-accepted gaps already tracked
+    /// elsewhere (the "C1 elevation tokens" backlog item), and hard-
+    /// failing on them today would redden the currently-green
+    /// `native-complete` gate for packages that already ship with them.
+    /// Currently populated for the XAML backend only — see
+    /// `mosaic_emit_xaml::pipeline::dropped_style_properties`.
+    pub style_degradations: Vec<Degradation>,
 }
 
 impl Backend {
@@ -939,6 +951,7 @@ fn analyze_package_degradations_with_runtime_and_tokens(
     let src_dir = opts.package_root.join("src");
     let package_search_paths = default_package_search_paths(&opts.package_root);
     let mut degradations = Vec::new();
+    let mut style_degradations = Vec::new();
 
     if !opts.backend.is_native() {
         degradations.push(Degradation {
@@ -1052,6 +1065,25 @@ fn analyze_package_degradations_with_runtime_and_tokens(
                 "root",
                 &mut degradations,
             );
+            // issue #12022: style-property drops, XAML only for now (see
+            // `DegradationReport::style_degradations` doc comment for why
+            // this is a separate, non-gating list rather than folded into
+            // `degradations` — and why other backends aren't wired yet).
+            if opts.backend == Backend::Xaml {
+                let backend_name = opts.backend.dir_name();
+                for dropped in mosaic_emit_xaml::pipeline::dropped_style_properties(&composed.style)
+                {
+                    style_degradations.push(Degradation {
+                        code: "style.property-dropped".to_string(),
+                        backend: backend_name.to_string(),
+                        component: component.clone(),
+                        variant: variant.clone(),
+                        layout_path: format!("$style.{}", dropped.part),
+                        primitive: Some(dropped.name),
+                        reason: format!("{} (value: {:?})", dropped.reason, dropped.value),
+                    });
+                }
+            }
         }
     }
 
@@ -1062,6 +1094,7 @@ fn analyze_package_degradations_with_runtime_and_tokens(
         backend: opts.backend.dir_name().to_string(),
         native_complete: degradations.is_empty(),
         degradations,
+        style_degradations,
     })
 }
 
@@ -6125,6 +6158,73 @@ layout NativeEvents {
                 .collect::<Vec<_>>(),
             vec!["interaction.dialog-placeholder", "effect.url-host-missing"]
         );
+    }
+
+    // ── issue #12022: style_degradations ──
+
+    /// A `box-shadow` declaration (no WinUI equivalent) is reported in
+    /// `styleDegradations`, but — deliberately — does NOT gate
+    /// `native-complete`: the build still succeeds, `degradations` stays
+    /// empty, and `nativeComplete` stays `true`. See the
+    /// `DegradationReport::style_degradations` doc comment for why.
+    #[test]
+    fn xaml_style_drop_is_reported_but_not_gating() {
+        let pkg = make_package("mosaic-pkg-card", &["Card"]);
+        fs::write(
+            pkg.path().join("src/Card.msl"),
+            "style Card { part root { box-shadow: \"0 1px 2px #000\" ; } }\n",
+        )
+        .unwrap();
+        let out = TempDir::new().unwrap();
+        let result = build_package_with_profile(
+            &BuildOptions {
+                package_root: pkg.path().to_path_buf(),
+                output_root: out.path().to_path_buf(),
+                backend: Backend::Xaml,
+                emit_project: false,
+                theme: None,
+            },
+            BuildProfile::NativeComplete,
+        )
+        .expect("box-shadow must not block the native-complete gate");
+
+        let report_path = out.path().join("xaml/mosaic-degradations.json");
+        assert!(result.artifacts.contains(&report_path));
+        let json: serde_json::Value =
+            serde_json::from_str(&fs::read_to_string(report_path).unwrap()).unwrap();
+        assert_eq!(json["nativeComplete"], true);
+        assert_eq!(json["degradations"].as_array().unwrap().len(), 0);
+        let style_degradations = json["styleDegradations"].as_array().unwrap();
+        assert_eq!(style_degradations.len(), 1, "got: {json}");
+        assert_eq!(style_degradations[0]["code"], "style.property-dropped");
+        assert_eq!(style_degradations[0]["primitive"], "box-shadow");
+        assert_eq!(style_degradations[0]["layoutPath"], "$style.root");
+    }
+
+    /// Style-drop detection is XAML-only for now — SwiftUI's own style
+    /// lowering hasn't been audited, so it must not gain new degradations
+    /// as a side effect of this change.
+    #[test]
+    fn non_xaml_backend_does_not_report_style_drops() {
+        let pkg = make_package("mosaic-pkg-card", &["Card"]);
+        fs::write(
+            pkg.path().join("src/Card.msl"),
+            "style Card { part root { box-shadow: \"0 1px 2px #000\" ; } }\n",
+        )
+        .unwrap();
+        let out = TempDir::new().unwrap();
+        let report = analyze_package_degradations(
+            &BuildOptions {
+                package_root: pkg.path().to_path_buf(),
+                output_root: out.path().to_path_buf(),
+                backend: Backend::SwiftUI,
+                emit_project: false,
+                theme: None,
+            },
+            BuildProfile::NativeComplete,
+        )
+        .expect("analysis");
+        assert!(report.style_degradations.is_empty(), "got: {report:?}");
     }
 
     // -----------------------------------------------------------------------

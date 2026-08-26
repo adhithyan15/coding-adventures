@@ -1529,8 +1529,28 @@ fn xaml_visual_state_target(target_name: &str, property: &str) -> String {
     }
 }
 
+/// A property `build_style_fragment_with_drops` could not lower to any
+/// XAML output at all — the raw ingredients `dropped_style_properties`
+/// (issue #12022) turns into a public, part-tagged `DroppedStyleProperty`.
+struct RawStyleDrop {
+    name: String,
+    value: String,
+    reason: &'static str,
+}
+
 fn build_style_fragment(props: &[mosstyle_compiler::StyleProp]) -> String {
+    build_style_fragment_with_drops(props).0
+}
+
+/// Same lowering as `build_style_fragment`, but also returns every property
+/// that produced no XAML output at all, with why. Two call sites in this
+/// function are genuine drops (see inline comments); a successful-but-
+/// approximate translation (`stretch_alignment_for`) is NOT a drop.
+fn build_style_fragment_with_drops(
+    props: &[mosstyle_compiler::StyleProp],
+) -> (String, Vec<RawStyleDrop>) {
     let mut parts: Vec<(String, String)> = Vec::with_capacity(props.len());
+    let mut drops: Vec<RawStyleDrop> = Vec::new();
     for p in props {
         if let Some((key, value)) = css_side_spacing_to_xaml_attr(&p.name, &p.value) {
             upsert_style_attr(&mut parts, key, value);
@@ -1544,7 +1564,14 @@ fn build_style_fragment(props: &[mosstyle_compiler::StyleProp]) -> String {
         // compiler as invalid attributes / `<Setter>`s.
         let key = match css_property_to_xaml_setter(&p.name) {
             Some(k) => k,
-            None => continue,
+            None => {
+                drops.push(RawStyleDrop {
+                    name: p.name.clone(),
+                    value: p.value.clone(),
+                    reason: unsupported_property_reason(&p.name),
+                });
+                continue;
+            }
         };
 
         // `width: 100%` / `height: 100%` express "fill the cross axis", and
@@ -1572,18 +1599,79 @@ fn build_style_fragment(props: &[mosstyle_compiler::StyleProp]) -> String {
         // pass through untouched (never px-stripped or case-mangled).
         let value = match translate_xaml_value(&key, &p.value) {
             Some(v) => v,
-            None => continue,
+            None => {
+                drops.push(RawStyleDrop {
+                    name: p.name.clone(),
+                    value: p.value.clone(),
+                    reason: "value could not be translated into a form the WinUI XAML markup compiler accepts (e.g. a non-100% percentage, or an unsupported CSS unit)",
+                });
+                continue;
+            }
         };
         upsert_style_attr(&mut parts, key, value);
     }
-    parts
+    let fragment = parts
         .into_iter()
         .map(|(key, value)| {
             let escaped = value.replace('\\', "\\\\").replace('"', "\\\"");
             format!("{key}=\"{escaped}\"")
         })
         .collect::<Vec<_>>()
-        .join(" ")
+        .join(" ");
+    (fragment, drops)
+}
+
+/// One mosstyle property, on one part, that XAML lowering could not express
+/// at all — no attribute, no `<Setter>`, nothing. Public so
+/// `mosaic-package-artifact-builder`'s degradation analyzer (issue #12022)
+/// can surface these in `mosaic-degradations.json` instead of them vanishing
+/// silently, the same way `host_table_has_native_semantics` and friends let
+/// it ask about capability-level gaps.
+#[derive(Debug, Clone, PartialEq, Eq)]
+pub struct DroppedStyleProperty {
+    pub part: String,
+    pub name: String,
+    pub value: String,
+    pub reason: String,
+}
+
+/// Every property, across every part of `style`, that XAML lowering drops
+/// with no expressible output — see `mosaic-emit-xaml.md` §3.1.
+///
+/// Deliberately excludes `align-items`/`justify-content`/`flex-grow` when
+/// their value is one `FlexHints` (PR #12980) actually consumes through its
+/// own side channel outside `build_style_fragment` — those are NOT drops,
+/// even though `build_style_fragment_with_drops` sees them as such in
+/// isolation (it has no visibility into the separate flex-lowering path).
+/// `flex-grow` is excluded unconditionally: it's fully boolean-handled
+/// today (grows or doesn't), so there is nothing a reader would recognise
+/// as "lost" by reporting it.
+pub fn dropped_style_properties(style: &mosstyle_compiler::StyleDef) -> Vec<DroppedStyleProperty> {
+    let mut out = Vec::new();
+    for part in &style.parts {
+        let (_, raw_drops) = build_style_fragment_with_drops(&part.base);
+        if raw_drops.is_empty() {
+            continue;
+        }
+        for drop in raw_drops {
+            let consumed_via_flex_hints = match drop.name.as_str() {
+                "flex-grow" => true,
+                "align-items" => drop.value.trim() == "center",
+                "justify-content" => drop.value.trim() == "space-between",
+                _ => false,
+            };
+            if consumed_via_flex_hints {
+                continue;
+            }
+            out.push(DroppedStyleProperty {
+                part: part.name.clone(),
+                name: drop.name,
+                value: drop.value,
+                reason: drop.reason.to_string(),
+            });
+        }
+    }
+    out
 }
 
 fn upsert_style_attr(attrs: &mut Vec<(String, String)>, key: String, value: String) {
@@ -2063,6 +2151,38 @@ fn css_property_to_xaml_setter(name: &str) -> Option<String> {
         // `gap` and `flex-wrap` leak into TextBlock styles and made
         // XamlCompiler.exe fail with code 1 and no useful diagnostic.
         _ => None,
+    }
+}
+
+/// A short, specific reason a property named `name` has no XAML setter —
+/// used by `dropped_style_properties` (issue #12022) to explain *why* a
+/// property was dropped, not just that it was. Mirrors the prose already in
+/// `css_property_to_xaml_setter`'s doc comment for the known cases.
+///
+/// `align-items` / `justify-content` / `flex-grow` are deliberately absent
+/// from this function's callers' concern in the common case — they have no
+/// XAML setter either, but PR #12980 consumes them through a side channel
+/// (`FlexHints`) the caller checks separately before ever reaching here.
+/// This function only supplies the *text*; it doesn't decide who's exempt.
+fn unsupported_property_reason(name: &str) -> &'static str {
+    match name {
+        "border-collapse" => {
+            "WinUI has no table model; gridlines are drawn by per-cell BorderThickness"
+        }
+        "border-style" => "WinUI borders are always solid; there is no dashed/dotted BorderStyle property",
+        "outline" => "no WinUI equivalent (focus visuals use the FocusVisual* attached properties)",
+        "text-decoration" => {
+            "TextBlock's TextDecorations property has a different value shape; not wired yet"
+        }
+        "box-shadow" => "WinUI shadows use <ThemeShadow> / translation Z, not a CSS-shaped property",
+        "flex-wrap" => "WinUI 3 has no built-in WrapPanel",
+        "align-items" => {
+            "this value isn't one FlexHints recognises (only \"center\" is); no per-child alignment was applied"
+        }
+        "justify-content" => {
+            "this value isn't one FlexHints recognises (only \"space-between\" is); no distribution was applied"
+        }
+        _ => "no WinUI XAML setter is mapped for this property",
     }
 }
 
@@ -15217,6 +15337,117 @@ mod tests {
                 states: Vec::new(),
             }],
         }
+    }
+
+    // ── issue #12022: dropped_style_properties ──
+
+    /// A genuinely-unexpressible property (`box-shadow`) is reported, with
+    /// a real reason, tagged with its part name.
+    #[test]
+    fn dropped_style_properties_reports_box_shadow() {
+        let style = style_for_box("card", vec![("box-shadow", "0 1px 2px #000")]);
+        let dropped = dropped_style_properties(&style);
+        assert_eq!(dropped.len(), 1, "got: {dropped:?}");
+        assert_eq!(dropped[0].part, "card");
+        assert_eq!(dropped[0].name, "box-shadow");
+        assert_eq!(dropped[0].value, "0 1px 2px #000");
+        assert!(
+            dropped[0].reason.contains("ThemeShadow"),
+            "got: {}",
+            dropped[0].reason
+        );
+    }
+
+    /// `align-items: center` / `justify-content: space-between` are
+    /// consumed by `FlexHints` (PR #12980) through a side channel outside
+    /// `build_style_fragment` — reporting them as dropped would be a false
+    /// positive.
+    #[test]
+    fn dropped_style_properties_excludes_recognised_flex_values() {
+        let style = style_for_box(
+            "toolbar",
+            vec![
+                ("align-items", "center"),
+                ("justify-content", "space-between"),
+                ("flex-grow", "1"),
+            ],
+        );
+        assert!(
+            dropped_style_properties(&style).is_empty(),
+            "got: {:?}",
+            dropped_style_properties(&style)
+        );
+    }
+
+    /// An `align-items`/`justify-content` value `FlexHints` does NOT
+    /// recognise is a genuine drop — no per-child alignment or
+    /// distribution is applied for it anywhere.
+    #[test]
+    fn dropped_style_properties_reports_unrecognised_flex_values() {
+        let style = style_for_box(
+            "toolbar",
+            vec![
+                ("align-items", "flex-end"),
+                ("justify-content", "center"),
+            ],
+        );
+        let dropped = dropped_style_properties(&style);
+        assert_eq!(dropped.len(), 2, "got: {dropped:?}");
+        assert!(dropped.iter().any(|d| d.name == "align-items"));
+        assert!(dropped.iter().any(|d| d.name == "justify-content"));
+    }
+
+    /// `flex-grow` is never reported regardless of value — it's fully
+    /// boolean-handled today (grows or doesn't), so there's nothing a
+    /// reader would recognise as lost.
+    #[test]
+    fn dropped_style_properties_never_reports_flex_grow() {
+        for value in ["1", "0", "2.5", "not-a-number"] {
+            let style = style_for_box("cell", vec![("flex-grow", value)]);
+            assert!(
+                dropped_style_properties(&style).is_empty(),
+                "flex-grow: {value} should not be reported, got: {:?}",
+                dropped_style_properties(&style)
+            );
+        }
+    }
+
+    /// `width: 100%` is fully handled via `stretch_alignment_for` (a
+    /// successful translation, not a drop) — must never appear here.
+    #[test]
+    fn dropped_style_properties_excludes_full_width() {
+        let style = style_for_box("filler", vec![("width", "100%")]);
+        assert!(
+            dropped_style_properties(&style).is_empty(),
+            "got: {:?}",
+            dropped_style_properties(&style)
+        );
+    }
+
+    /// A non-100% percentage width is the issue's own motivating example —
+    /// silently dropped today, must now be reported.
+    #[test]
+    fn dropped_style_properties_reports_partial_percentage_width() {
+        let style = style_for_box("cell", vec![("width", "50%")]);
+        let dropped = dropped_style_properties(&style);
+        assert_eq!(dropped.len(), 1, "got: {dropped:?}");
+        assert_eq!(dropped[0].name, "width");
+        assert_eq!(dropped[0].value, "50%");
+    }
+
+    /// An unrecognised/typo'd property name falls through to the generic
+    /// reason rather than being silently ignored.
+    #[test]
+    fn dropped_style_properties_reports_unknown_property_with_generic_reason() {
+        let style = style_for_box("card", vec![("colr", "#fff")]);
+        let dropped = dropped_style_properties(&style);
+        assert_eq!(dropped.len(), 1, "got: {dropped:?}");
+        assert_eq!(dropped[0].name, "colr");
+        assert!(
+            dropped[0].reason.contains("no WinUI XAML setter"),
+            "got: {}",
+            dropped[0].reason
+        );
     }
 
     /// X1: `border-radius` lowers to WinUI's `CornerRadius`, not

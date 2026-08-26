@@ -1,5 +1,34 @@
 # Changelog
 
+## [Unreleased] - report dropped style properties, non-gating (#12022)
+
+- New `DegradationReport::style_degradations` field (`styleDegradations` in
+  `mosaic-degradations.json`), populated for the XAML backend by calling the
+  new `mosaic_emit_xaml::pipeline::dropped_style_properties` per
+  component/variant, right alongside the existing `collect_native_degradations`
+  layout walk.
+- Deliberately a separate field from `degradations`, not merged in:
+  `native_complete`/the `NativeComplete` profile gate are computed from
+  `degradations` alone and are completely unaffected. Regenerating the
+  package-expanded TaskApp's XAML report locally shows *why* this matters —
+  166 style properties are now visible for the first time (`box-shadow`,
+  absolute positioning, per-side border shorthands, `transform`, and more),
+  and several of them (30 `box-shadow` uses, 2 `border-style: dashed`) are
+  real, already-shipped gaps in TaskApp's own stylesheet. Folding them into
+  the gating list today would break the currently-green `native-complete`
+  CI job for TaskApp and `mosaic-pkg-rating-controls`. This PR ships full
+  detection + reporting (the invisible-failure-class problem #12022
+  describes is fully fixed — nothing vanishes without a record anymore);
+  the hard-fail is deferred until those gaps are addressed. See #12022 for
+  the follow-up.
+- Scoped to XAML only. SwiftUI/Compose/Qt/Flutter's own style lowering
+  hasn't been audited and gains no degradations from this change.
+- New tests: a `box-shadow` declaration on XAML is reported in
+  `styleDegradations` while `degradations`/`nativeComplete` stay unaffected
+  (`xaml_style_drop_is_reported_but_not_gating`); the same style on a
+  non-XAML backend produces zero `styleDegradations`
+  (`non_xaml_backend_does_not_report_style_drops`).
+
 ## [Unreleased] - HostSwitch capability tracking
 
 - Native-complete analysis reports `primitive.switch-unimplemented` on every

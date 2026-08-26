@@ -1,5 +1,40 @@
 # Changelog — mosaic-emit-xaml
 
+## [Unreleased] — `dropped_style_properties`: make silently-discarded style properties visible (#12022)
+
+`build_style_fragment` has two points where a mosstyle property produces no
+XAML output at all — an unrecognised property name, or a value that can't
+be translated (a non-100% percentage, an unsupported CSS unit, …) — and
+both were a bare `continue` with zero record. New public
+`pub fn dropped_style_properties(style: &StyleDef) -> Vec<DroppedStyleProperty>`
+(`mosaic-emit-xaml::pipeline`) makes both visible: one entry per dropped
+`(part, property, value, reason)`, read by `mosaic-package-artifact-builder`'s
+degradation analyzer (issue #12022) the same way it already reads
+`host_table_has_native_semantics` and friends for capability-level gaps.
+
+Pure reporting — no change to what XAML is emitted. `build_style_fragment`
+itself is now a thin wrapper over `build_style_fragment_with_drops`, so its
+existing signature and ~15 test call sites are untouched.
+
+Excludes `align-items`/`justify-content` when their value is one `FlexHints`
+(#12980) already consumes through its own side channel outside this
+function (`"center"` / `"space-between"` respectively — any other value IS
+still reported, since nothing consumes it), and excludes `flex-grow`
+unconditionally (fully boolean-handled today, nothing recognisable as
+"lost"). Verified this doesn't false-positive by regenerating the
+package-expanded TaskApp: `align-items: center` and
+`justify-content: space-between` (both authored) produce zero drop entries;
+166 *other* properties do (see `mosaic-package-artifact-builder`'s
+CHANGELOG for the fuller picture — this crate only supplies the detector,
+the builder crate decides what to do with it).
+
+New tests: a genuinely-dropped property (`box-shadow`) is reported with a
+specific reason; the two flex exclusions are covered both ways (recognised
+value → not reported, unrecognised value → reported); a non-100%
+percentage width (the issue's own motivating example) is reported; an
+unknown/typo'd property name falls through to a generic reason rather than
+being silently ignored.
+
 ## [Unreleased] — lower `Row`/`Column` to `Grid` with flex sizing (#12021)
 
 `StackPanel` sizes to content and has no concept of distributing free space.
