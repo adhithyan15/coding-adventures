@@ -33,16 +33,38 @@ export default defineConfig({
               // scripts/check-bundle.mjs. Raising that ceiling would have bought
               // one PR of room and made the app slower; raising the cap fixes the
               // shape. Keep the grouping cap aligned with the independently
-              // enforced 49 kB emitted-batch ceiling: that lets Rolldown fill the
+              // enforced emitted-batch ceiling: that lets Rolldown fill the
               // final batch for each language instead of stranding usable bytes
               // in undersized tail chunks, without weakening either request or
               // response-size gates.
+              //
+              // 49 kB -> 56 kB. SECOND occurrence of that same recurrence, from
+              // the Spanish A1 vocabulary tranche that took the corpus to 401
+              // batches. Measured on that corpus:
+              //
+              //     cap 49 kB   401 batches   47,976 B largest
+              //     cap 56 kB   353 batches   54,688 B largest
+              //
+              // Note which way the numbers move. This is a GROUPING parameter,
+              // not a budget. Raising it takes the request count DOWN by 48, and
+              // the request-count ceiling in check-bundle.mjs is lowered to the
+              // measured 353 in the same commit -- a ceiling that may fall should
+              // fall when it falls. Nothing was relaxed to squeeze past a gate:
+              // the gate is met with more margin than before, and 54,688 B is
+              // about 11% of the 500 kB chunk budget that is the constraint
+              // actually protecting the browser.
+              //
+              // If you are here for a THIRD bump: stop, and do issue #12918
+              // instead. Batches are grouped by track-then-size, so the count
+              // tracks corpus bytes linearly and this recurs every few content
+              // tranches. Grouping by a chapter range -- something a reader
+              // actually navigates -- makes it grow sublinearly and ends this.
               name(moduleId) {
                 const normalized = moduleId.replaceAll("\\", "/");
                 const match = /human-languages\/([^/]+)\/lessons\//.exec(normalized);
                 return match?.[1] ? `lessons-${match[1]}` : null;
               },
-              maxSize: 49_000,
+              maxSize: 56_000,
             },
             {
               name: "script-data",

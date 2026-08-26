@@ -1,0 +1,799 @@
+{
+  "version": 1,
+  "language": "spanish",
+  "chapter": 366,
+  "title": "Around The Room",
+  "drivablePrefix": 5,
+  "sourceHash": "fnv1a64:b559102a70f4971d",
+  "lessons": [
+    {
+      "id": "ES-C366-caja",
+      "sequence": 7220,
+      "title": "la caja — the box that became the cash",
+      "headword": "la caja",
+      "romanization": "la caja",
+      "gloss": "box — Latin capsa, the case a Roman kept scrolls in, probably reaching Castilian through Catalan or Occitan; case, capsule and chassis are cousins, and English cash first meant the box itself",
+      "script": "latin",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:10c010646ed0c1f6",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Say short, then full. (Corto; lleno.)"
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know first",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "la casa — the word caja is constantly mistaken for, and is not related to."
+            },
+            {
+              "kind": "speech",
+              "text": "la bolsa — the other thing you carry things in, so the pair sits together."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "pronunciation",
+          "title": "Sounds you'll need",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "KA-ha, two beats with the weight on the first. The j is the jota, scraped at the back of the throat, and the c is a hard k. see pronunciation reference."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "la caja — \"the box.\""
+            },
+            {
+              "kind": "speech",
+              "text": "Latin capsa was a box, and in particular the cylindrical case a Roman kept scrolls in. English holds it as case in the container sense; as capsule, which is capsula, a little capsa; and, arriving through French châssis, as chassis, the frame a car is built onto."
+            },
+            {
+              "kind": "speech",
+              "text": "The route into Spanish deserves a hedge. The -ps- in the middle of capsa softens into a sh-like sound in Catalan and in Occitan, which is how Catalan arrives at caixa, and it does not behave that way in Castilian left to itself. So caja most likely walked in from the east rather than being inherited straight down the line. The usual account says Catalan or Occitan carried it."
+            },
+            {
+              "kind": "speech",
+              "text": "The reward for all this is cash. English took cash from French casse or Italian cassa, and for its first stretch of life the English word meant the money box — not the money. Only later did the contents take the name of the container. A cashier is still the person who minds that box."
+            },
+            {
+              "kind": "speech",
+              "text": "Be careful with the other cashier, though: the verb, \"to dismiss an officer from service.\" That one came from French casser, \"to break, to annul\", and is not related to the box at all. Two spellings alike, two histories."
+            },
+            {
+              "kind": "speech",
+              "text": "And caja is no relative of casa. Latin casa was a hut; it pushed the grander domus out of everyday Latin, and it gave English casino, \"a little house.\""
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "You can now name a container and say what state it is in: la caja está llena."
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "la caja",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *la caja*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "una caja",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *una caja*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "la caja está llena",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *la caja está llena*]"
+            }
+          ]
+        },
+        {
+          "index": 6,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What did a Latin capsa hold? (Scrolls.) And what did English cash mean first? (The box, not the money in it.)"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "ES-C366-lampara",
+      "sequence": 7230,
+      "title": "la lámpara — the shining thing with a letter swapped",
+      "headword": "la lámpara",
+      "romanization": "la lámpara",
+      "gloss": "lamp — Greek lampas, a torch, from lampein, to shine; lamp and lantern are cousins, and Spanish relámpago, lightning, comes free with it",
+      "script": "latin",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:b2e2c0222dc3c9d8",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Say full, then the box. (Lleno; la caja.)"
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know first",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "la luz — the light itself, before the thing that holds it."
+            },
+            {
+              "kind": "speech",
+              "text": "la noche — when a lámpara earns its keep."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "pronunciation",
+          "title": "Sounds you'll need",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "LAM-pa-ra, three beats with the weight on the first — the written accent is there to tell you so. Both r sounds are single taps. see pronunciation reference."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "la lámpara — \"the lamp.\""
+            },
+            {
+              "kind": "speech",
+              "text": "Greek lampein meant to shine. From it came lampas, a torch — light you could carry with you. Latin borrowed the Greek word as lampada, and Spanish took it over from Latin."
+            },
+            {
+              "kind": "speech",
+              "text": "But listen to what Spanish says now: LAM-pa-ra, with an r in it. Older Spanish really did say lámpada, and the r is a repair. The word held two very similar beats sitting close together, and the language traded the second of them for a different sound rather than keep saying both. The r in lámpara is a substitution, not an inheritance — a small scar you can hear."
+            },
+            {
+              "kind": "speech",
+              "text": "English has the family through French. A lamp is Old French lampe, the same torch. A lantern is the Greek lampter, a light-holder, which picked up an intrusive n passing through Latin and has kept it ever since."
+            },
+            {
+              "kind": "speech",
+              "text": "The real prize, though, is elsewhere in Spanish. Relámpago — lightning — is this root with a prefix on the front: the shining that flashes back out of a cloud. The verb relampaguear is what a storm does. Learn the lamp and you have quietly learned the lightning as well."
+            },
+            {
+              "kind": "speech",
+              "text": "One word does not belong here, however much it wants to. Lampoon is French lampons, \"let us drink\", the refrain shouted in old drinking songs. It reached English satire by an entirely separate road, and it is exactly the kind of lookalike that sneaks into a family it has no claim on."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "You can now name the thing that makes light indoors, and hear its root again in relámpago."
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "la lámpara",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *la lámpara*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "una lámpara",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *una lámpara*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "la lámpara de la casa",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *la lámpara de la casa*]"
+            }
+          ]
+        },
+        {
+          "index": 6,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What did Greek lampein mean? (To shine.) And why does lámpara carry an r where older Spanish had a d? (Two like sounds sat too close, so one was traded away.)"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "ES-C366-almohada",
+      "sequence": 7240,
+      "title": "la almohada — the Arabic word for your cheek",
+      "headword": "la almohada",
+      "romanization": "la almohada",
+      "gloss": "pillow — Andalusi Arabic al-mukhadda, the cheek-instrument, with the Arabic article fused on; this word has no English relative at all",
+      "script": "latin",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:a1b5163e3cc0d2aa",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Say the box, then the lamp. (La caja; la lámpara.)"
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know first",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "la cama — the almohada lives on it."
+            },
+            {
+              "kind": "speech",
+              "text": "el sueño — what the pillow is for."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "pronunciation",
+          "title": "Sounds you'll need",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "al-mo-A-da, four beats with the weight on the third. The h is silent, doing nothing at all, the way it does nothing in hermano. see pronunciation reference."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "la almohada — \"the pillow.\""
+            },
+            {
+              "kind": "speech",
+              "text": "Spanish took this word from Arabic, and it took the Arabic article along with it. Andalusi Arabic al-mukhadda came over whole — al- means \"the\" — and Spanish never pried the article off. The same fused al- sits at the front of alcalde, alcohol, algodón and almacén. When you say la almohada you are saying \"the\" twice, once in each language, and nobody minds."
+            },
+            {
+              "kind": "speech",
+              "text": "Underneath the article is khadd, \"cheek.\" The mi- on the front is the Arabic shape that builds a noun for the tool that does something: fataha is \"to open\", and miftah is \"a key.\" So al-mukhadda is the cheek-instrument. The thing your cheek goes on."
+            },
+            {
+              "kind": "speech",
+              "text": "Now the strange part, and the honest one. This word has no English relative whatever. Not a borrowed one, not an inherited one, not even a learned one lurking in a medical dictionary. English pillow comes down from Latin pulvīnus through Old English, and cushion from a Vulgar Latin coxīnum. There is nowhere in your English memory to hang almohada, which means you get to learn it the plain way: by putting your cheek on it. That happens rarely enough to be worth noticing when it does."
+            },
+            {
+              "kind": "speech",
+              "text": "A small note on the article. Learners who have met el agua sometimes reach for el here. Agua takes el because its opening a is the stressed one; almohada carries its weight on -ha-, and stays la almohada."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "You can now furnish a bed in Spanish, with a word that came from Arabic and kept its article."
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "la almohada",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *la almohada*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "una almohada",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *una almohada*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "la almohada de la cama",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *la almohada de la cama*]"
+            }
+          ]
+        },
+        {
+          "index": 6,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does the al- at the front of almohada mean? (The — it is the Arabic article.) And what is the word underneath it? (Khadd, cheek: the cheek-instrument.)"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "ES-C366-escalera",
+      "sequence": 7250,
+      "title": "la escalera — the ladder that grew a vowel",
+      "headword": "la escalera",
+      "romanization": "la escalera",
+      "gloss": "stairs, ladder — Latin scālāria from scāla, a ladder; scale, ascend, descend and echelon are cousins, while escalate arrived by way of a 1900 trademark",
+      "script": "latin",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:0212d3a54afc114a",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Say the lamp, then the pillow. (La lámpara; la almohada.)"
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know first",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "el piso — the escalera is what joins one piso to the next."
+            },
+            {
+              "kind": "speech",
+              "text": "la escuela — another Spanish word that grew the same opening e."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "pronunciation",
+          "title": "Sounds you'll need",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "es-ka-LE-ra, four beats with the weight on the third. The r is a single tap, never rolled, and the opening es- is unhurried. see pronunciation reference."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "la escalera — \"the stairs, the ladder.\""
+            },
+            {
+              "kind": "speech",
+              "text": "Latin scāla was a ladder or a flight of steps, and scālāria was the whole staircase. Spanish inherited it — but listen to the front of the Spanish word. Latin opened with sc-. Spanish opens with es-. A vowel grew there, the same way it grew in escuela from schola, in estrella from stella, and in espada from spatha. Say those three aloud in a row and you can hear Spanish doing the same thing each time it met that opening."
+            },
+            {
+              "kind": "speech",
+              "text": "English has the climbing half of the family. To scale a wall is to set a scāla against it. Ascend, descend and transcend come from scandere, \"to climb\", the verb the ladder-word is built on. And echelon is French échelon, a rung of a ladder — which is why an echelon of an army, or of a company, is a step that somebody is standing on above you."
+            },
+            {
+              "kind": "speech",
+              "text": "One relative has to be handed over carefully. Escalate is not an old descendant of scāla. It is a twentieth-century back-formation from escalator, and escalator was a trademark, registered by the Otis company in 1900 and built to sound Latin. So a conflict that escalates is climbing a machine that a marketing department named."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "You can now name the way from one floor to the next: la escalera."
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "la escalera",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *la escalera*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "una escalera",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *una escalera*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "la escalera del piso",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *la escalera del piso*]"
+            }
+          ]
+        },
+        {
+          "index": 6,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What was a Latin scāla? (A ladder or flight of steps.) And where does English escalate really come from? (From escalator, an Otis trademark of 1900.)"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "ES-C366-armario",
+      "sequence": 7260,
+      "title": "el armario — where the gear was kept",
+      "headword": "el armario",
+      "romanization": "el armario",
+      "gloss": "wardrobe, cupboard — Latin armārium from arma, which meant tools and gear rather than weapons; arms, army, armour and alarm are cousins, and French armoire is the very same room-word",
+      "script": "latin",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:a296fd3c4c5409ae",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Say the pillow, then the stairs. (La almohada; la escalera.)"
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know first",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "la ropa — what an armario is full of."
+            },
+            {
+              "kind": "speech",
+              "text": "la habitación — the room the armario stands in."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "pronunciation",
+          "title": "Sounds you'll need",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ar-MA-rio, three beats with the weight on the second. Both r sounds are single taps, and the -rio runs together into one beat. see pronunciation reference."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "el armario — \"the wardrobe, the cupboard.\""
+            },
+            {
+              "kind": "speech",
+              "text": "Start with the question the word invites: why does a place for keeping clothes begin like arms? Because Latin arma did not mean weapons. It meant tools, equipment, gear — whatever a person needed on hand to do a job. An armārium was therefore the place where your gear lived: a chest, a cupboard, a recess fitted into a wall. Monastic libraries had one for their books."
+            },
+            {
+              "kind": "speech",
+              "text": "The fighting sense came afterwards, and English mostly inherited that half: arms in the military sense, army from armāta, armour from armātūra."
+            },
+            {
+              "kind": "speech",
+              "text": "The best of the family is alarm. Italians shouted all'arme! — \"to the arms!\" — and French and then English borrowed the entire shouted phrase and froze it into a noun. So an alarm clock is a small machine yelling \"to arms!\" at you before dawn. Spanish has alarma from the same cry."
+            },
+            {
+              "kind": "speech",
+              "text": "That same Latin armārium also went through French as armoire, and English borrowed that too. Armario and armoire are one Latin word that reached English by a different door than the one it took into Spanish."
+            },
+            {
+              "kind": "speech",
+              "text": "Two neighbours, sorted out. Armonía, harmony, is Greek harmonia, and it genuinely is a distant relative of arma — both go back to an old root for fitting things together. Farmacia is Greek pharmakon, a drug, and it is not related at all. The one that looks unrelated is; the one that looks related is not."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "You can now say where your clothes live: la ropa está en el armario."
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "el armario",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *el armario*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "un armario",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *un armario*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "la ropa está en el armario",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *la ropa está en el armario*]"
+            }
+          ]
+        },
+        {
+          "index": 6,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What did Latin arma mean? (Tools and gear, not weapons.) And what is an alarm taken literally? (Italian all'arme — to the arms!)"
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "findings": []
+}

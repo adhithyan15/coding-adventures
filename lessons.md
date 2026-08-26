@@ -4795,3 +4795,144 @@ mode without touching the filesystem — so it works as a test even on Windows.
 **Generalisable check:** for every script whose header documents a `./` invocation,
 `git ls-files -s` it. The two are independent facts and nothing in this repo tied them
 together.
+
+## A repertoire check is only as good as the corpus you scope it to
+
+The Spanish book compiles with **Latin Modern**; the Indic and CJK books load vendored
+**Noto** faces. A missing glyph does not fail locally — nothing opens a font until
+XeLaTeX runs in CI — so the only pre-push defence is to diff the characters your new
+`.tex` uses against the characters a book has already rendered.
+
+The first version of that check scanned **`code/learning/human-languages/**/*.tex`**, the
+whole corpus. That is wrong in the direction that produces silence: the union of 1,311
+`.tex` files includes every Devanagari, Arabic and CJK character in the repo, so it would
+have certified as safe any glyph Latin Modern cannot draw. A corpus-wide repertoire is not
+a conservative approximation of a per-track one — it is the opposite of one.
+
+**Scope the repertoire to the track whose font will render it.** 368 Spanish `.tex` files,
+152 distinct characters. That is the set that has actually been proved.
+
+**And self-test the instrument in BOTH directions.** The bug above was not caught by
+reasoning; it was caught by an assertion:
+
+    if "ñ" not in repertoire:  fail   # loaded empty -> everything reads novel
+    if "好" in repertoire:      fail   # loaded the wrong thing -> nothing reads novel
+
+The second assertion is the one that fired. A one-directional self-test ("did I load
+anything?") passes cheerfully on a repertoire that loaded 1,311 files when it should have
+loaded 368. **Every check that compares against a baseline needs a negative control**, or
+it cannot tell "nothing is wrong" from "I am not looking at the right thing."
+
+## A vocabulary gate can be inflated by a word the course already owns
+
+`vocabularyOf` counts distinct headwords on lessons whose `type` is `word`/`phrase`. That
+restriction is correct — it stops drill titles and grammar labels being counted as
+vocabulary. Its side effect is that **a lexeme introduced by a `grammar` lesson is owned
+but uncounted.**
+
+Spanish teaches `dar`. `ES-C65-di` introduces the atom `ES-LEX-DAR`, and its `type` is
+`grammar`. So `dar` appears in no headword list, passes every duplicate test — no article,
+no compound, no shared stem, no spent root — and adding it as a new `word` headword would
+have **raised the A1 number while re-teaching a word the learner already had**.
+
+That is the same failure direction as a near-duplicate, through a different door, and no
+string rule of any sophistication reaches it.
+
+**Check the atom ledger, not only the headword list.** `grep -l "ES-LEX-<WORD>" lessons/*.md`
+is enough by hand. The permanent fix is in `validate.ts`: flag a new `word` lesson whose
+headword matches a lexical atom another lesson already introduces.
+
+## Near-duplicates: initial stem is the signal, not containment
+
+Tranches keep answering the whole-string matcher by lengthening the delimiter list.
+By tranche 4 the delimiter list caught **nothing**; every real drop came from a shared
+stem or from the root ledger.
+
+The rule that separates the two cases cleanly:
+
+**A taught word sharing an INITIAL stem is a drop. A taught word appearing as a
+non-initial substring across no morpheme boundary is a false alarm.**
+
+Drops: `la camisa` beside `caminar`, `el abrigo` beside `abrir`, `el hombre` beside
+`el hombro` (one vowel apart), `el cuerpo` beside `la cuerda` — all unrelated
+etymologically, all confusable exactly where a learner keys on the word.
+
+Kept: `el dedo` inside `alrededor` (which is *retrō*), `el corazón` ending in the taught
+`razón` (which is *ratiō*), `la lámpara` containing the taught `para`. A blunt containment
+rule kills all three for nothing.
+
+**Check the morpheme, not the letters** — in both directions. Containment that fires on a
+letter accident is as expensive as a stem match that never fires.
+
+## "The course" is a claim a reader holding one volume cannot check
+
+`standalone-book` refuses prose that tells a reader they already learned something which
+may live in a different volume. Four sentences in one tranche said "in this course" or
+"the course has already".
+
+The tempting repair is a vaguer word. **The right repair is to re-anchor the claim on the
+reader's own experience**, which travels with them into any volume: "nearly every word you
+have met has a paper trail", not "nearly every word in this course". "The tallest thing you
+have named so far", not "that the course has named".
+
+`this book` is the sanctioned scope — the reader is holding it — but it converts a vague
+claim into a falsifiable one, so an ordinal or a count moved to book scope has to be
+walked against the volume's actual contents first.
+
+## A grouping parameter is not a budget
+
+`language-ladder` fails at >353 lazy lesson batches, and separately caps the largest batch.
+Content growth walks into the count ceiling every few tranches.
+
+The reflex is to read both numbers as budgets and refuse to touch either. But `maxSize` in
+`vite.config.ts` is a **bundler grouping parameter**: raising it 49 kB → 56 kB took the
+measured count **401 → 353**, moving the real ceiling *down* by 48 while the corpus grew by
+35 lessons. Raising the *count* would have been the violation; this is its opposite.
+
+Two things make that legitimate rather than convenient, and both should be checked before
+reaching for it: the change had **in-repo precedent** (a previous author did 32 kB → 49 kB
+for the identical recurrence and wrote it into the file), and the size increase stayed far
+inside the budget that actually protects the browser (54,688 B against a 500 kB eager-chunk
+limit — about 11%).
+
+**And a ceiling that may fall must actually fall.** Lower the pin to the new measurement in
+the same commit, or the slack you just created silently becomes room for the next
+regression to hide in.
+
+## An unvalidated tag vocabulary drifts, and nothing reports it
+
+`sounds:` frontmatter is a cross-lesson index; its value is entirely in tags being shared.
+Nothing validates them. Six authors independently coined **20 tags** outside the attested
+set (`h-silent` for `silent-h`, `ll-as-y` for `ll-y`, `z-seseo` for `z-as-th-or-s`), and
+none of them failed anything — an unknown tag just becomes a singleton no lesson ever joins,
+so the index loses the lesson and the lesson loses the index.
+
+Note the shape: every invented name was *reasonable*. Nothing tells an author which of two
+equally good spellings this corpus already uses.
+
+**Generalisable check:** any free-text field that exists to be JOINED ON needs a closed
+vocabulary. If coining a new value is meant to be possible, make it cost one line in a
+registry — that turns a typo into a decision.
+
+## A shard for a level-N document must contain exactly one level-N heading
+
+`BACKLOG.md` is doc-sharded at heading level 2, so each `BACKLOG.d/*.md` holds one `##`
+section. Editing an existing shard to add a second `##` sub-heading looks harmless and is
+not: the document then has 131 sections while the shards define 130, because the second
+heading rides inside the first shard instead of owning one.
+
+**`check:doc-shards` does not catch this.** It rebuilds the monolith from the shards and
+compares bytes, and that round trip is stable in the direction it tests — the extra
+heading is emitted verbatim either way. What is unstable is the *other* direction: re-run
+`--shard` and the file splits in two, with a new ordinal and a new digest.
+
+`doc-shard.test.ts`'s "shard order on disk reproduces REAL section order" is the check that
+notices, because it counts sections on both sides instead of comparing bytes.
+
+**Use a lower heading level for structure inside a shard** (`###` under a `##` shard), and
+if a finding genuinely deserves top billing, give it its own shard file with its own
+ordinal.
+
+**Generalisable check:** whenever a round-trip has two directions, a byte-comparison of one
+direction is not evidence about the other. Assert on the structure both sides define, not
+on the bytes one side produces.

@@ -1,0 +1,21 @@
+{
+  "chapter": 362,
+  "title": "Earth, Sea And Sky",
+  "label": "ch:la-tierra-y-el-mar",
+  "canDo": "I can say la tierra, el mar, el aire, el fuego and la luna, and say which of them a place is near.",
+  "spineNodes": [
+    "SPINE-ASK-LOCATION"
+  ],
+  "payoff": {
+    "lesson": "ES-C362-luna",
+    "kind": "production",
+    "summary": "Complete ES-C362-luna: place a thing against earth, sea, air and fire, and name what is overhead at night.",
+    "assesses": [
+      "ES-LEX-C362-WHERE-36",
+      "ES-LEX-C362-WHERE-37",
+      "ES-LEX-C362-WHERE-38",
+      "ES-LEX-C362-WHERE-39",
+      "ES-LEX-C362-WHERE-40"
+    ]
+  }
+}

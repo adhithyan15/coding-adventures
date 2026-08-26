@@ -1,0 +1,16 @@
+{
+  "id": "ES-PATH-362-01",
+  "spine_node": "SPINE-ASK-LOCATION",
+  "lessons": [
+    "ES-C362-tierra",
+    "ES-C362-mar",
+    "ES-C362-aire",
+    "ES-C362-fuego",
+    "ES-C362-luna"
+  ],
+  "before": [],
+  "inline": [
+    "ES-EXT-362-WHERE"
+  ],
+  "after": []
+}

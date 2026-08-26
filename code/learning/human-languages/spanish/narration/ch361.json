@@ -1,0 +1,819 @@
+{
+  "version": 1,
+  "language": "spanish",
+  "chapter": 361,
+  "title": "What Is On The Table",
+  "drivablePrefix": 5,
+  "sourceHash": "fnv1a64:17c11259237cefc8",
+  "lessons": [
+    {
+      "id": "ES-C361-carne",
+      "sequence": 6970,
+      "title": "la carne — the flesh that named a party before a fast",
+      "headword": "la carne",
+      "romanization": "la carne",
+      "gloss": "meat, flesh — Latin carō, stem carn-; carnal, incarnate and carnage are the direct cousins, and carnival is carnelevare, the removing of meat",
+      "script": "latin",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:2d3388a68ca868c7",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Say the trousers, then the button. (El pantalón; el botón.)"
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know first",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "la comida — the meal this word ends up inside."
+            },
+            {
+              "kind": "speech",
+              "text": "el plato — what the meat arrives on."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "pronunciation",
+          "title": "Sounds you'll need",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "KAR-ne, two beats with the weight on the first. The r is a single tap of the tongue, not a roll. see pronunciation reference."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "la carne — \"meat.\""
+            },
+            {
+              "kind": "speech",
+              "text": "Latin carō had the stem carn-, and it meant flesh: the stuff of a body, on the animal or on the person. Spanish took it plain, and la carne is what a butcher sells and what arrives for dinner. No shudder attached."
+            },
+            {
+              "kind": "speech",
+              "text": "English inherited nothing here and borrowed everything, which is why the same root arrives in English wearing solemn clothes:"
+            },
+            {
+              "kind": "speech",
+              "text": "carnal, of the flesh rather than the spirit;"
+            },
+            {
+              "kind": "speech",
+              "text": "incarnate, made flesh, out of the Latin of the Church;"
+            },
+            {
+              "kind": "speech",
+              "text": "carnage, through French and Italian — flesh in quantity."
+            },
+            {
+              "kind": "speech",
+              "text": "The generous one is carnival. Italian carnevale goes back to an older carnelevare, \"the removing of meat\" — the name of the hinge in the year where meat stops and Lent begins. The party is named after the fast that follows it."
+            },
+            {
+              "kind": "speech",
+              "text": "You will also hear a tidier account: carne, vale!, \"meat, farewell!\", as though the word were a parting wave at a plate. It scans beautifully and it is not where the word came from. It is a reworking by speakers who heard carnevale, recognised carne inside it, and supplied a story for the rest."
+            },
+            {
+              "kind": "speech",
+              "text": "Worth hearing too: the register gap. English carnal is a heavy word, kept for sermons and courtrooms. Spanish carne is the lightest one there is. It goes on the shopping list."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "You can name what is on a plate with the same root that named a street party in February: la carne."
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "la carne",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *la carne*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "la carne y el pan",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *la carne y el pan*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "un plato de carne",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *un plato de carne*]"
+            }
+          ]
+        },
+        {
+          "index": 6,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What did carnelevare mean? (The removing of meat, before Lent.) And is carne, vale the real story? (No — that is a later guess, made by ear.)"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "ES-C361-pescado",
+      "sequence": 6980,
+      "title": "el pescado — the fish that has already been caught",
+      "headword": "el pescado",
+      "romanization": "el pescado",
+      "gloss": "fish as food — Latin piscātus, the catch, from piscārī to fish, on piscis; Pisces and piscine are borrowed, English fish is the inherited cousin, and pecado sin is a different word entirely",
+      "script": "latin",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:1360182710b529e5",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Say the button, then the meat. (El botón; la carne.)"
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know first",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "el agua — where the fish was before it was caught."
+            },
+            {
+              "kind": "speech",
+              "text": "la olla — where it goes afterwards."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "pronunciation",
+          "title": "Sounds you'll need",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "pes-KA-do, three beats with the weight on the middle one. The final d is soft, close to the th of the. see pronunciation reference."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "el pescado — \"fish,\" the kind you eat."
+            },
+            {
+              "kind": "speech",
+              "text": "Latin piscis was a fish. From it came the verb piscārī, to fish, and from that verb its past participle piscātus, \"having been fished\" — the catch. Spanish turned that participle into a noun. So el pescado is not a fish. It is the caught one."
+            },
+            {
+              "kind": "speech",
+              "text": "That is why Spanish is holding two words. A fish moving through water is un pez. The same creature, netted and in a pan, is el pescado. The grammar of a finished action is doing the work, and you can hear the -ado on the end of it, the same ending that sits on the end of hablado and comido."
+            },
+            {
+              "kind": "speech",
+              "text": "English took the learned half straight from Latin: Pisces in the sky, piscine for anything fishy, piscatorial for the business of fishing. But English also owns the word by inheritance. Latin pater is English father; Latin pēs is foot; Latin plēnus is full. Piscis and fish are that same pairing, one more time."
+            },
+            {
+              "kind": "speech",
+              "text": "A caution on how far back to push it. Call it the p and f correspondence and stop there — the fish-word turns up only in the western languages, and one proposal is that they all took it from some older neighbour rather than inheriting it."
+            },
+            {
+              "kind": "speech",
+              "text": "One letter of danger: pescado is fish, pecado is sin. Pescador fishes, pecador sins."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "You can order fish with a word that means the catch, and hear a finished action inside it: el pescado."
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "el pescado",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *el pescado*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "el pescado y el arroz",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *el pescado y el arroz*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "un plato de pescado",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *un plato de pescado*]"
+            }
+          ]
+        },
+        {
+          "index": 6,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does the -ado of pescado tell you? (That it has been caught — it is a past participle.) And what does pecado mean? (Sin — an unrelated word, one letter away.)"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "ES-C361-leche",
+      "sequence": 6990,
+      "title": "la leche — the milk hiding inside a lettuce",
+      "headword": "la leche",
+      "romanization": "la leche",
+      "gloss": "milk — Latin lac, stem lact-; lactose and lactate are learned coinages and Italian latte is the same word, while lettuce is lactūca, named for the milky sap of a cut stem",
+      "script": "latin",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:fc3b028605eb99ba",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Say the meat, then the fish. (La carne; el pescado.)"
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know first",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "la vaca — where the milk starts."
+            },
+            {
+              "kind": "speech",
+              "text": "el queso — what it turns into."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "pronunciation",
+          "title": "Sounds you'll need",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "LE-che, two beats with the weight on the first. The ch is one sound, the ch of church. see pronunciation reference."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "la leche — \"milk.\""
+            },
+            {
+              "kind": "speech",
+              "text": "Latin lac had the stem lact-, and the spoken language flattened it to lacte, which wore down into leche. Chemists later went back to the Latin stem and cut it into lactose, lactic and lactate — modern coinages from an old root. Italian latte needs no explanation at all: it is leche, in another accent."
+            },
+            {
+              "kind": "speech",
+              "text": "Now the good one. A lettuce is a lactūca, \"the milky one,\" because a cut lettuce stem bleeds a pale sap. English got the word through Old French laitues. Spanish never had to borrow it — lechuga came down the ordinary way, so Spanish keeps the milk and the salad plant as an audible pair, no translation required."
+            },
+            {
+              "kind": "speech",
+              "text": "Milky Way is a translation of Latin via lactea, which was itself a translation of a Greek phrase — the same picture handed along in three languages."
+            },
+            {
+              "kind": "speech",
+              "text": "And a hedge on the Greek. Galaxy comes from galaxías, \"milky\", from Greek gála, stem galakt-. That much is solid. What is not solid is treating gála and lac as a tidy pair of cousins: the sounds do not line up the way inherited words normally do, and the usual account now is that Greek and Latin each picked their milk-word up from somewhere else that has been lost. Two words that look like damaged copies of each other, with no surviving original."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "You can name milk, and hear the same word inside a salad leaf: la leche."
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "la leche",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *la leche*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "la leche y el queso",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *la leche y el queso*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "un vaso de leche",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *un vaso de leche*]"
+            }
+          ]
+        },
+        {
+          "index": 6,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Why is a lettuce named for milk? (A cut stem bleeds a milky sap.) And are Greek gála and Latin lac a clean pair of cousins? (No — they look like damaged copies of each other, and neither seems inherited.)"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "ES-C361-sal",
+      "sequence": 7000,
+      "title": "la sal — one short word, and three roots that only sound alike",
+      "headword": "la sal",
+      "romanization": "la sal",
+      "gloss": "salt — Latin sal, salis; salad, salsa, sauce, sausage and salary are the real family, while salud, saludo and salvo belong together to a whole-and-safe root, and salir to a leaping one",
+      "script": "latin",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:196e42623d6b1c40",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Say the fish, then the milk. (El pescado; la leche.)"
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know first",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "la salud — the sal- word that is not salt."
+            },
+            {
+              "kind": "speech",
+              "text": "la sopa — the first thing you reach for salt to fix."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "pronunciation",
+          "title": "Sounds you'll need",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "sal, one beat. The s stays clear and unbuzzed, and the l is light, made at the tip of the tongue. see pronunciation reference."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "la sal — \"salt.\""
+            },
+            {
+              "kind": "speech",
+              "text": "Latin sal, salis. Its family is a kitchen: salad is herba salāta, salted greens; salsa and sauce are one Latin word, salsa, \"salted\", arriving in English by two different doors; sausage is salsīcia; and saline and salami are the same root again."
+            },
+            {
+              "kind": "speech",
+              "text": "Salary belongs here too — salārium is built on sal, and that much is real. What is not real is the story stapled to it. No Roman source says soldiers were paid in salt. Pliny remarks only that salt was valuable enough for the word to be named after it; the salt-money version traces to an eighteenth-century dictionary. It is the same species of invention as carne, vale!."
+            },
+            {
+              "kind": "speech",
+              "text": "Now the part that matters for the ear. Spanish has other words that open with sal-, and they are not a crowd of separate accidents. There are three roots in total, counting salt."
+            },
+            {
+              "kind": "speech",
+              "text": "Whole, safe. Salūs gives salud; salūtāre, built directly on salūs, gives saludo; salvus gives salvo. Those three Spanish words are one root, not three. English drew salute, salvage, salvation and save from it, and by way of Greek hólos the holo- of holograph."
+            },
+            {
+              "kind": "speech",
+              "text": "Leap. Salīre meant to jump. English took salient, sally, assail, assault, result, insult and somersault from it. Spanish salir, to go out, is a leap that calmed down into a doorway."
+            },
+            {
+              "kind": "speech",
+              "text": "So: one root seasons the food, one wishes you well, one jumps."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "You can salt a soup, and tell three sal- families apart by ear: la sal."
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "la sal",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *la sal*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "la sal y el pan",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *la sal y el pan*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "un poco de sal",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *un poco de sal*]"
+            }
+          ]
+        },
+        {
+          "index": 6,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "How many roots hide behind the sal- words? (Three — salt, whole-or-safe, and leap.) And which Spanish words share the whole-or-safe one? (Salud, saludo and salvo, all from the same root.)"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "ES-C361-aceite",
+      "sequence": 7010,
+      "title": "el aceite — an Arabic oil and a Latin olive in one phrase",
+      "headword": "el aceite",
+      "romanization": "el aceite",
+      "gloss": "oil — Andalusi Arabic az-zayt, the oil, borrowed with its article fused on; Latin oleum gave English oil, olive, petroleum and linoleum, and the two words meet in aceite de oliva",
+      "script": "latin",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:92dc5adef58b215f",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Say the milk, then the salt. (La leche; la sal.)"
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know first",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "la sartén — what you pour it into."
+            },
+            {
+              "kind": "speech",
+              "text": "la cebolla — what goes in after it."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "pronunciation",
+          "title": "Sounds you'll need",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "a-SEI-te, three beats with the weight on the middle one. In much of Spain that c is the soft th of think; across the Americas it is a clear s. see pronunciation reference."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "el aceite — \"oil.\""
+            },
+            {
+              "kind": "speech",
+              "text": "Arabic az-zayt means \"the oil.\" Spanish borrowed the whole phrase, article and all, and never took the article back off. The Arabic al- had already softened to az- alongside that z, so what crossed over was azzayt, which settled into aceite. The olive, az-zaytūna, came the same way and became aceituna. English did this too, with alcohol, algebra and alchemy — each of them carrying an Arabic al- that means nothing at all in English now."
+            },
+            {
+              "kind": "speech",
+              "text": "Latin had a perfectly good word of its own: oleum, oil, and olīva, the tree and its fruit. That is the source of English oil (through Old French), of olive, of petroleum, \"rock oil\", and of linoleum, a nineteenth- century coinage from linum, flax, plus oleum. Spanish kept óleo for the painter's oil and el olivo for the tree."
+            },
+            {
+              "kind": "speech",
+              "text": "Here is the part to keep. Neither word is home-grown. Arabic zayt is Semitic — Hebrew zayit is the same word — and it has no connection to oleum. And oleum and olīva were themselves lifted from Greek élaion and elaíā, which are generally taken to come from some older Mediterranean language that left nothing else behind. So the phrase aceite de oliva stands two borrowings next to each other, a thousand years apart, naming one plant."
+            },
+            {
+              "kind": "speech",
+              "text": "One warning for the kitchen and the garage: aceite is oil of every kind, cooking or engine. The stuff from the ground is petróleo."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "You can name the oil in a pan with a word Spain took from Arabic, and the olive in it with one Rome took from Greek: el aceite."
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "el aceite",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *el aceite*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "el aceite y la sal",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *el aceite y la sal*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "un poco de aceite",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *un poco de aceite*]"
+            }
+          ]
+        },
+        {
+          "index": 6,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What is the a- at the front of aceite? (The Arabic article al-, already softened to az- before the z.) And where did Latin get oleum? (Borrowed from Greek — so both words for the plant are loans.)"
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "findings": []
+}

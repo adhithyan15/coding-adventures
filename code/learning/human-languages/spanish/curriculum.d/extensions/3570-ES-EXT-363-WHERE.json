@@ -1,0 +1,15 @@
+{
+  "id": "ES-EXT-363-WHERE",
+  "stage": "A1",
+  "kind": "required",
+  "category": "vocabulary",
+  "canDo": "I can name el coche, el avión, el barco, el autobús and la bicicleta.",
+  "prerequisites": [],
+  "lessons": [
+    "ES-C363-coche",
+    "ES-C363-avion",
+    "ES-C363-barco",
+    "ES-C363-autobus",
+    "ES-C363-bicicleta"
+  ]
+}

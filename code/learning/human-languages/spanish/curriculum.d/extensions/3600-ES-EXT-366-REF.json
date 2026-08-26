@@ -1,0 +1,15 @@
+{
+  "id": "ES-EXT-366-REF",
+  "stage": "A1",
+  "kind": "required",
+  "category": "vocabulary",
+  "canDo": "I can name la caja, la lámpara, la almohada, la escalera and el armario.",
+  "prerequisites": [],
+  "lessons": [
+    "ES-C366-caja",
+    "ES-C366-lampara",
+    "ES-C366-almohada",
+    "ES-C366-escalera",
+    "ES-C366-armario"
+  ]
+}

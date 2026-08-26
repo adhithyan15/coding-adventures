@@ -1,0 +1,21 @@
+{
+  "chapter": 366,
+  "title": "Around The Room",
+  "label": "ch:la-caja-y-la-lampara",
+  "canDo": "I can say la caja, la lámpara, la almohada, la escalera and el armario, and name the furniture of an ordinary room.",
+  "spineNodes": [
+    "SPINE-DEFINITE-REFERENCE"
+  ],
+  "payoff": {
+    "lesson": "ES-C366-armario",
+    "kind": "production",
+    "summary": "Complete ES-C366-armario: name five things in a room, and say what each of them holds or does.",
+    "assesses": [
+      "ES-LEX-C366-REF-31",
+      "ES-LEX-C366-REF-32",
+      "ES-LEX-C366-REF-33",
+      "ES-LEX-C366-REF-34",
+      "ES-LEX-C366-REF-35"
+    ]
+  }
+}

@@ -1,0 +1,16 @@
+{
+  "id": "ES-PATH-364-01",
+  "spine_node": "SPINE-DEFINITE-REFERENCE",
+  "lessons": [
+    "ES-C364-mujer",
+    "ES-C364-cara",
+    "ES-C364-nariz",
+    "ES-C364-dedo",
+    "ES-C364-corazon"
+  ],
+  "before": [],
+  "inline": [
+    "ES-EXT-364-REF"
+  ],
+  "after": []
+}
