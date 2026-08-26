@@ -1,0 +1,14 @@
+{
+  "id": "ES-EXT-387-VERB",
+  "stage": "A1",
+  "kind": "required",
+  "category": "vocabulary",
+  "canDo": "I can name quemar, cruzar, volar and girar.",
+  "prerequisites": [],
+  "lessons": [
+    "ES-C387-quemar",
+    "ES-C387-cruzar",
+    "ES-C387-volar",
+    "ES-C387-girar"
+  ]
+}

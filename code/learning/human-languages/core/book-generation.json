@@ -5743,6 +5743,26 @@
       "output": "spanish/book/chapters/ch384-enviar-y-subir.tex"
     },
     {
+      "language": "spanish",
+      "chapter": 385,
+      "output": "spanish/book/chapters/ch385-usar-y-tocar.tex"
+    },
+    {
+      "language": "spanish",
+      "chapter": 386,
+      "output": "spanish/book/chapters/ch386-vender-y-servir.tex"
+    },
+    {
+      "language": "spanish",
+      "chapter": 387,
+      "output": "spanish/book/chapters/ch387-quemar-y-cruzar.tex"
+    },
+    {
+      "language": "spanish",
+      "chapter": 388,
+      "output": "spanish/book/chapters/ch388-empujar-y-lanzar.tex"
+    },
+    {
       "language": "tamil",
       "chapter": 6,
       "output": "tamil/book/chapters/ch06-dative-case.tex",

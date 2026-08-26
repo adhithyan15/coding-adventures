@@ -1,8 +1,8 @@
 [package]
 name = "semantic-ir-to-typescript"
-version = "0.14.1"
+version = "0.15.0"
 edition = "2021"
-description = "Semantic IR → self-contained TypeScript source code (SIR12). First backend for the SIR10 narrow-waist IR."
+description = "Semantic IR → self-contained TypeScript source code (SIR12). Task #63: accept Feature::LoopControl (break/continue), with the bare-if-as-statement IIFE fix that requires."
 
 [dependencies]
 semantic-ir = { path = "../semantic-ir" }

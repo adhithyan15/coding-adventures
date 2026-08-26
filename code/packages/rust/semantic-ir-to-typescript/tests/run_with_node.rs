@@ -1659,3 +1659,245 @@ fn mx3_extend_makes_module_method_a_class_method_ts() {
         assert_eq!(stdout, "a widget", "extend must make the module method a class method");
     }
 }
+
+// ── SIR16 addendum: loop control (`break`/`continue`), task #63 ────────
+//
+// Mirrors `semantic-ir-to-javascript`'s own identically-shaped proof
+// tests (task #62) in spirit, adapted to avoid `%` (this backend's
+// `BuiltinCall` emitter routes an unrecognized-by-name op through
+// `__Sir.callBuiltin`, and `sir-runtime-core`'s own dispatch table has no
+// `%` entry at all — a real, pre-existing gap in that runtime unrelated
+// to loop control, out of scope here; confirmed by direct inspection of
+// `code/packages/typescript/sir-runtime-core/src/runtime.ts`'s
+// `builtins` table before writing this test, not assumed). Each `if`
+// used as a bare statement to hold a `break`/`continue` also exercises
+// the `Stmt::ExprStmt`/`Expr::If` special case `emit_stmt` gained
+// alongside `Feature::LoopControl`: without it, this program would
+// route through the value-position ternary+IIFE codegen and fail at
+// `node` with `SyntaxError: Illegal break statement`.
+
+/// A minimal `__Sir` runtime stub covering exactly the arithmetic/
+/// comparison helpers these loop-control programs call (`truthy`, `add`,
+/// `lt`, `gt`, `eq`) plus `write` — faithful to `sir-runtime-core`'s own
+/// real semantics for the integer-only values these tests use (verified
+/// against `src/values.ts`/`src/arithmetic.ts` directly): truthiness is
+/// "everything but `false`/`null`", equality is native `===`, and
+/// `add`/`lt`/`gt` are ordinary numeric operators.
+const SIR_LOOP_CONTROL_STUB: &str = r#"const __Sir = {
+  toDisplay: (v) => (v === null ? "nil" : String(v)),
+  write: (stream, terminator, unpackArrays, ...values) => {
+    console.log(values.map((v) => __Sir.toDisplay(v)).join(" "));
+    return null;
+  },
+  truthy: (v) => v !== false && v !== null,
+  add: (a, b) => a + b,
+  lt: (a, b) => a < b,
+  gt: (a, b) => a > b,
+  eq: (a, b) => a === b,
+};
+"#;
+
+/// Turn emitted TypeScript into runnable JavaScript for the loop-control
+/// execution proofs, using [`SIR_LOOP_CONTROL_STUB`] instead of
+/// [`ts_to_runnable_js`]'s own minimal `__Sir` stub (which covers only
+/// the keyword-argument programs' own narrower call surface, not
+/// arithmetic/comparison).
+fn ts_to_runnable_js_loop_control(ts: &str) -> String {
+    let mut js = ts.to_string();
+    js = js.replace(
+        "import * as __Sir from \"@coding-adventures/sir-runtime-core\";\n",
+        SIR_LOOP_CONTROL_STUB,
+    );
+    js = js.replace(" as { [k: string]: __Sir.Val }", "");
+    js = js.replace(" as __Sir.Val[]", "");
+    js = js.replace(" as __Sir.Val", "");
+    js = js.replace(": __Sir.Val[]", "");
+    js = js.replace(": __Sir.Val", "");
+    js
+}
+
+/// Compile a loop-control module, transform to JS via
+/// [`ts_to_runnable_js_loop_control`], run under node, and return trimmed
+/// stdout. `None` when node is unavailable.
+fn run_loop_control_module(module: &Module, tag: &str) -> Option<String> {
+    let artifact = compile(module).expect("compile to typescript");
+    if !node_available() {
+        eprintln!("note: `node` unavailable — skipping execution for `{tag}`");
+        return None;
+    }
+    let js = ts_to_runnable_js_loop_control(&artifact.source);
+    let mut path: PathBuf = std::env::temp_dir();
+    path.push(format!("sir_ts_lc_{}_{}.js", tag, std::process::id()));
+    std::fs::write(&path, &js).expect("write temp js");
+    let output = Command::new("node").arg(&path).output().expect("spawn node");
+    let _ = std::fs::remove_file(&path);
+    assert!(
+        output.status.success(),
+        "node exited non-zero for `{tag}`:\nstdout: {}\nstderr: {}\nsource:\n{}",
+        String::from_utf8_lossy(&output.stdout),
+        String::from_utf8_lossy(&output.stderr),
+        js,
+    );
+    let stdout = String::from_utf8(output.stdout).expect("utf8 stdout");
+    Some(stdout.trim_end_matches(['\n', '\r']).to_string())
+}
+
+fn kw_if_stmt(cond: Expr, then_stmts: Vec<Stmt>) -> Stmt {
+    Stmt::ExprStmt {
+        expr: Expr::If {
+            cond: Box::new(cond),
+            then_branch: Box::new(Block {
+                stmts: then_stmts,
+                value: Expr::NilLit { span: sp() },
+                span: sp(),
+            }),
+            else_branch: Box::new(Block {
+                stmts: vec![],
+                value: Expr::NilLit { span: sp() },
+                span: sp(),
+            }),
+            span: sp(),
+        },
+        span: sp(),
+    }
+}
+
+fn kw_local(name: &str) -> Expr {
+    Expr::VarRef { name: name.into(), scope: Scope::Local, span: sp() }
+}
+
+fn kw_int(value: i64) -> Expr {
+    Expr::IntLit { value, span: sp() }
+}
+
+fn kw_builtin(name: &str, args: Vec<Expr>) -> Expr {
+    Expr::BuiltinCall { name: name.into(), args, effects: EffectSet::PURE, span: sp() }
+}
+
+fn kw_let(name: &str, value: Expr) -> Stmt {
+    Stmt::LetStarBinding { name: name.into(), sir_type: None, value, span: sp() }
+}
+
+fn loop_control_module(name: &str, main_stmts: Vec<Stmt>, extra_features: &[Feature]) -> Module {
+    let mut features = vec![
+        Feature::Loops,
+        Feature::LoopControl,
+        Feature::MutableBindings,
+        Feature::ConsoleIO,
+        Feature::Strings,
+    ];
+    features.extend_from_slice(extra_features);
+    let main = Function {
+        name: "main".into(),
+        params: vec![],
+        return_type: None,
+        captures: vec![],
+        body: Block { stmts: main_stmts, value: Expr::NilLit { span: sp() }, span: sp() },
+        effects: EffectSet::PURE,
+        metadata: Metadata::new(),
+        span: sp(),
+    };
+    Module {
+        name: name.into(),
+        manifest: FeatureManifest::from_features(&features),
+        imports: vec![],
+        exports: vec![],
+        functions: vec![main],
+        globals: vec![],
+        metadata: Metadata::new()
+            .with_source_language("handbuilt")
+            .with_sir_version(semantic_ir::CURRENT_SIR_VERSION),
+        span: sp(),
+    }
+}
+
+#[test]
+fn while_loop_continue_skips_five_and_break_stops_past_seven_ts() {
+    // let i = 0; let sum = 0;
+    // while (i < 10) {
+    //   i = i + 1;
+    //   if (i = 5) { continue; }   // skip i == 5
+    //   if (i > 7) { break; }      // stop once i exceeds 7
+    //   sum = sum + i;
+    // }
+    // print(sum);  → 1+2+3+4 (skip 5) +6+7 = 23, then break at i=8
+    let body = Block {
+        stmts: vec![
+            Stmt::Assign {
+                name: "i".into(),
+                scope: Scope::Local,
+                value: kw_builtin("+", vec![kw_local("i"), kw_int(1)]),
+                span: sp(),
+            },
+            kw_if_stmt(
+                kw_builtin("=", vec![kw_local("i"), kw_int(5)]),
+                vec![Stmt::Continue { span: sp() }],
+            ),
+            kw_if_stmt(
+                kw_builtin(">", vec![kw_local("i"), kw_int(7)]),
+                vec![Stmt::Break { span: sp() }],
+            ),
+            Stmt::Assign {
+                name: "sum".into(),
+                scope: Scope::Local,
+                value: kw_builtin("+", vec![kw_local("sum"), kw_local("i")]),
+                span: sp(),
+            },
+        ],
+        value: Expr::NilLit { span: sp() },
+        span: sp(),
+    };
+    let main_stmts = vec![
+        kw_let("i", kw_int(0)),
+        kw_let("sum", kw_int(0)),
+        Stmt::While { cond: kw_builtin("<", vec![kw_local("i"), kw_int(10)]), body, span: sp() },
+        print(kw_local("sum")),
+    ];
+    let module = loop_control_module("loop_control_while", main_stmts, &[]);
+    if let Some(stdout) = run_loop_control_module(&module, "loop_control_while_ts") {
+        assert_eq!(stdout, "23");
+    }
+}
+
+#[test]
+fn for_each_loop_break_stops_iteration_before_the_matching_element_ts() {
+    // let sum = 0;
+    // for x in [1, 2, 3, 4, 5] {
+    //   if (x = 3) { break; }
+    //   sum = sum + x;
+    // }
+    // print(sum);  → 1 + 2 = 3 (the loop never adds 3, 4, or 5)
+    let body = Block {
+        stmts: vec![
+            kw_if_stmt(
+                kw_builtin("=", vec![kw_local("x"), kw_int(3)]),
+                vec![Stmt::Break { span: sp() }],
+            ),
+            Stmt::Assign {
+                name: "sum".into(),
+                scope: Scope::Local,
+                value: kw_builtin("+", vec![kw_local("sum"), kw_local("x")]),
+                span: sp(),
+            },
+        ],
+        value: Expr::NilLit { span: sp() },
+        span: sp(),
+    };
+    let main_stmts = vec![
+        kw_let("sum", kw_int(0)),
+        Stmt::ForEach {
+            var: "x".into(),
+            iter: Expr::SeqLit {
+                items: vec![kw_int(1), kw_int(2), kw_int(3), kw_int(4), kw_int(5)],
+                span: sp(),
+            },
+            body,
+            span: sp(),
+        },
+        print(kw_local("sum")),
+    ];
+    let module = loop_control_module("loop_control_foreach", main_stmts, &[Feature::Sequences]);
+    if let Some(stdout) = run_loop_control_module(&module, "loop_control_foreach_ts") {
+        assert_eq!(stdout, "3");
+    }
+}

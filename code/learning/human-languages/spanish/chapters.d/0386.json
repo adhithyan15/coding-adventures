@@ -1,0 +1,20 @@
+{
+  "chapter": 386,
+  "title": "Selling, Serving, Spending, Growing",
+  "label": "ch:vender-y-servir",
+  "canDo": "I can say vender, servir, gastar and crecer, and name four everyday actions.",
+  "spineNodes": [
+    "SPINE-NAME-EVERYDAY-ACTIONS"
+  ],
+  "payoff": {
+    "lesson": "ES-C386-crecer",
+    "kind": "production",
+    "summary": "Complete ES-C386-crecer: name four everyday actions, and say one thing that grows.",
+    "assesses": [
+      "ES-LEX-VENDER",
+      "ES-LEX-SERVIR",
+      "ES-LEX-GASTAR",
+      "ES-LEX-CRECER"
+    ]
+  }
+}

@@ -80,7 +80,7 @@ describe("independent (word-initial) vowels", () => {
     expect(iv.filter((_, index) => ![0, 1, 2, 6].includes(index)).every((v) => v.strokeOrder.length === 0)).toBe(true);
   });
 
-  it("keeps Malayalam independent അ, ഇ, ഉ, and എ sourced while the remaining vowels stay unverified", () => {
+  it("keeps Malayalam independent അ, ആ, ഇ, ഉ, and എ sourced while the remaining vowels stay unverified", () => {
     const malayalam = SCRIPTS.find((s) => s.script === "malayalam")!;
     const iv = malayalam.independentVowels!;
     expect(iv[0]!.glyph).toBe("അ");
@@ -88,6 +88,12 @@ describe("independent (word-initial) vowels", () => {
     expect(iv[0]!.penLifts).toBe(1);
     expect(iv[0]!.strokeOrderSource?.url).toBe(
       "https://malayalam.la.utexas.edu/resources/the-malayalam-script/",
+    );
+    expect(iv[1]!.glyph).toBe("ആ");
+    expect(iv[1]!.strokeOrder).toHaveLength(5);
+    expect(iv[1]!.penLifts).toBe(1);
+    expect(iv[1]!.strokeOrderSource?.url).toBe(
+      "https://commons.wikimedia.org/wiki/File:Ml_%E0%B4%86_order.gif",
     );
     expect(iv[2]!.glyph).toBe("ഇ");
     expect(iv[2]!.strokeOrder).toHaveLength(4);
@@ -104,7 +110,7 @@ describe("independent (word-initial) vowels", () => {
     expect(iv[6]!.glyph).toBe("എ");
     expect(iv[6]!.strokeOrder).toHaveLength(3);
     expect(iv[6]!.penLifts).toBe(1);
-    expect(iv.filter((_, index) => ![0, 2, 4, 6].includes(index)).every((v) => v.strokeOrder.length === 0)).toBe(true);
+    expect(iv.filter((_, index) => ![0, 1, 2, 4, 6].includes(index)).every((v) => v.strokeOrder.length === 0)).toBe(true);
   });
 
   it("CONTROL: they are SEPARATE from the syllabary — letters, isSyllabary and the matrix are untouched", () => {
@@ -258,6 +264,23 @@ describe("shared Perso-Arabic letters retain script-owned provenance", () => {
       "https://openbooks.library.northwestern.edu/zerozabar/chapter/te-mim-jim-che/",
     );
     expect(persian.strokeOrderSource?.url).not.toBe(urdu.strokeOrderSource?.url);
+  });
+
+  it("keeps Persian and Urdu ح zero-lift with independently sourced provenance", () => {
+    const persian = SCRIPTS.find((script) => script.script === "perso-arabic")!
+      .letters.find((entry) => entry.glyph === "ح")!;
+    const urdu = SCRIPTS.find((script) => script.script === "urdu-nastaliq")!
+      .letters.find((entry) => entry.glyph === "ح")!;
+    expect(persian.sound).toBe("h");
+    expect(urdu.sound).toBe("h");
+    expect(persian.penLifts).toBe(0);
+    expect(urdu.penLifts).toBe(0);
+    expect(persian.strokeOrder).toHaveLength(2);
+    expect(urdu.strokeOrder).toHaveLength(2);
+    expect(persian.strokeOrder[0]).toMatch(/head.*left to right/i);
+    expect(urdu.strokeOrder[0]).toMatch(/pointed hooked head/i);
+    expect(persian.strokeOrderSource?.url).not.toBe(urdu.strokeOrderSource?.url);
+    expect(urdu.notes).toMatch(/baṛī he.*Arabic-derived.*chhoṭī he.*do-chashmī he/i);
   });
 
   it("keeps Urdu ھ as one sourced two-eyed aspiration path", () => {

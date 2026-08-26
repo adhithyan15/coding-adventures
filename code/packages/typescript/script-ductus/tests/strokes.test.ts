@@ -200,6 +200,8 @@ const ARABIC_TAA = DUCTUS[ductusKey("arabic", "ت")];
 const ARABIC_THAA = DUCTUS[ductusKey("arabic", "ث")];
 const ARABIC_JEEM = DUCTUS[ductusKey("arabic", "ج")];
 const ARABIC_HAA = DUCTUS[ductusKey("arabic", "ح")];
+const PERSIAN_HAH = DUCTUS[ductusKey("perso-arabic", "ح")];
+const URDU_BARI_HE = DUCTUS[ductusKey("urdu-nastaliq", "ح")];
 const ARABIC_KHAA = DUCTUS[ductusKey("arabic", "خ")];
 const PERSIAN_KHEH = DUCTUS[ductusKey("perso-arabic", "خ")];
 const URDU_KHE = DUCTUS[ductusKey("urdu-nastaliq", "خ")];
@@ -259,6 +261,7 @@ const TELUGU_AA = DUCTUS[ductusKey("telugu", "ఆ")];
 const TELUGU_I = DUCTUS[ductusKey("telugu", "ఇ")];
 const TELUGU_E = DUCTUS[ductusKey("telugu", "ఎ")];
 const MALAYALAM_A = DUCTUS[ductusKey("malayalam", "അ")];
+const MALAYALAM_AA = DUCTUS[ductusKey("malayalam", "ആ")];
 const MALAYALAM_I = DUCTUS[ductusKey("malayalam", "ഇ")];
 const MALAYALAM_U = DUCTUS[ductusKey("malayalam", "ഉ")];
 const MALAYALAM_E = DUCTUS[ductusKey("malayalam", "എ")];
@@ -614,12 +617,14 @@ describe("handwriting ductus", () => {
         const inInk = makeInInk(glyph().contours);
         for (let s = 0; s < letter.strokes.length; s++) {
           const frac = fractionOnInk(penPath(letter.strokes[s]), inInk);
-          // Five cited handwriting animations keep a run continuous across a
+          // Six cited handwriting animations keep a run continuous across a
           // gap in Noto's printed contours: Gujarati હ and Devanagari ख's
           // upper-right loop, Telugu అ's right-lobe return, and Malayalam അ's
           // lower-loop return, plus Kannada ಆ's loop-to-bowl and loop-to-bar
-          // joins. Permit only those documented bridges; every other authored
-          // path retains the stricter general-purpose floor.
+          // joins, while Malayalam ആ circles its right loop and descender in
+          // one uninterrupted run across Noto's separated print contours.
+          // Permit only those documented bridges; every other authored path
+          // retains the stricter general-purpose floor.
           const minimumInkFit = letter.script === "gujarati" && letter.glyph === "હ"
             ? 0.92
             : letter.script === "devanagari" && letter.glyph === "ख"
@@ -628,6 +633,8 @@ describe("handwriting ductus", () => {
               ? 0.96
               : letter.script === "malayalam" && letter.glyph === "അ"
                 ? 0.96
+              : letter.script === "malayalam" && letter.glyph === "ആ"
+                ? 0.89
               : letter.script === "kannada" && letter.glyph === "ಆ"
                 ? 0.92
               : 0.97;
@@ -862,6 +869,22 @@ describe("handwriting ductus", () => {
         "curl left around the lower inner loop",
       ],
     ]);
+  });
+
+  it("Malayalam ആ lifts once after the standalone left outer arch", () => {
+    expect(penLifts(MALAYALAM_AA)).toBe(1);
+    expect(MALAYALAM_AA.strokes.map((stroke) => stroke.segments.map((segment) => segment.label))).toEqual([
+      ["climb the left outer arch and curve inward at the top"],
+      [
+        "turn inward around the compact inner curl and circle the broad lower loop",
+        "sweep up through the central crown and descend the upright",
+        "retrace the upright and sweep around the rounded right loop",
+        "descend the far side and curl left below the line",
+      ],
+    ]);
+    expect(MALAYALAM_AA.source.url).toBe(
+      "https://commons.wikimedia.org/wiki/File:Ml_%E0%B4%86_order.gif",
+    );
   });
 
   it("Malayalam ഇ keeps all four animated movements in one run", () => {
@@ -3894,6 +3917,20 @@ describe("handwriting ductus", () => {
     expect(Math.min(...bowl.map((point) => point.y))).toBeLessThan(
       Math.min(...head.map((point) => point.y)),
     );
+  });
+
+  it("Persian and Urdu independent ح keep separate sources for one body-first run", () => {
+    for (const letter of [PERSIAN_HAH, URDU_BARI_HE]) {
+      expect(penLifts(letter)).toBe(0);
+      expect(letter.strokes).toHaveLength(1);
+      expect(letter.strokes[0].segments).toHaveLength(2);
+      expect(letter.strokes[0].segments[0].path.at(-1)).toEqual(
+        letter.strokes[0].segments[1].path[0],
+      );
+    }
+    expect(PERSIAN_HAH.source.url).not.toBe(URDU_BARI_HE.source.url);
+    expect(PERSIAN_HAH.source.citation).toMatch(/Persian Online.*ح.*00:42.?00:46/i);
+    expect(URDU_BARI_HE.source.citation).toMatch(/Zer o Zabar.*baṛī he.*ح/i);
   });
 
   it("Arabic independent خ draws its body first, then lifts once for the upper dot", () => {

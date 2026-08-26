@@ -2,6 +2,21 @@
 
 ## Unreleased
 
+### Added — source-verified Persian and Urdu hah
+
+- Add script-scoped Persian and Urdu **ح** as independently sourced body-first,
+  zero-lift head-and-bowl runs.
+- Keep both paths separate from Arabic **ح**'s source-specific two-run order
+  while fitting the same bundled Noto Naskh fallback outline.
+
+### Added — source-verified Malayalam independent aa
+
+- Add Malayalam **ആ** as two source-backed pen-down runs: draw the left outer
+  arch, lift once, then carry the inner curl through the lower loop, central
+  upright, rounded right loop, and below-line finish.
+- Preserve the animation's one-lift order while fitting the medians to the
+  bundled Noto Sans Malayalam outline.
+
 ### Added — source-verified Kannada independent aa
 
 - Add Kannada **ಆ** as two source-backed pen-down runs: join the compact left

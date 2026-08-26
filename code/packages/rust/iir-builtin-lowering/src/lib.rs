@@ -151,6 +151,12 @@ pub use dyn_repr::lower_dyn_repr;
 // is concretely typed. Runs after `lower_heap_builtins`; a no-op for functions
 // that touch no heap op.
 pub use dyn_repr_structural::lower_dyn_repr_structural;
+// The per-function "is this on the uniform-anyref value model" classifier
+// `lower_dyn_repr_structural` partitions a module's functions with. Re-exported
+// so a sibling scalar-concretization pass in a downstream crate (e.g.
+// `lang-aot::concretize_scalar_any_for_wasm`) can partition against the exact
+// same set instead of recomputing its own, possibly-disagreeing, heuristic.
+pub use dyn_repr_structural::lisp_functions;
 // Re-export the compile-time symbol interning pass (LANG77 / L3b-2c-3):
 // rewrites `const Var(name):symbol` → the tagged immediate `(id<<32)|TAG_SYMBOL`
 // so native symbols carry identity (for `EQ`) without runtime interning.

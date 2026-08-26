@@ -205,14 +205,11 @@ fn collect_ancestry_in_stmt(
                 span
             );
         }
-        // SIR16 addendum: `LoopControl` not accepted by this backend yet
-        // — same rationale as the SIR29 arm just above.
-        Stmt::Break { span, .. } | Stmt::Continue { span, .. } => {
-            panic!(
-                "typescript backend reached a Stmt::Break/Continue node at {} — capability check should have rejected it",
-                span
-            );
-        }
+        // SIR16 addendum: `Stmt::Break`/`Stmt::Continue` carry only a
+        // `span`, no nested expression or statement, so there is nothing
+        // to walk — a bare `break;`/`continue;` can never itself contain
+        // a `ClassDef`.
+        Stmt::Break { .. } | Stmt::Continue { .. } => {}
     }
 }
 
@@ -394,14 +391,9 @@ fn stmt_uses_builtin(s: &Stmt, name: &str) -> bool {
                 span
             );
         }
-        // SIR16 addendum: `LoopControl` not accepted by this backend yet
-        // — same rationale as the SIR29 arm just above.
-        Stmt::Break { span, .. } | Stmt::Continue { span, .. } => {
-            panic!(
-                "typescript backend reached a Stmt::Break/Continue node at {} — capability check should have rejected it",
-                span
-            );
-        }
+        // SIR16 addendum: `Stmt::Break`/`Stmt::Continue` carry no
+        // expression, so they can never "use" any builtin.
+        Stmt::Break { .. } | Stmt::Continue { .. } => false,
     }
 }
 
@@ -951,14 +943,9 @@ fn collect_stmt_assigned(s: &Stmt, out: &mut HashSet<String>) {
                 span
             );
         }
-        // SIR16 addendum: `LoopControl` not accepted by this backend yet —
-        // same rationale as the SIR29 arm just above.
-        Stmt::Break { span, .. } | Stmt::Continue { span, .. } => {
-            panic!(
-                "typescript backend reached a Stmt::Break/Continue node at {} — capability check should have rejected it",
-                span
-            );
-        }
+        // SIR16 addendum: `Stmt::Break`/`Stmt::Continue` carry no
+        // expression, so they can never assign a local.
+        Stmt::Break { .. } | Stmt::Continue { .. } => {}
     }
 }
 
@@ -1178,6 +1165,43 @@ fn emit_stmt(out: &mut String, s: &Stmt, indent: usize) {
                 let _ = write!(out, "{}{} = ", pad, sanitize_ident(global));
                 emit_expr(out, value, indent);
                 out.push_str(";\n");
+            } else if let Expr::If {
+                cond,
+                then_branch,
+                else_branch,
+                ..
+            } = expr
+            {
+                // A bare `if` used for effect only (its value is
+                // discarded — this is `Stmt::ExprStmt`, which never
+                // captures a value at all) gets a REAL native
+                // `if (...) { … } else { … }` statement here, not the
+                // ternary-shaped `(cond ? (() => { … })() : (() => {
+                // … })())` the generic `emit_expr` path below produces
+                // for `Expr::If` in *value* position.
+                //
+                // This isn't just a style improvement: that generic path
+                // (`emit_block_as_expr`) wraps each non-empty branch in
+                // an arrow-function IIFE so it can `return` a value, and
+                // `break`/`continue` (SIR16 addendum, `Feature::
+                // LoopControl`) cannot cross a TypeScript function
+                // boundary — `if (cond) { break; }` inside a `while` is
+                // the single most common way source code uses `break`/
+                // `continue` at all, so routing it through the IIFE path
+                // made every such program a `tsc`/runtime
+                // `SyntaxError: Illegal break statement`, not just a
+                // stylistic wart. Mirrors `semantic-ir-to-javascript`'s
+                // own identically-reasoned fix (task #62) — confirmed by
+                // direct inspection that this backend's `Expr::If` and
+                // `emit_block_as_expr` share the exact same IIFE shape.
+                out.push_str(&pad);
+                out.push_str("if (__Sir.truthy(");
+                emit_expr(out, cond, indent);
+                out.push_str(")) {\n");
+                emit_block_as_stmts(out, then_branch, indent + 2);
+                let _ = writeln!(out, "{pad}}} else {{");
+                emit_block_as_stmts(out, else_branch, indent + 2);
+                let _ = writeln!(out, "{pad}}}");
             } else {
                 let _ = write!(out, "{}", pad);
                 emit_expr(out, expr, indent);
@@ -1493,16 +1517,22 @@ fn emit_stmt(out: &mut String, s: &Stmt, indent: usize) {
                 span
             );
         }
-        // SIR16 addendum: `LoopControl` not accepted by this backend yet
-        // (no `Feature::LoopControl` in `accepts_features`) — same
-        // rationale as the SIR29 arm just above. A future PR wiring this
-        // backend to the feature would replace this arm with real
-        // `break;`/`continue;` emission.
-        Stmt::Break { span, .. } | Stmt::Continue { span, .. } => {
-            panic!(
-                "typescript backend reached a Stmt::Break/Continue node at {} — capability check should have rejected it",
-                span
-            );
+        // SIR16 addendum: bare loop-control statements. A trivial 1:1
+        // emission — `While`/`ForRange`/`ForEach`'s bodies above are
+        // already inlined directly into a real native loop with no
+        // closure boundary in the way, so a bare `break;`/`continue;`
+        // here always targets the correct enclosing TS loop. The
+        // validator itself guarantees the nearest enclosing loop is
+        // never a `ForRange` (see `Feature::LoopControl`'s own doc
+        // comment in `semantic-ir::manifest`), so there's no case this
+        // backend needs to reject or special-case here. Mirrors
+        // `semantic-ir-to-javascript`'s own identical emission (task
+        // #62) — this backend's loops share the same closure-free shape.
+        Stmt::Break { .. } => {
+            let _ = writeln!(out, "{pad}break;");
+        }
+        Stmt::Continue { .. } => {
+            let _ = writeln!(out, "{pad}continue;");
         }
     }
 }
@@ -3700,5 +3730,77 @@ mod tests {
             0,
         );
         assert_eq!(out, r#"__SirOop.symToProc(__Sir.intern("upcase"))"#);
+    }
+
+    // ── SIR16 addendum: loop control (task #63) ─────────────────────────
+
+    #[test]
+    fn emit_break_is_bare_break() {
+        let mut out = String::new();
+        emit_stmt(&mut out, &Stmt::Break { span: s() }, 0);
+        assert_eq!(out, "break;\n");
+    }
+
+    #[test]
+    fn emit_continue_is_bare_continue() {
+        let mut out = String::new();
+        emit_stmt(&mut out, &Stmt::Continue { span: s() }, 0);
+        assert_eq!(out, "continue;\n");
+    }
+
+    #[test]
+    fn emit_while_with_break_and_continue_in_body() {
+        // `while (true) { continue; break; }` — both statements land
+        // inside the native `while`'s body, at the loop body's own
+        // indentation.
+        let st = Stmt::While {
+            cond: Expr::BoolLit { value: true, span: s() },
+            body: Block {
+                stmts: vec![Stmt::Continue { span: s() }, Stmt::Break { span: s() }],
+                value: Expr::NilLit { span: s() },
+                span: s(),
+            },
+            span: s(),
+        };
+        let mut out = String::new();
+        emit_stmt(&mut out, &st, 0);
+        assert!(out.contains("  continue;\n"), "got {out}");
+        assert!(out.contains("  break;\n"), "got {out}");
+        assert!(out.trim_end().ends_with('}'));
+    }
+
+    #[test]
+    fn bare_if_used_as_a_statement_emits_native_if_else_not_ternary_iife() {
+        // The crux of task #63's own fix: `Stmt::ExprStmt{Expr::If{..}}`
+        // must NOT route through the generic value-position `Expr::If`
+        // codegen (a `cond ? (IIFE) : (IIFE)` ternary) — a `break`/
+        // `continue` inside either branch cannot cross that IIFE's own
+        // function boundary. It must emit a real native `if () {} else
+        // {}` statement instead.
+        let st = Stmt::ExprStmt {
+            expr: Expr::If {
+                cond: Expr::VarRef { name: "x".into(), scope: Scope::Local, span: s() }.into(),
+                then_branch: Block {
+                    stmts: vec![Stmt::Break { span: s() }],
+                    value: Expr::NilLit { span: s() },
+                    span: s(),
+                }
+                .into(),
+                else_branch: Block { stmts: vec![], value: Expr::NilLit { span: s() }, span: s() }
+                    .into(),
+                span: s(),
+            },
+            span: s(),
+        };
+        let mut out = String::new();
+        emit_stmt(&mut out, &st, 0);
+        assert!(
+            out.starts_with("if (__Sir.truthy("),
+            "expected a native `if`, got {out}"
+        );
+        assert!(out.contains("break;\n"), "got {out}");
+        assert!(!out.contains("=>"), "must not route through an arrow-function IIFE: {out}");
+        assert!(!out.contains('?'), "must not route through the value-position ternary: {out}");
+        assert!(out.contains("} else {"), "got {out}");
     }
 }

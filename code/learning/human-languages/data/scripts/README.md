@@ -283,13 +283,17 @@ below. The full-alphabet source then demonstrates Persian-added **پ** at
 in left, right, then lower-center order. This added corpus row does not change
 HL-C09's fixed 228 prose entries. The next starter entry, **ت**, repeats the
 right-to-left bowl at 00:22–00:27, lifts to place the left dot above, then lifts
-  again for the right dot. The **خ** demonstration at 00:49–00:54 completes its
+  again for the right dot. The **ح** demonstration at 00:42–00:46 keeps its
+  short upper head and deep lower bowl in one uninterrupted body-first run;
+  this zero-lift row stays Persian-scoped rather than borrowing Arabic's
+  separately demonstrated stem-first order or Urdu provenance. The **خ**
+  demonstration at 00:49–00:54 completes its
   short head and deep bowl before lifting once for the dot above; this row stays
   Persian-scoped rather than borrowing Arabic or Urdu provenance. The earlier
   **چ** demonstration at 00:35–00:41 draws that same body first, then lifts for
   the lower-left, lower-right, and lower-center dots. Its Persian-scoped source
   remains independent from Urdu **چ**, even though both use the same fitted Noto
-  geometry. All five authored paths are checked against their vendored isolated
+  geometry. All six authored paths are checked against their vendored isolated
   Noto Naskh outlines.
   The **د** row at 01:04–01:06 folds from
 its upper tip through the shoulder and left along the baseline without lifting.
@@ -356,7 +360,12 @@ queue: **و**, not ه, follows ن. Its 02:43–02:45 demonstration loops the sma
   animation completes the pointed head and deep bowl in one body-first run, then
   lifts once for the dot above. The prose identifies it as the **ج** shape with
   its dot moved above, while the script-scoped row remains independent of Arabic
-  and Persian. Urdu **ر** follows from the next source-backed chapter as one
+  and Persian. Urdu baṛī he **ح** follows Chapter 6: its independent handwriting
+  animation carries the pointed hooked head into the deep bowl in one
+  uninterrupted body-first run. The prose identifies it as the dotless
+  jīm-series shape used in Arabic-derived words; the zero-lift learner path
+  remains separate from Persian and Arabic provenance. Urdu **ر** follows from
+  the next source-backed chapter as one
   uninterrupted downward line that curves left. Its zero-lift learner path
   preserves the chapter's separate final-form motion and its Naskh/Nastaliq
   distinction without conflating them with the independent form. Urdu **و**
@@ -1041,7 +1050,7 @@ turn around the compact left loop, sweep through the joined lower curves,
 climb the rounded right side, then carry the tall outer arch over and finish
 left. Its four-movement Noto Sans Kannada fit preserves that zero-lift order
 while recording loop-width, lower-bowl, and arch-height variation.
-Malayalam has cited independent **അ** and **എ** rows, base consonant **ഴ**, and
+Malayalam has cited independent **അ**, **ആ**, and **എ** rows, base consonant **ഴ**, and
 standalone chillus **ൽ**, **ൻ**, **ൾ**, and **ർ**. Sriveenkat's 57-frame
 animation writes chillu RR **ർ** in one uninterrupted run: climb around the
 left arch, cross the upper shoulder, circle the right loop, and finish in the
@@ -1052,6 +1061,11 @@ writes chillu LL **ൾ** in one uninterrupted run: descend around the left bowl,
 climb the central rise, cross the upper shoulder, circle the right loop, and
 finish in the hook above the line. Its four-movement Noto Sans Malayalam fit
 preserves that zero-lift order while recording bowl, loop, and hook variation.
+The same author's 73-frame Gayathri animation writes independent **ആ** in two
+runs: climb the left outer arch; lift once, then carry the inner curl through
+the lower loop, central upright, rounded right loop, and below-line finish.
+Its five-movement Noto Sans Malayalam fit preserves that one-lift order while
+recording arch-width, loop-roundness, and descender-depth variation.
 An absent `penLifts` remains unverified, never an implied zero.
 
 ## Adding a script (e.g. Gujarati, Bengali, Hebrew)

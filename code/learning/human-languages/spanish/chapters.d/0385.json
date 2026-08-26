@@ -1,0 +1,20 @@
+{
+  "chapter": 385,
+  "title": "Four Things the Hands Do",
+  "label": "ch:usar-y-tocar",
+  "canDo": "I can say usar, tocar, mezclar and colgar, and name four everyday actions.",
+  "spineNodes": [
+    "SPINE-NAME-EVERYDAY-ACTIONS"
+  ],
+  "payoff": {
+    "lesson": "ES-C385-colgar",
+    "kind": "production",
+    "summary": "Complete ES-C385-colgar: name four everyday actions your hands do, and say which one you did today.",
+    "assesses": [
+      "ES-LEX-USAR",
+      "ES-LEX-TOCAR",
+      "ES-LEX-MEZCLAR",
+      "ES-LEX-COLGAR"
+    ]
+  }
+}

@@ -5976,6 +5976,74 @@
       "json": "spanish/narration/ch384.json",
       "textHash": "fnv1a64:b337c2012efb15b3",
       "jsonHash": "fnv1a64:924156f9780ae1c6"
+    },
+    {
+      "language": "spanish",
+      "chapter": 385,
+      "sourceHash": "fnv1a64:0e6d9322965ed320",
+      "lessonIds": [
+        "ES-C385-usar",
+        "ES-C385-tocar",
+        "ES-C385-mezclar",
+        "ES-C385-colgar"
+      ],
+      "voiceLessons": 4,
+      "drivablePrefix": 4,
+      "text": "spanish/narration/ch385.txt",
+      "json": "spanish/narration/ch385.json",
+      "textHash": "fnv1a64:7ba3b83d1c3c07ea",
+      "jsonHash": "fnv1a64:fb635d2ede0c1883"
+    },
+    {
+      "language": "spanish",
+      "chapter": 386,
+      "sourceHash": "fnv1a64:cecadbdd604efb49",
+      "lessonIds": [
+        "ES-C386-vender",
+        "ES-C386-servir",
+        "ES-C386-gastar",
+        "ES-C386-crecer"
+      ],
+      "voiceLessons": 4,
+      "drivablePrefix": 4,
+      "text": "spanish/narration/ch386.txt",
+      "json": "spanish/narration/ch386.json",
+      "textHash": "fnv1a64:b6cfb1f14600a5f4",
+      "jsonHash": "fnv1a64:0ef10033b59f8ded"
+    },
+    {
+      "language": "spanish",
+      "chapter": 387,
+      "sourceHash": "fnv1a64:7019253a4b797c52",
+      "lessonIds": [
+        "ES-C387-quemar",
+        "ES-C387-cruzar",
+        "ES-C387-volar",
+        "ES-C387-girar"
+      ],
+      "voiceLessons": 4,
+      "drivablePrefix": 4,
+      "text": "spanish/narration/ch387.txt",
+      "json": "spanish/narration/ch387.json",
+      "textHash": "fnv1a64:1244ebd00c7bc045",
+      "jsonHash": "fnv1a64:e68f60f875caf790"
+    },
+    {
+      "language": "spanish",
+      "chapter": 388,
+      "sourceHash": "fnv1a64:225e68930e7f91cb",
+      "lessonIds": [
+        "ES-C388-empujar",
+        "ES-C388-lanzar",
+        "ES-C388-borrar",
+        "ES-C388-gritar"
+      ],
+      "voiceLessons": 4,
+      "drivablePrefix": 4,
+      "text": "spanish/narration/ch388.txt",
+      "json": "spanish/narration/ch388.json",
+      "textHash": "fnv1a64:5bd01678fc42188f",
+      "jsonHash": "fnv1a64:ac6c391bd01b7971"
     }
   ],
   "findings": []

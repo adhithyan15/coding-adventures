@@ -39,7 +39,7 @@ describe("real curriculum", () => {
     expect(scripts.devanagari!.complete).toBe(true);
   });
 
-  it("keeps the cross-script closure queue measured after Kannada aa", () => {
+  it("keeps the cross-script closure queue measured after Persian and Urdu hah", () => {
     const candrakkala = scripts.malayalam!.marks!.find((mark) => mark.mark === "്")!;
     expect(candrakkala.role).toBe("virama");
     expect(candrakkala.compositionOrder).toEqual([
@@ -251,6 +251,27 @@ describe("real curriculum", () => {
     );
     expect(malayalamA.strokeOrderSource?.variation).toMatch(
       /word-initial forms.*click-to-play handwriting clip.*left-and-central body.*one lifted right-side run.*outer arch.*lower inner loop.*Noto Sans Malayalam/i,
+    );
+
+    const malayalamAa = scripts.malayalam!.independentVowels!.find((entry) => entry.glyph === "ആ")!;
+    expect(malayalamAa.sound).toBe("ā");
+    expect(malayalamAa.penLifts).toBe(1);
+    expect(malayalamAa.strokeOrder).toEqual([
+      "climb the left outer arch and curve inward at the top",
+      "after one lift, turn inward around the compact inner curl and circle the broad lower loop",
+      "without lifting, sweep up through the central crown and descend the upright",
+      "without lifting, retrace the upright and sweep around the rounded right loop",
+      "without lifting, descend the far side and curl left below the line",
+    ]);
+    expect(malayalamAa.strokeOrderNote).toMatch(/five visible movements.*two pen-down runs.*after one lift/i);
+    expect(malayalamAa.strokeOrderSource?.url).toBe(
+      "https://commons.wikimedia.org/wiki/File:Ml_%E0%B4%86_order.gif",
+    );
+    expect(malayalamAa.strokeOrderSource?.citation).toMatch(
+      /Sriveenkat.*Ml ആ order\.gif.*Malayalam independent vowel ആ.*Gayathri.*73 frames.*11 seconds.*Wikimedia Commons.*1 June 2023/i,
+    );
+    expect(malayalamAa.strokeOrderSource?.variation).toMatch(
+      /CC BY-SA 4\.0.*left outer arch.*frames 2.?9.*disconnected second run.*frame 10.*inner curl.*lower loop.*central upright.*rounded right loop.*below-line finish.*Noto Sans Malayalam.*one-lift order/i,
     );
 
     const malayalamI = scripts.malayalam!.independentVowels!.find((entry) => entry.glyph === "ഇ")!;
@@ -658,6 +679,18 @@ describe("real curriculum", () => {
       /body-first.*clockwise.*closed head.*broad bowl.*lift once.*dot.*Persian-scoped/i,
     );
 
+    const persianHah = scripts["perso-arabic"]!.letters.find((letter) => letter.glyph === "ح")!;
+    expect(persianHah.sound).toBe("h");
+    expect(persianHah.penLifts).toBe(0);
+    expect(persianHah.strokeOrder).toEqual([
+      "draw the short upper head from left to right",
+      "continue down and around the deep bowl without lifting",
+    ]);
+    expect(persianHah.strokeOrderSource?.citation).toMatch(/Persian Online.*ح.*00:42–00:46/i);
+    expect(persianHah.strokeOrderSource?.variation).toMatch(
+      /body-first.*continuous Naskh.*left to right.*hooked descent.*deep lower bowl.*without lifting.*Persian-scoped/i,
+    );
+
     const persianRa = scripts["perso-arabic"]!.letters.find((letter) => letter.glyph === "ر")!;
     expect(persianRa.strokeOrder).toEqual([
       "begin at the upper tip and descend through the short stroke",
@@ -714,6 +747,23 @@ describe("real curriculum", () => {
     );
     expect(urduFe.strokeOrderSource?.variation).toMatch(
       /clockwise.*above the main line.*shallow curved tail.*lift.*dot.*looped head.*Noto Naskh fallback.*Nastaliq.*Urdu-specific/i,
+    );
+
+    const urduBariHe = scripts["urdu-nastaliq"]!.letters.find((letter) => letter.glyph === "ح")!;
+    expect(urduBariHe.sound).toBe("h");
+    expect(urduBariHe.penLifts).toBe(0);
+    expect(urduBariHe.strokeOrder).toEqual([
+      "sweep left through the pointed hooked head",
+      "continue down and around the deep bowl without lifting",
+    ]);
+    expect(urduBariHe.strokeOrderSource?.url).toBe(
+      "https://openbooks.library.northwestern.edu/zerozabar/chapter/sin-shin-bari-he-nun-nun-ghunna/",
+    );
+    expect(urduBariHe.strokeOrderSource?.citation).toMatch(
+      /Zer o Zabar.*Sīn.*shīn.*baṛī he.*independent ح handwriting animation.*Northwestern.*2026/i,
+    );
+    expect(urduBariHe.strokeOrderSource?.variation).toMatch(
+      /pointed hooked head.*deep bowl.*one uninterrupted body-first stroke.*Arabic-derived words.*Noto Naskh fallback.*Nastaliq.*Urdu-specific/i,
     );
 
     const urduPe = scripts["urdu-nastaliq"]!.letters.find((letter) => letter.glyph === "پ")!;
@@ -951,6 +1001,11 @@ describe("real curriculum", () => {
     );
     expect(missingByScript.get("kannada.json")?.has("ಆ")).toBe(false);
     expect(affected.get("ಆ") ?? 0).toBe(0);
+    expect(missingByScript.get("malayalam.json")?.has("ആ")).toBe(false);
+    expect(affected.get("ആ") ?? 0).toBe(0);
+    expect(missingByScript.get("perso-arabic.json")?.has("ح")).toBe(false);
+    expect(missingByScript.get("urdu-nastaliq.json")?.has("ح")).toBe(false);
+    expect(affected.get("ح") ?? 0).toBe(0);
     const persianShin = scripts["perso-arabic"]!.letters.find((entry) => entry.glyph === "ش")!;
     expect(persianShin.sound).toBe("sh");
     expect(persianShin.penLifts).toBe(3);
@@ -983,7 +1038,7 @@ describe("real curriculum", () => {
     expect(affected.get("ی") ?? 0).toBe(0);
     expect(
       [...affected.entries()].sort((left, right) => right[1] - left[1])[0],
-    ).toEqual(["ആ", 6]);
+    ).toEqual(["ఉ", 6]);
   });
 
   it("loaded every track (17+ and growing)", () => {

@@ -18,7 +18,7 @@ use diagram_ir::{
 };
 use std::collections::{BTreeSet, HashMap};
 
-pub const VERSION: &str = "0.25.0";
+pub const VERSION: &str = "0.26.0";
 
 // ── Constants ─────────────────────────────────────────────────────────────
 
@@ -232,6 +232,7 @@ fn date_to_days(source: &str, format: &GanttDateFormat) -> Option<f64> {
     let mut rest = source;
     let (mut year, mut month, mut day) = (1970_i64, 1_i64, 1_i64);
     let (mut hour, mut minute, mut second, mut millisecond) = (0_i64, 0_i64, 0_i64, 0_i64);
+    let mut timezone_offset_minutes = 0_i64;
     for part in &format.parts {
         match part {
             GanttDateFormatPart::Literal(literal) => rest = rest.strip_prefix(literal)?,
@@ -256,6 +257,12 @@ fn date_to_days(source: &str, format: &GanttDateFormat) -> Option<f64> {
             GanttDateFormatPart::Minute => (minute, rest) = take_number(rest, 2, 2)?,
             GanttDateFormatPart::Second => (second, rest) = take_number(rest, 2, 2)?,
             GanttDateFormatPart::Millisecond => (millisecond, rest) = take_number(rest, 3, 3)?,
+            GanttDateFormatPart::TimezoneOffsetColon => {
+                (timezone_offset_minutes, rest) = take_timezone_offset(rest, true)?;
+            }
+            GanttDateFormatPart::TimezoneOffsetCompact => {
+                (timezone_offset_minutes, rest) = take_timezone_offset(rest, false)?;
+            }
             GanttDateFormatPart::UnixSeconds | GanttDateFormatPart::UnixMilliseconds => return None,
         }
     }
@@ -266,7 +273,18 @@ fn date_to_days(source: &str, format: &GanttDateFormat) -> Option<f64> {
     if hour > 23 || minute > 59 || second > 59 || millisecond > 999 { return None; }
     let seconds = hour * 3600 + minute * 60 + second;
     Some(days_from_civil(year, month, day) as f64
-        + seconds as f64 / 86_400.0 + millisecond as f64 / 86_400_000.0)
+        + seconds as f64 / 86_400.0 + millisecond as f64 / 86_400_000.0
+        - timezone_offset_minutes as f64 / 1_440.0)
+}
+
+fn take_timezone_offset(source: &str, colon: bool) -> Option<(i64, &str)> {
+    if let Some(rest) = source.strip_prefix('Z') { return Some((0, rest)); }
+    let sign = match source.as_bytes().first()? { b'+' => 1, b'-' => -1, _ => return None };
+    let (hour, rest) = take_number(&source[1..], 2, 2)?;
+    let rest = if colon { rest.strip_prefix(':')? } else { rest };
+    let (minute, rest) = take_number(rest, 2, 2)?;
+    if hour > 23 || minute > 59 { return None; }
+    Some((sign * (hour * 60 + minute), rest))
 }
 
 fn take_number(source: &str, minimum: usize, maximum: usize) -> Option<(i64, &str)> {
@@ -938,7 +956,7 @@ mod tests {
 
     #[test]
     fn version_exists() {
-        assert_eq!(crate::VERSION, "0.25.0");
+        assert_eq!(crate::VERSION, "0.26.0");
     }
 
     #[test]
@@ -1099,6 +1117,40 @@ mod tests {
         }).collect::<Vec<_>>();
         assert_eq!(widths.len(), 2);
         assert!((widths[0] - widths[1]).abs() < 0.01);
+    }
+
+    #[test]
+    fn gantt_layout_normalizes_typed_timezone_offsets() {
+        let mut diagram = simple_gantt();
+        let TemporalBody::Gantt(gantt) = &mut diagram.body else { unreachable!() };
+        gantt.date_format = GanttDateFormat {
+            source: "YYYY-MM-DD[T]HH:mmZ".into(),
+            parts: vec![
+                GanttDateFormatPart::Year4,
+                GanttDateFormatPart::Literal("-".into()),
+                GanttDateFormatPart::Month2,
+                GanttDateFormatPart::Literal("-".into()),
+                GanttDateFormatPart::Day2,
+                GanttDateFormatPart::Literal("T".into()),
+                GanttDateFormatPart::Hour24,
+                GanttDateFormatPart::Literal(":".into()),
+                GanttDateFormatPart::Minute,
+                GanttDateFormatPart::TimezoneOffsetColon,
+            ],
+        };
+        gantt.sections[0].tasks[0].start = TaskStart::Date("2026-01-02T12:00+02:00".into());
+        gantt.sections[0].tasks[0].duration = GanttDuration { value: 2.0, unit: GanttDurationUnit::Hours };
+        gantt.sections[0].tasks[1].start = TaskStart::Date("2026-01-02T10:00Z".into());
+        gantt.sections[0].tasks[1].duration = GanttDuration { value: 2.0, unit: GanttDurationUnit::Hours };
+
+        let layout = layout_temporal_diagram(&diagram, 800.0);
+        let bars = layout.items.iter().filter_map(|item| match item {
+            LayoutedTemporalItem::TaskBar { x, width, .. } => Some((*x, *width)),
+            _ => None,
+        }).collect::<Vec<_>>();
+        assert_eq!(bars.len(), 2);
+        assert!((bars[0].0 - bars[1].0).abs() < 0.01);
+        assert!((bars[0].1 - bars[1].1).abs() < 0.01);
     }
 
     #[test]
