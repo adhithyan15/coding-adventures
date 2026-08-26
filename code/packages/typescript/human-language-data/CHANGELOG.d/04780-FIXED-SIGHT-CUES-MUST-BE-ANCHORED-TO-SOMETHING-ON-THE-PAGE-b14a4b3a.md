@@ -38,3 +38,4 @@
   atomic, because the unbounded form walked to end-of-text from every `!` in the
   body (49 s on 400 KB of `![`, now ~70 ms, with a test pinning the class).
 
+
