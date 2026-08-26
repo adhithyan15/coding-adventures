@@ -1656,13 +1656,252 @@ fn enhanced_for_loop_with_var_is_unsupported() {
     );
 }
 
-// ── M2a: `switch` still has no SIR IR at all ─────────────────────────────
+// ── task #69: `switch` (SIR30, `Stmt::Switch`/`Feature::Switch`) ─────────
+//
+// No backend accepts `Feature::Switch` yet (see SIR30's own "Backend
+// status" — this is the same "IR ahead of both ends" state
+// `Feature::LoopControl` itself passed through between task #61's own
+// IR-landing and task #62's first-adopter backend), so unlike
+// `loop_control_java_execution.rs`'s real `node`-execution proof for
+// `break`/`continue`, these tests are all structural-only: they assert
+// the lowered `Module` both compiles and passes `semantic_ir::validate()`
+// — not just that lowering itself didn't panic/error.
 
 #[test]
-fn switch_statement_is_unsupported() {
-    let err =
-        compile_source(&wrap("int x = 1; switch (x) { default: break; }"), "prog").unwrap_err();
+fn switch_with_default_lowers_to_stmt_switch_and_declares_feature_switch() {
+    let m = compile_ok(&wrap(
+        "int x = 1; int y = 0; switch (x) { case 1: y = 10; break; default: y = 20; }",
+    ));
+    assert!(m.manifest.contains(Feature::Switch));
+    match &main_fn(&m).body.stmts[2] {
+        Stmt::Switch {
+            cases, default, ..
+        } => {
+            assert_eq!(cases.len(), 1);
+            assert!(matches!(cases[0].body.as_slice(), [_, Stmt::Break { .. }]));
+            assert!(default.is_some());
+            assert_eq!(default.as_ref().unwrap().len(), 1);
+        }
+        other => panic!("expected Switch, got {other:?}"),
+    }
+}
+
+#[test]
+fn switch_with_no_default_lowers_default_to_none() {
+    let m = compile_ok(&wrap("int x = 1; switch (x) { case 1: break; }"));
+    match &main_fn(&m).body.stmts[1] {
+        Stmt::Switch { default, .. } => assert!(default.is_none()),
+        other => panic!("expected Switch, got {other:?}"),
+    }
+}
+
+#[test]
+fn switch_multiple_case_labels_sharing_one_body_lower_to_empty_bodied_leading_cases() {
+    // `case 1: case 2: y = 1; break;` — no dedicated multi-label IR shape
+    // needed (see `SwitchCase`'s own doc comment): the first label lowers
+    // to an empty-bodied `SwitchCase` that naturally falls through into
+    // the second, which carries the real body.
+    let m = compile_ok(&wrap(
+        "int x = 1; int y = 0; switch (x) { case 1: case 2: y = 1; break; }",
+    ));
+    match &main_fn(&m).body.stmts[2] {
+        Stmt::Switch { cases, .. } => {
+            assert_eq!(cases.len(), 2);
+            assert!(cases[0].body.is_empty());
+            assert_eq!(cases[1].body.len(), 2);
+        }
+        other => panic!("expected Switch, got {other:?}"),
+    }
+}
+
+#[test]
+fn switch_string_discriminant_is_supported() {
+    compile_ok(&wrap(concat!(
+        "String s = \"a\"; int y = 0; ",
+        "switch (s) { case \"a\": y = 1; break; default: y = 2; }"
+    )));
+}
+
+#[test]
+fn switch_discriminant_must_be_int_or_string() {
+    let err = compile_source(
+        &wrap("boolean b = true; switch (b) { default: break; }"),
+        "prog",
+    )
+    .unwrap_err();
+    assert!(
+        err.message.contains("int or String"),
+        "unexpected message: {}",
+        err.message
+    );
+}
+
+#[test]
+fn switch_case_label_kind_must_match_discriminant() {
+    let err = compile_source(
+        &wrap("int x = 1; switch (x) { case \"a\": break; }"),
+        "prog",
+    )
+    .unwrap_err();
+    assert!(
+        err.message.contains("same type"),
+        "unexpected message: {}",
+        err.message
+    );
+}
+
+#[test]
+fn switch_default_in_a_non_last_position_is_rejected() {
+    let err = compile_source(
+        &wrap("int x = 1; switch (x) { default: break; case 1: break; }"),
+        "prog",
+    )
+    .unwrap_err();
+    assert!(
+        err.message.contains("last case"),
+        "unexpected message: {}",
+        err.message
+    );
+}
+
+#[test]
+fn switch_with_two_default_labels_is_rejected() {
+    // Real `javac` also rejects a duplicate `default` at compile time —
+    // this frontend gets the same result for free from its own "default
+    // must be the last position" check (see `lower_switch_block`'s own
+    // doc comment): a second `default:` necessarily puts the *first* one
+    // in a non-last position.
+    let err = compile_source(
+        &wrap("int x = 1; switch (x) { default: break; default: break; }"),
+        "prog",
+    )
+    .unwrap_err();
+    assert!(
+        err.message.contains("last case"),
+        "unexpected message: {}",
+        err.message
+    );
+}
+
+#[test]
+fn break_inside_a_switch_is_valid() {
+    compile_ok(&wrap(
+        "int x = 1; switch (x) { case 1: break; default: break; }",
+    ));
+}
+
+#[test]
+fn continue_inside_a_switch_with_no_enclosing_loop_is_rejected() {
+    let err = compile_source(
+        &wrap("int x = 1; switch (x) { case 1: continue; }"),
+        "prog",
+    )
+    .unwrap_err();
     assert!(!err.message.is_empty());
+}
+
+#[test]
+fn continue_inside_a_switch_inside_a_while_loop_targets_the_while_loop() {
+    // `continue` never targets a `switch` in any C-family language, even
+    // when the switch is the more deeply nested construct — it skips
+    // straight past to the nearest *actual* loop. Structural-only: SIR's
+    // own `Stmt::Continue` carries no explicit target, so this just
+    // confirms the module lowers and validates at all (the shared
+    // `semantic-ir` validator independently enforces the skip-past-
+    // switch rule via its own `loop_stack`).
+    compile_ok(&wrap(
+        "int x = 1; while (x < 3) { switch (x) { case 1: continue; } x = x + 1; }",
+    ));
+}
+
+#[test]
+fn a_local_declared_in_one_case_is_visible_to_a_later_case() {
+    // The whole switch body shares ONE flat scope, matching real
+    // `javac`'s own well-known cross-case scoping gotcha (see `Stmt::
+    // Switch`'s own doc comment) — a local declared in `case 1`'s body
+    // is lexically in scope for `case 2`'s body, regardless of whether
+    // execution actually falls through to reach it.
+    compile_ok(&wrap(concat!(
+        "int x = 2; ",
+        "switch (x) { ",
+        "  case 1: int y = 5; break; ",
+        "  case 2: y = 10; break; ",
+        "}"
+    )));
+}
+
+#[test]
+fn a_local_declared_inside_a_switch_does_not_leak_past_it() {
+    let err = compile_source(
+        &wrap("int x = 1; switch (x) { case 1: int y = 5; break; } int z = y;"),
+        "prog",
+    )
+    .unwrap_err();
+    assert!(!err.message.is_empty());
+}
+
+#[test]
+fn empty_default_with_no_body_lowers_to_an_empty_case_list() {
+    let m = compile_ok(&wrap("int x = 1; switch (x) { default: }"));
+    match &main_fn(&m).body.stmts[1] {
+        Stmt::Switch {
+            cases, default, ..
+        } => {
+            assert!(cases.is_empty());
+            assert_eq!(default.as_ref().unwrap().len(), 0);
+        }
+        other => panic!("expected Switch, got {other:?}"),
+    }
+}
+
+#[test]
+fn switch_comma_separated_case_constants_share_one_label_and_lower_like_separate_labels() {
+    // Java 14+'s `case 1, 2:` (several constants under ONE `switch_label`,
+    // via the `case_constant ("," case_constant)*` grammar alternative)
+    // is a distinct source shape from the classic `case 1: case 2:`
+    // multi-label idiom (already covered by
+    // `switch_multiple_case_labels_sharing_one_body_lower_to_empty_bodied_leading_cases`)
+    // but must lower identically: an empty-bodied leading `SwitchCase`
+    // falling through into the one that carries the real body.
+    let m = compile_ok(&wrap(
+        "int x = 1; int y = 0; switch (x) { case 1, 2: y = 1; break; }",
+    ));
+    match &main_fn(&m).body.stmts[2] {
+        Stmt::Switch { cases, .. } => {
+            assert_eq!(cases.len(), 2);
+            assert!(cases[0].body.is_empty());
+            assert_eq!(cases[1].body.len(), 2);
+        }
+        other => panic!("expected Switch, got {other:?}"),
+    }
+}
+
+#[test]
+fn switch_case_null_label_is_rejected() {
+    let err = compile_source(
+        &wrap("String s = null; switch (s) { case null: break; default: break; }"),
+        "prog",
+    )
+    .unwrap_err();
+    assert!(
+        err.message.contains("case null"),
+        "unexpected message: {}",
+        err.message
+    );
+}
+
+#[test]
+fn switch_pattern_matching_case_label_is_rejected() {
+    let err = compile_source(
+        &wrap("String s = null; switch (s) { case String str: break; default: break; }"),
+        "prog",
+    )
+    .unwrap_err();
+    assert!(
+        err.message.contains("pattern-matching"),
+        "unexpected message: {}",
+        err.message
+    );
 }
 
 // ── task #64: `break`/`continue` (SIR16 addendum, Feature::LoopControl) ──

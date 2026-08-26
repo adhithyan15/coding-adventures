@@ -71,6 +71,7 @@ pub use metadata::{Metadata, CURRENT_SIR_VERSION};
 pub use nodes::{
     Block, Capture, CaptureValue, ElementwiseOpKind, ExportName, Expr, Function, Global, Import,
     ImportName, IndexArg, MapEntry, Module, Param, ParamKind, RescueClause, Scope, Stmt,
+    SwitchCase,
 };
 pub use op_select::{resolve_binary, resolve_numeric, BinaryLowering, NumericLowering};
 pub use span::Span;

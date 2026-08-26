@@ -34,7 +34,7 @@ let module = compile_source(
 )?;
 ```
 
-## Scope (v0.14.0 — JV02 milestones M0 + M1 + M2a + M2b + M3a + M3b + M4a + M4b + M4c + M4d, plus tasks #54, #64, #59, and #60)
+## Scope (v0.17.0 — JV02 milestones M0 + M1 + M2a + M2b + M3a + M3b + M4a + M4b + M4c + M4d + M5, plus tasks #54, #59, #60, #64, and #69)
 
 Java requires an explicit `class`/`main`-method wrapper at the source level
 (unlike Ruby/Python/JS, which allow bare top-level statements) — this crate
@@ -231,11 +231,29 @@ token into a declared name), restoring the invariant `fresh_flag_name`'s
 design actually needs rather than teaching this frontend every backend's
 own escaping scheme — see `CHANGELOG.md`'s `[0.12.0]` entry for the full
 before/after shapes and the regression tests each round added.
-Everything else — `switch`
-(SIR still has no IR node for it at all — confirmed by a repo-wide grep,
-not assumed — so this needs its own spec-level design decision before
-any frontend can target it, tracked as task #51; `break`/`continue`
-themselves are supported as of task #64, see below), a labeled `break`/
+**Task #69** wires `switch`/`case`/`default` to
+[SIR30](../../../specs/SIR30-switch-statement.md)'s own `Stmt::Switch`
+(landed core-IR-only in task #51/`semantic-ir` v0.28.0 — no backend
+accepts it yet, so a switch-using module lowers and validates but can't
+be compiled by any backend today, the same "IR ahead of both ends" state
+`Feature::LoopControl` itself passed through). `discriminant` must lower
+to `Kind::Int` or `Kind::Str` (this frontend has no separate `char`/enum
+`Kind`); each `case` label's value must match that `Kind`. Both of Java's
+own fall-through idioms — the classic `case 1: case 2: body` (several
+separate labels) and Java 14+'s `case 1, 2: body` (one label, several
+comma-separated constants) — flatten identically to a chain of
+empty-bodied `SwitchCase`s ending in the one that carries the real body.
+`default` is only accepted in the last position (a non-last `default` is
+a clean, disclosed rejection — `Stmt::Switch.default` is a dedicated
+field, always logically last by construction). A `switch` is a valid
+`break` target the same way a loop is (a new `Lowerer::break_depth`
+counter, alongside `loop_depth`, tracks this — see its own doc comment)
+but never a valid `continue` target, matching every C-family language.
+Java 21's own pattern-matching switch surface — `case null`/`case null,
+default`, and `case Type t`/`case Type(...)` record/type-deconstruction
+patterns (JEP 440/441) — is cleanly rejected, not silently mis-lowered as
+a plain `default`; real pattern-binding support is a separate, much
+larger future feature. Everything else — a labeled `break`/
 `continue` (SIR has no loop-label vocabulary at all), an *instance*-
 qualified call (`x.foo(...)`) or any qualifier other than this
 compilation unit's own class name (`ClassName.staticMethod(args)` on
