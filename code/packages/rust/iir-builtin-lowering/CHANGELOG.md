@@ -1,5 +1,12 @@
 # Changelog — iir-builtin-lowering
 
+## 0.40.0 - 2026-08-25 - nullable structural entry results
+
+The managed structural Lisp representation now maps a nullable entry result
+to process exit code zero before unboxing non-null integer atoms. This keeps
+`nil`-returning `COND` programs compatible with the process boundary while
+preserving the spec-required `i31.get_s` trap on null references elsewhere.
+
 ## 0.39.0 - 2026-08-18 - lower_dynamic_arith handles a unary `call_builtin "-"` (negate)
 
 `lower_dynamic_arith_function` only ever matched the binary (2-operand) shape
