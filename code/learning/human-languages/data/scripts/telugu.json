@@ -5484,10 +5484,23 @@
       "sound": "i",
       "role": "vowel",
       "components": [
-        "ఇ  i — independent vowel (word-initial)"
+        "the broad outer bowl",
+        "the compact upper-left lobe",
+        "the angled upper-right shoulder"
       ],
-      "strokeOrder": [],
-      "strokeOrderNote": ""
+      "strokeOrder": [
+        "turn around the broad outer bowl",
+        "lift and form the compact upper-left lobe",
+        "lift again and form the angled upper-right shoulder"
+      ],
+      "strokeOrderNote": "Three separate pen-down runs: the broad outer bowl first, then the compact upper-left lobe, then the angled upper-right shoulder.",
+      "penLifts": 2,
+      "strokeOrderSource": {
+        "citation": "Hojaswani LUCIDA and Physics classes, practice Telugu letters with strokes, independent vowel ఇ decomposition, 00:00–00:05 (YouTube, 14 September 2024)",
+        "url": "https://www.youtube.com/watch?v=MKvmq1hFVIE",
+        "variation": "The demonstration writes three separated components—broad bowl, compact center, and angled shoulder—then shows them recombined as ఇ. Their proportions and joins are fitted to the bundled Noto Sans Telugu outline; this is one attested pedagogical order, and Telugu handwriting may vary."
+      },
+      "notes": "Independent short i used when a word or syllable begins with the vowel; it contrasts with long ఈ and with the dependent vowel sign ి."
     },
     {
       "glyph": "ఈ",
