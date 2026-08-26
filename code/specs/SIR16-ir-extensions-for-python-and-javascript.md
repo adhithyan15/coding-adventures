@@ -176,7 +176,8 @@ break; } }`-shaped nesting is unaffected).
 
 Only the syntactic nearest-enclosing-loop matters, not a lexically-outer
 one across a statement-flow boundary: a `Break`/`Continue` inside a
-`Stmt::MethodDef` body or a `MakeClosure`-hoisted top-level `Function`
+`Stmt::MethodDef` body, a `MakeClosure`-hoisted top-level `Function`, or a
+`Stmt::ClassDef`/`ModuleDef`/`SingletonClassDef`/`NominalClassDef` body
 never resolves against a loop the *declaration* happens to be nested in —
 each of those bodies is validated with its own fresh loop-tracking state.
 

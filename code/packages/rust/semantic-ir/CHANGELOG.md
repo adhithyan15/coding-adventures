@@ -51,6 +51,20 @@ resolve against an unrelated enclosing loop the declaration happens to be
 lexically nested in (a real, if pathological, IR-legal shape:
 `while (...) { class C { method m() { break; } } }`).
 
+**Caught by `/security-review` before push**: the same reset was
+initially missing from `Stmt::ClassDef`/`Stmt::ModuleDef`/
+`Stmt::SingletonClassDef`/`Stmt::NominalClassDef`'s own body walks — a
+`break`/`continue` sitting *directly* in one of those bodies (not nested
+inside a `MethodDef`, which already got its own reset) could resolve
+against a loop the class/module declaration happens to be nested in
+(`while (...) { class C; break; end }`). Inert today (no backend accepts
+`Feature::LoopControl` yet, so nothing can reach codegen), but it
+contradicted this very changelog's own stated invariant and would have
+become a real bug the moment a backend adopts the feature. Fixed by
+applying the identical save/restore to all four body walks; regression
+tests added for each (`break_directly_in_{nominal_class,class_def,
+module_def,singleton_class_def}_body_does_not_see_enclosing_loop`).
+
 **Compile-compat stubs**: every crate with an exhaustive `Stmt` match —
 six backends (`semantic-ir-to-{go,javascript,python,ruby,rust,
 typescript}`) and three frontends whose internal generic tree-walking
