@@ -8746,12 +8746,21 @@ fn escape_csharp_string(s: &str) -> String {
 /// hierarchical URI) would pass a scheme-only check and then hit an
 /// unhandled `UriFormatException` when .NET's own parser tries it --
 /// swapping "rejected at compile time" for "the app crashes on click".
-/// `http`/`https` are hierarchical (RFC 3986 Â§3: `hier-part` for a
-/// scheme with an authority always starts `//`), so requiring `://`
-/// immediately after the scheme name closes that gap for both without
-/// needing to replicate .NET's full `Uri` grammar. `mailto` is RFC
-/// 6068's non-hierarchical `mailto:mailbox` form and never uses `//`, so
-/// it's exempt from that specific check.
+/// `http`/`https` are hierarchical (RFC 3986 section 3: `hier-part` for
+/// a scheme with an authority always starts `//`, and the authority
+/// itself can't be empty), so this also requires a `//`-prefixed,
+/// non-empty authority token immediately after the scheme name --
+/// closing both the no-`//`-at-all case (`http:evil`) and the
+/// empty-authority case (`http://`, `http:///path`; a second round of
+/// review confirmed those two still throw in .NET even after the first,
+/// `//`-only version of this check). `mailto` is RFC 6068's
+/// non-hierarchical `mailto:mailbox` form and never uses `//`, so it's
+/// exempt from this specific check. This narrows the gap without fully
+/// replicating .NET's `Uri` grammar (host-label syntax, IPv6 literals,
+/// userinfo/port rules, etc.); it deliberately does not chase full
+/// parity -- an authority token that's present but itself malformed
+/// (e.g. a bare space) can still reach .NET's independent parse
+/// unrejected here.
 fn has_allowed_uri_scheme(href: &str) -> bool {
     const ALLOWED: [&str; 3] = ["http", "https", "mailto"];
     let Some(colon) = href.find(':') else {
@@ -8774,7 +8783,10 @@ fn has_allowed_uri_scheme(href: &str) -> bool {
     if scheme.eq_ignore_ascii_case("mailto") {
         return true;
     }
-    href[colon + 1..].starts_with("//")
+    let Some(authority_onward) = href[colon + 1..].strip_prefix("//") else {
+        return false;
+    };
+    !authority_onward.starts_with(['/', '?', '#']) && !authority_onward.is_empty()
 }
 
 /// `HostLink` â†’ WinUI 3 `<HyperlinkButton>` per UI29-4.
@@ -15689,6 +15701,15 @@ mod tests {
             // instead of failing the build.
             "http:evil",
             "https:not-a-real-authority",
+            // #12038 second review round: a `//`-prefixed but empty (or
+            // path/query/fragment-starting) authority is the same crash
+            // class -- `new Uri("http://")` throws in .NET the same way
+            // `new Uri("http:evil")` does.
+            "http://",
+            "https://",
+            "http:///path",
+            "http://?x",
+            "http://#frag",
         ] {
             let c = component("X", vec![], vec![]);
             let l = link_in_box(vec![LayoutProp {

@@ -51,13 +51,21 @@ that makes `file:` safe in this position.
   the same string to throw `UriFormatException` when the app loads —
   trading "rejected at compile time" for "crashes on click". Since
   `http`/`https` are hierarchical schemes (RFC 3986 §3 — a scheme with an
-  authority always has a `//`-prefixed `hier-part`), `has_allowed_uri_scheme`
-  now also requires `://` immediately after the scheme name for those
-  two; `mailto` (RFC 6068's non-hierarchical `mailto:mailbox` form, never
-  `//`-prefixed) is exempt from that specific check. No bypass of the
-  scheme allowlist itself was found by the review for either arm — this
-  closes a real-but-narrower "malformed input crashes the app instead of
-  failing the build" gap, not a scheme bypass.
+  authority always has a `//`-prefixed `hier-part`, and the authority
+  can't be empty), `has_allowed_uri_scheme` now also requires a
+  `//`-prefixed, *non-empty* authority token immediately after the
+  scheme name for those two; `mailto` (RFC 6068's non-hierarchical
+  `mailto:mailbox` form, never `//`-prefixed) is exempt from this check.
+  A second review round on this exact hardening caught that the first
+  version (`//` present, but not checking for an empty authority) still
+  let `http://`, `https://` and `http:///path` through — `new
+  Uri("http://")` throws in .NET the same way `new Uri("http:evil")`
+  does, so those needed the same fix. No bypass of the scheme allowlist
+  itself was found by either review round for either arm — this narrows
+  a real "malformed input crashes the app instead of failing the build"
+  gap; it deliberately doesn't chase full parity with .NET's `Uri`
+  grammar (an authority token that's present but itself malformed, e.g.
+  a bare space, can still reach .NET's independent parse unrejected).
 
 Checked the other 7 backend emitter crates
 (`mosaic-emit-{compose,flutter,html,qt,react,swiftui,webcomponent}`) —
@@ -70,9 +78,10 @@ review as a single, contained fix.
 
 Three new tests: a disallowed-scheme table (`file:///...`,
 `ms-appx-web:///...`, a UNC path, `javascript:...`, a scheme-less
-string, and — from the review's hardening — `http:evil` and
-`https:not-a-real-authority`, allowed scheme names with a malformed
-remainder) all reject with `UnsafeUriScheme`; an allowed-scheme table
+string, `http:evil`/`https:not-a-real-authority` from round one of the
+hardening, and `http://`/`https://`/`http:///path`/`http://?x`/
+`http://#frag` from round two) all reject with `UnsafeUriScheme`; an
+allowed-scheme table
 (`http`, `https`, `mailto`, plus a case-insensitive `HTTPS://` variant)
 all still emit `NavigateUri` unchanged; a slot-bound href binds through
 `SafeNavigateUri` and the helper itself is present in the generated
