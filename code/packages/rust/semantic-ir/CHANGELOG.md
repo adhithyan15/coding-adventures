@@ -2,7 +2,19 @@
 
 All notable changes to the `semantic-ir` crate are documented here.
 
-## 0.28.0 — SIR30: switch statement (task #51)
+## 0.28.1 — Fix: re-export `SwitchCase` from the crate root (task #69)
+
+`0.28.0` added `pub struct SwitchCase` to `nodes.rs` but never added it to
+`lib.rs`'s own `pub use nodes::{...}` re-export list — the same oversight
+class this crate's own public-API-surface convention exists to prevent
+(every other node type introduced alongside a new `Stmt`/`Expr` variant is
+re-exported at the crate root; `SwitchCase` alone was not). Found
+immediately when `java-to-semantic-ir`'s own task #69 (wiring Java's
+`switch` to `Stmt::Switch`) tried to `use semantic_ir::SwitchCase` and hit
+`E0432: unresolved import` — before this fix, no downstream frontend
+could construct a `Stmt::Switch` at all without reaching into the crate's
+internal `semantic_ir::nodes::SwitchCase` path, defeating the whole point
+of `0.28.0` landing the node. No behavior change; purely a visibility fix.
 
 Implements [SIR30](../../../specs/SIR30-switch-statement.md) — the core
 IR previously had **zero** `Stmt` for `switch`/`case`, confirmed by an

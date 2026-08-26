@@ -2,6 +2,58 @@
 
 All notable changes to the `java-to-semantic-ir` crate will be documented in this file.
 
+## [0.17.0] - 2026-08-26
+
+### Added
+
+- Task #69: wires this frontend's own `switch`/`case`/`default` source
+  syntax to the core-IR primitive [SIR30](../../../specs/SIR30-switch-statement.md)
+  landed (task #51, `semantic-ir` v0.28.0/v0.28.1) — the gap the JV02
+  spec's own "Implementation progress" note tracked as task #51 since
+  M2a. `discriminant` must lower to `Kind::Int` or `Kind::Str` (this
+  frontend has no separate `char`/enum `Kind` yet — see [`Kind`]'s own
+  doc comment); each `case` label's value must lower to the same `Kind`.
+- New `Lowerer::lower_switch_statement`/`lower_switch_block`/
+  `switch_label_case_constants` in `lower.rs`. Handles the real Java-21-
+  grammar shape (confirmed by dumping the parsed tree directly, not
+  assumed from the spec text): a `case` label's value is wrapped in a
+  `case_constant` node, not a bare `expression` child; Java 14+'s
+  comma-separated `case 1, 2:` (several `case_constant`s under one
+  `switch_label`) and the classic `case 1: case 2:` multi-label idiom are
+  flattened into the same ordered "atom" sequence and lowered
+  identically — an empty-bodied `SwitchCase` naturally falls through into
+  the one carrying the real body (see `SwitchCase`'s own doc comment).
+  `default` is only accepted as the last atom of the last group — a
+  non-last `default` is a clean, disclosed rejection (SIR30's own scope
+  boundary), which also rejects a duplicate `default` for free (a second
+  one necessarily makes the first non-last).
+- Cleanly rejects Java 21's own pattern-matching switch surface this
+  frontend does not model: a `case null`/`case null, default` label, and
+  a `case Type t`/`case Type(...)` pattern label (record/type
+  deconstruction, JEP 440/441) — both distinguishable from the shapes
+  this frontend *does* support (checked directly against the real parsed
+  tree structure), and both rejected rather than silently mis-lowered as
+  a plain `default`.
+- New `Lowerer::break_depth: usize`, alongside the existing `loop_depth`:
+  a `switch` is a valid `break` target the same way a loop is, but
+  (unlike a loop) never a valid `continue` target — mirrors the shared
+  `semantic-ir` validator's own `LoopKind::Switch` split via two
+  independent depth counters instead of a typed stack (`break_depth`
+  increments for every loop *and* every switch; `loop_depth` only for an
+  actual loop). Saved/restored in lockstep with `loop_depth` at both
+  existing statement-flow boundaries (a lambda body, a method body).
+- The whole switch body — every case plus `default` — shares ONE flat
+  local-env scope (`push_scope`/`pop_scope` bracket the entire switch,
+  not each case), matching real `javac`'s own well-known cross-case
+  scoping rule and the shared validator's identical requirement.
+
+### Fixed (in `semantic-ir`, discovered while implementing this task)
+
+- `semantic-ir` 0.28.0 added `pub struct SwitchCase` but never re-exported
+  it from the crate root — this frontend's own `use semantic_ir::
+  SwitchCase` failed to compile until `semantic-ir` 0.28.1 fixed the
+  re-export (see that crate's own CHANGELOG entry).
+
 ## [0.16.0] - 2026-08-26
 
 ### Added
