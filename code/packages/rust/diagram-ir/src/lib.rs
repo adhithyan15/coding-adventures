@@ -1155,6 +1155,8 @@ pub enum GanttDateFormatPart {
     Hour12Padded,
     Minute,
     Second,
+    Millisecond1,
+    Millisecond2,
     Millisecond,
     MeridiemUpper,
     MeridiemLower,

@@ -961,6 +961,35 @@ line "Target" [35, 50, 68, 82]"##,
         write_png(&weekday_pixels, "/tmp/mermaid_gantt_weekday_e2e.png")
             .expect("weekday-name PNG write failed");
         assert!(!weekday_scene.instructions.is_empty());
+
+        let fractional = parse_gantt(
+            "gantt\ntitle Request timing\ndateFormat HH:mm:ss.SS\nsection Network\nRequest :r1, 00:00:00.25, 250ms",
+        )
+        .expect("fractional-second Mermaid Gantt parse failed");
+        let fractional_layout = layout_temporal_diagram(
+            &TemporalDiagram {
+                kind: TemporalKind::Gantt,
+                title: fractional.title.clone(),
+                body: TemporalBody::Gantt(fractional),
+            },
+            800.0,
+        );
+        let fractional_scene = diagram_to_paint_temporal(
+            &fractional_layout,
+            &DiagramToPaintOptions {
+                background: layout_ir::Color { r: 255, g: 255, b: 255, a: 255 },
+                device_pixel_ratio: 2.0,
+                label_font: font_spec("Helvetica", 12.0),
+                title_font: font_spec("Helvetica", 16.0),
+                shaper: &shaper,
+                metrics: &metrics,
+                resolver: &resolver,
+            },
+        );
+        let fractional_pixels = render(&fractional_scene);
+        write_png(&fractional_pixels, "/tmp/mermaid_gantt_fractional_e2e.png")
+            .expect("fractional-second PNG write failed");
+        assert!(!fractional_scene.instructions.is_empty());
     }
 
     #[test]
