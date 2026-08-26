@@ -1,5 +1,9 @@
 # Changelog
 
+## 0.144.0
+
+- Match Mermaid Gantt's semicolon- and hash-prefixed title, section, and task label grammar while preserving clean semantic labels.
+
 ## 0.143.0
 
 - Parse Mermaid Gantt millisecond, second, minute, hour, day, and week durations into typed semantic units.
