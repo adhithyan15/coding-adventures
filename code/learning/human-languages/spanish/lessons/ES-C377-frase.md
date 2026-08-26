@@ -11,7 +11,7 @@ concept_tag: ES-REF-PHRASE
 prerequisites: [ES-C377-letra]
 sounds: [pr-cluster, s-clear, stress-penultimate]
 roots: [phrasis-greek]
-etymology_hook: "frase is Greek phrásis, an expression or a way of speaking, built on phrázein, to point out or declare, and it reached Spanish through Latin phrasis; English has it as phrase and again in paraphrase, which is a speaking-alongside, a saying of the same thing next to the original; and the Academy's dictionary lists idiotismo among its synonyms, which quietly ties it to another Greek word about what belongs to one speaker"
+etymology_hook: "frase is Greek phrásis, an expression or a way of speaking, built on phrázein, to point out or declare, and it reached Spanish through Latin phrasis; English has it as phrase and again in paraphrase, which is a speaking-alongside, a saying of the same thing next to the original"
 duration:
   max_seconds: 240
 requires:

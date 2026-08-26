@@ -78,7 +78,7 @@ newcomer.
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->
 
-You can now name what makes food hot: *el pimiento*.
+You can now name a pepper: *un pimiento*.
 
 ## Guided Practice
 <!-- hl-knowledge: introduces=[]; assesses=[ES-LEX-C376-REF-68, ES-LEX-C376-REF-69, ES-LEX-C376-REF-70] -->

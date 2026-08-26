@@ -58,7 +58,8 @@ a-LE-gre, three beats with the weight on the middle one. The g before r is hard,
 The word, taken apart.
 alegre — "cheerful."
 Latin alacer meant lively, brisk, eager — quicker and more physical than "cheerful."
-The Academy's dictionary does something worth noticing on the way to Spanish. Rather than going straight from alacer to alegre, it prints two reconstructed spoken forms in between, both marked with a star to say that nobody wrote them down. That is a dictionary telling you the road was bumpy and it is guessing at the potholes.
+The Academy's dictionary does something worth noticing on the way to Spanish. Rather than going straight from alacer to alegre, it puts a spoken-Latin stage in between and prints two reconstructed forms for it -- not a chain of two ancestors, but one step somebody had to guess at twice.
+What makes that worth pointing out is the contrast inside the entry. The two spoken forms carry a star; alacer does not, because alacer is written down in real Latin texts. The dictionary is marking, form by form, which words it has evidence for and which it is reconstructing.
 English has the word as alacrity — a brisk willingness, doing something without being asked twice. The old "quick" sense survives there better than in Spanish.
 And Italian handed it to music. Allegro on a score means fast, and every orchestra in the world reads a Latin word for liveliness at the top of the page.
 Where alacer came from before Latin is not settled. Several proposals exist; none has won.

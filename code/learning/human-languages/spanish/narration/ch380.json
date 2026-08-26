@@ -4,7 +4,7 @@
   "chapter": 380,
   "title": "Five Words for What Something Is Like",
   "drivablePrefix": 5,
-  "sourceHash": "fnv1a64:ccb917bcbff4c630",
+  "sourceHash": "fnv1a64:1faed5095ee19c3e",
   "lessons": [
     {
       "id": "ES-C380-simpatico",
@@ -179,7 +179,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:6a100d0bea20e5a8",
+      "sourceHash": "fnv1a64:d75b0d4ffa9403ea",
       "notice": null,
       "blocks": [
         {
@@ -240,7 +240,11 @@
             },
             {
               "kind": "speech",
-              "text": "The Academy's dictionary does something worth noticing on the way to Spanish. Rather than going straight from alacer to alegre, it prints two reconstructed spoken forms in between, both marked with a star to say that nobody wrote them down. That is a dictionary telling you the road was bumpy and it is guessing at the potholes."
+              "text": "The Academy's dictionary does something worth noticing on the way to Spanish. Rather than going straight from alacer to alegre, it puts a spoken-Latin stage in between and prints two reconstructed forms for it -- not a chain of two ancestors, but one step somebody had to guess at twice."
+            },
+            {
+              "kind": "speech",
+              "text": "What makes that worth pointing out is the contrast inside the entry. The two spoken forms carry a star; alacer does not, because alacer is written down in real Latin texts. The dictionary is marking, form by form, which words it has evidence for and which it is reconstructing."
             },
             {
               "kind": "speech",

@@ -4,7 +4,7 @@
   "chapter": 377,
   "title": "Five Things You Can Learn",
   "drivablePrefix": 5,
-  "sourceHash": "fnv1a64:005191594da3b7b3",
+  "sourceHash": "fnv1a64:a6cad17335cf2ca9",
   "lessons": [
     {
       "id": "ES-C377-letra",
@@ -191,7 +191,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:dd22336041cf9675",
+      "sourceHash": "fnv1a64:d4bf24ac25974615",
       "notice": null,
       "blocks": [
         {

@@ -7,7 +7,7 @@
   "policy": {
     "maxLinearisableTableColumns": 3
   },
-  "sourceHash": "fnv1a64:ccdd835c4a50184f",
+  "sourceHash": "fnv1a64:0c5d906e8dc840a6",
   "summary": {
     "totalLessons": 966,
     "voice": 912,
@@ -23629,7 +23629,7 @@
         "no-visual-dependency"
       ],
       "coreDrivable": true,
-      "sourceHash": "fnv1a64:f8a7d851e95b4f30"
+      "sourceHash": "fnv1a64:3028a46d8ac587e7"
     },
     {
       "id": "ES-C376-uva",
@@ -23701,7 +23701,7 @@
         "no-visual-dependency"
       ],
       "coreDrivable": true,
-      "sourceHash": "fnv1a64:f2691efc0d14d9d3"
+      "sourceHash": "fnv1a64:3807a175951fe7d7"
     },
     {
       "id": "ES-C377-letra",
@@ -23737,7 +23737,7 @@
         "no-visual-dependency"
       ],
       "coreDrivable": true,
-      "sourceHash": "fnv1a64:dd22336041cf9675"
+      "sourceHash": "fnv1a64:d4bf24ac25974615"
     },
     {
       "id": "ES-C377-idioma",
@@ -23863,7 +23863,7 @@
         "no-visual-dependency"
       ],
       "coreDrivable": true,
-      "sourceHash": "fnv1a64:19dbd4479fdcfbef"
+      "sourceHash": "fnv1a64:494e959fabd8b1ab"
     },
     {
       "id": "ES-C378-edificio",
@@ -23899,7 +23899,7 @@
         "no-visual-dependency"
       ],
       "coreDrivable": true,
-      "sourceHash": "fnv1a64:76d9b4320bad430d"
+      "sourceHash": "fnv1a64:8a0f2dfa43b148ad"
     },
     {
       "id": "ES-C379-mojado",
@@ -24007,7 +24007,7 @@
         "no-visual-dependency"
       ],
       "coreDrivable": true,
-      "sourceHash": "fnv1a64:6a100d0bea20e5a8"
+      "sourceHash": "fnv1a64:d75b0d4ffa9403ea"
     },
     {
       "id": "ES-C380-feo",

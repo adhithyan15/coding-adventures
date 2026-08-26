@@ -4,7 +4,7 @@
   "chapter": 378,
   "title": "Five Places You Can Ask About",
   "drivablePrefix": 5,
-  "sourceHash": "fnv1a64:68abd44a9e71d7d4",
+  "sourceHash": "fnv1a64:d2ae0ba5f0fba6c4",
   "lessons": [
     {
       "id": "ES-C378-selva",
@@ -480,14 +480,14 @@
       "title": "la cumbre — the ridge of a roof",
       "headword": "la cumbre",
       "romanization": "la cumbre",
-      "gloss": "summit — Latin culmen, which meant the ridge of a roof before it meant a mountaintop; Latin columna, the pillar word, is its closest relative",
+      "gloss": "summit — Latin culmen, which meant the ridge of a roof before it meant a mountaintop; culmen is a squeezed-down columen, with columna a cousin rather than a twin",
       "script": "latin",
       "modality": "voice",
       "derivedModality": "voice",
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:19dbd4479fdcfbef",
+      "sourceHash": "fnv1a64:494e959fabd8b1ab",
       "notice": null,
       "blocks": [
         {
@@ -568,6 +568,10 @@
             },
             {
               "kind": "speech",
+              "text": "Only the first of those three is real Latin. Nomen and culmen are neuter nouns, and a neuter accusative is the same as its nominative -- so Latin had nomen and culmen, full stop. Nominem and culminem are reconstructed: forms nobody ever wrote down, remade later by analogy with words like hominem, which is real. Dictionaries print a star in front of a form like that to say exactly this."
+            },
+            {
+              "kind": "speech",
               "text": "The vowel, on the other hand, misbehaves. Latin culmen had a short u, and a short u normally comes out as o in Spanish — lupum gives lobo, buccam gives boca. By the ordinary route this word should be combre. Corominas puts the blame on the l, which pulled the vowel upward and then vanished into it, the same thing that happened in mucho and escuchar."
             },
             {
@@ -576,7 +580,15 @@
             },
             {
               "kind": "speech",
-              "text": "One last thing, because it is the opposite of what you would guess. The nearest English relative is not culminate, which is a late borrowing off the same Latin noun. It is Latin columna, the pillar, which the etymological dictionaries file as culmen's twin rather than its cousin. A pillar and a mountaintop are both the thing that stands highest."
+              "text": "One last thing, because it is the opposite of what you would guess. The word closest to culmen is not English culminate, which is a late borrowing taken straight off culmen itself."
+            },
+            {
+              "kind": "speech",
+              "text": "It is Latin columen. Culmen is that word with its middle syllable squeezed out -- the two are one word in two states of compression."
+            },
+            {
+              "kind": "speech",
+              "text": "Latin columna, the pillar, is built on the same root by a different route. That makes it a cousin, not a twin, and the difference is the whole point: a twin is one word in two shapes; a cousin is a separate word built from the same material. A roof ridge, a pillar and a mountaintop are all the thing that stands highest."
             }
           ]
         },
@@ -644,7 +656,7 @@
             },
             {
               "kind": "speech",
-              "text": "What did Latin culmen mean first? (The ridge of a roof.) And which Latin word is its closest relative? (Columna, the pillar — its twin form.)"
+              "text": "What did Latin culmen mean first? (The ridge of a roof.) And which Latin word is culmen the squeezed-down form of? (Columen — while columna, the pillar, is a cousin rather than a twin.)"
             }
           ]
         }

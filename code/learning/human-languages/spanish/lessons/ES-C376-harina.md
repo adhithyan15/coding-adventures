@@ -11,7 +11,7 @@ concept_tag: ES-REF-FLOUR
 prerequisites: [ES-C375-sobrino]
 sounds: [silent-h, r-tap, nasal-n, stress-penultimate]
 roots: [farina-latin]
-etymology_hook: "harina is Latin farīna, built on far, the husked wheat the Romans ate before bread was refined, and English has the same Latin in farina and farinaceous; the f turned into a silent h by the change that also produced hacer from facere and hijo from filius, and the useful half of the rule is where it stopped, since it never applied before r or the ue glide, which is exactly why frente and fuego still begin with f"
+etymology_hook: "harina is Latin farīna, built on far, the husked wheat the Romans ate before bread was refined, and English has the same Latin in farina and farinaceous; the f turned into a silent h by the change that also produced hacer from facere and hijo from filius, and the useful half is where it stopped, since it never applied before r, before l, or before the ue glide, which is why frente, flor and fuego still begin with f; the larger reason a Spanish word starts with f, though, is that it never went through the change at all, having been borrowed out of written Latin long afterwards, as facil, familia and fiesta were"
 duration:
   max_seconds: 240
 requires:
@@ -65,15 +65,22 @@ named:
 - *farīna* → **harina**.
 
 Here is the part that makes it usable rather than a curiosity. The change had
-a **boundary**. It did not happen before an *r*, and it did not happen before
-the *ue* glide. Which is why two very common words kept their *f* and look
-like exceptions until you know that:
+a **boundary**. It did not happen before *r*, before *l*, or before the *ue*
+glide, which is why these kept their *f*:
 
 - **frente**, not *hrente*;
+- **flor**, not *hlor*;
 - **fuego**, not *huego*.
 
-So an *f* at the start of a Spanish word is not a failure of the rule. It is
-usually a sign that an *r* or a *ue* was standing directly behind it.
+Do not turn that into a rule about every *f*, though, because there is a
+second reason and it covers many more words: **the word never went through the
+change at all.** It was lifted out of written Latin centuries after the change
+had finished, so there was nothing for it to apply to. *Fácil*, *familia*,
+*forma*, *final*, *fecha*, *feliz* and *fiesta* are all in that group.
+
+So an initial *f* tells you one of two things. Either an *r*, an *l* or a *ue*
+was standing directly behind it -- or the word came into Spanish through a
+book rather than through speech.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->
@@ -91,4 +98,4 @@ You can now name what bread is made of: *la harina*.
 ## Wrap-up Recall
 <!-- hl-knowledge: introduces=[]; assesses=[ES-LEX-C375-REF-64, ES-LEX-C375-REF-65, ES-LEX-C376-REF-66] -->
 
-[PAUSE 3s] What happened to the *f* of Latin *farīna*? (It became a written, silent *h*.) And why does *fuego* still have its *f*? (The change never happened before the *ue* glide.)
+[PAUSE 3s] What happened to the *f* of Latin *farīna*? (It became a written, silent *h*.) And name the two reasons a Spanish word can still start with *f*. (An *r*, *l* or *ue* stood behind it — or it was lifted from written Latin long after the change finished.)

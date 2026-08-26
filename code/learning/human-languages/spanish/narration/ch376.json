@@ -4,7 +4,7 @@
   "chapter": 376,
   "title": "Five Things on a Plate",
   "drivablePrefix": 5,
-  "sourceHash": "fnv1a64:ee669d19103f7923",
+  "sourceHash": "fnv1a64:9777c75c5ab0f902",
   "lessons": [
     {
       "id": "ES-C376-harina",
@@ -19,7 +19,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:f8a7d851e95b4f30",
+      "sourceHash": "fnv1a64:3028a46d8ac587e7",
       "notice": null,
       "blocks": [
         {
@@ -96,7 +96,7 @@
             },
             {
               "kind": "speech",
-              "text": "Here is the part that makes it usable rather than a curiosity. The change had a boundary. It did not happen before an r, and it did not happen before the ue glide. Which is why two very common words kept their f and look like exceptions until you know that:"
+              "text": "Here is the part that makes it usable rather than a curiosity. The change had a boundary. It did not happen before r, before l, or before the ue glide, which is why these kept their f:"
             },
             {
               "kind": "speech",
@@ -104,11 +104,19 @@
             },
             {
               "kind": "speech",
+              "text": "flor, not hlor;"
+            },
+            {
+              "kind": "speech",
               "text": "fuego, not huego."
             },
             {
               "kind": "speech",
-              "text": "So an f at the start of a Spanish word is not a failure of the rule. It is usually a sign that an r or a ue was standing directly behind it."
+              "text": "Do not turn that into a rule about every f, though, because there is a second reason and it covers many more words: the word never went through the change at all. It was lifted out of written Latin centuries after the change had finished, so there was nothing for it to apply to. Fácil, familia, forma, final, fecha, feliz and fiesta are all in that group."
+            },
+            {
+              "kind": "speech",
+              "text": "So an initial f tells you one of two things. Either an r, an l or a ue was standing directly behind it -- or the word came into Spanish through a book rather than through speech."
             }
           ]
         },
@@ -176,7 +184,7 @@
             },
             {
               "kind": "speech",
-              "text": "What happened to the f of Latin farīna? (It became a written, silent h.) And why does fuego still have its f? (The change never happened before the ue glide.)"
+              "text": "What happened to the f of Latin farīna? (It became a written, silent h.) And name the two reasons a Spanish word can still start with f. (An r, l or ue stood behind it — or it was lifted from written Latin long after the change finished.)"
             }
           ]
         }
@@ -667,7 +675,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:f2691efc0d14d9d3",
+      "sourceHash": "fnv1a64:3807a175951fe7d7",
       "notice": null,
       "blocks": [
         {
@@ -751,7 +759,7 @@
           "segments": [
             {
               "kind": "speech",
-              "text": "You can now name what makes food hot: el pimiento."
+              "text": "You can now name a pepper: un pimiento."
             }
           ]
         },

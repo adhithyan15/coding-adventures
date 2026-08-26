@@ -11,7 +11,7 @@ concept_tag: ES-COUNT-CHEERFUL
 prerequisites: [ES-C380-simpatico]
 sounds: [l-clear, g-hard, r-tap, stress-penultimate]
 roots: [alacer-latin]
-etymology_hook: "alegre is Latin alacer, lively or brisk, and the Academy's dictionary prints two reconstructed spoken forms between them rather than one, which is a small honest admission that the road was bumpy; English has the word as alacrity, meaning a brisk readiness, and Italian passed it to every orchestra in the world as allegro; where alacer itself came from is not settled, so the trail stops at Latin"
+etymology_hook: "alegre is Latin alacer, lively or brisk, and the Academy's dictionary prints two reconstructed forms for the single spoken-Latin stage between them, starring both while leaving alacer bare, which is the dictionary marking form by form what it has evidence for; English has the word as alacrity, meaning a brisk readiness, and Italian passed it to every orchestra in the world as allegro; where alacer itself came from is not settled, so the trail stops at Latin"
 duration:
   max_seconds: 240
 requires:
@@ -56,10 +56,14 @@ Latin **alacer** meant lively, brisk, eager — quicker and more physical than
 "cheerful."
 
 The Academy's dictionary does something worth noticing on the way to Spanish.
-Rather than going straight from *alacer* to *alegre*, it prints **two**
-reconstructed spoken forms in between, both marked with a star to say that
-nobody wrote them down. That is a dictionary telling you the road was bumpy
-and it is guessing at the potholes.
+Rather than going straight from *alacer* to *alegre*, it puts a spoken-Latin
+stage in between and prints **two** reconstructed forms for it -- not a chain
+of two ancestors, but one step somebody had to guess at twice.
+
+What makes that worth pointing out is the contrast inside the entry. The two
+spoken forms carry a star; *alacer* does not, because *alacer* is written down
+in real Latin texts. The dictionary is marking, form by form, which words it
+has evidence for and which it is reconstructing.
 
 English has the word as **alacrity** — a brisk willingness, doing something
 without being asked twice. The old "quick" sense survives there better than

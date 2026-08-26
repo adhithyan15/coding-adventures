@@ -4,7 +4,7 @@
   "chapter": 379,
   "title": "Five Words for How Something Feels",
   "drivablePrefix": 5,
-  "sourceHash": "fnv1a64:c84822b63424a0d2",
+  "sourceHash": "fnv1a64:401bb2fe3a27f72a",
   "lessons": [
     {
       "id": "ES-C379-seco",
@@ -19,7 +19,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:76d9b4320bad430d",
+      "sourceHash": "fnv1a64:8a0f2dfa43b148ad",
       "notice": null,
       "blocks": [
         {
@@ -84,7 +84,11 @@
             },
             {
               "kind": "speech",
-              "text": "German Sekt really does descend from French sec, borrowed in the seventeenth century. But in German it never meant dry. It named a sweet wine from southern Spain and the Canaries, and it became the word for sparkling wine by accident: German translators rendered Shakespeare's sack as Sect, and in an 1825 Berlin tavern the actor Ludwig Devrient, still in character as Falstaff, demanded \"Sekt\" and was served champagne. The name stuck to the bubbles."
+              "text": "German Sekt really does descend from French sec, borrowed in the seventeenth century. But in German it never meant dry. It named a sweet wine from southern Spain and the Canaries, and it became the word for sparkling wine by accident: German translators rendered Shakespeare's sack as Sect, and the story goes that in an 1825 Berlin tavern the actor Ludwig Devrient, still in character as Falstaff, demanded \"Sekt\" and was served champagne."
+            },
+            {
+              "kind": "speech",
+              "text": "Treat that last part as an anecdote. It is repeated everywhere and rests on very little. The borrowing itself is not in doubt; the tavern is."
             },
             {
               "kind": "speech",
@@ -160,7 +164,7 @@
             },
             {
               "kind": "speech",
-              "text": "Which English word means to dry something out completely? (Desiccate.) And does German Sekt mean dry? (No — sparkling, by way of an accident in a tavern.)"
+              "text": "Which English word means to dry something out completely? (Desiccate.) And does German Sekt mean dry? (No — sparkling, and the tavern story behind that shift is only a story.)"
             }
           ]
         }

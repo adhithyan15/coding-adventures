@@ -23,10 +23,12 @@ Spanish turned the f into an h, and then stopped pronouncing the h altogether. Y
 facere becomes hacer;
 filius becomes hijo;
 farīna becomes harina.
-Here is the part that makes it usable rather than a curiosity. The change had a boundary. It did not happen before an r, and it did not happen before the ue glide. Which is why two very common words kept their f and look like exceptions until you know that:
+Here is the part that makes it usable rather than a curiosity. The change had a boundary. It did not happen before r, before l, or before the ue glide, which is why these kept their f:
 frente, not hrente;
+flor, not hlor;
 fuego, not huego.
-So an f at the start of a Spanish word is not a failure of the rule. It is usually a sign that an r or a ue was standing directly behind it.
+Do not turn that into a rule about every f, though, because there is a second reason and it covers many more words: the word never went through the change at all. It was lifted out of written Latin centuries after the change had finished, so there was nothing for it to apply to. Fácil, familia, forma, final, fecha, feliz and fiesta are all in that group.
+So an initial f tells you one of two things. Either an r, an l or a ue was standing directly behind it -- or the word came into Spanish through a book rather than through speech.
 
 What you've built.
 You can now name what bread is made of: la harina.
@@ -42,7 +44,7 @@ Guided Practice.
 
 Wrap-up Recall.
 [pause 3 seconds]
-What happened to the f of Latin farīna? (It became a written, silent h.) And why does fuego still have its f? (The change never happened before the ue glide.)
+What happened to the f of Latin farīna? (It became a written, silent h.) And name the two reasons a Spanish word can still start with f. (An r, l or ue stood behind it — or it was lifted from written Latin long after the change finished.)
 
 
 Lesson 2 of 5.
@@ -183,7 +185,7 @@ English keeps the older sense alive in pigment, and paint is a relative — both
 One more turn. The pepper on a Spanish table is American, and it was named by transfer: Europeans reached for the word they already had for the hot thing you grind. Pimienta stayed with the peppercorn; pimiento went to the newcomer.
 
 What you've built.
-You can now name what makes food hot: el pimiento.
+You can now name a pepper: un pimiento.
 
 Guided Practice.
 [pause 1 second]
