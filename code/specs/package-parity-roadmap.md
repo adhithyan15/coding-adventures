@@ -9020,6 +9020,110 @@ blocked only by branch protections, and auto-merge remains disabled. State is
 now 156 merged, 374 pending, and exactly one `pr-open` owner across the
 unchanged complete and acyclic 531-owner/790-edge graph.
 
+PR #13095 completed all 40 final checks at state-recording head
+`fe0fd77c2af7ea8bf5df6b937b0ee08e62536625`: 33 succeeded and seven were
+expected skips, with no failures or pending work. GitHub reported a clean merge
+state, auto-merge was enabled, and the PR merged as
+`b2a237322f3f595385eb33f80e6793734659c524` at 2026-08-26T20:29:30Z without a
+manual merge command. The clean exact merged-head worktree was removed
+afterward.
+
+### Post-#13095 inventory and classical-cipher fixture selection
+
+The exact-main schema-3 report remains collision-clean at 15 established
+lanes, 1,373 implementation identities, 4,582 implementation slots, and 1,412
+all-reported identities. The breadth bands are 175 high-consensus identities
+with 266 gaps, 123 five-to-nine identities with 934 gaps, 166 two-to-four
+identities with 2,087 gaps, and 909 singletons with 12,726 gaps. Rust retains
+720 singletons; canonical collisions and unknown language buckets remain zero;
+OCaml remains correctly emerging at zero packages. Relative to the post-#13083
+snapshot, only the expected Dart trie slot was added. Current-main changes
+after the merge are disjoint from the parity topology, so no new topology owner
+is required.
+
+The reopened 14-of-15 frontier has four exact gaps: Dart alone is missing
+`binary-search-tree`, `fenwick-tree`, and `uuid`; Swift alone is missing
+`paint-vm-ascii`, which open PR #12149 continues to own. The reference pass
+found one semantic ownership gap before selection: DT06 does not close the
+Fenwick integer domain, negative-size behavior, bounds errors, or the
+monotone-prefix precondition required by `findKth`. A new
+`fenwick-tree-language-neutral-fixtures-and-index-contract` owner now precedes
+the Dart Fenwick port. This keeps implementation work behind a reviewed neutral
+contract instead of silently choosing among divergent established lanes.
+
+The dependency/leverage pass selects
+`classical-cipher-language-neutral-fixtures-and-analysis-contract` on branch
+`codex/classical-cipher-neutral-fixtures`. It has no dependencies or live-PR
+path overlap and unlocks two registered children: established-lane Scytale
+Unicode/padding conformance and Vigenere ASCII/analysis conformance. The DT13
+neutral corpus unlocks one child; the remaining Dart package ports unlock none.
+The fixture tranche will pin Atbash's ASCII substitution contract, Scytale's
+Unicode-scalar grid and literal U+0020 padding behavior, and Vigenere's
+ASCII-only text/key progression plus deterministic analysis bounds, threshold,
+ties, and fixed long-English recovery. A closed, bounded schema and semantic
+oracle will keep the static corpus payload-safe and language-neutral.
+
+OCaml's process-free substrate remains collision-unsafe while open PRs #12149
+and #12162 own required Go build-tool entry-point and validator surfaces. The
+unrelated Haskell event-loop/Brotli tail must be split before selection because
+Brotli carries malformed-input and output-amplification risk. No additional
+registered worktree met the clean exact-merged-head deletion rule; dirty,
+detached, open-PR, and ambiguous worktrees remain preserved.
+
+At selection time, the reconciled graph is complete and acyclic at 532 owners
+and 791 edges: 157 merged, 374 pending, and exactly one in-progress owner, with
+no active parity PR. The fresh branch starts from exact current
+`origin/main` `f7de03cfbecfe2532e18e2112961a5185615eaeb`.
+
+The implementation defines a closed, process-free `classical-ciphers-v1`
+schema and 48-case corpus across all nine operations. CR01-CR03 now pin exact
+portable string units and edge behavior: Atbash's complete ASCII involution;
+Scytale's Unicode-scalar full and ragged grids, U+0020-only trimming,
+ascending brute force, and resource limit; and Vigenere's ASCII-only
+progression, exact 90% shortest-near-maximum IC rule, ascending chi-squared
+tie, insufficient-signal fallback, empty groups, unshortened keys, fixed
+`SECRET` recovery, and analysis limits. The independent Python oracle also
+enforces bounded strict JSON, duplicate-free objects, finite numbers, separate
+schema and fixture depth caps, surrogate and duplicate-ID rejection,
+fragment-local references, payload-blind stable errors, and limit checks before
+repeat expansion. Its six tests execute 48 semantic subtests at 97%
+branch-aware coverage; the canonical-CBOR companion and parity reporter bring
+the focused gate to 20 tests plus those 48 subtests.
+
+Existing Dart Atbash, Scytale, and Vigenere packages pass 8, 16, and 16 tests,
+fatal analysis, and formatting. Their Python 3.13 references pass 33, 45 with
+one expected skip, and 37 tests at 100%, 100%, and 98% coverage. Ruff lint and
+source/test formatting are clean; an unchanged Vigenere README retains two
+pre-existing code-block spacing notices. The Go build tool passes all package
+tests, vet, and trimpath compilation. Its real forced dry run evaluates 45
+Starlark files, validates the five reviewed orphan exemptions, discovers all
+5,089 packages, and reports all 5,089 as `WOULD-BUILD` without changing package
+files. Strict JSON/YAML, Bandit, diff, dependency, credential, raw-control-byte,
+BUILD, state, and collision gates pass.
+
+The branch rebased without conflict onto exact `origin/main`
+`5bc201ae66021fed72c655484d65dda3753e1eae` after seven disjoint Mermaid,
+human-language, Mosaic, ALGOL, and Java-to-semantic-IR changes. The refreshed
+schema-3 inventory is unchanged at 15 established lanes, 1,373 implementation
+identities, 4,582
+slots, 1,412 all-reported identities, zero collisions, and zero unknown
+buckets. Five live open PRs have zero exact overlap with the 11 changed paths;
+the complete acyclic state remains 532 owners and 791 edges with 157 merged,
+374 pending, and exactly one in-progress owner. Independent contract, security,
+and ownership reviews identified and verified closure of every focused loader,
+fixture, CI, and wording issue; no publication blocker remains.
+
+Ready-for-review PR #13112 publishes the contract from validated head
+`32a21b71455163ba58160dc97e89040ef53722de` on exact `origin/main`
+`5bc201ae66021fed72c655484d65dda3753e1eae` after a normal first push. Every
+intervening rebase was conflict-free, and no force push was needed. Five live
+open PRs had zero exact overlap with the 11 changed paths at publication.
+GitHub reports the PR non-draft and mergeable. Checks are queued or in
+progress, merge state is blocked only by branch protections, and auto-merge
+remains disabled until every required check is terminal and acceptable. State
+is now 157 merged, 374 pending, and exactly one `pr-open` owner across the
+unchanged complete and acyclic 532-owner/791-edge graph.
+
 ## Autonomous Loop Protocol
 
 Only one parity PR should be active at a time.

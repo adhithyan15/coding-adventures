@@ -1,0 +1,362 @@
+{
+  "schema_version": 1,
+  "profile": "cr01-cr03-portable-v1",
+  "limits": {
+    "max_cases": 64,
+    "max_fixture_bytes": 131072,
+    "max_fixture_nesting_depth": 8,
+    "max_fixture_text_scalars": 8193,
+    "max_scytale_brute_force_scalars": 4096,
+    "max_vigenere_analysis_scalars": 8192,
+    "max_vigenere_key_length": 40
+  },
+  "analysis": {
+    "english_frequencies": [
+      0.08167,
+      0.01492,
+      0.02782,
+      0.04253,
+      0.12702,
+      0.02228,
+      0.02015,
+      0.06094,
+      0.06966,
+      0.00153,
+      0.00772,
+      0.04025,
+      0.02406,
+      0.06749,
+      0.07507,
+      0.01929,
+      0.00095,
+      0.05987,
+      0.06327,
+      0.09056,
+      0.02758,
+      0.00978,
+      0.02360,
+      0.00150,
+      0.01974,
+      0.00074
+    ],
+    "ic_near_max_ratio": 0.9,
+    "key_length_tie_break": "smallest-near-maximum",
+    "chi_squared_tie_break": "smallest-shift",
+    "insufficient_signal_key_length": 1,
+    "empty_group_key_letter": "A",
+    "shorten_repeating_key": false
+  },
+  "operation_error_ids": [
+    "scytale-invalid-key",
+    "scytale-brute-force-limit",
+    "vigenere-invalid-key",
+    "vigenere-analysis-limit",
+    "vigenere-key-length-limit"
+  ],
+  "validation_error_ids": [
+    "fixture-depth-limit",
+    "fixture-duplicate-id",
+    "fixture-invalid-json",
+    "fixture-invalid-scalar",
+    "fixture-schema-invalid",
+    "fixture-size-limit"
+  ],
+  "cases": [
+    {
+      "id": "classical-ciphers-v1-atbash-empty",
+      "operation": "atbash-transform",
+      "input": { "text": "" },
+      "expected": { "text": "" }
+    },
+    {
+      "id": "classical-ciphers-v1-atbash-uppercase-alphabet",
+      "operation": "atbash-transform",
+      "input": { "text": "ABCDEFGHIJKLMNOPQRSTUVWXYZ" },
+      "expected": { "text": "ZYXWVUTSRQPONMLKJIHGFEDCBA" }
+    },
+    {
+      "id": "classical-ciphers-v1-atbash-lowercase-alphabet",
+      "operation": "atbash-transform",
+      "input": { "text": "abcdefghijklmnopqrstuvwxyz" },
+      "expected": { "text": "zyxwvutsrqponmlkjihgfedcba" }
+    },
+    {
+      "id": "classical-ciphers-v1-atbash-passthrough",
+      "operation": "atbash-transform",
+      "input": { "text": "Hello, World! 123\u0000 é😀" },
+      "expected": { "text": "Svool, Dliow! 123\u0000 é😀" }
+    },
+    {
+      "id": "classical-ciphers-v1-atbash-involution-forward",
+      "operation": "atbash-transform",
+      "input": { "text": "HELLO" },
+      "expected": { "text": "SVOOL" }
+    },
+    {
+      "id": "classical-ciphers-v1-atbash-involution-reverse",
+      "operation": "atbash-transform",
+      "input": { "text": "SVOOL" },
+      "expected": { "text": "HELLO" }
+    },
+    {
+      "id": "classical-ciphers-v1-scytale-worked-encrypt",
+      "operation": "scytale-encrypt",
+      "input": { "text": "HELLO WORLD", "key": 3 },
+      "expected": { "text": "HLWLEOODL R " }
+    },
+    {
+      "id": "classical-ciphers-v1-scytale-worked-decrypt",
+      "operation": "scytale-decrypt",
+      "input": { "text": "HLWLEOODL R ", "key": 3 },
+      "expected": { "text": "HELLO WORLD" }
+    },
+    {
+      "id": "classical-ciphers-v1-scytale-ragged-decrypt",
+      "operation": "scytale-decrypt",
+      "input": { "text": "ABCDEF", "key": 4 },
+      "expected": { "text": "ACEFBD" }
+    },
+    {
+      "id": "classical-ciphers-v1-scytale-unicode-encrypt",
+      "operation": "scytale-encrypt",
+      "input": { "text": "A😀Bé", "key": 3 },
+      "expected": { "text": "Aé😀 B " }
+    },
+    {
+      "id": "classical-ciphers-v1-scytale-unicode-decrypt",
+      "operation": "scytale-decrypt",
+      "input": { "text": "Aé😀 B ", "key": 3 },
+      "expected": { "text": "A😀Bé" }
+    },
+    {
+      "id": "classical-ciphers-v1-scytale-genuine-trailing-space-encrypt",
+      "operation": "scytale-encrypt",
+      "input": { "text": "END ", "key": 3 },
+      "expected": { "text": "E N D " }
+    },
+    {
+      "id": "classical-ciphers-v1-scytale-genuine-trailing-space-loss",
+      "operation": "scytale-decrypt",
+      "input": { "text": "E N D ", "key": 3 },
+      "expected": { "text": "END" }
+    },
+    {
+      "id": "classical-ciphers-v1-scytale-trailing-tab-retained",
+      "operation": "scytale-decrypt",
+      "input": { "text": "A\tB ", "key": 2 },
+      "expected": { "text": "AB\t" }
+    },
+    {
+      "id": "classical-ciphers-v1-scytale-newline-nbsp-retained",
+      "operation": "scytale-decrypt",
+      "input": { "text": "A \t \n ", "key": 3 },
+      "expected": { "text": "A\t\n " }
+    },
+    {
+      "id": "classical-ciphers-v1-scytale-empty-before-low-key",
+      "operation": "scytale-encrypt",
+      "input": { "text": "", "key": -1 },
+      "expected": { "text": "" }
+    },
+    {
+      "id": "classical-ciphers-v1-scytale-empty-before-high-key",
+      "operation": "scytale-decrypt",
+      "input": { "text": "", "key": 8194 },
+      "expected": { "text": "" }
+    },
+    {
+      "id": "classical-ciphers-v1-scytale-invalid-low-key",
+      "operation": "scytale-encrypt",
+      "input": { "text": "A", "key": 1 },
+      "expected": { "error_id": "scytale-invalid-key" }
+    },
+    {
+      "id": "classical-ciphers-v1-scytale-invalid-high-key",
+      "operation": "scytale-decrypt",
+      "input": { "text": "ABC", "key": 4 },
+      "expected": { "error_id": "scytale-invalid-key" }
+    },
+    {
+      "id": "classical-ciphers-v1-scytale-brute-force-ascending",
+      "operation": "scytale-brute-force",
+      "input": { "text": "HLWLEOODL R " },
+      "expected": {
+        "candidates": [
+          { "key": 2, "text": "HOLDWLL ERO" },
+          { "key": 3, "text": "HELLO WORLD" },
+          { "key": 4, "text": "HLO LEDRWOL" },
+          { "key": 5, "text": "HLOLRLED  WO" },
+          { "key": 6, "text": "HWEOLRLLOD" }
+        ]
+      }
+    },
+    {
+      "id": "classical-ciphers-v1-scytale-brute-force-short",
+      "operation": "scytale-brute-force",
+      "input": { "text": "ABC" },
+      "expected": { "candidates": [] }
+    },
+    {
+      "id": "classical-ciphers-v1-scytale-brute-force-preflight-limit",
+      "operation": "scytale-brute-force",
+      "input": { "repeat_scalar": "A", "repeat_count": 4097 },
+      "expected": { "error_id": "scytale-brute-force-limit" }
+    },
+    {
+      "id": "classical-ciphers-v1-vigenere-standard-encrypt",
+      "operation": "vigenere-encrypt",
+      "input": { "text": "ATTACKATDAWN", "key": "LEMON" },
+      "expected": { "text": "LXFOPVEFRNHR" }
+    },
+    {
+      "id": "classical-ciphers-v1-vigenere-standard-decrypt",
+      "operation": "vigenere-decrypt",
+      "input": { "text": "LXFOPVEFRNHR", "key": "LEMON" },
+      "expected": { "text": "ATTACKATDAWN" }
+    },
+    {
+      "id": "classical-ciphers-v1-vigenere-case-punctuation-encrypt",
+      "operation": "vigenere-encrypt",
+      "input": { "text": "Hello, World!", "key": "key" },
+      "expected": { "text": "Rijvs, Uyvjn!" }
+    },
+    {
+      "id": "classical-ciphers-v1-vigenere-case-punctuation-decrypt",
+      "operation": "vigenere-decrypt",
+      "input": { "text": "Rijvs, Uyvjn!", "key": "key" },
+      "expected": { "text": "Hello, World!" }
+    },
+    {
+      "id": "classical-ciphers-v1-vigenere-unicode-does-not-advance",
+      "operation": "vigenere-encrypt",
+      "input": { "text": "A😀-BéC", "key": "BC" },
+      "expected": { "text": "B😀-DéD" }
+    },
+    {
+      "id": "classical-ciphers-v1-vigenere-unicode-round-trip",
+      "operation": "vigenere-decrypt",
+      "input": { "text": "B😀-DéD", "key": "BC" },
+      "expected": { "text": "A😀-BéC" }
+    },
+    {
+      "id": "classical-ciphers-v1-vigenere-empty-key-before-empty-text",
+      "operation": "vigenere-encrypt",
+      "input": { "text": "", "key": "" },
+      "expected": { "error_id": "vigenere-invalid-key" }
+    },
+    {
+      "id": "classical-ciphers-v1-vigenere-nonascii-key",
+      "operation": "vigenere-decrypt",
+      "input": { "text": "ciphertext", "key": "KÉY" },
+      "expected": { "error_id": "vigenere-invalid-key" }
+    },
+    {
+      "id": "classical-ciphers-v1-vigenere-insufficient-empty",
+      "operation": "vigenere-find-key-length",
+      "input": { "ciphertext": "", "max_length": 20 },
+      "expected": { "key_length": 1 }
+    },
+    {
+      "id": "classical-ciphers-v1-vigenere-insufficient-two-letters",
+      "operation": "vigenere-find-key-length",
+      "input": { "ciphertext": "A!B", "max_length": 20 },
+      "expected": { "key_length": 1 }
+    },
+    {
+      "id": "classical-ciphers-v1-vigenere-insufficient-zero-score",
+      "operation": "vigenere-find-key-length",
+      "input": { "ciphertext": "ABCD", "max_length": 20 },
+      "expected": { "key_length": 1 }
+    },
+    {
+      "id": "classical-ciphers-v1-vigenere-max-length-one",
+      "operation": "vigenere-find-key-length",
+      "input": { "ciphertext": "AAAAAAAA", "max_length": 1 },
+      "expected": { "key_length": 1 }
+    },
+    {
+      "id": "classical-ciphers-v1-vigenere-smallest-ic-tie",
+      "operation": "vigenere-find-key-length",
+      "input": { "ciphertext": "AAAAAAAA", "max_length": 4 },
+      "expected": { "key_length": 2 }
+    },
+    {
+      "id": "classical-ciphers-v1-vigenere-parameter-before-input-limit",
+      "operation": "vigenere-find-key-length",
+      "input": { "repeat_scalar": "A", "repeat_count": 8193, "max_length": 41 },
+      "expected": { "error_id": "vigenere-key-length-limit" }
+    },
+    {
+      "id": "classical-ciphers-v1-vigenere-analysis-preflight-limit",
+      "operation": "vigenere-find-key-length",
+      "input": { "repeat_scalar": "A", "repeat_count": 8193, "max_length": 20 },
+      "expected": { "error_id": "vigenere-analysis-limit" }
+    },
+    {
+      "id": "classical-ciphers-v1-vigenere-empty-groups-are-a",
+      "operation": "vigenere-find-key",
+      "input": { "ciphertext": "E", "key_length": 3 },
+      "expected": { "key": "AAA" }
+    },
+    {
+      "id": "classical-ciphers-v1-vigenere-smallest-chi-squared-tie",
+      "operation": "vigenere-find-key",
+      "input": { "ciphertext": "ABCDEFGHIJKLMNOPQRSTUVWXYZ", "key_length": 1 },
+      "expected": { "key": "A" }
+    },
+    {
+      "id": "classical-ciphers-v1-vigenere-nonpositive-key-length-before-limit",
+      "operation": "vigenere-find-key",
+      "input": { "repeat_scalar": "A", "repeat_count": 8193, "key_length": 0 },
+      "expected": { "key": "" }
+    },
+    {
+      "id": "classical-ciphers-v1-vigenere-find-key-analysis-limit",
+      "operation": "vigenere-find-key",
+      "input": { "repeat_scalar": "A", "repeat_count": 8193, "key_length": 1 },
+      "expected": { "error_id": "vigenere-analysis-limit" }
+    },
+    {
+      "id": "classical-ciphers-v1-vigenere-find-key-length-limit",
+      "operation": "vigenere-find-key",
+      "input": { "ciphertext": "ABC", "key_length": 41 },
+      "expected": { "error_id": "vigenere-key-length-limit" }
+    },
+    {
+      "id": "classical-ciphers-v1-vigenere-long-find-length-twenty",
+      "operation": "vigenere-find-key-length",
+      "input": { "ciphertext": "Llg hybuo dispf jqo nnetu fzxj xjv ptrc ffk tfh vyig jypj ekgypu xaw ipkmkw rgzkatstyshv pqfobfk hfv fgvg rhowrvlvxk xq vqusvm lthf ajzpx llg jyg kpqnpr kivj fxzmpu xaw hkjxtfx ofyglekew vswvzrz dspx washqnw tuvqjw mzi xrpewc dvpho ajvvx llg imowv yzrwk mvj atq xjisnyl cegbwrv wskwwvj jbdpgu abll vfaxjmpx stc xtvil srf jmgympx fbjhu kltl lgieev xjv ghempx sy kttzrz omvy xawmt dieghkfyl kspxw xulqzrz lltfyzz xjv gtfsrp eugzg nlxji uhybjvgcw vzeuv itul qklxj jtfq ujeptl mg ftrrvz kcklxjmpx evgvpj egv svyik fyvj jhj xjv phfk yzrmwv ofrmzw cyitv ajvr mzi iisnfh yzpe ti efzxjif zr t llkto udepbim gj rimllmpv aaaxg jrho epu xaw gjzpwjip nmed fwzpw krqnqxf epu xajsy jrhofccpl sx grga gxjvv esyiymgy epu tesckek nfxkc xawmt gekwrvj gtdp vyif aruzhx xst umgfit nlxji yrvf kswg egv jtvwa tvgrh toekk xawq qe xaw snu ahghge xttpg", "max_length": 20 },
+      "expected": { "key_length": 6 }
+    },
+    {
+      "id": "classical-ciphers-v1-vigenere-long-find-length-forty",
+      "operation": "vigenere-find-key-length",
+      "input": { "ciphertext": "Llg hybuo dispf jqo nnetu fzxj xjv ptrc ffk tfh vyig jypj ekgypu xaw ipkmkw rgzkatstyshv pqfobfk hfv fgvg rhowrvlvxk xq vqusvm lthf ajzpx llg jyg kpqnpr kivj fxzmpu xaw hkjxtfx ofyglekew vswvzrz dspx washqnw tuvqjw mzi xrpewc dvpho ajvvx llg imowv yzrwk mvj atq xjisnyl cegbwrv wskwwvj jbdpgu abll vfaxjmpx stc xtvil srf jmgympx fbjhu kltl lgieev xjv ghempx sy kttzrz omvy xawmt dieghkfyl kspxw xulqzrz lltfyzz xjv gtfsrp eugzg nlxji uhybjvgcw vzeuv itul qklxj jtfq ujeptl mg ftrrvz kcklxjmpx evgvpj egv svyik fyvj jhj xjv phfk yzrmwv ofrmzw cyitv ajvr mzi iisnfh yzpe ti efzxjif zr t llkto udepbim gj rimllmpv aaaxg jrho epu xaw gjzpwjip nmed fwzpw krqnqxf epu xajsy jrhofccpl sx grga gxjvv esyiymgy epu tesckek nfxkc xawmt gekwrvj gtdp vyif aruzhx xst umgfit nlxji yrvf kswg egv jtvwa tvgrh toekk xawq qe xaw snu ahghge xttpg", "max_length": 40 },
+      "expected": { "key_length": 6 }
+    },
+    {
+      "id": "classical-ciphers-v1-vigenere-long-find-key",
+      "operation": "vigenere-find-key",
+      "input": { "ciphertext": "Llg hybuo dispf jqo nnetu fzxj xjv ptrc ffk tfh vyig jypj ekgypu xaw ipkmkw rgzkatstyshv pqfobfk hfv fgvg rhowrvlvxk xq vqusvm lthf ajzpx llg jyg kpqnpr kivj fxzmpu xaw hkjxtfx ofyglekew vswvzrz dspx washqnw tuvqjw mzi xrpewc dvpho ajvvx llg imowv yzrwk mvj atq xjisnyl cegbwrv wskwwvj jbdpgu abll vfaxjmpx stc xtvil srf jmgympx fbjhu kltl lgieev xjv ghempx sy kttzrz omvy xawmt dieghkfyl kspxw xulqzrz lltfyzz xjv gtfsrp eugzg nlxji uhybjvgcw vzeuv itul qklxj jtfq ujeptl mg ftrrvz kcklxjmpx evgvpj egv svyik fyvj jhj xjv phfk yzrmwv ofrmzw cyitv ajvr mzi iisnfh yzpe ti efzxjif zr t llkto udepbim gj rimllmpv aaaxg jrho epu xaw gjzpwjip nmed fwzpw krqnqxf epu xajsy jrhofccpl sx grga gxjvv esyiymgy epu tesckek nfxkc xawmt gekwrvj gtdp vyif aruzhx xst umgfit nlxji yrvf kswg egv jtvwa tvgrh toekk xawq qe xaw snu ahghge xttpg", "key_length": 6 },
+      "expected": { "key": "SECRET" }
+    },
+    {
+      "id": "classical-ciphers-v1-vigenere-no-repeating-key-shortening",
+      "operation": "vigenere-find-key",
+      "input": { "ciphertext": "Llg hybuo dispf jqo nnetu fzxj xjv ptrc ffk tfh vyig jypj ekgypu xaw ipkmkw rgzkatstyshv pqfobfk hfv fgvg rhowrvlvxk xq vqusvm lthf ajzpx llg jyg kpqnpr kivj fxzmpu xaw hkjxtfx ofyglekew vswvzrz dspx washqnw tuvqjw mzi xrpewc dvpho ajvvx llg imowv yzrwk mvj atq xjisnyl cegbwrv wskwwvj jbdpgu abll vfaxjmpx stc xtvil srf jmgympx fbjhu kltl lgieev xjv ghempx sy kttzrz omvy xawmt dieghkfyl kspxw xulqzrz lltfyzz xjv gtfsrp eugzg nlxji uhybjvgcw vzeuv itul qklxj jtfq ujeptl mg ftrrvz kcklxjmpx evgvpj egv svyik fyvj jhj xjv phfk yzrmwv ofrmzw cyitv ajvr mzi iisnfh yzpe ti efzxjif zr t llkto udepbim gj rimllmpv aaaxg jrho epu xaw gjzpwjip nmed fwzpw krqnqxf epu xajsy jrhofccpl sx grga gxjvv esyiymgy epu tesckek nfxkc xawmt gekwrvj gtdp vyif aruzhx xst umgfit nlxji yrvf kswg egv jtvwa tvgrh toekk xawq qe xaw snu ahghge xttpg", "key_length": 12 },
+      "expected": { "key": "SECRETSECRET" }
+    },
+    {
+      "id": "classical-ciphers-v1-vigenere-long-break",
+      "operation": "vigenere-break",
+      "input": { "ciphertext": "Llg hybuo dispf jqo nnetu fzxj xjv ptrc ffk tfh vyig jypj ekgypu xaw ipkmkw rgzkatstyshv pqfobfk hfv fgvg rhowrvlvxk xq vqusvm lthf ajzpx llg jyg kpqnpr kivj fxzmpu xaw hkjxtfx ofyglekew vswvzrz dspx washqnw tuvqjw mzi xrpewc dvpho ajvvx llg imowv yzrwk mvj atq xjisnyl cegbwrv wskwwvj jbdpgu abll vfaxjmpx stc xtvil srf jmgympx fbjhu kltl lgieev xjv ghempx sy kttzrz omvy xawmt dieghkfyl kspxw xulqzrz lltfyzz xjv gtfsrp eugzg nlxji uhybjvgcw vzeuv itul qklxj jtfq ujeptl mg ftrrvz kcklxjmpx evgvpj egv svyik fyvj jhj xjv phfk yzrmwv ofrmzw cyitv ajvr mzi iisnfh yzpe ti efzxjif zr t llkto udepbim gj rimllmpv aaaxg jrho epu xaw gjzpwjip nmed fwzpw krqnqxf epu xajsy jrhofccpl sx grga gxjvv esyiymgy epu tesckek nfxkc xawmt gekwrvj gtdp vyif aruzhx xst umgfit nlxji yrvf kswg egv jtvwa tvgrh toekk xawq qe xaw snu ahghge xttpg" },
+      "expected": { "key": "SECRET", "plaintext": "The quick brown fox jumps over the lazy dog and then runs around the entire neighborhood looking for more adventures to embark upon while the sun slowly sets behind the distant mountains casting long shadows across the valley below where the river winds its way through ancient forests filled with towering oak trees and singing birds that herald the coming of spring with their melodious songs echoing through the canopy above where squirrels chase each other from branch to branch gathering acorns and other nuts for the long winter months ahead when the ground will be covered in a thick blanket of pristine white snow and the children will build snowmen and throw snowballs at each other laughing and playing until their parents call them inside for dinner where warm soup and fresh bread await them on the old wooden table" }
+    },
+    {
+      "id": "classical-ciphers-v1-vigenere-empty-break",
+      "operation": "vigenere-break",
+      "input": { "ciphertext": "" },
+      "expected": { "key": "A", "plaintext": "" }
+    }
+  ]
+}
