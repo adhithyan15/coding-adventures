@@ -6999,11 +6999,48 @@ impl HtmlParser {
     }
 
     fn insert_node_before_open_table(&mut self, node: Node) -> Option<Vec<usize>> {
-        let table_path = self
+        let last_template = self
             .open_elements
             .iter()
-            .rfind(|path| element_at_path(&self.document, path).is_some_and(|name| name == "table"))
-            .cloned()?;
+            .enumerate()
+            .rfind(|(_, path)| {
+                element_ref_at_path(&self.document, path).is_some_and(|element| {
+                    element.namespace.is_none() && element.name == "template"
+                })
+            })
+            .map(|(index, path)| (index, path.clone()));
+        let last_table = self
+            .open_elements
+            .iter()
+            .enumerate()
+            .rfind(|(_, path)| {
+                element_at_path(&self.document, path).is_some_and(|name| name == "table")
+            })
+            .map(|(index, path)| (index, path.clone()));
+
+        let foster_into_template = last_template.as_ref().is_some_and(|(template_index, _)| {
+            last_table
+                .as_ref()
+                .is_none_or(|(table_index, _)| template_index > table_index)
+        });
+        if foster_into_template {
+            let (_, template_path) = last_template?;
+            let children = children_at_path_mut(&mut self.document.children, &template_path)?;
+            if let Node::Text(text) = node {
+                if let Some(Node::Text(existing)) = children.last_mut() {
+                    existing.data.push_str(&text.data);
+                    return Some(template_path);
+                }
+                children.push(Node::Text(text));
+            } else {
+                children.push(node);
+            }
+            let mut inserted_path = template_path;
+            inserted_path.push(children.len() - 1);
+            return Some(inserted_path);
+        }
+
+        let table_path = last_table.map(|(_, path)| path)?;
         let (&table_index, parent_path) = table_path.split_last()?;
         let children = children_at_path_mut(&mut self.document.children, parent_path)?;
 
