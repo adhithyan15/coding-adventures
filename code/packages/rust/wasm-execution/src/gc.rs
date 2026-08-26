@@ -298,6 +298,7 @@ mod tests {
             tag_identities: Vec::new(),
             try_table_infos: Vec::new(),
             instance_id: 0,
+            exception_heap: Vec::new(),
         }
     }
 

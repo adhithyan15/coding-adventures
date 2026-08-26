@@ -1,5 +1,20 @@
 # Changelog
 
+## 0.206.0 — 2026-08-26 — real power-unit identities
+
+Exact signed-unit recognition now evaluates bounded literal powers of positive
+or negative one. Even negative-one exponents yield a positive unit, while odd
+exponents retain a negative unit and must be paired before a finite-real
+selector dependency is considered unchanged.
+
+## 0.205.0 — 2026-08-26 — nested real zero identities
+
+Exact zero recognition now evaluates bounded literal-only addition and
+subtraction subexpressions with IEEE-754 zero-sign semantics. Grouped positive
+zero results may be subtracted and grouped negative-zero results may be added
+without invalidating finite-real selector dependencies; opposite signs remain
+conservative.
+
 ## 0.204.0 — 2026-08-26 — nested real signed-unit identities
 
 Exact signed-unit recognition now evaluates bounded literal-only multiplication

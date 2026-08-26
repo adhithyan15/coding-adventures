@@ -1,5 +1,55 @@
 # Changelog — mosaic-emit-xaml
 
+## [Unreleased] — lower `Row`/`Column` to `Grid` with flex sizing (#12021)
+
+`StackPanel` sizes to content and has no concept of distributing free space.
+Because `Row`/`Column` lowered to it, the generated app occupied roughly the
+top-left third of the window with the rest empty, and `flex-grow`,
+`justify-content`, `align-items`, and a main-axis `width: 100%` were all
+silently dropped — none of them are `StackPanel` limitations, `Grid` with
+row/column definitions, star sizing, and child alignment does all of it.
+
+`Row` now lowers to `<Grid>` + one `ColumnDefinition` per child slot;
+`Column` lowers to `<Grid>` + one `RowDefinition`. Each child gets a matching
+`Grid.Column`/`Grid.Row` attached property. An `If`/`Else` pair is one
+logical slot even though it emits two sibling `<ContentControl>`s (§6.2) —
+both now carry the same index, since only one is ever visible at a time.
+
+Scoped to what's actually authored anywhere in the repo today rather than a
+general CSS flexbox engine (see `mosaic-emit-xaml.md` §3.1 for the full
+writeup and what's deliberately deferred):
+
+- `flex-grow` (only `1` is authored, 12 sites) and a main-axis `width`/
+  `height: 100%` (flexbox's own "claim the remaining space", treated the
+  same) → that child's definition becomes `"*"` instead of `Auto`.
+- `align-items: center` (2 sites) → `VerticalAlignment`/`HorizontalAlignment`
+  = `Center` on every child, injected the same way as the Grid position.
+- `justify-content: space-between` (1 site) → a `"*"` spacer definition
+  between each pair of children (N children, N−1 spacers).
+- `gap` keeps mapping to the same `Spacing`-shaped value, but the *attribute
+  name* becomes `Grid.ColumnSpacing`/`Grid.RowSpacing` (`<Grid>` has no
+  `Spacing` property; both were added to `Grid` in Windows App SDK 1.3+,
+  inside this backend's pinned 1.5 floor).
+- Everything else (`flex-wrap` — no WinUI 3 `WrapPanel` — weighted
+  `flex-grow`, `align-items: flex-end`/`baseline`, other `justify-content`
+  values) is unchanged/dropped, not guessed at.
+
+Verified live: generated the TaskApp, built and launched it, and confirmed
+via `PrintWindow` capture that content now fills the 1920×1015 window with
+the rail/topbar/view-switcher taking proportional widths instead of
+overlapping in the top-left corner. The functional UI-Automation smoke test
+(`code/scripts/taskapp-xaml-smoke.ps1`) still passes: the app launches, a
+dispatched "add task" event updates the rendered summary, and the new row's
+name renders. `mosaic-degradations.json` stays `nativeComplete: true` with
+zero degradations.
+
+Wide golden-string churn as expected (the issue's own estimate): 6 existing
+tests asserted literal `<StackPanel Orientation=...>` output for `Row`/
+`Column` and needed updating to the new `<Grid>` shape; none were logic
+bugs. 4 new tests cover the flex-grow star column, the main-axis 100% case,
+`justify-content: space-between` spacer insertion, and the If/Else
+shared-index case.
+
 ## [Unreleased] — emit Content for Checkbox, Radio and Link expression labels
 
 #12045 fixed a missing `LayoutPropValue::Expr` arm in `emit_host_button`'s

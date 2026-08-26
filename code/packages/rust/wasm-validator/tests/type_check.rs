@@ -3446,16 +3446,99 @@ fn valid_try_table_with_no_catch_clauses_is_just_a_block() {
     assert_valid("(module (func (result i32) (try_table (result i32) (i32.const 5))))");
 }
 
+// ── W24: exceptions proposal, fourth slice (exnref / catch_ref / throw_ref) ─
+
+#[test]
+fn valid_throw_ref_pops_an_exnref_and_the_rest_of_the_block_is_dead_code() {
+    assert_valid("(module (func (param exnref) (local.get 0) (throw_ref) (unreachable)))");
+}
+
+#[test]
+fn invalid_throw_ref_with_nothing_on_the_stack_is_rejected() {
+    // `throw_ref.wast`'s own real case: `(assert_invalid (module (func
+    // (throw_ref))) "type mismatch")`.
+    assert_invalid("(module (func (throw_ref)))");
+}
+
+#[test]
+fn invalid_throw_ref_inside_a_block_with_nothing_on_the_stack_is_rejected() {
+    // `throw_ref.wast`'s own other real case: `(assert_invalid (module
+    // (func (block (throw_ref)))) "type mismatch")`.
+    assert_invalid("(module (func (block (throw_ref))))");
+}
+
+#[test]
+fn invalid_throw_ref_wrong_operand_type_is_rejected() {
+    assert_invalid("(module (func (i32.const 0) (throw_ref)))");
+}
+
+#[test]
+fn valid_catch_ref_with_a_matching_target_label_type() {
+    // `try_table.wast`'s own real shape (the `throw-catch_ref-param-i32`
+    // family): the target label's declared type must be EXACTLY the tag's
+    // params followed by `exnref`.
+    assert_valid(
+        "(module (tag $e (param i32))
+           (func (result i32)
+             (block $h (result i32 exnref)
+               (try_table (result i32) (catch_ref $e $h) (i32.const 1))
+               (return)
+             )
+             (drop) (return)
+           ))",
+    );
+}
+
+#[test]
+fn invalid_catch_ref_target_label_missing_the_exnref_is_rejected() {
+    // `try_table.wast`'s own real case: `(module (tag $e) (func (try_table
+    // (catch_ref 0 0))))` "type mismatch" -- the target label (the
+    // function's own implicit outer block, no declared result) expects
+    // nothing, but `catch_ref` would push a real `exnref`.
+    assert_invalid("(module (tag $e) (func (try_table (catch_ref $e 0))))");
+}
+
+#[test]
+fn invalid_catch_all_ref_target_label_missing_the_exnref_is_rejected() {
+    // `try_table.wast`'s own real case: `(module (func (try_table
+    // (catch_all_ref 0))))` "type mismatch".
+    assert_invalid("(module (func (try_table (catch_all_ref 0))))");
+}
+
+#[test]
+fn invalid_catch_ref_target_label_type_mismatches_the_tags_own_params() {
+    // `try_table.wast`'s own real case: a tag with an `i64` param, but the
+    // target label declares `i32` (not `i64`) ahead of the `exnref` --
+    // `catch_ref` would push `[i64, exnref]`, which doesn't match the
+    // label's declared `[i32, exnref]`.
+    assert_invalid(
+        "(module
+           (tag $e (param i64))
+           (func (result i32 exnref)
+             (try_table (result i32) (catch_ref $e 0) (i32.const 42))
+           ))",
+    );
+}
+
 #[test]
 fn valid_try_table_catch_all_and_ref_variants_parse_and_validate() {
+    // W24: `catch_ref`/`catch_all_ref` now get a REAL arity/type check
+    // (they push a genuine `exnref`, unlike `catch`/`catch_all`), so each
+    // clause kind here needs its OWN target label with the matching
+    // declared type -- `$h0` (no result, for plain `catch_all`) vs. `$h1`/
+    // `$h2` (`(result exnref)`, for `catch_ref`/`catch_all_ref`). A single
+    // shared label could never satisfy both shapes at once, which is
+    // exactly the real spec rule this slice's own `assert_invalid` corpus
+    // cases (`try_table.wast`) exercise from the other direction.
     assert_valid(
         "(module (tag $e)
            (func
-             (block $h
-               (try_table (catch_all $h))
-               (try_table (catch_ref $e $h))
-               (try_table (catch_all_ref $h))
-             )))",
+             (block $h0 (try_table (catch_all $h0)))
+             (block $h1 (result exnref) (try_table (catch_ref $e $h1)) (unreachable))
+             (drop)
+             (block $h2 (result exnref) (try_table (catch_all_ref $h2)) (unreachable))
+             (drop)
+           ))",
     );
 }
 

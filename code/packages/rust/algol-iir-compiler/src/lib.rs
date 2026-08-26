@@ -8504,6 +8504,9 @@ fn literal_numeric_unit_is_negative(node: &GrammarASTNode) -> Option<bool> {
             _ => None,
         };
     }
+    if let Some(negative) = literal_power_unit_is_negative(node) {
+        return Some(negative);
+    }
     let tokens = direct_tokens(node);
     if tokens.len() == 1 {
         match tokens[0].effective_type_name() {
@@ -8549,38 +8552,93 @@ fn literal_numeric_unit_is_negative(node: &GrammarASTNode) -> Option<bool> {
         .flatten()
 }
 
+fn literal_power_unit_is_negative(node: &GrammarASTNode) -> Option<bool> {
+    let sequence = pieces(node);
+    if sequence.len() < 3 || sequence.len().is_multiple_of(2) {
+        return None;
+    }
+    let mut operands = Vec::new();
+    for (index, piece) in sequence.iter().enumerate() {
+        if index.is_multiple_of(2) {
+            let Piece::Node(operand) = piece else {
+                return None;
+            };
+            operands.push(*operand);
+        } else if !matches!(piece, Piece::Op(op) if matches!(op.as_str(), "^" | "**")) {
+            return None;
+        }
+    }
+    let (base, exponents) = operands.split_first()?;
+    let exponent = literal_nonneg_integer_power_chain(exponents)?;
+    let base_is_negative = literal_numeric_unit_is_negative(base)?;
+    Some(base_is_negative && !exponent.is_multiple_of(2))
+}
+
 fn literal_positive_numeric_zero(node: &GrammarASTNode) -> bool {
+    literal_numeric_zero(node).is_some_and(|value| value.to_bits() == 0.0f64.to_bits())
+}
+
+fn literal_negative_real_zero(node: &GrammarASTNode) -> bool {
+    literal_numeric_zero(node)
+        .is_some_and(|value| value.to_bits() == (-0.0f64).to_bits())
+}
+
+fn literal_numeric_zero(node: &GrammarASTNode) -> Option<f64> {
     if let Some(child) = single_parenthesized_child(node) {
-        return literal_positive_numeric_zero(child);
+        return literal_numeric_zero(child);
     }
     if let Some((sign, child)) = single_signed_child(node) {
+        if literal_integer_value(node) == Some(0) {
+            return Some(0.0);
+        }
+        let value = literal_numeric_zero(child)?;
         return match sign {
-            "+" => literal_positive_numeric_zero(child),
-            "-" => literal_integer_value(child) == Some(0),
-            _ => false,
+            "+" => Some(value),
+            "-" => Some(-value),
+            _ => None,
         };
     }
     let tokens = direct_tokens(node);
     if tokens.len() == 1 {
-        return match tokens[0].effective_type_name() {
-            "INTEGER_LIT" => tokens[0].value.parse::<i64>() == Ok(0),
-            "REAL_LIT" => tokens[0]
-                .value
-                .parse::<f64>()
-                .is_ok_and(|value| value.to_bits() == 0.0f64.to_bits()),
-            _ => false,
+        match tokens[0].effective_type_name() {
+            "INTEGER_LIT" => {
+                return (tokens[0].value.parse::<i64>() == Ok(0)).then_some(0.0);
+            }
+            "REAL_LIT" => {
+                return tokens[0]
+                    .value
+                    .parse::<f64>()
+                    .ok()
+                    .filter(|value| *value == 0.0);
+            }
+            _ => {}
+        }
+    }
+    let sequence = pieces(node);
+    if sequence.len() >= 3
+        && !sequence.len().is_multiple_of(2)
+        && sequence.iter().skip(1).step_by(2).all(
+            |piece| matches!(piece, Piece::Op(op) if matches!(op.as_str(), "+" | "-")),
+        )
+    {
+        let Piece::Node(first) = &sequence[0] else {
+            return None;
         };
+        let mut value = literal_numeric_zero(first)?;
+        for index in (1..sequence.len()).step_by(2) {
+            let (Piece::Op(op), Piece::Node(rhs)) = (&sequence[index], &sequence[index + 1])
+            else {
+                return None;
+            };
+            let rhs = literal_numeric_zero(rhs)?;
+            value = if op == "+" { value + rhs } else { value - rhs };
+        }
+        return Some(value);
     }
     let child_nodes = direct_nodes(node);
-    tokens.is_empty()
-        && child_nodes.len() == 1
-        && literal_positive_numeric_zero(child_nodes[0])
-}
-
-fn literal_negative_real_zero(node: &GrammarASTNode) -> bool {
-    expr_real_literal_text(node)
-        .and_then(|literal| literal.parse::<f64>().ok())
-        .is_some_and(|value| value.to_bits() == (-0.0f64).to_bits())
+    (tokens.is_empty() && child_nodes.len() == 1)
+        .then(|| literal_numeric_zero(child_nodes[0]))
+        .flatten()
 }
 
 /// Return the name of a bare scalar variable node. Array elements are kept
@@ -11008,6 +11066,8 @@ mod tests {
             "choose + (-(0.0))",
             "choose + (-0.0) + (-0.0)",
             "((choose + (-0.0)))",
+            "choose + ((-0.0) + (-0.0))",
+            "choose + ((-0.0) - 0.0)",
         ] {
             compile_source(
                 &format!(
@@ -11028,6 +11088,8 @@ mod tests {
             "choose - (-0)",
             "choose - 0.0 - 0",
             "((choose - 0.0))",
+            "choose - (0.0 + 0.0)",
+            "choose - ((-0.0) - (-0.0))",
         ] {
             compile_source(
                 &format!(
@@ -11041,12 +11103,16 @@ mod tests {
 
     #[test]
     fn al4_real_negative_zero_subtraction_remains_conservative() {
-        let err = compile_source(
-            "begin integer i, n, limit; real choose; boolean other; n := 3; limit := 3; choose := 1.0; other := true; i := 0; for i := i + 1 while i < n do begin n := limit; limit := if choose = 1.0 then limit else limit + 1; choose := if other then choose else 0.0; other := other; choose := choose - (-0.0) end; print(i + 0.25) end",
-            "test",
-        )
-        .expect_err("subtracting negative zero is the unsafe additive-zero identity");
-        assert!(format!("{err:?}").contains("cannot print a real value"));
+        for write in ["choose - (-0.0)", "choose - ((-0.0) + (-0.0))"] {
+            let err = compile_source(
+                &format!(
+                    "begin integer i, n, limit; real choose; boolean other; n := 3; limit := 3; choose := 1.0; other := true; i := 0; for i := i + 1 while i < n do begin n := limit; limit := if choose = 1.0 then limit else limit + 1; choose := if other then choose else 0.0; other := other; choose := {write} end; print(i + 0.25) end"
+                ),
+                "test",
+            )
+            .expect_err("subtracting negative zero is the unsafe additive-zero identity");
+            assert!(format!("{err:?}").contains("cannot print a real value"));
+        }
     }
 
     #[test]
@@ -11093,6 +11159,9 @@ mod tests {
             "choose / ((-1.0) / (-1.0))",
             "((-1.0) * (-1.0)) * choose",
             "choose * ((1.0 / (-1.0)) * (-1.0))",
+            "choose * ((-1.0) ^ 2)",
+            "choose / ((-1.0) ** 2)",
+            "choose * ((-1.0) ^ 3) * (-1.0)",
         ] {
             compile_source(
                 &format!(
@@ -11138,6 +11207,7 @@ mod tests {
             "(-1.0) * choose",
             "choose * (-1.0) / 1.0",
             "choose * ((-1.0) * 1.0)",
+            "choose * ((-1.0) ^ 3)",
             "1.0 / choose * 1.0",
         ] {
             let err = compile_source(

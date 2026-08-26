@@ -2,6 +2,38 @@
 
 All notable changes to this package will be documented in this file.
 
+## [0.1.9] - 2026-08-26 (W24 — exceptions proposal, fourth slice: real exnref)
+
+### Fixed
+
+- **Security review finding**: `ValueType::Exnref::byte_tag`/`encode`
+  changed from `0xE9` to `0x69`. `0xE9` was this variant's real spec type
+  opcode `-0x17` mis-encoded as its two's-complement-mod-256 byte
+  (`-23 + 256 = 233 = 0xE9`) rather than its correct single-byte SLEB128
+  encoding (`-23 & 0x7F = 0x69`) — every OTHER abstract reference type
+  here (`funcref` `-0x10`→`0x70`, `externref` `-0x11`→`0x6F`, `anyref`
+  `-0x12`→`0x6E`, `i31ref`→`0x6C`) happens to have its raw byte value
+  ALSO be its correct SLEB128 encoding, which is what let this go
+  unnoticed since W22 first added `Exnref` — `exn`'s value (`-0x17`)
+  is simply the first one where the two representations diverge. `0xE9`
+  has its LEB128 continuation bit SET (`>= 0x80`), making it
+  indistinguishable, in a blocktype decoder, from the leading byte of a
+  genuine multi-byte type index — a real, attacker-reachable bug
+  (surfaced and fixed while adding `exnref` blocktype-shorthand support
+  for W24; see `wasm-execution`/`wasm-validator`'s own changelogs).
+  `0x69` has its continuation bit clear, matching every other
+  special-cased blocktype byte's own safe invariant. No test anywhere in
+  this repo hard-coded the old `0xE9` value (confirmed via a repo-wide
+  grep before changing it), so this is a clean, non-breaking fix.
+
+### Changed
+
+- `ValueType::Exnref`'s doc comment updated: no longer "deliberately
+  inert" as of `wasm-execution` 0.9.68 — a `catch_ref`/`catch_all_ref`
+  clause that matches now pushes a real, reified `exnref` value (a handle
+  into `wasm-execution`'s new `exception_heap`), and `throw_ref` consumes
+  one to re-raise the exception it names.
+
 ## [0.1.8] - 2026-08-25 (W22 — exceptions proposal: real catch/catch_all matching)
 
 ### Added

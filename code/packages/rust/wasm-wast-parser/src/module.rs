@@ -5731,6 +5731,24 @@ mod tests {
     }
 
     #[test]
+    fn throw_ref_folded_and_flat_encode_the_bare_0x0a_opcode_no_immediate() {
+        // W24 -- `throw_ref` takes no immediate at all (unlike `throw`'s
+        // `tagidx`): a real corpus shape from `throw_ref.wast`, e.g.
+        // `(func (export "catch-throw_ref-0") (block $h (result exnref)
+        // (try_table (catch_ref $e0 $h) (throw $e0)) (unreachable))
+        // (throw_ref))`. This crate's generic no-immediate default arm
+        // (the same one `unreachable`/`nop`/`return` already use) handles
+        // both folded and flat/bare-atom forms without any special-casing
+        // needed, since `wasm-opcodes` now registers `throw_ref` with
+        // `immediates: &[]`.
+        let folded = parse_module(r#"(module (tag $e0) (func (throw_ref)))"#).unwrap();
+        assert_eq!(code_of(&folded, 0), &[0x0A, 0x0B]);
+
+        let flat = parse_module(r#"(module (tag $e0) (func throw_ref))"#).unwrap();
+        assert_eq!(code_of(&flat, 0), &[0x0A, 0x0B]);
+    }
+
+    #[test]
     fn try_table_folded_catch_catch_all_catch_ref_catch_all_ref_encode_the_real_binary_shape() {
         // `throw.wast`'s own real shape: `(block $h (result i32 i32) (try_table
         // (catch $e-i32-i32 $h) (call $throw-1-2)) (return))`.

@@ -922,6 +922,144 @@ struct PartStyleEntry {
     base_fragment: String,
     transitions: Vec<StyleTransition>,
     states: std::collections::HashMap<String, PartStateStyle>,
+    /// `flex-grow` / `align-items` / `justify-content` have no 1:1 XAML
+    /// setter, so `css_property_to_xaml_setter` maps them to `None` and
+    /// they never survive into `base_fragment`. The `Row`/`Column`→`Grid`
+    /// lowering (see `mosaic-emit-xaml.md` §3.1) reads them here instead,
+    /// straight off the raw mosstyle props.
+    flex: FlexHints,
+}
+
+/// Layout hints a `Row`/`Column`'s `<Grid>` lowering needs but that have no
+/// direct XAML attribute. Populated once per part in `build_part_style_map`
+/// from the raw mosstyle props (`part.base`), independent of the
+/// CSS-property→XAML-setter table `build_style_fragment` uses.
+///
+/// `flex_grow` / `main_axis_full` are read off a *child*'s own part (do I
+/// get a star-sized cell?). `align_items` / `justify_content` are read off
+/// the *container*'s own part (how do I place my children?). Both live on
+/// the same struct because both come from the same raw-prop scan; only the
+/// caller decides which fields are meaningful for its role.
+#[derive(Debug, Clone, Default)]
+struct FlexHints {
+    /// `true` when this part's own style carries a non-zero `flex-grow`.
+    /// Only `flex-grow: 1` is authored anywhere in the repo today, so this
+    /// is a boolean ("does this child grow") rather than a weight; add a
+    /// numeric weight if a real fractional/multi-value case ever appears.
+    flex_grow: bool,
+    /// `true` when this part's own style sets `width: 100%` (read by a
+    /// `Row`'s child) or `height: 100%` (read by a `Column`'s child) — the
+    /// main-axis case, flexbox's own "claim the remaining space", treated
+    /// identically to `flex_grow`. The cross-axis case needs no flag: it's
+    /// already handled by `stretch_alignment_for`'s `HorizontalAlignment`/
+    /// `VerticalAlignment` = `Stretch`, which composes fine with `<Grid>`'s
+    /// own default child-stretch behavior.
+    width_full: bool,
+    height_full: bool,
+    /// Container-only: this part's own `align-items` value, when it's one
+    /// this backend maps (today: only `center` is authored anywhere).
+    align_items: Option<String>,
+    /// Container-only: this part's own `justify-content` value, when it's
+    /// one this backend maps (today: only `space-between` is authored
+    /// anywhere).
+    justify_content: Option<String>,
+}
+
+/// Which axis a flex `<Grid>` lowering runs along. `Row` children flow
+/// left→right (one `ColumnDefinition` per slot, `Grid.Column` attached
+/// property); `Column` children flow top→bottom (one `RowDefinition` per
+/// slot, `Grid.Row`).
+#[derive(Debug, Clone, Copy, PartialEq, Eq)]
+enum FlexAxis {
+    Row,
+    Column,
+}
+
+impl FlexAxis {
+    /// The attached property that positions a child along this axis.
+    fn grid_position_property(self) -> &'static str {
+        match self {
+            FlexAxis::Row => "Grid.Column",
+            FlexAxis::Column => "Grid.Row",
+        }
+    }
+    /// The `<Grid.*Definitions>` wrapper tag for this axis.
+    fn definitions_tag(self) -> &'static str {
+        match self {
+            FlexAxis::Row => "Grid.ColumnDefinitions",
+            FlexAxis::Column => "Grid.RowDefinitions",
+        }
+    }
+    /// The individual `<*Definition>` tag for this axis.
+    fn definition_tag(self) -> &'static str {
+        match self {
+            FlexAxis::Row => "ColumnDefinition",
+            FlexAxis::Column => "RowDefinition",
+        }
+    }
+    /// The size attribute name on a definition element (`Width` for a
+    /// `ColumnDefinition`, `Height` for a `RowDefinition`).
+    fn definition_size_attr(self) -> &'static str {
+        match self {
+            FlexAxis::Row => "Width",
+            FlexAxis::Column => "Height",
+        }
+    }
+    /// `Grid.ColumnSpacing` / `Grid.RowSpacing` — added to `Grid` in
+    /// Windows App SDK 1.3+ (this spec pins 1.5, `mosaic-emit-xaml.md`
+    /// §10), the `<Grid>` equivalent of the `<StackPanel>`-only `Spacing`
+    /// that `gap` used to map to.
+    fn spacing_attr(self) -> &'static str {
+        match self {
+            FlexAxis::Row => "ColumnSpacing",
+            FlexAxis::Column => "RowSpacing",
+        }
+    }
+    /// The cross-axis alignment property `align-items` sets on children —
+    /// vertical for a `Row` (its cross axis), horizontal for a `Column`.
+    fn cross_align_property(self) -> &'static str {
+        match self {
+            FlexAxis::Row => "VerticalAlignment",
+            FlexAxis::Column => "HorizontalAlignment",
+        }
+    }
+    /// Does this part's own `FlexHints` say a child on this axis should
+    /// get a star-sized cell (either `flex-grow` or a main-axis 100%)?
+    fn child_grows(self, hints: &FlexHints) -> bool {
+        hints.flex_grow
+            || match self {
+                FlexAxis::Row => hints.width_full,
+                FlexAxis::Column => hints.height_full,
+            }
+    }
+}
+
+/// Scan a part's raw mosstyle props for the flex hints that have no XAML
+/// setter (`build_style_fragment` already drops all four for that reason —
+/// see its `css_property_to_xaml_setter` call). Deliberately narrow: only
+/// the exact values authored anywhere in the repo today are recognised: `
+/// flex-grow: 1`, `align-items: center`, `justify-content: space-between`.
+/// Anything else is left `None`/`false` — same "don't guess, defer" policy
+/// as the rest of this emitter (see `mosaic-emit-xaml.md` §3.1 for what's
+/// intentionally out of scope).
+fn extract_flex_hints(props: &[StyleProp]) -> FlexHints {
+    let mut hints = FlexHints::default();
+    for p in props {
+        let value = p.value.trim();
+        match p.name.as_str() {
+            "flex-grow" => {
+                hints.flex_grow = value.parse::<f64>().map(|n| n != 0.0).unwrap_or(false);
+            }
+            "width" if value == "100%" => hints.width_full = true,
+            "height" if value == "100%" => hints.height_full = true,
+            "align-items" if value == "center" => hints.align_items = Some(value.to_string()),
+            "justify-content" if value == "space-between" => {
+                hints.justify_content = Some(value.to_string());
+            }
+            _ => {}
+        }
+    }
+    hints
 }
 
 type PartStyleMap = std::collections::HashMap<String, PartStyleEntry>;
@@ -957,6 +1095,7 @@ fn build_part_style_map(style: &StyleDef) -> PartStyleMap {
     let mut out = PartStyleMap::with_capacity(style.parts.len());
     for part in &style.parts {
         let base_fragment = build_style_fragment(&part.base);
+        let flex = extract_flex_hints(&part.base);
         let states = part
             .states
             .iter()
@@ -970,13 +1109,23 @@ fn build_part_style_map(style: &StyleDef) -> PartStyleMap {
                 )
             })
             .collect();
-        if !base_fragment.is_empty() || !part.transitions.is_empty() || !part.states.is_empty() {
+        let has_flex_hints = flex.flex_grow
+            || flex.width_full
+            || flex.height_full
+            || flex.align_items.is_some()
+            || flex.justify_content.is_some();
+        if !base_fragment.is_empty()
+            || !part.transitions.is_empty()
+            || !part.states.is_empty()
+            || has_flex_hints
+        {
             out.insert(
                 part.name.clone(),
                 PartStyleEntry {
                     base_fragment,
                     transitions: part.transitions.clone(),
                     states,
+                    flex,
                 },
             );
         }
@@ -1895,11 +2044,18 @@ fn css_property_to_xaml_setter(name: &str) -> Option<String> {
         //                     an invalid literal.
         //   box-shadow      â€” WinUI shadows use `<ThemeShadow>` /
         //                     translation Z, not a CSS-shaped property.
-        //   align-items     — requires child-level alignment, not a
-        //                     property on StackPanel/Border/TextBlock.
-        //   justify-content — StackPanel has no space-between/around
-        //                     distribution property.
+        //   align-items     — no 1:1 XAML setter (it becomes per-child
+        //                     Horizontal/VerticalAlignment, not one
+        //                     attribute on the container). `emit_flex_grid`
+        //                     reads it straight off the raw StyleProp list
+        //                     via `extract_flex_hints`/`FlexHints`, not
+        //                     through this table — see mosaic-emit-xaml.md
+        //                     §3.1. Still correctly `None` here.
+        //   justify-content — same story: becomes spacer `ColumnDefinition`/
+        //                     `RowDefinition`s, not a container attribute.
+        //                     See `FlexHints`/§3.1.
         //   flex-wrap       — WinUI has no built-in WrapPanel in WinUI 3.
+        //                     Genuinely unhandled (tracked separately).
         "align-items" | "border-collapse" | "border-style" | "box-shadow" | "flex-wrap"
         | "justify-content" | "outline" | "text-decoration" => None,
         // Unknown properties must not be PascalCased into fake WinUI
@@ -2275,8 +2431,8 @@ fn emit_xaml_node(
 ) -> Result<String, PipelineEmitError> {
     match node.tag.as_str() {
         "Box" => emit_box(node, indent, part_styles, ctx),
-        "Row" => emit_stack_panel(node, indent, part_styles, "Horizontal", ctx),
-        "Column" => emit_stack_panel(node, indent, part_styles, "Vertical", ctx),
+        "Row" => emit_flex_grid(node, indent, part_styles, FlexAxis::Row, ctx),
+        "Column" => emit_flex_grid(node, indent, part_styles, FlexAxis::Column, ctx),
         "Stack" => emit_stack(node, indent, part_styles, ctx),
         "Text" => emit_text(node, indent, part_styles, ctx),
         "Image" => emit_image(node, indent, part_styles, ctx),
@@ -2293,7 +2449,7 @@ fn emit_xaml_node(
         // conditional. The look-ahead for `Else` happens in the
         // children iterator, so the standalone case here means no
         // `Else` was paired.
-        "If" => emit_if(node, None, indent, part_styles, ctx),
+        "If" => emit_if(node, None, indent, part_styles, ctx, None),
         // A standalone `Else` (no preceding `If`) is a moslayout-level
         // validation error per UI29 Â§3.2; we treat it as
         // UnsupportedPrimitive here for the second line of defence in
@@ -2378,7 +2534,7 @@ fn emit_xaml_children(
         if child.tag == "If" {
             // Look ahead one position for an `Else` sibling.
             let else_node = children.get(i + 1).filter(|next| next.tag == "Else");
-            out.push_str(&emit_if(child, else_node, indent, part_styles, ctx)?);
+            out.push_str(&emit_if(child, else_node, indent, part_styles, ctx, None)?);
             // Skip past the consumed `Else` if we paired one.
             i += if else_node.is_some() { 2 } else { 1 };
         } else if child.tag == "Else" {
@@ -2663,6 +2819,54 @@ fn partition_stack_panel_style(
     (wrapper, stack, text)
 }
 
+/// `<Grid>` equivalent of `partition_stack_panel_style`. Same three-way
+/// split (wrapper `<Border>` attrs / the panel's own attrs / text-style
+/// setters for descendant `TextBlock`s) and the same "valid directly on
+/// the panel" bucket (`is_stack_panel_style_attr` — `Margin`/`Width`/
+/// `Height`/Min·Max/alignments/`Opacity` are all valid on `<Grid>` too;
+/// `<Grid>` has no `Padding` any more than `<StackPanel>` does, so those
+/// still route to the wrapping `<Border>`). The one difference: `gap`
+/// lowers to the `StackPanel`-only `Spacing` setter, which `<Grid>`
+/// doesn't have — rename it to `axis.spacing_attr()`
+/// (`ColumnSpacing`/`RowSpacing`) here.
+fn partition_flex_grid_style(
+    part: Option<&str>,
+    part_styles: &PartStyleMap,
+    axis: FlexAxis,
+) -> (String, String, Vec<(String, String)>) {
+    let frag = match part.and_then(|p| part_styles.get(p)) {
+        Some(entry) => entry.base_fragment.as_str(),
+        None => return (String::new(), String::new(), Vec::new()),
+    };
+    let mut wrapper = String::new();
+    let mut grid = String::new();
+    let mut text = Vec::new();
+    for (setter, value) in parse_style_fragment(frag) {
+        if setter == "Spacing" {
+            grid.push(' ');
+            grid.push_str(axis.spacing_attr());
+            grid.push_str("=\"");
+            grid.push_str(&value);
+            grid.push('"');
+        } else if is_container_style_attr(&setter) && !is_stack_panel_style_attr(&setter) {
+            wrapper.push(' ');
+            wrapper.push_str(&setter);
+            wrapper.push_str("=\"");
+            wrapper.push_str(&value);
+            wrapper.push('"');
+        } else if is_stack_panel_style_attr(&setter) {
+            grid.push(' ');
+            grid.push_str(&setter);
+            grid.push_str("=\"");
+            grid.push_str(&value);
+            grid.push('"');
+        } else if is_text_style_attr(&setter) {
+            text.push((setter, value));
+        }
+    }
+    (wrapper, grid, text)
+}
+
 // ---------------------------------------------------------------------
 // Primitive emitters (the nine simple kernel primitives â€” PR-1)
 // ---------------------------------------------------------------------
@@ -2746,6 +2950,173 @@ fn emit_stack_panel(
         writeln!(out, "{pad}</StackPanel>").unwrap();
     } else {
         writeln!(out, "{inner_pad}</StackPanel>").unwrap();
+        writeln!(out, "{pad}</Border>").unwrap();
+    }
+    Ok(out)
+}
+
+/// One `Grid.Column`/`Grid.Row` slot inside a flex `<Grid>`. An `If`/`Else`
+/// pair occupies exactly one slot (both branches share one grid index —
+/// see `mosaic-emit-xaml.md` §3.1); a `justify-content: space-between`
+/// spacer is a slot with no source node at all.
+enum FlexSlot<'a> {
+    Node {
+        node: &'a LayoutNode,
+        grows: bool,
+    },
+    If {
+        if_node: &'a LayoutNode,
+        else_node: Option<&'a LayoutNode>,
+        grows: bool,
+    },
+    Spacer,
+}
+
+/// Does `node`'s own part style request a star-sized cell on `axis`
+/// (`flex-grow`, or the main-axis `width`/`height: 100%` case — see
+/// `FlexAxis::child_grows`)?
+fn flex_child_grows(node: &LayoutNode, part_styles: &PartStyleMap, axis: FlexAxis) -> bool {
+    node.part_name
+        .as_deref()
+        .and_then(|p| part_styles.get(p))
+        .is_some_and(|entry| axis.child_grows(&entry.flex))
+}
+
+/// `Row`/`Column [name] { children }` → `<Grid>` with one
+/// `ColumnDefinition`/`RowDefinition` per child slot and a matching
+/// `Grid.Column`/`Grid.Row` attached property on each child — the flex
+/// lowering documented in `mosaic-emit-xaml.md` §3.1. Replaces the old
+/// `<StackPanel>` lowering (`emit_stack_panel`, kept for the unrelated
+/// `HostTable` row-section emitter, which isn't a flex container).
+fn emit_flex_grid(
+    node: &LayoutNode,
+    indent: usize,
+    part_styles: &PartStyleMap,
+    axis: FlexAxis,
+    ctx: &mut EmitContext<'_>,
+) -> Result<String, PipelineEmitError> {
+    let pad = " ".repeat(indent);
+    let inner_pad = " ".repeat(indent + 4);
+    let (container_attrs, grid_attrs, text_setters) =
+        partition_flex_grid_style(node.part_name.as_deref(), part_styles, axis);
+    let wrapped = !container_attrs.is_empty() || !text_setters.is_empty();
+    let mut out = if !wrapped {
+        format!("{pad}<Grid{grid_attrs}>\n")
+    } else {
+        let mut wrapped_out = format!("{pad}<Border{container_attrs}>\n");
+        emit_text_style_resources(&mut wrapped_out, "Border", indent + 4, &text_setters);
+        writeln!(wrapped_out, "{inner_pad}<Grid{grid_attrs}>").unwrap();
+        wrapped_out
+    };
+    let content_indent = if wrapped { indent + 8 } else { indent + 4 };
+    let content_pad = " ".repeat(content_indent);
+
+    let container_flex = node
+        .part_name
+        .as_deref()
+        .and_then(|p| part_styles.get(p))
+        .map(|entry| entry.flex.clone())
+        .unwrap_or_default();
+    let space_between = container_flex.justify_content.as_deref() == Some("space-between");
+    let cross_align = container_flex
+        .align_items
+        .as_deref()
+        .filter(|v| *v == "center")
+        .map(|_| format!("{}=\"Center\"", axis.cross_align_property()));
+
+    // -- Build the ordered slot list. An `If` looks ahead for a paired
+    //    `Else` exactly like `emit_xaml_children` does — both branches
+    //    are one logical slot even though `emit_if` emits two sibling
+    //    `<ContentControl>`s for them. --
+    let mut slots: Vec<FlexSlot<'_>> = Vec::with_capacity(node.children.len());
+    let mut i = 0;
+    while i < node.children.len() {
+        let child = &node.children[i];
+        if child.tag == "Else" {
+            return Err(PipelineEmitError::UnsupportedPrimitive(
+                "Else without preceding If".to_string(),
+            ));
+        }
+        if space_between && !slots.is_empty() {
+            slots.push(FlexSlot::Spacer);
+        }
+        if child.tag == "If" {
+            let else_node = node.children.get(i + 1).filter(|n| n.tag == "Else");
+            let grows = flex_child_grows(child, part_styles, axis);
+            slots.push(FlexSlot::If {
+                if_node: child,
+                else_node,
+                grows,
+            });
+            i += if else_node.is_some() { 2 } else { 1 };
+        } else {
+            let grows = flex_child_grows(child, part_styles, axis);
+            slots.push(FlexSlot::Node { node: child, grows });
+            i += 1;
+        }
+    }
+
+    // -- Definitions: one per slot, `"*"` for a growing child or a
+    //    space-between spacer, `Auto` otherwise. --
+    if !slots.is_empty() {
+        writeln!(out, "{content_pad}<{}>", axis.definitions_tag()).unwrap();
+        let def_pad = " ".repeat(content_indent + 4);
+        for slot in &slots {
+            let grows = matches!(
+                slot,
+                FlexSlot::Spacer
+                    | FlexSlot::Node { grows: true, .. }
+                    | FlexSlot::If { grows: true, .. }
+            );
+            let size = if grows { "*" } else { "Auto" };
+            writeln!(
+                out,
+                "{def_pad}<{} {}=\"{size}\"/>",
+                axis.definition_tag(),
+                axis.definition_size_attr()
+            )
+            .unwrap();
+        }
+        writeln!(out, "{content_pad}</{}>", axis.definitions_tag()).unwrap();
+    }
+
+    // -- Children, each positioned by the same-index attached property. --
+    for (idx, slot) in slots.iter().enumerate() {
+        let position_attr = format!("{}=\"{idx}\"", axis.grid_position_property());
+        let combined_attr = match &cross_align {
+            Some(a) => format!("{position_attr} {a}"),
+            None => position_attr,
+        };
+        match slot {
+            FlexSlot::Spacer => {
+                let spacer = format!("{content_pad}<Rectangle Width=\"Auto\" Height=\"Auto\"/>\n");
+                out.push_str(&inject_attr_into_first_element(&spacer, &combined_attr));
+            }
+            FlexSlot::If {
+                if_node,
+                else_node,
+                ..
+            } => {
+                out.push_str(&emit_if(
+                    if_node,
+                    *else_node,
+                    content_indent,
+                    part_styles,
+                    ctx,
+                    Some(&combined_attr),
+                )?);
+            }
+            FlexSlot::Node { node: child, .. } => {
+                let body = emit_xaml_node(child, content_indent, part_styles, ctx)?;
+                out.push_str(&inject_attr_into_first_element(&body, &combined_attr));
+            }
+        }
+    }
+
+    if !wrapped {
+        writeln!(out, "{pad}</Grid>").unwrap();
+    } else {
+        writeln!(out, "{inner_pad}</Grid>").unwrap();
         writeln!(out, "{pad}</Border>").unwrap();
     }
     Ok(out)
@@ -4978,7 +5349,14 @@ fn emit_if(
     indent: usize,
     part_styles: &PartStyleMap,
     ctx: &mut EmitContext<'_>,
+    // Extra attribute(s) (e.g. `Grid.Column="2" VerticalAlignment="Center"`)
+    // spliced onto BOTH branches' `<ContentControl>` tags. Used by
+    // `emit_flex_grid` (mosaic-emit-xaml.md §3.1): an If/Else pair is one
+    // logical grid slot, and both mutually-exclusive branches must carry
+    // the same attached property to land in that slot.
+    extra_attr: Option<&str>,
 ) -> Result<String, PipelineEmitError> {
+    let extra = extra_attr.map(|a| format!(" {a}")).unwrap_or_default();
     // -- 1. Lower the `when:` expression --
     let when_path = match find_prop_value(if_node, "when") {
         Some(LayoutPropValue::SlotRef(slot)) => {
@@ -5035,7 +5413,7 @@ fn emit_if(
     let mut out = String::new();
     writeln!(
         out,
-        "{pad}<ContentControl Visibility=\"{{x:Bind {when_path}, Converter={{StaticResource BoolToVisibilityConverter}}, Mode=OneWay}}\">"
+        "{pad}<ContentControl Visibility=\"{{x:Bind {when_path}, Converter={{StaticResource BoolToVisibilityConverter}}, Mode=OneWay}}\"{extra}>"
     )
     .unwrap();
     out.push_str(&then_body);
@@ -5049,7 +5427,7 @@ fn emit_if(
             emit_xaml_single_content_children(&else_node.children, indent + 4, part_styles, ctx)?;
         writeln!(
             out,
-            "{pad}<ContentControl Visibility=\"{{x:Bind {when_path}, Converter={{StaticResource BoolToVisibilityConverter}}, ConverterParameter=invert, Mode=OneWay}}\">"
+            "{pad}<ContentControl Visibility=\"{{x:Bind {when_path}, Converter={{StaticResource BoolToVisibilityConverter}}, ConverterParameter=invert, Mode=OneWay}}\"{extra}>"
         )
         .unwrap();
         out.push_str(&else_body);
@@ -9142,7 +9520,7 @@ fn emit_host_table_rows(
             "If" => {
                 // Allow conditional rows (e.g. show a row only when an
                 // option is enabled).
-                out.push_str(&emit_if(row, None, indent, part_styles, ctx)?);
+                out.push_str(&emit_if(row, None, indent, part_styles, ctx, None)?);
             }
             other => {
                 return Err(PipelineEmitError::UnsupportedPrimitive(format!(
@@ -9609,7 +9987,7 @@ mod tests {
     }
 
     #[test]
-    fn row_lowers_to_horizontal_stackpanel() {
+    fn row_lowers_to_horizontal_grid() {
         let c = component("Foo", vec![], vec![]);
         let l = layout_with_root(
             "Foo",
@@ -9621,15 +9999,15 @@ mod tests {
             },
         );
         let r = compile(&c, &l, &empty_style("Foo"));
-        assert!(
-            r.xaml.contains("<StackPanel Orientation=\"Horizontal\""),
-            "got:\n{}",
-            r.xaml
-        );
+        // An empty Row has no children, hence no ColumnDefinitions — the
+        // bare wrapper is enough to prove `Row` no longer lowers to
+        // `StackPanel` (mosaic-emit-xaml.md §3.1).
+        assert!(r.xaml.contains("<Grid>"), "got:\n{}", r.xaml);
+        assert!(!r.xaml.contains("StackPanel"), "got:\n{}", r.xaml);
     }
 
     #[test]
-    fn column_lowers_to_vertical_stackpanel() {
+    fn column_lowers_to_vertical_grid() {
         let c = component("Foo", vec![], vec![]);
         let l = layout_with_root(
             "Foo",
@@ -9641,11 +10019,57 @@ mod tests {
             },
         );
         let r = compile(&c, &l, &empty_style("Foo"));
+        assert!(r.xaml.contains("<Grid>"), "got:\n{}", r.xaml);
+        assert!(!r.xaml.contains("StackPanel"), "got:\n{}", r.xaml);
+    }
+
+    #[test]
+    fn row_with_children_gets_one_column_definition_per_child() {
+        let c = component("Foo", vec![], vec![]);
+        let l = layout_with_root(
+            "Foo",
+            LayoutNode {
+                tag: "Row".to_string(),
+                part_name: None,
+                props: Vec::new(),
+                children: vec![
+                    LayoutNode {
+                        tag: "Text".to_string(),
+                        part_name: None,
+                        props: vec![LayoutProp {
+                            name: "content".to_string(),
+                            value: LayoutPropValue::String("a".to_string()),
+                        }],
+                        children: Vec::new(),
+                    },
+                    LayoutNode {
+                        tag: "Text".to_string(),
+                        part_name: None,
+                        props: vec![LayoutProp {
+                            name: "content".to_string(),
+                            value: LayoutPropValue::String("b".to_string()),
+                        }],
+                        children: Vec::new(),
+                    },
+                ],
+            },
+        );
+        let r = compile(&c, &l, &empty_style("Foo"));
         assert!(
-            r.xaml.contains("<StackPanel Orientation=\"Vertical\""),
+            r.xaml.contains("<Grid.ColumnDefinitions>"),
             "got:\n{}",
             r.xaml
         );
+        assert_eq!(
+            r.xaml
+                .matches("<ColumnDefinition Width=\"Auto\"/>")
+                .count(),
+            2,
+            "expected one Auto ColumnDefinition per child, got:\n{}",
+            r.xaml
+        );
+        assert!(r.xaml.contains("Grid.Column=\"0\""), "got:\n{}", r.xaml);
+        assert!(r.xaml.contains("Grid.Column=\"1\""), "got:\n{}", r.xaml);
     }
 
     #[test]
@@ -9692,14 +10116,234 @@ mod tests {
             },
         );
         let r = compile(&c, &l, &empty_style("Foo"));
-        // The Text should be nested under the Column under the Row.
-        let row_pos = r
-            .xaml
-            .find("<StackPanel Orientation=\"Horizontal\"")
-            .unwrap();
-        let col_pos = r.xaml.find("<StackPanel Orientation=\"Vertical\"").unwrap();
+        // The Text should be nested under the Column under the Row. Both
+        // Row and Column lower to `<Grid ...>` (mosaic-emit-xaml.md §3.1)
+        // — the inner one carries its own `Grid.Column="0"` slot index, so
+        // match on the open tag rather than the exact bare `<Grid>` form.
+        let row_pos = r.xaml.find("<Grid>").unwrap();
+        let col_pos = r.xaml[row_pos + 1..].find("<Grid ").unwrap() + row_pos + 1;
         let txt_pos = r.xaml.find("<TextBlock").unwrap();
-        assert!(row_pos < col_pos && col_pos < txt_pos);
+        assert!(
+            row_pos < col_pos && col_pos < txt_pos,
+            "got:\n{}",
+            r.xaml
+        );
+    }
+
+    // ── §3.1 flex hints: flex-grow / main-axis 100% / justify-content /
+    //    If-Else grid-slot sharing ──
+
+    /// A child whose own style carries `flex-grow: 1` gets a `"*"`
+    /// definition instead of `Auto` — the one real weight authored
+    /// anywhere in the repo today (mosaic-emit-xaml.md §3.1).
+    #[test]
+    fn flex_grow_child_gets_star_column() {
+        let c = component("Foo", vec![], vec![]);
+        let l = layout_with_root(
+            "Foo",
+            LayoutNode {
+                tag: "Row".to_string(),
+                part_name: None,
+                props: Vec::new(),
+                children: vec![
+                    LayoutNode {
+                        tag: "Text".to_string(),
+                        part_name: Some("fixed".to_string()),
+                        props: vec![LayoutProp {
+                            name: "content".to_string(),
+                            value: LayoutPropValue::String("fixed".to_string()),
+                        }],
+                        children: Vec::new(),
+                    },
+                    LayoutNode {
+                        tag: "Text".to_string(),
+                        part_name: Some("grows".to_string()),
+                        props: vec![LayoutProp {
+                            name: "content".to_string(),
+                            value: LayoutPropValue::String("grows".to_string()),
+                        }],
+                        children: Vec::new(),
+                    },
+                ],
+            },
+        );
+        let mut s = style_for_box("fixed", vec![]);
+        s.parts
+            .push(style_for_box("grows", vec![("flex-grow", "1")]).parts.remove(0));
+        let r = compile(&c, &l, &s);
+        assert!(
+            r.xaml.contains(
+                "<ColumnDefinition Width=\"Auto\"/>\n            <ColumnDefinition Width=\"*\"/>"
+            ),
+            "expected the first child Auto and the flex-grow child star, got:\n{}",
+            r.xaml
+        );
+    }
+
+    /// `width: 100%` on a `Row`'s direct child is flexbox's own "claim the
+    /// remaining main-axis space" — treated identically to `flex-grow: 1`
+    /// (mosaic-emit-xaml.md §3.1). `height: 100%` is the `Column` analog.
+    #[test]
+    fn main_axis_width_full_gets_star_column_like_flex_grow() {
+        let c = component("Foo", vec![], vec![]);
+        let l = layout_with_root(
+            "Foo",
+            LayoutNode {
+                tag: "Row".to_string(),
+                part_name: None,
+                props: Vec::new(),
+                children: vec![LayoutNode {
+                    tag: "Box".to_string(),
+                    part_name: Some("filler".to_string()),
+                    props: Vec::new(),
+                    children: Vec::new(),
+                }],
+            },
+        );
+        let s = style_for_box("filler", vec![("width", "100%")]);
+        let r = compile(&c, &l, &s);
+        assert!(
+            r.xaml.contains("<ColumnDefinition Width=\"*\"/>"),
+            "got:\n{}",
+            r.xaml
+        );
+    }
+
+    /// `justify-content: space-between` inserts a `"*"` spacer between
+    /// each pair of children — N children get N−1 spacers, none leading
+    /// or trailing (mosaic-emit-xaml.md §3.1).
+    #[test]
+    fn justify_content_space_between_inserts_star_spacers_between_children() {
+        let c = component("Foo", vec![], vec![]);
+        let l = layout_with_root(
+            "Foo",
+            LayoutNode {
+                tag: "Row".to_string(),
+                part_name: Some("toolbar".to_string()),
+                props: Vec::new(),
+                children: vec![
+                    LayoutNode {
+                        tag: "Text".to_string(),
+                        part_name: None,
+                        props: vec![LayoutProp {
+                            name: "content".to_string(),
+                            value: LayoutPropValue::String("a".to_string()),
+                        }],
+                        children: Vec::new(),
+                    },
+                    LayoutNode {
+                        tag: "Text".to_string(),
+                        part_name: None,
+                        props: vec![LayoutProp {
+                            name: "content".to_string(),
+                            value: LayoutPropValue::String("b".to_string()),
+                        }],
+                        children: Vec::new(),
+                    },
+                    LayoutNode {
+                        tag: "Text".to_string(),
+                        part_name: None,
+                        props: vec![LayoutProp {
+                            name: "content".to_string(),
+                            value: LayoutPropValue::String("c".to_string()),
+                        }],
+                        children: Vec::new(),
+                    },
+                ],
+            },
+        );
+        let s = style_for_box("toolbar", vec![("justify-content", "space-between")]);
+        let r = compile(&c, &l, &s);
+        // 3 real children + 2 spacers = 5 definitions; the 2 spacer slots
+        // (indices 1 and 3) are the star ones, real children stay Auto.
+        assert_eq!(
+            r.xaml.matches("<ColumnDefinition").count(),
+            5,
+            "got:\n{}",
+            r.xaml
+        );
+        assert_eq!(
+            r.xaml
+                .matches("<ColumnDefinition Width=\"*\"/>")
+                .count(),
+            2,
+            "got:\n{}",
+            r.xaml
+        );
+        assert!(r.xaml.contains("Grid.Column=\"0\""), "got:\n{}", r.xaml);
+        assert!(r.xaml.contains("Grid.Column=\"2\""), "got:\n{}", r.xaml);
+        assert!(r.xaml.contains("Grid.Column=\"4\""), "got:\n{}", r.xaml);
+    }
+
+    /// An `If`/`Else` pair is ONE logical grid slot even though `emit_if`
+    /// emits two sibling `<ContentControl>`s for it (§6.2) — both must
+    /// carry the SAME `Grid.Column`/`Grid.Row` index (mosaic-emit-xaml.md
+    /// §3.1), since only one is ever visible at a time.
+    #[test]
+    fn if_else_pair_shares_one_grid_index() {
+        let c = component("Foo", vec![slot("editable", SlotType::Bool, true)], vec![]);
+        let l = layout_with_root(
+            "Foo",
+            LayoutNode {
+                tag: "Column".to_string(),
+                part_name: None,
+                props: Vec::new(),
+                children: vec![
+                    LayoutNode {
+                        tag: "Text".to_string(),
+                        part_name: None,
+                        props: vec![LayoutProp {
+                            name: "content".to_string(),
+                            value: LayoutPropValue::String("above".to_string()),
+                        }],
+                        children: Vec::new(),
+                    },
+                    if_node(
+                        LayoutPropValue::SlotRef("editable".to_string()),
+                        vec![LayoutNode {
+                            tag: "Text".to_string(),
+                            part_name: None,
+                            props: vec![LayoutProp {
+                                name: "content".to_string(),
+                                value: LayoutPropValue::String("then".to_string()),
+                            }],
+                            children: Vec::new(),
+                        }],
+                    ),
+                    else_node(vec![LayoutNode {
+                        tag: "Text".to_string(),
+                        part_name: None,
+                        props: vec![LayoutProp {
+                            name: "content".to_string(),
+                            value: LayoutPropValue::String("else".to_string()),
+                        }],
+                        children: Vec::new(),
+                    }]),
+                ],
+            },
+        );
+        let r = compile(&c, &l, &empty_style("Foo"));
+        // 2 logical slots (the plain Text, then the If/Else pair) — NOT 3.
+        assert_eq!(
+            r.xaml.matches("<RowDefinition").count(),
+            2,
+            "got:\n{}",
+            r.xaml
+        );
+        assert!(
+            r.xaml.contains(
+                "Converter={StaticResource BoolToVisibilityConverter}, Mode=OneWay}\" Grid.Row=\"1\">"
+            ),
+            "then-branch should carry Grid.Row=\"1\", got:\n{}",
+            r.xaml
+        );
+        assert!(
+            r.xaml.contains(
+                "ConverterParameter=invert, Mode=OneWay}\" Grid.Row=\"1\">"
+            ),
+            "else-branch should carry Grid.Row=\"1\" too, got:\n{}",
+            r.xaml
+        );
     }
 
     // â”€â”€ primitive lowering: Text / Image / Spacer / Divider / Icon â”€â”€
@@ -12314,9 +12958,12 @@ mod tests {
             },
         );
         let r = compile(&c, &l, &empty_style("Foo"));
+        // The `If` is the Column's one child slot, so it carries that
+        // slot's `Grid.Row="0"` attached property (mosaic-emit-xaml.md
+        // §3.1) alongside its own Visibility binding.
         assert!(
             r.xaml
-                .contains("<ContentControl Visibility=\"{x:Bind Editable, Converter={StaticResource BoolToVisibilityConverter}, Mode=OneWay}\">"),
+                .contains("<ContentControl Visibility=\"{x:Bind Editable, Converter={StaticResource BoolToVisibilityConverter}, Mode=OneWay}\" Grid.Row=\"0\">"),
             "got:\n{}",
             r.xaml
         );
@@ -14763,12 +15410,17 @@ mod tests {
         );
     }
 
-    /// X6: Lattice/flex layout props must lower only where WinUI has a
-    /// native equivalent. `gap` becomes StackPanel.Spacing for Row/Column,
-    /// `max-width` becomes MaxWidth, and flex-only props are dropped instead
-    /// of leaking into a fake TextBlock style setter.
+    /// X6/§3.1: Lattice/flex layout props must lower only where WinUI has a
+    /// native equivalent. `gap` becomes `Grid.ColumnSpacing` for a `Row`
+    /// (`RowSpacing` for a `Column`), `max-width` becomes `MaxWidth`,
+    /// `align-items: center` becomes `VerticalAlignment="Center"` on the
+    /// child (the Row's cross axis), and `flex-wrap` (genuinely
+    /// unsupported — no WinUI 3 WrapPanel) is dropped instead of leaking
+    /// into a fake TextBlock style setter. A single child under
+    /// `justify-content: space-between` gets no spacer (space-between needs
+    /// ≥2 children to have anything to distribute between).
     #[test]
-    fn row_lattice_layout_style_lowers_to_native_stackpanel_attrs() {
+    fn row_lattice_layout_style_lowers_to_native_grid_attrs() {
         let c = component("Foo", vec![], vec![]);
         let l = layout_with_root(
             "Foo",
@@ -14803,10 +15455,24 @@ mod tests {
         let r = compile(&c, &l, &s);
 
         assert!(
-            r.xaml.contains(
-                "<StackPanel Orientation=\"Horizontal\" Spacing=\"16\" MaxWidth=\"980\">"
-            ),
-            "expected Row gap/max-width to land on StackPanel, got:\n{}",
+            r.xaml
+                .contains("<Grid ColumnSpacing=\"16\" MaxWidth=\"980\">"),
+            "expected Row gap/max-width to land on Grid, got:\n{}",
+            r.xaml
+        );
+        // align-items: center → the child's cross-axis (vertical, for a
+        // Row) alignment, injected alongside its Grid.Column index.
+        assert!(
+            r.xaml
+                .contains("Text=\"Title\" Grid.Column=\"0\" VerticalAlignment=\"Center\""),
+            "got:\n{}",
+            r.xaml
+        );
+        // One child under space-between: no spacer definitions.
+        assert_eq!(
+            r.xaml.matches("<ColumnDefinition").count(),
+            1,
+            "got:\n{}",
             r.xaml
         );
         assert!(
@@ -14827,6 +15493,7 @@ mod tests {
             "Property=\"FlexWrap\"",
             "Property=\"JustifyContent\"",
             "Value=\"980px\"",
+            "StackPanel",
         ] {
             assert!(
                 !r.xaml.contains(invalid),
@@ -15173,7 +15840,7 @@ mod tests {
     }
 
     #[test]
-    fn styled_column_wraps_stack_panel_in_border() {
+    fn styled_column_wraps_grid_in_border() {
         let c = component("Foo", vec![], vec![]);
         let l = layout_with_root(
             "Foo",
@@ -15200,15 +15867,10 @@ mod tests {
             "got:\n{}",
             r.xaml
         );
+        assert!(r.xaml.contains("<Grid>"), "got:\n{}", r.xaml);
         assert!(
-            r.xaml.contains("<StackPanel Orientation=\"Vertical\">"),
-            "got:\n{}",
-            r.xaml
-        );
-        assert!(
-            !r.xaml
-                .contains("<StackPanel Orientation=\"Vertical\" Background="),
-            "StackPanel must not carry Border/Control style attrs, got:\n{}",
+            !r.xaml.contains("<Grid Background="),
+            "Grid must not carry Border/Control style attrs, got:\n{}",
             r.xaml
         );
     }

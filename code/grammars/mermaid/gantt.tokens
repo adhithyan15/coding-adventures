@@ -6,15 +6,14 @@ case_sensitive: false
 
 skip:
   WHITESPACE          = /[ \t]+/
-  COMMENT             = /(?:%%|#)[^\r\n]*/
+  COMMENT             = /%%[^\r\n]*/
 
 NEWLINE               = /\r?\n/
-SEMICOLON             = ";"
 HEADER                = /gantt/
 ACC_DESCR_BLOCK       = /accDescr[ \t]*\{[^}]*\}/
 ACC_TITLE_STATEMENT   = /accTitle[ \t]*:[^#\r\n;]+/
 ACC_DESCR_STATEMENT   = /accDescr[ \t]*:[^#\r\n;]+/
-TITLE_STATEMENT       = /title[ \t]+[^\r\n;]+/
+TITLE_STATEMENT       = /title[ \t]+(?:[;#][^;\r\n]*|[^#;\r\n][^;\r\n]*)/
 DATE_FORMAT_STATEMENT = /dateFormat[ \t]+[^#\r\n;]+/
 AXIS_FORMAT_STATEMENT = /axisFormat[ \t]+[^#\r\n;]+/
 TICK_INTERVAL_STATEMENT = /tickInterval[ \t]+[^#\r\n;]+/
@@ -25,6 +24,7 @@ TOP_AXIS              = /topAxis/
 TODAY_MARKER_STATEMENT = /todayMarker[ \t]+[^#\r\n;]+/
 WEEKDAY_STATEMENT     = /weekday[ \t]+(?:monday|tuesday|wednesday|thursday|friday|saturday|sunday)/
 WEEKEND_STATEMENT     = /weekend[ \t]+(?:friday|saturday)/
-SECTION_STATEMENT     = /section[ \t]+[^\r\n;]+/
+SECTION_STATEMENT     = /section[ \t]+(?:[;#][^;\r\n]*|[^#;\r\n][^;\r\n]*)/
 CLICK_STATEMENT       = /click[ \t]+[^#\r\n;]+/
-TASK_STATEMENT        = /[^#:\r\n;]+:[^#\r\n;]+/
+TASK_STATEMENT        = /(?:[;#][^:\r\n;]+|[^#:\r\n;][^:\r\n;]*):[^#\r\n;]+/
+SEMICOLON             = ";"

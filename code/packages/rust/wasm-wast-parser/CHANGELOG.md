@@ -1,5 +1,15 @@
 # Changelog — wasm-wast-parser
 
+## 0.1.78 — 2026-08-26 — Exceptions proposal, fourth slice W24: `throw_ref` text form
+
+### Added
+
+- `throw_ref` parses and encodes in both folded and flat (bare-atom) text
+  forms — no special-casing needed: `wasm-opcodes` now registers it with
+  `immediates: &[]`, so this crate's existing generic no-immediate default
+  arm (the same one `unreachable`/`nop`/`return` already use) handles it
+  automatically. See `code/specs/W24-wasm-exceptions-exnref-catch-ref.md`.
+
 ## 0.1.77 — 2026-08-25 — Exceptions proposal, second slice W22: `exnref` recognized (inert)
 
 ### Added
