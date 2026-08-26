@@ -12,7 +12,7 @@
   },
   "summary": {
     "registeredTracks": 23,
-    "totalLessons": 4169,
+    "totalLessons": 4204,
     "authoredBooks": 23,
     "durationViolations": 0,
     "unknownPrerequisites": 0,
@@ -33,14 +33,14 @@
     "lessonsWithoutSequence": 0,
     "forwardReviews": 0,
     "atomsNeverRevisited": 599,
-    "forwardReferences": 663,
+    "forwardReferences": 671,
     "chaptersWithoutCapability": 0,
     "chapterPayoffsNotRepresentative": 80,
     "chapterGateCleanTracks": 9,
     "tracksWithoutWritingStageEvidence": 5,
     "missingWritingStagePairs": 596,
     "invalidWritingStageEvidence": 0,
-    "drivableLessons": 3516,
+    "drivableLessons": 3551,
     "drivablePercent": 84,
     "chaptersWithoutDrivablePrefix": 102,
     "unexplainedModalityOverrides": 0
@@ -1281,7 +1281,14 @@
           363,
           364,
           365,
-          366
+          366,
+          367,
+          368,
+          369,
+          370,
+          371,
+          372,
+          373
         ],
         "bookChapters": [
           1,
@@ -1649,7 +1656,14 @@
           363,
           364,
           365,
-          366
+          366,
+          367,
+          368,
+          369,
+          370,
+          371,
+          372,
+          373
         ],
         "missingBookChapters": [],
         "orphanBookChapters": [],
@@ -3394,9 +3408,9 @@
       {
         "language": "spanish",
         "status": "version-2",
-        "lessonCount": 896,
+        "lessonCount": 931,
         "versions": {
-          "2": 896
+          "2": 931
         }
       },
       {
@@ -4309,8 +4323,8 @@
       },
       {
         "language": "spanish",
-        "bookChapters": 366,
-        "declaredChapters": 366,
+        "bookChapters": 373,
+        "declaredChapters": 373,
         "missingCapability": 0,
         "findings": 26,
         "clean": false
@@ -4341,8 +4355,8 @@
       }
     ],
     "summary": {
-      "bookChapters": 1111,
-      "declaredChapters": 1111,
+      "bookChapters": 1118,
+      "declaredChapters": 1118,
       "chaptersWithoutCapability": 0,
       "payoffsNotClosed": 0,
       "payoffsNotRepresentative": 80,
@@ -4354,10 +4368,10 @@
     }
   },
   "levels": {
-    "totalLessons": 4169,
+    "totalLessons": 4204,
     "byLevel": {
       "pre-A1": 2732,
-      "A1": 743,
+      "A1": 778,
       "A2": 549,
       "B1": 40,
       "B2": 17,
@@ -4654,10 +4668,10 @@
       },
       {
         "language": "spanish",
-        "lessonCount": 896,
+        "lessonCount": 931,
         "byLevel": {
           "pre-A1": 354,
-          "A1": 299,
+          "A1": 334,
           "A2": 158,
           "B1": 40,
           "B2": 17,
@@ -5319,8 +5333,8 @@
       },
       {
         "language": "spanish",
-        "lessonCount": 896,
-        "measurable": 892,
+        "lessonCount": 931,
+        "measurable": 927,
         "unmeasurable": 4,
         "lessonViolations": 0,
         "chapterViolations": 0
@@ -5982,7 +5996,7 @@
           "language": "spanish",
           "script": "latin",
           "latinScript": true,
-          "lessonCount": 896,
+          "lessonCount": 931,
           "totalGlyphs": 0,
           "lessonViolations": 0,
           "systemViolations": 0,
@@ -19278,6 +19292,426 @@
         "language": "spanish",
         "introducedBy": "ES-C350-tipo",
         "introducedAt": 815,
+        "missed": [
+          "R2",
+          "R3",
+          "R4"
+        ],
+        "revisits": 2
+      },
+      {
+        "atom": "ES-LEX-C351-COUNT-06",
+        "language": "spanish",
+        "introducedBy": "ES-C351-cien",
+        "introducedAt": 816,
+        "missed": [
+          "R2",
+          "R3",
+          "R4"
+        ],
+        "revisits": 2
+      },
+      {
+        "atom": "ES-LEX-C351-COUNT-07",
+        "language": "spanish",
+        "introducedBy": "ES-C351-cantidad",
+        "introducedAt": 817,
+        "missed": [
+          "R2",
+          "R3",
+          "R4"
+        ],
+        "revisits": 2
+      },
+      {
+        "atom": "ES-LEX-C351-COUNT-08",
+        "language": "spanish",
+        "introducedBy": "ES-C351-ambos",
+        "introducedAt": 818,
+        "missed": [
+          "R2",
+          "R3",
+          "R4"
+        ],
+        "revisits": 2
+      },
+      {
+        "atom": "ES-LEX-C351-COUNT-09",
+        "language": "spanish",
+        "introducedBy": "ES-C351-varios",
+        "introducedAt": 819,
+        "missed": [
+          "R2",
+          "R3",
+          "R4"
+        ],
+        "revisits": 2
+      },
+      {
+        "atom": "ES-LEX-C351-COUNT-10",
+        "language": "spanish",
+        "introducedBy": "ES-C351-triple",
+        "introducedAt": 820,
+        "missed": [
+          "R2",
+          "R3",
+          "R4"
+        ],
+        "revisits": 2
+      },
+      {
+        "atom": "ES-LEX-C352-COUNT-11",
+        "language": "spanish",
+        "introducedBy": "ES-C352-conjunto",
+        "introducedAt": 821,
+        "missed": [
+          "R2",
+          "R3",
+          "R4"
+        ],
+        "revisits": 2
+      },
+      {
+        "atom": "ES-LEX-C352-COUNT-12",
+        "language": "spanish",
+        "introducedBy": "ES-C352-entero",
+        "introducedAt": 822,
+        "missed": [
+          "R2",
+          "R3",
+          "R4"
+        ],
+        "revisits": 2
+      },
+      {
+        "atom": "ES-LEX-C352-COUNT-13",
+        "language": "spanish",
+        "introducedBy": "ES-C352-mayoria",
+        "introducedAt": 823,
+        "missed": [
+          "R2",
+          "R3",
+          "R4"
+        ],
+        "revisits": 2
+      },
+      {
+        "atom": "ES-LEX-C352-COUNT-14",
+        "language": "spanish",
+        "introducedBy": "ES-C352-resto",
+        "introducedAt": 824,
+        "missed": [
+          "R2",
+          "R3",
+          "R4"
+        ],
+        "revisits": 2
+      },
+      {
+        "atom": "ES-LEX-C352-COUNT-15",
+        "language": "spanish",
+        "introducedBy": "ES-C352-escaso",
+        "introducedAt": 825,
+        "missed": [
+          "R2",
+          "R3",
+          "R4"
+        ],
+        "revisits": 2
+      },
+      {
+        "atom": "ES-LEX-C353-WHERE-21",
+        "language": "spanish",
+        "introducedBy": "ES-C353-hospital",
+        "introducedAt": 826,
+        "missed": [
+          "R2",
+          "R3",
+          "R4"
+        ],
+        "revisits": 2
+      },
+      {
+        "atom": "ES-LEX-C353-WHERE-22",
+        "language": "spanish",
+        "introducedBy": "ES-C353-banco",
+        "introducedAt": 827,
+        "missed": [
+          "R2",
+          "R3",
+          "R4"
+        ],
+        "revisits": 2
+      },
+      {
+        "atom": "ES-LEX-C353-WHERE-23",
+        "language": "spanish",
+        "introducedBy": "ES-C353-farmacia",
+        "introducedAt": 828,
+        "missed": [
+          "R2",
+          "R3",
+          "R4"
+        ],
+        "revisits": 2
+      },
+      {
+        "atom": "ES-LEX-C353-WHERE-24",
+        "language": "spanish",
+        "introducedBy": "ES-C353-biblioteca",
+        "introducedAt": 829,
+        "missed": [
+          "R2",
+          "R3",
+          "R4"
+        ],
+        "revisits": 2
+      },
+      {
+        "atom": "ES-LEX-C353-WHERE-25",
+        "language": "spanish",
+        "introducedBy": "ES-C353-museo",
+        "introducedAt": 830,
+        "missed": [
+          "R2",
+          "R3",
+          "R4"
+        ],
+        "revisits": 2
+      },
+      {
+        "atom": "ES-LEX-C354-WHERE-26",
+        "language": "spanish",
+        "introducedBy": "ES-C354-hotel",
+        "introducedAt": 831,
+        "missed": [
+          "R2",
+          "R3",
+          "R4"
+        ],
+        "revisits": 2
+      },
+      {
+        "atom": "ES-LEX-C354-WHERE-27",
+        "language": "spanish",
+        "introducedBy": "ES-C354-restaurante",
+        "introducedAt": 832,
+        "missed": [
+          "R2",
+          "R3",
+          "R4"
+        ],
+        "revisits": 2
+      },
+      {
+        "atom": "ES-LEX-C354-WHERE-28",
+        "language": "spanish",
+        "introducedBy": "ES-C354-cine",
+        "introducedAt": 833,
+        "missed": [
+          "R2",
+          "R3",
+          "R4"
+        ],
+        "revisits": 2
+      },
+      {
+        "atom": "ES-LEX-C354-WHERE-29",
+        "language": "spanish",
+        "introducedBy": "ES-C354-parque",
+        "introducedAt": 834,
+        "missed": [
+          "R2",
+          "R3",
+          "R4"
+        ],
+        "revisits": 2
+      },
+      {
+        "atom": "ES-LEX-C354-WHERE-30",
+        "language": "spanish",
+        "introducedBy": "ES-C354-jardin",
+        "introducedAt": 835,
+        "missed": [
+          "R2",
+          "R3",
+          "R4"
+        ],
+        "revisits": 2
+      },
+      {
+        "atom": "ES-LEX-C355-WHERE-31",
+        "language": "spanish",
+        "introducedBy": "ES-C355-pared",
+        "introducedAt": 836,
+        "missed": [
+          "R2",
+          "R3",
+          "R4"
+        ],
+        "revisits": 2
+      },
+      {
+        "atom": "ES-LEX-C355-WHERE-32",
+        "language": "spanish",
+        "introducedBy": "ES-C355-techo",
+        "introducedAt": 837,
+        "missed": [
+          "R2",
+          "R3",
+          "R4"
+        ],
+        "revisits": 2
+      },
+      {
+        "atom": "ES-LEX-C355-WHERE-33",
+        "language": "spanish",
+        "introducedBy": "ES-C355-piso",
+        "introducedAt": 838,
+        "missed": [
+          "R2",
+          "R3",
+          "R4"
+        ],
+        "revisits": 2
+      },
+      {
+        "atom": "ES-LEX-C355-WHERE-34",
+        "language": "spanish",
+        "introducedBy": "ES-C355-rincon",
+        "introducedAt": 839,
+        "missed": [
+          "R2",
+          "R3",
+          "R4"
+        ],
+        "revisits": 2
+      },
+      {
+        "atom": "ES-LEX-C355-WHERE-35",
+        "language": "spanish",
+        "introducedBy": "ES-C355-fondo",
+        "introducedAt": 840,
+        "missed": [
+          "R2",
+          "R3",
+          "R4"
+        ],
+        "revisits": 2
+      },
+      {
+        "atom": "ES-LEX-C356-CLOCK-21",
+        "language": "spanish",
+        "introducedBy": "ES-C356-desde",
+        "introducedAt": 841,
+        "missed": [
+          "R2",
+          "R3",
+          "R4"
+        ],
+        "revisits": 2
+      },
+      {
+        "atom": "ES-LEX-C356-CLOCK-22",
+        "language": "spanish",
+        "introducedBy": "ES-C356-cita",
+        "introducedAt": 842,
+        "missed": [
+          "R2",
+          "R3",
+          "R4"
+        ],
+        "revisits": 2
+      },
+      {
+        "atom": "ES-LEX-C356-CLOCK-23",
+        "language": "spanish",
+        "introducedBy": "ES-C356-etapa",
+        "introducedAt": 843,
+        "missed": [
+          "R2",
+          "R3",
+          "R4"
+        ],
+        "revisits": 2
+      },
+      {
+        "atom": "ES-LEX-C356-CLOCK-24",
+        "language": "spanish",
+        "introducedBy": "ES-C356-ocasion",
+        "introducedAt": 844,
+        "missed": [
+          "R2",
+          "R3",
+          "R4"
+        ],
+        "revisits": 2
+      },
+      {
+        "atom": "ES-LEX-C356-CLOCK-25",
+        "language": "spanish",
+        "introducedBy": "ES-C356-repente",
+        "introducedAt": 845,
+        "missed": [
+          "R2",
+          "R3",
+          "R4"
+        ],
+        "revisits": 2
+      },
+      {
+        "atom": "ES-LEX-C357-CLOCK-26",
+        "language": "spanish",
+        "introducedBy": "ES-C357-navidad",
+        "introducedAt": 846,
+        "missed": [
+          "R2",
+          "R3",
+          "R4"
+        ],
+        "revisits": 2
+      },
+      {
+        "atom": "ES-LEX-C357-CLOCK-27",
+        "language": "spanish",
+        "introducedBy": "ES-C357-pascua",
+        "introducedAt": 847,
+        "missed": [
+          "R2",
+          "R3",
+          "R4"
+        ],
+        "revisits": 2
+      },
+      {
+        "atom": "ES-LEX-C357-CLOCK-28",
+        "language": "spanish",
+        "introducedBy": "ES-C357-vispera",
+        "introducedAt": 848,
+        "missed": [
+          "R2",
+          "R3",
+          "R4"
+        ],
+        "revisits": 2
+      },
+      {
+        "atom": "ES-LEX-C357-CLOCK-29",
+        "language": "spanish",
+        "introducedBy": "ES-C357-regalo",
+        "introducedAt": 849,
+        "missed": [
+          "R2",
+          "R3",
+          "R4"
+        ],
+        "revisits": 2
+      },
+      {
+        "atom": "ES-LEX-C357-CLOCK-30",
+        "language": "spanish",
+        "introducedBy": "ES-C357-tarjeta",
+        "introducedAt": 850,
         "missed": [
           "R2",
           "R3",
@@ -36920,391 +37354,6 @@
         "revisits": 4
       },
       {
-        "atom": "ES-LEX-C351-COUNT-06",
-        "language": "spanish",
-        "introducedBy": "ES-C351-cien",
-        "introducedAt": 816,
-        "missed": [
-          "R2",
-          "R3"
-        ],
-        "revisits": 2
-      },
-      {
-        "atom": "ES-LEX-C351-COUNT-07",
-        "language": "spanish",
-        "introducedBy": "ES-C351-cantidad",
-        "introducedAt": 817,
-        "missed": [
-          "R2",
-          "R3"
-        ],
-        "revisits": 2
-      },
-      {
-        "atom": "ES-LEX-C351-COUNT-08",
-        "language": "spanish",
-        "introducedBy": "ES-C351-ambos",
-        "introducedAt": 818,
-        "missed": [
-          "R2",
-          "R3"
-        ],
-        "revisits": 2
-      },
-      {
-        "atom": "ES-LEX-C351-COUNT-09",
-        "language": "spanish",
-        "introducedBy": "ES-C351-varios",
-        "introducedAt": 819,
-        "missed": [
-          "R2",
-          "R3"
-        ],
-        "revisits": 2
-      },
-      {
-        "atom": "ES-LEX-C351-COUNT-10",
-        "language": "spanish",
-        "introducedBy": "ES-C351-triple",
-        "introducedAt": 820,
-        "missed": [
-          "R2",
-          "R3"
-        ],
-        "revisits": 2
-      },
-      {
-        "atom": "ES-LEX-C352-COUNT-11",
-        "language": "spanish",
-        "introducedBy": "ES-C352-conjunto",
-        "introducedAt": 821,
-        "missed": [
-          "R2",
-          "R3"
-        ],
-        "revisits": 2
-      },
-      {
-        "atom": "ES-LEX-C352-COUNT-12",
-        "language": "spanish",
-        "introducedBy": "ES-C352-entero",
-        "introducedAt": 822,
-        "missed": [
-          "R2",
-          "R3"
-        ],
-        "revisits": 2
-      },
-      {
-        "atom": "ES-LEX-C352-COUNT-13",
-        "language": "spanish",
-        "introducedBy": "ES-C352-mayoria",
-        "introducedAt": 823,
-        "missed": [
-          "R2",
-          "R3"
-        ],
-        "revisits": 2
-      },
-      {
-        "atom": "ES-LEX-C352-COUNT-14",
-        "language": "spanish",
-        "introducedBy": "ES-C352-resto",
-        "introducedAt": 824,
-        "missed": [
-          "R2",
-          "R3"
-        ],
-        "revisits": 2
-      },
-      {
-        "atom": "ES-LEX-C352-COUNT-15",
-        "language": "spanish",
-        "introducedBy": "ES-C352-escaso",
-        "introducedAt": 825,
-        "missed": [
-          "R2",
-          "R3"
-        ],
-        "revisits": 2
-      },
-      {
-        "atom": "ES-LEX-C353-WHERE-21",
-        "language": "spanish",
-        "introducedBy": "ES-C353-hospital",
-        "introducedAt": 826,
-        "missed": [
-          "R2",
-          "R3"
-        ],
-        "revisits": 2
-      },
-      {
-        "atom": "ES-LEX-C353-WHERE-22",
-        "language": "spanish",
-        "introducedBy": "ES-C353-banco",
-        "introducedAt": 827,
-        "missed": [
-          "R2",
-          "R3"
-        ],
-        "revisits": 2
-      },
-      {
-        "atom": "ES-LEX-C353-WHERE-23",
-        "language": "spanish",
-        "introducedBy": "ES-C353-farmacia",
-        "introducedAt": 828,
-        "missed": [
-          "R2",
-          "R3"
-        ],
-        "revisits": 2
-      },
-      {
-        "atom": "ES-LEX-C353-WHERE-24",
-        "language": "spanish",
-        "introducedBy": "ES-C353-biblioteca",
-        "introducedAt": 829,
-        "missed": [
-          "R2",
-          "R3"
-        ],
-        "revisits": 2
-      },
-      {
-        "atom": "ES-LEX-C353-WHERE-25",
-        "language": "spanish",
-        "introducedBy": "ES-C353-museo",
-        "introducedAt": 830,
-        "missed": [
-          "R2",
-          "R3"
-        ],
-        "revisits": 2
-      },
-      {
-        "atom": "ES-LEX-C354-WHERE-26",
-        "language": "spanish",
-        "introducedBy": "ES-C354-hotel",
-        "introducedAt": 831,
-        "missed": [
-          "R2",
-          "R3"
-        ],
-        "revisits": 2
-      },
-      {
-        "atom": "ES-LEX-C354-WHERE-27",
-        "language": "spanish",
-        "introducedBy": "ES-C354-restaurante",
-        "introducedAt": 832,
-        "missed": [
-          "R2",
-          "R3"
-        ],
-        "revisits": 2
-      },
-      {
-        "atom": "ES-LEX-C354-WHERE-28",
-        "language": "spanish",
-        "introducedBy": "ES-C354-cine",
-        "introducedAt": 833,
-        "missed": [
-          "R2",
-          "R3"
-        ],
-        "revisits": 2
-      },
-      {
-        "atom": "ES-LEX-C354-WHERE-29",
-        "language": "spanish",
-        "introducedBy": "ES-C354-parque",
-        "introducedAt": 834,
-        "missed": [
-          "R2",
-          "R3"
-        ],
-        "revisits": 2
-      },
-      {
-        "atom": "ES-LEX-C354-WHERE-30",
-        "language": "spanish",
-        "introducedBy": "ES-C354-jardin",
-        "introducedAt": 835,
-        "missed": [
-          "R2",
-          "R3"
-        ],
-        "revisits": 2
-      },
-      {
-        "atom": "ES-LEX-C355-WHERE-31",
-        "language": "spanish",
-        "introducedBy": "ES-C355-pared",
-        "introducedAt": 836,
-        "missed": [
-          "R2",
-          "R3"
-        ],
-        "revisits": 2
-      },
-      {
-        "atom": "ES-LEX-C355-WHERE-32",
-        "language": "spanish",
-        "introducedBy": "ES-C355-techo",
-        "introducedAt": 837,
-        "missed": [
-          "R2",
-          "R3"
-        ],
-        "revisits": 2
-      },
-      {
-        "atom": "ES-LEX-C355-WHERE-33",
-        "language": "spanish",
-        "introducedBy": "ES-C355-piso",
-        "introducedAt": 838,
-        "missed": [
-          "R2",
-          "R3"
-        ],
-        "revisits": 2
-      },
-      {
-        "atom": "ES-LEX-C355-WHERE-34",
-        "language": "spanish",
-        "introducedBy": "ES-C355-rincon",
-        "introducedAt": 839,
-        "missed": [
-          "R2",
-          "R3"
-        ],
-        "revisits": 2
-      },
-      {
-        "atom": "ES-LEX-C355-WHERE-35",
-        "language": "spanish",
-        "introducedBy": "ES-C355-fondo",
-        "introducedAt": 840,
-        "missed": [
-          "R2",
-          "R3"
-        ],
-        "revisits": 2
-      },
-      {
-        "atom": "ES-LEX-C356-CLOCK-21",
-        "language": "spanish",
-        "introducedBy": "ES-C356-desde",
-        "introducedAt": 841,
-        "missed": [
-          "R2",
-          "R3"
-        ],
-        "revisits": 2
-      },
-      {
-        "atom": "ES-LEX-C356-CLOCK-22",
-        "language": "spanish",
-        "introducedBy": "ES-C356-cita",
-        "introducedAt": 842,
-        "missed": [
-          "R2",
-          "R3"
-        ],
-        "revisits": 2
-      },
-      {
-        "atom": "ES-LEX-C356-CLOCK-23",
-        "language": "spanish",
-        "introducedBy": "ES-C356-etapa",
-        "introducedAt": 843,
-        "missed": [
-          "R2",
-          "R3"
-        ],
-        "revisits": 2
-      },
-      {
-        "atom": "ES-LEX-C356-CLOCK-24",
-        "language": "spanish",
-        "introducedBy": "ES-C356-ocasion",
-        "introducedAt": 844,
-        "missed": [
-          "R2",
-          "R3"
-        ],
-        "revisits": 2
-      },
-      {
-        "atom": "ES-LEX-C356-CLOCK-25",
-        "language": "spanish",
-        "introducedBy": "ES-C356-repente",
-        "introducedAt": 845,
-        "missed": [
-          "R2",
-          "R3"
-        ],
-        "revisits": 2
-      },
-      {
-        "atom": "ES-LEX-C357-CLOCK-26",
-        "language": "spanish",
-        "introducedBy": "ES-C357-navidad",
-        "introducedAt": 846,
-        "missed": [
-          "R2",
-          "R3"
-        ],
-        "revisits": 2
-      },
-      {
-        "atom": "ES-LEX-C357-CLOCK-27",
-        "language": "spanish",
-        "introducedBy": "ES-C357-pascua",
-        "introducedAt": 847,
-        "missed": [
-          "R2",
-          "R3"
-        ],
-        "revisits": 2
-      },
-      {
-        "atom": "ES-LEX-C357-CLOCK-28",
-        "language": "spanish",
-        "introducedBy": "ES-C357-vispera",
-        "introducedAt": 848,
-        "missed": [
-          "R2",
-          "R3"
-        ],
-        "revisits": 2
-      },
-      {
-        "atom": "ES-LEX-C357-CLOCK-29",
-        "language": "spanish",
-        "introducedBy": "ES-C357-regalo",
-        "introducedAt": 849,
-        "missed": [
-          "R2",
-          "R3"
-        ],
-        "revisits": 2
-      },
-      {
-        "atom": "ES-LEX-C357-CLOCK-30",
-        "language": "spanish",
-        "introducedBy": "ES-C357-tarjeta",
-        "introducedAt": 850,
-        "missed": [
-          "R2",
-          "R3"
-        ],
-        "revisits": 2
-      },
-      {
         "atom": "ES-LEX-C358-REF-11",
         "language": "spanish",
         "introducedBy": "ES-C358-color",
@@ -37573,6 +37622,391 @@
         "language": "spanish",
         "introducedBy": "ES-C362-luna",
         "introducedAt": 875,
+        "missed": [
+          "R2",
+          "R3"
+        ],
+        "revisits": 2
+      },
+      {
+        "atom": "ES-LEX-C363-WHERE-41",
+        "language": "spanish",
+        "introducedBy": "ES-C363-coche",
+        "introducedAt": 876,
+        "missed": [
+          "R2",
+          "R3"
+        ],
+        "revisits": 2
+      },
+      {
+        "atom": "ES-LEX-C363-WHERE-42",
+        "language": "spanish",
+        "introducedBy": "ES-C363-avion",
+        "introducedAt": 877,
+        "missed": [
+          "R2",
+          "R3"
+        ],
+        "revisits": 2
+      },
+      {
+        "atom": "ES-LEX-C363-WHERE-43",
+        "language": "spanish",
+        "introducedBy": "ES-C363-barco",
+        "introducedAt": 878,
+        "missed": [
+          "R2",
+          "R3"
+        ],
+        "revisits": 2
+      },
+      {
+        "atom": "ES-LEX-C363-WHERE-44",
+        "language": "spanish",
+        "introducedBy": "ES-C363-autobus",
+        "introducedAt": 879,
+        "missed": [
+          "R2",
+          "R3"
+        ],
+        "revisits": 2
+      },
+      {
+        "atom": "ES-LEX-C363-WHERE-45",
+        "language": "spanish",
+        "introducedBy": "ES-C363-bicicleta",
+        "introducedAt": 880,
+        "missed": [
+          "R2",
+          "R3"
+        ],
+        "revisits": 2
+      },
+      {
+        "atom": "ES-LEX-C364-REF-26",
+        "language": "spanish",
+        "introducedBy": "ES-C364-mujer",
+        "introducedAt": 881,
+        "missed": [
+          "R2",
+          "R3"
+        ],
+        "revisits": 2
+      },
+      {
+        "atom": "ES-LEX-C364-REF-27",
+        "language": "spanish",
+        "introducedBy": "ES-C364-cara",
+        "introducedAt": 882,
+        "missed": [
+          "R2",
+          "R3"
+        ],
+        "revisits": 2
+      },
+      {
+        "atom": "ES-LEX-C364-REF-28",
+        "language": "spanish",
+        "introducedBy": "ES-C364-nariz",
+        "introducedAt": 883,
+        "missed": [
+          "R2",
+          "R3"
+        ],
+        "revisits": 2
+      },
+      {
+        "atom": "ES-LEX-C364-REF-29",
+        "language": "spanish",
+        "introducedBy": "ES-C364-dedo",
+        "introducedAt": 884,
+        "missed": [
+          "R2",
+          "R3"
+        ],
+        "revisits": 2
+      },
+      {
+        "atom": "ES-LEX-C364-REF-30",
+        "language": "spanish",
+        "introducedBy": "ES-C364-corazon",
+        "introducedAt": 885,
+        "missed": [
+          "R2",
+          "R3"
+        ],
+        "revisits": 2
+      },
+      {
+        "atom": "ES-LEX-C365-COUNT-21",
+        "language": "spanish",
+        "introducedBy": "ES-C365-alto",
+        "introducedAt": 886,
+        "missed": [
+          "R2",
+          "R3"
+        ],
+        "revisits": 2
+      },
+      {
+        "atom": "ES-LEX-C365-COUNT-22",
+        "language": "spanish",
+        "introducedBy": "ES-C365-largo",
+        "introducedAt": 887,
+        "missed": [
+          "R2",
+          "R3"
+        ],
+        "revisits": 2
+      },
+      {
+        "atom": "ES-LEX-C365-COUNT-23",
+        "language": "spanish",
+        "introducedBy": "ES-C365-ancho",
+        "introducedAt": 888,
+        "missed": [
+          "R2",
+          "R3"
+        ],
+        "revisits": 2
+      },
+      {
+        "atom": "ES-LEX-C365-COUNT-24",
+        "language": "spanish",
+        "introducedBy": "ES-C365-corto",
+        "introducedAt": 889,
+        "missed": [
+          "R2",
+          "R3"
+        ],
+        "revisits": 2
+      },
+      {
+        "atom": "ES-LEX-C365-COUNT-25",
+        "language": "spanish",
+        "introducedBy": "ES-C365-lleno",
+        "introducedAt": 890,
+        "missed": [
+          "R2",
+          "R3"
+        ],
+        "revisits": 2
+      },
+      {
+        "atom": "ES-LEX-C366-REF-31",
+        "language": "spanish",
+        "introducedBy": "ES-C366-caja",
+        "introducedAt": 891,
+        "missed": [
+          "R2",
+          "R3"
+        ],
+        "revisits": 2
+      },
+      {
+        "atom": "ES-LEX-C366-REF-32",
+        "language": "spanish",
+        "introducedBy": "ES-C366-lampara",
+        "introducedAt": 892,
+        "missed": [
+          "R2",
+          "R3"
+        ],
+        "revisits": 2
+      },
+      {
+        "atom": "ES-LEX-C366-REF-33",
+        "language": "spanish",
+        "introducedBy": "ES-C366-almohada",
+        "introducedAt": 893,
+        "missed": [
+          "R2",
+          "R3"
+        ],
+        "revisits": 2
+      },
+      {
+        "atom": "ES-LEX-C366-REF-34",
+        "language": "spanish",
+        "introducedBy": "ES-C366-escalera",
+        "introducedAt": 894,
+        "missed": [
+          "R2",
+          "R3"
+        ],
+        "revisits": 2
+      },
+      {
+        "atom": "ES-LEX-C366-REF-35",
+        "language": "spanish",
+        "introducedBy": "ES-C366-armario",
+        "introducedAt": 895,
+        "missed": [
+          "R2",
+          "R3"
+        ],
+        "revisits": 2
+      },
+      {
+        "atom": "ES-LEX-C367-REF-36",
+        "language": "spanish",
+        "introducedBy": "ES-C367-desayuno",
+        "introducedAt": 896,
+        "missed": [
+          "R2",
+          "R3"
+        ],
+        "revisits": 2
+      },
+      {
+        "atom": "ES-LEX-C367-REF-37",
+        "language": "spanish",
+        "introducedBy": "ES-C367-fruta",
+        "introducedAt": 897,
+        "missed": [
+          "R2",
+          "R3"
+        ],
+        "revisits": 2
+      },
+      {
+        "atom": "ES-LEX-C367-REF-38",
+        "language": "spanish",
+        "introducedBy": "ES-C367-naranja",
+        "introducedAt": 898,
+        "missed": [
+          "R2",
+          "R3"
+        ],
+        "revisits": 2
+      },
+      {
+        "atom": "ES-LEX-C367-REF-39",
+        "language": "spanish",
+        "introducedBy": "ES-C367-patata",
+        "introducedAt": 899,
+        "missed": [
+          "R2",
+          "R3"
+        ],
+        "revisits": 2
+      },
+      {
+        "atom": "ES-LEX-C367-REF-40",
+        "language": "spanish",
+        "introducedBy": "ES-C367-azucar",
+        "introducedAt": 900,
+        "missed": [
+          "R2",
+          "R3"
+        ],
+        "revisits": 2
+      },
+      {
+        "atom": "ES-LEX-C368-REF-41",
+        "language": "spanish",
+        "introducedBy": "ES-C368-abeja",
+        "introducedAt": 901,
+        "missed": [
+          "R2",
+          "R3"
+        ],
+        "revisits": 2
+      },
+      {
+        "atom": "ES-LEX-C368-REF-42",
+        "language": "spanish",
+        "introducedBy": "ES-C368-mosca",
+        "introducedAt": 902,
+        "missed": [
+          "R2",
+          "R3"
+        ],
+        "revisits": 2
+      },
+      {
+        "atom": "ES-LEX-C368-REF-43",
+        "language": "spanish",
+        "introducedBy": "ES-C368-cerdo",
+        "introducedAt": 903,
+        "missed": [
+          "R2",
+          "R3"
+        ],
+        "revisits": 2
+      },
+      {
+        "atom": "ES-LEX-C368-REF-44",
+        "language": "spanish",
+        "introducedBy": "ES-C368-lobo",
+        "introducedAt": 904,
+        "missed": [
+          "R2",
+          "R3"
+        ],
+        "revisits": 2
+      },
+      {
+        "atom": "ES-LEX-C368-REF-45",
+        "language": "spanish",
+        "introducedBy": "ES-C368-toro",
+        "introducedAt": 905,
+        "missed": [
+          "R2",
+          "R3"
+        ],
+        "revisits": 2
+      },
+      {
+        "atom": "ES-LEX-C369-WHERE-46",
+        "language": "spanish",
+        "introducedBy": "ES-C369-rio",
+        "introducedAt": 906,
+        "missed": [
+          "R2",
+          "R3"
+        ],
+        "revisits": 2
+      },
+      {
+        "atom": "ES-LEX-C369-WHERE-47",
+        "language": "spanish",
+        "introducedBy": "ES-C369-arena",
+        "introducedAt": 907,
+        "missed": [
+          "R2",
+          "R3"
+        ],
+        "revisits": 2
+      },
+      {
+        "atom": "ES-LEX-C369-WHERE-48",
+        "language": "spanish",
+        "introducedBy": "ES-C369-polvo",
+        "introducedAt": 908,
+        "missed": [
+          "R2",
+          "R3"
+        ],
+        "revisits": 2
+      },
+      {
+        "atom": "ES-LEX-C369-WHERE-49",
+        "language": "spanish",
+        "introducedBy": "ES-C369-humo",
+        "introducedAt": 909,
+        "missed": [
+          "R2",
+          "R3"
+        ],
+        "revisits": 2
+      },
+      {
+        "atom": "ES-LEX-C369-WHERE-50",
+        "language": "spanish",
+        "introducedBy": "ES-C369-ceniza",
+        "introducedAt": 910,
         "missed": [
           "R2",
           "R3"
@@ -53157,150 +53591,150 @@
         "revisits": 6
       },
       {
-        "atom": "ES-LEX-C363-WHERE-41",
+        "atom": "ES-LEX-C370-WHERE-51",
         "language": "spanish",
-        "introducedBy": "ES-C363-coche",
-        "introducedAt": 876,
+        "introducedBy": "ES-C370-tormenta",
+        "introducedAt": 911,
         "missed": [
           "R2"
         ],
         "revisits": 2
       },
       {
-        "atom": "ES-LEX-C363-WHERE-42",
+        "atom": "ES-LEX-C370-WHERE-52",
         "language": "spanish",
-        "introducedBy": "ES-C363-avion",
-        "introducedAt": 877,
+        "introducedBy": "ES-C370-trueno",
+        "introducedAt": 912,
         "missed": [
           "R2"
         ],
         "revisits": 2
       },
       {
-        "atom": "ES-LEX-C363-WHERE-43",
+        "atom": "ES-LEX-C370-WHERE-53",
         "language": "spanish",
-        "introducedBy": "ES-C363-barco",
-        "introducedAt": 878,
+        "introducedBy": "ES-C370-hielo",
+        "introducedAt": 913,
         "missed": [
           "R2"
         ],
         "revisits": 2
       },
       {
-        "atom": "ES-LEX-C363-WHERE-44",
+        "atom": "ES-LEX-C370-WHERE-54",
         "language": "spanish",
-        "introducedBy": "ES-C363-autobus",
-        "introducedAt": 879,
+        "introducedBy": "ES-C370-cueva",
+        "introducedAt": 914,
         "missed": [
           "R2"
         ],
         "revisits": 2
       },
       {
-        "atom": "ES-LEX-C363-WHERE-45",
+        "atom": "ES-LEX-C370-WHERE-55",
         "language": "spanish",
-        "introducedBy": "ES-C363-bicicleta",
-        "introducedAt": 880,
+        "introducedBy": "ES-C370-costa",
+        "introducedAt": 915,
         "missed": [
           "R2"
         ],
         "revisits": 2
       },
       {
-        "atom": "ES-LEX-C364-REF-26",
+        "atom": "ES-LEX-C371-COUNT-26",
         "language": "spanish",
-        "introducedBy": "ES-C364-mujer",
-        "introducedAt": 881,
+        "introducedBy": "ES-C371-pequeno",
+        "introducedAt": 916,
         "missed": [
           "R2"
         ],
         "revisits": 2
       },
       {
-        "atom": "ES-LEX-C364-REF-27",
+        "atom": "ES-LEX-C371-COUNT-27",
         "language": "spanish",
-        "introducedBy": "ES-C364-cara",
-        "introducedAt": 882,
+        "introducedBy": "ES-C371-gordo",
+        "introducedAt": 917,
         "missed": [
           "R2"
         ],
         "revisits": 2
       },
       {
-        "atom": "ES-LEX-C364-REF-28",
+        "atom": "ES-LEX-C371-COUNT-28",
         "language": "spanish",
-        "introducedBy": "ES-C364-nariz",
-        "introducedAt": 883,
+        "introducedBy": "ES-C371-joven",
+        "introducedAt": 918,
         "missed": [
           "R2"
         ],
         "revisits": 2
       },
       {
-        "atom": "ES-LEX-C364-REF-29",
+        "atom": "ES-LEX-C371-COUNT-29",
         "language": "spanish",
-        "introducedBy": "ES-C364-dedo",
-        "introducedAt": 884,
+        "introducedBy": "ES-C371-lento",
+        "introducedAt": 919,
         "missed": [
           "R2"
         ],
         "revisits": 2
       },
       {
-        "atom": "ES-LEX-C364-REF-30",
+        "atom": "ES-LEX-C371-COUNT-30",
         "language": "spanish",
-        "introducedBy": "ES-C364-corazon",
-        "introducedAt": 885,
+        "introducedBy": "ES-C371-dulce",
+        "introducedAt": 920,
         "missed": [
           "R2"
         ],
         "revisits": 2
       },
       {
-        "atom": "ES-LEX-C365-COUNT-21",
+        "atom": "ES-LEX-C372-REF-46",
         "language": "spanish",
-        "introducedBy": "ES-C365-alto",
-        "introducedAt": 886,
+        "introducedBy": "ES-C372-gris",
+        "introducedAt": 921,
         "missed": [
           "R2"
         ],
         "revisits": 2
       },
       {
-        "atom": "ES-LEX-C365-COUNT-22",
+        "atom": "ES-LEX-C372-REF-47",
         "language": "spanish",
-        "introducedBy": "ES-C365-largo",
-        "introducedAt": 887,
+        "introducedBy": "ES-C372-rosa",
+        "introducedAt": 922,
         "missed": [
           "R2"
         ],
         "revisits": 2
       },
       {
-        "atom": "ES-LEX-C365-COUNT-23",
+        "atom": "ES-LEX-C372-REF-48",
         "language": "spanish",
-        "introducedBy": "ES-C365-ancho",
-        "introducedAt": 888,
+        "introducedBy": "ES-C372-oscuro",
+        "introducedAt": 923,
         "missed": [
           "R2"
         ],
         "revisits": 2
       },
       {
-        "atom": "ES-LEX-C365-COUNT-24",
+        "atom": "ES-LEX-C372-REF-49",
         "language": "spanish",
-        "introducedBy": "ES-C365-corto",
-        "introducedAt": 889,
+        "introducedBy": "ES-C372-palido",
+        "introducedAt": 924,
         "missed": [
           "R2"
         ],
         "revisits": 2
       },
       {
-        "atom": "ES-LEX-C365-COUNT-25",
+        "atom": "ES-LEX-C372-REF-50",
         "language": "spanish",
-        "introducedBy": "ES-C365-lleno",
-        "introducedAt": 890,
+        "introducedBy": "ES-C372-suave",
+        "introducedAt": 925,
         "missed": [
           "R2"
         ],
@@ -60359,12 +60793,36 @@
     ],
     "forwardReferences": [
       {
+        "lessonId": "ES-C05-hasta",
+        "language": "spanish",
+        "position": 60,
+        "word": "alfombra",
+        "taughtBy": "ES-C373-alfombra",
+        "lessonsEarly": 868
+      },
+      {
         "lessonId": "ES-C02-noche",
         "language": "spanish",
         "position": 13,
         "word": "leche",
         "taughtBy": "ES-C361-leche",
         "lessonsEarly": 855
+      },
+      {
+        "lessonId": "ES-C05-hasta",
+        "language": "spanish",
+        "position": 60,
+        "word": "azúcar",
+        "taughtBy": "ES-C367-azucar",
+        "lessonsEarly": 840
+      },
+      {
+        "lessonId": "ES-C05-hasta",
+        "language": "spanish",
+        "position": 60,
+        "word": "naranja",
+        "taughtBy": "ES-C367-naranja",
+        "lessonsEarly": 838
       },
       {
         "lessonId": "ES-C05-hasta",
@@ -60405,6 +60863,14 @@
         "word": "forma",
         "taughtBy": "ES-C358-forma",
         "lessonsEarly": 765
+      },
+      {
+        "lessonId": "ES-C45-os",
+        "language": "spanish",
+        "position": 191,
+        "word": "río",
+        "taughtBy": "ES-C369-rio",
+        "lessonsEarly": 715
       },
       {
         "lessonId": "ES-C06-estudiar",
@@ -60671,6 +61137,14 @@
         "lessonsEarly": 596
       },
       {
+        "lessonId": "ES-C37-abrir",
+        "language": "spanish",
+        "position": 309,
+        "word": "lobo",
+        "taughtBy": "ES-C368-lobo",
+        "lessonsEarly": 595
+      },
+      {
         "lessonId": "ES-C06-practice",
         "language": "spanish",
         "position": 93,
@@ -60789,6 +61263,14 @@
         "word": "escuela",
         "taughtBy": "ES-C346-escuela",
         "lessonsEarly": 495
+      },
+      {
+        "lessonId": "ES-C67-uno-otro",
+        "language": "spanish",
+        "position": 422,
+        "word": "pequeño",
+        "taughtBy": "ES-C371-pequeno",
+        "lessonsEarly": 494
       },
       {
         "lessonId": "ES-C30-llueve",
@@ -60999,6 +61481,14 @@
         "lessonsEarly": 371
       },
       {
+        "lessonId": "ES-C290-arroz",
+        "language": "spanish",
+        "position": 531,
+        "word": "azúcar",
+        "taughtBy": "ES-C367-azucar",
+        "lessonsEarly": 369
+      },
+      {
         "lessonId": "ES-C268-habitacion",
         "language": "spanish",
         "position": 433,
@@ -61189,6 +61679,14 @@
         "word": "agenda",
         "taughtBy": "ES-C349-agenda",
         "lessonsEarly": 307
+      },
+      {
+        "lessonId": "ES-C306-hijo",
+        "language": "spanish",
+        "position": 610,
+        "word": "humo",
+        "taughtBy": "ES-C369-humo",
+        "lessonsEarly": 299
       },
       {
         "lessonId": "ES-C35-ayudar",
@@ -65856,13 +66354,13 @@
       },
       {
         "language": "spanish",
-        "lessonCount": 896,
+        "lessonCount": 931,
         "lessonsWithoutSequence": 0,
         "forwardPrerequisites": 0,
         "forwardReviews": 0,
-        "atomsTaught": 1163,
+        "atomsTaught": 1198,
         "atomsNeverRevisited": 119,
-        "forwardReferences": 325
+        "forwardReferences": 333
       },
       {
         "language": "tamil",
@@ -65900,16 +66398,16 @@
       "tracksWithUnorderedLessons": 0,
       "forwardPrerequisites": 0,
       "forwardReviews": 0,
-      "atomsTaught": 5328,
+      "atomsTaught": 5363,
       "atomsNeverRevisited": 599,
       "neverRevisitedPercent": 11,
       "missedByWindow": {
         "R1": 1180,
-        "R2": 3945,
-        "R3": 3896,
-        "R4": 2460
+        "R2": 3980,
+        "R3": 3931,
+        "R4": 2495
       },
-      "forwardReferences": 663
+      "forwardReferences": 671
     }
   },
   "scriptClosure": {
@@ -81984,8 +82482,8 @@
       },
       {
         "language": "spanish",
-        "lessonCount": 896,
-        "atomMeasurableLessons": 892,
+        "lessonCount": 931,
+        "atomMeasurableLessons": 927,
         "atomMeasurementBlindLessons": 4,
         "durationViolations": 0,
         "atomLessonSpikes": 0,
@@ -81999,15 +82497,15 @@
         "unknownPrerequisites": 0,
         "forwardPrerequisites": 0,
         "forwardReviews": 0,
-        "forwardReferences": 325,
-        "atomsTaught": 1163,
+        "forwardReferences": 333,
+        "atomsTaught": 1198,
         "atomsNeverRevisited": 119,
-        "reinforcementWindowMisses": 3156,
+        "reinforcementWindowMisses": 3261,
         "reinforcementMissesByWindow": {
           "R1": 222,
-          "R2": 986,
-          "R3": 1011,
-          "R4": 937
+          "R2": 1021,
+          "R3": 1046,
+          "R4": 972
         },
         "payoffSurprises": 26,
         "writingPracticeLessons": 14,
@@ -82017,7 +82515,7 @@
           {
             "language": "spanish",
             "kind": "forward-language",
-            "count": 325,
+            "count": 333,
             "unit": "use(s)",
             "detail": "teach target-language material before load-bearing use"
           },
@@ -82031,7 +82529,7 @@
           {
             "language": "spanish",
             "kind": "reinforcement",
-            "count": 3156,
+            "count": 3261,
             "unit": "missed window(s)",
             "detail": "add retrieval at the expanding R1-R4 intervals"
           },
@@ -82053,7 +82551,7 @@
         "next": {
           "language": "spanish",
           "kind": "forward-language",
-          "count": 325,
+          "count": 333,
           "unit": "use(s)",
           "detail": "teach target-language material before load-bearing use"
         }
@@ -82333,7 +82831,7 @@
       {
         "language": "spanish",
         "kind": "forward-language",
-        "count": 325,
+        "count": 333,
         "unit": "use(s)",
         "detail": "teach target-language material before load-bearing use"
       },
@@ -82809,7 +83307,7 @@
       {
         "language": "spanish",
         "kind": "reinforcement",
-        "count": 3156,
+        "count": 3261,
         "unit": "missed window(s)",
         "detail": "add retrieval at the expanding R1-R4 intervals"
       },
@@ -83628,8 +84126,8 @@
         "blockers": [
           {
             "criterion": "vocabulary",
-            "detail": "teaches 514 distinct headwords at or below A1, against 600",
-            "shortfall": 86
+            "detail": "teaches 549 distinct headwords at or below A1, against 600",
+            "shortfall": 51
           },
           {
             "criterion": "reinforcement",
@@ -83637,7 +84135,7 @@
             "shortfall": 83
           }
         ],
-        "vocabulary": 618
+        "vocabulary": 653
       },
       {
         "language": "tamil",
@@ -83738,11 +84236,11 @@
   },
   "modality": {
     "maxLinearisableTableColumns": 3,
-    "totalLessons": 4169,
-    "voice": 3037,
+    "totalLessons": 4204,
+    "voice": 3072,
     "sight": 573,
     "pen": 559,
-    "coreVoice": 3516,
+    "coreVoice": 3551,
     "lessonsWithWritingSegments": 292,
     "drivablePercent": 84,
     "tracks": [
@@ -92571,13 +93069,13 @@
       },
       {
         "language": "spanish",
-        "lessonCount": 896,
-        "voice": 842,
+        "lessonCount": 931,
+        "voice": 877,
         "sight": 40,
         "pen": 14,
-        "coreVoice": 844,
+        "coreVoice": 879,
         "drivablePercent": 94,
-        "drivablePrefixTotal": 821,
+        "drivablePrefixTotal": 856,
         "chapters": [
           {
             "language": "spanish",
@@ -97723,6 +98221,104 @@
             ],
             "drivablePrefix": 5,
             "firstNonVoiceLesson": null
+          },
+          {
+            "language": "spanish",
+            "chapter": 367,
+            "lessonCount": 5,
+            "voice": 5,
+            "sight": 0,
+            "pen": 0,
+            "coreVoice": 5,
+            "modalities": [
+              "voice"
+            ],
+            "drivablePrefix": 5,
+            "firstNonVoiceLesson": null
+          },
+          {
+            "language": "spanish",
+            "chapter": 368,
+            "lessonCount": 5,
+            "voice": 5,
+            "sight": 0,
+            "pen": 0,
+            "coreVoice": 5,
+            "modalities": [
+              "voice"
+            ],
+            "drivablePrefix": 5,
+            "firstNonVoiceLesson": null
+          },
+          {
+            "language": "spanish",
+            "chapter": 369,
+            "lessonCount": 5,
+            "voice": 5,
+            "sight": 0,
+            "pen": 0,
+            "coreVoice": 5,
+            "modalities": [
+              "voice"
+            ],
+            "drivablePrefix": 5,
+            "firstNonVoiceLesson": null
+          },
+          {
+            "language": "spanish",
+            "chapter": 370,
+            "lessonCount": 5,
+            "voice": 5,
+            "sight": 0,
+            "pen": 0,
+            "coreVoice": 5,
+            "modalities": [
+              "voice"
+            ],
+            "drivablePrefix": 5,
+            "firstNonVoiceLesson": null
+          },
+          {
+            "language": "spanish",
+            "chapter": 371,
+            "lessonCount": 5,
+            "voice": 5,
+            "sight": 0,
+            "pen": 0,
+            "coreVoice": 5,
+            "modalities": [
+              "voice"
+            ],
+            "drivablePrefix": 5,
+            "firstNonVoiceLesson": null
+          },
+          {
+            "language": "spanish",
+            "chapter": 372,
+            "lessonCount": 5,
+            "voice": 5,
+            "sight": 0,
+            "pen": 0,
+            "coreVoice": 5,
+            "modalities": [
+              "voice"
+            ],
+            "drivablePrefix": 5,
+            "firstNonVoiceLesson": null
+          },
+          {
+            "language": "spanish",
+            "chapter": 373,
+            "lessonCount": 5,
+            "voice": 5,
+            "sight": 0,
+            "pen": 0,
+            "coreVoice": 5,
+            "modalities": [
+              "voice"
+            ],
+            "drivablePrefix": 5,
+            "firstNonVoiceLesson": null
           }
         ]
       },
@@ -100487,11 +101083,11 @@
     "taughtPercent": 8
   },
   "rootLedger": {
-    "roots": 3370,
-    "underspent": 3242,
-    "neverSpent": 2237,
+    "roots": 3405,
+    "underspent": 3277,
+    "neverSpent": 2272,
     "payoffDistribution": {
-      "0": 2237,
+      "0": 2272,
       "1": 706,
       "2": 299,
       "3": 70,
@@ -100507,7 +101103,7 @@
     "underspentPercent": 96
   },
   "infoDump": {
-    "lessons": 4169,
+    "lessons": 4204,
     "lessonsWithFindings": 121,
     "ruleStatements": 30,
     "paradigmTables": 95,
@@ -100517,22 +101113,22 @@
   "metalanguage": {
     "terms": 54,
     "termsUsed": 53,
-    "lessonsUsingTerms": 3950,
-    "usesBeforeIntroduction": 13645,
-    "technicalUsesBeforeIntroduction": 3425,
-    "technicalLessons": 1829,
+    "lessonsUsingTerms": 3985,
+    "usesBeforeIntroduction": 13766,
+    "technicalUsesBeforeIntroduction": 3447,
+    "technicalLessons": 1845,
     "worstTerms": [
       {
         "term": "verb",
-        "lessons": 1075
+        "lessons": 1082
       },
       {
         "term": "noun",
-        "lessons": 596
+        "lessons": 603
       },
       {
         "term": "adjective",
-        "lessons": 172
+        "lessons": 175
       },
       {
         "term": "tense",
@@ -100540,7 +101136,7 @@
       },
       {
         "term": "regular",
-        "lessons": 154
+        "lessons": 155
       },
       {
         "term": "pronoun",
@@ -100549,12 +101145,12 @@
     ]
   },
   "literalMarkup": {
-    "lessonsScanned": 4169,
+    "lessonsScanned": 4204,
     "sourceFindings": 0,
     "renderedFindings": 0
   },
   "glyphCoverage": {
-    "filesScanned": 1295,
+    "filesScanned": 1302,
     "mainCharacters": 126,
     "scriptCharacters": 713,
     "gaps": 0
