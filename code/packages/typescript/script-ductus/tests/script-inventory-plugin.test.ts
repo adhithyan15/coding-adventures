@@ -33,6 +33,8 @@ describe("script inventory virtual module", () => {
     expect(source).toContain("export const japanese =");
     expect(source).toContain("export const persoArabic =");
     expect(source).toContain("export const urduNastaliq =");
+    expect(source).toContain("export const japanese = JSON.parse(");
+    expect(source).not.toContain("export const japanese = {");
     expect(source).not.toContain("import.meta.glob");
     expect(watched.some((path) => path.endsWith("japanese.d/_meta.json"))).toBe(true);
     expect(watched.some((path) => path.endsWith("perso-arabic.d/_meta.json"))).toBe(true);
@@ -65,10 +67,12 @@ describe("script inventory virtual module", () => {
     const scripts = join(root, "data", "scripts");
     mkdirSync(scripts, { recursive: true });
     symlinkSync(join(curriculumRoot, "data", "scripts", "japanese.d"), join(scripts, "japanese.d"));
+    const watched: string[] = [];
     try {
       expect(() =>
-        loadScriptInventoryModule(RESOLVED_SCRIPT_INVENTORIES_ID, root, () => undefined),
+        loadScriptInventoryModule(RESOLVED_SCRIPT_INVENTORIES_ID, root, (path) => watched.push(path)),
       ).toThrow(/symbolic link/i);
+      expect(watched).toEqual([]);
     } finally {
       rmSync(root, { recursive: true, force: true });
     }

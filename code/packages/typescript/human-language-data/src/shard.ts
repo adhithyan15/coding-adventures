@@ -1180,15 +1180,23 @@ function scrubbedCause(cause: unknown): unknown {
  * and a guard that is documented as total but is not is worse than none, because
  * the next author reads the comment instead of the code.
  *
- * Nothing in this package deep-merges these values today, so this is defence in
- * depth for the consumer that has not been written yet. See `mergeMetaAndList`
- * for why `JSON.parse` plus spread is not itself pollution.
+ * The walk is recursive because a later consumer may emit or deep-merge any
+ * nested author-controlled object. A top-level-only check left values such as
+ * `forms.__proto__` dormant until JavaScript object-literal evaluation invoked
+ * the legacy prototype setter. Parsed JSON is acyclic, but the exported helper
+ * also tolerates a caller-owned cycle rather than recursing forever.
  */
 export function rejectDangerousKeys(value: unknown, where: string): void {
-  if (typeof value !== "object" || value === null) return;
-  for (const dangerous of ["__proto__", "constructor", "prototype"]) {
-    if (Object.hasOwn(value, dangerous)) {
-      throw new Error(`${where}: must not carry '${dangerous}'`);
+  const visited = new Set<object>();
+  const visit = (candidate: unknown): void => {
+    if (typeof candidate !== "object" || candidate === null || visited.has(candidate)) return;
+    visited.add(candidate);
+    for (const key of Object.keys(candidate)) {
+      if (key === "__proto__" || key === "constructor" || key === "prototype") {
+        throw new Error(`${where}: must not carry '${key}'`);
+      }
+      visit((candidate as Record<string, unknown>)[key]);
     }
-  }
+  };
+  visit(value);
 }

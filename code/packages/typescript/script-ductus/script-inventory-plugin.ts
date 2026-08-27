@@ -2,7 +2,6 @@ import { realpathSync } from "node:fs";
 import { dirname, isAbsolute, join, normalize, relative, resolve } from "node:path";
 import type { Plugin } from "vite";
 import {
-  listShardNames,
   mergeScriptInventoryShards,
   readShards,
   shardDirectoryFor,
@@ -44,11 +43,6 @@ export function resolveScriptInventoryId(id: string): string | null {
   return id === SCRIPT_INVENTORIES_ID ? RESOLVED_SCRIPT_INVENTORIES_ID : null;
 }
 
-function watchInventory(monolithPath: string, watch: WatchFile): void {
-  const shardDir = shardDirectoryFor(monolithPath);
-  for (const name of listShardNames(monolithPath)) watch(join(shardDir, name));
-}
-
 /** Build one fixed browser module from the three canonical shard directories. */
 export function loadScriptInventoryModule(
   id: string,
@@ -59,13 +53,16 @@ export function loadScriptInventoryModule(
   const exports: string[] = [];
   for (const inventory of INVENTORIES) {
     const monolithPath = safeInventoryPath(curriculumRoot, inventory.id);
-    watchInventory(monolithPath, watch);
     const shards = readShards(monolithPath);
     if (shards === null) {
       throw new Error(
         `script-ductus-inventories: ${shardDirectoryFor(monolithPath)} is missing`,
       );
     }
+    // Validate the entire trust boundary before exposing even a watch path.
+    // Enumerating first would follow a symlinked directory long enough to leak
+    // target filenames into Vite's watcher despite the later read refusal.
+    for (const shard of shards) watch(shard.path);
     const value = mergeScriptInventoryShards<{ script: string } & Record<string, unknown>>(shards);
     if (value.script !== inventory.id) {
       throw new Error(
@@ -73,7 +70,13 @@ export function loadScriptInventoryModule(
           `${JSON.stringify(value.script)}`,
       );
     }
-    exports.push(`export const ${inventory.exportName} = ${JSON.stringify(value)};`);
+    // Keep authored keys as inert JSON data. Emitting an object literal directly
+    // would give `__proto__` special setter semantics during module evaluation,
+    // even though JSON.parse correctly treats it as an ordinary own property.
+    const json = JSON.stringify(value);
+    exports.push(
+      `export const ${inventory.exportName} = JSON.parse(${JSON.stringify(json)});`,
+    );
   }
   return `${exports.join("\n")}\n`;
 }
