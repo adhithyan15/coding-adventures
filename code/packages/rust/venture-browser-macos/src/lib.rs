@@ -15,15 +15,15 @@ use std::fmt;
 use std::{cell::RefCell, rc::Rc};
 use text_native::{NativeMetrics, NativeResolver, NativeShaper};
 use venture_browser_core::{
-    BrowserCommandError, BrowserLoadError, BrowserNavigation, BrowserPagePipeline,
-    BrowserResourceFetcher, BrowserScrollCommand, BrowserSession,
+    BrowserLoadError, BrowserNavigation, BrowserPagePipeline, BrowserResourceFetcher,
+    BrowserScrollCommand, BrowserSession,
 };
 use window_core::{ElementState, Key, NamedKey, PointerButton, WindowError, WindowEvent};
 
 #[cfg(target_vendor = "apple")]
 use venture_browser_core::{
-    BookmarkRepository, BrowserChromeEvent, BrowserChromeProps, BrowserHostController,
-    BrowserScrollMetrics, HttpBrowserFetcher, MemoryBookmarkRepository,
+    BookmarkRepository, BrowserChromeEvent, BrowserChromeProps, BrowserCommandError,
+    BrowserHostController, BrowserScrollMetrics, HttpBrowserFetcher, MemoryBookmarkRepository,
 };
 
 pub const VERSION: &str = "0.1.0";
