@@ -9541,20 +9541,33 @@ The same audit discovers three tracked Mix projects outside BUILD discovery:
 toolchain tranche and requires missing tests before those roots become honest
 cross-platform build evidence.
 
-Before publication the branch rebased conflict-free onto exact `origin/main`
-`c831260c0ac475fc6c300b8daddee27c04293bf2`. The refreshed inventory is
-topology-identical to the selected report and a fresh open-PR path audit finds
-zero overlap. Real Windows plan emission found one additional build-tool edge
-case: deleting the three temporary cipher overrides initially failed to select
-their canonical fallbacks. Platform change detection now treats deletion of a
-selected override as a platform-scoped package change. The regenerated closure
-contains all three ciphers and completed 16 native builds, seven exact
-unsupported results, one dependency-unsupported result, and 261 unaffected
-skips with no failure.
+Before publication the branch rebased conflict-free twice, finally onto exact
+`origin/main` `0f22582f5a0ddaceaae4f8f6ba56f3b2d5a4fd30`.
+Real Windows plan emission found one additional build-tool edge case: deleting
+the three temporary cipher overrides initially failed to select their canonical
+fallbacks. Platform change detection now treats deletion of a selected override
+as a platform-scoped package change. The regenerated closure contains all three
+ciphers and completed 16 native builds, seven exact unsupported results, one
+dependency-unsupported result, and 261 unaffected skips with no failure.
 
-With that work registered, the selected graph
-contains 545 owners and 798 dependency edges: 163 merged, 381 pending, and
-exactly one in-progress owner, with no active parity PR.
+The final schema-3 inventory records 1,379 implementation identities, 4,590
+slots, and 1,418 all-reported identities. The bands are 175/266, 123/934,
+168/2,113, and 913/12,782; Rust has 726 singletons, OCaml remains emerging at
+zero packages, and collisions and unknown buckets remain zero. Merged PR #13264
+adds the Rust-only `browser-bookmarks` portable core and separately named
+`browser-bookmarks-file` native adapter. New pending owners
+`browser-bookmarks-singleton-classification` and
+`browser-bookmarks-file-applicable-lane-classification` record those gaps in
+dependency order before publication.
+
+A final live-PR path audit finds no package, fixture, audit, state, roadmap, or
+changelog overlap. PR #13285 concurrently edits `ci.yml` for Forme workflow
+modernization and PR #12149 edits the Go entry point for a Swift native-dep
+validator path; their current hunks are line-distinct from this tranche, but the
+loop must recheck conflicts if either merges first. With the new owners
+registered, the selected graph contains 547 owners and 799 dependency edges:
+163 merged, 383 pending, and exactly one in-progress owner, with no active
+parity PR.
 
 ## Autonomous Loop Protocol
 
