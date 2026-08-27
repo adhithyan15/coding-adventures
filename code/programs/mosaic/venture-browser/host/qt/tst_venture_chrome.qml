@@ -120,7 +120,10 @@ TestCase {
     function test_view_source_crosses_the_mosaic_host_seam() {
         hydrate(false)
         recordingHost.reset()
-        mouseClick(nativeControl("view-source-button"))
+        const viewSourceButton = nativeControl("view-source-button")
+        verify(viewSourceButton.enabled)
+        viewSourceButton.forceActiveFocus()
+        keyClick(Qt.Key_Space)
         wait(0)
         compare(recordingHost.events.length, 1)
         compare(recordingHost.events[0].event, "onViewSource")
