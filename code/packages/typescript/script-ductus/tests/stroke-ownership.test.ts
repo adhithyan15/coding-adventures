@@ -1,0 +1,85 @@
+import { createHash } from "node:crypto";
+import { readFileSync, readdirSync } from "node:fs";
+import { dirname, resolve } from "node:path";
+import { fileURLToPath } from "node:url";
+import { describe, expect, it } from "vitest";
+
+import { DUCTUS } from "../src/strokes";
+
+const sha256 = (value: string): string =>
+  createHash("sha256").update(value).digest("hex");
+
+const packageRoot = resolve(dirname(fileURLToPath(import.meta.url)), "..");
+const ownerNames = [
+  "arabic-family",
+  "chinese",
+  "cyrillic",
+  "devanagari",
+  "gujarati",
+  "hebrew",
+  "japanese",
+  "kannada",
+  "malayalam",
+  "tamil",
+  "telugu",
+];
+
+describe("stroke ownership migration baseline", () => {
+  it("preserves the exact ordered registry and parsed data", () => {
+    const counts = Object.values(DUCTUS).reduce<Record<string, number>>((out, letter) => {
+      out[letter.script] = (out[letter.script] ?? 0) + 1;
+      return out;
+    }, {});
+    expect({
+      keys: Object.keys(DUCTUS).length,
+      keyHash: sha256(JSON.stringify(Object.keys(DUCTUS))),
+      dataHash: sha256(JSON.stringify(DUCTUS)),
+      counts: Object.fromEntries(Object.entries(counts).sort(([a], [b]) => a.localeCompare(b))),
+    }).toEqual({
+      keys: 329,
+      keyHash: "7dc8d9e4b9de8771b4c5d57d36e4c53ca9ada675decd02b0e7ff8d180e24d99b",
+      dataHash: "058559ae69e653d5074d623e978dec8e3d4352d8b7d610a9a397c975d899f7ae",
+      counts: {
+        arabic: 32,
+        chinese: 43,
+        cyrillic: 33,
+        devanagari: 43,
+        gujarati: 44,
+        hebrew: 22,
+        japanese: 12,
+        kannada: 7,
+        malayalam: 10,
+        "perso-arabic": 24,
+        tamil: 24,
+        telugu: 6,
+        "urdu-nastaliq": 29,
+      },
+    });
+  });
+
+  it("keeps authored entries in stable owner modules", () => {
+    const ownerDir = resolve(packageRoot, "src/strokes");
+    expect(
+      readdirSync(ownerDir)
+        .filter((name) => name.endsWith(".ts") && name !== "registry.ts")
+        .map((name) => name.replace(/\.ts$/, ""))
+        .sort(),
+    ).toEqual(ownerNames);
+
+    const compatibilitySource = readFileSync(resolve(packageRoot, "src/strokes.ts"), "utf8");
+    expect(compatibilitySource).not.toMatch(/\[ductusKey\([^\n]+\)\]\s*:/);
+    expect(compatibilitySource).not.toMatch(/^\s*["'][^"']+["']\s*:\s*\{\s*$/m);
+  });
+
+  it("keeps script-specific claims out of the two shared evidence roots", () => {
+    for (const name of ["strokes.test.ts", "ductusview.test.ts"]) {
+      const source = readFileSync(resolve(packageRoot, "tests", name), "utf8");
+      for (const script of [
+        "Arabic", "Chinese", "Cyrillic", "Devanagari", "Gujarati", "Hebrew",
+        "Japanese", "Kannada", "Malayalam", "Tamil", "Telugu", "Urdu",
+      ]) {
+        expect(source, `${name} still owns ${script} evidence`).not.toContain(script);
+      }
+    }
+  });
+});
