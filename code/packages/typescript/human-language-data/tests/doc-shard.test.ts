@@ -8,7 +8,15 @@
 // migration that silently drops content is the failure this whole convention is
 // supposed to make impossible.
 
-import { mkdirSync, mkdtempSync, readFileSync, readdirSync, rmSync, writeFileSync } from "node:fs";
+import {
+  lstatSync,
+  mkdirSync,
+  mkdtempSync,
+  readFileSync,
+  readdirSync,
+  rmSync,
+  writeFileSync,
+} from "node:fs";
 import { tmpdir } from "node:os";
 import { join, resolve } from "node:path";
 import { afterAll, describe, expect, it } from "vitest";
@@ -40,6 +48,28 @@ import { LEGACY_DOC_SHARD_SHA256 } from "../src/doc-shard-legacy.js";
 
 const PLAN: DocShardPlan = { path: "x/DOC.md", headingLevel: 2, newestFirst: true };
 const OLDEST_FIRST: DocShardPlan = { ...PLAN, newestFirst: false };
+const DUCTUS_CHANGELOG = "code/packages/typescript/script-ductus/CHANGELOG.md";
+
+describe("HL26 Script Ductus changelog ownership", () => {
+  it("registers the changelog as a fixed newest-first level-3 shard plan", () => {
+    expect(DOC_SHARD_PLANS.find((plan) => plan.path === DUCTUS_CHANGELOG)).toEqual({
+      path: DUCTUS_CHANGELOG,
+      headingLevel: 3,
+      newestFirst: true,
+    });
+  });
+
+  it("keeps the generated monolith absent from a clean checkout", () => {
+    const monolith = safeDocumentPath(defaultRepoRoot(), DUCTUS_CHANGELOG);
+    let cause: unknown;
+    try {
+      lstatSync(monolith);
+    } catch (error) {
+      cause = error;
+    }
+    expect(isAbsentErrno(cause)).toBe(true);
+  });
+});
 
 describe("docShardDirectoryFor", () => {
   it("maps X.md to X.d", () => {
