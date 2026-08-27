@@ -8,6 +8,7 @@ type HostRequest = {
 
 const events: HostRequest[] = [];
 let navigationDisabled = true;
+let bookmarked = false;
 (globalThis as { IS_REACT_ACT_ENVIRONMENT?: boolean }).IS_REACT_ACT_ENVIRONMENT = true;
 
 const props = (statusText: string) => ({
@@ -17,6 +18,8 @@ const props = (statusText: string) => ({
     statusText,
     backDisabled: navigationDisabled,
     forwardDisabled: navigationDisabled,
+    bookmarkLabel: bookmarked ? "Remove Bookmark" : "Bookmark",
+    bookmarkDisabled: navigationDisabled,
     navigationDisabled,
     contentSurface: "React host surface",
   },
@@ -26,6 +29,10 @@ window.mosaicHost = {
   getProps: vi.fn(async () => props("Ready")),
   handleEvent: vi.fn(async (request: HostRequest) => {
     events.push(request);
+    if (request.event.type === "toggleBookmark") {
+      bookmarked = !bookmarked;
+      return props("Bookmark persisted through MosaicHost");
+    }
     return request.event.type === "navigate"
       ? props("Navigated through MosaicHost")
       : undefined;
@@ -58,7 +65,7 @@ test("React and Electron renderer controls cross the Mosaic host seam", async ()
 
   expect(document.body.textContent).toContain("Venture React acceptance");
   expect(document.body.textContent).toContain("React host surface");
-  for (const label of ["Back", "Forward", "Reload", "Go"]) {
+  for (const label of ["Back", "Forward", "Reload", "Bookmark", "Go"]) {
     const button = textButton(label);
     expect(button.disabled).toBe(true);
     button.click();
@@ -98,6 +105,14 @@ test("React and Electron renderer controls cross the Mosaic host seam", async ()
   await flush();
   expect(events[events.length - 1]?.event.type).toBe("navigate");
   expect(document.body.textContent).toContain("Navigated through MosaicHost");
+
+  await act(async () => {
+    textButton("Bookmark").click();
+  });
+  await flush();
+  expect(events[events.length - 1]?.event.type).toBe("toggleBookmark");
+  expect(document.body.textContent).toContain("Remove Bookmark");
+  expect(document.body.textContent).toContain("Bookmark persisted through MosaicHost");
 
   await act(async () => {
     textButton("Go").click();

@@ -30,6 +30,12 @@ layout VentureChrome {
         state-when-disabled : slot: navigation-disabled ,
         onClick : emit: onReload
       )
+      HostButton [ bookmark-button ] (
+        label : slot: bookmark-label ,
+        disabled : slot: bookmark-disabled ,
+        state-when-disabled : slot: bookmark-disabled ,
+        onClick : emit: onToggleBookmark
+      )
       HostInput [ address-input ] (
         value : slot: address ,
         placeholder : "Enter a URL" ,

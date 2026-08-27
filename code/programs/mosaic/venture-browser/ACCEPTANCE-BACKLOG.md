@@ -10,6 +10,18 @@ cross-platform proving application. Items are ordered by risk and dependency.
   successful final response URLs in `BrowserSession`, and project blue/purple
   underlined link styling through Layout IR and backend-neutral paint across
   navigation, history, reload, failure, and reflow.
+- [x] **P0 browser convergence — reusable durable bookmarks.** Define a
+  storage-neutral canonical catalog and transactional repository, implement a
+  bounded versioned native-profile file adapter with atomic replacement, route
+  one shared Mosaic bookmark command through every host, and cover rollback,
+  restart, generated DOM, and direct SwiftUI toolbar behavior.
+- [ ] **P1 browser convergence — host-neutral View Source.** Project the
+  already-retained response source into a synthetic preformatted browser page
+  through a reusable core command before adding toolkit-specific windows or
+  menus.
+- [ ] **P1 browser convergence — deterministic real-page visuals.** Ratchet
+  representative Mosaic-era pages with screenshot and geometry fixtures for
+  mixed inline content, preformatted text, images, wrapped links, and scrolling.
 - [x] **P0 CI regression — required gate event isolation.** Keep the protected
   `CI gate` context exclusive to pull-request workflows. Branch and main push
   workflows publish `CI push gate` so a fast push build cannot auto-complete a

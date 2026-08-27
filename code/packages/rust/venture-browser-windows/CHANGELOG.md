@@ -2,6 +2,9 @@
 
 ## Unreleased
 
+- Load and atomically persist the shared bookmark catalog through the native
+  Venture profile while exposing bookmark state and commands to generated
+  WinUI chrome.
 - Keep direct WinUI launch and interaction as the default Windows acceptance,
   while allowing explicitly non-interactive hosted workers to stop after the
   complete generated project builds and produces its executable. This avoids

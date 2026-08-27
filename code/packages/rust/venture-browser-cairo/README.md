@@ -10,6 +10,11 @@ library. They therefore share navigation, chrome projection, scrolling, hover,
 link activation, retained-page reflow, and rendering behavior without placing
 cross-platform browser ownership in a toolkit-specific package.
 
+The bridge also loads and atomically persists the shared versioned bookmark
+catalog. Linux follows `$XDG_DATA_HOME/venture/bookmarks.json` (falling back to
+`~/.local/share/venture/bookmarks.json`); every platform can override the path
+with `VENTURE_BOOKMARKS_PATH` for isolated profiles.
+
 ```sh
 cargo test -p venture-browser-cairo
 ```

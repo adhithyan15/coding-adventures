@@ -107,9 +107,10 @@ builds and starts the emitted SwiftUI and WinUI applications, loads each
 package-owned native bridge, and requires a rendered host-surface readiness
 signal. Direct UI interaction acceptance covers navigation, history, failure
 retention, focus, pointer activation, wheel and keyboard scrolling, resize,
-and repaint on those two primary platforms. The prioritized gaps below and
-the remaining generated platform hosts still keep the browser shell from being
-complete.
+repaint, and bookmark toggling on the primary native path. The Qt, Flutter,
+and Compose shells reuse one Cairo bridge and browser session rather than
+forking browser behavior into toolkit code. The prioritized gaps below still
+keep the browser shell from being complete.
 
 ### Prioritized Browser Completion Backlog
 
@@ -117,19 +118,16 @@ Completed convergence foundations: exact zero-missing HTML tokenizer/tree
 construction ratchets; native generated-host interaction gates; shared
 scrollbars, hover status, and cursors; and reusable fragmented inline layout.
 
-1. **P1 — bookmarks as a reusable persistence component.** Define a small
-   storage-neutral bookmark model and repository interface, then add native
-   persistence adapters and generated Mosaic chrome commands.
-2. **P1 — View Source.** Retain fetched source bytes/text in the loaded-page
+1. **P1 — View Source.** Retain fetched source bytes/text in the loaded-page
    model and expose a source document through a host-neutral command instead
    of adding platform-specific windows first.
-3. **P1 — real-page visual acceptance.** Add deterministic screenshot and
+2. **P1 — real-page visual acceptance.** Add deterministic screenshot and
    geometry fixtures for representative 1993-era pages, including wrapped
    links, mixed fonts, preformatted text, images, and scrolling.
-4. **P2 — international inline convergence.** Replace whitespace-only break
+3. **P2 — international inline convergence.** Replace whitespace-only break
    opportunities with a reusable UAX #14 component, then add bidi/RTL as a
    separate shaping/layout phase rather than embedding either in HTML.
-5. **P2 — richer inline box edges.** Preserve padding, margins, borders, and
+4. **P2 — richer inline box edges.** Preserve padding, margins, borders, and
    decoration continuation policy across semantic wrapper fragments before
    expanding the supported CSS surface.
 
@@ -140,6 +138,14 @@ HTML styling consumes a narrow visited callback; and Layout IR carries inherited
 text decoration into shaped-width underline paint using CoreText/DirectWrite
 metrics or a device-pixel-safe fallback. Redirect, failure, reload, history,
 reflow, layout, and paint tests cover the complete seam.
+
+Completed in the bookmark convergence phase: `browser-bookmarks` owns the
+storage-neutral canonical model, ordered catalog, repository boundary, and
+save-before-commit transaction; `browser-bookmarks-file` supplies bounded,
+versioned JSON with native profile paths and crash-safe atomic replacement;
+`BrowserSession` owns bookmark commands; and all generated Mosaic hosts share
+one label/disabled/event contract. Adapter, restart, rollback, DOM, and direct
+native toolbar tests cover the complete seam.
 
 These are browser-wiring and acceptance items. They do not relax the exact
 zero-missing WPT tree-construction or tokenizer coverage ratchets, and they do
@@ -513,10 +519,14 @@ system window color and felt "native."
 
 ### Bookmarks
 
-- **Storage**: `%APPDATA%\Venture\bookmarks.json` (Windows),
-  `~/.venture/bookmarks.json` (Unix).
-- **Format**: JSON array of `{ "title": "...", "url": "..." }` objects.
-- **UI**: Menu bar → Bookmarks → "Add Bookmark" / list of saved bookmarks.
+- **Storage**: `%LOCALAPPDATA%\Venture\bookmarks.json` (Windows),
+  `~/Library/Application Support/Venture/bookmarks.json` (macOS), and
+  `$XDG_DATA_HOME/venture/bookmarks.json` with an XDG fallback (Unix).
+- **Format**: bounded, versioned JSON containing an ordered flat array of
+  `{ "title": "...", "url": "..." }` records.
+- **UI**: shared generated chrome toggles the current page between Bookmark and
+  Remove Bookmark; list/navigation UI remains a later presentation layer over
+  the same storage-neutral catalog.
 - For v0.1, bookmarks are a **flat list** — no folders or hierarchy.
 
 ### View Source

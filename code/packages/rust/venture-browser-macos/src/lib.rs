@@ -5,6 +5,8 @@
 //! crate selects native CoreText services, creates an AppKit Metal window, and
 //! presents the loaded viewport.
 
+#[cfg(target_vendor = "apple")]
+use browser_bookmarks_file::{default_bookmark_path, FileBookmarkRepository};
 use html_to_layout::mosaic_html_theme;
 use html_to_paint::HtmlPaintViewport;
 use layout_text_measure_native::NativeMeasurer;
@@ -20,8 +22,8 @@ use window_core::{ElementState, Key, NamedKey, PointerButton, WindowError, Windo
 
 #[cfg(target_vendor = "apple")]
 use venture_browser_core::{
-    BrowserChromeEvent, BrowserChromeProps, BrowserHostController, BrowserScrollMetrics,
-    HttpBrowserFetcher,
+    BookmarkRepository, BrowserChromeEvent, BrowserChromeProps, BrowserCommandError,
+    BrowserHostController, BrowserScrollMetrics, HttpBrowserFetcher, MemoryBookmarkRepository,
 };
 
 pub const VERSION: &str = "0.1.0";
@@ -400,6 +402,7 @@ impl BrowserResourceFetcher for OwnedFetcher {
 #[cfg(target_vendor = "apple")]
 pub struct MacBrowserHost {
     controller: BrowserHostController,
+    bookmarks: Box<dyn BookmarkRepository>,
     fetcher: OwnedFetcher,
     width: f64,
     height: f64,
@@ -407,12 +410,14 @@ pub struct MacBrowserHost {
 
 #[cfg(target_vendor = "apple")]
 impl MacBrowserHost {
-    pub fn new(start_url: &str, width: f64, height: f64) -> Result<Self, BrowserLoadError> {
-        Self::new_with_fetcher(
+    pub fn new(start_url: &str, width: f64, height: f64) -> Result<Self, BrowserCommandError> {
+        let path = default_bookmark_path()?;
+        Self::new_with_fetcher_and_bookmarks(
             start_url,
             width,
             height,
             Box::new(HttpBrowserFetcher::default()),
+            Box::new(FileBookmarkRepository::new(path)),
         )
     }
 
@@ -426,6 +431,27 @@ impl MacBrowserHost {
         let session = load_initial_session(start_url, width, height, &fetcher)?;
         Ok(Self {
             controller: BrowserHostController::new(session),
+            bookmarks: Box::new(MemoryBookmarkRepository::default()),
+            fetcher,
+            width,
+            height,
+        })
+    }
+
+    pub fn new_with_fetcher_and_bookmarks(
+        start_url: &str,
+        width: f64,
+        height: f64,
+        fetcher: Box<dyn BrowserResourceFetcher>,
+        mut bookmarks: Box<dyn BookmarkRepository>,
+    ) -> Result<Self, BrowserCommandError> {
+        let fetcher = OwnedFetcher(fetcher);
+        let catalog = bookmarks.load()?;
+        let mut session = load_initial_session(start_url, width, height, &fetcher)?;
+        session.replace_bookmarks(catalog);
+        Ok(Self {
+            controller: BrowserHostController::new(session),
+            bookmarks,
             fetcher,
             width,
             height,
@@ -436,13 +462,14 @@ impl MacBrowserHost {
         self.controller.props()
     }
 
-    pub fn handle_event(&mut self, event: BrowserChromeEvent) -> Result<bool, BrowserLoadError> {
+    pub fn handle_event(&mut self, event: BrowserChromeEvent) -> Result<bool, BrowserCommandError> {
         let width = self.width;
         let height = self.height;
         let fetcher = &self.fetcher;
-        self.controller.handle_event(event, |session, navigation| {
-            navigate_session(session, navigation, width, height, fetcher)
-        })
+        self.controller
+            .handle_event(event, self.bookmarks.as_mut(), |session, navigation| {
+                navigate_session(session, navigation, width, height, fetcher)
+            })
     }
 
     pub fn scroll_by(&mut self, delta_y: f64) -> bool {
@@ -562,12 +589,14 @@ mod mosaic_ffi {
             .map(|message| format!(",\"error\":{}", json_string(message)))
             .unwrap_or_default();
         let value = format!(
-            "{{\"props\":{{\"address\":{},\"page-title\":{},\"status-text\":{},\"back-disabled\":{},\"forward-disabled\":{},\"navigation-disabled\":false}}{error}}}",
+            "{{\"props\":{{\"address\":{},\"page-title\":{},\"status-text\":{},\"back-disabled\":{},\"forward-disabled\":{},\"bookmark-label\":{},\"bookmark-disabled\":{},\"navigation-disabled\":false}}{error}}}",
             json_string(&props.address),
             json_string(&props.page_title),
             json_string(&props.status_text),
             props.back_disabled,
             props.forward_disabled,
+            json_string(&props.bookmark_label),
+            props.bookmark_disabled,
         );
         CString::new(value)
             .expect("JSON response contains no NUL")
@@ -624,6 +653,7 @@ mod mosaic_ffi {
             "onForward" => Some(BrowserChromeEvent::Forward),
             "onHome" => Some(BrowserChromeEvent::Home),
             "onReload" => Some(BrowserChromeEvent::Reload),
+            "onToggleBookmark" => Some(BrowserChromeEvent::ToggleBookmark),
             "onNavigate" => Some(BrowserChromeEvent::Navigate),
             "onAddressChange" => string_arg(value).map(BrowserChromeEvent::AddressChange),
             _ => None,

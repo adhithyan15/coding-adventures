@@ -765,6 +765,9 @@ public static class MosaicHost
                 value => component.StatusText = value);
             component.BackDisabled = props.GetProperty("back-disabled").GetBoolean();
             component.ForwardDisabled = props.GetProperty("forward-disabled").GetBoolean();
+            SetIfChanged(component.BookmarkLabel, props.GetProperty("bookmark-label").GetString(),
+                value => component.BookmarkLabel = value);
+            component.BookmarkDisabled = props.GetProperty("bookmark-disabled").GetBoolean();
             component.NavigationDisabled = props.GetProperty("navigation-disabled").GetBoolean();
 
             if (root.TryGetProperty("error", out var error))

@@ -4,14 +4,16 @@
 //! host-neutral Venture session and chrome reducer to a Direct2D pixel surface
 //! that the package-owned XAML adapter mounts in the generated `HostSurface`.
 
+use browser_bookmarks_file::{default_bookmark_path, FileBookmarkRepository};
 use html_to_layout::mosaic_html_theme;
 use html_to_paint::HtmlPaintViewport;
 use layout_text_measure_native::NativeMeasurer;
 use text_native::{NativeMetrics, NativeResolver, NativeShaper};
 use venture_browser_core::{
-    BrowserChromeEvent, BrowserChromeProps, BrowserFetchResponse, BrowserHostController,
-    BrowserLoadError, BrowserNavigation, BrowserPagePipeline, BrowserResourceFetcher,
-    BrowserScrollCommand, BrowserScrollMetrics, BrowserSession, HttpBrowserFetcher,
+    BookmarkRepository, BrowserChromeEvent, BrowserChromeProps, BrowserCommandError,
+    BrowserFetchResponse, BrowserHostController, BrowserLoadError, BrowserNavigation,
+    BrowserPagePipeline, BrowserResourceFetcher, BrowserScrollCommand, BrowserScrollMetrics,
+    BrowserSession, HttpBrowserFetcher, MemoryBookmarkRepository,
 };
 
 pub const VERSION: &str = "0.1.0";
@@ -56,18 +58,21 @@ impl BrowserResourceFetcher for OwnedFetcher {
 /// One browser session shared by generated chrome and the Direct2D surface.
 pub struct WindowsBrowserHost {
     controller: BrowserHostController,
+    bookmarks: Box<dyn BookmarkRepository>,
     fetcher: OwnedFetcher,
     width: f64,
     height: f64,
 }
 
 impl WindowsBrowserHost {
-    pub fn new(start_url: &str, width: f64, height: f64) -> Result<Self, BrowserLoadError> {
-        Self::new_with_fetcher(
+    pub fn new(start_url: &str, width: f64, height: f64) -> Result<Self, BrowserCommandError> {
+        let path = default_bookmark_path()?;
+        Self::new_with_fetcher_and_bookmarks(
             start_url,
             width,
             height,
             Box::new(HttpBrowserFetcher::default()),
+            Box::new(FileBookmarkRepository::new(path)),
         )
     }
 
@@ -88,6 +93,34 @@ impl WindowsBrowserHost {
         )?;
         Ok(Self {
             controller: BrowserHostController::new(session),
+            bookmarks: Box::new(MemoryBookmarkRepository::default()),
+            fetcher,
+            width,
+            height,
+        })
+    }
+
+    pub fn new_with_fetcher_and_bookmarks(
+        start_url: &str,
+        width: f64,
+        height: f64,
+        fetcher: Box<dyn BrowserResourceFetcher>,
+        mut bookmarks: Box<dyn BookmarkRepository>,
+    ) -> Result<Self, BrowserCommandError> {
+        let fetcher = OwnedFetcher(fetcher);
+        let catalog = bookmarks.load()?;
+        let mut session = BrowserSession::new(start_url, height);
+        execute_navigation(
+            &mut session,
+            BrowserNavigation::Navigate(start_url.to_string()),
+            width,
+            height,
+            &fetcher,
+        )?;
+        session.replace_bookmarks(catalog);
+        Ok(Self {
+            controller: BrowserHostController::new(session),
+            bookmarks,
             fetcher,
             width,
             height,
@@ -98,13 +131,14 @@ impl WindowsBrowserHost {
         self.controller.props()
     }
 
-    pub fn handle_event(&mut self, event: BrowserChromeEvent) -> Result<bool, BrowserLoadError> {
+    pub fn handle_event(&mut self, event: BrowserChromeEvent) -> Result<bool, BrowserCommandError> {
         let width = self.width;
         let height = self.height;
         let fetcher = &self.fetcher;
-        self.controller.handle_event(event, |session, navigation| {
-            execute_navigation(session, navigation, width, height, fetcher)
-        })
+        self.controller
+            .handle_event(event, self.bookmarks.as_mut(), |session, navigation| {
+                execute_navigation(session, navigation, width, height, fetcher)
+            })
     }
 
     pub fn scroll_by(&mut self, delta_y: f64) -> bool {
@@ -222,12 +256,14 @@ mod ffi {
             .map(|message| format!(",\"error\":{}", json_string(message)))
             .unwrap_or_default();
         let value = format!(
-            "{{\"props\":{{\"address\":{},\"page-title\":{},\"status-text\":{},\"back-disabled\":{},\"forward-disabled\":{},\"navigation-disabled\":false}}{error}}}",
+            "{{\"props\":{{\"address\":{},\"page-title\":{},\"status-text\":{},\"back-disabled\":{},\"forward-disabled\":{},\"bookmark-label\":{},\"bookmark-disabled\":{},\"navigation-disabled\":false}}{error}}}",
             json_string(&props.address),
             json_string(&props.page_title),
             json_string(&props.status_text),
             props.back_disabled,
             props.forward_disabled,
+            json_string(&props.bookmark_label),
+            props.bookmark_disabled,
         );
         CString::new(value)
             .expect("JSON response contains no NUL")
@@ -284,6 +320,7 @@ mod ffi {
             "onForward" => Some(BrowserChromeEvent::Forward),
             "onHome" => Some(BrowserChromeEvent::Home),
             "onReload" => Some(BrowserChromeEvent::Reload),
+            "onToggleBookmark" => Some(BrowserChromeEvent::ToggleBookmark),
             "onNavigate" => Some(BrowserChromeEvent::Navigate),
             "onAddressChange" => string_arg(value).map(BrowserChromeEvent::AddressChange),
             _ => None,
