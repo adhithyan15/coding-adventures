@@ -16767,6 +16767,54 @@ export const DUCTUS: Record<string, LetterDuctus> = {
   },
 };
 
+// Persian Online and Zer o Zabar independently attest the same body-upright
+// construction for ط. The scoped entries share only the fitted Noto Naskh
+// geometry with Arabic while retaining language-specific provenance.
+const [sharedTahBody, sharedTahUpright] = DUCTUS[ductusKey("arabic", "ط")].strokes;
+DUCTUS[ductusKey("perso-arabic", "ط")] = {
+  script: "perso-arabic",
+  glyph: "ط",
+  strokes: [
+    sharedTahBody,
+    {
+      segments: [
+        {
+          ...sharedTahUpright.segments[0],
+          label: "lift once, then draw the tall upright top-to-bottom",
+        },
+      ],
+    },
+  ],
+  source: persianAlphabetSource("ط"),
+};
+DUCTUS[ductusKey("urdu-nastaliq", "ط")] = {
+  script: "urdu-nastaliq",
+  glyph: "ط",
+  strokes: [
+    {
+      segments: [
+        {
+          ...sharedTahBody.segments[0],
+          label: "draw the independent to'e-series loop",
+        },
+        {
+          ...sharedTahBody.segments[1],
+          label: "continue through its leftward finish without lifting",
+        },
+      ],
+    },
+    {
+      segments: [
+        {
+          ...sharedTahUpright.segments[0],
+          label: "after one lift, draw the tall upright",
+        },
+      ],
+    },
+  ],
+  source: urduAlphabetSource("ط"),
+};
+
 // Persian Online and Zer o Zabar independently attest the same body-upright-dot
 // construction for ظ. The scoped entries intentionally share only the Noto
 // fallback geometry with Arabic while retaining language-specific provenance.
