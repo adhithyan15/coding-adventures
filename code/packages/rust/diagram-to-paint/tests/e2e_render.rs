@@ -1077,6 +1077,35 @@ line "Target" [35, 50, 68, 82]"##,
         write_png(&unpadded_time_pixels, "/tmp/mermaid_gantt_unpadded_time_e2e.png")
             .expect("unpadded-time PNG write failed");
         assert!(!unpadded_time_scene.instructions.is_empty());
+
+        let quarter = parse_gantt(
+            "gantt\ntitle Quarterly plan\ndateFormat YYYY-Q\nsection Plan\nPlanning :p1, 2026-2, 1d",
+        )
+        .expect("quarter-date Mermaid Gantt parse failed");
+        let quarter_layout = layout_temporal_diagram(
+            &TemporalDiagram {
+                kind: TemporalKind::Gantt,
+                title: quarter.title.clone(),
+                body: TemporalBody::Gantt(quarter),
+            },
+            800.0,
+        );
+        let quarter_scene = diagram_to_paint_temporal(
+            &quarter_layout,
+            &DiagramToPaintOptions {
+                background: layout_ir::Color { r: 255, g: 255, b: 255, a: 255 },
+                device_pixel_ratio: 2.0,
+                label_font: font_spec("Helvetica", 12.0),
+                title_font: font_spec("Helvetica", 16.0),
+                shaper: &shaper,
+                metrics: &metrics,
+                resolver: &resolver,
+            },
+        );
+        let quarter_pixels = render(&quarter_scene);
+        write_png(&quarter_pixels, "/tmp/mermaid_gantt_quarter_e2e.png")
+            .expect("quarter-date PNG write failed");
+        assert!(!quarter_scene.instructions.is_empty());
     }
 
     #[test]

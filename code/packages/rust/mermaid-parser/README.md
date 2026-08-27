@@ -80,6 +80,7 @@ One-, two-, and three-digit fractional-second tokens retain their authored
 precision before backend-neutral temporal layout.
 Ordinal calendar-day tokens validate their numeric suffix before layout.
 Unpadded 24-hour, minute, and second fields retain sub-minute precision.
+Quarter tokens resolve to the first month of the authored quarter.
 It remains partial while non-English locale data and the complete pinned visual
 corpus are still outstanding.
 

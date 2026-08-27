@@ -1142,6 +1142,7 @@ pub enum GanttDateFormatPart {
     Literal(String),
     Year4,
     Year2,
+    Quarter,
     Month,
     Month2,
     MonthShort,

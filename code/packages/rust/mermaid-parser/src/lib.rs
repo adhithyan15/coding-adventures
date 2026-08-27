@@ -6075,6 +6075,7 @@ fn parse_gantt_date_format(token: &Token, source: &str) -> Result<GanttDateForma
             ("h", GanttDateFormatPart::Hour12),
             ("m", GanttDateFormatPart::MinuteUnpadded),
             ("s", GanttDateFormatPart::SecondUnpadded),
+            ("Q", GanttDateFormatPart::Quarter),
             ("A", GanttDateFormatPart::MeridiemUpper),
             ("a", GanttDateFormatPart::MeridiemLower),
             ("Z", GanttDateFormatPart::TimezoneOffsetColon),
@@ -6115,6 +6116,7 @@ fn gantt_date_matches_format(value: &str, format: &GanttDateFormat) -> bool {
             }
             GanttDateFormatPart::Year4 => consume_digits(rest, 4, 4),
             GanttDateFormatPart::Year2 => consume_digits(rest, 2, 2),
+            GanttDateFormatPart::Quarter => consume_quarter(rest),
             GanttDateFormatPart::Month | GanttDateFormatPart::Day => consume_digits(rest, 1, 2),
             GanttDateFormatPart::DayOrdinal => consume_ordinal_day(rest),
             GanttDateFormatPart::Month2 | GanttDateFormatPart::Day2 | GanttDateFormatPart::Hour24
@@ -6144,6 +6146,10 @@ fn gantt_date_matches_format(value: &str, format: &GanttDateFormat) -> bool {
         rest = &rest[length..];
     }
     rest.is_empty()
+}
+
+fn consume_quarter(value: &str) -> Option<usize> {
+    matches!(value.as_bytes().first(), Some(b'1'..=b'4')).then_some(1)
 }
 
 fn consume_weekday_number(value: &str) -> Option<usize> {
@@ -7171,6 +7177,13 @@ Rel(customer, web, \"Uses\", \"HTTPS\")";
         assert!(diagram.date_format.parts.contains(&GanttDateFormatPart::Hour24Unpadded));
         assert!(diagram.date_format.parts.contains(&GanttDateFormatPart::MinuteUnpadded));
         assert!(diagram.date_format.parts.contains(&GanttDateFormatPart::SecondUnpadded));
+    }
+
+    #[test]
+    fn gantt_compiles_quarter_formats() {
+        let diagram = parse_gantt("gantt\ndateFormat YYYY-Q\nPlanning :p1, 2026-2, 1d").unwrap();
+        assert!(diagram.date_format.parts.contains(&GanttDateFormatPart::Quarter));
+        assert!(parse_gantt("gantt\ndateFormat YYYY-Q\nBad :b, 2026-5, 1d").is_err());
     }
 
     #[test]

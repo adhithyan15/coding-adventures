@@ -1,5 +1,9 @@
 # Changelog
 
+## 0.154.0
+
+- Compile Mermaid Gantt `Q` quarter tokens into typed semantic date formats.
+
 ## 0.153.0
 
 - Compile Mermaid Gantt `H`, `m`, and `s` unpadded time tokens into typed semantic date formats.

@@ -1,5 +1,9 @@
 # Changelog
 
+## 0.34.0
+
+- Resolve typed Gantt quarter dates to their first month before backend-neutral layout.
+
 ## 0.33.0
 
 - Resolve typed unpadded Gantt time fields into backend-neutral temporal geometry.
