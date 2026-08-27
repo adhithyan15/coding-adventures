@@ -40,6 +40,7 @@ use Exporter 'import';
 
 our $VERSION = '0.1.0';
 our @EXPORT_OK = qw(encrypt decrypt brute_force);
+our $MAX_BRUTE_FORCE_TEXT_LENGTH = 4096;
 
 # Encrypt text using the Scytale transposition cipher.
 #
@@ -52,20 +53,21 @@ sub encrypt {
     my ($text, $key) = @_;
     return "" if $text eq "";
 
-    my $n = length($text);
+    my @scalars = split //u, $text;
+    my $n = scalar @scalars;
     die "Key must be >= 2, got $key\n" if $key < 2;
     die "Key must be <= text length ($n), got $key\n" if $key > $n;
 
     # Calculate grid dimensions and pad
     my $num_rows = ceil($n / $key);
     my $padded_len = $num_rows * $key;
-    my $padded = $text . (" " x ($padded_len - $n));
+    push @scalars, (" ") x ($padded_len - $n);
 
     # Read column-by-column
     my $result = "";
     for my $col (0 .. $key - 1) {
         for my $row (0 .. $num_rows - 1) {
-            $result .= substr($padded, $row * $key + $col, 1);
+            $result .= $scalars[$row * $key + $col];
         }
     }
 
@@ -84,7 +86,8 @@ sub decrypt {
     my ($text, $key) = @_;
     return "" if $text eq "";
 
-    my $n = length($text);
+    my @scalars = split //u, $text;
+    my $n = scalar @scalars;
     die "Key must be >= 2, got $key\n" if $key < 2;
     die "Key must be <= text length ($n), got $key\n" if $key > $n;
 
@@ -109,14 +112,15 @@ sub decrypt {
     for my $row (0 .. $num_rows - 1) {
         for my $col (0 .. $key - 1) {
             if ($row < $col_lens[$col]) {
-                $result .= substr($text, $col_starts[$col] + $row, 1);
+                $result .= $scalars[$col_starts[$col] + $row];
             }
         }
     }
 
     # Strip trailing padding spaces
-    $result =~ s/\s+$//;
-    return $result;
+    my @plaintext = split //u, $result;
+    pop @plaintext while @plaintext && $plaintext[-1] eq " ";
+    return join "", @plaintext;
 }
 
 # Try all possible keys and return decryption results.
@@ -127,7 +131,8 @@ sub decrypt {
 # Returns an array of hashrefs [{key => N, text => "..."}, ...]
 sub brute_force {
     my ($text) = @_;
-    my $n = length($text);
+    my $n = scalar split //u, $text;
+    die "scytale-brute-force-limit\n" if $n > $MAX_BRUTE_FORCE_TEXT_LENGTH;
     return () if $n < 4;
 
     my $max_key = int($n / 2);

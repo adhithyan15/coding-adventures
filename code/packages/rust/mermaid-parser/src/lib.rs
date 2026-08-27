@@ -6061,6 +6061,7 @@ fn parse_gantt_date_format(token: &Token, source: &str) -> Result<GanttDateForma
             ("MMM", GanttDateFormatPart::MonthShort), ("SSS", GanttDateFormatPart::Millisecond),
             ("SS", GanttDateFormatPart::Millisecond2),
             ("ddd", GanttDateFormatPart::WeekdayShort),
+            ("dd", GanttDateFormatPart::WeekdayMin),
             ("ZZ", GanttDateFormatPart::TimezoneOffsetCompact),
             ("hh", GanttDateFormatPart::Hour12Padded),
             ("YY", GanttDateFormatPart::Year2), ("MM", GanttDateFormatPart::Month2),
@@ -6069,6 +6070,7 @@ fn parse_gantt_date_format(token: &Token, source: &str) -> Result<GanttDateForma
             ("mm", GanttDateFormatPart::Minute), ("ss", GanttDateFormatPart::Second),
             ("M", GanttDateFormatPart::Month), ("D", GanttDateFormatPart::Day),
             ("S", GanttDateFormatPart::Millisecond1),
+            ("d", GanttDateFormatPart::WeekdayNumber),
             ("h", GanttDateFormatPart::Hour12),
             ("A", GanttDateFormatPart::MeridiemUpper),
             ("a", GanttDateFormatPart::MeridiemLower),
@@ -6123,6 +6125,8 @@ fn gantt_date_matches_format(value: &str, format: &GanttDateFormat) -> bool {
             GanttDateFormatPart::Millisecond => consume_digits(rest, 3, 3),
             GanttDateFormatPart::MonthShort => consume_letters(rest, 3, 3),
             GanttDateFormatPart::MonthLong => consume_letters(rest, 3, 9),
+            GanttDateFormatPart::WeekdayNumber => consume_weekday_number(rest),
+            GanttDateFormatPart::WeekdayMin => consume_letters(rest, 2, 2),
             GanttDateFormatPart::WeekdayShort => consume_letters(rest, 3, 3),
             GanttDateFormatPart::WeekdayLong => consume_letters(rest, 6, 9),
             GanttDateFormatPart::MeridiemUpper => consume_meridiem(rest, true),
@@ -6135,6 +6139,10 @@ fn gantt_date_matches_format(value: &str, format: &GanttDateFormat) -> bool {
         rest = &rest[length..];
     }
     rest.is_empty()
+}
+
+fn consume_weekday_number(value: &str) -> Option<usize> {
+    matches!(value.as_bytes().first(), Some(b'0'..=b'6')).then_some(1)
 }
 
 fn consume_ordinal_day(value: &str) -> Option<usize> {
@@ -7221,6 +7229,16 @@ Rel(customer, web, \"Uses\", \"HTTPS\")";
 
     #[test]
     fn gantt_compiles_named_weekday_formats() {
+        let numeric = parse_gantt(
+            "gantt\ndateFormat d YYYY-MM-DD\nRelease :r1, 0 2026-03-01, 1d",
+        ).unwrap();
+        assert!(numeric.date_format.parts.contains(&GanttDateFormatPart::WeekdayNumber));
+
+        let minimum = parse_gantt(
+            "gantt\ndateFormat dd YYYY-MM-DD\nRelease :r1, Su 2026-03-01, 1d",
+        ).unwrap();
+        assert!(minimum.date_format.parts.contains(&GanttDateFormatPart::WeekdayMin));
+
         let short = parse_gantt(
             "gantt\ndateFormat ddd YYYY-MM-DD\nRelease :r1, Sun 2026-03-01, 1d",
         ).unwrap();
@@ -7230,6 +7248,7 @@ Rel(customer, web, \"Uses\", \"HTTPS\")";
             "gantt\ndateFormat dddd YYYY-MM-DD\nRelease :r1, Sunday 2026-03-01, 1d",
         ).unwrap();
         assert!(long.date_format.parts.contains(&GanttDateFormatPart::WeekdayLong));
+        assert!(parse_gantt("gantt\ndateFormat d YYYY-MM-DD\nBad :b, 7 2026-03-01, 1d").is_err());
     }
 
     #[test]

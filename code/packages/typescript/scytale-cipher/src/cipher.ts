@@ -41,6 +41,8 @@
  * about n/2 possible keys. An attacker can try every key in milliseconds.
  */
 
+export const MAX_BRUTE_FORCE_TEXT_LENGTH = 4096;
+
 /**
  * Encrypt text using the Scytale transposition cipher.
  *
@@ -51,13 +53,17 @@
  */
 export function encrypt(text: string, key: number): string {
   if (text === "") return "";
+  const scalars = Array.from(text);
   if (key < 2) throw new Error(`Key must be >= 2, got ${key}`);
-  if (key > text.length)
-    throw new Error(`Key must be <= text length (${text.length}), got ${key}`);
+  if (key > scalars.length)
+    throw new Error(`Key must be <= text length (${scalars.length}), got ${key}`);
 
-  // Calculate grid dimensions and pad
-  const numRows = Math.ceil(text.length / key);
-  const padded = text.padEnd(numRows * key, " ");
+  // JavaScript indexes strings by UTF-16 code unit. Array.from instead walks
+  // code points, so supplementary scalars occupy one grid cell.
+  const numRows = Math.ceil(scalars.length / key);
+  const padded = scalars.concat(
+    Array<string>(numRows * key - scalars.length).fill(" "),
+  );
 
   // Read column-by-column
   let result = "";
@@ -80,11 +86,12 @@ export function encrypt(text: string, key: number): string {
  */
 export function decrypt(text: string, key: number): string {
   if (text === "") return "";
+  const scalars = Array.from(text);
   if (key < 2) throw new Error(`Key must be >= 2, got ${key}`);
-  if (key > text.length)
-    throw new Error(`Key must be <= text length (${text.length}), got ${key}`);
+  if (key > scalars.length)
+    throw new Error(`Key must be <= text length (${scalars.length}), got ${key}`);
 
-  const n = text.length;
+  const n = scalars.length;
   const numRows = Math.ceil(n / key);
 
   // Handle uneven grids (when n % key != 0, e.g. during brute-force)
@@ -106,13 +113,14 @@ export function decrypt(text: string, key: number): string {
   for (let row = 0; row < numRows; row++) {
     for (let col = 0; col < key; col++) {
       if (row < colLens[col]) {
-        result += text[colStarts[col] + row];
+        result += scalars[colStarts[col] + row];
       }
     }
   }
 
-  // Strip trailing padding spaces
-  return result.trimEnd();
+  // Only U+0020 is padding. Tabs, newlines, and NBSP are ciphertext data.
+  while (result.endsWith(" ")) result = result.slice(0, -1);
+  return result;
 }
 
 /** A single brute-force decryption result. */
@@ -128,9 +136,13 @@ export interface BruteForceResult {
  * @returns Array of {key, text} results for keys 2 through floor(len/2).
  */
 export function bruteForce(text: string): BruteForceResult[] {
-  if (text.length < 4) return [];
+  const scalarLength = Array.from(text).length;
+  if (scalarLength > MAX_BRUTE_FORCE_TEXT_LENGTH) {
+    throw new RangeError("scytale-brute-force-limit");
+  }
+  if (scalarLength < 4) return [];
 
-  const maxKey = Math.floor(text.length / 2);
+  const maxKey = Math.floor(scalarLength / 2);
   const results: BruteForceResult[] = [];
 
   for (let candidateKey = 2; candidateKey <= maxKey; candidateKey++) {

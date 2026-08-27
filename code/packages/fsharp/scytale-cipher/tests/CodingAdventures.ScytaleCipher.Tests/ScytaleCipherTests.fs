@@ -21,6 +21,16 @@ type ScytaleCipherTests() =
         Assert.Equal(String.Empty, ScytaleCipher.decrypt String.Empty 2)
 
     [<Fact>]
+    member _.``portable scalar ragged and padding vectors match``() =
+        Assert.Equal("Aé😀 B ", ScytaleCipher.encrypt "A😀Bé" 3)
+        Assert.Equal("A😀Bé", ScytaleCipher.decrypt "Aé😀 B " 3)
+        Assert.Equal("ABe \u0301 ", ScytaleCipher.encrypt "Ae\u0301B" 3)
+        Assert.Equal("Ae\u0301B", ScytaleCipher.decrypt "ABe \u0301 " 3)
+        Assert.Equal("ACEFBD", ScytaleCipher.decrypt "ABCDEF" 4)
+        Assert.Equal("AB\t", ScytaleCipher.decrypt "A\tB " 2)
+        Assert.Equal("A\t\n\u00A0", ScytaleCipher.decrypt "A\u00A0\t \n " 3)
+
+    [<Fact>]
     member _.``round trips across valid keys``() =
         let text = "The quick brown fox jumps over the lazy dog!"
 
@@ -43,3 +53,5 @@ type ScytaleCipherTests() =
         Assert.Throws<ArgumentNullException>(fun () -> ScytaleCipher.bruteForce null |> ignore) |> ignore
         Assert.Throws<ArgumentException>(fun () -> ScytaleCipher.encrypt "HELLO" 1 |> ignore) |> ignore
         Assert.Throws<ArgumentException>(fun () -> ScytaleCipher.decrypt "HI" 3 |> ignore) |> ignore
+        let oversized = String('A', ScytaleCipher.maxBruteForceTextLength + 1)
+        Assert.Throws<ArgumentException>(fun () -> ScytaleCipher.bruteForce oversized |> ignore) |> ignore

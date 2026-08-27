@@ -39,7 +39,7 @@ describe("real curriculum", () => {
     expect(scripts.devanagari!.complete).toBe(true);
   });
 
-  it("keeps the cross-script closure queue measured after Japanese se", () => {
+  it("keeps the cross-script closure queue measured after Kannada long e", () => {
     const candrakkala = scripts.malayalam!.marks!.find((mark) => mark.mark === "്")!;
     expect(candrakkala.role).toBe("virama");
     expect(candrakkala.compositionOrder).toEqual([
@@ -1122,6 +1122,41 @@ describe("real curriculum", () => {
     );
     expect(missingByScript.get("japanese.json")?.has("せ")).toBe(false);
     expect(affected.get("せ") ?? 0).toBe(0);
+    const japaneseTe = scripts.japanese!.letters.find((entry) => entry.glyph === "て")!;
+    expect(japaneseTe.sound).toBe("te");
+    expect(japaneseTe.role).toBe("hiragana");
+    expect(japaneseTe.penLifts).toBe(0);
+    expect(japaneseTe.strokeOrder).toEqual([
+      "draw the high horizontal from left to right",
+      "without lifting, turn back down and left through the diagonal",
+      "without lifting, round the broad lower curve and sweep right to the finish",
+    ]);
+    expect(japaneseTe.strokeOrderSource?.citation).toMatch(
+      /Sirgazil.*て.*28 frames.*2\.8 seconds.*Wikimedia Commons.*1 October 2009/i,
+    );
+    expect(japaneseTe.strokeOrderSource?.variation).toMatch(
+      /one uninterrupted run.*high horizontal.*left to right.*down and left.*diagonal.*broad lower curve.*sweep right.*Noto Sans JP.*zero-lift order/i,
+    );
+    expect(missingByScript.get("japanese.json")?.has("て")).toBe(false);
+    expect(affected.get("て") ?? 0).toBe(0);
+    const japaneseNa = scripts.japanese!.letters.find((entry) => entry.glyph === "な")!;
+    expect(japaneseNa.sound).toBe("na");
+    expect(japaneseNa.role).toBe("hiragana");
+    expect(japaneseNa.penLifts).toBe(3);
+    expect(japaneseNa.strokeOrder).toEqual([
+      "draw the upper-left horizontal from left to right",
+      "lift and descend through the crossing left-falling stem",
+      "lift and draw the short upper-right diagonal down and right",
+      "lift, descend through the lower-right stem, turn around the loop, and sweep right to the finish",
+    ]);
+    expect(japaneseNa.strokeOrderSource?.citation).toMatch(
+      /Sirgazil.*な.*32 frames.*3\.2 seconds.*Wikimedia Commons.*1 October 2009/i,
+    );
+    expect(japaneseNa.strokeOrderSource?.variation).toMatch(
+      /four pen-down runs.*three lifts.*upper-left horizontal.*left-falling stem.*upper-right diagonal.*lower-right stem.*loop.*right.*Noto Sans JP.*four-run order/i,
+    );
+    expect(missingByScript.get("japanese.json")?.has("な")).toBe(false);
+    expect(affected.get("な") ?? 0).toBe(0);
     const japaneseMo = scripts.japanese!.letters.find((entry) => entry.glyph === "も")!;
     expect(japaneseMo.sound).toBe("mo");
     expect(japaneseMo.role).toBe("hiragana");
@@ -1173,6 +1208,23 @@ describe("real curriculum", () => {
     );
     expect(missingByScript.get("kannada.json")?.has("ಎ")).toBe(false);
     expect(affected.get("ಎ") ?? 0).toBe(0);
+    const kannadaEe = scripts.kannada!.independentVowels!.find((entry) => entry.glyph === "ಏ")!;
+    expect(kannadaEe.sound).toBe("ē");
+    expect(kannadaEe.penLifts).toBe(1);
+    expect(kannadaEe.strokeOrder).toEqual([
+      "turn clockwise around the compact left loop",
+      "without lifting, sweep through the joined lower curves and climb the right side",
+      "without lifting, carry the tall outer arch over and finish at the upper left",
+      "lift, then draw the small upper loop from left to right",
+    ]);
+    expect(kannadaEe.strokeOrderSource?.citation).toMatch(
+      /Gopala Krishna A.*Kannada-alphabet-aee\.gif.*ಏ.*31 frames.*3\.1 seconds.*Wikimedia Commons.*25 May 2016/i,
+    );
+    expect(kannadaEe.strokeOrderSource?.variation).toMatch(
+      /CC BY-SA 4\.0.*two pen-down runs.*compact left loop.*joined lower curves.*tall outer arch.*one lift.*small upper loop.*left to right.*Noto Sans Kannada.*one-lift order/i,
+    );
+    expect(missingByScript.get("kannada.json")?.has("ಏ")).toBe(false);
+    expect(affected.get("ಏ") ?? 0).toBe(0);
     const kannadaAa = scripts.kannada!.independentVowels!.find((entry) => entry.glyph === "ಆ")!;
     expect(kannadaAa.sound).toBe("ā");
     expect(kannadaAa.penLifts).toBe(1);
@@ -1238,7 +1290,7 @@ describe("real curriculum", () => {
     expect(affected.get("ب") ?? 0).toBe(0);
     expect(
       [...affected.entries()].sort((left, right) => right[1] - left[1])[0],
-    ).toEqual(["て", 3]);
+    ).toEqual(["ಒ", 3]);
   });
 
   it("loaded every track (17+ and growing)", () => {

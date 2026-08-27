@@ -6710,7 +6710,7 @@
       "language": "arabic",
       "chapter": 1,
       "output": "arabic/book/chapters/ch01-greetings.tex",
-      "omittedLessonIds": [
+      "embeddedLessonIds": [
         "AR-C01-salam",
         "AR-W00-sin-lam",
         "AR-W00-alif-mim-salam",
@@ -6722,17 +6722,15 @@
         "AR-W00-kaf-waw-alaykum",
         "AR-W00-full-greeting-recall",
         "AR-C01-practice"
-      ],
-      "omissionIssue": 13117
+      ]
     },
     {
       "language": "arabic",
       "chapter": 2,
       "output": "arabic/book/chapters/ch02-introductions.tex",
-      "omittedLessonIds": [
+      "embeddedLessonIds": [
         "AR-W06-sukun-shadda-tanwin"
-      ],
-      "omissionIssue": 13117
+      ]
     },
     {
       "language": "french",
@@ -6945,7 +6943,7 @@
       "language": "malayalam",
       "chapter": 1,
       "output": "malayalam/book/chapters/ch01-greetings.tex",
-      "omittedLessonIds": [
+      "embeddedLessonIds": [
         "ML-C01-namaskaram",
         "ML-W01-na-ma-trace",
         "ML-W01-na-ma-guided-copy",
@@ -6956,26 +6954,23 @@
         "ML-W01-namaskaram-read",
         "ML-W01-namaskaram-dictation",
         "ML-C01-practice"
-      ],
-      "omissionIssue": 13117
+      ]
     },
     {
       "language": "malayalam",
       "chapter": 2,
       "output": "malayalam/book/chapters/ch02-introductions.tex",
-      "omittedLessonIds": [
+      "embeddedLessonIds": [
         "ML-W02-santosham-guided-copy"
-      ],
-      "omissionIssue": 13117
+      ]
     },
     {
       "language": "malayalam",
       "chapter": 3,
       "output": "malayalam/book/chapters/ch03-responding.tex",
-      "omittedLessonIds": [
+      "embeddedLessonIds": [
         "ML-W03-santosham-delayed-copy"
-      ],
-      "omissionIssue": 13117
+      ]
     },
     {
       "language": "malayalam",

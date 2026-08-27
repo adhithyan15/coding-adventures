@@ -1,11 +1,15 @@
 module ScytaleCipher
     ( BruteForceResult (..)
+    , maxBruteForceTextLength
     , encrypt
     , decrypt
     , bruteForce
     ) where
 
-import Data.List (dropWhileEnd)
+import Data.List (dropWhileEnd, transpose)
+
+maxBruteForceTextLength :: Int
+maxBruteForceTextLength = 4096
 
 -- | One candidate plaintext from a brute-force Scytale attack.
 data BruteForceResult = BruteForceResult
@@ -23,11 +27,7 @@ encrypt text key = do
     let rowCount = ceilingDiv (length text) key
         paddedLength = rowCount * key
         padded = text ++ replicate (paddedLength - length text) ' '
-    Right
-        [ padded !! (row * key + column)
-        | column <- [0 .. key - 1]
-        , row <- [0 .. rowCount - 1]
-        ]
+    Right (concat (transpose (chunksOf key padded)))
 
 -- | Decrypt Scytale text with @key@ columns and remove trailing space padding.
 -- Uneven ciphertext lengths are supported so brute-force candidates remain
@@ -44,24 +44,22 @@ decrypt text key = do
                 else rowCount - 1
             | column <- [0 .. key - 1]
             ]
-        columnStarts = scanl (+) 0 columnLengths
-        plaintext =
-            [ text !! (columnStarts !! column + row)
-            | row <- [0 .. rowCount - 1]
-            , column <- [0 .. key - 1]
-            , row < columnLengths !! column
-            ]
+        columns = splitAtLengths columnLengths text
+        plaintext = concat (transpose columns)
     Right (dropWhileEnd (== ' ') plaintext)
   where
     textLength = length text
 
 -- | Try every key from 2 through half the ciphertext length.
-bruteForce :: String -> [BruteForceResult]
-bruteForce text =
-    [ BruteForceResult key plaintext
-    | key <- [2 .. length text `div` 2]
-    , Right plaintext <- [decrypt text key]
-    ]
+bruteForce :: String -> Either String [BruteForceResult]
+bruteForce text
+    | length text > maxBruteForceTextLength = Left "scytale-brute-force-limit"
+    | otherwise =
+        Right
+            [ BruteForceResult key plaintext
+            | key <- [2 .. length text `div` 2]
+            , Right plaintext <- [decrypt text key]
+            ]
 
 validateKey :: Int -> Int -> Either String ()
 validateKey textLength key
@@ -71,3 +69,15 @@ validateKey textLength key
 
 ceilingDiv :: Int -> Int -> Int
 ceilingDiv dividend divisor = (dividend + divisor - 1) `div` divisor
+
+chunksOf :: Int -> [a] -> [[a]]
+chunksOf _ [] = []
+chunksOf size values = prefix : chunksOf size suffix
+  where
+    (prefix, suffix) = splitAt size values
+
+splitAtLengths :: [Int] -> [a] -> [[a]]
+splitAtLengths [] _ = []
+splitAtLengths (size : sizes) values = prefix : splitAtLengths sizes suffix
+  where
+    (prefix, suffix) = splitAt size values

@@ -9124,6 +9124,86 @@ remains disabled until every required check is terminal and acceptable. State
 is now 157 merged, 374 pending, and exactly one `pr-open` owner across the
 unchanged complete and acyclic 532-owner/791-edge graph.
 
+PR #13112's final state-recording head
+`681cab6d2991f52d2ec7def9a1847deb03036ba2` completed all 40 reported checks:
+33 passed and seven were expected skips, with no failure or pending check.
+GitHub reported the branch clean and mergeable. The loop enabled squash
+auto-merge, and GitHub merged the PR as
+`7b43338ebe0e7caa55cda1e06bd0324ae9d1a6e7` at
+2026-08-26T21:59:52Z without a manual merge command. Its clean worktree matched
+the exact reviewed head and was removed after the successor worktree existed.
+
+Before successor selection, `origin/main` advanced through disjoint Urdu
+curriculum and Rust Wasm-runtime changes to exact
+`523f5ac925b23a8682f199e1a1838be745d6833a`. Neither merge added an
+implementation package identity. The regenerated schema-3 inventory therefore
+remains collision-clean at 15 established lanes, 1,373 implementation
+identities, 4,582 slots, and 1,412 all-reported identities. The four bands remain
+175/266, 123/934, 166/2,087, and 909/12,726; Rust has 720 singletons, OCaml is
+still emerging at zero packages, and collisions and unknown buckets remain
+zero. The exact 14/15 frontier remains Dart binary-search-tree, Fenwick tree,
+and UUID plus externally owned Swift paint-vm-ascii. The ragged Scytale review
+finding is already captured by its registered conformance owner, so the refresh
+adds no new owner.
+
+The next selected owner is
+`scytale-unicode-padding-established-lane-conformance` on
+`codex/scytale-established-lane-conformance`. It is newly dependency-ready after
+the neutral classical-cipher corpus merged, implements the CR02 behavior pinned
+by that suite, and closes one established identity's Unicode-unit,
+ragged-column, and literal U+0020-padding divergence across all 15 lanes. It is
+the highest-leverage bounded successor and materially narrower than the sibling
+Vigenere cryptanalysis convergence. Seven live PRs have zero exact overlap with
+its package, CR02, fixture, state, or roadmap surfaces. OCaml's process-free
+substrate remains collision-unsafe while PRs #12149 and #12162 own required Go
+build-tool entry and validator paths. The reconciled state graph remains
+complete and acyclic at 532 owners and 791 edges: 158 merged, 373 pending, and
+exactly one in-progress owner, with no active parity PR.
+
+The final implementation audit found a distinct test-infrastructure gap before
+publication: the package tests directly exercise the normative Scytale
+semantics, but no lane loads or generatedly consumes all 18 Scytale fixture
+cases and compares each complete expected object. The new pending owner
+`scytale-language-neutral-fixture-established-lane-consumers` depends on this
+behavior-convergence slice and will add bounded test-only JSON consumers or
+dependency-free generated adapters plus a corpus-drift gate across all 15
+lanes. This keeps the current implementation claim honest while preserving the
+fixture README's stronger definition of executable conformance. The addition
+brings the registered graph to 533 owners and 792 edges without changing the
+single in-progress owner.
+
+The implementation now converges every established Scytale package on Unicode
+scalar cells, explicit full and ragged column reconstruction, U+0020-only
+padding removal, empty-before-validation behavior, stable errors, ascending
+brute force, and the 4,096-scalar preflight. Package tests pass in all 15 lanes;
+coverage is above 80% wherever a lane has a coverage gate, and Java/Kotlin now
+gate line coverage explicitly. TypeScript's Unix and Windows BUILD fronts use
+`npm ci`, compile the public API, run 26 tests at 100% coverage, and retain an
+audited range-consistent `nanoid` security patch with zero reported npm
+vulnerabilities. Empty schema-v1 capability manifests preserve the packages'
+process-free, filesystem-free, network-free authority profile.
+
+After a conflict-free rebase over five disjoint mainline commits to exact
+`origin/main` `5fb2ef7d5d858b6144075eb95e162908f4b26cbb`, a fresh build-tool
+plan evaluated 45 Starlark files, discovered 5,089 packages, selected exactly
+the 15 established Scytale packages, and built all 15 while skipping 5,074.
+The collision gate remains at 15 established lanes, 1,373 identities, 4,582
+slots, and zero collisions or unknown buckets. Ten live PRs have zero overlap
+with the 87 changed paths. Independent reviews are clean after focused Dart,
+Elixir, Swift, JVM coverage, TypeScript build, README, and generated-artifact
+fixes. Exact cleanup of generated plans, coverage, dependency, and compiler
+caches reduced the active worktree from about 1.3 GiB to 778 MiB.
+
+Ready-for-review PR #13128 publishes the validated implementation from initial
+head `a44209c2fe836357dc466530aac741c50df794bc` on exact `origin/main`
+`5fb2ef7d5d858b6144075eb95e162908f4b26cbb` after a normal first push.
+The conflict-free rebase required no force push. GitHub reports the PR
+non-draft; checks are queued and mergeability is still being calculated, so
+auto-merge remains disabled until every required check is terminal and
+acceptable and GitHub reports no conflict. State is now 158 merged, 374
+pending, and exactly one `pr-open` owner across the complete acyclic
+533-owner/792-edge graph.
+
 ## Autonomous Loop Protocol
 
 Only one parity PR should be active at a time.

@@ -1,5 +1,17 @@
 # Changelog
 
+## [Unreleased] - gate Flutter's HostDialog degradation on the actual gap (#13010)
+
+`mosaic-emit-flutter` now implements a real native dialog for `HostDialog`'s
+default `modal: true` shape (#13010) — only `modal: false` still falls
+back to a placeholder. Changed the `("HostDialog", backend == Flutter)`
+match arm in `ignored_native_property` to call the new
+`mosaic_emit_flutter::pipeline::host_dialog_has_native_semantics`
+predicate, mirroring the existing `host_table_has_native_semantics`
+pattern, so `interaction.dialog-placeholder` is only reported for the
+genuinely-still-degraded `modal: false` case rather than unconditionally
+for every `HostDialog` on Flutter.
+
 ## [Unreleased] - document HostDialog's XAML open-host-required gap as permanent (#13008)
 
 Added a doc comment above the `("HostDialog", "open")` arm in

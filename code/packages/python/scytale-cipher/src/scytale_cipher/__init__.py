@@ -24,6 +24,17 @@ implementation of the computing stack from transistors to operating systems.
 
 __version__ = "0.1.0"
 
-from scytale_cipher.cipher import brute_force, decrypt, encrypt
+from scytale_cipher.cipher import (
+    MAX_BRUTE_FORCE_TEXT_LENGTH,
+    brute_force,
+    decrypt,
+    encrypt,
+)
 
-__all__ = ["encrypt", "decrypt", "brute_force", "__version__"]
+__all__ = [
+    "encrypt",
+    "decrypt",
+    "brute_force",
+    "MAX_BRUTE_FORCE_TEXT_LENGTH",
+    "__version__",
+]

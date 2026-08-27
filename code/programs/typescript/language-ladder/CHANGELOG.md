@@ -1,5 +1,33 @@
 # Changelog
 
+### Added — source-verified Kannada long e
+
+- Teach Kannada independent vowel **ಏ** from Gopala Krishna A's CC BY-SA 4.0,
+  31-frame animation: carry the compact left loop through the joined lower
+  curves and tall outer arch, then lift once for the small upper loop.
+- Close all 3 affected realizations in the alphabet filmstrip and fit the
+  two-run order to the bundled Noto Sans Kannada outline, reranking Kannada
+  **ಒ** first at 3.
+
+### Added — source-verified Japanese hiragana na
+
+- Teach hiragana **な** from Sirgazil's CC0 32-frame animation: draw the
+  upper-left horizontal, crossing left-falling stem, and upper-right diagonal
+  as three lifted marks, then join the lower-right stem, loop, and outward
+  sweep.
+- Close all 3 affected realizations in the alphabet filmstrip, fit the four-run
+  order to the bundled Noto Sans JP outline, and rerank Kannada **ಏ** first at
+  3.
+
+### Added — source-verified Japanese hiragana te
+
+- Teach hiragana **て** from Sirgazil's CC0 28-frame animation: carry the high
+  horizontal left to right, return down and left through the diagonal, then
+  round the broad lower curve and sweep right without lifting.
+- Close all 3 affected realizations in the alphabet filmstrip, fit the zero-lift
+  order to the bundled Noto Sans JP outline, and rerank hiragana **な** first
+  at 3.
+
 ### Added — source-verified Japanese hiragana se
 
 - Teach hiragana **せ** from Sirgazil's CC0 33-frame animation: draw the long

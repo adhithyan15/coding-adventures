@@ -127,6 +127,8 @@ const KANNADA_I = DUCTUS[ductusKey("kannada", "ಇ")];
 const kannadaIOutline = kannadaOutline("ಇ");
 const KANNADA_E = DUCTUS[ductusKey("kannada", "ಎ")];
 const kannadaEOutline = kannadaOutline("ಎ");
+const KANNADA_EE = DUCTUS[ductusKey("kannada", "ಏ")];
+const kannadaEeOutline = kannadaOutline("ಏ");
 const MALAYALAM_E = DUCTUS[ductusKey("malayalam", "എ")];
 const malayalamEOutline = malayalamOutline("എ");
 const MALAYALAM_A = DUCTUS[ductusKey("malayalam", "അ")];
@@ -163,6 +165,10 @@ const JAPANESE_MI = DUCTUS[ductusKey("japanese", "み")];
 const japaneseMiOutline = japaneseOutline("み");
 const JAPANESE_SE = DUCTUS[ductusKey("japanese", "せ")];
 const japaneseSeOutline = japaneseOutline("せ");
+const JAPANESE_TE = DUCTUS[ductusKey("japanese", "て")];
+const japaneseTeOutline = japaneseOutline("て");
+const JAPANESE_NA = DUCTUS[ductusKey("japanese", "な")];
+const japaneseNaOutline = japaneseOutline("な");
 const JAPANESE_MO = DUCTUS[ductusKey("japanese", "も")];
 const japaneseMoOutline = japaneseOutline("も");
 const CA = DUCTUS["ச"];
@@ -1185,6 +1191,22 @@ describe("Kannada ಎ — one loop-to-arch run", () => {
   });
 });
 
+describe("Kannada ಏ — joined body, then the small upper loop", () => {
+  const steps = ductusSteps(KANNADA_EE);
+  const strip = ductusFilmstrip(KANNADA_EE, kannadaEeOutline);
+
+  it("places one lift before the small upper loop", () => {
+    expect(steps.map((step) => step.strokeIndex)).toEqual([0, 0, 0, 1]);
+    expect(steps.map((step) => step.startsAfterLift)).toEqual([false, false, false, true]);
+  });
+
+  it("reports four movements in two strokes", () => {
+    expect(strip.frames).toHaveLength(4);
+    expect(strip.penLifts).toBe(1);
+    expect(strip.summary).toBe("2 strokes · 1 pen lift · 4 movements");
+  });
+});
+
 describe("Malayalam എ — joined body, then a separate broad outer arch", () => {
   const steps = ductusSteps(MALAYALAM_E);
   const strip = ductusFilmstrip(MALAYALAM_E, malayalamEOutline);
@@ -1712,6 +1734,58 @@ describe("せ — a horizontal followed by two lifted crossing stems", () => {
       penPathD(JAPANESE_SE.strokes[1], 1),
     ]);
     expect(pen.attrs.d).toBe(penPathD(JAPANESE_SE.strokes[2], 1));
+  });
+});
+
+describe("て — one high bar returning through a broad lower curve", () => {
+  const steps = ductusSteps(JAPANESE_TE);
+  const strip = ductusFilmstrip(JAPANESE_TE, japaneseTeOutline);
+
+  it("keeps all three movements in one pen-down run", () => {
+    expect(steps.map((step) => step.strokeIndex)).toEqual([0, 0, 0]);
+    expect(steps.map((step) => step.startsAfterLift)).toEqual([false, false, false]);
+  });
+
+  it("reports a three-frame zero-lift filmstrip", () => {
+    expect(strip.frames).toHaveLength(3);
+    expect(strip.penLifts).toBe(0);
+    expect(strip.summary).toBe("one unbroken stroke · 3 movements");
+  });
+
+  it("finishes with the whole continuous path as the active pen", () => {
+    const last = strip.frames.at(-1)!;
+    const done = byTag(last, "path").filter((node) => node.attrs.class === "ductus__done");
+    const pen = byTag(last, "path").find((node) => node.attrs.class === "ductus__pen")!;
+    expect(done).toEqual([]);
+    expect(pen.attrs.d).toBe(penPathD(JAPANESE_TE.strokes[0], 1));
+  });
+});
+
+describe("な — three lifted marks followed by a looping body", () => {
+  const steps = ductusSteps(JAPANESE_NA);
+  const strip = ductusFilmstrip(JAPANESE_NA, japaneseNaOutline);
+
+  it("lifts for the first three marks and keeps the final loop joined", () => {
+    expect(steps.map((step) => step.strokeIndex)).toEqual([0, 1, 2, 3, 3]);
+    expect(steps.map((step) => step.startsAfterLift)).toEqual([false, true, true, true, false]);
+  });
+
+  it("reports a five-frame three-lift filmstrip", () => {
+    expect(strip.frames).toHaveLength(5);
+    expect(strip.penLifts).toBe(3);
+    expect(strip.summary).toBe("4 strokes · 3 pen lifts · 5 movements");
+  });
+
+  it("keeps the three completed marks visible while the loop finishes", () => {
+    const last = strip.frames.at(-1)!;
+    const done = byTag(last, "path").filter((node) => node.attrs.class === "ductus__done");
+    const pen = byTag(last, "path").find((node) => node.attrs.class === "ductus__pen")!;
+    expect(done.map((path) => path.attrs.d)).toEqual([
+      penPathD(JAPANESE_NA.strokes[0], 1),
+      penPathD(JAPANESE_NA.strokes[1], 1),
+      penPathD(JAPANESE_NA.strokes[2], 1),
+    ]);
+    expect(pen.attrs.d).toBe(penPathD(JAPANESE_NA.strokes[3], 1));
   });
 });
 

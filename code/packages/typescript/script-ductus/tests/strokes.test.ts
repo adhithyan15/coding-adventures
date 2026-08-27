@@ -263,6 +263,7 @@ const KANNADA_A = DUCTUS[ductusKey("kannada", "ಅ")];
 const KANNADA_AA = DUCTUS[ductusKey("kannada", "ಆ")];
 const KANNADA_I = DUCTUS[ductusKey("kannada", "ಇ")];
 const KANNADA_E = DUCTUS[ductusKey("kannada", "ಎ")];
+const KANNADA_EE = DUCTUS[ductusKey("kannada", "ಏ")];
 const TELUGU_A = DUCTUS[ductusKey("telugu", "అ")];
 const TELUGU_AA = DUCTUS[ductusKey("telugu", "ఆ")];
 const TELUGU_I = DUCTUS[ductusKey("telugu", "ఇ")];
@@ -287,6 +288,8 @@ const JAPANESE_TA = DUCTUS[ductusKey("japanese", "た")];
 const JAPANESE_NE = DUCTUS[ductusKey("japanese", "ね")];
 const JAPANESE_MI = DUCTUS[ductusKey("japanese", "み")];
 const JAPANESE_SE = DUCTUS[ductusKey("japanese", "せ")];
+const JAPANESE_TE = DUCTUS[ductusKey("japanese", "て")];
+const JAPANESE_NA = DUCTUS[ductusKey("japanese", "な")];
 const JAPANESE_SMALL_TSU = DUCTUS[ductusKey("japanese", "っ")];
 const JAPANESE_MO = DUCTUS[ductusKey("japanese", "も")];
 
@@ -803,6 +806,35 @@ describe("handwriting ductus", () => {
     expect(JAPANESE_SE.source.citation).toMatch(/Sirgazil.*せ.*33 frames.*3\.3 seconds/i);
   });
 
+  it("Japanese て keeps its bar, return, and lower curve in one run", () => {
+    expect(penLifts(JAPANESE_TE)).toBe(0);
+    expect(JAPANESE_TE.strokes).toHaveLength(1);
+    expect(JAPANESE_TE.strokes[0].segments.map((segment) => segment.label)).toEqual([
+      "draw the high horizontal from left to right",
+      "turn back down and left through the diagonal",
+      "round the broad lower curve and sweep right to the finish",
+    ]);
+    expect(JAPANESE_TE.source.url).toBe(
+      "https://commons.wikimedia.org/wiki/File:Hiragana_%E3%81%A6_stroke_order_animation.gif",
+    );
+    expect(JAPANESE_TE.source.citation).toMatch(/Sirgazil.*て.*28 frames.*2\.8 seconds/i);
+  });
+
+  it("Japanese な draws three lifted marks before its looping body", () => {
+    expect(penLifts(JAPANESE_NA)).toBe(3);
+    expect(JAPANESE_NA.strokes).toHaveLength(4);
+    expect(JAPANESE_NA.strokes.map((stroke) => stroke.segments.map((segment) => segment.label))).toEqual([
+      ["draw the upper-left horizontal from left to right"],
+      ["descend through the crossing left-falling stem"],
+      ["draw the short upper-right diagonal down and right"],
+      ["descend through the lower-right stem", "turn around the loop and sweep right to the finish"],
+    ]);
+    expect(JAPANESE_NA.source.url).toBe(
+      "https://commons.wikimedia.org/wiki/File:Hiragana_%E3%81%AA_stroke_order_animation.gif",
+    );
+    expect(JAPANESE_NA.source.citation).toMatch(/Sirgazil.*な.*32 frames.*3\.2 seconds/i);
+  });
+
   it("Japanese small っ scales つ's one-run movement to its own glyph", () => {
     expect(penLifts(JAPANESE_SMALL_TSU)).toBe(0);
     expect(JAPANESE_SMALL_TSU.strokes).toHaveLength(1);
@@ -977,6 +1009,20 @@ describe("handwriting ductus", () => {
     ]);
     expect(KANNADA_E.source.url).toBe(
       "https://commons.wikimedia.org/wiki/File:Kannada-alphabet-ae.gif",
+    );
+  });
+
+  it("Kannada ಏ adds its small upper loop after one lift", () => {
+    expect(penLifts(KANNADA_EE)).toBe(1);
+    expect(KANNADA_EE.strokes).toHaveLength(2);
+    expect(KANNADA_EE.strokes.flatMap((stroke) => stroke.segments.map((segment) => segment.label))).toEqual([
+      "turn clockwise around the compact left loop",
+      "sweep through the joined lower curves and climb the right side",
+      "carry the tall outer arch over and finish at the upper left",
+      "draw the small upper loop from left to right",
+    ]);
+    expect(KANNADA_EE.source.url).toBe(
+      "https://commons.wikimedia.org/wiki/File:Kannada-alphabet-aee.gif",
     );
   });
 

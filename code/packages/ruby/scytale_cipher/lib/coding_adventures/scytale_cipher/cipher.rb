@@ -36,6 +36,8 @@
 
 module CodingAdventures
   module ScytaleCipher
+    MAX_BRUTE_FORCE_TEXT_LENGTH = 4096
+
     # Encrypt text using the Scytale transposition cipher.
     #
     # @param text [String] the plaintext to encrypt
@@ -45,17 +47,18 @@ module CodingAdventures
     def self.encrypt(text, key)
       return "" if text.empty?
       raise ArgumentError, "Key must be >= 2, got #{key}" if key < 2
-      raise ArgumentError, "Key must be <= text length (#{text.length}), got #{key}" if key > text.length
+      scalars = text.each_char.to_a
+      raise ArgumentError, "Key must be <= text length (#{scalars.length}), got #{key}" if key > scalars.length
 
       # Calculate grid dimensions and pad
-      num_rows = (text.length.to_f / key).ceil
-      padded = text.ljust(num_rows * key)
+      num_rows = (scalars.length.to_f / key).ceil
+      scalars.concat([" "] * (num_rows * key - scalars.length))
 
       # Read column-by-column
       result = +""
       key.times do |col|
         num_rows.times do |row|
-          result << padded[row * key + col]
+          result << scalars[row * key + col]
         end
       end
 
@@ -71,9 +74,10 @@ module CodingAdventures
     def self.decrypt(text, key)
       return "" if text.empty?
       raise ArgumentError, "Key must be >= 2, got #{key}" if key < 2
-      raise ArgumentError, "Key must be <= text length (#{text.length}), got #{key}" if key > text.length
+      scalars = text.each_char.to_a
+      raise ArgumentError, "Key must be <= text length (#{scalars.length}), got #{key}" if key > scalars.length
 
-      n = text.length
+      n = scalars.length
       num_rows = (n.to_f / key).ceil
 
       # Handle uneven grids (when n % key != 0, e.g. during brute-force)
@@ -94,11 +98,13 @@ module CodingAdventures
       result = +""
       num_rows.times do |row|
         key.times do |col|
-          result << text[col_starts[col] + row] if row < col_lens[col]
+          result << scalars[col_starts[col] + row] if row < col_lens[col]
         end
       end
 
-      result.rstrip
+      result = result.each_char.to_a
+      result.pop while result.last == " "
+      result.join
     end
 
     # Try all possible keys and return decryption results.
@@ -106,9 +112,11 @@ module CodingAdventures
     # @param text [String] the ciphertext to brute-force
     # @return [Array<Hash>] list of {key:, text:} results
     def self.brute_force(text)
-      return [] if text.length < 4
+      scalar_length = text.each_char.count
+      raise ArgumentError, "scytale-brute-force-limit" if scalar_length > MAX_BRUTE_FORCE_TEXT_LENGTH
+      return [] if scalar_length < 4
 
-      max_key = text.length / 2
+      max_key = scalar_length / 2
       (2..max_key).map do |candidate_key|
         { key: candidate_key, text: decrypt(text, candidate_key) }
       end

@@ -126,6 +126,9 @@ Result (after stripping trailing pad): `"HELLO WORLD"`
    punctuation, digits, letters, and non-ASCII data all participate. Length,
    key bounds, grid positions, and brute-force limits are counted in Unicode
    scalar values, not UTF-8 bytes, UTF-16 code units, or grapheme clusters.
+   Combining marks remain independent scalar positions: the decomposed sequence
+   `e` followed by `U+0301` occupies two grid cells and is not normalized or
+   grouped into one user-perceived character.
    Inputs containing an unpaired UTF-16 surrogate are outside the portable
    string contract.
 
@@ -158,9 +161,10 @@ range or argument error without including input data.
 
 `code/specs/fixtures/classical-ciphers-v1/cases.json` is the normative
 executable corpus for CR01 through CR03. Scytale cases pin Unicode-scalar grid
-coordinates, exact `U+0020` padding and removal, intentional loss of genuine
-trailing spaces, retention of tabs, newlines, and non-breaking spaces, empty
-input before key validation, and ascending brute-force results. The stable
+coordinates including decomposed combining sequences, exact `U+0020` padding
+and removal, intentional loss of genuine trailing spaces, retention of tabs,
+newlines, and non-breaking spaces, empty input before key validation, and
+ascending brute-force results. The stable
 conformance error ID for a non-empty text with a key below 2 or above the text's
 scalar length is `scytale-invalid-key`.
 

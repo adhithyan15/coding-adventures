@@ -1,5 +1,10 @@
 # Changelog
 
+## 1.0.1 - 2026-08-26
+
+- Add Scytale encrypt/decrypt vectors for a decomposed combining sequence so
+  scalar-based grids cannot silently regress to grapheme-cluster counting.
+
 ## 1.0.0 - 2026-08-26
 
 - Define the closed CR01-CR03 language-neutral corpus.

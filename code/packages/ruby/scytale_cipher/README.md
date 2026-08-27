@@ -2,6 +2,8 @@
 
 Ancient Spartan transposition cipher implementation in Ruby.
 
+This package follows [CR02](../../../specs/CR02-scytale-cipher.md). Grid cells are Unicode scalar values, uneven ciphertext columns are reconstructed explicitly, and only trailing U+0020 padding is removed. `brute_force` rejects inputs above 4096 scalars before allocating quadratic candidate output. Production code is deterministic pure computation with no OS capabilities.
+
 ## Usage
 
 ```ruby

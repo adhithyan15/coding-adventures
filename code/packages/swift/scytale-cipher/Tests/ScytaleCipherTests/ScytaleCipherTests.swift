@@ -47,6 +47,16 @@ final class ScytaleCipherTests: XCTestCase {
         XCTAssertEqual(try ScytaleCipher.decrypt("", key: 2), "")
     }
 
+    func testPortableScalarRaggedAndPaddingVectorsMatch() throws {
+        XCTAssertEqual(try ScytaleCipher.encrypt("A😀Bé", key: 3), "Aé😀 B ")
+        XCTAssertEqual(try ScytaleCipher.decrypt("Aé😀 B ", key: 3), "A😀Bé")
+        XCTAssertEqual(try ScytaleCipher.encrypt("Ae\u{0301}B", key: 3), "ABe \u{0301} ")
+        XCTAssertEqual(try ScytaleCipher.decrypt("ABe \u{0301} ", key: 3), "Ae\u{0301}B")
+        XCTAssertEqual(try ScytaleCipher.decrypt("ABCDEF", key: 4), "ACEFBD")
+        XCTAssertEqual(try ScytaleCipher.decrypt("A\tB ", key: 2), "AB\t")
+        XCTAssertEqual(try ScytaleCipher.decrypt("A\u{00A0}\t \n ", key: 3), "A\t\n\u{00A0}")
+    }
+
     func testDecryptInvalidKey() {
         XCTAssertThrowsError(try ScytaleCipher.decrypt("HELLO", key: 0))
         XCTAssertThrowsError(try ScytaleCipher.decrypt("HI", key: 3))
@@ -83,20 +93,29 @@ final class ScytaleCipherTests: XCTestCase {
     func testBruteForceFindsOriginal() throws {
         let original = "HELLO WORLD"
         let ct = try ScytaleCipher.encrypt(original, key: 3)
-        let results = ScytaleCipher.bruteForce(ct)
+        let results = try ScytaleCipher.bruteForce(ct)
         let found = results.first(where: { $0.key == 3 })
         XCTAssertNotNil(found)
         XCTAssertEqual(found?.text, original)
     }
 
-    func testBruteForceReturnsAllKeys() {
-        let results = ScytaleCipher.bruteForce("ABCDEFGHIJ")
+    func testBruteForceReturnsAllKeys() throws {
+        let results = try ScytaleCipher.bruteForce("ABCDEFGHIJ")
         let keys = results.map { $0.key }
         XCTAssertEqual(keys, [2, 3, 4, 5])
     }
 
-    func testBruteForceShortText() {
-        XCTAssertTrue(ScytaleCipher.bruteForce("AB").isEmpty)
+    func testBruteForceShortText() throws {
+        XCTAssertTrue(try ScytaleCipher.bruteForce("AB").isEmpty)
+    }
+
+    func testBruteForceRejectsOversizedScalarInput() {
+        let oversized = String(repeating: "A", count: ScytaleCipher.maxBruteForceTextLength + 1)
+        XCTAssertThrowsError(try ScytaleCipher.bruteForce(oversized)) { error in
+            guard case ScytaleCipherError.bruteForceLimit = error else {
+                return XCTFail("expected bruteForceLimit, got \(error)")
+            }
+        }
     }
 
     // --- Padding Tests ---

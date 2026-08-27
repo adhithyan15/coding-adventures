@@ -56,7 +56,7 @@ describe("independent (word-initial) vowels", () => {
     });
   });
 
-  it("keeps Kannada independent ಅ, ಆ, ಇ, and ಎ sourced while the remaining vowels stay unverified", () => {
+  it("keeps Kannada independent ಅ, ಆ, ಇ, ಎ, and ಏ sourced while the remaining vowels stay unverified", () => {
     const kannada = SCRIPTS.find((s) => s.script === "kannada")!;
     const iv = kannada.independentVowels!;
     expect(iv[0]!.glyph).toBe("ಅ");
@@ -83,7 +83,13 @@ describe("independent (word-initial) vowels", () => {
     expect(iv[6]!.strokeOrderSource?.url).toBe(
       "https://commons.wikimedia.org/wiki/File:Kannada-alphabet-ae.gif",
     );
-    expect(iv.filter((_, index) => ![0, 1, 2, 6].includes(index)).every((v) => v.strokeOrder.length === 0)).toBe(true);
+    expect(iv[7]!.glyph).toBe("ಏ");
+    expect(iv[7]!.strokeOrder).toHaveLength(4);
+    expect(iv[7]!.penLifts).toBe(1);
+    expect(iv[7]!.strokeOrderSource?.url).toBe(
+      "https://commons.wikimedia.org/wiki/File:Kannada-alphabet-aee.gif",
+    );
+    expect(iv.filter((_, index) => ![0, 1, 2, 6, 7].includes(index)).every((v) => v.strokeOrder.length === 0)).toBe(true);
   });
 
   it("keeps Malayalam independent അ, ആ, ഇ, ഉ, and എ sourced while the remaining vowels stay unverified", () => {
@@ -365,6 +371,52 @@ describe("shared Perso-Arabic letters retain script-owned provenance", () => {
     expect(japanese.strokeOrder[2]).toMatch(/right crossing.*hook left/i);
     expect(japanese.strokeOrderSource?.url).toBe(
       "https://commons.wikimedia.org/wiki/File:Hiragana_%E3%81%9B_stroke_order_animation.gif",
+    );
+  });
+
+  it("keeps Japanese て as a source-backed one-run hiragana path", () => {
+    const japanese = SCRIPTS.find((script) => script.script === "japanese")!
+      .letters.find((entry) => entry.glyph === "て")!;
+    expect(japanese.sound).toBe("te");
+    expect(japanese.role).toBe("hiragana");
+    expect(japanese.penLifts).toBe(0);
+    expect(japanese.strokeOrder).toHaveLength(3);
+    expect(japanese.strokeOrder[0]).toMatch(/high horizontal.*left to right/i);
+    expect(japanese.strokeOrder[1]).toMatch(/without lifting.*down and left.*diagonal/i);
+    expect(japanese.strokeOrder[2]).toMatch(/without lifting.*lower curve.*right/i);
+    expect(japanese.strokeOrderSource?.url).toBe(
+      "https://commons.wikimedia.org/wiki/File:Hiragana_%E3%81%A6_stroke_order_animation.gif",
+    );
+  });
+
+  it("keeps Japanese な as a source-backed four-run hiragana path", () => {
+    const japanese = SCRIPTS.find((script) => script.script === "japanese")!
+      .letters.find((entry) => entry.glyph === "な")!;
+    expect(japanese.sound).toBe("na");
+    expect(japanese.role).toBe("hiragana");
+    expect(japanese.penLifts).toBe(3);
+    expect(japanese.strokeOrder).toHaveLength(4);
+    expect(japanese.strokeOrder[0]).toMatch(/upper-left horizontal.*left to right/i);
+    expect(japanese.strokeOrder[1]).toMatch(/crossing left-falling stem/i);
+    expect(japanese.strokeOrder[2]).toMatch(/upper-right diagonal.*down and right/i);
+    expect(japanese.strokeOrder[3]).toMatch(/lower-right stem.*loop.*right/i);
+    expect(japanese.strokeOrderSource?.url).toBe(
+      "https://commons.wikimedia.org/wiki/File:Hiragana_%E3%81%AA_stroke_order_animation.gif",
+    );
+  });
+
+  it("keeps Kannada ಏ as a source-backed two-run independent vowel", () => {
+    const kannada = SCRIPTS.find((script) => script.script === "kannada")!
+      .independentVowels!.find((entry) => entry.glyph === "ಏ")!;
+    expect(kannada.sound).toBe("ē");
+    expect(kannada.role).toBe("vowel");
+    expect(kannada.penLifts).toBe(1);
+    expect(kannada.strokeOrder).toHaveLength(4);
+    expect(kannada.strokeOrder[0]).toMatch(/compact left loop/i);
+    expect(kannada.strokeOrder[2]).toMatch(/without lifting.*tall outer arch.*upper left/i);
+    expect(kannada.strokeOrder[3]).toMatch(/lift.*small upper loop.*left to right/i);
+    expect(kannada.strokeOrderSource?.url).toBe(
+      "https://commons.wikimedia.org/wiki/File:Kannada-alphabet-aee.gif",
     );
   });
 

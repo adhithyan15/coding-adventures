@@ -59,8 +59,6 @@ const ALLOWED_DEGRADATIONS: &[(Backend, &str, &str)] = &[
     // IsOpen-style property the way Popup/Flyout/TeachingTip do, so
     // there's no declarative show/hide surface to bind `open:` to.
     (Backend::Xaml, "Modal", "property.dialog-open-host-required"),
-    // #13010 — Flutter Modal is a zero-size TODO placeholder.
-    (Backend::Flutter, "Modal", "interaction.dialog-placeholder"),
 ];
 
 fn is_allowed(backend: Backend, component: &str, code: &str) -> bool {

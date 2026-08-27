@@ -9,5 +9,10 @@
  * positions using a columnar transposition.
  */
 
-export { encrypt, decrypt, bruteForce } from "./cipher.js";
+export {
+  MAX_BRUTE_FORCE_TEXT_LENGTH,
+  bruteForce,
+  decrypt,
+  encrypt,
+} from "./cipher.js";
 export type { BruteForceResult } from "./cipher.js";

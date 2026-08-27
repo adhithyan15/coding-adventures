@@ -1235,6 +1235,149 @@ export const DUCTUS: Record<string, LetterDuctus> = {
     ],
     source: japanese.letters.find((letter) => letter.glyph === "せ")!.strokeOrderSource!,
   },
+  // Sirgazil's 28-frame animation writes て in one uninterrupted run: the
+  // high bar, returning diagonal, and broad lower curve. These medians preserve
+  // that zero-lift order in the bundled Noto Sans JP print outline.
+  [ductusKey("japanese", "て")]: {
+    script: "japanese",
+    glyph: "て",
+    strokes: [
+      {
+        segments: [
+          {
+            label: "draw the high horizontal from left to right",
+            path: [
+              { x: 110, y: 620 },
+              { x: 220, y: 630 },
+              { x: 340, y: 642 },
+              { x: 470, y: 655 },
+              { x: 600, y: 668 },
+              { x: 730, y: 680 },
+              { x: 845, y: 688 },
+            ],
+          },
+          {
+            label: "turn back down and left through the diagonal",
+            path: [
+              { x: 845, y: 688 },
+              { x: 760, y: 675 },
+              { x: 675, y: 645 },
+              { x: 600, y: 600 },
+              { x: 535, y: 540 },
+              { x: 485, y: 470 },
+              { x: 450, y: 390 },
+              { x: 430, y: 305 },
+            ],
+          },
+          {
+            label: "round the broad lower curve and sweep right to the finish",
+            path: [
+              { x: 430, y: 305 },
+              { x: 430, y: 230 },
+              { x: 450, y: 165 },
+              { x: 490, y: 110 },
+              { x: 550, y: 70 },
+              { x: 620, y: 42 },
+              { x: 700, y: 22 },
+              { x: 770, y: 12 },
+            ],
+          },
+        ],
+      },
+    ],
+    source: japanese.letters.find((letter) => letter.glyph === "て")!.strokeOrderSource!,
+  },
+  // Sirgazil's 32-frame animation writes な in four pen-down runs: horizontal,
+  // crossing stem, upper-right diagonal, then the lower stem, loop, and sweep.
+  [ductusKey("japanese", "な")]: {
+    script: "japanese",
+    glyph: "な",
+    strokes: [
+      {
+        segments: [
+          {
+            label: "draw the upper-left horizontal from left to right",
+            path: [
+              { x: 120, y: 590 },
+              { x: 210, y: 589 },
+              { x: 300, y: 592 },
+              { x: 390, y: 600 },
+              { x: 480, y: 615 },
+              { x: 550, y: 635 },
+            ],
+          },
+        ],
+      },
+      {
+        segments: [
+          {
+            label: "descend through the crossing left-falling stem",
+            path: [
+              { x: 405, y: 775 },
+              { x: 395, y: 700 },
+              { x: 370, y: 620 },
+              { x: 340, y: 535 },
+              { x: 305, y: 450 },
+              { x: 265, y: 365 },
+              { x: 220, y: 285 },
+              { x: 175, y: 205 },
+              { x: 135, y: 165 },
+            ],
+          },
+        ],
+      },
+      {
+        segments: [
+          {
+            label: "draw the short upper-right diagonal down and right",
+            path: [
+              { x: 680, y: 620 },
+              { x: 735, y: 592 },
+              { x: 790, y: 560 },
+              { x: 845, y: 525 },
+              { x: 900, y: 490 },
+            ],
+          },
+        ],
+      },
+      {
+        segments: [
+          {
+            label: "descend through the lower-right stem",
+            path: [
+              { x: 648, y: 460 },
+              { x: 649, y: 385 },
+              { x: 651, y: 310 },
+              { x: 653, y: 235 },
+              { x: 655, y: 165 },
+              { x: 655, y: 110 },
+            ],
+          },
+          {
+            label: "turn around the loop and sweep right to the finish",
+            path: [
+              { x: 655, y: 110 },
+              { x: 640, y: 55 },
+              { x: 595, y: 20 },
+              { x: 530, y: -5 },
+              { x: 460, y: 0 },
+              { x: 400, y: 35 },
+              { x: 360, y: 85 },
+              { x: 365, y: 135 },
+              { x: 405, y: 175 },
+              { x: 470, y: 205 },
+              { x: 545, y: 210 },
+              { x: 625, y: 185 },
+              { x: 705, y: 150 },
+              { x: 790, y: 105 },
+              { x: 870, y: 55 },
+            ],
+          },
+        ],
+      },
+    ],
+    source: japanese.letters.find((letter) => letter.glyph === "な")!.strokeOrderSource!,
+  },
   // Sirgazil's つ animation supplies the one-run movement. Unicode identifies
   // U+3063 as small tsu; these medians preserve that movement while fitting it
   // explicitly to the bundled smaller Noto Sans JP glyph.
@@ -14874,6 +15017,60 @@ export const DUCTUS: Record<string, LetterDuctus> = {
       },
     ],
     source: kannadaIndependentVowelSource("ಎ"),
+  },
+  // Gopala Krishna A's 31-frame animation writes independent vowel ಏ in two
+  // runs. The first carries the same compact loop and joined lower body into
+  // the tall outer arch; after one lift, the second draws the small upper loop
+  // from left to right. These medians fit that order to Noto Sans Kannada.
+  [ductusKey("kannada", "ಏ")]: {
+    script: "kannada",
+    glyph: "ಏ",
+    strokes: [
+      {
+        segments: [
+          {
+            label: "turn clockwise around the compact left loop",
+            path: [
+              { x: 220, y: 185 }, { x: 240, y: 190 }, { x: 260, y: 210 },
+              { x: 260, y: 235 }, { x: 245, y: 260 }, { x: 210, y: 285 },
+              { x: 170, y: 295 }, { x: 135, y: 290 }, { x: 90, y: 270 }, { x: 65, y: 225 },
+              { x: 67, y: 165 }, { x: 100, y: 105 }, { x: 160, y: 55 },
+              { x: 230, y: 28 }, { x: 300, y: 35 }, { x: 350, y: 85 },
+              { x: 370, y: 150 }, { x: 370, y: 180 },
+            ],
+          },
+          {
+            label: "sweep through the joined lower curves and climb the right side",
+            path: [
+              { x: 370, y: 180 }, { x: 410, y: 115 }, { x: 475, y: 55 },
+              { x: 550, y: 30 }, { x: 625, y: 55 }, { x: 685, y: 125 },
+              { x: 710, y: 220 }, { x: 680, y: 320 }, { x: 610, y: 410 },
+              { x: 515, y: 460 },
+            ],
+          },
+          {
+            label: "carry the tall outer arch over and finish at the upper left",
+            path: [
+              { x: 515, y: 460 }, { x: 465, y: 480 }, { x: 420, y: 491 },
+            ],
+          },
+        ],
+      },
+      {
+        segments: [
+          {
+            label: "draw the small upper loop from left to right",
+            path: [
+              { x: 110, y: 565 }, { x: 112, y: 520 }, { x: 130, y: 480 },
+              { x: 165, y: 445 }, { x: 215, y: 420 }, { x: 267, y: 420 },
+              { x: 315, y: 430 }, { x: 350, y: 470 }, { x: 365, y: 525 },
+              { x: 370, y: 570 },
+            ],
+          },
+        ],
+      },
+    ],
+    source: kannadaIndependentVowelSource("ಏ"),
   },
   [ductusKey("telugu", "అ")]: {
     script: "telugu",
