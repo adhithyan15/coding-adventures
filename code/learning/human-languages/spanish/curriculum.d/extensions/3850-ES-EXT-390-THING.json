@@ -1,0 +1,15 @@
+{
+  "id": "ES-EXT-390-THING",
+  "stage": "A1",
+  "kind": "required",
+  "category": "vocabulary",
+  "canDo": "I can name la terraza, la sala, la planta, el ascensor and la piscina.",
+  "prerequisites": [],
+  "lessons": [
+    "ES-C390-terraza",
+    "ES-C390-sala",
+    "ES-C390-planta",
+    "ES-C390-ascensor",
+    "ES-C390-piscina"
+  ]
+}

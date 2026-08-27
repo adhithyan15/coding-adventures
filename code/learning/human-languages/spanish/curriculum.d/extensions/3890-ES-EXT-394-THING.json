@@ -1,0 +1,15 @@
+{
+  "id": "ES-EXT-394-THING",
+  "stage": "A1",
+  "kind": "required",
+  "category": "vocabulary",
+  "canDo": "I can name la universidad, el trabajo, la actividad, la guitarra and el médico.",
+  "prerequisites": [],
+  "lessons": [
+    "ES-C394-universidad",
+    "ES-C394-trabajo",
+    "ES-C394-actividad",
+    "ES-C394-guitarra",
+    "ES-C394-medico"
+  ]
+}

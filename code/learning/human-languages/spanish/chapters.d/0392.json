@@ -1,0 +1,21 @@
+{
+  "chapter": 392,
+  "title": "Five Words for a Journey",
+  "label": "ch:el-aeropuerto-y-las-vacaciones",
+  "canDo": "I can say el aeropuerto, las vacaciones, el destino, el pasajero and agosto, and name five things about a journey.",
+  "spineNodes": [
+    "SPINE-NAME-EVERYDAY-THINGS"
+  ],
+  "payoff": {
+    "lesson": "ES-C392-agosto",
+    "kind": "production",
+    "summary": "Complete ES-C392-agosto: name five things about a journey, and say one thing about each.",
+    "assesses": [
+      "ES-LEX-AEROPUERTO",
+      "ES-LEX-VACACIONES",
+      "ES-LEX-DESTINO",
+      "ES-LEX-PASAJERO",
+      "ES-LEX-AGOSTO"
+    ]
+  }
+}

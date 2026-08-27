@@ -1,0 +1,15 @@
+{
+  "id": "ES-EXT-392-THING",
+  "stage": "A1",
+  "kind": "required",
+  "category": "vocabulary",
+  "canDo": "I can name el aeropuerto, las vacaciones, el destino, el pasajero and agosto.",
+  "prerequisites": [],
+  "lessons": [
+    "ES-C392-aeropuerto",
+    "ES-C392-vacaciones",
+    "ES-C392-destino",
+    "ES-C392-pasajero",
+    "ES-C392-agosto"
+  ]
+}

@@ -1,0 +1,16 @@
+{
+  "id": "ES-PATH-395-01",
+  "spine_node": "SPINE-NAME-EVERYDAY-ACTIONS",
+  "lessons": [
+    "ES-C395-entrar",
+    "ES-C395-volver",
+    "ES-C395-llegar",
+    "ES-C395-perder",
+    "ES-C395-necesitar"
+  ],
+  "before": [],
+  "inline": [
+    "ES-EXT-395-VERB"
+  ],
+  "after": []
+}
