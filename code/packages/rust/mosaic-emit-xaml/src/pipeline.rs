@@ -942,6 +942,10 @@ struct PartStyleEntry {
     /// lowering (see `mosaic-emit-xaml.md` §3.1) reads them here instead,
     /// straight off the raw mosstyle props.
     flex: FlexHints,
+    /// A non-`inset` `box-shadow` was authored (issue #12028 item 1) —
+    /// like `flex`, has no 1:1 XAML setter and is read straight off the
+    /// raw mosstyle props rather than surviving into `base_fragment`.
+    wants_theme_shadow: bool,
 }
 
 /// Layout hints a `Row`/`Column`'s `<Grid>` lowering needs but that have no
@@ -1067,6 +1071,26 @@ fn extract_flex_hints(props: &[StyleProp]) -> FlexHints {
             "width" if value == "100%" => hints.width_full = true,
             "height" if value == "100%" => hints.height_full = true,
             "align-items" if value == "center" => hints.align_items = Some(value.to_string()),
+            // `align` (not `align-items`) is not a real mosstyle property
+            // — per `UI15-mosstyle.md` §1/§11, alignment belongs in
+            // `.mll`, and mosstyle's grammar has no property whitelist to
+            // reject it (a separate, filed gap: issue TBD). It reached
+            // real `.msl` files anyway (TaskApp, VentureChrome, Calendar,
+            // ProjectNav — 30+ occurrences), always as `center-vertical`
+            // on a `Row` (one `center` on a `Column`), always meaning
+            // "center the cross axis" — exactly `align-items: center`'s
+            // existing meaning. Recognising it here (rather than
+            // rejecting it, which would just re-silently-drop it) fixes
+            // the real, currently-broken rendering with the same
+            // reasoning `align-items: center` already applies: this
+            // conflates "vertical" with "cross-axis", which only holds
+            // because every current author of `center-vertical` puts it
+            // on a Row — a hypothetical future `center-vertical` on a
+            // Column is out of scope, same "don't guess" policy as the
+            // rest of this table.
+            "align" if value == "center-vertical" || value == "center" => {
+                hints.align_items = Some("center".to_string());
+            }
             "justify-content" if value == "space-between" => {
                 hints.justify_content = Some(value.to_string());
             }
@@ -1074,6 +1098,54 @@ fn extract_flex_hints(props: &[StyleProp]) -> FlexHints {
         }
     }
     hints
+}
+
+/// A fixed Z-depth (effective pixels) for every `ThemeShadow` this
+/// emitter generates — see [`part_wants_theme_shadow`]'s doc comment
+/// for why this is a single constant rather than derived from the
+/// authored value. `4` matches Microsoft's own "Cards: 4–8px" elevation
+/// guidance (learn.microsoft.com/windows/apps/develop/ui/shadows).
+const THEME_SHADOW_TRANSLATION_Z: &str = "4";
+
+/// Whether a part's raw mosstyle props author a non-`inset` `box-shadow`
+/// (issue #12028 item 1) — the signal that this element wants elevation.
+///
+/// WinUI's `ThemeShadow` is a fixed, system-composited shadow with no
+/// CSS-shaped blur/spread/color/opacity controls — Microsoft's own
+/// guidance is a Z-*depth* value, not shadow parameters. So unlike
+/// every other property this emitter translates, this doesn't attempt
+/// to reproduce the authored numbers (TaskApp's shadows only ever vary
+/// by opacity/color between light/dark themes and one "stronger" tier —
+/// none of which `ThemeShadow` can express anyway): it recognizes "this
+/// element should look raised" and applies WinUI's own consistent
+/// elevation treatment at one fixed depth.
+///
+/// A value containing `inset` (e.g. `"5px -5px 0 0 #f1ebe1 inset"`) is
+/// a fundamentally different technique — a shape cutout used to fake a
+/// crescent-moon icon or a status dot, not elevation (issue #12028 item
+/// 3, a kernel drawing primitive) — and is deliberately excluded here,
+/// staying a genuine drop.
+fn part_wants_theme_shadow(props: &[mosstyle_compiler::StyleProp]) -> bool {
+    props
+        .iter()
+        .any(|p| p.name == "box-shadow" && !p.value.to_ascii_lowercase().contains("inset"))
+}
+
+/// The `Translation="0,0,{z}"` attribute plus the `<{tag}.Shadow>`
+/// child-element block that gives `tag` a real `ThemeShadow`, or a pair
+/// of empty strings when `wants_shadow` is false. `tag` must match
+/// whatever element name the caller already opened (`Border`, `Grid`,
+/// `StackPanel`, …) — `Shadow` is a property every `UIElement` has.
+fn theme_shadow_attr_and_child(wants_shadow: bool, tag: &str, indent: usize) -> (String, String) {
+    if !wants_shadow {
+        return (String::new(), String::new());
+    }
+    let pad = " ".repeat(indent);
+    let attr = format!(" Translation=\"0,0,{THEME_SHADOW_TRANSLATION_Z}\"");
+    let child = format!(
+        "{pad}<{tag}.Shadow>\n{pad}    <ThemeShadow/>\n{pad}</{tag}.Shadow>\n"
+    );
+    (attr, child)
 }
 
 type PartStyleMap = std::collections::HashMap<String, PartStyleEntry>;
@@ -1110,6 +1182,7 @@ fn build_part_style_map(style: &StyleDef) -> PartStyleMap {
     for part in &style.parts {
         let base_fragment = build_style_fragment(&part.base);
         let flex = extract_flex_hints(&part.base);
+        let wants_theme_shadow = part_wants_theme_shadow(&part.base);
         let states = part
             .states
             .iter()
@@ -1132,6 +1205,7 @@ fn build_part_style_map(style: &StyleDef) -> PartStyleMap {
             || !part.transitions.is_empty()
             || !part.states.is_empty()
             || has_flex_hints
+            || wants_theme_shadow
         {
             out.insert(
                 part.name.clone(),
@@ -1140,6 +1214,7 @@ fn build_part_style_map(style: &StyleDef) -> PartStyleMap {
                     transitions: part.transitions.clone(),
                     states,
                     flex,
+                    wants_theme_shadow,
                 },
             );
         }
@@ -1560,12 +1635,62 @@ fn build_style_fragment(props: &[mosstyle_compiler::StyleProp]) -> String {
 /// that produced no XAML output at all, with why. Two call sites in this
 /// function are genuine drops (see inline comments); a successful-but-
 /// approximate translation (`stretch_alignment_for`) is NOT a drop.
+/// `Margin`/`HorizontalAlignment`/`VerticalAlignment` recreating a
+/// `position: "absolute"` part's `top`/`left` offset (issue #12028 item
+/// 4), or `None` when `position` isn't authored as `"absolute"`.
+///
+/// WinUI's `Canvas.Left`/`Canvas.Top` attached properties only take
+/// effect when the immediate parent panel is a literal `<Canvas>` —
+/// but `Stack [name] { ... }` already lowers to `<Grid>`, which is
+/// itself a z-axis stacking panel (every child occupies the same cell
+/// by default). A `Margin="{left},{top},0,0"` pinned to the cell's
+/// top-left corner via `HorizontalAlignment="Left"
+/// VerticalAlignment="Top"` reproduces the same visual offset within
+/// that existing `Grid`, with no need to restructure the parent into a
+/// `Canvas` (which every enclosing container up to the nearest common
+/// ancestor would also need to become, to keep coordinates consistent
+/// — a much larger change than three overlaid children need). Missing
+/// `top`/`left` default to `0` — CSS's own default for an
+/// absolutely-positioned element with no offset authored.
+fn absolute_position_style_attrs(
+    props: &[mosstyle_compiler::StyleProp],
+) -> Option<Vec<(String, String)>> {
+    let is_absolute = props
+        .iter()
+        .any(|p| p.name == "position" && p.value.trim().trim_matches('"') == "absolute");
+    if !is_absolute {
+        return None;
+    }
+    let top = props
+        .iter()
+        .find(|p| p.name == "top")
+        .map(|p| strip_px_units(p.value.trim()))
+        .unwrap_or_else(|| "0".to_string());
+    let left = props
+        .iter()
+        .find(|p| p.name == "left")
+        .map(|p| strip_px_units(p.value.trim()))
+        .unwrap_or_else(|| "0".to_string());
+    Some(vec![
+        ("Margin".to_string(), format!("{left},{top},0,0")),
+        ("HorizontalAlignment".to_string(), "Left".to_string()),
+        ("VerticalAlignment".to_string(), "Top".to_string()),
+    ])
+}
+
 fn build_style_fragment_with_drops(
     props: &[mosstyle_compiler::StyleProp],
 ) -> (String, Vec<RawStyleDrop>) {
     let mut parts: Vec<(String, String)> = Vec::with_capacity(props.len());
     let mut drops: Vec<RawStyleDrop> = Vec::new();
+    // #12028 item 4: computed up front so the main loop below can skip
+    // `position`/`top`/`left` entirely when they're consumed here,
+    // rather than falling through to the generic "no WinUI setter" drop.
+    let absolute_attrs = absolute_position_style_attrs(props);
     for p in props {
+        if absolute_attrs.is_some() && matches!(p.name.as_str(), "position" | "top" | "left") {
+            continue;
+        }
         if let Some((key, value)) = css_side_spacing_to_xaml_attr(&p.name, &p.value) {
             upsert_style_attr(&mut parts, key, value);
             continue;
@@ -1623,6 +1748,15 @@ fn build_style_fragment_with_drops(
             }
         };
         upsert_style_attr(&mut parts, key, value);
+    }
+    // #12028 item 4: applied last so it overrides whatever Margin/
+    // alignment the normal per-property loop above may already have
+    // computed from other authored properties — `position: "absolute"`
+    // takes full control of an element's placement in CSS too.
+    if let Some(attrs) = absolute_attrs {
+        for (key, value) in attrs {
+            upsert_style_attr(&mut parts, key, value);
+        }
     }
     // X8/#12025: `escape_xaml_attr` does real XML attribute escaping
     // (`&`/`"`/`<`/`>`), not the C-string-style backslash escaping this
@@ -1684,7 +1818,16 @@ pub fn dropped_style_properties(style: &mosstyle_compiler::StyleDef) -> Vec<Drop
             let consumed_via_flex_hints = match drop.name.as_str() {
                 "flex-grow" => true,
                 "align-items" => drop.value.trim() == "center",
+                "align" => {
+                    let v = drop.value.trim();
+                    v == "center-vertical" || v == "center"
+                }
                 "justify-content" => drop.value.trim() == "space-between",
+                // #12028 item 1: a non-inset box-shadow is consumed via
+                // the ThemeShadow side channel (`part_wants_theme_shadow`);
+                // an `inset` one is a drawing-primitive hack (item 3) and
+                // stays a genuine drop.
+                "box-shadow" => !drop.value.to_ascii_lowercase().contains("inset"),
                 _ => false,
             };
             if consumed_via_flex_hints {
@@ -2155,8 +2298,17 @@ fn css_property_to_xaml_setter(name: &str) -> Option<String> {
         //                     property with a different value shape;
         //                     not wired yet, so drop rather than emit
         //                     an invalid literal.
-        //   box-shadow      â€” WinUI shadows use `<ThemeShadow>` /
-        //                     translation Z, not a CSS-shaped property.
+        //   box-shadow      — not a 1:1 XAML setter either way: a
+        //                     non-inset value IS handled, but as a
+        //                     `Translation`/`<Element.Shadow>` side
+        //                     channel (`part_wants_theme_shadow`,
+        //                     issue #12028 item 1), not through this
+        //                     table — WinUI's ThemeShadow takes no
+        //                     CSS-shaped blur/spread/color parameters,
+        //                     so there is no `value` to translate here.
+        //                     An `inset` value (the moon/status-dot
+        //                     drawing hack) is genuinely unsupported
+        //                     and stays dropped.
         //   align-items     — no 1:1 XAML setter (it becomes per-child
         //                     Horizontal/VerticalAlignment, not one
         //                     attribute on the container). `emit_flex_grid`
@@ -2199,10 +2351,13 @@ fn unsupported_property_reason(name: &str) -> &'static str {
         "text-decoration" => {
             "TextBlock's TextDecorations property has a different value shape; not wired yet"
         }
-        "box-shadow" => "WinUI shadows use <ThemeShadow> / translation Z, not a CSS-shaped property",
+        "box-shadow" => "an inset box-shadow is a shape-cutout drawing hack (issue #12028 item 3), not elevation — WinUI's <ThemeShadow>/Translation treatment (item 1) only applies to a non-inset value",
         "flex-wrap" => "WinUI 3 has no built-in WrapPanel",
         "align-items" => {
             "this value isn't one FlexHints recognises (only \"center\" is); no per-child alignment was applied"
+        }
+        "align" => {
+            "this value isn't one FlexHints recognises (only \"center-vertical\"/\"center\" are); no per-child alignment was applied"
         }
         "justify-content" => {
             "this value isn't one FlexHints recognises (only \"space-between\" is); no distribution was applied"
@@ -2584,6 +2739,12 @@ fn emit_xaml_node(
         "Spacer" => emit_spacer(node, indent, part_styles),
         "Divider" => emit_divider(node, indent, part_styles),
         "Icon" => emit_icon(node, indent, part_styles, ctx),
+        // UI39: the kernel drawing primitive. `circle`/`line`/`curve` land
+        // here; `arc` is a stretch goal not yet implemented (falls through
+        // to the "not yet supported" error inside emit_path itself, not the
+        // generic UnsupportedPrimitive fallback below, so the message names
+        // the kind specifically).
+        "Path" => emit_path(node, indent, part_styles),
 
         // PR-2: For lowering.
         "For" => emit_for(node, indent, part_styles, ctx),
@@ -3043,6 +3204,9 @@ fn emit_host_surface(
     let pad = " ".repeat(indent);
     let inner_pad = " ".repeat(indent + 4);
     let (container_attrs, _) = partition_box_style(node.part_name.as_deref(), part_styles);
+    // #13040: this used to handle only SlotRef -- a literal String
+    // content value silently emitted nothing at all, the same
+    // invisible-drop failure mode as the missing Expr arm.
     let content = match find_prop_value(node, "content") {
         Some(LayoutPropValue::SlotRef(slot)) => {
             format!(
@@ -3050,7 +3214,22 @@ fn emit_host_surface(
                 ctx.slot_xbind_path(slot)
             )
         }
-        _ => String::new(),
+        Some(LayoutPropValue::String(s)) => format!(" Content=\"{}\"", escape_xaml_attr(s)),
+        Some(LayoutPropValue::Expr(src)) => match lower_expr_for_xbind(src, ctx) {
+            ExprLowering::Bindable(path) => {
+                format!(" Content=\"{{x:Bind {path}, Mode=OneWay}}\"")
+            }
+            ExprLowering::Helper(call) => {
+                format!(" Content=\"{{x:Bind {call}, Mode=OneWay}}\"")
+            }
+            ExprLowering::Unsupported(reason) => {
+                return Err(PipelineEmitError::UnsupportedExpression(reason));
+            }
+        },
+        Some(LayoutPropValue::Keyword(_))
+        | Some(LayoutPropValue::Number(_))
+        | Some(LayoutPropValue::EmitRef(_))
+        | None => String::new(),
     };
     Ok(format!(
         "{pad}<Border{container_attrs}>\n{inner_pad}<ContentPresenter{content}/>\n{pad}</Border>\n"
@@ -3302,9 +3481,19 @@ fn emit_container(
     // + Badge demo (#4548).
     let (container_attrs, text_setters) =
         partition_box_style(node.part_name.as_deref(), part_styles);
+    // #12028 item 1: a non-inset box-shadow (any value) means this
+    // element wants elevation — see `part_wants_theme_shadow`.
+    let wants_shadow = node
+        .part_name
+        .as_deref()
+        .and_then(|p| part_styles.get(p))
+        .is_some_and(|entry| entry.wants_theme_shadow);
 
     if element != "Border" && (!container_attrs.is_empty() || !text_setters.is_empty()) {
-        let mut out = format!("{pad}<Border{container_attrs}>\n");
+        let (shadow_attr, shadow_child) =
+            theme_shadow_attr_and_child(wants_shadow, "Border", indent + 4);
+        let mut out = format!("{pad}<Border{container_attrs}{shadow_attr}>\n");
+        out.push_str(&shadow_child);
         emit_text_style_resources(&mut out, "Border", indent + 4, &text_setters);
         writeln!(out, "{inner_pad}<{element}>").unwrap();
         out.push_str(&emit_xaml_children(
@@ -3318,7 +3507,9 @@ fn emit_container(
         return Ok(out);
     }
 
-    let mut out = format!("{pad}<{element}{container_attrs}>\n");
+    let (shadow_attr, shadow_child) = theme_shadow_attr_and_child(wants_shadow, element, indent + 4);
+    let mut out = format!("{pad}<{element}{container_attrs}{shadow_attr}>\n");
+    out.push_str(&shadow_child);
 
     emit_text_style_resources(&mut out, element, indent + 4, &text_setters);
 
@@ -3641,7 +3832,22 @@ fn emit_icon(
             let pascal = ctx.slot_xbind_path(slot);
             format!(" Glyph=\"{{x:Bind {pascal}, Mode=OneWay}}\"")
         }
-        _ => String::new(),
+        // #13040
+        Some(LayoutPropValue::Expr(src)) => match lower_expr_for_xbind(src, ctx) {
+            ExprLowering::Bindable(path) => {
+                format!(" Glyph=\"{{x:Bind {path}, Mode=OneWay}}\"")
+            }
+            ExprLowering::Helper(call) => {
+                format!(" Glyph=\"{{x:Bind {call}, Mode=OneWay}}\"")
+            }
+            ExprLowering::Unsupported(reason) => {
+                return Err(PipelineEmitError::UnsupportedExpression(reason));
+            }
+        },
+        Some(LayoutPropValue::Keyword(_))
+        | Some(LayoutPropValue::Number(_))
+        | Some(LayoutPropValue::EmitRef(_))
+        | None => String::new(),
     };
     Ok(format!("{pad}<FontIcon{glyph_attr}{style}/>\n"))
 }
@@ -3662,6 +3868,149 @@ fn semantic_glyph_xaml_element(name: &str) -> Option<&'static str> {
     match name {
         "spinner" => Some("ProgressRing IsActive=\"True\""),
         _ => None,
+    }
+}
+
+/// `Path`'s `.msl` paint properties — `Fill`/`Stroke`/`StrokeThickness`,
+/// remapped from the same `background`/`border-color`/`border-width` every
+/// other primitive already authors (UI39 §3.2: deliberately zero new style
+/// properties).
+///
+/// `part_style_attr` cannot be reused directly here: it splices
+/// `base_fragment` verbatim, and `css_property_to_xaml_setter` maps those
+/// three CSS properties to `Background`/`BorderBrush`/`BorderThickness` —
+/// real dependency properties on `Border`/`Panel`/`Control`, but `Ellipse`/
+/// `Line`/`Path` are `Shape`-derived and have none of the three; XamlCompiler
+/// would reject the attribute outright. This mirrors
+/// `content_control_style_attr`'s selective-remap pattern (that one renames
+/// a single setter, `TextAlignment` → `HorizontalContentAlignment`; this one
+/// renames three) rather than `part_style_attr`'s splice-everything-through.
+///
+/// Anything else present in the fragment (an authored `width`/`height`, say —
+/// unusual on a `Path` part, since its size comes from geometry props in the
+/// `.mll`, not style, but nothing stops an author from adding one) is
+/// intentionally dropped here rather than spliced through unremapped, since
+/// splicing an unrelated setter onto a shape element risks a duplicate
+/// attribute with the geometry-computed `Margin`/`Width`/`Height` `emit_path`
+/// itself emits — silently ignored is the deliberate tradeoff for this one
+/// primitive's unusual style surface, not the general policy.
+fn path_paint_attr(node: &LayoutNode, part_styles: &PartStyleMap) -> String {
+    let Some(fragment) = node
+        .part_name
+        .as_deref()
+        .and_then(|part| part_styles.get(part))
+        .map(|entry| entry.base_fragment.as_str())
+    else {
+        return String::new();
+    };
+    parse_style_fragment(fragment)
+        .into_iter()
+        .filter_map(|(setter, value)| {
+            let remapped = match setter.as_str() {
+                "Background" => "Fill",
+                "BorderBrush" => "Stroke",
+                "BorderThickness" => "StrokeThickness",
+                _ => return None,
+            };
+            Some(format!(" {remapped}=\"{value}\""))
+        })
+        .collect()
+}
+
+/// Read a required `Number`-valued prop, e.g. `cx`/`cy`/`r`. `Path`'s
+/// geometry props don't yet support the `SlotRef`/`Expr` bindings every
+/// other numeric prop in the kernel has (UI39 §3.1 documents that as a
+/// kernel-level capability; wiring it through to real `x:Bind` XAML is
+/// XAML's own not-yet-landed UI36 work, tracked separately) — a bound
+/// coordinate is therefore a clear compile error here, not a silent 0.
+fn required_path_number(node: &LayoutNode, prop_name: &str) -> Result<f64, PipelineEmitError> {
+    match find_prop_value(node, prop_name) {
+        Some(LayoutPropValue::Number(n)) => Ok(*n),
+        Some(LayoutPropValue::SlotRef(_)) | Some(LayoutPropValue::Expr(_)) => {
+            Err(PipelineEmitError::UnsupportedPrimitive(format!(
+                "Path prop '{prop_name}' is bound to a slot or expression, but the WinUI 3 / XAML emitter only supports a literal number for Path geometry props today"
+            )))
+        }
+        _ => Err(PipelineEmitError::UnsupportedPrimitive(format!(
+            "Path missing required numeric prop '{prop_name}:'"
+        ))),
+    }
+}
+
+/// `Path [name] (kind: circle|line|curve, ...)` → real WinUI vector
+/// geometry. UI39 §3.1's four shape kinds; `arc` is a stretch goal not
+/// implemented in this PR (falls through to a named "not yet supported"
+/// error below, same posture `Icon`'s glyph lowering already has for
+/// unrecognized semantic names).
+///
+/// Every kind places its element as a direct `<Grid>`/`<Stack>` child using
+/// `Margin`/`HorizontalAlignment="Left"`/`VerticalAlignment="Top"` rather
+/// than `Canvas.Left`/`Canvas.Top` — `Stack` lowers to `<Grid>`
+/// (`emit_stack`), not `<Canvas>`, and `Canvas.*` attached properties are
+/// inert outside an actual `Canvas` parent, where `Margin`-based
+/// positioning already works in any panel (the same mechanism
+/// `absolute_position_style_attrs`, #12028 item 4, established for
+/// `position: absolute`). Verified empirically via a real `dotnet build`
+/// probe project before writing this function — two overlapping `Ellipse`s
+/// positioned this way inside a plain `<Grid>` render as the intended
+/// crescent-moon shape, matching UI39 §3's worked example.
+fn emit_path(
+    node: &LayoutNode,
+    indent: usize,
+    part_styles: &PartStyleMap,
+) -> Result<String, PipelineEmitError> {
+    let pad = " ".repeat(indent);
+    let paint = path_paint_attr(node, part_styles);
+    let kind = find_prop_keyword(node, "kind").ok_or_else(|| {
+        PipelineEmitError::UnsupportedPrimitive("Path missing required prop 'kind:'".to_string())
+    })?;
+
+    match kind {
+        "circle" => {
+            let cx = required_path_number(node, "cx")?;
+            let cy = required_path_number(node, "cy")?;
+            let r = required_path_number(node, "r")?;
+            let d = 2.0 * r;
+            let (left, top) = (cx - r, cy - r);
+            Ok(format!(
+                "{pad}<Ellipse Width=\"{d}\" Height=\"{d}\" Margin=\"{left},{top},0,0\" HorizontalAlignment=\"Left\" VerticalAlignment=\"Top\"{paint}/>\n"
+            ))
+        }
+        "line" => {
+            let x1 = required_path_number(node, "x1")?;
+            let y1 = required_path_number(node, "y1")?;
+            let x2 = required_path_number(node, "x2")?;
+            let y2 = required_path_number(node, "y2")?;
+            Ok(format!(
+                "{pad}<Line X1=\"{x1}\" Y1=\"{y1}\" X2=\"{x2}\" Y2=\"{y2}\" HorizontalAlignment=\"Left\" VerticalAlignment=\"Top\"{paint}/>\n"
+            ))
+        }
+        "curve" => {
+            let x1 = required_path_number(node, "x1")?;
+            let y1 = required_path_number(node, "y1")?;
+            let cx = required_path_number(node, "cx")?;
+            let cy = required_path_number(node, "cy")?;
+            let x2 = required_path_number(node, "x2")?;
+            let y2 = required_path_number(node, "y2")?;
+            let inner_pad = " ".repeat(indent + 4);
+            Ok(format!(
+                "{pad}<Path HorizontalAlignment=\"Left\" VerticalAlignment=\"Top\"{paint}>\n\
+                 {inner_pad}<Path.Data>\n\
+                 {inner_pad}    <PathGeometry>\n\
+                 {inner_pad}        <PathFigure StartPoint=\"{x1},{y1}\">\n\
+                 {inner_pad}            <QuadraticBezierSegment Point1=\"{cx},{cy}\" Point2=\"{x2},{y2}\"/>\n\
+                 {inner_pad}        </PathFigure>\n\
+                 {inner_pad}    </PathGeometry>\n\
+                 {inner_pad}</Path.Data>\n\
+                 {pad}</Path>\n"
+            ))
+        }
+        "arc" => Err(PipelineEmitError::UnsupportedPrimitive(
+            "Path kind 'arc' is not yet supported by the WinUI 3 / XAML emitter (deferred per spec PR sequence)".to_string(),
+        )),
+        other => Err(PipelineEmitError::UnsupportedPrimitive(format!(
+            "Path kind '{other}' is not a recognized shape kind (expected circle, line, curve, or arc)"
+        ))),
     }
 }
 
@@ -6955,6 +7304,45 @@ fn disabled_slot_xbind_path(slot: &str, ctx: &mut EmitContext<'_>) -> String {
     }
 }
 
+/// #13040: the `Expr` analogue of `disabled_slot_xbind_path` above.
+/// Outside a `For` template scope this is safe in general: negate
+/// whatever `lower_expr_for_xbind` returns with the same shared `Not`
+/// helper `disabled_slot_xbind_path` registers.
+///
+/// Inside a `For` template scope, wrapping the lowered result in
+/// another function call (`Not(...)`) would hit the identical "WinUI's
+/// typed DataTemplate compiler rejects a function binding rooted
+/// through another property" restriction `disabled_slot_xbind_path`'s
+/// own for-scope branch works around by projecting a new row-VM
+/// computed property instead of calling `Not` bare. Doing that
+/// correctly for an arbitrary lowered expression (as opposed to a
+/// single named slot) needs the negation to compose with whatever
+/// `register_template_helper_binding` already projected, which isn't
+/// exercised or verified anywhere yet -- rather than guess at that
+/// composition, this returns `Unsupported` inside a for-scope so the
+/// emitter reports a clear diagnostic instead of risking subtly wrong
+/// generated C#/XAML.
+fn disabled_expr_xbind_path(src: &str, ctx: &mut EmitContext<'_>) -> ExprLowering {
+    if !ctx.for_scope.is_empty() {
+        return ExprLowering::Unsupported(format!(
+            "expression {src:?} used for `disabled:` inside a `For` template is not \
+             yet supported -- only a plain `slot:` reference can be negated there today"
+        ));
+    }
+    match lower_expr_for_xbind(src, ctx) {
+        ExprLowering::Bindable(path) | ExprLowering::Helper(path) => {
+            ctx.add_helper(HelperMethod {
+                name: "Not".to_string(),
+                parameters: vec![("b".to_string(), "bool".to_string())],
+                return_type: "bool".to_string(),
+                body: "!b".to_string(),
+            });
+            ExprLowering::Bindable(format!("Not({path})"))
+        }
+        unsupported => unsupported,
+    }
+}
+
 fn template_helper_argument(parameter: &str, ctx: &EmitContext<'_>) -> String {
     for (position, binding) in ctx.for_scope.iter().enumerate().rev() {
         if kebab_to_pascal_case(&binding.as_name) == parameter {
@@ -7616,7 +8004,23 @@ fn emit_host_input(
         Some(LayoutPropValue::Keyword(k)) if k == "false" => {
             attrs.push_str(" IsReadOnly=\"False\"");
         }
-        _ => {}
+        // #13040
+        Some(LayoutPropValue::Expr(src)) => match lower_expr_for_xbind(src, ctx) {
+            ExprLowering::Bindable(path) => {
+                attrs.push_str(&format!(" IsReadOnly=\"{{x:Bind {path}, Mode=OneWay}}\""));
+            }
+            ExprLowering::Helper(call) => {
+                attrs.push_str(&format!(" IsReadOnly=\"{{x:Bind {call}, Mode=OneWay}}\""));
+            }
+            ExprLowering::Unsupported(reason) => {
+                return Err(PipelineEmitError::UnsupportedExpression(reason));
+            }
+        },
+        Some(LayoutPropValue::String(_))
+        | Some(LayoutPropValue::Keyword(_))
+        | Some(LayoutPropValue::Number(_))
+        | Some(LayoutPropValue::EmitRef(_))
+        | None => {}
     }
 
     // placeholder: literal/slot/expr
@@ -7847,7 +8251,24 @@ fn emit_host_button(
         Some(LayoutPropValue::Keyword(k)) if k == "false" => {
             attrs.push_str(" IsEnabled=\"True\"");
         }
-        _ => {}
+        // #13040: same polarity-flip Not(bool) helper as the SlotRef arm
+        // above, applied to a lowered expression instead of a slot.
+        Some(LayoutPropValue::Expr(src)) => match disabled_expr_xbind_path(src, ctx) {
+            ExprLowering::Bindable(path) => {
+                attrs.push_str(&format!(" IsEnabled=\"{{x:Bind {path}, Mode=OneWay}}\""));
+            }
+            ExprLowering::Helper(call) => {
+                attrs.push_str(&format!(" IsEnabled=\"{{x:Bind {call}, Mode=OneWay}}\""));
+            }
+            ExprLowering::Unsupported(reason) => {
+                return Err(PipelineEmitError::UnsupportedExpression(reason));
+            }
+        },
+        Some(LayoutPropValue::String(_))
+        | Some(LayoutPropValue::Keyword(_))
+        | Some(LayoutPropValue::Number(_))
+        | Some(LayoutPropValue::EmitRef(_))
+        | None => {}
     }
 
     // onClick â†’ Click handler
@@ -7874,9 +8295,23 @@ fn emit_host_button(
         attrs.push_str(&format!(" Click=\"{handler}\""));
     }
 
-    Ok(format!(
-        "{pad}<Button x:Name=\"{x_name}\"{attrs}{style}/>\n"
-    ))
+    // #12028 item 1: a non-inset box-shadow (real usage: the "pill"
+    // project toggle buttons) — same treatment as `emit_container`.
+    let wants_shadow = node
+        .part_name
+        .as_deref()
+        .and_then(|p| part_styles.get(p))
+        .is_some_and(|entry| entry.wants_theme_shadow);
+    let (shadow_attr, shadow_child) = theme_shadow_attr_and_child(wants_shadow, "Button", indent + 4);
+    if shadow_child.is_empty() {
+        Ok(format!(
+            "{pad}<Button x:Name=\"{x_name}\"{attrs}{style}{shadow_attr}/>\n"
+        ))
+    } else {
+        Ok(format!(
+            "{pad}<Button x:Name=\"{x_name}\"{attrs}{style}{shadow_attr}>\n{shadow_child}{pad}</Button>\n"
+        ))
+    }
 }
 
 fn host_button_click_payload_expr(emit_name: &str, ctx: &EmitContext<'_>) -> Option<String> {
@@ -8228,38 +8663,66 @@ fn host_link_click_payload_expr(
     emit_name: &str,
     node: &LayoutNode,
     ctx: &EmitContext<'_>,
-) -> Option<String> {
-    let params = ctx.emit_payloads.get(emit_name)?;
+) -> Result<Option<String>, PipelineEmitError> {
+    let Some(params) = ctx.emit_payloads.get(emit_name) else {
+        return Ok(None);
+    };
     if params.is_empty() {
-        return None;
+        return Ok(None);
     }
     if params.len() != 1 {
-        return None;
+        return Ok(None);
     }
 
     let (param_name, param_type) = &params[0];
     if param_name == "href" && param_type == "string" {
-        return Some(host_link_href_payload_expr(node, ctx));
+        return host_link_href_payload_expr(node, ctx).map(Some);
     }
     if let Some(expr) = host_button_click_payload_expr(emit_name, ctx) {
-        return Some(expr);
+        return Ok(Some(expr));
     }
     if param_type == "string" {
-        return Some(host_link_href_payload_expr(node, ctx));
+        return host_link_href_payload_expr(node, ctx).map(Some);
     }
-    None
+    Ok(None)
 }
 
-fn host_link_href_payload_expr(node: &LayoutNode, ctx: &EmitContext<'_>) -> String {
+/// #13040: made exhaustive over `LayoutPropValue`, but `Expr` is
+/// deliberately NOT wired to a real value here. Unlike every XAML-
+/// attribute-shaped site this issue closes, this function builds a bare
+/// C# expression spliced into a code-behind `Dispatch?.Invoke(...)`
+/// call fired once at click time -- `SlotRef` resolves via
+/// `this.<Pascal>` (a *component-level* property reference) since this
+/// function has no for-scope awareness at all. Real per-row `Expr`
+/// support (`value: (row[1])` as a click payload) needs the same
+/// sender-`DataContext`-cast-to-row-VM-type codegen
+/// `host_button_click_payload_expr` already does for its own params --
+/// a materially different, more novel code shape with no existing
+/// precedent for an arbitrary expression, and a real feature addition
+/// rather than a "make the match exhaustive" fix. Returns a clear
+/// diagnostic instead of silently falling back to `""` the way the
+/// other now-explicit variants below still do -- an author who wrote
+/// an expression here deserves to know it wasn't honoured, not have it
+/// silently become an empty string.
+fn host_link_href_payload_expr(
+    node: &LayoutNode,
+    ctx: &EmitContext<'_>,
+) -> Result<String, PipelineEmitError> {
     match find_prop_value(node, "href") {
-        Some(LayoutPropValue::String(s)) => {
-            format!("\"{}\"", escape_csharp_string(s))
-        }
+        Some(LayoutPropValue::String(s)) => Ok(format!("\"{}\"", escape_csharp_string(s))),
         Some(LayoutPropValue::SlotRef(slot)) => {
             let pascal = ctx.slot_property_name(slot);
-            format!("this.{pascal}")
+            Ok(format!("this.{pascal}"))
         }
-        _ => "\"\"".to_string(),
+        Some(LayoutPropValue::Expr(src)) => Err(PipelineEmitError::UnsupportedExpression(format!(
+            "expression {src:?} used as a HostLink click payload (`href` on an \
+             `external: false` link) is not yet supported -- only a literal string \
+             or a `slot:` reference can be dispatched as the click payload today"
+        ))),
+        Some(LayoutPropValue::Keyword(_))
+        | Some(LayoutPropValue::Number(_))
+        | Some(LayoutPropValue::EmitRef(_))
+        | None => Ok("\"\"".to_string()),
     }
 }
 
@@ -8320,7 +8783,23 @@ fn emit_host_checkbox(
         Some(LayoutPropValue::Keyword(k)) if k == "false" => {
             attrs.push_str(" IsChecked=\"False\"");
         }
-        _ => {}
+        // #13040
+        Some(LayoutPropValue::Expr(src)) => match lower_expr_for_xbind(src, ctx) {
+            ExprLowering::Bindable(path) => {
+                attrs.push_str(&format!(" IsChecked=\"{{x:Bind {path}, Mode=OneWay}}\""));
+            }
+            ExprLowering::Helper(call) => {
+                attrs.push_str(&format!(" IsChecked=\"{{x:Bind {call}, Mode=OneWay}}\""));
+            }
+            ExprLowering::Unsupported(reason) => {
+                return Err(PipelineEmitError::UnsupportedExpression(reason));
+            }
+        },
+        Some(LayoutPropValue::String(_))
+        | Some(LayoutPropValue::Keyword(_))
+        | Some(LayoutPropValue::Number(_))
+        | Some(LayoutPropValue::EmitRef(_))
+        | None => {}
     }
 
     // IsEnabled from `disabled:` (polarity flip; reuses HostButton's
@@ -8336,7 +8815,24 @@ fn emit_host_checkbox(
         Some(LayoutPropValue::Keyword(k)) if k == "false" => {
             attrs.push_str(" IsEnabled=\"True\"");
         }
-        _ => {}
+        // #13040: same polarity-flip Not(bool) helper as the SlotRef arm
+        // above, applied to a lowered expression instead of a slot.
+        Some(LayoutPropValue::Expr(src)) => match disabled_expr_xbind_path(src, ctx) {
+            ExprLowering::Bindable(path) => {
+                attrs.push_str(&format!(" IsEnabled=\"{{x:Bind {path}, Mode=OneWay}}\""));
+            }
+            ExprLowering::Helper(call) => {
+                attrs.push_str(&format!(" IsEnabled=\"{{x:Bind {call}, Mode=OneWay}}\""));
+            }
+            ExprLowering::Unsupported(reason) => {
+                return Err(PipelineEmitError::UnsupportedExpression(reason));
+            }
+        },
+        Some(LayoutPropValue::String(_))
+        | Some(LayoutPropValue::Keyword(_))
+        | Some(LayoutPropValue::Number(_))
+        | Some(LayoutPropValue::EmitRef(_))
+        | None => {}
     }
 
     // IsThreeState + tri-state from `indeterminate:`. The visual
@@ -8344,10 +8840,18 @@ fn emit_host_checkbox(
     // "show as indeterminate" toggle is driven via code-behind reading
     // the bound slot. v1 emits the bare IsThreeState attr; the host
     // owns IsChecked transitions.
+    // #13040: same "can't know the runtime value at compile time, so
+    // enable three-state mode conservatively" treatment already applied
+    // to SlotRef -- an Expr-valued indeterminate is equally unknowable
+    // at compile time.
     let enable_three_state = match find_prop_value(node, "indeterminate") {
-        Some(LayoutPropValue::SlotRef(_)) => true,
+        Some(LayoutPropValue::SlotRef(_)) | Some(LayoutPropValue::Expr(_)) => true,
         Some(LayoutPropValue::Keyword(k)) if k == "true" => true,
-        _ => false,
+        Some(LayoutPropValue::Keyword(_))
+        | Some(LayoutPropValue::String(_))
+        | Some(LayoutPropValue::Number(_))
+        | Some(LayoutPropValue::EmitRef(_))
+        | None => false,
     };
     if enable_three_state {
         attrs.push_str(" IsThreeState=\"True\"");
@@ -8476,7 +8980,22 @@ fn emit_host_radio(
         Some(LayoutPropValue::String(s)) => {
             attrs.push_str(&format!(" GroupName=\"{}\"", escape_xaml_attr(s)));
         }
-        _ => {}
+        // #13040
+        Some(LayoutPropValue::Expr(src)) => match lower_expr_for_xbind(src, ctx) {
+            ExprLowering::Bindable(path) => {
+                attrs.push_str(&format!(" GroupName=\"{{x:Bind {path}, Mode=OneWay}}\""));
+            }
+            ExprLowering::Helper(call) => {
+                attrs.push_str(&format!(" GroupName=\"{{x:Bind {call}, Mode=OneWay}}\""));
+            }
+            ExprLowering::Unsupported(reason) => {
+                return Err(PipelineEmitError::UnsupportedExpression(reason));
+            }
+        },
+        Some(LayoutPropValue::Keyword(_))
+        | Some(LayoutPropValue::Number(_))
+        | Some(LayoutPropValue::EmitRef(_))
+        | None => {}
     }
 
     // IsChecked from `checked:`.
@@ -8491,7 +9010,23 @@ fn emit_host_radio(
         Some(LayoutPropValue::Keyword(k)) if k == "false" => {
             attrs.push_str(" IsChecked=\"False\"");
         }
-        _ => {}
+        // #13040
+        Some(LayoutPropValue::Expr(src)) => match lower_expr_for_xbind(src, ctx) {
+            ExprLowering::Bindable(path) => {
+                attrs.push_str(&format!(" IsChecked=\"{{x:Bind {path}, Mode=OneWay}}\""));
+            }
+            ExprLowering::Helper(call) => {
+                attrs.push_str(&format!(" IsChecked=\"{{x:Bind {call}, Mode=OneWay}}\""));
+            }
+            ExprLowering::Unsupported(reason) => {
+                return Err(PipelineEmitError::UnsupportedExpression(reason));
+            }
+        },
+        Some(LayoutPropValue::String(_))
+        | Some(LayoutPropValue::Keyword(_))
+        | Some(LayoutPropValue::Number(_))
+        | Some(LayoutPropValue::EmitRef(_))
+        | None => {}
     }
 
     // IsEnabled from `disabled:` (same as HostCheckbox / HostButton).
@@ -8506,20 +9041,53 @@ fn emit_host_radio(
         Some(LayoutPropValue::Keyword(k)) if k == "false" => {
             attrs.push_str(" IsEnabled=\"True\"");
         }
-        _ => {}
+        // #13040: same polarity-flip Not(bool) helper as the SlotRef arm
+        // above, applied to a lowered expression instead of a slot.
+        Some(LayoutPropValue::Expr(src)) => match disabled_expr_xbind_path(src, ctx) {
+            ExprLowering::Bindable(path) => {
+                attrs.push_str(&format!(" IsEnabled=\"{{x:Bind {path}, Mode=OneWay}}\""));
+            }
+            ExprLowering::Helper(call) => {
+                attrs.push_str(&format!(" IsEnabled=\"{{x:Bind {call}, Mode=OneWay}}\""));
+            }
+            ExprLowering::Unsupported(reason) => {
+                return Err(PipelineEmitError::UnsupportedExpression(reason));
+            }
+        },
+        Some(LayoutPropValue::String(_))
+        | Some(LayoutPropValue::Keyword(_))
+        | Some(LayoutPropValue::Number(_))
+        | Some(LayoutPropValue::EmitRef(_))
+        | None => {}
     }
 
     // Checked handler from `onSelect:`. Pre-compute the value: payload
     // (C# string literal or property reference) so the handler body
     // dispatches the right shape.
     if let Some(LayoutPropValue::EmitRef(emit_name)) = find_prop_value(node, "onSelect") {
+        // #13040: same scope decision as `host_link_href_payload_expr`
+        // -- this builds a bare C# click-payload expression with no
+        // for-scope awareness, a materially different code shape from
+        // the XAML-attribute Expr sites this issue otherwise closes.
+        // An expression here gets a clear diagnostic, not a silent ""
+        // payload.
         let value_expr: String = match find_prop_value(node, "value") {
             Some(LayoutPropValue::String(s)) => format!("\"{}\"", escape_csharp_string(s)),
             Some(LayoutPropValue::SlotRef(slot)) => {
                 let pascal = ctx.slot_property_name(slot);
                 format!("this.{pascal}")
             }
-            _ => "\"\"".to_string(),
+            Some(LayoutPropValue::Expr(src)) => {
+                return Err(PipelineEmitError::UnsupportedExpression(format!(
+                    "expression {src:?} used as a HostRadio onSelect `value:` click \
+                     payload is not yet supported -- only a literal string or a \
+                     `slot:` reference can be dispatched as the click payload today"
+                )));
+            }
+            Some(LayoutPropValue::Keyword(_))
+            | Some(LayoutPropValue::Number(_))
+            | Some(LayoutPropValue::EmitRef(_))
+            | None => "\"\"".to_string(),
         };
 
         let emit_case = strip_on_prefix(emit_name);
@@ -8625,7 +9193,24 @@ fn emit_host_slider(
         Some(LayoutPropValue::Keyword(value)) if value == "false" => {
             attrs.push_str(" IsEnabled=\"True\"");
         }
-        _ => {}
+        // #13040: same polarity-flip Not(bool) helper as the SlotRef arm
+        // above, applied to a lowered expression instead of a slot.
+        Some(LayoutPropValue::Expr(src)) => match disabled_expr_xbind_path(src, ctx) {
+            ExprLowering::Bindable(path) => {
+                attrs.push_str(&format!(" IsEnabled=\"{{x:Bind {path}, Mode=OneWay}}\""));
+            }
+            ExprLowering::Helper(call) => {
+                attrs.push_str(&format!(" IsEnabled=\"{{x:Bind {call}, Mode=OneWay}}\""));
+            }
+            ExprLowering::Unsupported(reason) => {
+                return Err(PipelineEmitError::UnsupportedExpression(reason));
+            }
+        },
+        Some(LayoutPropValue::String(_))
+        | Some(LayoutPropValue::Keyword(_))
+        | Some(LayoutPropValue::Number(_))
+        | Some(LayoutPropValue::EmitRef(_))
+        | None => {}
     }
 
     if let Some(LayoutPropValue::EmitRef(emit_name)) = find_prop_value(node, "onChange") {
@@ -8912,7 +9497,7 @@ fn emit_host_link(
             let case_pascal = kebab_to_pascal_case(&strip_on_prefix(emit_name));
             let component = ctx.component_name;
             let event_ctor =
-                if let Some(payload_expr) = host_link_click_payload_expr(emit_name, node, ctx) {
+                if let Some(payload_expr) = host_link_click_payload_expr(emit_name, node, ctx)? {
                     format!("new {component}Event.{case_pascal}({payload_expr})")
                 } else {
                     format!("new {component}Event.{case_pascal}()")
@@ -9163,7 +9748,24 @@ fn emit_host_number_input(
         Some(LayoutPropValue::Keyword(k)) if k == "false" => {
             attrs.push_str(" IsEnabled=\"True\"");
         }
-        _ => {}
+        // #13040: same polarity-flip Not(bool) helper as the SlotRef arm
+        // above, applied to a lowered expression instead of a slot.
+        Some(LayoutPropValue::Expr(src)) => match disabled_expr_xbind_path(src, ctx) {
+            ExprLowering::Bindable(path) => {
+                attrs.push_str(&format!(" IsEnabled=\"{{x:Bind {path}, Mode=OneWay}}\""));
+            }
+            ExprLowering::Helper(call) => {
+                attrs.push_str(&format!(" IsEnabled=\"{{x:Bind {call}, Mode=OneWay}}\""));
+            }
+            ExprLowering::Unsupported(reason) => {
+                return Err(PipelineEmitError::UnsupportedExpression(reason));
+            }
+        },
+        Some(LayoutPropValue::String(_))
+        | Some(LayoutPropValue::Keyword(_))
+        | Some(LayoutPropValue::Number(_))
+        | Some(LayoutPropValue::EmitRef(_))
+        | None => {}
     }
 
     // onChange â†’ ValueChanged code-behind handler.
@@ -9265,6 +9867,17 @@ fn emit_host_scroll(
 /// open-state still surfaces as a comment (the host code-behind
 /// remains responsible for calling ShowAsync()/Hide() â€” same contract
 /// as before, minus the undeclared-namespace XAML).
+///
+/// #13008 investigated whether this host-code-behind requirement could
+/// be dropped, the way SwiftUI/Qt/Compose's dialog lowerings avoid it
+/// (`.sheet(isPresented:)`, QML `Popup.visible`, Compose's conditional
+/// `Dialog { }` composition are all natively declarative). It's
+/// confirmed permanent, not a to-do: WinUI3's `ContentDialog` has no
+/// bindable `IsOpen`-style property the way `Popup`/`Flyout`/
+/// `TeachingTip` do, so there is no declarative show/hide surface here
+/// to bind to. Lowering to `Flyout` instead was considered and
+/// rejected â€” `Flyout` isn't a true modal dialog, so it would trade
+/// this gap for a wrong-primitive one rather than closing it.
 ///
 /// Fix A3: `Title="{Binding X}"` â†’ `Title="{x:Bind X, Mode=OneWay}"`
 /// to match the rest of the emitter. The `{Binding}` form silently
@@ -9606,6 +10219,11 @@ fn emit_native_host_table(
     let table_type = format!("{component}MosaicTable");
     let header_path = ctx.slot_property_name(shape.header_slot);
     let rows_path = ctx.slot_property_name(shape.rows_slot);
+    // #13040: `dir` already intentionally silently ignores an
+    // unrecognized Keyword value (only "rtl"/"ltr" mean anything) --
+    // that allow-list is about keyword *values*, not about rejecting
+    // an entire LayoutPropValue kind, so Expr gets a real FlowDirection
+    // binding here rather than joining the "silently ignored" bucket.
     let flow_direction_attr = match find_prop_value(node, "dir") {
         Some(LayoutPropValue::SlotRef(slot)) => {
             let property = ctx.slot_property_name(slot);
@@ -9623,7 +10241,21 @@ fn emit_native_host_table(
             "ltr" => " FlowDirection=\"LeftToRight\"".to_string(),
             _ => String::new(),
         },
-        _ => String::new(),
+        Some(LayoutPropValue::Expr(src)) => match lower_expr_for_xbind(src, ctx) {
+            ExprLowering::Bindable(path) => {
+                format!(" FlowDirection=\"{{x:Bind {path}, Mode=OneWay}}\"")
+            }
+            ExprLowering::Helper(call) => {
+                format!(" FlowDirection=\"{{x:Bind {call}, Mode=OneWay}}\"")
+            }
+            ExprLowering::Unsupported(reason) => {
+                return Err(PipelineEmitError::UnsupportedExpression(reason));
+            }
+        },
+        Some(LayoutPropValue::String(_))
+        | Some(LayoutPropValue::Number(_))
+        | Some(LayoutPropValue::EmitRef(_))
+        | None => String::new(),
     };
     let table_name = node
         .part_name
@@ -9764,7 +10396,30 @@ fn emit_host_table(
             "auto" => String::new(),
             _ => String::new(),
         },
-        _ => String::new(),
+        // #13040: the keyword allow-list just above is the security
+        // gate against an arbitrary *static* keyword string reaching
+        // the XAML attribute -- it says nothing about rejecting an
+        // entire LayoutPropValue kind. A slot-bound FlowDirection was
+        // already fully dynamic (arm above); an Expr-bound one is no
+        // more permissive, since lower_expr_for_xbind never splices
+        // attacker-influenced text either -- it always resolves to a
+        // compiler-generated C# path or helper call, never the raw
+        // expression source.
+        Some(LayoutPropValue::Expr(src)) => match lower_expr_for_xbind(src, ctx) {
+            ExprLowering::Bindable(path) => {
+                format!(" FlowDirection=\"{{x:Bind {path}, Mode=OneWay}}\"")
+            }
+            ExprLowering::Helper(call) => {
+                format!(" FlowDirection=\"{{x:Bind {call}, Mode=OneWay}}\"")
+            }
+            ExprLowering::Unsupported(reason) => {
+                return Err(PipelineEmitError::UnsupportedExpression(reason));
+            }
+        },
+        Some(LayoutPropValue::String(_))
+        | Some(LayoutPropValue::Number(_))
+        | Some(LayoutPropValue::EmitRef(_))
+        | None => String::new(),
     };
 
     // -- 1. Find each section sub-tag at most once. --
@@ -11347,6 +12002,198 @@ mod tests {
             r.xaml.contains("Glyph=\"{x:Bind GlyphName, Mode=OneWay}\""),
             "expected x:Bind passthrough, got:\n{}",
             r.xaml
+        );
+    }
+
+    // â”€â”€ UI39: Path kernel drawing primitive â”€â”€
+
+    fn path_node(part: &str, kind: &str, coords: &[(&str, f64)]) -> LayoutNode {
+        let mut props = vec![LayoutProp {
+            name: "kind".to_string(),
+            value: LayoutPropValue::Keyword(kind.to_string()),
+        }];
+        for (name, value) in coords {
+            props.push(LayoutProp {
+                name: name.to_string(),
+                value: LayoutPropValue::Number(*value),
+            });
+        }
+        LayoutNode {
+            tag: "Path".to_string(),
+            part_name: Some(part.to_string()),
+            props,
+            children: Vec::new(),
+        }
+    }
+
+    #[test]
+    fn path_circle_emits_ellipse_with_margin_offset() {
+        let c = component("Foo", vec![], vec![]);
+        let l = layout_with_root(
+            "Foo",
+            path_node("moon-disc", "circle", &[("cx", 17.0), ("cy", 17.0), ("r", 17.0)]),
+        );
+        let s = style_for_box(
+            "moon-disc",
+            vec![("background", "#b3a99c"), ("border-color", "#1a1714"), ("border-width", "1")],
+        );
+        let r = compile(&c, &l, &s);
+        assert!(r.xaml.contains("<Ellipse"), "got:\n{}", r.xaml);
+        assert!(r.xaml.contains("Width=\"34\""), "got:\n{}", r.xaml);
+        assert!(r.xaml.contains("Height=\"34\""), "got:\n{}", r.xaml);
+        assert!(r.xaml.contains("Margin=\"0,0,0,0\""), "got:\n{}", r.xaml);
+        assert!(
+            r.xaml.contains("HorizontalAlignment=\"Left\"") && r.xaml.contains("VerticalAlignment=\"Top\""),
+            "got:\n{}",
+            r.xaml
+        );
+        // Fill/Stroke/StrokeThickness, remapped from background/border-color/
+        // border-width -- NOT Background/BorderBrush/BorderThickness, which
+        // Ellipse has no dependency property for.
+        assert!(r.xaml.contains("Fill=\"#b3a99c\""), "got:\n{}", r.xaml);
+        assert!(r.xaml.contains("Stroke=\"#1a1714\""), "got:\n{}", r.xaml);
+        assert!(r.xaml.contains("StrokeThickness=\"1\""), "got:\n{}", r.xaml);
+        assert!(!r.xaml.contains("Background="), "got:\n{}", r.xaml);
+        assert!(!r.xaml.contains("BorderBrush="), "got:\n{}", r.xaml);
+    }
+
+    #[test]
+    fn path_circle_offset_center_computes_margin_from_radius() {
+        let c = component("Foo", vec![], vec![]);
+        let l = layout_with_root(
+            "Foo",
+            path_node("moon-bite", "circle", &[("cx", 22.0), ("cy", 12.0), ("r", 17.0)]),
+        );
+        let r = compile(&c, &l, &empty_style("Foo"));
+        // left = cx - r = 5, top = cy - r = -5
+        assert!(r.xaml.contains("Margin=\"5,-5,0,0\""), "got:\n{}", r.xaml);
+    }
+
+    #[test]
+    fn path_line_emits_line_element() {
+        let c = component("Foo", vec![], vec![]);
+        let l = layout_with_root(
+            "Foo",
+            path_node("bar-icon-1", "line", &[("x1", 0.0), ("y1", 4.0), ("x2", 12.0), ("y2", 4.0)]),
+        );
+        let r = compile(&c, &l, &empty_style("Foo"));
+        assert!(r.xaml.contains("<Line"), "got:\n{}", r.xaml);
+        assert!(r.xaml.contains("X1=\"0\""), "got:\n{}", r.xaml);
+        assert!(r.xaml.contains("Y1=\"4\""), "got:\n{}", r.xaml);
+        assert!(r.xaml.contains("X2=\"12\""), "got:\n{}", r.xaml);
+        assert!(r.xaml.contains("Y2=\"4\""), "got:\n{}", r.xaml);
+    }
+
+    #[test]
+    fn path_curve_emits_quadratic_bezier_geometry() {
+        let c = component("Foo", vec![], vec![]);
+        let l = layout_with_root(
+            "Foo",
+            path_node(
+                "dependency-arrow",
+                "curve",
+                &[("x1", 0.0), ("y1", 0.0), ("cx", 10.0), ("cy", -8.0), ("x2", 20.0), ("y2", 0.0)],
+            ),
+        );
+        let r = compile(&c, &l, &empty_style("Foo"));
+        assert!(r.xaml.contains("<Path.Data>"), "got:\n{}", r.xaml);
+        assert!(r.xaml.contains("<PathGeometry>"), "got:\n{}", r.xaml);
+        assert!(
+            r.xaml.contains("<PathFigure StartPoint=\"0,0\">"),
+            "got:\n{}",
+            r.xaml
+        );
+        assert!(
+            r.xaml.contains("<QuadraticBezierSegment Point1=\"10,-8\" Point2=\"20,0\"/>"),
+            "got:\n{}",
+            r.xaml
+        );
+    }
+
+    #[test]
+    fn path_missing_kind_is_a_clear_error() {
+        let c = component("Foo", vec![], vec![]);
+        let l = layout_with_root(
+            "Foo",
+            LayoutNode {
+                tag: "Path".to_string(),
+                part_name: None,
+                props: Vec::new(),
+                children: Vec::new(),
+            },
+        );
+        let err = from_pipeline(&c, &l, &empty_style("Foo"), None, &opts()).unwrap_err();
+        assert!(
+            matches!(err, PipelineEmitError::UnsupportedPrimitive(ref t) if t.contains("kind")),
+            "{err:?}"
+        );
+    }
+
+    #[test]
+    fn path_missing_coordinate_is_a_clear_error_not_a_default() {
+        let c = component("Foo", vec![], vec![]);
+        let l = layout_with_root(
+            "Foo",
+            path_node("moon-disc", "circle", &[("cx", 17.0), ("cy", 17.0)]), // no r
+        );
+        let err = from_pipeline(&c, &l, &empty_style("Foo"), None, &opts()).unwrap_err();
+        assert!(
+            matches!(err, PipelineEmitError::UnsupportedPrimitive(ref t) if t.contains('r')),
+            "{err:?}"
+        );
+    }
+
+    #[test]
+    fn path_slot_bound_coordinate_is_a_clear_error_not_a_silent_drop() {
+        let c = component("Foo", vec![], vec![]);
+        let l = layout_with_root(
+            "Foo",
+            LayoutNode {
+                tag: "Path".to_string(),
+                part_name: None,
+                props: vec![
+                    LayoutProp {
+                        name: "kind".to_string(),
+                        value: LayoutPropValue::Keyword("circle".to_string()),
+                    },
+                    LayoutProp {
+                        name: "cx".to_string(),
+                        value: LayoutPropValue::SlotRef("moon-x".to_string()),
+                    },
+                    LayoutProp {
+                        name: "cy".to_string(),
+                        value: LayoutPropValue::Number(17.0),
+                    },
+                    LayoutProp {
+                        name: "r".to_string(),
+                        value: LayoutPropValue::Number(17.0),
+                    },
+                ],
+                children: Vec::new(),
+            },
+        );
+        let err = from_pipeline(&c, &l, &empty_style("Foo"), None, &opts()).unwrap_err();
+        assert!(
+            matches!(err, PipelineEmitError::UnsupportedPrimitive(ref t) if t.contains("cx") && t.contains("literal")),
+            "{err:?}"
+        );
+    }
+
+    #[test]
+    fn path_arc_kind_is_a_named_stretch_goal_not_a_generic_error() {
+        let c = component("Foo", vec![], vec![]);
+        let l = layout_with_root(
+            "Foo",
+            path_node(
+                "ring-segment",
+                "arc",
+                &[("cx", 10.0), ("cy", 10.0), ("r", 8.0), ("start-angle", 0.0), ("end-angle", 90.0)],
+            ),
+        );
+        let err = from_pipeline(&c, &l, &empty_style("Foo"), None, &opts()).unwrap_err();
+        assert!(
+            matches!(err, PipelineEmitError::UnsupportedPrimitive(ref t) if t.contains("arc") && t.contains("not yet supported")),
+            "{err:?}"
         );
     }
 
@@ -13041,6 +13888,41 @@ mod tests {
             r.code_behind.contains("internal bool Not(bool b) => !b;"),
             "got:\n{}",
             r.code_behind
+        );
+    }
+
+    /// `HostButton [name]` (→ `<Button>`) with a non-`inset` box-shadow
+    /// gets the same `Translation`/`<Button.Shadow>` treatment as a
+    /// `Box` — matches the real "pill" project-toggle buttons
+    /// (`mosaic-pkg-project-nav`'s `project-on`/`project-off`).
+    /// `Button` normally self-closes; a `<Button.Shadow>` child forces
+    /// the open/close form instead.
+    #[test]
+    fn host_button_with_box_shadow_emits_theme_shadow_and_opens_close_tag() {
+        let c = component("Foo", vec![], vec![]);
+        let l = layout_with_root("Foo", host_button_node(Some("project-on"), vec![]));
+        let s = style_for_box(
+            "project-on",
+            vec![(
+                "box-shadow",
+                "0 1px 2px rgba(0,0,0,.3), 0 4px 14px rgba(0,0,0,.28)",
+            )],
+        );
+        let r = compile(&c, &l, &s);
+        assert!(
+            r.xaml.contains("Translation=\"0,0,4\""),
+            "got:\n{}",
+            r.xaml
+        );
+        assert!(
+            r.xaml.contains("<Button.Shadow>") && r.xaml.contains("<ThemeShadow/>"),
+            "got:\n{}",
+            r.xaml
+        );
+        assert!(
+            r.xaml.contains("</Button>"),
+            "expected an open/close Button (not self-closed) once it has a Shadow child, got:\n{}",
+            r.xaml
         );
     }
 
@@ -16084,20 +16966,47 @@ mod tests {
 
     // ── issue #12022: dropped_style_properties ──
 
-    /// A genuinely-unexpressible property (`box-shadow`) is reported, with
-    /// a real reason, tagged with its part name.
+    /// An `inset` `box-shadow` (the moon/status-dot drawing hack, issue
+    /// #12028 item 3 — a shape cutout, not elevation) is genuinely
+    /// unexpressible and is reported, with a real reason, tagged with
+    /// its part name. A non-`inset` value is NOT reported — see
+    /// `dropped_style_properties_excludes_non_inset_box_shadow` — since
+    /// #12028 item 1 taught the emitter to treat it as an elevation
+    /// request instead of dropping it.
     #[test]
-    fn dropped_style_properties_reports_box_shadow() {
-        let style = style_for_box("card", vec![("box-shadow", "0 1px 2px #000")]);
+    fn dropped_style_properties_reports_inset_box_shadow() {
+        let style = style_for_box("card", vec![("box-shadow", "5px -5px 0 0 #000 inset")]);
         let dropped = dropped_style_properties(&style);
         assert_eq!(dropped.len(), 1, "got: {dropped:?}");
         assert_eq!(dropped[0].part, "card");
         assert_eq!(dropped[0].name, "box-shadow");
-        assert_eq!(dropped[0].value, "0 1px 2px #000");
+        assert_eq!(dropped[0].value, "5px -5px 0 0 #000 inset");
         assert!(
             dropped[0].reason.contains("ThemeShadow"),
             "got: {}",
             dropped[0].reason
+        );
+    }
+
+    /// A non-`inset` `box-shadow` (any value — real usage: two comma-
+    /// separated layers, differing only by opacity/color between light/
+    /// dark themes) is consumed by the `ThemeShadow` side channel
+    /// (issue #12028 item 1) and must never surface in the #12022
+    /// dropped-properties report — reporting it would be a false
+    /// positive on a now-real feature.
+    #[test]
+    fn dropped_style_properties_excludes_non_inset_box_shadow() {
+        let style = style_for_box(
+            "brand-mark",
+            vec![(
+                "box-shadow",
+                "0 1px 2px rgba(0,0,0,.3), 0 4px 14px rgba(0,0,0,.28)",
+            )],
+        );
+        assert!(
+            dropped_style_properties(&style).is_empty(),
+            "got: {:?}",
+            dropped_style_properties(&style)
         );
     }
 
@@ -16477,6 +17386,150 @@ mod tests {
         }
     }
 
+    /// `align: "center-vertical"` (a non-standard mosstyle property that
+    /// reached real `.msl` files — TaskApp, VentureChrome, Calendar,
+    /// ProjectNav — but was never lowered by anything) produces the
+    /// same `VerticalAlignment="Center"` per-child attribute
+    /// `align-items: center` already does, since every real author of
+    /// `center-vertical` puts it on a `Row` (where "vertical" IS the
+    /// cross axis).
+    #[test]
+    fn row_align_center_vertical_lowers_to_same_cross_axis_attribute_as_align_items() {
+        let c = component("Foo", vec![], vec![]);
+        let l = layout_with_root(
+            "Foo",
+            LayoutNode {
+                tag: "Row".to_string(),
+                part_name: Some("brand".to_string()),
+                props: Vec::new(),
+                children: vec![LayoutNode {
+                    tag: "Text".to_string(),
+                    part_name: None,
+                    props: vec![LayoutProp {
+                        name: "content".to_string(),
+                        value: LayoutPropValue::String("Trestle".to_string()),
+                    }],
+                    children: Vec::new(),
+                }],
+            },
+        );
+        let s = style_for_box("brand", vec![("align", "center-vertical"), ("gap", "10")]);
+        let r = compile(&c, &l, &s);
+        assert!(
+            r.xaml
+                .contains("Text=\"Trestle\" Grid.Column=\"0\" VerticalAlignment=\"Center\""),
+            "got:\n{}",
+            r.xaml
+        );
+        assert!(
+            !r.xaml.contains("Property=\"Align\""),
+            "align must never leak into a fake WinUI setter, got:\n{}",
+            r.xaml
+        );
+    }
+
+    /// `align: "center-vertical"`/`align: "center"` are consumed by the
+    /// same `FlexHints` side channel as `align-items: center` and must
+    /// never surface in the #12022 dropped-properties report.
+    #[test]
+    fn dropped_style_properties_excludes_recognised_align_values() {
+        let style = style_for_box(
+            "brand",
+            vec![("align", "center-vertical")],
+        );
+        assert!(
+            dropped_style_properties(&style).is_empty(),
+            "got: {:?}",
+            dropped_style_properties(&style)
+        );
+        let style_center = style_for_box("notes-empty", vec![("align", "center")]);
+        assert!(
+            dropped_style_properties(&style_center).is_empty(),
+            "got: {:?}",
+            dropped_style_properties(&style_center)
+        );
+    }
+
+    /// An `align` value FlexHints doesn't recognise is a genuine drop —
+    /// no per-child alignment is applied for it anywhere, matching
+    /// `align-items`'s identical unrecognised-value treatment.
+    #[test]
+    fn dropped_style_properties_reports_unrecognised_align_value() {
+        let style = style_for_box("brand", vec![("align", "flex-end")]);
+        let dropped = dropped_style_properties(&style);
+        assert_eq!(dropped.len(), 1, "got: {dropped:?}");
+        assert_eq!(dropped[0].name, "align");
+        assert!(
+            dropped[0].reason.contains("FlexHints"),
+            "got: {}",
+            dropped[0].reason
+        );
+    }
+
+    /// `Box [name]` (→ `<Border>`) with a non-`inset` `box-shadow` gets
+    /// `Translation="0,0,4"` on the opening tag plus a `<Border.Shadow>`
+    /// child — matching the real `mosaic-pkg-*`/`task-app` "raised
+    /// card" usage (`brand-mark`, `project-on`).
+    #[test]
+    fn box_with_box_shadow_emits_theme_shadow_and_translation() {
+        let c = component("Foo", vec![], vec![]);
+        let l = layout_with_root(
+            "Foo",
+            LayoutNode {
+                tag: "Box".to_string(),
+                part_name: Some("card".to_string()),
+                props: Vec::new(),
+                children: Vec::new(),
+            },
+        );
+        let s = style_for_box(
+            "card",
+            vec![
+                ("background", "#1a1714"),
+                (
+                    "box-shadow",
+                    "0 1px 2px rgba(0,0,0,.3), 0 4px 14px rgba(0,0,0,.28)",
+                ),
+            ],
+        );
+        let r = compile(&c, &l, &s);
+        assert!(
+            r.xaml.contains("Translation=\"0,0,4\""),
+            "got:\n{}",
+            r.xaml
+        );
+        assert!(
+            r.xaml.contains("<Border.Shadow>") && r.xaml.contains("<ThemeShadow/>"),
+            "got:\n{}",
+            r.xaml
+        );
+        assert!(
+            !r.xaml.contains("Property=\"BoxShadow\""),
+            "box-shadow must never leak into a fake WinUI setter, got:\n{}",
+            r.xaml
+        );
+    }
+
+    /// An `inset` `box-shadow` gets no `Translation`/`ThemeShadow` at
+    /// all — it's a drawing hack (item 3), not elevation (item 1).
+    #[test]
+    fn box_with_inset_box_shadow_gets_no_theme_shadow() {
+        let c = component("Foo", vec![], vec![]);
+        let l = layout_with_root(
+            "Foo",
+            LayoutNode {
+                tag: "Box".to_string(),
+                part_name: Some("moon".to_string()),
+                props: Vec::new(),
+                children: Vec::new(),
+            },
+        );
+        let s = style_for_box("moon", vec![("box-shadow", "5px -5px 0 0 #1a1714 inset")]);
+        let r = compile(&c, &l, &s);
+        assert!(!r.xaml.contains("Translation"), "got:\n{}", r.xaml);
+        assert!(!r.xaml.contains("ThemeShadow"), "got:\n{}", r.xaml);
+    }
+
     #[test]
     fn box_with_multiple_children_wraps_border_child_in_stackpanel() {
         let c = component("Foo", vec![], vec![]);
@@ -16811,6 +17864,93 @@ mod tests {
             value: "16".to_string(),
         }]);
         assert!(top.contains("Padding=\"0,16,0,0\""), "got:\n{top}");
+    }
+
+    // ── issue #12028 item 4: position: absolute → Margin/alignment ──
+
+    fn style_prop(name: &str, value: &str) -> StyleProp {
+        StyleProp {
+            name: name.to_string(),
+            value: value.to_string(),
+        }
+    }
+
+    /// `position: "absolute"` with `top`/`left` reproduces the CSS
+    /// offset as `Margin="{left},{top},0,0"` pinned to the top-left
+    /// corner of the (already z-axis-stacking) `Grid` cell — matching
+    /// the real `TaskApp` bridge-arc logo's authoring shape
+    /// (`brand-post-left`: `top: 11; left: 4;`).
+    #[test]
+    fn absolute_position_with_top_left_lowers_to_pinned_margin() {
+        let frag = build_style_fragment(&[
+            style_prop("position", "\"absolute\""),
+            style_prop("top", "11"),
+            style_prop("left", "4"),
+        ]);
+        assert!(frag.contains("Margin=\"4,11,0,0\""), "got:\n{frag}");
+        assert!(
+            frag.contains("HorizontalAlignment=\"Left\""),
+            "got:\n{frag}"
+        );
+        assert!(frag.contains("VerticalAlignment=\"Top\""), "got:\n{frag}");
+    }
+
+    /// Missing `top`/`left` default to `0` — CSS's own default for an
+    /// absolutely-positioned element with no offset authored.
+    #[test]
+    fn absolute_position_without_top_left_defaults_to_zero_margin() {
+        let frag = build_style_fragment(&[style_prop("position", "\"absolute\"")]);
+        assert!(frag.contains("Margin=\"0,0,0,0\""), "got:\n{frag}");
+    }
+
+    /// `position: "absolute"` overrides whatever Margin the normal
+    /// per-property loop would have computed from an authored
+    /// `margin-top` — CSS's own `position: absolute` takes full control
+    /// of placement too, so the two must not both apply.
+    #[test]
+    fn absolute_position_overrides_other_margin_properties() {
+        let frag = build_style_fragment(&[
+            style_prop("position", "\"absolute\""),
+            style_prop("top", "3"),
+            style_prop("left", "4"),
+            style_prop("margin-top", "99px"),
+        ]);
+        assert!(frag.contains("Margin=\"4,3,0,0\""), "got:\n{frag}");
+        assert!(!frag.contains("99"), "got:\n{frag}");
+    }
+
+    /// `top`/`left` with no `position: "absolute"` present are
+    /// meaningless in CSS and stay dropped exactly as before — this
+    /// fix does not turn them into a generic offset mechanism.
+    #[test]
+    fn top_left_without_absolute_position_are_still_dropped() {
+        let dropped = dropped_style_properties(&style_for_box(
+            "card",
+            vec![("top", "11"), ("left", "4")],
+        ));
+        assert_eq!(dropped.len(), 2, "got: {dropped:?}");
+        assert!(dropped.iter().any(|d| d.name == "top"));
+        assert!(dropped.iter().any(|d| d.name == "left"));
+    }
+
+    /// `position`/`top`/`left` are consumed by the side channel above
+    /// and must never surface in the #12022 dropped-properties report —
+    /// reporting them would be a false positive on a now-real feature.
+    #[test]
+    fn dropped_style_properties_excludes_consumed_absolute_position() {
+        let style = style_for_box(
+            "brand-post-left",
+            vec![
+                ("position", "\"absolute\""),
+                ("top", "11"),
+                ("left", "4"),
+            ],
+        );
+        assert!(
+            dropped_style_properties(&style).is_empty(),
+            "got: {:?}",
+            dropped_style_properties(&style)
+        );
     }
 
     #[test]
@@ -18230,6 +19370,391 @@ mod tests {
             !r.code_behind.contains("private bool Expr_"),
             "DataTemplate x:Bind cannot resolve page-level helper methods:\n{}",
             r.code_behind
+        );
+    }
+
+    // ── #13040 ──────────────────────────────────────────────────────
+    // The ~15 remaining `find_prop_value(node, "...")` sites #12126
+    // deliberately left out. Groups A-D below get full `Expr` support
+    // via the same `lower_expr_for_xbind` pattern proven by #12126;
+    // Group E (the two click-payload C# string builders) gets an
+    // exhaustive match with `Expr` explicitly routed to a diagnostic
+    // instead of a silently-empty payload.
+
+    /// Group A/B/C, row-scoped subset: `HostCheckbox.checked`,
+    /// `HostCheckbox.indeterminate`, `HostRadio.checked`,
+    /// `HostRadio.group`, `HostInput.read-only`, `HostSurface.content`
+    /// (both `String` and `Expr`, since `String` was an audit finding
+    /// with no prior arm at all), and `Icon.glyph` — every one of
+    /// these previously fell into a bare `_ => {}` and silently
+    /// dropped the attribute when given a row expression.
+    #[test]
+    fn expr_valued_props_bind_at_row_scoped_group_a_b_c_sites() {
+        fn expr_prop(name: &str) -> LayoutProp {
+            LayoutProp {
+                name: name.to_string(),
+                value: LayoutPropValue::Expr("row[1]".to_string()),
+            }
+        }
+
+        let c = component(
+            "Foo",
+            vec![slot(
+                "rows",
+                SlotType::List(Box::new(ListInnerType::List(Box::new(
+                    ListInnerType::Text,
+                )))),
+                true,
+            )],
+            vec![],
+        );
+        let l = layout_with_root(
+            "Foo",
+            LayoutNode {
+                tag: "Column".to_string(),
+                part_name: None,
+                props: Vec::new(),
+                children: vec![for_node(
+                    LayoutPropValue::SlotRef("rows".to_string()),
+                    "row",
+                    None,
+                    vec![
+                        LayoutNode {
+                            tag: "HostCheckbox".to_string(),
+                            part_name: None,
+                            props: vec![expr_prop("checked"), expr_prop("indeterminate")],
+                            children: Vec::new(),
+                        },
+                        LayoutNode {
+                            tag: "HostRadio".to_string(),
+                            part_name: None,
+                            props: vec![expr_prop("checked"), expr_prop("group")],
+                            children: Vec::new(),
+                        },
+                        LayoutNode {
+                            tag: "HostInput".to_string(),
+                            part_name: None,
+                            props: vec![expr_prop("read-only")],
+                            children: Vec::new(),
+                        },
+                        LayoutNode {
+                            tag: "HostSurface".to_string(),
+                            part_name: None,
+                            props: vec![LayoutProp {
+                                name: "content".to_string(),
+                                value: LayoutPropValue::String("literal".to_string()),
+                            }],
+                            children: Vec::new(),
+                        },
+                        LayoutNode {
+                            tag: "Icon".to_string(),
+                            part_name: None,
+                            props: vec![expr_prop("glyph")],
+                            children: Vec::new(),
+                        },
+                    ],
+                )],
+            },
+        );
+        let r = compile(&c, &l, &empty_style("Foo"));
+
+        for (site, needle) in [
+            ("HostCheckbox.checked", " IsChecked=\"{x:Bind"),
+            ("HostCheckbox.indeterminate", " IsThreeState=\"True\""),
+            ("HostRadio.group", " GroupName=\"{x:Bind"),
+            ("HostInput.read-only", " IsReadOnly=\"{x:Bind"),
+            ("HostSurface.content (String)", " Content=\"literal\""),
+            ("Icon.glyph", " Glyph=\"{x:Bind"),
+        ] {
+            assert!(
+                r.xaml.contains(needle),
+                "{site}: expected {needle:?} in emitted XAML, found none. full XAML:\n{}",
+                r.xaml
+            );
+        }
+
+        // Both HostCheckbox and HostRadio bind `checked` — assert both
+        // fired, not just one clobbering the other's assertion.
+        let checked_bindings = r.xaml.matches(" IsChecked=\"{x:Bind").count();
+        assert_eq!(
+            checked_bindings, 2,
+            "expected both HostCheckbox and HostRadio checked to bind, got {checked_bindings}:\n{}",
+            r.xaml
+        );
+    }
+
+    /// `HostSurface.content` given a row `Expr` (not a literal) also
+    /// lowers to a binding — separate test since the row-scoped test
+    /// above already used `content` for the `String` audit finding.
+    #[test]
+    fn host_surface_content_expr_binds() {
+        let c = component(
+            "Foo",
+            vec![slot(
+                "rows",
+                SlotType::List(Box::new(ListInnerType::Text)),
+                true,
+            )],
+            vec![],
+        );
+        let l = layout_with_root(
+            "Foo",
+            for_node(
+                LayoutPropValue::SlotRef("rows".to_string()),
+                "row",
+                None,
+                vec![LayoutNode {
+                    tag: "HostSurface".to_string(),
+                    part_name: None,
+                    props: vec![LayoutProp {
+                        name: "content".to_string(),
+                        value: LayoutPropValue::Expr("row".to_string()),
+                    }],
+                    children: Vec::new(),
+                }],
+            ),
+        );
+        let r = compile(&c, &l, &empty_style("Foo"));
+        assert!(
+            r.xaml.contains(" Content=\"{x:Bind"),
+            "expected a row-expression HostSurface.content to lower to a binding:\n{}",
+            r.xaml
+        );
+    }
+
+    /// Group D: `HostTable.dir` given a row-independent `Expr` (a
+    /// plain `slot: ...` reference, expressible outside a `For`)
+    /// lowers to a `FlowDirection` binding on both the native-shape
+    /// path (`emit_native_host_table`, exercised via the existing
+    /// `host_table_with_dir` fixture which always emits a
+    /// `HostTableBody`) and the non-native fallback path
+    /// (`emit_host_table`, exercised via a bare `HostTable` with no
+    /// children so `xaml_native_table_shape` returns `None`).
+    #[test]
+    fn host_table_dir_expr_binds_flow_direction_native_shape() {
+        let c = component(
+            "Foo",
+            vec![SlotDecl {
+                name: "layout-direction".to_string(),
+                r#type: SlotType::Text,
+                required: true,
+                default: None,
+            }],
+            vec![],
+        );
+        let l = host_table_with_dir(LayoutPropValue::Expr("slot: layout-direction".to_string()));
+        let r = compile(&c, &l, &empty_style("Foo"));
+        assert!(
+            r.xaml
+                .contains("FlowDirection=\"{x:Bind LayoutDirection, Mode=OneWay}\""),
+            "expected an Expr-valued dir to lower to a FlowDirection binding on the \
+             native-shape table, got:\n{}",
+            r.xaml
+        );
+    }
+
+    #[test]
+    fn host_table_dir_expr_binds_flow_direction_fallback_shape() {
+        let c = component(
+            "Foo",
+            vec![SlotDecl {
+                name: "layout-direction".to_string(),
+                r#type: SlotType::Text,
+                required: true,
+                default: None,
+            }],
+            vec![],
+        );
+        let l = layout_with_root(
+            "Foo",
+            LayoutNode {
+                tag: "HostTable".to_string(),
+                part_name: None,
+                props: vec![LayoutProp {
+                    name: "dir".to_string(),
+                    value: LayoutPropValue::Expr("slot: layout-direction".to_string()),
+                }],
+                children: Vec::new(),
+            },
+        );
+        let r = compile(&c, &l, &empty_style("Foo"));
+        assert!(
+            r.xaml
+                .contains("FlowDirection=\"{x:Bind LayoutDirection, Mode=OneWay}\""),
+            "expected an Expr-valued dir to lower to a FlowDirection binding on the \
+             non-native fallback table, got:\n{}",
+            r.xaml
+        );
+    }
+
+    /// Group A negated subset: `disabled:` on all five host controls
+    /// that support it, given an `Expr` outside a `For` scope, lowers
+    /// through the shared `Not(bool)` helper — the same polarity flip
+    /// `disabled_slot_xbind_path` already does for `SlotRef`.
+    #[test]
+    fn disabled_expr_negates_via_shared_not_helper_outside_for_scope() {
+        fn disabled_expr(tag: &str) -> LayoutNode {
+            LayoutNode {
+                tag: tag.to_string(),
+                part_name: None,
+                props: vec![LayoutProp {
+                    name: "disabled".to_string(),
+                    value: LayoutPropValue::Expr("slot: editable".to_string()),
+                }],
+                children: Vec::new(),
+            }
+        }
+
+        let c = component("Foo", vec![slot("editable", SlotType::Bool, true)], vec![]);
+        let l = layout_with_root(
+            "Foo",
+            LayoutNode {
+                tag: "Column".to_string(),
+                part_name: None,
+                props: Vec::new(),
+                children: vec![
+                    disabled_expr("HostButton"),
+                    disabled_expr("HostCheckbox"),
+                    disabled_expr("HostRadio"),
+                    disabled_expr("HostNumberInput"),
+                    disabled_expr("HostSlider"),
+                ],
+            },
+        );
+        let r = compile(&c, &l, &empty_style("Foo"));
+
+        let bound = r
+            .xaml
+            .matches(" IsEnabled=\"{x:Bind Not(Editable), Mode=OneWay}\"")
+            .count();
+        assert_eq!(
+            bound, 5,
+            "expected all five disabled-capable controls to negate the row-independent \
+             expression via the shared Not(bool) helper, got {bound}:\n{}",
+            r.xaml
+        );
+        assert!(
+            r.code_behind.contains("bool Not(bool b)"),
+            "expected the shared Not(bool) helper to be registered exactly once:\n{}",
+            r.code_behind
+        );
+    }
+
+    /// #13040's own documented scope decision: `disabled:` given an
+    /// `Expr` *inside* a `For` template scope is not supported — the
+    /// negation would need to compose with whatever
+    /// `register_template_helper_binding` already projected onto the
+    /// row VM, which isn't implemented. This must fail with a clear
+    /// `UnsupportedExpression` diagnostic, not silently drop the
+    /// attribute or panic.
+    #[test]
+    fn disabled_expr_inside_for_scope_is_unsupported() {
+        let c = component(
+            "Foo",
+            vec![slot(
+                "rows",
+                SlotType::List(Box::new(ListInnerType::Bool)),
+                true,
+            )],
+            vec![],
+        );
+        let l = layout_with_root(
+            "Foo",
+            for_node(
+                LayoutPropValue::SlotRef("rows".to_string()),
+                "row",
+                None,
+                vec![LayoutNode {
+                    tag: "HostButton".to_string(),
+                    part_name: None,
+                    props: vec![LayoutProp {
+                        name: "disabled".to_string(),
+                        value: LayoutPropValue::Expr("row".to_string()),
+                    }],
+                    children: Vec::new(),
+                }],
+            ),
+        );
+        let err = from_pipeline(&c, &l, &empty_style("Foo"), None, &opts()).unwrap_err();
+        assert!(
+            matches!(err, PipelineEmitError::UnsupportedExpression(ref reason) if reason.contains("disabled")),
+            "expected an UnsupportedExpression diagnostic naming `disabled:`, got: {err:?}"
+        );
+    }
+
+    /// Group E: an `Expr`-valued HostLink `href` used as an in-app
+    /// click payload (`external: false` + `onActivate`) now produces a
+    /// clear `UnsupportedExpression` diagnostic instead of silently
+    /// dispatching an empty-string payload.
+    #[test]
+    fn host_link_href_expr_click_payload_is_unsupported() {
+        let c = component(
+            "X",
+            vec![],
+            vec![EmitDecl {
+                name: "onNavigate".to_string(),
+                params: vec![EmitParam {
+                    name: "href".to_string(),
+                    r#type: EmitPayloadType::Text,
+                }],
+            }],
+        );
+        let l = link_in_box(vec![
+            LayoutProp {
+                name: "href".to_string(),
+                value: LayoutPropValue::Expr("slot: target".to_string()),
+            },
+            LayoutProp {
+                name: "external".to_string(),
+                value: LayoutPropValue::Keyword("false".to_string()),
+            },
+            LayoutProp {
+                name: "onActivate".to_string(),
+                value: LayoutPropValue::EmitRef("onNavigate".to_string()),
+            },
+        ]);
+        let err = from_pipeline(&c, &l, &empty_style("X"), None, &opts()).unwrap_err();
+        assert!(
+            matches!(err, PipelineEmitError::UnsupportedExpression(ref reason) if reason.contains("HostLink")),
+            "expected an UnsupportedExpression diagnostic naming HostLink, got: {err:?}"
+        );
+    }
+
+    /// Group E: an `Expr`-valued HostRadio `onSelect` `value:` click
+    /// payload gets the identical treatment — a clear diagnostic, not
+    /// a silent `""` payload.
+    #[test]
+    fn host_radio_on_select_value_expr_click_payload_is_unsupported() {
+        let c = component(
+            "Foo",
+            vec![],
+            vec![emit(
+                "onSelect",
+                vec![param("choice", EmitPayloadType::Text)],
+            )],
+        );
+        let l = layout_with_root(
+            "Foo",
+            LayoutNode {
+                tag: "HostRadio".to_string(),
+                part_name: None,
+                props: vec![
+                    LayoutProp {
+                        name: "value".to_string(),
+                        value: LayoutPropValue::Expr("slot: choice".to_string()),
+                    },
+                    LayoutProp {
+                        name: "onSelect".to_string(),
+                        value: LayoutPropValue::EmitRef("onSelect".to_string()),
+                    },
+                ],
+                children: Vec::new(),
+            },
+        );
+        let err = from_pipeline(&c, &l, &empty_style("Foo"), None, &opts()).unwrap_err();
+        assert!(
+            matches!(err, PipelineEmitError::UnsupportedExpression(ref reason) if reason.contains("HostRadio")),
+            "expected an UnsupportedExpression diagnostic naming HostRadio, got: {err:?}"
         );
     }
 }

@@ -1,7 +1,7 @@
 ---
 schema_version: 2
 id: BN-C08-lekha
-spine_node: SPINE-SAY-WHAT-I-DO
+spine_node: SPINE-NAME-EVERYDAY-ACTIONS
 sequence: 530
 chapter: 8
 type: word

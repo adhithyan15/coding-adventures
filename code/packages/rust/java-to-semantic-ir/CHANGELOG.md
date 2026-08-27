@@ -2,6 +2,184 @@
 
 All notable changes to the `java-to-semantic-ir` crate will be documented in this file.
 
+## [0.19.0] - 2026-08-26
+
+### Added
+
+- Task #72: the ternary conditional operator (`cond ? a : b`) now lowers
+  to `Expr::If` used in **value** position — the same node `if`/`else`
+  statements already lower to (see that node's own doc comment: "the
+  IR's conditional is an expression with no statement-level
+  counterpart"), just with each branch's own lowered operand as its
+  `Block.value` instead of a bare `NilLit`. Not blocked by task #68's
+  own `NominalClassDef`/`Module` gap — a pure expression-level feature
+  needing no new IR primitive and no class/OOP surface.
+- The condition must be `Kind::Bool` (matching `lower_if_statement`'s own
+  identically-reasoned check). The two branches must lower to a
+  compatible `Kind`: exact match, or real Java's own symmetric numeric
+  promotion for a mismatched `Int`/`Float` pair (`true ? 1 : 2.0` has
+  type `double` regardless of which branch is which) — kept accepted the
+  same way task #71's own directional int-widening-to-float exception
+  is, with the identical disclosed caveat: no real numeric conversion is
+  inserted (SIR's `Expr::Convert`/SIR26 only ever converts between
+  *integer* widths). Every other `Kind` pair is rejected — real Java's
+  ternary does not auto-stringify mismatched branches the way `+` does.
+- New tests cover: the basic lowering shape, the boolean-condition
+  requirement, the numeric-promotion acceptance, the mismatched-kind
+  rejection, using the ternary as a bare expression statement, and
+  nested ternaries.
+
+## [0.18.1] - 2026-08-26
+
+### Fixed
+
+- Task #71 (found while implementing task #70's own exceptions work,
+  unrelated to it): `lower_variable_declarator` used to trust an
+  *explicitly*-declared local variable's own type unconditionally,
+  never checking the initializer's actual `Kind` against it at all —
+  `int y = "hello";` compiled with **zero** error. Now rejects any
+  declared/initializer `Kind` mismatch, with two deliberate exceptions
+  matching real Java's own legal syntax:
+  - int-widening-to-float (`double d = 5;`, JLS 5.1.2's primitive
+    widening conversion) — directional only; the reverse (`int x =
+    5.0;`) is still rejected, matching real Java's own requirement for
+    an explicit narrowing cast. **Does not insert a real numeric
+    conversion** (SIR's own `Expr::Convert`, SIR26, only ever converts
+    between *integer* widths — there is no int-to-float primitive at
+    all): the emitted value for `double d = 5;` remains an `IntLit`,
+    only this frontend's own bookkeeping `Kind` becomes `Float`. A
+    disclosed, currently-unobservable gap (this frontend has no
+    output/print primitive wired up at all yet), not silently swept
+    under this fix.
+  - `null` initializing a *reference*-kinded declaration (`String s =
+    null;`, `int[] xs = null;`) — real Java permits `null` for any
+    reference type but rejects it for a primitive (`int x = null;` is a
+    `javac` compile error).
+- New tests cover the original bug, the widening/narrowing asymmetry,
+  and the primitive-vs-reference `null` distinction.
+
+## [0.18.0] - 2026-08-26
+
+### Added
+
+- JV02 M8 (task #70): `try`/`catch`/`finally`/`throw` → `Stmt::TryCatch`/
+  `RescueClause` (SIR17), reused exactly as SIR29 itself specifies
+  ("Explicitly deferred: a checked-vs-unchecked exception distinction")
+  — no new core-IR primitive needed, unblocked by task #68's own
+  `NominalClassDef`/`Module` gap since this milestone touches none of
+  that surface.
+- `try`'s own block, every `catch` clause's own block, and `finally`'s
+  own block each lower independently via the existing `lower_block_node`
+  (each already opens/closes its own scope) — unlike `Stmt::Switch`
+  (task #51), no shared cross-clause scope: a Java `catch` parameter is
+  scoped to its own clause only, matching `RescueClause.binding`'s own
+  "in scope within `body` only" contract.
+- Java 7+ multi-catch (`catch (IOException | SQLException e) { ... }`)
+  maps directly onto `RescueClause.exception_types: Vec<String>`, no
+  adaptation needed.
+- `throw new ExceptionClass(...)` (0 or 1 constructor arguments — a
+  no-arg or message-arg constructor) lowers to `Expr::BuiltinCall
+  ("raise", [class_name, message?])`, reusing the *cross-backend*
+  `"raise"` convention `ruby-to-semantic-ir` established (not a
+  Ruby-specific mechanism — `semantic-ir-to-{javascript,python}` both
+  already implement it in `emit_expr`). New `Lowerer::lower_throw_
+  statement` detects this one supported shape via a new depth-guarded
+  `unwrap_to_primary` helper (descends the expression-precedence CST
+  chain down to a `primary` node — depth-guarded against
+  `MAX_EXPR_DEPTH` since Java's `unary_expression`/`unary_expression_
+  not_plus_minus` grammar pair can nest an adversarially long prefix-
+  operator chain, `!!!!!...x`, the same CWE-674 recursion-depth class
+  this crate already guards elsewhere).
+- New `Kind::Exception` — the kind of a `catch` clause's own bound local,
+  following the exact established `Void`/`Closure` "placeholder kind no
+  operator accepts as an operand" pattern: this frontend has no method-
+  call-on-arbitrary-object or field-access support at all, so a caught
+  exception's own methods (`e.getMessage()`) remain out of scope: the
+  bound name just needs *some* kind so referencing it doesn't spuriously
+  fail as "undeclared".
+
+### Deliberately out of scope (rejected cleanly, not mis-lowered)
+
+- Try-with-resources (`try (AutoCloseable r = ...) { }`) — SIR has no
+  resource-auto-close primitive.
+- Rethrowing an arbitrary expression (`throw e;`) — this frontend has no
+  way to distinguish "the exact exception object just caught" from any
+  other local; lowering it via the same fallback shape a non-`Const`
+  `raise` argument gets (an implicit `RuntimeError` wrapping that value
+  as a *message*) would silently change what actually gets thrown, so
+  this is rejected outright rather than risk that — see `lower_throw_
+  statement`'s own doc comment.
+- An anonymous exception subclass (`throw new Foo() { ... };`), generic
+  exception construction (`throw new Foo<T>(...);`), and a constructor
+  call with more than one argument (real Java exception constructors can
+  chain a `cause` `Throwable`, `enableSuppression`/`writableStackTrace`
+  flags, etc.).
+
+### Found while implementing this (pre-existing, unrelated bug — logged
+as a new backlog item, not fixed here)
+
+- `lower_variable_declarator` never checks an initializer's own `Kind`
+  against an *explicitly* declared local-variable type at all (only
+  `var`-inferred declarations get a kind at all, taken from the
+  initializer) — confirmed directly: `int y = "hello";` currently
+  compiles with **zero** error. Not fixed in this PR: a correct fix
+  needs to first work out Java's own implicit-numeric-widening lattice
+  (`double d = 5;` is legal Java) before it can distinguish "legitimate
+  widening" from "genuinely wrong kind" — a separately-scoped
+  investigation, not a one-line equality check.
+
+## [0.17.0] - 2026-08-26
+
+### Added
+
+- Task #69: wires this frontend's own `switch`/`case`/`default` source
+  syntax to the core-IR primitive [SIR30](../../../specs/SIR30-switch-statement.md)
+  landed (task #51, `semantic-ir` v0.28.0/v0.28.1) — the gap the JV02
+  spec's own "Implementation progress" note tracked as task #51 since
+  M2a. `discriminant` must lower to `Kind::Int` or `Kind::Str` (this
+  frontend has no separate `char`/enum `Kind` yet — see [`Kind`]'s own
+  doc comment); each `case` label's value must lower to the same `Kind`.
+- New `Lowerer::lower_switch_statement`/`lower_switch_block`/
+  `switch_label_case_constants` in `lower.rs`. Handles the real Java-21-
+  grammar shape (confirmed by dumping the parsed tree directly, not
+  assumed from the spec text): a `case` label's value is wrapped in a
+  `case_constant` node, not a bare `expression` child; Java 14+'s
+  comma-separated `case 1, 2:` (several `case_constant`s under one
+  `switch_label`) and the classic `case 1: case 2:` multi-label idiom are
+  flattened into the same ordered "atom" sequence and lowered
+  identically — an empty-bodied `SwitchCase` naturally falls through into
+  the one carrying the real body (see `SwitchCase`'s own doc comment).
+  `default` is only accepted as the last atom of the last group — a
+  non-last `default` is a clean, disclosed rejection (SIR30's own scope
+  boundary), which also rejects a duplicate `default` for free (a second
+  one necessarily makes the first non-last).
+- Cleanly rejects Java 21's own pattern-matching switch surface this
+  frontend does not model: a `case null`/`case null, default` label, and
+  a `case Type t`/`case Type(...)` pattern label (record/type
+  deconstruction, JEP 440/441) — both distinguishable from the shapes
+  this frontend *does* support (checked directly against the real parsed
+  tree structure), and both rejected rather than silently mis-lowered as
+  a plain `default`.
+- New `Lowerer::break_depth: usize`, alongside the existing `loop_depth`:
+  a `switch` is a valid `break` target the same way a loop is, but
+  (unlike a loop) never a valid `continue` target — mirrors the shared
+  `semantic-ir` validator's own `LoopKind::Switch` split via two
+  independent depth counters instead of a typed stack (`break_depth`
+  increments for every loop *and* every switch; `loop_depth` only for an
+  actual loop). Saved/restored in lockstep with `loop_depth` at both
+  existing statement-flow boundaries (a lambda body, a method body).
+- The whole switch body — every case plus `default` — shares ONE flat
+  local-env scope (`push_scope`/`pop_scope` bracket the entire switch,
+  not each case), matching real `javac`'s own well-known cross-case
+  scoping rule and the shared validator's identical requirement.
+
+### Fixed (in `semantic-ir`, discovered while implementing this task)
+
+- `semantic-ir` 0.28.0 added `pub struct SwitchCase` but never re-exported
+  it from the crate root — this frontend's own `use semantic_ir::
+  SwitchCase` failed to compile until `semantic-ir` 0.28.1 fixed the
+  re-export (see that crate's own CHANGELOG entry).
+
 ## [0.16.0] - 2026-08-26
 
 ### Added

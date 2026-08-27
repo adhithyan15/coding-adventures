@@ -1,0 +1,11 @@
+{
+  "id": "ES-PATH-031",
+  "spine_node": "SPINE-SAY-WHAT-I-DO",
+  "lessons": [
+    "ES-C34-pensar",
+    "ES-C34-entender"
+  ],
+  "before": [],
+  "inline": [],
+  "after": []
+}

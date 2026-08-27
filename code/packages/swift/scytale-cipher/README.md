@@ -2,6 +2,10 @@
 
 Ancient Spartan transposition cipher implementation in Swift.
 
+This package follows [CR02](../../../specs/CR02-scytale-cipher.md). Grid cells are Unicode scalar values rather than grapheme clusters, uneven ciphertext columns are reconstructed explicitly, and only trailing U+0020 padding is removed. `bruteForce` throws before allocating candidate output above 4096 scalars. Production code is deterministic pure computation with no OS capabilities.
+
+The native test suite includes a generated, dependency-free consumer for all 18 normative Scytale cases in `classical-ciphers-v1`; `generate_scytale_fixture_consumers.py --check` prevents fixture or language-roster drift.
+
 ## Usage
 
 ```swift
@@ -13,7 +17,7 @@ let ct = try encrypt("HELLO WORLD", key: 3)
 let pt = try decrypt(ct, key: 3)
 // => "HELLO WORLD"
 
-let results = bruteForce(ct)
+let results = try bruteForce(ct)
 // => [BruteForceResult(key: 2, text: "..."), BruteForceResult(key: 3, text: "HELLO WORLD"), ...]
 ```
 

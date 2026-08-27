@@ -185,6 +185,91 @@ body {
   font-size: 12px;
   color: #ccc;
 }
+
+/* ── Native-backend drop panel (UI19-mosaicbook.md §13) ───────────────
+ * Shown instead of the iframe for backends with no render daemon yet
+ * (xaml/swiftui/qt/flutter/compose) — see NATIVE_BACKENDS below. There is
+ * nothing to embed, only the degradation analysis to display. */
+#drop-panel {
+  flex: 1;
+  overflow-y: auto;
+  padding: 20px 24px;
+  background: #1a1a1a;
+  color: #ddd;
+  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+}
+
+#drop-panel .drop-loading,
+#drop-panel .drop-error,
+#drop-panel .drop-unavailable {
+  font-size: 13px;
+  color: #888;
+}
+
+#drop-panel .drop-error { color: #ff8080; }
+
+#drop-panel .drop-summary {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  margin-bottom: 16px;
+  font-size: 13px;
+}
+
+#drop-panel .drop-badge {
+  padding: 2px 8px;
+  border-radius: 4px;
+  font-size: 11px;
+  font-weight: 700;
+  letter-spacing: 0.03em;
+}
+
+#drop-panel .drop-badge.complete { background: #14532d; color: #86efac; }
+#drop-panel .drop-badge.incomplete { background: #450a0a; color: #fca5a5; }
+
+#drop-panel .drop-section-title {
+  font-size: 11px;
+  font-weight: 600;
+  color: #999;
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+  margin: 16px 0 8px;
+}
+
+#drop-panel .drop-empty {
+  font-size: 12px;
+  color: #555;
+  font-style: italic;
+}
+
+#drop-panel .drop-entry {
+  background: #242424;
+  border: 1px solid #333;
+  border-left: 3px solid #d97706;
+  border-radius: 4px;
+  padding: 10px 12px;
+  margin-bottom: 8px;
+}
+
+#drop-panel .drop-entry-code {
+  font-family: 'SF Mono', Consolas, monospace;
+  font-size: 12px;
+  color: #fbbf24;
+}
+
+#drop-panel .drop-entry-primitive {
+  font-family: 'SF Mono', Consolas, monospace;
+  font-size: 11px;
+  color: #999;
+  margin-left: 6px;
+}
+
+#drop-panel .drop-entry-reason {
+  font-size: 12px;
+  color: #bbb;
+  margin-top: 4px;
+  line-height: 1.4;
+}
 </style>
 </head>
 <body>
@@ -204,6 +289,11 @@ body {
       <button class="backend-tab active" data-backend="html">HTML</button>
       <button class="backend-tab" data-backend="webcomponent">Web Component</button>
       <button class="backend-tab" data-backend="react">React</button>
+      <button class="backend-tab" data-backend="xaml" data-native="true">XAML</button>
+      <button class="backend-tab" data-backend="swiftui" data-native="true">SwiftUI</button>
+      <button class="backend-tab" data-backend="qt" data-native="true">Qt</button>
+      <button class="backend-tab" data-backend="flutter" data-native="true">Flutter</button>
+      <button class="backend-tab" data-backend="compose" data-native="true">Compose</button>
     </div>
     <span id="status">Select a story to preview</span>
     <div id="sse-indicator" title="Live reload: disconnected"></div>
@@ -218,6 +308,11 @@ body {
     sandbox="allow-scripts allow-same-origin allow-forms"
     style="display:none"
   ></iframe>
+
+  <!-- Shown instead of the iframe for native backends (xaml/swiftui/qt/
+       flutter/compose) — none has a render daemon yet, so there is nothing
+       to embed. Populated by loadDegradations(); see UI19-mosaicbook.md §13. -->
+  <div id="drop-panel" style="display:none"></div>
 
   <div id="no-selection">
     <span>No story selected</span>
@@ -238,6 +333,12 @@ body {
 let currentComponent = null;
 let currentStory = null;
 let currentBackend = 'html';
+
+// Backends with no render daemon (UI19-mosaicbook.md §13) — selecting one
+// shows the degradation "what got dropped" panel instead of the iframe.
+// Kept in sync with server.go's nativeBackends map and the
+// data-native="true" tabs above.
+const NATIVE_BACKENDS = ['xaml', 'swiftui', 'qt', 'flutter', 'compose'];
 
 // ── Story loading ─────────────────────────────────────────────────────────
 
@@ -328,25 +429,120 @@ function selectStory(comp, story, el) {
 // ── Preview loading ───────────────────────────────────────────────────────
 
 /**
- * loadPreview updates the iframe src to point at the compiled preview URL.
- * The server compiles the .mosaic file on demand and returns a full HTML page.
+ * loadPreview shows either the compiled-output iframe (Tier 1 backends) or
+ * the degradation drop panel (native backends — see NATIVE_BACKENDS). The
+ * server compiles the component on demand for either path.
  */
 function loadPreview() {
   if (!currentComponent || !currentStory) return;
 
-  // Encode each path segment independently so slashes in component IDs are
-  // preserved as path separators (not double-encoded).
-  const idParts = currentComponent.id.split('/').map(encodeURIComponent).join('/');
-  const storyPart = encodeURIComponent(currentStory.name);
-  const url = `/preview/${currentBackend}/${idParts}/${storyPart}`;
-
   const frame = document.getElementById('preview-frame');
-  frame.style.display = '';
+  const dropPanel = document.getElementById('drop-panel');
   document.getElementById('no-selection').style.display = 'none';
-  frame.src = url;
+
+  if (NATIVE_BACKENDS.includes(currentBackend)) {
+    // No render daemon exists yet for any native backend — nothing to embed.
+    frame.style.display = 'none';
+    frame.removeAttribute('src');
+    dropPanel.style.display = '';
+    loadDegradations();
+  } else {
+    dropPanel.style.display = 'none';
+    frame.style.display = '';
+
+    // Encode each path segment independently so slashes in component IDs
+    // are preserved as path separators (not double-encoded).
+    const idParts = currentComponent.id.split('/').map(encodeURIComponent).join('/');
+    const storyPart = encodeURIComponent(currentStory.name);
+    frame.src = `/preview/${currentBackend}/${idParts}/${storyPart}`;
+  }
 
   document.getElementById('status').textContent =
     `${currentBackend}  ›  ${currentComponent.title}  ›  ${currentStory.name}`;
+}
+
+// ── Native-backend drop panel ────────────────────────────────────────────
+
+/**
+ * loadDegradations fetches GET /api/degradations/{backend}/{component_id}
+ * for the current component + native backend and renders the result.
+ * Not story-scoped: what a backend's lowering drops depends on the
+ * component's definition, not which fixture values a story supplies.
+ */
+async function loadDegradations() {
+  const dropPanel = document.getElementById('drop-panel');
+  dropPanel.textContent = '';
+  dropPanel.appendChild(textEl('div', 'drop-loading', 'Analyzing…'));
+
+  const idParts = currentComponent.id.split('/').map(encodeURIComponent).join('/');
+  const url = `/api/degradations/${currentBackend}/${idParts}`;
+
+  let data;
+  try {
+    const res = await fetch(url);
+    data = await res.json();
+    if (!res.ok) throw new Error(data.error || `HTTP ${res.status}`);
+  } catch (err) {
+    dropPanel.textContent = '';
+    dropPanel.appendChild(textEl('div', 'drop-error', `Failed to analyze: ${err.message}`));
+    return;
+  }
+  renderDropPanel(dropPanel, data);
+}
+
+/**
+ * renderDropPanel builds the drop-panel DOM from a DegradationsResponse.
+ * Every dynamic string goes through textContent (via textEl), never
+ * innerHTML, so nothing in a component/reason/code string can inject markup.
+ */
+function renderDropPanel(dropPanel, data) {
+  dropPanel.textContent = '';
+
+  if (!data.available) {
+    dropPanel.appendChild(textEl('div', 'drop-unavailable', data.reason || 'Not available.'));
+    return;
+  }
+
+  const summary = document.createElement('div');
+  summary.className = 'drop-summary';
+  const badge = textEl('span', 'drop-badge ' + (data.nativeComplete ? 'complete' : 'incomplete'),
+    data.nativeComplete ? 'NATIVE COMPLETE' : 'HAS DROPS');
+  summary.appendChild(badge);
+  summary.appendChild(textEl('span', '', `${data.package || ''} · ${data.backend || ''} · profile: ${data.profile || ''}`));
+  dropPanel.appendChild(summary);
+
+  appendDropSection(dropPanel, 'Capability degradations', data.degradations || []);
+  appendDropSection(dropPanel, 'Style degradations', data.styleDegradations || []);
+}
+
+function appendDropSection(dropPanel, title, entries) {
+  dropPanel.appendChild(textEl('div', 'drop-section-title', title));
+  if (entries.length === 0) {
+    dropPanel.appendChild(textEl('div', 'drop-empty', 'None.'));
+    return;
+  }
+  entries.forEach(e => {
+    const entry = document.createElement('div');
+    entry.className = 'drop-entry';
+
+    const codeLine = document.createElement('div');
+    codeLine.appendChild(textEl('span', 'drop-entry-code', e.code));
+    if (e.primitive) codeLine.appendChild(textEl('span', 'drop-entry-primitive', e.primitive));
+    entry.appendChild(codeLine);
+
+    if (e.reason) entry.appendChild(textEl('div', 'drop-entry-reason', e.reason));
+
+    dropPanel.appendChild(entry);
+  });
+}
+
+/** textEl creates an element with the given tag/class, setting text via
+ * textContent so the value can never be interpreted as markup. */
+function textEl(tag, className, text) {
+  const el = document.createElement(tag);
+  if (className) el.className = className;
+  if (text !== undefined) el.textContent = text;
+  return el;
 }
 
 // ── Backend tab switching ─────────────────────────────────────────────────
@@ -401,8 +597,10 @@ document.addEventListener('keydown', e => {
   // Ignore shortcuts when focus is inside the iframe (it has its own document).
   if (document.activeElement && document.activeElement.tagName === 'IFRAME') return;
 
-  // 1-3: switch backend by index
-  if (e.key >= '1' && e.key <= '3') {
+  // 1-9: switch backend by index (bounded by however many tabs actually
+  // exist — see backend-tabs above; currently 8: html/webcomponent/react
+  // plus xaml/swiftui/qt/flutter/compose).
+  if (e.key >= '1' && e.key <= '9') {
     const tabs = document.querySelectorAll('.backend-tab:not(:disabled)');
     const idx = parseInt(e.key, 10) - 1;
     if (tabs[idx]) tabs[idx].click();

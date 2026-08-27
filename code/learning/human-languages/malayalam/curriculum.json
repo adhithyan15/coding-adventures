@@ -389,8 +389,26 @@
       "spine_node": "SPINE-SAY-WHAT-I-DO",
       "lessons": [
         "ML-C32-undu",
-        "ML-C32-pokuka",
-        "ML-C32-varuka",
+        "ML-C32-pokuka"
+      ],
+      "before": [],
+      "inline": [],
+      "after": []
+    },
+    {
+      "id": "ML-PATH-026-B",
+      "spine_node": "SPINE-NAME-EVERYDAY-ACTIONS",
+      "lessons": [
+        "ML-C32-varuka"
+      ],
+      "before": [],
+      "inline": [],
+      "after": []
+    },
+    {
+      "id": "ML-PATH-026-C",
+      "spine_node": "SPINE-SAY-WHAT-I-DO",
+      "lessons": [
         "ML-C32-tinnuka",
         "ML-C32-kaanuka",
         "ML-C32-ariyuka"
@@ -404,9 +422,7 @@
       "spine_node": "SPINE-SAY-WHAT-I-DO",
       "lessons": [
         "ML-C33-cintikkuka",
-        "ML-C33-manassilaakkuka",
-        "ML-C33-vaayikkuka",
-        "ML-C33-ezhutuka"
+        "ML-C33-manassilaakkuka"
       ],
       "before": [],
       "inline": [
@@ -415,17 +431,63 @@
       "after": []
     },
     {
+      "id": "ML-PATH-027-B",
+      "spine_node": "SPINE-NAME-EVERYDAY-ACTIONS",
+      "lessons": [
+        "ML-C33-vaayikkuka",
+        "ML-C33-ezhutuka"
+      ],
+      "before": [],
+      "inline": [
+        "ML-EXT-027-MIND-VERBS-B"
+      ],
+      "after": []
+    },
+    {
       "id": "ML-PATH-028",
       "spine_node": "SPINE-SAY-WHAT-I-DO",
       "lessons": [
-        "ML-C34-edukkuka",
-        "ML-C34-codikkuka",
-        "ML-C34-sahaayikkuka",
-        "ML-C34-ishtam"
+        "ML-C34-edukkuka"
       ],
       "before": [],
       "inline": [
         "ML-EXT-028-DOING-VERBS"
+      ],
+      "after": []
+    },
+    {
+      "id": "ML-PATH-028-B",
+      "spine_node": "SPINE-NAME-EVERYDAY-ACTIONS",
+      "lessons": [
+        "ML-C34-codikkuka"
+      ],
+      "before": [],
+      "inline": [
+        "ML-EXT-028-DOING-VERBS-B"
+      ],
+      "after": []
+    },
+    {
+      "id": "ML-PATH-028-C",
+      "spine_node": "SPINE-SAY-WHAT-I-DO",
+      "lessons": [
+        "ML-C34-sahaayikkuka"
+      ],
+      "before": [],
+      "inline": [
+        "ML-EXT-028-DOING-VERBS-C"
+      ],
+      "after": []
+    },
+    {
+      "id": "ML-PATH-028-C-B",
+      "spine_node": "SPINE-SAY-WHAT-I-LIKE",
+      "lessons": [
+        "ML-C34-ishtam"
+      ],
+      "before": [],
+      "inline": [
+        "ML-EXT-028-DOING-VERBS-D"
       ],
       "after": []
     },
@@ -1076,48 +1138,88 @@
       "relocates": {}
     },
     "SPINE-NAME-EVERYDAY-ACTIONS": {
-      "segments": [],
+      "segments": [
+        "ML-PATH-026-B",
+        "ML-PATH-027-B",
+        "ML-PATH-028-B"
+      ],
       "omits": [
         "VERB-DRINK",
         "VERB-GIVE",
-        "VERB-PUT"
+        "VERB-PUT",
+        "VERB-DO-MAKE",
+        "VERB-BUY",
+        "VERB-OPEN",
+        "VERB-CLOSE",
+        "VERB-STAND",
+        "VERB-WAIT",
+        "VERB-BRING",
+        "VERB-WALK"
+      ],
+      "relocates": {}
+    },
+    "SPINE-NAME-EVERYDAY-THINGS": {
+      "segments": [],
+      "omits": [
+        "LODGING-ROOM"
+      ],
+      "relocates": {}
+    },
+    "SPINE-SAY-WHAT-I-HAVE-AND-CAN-DO": {
+      "segments": [],
+      "omits": [
+        "VERB-HAVE",
+        "VERB-CAN"
+      ],
+      "relocates": {}
+    },
+    "SPINE-SAY-WHAT-I-LIKE": {
+      "segments": [
+        "ML-PATH-028-C-B"
+      ],
+      "omits": [],
+      "relocates": {}
+    },
+    "SPINE-SAY-WHY": {
+      "segments": [],
+      "omits": [
+        "CONNECTIVE-BECAUSE"
+      ],
+      "relocates": {}
+    },
+    "SPINE-SAY-WHAT-I-WANT": {
+      "segments": [],
+      "omits": [
+        "VERB-WANT"
       ],
       "relocates": {}
     },
     "SPINE-SAY-WHAT-I-DO": {
       "segments": [
         "ML-PATH-026",
+        "ML-PATH-026-C",
         "ML-PATH-027",
         "ML-PATH-028",
+        "ML-PATH-028-C",
         "ML-PATH-43-VERBS",
         "ML-PATH-44-SEESAY"
       ],
       "omits": [
         "VERB-INFINITIVE",
         "VERB-PRESENT-HABITUAL",
-        "VERB-HAVE",
-        "VERB-DO-MAKE",
         "VERB-SAY",
         "VERB-SPEAK",
         "VERB-HEAR",
         "VERB-LEARN",
-        "VERB-CAN",
-        "VERB-BRING",
         "VERB-GET",
         "VERB-SLEEP",
         "VERB-LIVE",
         "VERB-WORK",
         "VERB-PLAY",
-        "VERB-WALK",
         "VERB-RUN",
         "VERB-SIT",
-        "VERB-STAND",
-        "VERB-WAIT",
         "VERB-ANSWER",
-        "VERB-MEET",
-        "VERB-BUY",
-        "VERB-OPEN",
-        "VERB-CLOSE"
+        "VERB-MEET"
       ],
       "relocates": {}
     },
@@ -1126,13 +1228,6 @@
       "omits": [
         "VERB-NEGATE",
         "QUESTION-POLAR"
-      ],
-      "relocates": {}
-    },
-    "SPINE-SAY-WHAT-I-WANT": {
-      "segments": [],
-      "omits": [
-        "VERB-WANT"
       ],
       "relocates": {}
     },
@@ -1155,7 +1250,6 @@
       "omits": [
         "NARRATIVE-SEQUENCE",
         "CONNECTIVE-THEN",
-        "CONNECTIVE-BECAUSE",
         "ASPECT-ONGOING-PAST"
       ],
       "relocates": {}
@@ -1175,7 +1269,6 @@
       "omits": [
         "DIRECTION-ASK",
         "TRANSPORT-TICKET",
-        "LODGING-ROOM",
         "PROBLEM-REPORT"
       ],
       "relocates": {}
@@ -1589,7 +1682,17 @@
       "prerequisites": [],
       "lessons": [
         "ML-C33-cintikkuka",
-        "ML-C33-manassilaakkuka",
+        "ML-C33-manassilaakkuka"
+      ]
+    },
+    {
+      "id": "ML-EXT-027-MIND-VERBS-B",
+      "stage": "A2",
+      "kind": "required",
+      "category": "language-specific",
+      "canDo": "I can say that I think, understand, read and write in Malayalam, and tell which of those four Malayalam treats as something that arrives at me rather than something I do.",
+      "prerequisites": [],
+      "lessons": [
         "ML-C33-vaayikkuka",
         "ML-C33-ezhutuka"
       ]
@@ -1602,9 +1705,39 @@
       "canDo": "I can say that I take, ask, help and like in Malayalam, and tell a native geminate stem apart from the Sanskrit verb-maker that looks just like it.",
       "prerequisites": [],
       "lessons": [
-        "ML-C34-edukkuka",
-        "ML-C34-codikkuka",
-        "ML-C34-sahaayikkuka",
+        "ML-C34-edukkuka"
+      ]
+    },
+    {
+      "id": "ML-EXT-028-DOING-VERBS-B",
+      "stage": "A2",
+      "kind": "required",
+      "category": "language-specific",
+      "canDo": "I can say that I take, ask, help and like in Malayalam, and tell a native geminate stem apart from the Sanskrit verb-maker that looks just like it.",
+      "prerequisites": [],
+      "lessons": [
+        "ML-C34-codikkuka"
+      ]
+    },
+    {
+      "id": "ML-EXT-028-DOING-VERBS-C",
+      "stage": "A2",
+      "kind": "required",
+      "category": "language-specific",
+      "canDo": "I can say that I take, ask, help and like in Malayalam, and tell a native geminate stem apart from the Sanskrit verb-maker that looks just like it.",
+      "prerequisites": [],
+      "lessons": [
+        "ML-C34-sahaayikkuka"
+      ]
+    },
+    {
+      "id": "ML-EXT-028-DOING-VERBS-D",
+      "stage": "A2",
+      "kind": "required",
+      "category": "language-specific",
+      "canDo": "I can say that I take, ask, help and like in Malayalam, and tell a native geminate stem apart from the Sanskrit verb-maker that looks just like it.",
+      "prerequisites": [],
+      "lessons": [
         "ML-C34-ishtam"
       ]
     },

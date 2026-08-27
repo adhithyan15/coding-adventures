@@ -1,0 +1,11 @@
+{
+  "id": "GU-PATH-011-B",
+  "spine_node": "SPINE-NAME-EVERYDAY-ACTIONS",
+  "lessons": [
+    "GU-C08-vanchvun",
+    "GU-C08-lakhvun"
+  ],
+  "before": [],
+  "inline": [],
+  "after": []
+}

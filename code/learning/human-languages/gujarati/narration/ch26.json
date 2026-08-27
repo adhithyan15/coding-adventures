@@ -4,7 +4,7 @@
   "chapter": 26,
   "title": "City, School, and Road",
   "drivablePrefix": 1,
-  "sourceHash": "fnv1a64:e9780e192966fc9a",
+  "sourceHash": "fnv1a64:6e4d80496bca2294",
   "lessons": [
     {
       "id": "GU-C22-hear-shahar",
@@ -233,7 +233,7 @@
       "modalityReasons": [
         "writing-type"
       ],
-      "sourceHash": "fnv1a64:8ff8d76830a759f4",
+      "sourceHash": "fnv1a64:c45c2473dc503b57",
       "notice": {
         "modality": "pen",
         "needs": [
@@ -250,7 +250,24 @@
           "segments": [
             {
               "kind": "speech",
-              "text": "Say shāḷā from school, then look: શાળા — shāḷā — school."
+              "text": "Before looking below, write city in Gujarati from memory. Now check only that answer: શહેર (shahar). Then say shāḷā from school, and look: શાળા — shāḷā — school."
+            },
+            {
+              "kind": "activity",
+              "scored": true,
+              "id": "GU-C22-shaalaa-city-r1",
+              "prompt": "Cover every model. Write city in Gujarati.",
+              "assesses": [
+                "GU-SCRIPT-SHAHAR-01"
+              ],
+              "responseSeconds": 15,
+              "acceptedResponses": [
+                "શહેર"
+              ],
+              "feedback": {
+                "correct": "શહેર is city; its script has returned without a model.",
+                "incorrect": "Check શહેર once, cover it, and write city again."
+              }
             }
           ]
         },

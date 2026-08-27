@@ -1,7 +1,7 @@
 ---
 schema_version: 2
 id: ES-C12-hacer
-spine_node: SPINE-SAY-WHAT-I-DO
+spine_node: SPINE-NAME-EVERYDAY-ACTIONS
 sequence: 1110
 chapter: 70
 type: word

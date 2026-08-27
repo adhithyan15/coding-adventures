@@ -4,7 +4,7 @@
   "chapter": 28,
   "title": "Going and Coming",
   "drivablePrefix": 2,
-  "sourceHash": "fnv1a64:c7782c0d45492fde",
+  "sourceHash": "fnv1a64:fa1d86f2b8989532",
   "lessons": [
     {
       "id": "AR-C28-dhahaba",
@@ -176,7 +176,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:9d60f205ab777646",
+      "sourceHash": "fnv1a64:eb37703b0c5a237f",
       "notice": null,
       "blocks": [
         {

@@ -250,7 +250,7 @@
     {
       "language": "arabic",
       "chapter": 28,
-      "sourceHash": "fnv1a64:6cf4b40a23477ef9",
+      "sourceHash": "fnv1a64:d82bfc12d887a536",
       "lessonIds": [
         "AR-C28-dhahaba",
         "AR-C28-jaa"
@@ -280,7 +280,7 @@
     {
       "language": "arabic",
       "chapter": 31,
-      "sourceHash": "fnv1a64:bd0511769c84fed9",
+      "sourceHash": "fnv1a64:e6bdf5ae63c202b4",
       "lessonIds": [
         "AR-C31-fahima",
         "AR-C31-qaraa",
@@ -292,7 +292,7 @@
     {
       "language": "arabic",
       "chapter": 32,
-      "sourceHash": "fnv1a64:04746d0625479d19",
+      "sourceHash": "fnv1a64:913e62eb1f5a42df",
       "lessonIds": [
         "AR-C32-akhadha",
         "AR-C32-fakkara",

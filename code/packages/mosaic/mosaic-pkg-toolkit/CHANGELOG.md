@@ -1,5 +1,53 @@
 # Changelog — mosaic-pkg-toolkit
 
+## [Unreleased] — clarify why the radio-group allowlist entries survive #13007
+
+`mosaic-emit-compose`/`-flutter`/`-qt` now apply real native mutual-
+exclusion wiring for a literal `HostRadio.group` shared by 2+ resolvable
+siblings (#13007) — but the toolkit's own `Radio` component
+(`Radio.mll`) is a 1:1 `HostRadio` wrapper with no sibling of its own,
+so it never qualifies and the `property.radio-group-ignored` allowlist
+entries for Compose/Flutter/Qt/SwiftUI in
+`tests/native_complete_gate.rs` all stay — updated the comment above
+them to explain why, so a future reader doesn't mistake this for an
+oversight. No test behavior change; re-verified the gate still passes
+with no drift in either direction.
+
+## [Unreleased] — remove the 3 fixed checkbox-indeterminate allowlist entries (#13006)
+
+`mosaic-emit-compose`/`-flutter`/`-swiftui` now lower `Checkbox`'s
+authored `indeterminate: slot: indeterminate` to real native tri-state
+controls (#13006), so the `(Backend::SwiftUI | Flutter | Compose,
+"Checkbox", "property.checkbox-indeterminate-ignored")` entries in
+`tests/native_complete_gate.rs`'s `ALLOWED_DEGRADATIONS` are stale.
+Removed all three; the gate now genuinely asserts the toolkit is clean
+on these backends for `Checkbox`, not just tolerating a known gap.
+Updated the module doc comment's stale pre-existing-gap count (9 → 5;
+it had already drifted from 8 after #13010 removed the Flutter Modal
+entry without updating the prose).
+
+## [Unreleased] — remove the fixed Flutter Modal allowlist entry (#13010)
+
+`mosaic-emit-flutter` now implements a real native dialog for the
+default `modal: true` shape (#13010), and the toolkit's own `Modal`
+component always authors `modal: true` — so the
+`(Backend::Flutter, "Modal", "interaction.dialog-placeholder")` entry
+in `tests/native_complete_gate.rs`'s `ALLOWED_DEGRADATIONS` is stale.
+Removed it; the gate now genuinely asserts the toolkit is clean on
+Flutter for `Modal`, not just tolerating a known gap.
+
+## [Unreleased] — confirm XAML Modal's open-host-required allowlist entry is permanent (#13008)
+
+Updated the `#13008` comment in `tests/native_complete_gate.rs`'s
+`ALLOWED_DEGRADATIONS` table from "under investigation" to a confirmed,
+permanent finding: WinUI3's `ContentDialog` has no bindable `IsOpen`
+the way `Popup`/`Flyout`/`TeachingTip` do, so XAML's `HostDialog` genuinely
+cannot avoid requiring host code-behind to show/hide, unlike
+SwiftUI/Qt/Compose's declarative dialog lowerings. No test behavior
+change — the allowlist entry stays, now documented as permanent rather
+than a to-do. See `mosaic-emit-xaml`'s changelog for the full
+investigation. Closes #13008.
+
 ## [Unreleased] — per-atom native-complete gate (#12024)
 
 - New `tests/native_complete_gate.rs`: for each of the five native backends

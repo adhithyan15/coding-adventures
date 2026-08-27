@@ -1,0 +1,19 @@
+{
+  "chapter": 389,
+  "title": "Knowing How --- the Verb That Once Meant Taste",
+  "label": "ch:saber",
+  "canDo": "I can say what I know how to do with sé plus an infinitive, ask someone else with sabes, and tell that apart from what poder says.",
+  "spineNodes": [
+    "SPINE-SAY-WHAT-I-HAVE-AND-CAN-DO"
+  ],
+  "payoff": {
+    "lesson": "ES-C389-saber",
+    "kind": "production",
+    "summary": "Complete ES-C389-saber: say one thing you know how to do with sé plus an infinitive, ask a partner the same with sabes, and say one thing you know how to do but cannot do today.",
+    "assesses": [
+      "ES-LEX-SABER",
+      "ES-GRAMMAR-SABER-INFINITIVO"
+    ],
+    "note": "The payoff retrieves both Chapter-389 atoms and deliberately leaves the plural persons, the preterite supo, and saber's noun sabor for later lessons."
+  }
+}

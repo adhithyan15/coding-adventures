@@ -684,6 +684,15 @@ impl Scan {
             "a break/continue statement".to_string(),
             span.clone(),
         )),
+        // Switch statement (task #51): `Feature::Switch` — NOT in this
+        // backend's `ACCEPTED_FEATURES`. Same reasoning as the SIR29 and
+        // loop-control arms above: reject cleanly in the scan rather
+        // than risk a hand-built module reaching the emitter's
+        // `unreachable!`.
+        Stmt::Switch { span, .. } => Some(ScanHit::Unsupported(
+            "a switch statement".to_string(),
+            span.clone(),
+        )),
     }
     }
 }

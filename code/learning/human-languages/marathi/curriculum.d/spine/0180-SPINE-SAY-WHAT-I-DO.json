@@ -1,0 +1,28 @@
+{
+  "segments": [
+    "MR-PATH-019",
+    "MR-PATH-012",
+    "MR-PATH-012-C",
+    "MR-PATH-013",
+    "MR-PATH-014",
+    "MR-PATH-014-C"
+  ],
+  "omits": [
+    "VERB-INFINITIVE",
+    "VERB-PRESENT-HABITUAL",
+    "VERB-SAY",
+    "VERB-SPEAK",
+    "VERB-HEAR",
+    "VERB-LEARN",
+    "VERB-GET",
+    "VERB-SLEEP",
+    "VERB-LIVE",
+    "VERB-WORK",
+    "VERB-PLAY",
+    "VERB-RUN",
+    "VERB-SIT",
+    "VERB-ANSWER",
+    "VERB-MEET"
+  ],
+  "relocates": {}
+}

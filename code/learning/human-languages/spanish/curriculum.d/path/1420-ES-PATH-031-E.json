@@ -1,0 +1,13 @@
+{
+  "id": "ES-PATH-031-E",
+  "spine_node": "SPINE-SAY-WHAT-I-DO",
+  "lessons": [
+    "ES-C35-ayudar",
+    "ES-C35-repaso-tres"
+  ],
+  "before": [],
+  "inline": [
+    "ES-EXT-031-CONSOLIDATION-GUSTAR"
+  ],
+  "after": []
+}

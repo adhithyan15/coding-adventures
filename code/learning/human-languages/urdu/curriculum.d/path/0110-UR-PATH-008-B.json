@@ -1,0 +1,13 @@
+{
+  "id": "UR-PATH-008-B",
+  "spine_node": "SPINE-NAME-EVERYDAY-ACTIONS",
+  "lessons": [
+    "UR-C07-parhna",
+    "UR-C07-likhna"
+  ],
+  "before": [],
+  "inline": [
+    "UR-EXT-018-MIND-VERBS-B"
+  ],
+  "after": []
+}

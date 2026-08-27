@@ -5,6 +5,125 @@ this file.
 
 ## [Unreleased]
 
+### Added - native radio-group mutual exclusion (#13007)
+
+`emit_host_radio`'s `group:` prop only fed a per-radio-independent
+`groupValue` that defaulted to `null` for a literal string group value
+(discarding it entirely) — real usage's radios never actually rendered
+as selected, let alone exclusively. A literal `group: "..."` value
+shared by 2+ `HostRadio`s with a resolvable `checked:` prop anywhere in
+the component (see `collect_radio_group_members`) now gets a
+synthesized shared `groupValue`: the SAME nested-ternary Dart
+expression (`cond1 ? val1 : (cond2 ? val2 : (... : null))`) emitted at
+every member's own call site. Flutter's `Radio<T>` computes its checked
+state as `value == groupValue`, so sharing one reactive expression
+across siblings gives real native mutual exclusion with zero
+restructuring of the widget tree — no ancestor wrapper needed, and
+`onChanged` is untouched (each radio still dispatches its own
+`onSelect` independently).
+
+Deliberately uses the classic `groupValue`/`onChanged` API rather than
+Flutter's newer `RadioGroup<T>` ancestor widget, which requires Flutter
+3.35+ (this repo's pinned floor is 3.32) — the classic API remains
+fully supported and achieves the identical exclusivity guarantee with
+no SDK bump.
+
+Threaded via a new `TableCtx.radio_group_members` field, computed once
+in `emit_widget_class` and inherited unchanged through every recursive
+call. A `slot:`-bound group, or a literal value with no qualifying
+peer, keeps the pre-#13007 behavior exactly (including its existing
+`groupValue: null`-always-unselected gap for those cases).
+
+New `pub fn radio_groups_with_native_semantics` lets
+`mosaic-package-artifact-builder`'s degradation analyzer stop reporting
+`property.radio-group-ignored` wherever this lowering actually applies.
+
+Verified against a real regenerated `mosaic-pkg-deck-options` project
+(the real multi-radio usage this targets): `flutter pub get` +
+`flutter analyze` — "No issues found!".
+
+### Added - native indeterminate checkbox state (#13006)
+
+`emit_host_checkbox`'s `indeterminate:` prop was accepted but ignored —
+the doc comment even named Flutter's own `Checkbox(tristate: true)`
+mode as the mechanism, but nothing in the function ever read the prop.
+When `indeterminate:` is authored as anything other than a literal
+`Keyword("false")`, the emitter now adds `tristate: true` and collapses
+`value:` to `{indeterminate} ? null : {checked}` (Flutter's own
+"`null` renders the dash" convention). No changes were needed to the
+`onChanged` wiring: `Checkbox.onChanged` is always `void
+Function(bool?)` even in two-state mode, and the existing
+`host_checkbox_event_args` already treats its `v` parameter as
+nullable (`v ?? false`).
+
+A `slot:`/expression-valued `indeterminate` can't be evaluated at
+compile time, so — mirroring XAML's `IsThreeState` treatment — its mere
+*presence* unconditionally enables `tristate: true`; the runtime value
+decides whether `null` (the mixed dash) actually renders.
+
+New `pub fn host_checkbox_has_native_semantics` lets
+`mosaic-package-artifact-builder`'s degradation analyzer stop reporting
+`property.checkbox-indeterminate-ignored` for Flutter wherever this
+lowering actually applies.
+
+Verified against a real regenerated `mosaic-pkg-toolkit` project:
+`flutter pub get` + `flutter analyze` — "No issues found!" — on the
+whole package, including the real `Checkbox.dart` this change touches.
+
+### Fixed - HostDialog lowers to a real native dialog, not a placeholder (#13010)
+
+`emit_host_dialog` unconditionally emitted `const SizedBox.shrink() /*
+TODO: HostDialog showDialog wiring */` — every Mosaic `Modal`/`HostDialog`
+on Flutter rendered nothing at all. Genuinely incomplete, not a
+documented platform limitation the way XAML's Modal gap is (#13008).
+
+Implemented the `modal: true` (default, and the only value the
+toolkit's own `Modal` component ever authors) case for real: a new
+shared `_MosaicDialogHost` `StatefulWidget` (vanilla Flutter, no new
+package dependency) bridges the declarative `open: bool` contract
+every backend shares to Flutter's imperative `showDialog`/`Navigator`
+API — `open` flipping false→true schedules `showDialog` on the next
+frame; flipping true→false while still showing (the host closed it via
+its own slot, not backdrop-tap) pops the route programmatically. Either
+dismissal path resolves `showDialog`'s `Future`, which is where
+`onClose` dispatches exactly once regardless of which side closed it.
+`title`, `dismiss-on-backdrop` (→ `barrierDismissible`), and children
+(→ `AlertDialog.content`, wrapped in a `Column` for multiple children)
+are all wired following the exact property table every other backend
+already implements.
+
+`modal: false` is NOT implemented and deliberately out of scope here:
+Flutter's `showDialog` is inherently modal (a full-screen route +
+barrier), with no vanilla-Flutter equivalent to SwiftUI's `.popover`/
+Qt's non-modal `Popup` short of a custom `Overlay`. That shape keeps
+the old placeholder and keeps reporting `interaction.dialog-placeholder`
+(now gated on a new `host_dialog_has_native_semantics` predicate,
+mirroring the existing `host_table_has_native_semantics` pattern, so
+`mosaic-package-artifact-builder` only reports the degradation for the
+still-unimplemented shape). Removed the now-stale
+`(Backend::Flutter, "Modal", "interaction.dialog-placeholder")`
+allowlist entry from `mosaic-pkg-toolkit`'s native-complete gate — the
+toolkit's `Modal` always authors `modal: true`, so it's genuinely clean
+on Flutter now.
+
+Verified with 7 new tests plus a real `flutter analyze` (0 issues) and
+`flutter pub get` against the actual generated project shell for all 23
+`mosaic-pkg-toolkit` components — not just Rust-level string assertions.
+
+### Security - validate literal HostLink.href's URI scheme (#13052)
+
+Follow-up to #12038 (the identical XAML gap). Added `has_disallowed_uri_scheme`
+(new `PipelineEmitError::UnsafeUriScheme` variant), checked when `external`
+is not `false` — the path a real `launchUrl` call will eventually use.
+Today that path is still a `/* TODO: launchUrl(Uri.parse(...)) */` comment,
+never real code, so there's no live navigation vulnerability yet; this is a
+preventative fix ahead of that landing rather than a response to a
+currently-reachable gap. A relative reference with no scheme at all (`"#"`,
+`"/about"`) is unaffected, and `external: false` (dispatch-only, never
+reaching `launchUrl`) is unaffected either way — matching every other
+backend's #13052 scoping. No runtime (slot-bound) guard was added, for the
+same reason: there is no real navigation call yet to guard.
+
 ### Fixed - MIL slot defaults
 
 Slots with authored MIL defaults now emit non-null Dart fields and matching

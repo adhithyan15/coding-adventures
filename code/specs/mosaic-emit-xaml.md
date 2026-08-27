@@ -194,6 +194,17 @@ need no attribute — `Stretch` is both WinUI's and flexbox's default.
 authored source needs them rather than guessing at the XAML shape
 unverified.
 
+`align: "center-vertical"` / `align: "center"` (not `align-items`) are
+also recognized here, mapped to the identical `center` treatment
+(issue #13164). `align` is not a real mosstyle property — per
+`UI15-mosstyle.md` §1/§11 alignment belongs in `.mll`, and mosstyle's
+grammar has no property whitelist to reject it — but it reached 30+
+real `.msl` declarations anyway (TaskApp, VentureChrome, Calendar,
+ProjectNav), always on a `Row`, always meaning exactly what
+`align-items: center` means. Recognizing the value that's actually
+authored fixes the real dropped-centering bug; the underlying
+mosstyle-grammar gap stays open, tracked in #13164.
+
 **Main-axis distribution (`justify-content`).** Only `space-between`
 is authored today. It inserts a `"*"`-sized spacer definition
 *between* each pair of children — `N` children get `N − 1` spacers, no
@@ -238,12 +249,83 @@ surfaces the results as `styleDegradations` in `mosaic-degradations.json`
 from `degradations` (non-gating) rather than folded in.
 
 **Exclusions**, so the report doesn't false-positive on properties §3.1
-already handles through a side channel: `align-items`/`justify-content`
-are excluded only when their value is one `FlexHints` actually consumes
-(`"center"` / `"space-between"` respectively — any other value IS
-reported, since nothing consumes it); `flex-grow` is excluded
-unconditionally (fully boolean-handled today, nothing recognisable as
-"lost").
+already handles through a side channel: `align-items`/`align`/
+`justify-content` are excluded only when their value is one `FlexHints`
+actually consumes (`"center"` for `align-items`/`align`, or
+`"center-vertical"` for `align`; `"space-between"` for
+`justify-content` — any other value IS reported, since nothing consumes
+it); `flex-grow` is excluded unconditionally (fully boolean-handled
+today, nothing recognisable as "lost"); `position`/`top`/`left` are
+excluded only when `position` is literally `"absolute"` (see §3.3) —
+`top`/`left` authored without it are meaningless in CSS too and stay
+reported as before.
+
+### 3.3 `position: "absolute"` → pinned `Margin` (issue #12028 item 4)
+
+WinUI's `Canvas.Left`/`Canvas.Top` attached properties only take effect
+when the immediate parent panel is a literal `<Canvas>` — but `Stack`
+already lowers to `<Grid>` (§3, a z-axis stacking panel: every child
+occupies the same cell unless given an explicit offset). Restructuring
+every enclosing container into `Canvas` just to place a handful of
+absolutely-positioned children would be a much larger change than the
+problem calls for, so `absolute_position_style_attrs` reproduces the
+same visual offset within the *existing* `Grid` instead:
+
+```
+position: "absolute"; top: 11; left: 4;
+    →  Margin="4,11,0,0" HorizontalAlignment="Left" VerticalAlignment="Top"
+```
+
+A missing `top`/`left` defaults to `0` (CSS's own default for an
+offset-less absolutely-positioned element). The three attrs are applied
+*after* the normal per-property loop, overriding whatever `Margin`/
+alignment another authored property might already have produced —
+`position: absolute` takes full control of placement in CSS too, so the
+two must never both apply. `position`/`top`/`left` are skipped in the
+main loop when this fires, so they never reach
+`dropped_style_properties` as a false-positive drop (§3.2).
+
+Real usage: `mosaic/programs/task-app`'s bridge-arc brand mark
+(`brand-post-left`/`brand-post-right`/`brand-arc`, three `Box`es
+absolutely positioned inside one `Stack`) and its inline status-dot
+icon compositions.
+
+### 3.4 `box-shadow` → `ThemeShadow` elevation (issue #12028 item 1)
+
+A non-`inset` `box-shadow` (any value) signals the author wants
+elevation. Unlike every other property translation in this file, this
+does not attempt to reproduce the authored numbers — WinUI's
+`ThemeShadow` is a fixed, system-composited shadow with no CSS-shaped
+blur/spread/color/opacity controls; Microsoft's own guidance
+([learn.microsoft.com/windows/apps/develop/ui/shadows](https://learn.microsoft.com/en-us/windows/apps/develop/ui/shadows))
+is a Z-*depth* value, not shadow parameters. `part_wants_theme_shadow`
+recognizes "this element should look raised" and every qualifying
+element gets the identical treatment: `Translation="0,0,4"` (4
+effective pixels — Microsoft's own "Cards: 4–8px" guidance) on the
+opening tag, plus a `<{Element}.Shadow><ThemeShadow/></{Element}.Shadow>`
+child forcing an open/close tag even for elements (`Button`) that
+would otherwise self-close. `Shadow`/`Translation` work on any
+`UIElement`, so this applies uniformly across `emit_container`'s three
+element kinds (`Border`/`Grid`/`StackPanel`) and `emit_host_button`'s
+`<Button>` — verified empirically with a real `dotnet build` (both
+`<Border.Shadow>` and `<Button.Shadow>` compile with zero errors under
+the pinned Windows App SDK; `Translation` is settable as a direct XAML
+attribute despite not being a `DependencyProperty` settable via
+`<Setter>`).
+
+A value containing `inset` (e.g. `"5px -5px 0 0 #f1ebe1 inset"`) is a
+fundamentally different technique — a shape cutout used to fake a
+crescent-moon icon or a status dot (issue #12028 item 3, a kernel
+drawing primitive) — and is deliberately excluded, staying a genuine
+drop with its own specific reason text.
+
+Real usage: `task-app`'s brand-mark icon and every "active" pill/
+segmented-switch button (`project-on`, `seg-tl-on`, `seg-board-on`,
+…) — 9 elements in the real app. TaskApp's authored shadows vary by
+opacity/color between light/dark themes and one "stronger" tier, none
+of which `ThemeShadow` can express anyway, so collapsing every
+non-inset value to one fixed treatment loses no distinction the
+platform could show in the first place.
 
 ## 4. Host* primitives
 
@@ -556,8 +638,40 @@ C# return type is always `string`; WinUI's compiled-binding implicit
 conversions (verified against a real `dotnet build`, not assumed) make
 this bind correctly even at non-`string` targets like
 `HostNumberInput.value`'s `double` and `Image.src`'s `ImageSource`.
-Issue #13040 tracks the remaining `find_prop_value` sites with the same
-bare-catch-all shape not yet made exhaustive.
+Issue #13040 closed the remaining ~15 sites with the same bare-catch-all
+shape, in two treatments:
+
+- **Full `Expr` support, same pattern as above** (13 sites): `disabled:`
+  → `IsEnabled` (negated) on `HostButton`/`HostCheckbox`/`HostRadio`/
+  `HostNumberInput`/`HostSlider`; `checked:` → `IsChecked` on
+  `HostCheckbox`/`HostRadio`; `read-only:` → `IsReadOnly` on
+  `HostInput`; `indeterminate:` → `IsThreeState` on `HostCheckbox`;
+  `HostSurface.content` → `Content`; `Icon.glyph`/`.name` → `Glyph`;
+  `HostRadio.group` → `GroupName`; `HostTable.dir` → `FlowDirection`
+  (both the native-shape and non-native fallback lowering paths — the
+  existing `rtl`/`ltr` keyword allow-list there is a gate against an
+  *unrecognized static keyword*, not a reason to reject `Expr`
+  wholesale, since `lower_expr_for_xbind` never splices raw text). The
+  five negated `disabled:` sites route through a new
+  `disabled_expr_xbind_path`, composing the lowered expression with the
+  same shared `Not(bool)` helper `disabled_slot_xbind_path` already
+  registers for `SlotRef`; inside a `For` template scope it returns
+  `Unsupported` rather than guessing, since composing that negation
+  with whatever `register_template_helper_binding` already projected
+  onto the row VM isn't implemented or verified.
+- **Exhaustive but `Expr` deliberately deferred** (2 sites):
+  `host_link_href_payload_expr`, used both for `HostLink`'s in-app
+  `Click` payload and `HostRadio`'s `onSelect` `value:` payload. These
+  build a bare C# expression spliced into a code-behind
+  `Dispatch?.Invoke(...)` call at click time — no for-scope awareness,
+  `SlotRef` resolves via `this.<Pascal>`. Real per-row `Expr` support
+  would need the same sender-`DataContext`-cast-to-row-VM-type codegen
+  `host_button_click_payload_expr` already does for its own params, a
+  materially more novel shape with no existing precedent — a real
+  feature addition, not an exhaustiveness fix. Both functions are now
+  exhaustive over `LayoutPropValue` (no `_`); `Expr` returns
+  `PipelineEmitError::UnsupportedExpression` instead of silently
+  falling back to an empty-string payload.
 
 ## 7. Event dispatch contract (UI24)
 

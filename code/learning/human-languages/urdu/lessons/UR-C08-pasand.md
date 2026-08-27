@@ -1,7 +1,7 @@
 ---
 schema_version: 2
 id: UR-C08-pasand
-spine_node: SPINE-SAY-WHAT-I-DO
+spine_node: SPINE-SAY-WHAT-I-LIKE
 sequence: 330
 chapter: 8
 type: word

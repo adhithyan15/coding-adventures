@@ -286,7 +286,16 @@
       "spine_node": "SPINE-SAY-WHAT-I-DO",
       "lessons": [
         "IT-C18-pensare",
-        "IT-C18-capire",
+        "IT-C18-capire"
+      ],
+      "before": [],
+      "inline": [],
+      "after": []
+    },
+    {
+      "id": "IT-PATH-022-B",
+      "spine_node": "SPINE-NAME-EVERYDAY-ACTIONS",
+      "lessons": [
         "IT-C18-leggere",
         "IT-C18-scrivere"
       ],
@@ -298,9 +307,36 @@
       "id": "IT-PATH-023",
       "spine_node": "SPINE-SAY-WHAT-I-DO",
       "lessons": [
-        "IT-C19-prendere",
-        "IT-C19-chiedere",
-        "IT-C19-aiutare",
+        "IT-C19-prendere"
+      ],
+      "before": [],
+      "inline": [],
+      "after": []
+    },
+    {
+      "id": "IT-PATH-023-B",
+      "spine_node": "SPINE-NAME-EVERYDAY-ACTIONS",
+      "lessons": [
+        "IT-C19-chiedere"
+      ],
+      "before": [],
+      "inline": [],
+      "after": []
+    },
+    {
+      "id": "IT-PATH-023-C",
+      "spine_node": "SPINE-SAY-WHAT-I-DO",
+      "lessons": [
+        "IT-C19-aiutare"
+      ],
+      "before": [],
+      "inline": [],
+      "after": []
+    },
+    {
+      "id": "IT-PATH-023-C-B",
+      "spine_node": "SPINE-SAY-WHAT-I-LIKE",
+      "lessons": [
         "IT-C19-mi-piace"
       ],
       "before": [],
@@ -309,11 +345,38 @@
     },
     {
       "id": "IT-PATH-024",
+      "spine_node": "SPINE-NAME-EVERYDAY-ACTIONS",
+      "lessons": [
+        "IT-C20-portare"
+      ],
+      "before": [],
+      "inline": [],
+      "after": []
+    },
+    {
+      "id": "IT-PATH-A1-COMPRARE",
+      "spine_node": "SPINE-NAME-EVERYDAY-ACTIONS",
+      "lessons": [
+        "IT-C20-comprare"
+      ],
+      "before": [],
+      "inline": [],
+      "after": []
+    },
+    {
+      "id": "IT-PATH-024-B",
+      "spine_node": "SPINE-NAME-EVERYDAY-ACTIONS",
+      "lessons": [
+        "IT-C20-aspettare"
+      ],
+      "before": [],
+      "inline": [],
+      "after": []
+    },
+    {
+      "id": "IT-PATH-024-B-B",
       "spine_node": "SPINE-SAY-WHAT-I-DO",
       "lessons": [
-        "IT-C20-portare",
-        "IT-C20-comprare",
-        "IT-C20-aspettare",
         "IT-C20-incontrare"
       ],
       "before": [],
@@ -519,11 +582,60 @@
       "relocates": {}
     },
     "SPINE-NAME-EVERYDAY-ACTIONS": {
-      "segments": [],
+      "segments": [
+        "IT-PATH-022-B",
+        "IT-PATH-023-B",
+        "IT-PATH-024",
+        "IT-PATH-A1-COMPRARE",
+        "IT-PATH-024-B"
+      ],
       "omits": [
         "VERB-DRINK",
         "VERB-GIVE",
-        "VERB-PUT"
+        "VERB-PUT",
+        "VERB-DO-MAKE",
+        "VERB-OPEN",
+        "VERB-CLOSE",
+        "VERB-STAND",
+        "VERB-COME",
+        "VERB-WALK"
+      ],
+      "relocates": {}
+    },
+    "SPINE-NAME-EVERYDAY-THINGS": {
+      "segments": [],
+      "omits": [
+        "LODGING-ROOM"
+      ],
+      "relocates": {}
+    },
+    "SPINE-SAY-WHAT-I-HAVE-AND-CAN-DO": {
+      "segments": [],
+      "omits": [
+        "VERB-CAN"
+      ],
+      "relocates": {
+        "VERB-HAVE": "SPINE-EXCHANGE-NAMES"
+      }
+    },
+    "SPINE-SAY-WHAT-I-LIKE": {
+      "segments": [
+        "IT-PATH-023-C-B"
+      ],
+      "omits": [],
+      "relocates": {}
+    },
+    "SPINE-SAY-WHY": {
+      "segments": [],
+      "omits": [
+        "CONNECTIVE-BECAUSE"
+      ],
+      "relocates": {}
+    },
+    "SPINE-SAY-WHAT-I-WANT": {
+      "segments": [],
+      "omits": [
+        "VERB-WANT"
       ],
       "relocates": {}
     },
@@ -532,31 +644,24 @@
         "IT-PATH-011",
         "IT-PATH-022",
         "IT-PATH-023",
-        "IT-PATH-024",
+        "IT-PATH-023-C",
+        "IT-PATH-024-B-B",
         "IT-PATH-025"
       ],
       "omits": [
         "VERB-INFINITIVE",
         "VERB-PRESENT-HABITUAL",
-        "VERB-DO-MAKE",
-        "VERB-COME",
         "VERB-SAY",
         "VERB-SEE",
         "VERB-HEAR",
         "VERB-KNOW",
         "VERB-LEARN",
-        "VERB-CAN",
         "VERB-EAT",
         "VERB-SLEEP",
-        "VERB-WALK",
         "VERB-RUN",
-        "VERB-SIT",
-        "VERB-STAND",
-        "VERB-OPEN",
-        "VERB-CLOSE"
+        "VERB-SIT"
       ],
       "relocates": {
-        "VERB-HAVE": "SPINE-EXCHANGE-NAMES",
         "VERB-GO": "SPINE-ASK-LOCATION",
         "VERB-BE": "SPINE-ASK-LOCATION"
       }
@@ -566,13 +671,6 @@
       "omits": [
         "VERB-NEGATE",
         "QUESTION-POLAR"
-      ],
-      "relocates": {}
-    },
-    "SPINE-SAY-WHAT-I-WANT": {
-      "segments": [],
-      "omits": [
-        "VERB-WANT"
       ],
       "relocates": {}
     },
@@ -595,7 +693,6 @@
       "omits": [
         "NARRATIVE-SEQUENCE",
         "CONNECTIVE-THEN",
-        "CONNECTIVE-BECAUSE",
         "ASPECT-ONGOING-PAST"
       ],
       "relocates": {}
@@ -615,7 +712,6 @@
       "omits": [
         "DIRECTION-ASK",
         "TRANSPORT-TICKET",
-        "LODGING-ROOM",
         "PROBLEM-REPORT"
       ],
       "relocates": {}

@@ -97,7 +97,7 @@
     {
       "language": "hindi",
       "chapter": 5,
-      "sourceHash": "fnv1a64:5d90c350329583d4",
+      "sourceHash": "fnv1a64:1dddd846ddfd42f4",
       "lessonIds": [
         "HI-C05-bolna",
         "HI-C05-rahna",
@@ -111,7 +111,7 @@
       "text": "hindi/narration/ch05.txt",
       "json": "hindi/narration/ch05.json",
       "textHash": "fnv1a64:ed05b74f37ece7e7",
-      "jsonHash": "fnv1a64:7072cbf12ea872df"
+      "jsonHash": "fnv1a64:41a61270f9e4ad43"
     },
     {
       "language": "hindi",
@@ -543,7 +543,7 @@
     {
       "language": "hindi",
       "chapter": 34,
-      "sourceHash": "fnv1a64:4b57f7f3ccbc871d",
+      "sourceHash": "fnv1a64:5379fa247a0b970e",
       "lessonIds": [
         "HI-C34-sochna",
         "HI-C34-samajhna",
@@ -555,12 +555,12 @@
       "text": "hindi/narration/ch34.txt",
       "json": "hindi/narration/ch34.json",
       "textHash": "fnv1a64:98ebd2cf135f6039",
-      "jsonHash": "fnv1a64:8bcd3194e3b526f5"
+      "jsonHash": "fnv1a64:5ba35544d082f4d3"
     },
     {
       "language": "hindi",
       "chapter": 35,
-      "sourceHash": "fnv1a64:6d1e198f9be4d685",
+      "sourceHash": "fnv1a64:7bd7ac99a07ba3a0",
       "lessonIds": [
         "HI-C35-lena",
         "HI-C35-puchna",
@@ -572,7 +572,7 @@
       "text": "hindi/narration/ch35.txt",
       "json": "hindi/narration/ch35.json",
       "textHash": "fnv1a64:1757a90c9de0992c",
-      "jsonHash": "fnv1a64:7b91673f53a32af3"
+      "jsonHash": "fnv1a64:f4179828cf759966"
     },
     {
       "language": "hindi",

@@ -104,10 +104,7 @@
       "spine_node": "SPINE-SAY-WHAT-I-DO",
       "lessons": [
         "UR-C06-hona",
-        "UR-C06-jana",
-        "UR-C06-ana",
-        "UR-C06-bolna",
-        "UR-C06-janna"
+        "UR-C06-jana"
       ],
       "before": [],
       "inline": [
@@ -116,13 +113,36 @@
       "after": []
     },
     {
+      "id": "UR-PATH-007-B",
+      "spine_node": "SPINE-NAME-EVERYDAY-ACTIONS",
+      "lessons": [
+        "UR-C06-ana"
+      ],
+      "before": [],
+      "inline": [
+        "UR-EXT-017-CORE-VERBS-B"
+      ],
+      "after": []
+    },
+    {
+      "id": "UR-PATH-007-C",
+      "spine_node": "SPINE-SAY-WHAT-I-DO",
+      "lessons": [
+        "UR-C06-bolna",
+        "UR-C06-janna"
+      ],
+      "before": [],
+      "inline": [
+        "UR-EXT-017-CORE-VERBS-C"
+      ],
+      "after": []
+    },
+    {
       "id": "UR-PATH-008",
       "spine_node": "SPINE-SAY-WHAT-I-DO",
       "lessons": [
         "UR-C07-sochna",
-        "UR-C07-samajhna",
-        "UR-C07-parhna",
-        "UR-C07-likhna"
+        "UR-C07-samajhna"
       ],
       "before": [],
       "inline": [
@@ -131,17 +151,63 @@
       "after": []
     },
     {
+      "id": "UR-PATH-008-B",
+      "spine_node": "SPINE-NAME-EVERYDAY-ACTIONS",
+      "lessons": [
+        "UR-C07-parhna",
+        "UR-C07-likhna"
+      ],
+      "before": [],
+      "inline": [
+        "UR-EXT-018-MIND-VERBS-B"
+      ],
+      "after": []
+    },
+    {
       "id": "UR-PATH-009",
       "spine_node": "SPINE-SAY-WHAT-I-DO",
       "lessons": [
-        "UR-C08-lena",
-        "UR-C08-puchhna",
-        "UR-C08-madad",
-        "UR-C08-pasand"
+        "UR-C08-lena"
       ],
       "before": [],
       "inline": [
         "UR-EXT-019-SOCIAL-VERBS"
+      ],
+      "after": []
+    },
+    {
+      "id": "UR-PATH-009-B",
+      "spine_node": "SPINE-NAME-EVERYDAY-ACTIONS",
+      "lessons": [
+        "UR-C08-puchhna"
+      ],
+      "before": [],
+      "inline": [
+        "UR-EXT-019-SOCIAL-VERBS-B"
+      ],
+      "after": []
+    },
+    {
+      "id": "UR-PATH-009-C",
+      "spine_node": "SPINE-SAY-WHAT-I-DO",
+      "lessons": [
+        "UR-C08-madad"
+      ],
+      "before": [],
+      "inline": [
+        "UR-EXT-019-SOCIAL-VERBS-C"
+      ],
+      "after": []
+    },
+    {
+      "id": "UR-PATH-009-C-B",
+      "spine_node": "SPINE-SAY-WHAT-I-LIKE",
+      "lessons": [
+        "UR-C08-pasand"
+      ],
+      "before": [],
+      "inline": [
+        "UR-EXT-019-SOCIAL-VERBS-D"
       ],
       "after": []
     },
@@ -391,47 +457,87 @@
       "relocates": {}
     },
     "SPINE-NAME-EVERYDAY-ACTIONS": {
-      "segments": [],
+      "segments": [
+        "UR-PATH-007-B",
+        "UR-PATH-008-B",
+        "UR-PATH-009-B"
+      ],
       "omits": [
         "VERB-DRINK",
         "VERB-GIVE",
-        "VERB-PUT"
+        "VERB-PUT",
+        "VERB-DO-MAKE",
+        "VERB-BUY",
+        "VERB-OPEN",
+        "VERB-CLOSE",
+        "VERB-STAND",
+        "VERB-WAIT",
+        "VERB-BRING",
+        "VERB-WALK"
+      ],
+      "relocates": {}
+    },
+    "SPINE-NAME-EVERYDAY-THINGS": {
+      "segments": [],
+      "omits": [
+        "LODGING-ROOM"
+      ],
+      "relocates": {}
+    },
+    "SPINE-SAY-WHAT-I-HAVE-AND-CAN-DO": {
+      "segments": [],
+      "omits": [
+        "VERB-HAVE",
+        "VERB-CAN"
+      ],
+      "relocates": {}
+    },
+    "SPINE-SAY-WHAT-I-LIKE": {
+      "segments": [
+        "UR-PATH-009-C-B"
+      ],
+      "omits": [],
+      "relocates": {}
+    },
+    "SPINE-SAY-WHY": {
+      "segments": [],
+      "omits": [
+        "CONNECTIVE-BECAUSE"
+      ],
+      "relocates": {}
+    },
+    "SPINE-SAY-WHAT-I-WANT": {
+      "segments": [],
+      "omits": [
+        "VERB-WANT"
       ],
       "relocates": {}
     },
     "SPINE-SAY-WHAT-I-DO": {
       "segments": [
         "UR-PATH-007",
+        "UR-PATH-007-C",
         "UR-PATH-008",
-        "UR-PATH-009"
+        "UR-PATH-009",
+        "UR-PATH-009-C"
       ],
       "omits": [
         "VERB-INFINITIVE",
         "VERB-PRESENT-HABITUAL",
-        "VERB-HAVE",
-        "VERB-DO-MAKE",
         "VERB-SAY",
         "VERB-SEE",
         "VERB-HEAR",
         "VERB-LEARN",
-        "VERB-CAN",
-        "VERB-BRING",
         "VERB-GET",
         "VERB-EAT",
         "VERB-SLEEP",
         "VERB-LIVE",
         "VERB-WORK",
         "VERB-PLAY",
-        "VERB-WALK",
         "VERB-RUN",
         "VERB-SIT",
-        "VERB-STAND",
-        "VERB-WAIT",
         "VERB-ANSWER",
-        "VERB-MEET",
-        "VERB-BUY",
-        "VERB-OPEN",
-        "VERB-CLOSE"
+        "VERB-MEET"
       ],
       "relocates": {}
     },
@@ -440,13 +546,6 @@
       "omits": [
         "VERB-NEGATE",
         "QUESTION-POLAR"
-      ],
-      "relocates": {}
-    },
-    "SPINE-SAY-WHAT-I-WANT": {
-      "segments": [],
-      "omits": [
-        "VERB-WANT"
       ],
       "relocates": {}
     },
@@ -469,7 +568,6 @@
       "omits": [
         "NARRATIVE-SEQUENCE",
         "CONNECTIVE-THEN",
-        "CONNECTIVE-BECAUSE",
         "ASPECT-ONGOING-PAST"
       ],
       "relocates": {}
@@ -489,7 +587,6 @@
       "omits": [
         "DIRECTION-ASK",
         "TRANSPORT-TICKET",
-        "LODGING-ROOM",
         "PROBLEM-REPORT"
       ],
       "relocates": {}
@@ -868,8 +965,32 @@
       ],
       "lessons": [
         "UR-C06-hona",
-        "UR-C06-jana",
-        "UR-C06-ana",
+        "UR-C06-jana"
+      ]
+    },
+    {
+      "id": "UR-EXT-017-CORE-VERBS-B",
+      "stage": "A2",
+      "kind": "required",
+      "category": "language-specific",
+      "canDo": "I can name five everyday Urdu verbs by their -nā ending, strip that ending for the stem, and say what I do with the participle agreeing for gender while the copula agrees for person.",
+      "prerequisites": [
+        "UR-EXT-016-TAKE-LEAVE-CONSOLIDATION"
+      ],
+      "lessons": [
+        "UR-C06-ana"
+      ]
+    },
+    {
+      "id": "UR-EXT-017-CORE-VERBS-C",
+      "stage": "A2",
+      "kind": "required",
+      "category": "language-specific",
+      "canDo": "I can name five everyday Urdu verbs by their -nā ending, strip that ending for the stem, and say what I do with the participle agreeing for gender while the copula agrees for person.",
+      "prerequisites": [
+        "UR-EXT-016-TAKE-LEAVE-CONSOLIDATION"
+      ],
+      "lessons": [
         "UR-C06-bolna",
         "UR-C06-janna"
       ]
@@ -885,7 +1006,19 @@
       ],
       "lessons": [
         "UR-C07-sochna",
-        "UR-C07-samajhna",
+        "UR-C07-samajhna"
+      ]
+    },
+    {
+      "id": "UR-EXT-018-MIND-VERBS-B",
+      "stage": "A2",
+      "kind": "required",
+      "category": "language-specific",
+      "canDo": "I can name four Urdu verbs for what the mind does, read the two-eyed he that marks an aspirated consonant, and count the dots that separate one letter skeleton from another.",
+      "prerequisites": [
+        "UR-EXT-017-CORE-VERBS"
+      ],
+      "lessons": [
         "UR-C07-parhna",
         "UR-C07-likhna"
       ]
@@ -900,9 +1033,45 @@
         "UR-EXT-018-MIND-VERBS"
       ],
       "lessons": [
-        "UR-C08-lena",
-        "UR-C08-puchhna",
-        "UR-C08-madad",
+        "UR-C08-lena"
+      ]
+    },
+    {
+      "id": "UR-EXT-019-SOCIAL-VERBS-B",
+      "stage": "A2",
+      "kind": "required",
+      "category": "language-specific",
+      "canDo": "I can take, ask and help in Urdu, build a verb by bolting a borrowed noun onto karnā, and say what I like in the sentence where the thing liked is the subject and I am only the person it happens to.",
+      "prerequisites": [
+        "UR-EXT-018-MIND-VERBS"
+      ],
+      "lessons": [
+        "UR-C08-puchhna"
+      ]
+    },
+    {
+      "id": "UR-EXT-019-SOCIAL-VERBS-C",
+      "stage": "A2",
+      "kind": "required",
+      "category": "language-specific",
+      "canDo": "I can take, ask and help in Urdu, build a verb by bolting a borrowed noun onto karnā, and say what I like in the sentence where the thing liked is the subject and I am only the person it happens to.",
+      "prerequisites": [
+        "UR-EXT-018-MIND-VERBS"
+      ],
+      "lessons": [
+        "UR-C08-madad"
+      ]
+    },
+    {
+      "id": "UR-EXT-019-SOCIAL-VERBS-D",
+      "stage": "A2",
+      "kind": "required",
+      "category": "language-specific",
+      "canDo": "I can take, ask and help in Urdu, build a verb by bolting a borrowed noun onto karnā, and say what I like in the sentence where the thing liked is the subject and I am only the person it happens to.",
+      "prerequisites": [
+        "UR-EXT-018-MIND-VERBS"
+      ],
+      "lessons": [
         "UR-C08-pasand"
       ]
     },

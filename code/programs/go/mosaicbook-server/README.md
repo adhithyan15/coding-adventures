@@ -64,6 +64,23 @@ Then open `http://localhost:7331` in your browser.
 | `--root`     | `.` (cwd)        | Directory to scan for Mosaic components        |
 | `--compiler` | `mosaic-compile` | Path (or name on PATH) to the compiler binary   |
 
+### Security
+
+The server binds to `localhost` only, and every request is additionally
+checked against the real `Host`/`Origin`/`Sec-Fetch-Site` headers it
+receives (`security.go`) — binding alone doesn't stop a page open in your
+browser from a *different* site from reaching this port, nor DNS rebinding.
+A request whose `Host` isn't `localhost`/`127.0.0.1`/`::1`, whose `Origin`
+(when present) isn't either, or whose `Sec-Fetch-Site` says `cross-site`,
+gets a 403 before any route runs. The `Sec-Fetch-Site` check matters
+specifically because `GET /preview/...` is loaded via `<iframe src=...>` by
+this tool's own browser shell — and a cross-origin iframe *navigation*
+carries no `Origin` header at all, so `Sec-Fetch-Site` is what actually
+catches a hostile page embedding that same URL. This matters more than it
+might for a typical local dev server since `GET /api/degradations` and
+`GET /preview/...` each spawn a real `mosaic-compile` subprocess per
+request.
+
 ## REST API
 
 All endpoints return JSON unless noted.
@@ -90,18 +107,65 @@ Returns all discovered components and their stories.
 
 ### `GET /api/backends`
 
-Returns the list of backends and their Phase 1 availability.
+Returns the list of backends. `rendered` is whether the backend has a live
+preview (Tier 1's iframe); `analysis` is whether degradation analysis is
+available (see `/api/degradations` below) — the two are independent, since
+every native backend supports analysis today with no render daemon built for
+any of them yet.
 
 ```json
 {
   "backends": [
-    { "id": "html",         "tier": 1, "available": true  },
-    { "id": "webcomponent", "tier": 1, "available": true  },
-    { "id": "react",        "tier": 1, "available": true  },
-    { "id": "qt",           "tier": 3, "available": false, "reason": "Qt daemon not running (Phase 3)" }
+    { "id": "html",         "tier": 1, "rendered": true,  "analysis": false },
+    { "id": "webcomponent", "tier": 1, "rendered": true,  "analysis": false },
+    { "id": "react",        "tier": 1, "rendered": true,  "analysis": false },
+    { "id": "xaml",         "tier": 3, "rendered": false, "analysis": true, "reason": "no render daemon yet..." },
+    { "id": "swiftui",      "tier": 3, "rendered": false, "analysis": true, "reason": "no render daemon yet..." },
+    { "id": "qt",           "tier": 3, "rendered": false, "analysis": true, "reason": "no render daemon yet..." },
+    { "id": "flutter",      "tier": 3, "rendered": false, "analysis": true, "reason": "no render daemon yet..." },
+    { "id": "compose",      "tier": 3, "rendered": false, "analysis": true, "reason": "no render daemon yet..." }
   ]
 }
 ```
+
+### `GET /api/degradations/{backend}/{component_id}`
+
+Runs `mosaic-compile pkg` (a package-wide build, distinct from the
+single-component invocation `/preview/` uses) at the `permissive` profile and
+returns what that backend's native lowering dropped for the given component —
+capability degradations (e.g. no native radio-group exclusion) and style
+degradations (e.g. `box-shadow` with no XAML equivalent) alike. `{backend}`
+must be one of `xaml`, `swiftui`, `qt`, `flutter`, `compose`; Tier-1 backends
+have no lowering step to drop from and are rejected with 400.
+
+```json
+{
+  "available": true,
+  "schemaVersion": 1,
+  "profile": "permissive",
+  "package": "mosaic-pkg-toolkit",
+  "backend": "qt",
+  "nativeComplete": false,
+  "degradations": [
+    {
+      "code": "property.radio-group-ignored",
+      "backend": "qt",
+      "component": "Radio",
+      "layoutPath": "root.props[3]",
+      "primitive": "HostRadio",
+      "reason": "the backend does not apply the authored HostRadio group to a native mutual-exclusion mechanism"
+    }
+  ],
+  "styleDegradations": []
+}
+```
+
+A component with no owning `mosaic-package.toml` returns
+`{"available": false, "reason": "..."}` — `mosaic-compile pkg` needs a real
+package root, which a standalone component doesn't have.
+
+See `code/specs/UI19-mosaicbook.md` §13 for the full design, including why
+this needs no render daemon or platform toolchain.
 
 ### `GET /preview/{backend}/{component_id}/{story_name}`
 
@@ -160,8 +224,10 @@ main.go       — flag parsing, server startup, watcher goroutine launch
 server.go     — Server struct, HTTP mux, /api/* handlers, SSE machinery
 stories.go    — component discovery (three-file + legacy .mosaic),
                 .stories.json pairing, title derivation
-compiler.go   — mosaic-compile subprocess invocation
+compiler.go   — mosaic-compile subprocess invocation (single-component mode)
 preview.go    — /preview/* handler, backend-specific HTML wrapping
+degradations.go — /api/degradations/* handler (mosaic-compile pkg mode)
+security.go   — requireLocalOrigin middleware, wrapping the whole mux
 watcher.go    — 1-second polling file watcher
 static.go     — embed.FS declaration for static/index.html
 static/

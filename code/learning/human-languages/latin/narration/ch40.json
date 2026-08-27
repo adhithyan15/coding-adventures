@@ -4,7 +4,7 @@
   "chapter": 40,
   "title": "Hearing, Sleeping, Sitting, Standing",
   "drivablePrefix": 4,
-  "sourceHash": "fnv1a64:589faaaa00fe0564",
+  "sourceHash": "fnv1a64:cea80cdbe6828083",
   "lessons": [
     {
       "id": "LA-C40-audio",
@@ -543,7 +543,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:a9e7c0df7dfd7fca",
+      "sourceHash": "fnv1a64:11aff5424855e441",
       "notice": null,
       "blocks": [
         {

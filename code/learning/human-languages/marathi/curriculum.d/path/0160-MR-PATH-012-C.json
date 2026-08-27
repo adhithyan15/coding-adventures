@@ -1,0 +1,14 @@
+{
+  "id": "MR-PATH-012-C",
+  "spine_node": "SPINE-SAY-WHAT-I-DO",
+  "lessons": [
+    "MR-C07-khane",
+    "MR-C07-pahne",
+    "MR-C07-mahit-asne"
+  ],
+  "before": [],
+  "inline": [
+    "MR-EXT-012-CORE-VERBS-C"
+  ],
+  "after": []
+}

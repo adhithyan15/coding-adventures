@@ -4,6 +4,87 @@ All notable changes to this package will be documented in this file.
 
 ## [Unreleased]
 
+### Added - native indeterminate checkbox state (#13006)
+
+`emit_host_checkbox` previously had no code path for `indeterminate:`
+at all — SwiftUI's `Toggle` has no tri-state visual, so the value was
+silently dropped (documented as a known gap, not implemented). When
+`indeterminate:` is authored as anything other than a literal
+`Keyword("false")`, the emitter now swaps `Toggle` for a manually
+composed mixed-checkbox: a `Button` wrapping an SF Symbol
+(`minus.square.fill` / `checkmark.square.fill` / `square`) plus the
+label, with `.buttonStyle(.plain)` — unlike a bare `Image` +
+`.onTapGesture`, `Button` correctly respects a trailing `.disabled(...)`
+modifier. Tapping always resolves *out of* mixed (mixed → checked,
+checked → unchecked, unchecked → checked), matching the "toggle away
+from indeterminate" rule `mosaic-emit-compose`'s `TriStateCheckbox`
+lowering uses for the same prop.
+
+A `slot:`/expression-valued `indeterminate` can't be evaluated at
+compile time, so — mirroring XAML's `IsThreeState` treatment — its mere
+*presence* unconditionally routes to the mixed-capable primitive; the
+runtime value decides whether the mixed glyph actually renders.
+
+New `pub fn host_checkbox_has_native_semantics` lets
+`mosaic-package-artifact-builder`'s degradation analyzer stop reporting
+`property.checkbox-indeterminate-ignored` for SwiftUI wherever this
+lowering actually applies.
+
+Verified with a real `swiftc -parse` of the generated `Button`/`HStack`/
+`Image(systemName:)` shape.
+
+### Fixed - HostLink.href now supports a slot:-bound value (#13110)
+
+`emit_host_link` only ever matched a literal `String` href
+(`find_string_prop` was the sole source) — a `slot:`-bound href
+silently fell back to the `"#"` placeholder with no diagnostic, the
+epic's own recurring "silent drop" failure class (#12017). Every other
+native backend (XAML, Qt, Compose, Flutter) already supported this.
+
+Added `find_slot_ref_prop(node, "href")` handling, introducing a small
+`HostLinkHref` enum (`Literal`/`Slot`) so the same value threads
+correctly through both consumption sites: the `Link(destination:)` URL
+and the `onActivate` dispatch payload (previously always emitted a
+hardcoded quoted string for the payload — for a slot-bound href it now
+emits the bare property reference instead, so the host receives the
+slot's live value, not a fixed placeholder).
+
+A slot-bound href is an unknown runtime value, so it can't be scheme-
+validated at compile time the way a literal is (#13052) — and
+`URL(string:)` returns `nil` for malformed input, so the previous
+bare `!` force-unwrap pattern would have crashed the app on tap for
+any invalid runtime value. Both are handled by a small inline
+runtime-validated closure: `guard let u = URL(string: <slot>), ["http",
+"https", "mailto"].contains(u.scheme?.lowercased() ?? "") else {
+return URL(string: "about:blank")! }; return u`. A malformed or
+disallowed-scheme value falls back to a fixed, always-valid, inert
+URL rather than crashing or navigating — the same "no navigation
+target" outcome the XAML/Compose backends settled on for their own
+runtime guards.
+
+Verified with a real `swiftc` compile-and-run of the exact generated
+closure expression (not just Rust-level string assertions): an
+allowed scheme passes through unchanged, a disallowed scheme
+(`javascript:`) and a malformed string both safely produce
+`about:blank`.
+
+### Security - validate literal HostLink.href's URI scheme (#13052)
+
+Follow-up to #12038 (the identical XAML gap). `Link(destination: URL(string:
+href)!)` hands the href straight to the OS on tap with no scheme check.
+Added `has_disallowed_uri_scheme` (new `PipelineEmitError::UnsafeUriScheme`
+variant), checked when `external` is not `false` — `external: false` routes
+through a Button + dispatch instead, never constructing a `URL` at all, so
+a routing placeholder like `href: "#"` stays valid there (mirrors the
+Qt/Compose backends' identical scoping).
+
+Audit finding, not fixed here: this backend has no `slot:`-bound href
+support at all today — `find_string_prop` only matches a literal `String`,
+so a `SlotRef` href silently falls back to `"#"` with no diagnostic. That's
+a pre-existing silent-drop bug (the epic's own recurring failure class,
+#12017), not a #13052 scheme-validation gap; filed separately as its own
+issue rather than folded into this security fix.
+
 ### Added - accessible HostSlider names
 
 Literal and slot-backed `HostSlider.a11y-label` values now lower to a native

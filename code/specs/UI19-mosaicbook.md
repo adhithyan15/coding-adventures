@@ -90,6 +90,14 @@ returns it to the server, which proxies it to the browser.
 Tier 3 also supports **live native window embedding** (v2 feature, §8) where
 the daemon keeps a Qt window alive and streams frame updates over WebSocket.
 
+> **Status note (§13):** none of Tier 3's daemon-backed live rendering is
+> built yet — no daemon binary exists in the repo for any backend, `qt`
+> included. What *is* built, for `xaml`/`swiftui`/`qt`/`flutter`/`compose`
+> alike, is degradation analysis without rendering: §13's drop panel. It
+> needs no daemon and no platform runtime, so it works for all five native
+> backends on any development machine today, ahead of and independent from
+> the render daemons this section describes.
+
 ---
 
 ## 4. Story Format
@@ -562,7 +570,20 @@ Deliverables:
 ## 11. Security Considerations
 
 - The MosaicBook server binds to `localhost` only and is not exposed to the
-  network.
+  network. Binding alone doesn't stop a page open in the developer's own
+  browser — from any site, if it can reach this port — from issuing
+  requests here, nor DNS rebinding; `requireLocalOrigin`
+  (`code/programs/go/mosaicbook-server/security.go`, #13178) wraps the
+  whole server and rejects any request whose `Host`, and — when present —
+  `Origin`, don't name `localhost`/`127.0.0.1`/`::1`, and rejects
+  `Sec-Fetch-Site: cross-site` unconditionally — needed because
+  `GET /preview/...` (§4) is designed to be loaded via `<iframe src=...>`,
+  and a cross-origin iframe *navigation* carries no `Origin` header at all,
+  so `Sec-Fetch-Site` (sent by every modern browser on every request type,
+  unlike `Origin`) is what actually catches a hostile page embedding that
+  URL. This matters more than it would for a typical local-only tool since
+  §13's `GET /api/degradations` and `GET /preview/...` each spawn a real
+  `mosaic-compile` subprocess per request.
 - Story fixture values from `.stories.json` and the fixture editor are
   HTML-escaped by the backend renderers before embedding in HTML/JSX output.
 - The daemon socket is mode `0600` and accessible only to the current user.
@@ -582,3 +603,115 @@ Deliverables:
 - **Visual regression testing**: No snapshot diffing in v1 (planned for v2).
 - **TypeScript compilation for React preview**: v1 uses Vite's built-in TSX
   transform; no custom Babel/esbuild pipeline.
+
+---
+
+## 13. Native-Backend Drop Panel (#12027, delivered)
+
+Issue [#12027](https://github.com/adhithyan15/coding-adventures/issues/12027)
+asked for two things "rather than four broken panes": real XAML snapshots
+(§7/§8's Tier 3 daemon model, not yet built — no render daemon exists for
+any backend, including `qt`) and a per-backend "what got dropped" panel,
+which needs no platform runtime and works identically for every native
+backend on any machine. This section documents the second half, delivered
+first because it is immediately useful everywhere and unblocks nothing else.
+
+### 13.1 Why this doesn't wait for a render daemon
+
+`nativeComplete: true, degradations: []` in a `mosaic-degradations.json`
+report is computed by
+[`mosaic-package-artifact-builder::analyze_package_degradations`](../packages/rust/mosaic-package-artifact-builder/src/lib.rs)
+— pure static analysis over the composed component IR, no `dotnet build`,
+no Qt/JVM/Flutter toolchain, no window to launch. Every native backend
+(`xaml`, `swiftui`, `qt`, `flutter`, `compose`) already produces this report
+as a side effect of `mosaic-compile pkg`. MosaicBook's existing
+per-component-compile path (`compiler.go`) doesn't reach it — it invokes
+`mosaic-compile` in single-component mode
+(`--interface/--layout/--style/--backend/--output`), never the `pkg`
+subcommand that runs the package-wide degradation analysis and writes
+`mosaic-degradations.json`. The drop panel adds that second invocation
+path alongside the first, not in place of it.
+
+### 13.2 Server: `GET /api/degradations/{backend}/{component_id}`
+
+- `{backend}` must be one of the five native backends
+  (`xaml|swiftui|qt|flutter|compose`); anything else — including the three
+  Tier-1 backends, which have no style-lowering step to drop from — is a
+  400.
+- `{component_id}` is resolved against the same component catalogue
+  `/api/stories` and `/preview/...` already use.
+- A component with no owning `mosaic-package.toml` (`Component.ManifestPath
+  == ""`) returns `{"available": false, "reason": "..."}` rather than
+  attempting a build — `mosaic-compile pkg` requires a real package root,
+  and a standalone component has none.
+- Otherwise the server runs, as a subprocess (no shell — same `os/exec`
+  argv-list posture as `compiler.go`'s existing invocation):
+
+  ```
+  mosaic-compile pkg <package_root> --backend <backend> \
+      --output <temp_dir> --profile permissive
+  ```
+
+  `<package_root>` is `filepath.Dir(component.ManifestPath)`. `--profile
+  permissive` (not `native-complete`) is deliberate: the panel's whole
+  purpose is to *show* drops, so the request must never fail just because
+  drops exist — it should fail only on a genuine compile error, exactly
+  the same distinction `permissive` vs `native-complete` already draws
+  everywhere else in the toolchain (see `code/specs/mosaic-emit-xaml.md`
+  and the `mosaic-package-artifact-builder` doc comments).
+  `--emit-project` is intentionally omitted — the panel needs the analysis,
+  not a buildable project shell, so this stays fast and has no `dotnet`/
+  Qt/Gradle/Flutter dependency even for backends whose toolchain isn't
+  installed on the current machine.
+- The server reads `<temp_dir>/<backend>/mosaic-degradations.json`
+  (written unconditionally by `build_package_with_profile_runtime_and_tokens`
+  regardless of profile), parses it, filters `degradations` and
+  `styleDegradations` down to entries whose `component` field is either the
+  requested component's PascalCase name or `"*"` (the package-wide marker
+  used by degradations like `runtime.library-not-bundled`), and returns the
+  filtered `DegradationReport` as JSON. The temp directory is removed
+  before the handler returns.
+- Response schema (mirrors the Rust `DegradationReport`/`Degradation`
+  structs' `camelCase` JSON exactly, so the frontend and any future tooling
+  can share one mental model with the CLI's own report):
+
+  ```json
+  {
+    "available": true,
+    "schemaVersion": 1,
+    "profile": "permissive",
+    "package": "mosaic-pkg-toolkit",
+    "backend": "swiftui",
+    "nativeComplete": false,
+    "degradations": [
+      {
+        "code": "property.radio-group-ignored",
+        "backend": "swiftui",
+        "component": "Radio",
+        "layoutPath": "$",
+        "reason": "SwiftUI has no native radio-group primitive..."
+      }
+    ],
+    "styleDegradations": []
+  }
+  ```
+
+### 13.3 Frontend: native backends get the panel, not the iframe
+
+Five new backend tabs (`xaml`, `swiftui`, `qt`, `flutter`, `compose`) are
+added alongside the existing three. Selecting one hides `#preview-frame`
+(there is nothing to embed — no daemon renders a native backend to HTML/PNG
+yet) and shows a new `#drop-panel` element instead, populated by
+`GET /api/degradations/...`. Tier-1 tabs are unaffected — `loadPreview()`
+branches on whether the selected backend is in the native set, and every
+existing iframe-embedding behavior for `html`/`webcomponent`/`react` is
+unchanged.
+
+### 13.4 What's still open
+
+The XAML snapshot half of #12027 — compile → `dotnet build` → launch →
+`PrintWindow(..., PW_RENDERFULLCONTENT)` → PNG — is unbuilt and unrelated
+to this section beyond sharing the same issue. It needs the short-output-
+path handling and `PW_RENDERFULLCONTENT` gotchas #12027 itself documents,
+and is deliberately scoped as a separate follow-up rather than bundled
+here.

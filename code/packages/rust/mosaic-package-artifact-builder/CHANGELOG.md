@@ -1,5 +1,105 @@
 # Changelog
 
+## [Unreleased] - narrow the `Path` degradation to also exclude Qt (#12028 item 3, UI39)
+
+Qt now lowers `Path`'s `circle`/`line`/`curve` kinds to real QML vector
+geometry (`mosaic-emit-qt`). Narrowed the `("Path", ...)` arm in
+`collect_native_degradations` from `backend != Backend::Xaml` to
+`!matches!(backend, Backend::Xaml | Backend::Qt)`, matching
+`HostSlider`'s per-backend narrowing pattern. Same primitive-level
+(not per-kind) caveat as the XAML narrowing: a real build using
+`kind: arc` on Qt still hard-errors from the emitter itself.
+
+## [Unreleased] - narrow the `Path` degradation to exclude XAML (#12028 item 3, UI39)
+
+XAML now lowers `Path`'s `circle`/`line`/`curve` kinds to real vector
+geometry (`mosaic-emit-xaml`). Narrowed the `("Path", ...)` arm in
+`collect_native_degradations` with `backend != Backend::Xaml`, matching
+`HostSlider`'s per-backend narrowing pattern exactly. This is a
+primitive-level flag, not per-kind — a real build using the
+not-yet-implemented `arc` kind on XAML still hard-errors from the
+emitter itself with a named message, it just isn't reflected as a
+separate degradation code (matching how `HostSlider`'s own arm doesn't
+distinguish authored prop combinations either).
+
+## [Unreleased] - degradation plumbing for the `Path` kernel drawing primitive (#12028 item 3)
+
+Added the `("Path", ...)` arm to `collect_native_degradations`, following
+`HostSwitch`'s lifecycle exactly: unconditionally degraded (code
+`primitive.path-unimplemented`) on every native backend the moment the
+primitive is registered, since none renders it yet. As each backend lands a
+real lowering (XAML first, immediately following this), narrow the arm's
+`is_native()` guard with a `!matches!(backend, ...)` exclusion the same way
+the existing `HostSlider` arm already does. See
+`code/specs/UI39-mosaic-drawing-primitive.md`.
+
+## [Unreleased] - gate the radio-group degradation on actual native support (#13007)
+
+`mosaic-emit-compose`/`-flutter`/`-qt` now apply real mutual-exclusion
+wiring (`selectableGroup`/synthesized `groupValue`/`ButtonGroup`) for a
+literal `HostRadio.group` value shared by 2+ resolvable siblings.
+Changed the `("HostRadio", "group")` match arm in
+`ignored_native_property` to check a new `native_radio_groups:
+&HashSet<String>` parameter — the set of literal group values that get
+real wiring on the current backend — computed once per component (from
+the whole layout tree, since the recursive degradation walk only ever
+sees one node at a time and can't discover a node's siblings on its
+own) via each backend's new `radio_groups_with_native_semantics`, and
+threaded through `collect_native_degradations`'s recursion alongside
+the existing `backend`/`component`/`variant` parameters. SwiftUI has no
+idiomatic ancestor-grouping widget for N independently-bound `Toggle`s
+and is deliberately excluded from this gating — it stays unconditionally
+degraded (tracked as a follow-up). A `slot:`-bound group, or a literal
+value with no qualifying peer, still reports the degradation on every
+backend exactly as before.
+
+Added `literal_radio_group_with_two_siblings_is_native_on_compose_flutter_qt_not_swiftui`,
+covering the real `mosaic-pkg-deck-options`-shaped fixture (2 sibling
+radios, one shared literal group) across all 5 backends.
+
+## [Unreleased] - gate the checkbox-indeterminate degradation on actual native support (#13006)
+
+`mosaic-emit-compose`/`-flutter`/`-swiftui` now lower `HostCheckbox`'s
+`indeterminate:` to real native tri-state controls (#13006). Changed
+the `("HostCheckbox", "indeterminate")` match arm in
+`ignored_native_property` to call each backend's new
+`host_checkbox_has_native_semantics` predicate (mirroring the existing
+`host_table_has_native_semantics`/`host_dialog_has_native_semantics`
+pattern), so `property.checkbox-indeterminate-ignored` is only reported
+when the authored value is a shape none of the three emitters actually
+act on (in practice, never — the toolkit's `Checkbox` component only
+ever authors a `slot:`-bound value) rather than unconditionally for
+every non-`false` `indeterminate` on these three backends.
+
+Updated `native_degradation_analysis_reports_ignored_checkbox_and_radio_properties`'s
+expected-degradations matrix: Compose/Flutter/SwiftUI now collapse to
+just the still-open `property.radio-group-ignored` entry (#13007),
+matching Qt's existing shape, and the strict-mode `degradation_count`
+assertion for Compose drops from 2 to 1.
+
+## [Unreleased] - gate Flutter's HostDialog degradation on the actual gap (#13010)
+
+`mosaic-emit-flutter` now implements a real native dialog for `HostDialog`'s
+default `modal: true` shape (#13010) — only `modal: false` still falls
+back to a placeholder. Changed the `("HostDialog", backend == Flutter)`
+match arm in `ignored_native_property` to call the new
+`mosaic_emit_flutter::pipeline::host_dialog_has_native_semantics`
+predicate, mirroring the existing `host_table_has_native_semantics`
+pattern, so `interaction.dialog-placeholder` is only reported for the
+genuinely-still-degraded `modal: false` case rather than unconditionally
+for every `HostDialog` on Flutter.
+
+## [Unreleased] - document HostDialog's XAML open-host-required gap as permanent (#13008)
+
+Added a doc comment above the `("HostDialog", "open")` arm in
+`ignored_native_property` recording that this degradation is confirmed
+permanent, not an open TODO: WinUI3's `ContentDialog` has no bindable
+`IsOpen`-style property the way `Popup`/`Flyout`/`TeachingTip` do, so
+there's no declarative show/hide surface for the XAML emitter to bind
+`open:` to — unlike SwiftUI/Qt/Compose, whose dialog primitives are all
+natively declarative. No behavior change; the degradation code and
+message are unchanged. Closes #13008.
+
 ## [Unreleased] - report dropped style properties, non-gating (#12022)
 
 - New `DegradationReport::style_degradations` field (`styleDegradations` in

@@ -157,8 +157,17 @@
       "spine_node": "SPINE-SAY-WHAT-I-DO",
       "lessons": [
         "GE-C05-wohnen",
-        "GE-C05-machen",
         "GE-C05-lernen"
+      ],
+      "before": [],
+      "inline": [],
+      "after": []
+    },
+    {
+      "id": "GE-PATH-A1-MACHEN",
+      "spine_node": "SPINE-NAME-EVERYDAY-ACTIONS",
+      "lessons": [
+        "GE-C05-machen"
       ],
       "before": [],
       "inline": [],
@@ -225,7 +234,7 @@
     },
     {
       "id": "GE-PATH-018",
-      "spine_node": "SPINE-SAY-WHAT-I-DO",
+      "spine_node": "SPINE-SAY-WHAT-I-HAVE-AND-CAN-DO",
       "lessons": [
         "GE-C14-haben"
       ],
@@ -335,7 +344,16 @@
       "spine_node": "SPINE-SAY-WHAT-I-DO",
       "lessons": [
         "GE-C24-denken",
-        "GE-C24-verstehen",
+        "GE-C24-verstehen"
+      ],
+      "before": [],
+      "inline": [],
+      "after": []
+    },
+    {
+      "id": "GE-PATH-027-B",
+      "spine_node": "SPINE-NAME-EVERYDAY-ACTIONS",
+      "lessons": [
         "GE-C24-lesen",
         "GE-C24-schreiben"
       ],
@@ -347,9 +365,36 @@
       "id": "GE-PATH-028",
       "spine_node": "SPINE-SAY-WHAT-I-DO",
       "lessons": [
-        "GE-C25-nehmen",
-        "GE-C25-fragen",
-        "GE-C25-helfen",
+        "GE-C25-nehmen"
+      ],
+      "before": [],
+      "inline": [],
+      "after": []
+    },
+    {
+      "id": "GE-PATH-028-B",
+      "spine_node": "SPINE-NAME-EVERYDAY-ACTIONS",
+      "lessons": [
+        "GE-C25-fragen"
+      ],
+      "before": [],
+      "inline": [],
+      "after": []
+    },
+    {
+      "id": "GE-PATH-028-C",
+      "spine_node": "SPINE-SAY-WHAT-I-DO",
+      "lessons": [
+        "GE-C25-helfen"
+      ],
+      "before": [],
+      "inline": [],
+      "after": []
+    },
+    {
+      "id": "GE-PATH-028-C-B",
+      "spine_node": "SPINE-SAY-WHAT-I-LIKE",
+      "lessons": [
         "GE-C25-moegen-lieben"
       ],
       "before": [],
@@ -360,8 +405,26 @@
       "id": "GE-PATH-029",
       "spine_node": "SPINE-SAY-WHAT-I-DO",
       "lessons": [
-        "GE-C26-sitzen",
-        "GE-C26-stehen",
+        "GE-C26-sitzen"
+      ],
+      "before": [],
+      "inline": [],
+      "after": []
+    },
+    {
+      "id": "GE-PATH-029-B",
+      "spine_node": "SPINE-NAME-EVERYDAY-ACTIONS",
+      "lessons": [
+        "GE-C26-stehen"
+      ],
+      "before": [],
+      "inline": [],
+      "after": []
+    },
+    {
+      "id": "GE-PATH-029-C",
+      "spine_node": "SPINE-SAY-WHAT-I-DO",
+      "lessons": [
         "GE-C26-schlafen",
         "GE-C26-hoeren"
       ],
@@ -371,10 +434,28 @@
     },
     {
       "id": "GE-PATH-030",
+      "spine_node": "SPINE-NAME-EVERYDAY-ACTIONS",
+      "lessons": [
+        "GE-C27-gehen"
+      ],
+      "before": [],
+      "inline": [],
+      "after": []
+    },
+    {
+      "id": "GE-PATH-030-B",
       "spine_node": "SPINE-SAY-WHAT-I-DO",
       "lessons": [
-        "GE-C27-gehen",
-        "GE-C27-laufen",
+        "GE-C27-laufen"
+      ],
+      "before": [],
+      "inline": [],
+      "after": []
+    },
+    {
+      "id": "GE-PATH-A1-OEFFNEN-SCHLIESSEN",
+      "spine_node": "SPINE-NAME-EVERYDAY-ACTIONS",
+      "lessons": [
         "GE-C27-oeffnen",
         "GE-C27-schliessen"
       ],
@@ -557,11 +638,59 @@
       "relocates": {}
     },
     "SPINE-NAME-EVERYDAY-ACTIONS": {
-      "segments": [],
+      "segments": [
+        "GE-PATH-A1-MACHEN",
+        "GE-PATH-027-B",
+        "GE-PATH-028-B",
+        "GE-PATH-029-B",
+        "GE-PATH-030",
+        "GE-PATH-A1-OEFFNEN-SCHLIESSEN"
+      ],
       "omits": [
         "VERB-DRINK",
         "VERB-GIVE",
-        "VERB-PUT"
+        "VERB-PUT",
+        "VERB-BUY",
+        "VERB-WAIT",
+        "VERB-BRING",
+        "VERB-COME"
+      ],
+      "relocates": {}
+    },
+    "SPINE-NAME-EVERYDAY-THINGS": {
+      "segments": [],
+      "omits": [
+        "LODGING-ROOM"
+      ],
+      "relocates": {}
+    },
+    "SPINE-SAY-WHAT-I-HAVE-AND-CAN-DO": {
+      "segments": [
+        "GE-PATH-018"
+      ],
+      "omits": [
+        "VERB-CAN"
+      ],
+      "relocates": {}
+    },
+    "SPINE-SAY-WHAT-I-LIKE": {
+      "segments": [
+        "GE-PATH-028-C-B"
+      ],
+      "omits": [],
+      "relocates": {}
+    },
+    "SPINE-SAY-WHY": {
+      "segments": [],
+      "omits": [
+        "CONNECTIVE-BECAUSE"
+      ],
+      "relocates": {}
+    },
+    "SPINE-SAY-WHAT-I-WANT": {
+      "segments": [],
+      "omits": [
+        "VERB-WANT"
       ],
       "relocates": {}
     },
@@ -569,31 +698,27 @@
       "segments": [
         "GE-PATH-011",
         "GE-PATH-014",
-        "GE-PATH-018",
         "GE-PATH-021",
         "GE-PATH-027",
         "GE-PATH-028",
+        "GE-PATH-028-C",
         "GE-PATH-029",
-        "GE-PATH-030"
+        "GE-PATH-029-C",
+        "GE-PATH-030-B"
       ],
       "omits": [
         "VERB-INFINITIVE",
         "VERB-PRESENT-HABITUAL",
-        "VERB-COME",
         "VERB-SAY",
         "VERB-SPEAK",
         "VERB-SEE",
         "VERB-KNOW",
-        "VERB-CAN",
-        "VERB-BRING",
         "VERB-GET",
         "VERB-EAT",
         "VERB-WORK",
         "VERB-PLAY",
-        "VERB-WAIT",
         "VERB-ANSWER",
-        "VERB-MEET",
-        "VERB-BUY"
+        "VERB-MEET"
       ],
       "relocates": {}
     },
@@ -602,13 +727,6 @@
       "omits": [
         "VERB-NEGATE",
         "QUESTION-POLAR"
-      ],
-      "relocates": {}
-    },
-    "SPINE-SAY-WHAT-I-WANT": {
-      "segments": [],
-      "omits": [
-        "VERB-WANT"
       ],
       "relocates": {}
     },
@@ -633,7 +751,6 @@
       "omits": [
         "NARRATIVE-SEQUENCE",
         "CONNECTIVE-THEN",
-        "CONNECTIVE-BECAUSE",
         "ASPECT-ONGOING-PAST"
       ],
       "relocates": {}
@@ -653,7 +770,6 @@
       "omits": [
         "DIRECTION-ASK",
         "TRANSPORT-TICKET",
-        "LODGING-ROOM",
         "PROBLEM-REPORT"
       ],
       "relocates": {}

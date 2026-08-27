@@ -34,7 +34,7 @@ let module = compile_source(
 )?;
 ```
 
-## Scope (v0.14.0 — JV02 milestones M0 + M1 + M2a + M2b + M3a + M3b + M4a + M4b + M4c + M4d, plus tasks #54, #64, #59, and #60)
+## Scope (v0.19.0 — JV02 milestones M0 + M1 + M2a + M2b + M3a + M3b + M4a + M4b + M4c + M4d + M5 + M8, plus tasks #54, #59, #60, #64, #69, #71, and #72)
 
 Java requires an explicit `class`/`main`-method wrapper at the source level
 (unlike Ruby/Python/JS, which allow bare top-level statements) — this crate
@@ -231,12 +231,52 @@ token into a declared name), restoring the invariant `fresh_flag_name`'s
 design actually needs rather than teaching this frontend every backend's
 own escaping scheme — see `CHANGELOG.md`'s `[0.12.0]` entry for the full
 before/after shapes and the regression tests each round added.
-Everything else — `switch`
-(SIR still has no IR node for it at all — confirmed by a repo-wide grep,
-not assumed — so this needs its own spec-level design decision before
-any frontend can target it, tracked as task #51; `break`/`continue`
-themselves are supported as of task #64, see below), a labeled `break`/
-`continue` (SIR has no loop-label vocabulary at all), an *instance*-
+**Task #69** wires `switch`/`case`/`default` to
+[SIR30](../../../specs/SIR30-switch-statement.md)'s own `Stmt::Switch`
+(landed core-IR-only in task #51/`semantic-ir` v0.28.0 — no backend
+accepts it yet, so a switch-using module lowers and validates but can't
+be compiled by any backend today, the same "IR ahead of both ends" state
+`Feature::LoopControl` itself passed through). `discriminant` must lower
+to `Kind::Int` or `Kind::Str` (this frontend has no separate `char`/enum
+`Kind`); each `case` label's value must match that `Kind`. Both of Java's
+own fall-through idioms — the classic `case 1: case 2: body` (several
+separate labels) and Java 14+'s `case 1, 2: body` (one label, several
+comma-separated constants) — flatten identically to a chain of
+empty-bodied `SwitchCase`s ending in the one that carries the real body.
+`default` is only accepted in the last position (a non-last `default` is
+a clean, disclosed rejection — `Stmt::Switch.default` is a dedicated
+field, always logically last by construction). A `switch` is a valid
+`break` target the same way a loop is (a new `Lowerer::break_depth`
+counter, alongside `loop_depth`, tracks this — see its own doc comment)
+but never a valid `continue` target, matching every C-family language.
+Java 21's own pattern-matching switch surface — `case null`/`case null,
+default`, and `case Type t`/`case Type(...)` record/type-deconstruction
+patterns (JEP 440/441) — is cleanly rejected, not silently mis-lowered as
+a plain `default`; real pattern-binding support is a separate, much
+larger future feature. **M8 (task #70)** wires `try`/`catch`/`finally`/
+`throw` to `Stmt::TryCatch`/`RescueClause` (SIR17), reused exactly as
+SIR29 itself specifies — no new core-IR primitive needed, and unblocked
+by task #68's own `NominalClassDef`/`Module` gap since this milestone
+touches none of that surface. Each of `try`'s own block, every `catch`
+clause's own block, and `finally`'s own block lowers independently
+(each already opens/closes its own scope) — unlike `Stmt::Switch`'s own
+deliberately-shared cross-case scope, a `catch` parameter is scoped to
+its own clause only. Java 7+ multi-catch (`catch (IOException |
+SQLException e) { ... }`) maps directly onto `RescueClause.
+exception_types: Vec<String>`. `throw new ExceptionClass(...)` (0 or 1
+constructor arguments) lowers to `Expr::BuiltinCall("raise", [class_name,
+message?])`, reusing the *cross-backend* `"raise"` convention `ruby-to-
+semantic-ir` established (not Ruby-specific — `semantic-ir-to-
+{javascript,python}` both already implement it). Deliberately out of
+scope, rejected cleanly rather than mis-lowered: try-with-resources (SIR
+has no resource-auto-close primitive), rethrowing an arbitrary expression
+(`throw e;` — this frontend can't distinguish "the exact object just
+caught" from any other local, and the fallback `raise` shape a non-
+`Const` argument gets would silently change what actually gets thrown),
+an anonymous exception subclass, generic exception construction, and a
+constructor call with more than one argument. Everything else — a
+labeled `break`/`continue` (SIR has no loop-label vocabulary at all), an
+*instance*-
 qualified call (`x.foo(...)`) or any qualifier other than this
 compilation unit's own class name (`ClassName.staticMethod(args)` on
 *this* class IS supported as of task #67/M5, see below), method
@@ -253,13 +293,30 @@ dimensional array literals, multi-dimensional `new` array-creation forms
 of task #66, see above), a
 non-constant or reference-typed `new T[N]`, List/Map collection literals,
 the array/String method-call surface beyond `.length`, field access
-other than an array's own `.length`, casts, `instanceof`, the ternary
-conditional, bitwise/shift operators, fields/constructors/nested types,
+other than an array's own `.length`, casts, `instanceof`,
+bitwise/shift operators (the ternary conditional `cond ? a : b` IS
+supported as of task #72, lowering to `Expr::If` in value position —
+see below), fields/constructors/nested types,
 and every SIR29 construct (`NominalClassDef`/`InterfaceDef`/`MethodDef`/
 `VirtualCall`) — is out of scope so far and returns a clean
 `JavaLowerError` rather than being silently mis-lowered. See
 `src/lower.rs`'s own module doc comment for the exact boundary, and the
 JV02 spec's milestone table for what comes next.
+
+**Task #72** wires the ternary conditional operator (`cond ? a : b`) to
+`Expr::If` used in value position (the same node `if`/`else` statements
+already lower to — see that node's own doc comment: "the IR's
+conditional is an expression with no statement-level counterpart"), each
+branch's own lowered operand becoming that branch's `Block.value`. The
+condition must be `Kind::Bool`; the two branches must lower to a
+compatible `Kind` — exact match, or real Java's own symmetric numeric
+promotion for a mismatched `Int`/`Float` pair (`true ? 1 : 2.0` has type
+`double`), kept accepted the same way task #71's own directional
+int-widening-to-float exception is (with the identical disclosed caveat:
+no real numeric conversion is inserted, since SIR's own `Expr::Convert`
+only ever converts between integer widths) — every other `Kind` pair is
+a clean rejection, since real Java's ternary does not auto-stringify
+mismatched branches the way `+` does.
 
 ### Testing
 

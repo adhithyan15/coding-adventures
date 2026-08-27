@@ -4,7 +4,7 @@
   "chapter": 4,
   "title": "Verbs of the Mind and the Page",
   "drivablePrefix": 3,
-  "sourceHash": "fnv1a64:03746f089990b63b",
+  "sourceHash": "fnv1a64:cdb3a07b83731971",
   "lessons": [
     {
       "id": "RU-C04-dumat",
@@ -350,7 +350,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:62614a8b0719dfed",
+      "sourceHash": "fnv1a64:81332063cdd644ec",
       "notice": null,
       "blocks": [
         {
@@ -503,7 +503,7 @@
       "modalityReasons": [
         "script-block"
       ],
-      "sourceHash": "fnv1a64:0f08ae4c05ca1162",
+      "sourceHash": "fnv1a64:02d8c14760fba4ed",
       "notice": {
         "modality": "sight",
         "needs": [

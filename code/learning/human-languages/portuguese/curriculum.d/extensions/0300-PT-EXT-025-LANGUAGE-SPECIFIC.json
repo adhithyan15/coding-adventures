@@ -1,0 +1,10 @@
+{
+  "id": "PT-EXT-025-LANGUAGE-SPECIFIC",
+  "stage": "A2",
+  "kind": "required",
+  "canDo": "I can say that I bring, get, wait for and buy in Portuguese, use conseguir for managing to do a thing, let esperar carry waiting, hoping and expecting at once, and tell comprar's Latin root from the identically spelled one behind English compare.",
+  "prerequisites": [],
+  "lessons": [
+    "PT-C21-trazer"
+  ]
+}

@@ -53,6 +53,12 @@ import (
 // ErrInvalidKey is returned when the key is out of the valid range.
 var ErrInvalidKey = errors.New("invalid key")
 
+// ErrBruteForceLimit is returned before brute-force output can grow without bound.
+var ErrBruteForceLimit = errors.New("scytale-brute-force-limit")
+
+// MaxBruteForceTextLength bounds the quadratic brute-force output surface.
+const MaxBruteForceTextLength = 4096
+
 // Encrypt applies the Scytale transposition cipher to the given text.
 //
 // The text is written row-by-row into a grid with `key` columns, then
@@ -185,13 +191,16 @@ type BruteForceResult struct {
 //
 // Example:
 //
-//	results := BruteForce("ACEBDF")
+//	results, err := BruteForce("ACEBDF")
 //	// results[0] = BruteForceResult{Key: 2, Text: "ABCDEF"}
-func BruteForce(text string) []BruteForceResult {
+func BruteForce(text string) ([]BruteForceResult, error) {
 	runes := []rune(text)
 	n := len(runes)
+	if n > MaxBruteForceTextLength {
+		return nil, ErrBruteForceLimit
+	}
 	if n < 4 {
-		return nil
+		return nil, nil
 	}
 
 	maxKey := n / 2
@@ -208,5 +217,5 @@ func BruteForce(text string) []BruteForceResult {
 		})
 	}
 
-	return results
+	return results, nil
 }

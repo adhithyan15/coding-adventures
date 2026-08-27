@@ -1,9 +1,20 @@
 {
-  "segments": [],
+  "segments": [
+    "GE-PATH-A1-MACHEN",
+    "GE-PATH-027-B",
+    "GE-PATH-028-B",
+    "GE-PATH-029-B",
+    "GE-PATH-030",
+    "GE-PATH-A1-OEFFNEN-SCHLIESSEN"
+  ],
   "omits": [
     "VERB-DRINK",
     "VERB-GIVE",
-    "VERB-PUT"
+    "VERB-PUT",
+    "VERB-BUY",
+    "VERB-WAIT",
+    "VERB-BRING",
+    "VERB-COME"
   ],
   "relocates": {}
 }

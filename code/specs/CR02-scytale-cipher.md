@@ -21,9 +21,12 @@ The Scytale cipher is equivalent to a columnar transposition:
    Pad the last row with spaces if needed. Then read the ciphertext
    column-by-column (top to bottom, left to right).
 
-2. **Decrypt**: Calculate the number of rows as `ceil(len / key)`. Write the
-   ciphertext into columns of that length (top to bottom, left to right).
-   Then read row-by-row and strip any trailing padding spaces.
+2. **Decrypt**: For ciphertext length `n`, calculate `rows = ceil(n / key)` and
+   `r = n % key`. If `r == 0`, all `key` columns contain `rows` scalars.
+   Otherwise, the first `r` columns contain `rows` scalars and the remaining
+   columns contain `rows - 1` scalars. Fill those columns from the ciphertext
+   top to bottom and left to right, then read row-by-row and strip only trailing
+   `U+0020` padding spaces.
 
 ### Historical Context
 
@@ -123,6 +126,9 @@ Result (after stripping trailing pad): `"HELLO WORLD"`
    punctuation, digits, letters, and non-ASCII data all participate. Length,
    key bounds, grid positions, and brute-force limits are counted in Unicode
    scalar values, not UTF-8 bytes, UTF-16 code units, or grapheme clusters.
+   Combining marks remain independent scalar positions: the decomposed sequence
+   `e` followed by `U+0301` occupies two grid cells and is not normalized or
+   grouped into one user-perceived character.
    Inputs containing an unpaired UTF-16 surrogate are outside the portable
    string contract.
 
@@ -144,9 +150,35 @@ The `brute_force` function tries every possible key from 2 to `len(text) / 2`
 (inclusive). For each key, it decrypts the ciphertext and returns a list of
 `{key, decrypted_text}` pairs. This demonstrates that the Scytale has a very
 small key space (roughly `n/2` possibilities), making it trivially breakable.
-Because the returned candidates contain quadratic total text in the worst
-case, implementations may reject inputs beyond a documented resource limit;
-they must do so before building the candidate list.
+Results are ordered by ascending key. Because the returned candidates contain
+quadratic total text in the worst case, the portable contract rejects inputs
+longer than 4,096 Unicode scalar values before building the candidate list.
+Conformance adapters report the payload-blind error ID
+`scytale-brute-force-limit`; public APIs may map it to the language's standard
+range or argument error without including input data.
+
+### Language-neutral conformance
+
+`code/specs/fixtures/classical-ciphers-v1/cases.json` is the normative
+executable corpus for CR01 through CR03. Scytale cases pin Unicode-scalar grid
+coordinates including decomposed combining sequences, exact `U+0020` padding
+and removal, intentional loss of genuine trailing spaces, retention of tabs,
+newlines, and non-breaking spaces, empty input before key validation, and
+ascending brute-force results. The stable
+conformance error ID for a non-empty text with a key below 2 or above the text's
+scalar length is `scytale-invalid-key`.
+
+The corpus is static data with no runtime authority. Its schema, bounded
+limits, and semantic oracle are validated by
+`code/scripts/tests/test_classical_cipher_fixtures.py`.
+
+All established package tests consume the complete Scytale subset through
+dependency-free generated native adapters. Run
+`python code/scripts/generate_scytale_fixture_consumers.py --check` to prove
+the 15 tracked consumers still match the exact bounded fixture bytes and the
+current established-lane roster. The adapters execute public APIs, normalize
+results to the fixture's closed expected-object shapes, and compare all 18
+cases without adding production filesystem or JSON dependencies.
 
 ## Package Matrix
 

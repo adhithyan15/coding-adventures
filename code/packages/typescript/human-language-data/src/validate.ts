@@ -186,7 +186,16 @@ function uncoveredGlyphs(headword: string, sd: ScriptData): string[] {
   for (const consonant of sd.finalConsonants ?? []) {
     if (consonant.strokeOrderSource) add(consonant.glyph);
   }
-  for (const m of sd.marks ?? []) add(m.mark);
+  for (const m of sd.marks ?? []) {
+    add(m.mark);
+    // A source-backed composition owns the encoded carrier as well as the
+    // combining mark. This matters for canonically decomposed letters such as
+    // Urdu ئ (U+0626 -> U+064A U+0654): the carrier is not an Urdu alphabet
+    // row on its own, but it is still covered by the verified composition.
+    if (m.compositionSource) {
+      for (const example of m.examples ?? []) add(example.combined);
+    }
+  }
   const targetSystems = hasOwn(SCRIPT_SYSTEMS, sd.script)
     ? new Set(SCRIPT_SYSTEMS[sd.script])
     : undefined;

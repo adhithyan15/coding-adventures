@@ -1,0 +1,11 @@
+{
+  "id": "ES-PATH-A1-ABRIR-CERRAR",
+  "spine_node": "SPINE-NAME-EVERYDAY-ACTIONS",
+  "lessons": [
+    "ES-C37-abrir",
+    "ES-C37-cerrar"
+  ],
+  "before": [],
+  "inline": [],
+  "after": []
+}

@@ -1,7 +1,7 @@
 ---
 schema_version: 2
 id: FR-C27-se-lever
-spine_node: SPINE-SAY-WHAT-I-DO
+spine_node: SPINE-NAME-EVERYDAY-ACTIONS
 sequence: 840
 chapter: 27
 type: word

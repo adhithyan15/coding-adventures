@@ -1,0 +1,12 @@
+{
+  "id": "LA-PATH-026-B",
+  "spine_node": "SPINE-NAME-EVERYDAY-ACTIONS",
+  "lessons": [
+    "LA-C38-lego"
+  ],
+  "before": [],
+  "inline": [
+    "LA-EXT-026-LANGUAGE-SPECIFIC-B"
+  ],
+  "after": []
+}

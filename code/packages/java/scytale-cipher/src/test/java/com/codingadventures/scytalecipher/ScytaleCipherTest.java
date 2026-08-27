@@ -106,6 +106,17 @@ class ScytaleCipherTest {
         assertEquals("", ScytaleCipher.decrypt("", 4));
     }
 
+    @Test
+    void portableScalarRaggedAndPaddingVectorsMatch() {
+        assertEquals("Aé😀 B ", ScytaleCipher.encrypt("A😀Bé", 3));
+        assertEquals("A😀Bé", ScytaleCipher.decrypt("Aé😀 B ", 3));
+        assertEquals("ABe \u0301 ", ScytaleCipher.encrypt("Ae\u0301B", 3));
+        assertEquals("Ae\u0301B", ScytaleCipher.decrypt("ABe \u0301 ", 3));
+        assertEquals("ACEFBD", ScytaleCipher.decrypt("ABCDEF", 4));
+        assertEquals("AB\t", ScytaleCipher.decrypt("A\tB ", 2));
+        assertEquals("A\t\n\u00a0", ScytaleCipher.decrypt("A\u00a0\t \n ", 3));
+    }
+
     // =========================================================================
     // 3. roundtrip
     // =========================================================================
@@ -185,5 +196,13 @@ class ScytaleCipherTest {
         List<ScytaleCipher.BruteForceResult> results = ScytaleCipher.bruteForce(ciphertext);
         boolean found = results.stream().anyMatch(r -> r.key == 4 && r.text.equals("HELLOSPARTANS"));
         assertTrue(found, "brute force should find key=4 → HELLOSPARTANS");
+    }
+
+    @Test
+    void bruteForceRejectsOversizedScalarInput() {
+        String oversized = "A".repeat(ScytaleCipher.MAX_BRUTE_FORCE_TEXT_LENGTH + 1);
+        IllegalArgumentException error = assertThrows(
+            IllegalArgumentException.class, () -> ScytaleCipher.bruteForce(oversized));
+        assertEquals("scytale-brute-force-limit", error.getMessage());
     }
 }

@@ -1,7 +1,7 @@
 ---
 schema_version: 2
 id: RU-C05-sprashivat
-spine_node: SPINE-SAY-WHAT-I-DO
+spine_node: SPINE-NAME-EVERYDAY-ACTIONS
 sequence: 250
 chapter: 5
 type: word

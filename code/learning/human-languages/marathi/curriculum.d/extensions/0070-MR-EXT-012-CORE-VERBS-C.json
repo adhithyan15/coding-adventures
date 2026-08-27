@@ -1,0 +1,13 @@
+{
+  "id": "MR-EXT-012-CORE-VERBS-C",
+  "stage": "A2",
+  "kind": "required",
+  "category": "language-specific",
+  "canDo": "I can use six everyday Marathi verbs, choose the present-tense ending that agrees with my subject's gender, close every sentence on the verb, and say that I know something the way Marathi actually says it.",
+  "prerequisites": [],
+  "lessons": [
+    "MR-C07-khane",
+    "MR-C07-pahne",
+    "MR-C07-mahit-asne"
+  ]
+}

@@ -251,13 +251,13 @@ describe("corpus snapshot", () => {
     // 46 canonical VERB-* concepts names to wash, to climb, to look for, to keep,
     // to die, to send, to use, to touch, to sell, to serve, to spend, to grow, to
     // burn, to cross, to hang, to mix, to turn, to fly, to push, to throw, to
-    // erase or to shout, and promoting them would ask all 23 tracks to answer for
+    // erase, to shout or to know-how, and promoting them would ask all 23 tracks to answer for
     // them. `extras` is exactly the measurement of that decision -- the number is
-    // meant to be read as "forty-two everyday verbs the cross-language core does
+    // meant to be read as "forty-three everyday verbs the cross-language core does
     // not name yet", which is a question for the taxonomy, not a defect in the
     // track. It has now outgrown `covered`, which is the point at which the
     // question stops being rhetorical.
-    expect(spanish.extras.length).toBe(42); // HL-C128 step 9: 6 -> 7 -- ch258 names subject-verb agreement, which adds one verb-adjacent extra beyond the paradigm set // HL-C152: +5 lessons, +1 chapter — Spanish realizes SPINE-NEGATE-AND-ASK, completing A2 at 5/5 // HL-C157: ayer + hablare close A2
+    expect(spanish.extras.length).toBe(43); // HL-C128 step 9: 6 -> 7 -- ch258 names subject-verb agreement, which adds one verb-adjacent extra beyond the paradigm set // HL-C152: +5 lessons, +1 chapter — Spanish realizes SPINE-NEGATE-AND-ASK, completing A2 at 5/5 // HL-C157: ayer + hablare close A2
 
     // THE EIGHT THAT NOBODY TAUGHT. Twenty-three of the forty core verbs were realized by
     // no track anywhere — everyday words like *think*, *read*, *write* and *ask*. Spanish,

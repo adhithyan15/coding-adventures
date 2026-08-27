@@ -1,7 +1,7 @@
 ---
 schema_version: 2
 id: MR-C09-avadne
-spine_node: SPINE-SAY-WHAT-I-DO
+spine_node: SPINE-SAY-WHAT-I-LIKE
 sequence: 510
 chapter: 12
 type: word

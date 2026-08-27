@@ -1,7 +1,7 @@
 ---
 schema_version: 2
 id: AR-C32-ahabba
-spine_node: SPINE-SAY-WHAT-I-DO
+spine_node: SPINE-SAY-WHAT-I-LIKE
 sequence: 850
 chapter: 32
 type: word

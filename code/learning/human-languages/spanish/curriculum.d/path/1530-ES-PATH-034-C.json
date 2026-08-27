@@ -1,0 +1,11 @@
+{
+  "id": "ES-PATH-034-C",
+  "spine_node": "SPINE-NARRATE-EVENTS",
+  "lessons": [
+    "ES-C38-imperfecto",
+    "ES-C38-contar"
+  ],
+  "before": [],
+  "inline": [],
+  "after": []
+}

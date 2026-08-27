@@ -1,5 +1,138 @@
 # Changelog
 
+### Added — source-verified Japanese hiragana yu
+
+- Teach Japanese **ゆ** from Sirgazil's CC0 30-frame animation: keep the left
+  stem and broad clockwise loop joined, then lift once for the central
+  descending curve.
+- Close both affected **ゆ** realizations with a learner filmstrip fitted to the
+  bundled Noto Sans JP subset; Kannada **ಉ** now leads the measured queue at 2.
+
+### Added — source-verified Japanese hiragana wa
+
+- Teach Japanese **わ** from Sirgazil's CC0 30-frame animation: descend through
+  the long left vertical, lift once, then keep the crossing sweep, down-left
+  hook, central return, and broad clockwise loop joined.
+- Close both affected **わ** realizations with a learner filmstrip fitted to the
+  bundled Noto Sans JP subset; Japanese **ゆ** now leads the measured queue at
+  2.
+
+### Added — source-verified Urdu hamza-ye composition
+
+- Teach Urdu **ئ** as Zer o Zabar's tooth carrier plus lifted hamza mark,
+  preserving its vowel-separator role in **بھائی** and the accepted diagonal
+  squiggle handwriting variant.
+- Close all 3 canonically decomposed **ي**/**ٔ** realizations without
+  conflating Urdu **ی** (U+06CC) with Arabic **ي** (U+064A); Japanese **わ**
+  now leads the measured queue at 2.
+
+### Added — source-verified Urdu te
+
+- Teach Urdu **ت** from Zer o Zabar's independent handwriting animation and
+  prose: write the be-series bowl, lift for the left upper dot, then lift for
+  the right upper dot beside it.
+- Close all 3 affected realizations while preserving the explicit two-dot form,
+  canonical Noto Naskh fallback, and separate Nastaliq presentation face;
+  Arabic **ي** is next at 3.
+
+### Added — source-verified Urdu gaf
+
+- Teach Urdu **گ** from Zer o Zabar's independent calligraphic and handwriting
+  animations: write the kāf-family body, lift for its long slash, then lift
+  again for the shorter floating slash above.
+- Close the Urdu realization and fit the three-run order to the canonical Noto
+  Naskh fallback while preserving the separate Nastaliq presentation face;
+  **ت** is next at 3 and Persian **گ** remains scoped debt at 2.
+
+### Added — source-verified Kannada o
+
+- Teach Kannada independent vowel **ಒ** from Gopala Krishna A's CC BY-SA 4.0,
+  30-frame animation: turn around the upper-left loop, descend through the
+  curved middle and joined lower bowls, then climb to the open terminal.
+- Close all 3 affected realizations in the alphabet filmstrip and fit the
+  zero-lift order to the bundled Noto Sans Kannada outline, reranking Urdu
+  **گ** first at 3.
+
+### Added — source-verified Kannada long e
+
+- Teach Kannada independent vowel **ಏ** from Gopala Krishna A's CC BY-SA 4.0,
+  31-frame animation: carry the compact left loop through the joined lower
+  curves and tall outer arch, then lift once for the small upper loop.
+- Close all 3 affected realizations in the alphabet filmstrip and fit the
+  two-run order to the bundled Noto Sans Kannada outline, reranking Kannada
+  **ಒ** first at 3.
+
+### Added — source-verified Japanese hiragana na
+
+- Teach hiragana **な** from Sirgazil's CC0 32-frame animation: draw the
+  upper-left horizontal, crossing left-falling stem, and upper-right diagonal
+  as three lifted marks, then join the lower-right stem, loop, and outward
+  sweep.
+- Close all 3 affected realizations in the alphabet filmstrip, fit the four-run
+  order to the bundled Noto Sans JP outline, and rerank Kannada **ಏ** first at
+  3.
+
+### Added — source-verified Japanese hiragana te
+
+- Teach hiragana **て** from Sirgazil's CC0 28-frame animation: carry the high
+  horizontal left to right, return down and left through the diagonal, then
+  round the broad lower curve and sweep right without lifting.
+- Close all 3 affected realizations in the alphabet filmstrip, fit the zero-lift
+  order to the bundled Noto Sans JP outline, and rerank hiragana **な** first
+  at 3.
+
+### Added — source-verified Japanese hiragana se
+
+- Teach hiragana **せ** from Sirgazil's CC0 33-frame animation: draw the long
+  horizontal left to right, lift for the left descending stem and rightward
+  base curve, then lift again for the right descending stem and leftward hook.
+- Close all 3 affected realizations in the alphabet filmstrip, fit the
+  three-run order to the bundled Noto Sans JP outline, and rerank hiragana
+  **て** first at 3.
+
+### Added — source-verified Japanese hiragana mi
+
+- Teach hiragana **み** from Sirgazil's CC0 29-frame animation: carry the top
+  bar into the diagonal, lower-left loop, and middle sweep, then lift once for
+  the high-right descending curve and upward finish.
+- Close all 3 affected realizations in the alphabet filmstrip, fit the two-run
+  order to the bundled Noto Sans JP outline, and rerank hiragana **せ** first
+  at 3.
+
+### Added — source-verified Japanese hiragana ne
+
+- Teach hiragana **ね** from Sirgazil's CC0 35-frame animation: descend through
+  the short left vertical, lift once, then cross left from the upper right and
+  hook down along the diagonal, return to the crossing, and continue into the
+  lower-right loop.
+- Close all 3 affected realizations in the alphabet filmstrip, fit the two-run
+  order to the bundled Noto Sans JP outline, and rerank hiragana **み** first
+  at 3.
+
+### Added — source-verified Urdu be
+
+- Teach Urdu **ب** from *Zer o Zabar*'s independent handwriting animation and
+  main-line-first rule: sweep the be-series bowl right-to-left, then lift once
+  to place the single lower dot.
+- Close all 4 affected realizations in the alphabet filmstrip, retain a scoped
+  Urdu source beside the separate Arabic and Persian records, and rerank
+  Japanese hiragana **ね** first at 3.
+
+### Added — source-verified Telugu long e
+
+- Teach independent long **ఏ** with the packaged *Write Telugu Alphabets*
+  four-movement, three-run order: join movements 1–2 around the lower loop,
+  lift for the broad outer arch, then lift again for the upper-left hook.
+- Close all 4 affected realizations while fitting the source order to the
+  bundled Noto Sans Telugu outline, then rerank Arabic **ب** first at 4.
+
+### Added — source-verified Persian kaf
+
+- Teach Persian **ک** with Persian Online's two-run freehand order: draw the
+  independent stem and shallow hooked bowl, then lift once for the long slash.
+- Close all 4 affected realizations and rerank Telugu **ఏ** first at 4 while
+  retaining Persian-specific provenance and the Persian/Urdu Unicode form.
+
 ### Added — source-verified Persian and Urdu zah
 
 - Teach Persian and Urdu **ظ** with independently scoped sources: Persian

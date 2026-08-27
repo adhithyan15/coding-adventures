@@ -236,7 +236,9 @@ const ARABIC_YAA = DUCTUS[ductusKey("arabic", "ي")];
 const ARABIC_HAMZA = DUCTUS[ductusKey("arabic", "ء")];
 const ARABIC_LAM_ALIF = DUCTUS[ductusKey("arabic", "لا")];
 const URDU_ALEF = DUCTUS[ductusKey("urdu-nastaliq", "ا")];
+const URDU_BEH = DUCTUS[ductusKey("urdu-nastaliq", "ب")];
 const URDU_PEH = DUCTUS[ductusKey("urdu-nastaliq", "پ")];
+const URDU_TE = DUCTUS[ductusKey("urdu-nastaliq", "ت")];
 const URDU_TTE = DUCTUS[ductusKey("urdu-nastaliq", "ٹ")];
 const PERSIAN_CHE = DUCTUS[ductusKey("perso-arabic", "چ")];
 const PERSIAN_SHIN = DUCTUS[ductusKey("perso-arabic", "ش")];
@@ -248,6 +250,8 @@ const URDU_WAW = DUCTUS[ductusKey("urdu-nastaliq", "و")];
 const URDU_SIN = DUCTUS[ductusKey("urdu-nastaliq", "س")];
 const URDU_SHIN = DUCTUS[ductusKey("urdu-nastaliq", "ش")];
 const URDU_KAF = DUCTUS[ductusKey("urdu-nastaliq", "ک")];
+const URDU_GAF = DUCTUS[ductusKey("urdu-nastaliq", "گ")];
+const PERSIAN_KAF = DUCTUS[ductusKey("perso-arabic", "ک")];
 const URDU_LAM = DUCTUS[ductusKey("urdu-nastaliq", "ل")];
 const URDU_MIM = DUCTUS[ductusKey("urdu-nastaliq", "م")];
 const URDU_NUN = DUCTUS[ductusKey("urdu-nastaliq", "ن")];
@@ -261,11 +265,14 @@ const KANNADA_A = DUCTUS[ductusKey("kannada", "ಅ")];
 const KANNADA_AA = DUCTUS[ductusKey("kannada", "ಆ")];
 const KANNADA_I = DUCTUS[ductusKey("kannada", "ಇ")];
 const KANNADA_E = DUCTUS[ductusKey("kannada", "ಎ")];
+const KANNADA_EE = DUCTUS[ductusKey("kannada", "ಏ")];
+const KANNADA_O = DUCTUS[ductusKey("kannada", "ಒ")];
 const TELUGU_A = DUCTUS[ductusKey("telugu", "అ")];
 const TELUGU_AA = DUCTUS[ductusKey("telugu", "ఆ")];
 const TELUGU_I = DUCTUS[ductusKey("telugu", "ఇ")];
 const TELUGU_U = DUCTUS[ductusKey("telugu", "ఉ")];
 const TELUGU_E = DUCTUS[ductusKey("telugu", "ఎ")];
+const TELUGU_EE = DUCTUS[ductusKey("telugu", "ఏ")];
 const MALAYALAM_A = DUCTUS[ductusKey("malayalam", "അ")];
 const MALAYALAM_AA = DUCTUS[ductusKey("malayalam", "ആ")];
 const MALAYALAM_I = DUCTUS[ductusKey("malayalam", "ഇ")];
@@ -281,8 +288,15 @@ const TAMIL_NGA = DUCTUS["ங"];
 const JAPANESE_SHI = DUCTUS[ductusKey("japanese", "し")];
 const JAPANESE_KU = DUCTUS[ductusKey("japanese", "く")];
 const JAPANESE_TA = DUCTUS[ductusKey("japanese", "た")];
+const JAPANESE_NE = DUCTUS[ductusKey("japanese", "ね")];
+const JAPANESE_MI = DUCTUS[ductusKey("japanese", "み")];
+const JAPANESE_SE = DUCTUS[ductusKey("japanese", "せ")];
+const JAPANESE_TE = DUCTUS[ductusKey("japanese", "て")];
+const JAPANESE_NA = DUCTUS[ductusKey("japanese", "な")];
 const JAPANESE_SMALL_TSU = DUCTUS[ductusKey("japanese", "っ")];
 const JAPANESE_MO = DUCTUS[ductusKey("japanese", "も")];
+const JAPANESE_WA = DUCTUS[ductusKey("japanese", "わ")];
+const JAPANESE_YU = DUCTUS[ductusKey("japanese", "ゆ")];
 
 const fontForDuctus = (letter: LetterDuctus) => {
   const script = SCRIPTS.find((candidate) => candidate.script === letter.script);
@@ -632,6 +646,9 @@ describe("handwriting ductus", () => {
           // lower-loop return, plus Kannada ಆ's loop-to-bowl and loop-to-bar
           // joins, while Malayalam ആ circles its right loop and descender in
           // one uninterrupted run across Noto's separated print contours.
+          // Japanese ね and わ likewise keep each source's continuous second
+          // run as it crosses Noto's separated bar, diagonal return, and loop
+          // shapes.
           // Permit only those documented bridges; every other authored path
           // retains the stricter general-purpose floor.
           const minimumInkFit = letter.script === "gujarati" && letter.glyph === "હ"
@@ -646,6 +663,8 @@ describe("handwriting ductus", () => {
                 ? 0.89
               : letter.script === "kannada" && letter.glyph === "ಆ"
                 ? 0.92
+              : letter.script === "japanese" && ["ね", "わ"].includes(letter.glyph)
+                ? 0.88
               : 0.97;
           expect(frac, `stroke ${s} strays off the glyph`).toBeGreaterThan(minimumInkFit);
         }
@@ -742,6 +761,86 @@ describe("handwriting ductus", () => {
     );
   });
 
+  it("Japanese ね draws the vertical before the crossing hook and loop", () => {
+    expect(penLifts(JAPANESE_NE)).toBe(1);
+    expect(JAPANESE_NE.strokes).toHaveLength(2);
+    expect(JAPANESE_NE.strokes.map((stroke) => stroke.segments.map((segment) => segment.label))).toEqual([
+      ["descend through the short left vertical"],
+      [
+        "sweep left from the upper right across the vertical",
+        "hook down along the diagonal and return to the crossing",
+        "finish clockwise around the lower-right loop",
+      ],
+    ]);
+    expect(JAPANESE_NE.source.url).toBe(
+      "https://commons.wikimedia.org/wiki/File:Hiragana_%E3%81%AD_stroke_order_animation.gif",
+    );
+    expect(JAPANESE_NE.source.citation).toMatch(/Sirgazil.*ね.*35 frames.*3\.5 seconds/i);
+  });
+
+  it("Japanese み draws its loop before the lifted high-right sweep", () => {
+    expect(penLifts(JAPANESE_MI)).toBe(1);
+    expect(JAPANESE_MI.strokes).toHaveLength(2);
+    expect(JAPANESE_MI.strokes.map((stroke) => stroke.segments.map((segment) => segment.label))).toEqual([
+      [
+        "draw the top bar from left to right",
+        "descend diagonally into the lower-left loop",
+        "continue around the loop and sweep out through the middle",
+      ],
+      [
+        "begin high on the right and curve down to the left",
+        "turn upward at the finish",
+      ],
+    ]);
+    expect(JAPANESE_MI.source.url).toBe(
+      "https://commons.wikimedia.org/wiki/File:Hiragana_%E3%81%BF_stroke_order_animation.gif",
+    );
+    expect(JAPANESE_MI.source.citation).toMatch(/Sirgazil.*み.*29 frames.*2\.9 seconds/i);
+  });
+
+  it("Japanese せ draws the crossing bar before its two lifted stems", () => {
+    expect(penLifts(JAPANESE_SE)).toBe(2);
+    expect(JAPANESE_SE.strokes).toHaveLength(3);
+    expect(JAPANESE_SE.strokes.map((stroke) => stroke.segments.map((segment) => segment.label))).toEqual([
+      ["draw the long crossing horizontal from left to right"],
+      ["descend through the left crossing", "curve right along the base"],
+      ["descend through the right crossing", "hook left at the finish"],
+    ]);
+    expect(JAPANESE_SE.source.url).toBe(
+      "https://commons.wikimedia.org/wiki/File:Hiragana_%E3%81%9B_stroke_order_animation.gif",
+    );
+    expect(JAPANESE_SE.source.citation).toMatch(/Sirgazil.*せ.*33 frames.*3\.3 seconds/i);
+  });
+
+  it("Japanese て keeps its bar, return, and lower curve in one run", () => {
+    expect(penLifts(JAPANESE_TE)).toBe(0);
+    expect(JAPANESE_TE.strokes).toHaveLength(1);
+    expect(JAPANESE_TE.strokes[0].segments.map((segment) => segment.label)).toEqual([
+      "draw the high horizontal from left to right",
+      "turn back down and left through the diagonal",
+      "round the broad lower curve and sweep right to the finish",
+    ]);
+    expect(JAPANESE_TE.source.url).toBe(
+      "https://commons.wikimedia.org/wiki/File:Hiragana_%E3%81%A6_stroke_order_animation.gif",
+    );
+    expect(JAPANESE_TE.source.citation).toMatch(/Sirgazil.*て.*28 frames.*2\.8 seconds/i);
+  });
+
+  it("Japanese な draws three lifted marks before its looping body", () => {
+    expect(penLifts(JAPANESE_NA)).toBe(3);
+    expect(JAPANESE_NA.strokes).toHaveLength(4);
+    expect(JAPANESE_NA.strokes.map((stroke) => stroke.segments.map((segment) => segment.label))).toEqual([
+      ["draw the upper-left horizontal from left to right"],
+      ["descend through the crossing left-falling stem"],
+      ["draw the short upper-right diagonal down and right"],
+      ["descend through the lower-right stem", "turn around the loop and sweep right to the finish"],
+    ]);
+    expect(JAPANESE_NA.source.url).toBe(
+      "https://commons.wikimedia.org/wiki/File:Hiragana_%E3%81%AA_stroke_order_animation.gif",
+    );
+    expect(JAPANESE_NA.source.citation).toMatch(/Sirgazil.*な.*32 frames.*3\.2 seconds/i);
+  });
+
   it("Japanese small っ scales つ's one-run movement to its own glyph", () => {
     expect(penLifts(JAPANESE_SMALL_TSU)).toBe(0);
     expect(JAPANESE_SMALL_TSU.strokes).toHaveLength(1);
@@ -767,6 +866,43 @@ describe("handwriting ductus", () => {
     expect(JAPANESE_MO.source.url).toBe(
       "https://commons.wikimedia.org/wiki/File:Hiragana_%E3%82%82_stroke_order_animation.gif",
     );
+  });
+
+  it("Japanese わ draws the vertical before the crossing hook and broad loop", () => {
+    expect(penLifts(JAPANESE_WA)).toBe(1);
+    expect(JAPANESE_WA.strokes).toHaveLength(2);
+    expect(JAPANESE_WA.strokes.map((stroke) => stroke.segments.map((segment) => segment.label))).toEqual([
+      ["descend through the long left vertical"],
+      [
+        "sweep right from the upper left across the vertical",
+        "hook down and left, then return through the central crossing",
+        "continue clockwise around the broad right loop",
+      ],
+    ]);
+    expect(JAPANESE_WA.source.url).toBe(
+      "https://commons.wikimedia.org/wiki/File:Hiragana_%E3%82%8F_stroke_order_animation.gif",
+    );
+    expect(JAPANESE_WA.source.citation).toMatch(/Sirgazil.*わ.*30 frames.*3\.0 seconds/i);
+  });
+
+  it("Japanese ゆ draws its broad loop before the central descending curve", () => {
+    expect(penLifts(JAPANESE_YU)).toBe(1);
+    expect(JAPANESE_YU.strokes).toHaveLength(2);
+    expect(JAPANESE_YU.strokes.map((stroke) => stroke.segments.map((segment) => segment.label))).toEqual([
+      [
+        "descend through the left stem and turn up across the high shoulder",
+        "continue clockwise around the broad loop",
+        "curve left to the inner finish",
+      ],
+      [
+        "descend through the center of the loop",
+        "curve down and left to the finish",
+      ],
+    ]);
+    expect(JAPANESE_YU.source.url).toBe(
+      "https://commons.wikimedia.org/wiki/File:Hiragana_%E3%82%86_stroke_order_animation.gif",
+    );
+    expect(JAPANESE_YU.source.citation).toMatch(/Sirgazil.*ゆ.*30 frames.*3\.0 seconds/i);
   });
 
   it("ப descends, crosses the bottom, and rises without lifting", () => {
@@ -853,6 +989,19 @@ describe("handwriting ductus", () => {
     ]);
   });
 
+  it("Telugu ఏ groups four source-verified movements into three pen-down runs", () => {
+    expect(penLifts(TELUGU_EE)).toBe(2);
+    expect(TELUGU_EE.strokes).toHaveLength(3);
+    expect(TELUGU_EE.strokes.map((stroke) => stroke.segments.map((segment) => segment.label))).toEqual([
+      [
+        "turn down and left around the compact lower loop",
+        "continue around its base and return to the central junction",
+      ],
+      ["restart at the lower-right tail and sweep up through the broad outer arch"],
+      ["restart below the upper-left hook and sweep upward to its tip"],
+    ]);
+  });
+
   it("Kannada ಅ keeps all four animated movements in one pen-down run", () => {
     expect(penLifts(KANNADA_A)).toBe(0);
     expect(KANNADA_A.strokes).toHaveLength(1);
@@ -903,6 +1052,34 @@ describe("handwriting ductus", () => {
     ]);
     expect(KANNADA_E.source.url).toBe(
       "https://commons.wikimedia.org/wiki/File:Kannada-alphabet-ae.gif",
+    );
+  });
+
+  it("Kannada ಏ adds its small upper loop after one lift", () => {
+    expect(penLifts(KANNADA_EE)).toBe(1);
+    expect(KANNADA_EE.strokes).toHaveLength(2);
+    expect(KANNADA_EE.strokes.flatMap((stroke) => stroke.segments.map((segment) => segment.label))).toEqual([
+      "turn clockwise around the compact left loop",
+      "sweep through the joined lower curves and climb the right side",
+      "carry the tall outer arch over and finish at the upper left",
+      "draw the small upper loop from left to right",
+    ]);
+    expect(KANNADA_EE.source.url).toBe(
+      "https://commons.wikimedia.org/wiki/File:Kannada-alphabet-aee.gif",
+    );
+  });
+
+  it("Kannada ಒ joins its upper loop, lower bowls, and open terminal", () => {
+    expect(penLifts(KANNADA_O)).toBe(0);
+    expect(KANNADA_O.strokes).toHaveLength(1);
+    expect(KANNADA_O.strokes[0].segments.map((segment) => segment.label)).toEqual([
+      "turn counterclockwise around the compact upper-left loop",
+      "descend through the curved middle into the lower-left bowl",
+      "sweep through the join and around the lower-right bowl",
+      "climb the right side and curl left at the open terminal",
+    ]);
+    expect(KANNADA_O.source.url).toBe(
+      "https://commons.wikimedia.org/wiki/File:Kannada-alphabet-o.gif",
     );
   });
 
@@ -3643,6 +3820,27 @@ describe("handwriting ductus", () => {
     expect(path[0].y).toBeGreaterThan(path.at(-1)!.y);
   });
 
+  it("Urdu independent ب draws its bowl before the single lower dot", () => {
+    expect(URDU_BEH.script).toBe("urdu-nastaliq");
+    expect(penLifts(URDU_BEH)).toBe(1);
+    expect(URDU_BEH.strokes).toHaveLength(2);
+    expect(URDU_BEH.strokes.map((stroke) => stroke.segments[0].label)).toEqual([
+      "sweep the independent be-series bowl from right to left",
+      "after one lift, place the single dot below",
+    ]);
+    const bowl = URDU_BEH.strokes[0].segments[0].path;
+    const dot = URDU_BEH.strokes[1].segments[0].path;
+    expect(bowl[0].x).toBeGreaterThan(bowl.at(-1)!.x);
+    expect(Math.max(...dot.map((point) => point.y))).toBeLessThan(
+      Math.min(...bowl.map((point) => point.y)),
+    );
+    expect(URDU_BEH.source.url).toBe(
+      "https://openbooks.library.northwestern.edu/zerozabar/chapter/be-kaf-and-short-vowels/",
+    );
+    expect(URDU_BEH.source.citation).toMatch(/Zer o Zabar.*independent ب.*Be instructions/i);
+    expect(new Set([ARABIC_BAA.source.url, DUCTUS["ب"].source.url, URDU_BEH.source.url]).size).toBe(3);
+  });
+
   it("Urdu independent پ draws its bowl before the three-dot triangle", () => {
     expect(URDU_PEH.script).toBe("urdu-nastaliq");
     expect(penLifts(URDU_PEH)).toBe(3);
@@ -3665,6 +3863,25 @@ describe("handwriting ductus", () => {
     );
     expect(URDU_PEH.source.citation).toMatch(/Zer o Zabar.*independent پ.*Pe instructions/i);
     expect(DUCTUS["پ"].source.url).not.toBe(URDU_PEH.source.url);
+  });
+
+  it("Urdu independent ت draws its bowl before two upper dots", () => {
+    expect(URDU_TE.script).toBe("urdu-nastaliq");
+    expect(penLifts(URDU_TE)).toBe(2);
+    expect(URDU_TE.strokes.map((stroke) => stroke.segments.length)).toEqual([1, 1, 1]);
+    expect(URDU_TE.strokes.map((stroke) => stroke.segments[0].label)).toEqual([
+      "sweep the independent be-series bowl from right to left",
+      "after one lift, place the left dot above the main line",
+      "after another lift, place the right dot beside it",
+    ]);
+    const left = URDU_TE.strokes[1].segments[0].path;
+    const right = URDU_TE.strokes[2].segments[0].path;
+    expect(left[0].x).toBeLessThan(right[0].x);
+    expect(URDU_TE.source.url).toBe(
+      "https://openbooks.library.northwestern.edu/zerozabar/chapter/te-mim-jim-che/",
+    );
+    expect(URDU_TE.source.url).not.toBe(ARABIC_TAA.source.url);
+    expect(URDU_TE.source.url).not.toBe(DUCTUS["ت"].source.url);
   });
 
   it("Urdu independent ٹ draws its bowl before the lifted retroflex mark", () => {
@@ -3811,6 +4028,31 @@ describe("handwriting ductus", () => {
     expect(bowl[0].x).toBeGreaterThan(bowl.at(-1)!.x);
     expect(slash[0].x).toBeGreaterThan(slash.at(-1)!.x);
     expect(slash[0].y).toBeGreaterThan(slash.at(-1)!.y);
+  });
+
+  it("Urdu independent گ adds a shorter floating slash above the kāf construction", () => {
+    expect(URDU_GAF.script).toBe("urdu-nastaliq");
+    expect(penLifts(URDU_GAF)).toBe(2);
+    expect(URDU_GAF.strokes.map((stroke) => stroke.segments.length)).toEqual([2, 1, 1]);
+    expect(URDU_GAF.strokes[2].segments[0].label).toMatch(/shorter floating slash above/i);
+    const longSlash = URDU_GAF.strokes[1].segments[0].path;
+    const shortSlash = URDU_GAF.strokes[2].segments[0].path;
+    expect(shortSlash[0].y).toBeGreaterThan(longSlash[0].y);
+    expect(URDU_GAF.source.url).toBe(
+      "https://openbooks.library.northwestern.edu/zerozabar/chapter/pe-gaf-alif-lam/",
+    );
+  });
+
+  it("Persian independent ک keeps its scoped body-first two-run source", () => {
+    expect(PERSIAN_KAF.script).toBe("perso-arabic");
+    expect(penLifts(PERSIAN_KAF)).toBe(1);
+    expect(PERSIAN_KAF.strokes).toHaveLength(2);
+    expect(PERSIAN_KAF.strokes.map((stroke) => stroke.segments.length)).toEqual([2, 1]);
+    expect(PERSIAN_KAF.strokes.map((stroke) => stroke.segments.map((segment) => segment.path))).toEqual(
+      URDU_KAF.strokes.map((stroke) => stroke.segments.map((segment) => segment.path)),
+    );
+    expect(PERSIAN_KAF.source.citation).toMatch(/Persian Online.*ک.*02:19–02:23/i);
+    expect(PERSIAN_KAF.source.url).not.toBe(URDU_KAF.source.url);
   });
 
   it("Urdu independent ل descends through its below-baseline bowl without lifting", () => {
@@ -4590,6 +4832,9 @@ describe("handwriting ductus", () => {
       "_fonts/NotoSansTelugu-Static.ttf",
     );
     expect(verifiedLetterFont("ఎ", TELUGU_E.source.url)).toBe(
+      "_fonts/NotoSansTelugu-Static.ttf",
+    );
+    expect(verifiedLetterFont("ఏ", TELUGU_EE.source.url)).toBe(
       "_fonts/NotoSansTelugu-Static.ttf",
     );
     expect(verifiedLetterFont("ಅ", KANNADA_A.source.url)).toBe(

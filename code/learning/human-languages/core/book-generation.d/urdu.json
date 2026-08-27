@@ -144,7 +144,13 @@
     {
       "language": "urdu",
       "chapter": 1,
-      "output": "urdu/book/chapters/ch01-greetings-and-responses.tex"
+      "output": "urdu/book/chapters/ch01-greetings-and-responses.tex",
+      "embeddedLessonIds": [
+        "UR-W01-shukriya-first-three",
+        "UR-C01-shukriya",
+        "UR-C01-ji-han",
+        "UR-C01-nahin"
+      ]
     }
   ]
 }

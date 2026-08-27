@@ -6075,7 +6075,7 @@ impl Compiler {
         if exact_bare_variable_expression_name(node).as_deref() == Some(name) {
             return true;
         }
-        if let Some(base) = literal_power_identity_base(node) {
+        if let Some(base) = literal_power_identity_base(node, false) {
             return self.integer_identity_expression_preserves_name(base, name);
         }
         let sequence = pieces(node);
@@ -6157,7 +6157,7 @@ impl Compiler {
         if exact_bare_variable_expression_name(node).as_deref() == Some(name) {
             return true;
         }
-        if let Some(base) = literal_power_identity_base(node) {
+        if let Some(base) = literal_power_identity_base(node, true) {
             return self.real_identity_expression_preserves_name(base, name);
         }
         let sequence = pieces(node);
@@ -8129,10 +8129,13 @@ fn literal_nonneg_integer_power_chain(nodes: &[&GrammarASTNode]) -> Option<u32> 
 }
 
 /// Return the base of an exponentiation expression whose complete literal
-/// exponent chain evaluates to one. The power lowerer returns that base
-/// directly, so this is an exact structural identity for integer and real
-/// values rather than an algebraic approximation of runtime `f64_pow`.
-fn literal_power_identity_base(node: &GrammarASTNode) -> Option<&GrammarASTNode> {
+/// exponent chain evaluates to one. Integer-literal chains return the base
+/// directly; real selector analysis also accepts bounded integral real
+/// literals whose finite runtime power result preserves the base.
+fn literal_power_identity_base(
+    node: &GrammarASTNode,
+    allow_integral_real_exponents: bool,
+) -> Option<&GrammarASTNode> {
     let sequence = pieces(node);
     if sequence.len() < 3 || sequence.len().is_multiple_of(2) {
         return None;
@@ -8149,7 +8152,12 @@ fn literal_power_identity_base(node: &GrammarASTNode) -> Option<&GrammarASTNode>
         }
     }
     let (base, exponents) = operands.split_first()?;
-    (literal_nonneg_integer_power_chain(exponents) == Some(1)).then_some(*base)
+    let exponent = if allow_integral_real_exponents {
+        literal_nonnegative_integral_arithmetic_power_chain(exponents)
+    } else {
+        literal_nonneg_integer_power_chain(exponents)
+    };
+    (exponent == Some(1)).then_some(*base)
 }
 
 fn literal_signed_integer_exponent(node: &GrammarASTNode) -> Option<i32> {
@@ -8203,6 +8211,44 @@ fn literal_nonnegative_integral_power_chain(nodes: &[&GrammarASTNode]) -> Option
             let value = literal_integral_real_exponent(node)?;
             (value >= 0).then_some(value as u32)
         })
+    };
+    let mut value = exponent_value(last)? as u64;
+
+    for node in prefix.iter().rev() {
+        let base = exponent_value(node)? as u64;
+        value = base.checked_pow(value.try_into().ok()?)?;
+        if value > MAX_POW_UNROLL_EXPONENT as u64 {
+            return None;
+        }
+    }
+
+    Some(value as u32)
+}
+
+fn literal_nonnegative_integral_arithmetic_power_chain(
+    nodes: &[&GrammarASTNode],
+) -> Option<u32> {
+    let (last, prefix) = nodes.split_last()?;
+    let exponent_value = |node: &GrammarASTNode| {
+        if let Some(value) = literal_nonneg_integer_exponent(node) {
+            return Some(value);
+        }
+        if let Some(value) = literal_integral_real_exponent(node) {
+            return (value >= 0).then_some(value as u32);
+        }
+        if !recursive_tokens(node)
+            .iter()
+            .any(|token| token.effective_type_name() == "REAL_LIT" || token.value == "/")
+        {
+            let value = literal_checked_integer_arithmetic_value(node)?;
+            return (value >= 0 && value <= MAX_POW_UNROLL_EXPONENT as i64)
+                .then_some(value as u32);
+        }
+        let value = expr_static_real_arithmetic_value_with(node, &|_| None)?;
+        (value.fract() == 0.0
+            && value >= 0.0
+            && value <= MAX_POW_UNROLL_EXPONENT as f64)
+            .then_some(value as u32)
     };
     let mut value = exponent_value(last)? as u64;
 
@@ -8490,6 +8536,79 @@ fn literal_integer_value(node: &GrammarASTNode) -> Option<i64> {
     (tokens.is_empty() && child_nodes.len() == 1)
         .then(|| literal_integer_value(child_nodes[0]))
         .flatten()
+}
+
+fn literal_checked_integer_arithmetic_value(node: &GrammarASTNode) -> Option<i64> {
+    if let Some(value) = literal_integer_value(node) {
+        return Some(value);
+    }
+
+    let sequence = pieces(node);
+    if node.rule_name == "expr_pow"
+        && sequence
+            .iter()
+            .any(|piece| matches!(piece, Piece::Op(op) if op == "^" || op == "**"))
+    {
+        if sequence.len().is_multiple_of(2) {
+            return None;
+        }
+        let mut operands = Vec::new();
+        for (index, piece) in sequence.iter().enumerate() {
+            if index.is_multiple_of(2) {
+                let Piece::Node(operand) = piece else {
+                    return None;
+                };
+                operands.push(*operand);
+            } else if !matches!(piece, Piece::Op(op) if op == "^" || op == "**") {
+                return None;
+            }
+        }
+        let (base, exponents) = operands.split_first()?;
+        let exponent = literal_nonneg_integer_power_chain(exponents)?;
+        return literal_checked_integer_arithmetic_value(base)?.checked_pow(exponent);
+    }
+    if sequence.len() == 1 {
+        return match sequence[0] {
+            Piece::Node(child) => literal_checked_integer_arithmetic_value(child),
+            Piece::Op(_) => None,
+        };
+    }
+
+    let mut index = 0;
+    let mut negate = false;
+    if let Some(Piece::Op(op)) = sequence.first() {
+        negate = match op.as_str() {
+            "+" => false,
+            "-" => true,
+            _ => return None,
+        };
+        index += 1;
+    }
+    let Piece::Node(first) = sequence.get(index)? else {
+        return None;
+    };
+    let first = literal_checked_integer_arithmetic_value(first)?;
+    let mut value = if negate { first.checked_neg()? } else { first };
+    index += 1;
+    while index < sequence.len() {
+        let Piece::Op(op) = sequence.get(index)? else {
+            return None;
+        };
+        let Piece::Node(rhs) = sequence.get(index + 1)? else {
+            return None;
+        };
+        let rhs = literal_checked_integer_arithmetic_value(rhs)?;
+        value = match op.as_str() {
+            "+" => value.checked_add(rhs)?,
+            "-" => value.checked_sub(rhs)?,
+            "*" => value.checked_mul(rhs)?,
+            "div" => value.checked_div(rhs)?,
+            "mod" => value.checked_rem(rhs)?,
+            _ => return None,
+        };
+        index += 2;
+    }
+    Some(value)
 }
 
 fn literal_numeric_unit_is_negative(node: &GrammarASTNode) -> Option<bool> {
@@ -11189,6 +11308,14 @@ mod tests {
             "choose ^ 1",
             "choose ** 1",
             "choose ^ 1 ^ 1",
+            "choose ^ 1.0",
+            "choose ** (+1.0)",
+            "choose ^ 1.0 ^ 1",
+            "choose ^ (2.0 - 1.0)",
+            "choose ** ((2.0 * 2.0) / 4.0)",
+            "choose ^ (3.0 - 2.0) ^ (2.0 - 1.0)",
+            "choose ^ (2 - 1)",
+            "choose ** ((6 div 3) - 1)",
             "+choose",
             "(choose)",
             "choose * (1.0)",
@@ -11282,7 +11409,9 @@ mod tests {
             "choose ^ 0",
             "choose ^ 0.0",
             "1.0 ^ choose",
-            "choose ^ 1.0",
+            "choose ^ 2.0",
+            "choose ^ (3.0 - 1.0)",
+            "choose ^ ((9223372036854775807 + 1) - 9223372036854775807)",
             "choose - ((-0.0) ^ 0)",
             "choose + ((-0.0) ^ 2)",
         ] {

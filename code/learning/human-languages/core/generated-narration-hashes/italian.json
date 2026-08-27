@@ -286,7 +286,7 @@
     {
       "language": "italian",
       "chapter": 18,
-      "sourceHash": "fnv1a64:e6760761fdd366e9",
+      "sourceHash": "fnv1a64:d09734efe517ba07",
       "lessonIds": [
         "IT-C18-pensare",
         "IT-C18-capire",
@@ -298,12 +298,12 @@
       "text": "italian/narration/ch18.txt",
       "json": "italian/narration/ch18.json",
       "textHash": "fnv1a64:51c0fd04024c453b",
-      "jsonHash": "fnv1a64:1ff75a95046ef0ae"
+      "jsonHash": "fnv1a64:6c9fe0b774806031"
     },
     {
       "language": "italian",
       "chapter": 19,
-      "sourceHash": "fnv1a64:f337de5f22901d82",
+      "sourceHash": "fnv1a64:77f28976c9d33821",
       "lessonIds": [
         "IT-C19-prendere",
         "IT-C19-chiedere",
@@ -315,12 +315,12 @@
       "text": "italian/narration/ch19.txt",
       "json": "italian/narration/ch19.json",
       "textHash": "fnv1a64:15d2d42ad6328b16",
-      "jsonHash": "fnv1a64:adae5d2fccabffe0"
+      "jsonHash": "fnv1a64:ec23de50757d1957"
     },
     {
       "language": "italian",
       "chapter": 20,
-      "sourceHash": "fnv1a64:8e8b66cfd72012b7",
+      "sourceHash": "fnv1a64:d908006fc7a74f00",
       "lessonIds": [
         "IT-C20-portare",
         "IT-C20-comprare",
@@ -332,7 +332,7 @@
       "text": "italian/narration/ch20.txt",
       "json": "italian/narration/ch20.json",
       "textHash": "fnv1a64:1939cafb88d0cbc1",
-      "jsonHash": "fnv1a64:5a8181e3a1c1dc4f"
+      "jsonHash": "fnv1a64:e5e9f72f32879b24"
     },
     {
       "language": "italian",

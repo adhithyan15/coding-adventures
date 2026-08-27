@@ -4,7 +4,7 @@
   "chapter": 9,
   "title": "Taking, Asking, Helping, Liking",
   "drivablePrefix": 0,
-  "sourceHash": "fnv1a64:87c66f64ea563bde",
+  "sourceHash": "fnv1a64:4767c103fcf56411",
   "lessons": [
     {
       "id": "BN-C09-neowa",
@@ -199,7 +199,7 @@
       "modalityReasons": [
         "script-block"
       ],
-      "sourceHash": "fnv1a64:4b3d683c0f08d7a8",
+      "sourceHash": "fnv1a64:654e2f3215f6b575",
       "notice": {
         "modality": "sight",
         "needs": [
@@ -564,7 +564,7 @@
       "modalityReasons": [
         "script-block"
       ],
-      "sourceHash": "fnv1a64:c9aa4582a3ac3bf3",
+      "sourceHash": "fnv1a64:103b21f7a6a3c779",
       "notice": {
         "modality": "sight",
         "needs": [

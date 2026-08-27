@@ -579,6 +579,33 @@ fn check_soundness_stmt(s: &semantic_ir::Stmt, errs: &mut Vec<BackendError>) {
         // `Stmt`/`Expr` to recurse into, regardless of whether the
         // feature is accepted.
         Stmt::Break { .. } | Stmt::Continue { .. } => {}
+        // Switch statement (task #51): not in `ACCEPTED_FEATURES`, so a
+        // module using it is already rejected by the manifest-level
+        // `check_module` gate — same situation as the SIR29 arm above,
+        // and for the same reason this stays non-panicking rather than
+        // mirroring `emit.rs`'s post-gate panic arm. Recurse into every
+        // nested `Stmt`/`Expr` position (`discriminant`, each case's
+        // `value` and `body`, and `default`) for the same
+        // residual-const-usage checks every other statement gets.
+        Stmt::Switch {
+            discriminant,
+            cases,
+            default,
+            ..
+        } => {
+            check_soundness_expr(discriminant, errs);
+            for case in cases {
+                check_soundness_expr(&case.value, errs);
+                for st in &case.body {
+                    check_soundness_stmt(st, errs);
+                }
+            }
+            if let Some(default) = default {
+                for st in default {
+                    check_soundness_stmt(st, errs);
+                }
+            }
+        }
     }
 }
 

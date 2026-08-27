@@ -4,6 +4,31 @@ All notable changes to this package will be documented in this file.
 
 ## [Unreleased]
 
+### Security - validate literal HostLink.href scheme; upgrade safeHref to an allowlist (#13052)
+
+Follow-up to #12038 (the identical XAML gap). A literal `href` was spliced
+into a real `<a href="...">` with only HTML-attribute escaping — no scheme
+check — while the slot-bound path already routed through a `safeHref`
+runtime helper, but that helper only blocklisted three schemes
+(`javascript`/`data`/`vbscript`), missing custom protocol handlers and any
+future dangerous scheme.
+
+Two changes: (1) a new `has_disallowed_uri_scheme` Rust function rejects a
+literal `href` at compile time (new `PipelineEmitError::UnsafeUriScheme`
+variant) when it carries an explicit, disallowed scheme — a relative
+reference with no scheme at all (`"#"`, `"/about"`) is unaffected, since
+that's the common in-app-routing shape. (2) `safeHref` itself is upgraded
+from the 3-item blocklist to the same allowlist (`http`/`https`/`mailto`),
+so a literal and a slot-bound href of the same value now get the same
+verdict.
+
+Checked unconditionally (not gated on `external: false`), unlike the
+native-widget backends (Qt/XAML/Compose/SwiftUI/Flutter): the `href`
+attribute here lands on a real `<a>` element reachable outside the
+`onclick` handler (middle-click, "open in new tab", drag) even when
+`external: false`'s `event.preventDefault()` blocks the ordinary click
+path.
+
 ### Fixed - host-controlled shadow-DOM interpolation
 
 Generated pipeline components now encode dynamic text and quoted-attribute

@@ -348,11 +348,7 @@
       "spine_node": "SPINE-SAY-WHAT-I-DO",
       "lessons": [
         "KA-C32-iru",
-        "KA-C32-hoogu",
-        "KA-C32-baa",
-        "KA-C32-tinnu",
-        "KA-C32-noodu",
-        "KA-C32-gottu"
+        "KA-C32-hoogu"
       ],
       "before": [],
       "inline": [
@@ -361,22 +357,102 @@
       "after": []
     },
     {
+      "id": "KA-PATH-025-B",
+      "spine_node": "SPINE-NAME-EVERYDAY-ACTIONS",
+      "lessons": [
+        "KA-C32-baa"
+      ],
+      "before": [],
+      "inline": [
+        "KA-EXT-025-CORE-VERBS-B"
+      ],
+      "after": []
+    },
+    {
+      "id": "KA-PATH-025-C",
+      "spine_node": "SPINE-SAY-WHAT-I-DO",
+      "lessons": [
+        "KA-C32-tinnu",
+        "KA-C32-noodu",
+        "KA-C32-gottu"
+      ],
+      "before": [],
+      "inline": [
+        "KA-EXT-025-CORE-VERBS-C"
+      ],
+      "after": []
+    },
+    {
       "id": "KA-PATH-026",
       "spine_node": "SPINE-SAY-WHAT-I-DO",
       "lessons": [
         "KA-C33-yocisu",
-        "KA-C33-artha-maadiko",
+        "KA-C33-artha-maadiko"
+      ],
+      "before": [],
+      "inline": [
+        "KA-EXT-026-MIND-VERBS"
+      ],
+      "after": []
+    },
+    {
+      "id": "KA-PATH-026-B",
+      "spine_node": "SPINE-NAME-EVERYDAY-ACTIONS",
+      "lessons": [
         "KA-C33-oodu",
-        "KA-C33-bare",
-        "KA-C34-tegeduko",
-        "KA-C34-keelu",
-        "KA-C34-sahaya-maadu",
+        "KA-C33-bare"
+      ],
+      "before": [],
+      "inline": [
+        "KA-EXT-026-MIND-VERBS-B"
+      ],
+      "after": []
+    },
+    {
+      "id": "KA-PATH-026-C",
+      "spine_node": "SPINE-SAY-WHAT-I-DO",
+      "lessons": [
+        "KA-C34-tegeduko"
+      ],
+      "before": [],
+      "inline": [
+        "KA-EXT-027-SOCIAL-VERBS"
+      ],
+      "after": []
+    },
+    {
+      "id": "KA-PATH-026-D",
+      "spine_node": "SPINE-NAME-EVERYDAY-ACTIONS",
+      "lessons": [
+        "KA-C34-keelu"
+      ],
+      "before": [],
+      "inline": [
+        "KA-EXT-027-SOCIAL-VERBS-B"
+      ],
+      "after": []
+    },
+    {
+      "id": "KA-PATH-026-E",
+      "spine_node": "SPINE-SAY-WHAT-I-DO",
+      "lessons": [
+        "KA-C34-sahaya-maadu"
+      ],
+      "before": [],
+      "inline": [
+        "KA-EXT-027-SOCIAL-VERBS-C"
+      ],
+      "after": []
+    },
+    {
+      "id": "KA-PATH-026-E-B",
+      "spine_node": "SPINE-SAY-WHAT-I-LIKE",
+      "lessons": [
         "KA-C34-ishta"
       ],
       "before": [],
       "inline": [
-        "KA-EXT-026-MIND-VERBS",
-        "KA-EXT-027-SOCIAL-VERBS"
+        "KA-EXT-027-SOCIAL-VERBS-D"
       ],
       "after": []
     },
@@ -1026,47 +1102,88 @@
       "relocates": {}
     },
     "SPINE-NAME-EVERYDAY-ACTIONS": {
-      "segments": [],
+      "segments": [
+        "KA-PATH-025-B",
+        "KA-PATH-026-B",
+        "KA-PATH-026-D"
+      ],
       "omits": [
         "VERB-DRINK",
         "VERB-GIVE",
-        "VERB-PUT"
+        "VERB-PUT",
+        "VERB-DO-MAKE",
+        "VERB-BUY",
+        "VERB-OPEN",
+        "VERB-CLOSE",
+        "VERB-STAND",
+        "VERB-WAIT",
+        "VERB-BRING",
+        "VERB-WALK"
+      ],
+      "relocates": {}
+    },
+    "SPINE-NAME-EVERYDAY-THINGS": {
+      "segments": [],
+      "omits": [
+        "LODGING-ROOM"
+      ],
+      "relocates": {}
+    },
+    "SPINE-SAY-WHAT-I-HAVE-AND-CAN-DO": {
+      "segments": [],
+      "omits": [
+        "VERB-HAVE",
+        "VERB-CAN"
+      ],
+      "relocates": {}
+    },
+    "SPINE-SAY-WHAT-I-LIKE": {
+      "segments": [
+        "KA-PATH-026-E-B"
+      ],
+      "omits": [],
+      "relocates": {}
+    },
+    "SPINE-SAY-WHY": {
+      "segments": [],
+      "omits": [
+        "CONNECTIVE-BECAUSE"
+      ],
+      "relocates": {}
+    },
+    "SPINE-SAY-WHAT-I-WANT": {
+      "segments": [],
+      "omits": [
+        "VERB-WANT"
       ],
       "relocates": {}
     },
     "SPINE-SAY-WHAT-I-DO": {
       "segments": [
         "KA-PATH-025",
+        "KA-PATH-025-C",
         "KA-PATH-026",
+        "KA-PATH-026-C",
+        "KA-PATH-026-E",
         "KA-PATH-43-VERBS",
         "KA-PATH-44-SEESAY"
       ],
       "omits": [
         "VERB-INFINITIVE",
         "VERB-PRESENT-HABITUAL",
-        "VERB-HAVE",
-        "VERB-DO-MAKE",
         "VERB-SAY",
         "VERB-SPEAK",
         "VERB-HEAR",
         "VERB-LEARN",
-        "VERB-CAN",
-        "VERB-BRING",
         "VERB-GET",
         "VERB-SLEEP",
         "VERB-LIVE",
         "VERB-WORK",
         "VERB-PLAY",
-        "VERB-WALK",
         "VERB-RUN",
         "VERB-SIT",
-        "VERB-STAND",
-        "VERB-WAIT",
         "VERB-ANSWER",
-        "VERB-MEET",
-        "VERB-BUY",
-        "VERB-OPEN",
-        "VERB-CLOSE"
+        "VERB-MEET"
       ],
       "relocates": {}
     },
@@ -1075,13 +1192,6 @@
       "omits": [
         "VERB-NEGATE",
         "QUESTION-POLAR"
-      ],
-      "relocates": {}
-    },
-    "SPINE-SAY-WHAT-I-WANT": {
-      "segments": [],
-      "omits": [
-        "VERB-WANT"
       ],
       "relocates": {}
     },
@@ -1104,7 +1214,6 @@
       "omits": [
         "NARRATIVE-SEQUENCE",
         "CONNECTIVE-THEN",
-        "CONNECTIVE-BECAUSE",
         "ASPECT-ONGOING-PAST"
       ],
       "relocates": {}
@@ -1124,7 +1233,6 @@
       "omits": [
         "DIRECTION-ASK",
         "TRANSPORT-TICKET",
-        "LODGING-ROOM",
         "PROBLEM-REPORT"
       ],
       "relocates": {}
@@ -1510,8 +1618,28 @@
       "prerequisites": [],
       "lessons": [
         "KA-C32-iru",
-        "KA-C32-hoogu",
-        "KA-C32-baa",
+        "KA-C32-hoogu"
+      ]
+    },
+    {
+      "id": "KA-EXT-025-CORE-VERBS-B",
+      "stage": "A2",
+      "kind": "required",
+      "category": "language-specific",
+      "canDo": "I can say what I do with six everyday Kannada verbs, build each one as stem plus tense plus person, and name the one that carries no person at all.",
+      "prerequisites": [],
+      "lessons": [
+        "KA-C32-baa"
+      ]
+    },
+    {
+      "id": "KA-EXT-025-CORE-VERBS-C",
+      "stage": "A2",
+      "kind": "required",
+      "category": "language-specific",
+      "canDo": "I can say what I do with six everyday Kannada verbs, build each one as stem plus tense plus person, and name the one that carries no person at all.",
+      "prerequisites": [],
+      "lessons": [
         "KA-C32-tinnu",
         "KA-C32-noodu",
         "KA-C32-gottu"
@@ -1526,7 +1654,17 @@
       "prerequisites": [],
       "lessons": [
         "KA-C33-yocisu",
-        "KA-C33-artha-maadiko",
+        "KA-C33-artha-maadiko"
+      ]
+    },
+    {
+      "id": "KA-EXT-026-MIND-VERBS-B",
+      "stage": "A2",
+      "kind": "required",
+      "category": "language-specific",
+      "canDo": "I can say I think, I understand, I read and I write in Kannada, name the suffix that turns a Sanskrit noun into a Kannada verb, use the ending that hands an action back to its doer, and give both of the front-of-the-word sound laws that separate Kannada from Tamil.",
+      "prerequisites": [],
+      "lessons": [
         "KA-C33-oodu",
         "KA-C33-bare"
       ]
@@ -1539,9 +1677,39 @@
       "canDo": "I can say I take, I ask and I help in Kannada, say I like Kannada in a sentence with no verb in it, and show that the dative frame it uses was Kannada's own before any Sanskrit word moved into it.",
       "prerequisites": [],
       "lessons": [
-        "KA-C34-tegeduko",
-        "KA-C34-keelu",
-        "KA-C34-sahaya-maadu",
+        "KA-C34-tegeduko"
+      ]
+    },
+    {
+      "id": "KA-EXT-027-SOCIAL-VERBS-B",
+      "stage": "A2",
+      "kind": "required",
+      "category": "language-specific",
+      "canDo": "I can say I take, I ask and I help in Kannada, say I like Kannada in a sentence with no verb in it, and show that the dative frame it uses was Kannada's own before any Sanskrit word moved into it.",
+      "prerequisites": [],
+      "lessons": [
+        "KA-C34-keelu"
+      ]
+    },
+    {
+      "id": "KA-EXT-027-SOCIAL-VERBS-C",
+      "stage": "A2",
+      "kind": "required",
+      "category": "language-specific",
+      "canDo": "I can say I take, I ask and I help in Kannada, say I like Kannada in a sentence with no verb in it, and show that the dative frame it uses was Kannada's own before any Sanskrit word moved into it.",
+      "prerequisites": [],
+      "lessons": [
+        "KA-C34-sahaya-maadu"
+      ]
+    },
+    {
+      "id": "KA-EXT-027-SOCIAL-VERBS-D",
+      "stage": "A2",
+      "kind": "required",
+      "category": "language-specific",
+      "canDo": "I can say I take, I ask and I help in Kannada, say I like Kannada in a sentence with no verb in it, and show that the dative frame it uses was Kannada's own before any Sanskrit word moved into it.",
+      "prerequisites": [],
+      "lessons": [
         "KA-C34-ishta"
       ]
     },

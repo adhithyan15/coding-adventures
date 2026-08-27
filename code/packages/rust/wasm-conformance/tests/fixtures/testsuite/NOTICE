@@ -2394,6 +2394,45 @@ doesn't check a table's element type is `funcref` before an indirect
 call). Neither is new, and neither is this addendum's own concrete-
 function-ref subtyping work.
 
+extended 2026-08-26 (W27 -- census-driven batch: 70 more files vendored
+               in one pass, same pinned commit, no re-pin. Census found
+               146/257 upstream files vendored, 112 missing; most of the
+               missing 112 were plain corpus SPLITS of already-fully-
+               implemented MVP features that had simply never been
+               fetched. Live-running each candidate (not trusting any
+               prior categorization) found: ~50 files already passed
+               cleanly; a handful were blocked on three small, real,
+               now-fixed gaps -- (1) active data segments could only
+               ever target memory 0 in a multi-memory module
+               (`wasm-validator`'s Check 8 widened from "must be 0" to a
+               real bounds check against the real memory count;
+               `wasm-runtime::instantiate` widened to apply each
+               segment to its OWN `seg.memory_index`, not
+               unconditionally memory 0; also fixed a second,
+               previously-undetected bug the same widening surfaced --
+               a PASSIVE data segment was wrongly required to target a
+               real memory even though it references none at all,
+               `token.wast`'s own no-memory-module case), (2)
+               `wasm-wast-parser`'s inline-import desugaring never
+               recognized a field combining an inline EXPORT with an
+               inline IMPORT on the same field (`(memory $m (export
+               "e") (import "m" "n") <limits>)`), and (3) a module's
+               `start` function was parsed and carried on `WasmModule`
+               but never actually INVOKED at instantiation time
+               (`wasm-runtime::instantiate` now calls it, as the very
+               last step, exactly once, if present) -- and a genuine
+               pleasant surprise: nearly all of the GC-proposal files
+               this repo's real "no non-null concrete ref type" wall
+               was assumed to block turned out to gracefully degrade to
+               all-`not_yet_supported`/zero-real-`fail` instead of hard-
+               failing, meeting this repo's own existing "vendor it"
+               bar. See `fetch_testsuite.py`'s own batch-level comment
+               immediately above its 70 new filenames for the full
+               per-file accounting and the deliberately-skipped list
+               with reasons, and `code/packages/rust/wasm-validator`/
+               `wasm-runtime`/`wasm-wast-parser`/`wasm-execution`'s own
+               CHANGELOGs for the exact code changes).
+
 The vendored files are licensed under the Apache License, Version 2.0 --
 see the accompanying LICENSE file, itself vendored verbatim from the same
 pinned commit.

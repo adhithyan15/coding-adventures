@@ -237,13 +237,22 @@
         "HI-C05-bolna",
         "HI-C05-bolta-hun",
         "HI-C05-rahna",
-        "HI-C05-karna",
         "HI-C05-main-hindi-bolta-hun"
       ],
       "before": [],
       "inline": [
         "HI-EXT-028-LANGUAGE-SPECIFIC"
       ],
+      "after": []
+    },
+    {
+      "id": "HI-PATH-A1-KARNA",
+      "spine_node": "SPINE-NAME-EVERYDAY-ACTIONS",
+      "lessons": [
+        "HI-C05-karna"
+      ],
+      "before": [],
+      "inline": [],
       "after": []
     },
     {
@@ -486,12 +495,57 @@
       "spine_node": "SPINE-SAY-WHAT-I-DO",
       "lessons": [
         "HI-C34-sochna",
-        "HI-C34-samajhna",
+        "HI-C34-samajhna"
+      ],
+      "before": [],
+      "inline": [],
+      "after": []
+    },
+    {
+      "id": "HI-PATH-029-B",
+      "spine_node": "SPINE-NAME-EVERYDAY-ACTIONS",
+      "lessons": [
         "HI-C34-padhna",
-        "HI-C34-likhna",
-        "HI-C35-lena",
-        "HI-C35-puchna",
-        "HI-C35-madad",
+        "HI-C34-likhna"
+      ],
+      "before": [],
+      "inline": [],
+      "after": []
+    },
+    {
+      "id": "HI-PATH-029-C",
+      "spine_node": "SPINE-SAY-WHAT-I-DO",
+      "lessons": [
+        "HI-C35-lena"
+      ],
+      "before": [],
+      "inline": [],
+      "after": []
+    },
+    {
+      "id": "HI-PATH-029-D",
+      "spine_node": "SPINE-NAME-EVERYDAY-ACTIONS",
+      "lessons": [
+        "HI-C35-puchna"
+      ],
+      "before": [],
+      "inline": [],
+      "after": []
+    },
+    {
+      "id": "HI-PATH-029-E",
+      "spine_node": "SPINE-SAY-WHAT-I-DO",
+      "lessons": [
+        "HI-C35-madad"
+      ],
+      "before": [],
+      "inline": [],
+      "after": []
+    },
+    {
+      "id": "HI-PATH-029-E-B",
+      "spine_node": "SPINE-SAY-WHAT-I-LIKE",
+      "lessons": [
         "HI-C35-pasand"
       ],
       "before": [],
@@ -1122,11 +1176,59 @@
       "relocates": {}
     },
     "SPINE-NAME-EVERYDAY-ACTIONS": {
-      "segments": [],
+      "segments": [
+        "HI-PATH-A1-KARNA",
+        "HI-PATH-029-B",
+        "HI-PATH-029-D"
+      ],
       "omits": [
         "VERB-DRINK",
         "VERB-GIVE",
-        "VERB-PUT"
+        "VERB-PUT",
+        "VERB-BUY",
+        "VERB-OPEN",
+        "VERB-CLOSE",
+        "VERB-STAND",
+        "VERB-WAIT",
+        "VERB-BRING",
+        "VERB-COME",
+        "VERB-WALK"
+      ],
+      "relocates": {}
+    },
+    "SPINE-NAME-EVERYDAY-THINGS": {
+      "segments": [],
+      "omits": [
+        "LODGING-ROOM"
+      ],
+      "relocates": {}
+    },
+    "SPINE-SAY-WHAT-I-HAVE-AND-CAN-DO": {
+      "segments": [],
+      "omits": [
+        "VERB-HAVE",
+        "VERB-CAN"
+      ],
+      "relocates": {}
+    },
+    "SPINE-SAY-WHAT-I-LIKE": {
+      "segments": [
+        "HI-PATH-029-E-B"
+      ],
+      "omits": [],
+      "relocates": {}
+    },
+    "SPINE-SAY-WHY": {
+      "segments": [],
+      "omits": [
+        "CONNECTIVE-BECAUSE"
+      ],
+      "relocates": {}
+    },
+    "SPINE-SAY-WHAT-I-WANT": {
+      "segments": [],
+      "omits": [
+        "VERB-WANT"
       ],
       "relocates": {}
     },
@@ -1136,37 +1238,29 @@
         "HI-PATH-028",
         "HI-PATH-028A",
         "HI-PATH-029",
+        "HI-PATH-029-C",
+        "HI-PATH-029-E",
         "HI-PATH-42-VERBS",
         "HI-PATH-43-SEESAY"
       ],
       "omits": [
         "VERB-INFINITIVE",
         "VERB-PRESENT-HABITUAL",
-        "VERB-HAVE",
         "VERB-GO",
-        "VERB-COME",
         "VERB-SAY",
         "VERB-SEE",
         "VERB-HEAR",
         "VERB-KNOW",
         "VERB-LEARN",
-        "VERB-CAN",
-        "VERB-BRING",
         "VERB-GET",
         "VERB-EAT",
         "VERB-SLEEP",
         "VERB-WORK",
         "VERB-PLAY",
-        "VERB-WALK",
         "VERB-RUN",
         "VERB-SIT",
-        "VERB-STAND",
-        "VERB-WAIT",
         "VERB-ANSWER",
-        "VERB-MEET",
-        "VERB-BUY",
-        "VERB-OPEN",
-        "VERB-CLOSE"
+        "VERB-MEET"
       ],
       "relocates": {}
     },
@@ -1175,13 +1269,6 @@
       "omits": [
         "VERB-NEGATE",
         "QUESTION-POLAR"
-      ],
-      "relocates": {}
-    },
-    "SPINE-SAY-WHAT-I-WANT": {
-      "segments": [],
-      "omits": [
-        "VERB-WANT"
       ],
       "relocates": {}
     },
@@ -1204,7 +1291,6 @@
       "omits": [
         "NARRATIVE-SEQUENCE",
         "CONNECTIVE-THEN",
-        "CONNECTIVE-BECAUSE",
         "ASPECT-ONGOING-PAST"
       ],
       "relocates": {}
@@ -1224,7 +1310,6 @@
       "omits": [
         "DIRECTION-ASK",
         "TRANSPORT-TICKET",
-        "LODGING-ROOM",
         "PROBLEM-REPORT"
       ],
       "relocates": {}

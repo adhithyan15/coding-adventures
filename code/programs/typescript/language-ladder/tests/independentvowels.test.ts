@@ -41,7 +41,10 @@ describe("independent (word-initial) vowels", () => {
     expect(iv[6]!.strokeOrderSource?.url).toBe(
       "https://write-telugu-alphabets.en.aptoide.com/app",
     );
-    expect(iv.filter((_, index) => ![0, 1, 2, 4, 6].includes(index)).every((v) => v.strokeOrder.length === 0)).toBe(true);
+    expect(iv[7]!.strokeOrder).toHaveLength(4);
+    expect(iv[7]!.penLifts).toBe(2);
+    expect(iv[7]!.strokeOrderSource?.citation).toMatch(/dot_stroke_v_10_ae\.png.*movements 1–4.*version 2\.6/i);
+    expect(iv.filter((_, index) => ![0, 1, 2, 4, 6, 7].includes(index)).every((v) => v.strokeOrder.length === 0)).toBe(true);
     // The vocalic-R vowel is ISO-15919 r̥ = r + U+0325 (ring below), not IAST ṛ.
     expect([...iv[12]!.sound].map((c) => c.codePointAt(0))).toEqual([0x72, 0x325]);
   });
@@ -53,7 +56,7 @@ describe("independent (word-initial) vowels", () => {
     });
   });
 
-  it("keeps Kannada independent ಅ, ಆ, ಇ, and ಎ sourced while the remaining vowels stay unverified", () => {
+  it("keeps Kannada independent ಅ, ಆ, ಇ, ಎ, ಏ, and ಒ sourced while the remaining vowels stay unverified", () => {
     const kannada = SCRIPTS.find((s) => s.script === "kannada")!;
     const iv = kannada.independentVowels!;
     expect(iv[0]!.glyph).toBe("ಅ");
@@ -80,7 +83,19 @@ describe("independent (word-initial) vowels", () => {
     expect(iv[6]!.strokeOrderSource?.url).toBe(
       "https://commons.wikimedia.org/wiki/File:Kannada-alphabet-ae.gif",
     );
-    expect(iv.filter((_, index) => ![0, 1, 2, 6].includes(index)).every((v) => v.strokeOrder.length === 0)).toBe(true);
+    expect(iv[7]!.glyph).toBe("ಏ");
+    expect(iv[7]!.strokeOrder).toHaveLength(4);
+    expect(iv[7]!.penLifts).toBe(1);
+    expect(iv[7]!.strokeOrderSource?.url).toBe(
+      "https://commons.wikimedia.org/wiki/File:Kannada-alphabet-aee.gif",
+    );
+    expect(iv[8]!.glyph).toBe("ಒ");
+    expect(iv[8]!.strokeOrder).toHaveLength(4);
+    expect(iv[8]!.penLifts).toBe(0);
+    expect(iv[8]!.strokeOrderSource?.url).toBe(
+      "https://commons.wikimedia.org/wiki/File:Kannada-alphabet-o.gif",
+    );
+    expect(iv.filter((_, index) => ![0, 1, 2, 6, 7, 8].includes(index)).every((v) => v.strokeOrder.length === 0)).toBe(true);
   });
 
   it("keeps Malayalam independent അ, ആ, ഇ, ഉ, and എ sourced while the remaining vowels stay unverified", () => {
@@ -298,6 +313,203 @@ describe("shared Perso-Arabic letters retain script-owned provenance", () => {
     expect(urdu.strokeOrderSource?.url).toBe(
       "https://openbooks.library.northwestern.edu/zerozabar/chapter/chhoti-he-do-chashmi-he-chhoti-ye-bari-ye/",
     );
+  });
+
+  it("keeps Arabic, Persian, and Urdu ب separate while Urdu preserves main-line-first order", () => {
+    const arabic = SCRIPTS.find((script) => script.script === "arabic")!
+      .letters.find((entry) => entry.glyph === "ب")!;
+    const persian = SCRIPTS.find((script) => script.script === "perso-arabic")!
+      .letters.find((entry) => entry.glyph === "ب")!;
+    const urdu = SCRIPTS.find((script) => script.script === "urdu-nastaliq")!
+      .letters.find((entry) => entry.glyph === "ب")!;
+    expect(urdu.penLifts).toBe(1);
+    expect(urdu.strokeOrder).toEqual([
+      "sweep the independent be-series bowl from right to left",
+      "after one lift, place the single dot below",
+    ]);
+    expect(urdu.strokeOrderSource?.url).toBe(
+      "https://openbooks.library.northwestern.edu/zerozabar/chapter/be-kaf-and-short-vowels/",
+    );
+    expect(new Set([
+      arabic.strokeOrderSource?.url,
+      persian.strokeOrderSource?.url,
+      urdu.strokeOrderSource?.url,
+    ]).size).toBe(3);
+  });
+
+  it("keeps Japanese ね as a source-backed two-run hiragana path", () => {
+    const japanese = SCRIPTS.find((script) => script.script === "japanese")!
+      .letters.find((entry) => entry.glyph === "ね")!;
+    expect(japanese.sound).toBe("ne");
+    expect(japanese.role).toBe("hiragana");
+    expect(japanese.penLifts).toBe(1);
+    expect(japanese.strokeOrder).toHaveLength(2);
+    expect(japanese.strokeOrder[0]).toMatch(/short left vertical/i);
+    expect(japanese.strokeOrder[1]).toMatch(/upper right.*sweep left.*diagonal.*return.*lower-right loop/i);
+    expect(japanese.strokeOrderSource?.url).toBe(
+      "https://commons.wikimedia.org/wiki/File:Hiragana_%E3%81%AD_stroke_order_animation.gif",
+    );
+  });
+
+  it("keeps Japanese み as a source-backed two-run hiragana path", () => {
+    const japanese = SCRIPTS.find((script) => script.script === "japanese")!
+      .letters.find((entry) => entry.glyph === "み")!;
+    expect(japanese.sound).toBe("mi");
+    expect(japanese.role).toBe("hiragana");
+    expect(japanese.penLifts).toBe(1);
+    expect(japanese.strokeOrder).toHaveLength(2);
+    expect(japanese.strokeOrder[0]).toMatch(/top bar.*lower-left loop.*middle/i);
+    expect(japanese.strokeOrder[1]).toMatch(/high on the right.*curve down and left.*turning upward/i);
+    expect(japanese.strokeOrderSource?.url).toBe(
+      "https://commons.wikimedia.org/wiki/File:Hiragana_%E3%81%BF_stroke_order_animation.gif",
+    );
+  });
+
+  it("keeps Japanese せ as a source-backed three-run hiragana path", () => {
+    const japanese = SCRIPTS.find((script) => script.script === "japanese")!
+      .letters.find((entry) => entry.glyph === "せ")!;
+    expect(japanese.sound).toBe("se");
+    expect(japanese.role).toBe("hiragana");
+    expect(japanese.penLifts).toBe(2);
+    expect(japanese.strokeOrder).toHaveLength(3);
+    expect(japanese.strokeOrder[0]).toMatch(/long crossing horizontal.*left to right/i);
+    expect(japanese.strokeOrder[1]).toMatch(/left crossing.*curve right along the base/i);
+    expect(japanese.strokeOrder[2]).toMatch(/right crossing.*hook left/i);
+    expect(japanese.strokeOrderSource?.url).toBe(
+      "https://commons.wikimedia.org/wiki/File:Hiragana_%E3%81%9B_stroke_order_animation.gif",
+    );
+  });
+
+  it("keeps Japanese て as a source-backed one-run hiragana path", () => {
+    const japanese = SCRIPTS.find((script) => script.script === "japanese")!
+      .letters.find((entry) => entry.glyph === "て")!;
+    expect(japanese.sound).toBe("te");
+    expect(japanese.role).toBe("hiragana");
+    expect(japanese.penLifts).toBe(0);
+    expect(japanese.strokeOrder).toHaveLength(3);
+    expect(japanese.strokeOrder[0]).toMatch(/high horizontal.*left to right/i);
+    expect(japanese.strokeOrder[1]).toMatch(/without lifting.*down and left.*diagonal/i);
+    expect(japanese.strokeOrder[2]).toMatch(/without lifting.*lower curve.*right/i);
+    expect(japanese.strokeOrderSource?.url).toBe(
+      "https://commons.wikimedia.org/wiki/File:Hiragana_%E3%81%A6_stroke_order_animation.gif",
+    );
+  });
+
+  it("keeps Japanese な as a source-backed four-run hiragana path", () => {
+    const japanese = SCRIPTS.find((script) => script.script === "japanese")!
+      .letters.find((entry) => entry.glyph === "な")!;
+    expect(japanese.sound).toBe("na");
+    expect(japanese.role).toBe("hiragana");
+    expect(japanese.penLifts).toBe(3);
+    expect(japanese.strokeOrder).toHaveLength(4);
+    expect(japanese.strokeOrder[0]).toMatch(/upper-left horizontal.*left to right/i);
+    expect(japanese.strokeOrder[1]).toMatch(/crossing left-falling stem/i);
+    expect(japanese.strokeOrder[2]).toMatch(/upper-right diagonal.*down and right/i);
+    expect(japanese.strokeOrder[3]).toMatch(/lower-right stem.*loop.*right/i);
+    expect(japanese.strokeOrderSource?.url).toBe(
+      "https://commons.wikimedia.org/wiki/File:Hiragana_%E3%81%AA_stroke_order_animation.gif",
+    );
+  });
+
+  it("keeps Japanese わ as a source-backed two-run hiragana path", () => {
+    const japanese = SCRIPTS.find((script) => script.script === "japanese")!
+      .letters.find((entry) => entry.glyph === "わ")!;
+    expect(japanese.sound).toBe("wa");
+    expect(japanese.role).toBe("hiragana");
+    expect(japanese.penLifts).toBe(1);
+    expect(japanese.strokeOrder).toHaveLength(2);
+    expect(japanese.strokeOrder[0]).toMatch(/long left vertical/i);
+    expect(japanese.strokeOrder[1]).toMatch(/upper left.*sweep right.*hook down and left.*central crossing.*right loop/i);
+    expect(japanese.strokeOrderSource?.url).toBe(
+      "https://commons.wikimedia.org/wiki/File:Hiragana_%E3%82%8F_stroke_order_animation.gif",
+    );
+  });
+
+  it("keeps Japanese ゆ as a source-backed two-run hiragana path", () => {
+    const japanese = SCRIPTS.find((script) => script.script === "japanese")!
+      .letters.find((entry) => entry.glyph === "ゆ")!;
+    expect(japanese.sound).toBe("yu");
+    expect(japanese.role).toBe("hiragana");
+    expect(japanese.penLifts).toBe(1);
+    expect(japanese.strokeOrder).toHaveLength(2);
+    expect(japanese.strokeOrder[0]).toMatch(/left stem.*high shoulder.*clockwise.*broad loop.*inner finish/i);
+    expect(japanese.strokeOrder[1]).toMatch(/high above.*center.*down and left/i);
+    expect(japanese.strokeOrderSource?.url).toBe(
+      "https://commons.wikimedia.org/wiki/File:Hiragana_%E3%82%86_stroke_order_animation.gif",
+    );
+  });
+
+  it("keeps Kannada ಏ as a source-backed two-run independent vowel", () => {
+    const kannada = SCRIPTS.find((script) => script.script === "kannada")!
+      .independentVowels!.find((entry) => entry.glyph === "ಏ")!;
+    expect(kannada.sound).toBe("ē");
+    expect(kannada.role).toBe("vowel");
+    expect(kannada.penLifts).toBe(1);
+    expect(kannada.strokeOrder).toHaveLength(4);
+    expect(kannada.strokeOrder[0]).toMatch(/compact left loop/i);
+    expect(kannada.strokeOrder[2]).toMatch(/without lifting.*tall outer arch.*upper left/i);
+    expect(kannada.strokeOrder[3]).toMatch(/lift.*small upper loop.*left to right/i);
+    expect(kannada.strokeOrderSource?.url).toBe(
+      "https://commons.wikimedia.org/wiki/File:Kannada-alphabet-aee.gif",
+    );
+  });
+
+  it("keeps Kannada ಒ as a source-backed one-run independent vowel", () => {
+    const kannada = SCRIPTS.find((script) => script.script === "kannada")!
+      .independentVowels!.find((entry) => entry.glyph === "ಒ")!;
+    expect(kannada.sound).toBe("o");
+    expect(kannada.role).toBe("vowel");
+    expect(kannada.penLifts).toBe(0);
+    expect(kannada.strokeOrder).toHaveLength(4);
+    expect(kannada.strokeOrder[0]).toMatch(/upper-left loop/i);
+    expect(kannada.strokeOrder[1]).toMatch(/without lifting.*curved middle.*lower-left bowl/i);
+    expect(kannada.strokeOrder[3]).toMatch(/without lifting.*open terminal/i);
+    expect(kannada.strokeOrderSource?.url).toBe(
+      "https://commons.wikimedia.org/wiki/File:Kannada-alphabet-o.gif",
+    );
+  });
+
+  it("keeps Urdu گ as a source-backed three-run kāf-family letter", () => {
+    const urdu = SCRIPTS.find((script) => script.script === "urdu-nastaliq")!
+      .letters.find((entry) => entry.glyph === "گ")!;
+    expect(urdu.sound).toBe("g");
+    expect(urdu.role).toBe("consonant");
+    expect(urdu.penLifts).toBe(2);
+    expect(urdu.strokeOrder).toHaveLength(4);
+    expect(urdu.strokeOrder[1]).toMatch(/right to left.*flatter bowl.*hook/i);
+    expect(urdu.strokeOrder[2]).toMatch(/one lift.*long slash/i);
+    expect(urdu.strokeOrder[3]).toMatch(/another lift.*shorter floating slash/i);
+    expect(urdu.strokeOrderSource?.url).toBe(
+      "https://openbooks.library.northwestern.edu/zerozabar/chapter/pe-gaf-alif-lam/",
+    );
+  });
+
+  it("keeps Urdu ت as a source-backed bowl-and-two-dots letter", () => {
+    const urdu = SCRIPTS.find((script) => script.script === "urdu-nastaliq")!
+      .letters.find((entry) => entry.glyph === "ت")!;
+    expect(urdu.sound).toBe("t");
+    expect(urdu.role).toBe("consonant");
+    expect(urdu.penLifts).toBe(2);
+    expect(urdu.strokeOrder).toEqual([
+      "sweep the independent be-series bowl from right to left",
+      "after one lift, place the left dot above the main line",
+      "after another lift, place the right dot beside it",
+    ]);
+    expect(urdu.strokeOrderSource?.url).toBe(
+      "https://openbooks.library.northwestern.edu/zerozabar/chapter/te-mim-jim-che/",
+    );
+  });
+
+  it("keeps Urdu ئ as a source-backed carrier-plus-hamza composition", () => {
+    const hamza = SCRIPTS.find((script) => script.script === "urdu-nastaliq")!
+      .marks!.find((entry) => entry.mark === "ٔ")!;
+    expect(hamza.examples?.map((example) => example.combined)).toEqual(["ئ"]);
+    expect(hamza.compositionOrder?.[0]).toMatch(/tooth carrier.*right-to-left main line/i);
+    expect(hamza.compositionOrder?.[1]).toMatch(/after lifting.*hamza above/i);
+    expect(hamza.compositionSource?.url).toBe(
+      "https://openbooks.library.northwestern.edu/zerozabar/chapter/ain-hamza/",
+    );
+    expect(hamza.compositionSource?.variation).toMatch(/بھائی.*carrier-plus-mark/i);
   });
 
   it("keeps Persian and Urdu پ separate while both preserve the four-stroke triangle order", () => {

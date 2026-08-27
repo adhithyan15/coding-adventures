@@ -1,7 +1,7 @@
 ---
 schema_version: 2
 id: ES-C38-porque
-spine_node: SPINE-NARRATE-EVENTS
+spine_node: SPINE-SAY-WHY
 sequence: 2060
 chapter: 167
 type: word

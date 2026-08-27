@@ -18,12 +18,14 @@
 //!
 //! ## The allowlist
 //!
-//! The toolkit is NOT degradation-clean today: 9 pre-existing capability
-//! gaps exist across all five native backends, none introduced by this
-//! test. Each is real native-UI feature work (native indeterminate
-//! checkbox state, native radio-group mutual exclusion, a real Flutter
-//! dialog), not something fixable as a side effect of wiring this gate —
-//! see the linked issues. `ALLOWED_DEGRADATIONS` is the explicit,
+//! The toolkit is NOT degradation-clean today: 5 pre-existing capability
+//! gaps exist across the native backends, none introduced by this
+//! test. Each is real native-UI feature work (native radio-group mutual
+//! exclusion, XAML's inherent `ContentDialog` open-host requirement),
+//! not something fixable as a side effect of wiring this gate — see the
+//! linked issues. (#13006's native indeterminate checkbox state landed
+//! on all three affected backends and no longer needs an entry here.)
+//! `ALLOWED_DEGRADATIONS` is the explicit,
 //! reviewed list of what's tolerated for now; anything else — on any
 //! component, existing or new — fails this test immediately. Remove an
 //! entry the moment its issue is fixed; do not add new entries without a
@@ -45,20 +47,23 @@ fn package_root() -> PathBuf {
 /// (backend, component, degradation code) — every entry must reference
 /// its tracking issue in the comment beside it.
 const ALLOWED_DEGRADATIONS: &[(Backend, &str, &str)] = &[
-    // #13006 — native indeterminate checkbox state not implemented.
-    (Backend::SwiftUI, "Checkbox", "property.checkbox-indeterminate-ignored"),
-    (Backend::Flutter, "Checkbox", "property.checkbox-indeterminate-ignored"),
-    (Backend::Compose, "Checkbox", "property.checkbox-indeterminate-ignored"),
-    // #13007 — native radio-group mutual exclusion not implemented.
+    // #13007 — Compose/Flutter/Qt now apply real native mutual-
+    // exclusion wiring for a literal `group:` shared by 2+ resolvable
+    // sibling HostRadios (e.g. mosaic-pkg-deck-options's leech-action
+    // radios) — but the toolkit's own `Radio` component (`Radio.mll`)
+    // is a 1:1 HostRadio wrapper with no sibling of its own, so it
+    // never qualifies and stays degraded on all four backends here.
+    // SwiftUI has no idiomatic ancestor-grouping widget at all and
+    // remains degraded even for a real multi-radio group.
     (Backend::SwiftUI, "Radio", "property.radio-group-ignored"),
     (Backend::Qt, "Radio", "property.radio-group-ignored"),
     (Backend::Flutter, "Radio", "property.radio-group-ignored"),
     (Backend::Compose, "Radio", "property.radio-group-ignored"),
-    // #13008 — XAML Modal requires app code-behind to open; under
-    // investigation whether this is inherent or fixable.
+    // #13008 — XAML Modal requires app code-behind to open. Confirmed
+    // permanent, not a to-do: WinUI3's ContentDialog has no bindable
+    // IsOpen-style property the way Popup/Flyout/TeachingTip do, so
+    // there's no declarative show/hide surface to bind `open:` to.
     (Backend::Xaml, "Modal", "property.dialog-open-host-required"),
-    // #13010 — Flutter Modal is a zero-size TODO placeholder.
-    (Backend::Flutter, "Modal", "interaction.dialog-placeholder"),
 ];
 
 fn is_allowed(backend: Backend, component: &str, code: &str) -> bool {

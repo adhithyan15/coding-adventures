@@ -111,7 +111,11 @@ describe("the plan CLI", () => {
     // grammar only. Enumerating its functional, notional and orthographic
     // dimensions added 50 points with no corresponding atom, and this total is
     // the sum across all four written inventories.
-    expect(out).toMatch(/196 uncovered point\(s\) across 4 written/);
+    // 196 -> 194: HL23 §10 authors `saber` (chapter 389) and maps `A1-F2-16`
+    // and `A1-F2-17`, the two PCIC ability points, onto it. The backlog falls
+    // because two points were CLOSED, not because an inventory shrank — the
+    // Spanish denominator is still 273.
+    expect(out).toMatch(/194 uncovered point\(s\) across 4 written/);
     expect(out).toMatch(/0 complete and 4 partial of 138/);
     expect(out).toMatch(/the other 20 track\(s\)/);
   }, 120_000);

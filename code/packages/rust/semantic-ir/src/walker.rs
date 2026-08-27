@@ -251,6 +251,30 @@ pub fn walk_stmt_default<V: Visitor>(v: &mut V, s: &Stmt, depth: usize) {
         Stmt::Break { .. } | Stmt::Continue { .. } => {
             // No nested expression or statement to recurse into.
         }
+
+        // ── Switch statement (task #51) ───────────────────────────────
+        Stmt::Switch {
+            discriminant,
+            cases,
+            default,
+            ..
+        } => {
+            // Recurse into the discriminant, every case's own value +
+            // body, and the optional default body, so visitors see
+            // every nested statement/expression.
+            v.visit_expr(discriminant, depth + 1);
+            for case in cases {
+                v.visit_expr(&case.value, depth + 1);
+                for stmt in &case.body {
+                    v.visit_stmt(stmt, depth + 1);
+                }
+            }
+            if let Some(def) = default {
+                for stmt in def {
+                    v.visit_stmt(stmt, depth + 1);
+                }
+            }
+        }
     }
 }
 

@@ -26,7 +26,7 @@
 //     Col 2: L P A _
 //     Col 3: L A N _
 //
-//   Ciphertext: "HORSEST LPAAL N "
+//   Ciphertext: "HORSEST LPA LAN "
 //
 //   To decrypt: write the ciphertext column-by-column into the same grid,
 //   then read row-by-row, stripping trailing padding spaces.
@@ -40,6 +40,7 @@
 package com.codingadventures.scytalecipher;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 
 /**
@@ -52,13 +53,15 @@ import java.util.List;
  * then stripping trailing padding spaces.
  *
  * <pre>{@code
- * ScytaleCipher.encrypt("HELLOSPARTANS", 4)  // → "HORSEST LPAAL N "
- * ScytaleCipher.decrypt("HORSEST LPAAL N ", 4)  // → "HELLOSPARTANS"
+ * ScytaleCipher.encrypt("HELLOSPARTANS", 4)  // → "HORSEST LPA LAN "
+ * ScytaleCipher.decrypt("HORSEST LPA LAN ", 4)  // → "HELLOSPARTANS"
  * }</pre>
  *
  * <p>All methods are static — pure utility class.
  */
 public final class ScytaleCipher {
+
+    public static final int MAX_BRUTE_FORCE_TEXT_LENGTH = 4096;
 
     // Private constructor.
     private ScytaleCipher() {}
@@ -101,7 +104,7 @@ public final class ScytaleCipher {
      *            O S P A
      *            R T A N
      *            S _ _ _   ← spaces
-     *   Output: "HORSEST LPAAL N "
+     *   Output: "HORSEST LPA LAN "
      * </pre>
      *
      * @param text the plaintext (any characters, including spaces/punctuation)
@@ -111,22 +114,23 @@ public final class ScytaleCipher {
      */
     public static String encrypt(String text, int key) {
         if (text.isEmpty()) return "";
-        validateKey(key, text.length());
+        int[] scalars = text.codePoints().toArray();
+        validateKey(key, scalars.length);
 
         // Number of rows needed (ceiling division)
-        int rows = (text.length() + key - 1) / key;
+        int rows = (scalars.length + key - 1) / key;
         int paddedLen = rows * key;
 
-        // Build the padded character grid
-        char[] padded = new char[paddedLen];
-        for (int i = 0; i < text.length(); i++) padded[i] = text.charAt(i);
-        for (int i = text.length(); i < paddedLen; i++) padded[i] = ' ';
+        // Build the padded scalar grid. A supplementary-plane scalar occupies
+        // one cell even though Java stores it as two UTF-16 code units.
+        int[] padded = Arrays.copyOf(scalars, paddedLen);
+        Arrays.fill(padded, scalars.length, paddedLen, 0x20);
 
         // Read column-by-column
         StringBuilder sb = new StringBuilder(paddedLen);
         for (int col = 0; col < key; col++) {
             for (int row = 0; row < rows; row++) {
-                sb.append(padded[row * key + col]);
+                sb.appendCodePoint(padded[row * key + col]);
             }
         }
         return sb.toString();
@@ -145,30 +149,32 @@ public final class ScytaleCipher {
      */
     public static String decrypt(String text, int key) {
         if (text.isEmpty()) return "";
-        validateKey(key, text.length());
+        int[] scalars = text.codePoints().toArray();
+        validateKey(key, scalars.length);
 
-        int len = text.length();
+        int len = scalars.length;
         int rows = (len + key - 1) / key;
+        int remainder = len % key;
+        int[] columnStarts = new int[key];
+        int[] columnLengths = new int[key];
+        int offset = 0;
+        for (int column = 0; column < key; column++) {
+            columnStarts[column] = offset;
+            columnLengths[column] = remainder == 0 || column < remainder ? rows : rows - 1;
+            offset += columnLengths[column];
+        }
 
-        // Ciphertext was read column-by-column: ciphertext[c*rows + r] = grid[r][c]
-        // To reverse: grid[r][c] = ciphertext[c*rows + r]
-        // Read grid row-by-row: grid[r][c] = ciphertext[c*rows + r]
-        char[] grid = new char[len];
-        for (int col = 0; col < key; col++) {
-            for (int row = 0; row < rows; row++) {
-                int cipherIdx = col * rows + row;
-                int gridIdx   = row * key  + col;
-                if (cipherIdx < len && gridIdx < len) {
-                    grid[gridIdx] = text.charAt(cipherIdx);
+        int[] plaintext = new int[len];
+        int output = 0;
+        for (int row = 0; row < rows; row++) {
+            for (int column = 0; column < key; column++) {
+                if (row < columnLengths[column]) {
+                    plaintext[output++] = scalars[columnStarts[column] + row];
                 }
             }
         }
-
-        // Strip trailing padding spaces
-        String result = new String(grid);
-        int end = result.length();
-        while (end > 0 && result.charAt(end - 1) == ' ') end--;
-        return result.substring(0, end);
+        while (output > 0 && plaintext[output - 1] == 0x20) output--;
+        return new String(plaintext, 0, output);
     }
 
     /**
@@ -182,8 +188,12 @@ public final class ScytaleCipher {
      */
     public static List<BruteForceResult> bruteForce(String text) {
         List<BruteForceResult> results = new ArrayList<>();
-        if (text.length() < 4) return results;
-        for (int key = 2; key <= text.length() / 2; key++) {
+        int scalarLength = text.codePointCount(0, text.length());
+        if (scalarLength > MAX_BRUTE_FORCE_TEXT_LENGTH) {
+            throw new IllegalArgumentException("scytale-brute-force-limit");
+        }
+        if (scalarLength < 4) return results;
+        for (int key = 2; key <= scalarLength / 2; key++) {
             results.add(new BruteForceResult(key, decrypt(text, key)));
         }
         return results;

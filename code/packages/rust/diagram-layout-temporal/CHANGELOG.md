@@ -1,5 +1,25 @@
 # Changelog
 
+## 0.34.0
+
+- Resolve typed Gantt quarter dates to their first month before backend-neutral layout.
+
+## 0.33.0
+
+- Resolve typed unpadded Gantt time fields into backend-neutral temporal geometry.
+
+## 0.32.0
+
+- Validate typed numeric and two-letter Gantt weekdays before backend-neutral layout.
+
+## 0.31.0
+
+- Resolve and validate typed Gantt ordinal days before backend-neutral temporal layout.
+
+## 0.30.0
+
+- Resolve typed one-, two-, and three-digit Gantt fractional seconds into precise backend-neutral geometry.
+
 ## 0.29.0
 
 - Resolve and validate typed English weekday names before backend-neutral Gantt layout.

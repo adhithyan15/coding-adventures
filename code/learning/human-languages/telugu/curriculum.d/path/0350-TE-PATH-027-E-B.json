@@ -1,0 +1,12 @@
+{
+  "id": "TE-PATH-027-E-B",
+  "spine_node": "SPINE-SAY-WHAT-I-LIKE",
+  "lessons": [
+    "TE-C34-ishtam"
+  ],
+  "before": [],
+  "inline": [
+    "TE-EXT-028-SOCIAL-VERBS-D"
+  ],
+  "after": []
+}

@@ -1,0 +1,12 @@
+{
+  "id": "ML-PATH-026-C",
+  "spine_node": "SPINE-SAY-WHAT-I-DO",
+  "lessons": [
+    "ML-C32-tinnuka",
+    "ML-C32-kaanuka",
+    "ML-C32-ariyuka"
+  ],
+  "before": [],
+  "inline": [],
+  "after": []
+}

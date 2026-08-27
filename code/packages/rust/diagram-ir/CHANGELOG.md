@@ -1,5 +1,25 @@
 # Changelog — diagram-ir
 
+## 0.91.0
+
+- Represent Gantt quarter dates as a typed date-format part.
+
+## 0.90.0
+
+- Represent unpadded 24-hour, minute, and second Gantt fields as typed date-format parts.
+
+## 0.89.0
+
+- Represent numeric and two-letter Gantt weekdays as typed date-format parts.
+
+## 0.88.0
+
+- Represent Gantt ordinal calendar days as a typed date-format part.
+
+## 0.87.0
+
+- Represent one-, two-, and three-digit Gantt fractional seconds as typed date-format parts.
+
 ## 0.86.0
 
 - Represent short and long Gantt weekday names as typed date-format parts.

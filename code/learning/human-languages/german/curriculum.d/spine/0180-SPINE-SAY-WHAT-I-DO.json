@@ -1,0 +1,28 @@
+{
+  "segments": [
+    "GE-PATH-011",
+    "GE-PATH-014",
+    "GE-PATH-021",
+    "GE-PATH-027",
+    "GE-PATH-028",
+    "GE-PATH-028-C",
+    "GE-PATH-029",
+    "GE-PATH-029-C",
+    "GE-PATH-030-B"
+  ],
+  "omits": [
+    "VERB-INFINITIVE",
+    "VERB-PRESENT-HABITUAL",
+    "VERB-SAY",
+    "VERB-SPEAK",
+    "VERB-SEE",
+    "VERB-KNOW",
+    "VERB-GET",
+    "VERB-EAT",
+    "VERB-WORK",
+    "VERB-PLAY",
+    "VERB-ANSWER",
+    "VERB-MEET"
+  ],
+  "relocates": {}
+}

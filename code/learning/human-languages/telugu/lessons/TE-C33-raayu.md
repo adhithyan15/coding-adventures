@@ -1,7 +1,7 @@
 ---
 schema_version: 2
 id: TE-C33-raayu
-spine_node: SPINE-SAY-WHAT-I-DO
+spine_node: SPINE-NAME-EVERYDAY-ACTIONS
 sequence: 700
 chapter: 33
 type: word

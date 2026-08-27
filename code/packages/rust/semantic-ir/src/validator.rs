@@ -163,19 +163,26 @@ struct ValidatorState<'m> {
     /// per-arg walk of a call and reset to false before recursing into any
     /// argument's sub-expressions.
     in_call_args: bool,
-    /// Stack of enclosing loops, innermost last.  Pushed/popped around
-    /// each `While`/`ForRange`/`ForEach` body walk (same save/restore
-    /// idiom as `in_call_args`, generalized to a stack since loops
-    /// nest).  `Stmt::Break`/`Stmt::Continue` consult only the top entry:
-    /// empty means "not inside any loop" (error); `LoopKind::ForRange`
-    /// means the nearest enclosing loop is a `ForRange`, which both
-    /// statements reject — see `Feature::LoopControl`'s doc comment for
-    /// why `ForRange` can't safely host either one on every backend.
+    /// Stack of enclosing *breakable* contexts, innermost last —
+    /// loops, and (task #51) `Switch` statements. Pushed/popped around
+    /// each `While`/`ForRange`/`ForEach`/`Switch` body walk (same
+    /// save/restore idiom as `in_call_args`, generalized to a stack
+    /// since these nest). `Stmt::Break` consults only the top entry:
+    /// empty means "not inside any loop or switch" (error);
+    /// `LoopKind::ForRange` means the nearest enclosing loop is a
+    /// `ForRange`, which `Break` rejects — see `Feature::LoopControl`'s
+    /// doc comment for why `ForRange` can't safely host it on every
+    /// backend; `LoopKind::Switch` is always a valid `Break` target,
+    /// same as `Safe`. `Stmt::Continue` instead walks the stack from
+    /// the top, *skipping* any `Switch` entries, since `continue` never
+    /// targets a switch in any C-family language — see
+    /// `Feature::Switch`'s own doc comment.
     loop_stack: Vec<LoopKind>,
 }
 
-/// The kind of the nearest enclosing loop, as seen by `Stmt::Break`/
-/// `Stmt::Continue` validation.  See `ValidatorState::loop_stack`.
+/// The kind of the nearest enclosing breakable context, as seen by
+/// `Stmt::Break`/`Stmt::Continue` validation.  See
+/// `ValidatorState::loop_stack`.
 #[derive(Debug, Clone, Copy, PartialEq, Eq)]
 enum LoopKind {
     /// `While` or `ForEach` — break/continue are well-defined on every
@@ -184,6 +191,11 @@ enum LoopKind {
     /// `ForRange` — break/continue are excluded; see
     /// `Feature::LoopControl`'s doc comment.
     ForRange,
+    /// `Switch` (task #51) — a valid `Break` target (exits the
+    /// switch), but never a valid `Continue` target: `Continue`'s own
+    /// validation skips past any `Switch` entry looking for the
+    /// nearest real loop, exactly like real Java/JavaScript/C/Go.
+    Switch,
 }
 
 impl<'m> ValidatorState<'m> {
@@ -921,19 +933,29 @@ impl<'m> ValidatorState<'m> {
                 Stmt::Break { span } => {
                     self.observed.add(Feature::LoopControl);
                     match self.loop_stack.last() {
-                        None => self.error("`break` outside a loop", span),
+                        None => self.error("`break` outside a loop or switch", span),
                         Some(LoopKind::ForRange) => self.error(
                             "`break` inside a for-range loop is not supported yet (deferred — \
                              see Feature::LoopControl's doc comment)",
                             span,
                         ),
-                        Some(LoopKind::Safe) => {}
+                        // A `Switch` is just as valid a `break` target as
+                        // an ordinary loop (task #51) — it exits the
+                        // switch rather than a loop, but the validator's
+                        // own concern here is only "is *some* breakable
+                        // context innermost", not which kind.
+                        Some(LoopKind::Safe) | Some(LoopKind::Switch) => {}
                     }
                     i += 1;
                 }
                 Stmt::Continue { span } => {
                     self.observed.add(Feature::LoopControl);
-                    match self.loop_stack.last() {
+                    // Unlike `Break`, `continue` never targets a
+                    // `Switch` (task #51) — walk the stack from the
+                    // innermost entry, skipping past any `Switch`
+                    // frames, to find the nearest *actual* loop, the
+                    // same rule every C-family language uses.
+                    match self.loop_stack.iter().rev().find(|k| **k != LoopKind::Switch) {
                         None => self.error("`continue` outside a loop", span),
                         Some(LoopKind::ForRange) => self.error(
                             "`continue` inside a for-range loop is not supported yet (deferred \
@@ -941,7 +963,50 @@ impl<'m> ValidatorState<'m> {
                             span,
                         ),
                         Some(LoopKind::Safe) => {}
+                        Some(LoopKind::Switch) => {
+                            unreachable!("the search above already excludes LoopKind::Switch")
+                        }
                     }
+                    i += 1;
+                }
+                Stmt::Switch {
+                    discriminant,
+                    cases,
+                    default,
+                    span,
+                } => {
+                    // Task #51: a C-family-style switch with real
+                    // fall-through. `discriminant`'s own value is
+                    // computed once, in the *outer* env (before any
+                    // case's own declarations exist). The whole switch
+                    // body -- every case plus `default` -- shares ONE
+                    // flat local-env scope, matching real `javac`'s own
+                    // scoping rule: a local declared in an earlier case
+                    // is lexically in scope for every later case,
+                    // regardless of whether execution actually falls
+                    // through to reach it (a well-known Java gotcha,
+                    // deliberately preserved rather than "fixed" here --
+                    // getting this wrong would make a validator-accepted
+                    // module produce a real `javac` scope error if a
+                    // frontend that also emits Java-flavored diagnostics
+                    // ever re-derives scope from this same rule).
+                    self.observed.add(Feature::Switch);
+                    self.check_expr(discriminant, env, depth + 1);
+                    if self.check_depth(depth, span) {
+                        i += 1;
+                        continue;
+                    }
+                    let switch_mark = env.mark();
+                    self.loop_stack.push(LoopKind::Switch);
+                    for case in cases {
+                        self.check_expr(&case.value, env, depth + 1);
+                        self.check_stmt_seq(&case.body, env, depth + 1);
+                    }
+                    if let Some(def) = default {
+                        self.check_stmt_seq(def, env, depth + 1);
+                    }
+                    self.loop_stack.pop();
+                    env.rewind(switch_mark);
                     i += 1;
                 }
             }
@@ -3039,6 +3104,292 @@ mod tests {
         }]));
         let r = validate(&m);
         assert!(r.errors().any(|i| i.message.contains("for-range")));
+    }
+
+    // ── Switch statement (task #51) ─────────────────────────────────
+
+    fn switch_feature_manifest(extra: &[Feature]) -> FeatureManifest {
+        let mut features = vec![Feature::Switch];
+        features.extend_from_slice(extra);
+        FeatureManifest::from_features(&features)
+    }
+
+    #[test]
+    fn simple_switch_with_default_is_valid_and_observes_switch_feature() {
+        let mut m = empty_module(switch_feature_manifest(&[]));
+        m.functions.push(fn_with_body(vec![Stmt::Switch {
+            discriminant: Box::new(Expr::IntLit { value: 1, span: s() }),
+            cases: vec![SwitchCase {
+                value: Expr::IntLit { value: 1, span: s() },
+                body: vec![],
+                span: s(),
+            }],
+            default: Some(vec![]),
+            span: s(),
+        }]));
+        let r = validate(&m);
+        assert!(r.is_ok(), "expected ok, got {:?}", r.issues);
+    }
+
+    #[test]
+    fn break_inside_switch_is_valid() {
+        // Task #51: `Break` is just as valid a target inside a `Switch`
+        // as inside a loop -- it exits the switch.
+        let mut m = empty_module(switch_feature_manifest(&[Feature::LoopControl]));
+        m.functions.push(fn_with_body(vec![Stmt::Switch {
+            discriminant: Box::new(Expr::IntLit { value: 1, span: s() }),
+            cases: vec![SwitchCase {
+                value: Expr::IntLit { value: 1, span: s() },
+                body: vec![Stmt::Break { span: s() }],
+                span: s(),
+            }],
+            default: None,
+            span: s(),
+        }]));
+        let r = validate(&m);
+        assert!(r.is_ok(), "expected ok, got {:?}", r.issues);
+    }
+
+    #[test]
+    fn continue_inside_switch_with_no_enclosing_loop_is_rejected() {
+        // A `Switch` is never a valid `Continue` target on its own --
+        // real Java/JavaScript/C/Go all agree `continue` requires an
+        // actual enclosing loop.
+        let mut m = empty_module(switch_feature_manifest(&[Feature::LoopControl]));
+        m.functions.push(fn_with_body(vec![Stmt::Switch {
+            discriminant: Box::new(Expr::IntLit { value: 1, span: s() }),
+            cases: vec![SwitchCase {
+                value: Expr::IntLit { value: 1, span: s() },
+                body: vec![Stmt::Continue { span: s() }],
+                span: s(),
+            }],
+            default: None,
+            span: s(),
+        }]));
+        let r = validate(&m);
+        assert!(r.errors().any(|i| i.message.contains("outside a loop")));
+    }
+
+    #[test]
+    fn continue_inside_switch_inside_while_targets_the_enclosing_loop() {
+        // `Continue` skips past the `Switch` frame and correctly
+        // targets the real enclosing `while` loop.
+        let mut m = empty_module(switch_feature_manifest(&[
+            Feature::Loops,
+            Feature::LoopControl,
+        ]));
+        m.functions.push(fn_with_body(vec![Stmt::While {
+            cond: Expr::BoolLit { value: true, span: s() },
+            body: Block {
+                stmts: vec![Stmt::Switch {
+                    discriminant: Box::new(Expr::IntLit { value: 1, span: s() }),
+                    cases: vec![SwitchCase {
+                        value: Expr::IntLit { value: 1, span: s() },
+                        body: vec![Stmt::Continue { span: s() }],
+                        span: s(),
+                    }],
+                    default: None,
+                    span: s(),
+                }],
+                value: Expr::NilLit { span: s() },
+                span: s(),
+            },
+            span: s(),
+        }]));
+        let r = validate(&m);
+        assert!(r.is_ok(), "expected ok, got {:?}", r.issues);
+    }
+
+    #[test]
+    fn break_inside_switch_inside_for_range_still_targets_the_switch() {
+        // The reverse pairing: a `Switch` nested inside a `ForRange`
+        // loop. `Break` targets the innermost breakable context (the
+        // switch), not the for-range loop, so it's valid even though
+        // `break` directly inside a bare `ForRange` is rejected.
+        let mut m = empty_module(switch_feature_manifest(&[Feature::Loops, Feature::LoopControl]));
+        m.functions.push(fn_with_body(vec![Stmt::ForRange {
+            var: "i".into(),
+            start: Expr::IntLit { value: 0, span: s() },
+            stop: Expr::IntLit { value: 10, span: s() },
+            step: Expr::IntLit { value: 1, span: s() },
+            body: Block {
+                stmts: vec![Stmt::Switch {
+                    discriminant: Box::new(Expr::IntLit { value: 1, span: s() }),
+                    cases: vec![SwitchCase {
+                        value: Expr::IntLit { value: 1, span: s() },
+                        body: vec![Stmt::Break { span: s() }],
+                        span: s(),
+                    }],
+                    default: None,
+                    span: s(),
+                }],
+                value: Expr::NilLit { span: s() },
+                span: s(),
+            },
+            span: s(),
+        }]));
+        let r = validate(&m);
+        assert!(r.is_ok(), "expected ok, got {:?}", r.issues);
+    }
+
+    #[test]
+    fn continue_inside_switch_inside_for_range_is_still_rejected() {
+        // Symmetric to the above: `Continue` still skips the `Switch`
+        // frame to find the real enclosing loop -- which is a
+        // `ForRange`, so it's still rejected, exactly as a bare
+        // `continue` directly inside a `ForRange` already is.
+        let mut m = empty_module(switch_feature_manifest(&[Feature::Loops, Feature::LoopControl]));
+        m.functions.push(fn_with_body(vec![Stmt::ForRange {
+            var: "i".into(),
+            start: Expr::IntLit { value: 0, span: s() },
+            stop: Expr::IntLit { value: 10, span: s() },
+            step: Expr::IntLit { value: 1, span: s() },
+            body: Block {
+                stmts: vec![Stmt::Switch {
+                    discriminant: Box::new(Expr::IntLit { value: 1, span: s() }),
+                    cases: vec![SwitchCase {
+                        value: Expr::IntLit { value: 1, span: s() },
+                        body: vec![Stmt::Continue { span: s() }],
+                        span: s(),
+                    }],
+                    default: None,
+                    span: s(),
+                }],
+                value: Expr::NilLit { span: s() },
+                span: s(),
+            },
+            span: s(),
+        }]));
+        let r = validate(&m);
+        assert!(r.errors().any(|i| i.message.contains("for-range")));
+    }
+
+    #[test]
+    fn a_local_declared_in_one_case_is_visible_to_a_later_case() {
+        // The whole switch body -- every case plus `default` -- shares
+        // ONE flat local-env scope, matching real `javac`'s own (well-
+        // known-gotcha) scoping rule: a local declared in an earlier
+        // case is lexically in scope for every later case, regardless
+        // of whether execution actually falls through to reach it.
+        let mut m = empty_module(switch_feature_manifest(&[]));
+        m.functions.push(fn_with_body(vec![Stmt::Switch {
+            discriminant: Box::new(Expr::IntLit { value: 1, span: s() }),
+            cases: vec![
+                SwitchCase {
+                    value: Expr::IntLit { value: 1, span: s() },
+                    body: vec![Stmt::LetBinding {
+                        name: "x".into(),
+                        sir_type: None,
+                        value: Expr::IntLit { value: 1, span: s() },
+                        span: s(),
+                    }],
+                    span: s(),
+                },
+                SwitchCase {
+                    value: Expr::IntLit { value: 2, span: s() },
+                    body: vec![Stmt::ExprStmt {
+                        expr: Expr::VarRef {
+                            name: "x".into(),
+                            scope: Scope::Local,
+                            span: s(),
+                        },
+                        span: s(),
+                    }],
+                    span: s(),
+                },
+            ],
+            default: None,
+            span: s(),
+        }]));
+        let r = validate(&m);
+        assert!(r.is_ok(), "expected ok, got {:?}", r.issues);
+    }
+
+    #[test]
+    fn a_local_declared_inside_a_switch_does_not_leak_past_it() {
+        let mut m = empty_module(switch_feature_manifest(&[]));
+        m.functions.push(fn_with_body(vec![
+            Stmt::Switch {
+                discriminant: Box::new(Expr::IntLit { value: 1, span: s() }),
+                cases: vec![SwitchCase {
+                    value: Expr::IntLit { value: 1, span: s() },
+                    body: vec![Stmt::LetBinding {
+                        name: "x".into(),
+                        sir_type: None,
+                        value: Expr::IntLit { value: 1, span: s() },
+                        span: s(),
+                    }],
+                    span: s(),
+                }],
+                default: None,
+                span: s(),
+            },
+            Stmt::ExprStmt {
+                expr: Expr::VarRef {
+                    name: "x".into(),
+                    scope: Scope::Local,
+                    span: s(),
+                },
+                span: s(),
+            },
+        ]));
+        let r = validate(&m);
+        assert!(r.errors().any(|i| i.message.contains("x")));
+    }
+
+    #[test]
+    fn switch_discriminant_is_checked_in_the_outer_scope() {
+        // The discriminant references a name declared BEFORE the
+        // switch, in the enclosing scope -- confirms it's checked
+        // against `env` as it stood prior to the switch's own mark,
+        // not against the (rewound) post-switch state.
+        let mut m = empty_module(switch_feature_manifest(&[]));
+        m.functions.push(fn_with_body(vec![
+            Stmt::LetBinding {
+                name: "x".into(),
+                sir_type: None,
+                value: Expr::IntLit { value: 1, span: s() },
+                span: s(),
+            },
+            Stmt::Switch {
+                discriminant: Box::new(Expr::VarRef {
+                    name: "x".into(),
+                    scope: Scope::Local,
+                    span: s(),
+                }),
+                cases: vec![SwitchCase {
+                    value: Expr::IntLit { value: 1, span: s() },
+                    body: vec![],
+                    span: s(),
+                }],
+                default: None,
+                span: s(),
+            },
+        ]));
+        let r = validate(&m);
+        assert!(r.is_ok(), "expected ok, got {:?}", r.issues);
+    }
+
+    #[test]
+    fn switch_default_body_is_validated() {
+        // An undeclared reference inside `default` is still caught --
+        // confirms `default`'s own body is walked, not skipped.
+        let mut m = empty_module(switch_feature_manifest(&[]));
+        m.functions.push(fn_with_body(vec![Stmt::Switch {
+            discriminant: Box::new(Expr::IntLit { value: 1, span: s() }),
+            cases: vec![],
+            default: Some(vec![Stmt::ExprStmt {
+                expr: Expr::VarRef {
+                    name: "undeclared".into(),
+                    scope: Scope::Local,
+                    span: s(),
+                },
+                span: s(),
+            }]),
+            span: s(),
+        }]));
+        let r = validate(&m);
+        assert!(r.errors().any(|i| i.message.contains("undeclared")));
     }
 
     #[test]

@@ -1,5 +1,28 @@
 # Changelog
 
+## 0.213.0 — 2026-08-26 — checked integer unit exponent expressions
+
+Real selector identity recognition now also accepts variable-free integer
+literal arithmetic exponent operands when checked `i64` evaluation leaves
+each operand nonnegative and the complete bounded chain equal to one.
+Overflow, division by zero, dynamic, non-integral, and non-unit forms remain
+conservative.
+
+## 0.212.0 — 2026-08-26 — real unit exponent expressions
+
+Real selector identity recognition now accepts variable-free finite literal
+arithmetic exponents when each bounded exponent operand evaluates to a
+nonnegative integer and the complete chain evaluates to one. Integer,
+dynamic, non-integral, and non-unit exponent forms retain their existing
+conservative rules.
+
+## 0.211.0 — 2026-08-26 — real integral unit exponents
+
+Real selector identity recognition now accepts complete bounded exponent
+chains containing integral real literals when the chain evaluates to one.
+Integer selectors retain their integer-literal-only rule, and dynamic or
+non-unit exponents remain conservative.
+
 ## 0.210.0 — 2026-08-26 — real-literal zero exponents
 
 Bounded zero-exponent unit recognition now accepts complete nonnegative

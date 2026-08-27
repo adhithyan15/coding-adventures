@@ -185,7 +185,7 @@
     {
       "language": "gujarati",
       "chapter": 13,
-      "sourceHash": "fnv1a64:c3d492455d2dfe95",
+      "sourceHash": "fnv1a64:793978ce8e180c17",
       "lessonIds": [
         "GU-C07-hovun",
         "GU-C07-javun",
@@ -199,7 +199,7 @@
     {
       "language": "gujarati",
       "chapter": 14,
-      "sourceHash": "fnv1a64:f714a82162614591",
+      "sourceHash": "fnv1a64:ba4329f4e1c1f92e",
       "lessonIds": [
         "GU-C08-vicharvun",
         "GU-C08-samajvun",
@@ -211,7 +211,7 @@
     {
       "language": "gujarati",
       "chapter": 15,
-      "sourceHash": "fnv1a64:3cf2fbb04e7f490d",
+      "sourceHash": "fnv1a64:827520ff8209270f",
       "lessonIds": [
         "GU-C09-levun",
         "GU-C09-puchhvun",
@@ -324,7 +324,7 @@
     {
       "language": "gujarati",
       "chapter": 24,
-      "sourceHash": "fnv1a64:280ca7090bd9b734",
+      "sourceHash": "fnv1a64:1bc4eaeaeb3bcae8",
       "lessonIds": [
         "GU-C20-hear-bajar",
         "GU-C20-bajar",
@@ -340,7 +340,7 @@
     {
       "language": "gujarati",
       "chapter": 25,
-      "sourceHash": "fnv1a64:3c074e504402cd7e",
+      "sourceHash": "fnv1a64:1bacb5e067cb9a4e",
       "lessonIds": [
         "GU-C21-hear-haath",
         "GU-C21-haath",
@@ -355,7 +355,7 @@
     {
       "language": "gujarati",
       "chapter": 26,
-      "sourceHash": "fnv1a64:8b61d3ff603d5d2f",
+      "sourceHash": "fnv1a64:917b538c769de6d0",
       "lessonIds": [
         "GU-C22-hear-shahar",
         "GU-C22-shahar",
@@ -370,14 +370,16 @@
     {
       "language": "gujarati",
       "chapter": 27,
-      "sourceHash": "fnv1a64:e2b557d05872debc",
+      "sourceHash": "fnv1a64:30a8ee9a1da51134",
       "lessonIds": [
         "GU-C23-hear-gaam",
+        "GU-R23-route-three-r1",
         "GU-C23-gaam",
         "GU-C23-hear-dukaan",
         "GU-C23-dukaan",
         "GU-R23-map-ten",
-        "GU-C23-map-ten"
+        "GU-C23-map-ten",
+        "GU-R23-shaalaa-rasto-r2"
       ],
       "tex": "gujarati/book/chapters/ch27-village-shop-ten.tex"
     }

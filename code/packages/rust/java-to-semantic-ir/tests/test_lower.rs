@@ -303,13 +303,74 @@ fn string_declaration_with_explicit_type() {
 
 #[test]
 fn string_declaration_accepts_null_initializer() {
-    // Declared type wins over the initializer's own (transient) `Null`
-    // kind -- see `lower_local_var_decl`'s handling of `declared_kind`.
+    // `null` is a legal initializer for any *reference*-kinded
+    // declaration (task #71's own `Kind::Null` carve-out) -- matches
+    // real Java, which permits `String s = null;` but rejects `null` for
+    // a primitive (`int x = null;`, see the rejection test below).
     let m = compile_ok(&wrap(r#"String s = null;"#));
     assert!(matches!(
         &main_fn(&m).body.stmts[0],
         Stmt::LetStarBinding { .. }
     ));
+}
+
+// ── task #71: declared type must actually match its own initializer ──
+
+#[test]
+fn declaring_an_int_with_a_string_initializer_is_rejected() {
+    // The original bug this task fixes: `lower_variable_declarator`
+    // used to trust `declared_kind` unconditionally, so this compiled
+    // with zero error.
+    let err = compile_source(&wrap(r#"int y = "hello";"#), "prog").unwrap_err();
+    assert!(
+        err.message.contains("Str") && err.message.contains("Int"),
+        "unexpected message: {}",
+        err.message
+    );
+}
+
+#[test]
+fn declaring_a_boolean_with_an_int_initializer_is_rejected() {
+    let err = compile_source(&wrap("boolean b = 1;"), "prog").unwrap_err();
+    assert!(!err.message.is_empty());
+}
+
+#[test]
+fn declaring_a_string_with_a_bool_initializer_is_rejected() {
+    let err = compile_source(&wrap("String s = true;"), "prog").unwrap_err();
+    assert!(!err.message.is_empty());
+}
+
+#[test]
+fn declaring_a_double_with_an_int_initializer_is_accepted_widening() {
+    // JLS 5.1.2's own primitive widening conversion -- real Java permits
+    // this without an explicit cast.
+    compile_ok(&wrap("double d = 5;"));
+}
+
+#[test]
+fn declaring_an_int_with_a_double_initializer_is_rejected_narrowing() {
+    // The reverse direction is NOT a legal implicit conversion in real
+    // Java (`int x = 5.0;` needs an explicit `(int)` cast) -- confirms
+    // the widening carve-out is directional, not a blanket Int/Float
+    // equivalence.
+    let err = compile_source(&wrap("int x = 5.0;"), "prog").unwrap_err();
+    assert!(!err.message.is_empty());
+}
+
+#[test]
+fn declaring_an_int_with_a_null_initializer_is_rejected() {
+    // Unlike `String s = null;`, a primitive can never be `null` in real
+    // Java -- confirms the `Kind::Null` carve-out is scoped to
+    // reference-kinded declarations only, not every declared kind.
+    let err = compile_source(&wrap("int x = null;"), "prog").unwrap_err();
+    assert!(!err.message.is_empty());
+}
+
+#[test]
+fn declaring_an_array_with_a_null_initializer_is_accepted() {
+    // Arrays are reference types too -- `int[] xs = null;` is legal Java.
+    compile_ok(&wrap("int[] xs = null;"));
 }
 
 #[test]
@@ -888,16 +949,6 @@ fn parenthesized_expression_changes_grouping() {
 }
 
 // ── M1: deferred constructs (clean errors, not mis-lowering) ────────────
-
-#[test]
-fn ternary_conditional_is_unsupported() {
-    let err = compile_source(&wrap("int x = true ? 1 : 2;"), "prog").unwrap_err();
-    assert!(
-        err.message.contains("ternary"),
-        "unexpected message: {}",
-        err.message
-    );
-}
 
 #[test]
 fn bitwise_and_is_unsupported() {
@@ -1656,13 +1707,275 @@ fn enhanced_for_loop_with_var_is_unsupported() {
     );
 }
 
-// ── M2a: `switch` still has no SIR IR at all ─────────────────────────────
+// ── task #69: `switch` (SIR30, `Stmt::Switch`/`Feature::Switch`) ─────────
+//
+// No backend accepts `Feature::Switch` yet (see SIR30's own "Backend
+// status" — this is the same "IR ahead of both ends" state
+// `Feature::LoopControl` itself passed through between task #61's own
+// IR-landing and task #62's first-adopter backend), so unlike
+// `loop_control_java_execution.rs`'s real `node`-execution proof for
+// `break`/`continue`, these tests are all structural-only: they assert
+// the lowered `Module` both compiles and passes `semantic_ir::validate()`
+// — not just that lowering itself didn't panic/error.
 
 #[test]
-fn switch_statement_is_unsupported() {
-    let err =
-        compile_source(&wrap("int x = 1; switch (x) { default: break; }"), "prog").unwrap_err();
+fn switch_with_default_lowers_to_stmt_switch_and_declares_feature_switch() {
+    let m = compile_ok(&wrap(
+        "int x = 1; int y = 0; switch (x) { case 1: y = 10; break; default: y = 20; }",
+    ));
+    assert!(m.manifest.contains(Feature::Switch));
+    match &main_fn(&m).body.stmts[2] {
+        Stmt::Switch {
+            cases, default, ..
+        } => {
+            assert_eq!(cases.len(), 1);
+            assert!(matches!(cases[0].body.as_slice(), [_, Stmt::Break { .. }]));
+            assert!(default.is_some());
+            assert_eq!(default.as_ref().unwrap().len(), 1);
+        }
+        other => panic!("expected Switch, got {other:?}"),
+    }
+}
+
+#[test]
+fn switch_with_no_default_lowers_default_to_none() {
+    let m = compile_ok(&wrap("int x = 1; switch (x) { case 1: break; }"));
+    match &main_fn(&m).body.stmts[1] {
+        Stmt::Switch { default, .. } => assert!(default.is_none()),
+        other => panic!("expected Switch, got {other:?}"),
+    }
+}
+
+#[test]
+fn switch_multiple_case_labels_sharing_one_body_lower_to_empty_bodied_leading_cases() {
+    // `case 1: case 2: y = 1; break;` — no dedicated multi-label IR shape
+    // needed (see `SwitchCase`'s own doc comment): the first label lowers
+    // to an empty-bodied `SwitchCase` that naturally falls through into
+    // the second, which carries the real body.
+    let m = compile_ok(&wrap(
+        "int x = 1; int y = 0; switch (x) { case 1: case 2: y = 1; break; }",
+    ));
+    match &main_fn(&m).body.stmts[2] {
+        Stmt::Switch { cases, .. } => {
+            assert_eq!(cases.len(), 2);
+            assert!(cases[0].body.is_empty());
+            assert_eq!(cases[1].body.len(), 2);
+        }
+        other => panic!("expected Switch, got {other:?}"),
+    }
+}
+
+#[test]
+fn switch_string_discriminant_is_supported() {
+    compile_ok(&wrap(concat!(
+        "String s = \"a\"; int y = 0; ",
+        "switch (s) { case \"a\": y = 1; break; default: y = 2; }"
+    )));
+}
+
+#[test]
+fn switch_discriminant_must_be_int_or_string() {
+    let err = compile_source(
+        &wrap("boolean b = true; switch (b) { default: break; }"),
+        "prog",
+    )
+    .unwrap_err();
+    assert!(
+        err.message.contains("int or String"),
+        "unexpected message: {}",
+        err.message
+    );
+}
+
+#[test]
+fn switch_case_label_kind_must_match_discriminant() {
+    let err = compile_source(
+        &wrap("int x = 1; switch (x) { case \"a\": break; }"),
+        "prog",
+    )
+    .unwrap_err();
+    assert!(
+        err.message.contains("same type"),
+        "unexpected message: {}",
+        err.message
+    );
+}
+
+#[test]
+fn switch_default_in_a_non_last_position_is_rejected() {
+    let err = compile_source(
+        &wrap("int x = 1; switch (x) { default: break; case 1: break; }"),
+        "prog",
+    )
+    .unwrap_err();
+    assert!(
+        err.message.contains("last case"),
+        "unexpected message: {}",
+        err.message
+    );
+}
+
+#[test]
+fn switch_with_two_default_labels_is_rejected() {
+    // Real `javac` also rejects a duplicate `default` at compile time —
+    // this frontend gets the same result for free from its own "default
+    // must be the last position" check (see `lower_switch_block`'s own
+    // doc comment): a second `default:` necessarily puts the *first* one
+    // in a non-last position.
+    let err = compile_source(
+        &wrap("int x = 1; switch (x) { default: break; default: break; }"),
+        "prog",
+    )
+    .unwrap_err();
+    assert!(
+        err.message.contains("last case"),
+        "unexpected message: {}",
+        err.message
+    );
+}
+
+#[test]
+fn break_inside_a_switch_is_valid() {
+    compile_ok(&wrap(
+        "int x = 1; switch (x) { case 1: break; default: break; }",
+    ));
+}
+
+#[test]
+fn continue_inside_a_switch_with_no_enclosing_loop_is_rejected() {
+    let err = compile_source(
+        &wrap("int x = 1; switch (x) { case 1: continue; }"),
+        "prog",
+    )
+    .unwrap_err();
     assert!(!err.message.is_empty());
+}
+
+#[test]
+fn continue_inside_a_switch_inside_a_while_loop_targets_the_while_loop() {
+    // `continue` never targets a `switch` in any C-family language, even
+    // when the switch is the more deeply nested construct — it skips
+    // straight past to the nearest *actual* loop. Structural-only: SIR's
+    // own `Stmt::Continue` carries no explicit target, so this just
+    // confirms the module lowers and validates at all (the shared
+    // `semantic-ir` validator independently enforces the skip-past-
+    // switch rule via its own `loop_stack`).
+    compile_ok(&wrap(
+        "int x = 1; while (x < 3) { switch (x) { case 1: continue; } x = x + 1; }",
+    ));
+}
+
+#[test]
+fn a_local_declared_in_one_case_is_visible_to_a_later_case() {
+    // The whole switch body shares ONE flat scope, matching real
+    // `javac`'s own well-known cross-case scoping gotcha (see `Stmt::
+    // Switch`'s own doc comment) — a local declared in `case 1`'s body
+    // is lexically in scope for `case 2`'s body, regardless of whether
+    // execution actually falls through to reach it.
+    compile_ok(&wrap(concat!(
+        "int x = 2; ",
+        "switch (x) { ",
+        "  case 1: int y = 5; break; ",
+        "  case 2: y = 10; break; ",
+        "}"
+    )));
+}
+
+#[test]
+fn a_local_declared_inside_a_switch_does_not_leak_past_it() {
+    let err = compile_source(
+        &wrap("int x = 1; switch (x) { case 1: int y = 5; break; } int z = y;"),
+        "prog",
+    )
+    .unwrap_err();
+    assert!(!err.message.is_empty());
+}
+
+#[test]
+fn empty_default_with_no_body_lowers_to_an_empty_case_list() {
+    let m = compile_ok(&wrap("int x = 1; switch (x) { default: }"));
+    match &main_fn(&m).body.stmts[1] {
+        Stmt::Switch {
+            cases, default, ..
+        } => {
+            assert!(cases.is_empty());
+            assert_eq!(default.as_ref().unwrap().len(), 0);
+        }
+        other => panic!("expected Switch, got {other:?}"),
+    }
+}
+
+#[test]
+fn switch_comma_separated_case_constants_share_one_label_and_lower_like_separate_labels() {
+    // Java 14+'s `case 1, 2:` (several constants under ONE `switch_label`,
+    // via the `case_constant ("," case_constant)*` grammar alternative)
+    // is a distinct source shape from the classic `case 1: case 2:`
+    // multi-label idiom (already covered by
+    // `switch_multiple_case_labels_sharing_one_body_lower_to_empty_bodied_leading_cases`)
+    // but must lower identically: an empty-bodied leading `SwitchCase`
+    // falling through into the one that carries the real body.
+    let m = compile_ok(&wrap(
+        "int x = 1; int y = 0; switch (x) { case 1, 2: y = 1; break; }",
+    ));
+    match &main_fn(&m).body.stmts[2] {
+        Stmt::Switch { cases, .. } => {
+            assert_eq!(cases.len(), 2);
+            assert!(cases[0].body.is_empty());
+            assert_eq!(cases[1].body.len(), 2);
+        }
+        other => panic!("expected Switch, got {other:?}"),
+    }
+}
+
+#[test]
+fn switch_case_null_label_is_rejected() {
+    let err = compile_source(
+        &wrap("String s = null; switch (s) { case null: break; default: break; }"),
+        "prog",
+    )
+    .unwrap_err();
+    assert!(
+        err.message.contains("case null"),
+        "unexpected message: {}",
+        err.message
+    );
+}
+
+#[test]
+fn switch_pattern_matching_case_label_is_rejected() {
+    let err = compile_source(
+        &wrap("String s = null; switch (s) { case String str: break; default: break; }"),
+        "prog",
+    )
+    .unwrap_err();
+    assert!(
+        err.message.contains("pattern-matching"),
+        "unexpected message: {}",
+        err.message
+    );
+}
+
+#[test]
+fn switch_arrow_form_is_rejected_not_silently_dropped() {
+    // `/security-review`-caught: `switch_block`'s own grammar has TWO
+    // alternatives — the colon form this crate lowers, and Java 14+'s
+    // arrow form (`case v -> body;`), which shares no children at all
+    // with the colon form. Before `lower_switch_block`'s own explicit
+    // `switch_rule` check, an arrow-form switch's case bodies were
+    // silently discarded (zero cases, no error) rather than rejected —
+    // this is a correctness regression test for that fix, not just a
+    // rejection-message test: it confirms lowering actually *fails*
+    // rather than succeeding with an empty switch.
+    let err = compile_source(
+        &wrap("int x = 1; int y = 0; switch (x) { case 1 -> y = 1; default -> y = 2; }"),
+        "prog",
+    )
+    .unwrap_err();
+    assert!(
+        err.message.contains("arrow-form"),
+        "unexpected message: {}",
+        err.message
+    );
 }
 
 // ── task #64: `break`/`continue` (SIR16 addendum, Feature::LoopControl) ──
@@ -4108,4 +4421,329 @@ fn deeply_nested_lambda_expressions_report_depth_error_not_stack_overflow() {
         "expected a depth-exceeded error, got: {}",
         err.message
     );
+}
+
+// ── task #70 (M8): exceptions (try/catch/finally/throw → Stmt::TryCatch) ─
+
+#[test]
+fn try_catch_lowers_to_stmt_try_catch_and_declares_feature_exceptions() {
+    let m = compile_ok(&wrap(
+        "int x = 0; try { x = 1; } catch (RuntimeException e) { x = 2; }",
+    ));
+    assert!(m.manifest.contains(Feature::Exceptions));
+    match &main_fn(&m).body.stmts[1] {
+        Stmt::TryCatch {
+            body,
+            rescues,
+            ensure_body,
+            ..
+        } => {
+            assert_eq!(body.len(), 1);
+            assert_eq!(rescues.len(), 1);
+            assert_eq!(rescues[0].exception_types, vec!["RuntimeException"]);
+            assert_eq!(rescues[0].binding, Some("e".to_string()));
+            assert_eq!(rescues[0].body.len(), 1);
+            assert!(ensure_body.is_none());
+        }
+        other => panic!("expected TryCatch, got {other:?}"),
+    }
+}
+
+#[test]
+fn try_finally_with_no_catch_lowers_correctly() {
+    let m = compile_ok(&wrap("int x = 0; try { x = 1; } finally { x = 2; }"));
+    match &main_fn(&m).body.stmts[1] {
+        Stmt::TryCatch {
+            rescues,
+            ensure_body,
+            ..
+        } => {
+            assert!(rescues.is_empty());
+            assert_eq!(ensure_body.as_ref().unwrap().len(), 1);
+        }
+        other => panic!("expected TryCatch, got {other:?}"),
+    }
+}
+
+#[test]
+fn try_catch_finally_all_three_lower_correctly() {
+    let m = compile_ok(&wrap(concat!(
+        "int x = 0; ",
+        "try { x = 1; } ",
+        "catch (RuntimeException e) { x = 2; } ",
+        "finally { x = 3; }"
+    )));
+    match &main_fn(&m).body.stmts[1] {
+        Stmt::TryCatch {
+            body,
+            rescues,
+            ensure_body,
+            ..
+        } => {
+            assert_eq!(body.len(), 1);
+            assert_eq!(rescues.len(), 1);
+            assert_eq!(ensure_body.as_ref().unwrap().len(), 1);
+        }
+        other => panic!("expected TryCatch, got {other:?}"),
+    }
+}
+
+#[test]
+fn multiple_catch_clauses_lower_to_multiple_rescue_clauses_in_order() {
+    let m = compile_ok(&wrap(concat!(
+        "int x = 0; ",
+        "try { x = 1; } ",
+        "catch (RuntimeException e) { x = 2; } ",
+        "catch (Exception e) { x = 3; }"
+    )));
+    match &main_fn(&m).body.stmts[1] {
+        Stmt::TryCatch { rescues, .. } => {
+            assert_eq!(rescues.len(), 2);
+            assert_eq!(rescues[0].exception_types, vec!["RuntimeException"]);
+            assert_eq!(rescues[1].exception_types, vec!["Exception"]);
+        }
+        other => panic!("expected TryCatch, got {other:?}"),
+    }
+}
+
+#[test]
+fn java_7_multi_catch_lowers_to_one_rescue_clause_with_multiple_exception_types() {
+    // `catch (IOException | RuntimeException e) { ... }` — maps directly
+    // onto `RescueClause.exception_types: Vec<String>`.
+    let m = compile_ok(&wrap(concat!(
+        "int x = 0; ",
+        "try { x = 1; } ",
+        "catch (IOException | RuntimeException e) { x = 2; }"
+    )));
+    match &main_fn(&m).body.stmts[1] {
+        Stmt::TryCatch { rescues, .. } => {
+            assert_eq!(rescues.len(), 1);
+            assert_eq!(
+                rescues[0].exception_types,
+                vec!["IOException".to_string(), "RuntimeException".to_string()]
+            );
+        }
+        other => panic!("expected TryCatch, got {other:?}"),
+    }
+}
+
+#[test]
+fn try_with_resources_is_rejected() {
+    let err = compile_source(&wrap("try (AutoCloseable r = null) { }"), "prog").unwrap_err();
+    assert!(
+        err.message.contains("try"),
+        "unexpected message: {}",
+        err.message
+    );
+}
+
+#[test]
+fn a_local_declared_inside_a_try_body_does_not_leak_past_it() {
+    let err = compile_source(
+        &wrap("try { int y = 5; } catch (RuntimeException e) { } int z = y;"),
+        "prog",
+    )
+    .unwrap_err();
+    assert!(!err.message.is_empty());
+}
+
+#[test]
+fn the_catch_bound_variable_does_not_leak_past_its_own_clause() {
+    let err = compile_source(
+        &wrap("try { } catch (RuntimeException e) { } int z = e;"),
+        "prog",
+    )
+    .unwrap_err();
+    assert!(!err.message.is_empty());
+}
+
+#[test]
+fn the_catch_bound_variable_from_one_clause_is_not_visible_in_a_later_clause() {
+    // Unlike `Stmt::Switch`'s own deliberately-shared cross-case scope
+    // (task #51), each `catch` clause is independently scoped — matches
+    // `RescueClause.binding`'s own "in scope within `body` only" contract.
+    let err = compile_source(
+        &wrap(concat!(
+            "try { } ",
+            "catch (RuntimeException e) { } ",
+            "catch (Exception ex) { int z = e; }"
+        )),
+        "prog",
+    )
+    .unwrap_err();
+    assert!(!err.message.is_empty());
+}
+
+#[test]
+fn throw_new_exception_class_with_no_message_lowers_to_raise_builtin_call() {
+    let m = compile_ok(&wrap("throw new RuntimeException();"));
+    assert!(m.manifest.contains(Feature::Exceptions));
+    assert!(m.manifest.contains(Feature::Constants));
+    match &main_fn(&m).body.stmts[0] {
+        Stmt::ExprStmt {
+            expr: Expr::BuiltinCall { name, args, .. },
+            ..
+        } => {
+            assert_eq!(name, "raise");
+            assert_eq!(args.len(), 1);
+            match &args[0] {
+                Expr::VarRef { name, scope, .. } => {
+                    assert_eq!(name, "RuntimeException");
+                    assert_eq!(*scope, Scope::Const);
+                }
+                other => panic!("expected a Const VarRef, got {other:?}"),
+            }
+        }
+        other => panic!("expected an ExprStmt wrapping a raise BuiltinCall, got {other:?}"),
+    }
+}
+
+#[test]
+fn throw_new_exception_class_with_a_message_lowers_to_raise_builtin_call_with_two_args() {
+    let m = compile_ok(&wrap("throw new RuntimeException(\"boom\");"));
+    match &main_fn(&m).body.stmts[0] {
+        Stmt::ExprStmt {
+            expr: Expr::BuiltinCall { name, args, .. },
+            ..
+        } => {
+            assert_eq!(name, "raise");
+            assert_eq!(args.len(), 2);
+            assert!(matches!(&args[1], Expr::StrLit { value, .. } if value == "boom"));
+        }
+        other => panic!("expected an ExprStmt wrapping a raise BuiltinCall, got {other:?}"),
+    }
+}
+
+#[test]
+fn throw_inside_a_try_body_lowers_correctly() {
+    compile_ok(&wrap(concat!(
+        "try { throw new RuntimeException(\"x\"); } ",
+        "catch (RuntimeException e) { }"
+    )));
+}
+
+#[test]
+fn throw_new_exception_with_a_non_string_message_is_rejected() {
+    let err = compile_source(&wrap("throw new RuntimeException(1);"), "prog").unwrap_err();
+    assert!(
+        err.message.contains("String"),
+        "unexpected message: {}",
+        err.message
+    );
+}
+
+#[test]
+fn throw_new_exception_with_more_than_one_argument_is_rejected() {
+    let err = compile_source(
+        &wrap("throw new RuntimeException(\"msg\", \"cause\");"),
+        "prog",
+    )
+    .unwrap_err();
+    assert!(
+        err.message.contains("at most one"),
+        "unexpected message: {}",
+        err.message
+    );
+}
+
+#[test]
+fn rethrowing_a_bare_variable_is_rejected_not_mis_lowered_as_a_message() {
+    // `throw e;` (rethrowing a caught exception) must NOT silently
+    // become `raise("RuntimeError", e)` (the fallback shape a non-`Const`
+    // `raise` argument gets — see `lower_throw_statement`'s own doc
+    // comment) — that would change *what* actually gets thrown. This
+    // frontend can't tell "the exact object just caught" from any other
+    // local, so it rejects rethrow entirely rather than risk that.
+    let err = compile_source(
+        &wrap("try { } catch (RuntimeException e) { throw e; }"),
+        "prog",
+    )
+    .unwrap_err();
+    assert!(
+        err.message.contains("rethrow"),
+        "unexpected message: {}",
+        err.message
+    );
+}
+
+#[test]
+fn throw_of_a_bare_string_literal_is_rejected() {
+    let err = compile_source(&wrap("throw \"boom\";"), "prog").unwrap_err();
+    assert!(!err.message.is_empty());
+}
+
+#[test]
+fn throw_new_anonymous_exception_subclass_is_rejected() {
+    let err = compile_source(&wrap("throw new RuntimeException() { };"), "prog").unwrap_err();
+    assert!(
+        err.message.contains("anonymous"),
+        "unexpected message: {}",
+        err.message
+    );
+}
+
+// ── task #72: the ternary conditional operator (cond ? a : b) ───────────
+
+#[test]
+fn ternary_conditional_lowers_to_expr_if() {
+    let m = compile_ok(&wrap("int x = true ? 1 : 2;"));
+    match &main_fn(&m).body.stmts[0] {
+        Stmt::LetStarBinding { value, .. } => match value {
+            Expr::If {
+                then_branch,
+                else_branch,
+                ..
+            } => {
+                assert!(then_branch.stmts.is_empty());
+                assert!(matches!(then_branch.value, Expr::IntLit { value: 1, .. }));
+                assert!(else_branch.stmts.is_empty());
+                assert!(matches!(else_branch.value, Expr::IntLit { value: 2, .. }));
+            }
+            other => panic!("expected Expr::If, got {other:?}"),
+        },
+        other => panic!("expected LetStarBinding, got {other:?}"),
+    }
+}
+
+#[test]
+fn ternary_conditional_condition_must_be_boolean() {
+    let err = compile_source(&wrap("int x = 1 ? 1 : 2;"), "prog").unwrap_err();
+    assert!(
+        err.message.contains("boolean"),
+        "unexpected message: {}",
+        err.message
+    );
+}
+
+#[test]
+fn ternary_conditional_int_and_float_branches_promote_to_float() {
+    let m = compile_ok(&wrap("double d = true ? 1 : 2.0;"));
+    assert!(matches!(
+        &main_fn(&m).body.stmts[0],
+        Stmt::LetStarBinding { .. }
+    ));
+}
+
+#[test]
+fn ternary_conditional_mismatched_non_numeric_branches_are_rejected() {
+    let err = compile_source(&wrap(r#"String s = true ? "a" : 1;"#), "prog").unwrap_err();
+    assert!(
+        err.message.contains("compatible kinds"),
+        "unexpected message: {}",
+        err.message
+    );
+}
+
+#[test]
+fn ternary_conditional_can_appear_as_a_bare_expression_statement() {
+    compile_ok(&wrap("boolean b = true; b ? 1 : 2;"));
+}
+
+#[test]
+fn nested_ternary_conditionals_lower_correctly() {
+    let m = compile_ok(&wrap("int x = true ? (false ? 1 : 2) : 3;"));
+    assert!(matches!(
+        &main_fn(&m).body.stmts[0],
+        Stmt::LetStarBinding { .. }
+    ));
 }

@@ -363,12 +363,7 @@
       "id": "AR-PATH-027",
       "spine_node": "SPINE-SAY-WHAT-I-DO",
       "lessons": [
-        "AR-C28-dhahaba",
-        "AR-C28-jaa",
-        "AR-C29-qala",
-        "AR-C29-raa",
-        "AR-C30-arafa",
-        "AR-C30-akala"
+        "AR-C28-dhahaba"
       ],
       "before": [],
       "inline": [
@@ -377,17 +372,55 @@
       "after": []
     },
     {
+      "id": "AR-PATH-027-B",
+      "spine_node": "SPINE-NAME-EVERYDAY-ACTIONS",
+      "lessons": [
+        "AR-C28-jaa"
+      ],
+      "before": [],
+      "inline": [
+        "AR-EXT-027-LANGUAGE-SPECIFIC-B"
+      ],
+      "after": []
+    },
+    {
+      "id": "AR-PATH-027-C",
+      "spine_node": "SPINE-SAY-WHAT-I-DO",
+      "lessons": [
+        "AR-C29-qala",
+        "AR-C29-raa",
+        "AR-C30-arafa",
+        "AR-C30-akala"
+      ],
+      "before": [],
+      "inline": [
+        "AR-EXT-027-LANGUAGE-SPECIFIC-C"
+      ],
+      "after": []
+    },
+    {
       "id": "AR-PATH-028",
       "spine_node": "SPINE-SAY-WHAT-I-DO",
       "lessons": [
-        "AR-C31-fahima",
+        "AR-C31-fahima"
+      ],
+      "before": [],
+      "inline": [
+        "AR-EXT-028-LANGUAGE-SPECIFIC"
+      ],
+      "after": []
+    },
+    {
+      "id": "AR-PATH-028-B",
+      "spine_node": "SPINE-NAME-EVERYDAY-ACTIONS",
+      "lessons": [
         "AR-C31-qaraa",
         "AR-C31-saala",
         "AR-C31-kataba"
       ],
       "before": [],
       "inline": [
-        "AR-EXT-028-LANGUAGE-SPECIFIC"
+        "AR-EXT-028-LANGUAGE-SPECIFIC-B"
       ],
       "after": []
     },
@@ -397,12 +430,23 @@
       "lessons": [
         "AR-C32-akhadha",
         "AR-C32-fakkara",
-        "AR-C32-saada",
-        "AR-C32-ahabba"
+        "AR-C32-saada"
       ],
       "before": [],
       "inline": [
         "AR-EXT-029-LANGUAGE-SPECIFIC"
+      ],
+      "after": []
+    },
+    {
+      "id": "AR-PATH-029-B",
+      "spine_node": "SPINE-SAY-WHAT-I-LIKE",
+      "lessons": [
+        "AR-C32-ahabba"
+      ],
+      "before": [],
+      "inline": [
+        "AR-EXT-029-LANGUAGE-SPECIFIC-B"
       ],
       "after": []
     },
@@ -592,17 +636,65 @@
       "relocates": {}
     },
     "SPINE-NAME-EVERYDAY-ACTIONS": {
-      "segments": [],
+      "segments": [
+        "AR-PATH-027-B",
+        "AR-PATH-028-B"
+      ],
       "omits": [
         "VERB-DRINK",
         "VERB-GIVE",
-        "VERB-PUT"
+        "VERB-PUT",
+        "VERB-DO-MAKE",
+        "VERB-BUY",
+        "VERB-OPEN",
+        "VERB-CLOSE",
+        "VERB-STAND",
+        "VERB-WAIT",
+        "VERB-BRING",
+        "VERB-WALK"
+      ],
+      "relocates": {}
+    },
+    "SPINE-NAME-EVERYDAY-THINGS": {
+      "segments": [],
+      "omits": [
+        "LODGING-ROOM"
+      ],
+      "relocates": {}
+    },
+    "SPINE-SAY-WHAT-I-HAVE-AND-CAN-DO": {
+      "segments": [],
+      "omits": [
+        "VERB-HAVE",
+        "VERB-CAN"
+      ],
+      "relocates": {}
+    },
+    "SPINE-SAY-WHAT-I-LIKE": {
+      "segments": [
+        "AR-PATH-029-B"
+      ],
+      "omits": [],
+      "relocates": {}
+    },
+    "SPINE-SAY-WHY": {
+      "segments": [],
+      "omits": [
+        "CONNECTIVE-BECAUSE"
+      ],
+      "relocates": {}
+    },
+    "SPINE-SAY-WHAT-I-WANT": {
+      "segments": [],
+      "omits": [
+        "VERB-WANT"
       ],
       "relocates": {}
     },
     "SPINE-SAY-WHAT-I-DO": {
       "segments": [
         "AR-PATH-027",
+        "AR-PATH-027-C",
         "AR-PATH-028",
         "AR-PATH-029"
       ],
@@ -610,28 +702,18 @@
         "VERB-INFINITIVE",
         "VERB-PRESENT-HABITUAL",
         "VERB-BE",
-        "VERB-HAVE",
-        "VERB-DO-MAKE",
         "VERB-SPEAK",
         "VERB-HEAR",
         "VERB-LEARN",
-        "VERB-CAN",
-        "VERB-BRING",
         "VERB-GET",
         "VERB-SLEEP",
         "VERB-LIVE",
         "VERB-WORK",
         "VERB-PLAY",
-        "VERB-WALK",
         "VERB-RUN",
         "VERB-SIT",
-        "VERB-STAND",
-        "VERB-WAIT",
         "VERB-ANSWER",
-        "VERB-MEET",
-        "VERB-BUY",
-        "VERB-OPEN",
-        "VERB-CLOSE"
+        "VERB-MEET"
       ],
       "relocates": {}
     },
@@ -640,13 +722,6 @@
       "omits": [
         "VERB-NEGATE",
         "QUESTION-POLAR"
-      ],
-      "relocates": {}
-    },
-    "SPINE-SAY-WHAT-I-WANT": {
-      "segments": [],
-      "omits": [
-        "VERB-WANT"
       ],
       "relocates": {}
     },
@@ -669,7 +744,6 @@
       "omits": [
         "NARRATIVE-SEQUENCE",
         "CONNECTIVE-THEN",
-        "CONNECTIVE-BECAUSE",
         "ASPECT-ONGOING-PAST"
       ],
       "relocates": {}
@@ -689,7 +763,6 @@
       "omits": [
         "DIRECTION-ASK",
         "TRANSPORT-TICKET",
-        "LODGING-ROOM",
         "PROBLEM-REPORT"
       ],
       "relocates": {}
@@ -1127,8 +1200,28 @@
       "canDo": "I can say six core Arabic verbs in their dictionary form and take each one apart into its three-consonant root.",
       "prerequisites": [],
       "lessons": [
-        "AR-C28-dhahaba",
-        "AR-C28-jaa",
+        "AR-C28-dhahaba"
+      ]
+    },
+    {
+      "id": "AR-EXT-027-LANGUAGE-SPECIFIC-B",
+      "stage": "A2",
+      "kind": "required",
+      "category": "language-specific",
+      "canDo": "I can say six core Arabic verbs in their dictionary form and take each one apart into its three-consonant root.",
+      "prerequisites": [],
+      "lessons": [
+        "AR-C28-jaa"
+      ]
+    },
+    {
+      "id": "AR-EXT-027-LANGUAGE-SPECIFIC-C",
+      "stage": "A2",
+      "kind": "required",
+      "category": "language-specific",
+      "canDo": "I can say six core Arabic verbs in their dictionary form and take each one apart into its three-consonant root.",
+      "prerequisites": [],
+      "lessons": [
         "AR-C29-qala",
         "AR-C29-raa",
         "AR-C30-arafa",
@@ -1143,7 +1236,17 @@
       "canDo": "I can build a family of Arabic nouns out of a verb's three-consonant root using the doer, done-to and ma- place shapes I already know.",
       "prerequisites": [],
       "lessons": [
-        "AR-C31-fahima",
+        "AR-C31-fahima"
+      ]
+    },
+    {
+      "id": "AR-EXT-028-LANGUAGE-SPECIFIC-B",
+      "stage": "A2",
+      "kind": "required",
+      "category": "language-specific",
+      "canDo": "I can build a family of Arabic nouns out of a verb's three-consonant root using the doer, done-to and ma- place shapes I already know.",
+      "prerequisites": [],
+      "lessons": [
         "AR-C31-qaraa",
         "AR-C31-saala",
         "AR-C31-kataba"
@@ -1159,7 +1262,17 @@
       "lessons": [
         "AR-C32-akhadha",
         "AR-C32-fakkara",
-        "AR-C32-saada",
+        "AR-C32-saada"
+      ]
+    },
+    {
+      "id": "AR-EXT-029-LANGUAGE-SPECIFIC-B",
+      "stage": "A2",
+      "kind": "required",
+      "category": "language-specific",
+      "canDo": "I can tell a plain Arabic verb from a rebuilt one and say what doubling, stretching or prefixing a root does to its meaning.",
+      "prerequisites": [],
+      "lessons": [
         "AR-C32-ahabba"
       ]
     },

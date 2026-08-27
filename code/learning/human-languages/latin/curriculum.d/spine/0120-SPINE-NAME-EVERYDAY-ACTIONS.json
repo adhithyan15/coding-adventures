@@ -1,10 +1,23 @@
 {
-  "segments": [],
+  "segments": [
+    "LA-PATH-025-B",
+    "LA-PATH-026-B",
+    "LA-PATH-026-D",
+    "LA-PATH-027-B",
+    "LA-PATH-028-B",
+    "LA-PATH-029",
+    "LA-PATH-030",
+    "LA-PATH-030-C"
+  ],
   "omits": [
     "VERB-DRINK",
-    "VERB-PUT"
+    "VERB-PUT",
+    "VERB-DO-MAKE"
   ],
   "relocates": {
-    "VERB-GIVE": "SPINE-SAY-WHAT-I-DO"
+    "VERB-GIVE": "SPINE-SAY-WHAT-I-DO",
+    "VERB-OPEN": "SPINE-SAY-WHAT-I-DO",
+    "VERB-CLOSE": "SPINE-SAY-WHAT-I-DO",
+    "VERB-BUY": "SPINE-SAY-WHAT-I-DO"
   }
 }

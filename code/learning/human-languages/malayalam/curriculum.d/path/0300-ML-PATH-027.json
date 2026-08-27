@@ -1,0 +1,13 @@
+{
+  "id": "ML-PATH-027",
+  "spine_node": "SPINE-SAY-WHAT-I-DO",
+  "lessons": [
+    "ML-C33-cintikkuka",
+    "ML-C33-manassilaakkuka"
+  ],
+  "before": [],
+  "inline": [
+    "ML-EXT-027-MIND-VERBS"
+  ],
+  "after": []
+}

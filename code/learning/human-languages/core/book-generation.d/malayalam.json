@@ -392,17 +392,35 @@
     {
       "language": "malayalam",
       "chapter": 1,
-      "output": "malayalam/book/chapters/ch01-greetings.tex"
+      "output": "malayalam/book/chapters/ch01-greetings.tex",
+      "embeddedLessonIds": [
+        "ML-C01-namaskaram",
+        "ML-W01-na-ma-trace",
+        "ML-W01-na-ma-guided-copy",
+        "ML-W01-na-ma-delayed-copy",
+        "ML-W01-na-ma-dictation",
+        "ML-W01-sa-chandrakkala-ka",
+        "ML-W01-aa-ra-anusvaram",
+        "ML-W01-namaskaram-read",
+        "ML-W01-namaskaram-dictation",
+        "ML-C01-practice"
+      ]
     },
     {
       "language": "malayalam",
       "chapter": 2,
-      "output": "malayalam/book/chapters/ch02-introductions.tex"
+      "output": "malayalam/book/chapters/ch02-introductions.tex",
+      "embeddedLessonIds": [
+        "ML-W02-santosham-guided-copy"
+      ]
     },
     {
       "language": "malayalam",
       "chapter": 3,
-      "output": "malayalam/book/chapters/ch03-responding.tex"
+      "output": "malayalam/book/chapters/ch03-responding.tex",
+      "embeddedLessonIds": [
+        "ML-W03-santosham-delayed-copy"
+      ]
     },
     {
       "language": "malayalam",

@@ -71,7 +71,7 @@
     {
       "language": "german",
       "chapter": 24,
-      "sourceHash": "fnv1a64:878f2fe69c1b432d",
+      "sourceHash": "fnv1a64:db9e76028f50e719",
       "lessonIds": [
         "GE-C24-denken",
         "GE-C24-verstehen",
@@ -83,7 +83,7 @@
     {
       "language": "german",
       "chapter": 25,
-      "sourceHash": "fnv1a64:221fcefb47333d67",
+      "sourceHash": "fnv1a64:a01d425f27e46f28",
       "lessonIds": [
         "GE-C25-nehmen",
         "GE-C25-fragen",
@@ -95,7 +95,7 @@
     {
       "language": "german",
       "chapter": 26,
-      "sourceHash": "fnv1a64:e019d266e8a91688",
+      "sourceHash": "fnv1a64:e8cd4adc523d6521",
       "lessonIds": [
         "GE-C26-sitzen",
         "GE-C26-stehen",
@@ -107,7 +107,7 @@
     {
       "language": "german",
       "chapter": 27,
-      "sourceHash": "fnv1a64:d5ff4eae6557da80",
+      "sourceHash": "fnv1a64:a336180d97ed065d",
       "lessonIds": [
         "GE-C27-gehen",
         "GE-C27-laufen",

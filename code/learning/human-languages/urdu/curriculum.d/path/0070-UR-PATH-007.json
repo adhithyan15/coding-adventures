@@ -3,10 +3,7 @@
   "spine_node": "SPINE-SAY-WHAT-I-DO",
   "lessons": [
     "UR-C06-hona",
-    "UR-C06-jana",
-    "UR-C06-ana",
-    "UR-C06-bolna",
-    "UR-C06-janna"
+    "UR-C06-jana"
   ],
   "before": [],
   "inline": [

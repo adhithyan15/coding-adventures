@@ -1,0 +1,12 @@
+{
+  "id": "ES-PATH-030-SALIR-CH13",
+  "spine_node": "SPINE-NAME-EVERYDAY-ACTIONS",
+  "lessons": [
+    "ES-C13-salir"
+  ],
+  "before": [],
+  "inline": [
+    "ES-EXT-030-SALIR-CH13"
+  ],
+  "after": []
+}

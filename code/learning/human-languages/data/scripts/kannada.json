@@ -5568,8 +5568,19 @@
       "components": [
         "ಏ  ē — independent vowel (word-initial)"
       ],
-      "strokeOrder": [],
-      "strokeOrderNote": ""
+      "strokeOrder": [
+        "turn clockwise around the compact left loop",
+        "without lifting, sweep through the joined lower curves and climb the right side",
+        "without lifting, carry the tall outer arch over and finish at the upper left",
+        "lift, then draw the small upper loop from left to right"
+      ],
+      "strokeOrderNote": "Write the joined lower body and tall arch in one run, then lift once for the small upper loop.",
+      "penLifts": 1,
+      "strokeOrderSource": {
+        "citation": "Gopala Krishna A, Kannada-alphabet-aee.gif, animation of Kannada independent vowel ಏ, 31 frames, 3.1 seconds (Wikimedia Commons, 25 May 2016)",
+        "url": "https://commons.wikimedia.org/wiki/File:Kannada-alphabet-aee.gif",
+        "variation": "The CC BY-SA 4.0 animation writes ಏ in two pen-down runs: the compact left loop flows through the joined lower curves and rounded right side into the tall outer arch; after one lift, a small upper loop is drawn from left to right. The path is fitted to the bundled Noto Sans Kannada outline; handwritten loop width, bowl depth, and the spacing of the upper loop vary, but the one-lift order remains the same."
+      }
     },
     {
       "glyph": "ಒ",
@@ -5578,8 +5589,19 @@
       "components": [
         "ಒ  o — independent vowel (word-initial)"
       ],
-      "strokeOrder": [],
-      "strokeOrderNote": ""
+      "strokeOrder": [
+        "turn counterclockwise around the compact upper-left loop",
+        "without lifting, descend through the curved middle into the lower-left bowl",
+        "without lifting, sweep through the join and around the lower-right bowl",
+        "without lifting, climb the right side and curl left at the open terminal"
+      ],
+      "strokeOrderNote": "Write the upper loop, curved descent, joined lower bowls, and open terminal in one uninterrupted run.",
+      "penLifts": 0,
+      "strokeOrderSource": {
+        "citation": "Gopala Krishna A, Kannada-alphabet-o.gif, animation of Kannada independent vowel ಒ, 30 frames, 3.0 seconds (Wikimedia Commons, 25 May 2016)",
+        "url": "https://commons.wikimedia.org/wiki/File:Kannada-alphabet-o.gif",
+        "variation": "The CC BY-SA 4.0 animation writes ಒ in one uninterrupted run: turn around the compact upper-left loop, descend through the curved middle into the lower-left bowl, sweep through the join and around the lower-right bowl, then climb and curl left at the open terminal. The path is fitted to the bundled Noto Sans Kannada outline; handwritten loop width, bowl depth, and terminal curl vary, but the zero-lift order remains the same."
+      }
     },
     {
       "glyph": "ಓ",

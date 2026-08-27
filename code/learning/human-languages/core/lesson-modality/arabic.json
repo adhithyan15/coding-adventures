@@ -7,7 +7,7 @@
   "policy": {
     "maxLinearisableTableColumns": 3
   },
-  "sourceHash": "fnv1a64:d7bc04a893b7400e",
+  "sourceHash": "fnv1a64:f664b442e766a7eb",
   "summary": {
     "totalLessons": 108,
     "voice": 47,
@@ -2178,7 +2178,7 @@
         "no-visual-dependency"
       ],
       "coreDrivable": true,
-      "sourceHash": "fnv1a64:9d60f205ab777646"
+      "sourceHash": "fnv1a64:eb37703b0c5a237f"
     },
     {
       "id": "AR-C29-qala",
@@ -2289,7 +2289,7 @@
         "no-visual-dependency"
       ],
       "coreDrivable": true,
-      "sourceHash": "fnv1a64:048d4affba0e5fc3",
+      "sourceHash": "fnv1a64:a6c623bef5913c4a",
       "detachableSegments": [
         "The letters in this word"
       ]
@@ -2310,7 +2310,7 @@
         "no-visual-dependency"
       ],
       "coreDrivable": true,
-      "sourceHash": "fnv1a64:9b7f1e1d11e552b5",
+      "sourceHash": "fnv1a64:e2d6c52642cbb69e",
       "detachableSegments": [
         "The letters in this word"
       ]
@@ -2331,7 +2331,7 @@
         "no-visual-dependency"
       ],
       "coreDrivable": true,
-      "sourceHash": "fnv1a64:8083a92e55e85f54",
+      "sourceHash": "fnv1a64:4d30131d8755ccb9",
       "detachableSegments": [
         "The letters in this word"
       ]
@@ -2415,7 +2415,7 @@
         "no-visual-dependency"
       ],
       "coreDrivable": true,
-      "sourceHash": "fnv1a64:2c4164cd56e38bb1",
+      "sourceHash": "fnv1a64:88bbb0888c85b0a7",
       "detachableSegments": [
         "The letters in this word"
       ]

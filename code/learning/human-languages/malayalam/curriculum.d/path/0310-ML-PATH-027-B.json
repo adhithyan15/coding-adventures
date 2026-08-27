@@ -1,0 +1,13 @@
+{
+  "id": "ML-PATH-027-B",
+  "spine_node": "SPINE-NAME-EVERYDAY-ACTIONS",
+  "lessons": [
+    "ML-C33-vaayikkuka",
+    "ML-C33-ezhutuka"
+  ],
+  "before": [],
+  "inline": [
+    "ML-EXT-027-MIND-VERBS-B"
+  ],
+  "after": []
+}

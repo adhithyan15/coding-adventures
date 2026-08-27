@@ -100,10 +100,13 @@
       "spine_node": "SPINE-CHECK-WELLBEING",
       "lessons": [
         "PA-C03-kivein",
-        "PA-C03-tusi-kivein-ho"
+        "PA-C03-tusi-kivein-ho",
+        "PA-R03-wellbeing-r1"
       ],
       "before": [],
-      "inline": [],
+      "inline": [
+        "PA-EXT-020-WELLBEING-R1"
+      ],
       "after": []
     },
     {
@@ -155,12 +158,15 @@
         "PA-C04-milaange",
         "PA-C04-phir",
         "PA-C04-phir-milaange",
+        "PA-R04-wellbeing-r2",
         "PA-C04-rab-raakha"
       ],
       "before": [
         "PA-EXT-009-LANGUAGE-SPECIFIC"
       ],
-      "inline": [],
+      "inline": [
+        "PA-EXT-021-WELLBEING-R2"
+      ],
       "after": []
     },
     {
@@ -184,14 +190,35 @@
       "spine_node": "SPINE-SAY-WHAT-I-DO",
       "lessons": [
         "PA-C07-hona",
-        "PA-C07-jana",
-        "PA-C07-auna",
-        "PA-C07-khana",
-        "PA-C07-vekhna",
-        "PA-C07-janna"
+        "PA-C07-jana"
       ],
       "before": [],
       "inline": [],
+      "after": []
+    },
+    {
+      "id": "PA-PATH-011-B",
+      "spine_node": "SPINE-NAME-EVERYDAY-ACTIONS",
+      "lessons": [
+        "PA-C07-auna"
+      ],
+      "before": [],
+      "inline": [],
+      "after": []
+    },
+    {
+      "id": "PA-PATH-011-C",
+      "spine_node": "SPINE-SAY-WHAT-I-DO",
+      "lessons": [
+        "PA-C07-khana",
+        "PA-C07-vekhna",
+        "PA-R07-wellbeing-r3",
+        "PA-C07-janna"
+      ],
+      "before": [],
+      "inline": [
+        "PA-EXT-022-WELLBEING-R3"
+      ],
       "after": []
     },
     {
@@ -199,9 +226,7 @@
       "spine_node": "SPINE-SAY-WHAT-I-DO",
       "lessons": [
         "PA-C08-sochna",
-        "PA-C08-samajhna",
-        "PA-C08-parhna",
-        "PA-C08-likhna"
+        "PA-C08-samajhna"
       ],
       "before": [],
       "inline": [
@@ -210,17 +235,63 @@
       "after": []
     },
     {
+      "id": "PA-PATH-012-B",
+      "spine_node": "SPINE-NAME-EVERYDAY-ACTIONS",
+      "lessons": [
+        "PA-C08-parhna",
+        "PA-C08-likhna"
+      ],
+      "before": [],
+      "inline": [
+        "PA-EXT-012-MIND-VERBS-B"
+      ],
+      "after": []
+    },
+    {
       "id": "PA-PATH-013",
       "spine_node": "SPINE-SAY-WHAT-I-DO",
       "lessons": [
-        "PA-C09-laina",
-        "PA-C09-puchhna",
-        "PA-C09-madad-karna",
-        "PA-C09-pasand"
+        "PA-C09-laina"
       ],
       "before": [],
       "inline": [
         "PA-EXT-013-DOING-VERBS"
+      ],
+      "after": []
+    },
+    {
+      "id": "PA-PATH-013-B",
+      "spine_node": "SPINE-NAME-EVERYDAY-ACTIONS",
+      "lessons": [
+        "PA-C09-puchhna"
+      ],
+      "before": [],
+      "inline": [
+        "PA-EXT-013-DOING-VERBS-B"
+      ],
+      "after": []
+    },
+    {
+      "id": "PA-PATH-013-C",
+      "spine_node": "SPINE-SAY-WHAT-I-DO",
+      "lessons": [
+        "PA-C09-madad-karna"
+      ],
+      "before": [],
+      "inline": [
+        "PA-EXT-013-DOING-VERBS-C"
+      ],
+      "after": []
+    },
+    {
+      "id": "PA-PATH-013-C-B",
+      "spine_node": "SPINE-SAY-WHAT-I-LIKE",
+      "lessons": [
+        "PA-C09-pasand"
+      ],
+      "before": [],
+      "inline": [
+        "PA-EXT-013-DOING-VERBS-D"
       ],
       "after": []
     },
@@ -401,46 +472,86 @@
       "relocates": {}
     },
     "SPINE-NAME-EVERYDAY-ACTIONS": {
-      "segments": [],
+      "segments": [
+        "PA-PATH-011-B",
+        "PA-PATH-012-B",
+        "PA-PATH-013-B"
+      ],
       "omits": [
         "VERB-DRINK",
         "VERB-GIVE",
-        "VERB-PUT"
+        "VERB-PUT",
+        "VERB-DO-MAKE",
+        "VERB-BUY",
+        "VERB-OPEN",
+        "VERB-CLOSE",
+        "VERB-STAND",
+        "VERB-WAIT",
+        "VERB-BRING",
+        "VERB-WALK"
+      ],
+      "relocates": {}
+    },
+    "SPINE-NAME-EVERYDAY-THINGS": {
+      "segments": [],
+      "omits": [
+        "LODGING-ROOM"
+      ],
+      "relocates": {}
+    },
+    "SPINE-SAY-WHAT-I-HAVE-AND-CAN-DO": {
+      "segments": [],
+      "omits": [
+        "VERB-HAVE",
+        "VERB-CAN"
+      ],
+      "relocates": {}
+    },
+    "SPINE-SAY-WHAT-I-LIKE": {
+      "segments": [
+        "PA-PATH-013-C-B"
+      ],
+      "omits": [],
+      "relocates": {}
+    },
+    "SPINE-SAY-WHY": {
+      "segments": [],
+      "omits": [
+        "CONNECTIVE-BECAUSE"
+      ],
+      "relocates": {}
+    },
+    "SPINE-SAY-WHAT-I-WANT": {
+      "segments": [],
+      "omits": [
+        "VERB-WANT"
       ],
       "relocates": {}
     },
     "SPINE-SAY-WHAT-I-DO": {
       "segments": [
         "PA-PATH-011",
+        "PA-PATH-011-C",
         "PA-PATH-012",
-        "PA-PATH-013"
+        "PA-PATH-013",
+        "PA-PATH-013-C"
       ],
       "omits": [
         "VERB-INFINITIVE",
         "VERB-PRESENT-HABITUAL",
-        "VERB-HAVE",
-        "VERB-DO-MAKE",
         "VERB-SAY",
         "VERB-SPEAK",
         "VERB-HEAR",
         "VERB-LEARN",
-        "VERB-CAN",
-        "VERB-BRING",
         "VERB-GET",
         "VERB-SLEEP",
         "VERB-LIVE",
         "VERB-WORK",
         "VERB-PLAY",
-        "VERB-WALK",
         "VERB-RUN",
         "VERB-SIT",
-        "VERB-STAND",
-        "VERB-WAIT",
         "VERB-ANSWER",
-        "VERB-MEET",
-        "VERB-BUY",
-        "VERB-OPEN",
-        "VERB-CLOSE"
+        "VERB-MEET"
       ],
       "relocates": {}
     },
@@ -449,13 +560,6 @@
       "omits": [
         "VERB-NEGATE",
         "QUESTION-POLAR"
-      ],
-      "relocates": {}
-    },
-    "SPINE-SAY-WHAT-I-WANT": {
-      "segments": [],
-      "omits": [
-        "VERB-WANT"
       ],
       "relocates": {}
     },
@@ -478,7 +582,6 @@
       "omits": [
         "NARRATIVE-SEQUENCE",
         "CONNECTIVE-THEN",
-        "CONNECTIVE-BECAUSE",
         "ASPECT-ONGOING-PAST"
       ],
       "relocates": {}
@@ -498,7 +601,6 @@
       "omits": [
         "DIRECTION-ASK",
         "TRANSPORT-TICKET",
-        "LODGING-ROOM",
         "PROBLEM-REPORT"
       ],
       "relocates": {}
@@ -690,7 +792,17 @@
       "prerequisites": [],
       "lessons": [
         "PA-C08-sochna",
-        "PA-C08-samajhna",
+        "PA-C08-samajhna"
+      ]
+    },
+    {
+      "id": "PA-EXT-012-MIND-VERBS-B",
+      "stage": "A2",
+      "kind": "required",
+      "category": "language-specific",
+      "canDo": "I can say that I think, understand, read and write in Punjabi, hear the falling tone in the two of those verbs that carry one, and name what each of the four roots meant before it named a mental act.",
+      "prerequisites": [],
+      "lessons": [
         "PA-C08-parhna",
         "PA-C08-likhna"
       ]
@@ -703,9 +815,39 @@
       "canDo": "I can take, ask, help and say what I like in Punjabi, build a fresh verb by putting a noun in front of ਕਰਨਾ, and say why ਮੈਨੂੰ ਪੰਜਾਬੀ ਪਸੰਦ ਹੈ has no room for me as its subject.",
       "prerequisites": [],
       "lessons": [
-        "PA-C09-laina",
-        "PA-C09-puchhna",
-        "PA-C09-madad-karna",
+        "PA-C09-laina"
+      ]
+    },
+    {
+      "id": "PA-EXT-013-DOING-VERBS-B",
+      "stage": "A2",
+      "kind": "required",
+      "category": "language-specific",
+      "canDo": "I can take, ask, help and say what I like in Punjabi, build a fresh verb by putting a noun in front of ਕਰਨਾ, and say why ਮੈਨੂੰ ਪੰਜਾਬੀ ਪਸੰਦ ਹੈ has no room for me as its subject.",
+      "prerequisites": [],
+      "lessons": [
+        "PA-C09-puchhna"
+      ]
+    },
+    {
+      "id": "PA-EXT-013-DOING-VERBS-C",
+      "stage": "A2",
+      "kind": "required",
+      "category": "language-specific",
+      "canDo": "I can take, ask, help and say what I like in Punjabi, build a fresh verb by putting a noun in front of ਕਰਨਾ, and say why ਮੈਨੂੰ ਪੰਜਾਬੀ ਪਸੰਦ ਹੈ has no room for me as its subject.",
+      "prerequisites": [],
+      "lessons": [
+        "PA-C09-madad-karna"
+      ]
+    },
+    {
+      "id": "PA-EXT-013-DOING-VERBS-D",
+      "stage": "A2",
+      "kind": "required",
+      "category": "language-specific",
+      "canDo": "I can take, ask, help and say what I like in Punjabi, build a fresh verb by putting a noun in front of ਕਰਨਾ, and say why ਮੈਨੂੰ ਪੰਜਾਬੀ ਪਸੰਦ ਹੈ has no room for me as its subject.",
+      "prerequisites": [],
+      "lessons": [
         "PA-C09-pasand"
       ]
     },
@@ -843,6 +985,45 @@
       ],
       "lessons": [
         "PA-C03-practice"
+      ]
+    },
+    {
+      "id": "PA-EXT-020-WELLBEING-R1",
+      "stage": "pre-A1",
+      "kind": "required",
+      "category": "assessment",
+      "canDo": "I can orally retrieve the respectful Punjabi wellbeing question's grammar and question-family sound at R1 distance without claiming script credit.",
+      "prerequisites": [
+        "PA-EXT-018-INTRODUCTION-CHECKPOINT"
+      ],
+      "lessons": [
+        "PA-R03-wellbeing-r1"
+      ]
+    },
+    {
+      "id": "PA-EXT-021-WELLBEING-R2",
+      "stage": "pre-A1",
+      "kind": "required",
+      "category": "assessment",
+      "canDo": "I can orally retrieve the complete Punjabi wellbeing cycle at R2 distance without claiming script credit.",
+      "prerequisites": [
+        "PA-EXT-020-WELLBEING-R1"
+      ],
+      "lessons": [
+        "PA-R04-wellbeing-r2"
+      ]
+    },
+    {
+      "id": "PA-EXT-022-WELLBEING-R3",
+      "stage": "pre-A1",
+      "kind": "required",
+      "category": "assessment",
+      "canDo": "I can orally retrieve every Punjabi Chapter 3 wellbeing atom at R3 distance without claiming script credit.",
+      "prerequisites": [
+        "PA-EXT-021-WELLBEING-R2"
+      ],
+      "lessons": [
+        "PA-R07-wellbeing-r3"
       ]
     }
   ]

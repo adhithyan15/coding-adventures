@@ -1,8 +1,8 @@
 [package]
 name = "java-to-semantic-ir"
-version = "0.16.0"
+version = "0.19.0"
 edition = "2021"
-description = "Java (GrammarASTNode CST) → narrow-waist Semantic IR. JV02 frontend, task #67 (M5): qualified static method call self-reference (ClassName.staticMethod(args))."
+description = "Java (GrammarASTNode CST) → narrow-waist Semantic IR. Task #72: the ternary conditional operator (cond ? a : b) → Expr::If."
 
 [dependencies]
 coding-adventures-java-lexer = { path = "../java-lexer" }

@@ -3,8 +3,8 @@
   "language": "gujarati",
   "chapter": 24,
   "title": "A First Three-Place Map",
-  "drivablePrefix": 3,
-  "sourceHash": "fnv1a64:e2443bdb29c98822",
+  "drivablePrefix": 1,
+  "sourceHash": "fnv1a64:c6ae1f7630c620ce",
   "lessons": [
     {
       "id": "GU-C20-hear-bajar",
@@ -83,13 +83,20 @@
       "romanization": "bajār",
       "gloss": "market, now read and written with familiar signs",
       "script": "gujarati",
-      "modality": "voice",
-      "derivedModality": "voice",
+      "modality": "pen",
+      "derivedModality": "pen",
       "modalityReasons": [
-        "no-visual-dependency"
+        "writing-type"
       ],
-      "sourceHash": "fnv1a64:ff2b4f810ab6c9cc",
-      "notice": null,
+      "sourceHash": "fnv1a64:a46539ae956d0b42",
+      "notice": {
+        "modality": "pen",
+        "needs": [
+          "a pen and something to write on"
+        ],
+        "waitUntilStopped": [],
+        "text": "Before we start: this one needs your hands, so it is not a driving lesson. You will want a pen and something to write on. You can listen to all of it now and come back to the parts that need looking at once you have stopped."
+      },
       "blocks": [
         {
           "index": 0,
@@ -299,19 +306,21 @@
       "romanization": "ghar",
       "gloss": "home; house, read and written",
       "script": "gujarati",
-      "modality": "sight",
-      "derivedModality": "sight",
+      "modality": "pen",
+      "derivedModality": "pen",
       "modalityReasons": [
+        "writing-type",
         "sight-cue"
       ],
-      "sourceHash": "fnv1a64:e44f3c04d1183048",
+      "sourceHash": "fnv1a64:e6cd2e676f88d93c",
       "notice": {
-        "modality": "sight",
+        "modality": "pen",
         "needs": [
+          "a pen and something to write on",
           "your eyes, because the lesson points at something written down"
         ],
         "waitUntilStopped": [],
-        "text": "Before we start: this one needs your eyes, so it is not fully a driving lesson. You will want your eyes, because the lesson points at something written down. You can listen to all of it now and come back to the parts that need looking at once you have stopped."
+        "text": "Before we start: this one needs your hands, so it is not a driving lesson. You will want a pen and something to write on and your eyes, because the lesson points at something written down. You can listen to all of it now and come back to the parts that need looking at once you have stopped."
       },
       "blocks": [
         {
@@ -448,13 +457,20 @@
       "romanization": "mandir",
       "gloss": "temple, read and written",
       "script": "gujarati",
-      "modality": "voice",
-      "derivedModality": "voice",
+      "modality": "pen",
+      "derivedModality": "pen",
       "modalityReasons": [
-        "no-visual-dependency"
+        "writing-type"
       ],
-      "sourceHash": "fnv1a64:b4304754d2a02dd9",
-      "notice": null,
+      "sourceHash": "fnv1a64:48433150b57078b9",
+      "notice": {
+        "modality": "pen",
+        "needs": [
+          "a pen and something to write on"
+        ],
+        "waitUntilStopped": [],
+        "text": "Before we start: this one needs your hands, so it is not a driving lesson. You will want a pen and something to write on. You can listen to all of it now and come back to the parts that need looking at once you have stopped."
+      },
       "blocks": [
         {
           "index": 0,
@@ -521,13 +537,20 @@
       "romanization": "bajār — ghar — mandir",
       "gloss": "market — home — temple",
       "script": "gujarati",
-      "modality": "voice",
-      "derivedModality": "voice",
+      "modality": "pen",
+      "derivedModality": "pen",
       "modalityReasons": [
-        "no-visual-dependency"
+        "writing-type"
       ],
-      "sourceHash": "fnv1a64:a6e3bba9437b7559",
-      "notice": null,
+      "sourceHash": "fnv1a64:c10cf25559b36e35",
+      "notice": {
+        "modality": "pen",
+        "needs": [
+          "a pen and something to write on"
+        ],
+        "waitUntilStopped": [],
+        "text": "Before we start: this one needs your hands, so it is not a driving lesson. You will want a pen and something to write on. You can listen to all of it now and come back to the parts that need looking at once you have stopped."
+      },
       "blocks": [
         {
           "index": 0,

@@ -1,7 +1,7 @@
 {
   "language": "punjabi",
-  "lessonCount": 75,
-  "atomMeasurableLessons": 65,
+  "lessonCount": 78,
+  "atomMeasurableLessons": 68,
   "atomMeasurementBlindLessons": 10,
   "durationViolations": 0,
   "atomLessonSpikes": 4,
@@ -18,11 +18,11 @@
   "forwardReferences": 0,
   "atomsTaught": 119,
   "atomsNeverRevisited": 5,
-  "reinforcementWindowMisses": 176,
+  "reinforcementWindowMisses": 149,
   "reinforcementMissesByWindow": {
-    "R1": 28,
-    "R2": 66,
-    "R3": 82,
+    "R1": 27,
+    "R2": 51,
+    "R3": 71,
     "R4": 0
   },
   "payoffSurprises": 0,
@@ -61,7 +61,7 @@
     {
       "language": "punjabi",
       "kind": "reinforcement",
-      "count": 176,
+      "count": 149,
       "unit": "missed window(s)",
       "detail": "add retrieval at the expanding R1-R4 intervals"
     },

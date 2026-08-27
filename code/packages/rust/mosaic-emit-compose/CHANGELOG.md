@@ -5,6 +5,77 @@ This project follows [Semantic Versioning](https://semver.org/).
 
 ## [Unreleased]
 
+### Added
+
+- Native radio-group mutual exclusion (#13007). `group:` was never read
+  anywhere in `emit_host_radio`. A container physically holding 2+
+  `HostRadio` siblings sharing a literal `group:` value now gets
+  `Modifier.selectableGroup()` on its own modifier chain (new
+  `container_needs_radio_group_semantics` + `host_radio_literal_group_key`,
+  wired into both `emit_container` and the root-splitting
+  `emit_container_frame` path) — purely additive a11y semantics; each
+  `RadioButton`'s own `selected`/`onClick` stays entirely local to its
+  own `checked`/`onSelect` props, unchanged. The
+  `androidx.compose.foundation.selection.selectableGroup` import is
+  added conditionally via a new whole-tree `layout_has_radio_group`
+  walk. New `pub fn radio_groups_with_native_semantics` lets
+  `mosaic-package-artifact-builder`'s degradation analyzer stop
+  reporting `property.radio-group-ignored` wherever this lowering
+  actually applies. Verified against a real regenerated
+  `mosaic-pkg-deck-options` project (the real multi-radio usage this
+  targets): `gradle compileKotlin` — `BUILD SUCCESSFUL`.
+
+- Native indeterminate checkbox state (#13006). `emit_host_checkbox` had
+  no code path for `indeterminate:` at all. When authored as anything
+  other than a literal `Keyword("false")`, the emitter now swaps the
+  plain `Checkbox` for Compose's own `TriStateCheckbox(state:
+  ToggleableState, onClick: () -> Unit)`, with `state` computed from
+  `indeterminate`/`checked` (`_mosaicTruthy`-wrapped for `slot:`/`Expr`
+  values, matching `bool_prop_expr`'s existing convention) and the
+  `TriStateCheckbox.material` and `androidx.compose.ui.state.ToggleableState`
+  imports added conditionally (new `layout_has_checkbox_indeterminate`
+  walk). `TriStateCheckbox.onClick` takes no argument — unlike
+  `Checkbox.onCheckedChange`'s `checked` lambda parameter — so the
+  dispatched "new checked" value is computed inline from the same
+  `ToggleableState` expression used for `state =`: clicking always
+  resolves *out of* Indeterminate, toggling towards `On` unless already
+  `On`. New `pub fn host_checkbox_has_native_semantics` lets
+  `mosaic-package-artifact-builder`'s degradation analyzer stop
+  reporting `property.checkbox-indeterminate-ignored` for Compose
+  wherever this lowering actually applies. Verified against a real
+  regenerated `mosaic-pkg-toolkit` project: `gradle compileKotlin` —
+  `BUILD SUCCESSFUL` — on the whole Compose Desktop package, including
+  the real `Checkbox.kt` this change touches.
+
+### Security
+
+- Validate `HostLink.href`'s URI scheme, literal and slot-bound (#13052).
+  Follow-up to #12038 (the identical XAML gap). A literal href is now
+  rejected at compile time when it carries an explicit, disallowed scheme
+  (new `host_link_href_expr` + `has_disallowed_uri_scheme`, reusing the
+  existing `UnsupportedHostLink` error variant). A slot-bound href — unknown
+  until runtime — is validated inside the shared `_mosaicHostLink`
+  composable via a new `_mosaicIsSafeUri` helper: when the scheme is
+  disallowed, the link degrades to the same inert `Clickable` shape the
+  `external == false` branch already uses (neither `onActivate` nor
+  `uriHandler.openUri` fires), matching the "no navigation target" outcome
+  XAML's `SafeNavigateUri` fix settled on for a null `Uri`. A relative
+  reference with no scheme at all (`"#"`, a route path) is unaffected in
+  both paths, since a relative href never reaches `uriHandler.openUri` as
+  an external target regardless (only the `external == true` branch is
+  gated).
+- Two rounds of security review caught two real gaps in the scheme
+  detection, both fixed before merge: a leading space or embedded
+  tab/CR/LF made the first-character-alphabetic check fail and
+  misclassified the string as "no scheme, therefore safe" -- but a real
+  consumer strips that whitespace before parsing the scheme, so it's
+  really the dangerous scheme it looks like. The first fix trimmed
+  leading/trailing whitespace via Kotlin's `trim()`, but a second review
+  round found `trim()`'s default `isWhitespace`-based predicate doesn't
+  cover the full C0-control range a real consumer strips (control bytes
+  like 0x01/0x1B bypassed it) -- `_mosaicIsSafeUri` now uses
+  `raw.trim { it.code <= 0x20 }`, matching the Rust-side check exactly.
+
 ### Fixed
 
 - MIL slots with authored defaults now emit non-null Kotlin parameters with

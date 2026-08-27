@@ -1,0 +1,13 @@
+{
+  "id": "SPINE-SAY-WHAT-I-LIKE",
+  "stage": "A1",
+  "strand": "FUNCTION",
+  "canDo": "I can say what I like and what I do not like.",
+  "prerequisites": [
+    "SPINE-EXCHANGE-NAMES"
+  ],
+  "core": true,
+  "concepts": [
+    "VERB-LIKE-LOVE"
+  ]
+}

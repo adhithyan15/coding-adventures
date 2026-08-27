@@ -189,15 +189,25 @@ describe("the committed A1 inventory", () => {
     // skipped. Every entry below carries a `note` naming the source exponent
     // that is missing, and the loop underneath proves the note is there.
     //
+    // 50 -> 48. `A1-F2-16` and `A1-F2-17` — ask about and express ability —
+    // leave this list because chapter 389 teaches `saber`, which is the exponent
+    // the PCIC actually asks for. They were NOT closed by pointing them at
+    // `poder`: both notes said in as many words that the source asks for *saber*
+    // plus an infinitive and that substituting `poder` would be a different
+    // structure, so closing them honestly meant authoring the verb the syllabus
+    // names. HL23 §10 minted `SPINE-SAY-WHAT-I-HAVE-AND-CAN-DO` for these two
+    // points, which is why that rung is justified by this inventory rather than
+    // invented to give two verbs somewhere to live.
+    //
     // Read as a map of the real gaps: the F-* entries are speech acts the book
-    // never performs (the affirmative imperative, toasting, congratulating,
-    // saber for ability); the NE-* entries are whole A1 domains with no lesson
+    // never performs (the affirmative imperative, toasting, congratulating);
+    // the NE-* entries are whole A1 domains with no lesson
     // at all (clothing, cinema and music, the internet and dictating an
     // address, police and fire); and the O-* entries are nearly the entire
     // orthography inventory -- the alphabet, capitalisation, and every
     // punctuation mark except the question and exclamation pair.
     expect(unmapped.sort()).toEqual([
-      "A1-F2-10", "A1-F2-16", "A1-F2-17", "A1-F3-03", "A1-F4-01", "A1-F5-09",
+      "A1-F2-10", "A1-F3-03", "A1-F4-01", "A1-F5-09",
       "A1-F5-10", "A1-F6-06", "A1-NE02-01", "A1-NE06-01", "A1-NE06-05",
       "A1-NE07-04", "A1-NE07-06", "A1-NE08-02", "A1-NE09-06", "A1-NE11-04",
       "A1-NE12-02", "A1-NE13-03", "A1-NE15-02", "A1-NE15-03", "A1-NE15-04",
@@ -470,10 +480,17 @@ describe("what the corpus actually covers", () => {
     //
     // This is also why `percent` is pinned exactly rather than as a floor: it
     // is allowed to fall, but only for a reason stated here in prose.
+    //
+    // 223 -> 225, 50 -> 48 unmapped. HL23 §10 authors `saber` (chapter 389) and
+    // maps `A1-F2-16` and `A1-F2-17` onto it. `percent` is unmoved at 82: two
+    // points out of 273 is 0.7pp, which rounds away. That is worth saying out
+    // loud — a headline percentage that does not move is not evidence that
+    // nothing happened, which is exactly why `covered` and `unmapped` are pinned
+    // beside it rather than the percentage alone.
     expect(coverage.enumerated).toBe(273); // 85 grammar + 54 functions + 113 notions + 21 orthography
-    expect(coverage.covered).toBe(223); // 85 grammar (unchanged) + 138 newly mapped // ...and 262-266 close the last four enumerated points. The inventory scope remains partial. // +3 ch221-225 // +4 ch226-229 // +4 ch230-235 // +2 ch236-240 // +2 ch241-245 // +3 ch246-250 // +6 ch251-256 // +4 ch257-261: the four rules the book had always demonstrated and never stated // +3 ch221-225 // +4 ch226-229 // +4 ch230-235 // +2 ch236-240 // +2 ch241-245 // +3 ch246-250 // +6 ch251-255: the half-taught sets finished, plus bastante which was already taught and merely unwired // +3 ch221-225 // +4 ch226-229 // +4 ch230-235 // +2 ch236-240 // +2 ch241-245 // +3 ch246-250: the stressed pronouns, the exclamative and the vocative // +3 ch221-225 // +4 ch226-229 // +4 ch230-235 // +2 ch236-240 // +2 ch241-245: the vosotros preterite and the imperfect plural, both promised in chapter 204 // +3: ch221-225 demonstratives // +4: ch226-229 degree words // +4: ch230-235 joining words // +2: ch236-240 the gerund and the personal a // +3: chapters 221-225 teach the demonstratives // +4: chapters 226-229 teach muy, bastante and mal // +4: chapters 230-235 teach al/del, quien, o and ni
+    expect(coverage.covered).toBe(225); // 85 grammar (unchanged) + 138 newly mapped // ...and 262-266 close the last four enumerated points. The inventory scope remains partial. // +3 ch221-225 // +4 ch226-229 // +4 ch230-235 // +2 ch236-240 // +2 ch241-245 // +3 ch246-250 // +6 ch251-256 // +4 ch257-261: the four rules the book had always demonstrated and never stated // +3 ch221-225 // +4 ch226-229 // +4 ch230-235 // +2 ch236-240 // +2 ch241-245 // +3 ch246-250 // +6 ch251-255: the half-taught sets finished, plus bastante which was already taught and merely unwired // +3 ch221-225 // +4 ch226-229 // +4 ch230-235 // +2 ch236-240 // +2 ch241-245 // +3 ch246-250: the stressed pronouns, the exclamative and the vocative // +3 ch221-225 // +4 ch226-229 // +4 ch230-235 // +2 ch236-240 // +2 ch241-245: the vosotros preterite and the imperfect plural, both promised in chapter 204 // +3: ch221-225 demonstratives // +4: ch226-229 degree words // +4: ch230-235 joining words // +2: ch236-240 the gerund and the personal a // +3: chapters 221-225 teach the demonstratives // +4: chapters 226-229 teach muy, bastante and mal // +4: chapters 230-235 teach al/del, quien, o and ni
     expect(coverage.percent).toBe(82); // 53 -> 56 -> 60 -> 64 -> 66 -> 68 -> 71 -> 77 -> 81 -> 85/85 grammar-only, then 223/273 across four dimensions
-    expect(coverage.unmapped).toBe(50); // was 0 while only grammar was enumerated
+    expect(coverage.unmapped).toBe(48); // was 0 while only grammar was enumerated
 
     // Whole categories missing is a different failure from thin coverage, and
     // the report has to keep them distinguishable. These three are GRAMMAR
@@ -495,8 +512,8 @@ describe("what the corpus actually covers", () => {
     const report = formatExamCoverage(
       measureExamCoverage(loadExamInventory("spanish", "A1"), lessons),
     );
-    expect(report).toContain("spanish A1 (partial inventory): 223/273 points covered (82%)");
-    expect(report).toContain("50 with no corresponding atom");
+    expect(report).toContain("spanish A1 (partial inventory): 225/273 points covered (82%)");
+    expect(report).toContain("48 with no corresponding atom");
     // Worst category first, not alphabetical. This USED to be checkable against
     // the real corpus, whose emptiest category kept changing as the campaign
     // closed points — `El sintagma adjetival` at 0/1, then `Los cuantificadores`

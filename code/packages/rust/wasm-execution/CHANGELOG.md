@@ -2,6 +2,170 @@
 
 All notable changes to this package will be documented in this file.
 
+## [0.9.74] - 2026-08-26 (W26 follow-up — real table64 operations)
+
+### Added
+
+- **Real `is64` table operations**: `table.get`/`table.set`/`table.grow`/
+  `table.size`/`table.fill`/`table.copy`/`table.init`/`call_indirect`/
+  `return_call_indirect` all now honor the TARGET table's own `is64`
+  (table64 proposal, W26's own first slice added `Table::is64`/
+  `Table::new_with_is64` but left every operation assuming a hardcoded
+  `i32` index). Mirrors memory64's own `pop_effective_addr` is64/is32
+  branch (W25) exactly, just for table index/dest/src/len/delta operands
+  instead of a memory address — `Table`'s own storage stays
+  `u32`/`usize`-based (unchanged, already bounded well under any `u64`
+  range by `MAX_TABLE_ELEMENTS`), only the operand WIDTH popped off/pushed
+  onto the WASM value stack changes.
+- New `pop_table_operand`/`push_table_result`/`table_u64_to_u32` helpers.
+  `table_u64_to_u32` maps any `u64` that doesn't fit `u32` to `u32::MAX`
+  rather than truncating — a real, attacker-reachable `(i64.const -1)`
+  index (the real `table_get64.wast`/`table_set64.wast` corpus's own
+  boundary case) must still trip every existing bounds check, never
+  silently wrap into a small, coincidentally-in-bounds index.
+- `table.copy`'s `len` operand is `i64` ONLY when BOTH the source and
+  destination tables are `is64` — otherwise `i32`, even when exactly one
+  side is `is64` (verified against the real `table_copy_mixed.wast`
+  corpus's `test_64to32`/`test_32to64` valid cases and its
+  `bad_size_arg`/`bad_src_idx`/`bad_dst_idx` `assert_invalid` cases; see
+  `code/specs/W26-wasm-table64-first-slice.md`'s addendum for the full
+  operand-width rule table).
+- `table.init`'s `dest` operand widens per the TARGET table's own `is64`;
+  `src`/`len` (positions within the passive element segment) always stay
+  `i32` — a segment isn't itself address-typed.
+
+### Fixed
+
+- **Real, pre-existing bug**: `wasm-runtime`'s active ELEMENT segment
+  application unconditionally evaluated its offset expression as `i32`,
+  even though the sibling active DATA segment branch was already
+  correctly `is64`-aware (W25) — any active element segment targeting an
+  `is64` table trapped instantiation instead of applying. Found via the
+  real `call_indirect64.wast` corpus (its `(table $t64 i64 funcref (elem
+  $const-i32))` shorthand hit exactly this gap). Fixed in `wasm-runtime`,
+  noted here since this crate's `Table::is64()` is what the fix reads.
+
+### Tests
+
+- 8 new unit tests covering `table.get`/`set`/`grow`/`size`/`fill`/
+  `copy`/`init`/`call_indirect` against a real `is64` table, including a
+  huge-`i64`-index boundary case and a mixed is32/is64 `table.copy`.
+
+## [0.9.73] - 2026-08-26 (W28 — shared, live `LinearMemory`/`Table` storage across instances)
+
+### Fixed
+
+- **Real interpreter correctness bug: an imported memory or table was a
+  CLONE, not a shared live view.** `LinearMemory` and `Table` both used
+  `#[derive(Clone)]` over plain owned fields (`data: Vec<u8>`/
+  `current_pages: u32` for memory, `elements: Vec<Option<u32>>` for
+  tables). `wasm-runtime`'s `instantiate()` resolves a memory/table import
+  through `HostInterface::resolve_memory`/`resolve_table`, which hands
+  back an owned VALUE that gets pushed directly into the importing
+  instance's own `WasmInstance::memories`/`tables` — so every clone was a
+  full, independent copy. A write through the IMPORTING instance's memory/
+  table was invisible when read back through the EXPORTING instance, and
+  vice versa: wrong for any real multi-module WASM program using a
+  shared-memory/shared-table import (a common pattern — a "libc"-style
+  module sharing its memory with several consumer modules), not just a
+  conformance-corpus gap. `wasm-conformance`'s own `RegistryHost::
+  resolve_memory`/`resolve_table` had already named this exact limitation
+  in their doc comments.
+- **Fix: `LinearMemory`/`Table`'s mutable storage now lives behind
+  `Rc<RefCell<..>>`.** New private `MemoryStorage { data, current_pages }`
+  and `TableStorage { elements }` structs hold everything a `grow`/store/
+  `table.set` can actually mutate; `LinearMemory`/`Table` each hold
+  `inner: Rc<RefCell<..Storage>>` plus their immutable-after-construction
+  fields (`max_pages`/`is64` for memory, `max_size`/`is64` for tables)
+  outside the `RefCell`. `#[derive(Clone)]` on the outer struct is now
+  EXACTLY the right shape: cloning clones the `Rc` pointer, giving a
+  second handle onto the SAME underlying storage, not a second copy of
+  the bytes/elements. Every public method signature is unchanged (`&self`/
+  `&mut self` exactly as before) — only the body now goes through one
+  `borrow()`/`borrow_mut()` per call, scoped to a single statement, never
+  held across two calls. The two raw-pointer-based cross-object
+  primitives (`LinearMemory::copy_between`, `Table::copy_between`, both
+  pre-existing `unsafe fn`s for `memory.copy $dst $src`/`table.copy $dst
+  $src` when `$dst`/`$src` may alias the SAME object) remain sound
+  unchanged: they already read the source range into an owned temporary
+  `Vec` via one scoped borrow BEFORE taking a separate borrow for the
+  destination write, so the two `RefCell` borrows never overlap even when
+  `dst`/`src` share the same underlying `Rc<RefCell<..>>` (self-copy, or
+  now also a shared cross-instance import).
+- **Also fixed, surfaced BY this change: active element-segment
+  application was not atomic per segment.** `wasm-runtime::instantiate()`
+  applied each active element segment's entries one `Table::set` call at
+  a time, propagating the first out-of-bounds error immediately — correct
+  for a segment that's entirely out of bounds, but wrong for one that's
+  only PARTIALLY out of bounds: earlier entries in that same segment had
+  already been written by the time the trap fired, violating the real
+  spec's per-segment atomicity (a single active segment is all-or-nothing;
+  only *earlier, already-fully-applied* segments are guaranteed to persist
+  past a *later* segment's trap — see `linking.wast`'s own "unlike the v1
+  spec" comment). This was unobservable before this same PR's storage fix:
+  a failed `instantiate()` call's local `tables` Vec (holding an
+  independent CLONE of any imported table) was simply dropped on error, so
+  a partial write vanished along with it regardless. It stopped being
+  unobservable the moment table storage became genuinely shared — a
+  partial write to a SHARED table now persists in the exporting instance's
+  own storage even though the importing instance's `instantiate()` call
+  fails. Fixed in `wasm-runtime` (see that crate's own CHANGELOG) by
+  bounds-checking the WHOLE segment against `table.size()` before writing
+  any entry, matching `LinearMemory::write_bytes`'s existing upfront-
+  bounds-check shape (a single check before one `copy_from_slice`, never a
+  byte-at-a-time loop that could partially write before trapping).
+- **Known, deliberately out-of-scope remaining gap:** this fix makes a
+  table's raw entries (bare `u32` function indices) and size genuinely
+  shared and observable cross-instance, but `call_indirect` still resolves
+  a table entry against the CALLING instance's own `func_bodies`/
+  `host_functions` index space. A funcref written into a SHARED table by
+  one module and `call_indirect`-invoked through a DIFFERENT module needs
+  real cross-instance function IDENTITY (the same class of problem
+  `WasmInstance::tag_identities` already solves for exception tags, W23,
+  but requiring genuine cross-instance CALL DISPATCH, not just equality
+  comparison) — a separate, larger follow-on. See `Table`'s own doc
+  comment. `linking0.wast`/`linking3.wast` (newly vendored, see `wasm-
+  conformance`'s CHANGELOG) each have exactly one `assert_return` that
+  hits this remaining gap.
+- Real corpus impact (`wasm-conformance`, same date): the already-vendored
+  `linking.wast`'s `assert_return` tally improved from 48/65 to 54/65 with
+  ZERO new failures anywhere else in the 216-file corpus (programmatically
+  diffed baseline-to-baseline before pushing). Five new files vendored:
+  `elem.wast`, `linking0.wast`, `linking1.wast`, `linking3.wast`,
+  `load1.wast` — see that crate's own CHANGELOG for per-file numbers.
+
+### Added
+
+- New unit tests directly exercising `LinearMemory`/`Table`'s shared-clone
+  semantics stay in `wasm-runtime` (see that crate's own CHANGELOG) since
+  they need a real `WasmInstance`/`HostInterface` to build the import
+  scenario; this crate's own existing memory/table unit tests were updated
+  in place (not added to) where they previously reached into the
+  now-relocated `data`/`elements`/`current_pages` fields directly (e.g.
+  `mem.data[..]` -> `mem.inner.borrow().data[..]`) — no behavioral change,
+  same assertions.
+
+## [0.9.72] - 2026-08-26 (W27 — census batch: `ref.null` in a global's const-expr)
+
+### Fixed
+
+- **`evaluate_const_expr` gained a `0xD0` (`ref.null <heap_type>`) case.**
+  This crate already handled `ref.null` fine as an ordinary instruction
+  (the main decode loop) and as an element-segment entry, but never as a
+  GLOBAL's init expression — any `(global <reftype> (ref.null ...))`
+  simply trapped ("illegal opcode 0xD0 in constant expression") at
+  instantiation instead of producing the null reference it always
+  evaluates to. Same "heap-type byte doesn't change runtime behavior"
+  reasoning as the main decode loop's own `0xD0` handler: skip the
+  immediate (one byte for an abstract heap type, or `0x63` + a LEB128
+  type index for a concrete `(ref.null $t)`) and push `WasmValue::Ref
+  (None)`.
+- Real corpus impact: this was reaching for `ref_null.wast`'s own
+  `(global anyref (ref.null any))`-shaped cases — see `wasm-wast-
+  parser`'s own CHANGELOG (same date) for the heap-type-keyword
+  recognition this fix pairs with, and `wasm-conformance`'s CHANGELOG
+  for why that specific file still isn't vendored despite both fixes.
+
 ## [0.9.71] - 2026-08-26 (W11 addendum — concrete function-type refs)
 
 ### Fixed

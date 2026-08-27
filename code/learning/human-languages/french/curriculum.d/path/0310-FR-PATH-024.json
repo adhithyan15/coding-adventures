@@ -1,0 +1,11 @@
+{
+  "id": "FR-PATH-024",
+  "spine_node": "SPINE-SAY-WHAT-I-DO",
+  "lessons": [
+    "FR-C26-entendre",
+    "FR-C26-dormir"
+  ],
+  "before": [],
+  "inline": [],
+  "after": []
+}

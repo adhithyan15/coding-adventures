@@ -1,0 +1,13 @@
+{
+  "id": "SPINE-SAY-WHAT-I-WANT",
+  "stage": "A1",
+  "strand": "FUNCTION",
+  "canDo": "I can say what I want or need, and ask for it.",
+  "prerequisites": [
+    "SPINE-POLITE-REQUEST-REPAIR"
+  ],
+  "core": true,
+  "concepts": [
+    "VERB-WANT"
+  ]
+}

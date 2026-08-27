@@ -7,7 +7,7 @@
   "policy": {
     "maxLinearisableTableColumns": 3
   },
-  "sourceHash": "fnv1a64:bd218ea3d91470bb",
+  "sourceHash": "fnv1a64:e523c16b4dca6d48",
   "summary": {
     "totalLessons": 301,
     "voice": 205,
@@ -4121,7 +4121,7 @@
         "no-visual-dependency"
       ],
       "coreDrivable": true,
-      "sourceHash": "fnv1a64:b8b7f1f6cbee9bd4"
+      "sourceHash": "fnv1a64:ef0c7727ea1f5cb3"
     },
     {
       "id": "TA-C32-saappidu",
@@ -4235,7 +4235,7 @@
         "no-visual-dependency"
       ],
       "coreDrivable": true,
-      "sourceHash": "fnv1a64:36ae56781169eff6",
+      "sourceHash": "fnv1a64:28b03fb1ff05f7fd",
       "detachableSegments": [
         "The letters in this word"
       ]
@@ -4280,7 +4280,7 @@
         "no-visual-dependency"
       ],
       "coreDrivable": true,
-      "sourceHash": "fnv1a64:bdda9249c003f94c",
+      "sourceHash": "fnv1a64:c28892cfdd5df5f3",
       "detachableSegments": [
         "The letters in this word"
       ]
@@ -4322,7 +4322,7 @@
         "no-visual-dependency"
       ],
       "coreDrivable": true,
-      "sourceHash": "fnv1a64:f5e3b74b5b3bf025",
+      "sourceHash": "fnv1a64:6210edd64a460ae2",
       "detachableSegments": [
         "The letters in this word"
       ]
@@ -4388,7 +4388,7 @@
         "no-visual-dependency"
       ],
       "coreDrivable": true,
-      "sourceHash": "fnv1a64:d9826b5358141478"
+      "sourceHash": "fnv1a64:0e2378258f39c8f6"
     },
     {
       "id": "TA-C35-veedu",

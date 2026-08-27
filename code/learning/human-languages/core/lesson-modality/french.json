@@ -7,7 +7,7 @@
   "policy": {
     "maxLinearisableTableColumns": 3
   },
-  "sourceHash": "fnv1a64:50038a2bca70c013",
+  "sourceHash": "fnv1a64:5f85796283530ce4",
   "summary": {
     "totalLessons": 122,
     "voice": 102,
@@ -2067,7 +2067,7 @@
         "no-visual-dependency"
       ],
       "coreDrivable": true,
-      "sourceHash": "fnv1a64:7d3f728249aa2e13"
+      "sourceHash": "fnv1a64:2f961f158ba8c342"
     },
     {
       "id": "FR-C24-aider",
@@ -2103,7 +2103,7 @@
         "no-visual-dependency"
       ],
       "coreDrivable": true,
-      "sourceHash": "fnv1a64:85d8360819b5b772"
+      "sourceHash": "fnv1a64:e92f4fe0a84ca2a4"
     },
     {
       "id": "FR-C25-comprendre",
@@ -2157,7 +2157,7 @@
         "no-visual-dependency"
       ],
       "coreDrivable": true,
-      "sourceHash": "fnv1a64:f07000fefeb3d091"
+      "sourceHash": "fnv1a64:7bd9f6264e610bc4"
     },
     {
       "id": "FR-C25-ecrire",
@@ -2175,7 +2175,7 @@
         "no-visual-dependency"
       ],
       "coreDrivable": true,
-      "sourceHash": "fnv1a64:c75664e4497104d6"
+      "sourceHash": "fnv1a64:003c5eab1ddf2f1b"
     },
     {
       "id": "FR-C26-entendre",
@@ -2229,7 +2229,7 @@
         "no-visual-dependency"
       ],
       "coreDrivable": true,
-      "sourceHash": "fnv1a64:97bc8031093782ab"
+      "sourceHash": "fnv1a64:3f4ebf3f64901228"
     },
     {
       "id": "FR-C26-courir",
@@ -2283,7 +2283,7 @@
         "no-visual-dependency"
       ],
       "coreDrivable": true,
-      "sourceHash": "fnv1a64:a76cbc6f47190d89"
+      "sourceHash": "fnv1a64:d76fdc7c5ff27928"
     },
     {
       "id": "FR-C27-ouvrir",
@@ -2301,7 +2301,7 @@
         "no-visual-dependency"
       ],
       "coreDrivable": true,
-      "sourceHash": "fnv1a64:9520fc80bfc81ee2"
+      "sourceHash": "fnv1a64:bca85177f6fa7951"
     },
     {
       "id": "FR-C27-fermer",
@@ -2319,7 +2319,7 @@
         "no-visual-dependency"
       ],
       "coreDrivable": true,
-      "sourceHash": "fnv1a64:b24800fffba8e018"
+      "sourceHash": "fnv1a64:ba99b875c7691d9b"
     },
     {
       "id": "FR-C28-cafe",

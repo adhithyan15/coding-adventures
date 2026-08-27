@@ -243,13 +243,30 @@ describe("the committed corpus", () => {
     // `SPINE-SAY-WHAT-I-DO` — the first slice of HL09 §11 item 5. The pin moves
     // because the spine gained a commitment, which is exactly what it is here to
     // report; it is not loosened.
-    expect(summary.totalNodes).toBe(34);
+    //
+    // 34 -> 35, and FUNCTION 14 -> 15: HL23 §10 adds
+    // `SPINE-SAY-WHAT-I-HAVE-AND-CAN-DO`, an A1 FUNCTION node carrying
+    // `VERB-HAVE` and `VERB-CAN`. It is FUNCTION rather than LEXICON because it
+    // exists to close two enumerated PCIC A1 function points — `A1-F2-16` (ask
+    // about ability) and `A1-F2-17` (express ability) — that stood unmapped in
+    // `exam-inventory-es-a1.json`, and not to give two verbs somewhere to live.
+    // The node was minted rather than `SPINE-NAME-EVERYDAY-ACTIONS` being
+    // widened: having a thing is not an everyday action and being able to do one
+    // is not an action either, so absorbing them would have meant a `canDo`
+    // covering naming AND possession AND ability — the compound, unchosen
+    // capability statement HL23 §5 exists to refuse.
+    // 35 -> 38. HL23 §11 mints three more A1 rungs, each a single honest capability
+    // rather than one widened node: SPINE-NAME-EVERYDAY-THINGS (LEXICON), 
+    // SPINE-SAY-WHAT-I-LIKE (FUNCTION) and SPINE-SAY-WHY (FUNCTION). gustar got its
+    // own rung rather than being absorbed by the everyday-action node, and porque
+    // got its own rather than dragging B1 SPINE-GIVE-REASONS wording down to A1.
+    expect(summary.totalNodes).toBe(38);
 
     const byStrand = Object.fromEntries(summary.strands.map((s) => [s.strand, s.nodes]));
     expect(byStrand).toEqual({
-      FUNCTION: 14,
+      FUNCTION: 17,
       GRAMMAR: 7,
-      LEXICON: 3,
+      LEXICON: 4,
       SOUND: 0,
       ETYMOLOGY: 0,
       CULTURE: 3,
@@ -265,22 +282,45 @@ describe("the committed corpus", () => {
     expect(summary.emptyStrands).toEqual(["SOUND", "ETYMOLOGY", "IDIOM"]);
   });
 
-  it("still measures the node HL09 section 1 diagnosed, now six concepts lighter", () => {
+  it("still measures the node HL09 section 1 diagnosed, now ten concepts lighter", () => {
     const summary = summarizeStrands(loadCurriculumSpine(), loadChapterPolicy().maxNewAtomsPerChapter);
-    // 42 -> 39. HL23 moved VERB-DRINK, VERB-GIVE and VERB-PUT onto the new A1
-    // `SPINE-NAME-EVERYDAY-ACTIONS`. This is the first slice of HL09 §11 item 5,
-    // and a deliberately small one: a concept can only leave this node when every
-    // lesson realizing it moves too, because `validateCurriculum` demotes a lesson
-    // to "local support" the moment its concept's owner stops being its segment's
-    // node. These three were the ones no other track had to be edited to release.
-    // 39 is still 3x the chapter atom ceiling, so the node stays the corpus's
-    // worst offender and stays pinned below.
-    expect(summary.largestNode).toEqual({ nodeId: "SPINE-SAY-WHAT-I-DO", concepts: 39 });
+    // 42 -> 39 -> 35. HL23's first slice moved VERB-DRINK, VERB-GIVE and
+    // VERB-PUT onto the new A1 `SPINE-NAME-EVERYDAY-ACTIONS`; its second moved
+    // VERB-DO-MAKE, VERB-BUY, VERB-OPEN and VERB-CLOSE onto the same node,
+    // because the DELE A1 sitting found those verbs taught and then parked
+    // above the exam that asks for them.
+    //
+    // A concept can only leave this node when every lesson realizing it moves
+    // too, because `validateCurriculum` demotes a lesson to "local support" the
+    // moment its concept's owner stops being its segment's node. The second
+    // slice therefore cost 11 lesson migrations across 5 tracks to release 4
+    // concepts.
+    //
+    // 35 -> 33. HL23 §10's third slice moved VERB-HAVE and VERB-CAN onto the new
+    // A1 `SPINE-SAY-WHAT-I-HAVE-AND-CAN-DO`, because the DELE A1 sitting found
+    // `tener` its most-missed verb of all and `poder` its fourth.
+    //
+    // This number may only ever FALL. It measures the corpus's worst
+    // `over-ceiling` node, so a pin that gets raised to let a change through
+    // would be measuring nothing at all. 33 is still nearly 3x the chapter atom
+    // ceiling, so the node stays the worst offender and stays pinned below.
+    // 33 -> 24. Eight everyday-action verbs move to SPINE-NAME-EVERYDAY-ACTIONS with
+    // NO canDo change, and gustar to its own rung. This number may only ever FALL.
+    expect(summary.largestNode).toEqual({ nodeId: "SPINE-SAY-WHAT-I-DO", concepts: 24 });
 
     // Recorded debt, report-only: HL-C81 splits these. Until then the count is
     // pinned so it cannot grow quietly.
     const overCeiling = summary.nodeSizeDefects.filter((d) => d.severity === "over-ceiling");
-    expect(overCeiling.map((d) => d.nodeId)).toEqual(["SPINE-SAY-WHAT-I-DO"]);
+    // SPINE-NAME-EVERYDAY-ACTIONS joins the list at 15 concepts. Stated rather than
+    // absorbed: nine concepts left a 33-concept node for a 7-concept one and the
+    // destination crossed the 12 ceiling, so over-ceiling concepts went 33 -> 39.
+    // The debt REDISTRIBUTED and also grew; the alternative was leaving eight
+    // everyday-action verbs at A2 where the exam cannot reach them. HL-C81 splits
+    // both nodes, which is the real fix.
+    expect(overCeiling.map((d) => d.nodeId).sort()).toEqual([
+      "SPINE-NAME-EVERYDAY-ACTIONS",
+      "SPINE-SAY-WHAT-I-DO",
+    ]);
   });
 });
 

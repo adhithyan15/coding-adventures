@@ -1,0 +1,24 @@
+{
+  "segments": [
+    "LA-PATH-025",
+    "LA-PATH-025-C",
+    "LA-PATH-026",
+    "LA-PATH-026-C",
+    "LA-PATH-027",
+    "LA-PATH-027-C",
+    "LA-PATH-028",
+    "LA-PATH-029-B",
+    "LA-PATH-030-B",
+    "LA-PATH-031"
+  ],
+  "omits": [
+    "VERB-INFINITIVE",
+    "VERB-PRESENT-HABITUAL",
+    "VERB-SPEAK",
+    "VERB-LEARN",
+    "VERB-EAT",
+    "VERB-LIVE",
+    "VERB-WORK"
+  ],
+  "relocates": {}
+}

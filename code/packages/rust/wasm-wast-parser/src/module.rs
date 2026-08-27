@@ -120,17 +120,29 @@ pub fn parse_module_expr(module_expr: &SExpr) -> Result<WasmModule, WastParseErr
 /// (func $f (type $t)))`, not a real function body.
 ///
 /// Only recognizes the import form immediately following an optional
-/// `$name` (i.e. as the field's very first substantive item) — the shape
-/// every inline-import case in the vendored testsuite actually uses.
-/// Combining inline import with inline export on the same field (`(func
-/// (export "e") (import "m" "n") ...)`, also spec-legal) isn't handled;
-/// no vendored file currently needs it, and it isn't the gap this fixes.
+/// `$name`, OR after that `$name` and zero or more inline `(export "e")`
+/// clauses -- the two shapes the real corpus uses (a bare inline import,
+/// and `(memory $m (export "e") (import "m" "n") <limits>)`, spec-legal
+/// per the WAT module-abbreviations grammar: it expands to a plain import
+/// PLUS a separate top-level `(export "e" (memory $m))`). Each field
+/// still only ever produces at most one rewritten import plus zero or
+/// more synthesized export fields -- `desugar_inline_imports` below is
+/// what turns this function's `Vec<SExpr>` per field into the flat,
+/// desugared field list `collect_symbols`/`build` walk.
+///
+/// A field with NO `$name` that also carries inline export clauses gets
+/// one synthesized here (`$__inline_import_export_<pos>`, `pos` being
+/// this field's own unique byte offset) purely so the generated
+/// `(export "e" (kind $synth))` has something to resolve against --
+/// invisible to every other check (duplicate-identifier detection keys
+/// on real user text, and a real `$name` starting this way can't occur
+/// in valid input).
 fn desugar_inline_imports(fields: &[&SExpr]) -> Vec<SExpr> {
-    fields.iter().map(|f| desugar_one_inline_import(f)).collect()
+    fields.iter().flat_map(|f| desugar_one_inline_import(f)).collect()
 }
 
-fn desugar_one_inline_import(f: &SExpr) -> SExpr {
-    let Some(items) = f.as_list() else { return (*f).clone() };
+fn desugar_one_inline_import(f: &SExpr) -> Vec<SExpr> {
+    let Some(items) = f.as_list() else { return vec![(*f).clone()] };
     let pos = f.pos();
     let kind = items.first().and_then(|e| e.as_atom()).unwrap_or("");
     // W21 (exceptions proposal): `tag` joins func/table/memory/global as a
@@ -138,26 +150,62 @@ fn desugar_one_inline_import(f: &SExpr) -> SExpr {
     // import-shorthand shape -- matches `throw.wast`'s own `(tag $t0
     // (import "test" "t2") (param i32))`.
     if !matches!(kind, "func" | "table" | "memory" | "global" | "tag") {
-        return (*f).clone();
+        return vec![(*f).clone()];
     }
-    let mut i = 1;
-    if matches!(items.get(i), Some(SExpr::Atom(s, _)) if s.starts_with('$')) {
+    let mut name_end = 1;
+    let had_name = matches!(items.get(name_end), Some(SExpr::Atom(s, _)) if s.starts_with('$'));
+    if had_name {
+        name_end += 1;
+    }
+    // Zero or more `(export "e")` clauses between the optional name and a
+    // possible `(import "m" "n")` -- the combined-abbreviation shape this
+    // function now also recognizes.
+    let mut i = name_end;
+    let mut export_clauses: Vec<&[SExpr]> = Vec::new();
+    while matches!(items.get(i), Some(c) if c.is_keyword_list("export")) {
+        export_clauses.push(items[i].as_list().unwrap());
         i += 1;
     }
     match items.get(i) {
         Some(candidate) if candidate.is_keyword_list("import") => {
             let import_items = candidate.as_list().unwrap();
             if import_items.len() != 3 {
-                return (*f).clone(); // malformed; let normal parsing surface a real error
+                return vec![(*f).clone()]; // malformed; let normal parsing surface a real error
             }
             let module_name = import_items[1].clone();
             let field_name = import_items[2].clone();
-            let mut desc_items: Vec<SExpr> = items[..i].to_vec(); // kind atom + optional $name
+            // Synthesize a name when the field has none, so any captured
+            // export clause(s) below have a `$name` to reference -- a
+            // combined export+import field with no real identifier is
+            // spec-legal but otherwise has no way to name its own target.
+            let synth_name = format!("$__inline_import_export_{pos}");
+            let mut desc_items: Vec<SExpr> = Vec::with_capacity(2 + items.len() - i);
+            desc_items.push(items[0].clone()); // kind atom
+            if had_name {
+                desc_items.push(items[1].clone());
+            } else if !export_clauses.is_empty() {
+                desc_items.push(SExpr::Atom(synth_name.clone(), pos));
+            }
             desc_items.extend(items[i + 1..].iter().cloned()); // everything after (import ...)
             let desc = SExpr::List(desc_items, pos);
-            SExpr::List(vec![SExpr::Atom("import".to_string(), pos), module_name, field_name, desc], pos)
+            let import_field = SExpr::List(vec![SExpr::Atom("import".to_string(), pos), module_name, field_name, desc], pos);
+
+            if export_clauses.is_empty() {
+                return vec![import_field];
+            }
+            let target_name = if had_name { items[1].as_atom().unwrap().to_string() } else { synth_name };
+            let mut out = vec![import_field];
+            for export in export_clauses {
+                // `(export "e")` -> top-level `(export "e" (kind $target))`,
+                // the exact shape `build`'s own `"export"` arm already
+                // understands (see that match arm above).
+                let name_str = export.get(1).cloned().unwrap_or_else(|| SExpr::Str(Vec::new(), pos));
+                let target = SExpr::List(vec![SExpr::Atom(kind.to_string(), pos), SExpr::Atom(target_name.clone(), pos)], pos);
+                out.push(SExpr::List(vec![SExpr::Atom("export".to_string(), pos), name_str, target], pos));
+            }
+            out
         }
-        _ => (*f).clone(),
+        _ => vec![(*f).clone()],
     }
 }
 
@@ -260,6 +308,26 @@ fn parse_value_type(expr: &SExpr, type_names: &HashMap<String, u32>) -> Result<V
         "funcref" => Ok(ValueType::Funcref),
         "externref" => Ok(ValueType::Externref),
         "i31ref" => Ok(ValueType::I31ref),
+        // `anyref` (GC proposal top reference type -- `ValueType::Anyref`,
+        // already wired for W20's i31 slice) and the four BOTTOM reference
+        // types (`nullref`/`nullfuncref`/`nullexternref`/`nullexnref`,
+        // real corpus vendoring pass -- `ref_null.wast`'s own `(global
+        // $null nullref (ref.null none))` etc.): every bottom type is a
+        // strict subtype of exactly one of this crate's existing four
+        // reference `ValueType`s (`nullref` <: `anyref`, `nullfuncref` <:
+        // `funcref`, `nullexternref` <: `externref`, `nullexnref` <:
+        // `exnref`), and this crate's `WasmValue::Ref` carries no runtime
+        // type tag at all (every null is the same null -- see
+        // `wasm-conformance::value_matches_expected`'s own doc comment),
+        // so aliasing each bottom type straight to its one possible
+        // supertype is exact, not an approximation: nothing observable
+        // here ever depends on telling a `nullfuncref`-typed value apart
+        // from a plain `funcref` one.
+        "anyref" => Ok(ValueType::Anyref),
+        "nullref" => Ok(ValueType::Anyref),
+        "nullfuncref" => Ok(ValueType::Funcref),
+        "nullexternref" => Ok(ValueType::Externref),
+        "nullexnref" => Ok(ValueType::Exnref),
         // `exnref` (exceptions proposal, W-next): recognized so a module
         // mixing `exnref`-typed functions (`catch_ref`/`catch_all_ref`
         // targets) alongside ordinary `catch`/`catch_all`-only ones -- the
@@ -292,6 +360,39 @@ fn parse_ref_null_heap_type(expr: &SExpr, type_names: &HashMap<String, u32>) -> 
         "func" => Ok(vec![0x70]),
         "extern" => Ok(vec![0x6F]),
         "i31" => Ok(vec![0x6C]),
+        // `any` (the GC proposal's top reference type, `ValueType::Anyref`
+        // -- already has a real encoding byte, `0x6E`, wired for W20's
+        // i31ref slice; see `ValueType::encode`) -- real corpus vendoring
+        // pass, `ref_null.wast`'s own `(ref.null any)`/`(assert_return
+        // (invoke "anyref") (ref.null any))`. Represented identically to
+        // every other null reference on this crate's value stack
+        // (`WasmValue::Ref(None)`, no runtime type tag -- see
+        // `wasm-conformance::value_matches_expected`'s own doc comment on
+        // why that's safe for the vendored corpus).
+        "any" => Ok(vec![0x6E]),
+        // `exn` (the exceptions proposal's `exnref`, `ValueType::Exnref` --
+        // already has a real encoding byte, `0x69`, wired since the W21-
+        // W24 exceptions epic; see `ValueType::encode`). Real corpus
+        // vendoring pass, `ref_null.wast`'s own `(ref.null exn)`.
+        "exn" => Ok(vec![0x69]),
+        // The four BOTTOM heap types (`none`/`nofunc`/`noextern`/`noexn`,
+        // real corpus vendoring pass -- `ref_null.wast`'s own `(ref.null
+        // none)`/`(ref.null nofunc)`/etc.): this crate's own decoder
+        // (`wasm-execution`'s `0xD0` handler) treats every abstract heap
+        // type identically -- skip exactly one byte, push `Ref(None)`, see
+        // that handler's own doc comment -- so any single byte distinct
+        // from the `0x63` concrete-type-ref tag round-trips correctly.
+        // These four are NOT claimed to match the upstream GC-proposal
+        // binary encoding byte-for-byte (unlike `func`/`extern`/`any`/
+        // `i31`/`exn` above, which do) -- nothing in this crate ever reads
+        // a `ref.null` heap-type byte back out to distinguish one
+        // abstract type from another, so an internally-consistent,
+        // deliberately-chosen distinct byte is exact for this crate's
+        // purposes without needing to be spec-canonical.
+        "none" => Ok(vec![0x65]),
+        "nofunc" => Ok(vec![0x66]),
+        "noextern" => Ok(vec![0x67]),
+        "noexn" => Ok(vec![0x68]),
         _ => {
             let idx = resolve_idx(type_names, expr, "type")?;
             let mut bytes = vec![0x63u8];
@@ -1298,7 +1399,20 @@ fn build_table_limits_and_elements(rest: &[SExpr], table_idx: u32, storage_idx: 
     ctx.module.tables[storage_idx as usize].limits = Limits { min: count, max: Some(count) };
     ctx.module.elements.push(Element {
         table_index: table_idx,
-        offset_expr: vec![0x41, 0x00, 0x0B], // i32.const 0; end
+        // `i64.const 0` (0x42) for a 64-bit table, `i32.const 0` (0x41)
+        // otherwise (table64 proposal, W26 follow-up) -- an active
+        // element segment's offset expression must match its target
+        // table's own address width, mirroring `build_memory_limits_and_
+        // data`'s identical `is64`-aware default-offset branch (W25) for
+        // memory's own inline-data shorthand. Found via the real
+        // `call_indirect64.wast` corpus: `(table $t64 i64 funcref (elem
+        // $const-i32))` uses exactly this shorthand on an `is64` table,
+        // which previously always emitted an `i32.const 0` offset
+        // regardless -- `wasm-runtime::instantiate`'s matching `is64`-aware
+        // offset evaluation then tried to read that `i32` value as an
+        // `i64`, trapping every such module's instantiation instead of
+        // applying the segment.
+        offset_expr: if is64 { vec![0x42, 0x00, 0x0B] } else { vec![0x41, 0x00, 0x0B] },
         function_indices,
         is_passive: false,
     });
@@ -5389,6 +5503,30 @@ mod tests {
         assert_eq!(m.elements[0].table_index, 0);
         assert_eq!(m.elements[0].function_indices, vec![Some(0), Some(1)]);
         assert_eq!(m.elements[0].offset_expr, vec![0x41, 0x00, 0x0B]);
+    }
+
+    /// W26 follow-up (table64 real operations): the SAME inline
+    /// `(table reftype (elem e*))` shorthand as the sibling test just
+    /// above, but on an `is64` table (`(table i64 reftype (elem e*))`) --
+    /// the generated active element segment's offset expression must be
+    /// `i64.const 0` (`0x42`), not `i32.const 0` (`0x41`). Found via the
+    /// real `call_indirect64.wast` corpus, whose `(table $t64 i64 funcref
+    /// (elem $const-i32))` previously emitted an `i32.const 0` offset
+    /// regardless of `is64`, trapping instantiation (`wasm-runtime`'s own
+    /// `is64`-aware offset evaluation tried to read it as `i64`).
+    #[test]
+    fn is64_table_with_size_implied_by_inline_elem_list_emits_an_i64_offset() {
+        let m = parse_module(
+            "(module
+               (func $a (result i32) i32.const 1)
+               (table i64 funcref (elem $a))
+             )",
+        )
+        .unwrap();
+        assert_eq!(m.tables.len(), 1);
+        assert!(m.tables[0].is64);
+        assert_eq!(m.elements.len(), 1);
+        assert_eq!(m.elements[0].offset_expr, vec![0x42, 0x00, 0x0B]);
     }
 
     /// Found via security review of the round-4 `wasm-conformance` PR,

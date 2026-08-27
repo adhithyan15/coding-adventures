@@ -4,7 +4,7 @@
   "chapter": 18,
   "title": "Verbs at the Core",
   "drivablePrefix": 7,
-  "sourceHash": "fnv1a64:0d898ecaffb6d412",
+  "sourceHash": "fnv1a64:4c8c2a31c3bfd7fb",
   "lessons": [
     {
       "id": "PT-C18-ser-estar",
@@ -472,7 +472,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:c8624c9aea28f2ed",
+      "sourceHash": "fnv1a64:421e6ad4cbc0253e",
       "notice": null,
       "blocks": [
         {

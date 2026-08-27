@@ -43,10 +43,11 @@
     {
       "language": "punjabi",
       "chapter": 3,
-      "sourceHash": "fnv1a64:e5ddb23b5782e324",
+      "sourceHash": "fnv1a64:d0c41b891c0d5f87",
       "lessonIds": [
         "PA-C03-kivein",
         "PA-C03-tusi-kivein-ho",
+        "PA-R03-wellbeing-r1",
         "PA-C03-main",
         "PA-C03-thik",
         "PA-C03-koi-gall-nahin",
@@ -67,13 +68,14 @@
     {
       "language": "punjabi",
       "chapter": 7,
-      "sourceHash": "fnv1a64:68a1b3c7a03f963e",
+      "sourceHash": "fnv1a64:54e22da2b725d4d5",
       "lessonIds": [
         "PA-C07-hona",
         "PA-C07-jana",
         "PA-C07-auna",
         "PA-C07-khana",
         "PA-C07-vekhna",
+        "PA-R07-wellbeing-r3",
         "PA-C07-janna"
       ],
       "tex": "punjabi/book/chapters/ch07-core-verbs.tex"
@@ -81,7 +83,7 @@
     {
       "language": "punjabi",
       "chapter": 8,
-      "sourceHash": "fnv1a64:d216b9ff18e63fbb",
+      "sourceHash": "fnv1a64:b928d92edb980ccb",
       "lessonIds": [
         "PA-C08-sochna",
         "PA-C08-samajhna",
@@ -93,7 +95,7 @@
     {
       "language": "punjabi",
       "chapter": 9,
-      "sourceHash": "fnv1a64:bb53454620f304e2",
+      "sourceHash": "fnv1a64:c0720cf036822547",
       "lessonIds": [
         "PA-C09-laina",
         "PA-C09-puchhna",

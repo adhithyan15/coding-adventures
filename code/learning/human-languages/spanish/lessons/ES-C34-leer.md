@@ -1,7 +1,7 @@
 ---
 schema_version: 2
 id: ES-C34-leer
-spine_node: SPINE-SAY-WHAT-I-DO
+spine_node: SPINE-NAME-EVERYDAY-ACTIONS
 sequence: 1910
 chapter: 155
 type: word

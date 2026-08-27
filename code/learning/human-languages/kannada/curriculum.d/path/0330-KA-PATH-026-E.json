@@ -1,0 +1,12 @@
+{
+  "id": "KA-PATH-026-E",
+  "spine_node": "SPINE-SAY-WHAT-I-DO",
+  "lessons": [
+    "KA-C34-sahaya-maadu"
+  ],
+  "before": [],
+  "inline": [
+    "KA-EXT-027-SOCIAL-VERBS-C"
+  ],
+  "after": []
+}

@@ -1,0 +1,12 @@
+{
+  "id": "TE-EXT-027-MIND-VERBS-B",
+  "stage": "A2",
+  "kind": "required",
+  "category": "language-specific",
+  "canDo": "I can say what I think, understand, read and write in Telugu, build the -కో ending that hands an action back to its doer, and tell the native verbs of this chapter from the Sanskrit words layered beside them.",
+  "prerequisites": [],
+  "lessons": [
+    "TE-C33-caduvu",
+    "TE-C33-raayu"
+  ]
+}

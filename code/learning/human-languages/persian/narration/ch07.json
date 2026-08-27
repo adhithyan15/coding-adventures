@@ -4,7 +4,7 @@
   "chapter": 7,
   "title": "Four Verbs of the Mind",
   "drivablePrefix": 4,
-  "sourceHash": "fnv1a64:f2a04e1c7cf5e085",
+  "sourceHash": "fnv1a64:e912a983a1f20f1f",
   "lessons": [
     {
       "id": "FA-C07-fekr-kardan",
@@ -407,7 +407,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:abcd90b516fa7834",
+      "sourceHash": "fnv1a64:6cdb9ffa86bf111f",
       "notice": null,
       "blocks": [
         {
@@ -606,7 +606,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:bf84f9553db841c7",
+      "sourceHash": "fnv1a64:670faf0d5dcda34a",
       "notice": null,
       "blocks": [
         {

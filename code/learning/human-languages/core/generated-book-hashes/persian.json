@@ -53,7 +53,7 @@
     {
       "language": "persian",
       "chapter": 6,
-      "sourceHash": "fnv1a64:176e4c965cf8e7b5",
+      "sourceHash": "fnv1a64:0a7544d35a925a9d",
       "lessonIds": [
         "FA-C06-budan",
         "FA-C06-raftan",
@@ -66,7 +66,7 @@
     {
       "language": "persian",
       "chapter": 7,
-      "sourceHash": "fnv1a64:3b18c9a915370ad6",
+      "sourceHash": "fnv1a64:641660fe57bc571c",
       "lessonIds": [
         "FA-C07-fekr-kardan",
         "FA-C07-fahmidan",
@@ -78,7 +78,7 @@
     {
       "language": "persian",
       "chapter": 8,
-      "sourceHash": "fnv1a64:2b346bb5101e4422",
+      "sourceHash": "fnv1a64:f176a20501ca1a86",
       "lessonIds": [
         "FA-C08-gereftan",
         "FA-C08-porsidan",

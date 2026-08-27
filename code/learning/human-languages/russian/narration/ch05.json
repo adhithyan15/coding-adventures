@@ -4,7 +4,7 @@
   "chapter": 5,
   "title": "Taking, Asking, Helping, Loving",
   "drivablePrefix": 4,
-  "sourceHash": "fnv1a64:48c27977fdd918fe",
+  "sourceHash": "fnv1a64:dbdde7a90a1a58d0",
   "lessons": [
     {
       "id": "RU-C05-brat",
@@ -198,7 +198,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:8ddc0a7207ebb793",
+      "sourceHash": "fnv1a64:97afdb40f7c03d08",
       "notice": null,
       "blocks": [
         {
@@ -532,7 +532,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:ff48a9340aa49fa3",
+      "sourceHash": "fnv1a64:b1d00e319b6db2f5",
       "notice": null,
       "blocks": [
         {

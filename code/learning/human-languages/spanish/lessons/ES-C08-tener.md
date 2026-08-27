@@ -1,7 +1,7 @@
 ---
 schema_version: 2
 id: ES-C08-tener
-spine_node: SPINE-SAY-WHAT-I-DO
+spine_node: SPINE-SAY-WHAT-I-HAVE-AND-CAN-DO
 sequence: 840
 chapter: 47
 type: word

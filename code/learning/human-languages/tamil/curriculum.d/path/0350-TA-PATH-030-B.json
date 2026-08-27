@@ -1,0 +1,10 @@
+{
+  "id": "TA-PATH-030-B",
+  "spine_node": "SPINE-NAME-EVERYDAY-ACTIONS",
+  "lessons": [
+    "TA-C34-kel"
+  ],
+  "before": [],
+  "inline": [],
+  "after": []
+}

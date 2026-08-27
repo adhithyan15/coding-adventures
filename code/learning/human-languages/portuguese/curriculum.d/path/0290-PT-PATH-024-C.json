@@ -1,0 +1,12 @@
+{
+  "id": "PT-PATH-024-C",
+  "spine_node": "SPINE-SAY-WHAT-I-DO",
+  "lessons": [
+    "PT-C20-ajudar"
+  ],
+  "before": [],
+  "inline": [
+    "PT-EXT-024-LANGUAGE-SPECIFIC-C"
+  ],
+  "after": []
+}

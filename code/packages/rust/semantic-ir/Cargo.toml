@@ -1,7 +1,7 @@
 [package]
 name = "semantic-ir"
-version = "0.27.0"
+version = "0.28.1"
 edition = "2021"
-description = "Narrow-waist Semantic IR (SIR10): a language-neutral intermediate representation between frontends and backends."
+description = "Narrow-waist Semantic IR (SIR10): a language-neutral intermediate representation between frontends and backends. Fix: re-export SwitchCase from the crate root (task #69)."
 
 [dependencies]

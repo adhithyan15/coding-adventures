@@ -1,7 +1,7 @@
 ---
 schema_version: 2
 id: FR-C26-marcher
-spine_node: SPINE-SAY-WHAT-I-DO
+spine_node: SPINE-NAME-EVERYDAY-ACTIONS
 sequence: 810
 chapter: 26
 type: word

@@ -137,7 +137,12 @@
     {
       "language": "persian",
       "chapter": 1,
-      "output": "persian/book/chapters/ch01-greetings-and-responses.tex"
+      "output": "persian/book/chapters/ch01-greetings-and-responses.tex",
+      "embeddedLessonIds": [
+        "FA-C01-salam",
+        "FA-W00-alef-guided-copy",
+        "FA-C01-practice"
+      ]
     }
   ]
 }

@@ -38,6 +38,12 @@ defmodule CodingAdventures.ScytaleCipher do
   Provides `encrypt/2`, `decrypt/2`, and `brute_force/1`.
   """
 
+  @max_brute_force_text_length 4096
+
+  @doc "The largest Unicode-scalar input accepted by `brute_force/1`."
+  @spec max_brute_force_text_length() :: pos_integer()
+  def max_brute_force_text_length, do: @max_brute_force_text_length
+
   @doc """
   Encrypt text using the Scytale transposition cipher.
 
@@ -49,11 +55,11 @@ defmodule CodingAdventures.ScytaleCipher do
       iex> CodingAdventures.ScytaleCipher.encrypt("ABCDEF", 2)
       "ACEBDF"
   """
-  @spec encrypt(String.t(), pos_integer()) :: String.t()
+  @spec encrypt(String.t(), integer()) :: String.t()
   def encrypt("", _key), do: ""
 
   def encrypt(text, key) when is_binary(text) and is_integer(key) do
-    chars = String.graphemes(text)
+    chars = String.to_charlist(text)
     n = length(chars)
 
     if key < 2, do: raise(ArgumentError, "Key must be >= 2, got #{key}")
@@ -63,15 +69,15 @@ defmodule CodingAdventures.ScytaleCipher do
     num_rows = ceil_div(n, key)
     padded_len = num_rows * key
     pad_count = padded_len - n
-    padded = chars ++ List.duplicate(" ", pad_count)
+    padded = List.to_tuple(chars ++ List.duplicate(?\s, pad_count))
 
     # Read column-by-column
     0..(key - 1)//1
     |> Enum.flat_map(fn col ->
       0..(num_rows - 1)//1
-      |> Enum.map(fn row -> Enum.at(padded, row * key + col) end)
+      |> Enum.map(fn row -> elem(padded, row * key + col) end)
     end)
-    |> Enum.join()
+    |> List.to_string()
   end
 
   @doc """
@@ -84,11 +90,11 @@ defmodule CodingAdventures.ScytaleCipher do
       iex> CodingAdventures.ScytaleCipher.decrypt("HLWLEOODL R ", 3)
       "HELLO WORLD"
   """
-  @spec decrypt(String.t(), pos_integer()) :: String.t()
+  @spec decrypt(String.t(), integer()) :: String.t()
   def decrypt("", _key), do: ""
 
   def decrypt(text, key) when is_binary(text) and is_integer(key) do
-    chars = String.graphemes(text)
+    chars = String.to_charlist(text)
     n = length(chars)
 
     if key < 2, do: raise(ArgumentError, "Key must be >= 2, got #{key}")
@@ -103,18 +109,24 @@ defmodule CodingAdventures.ScytaleCipher do
     {col_starts, col_lens, _} =
       Enum.reduce(0..(key - 1)//1, {[], [], 0}, fn c, {starts, lens, offset} ->
         col_len = if rem(n, key) == 0 or c < full_cols, do: num_rows, else: num_rows - 1
-        {starts ++ [offset], lens ++ [col_len], offset + col_len}
+        {[offset | starts], [col_len | lens], offset + col_len}
       end)
+
+    col_starts = col_starts |> Enum.reverse() |> List.to_tuple()
+    col_lens = col_lens |> Enum.reverse() |> List.to_tuple()
+    chars = List.to_tuple(chars)
 
     # Read row-by-row
     0..(num_rows - 1)//1
     |> Enum.flat_map(fn row ->
       0..(key - 1)//1
-      |> Enum.filter(fn col -> row < Enum.at(col_lens, col) end)
-      |> Enum.map(fn col -> Enum.at(chars, Enum.at(col_starts, col) + row) end)
+      |> Enum.filter(fn col -> row < elem(col_lens, col) end)
+      |> Enum.map(fn col -> elem(chars, elem(col_starts, col) + row) end)
     end)
-    |> Enum.join()
-    |> String.trim_trailing(" ")
+    |> Enum.reverse()
+    |> Enum.drop_while(&(&1 == ?\s))
+    |> Enum.reverse()
+    |> List.to_string()
   end
 
   @doc """
@@ -128,7 +140,11 @@ defmodule CodingAdventures.ScytaleCipher do
   """
   @spec brute_force(String.t()) :: [%{key: pos_integer(), text: String.t()}]
   def brute_force(text) when is_binary(text) do
-    n = String.length(text)
+    n = text |> String.to_charlist() |> length()
+
+    if n > @max_brute_force_text_length do
+      raise ArgumentError, "scytale-brute-force-limit"
+    end
 
     if n < 4 do
       []

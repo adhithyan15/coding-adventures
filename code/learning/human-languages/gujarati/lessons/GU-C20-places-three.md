@@ -3,8 +3,11 @@ schema_version: 2
 id: GU-C20-places-three
 spine_node: SPINE-POLITE-REQUEST-REPAIR
 sequence: 940
+delivery: script
+modality: pen
+modality_reason: The non-compensatory payoff includes required dictation, so the complete lesson needs a pen even though its oral core is drivable.
 chapter: 24
-type: practice-mix
+type: writing
 headword: બજાર — ઘર — મંદિર
 romanization: bajār — ghar — mandir
 gloss: market — home — temple

@@ -4,7 +4,7 @@
   "chapter": 6,
   "title": "Five Verbs at the Core",
   "drivablePrefix": 5,
-  "sourceHash": "fnv1a64:94e111bc86ef5d38",
+  "sourceHash": "fnv1a64:522465ff1bc390d9",
   "lessons": [
     {
       "id": "UR-C06-hona",
@@ -315,7 +315,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:042409b1029d7da3",
+      "sourceHash": "fnv1a64:10d76ff9dab4cd22",
       "notice": null,
       "blocks": [
         {

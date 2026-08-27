@@ -4,7 +4,7 @@
   "chapter": 10,
   "title": "The Core Verbs",
   "drivablePrefix": 6,
-  "sourceHash": "fnv1a64:2635c0b8af24f6d0",
+  "sourceHash": "fnv1a64:fbae7286d1b5efed",
   "lessons": [
     {
       "id": "MR-C07-asne",
@@ -343,7 +343,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:4778473b7cf6d286",
+      "sourceHash": "fnv1a64:40b557f506f87549",
       "notice": null,
       "blocks": [
         {

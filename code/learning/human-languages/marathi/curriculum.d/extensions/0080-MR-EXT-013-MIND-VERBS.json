@@ -1,0 +1,12 @@
+{
+  "id": "MR-EXT-013-MIND-VERBS",
+  "stage": "A2",
+  "kind": "required",
+  "category": "language-specific",
+  "canDo": "I can say that I think, understand, read and write in Marathi, and tell which of those four Marathi treats as something that happens to me rather than something I do.",
+  "prerequisites": [],
+  "lessons": [
+    "MR-C08-vichar-karne",
+    "MR-C08-samajne"
+  ]
+}

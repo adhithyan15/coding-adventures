@@ -1,0 +1,9 @@
+{
+  "segments": [
+    "FR-PATH-A1-AVOIR"
+  ],
+  "omits": [],
+  "relocates": {
+    "VERB-CAN": "SPINE-SAY-WHAT-I-WANT"
+  }
+}

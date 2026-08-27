@@ -1,0 +1,12 @@
+{
+  "id": "LA-PATH-027-C",
+  "spine_node": "SPINE-SAY-WHAT-I-DO",
+  "lessons": [
+    "LA-C39-adiuvo"
+  ],
+  "before": [],
+  "inline": [
+    "LA-EXT-027-LANGUAGE-SPECIFIC-C"
+  ],
+  "after": []
+}

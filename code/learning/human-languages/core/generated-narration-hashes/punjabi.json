@@ -54,39 +54,41 @@
     {
       "language": "punjabi",
       "chapter": 3,
-      "sourceHash": "fnv1a64:93148f500fc30705",
+      "sourceHash": "fnv1a64:bc09dda5bba4d90e",
       "lessonIds": [
         "PA-C03-kivein",
         "PA-C03-tusi-kivein-ho",
+        "PA-R03-wellbeing-r1",
         "PA-C03-main",
         "PA-C03-thik",
         "PA-C03-koi-gall-nahin",
         "PA-C03-practice"
       ],
-      "voiceLessons": 2,
+      "voiceLessons": 3,
       "drivablePrefix": 0,
       "text": "punjabi/narration/ch03.txt",
       "json": "punjabi/narration/ch03.json",
-      "textHash": "fnv1a64:fe92afaea8d8ba0c",
-      "jsonHash": "fnv1a64:c54ac29e2fc7678e"
+      "textHash": "fnv1a64:25ed2f7ee4db57d0",
+      "jsonHash": "fnv1a64:c9d7c2ed25d0ca01"
     },
     {
       "language": "punjabi",
       "chapter": 4,
-      "sourceHash": "fnv1a64:66f4223ea1fa9fd9",
+      "sourceHash": "fnv1a64:bccc4cbfa76872a4",
       "lessonIds": [
         "PA-C04-phir",
         "PA-C04-milaange",
         "PA-C04-phir-milaange",
+        "PA-R04-wellbeing-r2",
         "PA-C04-rab-raakha",
         "PA-C04-practice"
       ],
-      "voiceLessons": 2,
+      "voiceLessons": 3,
       "drivablePrefix": 0,
       "text": "punjabi/narration/ch04.txt",
       "json": "punjabi/narration/ch04.json",
-      "textHash": "fnv1a64:d1175f4c65903808",
-      "jsonHash": "fnv1a64:0d8e6bd50f40b31f"
+      "textHash": "fnv1a64:3e277b0edd57eab3",
+      "jsonHash": "fnv1a64:705899a4d947cba2"
     },
     {
       "language": "punjabi",
@@ -124,26 +126,27 @@
     {
       "language": "punjabi",
       "chapter": 7,
-      "sourceHash": "fnv1a64:a0dcbe3bf7eb8de6",
+      "sourceHash": "fnv1a64:8d097f1d87187648",
       "lessonIds": [
         "PA-C07-hona",
         "PA-C07-jana",
         "PA-C07-auna",
         "PA-C07-khana",
         "PA-C07-vekhna",
+        "PA-R07-wellbeing-r3",
         "PA-C07-janna"
       ],
-      "voiceLessons": 6,
-      "drivablePrefix": 6,
+      "voiceLessons": 7,
+      "drivablePrefix": 7,
       "text": "punjabi/narration/ch07.txt",
       "json": "punjabi/narration/ch07.json",
-      "textHash": "fnv1a64:b16894133401a7ea",
-      "jsonHash": "fnv1a64:44878e06b7f35c71"
+      "textHash": "fnv1a64:1285ce604a817bb7",
+      "jsonHash": "fnv1a64:54f7f7036d66d6eb"
     },
     {
       "language": "punjabi",
       "chapter": 8,
-      "sourceHash": "fnv1a64:0af5f1a00caabcd3",
+      "sourceHash": "fnv1a64:5f929452ca816174",
       "lessonIds": [
         "PA-C08-sochna",
         "PA-C08-samajhna",
@@ -155,12 +158,12 @@
       "text": "punjabi/narration/ch08.txt",
       "json": "punjabi/narration/ch08.json",
       "textHash": "fnv1a64:6ca1905a00f9fe5a",
-      "jsonHash": "fnv1a64:889da453dc55d687"
+      "jsonHash": "fnv1a64:3638cb3a333df164"
     },
     {
       "language": "punjabi",
       "chapter": 9,
-      "sourceHash": "fnv1a64:01d0ba06d4ae01a9",
+      "sourceHash": "fnv1a64:a5d3077984886e8a",
       "lessonIds": [
         "PA-C09-laina",
         "PA-C09-puchhna",
@@ -172,7 +175,7 @@
       "text": "punjabi/narration/ch09.txt",
       "json": "punjabi/narration/ch09.json",
       "textHash": "fnv1a64:9fbcd2f5256b662b",
-      "jsonHash": "fnv1a64:cd38d9138c8fa47a"
+      "jsonHash": "fnv1a64:984b10bd6adcb49a"
     },
     {
       "language": "punjabi",

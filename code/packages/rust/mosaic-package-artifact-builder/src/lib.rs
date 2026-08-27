@@ -1057,6 +1057,28 @@ fn analyze_package_degradations_with_runtime_and_tokens(
                 &package_search_paths,
                 &style_options,
             )?;
+            // #13007: the set of literal HostRadio `group:` values that
+            // get real native mutual-exclusion wiring on this backend
+            // (ButtonGroup/selectableGroup/synthesized groupValue).
+            // Computed once per component from the whole tree, since
+            // the recursive degradation walk only ever sees one node
+            // at a time and can't discover siblings on its own.
+            let native_radio_groups: HashSet<String> = match opts.backend {
+                Backend::Qt => mosaic_emit_qt::pipeline::radio_groups_with_native_semantics(
+                    &composed.layout.def.root,
+                ),
+                Backend::Compose => {
+                    mosaic_emit_compose::pipeline::radio_groups_with_native_semantics(
+                        &composed.layout.def.root,
+                    )
+                }
+                Backend::Flutter => {
+                    mosaic_emit_flutter::pipeline::radio_groups_with_native_semantics(
+                        &composed.layout.def.root,
+                    )
+                }
+                _ => HashSet::new(),
+            };
             collect_native_degradations(
                 opts.backend,
                 component,
@@ -1064,6 +1086,7 @@ fn analyze_package_degradations_with_runtime_and_tokens(
                 &composed.layout.def.root,
                 "root",
                 &mut degradations,
+                &native_radio_groups,
             );
             // issue #12022: style-property drops, XAML only for now (see
             // `DegradationReport::style_degradations` doc comment for why
@@ -1112,6 +1135,7 @@ fn collect_native_degradations(
     node: &LayoutNode,
     path: &str,
     degradations: &mut Vec<Degradation>,
+    native_radio_groups: &HashSet<String>,
 ) {
     let backend_name = backend.dir_name();
     let reason = match node.tag.as_str() {
@@ -1147,10 +1171,19 @@ fn collect_native_degradations(
             "accessibility.table-semantics-missing",
             "the backend preserves the visual rows and cells but does not expose native table semantics",
         )),
-        "HostDialog" if backend == Backend::Flutter => Some((
-            "interaction.dialog-placeholder",
-            "the Flutter emitter produces a zero-size TODO placeholder instead of a native dialog",
-        )),
+        // #13010: fixed for the common `modal: true` (default) case --
+        // `host_dialog_has_native_semantics` is false only for the
+        // still-unimplemented `modal: false` shape (Flutter's
+        // `showDialog` is inherently modal).
+        "HostDialog"
+            if backend == Backend::Flutter
+                && !mosaic_emit_flutter::pipeline::host_dialog_has_native_semantics(node) =>
+        {
+            Some((
+                "interaction.dialog-placeholder",
+                "the Flutter emitter produces a zero-size TODO placeholder instead of a native dialog for modal: false (Flutter's showDialog is inherently modal)",
+            ))
+        }
         "HostSlider"
             if backend.is_native()
                 && !matches!(
@@ -1168,6 +1201,22 @@ fn collect_native_degradations(
             "primitive.switch-unimplemented",
             "the backend does not yet lower HostSwitch to its native on/off control",
         )),
+        // UI39 — the kernel drawing primitive. XAML and Qt lower `circle`/
+        // `line`/`curve` (not yet `arc` — a real build attempting
+        // `kind: arc` on either still hard-errors with a named "not yet
+        // supported" message from the emitter itself, same as any other
+        // unimplemented shape kind would; this coarse per-primitive flag
+        // doesn't distinguish kinds, matching how HostSlider's arm below
+        // doesn't distinguish authored prop combinations either). Narrow
+        // further as each remaining backend's PR merges.
+        "Path"
+            if backend.is_native() && !matches!(backend, Backend::Xaml | Backend::Qt) =>
+        {
+            Some((
+                "primitive.path-unimplemented",
+                "the backend does not yet lower Path to real vector geometry",
+            ))
+        }
         "HostLink" if backend == Backend::Flutter && flutter_link_requires_url_host(node) => Some((
             "effect.url-host-missing",
             "the Flutter emitter cannot open URLs without an application-supplied effect host",
@@ -1187,7 +1236,9 @@ fn collect_native_degradations(
     }
 
     for (index, prop) in node.props.iter().enumerate() {
-        if let Some((code, reason)) = ignored_native_property(backend, node, prop) {
+        if let Some((code, reason)) =
+            ignored_native_property(backend, node, prop, native_radio_groups)
+        {
             degradations.push(Degradation {
                 code: code.to_string(),
                 backend: backend_name.to_string(),
@@ -1209,6 +1260,7 @@ fn collect_native_degradations(
             child,
             &child_path,
             degradations,
+            native_radio_groups,
         );
     }
 }
@@ -1217,6 +1269,7 @@ fn ignored_native_property(
     backend: Backend,
     node: &LayoutNode,
     property: &LayoutProp,
+    native_radio_groups: &HashSet<String>,
 ) -> Option<(&'static str, &'static str)> {
     match (node.tag.as_str(), property.name.as_str()) {
         ("Text", "a11y-label")
@@ -1249,6 +1302,21 @@ fn ignored_native_property(
                 "native Text accessibility hiding must be a static true or false value",
             ))
         }
+        // #13008: confirmed permanent, not a to-do. WinUI3's
+        // `ContentDialog` exposes only imperative `ShowAsync()`/`Hide()`
+        // — unlike `Popup`, `Flyout`, and `TeachingTip`, it has no
+        // bindable `IsOpen` dependency property, so there is no
+        // declarative show/hide surface for the emitter to bind `open:`
+        // to (confirmed against current WinUI3/WinAppSDK docs and
+        // community discussion asking Microsoft for exactly this
+        // feature — it does not exist). SwiftUI/Qt/Compose don't share
+        // this gap because their dialog primitives (`.sheet(isPresented:)`,
+        // QML `Popup.visible`, Compose's conditional `Dialog { }`
+        // composition) are all natively declarative. Lowering to
+        // `Flyout` instead (which does have `IsOpen`) was considered and
+        // rejected — `Flyout` isn't a true modal dialog, so it would
+        // trade this degradation for a wrong-primitive one instead of
+        // fixing it. See #13008 for the full investigation.
         ("HostDialog", "open") if backend == Backend::Xaml => Some((
             "property.dialog-open-host-required",
             "the XAML emitter documents the authored open state but requires application code-behind to show and hide the native dialog",
@@ -1287,22 +1355,48 @@ fn ignored_native_property(
                 "the backend opens the external URL but does not dispatch the authored HostLink onActivate event",
             ))
         }
+        // #13006 — Compose/Flutter/SwiftUI now lower `indeterminate:` to
+        // real native tri-state controls (`TriStateCheckbox`,
+        // `Checkbox(tristate: true)`, the mixed-state Button/Image
+        // primitive respectively) whenever the emitter's own
+        // `host_checkbox_has_native_semantics` predicate agrees the
+        // authored value is one it acts on. A value shape none of the
+        // three emitters recognise (e.g. a `String`/`Number`/`EmitRef`
+        // — never authored in practice, but not excluded by the grammar
+        // either) still falls through to a real degradation report
+        // rather than silently rendering as a plain two-state control.
         ("HostCheckbox", "indeterminate")
             if matches!(
                 backend,
                 Backend::Compose | Backend::Flutter | Backend::SwiftUI
-            ) && !matches!(&property.value, LayoutPropValue::Keyword(value) if value == "false") =>
+            ) && !matches!(&property.value, LayoutPropValue::Keyword(value) if value == "false")
+                && !(backend == Backend::Compose
+                    && mosaic_emit_compose::pipeline::host_checkbox_has_native_semantics(node))
+                && !(backend == Backend::Flutter
+                    && mosaic_emit_flutter::pipeline::host_checkbox_has_native_semantics(node))
+                && !(backend == Backend::SwiftUI
+                    && mosaic_emit_swiftui::pipeline::host_checkbox_has_native_semantics(node)) =>
         {
             Some((
                 "property.checkbox-indeterminate-ignored",
                 "the backend lowers HostCheckbox to a two-state control and ignores the authored indeterminate state",
             ))
         }
+        // #13007 — Compose/Flutter/Qt now apply real mutual-exclusion
+        // wiring (selectableGroup/ButtonGroup/synthesized groupValue)
+        // for a literal `group:` value shared by 2+ resolvable
+        // siblings — see each backend's `radio_groups_with_native_
+        // semantics`. SwiftUI has no idiomatic ancestor-grouping
+        // widget for N independently-bound Toggles and stays
+        // unconditionally degraded (tracked separately). A `slot:`-
+        // bound group, or a literal value with no qualifying peer,
+        // still can't be resolved at compile time on any backend and
+        // keeps reporting the degradation.
         ("HostRadio", "group")
             if matches!(
                 backend,
                 Backend::Compose | Backend::Flutter | Backend::Qt | Backend::SwiftUI
-            ) =>
+            ) && !matches!(&property.value, LayoutPropValue::String(group) if native_radio_groups.contains(group)) =>
         {
             Some((
                 "property.radio-group-ignored",
@@ -4871,6 +4965,128 @@ layout Settings {
     }
 
     #[test]
+    fn path_is_explicitly_incomplete_until_native_lowerings_land() {
+        let pkg = make_package("mosaic-pkg-icons", &["MoonIcon"]);
+        fs::write(
+            pkg.path().join("src/MoonIcon.mll"),
+            r#"
+layout MoonIcon {
+  Path [ root ] (
+    kind: circle,
+    cx: 17,
+    cy: 17,
+    r: 17
+  )
+}
+"#,
+        )
+        .unwrap();
+
+        // XAML and Qt land their Path lowerings (circle/line/curve) in
+        // separate PRs — see path_xaml_now_has_a_native_lowering and
+        // path_qt_now_has_a_native_lowering below. The remaining three
+        // still have no lowering at all.
+        for backend in [Backend::Compose, Backend::Flutter, Backend::SwiftUI] {
+            let out = TempDir::new().unwrap();
+            let report = analyze_package_degradations(
+                &BuildOptions {
+                    package_root: pkg.path().to_path_buf(),
+                    output_root: out.path().to_path_buf(),
+                    backend,
+                    emit_project: false,
+                    theme: None,
+                },
+                BuildProfile::NativeComplete,
+            )
+            .expect("Path capability analysis");
+
+            assert!(!report.native_complete, "{backend:?} must remain honest");
+            assert_eq!(
+                report.degradations.len(),
+                1,
+                "unexpected {backend:?} report"
+            );
+            assert_eq!(report.degradations[0].code, "primitive.path-unimplemented");
+            assert_eq!(report.degradations[0].layout_path, "root");
+            assert_eq!(report.degradations[0].primitive.as_deref(), Some("Path"));
+        }
+    }
+
+    #[test]
+    fn path_xaml_now_has_a_native_lowering() {
+        let pkg = make_package("mosaic-pkg-icons-xaml", &["MoonIcon"]);
+        fs::write(
+            pkg.path().join("src/MoonIcon.mll"),
+            r#"
+layout MoonIcon {
+  Path [ root ] (
+    kind: circle,
+    cx: 17,
+    cy: 17,
+    r: 17
+  )
+}
+"#,
+        )
+        .unwrap();
+
+        let out = TempDir::new().unwrap();
+        let report = analyze_package_degradations(
+            &BuildOptions {
+                package_root: pkg.path().to_path_buf(),
+                output_root: out.path().to_path_buf(),
+                backend: Backend::Xaml,
+                emit_project: false,
+                theme: None,
+            },
+            BuildProfile::NativeComplete,
+        )
+        .expect("XAML Path capability analysis");
+        assert!(
+            report.native_complete,
+            "XAML now has a native Path (circle/line/curve) lowering: {:?}",
+            report.degradations
+        );
+    }
+
+    #[test]
+    fn path_qt_now_has_a_native_lowering() {
+        let pkg = make_package("mosaic-pkg-icons-qt", &["MoonIcon"]);
+        fs::write(
+            pkg.path().join("src/MoonIcon.mll"),
+            r#"
+layout MoonIcon {
+  Path [ root ] (
+    kind: circle,
+    cx: 17,
+    cy: 17,
+    r: 17
+  )
+}
+"#,
+        )
+        .unwrap();
+
+        let out = TempDir::new().unwrap();
+        let report = analyze_package_degradations(
+            &BuildOptions {
+                package_root: pkg.path().to_path_buf(),
+                output_root: out.path().to_path_buf(),
+                backend: Backend::Qt,
+                emit_project: false,
+                theme: None,
+            },
+            BuildProfile::NativeComplete,
+        )
+        .expect("Qt Path capability analysis");
+        assert!(
+            report.native_complete,
+            "Qt now has a native Path (circle/line/curve) lowering: {:?}",
+            report.degradations
+        );
+    }
+
+    #[test]
     fn native_drag_drop_backends_are_not_reported_as_inert() {
         let pkg = make_package("mosaic-pkg-board", &["Board"]);
         fs::write(
@@ -4955,26 +5171,18 @@ layout Controls {
         )
         .unwrap();
 
+        // #13006: `indeterminate: slot: mixed` now lowers to a real
+        // native tri-state control on Compose/Flutter/SwiftUI, so only
+        // the (still-unimplemented, #13007) radio-group degradation
+        // survives on those three backends — matching Qt's shape.
         for (backend, expected) in [
             (
                 Backend::Compose,
-                vec![
-                    (
-                        "property.checkbox-indeterminate-ignored",
-                        "root.children[0].props[1]",
-                    ),
-                    ("property.radio-group-ignored", "root.children[1].props[2]"),
-                ],
+                vec![("property.radio-group-ignored", "root.children[1].props[2]")],
             ),
             (
                 Backend::Flutter,
-                vec![
-                    (
-                        "property.checkbox-indeterminate-ignored",
-                        "root.children[0].props[1]",
-                    ),
-                    ("property.radio-group-ignored", "root.children[1].props[2]"),
-                ],
+                vec![("property.radio-group-ignored", "root.children[1].props[2]")],
             ),
             (
                 Backend::Qt,
@@ -4982,13 +5190,7 @@ layout Controls {
             ),
             (
                 Backend::SwiftUI,
-                vec![
-                    (
-                        "property.checkbox-indeterminate-ignored",
-                        "root.children[0].props[1]",
-                    ),
-                    ("property.radio-group-ignored", "root.children[1].props[2]"),
-                ],
+                vec![("property.radio-group-ignored", "root.children[1].props[2]")],
             ),
             (Backend::Xaml, vec![]),
         ] {
@@ -5028,7 +5230,7 @@ layout Controls {
             error,
             BuildError::NativeIncomplete {
                 backend: Backend::Compose,
-                degradation_count: 2,
+                degradation_count: 1,
                 ..
             }
         ));
@@ -5037,6 +5239,75 @@ layout Controls {
             .join("compose/mosaic-degradations.json")
             .exists());
         assert!(!strict_out.path().join("compose/Controls.kt").exists());
+    }
+
+    /// #13007 — a literal `group:` value shared by 2 real sibling
+    /// `HostRadio`s (matching `mosaic-pkg-deck-options`'s actual
+    /// authoring shape) gets real native mutual-exclusion wiring on
+    /// Compose/Flutter/Qt, so the degradation disappears there.
+    /// SwiftUI has no idiomatic ancestor-grouping widget and keeps
+    /// reporting it.
+    #[test]
+    fn literal_radio_group_with_two_siblings_is_native_on_compose_flutter_qt_not_swiftui() {
+        let pkg = make_package("mosaic-pkg-leech-action", &["LeechAction"]);
+        fs::write(
+            pkg.path().join("src/LeechAction.mil"),
+            "component LeechAction { slot suspend-selected : bool ; slot tag-only-selected : bool ; }\n",
+        )
+        .unwrap();
+        fs::write(
+            pkg.path().join("src/LeechAction.mll"),
+            r#"
+layout LeechAction {
+  Row [ root ] {
+    HostRadio [ suspend ] (
+      checked : slot: suspend-selected,
+      value : "suspend",
+      group : "leech-action"
+    )
+    HostRadio [ tag-only ] (
+      checked : slot: tag-only-selected,
+      value : "tag-only",
+      group : "leech-action"
+    )
+  }
+}
+"#,
+        )
+        .unwrap();
+
+        for (backend, expected) in [
+            (Backend::Compose, vec![]),
+            (Backend::Flutter, vec![]),
+            (Backend::Qt, vec![]),
+            (
+                Backend::SwiftUI,
+                vec![
+                    ("property.radio-group-ignored", "root.children[0].props[2]"),
+                    ("property.radio-group-ignored", "root.children[1].props[2]"),
+                ],
+            ),
+            (Backend::Xaml, vec![]),
+        ] {
+            let out = TempDir::new().unwrap();
+            let report = analyze_package_degradations(
+                &BuildOptions {
+                    package_root: pkg.path().to_path_buf(),
+                    output_root: out.path().to_path_buf(),
+                    backend,
+                    emit_project: false,
+                    theme: None,
+                },
+                BuildProfile::NativeComplete,
+            )
+            .expect("radio group analysis");
+            let actual = report
+                .degradations
+                .iter()
+                .map(|entry| (entry.code.as_str(), entry.layout_path.as_str()))
+                .collect::<Vec<_>>();
+            assert_eq!(actual, expected, "unexpected {backend:?} inventory");
+        }
     }
 
     #[test]
@@ -6127,12 +6398,16 @@ layout NativeEvents {
 
     #[test]
     fn flutter_specific_placeholders_are_reported() {
+        // #13010: `modal: false` is the one HostDialog shape still
+        // unimplemented on Flutter (showDialog is inherently modal) --
+        // the default/`modal: true` case is fixed and covered
+        // separately by `flutter_modal_dialog_has_no_placeholder_degradation`.
         let pkg = make_package("mosaic-pkg-links", &["Links"]);
         fs::write(
             pkg.path().join("src/Links.mll"),
             r#"layout Links {
   Column [ root ] {
-    HostDialog [ dialog ] { }
+    HostDialog [ dialog ] ( modal: false ) { }
     HostLink ( href: "https://example.com", label: "Example" )
     HostLink ( href: "/settings", label: "Settings", external: false )
   }
@@ -6163,6 +6438,43 @@ layout NativeEvents {
         );
     }
 
+    /// #13010: a `HostDialog` with the default `modal: true` no longer
+    /// reports `interaction.dialog-placeholder` -- it now lowers to a
+    /// real `_MosaicDialogHost` + `AlertDialog`, not a placeholder.
+    #[test]
+    fn flutter_modal_dialog_has_no_placeholder_degradation() {
+        let pkg = make_package("mosaic-pkg-dialog-only", &["DialogOnly"]);
+        fs::write(
+            pkg.path().join("src/DialogOnly.mll"),
+            r#"layout DialogOnly {
+  HostDialog [ root ] { }
+}
+"#,
+        )
+        .unwrap();
+        let out = TempDir::new().unwrap();
+        let report = analyze_package_degradations(
+            &BuildOptions {
+                package_root: pkg.path().to_path_buf(),
+                output_root: out.path().to_path_buf(),
+                backend: Backend::Flutter,
+                emit_project: false,
+                theme: None,
+            },
+            BuildProfile::NativeComplete,
+        )
+        .expect("analysis");
+
+        assert!(
+            report
+                .degradations
+                .iter()
+                .all(|entry| entry.code != "interaction.dialog-placeholder"),
+            "expected no dialog-placeholder degradation for the default modal:true case, got: {:?}",
+            report.degradations
+        );
+    }
+
     // ── issue #12022: style_degradations ──
 
     /// A `box-shadow` declaration (no WinUI equivalent) is reported in
@@ -6172,10 +6484,15 @@ layout NativeEvents {
     /// `DegradationReport::style_degradations` doc comment for why.
     #[test]
     fn xaml_style_drop_is_reported_but_not_gating() {
+        // #12028 item 1: a non-inset box-shadow is no longer an
+        // unexpressible property — it now lowers to a real ThemeShadow
+        // (see mosaic-emit-xaml's `part_wants_theme_shadow`). An
+        // `inset` value (the moon/status-dot drawing hack, item 3)
+        // stays genuinely dropped and keeps testing this mechanism.
         let pkg = make_package("mosaic-pkg-card", &["Card"]);
         fs::write(
             pkg.path().join("src/Card.msl"),
-            "style Card { part root { box-shadow: \"0 1px 2px #000\" ; } }\n",
+            "style Card { part root { box-shadow: \"5px -5px 0 0 #000 inset\" ; } }\n",
         )
         .unwrap();
         let out = TempDir::new().unwrap();

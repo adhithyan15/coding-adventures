@@ -1,0 +1,10 @@
+{
+  "id": "GE-PATH-A1-MACHEN",
+  "spine_node": "SPINE-NAME-EVERYDAY-ACTIONS",
+  "lessons": [
+    "GE-C05-machen"
+  ],
+  "before": [],
+  "inline": [],
+  "after": []
+}

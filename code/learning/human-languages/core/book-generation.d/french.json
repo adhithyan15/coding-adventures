@@ -108,7 +108,13 @@
     {
       "language": "french",
       "chapter": 1,
-      "output": "french/book/chapters/ch01-greetings.tex"
+      "output": "french/book/chapters/ch01-greetings.tex",
+      "embeddedLessonIds": [
+        "FR-W01-salut-observe",
+        "FR-W01-salut-guided-copy",
+        "FR-W01-salut-delayed-copy",
+        "FR-W01-salut-dictation"
+      ]
     },
     {
       "language": "french",

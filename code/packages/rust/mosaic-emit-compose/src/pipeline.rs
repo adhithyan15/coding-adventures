@@ -1,6 +1,6 @@
 //! Jetpack Compose backend pipeline emitter.
 
-use std::collections::HashMap;
+use std::collections::{HashMap, HashSet};
 use std::fmt::Write;
 
 use moslayout_compiler::{LayoutDef, LayoutNode, LayoutProp, LayoutPropValue};
@@ -115,6 +115,8 @@ pub fn from_pipeline(
     let uses_icon = layout_contains_tag(&layout.root, "Icon");
     let uses_drag = layout_contains_tag(&layout.root, "HostDraggable")
         || layout_contains_tag(&layout.root, "HostDropTarget");
+    let uses_checkbox_indeterminate = layout_has_checkbox_indeterminate(&layout.root);
+    let uses_radio_group = layout_has_radio_group(&layout.root);
 
     writeln!(out, "import androidx.compose.foundation.background").unwrap();
     writeln!(out, "import androidx.compose.foundation.border").unwrap();
@@ -142,6 +144,13 @@ pub fn from_pipeline(
         "import androidx.compose.foundation.rememberBasicTooltipState"
     )
     .unwrap();
+    if uses_radio_group {
+        writeln!(
+            out,
+            "import androidx.compose.foundation.selection.selectableGroup"
+        )
+        .unwrap();
+    }
     writeln!(out, "import androidx.compose.foundation.layout.Box").unwrap();
     writeln!(out, "import androidx.compose.foundation.layout.Column").unwrap();
     writeln!(out, "import androidx.compose.foundation.layout.Row").unwrap();
@@ -184,6 +193,9 @@ pub fn from_pipeline(
     writeln!(out, "import androidx.compose.material.Surface").unwrap();
     writeln!(out, "import androidx.compose.material.Text").unwrap();
     writeln!(out, "import androidx.compose.material.TextField").unwrap();
+    if uses_checkbox_indeterminate {
+        writeln!(out, "import androidx.compose.material.TriStateCheckbox").unwrap();
+    }
     writeln!(out, "import androidx.compose.runtime.Composable").unwrap();
     if uses_drag {
         writeln!(
@@ -264,6 +276,9 @@ pub fn from_pipeline(
             "import androidx.compose.ui.platform.LocalLayoutDirection"
         )
         .unwrap();
+    }
+    if uses_checkbox_indeterminate {
+        writeln!(out, "import androidx.compose.ui.state.ToggleableState").unwrap();
     }
     writeln!(out, "import androidx.compose.ui.unit.IntOffset").unwrap();
     writeln!(out, "import androidx.compose.ui.unit.IntRect").unwrap();
@@ -457,6 +472,16 @@ private fun _mosaicHostSlider(
 /// activation, and assistive technology. Keeping the URI handler inside this
 /// composable also avoids application-owned glue and duplicate local names when
 /// several links share one generated layout scope.
+///
+/// #13052: a *slot-bound* `href` is unknown at compile time (unlike a
+/// literal, rejected up front in `host_link_href_expr`), so it's
+/// validated here at runtime, once, for every call site regardless of
+/// whether `href` came from a literal or a slot. When the scheme is
+/// disallowed, the link degrades to the same inert `Clickable` shape
+/// the `external == false` branch already uses -- neither
+/// `onActivate` nor `uriHandler.openUri` fires, matching the "no
+/// navigation target" outcome the XAML backend's `SafeNavigateUri`
+/// fix (#12038) settled on for a null Uri.
 fn emit_host_link_helper() -> String {
     r#"@Composable
 private fun _mosaicHostLink(
@@ -476,18 +501,20 @@ private fun _mosaicHostLink(
     val linkStyles = TextLinkStyles(
         style = SpanStyle(color = linkColor, textDecoration = TextDecoration.Underline),
     )
-    val link = if (external) {
-        if (onActivate == null) {
-            LinkAnnotation.Url(url = href, styles = linkStyles)
-        } else {
-            LinkAnnotation.Url(url = href, styles = linkStyles) { annotation ->
-                onActivate()
-                uriHandler.openUri((annotation as LinkAnnotation.Url).url)
-            }
-        }
-    } else {
+    val link = if (!external) {
         LinkAnnotation.Clickable(tag = href, styles = linkStyles) {
             onActivate?.invoke()
+        }
+    } else if (!_mosaicIsSafeUri(href)) {
+        LinkAnnotation.Clickable(tag = href, styles = linkStyles) {
+            // Disallowed URI scheme -- no navigation, no dispatch.
+        }
+    } else if (onActivate == null) {
+        LinkAnnotation.Url(url = href, styles = linkStyles)
+    } else {
+        LinkAnnotation.Url(url = href, styles = linkStyles) { annotation ->
+            onActivate()
+            uriHandler.openUri((annotation as LinkAnnotation.Url).url)
         }
     }
     Text(
@@ -497,6 +524,21 @@ private fun _mosaicHostLink(
         modifier = modifier,
         style = textStyle,
     )
+}
+
+private fun _mosaicIsSafeUri(raw: String): Boolean {
+    // #13052 hardening: normalize like the WHATWG URL parser does
+    // before scheme detection -- trim leading/trailing C0-control-or-
+    // space (code <= 0x20, not just Kotlin's narrower `isWhitespace`
+    // class -- a round-2 review caught that gap), strip every
+    // embedded tab/CR/LF. Without this, a scheme hidden behind a
+    // control byte (e.g. "javascript:...") reads as "no scheme,
+    // therefore safe," but a real consumer strips that byte and
+    // navigates it as javascript:.
+    val normalized = raw.trim { it.code <= 0x20 }.replace(Regex("[\t\r\n]"), "")
+    val schemeMatch = Regex("^([a-zA-Z][a-zA-Z0-9+.-]*):").find(normalized) ?: return true
+    val scheme = schemeMatch.groupValues[1].lowercase()
+    return scheme == "http" || scheme == "https" || scheme == "mailto"
 }
 "#
     .to_string()
@@ -2642,7 +2684,13 @@ fn emit_container_frame(
         .map(|s| !s.modifier.is_empty())
         .unwrap_or(false);
     let semantic_modifier = table_semantics_modifier(node, table_ctx);
-    let has_chain = has_style_chain || semantic_modifier.is_some();
+    let radio_group_modifier: Option<String> = if container_needs_radio_group_semantics(node) {
+        Some("selectableGroup()".to_string())
+    } else {
+        None
+    };
+    let has_chain =
+        has_style_chain || semantic_modifier.is_some() || radio_group_modifier.is_some();
     let content_alignment = style.as_ref().and_then(|s| s.content_alignment.clone());
     let child_text: Option<TextStyleCtx> = match &style {
         Some(s) => {
@@ -2662,6 +2710,9 @@ fn emit_container_frame(
             write!(opener, "{modifier_pad}modifier = Modifier.fillMaxWidth()").unwrap();
         }
         if let Some(semantics) = &semantic_modifier {
+            write!(opener, "\n{}.{semantics}", " ".repeat(chain_indent)).unwrap();
+        }
+        if let Some(semantics) = &radio_group_modifier {
             write!(opener, "\n{}.{semantics}", " ".repeat(chain_indent)).unwrap();
         }
         writeln!(opener, ",").unwrap();
@@ -2700,6 +2751,77 @@ fn emit_container_frame(
         opener,
         closer: format!("{pad}}}\n"),
         child_text,
+    }
+}
+
+/// A `HostRadio` child's literal `group: "..."` value, if authored.
+///
+/// Only a literal `String` is synthesizable into a shared container-
+/// level a11y grouping (`#13007`) — a `slot:`-bound group can't be
+/// bucketed into a fixed set of containers at compile time, so those
+/// radios are left exactly as before (ungrouped, matching the
+/// pre-#13007 behavior for every `LayoutPropValue` shape).
+fn host_radio_literal_group_key(node: &LayoutNode) -> Option<&str> {
+    if node.tag != "HostRadio" {
+        return None;
+    }
+    match find_prop_value(node, "group") {
+        Some(LayoutPropValue::String(s)) => Some(s.as_str()),
+        _ => None,
+    }
+}
+
+/// Whether a container's direct children include 2+ `HostRadio` nodes
+/// sharing the same literal `group:` value (`#13007`). Compose Material
+/// has no dedicated "RadioGroup" composable — mutual-exclusion grouping
+/// is purely the `Modifier.selectableGroup()` a11y convention layered
+/// onto whichever container physically holds the options, so this is
+/// additive: it changes nothing about how each `RadioButton`'s own
+/// `selected`/`onClick` is computed (still entirely local to its own
+/// `checked`/`onSelect` props), only the ancestor's semantics.
+fn container_needs_radio_group_semantics(node: &LayoutNode) -> bool {
+    let mut counts: HashMap<&str, usize> = HashMap::new();
+    for child in &node.children {
+        if let Some(key) = host_radio_literal_group_key(child) {
+            *counts.entry(key).or_insert(0) += 1;
+        }
+    }
+    counts.values().any(|&count| count >= 2)
+}
+
+/// Whether ANY container anywhere in the layout needs
+/// `.selectableGroup()` (`#13007`) — gates the one-time
+/// `androidx.compose.foundation.selection.selectableGroup` import.
+fn layout_has_radio_group(node: &LayoutNode) -> bool {
+    container_needs_radio_group_semantics(node) || node.children.iter().any(layout_has_radio_group)
+}
+
+/// The set of literal `group:` values that get real
+/// `.selectableGroup()` semantics anywhere in this component
+/// (`#13007`) — i.e. every key with 2+ direct-sibling members under
+/// some container, per [`container_needs_radio_group_semantics`].
+/// Package capability analysis calls this so strict-profile reporting
+/// cannot drift from `emit_container`'s actual lowering.
+pub fn radio_groups_with_native_semantics(root: &LayoutNode) -> HashSet<String> {
+    let mut result = HashSet::new();
+    collect_grouped_radio_keys(root, &mut result);
+    result
+}
+
+fn collect_grouped_radio_keys(node: &LayoutNode, out: &mut HashSet<String>) {
+    let mut counts: HashMap<&str, usize> = HashMap::new();
+    for child in &node.children {
+        if let Some(key) = host_radio_literal_group_key(child) {
+            *counts.entry(key).or_insert(0) += 1;
+        }
+    }
+    for (key, count) in &counts {
+        if *count >= 2 {
+            out.insert(key.to_string());
+        }
+    }
+    for child in &node.children {
+        collect_grouped_radio_keys(child, out);
     }
 }
 
@@ -2760,7 +2882,17 @@ fn emit_container(
         .map(|s| !s.modifier.is_empty())
         .unwrap_or(false);
     let semantic_modifier = table_semantics_modifier(node, table_ctx);
-    let has_chain = has_style_chain || semantic_modifier.is_some();
+    // #13007: a container physically holding 2+ same-group HostRadio
+    // siblings gets `.selectableGroup()` for native mutual-exclusion
+    // a11y semantics — purely additive, doesn't touch each radio's own
+    // selected/onClick wiring.
+    let radio_group_modifier: Option<String> = if container_needs_radio_group_semantics(node) {
+        Some("selectableGroup()".to_string())
+    } else {
+        None
+    };
+    let has_chain =
+        has_style_chain || semantic_modifier.is_some() || radio_group_modifier.is_some();
     let content_alignment = style.as_ref().and_then(|s| s.content_alignment.clone());
 
     // The text style children inherit: a styled Box may override the
@@ -2785,6 +2917,9 @@ fn emit_container(
             write!(out, "{modifier_pad}modifier = Modifier.fillMaxWidth()").unwrap();
         }
         if let Some(semantics) = &semantic_modifier {
+            write!(out, "\n{}.{semantics}", " ".repeat(chain_indent)).unwrap();
+        }
+        if let Some(semantics) = &radio_group_modifier {
             write!(out, "\n{}.{semantics}", " ".repeat(chain_indent)).unwrap();
         }
         writeln!(out, ",").unwrap();
@@ -3620,7 +3755,7 @@ fn emit_host_link(
         None => inherited_text,
     };
 
-    let href = host_link_text_prop_expr(node, "href")?.unwrap_or_else(|| "\"\"".to_string());
+    let href = host_link_href_expr(node)?.unwrap_or_else(|| "\"\"".to_string());
     let label = host_link_text_prop_expr(node, "label")?.unwrap_or_else(|| href.clone());
     let external = bool_prop_expr(node, "external", "true")?;
     let on_activate = host_link_on_activate(node, component_name, emits, for_payload, &href)?;
@@ -3660,6 +3795,69 @@ fn host_link_text_prop_expr(
         Some(LayoutPropValue::Expr(expression)) => Ok(Some(expression.clone())),
         _ => Ok(None),
     }
+}
+
+/// #13052: the `href`-specific analogue of [`host_link_text_prop_expr`]
+/// above -- identical except a literal `String` is checked against the
+/// URI scheme allowlist first. `label` keeps using the generic
+/// function since it's never handed to `uriHandler.openUri`.
+fn host_link_href_expr(node: &LayoutNode) -> Result<Option<String>, PipelineEmitError> {
+    if let Some(LayoutPropValue::String(value)) = find_prop_value(node, "href") {
+        if has_disallowed_uri_scheme(value) {
+            return Err(PipelineEmitError::UnsupportedHostLink(format!(
+                "href {value:?} uses a disallowed URI scheme -- only http, https, mailto, \
+                 or a relative reference are allowed"
+            )));
+        }
+    }
+    host_link_text_prop_expr(node, "href")
+}
+
+/// #13052: does `href` carry an explicit URI scheme outside the
+/// `http`/`https`/`mailto` allowlist? A relative reference (no scheme
+/// at all -- `"#"`, a route path) returns `false`, since a relative
+/// reference never reaches `uriHandler.openUri` as an external
+/// navigation target in the first place (see `_mosaicHostLink`'s
+/// runtime guard, which only gates the `external == true` branch).
+/// Only a *present, disallowed* scheme (`javascript:`, `data:`,
+/// `intent:`, a custom protocol handler, ...) returns `true`.
+///
+/// Security-review hardening: normalizes exactly like the WHATWG URL
+/// parser does before looking for a scheme -- trims leading/trailing
+/// C0-control-or-space and strips every embedded tab/CR/LF. Without
+/// this, `" javascript:alert(1)"` or `"java\tscript:alert(1)"` fails
+/// the alphabetic-first-character check below and gets classified as
+/// "no scheme, therefore a safe relative reference" -- but a real
+/// consumer strips that same whitespace before parsing the scheme, so
+/// it actually navigates as `javascript:`. A first review pass of
+/// #13052 missed this; caught and fixed in the same PR. The matching
+/// runtime `_mosaicIsSafeUri` Kotlin helper normalizes identically.
+fn has_disallowed_uri_scheme(href: &str) -> bool {
+    let normalized: String = href
+        .trim_matches(|c: char| (c as u32) <= 0x20)
+        .chars()
+        .filter(|c| !matches!(c, '\t' | '\r' | '\n'))
+        .collect();
+    let href = normalized.as_str();
+    let Some(colon) = href.find(':') else {
+        return false;
+    };
+    let prefix = &href[..colon];
+    if prefix.is_empty() || prefix.contains(['/', '?', '#']) {
+        return false;
+    }
+    let mut chars = prefix.chars();
+    let Some(first) = chars.next() else {
+        return false;
+    };
+    if !first.is_ascii_alphabetic() {
+        return false;
+    }
+    if !chars.all(|c| c.is_ascii_alphanumeric() || c == '+' || c == '-' || c == '.') {
+        return false;
+    }
+    const ALLOWED: [&str; 3] = ["http", "https", "mailto"];
+    !ALLOWED.iter().any(|s| s.eq_ignore_ascii_case(prefix))
 }
 
 fn host_link_on_activate(
@@ -3860,6 +4058,49 @@ fn host_dialog_dispatch(
     Ok(Some(format!("dispatch({component_name}Event.{case})")))
 }
 
+/// Whether `indeterminate:` is authored in a form the emitter can act
+/// on, and if so, the Kotlin boolean expression that is `true` while
+/// the checkbox should render mixed. Mirrors `bool_prop_expr`'s
+/// `SlotRef`/`Expr` → `_mosaicTruthy(...)` convention, and XAML's
+/// `IsThreeState` treatment: a `SlotRef`/`Expr` value can't be
+/// evaluated at compile time, so its *presence* unconditionally routes
+/// to `TriStateCheckbox` — the runtime value decides which
+/// `ToggleableState` is actually shown.
+fn checkbox_indeterminate_expr(node: &LayoutNode) -> Result<Option<String>, PipelineEmitError> {
+    match find_prop_value(node, "indeterminate") {
+        Some(LayoutPropValue::Keyword(k)) if k == "true" => Ok(Some("true".to_string())),
+        Some(LayoutPropValue::SlotRef(slot)) => {
+            let camel = to_camel_case_first_lower(slot);
+            validate_safe_identifier(&camel).map_err(PipelineEmitError::UnsafeSlotName)?;
+            Ok(Some(format!("_mosaicTruthy({camel})")))
+        }
+        Some(LayoutPropValue::Expr(expr)) => Ok(Some(format!("_mosaicTruthy({expr})"))),
+        Some(LayoutPropValue::Keyword(_))
+        | Some(LayoutPropValue::String(_))
+        | Some(LayoutPropValue::Number(_))
+        | Some(LayoutPropValue::EmitRef(_))
+        | None => Ok(None),
+    }
+}
+
+/// Returns whether a HostCheckbox's authored `indeterminate:` value (if
+/// any) lowers to real tri-state rendering (`#13006`).
+///
+/// Package capability analysis calls this same predicate so strict-
+/// profile reporting cannot drift from `emit_host_checkbox`'s actual
+/// lowering.
+pub fn host_checkbox_has_native_semantics(node: &LayoutNode) -> bool {
+    matches!(checkbox_indeterminate_expr(node), Ok(Some(_)))
+}
+
+fn layout_has_checkbox_indeterminate(node: &LayoutNode) -> bool {
+    (node.tag == "HostCheckbox" && host_checkbox_has_native_semantics(node))
+        || node
+            .children
+            .iter()
+            .any(layout_has_checkbox_indeterminate)
+}
+
 fn emit_host_checkbox(
     node: &LayoutNode,
     depth: usize,
@@ -3880,30 +4121,73 @@ fn emit_host_checkbox(
     };
     let checked_expr = bool_prop_expr(node, "checked", "false")?;
     let enabled_expr = disabled_prop_enabled_expr(node)?;
+    let indeterminate_expr = checkbox_indeterminate_expr(node)?;
 
-    let on_checked = if let Some(emit_name) = find_emit_ref_prop(node, "onToggle") {
-        let case = pascalize(&strip_on_prefix(emit_name));
-        validate_safe_identifier(&case).map_err(PipelineEmitError::UnsafeEmitName)?;
-        let arity = emits
-            .iter()
-            .find(|e| e.name == *emit_name)
-            .map(|e| e.params.len())
-            .unwrap_or(0);
-        if arity == 0 {
-            format!("dispatch({component_name}Event.{case})")
-        } else {
-            format!("dispatch({component_name}Event.{case}(checked))")
+    // `widget_name` + the two lines that differ between a plain
+    // two-state `Checkbox` (checked/onCheckedChange) and a
+    // `TriStateCheckbox` (state/onClick). `TriStateCheckbox.onClick`
+    // takes no argument — unlike `Checkbox.onCheckedChange`'s `checked`
+    // lambda parameter — so the dispatched "new checked" value is
+    // computed inline from the same `ToggleableState` expression used
+    // for `state =`: clicking always resolves *out of* Indeterminate,
+    // toggling towards On unless already On.
+    let (widget_name, state_line, action_line) = match &indeterminate_expr {
+        Some(cond) => {
+            let toggle_state_expr = format!(
+                "if ({cond}) ToggleableState.Indeterminate else if ({checked_expr}) ToggleableState.On else ToggleableState.Off"
+            );
+            let new_checked_expr = format!("({toggle_state_expr}) != ToggleableState.On");
+            let on_click = if let Some(emit_name) = find_emit_ref_prop(node, "onToggle") {
+                let case = pascalize(&strip_on_prefix(emit_name));
+                validate_safe_identifier(&case).map_err(PipelineEmitError::UnsafeEmitName)?;
+                let arity = emits
+                    .iter()
+                    .find(|e| e.name == *emit_name)
+                    .map(|e| e.params.len())
+                    .unwrap_or(0);
+                if arity == 0 {
+                    format!("dispatch({component_name}Event.{case})")
+                } else {
+                    format!("dispatch({component_name}Event.{case}({new_checked_expr}))")
+                }
+            } else {
+                "/* no onToggle bound */".to_string()
+            };
+            (
+                "TriStateCheckbox",
+                format!("state = {toggle_state_expr},"),
+                format!("onClick = {{ {on_click} }},"),
+            )
         }
-    } else {
-        "/* no onToggle bound */".to_string()
+        None => {
+            let on_checked = if let Some(emit_name) = find_emit_ref_prop(node, "onToggle") {
+                let case = pascalize(&strip_on_prefix(emit_name));
+                validate_safe_identifier(&case).map_err(PipelineEmitError::UnsafeEmitName)?;
+                let arity = emits
+                    .iter()
+                    .find(|e| e.name == *emit_name)
+                    .map(|e| e.params.len())
+                    .unwrap_or(0);
+                if arity == 0 {
+                    format!("dispatch({component_name}Event.{case})")
+                } else {
+                    format!("dispatch({component_name}Event.{case}(checked))")
+                }
+            } else {
+                "/* no onToggle bound */".to_string()
+            };
+            (
+                "Checkbox",
+                format!("checked = {checked_expr},"),
+                format!("onCheckedChange = {{ checked -> {on_checked} }},"),
+            )
+        }
     };
 
     let mut checkbox_lines = Vec::new();
-    checkbox_lines.push(format!("{inner}Checkbox("));
-    checkbox_lines.push(format!("{inner}    checked = {checked_expr},"));
-    checkbox_lines.push(format!(
-        "{inner}    onCheckedChange = {{ checked -> {on_checked} }},"
-    ));
+    checkbox_lines.push(format!("{inner}{widget_name}("));
+    checkbox_lines.push(format!("{inner}    {state_line}"));
+    checkbox_lines.push(format!("{inner}    {action_line}"));
     if let Some(enabled) = enabled_expr.as_deref() {
         checkbox_lines.push(format!("{inner}    enabled = {enabled},"));
     }
@@ -3930,13 +4214,9 @@ fn emit_host_checkbox(
         Ok(out)
     } else {
         let mut out = String::new();
-        writeln!(out, "{pad}Checkbox(").unwrap();
-        writeln!(out, "{inner}checked = {checked_expr},").unwrap();
-        writeln!(
-            out,
-            "{inner}onCheckedChange = {{ checked -> {on_checked} }},"
-        )
-        .unwrap();
+        writeln!(out, "{pad}{widget_name}(").unwrap();
+        writeln!(out, "{inner}{state_line}").unwrap();
+        writeln!(out, "{inner}{action_line}").unwrap();
         if let Some(style) = &style {
             if !style.modifier.is_empty() {
                 writeln!(out, "{inner}modifier = Modifier{},", style.modifier).unwrap();
@@ -6023,6 +6303,116 @@ mod tests {
         assert!(out.contains("Text(text = buryNewLabel)"));
     }
 
+    /// #13006 — `indeterminate: true` swaps `Checkbox` for
+    /// `TriStateCheckbox`, with `state =` reflecting the always-mixed
+    /// condition and `onClick` resolving out of mixed on click.
+    #[test]
+    fn host_checkbox_indeterminate_true_emits_tri_state_checkbox() {
+        let m = component(
+            "Tri",
+            vec![slot("done", SlotType::Bool, true)],
+            vec![emit_decl("onChange", vec![param("checked", EmitPayloadType::Bool)])],
+        );
+        let l = layout(
+            "Tri",
+            node(
+                "HostCheckbox",
+                vec![
+                    LayoutProp {
+                        name: "checked".into(),
+                        value: LayoutPropValue::SlotRef("done".into()),
+                    },
+                    LayoutProp {
+                        name: "indeterminate".into(),
+                        value: LayoutPropValue::Keyword("true".into()),
+                    },
+                    LayoutProp {
+                        name: "onToggle".into(),
+                        value: LayoutPropValue::EmitRef("onChange".into()),
+                    },
+                ],
+                vec![],
+            ),
+        );
+        let out = from_pipeline(&m, &l, &empty_style("Tri")).unwrap().output;
+        assert!(out.contains("import androidx.compose.material.TriStateCheckbox"));
+        assert!(out.contains("import androidx.compose.ui.state.ToggleableState"));
+        assert!(out.contains("TriStateCheckbox(\n"), "expected TriStateCheckbox(, got:\n{out}");
+        assert!(out.contains(
+            "state = if (true) ToggleableState.Indeterminate else if (_mosaicTruthy(done)) ToggleableState.On else ToggleableState.Off,"
+        ));
+        assert!(out.contains(
+            "onClick = { dispatch(TriEvent.Change((if (true) ToggleableState.Indeterminate else if (_mosaicTruthy(done)) ToggleableState.On else ToggleableState.Off) != ToggleableState.On)) },"
+        ));
+    }
+
+    /// #13006 — `indeterminate: slot: mixed` also routes to
+    /// `TriStateCheckbox`, with the runtime slot deciding the state.
+    #[test]
+    fn host_checkbox_indeterminate_slot_emits_tri_state_checkbox() {
+        let m = component(
+            "Tri",
+            vec![
+                slot("done", SlotType::Bool, true),
+                slot("mixed", SlotType::Bool, true),
+            ],
+            vec![],
+        );
+        let l = layout(
+            "Tri",
+            node(
+                "HostCheckbox",
+                vec![
+                    LayoutProp {
+                        name: "checked".into(),
+                        value: LayoutPropValue::SlotRef("done".into()),
+                    },
+                    LayoutProp {
+                        name: "indeterminate".into(),
+                        value: LayoutPropValue::SlotRef("mixed".into()),
+                    },
+                ],
+                vec![],
+            ),
+        );
+        let out = from_pipeline(&m, &l, &empty_style("Tri")).unwrap().output;
+        assert!(out.contains(
+            "state = if (_mosaicTruthy(mixed)) ToggleableState.Indeterminate else if (_mosaicTruthy(done)) ToggleableState.On else ToggleableState.Off,"
+        ));
+    }
+
+    /// #13006 — `indeterminate: false` (the explicit opt-out) keeps the
+    /// plain two-state `Checkbox` unchanged — no `TriStateCheckbox`
+    /// import, no `ToggleableState` import.
+    #[test]
+    fn host_checkbox_indeterminate_false_keeps_plain_checkbox() {
+        let m = component("Tri", vec![slot("done", SlotType::Bool, true)], vec![]);
+        let l = layout(
+            "Tri",
+            node(
+                "HostCheckbox",
+                vec![
+                    LayoutProp {
+                        name: "checked".into(),
+                        value: LayoutPropValue::SlotRef("done".into()),
+                    },
+                    LayoutProp {
+                        name: "indeterminate".into(),
+                        value: LayoutPropValue::Keyword("false".into()),
+                    },
+                ],
+                vec![],
+            ),
+        );
+        let out = from_pipeline(&m, &l, &empty_style("Tri")).unwrap().output;
+        assert!(!out.contains("TriStateCheckbox"), "expected no TriStateCheckbox, got:\n{out}");
+        assert!(
+            !out.contains("import androidx.compose.ui.state.ToggleableState"),
+            "expected no ToggleableState import, got:\n{out}"
+        );
+        assert!(out.contains("checked = _mosaicTruthy(done),"));
+    }
+
     #[test]
     fn host_radio_dispatches_text_payload_with_label() {
         let m = component(
@@ -6080,6 +6470,118 @@ mod tests {
             .contains("onClick = { dispatch(DeckOptionsEvent.LeechActionChange(\"suspend\")) },"));
         assert!(out.contains("enabled = true,"));
         assert!(out.contains("Text(text = suspendLabel)"));
+    }
+
+    fn radio_prop(part: &str, group: &str, checked_slot: &str, value: &str) -> LayoutNode {
+        styled_node(
+            "HostRadio",
+            part,
+            vec![
+                LayoutProp {
+                    name: "checked".into(),
+                    value: LayoutPropValue::SlotRef(checked_slot.into()),
+                },
+                LayoutProp {
+                    name: "value".into(),
+                    value: LayoutPropValue::String(value.into()),
+                },
+                LayoutProp {
+                    name: "group".into(),
+                    value: LayoutPropValue::String(group.into()),
+                },
+            ],
+            vec![],
+        )
+    }
+
+    /// #13007 — a `Row` holding 2+ `HostRadio` siblings sharing a
+    /// literal `group:` value gets `.selectableGroup()` on its own
+    /// modifier chain, matching real usage
+    /// (`mosaic-pkg-deck-options`'s leech-action radios).
+    #[test]
+    fn container_with_shared_radio_group_gets_selectable_group_modifier() {
+        let m = component(
+            "X",
+            vec![
+                slot("suspend-selected", SlotType::Bool, true),
+                slot("tag-only-selected", SlotType::Bool, true),
+            ],
+            vec![],
+        );
+        let radio1 = radio_prop("suspend", "leech-action", "suspend-selected", "suspend");
+        let radio2 = radio_prop("tag-only", "leech-action", "tag-only-selected", "tag-only");
+        let l = layout("X", node("Row", vec![], vec![radio1, radio2]));
+        let out = from_pipeline(&m, &l, &empty_style("X")).unwrap().output;
+        assert!(
+            out.contains(".selectableGroup()"),
+            "expected .selectableGroup() on the shared container, got:\n{out}"
+        );
+        assert!(
+            out.contains("import androidx.compose.foundation.selection.selectableGroup"),
+            "expected the selectableGroup import, got:\n{out}"
+        );
+    }
+
+    /// #13007 — the fix also applies when radios are nested one level
+    /// deeper than the layout root (Column > Row > HostRadio×2),
+    /// matching the real `mosaic-pkg-deck-options` shape exactly (a
+    /// root-level Row/Column with >1 children takes a different,
+    /// root-splitting code path than a nested one — both need the fix).
+    #[test]
+    fn nested_shared_radio_group_gets_selectable_group_modifier() {
+        let m = component(
+            "X",
+            vec![
+                slot("suspend-selected", SlotType::Bool, true),
+                slot("tag-only-selected", SlotType::Bool, true),
+            ],
+            vec![],
+        );
+        let radio1 = radio_prop("suspend", "leech-action", "suspend-selected", "suspend");
+        let radio2 = radio_prop("tag-only", "leech-action", "tag-only-selected", "tag-only");
+        let inner_row = node("Row", vec![], vec![radio1, radio2]);
+        let l = layout("X", node("Column", vec![], vec![inner_row]));
+        let out = from_pipeline(&m, &l, &empty_style("X")).unwrap().output;
+        assert!(
+            out.contains(".selectableGroup()"),
+            "expected .selectableGroup() on the nested shared container, got:\n{out}"
+        );
+    }
+
+    /// #13007 — a single `HostRadio` (no same-group sibling) never gets
+    /// `.selectableGroup()` — there's nothing to group.
+    #[test]
+    fn container_with_lone_radio_gets_no_selectable_group_modifier() {
+        let m = component("X", vec![slot("selected", SlotType::Bool, true)], vec![]);
+        let radio = radio_prop("only", "leech-action", "selected", "only");
+        let l = layout("X", node("Row", vec![], vec![radio]));
+        let out = from_pipeline(&m, &l, &empty_style("X")).unwrap().output;
+        assert!(
+            !out.contains("selectableGroup"),
+            "expected no selectableGroup (or its import) for a lone radio, got:\n{out}"
+        );
+    }
+
+    /// #13007 — two radios with *different* literal `group:` values in
+    /// the same container are NOT treated as one shared group.
+    #[test]
+    fn container_with_two_distinct_radio_groups_gets_no_selectable_group_modifier() {
+        let m = component(
+            "X",
+            vec![
+                slot("a-selected", SlotType::Bool, true),
+                slot("b-selected", SlotType::Bool, true),
+            ],
+            vec![],
+        );
+        let radio1 = radio_prop("a", "group-a", "a-selected", "a");
+        let radio2 = radio_prop("b", "group-b", "b-selected", "b");
+        let l = layout("X", node("Row", vec![], vec![radio1, radio2]));
+        let out = from_pipeline(&m, &l, &empty_style("X")).unwrap().output;
+        assert!(
+            !out.contains("selectableGroup"),
+            "expected no selectableGroup across two distinct groups, got:\n{out}"
+        );
     }
 
     #[test]
@@ -6329,6 +6831,146 @@ mod tests {
         assert!(out.contains("href = \"https://example.com/docs\","));
         assert!(out.contains("label = \"Read docs\","));
         assert!(out.contains("external = true,"));
+    }
+
+    /// #13052: a literal `href` carrying an explicit disallowed URI
+    /// scheme is rejected at compile time -- no escaping makes an
+    /// unsafe scheme safe.
+    #[test]
+    fn host_link_disallowed_scheme_href_is_rejected() {
+        for hostile in [
+            "javascript:alert(1)",
+            "data:text/html,<script>alert(1)</script>",
+            "intent:#Intent;action=android.intent.action.VIEW;end",
+            "file:///etc/passwd",
+        ] {
+            let m = component("X", vec![], vec![]);
+            let l = layout(
+                "X",
+                node(
+                    "HostLink",
+                    vec![LayoutProp {
+                        name: "href".into(),
+                        value: LayoutPropValue::String(hostile.to_string()),
+                    }],
+                    vec![],
+                ),
+            );
+            let err = from_pipeline(&m, &l, &empty_style("X")).unwrap_err();
+            assert!(
+                matches!(err, PipelineEmitError::UnsupportedHostLink(ref reason) if reason.contains(hostile)),
+                "expected UnsupportedHostLink naming {hostile:?}, got: {err:?}"
+            );
+        }
+    }
+
+    /// #13052 security-review finding: a scheme hidden behind leading
+    /// whitespace or an embedded tab/CR/LF must still be rejected --
+    /// a naive scan sees no alphabetic first character and
+    /// misclassifies it as "no scheme, therefore safe," but a real
+    /// consumer normalizes that whitespace away before parsing the
+    /// scheme, so it's really a disallowed scheme.
+    #[test]
+    fn host_link_scheme_hidden_by_whitespace_is_still_rejected() {
+        for hostile in [
+            " javascript:alert(1)",
+            "java\tscript:alert(1)",
+            "java\nscript:alert(1)",
+            "\tjavascript:alert(1)",
+        ] {
+            let m = component("X", vec![], vec![]);
+            let l = layout(
+                "X",
+                node(
+                    "HostLink",
+                    vec![LayoutProp {
+                        name: "href".into(),
+                        value: LayoutPropValue::String(hostile.to_string()),
+                    }],
+                    vec![],
+                ),
+            );
+            let err = from_pipeline(&m, &l, &empty_style("X")).unwrap_err();
+            // Debug-formatted in the error message, so compare against
+            // `{hostile:?}` rather than the raw string -- a `\t`/`\n`
+            // byte renders as the two-character escape there.
+            let needle = format!("{hostile:?}");
+            assert!(
+                matches!(err, PipelineEmitError::UnsupportedHostLink(ref reason) if reason.contains(&needle)),
+                "expected UnsupportedHostLink for whitespace-obscured {hostile:?}, got: {err:?}"
+            );
+        }
+    }
+
+    /// #13052: allowed schemes and relative references (no scheme at
+    /// all -- the common in-app-routing shape) stay valid.
+    #[test]
+    fn host_link_allowed_or_relative_href_still_compiles() {
+        for safe in [
+            "http://example.com",
+            "https://example.com",
+            "HTTPS://example.com",
+            "mailto:hello@example.com",
+            "#",
+            "/about",
+        ] {
+            let m = component("X", vec![], vec![]);
+            let l = layout(
+                "X",
+                node(
+                    "HostLink",
+                    vec![LayoutProp {
+                        name: "href".into(),
+                        value: LayoutPropValue::String(safe.to_string()),
+                    }],
+                    vec![],
+                ),
+            );
+            let out = from_pipeline(&m, &l, &empty_style("X")).unwrap().output;
+            assert!(
+                out.contains(&format!("href = \"{safe}\",")),
+                "expected {safe:?} to still compile, got:\n{out}"
+            );
+        }
+    }
+
+    /// #13052: the shared `_mosaicHostLink` composable gates
+    /// `LinkAnnotation.Url` behind a runtime `_mosaicIsSafeUri(href)`
+    /// check, so a slot-bound href (unknown at compile time) can't
+    /// reach `uriHandler.openUri` with a disallowed scheme.
+    #[test]
+    fn host_link_helper_gates_url_annotation_on_runtime_scheme_check() {
+        let m = component("X", vec![], vec![]);
+        let l = layout(
+            "X",
+            node(
+                "HostLink",
+                vec![LayoutProp {
+                    name: "href".into(),
+                    value: LayoutPropValue::String("https://example.com".into()),
+                }],
+                vec![],
+            ),
+        );
+        let out = from_pipeline(&m, &l, &empty_style("X")).unwrap().output;
+        assert!(
+            out.contains("private fun _mosaicIsSafeUri(raw: String): Boolean"),
+            "expected the runtime scheme-check helper, got:\n{out}"
+        );
+        assert!(
+            out.contains("} else if (!_mosaicIsSafeUri(href)) {"),
+            "expected LinkAnnotation.Url to be gated on the runtime check, got:\n{out}"
+        );
+        // Round-2 security-review regression: the runtime helper must
+        // strip the FULL C0-control-or-space range before scheme
+        // detection, not Kotlin's narrower `isWhitespace`-based
+        // `trim()` -- a narrower check misses control bytes like
+        // 0x01/0x1B, letting a hidden scheme slip through as "no
+        // scheme found."
+        assert!(
+            out.contains("raw.trim { it.code <= 0x20 }"),
+            "expected the full C0-control-or-space range in _mosaicIsSafeUri's normalization, got:\n{out}"
+        );
     }
 
     #[test]

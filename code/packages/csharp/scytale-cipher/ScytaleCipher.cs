@@ -1,9 +1,13 @@
+using System.Text;
+
 namespace CodingAdventures.ScytaleCipher;
 
 public readonly record struct BruteForceResult(int Key, string Text);
 
 public static class ScytaleCipher
 {
+    public const int MaxBruteForceTextLength = 4096;
+
     public static string Encrypt(string text, int key)
     {
         ArgumentNullException.ThrowIfNull(text);
@@ -12,23 +16,25 @@ public static class ScytaleCipher
             return string.Empty;
         }
 
-        ValidateKey(text.Length, key);
+        var scalars = text.EnumerateRunes().ToArray();
+        ValidateKey(scalars.Length, key);
 
-        var rowCount = (text.Length + key - 1) / key;
+        var rowCount = (scalars.Length + key - 1) / key;
         var paddedLength = rowCount * key;
-        var padded = text.PadRight(paddedLength).ToCharArray();
-        var result = new char[paddedLength];
-        var output = 0;
+        var padded = new Rune[paddedLength];
+        scalars.CopyTo(padded, 0);
+        Array.Fill(padded, new Rune(' '), scalars.Length, paddedLength - scalars.Length);
+        var result = new StringBuilder(paddedLength);
 
         for (var column = 0; column < key; column++)
         {
             for (var row = 0; row < rowCount; row++)
             {
-                result[output++] = padded[(row * key) + column];
+                result.Append(padded[(row * key) + column]);
             }
         }
 
-        return new string(result);
+        return result.ToString();
     }
 
     public static string Decrypt(string text, int key)
@@ -39,10 +45,11 @@ public static class ScytaleCipher
             return string.Empty;
         }
 
-        ValidateKey(text.Length, key);
+        var scalars = text.EnumerateRunes().ToArray();
+        ValidateKey(scalars.Length, key);
 
-        var rowCount = (text.Length + key - 1) / key;
-        var fullColumns = text.Length % key == 0 ? key : text.Length % key;
+        var rowCount = (scalars.Length + key - 1) / key;
+        var fullColumns = scalars.Length % key == 0 ? key : scalars.Length % key;
         var columnStarts = new int[key];
         var columnLengths = new int[key];
         var offset = 0;
@@ -50,36 +57,50 @@ public static class ScytaleCipher
         for (var column = 0; column < key; column++)
         {
             columnStarts[column] = offset;
-            var columnLength = text.Length % key == 0 || column < fullColumns ? rowCount : rowCount - 1;
+            var columnLength = scalars.Length % key == 0 || column < fullColumns ? rowCount : rowCount - 1;
             columnLengths[column] = columnLength;
             offset += columnLength;
         }
 
-        var chars = text.ToCharArray();
-        var result = new List<char>(text.Length);
+        var result = new List<Rune>(scalars.Length);
         for (var row = 0; row < rowCount; row++)
         {
             for (var column = 0; column < key; column++)
             {
                 if (row < columnLengths[column])
                 {
-                    result.Add(chars[columnStarts[column] + row]);
+                    result.Add(scalars[columnStarts[column] + row]);
                 }
             }
         }
 
-        return new string(result.ToArray()).TrimEnd(' ');
+        while (result.Count > 0 && result[^1].Value == 0x20)
+        {
+            result.RemoveAt(result.Count - 1);
+        }
+
+        var plaintext = new StringBuilder(result.Count);
+        foreach (var scalar in result)
+        {
+            plaintext.Append(scalar);
+        }
+        return plaintext.ToString();
     }
 
     public static IReadOnlyList<BruteForceResult> BruteForce(string text)
     {
         ArgumentNullException.ThrowIfNull(text);
-        if (text.Length < 4)
+        var scalarLength = text.EnumerateRunes().Count();
+        if (scalarLength > MaxBruteForceTextLength)
+        {
+            throw new ArgumentOutOfRangeException(nameof(text), "scytale-brute-force-limit");
+        }
+        if (scalarLength < 4)
         {
             return [];
         }
 
-        var maxKey = text.Length / 2;
+        var maxKey = scalarLength / 2;
         var results = new List<BruteForceResult>(maxKey - 1);
         for (var key = 2; key <= maxKey; key++)
         {

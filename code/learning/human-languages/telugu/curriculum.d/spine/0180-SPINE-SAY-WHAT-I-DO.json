@@ -1,0 +1,29 @@
+{
+  "segments": [
+    "TE-PATH-026",
+    "TE-PATH-026-C",
+    "TE-PATH-027",
+    "TE-PATH-027-C",
+    "TE-PATH-027-E",
+    "TE-PATH-43-VERBS",
+    "TE-PATH-44-SEESAY"
+  ],
+  "omits": [
+    "VERB-INFINITIVE",
+    "VERB-PRESENT-HABITUAL",
+    "VERB-SAY",
+    "VERB-SPEAK",
+    "VERB-HEAR",
+    "VERB-LEARN",
+    "VERB-GET",
+    "VERB-SLEEP",
+    "VERB-LIVE",
+    "VERB-WORK",
+    "VERB-PLAY",
+    "VERB-RUN",
+    "VERB-SIT",
+    "VERB-ANSWER",
+    "VERB-MEET"
+  ],
+  "relocates": {}
+}

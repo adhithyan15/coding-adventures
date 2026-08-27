@@ -1,0 +1,32 @@
+{
+  "segments": [
+    "HI-PATH-008",
+    "HI-PATH-028",
+    "HI-PATH-028A",
+    "HI-PATH-029",
+    "HI-PATH-029-C",
+    "HI-PATH-029-E",
+    "HI-PATH-42-VERBS",
+    "HI-PATH-43-SEESAY"
+  ],
+  "omits": [
+    "VERB-INFINITIVE",
+    "VERB-PRESENT-HABITUAL",
+    "VERB-GO",
+    "VERB-SAY",
+    "VERB-SEE",
+    "VERB-HEAR",
+    "VERB-KNOW",
+    "VERB-LEARN",
+    "VERB-GET",
+    "VERB-EAT",
+    "VERB-SLEEP",
+    "VERB-WORK",
+    "VERB-PLAY",
+    "VERB-RUN",
+    "VERB-SIT",
+    "VERB-ANSWER",
+    "VERB-MEET"
+  ],
+  "relocates": {}
+}

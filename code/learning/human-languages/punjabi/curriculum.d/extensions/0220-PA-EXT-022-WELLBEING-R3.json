@@ -1,0 +1,13 @@
+{
+  "id": "PA-EXT-022-WELLBEING-R3",
+  "stage": "pre-A1",
+  "kind": "required",
+  "category": "assessment",
+  "canDo": "I can orally retrieve every Punjabi Chapter 3 wellbeing atom at R3 distance without claiming script credit.",
+  "prerequisites": [
+    "PA-EXT-021-WELLBEING-R2"
+  ],
+  "lessons": [
+    "PA-R07-wellbeing-r3"
+  ]
+}

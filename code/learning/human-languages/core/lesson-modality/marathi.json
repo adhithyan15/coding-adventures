@@ -7,7 +7,7 @@
   "policy": {
     "maxLinearisableTableColumns": 3
   },
-  "sourceHash": "fnv1a64:fd2a34f767fc9b82",
+  "sourceHash": "fnv1a64:69f56611e07c2502",
   "summary": {
     "totalLessons": 111,
     "voice": 45,
@@ -1778,7 +1778,7 @@
         "no-visual-dependency"
       ],
       "coreDrivable": true,
-      "sourceHash": "fnv1a64:4778473b7cf6d286"
+      "sourceHash": "fnv1a64:40b557f506f87549"
     },
     {
       "id": "MR-C07-khane",
@@ -1892,7 +1892,7 @@
         "no-visual-dependency"
       ],
       "coreDrivable": true,
-      "sourceHash": "fnv1a64:853ab14707cf2ae6",
+      "sourceHash": "fnv1a64:7efdb12c5b5b5571",
       "detachableSegments": [
         "The letters in this word"
       ]
@@ -1913,7 +1913,7 @@
         "no-visual-dependency"
       ],
       "coreDrivable": true,
-      "sourceHash": "fnv1a64:43c8af88112d014f",
+      "sourceHash": "fnv1a64:a1e633d41d2c7dc6",
       "detachableSegments": [
         "The letters in this word"
       ]
@@ -1955,7 +1955,7 @@
         "no-visual-dependency"
       ],
       "coreDrivable": true,
-      "sourceHash": "fnv1a64:ecdd293e313d6d0b",
+      "sourceHash": "fnv1a64:efd583212edc2bde",
       "detachableSegments": [
         "The letters in this word"
       ]
@@ -1997,7 +1997,7 @@
         "no-visual-dependency"
       ],
       "coreDrivable": true,
-      "sourceHash": "fnv1a64:0a13f5ca69a4cd1a",
+      "sourceHash": "fnv1a64:2010e9560bf44768",
       "detachableSegments": [
         "The letters in this word"
       ]

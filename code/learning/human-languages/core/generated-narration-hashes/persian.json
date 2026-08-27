@@ -93,7 +93,7 @@
     {
       "language": "persian",
       "chapter": 6,
-      "sourceHash": "fnv1a64:45fe9072e4bc2575",
+      "sourceHash": "fnv1a64:e17405c0806693fb",
       "lessonIds": [
         "FA-C06-budan",
         "FA-C06-raftan",
@@ -106,12 +106,12 @@
       "text": "persian/narration/ch06.txt",
       "json": "persian/narration/ch06.json",
       "textHash": "fnv1a64:03d604560e0778f5",
-      "jsonHash": "fnv1a64:1fed00dc889925be"
+      "jsonHash": "fnv1a64:b40dda9f34ebe0dc"
     },
     {
       "language": "persian",
       "chapter": 7,
-      "sourceHash": "fnv1a64:f2a04e1c7cf5e085",
+      "sourceHash": "fnv1a64:e912a983a1f20f1f",
       "lessonIds": [
         "FA-C07-fekr-kardan",
         "FA-C07-fahmidan",
@@ -123,12 +123,12 @@
       "text": "persian/narration/ch07.txt",
       "json": "persian/narration/ch07.json",
       "textHash": "fnv1a64:c0d4475b960b77d5",
-      "jsonHash": "fnv1a64:7949818ab4c4e064"
+      "jsonHash": "fnv1a64:56af2d28ccd8aef4"
     },
     {
       "language": "persian",
       "chapter": 8,
-      "sourceHash": "fnv1a64:5e3fa6637a9815fa",
+      "sourceHash": "fnv1a64:f2733b8f55885f54",
       "lessonIds": [
         "FA-C08-gereftan",
         "FA-C08-porsidan",
@@ -140,7 +140,7 @@
       "text": "persian/narration/ch08.txt",
       "json": "persian/narration/ch08.json",
       "textHash": "fnv1a64:2b882a065a605eb5",
-      "jsonHash": "fnv1a64:23a041e530f9f4d8"
+      "jsonHash": "fnv1a64:eb903c3f1906f9aa"
     },
     {
       "language": "persian",

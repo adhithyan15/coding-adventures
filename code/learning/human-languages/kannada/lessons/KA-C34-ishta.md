@@ -1,7 +1,7 @@
 ---
 schema_version: 2
 id: KA-C34-ishta
-spine_node: SPINE-SAY-WHAT-I-DO
+spine_node: SPINE-SAY-WHAT-I-LIKE
 sequence: 740
 chapter: 34
 type: phrase

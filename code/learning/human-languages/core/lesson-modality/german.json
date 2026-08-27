@@ -7,7 +7,7 @@
   "policy": {
     "maxLinearisableTableColumns": 3
   },
-  "sourceHash": "fnv1a64:4a380264c796a76f",
+  "sourceHash": "fnv1a64:a513375138de47ba",
   "summary": {
     "totalLessons": 107,
     "voice": 95,
@@ -2037,7 +2037,7 @@
         "no-visual-dependency"
       ],
       "coreDrivable": true,
-      "sourceHash": "fnv1a64:820e3554f1ce62f3"
+      "sourceHash": "fnv1a64:a035960a81dead44"
     },
     {
       "id": "GE-C24-schreiben",
@@ -2055,7 +2055,7 @@
         "no-visual-dependency"
       ],
       "coreDrivable": true,
-      "sourceHash": "fnv1a64:674265d6279ccc47"
+      "sourceHash": "fnv1a64:82ad7baeb935d3cc"
     },
     {
       "id": "GE-C25-nehmen",
@@ -2091,7 +2091,7 @@
         "no-visual-dependency"
       ],
       "coreDrivable": true,
-      "sourceHash": "fnv1a64:b37a2e1984bf0f52"
+      "sourceHash": "fnv1a64:ab45bd24d364b2c1"
     },
     {
       "id": "GE-C25-helfen",
@@ -2127,7 +2127,7 @@
         "no-visual-dependency"
       ],
       "coreDrivable": true,
-      "sourceHash": "fnv1a64:6413600515d017a7"
+      "sourceHash": "fnv1a64:6fc3b7ef52590ba9"
     },
     {
       "id": "GE-C26-sitzen",
@@ -2163,7 +2163,7 @@
         "no-visual-dependency"
       ],
       "coreDrivable": true,
-      "sourceHash": "fnv1a64:c5502f60549c0f38"
+      "sourceHash": "fnv1a64:db4d4825d0f6442f"
     },
     {
       "id": "GE-C26-schlafen",
@@ -2217,7 +2217,7 @@
         "no-visual-dependency"
       ],
       "coreDrivable": true,
-      "sourceHash": "fnv1a64:9cfcead00ceeff1c"
+      "sourceHash": "fnv1a64:1fa9934cbba41401"
     },
     {
       "id": "GE-C27-laufen",
@@ -2253,7 +2253,7 @@
         "no-visual-dependency"
       ],
       "coreDrivable": true,
-      "sourceHash": "fnv1a64:6077fbe3623e96ba"
+      "sourceHash": "fnv1a64:1d968eb670945a45"
     },
     {
       "id": "GE-C27-schliessen",
@@ -2271,7 +2271,7 @@
         "no-visual-dependency"
       ],
       "coreDrivable": true,
-      "sourceHash": "fnv1a64:7fbdf7b45126355b"
+      "sourceHash": "fnv1a64:3a010511b57a5214"
     },
     {
       "id": "GE-C28-kaffee",

@@ -117,7 +117,7 @@
     {
       "language": "sanskrit",
       "chapter": 7,
-      "sourceHash": "fnv1a64:ff231d44e04fb65e",
+      "sourceHash": "fnv1a64:8b6a479b95c7195b",
       "lessonIds": [
         "SA-C07-asti",
         "SA-C07-gacchati",
@@ -131,12 +131,12 @@
       "text": "sanskrit/narration/ch07.txt",
       "json": "sanskrit/narration/ch07.json",
       "textHash": "fnv1a64:47301ded2c9a4c1a",
-      "jsonHash": "fnv1a64:6d5d1b5760b96037"
+      "jsonHash": "fnv1a64:7add2b99158343a9"
     },
     {
       "language": "sanskrit",
       "chapter": 8,
-      "sourceHash": "fnv1a64:8d76e533819aeb44",
+      "sourceHash": "fnv1a64:a86dba7b2338d610",
       "lessonIds": [
         "SA-C08-cintayati",
         "SA-C08-avagacchati",
@@ -150,12 +150,12 @@
       "text": "sanskrit/narration/ch08.txt",
       "json": "sanskrit/narration/ch08.json",
       "textHash": "fnv1a64:8e67dce2a70d9cae",
-      "jsonHash": "fnv1a64:dfb0a0697de5bd0c"
+      "jsonHash": "fnv1a64:19887c1fb10713c9"
     },
     {
       "language": "sanskrit",
       "chapter": 9,
-      "sourceHash": "fnv1a64:f1b1bc0c5f5ad1c7",
+      "sourceHash": "fnv1a64:c5be31315ce30ba4",
       "lessonIds": [
         "SA-C09-grhnati",
         "SA-C09-prcchati",
@@ -169,7 +169,7 @@
       "text": "sanskrit/narration/ch09.txt",
       "json": "sanskrit/narration/ch09.json",
       "textHash": "fnv1a64:b3d646d7371bdaeb",
-      "jsonHash": "fnv1a64:674b029334ed0b64"
+      "jsonHash": "fnv1a64:a4517e570420dcad"
     },
     {
       "language": "sanskrit",

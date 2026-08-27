@@ -1,7 +1,7 @@
 ---
 schema_version: 2
 id: FR-C25-lire
-spine_node: SPINE-SAY-WHAT-I-DO
+spine_node: SPINE-NAME-EVERYDAY-ACTIONS
 sequence: 770
 chapter: 25
 type: word

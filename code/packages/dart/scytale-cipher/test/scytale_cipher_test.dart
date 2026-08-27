@@ -19,6 +19,7 @@ void main() {
 
     test('counts Unicode scalar values, not UTF-16 code units', () {
       expect(encrypt('A😀e\u0301B', 2), 'AeB😀\u0301 ');
+      expect(encrypt('Ae\u0301B', 3), 'ABe \u0301 ');
     });
 
     test('returns empty text before key validation', () {
@@ -36,6 +37,7 @@ void main() {
     test('round-trips Unicode scalar values', () {
       const original = 'A😀e\u0301B';
       expect(decrypt(encrypt(original, 2), 2), original);
+      expect(decrypt('ABe \u0301 ', 3), 'Ae\u0301B');
     });
 
     test('preserves leading and internal whitespace', () {
@@ -104,7 +106,16 @@ void main() {
 
     test('rejects work beyond the documented quadratic-output limit', () {
       final oversized = List.filled(maxBruteForceTextLength + 1, 'A').join();
-      expect(() => bruteForce(oversized), throwsRangeError);
+      expect(
+        () => bruteForce(oversized),
+        throwsA(
+          isA<RangeError>().having(
+            (error) => error.message,
+            'message',
+            'scytale-brute-force-limit',
+          ),
+        ),
+      );
     });
   });
 }

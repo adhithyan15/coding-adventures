@@ -210,7 +210,85 @@
       "concepts": [
         "VERB-DRINK",
         "VERB-GIVE",
-        "VERB-PUT"
+        "VERB-PUT",
+        "VERB-DO-MAKE",
+        "VERB-BUY",
+        "VERB-OPEN",
+        "VERB-CLOSE",
+        "VERB-ASK",
+        "VERB-STAND",
+        "VERB-WRITE",
+        "VERB-WAIT",
+        "VERB-READ",
+        "VERB-BRING",
+        "VERB-COME",
+        "VERB-WALK"
+      ]
+    },
+    {
+      "id": "SPINE-NAME-EVERYDAY-THINGS",
+      "stage": "A1",
+      "strand": "LEXICON",
+      "canDo": "I can name common everyday things.",
+      "prerequisites": [
+        "SPINE-EXCHANGE-NAMES"
+      ],
+      "core": true,
+      "concepts": [
+        "LODGING-ROOM"
+      ]
+    },
+    {
+      "id": "SPINE-SAY-WHAT-I-HAVE-AND-CAN-DO",
+      "stage": "A1",
+      "strand": "FUNCTION",
+      "canDo": "I can say what I have and what I am able to do.",
+      "prerequisites": [
+        "SPINE-EXCHANGE-NAMES"
+      ],
+      "core": true,
+      "concepts": [
+        "VERB-HAVE",
+        "VERB-CAN"
+      ]
+    },
+    {
+      "id": "SPINE-SAY-WHAT-I-LIKE",
+      "stage": "A1",
+      "strand": "FUNCTION",
+      "canDo": "I can say what I like and what I do not like.",
+      "prerequisites": [
+        "SPINE-EXCHANGE-NAMES"
+      ],
+      "core": true,
+      "concepts": [
+        "VERB-LIKE-LOVE"
+      ]
+    },
+    {
+      "id": "SPINE-SAY-WHY",
+      "stage": "A1",
+      "strand": "FUNCTION",
+      "canDo": "I can give one reason for something.",
+      "prerequisites": [
+        "SPINE-EXCHANGE-NAMES"
+      ],
+      "core": true,
+      "concepts": [
+        "CONNECTIVE-BECAUSE"
+      ]
+    },
+    {
+      "id": "SPINE-SAY-WHAT-I-WANT",
+      "stage": "A1",
+      "strand": "FUNCTION",
+      "canDo": "I can say what I want or need, and ask for it.",
+      "prerequisites": [
+        "SPINE-POLITE-REQUEST-REPAIR"
+      ],
+      "core": true,
+      "concepts": [
+        "VERB-WANT"
       ]
     },
     {
@@ -226,10 +304,7 @@
         "VERB-INFINITIVE",
         "VERB-PRESENT-HABITUAL",
         "VERB-BE",
-        "VERB-HAVE",
-        "VERB-DO-MAKE",
         "VERB-GO",
-        "VERB-COME",
         "VERB-SAY",
         "VERB-SPEAK",
         "VERB-SEE",
@@ -238,30 +313,18 @@
         "VERB-THINK",
         "VERB-UNDERSTAND",
         "VERB-LEARN",
-        "VERB-READ",
-        "VERB-WRITE",
-        "VERB-CAN",
         "VERB-TAKE",
-        "VERB-BRING",
         "VERB-GET",
         "VERB-EAT",
         "VERB-SLEEP",
         "VERB-LIVE",
         "VERB-WORK",
         "VERB-PLAY",
-        "VERB-WALK",
         "VERB-RUN",
         "VERB-SIT",
-        "VERB-STAND",
-        "VERB-WAIT",
-        "VERB-ASK",
         "VERB-ANSWER",
         "VERB-HELP",
-        "VERB-MEET",
-        "VERB-BUY",
-        "VERB-OPEN",
-        "VERB-CLOSE",
-        "VERB-LIKE-LOVE"
+        "VERB-MEET"
       ]
     },
     {
@@ -277,20 +340,6 @@
       "concepts": [
         "VERB-NEGATE",
         "QUESTION-POLAR"
-      ]
-    },
-    {
-      "id": "SPINE-SAY-WHAT-I-WANT",
-      "stage": "A2",
-      "strand": "FUNCTION",
-      "canDo": "I can say what I want or need, and ask for it.",
-      "prerequisites": [
-        "SPINE-SAY-WHAT-I-DO",
-        "SPINE-POLITE-REQUEST-REPAIR"
-      ],
-      "core": true,
-      "concepts": [
-        "VERB-WANT"
       ]
     },
     {
@@ -331,7 +380,6 @@
       "concepts": [
         "NARRATIVE-SEQUENCE",
         "CONNECTIVE-THEN",
-        "CONNECTIVE-BECAUSE",
         "ASPECT-ONGOING-PAST"
       ]
     },
@@ -365,7 +413,6 @@
       "concepts": [
         "DIRECTION-ASK",
         "TRANSPORT-TICKET",
-        "LODGING-ROOM",
         "PROBLEM-REPORT"
       ]
     },

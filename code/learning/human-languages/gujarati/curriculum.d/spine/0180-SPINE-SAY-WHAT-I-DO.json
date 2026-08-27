@@ -1,0 +1,28 @@
+{
+  "segments": [
+    "GU-PATH-016",
+    "GU-PATH-010",
+    "GU-PATH-010-C",
+    "GU-PATH-011",
+    "GU-PATH-012",
+    "GU-PATH-012-C"
+  ],
+  "omits": [
+    "VERB-INFINITIVE",
+    "VERB-PRESENT-HABITUAL",
+    "VERB-SAY",
+    "VERB-SPEAK",
+    "VERB-HEAR",
+    "VERB-LEARN",
+    "VERB-GET",
+    "VERB-SLEEP",
+    "VERB-LIVE",
+    "VERB-WORK",
+    "VERB-PLAY",
+    "VERB-RUN",
+    "VERB-SIT",
+    "VERB-ANSWER",
+    "VERB-MEET"
+  ],
+  "relocates": {}
+}

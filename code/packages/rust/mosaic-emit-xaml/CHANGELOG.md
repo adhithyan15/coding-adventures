@@ -1,5 +1,252 @@
 # Changelog — mosaic-emit-xaml
 
+## [Unreleased] — lower `Path` to real WinUI vector geometry (#12028 item 3, UI39)
+
+XAML is the first backend to render the new kernel drawing primitive
+(`Path`, registered in the prior PR). `circle`/`line`/`curve` are
+implemented; `arc` is a stretch goal not included here — a real build
+using `kind: arc` still hard-errors with a named "not yet supported"
+message, same posture any other unimplemented shape kind gets.
+
+New `emit_path`, dispatched from the primitive-tag match alongside every
+other leaf primitive:
+- `circle` → `<Ellipse Width="{2r}" Height="{2r}" Margin="{cx-r},{cy-r},0,0" HorizontalAlignment="Left" VerticalAlignment="Top" .../>`.
+- `line` → `<Line X1="{x1}" Y1="{y1}" X2="{x2}" Y2="{y2}" .../>`.
+- `curve` → `<Path><Path.Data><PathGeometry><PathFigure StartPoint="{x1},{y1}"><QuadraticBezierSegment Point1="{cx},{cy}" Point2="{x2},{y2}"/></PathFigure></PathGeometry></Path.Data></Path>`.
+
+Positioning uses `Margin`/`HorizontalAlignment="Left"`/
+`VerticalAlignment="Top"`, not `Canvas.Left`/`Canvas.Top` — `Stack`
+lowers to `<Grid>` (`emit_stack`), not `<Canvas>`, and `Canvas.*`
+attached properties are inert outside an actual `Canvas` parent. This
+is the same mechanism `absolute_position_style_attrs` (#12028 item 4)
+already established for `position: absolute`, and was verified
+empirically via a real `dotnet build` probe project — confirmed
+overlapping `Ellipse`s inside a plain `<Grid>` render as the intended
+crescent-moon shape — before writing `emit_path`, catching that the
+plan's original `Canvas.Left`/`Canvas.Top` assumption was wrong before
+any code was written on it.
+
+New `path_paint_attr`: `Fill`/`Stroke`/`StrokeThickness`, remapped from
+the same `background`/`border-color`/`border-width` every other
+primitive already authors (UI39 §3.2's zero-new-style-properties design).
+Deliberately does NOT reuse `part_style_attr` — that splices
+`Background`/`BorderBrush`/`BorderThickness` verbatim (real dependency
+properties on `Border`/`Panel`/`Control`, but `Ellipse`/`Line`/`Path`
+are `Shape`-derived and have none of the three; XamlCompiler would
+reject the attribute). Mirrors `content_control_style_attr`'s
+selective-remap pattern instead.
+
+Coordinate props (`cx`/`cy`/`r`/`x1`/`y1`/etc.) accept only a literal
+`Number` for now — `SlotRef`/`Expr` produce a clear compile error
+naming the unsupported prop, not a silent 0 or a dropped binding.
+Kernel-level bindability (UI39 §3.1) is real, but wiring it to actual
+`x:Bind` XAML is XAML's own not-yet-landed UI36 (data-driven sizing)
+work, tracked separately — implementing a one-off binding path just for
+`Path` ahead of that would duplicate work UI36 already owns.
+
+`mosaic-package-artifact-builder`'s `("Path", ...)` degradation arm
+narrowed to exclude `Backend::Xaml` (`HostSlider`'s per-backend
+narrowing pattern). SwiftUI/Qt/Flutter/Compose remain fully degraded.
+
+Verified against the real toolchain: the exact XAML syntax above was
+confirmed via a throwaway `dotnet build` probe project *before* writing
+`emit_path` (catching the `Canvas.Left` mistake, see above); a real
+`mosaic-compile pkg --backend xaml` build of a package authoring the
+actual crescent-moon shape (two overlapping `Path` circles) produces
+`nativeComplete: true, degradations: []`; a real `--emit-project` +
+`dotnet build` + launch of that same package succeeds cleanly (0
+errors, 0 warnings) and the window stays running. (Along the way, found
+and filed #13184 — the `--emit-project` scaffold breaks for a component
+with zero declared `emit`s, unrelated to `Path`, sidestepped in this
+verification by adding one unused `emit`.)
+
+## [Unreleased] — lower `box-shadow` to a `ThemeShadow` elevation token (#12028 item 1)
+
+30 `box-shadow` declarations across `task-app`'s stylesheet — its
+entire elevation system — were silently dropped, the single largest
+contributor to the flat, unfinished look the epic's original writeup
+flagged.
+
+New `part_wants_theme_shadow`: a non-`inset` `box-shadow` (any value)
+now gets `Translation="0,0,4"` plus a `<{Element}.Shadow><ThemeShadow/>
+</{Element}.Shadow>` child — WinUI's own consistent elevation
+treatment. Deliberately does NOT attempt to reproduce the authored
+blur/spread/color/opacity: `ThemeShadow` is a fixed, system-composited
+shadow with no CSS-shaped parameters, so every qualifying value
+collapses to the same one Z-depth (Microsoft's own "Cards: 4–8px"
+guidance) — a value an author might reasonably expect to vary in
+*intensity* can't, on this platform, regardless of what this emitter
+does. Applies uniformly to `emit_container`'s `Border`/`Grid`/
+`StackPanel` shapes and `emit_host_button`'s `<Button>` (which
+self-closes unless a `Shadow` child forces the open/close form).
+
+An `inset` value (the crescent-moon/status-dot drawing hack, item 3 —
+a shape cutout, not elevation) is a fundamentally different technique
+and stays a genuine, reported drop.
+
+Verified empirically against the real WinUI3 `dotnet build` toolchain
+before implementing (confirming `<Border.Shadow>`/`Translation="0,0,N"`
+both compile as direct XAML, despite `Translation` not being settable
+via `<Setter>`), then against a real regenerated `task-app` XAML
+project: 9 real elements (the brand-mark icon, every "active" pill/
+segmented-switch button) now carry `ThemeShadow`, the degradation
+report's only remaining `box-shadow` entry is the one genuinely-
+unsupported `inset` moon hack, and `dotnet build` succeeds with 0
+errors (same 98 pre-existing, unrelated warnings).
+
+## [Unreleased] — recognize mosstyle's `align: "center-vertical"` (#13164)
+
+Found while auditing TaskApp's remaining `styleDegradations` after
+#13160: `align: "center-vertical"` (and one `align: "center"`) is
+authored 30+ times across real `.msl` files (TaskApp, VentureChrome,
+Calendar, ProjectNav) — always on a `Row`, always meaning "center the
+cross axis" — but nothing lowered it, so every one of those rows
+rendered top-aligned instead of vertically centered.
+
+`align` is not a real mosstyle property (per `UI15-mosstyle.md`
+§1/§11, alignment belongs in `.mll`; mosstyle's grammar has no property
+whitelist to reject it — a separate gap, tracked in #13164 rather than
+fixed here). Given every real occurrence is semantically identical to
+`align-items: center`, `extract_flex_hints` now also recognizes
+`align: "center-vertical"` / `align: "center"`, mapping to the exact
+same `align_items = Some("center")` FlexHints slot — reusing 100% of
+the existing, tested per-child `VerticalAlignment`/`HorizontalAlignment`
+injection, no new mechanism.
+
+Verified against a real regenerated `task-app` XAML project: 60
+`VerticalAlignment="Center"` attributes now appear (versus rows
+rendering top-aligned before), the degradation report no longer lists
+`align` for any part, and `dotnet build` succeeds with 0 errors (same
+98 pre-existing unrelated warnings).
+
+## [Unreleased] — lower `position: "absolute"` to a pinned Margin (#12028 item 4)
+
+`position: "absolute"`/`top`/`left` had no XAML setter at all and were
+silently dropped — real impact: `mosaic/programs/task-app`'s bridge-arc
+brand mark (three `Box`es absolutely positioned inside one `Stack`)
+rendered as a plain amber square, since `Stack`'s `<Grid>` lowering
+stacks all children at the same z-axis cell with zero offset, and
+several inline icon compositions elsewhere in the app had the same gap.
+
+New `absolute_position_style_attrs`: when `position: "absolute"` is
+authored, `top`/`left` (each defaulting to `0` if absent) become
+`Margin="{left},{top},0,0"` plus `HorizontalAlignment="Left"
+VerticalAlignment="Top"`, pinned to the top-left corner of the existing
+`Grid` cell — reproducing the CSS offset with no need to restructure
+the parent into a `<Canvas>` (WinUI's actual `Canvas.Left`/`Canvas.Top`
+attached properties only take effect inside a literal `Canvas` panel,
+which every enclosing container up to the nearest common ancestor would
+also need to become). Applied after the normal per-property loop, so it
+overrides whatever `Margin`/alignment another authored property already
+produced — `position: absolute` takes full control of placement in CSS
+too. `position`/`top`/`left` are excluded from `dropped_style_properties`
+(#12022) only when consumed this way; authored without `position:
+"absolute"` they're meaningless in CSS too and stay reported exactly as
+before.
+
+Verified against a real regenerated `task-app` XAML project: the three
+brand-mark parts (and the other icon compositions this also fixed) now
+carry the expected `Margin`/alignment attrs, `dotnet build` — 0 errors
+(98 pre-existing, unrelated `WMC1506` binding warnings), and the
+`mosaic-degradations.json` `styleDegradations` list no longer reports
+`position`/`top`/`left` for any part.
+
+## [Unreleased] — confirm HostDialog's open-host-required degradation is permanent, not a to-do (#13008)
+
+Investigated whether XAML's `HostDialog` could drop its "host code-behind
+must call `ShowAsync()`/`Hide()`" requirement, matching SwiftUI/Qt/Compose's
+dialog lowerings — none of which report an equivalent degradation, since
+`.sheet(isPresented:)`, QML `Popup.visible`, and Compose's conditional
+`Dialog { }` composition are all natively declarative: the `open:` slot
+drives visibility directly, with no imperative call needed.
+
+Confirmed (against current WinUI3/WinAppSDK docs, plus the multiple
+open community discussions/issues asking Microsoft for exactly this)
+that this is a genuine, permanent WinUI3 API gap, not something Mosaic's
+architecture is missing: `ContentDialog` exposes only imperative
+`ShowAsync()`/`Hide()` and has no bindable `IsOpen`-style dependency
+property, unlike `Popup`/`Flyout`/`TeachingTip`, all of which do.
+Lowering `HostDialog` to `Flyout` instead (which does have `IsOpen`)
+was considered and rejected — `Flyout` isn't a true modal dialog (no
+dimmed overlay, different dismiss semantics), so it would trade this
+degradation for a wrong-primitive one rather than closing it.
+
+No functional change. Updated the doc comment above
+`build_host_dialog_attrs` and the `property.dialog-open-host-required`
+degradation site in `mosaic-package-artifact-builder` to record the
+finding, so it reads as a confirmed, permanent decision rather than an
+open TODO. Closes #13008.
+
+## [Unreleased] — close the remaining find_prop_value catch-all sites (#13040)
+
+#12126 fixed seven sites where a bare `_ => {}` silently dropped a row
+`Expr` value; it deliberately left ~15 more sites with the identical
+shape out of scope to keep that PR reviewable. This closes all of them,
+grouped by how deep the fix goes:
+
+- **Full `Expr` support, same `lower_expr_for_xbind` pattern as #12126**
+  (13 sites): `disabled:` → `IsEnabled` (negated) on `HostButton`,
+  `HostCheckbox`, `HostRadio`, `HostNumberInput`, `HostSlider`;
+  `checked:` → `IsChecked` on `HostCheckbox`/`HostRadio`; `read-only:` →
+  `IsReadOnly` on `HostInput`; `indeterminate:` → `IsThreeState` on
+  `HostCheckbox`; `HostSurface.content` → `Content` (which also had no
+  `String` arm at all — an audit finding, not just the `Expr` gap);
+  `Icon.glyph`/`.name` → `Glyph`; `HostRadio.group` → `GroupName`;
+  `HostTable.dir` → `FlowDirection` on both the native-shape and
+  non-native fallback lowering paths.
+
+  The five negated `disabled:` sites route through a new
+  `disabled_expr_xbind_path`, the `Expr` analogue of the existing
+  `disabled_slot_xbind_path` — it composes a lowered expression with
+  the same shared `Not(bool)` C# helper `SlotRef` already used, wrapped
+  in `x:Bind Not(...), Mode=OneWay`. Inside a `For` template scope this
+  returns `Unsupported` rather than guessing: WinUI's typed
+  `DataTemplate` compiler rejects a function binding rooted through
+  another property, and `disabled_slot_xbind_path`'s own for-scope
+  branch works around that for a plain slot by projecting a new row-VM
+  computed property — composing that projection with an arbitrary
+  lowered expression isn't implemented or verified anywhere, so an
+  `Expr`-valued `disabled:` inside a `For` gets a clear diagnostic
+  instead of risking subtly wrong generated C#/XAML.
+
+  `HostTable.dir`'s existing keyword allow-list (`rtl`/`ltr` only,
+  everything else silently dropped) is a security gate against an
+  *unrecognized static keyword string* reaching the XAML attribute —
+  not a reason to reject `Expr` wholesale. `lower_expr_for_xbind` never
+  splices attacker-influenced text directly; it always resolves to a
+  compiler-generated path or helper call, so `Expr` gets the same real
+  `FlowDirection` binding every other XAML-attribute site in this fix
+  gets, while the keyword allow-list's own narrowness is untouched.
+
+- **Exhaustive but `Expr` deliberately deferred, with a clear
+  diagnostic instead of a silent empty payload** (2 sites):
+  `host_link_href_payload_expr` (used both for `HostLink`'s in-app
+  `Click` payload and `HostRadio`'s `onSelect` `value:` payload). These
+  build a bare C# expression spliced into a code-behind
+  `Dispatch?.Invoke(...)` call fired once at click time — a materially
+  different code shape from every XAML-attribute-bind site above.
+  `SlotRef` resolves via `this.<Pascal>` (component-level, no
+  for-scope awareness at all); real per-row `Expr` support here would
+  need the same sender-`DataContext`-cast-to-row-VM-type codegen
+  `host_button_click_payload_expr` already does for its own params — a
+  materially different, more novel code shape with no existing
+  precedent for an arbitrary expression, and a real feature addition
+  rather than a "make the match exhaustive" fix. Both functions are now
+  exhaustive over every `LayoutPropValue` variant (no `_`); `Expr`
+  explicitly returns `PipelineEmitError::UnsupportedExpression` rather
+  than silently falling back to `""` the way it did before — an author
+  who wrote an expression here deserves to know it wasn't honoured, not
+  have it silently become an empty click payload.
+
+Verified with 8 new tests plus a real `dotnet build` against a probe
+project exercising the two least mechanically-obvious translations: the
+`disabled:` → `Not(bool)`-helper composition (genuinely new C# codegen,
+not just a new attribute) and `HostTable.dir`'s `FlowDirection` `Expr`
+path. Both compiled clean, 0 warnings, 0 errors, and the emitted XAML
+matched what the unit tests already asserted
+(`IsEnabled="{x:Bind Not(Editable), Mode=OneWay}"` and
+`FlowDirection="{x:Bind Dir, Mode=OneWay}"`).
+
 ## [Unreleased] — security: narrow CopyMosaicNativeHostLibraries from a *.dll glob to the known runtime filename (#12026)
 
 The generated `.csproj`'s `CopyMosaicNativeHostLibraries` MSBuild target

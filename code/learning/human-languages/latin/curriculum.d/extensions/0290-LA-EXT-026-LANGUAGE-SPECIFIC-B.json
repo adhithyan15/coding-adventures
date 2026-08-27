@@ -1,0 +1,11 @@
+{
+  "id": "LA-EXT-026-LANGUAGE-SPECIFIC-B",
+  "stage": "A1",
+  "kind": "required",
+  "category": "language-specific",
+  "canDo": "I can produce the present-tense forms of the four Latin verbs of thinking, reading, understanding and writing, and trace each one into the English words built on it.",
+  "prerequisites": [],
+  "lessons": [
+    "LA-C38-lego"
+  ]
+}

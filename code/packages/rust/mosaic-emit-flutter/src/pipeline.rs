@@ -66,7 +66,7 @@
 //!   placeholder so the output type-checks. The package-resolver
 //!   integration is a follow-up.
 
-use std::collections::HashMap;
+use std::collections::{HashMap, HashSet};
 use std::fmt::Write as _;
 
 use moslayout_compiler::{LayoutDef, LayoutNode, LayoutProp, LayoutPropValue};
@@ -105,6 +105,13 @@ pub enum PipelineEmitError {
     UnsafeSlotName(String),
     UnsafeEmitName(String),
     UnknownPrimitive(String),
+    /// #13052: a `HostLink.href` literal uses an explicit URI scheme
+    /// outside the `http`/`https`/`mailto` allowlist, checked when
+    /// `external` is not `false` (the path a real `launchUrl` call
+    /// will eventually use -- currently still a `/* TODO: launchUrl(...)
+    /// */` comment, but this is checked preventatively ahead of that
+    /// landing rather than waiting for it to become a live gap).
+    UnsafeUriScheme(String),
 }
 
 impl std::fmt::Display for PipelineEmitError {
@@ -126,6 +133,10 @@ impl std::fmt::Display for PipelineEmitError {
             PipelineEmitError::UnknownPrimitive(t) => write!(
                 f,
                 "moslayout primitive '{t}' is not yet supported by the Flutter pipeline emitter"
+            ),
+            PipelineEmitError::UnsafeUriScheme(href) => write!(
+                f,
+                "HostLink href {href:?} does not use an allowed URI scheme (http, https, mailto)"
             ),
         }
     }
@@ -1112,6 +1123,7 @@ pub fn from_pipeline(
     let uses_tooltip = layout_contains_tag(&layout.root, "HostTooltip");
     let uses_drag = layout_contains_tag(&layout.root, "HostDraggable")
         || layout_contains_tag(&layout.root, "HostDropTarget");
+    let uses_dialog = layout_contains_native_dialog(&layout.root);
     if uses_radio {
         writeln!(out, "// ignore_for_file: deprecated_member_use").unwrap();
     }
@@ -1125,6 +1137,14 @@ pub fn from_pipeline(
             "// ignore_for_file: unused_element_parameter, deprecated_member_use"
         )
         .unwrap();
+    } else if uses_dialog {
+        // #13010: `_MosaicDialogHost.barrierDismissible` is a
+        // constructor parameter with a default, exposed for every
+        // `HostDialog` even when this particular file's authored
+        // layout(s) never set `dismiss-on-backdrop: false` -- same
+        // "shared helper exposes the complete contract" shape as the
+        // drag helper above, just for a different lint trigger.
+        writeln!(out, "// ignore_for_file: unused_element_parameter").unwrap();
     }
     writeln!(
         out,
@@ -1165,6 +1185,10 @@ pub fn from_pipeline(
         out.push_str(&emit_drag_helpers());
         writeln!(out).unwrap();
     }
+    if uses_dialog {
+        out.push_str(&emit_dialog_helper());
+        writeln!(out).unwrap();
+    }
 
     // 3. Pre-compute the per-part style map. Same shape as the React
     //    emitter's `build_part_style_map`: kebab part-name → joined
@@ -1192,6 +1216,16 @@ fn layout_contains_tag(node: &LayoutNode, tag: &str) -> bool {
             .children
             .iter()
             .any(|child| layout_contains_tag(child, tag))
+}
+
+/// #13010: like [`layout_contains_tag`] for `"HostDialog"`, but only
+/// counts a node that actually lowers to `_MosaicDialogHost` (i.e.
+/// [`host_dialog_has_native_semantics`] is true for it). A file whose
+/// only `HostDialog` is `modal: false` must not pay for the shared
+/// helper class it never instantiates.
+fn layout_contains_native_dialog(node: &LayoutNode) -> bool {
+    (node.tag == "HostDialog" && host_dialog_has_native_semantics(node))
+        || node.children.iter().any(layout_contains_native_dialog)
 }
 
 // =====================================================================
@@ -1603,6 +1637,92 @@ class _MosaicDropTargetState extends State<_MosaicDropTarget> {
 /// `dispatch` field (always present, matches React's required prop),
 /// a const constructor with named-required parameters, and the
 /// `build` method returning the widget tree.
+/// One member of a synthesized radio group (`#13007`): the Dart boolean
+/// expression that is `true` while this member is the selected one, and
+/// the Dart expression for the value it represents.
+struct RadioGroupMember {
+    checked_expr: String,
+    value_expr: String,
+}
+
+/// Walks the whole component tree bucketing `HostRadio` nodes by their
+/// literal `group: "..."` value (`#13007`). A member is only included
+/// when its `checked:` prop resolves to a real boolean expression (via
+/// [`bool_prop_expression`]) — without that, there's no way to know
+/// which member should be selected in the synthesized `groupValue`
+/// chain, so such a radio is silently excluded from grouping and keeps
+/// the pre-#13007 per-radio-independent behavior. A `slot:`-bound
+/// `group` can't be bucketed at compile time and is never collected
+/// here either.
+fn collect_radio_group_members(
+    node: &LayoutNode,
+    groups: &mut HashMap<String, Vec<RadioGroupMember>>,
+) -> Result<(), PipelineEmitError> {
+    if node.tag == "HostRadio" {
+        if let Some(key) = find_string_prop(node, "group") {
+            if let Some(checked_expr) = bool_prop_expression(node, "checked")? {
+                let value_expr = if let Some(s) = find_string_prop(node, "value") {
+                    format!("\"{}\"", escape_dart_string(s))
+                } else if let Some(slot) = find_slot_ref_prop(node, "value") {
+                    let camel = to_camel_case_first_lower(slot);
+                    validate_slot_or_field_name(&camel)?;
+                    camel
+                } else {
+                    "\"\"".to_string()
+                };
+                groups
+                    .entry(key.to_string())
+                    .or_default()
+                    .push(RadioGroupMember {
+                        checked_expr,
+                        value_expr,
+                    });
+            }
+        }
+    }
+    for child in &node.children {
+        collect_radio_group_members(child, groups)?;
+    }
+    Ok(())
+}
+
+/// The shared `groupValue` Dart expression for a synthesized radio
+/// group (`#13007`): a nested ternary resolving to whichever member's
+/// `checked_expr` is true, `null` if none are. Flutter's `Radio<T>`
+/// computes its own checked state as `value == groupValue` — every
+/// member of the group emits this SAME expression, so only one can ever
+/// compare equal, giving real native mutual exclusion without any
+/// ancestor widget or ceremony beyond what `Radio<T>` already supports
+/// on the repo's currently-pinned Flutter SDK floor (the newer
+/// `RadioGroup<T>` ancestor widget needs Flutter 3.35+; this achieves
+/// the same exclusivity guarantee using the classic, still-fully-
+/// supported `groupValue`/`onChanged` API).
+fn radio_group_value_chain(members: &[RadioGroupMember]) -> String {
+    members.iter().rev().fold("null".to_string(), |acc, m| {
+        format!("{} ? {} : ({})", m.checked_expr, m.value_expr, acc)
+    })
+}
+
+/// The set of literal `group:` values that get a synthesized shared
+/// `groupValue` anywhere in this component (`#13007`) — i.e. every key
+/// with 2+ resolvable members per [`collect_radio_group_members`].
+/// Package capability analysis calls this so strict-profile reporting
+/// cannot drift from `emit_host_radio`'s actual lowering. Errors from
+/// an unsafe identifier propagate as "no groups" here rather than
+/// failing the analysis outright — the same error surfaces (and does
+/// fail the build) when the component is actually emitted.
+pub fn radio_groups_with_native_semantics(root: &LayoutNode) -> HashSet<String> {
+    let mut groups: HashMap<String, Vec<RadioGroupMember>> = HashMap::new();
+    if collect_radio_group_members(root, &mut groups).is_err() {
+        return HashSet::new();
+    }
+    groups
+        .into_iter()
+        .filter(|(_, members)| members.len() >= 2)
+        .map(|(group, _)| group)
+        .collect()
+}
+
 fn emit_widget_class(
     component: &str,
     slots: &[SlotDecl],
@@ -1644,13 +1764,23 @@ fn emit_widget_class(
     writeln!(out, "    required this.dispatch,").unwrap();
     writeln!(out, "  }});").unwrap();
 
+    // #13007: collect radio-group membership once, up front, so
+    // `emit_host_radio` (deep in the recursive walk) can synthesize a
+    // shared `groupValue` for any group with 2+ resolvable members.
+    let mut radio_groups: HashMap<String, Vec<RadioGroupMember>> = HashMap::new();
+    collect_radio_group_members(layout_root, &mut radio_groups)?;
+    radio_groups.retain(|_, members| members.len() >= 2);
+
     let mut tree = emit_widget_tree(
         layout_root,
         6,
         part_styles,
         component,
         emits,
-        TableCtx::default(),
+        TableCtx {
+            radio_group_members: Some(&radio_groups),
+            ..TableCtx::default()
+        },
     )?;
 
     if layout_contains_tag(layout_root, "HostDraggable")
@@ -1747,6 +1877,12 @@ struct TableCtx<'a> {
     /// `Row`. Flutter text fields require a finite horizontal constraint,
     /// so direct row inputs lower through `Expanded`.
     direct_row_child: bool,
+    /// Whole-component radio-group membership (`#13007`), computed once
+    /// in `emit_widget_class` via [`collect_radio_group_members`] and
+    /// threaded unchanged through every recursive call — `emit_host_radio`
+    /// looks up its own node's `group:` value here to decide whether to
+    /// synthesize a shared `groupValue`.
+    radio_group_members: Option<&'a HashMap<String, Vec<RadioGroupMember>>>,
 }
 
 /// Scan a `HostTable`'s children for the
@@ -1913,7 +2049,7 @@ fn emit_widget_tree(
         return emit_host_checkbox(node, indent, part_styles, component, emits);
     }
     if node.tag == "HostRadio" {
-        return emit_host_radio(node, indent, part_styles, component, emits);
+        return emit_host_radio(node, indent, part_styles, component, emits, ctx);
     }
     if node.tag == "HostSlider" {
         return emit_host_slider(node, indent, component, emits);
@@ -1922,7 +2058,7 @@ fn emit_widget_tree(
         return emit_host_scroll(node, indent, part_styles, component, emits, ctx);
     }
     if node.tag == "HostDialog" {
-        return emit_host_dialog(node, indent, part_styles, component);
+        return emit_host_dialog(node, indent, part_styles, component, emits, ctx);
     }
     if node.tag == "HostTable" {
         return emit_host_table(node, indent, part_styles, component, emits, ctx);
@@ -3426,10 +3562,15 @@ fn host_button_style_arg(node: &LayoutNode, part_styles: &HashMap<String, String
     }
 }
 
-/// `HostCheckbox` → `Checkbox`. Two-state for v1; the `indeterminate`
-/// slot is accepted but ignored (Flutter `Checkbox` has a
-/// `tristate: true` mode, but the visual is a dash — close enough for
-/// a follow-up).
+/// `HostCheckbox` → `Checkbox`. `indeterminate:` (`#13006`) lowers to
+/// Flutter's own tri-state mode: `tristate: true` plus a nullable
+/// `value` expression (`null` renders the dash). See
+/// `checkbox_indeterminate_expr` for how the condition is derived.
+///
+/// The `onChanged` callback needs no special-casing for tri-state:
+/// `Checkbox.onChanged` is always `void Function(bool?)` even in
+/// two-state mode, and `host_checkbox_event_args` already treats its
+/// `v` parameter as nullable (`v ?? false`).
 fn emit_host_checkbox(
     node: &LayoutNode,
     indent: usize,
@@ -3476,14 +3617,52 @@ fn emit_host_checkbox(
     } else {
         "/* no onToggle bound */".to_string()
     };
+    let (value_expr, tristate_attr) = match checkbox_indeterminate_expr(node)? {
+        Some(cond) => (format!("{cond} ? null : {checked_expr}"), "tristate: true, "),
+        None => (checked_expr, ""),
+    };
     let body = format!(
-        "material.Checkbox(value: {checked_expr}, onChanged: (v) {{ {on_changed_body}; }})"
+        "material.Checkbox(value: {value_expr}, {tristate_attr}onChanged: (v) {{ {on_changed_body}; }})"
     );
     let inner = match label {
         Some(l) => format!("Row(children: [{body}, {l}])"),
         None => body,
     };
     Ok(format!("{pad}{inner}\n"))
+}
+
+/// Whether `indeterminate:` is authored in a form the emitter can act
+/// on, and if so, the Dart boolean expression that is `true` while the
+/// checkbox should render mixed (`null` value). Mirrors XAML's
+/// `IsThreeState` treatment: a `SlotRef`/`Expr` value can't be
+/// evaluated at compile time, so its *presence* unconditionally routes
+/// to `tristate: true` — the runtime value decides whether `null` (the
+/// mixed dash) is actually shown.
+fn checkbox_indeterminate_expr(node: &LayoutNode) -> Result<Option<String>, PipelineEmitError> {
+    match find_prop_value(node, "indeterminate") {
+        Some(LayoutPropValue::Keyword(k)) if k == "true" => Ok(Some("true".to_string())),
+        Some(LayoutPropValue::SlotRef(slot)) => {
+            let camel = to_camel_case_first_lower(slot);
+            validate_slot_or_field_name(&camel)?;
+            Ok(Some(camel))
+        }
+        Some(LayoutPropValue::Expr(expr)) => Ok(Some(format!("({expr})"))),
+        Some(LayoutPropValue::Keyword(_))
+        | Some(LayoutPropValue::String(_))
+        | Some(LayoutPropValue::Number(_))
+        | Some(LayoutPropValue::EmitRef(_))
+        | None => Ok(None),
+    }
+}
+
+/// Returns whether a HostCheckbox's authored `indeterminate:` value (if
+/// any) lowers to real tri-state rendering (`#13006`).
+///
+/// Package capability analysis calls this same predicate so strict-
+/// profile reporting cannot drift from `emit_host_checkbox`'s actual
+/// lowering.
+pub fn host_checkbox_has_native_semantics(node: &LayoutNode) -> bool {
+    matches!(checkbox_indeterminate_expr(node), Ok(Some(_)))
 }
 
 fn host_checkbox_event_args(emit: &EmitDecl) -> Result<String, PipelineEmitError> {
@@ -3504,15 +3683,34 @@ fn host_checkbox_event_args(emit: &EmitDecl) -> Result<String, PipelineEmitError
         .map(|parts| parts.join(", "))
 }
 
-/// `HostRadio` → `Radio<String>`. Group coordination via `groupValue`
-/// matches HTML's shared-`name` pattern; the host owns the
-/// currently-selected value.
+/// `HostRadio` → `Radio<String>`.
+///
+/// ## Group coordination (`#13007`)
+///
+/// A literal `group: "..."` shared by 2+ resolvable `HostRadio`s
+/// anywhere in the component (see [`collect_radio_group_members`]) gets
+/// a synthesized shared `groupValue` — the SAME nested-ternary
+/// expression emitted at every member's own call site (see
+/// [`radio_group_value_chain`]). Flutter's `Radio<T>` computes its
+/// checked state as `value == groupValue`, so sharing one reactive
+/// expression across siblings gives real native mutual exclusion with
+/// zero restructuring of the widget tree — no ancestor wrapper, no
+/// change to `onChanged` (each radio still dispatches its own
+/// `onSelect` independently; exclusivity comes entirely from
+/// `groupValue`, not from a shared handler).
+///
+/// A `slot:`-bound group, or a literal value with no qualifying peer,
+/// keeps the pre-#13007 behavior: the radio's own `group` slot (if any)
+/// becomes `groupValue` directly, otherwise `groupValue` is `null` and
+/// the radio always renders unselected — a real pre-existing gap this
+/// fix does not attempt to paper over for the ungroupable cases.
 fn emit_host_radio(
     node: &LayoutNode,
     indent: usize,
     _part_styles: &HashMap<String, String>,
     component: &str,
     emits: &[EmitDecl],
+    ctx: TableCtx,
 ) -> Result<String, PipelineEmitError> {
     let pad = " ".repeat(indent);
     let value_expr: String = if let Some(s) = find_string_prop(node, "value") {
@@ -3524,22 +3722,21 @@ fn emit_host_radio(
     } else {
         "\"\"".to_string()
     };
-    // For v1 we use the radio's own `checked` slot as the groupValue
-    // wherever the group prop isn't bound. Real radio-group
-    // coordination is a follow-up (mirrors the SwiftUI backend's v1
-    // caveat).
-    let group_value_expr: String = if let Some(slot) = find_slot_ref_prop(node, "group") {
+    let synthesized_group_value = find_string_prop(node, "group").and_then(|g| {
+        ctx.radio_group_members
+            .and_then(|groups| groups.get(g))
+            .map(|members| radio_group_value_chain(members))
+    });
+    let group_value_expr: String = if let Some(chain) = synthesized_group_value {
+        chain
+    } else if let Some(slot) = find_slot_ref_prop(node, "group") {
         let camel = to_camel_case_first_lower(slot);
         validate_slot_or_field_name(&camel)?;
         camel
-    } else if let Some(s) = find_string_prop(node, "group") {
-        // Static group name — every radio in the group still needs a
-        // shared *value*, not just a shared name. The host pushes the
-        // currently-selected value via a slot. We default to `null`
-        // (Radio renders unselected).
-        let _ = s;
-        "null".to_string()
     } else {
+        // Either no `group:` authored, or a literal value with no
+        // qualifying peer (see doc comment) — `null` renders unselected,
+        // matching the pre-#13007 behavior for these cases exactly.
         "null".to_string()
     };
 
@@ -3763,21 +3960,230 @@ fn emit_host_scroll(
     ))
 }
 
-/// `HostDialog` → a `Builder` that calls `showDialog` from a
-/// post-frame callback when the `open` slot is truthy. v1 emits an
-/// anchor-shaped `SizedBox.shrink()` carrying the dialog logic; full
-/// fidelity (modal vs non-modal, dismiss-on-backdrop, title, onClose
-/// dispatch) is a follow-up PR.
+/// #13010: does this `HostDialog` node lower to a real native dialog on
+/// the Flutter backend, or does it still fall back to the zero-size
+/// placeholder? `modal: false` is the one case still unimplemented --
+/// Flutter's `showDialog` is inherently modal (a full-screen barrier +
+/// route), with no vanilla-Flutter equivalent to SwiftUI's `.popover`/
+/// Qt's non-modal `Popup` short of a custom `Overlay`, which is out of
+/// scope here. `modal: true` (the default, and the only value the
+/// toolkit's own `Modal` component ever authors) gets a real dialog.
+pub fn host_dialog_has_native_semantics(node: &LayoutNode) -> bool {
+    !matches!(find_keyword_prop(node, "modal"), Some("false"))
+}
+
+/// `HostDialog` -> a declarative-triggered imperative `showDialog`,
+/// wrapped in the shared `_MosaicDialogHost` `StatefulWidget` (emitted
+/// once per file, see [`emit_dialog_helper`]). Flutter's `showDialog`
+/// is an imperative call, not a widget that sits in the tree the way
+/// SwiftUI's `.sheet` modifier or Compose's conditional composition
+/// does -- `_MosaicDialogHost` bridges the two: it watches its `open`
+/// property and calls `showDialog`/`Navigator.pop` from lifecycle
+/// callbacks so the rest of this emitter can still treat `HostDialog`
+/// as an ordinary declarative tree node.
+///
+/// `modal: false` is not implemented (see
+/// [`host_dialog_has_native_semantics`]) -- it keeps the previous
+/// zero-size placeholder rather than emitting a wrong-shaped dialog.
+///
+/// ## Property handling
+///
+/// | Moslayout prop        | Flutter                                          |
+/// |---|---|
+/// | `open: slot: x`       | `_MosaicDialogHost.open: x`                      |
+/// | `title: "..."` / slot | `AlertDialog(title: Text(...))`                  |
+/// | `dismiss-on-backdrop: false` | `barrierDismissible: false`               |
+/// | `onClose: emit: onX`  | `onClose: () { dispatch(XEventX()); }`           |
+/// | children              | `AlertDialog(content: ...)`                      |
+///
+/// ## Generated shape
+///
+/// ```dart
+/// _MosaicDialogHost(
+///   open: open,
+///   onClose: () { dispatch(const XEventClose()); },
+///   builder: (context) => AlertDialog(
+///     title: Text(title),
+///     content: Column(children: [ ... ]),
+///   ),
+/// )
+/// ```
 fn emit_host_dialog(
-    _node: &LayoutNode,
+    node: &LayoutNode,
     indent: usize,
-    _part_styles: &HashMap<String, String>,
-    _component: &str,
+    part_styles: &HashMap<String, String>,
+    component: &str,
+    emits: &[EmitDecl],
+    ctx: TableCtx,
 ) -> Result<String, PipelineEmitError> {
     let pad = " ".repeat(indent);
+    let inner_pad = " ".repeat(indent + 2);
+    let body_pad = " ".repeat(indent + 4);
+
+    if !host_dialog_has_native_semantics(node) {
+        return Ok(format!(
+            "{pad}const SizedBox.shrink() /* TODO: HostDialog non-modal (modal: false) is not yet implemented */\n"
+        ));
+    }
+
+    // `open: slot: x` -> the bare identifier. Unbound falls back to a
+    // literal `false` so the file still type-checks (matches the
+    // XAML/SwiftUI backends' identical fallback for an unbound open).
+    let open_expr: String = match find_slot_ref_prop(node, "open") {
+        Some(slot) => {
+            let camel = to_camel_case_first_lower(slot);
+            validate_slot_or_field_name(&camel)?;
+            camel
+        }
+        None => "false".to_string(),
+    };
+
+    // `dismiss-on-backdrop: false` -> `barrierDismissible: false`.
+    // Anything else (including unset) keeps Flutter's own default of
+    // `true`, so no attribute is emitted at all.
+    let barrier_dismissible_attr =
+        if matches!(find_keyword_prop(node, "dismiss-on-backdrop"), Some("false")) {
+            format!("{inner_pad}barrierDismissible: false,\n")
+        } else {
+            String::new()
+        };
+
+    // `onClose: emit: onX` -> dispatch closure. Optional: a dialog
+    // with no onClose still opens and closes (backdrop-dismissible by
+    // default), it just doesn't notify the host.
+    let on_close_attr = match find_emit_ref_prop(node, "onClose") {
+        Some(emit_name) => {
+            let case_name = pascalize(&strip_on_prefix(emit_name));
+            validate_emit_name(&case_name)?;
+            format!(
+                "{inner_pad}onClose: () {{ dispatch(const {component}Event{case_name}()); }},\n"
+            )
+        }
+        None => String::new(),
+    };
+
+    // `title: "..."` / `title: slot: x` -> `AlertDialog(title: Text(...))`.
+    let title_attr = match find_string_prop(node, "title") {
+        Some(literal) => format!(
+            "{body_pad}title: Text(\"{}\"),\n",
+            escape_dart_string(literal)
+        ),
+        None => match find_slot_ref_prop(node, "title") {
+            Some(slot) => {
+                let camel = to_camel_case_first_lower(slot);
+                validate_slot_or_field_name(&camel)?;
+                format!("{body_pad}title: Text({camel}),\n")
+            }
+            None => String::new(),
+        },
+    };
+
+    // Children become the dialog's `content`. Same single-vs-multi
+    // shape as `emit_host_scroll`: a lone child is passed directly,
+    // several are wrapped in a `Column` via the paired walker (so an
+    // `If`/`Else` sibling pair inside the dialog body is handled).
+    let content_attr = if node.children.is_empty() {
+        String::new()
+    } else if node.children.len() == 1 {
+        let child = emit_widget_tree(
+            &node.children[0],
+            indent + 6,
+            part_styles,
+            component,
+            emits,
+            ctx,
+        )?;
+        let child = child.trim_end_matches('\n');
+        format!("{body_pad}content: {child},\n")
+    } else {
+        let children_pad = " ".repeat(indent + 8);
+        let children = emit_paired_children(
+            &node.children,
+            indent + 8,
+            part_styles,
+            component,
+            emits,
+            ctx,
+        )?;
+        format!(
+            "{body_pad}content: Column(\n{children_pad}mainAxisSize: MainAxisSize.min,\n{children_pad}children: [\n{children}{children_pad}],\n{body_pad}),\n"
+        )
+    };
+
     Ok(format!(
-        "{pad}const SizedBox.shrink() /* TODO: HostDialog showDialog wiring */\n"
+        "{pad}_MosaicDialogHost(\n{inner_pad}open: {open_expr},\n{barrier_dismissible_attr}{on_close_attr}{inner_pad}builder: (context) => AlertDialog(\n{title_attr}{content_attr}{inner_pad}),\n{pad})\n"
     ))
+}
+
+/// Shared `StatefulWidget` bridging a declarative `open: bool` to
+/// Flutter's imperative `showDialog`/`Navigator` API. Emitted once per
+/// file (gated on `uses_dialog`, mirroring [`emit_drag_helpers`]'s
+/// `uses_drag` gate), reused by every `HostDialog` in that file.
+///
+/// - `open` flips false -> true: schedules `showDialog` on the next
+///   frame (an `addPostFrameCallback`, since `showDialog` needs a
+///   `BuildContext` already in the tree -- calling it synchronously
+///   from `didUpdateWidget`/`initState` can race the current build).
+/// - `open` flips true -> false while the dialog is still showing
+///   (the host closed it via its own slot, not via backdrop-tap or an
+///   in-dialog control): pops the route programmatically.
+/// - Either dismissal path (backdrop tap or host-driven pop) resolves
+///   `showDialog`'s returned `Future`, which is where `onClose` fires
+///   -- exactly once per open/close cycle, regardless of which side
+///   initiated the close.
+fn emit_dialog_helper() -> String {
+    r#"class _MosaicDialogHost extends StatefulWidget {
+  final bool open;
+  final bool barrierDismissible;
+  final WidgetBuilder builder;
+  final VoidCallback? onClose;
+  const _MosaicDialogHost({
+    required this.open,
+    required this.builder,
+    this.barrierDismissible = true,
+    this.onClose,
+  });
+  @override
+  State<_MosaicDialogHost> createState() => _MosaicDialogHostState();
+}
+
+class _MosaicDialogHostState extends State<_MosaicDialogHost> {
+  bool _isShowing = false;
+
+  @override
+  void initState() {
+    super.initState();
+    if (widget.open) {
+      WidgetsBinding.instance.addPostFrameCallback((_) => _open());
+    }
+  }
+
+  @override
+  void didUpdateWidget(covariant _MosaicDialogHost oldWidget) {
+    super.didUpdateWidget(oldWidget);
+    if (widget.open && !_isShowing) {
+      WidgetsBinding.instance.addPostFrameCallback((_) => _open());
+    } else if (!widget.open && _isShowing) {
+      Navigator.of(context).maybePop();
+    }
+  }
+
+  Future<void> _open() async {
+    _isShowing = true;
+    await showDialog<void>(
+      context: context,
+      barrierDismissible: widget.barrierDismissible,
+      builder: widget.builder,
+    );
+    _isShowing = false;
+    widget.onClose?.call();
+  }
+
+  @override
+  Widget build(BuildContext context) => const SizedBox.shrink();
+}
+"#
+    .to_string()
 }
 
 /// `HostDraggable` and `HostDropTarget` lower through a small generated
@@ -4227,6 +4633,7 @@ fn emit_host_table(
         sheet_font_family: sheet_font_family.as_deref(),
         sheet_font_size: sheet_font_size.as_deref(),
         direct_row_child: false,
+        radio_group_members: parent_ctx.radio_group_members,
     };
 
     let table_body = if let Some(shape) = flutter_data_table_shape(node) {
@@ -4340,6 +4747,48 @@ fn emit_host_table(
 /// list before being interpolated into comments, so a malicious
 /// keyword like `false*/dispatch(evil())/*` can't terminate the
 /// `/* ... */` block-comment early.
+/// #13052: does `href` carry an explicit URI scheme outside the
+/// `http`/`https`/`mailto` allowlist? A relative reference (no scheme
+/// at all -- `"#"`, `"/about"`) returns `false`. Only a *present,
+/// disallowed* scheme (`javascript:`, `data:`, `intent:`, a custom
+/// protocol handler, ...) returns `true`. A colon appearing after a
+/// `/`, `?`, or `#` is data, not a scheme separator.
+///
+/// Security-review hardening: normalizes exactly like the WHATWG URL
+/// parser does before looking for a scheme -- trims leading/trailing
+/// C0-control-or-space and strips every embedded tab/CR/LF. Without
+/// this, `" javascript:alert(1)"` or `"java\tscript:alert(1)"` fails
+/// the alphabetic-first-character check below and gets classified as
+/// "no scheme, therefore a safe relative reference." A first review
+/// pass of #13052 missed this; caught and fixed in the same PR.
+fn has_disallowed_uri_scheme(href: &str) -> bool {
+    let normalized: String = href
+        .trim_matches(|c: char| (c as u32) <= 0x20)
+        .chars()
+        .filter(|c| !matches!(c, '\t' | '\r' | '\n'))
+        .collect();
+    let href = normalized.as_str();
+    let Some(colon) = href.find(':') else {
+        return false;
+    };
+    let prefix = &href[..colon];
+    if prefix.is_empty() || prefix.contains(['/', '?', '#']) {
+        return false;
+    }
+    let mut chars = prefix.chars();
+    let Some(first) = chars.next() else {
+        return false;
+    };
+    if !first.is_ascii_alphabetic() {
+        return false;
+    }
+    if !chars.all(|c| c.is_ascii_alphanumeric() || c == '+' || c == '-' || c == '.') {
+        return false;
+    }
+    const ALLOWED: [&str; 3] = ["http", "https", "mailto"];
+    !ALLOWED.iter().any(|s| s.eq_ignore_ascii_case(prefix))
+}
+
 fn emit_host_link(
     node: &LayoutNode,
     indent: usize,
@@ -4349,13 +4798,28 @@ fn emit_host_link(
 ) -> Result<String, PipelineEmitError> {
     let pad = " ".repeat(indent);
 
+    // external — keyword allow-list. Defaults to `true` (open in OS
+    // browser via url_launcher). `false` means in-app routing; host
+    // handles via onActivate, no `launchUrl` comment is emitted.
+    let external = find_keyword_prop(node, "external")
+        .map(|v| !matches!(v, "false")) // anything other than "false" → true
+        .unwrap_or(true);
+
     // href — slot ref takes priority over literal (slot refs are
     // identifiers we validated upstream; literals get escape_dart_string).
+    // #13052: reject a literal that carries an explicit disallowed
+    // scheme when `external` can reach the eventual `launchUrl` call
+    // -- no escaping makes an unsafe scheme safe. `external: false`
+    // never reaches that call (dispatch-only), so a routing
+    // placeholder like `href: "#"` stays valid there.
     let href_expr: String = if let Some(slot) = find_slot_ref_prop(node, "href") {
         let camel = to_camel_case_first_lower(slot);
         validate_slot_or_field_name(&camel)?;
         camel
     } else if let Some(s) = find_string_prop(node, "href") {
+        if external && has_disallowed_uri_scheme(s) {
+            return Err(PipelineEmitError::UnsafeUriScheme(s.to_string()));
+        }
         format!("\"{}\"", escape_dart_string(s))
     } else {
         "\"\"".to_string()
@@ -4375,13 +4839,6 @@ fn emit_host_link(
     } else {
         "Text(\"\")".to_string()
     };
-
-    // external — keyword allow-list. Defaults to `true` (open in OS
-    // browser via url_launcher). `false` means in-app routing; host
-    // handles via onActivate, no `launchUrl` comment is emitted.
-    let external = find_keyword_prop(node, "external")
-        .map(|v| !matches!(v, "false")) // anything other than "false" → true
-        .unwrap_or(true);
 
     // target — keyword allow-list (defensive). Maps to comment-only
     // hint today; Flutter's url_launcher mode is host-controlled.
@@ -6004,6 +6461,101 @@ mod tests {
         assert!(out.contains("dispatch(CheckboxEventChange(checked: v ?? false))"));
     }
 
+    /// #13006 — `indeterminate: true` enables `tristate: true` and the
+    /// checkbox's `value` collapses to a literal `null`.
+    #[test]
+    fn host_checkbox_indeterminate_true_emits_tristate_null_value() {
+        let m = component("X", vec![slot("agreed", SlotType::Bool, true)], vec![]);
+        let l = layout(
+            "X",
+            node_with(
+                "HostCheckbox",
+                vec![
+                    LayoutProp {
+                        name: "checked".into(),
+                        value: LayoutPropValue::SlotRef("agreed".into()),
+                    },
+                    LayoutProp {
+                        name: "indeterminate".into(),
+                        value: LayoutPropValue::Keyword("true".into()),
+                    },
+                ],
+                vec![],
+            ),
+        );
+        let out = from_pipeline(&m, &l, &empty_style("X")).unwrap().output;
+        assert!(
+            out.contains("Checkbox(value: true ? null : agreed, tristate: true, onChanged:"),
+            "expected tristate null-collapsing value, got:\n{out}"
+        );
+    }
+
+    /// #13006 — `indeterminate: slot: mixed` also enables tristate, with
+    /// the runtime slot deciding whether `value` resolves to `null`.
+    #[test]
+    fn host_checkbox_indeterminate_slot_emits_tristate_conditional_value() {
+        let m = component(
+            "X",
+            vec![
+                slot("agreed", SlotType::Bool, true),
+                slot("mixed", SlotType::Bool, true),
+            ],
+            vec![],
+        );
+        let l = layout(
+            "X",
+            node_with(
+                "HostCheckbox",
+                vec![
+                    LayoutProp {
+                        name: "checked".into(),
+                        value: LayoutPropValue::SlotRef("agreed".into()),
+                    },
+                    LayoutProp {
+                        name: "indeterminate".into(),
+                        value: LayoutPropValue::SlotRef("mixed".into()),
+                    },
+                ],
+                vec![],
+            ),
+        );
+        let out = from_pipeline(&m, &l, &empty_style("X")).unwrap().output;
+        assert!(
+            out.contains("Checkbox(value: mixed ? null : agreed, tristate: true, onChanged:"),
+            "expected tristate conditional value, got:\n{out}"
+        );
+    }
+
+    /// #13006 — `indeterminate: false` (the explicit opt-out) keeps the
+    /// plain two-state `Checkbox` unchanged — no `tristate:` attribute.
+    #[test]
+    fn host_checkbox_indeterminate_false_keeps_plain_two_state() {
+        let m = component("X", vec![slot("agreed", SlotType::Bool, true)], vec![]);
+        let l = layout(
+            "X",
+            node_with(
+                "HostCheckbox",
+                vec![
+                    LayoutProp {
+                        name: "checked".into(),
+                        value: LayoutPropValue::SlotRef("agreed".into()),
+                    },
+                    LayoutProp {
+                        name: "indeterminate".into(),
+                        value: LayoutPropValue::Keyword("false".into()),
+                    },
+                ],
+                vec![],
+            ),
+        );
+        let out = from_pipeline(&m, &l, &empty_style("X")).unwrap().output;
+        assert!(
+            out.contains("Checkbox(value: agreed, onChanged:"),
+            "expected the plain two-state Checkbox to survive `indeterminate: false`, got:\n{out}"
+        );
+        assert!(!out.contains("tristate"), "expected no tristate attribute, got:\n{out}");
+    }
+
     #[test]
     fn host_radio_with_value_emits_radio_string_widget() {
         let m = component("X", vec![], vec![]);
@@ -6023,6 +6575,127 @@ mod tests {
             r.output.contains("Radio<String>(value: \"vanilla\""),
             "expected `Radio<String>(value: \"vanilla\"`, got:\n{}",
             r.output
+        );
+    }
+
+    fn radio_node(checked_slot: &str, value: &str, group: &str) -> LayoutNode {
+        node_with(
+            "HostRadio",
+            vec![
+                LayoutProp {
+                    name: "checked".into(),
+                    value: LayoutPropValue::SlotRef(checked_slot.into()),
+                },
+                LayoutProp {
+                    name: "value".into(),
+                    value: LayoutPropValue::String(value.into()),
+                },
+                LayoutProp {
+                    name: "group".into(),
+                    value: LayoutPropValue::String(group.into()),
+                },
+            ],
+            vec![],
+        )
+    }
+
+    /// #13007 — 2 `HostRadio`s sharing a literal `group:` value get a
+    /// synthesized shared `groupValue` chain: real native mutual
+    /// exclusion via Flutter's `value == groupValue` semantics, no
+    /// ancestor widget or SDK bump needed.
+    #[test]
+    fn host_radio_shared_group_synthesizes_group_value_chain() {
+        let m = component(
+            "X",
+            vec![
+                slot("suspend-selected", SlotType::Bool, true),
+                slot("tag-only-selected", SlotType::Bool, true),
+            ],
+            vec![],
+        );
+        let radio1 = radio_node("suspend-selected", "suspend", "leech-action");
+        let radio2 = radio_node("tag-only-selected", "tag-only", "leech-action");
+        let l = layout("X", node_with("Row", vec![], vec![radio1, radio2]));
+        let out = from_pipeline(&m, &l, &empty_style("X")).unwrap().output;
+        let expected_chain = "_mosaicTruthy(suspendSelected) ? \"suspend\" : (_mosaicTruthy(tagOnlySelected) ? \"tag-only\" : (null))";
+        assert_eq!(
+            out.matches(&format!("groupValue: {expected_chain}")).count(),
+            2,
+            "expected both radios to share the same groupValue chain, got:\n{out}"
+        );
+    }
+
+    /// #13007 — a lone `HostRadio` (no same-group sibling) keeps the
+    /// pre-#13007 `groupValue: null` behavior — nothing to be
+    /// exclusive with.
+    #[test]
+    fn host_radio_lone_group_member_keeps_null_group_value() {
+        let m = component("X", vec![slot("selected", SlotType::Bool, true)], vec![]);
+        let radio = radio_node("selected", "only", "leech-action");
+        let l = layout("X", node_with("Row", vec![], vec![radio]));
+        let out = from_pipeline(&m, &l, &empty_style("X")).unwrap().output;
+        assert!(
+            out.contains("groupValue: null"),
+            "expected the pre-#13007 null groupValue for a lone radio, got:\n{out}"
+        );
+    }
+
+    /// #13007 — a `slot:`-bound group can't be bucketed at compile
+    /// time, so it keeps the pre-#13007 direct-passthrough behavior
+    /// even with a sibling present.
+    #[test]
+    fn host_radio_slot_bound_group_keeps_direct_passthrough() {
+        let m = component(
+            "X",
+            vec![
+                slot("a-selected", SlotType::Bool, true),
+                slot("b-selected", SlotType::Bool, true),
+                slot("shared-group", SlotType::Text, true),
+            ],
+            vec![],
+        );
+        let radio1 = node_with(
+            "HostRadio",
+            vec![
+                LayoutProp {
+                    name: "checked".into(),
+                    value: LayoutPropValue::SlotRef("a-selected".into()),
+                },
+                LayoutProp {
+                    name: "value".into(),
+                    value: LayoutPropValue::String("a".into()),
+                },
+                LayoutProp {
+                    name: "group".into(),
+                    value: LayoutPropValue::SlotRef("shared-group".into()),
+                },
+            ],
+            vec![],
+        );
+        let radio2 = node_with(
+            "HostRadio",
+            vec![
+                LayoutProp {
+                    name: "checked".into(),
+                    value: LayoutPropValue::SlotRef("b-selected".into()),
+                },
+                LayoutProp {
+                    name: "value".into(),
+                    value: LayoutPropValue::String("b".into()),
+                },
+                LayoutProp {
+                    name: "group".into(),
+                    value: LayoutPropValue::SlotRef("shared-group".into()),
+                },
+            ],
+            vec![],
+        );
+        let l = layout("X", node_with("Row", vec![], vec![radio1, radio2]));
+        let out = from_pipeline(&m, &l, &empty_style("X")).unwrap().output;
+        assert_eq!(
+            out.matches("groupValue: sharedGroup").count(),
+            2,
+            "expected the slot passed through directly for both radios, got:\n{out}"
         );
     }
 
@@ -6591,6 +7264,138 @@ mod tests {
         assert!(
             out.contains("Text(\"Anthropic\")"),
             "expected `Text(\"Anthropic\")`, got:\n{out}"
+        );
+    }
+
+    /// #13052: a literal `href` carrying an explicit disallowed URI
+    /// scheme is rejected at compile time when `external` is not
+    /// `false` -- the path a real `launchUrl` call will eventually
+    /// use (currently still a TODO comment, checked preventatively).
+    #[test]
+    fn host_link_disallowed_scheme_href_is_rejected() {
+        for hostile in [
+            "javascript:alert(1)",
+            "data:text/html,<script>alert(1)</script>",
+            "intent:#Intent;action=android.intent.action.VIEW;end",
+            "file:///etc/passwd",
+        ] {
+            let m = component("X", vec![], vec![]);
+            let l = layout(
+                "X",
+                node_with(
+                    "HostLink",
+                    vec![LayoutProp {
+                        name: "href".into(),
+                        value: LayoutPropValue::String(hostile.to_string()),
+                    }],
+                    vec![],
+                ),
+            );
+            let err = from_pipeline(&m, &l, &empty_style("X")).unwrap_err();
+            assert!(
+                matches!(err, PipelineEmitError::UnsafeUriScheme(ref h) if h == hostile),
+                "expected UnsafeUriScheme for {hostile:?}, got: {err:?}"
+            );
+        }
+    }
+
+    /// #13052 security-review finding: a scheme hidden behind leading
+    /// whitespace or an embedded tab/CR/LF must still be rejected --
+    /// a naive scan sees no alphabetic first character and
+    /// misclassifies it as "no scheme, therefore safe," but a real
+    /// consumer normalizes that whitespace away before parsing the
+    /// scheme, so it's really a disallowed scheme.
+    #[test]
+    fn host_link_scheme_hidden_by_whitespace_is_still_rejected() {
+        for hostile in [
+            " javascript:alert(1)",
+            "java\tscript:alert(1)",
+            "java\nscript:alert(1)",
+            "\tjavascript:alert(1)",
+        ] {
+            let m = component("X", vec![], vec![]);
+            let l = layout(
+                "X",
+                node_with(
+                    "HostLink",
+                    vec![LayoutProp {
+                        name: "href".into(),
+                        value: LayoutPropValue::String(hostile.to_string()),
+                    }],
+                    vec![],
+                ),
+            );
+            let err = from_pipeline(&m, &l, &empty_style("X")).unwrap_err();
+            assert!(
+                matches!(err, PipelineEmitError::UnsafeUriScheme(ref h) if h == hostile),
+                "expected UnsafeUriScheme for whitespace-obscured {hostile:?}, got: {err:?}"
+            );
+        }
+    }
+
+    /// #13052: allowed schemes and relative references (no scheme at
+    /// all -- the common in-app-routing shape) stay valid.
+    #[test]
+    fn host_link_allowed_or_relative_href_still_compiles() {
+        for safe in [
+            "http://example.com",
+            "https://example.com",
+            "HTTPS://example.com",
+            "mailto:hello@example.com",
+            "#",
+            "/about",
+        ] {
+            let m = component("X", vec![], vec![]);
+            let l = layout(
+                "X",
+                node_with(
+                    "HostLink",
+                    vec![LayoutProp {
+                        name: "href".into(),
+                        value: LayoutPropValue::String(safe.to_string()),
+                    }],
+                    vec![],
+                ),
+            );
+            let out = from_pipeline(&m, &l, &empty_style("X")).unwrap().output;
+            assert!(
+                out.contains(&format!("Uri.parse(\"{safe}\")")),
+                "expected {safe:?} to still compile, got:\n{out}"
+            );
+        }
+    }
+
+    /// #13052: a disallowed scheme with `external: false` stays valid
+    /// -- that path never reaches the eventual `launchUrl` call (it's
+    /// dispatch-only), matching the native-widget backends' scoping.
+    #[test]
+    fn host_link_disallowed_scheme_href_stays_valid_with_external_false() {
+        let m = component("X", vec![], vec![emit("onNavigate", vec![])]);
+        let l = layout(
+            "X",
+            node_with(
+                "HostLink",
+                vec![
+                    LayoutProp {
+                        name: "href".into(),
+                        value: LayoutPropValue::String("javascript:alert(1)".into()),
+                    },
+                    LayoutProp {
+                        name: "external".into(),
+                        value: LayoutPropValue::Keyword("false".into()),
+                    },
+                    LayoutProp {
+                        name: "onActivate".into(),
+                        value: LayoutPropValue::EmitRef("onNavigate".into()),
+                    },
+                ],
+                vec![],
+            ),
+        );
+        let r = from_pipeline(&m, &l, &empty_style("X"));
+        assert!(
+            r.is_ok(),
+            "expected a disallowed scheme with external:false to compile, got: {r:?}"
         );
     }
 
@@ -8703,6 +9508,239 @@ mod tests {
         assert!(
             out.contains("alignment: Alignment.center"),
             "header text-align:center must lower to Alignment.center, got:\n{out}"
+        );
+    }
+
+    // ---------------------------------------------------------------------
+    // #13010 — HostDialog: real showDialog wiring, not a placeholder
+    // ---------------------------------------------------------------------
+
+    /// A `HostDialog` with `open: slot: x`, a literal `title`, an
+    /// `onClose` emit, and a single child lowers to a real
+    /// `_MosaicDialogHost` + `AlertDialog`, not the old placeholder.
+    #[test]
+    fn host_dialog_with_open_slot_emits_real_dialog_host() {
+        let m = component(
+            "Modal",
+            vec![slot("open", SlotType::Bool, true)],
+            vec![emit("onClose", vec![])],
+        );
+        let l = layout(
+            "Modal",
+            node_with(
+                "HostDialog",
+                vec![
+                    LayoutProp {
+                        name: "open".into(),
+                        value: LayoutPropValue::SlotRef("open".into()),
+                    },
+                    LayoutProp {
+                        name: "title".into(),
+                        value: LayoutPropValue::String("Save changes?".into()),
+                    },
+                    LayoutProp {
+                        name: "onClose".into(),
+                        value: LayoutPropValue::EmitRef("onClose".into()),
+                    },
+                ],
+                vec![node_with(
+                    "Text",
+                    vec![LayoutProp {
+                        name: "content".into(),
+                        value: LayoutPropValue::String("Body".into()),
+                    }],
+                    vec![],
+                )],
+            ),
+        );
+        let out = from_pipeline(&m, &l, &empty_style("Modal")).unwrap().output;
+        assert!(
+            !out.contains("TODO: HostDialog"),
+            "expected a real dialog, not the placeholder, got:\n{out}"
+        );
+        assert!(
+            out.contains("_MosaicDialogHost("),
+            "expected the shared dialog host widget, got:\n{out}"
+        );
+        assert!(
+            out.contains("open: open,"),
+            "expected the open slot's live value, got:\n{out}"
+        );
+        assert!(
+            out.contains("onClose: () { dispatch(const ModalEventClose()); },"),
+            "expected the onClose dispatch closure, got:\n{out}"
+        );
+        assert!(
+            out.contains("title: Text(\"Save changes?\"),"),
+            "expected the literal title, got:\n{out}"
+        );
+        assert!(
+            out.contains("content:") && out.contains("Text(\"Body\")"),
+            "expected the single child as content, got:\n{out}"
+        );
+        assert!(
+            out.contains("class _MosaicDialogHost extends StatefulWidget"),
+            "expected the shared dialog helper class to be emitted, got:\n{out}"
+        );
+    }
+
+    /// `dismiss-on-backdrop: false` maps to `barrierDismissible: false`.
+    /// Unset (the default) emits no attribute at all, relying on
+    /// Flutter's own `true` default.
+    #[test]
+    fn host_dialog_dismiss_on_backdrop_false_sets_barrier_dismissible_false() {
+        let m = component("X", vec![], vec![]);
+        let l = layout(
+            "X",
+            node_with(
+                "HostDialog",
+                vec![LayoutProp {
+                    name: "dismiss-on-backdrop".into(),
+                    value: LayoutPropValue::Keyword("false".into()),
+                }],
+                vec![],
+            ),
+        );
+        let out = from_pipeline(&m, &l, &empty_style("X")).unwrap().output;
+        assert!(
+            out.contains("barrierDismissible: false,"),
+            "expected barrierDismissible: false, got:\n{out}"
+        );
+    }
+
+    #[test]
+    fn host_dialog_default_dismiss_on_backdrop_emits_no_barrier_attr() {
+        let m = component("X", vec![], vec![]);
+        let l = layout("X", node_with("HostDialog", vec![], vec![]));
+        let out = from_pipeline(&m, &l, &empty_style("X")).unwrap().output;
+        // The shared helper class itself always mentions
+        // `barrierDismissible` (it's a field/parameter there) --
+        // check the *call site* doesn't pass one, not that the word
+        // never appears anywhere in the file.
+        assert!(
+            !out.contains("barrierDismissible: false"),
+            "expected no barrierDismissible: false at the call site when unset, got:\n{out}"
+        );
+    }
+
+    /// Multiple children are wrapped in a `Column` (via the paired
+    /// walker, matching `emit_host_scroll`'s identical shape) rather
+    /// than only the first child surviving.
+    #[test]
+    fn host_dialog_multiple_children_wrapped_in_column() {
+        let m = component("X", vec![], vec![]);
+        let l = layout(
+            "X",
+            node_with(
+                "HostDialog",
+                vec![],
+                vec![
+                    node_with(
+                        "Text",
+                        vec![LayoutProp {
+                            name: "content".into(),
+                            value: LayoutPropValue::String("One".into()),
+                        }],
+                        vec![],
+                    ),
+                    node_with(
+                        "Text",
+                        vec![LayoutProp {
+                            name: "content".into(),
+                            value: LayoutPropValue::String("Two".into()),
+                        }],
+                        vec![],
+                    ),
+                ],
+            ),
+        );
+        let out = from_pipeline(&m, &l, &empty_style("X")).unwrap().output;
+        assert!(
+            out.contains("content: Column("),
+            "expected multiple children wrapped in a Column, got:\n{out}"
+        );
+        assert!(out.contains("\"One\""), "expected first child, got:\n{out}");
+        assert!(out.contains("\"Two\""), "expected second child, got:\n{out}");
+    }
+
+    /// #13010's documented scope decision: `modal: false` is NOT
+    /// implemented (Flutter's `showDialog` is inherently modal) --
+    /// it must keep the old placeholder rather than emit a
+    /// wrong-shaped (still-modal) dialog silently.
+    #[test]
+    fn host_dialog_modal_false_keeps_placeholder() {
+        let m = component("X", vec![], vec![]);
+        let l = layout(
+            "X",
+            node_with(
+                "HostDialog",
+                vec![LayoutProp {
+                    name: "modal".into(),
+                    value: LayoutPropValue::Keyword("false".into()),
+                }],
+                vec![],
+            ),
+        );
+        let out = from_pipeline(&m, &l, &empty_style("X")).unwrap().output;
+        assert!(
+            out.contains("SizedBox.shrink()"),
+            "expected the placeholder for modal:false, got:\n{out}"
+        );
+        assert!(
+            !out.contains("_MosaicDialogHost("),
+            "modal:false must not emit the real dialog host, got:\n{out}"
+        );
+        assert!(
+            !out.contains("class _MosaicDialogHost"),
+            "the shared helper class must not be emitted when no HostDialog uses it, got:\n{out}"
+        );
+    }
+
+    /// The shared `_MosaicDialogHost` helper class is emitted exactly
+    /// once even with multiple `HostDialog` nodes in the same file,
+    /// and not at all when no `HostDialog` is present (matches the
+    /// existing `uses_drag`-style gating pattern).
+    #[test]
+    fn host_dialog_helper_emitted_once_when_used_not_at_all_otherwise() {
+        let m = component("X", vec![slot("open", SlotType::Bool, true)], vec![]);
+        let l = layout(
+            "X",
+            node_with(
+                "Column",
+                vec![],
+                vec![
+                    node_with(
+                        "HostDialog",
+                        vec![LayoutProp {
+                            name: "open".into(),
+                            value: LayoutPropValue::SlotRef("open".into()),
+                        }],
+                        vec![],
+                    ),
+                    node_with(
+                        "HostDialog",
+                        vec![LayoutProp {
+                            name: "open".into(),
+                            value: LayoutPropValue::SlotRef("open".into()),
+                        }],
+                        vec![],
+                    ),
+                ],
+            ),
+        );
+        let out = from_pipeline(&m, &l, &empty_style("X")).unwrap().output;
+        let helper_count = out.matches("class _MosaicDialogHost extends StatefulWidget").count();
+        assert_eq!(
+            helper_count, 1,
+            "expected the shared helper class exactly once, got {helper_count}:\n{out}"
+        );
+
+        let m2 = component("Y", vec![], vec![]);
+        let l2 = layout("Y", node_with("Box", vec![], vec![]));
+        let out2 = from_pipeline(&m2, &l2, &empty_style("Y")).unwrap().output;
+        assert!(
+            !out2.contains("_MosaicDialogHost"),
+            "a layout with no HostDialog must not pay for the helper, got:\n{out2}"
         );
     }
 }

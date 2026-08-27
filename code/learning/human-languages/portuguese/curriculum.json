@@ -291,11 +291,7 @@
       "lessons": [
         "PT-C18-ser-estar",
         "PT-C18-ter-haver",
-        "PT-C18-ir",
-        "PT-C18-vir",
-        "PT-C18-dizer",
-        "PT-C18-ver",
-        "PT-C18-saber-conhecer"
+        "PT-C18-ir"
       ],
       "before": [],
       "inline": [
@@ -304,13 +300,37 @@
       "after": []
     },
     {
+      "id": "PT-PATH-022-B",
+      "spine_node": "SPINE-NAME-EVERYDAY-ACTIONS",
+      "lessons": [
+        "PT-C18-vir"
+      ],
+      "before": [],
+      "inline": [
+        "PT-EXT-022-LANGUAGE-SPECIFIC-B"
+      ],
+      "after": []
+    },
+    {
+      "id": "PT-PATH-022-C",
+      "spine_node": "SPINE-SAY-WHAT-I-DO",
+      "lessons": [
+        "PT-C18-dizer",
+        "PT-C18-ver",
+        "PT-C18-saber-conhecer"
+      ],
+      "before": [],
+      "inline": [
+        "PT-EXT-022-LANGUAGE-SPECIFIC-C"
+      ],
+      "after": []
+    },
+    {
       "id": "PT-PATH-023",
       "spine_node": "SPINE-SAY-WHAT-I-DO",
       "lessons": [
         "PT-C19-pensar",
-        "PT-C19-entender-compreender",
-        "PT-C19-ler",
-        "PT-C19-escrever"
+        "PT-C19-entender-compreender"
       ],
       "before": [],
       "inline": [
@@ -319,13 +339,23 @@
       "after": []
     },
     {
+      "id": "PT-PATH-023-B",
+      "spine_node": "SPINE-NAME-EVERYDAY-ACTIONS",
+      "lessons": [
+        "PT-C19-ler",
+        "PT-C19-escrever"
+      ],
+      "before": [],
+      "inline": [
+        "PT-EXT-023-LANGUAGE-SPECIFIC-B"
+      ],
+      "after": []
+    },
+    {
       "id": "PT-PATH-024",
       "spine_node": "SPINE-SAY-WHAT-I-DO",
       "lessons": [
-        "PT-C20-tomar-pegar",
-        "PT-C20-perguntar",
-        "PT-C20-ajudar",
-        "PT-C20-gostar"
+        "PT-C20-tomar-pegar"
       ],
       "before": [],
       "inline": [
@@ -334,17 +364,86 @@
       "after": []
     },
     {
-      "id": "PT-PATH-025",
+      "id": "PT-PATH-024-B",
+      "spine_node": "SPINE-NAME-EVERYDAY-ACTIONS",
+      "lessons": [
+        "PT-C20-perguntar"
+      ],
+      "before": [],
+      "inline": [
+        "PT-EXT-024-LANGUAGE-SPECIFIC-B"
+      ],
+      "after": []
+    },
+    {
+      "id": "PT-PATH-024-C",
       "spine_node": "SPINE-SAY-WHAT-I-DO",
       "lessons": [
-        "PT-C21-trazer",
-        "PT-C21-conseguir",
-        "PT-C21-esperar",
-        "PT-C21-comprar"
+        "PT-C20-ajudar"
+      ],
+      "before": [],
+      "inline": [
+        "PT-EXT-024-LANGUAGE-SPECIFIC-C"
+      ],
+      "after": []
+    },
+    {
+      "id": "PT-PATH-024-C-B",
+      "spine_node": "SPINE-SAY-WHAT-I-LIKE",
+      "lessons": [
+        "PT-C20-gostar"
+      ],
+      "before": [],
+      "inline": [
+        "PT-EXT-024-LANGUAGE-SPECIFIC-D"
+      ],
+      "after": []
+    },
+    {
+      "id": "PT-PATH-025",
+      "spine_node": "SPINE-NAME-EVERYDAY-ACTIONS",
+      "lessons": [
+        "PT-C21-trazer"
       ],
       "before": [],
       "inline": [
         "PT-EXT-025-LANGUAGE-SPECIFIC"
+      ],
+      "after": []
+    },
+    {
+      "id": "PT-PATH-025-B",
+      "spine_node": "SPINE-SAY-WHAT-I-DO",
+      "lessons": [
+        "PT-C21-conseguir"
+      ],
+      "before": [],
+      "inline": [
+        "PT-EXT-025-LANGUAGE-SPECIFIC-B"
+      ],
+      "after": []
+    },
+    {
+      "id": "PT-PATH-025-C",
+      "spine_node": "SPINE-NAME-EVERYDAY-ACTIONS",
+      "lessons": [
+        "PT-C21-esperar"
+      ],
+      "before": [],
+      "inline": [
+        "PT-EXT-025-LANGUAGE-SPECIFIC-C"
+      ],
+      "after": []
+    },
+    {
+      "id": "PT-PATH-025-D",
+      "spine_node": "SPINE-SAY-WHAT-I-DO",
+      "lessons": [
+        "PT-C21-comprar"
+      ],
+      "before": [],
+      "inline": [
+        "PT-EXT-025-LANGUAGE-SPECIFIC-D"
       ],
       "after": []
     },
@@ -550,40 +649,87 @@
       "relocates": {}
     },
     "SPINE-NAME-EVERYDAY-ACTIONS": {
-      "segments": [],
+      "segments": [
+        "PT-PATH-022-B",
+        "PT-PATH-023-B",
+        "PT-PATH-024-B",
+        "PT-PATH-025",
+        "PT-PATH-025-C"
+      ],
       "omits": [
         "VERB-DRINK",
         "VERB-GIVE",
-        "VERB-PUT"
+        "VERB-PUT",
+        "VERB-DO-MAKE",
+        "VERB-OPEN",
+        "VERB-CLOSE",
+        "VERB-STAND",
+        "VERB-WALK"
+      ],
+      "relocates": {
+        "VERB-BUY": "SPINE-SAY-WHAT-I-DO"
+      }
+    },
+    "SPINE-NAME-EVERYDAY-THINGS": {
+      "segments": [],
+      "omits": [
+        "LODGING-ROOM"
+      ],
+      "relocates": {}
+    },
+    "SPINE-SAY-WHAT-I-HAVE-AND-CAN-DO": {
+      "segments": [],
+      "omits": [
+        "VERB-CAN"
+      ],
+      "relocates": {
+        "VERB-HAVE": "SPINE-SAY-WHAT-I-DO"
+      }
+    },
+    "SPINE-SAY-WHAT-I-LIKE": {
+      "segments": [
+        "PT-PATH-024-C-B"
+      ],
+      "omits": [],
+      "relocates": {}
+    },
+    "SPINE-SAY-WHY": {
+      "segments": [],
+      "omits": [
+        "CONNECTIVE-BECAUSE"
+      ],
+      "relocates": {}
+    },
+    "SPINE-SAY-WHAT-I-WANT": {
+      "segments": [],
+      "omits": [
+        "VERB-WANT"
       ],
       "relocates": {}
     },
     "SPINE-SAY-WHAT-I-DO": {
       "segments": [
         "PT-PATH-022",
+        "PT-PATH-022-C",
         "PT-PATH-023",
         "PT-PATH-024",
-        "PT-PATH-025",
+        "PT-PATH-024-C",
+        "PT-PATH-025-B",
+        "PT-PATH-025-D",
         "PT-PATH-026"
       ],
       "omits": [
         "VERB-INFINITIVE",
         "VERB-PRESENT-HABITUAL",
-        "VERB-DO-MAKE",
         "VERB-SPEAK",
         "VERB-HEAR",
         "VERB-LEARN",
-        "VERB-CAN",
         "VERB-EAT",
         "VERB-SLEEP",
         "VERB-LIVE",
         "VERB-WORK",
-        "VERB-WALK",
         "VERB-RUN",
-        "VERB-SIT",
-        "VERB-STAND",
-        "VERB-OPEN",
-        "VERB-CLOSE"
+        "VERB-SIT"
       ],
       "relocates": {}
     },
@@ -592,13 +738,6 @@
       "omits": [
         "VERB-NEGATE",
         "QUESTION-POLAR"
-      ],
-      "relocates": {}
-    },
-    "SPINE-SAY-WHAT-I-WANT": {
-      "segments": [],
-      "omits": [
-        "VERB-WANT"
       ],
       "relocates": {}
     },
@@ -621,7 +760,6 @@
       "omits": [
         "NARRATIVE-SEQUENCE",
         "CONNECTIVE-THEN",
-        "CONNECTIVE-BECAUSE",
         "ASPECT-ONGOING-PAST"
       ],
       "relocates": {}
@@ -641,7 +779,6 @@
       "omits": [
         "DIRECTION-ASK",
         "TRANSPORT-TICKET",
-        "LODGING-ROOM",
         "PROBLEM-REPORT"
       ],
       "relocates": {}
@@ -1037,8 +1174,28 @@
       "lessons": [
         "PT-C18-ser-estar",
         "PT-C18-ter-haver",
-        "PT-C18-ir",
-        "PT-C18-vir",
+        "PT-C18-ir"
+      ]
+    },
+    {
+      "id": "PT-EXT-022-LANGUAGE-SPECIFIC-B",
+      "stage": "A2",
+      "kind": "required",
+      "category": "language-specific",
+      "canDo": "I can produce the present-tense forms of the nine verbs Portuguese leans on hardest, choose between its two verbs for being and its two for knowing, and trace each one into the English words it left behind.",
+      "prerequisites": [],
+      "lessons": [
+        "PT-C18-vir"
+      ]
+    },
+    {
+      "id": "PT-EXT-022-LANGUAGE-SPECIFIC-C",
+      "stage": "A2",
+      "kind": "required",
+      "category": "language-specific",
+      "canDo": "I can produce the present-tense forms of the nine verbs Portuguese leans on hardest, choose between its two verbs for being and its two for knowing, and trace each one into the English words it left behind.",
+      "prerequisites": [],
+      "lessons": [
         "PT-C18-dizer",
         "PT-C18-ver",
         "PT-C18-saber-conhecer"
@@ -1052,7 +1209,16 @@
       "prerequisites": [],
       "lessons": [
         "PT-C19-pensar",
-        "PT-C19-entender-compreender",
+        "PT-C19-entender-compreender"
+      ]
+    },
+    {
+      "id": "PT-EXT-023-LANGUAGE-SPECIFIC-B",
+      "stage": "A2",
+      "kind": "required",
+      "canDo": "I can say that I think, understand, read and write in Portuguese, produce the broken row ler shares with ver, and trace each verb back to the Latin picture it came from.",
+      "prerequisites": [],
+      "lessons": [
         "PT-C19-ler",
         "PT-C19-escrever"
       ]
@@ -1064,9 +1230,36 @@
       "canDo": "I can say that I take, ask, help and like in Portuguese, choose between its two verbs for taking, and keep de attached to gostar.",
       "prerequisites": [],
       "lessons": [
-        "PT-C20-tomar-pegar",
-        "PT-C20-perguntar",
-        "PT-C20-ajudar",
+        "PT-C20-tomar-pegar"
+      ]
+    },
+    {
+      "id": "PT-EXT-024-LANGUAGE-SPECIFIC-B",
+      "stage": "A2",
+      "kind": "required",
+      "canDo": "I can say that I take, ask, help and like in Portuguese, choose between its two verbs for taking, and keep de attached to gostar.",
+      "prerequisites": [],
+      "lessons": [
+        "PT-C20-perguntar"
+      ]
+    },
+    {
+      "id": "PT-EXT-024-LANGUAGE-SPECIFIC-C",
+      "stage": "A2",
+      "kind": "required",
+      "canDo": "I can say that I take, ask, help and like in Portuguese, choose between its two verbs for taking, and keep de attached to gostar.",
+      "prerequisites": [],
+      "lessons": [
+        "PT-C20-ajudar"
+      ]
+    },
+    {
+      "id": "PT-EXT-024-LANGUAGE-SPECIFIC-D",
+      "stage": "A2",
+      "kind": "required",
+      "canDo": "I can say that I take, ask, help and like in Portuguese, choose between its two verbs for taking, and keep de attached to gostar.",
+      "prerequisites": [],
+      "lessons": [
         "PT-C20-gostar"
       ]
     },
@@ -1077,9 +1270,36 @@
       "canDo": "I can say that I bring, get, wait for and buy in Portuguese, use conseguir for managing to do a thing, let esperar carry waiting, hoping and expecting at once, and tell comprar's Latin root from the identically spelled one behind English compare.",
       "prerequisites": [],
       "lessons": [
-        "PT-C21-trazer",
-        "PT-C21-conseguir",
-        "PT-C21-esperar",
+        "PT-C21-trazer"
+      ]
+    },
+    {
+      "id": "PT-EXT-025-LANGUAGE-SPECIFIC-B",
+      "stage": "A2",
+      "kind": "required",
+      "canDo": "I can say that I bring, get, wait for and buy in Portuguese, use conseguir for managing to do a thing, let esperar carry waiting, hoping and expecting at once, and tell comprar's Latin root from the identically spelled one behind English compare.",
+      "prerequisites": [],
+      "lessons": [
+        "PT-C21-conseguir"
+      ]
+    },
+    {
+      "id": "PT-EXT-025-LANGUAGE-SPECIFIC-C",
+      "stage": "A2",
+      "kind": "required",
+      "canDo": "I can say that I bring, get, wait for and buy in Portuguese, use conseguir for managing to do a thing, let esperar carry waiting, hoping and expecting at once, and tell comprar's Latin root from the identically spelled one behind English compare.",
+      "prerequisites": [],
+      "lessons": [
+        "PT-C21-esperar"
+      ]
+    },
+    {
+      "id": "PT-EXT-025-LANGUAGE-SPECIFIC-D",
+      "stage": "A2",
+      "kind": "required",
+      "canDo": "I can say that I bring, get, wait for and buy in Portuguese, use conseguir for managing to do a thing, let esperar carry waiting, hoping and expecting at once, and tell comprar's Latin root from the identically spelled one behind English compare.",
+      "prerequisites": [],
+      "lessons": [
         "PT-C21-comprar"
       ]
     },

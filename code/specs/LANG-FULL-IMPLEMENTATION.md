@@ -953,9 +953,13 @@ backend immediately) come before the enabler-dependent items.
   transitive while dependencies; integer overflow and inexact widening still
   fail closed.
   Integer and real exponentiation whose complete
-  literal exponent chain evaluates to one is also preserving because the
-  existing power lowerer returns the base directly without a multiply or
-  runtime power call. Dynamic and otherwise non-unit exponents remain
+  literal exponent chain evaluates to one is also preserving. Integer-literal
+  chains return the base directly without a multiply or runtime power call;
+  finite-real selectors also accept bounded variable-free literal arithmetic
+  exponent operands when each evaluates to a nonnegative integer and the
+  complete chain evaluates to one on the runtime power path. Integer-only
+  literal arithmetic uses checked `i64` evaluation; overflow and division by
+  zero fail closed. Dynamic, non-integral, and otherwise non-unit exponents remain
   conservative. Leading unary plus, including integer identity tails, is
   likewise preserving because lowering returns its operand unchanged; unary
   minus remains conservative. Parentheses are transparent around exact scalar

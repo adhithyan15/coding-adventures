@@ -1,0 +1,12 @@
+{
+  "id": "LA-PATH-026-C",
+  "spine_node": "SPINE-SAY-WHAT-I-DO",
+  "lessons": [
+    "LA-C38-intellego"
+  ],
+  "before": [],
+  "inline": [
+    "LA-EXT-026-LANGUAGE-SPECIFIC-C"
+  ],
+  "after": []
+}

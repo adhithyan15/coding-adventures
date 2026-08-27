@@ -173,6 +173,16 @@ pub enum PipelineEmitError {
     /// A moslayout primitive tag is not recognised by the HTML backend yet.
     /// See the module-level table for the current coverage.
     UnknownPrimitive(String),
+    /// #13052: a `HostLink.href` literal uses an explicit URI scheme
+    /// outside the `http`/`https`/`mailto` allowlist. This is a real
+    /// `<a href>` in static HTML output -- clickable (and reachable
+    /// via middle-click / "open in new tab") regardless of whatever a
+    /// host's own hydration script does with `data-external`, so it
+    /// is checked unconditionally, not only for the default-external
+    /// case. A relative reference with no scheme (`"#"`, `"/about"`)
+    /// is unaffected -- only an explicit, disallowed scheme is
+    /// rejected.
+    UnsafeUriScheme(String),
 }
 
 impl std::fmt::Display for PipelineEmitError {
@@ -189,8 +199,60 @@ impl std::fmt::Display for PipelineEmitError {
                 f,
                 "moslayout primitive '{t}' is not yet supported by the pipeline HTML emitter"
             ),
+            PipelineEmitError::UnsafeUriScheme(href) => write!(
+                f,
+                "HostLink href {href:?} uses a disallowed URI scheme (only http, https, mailto, or a relative reference are allowed)"
+            ),
         }
     }
+}
+
+/// #13052: does `href` carry an explicit URI scheme outside the
+/// `http`/`https`/`mailto` allowlist? A relative reference (no scheme
+/// at all -- `"#"`, `"/about"`, `"?q=1"`) returns `false`: in-app
+/// routing paths are the majority real usage and carry no navigation
+/// risk on their own. Only a *present, disallowed* scheme
+/// (`javascript:`, `data:`, `vbscript:`, `file:`, a custom protocol
+/// handler, ...) returns `true`. A colon appearing after a `/`, `?`,
+/// or `#` is data, not a scheme separator (matches how browsers parse
+/// it too), so `"path/to:thing"` is a relative reference, not a
+/// scheme.
+///
+/// Security-review hardening: normalizes exactly like the WHATWG URL
+/// parser does before looking for a scheme -- trims leading/trailing
+/// C0-control-or-space and strips every embedded tab/CR/LF. Without
+/// this, `" javascript:alert(1)"` or `"java\tscript:alert(1)"` fails
+/// the alphabetic-first-character check below and gets classified as
+/// "no scheme, therefore a safe relative reference" -- but a real
+/// browser strips that same whitespace before parsing the scheme, so
+/// it actually navigates as `javascript:`. A first review pass of
+/// #13052 missed this; caught and fixed in the same PR.
+fn has_disallowed_uri_scheme(href: &str) -> bool {
+    let normalized: String = href
+        .trim_matches(|c: char| (c as u32) <= 0x20)
+        .chars()
+        .filter(|c| !matches!(c, '\t' | '\r' | '\n'))
+        .collect();
+    let href = normalized.as_str();
+    let Some(colon) = href.find(':') else {
+        return false;
+    };
+    let prefix = &href[..colon];
+    if prefix.is_empty() || prefix.contains(['/', '?', '#']) {
+        return false;
+    }
+    let mut chars = prefix.chars();
+    let Some(first) = chars.next() else {
+        return false;
+    };
+    if !first.is_ascii_alphabetic() {
+        return false;
+    }
+    if !chars.all(|c| c.is_ascii_alphanumeric() || c == '+' || c == '-' || c == '.') {
+        return false;
+    }
+    const ALLOWED: [&str; 3] = ["http", "https", "mailto"];
+    !ALLOWED.iter().any(|s| s.eq_ignore_ascii_case(prefix))
 }
 
 impl std::error::Error for PipelineEmitError {}
@@ -1459,7 +1521,7 @@ fn emit_html_tree(
     // noreferrer"` as a security default (HTML5 living-standard
     // recommendation; same shape the React backend emits).
     if node.tag == "HostLink" {
-        out.push_str(&emit_host_link(node, indent, part_styles));
+        out.push_str(&emit_host_link(node, indent, part_styles)?);
         return Ok(out);
     }
     // UI29-4 — `HostTooltip` wraps its single child in `<span
@@ -2077,13 +2139,23 @@ fn emit_host_link(
     node: &LayoutNode,
     indent: usize,
     part_styles: &HashMap<String, String>,
-) -> String {
+) -> Result<String, PipelineEmitError> {
     let pad = " ".repeat(indent);
     let mut attrs = String::new();
 
     // href= — string literal or slot ref template marker.
+    // #13052: reject a literal that carries an explicit disallowed
+    // scheme -- no escaping makes an unsafe scheme safe. The
+    // `SlotRef` path emits a `{{slot}}` template marker substituted
+    // by a separate host/preview template engine outside this crate
+    // (see the module doc comment) -- that substitution step, not
+    // this compiler, is where a runtime guard for a dynamic href
+    // would need to live; out of scope here.
     match find_prop(node, "href") {
         Some(LayoutPropValue::String(lit)) => {
+            if has_disallowed_uri_scheme(lit) {
+                return Err(PipelineEmitError::UnsafeUriScheme(lit.clone()));
+            }
             write!(attrs, " href=\"{}\"", escape_html_attr(lit)).unwrap();
         }
         Some(LayoutPropValue::SlotRef(s)) => {
@@ -2135,7 +2207,7 @@ fn emit_host_link(
         _ => String::new(),
     };
 
-    format!("{pad}<a{attrs}{style_attr}>{body}</a>\n")
+    Ok(format!("{pad}<a{attrs}{style_attr}>{body}</a>\n"))
 }
 
 /// Lower a UI29-4 `HostTooltip` node to `<span title="text">child(ren)
@@ -5861,6 +5933,84 @@ mod tests {
             out.contains(">Click me</a>"),
             "expected label as text body, got:\n{out}"
         );
+    }
+
+    /// #13052: a literal `href` carrying an explicit disallowed URI
+    /// scheme is rejected at compile time. Checked unconditionally
+    /// (not gated on `external`) since the `<a href>` this backend
+    /// emits is a real, clickable static-HTML element regardless of
+    /// whatever `data-external` hydration marker is also present.
+    #[test]
+    fn host_link_disallowed_scheme_href_is_rejected() {
+        for hostile in [
+            "javascript:alert(1)",
+            "data:text/html,<script>alert(1)</script>",
+            "vbscript:msgbox(1)",
+            "file:///etc/passwd",
+        ] {
+            let l = layout(
+                "X",
+                node_with_props("HostLink", vec![prop_string("href", hostile)]),
+            );
+            let err = from_pipeline(&component("X", vec![]), &l, &empty_style("X")).unwrap_err();
+            assert!(
+                matches!(err, PipelineEmitError::UnsafeUriScheme(ref h) if h == hostile),
+                "expected UnsafeUriScheme for {hostile:?}, got: {err:?}"
+            );
+        }
+    }
+
+    /// #13052 security-review finding: a scheme hidden behind leading
+    /// whitespace or an embedded tab/CR/LF must still be rejected --
+    /// a naive scan sees no alphabetic first character and
+    /// misclassifies it as "no scheme, therefore safe," but a real
+    /// browser normalizes that whitespace away before parsing the
+    /// scheme, so it's really a disallowed scheme.
+    #[test]
+    fn host_link_scheme_hidden_by_whitespace_is_still_rejected() {
+        for hostile in [
+            " javascript:alert(1)",
+            "java\tscript:alert(1)",
+            "java\nscript:alert(1)",
+            "\tjavascript:alert(1)",
+        ] {
+            let l = layout(
+                "X",
+                node_with_props("HostLink", vec![prop_string("href", hostile)]),
+            );
+            let err = from_pipeline(&component("X", vec![]), &l, &empty_style("X")).unwrap_err();
+            assert!(
+                matches!(err, PipelineEmitError::UnsafeUriScheme(ref h) if h == hostile),
+                "expected UnsafeUriScheme for whitespace-obscured {hostile:?}, got: {err:?}"
+            );
+        }
+    }
+
+    /// #13052: allowed schemes and relative references (no scheme at
+    /// all -- the common in-app-routing shape) stay valid.
+    #[test]
+    fn host_link_allowed_or_relative_href_still_emits_anchor() {
+        for safe in [
+            "http://example.com",
+            "https://example.com",
+            "HTTPS://example.com",
+            "mailto:hello@example.com",
+            "#",
+            "/about",
+            "?q=1",
+        ] {
+            let l = layout(
+                "X",
+                node_with_props("HostLink", vec![prop_string("href", safe)]),
+            );
+            let out = from_pipeline(&component("X", vec![]), &l, &empty_style("X"))
+                .unwrap()
+                .output;
+            assert!(
+                out.contains(&format!("href=\"{safe}\"")),
+                "expected {safe:?} to still compile to a real href, got:\n{out}"
+            );
+        }
     }
 
     /// UI29-4 HTML test 2 — SECURITY PIN: `target: new-tab` MUST emit

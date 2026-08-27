@@ -5833,6 +5833,11 @@
       "output": "spanish/book/chapters/ch388-empujar-y-lanzar.tex"
     },
     {
+      "language": "spanish",
+      "chapter": 389,
+      "output": "spanish/book/chapters/ch389-saber.tex"
+    },
+    {
       "language": "tamil",
       "chapter": 6,
       "output": "tamil/book/chapters/ch06-dative-case.tex",
@@ -6704,17 +6709,39 @@
     {
       "language": "arabic",
       "chapter": 1,
-      "output": "arabic/book/chapters/ch01-greetings.tex"
+      "output": "arabic/book/chapters/ch01-greetings.tex",
+      "embeddedLessonIds": [
+        "AR-C01-salam",
+        "AR-W00-sin-lam",
+        "AR-W00-alif-mim-salam",
+        "AR-C01-marhaba",
+        "AR-W00-ra-ha",
+        "AR-W00-ba-family-marhaba",
+        "AR-C01-as-salamu-alaykum",
+        "AR-W00-ayn-ya",
+        "AR-W00-kaf-waw-alaykum",
+        "AR-W00-full-greeting-recall",
+        "AR-C01-practice"
+      ]
     },
     {
       "language": "arabic",
       "chapter": 2,
-      "output": "arabic/book/chapters/ch02-introductions.tex"
+      "output": "arabic/book/chapters/ch02-introductions.tex",
+      "embeddedLessonIds": [
+        "AR-W06-sukun-shadda-tanwin"
+      ]
     },
     {
       "language": "french",
       "chapter": 1,
-      "output": "french/book/chapters/ch01-greetings.tex"
+      "output": "french/book/chapters/ch01-greetings.tex",
+      "embeddedLessonIds": [
+        "FR-W01-salut-observe",
+        "FR-W01-salut-guided-copy",
+        "FR-W01-salut-delayed-copy",
+        "FR-W01-salut-dictation"
+      ]
     },
     {
       "language": "french",
@@ -6794,7 +6821,11 @@
     {
       "language": "german",
       "chapter": 1,
-      "output": "german/book/chapters/ch01-greetings.tex"
+      "output": "german/book/chapters/ch01-greetings.tex",
+      "embeddedLessonIds": [
+        "GE-C01-hallo",
+        "GE-W01-hallo-guided-copy"
+      ]
     },
     {
       "language": "german",
@@ -6874,7 +6905,11 @@
     {
       "language": "italian",
       "chapter": 1,
-      "output": "italian/book/chapters/ch01-greetings.tex"
+      "output": "italian/book/chapters/ch01-greetings.tex",
+      "embeddedLessonIds": [
+        "IT-C01-ciao",
+        "IT-W01-ciao-guided-copy"
+      ]
     },
     {
       "language": "kannada",
@@ -6904,17 +6939,35 @@
     {
       "language": "malayalam",
       "chapter": 1,
-      "output": "malayalam/book/chapters/ch01-greetings.tex"
+      "output": "malayalam/book/chapters/ch01-greetings.tex",
+      "embeddedLessonIds": [
+        "ML-C01-namaskaram",
+        "ML-W01-na-ma-trace",
+        "ML-W01-na-ma-guided-copy",
+        "ML-W01-na-ma-delayed-copy",
+        "ML-W01-na-ma-dictation",
+        "ML-W01-sa-chandrakkala-ka",
+        "ML-W01-aa-ra-anusvaram",
+        "ML-W01-namaskaram-read",
+        "ML-W01-namaskaram-dictation",
+        "ML-C01-practice"
+      ]
     },
     {
       "language": "malayalam",
       "chapter": 2,
-      "output": "malayalam/book/chapters/ch02-introductions.tex"
+      "output": "malayalam/book/chapters/ch02-introductions.tex",
+      "embeddedLessonIds": [
+        "ML-W02-santosham-guided-copy"
+      ]
     },
     {
       "language": "malayalam",
       "chapter": 3,
-      "output": "malayalam/book/chapters/ch03-responding.tex"
+      "output": "malayalam/book/chapters/ch03-responding.tex",
+      "embeddedLessonIds": [
+        "ML-W03-santosham-delayed-copy"
+      ]
     },
     {
       "language": "malayalam",
@@ -6949,17 +7002,29 @@
     {
       "language": "persian",
       "chapter": 1,
-      "output": "persian/book/chapters/ch01-greetings-and-responses.tex"
+      "output": "persian/book/chapters/ch01-greetings-and-responses.tex",
+      "embeddedLessonIds": [
+        "FA-C01-salam",
+        "FA-W00-alef-guided-copy",
+        "FA-C01-practice"
+      ]
     },
     {
       "language": "portuguese",
       "chapter": 1,
-      "output": "portuguese/book/chapters/ch01-greetings.tex"
+      "output": "portuguese/book/chapters/ch01-greetings.tex",
+      "embeddedLessonIds": [
+        "PT-C01-ola",
+        "PT-W01-ola-guided-copy"
+      ]
     },
     {
       "language": "punjabi",
       "chapter": 4,
-      "output": "punjabi/book/chapters/ch04-farewells.tex"
+      "output": "punjabi/book/chapters/ch04-farewells.tex",
+      "embeddedLessonIds": [
+        "PA-R04-wellbeing-r2"
+      ]
     },
     {
       "language": "punjabi",
@@ -6994,7 +7059,11 @@
     {
       "language": "tamil",
       "chapter": 1,
-      "output": "tamil/book/chapters/ch01-greetings.tex"
+      "output": "tamil/book/chapters/ch01-greetings.tex",
+      "embeddedLessonIds": [
+        "TA-C01-vanakkam",
+        "TA-W00-va-guided-copy"
+      ]
     },
     {
       "language": "tamil",
@@ -7009,12 +7078,18 @@
     {
       "language": "tamil",
       "chapter": 4,
-      "output": "tamil/book/chapters/ch04-farewells.tex"
+      "output": "tamil/book/chapters/ch04-farewells.tex",
+      "embeddedLessonIds": [
+        "TA-W01-curves-va-ka"
+      ]
     },
     {
       "language": "tamil",
       "chapter": 5,
-      "output": "tamil/book/chapters/ch05-first-verbs.tex"
+      "output": "tamil/book/chapters/ch05-first-verbs.tex",
+      "embeddedLessonIds": [
+        "TA-W01-abugida-va-ka"
+      ]
     },
     {
       "language": "telugu",
@@ -7044,7 +7119,13 @@
     {
       "language": "urdu",
       "chapter": 1,
-      "output": "urdu/book/chapters/ch01-greetings-and-responses.tex"
+      "output": "urdu/book/chapters/ch01-greetings-and-responses.tex",
+      "embeddedLessonIds": [
+        "UR-W01-shukriya-first-three",
+        "UR-C01-shukriya",
+        "UR-C01-ji-han",
+        "UR-C01-nahin"
+      ]
     }
   ]
 }

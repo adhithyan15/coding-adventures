@@ -5574,10 +5574,24 @@
       "sound": "ē",
       "role": "vowel",
       "components": [
-        "ఏ  ē — independent vowel (word-initial)"
+        "the compact lower loop returning to the central junction",
+        "the broad outer arch",
+        "the tall upper-left hook"
       ],
-      "strokeOrder": [],
-      "strokeOrderNote": ""
+      "strokeOrder": [
+        "turn down and left around the compact lower loop",
+        "continue around its base and return to the central junction",
+        "restart at the lower-right tail and sweep up through the broad outer arch",
+        "restart below the upper-left hook and sweep upward to its tip"
+      ],
+      "strokeOrderNote": "Four numbered movements in three pen-down runs: movements 1–2 stay joined around the compact lower loop; after one lift, movement 3 forms the broad outer arch; after a second lift, movement 4 forms the tall upper-left hook.",
+      "penLifts": 2,
+      "strokeOrderSource": {
+        "citation": "Sathish Shanmugam, Write Telugu Alphabets, independent vowel ఏ packaged tracing guide res/drawable/dot_stroke_v_10_ae.png, movements 1–4 (version 2.6)",
+        "url": "https://write-telugu-alphabets.en.aptoide.com/app",
+        "variation": "The packaged tracing guide numbers four directional movements and marks three pen-down runs: movements 1–2 join around the compact lower loop, movement 3 forms the broad outer arch, and movement 4 separately forms the tall upper-left hook. Telugu letter direction is not uniform across the script, so this is one attested pedagogical order fitted to the bundled Noto Sans Telugu outline."
+      },
+      "notes": "Independent long e used when a word or syllable begins with the vowel; contrast dependent long-e sign ే on a consonant carrier."
     },
     {
       "glyph": "ఒ",

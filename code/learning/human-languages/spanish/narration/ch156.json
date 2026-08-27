@@ -4,7 +4,7 @@
   "chapter": 156,
   "title": "Escribir — Writing Is Scratching",
   "drivablePrefix": 1,
-  "sourceHash": "fnv1a64:115d5f4e625bf1f6",
+  "sourceHash": "fnv1a64:5800fa7dcc97cef4",
   "lessons": [
     {
       "id": "ES-C34-escribir",
@@ -19,7 +19,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:4c3ccd129854069c",
+      "sourceHash": "fnv1a64:90e0e3ab8f68d64f",
       "notice": null,
       "blocks": [
         {

@@ -1,9 +1,21 @@
 {
-  "segments": [],
+  "segments": [
+    "MR-PATH-012-B",
+    "MR-PATH-013-B",
+    "MR-PATH-014-B"
+  ],
   "omits": [
     "VERB-DRINK",
     "VERB-GIVE",
-    "VERB-PUT"
+    "VERB-PUT",
+    "VERB-DO-MAKE",
+    "VERB-BUY",
+    "VERB-OPEN",
+    "VERB-CLOSE",
+    "VERB-STAND",
+    "VERB-WAIT",
+    "VERB-BRING",
+    "VERB-WALK"
   ],
   "relocates": {}
 }

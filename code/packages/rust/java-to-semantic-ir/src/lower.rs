@@ -340,8 +340,9 @@
 
 use parser::grammar_parser::{ASTNodeOrToken, GrammarASTNode};
 use semantic_ir::{
-    walk_stmt_default, Block, Capture, CaptureValue, EffectSet, Expr, Feature, FeatureManifest,
-    Function, Metadata, Module, Param, ParamKind, Scope, Span, Stmt, Visitor,
+    walk_stmt_default, Block, Capture, CaptureValue, Effect, EffectSet, Expr, Feature,
+    FeatureManifest, Function, Metadata, Module, Param, ParamKind, RescueClause, Scope, Span,
+    Stmt, SwitchCase, Visitor,
 };
 use std::collections::{HashMap, HashSet};
 
@@ -496,6 +497,21 @@ enum Kind {
     /// `lower_primary_expression`'s own doc comment for how a chained
     /// `grid[i][j]` reaches this.
     Array(ArrayElemKind, u8),
+    /// The kind of a `catch (ExceptionType e)` clause's own bound local
+    /// — task #70/M8's addition. Like `Void`/`Closure`, not a real value
+    /// kind this frontend can do anything *with*: this crate has no
+    /// method-call-on-arbitrary-object or field-access support at all
+    /// (see the crate's own README "Everything else" list), so a caught
+    /// exception's own methods (`e.getMessage()`) and an explicit
+    /// rethrow of the bound variable (`throw e;`, distinct from `throw
+    /// new Foo(...)`, which *is* supported — see `lower_throw_statement`)
+    /// both remain out of scope. Exists purely so the bound name has
+    /// *some* kind to be declared with, so referencing it at all doesn't
+    /// spuriously fail as "undeclared" — any attempt to actually use it
+    /// as an operand falls through to an ordinary "wrong kind" rejection
+    /// at whichever operator tried to consume it, the same discipline
+    /// `Void`/`Closure` already established.
+    Exception,
 }
 
 /// The element kind of a single-dimensional Java array (see `Kind::
@@ -526,10 +542,10 @@ impl ArrayElemKind {
 
     /// The inverse of [`ArrayElemKind::as_kind`]: `None` for any `Kind`
     /// that isn't itself a valid array element kind (`Kind::Null`/
-    /// `Void`/`Closure`/`Array(_)` — an array-of-arrays' own *element*
-    /// kind is still always a scalar `ArrayElemKind`, since `Kind::
-    /// Array`'s own dimension count already carries the nesting; the
-    /// others are non-value placeholder kinds that can't be an array
+    /// `Void`/`Closure`/`Array(_)`/`Exception` — an array-of-arrays' own
+    /// *element* kind is still always a scalar `ArrayElemKind`, since
+    /// `Kind::Array`'s own dimension count already carries the nesting;
+    /// the others are non-value placeholder kinds that can't be an array
     /// element at all). Shared by every call site that resolves a scalar
     /// `Kind` into an array's own element kind (`kind_of_type_node`,
     /// `lower_array_initializer`, and M4c's `lower_new_sized_array`).
@@ -539,7 +555,9 @@ impl ArrayElemKind {
             Kind::Float => Some(ArrayElemKind::Float),
             Kind::Bool => Some(ArrayElemKind::Bool),
             Kind::Str => Some(ArrayElemKind::Str),
-            Kind::Null | Kind::Void | Kind::Closure(_) | Kind::Array(_, _) => None,
+            Kind::Null | Kind::Void | Kind::Closure(_) | Kind::Array(_, _) | Kind::Exception => {
+                None
+            }
         }
     }
 }
@@ -644,6 +662,27 @@ struct Lowerer {
     /// must be rejected even though that lambda happens to be lexically
     /// nested inside an enclosing loop.
     loop_depth: usize,
+    /// Depth of syntactically-enclosing Java *breakable contexts* — every
+    /// `loop_depth`-incrementing construct (`while`/`do`-`while`/classic
+    /// or enhanced `for`) plus (task #51/SIR30) `switch`. `0` means "not
+    /// inside a loop or switch at all". `lower_break_statement` consults
+    /// *this*, not `loop_depth`, to reject a bare `break;` — a `switch`
+    /// is a valid `break` target the same way a loop is (see `Stmt::
+    /// Switch`'s own doc comment), but is deliberately **not** a valid
+    /// `continue` target (real Java's `continue` always skips a switch
+    /// to reach the nearest actual loop), so `lower_switch_statement`
+    /// increments only this counter, never `loop_depth` — mirroring the
+    /// shared `semantic-ir` validator's own `LoopKind::Switch` split of
+    /// "any breakable context" from "an actual loop" exactly, just as
+    /// two independent depth counters instead of a typed stack (this
+    /// frontend never needs to know *which* breakable context is
+    /// innermost, only whether one exists, since a bare `break;` always
+    /// targets whichever is nearest regardless of kind). Saved to `0`
+    /// and restored around a lambda body's own lowering and a method
+    /// body's own lowering, in lockstep with `loop_depth` — identical
+    /// statement-flow-boundary reasoning; see `loop_depth`'s own doc
+    /// comment.
+    break_depth: usize,
     /// Every method's resolved call signature (parameter kinds + return
     /// kind), computed in a first pass over the class body before *any*
     /// method body is lowered — mirrors `python-to-semantic-ir`'s/
@@ -778,6 +817,7 @@ impl Lowerer {
             do_while_counter: 0,
             for_counter: 0,
             loop_depth: 0,
+            break_depth: 0,
             method_signatures: HashMap::new(),
             current_method: String::new(),
             call_graph: HashMap::new(),
@@ -1413,15 +1453,18 @@ impl Lowerer {
         // explicit reset makes that an enforced invariant rather than an
         // implicit one a future refactor could quietly break.
         let saved_loop_depth = std::mem::take(&mut self.loop_depth);
+        let saved_break_depth = std::mem::take(&mut self.break_depth);
         let body = match self.lower_method_body_block(block, return_kind, 0) {
             Ok(b) => b,
             Err(e) => {
                 self.loop_depth = saved_loop_depth;
+                self.break_depth = saved_break_depth;
                 self.pop_scope();
                 return Err(e);
             }
         };
         self.loop_depth = saved_loop_depth;
+        self.break_depth = saved_break_depth;
         self.pop_scope();
 
         Ok(Function {
@@ -1772,9 +1815,18 @@ impl Lowerer {
         if let Some(continue_stmt) = self.first_child_named(statement, "continue_statement") {
             return self.lower_continue_statement(continue_stmt);
         }
+        if let Some(switch_stmt) = self.first_child_named(statement, "switch_statement") {
+            return self.lower_switch_statement(switch_stmt, depth);
+        }
+        if let Some(try_stmt) = self.first_child_named(statement, "try_statement") {
+            return self.lower_try_statement(try_stmt, depth);
+        }
+        if let Some(throw_stmt) = self.first_child_named(statement, "throw_statement") {
+            return self.lower_throw_statement(throw_stmt);
+        }
         Err(self.err_at(
             statement,
-            "unsupported statement kind (JV02 supports variable declarations, assignment, if/while/do-while/for/enhanced-for, bare break/continue, and bare expression statements — switch still has no SIR IR at all, everything else is deferred further)"
+            "unsupported statement kind (JV02 supports variable declarations, assignment, if/while/do-while/for/enhanced-for/switch/try-catch-finally/throw, bare break/continue, and bare expression statements — everything else is deferred further)"
                 .to_string(),
         ))
     }
@@ -1803,8 +1855,8 @@ impl Lowerer {
                 ),
             ));
         }
-        if self.loop_depth == 0 {
-            return Err(self.err_at(node, "`break` outside a loop".to_string()));
+        if self.break_depth == 0 {
+            return Err(self.err_at(node, "`break` outside a loop or switch".to_string()));
         }
         self.observed.add(Feature::LoopControl);
         Ok(Stmt::Break { span })
@@ -1914,11 +1966,573 @@ impl Lowerer {
                 self.err_at(while_stmt, "malformed `while` (missing body)".to_string())
             })?;
         self.loop_depth += 1;
+        self.break_depth += 1;
         let body = self.lower_body(body_stmt, depth + 1);
         self.loop_depth -= 1;
+        self.break_depth -= 1;
         let body = body?;
         self.observed.add(Feature::Loops);
         Ok(Stmt::While { cond, body, span })
+    }
+
+    /// `switch_statement = "switch" LPAREN expression RPAREN switch_block
+    /// ;` (task #51/SIR30). Lowers to `Stmt::Switch { discriminant,
+    /// cases, default, span }` — see that node's own doc comment in
+    /// `semantic_ir::nodes` for the full fall-through/`default`-always-
+    /// last design this mirrors exactly. `discriminant` must lower to
+    /// `Kind::Int` or `Kind::Str` — JV02 has no separate `char`/enum
+    /// `Kind` yet (see [`Kind`]'s own doc comment), so those two real
+    /// Java switch discriminant types can't be distinguished from a
+    /// plain `int` or checked as enum-typed here; a disclosed scope
+    /// narrowing, not a silent gap. Each `case` label's own expression
+    /// must lower to the *same* `Kind` as the discriminant.
+    ///
+    /// The entire switch body — every case plus `default` — shares ONE
+    /// flat local-env scope, matching real `javac`'s own scoping rule
+    /// and the shared `semantic-ir` validator's identical requirement:
+    /// `push_scope`/`pop_scope` bracket the whole `lower_switch_block`
+    /// call below, not each case individually. `break_depth` (not
+    /// `loop_depth`) is incremented around the same call, so a bare
+    /// `break;` directly inside any case body is accepted (it exits the
+    /// switch) while a bare `continue;` with no *actual* enclosing loop
+    /// is still rejected — see `break_depth`'s own doc comment.
+    fn lower_switch_statement(
+        &mut self,
+        switch_stmt: &GrammarASTNode,
+        depth: usize,
+    ) -> Result<Stmt, JavaLowerError> {
+        if depth >= MAX_STMT_DEPTH {
+            return Err(self.err_at(
+                switch_stmt,
+                format!("statement/block nesting exceeds {MAX_STMT_DEPTH} levels"),
+            ));
+        }
+        let span = self.span_of(switch_stmt);
+        let disc_node = self
+            .first_child_named(switch_stmt, "expression")
+            .ok_or_else(|| {
+                self.err_at(
+                    switch_stmt,
+                    "malformed `switch` (missing discriminant)".to_string(),
+                )
+            })?;
+        let (discriminant, disc_kind) = self.lower_expr(disc_node, 0)?;
+        if disc_kind != Kind::Int && disc_kind != Kind::Str {
+            return Err(self.err_at(
+                disc_node,
+                "`switch` discriminant must be int or String (JV02 does not yet model char or enum types separately — see Kind's own doc comment)"
+                    .to_string(),
+            ));
+        }
+        let switch_block = self
+            .first_child_named(switch_stmt, "switch_block")
+            .ok_or_else(|| {
+                self.err_at(switch_stmt, "malformed `switch` (missing body)".to_string())
+            })?;
+
+        self.push_scope();
+        self.break_depth += 1;
+        let body_result = self.lower_switch_block(switch_block, depth, disc_kind);
+        self.break_depth -= 1;
+        self.pop_scope();
+        let (cases, default) = body_result?;
+
+        self.observed.add(Feature::Switch);
+        Ok(Stmt::Switch {
+            discriminant: Box::new(discriminant),
+            cases,
+            default,
+            span,
+        })
+    }
+
+    /// Lower every `switch_block_statement_group` (`switch_label+
+    /// block_statement*`) or trailing bare `switch_label` (a label with
+    /// no following statements, e.g. an empty `default:` at the very
+    /// end) child of a `switch_block` node, in source order, into the
+    /// `(cases, default)` pair `lower_switch_statement` needs. Assumes
+    /// the caller already opened the switch's one shared scope and
+    /// incremented `break_depth` — this only walks and lowers.
+    ///
+    /// **Multiple case values sharing one body** needs no special IR
+    /// casing, in either of Java's own two source shapes for it: the
+    /// classic multi-label idiom (`case 1: case 2: foo(); break;`) *and*
+    /// Java 14+'s comma-separated single-label idiom (`case 1, 2:
+    /// foo(); break;`) are both flattened into the same ordered sequence
+    /// of "atoms" (one `case_constant` per real value, or one `Default`
+    /// marker) before lowering — an empty-bodied `SwitchCase` naturally
+    /// falls through into the next `cases` entry (see `SwitchCase`'s own
+    /// doc comment), so every atom in a group but the *last* one lowers
+    /// to an empty body; only the last carries the group's real
+    /// `block_statement`s.
+    ///
+    /// **`default` in a non-last source position is rejected**, not
+    /// mis-lowered: `Stmt::Switch.default` is a dedicated field, always
+    /// logically last (see its own doc comment) — a source `default:`
+    /// written earlier than the final atom would need this node to
+    /// expose two independent orderings (match-order vs. fallthrough-
+    /// order) it deliberately doesn't have. A `default` atom is only
+    /// accepted as the *last* atom of the *last* group (or a lone
+    /// trailing bare label) — every other position is a clean rejection.
+    fn lower_switch_block(
+        &mut self,
+        switch_block: &GrammarASTNode,
+        depth: usize,
+        disc_kind: Kind,
+    ) -> Result<(Vec<SwitchCase>, Option<Vec<Stmt>>), JavaLowerError> {
+        // `switch_block`'s own grammar has TWO alternatives: the
+        // traditional colon form this function lowers (`switch_block_
+        // statement_group`* / trailing `switch_label`*), and Java 14+'s
+        // arrow form (`switch_rule`* — `case 1 -> foo();`), which shares
+        // no children at all with the colon form. Reject the arrow form
+        // explicitly, `/security-review`-caught: without this check, an
+        // arrow-form switch's `switch_rule` children simply don't match
+        // either filter branch below, so `groups` would silently end up
+        // empty and this function would return `(cases: [], default:
+        // None)` with no error at all — every case body silently
+        // discarded rather than cleanly rejected, unlike every other
+        // unsupported switch-label shape this crate rejects (`case
+        // null`, pattern-matching labels, non-last `default` — see
+        // `switch_label_case_constants`'s own doc comment).
+        if let Some(rule_node) = self.first_child_named(switch_block, "switch_rule") {
+            return Err(self.err_at(
+                rule_node,
+                "`switch` arrow-form case labels (`case v -> ...`) are not supported yet"
+                    .to_string(),
+            ));
+        }
+        let groups: Vec<&GrammarASTNode> = child_nodes(switch_block)
+            .into_iter()
+            .filter(|n| {
+                n.rule_name == "switch_block_statement_group" || n.rule_name == "switch_label"
+            })
+            .collect();
+
+        let mut cases: Vec<SwitchCase> = Vec::new();
+        let mut default: Option<Vec<Stmt>> = None;
+
+        // One atom per real case value or `default` marker, spanning
+        // every label a `switch_block_statement_group`/trailing bare
+        // label carries — see this function's own doc comment for why
+        // `case 1: case 2:` and `case 1, 2:` are flattened identically.
+        enum LabelAtom<'a> {
+            Case(&'a GrammarASTNode),
+            Default,
+        }
+
+        for (i, group) in groups.iter().enumerate() {
+            let is_last_group = i + 1 == groups.len();
+            let (label_nodes, body_nodes): (Vec<&GrammarASTNode>, Vec<&GrammarASTNode>) =
+                if group.rule_name == "switch_label" {
+                    (vec![*group], Vec::new())
+                } else {
+                    let mut labels = Vec::new();
+                    let mut body_nodes = Vec::new();
+                    for child in child_nodes(group) {
+                        match child.rule_name.as_str() {
+                            "switch_label" => labels.push(child),
+                            "block_statement" => body_nodes.push(child),
+                            _ => {}
+                        }
+                    }
+                    (labels, body_nodes)
+                };
+
+            let mut atoms: Vec<LabelAtom> = Vec::new();
+            for label in &label_nodes {
+                match self.switch_label_case_constants(label)? {
+                    Some(constants) => atoms.extend(constants.into_iter().map(LabelAtom::Case)),
+                    None => atoms.push(LabelAtom::Default),
+                }
+            }
+
+            // Lower the group's shared body once, into the ONE flat
+            // scope `lower_switch_statement` already opened.
+            let mut body: Vec<Stmt> = Vec::with_capacity(body_nodes.len());
+            for stmt_node in body_nodes.iter().copied() {
+                body.push(self.lower_block_statement(stmt_node, depth + 1)?);
+            }
+
+            let atom_count = atoms.len();
+            for (j, atom) in atoms.into_iter().enumerate() {
+                let is_last_atom = j + 1 == atom_count;
+                let this_body = if is_last_atom {
+                    std::mem::take(&mut body)
+                } else {
+                    Vec::new()
+                };
+                match atom {
+                    LabelAtom::Case(case_constant_node) => {
+                        // `case_constant`'s own sole child is the real
+                        // value `expression` — see `case_constant`'s
+                        // own one-line grammar rule (`case_constant =
+                        // expression`).
+                        let value_node = self
+                            .first_child_named(case_constant_node, "expression")
+                            .ok_or_else(|| {
+                                self.err_at(
+                                    case_constant_node,
+                                    "malformed `case` label (missing value)".to_string(),
+                                )
+                            })?;
+                        let (value, value_kind) = self.lower_expr(value_node, 0)?;
+                        if value_kind != disc_kind {
+                            return Err(self.err_at(
+                                value_node,
+                                "`case` label must be the same type as the `switch` discriminant"
+                                    .to_string(),
+                            ));
+                        }
+                        cases.push(SwitchCase {
+                            value,
+                            body: this_body,
+                            span: self.span_of(case_constant_node),
+                        });
+                    }
+                    LabelAtom::Default => {
+                        // Only legal as the last atom of the last group
+                        // (see this function's own doc comment for
+                        // why). This position check alone also rejects
+                        // a *duplicate* `default` for free: at most one
+                        // atom across the whole `switch_block` can ever
+                        // be both the last atom of its own group *and*
+                        // belong to the last group, so `default` can
+                        // never already be `Some(..)` by the time this
+                        // arm runs — no separate duplicate check is
+                        // reachable here.
+                        if !is_last_atom || !is_last_group {
+                            return Err(self.err_at(
+                                group,
+                                "`default` must be the last case in a `switch` (JV02 does not support a `default` label in a non-last source position)"
+                                    .to_string(),
+                            ));
+                        }
+                        default = Some(this_body);
+                    }
+                }
+            }
+        }
+
+        Ok((cases, default))
+    }
+
+    /// Classify one `switch_label` node (task #51/SIR30's own `switch`
+    /// wiring): `Some(case_constant_nodes)` for an ordinary `"case" v1 [
+    /// "," v2 ...]` label — each entry the real Java-21-grammar
+    /// `case_constant` node holding one value `expression` (real Java
+    /// 14+ permits several comma-separated constants sharing a single
+    /// label; `lower_switch_block` flattens that identically to writing
+    /// several separate `case` labels — see its own doc comment) —
+    /// `None` for a bare `"default"` label. Cleanly rejects the two real
+    /// Java 21 switch-label forms this frontend does not model — a `case
+    /// null` (optionally combined `case null, default`) label, and a
+    /// pattern-matching `case Type t`/`case Type(...)` label (record/
+    /// type deconstruction, JEP 441/440) — rather than silently
+    /// mis-lowering either as a plain `default`, which a naive "does
+    /// this label carry a value expression" check would otherwise do
+    /// (all three of `default`, `case null`, and a pattern label parse
+    /// to structurally distinct shapes, but only a pattern label leaves
+    /// a detectable `case_pattern` child; `default` and `case null` both
+    /// leave *zero* child `Node`s, distinguishable only by a literal
+    /// `null` token among the label's own direct children).
+    fn switch_label_case_constants<'a>(
+        &self,
+        label: &'a GrammarASTNode,
+    ) -> Result<Option<Vec<&'a GrammarASTNode>>, JavaLowerError> {
+        if self.first_child_named(label, "case_pattern").is_some() {
+            return Err(self.err_at(
+                label,
+                "`switch` pattern-matching case labels (`case Type t` / `case Type(...)`) are not supported yet"
+                    .to_string(),
+            ));
+        }
+        let constants: Vec<&GrammarASTNode> = child_nodes(label)
+            .into_iter()
+            .filter(|n| n.rule_name == "case_constant")
+            .collect();
+        if !constants.is_empty() {
+            return Ok(Some(constants));
+        }
+        let has_null_token = label
+            .children
+            .iter()
+            .any(|c| matches!(c, ASTNodeOrToken::Token(t) if t.value == "null"));
+        if has_null_token {
+            return Err(self.err_at(
+                label,
+                "`switch` case null labels are not supported yet".to_string(),
+            ));
+        }
+        Ok(None)
+    }
+
+    /// `try_statement = "try" resource_specification block catch_clause*
+    /// finally_clause? | "try" block ( catch_clause+ finally_clause? |
+    /// finally_clause ) ;` (task #70/M8). Lowers to `Stmt::TryCatch`
+    /// (SIR17), reused exactly as SIR29 itself specifies ("Explicitly
+    /// deferred: a checked-vs-unchecked exception distinction") — no new
+    /// IR needed.
+    ///
+    /// Try-with-resources (the first grammar alternative, carrying a
+    /// `resource_specification`) is rejected cleanly: SIR has no
+    /// resource-auto-close primitive, and desugaring it into an
+    /// equivalent `try`/`finally` would need real destructor/`close()`
+    /// method-call support this frontend doesn't have at all.
+    ///
+    /// Each of `try`'s own block, every `catch` clause's own block, and
+    /// `finally`'s own block is independently lowered via
+    /// `lower_block_node`, which already opens/closes its own scope —
+    /// unlike `Stmt::Switch` (task #51), there is no shared-scope
+    /// requirement here: a Java `catch` parameter is scoped to its own
+    /// clause only, matching `RescueClause.binding`'s own "in scope
+    /// within `body` only" doc comment, so no extra `push_scope`/
+    /// `pop_scope` wraps this function itself.
+    fn lower_try_statement(
+        &mut self,
+        node: &GrammarASTNode,
+        depth: usize,
+    ) -> Result<Stmt, JavaLowerError> {
+        if depth >= MAX_STMT_DEPTH {
+            return Err(self.err_at(
+                node,
+                format!("statement/block nesting exceeds {MAX_STMT_DEPTH} levels"),
+            ));
+        }
+        let span = self.span_of(node);
+        if self
+            .first_child_named(node, "resource_specification")
+            .is_some()
+        {
+            return Err(self.err_at(
+                node,
+                "`try`-with-resources is not supported yet (JV02 M8 supports plain try/catch/finally only)"
+                    .to_string(),
+            ));
+        }
+        let try_block = self
+            .first_child_named(node, "block")
+            .ok_or_else(|| self.err_at(node, "malformed `try` (missing body)".to_string()))?;
+        let body = self.lower_block_node(try_block, depth + 1)?.stmts;
+
+        let mut rescues = Vec::new();
+        for clause in child_nodes(node)
+            .into_iter()
+            .filter(|n| n.rule_name == "catch_clause")
+        {
+            rescues.push(self.lower_catch_clause(clause, depth)?);
+        }
+
+        let ensure_body = match self.first_child_named(node, "finally_clause") {
+            Some(finally_clause) => {
+                let finally_block =
+                    self.first_child_named(finally_clause, "block")
+                        .ok_or_else(|| {
+                            self.err_at(
+                                finally_clause,
+                                "malformed `finally` (missing body)".to_string(),
+                            )
+                        })?;
+                Some(self.lower_block_node(finally_block, depth + 1)?.stmts)
+            }
+            None => None,
+        };
+
+        self.observed.add(Feature::Exceptions);
+        Ok(Stmt::TryCatch {
+            body,
+            rescues,
+            ensure_body,
+            span,
+        })
+    }
+
+    /// `catch_clause = "catch" LPAREN catch_formal_parameter RPAREN block
+    /// ;`, `catch_formal_parameter = {annotation} ["final"] catch_type
+    /// NAME ;`, `catch_type = class_type ("|" class_type)*` (Java 7+
+    /// multi-catch, `catch (IOException | SQLException e) { ... }`) —
+    /// maps directly onto `RescueClause.exception_types: Vec<String>`,
+    /// no adaptation needed. The bound name is declared `Kind::
+    /// Exception` (see that variant's own doc comment) in a fresh scope
+    /// covering only this clause's own body, matching `RescueClause.
+    /// binding`'s own "in scope within `body` only" contract.
+    fn lower_catch_clause(
+        &mut self,
+        clause: &GrammarASTNode,
+        depth: usize,
+    ) -> Result<RescueClause, JavaLowerError> {
+        let span = self.span_of(clause);
+        let param = self
+            .first_child_named(clause, "catch_formal_parameter")
+            .ok_or_else(|| {
+                self.err_at(clause, "malformed `catch` (missing parameter)".to_string())
+            })?;
+        let catch_type = self.first_child_named(param, "catch_type").ok_or_else(|| {
+            self.err_at(param, "malformed `catch` (missing exception type)".to_string())
+        })?;
+        let exception_types: Vec<String> = child_nodes(catch_type)
+            .into_iter()
+            .filter(|n| n.rule_name == "class_type")
+            .filter_map(qualified_name_text)
+            .collect();
+        if exception_types.is_empty() {
+            return Err(self.err_at(
+                catch_type,
+                "malformed `catch` (missing exception type)".to_string(),
+            ));
+        }
+        let binding_name = param
+            .children
+            .iter()
+            .find_map(|c| match c {
+                ASTNodeOrToken::Token(t) if t.type_ == lexer::token::TokenType::Name => {
+                    Some(t.value.clone())
+                }
+                _ => None,
+            })
+            .ok_or_else(|| {
+                self.err_at(param, "malformed `catch` (missing bound name)".to_string())
+            })?;
+
+        let catch_block = self
+            .first_child_named(clause, "block")
+            .ok_or_else(|| self.err_at(clause, "malformed `catch` (missing body)".to_string()))?;
+        self.push_scope();
+        self.declare_local(binding_name.clone(), Kind::Exception);
+        let body_result = self.lower_block_node(catch_block, depth + 1);
+        self.pop_scope();
+        let body = body_result?.stmts;
+
+        Ok(RescueClause {
+            exception_types,
+            binding: Some(binding_name),
+            body,
+            span,
+        })
+    }
+
+    /// `throw_statement = "throw" expression SEMICOLON ;` (task #70/M8).
+    /// Lowers to a bare expression statement wrapping `Expr::BuiltinCall
+    /// ("raise", [class_name, message?])` — the exact cross-backend
+    /// convention `ruby-to-semantic-ir`'s own `raise Foo[, "msg"]`
+    /// already established (see `semantic-ir-to-javascript`'s/
+    /// `semantic-ir-to-python`'s own `"raise"` handling in `emit_expr`),
+    /// not a Ruby-specific one: `class_name` must be an `Expr::VarRef`
+    /// with `scope: Scope::Const` for a backend to recognize it as an
+    /// exception *class* (any other first-argument shape is instead
+    /// treated as an implicit-`RuntimeError` *message*, matching real
+    /// Ruby's own `raise "msg"` idiom — see the JS backend's own doc
+    /// comment on its `raise` arm) — so this only accepts the one shape
+    /// that can supply a well-formed `Const` reference, `throw new
+    /// ExceptionClass(...)`.
+    ///
+    /// **Deliberately out of scope** (rejected cleanly, not
+    /// mis-lowered): rethrowing an arbitrary expression (`throw e;` —
+    /// this frontend has no way to distinguish "the exact exception
+    /// object just caught" from any other local, and lowering it as a
+    /// `raise` *message* instead, per the fallback shape above, would
+    /// silently change what actually gets thrown), an anonymous
+    /// exception subclass (`throw new Foo() { ... };`), generic
+    /// exception construction (`throw new Foo<T>(...);`), and a
+    /// constructor call with more than one argument (real Java exception
+    /// constructors can chain a `cause` `Throwable`, `enableSuppression`/
+    /// `writableStackTrace` flags, etc. — only the common no-arg/message-
+    /// arg constructor shapes are supported here).
+    fn lower_throw_statement(&mut self, node: &GrammarASTNode) -> Result<Stmt, JavaLowerError> {
+        let span = self.span_of(node);
+        let expr_node = self
+            .first_child_named(node, "expression")
+            .ok_or_else(|| self.err_at(node, "malformed `throw` (missing expression)".to_string()))?;
+        let primary = unwrap_to_primary(expr_node, 0).ok_or_else(|| {
+            self.err_at(
+                node,
+                "`throw` only supports `throw new ExceptionClass(...)` in JV02 M8 (not a more complex expression, and not rethrowing a caught exception variable)"
+                    .to_string(),
+            )
+        })?;
+        let is_new = matches!(
+            primary.children.first(),
+            Some(ASTNodeOrToken::Token(t)) if t.value == "new"
+        );
+        if !is_new {
+            return Err(self.err_at(
+                node,
+                "`throw` only supports `throw new ExceptionClass(...)` in JV02 M8 (not rethrowing a caught exception variable, or any other expression)"
+                    .to_string(),
+            ));
+        }
+        if self.first_child_named(primary, "class_body").is_some() {
+            return Err(self.err_at(
+                node,
+                "an anonymous exception subclass (`throw new ExceptionClass() { ... }`) is not supported"
+                    .to_string(),
+            ));
+        }
+        if self.first_child_named(primary, "type_arguments").is_some() {
+            return Err(self.err_at(
+                node,
+                "generic exception construction (`throw new Foo<T>(...)`) is not supported"
+                    .to_string(),
+            ));
+        }
+        let class_type = self.first_child_named(primary, "class_type").ok_or_else(|| {
+            self.err_at(
+                node,
+                "malformed `throw new ...` (missing exception class)".to_string(),
+            )
+        })?;
+        let class_name = qualified_name_text(class_type).ok_or_else(|| {
+            self.err_at(
+                node,
+                "malformed `throw new ...` (missing exception class name)".to_string(),
+            )
+        })?;
+        let arg_exprs: Vec<&GrammarASTNode> = self
+            .first_child_named(primary, "argument_list")
+            .map(|al| {
+                child_nodes(al)
+                    .into_iter()
+                    .filter(|n| n.rule_name == "expression")
+                    .collect()
+            })
+            .unwrap_or_default();
+        if arg_exprs.len() > 1 {
+            return Err(self.err_at(
+                node,
+                "`throw new ExceptionClass(...)` supports at most one constructor argument (a message) in JV02 M8"
+                    .to_string(),
+            ));
+        }
+
+        let mut raise_args = vec![Expr::VarRef {
+            name: class_name,
+            scope: Scope::Const,
+            span: span.clone(),
+        }];
+        if let Some(msg_node) = arg_exprs.first() {
+            let (msg_expr, msg_kind) = self.lower_expr(msg_node, 0)?;
+            if msg_kind != Kind::Str {
+                return Err(self.err_at(
+                    node,
+                    "`throw new ExceptionClass(msg)`'s constructor argument must be a String"
+                        .to_string(),
+                ));
+            }
+            raise_args.push(msg_expr);
+        }
+
+        self.observed.add(Feature::Exceptions);
+        self.observed.add(Feature::Constants);
+        Ok(Stmt::ExprStmt {
+            expr: Expr::BuiltinCall {
+                name: "raise".to_string(),
+                args: raise_args,
+                effects: EffectSet::PURE
+                    .with(Effect::MayThrow)
+                    .with(Effect::Divergent),
+                span: span.clone(),
+            },
+            span,
+        })
     }
 
     /// `do_while_statement = "do" statement "while" LPAREN expression
@@ -1989,8 +2603,10 @@ impl Lowerer {
             self.err_at(node, "malformed `do`/`while` (missing body)".to_string())
         })?;
         self.loop_depth += 1;
+        self.break_depth += 1;
         let body = self.lower_body(body_stmt, depth + 1);
         self.loop_depth -= 1;
+        self.break_depth -= 1;
         let body = body?;
         let cond_node = self.first_child_named(node, "expression").ok_or_else(|| {
             self.err_at(
@@ -2202,8 +2818,10 @@ impl Lowerer {
             .first_child_named(node, "statement")
             .ok_or_else(|| self.err_at(node, "malformed `for` (missing body)".to_string()))?;
         self.loop_depth += 1;
+        self.break_depth += 1;
         let body = self.lower_body(body_stmt, depth + 1);
         self.loop_depth -= 1;
+        self.break_depth -= 1;
         let body = body?;
         self.observed.add(Feature::Loops);
 
@@ -2432,8 +3050,10 @@ impl Lowerer {
         self.push_scope();
         self.declare_local(var_name.clone(), var_kind);
         self.loop_depth += 1;
+        self.break_depth += 1;
         let body = self.lower_body(body_stmt, depth + 1);
         self.loop_depth -= 1;
+        self.break_depth -= 1;
         self.pop_scope();
         let body = body?;
 
@@ -2570,7 +3190,55 @@ impl Lowerer {
         };
 
         let kind = match declared_kind {
-            Some(k) => k,
+            // task #71: an explicitly-declared type's own initializer
+            // must actually match it — this frontend previously trusted
+            // `declared_kind` unconditionally here, so e.g. `int y =
+            // "hello";` compiled with **zero** error. Two mismatches real
+            // Java itself permits, kept accepted here:
+            //
+            // - int-widening-to-float (`double d = 5;`, JLS 5.1.2's
+            //   primitive widening conversion). This does **not** insert
+            //   a real numeric conversion (SIR's own `Expr::Convert`,
+            //   SIR26, only ever converts between *integer* widths —
+            //   there is no int-to-float primitive at all): the emitted
+            //   `value` for `double d = 5;` remains whatever `lower_expr`
+            //   produced for the literal `5` (`Kind::Int` at the value
+            //   level), only this frontend's own *bookkeeping* `Kind` for
+            //   `d` becomes `Float`. A backend whose runtime numeric
+            //   representation actually distinguishes int from float at
+            //   the value level (not just at compile-time type-checking)
+            //   could observe this — e.g. `String.valueOf(d)` would print
+            //   `"5"` not `"5.0"` — but this frontend has no output/print
+            //   primitive wired up at all yet (JV02's own scope), so the
+            //   gap is real but currently unobservable; a disclosed,
+            //   deliberately out-of-scope narrowing of *this* fix, not
+            //   silently swept under it.
+            // - `null` initializing a *reference*-kinded declaration
+            //   (`String s = null;`, and — M4a's array types — `int[] xs
+            //   = null;`): real Java permits `null` for any reference
+            //   type but rejects it for a primitive (`int x = null;` is a
+            //   `javac` compile error), matching exactly the `Kind::Str`/
+            //   `Kind::Array` vs. `Kind::Int`/`Float`/`Bool` split this
+            //   frontend's own declarable-type set already draws.
+            //
+            // Every other declared/initializer `Kind` pair is a genuine
+            // error, not a narrowing conversion this frontend could ever
+            // silently support.
+            Some(k)
+                if k == value_kind
+                    || (k == Kind::Float && value_kind == Kind::Int)
+                    || (value_kind == Kind::Null && matches!(k, Kind::Str | Kind::Array(_, _))) =>
+            {
+                k
+            }
+            Some(k) => {
+                return Err(self.err_at(
+                    initializer,
+                    format!(
+                        "cannot initialize a `{k:?}`-declared local variable with a `{value_kind:?}`-kinded initializer"
+                    ),
+                ));
+            }
             None => {
                 if value_kind == Kind::Null {
                     return Err(self.err_at(
@@ -3569,17 +4237,87 @@ impl Lowerer {
     }
 
     /// `conditional_expression = logical_or_expression [ QUESTION
-    /// assignment_expression COLON assignment_expression ] ;`
+    /// assignment_expression COLON assignment_expression ] ;` — task #72.
+    /// Lowers `cond ? then : else` to `Expr::If` used in **value**
+    /// position: unlike `lower_if_statement`'s own `Stmt::ExprStmt`-
+    /// wrapped `Expr::If` (a statement-position `if` has no result
+    /// anyone consumes, so its two branches are bare `Block`s with a
+    /// `NilLit` value), this one's `then_branch`/`else_branch` each wrap
+    /// the real lowered operand as their own `Block.value` with an empty
+    /// `stmts` — `Expr::If` is *the same node* either way (see its own
+    /// doc comment: "the IR's conditional is an expression with no
+    /// statement-level counterpart"), only how this frontend uses the
+    /// two `Block`s differs.
+    ///
+    /// Both branches must lower to a compatible `Kind`: exact match, or
+    /// real Java's own symmetric numeric promotion for a mismatched
+    /// `Int`/`Float` pair (`true ? 1 : 2.0` has type `double` regardless
+    /// of which branch is which) — kept accepted here the same way task
+    /// #71's own directional int-widening-to-float exception is, and
+    /// with the identical disclosed caveat: no real numeric conversion
+    /// is inserted (SIR's `Expr::Convert`/SIR26 only ever converts
+    /// between *integer* widths), so the `Int`-kinded branch's own
+    /// emitted value stays whatever `lower_expr` produced for it — only
+    /// this frontend's own bookkeeping result `Kind` becomes `Float`.
+    /// Every other `Kind` pair (real Java's ternary does *not*
+    /// auto-stringify mismatched branches the way `+` does) is a clean
+    /// rejection, not a mis-lowering.
     fn lower_conditional_expression(
         &mut self,
         node: &GrammarASTNode,
         depth: usize,
     ) -> Result<(Expr, Kind), JavaLowerError> {
-        match node.children.as_slice() {
-            [ASTNodeOrToken::Node(only)] => self.lower_expr(only, depth + 1),
+        match child_nodes(node).as_slice() {
+            [only] => self.lower_expr(only, depth + 1),
+            [cond_node, then_node, else_node] => {
+                let span = self.span_of(node);
+                let (cond, cond_kind) = self.lower_expr(cond_node, depth + 1)?;
+                if cond_kind != Kind::Bool {
+                    return Err(self.err_at(
+                        cond_node,
+                        "the ternary conditional's own condition must be boolean".to_string(),
+                    ));
+                }
+                let (then_value, then_kind) = self.lower_expr(then_node, depth + 1)?;
+                let (else_value, else_kind) = self.lower_expr(else_node, depth + 1)?;
+                let result_kind = if then_kind == else_kind {
+                    then_kind
+                } else if matches!(
+                    (then_kind, else_kind),
+                    (Kind::Int, Kind::Float) | (Kind::Float, Kind::Int)
+                ) {
+                    Kind::Float
+                } else {
+                    return Err(self.err_at(
+                        node,
+                        format!(
+                            "the ternary conditional's two branches must have compatible kinds (got `{then_kind:?}` and `{else_kind:?}`)"
+                        ),
+                    ));
+                };
+                let then_span = self.span_of(then_node);
+                let else_span = self.span_of(else_node);
+                Ok((
+                    Expr::If {
+                        cond: Box::new(cond),
+                        then_branch: Box::new(Block {
+                            stmts: vec![],
+                            value: then_value,
+                            span: then_span,
+                        }),
+                        else_branch: Box::new(Block {
+                            stmts: vec![],
+                            value: else_value,
+                            span: else_span,
+                        }),
+                        span: span.clone(),
+                    },
+                    result_kind,
+                ))
+            }
             _ => Err(self.err_at(
                 node,
-                "the ternary conditional operator (`?:`) is not supported yet (deferred to a later JV02 milestone)".to_string(),
+                "malformed ternary conditional expression".to_string(),
             )),
         }
     }
@@ -4864,17 +5602,20 @@ impl Lowerer {
 
         // A lambda body is its own statement-flow boundary: real Java
         // forbids a `break`/`continue` inside a lambda from targeting a
-        // loop the lambda literal merely happens to be lexically nested
-        // in (e.g. `list.forEach(x -> { break; })` inside an enclosing
-        // `while` is a `javac` compile error, not a jump to that outer
-        // loop). Save/restore `loop_depth` to `0` around the body
-        // lowering so `lower_break_statement`/`lower_continue_statement`
+        // loop (or, task #51, a `switch`) the lambda literal merely
+        // happens to be lexically nested in (e.g. `list.forEach(x -> {
+        // break; })` inside an enclosing `while` is a `javac` compile
+        // error, not a jump to that outer loop). Save/restore both
+        // `loop_depth` and `break_depth` to `0` around the body lowering
+        // so `lower_break_statement`/`lower_continue_statement`
         // correctly reject a bare `break`/`continue` written directly in
         // this lambda's own body, regardless of how deeply the lambda
-        // *literal* itself is nested inside real Java loops.
+        // *literal* itself is nested inside real Java loops/switches.
         let saved_loop_depth = std::mem::take(&mut self.loop_depth);
+        let saved_break_depth = std::mem::take(&mut self.break_depth);
         let body_result = self.lower_lambda_body(body_node, depth + 1);
         self.loop_depth = saved_loop_depth;
+        self.break_depth = saved_break_depth;
         self.pop_scope();
         let closure_frame = self.closure_stack.pop().expect("just pushed above");
         let (body, body_kind) = body_result?;
@@ -5430,6 +6171,36 @@ fn child_nodes(node: &GrammarASTNode) -> Vec<&GrammarASTNode> {
             ASTNodeOrToken::Token(_) => None,
         })
         .collect()
+}
+
+/// Descend through a chain of single-child expression-precedence wrapper
+/// nodes (`lower_throw_statement`'s own helper, task #70) until reaching
+/// a `primary` node, or return `None` if any level along the way isn't a
+/// pure pass-through (a real binary/unary operator, or a trailing
+/// `primary_suffix`, was used) — meaning the throw target is a more
+/// complex expression than the bare `new ExceptionClass(...)` shape M8
+/// supports.
+///
+/// Depth-guarded against `MAX_EXPR_DEPTH`, mirroring `lower_expr`'s own
+/// guard: this walks the *parsed* CST, not source text, but Java's own
+/// `unary_expression`/`unary_expression_not_plus_minus` grammar pair is
+/// mutually left-recursive on a repeated prefix operator (`!!!!!x`,
+/// `-----x`) — each `!`/unary `-`/`+` adds one real wrapper level with
+/// exactly one `Node` child, so an adversarially long prefix-operator
+/// chain would otherwise recurse this function unboundedly, the same
+/// CWE-674 class this crate's other CST-walking helpers already guard
+/// against.
+fn unwrap_to_primary(node: &GrammarASTNode, depth: usize) -> Option<&GrammarASTNode> {
+    if depth >= MAX_EXPR_DEPTH {
+        return None;
+    }
+    if node.rule_name == "primary" {
+        return Some(node);
+    }
+    match child_nodes(node).as_slice() {
+        [only] => unwrap_to_primary(only, depth + 1),
+        _ => None,
+    }
 }
 
 /// Depth-guarded pre-order collection of every node named `rule_name`

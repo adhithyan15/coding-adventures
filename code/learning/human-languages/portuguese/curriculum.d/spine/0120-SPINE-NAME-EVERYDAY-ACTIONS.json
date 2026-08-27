@@ -1,9 +1,22 @@
 {
-  "segments": [],
+  "segments": [
+    "PT-PATH-022-B",
+    "PT-PATH-023-B",
+    "PT-PATH-024-B",
+    "PT-PATH-025",
+    "PT-PATH-025-C"
+  ],
   "omits": [
     "VERB-DRINK",
     "VERB-GIVE",
-    "VERB-PUT"
+    "VERB-PUT",
+    "VERB-DO-MAKE",
+    "VERB-OPEN",
+    "VERB-CLOSE",
+    "VERB-STAND",
+    "VERB-WALK"
   ],
-  "relocates": {}
+  "relocates": {
+    "VERB-BUY": "SPINE-SAY-WHAT-I-DO"
+  }
 }

@@ -3,11 +3,7 @@
   "spine_node": "SPINE-SAY-WHAT-I-DO",
   "lessons": [
     "SA-C07-asti",
-    "SA-C07-gacchati",
-    "SA-C07-agacchati",
-    "SA-C07-khadati",
-    "SA-C07-pashyati",
-    "SA-C07-janati"
+    "SA-C07-gacchati"
   ],
   "before": [],
   "inline": [],

@@ -72,3 +72,31 @@ fn elem_drop_persists_across_separate_calls_on_the_same_instance() {
     // not just within the call that ran `elem.drop` itself.
     assert!(runtime.call(&mut instance, "init", &[0, 0, 1]).is_err());
 }
+
+/// W26 follow-up (table64 real operations): an ACTIVE element segment's
+/// offset expression must evaluate as `i64` when its target table is
+/// `is64` -- `wasm-runtime::instantiate` previously read every active
+/// element segment's offset unconditionally as `i32` regardless of the
+/// target table's own address width (mirroring the analogous, already-
+/// `is64`-aware active DATA segment branch, which this one had drifted
+/// from). Found via the real `call_indirect64.wast` corpus -- its
+/// `(table $t64 i64 funcref (elem $const-i32))` shorthand hit exactly
+/// this gap, trapping instantiation instead of applying the segment.
+#[test]
+fn active_element_segment_on_an_is64_table_applies_at_instantiation_time() {
+    let (runtime, mut instance) = instantiate(
+        r#"(module
+             (type $t (func (result i32)))
+             (func $one (result i32) (i32.const 111))
+             (func $two (result i32) (i32.const 222))
+             (table $t0 i64 4 funcref)
+             (elem (table $t0) (i64.const 1) func $one $two)
+             (func (export "call0") (param i64) (result i32)
+               (call_indirect (type $t) (local.get 0))))"#,
+    );
+    // Slot 0 is left uninitialized by the segment (offset 1); slots 1/2
+    // hold $one/$two respectively.
+    assert_eq!(runtime.call(&mut instance, "call0", &[1]).unwrap(), vec![111]);
+    assert_eq!(runtime.call(&mut instance, "call0", &[2]).unwrap(), vec![222]);
+    assert!(runtime.call(&mut instance, "call0", &[0]).is_err(), "slot 0 is uninitialized and must trap on call");
+}

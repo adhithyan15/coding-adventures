@@ -4,6 +4,123 @@ All notable changes to this package will be documented in this file.
 
 ## [Unreleased]
 
+### Added - lower `Path` to real QML vector geometry (#12028 item 3, UI39)
+
+Qt is the second backend to render the new kernel drawing primitive
+(after XAML). `circle`/`line`/`curve` are implemented; `arc` is a
+stretch goal not included here — a real build using `kind: arc` still
+hard-errors with a named "not yet supported" message.
+
+New `emit_path_qml`, dispatched early in `emit_qml_tree` (dynamic
+per-node geometry can't be expressed by `primitive_to_qml`'s static
+`QmlElement.builtin_lines`, so `Path` gets its own emitter like every
+other host/dynamic primitive):
+- `circle` → a plain `Rectangle` with `radius: width / 2` — QML has no
+  dedicated ellipse primitive, but a square `Rectangle` with a
+  half-width corner radius is the idiomatic circle. Its native
+  `color`/`border.color`/`border.width` properties already match
+  `background`/`border-color`/`border-width` 1:1 — no remapping
+  needed, unlike XAML's `Ellipse` (which has no `Background`/
+  `BorderBrush` dependency properties at all). Reuses the existing
+  `qml_rectangle_paint_lines` directly.
+- `line`/`curve` → `QtQuick.Shapes`' `Shape` + `ShapePath` +
+  `PathLine`/`PathQuad`, added behind a new conditional
+  `import QtQuick.Shapes` (`tree_needs_shapes_import`, mirroring
+  `tree_needs_controls_import`'s pattern) that only fires for
+  `line`/`curve`/`arc` kinds — a `circle`-only tree stays import-free.
+  New `qml_shape_path_paint_lines` maps `background`/`border-color`/
+  `border-width` to `ShapePath`'s differently-named
+  `fillColor`/`strokeColor`/`strokeWidth` (`fillColor` always gets an
+  explicit line, defaulting to `"transparent"`, since `ShapePath`'s own
+  default fill is solid black — would otherwise silently paint a
+  filled wedge behind a stroke-only line or curve).
+
+**A real architectural mismatch found and fixed along the way:**
+`Stack`'s existing QML lowering (`Item` + `anchors.fill: parent`
+injected onto every child, `emit_qml_children`) assumes every Z-overlay
+child wants to fill the whole container — true for every primitive
+that existed before `Path`, false for `Path` itself, whose entire
+purpose is self-positioning via its own geometry props. Without a fix,
+the crescent-moon worked example (two differently-sized/offset circles
+composited via `Stack`, UI39 §3) would have every `Path` child
+stretched to the full container bounds, destroying the positioning.
+Fixed with a narrow, well-justified exception in `emit_qml_children`:
+`Path` children skip the `anchors.fill: parent` injection that every
+other `Stack` child still gets — not a change to `Stack`'s general
+contract. Coordinate props accept only a literal `Number` for now
+(matching XAML's own scope decision); `SlotRef`/`Expr` produce a clear
+compile error, not a silent drop.
+
+`mosaic-package-artifact-builder`'s `("Path", ...)` degradation arm
+narrowed to also exclude `Backend::Qt`.
+
+Verified against the real toolchain: the exact QML syntax above
+(`Rectangle` circle, `Shape`/`ShapePath`/`PathLine`/`PathQuad`) was
+confirmed via `qmllint` and a real `qmlscene` launch *before* writing
+`emit_path_qml` — including a second probe specifically to confirm
+`Shape` doesn't need explicit `width`/`height` to paint correctly,
+since `ShapePath` coordinates are absolute within the `Shape`'s own
+origin regardless. A real `mosaic-compile pkg --backend qt` build of a
+package authoring the actual crescent-moon shape (two overlapping
+`Path` circles) produces `nativeComplete: true, degradations: []`; the
+real emitted `.qml` passes `qmllint` with zero errors and launches
+cleanly via `qmlscene` for both the circle-only case and a combined
+circle+line+curve case exercising the `QtQuick.Shapes` import path.
+
+### Added - native radio-group mutual exclusion (#13007)
+
+`emit_host_radio_qml`'s `group:` prop was preserved only as a
+`// group: ...` line comment — no actual QtQuick.Controls `ButtonGroup`
+wiring. A literal `group: "..."` value shared by 2+ `HostRadio`s
+anywhere in the component now gets real exclusivity: `from_pipeline`
+pre-scans the whole tree (`collect_radio_group_counts`) before emission
+begins, synthesizes one `ButtonGroup { id: ... }` per qualifying group
+value as an extra non-visual child of the root `Item`, and each member
+radio's own block attaches `ButtonGroup.group: <id>` to it — no
+restructuring of the visual tree, since QML object `id`s are file-
+scoped (a `ButtonGroup` doesn't need to be a visual sibling of the
+radios it governs). Threaded via a new `EmitCtx.radio_group_slugs`
+field, computed once and inherited unchanged through every recursive
+call. A `slot:`-bound group, or a literal value with only one member,
+keeps the pre-#13007 comment-only behavior.
+
+New `pub fn radio_groups_with_native_semantics` lets
+`mosaic-package-artifact-builder`'s degradation analyzer stop reporting
+`property.radio-group-ignored` wherever this lowering actually applies.
+
+Verified with a real `qmllint` pass over a regenerated
+`mosaic-pkg-deck-options` project (the real multi-radio usage this
+targets) — zero errors, zero `ButtonGroup`-related warnings.
+
+### Security - validate HostLink.href's URI scheme before Qt.openUrlExternally (#13052)
+
+Follow-up to #12038, which fixed the identical gap in the XAML backend and
+flagged that the other native backends likely shared it. `emit_host_link_qml`
+handed a literal `href` straight into `<a href="...">` rich text, and
+`onLinkActivated` passes the clicked link straight to
+`Qt.openUrlExternally(link)` — the OS shell launcher — with no scheme check.
+Since layout/style source is a trust boundary (third-party Mosaic packages),
+an unvalidated `file:`/custom-protocol scheme would launch arbitrary local
+content rather than open as a web link.
+
+Added `has_allowed_uri_scheme` (mirrors XAML's function of the same name —
+allowlists `http`/`https`/`mailto`, RFC-3986-shaped scheme/authority
+parsing) and a new `PipelineEmitError::UnsafeUriScheme` variant. Rejects a
+literal disallowed scheme at compile time — the only href path this backend
+has today (no `slot:`-bound href exists yet).
+
+Two rounds of security review caught two real bugs before merge, both
+fixed here: (1) the exemption for `external: false` was checked on
+`external_false` alone, but `handler_body`'s `(_, None) => Qt.openUrlExternally(link)`
+arm means `external: false` **without** `onActivate` still reaches the
+sink — the real exemption is `external: false` **and** `onActivate`
+present together (`reaches_open_url_externally`, computed explicitly
+rather than inferred from `external_false` alone); (2) every real
+toolkit `HostLink` (`Breadcrumb`/`Nav`/`Navbar`/`Pagination`) pairs
+`href: "#"` + `external: false` with `onActivate`, so this tightening
+doesn't affect any shipping component — verified by grep before
+landing, not just asserted.
+
 ### Fixed - generated components collapsed to zero size in any QML layout
 
 Every generated component reported `0 x 0` to its parent and collapsed when

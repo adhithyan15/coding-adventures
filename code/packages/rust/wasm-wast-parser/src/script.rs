@@ -396,8 +396,25 @@ fn parse_const_value(e: &SExpr) -> Result<ConstValue, WastParseError> {
         // that function's own match) since it's only valid as an
         // `assert_return` expectation, never a concrete argument or result.
         "ref.null" => match lit {
-            "func" | "extern" => Ok(ConstValue::Ref(None)),
-            other => Err(WastParseError::UnexpectedToken { pos, found: other.to_string(), expected: "func or extern" }),
+            // `any` (real corpus vendoring pass -- `ref_null.wast`'s own
+            // `(ref.null any)`): same collapsed `Ref(None)` representation
+            // as `func`/`extern` -- see `wasm-wast-parser::module::
+            // parse_ref_null_heap_type`'s matching "any" arm for why this
+            // is a real, wired heap type (`ValueType::Anyref`'s `0x6E`
+            // encoding), not a fallback guess.
+            // `exn` (real corpus vendoring pass -- `ref_null.wast`'s own
+            // `(ref.null exn)`): same collapsed `Ref(None)` representation,
+            // see `wasm-wast-parser::module::parse_ref_null_heap_type`'s
+            // matching "exn" arm. `none`/`nofunc`/`noextern`/`noexn` (same
+            // file's own bottom-type cases) are every bit as collapsed --
+            // see that function's own doc comment on why an internally-
+            // consistent, non-spec-canonical byte is exact here.
+            "func" | "extern" | "any" | "exn" | "none" | "nofunc" | "noextern" | "noexn" => Ok(ConstValue::Ref(None)),
+            other => Err(WastParseError::UnexpectedToken {
+                pos,
+                found: other.to_string(),
+                expected: "func, extern, any, exn, none, nofunc, noextern, or noexn",
+            }),
         },
         // `(ref.extern N)` (WASM17) -- the testsuite's own script-syntax
         // convenience for an externref test value; not a real instruction.

@@ -2,6 +2,123 @@
 
 All notable changes to this package will be documented in this file.
 
+## [0.6.14] — 2026-08-26 (W26 follow-up — real table64 operations)
+
+### Fixed
+
+- **Real, pre-existing bug: active ELEMENT segment application ignored
+  the target table's own `is64`.** `instantiate()`'s active
+  element-segment-application loop unconditionally evaluated the
+  segment's offset expression as `i32`, even though the sibling active
+  DATA segment branch immediately above it was already correctly
+  `is64`-aware (W25) — an active element segment targeting an `is64`
+  table trapped instantiation (`expected I64, found I32`) instead of
+  applying. Found via the real `call_indirect64.wast` corpus (its
+  `(table $t64 i64 funcref (elem $const-i32))` shorthand hit exactly
+  this). Fixed to branch on the target table's own `Table::is64()`,
+  matching the data-segment code exactly; kept in `u64` throughout
+  (narrowing to `u32` only AFTER the upfront whole-segment bounds check),
+  same "never narrow before checking" discipline `wasm-execution`'s own
+  `table_u64_to_u32` helper documents.
+
+### Tests
+
+- New `active_element_segment_on_an_is64_table_applies_at_instantiation_time`
+  end-to-end test (`tests/table_init_copy_elem_drop.rs`): instantiates a
+  module with an active element segment on an `is64` table and confirms
+  `call_indirect` reaches the right functions.
+
+## [0.6.13] — 2026-08-26 (W28 — real cross-instance shared memory/table + atomic elem-segment application)
+
+### Fixed
+
+- **Imported memory/table is now a genuine shared live view, not a clone**
+  — depends on `wasm-execution` 0.9.73's `LinearMemory`/`Table` becoming
+  `Rc<RefCell<..>>`-backed (see that crate's own CHANGELOG for the full
+  rationale). This crate's own `instantiate()` needed NO code change for
+  this half of the fix: it already just pushes whatever `HostInterface::
+  resolve_memory`/`resolve_table` hands back straight into `WasmInstance::
+  memories`/`tables`, so once those values genuinely share storage on
+  `.clone()`, this crate's existing import-resolution path is correct for
+  free.
+- **Active element-segment application is now atomic per segment.** The
+  `for elem in &module.elements` loop in `instantiate()` used to call
+  `table.set(offset + j, func_idx)?` once per entry, propagating the
+  first out-of-bounds error via `?` as soon as ONE index in the segment
+  was out of range — but by then, every EARLIER entry in that same
+  segment had already been written. This is a real, spec-violating bug
+  (a single active segment must be all-or-nothing; only *earlier,
+  already-applied* segments persist past a *later* segment's trap, not
+  partial entries WITHIN one segment) that was completely unobservable
+  before this same PR's shared-storage fix: a failed `instantiate()`
+  call's local `tables` Vec was simply dropped on error, so a partial
+  write vanished regardless of whether the table was a fresh local one or
+  an independently-CLONED import. It became observable the moment a
+  table's storage started being genuinely SHARED across instances — a
+  partial write to a shared table now persists in the exporting
+  instance's own storage even though the importing instance's
+  `instantiate()` call fails, exactly the shape `linking.wast`'s own
+  already-vendored `assert_trap` directives probe. Fixed by
+  bounds-checking the WHOLE segment (`offset + segment.len() <=
+  table.size()`) BEFORE writing any entry, mirroring `LinearMemory::
+  write_bytes`'s existing upfront-bounds-check-then-one-write shape.
+  Confirmed via `linking.wast`'s own tally: without this second fix, its
+  `assert_trap` count regressed 18/18 -> 17/18 the moment the storage-
+  sharing fix alone landed; with both fixes together, it's back to 18/18
+  AND `assert_return` improved 48/65 -> 54/65, with zero regressions
+  anywhere else in the 216-file corpus (programmatically diffed
+  baseline-to-baseline).
+- **Known, deliberately out-of-scope remaining gap:** `call_indirect`
+  still resolves a table entry (a bare `u32` function index) against the
+  CALLING instance's own function-index space — correct within one
+  instance, but not a genuine cross-instance funcref identity. See
+  `wasm-execution`'s `Table` doc comment for the full explanation; two
+  `assert_return` directives in the newly-vendored `linking0.wast`/
+  `linking3.wast` (see `wasm-conformance`'s CHANGELOG) hit exactly this
+  gap and are the only real `fail`s introduced by vendoring those files.
+
+### Added
+
+- **`wasm-runtime/tests/shared_memory_table_import.rs`** — three new
+  integration tests, each building a two-instance import scenario (module
+  A exports a memory/table, module B imports it) directly against this
+  crate's own `WasmRuntime`/`HostInterface`, bypassing the `.wast` corpus
+  entirely: a write through B's imported memory is visible via A's own
+  `read` export; a `memory.grow` through B's import is visible via A's
+  own `memory.size`; a `table.grow` through B's imported table is visible
+  via A's own `table.size`. All three FAIL against the pre-fix code (the
+  clone-not-share bug reproduced directly, not just inferred from corpus
+  numbers) and PASS after it.
+
+## [0.6.12] — 2026-08-26 (W27 — census batch: multi-memory data segments + start function)
+
+### Fixed
+
+- **Active data segments now apply to their OWN `seg.memory_index`, not
+  unconditionally memory 0.** `instantiate()`'s data-segment loop used
+  to grab `memories.first_mut()` once and apply every non-passive
+  segment to it; it now looks up `memories.get_mut(seg.memory_index as
+  usize)` per segment, and resolves that segment's `i32.const`-vs-
+  `i64.const` offset-expression width from the TARGET memory's own
+  `is64`-ness (previously always memory 0's). `wasm-validator` 0.2.71
+  bounds-checks `seg.memory_index` before this ever runs, so the
+  `continue` fallback for a not-found index is defensive only.
+- **A module's `start` function is now actually invoked.** `module.start`
+  (parsed and carried on `WasmModule` since `wasm-wast-parser`'s own
+  `"start"` build arm) was never read anywhere in this crate —
+  `instantiate()` now calls it, via the same `call_engine` plumbing an
+  ordinary export call uses, as the LAST step of instantiation, exactly
+  once, only if present. A start-function trap surfaces through
+  `instantiate()`'s existing `Err` path, same as any other
+  instantiation-time fault.
+- Real corpus impact: unblocks `start.wast`/`start0.wast` outright;
+  `linking.wast` (already vendored) has exercised the missing-start-
+  invocation gap all along in its own `assert_return` tally, though a
+  full before/after baseline diff confirms neither this fix nor the
+  multi-memory one above moved that specific file's numbers (its
+  remaining fails share cross-instance-import root causes tracked
+  separately — see `wasm-conformance`'s own CHANGELOG skip list).
+
 ## [0.6.11] — 2026-08-26 (W11 addendum — concrete function-type refs)
 
 ### Changed

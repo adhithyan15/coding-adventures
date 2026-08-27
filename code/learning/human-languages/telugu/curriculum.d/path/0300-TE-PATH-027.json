@@ -1,0 +1,13 @@
+{
+  "id": "TE-PATH-027",
+  "spine_node": "SPINE-SAY-WHAT-I-DO",
+  "lessons": [
+    "TE-C33-anuko",
+    "TE-C33-artham-cesuko"
+  ],
+  "before": [],
+  "inline": [
+    "TE-EXT-027-MIND-VERBS"
+  ],
+  "after": []
+}

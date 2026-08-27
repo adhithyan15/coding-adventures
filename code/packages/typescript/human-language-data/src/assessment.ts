@@ -202,10 +202,21 @@ export function parseAssessmentContract(
       if (!Array.isArray(skillRaw.taskInventory) || skillRaw.taskInventory.some((task) => typeof task !== "string")) {
         throw new Error(`assessment: ${expectedLanguage}.${current}.${skill}.taskInventory must be a string array`);
       }
+      // `artifactReference`, not a bare string check. These are paths that a
+      // checker joins to the track directory and stats, and the CEFR half of the
+      // contract was the only half not validating their shape — the capstone half
+      // below has always done so. A rule spelled in one of two places is a rule
+      // whose absence in the other nobody notices (see loader.ts's TRACK_ID note).
+      const taskInventory = skillRaw.taskInventory.map((reference, referenceIndex) =>
+        artifactReference(
+          reference,
+          `${expectedLanguage}.${current}.skills.${skill}.taskInventory[${referenceIndex}]`,
+        )
+      );
       if (typeof skillRaw.passThreshold !== "number" || skillRaw.passThreshold <= 0 || skillRaw.passThreshold > 1) {
         throw new Error(`assessment: ${expectedLanguage}.${current}.${skill}.passThreshold must be in (0, 1]`);
       }
-      return [skill, { taskInventory: [...skillRaw.taskInventory], passThreshold: skillRaw.passThreshold }];
+      return [skill, { taskInventory, passThreshold: skillRaw.passThreshold }];
     })) as AssessmentContract["levels"][number]["skills"];
     const additionalRaw = item.additionalComponents === undefined
       ? {}
@@ -248,7 +259,12 @@ export function parseAssessmentContract(
           componentRaw.name,
           `${expectedLanguage}.${current}.additionalComponents.${id}.name`,
         ),
-        taskInventory: [...componentRaw.taskInventory],
+        taskInventory: (componentRaw.taskInventory as string[]).map((reference, referenceIndex) =>
+          artifactReference(
+            reference,
+            `${expectedLanguage}.${current}.additionalComponents.${id}.taskInventory[${referenceIndex}]`,
+          )
+        ),
         passThreshold: componentRaw.passThreshold,
       }];
     }));
@@ -274,8 +290,8 @@ export function parseAssessmentContract(
       return {
         id: nonEmpty(mockRaw.id, `${expectedLanguage}.${current}.mock.id`),
         timed: true,
-        rubric: nonEmpty(mockRaw.rubric, `${expectedLanguage}.${current}.mock.rubric`),
-        answerKey: nonEmpty(mockRaw.answerKey, `${expectedLanguage}.${current}.mock.answerKey`),
+        rubric: artifactReference(mockRaw.rubric, `${expectedLanguage}.${current}.mock.rubric`),
+        answerKey: artifactReference(mockRaw.answerKey, `${expectedLanguage}.${current}.mock.answerKey`),
       };
     });
     return {

@@ -52,11 +52,11 @@ canonical `sequence` order.
 | 136-143 | 24 | A First Three-Place Map | `GU-C20-hear-bajar` -> `GU-C20-bajar` -> `GU-C20-hear-ghar` -> `GU-W20-gha` -> `GU-C20-ghar` -> `GU-C20-hear-mandir` -> `GU-C20-mandir` -> `GU-C20-places-three` |
 | 144-150 | 25 | Hand and Money Join the Map | `GU-C21-hear-haath` -> `GU-C21-haath` -> `GU-C21-hear-paisa` -> `GU-W21-ai-matra` -> `GU-C21-paisa` -> `GU-R21-travel-five` -> `GU-C21-travel-five` |
 | 151-157 | 26 | City, School, and Road | `GU-C22-hear-shahar` -> `GU-C22-shahar` -> `GU-C22-hear-shaalaa` -> `GU-C22-shaalaa` -> `GU-C22-hear-rasto` -> `GU-C22-rasto` -> `GU-C22-route-three` |
-| 158-163 | 27 | Village and Shop Complete Ten | `GU-C23-hear-gaam` -> `GU-C23-gaam` -> `GU-C23-hear-dukaan` -> `GU-C23-dukaan` -> `GU-R23-map-ten` -> `GU-C23-map-ten` |
+| 158-165 | 27 | Village and Shop Complete Ten | `GU-C23-hear-gaam` -> `GU-R23-route-three-r1` -> `GU-C23-gaam` -> `GU-C23-hear-dukaan` -> `GU-C23-dukaan` -> `GU-R23-map-ten` -> `GU-C23-map-ten` -> `GU-R23-shaalaa-rasto-r2` |
 
 ## Current boundary
 
-The current book contains 27 chapters and 163 lessons. It teaches all 41
+The current book contains 27 chapters and 165 lessons. It teaches all 41
 Gujarati forms that the book shows, includes the complete pre-A1 writing-stage
 ladder, and carries the doorway and conversation material through measured
 distant retrieval. It has begun, but has not completed, the 300-headword

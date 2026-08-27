@@ -1,0 +1,12 @@
+{
+  "id": "LA-PATH-030",
+  "spine_node": "SPINE-NAME-EVERYDAY-ACTIONS",
+  "lessons": [
+    "LA-C42-fero"
+  ],
+  "before": [],
+  "inline": [
+    "LA-EXT-030-LANGUAGE-SPECIFIC"
+  ],
+  "after": []
+}

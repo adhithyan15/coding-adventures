@@ -2,6 +2,25 @@
 
 ## [Unreleased]
 
+### Security - validate literal HostLink.href's URI scheme (#13052)
+
+Follow-up to #12038 (the identical XAML gap). A literal `href` was spliced
+into a real `<a href="...">` with only HTML-attribute escaping — no scheme
+check — a real XSS vector (`href: "javascript:..."`) reachable from a
+third-party layout, since layout/style source is a trust boundary.
+
+Added `has_disallowed_uri_scheme` (new `PipelineEmitError::UnsafeUriScheme`
+variant, `emit_host_link` now returns `Result`) rejecting a literal `href`
+at compile time when it carries an explicit, disallowed scheme. A relative
+reference with no scheme at all (`"#"`, `"/about"`) is unaffected — the
+common in-app-routing shape — matching every other backend's #13052 fix.
+
+A slot-bound `href` is left unvalidated here: this backend emits a
+`{{slot}}` mustache placeholder substituted by a separate host/preview
+template engine outside this crate (see the module doc comment), so a
+runtime guard for a dynamic href would need to live in that substitution
+step, not this compiler. Out of scope for this fix.
+
 ### Fixed - expression drag keys are no longer silently dropped
 
 `append_drag_value` matched only a string literal or a slot ref, so once a layout used

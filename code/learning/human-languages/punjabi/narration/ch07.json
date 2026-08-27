@@ -3,8 +3,8 @@
   "language": "punjabi",
   "chapter": 7,
   "title": "Six Verbs at the Core",
-  "drivablePrefix": 6,
-  "sourceHash": "fnv1a64:a0dcbe3bf7eb8de6",
+  "drivablePrefix": 7,
+  "sourceHash": "fnv1a64:8d097f1d87187648",
   "lessons": [
     {
       "id": "PA-C07-hona",
@@ -304,7 +304,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:02948358822be42d",
+      "sourceHash": "fnv1a64:9564a2e1bfc6b848",
       "notice": null,
       "blocks": [
         {
@@ -679,6 +679,150 @@
             {
               "kind": "speech",
               "text": "What noun is hiding inside vekhṇā? (The eye — Sanskrit akṣi, behind the verb īkṣ-.) Name two English words off that root. (Any of eye, window, ocular, optic, autopsy.) And what is the Hindi-shaped twin of this verb? (Dekhṇā.)"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "PA-R07-wellbeing-r3",
+      "sequence": 405,
+      "title": "Every wellbeing atom returns at R3",
+      "headword": "(oral R3)",
+      "romanization": "kivēṁ — tusī̃ kivēṁ ho — maiṁ ṭhīk hāṁ — koī gall nahīṁ",
+      "gloss": "retrieve every Chapter 3 wellbeing atom at R3",
+      "script": "gurmukhi",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:2673e58945cb94b1",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "No new language. Listen once, then speak two short turns. Keep each score independent and repair only a miss."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "The exchange",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "Listen to tusī̃ kivēṁ ho? and give its meaning before repeating it."
+            },
+            {
+              "kind": "speech",
+              "text": "Reply maiṁ ṭhīk hāṁ from the English cue alone."
+            },
+            {
+              "kind": "speech",
+              "text": "Answer thanks with koī gall nahīṁ."
+            },
+            {
+              "kind": "speech",
+              "text": "Name the three small root cues: question k-, first-person m-, negative n-."
+            },
+            {
+              "kind": "speech",
+              "text": "Romanization is only a machine-readable record of prior speech. It is not Gurmukhi reading or writing evidence."
+            },
+            {
+              "kind": "activity",
+              "scored": true,
+              "id": "PA-R07-wellbeing-r3-listening",
+              "prompt": "You hear tusī̃ kivēṁ ho? Say its meaning, identify respectful ho, and name kivēṁ's k-question-family sound. Then type those spoken answers.",
+              "assesses": [
+                "PA-LEX-KIVEIN-03",
+                "PA-ETYMON-QUESTION-K-03",
+                "PA-PHRASE-HOW-ARE-YOU-03",
+                "PA-GRAMMAR-TUSI-HO-03"
+              ],
+              "responseSeconds": 18,
+              "acceptedResponses": [
+                "how are you; ho; k-",
+                "how are you; ho; k",
+                "how i am; ho; k"
+              ],
+              "feedback": {
+                "correct": "The question's meaning, grammar, and k-family all returned at R3.",
+                "incorrect": "Hear tusī̃ kivēṁ ho once more: how are you; respectful ho; question-family k-."
+              }
+            },
+            {
+              "kind": "activity",
+              "scored": true,
+              "id": "PA-R07-wellbeing-r3-reply",
+              "prompt": "Reply I am fine aloud, then name maiṁ's first-person m-family. Type the romanized reply and sound.",
+              "assesses": [
+                "PA-LEX-MAIN-03",
+                "PA-GRAMMAR-MAIN-HAAN-03",
+                "PA-ETYMON-FIRST-PERSON-M-03",
+                "PA-LEX-THIK-03",
+                "PA-PHRASE-I-AM-FINE-03"
+              ],
+              "responseSeconds": 16,
+              "acceptedResponses": [
+                "maiṁ ṭhīk hāṁ; m-",
+                "main thik haan; m",
+                "mai thik haan; m"
+              ],
+              "feedback": {
+                "correct": "The complete reply and first-person family returned at R3.",
+                "incorrect": "Say maiṁ ṭhīk hāṁ, then keep maiṁ's opening m-."
+              }
+            },
+            {
+              "kind": "activity",
+              "scored": true,
+              "id": "PA-R07-wellbeing-r3-close",
+              "prompt": "Answer thanks with no problem aloud, then name nahīṁ's negative n-family. Type the romanized reply and sound.",
+              "assesses": [
+                "PA-PHRASE-NO-PROBLEM-03",
+                "PA-ETYMON-NEGATIVE-NE-03"
+              ],
+              "responseSeconds": 16,
+              "acceptedResponses": [
+                "koī gall nahīṁ; n-",
+                "koi gall nahin; n",
+                "koi gal nahi; n"
+              ],
+              "feedback": {
+                "correct": "The courtesy close and negative family returned at R3.",
+                "incorrect": "Say koī gall nahīṁ, then keep nahīṁ's opening n-."
+              }
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Ask, answer, and close the exchange once more from meaning alone."
             }
           ]
         }

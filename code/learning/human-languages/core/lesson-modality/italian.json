@@ -7,7 +7,7 @@
   "policy": {
     "maxLinearisableTableColumns": 3
   },
-  "sourceHash": "fnv1a64:504f19fb329b5dc6",
+  "sourceHash": "fnv1a64:cf4f32bc9cedb262",
   "summary": {
     "totalLessons": 89,
     "voice": 74,
@@ -1599,7 +1599,7 @@
         "no-visual-dependency"
       ],
       "coreDrivable": true,
-      "sourceHash": "fnv1a64:54e3ea7bdb0badc0"
+      "sourceHash": "fnv1a64:122ad0f13825da67"
     },
     {
       "id": "IT-C18-scrivere",
@@ -1617,7 +1617,7 @@
         "no-visual-dependency"
       ],
       "coreDrivable": true,
-      "sourceHash": "fnv1a64:bf241d48b4032ad6"
+      "sourceHash": "fnv1a64:cf859754b231bd29"
     },
     {
       "id": "IT-C19-prendere",
@@ -1653,7 +1653,7 @@
         "no-visual-dependency"
       ],
       "coreDrivable": true,
-      "sourceHash": "fnv1a64:c1a4a8184e67d693"
+      "sourceHash": "fnv1a64:ac3baa0ecae085ec"
     },
     {
       "id": "IT-C19-aiutare",
@@ -1689,7 +1689,7 @@
         "no-visual-dependency"
       ],
       "coreDrivable": true,
-      "sourceHash": "fnv1a64:659830f6ba3b9926"
+      "sourceHash": "fnv1a64:899f43a4edc49ac4"
     },
     {
       "id": "IT-C20-portare",
@@ -1707,7 +1707,7 @@
         "no-visual-dependency"
       ],
       "coreDrivable": true,
-      "sourceHash": "fnv1a64:e8abdcf4e264efbc"
+      "sourceHash": "fnv1a64:b7cfa7498b004291"
     },
     {
       "id": "IT-C20-comprare",
@@ -1725,7 +1725,7 @@
         "no-visual-dependency"
       ],
       "coreDrivable": true,
-      "sourceHash": "fnv1a64:0b8050f28b31c1da"
+      "sourceHash": "fnv1a64:a6d50888a958631f"
     },
     {
       "id": "IT-C20-aspettare",
@@ -1743,7 +1743,7 @@
         "no-visual-dependency"
       ],
       "coreDrivable": true,
-      "sourceHash": "fnv1a64:1f1a0e124a21d1c0"
+      "sourceHash": "fnv1a64:980daef53d3cec23"
     },
     {
       "id": "IT-C20-incontrare",

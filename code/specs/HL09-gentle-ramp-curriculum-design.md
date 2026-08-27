@@ -100,7 +100,7 @@ of the ramp; filling it is many tranches of work, replicated per track.
 
 ### 3.1 What this means for "reaching a level"
 
-A track may claim a level only when it has:
+A track has **complete structural coverage** of a level only when it has:
 
 1. realized **every** spine node at that level and all levels below,
 2. taught at least the cumulative vocabulary for that level,
@@ -108,7 +108,43 @@ A track may claim a level only when it has:
 3. zero lessons over the atom budget at or below that level, and
 4. every atom at or below that level revisited at least twice (§7).
 
-Anything less is reported as *in progress at level X*, never as *reached X*.
+Anything less is reported as *in progress at level X*, never as *coverage complete
+at X*.
+
+#### These five criteria measure the corpus. None measures a learner.
+
+**This is the most important sentence in the section, and until 2026-08-26 the
+gate's own output contradicted it.** Read the list again and ask what each
+criterion counts: spine nodes realized, headwords taught, verb headwords taught,
+lessons over budget, atoms revisited. Every one is a property of the *book*.
+Not one of them requires a person to answer a question.
+
+The report nevertheless printed **`levels ATTAINED`**, and Spanish was about to
+print *"1 track at A1"* having never had a single exam item scored against it.
+"Attained" is what a candidate does; "covered" is what a syllabus does. The
+gate was honest about which lessons exist and dishonest about what that proves,
+in exactly the shape §1 opens with — a number that means TOUCHES being read as
+MEANS, one rung higher up.
+
+So the terms are now fixed and the report says both halves:
+
+| term | what it asserts | measured by |
+|---|---|---|
+| **touches** *X* | some lesson sits at *X* | `TrackLevelCoverage.reach` |
+| **coverage complete** at *X* | the corpus teaches what *X* asks for | criteria 1–4 above |
+| **performance verified** at *X* | a learner scored a pass on a real task | **nothing — see §3.2** |
+
+The third row is empty on purpose. It is not a criterion that was weakened; it
+is a criterion that does not exist yet, and the report now says so in the line
+under the coverage figure rather than letting the reader supply it. Removing or
+softening criteria 1–4 to make the humbler wording true would be the same
+mistake pointing the other way: the corpus claims are correct, and they are
+claims about a corpus.
+
+The wording is also load-bearing outside this repository. These books are meant
+to be read by people deciding whether they are ready to sit DELE A1. A reader
+who sees "attained A1" and books an exam has been told something the project
+never measured.
 
 #### Every count criterion carries a composition criterion
 
@@ -146,6 +182,51 @@ every unrevisited atom is the same kind — and Spanish's 83-atom shortfall is
 currently un-partitioned. That is its own piece of work, tracked separately;
 it is named here so the rule is visibly not a one-off written to justify a
 single gate.
+
+### 3.2 Proposed: a `mock-performance` criterion — **NOT ENABLED, BLOCKED**
+
+*Status: **sketch only**. Not implemented, not wired, not gating anything.*
+
+The empty row above is not meant to stay empty. The shape a fifth criterion
+would take:
+
+> **5. `mock-performance` — at least one full mock at this level has been sat
+> and scored, and the score meets or exceeds the awarding body's own pass rule
+> for that level.**
+
+Its parts, and where each already has machinery:
+
+- **Which mock.** `<track>/assessment.json` already names two timed mocks per
+  level with a rubric and an answer key (HL16). Those artifacts must exist —
+  they mostly do not, which is what the `assessment-artifact-ceiling` gate now
+  records rather than tolerates.
+- **What "pass" means.** The awarding body's real rule, transcribed by HL18 §4
+  into `task-shapes/<level>.json` `passRule`, **not improved**. DELE A1 is not
+  60% of a project-invented total; it is whatever Instituto Cervantes publishes,
+  including the per-skill structure. Where the body publishes no independent
+  per-skill threshold, HL16's stricter project thresholds apply *on top*, and
+  the two remain separately visible (HL18 §4).
+- **Who sat it.** A score with no scorer is a number, not evidence. The record
+  must name the sitting: date, form, conditions (timed? single audio pass?),
+  who marked it, and against which rubric revision. HL16's
+  `requiresHumanValidation` is the existing hook.
+- **What it may not do.** It may not be satisfied by a self-scored, untimed, or
+  post-hoc-marked attempt, and it may not be satisfied by the *average* of two
+  skills — the whole point of independent thresholds is that a strong reading
+  score cannot hide an untaught speaking strand.
+
+**Why this is a sketch and not a change.** The A1 mocks are being written and
+sat right now, in a parallel effort. What a criterion should demand is exactly
+what that sitting is about to reveal — how long a real mock takes to author,
+whether a rubric written from an inventory survives contact with a real answer,
+whether a per-skill threshold is measurable from the artifacts HL16 asks for.
+Specifying the criterion before that result would be guessing at numbers and
+then defending them, which is how §3's editorial figures got their §10 warning
+label.
+
+**Blocked on:** the first scored Spanish A1 mock. Until it lands, the honest
+state of this project is *coverage complete at pre-A1, performance unmeasured
+everywhere*, and that is what the report prints.
 
 ---
 
@@ -519,7 +600,7 @@ This spec is the design. Implementation is a long series of small tranches:
 | 2 | Migrate Spanish chapters 7–8 to schema v2 and give all 56 sequence-less lessons a declared order | The ramp collapses exactly at the schema boundary: chapters 1–6 carry `sequence`/`spine_node`/atoms, chapters 7–8 carry none, so they are invisible to every tool that reads the knowledge graph. Chapter 7's order needs a **human decision** — `curriculum.json` says comer→beber→qué→vivir→dónde while the lesson prose and `reviews_of` say comer→vivir→beber→qué→dónde |
 | 3 | Close R1/R2 by wiring `practises.knowledge` on existing teaching lessons (§7.2), then add `review` lessons only for R3/R4 | 99 of Spanish's 114 R1 misses are never revisited at ANY distance, so this is an absence, not a scheduling error. A chapter-end review cannot reach R1 for 11 of 35 chapters. Extend `session-map.md` past chapter 3 as the schedule becomes real |
 | 4 | Close the functional holes: `sí`/`no`, `estoy`, `yo`, `un`/`una` | The learner can be asked a question and cannot decline; can ask "how are you?" and cannot answer |
-| 5 | Split `SPINE-SAY-WHAT-I-DO` (42 concepts) into rungs of ≤6 | No spine node holds more concepts than a chapter may introduce. **First slice shipped** (`HL23` §8.3): three concepts moved to a new A1 `SPINE-NAME-EVERYDAY-ACTIONS`, 42 → 39. The remainder is a cross-track **lesson migration**, not a ledger edit — `HL23` §8.1 explains why and §8.2 prices it per concept |
+| 5 | Split `SPINE-SAY-WHAT-I-DO` (42 concepts at diagnosis, **35 today**) into rungs of ≤6 | No spine node holds more concepts than a chapter may introduce. **Two slices shipped.** `HL23` §8.3: three concepts to a new A1 `SPINE-NAME-EVERYDAY-ACTIONS`, 42 → 39. `HL23` §9.2: `VERB-DO-MAKE`, `VERB-BUY`, `VERB-OPEN` and `VERB-CLOSE` to the same node, 39 → **35**, driven by the DELE A1 sitting that found those verbs taught and staged above the exam asking for them. The remainder is a cross-track **lesson migration**, not a ledger edit — `HL23` §8.1 explains why, §8.2 prices it per concept and §9.1 prices the six concepts §8.2 omits |
 | 6 | Close Spanish's R1 windows | Zero atoms miss the first revisit window |
 | 7 | Author pre-A1 to its real size (~150 lessons) | Vocabulary ≥300; every pre-A1 node realized; culture/region strand present in every chapter |
 | 8 | A1, then A2, at their real sizes | §3.1 satisfied per level before the next begins |
@@ -540,3 +621,10 @@ level.**
 - [ ] Level claims are gated on §3.1 rather than on node realization alone.
 - [ ] Every chapter has an intro, an etymological thread, and a culture/region note.
 - [ ] The gap report distinguishes *in progress at level X* from *reached X*.
+- [x] The gap report distinguishes **structural coverage** from **learner
+      performance**, and states in its own output that §3.1 measures the corpus
+      (§3.1). Enforced by `level-gate.test.ts`, which asserts the word
+      "ATTAINED" is absent from the rendered report — a positive assertion alone
+      would be satisfied by a rename that left the old phrasing elsewhere.
+- [ ] `mock-performance` (§3.2) is specified against a real scored mock. Blocked
+      on the first Spanish A1 sitting; deliberately not implemented.

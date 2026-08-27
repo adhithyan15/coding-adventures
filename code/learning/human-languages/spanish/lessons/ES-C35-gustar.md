@@ -1,7 +1,7 @@
 ---
 schema_version: 2
 id: ES-C35-gustar
-spine_node: SPINE-SAY-WHAT-I-DO
+spine_node: SPINE-SAY-WHAT-I-LIKE
 sequence: 1960
 chapter: 163
 type: word

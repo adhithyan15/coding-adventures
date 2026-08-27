@@ -477,6 +477,180 @@ fn invalid_table_size_without_a_declared_table() {
     assert_invalid(r#"(module (func (result i32) (table.size)))"#);
 }
 
+// ── W26 follow-up: real table64 operations (table.get/set/grow/size/fill/
+// copy/init/call_indirect against an `is64` table) ──────────────────────
+
+#[test]
+fn valid_table_get_set_use_i64_index_operands_on_an_is64_table() {
+    assert_valid(
+        r#"(module
+             (table $t i64 1 funcref)
+             (func (param $v funcref)
+               (table.set $t (i64.const 0) (local.get $v))
+               (drop (table.get $t (i64.const 0)))))"#,
+    );
+}
+
+#[test]
+fn invalid_table_get_rejects_an_i32_index_on_an_is64_table() {
+    assert_invalid(
+        r#"(module
+             (table $t i64 1 funcref)
+             (func (result funcref) (table.get $t (i32.const 0))))"#,
+    );
+}
+
+#[test]
+fn invalid_table_set_rejects_an_i32_index_on_an_is64_table() {
+    assert_invalid(
+        r#"(module
+             (table $t i64 1 funcref)
+             (func (param $v funcref) (table.set $t (i32.const 0) (local.get $v))))"#,
+    );
+}
+
+#[test]
+fn valid_table_grow_size_fill_use_i64_operands_and_results_on_an_is64_table() {
+    assert_valid(
+        r#"(module
+             (table $t i64 1 funcref)
+             (func (param $v funcref) (result i64 i64)
+               (table.fill $t (i64.const 0) (local.get $v) (i64.const 1))
+               (table.grow $t (local.get $v) (i64.const 1))
+               (table.size $t)))"#,
+    );
+}
+
+#[test]
+fn invalid_table_grow_rejects_an_i32_delta_on_an_is64_table() {
+    assert_invalid(
+        r#"(module
+             (table $t i64 1 funcref)
+             (func (param $v funcref) (result i32)
+               (table.grow $t (local.get $v) (i32.const 1))))"#,
+    );
+}
+
+#[test]
+fn invalid_table_size_pushes_i64_not_i32_on_an_is64_table() {
+    assert_invalid(r#"(module (table $t i64 1 funcref) (func (result i32) (table.size $t)))"#);
+}
+
+#[test]
+fn valid_call_indirect_against_an_is64_table_uses_an_i64_index() {
+    assert_valid(
+        "(module
+           (type $t (func (param i32) (result i32)))
+           (func $callee (param i32) (result i32) (local.get 0))
+           (table $t0 i64 1 funcref)
+           (elem (table $t0) (i64.const 0) func $callee)
+           (func (result i32) (call_indirect $t0 (type $t) (i32.const 1) (i64.const 0))))",
+    );
+}
+
+#[test]
+fn invalid_call_indirect_rejects_an_i32_index_on_an_is64_table() {
+    assert_invalid(
+        "(module
+           (type $t (func (result i32)))
+           (table $t0 i64 1 funcref)
+           (func (result i32) (call_indirect $t0 (type $t) (i32.const 0))))",
+    );
+}
+
+#[test]
+fn valid_table_init_on_an_is64_table_widens_only_the_destination_operand() {
+    // `dest` is i64 (the target table's own is64), `src`/`len` (positions
+    // within the element segment) stay i32 -- a passive element segment
+    // isn't itself address-typed, mirroring the real `table_init64.wast`
+    // corpus.
+    assert_valid(
+        r#"(module
+             (func $callee)
+             (table $t i64 4 funcref)
+             (elem $e func $callee $callee)
+             (func
+               (table.init $t $e (i64.const 0) (i32.const 0) (i32.const 2))))"#,
+    );
+}
+
+#[test]
+fn invalid_table_init_rejects_an_i64_source_offset_on_an_is64_table() {
+    // `src`/`len` must stay i32 even when the DESTINATION table is is64 --
+    // an is64 target table only widens `dest`.
+    assert_invalid(
+        r#"(module
+             (func $callee)
+             (table $t i64 4 funcref)
+             (elem $e func $callee $callee)
+             (func
+               (table.init $t $e (i64.const 0) (i64.const 0) (i32.const 2))))"#,
+    );
+}
+
+/// `table_copy_mixed.wast`'s own "Valid cases" module, reproduced directly:
+/// a real `table.copy` between an is32 table and an is64 table, in both
+/// directions, must validate -- `dest` follows the DESTINATION table's own
+/// `is64`, `src` follows the SOURCE's, independently.
+#[test]
+fn valid_table_copy_between_mixed_is64_and_is32_tables_type_checks_each_operand_independently() {
+    assert_valid(
+        r#"(module
+             (table $t32 30 30 funcref)
+             (table $t64 i64 30 30 funcref)
+             (func (export "test32")
+               (table.copy $t32 $t32 (i32.const 13) (i32.const 2) (i32.const 3)))
+             (func (export "test64")
+               (table.copy $t64 $t64 (i64.const 13) (i64.const 2) (i64.const 3)))
+             (func (export "test_64to32")
+               (table.copy $t32 $t64 (i32.const 13) (i64.const 2) (i32.const 3)))
+             (func (export "test_32to64")
+               (table.copy $t64 $t32 (i64.const 13) (i32.const 2) (i32.const 3))))"#,
+    );
+}
+
+/// `table_copy_mixed.wast`'s `bad_size_arg` case: `len`'s width is `i64`
+/// ONLY when BOTH tables are `is64` -- here `dst` is is32 and `src` is
+/// is64, so `len` must stay `i32`; typing it to `i64` must be rejected.
+#[test]
+fn invalid_table_copy_mixed_rejects_a_length_wider_than_the_smaller_index_type() {
+    assert_invalid(
+        r#"(module
+             (table $t32 30 30 funcref)
+             (table $t64 i64 30 30 funcref)
+             (func
+               (table.copy $t32 $t64 (i32.const 13) (i64.const 2) (i64.const 3))))"#,
+    );
+}
+
+/// `table_copy_mixed.wast`'s `bad_src_idx` case: the SOURCE operand must
+/// match the SOURCE table's own `is64` (here `$t64`, so `i64`), not the
+/// destination's.
+#[test]
+fn invalid_table_copy_mixed_rejects_a_source_index_typed_to_the_wrong_table() {
+    assert_invalid(
+        r#"(module
+             (table $t32 30 30 funcref)
+             (table $t64 i64 30 30 funcref)
+             (func
+               (table.copy $t32 $t64 (i32.const 13) (i32.const 2) (i32.const 3))))"#,
+    );
+}
+
+/// `table_copy_mixed.wast`'s `bad_dst_idx` case: the DESTINATION operand
+/// must match the DESTINATION table's own `is64` (here `$t32`, so `i32`),
+/// not the source's.
+#[test]
+fn invalid_table_copy_mixed_rejects_a_destination_index_typed_to_the_wrong_table() {
+    assert_invalid(
+        r#"(module
+             (table $t32 30 30 funcref)
+             (table $t64 i64 30 30 funcref)
+             (func
+               (table.copy $t32 $t64 (i64.const 13) (i64.const 2) (i32.const 3))))"#,
+    );
+}
+
 // ── task #97: table.init / table.copy / elem.drop ────────────────────────
 
 #[test]

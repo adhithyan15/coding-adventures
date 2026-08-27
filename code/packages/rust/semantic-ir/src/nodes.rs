@@ -349,6 +349,22 @@ pub struct RescueClause {
     pub span: Span,
 }
 
+/// One `case` label of a [`Stmt::Switch`] (task #51) — Java/JavaScript
+/// `case v: body`. Real fall-through applies: if `body` doesn't end in
+/// a `Stmt::Break`, control continues into the *next* `SwitchCase` in
+/// the enclosing `Switch.cases` list (or into `Switch.default`, if this
+/// is the last entry). An empty `body` is exactly how the "multiple
+/// labels, one body" idiom (`case 1: case 2: foo(); break;`) is
+/// represented — no separate multi-value-label field is needed.
+#[derive(Debug, Clone, PartialEq)]
+pub struct SwitchCase {
+    pub value: Expr,
+    /// The case body, a bare statement list (no trailing value slot,
+    /// like `RescueClause.body`).
+    pub body: Vec<Stmt>,
+    pub span: Span,
+}
+
 /// A declared field of a [`Stmt::NominalClassDef`] (SIR29) — Java/C#
 /// `private int x;`.  Unlike the dynamic-OOP profile's `Scope::Instance`
 /// (any name legal at first write, no declaration), a nominal class
@@ -671,6 +687,62 @@ pub enum Stmt {
     /// `ForRange`-exclusion rules as `Break` — see its doc comment and
     /// `Feature::LoopControl`'s.
     Continue { span: Span },
+
+    // ── Switch statement (task #51) ─────────────────────────────────
+    /// `switch (discriminant) { case v1: body1 case v2: body2 …
+    /// default: body_n }` — a C-family-style switch statement with
+    /// real fall-through semantics (Java/JavaScript's own): each
+    /// `SwitchCase`'s own body executes, in `cases`' own order, once
+    /// its `value` matches `discriminant`; control then falls through
+    /// into the *next* case's body (and eventually `default`) unless a
+    /// `Stmt::Break` is reached first. `Break` is valid directly inside
+    /// a `Switch` the same way it's valid inside a loop — the
+    /// validator's own `loop_stack` mechanism gained a `LoopKind::
+    /// Switch` entry for exactly this (see the validator's own doc
+    /// comment on that enum); `Continue` still requires an actual
+    /// enclosing *loop*, skipping over any `Switch` frame to find one,
+    /// matching every C-family language's own rule that `continue`
+    /// never targets a switch.
+    ///
+    /// `discriminant`'s own `Kind`/type (in a statically-typed source
+    /// language) and whether each case `value` is even
+    /// equality-comparable against it are entirely a *frontend-level*
+    /// concern — this validator does not kind-check either, mirroring
+    /// `Stmt::While`'s own condition expression, which isn't
+    /// kind-checked here either (each frontend that already targets
+    /// `While` decides for itself, e.g. Java restricts loop conditions
+    /// to `Bool` before ever emitting IR).
+    ///
+    /// `default`, if present, is always the *last* case for both
+    /// match-order and fallthrough-order purposes. Real Java/
+    /// JavaScript permit `default` in any source position (still
+    /// matched last regardless of where it's written, but falling
+    /// through at its own textual position) — modeling that precisely
+    /// would require exposing two independent orderings (match-order
+    /// vs. fallthrough-order) to every consumer of this node for a
+    /// corner case essentially nobody hits in practice. A frontend
+    /// whose source declares `default` in a non-last position rejects
+    /// it as a narrow, disclosed scope boundary rather than
+    /// mis-lowering it.
+    ///
+    /// Zero cases matching and no `default` present is well-defined:
+    /// the switch does nothing (execution falls through to the
+    /// statement after it) — matches every C-family language's own
+    /// behavior.
+    ///
+    /// Gated by `Feature::Switch`. No backend accepts this feature yet
+    /// as of this node's own introduction (task #51) — every backend
+    /// gets a mechanical, compile-forced rejection arm; real codegen
+    /// is deferred to per-backend follow-up work, mirroring
+    /// `Feature::LoopControl`'s own rollout shape (SIR16 addendum:
+    /// landed IR-and-validator-only first, adopted by JS/TS/Go/Python
+    /// one backend at a time in later, separate tasks).
+    Switch {
+        discriminant: Box<Expr>,
+        cases: Vec<SwitchCase>,
+        default: Option<Vec<Stmt>>,
+        span: Span,
+    },
 }
 
 impl Stmt {
@@ -695,6 +767,7 @@ impl Stmt {
             Stmt::MethodDef { span, .. } => span,
             Stmt::Break { span } => span,
             Stmt::Continue { span } => span,
+            Stmt::Switch { span, .. } => span,
         }
     }
 }

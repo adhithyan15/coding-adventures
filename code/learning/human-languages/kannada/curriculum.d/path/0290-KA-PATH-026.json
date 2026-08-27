@@ -1,0 +1,13 @@
+{
+  "id": "KA-PATH-026",
+  "spine_node": "SPINE-SAY-WHAT-I-DO",
+  "lessons": [
+    "KA-C33-yocisu",
+    "KA-C33-artha-maadiko"
+  ],
+  "before": [],
+  "inline": [
+    "KA-EXT-026-MIND-VERBS"
+  ],
+  "after": []
+}

@@ -147,6 +147,13 @@ pub enum PipelineEmitError {
     /// First-pass limitations: see the module-level "What is NOT in this
     /// first pass" section.
     UnknownPrimitive(String),
+    /// #13052: a `HostLink.href` literal uses a URI scheme outside the
+    /// `http`/`https`/`mailto` allowlist. `Link(destination:)` hands
+    /// the URL to the OS on tap, so an unvalidated scheme (`file:`, a
+    /// custom protocol handler, ...) would open arbitrary local
+    /// content rather than a web link. Rejected rather than escaped --
+    /// no escaping makes an unsafe scheme safe.
+    UnsafeUriScheme(String),
 }
 
 impl std::fmt::Display for PipelineEmitError {
@@ -168,6 +175,10 @@ impl std::fmt::Display for PipelineEmitError {
             PipelineEmitError::UnknownPrimitive(t) => write!(
                 f,
                 "moslayout primitive '{t}' is not yet supported by the SwiftUI emitter"
+            ),
+            PipelineEmitError::UnsafeUriScheme(href) => write!(
+                f,
+                "HostLink href {href:?} does not use an allowed URI scheme (http, https, mailto)"
             ),
         }
     }
@@ -4247,17 +4258,17 @@ fn emit_host_button(
 /// effectively read-only (user taps have no effect — the host has no
 /// way to learn about them).
 ///
-/// ## What is NOT in this first cut
+/// ## Indeterminate (`#13006`)
 ///
-/// - The `indeterminate` slot. SwiftUI's `Toggle` has no tri-state
-///   visual; rendering a "mixed" state requires either a custom
-///   `ToggleStyle` or a different primitive (e.g. `Image` of the
-///   `checkmark.square.fill` SF Symbol). Deferred to a follow-up that
-///   adds a custom checkbox style.
-/// - Explicit `.toggleStyle(.checkbox)`. That style is macOS-only; on
-///   iOS the same modifier fails to compile. Setting the default
-///   platform style works on both. Authors who want a checkbox visual
-///   on macOS can compose a userland wrapper that adds the modifier.
+/// SwiftUI's `Toggle` has no tri-state visual, so when `indeterminate:`
+/// is authored the emitter swaps the whole primitive for a manually
+/// drawn mixed-checkbox: a `Button` wrapping an SF Symbol
+/// (`minus.square.fill` / `checkmark.square.fill` / `square`) plus the
+/// label, with `.buttonStyle(.plain)` so it doesn't pick up platform
+/// button chrome. `Button` (unlike a bare `Image` + `.onTapGesture`)
+/// correctly respects a trailing `.disabled(...)` modifier. See
+/// `checkbox_indeterminate_expr` for how the condition is derived, and
+/// `emit_host_checkbox_mixed` for the swapped-primitive emission.
 fn emit_host_checkbox(node: &LayoutNode, indent: usize) -> Result<String, PipelineEmitError> {
     let pad = " ".repeat(indent);
 
@@ -4286,6 +4297,33 @@ fn emit_host_checkbox(node: &LayoutNode, indent: usize) -> Result<String, Pipeli
         "\"\"".to_string()
     };
 
+    let mod_pad = " ".repeat(indent + 4);
+    let disabled_modifier: Option<String> = if let Some(slot) = find_slot_ref_prop(node, "disabled")
+    {
+        let camel = to_camel_case_first_lower(slot);
+        validate_slot_or_field_name(&camel).map_err(PipelineEmitError::UnsafeSlotName)?;
+        Some(format!("{mod_pad}.disabled({camel})\n"))
+    } else if let Some(kw) = find_keyword_prop(node, "disabled") {
+        if kw == "true" || kw == "false" {
+            Some(format!("{mod_pad}.disabled({kw})\n"))
+        } else {
+            None
+        }
+    } else {
+        None
+    };
+
+    if let Some(indeterminate_cond) = checkbox_indeterminate_expr(node)? {
+        return emit_host_checkbox_mixed(
+            node,
+            indent,
+            &checked_expr,
+            &label_arg,
+            &indeterminate_cond,
+            disabled_modifier.as_deref(),
+        );
+    }
+
     // Binding form. With onToggle: a Binding(get:set:) whose setter
     // dispatches the new value. Without: a .constant() that makes the
     // toggle read-only but still type-checks.
@@ -4302,18 +4340,99 @@ fn emit_host_checkbox(node: &LayoutNode, indent: usize) -> Result<String, Pipeli
 
     let mut out = String::new();
     writeln!(out, "{pad}Toggle({label_arg}, isOn: {binding_expr})").unwrap();
+    if let Some(modifier) = disabled_modifier {
+        out.push_str(&modifier);
+    }
 
-    // `.disabled(...)` trailing modifier. Indented one Swift-source step
-    // beyond the Toggle so the modifier visually attaches to it.
-    let mod_pad = " ".repeat(indent + 4);
-    if let Some(slot) = find_slot_ref_prop(node, "disabled") {
-        let camel = to_camel_case_first_lower(slot);
-        validate_slot_or_field_name(&camel).map_err(PipelineEmitError::UnsafeSlotName)?;
-        writeln!(out, "{mod_pad}.disabled({camel})").unwrap();
-    } else if let Some(kw) = find_keyword_prop(node, "disabled") {
-        if kw == "true" || kw == "false" {
-            writeln!(out, "{mod_pad}.disabled({kw})").unwrap();
+    Ok(out)
+}
+
+/// Whether `indeterminate:` is authored in a form the emitter can act
+/// on, and if so, the Swift boolean expression that is `true` while the
+/// checkbox should render mixed. Mirrors XAML's `IsThreeState`
+/// treatment (`mosaic-emit-xaml`'s `emit_host_checkbox`): a `SlotRef`
+/// or `Expr` value can't be evaluated at compile time, so its *presence*
+/// unconditionally routes to the mixed-capable primitive — the actual
+/// runtime value decides whether the mixed glyph is shown. A literal
+/// `Keyword("false")` (or absence) means "never mixed," so the caller
+/// keeps the plain two-state `Toggle`.
+fn checkbox_indeterminate_expr(node: &LayoutNode) -> Result<Option<String>, PipelineEmitError> {
+    match find_prop_value(node, "indeterminate") {
+        Some(LayoutPropValue::Keyword(k)) if k == "true" => Ok(Some("true".to_string())),
+        Some(LayoutPropValue::SlotRef(slot)) => {
+            let camel = to_camel_case_first_lower(slot);
+            validate_slot_or_field_name(&camel).map_err(PipelineEmitError::UnsafeSlotName)?;
+            Ok(Some(camel))
         }
+        Some(LayoutPropValue::Expr(expr)) => Ok(Some(format!("({expr})"))),
+        Some(LayoutPropValue::Keyword(_))
+        | Some(LayoutPropValue::String(_))
+        | Some(LayoutPropValue::Number(_))
+        | Some(LayoutPropValue::EmitRef(_))
+        | None => Ok(None),
+    }
+}
+
+/// The mixed-capable `HostCheckbox` primitive, used whenever
+/// `indeterminate:` is authored (see `checkbox_indeterminate_expr`).
+///
+/// ```swift
+/// Button(action: {
+///     dispatch(.toggle(checked: isMixed ? true : !isChecked))
+/// }) {
+///     HStack {
+///         Image(systemName: isMixed ? "minus.square.fill" : (isChecked ? "checkmark.square.fill" : "square"))
+///         Text("label")
+///     }
+/// }
+/// .buttonStyle(.plain)
+/// .disabled(isDisabled)
+/// ```
+///
+/// Tapping always resolves *out of* mixed: a mixed checkbox becomes
+/// fully checked, a checked one becomes unchecked, an unchecked one
+/// becomes checked — the same "toggle away from indeterminate" rule
+/// `mosaic-emit-compose`'s `TriStateCheckbox` lowering uses. Without
+/// `onToggle` bound, the action is a no-op (matching the plain
+/// `Toggle` path's `.constant()` fallback — the control renders but
+/// taps have no effect).
+fn emit_host_checkbox_mixed(
+    node: &LayoutNode,
+    indent: usize,
+    checked_expr: &str,
+    label_arg: &str,
+    indeterminate_cond: &str,
+    disabled_modifier: Option<&str>,
+) -> Result<String, PipelineEmitError> {
+    let pad = " ".repeat(indent);
+    let inner_pad = " ".repeat(indent + 4);
+    let content_pad = " ".repeat(indent + 8);
+    let mod_pad = " ".repeat(indent + 4);
+
+    let new_value_expr = format!("{indeterminate_cond} ? true : !{checked_expr}");
+    let action_body: String = match find_emit_ref_prop(node, "onToggle") {
+        Some(emit_name) => {
+            let case_name = to_camel_case_first_lower(&strip_on_prefix(emit_name));
+            validate_emit_name(&case_name)?;
+            format!("dispatch(.{case_name}(checked: {new_value_expr}))")
+        }
+        None => "()".to_string(),
+    };
+
+    let mut out = String::new();
+    writeln!(out, "{pad}Button(action: {{ {action_body} }}) {{").unwrap();
+    writeln!(out, "{inner_pad}HStack {{").unwrap();
+    writeln!(
+        out,
+        "{content_pad}Image(systemName: {indeterminate_cond} ? \"minus.square.fill\" : ({checked_expr} ? \"checkmark.square.fill\" : \"square\"))"
+    )
+    .unwrap();
+    writeln!(out, "{content_pad}Text({label_arg})").unwrap();
+    writeln!(out, "{inner_pad}}}").unwrap();
+    writeln!(out, "{pad}}}").unwrap();
+    writeln!(out, "{mod_pad}.buttonStyle(.plain)").unwrap();
+    if let Some(modifier) = disabled_modifier {
+        out.push_str(modifier);
     }
 
     Ok(out)
@@ -4840,6 +4959,71 @@ fn swift_drag_event_dispatch(
 /// `onActivate` dispatch when `external != false` and documents
 /// the limitation. The far-more-common in-app routing path
 /// (`external: false`) gets the full Button-with-dispatch shape.
+/// #13052: does `href` carry an explicit URI scheme outside the
+/// `http`/`https`/`mailto` allowlist? A relative reference (no scheme
+/// at all -- `"#"`) returns `false`. Only a *present, disallowed*
+/// scheme (`javascript:`, `data:`, `file:`, a custom protocol
+/// handler, ...) returns `true`. A colon appearing after a `/`, `?`,
+/// or `#` is data, not a scheme separator.
+///
+/// Security-review hardening: normalizes exactly like the WHATWG URL
+/// parser does before looking for a scheme -- trims leading/trailing
+/// C0-control-or-space and strips every embedded tab/CR/LF. Without
+/// this, `" javascript:alert(1)"` or `"java\tscript:alert(1)"` fails
+/// the alphabetic-first-character check below and gets classified as
+/// "no scheme, therefore a safe relative reference." A first review
+/// pass of #13052 missed this; caught and fixed in the same PR.
+fn has_disallowed_uri_scheme(href: &str) -> bool {
+    let normalized: String = href
+        .trim_matches(|c: char| (c as u32) <= 0x20)
+        .chars()
+        .filter(|c| !matches!(c, '\t' | '\r' | '\n'))
+        .collect();
+    let href = normalized.as_str();
+    let Some(colon) = href.find(':') else {
+        return false;
+    };
+    let prefix = &href[..colon];
+    if prefix.is_empty() || prefix.contains(['/', '?', '#']) {
+        return false;
+    }
+    let mut chars = prefix.chars();
+    let Some(first) = chars.next() else {
+        return false;
+    };
+    if !first.is_ascii_alphabetic() {
+        return false;
+    }
+    if !chars.all(|c| c.is_ascii_alphanumeric() || c == '+' || c == '-' || c == '.') {
+        return false;
+    }
+    const ALLOWED: [&str; 3] = ["http", "https", "mailto"];
+    !ALLOWED.iter().any(|s| s.eq_ignore_ascii_case(prefix))
+}
+
+/// #13110: `href:` can be a literal string OR (as of this fix) a
+/// `slot:` reference -- previously only the literal form was
+/// recognised, and a slot-bound href silently fell back to `"#"` with
+/// no diagnostic (the epic's own recurring "silent drop" bug class).
+/// `Swift(String)` carries the escaped Swift-string CONTENT of a
+/// literal href; `Slot(String)` carries the camelCase Swift property
+/// identifier the slot resolves to. [`HostLinkHref::as_swift_expr`]
+/// turns either into a ready-to-splice Swift expression of type
+/// `String` (a quoted literal or a bare identifier reference).
+enum HostLinkHref {
+    Literal(String),
+    Slot(String),
+}
+
+impl HostLinkHref {
+    fn as_swift_expr(&self) -> String {
+        match self {
+            HostLinkHref::Literal(escaped) => format!("\"{escaped}\""),
+            HostLinkHref::Slot(ident) => ident.clone(),
+        }
+    }
+}
+
 fn emit_host_link(
     node: &LayoutNode,
     indent: usize,
@@ -4849,11 +5033,40 @@ fn emit_host_link(
     let pad = " ".repeat(indent);
     let inner_pad = " ".repeat(indent + 4);
 
-    let href = find_string_prop(node, "href").unwrap_or("#");
-    let escaped_href = escape_swift_string(href);
-    let label_text = host_link_label_text_expr(node, href)?;
-
+    let href = match find_string_prop(node, "href") {
+        Some(literal) => HostLinkHref::Literal(escape_swift_string(literal)),
+        None => match find_slot_ref_prop(node, "href") {
+            Some(slot) => {
+                let camel = to_camel_case_first_lower(slot);
+                validate_slot_or_field_name(&camel).map_err(PipelineEmitError::UnsafeSlotName)?;
+                HostLinkHref::Slot(camel)
+            }
+            None => HostLinkHref::Literal(escape_swift_string("#")),
+        },
+    };
     let external_false = matches!(find_keyword_prop(node, "external"), Some("false"));
+    // #13052: reject rather than escape. `href` is the exact value
+    // `Link(destination:)` hands to the OS on tap (see below) -- no
+    // escaping done further down makes an unsafe scheme safe. Only
+    // checked when `external` can actually reach that call:
+    // `external: false` routes through a Button + dispatch instead,
+    // never constructing a URL, so a routing placeholder like
+    // `href: "#"` stays valid there (mirrors the Qt/Compose backends'
+    // identical scoping for #13052). A literal href is checked here,
+    // at compile time; a slot-bound href is unknown until runtime, so
+    // it's checked below via a generated safe-URL guard instead.
+    if let HostLinkHref::Literal(escaped) = &href {
+        if !external_false && has_disallowed_uri_scheme(escaped) {
+            return Err(PipelineEmitError::UnsafeUriScheme(escaped.clone()));
+        }
+    }
+    let href_label_source = match &href {
+        HostLinkHref::Literal(escaped) => escaped.as_str(),
+        HostLinkHref::Slot(_) => "#",
+    };
+    let label_text = host_link_label_text_expr(node, href_label_source)?;
+    let href_expr = href.as_swift_expr();
+
     let on_activate = find_emit_ref_prop(node, "onActivate");
 
     if external_false {
@@ -4863,7 +5076,7 @@ fn emit_host_link(
             Some(emit_name) => {
                 let case = to_camel_case_first_lower(&strip_on_prefix(emit_name));
                 validate_emit_name(&case)?;
-                let args = host_link_event_args(emit_name, emits, for_payload, &escaped_href)?;
+                let args = host_link_event_args(emit_name, emits, for_payload, &href_expr)?;
                 if args.is_empty() {
                     format!("dispatch(.{case})")
                 } else {
@@ -4879,11 +5092,27 @@ fn emit_host_link(
     } else {
         // Default: SwiftUI Link with OS-default open behaviour.
         let mut out = String::new();
-        writeln!(
-            out,
-            "{pad}Link(destination: URL(string: \"{escaped_href}\")!) {{"
-        )
-        .unwrap();
+        let destination = match &href {
+            // A literal href is validated above at compile time, so a
+            // well-formed absolute URL is guaranteed here -- force-
+            // unwrap is safe (the same value could never have reached
+            // this point otherwise).
+            HostLinkHref::Literal(escaped) => format!("URL(string: \"{escaped}\")!"),
+            // A slot-bound href is an unknown runtime value, so it
+            // needs BOTH a validity check (URL(string:) returns nil
+            // for malformed input -- force-unwrapping that would
+            // crash on click) AND the #13052 scheme allowlist. A
+            // disallowed/unparseable value falls back to a fixed,
+            // always-valid, inert URL rather than crashing or
+            // navigating -- the same "no navigation target" outcome
+            // the XAML/Compose backends settled on.
+            HostLinkHref::Slot(ident) => format!(
+                "{{ () -> URL in guard let u = URL(string: {ident}), \
+                 [\"http\", \"https\", \"mailto\"].contains(u.scheme?.lowercased() ?? \"\") \
+                 else {{ return URL(string: \"about:blank\")! }}; return u }}()"
+            ),
+        };
+        writeln!(out, "{pad}Link(destination: {destination}) {{").unwrap();
         writeln!(out, "{inner_pad}{label_text}").unwrap();
         writeln!(out, "{pad}}}").unwrap();
         Ok(out)
@@ -4914,7 +5143,7 @@ fn host_link_event_args(
     emit_name: &str,
     emits: &[EmitDecl],
     for_payload: Option<ForPayloadScope<'_>>,
-    escaped_href: &str,
+    href_expr: &str,
 ) -> Result<String, PipelineEmitError> {
     let Some(emit) = emits.iter().find(|e| e.name == emit_name) else {
         return Ok(String::new());
@@ -4926,7 +5155,7 @@ fn host_link_event_args(
         let param = &emit.params[0];
         let field = to_camel_case_first_lower(&param.name);
         validate_slot_or_field_name(&field).map_err(PipelineEmitError::UnsafeSlotName)?;
-        let expr = host_link_payload_expr(&param.r#type, &field, for_payload, escaped_href)
+        let expr = host_link_payload_expr(&param.r#type, &field, for_payload, href_expr)
             .unwrap_or_else(|| "/* TODO: payload */ fatalError(\"TODO: payload\")".to_string());
         return Ok(format!("{field}: {expr}"));
     }
@@ -4936,7 +5165,7 @@ fn host_link_event_args(
         .map(|param| {
             let field = to_camel_case_first_lower(&param.name);
             validate_slot_or_field_name(&field).map_err(PipelineEmitError::UnsafeSlotName)?;
-            let expr = host_link_payload_expr(&param.r#type, &field, for_payload, escaped_href)
+            let expr = host_link_payload_expr(&param.r#type, &field, for_payload, href_expr)
                 .unwrap_or_else(|| "/* TODO: payload */ fatalError(\"TODO: payload\")".to_string());
             Ok(format!("{field}: {expr}"))
         })
@@ -4944,15 +5173,19 @@ fn host_link_event_args(
         .map(|parts| parts.join(", "))
 }
 
+/// `href_expr` is already a complete Swift expression of type `String`
+/// -- a quoted literal (`"..."`) or a bare slot-property identifier --
+/// per [`HostLinkHref::as_swift_expr`]. It's spliced in as-is, not
+/// re-quoted.
 fn host_link_payload_expr(
     t: &EmitPayloadType,
     field: &str,
     for_payload: Option<ForPayloadScope<'_>>,
-    escaped_href: &str,
+    href_expr: &str,
 ) -> Option<String> {
     if field == "href" {
         return match t {
-            EmitPayloadType::Text => Some(format!("\"{escaped_href}\"")),
+            EmitPayloadType::Text => Some(href_expr.to_string()),
             _ => None,
         };
     }
@@ -4960,7 +5193,7 @@ fn host_link_payload_expr(
         return Some(expr);
     }
     match t {
-        EmitPayloadType::Text => Some(format!("\"{escaped_href}\"")),
+        EmitPayloadType::Text => Some(href_expr.to_string()),
         _ => None,
     }
 }
@@ -5237,6 +5470,17 @@ fn swiftui_table_shape(host_table: &LayoutNode) -> Option<SwiftUITableShape<'_>>
 /// reporting cannot drift from the emitter's actual lowering.
 pub fn host_table_has_native_semantics(host_table: &LayoutNode) -> bool {
     swiftui_table_shape(host_table).is_some()
+}
+
+/// Returns whether a HostCheckbox's authored `indeterminate:` value (if
+/// any) lowers to real mixed-state rendering (`#13006`).
+///
+/// Package capability analysis calls this same predicate so strict-
+/// profile reporting cannot drift from `emit_host_checkbox`'s actual
+/// lowering — see `checkbox_indeterminate_expr`, which this mirrors
+/// exactly (`Ok(Some(_))` there ⇔ `true` here).
+pub fn host_checkbox_has_native_semantics(node: &LayoutNode) -> bool {
+    matches!(checkbox_indeterminate_expr(node), Ok(Some(_)))
 }
 
 fn append_table_layout_direction(out: &mut String, node: &LayoutNode, indent: usize) {
@@ -9484,6 +9728,93 @@ mod tests {
         );
     }
 
+    /// #13006 — `indeterminate: true` swaps `Toggle` for the mixed-
+    /// capable `Button` + `Image(systemName:)` primitive, keyed off the
+    /// literal `minus.square.fill` glyph.
+    #[test]
+    fn host_checkbox_indeterminate_true_emits_mixed_button() {
+        let checkbox = leaf(
+            "HostCheckbox",
+            vec![prop_slot_ref("checked", "done"), prop_keyword("indeterminate", "true")],
+        );
+        let layout = layout_with("X", container_node("Box", vec![checkbox]));
+        let out = from_pipeline(
+            &component("X", vec![slot("done", SlotType::Bool, true)], vec![]),
+            &layout,
+            &empty_style("X"),
+        )
+        .unwrap()
+        .output;
+        assert!(!out.contains("Toggle("), "expected no Toggle(...), got:\n{out}");
+        assert!(
+            out.contains("Image(systemName: true ? \"minus.square.fill\" : (done ? \"checkmark.square.fill\" : \"square\"))"),
+            "expected the mixed-state Image(systemName:), got:\n{out}"
+        );
+        assert!(
+            out.contains(".buttonStyle(.plain)"),
+            "expected .buttonStyle(.plain), got:\n{out}"
+        );
+    }
+
+    /// #13006 — `indeterminate: slot: mixed` (an unknowable-at-compile-
+    /// time value) also routes to the mixed primitive, and `onToggle`'s
+    /// dispatched value resolves out of mixed (`mixed ? true : !done`).
+    #[test]
+    fn host_checkbox_indeterminate_slot_dispatches_resolved_value() {
+        let checkbox = leaf(
+            "HostCheckbox",
+            vec![
+                prop_slot_ref("checked", "done"),
+                prop_slot_ref("indeterminate", "mixed"),
+                prop_emit_ref("onToggle", "onChange"),
+            ],
+        );
+        let layout = layout_with("X", container_node("Box", vec![checkbox]));
+        let out = from_pipeline(
+            &component(
+                "X",
+                vec![
+                    slot("done", SlotType::Bool, true),
+                    slot("mixed", SlotType::Bool, true),
+                ],
+                vec![emit(
+                    "onChange",
+                    vec![param("checked", EmitPayloadType::Bool)],
+                )],
+            ),
+            &layout,
+            &empty_style("X"),
+        )
+        .unwrap()
+        .output;
+        assert!(
+            out.contains("dispatch(.change(checked: mixed ? true : !done))"),
+            "expected dispatch resolving out of mixed, got:\n{out}"
+        );
+    }
+
+    /// #13006 — `indeterminate: false` (the explicit opt-out) keeps the
+    /// plain two-state `Toggle` unchanged.
+    #[test]
+    fn host_checkbox_indeterminate_false_keeps_plain_toggle() {
+        let checkbox = leaf(
+            "HostCheckbox",
+            vec![prop_slot_ref("checked", "done"), prop_keyword("indeterminate", "false")],
+        );
+        let layout = layout_with("X", container_node("Box", vec![checkbox]));
+        let out = from_pipeline(
+            &component("X", vec![slot("done", SlotType::Bool, true)], vec![]),
+            &layout,
+            &empty_style("X"),
+        )
+        .unwrap()
+        .output;
+        assert!(
+            out.contains("Toggle(\"\", isOn:"),
+            "expected the plain Toggle to survive `indeterminate: false`, got:\n{out}"
+        );
+    }
+
     /// UI29-2 SwiftUI test 6 — a bare `HostRadio` (no props) emits the
     /// same degraded-but-compiling shape as a bare HostCheckbox:
     /// `Toggle("", isOn: .constant(false))`.
@@ -9856,6 +10187,121 @@ mod tests {
         );
     }
 
+    /// #13052: a literal `href` carrying an explicit disallowed URI
+    /// scheme is rejected at compile time when it can reach
+    /// `Link(destination:)` (the default, `external` not `false`).
+    #[test]
+    fn host_link_disallowed_scheme_href_is_rejected() {
+        for hostile in [
+            "javascript:alert(1)",
+            "data:text/html,<script>alert(1)</script>",
+            "file:///etc/passwd",
+        ] {
+            let l = layout_with(
+                "X",
+                container_node(
+                    "Box",
+                    vec![leaf("HostLink", vec![prop_string("href", hostile)])],
+                ),
+            );
+            let err = from_pipeline(&component("X", vec![], vec![]), &l, &empty_style("X"))
+                .unwrap_err();
+            assert!(
+                matches!(err, PipelineEmitError::UnsafeUriScheme(ref h) if h == hostile),
+                "expected UnsafeUriScheme for {hostile:?}, got: {err:?}"
+            );
+        }
+    }
+
+    /// #13052 security-review finding: a scheme hidden behind leading
+    /// whitespace or an embedded tab/CR/LF must still be rejected --
+    /// a naive scan sees no alphabetic first character and
+    /// misclassifies it as "no scheme, therefore safe," but a real
+    /// consumer normalizes that whitespace away before parsing the
+    /// scheme, so it's really a disallowed scheme.
+    #[test]
+    fn host_link_scheme_hidden_by_whitespace_is_still_rejected() {
+        for hostile in [
+            " javascript:alert(1)",
+            "java\tscript:alert(1)",
+            "java\nscript:alert(1)",
+            "\tjavascript:alert(1)",
+        ] {
+            let l = layout_with(
+                "X",
+                container_node(
+                    "Box",
+                    vec![leaf("HostLink", vec![prop_string("href", hostile)])],
+                ),
+            );
+            let err = from_pipeline(&component("X", vec![], vec![]), &l, &empty_style("X"))
+                .unwrap_err();
+            assert!(
+                matches!(err, PipelineEmitError::UnsafeUriScheme(ref h) if h == hostile),
+                "expected UnsafeUriScheme for whitespace-obscured {hostile:?}, got: {err:?}"
+            );
+        }
+    }
+
+    /// #13052: allowed schemes (including case-insensitively) still
+    /// compile to the same `Link(destination:)` shape as before.
+    #[test]
+    fn host_link_allowed_scheme_hrefs_still_emit_link() {
+        for allowed in [
+            "http://example.com",
+            "https://example.com",
+            "HTTPS://example.com",
+            "mailto:hello@example.com",
+        ] {
+            let l = layout_with(
+                "X",
+                container_node(
+                    "Box",
+                    vec![leaf("HostLink", vec![prop_string("href", allowed)])],
+                ),
+            );
+            let r = from_pipeline(&component("X", vec![], vec![]), &l, &empty_style("X"))
+                .unwrap()
+                .output;
+            assert!(
+                r.contains(&format!("URL(string: \"{allowed}\")!")),
+                "expected {allowed:?} to still compile, got:\n{r}"
+            );
+        }
+    }
+
+    /// #13052: a routing placeholder like `href: "#"` (the default
+    /// when no href is bound) and a disallowed scheme both stay valid
+    /// when `external: false`, since that path never constructs a
+    /// `URL` at all -- it's Button + dispatch only.
+    #[test]
+    fn host_link_disallowed_scheme_href_stays_valid_with_external_false() {
+        let m = component(
+            "X",
+            vec![],
+            vec![emit("onNavigate", vec![param("href", EmitPayloadType::Text)])],
+        );
+        let l = layout_with(
+            "X",
+            container_node(
+                "Box",
+                vec![leaf(
+                    "HostLink",
+                    vec![
+                        prop_string("href", "javascript:alert(1)"),
+                        prop_keyword("external", "false"),
+                        prop_emit_ref("onActivate", "onNavigate"),
+                    ],
+                )],
+            ),
+        );
+        let r = from_pipeline(&m, &l, &empty_style("X"));
+        assert!(
+            r.is_ok(),
+            "expected a disallowed scheme with external:false to compile, got: {r:?}"
+        );
+    }
+
     /// UI29-4 SwiftUI test 2 — `external: false` + `onActivate` swaps
     /// to a Button wrapper that dispatches the named emit without
     /// opening the URL (host's in-app router takes over). Pins the
@@ -9892,6 +10338,76 @@ mod tests {
         assert!(
             !r.contains("URL(string:"),
             "in-app routing path must NOT emit URL open, got:\n{r}"
+        );
+    }
+
+    /// #13110: a slot-bound `href` (previously silently ignored,
+    /// falling back to `"#"`) now resolves to the slot's live value,
+    /// wrapped in a runtime scheme-validated safe-URL closure rather
+    /// than a bare `URL(string:)!` force-unwrap -- a malformed or
+    /// disallowed-scheme runtime value must not crash the app on tap.
+    #[test]
+    fn host_link_slot_bound_href_emits_runtime_safe_url() {
+        let m = component("X", vec![slot("target", SlotType::Text, true)], vec![]);
+        let l = layout_with(
+            "X",
+            container_node(
+                "Box",
+                vec![leaf(
+                    "HostLink",
+                    vec![
+                        prop_slot_ref("href", "target"),
+                        prop_string("label", "Click me"),
+                    ],
+                )],
+            ),
+        );
+        let r = from_pipeline(&m, &l, &empty_style("X")).unwrap().output;
+        assert!(
+            r.contains("URL(string: target)"),
+            "expected the slot's live value to be used, not a literal, got:\n{r}"
+        );
+        assert!(
+            r.contains("[\"http\", \"https\", \"mailto\"].contains(u.scheme?.lowercased() ?? \"\")"),
+            "expected the runtime scheme allowlist guard, got:\n{r}"
+        );
+        assert!(
+            !r.contains("URL(string: \"#\")!"),
+            "must not silently fall back to the literal \"#\" placeholder, got:\n{r}"
+        );
+    }
+
+    /// #13110: a slot-bound `href` with `external: false` dispatches
+    /// the slot's live value (a bare identifier), not a hardcoded
+    /// literal string.
+    #[test]
+    fn host_link_slot_bound_href_with_external_false_dispatches_slot_value() {
+        let m = component(
+            "X",
+            vec![slot("target", SlotType::Text, true)],
+            vec![emit(
+                "onNavigate",
+                vec![param("href", EmitPayloadType::Text)],
+            )],
+        );
+        let l = layout_with(
+            "X",
+            container_node(
+                "Box",
+                vec![leaf(
+                    "HostLink",
+                    vec![
+                        prop_slot_ref("href", "target"),
+                        prop_keyword("external", "false"),
+                        prop_emit_ref("onActivate", "onNavigate"),
+                    ],
+                )],
+            ),
+        );
+        let r = from_pipeline(&m, &l, &empty_style("X")).unwrap().output;
+        assert!(
+            r.contains("Button(action: { dispatch(.navigate(href: target)) })"),
+            "expected dispatch with the bare slot identifier (not a quoted literal), got:\n{r}"
         );
     }
 

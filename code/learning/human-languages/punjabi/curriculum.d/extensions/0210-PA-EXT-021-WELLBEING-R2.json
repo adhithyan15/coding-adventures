@@ -1,0 +1,13 @@
+{
+  "id": "PA-EXT-021-WELLBEING-R2",
+  "stage": "pre-A1",
+  "kind": "required",
+  "category": "assessment",
+  "canDo": "I can orally retrieve the complete Punjabi wellbeing cycle at R2 distance without claiming script credit.",
+  "prerequisites": [
+    "PA-EXT-020-WELLBEING-R1"
+  ],
+  "lessons": [
+    "PA-R04-wellbeing-r2"
+  ]
+}

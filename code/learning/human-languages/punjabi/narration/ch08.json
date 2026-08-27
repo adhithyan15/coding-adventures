@@ -4,7 +4,7 @@
   "chapter": 8,
   "title": "The Mind, the Page, and the Falling Tone",
   "drivablePrefix": 0,
-  "sourceHash": "fnv1a64:0af5f1a00caabcd3",
+  "sourceHash": "fnv1a64:5f929452ca816174",
   "lessons": [
     {
       "id": "PA-C08-sochna",
@@ -408,7 +408,7 @@
       "modalityReasons": [
         "script-block"
       ],
-      "sourceHash": "fnv1a64:f872b6ca6fea56e6",
+      "sourceHash": "fnv1a64:f2b3a3784e9d0877",
       "notice": {
         "modality": "sight",
         "needs": [
@@ -593,7 +593,7 @@
       "modalityReasons": [
         "script-block"
       ],
-      "sourceHash": "fnv1a64:6dfd8d54df7e6694",
+      "sourceHash": "fnv1a64:990cb890f5403d2f",
       "notice": {
         "modality": "sight",
         "needs": [

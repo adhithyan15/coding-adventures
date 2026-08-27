@@ -144,6 +144,13 @@ pub enum PipelineEmitError {
     /// See the primitive table at the top of this module for the supported
     /// set.
     UnknownPrimitive(String),
+    /// #13052: a `HostLink.href` literal uses a URI scheme outside the
+    /// `http`/`https`/`mailto` allowlist. `Qt.openUrlExternally` hands the
+    /// clicked link straight to the OS shell, so an unvalidated scheme
+    /// (`file:`, a custom protocol handler, ...) would launch arbitrary
+    /// local content rather than open as a web link. Rejected rather than
+    /// escaped -- no escaping makes an unsafe scheme safe.
+    UnsafeUriScheme(String),
 }
 
 impl std::fmt::Display for PipelineEmitError {
@@ -165,6 +172,10 @@ impl std::fmt::Display for PipelineEmitError {
             PipelineEmitError::UnknownPrimitive(t) => write!(
                 f,
                 "moslayout primitive '{t}' is not yet supported by the Qt/QML emitter"
+            ),
+            PipelineEmitError::UnsafeUriScheme(href) => write!(
+                f,
+                "HostLink href {href:?} does not use an allowed URI scheme (http, https, mailto)"
             ),
         }
     }
@@ -769,6 +780,11 @@ struct EmitCtx<'a> {
     /// generated Qt shell. Only canonical dynamic HostTable shapes consume an
     /// index; unsupported shapes retain the structural fallback.
     next_table_id: Rc<Cell<usize>>,
+    /// Literal `group:` value → synthesized `ButtonGroup` QML id
+    /// (`#13007`), for every group value shared by 2+ `HostRadio`s
+    /// anywhere in the component. Computed once in `from_pipeline` via
+    /// [`collect_radio_group_counts`] before the tree walk begins.
+    radio_group_slugs: &'a HashMap<String, String>,
 }
 
 /// Table-level style defaults that cascade down to cells (the `sheet`
@@ -1158,6 +1174,184 @@ fn qml_rectangle_paint_lines(props: &[StyleProp]) -> Vec<String> {
     lines
 }
 
+/// UI39 `Path`'s `.msl` paint properties for `line`/`curve`'s `ShapePath` —
+/// `fillColor`/`strokeColor`/`strokeWidth`, mapped from the same
+/// `background`/`border-color`/`border-width` every other primitive already
+/// authors (UI39 §3.2's zero-new-style-properties design). `circle` reuses
+/// [`qml_rectangle_paint_lines`] directly instead — `Rectangle`'s own
+/// `color`/`border.color`/`border.width` properties already match
+/// `background`/`border-color`/`border-width` 1:1, unlike `ShapePath`, whose
+/// property names differ.
+///
+/// `fillColor` always gets an explicit line (defaulting to `"transparent"`)
+/// rather than being omitted when unset: `ShapePath`'s own default fill is
+/// solid black, which would silently paint a filled wedge behind an
+/// author's stroke-only line or curve.
+fn qml_shape_path_paint_lines(props: &[StyleProp]) -> Vec<String> {
+    let mut lines = Vec::new();
+    let fill = style_prop(props, "background")
+        .or_else(|| style_prop(props, "background-color"))
+        .and_then(qml_hex_color_or_none);
+    lines.push(format!(
+        "fillColor: \"{}\"",
+        fill.unwrap_or_else(|| "transparent".to_string())
+    ));
+    if let Some(stroke) = style_prop(props, "border-color").and_then(qml_hex_color_or_none) {
+        lines.push(format!("strokeColor: \"{stroke}\""));
+    }
+    if let Some(stroke_width) = style_prop(props, "border-width").and_then(qml_px_or_none) {
+        lines.push(format!("strokeWidth: {stroke_width}"));
+    }
+    lines
+}
+
+/// A `Shape`'s `width`/`height` lines, sized to bound the given coordinates.
+/// `ShapePath` coordinates are relative to the `Shape` element's own origin
+/// (fixed at `(0, 0)` — `Path`'s coordinate props are already the local
+/// values every current use case authors, so no offset is needed), and
+/// QtQuick's `Shape` does not clip painted content to its declared bounds by
+/// default — this size is an implicit-sizing hint for the parent layout,
+/// not a correctness requirement for the painted geometry itself.
+fn qml_shape_bounding_box_lines(xs: &[f64], ys: &[f64]) -> Vec<String> {
+    let width = xs.iter().copied().fold(0.0_f64, f64::max);
+    let height = ys.iter().copied().fold(0.0_f64, f64::max);
+    vec![format!("width: {width}"), format!("height: {height}")]
+}
+
+/// Read a required `Number`-valued prop, e.g. `cx`/`cy`/`r`. `Path`'s
+/// geometry props don't yet support the `SlotRef`/`Expr` bindings every
+/// other numeric prop in the kernel has (UI39 §3.1 documents that as a
+/// kernel-level capability; wiring it through to a real QML property binding
+/// is future work, tracked separately, matching XAML's own not-yet-landed
+/// UI36 dependency for the same gap) — a bound coordinate is therefore a
+/// clear compile error here, not a silent 0.
+fn required_path_number(node: &LayoutNode, prop_name: &str) -> Result<f64, PipelineEmitError> {
+    match node.props.iter().find(|p| p.name == prop_name).map(|p| &p.value) {
+        Some(LayoutPropValue::Number(n)) => Ok(*n),
+        Some(LayoutPropValue::SlotRef(_)) | Some(LayoutPropValue::Expr(_)) => {
+            Err(PipelineEmitError::UnknownPrimitive(format!(
+                "Path prop '{prop_name}' is bound to a slot or expression, but the Qt/QML emitter only supports a literal number for Path geometry props today"
+            )))
+        }
+        _ => Err(PipelineEmitError::UnknownPrimitive(format!(
+            "Path missing required numeric prop '{prop_name}:'"
+        ))),
+    }
+}
+
+/// `Path [name] (kind: circle|line|curve, ...)` → real QML vector geometry.
+/// UI39 §3.1's four shape kinds; `arc` is a stretch goal not implemented in
+/// this PR (falls through to a named "not yet supported" error below, same
+/// posture `Icon`'s glyph lowering has for unrecognized semantic names on
+/// the XAML backend).
+///
+/// `circle` lowers to a plain `Rectangle` with `radius: width / 2` — QML has
+/// no dedicated ellipse primitive, but a square `Rectangle` with a
+/// half-width corner radius is the idiomatic circle, and its native
+/// `color`/`border.color`/`border.width` properties already match
+/// `background`/`border-color`/`border-width` with no remapping needed
+/// (unlike XAML's `Ellipse`, which has no `Background`/`BorderBrush`
+/// dependency properties at all). `line`/`curve` need `QtQuick.Shapes`
+/// (`Shape` + `ShapePath` + `PathLine`/`PathQuad`), which has no equivalent
+/// of `Rectangle`'s reusable paint properties, hence
+/// [`qml_shape_path_paint_lines`]'s separate remap.
+///
+/// Verified empirically via `qmllint` and a real `qmlscene` launch before
+/// writing this function — the exact syntax below (including the
+/// `Stack`-child positioning fix in `emit_qml_children`, since QML's `Item`/
+/// `Rectangle` support direct `x`/`y` properties rather than XAML's
+/// `Margin`-based positioning) renders the crescent-moon worked example
+/// from UI39 §3 correctly.
+fn emit_path_qml(node: &LayoutNode, depth: usize, ctx: &EmitCtx) -> Result<String, PipelineEmitError> {
+    let pad = "    ".repeat(depth);
+    let props: &[StyleProp] = node
+        .part_name
+        .as_deref()
+        .and_then(|p| ctx.part_styles.get(p))
+        .map(Vec::as_slice)
+        .unwrap_or(&[]);
+    let kind = find_keyword_prop(node, "kind").ok_or_else(|| {
+        PipelineEmitError::UnknownPrimitive("Path missing required prop 'kind:'".to_string())
+    })?;
+
+    match kind {
+        "circle" => {
+            let cx = required_path_number(node, "cx")?;
+            let cy = required_path_number(node, "cy")?;
+            let r = required_path_number(node, "r")?;
+            let d = 2.0 * r;
+            let (x, y) = (cx - r, cy - r);
+            let mut out = String::new();
+            writeln!(out, "{pad}Rectangle {{").unwrap();
+            writeln!(out, "{pad}    x: {x}").unwrap();
+            writeln!(out, "{pad}    y: {y}").unwrap();
+            writeln!(out, "{pad}    width: {d}").unwrap();
+            writeln!(out, "{pad}    height: {d}").unwrap();
+            writeln!(out, "{pad}    radius: width / 2").unwrap();
+            for line in qml_rectangle_paint_lines(props) {
+                writeln!(out, "{pad}    {line}").unwrap();
+            }
+            writeln!(out, "{pad}}}").unwrap();
+            Ok(out)
+        }
+        "line" => {
+            let x1 = required_path_number(node, "x1")?;
+            let y1 = required_path_number(node, "y1")?;
+            let x2 = required_path_number(node, "x2")?;
+            let y2 = required_path_number(node, "y2")?;
+            let mut out = String::new();
+            writeln!(out, "{pad}Shape {{").unwrap();
+            for line in qml_shape_bounding_box_lines(&[x1, x2], &[y1, y2]) {
+                writeln!(out, "{pad}    {line}").unwrap();
+            }
+            writeln!(out, "{pad}    ShapePath {{").unwrap();
+            for line in qml_shape_path_paint_lines(props) {
+                writeln!(out, "{pad}        {line}").unwrap();
+            }
+            writeln!(out, "{pad}        startX: {x1}").unwrap();
+            writeln!(out, "{pad}        startY: {y1}").unwrap();
+            writeln!(out, "{pad}        PathLine {{ x: {x2}; y: {y2} }}").unwrap();
+            writeln!(out, "{pad}    }}").unwrap();
+            writeln!(out, "{pad}}}").unwrap();
+            Ok(out)
+        }
+        "curve" => {
+            let x1 = required_path_number(node, "x1")?;
+            let y1 = required_path_number(node, "y1")?;
+            let cx = required_path_number(node, "cx")?;
+            let cy = required_path_number(node, "cy")?;
+            let x2 = required_path_number(node, "x2")?;
+            let y2 = required_path_number(node, "y2")?;
+            let mut out = String::new();
+            writeln!(out, "{pad}Shape {{").unwrap();
+            for line in qml_shape_bounding_box_lines(&[x1, cx, x2], &[y1, cy, y2]) {
+                writeln!(out, "{pad}    {line}").unwrap();
+            }
+            writeln!(out, "{pad}    ShapePath {{").unwrap();
+            for line in qml_shape_path_paint_lines(props) {
+                writeln!(out, "{pad}        {line}").unwrap();
+            }
+            writeln!(out, "{pad}        startX: {x1}").unwrap();
+            writeln!(out, "{pad}        startY: {y1}").unwrap();
+            writeln!(
+                out,
+                "{pad}        PathQuad {{ x: {x2}; y: {y2}; controlX: {cx}; controlY: {cy} }}"
+            )
+            .unwrap();
+            writeln!(out, "{pad}    }}").unwrap();
+            writeln!(out, "{pad}}}").unwrap();
+            Ok(out)
+        }
+        "arc" => Err(PipelineEmitError::UnknownPrimitive(
+            "Path kind 'arc' is not yet supported by the Qt/QML emitter (deferred per spec PR sequence)"
+                .to_string(),
+        )),
+        other => Err(PipelineEmitError::UnknownPrimitive(format!(
+            "Path kind '{other}' is not a recognized shape kind (expected circle, line, curve, or arc)"
+        ))),
+    }
+}
+
 fn qml_padding(props: &[StyleProp]) -> Option<String> {
     style_prop(props, "padding")
         .or_else(|| style_prop(props, "padding-top"))
@@ -1503,6 +1697,13 @@ fn from_pipeline_with_runtime_policy(
     if layout_contains_tag(&layout.root, "HostSlider") {
         writeln!(out, "import QtQuick.Controls as MosaicControls").unwrap();
     }
+    // UI39: only `line`/`curve`/`arc` `Path` kinds need `QtQuick.Shapes`
+    // (`Shape`/`ShapePath`) — `circle` lowers to a plain `Rectangle`, which
+    // needs no extra import. `layout_contains_tag` can't express this (it
+    // only matches the tag, not `kind:`), hence the dedicated predicate.
+    if tree_needs_shapes_import(&layout.root) {
+        writeln!(out, "import QtQuick.Shapes").unwrap();
+    }
     writeln!(out).unwrap();
 
     // 3. Open the root `Item`. See the module-level doc for why the root
@@ -1635,6 +1836,18 @@ fn from_pipeline_with_runtime_policy(
     // walker's context so styled `Box [part]` containers can inline their
     // mosstyle properties (geometry, border, background, text styling).
     let part_styles = build_part_style_map(style);
+    // #13007: a literal `group:` value shared by 2+ HostRadios anywhere
+    // in the component gets a synthesized `ButtonGroup`. Computed once,
+    // up front, so `emit_host_radio_qml` (deep in the recursive walk)
+    // can look up its own group's id with no tree-shape awareness of
+    // its own.
+    let mut radio_group_counts: HashMap<String, usize> = HashMap::new();
+    collect_radio_group_counts(&layout.root, &mut radio_group_counts);
+    let radio_group_slugs: HashMap<String, String> = radio_group_counts
+        .into_iter()
+        .filter(|(_, count)| *count >= 2)
+        .map(|(group, _)| (group.clone(), qml_radio_group_id(&group)))
+        .collect();
     let ctx = EmitCtx {
         emits: &interface.emits,
         signal_names: &signal_names,
@@ -1647,9 +1860,23 @@ fn from_pipeline_with_runtime_policy(
         cell_fill_children: false,
         next_drag_id: Rc::new(Cell::new(0)),
         next_table_id: Rc::new(Cell::new(0)),
+        radio_group_slugs: &radio_group_slugs,
     };
     writeln!(out).unwrap();
     out.push_str(&emit_qml_tree(&layout.root, 1, &ctx)?);
+
+    // One `ButtonGroup { id: ... }` per qualifying group (#13007) — a
+    // non-visual object, so declaring it as an extra child of the root
+    // `Item` (after the real visual tree) is valid QML and doesn't
+    // affect layout. Sorted for deterministic output.
+    if !radio_group_slugs.is_empty() {
+        let mut ids: Vec<&str> = radio_group_slugs.values().map(String::as_str).collect();
+        ids.sort_unstable();
+        ids.dedup();
+        for id in ids {
+            writeln!(out, "    ButtonGroup {{ id: {id} }}").unwrap();
+        }
+    }
 
     // 7. Close the root `Item`.
     writeln!(out, "}}").unwrap();
@@ -1782,6 +2009,16 @@ fn emit_qml_tree(
         "HostDialog" => return emit_host_dialog_qml(node, depth, ctx),
         "HostSurface" => return emit_host_surface_qml(node, depth, ctx),
         "Icon" => return emit_icon_qml(node, depth, ctx),
+        // UI39: the kernel drawing primitive. `circle`/`line`/`curve` land
+        // here; `arc` is a stretch goal not yet implemented (falls through
+        // to the "not yet supported" error inside emit_path_qml itself, not
+        // a generic UnknownPrimitive from the tag dispatch, so the message
+        // names the kind specifically). Dynamic per-node geometry (x/y/
+        // width/height computed from cx/cy/r, etc.) can't be expressed by
+        // `primitive_to_qml`'s static `QmlElement.builtin_lines`, so — like
+        // every other primitive in this match — `Path` gets its own
+        // emitter rather than a table entry.
+        "Path" => return emit_path_qml(node, depth, ctx),
         "HostDraggable" => return emit_host_draggable_qml(node, depth, ctx),
         "HostDropTarget" => return emit_host_drop_target_qml(node, depth, ctx),
 
@@ -2096,7 +2333,17 @@ fn emit_qml_children(
             emit_qml_tree(child, depth, ctx)?
         };
 
-        if is_stack {
+        // UI39: `Path` is the one primitive whose entire purpose is NOT
+        // filling its container — it self-positions via its own geometry
+        // props (cx/cy/r, x1/y1/x2/y2, ...), the same way the crescent-moon
+        // worked example composites two differently-sized/offset circles in
+        // one `Stack`. `anchors.fill: parent` would stretch it to the whole
+        // Stack's bounding box and destroy that positioning; every other
+        // Stack child wants exactly that full-bleed behavior (the UI29
+        // z-overlay semantics `inject_anchors_fill_parent`'s doc comment
+        // describes), so this is a narrow, primitive-specific exception,
+        // not a change to Stack's general contract.
+        if is_stack && child.tag != "Path" {
             out.push_str(&inject_anchors_fill_parent(&child_qml, depth));
         } else {
             out.push_str(&child_qml);
@@ -3617,15 +3864,20 @@ fn emit_host_checkbox_qml(
 /// we gate the dispatch on `if (checked)` so a sibling-radio-caused
 /// deselect doesn't dispatch.
 ///
-/// ## Group coordination — v1 limitation
+/// ## Group coordination (`#13007`)
 ///
-/// QtQuick.Controls provides `ButtonGroup` for true radio-group
-/// behavior, but wiring it requires synthesising a `ButtonGroup { id: ... }`
-/// element at the enclosing scope and attaching every radio's
-/// `ButtonGroup.group: …` reference to it. That structural pass is
-/// reserved for UI29-2.1's `RadioGroup` userland component; v1
-/// preserves the `group:` prop as a `// group: ...` comment, identical
-/// to the SwiftUI backend's choice, so the metadata stays visible.
+/// A literal `group: "..."` shared by 2+ `HostRadio`s anywhere in the
+/// component gets real `ButtonGroup` exclusivity: `from_pipeline`
+/// pre-scans the whole tree (see [`collect_radio_group_counts`]),
+/// synthesises one `ButtonGroup { id: ... }` per qualifying group value
+/// as an extra (non-visual) child of the root `Item`, and each member
+/// radio attaches `ButtonGroup.group: <id>` to it — no restructuring of
+/// the visual tree needed, since QML object `id`s are file-scoped (a
+/// `ButtonGroup` doesn't need to be a visual sibling of the radios it
+/// governs). A `slot:`-bound group, or a literal value with only one
+/// member, keeps the pre-#13007 `// group: ...` comment-only behavior —
+/// dynamic group membership isn't knowable at compile time, and a
+/// single-member group has nothing to be exclusive with.
 fn emit_host_radio_qml(
     node: &LayoutNode,
     depth: usize,
@@ -3648,6 +3900,8 @@ fn emit_host_radio_qml(
         }
         escaped
     }
+    let button_group_id: Option<&str> = find_string_prop(node, "group")
+        .and_then(|g| ctx.radio_group_slugs.get(g).map(String::as_str));
     if let Some(g) = find_string_prop(node, "group") {
         writeln!(out, "{pad}// group: {}", escape_for_line_comment(g)).unwrap();
     } else if let Some(slot) = find_slot_ref_prop(node, "group") {
@@ -3674,6 +3928,12 @@ fn emit_host_radio_qml(
     };
 
     writeln!(out, "{pad}RadioButton {{").unwrap();
+
+    // ButtonGroup.group: <id> — real exclusivity for a shared literal
+    // group with 2+ members (#13007).
+    if let Some(id) = button_group_id {
+        writeln!(out, "{inner_pad}ButtonGroup.group: {id}").unwrap();
+    }
 
     // text: <label>.
     if let Some(line) = build_label_attribute(node) {
@@ -3807,6 +4067,40 @@ fn emit_host_slider_qml(
 // UI29-4 — HostLink / HostTooltip / HostNumberInput emitters
 // =====================================================================
 
+/// #13052: is `href` a URI whose scheme is safe to hand to
+/// `Qt.openUrlExternally`, i.e. the OS shell launcher? Allowlists
+/// `http`/`https`/`mailto` (case-insensitive scheme token per RFC 3986
+/// §3.1), and additionally requires a non-empty `//`-authority for
+/// `http`/`https` (mirrors `mosaic-emit-xaml`'s `has_allowed_uri_scheme`,
+/// added in #12038 for the identical XAML `NavigateUri` gap).
+fn has_allowed_uri_scheme(href: &str) -> bool {
+    const ALLOWED: [&str; 3] = ["http", "https", "mailto"];
+    let Some(colon) = href.find(':') else {
+        return false;
+    };
+    let scheme = &href[..colon];
+    let mut chars = scheme.chars();
+    let Some(first) = chars.next() else {
+        return false;
+    };
+    if !first.is_ascii_alphabetic() {
+        return false;
+    }
+    if !chars.all(|c| c.is_ascii_alphanumeric() || c == '+' || c == '-' || c == '.') {
+        return false;
+    }
+    if !ALLOWED.iter().any(|s| s.eq_ignore_ascii_case(scheme)) {
+        return false;
+    }
+    if scheme.eq_ignore_ascii_case("mailto") {
+        return true;
+    }
+    let Some(authority_onward) = href[colon + 1..].strip_prefix("//") else {
+        return false;
+    };
+    !authority_onward.starts_with(['/', '?', '#']) && !authority_onward.is_empty()
+}
+
 /// Lower a `HostLink` node (UI29-4, 19th kernel primitive) to a QML
 /// rich-text `Text` element with `onLinkActivated`.
 ///
@@ -3869,6 +4163,27 @@ fn emit_host_link_qml(
     //   - bare (no onActivate)            -> open externally
     let external_false = matches!(find_keyword_prop(node, "external"), Some("false"));
     let on_activate = find_emit_ref_prop(node, "onActivate");
+
+    // #13052: reject rather than escape. Only validate when `href` can
+    // actually reach `Qt.openUrlExternally(link)`. Per the
+    // `handler_body` match below, that's every combination EXCEPT
+    // `external: false` + `onActivate` present (dispatch-only) --
+    // critically, `external: false` with NO `onActivate` still falls
+    // to the `(_, None) => Qt.openUrlExternally(link)` arm, so
+    // `external_false` alone is not a safe exemption (a first review
+    // pass of #13052 got this wrong; caught and fixed in the same
+    // PR). Only that one dispatch-only combination lets an
+    // `href: "#"`-style routing placeholder skip validation -- every
+    // other shape reaches the sink and must be checked. No escaping
+    // done further down makes an unsafe scheme safe, so this has to
+    // reject rather than sanitize. Mirrors the XAML backend's
+    // `NavigateUri` fix (#12038). There is no dynamic (`slot:`) href
+    // path in this backend today, so this compile-time check on the
+    // literal is the only validation needed.
+    let reaches_open_url_externally = !(external_false && on_activate.is_some());
+    if reaches_open_url_externally && !has_allowed_uri_scheme(href) {
+        return Err(PipelineEmitError::UnsafeUriScheme(href.to_string()));
+    }
 
     let handler_body: String = match (external_false, on_activate) {
         (true, Some(emit)) => {
@@ -4176,6 +4491,47 @@ fn build_dialog_title_text_line(node: &LayoutNode) -> Option<String> {
 /// `Label`. `HostLink` is intentionally
 /// NOT here because it lowers to a plain `Text` element with rich-
 /// text + onLinkActivated, not a QtQuick.Controls widget.
+/// Walks the whole component tree tallying how many `HostRadio` nodes
+/// share each literal `group: "..."` value (`#13007`). A `slot:`-bound
+/// group can't be bucketed at compile time and is never counted here.
+fn collect_radio_group_counts(node: &LayoutNode, counts: &mut HashMap<String, usize>) {
+    if node.tag == "HostRadio" {
+        if let Some(g) = find_string_prop(node, "group") {
+            *counts.entry(g.to_string()).or_insert(0) += 1;
+        }
+    }
+    for child in &node.children {
+        collect_radio_group_counts(child, counts);
+    }
+}
+
+/// The set of literal `group:` values that get real `ButtonGroup`
+/// wiring anywhere in this component (`#13007`) — i.e. every key with
+/// 2+ members per [`collect_radio_group_counts`]. Package capability
+/// analysis calls this so strict-profile reporting cannot drift from
+/// `emit_host_radio_qml`'s actual lowering.
+pub fn radio_groups_with_native_semantics(root: &LayoutNode) -> HashSet<String> {
+    let mut counts: HashMap<String, usize> = HashMap::new();
+    collect_radio_group_counts(root, &mut counts);
+    counts
+        .into_iter()
+        .filter(|(_, count)| *count >= 2)
+        .map(|(group, _)| group)
+        .collect()
+}
+
+/// A stable, valid QML object id for a literal radio `group:` value —
+/// non-identifier characters become `_`, and a `g_` prefix guarantees a
+/// leading letter even when the raw value starts with a digit.
+fn qml_radio_group_id(value: &str) -> String {
+    let mut id = String::with_capacity(value.len() + 2);
+    id.push_str("g_");
+    for c in value.chars() {
+        id.push(if c.is_ascii_alphanumeric() { c } else { '_' });
+    }
+    id
+}
+
 fn tree_needs_controls_import(node: &LayoutNode) -> bool {
     if node.tag == "HostTable" && host_table_has_native_semantics(node) {
         return true;
@@ -4200,6 +4556,20 @@ fn tree_needs_controls_import(node: &LayoutNode) -> bool {
             | "HostNumberInput"
             | "Icon"
     ) || node.children.iter().any(tree_needs_controls_import)
+}
+
+/// UI39: does this tree contain a `Path` whose `kind` needs `QtQuick.Shapes`
+/// (`line`/`curve`/`arc` — `circle` lowers to a plain `Rectangle` and needs
+/// no import)? A `Path` with a missing/unrecognized `kind` is not matched
+/// here — `emit_path_qml` reports that as a clear error at emission time
+/// regardless of what this predicate decides about the import line.
+fn tree_needs_shapes_import(node: &LayoutNode) -> bool {
+    (node.tag == "Path"
+        && matches!(
+            find_keyword_prop(node, "kind"),
+            Some("line") | Some("curve") | Some("arc")
+        ))
+        || node.children.iter().any(tree_needs_shapes_import)
 }
 
 /// The exact dynamic table shape emitted by the reusable Mosaic Grid package.
@@ -6469,6 +6839,253 @@ mod tests {
         assert!(output.contains(
             "property string mosaicAccessibleName: (String(iconName).trim().toLowerCase() === \"spinner\" ? \"Loading\" : String(iconName))"
         ));
+    }
+
+    // -------- UI39: Path kernel drawing primitive --------
+
+    fn path_node(part: &str, kind: &str, coords: &[(&str, f64)]) -> LayoutNode {
+        let mut props = vec![LayoutProp {
+            name: "kind".to_string(),
+            value: LayoutPropValue::Keyword(kind.to_string()),
+        }];
+        for (name, value) in coords {
+            props.push(LayoutProp {
+                name: name.to_string(),
+                value: LayoutPropValue::Number(*value),
+            });
+        }
+        LayoutNode {
+            tag: "Path".to_string(),
+            part_name: Some(part.to_string()),
+            props,
+            children: Vec::new(),
+        }
+    }
+
+    fn style_with_part(component: &str, part: &str, props: Vec<(&str, &str)>) -> StyleDef {
+        StyleDef {
+            component_name: component.to_string(),
+            parts: vec![PartStyle {
+                name: part.to_string(),
+                base: props.into_iter().map(|(n, v)| sp(n, v)).collect(),
+                transitions: vec![],
+                states: vec![],
+            }],
+        }
+    }
+
+    #[test]
+    fn path_circle_lowers_to_rectangle_with_native_paint_props() {
+        let m = component("MoonIcon", vec![], vec![]);
+        let l = LayoutDef {
+            component_name: "MoonIcon".to_string(),
+            root: path_node("moon-disc", "circle", &[("cx", 17.0), ("cy", 17.0), ("r", 17.0)]),
+        };
+        let s = style_with_part(
+            "MoonIcon",
+            "moon-disc",
+            vec![("background", "#b3a99c"), ("border-color", "#1a1714"), ("border-width", "1")],
+        );
+        let out = from_pipeline(&m, &l, &s).unwrap().output;
+        assert!(out.contains("Rectangle {"), "got:\n{out}");
+        assert!(out.contains("width: 34"), "got:\n{out}");
+        assert!(out.contains("height: 34"), "got:\n{out}");
+        assert!(out.contains("x: 0"), "got:\n{out}");
+        assert!(out.contains("y: 0"), "got:\n{out}");
+        assert!(out.contains("radius: width / 2"), "got:\n{out}");
+        // Rectangle's own color/border.color/border.width -- NOT a
+        // fillColor/strokeColor remap, which only ShapePath needs.
+        assert!(out.contains("color: \"#b3a99c\""), "got:\n{out}");
+        assert!(out.contains("border.color: \"#1a1714\""), "got:\n{out}");
+        assert!(out.contains("border.width: 1"), "got:\n{out}");
+        assert!(!out.contains("import QtQuick.Shapes"), "got:\n{out}");
+    }
+
+    #[test]
+    fn path_circle_offset_center_computes_position_from_radius() {
+        let m = component("MoonIcon", vec![], vec![]);
+        let l = LayoutDef {
+            component_name: "MoonIcon".to_string(),
+            root: path_node("moon-bite", "circle", &[("cx", 22.0), ("cy", 12.0), ("r", 17.0)]),
+        };
+        let out = from_pipeline(&m, &l, &empty_style("MoonIcon")).unwrap().output;
+        // x = cx - r = 5, y = cy - r = -5
+        assert!(out.contains("x: 5"), "got:\n{out}");
+        assert!(out.contains("y: -5"), "got:\n{out}");
+    }
+
+    #[test]
+    fn path_line_lowers_to_shape_path_and_needs_shapes_import() {
+        let m = component("BarIcon", vec![], vec![]);
+        let l = LayoutDef {
+            component_name: "BarIcon".to_string(),
+            root: path_node("bar-1", "line", &[("x1", 0.0), ("y1", 4.0), ("x2", 12.0), ("y2", 4.0)]),
+        };
+        let out = from_pipeline(&m, &l, &empty_style("BarIcon")).unwrap().output;
+        assert!(out.contains("import QtQuick.Shapes"), "got:\n{out}");
+        assert!(out.contains("Shape {"), "got:\n{out}");
+        assert!(out.contains("ShapePath {"), "got:\n{out}");
+        assert!(out.contains("startX: 0"), "got:\n{out}");
+        assert!(out.contains("startY: 4"), "got:\n{out}");
+        assert!(out.contains("PathLine { x: 12; y: 4 }"), "got:\n{out}");
+        // No fill authored -> explicit transparent, not ShapePath's default
+        // solid-black fill.
+        assert!(out.contains("fillColor: \"transparent\""), "got:\n{out}");
+    }
+
+    #[test]
+    fn path_curve_lowers_to_shape_path_quad_bezier() {
+        let m = component("Connector", vec![], vec![]);
+        let l = LayoutDef {
+            component_name: "Connector".to_string(),
+            root: path_node(
+                "dependency-arrow",
+                "curve",
+                &[("x1", 0.0), ("y1", 0.0), ("cx", 10.0), ("cy", -8.0), ("x2", 20.0), ("y2", 0.0)],
+            ),
+        };
+        let s = style_with_part("Connector", "dependency-arrow", vec![("border-color", "#1a1714"), ("border-width", "2")]);
+        let out = from_pipeline(&m, &l, &s).unwrap().output;
+        assert!(out.contains("import QtQuick.Shapes"), "got:\n{out}");
+        assert!(
+            out.contains("PathQuad { x: 20; y: 0; controlX: 10; controlY: -8 }"),
+            "got:\n{out}"
+        );
+        assert!(out.contains("strokeColor: \"#1a1714\""), "got:\n{out}");
+        assert!(out.contains("strokeWidth: 2"), "got:\n{out}");
+    }
+
+    #[test]
+    fn path_circle_kind_does_not_import_shapes() {
+        // Precise import-gating check: a tree with ONLY a circle Path must
+        // not pull in QtQuick.Shapes at all, since Rectangle needs no such
+        // import -- confirms tree_needs_shapes_import distinguishes kinds,
+        // not just tag presence.
+        let m = component("Dot", vec![], vec![]);
+        let l = LayoutDef {
+            component_name: "Dot".to_string(),
+            root: path_node("dot", "circle", &[("cx", 3.0), ("cy", 3.0), ("r", 3.0)]),
+        };
+        let out = from_pipeline(&m, &l, &empty_style("Dot")).unwrap().output;
+        assert!(!out.contains("QtQuick.Shapes"), "got:\n{out}");
+    }
+
+    #[test]
+    fn path_inside_stack_is_not_stretched_by_anchors_fill_parent() {
+        // The crescent-moon worked example (UI39 §3): two differently-sized/
+        // offset circles composited via Stack. Every OTHER Stack child gets
+        // anchors.fill: parent (the Z-overlay contract); Path must not, or
+        // its explicit x/y/width/height positioning would be destroyed.
+        let m = component("MoonIcon", vec![], vec![]);
+        let l = LayoutDef {
+            component_name: "MoonIcon".to_string(),
+            root: LayoutNode {
+                tag: "Stack".to_string(),
+                part_name: None,
+                props: Vec::new(),
+                children: vec![
+                    path_node("moon-disc", "circle", &[("cx", 17.0), ("cy", 17.0), ("r", 17.0)]),
+                    path_node("moon-bite", "circle", &[("cx", 22.0), ("cy", 12.0), ("r", 17.0)]),
+                ],
+            },
+        };
+        let out = from_pipeline(&m, &l, &empty_style("MoonIcon")).unwrap().output;
+        assert!(
+            !out.contains("anchors.fill: parent"),
+            "Path children of a Stack must not be anchor-stretched, got:\n{out}"
+        );
+        assert_eq!(
+            out.matches("Rectangle {").count(),
+            2,
+            "expected two circle Rectangles, got:\n{out}"
+        );
+    }
+
+    #[test]
+    fn path_missing_kind_is_a_clear_error() {
+        let m = component("Foo", vec![], vec![]);
+        let l = LayoutDef {
+            component_name: "Foo".to_string(),
+            root: LayoutNode {
+                tag: "Path".to_string(),
+                part_name: None,
+                props: Vec::new(),
+                children: Vec::new(),
+            },
+        };
+        let err = from_pipeline(&m, &l, &empty_style("Foo")).unwrap_err();
+        assert!(
+            matches!(err, PipelineEmitError::UnknownPrimitive(ref t) if t.contains("kind")),
+            "{err:?}"
+        );
+    }
+
+    #[test]
+    fn path_missing_coordinate_is_a_clear_error_not_a_default() {
+        let m = component("Foo", vec![], vec![]);
+        let l = LayoutDef {
+            component_name: "Foo".to_string(),
+            root: path_node("moon-disc", "circle", &[("cx", 17.0), ("cy", 17.0)]), // no r
+        };
+        let err = from_pipeline(&m, &l, &empty_style("Foo")).unwrap_err();
+        assert!(
+            matches!(err, PipelineEmitError::UnknownPrimitive(ref t) if t.contains('r')),
+            "{err:?}"
+        );
+    }
+
+    #[test]
+    fn path_slot_bound_coordinate_is_a_clear_error_not_a_silent_drop() {
+        let m = component("Foo", vec![], vec![]);
+        let l = LayoutDef {
+            component_name: "Foo".to_string(),
+            root: LayoutNode {
+                tag: "Path".to_string(),
+                part_name: None,
+                props: vec![
+                    LayoutProp {
+                        name: "kind".to_string(),
+                        value: LayoutPropValue::Keyword("circle".to_string()),
+                    },
+                    LayoutProp {
+                        name: "cx".to_string(),
+                        value: LayoutPropValue::SlotRef("moon-x".to_string()),
+                    },
+                    LayoutProp {
+                        name: "cy".to_string(),
+                        value: LayoutPropValue::Number(17.0),
+                    },
+                    LayoutProp {
+                        name: "r".to_string(),
+                        value: LayoutPropValue::Number(17.0),
+                    },
+                ],
+                children: Vec::new(),
+            },
+        };
+        let err = from_pipeline(&m, &l, &empty_style("Foo")).unwrap_err();
+        assert!(
+            matches!(err, PipelineEmitError::UnknownPrimitive(ref t) if t.contains("cx") && t.contains("literal")),
+            "{err:?}"
+        );
+    }
+
+    #[test]
+    fn path_arc_kind_is_a_named_stretch_goal_not_a_generic_error() {
+        let m = component("Foo", vec![], vec![]);
+        let l = LayoutDef {
+            component_name: "Foo".to_string(),
+            root: path_node(
+                "ring-segment",
+                "arc",
+                &[("cx", 10.0), ("cy", 10.0), ("r", 8.0), ("start-angle", 0.0), ("end-angle", 90.0)],
+            ),
+        };
+        let err = from_pipeline(&m, &l, &empty_style("Foo")).unwrap_err();
+        assert!(
+            matches!(err, PipelineEmitError::UnknownPrimitive(ref t) if t.contains("arc") && t.contains("not yet supported")),
+            "{err:?}"
+        );
     }
 
     // -------- Test 11: Spacer carries fillWidth + fillHeight --------
@@ -9343,6 +9960,29 @@ mod tests {
         }
     }
 
+    /// Helper: a one-component layout def with N sibling `HostRadio`
+    /// nodes under a `Row` root (#13007 — real usage's shape, e.g.
+    /// `mosaic-pkg-deck-options`'s leech-action radios).
+    fn radios_layout(radios: Vec<Vec<LayoutProp>>) -> LayoutDef {
+        LayoutDef {
+            component_name: "X".to_string(),
+            root: LayoutNode {
+                tag: "Row".to_string(),
+                part_name: None,
+                props: Vec::new(),
+                children: radios
+                    .into_iter()
+                    .map(|props| LayoutNode {
+                        tag: "HostRadio".to_string(),
+                        part_name: None,
+                        props,
+                        children: Vec::new(),
+                    })
+                    .collect(),
+            },
+        }
+    }
+
     /// UI29-2 Qt test 1 — bare `HostCheckbox` emits a `CheckBox { }`
     /// block. No checked/label/disabled lines because none are bound.
     #[test]
@@ -9503,6 +10143,107 @@ mod tests {
         );
     }
 
+    /// #13007 — 2 sibling `HostRadio`s sharing a literal `group:` value
+    /// get real `ButtonGroup` wiring: one `ButtonGroup { id: ... }`
+    /// object, and each radio's own block attaches
+    /// `ButtonGroup.group: <id>` to it.
+    #[test]
+    fn host_radio_shared_group_gets_real_button_group_wiring() {
+        let m = component("X", vec![], vec![]);
+        let l = radios_layout(vec![
+            vec![LayoutProp {
+                name: "group".to_string(),
+                value: LayoutPropValue::String("flavor".to_string()),
+            }],
+            vec![LayoutProp {
+                name: "group".to_string(),
+                value: LayoutPropValue::String("flavor".to_string()),
+            }],
+        ]);
+        let out = from_pipeline(&m, &l, &empty_style("X")).unwrap().output;
+        assert!(
+            out.contains("ButtonGroup { id: g_flavor }"),
+            "expected a synthesized ButtonGroup, got:\n{out}"
+        );
+        assert_eq!(
+            out.matches("ButtonGroup.group: g_flavor").count(),
+            2,
+            "expected both radios to attach to the group, got:\n{out}"
+        );
+        // The comment stays too — it documents the authored value even
+        // though it's now backed by real behavior.
+        assert!(out.contains("// group: flavor"));
+    }
+
+    /// #13007 — a lone `HostRadio` (no same-group sibling) keeps the
+    /// pre-#13007 comment-only behavior: nothing to be exclusive with.
+    #[test]
+    fn host_radio_lone_group_member_gets_no_button_group() {
+        let m = component("X", vec![], vec![]);
+        let l = radios_layout(vec![vec![LayoutProp {
+            name: "group".to_string(),
+            value: LayoutPropValue::String("flavor".to_string()),
+        }]]);
+        let out = from_pipeline(&m, &l, &empty_style("X")).unwrap().output;
+        assert!(
+            !out.contains("ButtonGroup"),
+            "expected no ButtonGroup for a lone radio, got:\n{out}"
+        );
+    }
+
+    /// #13007 — two radios with *different* literal `group:` values
+    /// each get their own `ButtonGroup`, not one shared group.
+    #[test]
+    fn host_radio_two_distinct_groups_get_separate_button_groups() {
+        let m = component("X", vec![], vec![]);
+        let l = radios_layout(vec![
+            vec![LayoutProp {
+                name: "group".to_string(),
+                value: LayoutPropValue::String("a".to_string()),
+            }],
+            vec![LayoutProp {
+                name: "group".to_string(),
+                value: LayoutPropValue::String("a".to_string()),
+            }],
+            vec![LayoutProp {
+                name: "group".to_string(),
+                value: LayoutPropValue::String("b".to_string()),
+            }],
+            vec![LayoutProp {
+                name: "group".to_string(),
+                value: LayoutPropValue::String("b".to_string()),
+            }],
+        ]);
+        let out = from_pipeline(&m, &l, &empty_style("X")).unwrap().output;
+        assert!(out.contains("ButtonGroup { id: g_a }"), "got:\n{out}");
+        assert!(out.contains("ButtonGroup { id: g_b }"), "got:\n{out}");
+        assert_eq!(out.matches("ButtonGroup.group: g_a").count(), 2);
+        assert_eq!(out.matches("ButtonGroup.group: g_b").count(), 2);
+    }
+
+    /// #13007 — a `slot:`-bound group can't be bucketed at compile
+    /// time, so it keeps the pre-#13007 comment-only behavior even with
+    /// a sibling present.
+    #[test]
+    fn host_radio_slot_bound_group_never_gets_button_group() {
+        let m = component("X", vec![slot("g", SlotType::Text, true)], vec![]);
+        let l = radios_layout(vec![
+            vec![LayoutProp {
+                name: "group".to_string(),
+                value: LayoutPropValue::SlotRef("g".to_string()),
+            }],
+            vec![LayoutProp {
+                name: "group".to_string(),
+                value: LayoutPropValue::SlotRef("g".to_string()),
+            }],
+        ]);
+        let out = from_pipeline(&m, &l, &empty_style("X")).unwrap().output;
+        assert!(
+            !out.contains("ButtonGroup"),
+            "expected no ButtonGroup for a slot-bound group, got:\n{out}"
+        );
+    }
+
     /// UI29-2 Qt test 10 — regression: a `group:` string with a newline
     /// must not break out of the `//` line comment. Mirrors the
     /// SwiftUI backend's defense.
@@ -9645,6 +10386,178 @@ mod tests {
             out.contains("Qt.openUrlExternally(link)"),
             "expected open-external handler, got:\n{out}"
         );
+    }
+
+    /// #13052: a `HostLink.href` literal using a disallowed URI scheme
+    /// must be rejected at compile time when it can reach
+    /// `Qt.openUrlExternally` (the default, `external` not `false`) --
+    /// mirrors the XAML `NavigateUri` fix (#12038).
+    #[test]
+    fn host_link_disallowed_scheme_href_is_rejected() {
+        for hostile in [
+            "file:///etc/passwd",
+            "javascript:alert(1)",
+            "vbscript:msgbox(1)",
+            "no-scheme-at-all",
+        ] {
+            let m = component("X", vec![], vec![]);
+            let l = LayoutDef {
+                component_name: "X".to_string(),
+                root: LayoutNode {
+                    tag: "HostLink".to_string(),
+                    part_name: None,
+                    props: vec![LayoutProp {
+                        name: "href".to_string(),
+                        value: LayoutPropValue::String(hostile.to_string()),
+                    }],
+                    children: Vec::new(),
+                },
+            };
+            let err = from_pipeline(&m, &l, &empty_style("X")).unwrap_err();
+            assert!(
+                matches!(err, PipelineEmitError::UnsafeUriScheme(ref h) if h == hostile),
+                "expected UnsafeUriScheme for {hostile:?}, got: {err:?}"
+            );
+        }
+    }
+
+    /// #13052: allowed schemes (including case-insensitively) still
+    /// compile to the same `Qt.openUrlExternally` shape as before.
+    #[test]
+    fn host_link_allowed_scheme_hrefs_still_emit_anchor() {
+        for allowed in [
+            "http://example.com",
+            "https://example.com",
+            "HTTPS://example.com",
+            "mailto:hello@example.com",
+        ] {
+            let m = component("X", vec![], vec![]);
+            let l = LayoutDef {
+                component_name: "X".to_string(),
+                root: LayoutNode {
+                    tag: "HostLink".to_string(),
+                    part_name: None,
+                    props: vec![LayoutProp {
+                        name: "href".to_string(),
+                        value: LayoutPropValue::String(allowed.to_string()),
+                    }],
+                    children: Vec::new(),
+                },
+            };
+            let r = from_pipeline(&m, &l, &empty_style("X")).unwrap();
+            assert!(
+                r.output.contains("Qt.openUrlExternally(link)"),
+                "expected {allowed:?} to still compile, got:\n{}",
+                r.output
+            );
+        }
+    }
+
+    /// #13052: a routing placeholder like `href: "#"` or a relative
+    /// path stays valid when `external: false`, since that path never
+    /// reaches `Qt.openUrlExternally` -- the href there is cosmetic
+    /// rich-text only, dispatch handles the actual navigation.
+    #[test]
+    fn host_link_no_scheme_href_stays_valid_with_external_false() {
+        let m = component("X", vec![], vec![emit_decl("onNavigate", vec![])]);
+        let l = LayoutDef {
+            component_name: "X".to_string(),
+            root: LayoutNode {
+                tag: "HostLink".to_string(),
+                part_name: None,
+                props: vec![
+                    LayoutProp {
+                        name: "href".to_string(),
+                        value: LayoutPropValue::String("#".to_string()),
+                    },
+                    LayoutProp {
+                        name: "external".to_string(),
+                        value: LayoutPropValue::Keyword("false".to_string()),
+                    },
+                    LayoutProp {
+                        name: "onActivate".to_string(),
+                        value: LayoutPropValue::EmitRef("onNavigate".to_string()),
+                    },
+                ],
+                children: Vec::new(),
+            },
+        };
+        let r = from_pipeline(&m, &l, &empty_style("X"));
+        assert!(
+            r.is_ok(),
+            "expected `href: \"#\"` with external:false to compile, got: {r:?}"
+        );
+    }
+
+    /// #13052 security-review finding: `external: false` alone is NOT
+    /// a safe exemption from scheme validation. Per `handler_body`'s
+    /// match, `external: false` WITHOUT `onActivate` still falls to
+    /// the `(_, None) => Qt.openUrlExternally(link)` arm -- only the
+    /// combination of `external: false` AND `onActivate` present is
+    /// truly dispatch-only. A disallowed-scheme href with
+    /// `external: false` and no `onActivate` must still be rejected.
+    #[test]
+    fn host_link_disallowed_scheme_href_rejected_with_external_false_and_no_on_activate() {
+        let m = component("X", vec![], vec![]);
+        let l = LayoutDef {
+            component_name: "X".to_string(),
+            root: LayoutNode {
+                tag: "HostLink".to_string(),
+                part_name: None,
+                props: vec![
+                    LayoutProp {
+                        name: "href".to_string(),
+                        value: LayoutPropValue::String("javascript:alert(1)".to_string()),
+                    },
+                    LayoutProp {
+                        name: "external".to_string(),
+                        value: LayoutPropValue::Keyword("false".to_string()),
+                    },
+                ],
+                children: Vec::new(),
+            },
+        };
+        let err = from_pipeline(&m, &l, &empty_style("X")).unwrap_err();
+        assert!(
+            matches!(err, PipelineEmitError::UnsafeUriScheme(ref h) if h == "javascript:alert(1)"),
+            "expected UnsafeUriScheme even with external:false and no onActivate \
+             (that combination still reaches Qt.openUrlExternally), got: {err:?}"
+        );
+    }
+
+    /// #13052 security-review finding: a scheme hidden behind leading
+    /// whitespace or an embedded tab/CR/LF must still be rejected --
+    /// a naive scan sees no alphabetic first character and
+    /// misclassifies it as "no scheme, therefore safe," but Qt's own
+    /// URL handling normalizes that whitespace away just like a
+    /// browser does, so it's really a disallowed scheme.
+    #[test]
+    fn host_link_scheme_hidden_by_whitespace_is_still_rejected() {
+        for hostile in [
+            " javascript:alert(1)",
+            "java\tscript:alert(1)",
+            "java\nscript:alert(1)",
+            "\tjavascript:alert(1)",
+        ] {
+            let m = component("X", vec![], vec![]);
+            let l = LayoutDef {
+                component_name: "X".to_string(),
+                root: LayoutNode {
+                    tag: "HostLink".to_string(),
+                    part_name: None,
+                    props: vec![LayoutProp {
+                        name: "href".to_string(),
+                        value: LayoutPropValue::String(hostile.to_string()),
+                    }],
+                    children: Vec::new(),
+                },
+            };
+            let err = from_pipeline(&m, &l, &empty_style("X")).unwrap_err();
+            assert!(
+                matches!(err, PipelineEmitError::UnsafeUriScheme(ref h) if h == hostile),
+                "expected UnsafeUriScheme for whitespace-obscured {hostile:?}, got: {err:?}"
+            );
+        }
     }
 
     /// UI29-4 Qt test 1a — SECURITY REGRESSION: a `\` or `"` in the

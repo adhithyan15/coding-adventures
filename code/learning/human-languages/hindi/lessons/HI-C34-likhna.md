@@ -1,7 +1,7 @@
 ---
 schema_version: 2
 id: HI-C34-likhna
-spine_node: SPINE-SAY-WHAT-I-DO
+spine_node: SPINE-NAME-EVERYDAY-ACTIONS
 sequence: 890
 chapter: 34
 type: word

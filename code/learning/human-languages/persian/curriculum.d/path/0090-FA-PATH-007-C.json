@@ -1,0 +1,11 @@
+{
+  "id": "FA-PATH-007-C",
+  "spine_node": "SPINE-SAY-WHAT-I-DO",
+  "lessons": [
+    "FA-C06-goftan",
+    "FA-C06-danestan"
+  ],
+  "before": [],
+  "inline": [],
+  "after": []
+}

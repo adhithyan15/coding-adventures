@@ -1,0 +1,12 @@
+{
+  "id": "PT-PATH-024",
+  "spine_node": "SPINE-SAY-WHAT-I-DO",
+  "lessons": [
+    "PT-C20-tomar-pegar"
+  ],
+  "before": [],
+  "inline": [
+    "PT-EXT-024-LANGUAGE-SPECIFIC"
+  ],
+  "after": []
+}

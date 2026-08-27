@@ -373,6 +373,7 @@ impl TaskMosaicApp {
             "status-warn": if overdue_count > 0 { "warn" } else { "" },
             "ring-gradient": "",
             "ring-percent": format!("{percent}%"),
+            "ring-percent-value": percent,
             "theme-is-dark": if self.state.dark_theme { "dark" } else { "" },
             "complexity-label": if full { "Full CPM" } else { "Board" },
             "allow-timeline": if full { "full" } else { "" },
@@ -1356,6 +1357,7 @@ mod tests {
         "status-warn",
         "ring-gradient",
         "ring-percent",
+        "ring-percent-value",
         "theme-is-dark",
         "complexity-label",
         "allow-timeline",
@@ -1435,6 +1437,10 @@ mod tests {
             .unwrap();
         assert_eq!(completed.props["task-rows"][0][0], "✓");
         assert_eq!(completed.props["ring-percent"], "100%");
+        // #12028 item 2: the same percent as typed data, not just the
+        // pre-formatted caption string — this is what a future native
+        // rendering of the progress ring would consume.
+        assert_eq!(completed.props["ring-percent-value"], 100);
         let deleted = runtime
             .dispatch(event(5, "deleteTask", json!({"index":0})))
             .unwrap();

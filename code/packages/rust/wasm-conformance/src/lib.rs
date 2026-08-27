@@ -143,17 +143,21 @@ impl HostInterface for RegistryHost {
 
     fn resolve_memory(&self, module_name: &str, name: &str) -> Option<LinearMemory> {
         let (instance_rc, index) = self.find_export(module_name, name, ExternalKind::Memory)?;
-        // A real clone, not a shared live view: `HostInterface::
-        // resolve_memory` returns an OWNED `LinearMemory`, not a
-        // reference, so a genuinely SHARED-and-mutated-across-instances
-        // memory import isn't observable through this path -- link-time
-        // limits compatibility is still checked for real, but a write
-        // through the importing instance won't become visible to the
-        // exporting one. None of the corpus vendored so far exercises
-        // that (its `assert_unlinkable`/`assert_invalid` cases only
-        // probe link-time acceptance/rejection, never post-link shared
-        // mutation), so this is a real, named limitation, not a silently
-        // wrong answer -- revisit if a future vendored file needs it.
+        // W28: `.cloned()` here is a genuine SHARED live view, not an
+        // independent copy -- `LinearMemory`'s mutable storage
+        // (`data`/`current_pages`) lives behind an `Rc<RefCell<..>>` (see
+        // that struct's own doc comment in `wasm-execution`), so cloning
+        // it clones the `Rc` pointer: a write through the IMPORTING
+        // instance's copy is immediately visible through the EXPORTING
+        // instance's own `memories[index]`, and vice versa. Before W28,
+        // `LinearMemory` derived `Clone` over a plain `data: Vec<u8>`
+        // field, making this an independent, byte-for-byte COPY -- a
+        // real interpreter correctness bug for the common "one module
+        // shares its memory with several consumers" pattern, confirmed
+        // and fixed via `linking.wast`'s own `assert_return` tally
+        // improving (48/65 -> 54/65) plus five newly-vendored corpus
+        // files (`elem.wast`/`linking0.wast`/`linking1.wast`/
+        // `linking3.wast`/`load1.wast`) that specifically exercise this.
         //
         // `index` (multi-memory, W16, task #85) selects WHICH of the
         // exporting instance's memories this export refers to -- before
@@ -166,7 +170,13 @@ impl HostInterface for RegistryHost {
 
     fn resolve_table(&self, module_name: &str, name: &str) -> Option<Table> {
         let (instance_rc, index) = self.find_export(module_name, name, ExternalKind::Table)?;
-        // Same clone-not-share caveat as `resolve_memory` above.
+        // W28: same shared-live-view fix as `resolve_memory` above --
+        // `Table`'s `elements` also lives behind an `Rc<RefCell<..>>` now,
+        // so `.cloned()` shares storage rather than copying it. Still
+        // does NOT give a table entry real cross-instance function
+        // IDENTITY -- see `Table`'s own doc comment in `wasm-execution`
+        // for the deliberately out-of-scope follow-on that remains
+        // (`linking0.wast`/`linking3.wast`'s one known-gap `fail` each).
         let table = instance_rc.borrow().tables.get(index as usize).cloned();
         table
     }

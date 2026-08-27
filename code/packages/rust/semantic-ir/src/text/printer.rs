@@ -486,6 +486,37 @@ fn print_stmt(out: &mut String, s: &Stmt, indent: usize, depth: usize) {
         // ── SIR16 addendum: loop control ─────────────────────────────
         Stmt::Break { .. } => out.push_str("(break)"),
         Stmt::Continue { .. } => out.push_str("(continue)"),
+        // ── Switch statement (task #51) ───────────────────────────────
+        Stmt::Switch {
+            discriminant,
+            cases,
+            default,
+            ..
+        } => {
+            // `(switch <discriminant> (case <value> <body…>) … (default
+            // <body…>))` — mirrors `(try-catch …)`'s own multi-clause,
+            // indented-per-clause shape above.
+            out.push_str("(switch ");
+            print_expr_inline_depth(out, discriminant, depth + 1);
+            for case in cases {
+                let _ = write!(out, "\n{}  (case ", " ".repeat(indent));
+                print_expr_inline_depth(out, &case.value, depth + 1);
+                for inner in &case.body {
+                    let _ = write!(out, "\n{}    ", " ".repeat(indent));
+                    print_stmt(out, inner, indent + 4, depth + 1);
+                }
+                out.push(')');
+            }
+            if let Some(def) = default {
+                let _ = write!(out, "\n{}  (default", " ".repeat(indent));
+                for inner in def {
+                    let _ = write!(out, "\n{}    ", " ".repeat(indent));
+                    print_stmt(out, inner, indent + 4, depth + 1);
+                }
+                out.push(')');
+            }
+            out.push(')');
+        }
     }
 }
 

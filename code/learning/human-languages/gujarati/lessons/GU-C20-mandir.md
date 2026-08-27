@@ -3,8 +3,11 @@ schema_version: 2
 id: GU-C20-mandir
 spine_node: SPINE-POLITE-REQUEST-REPAIR
 sequence: 930
+delivery: script
+modality: pen
+modality_reason: The delayed-copy activity requires handwriting; its machine-readable stage is not visible to prose cue derivation.
 chapter: 24
-type: word
+type: writing
 headword: મંદિર
 romanization: mandir
 gloss: temple, read and written

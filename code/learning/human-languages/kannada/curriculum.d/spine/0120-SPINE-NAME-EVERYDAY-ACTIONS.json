@@ -1,9 +1,21 @@
 {
-  "segments": [],
+  "segments": [
+    "KA-PATH-025-B",
+    "KA-PATH-026-B",
+    "KA-PATH-026-D"
+  ],
   "omits": [
     "VERB-DRINK",
     "VERB-GIVE",
-    "VERB-PUT"
+    "VERB-PUT",
+    "VERB-DO-MAKE",
+    "VERB-BUY",
+    "VERB-OPEN",
+    "VERB-CLOSE",
+    "VERB-STAND",
+    "VERB-WAIT",
+    "VERB-BRING",
+    "VERB-WALK"
   ],
   "relocates": {}
 }
