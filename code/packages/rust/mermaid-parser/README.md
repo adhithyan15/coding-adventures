@@ -98,6 +98,8 @@ validation instead of producing unbounded fallback geometry.
 The pinned DB corpus also preserves authored task order across sections and
 calendar-day geometry across month-end, inclusive-end, and daylight-saving
 boundaries.
+Pinned native-render fixtures cover sub-day tick intervals and typed axis time
+fields through Metal-to-PNG validation.
 
 Each supported family lowers into the shared Diagram IR and can continue
 through its family layout package:
