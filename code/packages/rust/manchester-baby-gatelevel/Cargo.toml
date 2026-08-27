@@ -1,0 +1,12 @@
+[package]
+name = "manchester-baby-gatelevel"
+version = "0.1.0"
+edition = "2021"
+description = "Gate-level Manchester Baby (SSEM) simulator"
+
+[dependencies]
+logic-gates = { path = "../logic-gates" }
+arithmetic = { path = "../arithmetic" }
+
+[dev-dependencies]
+manchester-baby-simulator = { path = "../manchester-baby-simulator" }

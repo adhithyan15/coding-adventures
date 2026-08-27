@@ -22,7 +22,7 @@ This track is where the repo moves beyond "a program runs" and into questions li
 | Package family | Main learning entry |
 |----------------|---------------------|
 | `logic-gates`, `arithmetic`, `fp-arithmetic`, `cpu-simulator` | [Computing stack](./computing-stack.md) |
-| `arm-simulator`, `riscv-simulator`, `wasm-simulator`, `intel4004-simulator`, `jvm-simulator`, `clr-simulator` | [Instruction-set models](./instruction-set-models.md) |
+| `manchester-baby-simulator`, `manchester-baby-gatelevel`, `arm-simulator`, `riscv-simulator`, `wasm-simulator`, `intel4004-simulator`, `jvm-simulator`, `clr-simulator` | [Instruction-set models](./instruction-set-models.md) and [ISA simulators](./isa-simulators.md) |
 | `cache`, `branch-predictor`, `hazard-detection`, `pipeline`, `core` | [Pipelines, caches, and speculation](./pipelines-caches-and-speculation.md) |
 
 ## How To Use This Track

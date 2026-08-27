@@ -48,6 +48,30 @@ The external snapshot remains the Spec 07l shape: 32 `u32` words, `u32`
 accumulator, five-bit `u8` CI, and a Boolean halted value. Converting flip-flop
 outputs into host integers is observation, not instruction execution.
 
+### Topology metrics
+
+`flip_flop_count()` is the exact instantiated storage total above.
+`gate_count()` is a stable educational gate-equivalent estimate, calculated as
+follows:
+
+| Component | Assumption | Gates |
+|---|---:|---:|
+| Persistent state | 1,062 flip-flops × 6 gates | 6,372 |
+| Five-bit CI ripple adder | 5 full adders × 5 gates | 25 |
+| 32-bit arithmetic ripple adder | 32 full adders × 5 gates | 160 |
+| Shared arithmetic inverter bank | 32 NOT gates | 32 |
+| Opcode decoder and SUB combiner | 3 NOT + 16 AND + 1 OR | 20 |
+| Five-to-32 address decoder | 5 NOT + 32 four-AND chains | 133 |
+| 32-word, 32-bit read selection | 32 × (32 AND + 31 OR) | 2,016 |
+| Clock sequencing and control | documented estimate | 100 |
+| **Total** | | **8,858** |
+
+The address decoder, read-selection mux, and sequencer rows describe the
+equivalent circuit topology. The simulator is permitted to use host control
+flow for those ideal wire-selection operations, so it does not dynamically
+invoke every estimated gate on each read. The count must therefore never be
+presented as a transistor count, timing model, or count of gate function calls.
+
 ## Combinational paths
 
 ### Incrementer and relative jump
