@@ -15,7 +15,7 @@ import render from "@coding-adventures/forme-render-static";
 render.consumes      // streamOf(Kinds.ContentNode)
 render.produces      // streamOf(Kinds.RenderedPage)
 render.capabilities  // []  ← pure transform
-render.configSchema  // { type: "object", properties: { siteTitle?, routeTemplate? } }
+render.configSchema  // siteTitle, routeTemplate, siteUrl, siteHomeRoute, rssRoute, atomRoute
 ```
 
 ## What it does
@@ -29,9 +29,11 @@ For each input `ContentNode`:
    `document-ast-to-html`.
 3. **Derive title** via the three-step fallback:
    `frontmatter.title` → first `<h1>` text → slug.
-4. **Wrap** the body in a self-contained HTML5 document with the
+4. **Compose public metadata** when `siteUrl` is configured: description,
+   canonical URL, project-page-safe site navigation, and RSS/Atom discovery.
+5. **Wrap** the body in a self-contained HTML5 document with the
    classless theme CSS inlined in `<style>`.
-5. **Emit** a `RenderedPage` carrying the route, full HTML, derived
+6. **Emit** a `RenderedPage` carrying the route, full HTML, derived
    title, and a `source` reference back to the input node's identity.
 
 ## Routing contract
@@ -57,10 +59,9 @@ pipelines and should not be set in new product configurations.
 - **`usedStyle` / `usedIslands` / `usedAssets` all empty.** Driving the
   AOT bundler's smallest-artifact decisions (FM06) needs all three;
   static rendering doesn't have the inputs yet.
-- **`meta.description` / `meta.canonicalUrl` null**, `meta.openGraph` /
-  `meta.structured` / `meta.extra` empty. Richer head metadata is a
-  later concern; the existing fallback path already produces a usable
-  `<title>`.
+- **OpenGraph / structured metadata still empty.** Description and canonical
+  URL are populated when configured; social cards and structured data remain
+  later work.
 - **No sanitization.** The renderer trusts the input Markdown — this
   is your own blog, you wrote the posts. Multi-tenant pipelines must
   wire `@coding-adventures/document-ast-sanitizer` in between parser
@@ -97,6 +98,10 @@ request — important for first-paint on cold caches.
 interface RenderStaticConfig {
   siteTitle?:     string;   // header anchor text; empty → no header
   routeTemplate?: string;   // deprecated fallback when node.route is null
+  siteUrl?:       string;   // public deployment base, including project prefix
+  siteHomeRoute?: string;   // route used by the site-title link
+  rssRoute?:      string;   // RSS auto-discovery route
+  atomRoute?:     string;   // Atom auto-discovery route
 }
 ```
 
@@ -107,6 +112,9 @@ interface RenderStaticConfig {
 - `@coding-adventures/forme-stage` — `defineStage`, `StageContext`.
 - `@coding-adventures/document-ast-to-html` — `toHtml`.
 - `@coding-adventures/document-ast` — `DocumentNode` type only.
+- `@coding-adventures/forme-aot-meta-link-tags` — description and canonical
+  head tags.
+- `@coding-adventures/forme-aot-rss-discovery-link` — RSS/Atom discovery tags.
 - `@coding-adventures/gfm-parser` — **test only** (round-trip
   fixtures use the real parser).
 

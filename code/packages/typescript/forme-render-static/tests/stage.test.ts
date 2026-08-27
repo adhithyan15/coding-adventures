@@ -79,7 +79,7 @@ async function runRender(
     route: string;
     html: string;
     source: string;
-    meta: { title: string; description: string | null };
+    meta: { title: string; description: string | null; canonicalUrl: string | null };
     usedStyle: readonly unknown[];
     usedIslands: readonly unknown[];
     usedAssets: readonly unknown[];
@@ -100,12 +100,16 @@ describe("renderStatic — stage shape", () => {
     expect(renderStatic.apiVersion).toBe(1);
   });
 
-  it("has a configSchema covering siteTitle + routeTemplate", () => {
+  it("has a configSchema covering routing and public metadata", () => {
     expect(renderStatic.configSchema).toMatchObject({
       type: "object",
       properties: {
         siteTitle:     { type: "string" },
         routeTemplate: { type: "string" },
+        siteUrl:       { type: "string" },
+        siteHomeRoute: { type: "string" },
+        rssRoute:      { type: "string" },
+        atomRoute:     { type: "string" },
       },
     });
   });
@@ -198,11 +202,37 @@ describe("renderStatic — single-node rendering", () => {
     expect(page!.usedAssets).toEqual([]);
   });
 
-  it("meta.description / canonicalUrl are null in v0", async () => {
+  it("leaves optional metadata null without public-site config", async () => {
     const [page] = await runRender([
       makeNode({ sourcePath: "p.md", markdown: "# x\n" }),
     ]);
     expect(page!.meta.description).toBeNull();
+  });
+
+  it("emits project-page-safe canonical, description, and feed discovery metadata", async () => {
+    const [page] = await runRender([
+      makeNode({
+        sourcePath: "p.md",
+        markdown: "# Post\n",
+        route: "/blog/post.html",
+        frontmatter: { excerpt: 'A useful "post".' },
+      }),
+    ], {
+      siteTitle: "Coding Adventures",
+      siteUrl: "https://example.com/coding-adventures/",
+      siteHomeRoute: "/blog/index.html",
+      rssRoute: "/blog/rss.xml",
+      atomRoute: "/blog/atom.xml",
+    });
+
+    expect(page!.meta.description).toBe('A useful "post".');
+    expect(page!.meta.canonicalUrl)
+      .toBe("https://example.com/coding-adventures/blog/post.html");
+    expect(page!.html).toContain('<meta name="description" content="A useful &quot;post&quot;.">');
+    expect(page!.html).toContain('<link rel="canonical" href="https://example.com/coding-adventures/blog/post.html">');
+    expect(page!.html).toContain('type="application/rss+xml"');
+    expect(page!.html).toContain('href="https://example.com/coding-adventures/blog/atom.xml"');
+    expect(page!.html).toContain('<header><a href="https://example.com/coding-adventures/blog/index.html">');
   });
 });
 

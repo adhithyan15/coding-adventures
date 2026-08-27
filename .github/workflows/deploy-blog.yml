@@ -2,7 +2,7 @@
 # Deploy Coding Adventures Blog to GitHub Pages
 # ================================================================
 #
-# Builds the Forme pipeline (6 stages, FM00 §5 demo) and deploys the
+# Builds the Forme pipeline (8 stages, FM00 §5 demo) and deploys the
 # generated dist/blog/ tree to the gh-pages branch under blog/,
 # preserving other content on Pages.
 #
@@ -19,9 +19,8 @@
 #   forme-source-fs          Stream<ContentSource>
 #   forme-parse-markdown     ContentSource → ContentNode
 #   forme-router             Stream<ContentNode> → Stream<ContentNode>
-#                               ├→ forme-collect-chronological → Collection
-#                               └→ forme-render-static → Stream<RenderedPage>
-#                                                    └→ forme-emit-fs → DeployArtifact
+#                               ├→ render-static → emit-articles
+#                               └→ collect-chronological → blog-surface → emit-surface
 #
 # `npm run build:clean` is the canonical clean-checkout entry point. Its
 # bootstrap script discovers the `file:`-linked dependency graph recursively,
@@ -46,6 +45,11 @@ on:
       - "code/packages/typescript/forme-router/**"
       - "code/packages/typescript/forme-collect-chronological/**"
       - "code/packages/typescript/forme-render-static/**"
+      - "code/packages/typescript/forme-index-renderer/**"
+      - "code/packages/typescript/forme-feeds/**"
+      - "code/packages/typescript/forme-aot-sitemap-emitter/**"
+      - "code/packages/typescript/forme-aot-meta-link-tags/**"
+      - "code/packages/typescript/forme-aot-rss-discovery-link/**"
       - "code/packages/typescript/forme-emit-fs/**"
       - "code/packages/typescript/document-ast/**"
       - "code/packages/typescript/document-ast-to-html/**"
@@ -71,6 +75,11 @@ on:
       - "code/packages/typescript/forme-router/**"
       - "code/packages/typescript/forme-collect-chronological/**"
       - "code/packages/typescript/forme-render-static/**"
+      - "code/packages/typescript/forme-index-renderer/**"
+      - "code/packages/typescript/forme-feeds/**"
+      - "code/packages/typescript/forme-aot-sitemap-emitter/**"
+      - "code/packages/typescript/forme-aot-meta-link-tags/**"
+      - "code/packages/typescript/forme-aot-rss-discovery-link/**"
       - "code/packages/typescript/forme-emit-fs/**"
       - "code/packages/typescript/document-ast/**"
       - "code/packages/typescript/document-ast-to-html/**"
@@ -99,14 +108,17 @@ jobs:
       - name: Test clean-checkout blog build
         run: |
           cd code/sites/blog
-          npm test
           npm run build:clean
+          npm test
 
       - name: Verify expected output exists
         run: |
           test -d code/sites/blog/dist/blog
           ls code/sites/blog/dist/blog
-          test -n "$(ls code/sites/blog/dist/blog/*.html 2>/dev/null)"
+          test -f code/sites/blog/dist/blog/index.html
+          test -f code/sites/blog/dist/blog/rss.xml
+          test -f code/sites/blog/dist/blog/atom.xml
+          test -f code/sites/blog/dist/blog/sitemap.xml
 
       - name: Deploy to GitHub Pages (blog/ on gh-pages, served at <user>.github.io/<repo>/blog/)
         if: github.event_name == 'push' && github.ref == 'refs/heads/main'

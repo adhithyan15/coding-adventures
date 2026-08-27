@@ -8,11 +8,18 @@
   assigned by `forme-router` instead of independently re-deriving a URL.
 - `routeTemplate` remains as a compatibility fallback only when
   `ContentNode.route` is `null`.
+- Added optional `siteUrl`, `siteHomeRoute`, `rssRoute`, and `atomRoute`
+  configuration. Routed pages now emit canonical URLs, excerpt descriptions,
+  feed discovery, and a project-page-safe header link.
+- `renderHtmlDocument` accepts an escaped header destination and trusted
+  generated head tags; the fallback theme styles chronological indexes.
 
 ### Tests
 
 - Added coverage proving an upstream canonical route wins even when the
   source path and fallback route template disagree.
+- Added coverage for deployment-prefix composition, metadata escaping, feed
+  discovery, and custom header links.
 
 ## 0.1.0 — 2026-05-15
 

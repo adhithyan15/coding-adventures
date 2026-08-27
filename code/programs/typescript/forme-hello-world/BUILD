@@ -21,6 +21,8 @@ set -e
 #     forme-errors            ← StageError / CapabilityError / CancellationError
 #     forme-capability        ← capability parser+matcher
 #     forme-stage             ← Stage<In,Out> + StageContext
+#     forme-aot-meta-link-tags ← canonical + description head tags
+#     forme-aot-rss-discovery-link ← RSS/Atom discovery head tags
 #     blake2b                 ← hash primitive
 #     forme-identity          ← LogicalId + RevisionId
 #     forme-cache             ← orchestrator cache backend
@@ -46,6 +48,8 @@ cd ../../../packages/typescript/forme-types && npm install --silent
 cd ../../../packages/typescript/forme-errors && npm install --silent
 cd ../../../packages/typescript/forme-capability && npm install --silent
 cd ../../../packages/typescript/forme-stage && npm install --silent
+cd ../../../packages/typescript/forme-aot-meta-link-tags && npm install --silent
+cd ../../../packages/typescript/forme-aot-rss-discovery-link && npm install --silent
 cd ../../../packages/typescript/blake2b && npm install --silent
 cd ../../../packages/typescript/forme-identity && npm install --silent
 cd ../../../packages/typescript/forme-cache && npm install --silent

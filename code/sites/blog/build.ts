@@ -19,7 +19,7 @@ import {
   createOrchestrator,
 } from "@coding-adventures/forme-orchestrator";
 import { consoleLogger } from "@coding-adventures/forme-stage";
-import type { Collection, DeployArtifact } from "@coding-adventures/forme-types";
+import type { DeployArtifact } from "@coding-adventures/forme-types";
 import config from "./forme.config.ts";
 
 const here = dirname(fileURLToPath(import.meta.url));
@@ -47,33 +47,25 @@ try {
     process.exit(1);
   }
 
-  const posts = result.outputs.posts as Collection | undefined;
-  const site = result.outputs.site as DeployArtifact | undefined;
-  if (!posts || !site) {
-    throw new Error("Blog pipeline must expose both named sinks: posts and site");
+  const articles = result.outputs.articles as DeployArtifact | undefined;
+  const surface = result.outputs.surface as DeployArtifact | undefined;
+  if (!articles || !surface) {
+    throw new Error("Blog pipeline must expose both deploy sinks: articles and surface");
   }
 
-  const collectionRoutes = posts.entries.map((entry) => {
-    if (entry.route === null) {
-      throw new Error(`Collection entry ${entry.identity} has no canonical route`);
-    }
-    return entry.route;
-  });
-  const emittedRoutes = site.manifest.routes.map((route) => route.pattern);
-  const sortedCollectionRoutes = [...collectionRoutes].sort();
-  const sortedEmittedRoutes = [...emittedRoutes].sort();
-  if (JSON.stringify(sortedCollectionRoutes) !== JSON.stringify(sortedEmittedRoutes)) {
-    throw new Error("Collection routes must match the emitted page routes exactly");
+  const articleRoutes = articles.manifest.routes.map((route) => route.pattern).sort();
+  const surfaceRoutes = surface.manifest.routes.map((route) => route.pattern).sort();
+  const expectedSurfaceRoutes = [
+    "/blog/atom.xml",
+    "/blog/index.html",
+    "/blog/rss.xml",
+    "/blog/sitemap.xml",
+  ];
+  if (JSON.stringify(surfaceRoutes) !== JSON.stringify(expectedSurfaceRoutes)) {
+    throw new Error(`Blog surface routes differ: ${JSON.stringify(surfaceRoutes)}`);
   }
-
-  const chronologicalDates = posts.entries.map((entry) => {
-    if (entry.orderKey.kind !== "date") {
-      throw new Error(`Collection entry ${entry.identity} is not date-ordered`);
-    }
-    return entry.orderKey.value;
-  });
-  if (chronologicalDates.some((date, index) => index > 0 && chronologicalDates[index - 1]! < date)) {
-    throw new Error("Posts collection must be ordered newest first");
+  if (articleRoutes.length === 0 || articleRoutes.some((route) => !route.endsWith(".html"))) {
+    throw new Error("Article sink must contain at least one HTML route");
   }
 
   logger.info("Build complete", {
@@ -81,7 +73,8 @@ try {
     elapsedMs: result.elapsedMs,
     buildId: result.buildId,
     stages: result.stages.length,
-    posts: posts.entries.length,
+    articles: articleRoutes.length,
+    surfaceFiles: surfaceRoutes.length,
   });
 
   // Print a short summary of what got emitted.
