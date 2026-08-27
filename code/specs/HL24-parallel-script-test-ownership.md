@@ -97,3 +97,34 @@ but it must fail closed with evidence at least as strong as the assertions it
 replaces.
 
 Tracking: #13191. Parent backlog: #13193.
+
+## 6. Language Ladder evidence registry
+
+The Language Ladder consumer has the same ownership problem one layer above
+the corpus package. Its `tests/independentvowels.test.ts` file accumulated
+per-script glyph assertions even though each assertion proves one independently
+owned script inventory. The consumer-side rule is therefore:
+
+- `independentvowels.test.ts` is a stable aggregator, not an assertion file;
+- `tests/glyph-evidence/*.evidence.ts` modules own the exact assertions for one
+  script or one genuinely shared inventory relationship;
+- the aggregator discovers modules with an eager `import.meta.glob`, so adding
+  evidence never edits a registry;
+- the aggregator creates the `SCRIPTS`, syllabary, and matrix context once and
+  passes it to every evidence case; and
+- suite and case ranks are explicit integers. The aggregator sorts by those
+  ranks (then by stable text keys), so file-system enumeration cannot change
+  execution order.
+
+The pre-split assertion multiset must survive byte-for-byte apart from wrapper
+indentation. A source-shape regression test keeps assertion calls, concrete
+script lookups, and glyph-specific matchers out of the aggregator. Evidence
+modules remain `*.evidence.ts`, rather than independent `*.test.ts` files, so
+Vitest does not create one corpus/application setup per owner.
+
+Future glyph work edits only the owning evidence module. A cross-script claim
+belongs in a separately named shared module and must describe the semantic
+relationship in its case title; sharing a Unicode code point alone is not a
+reason to collapse script ownership.
+
+Tracking: #13211. Parent backlog: #13193.
