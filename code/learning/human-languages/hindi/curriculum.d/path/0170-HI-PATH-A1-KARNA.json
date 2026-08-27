@@ -1,0 +1,10 @@
+{
+  "id": "HI-PATH-A1-KARNA",
+  "spine_node": "SPINE-NAME-EVERYDAY-ACTIONS",
+  "lessons": [
+    "HI-C05-karna"
+  ],
+  "before": [],
+  "inline": [],
+  "after": []
+}

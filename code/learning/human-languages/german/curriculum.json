@@ -157,8 +157,17 @@
       "spine_node": "SPINE-SAY-WHAT-I-DO",
       "lessons": [
         "GE-C05-wohnen",
-        "GE-C05-machen",
         "GE-C05-lernen"
+      ],
+      "before": [],
+      "inline": [],
+      "after": []
+    },
+    {
+      "id": "GE-PATH-A1-MACHEN",
+      "spine_node": "SPINE-NAME-EVERYDAY-ACTIONS",
+      "lessons": [
+        "GE-C05-machen"
       ],
       "before": [],
       "inline": [],
@@ -374,7 +383,16 @@
       "spine_node": "SPINE-SAY-WHAT-I-DO",
       "lessons": [
         "GE-C27-gehen",
-        "GE-C27-laufen",
+        "GE-C27-laufen"
+      ],
+      "before": [],
+      "inline": [],
+      "after": []
+    },
+    {
+      "id": "GE-PATH-A1-OEFFNEN-SCHLIESSEN",
+      "spine_node": "SPINE-NAME-EVERYDAY-ACTIONS",
+      "lessons": [
         "GE-C27-oeffnen",
         "GE-C27-schliessen"
       ],
@@ -557,11 +575,15 @@
       "relocates": {}
     },
     "SPINE-NAME-EVERYDAY-ACTIONS": {
-      "segments": [],
+      "segments": [
+        "GE-PATH-A1-MACHEN",
+        "GE-PATH-A1-OEFFNEN-SCHLIESSEN"
+      ],
       "omits": [
         "VERB-DRINK",
         "VERB-GIVE",
-        "VERB-PUT"
+        "VERB-PUT",
+        "VERB-BUY"
       ],
       "relocates": {}
     },
@@ -592,8 +614,7 @@
         "VERB-PLAY",
         "VERB-WAIT",
         "VERB-ANSWER",
-        "VERB-MEET",
-        "VERB-BUY"
+        "VERB-MEET"
       ],
       "relocates": {}
     },

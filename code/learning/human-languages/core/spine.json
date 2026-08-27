@@ -210,7 +210,11 @@
       "concepts": [
         "VERB-DRINK",
         "VERB-GIVE",
-        "VERB-PUT"
+        "VERB-PUT",
+        "VERB-DO-MAKE",
+        "VERB-BUY",
+        "VERB-OPEN",
+        "VERB-CLOSE"
       ]
     },
     {
@@ -227,7 +231,6 @@
         "VERB-PRESENT-HABITUAL",
         "VERB-BE",
         "VERB-HAVE",
-        "VERB-DO-MAKE",
         "VERB-GO",
         "VERB-COME",
         "VERB-SAY",
@@ -258,9 +261,6 @@
         "VERB-ANSWER",
         "VERB-HELP",
         "VERB-MEET",
-        "VERB-BUY",
-        "VERB-OPEN",
-        "VERB-CLOSE",
         "VERB-LIKE-LOVE"
       ]
     },

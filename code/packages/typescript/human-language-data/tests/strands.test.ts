@@ -265,17 +265,25 @@ describe("the committed corpus", () => {
     expect(summary.emptyStrands).toEqual(["SOUND", "ETYMOLOGY", "IDIOM"]);
   });
 
-  it("still measures the node HL09 section 1 diagnosed, now six concepts lighter", () => {
+  it("still measures the node HL09 section 1 diagnosed, now ten concepts lighter", () => {
     const summary = summarizeStrands(loadCurriculumSpine(), loadChapterPolicy().maxNewAtomsPerChapter);
-    // 42 -> 39. HL23 moved VERB-DRINK, VERB-GIVE and VERB-PUT onto the new A1
-    // `SPINE-NAME-EVERYDAY-ACTIONS`. This is the first slice of HL09 §11 item 5,
-    // and a deliberately small one: a concept can only leave this node when every
-    // lesson realizing it moves too, because `validateCurriculum` demotes a lesson
-    // to "local support" the moment its concept's owner stops being its segment's
-    // node. These three were the ones no other track had to be edited to release.
-    // 39 is still 3x the chapter atom ceiling, so the node stays the corpus's
-    // worst offender and stays pinned below.
-    expect(summary.largestNode).toEqual({ nodeId: "SPINE-SAY-WHAT-I-DO", concepts: 39 });
+    // 42 -> 39 -> 35. HL23's first slice moved VERB-DRINK, VERB-GIVE and
+    // VERB-PUT onto the new A1 `SPINE-NAME-EVERYDAY-ACTIONS`; its second moved
+    // VERB-DO-MAKE, VERB-BUY, VERB-OPEN and VERB-CLOSE onto the same node,
+    // because the DELE A1 sitting found those verbs taught and then parked
+    // above the exam that asks for them.
+    //
+    // A concept can only leave this node when every lesson realizing it moves
+    // too, because `validateCurriculum` demotes a lesson to "local support" the
+    // moment its concept's owner stops being its segment's node. The second
+    // slice therefore cost 11 lesson migrations across 5 tracks to release 4
+    // concepts.
+    //
+    // This number may only ever FALL. It measures the corpus's worst
+    // `over-ceiling` node, so a pin that gets raised to let a change through
+    // would be measuring nothing at all. 35 is still nearly 3x the chapter atom
+    // ceiling, so the node stays the worst offender and stays pinned below.
+    expect(summary.largestNode).toEqual({ nodeId: "SPINE-SAY-WHAT-I-DO", concepts: 35 });
 
     // Recorded debt, report-only: HL-C81 splits these. Until then the count is
     // pinned so it cannot grow quietly.

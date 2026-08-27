@@ -7,7 +7,7 @@
   "policy": {
     "maxLinearisableTableColumns": 3
   },
-  "sourceHash": "fnv1a64:157d40fcddbdc295",
+  "sourceHash": "fnv1a64:7149a2448c636eb0",
   "summary": {
     "totalLessons": 998,
     "voice": 941,
@@ -9745,7 +9745,7 @@
         "no-visual-dependency"
       ],
       "coreDrivable": true,
-      "sourceHash": "fnv1a64:feecbbc0bce0b11e"
+      "sourceHash": "fnv1a64:7417fd6e16c01507"
     },
     {
       "id": "ES-C12-decir",
@@ -12391,7 +12391,7 @@
         "no-visual-dependency"
       ],
       "coreDrivable": true,
-      "sourceHash": "fnv1a64:00c7173e2df0f64a"
+      "sourceHash": "fnv1a64:54a9c67255169183"
     },
     {
       "id": "ES-C37-cerrar",
@@ -12409,7 +12409,7 @@
         "no-visual-dependency"
       ],
       "coreDrivable": true,
-      "sourceHash": "fnv1a64:fffdc00462a501bc"
+      "sourceHash": "fnv1a64:64540286ceff3e21"
     },
     {
       "id": "ES-C37-sentarse",
@@ -12679,7 +12679,7 @@
         "no-visual-dependency"
       ],
       "coreDrivable": true,
-      "sourceHash": "fnv1a64:06e99e37e2ac6756"
+      "sourceHash": "fnv1a64:1982168124b66d03"
     },
     {
       "id": "ES-C41-creer",

@@ -2,9 +2,13 @@
   "segments": [],
   "omits": [
     "VERB-DRINK",
-    "VERB-PUT"
+    "VERB-PUT",
+    "VERB-DO-MAKE"
   ],
   "relocates": {
-    "VERB-GIVE": "SPINE-SAY-WHAT-I-DO"
+    "VERB-GIVE": "SPINE-SAY-WHAT-I-DO",
+    "VERB-OPEN": "SPINE-SAY-WHAT-I-DO",
+    "VERB-CLOSE": "SPINE-SAY-WHAT-I-DO",
+    "VERB-BUY": "SPINE-SAY-WHAT-I-DO"
   }
 }

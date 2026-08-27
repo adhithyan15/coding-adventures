@@ -433,7 +433,7 @@
     {
       "language": "german",
       "chapter": 27,
-      "sourceHash": "fnv1a64:1bd7e0838fb35899",
+      "sourceHash": "fnv1a64:f0750333b7cb5b57",
       "lessonIds": [
         "GE-C27-gehen",
         "GE-C27-laufen",
@@ -445,7 +445,7 @@
       "text": "german/narration/ch27.txt",
       "json": "german/narration/ch27.json",
       "textHash": "fnv1a64:70899409818d857b",
-      "jsonHash": "fnv1a64:81f8b10789084d45"
+      "jsonHash": "fnv1a64:59615005ce8594f3"
     },
     {
       "language": "german",

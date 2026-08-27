@@ -2,7 +2,7 @@
 schema_version: 2
 id: HI-C05-karna
 sequence: 420
-spine_node: SPINE-SAY-WHAT-I-DO
+spine_node: SPINE-NAME-EVERYDAY-ACTIONS
 chapter: 5
 type: word
 headword: करना

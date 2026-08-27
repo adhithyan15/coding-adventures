@@ -10,6 +10,10 @@
   "concepts": [
     "VERB-DRINK",
     "VERB-GIVE",
-    "VERB-PUT"
+    "VERB-PUT",
+    "VERB-DO-MAKE",
+    "VERB-BUY",
+    "VERB-OPEN",
+    "VERB-CLOSE"
   ]
 }

@@ -7,7 +7,7 @@
   "policy": {
     "maxLinearisableTableColumns": 3
   },
-  "sourceHash": "fnv1a64:50038a2bca70c013",
+  "sourceHash": "fnv1a64:a1fec00d78445e3c",
   "summary": {
     "totalLessons": 122,
     "voice": 102,
@@ -2301,7 +2301,7 @@
         "no-visual-dependency"
       ],
       "coreDrivable": true,
-      "sourceHash": "fnv1a64:9520fc80bfc81ee2"
+      "sourceHash": "fnv1a64:bca85177f6fa7951"
     },
     {
       "id": "FR-C27-fermer",
@@ -2319,7 +2319,7 @@
         "no-visual-dependency"
       ],
       "coreDrivable": true,
-      "sourceHash": "fnv1a64:b24800fffba8e018"
+      "sourceHash": "fnv1a64:ba99b875c7691d9b"
     },
     {
       "id": "FR-C28-cafe",

@@ -2,8 +2,6 @@
   "id": "ES-PATH-033",
   "spine_node": "SPINE-SAY-WHAT-I-DO",
   "lessons": [
-    "ES-C37-abrir",
-    "ES-C37-cerrar",
     "ES-C37-sentarse",
     "ES-C37-levantarse"
   ],

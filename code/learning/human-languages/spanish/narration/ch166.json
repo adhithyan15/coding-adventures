@@ -4,7 +4,7 @@
   "chapter": 166,
   "title": "Opening, Closing, Sitting Down, Standing Up",
   "drivablePrefix": 4,
-  "sourceHash": "fnv1a64:b0c882d9c9a6ff59",
+  "sourceHash": "fnv1a64:90725beba113ee7a",
   "lessons": [
     {
       "id": "ES-C37-abrir",
@@ -19,7 +19,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:00c7173e2df0f64a",
+      "sourceHash": "fnv1a64:54a9c67255169183",
       "notice": null,
       "blocks": [
         {
@@ -185,7 +185,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:fffdc00462a501bc",
+      "sourceHash": "fnv1a64:64540286ceff3e21",
       "notice": null,
       "blocks": [
         {

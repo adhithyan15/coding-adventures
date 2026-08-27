@@ -8,7 +8,6 @@
     "VERB-INFINITIVE",
     "VERB-PRESENT-HABITUAL",
     "VERB-HAVE",
-    "VERB-DO-MAKE",
     "VERB-COME",
     "VERB-SAY",
     "VERB-HEAR",
@@ -26,10 +25,7 @@
     "VERB-STAND",
     "VERB-WAIT",
     "VERB-ANSWER",
-    "VERB-MEET",
-    "VERB-BUY",
-    "VERB-OPEN",
-    "VERB-CLOSE"
+    "VERB-MEET"
   ],
   "relocates": {}
 }

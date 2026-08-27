@@ -7,7 +7,7 @@
   "policy": {
     "maxLinearisableTableColumns": 3
   },
-  "sourceHash": "fnv1a64:4a380264c796a76f",
+  "sourceHash": "fnv1a64:5795662e582b139d",
   "summary": {
     "totalLessons": 107,
     "voice": 95,
@@ -2253,7 +2253,7 @@
         "no-visual-dependency"
       ],
       "coreDrivable": true,
-      "sourceHash": "fnv1a64:6077fbe3623e96ba"
+      "sourceHash": "fnv1a64:1d968eb670945a45"
     },
     {
       "id": "GE-C27-schliessen",
@@ -2271,7 +2271,7 @@
         "no-visual-dependency"
       ],
       "coreDrivable": true,
-      "sourceHash": "fnv1a64:7fbdf7b45126355b"
+      "sourceHash": "fnv1a64:3a010511b57a5214"
     },
     {
       "id": "GE-C28-kaffee",

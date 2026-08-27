@@ -320,7 +320,7 @@
     {
       "language": "italian",
       "chapter": 20,
-      "sourceHash": "fnv1a64:8e8b66cfd72012b7",
+      "sourceHash": "fnv1a64:2b54f4b269353dc6",
       "lessonIds": [
         "IT-C20-portare",
         "IT-C20-comprare",
@@ -332,7 +332,7 @@
       "text": "italian/narration/ch20.txt",
       "json": "italian/narration/ch20.json",
       "textHash": "fnv1a64:1939cafb88d0cbc1",
-      "jsonHash": "fnv1a64:5a8181e3a1c1dc4f"
+      "jsonHash": "fnv1a64:2459aa4258fe56fd"
     },
     {
       "language": "italian",

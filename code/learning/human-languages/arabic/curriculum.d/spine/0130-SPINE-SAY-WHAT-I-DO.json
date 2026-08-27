@@ -9,7 +9,6 @@
     "VERB-PRESENT-HABITUAL",
     "VERB-BE",
     "VERB-HAVE",
-    "VERB-DO-MAKE",
     "VERB-SPEAK",
     "VERB-HEAR",
     "VERB-LEARN",
@@ -26,10 +25,7 @@
     "VERB-STAND",
     "VERB-WAIT",
     "VERB-ANSWER",
-    "VERB-MEET",
-    "VERB-BUY",
-    "VERB-OPEN",
-    "VERB-CLOSE"
+    "VERB-MEET"
   ],
   "relocates": {}
 }

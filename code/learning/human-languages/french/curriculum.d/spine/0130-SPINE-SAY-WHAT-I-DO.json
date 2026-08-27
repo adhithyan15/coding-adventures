@@ -10,7 +10,6 @@
   "omits": [
     "VERB-INFINITIVE",
     "VERB-PRESENT-HABITUAL",
-    "VERB-DO-MAKE",
     "VERB-COME",
     "VERB-SAY",
     "VERB-SEE",
@@ -22,8 +21,7 @@
     "VERB-PLAY",
     "VERB-WAIT",
     "VERB-ANSWER",
-    "VERB-MEET",
-    "VERB-BUY"
+    "VERB-MEET"
   ],
   "relocates": {
     "VERB-CAN": "SPINE-SAY-WHAT-I-WANT"

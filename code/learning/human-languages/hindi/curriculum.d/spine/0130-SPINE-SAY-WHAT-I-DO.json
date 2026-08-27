@@ -31,10 +31,7 @@
     "VERB-STAND",
     "VERB-WAIT",
     "VERB-ANSWER",
-    "VERB-MEET",
-    "VERB-BUY",
-    "VERB-OPEN",
-    "VERB-CLOSE"
+    "VERB-MEET"
   ],
   "relocates": {}
 }

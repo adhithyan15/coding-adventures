@@ -1,7 +1,7 @@
 ---
 schema_version: 2
 id: ES-C37-cerrar
-spine_node: SPINE-SAY-WHAT-I-DO
+spine_node: SPINE-NAME-EVERYDAY-ACTIONS
 sequence: 2020
 chapter: 166
 type: word

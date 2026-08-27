@@ -454,7 +454,11 @@
       "omits": [
         "VERB-DRINK",
         "VERB-GIVE",
-        "VERB-PUT"
+        "VERB-PUT",
+        "VERB-DO-MAKE",
+        "VERB-BUY",
+        "VERB-OPEN",
+        "VERB-CLOSE"
       ],
       "relocates": {}
     },
@@ -469,7 +473,6 @@
         "VERB-INFINITIVE",
         "VERB-PRESENT-HABITUAL",
         "VERB-HAVE",
-        "VERB-DO-MAKE",
         "VERB-SAY",
         "VERB-SPEAK",
         "VERB-HEAR",
@@ -487,10 +490,7 @@
         "VERB-STAND",
         "VERB-WAIT",
         "VERB-ANSWER",
-        "VERB-MEET",
-        "VERB-BUY",
-        "VERB-OPEN",
-        "VERB-CLOSE"
+        "VERB-MEET"
       ],
       "relocates": {}
     },
