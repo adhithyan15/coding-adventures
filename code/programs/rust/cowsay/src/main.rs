@@ -461,6 +461,7 @@ fn cowsay_text_content(output: &str, font: FontSpec) -> TextContent {
         value: output.to_string(),
         font,
         color: color_black(),
+        decoration: None,
         max_lines: None,
         // Cowsay output is fixed-format monospace ASCII art: the speech
         // bubble's `/ \ | _ -` borders and the cow's legs only line up
