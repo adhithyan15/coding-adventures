@@ -13,6 +13,7 @@ export const scriptInventoryEvidence = {
     affected,
     missingByScript,
   }: ScriptEvidenceContext): void {
+    const persianMissing = missingByScript.get("perso-arabic.json") ?? new Set<string>();
     const persianDal = scripts["perso-arabic"]!.letters.find(
       (letter) => letter.glyph === "د",
     )!;
@@ -136,14 +137,32 @@ export const scriptInventoryEvidence = {
     expect(persianRa.strokeOrderSource?.variation).toMatch(
       /continuous Naskh.*upper tip.*short stroke.*lower curve.*without lifting.*non-connector.*Persian-scoped/i,
     );
-    expect(missingByScript.get("perso-arabic.json")?.has("د")).toBe(false);
-    expect(missingByScript.get("perso-arabic.json")?.has("ر")).toBe(false);
-    expect(missingByScript.get("perso-arabic.json")?.has("پ")).toBe(false);
-    expect(missingByScript.get("perso-arabic.json")?.has("چ")).toBe(false);
-    expect(missingByScript.get("perso-arabic.json")?.has("ٓ")).toBe(false);
-    expect(missingByScript.get("perso-arabic.json")?.has("خ")).toBe(false);
-    expect(missingByScript.get("perso-arabic.json")?.has("ف")).toBe(false);
-    expect(missingByScript.get("perso-arabic.json")?.has("ح")).toBe(false);
+    const persianZay = scripts["perso-arabic"]!.letters.find(
+      (letter) => letter.glyph === "ز",
+    )!;
+    expect(persianZay.sound).toBe("z");
+    expect(persianZay.penLifts).toBe(1);
+    expect(persianZay.strokeOrder).toEqual([
+      "begin at the upper tip and descend through the short stroke",
+      "without lifting, sweep left through the lower curve",
+      "lift once, then place the dot above",
+    ]);
+    expect(persianZay.strokeOrderSource?.citation).toMatch(
+      /Persian Online.*ز.*01:13–01:16/i,
+    );
+    expect(persianZay.strokeOrderSource?.variation).toMatch(
+      /body-first.*upper tip.*short stroke.*lower curve.*without lifting.*lift once.*dot above.*non-connector.*Persian-scoped.*Urdu/i,
+    );
+    expect(persianMissing.has("د")).toBe(false);
+    expect(persianMissing.has("ر")).toBe(false);
+    expect(persianMissing.has("ز")).toBe(false);
+    expect(affected.get("ز") ?? 0).toBe(0);
+    expect(persianMissing.has("پ")).toBe(false);
+    expect(persianMissing.has("چ")).toBe(false);
+    expect(persianMissing.has("ٓ")).toBe(false);
+    expect(persianMissing.has("خ")).toBe(false);
+    expect(persianMissing.has("ف")).toBe(false);
+    expect(persianMissing.has("ح")).toBe(false);
     const persianShin = scripts["perso-arabic"]!.letters.find(
       (entry) => entry.glyph === "ش",
     )!;
@@ -159,7 +178,7 @@ export const scriptInventoryEvidence = {
     expect(persianShin.strokeOrderSource?.citation).toMatch(
       /Persian Online.*ش.*01:29–01:35/i,
     );
-    expect(missingByScript.get("perso-arabic.json")?.has("ش")).toBe(false);
+    expect(persianMissing.has("ش")).toBe(false);
     expect(affected.get("ش") ?? 0).toBe(0);
     const persianYeh = scripts["perso-arabic"]!.letters.find(
       (entry) => entry.glyph === "ی",
@@ -176,15 +195,15 @@ export const scriptInventoryEvidence = {
     expect(persianYeh.strokeOrderSource?.variation).toMatch(
       /uninterrupted dotless S-shaped run.*upper right.*below-baseline bowl.*without lifting.*Persian-scoped.*Urdu/i,
     );
-    expect(missingByScript.get("perso-arabic.json")?.has("ی")).toBe(false);
+    expect(persianMissing.has("ی")).toBe(false);
     expect(affected.get("ی") ?? 0).toBe(0);
-    expect(missingByScript.get("perso-arabic.json")?.has("ظ")).toBe(false);
-    expect(missingByScript.get("perso-arabic.json")?.has("ک")).toBe(false);
+    expect(persianMissing.has("ظ")).toBe(false);
+    expect(persianMissing.has("ک")).toBe(false);
     expect(affected.get("ک") ?? 0).toBe(0);
-    expect(missingByScript.get("perso-arabic.json")?.has("ق")).toBe(false);
-    expect(missingByScript.get("perso-arabic.json")?.has("ط")).toBe(false);
+    expect(persianMissing.has("ق")).toBe(false);
+    expect(persianMissing.has("ط")).toBe(false);
     expect(affected.get("ط") ?? 0).toBe(0);
-    expect(missingByScript.get("perso-arabic.json")?.has("گ")).toBe(false);
+    expect(persianMissing.has("گ")).toBe(false);
     expect(affected.get("گ") ?? 0).toBe(0);
   },
 };
