@@ -29,8 +29,9 @@ extension.
 The preceding paragraph records the package's original compiler-MVP scope; it
 is not the final completion target. The Rust CPU simulator wave now requires a
 manual-backed functional simulator before a gate-level partner can be considered
-complete. The October 1963 GE-225 Programming Reference Manual is the primary
-authority for that work.
+complete. General Electric's corrected 1966 printing of the GE-225 Programming
+Reference Manual is the primary authority for that work; it resolves the
+earlier printing's inconsistent SXG opcode as `2506YY3`.
 
 The remaining functional work is deliberately split into auditable slices:
 
@@ -39,7 +40,7 @@ The remaining functional work is deliberately split into auditable slices:
 2. the one-sign-plus-38-data-bit A/Q representation and its double arithmetic,
    compare, multiply/divide, shift, and normalization paths (RCPU-P003);
 3. exact remaining single-length compare, shift, normalization, indicator, and
-   automatic-modification semantics;
+   automatic-modification semantics (RCPU-P004);
 4. the documented central-processor optional instructions and complete direct
    I/O/controller instruction decode and deterministic device contracts; and
 5. the optional Auxiliary Arithmetic Unit, including fixed, normalized

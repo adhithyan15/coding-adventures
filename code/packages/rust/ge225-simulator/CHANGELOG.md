@@ -5,6 +5,16 @@ All notable changes to the ge225-simulator Rust package will be documented in th
 ## [Unreleased]
 
 ### Changed
+- Decode `SXG` as the corrected `2506YY3` instruction and select its encoded
+  five-bit Y group instead of deriving a group from A.
+- Apply core-resident X words to fixed and shift instruction operands, reject
+  modified shifts above 31 places before state changes, and expose explicit
+  modified-instruction assembly helpers.
+- Put the modified operand in the architectural I register and reject invalid
+  effective addresses and branch targets before changing simulator state.
+- Keep single-length `ADD`, `SUB`, `NEG`, `ADO`, `SBO`, and `SLA` overflow
+  latched until `BOV` or `BNO`, and fail N-input shifts closed while N is not
+  ready.
 - Model A/Q double-length numbers as the documented one sign plus 38 data bits,
   with Q's sign duplicated or ignored according to the instruction, instead of
   treating the registers as a conventional 40-bit host integer.
@@ -34,6 +44,9 @@ All notable changes to the ge225-simulator Rust package will be documented in th
   warning-free rustdoc.
 
 ### Added
+- Corrected-manual vectors for SXG group 27, fixed and shift automatic
+  modification, the shift limit, single overflow latching, compare skips, and
+  N-register readiness, bringing core line coverage to 82.64% (719/870).
 - Manual example vectors for double add/subtract, multiply/divide, and
   double-register shifts, plus overflow, duplicated-sign, normalization, and
   zero-count regressions.

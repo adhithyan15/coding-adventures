@@ -73,6 +73,7 @@ fn address_modification_uses_reserved_core_x_words() {
     assert_eq!(trace.effective_address, Some(20));
     assert_eq!(simulator.get_state().a, 0x12345);
     assert_eq!(simulator.get_state().x_words[1], 4);
+    assert_eq!(simulator.get_state().ir, instruction(0o00, 20, 1));
 }
 
 #[test]
@@ -83,11 +84,12 @@ fn modified_address_outside_installed_memory_fails_instead_of_wrapping() {
         .load_words(&[instruction(0o00, 4090, 1)], 4)
         .unwrap();
     simulator.set_program_counter(4).unwrap();
+    let before = simulator.get_state();
 
     let error = simulator.step().unwrap_err();
 
     assert!(error.contains("address out of range: 4100"));
-    assert_eq!(simulator.get_state().a, 0);
+    assert_eq!(simulator.get_state(), before);
 }
 
 #[test]
@@ -270,11 +272,12 @@ fn branch_target_outside_installed_memory_fails_closed() {
         .load_words(&[instruction(0o26, 4096, 0)], 4)
         .unwrap();
     simulator.set_program_counter(4).unwrap();
+    let before = simulator.get_state();
 
     let error = simulator.step().unwrap_err();
 
     assert!(error.contains("address out of range: 4096"));
-    assert_eq!(simulator.get_state().pc, 5);
+    assert_eq!(simulator.get_state(), before);
 }
 
 #[test]

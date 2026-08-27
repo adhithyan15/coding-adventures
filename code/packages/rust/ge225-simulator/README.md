@@ -31,6 +31,16 @@ therefore operate on one sign plus 38 data bits rather than a host-style 40-bit
 integer. The manual's published arithmetic and shift examples are executable
 regression vectors.
 
+The modification path uses core-resident X words for both addresses and
+instructions. `SXG Y` decodes the corrected `2506YY3` form and selects the
+encoded group (00 through 31); it does not take a group number from A. A fixed
+or shift instruction carrying an X selector adds the selected X word to its
+operand field before execution, with modified shift counts rejected above the
+architectural 31-place limit. Overflow from single-length arithmetic and left
+shifts remains latched until `BOV` or `BNO` tests it. The current core has
+82.64% line coverage (719/870); the completion floor must be rechecked after
+the remaining optional CPU, controller, and AAU instruction families land.
+
 The current card reader is intentionally a deterministic development abstraction,
 not a completed GE-225 controller model: callers may queue at most 64 records of
 at most 27 words each, and `RCD` transfers the next record after validating the
@@ -38,8 +48,9 @@ whole destination range. Exact 27-word card/status rotation, alignment, ready
 indicators, and the rest of the controller instruction family remain in the
 RCPU-005 I/O slice.
 
-The primary reference is General Electric's October 1963
-[GE-225 Programming Reference Manual](https://bitsavers.org/www.computer.museum.uq.edu.au/pdf/CPB-252A%20GE-225%20Programming%20Reference%20Manual%201964.pdf).
+The primary reference is General Electric's corrected 1966 printing of the
+[GE-225 Programming Reference Manual](https://www.bitsavers.org/www.computer.museum.uq.edu.au/pdf/CPB-252A%20GE-225%20Programming%20Reference%20Manual%201966.pdf),
+which resolves the earlier printing's inconsistent SXG opcode as `2506YY3`.
 
 Run the package verification from `code/packages/rust`:
 
