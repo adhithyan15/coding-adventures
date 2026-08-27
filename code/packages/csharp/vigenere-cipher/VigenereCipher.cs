@@ -12,6 +12,9 @@ public readonly record struct BreakResult(string Key, string Plaintext);
 /// </summary>
 public static class VigenereCipher
 {
+    private const int MaxAnalysisScalars = 8192;
+    private const int MaxAnalysisKeyLength = 40;
+
     private static readonly double[] EnglishFrequenciesStorage =
     [
         0.08167, 0.01492, 0.02782, 0.04253, 0.12702, 0.02228, 0.02015,
@@ -36,16 +39,15 @@ public static class VigenereCipher
             throw new ArgumentException("Key must not be empty.", nameof(key));
         }
 
-        var normalized = key.ToUpperInvariant();
-        foreach (var ch in normalized)
+        foreach (var ch in key)
         {
-            if (ch is < 'A' or > 'Z')
+            if (!IsAsciiLetter(ch))
             {
                 throw new ArgumentException("Key must contain only ASCII letters.", nameof(key));
             }
         }
 
-        return normalized;
+        return key.ToUpperInvariant();
     }
 
     private static StringBuilder ExtractAlphaUpper(string text)
@@ -60,6 +62,14 @@ public static class VigenereCipher
         }
 
         return letters;
+    }
+
+    private static void ValidateAnalysisInput(string text)
+    {
+        if (text.EnumerateRunes().Count() > MaxAnalysisScalars)
+        {
+            throw new ArgumentException("Ciphertext exceeds the analysis limit.", nameof(text));
+        }
     }
 
     private static string Transform(string text, string key, int direction)
@@ -132,6 +142,12 @@ public static class VigenereCipher
     public static int FindKeyLength(string ciphertext, int maxLength = 20)
     {
         ArgumentNullException.ThrowIfNull(ciphertext);
+        if (maxLength > MaxAnalysisKeyLength)
+        {
+            throw new ArgumentOutOfRangeException(nameof(maxLength));
+        }
+
+        ValidateAnalysisInput(ciphertext);
 
         var letters = ExtractAlphaUpper(ciphertext);
         if (letters.Length < 2)
@@ -183,21 +199,15 @@ public static class VigenereCipher
         }
 
         var threshold = bestAverageIc * 0.90;
-        var candidates = new List<int>();
         for (var length = 2; length <= limit; length++)
         {
             if (averageIcs[length] >= threshold)
             {
-                candidates.Add(length);
+                return length;
             }
         }
 
-        foreach (var smaller in candidates.ToArray())
-        {
-            candidates.RemoveAll(candidate => candidate != smaller && candidate % smaller == 0);
-        }
-
-        return candidates.Count == 0 ? 1 : candidates[0];
+        return 1;
     }
 
     private static double ChiSquared(int[] counts, int total)
@@ -227,8 +237,15 @@ public static class VigenereCipher
         ArgumentNullException.ThrowIfNull(ciphertext);
         if (keyLength <= 0)
         {
-            throw new ArgumentOutOfRangeException(nameof(keyLength), "Key length must be positive.");
+            return string.Empty;
         }
+
+        if (keyLength > MaxAnalysisKeyLength)
+        {
+            throw new ArgumentOutOfRangeException(nameof(keyLength));
+        }
+
+        ValidateAnalysisInput(ciphertext);
 
         var letters = ExtractAlphaUpper(ciphertext);
         var key = new char[keyLength];
@@ -269,35 +286,7 @@ public static class VigenereCipher
             key[group] = (char)('A' + bestShift);
         }
 
-        return MinimalPeriod(new string(key));
-    }
-
-    private static string MinimalPeriod(string key)
-    {
-        for (var period = 1; period <= key.Length / 2; period++)
-        {
-            if (key.Length % period != 0)
-            {
-                continue;
-            }
-
-            var repeated = true;
-            for (var i = period; i < key.Length; i++)
-            {
-                if (key[i] != key[i % period])
-                {
-                    repeated = false;
-                    break;
-                }
-            }
-
-            if (repeated)
-            {
-                return key[..period];
-            }
-        }
-
-        return key;
+        return new string(key);
     }
 
     /// <summary>

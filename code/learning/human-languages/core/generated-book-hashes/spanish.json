@@ -4124,12 +4124,103 @@
     {
       "language": "spanish",
       "chapter": 389,
-      "sourceHash": "fnv1a64:bda5732921c29e6c",
+      "sourceHash": "fnv1a64:ab8d666c8e2837a6",
       "lessonIds": [
         "ES-C389-saber",
         "ES-C389-repaso-se-y-puedo"
       ],
       "tex": "spanish/book/chapters/ch389-saber.tex"
+    },
+    {
+      "language": "spanish",
+      "chapter": 390,
+      "sourceHash": "fnv1a64:7b318ef30c69c9cf",
+      "lessonIds": [
+        "ES-C390-terraza",
+        "ES-C390-sala",
+        "ES-C390-planta",
+        "ES-C390-ascensor",
+        "ES-C390-piscina"
+      ],
+      "tex": "spanish/book/chapters/ch390-la-terraza-y-la-sala.tex"
+    },
+    {
+      "language": "spanish",
+      "chapter": 391,
+      "sourceHash": "fnv1a64:c4d2fde415817ce8",
+      "lessonIds": [
+        "ES-C391-menu",
+        "ES-C391-camarero",
+        "ES-C391-postre",
+        "ES-C391-supermercado",
+        "ES-C391-euro"
+      ],
+      "tex": "spanish/book/chapters/ch391-el-menu-y-el-camarero.tex"
+    },
+    {
+      "language": "spanish",
+      "chapter": 392,
+      "sourceHash": "fnv1a64:864a2a12ef813792",
+      "lessonIds": [
+        "ES-C392-aeropuerto",
+        "ES-C392-vacaciones",
+        "ES-C392-destino",
+        "ES-C392-pasajero",
+        "ES-C392-agosto"
+      ],
+      "tex": "spanish/book/chapters/ch392-el-aeropuerto-y-las-vacaciones.tex"
+    },
+    {
+      "language": "spanish",
+      "chapter": 393,
+      "sourceHash": "fnv1a64:ab5d3b4e4597f367",
+      "lessonIds": [
+        "ES-C393-ordenador",
+        "ES-C393-internet",
+        "ES-C393-correo-electronico",
+        "ES-C393-direccion",
+        "ES-C393-nacionalidad"
+      ],
+      "tex": "spanish/book/chapters/ch393-el-ordenador-y-el-correo-electronico.tex"
+    },
+    {
+      "language": "spanish",
+      "chapter": 394,
+      "sourceHash": "fnv1a64:10a6b3c8f869c8f6",
+      "lessonIds": [
+        "ES-C394-universidad",
+        "ES-C394-trabajo",
+        "ES-C394-actividad",
+        "ES-C394-guitarra",
+        "ES-C394-medico"
+      ],
+      "tex": "spanish/book/chapters/ch394-la-universidad-y-el-trabajo.tex"
+    },
+    {
+      "language": "spanish",
+      "chapter": 395,
+      "sourceHash": "fnv1a64:e73676a1bef16fd1",
+      "lessonIds": [
+        "ES-C395-entrar",
+        "ES-C395-volver",
+        "ES-C395-llegar",
+        "ES-C395-perder",
+        "ES-C395-necesitar"
+      ],
+      "tex": "spanish/book/chapters/ch395-entrar-y-volver.tex"
+    },
+    {
+      "language": "spanish",
+      "chapter": 396,
+      "sourceHash": "fnv1a64:75492b375f15e823",
+      "lessonIds": [
+        "ES-C396-aprender",
+        "ES-C396-cocinar",
+        "ES-C396-preferir",
+        "ES-C396-funcionar",
+        "ES-C396-reparar"
+      ],
+      "tex": "spanish/book/chapters/ch396-aprender-y-cocinar.tex"
     }
   ]
 }

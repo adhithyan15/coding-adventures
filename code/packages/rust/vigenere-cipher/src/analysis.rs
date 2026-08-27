@@ -68,6 +68,15 @@ const ENGLISH_FREQUENCIES: [f64; 26] = [
     0.01974, // Y
     0.00074, // Z
 ];
+const MAX_ANALYSIS_SCALARS: usize = 8192;
+const MAX_ANALYSIS_KEY_LENGTH: usize = 40;
+
+fn validate_analysis_input(text: &str) {
+    assert!(
+        text.chars().count() <= MAX_ANALYSIS_SCALARS,
+        "ciphertext exceeds analysis limit"
+    );
+}
 
 /// Result of automatic cipher breaking.
 #[derive(Debug, Clone, PartialEq)]
@@ -130,6 +139,11 @@ fn chi_squared(counts: &[usize; 26], total: usize) -> f64 {
 /// produce high IC), we pick the smallest k whose average IC is within
 /// 90% of the overall best IC value.
 pub fn find_key_length(ciphertext: &str, max_length: usize) -> usize {
+    assert!(
+        max_length <= MAX_ANALYSIS_KEY_LENGTH,
+        "maximum key length exceeds 40"
+    );
+    validate_analysis_input(ciphertext);
     let letters = extract_alpha_upper(ciphertext);
 
     if letters.len() < 2 {
@@ -144,11 +158,7 @@ pub fn find_key_length(ciphertext: &str, max_length: usize) -> usize {
         let mut group_count = 0;
 
         for i in 0..k {
-            let group: Vec<u8> = letters.iter()
-                .skip(i)
-                .step_by(k)
-                .copied()
-                .collect();
+            let group: Vec<u8> = letters.iter().skip(i).step_by(k).copied().collect();
 
             if group.len() > 1 {
                 total_ic += index_of_coincidence(&group);
@@ -190,11 +200,20 @@ pub fn find_key_length(ciphertext: &str, max_length: usize) -> usize {
 /// This works because each group is a Caesar cipher, and the correct
 /// shift produces an English-like frequency distribution.
 pub fn find_key(ciphertext: &str, key_length: usize) -> String {
+    if key_length == 0 {
+        return String::new();
+    }
+    assert!(
+        key_length <= MAX_ANALYSIS_KEY_LENGTH,
+        "key length exceeds 40"
+    );
+    validate_analysis_input(ciphertext);
     let letters = extract_alpha_upper(ciphertext);
     let mut key = String::with_capacity(key_length);
 
     for pos in 0..key_length {
-        let group: Vec<u8> = letters.iter()
+        let group: Vec<u8> = letters
+            .iter()
             .skip(pos)
             .step_by(key_length)
             .copied()
@@ -332,7 +351,23 @@ mod tests {
         let ct = encrypt(LONG_ENGLISH_TEXT, "CIPHER").unwrap();
         let result = break_cipher(&ct);
         // Even if key recovery were imperfect, round-trip must be consistent
-        let rt = decrypt(&encrypt(LONG_ENGLISH_TEXT, &result.key).unwrap(), &result.key).unwrap();
+        let rt = decrypt(
+            &encrypt(LONG_ENGLISH_TEXT, &result.key).unwrap(),
+            &result.key,
+        )
+        .unwrap();
         assert_eq!(rt, LONG_ENGLISH_TEXT);
+    }
+
+    #[test]
+    fn cr03_analysis_limits_and_ordering() {
+        let at_limit = "😀".repeat(8192);
+        let over_limit = format!("{at_limit}😀");
+        assert_eq!(find_key_length(&at_limit, 40), 1);
+        assert!(std::panic::catch_unwind(|| find_key_length(&over_limit, 20)).is_err());
+        assert!(std::panic::catch_unwind(|| find_key_length(&over_limit, 41)).is_err());
+        assert_eq!(find_key(&over_limit, 0), "");
+        assert!(std::panic::catch_unwind(|| find_key(&over_limit, 1)).is_err());
+        assert!(std::panic::catch_unwind(|| find_key(&over_limit, 41)).is_err());
     }
 }

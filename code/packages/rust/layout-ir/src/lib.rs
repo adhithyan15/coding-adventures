@@ -33,7 +33,7 @@
 
 use std::collections::HashMap;
 
-pub const VERSION: &str = "0.1.0";
+pub const VERSION: &str = "0.3.0";
 
 // ═══════════════════════════════════════════════════════════════════════════
 // Size values
@@ -398,6 +398,10 @@ pub struct PositionedNode {
 pub struct MeasureResult {
     pub width: f64,
     pub height: f64,
+    /// Distance from the top of the measured line box to its baseline.
+    /// Multi-line callers receive the first line's baseline; inline layout
+    /// measures unwrapped fragments so this is exact for its use case.
+    pub baseline: f64,
     pub line_count: u32,
 }
 
@@ -585,11 +589,13 @@ mod tests {
                 None => MeasureResult {
                     width: line_width,
                     height: font.size * font.line_height,
+                    baseline: font.size * 0.8,
                     line_count: 1,
                 },
                 Some(mw) if line_width <= mw => MeasureResult {
                     width: line_width,
                     height: font.size * font.line_height,
+                    baseline: font.size * 0.8,
                     line_count: 1,
                 },
                 Some(mw) => {
@@ -597,6 +603,7 @@ mod tests {
                     MeasureResult {
                         width: mw,
                         height: lines as f64 * font.size * font.line_height,
+                        baseline: font.size * 0.8,
                         line_count: lines,
                     }
                 }

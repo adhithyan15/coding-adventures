@@ -1,5 +1,12 @@
 # Changelog
 
+## [0.3.0] - 2026-08-27
+
+### Added
+
+- Preformatted browser nodes now project `whiteSpace: pre` through the shared
+  block extension contract for reusable inline formatting.
+
 ## [0.2.0] - 2026-07-29
 
 ### Changed

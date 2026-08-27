@@ -169,6 +169,7 @@ describe("findKeyLength", () => {
 
   it("returns 1 for very short text", () => {
     expect(findKeyLength("A")).toBe(1);
+    expect(findKeyLength("AAAA", -2)).toBe(1);
   });
 });
 
@@ -221,5 +222,28 @@ describe("breakCipher", () => {
     expect(decrypt(encrypt(LONG_ENGLISH_TEXT, result.key), result.key)).toBe(
       LONG_ENGLISH_TEXT,
     );
+  });
+});
+
+describe("CR03 conformance", () => {
+  it("uses ASCII only and preserves requested key length", () => {
+    const plaintext = "Hello, 😀Wörld!";
+    const ciphertext = "Rijvs, 😀Uöbpb!";
+    expect(encrypt(plaintext, "kEy")).toBe(ciphertext);
+    expect(decrypt(ciphertext, "kEy")).toBe(plaintext);
+    expect(() => decrypt("", "KÉY")).toThrow();
+    expect(findKeyLength("AéA😀AЖAéABB", 4)).toBe(2);
+    expect(findKey("Eé😀Ж", 40)).toBe("A".repeat(40));
+  });
+
+  it("orders scalar and key-length preflights", () => {
+    const atLimit = "😀".repeat(8192);
+    const overLimit = `${atLimit}😀`;
+    expect(findKeyLength(atLimit, 40)).toBe(1);
+    expect(() => findKeyLength(overLimit, 20)).toThrow(RangeError);
+    expect(() => findKeyLength(overLimit, 41)).toThrow(RangeError);
+    expect(findKey(overLimit, 0)).toBe("");
+    expect(() => findKey(overLimit, 1)).toThrow(RangeError);
+    expect(() => findKey(overLimit, 41)).toThrow(RangeError);
   });
 });

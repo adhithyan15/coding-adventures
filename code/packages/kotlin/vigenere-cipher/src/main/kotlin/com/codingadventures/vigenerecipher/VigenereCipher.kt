@@ -100,11 +100,10 @@ object VigenereCipher {
      */
     private fun validateKey(key: String): String {
         require(key.isNotEmpty()) { "Key must not be empty" }
-        val upper = key.uppercase()
-        require(upper.all { it in 'A'..'Z' }) {
+        require(key.all { it in 'A'..'Z' || it in 'a'..'z' }) {
             "Key must contain only letters, got: '$key'"
         }
-        return upper
+        return key.uppercase()
     }
 
     // =========================================================================
@@ -190,22 +189,26 @@ object VigenereCipher {
      * IC across groups.  The correct key length produces groups that look like
      * Caesar-cipher ciphertext (IC ≈ 0.065) rather than random text (IC ≈ 0.038).
      *
-     * Returns the smallest candidate length within 5% of the best average IC,
-     * after filtering out any candidates that are multiples of smaller
-     * qualifying candidates (since k, 2k, 3k … all produce high IC).
+     * Returns the smallest candidate whose average IC is at least 90% of the
+     * best score. CR03 intentionally applies no divisor or multiple filtering.
      *
      * @param ciphertext the ciphertext (only alphabetic characters are analysed)
-     * @param maxLength  maximum key length to try (must be ≥ 2)
+     * @param maxLength  maximum key length to try; values below 2 return 1
      * @return the estimated key length
      */
     fun findKeyLength(ciphertext: String, maxLength: Int = 20): Int {
+        require(maxLength <= 40) { "maximum key length exceeds 40" }
+        require(ciphertext.codePointCount(0, ciphertext.length) <= 8192) {
+            "ciphertext exceeds analysis limit"
+        }
         // Extract only alphabetic characters, uppercase.
-        val s = ciphertext.filter { it.isLetter() }.uppercase()
+        val s = ciphertext.filter { it in 'A'..'Z' || it in 'a'..'z' }.uppercase()
         val n = s.length
 
         val limit = minOf(maxLength, n / 2)
+        if (n < 2 || limit < 2) return 1
         val avgIcs = DoubleArray(limit + 1)
-        var bestAvgIc = -1.0
+        var bestAvgIc = 0.0
 
         for (l in 2..limit) {
             var totalIc = 0.0
@@ -232,18 +235,10 @@ object VigenereCipher {
             }
         }
 
-        // Collect all candidates within 5% of the best average IC.
-        val threshold = bestAvgIc * 0.95
-        val candidates = (2..limit).filter { avgIcs[it] >= threshold }.toMutableList()
-        if (candidates.isEmpty()) return 2
-
-        // Remove any candidate that is a multiple of a smaller candidate in the
-        // list.  Multiples of the true key length also score well; the smallest
-        // residual is the true key length.
-        for (smaller in candidates.toList()) {
-            candidates.removeAll { bigger -> bigger != smaller && bigger % smaller == 0 }
-        }
-        return candidates.first()
+        // Return the smallest candidate scoring at least 90% of the best.
+        if (bestAvgIc <= 0.0) return 1
+        val threshold = bestAvgIc * 0.90
+        return (2..limit).firstOrNull { avgIcs[it] >= threshold } ?: 1
     }
 
     // =========================================================================
@@ -257,16 +252,20 @@ object VigenereCipher {
      * then runs chi-squared analysis on each group to find the Caesar shift —
      * which equals the corresponding keyword letter.
      *
-     * After recovering all characters, checks whether the key has a repeating
-     * sub-period and returns the minimal period.  This makes [findKey] robust
-     * even when [findKeyLength] returns a multiple of the true key length.
+     * Returns exactly [keyLength] recovered characters; repeated periods are
+     * intentionally retained as required by CR03.
      *
      * @param ciphertext the ciphertext
      * @param keyLength  the key length (from [findKeyLength])
      * @return the recovered keyword (uppercase)
      */
     fun findKey(ciphertext: String, keyLength: Int): String {
-        val s = ciphertext.filter { it.isLetter() }.uppercase()
+        if (keyLength <= 0) return ""
+        require(keyLength <= 40) { "key length exceeds 40" }
+        require(ciphertext.codePointCount(0, ciphertext.length) <= 8192) {
+            "ciphertext exceeds analysis limit"
+        }
+        val s = ciphertext.filter { it in 'A'..'Z' || it in 'a'..'z' }.uppercase()
         val keyChars = CharArray(keyLength)
 
         for (g in 0 until keyLength) {
@@ -300,16 +299,7 @@ object VigenereCipher {
             keyChars[g] = ('A'.code + bestShift).toChar()
         }
 
-        // Return the minimal period of the key.  If the IC estimator returned
-        // a multiple of the true key (e.g. 10 for LEMON), the full key is
-        // LEMONLEMON — which has minimal period 5, giving back "LEMON".
-        val fullKey = String(keyChars)
-        for (p in 1..keyLength / 2) {
-            if (keyLength % p != 0) continue
-            val base = fullKey.substring(0, p)
-            if ((p until keyLength).all { i -> fullKey[i] == fullKey[i % p] }) return base
-        }
-        return fullKey
+        return String(keyChars)
     }
 
     // =========================================================================

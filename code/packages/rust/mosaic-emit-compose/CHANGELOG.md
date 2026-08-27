@@ -7,6 +7,52 @@ This project follows [Semantic Versioning](https://semver.org/).
 
 ### Added
 
+- `Path` drawing primitive lowering (#12028 item 3, UI39). `Path [name]
+  (kind: circle|line|curve, ...)` now lowers to real Compose vector
+  geometry instead of reporting `primitive.path-unimplemented` on
+  every build. `circle` reuses `Modifier.background(color,
+  CircleShape)` + `Modifier.border(width, color, CircleShape)` —
+  `CircleShape` plus the already-unconditionally-imported
+  `.background`/`.border` modifiers match `background`/`border-color`+
+  `border-width` 1:1, the same reuse Qt's `Rectangle` and Flutter's
+  `BoxDecoration(shape: BoxShape.circle)` lowerings made for the same
+  shape. `line`/`curve` lower to a `Canvas` drawing a Compose
+  `graphics.Path` built via `moveTo`/`lineTo`/`quadraticBezierTo`,
+  using absolute canvas coordinates (mirrors Qt's `ShapePath` and
+  Flutter's `CustomPaint`). `arc` is a stretch goal not implemented in
+  this PR; it hard-errors with a named "not yet supported" message,
+  matching the XAML/Qt/Flutter lowerings' posture for the same gap.
+
+  Positioning `circle`'s authored center is notably simpler than the
+  Flutter lowering: Compose's `Modifier.offset(x, y)` shifts a
+  composable's painted position relative to wherever normal layout
+  would place it and is legal on ANY composable regardless of parent
+  type — unlike Flutter's `Positioned`, which only type-checks (and
+  only avoids a runtime panic) as a direct `Stack` child. So `circle`
+  always emits `Modifier.offset(...)` unconditionally, no
+  `direct_stack_child`-equivalent threading needed.
+
+  Import gating is split in two: `CircleShape` fires whenever any
+  `Path` is present, while `Canvas`/`graphics.Path`/`drawscope.Stroke`
+  fire only when a `line`/`curve`/`arc` kind is actually present (new
+  `tree_needs_path_canvas`, mirroring Qt's `tree_needs_shapes_import`)
+  — so a circle-only tree (the common case, the crescent moon) doesn't
+  pay for the Canvas imports it never uses.
+
+  Coordinate props (`cx`/`cy`/`r`/`x1`/`y1`/`x2`/`y2`) accept a literal
+  `Number` only; a `SlotRef`/`Expr`-bound coordinate is a clear compile
+  error, not a silent 0 — full data-driven binding is future work, the
+  same not-yet-landed gap the XAML, Qt, and Flutter lowerings all note.
+
+  Verified against the real toolchain: a `mosaic-compile pkg --backend
+  compose --profile native-complete` build of the crescent-moon shape
+  (two overlapping circles, a line, and a curve) produces
+  `nativeComplete: true` with zero degradations. The generated Kotlin
+  was dropped into a real JetBrains Compose Multiplatform Desktop
+  Gradle project (`org.jetbrains.compose` 1.6.11) and compiled cleanly
+  via `gradle compileKotlin`, then launched via `gradle run` and stayed
+  running with no crash or exception output.
+
 - Native radio-group mutual exclusion (#13007). `group:` was never read
   anywhere in `emit_host_radio`. A container physically holding 2+
   `HostRadio` siblings sharing a literal `group:` value now gets

@@ -49,6 +49,8 @@ findKeyLength ciphertext = findKeyLengthWithLimit ciphertext 20
 -- | Estimate the key length using average index of coincidence.
 findKeyLengthWithLimit :: String -> Int -> Int
 findKeyLengthWithLimit ciphertext maximumLength
+    | maximumLength > 40 = error "maximum key length exceeds 40"
+    | length ciphertext > 8192 = error "ciphertext exceeds analysis limit"
     | letterCount < 2 || limit < 2 = 1
     | bestIc <= 0.0 = 1
     | otherwise = fst (head candidates)
@@ -65,6 +67,8 @@ findKeyLengthWithLimit ciphertext maximumLength
 findKey :: String -> Int -> String
 findKey ciphertext keyLength
     | keyLength <= 0 = ""
+    | keyLength > 40 = error "key length exceeds 40"
+    | length ciphertext > 8192 = error "ciphertext exceeds analysis limit"
     | otherwise = map recoverPosition [0 .. keyLength - 1]
   where
     letters = extractAlphaUpper ciphertext

@@ -213,4 +213,28 @@ class VigenereCipherTest {
         for (double f : VigenereCipher.ENGLISH_FREQUENCIES) sum += f;
         assertEquals(1.0, sum, 0.001);
     }
+
+    @Test
+    void cr03AsciiAndExactKeyLength() {
+        String plaintext = "Hello, 😀Wörld!";
+        String ciphertext = "Rijvs, 😀Uöbpb!";
+        assertEquals(ciphertext, VigenereCipher.encrypt(plaintext, "kEy"));
+        assertEquals(plaintext, VigenereCipher.decrypt(ciphertext, "kEy"));
+        assertThrows(IllegalArgumentException.class, () -> VigenereCipher.decrypt("", "KÉY"));
+        assertThrows(IllegalArgumentException.class, () -> VigenereCipher.decrypt("", "KſY"));
+        assertEquals(2, VigenereCipher.findKeyLength("AéA😀AЖAéABB", 4));
+        assertEquals("A".repeat(40), VigenereCipher.findKey("Eé😀Ж", 40));
+    }
+
+    @Test
+    void cr03AnalysisLimitsAndOrdering() {
+        String atLimit = "😀".repeat(8192);
+        String overLimit = atLimit + "😀";
+        assertEquals(1, VigenereCipher.findKeyLength(atLimit, 40));
+        assertThrows(IllegalArgumentException.class, () -> VigenereCipher.findKeyLength(overLimit, 20));
+        assertThrows(IllegalArgumentException.class, () -> VigenereCipher.findKeyLength(overLimit, 41));
+        assertEquals("", VigenereCipher.findKey(overLimit, 0));
+        assertThrows(IllegalArgumentException.class, () -> VigenereCipher.findKey(overLimit, 1));
+        assertThrows(IllegalArgumentException.class, () -> VigenereCipher.findKey(overLimit, 41));
+    }
 }

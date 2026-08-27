@@ -1,4 +1,5 @@
 package CodingAdventures::VigenereCipher;
+use utf8;
 
 # ============================================================================
 # CodingAdventures::VigenereCipher
@@ -185,11 +186,13 @@ sub _index_of_coincidence {
 #   1. Split ciphertext into k groups (every k-th letter).
 #   2. Compute IC of each group.
 #   3. Average the ICs.
-# The key length with the highest average IC is most likely correct.
+# Return the smallest key length whose average IC is at least 90% of the best.
 
 sub find_key_length {
     my ($ciphertext, $max_length) = @_;
     $max_length //= 20;
+    die "maximum key length exceeds 40" if $max_length > 40;
+    die "ciphertext exceeds analysis limit" if length($ciphertext) > 8192;
 
     # Extract only alphabetic characters
     my $alpha_only = $ciphertext;
@@ -198,13 +201,14 @@ sub find_key_length {
 
     return 1 if $n < 2;
 
-    my $best_length = 1;
-    my $best_ic = -1;
-
     my $limit = $max_length < int($n / 2) ? $max_length : int($n / 2);
+    return 1 if $limit < 2;
+    my @scores;
+    my $best_ic = 0;
 
     for my $k (2 .. $limit) {
         my $ic_sum = 0;
+        my $valid_groups = 0;
 
         for my $j (0 .. $k - 1) {
             # Build the group: every k-th character starting at position j
@@ -214,17 +218,23 @@ sub find_key_length {
                 $group .= substr($alpha_only, $pos, 1);
                 $pos += $k;
             }
-            $ic_sum += _index_of_coincidence($group);
+            if (length($group) > 1) {
+                $ic_sum += _index_of_coincidence($group);
+                $valid_groups++;
+            }
         }
 
-        my $avg_ic = $ic_sum / $k;
-        if ($avg_ic > $best_ic) {
-            $best_ic = $avg_ic;
-            $best_length = $k;
-        }
+        my $avg_ic = $valid_groups ? $ic_sum / $valid_groups : 0;
+        push @scores, [$k, $avg_ic];
+        $best_ic = $avg_ic if $avg_ic > $best_ic;
     }
 
-    return $best_length;
+    return 1 if $best_ic <= 0;
+    my $threshold = $best_ic * 0.90;
+    for my $score (@scores) {
+        return $score->[0] if $score->[1] >= $threshold;
+    }
+    return 1;
 }
 
 # ============================================================================
@@ -263,6 +273,9 @@ sub _chi_squared {
 
 sub find_key {
     my ($ciphertext, $key_length) = @_;
+    return "" if $key_length <= 0;
+    die "key length exceeds 40" if $key_length > 40;
+    die "ciphertext exceeds analysis limit" if length($ciphertext) > 8192;
 
     # Extract only alphabetic characters, normalized to 0-25
     my @alpha;

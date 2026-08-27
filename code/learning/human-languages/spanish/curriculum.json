@@ -5420,6 +5420,118 @@
         "ES-EXT-389-ABILITY"
       ],
       "after": []
+    },
+    {
+      "id": "ES-PATH-390-01",
+      "spine_node": "SPINE-NAME-EVERYDAY-THINGS",
+      "lessons": [
+        "ES-C390-terraza",
+        "ES-C390-sala",
+        "ES-C390-planta",
+        "ES-C390-ascensor",
+        "ES-C390-piscina"
+      ],
+      "before": [],
+      "inline": [
+        "ES-EXT-390-THING"
+      ],
+      "after": []
+    },
+    {
+      "id": "ES-PATH-391-01",
+      "spine_node": "SPINE-NAME-EVERYDAY-THINGS",
+      "lessons": [
+        "ES-C391-menu",
+        "ES-C391-camarero",
+        "ES-C391-postre",
+        "ES-C391-supermercado",
+        "ES-C391-euro"
+      ],
+      "before": [],
+      "inline": [
+        "ES-EXT-391-THING"
+      ],
+      "after": []
+    },
+    {
+      "id": "ES-PATH-392-01",
+      "spine_node": "SPINE-NAME-EVERYDAY-THINGS",
+      "lessons": [
+        "ES-C392-aeropuerto",
+        "ES-C392-vacaciones",
+        "ES-C392-destino",
+        "ES-C392-pasajero",
+        "ES-C392-agosto"
+      ],
+      "before": [],
+      "inline": [
+        "ES-EXT-392-THING"
+      ],
+      "after": []
+    },
+    {
+      "id": "ES-PATH-393-01",
+      "spine_node": "SPINE-NAME-EVERYDAY-THINGS",
+      "lessons": [
+        "ES-C393-ordenador",
+        "ES-C393-internet",
+        "ES-C393-correo-electronico",
+        "ES-C393-direccion",
+        "ES-C393-nacionalidad"
+      ],
+      "before": [],
+      "inline": [
+        "ES-EXT-393-THING"
+      ],
+      "after": []
+    },
+    {
+      "id": "ES-PATH-394-01",
+      "spine_node": "SPINE-NAME-EVERYDAY-THINGS",
+      "lessons": [
+        "ES-C394-universidad",
+        "ES-C394-trabajo",
+        "ES-C394-actividad",
+        "ES-C394-guitarra",
+        "ES-C394-medico"
+      ],
+      "before": [],
+      "inline": [
+        "ES-EXT-394-THING"
+      ],
+      "after": []
+    },
+    {
+      "id": "ES-PATH-395-01",
+      "spine_node": "SPINE-NAME-EVERYDAY-ACTIONS",
+      "lessons": [
+        "ES-C395-entrar",
+        "ES-C395-volver",
+        "ES-C395-llegar",
+        "ES-C395-perder",
+        "ES-C395-necesitar"
+      ],
+      "before": [],
+      "inline": [
+        "ES-EXT-395-VERB"
+      ],
+      "after": []
+    },
+    {
+      "id": "ES-PATH-396-01",
+      "spine_node": "SPINE-NAME-EVERYDAY-ACTIONS",
+      "lessons": [
+        "ES-C396-aprender",
+        "ES-C396-cocinar",
+        "ES-C396-preferir",
+        "ES-C396-funcionar",
+        "ES-C396-reparar"
+      ],
+      "before": [],
+      "inline": [
+        "ES-EXT-396-VERB"
+      ],
+      "after": []
     }
   ],
   "spine": {
@@ -5758,7 +5870,9 @@
         "ES-PATH-385-01",
         "ES-PATH-386-01",
         "ES-PATH-387-01",
-        "ES-PATH-388-01"
+        "ES-PATH-388-01",
+        "ES-PATH-395-01",
+        "ES-PATH-396-01"
       ],
       "omits": [
         "VERB-GIVE"
@@ -5769,7 +5883,12 @@
     },
     "SPINE-NAME-EVERYDAY-THINGS": {
       "segments": [
-        "ES-PATH-268-ROOM"
+        "ES-PATH-268-ROOM",
+        "ES-PATH-390-01",
+        "ES-PATH-391-01",
+        "ES-PATH-392-01",
+        "ES-PATH-393-01",
+        "ES-PATH-394-01"
       ],
       "omits": [],
       "relocates": {}
@@ -10869,6 +10988,21 @@
       ]
     },
     {
+      "id": "ES-EXT-390-THING",
+      "stage": "A1",
+      "kind": "required",
+      "category": "vocabulary",
+      "canDo": "I can name la terraza, la sala, la planta, el ascensor and la piscina.",
+      "prerequisites": [],
+      "lessons": [
+        "ES-C390-terraza",
+        "ES-C390-sala",
+        "ES-C390-planta",
+        "ES-C390-ascensor",
+        "ES-C390-piscina"
+      ]
+    },
+    {
       "id": "ES-EXT-034-B-CONSOLIDATION-PORQUE",
       "stage": "A1",
       "kind": "supporting",
@@ -10877,6 +11011,21 @@
       "prerequisites": [],
       "lessons": [
         "ES-C38-repaso-los-tres-porques"
+      ]
+    },
+    {
+      "id": "ES-EXT-391-THING",
+      "stage": "A1",
+      "kind": "required",
+      "category": "vocabulary",
+      "canDo": "I can name el menú, el camarero, el postre, el supermercado and el euro.",
+      "prerequisites": [],
+      "lessons": [
+        "ES-C391-menu",
+        "ES-C391-camarero",
+        "ES-C391-postre",
+        "ES-C391-supermercado",
+        "ES-C391-euro"
       ]
     },
     {
@@ -10891,6 +11040,21 @@
       ]
     },
     {
+      "id": "ES-EXT-392-THING",
+      "stage": "A1",
+      "kind": "required",
+      "category": "vocabulary",
+      "canDo": "I can name el aeropuerto, las vacaciones, el destino, el pasajero and agosto.",
+      "prerequisites": [],
+      "lessons": [
+        "ES-C392-aeropuerto",
+        "ES-C392-vacaciones",
+        "ES-C392-destino",
+        "ES-C392-pasajero",
+        "ES-C392-agosto"
+      ]
+    },
+    {
       "id": "ES-EXT-268-CONSOLIDATION-GENDER",
       "stage": "A1",
       "kind": "supporting",
@@ -10899,6 +11063,66 @@
       "prerequisites": [],
       "lessons": [
         "ES-C268-repaso-dos-finales-dos-generos"
+      ]
+    },
+    {
+      "id": "ES-EXT-393-THING",
+      "stage": "A1",
+      "kind": "required",
+      "category": "vocabulary",
+      "canDo": "I can name el ordenador, internet, el correo electrónico, la dirección and la nacionalidad.",
+      "prerequisites": [],
+      "lessons": [
+        "ES-C393-ordenador",
+        "ES-C393-internet",
+        "ES-C393-correo-electronico",
+        "ES-C393-direccion",
+        "ES-C393-nacionalidad"
+      ]
+    },
+    {
+      "id": "ES-EXT-394-THING",
+      "stage": "A1",
+      "kind": "required",
+      "category": "vocabulary",
+      "canDo": "I can name la universidad, el trabajo, la actividad, la guitarra and el médico.",
+      "prerequisites": [],
+      "lessons": [
+        "ES-C394-universidad",
+        "ES-C394-trabajo",
+        "ES-C394-actividad",
+        "ES-C394-guitarra",
+        "ES-C394-medico"
+      ]
+    },
+    {
+      "id": "ES-EXT-395-VERB",
+      "stage": "A1",
+      "kind": "required",
+      "category": "vocabulary",
+      "canDo": "I can name entrar, volver, llegar, perder and necesitar.",
+      "prerequisites": [],
+      "lessons": [
+        "ES-C395-entrar",
+        "ES-C395-volver",
+        "ES-C395-llegar",
+        "ES-C395-perder",
+        "ES-C395-necesitar"
+      ]
+    },
+    {
+      "id": "ES-EXT-396-VERB",
+      "stage": "A1",
+      "kind": "required",
+      "category": "vocabulary",
+      "canDo": "I can name aprender, cocinar, preferir, funcionar and reparar.",
+      "prerequisites": [],
+      "lessons": [
+        "ES-C396-aprender",
+        "ES-C396-cocinar",
+        "ES-C396-preferir",
+        "ES-C396-funcionar",
+        "ES-C396-reparar"
       ]
     }
   ],

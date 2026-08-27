@@ -237,4 +237,28 @@ class VigenereCipherTest {
         assert(s.contains("KEY")) { "toString should include key: $s" }
         assert(s.contains("HELLO")) { "toString should include plaintext: $s" }
     }
+
+    @Test
+    fun cr03AsciiAndExactKeyLength() {
+        val plaintext = "Hello, 😀Wörld!"
+        val ciphertext = "Rijvs, 😀Uöbpb!"
+        assertEquals(ciphertext, VigenereCipher.encrypt(plaintext, "kEy"))
+        assertEquals(plaintext, VigenereCipher.decrypt(ciphertext, "kEy"))
+        assertFailsWith<IllegalArgumentException> { VigenereCipher.decrypt("", "KÉY") }
+        assertFailsWith<IllegalArgumentException> { VigenereCipher.decrypt("", "KſY") }
+        assertEquals(2, VigenereCipher.findKeyLength("AéA😀AЖAéABB", 4))
+        assertEquals("A".repeat(40), VigenereCipher.findKey("Eé😀Ж", 40))
+    }
+
+    @Test
+    fun cr03AnalysisLimitsAndOrdering() {
+        val atLimit = "😀".repeat(8192)
+        val overLimit = atLimit + "😀"
+        assertEquals(1, VigenereCipher.findKeyLength(atLimit, 40))
+        assertFailsWith<IllegalArgumentException> { VigenereCipher.findKeyLength(overLimit, 20) }
+        assertFailsWith<IllegalArgumentException> { VigenereCipher.findKeyLength(overLimit, 41) }
+        assertEquals("", VigenereCipher.findKey(overLimit, 0))
+        assertFailsWith<IllegalArgumentException> { VigenereCipher.findKey(overLimit, 1) }
+        assertFailsWith<IllegalArgumentException> { VigenereCipher.findKey(overLimit, 41) }
+    }
 }

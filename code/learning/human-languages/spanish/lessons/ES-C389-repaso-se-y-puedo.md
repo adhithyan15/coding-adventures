@@ -2,7 +2,7 @@
 schema_version: 2
 id: ES-C389-repaso-se-y-puedo
 spine_node: SPINE-SAY-WHAT-I-HAVE-AND-CAN-DO
-sequence: 8310
+sequence: 8295
 chapter: 389
 type: review
 headword: (review)

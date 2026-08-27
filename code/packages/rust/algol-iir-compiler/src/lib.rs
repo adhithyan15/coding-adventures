@@ -7130,8 +7130,9 @@ impl Compiler {
         }
 
         // When the complete right-hand exponent chain is a small nonnegative
-        // integer constant, preserve the integer/real literal fast path.
-        if let Some(k) = literal_nonneg_integer_power_chain(exponent_nodes) {
+        // checked integer constant, preserve the integer/real fast path.
+        if let Some(k) = literal_nonnegative_checked_integer_arithmetic_power_chain(exponent_nodes)
+        {
             return Ok(self.emit_pow_unroll(base, k));
         }
 
@@ -8128,6 +8129,30 @@ fn literal_nonneg_integer_power_chain(nodes: &[&GrammarASTNode]) -> Option<u32> 
     Some(value as u32)
 }
 
+/// Evaluate a right-associative exponent chain whose operands are variable-free
+/// checked integer arithmetic expressions and whose result remains small enough
+/// for AL-pow's fixed-size multiplication expansion.
+fn literal_nonnegative_checked_integer_arithmetic_power_chain(
+    nodes: &[&GrammarASTNode],
+) -> Option<u32> {
+    let (last, prefix) = nodes.split_last()?;
+    let operand_value = |node: &GrammarASTNode| {
+        let value = literal_checked_integer_arithmetic_value(node)?;
+        (value >= 0 && value <= MAX_POW_UNROLL_EXPONENT as i64).then_some(value as u32)
+    };
+    let mut value = operand_value(last)? as u64;
+
+    for node in prefix.iter().rev() {
+        let base = operand_value(node)? as u64;
+        value = base.checked_pow(value.try_into().ok()?)?;
+        if value > MAX_POW_UNROLL_EXPONENT as u64 {
+            return None;
+        }
+    }
+
+    Some(value as u32)
+}
+
 /// Return the base of an exponentiation expression whose complete literal
 /// exponent chain evaluates to one. Integer-literal chains return the base
 /// directly; real selector analysis also accepts bounded integral real
@@ -8155,7 +8180,7 @@ fn literal_power_identity_base(
     let exponent = if allow_integral_real_exponents {
         literal_nonnegative_integral_arithmetic_power_chain(exponents)
     } else {
-        literal_nonneg_integer_power_chain(exponents)
+        literal_nonnegative_checked_integer_arithmetic_power_chain(exponents)
     };
     (exponent == Some(1)).then_some(*base)
 }
@@ -11140,6 +11165,9 @@ mod tests {
             "choose ^ 1",
             "choose ** 1",
             "choose ^ 1 ^ 1",
+            "choose ^ (2 - 1)",
+            "choose ** ((6 div 3) - 1)",
+            "choose ^ (3 - 2) ^ (2 - 1)",
             "+choose",
             "+choose + 0 - 0",
             "(choose)",
@@ -15320,6 +15348,16 @@ mod tests {
     #[test]
     fn integer_power_literal_exponent() {
         assert_eq!(run_i64("begin integer result; result := 2 ^ 10 end"), 1024);
+    }
+
+    /// Variable-free checked integer arithmetic exponents use the same bounded
+    /// unrolled path as bare integer literals and retain the integer result.
+    #[test]
+    fn integer_power_checked_arithmetic_exponent() {
+        assert_eq!(
+            run_i64("begin integer result; result := 7 ^ ((6 div 3) - 1) end"),
+            7
+        );
     }
 
     /// The common `x ↑ 2` (square) case.

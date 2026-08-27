@@ -1,0 +1,16 @@
+{
+  "id": "ES-PATH-394-01",
+  "spine_node": "SPINE-NAME-EVERYDAY-THINGS",
+  "lessons": [
+    "ES-C394-universidad",
+    "ES-C394-trabajo",
+    "ES-C394-actividad",
+    "ES-C394-guitarra",
+    "ES-C394-medico"
+  ],
+  "before": [],
+  "inline": [
+    "ES-EXT-394-THING"
+  ],
+  "after": []
+}

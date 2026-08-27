@@ -1,5 +1,17 @@
 # Changelog
 
+## [Unreleased] - narrow the `Path` degradation to also exclude Compose (#12028 item 3, UI39)
+
+Compose now lowers `Path`'s `circle`/`line`/`curve` kinds to real
+Jetpack Compose vector geometry (`mosaic-emit-compose`). Narrowed the
+`("Path", ...)` arm in `collect_native_degradations` from
+`!matches!(backend, Backend::Xaml | Backend::Qt | Backend::Flutter)` to
+also exclude `Backend::Compose`, matching `HostSlider`'s per-backend
+narrowing pattern. Same primitive-level (not per-kind) caveat as the
+XAML/Qt/Flutter narrowings: a real build using `kind: arc` on Compose
+still hard-errors from the emitter itself. SwiftUI is now the only
+native backend still reporting this degradation.
+
 ## [Unreleased] - narrow the `Path` degradation to also exclude Flutter (#12028 item 3, UI39)
 
 Flutter now lowers `Path`'s `circle`/`line`/`curve` kinds to real Dart

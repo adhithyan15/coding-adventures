@@ -1,0 +1,21 @@
+{
+  "chapter": 394,
+  "title": "Five Places and Things in a Week",
+  "label": "ch:la-universidad-y-el-trabajo",
+  "canDo": "I can say la universidad, el trabajo, la actividad, la guitarra and el médico, and name five places I go or things I do in a week.",
+  "spineNodes": [
+    "SPINE-NAME-EVERYDAY-THINGS"
+  ],
+  "payoff": {
+    "lesson": "ES-C394-medico",
+    "kind": "production",
+    "summary": "Complete ES-C394-medico: name five places I go or things I do in a week, and say one thing about each.",
+    "assesses": [
+      "ES-LEX-UNIVERSIDAD",
+      "ES-LEX-TRABAJO",
+      "ES-LEX-ACTIVIDAD",
+      "ES-LEX-GUITARRA",
+      "ES-LEX-MEDICO"
+    ]
+  }
+}

@@ -2,8 +2,8 @@
 
 - Track: [Spanish](../spanish/README.md)
 - Family / script: Romance / Latin
-- Canonical lessons: 1017
-- Mapped lessons: 1017
-- Book progress: 389 chapters; through Ch. 389; 389 generated
+- Canonical lessons: 1052
+- Mapped lessons: 1052
+- Book progress: 396 chapters; through Ch. 396; 396 generated
 
 This file is generated from canonical curriculum data. Do not edit it by hand.

@@ -30,6 +30,24 @@ and current direction; it deliberately avoids a hand-maintained package
 inventory. Run the [package parity report](./code/scripts/package_parity_report.py)
 for a live cross-language view.
 
+### Repository snapshot — August 27, 2026
+
+| Surface | Current scale |
+|---|---:|
+| Reusable package directories | 4,986 |
+| Runnable programs and applications | 209 |
+| Grammar families | 54 |
+| Architecture and roadmap specifications | 1,483 |
+| Learning documents | 4,869 |
+| Forme packages | 57 |
+| CI, release, and deployment workflows | 36 |
+
+These counts are a dated orientation point, not release promises. The generated
+reports and the repository tree remain authoritative as the monorepo changes.
+The busiest current integration threads are Mosaic's native UI emitters,
+task-app's structured project surfaces, HTML parser conformance, and the
+human-language curriculum and book pipeline.
+
 ## What Makes This Repo Different
 
 ### A language platform with two shared hubs
@@ -226,6 +244,36 @@ multiple native and web hosts without duplicating product behavior.
 
 See the [Mosaic overview](./code/specs/UI00-mosaic.md) and
 [Mosaic compiler pipeline](./code/specs/UI16-mosaic-compiler-pipeline.md).
+
+### Forme: authoring and static-site compilation
+
+Forme is the repository's universal authoring pipeline: typed, capability-aware
+stages turn content into web pages, documentation sites, feeds, search indexes,
+and deployment artifacts. Its 57 TypeScript packages now cover the kernel and
+orchestrator, filesystem and Markdown sources, routing and collection,
+transformations, Style IR, HTML/AOT emitters, metadata, sitemaps, feeds, and a
+complete searchable documentation-site cluster.
+
+Two end-to-end programs prove the composition model:
+
+- [`forme-hello-world`](./code/programs/typescript/forme-hello-world/) runs the
+  smallest source → parse → render → emit pipeline;
+- [`forme-doc-demo`](./code/programs/typescript/forme-doc-demo/) builds a
+  multi-page documentation site with navigation, a table of contents, syntax
+  highlighting, and browser search.
+
+The core pipeline works, but Forme is not yet a turnkey site generator. The
+remaining product layer includes a general CLI and dev server, watch mode and
+incremental rebuilds, a themed renderer that consumes Style IR, asset handling,
+the plugin host and OS sandboxes, and the deploy runner described by FM05. The
+existing [Forme blog](./code/sites/blog/) is an early four-stage demonstration;
+later router, index, feed, style, and AOT packages still need to be integrated
+back into that flagship site.
+
+Start with the [Forme vision](./code/specs/FM00-forme-vision.md),
+[kernel](./code/specs/FM01-forme-kernel.md),
+[orchestrator](./code/specs/FM03-forme-orchestrator.md), and
+[Style IR](./code/specs/FM04-forme-style-ir.md).
 
 ### Applications and product experiments
 
@@ -430,6 +478,7 @@ Choose a path based on what you want to understand:
 | Rules, formulas, and auditable reasoning | [ADJ overview](./code/specs/ADJ-OVERVIEW.md) |
 | SQL and SQLite | [Mini-SQLite conformance roadmap](./code/specs/mini-sqlite-full-conformance.md) |
 | UI compilation | [Mosaic](./code/specs/UI00-mosaic.md) |
+| Authoring and static sites | [Forme vision](./code/specs/FM00-forme-vision.md) and [documentation-site vision](./code/specs/DOC00-docs-vision.md) |
 | Task/project engine | [task-app overview](./code/specs/task-app-overview.md) |
 | Native browser pipeline | [Venture browser](./code/specs/BR01-venture-browser.md) |
 | Smart-home runtime | [Smart-home runtime](./code/specs/D23-smart-home-runtime.md) |
@@ -446,23 +495,36 @@ material by subject.
 Selected programs are deployed to
 [adhithyan15.github.io/coding-adventures](https://adhithyan15.github.io/coding-adventures/):
 
-- `arithmetic/` — adders, ALU, two's-complement, multiplication, and CPU steps;
-- `arm1-web/` — ARM1 registers, pipeline, barrel shifter, and memory views;
-- `busicom/` — an Intel 4004-powered Busicom calculator;
-- `code39/` — text-to-barcode rendering through draw instructions;
-- `commonmark/` — a from-scratch Markdown renderer;
-- `electronics-visualizers/` — circuit and architecture visualizers;
-- `engram/` and `engram-docs/` — the Engram app and documentation;
-- `eniac/` — decimal vacuum-tube computation beside binary equivalents;
-- `journal/` — the journaling application;
-- `lattice/` — language documentation and a live transpiler;
-- `logic-gates/` — gates, truth tables, and CMOS layouts;
-- `ml-learning/` — interactive machine-learning demonstrations;
-- `nib-web/` — Nib to Intel 4004 assembly/binary/HEX and simulation;
-- `transistors/` — vacuum tube, BJT, MOSFET, and CMOS models.
+- [Arithmetic](https://adhithyan15.github.io/coding-adventures/arithmetic/) —
+  adders, ALU, two's-complement, multiplication, and CPU steps;
+- [ARM1](https://adhithyan15.github.io/coding-adventures/arm1-web/) — registers,
+  pipeline, barrel shifter, and memory views;
+- [Busicom](https://adhithyan15.github.io/coding-adventures/busicom/) and
+  [ENIAC](https://adhithyan15.github.io/coding-adventures/eniac/) — interactive
+  historical machines;
+- [Transistors](https://adhithyan15.github.io/coding-adventures/transistors/),
+  [Logic Gates](https://adhithyan15.github.io/coding-adventures/logic-gates/),
+  and [Electronics Visualizers](https://adhithyan15.github.io/coding-adventures/electronics-visualizers/)
+  — inspectable hardware layers;
+- [Nib](https://adhithyan15.github.io/coding-adventures/nib-web/),
+  [Lattice](https://adhithyan15.github.io/coding-adventures/lattice/), and
+  [CommonMark](https://adhithyan15.github.io/coding-adventures/commonmark/) —
+  language and compiler playgrounds;
+- [Code 39](https://adhithyan15.github.io/coding-adventures/code39/) — barcode
+  rendering through the repository's draw-instruction pipeline;
+- [Engram](https://adhithyan15.github.io/coding-adventures/engram/) and
+  [Engram Docs](https://adhithyan15.github.io/coding-adventures/engram-docs/) —
+  a spaced-repetition application and its documentation;
+- [ML Learning Lab](https://adhithyan15.github.io/coding-adventures/ml-learning/)
+  — browser-runnable machine-learning demonstrations;
+- [Language Ladder](https://adhithyan15.github.io/coding-adventures/language-ladder/)
+  and the [human-language book catalog](https://adhithyan15.github.io/coding-adventures/human-languages/books/)
+  — interactive lessons and generated books;
+- [Forme notes](https://adhithyan15.github.io/coding-adventures/blog/2026-05-15-hello-forme.html)
+  — articles produced by the repository's own authoring pipeline.
 
-The repository also deploys its blog and root landing page through dedicated
-workflows.
+The Journal application remains active in the repository, but its Pages route
+is currently unavailable and is intentionally not linked as a live surface.
 
 ## Copyright
 

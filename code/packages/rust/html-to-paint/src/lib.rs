@@ -590,6 +590,7 @@ mod tests {
             MeasureResult {
                 width: full_width.min(width_limit),
                 height: line_count * font.size * font.line_height,
+                baseline: font.size * 0.8,
                 line_count: line_count as u32,
             }
         }
@@ -763,6 +764,62 @@ mod tests {
             Some(&output.links[0])
         );
         assert!(positioned_texts(&output.positioned).contains(&"connected"));
+    }
+
+    #[test]
+    fn wrapped_link_exposes_one_tight_hit_region_per_line() {
+        let render = parse_browser_render_tree(
+            "<p><a href='https://example.test/long'>one two three four five six</a></p>",
+        )
+        .unwrap();
+        let output = html_render_tree_to_paint(
+            &render,
+            &mosaic_html_theme(),
+            HtmlPaintViewport::new(90.0, 40.0, 1.0),
+            &MonoMeasurer,
+            &FakeShaper,
+            &FakeMetrics,
+            &FakeResolver,
+        );
+
+        assert!(output.links.len() >= 3, "regions: {:?}", output.links);
+        assert!(output.links.windows(2).all(|pair| pair[0].y < pair[1].y));
+        assert!(output
+            .links
+            .iter()
+            .all(|region| region.width > 0.0 && region.width < 90.0));
+        for region in &output.links {
+            assert_eq!(region.url, "https://example.test/long");
+            assert_eq!(
+                hit_test_link(
+                    &output.links,
+                    region.x + region.width / 2.0,
+                    region.y + region.height / 2.0,
+                    0.0,
+                ),
+                Some(region)
+            );
+        }
+    }
+
+    #[test]
+    fn preformatted_text_preserves_spaces_and_hard_line_geometry() {
+        let render = parse_browser_render_tree("<pre>one  two\n\nthree</pre>").unwrap();
+        let output = html_render_tree_to_paint(
+            &render,
+            &mosaic_html_theme(),
+            HtmlPaintViewport::new(200.0, 40.0, 1.0),
+            &MonoMeasurer,
+            &FakeShaper,
+            &FakeMetrics,
+            &FakeResolver,
+        );
+
+        let first = find_positioned_text(&output.positioned, "one  two").unwrap();
+        let second = find_positioned_text(&output.positioned, "three").unwrap();
+        assert_eq!(first.x, second.x);
+        assert!(second.y >= first.y + first.height * 2.0);
+        assert!(positioned_texts(&output.positioned).contains(&"one  two"));
     }
 
     #[test]
@@ -1009,6 +1066,18 @@ mod tests {
             texts.extend(positioned_texts(child));
         }
         texts
+    }
+
+    fn find_positioned_text<'a>(
+        node: &'a PositionedNode,
+        value: &str,
+    ) -> Option<&'a PositionedNode> {
+        if matches!(&node.content, Some(Content::Text(text)) if text.value == value) {
+            return Some(node);
+        }
+        node.children
+            .iter()
+            .find_map(|child| find_positioned_text(child, value))
     }
 
     fn find_positioned_by_html_role<'a>(

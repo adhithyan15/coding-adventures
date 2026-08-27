@@ -1970,6 +1970,41 @@
       "language": "spanish",
       "chapter": 389,
       "output": "spanish/book/chapters/ch389-saber.tex"
+    },
+    {
+      "language": "spanish",
+      "chapter": 390,
+      "output": "spanish/book/chapters/ch390-la-terraza-y-la-sala.tex"
+    },
+    {
+      "language": "spanish",
+      "chapter": 391,
+      "output": "spanish/book/chapters/ch391-el-menu-y-el-camarero.tex"
+    },
+    {
+      "language": "spanish",
+      "chapter": 392,
+      "output": "spanish/book/chapters/ch392-el-aeropuerto-y-las-vacaciones.tex"
+    },
+    {
+      "language": "spanish",
+      "chapter": 393,
+      "output": "spanish/book/chapters/ch393-el-ordenador-y-el-correo-electronico.tex"
+    },
+    {
+      "language": "spanish",
+      "chapter": 394,
+      "output": "spanish/book/chapters/ch394-la-universidad-y-el-trabajo.tex"
+    },
+    {
+      "language": "spanish",
+      "chapter": 395,
+      "output": "spanish/book/chapters/ch395-entrar-y-volver.tex"
+    },
+    {
+      "language": "spanish",
+      "chapter": 396,
+      "output": "spanish/book/chapters/ch396-aprender-y-cocinar.tex"
     }
   ]
 }

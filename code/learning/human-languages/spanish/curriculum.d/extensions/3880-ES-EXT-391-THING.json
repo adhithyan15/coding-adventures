@@ -1,0 +1,15 @@
+{
+  "id": "ES-EXT-391-THING",
+  "stage": "A1",
+  "kind": "required",
+  "category": "vocabulary",
+  "canDo": "I can name el menú, el camarero, el postre, el supermercado and el euro.",
+  "prerequisites": [],
+  "lessons": [
+    "ES-C391-menu",
+    "ES-C391-camarero",
+    "ES-C391-postre",
+    "ES-C391-supermercado",
+    "ES-C391-euro"
+  ]
+}

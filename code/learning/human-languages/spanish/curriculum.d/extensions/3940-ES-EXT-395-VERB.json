@@ -1,0 +1,15 @@
+{
+  "id": "ES-EXT-395-VERB",
+  "stage": "A1",
+  "kind": "required",
+  "category": "vocabulary",
+  "canDo": "I can name entrar, volver, llegar, perder and necesitar.",
+  "prerequisites": [],
+  "lessons": [
+    "ES-C395-entrar",
+    "ES-C395-volver",
+    "ES-C395-llegar",
+    "ES-C395-perder",
+    "ES-C395-necesitar"
+  ]
+}

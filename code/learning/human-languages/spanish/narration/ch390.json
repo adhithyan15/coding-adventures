@@ -1,0 +1,925 @@
+{
+  "version": 1,
+  "language": "spanish",
+  "chapter": 390,
+  "title": "Five Parts of a Building",
+  "drivablePrefix": 5,
+  "sourceHash": "fnv1a64:65b592a1cf1658bb",
+  "lessons": [
+    {
+      "id": "ES-C390-terraza",
+      "sequence": 8300,
+      "title": "la terraza — earth, flattened out and stood on",
+      "headword": "la terraza",
+      "romanization": "la terraza",
+      "gloss": "terrace, café tables outside — Latin terra, earth, through a Vulgar Latin terrācea meaning earthen; English terrace is the same word, though how it entered Spanish is unsettled",
+      "script": "latin",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:0092c28235802251",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Say I know how to read. (Sé leer.)"
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know first",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "la tierra — the root underneath this one."
+            },
+            {
+              "kind": "speech",
+              "text": "el café — where you will hear the word most often."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "pronunciation",
+          "title": "Sounds you'll need",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "te-RRA-za, three beats with the weight on the middle one. The rr is rolled, held a moment longer than a single tap. The z is a soft s across the Americas and a th across much of Spain. see pronunciation reference."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "la terraza — an open flat outdoor level: a roof terrace, a balcony floor, and above all the tables a café sets out on the pavement."
+            },
+            {
+              "kind": "speech",
+              "text": "Latin terra was earth. From it came a Vulgar Latin terrācea, \"earthen\" — a thing made of packed dirt. That much is certain, and the family is wide: English has terrain, terrestrial, terra cotta."
+            },
+            {
+              "kind": "speech",
+              "text": "English terrace is not a relative but the same word, arriving through French. The twelfth-century Old French gloss is worth quoting because it is the evidence rather than a guess: a platform raised on a mound of earth faced with turf. Not tiles. Not pottery. A flat place you built by heaping up soil and laying grass over the front of it, so you could stand above the ground."
+            },
+            {
+              "kind": "speech",
+              "text": "Now the part that has to be said carefully, because the references disagree with each other and none of them is a fool."
+            },
+            {
+              "kind": "speech",
+              "text": "The Academy's dictionary keeps it at home, deriving terraza from terrazo inside Spanish."
+            },
+            {
+              "kind": "speech",
+              "text": "Wiktionary calls it \"more likely borrowed\" from French terrasse, which took it from Old Occitan terrassa."
+            },
+            {
+              "kind": "speech",
+              "text": "And Corominas, going through everything that grew out of tierra, does not list terraza among them at all."
+            },
+            {
+              "kind": "speech",
+              "text": "So: terra is certain, and the road from terra to terraza is not. When three careful sources give three answers, the answer is that nobody knows yet."
+            },
+            {
+              "kind": "speech",
+              "text": "One thing to refuse. English calls a row of joined houses a terrace, and that sense is English-only, dated to 1769. A Spanish terraza is never a house."
+            },
+            {
+              "kind": "speech",
+              "text": "un café con terraza — a café with tables outside."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "You can name the flat open space outside: la terraza."
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "la terraza",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *la terraza*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "un café con terraza",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *un café con terraza*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "estamos en la terraza",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *estamos en la terraza*]"
+            }
+          ]
+        },
+        {
+          "index": 6,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What did terrācea mean? (Earthen — made of packed earth.) Does terraza name a terraced house? (No. That row-of-houses sense is English only; a terraza is an open flat level, usually a café's outdoor tables.)"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "ES-C390-sala",
+      "sequence": 8310,
+      "title": "la sala — the one Germanic room in a Latin house",
+      "headword": "la sala",
+      "romanization": "la sala",
+      "gloss": "living room, hall — Proto-Germanic salaz, a one-room building, not Latin at all; English salon and saloon are the same word by way of French",
+      "script": "latin",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:49f49ff3895add3a",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Say the terrace, then a café with tables outside. (La terraza; un café con terraza.)"
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know first",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "la casa — what this is a room of."
+            },
+            {
+              "kind": "speech",
+              "text": "la habitación — the neighbouring word."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "pronunciation",
+          "title": "Sounds you'll need",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "SA-la, two beats with the weight on the first. Both as are the same open sound, neither of them swallowed. The s stays clear and hissed; the l is bright, made with the tongue tip forward. see pronunciation reference."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "la sala — the main room of a house, the living room; also a large room put to public use."
+            },
+            {
+              "kind": "speech",
+              "text": "Nearly everything in a Spanish house came from Latin. This did not."
+            },
+            {
+              "kind": "speech",
+              "text": "Behind sala is Proto-Germanic salaz, and what it named was a one-room building. The house was the room and the room was the house. Its relatives sit across the old Germanic languages: Old High German sal, Old English sele, Old Norse salr, all on a very old root meaning a dwelling."
+            },
+            {
+              "kind": "speech",
+              "text": "English then borrowed it back out of French, twice over. Salon came in during the 1690s; saloon followed. English's own inherited form of the word is sele, which survives only in old poetry."
+            },
+            {
+              "kind": "speech",
+              "text": "One pairing to keep out, because it looks irresistible and is wrong: English hall is not this word. It comes from a separate Germanic form, hallō. Two Germanic words for large rooms, two different ancestries."
+            },
+            {
+              "kind": "speech",
+              "text": "Now the honest part. Germanic words reached Spanish by more than one road — Gothic speakers in the peninsula, and Frankish words passing down through Catalan and southern France — and for sala Corominas refuses to pick. He calls it inseguro whether it arrived through Catalan and Gallo-Romance or straight from Gothic, and settles on there having been varios focos de difusión, several separate points from which it spread. The one story he throws out flatly, as inadmisible, is that it came from France alone."
+            },
+            {
+              "kind": "speech",
+              "text": "One firm date: sala is on record as a proper name in a Leonese document of 1102."
+            },
+            {
+              "kind": "speech",
+              "text": "Two lookalikes that are not family: sal, salt, is Latin sāl; salir is Latin salīre, to jump. Neither touches a room."
+            },
+            {
+              "kind": "speech",
+              "text": "una sala grande — a big living room."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "You can name the room a house is lived in: la sala. And you know one Spanish noun that came in from the north instead of from Rome."
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "la sala",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *la sala*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "una sala grande",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *una sala grande*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "la sala y la terraza",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *la sala y la terraza*]"
+            }
+          ]
+        },
+        {
+          "index": 6,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Is sala a Latin word? (No — Germanic, from salaz, a one-room building.) Did it come to Spanish through France? (Corominas says that story alone is inadmissible; the routes were several, and which one carried it is uncertain.)"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "ES-C390-planta",
+      "sequence": 8320,
+      "title": "la planta — a book word with a mouth-worn twin",
+      "headword": "la planta",
+      "romanization": "la planta",
+      "gloss": "floor, storey — Latin planta, both the sole of the foot and a cutting set in the ground; its pl- shows it was taken from writing, since the mouth-worn twin is llanta",
+      "script": "latin",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:7e2b9d59ef38c8f1",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Say the terrace, then the living room. (La terraza; la sala.)"
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know first",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "el piso — the everyday word alongside this one."
+            },
+            {
+              "kind": "speech",
+              "text": "el pie — where the Latin word starts."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "pronunciation",
+          "title": "Sounds you'll need",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "PLAN-ta, two beats with the weight on the first. The l is bright, made with the tongue tip forward, and the pl stays a crisp pair with nothing slipped between them. The t is dental — tongue against the back of the top teeth, not up on the ridge. see pronunciation reference."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "la planta — a floor of a building, a storey."
+            },
+            {
+              "kind": "speech",
+              "text": "Latin planta carried two senses at once: the sole of the foot, and a cutting, a shoot pressed down into soil. English kept them both and kept them apart. Plantar, as in plantar fasciitis, is the sole. Plant and plantation are the cutting. Whether Latin had one word doing two jobs or two words that fell together, the references disagree — Corominas suspects dos vocablos distintos; Wiktionary concludes they are one and the same."
+            },
+            {
+              "kind": "speech",
+              "text": "Here is the best thing in the word, and it is visible in the first two letters."
+            },
+            {
+              "kind": "speech",
+              "text": "Look at what happened to Latin pl- in words Spanish inherited by mouth, worn down by ordinary speakers over centuries:"
+            },
+            {
+              "kind": "speech",
+              "text": "plēnum becomes lleno."
+            },
+            {
+              "kind": "speech",
+              "text": "plūvia becomes lluvia."
+            },
+            {
+              "kind": "speech",
+              "text": "plicāre becomes llegar."
+            },
+            {
+              "kind": "speech",
+              "text": "Every one of them came out with ll-. So planta, which still has its pl- intact, did not come down that road. Corominas states the inference outright: el tratamiento de pl- indica que ha de ser cultismo — the treatment of the pl- shows it has to be a word taken from writing."
+            },
+            {
+              "kind": "speech",
+              "text": "The mouth-worn twin is not hypothetical: llanta, which in the Partidas meant a vegetable. One Latin word, two routes, two shapes — the spoken one bent, the written one preserved."
+            },
+            {
+              "kind": "speech",
+              "text": "Careful with that twin: llanta is really two words — the cabbage-plant one from planta, and a wheel rim from elsewhere. Corominas separates them."
+            },
+            {
+              "kind": "speech",
+              "text": "One question stays open, and it is the sense used here. How planta came to name a storey is not settled: Corominas declines to decide — no está bastante estudiado el problema — leaving Italian and a home-grown development both open."
+            },
+            {
+              "kind": "speech",
+              "text": "la primera planta — the first floor."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "You can say which floor of a building you mean: la planta. And you can read a surviving pl- as a fingerprint of a word that came in through writing."
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "la planta",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *la planta*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "la primera planta",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *la primera planta*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "la sala está en la primera planta",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *la sala está en la primera planta*]"
+            }
+          ]
+        },
+        {
+          "index": 6,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What shape did plēnum, plūvia and plicāre come out in? (Lleno, lluvia, llegar — the pl- arrived as ll-.) So what does the surviving pl- of planta tell you? (That it was not worn down by speech; it was lifted out of written Latin.)"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "ES-C390-ascensor",
+      "sequence": 8330,
+      "title": "el ascensor — an old word waiting for its machine",
+      "headword": "el ascensor",
+      "romanization": "el ascensor",
+      "gloss": "elevator, lift — Latin ascēnsor, the one who climbs, from ascendere; the form is ancient but the machine sense is French and dates to 1867",
+      "script": "latin",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:467d667547ff1f9b",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Say the living room, then the first floor. (La sala; la primera planta.)"
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know first",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "subir — what it does."
+            },
+            {
+              "kind": "speech",
+              "text": "la escalera — what people used before it."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "pronunciation",
+          "title": "Sounds you'll need",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "as-cen-SOR, three beats with the weight on the last. The c before e is soft, so the middle beat begins with an s sound and the written sc comes out as one clean hiss. The final r is a single tap. see pronunciation reference."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "el ascensor — the elevator."
+            },
+            {
+              "kind": "speech",
+              "text": "It takes apart cleanly. Latin ascēnsor is an agent noun — a -tor word, the one who does the thing — built on ascendere. And ascendere is ad-, \"to, up to,\" plus scandere, \"to climb.\" So the whole word says: the one who ascends. Nothing about cables, cars or shafts is in there."
+            },
+            {
+              "kind": "speech",
+              "text": "The Romans had the word for eighteen centuries before anyone had the machine, and it is worth seeing what they used it for. In the Vulgate, at Exodus 15, the ascensor is a horseman — the rider, the one gone up onto the horse. That is who an ascender was."
+            },
+            {
+              "kind": "speech",
+              "text": "So the form and the meaning came by different roads, and the meaning has a date. French ascenseur existed in the early sixteenth century and meant a rider too. The sense we want — an apparatus that serves to go up — is recorded by the CNRTL for the first time in 1867. Spanish ascensor is therefore ancient in shape and modern in what it points at: a Latin word handed a nineteenth-century job."
+            },
+            {
+              "kind": "speech",
+              "text": "The English family is large and regular. From ascendere: ascend, ascent, ascension. From the scandere underneath it: descend, transcend, and scansion — climbing along the beats of a line of verse."
+            },
+            {
+              "kind": "speech",
+              "text": "One that is not family, however much it looks it: scandal. That comes from Greek skandalon and has no share in this."
+            },
+            {
+              "kind": "speech",
+              "text": "¿Dónde está el ascensor? — Where is the elevator?"
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "You can ask for the elevator: el ascensor. And you can tell an old form from a young meaning wearing it."
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "el ascensor",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *el ascensor*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "¿dónde está el ascensor?",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *¿dónde está el ascensor?*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "subo a la primera planta en el ascensor",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *subo a la primera planta en el ascensor*]"
+            }
+          ]
+        },
+        {
+          "index": 6,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Who was an ascēnsor in the Vulgate? (A horseman — the one gone up onto the horse.) When does the machine sense first appear? (In French, in 1867.)"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "ES-C390-piscina",
+      "sequence": 8340,
+      "title": "la piscina — one Latin fish, two Spanish roads",
+      "headword": "la piscina",
+      "romanization": "la piscina",
+      "gloss": "swimming pool — Latin piscīna, from piscis, fish, plus -īna; a word taken from writing, standing beside the inherited pez from the same root",
+      "script": "latin",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:ff09e433582a642e",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Say the first floor, then where is the elevator?. (La primera planta; ¿dónde está el ascensor?)"
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know first",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "el agua — what fills it."
+            },
+            {
+              "kind": "speech",
+              "text": "el pescado — the fish you eat, built on the same piscis."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "pronunciation",
+          "title": "Sounds you'll need",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "pis-CI-na, three beats with the weight on the middle one. The c before i is soft, so that beat is see across the Americas and thee across much of Spain. Both is are tight and bright, never sliding toward an uh. see pronunciation reference."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "la piscina — a swimming pool."
+            },
+            {
+              "kind": "speech",
+              "text": "Latin piscīna is piscis, a fish, with the ending -īna on it."
+            },
+            {
+              "kind": "speech",
+              "text": "The cleanest thing here is a pair. That same Latin root reached Spanish twice, by two roads, and the two arrivals look nothing alike:"
+            },
+            {
+              "kind": "speech",
+              "text": "pez — inherited, carried down by mouth, worn short;"
+            },
+            {
+              "kind": "speech",
+              "text": "piscina — taken out of writing, its shape kept whole."
+            },
+            {
+              "kind": "speech",
+              "text": "One root, two routes. (Piscīna has a worn-down double of its own, pecina.)"
+            },
+            {
+              "kind": "speech",
+              "text": "Now a warning about the gloss, because the tempting move is wrong. Piscina does not mean \"fishpond\" in Spanish, and Spanish did not stretch it from fish to swimmers. That stretch had already happened in Rome. Lewis and Short mark the bathing sense as a post-Augustan transfer, and it turns up in Pliny, Seneca and Martial. Spanish borrowed the word with that meaning already attached."
+            },
+            {
+              "kind": "speech",
+              "text": "English holds the root twice: fish is the inherited cousin of piscis, the Latin p answering a Germanic f. Borrowed straight from Latin: Pisces, piscine, piscatorial."
+            },
+            {
+              "kind": "speech",
+              "text": "Before you travel: Mexico often says alberca, the Río de la Plata pileta — not variants but separate words, alberca from Arabic al-birka, pileta Romance."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "You can name five parts of a building: la terraza, la sala, la planta, el ascensor, la piscina."
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "la piscina",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *la piscina*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "la piscina y el ascensor",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *la piscina y el ascensor*]"
+            },
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Now all five together. Name each part of the building, then say one thing about it."
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "la terraza — la terraza es pequeña",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *la terraza — la terraza es pequeña*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "la sala — la sala es grande",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *la sala — la sala es grande*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "la planta — vivo en la primera planta",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *la planta — vivo en la primera planta*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "el ascensor — el ascensor sube",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *el ascensor — el ascensor sube*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "la piscina — la piscina está abajo",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *la piscina — la piscina está abajo*]"
+            }
+          ]
+        },
+        {
+          "index": 6,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Which of pez and piscina came down by mouth? (Pez.) Did Spanish turn a fishpond into a swimming pool? (No — the Romans had already done it; the swimming sense came with the word.)"
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "findings": []
+}

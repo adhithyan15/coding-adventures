@@ -1,6 +1,11 @@
 {
   "segments": [
-    "ES-PATH-268-ROOM"
+    "ES-PATH-268-ROOM",
+    "ES-PATH-390-01",
+    "ES-PATH-391-01",
+    "ES-PATH-392-01",
+    "ES-PATH-393-01",
+    "ES-PATH-394-01"
   ],
   "omits": [],
   "relocates": {}

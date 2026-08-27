@@ -1,5 +1,12 @@
 # Changelog — `lang-aot`
 
+## 0.259.0 - 2026-08-27 (ALGOL checked integer exponent expressions)
+
+The ALGOL matrix now proves that a variable-free checked integer arithmetic
+exponent remains on the bounded integer power path and preserves an integer
+selector on all seven standard backends. Overflow, division by zero, dynamic,
+negative, oversized, and non-unit forms remain conservative.
+
 ## 0.258.0 - 2026-08-26 (ALGOL checked integer unit exponents)
 
 The ALGOL matrix now preserves a finite-real selector raised by a bounded,

@@ -4,7 +4,7 @@
   "chapter": 389,
   "title": "Knowing How --- the Verb That Once Meant Taste",
   "drivablePrefix": 2,
-  "sourceHash": "fnv1a64:ebe0f998520a9ca1",
+  "sourceHash": "fnv1a64:05eca4141f599b78",
   "lessons": [
     {
       "id": "ES-C389-saber",
@@ -216,7 +216,7 @@
     },
     {
       "id": "ES-C389-repaso-se-y-puedo",
-      "sequence": 8310,
+      "sequence": 8295,
       "title": "Review — the verbs that will not sit behind sé",
       "headword": "(review)",
       "romanization": "(review)",
@@ -227,7 +227,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:0f63f8232113f03e",
+      "sourceHash": "fnv1a64:50fc43f033bb307e",
       "notice": null,
       "blocks": [
         {

@@ -1,0 +1,944 @@
+{
+  "version": 1,
+  "language": "spanish",
+  "chapter": 394,
+  "title": "Five Places and Things in a Week",
+  "drivablePrefix": 2,
+  "sourceHash": "fnv1a64:311831f04a0b6b35",
+  "lessons": [
+    {
+      "id": "ES-C394-universidad",
+      "sequence": 8500,
+      "title": "la universidad — a body of people, before it was a place",
+      "headword": "la universidad",
+      "romanization": "la universidad",
+      "gloss": "university — Latin ūniversitās, a corporation or guild of people, from ūniversus, turned into one; the first Spanish use, in 1490, means totality, and the school sense arrives in 1505",
+      "script": "latin",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:35698a188582ebe5",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Say the address, then the nationality. (La dirección; La nacionalidad.)"
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know first",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "el estudiante — who the word was named after."
+            },
+            {
+              "kind": "speech",
+              "text": "la escuela — the other place you go to learn."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "pronunciation",
+          "title": "Sounds you'll need",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "u-ni-ver-si-DAD, five beats with the weight on the last. The opening u is oo, not the English you-. The v comes out as a b. The s stays a clean hiss, and the final d is soft, nearer the th of the. see pronunciation reference."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "la universidad — \"university.\""
+            },
+            {
+              "kind": "speech",
+              "text": "Latin ūniversitās — and the meaning to hold onto is not the one the shape tempts you into. In Roman and medieval law a ūniversitās was a body of people: a corporation, a guild, a company treated as one thing. A trade guild was a universitas. So was a town council."
+            },
+            {
+              "kind": "speech",
+              "text": "A medieval university got its name the same way — after the people in it, not after the breadth of what they studied. On the exact phrase the references part company. Corominas shortens it from universitas scholarium, the guild of students. Etymonline gives universitas magistrorum et scholarium, of masters and students. Take the shape and leave the sentence: what got named was an association of its members."
+            },
+            {
+              "kind": "speech",
+              "text": "The pieces: ūnus, one, plus versus, the turned form of vertere, to turn. Ūniversus is turned into one, many things faced the same way. English holds that in universe and universal; vertere alone hands over verse, version, convert, reverse, divorce and vertigo."
+            },
+            {
+              "kind": "speech",
+              "text": "Two dates carry the argument better than any reasoning could."
+            },
+            {
+              "kind": "speech",
+              "text": "1490, Alfonso de Palencia — the earliest Spanish universidad on record. It means totality, the whole of a thing. No school in sight."
+            },
+            {
+              "kind": "speech",
+              "text": "1505 — the school sense appears, and cannot stand on its own. What was written is universidad de estudio, a universidad of study."
+            },
+            {
+              "kind": "speech",
+              "text": "That second date is the tell. A word already meaning \"the whole of knowledge\" would have needed no such help."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "You can name where you study: la universidad."
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "la universidad",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *la universidad*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "estudio en la universidad",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *estudio en la universidad*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "la universidad es grande",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *la universidad es grande*]"
+            }
+          ]
+        },
+        {
+          "index": 6,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What kind of thing was a Latin ūniversitās? (A body of people — a corporation or guild, held together as one.) And what did the first Spanish universidad, in 1490, mean? (Totality. The school sense came fifteen years later, needing the phrase universidad de estudio to say so.)"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "ES-C394-trabajo",
+      "sequence": 8510,
+      "title": "el trabajo — a word with an asterisk in the middle of it",
+      "headword": "el trabajo",
+      "romanization": "el trabajo",
+      "gloss": "work, a job — a reconstructed Vulgar Latin tripaliāre, to torture, on Late Latin tripalium, an instrument of torture attested in a church canon of 578; English travail is the same word",
+      "script": "latin",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:7c540887751faaed",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Say the nationality, then the university. (La nacionalidad; La universidad.)"
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know first",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "trabajar — the doing word this is cut from."
+            },
+            {
+              "kind": "speech",
+              "text": "la semana — the stretch you measure it in."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "pronunciation",
+          "title": "Sounds you'll need",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "tra-BA-jo, three beats with the weight on the middle one. The r is one quick tap of the tongue, not the English glide. The b between vowels is soft, the lips never quite closing. The j is the throaty jota, scraped at the back. see pronunciation reference."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "el trabajo — \"work\"; also \"a job\", and a piece of work you hand in."
+            },
+            {
+              "kind": "speech",
+              "text": "Corominas dates it in Spanish to 1212. Behind it sits Vulgar Latin tripaliāre, \"to torture\", on Late Latin tripalium, an instrument of torture. Told properly it has an asterisk in the middle, and the asterisk is where the honesty lives."
+            },
+            {
+              "kind": "speech",
+              "text": "The instrument is real. Tripalium is on record, spelled trepalium, in the Councils of Auxerre and Mâcon. The Auxerre canon of 578 forbids a priest or deacon to stand ad trepalium, ubi rei torquentur — at the trepalium, where the accused are tortured. Somebody wrote that down because it stood in a real place."
+            },
+            {
+              "kind": "speech",
+              "text": "Tripaliāre is not. The form that would mean \"to torture with one\" carries an asterisk in the Academy's dictionary and in Corominas alike: reconstructed backwards from its descendants, because no surviving text holds it. Two claims, two grades of evidence, worth keeping apart."
+            },
+            {
+              "kind": "speech",
+              "text": "What saves the story from being a good line is that the middle of it is documented too:"
+            },
+            {
+              "kind": "speech",
+              "text": "Old Spanish trabajo — suffering, pain;"
+            },
+            {
+              "kind": "speech",
+              "text": "Old Spanish trabajarse — to strive;"
+            },
+            {
+              "kind": "speech",
+              "text": "the labour sense — only from the fourteenth century;"
+            },
+            {
+              "kind": "speech",
+              "text": "and the Academy today still carries a sense penalidad, molestia, tormento."
+            },
+            {
+              "kind": "speech",
+              "text": "Torture, suffering, striving, work. Nobody had to guess a link."
+            },
+            {
+              "kind": "speech",
+              "text": "One step further up goes soft. Tripalium from tripalis, \"having three stakes\", is called darkly suggestive with its exact notion obscure. Hedge the three stakes; the descent of trabajo itself stands."
+            },
+            {
+              "kind": "speech",
+              "text": "And refuse the moral. None of this says how Spanish speakers feel about Monday. English travail is the same word, travel its doublet, and nobody calls a holiday agony."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "You can name what you do for a living: el trabajo."
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "el trabajo",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *el trabajo*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "voy al trabajo",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *voy al trabajo*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "el trabajo y la universidad",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *el trabajo y la universidad*]"
+            }
+          ]
+        },
+        {
+          "index": 6,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Which part of the story is attested and which is reconstructed? (Trepalium is written down in a canon of 578; tripaliāre carries an asterisk in both the Academy and Corominas.) And what did trabajo mean in Old Spanish? (Suffering, pain — the work sense only from the fourteenth century.)"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "ES-C394-actividad",
+      "sequence": 8520,
+      "title": "la actividad — the cluster that never wore down",
+      "headword": "la actividad",
+      "romanization": "la actividad",
+      "gloss": "activity — Medieval Latin āctīvitās, a Scholastic coinage on āctīvus, from agere, to drive or to do; the -ct- still sitting intact inside activ- is the sign the word came off the page",
+      "script": "latin",
+      "modality": "sight",
+      "derivedModality": "sight",
+      "modalityReasons": [
+        "sight-cue"
+      ],
+      "sourceHash": "fnv1a64:72196485ea37dc48",
+      "notice": {
+        "modality": "sight",
+        "needs": [
+          "your eyes, because the lesson points at something written down"
+        ],
+        "waitUntilStopped": [],
+        "text": "Before we start: this one needs your eyes, so it is not fully a driving lesson. You will want your eyes, because the lesson points at something written down. You can listen to all of it now and come back to the parts that need looking at once you have stopped."
+      },
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Say the university, then the work. (La universidad; El trabajo.)"
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know first",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "hacer — what you do with one."
+            },
+            {
+              "kind": "speech",
+              "text": "la clase — where you will meet the word most often."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "pronunciation",
+          "title": "Sounds you'll need",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ac-ti-vi-DAD, four beats with the weight on the last. The c is a hard k, and it lands — k and t back to back. The t is dental, tongue against the teeth rather than the ridge behind them. The v comes out as a b, and the final d is soft. see pronunciation reference."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "la actividad — \"activity\": something you do, and the state of being at it."
+            },
+            {
+              "kind": "speech",
+              "text": "Latin agere was to drive, to set in motion, to do. From it āctīvus, and from that āctīvitās. English carries the root in activity, active, act, agent, agile, exact and agenda."
+            },
+            {
+              "kind": "speech",
+              "text": "Now the part worth stopping on, because the word wears its own history on the outside. Put these three beside each other and look at the middle:"
+            },
+            {
+              "kind": "speech",
+              "text": "factum becomes hecho."
+            },
+            {
+              "kind": "speech",
+              "text": "lactem becomes leche."
+            },
+            {
+              "kind": "speech",
+              "text": "āctīvitās becomes actividad."
+            },
+            {
+              "kind": "speech",
+              "text": "Two of those went down through mouths for centuries and came out with their -ct- rubbed into a -ch-. The third still has both letters, and you can still hear both of them land. It did not travel that road; it was lifted off a written page long after the wearing had stopped."
+            },
+            {
+              "kind": "speech",
+              "text": "Do not try to argue the same thing from the -dad ending — it proves nothing. Words that did come down by mouth arrive at -dad as well: bonitātem gives bondad. The ending is silent about which road a word took. The cluster is the witness."
+            },
+            {
+              "kind": "speech",
+              "text": "Two cautions about the Latin, and neither is small."
+            },
+            {
+              "kind": "speech",
+              "text": "āctīvitās is not Cicero's word. It is Medieval Latin, coined by the Scholastics for their own arguments. Writing it out with Classical macrons, as above, flatters it into an age it never had."
+            },
+            {
+              "kind": "speech",
+              "text": "And the last stretch is dark. Whether Spanish took actividad straight off the Latin page or through French activité is unverified. The root is certain, the arrival is not."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "You can name a thing you do with your time: la actividad."
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "la actividad",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *la actividad*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "una actividad nueva",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *una actividad nueva*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "hago una actividad",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *hago una actividad*]"
+            }
+          ]
+        },
+        {
+          "index": 6,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What happened to the -ct- of factum and lactem, and what happened to the one in activ-? (The first two wore down to -ch- in hecho and leche; activ- kept both letters, because it came off the page.) Does the -dad ending help you tell? (No — bonitātem reaches bondad by mouth.)"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "ES-C394-guitarra",
+      "sequence": 8530,
+      "title": "la guitarra — one Greek word, three disputed roads",
+      "headword": "la guitarra",
+      "romanization": "la guitarra",
+      "gloss": "guitar — Ancient Greek kithára, a stringed instrument; the Greek source is certain and the road into Spanish is genuinely disputed, with three standard references giving three different answers",
+      "script": "latin",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:211f867e03b65536",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Say the work, then the activity. (El trabajo; La actividad.)"
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know first",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "tocar — what you do to one."
+            },
+            {
+              "kind": "speech",
+              "text": "la cuerda — what it is strung with."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "pronunciation",
+          "title": "Sounds you'll need",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "gui-TA-rra, three beats with the weight on the middle one. The gu before an i is a hard g and nothing more — ghee, not gwee; the u sits there to keep the g hard and is not pronounced. The t is dental. The rr is rolled, held a moment longer than a tap. see pronunciation reference."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "la guitarra — \"guitar.\""
+            },
+            {
+              "kind": "speech",
+              "text": "It starts in Ancient Greek: kithára, kithára, a stringed instrument — not this one, but an ancestor of the idea. Its first documented Spanish use is in Juan Ruiz, and it is a fine entrance: he already needs two kinds side by side, guitarra morisca and guitarra latina."
+            },
+            {
+              "kind": "speech",
+              "text": "Between the Greek and the Spanish, the references stop agreeing. This is one of those words where the honest answer is the disagreement itself."
+            },
+            {
+              "kind": "speech",
+              "text": "The Academy's dictionary takes it from an Arabic form, and that from an Aramaic one, and that from the Greek."
+            },
+            {
+              "kind": "speech",
+              "text": "Corominas has the Arabic form coming straight from Greek — no Aramaic step at all; that step is the Academy's addition. And he places the borrowing in the East, not by way of Spain: el vocablo no pasó de Europa a los árabes por España. His evidence sits inside the word — the Greek accentuation survives, and so does the hard k at the front."
+            },
+            {
+              "kind": "speech",
+              "text": "Etymonline routes it through French and Latin cithara with no Arabic step whatever, and adds the sting: the Arabic word may itself have come from Spanish or Greek, the relationship often being stated the other way round."
+            },
+            {
+              "kind": "speech",
+              "text": "That last one does not only doubt the route. It doubts which direction the word was travelling."
+            },
+            {
+              "kind": "speech",
+              "text": "So hold the Greek and let the middle stay open. What nobody argues about is the family that came out the far end. English guitar, cithara, zither, cittern and gittern are one Greek word wearing five coats, and Spanish keeps cítara and cítola standing beside guitarra."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "You can name the instrument: la guitarra."
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "la guitarra",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *la guitarra*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "toco la guitarra",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *toco la guitarra*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "tocar la guitarra es una actividad",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *tocar la guitarra es una actividad*]"
+            }
+          ]
+        },
+        {
+          "index": 6,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Which part of the guitarra story is settled and which is not? (The Greek kithára is settled; the road after it is disputed — the Academy through Arabic and Aramaic, Corominas through Arabic with no Aramaic, and etymonline through French with no Arabic at all, doubting even the direction.) What does the u in gui- do? (Keeps the g hard. It is not pronounced.)"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "ES-C394-medico",
+      "sequence": 8540,
+      "title": "el médico — three beats that never wore down",
+      "headword": "el médico",
+      "romanization": "el médico",
+      "gloss": "doctor — Latin medicus, a physician, from medeor, to heal; a word taken off the page, still carrying whole the three beats that Catalan metge wore away",
+      "script": "latin",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:79e3fde34e24b912",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Say the activity, then the guitar. (La actividad; La guitarra.)"
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know first",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "el hospital — where you find one."
+            },
+            {
+              "kind": "speech",
+              "text": "la cita — what you make to see one."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "pronunciation",
+          "title": "Sounds you'll need",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "MÉ-di-co, three beats with the weight right back on the first, which is what the written mark over the e is there to do. The d between vowels is soft, nearer the th of the. The c is a hard k. see pronunciation reference."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "el médico — \"doctor\": the person, and the profession."
+            },
+            {
+              "kind": "speech",
+              "text": "Latin medicus, a physician, from medeor, to heal. English holds the family in medic, medical, medicine and remedy."
+            },
+            {
+              "kind": "speech",
+              "text": "What is interesting about médico is how little happened to it. Count what survived: three beats, all present; a d still between its vowels; a c still landing as a hard stop. Nothing worn off anywhere."
+            },
+            {
+              "kind": "speech",
+              "text": "Set it against a word that did go down through mouths. Catalan inherited the same medicus by ordinary descent and came out with metge — middle beat gone, the hard c softened. Occitan mètge and archaic French mège show the same wear. Médico has none of it: lifted off a written page instead, late and intact."
+            },
+            {
+              "kind": "speech",
+              "text": "An older root sits behind medeor, independently supported by modus, moderate and meditate. Take care with it: glossing that root as \"measure\" and then offering a doctor's judgement as proof argues in a circle. The conclusion was smuggled into the gloss."
+            },
+            {
+              "kind": "speech",
+              "text": "One thing to hear rather than be told. These three aloud, one after another:"
+            },
+            {
+              "kind": "speech",
+              "text": "médico."
+            },
+            {
+              "kind": "speech",
+              "text": "medico."
+            },
+            {
+              "kind": "speech",
+              "text": "medicó."
+            },
+            {
+              "kind": "speech",
+              "text": "Same letters, three different words: the doctor, then I medicate, then he medicated. Nothing changed but where the weight landed — and the written mark moved with it."
+            },
+            {
+              "kind": "speech",
+              "text": "Médico does double duty: it names the person, and describes what belongs to the profession — un centro médico, a medical centre."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "You can name the doctor: el médico. And with it, five places you go or things you do in a week."
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "el médico",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *el médico*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "voy al médico",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *voy al médico*]"
+            },
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Now all five together. Name five places you go or things you do in a week, and say one thing about each."
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "la universidad — estudio en la universidad",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *la universidad — estudio en la universidad*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "el trabajo — voy al trabajo",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *el trabajo — voy al trabajo*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "la actividad — hago una actividad nueva",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *la actividad — hago una actividad nueva*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "la guitarra — toco la guitarra",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *la guitarra — toco la guitarra*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "el médico — tengo una cita con el médico",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *el médico — tengo una cita con el médico*]"
+            }
+          ]
+        },
+        {
+          "index": 6,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does Catalan metge show that médico does not? (Wear — a lost middle beat and a softened c; médico came off the page intact.) And what separates médico, medico and medicó? (Only where the weight lands.)"
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "findings": []
+}
