@@ -342,8 +342,19 @@ The output of a web-backend renderer, before bundling and per-page
 code-splitting.
 
 ```typescript
-export interface RenderedPage {
-  readonly kind: "RenderedPage";
+export interface ProvenanceContributor {
+  readonly identity: LogicalId;
+  readonly revision: RevisionId;
+}
+
+export interface OutputProvenance {
+  /** Canonically ordered, unique logical/revision input pairs. */
+  readonly contributors: readonly ProvenanceContributor[];
+  /** Content hash of the normalized contributor set. */
+  readonly revision: RevisionId;
+}
+
+export interface RenderedPageFields {
   /** Route this page sits at. */
   readonly route: string;
   /** Full HTML document as a string. */
@@ -362,9 +373,21 @@ export interface RenderedPage {
   readonly usedAssets: readonly LogicalId[];
   /** Meta tags (title, description, OG, etc.). */
   readonly meta: PageMeta;
-  /** Source-map back to the originating Document. */
-  readonly source: LogicalId;
 }
+
+export type RenderedPage = RenderedPageFields & (
+  | {
+      /** Exact source revisions behind this output; required for new producers. */
+      readonly provenance: OutputProvenance;
+      /** Optional compatibility hint for a single-source page. */
+      readonly source?: LogicalId;
+    }
+  | {
+      /** Legacy v1.0 producer shape; new producers attach provenance. */
+      readonly source: LogicalId;
+      readonly provenance?: never;
+    }
+);
 
 export interface PageMeta {
   readonly title: string;
@@ -593,7 +616,7 @@ export const Kinds = {
   Collection:      { name: "Collection",      version: "1.0" },
   Asset:           { name: "Asset",           version: "1.0" },
   Document:        { name: "Document",        version: "1.0" },
-  RenderedPage:    { name: "RenderedPage",    version: "1.0" },
+  RenderedPage:    { name: "RenderedPage",    version: "1.1" },
   PrintForme:      { name: "PrintForme",      version: "1.0" },
   RequestHandler:  { name: "RequestHandler",  version: "1.0" },
   SearchIndex:     { name: "SearchIndex",     version: "1.0" },
@@ -1473,6 +1496,10 @@ kernel package `forme-identity` provides:
 export function computeRevisionId(payload: JsonValue): RevisionId;
 
 export function canonicalJson(value: JsonValue): string;
+
+export function createOutputProvenance(
+  contributors: readonly ProvenanceContributor[],
+): OutputProvenance;
 ```
 
 Canonical JSON rules (the same across the ecosystem — matches
@@ -1487,6 +1514,13 @@ For `ContentNode`, the canonical form is the document AST + frontmatter
 + logical identity. `sourcePath` and similar transient fields are
 excluded from the hash. This allows a post moved to a new filesystem
 location to retain its revision ID.
+
+`createOutputProvenance` validates contributor identifiers, rejects two
+revisions for one logical identity, removes exact duplicates, sorts by logical
+identity, and hashes a domain-separated canonical representation. The same
+contributor set therefore produces the same aggregate revision independent of
+collection iteration order. Empty contributor sets are valid for outputs such
+as an empty site's index and feeds.
 
 ### 7.4 Relationship to `content_addressable_storage`
 

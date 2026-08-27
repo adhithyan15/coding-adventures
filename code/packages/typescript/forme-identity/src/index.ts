@@ -29,3 +29,5 @@ export {
   buildLogicalIdFrom,
   isLogicalIdShape,
 } from "./logical-id.js";
+
+export { createOutputProvenance } from "./provenance.js";

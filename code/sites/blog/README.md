@@ -110,8 +110,9 @@ The live URL is
   link to `data/`-relative paths; an asset stage will copy + hash
   them.
 - No dark mode. The classless theme is light-only for v0.
-- Aggregate artifacts currently carry a synthetic single source ID because
-  `RenderedPage.source` cannot yet represent collection provenance.
+- Aggregate artifacts carry deterministic revision-aware provenance for every
+  collection contributor; empty collections have a stable empty provenance
+  set and never need a fabricated single-source identity.
 
 These are tracked in the
 [Forme completion roadmap](../../specs/FM00-forme-completion-roadmap.md).

@@ -1,5 +1,14 @@
 # Changelog — @coding-adventures/forme-types
 
+## Unreleased
+
+### Added
+
+- `ProvenanceContributor` and `OutputProvenance` model every logical/revision
+  input behind a rendered output. `RenderedPage` now accepts revision-aware
+  provenance while preserving the legacy single-source producer shape during
+  migration; the kind descriptor advances compatibly to `1.1`.
+
 ## 0.1.0 — 2026-05-14
 
 Initial release. Implements the FM01 §2 kernel types.

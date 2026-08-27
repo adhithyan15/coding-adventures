@@ -1,5 +1,13 @@
 # Changelog — @coding-adventures/forme-identity
 
+## Unreleased
+
+### Added
+
+- `createOutputProvenance(contributors)` validates revision-aware source
+  references, diagnoses conflicting revisions, canonicalizes order, removes
+  exact duplicates, and computes a deterministic aggregate `RevisionId`.
+
 ## 0.1.0 — 2026-05-15
 
 Initial release. Implements the FM01 §7 identity layer.

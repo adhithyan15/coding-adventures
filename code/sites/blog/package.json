@@ -15,6 +15,7 @@
   "license": "MIT",
   "dependencies": {
     "@coding-adventures/forme-types":                "file:../../packages/typescript/forme-types",
+    "@coding-adventures/forme-identity":             "file:../../packages/typescript/forme-identity",
     "@coding-adventures/forme-stage":                "file:../../packages/typescript/forme-stage",
     "@coding-adventures/forme-pipeline-config":      "file:../../packages/typescript/forme-pipeline-config",
     "@coding-adventures/forme-orchestrator":         "file:../../packages/typescript/forme-orchestrator",

@@ -21,13 +21,13 @@
  *
  * The kernel's `RenderedPage` (see `forme-types/shapes.ts`) is:
  *
- *     { route, html, usedStyle, usedIslands, usedAssets, meta, source }
+ *     { route, html, usedStyle, usedIslands, usedAssets, meta, provenance }
  *
  * v0 emits `usedStyle: []` (no Style IR yet — the theme CSS is
  * inlined as one string), `usedIslands: []` (no interactivity), and
- * `usedAssets: []` (no asset-extraction stage yet).  `source` holds
- * the input `ContentNode.identity` so downstream stages can trace
- * back to the source.
+ * `usedAssets: []` (no asset-extraction stage yet). `provenance` records the
+ * input node's logical and revision IDs; `source` remains as a temporary
+ * compatibility hint for consumers of the v1.0 kind.
  *
  * `meta.title` is derived via the three-step fallback in `title.ts`:
  * `frontmatter.title` → first H1 → slug.
@@ -53,6 +53,7 @@ import {
   type PageMeta,
 } from "@coding-adventures/forme-types";
 import { defineStage } from "@coding-adventures/forme-stage";
+import { createOutputProvenance } from "@coding-adventures/forme-identity";
 import { toHtml } from "@coding-adventures/document-ast-to-html";
 import { generateMetaLinkTags } from "@coding-adventures/forme-aot-meta-link-tags";
 import { generateFeedDiscoveryLinks } from "@coding-adventures/forme-aot-rss-discovery-link";
@@ -178,6 +179,7 @@ const renderStatic = defineStage({
         usedIslands: [],
         usedAssets: [],
         meta,
+        provenance: createOutputProvenance([node]),
         source: node.identity,
       };
       yield page as never;

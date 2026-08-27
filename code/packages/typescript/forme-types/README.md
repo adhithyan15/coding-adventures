@@ -27,7 +27,7 @@ ContentNode           → parsed document (DocumentNode + frontmatter + identity
 Collection            → ordered set of content references with grouping discriminant
 Asset                 → image / video / font / binary with metadata
 Document              → (content, style, interactivity) triple ready to render
-RenderedPage          → HTML + metadata for a web page
+RenderedPage          → HTML + metadata + revision-aware input provenance
 PrintForme            → backend-neutral page for LaTeX / PDF / EPUB
 RequestHandler        → per-request handler (Workers, Node, Deno, Bun)
 SearchIndex           → serialised search index
@@ -66,6 +66,15 @@ const rev = "blake2b:abc123..." as RevisionId;
 ```
 
 The implementations of `computeRevisionId`, `canonicalJson`, etc. live in `@coding-adventures/forme-identity`. This package only declares the types so any package that *carries* an ID can use it without depending on the hashing code.
+
+### Rendered output provenance
+
+New `RenderedPage` producers attach an `OutputProvenance`: a canonical list of
+every contributing `{ identity, revision }` pair plus a revision hash of that
+set. Use `createOutputProvenance` from `@coding-adventures/forme-identity` to
+construct it. Aggregate pages omit the legacy `source` field instead of
+inventing a single source; v1.0 producers that only carry `source` remain valid
+during the v1.1 migration.
 
 ## Spec divergences (v0)
 

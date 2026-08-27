@@ -8,7 +8,12 @@
  */
 
 import { describe, it, expect } from "vitest";
-import { Kinds, streamOf, type ContentNode } from "@coding-adventures/forme-types";
+import {
+  Kinds,
+  streamOf,
+  type ContentNode,
+  type OutputProvenance,
+} from "@coding-adventures/forme-types";
 import {
   createCancellationTokenSource,
   inMemoryCache,
@@ -79,6 +84,7 @@ async function runRender(
     route: string;
     html: string;
     source: string;
+    provenance: OutputProvenance;
     meta: { title: string; description: string | null; canonicalUrl: string | null };
     usedStyle: readonly unknown[];
     usedIslands: readonly unknown[];
@@ -181,10 +187,15 @@ describe("renderStatic — single-node rendering", () => {
     expect(page!.meta.title).toBe("no-heading");
   });
 
-  it("source carries the input ContentNode identity through", async () => {
+  it("carries the input logical and revision IDs through provenance", async () => {
     const node = makeNode({ sourcePath: "p.md", markdown: "# x\n" });
     const [page] = await runRender([node]);
     expect(page!.source).toBe(node.identity);
+    expect(page!.provenance.contributors).toEqual([{
+      identity: node.identity,
+      revision: node.revision,
+    }]);
+    expect(page!.provenance.revision).toMatch(/^blake2b:[0-9a-f]{64}$/);
   });
 
   it("usedStyle / usedIslands / usedAssets are all empty in v0", async () => {
