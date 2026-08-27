@@ -5,10 +5,10 @@
  * executes it (FM03 §3-4, §9-10).
  *
  * v0 surface: `createOrchestrator()` → `buildPipeline(config)` →
- * `runOnce(pipeline, options?)` → `RunResult`.  Linear and
- * fan-out-1 pipelines work; full parallelism, watch mode, incremental
- * rebuild, reproducible-build mode, and OpenTelemetry traces are
- * deferred to follow-ups.
+ * `runOnce(pipeline, options?)` → `RunResult`. Explicit wires,
+ * deterministic fan-out, stable topological execution, and partial
+ * reproducible-build mode work; parallelism, watch mode, incremental
+ * rebuilds, and OpenTelemetry traces are deferred to follow-ups.
  *
  * See FM03 §3 for the lifecycle, §9 for error handling, §10 for
  * cancellation.  See `scheduler.ts` for the v0 simplifications listed

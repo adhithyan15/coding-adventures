@@ -18,7 +18,8 @@
  *   6. Stages with non-null `configSchema` need a non-undefined config.
  *      (Full JSON-Schema validation is deferred to the orchestrator;
  *      we only enforce the presence rule here.)
- *   7. Wires/outputs reference real instance IDs.
+ *   7. Wires/outputs reference real instance IDs, and a stage's
+ *      single input has at most one explicit producer.
  *   8. If more than one terminal stage exists (no consumer), each
  *      must have a corresponding `OutputSpec`.
  *
@@ -290,6 +291,7 @@ function validateWires(
   errors: ConfigErrorEntry[],
 ): void {
   if (!c.wires) return;
+  const incoming = new Map<string, number[]>();
   for (let i = 0; i < c.wires.length; i++) {
     const w = c.wires[i]!;
     if (!idSet.has(w.from.id)) {
@@ -306,6 +308,20 @@ function validateWires(
         message: `Edge references unknown instance ${JSON.stringify(w.to.id)}.`,
       });
     }
+    const indices = incoming.get(w.to.id);
+    if (indices) indices.push(i);
+    else incoming.set(w.to.id, [i]);
+  }
+
+  for (const [instanceId, indices] of incoming) {
+    if (indices.length < 2) continue;
+    errors.push({
+      path: indices.map(index => `wires[${index}].to`).join(", "),
+      code: CONFIG_ERROR_CODES.MULTIPLE_INPUT_WIRES,
+      message:
+        `Instance ${JSON.stringify(instanceId)} has ${indices.length} incoming wires, ` +
+        `but stages expose one input. Remove all but one producer wire.`,
+    });
   }
 }
 

@@ -146,6 +146,60 @@ describe("buildPipeline + runOnce — happy path", () => {
     expect(result.outputs["the-sink"]).toBeUndefined();
     await o.dispose();
   });
+
+  it("fans one materialized stream out through explicit wires", async () => {
+    const collectPaths = defineStage({
+      name: "@test/collect-paths",
+      version: "0.1.0",
+      apiVersion: KERNEL_API_VERSION,
+      description: "collects every path from a content-source stream",
+      consumes: streamOf(Kinds.ContentSource),
+      produces: Kinds.Collection,
+      capabilities: [],
+      configSchema: null,
+      async run(input) {
+        const paths: string[] = [];
+        for await (const item of input as AsyncIterable<{ path: string }>) {
+          paths.push(item.path);
+        }
+        return {
+          name: "paths",
+          entries: [],
+          discriminant: "test",
+          meta: { paths },
+        } as never;
+      },
+    });
+    const config: PipelineConfig = {
+      ...makeConfig([
+        { stage: tinySource(["a.md", "b.md"]) },
+        { stage: upper },
+        { stage: sink, id: "pages" },
+        { stage: collectPaths, id: "paths" },
+      ]),
+      wires: [
+        { from: { id: "@test/upper" }, to: { id: "pages" } },
+        { from: { id: "@test/upper" }, to: { id: "paths" } },
+      ],
+      outputs: [
+        { fromInstance: "pages", name: "pages" },
+        { fromInstance: "paths", name: "paths" },
+      ],
+    };
+
+    const o = createOrchestrator({ logger: silentLogger() });
+    const pipeline = await o.buildPipeline(config);
+    expect(pipeline.dag.sinks).toEqual(["pages", "paths"]);
+    expect(pipeline.dag.instances.get("pages")!.producer).toBe("@test/upper");
+    expect(pipeline.dag.instances.get("paths")!.producer).toBe("@test/upper");
+
+    const result = await o.runOnce(pipeline);
+    expect(result.outcome).toBe("success");
+    const pages = result.outputs.pages as Array<{ files: Record<string, Uint8Array> }>;
+    expect(pages.map(page => Object.keys(page.files)[0])).toEqual(["A.MD", "B.MD"]);
+    expect(result.outputs.paths).toMatchObject({ meta: { paths: ["A.MD", "B.MD"] } });
+    await o.dispose();
+  });
 });
 
 describe("Error handling", () => {
@@ -353,6 +407,66 @@ describe("buildDag — direct API", () => {
     const config = makeConfig([{ stage: a }, { stage: b }]);
     const resolved = validateConfig(config);
     expect(() => buildDag(resolved)).toThrow(/no earlier instance produces/);
+  });
+
+  it("uses an explicit producer instead of the nearest compatible stage", () => {
+    const first = defineStage({
+      name: "@test/first", version: "0.1.0", apiVersion: KERNEL_API_VERSION,
+      description: "first source", consumes: Kinds.Void, produces: Kinds.ContentSource,
+      capabilities: [], configSchema: null, async run() { return {} as never; },
+    });
+    const second = defineStage({
+      name: "@test/second", version: "0.1.0", apiVersion: KERNEL_API_VERSION,
+      description: "second source", consumes: Kinds.Void, produces: Kinds.ContentSource,
+      capabilities: [], configSchema: null, async run() { return {} as never; },
+    });
+    const config: PipelineConfig = {
+      ...makeConfig([{ stage: first }, { stage: second }, { stage: upper, id: "consumer" }]),
+      wires: [{ from: { id: "@test/first" }, to: { id: "consumer" } }],
+    };
+    const dag = buildDag(validateConfig(config));
+    expect(dag.instances.get("consumer")!.producer).toBe("@test/first");
+    expect(dag.sinks).toEqual(["@test/second", "consumer"]);
+  });
+
+  it("topologically orders an explicit forward wire", () => {
+    const source = tinySource(["a"]);
+    const config: PipelineConfig = {
+      ...makeConfig([{ stage: upper }, { stage: source }]),
+      wires: [{ from: { id: "@test/source" }, to: { id: "@test/upper" } }],
+    };
+    const dag = buildDag(validateConfig(config));
+    expect(dag.topoOrder).toEqual(["@test/source", "@test/upper"]);
+    expect(dag.sources).toEqual(["@test/source"]);
+  });
+
+  it("rejects an incompatible explicit wire", () => {
+    const assetSource = defineStage({
+      name: "@test/assets", version: "0.1.0", apiVersion: KERNEL_API_VERSION,
+      description: "asset source", consumes: Kinds.Void, produces: Kinds.Asset,
+      capabilities: [], configSchema: null, async run() { return {} as never; },
+    });
+    const config: PipelineConfig = {
+      ...makeConfig([{ stage: assetSource }, { stage: upper }]),
+      wires: [{ from: { id: "@test/assets" }, to: { id: "@test/upper" } }],
+    };
+    expect(() => buildDag(validateConfig(config))).toThrow(/explicit wire.*incompatible/);
+  });
+
+  it("rejects explicit wire cycles", () => {
+    const pass = (name: string) => defineStage({
+      name, version: "0.1.0", apiVersion: KERNEL_API_VERSION,
+      description: "pass through", consumes: Kinds.ContentSource, produces: Kinds.ContentSource,
+      capabilities: [], configSchema: null, async run(input) { return input; },
+    });
+    const config: PipelineConfig = {
+      ...makeConfig([{ stage: pass("a") }, { stage: pass("b") }]),
+      wires: [
+        { from: { id: "a" }, to: { id: "b" } },
+        { from: { id: "b" }, to: { id: "a" } },
+      ],
+    };
+    expect(() => buildDag(validateConfig(config))).toThrow(/cycle detected/);
   });
 });
 

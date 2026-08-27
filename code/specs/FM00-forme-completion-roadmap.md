@@ -67,8 +67,8 @@ Statuses are `done`, `active`, `ready`, `blocked`, and `later`. Only one item is
 |---:|---|---|---|---|
 | 0 | FM-B001 | done | Establish the completion contract and living backlog | This roadmap records the audited baseline, release horizons, ordered work, dependencies, and discovery log. |
 | 1 | FM-B002 | done | Make the blog a clean-checkout, one-command build | The documented command bootstraps local package dependencies, builds the site, and is exercised by a pull-request CI smoke test. Documentation says four stages, uses valid spec links, and matches the command CI runs. |
-| 2 | FM-B019 | ready | Implement explicit wires and deterministic fan-out | The DAG honors `PipelineConfig.wires`, validates compatible edges and at most one producer per input, lets one materialized stream feed multiple consumers without mutation, and reports every true sink. Focused tests prove the router → renderer/collector branch needed by the blog. |
-| 3 | FM-B003 | blocked | Integrate routing and collections in the blog DAG | Depends on FM-B019. `forme-router` assigns canonical routes, the chronological collector consumes routed nodes, and downstream stages consume both page and collection outputs without ad hoc route derivation. |
+| 2 | FM-B019 | done | Implement explicit wires and deterministic fan-out | The DAG honors `PipelineConfig.wires`, validates compatible edges and at most one producer per input, lets one materialized stream feed multiple consumers without mutation, and reports every true sink. Focused tests prove the router → renderer/collector branch needed by the blog. |
+| 3 | FM-B003 | ready | Integrate routing and collections in the blog DAG | `forme-router` assigns canonical routes, the chronological collector consumes routed nodes, and downstream stages consume both page and collection outputs without ad hoc route derivation. |
 | 4 | FM-B004 | blocked | Ship the complete blog surface | Depends on FM-B003. The live build emits a root index, article pages, RSS/Atom, sitemap, and discovery/meta links with tests for URLs and ordering. |
 | 5 | FM-B005 | ready | Make static rendering consume Style IR | The renderer accepts a resolved theme, records `usedStyle`, emits sliced CSS through the AOT path, supports light/dark preferences, and removes its hard-coded theme. |
 | 6 | FM-B006 | blocked | Add a first-class asset pipeline | Depends on canonical routes from FM-B003. Referenced local assets are discovered, fingerprinted, copied, rewritten, cached, and included in the deploy manifest. |
@@ -114,6 +114,7 @@ work.
 | 2026-08-27 | The orchestrator README understates the implemented reproducible-build support, while caching, bounded streaming, fan-out, and concurrency remain incomplete. | FM-B010 and FM-B011 |
 | 2026-08-27 | The Forme blog workflow can succeed while the public blog root is missing, so deployment success alone is not an end-to-end availability check. | FM-B004 and FM-B012 |
 | 2026-08-27 | The DAG builder ignores explicit `wires` and assigns one inferred producer per instance. Routed nodes therefore cannot feed article rendering and collection building in the same blog run. | Added FM-B019 and moved it ahead of FM-B003. |
+| 2026-08-27 | `forme-orchestrator` tests pass but its TypeScript build cannot resolve Node APIs imported through `forme-cache` and `forme-pipeline-config` because the package omits `@types/node`. | Resolve in FM-B019 and retain `npm run build` as a package gate. |
 
 ## Loop protocol
 

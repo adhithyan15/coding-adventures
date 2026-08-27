@@ -91,6 +91,8 @@ export const CONFIG_ERROR_CODES = Object.freeze({
   MULTIPLE_OUTPUTS_UNNAMED:  "MULTIPLE_OUTPUTS_UNNAMED",
   /** An `EdgeSpec` or `OutputSpec` references an instance ID that doesn't exist. */
   UNKNOWN_INSTANCE_ID:       "UNKNOWN_INSTANCE_ID",
+  /** More than one wire targets the single input of a stage instance. */
+  MULTIPLE_INPUT_WIRES:      "MULTIPLE_INPUT_WIRES",
   /** Top-level field is missing or has the wrong type. */
   MALFORMED:                 "MALFORMED",
 } as const);
