@@ -1,5 +1,37 @@
 # Changelog — mosaic-emit-xaml
 
+## [Unreleased] — lower `position: "absolute"` to a pinned Margin (#12028 item 4)
+
+`position: "absolute"`/`top`/`left` had no XAML setter at all and were
+silently dropped — real impact: `mosaic/programs/task-app`'s bridge-arc
+brand mark (three `Box`es absolutely positioned inside one `Stack`)
+rendered as a plain amber square, since `Stack`'s `<Grid>` lowering
+stacks all children at the same z-axis cell with zero offset, and
+several inline icon compositions elsewhere in the app had the same gap.
+
+New `absolute_position_style_attrs`: when `position: "absolute"` is
+authored, `top`/`left` (each defaulting to `0` if absent) become
+`Margin="{left},{top},0,0"` plus `HorizontalAlignment="Left"
+VerticalAlignment="Top"`, pinned to the top-left corner of the existing
+`Grid` cell — reproducing the CSS offset with no need to restructure
+the parent into a `<Canvas>` (WinUI's actual `Canvas.Left`/`Canvas.Top`
+attached properties only take effect inside a literal `Canvas` panel,
+which every enclosing container up to the nearest common ancestor would
+also need to become). Applied after the normal per-property loop, so it
+overrides whatever `Margin`/alignment another authored property already
+produced — `position: absolute` takes full control of placement in CSS
+too. `position`/`top`/`left` are excluded from `dropped_style_properties`
+(#12022) only when consumed this way; authored without `position:
+"absolute"` they're meaningless in CSS too and stay reported exactly as
+before.
+
+Verified against a real regenerated `task-app` XAML project: the three
+brand-mark parts (and the other icon compositions this also fixed) now
+carry the expected `Margin`/alignment attrs, `dotnet build` — 0 errors
+(98 pre-existing, unrelated `WMC1506` binding warnings), and the
+`mosaic-degradations.json` `styleDegradations` list no longer reports
+`position`/`top`/`left` for any part.
+
 ## [Unreleased] — confirm HostDialog's open-host-required degradation is permanent, not a to-do (#13008)
 
 Investigated whether XAML's `HostDialog` could drop its "host code-behind

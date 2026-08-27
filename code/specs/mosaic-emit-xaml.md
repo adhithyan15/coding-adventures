@@ -243,7 +243,39 @@ are excluded only when their value is one `FlexHints` actually consumes
 (`"center"` / `"space-between"` respectively — any other value IS
 reported, since nothing consumes it); `flex-grow` is excluded
 unconditionally (fully boolean-handled today, nothing recognisable as
-"lost").
+"lost"); `position`/`top`/`left` are excluded only when `position` is
+literally `"absolute"` (see §3.3) — `top`/`left` authored without it
+are meaningless in CSS too and stay reported as before.
+
+### 3.3 `position: "absolute"` → pinned `Margin` (issue #12028 item 4)
+
+WinUI's `Canvas.Left`/`Canvas.Top` attached properties only take effect
+when the immediate parent panel is a literal `<Canvas>` — but `Stack`
+already lowers to `<Grid>` (§3, a z-axis stacking panel: every child
+occupies the same cell unless given an explicit offset). Restructuring
+every enclosing container into `Canvas` just to place a handful of
+absolutely-positioned children would be a much larger change than the
+problem calls for, so `absolute_position_style_attrs` reproduces the
+same visual offset within the *existing* `Grid` instead:
+
+```
+position: "absolute"; top: 11; left: 4;
+    →  Margin="4,11,0,0" HorizontalAlignment="Left" VerticalAlignment="Top"
+```
+
+A missing `top`/`left` defaults to `0` (CSS's own default for an
+offset-less absolutely-positioned element). The three attrs are applied
+*after* the normal per-property loop, overriding whatever `Margin`/
+alignment another authored property might already have produced —
+`position: absolute` takes full control of placement in CSS too, so the
+two must never both apply. `position`/`top`/`left` are skipped in the
+main loop when this fires, so they never reach
+`dropped_style_properties` as a false-positive drop (§3.2).
+
+Real usage: `mosaic/programs/task-app`'s bridge-arc brand mark
+(`brand-post-left`/`brand-post-right`/`brand-arc`, three `Box`es
+absolutely positioned inside one `Stack`) and its inline status-dot
+icon compositions.
 
 ## 4. Host* primitives
 
