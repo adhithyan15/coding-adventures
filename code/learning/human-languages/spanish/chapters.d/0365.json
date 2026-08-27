@@ -4,7 +4,7 @@
   "label": "ch:alto-y-largo",
   "canDo": "I can say alto, largo, ancho, corto and lleno, and put a measurement on a thing in words rather than numbers.",
   "spineNodes": [
-    "SPINE-COUNT-ONE-TO-FIVE"
+    "SPINE-DESCRIBE-QUALITIES"
   ],
   "payoff": {
     "lesson": "ES-C365-lleno",

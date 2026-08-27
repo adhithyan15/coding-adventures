@@ -3819,7 +3819,7 @@
     {
       "language": "spanish",
       "chapter": 365,
-      "sourceHash": "fnv1a64:0b6e6eaff87a1a75",
+      "sourceHash": "fnv1a64:1617f98e2f80f48a",
       "lessonIds": [
         "ES-C365-alto",
         "ES-C365-largo",
@@ -3897,7 +3897,7 @@
     {
       "language": "spanish",
       "chapter": 371,
-      "sourceHash": "fnv1a64:fb6efe5764d4aad5",
+      "sourceHash": "fnv1a64:e9d047210453473b",
       "lessonIds": [
         "ES-C371-pequeno",
         "ES-C371-gordo",
@@ -4001,7 +4001,7 @@
     {
       "language": "spanish",
       "chapter": 379,
-      "sourceHash": "fnv1a64:4edac19f20d7a0e8",
+      "sourceHash": "fnv1a64:b540ca63a3910a90",
       "lessonIds": [
         "ES-C379-seco",
         "ES-C379-mojado",
@@ -4014,7 +4014,7 @@
     {
       "language": "spanish",
       "chapter": 380,
-      "sourceHash": "fnv1a64:543f581c39eaa226",
+      "sourceHash": "fnv1a64:3642abb440b07f6e",
       "lessonIds": [
         "ES-C380-simpatico",
         "ES-C380-alegre",
@@ -4221,6 +4221,42 @@
         "ES-C396-reparar"
       ],
       "tex": "spanish/book/chapters/ch396-aprender-y-cocinar.tex"
+    },
+    {
+      "language": "spanish",
+      "chapter": 397,
+      "sourceHash": "fnv1a64:64b0b78c9840fe9c",
+      "lessonIds": [
+        "ES-C397-barato",
+        "ES-C397-caro",
+        "ES-C397-gratis",
+        "ES-C397-mayor",
+        "ES-C397-menor"
+      ],
+      "tex": "spanish/book/chapters/ch397-barato-y-caro.tex"
+    },
+    {
+      "language": "spanish",
+      "chapter": 398,
+      "sourceHash": "fnv1a64:fbf25491334dcbf3",
+      "lessonIds": [
+        "ES-C398-importante",
+        "ES-C398-interesante",
+        "ES-C398-favorito",
+        "ES-C398-facil",
+        "ES-C398-dificil"
+      ],
+      "tex": "spanish/book/chapters/ch398-importante-y-facil.tex"
+    },
+    {
+      "language": "spanish",
+      "chapter": 399,
+      "sourceHash": "fnv1a64:5a1b8d20db1317e9",
+      "lessonIds": [
+        "ES-C399-bonito",
+        "ES-C399-guapo"
+      ],
+      "tex": "spanish/book/chapters/ch399-bonito-y-guapo.tex"
     }
   ]
 }

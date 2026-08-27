@@ -1,0 +1,16 @@
+{
+  "id": "ES-PATH-398-01",
+  "spine_node": "SPINE-DESCRIBE-QUALITIES",
+  "lessons": [
+    "ES-C398-importante",
+    "ES-C398-interesante",
+    "ES-C398-favorito",
+    "ES-C398-facil",
+    "ES-C398-dificil"
+  ],
+  "before": [],
+  "inline": [
+    "ES-EXT-398-QUALITY"
+  ],
+  "after": []
+}

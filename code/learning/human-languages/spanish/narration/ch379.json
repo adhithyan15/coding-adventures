@@ -4,7 +4,7 @@
   "chapter": 379,
   "title": "Five Words for How Something Feels",
   "drivablePrefix": 5,
-  "sourceHash": "fnv1a64:401bb2fe3a27f72a",
+  "sourceHash": "fnv1a64:81635863cca05e26",
   "lessons": [
     {
       "id": "ES-C379-seco",
@@ -19,7 +19,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:8a0f2dfa43b148ad",
+      "sourceHash": "fnv1a64:4e67a1ca7f0cde43",
       "notice": null,
       "blocks": [
         {
@@ -183,7 +183,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:10a781b5ef49a30c",
+      "sourceHash": "fnv1a64:593676a4e58ce5f4",
       "notice": null,
       "blocks": [
         {
@@ -351,7 +351,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:a65c872f78e1fe3c",
+      "sourceHash": "fnv1a64:604c9ab01a3ae3f4",
       "notice": null,
       "blocks": [
         {
@@ -507,7 +507,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:1465cfd055270962",
+      "sourceHash": "fnv1a64:98580c00a83cb2ca",
       "notice": null,
       "blocks": [
         {
@@ -667,7 +667,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:b203950a7be2f242",
+      "sourceHash": "fnv1a64:d59dfc13a02a78ba",
       "notice": null,
       "blocks": [
         {

@@ -6,11 +6,7 @@
     "ES-PATH-344-01",
     "ES-PATH-351-01",
     "ES-PATH-352-01",
-    "ES-PATH-359-01",
-    "ES-PATH-365-01",
-    "ES-PATH-371-01",
-    "ES-PATH-379-01",
-    "ES-PATH-380-01"
+    "ES-PATH-359-01"
   ],
   "omits": [],
   "relocates": {}

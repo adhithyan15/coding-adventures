@@ -260,13 +260,19 @@ describe("the committed corpus", () => {
     // SPINE-SAY-WHAT-I-LIKE (FUNCTION) and SPINE-SAY-WHY (FUNCTION). gustar got its
     // own rung rather than being absorbed by the everyday-action node, and porque
     // got its own rather than dragging B1 SPINE-GIVE-REASONS wording down to A1.
-    expect(summary.totalNodes).toBe(38);
+    // 38 -> 39. HL23 §13 mints SPINE-DESCRIBE-QUALITIES (LEXICON) — "I can say what
+    // something is like." It is the first node in the corpus with an EMPTY `concepts`
+    // list, and that is deliberate rather than an oversight: a canonical concept is a
+    // claim on all 23 tracks, and this rung is justified by the Spanish A1 syllabus
+    // (`A1-NG6-03`, `-08`, `-10`), so it asks nothing of anyone else. Its lessons carry
+    // namespaced `ES-QUALITY-*` tags, exactly as tranche 7's did.
+    expect(summary.totalNodes).toBe(39);
 
     const byStrand = Object.fromEntries(summary.strands.map((s) => [s.strand, s.nodes]));
     expect(byStrand).toEqual({
       FUNCTION: 17,
       GRAMMAR: 7,
-      LEXICON: 4,
+      LEXICON: 5, // + SPINE-DESCRIBE-QUALITIES
       SOUND: 0,
       ETYMOLOGY: 0,
       CULTURE: 3,

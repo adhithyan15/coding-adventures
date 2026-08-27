@@ -1,7 +1,7 @@
 ---
 schema_version: 2
 id: ES-C380-necesario
-spine_node: SPINE-COUNT-ONE-TO-FIVE
+spine_node: SPINE-DESCRIBE-QUALITIES
 sequence: 7960
 chapter: 380
 type: word

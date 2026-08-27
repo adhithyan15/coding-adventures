@@ -4,7 +4,7 @@
   "label": "ch:simpatico-y-alegre",
   "canDo": "I can say simpático, alegre, feo, último and necesario, and count five people or things and say what each is like.",
   "spineNodes": [
-    "SPINE-COUNT-ONE-TO-FIVE"
+    "SPINE-DESCRIBE-QUALITIES"
   ],
   "payoff": {
     "lesson": "ES-C380-necesario",

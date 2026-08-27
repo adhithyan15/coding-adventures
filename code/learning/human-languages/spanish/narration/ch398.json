@@ -1,0 +1,906 @@
+{
+  "version": 1,
+  "language": "spanish",
+  "chapter": 398,
+  "title": "Five Words for What a Thing Is Worth",
+  "drivablePrefix": 2,
+  "sourceHash": "fnv1a64:11bcc021c81a6855",
+  "lessons": [
+    {
+      "id": "ES-C398-importante",
+      "sequence": 8700,
+      "title": "importante — what a thing carries in with it",
+      "headword": "importante",
+      "romanization": "importante",
+      "gloss": "important — built on importar, from Latin importāre, \"to carry in\"; classical Latin never used it to mean \"to matter\", and English import still carries both jobs",
+      "script": "latin",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:94aee4f390e1c095",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Say bigger, older, then smaller, younger. (Mayor; menor.)"
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know first",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "la puerta — the same port- you are about to meet."
+            },
+            {
+              "kind": "speech",
+              "text": "el precio — one thing that can matter."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "pronunciation",
+          "title": "Sounds you'll need",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "im-por-TAN-te, four beats with the weight on the third. Every vowel stays short and clean — none of them slides. see pronunciation reference."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "importante — \"important.\""
+            },
+            {
+              "kind": "speech",
+              "text": "Take it apart and it is importar with an -ante on the end. And importar is Latin importāre: in- + portāre, \"to carry in.\""
+            },
+            {
+              "kind": "speech",
+              "text": "That is all it meant in Latin. Bring in. Introduce. Bring about. A Roman who said importat was talking about cargo, not significance."
+            },
+            {
+              "kind": "speech",
+              "text": "So where did mattering come from? Later, and not from Rome. The sense grew up inside the Romance languages after Latin, and the dictionaries that follow the trail point at Italian as the place it started. Spanish and French both have it; Latin did not. This is one of the cases where the modern meaning is younger than the word by a thousand years."
+            },
+            {
+              "kind": "speech",
+              "text": "English kept both jobs in one word, which is the clearest way to see it:"
+            },
+            {
+              "kind": "speech",
+              "text": "to import goods — to carry them in;"
+            },
+            {
+              "kind": "speech",
+              "text": "the import of his remarks — their weight, what they bring in with them."
+            },
+            {
+              "kind": "speech",
+              "text": "Same word, both senses, sitting in an English dictionary right now."
+            },
+            {
+              "kind": "speech",
+              "text": "The portāre family is large and you will recognise all of it: portable, porter, transport, export, report, deport."
+            },
+            {
+              "kind": "speech",
+              "text": "Es muy importante. — It is very important."
+            },
+            {
+              "kind": "speech",
+              "text": "No importa. — It does not matter."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "You can now say a thing matters: importante. And you know that the mattering is the new part — the old part is nothing but carrying something in."
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "importante",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *importante*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "es muy importante",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *es muy importante*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "no importa",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *no importa*]"
+            }
+          ]
+        },
+        {
+          "index": 6,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What did Latin importāre mean? (To carry in — nothing about mattering.) Which English word still does both jobs at once? (Import.)"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "ES-C398-interesante",
+      "sequence": 8710,
+      "title": "interesante — what stands between you and it",
+      "headword": "interesante",
+      "romanization": "interesante",
+      "gloss": "interesting — from Latin interesse, inter + esse, \"to be between\"; the same phrase gave banking the word interest, because what a lender lost was id quod interest, the difference between",
+      "script": "latin",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:7607f43ddb841eb0",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Say smaller, younger, then important. (Menor; importante.)"
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know first",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "importante — its neighbour, built the same way."
+            },
+            {
+              "kind": "speech",
+              "text": "el dinero — you will need it for the second half of this."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "pronunciation",
+          "title": "Sounds you'll need",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "in-te-re-SAN-te, five beats with the weight on the fourth. Every e is the same short, flat vowel — none of them drifts toward English uh. see pronunciation reference."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "interesante — \"interesting.\""
+            },
+            {
+              "kind": "speech",
+              "text": "Underneath is Latin interesse: inter (\"between\") + esse (\"to be\"). To be between."
+            },
+            {
+              "kind": "speech",
+              "text": "The step from there to interesting is short. What stands between you and something else is what concerns you, what you have a stake in. Spanish keeps the plain verb — interesar, \"to interest\" — and the noun interés."
+            },
+            {
+              "kind": "speech",
+              "text": "And now the good part, which is about money."
+            },
+            {
+              "kind": "speech",
+              "text": "Medieval canon law forbade charging for a loan; that was usury. But it permitted a lender to recover what he had lost by not having his money — and lawyers named that id quod interest: \"that which is between.\" The difference between where the lender stood and where he would have stood."
+            },
+            {
+              "kind": "speech",
+              "text": "The prohibition is long gone. The name stayed. Every time a bank quotes you an interest rate, it is using a Latin lawyer's phrase for a gap."
+            },
+            {
+              "kind": "speech",
+              "text": "Spanish holds the same double:"
+            },
+            {
+              "kind": "speech",
+              "text": "un libro interesante — an interesting book;"
+            },
+            {
+              "kind": "speech",
+              "text": "el interés del banco — the bank's interest."
+            },
+            {
+              "kind": "speech",
+              "text": "The esse half turns up in English too, in essence and present — the verb to be, dressed differently each time."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "You can now say a thing holds your attention: interesante. And you know why a bank's charge and your curiosity are the same word."
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "interesante",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *interesante*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "un libro interesante",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *un libro interesante*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "muy interesante",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *muy interesante*]"
+            }
+          ]
+        },
+        {
+          "index": 6,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What do inter and esse mean apart? (Between, and to be.) What were medieval lenders allowed to recover, since they could not charge for a loan? (Id quod interest — the difference, \"that which is between.\")"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "ES-C398-favorito",
+      "sequence": 8720,
+      "title": "favorito — an ending that only looks like a little word",
+      "headword": "favorito",
+      "romanization": "favorito",
+      "gloss": "favourite — from favor, Latin favēre, \"to be well disposed toward\"; the -ito on the end is an Italian past participle, not the Spanish little-word ending it looks exactly like",
+      "script": "latin",
+      "modality": "sight",
+      "derivedModality": "sight",
+      "modalityReasons": [
+        "sight-cue"
+      ],
+      "sourceHash": "fnv1a64:a822d9e113a538dc",
+      "notice": {
+        "modality": "sight",
+        "needs": [
+          "your eyes, because the lesson points at something written down"
+        ],
+        "waitUntilStopped": [],
+        "text": "Before we start: this one needs your eyes, so it is not fully a driving lesson. You will want your eyes, because the lesson points at something written down. You can listen to all of it now and come back to the parts that need looking at once you have stopped."
+      },
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Say important, then interesting. (Importante; interesante.)"
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know first",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "la casa — and the casita you can make from it. Hold that ending."
+            },
+            {
+              "kind": "speech",
+              "text": "el color — what you will use this word about."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "pronunciation",
+          "title": "Sounds you'll need",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "fa-vo-RI-to, four beats with the weight on the third. The v is the same soft sound as Spanish b, made with both lips. see pronunciation reference."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "favorito — \"favourite.\""
+            },
+            {
+              "kind": "speech",
+              "text": "The root is easy. Favor is Latin favēre, \"to be well disposed toward, to look kindly on.\" English has favour, favourable, and — from the same verb — the fan, who is a favourer of a team."
+            },
+            {
+              "kind": "speech",
+              "text": "Now look at the ending, because it is a trap."
+            },
+            {
+              "kind": "speech",
+              "text": "You have met -ito before. It is the ending that turns casa into casita, a little house. Seeing favor + -ito, a reader who has learned that ending will read \"a little favour.\""
+            },
+            {
+              "kind": "speech",
+              "text": "It is not that ending."
+            },
+            {
+              "kind": "speech",
+              "text": "Favorito was borrowed whole from Italian favorito — and in Italian, that is the past participle of the verb favorire. It means \"favoured.\" The -ito was already on the word when Spanish took it; nobody in Spanish added it. Two endings that look identical, doing entirely different work, and only the word's history tells them apart."
+            },
+            {
+              "kind": "speech",
+              "text": "English took the very same Italian word by the same road, through French, in the 1500s — so favourite and favorito are the same borrowing twice over."
+            },
+            {
+              "kind": "speech",
+              "text": "mi color favorito — my favourite colour;"
+            },
+            {
+              "kind": "speech",
+              "text": "mi comida favorita — my favourite food."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "You can now name the one you like best: favorito. And you have seen two identical endings that mean different things — one Spanish and small, one Italian and participial."
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "favorito",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *favorito*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "mi color favorito",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *mi color favorito*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "mi comida favorita",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *mi comida favorita*]"
+            }
+          ]
+        },
+        {
+          "index": 6,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Does the -ito of favorito mean \"little\"? (No — it is an Italian past participle meaning favoured, and it arrived already attached.) What does Latin favēre mean? (To look kindly on.)"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "ES-C398-facil",
+      "sequence": 8730,
+      "title": "fácil — not \"light\", but \"doable\"",
+      "headword": "fácil",
+      "romanization": "fácil",
+      "gloss": "easy — Latin facilis, built on facere, \"to do\", so what it says is do-able rather than light; hacer is the same verb worn down by mouth, while fácil was lifted off the page and kept its c",
+      "script": "latin",
+      "modality": "sight",
+      "derivedModality": "sight",
+      "modalityReasons": [
+        "sight-cue"
+      ],
+      "sourceHash": "fnv1a64:240b86853a93d31e",
+      "notice": {
+        "modality": "sight",
+        "needs": [
+          "your eyes, because the lesson points at something written down"
+        ],
+        "waitUntilStopped": [],
+        "text": "Before we start: this one needs your eyes, so it is not fully a driving lesson. You will want your eyes, because the lesson points at something written down. You can listen to all of it now and come back to the parts that need looking at once you have stopped."
+      },
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Say interesting, then favourite. (Interesante; favorito.)"
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know first",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "hacer — you already own this. It is about to turn out to be the same word."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "pronunciation",
+          "title": "Sounds you'll need",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "FÁ-cil, two beats with the weight on the first — and the written accent is there to tell you so. The c before i is soft. see pronunciation reference."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "fácil — \"easy.\""
+            },
+            {
+              "kind": "speech",
+              "text": "Latin facilis is facere, \"to do,\" with an ending that means -able."
+            },
+            {
+              "kind": "speech",
+              "text": "So the word does not say light. It does not say gentle. It says doable. That is a sharper idea than \"easy,\" and a kinder one: a thing is fácil because you can do it."
+            },
+            {
+              "kind": "speech",
+              "text": "And you have met facere already. It is hacer."
+            },
+            {
+              "kind": "speech",
+              "text": "Look at the two side by side:"
+            },
+            {
+              "kind": "speech",
+              "text": "hacer — carried in the mouth for centuries. The f fell away to an h that nobody pronounces, and the middle softened out entirely."
+            },
+            {
+              "kind": "speech",
+              "text": "fácil — lifted off a Latin page long afterwards, by people reading. It still shows the f and the c, because it had no journey in which to lose them."
+            },
+            {
+              "kind": "speech",
+              "text": "One Latin verb, two arrivals, and the spelling of each records how it travelled."
+            },
+            {
+              "kind": "speech",
+              "text": "The bookish end of the family is all in English: facile, facility, faculty. And a facility is exactly what the Latin says — a thing that makes something doable."
+            },
+            {
+              "kind": "speech",
+              "text": "Es muy fácil. — It is very easy."
+            },
+            {
+              "kind": "speech",
+              "text": "un examen fácil — an easy exam."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "You can now say a thing gives no trouble: fácil. And you can hear hacer inside it — the same verb, arriving twice by two different roads."
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "fácil",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *fácil*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "es muy fácil",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *es muy fácil*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "hacer, fácil",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *hacer, fácil*]"
+            }
+          ]
+        },
+        {
+          "index": 6,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does facilis say a thing is, literally? (Doable — facere plus an -able ending.) Which verb you already know is the same Latin word? (Hacer.)"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "ES-C398-dificil",
+      "sequence": 8740,
+      "title": "difícil — the word English had to build backwards",
+      "headword": "difícil",
+      "romanization": "difícil",
+      "gloss": "difficult — Latin difficilis, dis- plus facilis, \"not doable\"; English difficult is odd by comparison, having been cut backwards out of the noun difficulty",
+      "script": "latin",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:13e60620d8eee3b8",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Say favourite, then easy. (Favorito; fácil.)"
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know first",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "fácil — this word is that word with a no on the front."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "pronunciation",
+          "title": "Sounds you'll need",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "di-FÍ-cil, three beats with the weight on the middle one, which the written accent marks. Both c and the second i stay soft and short. see pronunciation reference."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "difícil — \"difficult.\""
+            },
+            {
+              "kind": "speech",
+              "text": "You already have the whole word. Latin difficilis is dis- — the prefix that undoes things — stuck on facilis."
+            },
+            {
+              "kind": "speech",
+              "text": "Not doable."
+            },
+            {
+              "kind": "speech",
+              "text": "That is the entire construction, and it is worth saying aloud in that order: facilis, doable; difficilis, not doable. Latin doubled the letter when dis- ran into that f, which is why the Latin has -ff-, and Spanish later settled back to one."
+            },
+            {
+              "kind": "speech",
+              "text": "The strange half of this story is English, not Spanish."
+            },
+            {
+              "kind": "speech",
+              "text": "English did not borrow difficult as an adjective. It borrowed the noun first — difficulty, from Latin difficultās — and then, about a century later, writers cut the adjective back out of it. Difficult is a word made by trimming a longer word that was already there."
+            },
+            {
+              "kind": "speech",
+              "text": "So Spanish holds the plain inherited shape, and English holds one that had to be reverse-engineered. When you say difícil, you are saying the older, simpler thing."
+            },
+            {
+              "kind": "speech",
+              "text": "Es difícil. — It is difficult."
+            },
+            {
+              "kind": "speech",
+              "text": "un examen difícil — a hard exam."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "You can now say a thing gives trouble: difícil. You have five words for saying what you think of something — importante, interesante, favorito, fácil, difícil — and you can build the last one out of the one before it."
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "difícil",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *difícil*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "fácil, difícil",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *fácil, difícil*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "un examen difícil",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *un examen difícil*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "importante, interesante, favorito, fácil, difícil",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *importante, interesante, favorito, fácil, difícil*]"
+            }
+          ]
+        },
+        {
+          "index": 6,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Take difícil apart. (Dis- plus facilis — \"not doable.\") Which came into English first, difficult or difficulty? (Difficulty — the adjective was cut out of the noun afterwards.)"
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "findings": []
+}

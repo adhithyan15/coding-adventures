@@ -1,0 +1,15 @@
+{
+  "id": "ES-EXT-397-QUALITY",
+  "stage": "A1",
+  "kind": "required",
+  "category": "vocabulary",
+  "canDo": "I can say barato, caro, gratis, mayor and menor.",
+  "prerequisites": [],
+  "lessons": [
+    "ES-C397-barato",
+    "ES-C397-caro",
+    "ES-C397-gratis",
+    "ES-C397-mayor",
+    "ES-C397-menor"
+  ]
+}

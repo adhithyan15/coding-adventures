@@ -1,0 +1,11 @@
+{
+  "id": "SPINE-DESCRIBE-QUALITIES",
+  "stage": "A1",
+  "strand": "LEXICON",
+  "canDo": "I can say what something is like.",
+  "prerequisites": [
+    "SPINE-NAME-EVERYDAY-THINGS"
+  ],
+  "core": true,
+  "concepts": []
+}

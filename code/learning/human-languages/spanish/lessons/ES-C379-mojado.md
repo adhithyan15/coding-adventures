@@ -1,7 +1,7 @@
 ---
 schema_version: 2
 id: ES-C379-mojado
-spine_node: SPINE-COUNT-ONE-TO-FIVE
+spine_node: SPINE-DESCRIBE-QUALITIES
 sequence: 7880
 chapter: 379
 type: word

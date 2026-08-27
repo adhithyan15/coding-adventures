@@ -206,14 +206,32 @@ describe("the committed A1 inventory", () => {
     // address, police and fire); and the O-* entries are nearly the entire
     // orthography inventory -- the alphabet, capitalisation, and every
     // punctuation mark except the question and exclamation pair.
+    // 48 -> 44. THE WHOLE `Nociones evaluativas` GAP CLOSES AT ONCE, and three of
+    // the four are the reason `SPINE-DESCRIBE-QUALITIES` exists at all.
+    //
+    // `A1-NG6-03` (attractiveness), `A1-NG6-08` (interest) and `A1-NG6-10` (ease and
+    // difficulty) leave this list because chapters 397-399 author the exponents the
+    // PCIC actually names — guapo, feo and bonito; interesante; fácil and difícil.
+    // HL23 §12.2 justified the qualities rung BY these three points, and a
+    // justification that leaves the points unmapped is a justification used as an
+    // excuse. They close the same way `A1-F2-16`/`A1-F2-17` did: by authoring the
+    // source's own exponent, never by pointing the point at a word already present.
+    //
+    // `A1-NG6-09` (capacity and competence with saber) is DIFFERENT, and it is a bug
+    // this slice found rather than work it did. Its note read "the corpus never
+    // introduces saber as a verb, only the fixed phrase no se" — which stopped being
+    // true when chapter 389 authored `saber` for the two points named above. The atom
+    // it needs, `ES-LEX-SABER`, has existed since #13154 and nothing pointed at it.
+    // A null whose stated reason has expired is worse than a bare null, because the
+    // note is precisely what the loop below trusts to prove the null was considered.
     expect(unmapped.sort()).toEqual([
       "A1-F2-10", "A1-F3-03", "A1-F4-01", "A1-F5-09",
       "A1-F5-10", "A1-F6-06", "A1-NE02-01", "A1-NE06-01", "A1-NE06-05",
       "A1-NE07-04", "A1-NE07-06", "A1-NE08-02", "A1-NE09-06", "A1-NE11-04",
       "A1-NE12-02", "A1-NE13-03", "A1-NE15-02", "A1-NE15-03", "A1-NE15-04",
       "A1-NE16-02", "A1-NE17-02", "A1-NE18-01", "A1-NE18-02", "A1-NE18-05",
-      "A1-NE18-06", "A1-NE20-05", "A1-NG6-03", "A1-NG6-08", "A1-NG6-09",
-      "A1-NG6-10", "A1-O1-01", "A1-O1-02", "A1-O1-03", "A1-O1-04", "A1-O1-05",
+      "A1-NE18-06", "A1-NE20-05",
+      "A1-O1-01", "A1-O1-02", "A1-O1-03", "A1-O1-04", "A1-O1-05",
       "A1-O1-06", "A1-O1-07", "A1-O3-01", "A1-O3-02", "A1-O3-03", "A1-O3-05",
       "A1-O3-06", "A1-O3-07", "A1-O3-08", "A1-O3-09", "A1-O4-01", "A1-O4-02",
       "A1-O4-03",
@@ -487,10 +505,23 @@ describe("what the corpus actually covers", () => {
     // loud — a headline percentage that does not move is not evidence that
     // nothing happened, which is exactly why `covered` and `unmapped` are pinned
     // beside it rather than the percentage alone.
+    //
+    // 225 -> 229, 48 -> 44 unmapped. HL23 §12.2's qualities rung closes the whole
+    // `Nociones evaluativas` gap: chapters 397-399 author the source's own exponents
+    // for `A1-NG6-03` (guapo, bonito — feo the corpus already had), `A1-NG6-08`
+    // (interesante) and `A1-NG6-10` (fácil, difícil). `A1-NG6-09` is the odd one and
+    // cost no authoring at all: its note claimed the corpus never introduces `saber`,
+    // which stopped being true when chapter 389 authored it for `A1-F2-16`/`A1-F2-17`
+    // two slices ago. The atom existed and nothing pointed at it.
+    //
+    // `percent` MOVES this time, 82 -> 84. Contrast the 223 -> 225 note above, where
+    // two points rounded away: four points out of 273 is 1.5pp and survives rounding.
+    // Both behaviours are correct and neither is evidence on its own, which is the
+    // argument for pinning `covered` and `unmapped` beside it.
     expect(coverage.enumerated).toBe(273); // 85 grammar + 54 functions + 113 notions + 21 orthography
-    expect(coverage.covered).toBe(225); // 85 grammar (unchanged) + 138 newly mapped // ...and 262-266 close the last four enumerated points. The inventory scope remains partial. // +3 ch221-225 // +4 ch226-229 // +4 ch230-235 // +2 ch236-240 // +2 ch241-245 // +3 ch246-250 // +6 ch251-256 // +4 ch257-261: the four rules the book had always demonstrated and never stated // +3 ch221-225 // +4 ch226-229 // +4 ch230-235 // +2 ch236-240 // +2 ch241-245 // +3 ch246-250 // +6 ch251-255: the half-taught sets finished, plus bastante which was already taught and merely unwired // +3 ch221-225 // +4 ch226-229 // +4 ch230-235 // +2 ch236-240 // +2 ch241-245 // +3 ch246-250: the stressed pronouns, the exclamative and the vocative // +3 ch221-225 // +4 ch226-229 // +4 ch230-235 // +2 ch236-240 // +2 ch241-245: the vosotros preterite and the imperfect plural, both promised in chapter 204 // +3: ch221-225 demonstratives // +4: ch226-229 degree words // +4: ch230-235 joining words // +2: ch236-240 the gerund and the personal a // +3: chapters 221-225 teach the demonstratives // +4: chapters 226-229 teach muy, bastante and mal // +4: chapters 230-235 teach al/del, quien, o and ni
-    expect(coverage.percent).toBe(82); // 53 -> 56 -> 60 -> 64 -> 66 -> 68 -> 71 -> 77 -> 81 -> 85/85 grammar-only, then 223/273 across four dimensions
-    expect(coverage.unmapped).toBe(48); // was 0 while only grammar was enumerated
+    expect(coverage.covered).toBe(229); // 85 grammar (unchanged) + 144 newly mapped // ...and 262-266 close the last four enumerated points. The inventory scope remains partial. // +3 ch221-225 // +4 ch226-229 // +4 ch230-235 // +2 ch236-240 // +2 ch241-245 // +3 ch246-250 // +6 ch251-256 // +4 ch257-261: the four rules the book had always demonstrated and never stated // +3 ch221-225 // +4 ch226-229 // +4 ch230-235 // +2 ch236-240 // +2 ch241-245 // +3 ch246-250 // +6 ch251-255: the half-taught sets finished, plus bastante which was already taught and merely unwired // +3 ch221-225 // +4 ch226-229 // +4 ch230-235 // +2 ch236-240 // +2 ch241-245 // +3 ch246-250: the stressed pronouns, the exclamative and the vocative // +3 ch221-225 // +4 ch226-229 // +4 ch230-235 // +2 ch236-240 // +2 ch241-245: the vosotros preterite and the imperfect plural, both promised in chapter 204 // +3: ch221-225 demonstratives // +4: ch226-229 degree words // +4: ch230-235 joining words // +2: ch236-240 the gerund and the personal a // +3: chapters 221-225 teach the demonstratives // +4: chapters 226-229 teach muy, bastante and mal // +4: chapters 230-235 teach al/del, quien, o and ni
+    expect(coverage.percent).toBe(84); // 53 -> 56 -> 60 -> 64 -> 66 -> 68 -> 71 -> 77 -> 81 -> 85/85 grammar-only, then 223/273 across four dimensions
+    expect(coverage.unmapped).toBe(44); // was 0 while only grammar was enumerated
 
     // Whole categories missing is a different failure from thin coverage, and
     // the report has to keep them distinguishable. These three are GRAMMAR
@@ -512,8 +543,8 @@ describe("what the corpus actually covers", () => {
     const report = formatExamCoverage(
       measureExamCoverage(loadExamInventory("spanish", "A1"), lessons),
     );
-    expect(report).toContain("spanish A1 (partial inventory): 225/273 points covered (82%)");
-    expect(report).toContain("48 with no corresponding atom");
+    expect(report).toContain("spanish A1 (partial inventory): 229/273 points covered (84%)");
+    expect(report).toContain("44 with no corresponding atom");
     // Worst category first, not alphabetical. This USED to be checkable against
     // the real corpus, whose emptiest category kept changing as the campaign
     // closed points — `El sintagma adjetival` at 0/1, then `Los cuantificadores`
