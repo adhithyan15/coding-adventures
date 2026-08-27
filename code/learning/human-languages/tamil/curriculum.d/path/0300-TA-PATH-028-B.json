@@ -1,0 +1,12 @@
+{
+  "id": "TA-PATH-028-B",
+  "spine_node": "SPINE-NAME-EVERYDAY-ACTIONS",
+  "lessons": [
+    "TA-C32-vaa"
+  ],
+  "before": [],
+  "inline": [
+    "TA-EXT-028-CORE-VERBS-B"
+  ],
+  "after": []
+}

@@ -1,0 +1,29 @@
+{
+  "segments": [
+    "KA-PATH-025",
+    "KA-PATH-025-C",
+    "KA-PATH-026",
+    "KA-PATH-026-C",
+    "KA-PATH-026-E",
+    "KA-PATH-43-VERBS",
+    "KA-PATH-44-SEESAY"
+  ],
+  "omits": [
+    "VERB-INFINITIVE",
+    "VERB-PRESENT-HABITUAL",
+    "VERB-SAY",
+    "VERB-SPEAK",
+    "VERB-HEAR",
+    "VERB-LEARN",
+    "VERB-GET",
+    "VERB-SLEEP",
+    "VERB-LIVE",
+    "VERB-WORK",
+    "VERB-PLAY",
+    "VERB-RUN",
+    "VERB-SIT",
+    "VERB-ANSWER",
+    "VERB-MEET"
+  ],
+  "relocates": {}
+}

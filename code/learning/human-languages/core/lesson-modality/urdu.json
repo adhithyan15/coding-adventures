@@ -7,7 +7,7 @@
   "policy": {
     "maxLinearisableTableColumns": 3
   },
-  "sourceHash": "fnv1a64:029d8d3ebffb0d37",
+  "sourceHash": "fnv1a64:60e9a3510ed4d1a5",
   "summary": {
     "totalLessons": 69,
     "voice": 39,
@@ -764,7 +764,7 @@
         "no-visual-dependency"
       ],
       "coreDrivable": true,
-      "sourceHash": "fnv1a64:042409b1029d7da3"
+      "sourceHash": "fnv1a64:10d76ff9dab4cd22"
     },
     {
       "id": "UR-C06-bolna",
@@ -860,7 +860,7 @@
         "no-visual-dependency"
       ],
       "coreDrivable": true,
-      "sourceHash": "fnv1a64:46d1b7a5d0208a4f",
+      "sourceHash": "fnv1a64:cd22f40c832e0f66",
       "detachableSegments": [
         "The letters in this word"
       ]
@@ -881,7 +881,7 @@
         "no-visual-dependency"
       ],
       "coreDrivable": true,
-      "sourceHash": "fnv1a64:77a2c90d40b58230",
+      "sourceHash": "fnv1a64:acefa066b443eff9",
       "detachableSegments": [
         "The letters in this word"
       ]
@@ -923,7 +923,7 @@
         "no-visual-dependency"
       ],
       "coreDrivable": true,
-      "sourceHash": "fnv1a64:86d649f6d61cbefd",
+      "sourceHash": "fnv1a64:7a00c30578b836fa",
       "detachableSegments": [
         "The letters in this word"
       ]
@@ -962,7 +962,7 @@
         "no-visual-dependency"
       ],
       "coreDrivable": true,
-      "sourceHash": "fnv1a64:c6c945a4954aefbb",
+      "sourceHash": "fnv1a64:7fcec48f83565d59",
       "detachableSegments": [
         "The letters in this word"
       ]

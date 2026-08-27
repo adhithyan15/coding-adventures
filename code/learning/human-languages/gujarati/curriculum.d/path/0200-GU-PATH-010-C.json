@@ -1,0 +1,12 @@
+{
+  "id": "GU-PATH-010-C",
+  "spine_node": "SPINE-SAY-WHAT-I-DO",
+  "lessons": [
+    "GU-C07-khaavun",
+    "GU-C07-jovun",
+    "GU-C07-jaanvun"
+  ],
+  "before": [],
+  "inline": [],
+  "after": []
+}

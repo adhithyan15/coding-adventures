@@ -355,12 +355,7 @@
       "lessons": [
         "LA-C37-sum",
         "LA-C37-habeo",
-        "LA-C37-eo",
-        "LA-C37-venio",
-        "LA-C37-dico",
-        "LA-C37-video",
-        "LA-C37-scio",
-        "LA-C37-do"
+        "LA-C37-eo"
       ],
       "before": [],
       "inline": [
@@ -369,13 +364,37 @@
       "after": []
     },
     {
+      "id": "LA-PATH-025-B",
+      "spine_node": "SPINE-NAME-EVERYDAY-ACTIONS",
+      "lessons": [
+        "LA-C37-venio"
+      ],
+      "before": [],
+      "inline": [
+        "LA-EXT-025-LANGUAGE-SPECIFIC-B"
+      ],
+      "after": []
+    },
+    {
+      "id": "LA-PATH-025-C",
+      "spine_node": "SPINE-SAY-WHAT-I-DO",
+      "lessons": [
+        "LA-C37-dico",
+        "LA-C37-video",
+        "LA-C37-scio",
+        "LA-C37-do"
+      ],
+      "before": [],
+      "inline": [
+        "LA-EXT-025-LANGUAGE-SPECIFIC-C"
+      ],
+      "after": []
+    },
+    {
       "id": "LA-PATH-026",
       "spine_node": "SPINE-SAY-WHAT-I-DO",
       "lessons": [
-        "LA-C38-cogito",
-        "LA-C38-lego",
-        "LA-C38-intellego",
-        "LA-C38-scribo"
+        "LA-C38-cogito"
       ],
       "before": [],
       "inline": [
@@ -384,17 +403,86 @@
       "after": []
     },
     {
+      "id": "LA-PATH-026-B",
+      "spine_node": "SPINE-NAME-EVERYDAY-ACTIONS",
+      "lessons": [
+        "LA-C38-lego"
+      ],
+      "before": [],
+      "inline": [
+        "LA-EXT-026-LANGUAGE-SPECIFIC-B"
+      ],
+      "after": []
+    },
+    {
+      "id": "LA-PATH-026-C",
+      "spine_node": "SPINE-SAY-WHAT-I-DO",
+      "lessons": [
+        "LA-C38-intellego"
+      ],
+      "before": [],
+      "inline": [
+        "LA-EXT-026-LANGUAGE-SPECIFIC-C"
+      ],
+      "after": []
+    },
+    {
+      "id": "LA-PATH-026-D",
+      "spine_node": "SPINE-NAME-EVERYDAY-ACTIONS",
+      "lessons": [
+        "LA-C38-scribo"
+      ],
+      "before": [],
+      "inline": [
+        "LA-EXT-026-LANGUAGE-SPECIFIC-D"
+      ],
+      "after": []
+    },
+    {
       "id": "LA-PATH-027",
       "spine_node": "SPINE-SAY-WHAT-I-DO",
       "lessons": [
-        "LA-C39-capio",
-        "LA-C39-rogo",
-        "LA-C39-adiuvo",
-        "LA-C39-amo"
+        "LA-C39-capio"
       ],
       "before": [],
       "inline": [
         "LA-EXT-027-LANGUAGE-SPECIFIC"
+      ],
+      "after": []
+    },
+    {
+      "id": "LA-PATH-027-B",
+      "spine_node": "SPINE-NAME-EVERYDAY-ACTIONS",
+      "lessons": [
+        "LA-C39-rogo"
+      ],
+      "before": [],
+      "inline": [
+        "LA-EXT-027-LANGUAGE-SPECIFIC-B"
+      ],
+      "after": []
+    },
+    {
+      "id": "LA-PATH-027-C",
+      "spine_node": "SPINE-SAY-WHAT-I-DO",
+      "lessons": [
+        "LA-C39-adiuvo"
+      ],
+      "before": [],
+      "inline": [
+        "LA-EXT-027-LANGUAGE-SPECIFIC-C"
+      ],
+      "after": []
+    },
+    {
+      "id": "LA-PATH-027-C-B",
+      "spine_node": "SPINE-SAY-WHAT-I-LIKE",
+      "lessons": [
+        "LA-C39-amo"
+      ],
+      "before": [],
+      "inline": [
+        "LA-EXT-027-LANGUAGE-SPECIFIC-D"
       ],
       "after": []
     },
@@ -404,8 +492,7 @@
       "lessons": [
         "LA-C40-audio",
         "LA-C40-dormio",
-        "LA-C40-sedeo",
-        "LA-C40-sto"
+        "LA-C40-sedeo"
       ],
       "before": [],
       "inline": [
@@ -414,13 +501,22 @@
       "after": []
     },
     {
-      "id": "LA-PATH-029",
-      "spine_node": "SPINE-SAY-WHAT-I-DO",
+      "id": "LA-PATH-028-B",
+      "spine_node": "SPINE-NAME-EVERYDAY-ACTIONS",
       "lessons": [
-        "LA-C41-ambulo",
-        "LA-C41-curro",
-        "LA-C41-aperio",
-        "LA-C41-claudo"
+        "LA-C40-sto"
+      ],
+      "before": [],
+      "inline": [
+        "LA-EXT-028-LANGUAGE-SPECIFIC-B"
+      ],
+      "after": []
+    },
+    {
+      "id": "LA-PATH-029",
+      "spine_node": "SPINE-NAME-EVERYDAY-ACTIONS",
+      "lessons": [
+        "LA-C41-ambulo"
       ],
       "before": [],
       "inline": [
@@ -429,17 +525,53 @@
       "after": []
     },
     {
-      "id": "LA-PATH-030",
+      "id": "LA-PATH-029-B",
       "spine_node": "SPINE-SAY-WHAT-I-DO",
       "lessons": [
-        "LA-C42-fero",
-        "LA-C42-accipio",
-        "LA-C42-ludo",
-        "LA-C42-exspecto"
+        "LA-C41-curro",
+        "LA-C41-aperio",
+        "LA-C41-claudo"
+      ],
+      "before": [],
+      "inline": [
+        "LA-EXT-029-LANGUAGE-SPECIFIC-B"
+      ],
+      "after": []
+    },
+    {
+      "id": "LA-PATH-030",
+      "spine_node": "SPINE-NAME-EVERYDAY-ACTIONS",
+      "lessons": [
+        "LA-C42-fero"
       ],
       "before": [],
       "inline": [
         "LA-EXT-030-LANGUAGE-SPECIFIC"
+      ],
+      "after": []
+    },
+    {
+      "id": "LA-PATH-030-B",
+      "spine_node": "SPINE-SAY-WHAT-I-DO",
+      "lessons": [
+        "LA-C42-accipio",
+        "LA-C42-ludo"
+      ],
+      "before": [],
+      "inline": [
+        "LA-EXT-030-LANGUAGE-SPECIFIC-B"
+      ],
+      "after": []
+    },
+    {
+      "id": "LA-PATH-030-C",
+      "spine_node": "SPINE-NAME-EVERYDAY-ACTIONS",
+      "lessons": [
+        "LA-C42-exspecto"
+      ],
+      "before": [],
+      "inline": [
+        "LA-EXT-030-LANGUAGE-SPECIFIC-C"
       ],
       "after": []
     },
@@ -582,7 +714,16 @@
       "relocates": {}
     },
     "SPINE-NAME-EVERYDAY-ACTIONS": {
-      "segments": [],
+      "segments": [
+        "LA-PATH-025-B",
+        "LA-PATH-026-B",
+        "LA-PATH-026-D",
+        "LA-PATH-027-B",
+        "LA-PATH-028-B",
+        "LA-PATH-029",
+        "LA-PATH-030",
+        "LA-PATH-030-C"
+      ],
       "omits": [
         "VERB-DRINK",
         "VERB-PUT",
@@ -595,6 +736,13 @@
         "VERB-BUY": "SPINE-SAY-WHAT-I-DO"
       }
     },
+    "SPINE-NAME-EVERYDAY-THINGS": {
+      "segments": [],
+      "omits": [
+        "LODGING-ROOM"
+      ],
+      "relocates": {}
+    },
     "SPINE-SAY-WHAT-I-HAVE-AND-CAN-DO": {
       "segments": [],
       "omits": [
@@ -604,14 +752,38 @@
         "VERB-HAVE": "SPINE-SAY-WHAT-I-DO"
       }
     },
+    "SPINE-SAY-WHAT-I-LIKE": {
+      "segments": [
+        "LA-PATH-027-C-B"
+      ],
+      "omits": [],
+      "relocates": {}
+    },
+    "SPINE-SAY-WHY": {
+      "segments": [],
+      "omits": [
+        "CONNECTIVE-BECAUSE"
+      ],
+      "relocates": {}
+    },
+    "SPINE-SAY-WHAT-I-WANT": {
+      "segments": [],
+      "omits": [
+        "VERB-WANT"
+      ],
+      "relocates": {}
+    },
     "SPINE-SAY-WHAT-I-DO": {
       "segments": [
         "LA-PATH-025",
+        "LA-PATH-025-C",
         "LA-PATH-026",
+        "LA-PATH-026-C",
         "LA-PATH-027",
+        "LA-PATH-027-C",
         "LA-PATH-028",
-        "LA-PATH-029",
-        "LA-PATH-030",
+        "LA-PATH-029-B",
+        "LA-PATH-030-B",
         "LA-PATH-031"
       ],
       "omits": [
@@ -630,13 +802,6 @@
       "omits": [
         "VERB-NEGATE",
         "QUESTION-POLAR"
-      ],
-      "relocates": {}
-    },
-    "SPINE-SAY-WHAT-I-WANT": {
-      "segments": [],
-      "omits": [
-        "VERB-WANT"
       ],
       "relocates": {}
     },
@@ -659,7 +824,6 @@
       "omits": [
         "NARRATIVE-SEQUENCE",
         "CONNECTIVE-THEN",
-        "CONNECTIVE-BECAUSE",
         "ASPECT-ONGOING-PAST"
       ],
       "relocates": {}
@@ -679,7 +843,6 @@
       "omits": [
         "DIRECTION-ASK",
         "TRANSPORT-TICKET",
-        "LODGING-ROOM",
         "PROBLEM-REPORT"
       ],
       "relocates": {}
@@ -1112,8 +1275,28 @@
       "lessons": [
         "LA-C37-sum",
         "LA-C37-habeo",
-        "LA-C37-eo",
-        "LA-C37-venio",
+        "LA-C37-eo"
+      ]
+    },
+    {
+      "id": "LA-EXT-025-LANGUAGE-SPECIFIC-B",
+      "stage": "A1",
+      "kind": "required",
+      "category": "language-specific",
+      "canDo": "I can produce the present-tense forms of the eight verbs Latin leans on hardest, and trace each one into the English words it left behind.",
+      "prerequisites": [],
+      "lessons": [
+        "LA-C37-venio"
+      ]
+    },
+    {
+      "id": "LA-EXT-025-LANGUAGE-SPECIFIC-C",
+      "stage": "A1",
+      "kind": "required",
+      "category": "language-specific",
+      "canDo": "I can produce the present-tense forms of the eight verbs Latin leans on hardest, and trace each one into the English words it left behind.",
+      "prerequisites": [],
+      "lessons": [
         "LA-C37-dico",
         "LA-C37-video",
         "LA-C37-scio",
@@ -1128,9 +1311,39 @@
       "canDo": "I can produce the present-tense forms of the four Latin verbs of thinking, reading, understanding and writing, and trace each one into the English words built on it.",
       "prerequisites": [],
       "lessons": [
-        "LA-C38-cogito",
-        "LA-C38-lego",
-        "LA-C38-intellego",
+        "LA-C38-cogito"
+      ]
+    },
+    {
+      "id": "LA-EXT-026-LANGUAGE-SPECIFIC-B",
+      "stage": "A1",
+      "kind": "required",
+      "category": "language-specific",
+      "canDo": "I can produce the present-tense forms of the four Latin verbs of thinking, reading, understanding and writing, and trace each one into the English words built on it.",
+      "prerequisites": [],
+      "lessons": [
+        "LA-C38-lego"
+      ]
+    },
+    {
+      "id": "LA-EXT-026-LANGUAGE-SPECIFIC-C",
+      "stage": "A1",
+      "kind": "required",
+      "category": "language-specific",
+      "canDo": "I can produce the present-tense forms of the four Latin verbs of thinking, reading, understanding and writing, and trace each one into the English words built on it.",
+      "prerequisites": [],
+      "lessons": [
+        "LA-C38-intellego"
+      ]
+    },
+    {
+      "id": "LA-EXT-026-LANGUAGE-SPECIFIC-D",
+      "stage": "A1",
+      "kind": "required",
+      "category": "language-specific",
+      "canDo": "I can produce the present-tense forms of the four Latin verbs of thinking, reading, understanding and writing, and trace each one into the English words built on it.",
+      "prerequisites": [],
+      "lessons": [
         "LA-C38-scribo"
       ]
     },
@@ -1142,9 +1355,39 @@
       "canDo": "I can produce the present-tense forms of the four Latin verbs of taking, asking, helping and loving, and trace each one into the English words built on it.",
       "prerequisites": [],
       "lessons": [
-        "LA-C39-capio",
-        "LA-C39-rogo",
-        "LA-C39-adiuvo",
+        "LA-C39-capio"
+      ]
+    },
+    {
+      "id": "LA-EXT-027-LANGUAGE-SPECIFIC-B",
+      "stage": "A1",
+      "kind": "required",
+      "category": "language-specific",
+      "canDo": "I can produce the present-tense forms of the four Latin verbs of taking, asking, helping and loving, and trace each one into the English words built on it.",
+      "prerequisites": [],
+      "lessons": [
+        "LA-C39-rogo"
+      ]
+    },
+    {
+      "id": "LA-EXT-027-LANGUAGE-SPECIFIC-C",
+      "stage": "A1",
+      "kind": "required",
+      "category": "language-specific",
+      "canDo": "I can produce the present-tense forms of the four Latin verbs of taking, asking, helping and loving, and trace each one into the English words built on it.",
+      "prerequisites": [],
+      "lessons": [
+        "LA-C39-adiuvo"
+      ]
+    },
+    {
+      "id": "LA-EXT-027-LANGUAGE-SPECIFIC-D",
+      "stage": "A1",
+      "kind": "required",
+      "category": "language-specific",
+      "canDo": "I can produce the present-tense forms of the four Latin verbs of taking, asking, helping and loving, and trace each one into the English words built on it.",
+      "prerequisites": [],
+      "lessons": [
         "LA-C39-amo"
       ]
     },
@@ -1158,7 +1401,17 @@
       "lessons": [
         "LA-C40-audio",
         "LA-C40-dormio",
-        "LA-C40-sedeo",
+        "LA-C40-sedeo"
+      ]
+    },
+    {
+      "id": "LA-EXT-028-LANGUAGE-SPECIFIC-B",
+      "stage": "A1",
+      "kind": "required",
+      "category": "language-specific",
+      "canDo": "I can produce the present-tense forms of the four Latin verbs of hearing, sleeping, sitting and standing, and tell an English word inherited from the shared ancestor apart from one borrowed out of Latin.",
+      "prerequisites": [],
+      "lessons": [
         "LA-C40-sto"
       ]
     },
@@ -1170,7 +1423,17 @@
       "canDo": "I can produce the present-tense forms of the four Latin verbs of walking, running, opening and closing, and say what a Latin prefix does to the verb it sits on.",
       "prerequisites": [],
       "lessons": [
-        "LA-C41-ambulo",
+        "LA-C41-ambulo"
+      ]
+    },
+    {
+      "id": "LA-EXT-029-LANGUAGE-SPECIFIC-B",
+      "stage": "A1",
+      "kind": "required",
+      "category": "language-specific",
+      "canDo": "I can produce the present-tense forms of the four Latin verbs of walking, running, opening and closing, and say what a Latin prefix does to the verb it sits on.",
+      "prerequisites": [],
+      "lessons": [
         "LA-C41-curro",
         "LA-C41-aperio",
         "LA-C41-claudo"
@@ -1184,9 +1447,29 @@
       "canDo": "I can produce the present-tense forms of the four Latin verbs of bringing, getting, playing and waiting, and say whether a verb is welded from two roots, built from a prefix on an older verb, or of unknown ancestry.",
       "prerequisites": [],
       "lessons": [
-        "LA-C42-fero",
+        "LA-C42-fero"
+      ]
+    },
+    {
+      "id": "LA-EXT-030-LANGUAGE-SPECIFIC-B",
+      "stage": "A1",
+      "kind": "required",
+      "category": "language-specific",
+      "canDo": "I can produce the present-tense forms of the four Latin verbs of bringing, getting, playing and waiting, and say whether a verb is welded from two roots, built from a prefix on an older verb, or of unknown ancestry.",
+      "prerequisites": [],
+      "lessons": [
         "LA-C42-accipio",
-        "LA-C42-ludo",
+        "LA-C42-ludo"
+      ]
+    },
+    {
+      "id": "LA-EXT-030-LANGUAGE-SPECIFIC-C",
+      "stage": "A1",
+      "kind": "required",
+      "category": "language-specific",
+      "canDo": "I can produce the present-tense forms of the four Latin verbs of bringing, getting, playing and waiting, and say whether a verb is welded from two roots, built from a prefix on an older verb, or of unknown ancestry.",
+      "prerequisites": [],
+      "lessons": [
         "LA-C42-exspecto"
       ]
     },

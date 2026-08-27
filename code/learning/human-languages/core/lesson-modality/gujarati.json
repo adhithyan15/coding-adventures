@@ -7,7 +7,7 @@
   "policy": {
     "maxLinearisableTableColumns": 3
   },
-  "sourceHash": "fnv1a64:51ba50a793315f07",
+  "sourceHash": "fnv1a64:c4f1babc18309293",
   "summary": {
     "totalLessons": 165,
     "voice": 25,
@@ -2514,7 +2514,7 @@
         "no-visual-dependency"
       ],
       "coreDrivable": true,
-      "sourceHash": "fnv1a64:9b20a4f2169805db"
+      "sourceHash": "fnv1a64:d660e16cdb5abe70"
     },
     {
       "id": "GU-C07-khaavun",
@@ -2628,7 +2628,7 @@
         "no-visual-dependency"
       ],
       "coreDrivable": true,
-      "sourceHash": "fnv1a64:16cde0898f6ae407",
+      "sourceHash": "fnv1a64:6ca4538d39186e04",
       "detachableSegments": [
         "The letters in this word"
       ]
@@ -2649,7 +2649,7 @@
         "no-visual-dependency"
       ],
       "coreDrivable": true,
-      "sourceHash": "fnv1a64:1837b163df412063",
+      "sourceHash": "fnv1a64:09427b0e767738e8",
       "detachableSegments": [
         "The letters in this word"
       ]
@@ -2691,7 +2691,7 @@
         "no-visual-dependency"
       ],
       "coreDrivable": true,
-      "sourceHash": "fnv1a64:8d4dc97de727d58a",
+      "sourceHash": "fnv1a64:ac62af0c03756617",
       "detachableSegments": [
         "The letters in this word"
       ]
@@ -2733,7 +2733,7 @@
         "no-visual-dependency"
       ],
       "coreDrivable": true,
-      "sourceHash": "fnv1a64:294bad6e7fccd371",
+      "sourceHash": "fnv1a64:989084bfab9de89b",
       "detachableSegments": [
         "The letters in this word"
       ]

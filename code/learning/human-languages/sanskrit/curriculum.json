@@ -161,8 +161,26 @@
       "spine_node": "SPINE-SAY-WHAT-I-DO",
       "lessons": [
         "SA-C07-asti",
-        "SA-C07-gacchati",
-        "SA-C07-agacchati",
+        "SA-C07-gacchati"
+      ],
+      "before": [],
+      "inline": [],
+      "after": []
+    },
+    {
+      "id": "SA-PATH-010-B",
+      "spine_node": "SPINE-NAME-EVERYDAY-ACTIONS",
+      "lessons": [
+        "SA-C07-agacchati"
+      ],
+      "before": [],
+      "inline": [],
+      "after": []
+    },
+    {
+      "id": "SA-PATH-010-C",
+      "spine_node": "SPINE-SAY-WHAT-I-DO",
+      "lessons": [
         "SA-C07-khadati",
         "SA-C07-pashyati",
         "SA-C07-janati"
@@ -176,7 +194,16 @@
       "spine_node": "SPINE-SAY-WHAT-I-DO",
       "lessons": [
         "SA-C08-cintayati",
-        "SA-C08-avagacchati",
+        "SA-C08-avagacchati"
+      ],
+      "before": [],
+      "inline": [],
+      "after": []
+    },
+    {
+      "id": "SA-PATH-011-B",
+      "spine_node": "SPINE-NAME-EVERYDAY-ACTIONS",
+      "lessons": [
         "SA-C08-pathati",
         "SA-C08-likhati"
       ],
@@ -188,9 +215,36 @@
       "id": "SA-PATH-012",
       "spine_node": "SPINE-SAY-WHAT-I-DO",
       "lessons": [
-        "SA-C09-grhnati",
-        "SA-C09-prcchati",
-        "SA-C09-sahayyam-karoti",
+        "SA-C09-grhnati"
+      ],
+      "before": [],
+      "inline": [],
+      "after": []
+    },
+    {
+      "id": "SA-PATH-012-B",
+      "spine_node": "SPINE-NAME-EVERYDAY-ACTIONS",
+      "lessons": [
+        "SA-C09-prcchati"
+      ],
+      "before": [],
+      "inline": [],
+      "after": []
+    },
+    {
+      "id": "SA-PATH-012-C",
+      "spine_node": "SPINE-SAY-WHAT-I-DO",
+      "lessons": [
+        "SA-C09-sahayyam-karoti"
+      ],
+      "before": [],
+      "inline": [],
+      "after": []
+    },
+    {
+      "id": "SA-PATH-012-C-B",
+      "spine_node": "SPINE-SAY-WHAT-I-LIKE",
+      "lessons": [
         "SA-C09-snihyati"
       ],
       "before": [],
@@ -1016,7 +1070,11 @@
       "relocates": {}
     },
     "SPINE-NAME-EVERYDAY-ACTIONS": {
-      "segments": [],
+      "segments": [
+        "SA-PATH-010-B",
+        "SA-PATH-011-B",
+        "SA-PATH-012-B"
+      ],
       "omits": [
         "VERB-DRINK",
         "VERB-GIVE",
@@ -1024,7 +1082,18 @@
         "VERB-DO-MAKE",
         "VERB-BUY",
         "VERB-OPEN",
-        "VERB-CLOSE"
+        "VERB-CLOSE",
+        "VERB-STAND",
+        "VERB-WAIT",
+        "VERB-BRING",
+        "VERB-WALK"
+      ],
+      "relocates": {}
+    },
+    "SPINE-NAME-EVERYDAY-THINGS": {
+      "segments": [],
+      "omits": [
+        "LODGING-ROOM"
       ],
       "relocates": {}
     },
@@ -1036,12 +1105,35 @@
       ],
       "relocates": {}
     },
+    "SPINE-SAY-WHAT-I-LIKE": {
+      "segments": [
+        "SA-PATH-012-C-B"
+      ],
+      "omits": [],
+      "relocates": {}
+    },
+    "SPINE-SAY-WHY": {
+      "segments": [],
+      "omits": [
+        "CONNECTIVE-BECAUSE"
+      ],
+      "relocates": {}
+    },
+    "SPINE-SAY-WHAT-I-WANT": {
+      "segments": [],
+      "omits": [
+        "VERB-WANT"
+      ],
+      "relocates": {}
+    },
     "SPINE-SAY-WHAT-I-DO": {
       "segments": [
         "SA-PATH-017",
         "SA-PATH-010",
+        "SA-PATH-010-C",
         "SA-PATH-011",
         "SA-PATH-012",
+        "SA-PATH-012-C",
         "SA-PATH-21-VERBS",
         "SA-PATH-22-VERBS"
       ],
@@ -1052,17 +1144,13 @@
         "VERB-SPEAK",
         "VERB-HEAR",
         "VERB-LEARN",
-        "VERB-BRING",
         "VERB-GET",
         "VERB-SLEEP",
         "VERB-LIVE",
         "VERB-WORK",
         "VERB-PLAY",
-        "VERB-WALK",
         "VERB-RUN",
         "VERB-SIT",
-        "VERB-STAND",
-        "VERB-WAIT",
         "VERB-ANSWER",
         "VERB-MEET"
       ],
@@ -1075,13 +1163,6 @@
       "omits": [
         "VERB-NEGATE",
         "QUESTION-POLAR"
-      ],
-      "relocates": {}
-    },
-    "SPINE-SAY-WHAT-I-WANT": {
-      "segments": [],
-      "omits": [
-        "VERB-WANT"
       ],
       "relocates": {}
     },
@@ -1104,7 +1185,6 @@
       "omits": [
         "NARRATIVE-SEQUENCE",
         "CONNECTIVE-THEN",
-        "CONNECTIVE-BECAUSE",
         "ASPECT-ONGOING-PAST"
       ],
       "relocates": {}
@@ -1124,7 +1204,6 @@
       "omits": [
         "DIRECTION-ASK",
         "TRANSPORT-TICKET",
-        "LODGING-ROOM",
         "PROBLEM-REPORT"
       ],
       "relocates": {}

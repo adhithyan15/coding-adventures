@@ -3,9 +3,7 @@
   "spine_node": "SPINE-SAY-WHAT-I-DO",
   "lessons": [
     "GE-C24-denken",
-    "GE-C24-verstehen",
-    "GE-C24-lesen",
-    "GE-C24-schreiben"
+    "GE-C24-verstehen"
   ],
   "before": [],
   "inline": [],

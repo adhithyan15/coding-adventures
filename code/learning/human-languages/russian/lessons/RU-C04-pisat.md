@@ -1,7 +1,7 @@
 ---
 schema_version: 2
 id: RU-C04-pisat
-spine_node: SPINE-SAY-WHAT-I-DO
+spine_node: SPINE-NAME-EVERYDAY-ACTIONS
 sequence: 230
 chapter: 4
 type: word

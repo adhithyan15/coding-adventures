@@ -4,7 +4,7 @@
   "chapter": 33,
   "title": "Four Verbs of the Mind",
   "drivablePrefix": 0,
-  "sourceHash": "fnv1a64:d442d66ccc91878e",
+  "sourceHash": "fnv1a64:8e3be5a629b0a0be",
   "lessons": [
     {
       "id": "TA-C33-ninai",
@@ -395,7 +395,7 @@
       "modalityReasons": [
         "script-block"
       ],
-      "sourceHash": "fnv1a64:36ae56781169eff6",
+      "sourceHash": "fnv1a64:28b03fb1ff05f7fd",
       "notice": {
         "modality": "sight",
         "needs": [
@@ -745,7 +745,7 @@
       "modalityReasons": [
         "script-block"
       ],
-      "sourceHash": "fnv1a64:bdda9249c003f94c",
+      "sourceHash": "fnv1a64:c28892cfdd5df5f3",
       "notice": {
         "modality": "sight",
         "needs": [

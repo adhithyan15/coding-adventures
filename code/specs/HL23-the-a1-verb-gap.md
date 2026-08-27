@@ -932,3 +932,158 @@ filter until `ES-C66-la-terminacion-dice-quien` counts as a verb — it matches
 `(^|-)VERB-` solely because its concept is `ES-SUBJECT-VERB-AGREEMENT`. That
 lesson sits at A1, so admitting it would give 41 verbs at or below A1 and break
 the project's own pinned 40. No rule yields both. The shipped code path was kept.
+
+---
+
+## 11. Amendment — the staging slice, and two published price tables that are wrong *(added after the fourth slice)*
+
+§10.5 measured the thing that decides this document's remaining plan: **the verb
+famine and the noun famine are multiplicative on the same items.** Before
+authoring anything, all four bundles were scored:
+
+| granted | mock 1 G1 | mock 2 G1 | result |
+|---|---|---|---|
+| nothing (baseline) | 4,00 | 5,17 | NO APTO |
+| the ~100 missing nouns **alone** | **28,33** | **26,33** | **NO APTO** |
+| the 17 staged-above-A1 entries **alone** | 13,33 | 7,17 | NO APTO |
+| **both** | **33,33** | **33,33** | **APTO** |
+
+Authoring every noun the exam asks for and stopping there lands Grupo 1 **1,67
+and 3,67 short of the 30,00 bar**. That is the whole authoring budget spent for a
+measured `NO APTO`. The staging half is not an optimisation; it is load-bearing,
+and this slice ships it first so every authoring tranche after it is measured on
+top.
+
+### 11.1 Three rungs, and one node that was simply mis-staged
+
+| node | stage | strand | `canDo` | carries |
+|---|---|---|---|---|
+| `SPINE-NAME-EVERYDAY-THINGS` *(new)* | A1 | LEXICON | I can name common everyday things. | `LODGING-ROOM` |
+| `SPINE-SAY-WHAT-I-LIKE` *(new)* | A1 | FUNCTION | I can say what I like and what I do not like. | `VERB-LIKE-LOVE` |
+| `SPINE-SAY-WHY` *(new)* | A1 | FUNCTION | I can give one reason for something. | `CONNECTIVE-BECAUSE` |
+| `SPINE-NAME-EVERYDAY-ACTIONS` | A1 | LEXICON | **unchanged** | +8 action verbs |
+
+`gustar` got a rung of its own rather than being absorbed by the everyday-action
+node — liking is not an action — and `porque` got one rather than dragging B1's
+`SPINE-GIVE-REASONS` ("*reasons and explanations for my opinions and plans*")
+down to A1. Eight verbs — ask, stand, write, wait, read, bring, come, walk —
+moved onto `SPINE-NAME-EVERYDAY-ACTIONS` **with no `canDo` change at all**,
+because every one of them is a common everyday action.
+
+**The finding worth more than the rungs: `SPINE-SAY-WHAT-I-WANT` was mis-staged.**
+Its `canDo` is *"I can say what I want or need, and ask for it"* — an A1
+capability by any reading, and one DELE A1 tests directly. It sat at **A2**, and
+it sat there because it declared `SPINE-SAY-WHAT-I-DO` (A2) as a prerequisite.
+But *quiero un café* needs one memorised form, not the present-tense machinery
+that node teaches. So the node is restaged **A2 → A1**, the spurious prerequisite
+is dropped, and **its `canDo` is not touched, because nothing was wrong with it.**
+
+That is HL23's own thesis recurring in a node nobody had looked at: a capability
+the learner needs early, parked high by a dependency that was assumed rather than
+checked. **This document has audited concepts and never audited node stages, and
+there is no reason to think this is the only one.** A stage audit against the
+declared prerequisites is cheap and is now recorded in `BACKLOG.d`.
+
+### 11.2 §8.2 and §9.1 are wrong, and here are the corrected numbers
+
+Both tables priced a concept move as *"realizing lessons that are not already
+extension-resident"*. §10.2 showed that over-counts, because **a concept moves
+without its lesson moving when the whole segment is retargeted** — level derives
+from `segment.spine_node`, and a segment's path position is independent of the
+stage its node declares. Measured across the corpus, the real price has three
+outcomes per realizer, not one:
+
+- **RETARGET** — the segment holds nothing that stays. One line, no lesson moves,
+  `curriculum-prerequisite-order` cannot break because nothing is reordered.
+- **FREE** — the realizer is already extension-resident.
+- **SPLIT** — the segment is cut into runs of consecutive lessons sharing a
+  destination.
+
+| concept | §8.2/§9.1 said | realizers | free | retarget | split |
+|---|---|---|---|---|---|
+| `VERB-ASK` | 9 lessons, 9 tracks | 20 | 11 | 0 | 9 |
+| `VERB-WRITE` | 9 lessons, 9 tracks | 20 | 11 | 0 | 9 |
+| `VERB-READ` | 9 lessons, 9 tracks | 20 | 11 | 0 | 9 |
+| `VERB-LIKE-LOVE` | 9 lessons, 9 tracks | 20 | 11 | 0 | 9 |
+| `VERB-COME` | 5 lessons, 5 tracks | 15 | 10 | 0 | 5 |
+| `VERB-WALK` | 3 lessons, 3 tracks | 4 | 1 | 0 | 3 |
+| `VERB-STAND` | 3 lessons, 3 tracks | 4 | 1 | 0 | 3 |
+| `VERB-WAIT` | 2 lessons, 2 tracks | 4 | 2 | 0 | 2 |
+| `VERB-BRING` | 2 lessons, 2 tracks | 4 | 2 | 1 | 1 |
+| `VERB-HAVE` (§9.1) | 3 lessons **+ 2 repairs + empties `GE-PATH-018`** | 6 | 3 | 1 | 2 |
+
+**Two corrections matter beyond the arithmetic.**
+
+First, §9.1's `VERB-HAVE` row predicted two `misplaced-shared-realization`
+repairs and an emptied `GE-PATH-018`. **Neither happened.** `GE-PATH-018` held
+only `GE-C14-haben`, so it was retargeted in one line and still exists; and
+because `FR-C14-avoir` and `GE-C14-haben` carry no explicit `spine_node`, their
+`canonicalOwner` followed the concept to the new node, which is where they now
+sit. The predicted error class never arose.
+
+Second — and this is what changes the plan — **the four 9-track concepts are the
+same twenty realizers sitting in the same segments.** `ES-PATH-031` alone holds
+`preguntar`, `leer`, `escribir` and `gustar`. Moving them **together** costs one
+split per segment instead of one per concept, so the marginal price of the fourth
+concept is nearly zero. §8.2 lists `VERB-LIKE-LOVE` as its single most expensive
+row and §9.3 deferred `gustar` on that basis; measured properly, `gustar` is
+almost free **provided it travels with its neighbours**. A slice that moves these
+one at a time pays four times over for nothing.
+
+### 11.3 One invariant the run-splitter broke, and the completion that fixes it
+
+Splitting a segment into runs preserves lesson order exactly, which is what
+`curriculum-prerequisite-order` needs. It is not sufficient. `validateCurriculum`
+holds two more invariants: an extension is attached to **exactly one** segment,
+and every lesson it names lives in that segment. Cutting a segment across an
+extension's lesson set breaks both, and it did — **173 errors**, of the shapes
+`AR-EXT-027-LANGUAGE-SPECIFIC uses AR-C28-jaa outside AR-PATH-027` and
+`… is attached to both AR-PATH-027 and AR-PATH-027-B`.
+
+The fix is not special-casing: it is applying the same operation to the
+extension. An extension whose lessons land in *n* runs becomes *n* extensions,
+each attached to the run holding its lessons. **A segment split is an extension
+split.** That is now the rule, and it is the second time this document has
+recorded that a split is more expensive than it looks — the first was Italian's
+`IT-PATH-024` needing three ways rather than two.
+
+### 11.4 The counts, and one debt that grew
+
+| | before | after |
+|---|---|---|
+| headwords ≤ **pre-A1** | 304 | **304** |
+| headwords ≤ **A1** | 624 | **638** |
+| verbs ≤ **A1** | 47 | **58** |
+
+`SPINE-SAY-WHAT-I-DO` goes **33 → 24** concepts.
+
+**`SPINE-NAME-EVERYDAY-ACTIONS` joins the `over-ceiling` list at 15 concepts, and
+that is stated rather than absorbed.** Nine concepts left a 33-concept node for a
+7-concept one and the destination crossed the 12 ceiling on the way, so
+over-ceiling concepts went **33 → 39**. The debt redistributed *and* grew. The
+alternative was leaving eight everyday-action verbs at A2 where the exam that
+asks for them cannot reach them, and the real fix is HL-C81's split of both
+nodes, not a different filing. The pin now names both nodes.
+
+`cansado`, `estudiante` and `lado` were deliberately **left behind**. Each would
+have needed an adjectives-and-people rung with no honest canonical concept to put
+on it, and minting one to hold three namespaced lessons is the widening this
+document exists to refuse. Ablation confirms APTO still holds without them.
+
+### 11.5 The re-sat result
+
+| | Grupo 1 | Grupo 2 | |
+|---|---|---|---|
+| mock 1, before → after | 4,00 → **12,33** / 50 | 12,58 → **18,33** / 50 | NO APTO |
+| mock 2, before → after | 5,17 → **7,17** / 50 | 13,33 → **13,33** / 50 | NO APTO |
+
+Objective items failed: 82 → **78** of 100.
+
+`NO APTO`, exactly as §11's own bundle table predicted for staging alone — 12,33
+and 7,17 against a predicted 13,33 and 7,17, the small difference being the three
+entries deliberately left behind. The written paper moves for the first time in
+the series, 0,00 → 8,33 on mock 1, because `gustar`, `porque` and `querer`
+between them lift both of its tareas out of band 0.
+
+Grupo 1 is still less than half the bar. The ~103 authored lexemes are what close
+it, and the bundle table says they close it exactly.

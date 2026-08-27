@@ -1,0 +1,12 @@
+{
+  "id": "AR-PATH-029-B",
+  "spine_node": "SPINE-SAY-WHAT-I-LIKE",
+  "lessons": [
+    "AR-C32-ahabba"
+  ],
+  "before": [],
+  "inline": [
+    "AR-EXT-029-LANGUAGE-SPECIFIC-B"
+  ],
+  "after": []
+}

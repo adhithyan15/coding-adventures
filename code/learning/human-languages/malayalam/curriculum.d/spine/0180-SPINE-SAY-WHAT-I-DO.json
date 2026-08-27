@@ -1,0 +1,29 @@
+{
+  "segments": [
+    "ML-PATH-026",
+    "ML-PATH-026-C",
+    "ML-PATH-027",
+    "ML-PATH-028",
+    "ML-PATH-028-C",
+    "ML-PATH-43-VERBS",
+    "ML-PATH-44-SEESAY"
+  ],
+  "omits": [
+    "VERB-INFINITIVE",
+    "VERB-PRESENT-HABITUAL",
+    "VERB-SAY",
+    "VERB-SPEAK",
+    "VERB-HEAR",
+    "VERB-LEARN",
+    "VERB-GET",
+    "VERB-SLEEP",
+    "VERB-LIVE",
+    "VERB-WORK",
+    "VERB-PLAY",
+    "VERB-RUN",
+    "VERB-SIT",
+    "VERB-ANSWER",
+    "VERB-MEET"
+  ],
+  "relocates": {}
+}

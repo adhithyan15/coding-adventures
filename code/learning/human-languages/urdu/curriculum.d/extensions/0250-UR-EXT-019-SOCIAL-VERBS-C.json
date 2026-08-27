@@ -1,0 +1,13 @@
+{
+  "id": "UR-EXT-019-SOCIAL-VERBS-C",
+  "stage": "A2",
+  "kind": "required",
+  "category": "language-specific",
+  "canDo": "I can take, ask and help in Urdu, build a verb by bolting a borrowed noun onto karnā, and say what I like in the sentence where the thing liked is the subject and I am only the person it happens to.",
+  "prerequisites": [
+    "UR-EXT-018-MIND-VERBS"
+  ],
+  "lessons": [
+    "UR-C08-madad"
+  ]
+}

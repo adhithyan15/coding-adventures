@@ -1,0 +1,14 @@
+{
+  "id": "TE-PATH-026-C",
+  "spine_node": "SPINE-SAY-WHAT-I-DO",
+  "lessons": [
+    "TE-C32-tinu",
+    "TE-C32-cuudu",
+    "TE-C32-telusu"
+  ],
+  "before": [],
+  "inline": [
+    "TE-EXT-026-CORE-VERBS-C"
+  ],
+  "after": []
+}

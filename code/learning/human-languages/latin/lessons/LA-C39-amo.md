@@ -1,7 +1,7 @@
 ---
 schema_version: 2
 id: LA-C39-amo
-spine_node: SPINE-SAY-WHAT-I-DO
+spine_node: SPINE-SAY-WHAT-I-LIKE
 sequence: 790
 chapter: 39
 type: word

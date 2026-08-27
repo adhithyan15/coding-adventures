@@ -1,0 +1,12 @@
+{
+  "id": "BN-PATH-013-C",
+  "spine_node": "SPINE-SAY-WHAT-I-DO",
+  "lessons": [
+    "BN-C09-sahajjo-kora"
+  ],
+  "before": [],
+  "inline": [
+    "BN-EXT-013-CONJUNCT-VERBS-C"
+  ],
+  "after": []
+}

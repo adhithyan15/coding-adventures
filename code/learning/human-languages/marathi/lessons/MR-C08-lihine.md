@@ -1,7 +1,7 @@
 ---
 schema_version: 2
 id: MR-C08-lihine
-spine_node: SPINE-SAY-WHAT-I-DO
+spine_node: SPINE-NAME-EVERYDAY-ACTIONS
 sequence: 470
 chapter: 11
 type: word

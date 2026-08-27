@@ -1,5 +1,9 @@
 {
   "segments": [
+    "FR-PATH-023-B",
+    "FR-PATH-023-D",
+    "FR-PATH-024-B",
+    "FR-PATH-024-D",
     "FR-PATH-A1-OUVRIR-FERMER"
   ],
   "omits": [
@@ -7,7 +11,10 @@
     "VERB-GIVE",
     "VERB-PUT",
     "VERB-DO-MAKE",
-    "VERB-BUY"
+    "VERB-BUY",
+    "VERB-WAIT",
+    "VERB-BRING",
+    "VERB-COME"
   ],
   "relocates": {}
 }

@@ -493,7 +493,7 @@
     {
       "language": "telugu",
       "chapter": 32,
-      "sourceHash": "fnv1a64:a3d9e2ddefa342d5",
+      "sourceHash": "fnv1a64:f32cac8bd024436e",
       "lessonIds": [
         "TE-C32-undu",
         "TE-C32-vellu",
@@ -507,12 +507,12 @@
       "text": "telugu/narration/ch32.txt",
       "json": "telugu/narration/ch32.json",
       "textHash": "fnv1a64:31b0cbe4ab1d09ac",
-      "jsonHash": "fnv1a64:9e5d5fc5ed77709f"
+      "jsonHash": "fnv1a64:e25422c9d4018984"
     },
     {
       "language": "telugu",
       "chapter": 33,
-      "sourceHash": "fnv1a64:f8ab9a281e43682e",
+      "sourceHash": "fnv1a64:791f531f16275b91",
       "lessonIds": [
         "TE-C33-anuko",
         "TE-C33-artham-cesuko",
@@ -524,12 +524,12 @@
       "text": "telugu/narration/ch33.txt",
       "json": "telugu/narration/ch33.json",
       "textHash": "fnv1a64:6cf429e862d299b4",
-      "jsonHash": "fnv1a64:e4a718d744ded06d"
+      "jsonHash": "fnv1a64:f2fe985de93c279e"
     },
     {
       "language": "telugu",
       "chapter": 34,
-      "sourceHash": "fnv1a64:b34e07c020a1e894",
+      "sourceHash": "fnv1a64:2849330214cf237b",
       "lessonIds": [
         "TE-C34-tiisuko",
         "TE-C34-adugu",
@@ -541,7 +541,7 @@
       "text": "telugu/narration/ch34.txt",
       "json": "telugu/narration/ch34.json",
       "textHash": "fnv1a64:71a3dea5ff2bbe68",
-      "jsonHash": "fnv1a64:1eb4252081885219"
+      "jsonHash": "fnv1a64:e75e72400f724413"
     },
     {
       "language": "telugu",

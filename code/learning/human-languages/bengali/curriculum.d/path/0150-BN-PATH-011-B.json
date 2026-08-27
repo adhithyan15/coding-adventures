@@ -1,0 +1,12 @@
+{
+  "id": "BN-PATH-011-B",
+  "spine_node": "SPINE-NAME-EVERYDAY-ACTIONS",
+  "lessons": [
+    "BN-C07-asha"
+  ],
+  "before": [],
+  "inline": [
+    "BN-EXT-011-CORE-VERBS-B"
+  ],
+  "after": []
+}

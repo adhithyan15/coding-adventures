@@ -4,7 +4,7 @@
   "chapter": 34,
   "title": "Four Verbs Between People",
   "drivablePrefix": 4,
-  "sourceHash": "fnv1a64:b5119a84010e759f",
+  "sourceHash": "fnv1a64:999218b42070c45f",
   "lessons": [
     {
       "id": "KA-C34-tegeduko",
@@ -204,7 +204,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:d78f84abda939af4",
+      "sourceHash": "fnv1a64:4ef27f7104452219",
       "notice": null,
       "blocks": [
         {
@@ -554,7 +554,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:fdd0ec6159882e0b",
+      "sourceHash": "fnv1a64:5329c7743b9841b9",
       "notice": null,
       "blocks": [
         {

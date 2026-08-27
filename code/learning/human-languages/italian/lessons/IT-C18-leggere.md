@@ -1,7 +1,7 @@
 ---
 schema_version: 2
 id: IT-C18-leggere
-spine_node: SPINE-SAY-WHAT-I-DO
+spine_node: SPINE-NAME-EVERYDAY-ACTIONS
 sequence: 610
 chapter: 18
 type: word

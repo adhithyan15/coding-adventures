@@ -1,0 +1,10 @@
+{
+  "id": "IT-PATH-023-C",
+  "spine_node": "SPINE-SAY-WHAT-I-DO",
+  "lessons": [
+    "IT-C19-aiutare"
+  ],
+  "before": [],
+  "inline": [],
+  "after": []
+}

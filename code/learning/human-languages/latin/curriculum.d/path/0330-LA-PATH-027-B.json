@@ -1,0 +1,12 @@
+{
+  "id": "LA-PATH-027-B",
+  "spine_node": "SPINE-NAME-EVERYDAY-ACTIONS",
+  "lessons": [
+    "LA-C39-rogo"
+  ],
+  "before": [],
+  "inline": [
+    "LA-EXT-027-LANGUAGE-SPECIFIC-B"
+  ],
+  "after": []
+}

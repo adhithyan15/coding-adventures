@@ -1,0 +1,13 @@
+{
+  "id": "BN-PATH-012",
+  "spine_node": "SPINE-SAY-WHAT-I-DO",
+  "lessons": [
+    "BN-C08-bhaba",
+    "BN-C08-bojha"
+  ],
+  "before": [],
+  "inline": [
+    "BN-EXT-012-MIND-AND-PAGE"
+  ],
+  "after": []
+}

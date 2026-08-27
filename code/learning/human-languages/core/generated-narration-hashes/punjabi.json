@@ -126,7 +126,7 @@
     {
       "language": "punjabi",
       "chapter": 7,
-      "sourceHash": "fnv1a64:a80f3030b5e04654",
+      "sourceHash": "fnv1a64:8d097f1d87187648",
       "lessonIds": [
         "PA-C07-hona",
         "PA-C07-jana",
@@ -141,12 +141,12 @@
       "text": "punjabi/narration/ch07.txt",
       "json": "punjabi/narration/ch07.json",
       "textHash": "fnv1a64:1285ce604a817bb7",
-      "jsonHash": "fnv1a64:a1e6f174e2d13fcd"
+      "jsonHash": "fnv1a64:54f7f7036d66d6eb"
     },
     {
       "language": "punjabi",
       "chapter": 8,
-      "sourceHash": "fnv1a64:0af5f1a00caabcd3",
+      "sourceHash": "fnv1a64:5f929452ca816174",
       "lessonIds": [
         "PA-C08-sochna",
         "PA-C08-samajhna",
@@ -158,12 +158,12 @@
       "text": "punjabi/narration/ch08.txt",
       "json": "punjabi/narration/ch08.json",
       "textHash": "fnv1a64:6ca1905a00f9fe5a",
-      "jsonHash": "fnv1a64:889da453dc55d687"
+      "jsonHash": "fnv1a64:3638cb3a333df164"
     },
     {
       "language": "punjabi",
       "chapter": 9,
-      "sourceHash": "fnv1a64:01d0ba06d4ae01a9",
+      "sourceHash": "fnv1a64:a5d3077984886e8a",
       "lessonIds": [
         "PA-C09-laina",
         "PA-C09-puchhna",
@@ -175,7 +175,7 @@
       "text": "punjabi/narration/ch09.txt",
       "json": "punjabi/narration/ch09.json",
       "textHash": "fnv1a64:9fbcd2f5256b662b",
-      "jsonHash": "fnv1a64:cd38d9138c8fa47a"
+      "jsonHash": "fnv1a64:984b10bd6adcb49a"
     },
     {
       "language": "punjabi",

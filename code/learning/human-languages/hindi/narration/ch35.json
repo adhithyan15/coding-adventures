@@ -4,7 +4,7 @@
   "chapter": 35,
   "title": "Taking, Asking, Helping — and Liking",
   "drivablePrefix": 1,
-  "sourceHash": "fnv1a64:6d1e198f9be4d685",
+  "sourceHash": "fnv1a64:7bd7ac99a07ba3a0",
   "lessons": [
     {
       "id": "HI-C35-lena",
@@ -149,7 +149,7 @@
       "modalityReasons": [
         "script-block"
       ],
-      "sourceHash": "fnv1a64:41174f32d288a6fe",
+      "sourceHash": "fnv1a64:7661363329ff38a1",
       "notice": {
         "modality": "sight",
         "needs": [
@@ -453,7 +453,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:563ca26024494765",
+      "sourceHash": "fnv1a64:45da4b00dda59ad7",
       "notice": null,
       "blocks": [
         {

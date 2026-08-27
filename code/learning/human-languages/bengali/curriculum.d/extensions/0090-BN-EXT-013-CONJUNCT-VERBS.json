@@ -1,0 +1,11 @@
+{
+  "id": "BN-EXT-013-CONJUNCT-VERBS",
+  "stage": "A2",
+  "kind": "required",
+  "category": "language-specific",
+  "canDo": "I can take, ask, help and say what I like and whom I love in Bengali, build a fresh verb out of any noun by putting করা behind it, and say why liking happens to me while loving is something I do.",
+  "prerequisites": [],
+  "lessons": [
+    "BN-C09-neowa"
+  ]
+}

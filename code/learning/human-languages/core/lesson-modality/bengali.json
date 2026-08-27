@@ -7,7 +7,7 @@
   "policy": {
     "maxLinearisableTableColumns": 3
   },
-  "sourceHash": "fnv1a64:8bc3da8e8aebe022",
+  "sourceHash": "fnv1a64:1d27462fb9515175",
   "summary": {
     "totalLessons": 80,
     "voice": 15,
@@ -957,7 +957,7 @@
         "no-visual-dependency"
       ],
       "coreDrivable": true,
-      "sourceHash": "fnv1a64:7bfc517583c9cf08"
+      "sourceHash": "fnv1a64:9ba19014092357d3"
     },
     {
       "id": "BN-C07-khaowa",
@@ -1071,7 +1071,7 @@
         "no-visual-dependency"
       ],
       "coreDrivable": true,
-      "sourceHash": "fnv1a64:087da54326653038",
+      "sourceHash": "fnv1a64:d6efb067fd3a25df",
       "detachableSegments": [
         "The letters in this word"
       ]
@@ -1092,7 +1092,7 @@
         "no-visual-dependency"
       ],
       "coreDrivable": true,
-      "sourceHash": "fnv1a64:057ee091c68a66f7",
+      "sourceHash": "fnv1a64:dc5f581e610afc54",
       "detachableSegments": [
         "The letters in this word"
       ]
@@ -1134,7 +1134,7 @@
         "no-visual-dependency"
       ],
       "coreDrivable": true,
-      "sourceHash": "fnv1a64:4b3d683c0f08d7a8",
+      "sourceHash": "fnv1a64:654e2f3215f6b575",
       "detachableSegments": [
         "The letters in this word"
       ]
@@ -1176,7 +1176,7 @@
         "no-visual-dependency"
       ],
       "coreDrivable": true,
-      "sourceHash": "fnv1a64:c9aa4582a3ac3bf3",
+      "sourceHash": "fnv1a64:103b21f7a6a3c779",
       "detachableSegments": [
         "The letters in this word"
       ]

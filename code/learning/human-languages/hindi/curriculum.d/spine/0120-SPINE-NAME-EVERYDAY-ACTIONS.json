@@ -1,6 +1,8 @@
 {
   "segments": [
-    "HI-PATH-A1-KARNA"
+    "HI-PATH-A1-KARNA",
+    "HI-PATH-029-B",
+    "HI-PATH-029-D"
   ],
   "omits": [
     "VERB-DRINK",
@@ -8,7 +10,12 @@
     "VERB-PUT",
     "VERB-BUY",
     "VERB-OPEN",
-    "VERB-CLOSE"
+    "VERB-CLOSE",
+    "VERB-STAND",
+    "VERB-WAIT",
+    "VERB-BRING",
+    "VERB-COME",
+    "VERB-WALK"
   ],
   "relocates": {}
 }

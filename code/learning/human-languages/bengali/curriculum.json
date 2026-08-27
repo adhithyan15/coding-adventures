@@ -177,11 +177,7 @@
       "spine_node": "SPINE-SAY-WHAT-I-DO",
       "lessons": [
         "BN-C07-howa",
-        "BN-C07-jaowa",
-        "BN-C07-asha",
-        "BN-C07-khaowa",
-        "BN-C07-dekha",
-        "BN-C07-jana"
+        "BN-C07-jaowa"
       ],
       "before": [],
       "inline": [
@@ -190,13 +186,37 @@
       "after": []
     },
     {
+      "id": "BN-PATH-011-B",
+      "spine_node": "SPINE-NAME-EVERYDAY-ACTIONS",
+      "lessons": [
+        "BN-C07-asha"
+      ],
+      "before": [],
+      "inline": [
+        "BN-EXT-011-CORE-VERBS-B"
+      ],
+      "after": []
+    },
+    {
+      "id": "BN-PATH-011-C",
+      "spine_node": "SPINE-SAY-WHAT-I-DO",
+      "lessons": [
+        "BN-C07-khaowa",
+        "BN-C07-dekha",
+        "BN-C07-jana"
+      ],
+      "before": [],
+      "inline": [
+        "BN-EXT-011-CORE-VERBS-C"
+      ],
+      "after": []
+    },
+    {
       "id": "BN-PATH-012",
       "spine_node": "SPINE-SAY-WHAT-I-DO",
       "lessons": [
         "BN-C08-bhaba",
-        "BN-C08-bojha",
-        "BN-C08-pora",
-        "BN-C08-lekha"
+        "BN-C08-bojha"
       ],
       "before": [],
       "inline": [
@@ -205,17 +225,63 @@
       "after": []
     },
     {
+      "id": "BN-PATH-012-B",
+      "spine_node": "SPINE-NAME-EVERYDAY-ACTIONS",
+      "lessons": [
+        "BN-C08-pora",
+        "BN-C08-lekha"
+      ],
+      "before": [],
+      "inline": [
+        "BN-EXT-012-MIND-AND-PAGE-B"
+      ],
+      "after": []
+    },
+    {
       "id": "BN-PATH-013",
       "spine_node": "SPINE-SAY-WHAT-I-DO",
       "lessons": [
-        "BN-C09-neowa",
-        "BN-C09-jijnasa-kora",
-        "BN-C09-sahajjo-kora",
-        "BN-C09-bhalo-laga"
+        "BN-C09-neowa"
       ],
       "before": [],
       "inline": [
         "BN-EXT-013-CONJUNCT-VERBS"
+      ],
+      "after": []
+    },
+    {
+      "id": "BN-PATH-013-B",
+      "spine_node": "SPINE-NAME-EVERYDAY-ACTIONS",
+      "lessons": [
+        "BN-C09-jijnasa-kora"
+      ],
+      "before": [],
+      "inline": [
+        "BN-EXT-013-CONJUNCT-VERBS-B"
+      ],
+      "after": []
+    },
+    {
+      "id": "BN-PATH-013-C",
+      "spine_node": "SPINE-SAY-WHAT-I-DO",
+      "lessons": [
+        "BN-C09-sahajjo-kora"
+      ],
+      "before": [],
+      "inline": [
+        "BN-EXT-013-CONJUNCT-VERBS-C"
+      ],
+      "after": []
+    },
+    {
+      "id": "BN-PATH-013-C-B",
+      "spine_node": "SPINE-SAY-WHAT-I-LIKE",
+      "lessons": [
+        "BN-C09-bhalo-laga"
+      ],
+      "before": [],
+      "inline": [
+        "BN-EXT-013-CONJUNCT-VERBS-D"
       ],
       "after": []
     },
@@ -466,7 +532,11 @@
       "relocates": {}
     },
     "SPINE-NAME-EVERYDAY-ACTIONS": {
-      "segments": [],
+      "segments": [
+        "BN-PATH-011-B",
+        "BN-PATH-012-B",
+        "BN-PATH-013-B"
+      ],
       "omits": [
         "VERB-DRINK",
         "VERB-GIVE",
@@ -474,7 +544,18 @@
         "VERB-DO-MAKE",
         "VERB-BUY",
         "VERB-OPEN",
-        "VERB-CLOSE"
+        "VERB-CLOSE",
+        "VERB-STAND",
+        "VERB-WAIT",
+        "VERB-BRING",
+        "VERB-WALK"
+      ],
+      "relocates": {}
+    },
+    "SPINE-NAME-EVERYDAY-THINGS": {
+      "segments": [],
+      "omits": [
+        "LODGING-ROOM"
       ],
       "relocates": {}
     },
@@ -486,12 +567,35 @@
       ],
       "relocates": {}
     },
+    "SPINE-SAY-WHAT-I-LIKE": {
+      "segments": [
+        "BN-PATH-013-C-B"
+      ],
+      "omits": [],
+      "relocates": {}
+    },
+    "SPINE-SAY-WHY": {
+      "segments": [],
+      "omits": [
+        "CONNECTIVE-BECAUSE"
+      ],
+      "relocates": {}
+    },
+    "SPINE-SAY-WHAT-I-WANT": {
+      "segments": [],
+      "omits": [
+        "VERB-WANT"
+      ],
+      "relocates": {}
+    },
     "SPINE-SAY-WHAT-I-DO": {
       "segments": [
         "BN-PATH-017",
         "BN-PATH-011",
+        "BN-PATH-011-C",
         "BN-PATH-012",
-        "BN-PATH-013"
+        "BN-PATH-013",
+        "BN-PATH-013-C"
       ],
       "omits": [
         "VERB-INFINITIVE",
@@ -500,17 +604,13 @@
         "VERB-SPEAK",
         "VERB-HEAR",
         "VERB-LEARN",
-        "VERB-BRING",
         "VERB-GET",
         "VERB-SLEEP",
         "VERB-LIVE",
         "VERB-WORK",
         "VERB-PLAY",
-        "VERB-WALK",
         "VERB-RUN",
         "VERB-SIT",
-        "VERB-STAND",
-        "VERB-WAIT",
         "VERB-ANSWER",
         "VERB-MEET"
       ],
@@ -521,13 +621,6 @@
       "omits": [
         "VERB-NEGATE",
         "QUESTION-POLAR"
-      ],
-      "relocates": {}
-    },
-    "SPINE-SAY-WHAT-I-WANT": {
-      "segments": [],
-      "omits": [
-        "VERB-WANT"
       ],
       "relocates": {}
     },
@@ -550,7 +643,6 @@
       "omits": [
         "NARRATIVE-SEQUENCE",
         "CONNECTIVE-THEN",
-        "CONNECTIVE-BECAUSE",
         "ASPECT-ONGOING-PAST"
       ],
       "relocates": {}
@@ -570,7 +662,6 @@
       "omits": [
         "DIRECTION-ASK",
         "TRANSPORT-TICKET",
-        "LODGING-ROOM",
         "PROBLEM-REPORT"
       ],
       "relocates": {}
@@ -760,8 +851,28 @@
       "prerequisites": [],
       "lessons": [
         "BN-C07-howa",
-        "BN-C07-jaowa",
-        "BN-C07-asha",
+        "BN-C07-jaowa"
+      ]
+    },
+    {
+      "id": "BN-EXT-011-CORE-VERBS-B",
+      "stage": "A2",
+      "kind": "required",
+      "category": "language-specific",
+      "canDo": "I can say what I do with six everyday Bengali verbs, put the right honorific ending on each, and name the two things a Bengali verb never asks — the speaker's gender, and which of two be-verbs will carry the future.",
+      "prerequisites": [],
+      "lessons": [
+        "BN-C07-asha"
+      ]
+    },
+    {
+      "id": "BN-EXT-011-CORE-VERBS-C",
+      "stage": "A2",
+      "kind": "required",
+      "category": "language-specific",
+      "canDo": "I can say what I do with six everyday Bengali verbs, put the right honorific ending on each, and name the two things a Bengali verb never asks — the speaker's gender, and which of two be-verbs will carry the future.",
+      "prerequisites": [],
+      "lessons": [
         "BN-C07-khaowa",
         "BN-C07-dekha",
         "BN-C07-jana"
@@ -776,7 +887,17 @@
       "prerequisites": [],
       "lessons": [
         "BN-C08-bhaba",
-        "BN-C08-bojha",
+        "BN-C08-bojha"
+      ]
+    },
+    {
+      "id": "BN-EXT-012-MIND-AND-PAGE-B",
+      "stage": "A2",
+      "kind": "required",
+      "category": "language-specific",
+      "canDo": "I can say that I think, understand, read and write in Bengali, raise the stem vowel when the -i ending arrives, and read the flapped ড় that Sanskrit never needed.",
+      "prerequisites": [],
+      "lessons": [
         "BN-C08-pora",
         "BN-C08-lekha"
       ]
@@ -789,9 +910,39 @@
       "canDo": "I can take, ask, help and say what I like and whom I love in Bengali, build a fresh verb out of any noun by putting করা behind it, and say why liking happens to me while loving is something I do.",
       "prerequisites": [],
       "lessons": [
-        "BN-C09-neowa",
-        "BN-C09-jijnasa-kora",
-        "BN-C09-sahajjo-kora",
+        "BN-C09-neowa"
+      ]
+    },
+    {
+      "id": "BN-EXT-013-CONJUNCT-VERBS-B",
+      "stage": "A2",
+      "kind": "required",
+      "category": "language-specific",
+      "canDo": "I can take, ask, help and say what I like and whom I love in Bengali, build a fresh verb out of any noun by putting করা behind it, and say why liking happens to me while loving is something I do.",
+      "prerequisites": [],
+      "lessons": [
+        "BN-C09-jijnasa-kora"
+      ]
+    },
+    {
+      "id": "BN-EXT-013-CONJUNCT-VERBS-C",
+      "stage": "A2",
+      "kind": "required",
+      "category": "language-specific",
+      "canDo": "I can take, ask, help and say what I like and whom I love in Bengali, build a fresh verb out of any noun by putting করা behind it, and say why liking happens to me while loving is something I do.",
+      "prerequisites": [],
+      "lessons": [
+        "BN-C09-sahajjo-kora"
+      ]
+    },
+    {
+      "id": "BN-EXT-013-CONJUNCT-VERBS-D",
+      "stage": "A2",
+      "kind": "required",
+      "category": "language-specific",
+      "canDo": "I can take, ask, help and say what I like and whom I love in Bengali, build a fresh verb out of any noun by putting করা behind it, and say why liking happens to me while loving is something I do.",
+      "prerequisites": [],
+      "lessons": [
         "BN-C09-bhalo-laga"
       ]
     },

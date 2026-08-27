@@ -53,7 +53,7 @@
     {
       "language": "urdu",
       "chapter": 6,
-      "sourceHash": "fnv1a64:48b49ad010e2f801",
+      "sourceHash": "fnv1a64:81a6a0348ec0740b",
       "lessonIds": [
         "UR-C06-hona",
         "UR-C06-jana",
@@ -66,7 +66,7 @@
     {
       "language": "urdu",
       "chapter": 7,
-      "sourceHash": "fnv1a64:4ec1329420d0f9c6",
+      "sourceHash": "fnv1a64:e567598a98a41d59",
       "lessonIds": [
         "UR-C07-sochna",
         "UR-C07-samajhna",
@@ -78,7 +78,7 @@
     {
       "language": "urdu",
       "chapter": 8,
-      "sourceHash": "fnv1a64:1e01f2fb736b26c4",
+      "sourceHash": "fnv1a64:0b038cedd34802ef",
       "lessonIds": [
         "UR-C08-lena",
         "UR-C08-puchhna",

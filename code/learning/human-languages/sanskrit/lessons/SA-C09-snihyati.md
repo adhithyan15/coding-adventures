@@ -1,7 +1,7 @@
 ---
 schema_version: 2
 id: SA-C09-snihyati
-spine_node: SPINE-SAY-WHAT-I-DO
+spine_node: SPINE-SAY-WHAT-I-LIKE
 sequence: 470
 chapter: 9
 type: word

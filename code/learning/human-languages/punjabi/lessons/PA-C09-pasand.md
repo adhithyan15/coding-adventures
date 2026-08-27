@@ -1,7 +1,7 @@
 ---
 schema_version: 2
 id: PA-C09-pasand
-spine_node: SPINE-SAY-WHAT-I-DO
+spine_node: SPINE-SAY-WHAT-I-LIKE
 sequence: 490
 chapter: 9
 type: word

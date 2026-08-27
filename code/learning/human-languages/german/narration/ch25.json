@@ -4,7 +4,7 @@
   "chapter": 25,
   "title": "Taking, Asking, Helping, Liking",
   "drivablePrefix": 4,
-  "sourceHash": "fnv1a64:eb085c89028cb9aa",
+  "sourceHash": "fnv1a64:aadd35c97d644082",
   "lessons": [
     {
       "id": "GE-C25-nehmen",
@@ -234,7 +234,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:b37a2e1984bf0f52",
+      "sourceHash": "fnv1a64:ab45bd24d364b2c1",
       "notice": null,
       "blocks": [
         {
@@ -654,7 +654,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:6413600515d017a7",
+      "sourceHash": "fnv1a64:6fc3b7ef52590ba9",
       "notice": null,
       "blocks": [
         {

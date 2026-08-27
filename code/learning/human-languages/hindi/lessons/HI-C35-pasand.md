@@ -1,7 +1,7 @@
 ---
 schema_version: 2
 id: HI-C35-pasand
-spine_node: SPINE-SAY-WHAT-I-DO
+spine_node: SPINE-SAY-WHAT-I-LIKE
 sequence: 930
 chapter: 35
 type: word

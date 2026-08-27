@@ -4,7 +4,7 @@
   "chapter": 14,
   "title": "The Mind and the Page",
   "drivablePrefix": 0,
-  "sourceHash": "fnv1a64:8baca893ab6141ff",
+  "sourceHash": "fnv1a64:65b447ac53b91c91",
   "lessons": [
     {
       "id": "GU-C08-vicharvun",
@@ -371,7 +371,7 @@
       "modalityReasons": [
         "script-block"
       ],
-      "sourceHash": "fnv1a64:16cde0898f6ae407",
+      "sourceHash": "fnv1a64:6ca4538d39186e04",
       "notice": {
         "modality": "sight",
         "needs": [
@@ -545,7 +545,7 @@
       "modalityReasons": [
         "script-block"
       ],
-      "sourceHash": "fnv1a64:1837b163df412063",
+      "sourceHash": "fnv1a64:09427b0e767738e8",
       "notice": {
         "modality": "sight",
         "needs": [

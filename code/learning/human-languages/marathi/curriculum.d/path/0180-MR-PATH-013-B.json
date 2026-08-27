@@ -1,0 +1,13 @@
+{
+  "id": "MR-PATH-013-B",
+  "spine_node": "SPINE-NAME-EVERYDAY-ACTIONS",
+  "lessons": [
+    "MR-C08-vachne",
+    "MR-C08-lihine"
+  ],
+  "before": [],
+  "inline": [
+    "MR-EXT-013-MIND-VERBS-B"
+  ],
+  "after": []
+}

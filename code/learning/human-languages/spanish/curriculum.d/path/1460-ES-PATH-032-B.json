@@ -1,0 +1,10 @@
+{
+  "id": "ES-PATH-032-B",
+  "spine_node": "SPINE-NAME-EVERYDAY-ACTIONS",
+  "lessons": [
+    "ES-C36-caminar"
+  ],
+  "before": [],
+  "inline": [],
+  "after": []
+}

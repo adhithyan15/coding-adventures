@@ -1,0 +1,12 @@
+{
+  "id": "ML-EXT-027-MIND-VERBS-B",
+  "stage": "A2",
+  "kind": "required",
+  "category": "language-specific",
+  "canDo": "I can say that I think, understand, read and write in Malayalam, and tell which of those four Malayalam treats as something that arrives at me rather than something I do.",
+  "prerequisites": [],
+  "lessons": [
+    "ML-C33-vaayikkuka",
+    "ML-C33-ezhutuka"
+  ]
+}

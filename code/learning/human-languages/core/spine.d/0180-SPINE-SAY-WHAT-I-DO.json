@@ -1,0 +1,36 @@
+{
+  "id": "SPINE-SAY-WHAT-I-DO",
+  "stage": "A2",
+  "strand": "GRAMMAR",
+  "canDo": "I can say what I do — name a verb, find its stem, and put it in the present.",
+  "prerequisites": [
+    "SPINE-EXCHANGE-NAMES"
+  ],
+  "core": true,
+  "concepts": [
+    "VERB-INFINITIVE",
+    "VERB-PRESENT-HABITUAL",
+    "VERB-BE",
+    "VERB-GO",
+    "VERB-SAY",
+    "VERB-SPEAK",
+    "VERB-SEE",
+    "VERB-HEAR",
+    "VERB-KNOW",
+    "VERB-THINK",
+    "VERB-UNDERSTAND",
+    "VERB-LEARN",
+    "VERB-TAKE",
+    "VERB-GET",
+    "VERB-EAT",
+    "VERB-SLEEP",
+    "VERB-LIVE",
+    "VERB-WORK",
+    "VERB-PLAY",
+    "VERB-RUN",
+    "VERB-SIT",
+    "VERB-ANSWER",
+    "VERB-HELP",
+    "VERB-MEET"
+  ]
+}

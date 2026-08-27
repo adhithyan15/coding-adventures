@@ -4,7 +4,7 @@
   "chapter": 72,
   "title": "Salir --- Leaving",
   "drivablePrefix": 1,
-  "sourceHash": "fnv1a64:347b4647bacdc007",
+  "sourceHash": "fnv1a64:9dc126e5e9354bf1",
   "lessons": [
     {
       "id": "ES-C13-salir",
@@ -19,7 +19,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:f649391e32be7920",
+      "sourceHash": "fnv1a64:683259af9c3ac24f",
       "notice": null,
       "blocks": [
         {

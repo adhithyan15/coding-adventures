@@ -1,7 +1,7 @@
 ---
 schema_version: 2
 id: PT-C21-trazer
-spine_node: SPINE-SAY-WHAT-I-DO
+spine_node: SPINE-NAME-EVERYDAY-ACTIONS
 sequence: 750
 chapter: 21
 type: word

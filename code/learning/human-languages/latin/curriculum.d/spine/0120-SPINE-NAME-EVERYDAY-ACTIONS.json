@@ -1,5 +1,14 @@
 {
-  "segments": [],
+  "segments": [
+    "LA-PATH-025-B",
+    "LA-PATH-026-B",
+    "LA-PATH-026-D",
+    "LA-PATH-027-B",
+    "LA-PATH-028-B",
+    "LA-PATH-029",
+    "LA-PATH-030",
+    "LA-PATH-030-C"
+  ],
   "omits": [
     "VERB-DRINK",
     "VERB-PUT",

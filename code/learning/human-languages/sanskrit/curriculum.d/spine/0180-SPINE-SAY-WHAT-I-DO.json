@@ -1,0 +1,30 @@
+{
+  "segments": [
+    "SA-PATH-017",
+    "SA-PATH-010",
+    "SA-PATH-010-C",
+    "SA-PATH-011",
+    "SA-PATH-012",
+    "SA-PATH-012-C",
+    "SA-PATH-21-VERBS",
+    "SA-PATH-22-VERBS"
+  ],
+  "omits": [
+    "VERB-INFINITIVE",
+    "VERB-PRESENT-HABITUAL",
+    "VERB-SAY",
+    "VERB-SPEAK",
+    "VERB-HEAR",
+    "VERB-LEARN",
+    "VERB-GET",
+    "VERB-SLEEP",
+    "VERB-LIVE",
+    "VERB-WORK",
+    "VERB-PLAY",
+    "VERB-RUN",
+    "VERB-SIT",
+    "VERB-ANSWER",
+    "VERB-MEET"
+  ],
+  "relocates": {}
+}

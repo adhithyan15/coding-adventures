@@ -3,11 +3,7 @@
   "spine_node": "SPINE-SAY-WHAT-I-DO",
   "lessons": [
     "TE-C32-undu",
-    "TE-C32-vellu",
-    "TE-C32-raa",
-    "TE-C32-tinu",
-    "TE-C32-cuudu",
-    "TE-C32-telusu"
+    "TE-C32-vellu"
   ],
   "before": [],
   "inline": [

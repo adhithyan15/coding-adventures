@@ -1,0 +1,11 @@
+{
+  "id": "ML-EXT-028-DOING-VERBS-D",
+  "stage": "A2",
+  "kind": "required",
+  "category": "language-specific",
+  "canDo": "I can say that I take, ask, help and like in Malayalam, and tell a native geminate stem apart from the Sanskrit verb-maker that looks just like it.",
+  "prerequisites": [],
+  "lessons": [
+    "ML-C34-ishtam"
+  ]
+}

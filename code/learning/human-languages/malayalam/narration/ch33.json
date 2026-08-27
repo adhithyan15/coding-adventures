@@ -4,7 +4,7 @@
   "chapter": 33,
   "title": "The Mind and the Page",
   "drivablePrefix": 0,
-  "sourceHash": "fnv1a64:cf65e258da063e67",
+  "sourceHash": "fnv1a64:a7099dc872c38073",
   "lessons": [
     {
       "id": "ML-C33-cintikkuka",
@@ -414,7 +414,7 @@
       "modalityReasons": [
         "script-block"
       ],
-      "sourceHash": "fnv1a64:92ce2dd007bf522e",
+      "sourceHash": "fnv1a64:08577a1a89d529ef",
       "notice": {
         "modality": "sight",
         "needs": [
@@ -613,7 +613,7 @@
       "modalityReasons": [
         "script-block"
       ],
-      "sourceHash": "fnv1a64:af6712cea8fc7fe6",
+      "sourceHash": "fnv1a64:a56549e165423daf",
       "notice": {
         "modality": "sight",
         "needs": [

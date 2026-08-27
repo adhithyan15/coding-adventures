@@ -4,7 +4,7 @@
   "chapter": 9,
   "title": "Taking, Asking, Helping, Loving",
   "drivablePrefix": 4,
-  "sourceHash": "fnv1a64:f1b1bc0c5f5ad1c7",
+  "sourceHash": "fnv1a64:c5be31315ce30ba4",
   "lessons": [
     {
       "id": "SA-C09-grhnati",
@@ -175,7 +175,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:5489939a906c5366",
+      "sourceHash": "fnv1a64:3991546af057fc9d",
       "notice": null,
       "blocks": [
         {
@@ -486,7 +486,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:f64ad93b34c76775",
+      "sourceHash": "fnv1a64:40cf7e91615b9b8f",
       "notice": null,
       "blocks": [
         {

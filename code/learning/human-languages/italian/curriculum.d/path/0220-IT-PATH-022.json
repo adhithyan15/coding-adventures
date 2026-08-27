@@ -3,9 +3,7 @@
   "spine_node": "SPINE-SAY-WHAT-I-DO",
   "lessons": [
     "IT-C18-pensare",
-    "IT-C18-capire",
-    "IT-C18-leggere",
-    "IT-C18-scrivere"
+    "IT-C18-capire"
   ],
   "before": [],
   "inline": [],

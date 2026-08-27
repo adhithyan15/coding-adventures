@@ -1,0 +1,10 @@
+{
+  "id": "HI-PATH-029-C",
+  "spine_node": "SPINE-SAY-WHAT-I-DO",
+  "lessons": [
+    "HI-C35-lena"
+  ],
+  "before": [],
+  "inline": [],
+  "after": []
+}

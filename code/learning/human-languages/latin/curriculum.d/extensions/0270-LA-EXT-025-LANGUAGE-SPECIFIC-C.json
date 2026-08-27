@@ -1,0 +1,14 @@
+{
+  "id": "LA-EXT-025-LANGUAGE-SPECIFIC-C",
+  "stage": "A1",
+  "kind": "required",
+  "category": "language-specific",
+  "canDo": "I can produce the present-tense forms of the eight verbs Latin leans on hardest, and trace each one into the English words it left behind.",
+  "prerequisites": [],
+  "lessons": [
+    "LA-C37-dico",
+    "LA-C37-video",
+    "LA-C37-scio",
+    "LA-C37-do"
+  ]
+}

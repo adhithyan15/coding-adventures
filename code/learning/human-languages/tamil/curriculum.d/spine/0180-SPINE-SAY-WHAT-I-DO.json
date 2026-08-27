@@ -1,0 +1,28 @@
+{
+  "segments": [
+    "TA-PATH-028",
+    "TA-PATH-028-C",
+    "TA-PATH-029",
+    "TA-PATH-030",
+    "TA-PATH-030-C",
+    "TA-PATH-42-VERBS"
+  ],
+  "omits": [
+    "VERB-INFINITIVE",
+    "VERB-PRESENT-HABITUAL",
+    "VERB-SAY",
+    "VERB-SPEAK",
+    "VERB-HEAR",
+    "VERB-LEARN",
+    "VERB-GET",
+    "VERB-SLEEP",
+    "VERB-LIVE",
+    "VERB-WORK",
+    "VERB-PLAY",
+    "VERB-RUN",
+    "VERB-SIT",
+    "VERB-ANSWER",
+    "VERB-MEET"
+  ],
+  "relocates": {}
+}

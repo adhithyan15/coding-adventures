@@ -1,0 +1,12 @@
+{
+  "id": "PT-PATH-025-C",
+  "spine_node": "SPINE-NAME-EVERYDAY-ACTIONS",
+  "lessons": [
+    "PT-C21-esperar"
+  ],
+  "before": [],
+  "inline": [
+    "PT-EXT-025-LANGUAGE-SPECIFIC-C"
+  ],
+  "after": []
+}

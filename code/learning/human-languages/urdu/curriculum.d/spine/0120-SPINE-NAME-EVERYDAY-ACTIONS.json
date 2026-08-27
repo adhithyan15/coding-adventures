@@ -1,5 +1,9 @@
 {
-  "segments": [],
+  "segments": [
+    "UR-PATH-007-B",
+    "UR-PATH-008-B",
+    "UR-PATH-009-B"
+  ],
   "omits": [
     "VERB-DRINK",
     "VERB-GIVE",
@@ -7,7 +11,11 @@
     "VERB-DO-MAKE",
     "VERB-BUY",
     "VERB-OPEN",
-    "VERB-CLOSE"
+    "VERB-CLOSE",
+    "VERB-STAND",
+    "VERB-WAIT",
+    "VERB-BRING",
+    "VERB-WALK"
   ],
   "relocates": {}
 }

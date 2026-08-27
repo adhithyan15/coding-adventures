@@ -1,7 +1,7 @@
 ---
 schema_version: 2
 id: IT-C19-mi-piace
-spine_node: SPINE-SAY-WHAT-I-DO
+spine_node: SPINE-SAY-WHAT-I-LIKE
 sequence: 660
 chapter: 19
 type: word

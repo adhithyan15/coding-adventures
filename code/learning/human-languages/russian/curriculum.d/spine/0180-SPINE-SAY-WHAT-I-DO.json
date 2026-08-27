@@ -1,0 +1,25 @@
+{
+  "segments": [
+    "RU-PATH-007",
+    "RU-PATH-008",
+    "RU-PATH-009",
+    "RU-PATH-009-C"
+  ],
+  "omits": [
+    "VERB-INFINITIVE",
+    "VERB-PRESENT-HABITUAL",
+    "VERB-SAY",
+    "VERB-HEAR",
+    "VERB-LEARN",
+    "VERB-GET",
+    "VERB-EAT",
+    "VERB-SLEEP",
+    "VERB-WORK",
+    "VERB-PLAY",
+    "VERB-RUN",
+    "VERB-SIT",
+    "VERB-ANSWER",
+    "VERB-MEET"
+  ],
+  "relocates": {}
+}

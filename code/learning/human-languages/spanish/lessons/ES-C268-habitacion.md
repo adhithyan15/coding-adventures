@@ -1,7 +1,7 @@
 ---
 schema_version: 2
 id: ES-C268-habitacion
-spine_node: SPINE-HANDLE-TRAVEL
+spine_node: SPINE-NAME-EVERYDAY-THINGS
 sequence: 2640
 chapter: 268
 type: word

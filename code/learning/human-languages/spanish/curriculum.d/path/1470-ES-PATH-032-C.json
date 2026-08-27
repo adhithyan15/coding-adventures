@@ -1,0 +1,10 @@
+{
+  "id": "ES-PATH-032-C",
+  "spine_node": "SPINE-SAY-WHAT-I-DO",
+  "lessons": [
+    "ES-C36-correr"
+  ],
+  "before": [],
+  "inline": [],
+  "after": []
+}

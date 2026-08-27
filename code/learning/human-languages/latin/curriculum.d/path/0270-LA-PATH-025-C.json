@@ -1,0 +1,15 @@
+{
+  "id": "LA-PATH-025-C",
+  "spine_node": "SPINE-SAY-WHAT-I-DO",
+  "lessons": [
+    "LA-C37-dico",
+    "LA-C37-video",
+    "LA-C37-scio",
+    "LA-C37-do"
+  ],
+  "before": [],
+  "inline": [
+    "LA-EXT-025-LANGUAGE-SPECIFIC-C"
+  ],
+  "after": []
+}

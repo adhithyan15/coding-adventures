@@ -917,7 +917,7 @@
     },
     {
       "id": "ES-PATH-030-SALIR-CH13",
-      "spine_node": "SPINE-SAY-WHAT-I-DO",
+      "spine_node": "SPINE-NAME-EVERYDAY-ACTIONS",
       "lessons": [
         "ES-C13-salir"
       ],
@@ -929,9 +929,20 @@
     },
     {
       "id": "ES-PATH-030-VENIR-CH13",
+      "spine_node": "SPINE-NAME-EVERYDAY-ACTIONS",
+      "lessons": [
+        "ES-C13-venir"
+      ],
+      "before": [],
+      "inline": [
+        "ES-EXT-030-VENIR-CH13"
+      ],
+      "after": []
+    },
+    {
+      "id": "ES-PATH-030-VENIR-CH13-B",
       "spine_node": "SPINE-SAY-WHAT-I-DO",
       "lessons": [
-        "ES-C13-venir",
         "ES-C13-repaso-yo-go",
         "ES-C13-sintesis-yo-go",
         "ES-C13-plurales-cambio",
@@ -940,7 +951,6 @@
       ],
       "before": [],
       "inline": [
-        "ES-EXT-030-VENIR-CH13",
         "ES-EXT-030-CONSOLIDATION-YOGO",
         "ES-EXT-030-DERIVE-PLURALS"
       ],
@@ -1821,22 +1831,79 @@
       "spine_node": "SPINE-SAY-WHAT-I-DO",
       "lessons": [
         "ES-C34-pensar",
-        "ES-C34-entender",
+        "ES-C34-entender"
+      ],
+      "before": [],
+      "inline": [],
+      "after": []
+    },
+    {
+      "id": "ES-PATH-031-B",
+      "spine_node": "SPINE-NAME-EVERYDAY-ACTIONS",
+      "lessons": [
         "ES-C34-leer",
-        "ES-C34-escribir",
+        "ES-C34-escribir"
+      ],
+      "before": [],
+      "inline": [],
+      "after": []
+    },
+    {
+      "id": "ES-PATH-031-C",
+      "spine_node": "SPINE-SAY-WHAT-I-DO",
+      "lessons": [
         "ES-C34-repaso-mente",
         "ES-C34-sintesis-mente",
-        "ES-C35-tomar",
-        "ES-C35-preguntar",
+        "ES-C35-tomar"
+      ],
+      "before": [],
+      "inline": [
+        "ES-EXT-031-CONSOLIDATION"
+      ],
+      "after": []
+    },
+    {
+      "id": "ES-PATH-031-D",
+      "spine_node": "SPINE-NAME-EVERYDAY-ACTIONS",
+      "lessons": [
+        "ES-C35-preguntar"
+      ],
+      "before": [],
+      "inline": [],
+      "after": []
+    },
+    {
+      "id": "ES-PATH-031-E",
+      "spine_node": "SPINE-SAY-WHAT-I-DO",
+      "lessons": [
         "ES-C35-ayudar",
-        "ES-C35-repaso-tres",
-        "ES-C35-gustar",
+        "ES-C35-repaso-tres"
+      ],
+      "before": [],
+      "inline": [
+        "ES-EXT-031-CONSOLIDATION-GUSTAR"
+      ],
+      "after": []
+    },
+    {
+      "id": "ES-PATH-031-E-B",
+      "spine_node": "SPINE-SAY-WHAT-I-LIKE",
+      "lessons": [
+        "ES-C35-gustar"
+      ],
+      "before": [],
+      "inline": [],
+      "after": []
+    },
+    {
+      "id": "ES-PATH-031-E-C",
+      "spine_node": "SPINE-SAY-WHAT-I-DO",
+      "lessons": [
         "ES-C35-sintesis-gustar"
       ],
       "before": [],
       "inline": [
-        "ES-EXT-031-CONSOLIDATION",
-        "ES-EXT-031-CONSOLIDATION-GUSTAR"
+        "ES-EXT-031-CONSOLIDATION-GUSTAR-B"
       ],
       "after": []
     },
@@ -1845,8 +1912,26 @@
       "spine_node": "SPINE-SAY-WHAT-I-DO",
       "lessons": [
         "ES-C36-oir",
-        "ES-C36-dormir",
-        "ES-C36-caminar",
+        "ES-C36-dormir"
+      ],
+      "before": [],
+      "inline": [],
+      "after": []
+    },
+    {
+      "id": "ES-PATH-032-B",
+      "spine_node": "SPINE-NAME-EVERYDAY-ACTIONS",
+      "lessons": [
+        "ES-C36-caminar"
+      ],
+      "before": [],
+      "inline": [],
+      "after": []
+    },
+    {
+      "id": "ES-PATH-032-C",
+      "spine_node": "SPINE-SAY-WHAT-I-DO",
+      "lessons": [
         "ES-C36-correr"
       ],
       "before": [],
@@ -1868,7 +1953,16 @@
       "id": "ES-PATH-033",
       "spine_node": "SPINE-SAY-WHAT-I-DO",
       "lessons": [
-        "ES-C37-sentarse",
+        "ES-C37-sentarse"
+      ],
+      "before": [],
+      "inline": [],
+      "after": []
+    },
+    {
+      "id": "ES-PATH-033-B",
+      "spine_node": "SPINE-NAME-EVERYDAY-ACTIONS",
+      "lessons": [
         "ES-C37-levantarse"
       ],
       "before": [],
@@ -1879,8 +1973,26 @@
       "id": "ES-PATH-034",
       "spine_node": "SPINE-NARRATE-EVENTS",
       "lessons": [
-        "ES-C38-luego",
-        "ES-C38-porque",
+        "ES-C38-luego"
+      ],
+      "before": [],
+      "inline": [],
+      "after": []
+    },
+    {
+      "id": "ES-PATH-034-B",
+      "spine_node": "SPINE-SAY-WHY",
+      "lessons": [
+        "ES-C38-porque"
+      ],
+      "before": [],
+      "inline": [],
+      "after": []
+    },
+    {
+      "id": "ES-PATH-034-C",
+      "spine_node": "SPINE-NARRATE-EVENTS",
+      "lessons": [
         "ES-C38-imperfecto",
         "ES-C38-contar"
       ],
@@ -1890,9 +2002,18 @@
     },
     {
       "id": "ES-PATH-035",
+      "spine_node": "SPINE-NAME-EVERYDAY-ACTIONS",
+      "lessons": [
+        "ES-C39-traer"
+      ],
+      "before": [],
+      "inline": [],
+      "after": []
+    },
+    {
+      "id": "ES-PATH-035-B",
       "spine_node": "SPINE-SAY-WHAT-I-DO",
       "lessons": [
-        "ES-C39-traer",
         "ES-C39-conseguir",
         "ES-C39-jugar",
         "ES-C39-conocer",
@@ -1907,9 +2028,18 @@
     },
     {
       "id": "ES-PATH-036",
+      "spine_node": "SPINE-NAME-EVERYDAY-ACTIONS",
+      "lessons": [
+        "ES-C40-esperar"
+      ],
+      "before": [],
+      "inline": [],
+      "after": []
+    },
+    {
+      "id": "ES-PATH-036-B",
       "spine_node": "SPINE-SAY-WHAT-I-DO",
       "lessons": [
-        "ES-C40-esperar",
         "ES-C40-contestar"
       ],
       "before": [],
@@ -3083,7 +3213,7 @@
     },
     {
       "id": "ES-PATH-268-ROOM",
-      "spine_node": "SPINE-HANDLE-TRAVEL",
+      "spine_node": "SPINE-NAME-EVERYDAY-THINGS",
       "lessons": [
         "ES-C268-habitacion"
       ],
@@ -5585,7 +5715,15 @@
       "segments": [
         "ES-PATH-A1-BEBER",
         "ES-PATH-030-HACER-CH12",
+        "ES-PATH-030-SALIR-CH13",
+        "ES-PATH-030-VENIR-CH13",
+        "ES-PATH-031-B",
+        "ES-PATH-031-D",
+        "ES-PATH-032-B",
         "ES-PATH-A1-ABRIR-CERRAR",
+        "ES-PATH-033-B",
+        "ES-PATH-035",
+        "ES-PATH-036",
         "ES-PATH-A1-COMPRAR",
         "ES-PATH-381-01",
         "ES-PATH-382-01",
@@ -5603,11 +5741,42 @@
         "VERB-PUT": "SPINE-SAY-WHAT-I-DO"
       }
     },
+    "SPINE-NAME-EVERYDAY-THINGS": {
+      "segments": [
+        "ES-PATH-268-ROOM"
+      ],
+      "omits": [],
+      "relocates": {}
+    },
     "SPINE-SAY-WHAT-I-HAVE-AND-CAN-DO": {
       "segments": [
         "ES-PATH-A1-TENER",
         "ES-PATH-030-ABILITY-CH11",
         "ES-PATH-389-01"
+      ],
+      "omits": [],
+      "relocates": {}
+    },
+    "SPINE-SAY-WHAT-I-LIKE": {
+      "segments": [
+        "ES-PATH-031-E-B"
+      ],
+      "omits": [],
+      "relocates": {}
+    },
+    "SPINE-SAY-WHY": {
+      "segments": [
+        "ES-PATH-034-B"
+      ],
+      "omits": [],
+      "relocates": {}
+    },
+    "SPINE-SAY-WHAT-I-WANT": {
+      "segments": [
+        "ES-PATH-042-WANT-CH11",
+        "ES-PATH-042-STEM-CONTRAST-CH11",
+        "ES-PATH-042-CONSOLIDATION-CH11",
+        "ES-PATH-042"
       ],
       "omits": [],
       "relocates": {}
@@ -5644,8 +5813,7 @@
         "ES-PATH-030-YO-GO-CH12",
         "ES-PATH-030-CONSOLIDATION-CH12",
         "ES-PATH-030-PONER-CH13",
-        "ES-PATH-030-SALIR-CH13",
-        "ES-PATH-030-VENIR-CH13",
+        "ES-PATH-030-VENIR-CH13-B",
         "ES-PATH-030-CONSOLIDATION-CH13",
         "ES-PATH-042-CMD-TU",
         "ES-PATH-042-CMD-EIGHT",
@@ -5654,10 +5822,14 @@
         "ES-PATH-042-REVIEW-CMD",
         "ES-PATH-042-SYNTH-CMD",
         "ES-PATH-031",
+        "ES-PATH-031-C",
+        "ES-PATH-031-E",
+        "ES-PATH-031-E-C",
         "ES-PATH-032",
+        "ES-PATH-032-C",
         "ES-PATH-033",
-        "ES-PATH-035",
-        "ES-PATH-036"
+        "ES-PATH-035-B",
+        "ES-PATH-036-B"
       ],
       "omits": [
         "VERB-INFINITIVE",
@@ -5675,16 +5847,6 @@
     "SPINE-NEGATE-AND-ASK": {
       "segments": [
         "ES-PATH-267"
-      ],
-      "omits": [],
-      "relocates": {}
-    },
-    "SPINE-SAY-WHAT-I-WANT": {
-      "segments": [
-        "ES-PATH-042-WANT-CH11",
-        "ES-PATH-042-STEM-CONTRAST-CH11",
-        "ES-PATH-042-CONSOLIDATION-CH11",
-        "ES-PATH-042"
       ],
       "omits": [],
       "relocates": {}
@@ -5736,7 +5898,8 @@
     },
     "SPINE-NARRATE-EVENTS": {
       "segments": [
-        "ES-PATH-034"
+        "ES-PATH-034",
+        "ES-PATH-034-C"
       ],
       "omits": [],
       "relocates": {}
@@ -5767,7 +5930,6 @@
       "segments": [
         "ES-PATH-268-DIRECTION",
         "ES-PATH-268-TICKET",
-        "ES-PATH-268-ROOM",
         "ES-PATH-268-PROBLEM"
       ],
       "omits": [],
@@ -6897,7 +7059,17 @@
       "canDo": "I can retrieve and combine the Spanish material introduced in this part of the path.",
       "prerequisites": [],
       "lessons": [
-        "ES-C35-repaso-tres",
+        "ES-C35-repaso-tres"
+      ]
+    },
+    {
+      "id": "ES-EXT-031-CONSOLIDATION-GUSTAR-B",
+      "stage": "A2",
+      "kind": "supporting",
+      "category": "consolidation",
+      "canDo": "I can retrieve and combine the Spanish material introduced in this part of the path.",
+      "prerequisites": [],
+      "lessons": [
         "ES-C35-sintesis-gustar"
       ]
     },

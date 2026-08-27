@@ -1,19 +1,12 @@
 {
   "id": "ES-PATH-030-VENIR-CH13",
-  "spine_node": "SPINE-SAY-WHAT-I-DO",
+  "spine_node": "SPINE-NAME-EVERYDAY-ACTIONS",
   "lessons": [
-    "ES-C13-venir",
-    "ES-C13-repaso-yo-go",
-    "ES-C13-sintesis-yo-go",
-    "ES-C13-plurales-cambio",
-    "ES-C13-plurales-yo-go",
-    "ES-C13-sintesis-derivar"
+    "ES-C13-venir"
   ],
   "before": [],
   "inline": [
-    "ES-EXT-030-VENIR-CH13",
-    "ES-EXT-030-CONSOLIDATION-YOGO",
-    "ES-EXT-030-DERIVE-PLURALS"
+    "ES-EXT-030-VENIR-CH13"
   ],
   "after": []
 }

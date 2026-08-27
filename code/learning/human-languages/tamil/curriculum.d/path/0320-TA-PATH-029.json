@@ -1,0 +1,11 @@
+{
+  "id": "TA-PATH-029",
+  "spine_node": "SPINE-SAY-WHAT-I-DO",
+  "lessons": [
+    "TA-C33-ninai",
+    "TA-C33-puri"
+  ],
+  "before": [],
+  "inline": [],
+  "after": []
+}

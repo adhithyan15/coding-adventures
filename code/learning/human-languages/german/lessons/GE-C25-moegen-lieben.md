@@ -1,7 +1,7 @@
 ---
 schema_version: 2
 id: GE-C25-moegen-lieben
-spine_node: SPINE-SAY-WHAT-I-DO
+spine_node: SPINE-SAY-WHAT-I-LIKE
 sequence: 780
 chapter: 25
 type: word

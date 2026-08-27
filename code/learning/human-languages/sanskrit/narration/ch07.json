@@ -4,7 +4,7 @@
   "chapter": 7,
   "title": "The Core Verbs",
   "drivablePrefix": 6,
-  "sourceHash": "fnv1a64:ff231d44e04fb65e",
+  "sourceHash": "fnv1a64:8b6a479b95c7195b",
   "lessons": [
     {
       "id": "SA-C07-asti",
@@ -361,7 +361,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:e8accb66197c17c2",
+      "sourceHash": "fnv1a64:17453d0de2125281",
       "notice": null,
       "blocks": [
         {

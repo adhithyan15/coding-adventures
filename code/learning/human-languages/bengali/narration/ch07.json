@@ -4,7 +4,7 @@
   "chapter": 7,
   "title": "The Core Verbs",
   "drivablePrefix": 6,
-  "sourceHash": "fnv1a64:38b195962d6a8ad2",
+  "sourceHash": "fnv1a64:1d694b233788553e",
   "lessons": [
     {
       "id": "BN-C07-howa",
@@ -331,7 +331,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:7bfc517583c9cf08",
+      "sourceHash": "fnv1a64:9ba19014092357d3",
       "notice": null,
       "blocks": [
         {

@@ -1,0 +1,12 @@
+{
+  "id": "ML-PATH-028-B",
+  "spine_node": "SPINE-NAME-EVERYDAY-ACTIONS",
+  "lessons": [
+    "ML-C34-codikkuka"
+  ],
+  "before": [],
+  "inline": [
+    "ML-EXT-028-DOING-VERBS-B"
+  ],
+  "after": []
+}

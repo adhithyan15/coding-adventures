@@ -1,0 +1,14 @@
+{
+  "id": "TA-PATH-028-C",
+  "spine_node": "SPINE-SAY-WHAT-I-DO",
+  "lessons": [
+    "TA-C32-saappidu",
+    "TA-C32-paar",
+    "TA-C32-teri"
+  ],
+  "before": [],
+  "inline": [
+    "TA-EXT-028-CORE-VERBS-C"
+  ],
+  "after": []
+}

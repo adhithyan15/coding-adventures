@@ -1,7 +1,7 @@
 ---
 schema_version: 2
 id: BN-C09-jijnasa-kora
-spine_node: SPINE-SAY-WHAT-I-DO
+spine_node: SPINE-NAME-EVERYDAY-ACTIONS
 sequence: 610
 chapter: 9
 type: word

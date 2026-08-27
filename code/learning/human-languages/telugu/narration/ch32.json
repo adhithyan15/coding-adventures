@@ -4,7 +4,7 @@
   "chapter": 32,
   "title": "The Core Verbs",
   "drivablePrefix": 6,
-  "sourceHash": "fnv1a64:a3d9e2ddefa342d5",
+  "sourceHash": "fnv1a64:f32cac8bd024436e",
   "lessons": [
     {
       "id": "TE-C32-undu",
@@ -349,7 +349,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:6260299ebab73314",
+      "sourceHash": "fnv1a64:51834ca11921f22b",
       "notice": null,
       "blocks": [
         {

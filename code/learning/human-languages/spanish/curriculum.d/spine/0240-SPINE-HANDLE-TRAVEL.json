@@ -1,0 +1,9 @@
+{
+  "segments": [
+    "ES-PATH-268-DIRECTION",
+    "ES-PATH-268-TICKET",
+    "ES-PATH-268-PROBLEM"
+  ],
+  "omits": [],
+  "relocates": {}
+}

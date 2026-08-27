@@ -3,11 +3,7 @@
   "spine_node": "SPINE-SAY-WHAT-I-DO",
   "lessons": [
     "BN-C07-howa",
-    "BN-C07-jaowa",
-    "BN-C07-asha",
-    "BN-C07-khaowa",
-    "BN-C07-dekha",
-    "BN-C07-jana"
+    "BN-C07-jaowa"
   ],
   "before": [],
   "inline": [

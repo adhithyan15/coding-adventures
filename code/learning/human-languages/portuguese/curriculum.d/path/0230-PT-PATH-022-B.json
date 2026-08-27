@@ -1,0 +1,12 @@
+{
+  "id": "PT-PATH-022-B",
+  "spine_node": "SPINE-NAME-EVERYDAY-ACTIONS",
+  "lessons": [
+    "PT-C18-vir"
+  ],
+  "before": [],
+  "inline": [
+    "PT-EXT-022-LANGUAGE-SPECIFIC-B"
+  ],
+  "after": []
+}

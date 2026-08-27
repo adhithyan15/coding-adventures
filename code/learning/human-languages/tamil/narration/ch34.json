@@ -4,7 +4,7 @@
   "chapter": 34,
   "title": "Four Verbs Between People",
   "drivablePrefix": 0,
-  "sourceHash": "fnv1a64:7389731691de483a",
+  "sourceHash": "fnv1a64:56d8a698540deca8",
   "lessons": [
     {
       "id": "TA-C34-edu",
@@ -191,7 +191,7 @@
       "modalityReasons": [
         "script-block"
       ],
-      "sourceHash": "fnv1a64:f5e3b74b5b3bf025",
+      "sourceHash": "fnv1a64:6210edd64a460ae2",
       "notice": {
         "modality": "sight",
         "needs": [
@@ -728,7 +728,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:d9826b5358141478",
+      "sourceHash": "fnv1a64:0e2378258f39c8f6",
       "notice": null,
       "blocks": [
         {

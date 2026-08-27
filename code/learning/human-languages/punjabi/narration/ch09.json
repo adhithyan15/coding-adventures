@@ -4,7 +4,7 @@
   "chapter": 9,
   "title": "Taking, Asking, Helping, and What Pleases You",
   "drivablePrefix": 0,
-  "sourceHash": "fnv1a64:01d0ba06d4ae01a9",
+  "sourceHash": "fnv1a64:a5d3077984886e8a",
   "lessons": [
     {
       "id": "PA-C09-laina",
@@ -186,7 +186,7 @@
       "modalityReasons": [
         "script-block"
       ],
-      "sourceHash": "fnv1a64:64526add00dafcd0",
+      "sourceHash": "fnv1a64:c6326a269d01dcf7",
       "notice": {
         "modality": "sight",
         "needs": [
@@ -566,7 +566,7 @@
       "modalityReasons": [
         "script-block"
       ],
-      "sourceHash": "fnv1a64:cf1e6755d4424a40",
+      "sourceHash": "fnv1a64:dd55d6ba97fead62",
       "notice": {
         "modality": "sight",
         "needs": [

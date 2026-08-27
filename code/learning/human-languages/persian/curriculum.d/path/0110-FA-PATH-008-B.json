@@ -1,0 +1,11 @@
+{
+  "id": "FA-PATH-008-B",
+  "spine_node": "SPINE-NAME-EVERYDAY-ACTIONS",
+  "lessons": [
+    "FA-C07-khandan",
+    "FA-C07-neveshtan"
+  ],
+  "before": [],
+  "inline": [],
+  "after": []
+}

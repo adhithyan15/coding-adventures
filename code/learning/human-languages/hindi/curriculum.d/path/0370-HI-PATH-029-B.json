@@ -1,0 +1,11 @@
+{
+  "id": "HI-PATH-029-B",
+  "spine_node": "SPINE-NAME-EVERYDAY-ACTIONS",
+  "lessons": [
+    "HI-C34-padhna",
+    "HI-C34-likhna"
+  ],
+  "before": [],
+  "inline": [],
+  "after": []
+}

@@ -1,0 +1,12 @@
+{
+  "id": "ML-PATH-028-C",
+  "spine_node": "SPINE-SAY-WHAT-I-DO",
+  "lessons": [
+    "ML-C34-sahaayikkuka"
+  ],
+  "before": [],
+  "inline": [
+    "ML-EXT-028-DOING-VERBS-C"
+  ],
+  "after": []
+}

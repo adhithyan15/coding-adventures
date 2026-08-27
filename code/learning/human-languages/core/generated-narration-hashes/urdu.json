@@ -92,7 +92,7 @@
     {
       "language": "urdu",
       "chapter": 6,
-      "sourceHash": "fnv1a64:94e111bc86ef5d38",
+      "sourceHash": "fnv1a64:522465ff1bc390d9",
       "lessonIds": [
         "UR-C06-hona",
         "UR-C06-jana",
@@ -105,12 +105,12 @@
       "text": "urdu/narration/ch06.txt",
       "json": "urdu/narration/ch06.json",
       "textHash": "fnv1a64:ac88e352a71cb761",
-      "jsonHash": "fnv1a64:6ce3579e4f251d3f"
+      "jsonHash": "fnv1a64:6c103aadf19b9ca8"
     },
     {
       "language": "urdu",
       "chapter": 7,
-      "sourceHash": "fnv1a64:c8278f3017bf9d99",
+      "sourceHash": "fnv1a64:beb2df7fa0469438",
       "lessonIds": [
         "UR-C07-sochna",
         "UR-C07-samajhna",
@@ -122,12 +122,12 @@
       "text": "urdu/narration/ch07.txt",
       "json": "urdu/narration/ch07.json",
       "textHash": "fnv1a64:3e017a5b0b4e6325",
-      "jsonHash": "fnv1a64:9eaa17fdb4518cd0"
+      "jsonHash": "fnv1a64:fe6087b537325312"
     },
     {
       "language": "urdu",
       "chapter": 8,
-      "sourceHash": "fnv1a64:d6961ef47c5a8dd7",
+      "sourceHash": "fnv1a64:13d395d36ba28189",
       "lessonIds": [
         "UR-C08-lena",
         "UR-C08-puchhna",
@@ -139,7 +139,7 @@
       "text": "urdu/narration/ch08.txt",
       "json": "urdu/narration/ch08.json",
       "textHash": "fnv1a64:89bfe5828747af1d",
-      "jsonHash": "fnv1a64:ef09aad11524eba4"
+      "jsonHash": "fnv1a64:e8aa0b11268d8c91"
     },
     {
       "language": "urdu",

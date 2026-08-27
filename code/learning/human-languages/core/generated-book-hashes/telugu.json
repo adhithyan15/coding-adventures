@@ -267,7 +267,7 @@
     {
       "language": "telugu",
       "chapter": 32,
-      "sourceHash": "fnv1a64:855ba93f91154428",
+      "sourceHash": "fnv1a64:525e6054cf773042",
       "lessonIds": [
         "TE-C32-undu",
         "TE-C32-vellu",
@@ -281,7 +281,7 @@
     {
       "language": "telugu",
       "chapter": 33,
-      "sourceHash": "fnv1a64:b0cba9ebee497583",
+      "sourceHash": "fnv1a64:e8cf8b1c5fc5a86f",
       "lessonIds": [
         "TE-C33-anuko",
         "TE-C33-artham-cesuko",
@@ -293,7 +293,7 @@
     {
       "language": "telugu",
       "chapter": 34,
-      "sourceHash": "fnv1a64:232930f4bffa6d93",
+      "sourceHash": "fnv1a64:40033eb742ac09f8",
       "lessonIds": [
         "TE-C34-tiisuko",
         "TE-C34-adugu",
