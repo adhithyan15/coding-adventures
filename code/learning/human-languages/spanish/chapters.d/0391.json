@@ -1,0 +1,21 @@
+{
+  "chapter": 391,
+  "title": "Five Words for Eating Out",
+  "label": "ch:el-menu-y-el-camarero",
+  "canDo": "I can say el menú, el camarero, el postre, el supermercado and el euro, and name five things I meet when I eat out.",
+  "spineNodes": [
+    "SPINE-NAME-EVERYDAY-THINGS"
+  ],
+  "payoff": {
+    "lesson": "ES-C391-euro",
+    "kind": "production",
+    "summary": "Complete ES-C391-euro: name five things I meet when I eat out, and say one thing about each.",
+    "assesses": [
+      "ES-LEX-MENU",
+      "ES-LEX-CAMARERO",
+      "ES-LEX-POSTRE",
+      "ES-LEX-SUPERMERCADO",
+      "ES-LEX-EURO"
+    ]
+  }
+}

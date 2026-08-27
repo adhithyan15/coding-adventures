@@ -5366,3 +5366,115 @@ track is long enough to contain them, so the last lessons are never measured. Me
 that tail explicitly rather than reasoning about it — Spanish's came to exactly two
 atoms, both in the final chapter, and both become blockers the moment anything lands
 after them.
+
+## A duplicate screen must decompose multiword headwords, and a confusability screen must not
+
+Screening a candidate word against the corpus has two independent failure modes, and the
+Spanish A1 exam tranches have now been bitten by both.
+
+**Miss-mode five: a word owned only as a fragment of a multiword headword.** Four
+already-owned traps were already on record, each invisible to a headword-only screen —
+`llevar` inside `ES-C39-traer`, `andar` inside `ES-C36-caminar`, `dar` in the `grammar`
+lesson `ES-C65-di`, `llover` in the `phrase` lesson `ES-C30-llueve`. The fifth is
+different again: **`amigo` is owned by `ES-C09-falsos-amigos`**, whose headword is the
+two-word term of art *falsos amigos*. No headword screen sees it, no atom-id screen sees
+it, and the root ledger does not either. **Only a screen that splits multiword headwords
+into their component words finds it.** Screen on articles, compounds, `+` patterns, U+2026
+ellipsis, and morphology — and treat a fragment as ownership.
+
+**But that same decomposition, applied to CONFUSABILITY, invents drops.** The two
+questions need two indexes and it is tempting to build one:
+
+- *Is this already taught?* — the **wide** index. Fragments count, because a word the
+  corpus utters anywhere is a word the learner has met.
+- *Will a learner conflate this with something we teach?* — the **narrow** index, whole
+  displayed headword forms only. A fragment was never presented as a word, so it cannot be
+  the thing the learner confuses it with.
+
+Conflating them dropped `menor` against `mejor`, where `mejor` occurs only inside the idiom
+*pasar a mejor vida* and is never taught as a word. One index gives a false duplicate or a
+false drop depending on which way you lean it; build both.
+
+## A screen calibrated on surplus changes meaning when the pool becomes the requirement
+
+The Spanish confusability rule — *a same-length pair differing in one position is a drop
+only when the differing position is not the first* — was derived in vocabulary tranche 6,
+which screened roughly a hundred candidates to place thirty-five. Dropping `el codo` there
+cost nothing: a replacement was waiting.
+
+Applied unchanged to an **exam-derived** list, where every entry is on the list because a
+measured item requires it, the identical rule became a veto on passing the exam. Ten of 103
+candidates flagged, and dropping all ten moved a mock from `APTO` to `NO APTO`. Nothing
+about the rule changed. **What changed is that there was no longer anywhere to substitute
+from — and nothing in the rule's statement said it had depended on that.**
+
+The verdict is therefore context-dependent, and must be written down as such:
+
+- **drop** when the pool has surplus;
+- **disambiguate** when the candidate is required.
+
+`tren`/`tres`, `pollo`/`polvo`, `playa`/`plaza`, `costar`/`contar` are minimal pairs, and
+the standard way to teach discrimination is to present the pair and make the contrast the
+lesson. That turns every one of the ten liabilities into an asset. **A screen that always
+drops silently shrinks the curriculum toward whatever is easy to teach**, and it does it
+without ever reporting that it made a curricular decision.
+
+The general form: **any filter tuned against an abundant candidate pool encodes an
+unstated assumption that substitutes exist.** Re-derive its action — not its criterion —
+whenever the pool stops being abundant.
+
+## A hash mismatch with no visible content difference: compare byte counts to line counts
+
+`check:books` failed in CI with `ch394-...tex: generated output is missing or stale`, while the
+identical check passed locally with exit 0. That phrasing reads like a generator bug, and the
+first instinct is to suspect the generator or the environment. It was neither.
+
+**The diagnostic that settled it in one step:** compare each source file's working-tree size to
+its blob size, and compare the difference to the file's line count.
+
+| lesson | worktree | blob | delta | lines |
+|---|---|---|---|---|
+| `ES-C394-guitarra` | 5652 | 5546 | **106** | 106 |
+| `ES-C394-medico` | 5469 | 5354 | **115** | 115 |
+| `ES-C394-universidad` | 5309 | 5309 | 0 | 103 |
+
+**Delta exactly equal to the line count means exactly one byte per line was dropped**, which is
+CRLF in the working tree against LF in the blob. Nothing else produces that signature. The
+generator hashes lesson *sources*, so the hash computed on Windows against CRLF could never match
+the hash CI computes against the LF blobs — and only the chapter containing those files went
+stale, which is why the failure looked oddly narrow.
+
+`.gitattributes` had `text=auto, eol=lf` all along, and `git add` printed
+`CRLF will be replaced by LF the next time Git touches it` for exactly those files. **That warning
+is the whole diagnosis, printed in advance and scrolled past.** Read the add warnings.
+
+## A `--check` gate that reads only the working tree cannot see this class at all
+
+`book-cli --check` regenerates from the working tree and compares to the working tree. When both
+sides carry the same CRLF, it agrees with itself and exits 0 — **the disagreement it needs to
+find is between the working tree and the blob, and it never looks at the blob.** So the gate is
+green locally and red in CI, by construction, for every line-ending or filter-normalization skew.
+
+This is a real blind spot, not merely an operator error: a check that validates one copy against
+itself is vacuous with respect to what will actually be committed. The fix worth considering is
+for `--check` to compare against `git show :path` (the staged blob) rather than the file on disk.
+
+## A filter must be proven against a known-positive input, never only a quiet one
+
+Two filters lied in the same session, both by silently matching the wrong thing while looking healthy.
+
+**`gh pr checks` is TAB-separated and check names contain spaces.** So `awk '$2=="fail"'` tests the
+*second word of the check name* — `message`, `channel`, `17` — and can never equal `fail`. A PR
+monitor built on it reported healthy while a required check was failing. Use `awk -F'\t'`.
+
+**`grep -c $'\r'` does not count carriage returns** where `$'...'` is not expanded: grep receives
+the two characters `\r`, and in a basic regex `\r` is just a literal **r**. Every line containing
+the letter *r* matches — which yields a count *close to the file's line count* and therefore looks
+exactly like a plausible CRLF count. It reported CRLF in all 35 files when only 3 had it, and it
+did so with numbers convincing enough to be quoted in a report. Count bytes with a real tool
+(`node`, `xxd`, `file`) instead.
+
+The general rule: **a filter that has only ever been observed silent has not been observed
+working.** Before trusting one, run it against an input you know is positive and confirm it fires.
+Both bugs above would have died instantly under that test, and both survived because the only
+evidence collected was "it didn't complain."

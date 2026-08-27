@@ -1,0 +1,15 @@
+{
+  "id": "ES-EXT-393-THING",
+  "stage": "A1",
+  "kind": "required",
+  "category": "vocabulary",
+  "canDo": "I can name el ordenador, internet, el correo electrónico, la dirección and la nacionalidad.",
+  "prerequisites": [],
+  "lessons": [
+    "ES-C393-ordenador",
+    "ES-C393-internet",
+    "ES-C393-correo-electronico",
+    "ES-C393-direccion",
+    "ES-C393-nacionalidad"
+  ]
+}

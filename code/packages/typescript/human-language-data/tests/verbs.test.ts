@@ -257,7 +257,7 @@ describe("corpus snapshot", () => {
     // not name yet", which is a question for the taxonomy, not a defect in the
     // track. It has now outgrown `covered`, which is the point at which the
     // question stops being rhetorical.
-    expect(spanish.extras.length).toBe(43); // HL-C128 step 9: 6 -> 7 -- ch258 names subject-verb agreement, which adds one verb-adjacent extra beyond the paradigm set // HL-C152: +5 lessons, +1 chapter — Spanish realizes SPINE-NEGATE-AND-ASK, completing A2 at 5/5 // HL-C157: ayer + hablare close A2
+    expect(spanish.extras.length).toBe(53); // A1 vocabulary tranche 7: 43 -> 53 -- chapters 395-396 author ten everyday verbs (entrar, volver, llegar, perder, necesitar, aprender, cocinar, preferir, funcionar, reparar) as namespaced ES-VERB-* rather than minting canonical concepts, so every one of them lands in extras by construction. The number still measures the same thing: everyday verbs the cross-language core does not name. // HL-C128 step 9: 6 -> 7 -- ch258 names subject-verb agreement, which adds one verb-adjacent extra beyond the paradigm set // HL-C152: +5 lessons, +1 chapter — Spanish realizes SPINE-NEGATE-AND-ASK, completing A2 at 5/5 // HL-C157: ayer + hablare close A2
 
     // THE EIGHT THAT NOBODY TAUGHT. Twenty-three of the forty core verbs were realized by
     // no track anywhere — everyday words like *think*, *read*, *write* and *ask*. Spanish,

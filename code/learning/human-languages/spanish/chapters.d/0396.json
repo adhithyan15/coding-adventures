@@ -1,0 +1,21 @@
+{
+  "chapter": 396,
+  "title": "Five More Everyday Actions",
+  "label": "ch:aprender-y-cocinar",
+  "canDo": "I can say aprender, cocinar, preferir, funcionar and reparar, and name five everyday actions.",
+  "spineNodes": [
+    "SPINE-NAME-EVERYDAY-ACTIONS"
+  ],
+  "payoff": {
+    "lesson": "ES-C396-reparar",
+    "kind": "production",
+    "summary": "Complete ES-C396-reparar: name five everyday actions, and say one thing about each.",
+    "assesses": [
+      "ES-LEX-APRENDER",
+      "ES-LEX-COCINAR",
+      "ES-LEX-PREFERIR",
+      "ES-LEX-FUNCIONAR",
+      "ES-LEX-REPARAR"
+    ]
+  }
+}

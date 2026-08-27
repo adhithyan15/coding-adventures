@@ -1,0 +1,16 @@
+{
+  "id": "ES-PATH-391-01",
+  "spine_node": "SPINE-NAME-EVERYDAY-THINGS",
+  "lessons": [
+    "ES-C391-menu",
+    "ES-C391-camarero",
+    "ES-C391-postre",
+    "ES-C391-supermercado",
+    "ES-C391-euro"
+  ],
+  "before": [],
+  "inline": [
+    "ES-EXT-391-THING"
+  ],
+  "after": []
+}
