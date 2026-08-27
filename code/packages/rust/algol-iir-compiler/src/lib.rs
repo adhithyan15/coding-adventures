@@ -2558,6 +2558,17 @@ impl Compiler {
     }
 
     fn static_integer_scalar_value(&self, node: &GrammarASTNode) -> Option<i64> {
+        if let Some((condition, then_node, else_node)) = self.conditional_expression_parts(node) {
+            return match self.static_boolean_value(condition) {
+                Some(true) => self.static_integer_scalar_value(then_node),
+                Some(false) => self.static_integer_scalar_value(else_node),
+                None => {
+                    let then_value = self.static_integer_scalar_value(then_node)?;
+                    let else_value = self.static_integer_scalar_value(else_node)?;
+                    (then_value == else_value).then_some(then_value)
+                }
+            };
+        }
         if let Some(value) = self.static_standard_integer_value(node) {
             return Some(value);
         }
@@ -10013,6 +10024,31 @@ mod tests {
             2,
             "both runtime conditions must still be evaluated"
         );
+    }
+
+    #[test]
+    fn al4_equal_conditional_integer_subexpressions_preserve_static_snapshots() {
+        let module = compile_source(
+            "begin integer gate, n, saved; n := (if gate = 0 then 40 else 40) + 2; saved := n; n := 9; output(saved + 0.5) end",
+            "test",
+        )
+        .expect("equal conditional integer subexpressions preserve snapshots");
+        let main = module.get_function("main").expect("has main");
+        assert!(main.instructions.iter().any(|instr| instr.op == "jmp_if_false"));
+        assert!(main.instructions.iter().any(|instr| {
+            instr.op == "str_const"
+                && matches!(instr.srcs.first(), Some(Operand::Str(text)) if text == "42.5")
+        }));
+    }
+
+    #[test]
+    fn al4_different_conditional_integer_subexpressions_invalidate_snapshots() {
+        let err = compile_source(
+            "begin integer gate, n; n := (if gate = 0 then 40 else 41) + 2; output(n + 0.5) end",
+            "test",
+        )
+        .expect_err("path-dependent integer subexpressions must remain dynamic");
+        assert!(format!("{err:?}").contains("cannot print a real value"));
     }
 
     #[test]
