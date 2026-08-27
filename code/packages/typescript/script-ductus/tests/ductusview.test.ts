@@ -563,6 +563,8 @@ const URDU_PEH = ductusFor("پ", "urdu-nastaliq")!;
 const urduPehOutline = naskhOutline("پ");
 const URDU_KAF = ductusFor("ک", "urdu-nastaliq")!;
 const urduKafOutline = naskhOutline("ک");
+const URDU_GAF = ductusFor("گ", "urdu-nastaliq")!;
+const urduGafOutline = naskhOutline("گ");
 const URDU_LAM = ductusFor("ل", "urdu-nastaliq")!;
 const urduLamOutline = naskhOutline("ل");
 const URDU_MIM = ductusFor("م", "urdu-nastaliq")!;
@@ -7243,6 +7245,22 @@ describe("Urdu ک — a main-line body followed by its long slash", () => {
     expect(paths.find((path) => path.attrs.class === "ductus__pen")!.attrs.d).toBe(
       penPathD(URDU_KAF.strokes[1], 1),
     );
+  });
+});
+
+describe("Urdu گ — the kāf-family body followed by two slashes", () => {
+  const steps = ductusSteps(URDU_GAF);
+  const strip = ductusFilmstrip(URDU_GAF, urduGafOutline);
+
+  it("places lifts before the long and short slashes", () => {
+    expect(steps.map((step) => step.strokeIndex)).toEqual([0, 0, 1, 2]);
+    expect(steps.map((step) => step.startsAfterLift)).toEqual([false, false, true, true]);
+  });
+
+  it("reports four movements in three strokes", () => {
+    expect(strip.frames).toHaveLength(4);
+    expect(strip.penLifts).toBe(2);
+    expect(strip.summary).toBe("3 strokes · 2 pen lifts · 4 movements");
   });
 });
 
