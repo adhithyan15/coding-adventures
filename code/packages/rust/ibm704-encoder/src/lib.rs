@@ -193,8 +193,11 @@ pub fn unpack_words(program: &[u8]) -> Result<Vec<u64>, DecodeError> {
     }
 
     program
-        .chunks_exact(BYTES_PER_WORD)
-        .map(|chunk| unpack_word([chunk[0], chunk[1], chunk[2], chunk[3], chunk[4]]))
+        .as_chunks::<BYTES_PER_WORD>()
+        .0
+        .iter()
+        .copied()
+        .map(unpack_word)
         .collect()
 }
 
