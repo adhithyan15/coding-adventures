@@ -16,11 +16,7 @@ export default defineConfig({
     // E2E test suites that start real TCP servers don't fight over ports.
     // Each describe block starts its own server on port 0 (OS-assigned).
     pool: "forks",
-    poolOptions: {
-      forks: {
-        singleFork: true,
-      },
-    },
+    singleFork: true,
     environment: "node",
     include: ["tests/**/*.test.ts"],
     // Increase timeout for E2E tests that start real TCP servers.
