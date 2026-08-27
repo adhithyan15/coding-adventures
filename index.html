@@ -1,924 +1,1026 @@
 <!DOCTYPE html>
-<!--
-  Coding Adventures - Landing Page
-  =================================
-  Static root page for:
-  https://adhithyan15.github.io/coding-adventures/
-
-  No build step. No framework. Just one HTML file with inline CSS so the
-  root GitHub Pages deploy can publish it directly.
--->
 <html lang="en">
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="theme-color" content="#15231f">
   <meta
     name="description"
-    content="Coding Adventures is a learning-first computing lab with interactive visualizers, language playgrounds, and browser-based docs spanning transistors, arithmetic, CPUs, parsers, and compilers."
-  />
-  <title>Coding Adventures</title>
+    content="Coding Adventures is a learning-first computing lab: nearly 5,000 packages, 200+ programs, and interactive projects spanning transistors, languages, runtimes, UI systems, and applications."
+  >
+  <meta property="og:type" content="website">
+  <meta property="og:title" content="Coding Adventures — Build the stack">
+  <meta
+    property="og:description"
+    content="A learning-first computing lab where every layer is built to be inspected."
+  >
+  <meta property="og:url" content="https://adhithyan15.github.io/coding-adventures/">
+  <meta property="og:image" content="https://adhithyan15.github.io/coding-adventures/og.jpg">
+  <meta property="og:image:width" content="1731">
+  <meta property="og:image:height" content="909">
+  <meta property="og:image:alt" content="Coding Adventures — Build the stack.">
+  <meta name="twitter:card" content="summary_large_image">
+  <meta name="twitter:image" content="https://adhithyan15.github.io/coding-adventures/og.jpg">
+  <title>Coding Adventures — Build the stack</title>
   <style>
-    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+    *, *::before, *::after { box-sizing: border-box; }
 
     :root {
-      --bg: #09111b;
-      --bg-deep: #060c14;
-      --panel: rgba(14, 24, 39, 0.86);
-      --panel-strong: rgba(18, 31, 50, 0.96);
-      --panel-soft: rgba(20, 36, 57, 0.72);
-      --border: rgba(146, 170, 201, 0.16);
-      --border-strong: rgba(125, 211, 252, 0.24);
-      --text: #ecf3ff;
-      --muted: #9eb0c9;
-      --accent: #7dd3fc;
-      --accent-warm: #f59e0b;
-      --accent-green: #34d399;
-      --shadow: 0 20px 60px rgba(0, 0, 0, 0.32);
-      --radius-lg: 24px;
-      --radius-md: 18px;
-      --radius-sm: 999px;
-      --page-width: 1160px;
+      color-scheme: light;
+      --paper: #f3efe5;
+      --paper-deep: #e7dfd0;
+      --paper-light: #fbf8f1;
+      --ink: #15231f;
+      --ink-soft: #485852;
+      --line: #c8c0b2;
+      --line-strong: #8d948c;
+      --signal: #ff5c35;
+      --signal-dark: #d83c19;
+      --blue: #1f58d6;
+      --blue-pale: #dbe6ff;
+      --mint: #b9e7d2;
+      --acid: #d7ee69;
+      --night: #10211c;
+      --night-soft: #1b3029;
+      --night-text: #f8f4e9;
+      --mono: "SFMono-Regular", Consolas, "Liberation Mono", monospace;
+      --sans: Inter, ui-sans-serif, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+      --serif: Iowan Old Style, "Palatino Linotype", Palatino, Georgia, serif;
+      --page: 1240px;
+      --shadow: 0 18px 50px rgba(25, 35, 31, 0.12);
     }
 
-    html { font-size: 16px; scroll-behavior: smooth; }
+    html { scroll-behavior: smooth; }
 
     body {
-      min-height: 100vh;
-      color: var(--text);
-      font-family: "Segoe UI", Inter, "Helvetica Neue", Arial, sans-serif;
-      line-height: 1.6;
+      margin: 0;
+      color: var(--ink);
       background:
-        radial-gradient(circle at top left, rgba(125, 211, 252, 0.16), transparent 34%),
-        radial-gradient(circle at top right, rgba(245, 158, 11, 0.12), transparent 28%),
-        linear-gradient(180deg, #0b1523 0%, var(--bg) 45%, var(--bg-deep) 100%);
+        linear-gradient(rgba(21, 35, 31, 0.035) 1px, transparent 1px),
+        linear-gradient(90deg, rgba(21, 35, 31, 0.035) 1px, transparent 1px),
+        var(--paper);
+      background-size: 24px 24px;
+      font-family: var(--sans);
+      font-size: 16px;
+      line-height: 1.6;
+      text-rendering: optimizeLegibility;
     }
 
     a { color: inherit; }
 
-    .page {
-      width: min(var(--page-width), calc(100% - 32px));
+    a:focus-visible,
+    button:focus-visible {
+      outline: 3px solid var(--blue);
+      outline-offset: 4px;
+    }
+
+    .skip-link {
+      position: fixed;
+      z-index: 100;
+      top: 12px;
+      left: 12px;
+      padding: 10px 14px;
+      color: white;
+      background: var(--blue);
+      transform: translateY(-160%);
+      transition: transform 150ms ease;
+    }
+
+    .skip-link:focus { transform: translateY(0); }
+
+    .shell {
+      width: min(var(--page), calc(100% - 40px));
       margin: 0 auto;
-      padding: 28px 0 56px;
-    }
-
-    .topbar {
-      display: flex;
-      align-items: center;
-      justify-content: space-between;
-      gap: 16px;
-      margin-bottom: 28px;
-    }
-
-    .logo {
-      display: inline-flex;
-      align-items: center;
-      gap: 12px;
-      text-decoration: none;
-    }
-
-    .logo-mark {
-      width: 42px;
-      height: 42px;
-      border-radius: 14px;
-      display: inline-flex;
-      align-items: center;
-      justify-content: center;
-      background: linear-gradient(135deg, rgba(125, 211, 252, 0.22), rgba(52, 211, 153, 0.2));
-      border: 1px solid rgba(125, 211, 252, 0.24);
-      font-size: 1.1rem;
-    }
-
-    .logo-text {
-      display: flex;
-      flex-direction: column;
-      gap: 2px;
-    }
-
-    .logo-title {
-      font-size: 1rem;
-      font-weight: 700;
-      letter-spacing: -0.02em;
-    }
-
-    .logo-subtitle {
-      font-size: 0.78rem;
-      color: var(--muted);
-      letter-spacing: 0.04em;
-      text-transform: uppercase;
-    }
-
-    .topnav {
-      display: flex;
-      flex-wrap: wrap;
-      gap: 10px;
-    }
-
-    .nav-link,
-    .button {
-      display: inline-flex;
-      align-items: center;
-      justify-content: center;
-      gap: 8px;
-      min-height: 42px;
-      padding: 0 16px;
-      border-radius: var(--radius-sm);
-      border: 1px solid var(--border);
-      text-decoration: none;
-      color: var(--text);
-      background: rgba(255, 255, 255, 0.02);
-      transition: transform 0.15s ease, border-color 0.15s ease, background 0.15s ease;
-    }
-
-    .nav-link:hover,
-    .button:hover,
-    .card:hover {
-      transform: translateY(-2px);
-      border-color: var(--border-strong);
-    }
-
-    .hero {
-      display: grid;
-      grid-template-columns: minmax(0, 1.35fr) minmax(300px, 0.9fr);
-      gap: 28px;
-      padding: 34px;
-      border-radius: 30px;
-      background:
-        linear-gradient(160deg, rgba(255, 255, 255, 0.04), rgba(255, 255, 255, 0.015)),
-        var(--panel);
-      border: 1px solid var(--border);
-      box-shadow: var(--shadow);
-      margin-bottom: 30px;
-      overflow: hidden;
-      position: relative;
-    }
-
-    .hero::after {
-      content: "";
-      position: absolute;
-      inset: auto -80px -90px auto;
-      width: 220px;
-      height: 220px;
-      background: radial-gradient(circle, rgba(125, 211, 252, 0.18), transparent 68%);
-      pointer-events: none;
     }
 
     .eyebrow {
       display: inline-flex;
       align-items: center;
-      gap: 8px;
-      padding: 7px 12px;
-      border-radius: var(--radius-sm);
-      border: 1px solid rgba(125, 211, 252, 0.18);
-      background: rgba(125, 211, 252, 0.08);
-      color: #cfefff;
-      font-size: 0.78rem;
+      gap: 9px;
+      margin: 0 0 14px;
+      font-family: var(--mono);
+      font-size: 0.74rem;
       font-weight: 700;
-      letter-spacing: 0.08em;
+      letter-spacing: 0.12em;
+      line-height: 1.3;
       text-transform: uppercase;
-      margin-bottom: 18px;
     }
 
-    .hero h1 {
-      font-size: clamp(2.4rem, 4vw, 4.5rem);
-      line-height: 1.02;
-      letter-spacing: -0.045em;
-      margin-bottom: 18px;
-      max-width: 12ch;
+    .eyebrow::before {
+      width: 28px;
+      height: 3px;
+      background: var(--signal);
+      content: "";
     }
 
-    .hero h1 .accent {
-      color: var(--accent);
-    }
-
-    .hero-copy {
-      color: var(--muted);
-      font-size: 1.05rem;
-      max-width: 62ch;
-      margin-bottom: 22px;
-    }
-
-    .actions {
-      display: flex;
-      flex-wrap: wrap;
-      gap: 12px;
-      margin-bottom: 26px;
-    }
-
-    .button-primary {
-      background: linear-gradient(135deg, rgba(125, 211, 252, 0.2), rgba(52, 211, 153, 0.16));
-      border-color: rgba(125, 211, 252, 0.34);
-    }
-
-    .hero-notes {
-      display: grid;
-      grid-template-columns: repeat(3, minmax(0, 1fr));
-      gap: 12px;
-    }
-
-    .note {
-      padding: 14px 16px;
-      border-radius: var(--radius-md);
-      background: rgba(255, 255, 255, 0.03);
-      border: 1px solid rgba(255, 255, 255, 0.06);
-    }
-
-    .note-title {
-      font-size: 0.82rem;
-      font-weight: 700;
-      letter-spacing: 0.04em;
-      text-transform: uppercase;
-      color: #d8e7ff;
-      margin-bottom: 6px;
-    }
-
-    .note-text {
-      font-size: 0.9rem;
-      color: var(--muted);
-    }
-
-    .hero-panel {
-      padding: 22px;
-      border-radius: 24px;
-      background: linear-gradient(180deg, rgba(20, 36, 57, 0.92), rgba(12, 20, 32, 0.96));
-      border: 1px solid rgba(255, 255, 255, 0.08);
-      display: flex;
-      flex-direction: column;
-      gap: 18px;
+    .site-header {
       position: relative;
-      z-index: 1;
+      z-index: 10;
+      border-top: 6px solid var(--ink);
+      border-bottom: 1px solid var(--line);
+      background: rgba(243, 239, 229, 0.92);
+      backdrop-filter: blur(16px);
     }
 
-    .panel-kicker {
-      font-size: 0.8rem;
-      font-weight: 700;
-      letter-spacing: 0.08em;
-      text-transform: uppercase;
-      color: var(--accent);
-    }
-
-    .panel-title {
-      font-size: 1.35rem;
-      line-height: 1.2;
-      letter-spacing: -0.03em;
-    }
-
-    .panel-copy {
-      color: var(--muted);
-      font-size: 0.96rem;
-    }
-
-    .panel-list {
-      display: grid;
-      gap: 12px;
-      list-style: none;
-    }
-
-    .panel-list li {
-      padding: 14px 14px 14px 16px;
-      border-radius: 16px;
-      background: rgba(255, 255, 255, 0.03);
-      border: 1px solid rgba(255, 255, 255, 0.06);
-    }
-
-    .panel-list strong {
-      display: block;
-      margin-bottom: 4px;
-      font-size: 0.96rem;
-    }
-
-    .panel-list span {
-      color: var(--muted);
-      font-size: 0.9rem;
-    }
-
-    .section {
-      margin-top: 34px;
-    }
-
-    .section-header {
+    .masthead {
+      min-height: 84px;
       display: flex;
-      flex-wrap: wrap;
+      align-items: center;
       justify-content: space-between;
-      align-items: end;
-      gap: 12px;
-      margin-bottom: 18px;
+      gap: 28px;
     }
 
-    .section-label {
-      font-size: 0.8rem;
-      font-weight: 700;
-      letter-spacing: 0.1em;
-      text-transform: uppercase;
-      color: var(--accent);
-      margin-bottom: 8px;
-    }
-
-    .section-title {
-      font-size: clamp(1.5rem, 3vw, 2.3rem);
-      line-height: 1.1;
-      letter-spacing: -0.04em;
-    }
-
-    .section-copy {
-      color: var(--muted);
-      max-width: 62ch;
-      font-size: 0.98rem;
-    }
-
-    .cards {
-      display: grid;
-      grid-template-columns: repeat(2, minmax(0, 1fr));
-      gap: 18px;
-    }
-
-    .card {
-      position: relative;
-      display: flex;
-      flex-direction: column;
-      gap: 16px;
-      min-height: 248px;
-      padding: 22px;
-      border-radius: 24px;
-      background:
-        linear-gradient(180deg, rgba(255, 255, 255, 0.02), rgba(255, 255, 255, 0)),
-        var(--panel-soft);
-      border: 1px solid var(--border);
-      box-shadow: 0 16px 40px rgba(0, 0, 0, 0.18);
+    .brand {
+      display: inline-flex;
+      align-items: center;
+      gap: 14px;
       text-decoration: none;
-      transition: transform 0.15s ease, border-color 0.15s ease, background 0.15s ease;
+    }
+
+    .brand-mark {
+      width: 44px;
+      height: 44px;
+      display: grid;
+      place-items: center;
+      color: var(--paper-light);
+      background: var(--ink);
+      border-radius: 50%;
+      font-family: var(--mono);
+      font-weight: 800;
+      letter-spacing: -0.08em;
+      transform: rotate(-7deg);
+    }
+
+    .brand-copy { display: grid; line-height: 1.1; }
+    .brand-name { font-weight: 850; letter-spacing: -0.04em; }
+    .brand-note {
+      margin-top: 5px;
+      color: var(--ink-soft);
+      font-family: var(--mono);
+      font-size: 0.67rem;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+    }
+
+    .site-nav {
+      display: flex;
+      align-items: center;
+      justify-content: flex-end;
+      gap: 6px;
+      font-size: 0.88rem;
+      font-weight: 700;
+    }
+
+    .site-nav a {
+      padding: 9px 11px;
+      border-radius: 999px;
+      text-decoration: none;
+    }
+
+    .site-nav a:hover { background: var(--paper-deep); }
+
+    .site-nav .github-link {
+      margin-left: 6px;
+      padding-inline: 16px;
+      color: var(--night-text);
+      background: var(--ink);
+    }
+
+    .site-nav .github-link:hover { background: var(--night-soft); }
+
+    .hero {
+      position: relative;
+      padding: 72px 0 46px;
       overflow: hidden;
     }
 
-    .card::before {
-      content: "";
+    .hero::before {
       position: absolute;
-      inset: 0 auto auto 0;
-      width: 100%;
-      height: 3px;
-      background: linear-gradient(90deg, rgba(125, 211, 252, 0), rgba(125, 211, 252, 0.9), rgba(245, 158, 11, 0.72));
-      opacity: 0.9;
+      z-index: -1;
+      top: -190px;
+      right: -100px;
+      width: 520px;
+      height: 520px;
+      border: 80px solid rgba(255, 92, 53, 0.12);
+      border-radius: 50%;
+      content: "";
     }
 
-    .card-meta {
-      display: flex;
+    .hero-grid {
+      display: grid;
+      grid-template-columns: minmax(0, 1.45fr) minmax(350px, 0.72fr);
+      gap: 70px;
       align-items: center;
-      justify-content: space-between;
-      gap: 12px;
     }
 
-    .card-badge {
+    .hero h1 {
+      max-width: 880px;
+      margin: 0;
+      font-family: var(--serif);
+      font-size: clamp(3.6rem, 8vw, 7.8rem);
+      font-weight: 500;
+      letter-spacing: -0.075em;
+      line-height: 0.82;
+    }
+
+    .hero h1 em {
+      display: block;
+      color: var(--signal-dark);
+      font-weight: 500;
+    }
+
+    .hero-intro {
+      max-width: 690px;
+      margin: 34px 0 0;
+      color: var(--ink-soft);
+      font-size: clamp(1.05rem, 2vw, 1.28rem);
+      line-height: 1.55;
+    }
+
+    .hero-actions {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 12px;
+      margin-top: 30px;
+    }
+
+    .button {
       display: inline-flex;
       align-items: center;
-      gap: 8px;
-      padding: 6px 10px;
-      border-radius: var(--radius-sm);
-      background: rgba(125, 211, 252, 0.1);
-      border: 1px solid rgba(125, 211, 252, 0.14);
-      color: #d7f2ff;
-      font-size: 0.78rem;
+      justify-content: center;
+      gap: 10px;
+      min-height: 48px;
+      padding: 0 19px;
+      border: 1px solid var(--ink);
+      border-radius: 2px;
+      font-weight: 800;
+      text-decoration: none;
+      box-shadow: 5px 5px 0 var(--ink);
+      transition: transform 130ms ease, box-shadow 130ms ease;
+    }
+
+    .button:hover {
+      transform: translate(2px, 2px);
+      box-shadow: 3px 3px 0 var(--ink);
+    }
+
+    .button-primary { color: white; background: var(--blue); }
+    .button-secondary { background: var(--paper-light); }
+
+    .stack-map {
+      position: relative;
+      padding: 20px;
+      border: 1px solid var(--ink);
+      background: rgba(251, 248, 241, 0.86);
+      box-shadow: 12px 12px 0 var(--mint);
+    }
+
+    .stack-map::before {
+      position: absolute;
+      top: -8px;
+      left: 24px;
+      width: 92px;
+      height: 15px;
+      background: var(--acid);
+      content: "";
+      transform: rotate(-2deg);
+    }
+
+    .map-head {
+      display: flex;
+      align-items: baseline;
+      justify-content: space-between;
+      gap: 16px;
+      padding: 4px 0 16px;
+      border-bottom: 1px solid var(--line);
+      font-family: var(--mono);
+      font-size: 0.74rem;
       font-weight: 700;
-      letter-spacing: 0.04em;
       text-transform: uppercase;
     }
 
-    .card-arrow {
-      color: var(--muted);
-      font-size: 1.2rem;
+    .map-head span:last-child { color: var(--signal-dark); }
+
+    .stack-list {
+      margin: 0;
+      padding: 8px 0 0;
+      list-style: none;
+      counter-reset: layer;
     }
 
-    .card-title {
-      font-size: 1.34rem;
-      font-weight: 700;
-      line-height: 1.15;
-      letter-spacing: -0.03em;
+    .stack-list li {
+      counter-increment: layer;
+      display: grid;
+      grid-template-columns: 36px 1fr auto;
+      gap: 12px;
+      align-items: center;
+      min-height: 50px;
+      border-bottom: 1px dashed var(--line);
+      font-weight: 800;
     }
 
-    .card-desc {
-      color: var(--muted);
-      font-size: 0.95rem;
-      flex: 1;
+    .stack-list li:last-child { border-bottom: 0; }
+
+    .stack-list li::before {
+      color: var(--ink-soft);
+      font-family: var(--mono);
+      font-size: 0.72rem;
+      content: "0" counter(layer);
     }
 
-    .tags {
+    .stack-list small {
+      color: var(--ink-soft);
+      font-family: var(--mono);
+      font-size: 0.65rem;
+      font-weight: 600;
+      text-transform: uppercase;
+    }
+
+    .snapshot {
+      padding: 0 0 76px;
+    }
+
+    .snapshot-grid {
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      border: 1px solid var(--ink);
+      background: var(--paper-light);
+      box-shadow: var(--shadow);
+    }
+
+    .stat {
+      min-height: 128px;
+      padding: 24px;
+      border-right: 1px solid var(--line);
+    }
+
+    .stat:last-child { border-right: 0; }
+
+    .stat strong {
+      display: block;
+      font-family: var(--serif);
+      font-size: clamp(2rem, 4vw, 3.6rem);
+      font-weight: 500;
+      letter-spacing: -0.06em;
+      line-height: 1;
+    }
+
+    .stat span {
+      display: block;
+      margin-top: 11px;
+      color: var(--ink-soft);
+      font-family: var(--mono);
+      font-size: 0.69rem;
+      line-height: 1.4;
+      text-transform: uppercase;
+    }
+
+    .snapshot-note {
+      display: flex;
+      justify-content: space-between;
+      gap: 24px;
+      margin: 14px 2px 0;
+      color: var(--ink-soft);
+      font-family: var(--mono);
+      font-size: 0.68rem;
+      text-transform: uppercase;
+    }
+
+    .section { padding: 92px 0; }
+
+    .section-head {
+      display: grid;
+      grid-template-columns: minmax(0, 0.8fr) minmax(320px, 0.55fr);
+      gap: 64px;
+      align-items: end;
+      margin-bottom: 42px;
+    }
+
+    .section h2 {
+      margin: 0;
+      font-family: var(--serif);
+      font-size: clamp(2.8rem, 6vw, 5.4rem);
+      font-weight: 500;
+      letter-spacing: -0.065em;
+      line-height: 0.94;
+    }
+
+    .section-lede {
+      margin: 0;
+      color: var(--ink-soft);
+      font-size: 1.04rem;
+    }
+
+    .trails { background: var(--night); color: var(--night-text); }
+    .trails .section-lede { color: #b8c9c1; }
+    .trails .eyebrow { color: var(--acid); }
+
+    .trail-grid {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 18px;
+    }
+
+    .trail-card {
+      position: relative;
+      min-height: 390px;
+      display: flex;
+      flex-direction: column;
+      padding: 28px;
+      border: 1px solid #50655d;
+      background: var(--night-soft);
+      overflow: hidden;
+    }
+
+    .trail-card::after {
+      position: absolute;
+      right: -55px;
+      bottom: -55px;
+      width: 175px;
+      height: 175px;
+      border: 35px solid rgba(215, 238, 105, 0.13);
+      border-radius: 50%;
+      content: "";
+    }
+
+    .trail-number {
+      color: var(--acid);
+      font-family: var(--mono);
+      font-size: 0.75rem;
+      letter-spacing: 0.1em;
+    }
+
+    .trail-card h3 {
+      max-width: 9ch;
+      margin: 64px 0 16px;
+      font-family: var(--serif);
+      font-size: clamp(2.1rem, 4vw, 3.5rem);
+      font-weight: 500;
+      letter-spacing: -0.055em;
+      line-height: 0.95;
+    }
+
+    .trail-card p { max-width: 34ch; margin: 0; color: #b8c9c1; }
+
+    .trail-links {
+      position: relative;
+      z-index: 1;
       display: flex;
       flex-wrap: wrap;
       gap: 8px;
+      margin-top: auto;
+      padding-top: 28px;
+    }
+
+    .trail-links a {
+      padding: 6px 10px;
+      border: 1px solid #5d736a;
+      border-radius: 999px;
+      color: var(--night-text);
+      font-family: var(--mono);
+      font-size: 0.68rem;
+      text-decoration: none;
+      text-transform: uppercase;
+    }
+
+    .trail-links a:hover { color: var(--night); background: var(--acid); border-color: var(--acid); }
+
+    .labs { background: var(--paper); }
+
+    .lab-grid {
+      display: grid;
+      grid-template-columns: repeat(12, 1fr);
+      gap: 14px;
+    }
+
+    .lab-card {
+      grid-column: span 4;
+      min-height: 250px;
+      display: flex;
+      flex-direction: column;
+      padding: 22px;
+      border: 1px solid var(--line-strong);
+      background: rgba(251, 248, 241, 0.82);
+      text-decoration: none;
+      transition: background 150ms ease, transform 150ms ease, box-shadow 150ms ease;
+    }
+
+    .lab-card:hover {
+      background: var(--paper-light);
+      box-shadow: 7px 7px 0 var(--blue-pale);
+      transform: translate(-2px, -2px);
+    }
+
+    .lab-card.featured { grid-column: span 6; min-height: 300px; }
+
+    .card-top {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 18px;
+      color: var(--ink-soft);
+      font-family: var(--mono);
+      font-size: 0.66rem;
+      font-weight: 700;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+    }
+
+    .card-arrow { color: var(--signal-dark); font-size: 1rem; }
+
+    .lab-card h3 {
+      margin: 50px 0 10px;
+      font-family: var(--serif);
+      font-size: clamp(1.65rem, 3vw, 2.6rem);
+      font-weight: 500;
+      letter-spacing: -0.045em;
+      line-height: 1;
+    }
+
+    .lab-card.featured h3 { font-size: clamp(2.3rem, 4vw, 3.8rem); }
+    .lab-card p { max-width: 46ch; margin: 0; color: var(--ink-soft); font-size: 0.91rem; }
+
+    .tag-row {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 6px;
+      margin-top: auto;
+      padding-top: 24px;
     }
 
     .tag {
-      display: inline-flex;
-      align-items: center;
-      min-height: 28px;
-      padding: 0 10px;
-      border-radius: var(--radius-sm);
-      background: rgba(255, 255, 255, 0.04);
-      border: 1px solid rgba(255, 255, 255, 0.08);
-      color: #d5e3f8;
-      font-size: 0.76rem;
-      font-weight: 600;
-      letter-spacing: 0.02em;
+      padding: 4px 8px;
+      border-radius: 999px;
+      background: var(--paper-deep);
+      font-family: var(--mono);
+      font-size: 0.62rem;
+      font-weight: 700;
+      text-transform: uppercase;
     }
 
-    .info-grid {
+    .forme { padding: 110px 0; background: var(--signal); color: #1b1d19; }
+
+    .forme-layout {
       display: grid;
-      grid-template-columns: repeat(3, minmax(0, 1fr));
+      grid-template-columns: minmax(0, 0.7fr) minmax(500px, 1fr);
+      gap: 72px;
+      align-items: start;
+    }
+
+    .forme h2 { max-width: 8ch; }
+    .forme-copy { max-width: 48ch; margin: 24px 0 0; font-size: 1.08rem; }
+
+    .forme-actions { display: flex; flex-wrap: wrap; gap: 12px; margin-top: 28px; }
+    .forme .button-primary { color: white; background: var(--ink); }
+    .forme .button-secondary { background: transparent; }
+
+    .pipeline {
+      margin: 0;
+      padding: 0;
+      border-top: 1px solid rgba(21, 35, 31, 0.7);
+      list-style: none;
+      counter-reset: stage;
+    }
+
+    .pipeline li {
+      counter-increment: stage;
+      display: grid;
+      grid-template-columns: 48px 1fr auto;
       gap: 18px;
-      margin-top: 18px;
+      align-items: center;
+      min-height: 76px;
+      border-bottom: 1px solid rgba(21, 35, 31, 0.42);
     }
 
-    .info-card {
-      padding: 22px;
-      border-radius: 22px;
-      background: rgba(14, 24, 39, 0.82);
-      border: 1px solid var(--border);
+    .pipeline li::before {
+      font-family: var(--mono);
+      font-size: 0.72rem;
+      font-weight: 800;
+      content: "0" counter(stage);
     }
 
-    .info-card h3 {
-      font-size: 1.05rem;
-      letter-spacing: -0.02em;
-      margin-bottom: 10px;
+    .pipeline strong { font-size: 1.08rem; }
+    .pipeline span { font-family: var(--mono); font-size: 0.66rem; text-transform: uppercase; }
+
+    .forme-status {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 1px;
+      margin-top: 24px;
+      border: 1px solid rgba(21, 35, 31, 0.65);
+      background: rgba(21, 35, 31, 0.5);
     }
 
-    .info-card p {
-      color: var(--muted);
-      font-size: 0.94rem;
+    .status-cell { min-height: 104px; padding: 17px; background: var(--signal); }
+    .status-cell strong { display: block; font-family: var(--serif); font-size: 1.7rem; line-height: 1; }
+    .status-cell span { display: block; margin-top: 9px; font-family: var(--mono); font-size: 0.62rem; text-transform: uppercase; }
+
+    .workshop { background: var(--paper-light); }
+
+    .workshop-grid {
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      gap: 1px;
+      border: 1px solid var(--line);
+      background: var(--line);
     }
 
-    footer {
-      margin-top: 38px;
-      padding: 20px 0 8px;
-      border-top: 1px solid var(--border);
-      display: flex;
-      flex-wrap: wrap;
-      justify-content: space-between;
-      gap: 12px;
-      color: var(--muted);
-      font-size: 0.92rem;
+    .workshop-item { min-height: 178px; padding: 22px; background: var(--paper-light); }
+    .workshop-item span { font-family: var(--mono); font-size: 0.65rem; font-weight: 700; text-transform: uppercase; }
+    .workshop-item h3 { margin: 34px 0 8px; font-family: var(--serif); font-size: 1.65rem; font-weight: 500; letter-spacing: -0.04em; }
+    .workshop-item p { margin: 0; color: var(--ink-soft); font-size: 0.86rem; }
+    .workshop-item a { text-decoration-thickness: 1px; text-underline-offset: 3px; }
+
+    .site-footer { padding: 42px 0; color: var(--night-text); background: var(--night); }
+
+    .footer-grid {
+      display: grid;
+      grid-template-columns: 1fr auto;
+      gap: 30px;
+      align-items: end;
     }
 
-    footer a {
-      color: var(--text);
-      text-decoration: none;
+    .footer-line {
+      max-width: 780px;
+      margin: 0;
+      font-family: var(--serif);
+      font-size: clamp(1.9rem, 4vw, 3.5rem);
+      letter-spacing: -0.05em;
+      line-height: 1;
     }
 
-    footer a:hover { text-decoration: underline; }
+    .footer-meta { color: #a9bbb3; font-family: var(--mono); font-size: 0.66rem; text-align: right; text-transform: uppercase; }
 
     @media (max-width: 980px) {
-      .hero,
-      .cards,
-      .info-grid,
-      .hero-notes {
-        grid-template-columns: 1fr;
-      }
-
-      .hero h1 {
-        max-width: none;
-      }
+      .hero-grid, .forme-layout { grid-template-columns: 1fr; }
+      .hero-grid { gap: 48px; }
+      .stack-map { max-width: 620px; }
+      .trail-grid { grid-template-columns: 1fr; }
+      .trail-card { min-height: 310px; }
+      .lab-card { grid-column: span 6; }
+      .forme-layout { gap: 50px; }
+      .workshop-grid { grid-template-columns: repeat(2, 1fr); }
     }
 
     @media (max-width: 720px) {
-      .page { width: min(var(--page-width), calc(100% - 22px)); }
+      .shell { width: min(100% - 24px, var(--page)); }
+      .masthead { min-height: 72px; }
+      .brand-note { display: none; }
+      .site-nav a:not(.github-link) { display: none; }
+      .hero { padding-top: 52px; }
+      .hero h1 { font-size: clamp(3.2rem, 17vw, 5rem); }
+      .snapshot-grid { grid-template-columns: repeat(2, 1fr); }
+      .stat:nth-child(2) { border-right: 0; }
+      .stat:nth-child(-n+2) { border-bottom: 1px solid var(--line); }
+      .snapshot-note { display: block; }
+      .snapshot-note span { display: block; margin-top: 5px; }
+      .section { padding: 72px 0; }
+      .section-head { grid-template-columns: 1fr; gap: 20px; }
+      .lab-card, .lab-card.featured { grid-column: 1 / -1; min-height: 245px; }
+      .forme { padding: 80px 0; }
+      .forme-layout { grid-template-columns: minmax(0, 1fr); }
+      .pipeline li { grid-template-columns: 38px 1fr; }
+      .pipeline li span { display: none; }
+      .forme-status { grid-template-columns: 1fr; }
+      .workshop-grid { grid-template-columns: 1fr; }
+      .footer-grid { grid-template-columns: 1fr; }
+      .footer-meta { text-align: left; }
+    }
 
-      .topbar,
-      .section-header,
-      footer {
-        flex-direction: column;
-        align-items: flex-start;
-      }
-
-      .hero {
-        padding: 24px;
-        border-radius: 24px;
-      }
+    @media (prefers-reduced-motion: reduce) {
+      html { scroll-behavior: auto; }
+      *, *::before, *::after { transition-duration: 0.01ms !important; }
     }
   </style>
 </head>
 <body>
-  <main class="page">
-    <div class="topbar">
-      <a class="logo" href="/coding-adventures/">
-        <span class="logo-mark" aria-hidden="true">CA</span>
-        <span class="logo-text">
-          <span class="logo-title">coding-adventures</span>
-          <span class="logo-subtitle">Interactive computing lab</span>
+  <a class="skip-link" href="#main">Skip to content</a>
+
+  <header class="site-header">
+    <div class="shell masthead">
+      <a class="brand" href="/coding-adventures/" aria-label="Coding Adventures home">
+        <span class="brand-mark" aria-hidden="true">CA</span>
+        <span class="brand-copy">
+          <span class="brand-name">coding-adventures</span>
+          <span class="brand-note">An inspectable computing lab</span>
         </span>
       </a>
-      <nav class="topnav" aria-label="Primary">
-        <a class="nav-link" href="#stack">Explore the stack</a>
-        <a class="nav-link" href="#languages">Languages and tooling</a>
-        <a class="nav-link" href="#apps">Apps and experiments</a>
-        <a
-          class="nav-link"
-          href="https://github.com/adhithyan15/coding-adventures"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          GitHub repo
-        </a>
+      <nav class="site-nav" aria-label="Primary navigation">
+        <a href="#paths">Learning paths</a>
+        <a href="#labs">Live labs</a>
+        <a href="#forme">Forme</a>
+        <a class="github-link" href="https://github.com/adhithyan15/coding-adventures">View source <span aria-hidden="true">↗</span></a>
       </nav>
     </div>
+  </header>
 
+  <main id="main">
     <section class="hero">
-      <div>
-        <div class="eyebrow">Learning-first monorepo</div>
-        <h1>From vacuum tubes to <span class="accent">languages</span> you can run.</h1>
-        <p class="hero-copy">
-          Coding Adventures is a hands-on map of the computing stack. The repo mixes
-          visualizers, playgrounds, specs, and real packages so you can trace how ideas
-          connect across hardware, arithmetic, CPUs, parsers, runtimes, and developer tools.
-        </p>
-        <div class="actions">
-          <a class="button button-primary" href="#stack">Start with the stack</a>
-          <a class="button" href="#languages">Open the playgrounds</a>
-        </div>
-        <div class="hero-notes">
-          <div class="note">
-            <div class="note-title">Build by layers</div>
-            <div class="note-text">Start with transistors, then climb into gates, arithmetic, processors, and compilers.</div>
-          </div>
-          <div class="note">
-            <div class="note-title">Learn by running</div>
-            <div class="note-text">Most pages are interactive, so the concepts move while you inspect them.</div>
-          </div>
-          <div class="note">
-            <div class="note-title">Follow the repo</div>
-            <div class="note-text">Every app sits on top of the same monorepo of specs, packages, and experiments.</div>
-          </div>
-        </div>
-      </div>
-
-      <aside class="hero-panel">
-        <div class="panel-kicker">What lives here</div>
-        <div class="panel-title">A study track, not just a link list.</div>
-        <p class="panel-copy">
-          The homepage now reflects the newer projects already deployed to GitHub Pages,
-          especially the CPU and arithmetic work that was missing from the old root page.
-        </p>
-        <ul class="panel-list">
-          <li>
-            <strong>Hardware track</strong>
-            <span>Vacuum tubes, transistors, logic gates, decimal machines, ALUs, and ARM-era CPUs.</span>
-          </li>
-          <li>
-            <strong>Language track</strong>
-            <span>Markdown, CSS tooling, Nib, and explainable pipelines from source text to output.</span>
-          </li>
-          <li>
-            <strong>Repo track</strong>
-            <span>Specs, learning notes, polyglot packages, and browser apps all built as one connected system.</span>
-          </li>
-        </ul>
-      </aside>
-    </section>
-
-    <section class="section" id="stack">
-      <div class="section-header">
+      <div class="shell hero-grid">
         <div>
-          <div class="section-label">Start Here</div>
-          <h2 class="section-title">Walk up the computing stack.</h2>
+          <p class="eyebrow">A learning-first monorepo</p>
+          <h1>Build the stack.<em>Inspect every layer.</em></h1>
+          <p class="hero-intro">
+            From transistor physics to native UI, Coding Adventures rebuilds computing
+            as a set of small, testable ideas. Read the specification, follow the
+            implementation across languages, then run the finished system in your browser.
+          </p>
+          <div class="hero-actions">
+            <a class="button button-primary" href="#paths">Choose a path <span aria-hidden="true">↓</span></a>
+            <a class="button button-secondary" href="https://github.com/adhithyan15/coding-adventures#where-to-start">Read the field guide</a>
+          </div>
         </div>
-        <p class="section-copy">
-          These pages are the clearest path through the repo's architecture story: how physical
-          switching becomes logic, how logic becomes arithmetic, and how that turns into full CPUs.
-        </p>
-      </div>
 
-      <div class="cards">
-        <a class="card" href="/coding-adventures/transistors/" aria-label="Open Transistor Visualizer">
-          <div class="card-meta">
-            <span class="card-badge">Layer 0</span>
-            <span class="card-arrow" aria-hidden="true">-></span>
-          </div>
-          <div class="card-title">Transistor Visualizer</div>
-          <p class="card-desc">
-            Trace the shift from vacuum tubes to BJTs, MOSFETs, and CMOS with live device models,
-            controls, and explanations of the physics behind gain, switching, and scaling.
-          </p>
-          <div class="tags">
-            <span class="tag">Vacuum tube</span>
-            <span class="tag">BJT</span>
-            <span class="tag">MOSFET</span>
-            <span class="tag">CMOS</span>
-          </div>
-        </a>
-
-        <a class="card" href="/coding-adventures/logic-gates/" aria-label="Open Logic Gates Visualizer">
-          <div class="card-meta">
-            <span class="card-badge">Layer 1</span>
-            <span class="card-arrow" aria-hidden="true">-></span>
-          </div>
-          <div class="card-title">Logic Gates Visualizer</div>
-          <p class="card-desc">
-            Toggle NOT, AND, OR, and XOR gates while following truth tables, gate symbols, and
-            the CMOS transistor layouts that make each digital building block work.
-          </p>
-          <div class="tags">
-            <span class="tag">Boolean logic</span>
-            <span class="tag">Truth tables</span>
-            <span class="tag">CMOS diagrams</span>
-          </div>
-        </a>
-
-        <a class="card" href="/coding-adventures/arithmetic/" aria-label="Open Arithmetic Visualizer">
-          <div class="card-meta">
-            <span class="card-badge">Layer 2</span>
-            <span class="card-arrow" aria-hidden="true">-></span>
-          </div>
-          <div class="card-title">Arithmetic Visualizer</div>
-          <p class="card-desc">
-            Follow how half adders become ripple-carry adders, ALUs, subtraction via two's
-            complement, multiplication via shift-and-add, and simple CPU execution traces.
-          </p>
-          <div class="tags">
-            <span class="tag">Adders</span>
-            <span class="tag">ALU</span>
-            <span class="tag">CPU step-through</span>
-          </div>
-        </a>
-
-        <a class="card" href="/coding-adventures/eniac/" aria-label="Open ENIAC Visualizer">
-          <div class="card-meta">
-            <span class="card-badge">History</span>
-            <span class="card-arrow" aria-hidden="true">-></span>
-          </div>
-          <div class="card-title">ENIAC Visualizer</div>
-          <p class="card-desc">
-            See decimal arithmetic before binary won: triode switches, decade ring counters,
-            accumulators, and side-by-side comparisons between ENIAC pulse logic and later binary machines.
-          </p>
-          <div class="tags">
-            <span class="tag">Vacuum tubes</span>
-            <span class="tag">Decimal arithmetic</span>
-            <span class="tag">ENIAC</span>
-          </div>
-        </a>
-
-        <a class="card" href="/coding-adventures/busicom/" aria-label="Open Busicom 141-PF Calculator">
-          <div class="card-meta">
-            <span class="card-badge">Layer 4</span>
-            <span class="card-arrow" aria-hidden="true">-></span>
-          </div>
-          <div class="card-title">Busicom 141-PF Calculator</div>
-          <p class="card-desc">
-            Explore a faithful simulator of the first microprocessor-based calculator, powered by
-            an Intel 4004 implementation with live ALU, gate-level, and transistor activity.
-          </p>
-          <div class="tags">
-            <span class="tag">Intel 4004</span>
-            <span class="tag">Calculator simulation</span>
-            <span class="tag">Microprocessor history</span>
-          </div>
-        </a>
-
-        <a class="card" href="/coding-adventures/arm1-web/" aria-label="Open ARM1 Web Simulator">
-          <div class="card-meta">
-            <span class="card-badge">CPU internals</span>
-            <span class="card-arrow" aria-hidden="true">-></span>
-          </div>
-          <div class="card-title">ARM1 Processor Simulator</div>
-          <p class="card-desc">
-            Step through the 1985 ARM1 across registers, decode, pipeline, barrel shifter,
-            memory, and execution trace views to see a classic RISC design from multiple angles.
-          </p>
-          <div class="tags">
-            <span class="tag">ARM1</span>
-            <span class="tag">Pipeline</span>
-            <span class="tag">Barrel shifter</span>
-          </div>
-        </a>
+        <aside class="stack-map" aria-label="Computing stack map">
+          <div class="map-head"><span>System map / 01</span><span>All layers live</span></div>
+          <ol class="stack-list">
+            <li><span>Transistors</span><small>physics</small></li>
+            <li><span>Logic &amp; arithmetic</span><small>circuits</small></li>
+            <li><span>Processors</span><small>machines</small></li>
+            <li><span>Languages</span><small>meaning</small></li>
+            <li><span>Runtimes</span><small>execution</small></li>
+            <li><span>Products</span><small>integration</small></li>
+          </ol>
+        </aside>
       </div>
     </section>
 
-    <section class="section" id="languages">
-      <div class="section-header">
+    <section class="snapshot" aria-labelledby="snapshot-title">
+      <div class="shell">
+        <h2 id="snapshot-title" class="eyebrow">Repository snapshot</h2>
+        <div class="snapshot-grid">
+          <div class="stat"><strong>4,986</strong><span>Reusable package directories</span></div>
+          <div class="stat"><strong>209</strong><span>Programs and applications</span></div>
+          <div class="stat"><strong>54</strong><span>Grammar families</span></div>
+          <div class="stat"><strong>1,483</strong><span>Specifications and roadmaps</span></div>
+        </div>
+        <div class="snapshot-note">
+          <span>Measured on main · August 27, 2026</span>
+          <span>Current focus: Mosaic · task-app · HTML conformance · human languages</span>
+        </div>
+      </div>
+    </section>
+
+    <section class="section trails" id="paths">
+      <div class="shell">
+        <div class="section-head">
+          <div>
+            <p class="eyebrow">Three ways in</p>
+            <h2>Pick a thread.<br>Follow it end to end.</h2>
+          </div>
+          <p class="section-lede">
+            Each route crosses specifications, teaching material, reusable packages,
+            tests, and a runnable surface. The destination matters; the layers are the lesson.
+          </p>
+        </div>
+
+        <div class="trail-grid">
+          <article class="trail-card">
+            <span class="trail-number">PATH / 01</span>
+            <h3>Build a computer</h3>
+            <p>Move from device physics through gates and arithmetic into historical and modern processors.</p>
+            <div class="trail-links">
+              <a href="/coding-adventures/transistors/">Transistors</a>
+              <a href="/coding-adventures/logic-gates/">Logic</a>
+              <a href="/coding-adventures/arithmetic/">Arithmetic</a>
+              <a href="/coding-adventures/arm1-web/">ARM1</a>
+            </div>
+          </article>
+
+          <article class="trail-card">
+            <span class="trail-number">PATH / 02</span>
+            <h3>Design a language</h3>
+            <p>Trace tokens, grammars, parsers, semantic IR, code generation, runtimes, and tools.</p>
+            <div class="trail-links">
+              <a href="/coding-adventures/commonmark/">CommonMark</a>
+              <a href="/coding-adventures/lattice/">Lattice</a>
+              <a href="/coding-adventures/nib-web/">Nib</a>
+              <a href="https://github.com/adhithyan15/coding-adventures/blob/main/code/specs/LANG-PLATFORM-VISION.md">Platform spec</a>
+            </div>
+          </article>
+
+          <article class="trail-card">
+            <span class="trail-number">PATH / 03</span>
+            <h3>Ship a product</h3>
+            <p>See shared engines, document systems, UI compilation, storage, and deployment meet real users.</p>
+            <div class="trail-links">
+              <a href="/coding-adventures/engram/">Engram</a>
+              <a href="/coding-adventures/language-ladder/">Language Ladder</a>
+              <a href="/coding-adventures/ml-learning/">ML Lab</a>
+              <a href="#forme">Forme</a>
+            </div>
+          </article>
+        </div>
+      </div>
+    </section>
+
+    <section class="section labs" id="labs">
+      <div class="shell">
+        <div class="section-head">
+          <div>
+            <p class="eyebrow">Live from the repository</p>
+            <h2>Open the machinery.</h2>
+          </div>
+          <p class="section-lede">
+            These are working builds, not screenshots. Change inputs, inspect intermediate
+            state, and watch the repository's packages collaborate in real time.
+          </p>
+        </div>
+
+        <div class="lab-grid">
+          <a class="lab-card featured" href="/coding-adventures/language-ladder/">
+            <div class="card-top"><span>Learning system / New</span><span class="card-arrow">↗</span></div>
+            <h3>Language Ladder</h3>
+            <p>Explore concepts, scripts, syllabaries, lessons, and review progress across a growing human-language curriculum.</p>
+            <div class="tag-row"><span class="tag">Languages</span><span class="tag">Curriculum</span><span class="tag">Interactive</span></div>
+          </a>
+
+          <a class="lab-card featured" href="/coding-adventures/engram/">
+            <div class="card-top"><span>Product system / App</span><span class="card-arrow">↗</span></div>
+            <h3>Engram</h3>
+            <p>A spaced-repetition product that exercises the repository's shared Rust core, document model, storage, and multi-host UI work.</p>
+            <div class="tag-row"><span class="tag">Memory</span><span class="tag">Rust</span><span class="tag">Mosaic</span></div>
+          </a>
+
+          <a class="lab-card" href="/coding-adventures/transistors/">
+            <div class="card-top"><span>Layer 00</span><span class="card-arrow">↗</span></div>
+            <h3>Transistors</h3>
+            <p>Vacuum tube, BJT, MOSFET, and CMOS behavior made visible.</p>
+            <div class="tag-row"><span class="tag">Physics</span><span class="tag">CMOS</span></div>
+          </a>
+
+          <a class="lab-card" href="/coding-adventures/logic-gates/">
+            <div class="card-top"><span>Layer 01</span><span class="card-arrow">↗</span></div>
+            <h3>Logic Gates</h3>
+            <p>Gate behavior, truth tables, and transistor-level CMOS layouts.</p>
+            <div class="tag-row"><span class="tag">Boolean logic</span><span class="tag">Circuits</span></div>
+          </a>
+
+          <a class="lab-card" href="/coding-adventures/arithmetic/">
+            <div class="card-top"><span>Layer 02</span><span class="card-arrow">↗</span></div>
+            <h3>Arithmetic</h3>
+            <p>Adders, ALUs, two's-complement, multiplication, and CPU steps.</p>
+            <div class="tag-row"><span class="tag">ALU</span><span class="tag">Binary</span></div>
+          </a>
+
+          <a class="lab-card" href="/coding-adventures/eniac/">
+            <div class="card-top"><span>Machine / 1945</span><span class="card-arrow">↗</span></div>
+            <h3>ENIAC</h3>
+            <p>Decimal vacuum-tube computation beside binary equivalents.</p>
+            <div class="tag-row"><span class="tag">History</span><span class="tag">Decimal</span></div>
+          </a>
+
+          <a class="lab-card" href="/coding-adventures/busicom/">
+            <div class="card-top"><span>Machine / 1971</span><span class="card-arrow">↗</span></div>
+            <h3>Busicom</h3>
+            <p>A working 141-PF calculator powered by an Intel 4004 simulation.</p>
+            <div class="tag-row"><span class="tag">Intel 4004</span><span class="tag">Calculator</span></div>
+          </a>
+
+          <a class="lab-card" href="/coding-adventures/arm1-web/">
+            <div class="card-top"><span>Machine / 1985</span><span class="card-arrow">↗</span></div>
+            <h3>ARM1</h3>
+            <p>Registers, pipeline, barrel shifter, control logic, and memory.</p>
+            <div class="tag-row"><span class="tag">CPU</span><span class="tag">Pipeline</span></div>
+          </a>
+
+          <a class="lab-card" href="/coding-adventures/nib-web/">
+            <div class="card-top"><span>Compiler path</span><span class="card-arrow">↗</span></div>
+            <h3>Nib</h3>
+            <p>Compile Nib into 4004 assembly, binary, HEX, and simulation.</p>
+            <div class="tag-row"><span class="tag">Compiler</span><span class="tag">Assembly</span></div>
+          </a>
+
+          <a class="lab-card" href="/coding-adventures/lattice/">
+            <div class="card-top"><span>Language tool</span><span class="card-arrow">↗</span></div>
+            <h3>Lattice</h3>
+            <p>Documentation and a live playground for the repository's CSS superset.</p>
+            <div class="tag-row"><span class="tag">CSS</span><span class="tag">Transpiler</span></div>
+          </a>
+
+          <a class="lab-card" href="/coding-adventures/commonmark/">
+            <div class="card-top"><span>Parser lab</span><span class="card-arrow">↗</span></div>
+            <h3>CommonMark</h3>
+            <p>A live Markdown renderer built from the repository's own grammar pipeline.</p>
+            <div class="tag-row"><span class="tag">Markdown</span><span class="tag">AST</span></div>
+          </a>
+
+          <a class="lab-card" href="/coding-adventures/code39/">
+            <div class="card-top"><span>Rendering lab</span><span class="card-arrow">↗</span></div>
+            <h3>Code 39</h3>
+            <p>Turn text into barcodes through reusable draw instructions.</p>
+            <div class="tag-row"><span class="tag">Barcode</span><span class="tag">Drawing</span></div>
+          </a>
+
+          <a class="lab-card" href="/coding-adventures/electronics-visualizers/">
+            <div class="card-top"><span>Collection</span><span class="card-arrow">↗</span></div>
+            <h3>Electronics</h3>
+            <p>Circuit and architecture visualizers collected in one surface.</p>
+            <div class="tag-row"><span class="tag">Circuits</span><span class="tag">Architecture</span></div>
+          </a>
+
+          <a class="lab-card" href="/coding-adventures/ml-learning/">
+            <div class="card-top"><span>Learning lab</span><span class="card-arrow">↗</span></div>
+            <h3>Machine Learning</h3>
+            <p>Perceptrons, XOR, normalization, gradient descent, and matrix math.</p>
+            <div class="tag-row"><span class="tag">ML</span><span class="tag">From scratch</span></div>
+          </a>
+
+          <a class="lab-card" href="/coding-adventures/engram-docs/">
+            <div class="card-top"><span>Documentation</span><span class="card-arrow">↗</span></div>
+            <h3>Engram Docs</h3>
+            <p>Architecture and product documentation for the spaced-repetition system.</p>
+            <div class="tag-row"><span class="tag">Docs</span><span class="tag">Architecture</span></div>
+          </a>
+
+          <a class="lab-card" href="/coding-adventures/human-languages/books/">
+            <div class="card-top"><span>Generated library / New</span><span class="card-arrow">↗</span></div>
+            <h3>Language Books</h3>
+            <p>Downloadable books generated from the shared human-language curriculum.</p>
+            <div class="tag-row"><span class="tag">Books</span><span class="tag">Generated</span></div>
+          </a>
+        </div>
+      </div>
+    </section>
+
+    <section class="forme" id="forme">
+      <div class="shell forme-layout">
         <div>
-          <div class="section-label">Playgrounds</div>
-          <h2 class="section-title">Language and tooling experiments.</h2>
+          <p class="eyebrow">Built here, for pages like this</p>
+          <h2>Meet Forme.</h2>
+          <p class="forme-copy">
+            Forme is a typed authoring pipeline that turns content into pages, search,
+            feeds, and deployment artifacts. Its compiler substrate works today; the next
+            milestone is making that power feel like a cohesive site-building product.
+          </p>
+          <div class="forme-actions">
+            <a class="button button-primary" href="https://github.com/adhithyan15/coding-adventures/blob/main/code/specs/FM00-forme-vision.md">Read the vision</a>
+            <a class="button button-secondary" href="/coding-adventures/blog/2026-05-15-hello-forme.html">Read the build notes</a>
+          </div>
         </div>
-        <p class="section-copy">
-          The repo is also a language-tooling lab. These projects lean into parsers, transpilers,
-          renderers, and browser-native docs that explain the path from source text to output.
-        </p>
-      </div>
 
-      <div class="cards">
-        <a class="card" href="/coding-adventures/lattice/" aria-label="Open Lattice Docs and Playground">
-          <div class="card-meta">
-            <span class="card-badge">CSS language</span>
-            <span class="card-arrow" aria-hidden="true">-></span>
-          </div>
-          <div class="card-title">Lattice Docs and Playground</div>
-          <p class="card-desc">
-            Learn the Lattice CSS superset through examples, language docs, and a live browser
-            playground that transpiles variables, mixins, functions, modules, and control flow to plain CSS.
-          </p>
-          <div class="tags">
-            <span class="tag">CSS</span>
-            <span class="tag">Transpiler</span>
-            <span class="tag">Live docs</span>
-          </div>
-        </a>
-
-        <a class="card" href="/coding-adventures/commonmark/" aria-label="Open CommonMark Live Demo">
-          <div class="card-meta">
-            <span class="card-badge">Parser</span>
-            <span class="card-arrow" aria-hidden="true">-></span>
-          </div>
-          <div class="card-title">CommonMark Live Demo</div>
-          <p class="card-desc">
-            Write Markdown on one side and watch the HTML render on the other, powered by a
-            CommonMark parser and renderer built from scratch in TypeScript rather than a third-party library.
-          </p>
-          <div class="tags">
-            <span class="tag">Markdown</span>
-            <span class="tag">Renderer</span>
-            <span class="tag">Live preview</span>
-          </div>
-        </a>
-
-        <a class="card" href="/coding-adventures/nib-web/" aria-label="Open Nib Playground">
-          <div class="card-meta">
-            <span class="card-badge">Compiler path</span>
-            <span class="card-arrow" aria-hidden="true">-></span>
-          </div>
-          <div class="card-title">Nib Playground</div>
-          <p class="card-desc">
-            Compile Nib source to Intel 4004 assembly, binary, and Intel HEX in the browser, then
-            run the result inside the repo's own 4004 simulator to close the loop from source to machine.
-          </p>
-          <div class="tags">
-            <span class="tag">Nib</span>
-            <span class="tag">Intel 4004</span>
-            <span class="tag">Browser compiler</span>
-          </div>
-        </a>
-
-        <a class="card" href="/coding-adventures/code39/" aria-label="Open Code39 Visualizer">
-          <div class="card-meta">
-            <span class="card-badge">Explainable rendering</span>
-            <span class="card-arrow" aria-hidden="true">-></span>
-          </div>
-          <div class="card-title">Code39 Visualizer</div>
-          <p class="card-desc">
-            Walk through the full barcode pipeline from input text to normalized symbols, encoded
-            runs, draw instructions, and final SVG output instead of treating barcode generation as a black box.
-          </p>
-          <div class="tags">
-            <span class="tag">Code39</span>
-            <span class="tag">SVG</span>
-            <span class="tag">Draw instructions</span>
-          </div>
-        </a>
-
-        <a class="card" href="/coding-adventures/engram-docs/" aria-label="Open Engram Docs">
-          <div class="card-meta">
-            <span class="card-badge">Browser docs</span>
-            <span class="card-arrow" aria-hidden="true">-></span>
-          </div>
-          <div class="card-title">Engram Docs</div>
-          <p class="card-desc">
-            Browser-rendered documentation site for the Engram product experiment, built on the
-            same in-house Markdown and document-AST infrastructure as the rest of the rendering track.
-          </p>
-          <div class="tags">
-            <span class="tag">Docs site</span>
-            <span class="tag">CommonMark</span>
-            <span class="tag">Document AST</span>
-          </div>
-        </a>
-
-        <a class="card" href="/coding-adventures/electronics-visualizers/" aria-label="Open Electronics Visualizers">
-          <div class="card-meta">
-            <span class="card-badge">Circuits</span>
-            <span class="card-arrow" aria-hidden="true">-></span>
-          </div>
-          <div class="card-title">Electronics Visualizers</div>
-          <p class="card-desc">
-            Circuit-level visualizers that back the architecture track — see resistors, capacitors,
-            diodes, and small subcircuits behave under live controls before they aggregate into gates.
-          </p>
-          <div class="tags">
-            <span class="tag">Circuits</span>
-            <span class="tag">Components</span>
-            <span class="tag">Live controls</span>
-          </div>
-        </a>
-      </div>
-    </section>
-
-    <section class="section" id="apps">
-      <div class="section-header">
         <div>
-          <div class="section-label">Apps and Experiments</div>
-          <h2 class="section-title">Product surfaces and ML demos.</h2>
-        </div>
-        <p class="section-copy">
-          The repo is also a product sandbox. These are end-user-facing experiments built on the
-          same package lab — UI sitting on top of the same parsers, runtimes, and ML primitives.
-        </p>
-      </div>
-
-      <div class="cards">
-        <a class="card" href="/coding-adventures/engram/" aria-label="Open Engram App">
-          <div class="card-meta">
-            <span class="card-badge">App</span>
-            <span class="card-arrow" aria-hidden="true">-></span>
+          <ol class="pipeline">
+            <li><strong>Source</strong><span>Markdown · filesystem · adapters</span></li>
+            <li><strong>Parse</strong><span>Content IR · frontmatter</span></li>
+            <li><strong>Transform</strong><span>Routes · links · typography</span></li>
+            <li><strong>Compose</strong><span>Collections · indexes · search</span></li>
+            <li><strong>Render</strong><span>HTML · styles · metadata</span></li>
+            <li><strong>Deploy</strong><span>Bundles · manifests · targets</span></li>
+          </ol>
+          <div class="forme-status">
+            <div class="status-cell"><strong>57</strong><span>TypeScript packages</span></div>
+            <div class="status-cell"><strong>2</strong><span>End-to-end demos</span></div>
+            <div class="status-cell"><strong>Next</strong><span>Integrate the product layer</span></div>
           </div>
-          <div class="card-title">Engram</div>
-          <p class="card-desc">
-            A spaced-repetition product experiment using the repo's own document AST, sanitizer,
-            and storage primitives — a working app that doubles as a stress test for the underlying packages.
-          </p>
-          <div class="tags">
-            <span class="tag">Memory</span>
-            <span class="tag">Document AST</span>
-            <span class="tag">Storage</span>
-          </div>
-        </a>
-
-        <a class="card" href="/coding-adventures/journal/" aria-label="Open Journal App">
-          <div class="card-meta">
-            <span class="card-badge">App</span>
-            <span class="card-arrow" aria-hidden="true">-></span>
-          </div>
-          <div class="card-title">Journal</div>
-          <p class="card-desc">
-            A daily journaling surface with Markdown editing, browser-side persistence, and a UI
-            built on the in-house CommonMark renderer rather than a third-party Markdown component.
-          </p>
-          <div class="tags">
-            <span class="tag">Journaling</span>
-            <span class="tag">Markdown</span>
-            <span class="tag">IndexedDB</span>
-          </div>
-        </a>
-
-        <a class="card" href="/coding-adventures/ml-learning/" aria-label="Open ML Learning Demos">
-          <div class="card-meta">
-            <span class="card-badge">ML demos</span>
-            <span class="card-arrow" aria-hidden="true">-></span>
-          </div>
-          <div class="card-title">ML Learning Lab</div>
-          <p class="card-desc">
-            Browser-runnable ML demonstrations — single-layer perceptrons, hidden-layer XOR
-            learning, feature normalization sweeps — backed by the repo's own gradient-descent and matrix packages.
-          </p>
-          <div class="tags">
-            <span class="tag">Perceptron</span>
-            <span class="tag">Gradient descent</span>
-            <span class="tag">Matrix math</span>
-          </div>
-        </a>
-      </div>
-    </section>
-
-    <section class="section">
-      <div class="section-header">
-        <div>
-          <div class="section-label">Why This Repo</div>
-          <h2 class="section-title">A monorepo designed to teach while it builds.</h2>
-        </div>
-        <p class="section-copy">
-          The live pages are only the visible surface. Underneath them is a much larger system of
-          specs, learning notes, packages, and experiments that keep the project grounded in explanation.
-        </p>
-      </div>
-
-      <div class="info-grid">
-        <div class="info-card">
-          <h3>Specs first</h3>
-          <p>
-            Major ideas in the repo usually begin as design docs and learning notes before they
-            become packages, visualizers, or browser apps.
-          </p>
-        </div>
-        <div class="info-card">
-          <h3>Cross-layer thinking</h3>
-          <p>
-            The same concept often appears more than once, letting you compare how it looks in
-            hardware, in language tooling, and in runnable software.
-          </p>
-        </div>
-        <div class="info-card">
-          <h3>Polyglot on purpose</h3>
-          <p>
-            Coding Adventures spans multiple ecosystems, so the pages here are backed by a broader
-            package lab instead of isolated demos.
-          </p>
         </div>
       </div>
     </section>
 
-    <footer>
-      <div>Built as a static root page for GitHub Pages, with the rest of the site deployed from the monorepo's individual apps.</div>
-      <a
-        href="https://github.com/adhithyan15/coding-adventures"
-        target="_blank"
-        rel="noopener noreferrer"
-      >
-        github.com/adhithyan15/coding-adventures
-      </a>
-    </footer>
+    <section class="section workshop">
+      <div class="shell">
+        <div class="section-head">
+          <div>
+            <p class="eyebrow">On the workbench</p>
+            <h2>What the lab is building now.</h2>
+          </div>
+          <p class="section-lede">The repository is active infrastructure. These are the current integration fronts on main.</p>
+        </div>
+
+        <div class="workshop-grid">
+          <article class="workshop-item">
+            <span>UI compilation</span>
+            <h3><a href="https://github.com/adhithyan15/coding-adventures/blob/main/code/specs/UI00-mosaic.md">Mosaic</a></h3>
+            <p>One typed UI model targeting web, native toolkits, and paint backends.</p>
+          </article>
+          <article class="workshop-item">
+            <span>Product surface</span>
+            <h3><a href="https://github.com/adhithyan15/coding-adventures/blob/main/code/specs/task-app-overview.md">task-app</a></h3>
+            <p>A shared project engine expressed as tables, boards, timelines, and flows.</p>
+          </article>
+          <article class="workshop-item">
+            <span>Curriculum system</span>
+            <h3><a href="/coding-adventures/language-ladder/">Human languages</a></h3>
+            <p>Shared lesson data feeding interactive study surfaces and generated books.</p>
+          </article>
+          <article class="workshop-item">
+            <span>Application / source</span>
+            <h3><a href="https://github.com/adhithyan15/coding-adventures/tree/main/code/programs/typescript/journal-app">Journal</a></h3>
+            <p>The journaling application is active; its public Pages route is being repaired.</p>
+          </article>
+        </div>
+      </div>
+    </section>
   </main>
+
+  <footer class="site-footer">
+    <div class="shell footer-grid">
+      <p class="footer-line">The best way to understand a system is to build the path through it.</p>
+      <div class="footer-meta">
+        <div>Built in public</div>
+        <div>Updated 2026-08-27</div>
+      </div>
+    </div>
+  </footer>
 </body>
 </html>
