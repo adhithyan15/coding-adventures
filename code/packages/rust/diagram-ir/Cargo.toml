@@ -1,6 +1,6 @@
 [package]
 name = "diagram-ir"
-version = "0.89.0"
+version = "0.90.0"
 edition = "2021"
 description = "Semantic diagram intermediate representation (DG00+DG04): types shared across all diagram pipeline families"
 

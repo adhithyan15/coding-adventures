@@ -1,5 +1,9 @@
 # Changelog
 
+## 0.153.0
+
+- Compile Mermaid Gantt `H`, `m`, and `s` unpadded time tokens into typed semantic date formats.
+
 ## 0.152.0
 
 - Compile Mermaid Gantt `d` and `dd` compact-weekday tokens into typed semantic date formats.
