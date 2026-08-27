@@ -630,14 +630,23 @@ end
 function M.render(scene, options)
     local sx = scale_x(options)
     local sy = scale_y(options)
-    if type(sx) ~= "number" or sx <= 0 then
+    -- `sx <= 0` alone does not reject NaN (every comparison against NaN is
+    -- false, including `<= 0`), so a NaN scale would otherwise slip past
+    -- this check and reach ceil_div() below -- explicitly require
+    -- is_finite() too, not just the sign check.
+    if type(sx) ~= "number" or not is_finite(sx) or sx <= 0 then
         error("paint_vm_ascii: options.scale_x must be a positive number, got: " .. tostring(sx))
     end
-    if type(sy) ~= "number" or sy <= 0 then
+    if type(sy) ~= "number" or not is_finite(sy) or sy <= 0 then
         error("paint_vm_ascii: options.scale_y must be a positive number, got: " .. tostring(sy))
     end
-    if scene.width < 0 or scene.height < 0 then
-        error("paint_vm_ascii: scene width/height must be non-negative, got: "
+    -- Same NaN gap as above: `scene.width < 0` is false for NaN, which
+    -- would otherwise reach ceil_div()/the scene-size cap check with a NaN
+    -- cols/rows value (NaN comparisons there are also false, silently
+    -- bypassing MAX_AXIS_CELLS/MAX_BUFFER_CELLS).
+    if not is_finite(scene.width) or not is_finite(scene.height)
+        or scene.width < 0 or scene.height < 0 then
+        error("paint_vm_ascii: scene width/height must be finite and non-negative, got: "
             .. tostring(scene.width) .. "x" .. tostring(scene.height))
     end
 

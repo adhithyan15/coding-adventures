@@ -385,6 +385,43 @@ describe("paint_vm_ascii", function()
             end)
         end)
 
+        -- Regression tests: `scene.width < 0` and `sx <= 0` are both false
+        -- for NaN (every comparison against NaN is false), so a NaN input
+        -- could previously slip past these checks and reach ceil_div()/the
+        -- scene-size cap with a NaN cols/rows value instead of being
+        -- rejected loudly.
+        it("rejects a NaN scene width", function()
+            local nan = 0 / 0
+            local scene = paint_instructions.paint_scene(nan, 10, {})
+            assert.has_error(function()
+                paint_vm_ascii.render(scene, { scale_x = 1, scale_y = 1 })
+            end)
+        end)
+
+        it("rejects a NaN scene height", function()
+            local nan = 0 / 0
+            local scene = paint_instructions.paint_scene(10, nan, {})
+            assert.has_error(function()
+                paint_vm_ascii.render(scene, { scale_x = 1, scale_y = 1 })
+            end)
+        end)
+
+        it("rejects a NaN scale_x", function()
+            local nan = 0 / 0
+            local scene = paint_instructions.paint_scene(1, 1, {})
+            assert.has_error(function()
+                paint_vm_ascii.render(scene, { scale_x = nan, scale_y = 1 })
+            end)
+        end)
+
+        it("rejects a NaN scale_y", function()
+            local nan = 0 / 0
+            local scene = paint_instructions.paint_scene(1, 1, {})
+            assert.has_error(function()
+                paint_vm_ascii.render(scene, { scale_x = 1, scale_y = nan })
+            end)
+        end)
+
         it("defaults to scale_x=8, scale_y=16 when options is omitted", function()
             local scene = paint_instructions.paint_scene(8, 16, {
                 paint_instructions.paint_glyph_run({

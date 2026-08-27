@@ -414,6 +414,17 @@ end
 -- cow_name would.
 local lfs_ok, lfs = pcall(require, "lfs")
 
+-- posix_double_quote_escape(s) -- escapes the four characters that carry
+-- special meaning inside a POSIX shell double-quoted string ($, `, ", \).
+-- `cows_dir` is never attacker-controlled today (see list_cow_files' doc
+-- comment below), so this is defense-in-depth rather than a fix for a
+-- currently reachable issue -- but it's cheap, and it means the shell
+-- fallback below stays safe even if a future caller ever passes a
+-- differently-derived directory string.
+local function posix_double_quote_escape(s)
+    return (s:gsub('([$`"\\])', "\\%1"))
+end
+
 function M.list_cow_files(cows_dir)
     local names = {}
 
@@ -430,7 +441,7 @@ function M.list_cow_files(cows_dir)
         if sep == "\\" then
             cmd = 'dir /b "' .. cows_dir .. '" 2>nul'
         else
-            cmd = 'ls -1 "' .. cows_dir .. '" 2>/dev/null'
+            cmd = 'ls -1 "' .. posix_double_quote_escape(cows_dir) .. '" 2>/dev/null'
         end
         local handle = io.popen(cmd)
         if handle then
@@ -580,7 +591,12 @@ end
 -- documented defaults for any flag that wasn't explicitly set.
 function M.build_invocation(message, flags)
     local width = 40
-    if flags.width ~= nil then
+    -- A NaN flags.width (e.g. from a --width value libc's strtod parses as
+    -- "nan") would pass through `< 1`/`> 2147483647` untouched -- every
+    -- comparison against NaN is false, including those -- so this check is
+    -- explicit rather than relying on the range comparisons below to catch
+    -- it.
+    if flags.width ~= nil and flags.width == flags.width then
         width = flags.width
         if width < 1 then
             width = 1

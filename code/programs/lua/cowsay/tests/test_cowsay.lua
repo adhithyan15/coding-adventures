@@ -239,6 +239,29 @@ describe("cowsay", function()
             assert.same({ "default" }, cowsay.list_cow_files(temp_dir))
             remove_tempdir(temp_dir)
         end)
+
+        -- Regression test for the shell-metacharacter escaping added to the
+        -- io.popen fallback path (used when the optional `lfs` module isn't
+        -- installed). A directory name containing "$" would previously risk
+        -- shell variable expansion inside the unescaped `ls -1 "..."`
+        -- command; this exercises whichever code path is actually active
+        -- (lfs or the shell fallback) with a path most likely to expose
+        -- that class of bug if it existed.
+        it("handles a cows_dir containing shell-special characters in its path", function()
+            local parent = make_tempdir()
+            local weird_dir = parent .. sep .. "weird dir with 'quotes' and $vars"
+            -- Single-quote (with the standard '\'' escape for embedded
+            -- single quotes) rather than double-quote this mkdir command --
+            -- unlike double quotes, POSIX single quotes never expand "$..."
+            -- inside them, so this actually creates a directory with the
+            -- literal name `weird_dir` names, rather than one with "$vars"
+            -- silently substituted away by the shell.
+            local quoted = "'" .. weird_dir:gsub("'", "'\\''") .. "'"
+            os.execute("mkdir " .. quoted)
+            write_file(weird_dir .. sep .. "default.cow", "")
+            assert.same({ "default" }, cowsay.list_cow_files(weird_dir))
+            remove_tempdir(parent)
+        end)
     end)
 
     describe("compose_content", function()
@@ -432,6 +455,15 @@ describe("cowsay", function()
         it("clamps width to a 32-bit ceiling and a floor of 1", function()
             assert.equal(2147483647, cowsay.build_invocation("hi", { width = 99999999999 }).width)
             assert.equal(1, cowsay.build_invocation("hi", { width = -5 }).width)
+        end)
+
+        -- Regression test: `width < 1` / `width > 2147483647` are both
+        -- false for NaN (every comparison against NaN is false), so a NaN
+        -- width previously slipped past both clamps unchanged instead of
+        -- falling back to the documented default.
+        it("falls back to the default width for a NaN width flag", function()
+            local nan = 0 / 0
+            assert.equal(40, cowsay.build_invocation("hi", { width = nan }).width)
         end)
     end)
 
