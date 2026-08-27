@@ -2,6 +2,60 @@
 
 ## Unreleased
 
+### Security
+
+- **Origin/Host validation on every route** (#13178, filed during #12027's
+  drop-panel security review). Binding to `localhost` alone doesn't stop a
+  page open in the developer's own browser from reaching this port — nor
+  does it stop DNS rebinding, where an attacker-controlled domain resolves
+  to `127.0.0.1` after the browser's same-origin checks already passed for
+  that domain. Either way the `Host` header the server actually receives
+  still names the untrusted domain, not `localhost`. `GET
+  /api/degradations` made this a materially bigger deal than it already
+  was: each request spawns a real `mosaic-compile` subprocess, turning a
+  drive-by cross-origin `GET` into repeated build invocations.
+
+  New `requireLocalOrigin` middleware (`security.go`) wraps the entire mux
+  once, in `main.go`, rather than per-route — a route added later is
+  protected automatically. Rejects any request whose `Host` doesn't name
+  `localhost`/`127.0.0.1`/`::1` (with or without a port); and — when an
+  `Origin` header is present, as it always is for a genuine cross-origin
+  `fetch()` — additionally rejects one whose `Origin` doesn't either (this
+  is what catches a same-machine page fetching this server's real
+  `localhost:PORT` URL directly, which the `Host` check alone wouldn't
+  catch, since `Host` is just where the request was addressed, not where it
+  came from). A request with no `Origin` header at all — ordinary
+  same-origin page loads, `curl` — passes on the `Host` check alone.
+
+  **Security-review round 2 caught a real bypass in round 1's Origin-only
+  design**, before this ever shipped: `GET /preview/{backend}/...` is
+  specifically designed to be loaded via `<iframe src=...>` (that's how
+  this tool's own browser shell displays a compiled component), and a
+  cross-origin *navigation* — which is exactly what an iframe load is —
+  carries no `Origin` header at all per the Fetch spec. A hostile page
+  embedding `<iframe src="http://localhost:PORT/preview/...">` would have
+  sailed straight past an Origin-only check: `Host` reads correctly as
+  `localhost` (that really is the destination), `Origin` is simply absent,
+  and the request reaches a handler that spawns a real subprocess per
+  request — the exact DoS this fix exists to prevent, for the exact
+  endpoint shaped to be embedded this way. Fixed by additionally checking
+  `Sec-Fetch-Site`, sent by every modern browser for every request type
+  including navigations (unlike `Origin`) and not spoofable by page JS:
+  `Sec-Fetch-Site: cross-site` is rejected outright, independent of whether
+  `Origin` is present.
+
+  Existing handler-level tests are unaffected: they call `srv.mux.ServeHTTP`
+  directly, bypassing this wrapper, which sits outside the mux specifically
+  so it doesn't have to be threaded through every existing test's request
+  construction.
+
+  Verified against the real running server: a forged `Host` header → 403; a
+  correct `Host` with a forged `Origin` → 403; a correct `Host` with no
+  `Origin` → 200; a correct `Host` with a matching `Origin` → 200; a
+  correct `Host`, no `Origin`, but `Sec-Fetch-Site: cross-site` (the
+  iframe-navigation bypass shape) → 403; `Sec-Fetch-Site: same-origin` →
+  200; a plain `curl` with no headers at all → 200 (unaffected).
+
 ### Added
 
 - **Native-backend drop panel** (#12027, part 1 of 2 — see
