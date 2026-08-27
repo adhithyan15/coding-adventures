@@ -1211,7 +1211,10 @@ fn collect_native_degradations(
         // further as each remaining backend's PR merges.
         "Path"
             if backend.is_native()
-                && !matches!(backend, Backend::Xaml | Backend::Qt | Backend::Flutter) =>
+                && !matches!(
+                    backend,
+                    Backend::Xaml | Backend::Qt | Backend::Flutter | Backend::Compose
+                ) =>
         {
             Some((
                 "primitive.path-unimplemented",
@@ -4983,35 +4986,36 @@ layout MoonIcon {
         )
         .unwrap();
 
-        // XAML, Qt, and Flutter land their Path lowerings (circle/line/
-        // curve) in separate PRs — see path_xaml_now_has_a_native_lowering,
-        // path_qt_now_has_a_native_lowering, and
-        // path_flutter_now_has_a_native_lowering below. The remaining two
-        // still have no lowering at all.
-        for backend in [Backend::Compose, Backend::SwiftUI] {
-            let out = TempDir::new().unwrap();
-            let report = analyze_package_degradations(
-                &BuildOptions {
-                    package_root: pkg.path().to_path_buf(),
-                    output_root: out.path().to_path_buf(),
-                    backend,
-                    emit_project: false,
-                    theme: None,
-                },
-                BuildProfile::NativeComplete,
-            )
-            .expect("Path capability analysis");
+        // XAML, Qt, Flutter, and Compose land their Path lowerings
+        // (circle/line/curve) in separate PRs — see
+        // path_xaml_now_has_a_native_lowering,
+        // path_qt_now_has_a_native_lowering,
+        // path_flutter_now_has_a_native_lowering, and
+        // path_compose_now_has_a_native_lowering below. SwiftUI remains
+        // the only backend with no lowering at all.
+        let backend = Backend::SwiftUI;
+        let out = TempDir::new().unwrap();
+        let report = analyze_package_degradations(
+            &BuildOptions {
+                package_root: pkg.path().to_path_buf(),
+                output_root: out.path().to_path_buf(),
+                backend,
+                emit_project: false,
+                theme: None,
+            },
+            BuildProfile::NativeComplete,
+        )
+        .expect("Path capability analysis");
 
-            assert!(!report.native_complete, "{backend:?} must remain honest");
-            assert_eq!(
-                report.degradations.len(),
-                1,
-                "unexpected {backend:?} report"
-            );
-            assert_eq!(report.degradations[0].code, "primitive.path-unimplemented");
-            assert_eq!(report.degradations[0].layout_path, "root");
-            assert_eq!(report.degradations[0].primitive.as_deref(), Some("Path"));
-        }
+        assert!(!report.native_complete, "{backend:?} must remain honest");
+        assert_eq!(
+            report.degradations.len(),
+            1,
+            "unexpected {backend:?} report"
+        );
+        assert_eq!(report.degradations[0].code, "primitive.path-unimplemented");
+        assert_eq!(report.degradations[0].layout_path, "root");
+        assert_eq!(report.degradations[0].primitive.as_deref(), Some("Path"));
     }
 
     #[test]
@@ -5121,6 +5125,43 @@ layout MoonIcon {
         assert!(
             report.native_complete,
             "Flutter now has a native Path (circle/line/curve) lowering: {:?}",
+            report.degradations
+        );
+    }
+
+    #[test]
+    fn path_compose_now_has_a_native_lowering() {
+        let pkg = make_package("mosaic-pkg-icons-compose", &["MoonIcon"]);
+        fs::write(
+            pkg.path().join("src/MoonIcon.mll"),
+            r#"
+layout MoonIcon {
+  Path [ root ] (
+    kind: circle,
+    cx: 17,
+    cy: 17,
+    r: 17
+  )
+}
+"#,
+        )
+        .unwrap();
+
+        let out = TempDir::new().unwrap();
+        let report = analyze_package_degradations(
+            &BuildOptions {
+                package_root: pkg.path().to_path_buf(),
+                output_root: out.path().to_path_buf(),
+                backend: Backend::Compose,
+                emit_project: false,
+                theme: None,
+            },
+            BuildProfile::NativeComplete,
+        )
+        .expect("Compose Path capability analysis");
+        assert!(
+            report.native_complete,
+            "Compose now has a native Path (circle/line/curve) lowering: {:?}",
             report.degradations
         );
     }
