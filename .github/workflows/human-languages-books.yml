@@ -76,7 +76,9 @@ jobs:
               echo "::error::Pull-request base or head SHA is invalid."
               exit 1
             fi
-            deleted_doc_shards=$(git diff --diff-filter=D --name-only \
+            # Disable rename detection so moving a history shard is treated as
+            # one deletion plus one addition and cannot hide removed history.
+            deleted_doc_shards=$(git diff --no-renames --diff-filter=D --name-only \
               "$PR_BASE_SHA...$PR_HEAD_SHA" -- \
               'code/learning/human-languages/BACKLOG.d/*.md' \
               'code/packages/typescript/human-language-data/CHANGELOG.d/*.md' \

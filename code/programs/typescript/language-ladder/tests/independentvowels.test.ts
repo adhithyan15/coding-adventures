@@ -8,18 +8,19 @@ import { describe, it } from "vitest";
 import { SCRIPTS } from "@coding-adventures/script-ductus";
 import { isSyllabary } from "../src/syllabary";
 import { buildSyllableMatrix } from "../src/matrix";
-import type { GlyphEvidence, GlyphEvidenceModule } from "./glyph-evidence/types";
-
-interface LocatedEvidence extends GlyphEvidence {
-  readonly modulePath: string;
-}
+import {
+  assertValidGlyphEvidenceRanks,
+  compareGlyphEvidence,
+  type GlyphEvidenceModule,
+  type LocatedGlyphEvidence,
+} from "./glyph-evidence/types";
 
 const modules = import.meta.glob<GlyphEvidenceModule>("./glyph-evidence/*.evidence.ts", {
   eager: true,
 });
 
 const context = Object.freeze({ SCRIPTS, isSyllabary, buildSyllableMatrix });
-const evidence: LocatedEvidence[] = Object.entries(modules).flatMap(([modulePath, module]) =>
+const evidence: LocatedGlyphEvidence[] = Object.entries(modules).flatMap(([modulePath, module]) =>
   module.default.map((entry) => ({ ...entry, modulePath })),
 );
 
@@ -29,6 +30,7 @@ const evidence: LocatedEvidence[] = Object.entries(modules).flatMap(([modulePath
 // tie-breakers give their merged evidence one deterministic order.
 const orderBySuite = new Map<string, number>();
 for (const entry of evidence) {
+  assertValidGlyphEvidenceRanks(entry);
   const orderForSuite = orderBySuite.get(entry.suite);
   if (orderForSuite !== undefined && orderForSuite !== entry.suiteOrder) {
     throw new Error(
@@ -38,14 +40,7 @@ for (const entry of evidence) {
   orderBySuite.set(entry.suite, entry.suiteOrder);
 }
 
-evidence.sort(
-  (left, right) =>
-    left.suiteOrder - right.suiteOrder ||
-    (left.suite < right.suite ? -1 : left.suite > right.suite ? 1 : 0) ||
-    left.caseOrder - right.caseOrder ||
-    (left.modulePath < right.modulePath ? -1 : left.modulePath > right.modulePath ? 1 : 0) ||
-    (left.name < right.name ? -1 : left.name > right.name ? 1 : 0),
-);
+evidence.sort(compareGlyphEvidence);
 
 for (const [suite] of [...orderBySuite].sort(
   ([leftSuite, leftOrder], [rightSuite, rightOrder]) =>
