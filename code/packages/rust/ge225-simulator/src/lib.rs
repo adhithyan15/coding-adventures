@@ -27,6 +27,19 @@ const MAX_CARD_RECORD_WORDS: usize = 27;
 const MAX_CARD_QUEUE_DEPTH: usize = 64;
 const MAX_CARD_PUNCH_DEPTH: usize = 64;
 const MAX_CHARACTER_QUEUE_DEPTH: usize = 65_536;
+const MAX_CONTROLLER_COMMANDS: usize = 64;
+const CONTROLLER_COUNT: usize = 8;
+const CONTROLLER_READY_CONDITION: u8 = 0o20;
+const CONTROLLER_CONDITION_MIN: u8 = 0o20;
+const CONTROLLER_CONDITION_MAX: u8 = 0o35;
+const CONTROLLER_PLUG_MASK: i32 = 0o700;
+const CONTROLLER_CONDITION_MASK: i32 = 0o77;
+const CONTROLLER_SELECT_BASE: i32 = 0o2500020;
+const CONTROLLER_STATUS_SET_BASE: i32 = 0o2514000;
+const CONTROLLER_STATUS_CLEAR_BASE: i32 = 0o2516000;
+const API_X_GROUP: usize = 32;
+const API_SAVED_PC_ADDRESS: i32 = 0o201;
+const API_VECTOR_ADDRESS: i32 = 0o204;
 const CARD_ADDRESS_ALIGNMENT: i32 = 128;
 const CARD_ADDRESS_LIMIT: i32 = 2_048;
 const CARD_MODE_MASK: i32 = 0x0f;
@@ -99,6 +112,37 @@ pub struct PaperTapeFrame {
     pub parity_error: bool,
 }
 
+#[derive(Debug, Clone, Copy, PartialEq, Eq)]
+pub struct ControllerStatus {
+    pub online: bool,
+    pub ready: bool,
+    pub error: bool,
+    pub conditions: u64,
+    pub error_conditions: u64,
+    pub api_enabled: bool,
+}
+
+impl Default for ControllerStatus {
+    fn default() -> Self {
+        Self {
+            online: true,
+            ready: true,
+            error: false,
+            conditions: 1_u64 << CONTROLLER_READY_CONDITION,
+            error_conditions: 0,
+            api_enabled: false,
+        }
+    }
+}
+
+#[derive(Debug, Clone, Copy, PartialEq, Eq)]
+pub struct ControllerCommand {
+    pub plug: u8,
+    pub select_word: i32,
+    pub command_word: i32,
+    pub address_word: i32,
+}
+
 const OP_LDA: i32 = 0o00;
 const OP_ADD: i32 = 0o01;
 const OP_SUB: i32 = 0o02;
@@ -147,6 +191,17 @@ pub struct State {
     pub decimal_mode: bool,
     pub decimal_carry: i32,
     pub automatic_interrupt_mode: bool,
+    pub priority_mode: bool,
+    pub priority_return_armed: bool,
+    pub pending_controller_interrupts: u8,
+    pub card_reader_api_enabled: bool,
+    pub card_punch_api_enabled: bool,
+    pub card_reader_interrupt_pending: bool,
+    pub card_punch_interrupt_pending: bool,
+    pub controller_selector_busy: bool,
+    pub controller_selector_alarm: bool,
+    pub selected_controller: Option<u8>,
+    pub controllers: Vec<ControllerStatus>,
     pub clock_sixths: i32,
     pub selected_x_group: usize,
     pub n_ready: bool,
@@ -187,6 +242,9 @@ struct DecodedInstruction {
     count: Option<i32>,
     sxg_group: Option<usize>,
     card_format: Option<CardFormat>,
+    controller_plug: Option<usize>,
+    controller_condition: Option<u8>,
+    controller_branch_when_set: bool,
     fixed_word: bool,
 }
 
@@ -642,6 +700,40 @@ pub fn assemble_card_io(mnemonic: &str, base: i32, modifier: i32) -> Result<i32,
     encode_instruction(OP_RCD, modifier, base | mode)
 }
 
+pub fn assemble_controller_select(plug: i32, modifier: i32) -> Result<i32, String> {
+    if !(0..CONTROLLER_COUNT as i32).contains(&plug) {
+        return Err(format!("GE-225 controller plug out of range: {plug}"));
+    }
+    if !(0..=3).contains(&modifier) {
+        return Err(format!("modifier out of range: {modifier}"));
+    }
+    Ok(CONTROLLER_SELECT_BASE | (plug << 6) | (modifier << MODIFIER_SHIFT))
+}
+
+pub fn assemble_controller_status(
+    plug: i32,
+    condition: i32,
+    branch_when_set: bool,
+) -> Result<i32, String> {
+    if !(0..CONTROLLER_COUNT as i32).contains(&plug) {
+        return Err(format!("GE-225 controller plug out of range: {plug}"));
+    }
+    if !(i32::from(CONTROLLER_CONDITION_MIN)..=i32::from(CONTROLLER_CONDITION_MAX))
+        .contains(&condition)
+    {
+        return Err(format!(
+            "GE-225 controller condition must be {:02o} through {:02o}, got {condition:o}",
+            CONTROLLER_CONDITION_MIN, CONTROLLER_CONDITION_MAX
+        ));
+    }
+    let base = if branch_when_set {
+        CONTROLLER_STATUS_SET_BASE
+    } else {
+        CONTROLLER_STATUS_CLEAR_BASE
+    };
+    Ok(base | (plug << 6) | condition)
+}
+
 pub fn assemble_shift(mnemonic: &str, count: i32) -> Result<i32, String> {
     assemble_shift_modified(mnemonic, count, 0)
 }
@@ -703,6 +795,20 @@ pub fn unpack_words(program: &[u8]) -> Result<Vec<i32>, String> {
 pub struct Simulator {
     memory_size: i32,
     memory: Vec<i32>,
+    controllers: [ControllerStatus; CONTROLLER_COUNT],
+    controller_commands: Vec<ControllerCommand>,
+    controller_selector_busy: bool,
+    controller_selector_alarm: bool,
+    selected_controller: Option<u8>,
+    pending_controller_interrupts: u8,
+    card_reader_api_enabled: bool,
+    card_punch_api_enabled: bool,
+    card_reader_interrupt_pending: bool,
+    card_punch_interrupt_pending: bool,
+    priority_mode: bool,
+    priority_return_armed: bool,
+    api_branch_inhibit: bool,
+    interrupted_x_group: usize,
     card_reader_queue: VecDeque<CardRecord>,
     card_punch_output: Vec<CardRecord>,
     card_reader_continuous: Option<CardFormat>,
@@ -753,6 +859,20 @@ impl Simulator {
         Ok(Self {
             memory_size: memory_words,
             memory: vec![0; memory_words as usize],
+            controllers: [ControllerStatus::default(); CONTROLLER_COUNT],
+            controller_commands: vec![],
+            controller_selector_busy: false,
+            controller_selector_alarm: false,
+            selected_controller: None,
+            pending_controller_interrupts: 0,
+            card_reader_api_enabled: false,
+            card_punch_api_enabled: false,
+            card_reader_interrupt_pending: false,
+            card_punch_interrupt_pending: false,
+            priority_mode: false,
+            priority_return_armed: false,
+            api_branch_inhibit: false,
+            interrupted_x_group: 0,
             card_reader_queue: VecDeque::new(),
             card_punch_output: vec![],
             card_reader_continuous: None,
@@ -806,6 +926,20 @@ impl Simulator {
         self.decimal_mode = false;
         self.decimal_carry = 0;
         self.automatic_interrupt_mode = false;
+        self.controllers = [ControllerStatus::default(); CONTROLLER_COUNT];
+        self.controller_commands.clear();
+        self.controller_selector_busy = false;
+        self.controller_selector_alarm = false;
+        self.selected_controller = None;
+        self.pending_controller_interrupts = 0;
+        self.card_reader_api_enabled = false;
+        self.card_punch_api_enabled = false;
+        self.card_reader_interrupt_pending = false;
+        self.card_punch_interrupt_pending = false;
+        self.priority_mode = false;
+        self.priority_return_armed = false;
+        self.api_branch_inhibit = false;
+        self.interrupted_x_group = 0;
         self.clock_sixths = 0;
         self.selected_x_group = 0;
         self.n_ready = true;
@@ -855,6 +989,17 @@ impl Simulator {
             decimal_mode: self.decimal_mode,
             decimal_carry: self.decimal_carry,
             automatic_interrupt_mode: self.automatic_interrupt_mode,
+            priority_mode: self.priority_mode,
+            priority_return_armed: self.priority_return_armed,
+            pending_controller_interrupts: self.pending_controller_interrupts,
+            card_reader_api_enabled: self.card_reader_api_enabled,
+            card_punch_api_enabled: self.card_punch_api_enabled,
+            card_reader_interrupt_pending: self.card_reader_interrupt_pending,
+            card_punch_interrupt_pending: self.card_punch_interrupt_pending,
+            controller_selector_busy: self.controller_selector_busy,
+            controller_selector_alarm: self.controller_selector_alarm,
+            selected_controller: self.selected_controller,
+            controllers: self.controllers.to_vec(),
             clock_sixths: self.clock_sixths,
             selected_x_group: self.selected_x_group,
             n_ready: self.n_ready,
@@ -910,6 +1055,136 @@ impl Simulator {
     pub fn clear_decimal_carry(&mut self) {
         self.decimal_carry = 0;
     }
+
+    pub fn controller_commands(&self) -> &[ControllerCommand] {
+        &self.controller_commands
+    }
+
+    pub fn take_controller_commands(&mut self) -> Vec<ControllerCommand> {
+        std::mem::take(&mut self.controller_commands)
+    }
+
+    pub fn highest_priority_pending_controller(&self) -> Option<usize> {
+        (0..CONTROLLER_COUNT)
+            .find(|plug| (self.pending_controller_interrupts & (1_u8 << plug)) != 0)
+    }
+
+    pub fn set_controller_online(&mut self, plug: usize, online: bool) -> Result<(), String> {
+        let controller = self.controller_mut(plug)?;
+        controller.online = online;
+        if !online {
+            Self::set_controller_ready_value(controller, false);
+        }
+        Ok(())
+    }
+
+    pub fn set_controller_api_enabled(&mut self, plug: usize, enabled: bool) -> Result<(), String> {
+        self.controller_mut(plug)?.api_enabled = enabled;
+        Ok(())
+    }
+
+    pub fn set_controller_condition(
+        &mut self,
+        plug: usize,
+        condition: u8,
+        asserted: bool,
+    ) -> Result<(), String> {
+        Self::check_controller_condition(condition)?;
+        if condition == CONTROLLER_READY_CONDITION {
+            return self.set_controller_ready(plug, asserted);
+        }
+        let controller = self.controller_mut(plug)?;
+        let mask = 1_u64 << condition;
+        if asserted {
+            controller.conditions |= mask;
+        } else {
+            controller.conditions &= !mask;
+        }
+        Ok(())
+    }
+
+    pub fn set_controller_error(&mut self, plug: usize, error: bool) -> Result<(), String> {
+        let controller = self.controller_mut(plug)?;
+        controller.error = error;
+        if !error {
+            controller.conditions &= !controller.error_conditions;
+            controller.error_conditions = 0;
+        }
+        Ok(())
+    }
+
+    pub fn set_controller_error_condition(
+        &mut self,
+        plug: usize,
+        condition: u8,
+        asserted: bool,
+    ) -> Result<(), String> {
+        Self::check_controller_condition(condition)?;
+        if condition == CONTROLLER_READY_CONDITION {
+            return Err("GE-225 controller ready status cannot be an error condition".into());
+        }
+        let controller = self.controller_mut(plug)?;
+        let mask = 1_u64 << condition;
+        if asserted {
+            controller.conditions |= mask;
+            controller.error_conditions |= mask;
+        } else {
+            controller.conditions &= !mask;
+            controller.error_conditions &= !mask;
+        }
+        controller.error = controller.error_conditions != 0;
+        Ok(())
+    }
+
+    pub fn set_controller_ready(&mut self, plug: usize, ready: bool) -> Result<(), String> {
+        let controller = self.controller_mut(plug)?;
+        let transitioned = !controller.ready && ready;
+        Self::set_controller_ready_value(controller, ready);
+        if transitioned && controller.api_enabled {
+            self.pending_controller_interrupts |= 1_u8 << plug;
+        }
+        Ok(())
+    }
+
+    pub fn complete_controller(
+        &mut self,
+        plug: usize,
+        conditions: u64,
+        error: bool,
+    ) -> Result<(), String> {
+        let controller = self.controller_mut(plug)?;
+        if !controller.online {
+            return Err(format!("GE-225 controller plug {plug} is offline"));
+        }
+        controller.conditions = conditions;
+        controller.error = error;
+        controller.error_conditions = 0;
+        self.set_controller_ready(plug, true)
+    }
+
+    pub fn advance_controller_selector(&mut self) -> bool {
+        if !self.controller_selector_busy {
+            return false;
+        }
+        self.controller_selector_busy = false;
+        self.selected_controller = None;
+        true
+    }
+
+    pub fn set_card_reader_api_enabled(&mut self, enabled: bool) {
+        self.card_reader_api_enabled = enabled;
+    }
+
+    pub fn set_card_punch_api_enabled(&mut self, enabled: bool) {
+        self.card_punch_api_enabled = enabled;
+    }
+
+    pub fn clear_controller_selector_alarm(&mut self) {
+        self.controller_selector_alarm = false;
+        self.priority_alarm = self.card_reader_alarm || self.card_punch_alarm;
+        self.halted = self.priority_alarm;
+    }
+
     pub fn set_program_counter(&mut self, address: i32) -> Result<(), String> {
         self.set_pc(address)
     }
@@ -930,6 +1205,8 @@ impl Simulator {
         words: &[i32],
         status: CardStatus,
     ) -> Result<(), String> {
+        let reader_before = self.card_reader_ready();
+        let punch_before = self.card_punch_ready();
         if words.len() != format.word_count() {
             return Err(format!(
                 "GE-225 {format:?} card requires exactly {} words, got {}",
@@ -947,41 +1224,61 @@ impl Simulator {
             words: words.iter().map(|word| word & MASK_20).collect(),
             status,
         });
+        self.record_direct_ready_transitions(reader_before, punch_before);
         Ok(())
     }
     pub fn card_punch_output(&self) -> &[CardRecord] {
         &self.card_punch_output
     }
     pub fn take_card_punch_output(&mut self) -> Vec<CardRecord> {
-        std::mem::take(&mut self.card_punch_output)
+        let reader_before = self.card_reader_ready();
+        let punch_before = self.card_punch_ready();
+        let output = std::mem::take(&mut self.card_punch_output);
+        self.record_direct_ready_transitions(reader_before, punch_before);
+        output
     }
     pub fn set_card_reader_online(&mut self, online: bool) {
+        let reader_before = self.card_reader_ready();
+        let punch_before = self.card_punch_ready();
         self.card_reader_online = online;
         if !online {
             self.card_reader_continuous = None;
         }
+        self.record_direct_ready_transitions(reader_before, punch_before);
     }
     pub fn set_card_punch_online(&mut self, online: bool) {
+        let reader_before = self.card_reader_ready();
+        let punch_before = self.card_punch_ready();
         self.card_punch_online = online;
+        self.record_direct_ready_transitions(reader_before, punch_before);
     }
     pub fn set_card_reader_fault(&mut self, fault: bool) {
+        let reader_before = self.card_reader_ready();
+        let punch_before = self.card_punch_ready();
         self.card_reader_fault = fault;
         if fault {
             self.card_reader_continuous = None;
         }
+        self.record_direct_ready_transitions(reader_before, punch_before);
     }
     pub fn set_card_punch_fault(&mut self, fault: bool) {
+        let reader_before = self.card_reader_ready();
+        let punch_before = self.card_punch_ready();
         self.card_punch_fault = fault;
+        self.record_direct_ready_transitions(reader_before, punch_before);
     }
     pub fn set_stop_on_parity_alarm(&mut self, enabled: bool) {
         self.stop_on_parity_alarm = enabled;
     }
     pub fn clear_direct_io_alarms(&mut self) {
+        let reader_before = self.card_reader_ready();
+        let punch_before = self.card_punch_ready();
         self.card_reader_alarm = false;
         self.card_punch_alarm = false;
-        self.priority_alarm = false;
+        self.priority_alarm = self.controller_selector_alarm;
         self.parity_error = false;
-        self.halted = false;
+        self.halted = self.controller_selector_alarm;
+        self.record_direct_ready_transitions(reader_before, punch_before);
     }
     pub fn queue_paper_tape_input(&mut self, frames: &[i32]) -> Result<(), String> {
         let frames = frames
@@ -1063,14 +1360,18 @@ impl Simulator {
         Ok(true)
     }
     pub fn advance_card_reader(&mut self) -> Result<bool, String> {
+        let reader_before = self.card_reader_ready();
+        let punch_before = self.card_punch_ready();
         let Some(format) = self.card_reader_continuous else {
             return Err("GE-225 card reader is not in continuous mode".into());
         };
         if self.card_reader_queue.is_empty() {
             self.card_reader_continuous = None;
+            self.record_direct_ready_transitions(reader_before, punch_before);
             return Ok(false);
         }
         self.transfer_card_input(format)?;
+        self.record_direct_ready_transitions(reader_before, punch_before);
         Ok(true)
     }
     pub fn get_typewriter_output(&self) -> String {
@@ -1102,7 +1403,25 @@ impl Simulator {
             } else {
                 format!(",X{modifier}")
             };
-            return Ok(if let Some(group) = decoded.sxg_group {
+            return Ok(if decoded.mnemonic == "SEL" {
+                let plug = decoded
+                    .controller_plug
+                    .ok_or_else(|| "GE-225 SEL decoder omitted its plug".to_string())?;
+                format!("SEL P{plug}{suffix}")
+            } else if decoded.mnemonic == "BCS" {
+                let plug = decoded
+                    .controller_plug
+                    .ok_or_else(|| "GE-225 BCS decoder omitted its plug".to_string())?;
+                let condition = decoded.controller_condition.ok_or_else(|| {
+                    "GE-225 BCS decoder omitted its controller condition".to_string()
+                })?;
+                let sense = if decoded.controller_branch_when_set {
+                    "SET"
+                } else {
+                    "CLEAR"
+                };
+                format!("BCS {condition:02o},P{plug},{sense}")
+            } else if let Some(group) = decoded.sxg_group {
                 format!("SXG {group}")
             } else if let Some(count) = decoded.count {
                 format!("{} {count}{suffix}", decoded.mnemonic)
@@ -1126,6 +1445,13 @@ impl Simulator {
         if self.halted {
             return Err("cannot step a halted GE-225 simulator".into());
         }
+        if self.api_branch_inhibit {
+            self.api_branch_inhibit = false;
+        } else {
+            self.enter_api_interrupt_if_pending()?;
+        }
+        let reader_ready_before = self.card_reader_ready();
+        let punch_ready_before = self.card_punch_ready();
         let pc_before = self.pc;
         let instruction_word = self.read_word(pc_before)?;
         let decoded = self.decode_word(instruction_word)?;
@@ -1206,12 +1532,24 @@ impl Simulator {
                 }
             }
         }
+        self.preflight_core(
+            &execution_decoded,
+            effective_address,
+            sequential_pc,
+            pc_before,
+        )?;
         self.preflight_direct_io(&execution_decoded, effective_address)?;
+        self.preflight_controller(&execution_decoded, sequential_pc)?;
         self.preflight_decimal(&execution_decoded, effective_address)?;
         self.ir = ir_word;
         self.pc = sequential_pc;
         let a_before = self.a;
         let q_before = self.q;
+        let priority_return = self.priority_mode
+            && self.priority_return_armed
+            && !execution_decoded.fixed_word
+            && execution_decoded.mnemonic == "BRU"
+            && execution_decoded.modifier.unwrap_or(0) != 0;
         if !execution_decoded.fixed_word {
             let address = execution_decoded
                 .address
@@ -1229,6 +1567,15 @@ impl Simulator {
         } else {
             self.execute_fixed(&execution_decoded)?;
         }
+        if priority_return {
+            self.priority_mode = false;
+            self.priority_return_armed = false;
+            self.selected_x_group = self.interrupted_x_group;
+        }
+        if !execution_decoded.fixed_word && execution_decoded.mnemonic == "BRU" {
+            self.api_branch_inhibit = true;
+        }
+        self.record_direct_ready_transitions(reader_ready_before, punch_ready_before);
         self.check_address(self.pc)?;
         Ok(Trace {
             address: pc_before,
@@ -1251,6 +1598,66 @@ impl Simulator {
             traces.push(self.step()?);
         }
         Ok(traces)
+    }
+
+    fn controller_mut(&mut self, plug: usize) -> Result<&mut ControllerStatus, String> {
+        self.controllers
+            .get_mut(plug)
+            .ok_or_else(|| format!("GE-225 controller plug out of range: {plug}"))
+    }
+
+    fn check_controller_condition(condition: u8) -> Result<(), String> {
+        if !(CONTROLLER_CONDITION_MIN..=CONTROLLER_CONDITION_MAX).contains(&condition) {
+            return Err(format!(
+                "GE-225 controller condition must be {:02o} through {:02o}, got {condition:o}",
+                CONTROLLER_CONDITION_MIN, CONTROLLER_CONDITION_MAX
+            ));
+        }
+        Ok(())
+    }
+
+    fn set_controller_ready_value(controller: &mut ControllerStatus, ready: bool) {
+        controller.ready = ready;
+        let mask = 1_u64 << CONTROLLER_READY_CONDITION;
+        if ready {
+            controller.conditions |= mask;
+        } else {
+            controller.conditions &= !mask;
+        }
+    }
+
+    fn record_direct_ready_transitions(&mut self, reader_before: bool, punch_before: bool) {
+        if !reader_before && self.card_reader_ready() && self.card_reader_api_enabled {
+            self.card_reader_interrupt_pending = true;
+        }
+        if !punch_before && self.card_punch_ready() && self.card_punch_api_enabled {
+            self.card_punch_interrupt_pending = true;
+        }
+    }
+
+    fn api_interrupt_pending(&self) -> bool {
+        self.pending_controller_interrupts != 0
+            || self.card_reader_interrupt_pending
+            || self.card_punch_interrupt_pending
+    }
+
+    fn enter_api_interrupt_if_pending(&mut self) -> Result<(), String> {
+        if !self.automatic_interrupt_mode || self.priority_mode || !self.api_interrupt_pending() {
+            return Ok(());
+        }
+        self.check_address(API_SAVED_PC_ADDRESS)?;
+        self.check_address(API_VECTOR_ADDRESS)?;
+        self.memory[API_SAVED_PC_ADDRESS as usize] = self.pc & MASK_20;
+        self.interrupted_x_group = self.selected_x_group;
+        self.selected_x_group = API_X_GROUP;
+        self.pc = API_VECTOR_ADDRESS;
+        self.automatic_interrupt_mode = false;
+        self.priority_mode = true;
+        self.priority_return_armed = false;
+        self.pending_controller_interrupts = 0;
+        self.card_reader_interrupt_pending = false;
+        self.card_punch_interrupt_pending = false;
+        Ok(())
     }
 
     fn x_address(&self, slot: usize) -> Result<i32, String> {
@@ -1444,6 +1851,177 @@ impl Simulator {
             )),
             _ => Ok(()),
         }
+    }
+
+    fn preflight_core(
+        &self,
+        decoded: &DecodedInstruction,
+        effective_address: Option<i32>,
+        sequential_pc: i32,
+        pc_before: i32,
+    ) -> Result<(), String> {
+        let raw_address = decoded.address.unwrap_or(0);
+        let modifier = decoded.modifier.unwrap_or(0);
+        if matches!(decoded.mnemonic, "DLD" | "DAD" | "DSU" | "DST" | "DCB") {
+            let address = effective_address.ok_or_else(|| {
+                format!(
+                    "GE-225 {} decoder omitted its effective address",
+                    decoded.mnemonic
+                )
+            })?;
+            if address & 1 == 0 {
+                self.following_address(address)?;
+            }
+        }
+        if matches!(decoded.mnemonic, "LDX" | "STX") {
+            self.check_address(raw_address)?;
+        }
+        if matches!(
+            decoded.mnemonic,
+            "BXL" | "BXH" | "LDX" | "SPB" | "INX" | "STX"
+        ) {
+            self.check_address(self.x_address(modifier as usize)?)?;
+        }
+        if decoded.mnemonic == "SPB" {
+            self.direct_branch_target(pc_before, raw_address)?;
+        }
+        if decoded.mnemonic == "MOV" {
+            let word_count = usize::try_from((-to_signed20(self.q)).max(0))
+                .map_err(|_| "GE-225 MOV word count overflow".to_string())?;
+            self.checked_range(raw_address, word_count)?;
+            self.checked_range(self.a & X_MASK, word_count)?;
+            self.check_address(self.x_address(0)?)?;
+        }
+
+        let skip = match decoded.mnemonic {
+            "BXL" => i32::from((self.get_x_word(modifier as usize)? & ADDR_MASK) >= raw_address),
+            "BXH" => i32::from((self.get_x_word(modifier as usize)? & ADDR_MASK) < raw_address),
+            "CAB" => {
+                let address = effective_address.ok_or_else(|| {
+                    "GE-225 CAB decoder omitted its effective address".to_string()
+                })?;
+                match arith_compare(self.read_word(address)?, self.a) {
+                    0 => 1,
+                    ordering if ordering < 0 => 2,
+                    _ => 0,
+                }
+            }
+            "DCB" => {
+                let address = effective_address.ok_or_else(|| {
+                    "GE-225 DCB decoder omitted its effective address".to_string()
+                })?;
+                let first = self.read_word(address)?;
+                let second = if address & 1 != 0 {
+                    first
+                } else {
+                    self.read_word(self.following_address(address)?)?
+                };
+                match arith_compare_double(first, second, self.a, self.q) {
+                    0 => 1,
+                    ordering if ordering < 0 => 2,
+                    _ => 0,
+                }
+            }
+            "BCS" => {
+                let plug = decoded
+                    .controller_plug
+                    .ok_or_else(|| "GE-225 BCS decoder omitted its controller plug".to_string())?;
+                let condition = decoded
+                    .controller_condition
+                    .ok_or_else(|| "GE-225 BCS decoder omitted its condition".to_string())?;
+                let asserted = (self.controllers[plug].conditions & (1_u64 << condition)) != 0;
+                let branch = if decoded.controller_branch_when_set {
+                    asserted
+                } else {
+                    !asserted
+                };
+                i32::from(!branch)
+            }
+            mnemonic => self
+                .branch_test_condition(mnemonic)
+                .map_or(0, |condition| i32::from(!condition)),
+        };
+        if skip != 0 {
+            let target = sequential_pc
+                .checked_add(skip)
+                .ok_or_else(|| "GE-225 decision skip overflows P".to_string())?;
+            self.check_address(target)?;
+        }
+        Ok(())
+    }
+
+    fn preflight_controller(
+        &self,
+        decoded: &DecodedInstruction,
+        sequential_pc: i32,
+    ) -> Result<(), String> {
+        if decoded.mnemonic != "SEL" {
+            return Ok(());
+        }
+        let plug = decoded
+            .controller_plug
+            .ok_or_else(|| "GE-225 SEL decoder omitted its controller plug".to_string())?;
+        if self.controller_selector_busy || !self.controllers[plug].online {
+            return Ok(());
+        }
+        self.checked_range(sequential_pc, 2)?;
+        let continuation = sequential_pc
+            .checked_add(2)
+            .ok_or_else(|| "GE-225 SEL continuation overflow".to_string())?;
+        self.check_address(continuation)?;
+        if self.controller_commands.len() >= MAX_CONTROLLER_COMMANDS {
+            return Err(format!(
+                "GE-225 controller command capture is full at {MAX_CONTROLLER_COMMANDS} commands"
+            ));
+        }
+        Ok(())
+    }
+
+    fn execute_controller_select(&mut self, decoded: &DecodedInstruction) -> Result<(), String> {
+        let plug = decoded
+            .controller_plug
+            .ok_or_else(|| "GE-225 SEL decoder omitted its controller plug".to_string())?;
+        if self.controller_selector_busy || !self.controllers[plug].online {
+            self.controller_selector_alarm = true;
+            self.priority_alarm = true;
+            self.halted = true;
+            return Ok(());
+        }
+        let command_word = self.read_word(self.pc)?;
+        let address_word = self.read_word(self.following_address(self.pc)?)?;
+        let controller = &mut self.controllers[plug];
+        controller.error = false;
+        controller.conditions &= !controller.error_conditions;
+        controller.error_conditions = 0;
+        Self::set_controller_ready_value(&mut self.controllers[plug], false);
+        self.controller_commands.push(ControllerCommand {
+            plug: plug as u8,
+            select_word: self.ir,
+            command_word,
+            address_word,
+        });
+        self.controller_selector_busy = true;
+        self.selected_controller = Some(plug as u8);
+        self.advance_pc(2)
+    }
+
+    fn execute_controller_status(&mut self, decoded: &DecodedInstruction) -> Result<(), String> {
+        let plug = decoded
+            .controller_plug
+            .ok_or_else(|| "GE-225 BCS decoder omitted its controller plug".to_string())?;
+        let condition = decoded
+            .controller_condition
+            .ok_or_else(|| "GE-225 BCS decoder omitted its condition".to_string())?;
+        let asserted = (self.controllers[plug].conditions & (1_u64 << condition)) != 0;
+        let branch = if decoded.controller_branch_when_set {
+            asserted
+        } else {
+            !asserted
+        };
+        if !branch {
+            self.advance_pc(1)?;
+        }
+        Ok(())
     }
 
     fn preflight_decimal(
@@ -1755,6 +2333,10 @@ impl Simulator {
                         None
                     };
                     self.transfer_card_input(format)?;
+                    if mnemonic == "RCF" && self.card_reader_ready() && self.card_reader_api_enabled
+                    {
+                        self.card_reader_interrupt_pending = true;
+                    }
                 }
             }
             "RCM" => {
@@ -1773,6 +2355,9 @@ impl Simulator {
                         self.card_reader_slot = 0;
                         self.card_reader_continuous = None;
                         self.transfer_card_input(format)?;
+                        if self.card_reader_ready() && self.card_reader_api_enabled {
+                            self.card_reader_interrupt_pending = true;
+                        }
                     }
                 }
             }
@@ -1791,6 +2376,9 @@ impl Simulator {
                         }
                     };
                     self.transfer_card_punch(format, effective_address)?;
+                    if self.card_punch_ready() && self.card_punch_api_enabled {
+                        self.card_punch_interrupt_pending = true;
+                    }
                 }
             }
             "BRU" => self.set_pc(effective_address)?,
@@ -1938,7 +2526,14 @@ impl Simulator {
                     .sxg_group
                     .ok_or_else(|| "GE-225 SXG decoder omitted its group".to_string())?;
             }
-            "SET_PST" => self.automatic_interrupt_mode = true,
+            "SEL" => self.execute_controller_select(decoded)?,
+            "BCS" => self.execute_controller_status(decoded)?,
+            "SET_PST" => {
+                self.automatic_interrupt_mode = true;
+                if self.priority_mode {
+                    self.priority_return_armed = true;
+                }
+            }
             "SET_PBK" => self.automatic_interrupt_mode = false,
             "BOD" | "BEV" | "BMI" | "BPL" | "BZE" | "BNZ" | "BOV" | "BNO" | "BPE" | "BPC"
             | "BNR" | "BNN" | "BCR" | "BCN" | "BPR" | "BPN" => {
@@ -1958,7 +2553,21 @@ impl Simulator {
     }
 
     fn execute_branch_test(&mut self, mnemonic: &str) -> Result<(), String> {
-        let cond = match mnemonic {
+        let cond = self.branch_test_condition(mnemonic).unwrap_or(false);
+        if !cond {
+            self.advance_pc(1)?;
+        }
+        if matches!(mnemonic, "BOV" | "BNO") {
+            self.overflow = false;
+        }
+        if matches!(mnemonic, "BPE" | "BPC") {
+            self.parity_error = false;
+        }
+        Ok(())
+    }
+
+    fn branch_test_condition(&self, mnemonic: &str) -> Option<bool> {
+        Some(match mnemonic {
             "BOD" => (self.a & 1) != 0,
             "BEV" => (self.a & 1) == 0,
             "BMI" => (self.a & SIGN_BIT) != 0,
@@ -1975,18 +2584,8 @@ impl Simulator {
             "BCN" => !self.card_reader_ready(),
             "BPR" => self.card_punch_ready(),
             "BPN" => !self.card_punch_ready(),
-            _ => false,
-        };
-        if !cond {
-            self.advance_pc(1)?;
-        }
-        if matches!(mnemonic, "BOV" | "BNO") {
-            self.overflow = false;
-        }
-        if matches!(mnemonic, "BPE" | "BPC") {
-            self.parity_error = false;
-        }
-        Ok(())
+            _ => return None,
+        })
     }
 
     fn execute_shift(&mut self, mnemonic: &str, count: i32) -> Result<(), String> {
@@ -2127,6 +2726,45 @@ impl Simulator {
                 count: None,
                 sxg_group: None,
                 card_format: None,
+                controller_plug: None,
+                controller_condition: None,
+                controller_branch_when_set: false,
+                fixed_word: true,
+            });
+        }
+        if (canonical & !CONTROLLER_PLUG_MASK) == CONTROLLER_SELECT_BASE {
+            return Ok(DecodedInstruction {
+                mnemonic: "SEL",
+                modifier: Some(modifier),
+                address: None,
+                count: None,
+                sxg_group: None,
+                card_format: None,
+                controller_plug: Some(((canonical & CONTROLLER_PLUG_MASK) >> 6) as usize),
+                controller_condition: None,
+                controller_branch_when_set: false,
+                fixed_word: true,
+            });
+        }
+        let controller_status_base =
+            normalized & !(CONTROLLER_PLUG_MASK | CONTROLLER_CONDITION_MASK);
+        let controller_condition = (normalized & CONTROLLER_CONDITION_MASK) as u8;
+        if matches!(
+            controller_status_base,
+            CONTROLLER_STATUS_SET_BASE | CONTROLLER_STATUS_CLEAR_BASE
+        ) && (CONTROLLER_CONDITION_MIN..=CONTROLLER_CONDITION_MAX)
+            .contains(&controller_condition)
+        {
+            return Ok(DecodedInstruction {
+                mnemonic: "BCS",
+                modifier: None,
+                address: None,
+                count: None,
+                sxg_group: None,
+                card_format: None,
+                controller_plug: Some(((normalized & CONTROLLER_PLUG_MASK) >> 6) as usize),
+                controller_condition: Some(controller_condition),
+                controller_branch_when_set: controller_status_base == CONTROLLER_STATUS_SET_BASE,
                 fixed_word: true,
             });
         }
@@ -2138,6 +2776,9 @@ impl Simulator {
                 count: None,
                 sxg_group: None,
                 card_format: None,
+                controller_plug: None,
+                controller_condition: None,
+                controller_branch_when_set: false,
                 fixed_word: true,
             });
         }
@@ -2149,6 +2790,9 @@ impl Simulator {
                 count: None,
                 sxg_group: Some(((canonical & SXG_GROUP_MASK) >> SXG_GROUP_SHIFT) as usize),
                 card_format: None,
+                controller_plug: None,
+                controller_condition: None,
+                controller_branch_when_set: false,
                 fixed_word: true,
             });
         }
@@ -2164,6 +2808,9 @@ impl Simulator {
                         count: Some(canonical & 0o37),
                         sxg_group: None,
                         card_format: None,
+                        controller_plug: None,
+                        controller_condition: None,
+                        controller_branch_when_set: false,
                         fixed_word: true,
                     });
                 }
@@ -2202,6 +2849,9 @@ impl Simulator {
                 count: None,
                 sxg_group: None,
                 card_format,
+                controller_plug: None,
+                controller_condition: None,
+                controller_branch_when_set: false,
                 fixed_word: false,
             });
         }
@@ -2214,6 +2864,9 @@ impl Simulator {
             count: None,
             sxg_group: None,
             card_format: None,
+            controller_plug: None,
+            controller_condition: None,
+            controller_branch_when_set: false,
             fixed_word: false,
         })
     }

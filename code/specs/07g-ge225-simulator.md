@@ -71,6 +71,13 @@ transitions are latched even while interrupts are off. At an instruction
 boundary they select X-group 32, save the main-program continuation at octal
 0201, vector to octal 0204, and enter priority mode with further interrupts
 disabled until the documented `SET PST` and modified-branch return sequence.
+`SET PBK` between those two instructions preserves the return arm while
+disabling later interrupts, and interrupt recognition is suppressed between
+every `BRU` and its target. The Rust slice exposes bounded controller command
+capture and explicit selector/controller service events rather than using host
+timing. Its shared core preflight also validates every multiword operand,
+raw/X-word destination, `MOV` range, branch target, and taken decision skip
+before architectural instruction state is clocked.
 
 ## Layer Position
 
