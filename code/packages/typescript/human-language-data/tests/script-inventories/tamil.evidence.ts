@@ -117,6 +117,16 @@ export const scriptInventoryEvidence = {
     );
     expect(tamilIndependentUu.strokeOrderSource?.citation).toMatch(/Module 17.*ஊ.*Frames 17, 16, and 12.*pp\. 195–196/i);
     expect(tamilIndependentUu.strokeOrderSource?.variation).toMatch(/write உ first.*then write ள over it.*Frame 16.*three movements joined.*Frame 12.*six movements.*three pen-down runs.*four-run learner order.*Noto Sans Tamil.*varies by school/i);
+    const tamilIndependentO = scripts.tamil!.letters.find((entry) => entry.glyph === "ஒ")!;
+    expect(tamilIndependentO.sound).toBe("o");
+    expect(tamilIndependentO.role).toBe("independent-vowel");
+    expect(tamilIndependentO.penLifts).toBe(1);
+    expect(tamilIndependentO.strokeOrder).toHaveLength(3);
+    expect(tamilIndependentO.strokeOrderSource?.url).toContain("module-14");
+    expect(tamilIndependentO.strokeOrderSource?.citation).toMatch(/Module 14.*ஒ.*Appendix I.*Frame 14.*p\. 195/i);
+    expect(tamilIndependentO.strokeOrderSource?.variation).toMatch(/short o.*three movements.*left loop.*large right loop.*joined.*separate lower bowl.*one lift.*two-run.*Noto Sans Tamil.*varies by school/i);
+    expect(missingByScript.get("tamil.json")?.has("ஒ")).toBe(false);
+    expect(affected.get("ஒ") ?? 0).toBe(0);
     const tamilNga = scripts.tamil!.letters.find(
       (entry) => entry.glyph === "ங",
     )!;
