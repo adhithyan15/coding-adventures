@@ -17,6 +17,7 @@ import {
   rmSync,
   writeFileSync,
 } from "node:fs";
+import { createHash } from "node:crypto";
 import { tmpdir } from "node:os";
 import { join, resolve } from "node:path";
 import { afterAll, describe, expect, it } from "vitest";
@@ -49,14 +50,18 @@ import { LEGACY_DOC_SHARD_SHA256 } from "../src/doc-shard-legacy.js";
 const PLAN: DocShardPlan = { path: "x/DOC.md", headingLevel: 2, newestFirst: true };
 const OLDEST_FIRST: DocShardPlan = { ...PLAN, newestFirst: false };
 const DUCTUS_CHANGELOG = "code/packages/typescript/script-ductus/CHANGELOG.md";
+const DUCTUS_PLAN: DocShardPlan = {
+  path: DUCTUS_CHANGELOG,
+  headingLevel: 3,
+  newestFirst: true,
+};
+const DUCTUS_FORWARD_FRAGMENT =
+  "01625-CHANGED-SHARD-NATIVE-SCRIPT-INVENTORIES-9fa3a043.md";
+const DUCTUS_MIGRATION_MAX_RANK = 1_630;
 
 describe("HL26 Script Ductus changelog ownership", () => {
   it("registers the changelog as a fixed newest-first level-3 shard plan", () => {
-    expect(DOC_SHARD_PLANS.find((plan) => plan.path === DUCTUS_CHANGELOG)).toEqual({
-      path: DUCTUS_CHANGELOG,
-      headingLevel: 3,
-      newestFirst: true,
-    });
+    expect(DOC_SHARD_PLANS.find((plan) => plan.path === DUCTUS_CHANGELOG)).toEqual(DUCTUS_PLAN);
   });
 
   it("keeps the generated monolith absent from a clean checkout", () => {
@@ -67,7 +72,28 @@ describe("HL26 Script Ductus changelog ownership", () => {
     } catch (error) {
       cause = error;
     }
-    expect(isAbsentErrno(cause)).toBe(true);
+    expect(isAbsentErrno((cause as NodeJS.ErrnoException | undefined)?.code)).toBe(true);
+  });
+
+  it("preserves the fresh-main monolith byte-for-byte beside the forward fragment", () => {
+    const monolith = safeDocumentPath(defaultRepoRoot(), DUCTUS_CHANGELOG);
+    const shards = readDocShards(monolith, DUCTUS_PLAN);
+    expect(shards).not.toBeNull();
+
+    const historical = new Map(
+      [...shards!].filter(
+        ([name]) =>
+          name !== DUCTUS_FORWARD_FRAGMENT &&
+          (name === DOC_META_SHARD || Number(name.slice(0, 5)) <= DUCTUS_MIGRATION_MAX_RANK),
+      ),
+    );
+    const rendered = joinDocShards(historical, DUCTUS_PLAN);
+
+    expect(Buffer.byteLength(rendered)).toBe(59_966);
+    expect(splitDocument(rendered, 3).sections).toHaveLength(163);
+    expect(createHash("sha256").update(rendered).digest("hex")).toBe(
+      "4e45c41b345252c2870c9704b194e66ed628ec1071d9c6d6228843b944ef2604",
+    );
   });
 });
 

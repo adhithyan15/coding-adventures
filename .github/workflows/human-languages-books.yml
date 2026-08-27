@@ -78,11 +78,25 @@ jobs:
             fi
             # Disable rename detection so moving a history shard is treated as
             # one deletion plus one addition and cannot hide removed history.
+            doc_shard_globs=(
+              'code/learning/human-languages/BACKLOG.d/*.md'
+              'code/packages/typescript/human-language-data/CHANGELOG.d/*.md'
+              'code/programs/typescript/language-ladder/CHANGELOG.d/*.md'
+            )
+            # The migration PR must replace the one provisional Script Ductus
+            # fragment while establishing its strict plan. The migration base is
+            # uniquely identified by still tracking the old monolith; every later
+            # base does not, so it gets the deletion gate. The decision comes from
+            # the immutable base tree and cannot be disabled by refactoring code in
+            # the PR head.
+            ductus_monolith='code/packages/typescript/script-ductus/CHANGELOG.md'
+            if ! git ls-tree -r --name-only "$PR_BASE_SHA" -- "$ductus_monolith" \
+              | grep -Fxq "$ductus_monolith"; then
+              doc_shard_globs+=('code/packages/typescript/script-ductus/CHANGELOG.d/*.md')
+            fi
             deleted_doc_shards=$(git diff --no-renames --diff-filter=D --name-only \
               "$PR_BASE_SHA...$PR_HEAD_SHA" -- \
-              'code/learning/human-languages/BACKLOG.d/*.md' \
-              'code/packages/typescript/human-language-data/CHANGELOG.d/*.md' \
-              'code/programs/typescript/language-ladder/CHANGELOG.d/*.md')
+              "${doc_shard_globs[@]}")
             if [ -n "$deleted_doc_shards" ]; then
               echo "::error::Markdown history shards are append-only; restore these deleted files:"
               printf '%s\n' "$deleted_doc_shards"
@@ -95,6 +109,7 @@ jobs:
           tracked_doc_monoliths=$(git ls-files -- \
             code/learning/human-languages/BACKLOG.md \
             code/packages/typescript/human-language-data/CHANGELOG.md \
+            code/packages/typescript/script-ductus/CHANGELOG.md \
             code/programs/typescript/language-ladder/CHANGELOG.md)
           if [ -n "$tracked_doc_monoliths" ]; then
             echo "::error::Generated Markdown aggregates must remain untracked:"

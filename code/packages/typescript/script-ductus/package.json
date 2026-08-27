@@ -6,6 +6,9 @@
   "main": "src/index.ts",
   "scripts": {
     "build": "tsc",
+    "shard:docs": "node ../human-language-data/dist/doc-shard-cli.js --shard code/packages/typescript/script-ductus/CHANGELOG.md",
+    "unshard:docs": "node ../human-language-data/dist/doc-shard-cli.js --unshard code/packages/typescript/script-ductus/CHANGELOG.md",
+    "check:doc-shards": "node ../human-language-data/dist/doc-shard-cli.js --check code/packages/typescript/script-ductus/CHANGELOG.md",
     "test": "vitest run",
     "test:coverage": "vitest run --coverage"
   },

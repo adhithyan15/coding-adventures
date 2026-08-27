@@ -11,6 +11,7 @@ code/packages/rust/html-parser/tests/fixtures/html5lib-tree-construction-smoke.d
 # ordered concatenation remains byte-identical to the authored monolith.
 code/learning/human-languages/BACKLOG.d/*.md whitespace=-blank-at-eof
 code/packages/typescript/human-language-data/CHANGELOG.d/*.md whitespace=-blank-at-eof
+code/packages/typescript/script-ductus/CHANGELOG.d/*.md whitespace=-blank-at-eof
 code/programs/typescript/language-ladder/CHANGELOG.d/*.md whitespace=-blank-at-eof
 
 # Content-addressed evidence must survive checkout without byte normalization.

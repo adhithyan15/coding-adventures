@@ -144,6 +144,14 @@ export const DOC_SHARD_PLANS: readonly DocShardPlan[] = [
     headingLevel: 2,
     newestFirst: true,
   },
+  {
+    // Script Ductus release notes are independently authored alongside script
+    // evidence. Split at level 3 so each note owns one file; historical level-2
+    // version markers remain attached to the preceding entry byte-for-byte.
+    path: "code/packages/typescript/script-ductus/CHANGELOG.md",
+    headingLevel: 3,
+    newestFirst: true,
+  },
 ];
 
 /**

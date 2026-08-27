@@ -1,4 +1,4 @@
-## Changed — shard-native script inventories
+### Changed — shard-native script inventories
 
 - Read Japanese, Perso-Arabic, and Urdu-Nastaliq through one fixed build-time
   virtual module backed by their canonical glyph shards.
