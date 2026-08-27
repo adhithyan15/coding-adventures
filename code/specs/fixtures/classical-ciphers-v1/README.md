@@ -15,6 +15,10 @@ any cipher implementation.
   subset into dependency-free native tests for every established
   implementation lane. Its `--check` mode is the corpus-to-consumer drift
   gate.
+- `code/scripts/generate_vigenere_fixture_consumers.py` renders all 26
+  Vigenere cases into the same 15 native test lanes. The consumers execute
+  complete expected objects, including normalized errors, analysis limits and
+  ordering, deterministic ties, exact recovered keys, and break plaintexts.
 
 The repository test
 `code/scripts/tests/test_classical_cipher_fixtures.py` validates the schema,
@@ -23,14 +27,14 @@ every expected result with a dependency-free semantic oracle. A schema-only
 pass is not conformance: consumers must execute the operations and compare the
 full expected object.
 
-The generated Scytale consumers are derived only from the bounded, strictly
-decoded fixture. Every output records the source SHA-256 digest and all case
-IDs, constructs repeat descriptors at test runtime, normalizes public API
-results to the closed `{text}`, `{error_id}`, or ordered `{candidates}` shape,
-and compares every field. Production packages do not read fixture files and do
-not gain filesystem or JSON-parser authority. A changed fixture, changed
-established-lane roster, missing output, or hand-edited output makes
-`--check` fail closed.
+The generated Scytale and Vigenere consumers are derived only from the bounded,
+strictly decoded fixture. Every output records the source SHA-256 digest and
+all selected case IDs, constructs repeat descriptors at test runtime,
+normalizes public API results to the operation's closed expected shape, and
+compares every field. Production packages do not read fixture files and do not
+gain filesystem or JSON-parser authority. A changed fixture, changed
+established-lane roster, missing output, or hand-edited output makes `--check`
+fail closed.
 
 Consumers must reject the encoded schema or fixture above 131,072 bytes and
 scan both raw JSON inputs for bounded nesting before parsing. After the bounded

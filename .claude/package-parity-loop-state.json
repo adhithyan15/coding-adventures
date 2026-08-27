@@ -12,35 +12,35 @@
     "excluded_delivery_classes": ["onvif", "host-security-hardening", "native-runtime", "external-approval"]
   },
   "active_pr": {
-    "number": 13172,
-    "url": "https://github.com/adhithyan15/coding-adventures/pull/13172",
-    "branch": "codex/vigenere-ascii-established-lane-conformance",
+    "number": 13224,
+    "url": "https://github.com/adhithyan15/coding-adventures/pull/13224",
+    "branch": "codex/vigenere-neutral-fixture-consumers",
     "status": "open"
   },
   "last_ci_action": {
-    "observed_at": "2026-08-27T12:17:22Z",
-    "pr_number": 13172,
-    "run_id": 33040844478,
-    "attempt": 2,
-    "status": "focused-fix-validated",
-    "notes": "The first Windows attempt failed an unrelated ADJ timing assertion by 30 milliseconds; its rerun passed all 48 containment tests and exposed two Vigenere build-front gaps. Added the established Windows Elixir skip because CI does not install mix, and removed nested command-shell quotes from the F# artifacts path. The downloaded CI plan now builds both affected fronts successfully through the real Go build tool; the F# suite passes all 10 tests at 93.66/83.89/100 percent line/branch/method coverage."
+    "observed_at": "2026-08-27T14:40:49Z",
+    "pr_number": 13224,
+    "run_id": 33083569848,
+    "attempt": 1,
+    "status": "checks-pending",
+    "notes": "Ready-for-review PR #13224 is non-draft and MERGEABLE, but required checks are queued and mergeStateStatus is BLOCKED. Per the parity loop, auto-merge remains disabled and the next run is monitor-only while checks are pending."
   },
   "last_inventory": {
-    "revision": "878556189d8652d9dc6cb9c84e3d3236e7f09f54",
+    "revision": "063d4d725df6dd8f854ef6c3a74a6459d8322e3b",
     "schema_version": 3,
     "established_languages": 15,
-    "implementation_identities": 1373,
-    "implementation_package_slots": 4582,
-    "all_reported_identities": 1412,
+    "implementation_identities": 1375,
+    "implementation_package_slots": 4585,
+    "all_reported_identities": 1414,
     "high_consensus_packages": 175,
     "high_consensus_missing_slots": 266,
     "five_to_nine_packages": 123,
     "five_to_nine_missing_slots": 934,
-    "two_to_four_packages": 166,
-    "two_to_four_missing_slots": 2087,
-    "singleton_packages": 909,
-    "singleton_missing_slots": 12726,
-    "rust_singletons": 720,
+    "two_to_four_packages": 167,
+    "two_to_four_missing_slots": 2100,
+    "singleton_packages": 910,
+    "singleton_missing_slots": 12740,
+    "rust_singletons": 722,
     "ocaml_packages": 0,
     "canonical_collisions": 0,
     "unknown_language_buckets": 0
@@ -2325,7 +2325,7 @@
     {
       "id": "vigenere-ascii-established-lane-conformance",
       "title": "Converge Vigenere ASCII text, key, and analysis behavior across established lanes",
-      "status": "pr-open",
+      "status": "merged",
       "depends_on": ["classical-cipher-language-neutral-fixtures-and-analysis-contract"],
       "branch": "codex/vigenere-ascii-established-lane-conformance",
       "pr_number": 13172,
@@ -2337,16 +2337,25 @@
       "notes": "Discovered during the post-#13070 reference audit. Go and Python accept Unicode-letter keys and transform non-ASCII text through ASCII arithmetic despite CR03's A-Z/a-z contract; Kotlin cryptanalysis admits Unicode before indexing a 26-slot table; Swift key-length grouping includes Unicode while its other analysis stages are ASCII-only. After the neutral corpus lands, make all established lanes validate ASCII-only keys, transform and advance only on ASCII letters, ignore non-ASCII data consistently in analysis, and adopt the pinned analysis edge behavior.",
       "validation_notes": "All fifteen established Vigenere lanes now implement CR03's raw ASCII-only key validation, Unicode-scalar-preserving transform behavior, ASCII-only analysis, 8,192-scalar and 40-key-length preflights with normative ordering, usable-group IC averaging, smallest candidate at or above 90% of the best without divisor filtering, deterministic fallback and tie behavior, and exact requested recovered-key length. Focused native validation passes: C# and F# each run 10 xUnit tests with 95.45/93.75/100 and 84.27/75.37/93.33 percent line/branch/method coverage; Dart runs 17 tests with its 90-percent branch/function coverage gate; Elixir runs 38 tests including four doctests at 98.91 percent coverage; Go runs 26 tests at 97.2 percent statement coverage plus gofmt and vet; Haskell runs 27 examples with coverage; Java and Kotlin Gradle suites pass; Lua Busted runs 32 successes; Perl's complete Test2::V0 file runs all eight subtests and 46 assertions using isolated upstream Test-Simple and Term-Table module trees; Python runs 39 tests at 98 percent coverage plus Ruff, format, MyPy, and Bandit medium/high; Ruby runs 30 tests and 53 assertions; Rust runs 28 unit tests and one doc test plus fmt and Clippy with warnings denied; Swift runs 32 tests with coverage and a release warnings-as-errors build; TypeScript runs 37 tests at 97.85/91.11/100/98.46 percent statement/branch/function/line coverage plus tsc. Real local Elixir OTP29 and Lua Busted toolchains were installed; the Perl runtime suite was completed from isolated upstream test-module source after the Strawberry Perl installer remained unavailable. Twelve legacy-empty capability profiles were normalized to schema-v1 empty manifests, leaving every touched production package dependency-free and process, filesystem, environment, Git, and network free. Production npm audit, dotnet vulnerability checks, JVM runtime dependency inspection, credential and authority reviews are clean; the unchanged development-only nanoid advisory remains in its existing registered owner. The capability-taxonomy, Haskell-capability, OCaml-lock, and package-parity suites pass 68 tests with two expected Windows symlink skips. The collision-checked schema-3 report remains 15 established lanes, 1,373 identities, 4,582 slots, zero collisions, and zero unknown buckets. The Go build tool passes all packages, vet, and trimpath compilation. Strict JSON, the complete acyclic 535-owner/794-edge state graph, README CR03 links, formatting, and git diff checks pass. Two independent final correctness/documentation and security/authority reviews surfaced raw-key normalization, Swift grapheme-versus-scalar iteration, Elixir grapheme-count bounds, TypeScript negative-limit allocation, payload-bearing Dart diagnostics, stale docs, and generated coverage hygiene; every finding was fixed, revalidated, and the final exact-diff reviews report no remaining finding. Four unrelated origin/main advances touched no Vigenere, parity-state, roadmap, or capability surface; the clean branch rebased conflict-free from 878556189d8652d9dc6cb9c84e3d3236e7f09f54 onto 53d2d1fb1a4d9a0a227d56cb9330900bfa9af07f. The exact post-rebase build-tool plan evaluates 45 Starlark files, discovers 5,089 packages, validates the five-entry orphan ledger, and selects exactly the 15 established Vigenere packages with no dependent expansion.",
       "rebase_notes": "Rebased conflict-free before publication onto exact origin/main 53d2d1fb1a4d9a0a227d56cb9330900bfa9af07f. The four intervening French, Mosaic XAML, Japanese, and Rust HTML-parser commits have no exact overlap across the 75 changed paths and no Vigenere, parity-state, roadmap, or capability ownership collision.",
-      "publication_notes": "Opened ready-for-review PR #13172 at 2026-08-27T04:52:49Z from fully validated implementation head ed79abe20e00aaf1218d6b11a8b641ad5652e4ac after a normal first push. Ten live open PRs had zero exact changed-path overlap. GitHub reports the PR non-draft and MERGEABLE; required checks are queued or in progress and mergeStateStatus is BLOCKED, so auto-merge remains disabled until every required check is terminal and acceptable and GitHub reports no conflict."
+      "publication_notes": "Opened ready-for-review PR #13172 at 2026-08-27T04:52:49Z from fully validated implementation head ed79abe20e00aaf1218d6b11a8b641ad5652e4ac after a normal first push. Ten live open PRs had zero exact changed-path overlap. GitHub reports the PR non-draft and MERGEABLE; required checks are queued or in progress and mergeStateStatus is BLOCKED, so auto-merge remains disabled until every required check is terminal and acceptable and GitHub reports no conflict.",
+      "merge_notes": "Focused Windows build-front repair head e212e0a87632069e8a37e732a4f784a9e3936b1c completed all 41 reported checks acceptably: 39 successes and two expected skips, with no failure or pending check. GitHub reported MERGEABLE/CLEAN; the loop enabled squash auto-merge, and GitHub merged PR #13172 as 580e1a1710452f1133eae07cc5252961920cac57 at 2026-08-27T13:18:07Z without a manual merge command."
     },
     {
       "id": "vigenere-language-neutral-fixture-established-lane-consumers",
       "title": "Execute the normative Vigenere corpus in every established lane",
-      "status": "pending",
+      "status": "pr-open",
       "depends_on": ["vigenere-ascii-established-lane-conformance"],
-      "branch": null,
-      "pr_number": null,
-      "notes": "Discovered during the post-#13147 reference audit before Vigenere behavior convergence. The neutral classical-ciphers-v1 corpus pins 26 Vigenere objects, but no established lane currently executes every complete expected object. After behavior converges, extend the bounded dependency-free generated-consumer and drift-gate pattern already proven for Scytale across all 15 Vigenere packages without adding production filesystem, JSON, process, environment, or network authority."
+      "branch": "codex/vigenere-neutral-fixture-consumers",
+      "pr_number": 13224,
+      "pr_url": "https://github.com/adhithyan15/coding-adventures/pull/13224",
+      "opened_at": "2026-08-27T14:40:44Z",
+      "implementation_revision": "cccc949cb00b0eb53f2dfdc257a966caebe56939",
+      "selection_revision": "580e1a1710452f1133eae07cc5252961920cac57",
+      "selection_notes": "Selected after PR #13172 completed all 41 terminal acceptable checks, GitHub reported MERGEABLE/CLEAN, and squash auto-merge merged focused repair head e212e0a87632069e8a37e732a4f784a9e3936b1c as 580e1a1710452f1133eae07cc5252961920cac57 at 2026-08-27T13:18:07Z without a manual merge command. The refreshed collision-checked schema-3 inventory records 15 established lanes, 1,374 implementation identities, 4,583 slots, 1,413 all-reported identities, bands of 175/266, 123/934, 166/2,087, and 910/12,740, 721 Rust singletons, zero collisions, zero unknown buckets, and OCaml correctly emerging at zero packages. The refresh registered the new Rust-only layout-inline singleton for classification and the missing six-case Atbash neutral-corpus consumer before selection. Eleven live open PRs have zero exact overlap with the Vigenere package, CR03/classical-cipher fixtures, generator/test, state, roadmap, CI, or root changelog surfaces. This newly dependency-ready owner executes all 26 complete normative Vigenere objects in every established lane through the bounded dependency-free generated-consumer pattern already proven for Scytale; it reaches all 15 lanes and therefore outranks the five-front Vigenere build hardening sibling and the six-case Atbash consumer. OCaml's higher-leverage process-free substrate remains collision-unsafe while open PR #12149 owns required Go build-tool validator and entry-point paths.",
+      "notes": "Discovered during the post-#13147 reference audit before Vigenere behavior convergence. The neutral classical-ciphers-v1 corpus pins 26 Vigenere objects, but no established lane currently executes every complete expected object. After behavior converges, extend the bounded dependency-free generated-consumer and drift-gate pattern already proven for Scytale across all 15 Vigenere packages without adding production filesystem, JSON, process, environment, or network authority.",
+      "rebase_notes": "Rebased conflict-free twice before publication, finally onto exact origin/main 063d4d725df6dd8f854ef6c3a74a6459d8322e3b. The intervening Mermaid, Algol, two Manchester Baby, Spanish, human-language, HTML-parser, and blog commits have no exact overlap with the 57 Vigenere, fixture-generator, state, roadmap, CI, and changelog paths. The regenerated collision-checked reports first recorded the Manchester Baby simulator identity moving from a TypeScript singleton into the two-lane band after its Rust package landed, then recorded the independently named Rust gate-level simulator as a new singleton. Both newly exposed classification owners were registered before publication.",
+      "validation_notes": "A dependency-free bounded generator validates the exact classical-ciphers-v1 profile, complete 26-case Vigenere roster, fixture digest, closed operation and error-ID sets, Unicode scalars, nesting and byte ceilings, 8,193-scalar text/repeat limits, Vigenere parameter/key/result bounds, and source-safe fixed case identities, then emits one native complete-object consumer for every established lane. Fourteen generator tests cover the complete roster and all renderers, strict duplicate/non-finite JSON, surrogate/depth/size limits, bounded file and generated-output reads, malformed operation types, numeric/keyword/source-injection IDs, schema-bound mutations, scalar-safe string rendering, fixture-owned repeat descriptors, complete expected-object projection, stale output detection, and Dart/TypeScript non-throw false-positive prevention. Generator check, Ruff check/format, Bandit medium/high, credential scan, and git diff checks pass. Native suites pass locally in C# (36 tests; 97.56% line/96.05% branch), Dart (43), Elixir (64 including four doctests), F# (36; 95.07% line/88.67% branch), Go (26 generated plus package tests; 97.9%), Haskell (53 examples), Java, Kotlin, Lua (58), Perl (36 top-level tests), Python (65; 99.15%), Ruby (56 runs/87 assertions), Rust (28 unit plus 26 generated, Clippy warnings denied), Swift (58), and TypeScript (63; 98.57/93.33/100/99.23% statement/branch/function/line). Dart format/analyze, Go format/vet, Rust format, Haskell cabal check, TypeScript build and production audit, NuGet vulnerability checks, and dependency inspection pass. Independent correctness and security reviews found and drove fixes for Dart/TypeScript false-positive negative cases, closed-schema resource bounds and result validation, stable malformed-operation errors, source-unsafe IDs, bounded drift reads, Ruff diagnostics, and changelog counting; both final reviews report no additional authority or dependency expansion. The exact diff build plan evaluates 45 Starlark files, discovers 5,092 packages, validates the five-entry orphan ledger, and selects exactly the 15 Vigenere roots with no dependency expansion; all 15 real Windows build fronts pass after exposing the already installed Lua Busted and Python 3.13 uv toolchains to the runner. The schema-3 report on exact rebased main is collision-clean with 15 established lanes, 1,375 implementation identities, 4,585 slots, 1,414 all-reported identities, bands 175/266, 123/934, 167/2,100, and 910/12,740, 722 Rust singletons, zero unknown buckets, and OCaml emerging at zero packages.",
+      "publication_notes": "Opened ready-for-review PR #13224 at 2026-08-27T14:40:44Z from fully validated implementation head cccc949cb00b0eb53f2dfdc257a966caebe56939 after a normal first push and confirmation that no parity PR was active. GitHub reports the PR non-draft and MERGEABLE; required checks are queued and mergeStateStatus is BLOCKED, so auto-merge remains disabled until every required check is terminal and acceptable and GitHub reports no conflict."
     },
     {
       "id": "vigenere-established-lane-build-front-hardening",
@@ -2356,6 +2365,42 @@
       "branch": null,
       "pr_number": null,
       "notes": "Discovered during the selected Vigenere owner's build and toolchain audit. Swift's Windows front masks a failing swift test behind an unconditional success echo; Haskell and Perl Windows fronts skip even when a usable toolchain is installed; TypeScript omits its declared typecheck build; and Python assumes a PATH-installed uv executable even when the supported module entry point is available. After behavior convergence, harden these fronts or record narrow reviewed platform exceptions, add exact build-front regression coverage, and keep the change separate from CR03 semantics."
+    },
+    {
+      "id": "atbash-language-neutral-fixture-established-lane-consumers",
+      "title": "Execute the normative Atbash corpus in every established lane",
+      "status": "pending",
+      "depends_on": ["classical-cipher-language-neutral-fixtures-and-analysis-contract"],
+      "branch": null,
+      "pr_number": null,
+      "notes": "Discovered during the post-#13172 fixture-consumer audit before successor selection. The neutral classical-ciphers-v1 corpus pins six complete Atbash objects, but no established Atbash lane currently references the corpus or compares every complete expected object. Add bounded dependency-free generated consumers or test-only adapters across all 15 established packages, preserving empty production capability profiles and the fixture README's rule that schema validation alone is not conformance."
+    },
+    {
+      "id": "layout-inline-singleton-classification",
+      "title": "Classify the Rust-only layout-inline package before parity expansion",
+      "status": "pending",
+      "depends_on": [],
+      "branch": null,
+      "pr_number": null,
+      "notes": "Discovered by the collision-checked post-#13172 inventory after merged PR #13196 added the Rust-only layout-inline identity, increasing the implementation inventory by one identity and slot and Rust singletons from 720 to 721. Review whether its deterministic Layout IR formatting behavior exposes a reusable portable contract or remains a Rust-canonical UI subsystem with a reviewed applicability exception. Do not implement or modify the package while live PR #13209 owns code/packages/rust/layout-inline/src/lib.rs; this owner records the new classification debt without colliding with that work."
+    },
+    {
+      "id": "manchester-baby-simulator-two-lane-classification",
+      "title": "Classify Manchester Baby simulator portability across Rust and TypeScript",
+      "status": "pending",
+      "depends_on": [],
+      "branch": null,
+      "pr_number": null,
+      "notes": "Discovered by the collision-checked pre-publication refresh after merged PR #13198 added code/packages/rust/manchester-baby-simulator beside the existing TypeScript implementation. This adds one implementation slot without adding an identity, moves Manchester Baby from the singleton band into the two-to-four-lane band, and leaves thirteen established lanes unclassified. Compare the deterministic CPU state, instruction, stepping, error, and resource-limit contracts; then define a portable corpus and dependency-shaped applicable-lane rollout or record a reviewed target-specific exception. Keep the separately named gate-level simulator work outside this package owner."
+    },
+    {
+      "id": "manchester-baby-gatelevel-singleton-classification",
+      "title": "Classify the Rust-only Manchester Baby gate-level simulator",
+      "status": "pending",
+      "depends_on": [],
+      "branch": null,
+      "pr_number": null,
+      "notes": "Discovered by the second collision-checked pre-publication refresh after merged PR #13218 added the independently named Rust-only manchester-baby-gatelevel package. Classify its deterministic transistor, netlist, clock, machine-state, instruction, diagnostic, and resource-limit behavior; define a neutral gate-level contract and applicable-lane rollout where portable, or record a reviewed Rust-canonical simulator exception. Keep it separate from the existing higher-level manchester-baby-simulator two-lane classification owner."
     },
     {
       "id": "trie-language-neutral-fixtures-and-key-contract",

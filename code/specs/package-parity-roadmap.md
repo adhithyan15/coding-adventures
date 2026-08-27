@@ -2713,7 +2713,7 @@ Delivery order:
    adversarial corpus from discovery, resolution, graph, and plan into the
    remaining non-execution domains: diff selection, hashing/cache, Starlark,
    sharding, validation, toolchain detection, and CLI. The current selected
-   tranche now provides a 30-case, 11-domain process-free corpus, including
+   tranche now provides a 111-case, 11-domain process-free corpus, including
    conservative unknown-path handling, typed cache states, inline-only
    Starlark loads, prerequisite-closed shard verification, the OCaml-aware
    toolchain registry, and fail-closed BUILD-file validation.
@@ -9335,6 +9335,85 @@ remaining one bounded package family. Six live open PRs have zero exact
 overlap with its Vigenere package, CR03, classical-cipher fixture, state, or
 roadmap surfaces. After selection, state is 160 merged, 374 pending, and
 exactly one in-progress owner, with no active parity PR.
+
+## Post-#13172 Refresh and Vigenere Fixture-Consumer Selection
+
+Focused Windows build-front repair head
+`e212e0a87632069e8a37e732a4f784a9e3936b1c` completed all 41 reported checks:
+39 succeeded and two were expected skips, with no failure or pending check.
+GitHub reported `MERGEABLE/CLEAN`; the loop enabled squash auto-merge, and
+GitHub merged PR #13172 as
+`580e1a1710452f1133eae07cc5252961920cac57` at
+2026-08-27T13:18:07Z without a manual merge command.
+
+The collision-checked schema-3 inventory on that exact merged `origin/main`
+contains 15 established lanes, 1,374 implementation identities, 4,583 package
+slots, and 1,413 all-reported identities. The four bands are 175/266,
+123/934, 166/2,087, and 910/12,740; Rust has 721 singletons, canonical
+collisions and unknown buckets remain zero, and OCaml remains correctly
+emerging at zero packages. The sole topology delta is Rust-only
+`layout-inline`, added by PR #13196. The refresh registers
+`layout-inline-singleton-classification` before selection so its deterministic
+Layout IR behavior receives either a portable contract or a reviewed subsystem
+exception. Live PR #13209 owns its Rust source, so the classification owner
+must not implement or modify that package while the PR remains active.
+
+The fixture audit also found that none of the 15 Atbash packages executes all
+six complete CR01 objects from `classical-ciphers-v1`. New pending owner
+`atbash-language-neutral-fixture-established-lane-consumers` records that
+bounded generated-consumer work before selection. Schema validation alone is
+not executable conformance, so this is distinct from the merged neutral corpus
+contract and from the completed Scytale consumers.
+
+The dependency/leverage pass selects
+`vigenere-language-neutral-fixture-established-lane-consumers` on branch
+`codex/vigenere-neutral-fixture-consumers`. Its sole behavior-convergence
+dependency is now merged. Executing all 26 complete normative Vigenere objects
+through the bounded dependency-free generated-consumer pattern already proven
+for Scytale closes executable drift evidence across all 15 established lanes.
+That immediate all-lane reach outranks the ready five-front Vigenere build
+hardening sibling, the six-case Atbash consumer, and the independent
+single-package contracts. The live-PR path audit found no overlap with the
+Vigenere packages, CR03 and classical-cipher fixtures, prospective generator
+and tests, state, roadmap, CI, or root changelog surfaces.
+
+The strategic OCaml process-free build substrate remains pending even though
+its declared dependencies are merged: open PR #12149 still owns the required
+Go build-tool validator and entry-point paths. OCaml therefore remains outside
+the established denominator until that collision clears and the full substrate,
+representative package, capability analyzer, native build tool, and promotion
+chain lands. After reconciliation and selection, the complete acyclic graph has
+537 owners and 795 dependency edges: 161 merged, 375 pending, and exactly one
+in-progress owner, with no active parity PR. The fresh worktree and branch start
+from exact `origin/main` `580e1a1710452f1133eae07cc5252961920cac57`.
+
+## Pre-publication Rebase and Manchester Baby Classification
+
+Before publication, the selected branch rebased conflict-free twice, finally
+onto exact `origin/main` `063d4d725df6dd8f854ef6c3a74a6459d8322e3b`. The
+intervening Mermaid, Algol, two Manchester Baby, Spanish, human-language,
+HTML-parser, and blog changes have no exact overlap with this tranche's 57
+Vigenere, fixture-generator, state, roadmap, CI, and changelog paths.
+
+The final required collision-checked schema-3 refresh records 15 established
+lanes, 1,375 implementation identities, 4,585 package slots, and 1,414
+all-reported identities. The four bands are now 175/266, 123/934, 167/2,100,
+and 910/12,740; Rust has 722 singletons, canonical collisions and unknown
+buckets remain zero, and OCaml remains emerging at zero packages. Merged PR
+#13198 added the Rust `manchester-baby-simulator` beside its existing
+TypeScript package. It therefore added one slot without adding an identity,
+moving that package from the singleton band into the two-to-four-lane band.
+Merged PR #13218 then added the independently named Rust-only
+`manchester-baby-gatelevel`, contributing one identity, one slot, and one Rust
+singleton.
+
+New pending owner `manchester-baby-simulator-two-lane-classification` records
+the higher-level simulator's thirteen-lane classification gap. Separate new
+pending owner `manchester-baby-gatelevel-singleton-classification` records the
+gate-level package's transistor, netlist, clock, machine-state, diagnostic,
+resource-limit, portability, and applicability review. The resulting complete
+acyclic graph has 539 owners and 795 dependency edges: 161 merged, 377 pending,
+and exactly one in-progress owner, with no active parity PR.
 
 ## Autonomous Loop Protocol
 

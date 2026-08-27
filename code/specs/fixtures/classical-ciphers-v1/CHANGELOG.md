@@ -1,5 +1,11 @@
 # Changelog
 
+## 1.0.3 - 2026-08-27
+
+- Add dependency-free generated Vigenere consumers for every established lane.
+- Bind all 15 native consumers to the exact corpus digest, all 26 complete expected
+  objects, normalized error IDs, and current implementation-language roster.
+
 ## 1.0.2 - 2026-08-26
 
 - Add dependency-free generated Scytale consumers for every established lane.

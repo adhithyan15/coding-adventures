@@ -1,5 +1,8 @@
+import qualified GeneratedClassicalCipherFixtureSpec
 import qualified VigenereCipherSpec
 import Test.Hspec
 
 main :: IO ()
-main = hspec VigenereCipherSpec.spec
+main = hspec $ do
+    VigenereCipherSpec.spec
+    GeneratedClassicalCipherFixtureSpec.spec
