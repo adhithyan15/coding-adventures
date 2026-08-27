@@ -1,9 +1,9 @@
 /**
- * slug.test.ts — slugify + formatRoute unit tests.
+ * slug.test.ts — slugify unit tests.
  */
 
 import { describe, it, expect } from "vitest";
-import { slugify, formatRoute } from "../src/slug.js";
+import { slugify } from "../src/slug.js";
 
 describe("slugify", () => {
   it("takes the basename and strips .md", () => {
@@ -62,19 +62,5 @@ describe("slugify", () => {
 
   it("preserves embedded digits", () => {
     expect(slugify("2026-05-15-release-notes.md")).toBe("2026-05-15-release-notes");
-  });
-});
-
-describe("formatRoute", () => {
-  it("substitutes {slug}", () => {
-    expect(formatRoute("/blog/{slug}.html", "hello")).toBe("/blog/hello.html");
-  });
-
-  it("substitutes multiple {slug} occurrences", () => {
-    expect(formatRoute("/{slug}/{slug}", "x")).toBe("/x/x");
-  });
-
-  it("leaves templates without {slug} unchanged", () => {
-    expect(formatRoute("/static.html", "ignored")).toBe("/static.html");
   });
 });

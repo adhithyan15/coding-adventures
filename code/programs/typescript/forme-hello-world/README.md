@@ -10,13 +10,13 @@ end-to-end. It exercises:
 |---|---|---|
 | `forme-source-fs` | `Void` → `Stream<ContentSource>` | FM00 §5.1 |
 | `forme-parse-markdown` | `ContentSource` → `ContentNode` | FM00 §5.2 |
+| `forme-router` | `Stream<ContentNode>` → `Stream<ContentNode>` | FM00 §5.4 |
 | `forme-render-static` | `Stream<ContentNode>` → `Stream<RenderedPage>` | FM00 §5.5 |
 | `forme-emit-fs` | `Stream<RenderedPage>` → `DeployArtifact` | FM00 §5.6 |
 
-The orchestrator (`forme-orchestrator`, FM03 §3–4) walks the typed DAG
-that connects them — relying on stream-iteration promotion (the v0.1.1
-bug fix) so the per-item parser slots cleanly between the streaming
-source and the streaming renderer.
+The orchestrator (`forme-orchestrator`, FM03 §3–4) walks the explicitly
+wired typed DAG. The router is the sole owner of URL policy; the renderer
+requires and preserves its canonical route.
 
 ## Run it
 
@@ -42,13 +42,9 @@ artifact exists and contains the expected substrings.
 ## What's deliberately NOT here (yet)
 
 - **`forme-collect-chronological`** is omitted from the topology.
-  v0 of `forme-render-static` derives its own routes from
-  `sourcePath` rather than reading them from a `Collection`, and the
-  collector produces a `Collection` (not a sink kind), so wiring the
-  collector in would create an orphan output. Once the v0.2 router
-  stage lands (per `forme-render-static`'s README) the collector will
-  fold in cleanly and a multi-post chronological index page becomes
-  the next demo.
+  The collector produces a `Collection` (not a sink kind), so this minimal
+  linear demo would create an orphan output. The complete blog example fans
+  routed nodes into collector and renderer branches and consumes both.
 
 - **Watch mode** (FM03 §7). The orchestrator's v0 release shipped
   `runOnce` only.

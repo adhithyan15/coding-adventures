@@ -4,15 +4,15 @@
 
 ### Changed
 
-- Collection entries now copy the canonical `ContentNode.route` assigned by
-  `forme-router`, keeping page and collection branches in agreement.
-- `routeTemplate` remains as a compatibility fallback only when a node has no
-  route.
+- Collection entries now require and copy the canonical `ContentNode.route`
+  assigned by `forme-router`, keeping page and collection branches in
+  agreement. Unrouted input receives an actionable error.
+- Removed `routeTemplate` and `formatRoute`; URL policy now lives exclusively
+  in `forme-router`.
 
 ### Tests
 
-- Added coverage proving the canonical node route wins over conflicting local
-  derivation settings.
+- Added coverage for canonical routed input and the unrouted-input diagnostic.
 
 ## 0.1.0 — 2026-05-15
 

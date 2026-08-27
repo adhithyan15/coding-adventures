@@ -8,17 +8,14 @@
  *   consumes:    streamOf(Kinds.ContentNode)
  *   produces:    streamOf(Kinds.RenderedPage)
  *   capabilities: []                ← pure transform
- *   configSchema: { siteTitle?, routeTemplate?, siteUrl?, siteHomeRoute?,
+ *   configSchema: { siteTitle?, siteUrl?, siteHomeRoute?,
  *                   rssRoute?, atomRoute? }
  *
  * === Why this is a stream-to-stream stage ===
  *
  * A router stage upstream owns canonical URL policy and records its
- * decision on `ContentNode.route`.  The renderer consumes that route
- * directly.  A local `sourcePath` derivation remains only as a
- * compatibility fallback for older standalone pipelines that have
- * not inserted `forme-router` yet; product pipelines should configure
- * routes once, at the router.
+ * decision on `ContentNode.route`. The renderer consumes that route
+ * directly and rejects unrouted nodes with an actionable diagnostic.
  *
  * === RenderedPage shape ===
  *
@@ -40,8 +37,6 @@
  * No deliberate divergences from FM00 / FM01.  v0 simplifications:
  *
  *   - Single hard-coded theme (no Style IR).
- *   - A deprecated local route fallback remains for pipelines that do
- *     not yet supply `ContentNode.route`.
  *   - `usedStyle` / `usedIslands` / `usedAssets` empty.
  *   - OpenGraph and structured data remain empty; canonical URLs,
  *     descriptions, and feed discovery are emitted when `siteUrl`
@@ -61,7 +56,7 @@ import { defineStage } from "@coding-adventures/forme-stage";
 import { toHtml } from "@coding-adventures/document-ast-to-html";
 import { generateMetaLinkTags } from "@coding-adventures/forme-aot-meta-link-tags";
 import { generateFeedDiscoveryLinks } from "@coding-adventures/forme-aot-rss-discovery-link";
-import { slugify, formatRoute } from "./slug.js";
+import { slugify } from "./slug.js";
 import { renderHtmlDocument } from "./theme.js";
 import { deriveTitle } from "./title.js";
 
@@ -69,8 +64,6 @@ import { deriveTitle } from "./title.js";
 export interface RenderStaticConfig {
   /** Site title for the page header.  Empty/undefined → no header. */
   readonly siteTitle?: string;
-  /** Deprecated fallback used only when `ContentNode.route` is null. */
-  readonly routeTemplate?: string;
   /** Public deployment base, including a project-page prefix when present. */
   readonly siteUrl?: string;
   /** Canonical route used by the site-title link. */
@@ -81,7 +74,6 @@ export interface RenderStaticConfig {
   readonly atomRoute?: string;
 }
 
-const DEFAULT_ROUTE_TEMPLATE = "/blog/{slug}.html";
 const DEFAULT_SITE_TITLE = "";
 
 const renderStatic = defineStage({
@@ -96,7 +88,6 @@ const renderStatic = defineStage({
     type: "object",
     properties: {
       siteTitle:     { type: "string" },
-      routeTemplate: { type: "string" },
       siteUrl:       { type: "string" },
       siteHomeRoute: { type: "string" },
       rssRoute:      { type: "string" },
@@ -106,17 +97,21 @@ const renderStatic = defineStage({
   async *run(rawInput, rawConfig, ctx) {
     const config = (rawConfig ?? {}) as RenderStaticConfig;
     const siteTitle     = config.siteTitle     ?? DEFAULT_SITE_TITLE;
-    const routeTemplate = config.routeTemplate ?? DEFAULT_ROUTE_TEMPLATE;
     const stream = rawInput as AsyncIterable<ContentNode>;
 
     for await (const node of stream) {
       ctx.cancellation.throwIfCancelled();
 
-      // Canonical routes are assigned once by forme-router. Keep the
-      // sourcePath derivation only as a compatibility fallback for
-      // standalone render-stage callers that have not migrated yet.
+      if (node.route === null) {
+        throw new Error(
+          `forme-render-static: ContentNode ${node.identity} (${node.sourcePath}) has no route; add forme-router upstream`,
+        );
+      }
+
+      // Canonical routes are assigned once by forme-router. Slug
+      // derivation remains solely for the final title fallback.
       const slug = slugify(node.sourcePath);
-      const route = node.route ?? formatRoute(routeTemplate, slug);
+      const route = node.route;
 
       // Render the document body via the wrapped renderer.  Note we
       // do NOT pass `sanitize: true` — v0 trusts authored Markdown
@@ -208,4 +203,4 @@ export function publicUrl(siteUrl: string, route: string): string {
 }
 
 export default renderStatic;
-export { renderStatic, slugify, formatRoute, deriveTitle, renderHtmlDocument };
+export { renderStatic, slugify, deriveTitle, renderHtmlDocument };

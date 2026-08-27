@@ -15,16 +15,16 @@ import render from "@coding-adventures/forme-render-static";
 render.consumes      // streamOf(Kinds.ContentNode)
 render.produces      // streamOf(Kinds.RenderedPage)
 render.capabilities  // []  ← pure transform
-render.configSchema  // siteTitle, routeTemplate, siteUrl, siteHomeRoute, rssRoute, atomRoute
+render.configSchema  // siteTitle, siteUrl, siteHomeRoute, rssRoute, atomRoute
 ```
 
 ## What it does
 
 For each input `ContentNode`:
 
-1. **Use the canonical route** from `ContentNode.route`, normally set
-   upstream by `forme-router`. Older standalone callers without a router
-   retain a compatibility fallback through `slugify` + `formatRoute`.
+1. **Use the canonical route** from `ContentNode.route`, set upstream by
+   `forme-router`. An unrouted node fails with a diagnostic that names the
+   source and tells the pipeline author to add the router.
 2. **Render body** by calling `toHtml(node.document)` from
    `document-ast-to-html`.
 3. **Derive title** via the three-step fallback:
@@ -45,17 +45,16 @@ parse → router ┬→ render → emit
                └→ collector
 ```
 
-Both branches read the same `ContentNode.route`. `routeTemplate` remains in
-the renderer config only for compatibility with pre-router standalone
-pipelines and should not be set in new product configurations.
+Both branches read the same `ContentNode.route`; URL templates belong only
+to `forme-router`.
 
 ## v0 simplifications (documented)
 
 - **Single hard-coded classless theme.** Replaced when FM04 (Style IR)
   lands and a `forme-render-themed` sibling stage starts consuming a
   `StyleDocument`.
-- **Local route fallback retained for compatibility.** New pipelines route
-  upstream and treat `ContentNode.route` as authoritative.
+- **Routed input is required.** This keeps one canonical URL decision across
+  all product branches.
 - **`usedStyle` / `usedIslands` / `usedAssets` all empty.** Driving the
   AOT bundler's smallest-artifact decisions (FM06) needs all three;
   static rendering doesn't have the inputs yet.
@@ -97,7 +96,6 @@ request — important for first-paint on cold caches.
 ```ts
 interface RenderStaticConfig {
   siteTitle?:     string;   // header anchor text; empty → no header
-  routeTemplate?: string;   // deprecated fallback when node.route is null
   siteUrl?:       string;   // public deployment base, including project prefix
   siteHomeRoute?: string;   // route used by the site-title link
   rssRoute?:      string;   // RSS auto-discovery route

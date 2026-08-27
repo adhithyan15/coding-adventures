@@ -2,9 +2,7 @@
  * slug.ts — derive a URL-safe slug from a source path.
  *
  * Routed pipelines read canonical URL policy from `ContentNode.route`.
- * This helper remains for title fallback and for backward-compatible
- * standalone callers whose nodes are still unrouted. FM-B020 tracks
- * migrating the final demo and retiring duplicated route formatting.
+ * This helper remains only for the renderer's final title fallback.
  *
  * @module slug
  */
@@ -28,16 +26,4 @@ export function slugify(sourcePath: string): string {
   while (hi > lo && s.charCodeAt(hi - 1) === 45) hi--;
   s = s.slice(lo, hi);
   return s.length > 0 ? s : "untitled";
-}
-
-/**
- * Substitute `{slug}` in a template string.
- *
- * Uses a function replacement (not a string replacement) so `$&`,
- * `$1`, `$<name>`, etc. in `slug` are treated as literal characters
- * rather than regex back-references.  Without this, frontmatter
- * `slug: "$&"` would inject the whole match into the route.
- */
-export function formatRoute(template: string, slug: string): string {
-  return template.replace(/\{slug\}/g, () => slug);
 }

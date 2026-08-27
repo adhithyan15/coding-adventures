@@ -1,5 +1,14 @@
 # Changelog — forme-hello-world
 
+## Unreleased
+
+### Changed
+
+- Added `forme-router` as the third stage and made the five-stage topology
+  explicit with stable IDs and wires.
+- Removed renderer-owned route configuration; URL policy now lives only in
+  the router, matching the complete blog pipeline.
+
 ## 0.1.0 — 2026-05-16
 
 Initial release. First end-to-end Forme pipeline demo — proves the

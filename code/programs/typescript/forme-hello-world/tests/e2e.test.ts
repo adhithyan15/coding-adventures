@@ -98,9 +98,10 @@ describe("forme-hello-world end-to-end", () => {
       expect(summary.outcome, `stage ${name} outcome`).toBe("success");
       expect(summary.errorCount, `stage ${name} errorCount`).toBe(0);
     }
-    // All four stages are present.
+    // All five stages are present, including the canonical router.
     expect(byName.has("@coding-adventures/forme-source-fs")).toBe(true);
     expect(byName.has("@coding-adventures/forme-parse-markdown")).toBe(true);
+    expect(byName.has("@coding-adventures/forme-router")).toBe(true);
     expect(byName.has("@coding-adventures/forme-render-static")).toBe(true);
     expect(byName.has("@coding-adventures/forme-emit-fs")).toBe(true);
 
@@ -113,6 +114,7 @@ describe("forme-hello-world end-to-end", () => {
     // tweaks because they come straight from the source post.
     expect(html).toContain("<h1>Hello, Forme</h1>");
     expect(html).toContain("forme-source-fs");
+    expect(html).toContain("forme-router");
     expect(html).toContain("forme-emit-fs");
 
     // Title resolved via the frontmatter.title path (not the H1
