@@ -1067,6 +1067,26 @@ fn extract_flex_hints(props: &[StyleProp]) -> FlexHints {
             "width" if value == "100%" => hints.width_full = true,
             "height" if value == "100%" => hints.height_full = true,
             "align-items" if value == "center" => hints.align_items = Some(value.to_string()),
+            // `align` (not `align-items`) is not a real mosstyle property
+            // — per `UI15-mosstyle.md` §1/§11, alignment belongs in
+            // `.mll`, and mosstyle's grammar has no property whitelist to
+            // reject it (a separate, filed gap: issue TBD). It reached
+            // real `.msl` files anyway (TaskApp, VentureChrome, Calendar,
+            // ProjectNav — 30+ occurrences), always as `center-vertical`
+            // on a `Row` (one `center` on a `Column`), always meaning
+            // "center the cross axis" — exactly `align-items: center`'s
+            // existing meaning. Recognising it here (rather than
+            // rejecting it, which would just re-silently-drop it) fixes
+            // the real, currently-broken rendering with the same
+            // reasoning `align-items: center` already applies: this
+            // conflates "vertical" with "cross-axis", which only holds
+            // because every current author of `center-vertical` puts it
+            // on a Row — a hypothetical future `center-vertical` on a
+            // Column is out of scope, same "don't guess" policy as the
+            // rest of this table.
+            "align" if value == "center-vertical" || value == "center" => {
+                hints.align_items = Some("center".to_string());
+            }
             "justify-content" if value == "space-between" => {
                 hints.justify_content = Some(value.to_string());
             }
@@ -1743,6 +1763,10 @@ pub fn dropped_style_properties(style: &mosstyle_compiler::StyleDef) -> Vec<Drop
             let consumed_via_flex_hints = match drop.name.as_str() {
                 "flex-grow" => true,
                 "align-items" => drop.value.trim() == "center",
+                "align" => {
+                    let v = drop.value.trim();
+                    v == "center-vertical" || v == "center"
+                }
                 "justify-content" => drop.value.trim() == "space-between",
                 _ => false,
             };
@@ -2262,6 +2286,9 @@ fn unsupported_property_reason(name: &str) -> &'static str {
         "flex-wrap" => "WinUI 3 has no built-in WrapPanel",
         "align-items" => {
             "this value isn't one FlexHints recognises (only \"center\" is); no per-child alignment was applied"
+        }
+        "align" => {
+            "this value isn't one FlexHints recognises (only \"center-vertical\"/\"center\" are); no per-child alignment was applied"
         }
         "justify-content" => {
             "this value isn't one FlexHints recognises (only \"space-between\" is); no distribution was applied"
@@ -16859,6 +16886,86 @@ mod tests {
                 r.xaml
             );
         }
+    }
+
+    /// `align: "center-vertical"` (a non-standard mosstyle property that
+    /// reached real `.msl` files — TaskApp, VentureChrome, Calendar,
+    /// ProjectNav — but was never lowered by anything) produces the
+    /// same `VerticalAlignment="Center"` per-child attribute
+    /// `align-items: center` already does, since every real author of
+    /// `center-vertical` puts it on a `Row` (where "vertical" IS the
+    /// cross axis).
+    #[test]
+    fn row_align_center_vertical_lowers_to_same_cross_axis_attribute_as_align_items() {
+        let c = component("Foo", vec![], vec![]);
+        let l = layout_with_root(
+            "Foo",
+            LayoutNode {
+                tag: "Row".to_string(),
+                part_name: Some("brand".to_string()),
+                props: Vec::new(),
+                children: vec![LayoutNode {
+                    tag: "Text".to_string(),
+                    part_name: None,
+                    props: vec![LayoutProp {
+                        name: "content".to_string(),
+                        value: LayoutPropValue::String("Trestle".to_string()),
+                    }],
+                    children: Vec::new(),
+                }],
+            },
+        );
+        let s = style_for_box("brand", vec![("align", "center-vertical"), ("gap", "10")]);
+        let r = compile(&c, &l, &s);
+        assert!(
+            r.xaml
+                .contains("Text=\"Trestle\" Grid.Column=\"0\" VerticalAlignment=\"Center\""),
+            "got:\n{}",
+            r.xaml
+        );
+        assert!(
+            !r.xaml.contains("Property=\"Align\""),
+            "align must never leak into a fake WinUI setter, got:\n{}",
+            r.xaml
+        );
+    }
+
+    /// `align: "center-vertical"`/`align: "center"` are consumed by the
+    /// same `FlexHints` side channel as `align-items: center` and must
+    /// never surface in the #12022 dropped-properties report.
+    #[test]
+    fn dropped_style_properties_excludes_recognised_align_values() {
+        let style = style_for_box(
+            "brand",
+            vec![("align", "center-vertical")],
+        );
+        assert!(
+            dropped_style_properties(&style).is_empty(),
+            "got: {:?}",
+            dropped_style_properties(&style)
+        );
+        let style_center = style_for_box("notes-empty", vec![("align", "center")]);
+        assert!(
+            dropped_style_properties(&style_center).is_empty(),
+            "got: {:?}",
+            dropped_style_properties(&style_center)
+        );
+    }
+
+    /// An `align` value FlexHints doesn't recognise is a genuine drop —
+    /// no per-child alignment is applied for it anywhere, matching
+    /// `align-items`'s identical unrecognised-value treatment.
+    #[test]
+    fn dropped_style_properties_reports_unrecognised_align_value() {
+        let style = style_for_box("brand", vec![("align", "flex-end")]);
+        let dropped = dropped_style_properties(&style);
+        assert_eq!(dropped.len(), 1, "got: {dropped:?}");
+        assert_eq!(dropped[0].name, "align");
+        assert!(
+            dropped[0].reason.contains("FlexHints"),
+            "got: {}",
+            dropped[0].reason
+        );
     }
 
     #[test]

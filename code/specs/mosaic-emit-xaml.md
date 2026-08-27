@@ -194,6 +194,17 @@ need no attribute — `Stretch` is both WinUI's and flexbox's default.
 authored source needs them rather than guessing at the XAML shape
 unverified.
 
+`align: "center-vertical"` / `align: "center"` (not `align-items`) are
+also recognized here, mapped to the identical `center` treatment
+(issue #13164). `align` is not a real mosstyle property — per
+`UI15-mosstyle.md` §1/§11 alignment belongs in `.mll`, and mosstyle's
+grammar has no property whitelist to reject it — but it reached 30+
+real `.msl` declarations anyway (TaskApp, VentureChrome, Calendar,
+ProjectNav), always on a `Row`, always meaning exactly what
+`align-items: center` means. Recognizing the value that's actually
+authored fixes the real dropped-centering bug; the underlying
+mosstyle-grammar gap stays open, tracked in #13164.
+
 **Main-axis distribution (`justify-content`).** Only `space-between`
 is authored today. It inserts a `"*"`-sized spacer definition
 *between* each pair of children — `N` children get `N − 1` spacers, no
@@ -238,14 +249,16 @@ surfaces the results as `styleDegradations` in `mosaic-degradations.json`
 from `degradations` (non-gating) rather than folded in.
 
 **Exclusions**, so the report doesn't false-positive on properties §3.1
-already handles through a side channel: `align-items`/`justify-content`
-are excluded only when their value is one `FlexHints` actually consumes
-(`"center"` / `"space-between"` respectively — any other value IS
-reported, since nothing consumes it); `flex-grow` is excluded
-unconditionally (fully boolean-handled today, nothing recognisable as
-"lost"); `position`/`top`/`left` are excluded only when `position` is
-literally `"absolute"` (see §3.3) — `top`/`left` authored without it
-are meaningless in CSS too and stay reported as before.
+already handles through a side channel: `align-items`/`align`/
+`justify-content` are excluded only when their value is one `FlexHints`
+actually consumes (`"center"` for `align-items`/`align`, or
+`"center-vertical"` for `align`; `"space-between"` for
+`justify-content` — any other value IS reported, since nothing consumes
+it); `flex-grow` is excluded unconditionally (fully boolean-handled
+today, nothing recognisable as "lost"); `position`/`top`/`left` are
+excluded only when `position` is literally `"absolute"` (see §3.3) —
+`top`/`left` authored without it are meaningless in CSS too and stay
+reported as before.
 
 ### 3.3 `position: "absolute"` → pinned `Margin` (issue #12028 item 4)
 
