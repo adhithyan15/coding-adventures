@@ -18,7 +18,10 @@ duration:
 requires:
   knowledge: [RU-LEX-KHLEB]
 introduces:
-  knowledge: [RU-LEX-DRUG, RU-ETYMON-DRUG-ACCOMPANY]
+ knowledge: [RU-LEX-DRUG, RU-ETYMON-DRUG-ACCOMPANY]
+introduces_idioms: []
+introduces_senses: []
+introduces_culture_claims: []
 practises:
   knowledge: [RU-LEX-KHLEB, RU-SCRIPT-KHA, RU-ETYMON-KHLEB-LOAF, RU-LEX-DRUG, RU-ETYMON-DRUG-ACCOMPANY, RU-GRAMMAR-NOUN-GENDER-ENDING, RU-GRAMMAR-TY-VY-REGISTER, RU-PRAGMATICS-VY-POLITENESS]
 skills: [listening, speaking, reading]

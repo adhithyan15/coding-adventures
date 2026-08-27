@@ -18,7 +18,10 @@ duration:
 requires:
   knowledge: []
 introduces:
-  knowledge: [RU-LEX-YA, RU-SCRIPT-YA-NOT-R, RU-ETYMON-YA-EGO]
+ knowledge: [RU-LEX-YA, RU-SCRIPT-YA-NOT-R, RU-ETYMON-YA-EGO]
+introduces_idioms: []
+introduces_senses: []
+introduces_culture_claims: []
 practises:
   knowledge: [RU-LEX-YA, RU-SCRIPT-YA-NOT-R, RU-ETYMON-YA-EGO]
 skills: [listening, speaking, reading]

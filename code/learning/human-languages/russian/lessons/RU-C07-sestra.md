@@ -18,7 +18,10 @@ duration:
 requires:
   knowledge: [RU-LEX-BRAT-NOUN, RU-ETYMON-BRAT-BROTHER]
 introduces:
-  knowledge: [RU-LEX-SESTRA, RU-ETYMON-SESTRA-SISTER]
+ knowledge: [RU-LEX-SESTRA, RU-ETYMON-SESTRA-SISTER]
+introduces_idioms: []
+introduces_senses: []
+introduces_culture_claims: []
 practises:
   knowledge: [RU-LEX-DRUG, RU-LEX-PODRUGA, RU-GRAMMAR-FEMININE-SUFFIX-A, RU-LEX-BRAT-NOUN, RU-ETYMON-BRAT-BROTHER, RU-LEX-SESTRA, RU-ETYMON-SESTRA-SISTER, RU-COMPARISON-POLITE-PRONOUNS, RU-PRAGMATICS-VY-POLITENESS, RU-ETYMON-TY-THOU, RU-GRAMMAR-NOUN-GENDER-ENDING]
 skills: [listening, speaking, reading]

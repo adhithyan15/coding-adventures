@@ -16,7 +16,10 @@ duration:
 requires:
   knowledge: [RU-LEX-YA, RU-LEX-TY-VY, RU-GRAMMAR-OBJECT-PRONOUNS, RU-LEX-MENYA-ZOVUT, RU-LEX-KAK-VAS-ZOVUT]
 introduces:
-  knowledge: [RU-DRILL-PERSON-SHAPES-01]
+ knowledge: [RU-DRILL-PERSON-SHAPES-01]
+introduces_idioms: []
+introduces_senses: []
+introduces_culture_claims: []
 practises:
   knowledge: [RU-DRILL-PERSON-SHAPES-01, RU-LEX-YA, RU-LEX-TY-VY, RU-GRAMMAR-OBJECT-PRONOUNS, RU-LEX-MENYA-ZOVUT, RU-LEX-KAK-VAS-ZOVUT]
 skills: [listening, speaking, reading]

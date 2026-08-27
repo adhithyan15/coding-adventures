@@ -18,7 +18,10 @@ duration:
 requires:
   knowledge: [RU-LEX-MAMA, RU-ETYMON-MAMA-BABBLING]
 introduces:
-  knowledge: [RU-LEX-PAPA, RU-GRAMMAR-NATURAL-GENDER-OVERRIDE]
+ knowledge: [RU-LEX-PAPA, RU-GRAMMAR-NATURAL-GENDER-OVERRIDE]
+introduces_idioms: []
+introduces_senses: []
+introduces_culture_claims: [RU-CULTURE-PAPA-AFFECTIONATE-01]
 practises:
   knowledge: [RU-LEX-MAMA, RU-ETYMON-MAMA-BABBLING, RU-LEX-SPOKOYNOY-NOCHI, RU-LEX-PAPA, RU-GRAMMAR-NATURAL-GENDER-OVERRIDE, RU-GRAMMAR-NOUN-GENDER-ENDING]
 skills: [listening, speaking, reading]

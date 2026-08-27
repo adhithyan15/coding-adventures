@@ -18,7 +18,10 @@ duration:
 requires:
   knowledge: [RU-LEX-SESTRA, RU-ETYMON-SESTRA-SISTER]
 introduces:
-  knowledge: [RU-LEX-SEMYA, RU-ETYMON-SEMYA-HOME]
+ knowledge: [RU-LEX-SEMYA, RU-ETYMON-SEMYA-HOME]
+introduces_idioms: []
+introduces_senses: []
+introduces_culture_claims: []
 practises:
   knowledge: [RU-LEX-DRUG, RU-LEX-PODRUGA, RU-LEX-BRAT-NOUN, RU-LEX-SESTRA, RU-ETYMON-SESTRA-SISTER, RU-LEX-SEMYA, RU-ETYMON-SEMYA-HOME, RU-LEX-ZHIT, RU-ETYMON-ZHIT-QUICK, RU-GRAMMAR-NOUN-GENDER-ENDING]
 skills: [listening, speaking, reading]

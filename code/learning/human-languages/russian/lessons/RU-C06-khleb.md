@@ -18,7 +18,10 @@ duration:
 requires:
   knowledge: [RU-LEX-CHAI, RU-GRAMMAR-REQUEST-PATTERN]
 introduces:
-  knowledge: [RU-LEX-KHLEB, RU-SCRIPT-KHA, RU-ETYMON-KHLEB-LOAF]
+ knowledge: [RU-LEX-KHLEB, RU-SCRIPT-KHA, RU-ETYMON-KHLEB-LOAF]
+introduces_idioms: []
+introduces_senses: []
+introduces_culture_claims: []
 practises:
   knowledge: [RU-LEX-VODA, RU-GRAMMAR-NOUN-GENDER-ENDING, RU-ETYMON-VODA-WATER, RU-LEX-KOFE, RU-SCRIPT-FE, RU-ETYMON-KOFE-ROUTE, RU-LEX-CHAI, RU-ETYMON-CHAI-ROUTE, RU-GRAMMAR-REQUEST-PATTERN, RU-LEX-KHLEB, RU-SCRIPT-KHA, RU-ETYMON-KHLEB-LOAF, RU-LEX-LYUBIT, RU-GRAMMAR-L-EPENTHESIS, RU-ETYMON-LYUBIT-LOVE]
 skills: [listening, speaking, reading]

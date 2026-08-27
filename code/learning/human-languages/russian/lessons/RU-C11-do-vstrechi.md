@@ -18,7 +18,10 @@ duration:
 requires:
   knowledge: [RU-LEX-DO-ZAVTRA, RU-ETYMON-ZAVTRA-DAWN]
 introduces:
-  knowledge: [RU-LEX-DO-VSTRECHI, RU-ETYMON-VSTRECHA-NO-COUSIN]
+ knowledge: [RU-LEX-DO-VSTRECHI, RU-ETYMON-VSTRECHA-NO-COUSIN]
+introduces_idioms: []
+introduces_senses: []
+introduces_culture_claims: []
 practises:
   knowledge: [RU-LEX-DO-ZAVTRA, RU-LEX-DO-SKOROGO, RU-ETYMON-SKORYI-HURRY, RU-GRAMMAR-DO-GENITIVE, RU-LEX-DO-VSTRECHI, RU-ETYMON-VSTRECHA-NO-COUSIN]
 skills: [listening, speaking, reading]

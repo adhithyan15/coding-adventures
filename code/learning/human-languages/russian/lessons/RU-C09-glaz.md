@@ -18,7 +18,10 @@ duration:
 requires:
   knowledge: [RU-LEX-ROT, RU-ETYMON-ROT-DIG]
 introduces:
-  knowledge: [RU-LEX-GLAZ, RU-ETYMON-GLAZ-BALL]
+ knowledge: [RU-LEX-GLAZ, RU-ETYMON-GLAZ-BALL]
+introduces_idioms: []
+introduces_senses: []
+introduces_culture_claims: []
 practises:
   knowledge: [RU-LEX-UKHO, RU-ETYMON-UKHO-EAR, RU-LEX-NOS, RU-ETYMON-NOS-NOSE, RU-LEX-ROT, RU-ETYMON-ROT-DIG, RU-LEX-GLAZ, RU-ETYMON-GLAZ-BALL, RU-LEX-VIDET, RU-ETYMON-VIDET-WIT, RU-GRAMMAR-CONSONANT-SWAP-I-FORM, RU-GRAMMAR-NOUN-GENDER-ENDING]
 skills: [listening, speaking, reading]

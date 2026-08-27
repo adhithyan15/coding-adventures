@@ -18,7 +18,10 @@ duration:
 requires:
   knowledge: [RU-LEX-DO-SVIDANIYA, RU-ETYMON-SVIDANIYA-VIDET]
 introduces:
-  knowledge: [RU-LEX-POKA, RU-ETYMON-POKA-KAKOI]
+ knowledge: [RU-LEX-POKA, RU-ETYMON-POKA-KAKOI]
+introduces_idioms: []
+introduces_senses: [RU-SENSE-POKA-FAREWELL-01]
+introduces_culture_claims: [RU-CULTURE-POKA-INFORMAL-01]
 practises:
   knowledge: [RU-LEX-DO-SVIDANIYA, RU-GRAMMAR-DO-GENITIVE, RU-LEX-KAK-VAS-ZOVUT, RU-LEX-SERDTSE, RU-SCRIPT-TSE, RU-LEX-POKA, RU-ETYMON-POKA-KAKOI]
 skills: [listening, speaking, reading]

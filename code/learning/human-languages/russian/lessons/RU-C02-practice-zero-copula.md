@@ -16,7 +16,10 @@ duration:
 requires:
   knowledge: [RU-LEX-MENYA-ZOVUT, RU-LEX-KAK-VAS-ZOVUT, RU-LEX-OCHEN-PRIYATNO]
 introduces:
-  knowledge: [RU-GRAMMAR-ZERO-COPULA-01]
+ knowledge: [RU-GRAMMAR-ZERO-COPULA-01]
+introduces_idioms: []
+introduces_senses: []
+introduces_culture_claims: []
 practises:
   knowledge: [RU-GRAMMAR-ZERO-COPULA-01, RU-LEX-MENYA-ZOVUT, RU-LEX-KAK-VAS-ZOVUT, RU-LEX-OCHEN-PRIYATNO]
 skills: [listening, speaking, reading]

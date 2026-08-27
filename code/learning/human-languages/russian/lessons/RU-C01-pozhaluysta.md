@@ -18,7 +18,10 @@ duration:
 requires:
   knowledge: [RU-LEX-SPASIBO]
 introduces:
-  knowledge: [RU-LEX-POZHALUYSTA]
+ knowledge: [RU-LEX-POZHALUYSTA]
+introduces_idioms: []
+introduces_senses: [RU-SENSE-POZHALUYSTA-YOURE-WELCOME-01]
+introduces_culture_claims: []
 practises:
   knowledge: [RU-LEX-POZHALUYSTA, RU-LEX-SPASIBO]
 skills: [listening, speaking, reading]

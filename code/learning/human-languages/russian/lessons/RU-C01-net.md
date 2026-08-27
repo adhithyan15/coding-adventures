@@ -18,7 +18,10 @@ duration:
 requires:
   knowledge: [RU-LEX-DA]
 introduces:
-  knowledge: [RU-LEX-NET]
+ knowledge: [RU-LEX-NET]
+introduces_idioms: []
+introduces_senses: []
+introduces_culture_claims: []
 practises:
   knowledge: [RU-LEX-DA, RU-LEX-NET]
 skills: [listening, speaking, reading]

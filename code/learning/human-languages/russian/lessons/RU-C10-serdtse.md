@@ -18,7 +18,10 @@ duration:
 requires:
   knowledge: [RU-LEX-GLAZ, RU-ETYMON-GLAZ-BALL]
 introduces:
-  knowledge: [RU-LEX-SERDTSE, RU-SCRIPT-TSE, RU-ETYMON-SERDTSE-HEART]
+ knowledge: [RU-LEX-SERDTSE, RU-SCRIPT-TSE, RU-ETYMON-SERDTSE-HEART]
+introduces_idioms: []
+introduces_senses: []
+introduces_culture_claims: []
 practises:
   knowledge: [RU-LEX-UKHO, RU-LEX-NOS, RU-LEX-ROT, RU-LEX-GLAZ, RU-ETYMON-GLAZ-BALL, RU-LEX-SERDTSE, RU-SCRIPT-TSE, RU-ETYMON-SERDTSE-HEART, RU-LEX-LYUBIT, RU-ETYMON-LYUBIT-LOVE, RU-GRAMMAR-NOUN-GENDER-ENDING]
 skills: [listening, speaking, reading]

@@ -18,7 +18,10 @@ duration:
 requires:
   knowledge: [RU-LEX-MAT, RU-ETYMON-MAT-MOTHER]
 introduces:
-  knowledge: [RU-LEX-OTETS, RU-ETYMON-OTETS-ATTA]
+ knowledge: [RU-LEX-OTETS, RU-ETYMON-OTETS-ATTA]
+introduces_idioms: []
+introduces_senses: []
+introduces_culture_claims: [RU-CULTURE-OTETS-FORMAL-01]
 practises:
   knowledge: [RU-LEX-MAMA, RU-LEX-PAPA, RU-LEX-MAT, RU-ETYMON-MAT-MOTHER, RU-LEX-OTETS, RU-ETYMON-OTETS-ATTA, RU-LEX-SEMYA, RU-LEX-SESTRA, RU-GRAMMAR-OBJECT-PRONOUNS, RU-GRAMMAR-INDEFINITE-PERSONAL-PLURAL]
 skills: [listening, speaking, reading]
