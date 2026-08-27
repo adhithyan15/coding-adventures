@@ -1210,7 +1210,8 @@ fn collect_native_degradations(
         // doesn't distinguish authored prop combinations either). Narrow
         // further as each remaining backend's PR merges.
         "Path"
-            if backend.is_native() && !matches!(backend, Backend::Xaml | Backend::Qt) =>
+            if backend.is_native()
+                && !matches!(backend, Backend::Xaml | Backend::Qt | Backend::Flutter) =>
         {
             Some((
                 "primitive.path-unimplemented",
@@ -4982,11 +4983,12 @@ layout MoonIcon {
         )
         .unwrap();
 
-        // XAML and Qt land their Path lowerings (circle/line/curve) in
-        // separate PRs — see path_xaml_now_has_a_native_lowering and
-        // path_qt_now_has_a_native_lowering below. The remaining three
+        // XAML, Qt, and Flutter land their Path lowerings (circle/line/
+        // curve) in separate PRs — see path_xaml_now_has_a_native_lowering,
+        // path_qt_now_has_a_native_lowering, and
+        // path_flutter_now_has_a_native_lowering below. The remaining two
         // still have no lowering at all.
-        for backend in [Backend::Compose, Backend::Flutter, Backend::SwiftUI] {
+        for backend in [Backend::Compose, Backend::SwiftUI] {
             let out = TempDir::new().unwrap();
             let report = analyze_package_degradations(
                 &BuildOptions {
@@ -5082,6 +5084,43 @@ layout MoonIcon {
         assert!(
             report.native_complete,
             "Qt now has a native Path (circle/line/curve) lowering: {:?}",
+            report.degradations
+        );
+    }
+
+    #[test]
+    fn path_flutter_now_has_a_native_lowering() {
+        let pkg = make_package("mosaic-pkg-icons-flutter", &["MoonIcon"]);
+        fs::write(
+            pkg.path().join("src/MoonIcon.mll"),
+            r#"
+layout MoonIcon {
+  Path [ root ] (
+    kind: circle,
+    cx: 17,
+    cy: 17,
+    r: 17
+  )
+}
+"#,
+        )
+        .unwrap();
+
+        let out = TempDir::new().unwrap();
+        let report = analyze_package_degradations(
+            &BuildOptions {
+                package_root: pkg.path().to_path_buf(),
+                output_root: out.path().to_path_buf(),
+                backend: Backend::Flutter,
+                emit_project: false,
+                theme: None,
+            },
+            BuildProfile::NativeComplete,
+        )
+        .expect("Flutter Path capability analysis");
+        assert!(
+            report.native_complete,
+            "Flutter now has a native Path (circle/line/curve) lowering: {:?}",
             report.degradations
         );
     }
