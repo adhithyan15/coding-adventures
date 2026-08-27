@@ -4419,9 +4419,9 @@
     "totalLessons": 4387,
     "byLevel": {
       "pre-A1": 2844,
-      "A1": 866,
-      "A2": 534,
-      "B1": 40,
+      "A1": 1000,
+      "A2": 402,
+      "B1": 38,
       "B2": 17,
       "C1": 10,
       "C2": 18
@@ -4434,8 +4434,8 @@
         "lessonCount": 108,
         "byLevel": {
           "pre-A1": 75,
-          "A1": 18,
-          "A2": 14,
+          "A1": 23,
+          "A2": 9,
           "B1": 0,
           "B2": 0,
           "C1": 0,
@@ -4449,8 +4449,8 @@
         "lessonCount": 80,
         "byLevel": {
           "pre-A1": 60,
-          "A1": 1,
-          "A2": 19,
+          "A1": 6,
+          "A2": 14,
           "B1": 0,
           "B2": 0,
           "C1": 0,
@@ -4479,8 +4479,8 @@
         "lessonCount": 122,
         "byLevel": {
           "pre-A1": 46,
-          "A1": 36,
-          "A2": 26,
+          "A1": 46,
+          "A2": 16,
           "B1": 0,
           "B2": 0,
           "C1": 0,
@@ -4494,8 +4494,8 @@
         "lessonCount": 107,
         "byLevel": {
           "pre-A1": 48,
-          "A1": 24,
-          "A2": 20,
+          "A1": 30,
+          "A2": 14,
           "B1": 0,
           "B2": 0,
           "C1": 0,
@@ -4509,8 +4509,8 @@
         "lessonCount": 165,
         "byLevel": {
           "pre-A1": 144,
-          "A1": 2,
-          "A2": 19,
+          "A1": 7,
+          "A2": 14,
           "B1": 0,
           "B2": 0,
           "C1": 0,
@@ -4524,8 +4524,8 @@
         "lessonCount": 273,
         "byLevel": {
           "pre-A1": 205,
-          "A1": 46,
-          "A2": 22,
+          "A1": 50,
+          "A2": 18,
           "B1": 0,
           "B2": 0,
           "C1": 0,
@@ -4539,8 +4539,8 @@
         "lessonCount": 89,
         "byLevel": {
           "pre-A1": 50,
-          "A1": 21,
-          "A2": 17,
+          "A1": 27,
+          "A2": 11,
           "B1": 0,
           "B2": 0,
           "C1": 0,
@@ -4569,8 +4569,8 @@
         "lessonCount": 242,
         "byLevel": {
           "pre-A1": 178,
-          "A1": 38,
-          "A2": 22,
+          "A1": 43,
+          "A2": 17,
           "B1": 0,
           "B2": 0,
           "C1": 0,
@@ -4584,8 +4584,8 @@
         "lessonCount": 111,
         "byLevel": {
           "pre-A1": 52,
-          "A1": 28,
-          "A2": 31,
+          "A1": 37,
+          "A2": 22,
           "B1": 0,
           "B2": 0,
           "C1": 0,
@@ -4599,8 +4599,8 @@
         "lessonCount": 270,
         "byLevel": {
           "pre-A1": 190,
-          "A1": 55,
-          "A2": 22,
+          "A1": 60,
+          "A2": 17,
           "B1": 0,
           "B2": 0,
           "C1": 0,
@@ -4614,8 +4614,8 @@
         "lessonCount": 111,
         "byLevel": {
           "pre-A1": 82,
-          "A1": 6,
-          "A2": 19,
+          "A1": 11,
+          "A2": 14,
           "B1": 0,
           "B2": 0,
           "C1": 0,
@@ -4644,8 +4644,8 @@
         "lessonCount": 71,
         "byLevel": {
           "pre-A1": 58,
-          "A1": 0,
-          "A2": 13,
+          "A1": 5,
+          "A2": 8,
           "B1": 0,
           "B2": 0,
           "C1": 0,
@@ -4659,8 +4659,8 @@
         "lessonCount": 97,
         "byLevel": {
           "pre-A1": 54,
-          "A1": 20,
-          "A2": 22,
+          "A1": 27,
+          "A2": 15,
           "B1": 0,
           "B2": 0,
           "C1": 0,
@@ -4674,8 +4674,8 @@
         "lessonCount": 78,
         "byLevel": {
           "pre-A1": 55,
-          "A1": 4,
-          "A2": 15,
+          "A1": 9,
+          "A2": 10,
           "B1": 0,
           "B2": 0,
           "C1": 0,
@@ -4689,8 +4689,8 @@
         "lessonCount": 88,
         "byLevel": {
           "pre-A1": 74,
-          "A1": 0,
-          "A2": 14,
+          "A1": 4,
+          "A2": 10,
           "B1": 0,
           "B2": 0,
           "C1": 0,
@@ -4704,8 +4704,8 @@
         "lessonCount": 266,
         "byLevel": {
           "pre-A1": 188,
-          "A1": 43,
-          "A2": 32,
+          "A1": 48,
+          "A2": 27,
           "B1": 0,
           "B2": 0,
           "C1": 0,
@@ -4719,9 +4719,9 @@
         "lessonCount": 999,
         "byLevel": {
           "pre-A1": 354,
-          "A1": 409,
-          "A2": 151,
-          "B1": 40,
+          "A1": 434,
+          "A2": 128,
+          "B1": 38,
           "B2": 17,
           "C1": 10,
           "C2": 18
@@ -4734,8 +4734,8 @@
         "lessonCount": 301,
         "byLevel": {
           "pre-A1": 216,
-          "A1": 60,
-          "A2": 21,
+          "A1": 68,
+          "A2": 13,
           "B1": 0,
           "B2": 0,
           "C1": 0,
@@ -4749,8 +4749,8 @@
         "lessonCount": 276,
         "byLevel": {
           "pre-A1": 211,
-          "A1": 39,
-          "A2": 22,
+          "A1": 44,
+          "A2": 17,
           "B1": 0,
           "B2": 0,
           "C1": 0,
@@ -4764,8 +4764,8 @@
         "lessonCount": 69,
         "byLevel": {
           "pre-A1": 56,
-          "A1": 0,
-          "A2": 13,
+          "A1": 5,
+          "A2": 8,
           "B1": 0,
           "B2": 0,
           "C1": 0,
@@ -87784,8 +87784,8 @@
         "blockers": [
           {
             "criterion": "reinforcement",
-            "detail": "61 atom(s) at or below A1 are revisited fewer than twice (115 etymology hook(s) waived)",
-            "shortfall": 61
+            "detail": "70 atom(s) at or below A1 are revisited fewer than twice (128 etymology hook(s) waived)",
+            "shortfall": 70
           }
         ],
         "vocabulary": 721
@@ -104700,17 +104700,18 @@
     "strands": [
       {
         "strand": "FUNCTION",
-        "nodes": 15,
+        "nodes": 17,
         "byStage": {
           "pre-A1": 7,
-          "A1": 3,
-          "A2": 1,
+          "A1": 6,
+          "A2": 0,
           "B1": 3,
           "B2": 1,
           "C1": 0,
           "C2": 0
         },
         "missingStages": [
+          "A2",
           "C1",
           "C2"
         ]
@@ -104735,10 +104736,10 @@
       },
       {
         "strand": "LEXICON",
-        "nodes": 3,
+        "nodes": 4,
         "byStage": {
           "pre-A1": 0,
-          "A1": 2,
+          "A1": 3,
           "A2": 0,
           "B1": 0,
           "B2": 0,
@@ -104869,7 +104870,16 @@
         "nodeId": "SPINE-SAY-WHAT-I-DO",
         "stage": "A2",
         "strand": "GRAMMAR",
-        "concepts": 33,
+        "concepts": 24,
+        "target": 6,
+        "ceiling": 12,
+        "severity": "over-ceiling"
+      },
+      {
+        "nodeId": "SPINE-NAME-EVERYDAY-ACTIONS",
+        "stage": "A1",
+        "strand": "LEXICON",
+        "concepts": 15,
         "target": 6,
         "ceiling": 12,
         "severity": "over-ceiling"
@@ -104891,21 +104901,12 @@
         "target": 6,
         "ceiling": 12,
         "severity": "over-target"
-      },
-      {
-        "nodeId": "SPINE-NAME-EVERYDAY-ACTIONS",
-        "stage": "A1",
-        "strand": "LEXICON",
-        "concepts": 7,
-        "target": 6,
-        "ceiling": 12,
-        "severity": "over-target"
       }
     ],
-    "totalNodes": 35,
+    "totalNodes": 38,
     "largestNode": {
       "nodeId": "SPINE-SAY-WHAT-I-DO",
-      "concepts": 33
+      "concepts": 24
     }
   },
   "grammarCells": {
