@@ -1,6 +1,7 @@
 import { defineConfig } from "vite";
 import path from "node:path";
 import { humanLanguageLedgerPlugin } from "./human-language-ledger-plugin.ts";
+import { scriptInventoryPlugin } from "@coding-adventures/script-ductus/script-inventory-plugin.ts";
 // How lesson batches are grouped lives in ONE module, imported by both this
 // config and scripts/check-bundle.mjs. The gate used to recover the band width
 // by regex-ing this file, which a comment mentioning the constant could shadow.
@@ -15,7 +16,10 @@ const repoRoot = path.resolve(__dirname, "../../../..");
 const curriculumRoot = path.join(repoRoot, "code", "learning", "human-languages");
 
 export default defineConfig({
-  plugins: [humanLanguageLedgerPlugin({ curriculumRoot })],
+  plugins: [
+    humanLanguageLedgerPlugin({ curriculumRoot }),
+    scriptInventoryPlugin({ curriculumRoot }),
+  ],
   // Relative base → the built index.html works when opened from any path
   // (local file, GitHub Pages sub-path, etc.) without a deploy-specific prefix.
   base: "./",

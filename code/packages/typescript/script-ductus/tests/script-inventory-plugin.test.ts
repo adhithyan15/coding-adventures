@@ -1,4 +1,6 @@
 import { describe, expect, it } from "vitest";
+import { mkdirSync, mkdtempSync, rmSync, symlinkSync } from "node:fs";
+import { tmpdir } from "node:os";
 import { join, resolve } from "node:path";
 import {
   RESOLVED_SCRIPT_INVENTORIES_ID,
@@ -8,7 +10,7 @@ import {
   scriptInventoryModuleIdsForShardPath,
 } from "../script-inventory-plugin.ts";
 
-const repoRoot = resolve(import.meta.dirname, "../../../..");
+const repoRoot = resolve(import.meta.dirname, "../../../../..");
 const curriculumRoot = join(repoRoot, "code", "learning", "human-languages");
 
 describe("script inventory virtual module", () => {
@@ -56,5 +58,19 @@ describe("script inventory virtual module", () => {
         curriculumRoot,
       ),
     ).toEqual([]);
+  });
+
+  it("rejects a symlinked inventory directory instead of reading outside the root", () => {
+    const root = mkdtempSync(join(tmpdir(), "script-inventory-plugin-"));
+    const scripts = join(root, "data", "scripts");
+    mkdirSync(scripts, { recursive: true });
+    symlinkSync(join(curriculumRoot, "data", "scripts", "japanese.d"), join(scripts, "japanese.d"));
+    try {
+      expect(() =>
+        loadScriptInventoryModule(RESOLVED_SCRIPT_INVENTORIES_ID, root, () => undefined),
+      ).toThrow(/symbolic link/i);
+    } finally {
+      rmSync(root, { recursive: true, force: true });
+    }
   });
 });

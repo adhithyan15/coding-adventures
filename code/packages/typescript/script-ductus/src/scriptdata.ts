@@ -1,11 +1,13 @@
+/// <reference path="./virtual-script-inventories.d.ts" />
+
 // ---------------------------------------------------------------------------
 // scriptdata.ts — the curriculum's own script files, and the shapes they hold
 // ---------------------------------------------------------------------------
 //
 // The ONLY place that reaches out to the curriculum's canonical script files.
-// They are imported directly rather than copied, so anything reading them is
-// reading exactly what the lessons teach from; adding a script here is the
-// single edit that surfaces it everywhere.
+// Ordinary inventories are imported directly. The three canonical shard sets
+// arrive through one fixed build-time virtual module. Neither route copies the
+// curriculum, so readers see exactly what the lessons teach from.
 //
 // This lives beside the pen paths on purpose. `strokes.ts` claims a stroke
 // ORDER for a letter and cites a source for it; these files are where that
@@ -14,20 +16,22 @@
 // cited letter resolves back to the script that owns it, and to the font its
 // pen path was verified against.
 //
-// Paths climb out of this package (src -> package -> typescript -> packages ->
-// code) into code/learning/human-languages/data/scripts/. Vite bundles the JSON
-// at build time; the app's `server.fs.allow` lets the dev server read it.
+// Direct paths climb out of this package into data/scripts/. Vite bundles the
+// ordinary JSON and folds the selected `.d/` directories at build time; the
+// app's `server.fs.allow` lets the dev server read the curriculum root.
 
 import cyrillic from "../../../../learning/human-languages/data/scripts/cyrillic.json";
 import hebrew from "../../../../learning/human-languages/data/scripts/hebrew.json";
 import chinese from "../../../../learning/human-languages/data/scripts/chinese.json";
 import arabic from "../../../../learning/human-languages/data/scripts/arabic.json";
-import persoArabic from "../../../../learning/human-languages/data/scripts/perso-arabic.json";
-import urduNastaliq from "../../../../learning/human-languages/data/scripts/urdu-nastaliq.json";
+import {
+  japanese as japaneseInventory,
+  persoArabic as persoArabicInventory,
+  urduNastaliq as urduNastaliqInventory,
+} from "virtual:script-ductus-inventories";
 import devanagari from "../../../../learning/human-languages/data/scripts/devanagari.json";
 import gujarati from "../../../../learning/human-languages/data/scripts/gujarati.json";
 import tamil from "../../../../learning/human-languages/data/scripts/tamil.json";
-import japanese from "../../../../learning/human-languages/data/scripts/japanese.json";
 // The Dravidian syllabaries (Telugu/Kannada/Malayalam) are GENERATED from Unicode
 // by data/scripts/generate_syllabary.py — each "letter" is a base consonant
 // composed with a vowel sign (ka, ki, ku, kha, …), for reading-recognition.
@@ -122,6 +126,10 @@ export interface ScriptData {
   complete?: boolean;
   notes?: string;
 }
+
+const japanese = japaneseInventory as ScriptData;
+const persoArabic = persoArabicInventory as ScriptData;
+const urduNastaliq = urduNastaliqInventory as ScriptData;
 
 // The JSON files are authored to the ScriptData shape; assert it once here.
 export const SCRIPTS: ScriptData[] = [
