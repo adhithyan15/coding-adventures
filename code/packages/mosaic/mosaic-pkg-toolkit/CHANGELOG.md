@@ -1,5 +1,18 @@
 # Changelog — mosaic-pkg-toolkit
 
+## [Unreleased] — remove the 3 fixed checkbox-indeterminate allowlist entries (#13006)
+
+`mosaic-emit-compose`/`-flutter`/`-swiftui` now lower `Checkbox`'s
+authored `indeterminate: slot: indeterminate` to real native tri-state
+controls (#13006), so the `(Backend::SwiftUI | Flutter | Compose,
+"Checkbox", "property.checkbox-indeterminate-ignored")` entries in
+`tests/native_complete_gate.rs`'s `ALLOWED_DEGRADATIONS` are stale.
+Removed all three; the gate now genuinely asserts the toolkit is clean
+on these backends for `Checkbox`, not just tolerating a known gap.
+Updated the module doc comment's stale pre-existing-gap count (9 → 5;
+it had already drifted from 8 after #13010 removed the Flutter Modal
+entry without updating the prose).
+
 ## [Unreleased] — remove the fixed Flutter Modal allowlist entry (#13010)
 
 `mosaic-emit-flutter` now implements a real native dialog for the

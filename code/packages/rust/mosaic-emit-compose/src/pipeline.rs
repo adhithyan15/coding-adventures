@@ -115,6 +115,7 @@ pub fn from_pipeline(
     let uses_icon = layout_contains_tag(&layout.root, "Icon");
     let uses_drag = layout_contains_tag(&layout.root, "HostDraggable")
         || layout_contains_tag(&layout.root, "HostDropTarget");
+    let uses_checkbox_indeterminate = layout_has_checkbox_indeterminate(&layout.root);
 
     writeln!(out, "import androidx.compose.foundation.background").unwrap();
     writeln!(out, "import androidx.compose.foundation.border").unwrap();
@@ -184,6 +185,9 @@ pub fn from_pipeline(
     writeln!(out, "import androidx.compose.material.Surface").unwrap();
     writeln!(out, "import androidx.compose.material.Text").unwrap();
     writeln!(out, "import androidx.compose.material.TextField").unwrap();
+    if uses_checkbox_indeterminate {
+        writeln!(out, "import androidx.compose.material.TriStateCheckbox").unwrap();
+    }
     writeln!(out, "import androidx.compose.runtime.Composable").unwrap();
     if uses_drag {
         writeln!(
@@ -264,6 +268,9 @@ pub fn from_pipeline(
             "import androidx.compose.ui.platform.LocalLayoutDirection"
         )
         .unwrap();
+    }
+    if uses_checkbox_indeterminate {
+        writeln!(out, "import androidx.compose.ui.state.ToggleableState").unwrap();
     }
     writeln!(out, "import androidx.compose.ui.unit.IntOffset").unwrap();
     writeln!(out, "import androidx.compose.ui.unit.IntRect").unwrap();
@@ -3950,6 +3957,49 @@ fn host_dialog_dispatch(
     Ok(Some(format!("dispatch({component_name}Event.{case})")))
 }
 
+/// Whether `indeterminate:` is authored in a form the emitter can act
+/// on, and if so, the Kotlin boolean expression that is `true` while
+/// the checkbox should render mixed. Mirrors `bool_prop_expr`'s
+/// `SlotRef`/`Expr` → `_mosaicTruthy(...)` convention, and XAML's
+/// `IsThreeState` treatment: a `SlotRef`/`Expr` value can't be
+/// evaluated at compile time, so its *presence* unconditionally routes
+/// to `TriStateCheckbox` — the runtime value decides which
+/// `ToggleableState` is actually shown.
+fn checkbox_indeterminate_expr(node: &LayoutNode) -> Result<Option<String>, PipelineEmitError> {
+    match find_prop_value(node, "indeterminate") {
+        Some(LayoutPropValue::Keyword(k)) if k == "true" => Ok(Some("true".to_string())),
+        Some(LayoutPropValue::SlotRef(slot)) => {
+            let camel = to_camel_case_first_lower(slot);
+            validate_safe_identifier(&camel).map_err(PipelineEmitError::UnsafeSlotName)?;
+            Ok(Some(format!("_mosaicTruthy({camel})")))
+        }
+        Some(LayoutPropValue::Expr(expr)) => Ok(Some(format!("_mosaicTruthy({expr})"))),
+        Some(LayoutPropValue::Keyword(_))
+        | Some(LayoutPropValue::String(_))
+        | Some(LayoutPropValue::Number(_))
+        | Some(LayoutPropValue::EmitRef(_))
+        | None => Ok(None),
+    }
+}
+
+/// Returns whether a HostCheckbox's authored `indeterminate:` value (if
+/// any) lowers to real tri-state rendering (`#13006`).
+///
+/// Package capability analysis calls this same predicate so strict-
+/// profile reporting cannot drift from `emit_host_checkbox`'s actual
+/// lowering.
+pub fn host_checkbox_has_native_semantics(node: &LayoutNode) -> bool {
+    matches!(checkbox_indeterminate_expr(node), Ok(Some(_)))
+}
+
+fn layout_has_checkbox_indeterminate(node: &LayoutNode) -> bool {
+    (node.tag == "HostCheckbox" && host_checkbox_has_native_semantics(node))
+        || node
+            .children
+            .iter()
+            .any(layout_has_checkbox_indeterminate)
+}
+
 fn emit_host_checkbox(
     node: &LayoutNode,
     depth: usize,
@@ -3970,30 +4020,73 @@ fn emit_host_checkbox(
     };
     let checked_expr = bool_prop_expr(node, "checked", "false")?;
     let enabled_expr = disabled_prop_enabled_expr(node)?;
+    let indeterminate_expr = checkbox_indeterminate_expr(node)?;
 
-    let on_checked = if let Some(emit_name) = find_emit_ref_prop(node, "onToggle") {
-        let case = pascalize(&strip_on_prefix(emit_name));
-        validate_safe_identifier(&case).map_err(PipelineEmitError::UnsafeEmitName)?;
-        let arity = emits
-            .iter()
-            .find(|e| e.name == *emit_name)
-            .map(|e| e.params.len())
-            .unwrap_or(0);
-        if arity == 0 {
-            format!("dispatch({component_name}Event.{case})")
-        } else {
-            format!("dispatch({component_name}Event.{case}(checked))")
+    // `widget_name` + the two lines that differ between a plain
+    // two-state `Checkbox` (checked/onCheckedChange) and a
+    // `TriStateCheckbox` (state/onClick). `TriStateCheckbox.onClick`
+    // takes no argument — unlike `Checkbox.onCheckedChange`'s `checked`
+    // lambda parameter — so the dispatched "new checked" value is
+    // computed inline from the same `ToggleableState` expression used
+    // for `state =`: clicking always resolves *out of* Indeterminate,
+    // toggling towards On unless already On.
+    let (widget_name, state_line, action_line) = match &indeterminate_expr {
+        Some(cond) => {
+            let toggle_state_expr = format!(
+                "if ({cond}) ToggleableState.Indeterminate else if ({checked_expr}) ToggleableState.On else ToggleableState.Off"
+            );
+            let new_checked_expr = format!("({toggle_state_expr}) != ToggleableState.On");
+            let on_click = if let Some(emit_name) = find_emit_ref_prop(node, "onToggle") {
+                let case = pascalize(&strip_on_prefix(emit_name));
+                validate_safe_identifier(&case).map_err(PipelineEmitError::UnsafeEmitName)?;
+                let arity = emits
+                    .iter()
+                    .find(|e| e.name == *emit_name)
+                    .map(|e| e.params.len())
+                    .unwrap_or(0);
+                if arity == 0 {
+                    format!("dispatch({component_name}Event.{case})")
+                } else {
+                    format!("dispatch({component_name}Event.{case}({new_checked_expr}))")
+                }
+            } else {
+                "/* no onToggle bound */".to_string()
+            };
+            (
+                "TriStateCheckbox",
+                format!("state = {toggle_state_expr},"),
+                format!("onClick = {{ {on_click} }},"),
+            )
         }
-    } else {
-        "/* no onToggle bound */".to_string()
+        None => {
+            let on_checked = if let Some(emit_name) = find_emit_ref_prop(node, "onToggle") {
+                let case = pascalize(&strip_on_prefix(emit_name));
+                validate_safe_identifier(&case).map_err(PipelineEmitError::UnsafeEmitName)?;
+                let arity = emits
+                    .iter()
+                    .find(|e| e.name == *emit_name)
+                    .map(|e| e.params.len())
+                    .unwrap_or(0);
+                if arity == 0 {
+                    format!("dispatch({component_name}Event.{case})")
+                } else {
+                    format!("dispatch({component_name}Event.{case}(checked))")
+                }
+            } else {
+                "/* no onToggle bound */".to_string()
+            };
+            (
+                "Checkbox",
+                format!("checked = {checked_expr},"),
+                format!("onCheckedChange = {{ checked -> {on_checked} }},"),
+            )
+        }
     };
 
     let mut checkbox_lines = Vec::new();
-    checkbox_lines.push(format!("{inner}Checkbox("));
-    checkbox_lines.push(format!("{inner}    checked = {checked_expr},"));
-    checkbox_lines.push(format!(
-        "{inner}    onCheckedChange = {{ checked -> {on_checked} }},"
-    ));
+    checkbox_lines.push(format!("{inner}{widget_name}("));
+    checkbox_lines.push(format!("{inner}    {state_line}"));
+    checkbox_lines.push(format!("{inner}    {action_line}"));
     if let Some(enabled) = enabled_expr.as_deref() {
         checkbox_lines.push(format!("{inner}    enabled = {enabled},"));
     }
@@ -4020,13 +4113,9 @@ fn emit_host_checkbox(
         Ok(out)
     } else {
         let mut out = String::new();
-        writeln!(out, "{pad}Checkbox(").unwrap();
-        writeln!(out, "{inner}checked = {checked_expr},").unwrap();
-        writeln!(
-            out,
-            "{inner}onCheckedChange = {{ checked -> {on_checked} }},"
-        )
-        .unwrap();
+        writeln!(out, "{pad}{widget_name}(").unwrap();
+        writeln!(out, "{inner}{state_line}").unwrap();
+        writeln!(out, "{inner}{action_line}").unwrap();
         if let Some(style) = &style {
             if !style.modifier.is_empty() {
                 writeln!(out, "{inner}modifier = Modifier{},", style.modifier).unwrap();
@@ -6111,6 +6200,116 @@ mod tests {
         ));
         assert!(out.contains("enabled = true,"));
         assert!(out.contains("Text(text = buryNewLabel)"));
+    }
+
+    /// #13006 — `indeterminate: true` swaps `Checkbox` for
+    /// `TriStateCheckbox`, with `state =` reflecting the always-mixed
+    /// condition and `onClick` resolving out of mixed on click.
+    #[test]
+    fn host_checkbox_indeterminate_true_emits_tri_state_checkbox() {
+        let m = component(
+            "Tri",
+            vec![slot("done", SlotType::Bool, true)],
+            vec![emit_decl("onChange", vec![param("checked", EmitPayloadType::Bool)])],
+        );
+        let l = layout(
+            "Tri",
+            node(
+                "HostCheckbox",
+                vec![
+                    LayoutProp {
+                        name: "checked".into(),
+                        value: LayoutPropValue::SlotRef("done".into()),
+                    },
+                    LayoutProp {
+                        name: "indeterminate".into(),
+                        value: LayoutPropValue::Keyword("true".into()),
+                    },
+                    LayoutProp {
+                        name: "onToggle".into(),
+                        value: LayoutPropValue::EmitRef("onChange".into()),
+                    },
+                ],
+                vec![],
+            ),
+        );
+        let out = from_pipeline(&m, &l, &empty_style("Tri")).unwrap().output;
+        assert!(out.contains("import androidx.compose.material.TriStateCheckbox"));
+        assert!(out.contains("import androidx.compose.ui.state.ToggleableState"));
+        assert!(out.contains("TriStateCheckbox(\n"), "expected TriStateCheckbox(, got:\n{out}");
+        assert!(out.contains(
+            "state = if (true) ToggleableState.Indeterminate else if (_mosaicTruthy(done)) ToggleableState.On else ToggleableState.Off,"
+        ));
+        assert!(out.contains(
+            "onClick = { dispatch(TriEvent.Change((if (true) ToggleableState.Indeterminate else if (_mosaicTruthy(done)) ToggleableState.On else ToggleableState.Off) != ToggleableState.On)) },"
+        ));
+    }
+
+    /// #13006 — `indeterminate: slot: mixed` also routes to
+    /// `TriStateCheckbox`, with the runtime slot deciding the state.
+    #[test]
+    fn host_checkbox_indeterminate_slot_emits_tri_state_checkbox() {
+        let m = component(
+            "Tri",
+            vec![
+                slot("done", SlotType::Bool, true),
+                slot("mixed", SlotType::Bool, true),
+            ],
+            vec![],
+        );
+        let l = layout(
+            "Tri",
+            node(
+                "HostCheckbox",
+                vec![
+                    LayoutProp {
+                        name: "checked".into(),
+                        value: LayoutPropValue::SlotRef("done".into()),
+                    },
+                    LayoutProp {
+                        name: "indeterminate".into(),
+                        value: LayoutPropValue::SlotRef("mixed".into()),
+                    },
+                ],
+                vec![],
+            ),
+        );
+        let out = from_pipeline(&m, &l, &empty_style("Tri")).unwrap().output;
+        assert!(out.contains(
+            "state = if (_mosaicTruthy(mixed)) ToggleableState.Indeterminate else if (_mosaicTruthy(done)) ToggleableState.On else ToggleableState.Off,"
+        ));
+    }
+
+    /// #13006 — `indeterminate: false` (the explicit opt-out) keeps the
+    /// plain two-state `Checkbox` unchanged — no `TriStateCheckbox`
+    /// import, no `ToggleableState` import.
+    #[test]
+    fn host_checkbox_indeterminate_false_keeps_plain_checkbox() {
+        let m = component("Tri", vec![slot("done", SlotType::Bool, true)], vec![]);
+        let l = layout(
+            "Tri",
+            node(
+                "HostCheckbox",
+                vec![
+                    LayoutProp {
+                        name: "checked".into(),
+                        value: LayoutPropValue::SlotRef("done".into()),
+                    },
+                    LayoutProp {
+                        name: "indeterminate".into(),
+                        value: LayoutPropValue::Keyword("false".into()),
+                    },
+                ],
+                vec![],
+            ),
+        );
+        let out = from_pipeline(&m, &l, &empty_style("Tri")).unwrap().output;
+        assert!(!out.contains("TriStateCheckbox"), "expected no TriStateCheckbox, got:\n{out}");
+        assert!(
+            !out.contains("import androidx.compose.ui.state.ToggleableState"),
+            "expected no ToggleableState import, got:\n{out}"
+        );
+        assert!(out.contains("checked = _mosaicTruthy(done),"));
     }
 
     #[test]

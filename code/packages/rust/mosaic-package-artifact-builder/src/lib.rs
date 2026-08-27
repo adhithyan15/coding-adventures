@@ -1311,11 +1311,27 @@ fn ignored_native_property(
                 "the backend opens the external URL but does not dispatch the authored HostLink onActivate event",
             ))
         }
+        // #13006 — Compose/Flutter/SwiftUI now lower `indeterminate:` to
+        // real native tri-state controls (`TriStateCheckbox`,
+        // `Checkbox(tristate: true)`, the mixed-state Button/Image
+        // primitive respectively) whenever the emitter's own
+        // `host_checkbox_has_native_semantics` predicate agrees the
+        // authored value is one it acts on. A value shape none of the
+        // three emitters recognise (e.g. a `String`/`Number`/`EmitRef`
+        // — never authored in practice, but not excluded by the grammar
+        // either) still falls through to a real degradation report
+        // rather than silently rendering as a plain two-state control.
         ("HostCheckbox", "indeterminate")
             if matches!(
                 backend,
                 Backend::Compose | Backend::Flutter | Backend::SwiftUI
-            ) && !matches!(&property.value, LayoutPropValue::Keyword(value) if value == "false") =>
+            ) && !matches!(&property.value, LayoutPropValue::Keyword(value) if value == "false")
+                && !(backend == Backend::Compose
+                    && mosaic_emit_compose::pipeline::host_checkbox_has_native_semantics(node))
+                && !(backend == Backend::Flutter
+                    && mosaic_emit_flutter::pipeline::host_checkbox_has_native_semantics(node))
+                && !(backend == Backend::SwiftUI
+                    && mosaic_emit_swiftui::pipeline::host_checkbox_has_native_semantics(node)) =>
         {
             Some((
                 "property.checkbox-indeterminate-ignored",
@@ -4979,26 +4995,18 @@ layout Controls {
         )
         .unwrap();
 
+        // #13006: `indeterminate: slot: mixed` now lowers to a real
+        // native tri-state control on Compose/Flutter/SwiftUI, so only
+        // the (still-unimplemented, #13007) radio-group degradation
+        // survives on those three backends — matching Qt's shape.
         for (backend, expected) in [
             (
                 Backend::Compose,
-                vec![
-                    (
-                        "property.checkbox-indeterminate-ignored",
-                        "root.children[0].props[1]",
-                    ),
-                    ("property.radio-group-ignored", "root.children[1].props[2]"),
-                ],
+                vec![("property.radio-group-ignored", "root.children[1].props[2]")],
             ),
             (
                 Backend::Flutter,
-                vec![
-                    (
-                        "property.checkbox-indeterminate-ignored",
-                        "root.children[0].props[1]",
-                    ),
-                    ("property.radio-group-ignored", "root.children[1].props[2]"),
-                ],
+                vec![("property.radio-group-ignored", "root.children[1].props[2]")],
             ),
             (
                 Backend::Qt,
@@ -5006,13 +5014,7 @@ layout Controls {
             ),
             (
                 Backend::SwiftUI,
-                vec![
-                    (
-                        "property.checkbox-indeterminate-ignored",
-                        "root.children[0].props[1]",
-                    ),
-                    ("property.radio-group-ignored", "root.children[1].props[2]"),
-                ],
+                vec![("property.radio-group-ignored", "root.children[1].props[2]")],
             ),
             (Backend::Xaml, vec![]),
         ] {
@@ -5052,7 +5054,7 @@ layout Controls {
             error,
             BuildError::NativeIncomplete {
                 backend: Backend::Compose,
-                degradation_count: 2,
+                degradation_count: 1,
                 ..
             }
         ));

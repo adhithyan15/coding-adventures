@@ -4,6 +4,35 @@ All notable changes to this package will be documented in this file.
 
 ## [Unreleased]
 
+### Added - native indeterminate checkbox state (#13006)
+
+`emit_host_checkbox` previously had no code path for `indeterminate:`
+at all — SwiftUI's `Toggle` has no tri-state visual, so the value was
+silently dropped (documented as a known gap, not implemented). When
+`indeterminate:` is authored as anything other than a literal
+`Keyword("false")`, the emitter now swaps `Toggle` for a manually
+composed mixed-checkbox: a `Button` wrapping an SF Symbol
+(`minus.square.fill` / `checkmark.square.fill` / `square`) plus the
+label, with `.buttonStyle(.plain)` — unlike a bare `Image` +
+`.onTapGesture`, `Button` correctly respects a trailing `.disabled(...)`
+modifier. Tapping always resolves *out of* mixed (mixed → checked,
+checked → unchecked, unchecked → checked), matching the "toggle away
+from indeterminate" rule `mosaic-emit-compose`'s `TriStateCheckbox`
+lowering uses for the same prop.
+
+A `slot:`/expression-valued `indeterminate` can't be evaluated at
+compile time, so — mirroring XAML's `IsThreeState` treatment — its mere
+*presence* unconditionally routes to the mixed-capable primitive; the
+runtime value decides whether the mixed glyph actually renders.
+
+New `pub fn host_checkbox_has_native_semantics` lets
+`mosaic-package-artifact-builder`'s degradation analyzer stop reporting
+`property.checkbox-indeterminate-ignored` for SwiftUI wherever this
+lowering actually applies.
+
+Verified with a real `swiftc -parse` of the generated `Button`/`HStack`/
+`Image(systemName:)` shape.
+
 ### Fixed - HostLink.href now supports a slot:-bound value (#13110)
 
 `emit_host_link` only ever matched a literal `String` href

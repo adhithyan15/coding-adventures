@@ -4258,17 +4258,17 @@ fn emit_host_button(
 /// effectively read-only (user taps have no effect — the host has no
 /// way to learn about them).
 ///
-/// ## What is NOT in this first cut
+/// ## Indeterminate (`#13006`)
 ///
-/// - The `indeterminate` slot. SwiftUI's `Toggle` has no tri-state
-///   visual; rendering a "mixed" state requires either a custom
-///   `ToggleStyle` or a different primitive (e.g. `Image` of the
-///   `checkmark.square.fill` SF Symbol). Deferred to a follow-up that
-///   adds a custom checkbox style.
-/// - Explicit `.toggleStyle(.checkbox)`. That style is macOS-only; on
-///   iOS the same modifier fails to compile. Setting the default
-///   platform style works on both. Authors who want a checkbox visual
-///   on macOS can compose a userland wrapper that adds the modifier.
+/// SwiftUI's `Toggle` has no tri-state visual, so when `indeterminate:`
+/// is authored the emitter swaps the whole primitive for a manually
+/// drawn mixed-checkbox: a `Button` wrapping an SF Symbol
+/// (`minus.square.fill` / `checkmark.square.fill` / `square`) plus the
+/// label, with `.buttonStyle(.plain)` so it doesn't pick up platform
+/// button chrome. `Button` (unlike a bare `Image` + `.onTapGesture`)
+/// correctly respects a trailing `.disabled(...)` modifier. See
+/// `checkbox_indeterminate_expr` for how the condition is derived, and
+/// `emit_host_checkbox_mixed` for the swapped-primitive emission.
 fn emit_host_checkbox(node: &LayoutNode, indent: usize) -> Result<String, PipelineEmitError> {
     let pad = " ".repeat(indent);
 
@@ -4297,6 +4297,33 @@ fn emit_host_checkbox(node: &LayoutNode, indent: usize) -> Result<String, Pipeli
         "\"\"".to_string()
     };
 
+    let mod_pad = " ".repeat(indent + 4);
+    let disabled_modifier: Option<String> = if let Some(slot) = find_slot_ref_prop(node, "disabled")
+    {
+        let camel = to_camel_case_first_lower(slot);
+        validate_slot_or_field_name(&camel).map_err(PipelineEmitError::UnsafeSlotName)?;
+        Some(format!("{mod_pad}.disabled({camel})\n"))
+    } else if let Some(kw) = find_keyword_prop(node, "disabled") {
+        if kw == "true" || kw == "false" {
+            Some(format!("{mod_pad}.disabled({kw})\n"))
+        } else {
+            None
+        }
+    } else {
+        None
+    };
+
+    if let Some(indeterminate_cond) = checkbox_indeterminate_expr(node)? {
+        return emit_host_checkbox_mixed(
+            node,
+            indent,
+            &checked_expr,
+            &label_arg,
+            &indeterminate_cond,
+            disabled_modifier.as_deref(),
+        );
+    }
+
     // Binding form. With onToggle: a Binding(get:set:) whose setter
     // dispatches the new value. Without: a .constant() that makes the
     // toggle read-only but still type-checks.
@@ -4313,18 +4340,99 @@ fn emit_host_checkbox(node: &LayoutNode, indent: usize) -> Result<String, Pipeli
 
     let mut out = String::new();
     writeln!(out, "{pad}Toggle({label_arg}, isOn: {binding_expr})").unwrap();
+    if let Some(modifier) = disabled_modifier {
+        out.push_str(&modifier);
+    }
 
-    // `.disabled(...)` trailing modifier. Indented one Swift-source step
-    // beyond the Toggle so the modifier visually attaches to it.
-    let mod_pad = " ".repeat(indent + 4);
-    if let Some(slot) = find_slot_ref_prop(node, "disabled") {
-        let camel = to_camel_case_first_lower(slot);
-        validate_slot_or_field_name(&camel).map_err(PipelineEmitError::UnsafeSlotName)?;
-        writeln!(out, "{mod_pad}.disabled({camel})").unwrap();
-    } else if let Some(kw) = find_keyword_prop(node, "disabled") {
-        if kw == "true" || kw == "false" {
-            writeln!(out, "{mod_pad}.disabled({kw})").unwrap();
+    Ok(out)
+}
+
+/// Whether `indeterminate:` is authored in a form the emitter can act
+/// on, and if so, the Swift boolean expression that is `true` while the
+/// checkbox should render mixed. Mirrors XAML's `IsThreeState`
+/// treatment (`mosaic-emit-xaml`'s `emit_host_checkbox`): a `SlotRef`
+/// or `Expr` value can't be evaluated at compile time, so its *presence*
+/// unconditionally routes to the mixed-capable primitive — the actual
+/// runtime value decides whether the mixed glyph is shown. A literal
+/// `Keyword("false")` (or absence) means "never mixed," so the caller
+/// keeps the plain two-state `Toggle`.
+fn checkbox_indeterminate_expr(node: &LayoutNode) -> Result<Option<String>, PipelineEmitError> {
+    match find_prop_value(node, "indeterminate") {
+        Some(LayoutPropValue::Keyword(k)) if k == "true" => Ok(Some("true".to_string())),
+        Some(LayoutPropValue::SlotRef(slot)) => {
+            let camel = to_camel_case_first_lower(slot);
+            validate_slot_or_field_name(&camel).map_err(PipelineEmitError::UnsafeSlotName)?;
+            Ok(Some(camel))
         }
+        Some(LayoutPropValue::Expr(expr)) => Ok(Some(format!("({expr})"))),
+        Some(LayoutPropValue::Keyword(_))
+        | Some(LayoutPropValue::String(_))
+        | Some(LayoutPropValue::Number(_))
+        | Some(LayoutPropValue::EmitRef(_))
+        | None => Ok(None),
+    }
+}
+
+/// The mixed-capable `HostCheckbox` primitive, used whenever
+/// `indeterminate:` is authored (see `checkbox_indeterminate_expr`).
+///
+/// ```swift
+/// Button(action: {
+///     dispatch(.toggle(checked: isMixed ? true : !isChecked))
+/// }) {
+///     HStack {
+///         Image(systemName: isMixed ? "minus.square.fill" : (isChecked ? "checkmark.square.fill" : "square"))
+///         Text("label")
+///     }
+/// }
+/// .buttonStyle(.plain)
+/// .disabled(isDisabled)
+/// ```
+///
+/// Tapping always resolves *out of* mixed: a mixed checkbox becomes
+/// fully checked, a checked one becomes unchecked, an unchecked one
+/// becomes checked — the same "toggle away from indeterminate" rule
+/// `mosaic-emit-compose`'s `TriStateCheckbox` lowering uses. Without
+/// `onToggle` bound, the action is a no-op (matching the plain
+/// `Toggle` path's `.constant()` fallback — the control renders but
+/// taps have no effect).
+fn emit_host_checkbox_mixed(
+    node: &LayoutNode,
+    indent: usize,
+    checked_expr: &str,
+    label_arg: &str,
+    indeterminate_cond: &str,
+    disabled_modifier: Option<&str>,
+) -> Result<String, PipelineEmitError> {
+    let pad = " ".repeat(indent);
+    let inner_pad = " ".repeat(indent + 4);
+    let content_pad = " ".repeat(indent + 8);
+    let mod_pad = " ".repeat(indent + 4);
+
+    let new_value_expr = format!("{indeterminate_cond} ? true : !{checked_expr}");
+    let action_body: String = match find_emit_ref_prop(node, "onToggle") {
+        Some(emit_name) => {
+            let case_name = to_camel_case_first_lower(&strip_on_prefix(emit_name));
+            validate_emit_name(&case_name)?;
+            format!("dispatch(.{case_name}(checked: {new_value_expr}))")
+        }
+        None => "()".to_string(),
+    };
+
+    let mut out = String::new();
+    writeln!(out, "{pad}Button(action: {{ {action_body} }}) {{").unwrap();
+    writeln!(out, "{inner_pad}HStack {{").unwrap();
+    writeln!(
+        out,
+        "{content_pad}Image(systemName: {indeterminate_cond} ? \"minus.square.fill\" : ({checked_expr} ? \"checkmark.square.fill\" : \"square\"))"
+    )
+    .unwrap();
+    writeln!(out, "{content_pad}Text({label_arg})").unwrap();
+    writeln!(out, "{inner_pad}}}").unwrap();
+    writeln!(out, "{pad}}}").unwrap();
+    writeln!(out, "{mod_pad}.buttonStyle(.plain)").unwrap();
+    if let Some(modifier) = disabled_modifier {
+        out.push_str(modifier);
     }
 
     Ok(out)
@@ -5362,6 +5470,17 @@ fn swiftui_table_shape(host_table: &LayoutNode) -> Option<SwiftUITableShape<'_>>
 /// reporting cannot drift from the emitter's actual lowering.
 pub fn host_table_has_native_semantics(host_table: &LayoutNode) -> bool {
     swiftui_table_shape(host_table).is_some()
+}
+
+/// Returns whether a HostCheckbox's authored `indeterminate:` value (if
+/// any) lowers to real mixed-state rendering (`#13006`).
+///
+/// Package capability analysis calls this same predicate so strict-
+/// profile reporting cannot drift from `emit_host_checkbox`'s actual
+/// lowering — see `checkbox_indeterminate_expr`, which this mirrors
+/// exactly (`Ok(Some(_))` there ⇔ `true` here).
+pub fn host_checkbox_has_native_semantics(node: &LayoutNode) -> bool {
+    matches!(checkbox_indeterminate_expr(node), Ok(Some(_)))
 }
 
 fn append_table_layout_direction(out: &mut String, node: &LayoutNode, indent: usize) {
@@ -9606,6 +9725,93 @@ mod tests {
         assert!(
             out.contains(".disabled(locked)"),
             "expected `.disabled(locked)` modifier, got:\n{out}"
+        );
+    }
+
+    /// #13006 — `indeterminate: true` swaps `Toggle` for the mixed-
+    /// capable `Button` + `Image(systemName:)` primitive, keyed off the
+    /// literal `minus.square.fill` glyph.
+    #[test]
+    fn host_checkbox_indeterminate_true_emits_mixed_button() {
+        let checkbox = leaf(
+            "HostCheckbox",
+            vec![prop_slot_ref("checked", "done"), prop_keyword("indeterminate", "true")],
+        );
+        let layout = layout_with("X", container_node("Box", vec![checkbox]));
+        let out = from_pipeline(
+            &component("X", vec![slot("done", SlotType::Bool, true)], vec![]),
+            &layout,
+            &empty_style("X"),
+        )
+        .unwrap()
+        .output;
+        assert!(!out.contains("Toggle("), "expected no Toggle(...), got:\n{out}");
+        assert!(
+            out.contains("Image(systemName: true ? \"minus.square.fill\" : (done ? \"checkmark.square.fill\" : \"square\"))"),
+            "expected the mixed-state Image(systemName:), got:\n{out}"
+        );
+        assert!(
+            out.contains(".buttonStyle(.plain)"),
+            "expected .buttonStyle(.plain), got:\n{out}"
+        );
+    }
+
+    /// #13006 — `indeterminate: slot: mixed` (an unknowable-at-compile-
+    /// time value) also routes to the mixed primitive, and `onToggle`'s
+    /// dispatched value resolves out of mixed (`mixed ? true : !done`).
+    #[test]
+    fn host_checkbox_indeterminate_slot_dispatches_resolved_value() {
+        let checkbox = leaf(
+            "HostCheckbox",
+            vec![
+                prop_slot_ref("checked", "done"),
+                prop_slot_ref("indeterminate", "mixed"),
+                prop_emit_ref("onToggle", "onChange"),
+            ],
+        );
+        let layout = layout_with("X", container_node("Box", vec![checkbox]));
+        let out = from_pipeline(
+            &component(
+                "X",
+                vec![
+                    slot("done", SlotType::Bool, true),
+                    slot("mixed", SlotType::Bool, true),
+                ],
+                vec![emit(
+                    "onChange",
+                    vec![param("checked", EmitPayloadType::Bool)],
+                )],
+            ),
+            &layout,
+            &empty_style("X"),
+        )
+        .unwrap()
+        .output;
+        assert!(
+            out.contains("dispatch(.change(checked: mixed ? true : !done))"),
+            "expected dispatch resolving out of mixed, got:\n{out}"
+        );
+    }
+
+    /// #13006 — `indeterminate: false` (the explicit opt-out) keeps the
+    /// plain two-state `Toggle` unchanged.
+    #[test]
+    fn host_checkbox_indeterminate_false_keeps_plain_toggle() {
+        let checkbox = leaf(
+            "HostCheckbox",
+            vec![prop_slot_ref("checked", "done"), prop_keyword("indeterminate", "false")],
+        );
+        let layout = layout_with("X", container_node("Box", vec![checkbox]));
+        let out = from_pipeline(
+            &component("X", vec![slot("done", SlotType::Bool, true)], vec![]),
+            &layout,
+            &empty_style("X"),
+        )
+        .unwrap()
+        .output;
+        assert!(
+            out.contains("Toggle(\"\", isOn:"),
+            "expected the plain Toggle to survive `indeterminate: false`, got:\n{out}"
         );
     }
 
