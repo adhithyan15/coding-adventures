@@ -49,6 +49,7 @@
     "fixed-dates",
     "relative-ranges",
     "combined-tags",
+    "repeated-vertical-markers",
     "milestone-tag",
     "done-tag",
     "critical-tag",

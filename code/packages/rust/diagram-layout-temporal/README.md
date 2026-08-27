@@ -42,5 +42,6 @@ interval units, with time fields formatted before Paint lowering.
 Weekly ticks align to the configured weekday, while month and year ticks use
 civil calendar boundaries instead of fixed-duration approximations.
 Styled today markers preserve stroke opacity as backend-neutral paint semantics.
+Repeated vertical-marker task IDs lower once without consuming task rows.
 
 **Git**: Branch lanes (horizontal rows), commits as circles on lanes, merges as bezier arcs.
