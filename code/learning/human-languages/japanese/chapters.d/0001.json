@@ -1,0 +1,21 @@
+{
+  "chapter": 1,
+  "title": "Two Answers, Sign by Sign",
+  "label": "ch:ja-two-answers",
+  "canDo": "I can write the three hiragana signs in はい and いいえ, read both answers without romanization, and say each with even mora timing.",
+  "spineNodes": [
+    "SPINE-RESPOND-BASIC"
+  ],
+  "payoff": {
+    "lesson": "JA-C01-iie",
+    "kind": "reading",
+    "summary": "A yes-or-no choice using only three signs the learner has already traced, copied, recalled, and read.",
+    "assesses": [
+      "JA-LEX-HAI",
+      "JA-LEX-IIE",
+      "JA-SCRIPT-I-01",
+      "JA-SCRIPT-HA-01",
+      "JA-SCRIPT-E-01"
+    ]
+  }
+}

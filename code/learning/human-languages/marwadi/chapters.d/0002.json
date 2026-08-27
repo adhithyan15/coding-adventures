@@ -1,0 +1,23 @@
+{
+  "chapter": 2,
+  "title": "Aabhaar: Formal Thanks, Two New Signs",
+  "label": "ch:mw-aabhaar",
+  "canDo": "I can recognise, hear, say, copy, and independently write आभार as a short formal gratitude response.",
+  "spineNodes": [
+    "SPINE-COURTESY-THANK"
+  ],
+  "payoff": {
+    "lesson": "MW-C02-practice",
+    "kind": "courtesy-response",
+    "summary": "A source-attested formal gratitude word built from two new signs and two signs already taught, followed by independent four-skill retrieval.",
+    "assesses": [
+      "MW-SCRIPT-AA-INDEPENDENT-01",
+      "MW-SCRIPT-BHA-01",
+      "MW-SCRIPT-AA-MATRA-01",
+      "MW-SCRIPT-RA-01",
+      "MW-SCRIPT-AABHAAR-01",
+      "MW-LEX-AABHAAR-01",
+      "MW-COURTESY-AABHAAR-FORMAL-01"
+    ]
+  }
+}

@@ -1,0 +1,24 @@
+{
+  "chapter": 7,
+  "title": "The Doorway Exchange",
+  "label": "ch:ja-doorway-exchange",
+  "canDo": "I can greet, name the language, answer yes or no, and thank someone politely while listening, speaking, reading, and writing independently.",
+  "spineNodes": [
+    "SPINE-RESPOND-BASIC",
+    "SPINE-MEET-GREET",
+    "SPINE-COURTESY-THANK"
+  ],
+  "payoff": {
+    "lesson": "JA-C01-practice",
+    "kind": "dialogue",
+    "summary": "A six-line doorway exchange using only words and signs already taught in the preceding six chapters.",
+    "assesses": [
+      "JA-LEX-KONNICHIWA",
+      "JA-LEX-NIHONGO",
+      "JA-LEX-HAI",
+      "JA-LEX-IIE",
+      "JA-LEX-ARIGATOU-GOZAIMASU",
+      "JA-DIALOGUE-DOORWAY"
+    ]
+  }
+}

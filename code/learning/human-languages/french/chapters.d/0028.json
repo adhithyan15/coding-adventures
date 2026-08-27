@@ -1,0 +1,24 @@
+{
+  "chapter": 28,
+  "title": "Coffee, Tea, Milk, Sugar",
+  "label": "ch:fr-coffee-tea-milk-sugar",
+  "canDo": "I can ask for coffee, tea, milk or sugar in French, and trace each word to the road it travelled to get there — one unbroken, one forked, one never borrowed, one from Sanskrit.",
+  "spineNodes": [
+    "SPINE-POLITE-REQUEST-REPAIR"
+  ],
+  "payoff": {
+    "lesson": "FR-C28-sucre",
+    "kind": "task",
+    "summary": "Ask for sugar, trace sucre to Sanskrit śárkarā through Arabic sukkar, and set the chapter's four masculine drink-words beside l'eau's lone feminine exception. Reaches back past the chapter to Chapter 18's si, the answer that contradicts a negative, and to the langue d'oïl / langue d'oc split behind oui itself.",
+    "assesses": [
+      "FR-LEX-SUCRE-07",
+      "FR-ETYMON-SUCRE-08",
+      "FR-LEX-LAIT-05",
+      "FR-ETYMON-LAIT-06",
+      "FR-LEX-CAFE-01",
+      "FR-ETYMON-CAFE-02",
+      "FR-CULTURE-OUI-04",
+      "FR-PRAGMATICS-SI-05"
+    ]
+  }
+}

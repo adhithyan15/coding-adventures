@@ -1,0 +1,16 @@
+{
+  "chapter": 16,
+  "title": "To Be, and the Past That Takes It",
+  "label": "ch:etre",
+  "canDo": "I can use the French verb for “to be” and form the past of verbs that select it.",
+  "spineNodes": [
+    "SPINE-SAY-WHAT-I-DO"
+  ],
+  "payoff": {
+    "lesson": "FR-C16-pronominal-past",
+    "kind": "task",
+    "summary": "Complete FR-C16-pronominal-past, the canonical closing checkpoint, and demonstrate the chapter promise: use the French verb for “to be” and form the past of verbs that select it.",
+    "assesses": [],
+    "note": "This legacy schema-v1 chapter has no typed knowledge atoms yet. The payoff is anchored to real canonical lesson content, but its representativeness remains authored rather than atom-scored until migration."
+  }
+}

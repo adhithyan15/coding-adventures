@@ -1,0 +1,34 @@
+{
+  "id": "MW-EXT-022-FAMILY-SEVEN",
+  "stage": "pre-A1",
+  "kind": "required",
+  "category": "vocabulary",
+  "canDo": "I can retrieve seven source-attested family labels in listening, speaking, reading, and writing after learning only three new Devanagari signs.",
+  "prerequisites": [
+    "MW-EXT-021-FAREWELL-LATER"
+  ],
+  "lessons": [
+    "MW-C08-hear-maa",
+    "MW-C08-maa",
+    "MW-C08-hear-baap",
+    "MW-W08-ba",
+    "MW-C08-baap",
+    "MW-C08-hear-bhai",
+    "MW-C08-bhai",
+    "MW-C08-hear-bahan",
+    "MW-C08-bahan",
+    "MW-C08-family-four",
+    "MW-C08-hear-dada",
+    "MW-W08-da",
+    "MW-C08-dada",
+    "MW-C08-hear-dadi",
+    "MW-C08-dadi",
+    "MW-C08-hear-parivaar",
+    "MW-W08-va",
+    "MW-C08-parivaar",
+    "MW-R08-family-foundation",
+    "MW-R08-family-map",
+    "MW-C08-family-seven",
+    "MW-R08-script-close"
+  ]
+}

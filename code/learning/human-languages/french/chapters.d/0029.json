@@ -1,0 +1,24 @@
+{
+  "chapter": 29,
+  "title": "The People You Introduce",
+  "label": "ch:fr-the-people-you-introduce",
+  "canDo": "I can introduce a friend, name my family, name a child and name any person, using French's four different relationships between grammatical gender and the person meant, and elide le or la to l' before a vowel.",
+  "spineNodes": [
+    "SPINE-EXCHANGE-NAMES"
+  ],
+  "payoff": {
+    "lesson": "FR-C29-personne",
+    "kind": "task",
+    "summary": "Say la personne, always feminine even naming a man, then line the chapter's four words up by how each one handles gender: l'ami changes, la famille is fixed, l'enfant is one spelling with two articles, la personne is fixed regardless of sex. Reaches back to Chapter 18's non for a sound contrast (personne's double -nn- blocks the nasal non has) and to its ne ... pas negation, which personne itself joins as \"nobody.\"",
+    "assesses": [
+      "FR-LEX-PERSONNE-08",
+      "FR-ETYMON-PERSONNE-09",
+      "FR-LEX-AMI-01",
+      "FR-GRAMMAR-ELISION-ARTICLE-02",
+      "FR-LEX-FAMILLE-04",
+      "FR-LEX-ENFANT-06",
+      "FR-SOUND-NON-03",
+      "FR-GRAMMAR-NEGATION-04"
+    ]
+  }
+}

@@ -1,0 +1,16 @@
+{
+  "chapter": 7,
+  "title": "The Days of the Week",
+  "label": "ch:days",
+  "canDo": "I can name the days of the week in French and use them in simple plans.",
+  "spineNodes": [
+    "SPINE-TIME-OF-DAY"
+  ],
+  "payoff": {
+    "lesson": "FR-C07-jours-2",
+    "kind": "task",
+    "summary": "Complete FR-C07-jours-2, the canonical closing checkpoint, and demonstrate the chapter promise: name the days of the week in French and use them in simple plans.",
+    "assesses": [],
+    "note": "This legacy schema-v1 chapter has no typed knowledge atoms yet. The payoff is anchored to real canonical lesson content, but its representativeness remains authored rather than atom-scored until migration."
+  }
+}

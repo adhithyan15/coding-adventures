@@ -1,0 +1,29 @@
+{
+  "chapter": 11,
+  "title": "Grandparents and Family: Two New Signs",
+  "label": "ch:mw-family-seven",
+  "canDo": "I can add paternal grandfather, paternal grandmother, and family to the earlier four-word map while keeping regional and household variation explicit.",
+  "spineNodes": [
+    "SPINE-EXCHANGE-NAMES"
+  ],
+  "payoff": {
+    "lesson": "MW-C08-family-seven",
+    "kind": "four-skill-vocabulary-map",
+    "summary": "Three more family labels secured by ear before writing, with only द and व added one sign at a time before the seven-word map.",
+    "assesses": [
+      "MW-LEX-MAA-01",
+      "MW-LEX-BAAP-01",
+      "MW-LEX-BHAI-01",
+      "MW-LEX-BAHAN-01",
+      "MW-LEX-DADA-01",
+      "MW-LEX-DADI-01",
+      "MW-LEX-PARIVAAR-01",
+      "MW-SCRIPT-DA-01",
+      "MW-SCRIPT-VA-01",
+      "MW-SCRIPT-DADA-01",
+      "MW-SCRIPT-DADI-01",
+      "MW-SCRIPT-PARIVAAR-01",
+      "MW-PERFORMANCE-FAMILY-SEVEN-FOUR-SKILL-01"
+    ]
+  }
+}

@@ -1,0 +1,25 @@
+{
+  "chapter": 8,
+  "title": "Thik Hoon: Answer in Two New Signs",
+  "label": "ch:mw-wellbeing-answer",
+  "canDo": "I can answer हूं ठीक हूं, then complete a polite wellbeing exchange in separately scored listening, speaking, reading, and writing tasks.",
+  "spineNodes": [
+    "SPINE-CHECK-WELLBEING"
+  ],
+  "payoff": {
+    "lesson": "MW-C06-practice",
+    "kind": "dialogue",
+    "summary": "A source-attested wellbeing answer whose only new written shapes are isolated before the complete four-skill exchange.",
+    "assesses": [
+      "MW-LEX-HOON-01",
+      "MW-LEX-THIK-01",
+      "MW-ANSWER-WELLBEING-HEARD-01",
+      "MW-SCRIPT-UU-MATRA-01",
+      "MW-SCRIPT-TTHA-01",
+      "MW-SCRIPT-HOON-01",
+      "MW-SCRIPT-THIK-01",
+      "MW-ANSWER-WELLBEING-01",
+      "MW-DIALOGUE-WELLBEING-01"
+    ]
+  }
+}

@@ -1,0 +1,20 @@
+{
+  "id": "MW-EXT-028-SHOPPING-SEVEN",
+  "stage": "pre-A1",
+  "kind": "required",
+  "category": "vocabulary",
+  "canDo": "I can add clothes and expensive to the shopping map in four separately scored skills after learning only the nukta that changes ड to ड़.",
+  "prerequisites": [
+    "MW-EXT-027-SHOPPING-FIVE"
+  ],
+  "lessons": [
+    "MW-C15-hear-kapda",
+    "MW-W15-nukta",
+    "MW-C15-kapda",
+    "MW-C15-hear-mahango",
+    "MW-C15-mahango",
+    "MW-R15-shopping-new-two",
+    "MW-C15-shopping-seven",
+    "MW-R15-shopping-close"
+  ]
+}

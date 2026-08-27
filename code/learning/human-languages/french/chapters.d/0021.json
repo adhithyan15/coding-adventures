@@ -1,0 +1,20 @@
+{
+  "chapter": 21,
+  "title": "Weather",
+  "label": "ch:fr-weather",
+  "canDo": "I can talk about the weather in French — quel temps fait-il, il fait chaud, il fait froid, il pleut.",
+  "spineNodes": [
+    "SPINE-TIME-OF-DAY"
+  ],
+  "payoff": {
+    "lesson": "FR-C21-le-temps",
+    "kind": "production",
+    "summary": "Use le temps in both its senses, build the weather with faire (il fait chaud / il fait froid), and say il pleut with the Latin pl- cluster French kept intact. The chapter's only lesson, so the payoff covers everything it introduces.",
+    "assesses": [
+      "FR-LEX-TEMPS-02",
+      "FR-GRAMMAR-IL-FAIT-03",
+      "FR-LEX-IL-PLEUT-04",
+      "FR-ETYMON-PLEUVOIR-05"
+    ]
+  }
+}

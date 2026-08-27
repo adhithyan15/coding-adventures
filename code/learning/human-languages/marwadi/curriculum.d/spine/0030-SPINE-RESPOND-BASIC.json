@@ -1,0 +1,11 @@
+{
+  "segments": [
+    "MW-PATH-003"
+  ],
+  "omits": [
+    "RESPONSE-NO",
+    "RESPONSE-YESNO",
+    "RESPONSE-OKAY"
+  ],
+  "relocates": {}
+}

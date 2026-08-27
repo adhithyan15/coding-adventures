@@ -1,0 +1,20 @@
+{
+  "chapter": 7,
+  "title": "Kaiso Ho: Ask How Someone Is",
+  "label": "ch:mw-wellbeing-question",
+  "canDo": "I can recognise, say, read, and write the polite wellbeing question आप कैसो हो?.",
+  "spineNodes": [
+    "SPINE-CHECK-WELLBEING"
+  ],
+  "payoff": {
+    "lesson": "MW-C06-question",
+    "kind": "question",
+    "summary": "A source-attested formal wellbeing question heard first and then written entirely with signs from earlier chapters.",
+    "assesses": [
+      "MW-LEX-AAP-01",
+      "MW-LEX-KAISO-01",
+      "MW-QUESTION-WELLBEING-HEARD-01",
+      "MW-SCRIPT-WELLBEING-QUESTION-01"
+    ]
+  }
+}

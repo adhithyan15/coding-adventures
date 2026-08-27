@@ -1,0 +1,19 @@
+{
+  "chapter": 20,
+  "title": "Sorry",
+  "label": "ch:fr-sorry",
+  "canDo": "I can apologise in French and pick between je suis désolé(e), pardon and excusez-moi for the situation I am actually in.",
+  "spineNodes": [
+    "SPINE-POLITE-REQUEST-REPAIR"
+  ],
+  "payoff": {
+    "lesson": "FR-C20-je-suis-desole",
+    "kind": "production",
+    "summary": "Say je suis désolé(e) knowing it literally means 'I am desolate', then place pardon as the quick reflex and excusez-moi as the attention-getter. The chapter's only lesson, so the payoff covers everything it introduces.",
+    "assesses": [
+      "FR-LEX-DESOLE-02",
+      "FR-ETYMON-DESOLE-03",
+      "FR-PRAGMATICS-SORRY-04"
+    ]
+  }
+}

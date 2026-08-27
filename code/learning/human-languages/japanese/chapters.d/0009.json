@@ -1,0 +1,28 @@
+{
+  "chapter": 9,
+  "title": "One More Time, Please",
+  "label": "ch:ja-repeat-please",
+  "canDo": "I can say that I do not understand, politely ask for one repetition, read and write the earned block もういちど, and write five new hiragana forms without a chart.",
+  "spineNodes": [
+    "SPINE-POLITE-REQUEST-REPAIR"
+  ],
+  "payoff": {
+    "lesson": "JA-C09-mou-ichido-onegaishimasu",
+    "kind": "dialogue",
+    "summary": "A spoken repair assembled from independently learned pieces, with decoding and dictation limited to the signs the learner has actually earned.",
+    "assesses": [
+      "JA-LEX-SUMIMASEN",
+      "JA-LEX-YOKU",
+      "JA-LEX-WAKARIMASEN",
+      "JA-LEX-MOU",
+      "JA-LEX-ICHIDO",
+      "JA-LEX-ONEGAI-SHIMASU",
+      "JA-LEX-MOU-ICHIDO-ONEGAI-SHIMASU",
+      "JA-SCRIPT-MI-01",
+      "JA-SCRIPT-ME-01",
+      "JA-SCRIPT-KU-01",
+      "JA-SCRIPT-DO-01",
+      "JA-SCRIPT-MO-01"
+    ]
+  }
+}

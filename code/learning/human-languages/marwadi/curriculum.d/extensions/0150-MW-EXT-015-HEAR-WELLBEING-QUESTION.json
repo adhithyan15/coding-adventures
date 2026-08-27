@@ -1,0 +1,13 @@
+{
+  "id": "MW-EXT-015-HEAR-WELLBEING-QUESTION",
+  "stage": "pre-A1",
+  "kind": "required",
+  "category": "vocabulary",
+  "canDo": "I can recognise āp kaiso ho? by ear as a polite question about wellbeing and say its three sound groups.",
+  "prerequisites": [
+    "MW-EXT-014-EXCHANGE-NAMES"
+  ],
+  "lessons": [
+    "MW-C06-hear-question"
+  ]
+}

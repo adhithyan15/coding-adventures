@@ -1,0 +1,13 @@
+{
+  "id": "MW-EXT-019-HEAR-LATER",
+  "stage": "pre-A1",
+  "kind": "required",
+  "category": "communication",
+  "canDo": "I can recognise and say pāchhe milsū as see you later before seeing its spelling.",
+  "prerequisites": [
+    "MW-EXT-018-WELLBEING-EXCHANGE"
+  ],
+  "lessons": [
+    "MW-C07-hear-later"
+  ]
+}

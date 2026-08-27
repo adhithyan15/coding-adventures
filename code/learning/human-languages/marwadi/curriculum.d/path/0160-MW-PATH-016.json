@@ -1,0 +1,19 @@
+{
+  "id": "MW-PATH-016",
+  "spine_node": "SPINE-POLITE-REQUEST-REPAIR",
+  "lessons": [
+    "MW-C17-hear-riksha",
+    "MW-W17-sha",
+    "MW-C17-riksha",
+    "MW-C17-hear-ghodo",
+    "MW-C17-ghodo",
+    "MW-R17-transport-new-two",
+    "MW-C17-transport-five",
+    "MW-R17-script-close"
+  ],
+  "before": [],
+  "inline": [
+    "MW-EXT-030-TRANSPORT-FIVE"
+  ],
+  "after": []
+}

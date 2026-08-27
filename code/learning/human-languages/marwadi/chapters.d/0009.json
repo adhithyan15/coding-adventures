@@ -1,0 +1,25 @@
+{
+  "chapter": 9,
+  "title": "Pachhe Milsu: See You Later",
+  "label": "ch:mw-see-you-later",
+  "canDo": "I can hear and say pāchhe milsū, write its four new units, and distinguish it from the common farewell राम राम सा in all four skills.",
+  "spineNodes": [
+    "SPINE-TAKE-LEAVE"
+  ],
+  "payoff": {
+    "lesson": "MW-C07-practice",
+    "kind": "dialogue",
+    "summary": "A source-attested see-you-later line taught sound-first, written through four isolated units, and scored separately in all four skills.",
+    "assesses": [
+      "MW-LEX-PACHHE-01",
+      "MW-LEX-MILSOO-01",
+      "MW-FAREWELL-LATER-HEARD-01",
+      "MW-SCRIPT-CHHA-01",
+      "MW-SCRIPT-E-MATRA-01",
+      "MW-SCRIPT-I-MATRA-01",
+      "MW-SCRIPT-LA-01",
+      "MW-SCRIPT-PACHHE-MILSOO-01",
+      "MW-PERFORMANCE-FAREWELL-LATER-FOUR-SKILL-01"
+    ]
+  }
+}

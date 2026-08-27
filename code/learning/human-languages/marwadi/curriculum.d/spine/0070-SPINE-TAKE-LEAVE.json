@@ -1,0 +1,14 @@
+{
+  "segments": [
+    "MW-PATH-007"
+  ],
+  "omits": [
+    "FAREWELL",
+    "FAREWELL-CASUAL",
+    "FAREWELL-LATER",
+    "FAREWELL-SOON",
+    "FAREWELL-TOMORROW",
+    "GREETING-GOODNIGHT"
+  ],
+  "relocates": {}
+}

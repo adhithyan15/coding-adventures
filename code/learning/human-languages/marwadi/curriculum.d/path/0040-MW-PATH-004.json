@@ -1,0 +1,19 @@
+{
+  "id": "MW-PATH-004",
+  "spine_node": "SPINE-POLITE-REQUEST-REPAIR",
+  "lessons": [
+    "MW-C04-hear-paani",
+    "MW-W04-pa",
+    "MW-W04-nna",
+    "MW-W04-ii-matra",
+    "MW-C04-paani",
+    "MW-C04-practice"
+  ],
+  "before": [],
+  "inline": [
+    "MW-EXT-006-HEAR-PAANI",
+    "MW-EXT-007-WRITE-PAANI",
+    "MW-EXT-008-RETRIEVE-PAANI"
+  ],
+  "after": []
+}

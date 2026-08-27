@@ -1,0 +1,13 @@
+{
+  "id": "MW-EXT-001-WRITE-RAAM",
+  "stage": "pre-A1",
+  "kind": "required",
+  "category": "script",
+  "canDo": "I can recognise र, ा, and म, combine them as राम, and write the word after a short delay.",
+  "prerequisites": [],
+  "lessons": [
+    "MW-W01-ra",
+    "MW-W01-aa-matra",
+    "MW-W01-raam"
+  ]
+}

@@ -1,0 +1,14 @@
+{
+  "id": "MW-EXT-003-RESPECTFUL-GREETING",
+  "stage": "pre-A1",
+  "kind": "required",
+  "category": "consolidation",
+  "canDo": "I can hear, read, say, and independently write राम-राम सा, and answer the greeting respectfully.",
+  "prerequisites": [
+    "MW-EXT-002-WRITE-SAA"
+  ],
+  "lessons": [
+    "MW-C01-raam-raam-saa",
+    "MW-C01-practice"
+  ]
+}

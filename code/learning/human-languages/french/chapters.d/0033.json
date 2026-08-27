@@ -1,0 +1,20 @@
+{
+  "chapter": 33,
+  "title": "Want, Can, Must",
+  "label": "ch:fr-modaux",
+  "canDo": "I can say what I want, what I can do and what I must do, put any verb I already know behind vouloir, pouvoir or devoir without changing it, and choose je voudrais over je veux when I am asking rather than stating.",
+  "spineNodes": [
+    "SPINE-SAY-WHAT-I-WANT"
+  ],
+  "payoff": {
+    "lesson": "FR-C33-practice",
+    "kind": "task",
+    "summary": "Three verbs that between them open a sentence for every verb the reader already owns -- and the point at which correct French used at the wrong moment is named as a harder mistake to hear than a grammatical one.",
+    "assesses": [
+      "FR-GRAMMAR-MODAL-CHAIN-04",
+      "FR-LEX-VOULOIR-01",
+      "FR-LEX-POUVOIR-02",
+      "FR-LEX-DEVOIR-03"
+    ]
+  }
+}

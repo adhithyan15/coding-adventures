@@ -1,0 +1,23 @@
+{
+  "chapter": 5,
+  "title": "Mharo Naam: Give One Name",
+  "label": "ch:mw-name-answer",
+  "canDo": "I can hear, say, read, and independently write म्हारो नाम राम है, then substitute a chosen name in speech.",
+  "spineNodes": [
+    "SPINE-EXCHANGE-NAMES"
+  ],
+  "payoff": {
+    "lesson": "MW-C05-answer",
+    "kind": "production",
+    "summary": "A source-attested name statement built by ear before four new signs are isolated and the complete line is retrieved from dictation.",
+    "assesses": [
+      "MW-LEX-MHARO-01",
+      "MW-SCRIPT-MHARO-01",
+      "MW-LEX-NAAM-01",
+      "MW-SCRIPT-NAAM-01",
+      "MW-LEX-HAI-01",
+      "MW-SCRIPT-HAI-01",
+      "MW-PHRASE-MY-NAME-IS-01"
+    ]
+  }
+}

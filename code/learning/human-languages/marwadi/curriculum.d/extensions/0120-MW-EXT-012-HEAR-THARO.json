@@ -1,0 +1,13 @@
+{
+  "id": "MW-EXT-012-HEAR-THARO",
+  "stage": "pre-A1",
+  "kind": "required",
+  "category": "vocabulary",
+  "canDo": "I can distinguish heard thāro, your, from mhāro, my.",
+  "prerequisites": [
+    "MW-EXT-011-NAME-ANSWER"
+  ],
+  "lessons": [
+    "MW-C05-hear-tharo"
+  ]
+}

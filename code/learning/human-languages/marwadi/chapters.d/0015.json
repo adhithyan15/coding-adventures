@@ -1,0 +1,21 @@
+{
+  "chapter": 15,
+  "title": "Hand and Money: No New Signs",
+  "label": "ch:mw-travel-five",
+  "canDo": "I can add hand and money to the three-place map in listening, speaking, reading, and writing without learning another sign.",
+  "spineNodes": [
+    "SPINE-POLITE-REQUEST-REPAIR"
+  ],
+  "payoff": {
+    "lesson": "MW-C10-travel-five",
+    "kind": "four-skill-vocabulary-map",
+    "summary": "Hand and money arrive by ear, reuse the complete script inventory, and join the three places in a non-compensatory four-skill payoff.",
+    "assesses": [
+      "MW-LEX-HAATH-01",
+      "MW-SCRIPT-HAATH-01",
+      "MW-LEX-PAISA-01",
+      "MW-SCRIPT-PAISA-01",
+      "MW-PERFORMANCE-TRAVEL-FIVE-FOUR-SKILL-01"
+    ]
+  }
+}

@@ -1,0 +1,11 @@
+{
+  "segments": [
+    "MW-PATH-001"
+  ],
+  "omits": [
+    "GREETING-FORMAL",
+    "GREETING-PEACE",
+    "GREETING-WELCOME"
+  ],
+  "relocates": {}
+}

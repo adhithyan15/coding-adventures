@@ -1,0 +1,19 @@
+{
+  "id": "MW-PATH-014",
+  "spine_node": "SPINE-POLITE-REQUEST-REPAIR",
+  "lessons": [
+    "MW-C15-hear-kapda",
+    "MW-W15-nukta",
+    "MW-C15-kapda",
+    "MW-C15-hear-mahango",
+    "MW-C15-mahango",
+    "MW-R15-shopping-new-two",
+    "MW-C15-shopping-seven",
+    "MW-R15-shopping-close"
+  ],
+  "before": [],
+  "inline": [
+    "MW-EXT-028-SHOPPING-SEVEN"
+  ],
+  "after": []
+}

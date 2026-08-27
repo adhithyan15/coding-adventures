@@ -1,0 +1,16 @@
+{
+  "chapter": 14,
+  "title": "To Have, and How Old You Are",
+  "label": "ch:avoir-age",
+  "canDo": "I can use the French verb for “to have” to talk about possession and age.",
+  "spineNodes": [
+    "SPINE-SAY-WHAT-I-DO"
+  ],
+  "payoff": {
+    "lesson": "FR-C14-age",
+    "kind": "task",
+    "summary": "Complete FR-C14-age, the canonical closing checkpoint, and demonstrate the chapter promise: use the French verb for “to have” to talk about possession and age.",
+    "assesses": [],
+    "note": "This legacy schema-v1 chapter has no typed knowledge atoms yet. The payoff is anchored to real canonical lesson content, but its representativeness remains authored rather than atom-scored until migration."
+  }
+}

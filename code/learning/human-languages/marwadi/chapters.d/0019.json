@@ -1,0 +1,21 @@
+{
+  "chapter": 19,
+  "title": "Cheap and Goods: No New Signs",
+  "label": "ch:mw-shopping-five",
+  "canDo": "I can add cheap and goods to the shop-item-price map in listening, speaking, reading, and writing without learning another sign.",
+  "spineNodes": [
+    "SPINE-POLITE-REQUEST-REPAIR"
+  ],
+  "payoff": {
+    "lesson": "MW-C14-shopping-five",
+    "kind": "four-skill-vocabulary-map",
+    "summary": "Two more source-attested shopping words reuse the secure script inventory and join the earlier three in a non-compensatory four-skill payoff.",
+    "assesses": [
+      "MW-LEX-SASTA-01",
+      "MW-SCRIPT-SASTA-01",
+      "MW-LEX-SAMAAN-01",
+      "MW-SCRIPT-SAMAAN-01",
+      "MW-PERFORMANCE-SHOPPING-FIVE-FOUR-SKILL-01"
+    ]
+  }
+}

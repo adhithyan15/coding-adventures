@@ -1,0 +1,22 @@
+{
+  "chapter": 22,
+  "title": "Rickshaw and Horse: One New Consonant",
+  "label": "ch:mw-transport-five",
+  "canDo": "I can add rickshaw and horse to the transport map after learning only श and reusing the dotted consonant from clothes.",
+  "spineNodes": [
+    "SPINE-POLITE-REQUEST-REPAIR"
+  ],
+  "payoff": {
+    "lesson": "MW-C17-transport-five",
+    "kind": "four-skill-vocabulary-map",
+    "summary": "Two more source-attested transport words begin by ear, add only श, and join the earlier three in a non-compensatory four-skill payoff.",
+    "assesses": [
+      "MW-LEX-RIKSHA-01",
+      "MW-SCRIPT-SHA-01",
+      "MW-SCRIPT-RIKSHA-01",
+      "MW-LEX-GHODO-01",
+      "MW-SCRIPT-GHODO-01",
+      "MW-PERFORMANCE-TRANSPORT-FIVE-FOUR-SKILL-01"
+    ]
+  }
+}

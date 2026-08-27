@@ -1,0 +1,15 @@
+{
+  "id": "MW-EXT-010-WRITE-MHARO",
+  "stage": "pre-A1",
+  "kind": "required",
+  "category": "script",
+  "canDo": "I can use the virāma and o sign with known consonants to read and write म्हारो after a short delay.",
+  "prerequisites": [
+    "MW-EXT-009-HEAR-MHARO"
+  ],
+  "lessons": [
+    "MW-W05-virama",
+    "MW-W05-o-matra",
+    "MW-C05-mharo"
+  ]
+}

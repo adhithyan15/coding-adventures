@@ -1,0 +1,13 @@
+{
+  "id": "MW-EXT-016-WRITE-WELLBEING-QUESTION",
+  "stage": "pre-A1",
+  "kind": "required",
+  "category": "script",
+  "canDo": "I can read and write आप कैसो हो? by reusing only signs taught in earlier chapters.",
+  "prerequisites": [
+    "MW-EXT-015-HEAR-WELLBEING-QUESTION"
+  ],
+  "lessons": [
+    "MW-C06-question"
+  ]
+}

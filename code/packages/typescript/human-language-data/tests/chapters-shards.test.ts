@@ -6,7 +6,7 @@
 // ---------------------------------------------------------------------------
 //
 // The migration itself was proved byte-exact at the moment it landed: for each
-// of the twenty tracks, folding the shards back together reproduced the
+// of the twenty-three tracks, folding the shards back together reproduced the
 // committed `chapters.json` with an unchanged SHA-256. Those hashes are in the
 // CHANGELOG and the commit message, where a one-time proof belongs — pinning
 // them in a test would mean every future chapter append had to edit a hash to
@@ -27,32 +27,21 @@ import { tmpdir } from "node:os";
 import { join } from "node:path";
 import { describe, expect, it } from "vitest";
 import { SHARD_PLANS, runShardCli, shardContents, unshardContents, unshardLedger } from "../src/shard-cli.js";
-import { defaultCurriculumRoot, loadTrackChapters } from "../src/loader.js";
+import { defaultCurriculumRoot, loadLanguageRegistry, loadTrackChapters } from "../src/loader.js";
 import { listShardNames } from "../src/shard.js";
 
 const root = defaultCurriculumRoot();
 
-/** Every plan the migration moved into a `.d/` and deleted the monolith of. */
+/** Every chapter ledger whose authored source lives in a sibling `.d/`. */
 const CHAPTER_PLANS = SHARD_PLANS.filter((plan) => plan.path.endsWith("/chapters.json"));
 
-/**
- * The three tracks deliberately left on their monoliths.
- *
- * Their committed `chapters.json` is hand-formatted with inline one-line arrays,
- * which `JSON.stringify(…, null, 2)` expands. The DATA is identical either way;
- * the BYTES are not. HL21's rule is that a ledger which does not round-trip
- * byte-exactly gets REPORTED rather than quietly reformatted into agreement
- * with the serialiser, so these wait for that decision instead of being swept
- * into this commit.
- */
-const UNMIGRATED = ["french", "japanese", "marwadi"];
-
 describe("the chapters.d migration covers what it claims to", () => {
-  it("sharded twenty tracks and left exactly the three that do not round-trip", () => {
-    expect(CHAPTER_PLANS).toHaveLength(20);
-    for (const track of UNMIGRATED) {
-      expect(CHAPTER_PLANS.some((plan) => plan.path === `${track}/chapters.json`)).toBe(false);
-    }
+  it("shards all twenty-three tracks", () => {
+    expect(CHAPTER_PLANS).toHaveLength(23);
+    const expected = loadLanguageRegistry(root).languages
+      .map((track) => `${track.id}/chapters.json`)
+      .sort();
+    expect(CHAPTER_PLANS.map((plan) => plan.path).sort()).toEqual(expected);
   });
 
   it("passes --check for every sharded ledger", () => {
@@ -76,10 +65,6 @@ describe("the chapters.d migration covers what it claims to", () => {
     },
   );
 
-  it.each(UNMIGRATED)("%s has no shard directory at all", (track) => {
-    expect(existsSync(join(root, track, "chapters.json"))).toBe(true);
-    expect(existsSync(join(root, track, "chapters.d"))).toBe(false);
-  });
 });
 
 describe("sorted shard order reproduces authored chapter order", () => {

@@ -1,0 +1,16 @@
+{
+  "id": "MW-PATH-003",
+  "spine_node": "SPINE-RESPOND-BASIC",
+  "lessons": [
+    "MW-W03-ha",
+    "MW-W03-anusvara",
+    "MW-C03-haan-saa",
+    "MW-C03-listen-say",
+    "MW-C03-practice"
+  ],
+  "before": [],
+  "inline": [
+    "MW-EXT-005-POLITE-AFFIRMATIVE"
+  ],
+  "after": []
+}

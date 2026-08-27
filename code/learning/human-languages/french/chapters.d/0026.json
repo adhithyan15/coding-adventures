@@ -1,0 +1,31 @@
+{
+  "chapter": 26,
+  "title": "Hearing, Sleeping, Walking, Running",
+  "label": "ch:fr-hearing-sleeping-walking-running",
+  "canDo": "I can say that I hear, sleep, walk and run in French, use ça marche for \"that works,\" and say why entendre carries English's intend inside it while the Latin verb for hearing ended up in English instead.",
+  "spineNodes": [
+    "SPINE-SAY-WHAT-I-DO"
+  ],
+  "payoff": {
+    "lesson": "FR-C26-courir",
+    "kind": "task",
+    "summary": "Run the chapter's four verbs together with je — j'entends, je dors, je marche, je cours — then use courir's spelling to settle why canis became chien while currere stayed hard at the front: the ca- shift only ever struck c before a. Reaches back past the chapter to le chien and its palatalization from Chapter 22, le chat from the same chapter, il fait chaud and il pleut from Chapter 21, and the ne … pas negation from Chapter 18.",
+    "assesses": [
+      "FR-LEX-COURIR-10",
+      "FR-ETYMON-COURIR-11",
+      "FR-LEX-MARCHER-07",
+      "FR-ETYMON-MARCHER-08",
+      "FR-SEMANTICS-MARCHER-WORK-09",
+      "FR-LEX-DORMIR-04",
+      "FR-GRAMMAR-DORMIR-STEM-06",
+      "FR-LEX-ENTENDRE-01",
+      "FR-ETYMON-ENTENDRE-02",
+      "FR-GRAMMAR-NEGATION-04",
+      "FR-LEX-CHIEN-02",
+      "FR-ETYMON-CHIEN-03",
+      "FR-LEX-CHAT-04",
+      "FR-LEX-IL-PLEUT-04",
+      "FR-GRAMMAR-IL-FAIT-03"
+    ]
+  }
+}

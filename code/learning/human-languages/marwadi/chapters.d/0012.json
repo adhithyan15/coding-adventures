@@ -1,0 +1,24 @@
+{
+  "chapter": 12,
+  "title": "Maternal Grandparents and Husband: One New Sign",
+  "label": "ch:mw-family-ten",
+  "canDo": "I can add maternal grandfather, maternal grandmother, and husband to the family map after learning only one new Devanagari sign.",
+  "spineNodes": [
+    "SPINE-EXCHANGE-NAMES"
+  ],
+  "payoff": {
+    "lesson": "MW-R09-maternal-three",
+    "kind": "four-skill-vocabulary-map",
+    "summary": "Three source-attested relationship labels begin by ear, reuse the established script except for त, and finish in four separately scored skills.",
+    "assesses": [
+      "MW-LEX-NANA-01",
+      "MW-SCRIPT-NANA-01",
+      "MW-LEX-NANI-01",
+      "MW-SCRIPT-NANI-01",
+      "MW-LEX-PATI-01",
+      "MW-SCRIPT-TA-01",
+      "MW-SCRIPT-PATI-01",
+      "MW-PERFORMANCE-FAMILY-TEN-FOUR-SKILL-01"
+    ]
+  }
+}

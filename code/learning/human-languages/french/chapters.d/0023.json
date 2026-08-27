@@ -1,0 +1,21 @@
+{
+  "chapter": 23,
+  "title": "Green and Yellow",
+  "label": "ch:fr-green-and-yellow",
+  "canDo": "I can name green and yellow in French, and say how solid the claimed link between jaune and German gelb actually is.",
+  "spineNodes": [
+    "SPINE-DEFINITE-REFERENCE"
+  ],
+  "payoff": {
+    "lesson": "FR-C23-vert-jaune",
+    "kind": "production",
+    "summary": "Say vert as the ordinary Romance inheritance from viridis, say jaune as galbinus 'yellow-green', and state the jaune / gelb cousinhood as probable rather than certain. The chapter's only lesson, so the payoff covers everything it introduces.",
+    "assesses": [
+      "FR-LEX-VERT-02",
+      "FR-ETYMON-VERT-03",
+      "FR-LEX-JAUNE-04",
+      "FR-ETYMON-JAUNE-05",
+      "FR-EVIDENCE-JAUNE-GELB-06"
+    ]
+  }
+}
