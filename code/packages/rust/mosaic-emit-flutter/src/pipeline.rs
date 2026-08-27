@@ -1123,6 +1123,7 @@ pub fn from_pipeline(
     let uses_tooltip = layout_contains_tag(&layout.root, "HostTooltip");
     let uses_drag = layout_contains_tag(&layout.root, "HostDraggable")
         || layout_contains_tag(&layout.root, "HostDropTarget");
+    let uses_dialog = layout_contains_native_dialog(&layout.root);
     if uses_radio {
         writeln!(out, "// ignore_for_file: deprecated_member_use").unwrap();
     }
@@ -1136,6 +1137,14 @@ pub fn from_pipeline(
             "// ignore_for_file: unused_element_parameter, deprecated_member_use"
         )
         .unwrap();
+    } else if uses_dialog {
+        // #13010: `_MosaicDialogHost.barrierDismissible` is a
+        // constructor parameter with a default, exposed for every
+        // `HostDialog` even when this particular file's authored
+        // layout(s) never set `dismiss-on-backdrop: false` -- same
+        // "shared helper exposes the complete contract" shape as the
+        // drag helper above, just for a different lint trigger.
+        writeln!(out, "// ignore_for_file: unused_element_parameter").unwrap();
     }
     writeln!(
         out,
@@ -1176,6 +1185,10 @@ pub fn from_pipeline(
         out.push_str(&emit_drag_helpers());
         writeln!(out).unwrap();
     }
+    if uses_dialog {
+        out.push_str(&emit_dialog_helper());
+        writeln!(out).unwrap();
+    }
 
     // 3. Pre-compute the per-part style map. Same shape as the React
     //    emitter's `build_part_style_map`: kebab part-name → joined
@@ -1203,6 +1216,16 @@ fn layout_contains_tag(node: &LayoutNode, tag: &str) -> bool {
             .children
             .iter()
             .any(|child| layout_contains_tag(child, tag))
+}
+
+/// #13010: like [`layout_contains_tag`] for `"HostDialog"`, but only
+/// counts a node that actually lowers to `_MosaicDialogHost` (i.e.
+/// [`host_dialog_has_native_semantics`] is true for it). A file whose
+/// only `HostDialog` is `modal: false` must not pay for the shared
+/// helper class it never instantiates.
+fn layout_contains_native_dialog(node: &LayoutNode) -> bool {
+    (node.tag == "HostDialog" && host_dialog_has_native_semantics(node))
+        || node.children.iter().any(layout_contains_native_dialog)
 }
 
 // =====================================================================
@@ -1933,7 +1956,7 @@ fn emit_widget_tree(
         return emit_host_scroll(node, indent, part_styles, component, emits, ctx);
     }
     if node.tag == "HostDialog" {
-        return emit_host_dialog(node, indent, part_styles, component);
+        return emit_host_dialog(node, indent, part_styles, component, emits, ctx);
     }
     if node.tag == "HostTable" {
         return emit_host_table(node, indent, part_styles, component, emits, ctx);
@@ -3774,21 +3797,230 @@ fn emit_host_scroll(
     ))
 }
 
-/// `HostDialog` → a `Builder` that calls `showDialog` from a
-/// post-frame callback when the `open` slot is truthy. v1 emits an
-/// anchor-shaped `SizedBox.shrink()` carrying the dialog logic; full
-/// fidelity (modal vs non-modal, dismiss-on-backdrop, title, onClose
-/// dispatch) is a follow-up PR.
+/// #13010: does this `HostDialog` node lower to a real native dialog on
+/// the Flutter backend, or does it still fall back to the zero-size
+/// placeholder? `modal: false` is the one case still unimplemented --
+/// Flutter's `showDialog` is inherently modal (a full-screen barrier +
+/// route), with no vanilla-Flutter equivalent to SwiftUI's `.popover`/
+/// Qt's non-modal `Popup` short of a custom `Overlay`, which is out of
+/// scope here. `modal: true` (the default, and the only value the
+/// toolkit's own `Modal` component ever authors) gets a real dialog.
+pub fn host_dialog_has_native_semantics(node: &LayoutNode) -> bool {
+    !matches!(find_keyword_prop(node, "modal"), Some("false"))
+}
+
+/// `HostDialog` -> a declarative-triggered imperative `showDialog`,
+/// wrapped in the shared `_MosaicDialogHost` `StatefulWidget` (emitted
+/// once per file, see [`emit_dialog_helper`]). Flutter's `showDialog`
+/// is an imperative call, not a widget that sits in the tree the way
+/// SwiftUI's `.sheet` modifier or Compose's conditional composition
+/// does -- `_MosaicDialogHost` bridges the two: it watches its `open`
+/// property and calls `showDialog`/`Navigator.pop` from lifecycle
+/// callbacks so the rest of this emitter can still treat `HostDialog`
+/// as an ordinary declarative tree node.
+///
+/// `modal: false` is not implemented (see
+/// [`host_dialog_has_native_semantics`]) -- it keeps the previous
+/// zero-size placeholder rather than emitting a wrong-shaped dialog.
+///
+/// ## Property handling
+///
+/// | Moslayout prop        | Flutter                                          |
+/// |---|---|
+/// | `open: slot: x`       | `_MosaicDialogHost.open: x`                      |
+/// | `title: "..."` / slot | `AlertDialog(title: Text(...))`                  |
+/// | `dismiss-on-backdrop: false` | `barrierDismissible: false`               |
+/// | `onClose: emit: onX`  | `onClose: () { dispatch(XEventX()); }`           |
+/// | children              | `AlertDialog(content: ...)`                      |
+///
+/// ## Generated shape
+///
+/// ```dart
+/// _MosaicDialogHost(
+///   open: open,
+///   onClose: () { dispatch(const XEventClose()); },
+///   builder: (context) => AlertDialog(
+///     title: Text(title),
+///     content: Column(children: [ ... ]),
+///   ),
+/// )
+/// ```
 fn emit_host_dialog(
-    _node: &LayoutNode,
+    node: &LayoutNode,
     indent: usize,
-    _part_styles: &HashMap<String, String>,
-    _component: &str,
+    part_styles: &HashMap<String, String>,
+    component: &str,
+    emits: &[EmitDecl],
+    ctx: TableCtx,
 ) -> Result<String, PipelineEmitError> {
     let pad = " ".repeat(indent);
+    let inner_pad = " ".repeat(indent + 2);
+    let body_pad = " ".repeat(indent + 4);
+
+    if !host_dialog_has_native_semantics(node) {
+        return Ok(format!(
+            "{pad}const SizedBox.shrink() /* TODO: HostDialog non-modal (modal: false) is not yet implemented */\n"
+        ));
+    }
+
+    // `open: slot: x` -> the bare identifier. Unbound falls back to a
+    // literal `false` so the file still type-checks (matches the
+    // XAML/SwiftUI backends' identical fallback for an unbound open).
+    let open_expr: String = match find_slot_ref_prop(node, "open") {
+        Some(slot) => {
+            let camel = to_camel_case_first_lower(slot);
+            validate_slot_or_field_name(&camel)?;
+            camel
+        }
+        None => "false".to_string(),
+    };
+
+    // `dismiss-on-backdrop: false` -> `barrierDismissible: false`.
+    // Anything else (including unset) keeps Flutter's own default of
+    // `true`, so no attribute is emitted at all.
+    let barrier_dismissible_attr =
+        if matches!(find_keyword_prop(node, "dismiss-on-backdrop"), Some("false")) {
+            format!("{inner_pad}barrierDismissible: false,\n")
+        } else {
+            String::new()
+        };
+
+    // `onClose: emit: onX` -> dispatch closure. Optional: a dialog
+    // with no onClose still opens and closes (backdrop-dismissible by
+    // default), it just doesn't notify the host.
+    let on_close_attr = match find_emit_ref_prop(node, "onClose") {
+        Some(emit_name) => {
+            let case_name = pascalize(&strip_on_prefix(emit_name));
+            validate_emit_name(&case_name)?;
+            format!(
+                "{inner_pad}onClose: () {{ dispatch(const {component}Event{case_name}()); }},\n"
+            )
+        }
+        None => String::new(),
+    };
+
+    // `title: "..."` / `title: slot: x` -> `AlertDialog(title: Text(...))`.
+    let title_attr = match find_string_prop(node, "title") {
+        Some(literal) => format!(
+            "{body_pad}title: Text(\"{}\"),\n",
+            escape_dart_string(literal)
+        ),
+        None => match find_slot_ref_prop(node, "title") {
+            Some(slot) => {
+                let camel = to_camel_case_first_lower(slot);
+                validate_slot_or_field_name(&camel)?;
+                format!("{body_pad}title: Text({camel}),\n")
+            }
+            None => String::new(),
+        },
+    };
+
+    // Children become the dialog's `content`. Same single-vs-multi
+    // shape as `emit_host_scroll`: a lone child is passed directly,
+    // several are wrapped in a `Column` via the paired walker (so an
+    // `If`/`Else` sibling pair inside the dialog body is handled).
+    let content_attr = if node.children.is_empty() {
+        String::new()
+    } else if node.children.len() == 1 {
+        let child = emit_widget_tree(
+            &node.children[0],
+            indent + 6,
+            part_styles,
+            component,
+            emits,
+            ctx,
+        )?;
+        let child = child.trim_end_matches('\n');
+        format!("{body_pad}content: {child},\n")
+    } else {
+        let children_pad = " ".repeat(indent + 8);
+        let children = emit_paired_children(
+            &node.children,
+            indent + 8,
+            part_styles,
+            component,
+            emits,
+            ctx,
+        )?;
+        format!(
+            "{body_pad}content: Column(\n{children_pad}mainAxisSize: MainAxisSize.min,\n{children_pad}children: [\n{children}{children_pad}],\n{body_pad}),\n"
+        )
+    };
+
     Ok(format!(
-        "{pad}const SizedBox.shrink() /* TODO: HostDialog showDialog wiring */\n"
+        "{pad}_MosaicDialogHost(\n{inner_pad}open: {open_expr},\n{barrier_dismissible_attr}{on_close_attr}{inner_pad}builder: (context) => AlertDialog(\n{title_attr}{content_attr}{inner_pad}),\n{pad})\n"
     ))
+}
+
+/// Shared `StatefulWidget` bridging a declarative `open: bool` to
+/// Flutter's imperative `showDialog`/`Navigator` API. Emitted once per
+/// file (gated on `uses_dialog`, mirroring [`emit_drag_helpers`]'s
+/// `uses_drag` gate), reused by every `HostDialog` in that file.
+///
+/// - `open` flips false -> true: schedules `showDialog` on the next
+///   frame (an `addPostFrameCallback`, since `showDialog` needs a
+///   `BuildContext` already in the tree -- calling it synchronously
+///   from `didUpdateWidget`/`initState` can race the current build).
+/// - `open` flips true -> false while the dialog is still showing
+///   (the host closed it via its own slot, not via backdrop-tap or an
+///   in-dialog control): pops the route programmatically.
+/// - Either dismissal path (backdrop tap or host-driven pop) resolves
+///   `showDialog`'s returned `Future`, which is where `onClose` fires
+///   -- exactly once per open/close cycle, regardless of which side
+///   initiated the close.
+fn emit_dialog_helper() -> String {
+    r#"class _MosaicDialogHost extends StatefulWidget {
+  final bool open;
+  final bool barrierDismissible;
+  final WidgetBuilder builder;
+  final VoidCallback? onClose;
+  const _MosaicDialogHost({
+    required this.open,
+    required this.builder,
+    this.barrierDismissible = true,
+    this.onClose,
+  });
+  @override
+  State<_MosaicDialogHost> createState() => _MosaicDialogHostState();
+}
+
+class _MosaicDialogHostState extends State<_MosaicDialogHost> {
+  bool _isShowing = false;
+
+  @override
+  void initState() {
+    super.initState();
+    if (widget.open) {
+      WidgetsBinding.instance.addPostFrameCallback((_) => _open());
+    }
+  }
+
+  @override
+  void didUpdateWidget(covariant _MosaicDialogHost oldWidget) {
+    super.didUpdateWidget(oldWidget);
+    if (widget.open && !_isShowing) {
+      WidgetsBinding.instance.addPostFrameCallback((_) => _open());
+    } else if (!widget.open && _isShowing) {
+      Navigator.of(context).maybePop();
+    }
+  }
+
+  Future<void> _open() async {
+    _isShowing = true;
+    await showDialog<void>(
+      context: context,
+      barrierDismissible: widget.barrierDismissible,
+      builder: widget.builder,
+    );
+    _isShowing = false;
+    widget.onClose?.call();
+  }
+
+  @override
+  Widget build(BuildContext context) => const SizedBox.shrink();
+}
+"#
+    .to_string()
 }
 
 /// `HostDraggable` and `HostDropTarget` lower through a small generated
@@ -8896,6 +9128,239 @@ mod tests {
         assert!(
             out.contains("alignment: Alignment.center"),
             "header text-align:center must lower to Alignment.center, got:\n{out}"
+        );
+    }
+
+    // ---------------------------------------------------------------------
+    // #13010 — HostDialog: real showDialog wiring, not a placeholder
+    // ---------------------------------------------------------------------
+
+    /// A `HostDialog` with `open: slot: x`, a literal `title`, an
+    /// `onClose` emit, and a single child lowers to a real
+    /// `_MosaicDialogHost` + `AlertDialog`, not the old placeholder.
+    #[test]
+    fn host_dialog_with_open_slot_emits_real_dialog_host() {
+        let m = component(
+            "Modal",
+            vec![slot("open", SlotType::Bool, true)],
+            vec![emit("onClose", vec![])],
+        );
+        let l = layout(
+            "Modal",
+            node_with(
+                "HostDialog",
+                vec![
+                    LayoutProp {
+                        name: "open".into(),
+                        value: LayoutPropValue::SlotRef("open".into()),
+                    },
+                    LayoutProp {
+                        name: "title".into(),
+                        value: LayoutPropValue::String("Save changes?".into()),
+                    },
+                    LayoutProp {
+                        name: "onClose".into(),
+                        value: LayoutPropValue::EmitRef("onClose".into()),
+                    },
+                ],
+                vec![node_with(
+                    "Text",
+                    vec![LayoutProp {
+                        name: "content".into(),
+                        value: LayoutPropValue::String("Body".into()),
+                    }],
+                    vec![],
+                )],
+            ),
+        );
+        let out = from_pipeline(&m, &l, &empty_style("Modal")).unwrap().output;
+        assert!(
+            !out.contains("TODO: HostDialog"),
+            "expected a real dialog, not the placeholder, got:\n{out}"
+        );
+        assert!(
+            out.contains("_MosaicDialogHost("),
+            "expected the shared dialog host widget, got:\n{out}"
+        );
+        assert!(
+            out.contains("open: open,"),
+            "expected the open slot's live value, got:\n{out}"
+        );
+        assert!(
+            out.contains("onClose: () { dispatch(const ModalEventClose()); },"),
+            "expected the onClose dispatch closure, got:\n{out}"
+        );
+        assert!(
+            out.contains("title: Text(\"Save changes?\"),"),
+            "expected the literal title, got:\n{out}"
+        );
+        assert!(
+            out.contains("content:") && out.contains("Text(\"Body\")"),
+            "expected the single child as content, got:\n{out}"
+        );
+        assert!(
+            out.contains("class _MosaicDialogHost extends StatefulWidget"),
+            "expected the shared dialog helper class to be emitted, got:\n{out}"
+        );
+    }
+
+    /// `dismiss-on-backdrop: false` maps to `barrierDismissible: false`.
+    /// Unset (the default) emits no attribute at all, relying on
+    /// Flutter's own `true` default.
+    #[test]
+    fn host_dialog_dismiss_on_backdrop_false_sets_barrier_dismissible_false() {
+        let m = component("X", vec![], vec![]);
+        let l = layout(
+            "X",
+            node_with(
+                "HostDialog",
+                vec![LayoutProp {
+                    name: "dismiss-on-backdrop".into(),
+                    value: LayoutPropValue::Keyword("false".into()),
+                }],
+                vec![],
+            ),
+        );
+        let out = from_pipeline(&m, &l, &empty_style("X")).unwrap().output;
+        assert!(
+            out.contains("barrierDismissible: false,"),
+            "expected barrierDismissible: false, got:\n{out}"
+        );
+    }
+
+    #[test]
+    fn host_dialog_default_dismiss_on_backdrop_emits_no_barrier_attr() {
+        let m = component("X", vec![], vec![]);
+        let l = layout("X", node_with("HostDialog", vec![], vec![]));
+        let out = from_pipeline(&m, &l, &empty_style("X")).unwrap().output;
+        // The shared helper class itself always mentions
+        // `barrierDismissible` (it's a field/parameter there) --
+        // check the *call site* doesn't pass one, not that the word
+        // never appears anywhere in the file.
+        assert!(
+            !out.contains("barrierDismissible: false"),
+            "expected no barrierDismissible: false at the call site when unset, got:\n{out}"
+        );
+    }
+
+    /// Multiple children are wrapped in a `Column` (via the paired
+    /// walker, matching `emit_host_scroll`'s identical shape) rather
+    /// than only the first child surviving.
+    #[test]
+    fn host_dialog_multiple_children_wrapped_in_column() {
+        let m = component("X", vec![], vec![]);
+        let l = layout(
+            "X",
+            node_with(
+                "HostDialog",
+                vec![],
+                vec![
+                    node_with(
+                        "Text",
+                        vec![LayoutProp {
+                            name: "content".into(),
+                            value: LayoutPropValue::String("One".into()),
+                        }],
+                        vec![],
+                    ),
+                    node_with(
+                        "Text",
+                        vec![LayoutProp {
+                            name: "content".into(),
+                            value: LayoutPropValue::String("Two".into()),
+                        }],
+                        vec![],
+                    ),
+                ],
+            ),
+        );
+        let out = from_pipeline(&m, &l, &empty_style("X")).unwrap().output;
+        assert!(
+            out.contains("content: Column("),
+            "expected multiple children wrapped in a Column, got:\n{out}"
+        );
+        assert!(out.contains("\"One\""), "expected first child, got:\n{out}");
+        assert!(out.contains("\"Two\""), "expected second child, got:\n{out}");
+    }
+
+    /// #13010's documented scope decision: `modal: false` is NOT
+    /// implemented (Flutter's `showDialog` is inherently modal) --
+    /// it must keep the old placeholder rather than emit a
+    /// wrong-shaped (still-modal) dialog silently.
+    #[test]
+    fn host_dialog_modal_false_keeps_placeholder() {
+        let m = component("X", vec![], vec![]);
+        let l = layout(
+            "X",
+            node_with(
+                "HostDialog",
+                vec![LayoutProp {
+                    name: "modal".into(),
+                    value: LayoutPropValue::Keyword("false".into()),
+                }],
+                vec![],
+            ),
+        );
+        let out = from_pipeline(&m, &l, &empty_style("X")).unwrap().output;
+        assert!(
+            out.contains("SizedBox.shrink()"),
+            "expected the placeholder for modal:false, got:\n{out}"
+        );
+        assert!(
+            !out.contains("_MosaicDialogHost("),
+            "modal:false must not emit the real dialog host, got:\n{out}"
+        );
+        assert!(
+            !out.contains("class _MosaicDialogHost"),
+            "the shared helper class must not be emitted when no HostDialog uses it, got:\n{out}"
+        );
+    }
+
+    /// The shared `_MosaicDialogHost` helper class is emitted exactly
+    /// once even with multiple `HostDialog` nodes in the same file,
+    /// and not at all when no `HostDialog` is present (matches the
+    /// existing `uses_drag`-style gating pattern).
+    #[test]
+    fn host_dialog_helper_emitted_once_when_used_not_at_all_otherwise() {
+        let m = component("X", vec![slot("open", SlotType::Bool, true)], vec![]);
+        let l = layout(
+            "X",
+            node_with(
+                "Column",
+                vec![],
+                vec![
+                    node_with(
+                        "HostDialog",
+                        vec![LayoutProp {
+                            name: "open".into(),
+                            value: LayoutPropValue::SlotRef("open".into()),
+                        }],
+                        vec![],
+                    ),
+                    node_with(
+                        "HostDialog",
+                        vec![LayoutProp {
+                            name: "open".into(),
+                            value: LayoutPropValue::SlotRef("open".into()),
+                        }],
+                        vec![],
+                    ),
+                ],
+            ),
+        );
+        let out = from_pipeline(&m, &l, &empty_style("X")).unwrap().output;
+        let helper_count = out.matches("class _MosaicDialogHost extends StatefulWidget").count();
+        assert_eq!(
+            helper_count, 1,
+            "expected the shared helper class exactly once, got {helper_count}:\n{out}"
+        );
+
+        let m2 = component("Y", vec![], vec![]);
+        let l2 = layout("Y", node_with("Box", vec![], vec![]));
+        let out2 = from_pipeline(&m2, &l2, &empty_style("Y")).unwrap().output;
+        assert!(
+            !out2.contains("_MosaicDialogHost"),
+            "a layout with no HostDialog must not pay for the helper, got:\n{out2}"
         );
     }
 }
