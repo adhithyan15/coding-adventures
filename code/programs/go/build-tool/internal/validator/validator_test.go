@@ -252,6 +252,81 @@ func TestValidateBuildFilesFailsHiddenReference(t *testing.T) {
 	}
 }
 
+// TestValidateBuildFilesAllowsDeclaredCrossLanguageBuildDep covers the
+// "# build-tool: deps=..." comment escape hatch: a Swift BUILD_windows file
+// that stages a Rust-built native library via shell commands (invisible to
+// the Package.swift .package(path:) scanner that builds the dependency
+// graph) should not be flagged as a hidden reference when it declares that
+// dependency via the comment.
+func TestValidateBuildFilesAllowsDeclaredCrossLanguageBuildDep(t *testing.T) {
+	root := t.TempDir()
+	rustPath := filepath.Join(root, filepath.FromSlash("code/packages/rust/lib"))
+	swiftPath := filepath.Join(root, filepath.FromSlash("code/packages/swift/pkg"))
+	if err := os.MkdirAll(rustPath, 0755); err != nil {
+		t.Fatal(err)
+	}
+	if err := os.MkdirAll(swiftPath, 0755); err != nil {
+		t.Fatal(err)
+	}
+
+	pkgs := []discovery.Package{
+		{Name: "rust/lib", Path: rustPath, Language: "rust"},
+		{
+			Name:          "swift/pkg",
+			Path:          swiftPath,
+			Language:      "swift",
+			BuildCommands: []string{`cd ../../rust/lib && cargo build --release`},
+			BuildContent:  "# build-tool: deps=rust/lib\ncd ../../rust/lib && cargo build --release\n",
+		},
+	}
+
+	graph := directedgraph.New()
+	graph.AddNode("rust/lib")
+	graph.AddNode("swift/pkg")
+
+	if err := ValidateBuildFiles(pkgs, graph); err != nil {
+		t.Fatalf("expected declared cross-language dep to be allowed, got %v", err)
+	}
+}
+
+// TestValidateBuildFilesFailsUndeclaredCrossLanguageBuildDep is the
+// companion negative case: the same shape, but without the "# build-tool:
+// deps=" comment, must still be flagged.
+func TestValidateBuildFilesFailsUndeclaredCrossLanguageBuildDep(t *testing.T) {
+	root := t.TempDir()
+	rustPath := filepath.Join(root, filepath.FromSlash("code/packages/rust/lib"))
+	swiftPath := filepath.Join(root, filepath.FromSlash("code/packages/swift/pkg"))
+	if err := os.MkdirAll(rustPath, 0755); err != nil {
+		t.Fatal(err)
+	}
+	if err := os.MkdirAll(swiftPath, 0755); err != nil {
+		t.Fatal(err)
+	}
+
+	pkgs := []discovery.Package{
+		{Name: "rust/lib", Path: rustPath, Language: "rust"},
+		{
+			Name:          "swift/pkg",
+			Path:          swiftPath,
+			Language:      "swift",
+			BuildCommands: []string{`cd ../../rust/lib && cargo build --release`},
+			BuildContent:  "cd ../../rust/lib && cargo build --release\n",
+		},
+	}
+
+	graph := directedgraph.New()
+	graph.AddNode("rust/lib")
+	graph.AddNode("swift/pkg")
+
+	err := ValidateBuildFiles(pkgs, graph)
+	if err == nil {
+		t.Fatal("expected validation failure")
+	}
+	if !strings.Contains(err.Error(), "undeclared local package refs: rust/lib") {
+		t.Fatalf("expected hidden reference message, got %v", err)
+	}
+}
+
 func TestValidateBuildFilesAllowsPerlTestDependencyClosure(t *testing.T) {
 	pkgs := makePackages(t, []struct {
 		name     string

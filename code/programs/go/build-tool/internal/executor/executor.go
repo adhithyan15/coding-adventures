@@ -292,7 +292,12 @@ func shellCommand(command string) *exec.Cmd {
 // non-Windows hosts.
 func shellCommandForOS(command string, goos string) *exec.Cmd {
 	if goos == "windows" {
-		return exec.Command("cmd", "/C", command)
+		cmd := exec.Command("cmd", "/C", command)
+		// See executor_windows.go: this overrides the actual command line
+		// used to launch the process so cmd.exe receives it unescaped,
+		// while cmd.Args above stays intact for callers/tests.
+		setRawWindowsCmdLine(cmd, command)
+		return cmd
 	}
 	return exec.Command("sh", "-c", command)
 }

@@ -9,6 +9,8 @@
 
 #[cfg(target_vendor = "apple")]
 mod apple {
+    use std::collections::BTreeSet;
+
     use diagram_ir::{
         EdgeKind, SequenceBlockKind, SequenceEvent, SequenceLink, SequenceProperty, TemporalBody,
         TemporalDiagram, TemporalKind,
@@ -32,7 +34,17 @@ mod apple {
     use paint_codec_png::write_png;
     use paint_instructions::PaintInstruction;
     use paint_metal::render;
+    use serde_json::Value;
     use text_native_coretext::{CoreTextMetrics, CoreTextResolver, CoreTextShaper};
+
+    const GANTT_CORPUS: &str = include_str!(concat!(
+        env!("CARGO_MANIFEST_DIR"),
+        "/../../../grammars/mermaid/gantt-11.16.1-corpus.json"
+    ));
+    const GANTT_VISUAL_CORPUS: &str = include_str!(concat!(
+        env!("CARGO_MANIFEST_DIR"),
+        "/../../../grammars/mermaid/gantt-11.16.1-visual-corpus.json"
+    ));
 
     #[test]
     fn render_dot_diagram_to_png() {
@@ -1106,6 +1118,89 @@ line "Target" [35, 50, 68, 82]"##,
         write_png(&quarter_pixels, "/tmp/mermaid_gantt_quarter_e2e.png")
             .expect("quarter-date PNG write failed");
         assert!(!quarter_scene.instructions.is_empty());
+
+        let signed_year = parse_gantt(
+            "gantt\ntitle Signed year\ndateFormat Y-MM-DD\nsection Plan\nPlanning :p1, +2026-03-01, 1d",
+        )
+        .expect("signed-year Mermaid Gantt parse failed");
+        let signed_year_layout = layout_temporal_diagram(
+            &TemporalDiagram {
+                kind: TemporalKind::Gantt,
+                title: signed_year.title.clone(),
+                body: TemporalBody::Gantt(signed_year),
+            },
+            800.0,
+        );
+        let signed_year_scene = diagram_to_paint_temporal(
+            &signed_year_layout,
+            &DiagramToPaintOptions {
+                background: layout_ir::Color { r: 255, g: 255, b: 255, a: 255 },
+                device_pixel_ratio: 2.0,
+                label_font: font_spec("Helvetica", 12.0),
+                title_font: font_spec("Helvetica", 16.0),
+                shaper: &shaper,
+                metrics: &metrics,
+                resolver: &resolver,
+            },
+        );
+        let signed_year_pixels = render(&signed_year_scene);
+        write_png(&signed_year_pixels, "/tmp/mermaid_gantt_signed_year_e2e.png")
+            .expect("signed-year PNG write failed");
+        assert!(!signed_year_scene.instructions.is_empty());
+    }
+
+    #[test]
+    fn render_pinned_mermaid_gantt_visual_corpus_to_png() {
+        let syntax: Value = serde_json::from_str(GANTT_CORPUS).expect("Gantt corpus JSON");
+        let visual: Value =
+            serde_json::from_str(GANTT_VISUAL_CORPUS).expect("Gantt visual corpus JSON");
+        assert_eq!(visual["upstream_commit"], syntax["upstream_commit"]);
+
+        let valid = syntax["valid"].as_array().expect("valid Gantt fixtures");
+        let fixture_ids = visual["fixtures"].as_array().expect("visual fixture ids");
+        assert_eq!(fixture_ids.len(), valid.len(), "visual corpus must cover every valid fixture");
+        let unique = fixture_ids.iter().filter_map(Value::as_str).collect::<BTreeSet<_>>();
+        assert_eq!(unique.len(), fixture_ids.len(), "visual fixture ids must be unique");
+
+        let shaper = CoreTextShaper;
+        let metrics = CoreTextMetrics;
+        let resolver = CoreTextResolver::new();
+        for fixture_id in fixture_ids {
+            let id = fixture_id.as_str().expect("visual fixture id");
+            let fixture = valid
+                .iter()
+                .find(|fixture| fixture["id"] == id)
+                .unwrap_or_else(|| panic!("visual fixture {id} must exist in the syntax corpus"));
+            let source = fixture["source"].as_str().expect("Gantt fixture source");
+            let gantt = parse_gantt(source)
+                .unwrap_or_else(|error| panic!("visual fixture {id} failed to parse: {error}"));
+            let layout = layout_temporal_diagram(
+                &TemporalDiagram {
+                    kind: TemporalKind::Gantt,
+                    title: gantt.title.clone(),
+                    body: TemporalBody::Gantt(gantt),
+                },
+                800.0,
+            );
+            let scene = diagram_to_paint_temporal(
+                &layout,
+                &DiagramToPaintOptions {
+                    background: layout_ir::Color { r: 255, g: 255, b: 255, a: 255 },
+                    device_pixel_ratio: 2.0,
+                    label_font: font_spec("Helvetica", 12.0),
+                    title_font: font_spec("Helvetica", 16.0),
+                    shaper: &shaper,
+                    metrics: &metrics,
+                    resolver: &resolver,
+                },
+            );
+            assert!(!scene.instructions.is_empty(), "visual fixture {id} must lower to paint");
+            let pixels = render(&scene);
+            assert!(pixels.width > 0 && pixels.height > 0, "visual fixture {id} must render");
+            let path = format!("/tmp/mermaid_gantt_11_16_1_{id}.png");
+            write_png(&pixels, &path)
+                .unwrap_or_else(|error| panic!("visual fixture {id} PNG failed: {error}"));
+        }
     }
 
     #[test]

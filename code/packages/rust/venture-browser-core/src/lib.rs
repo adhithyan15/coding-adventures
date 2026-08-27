@@ -1808,6 +1808,7 @@ mod tests {
             MeasureResult {
                 width: full_width.min(width_limit),
                 height: line_count * font.size * font.line_height,
+                baseline: font.size * 0.8,
                 line_count: line_count as u32,
             }
         }

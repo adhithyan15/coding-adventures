@@ -100,6 +100,25 @@ export const scriptInventoryEvidence = {
     );
     expect(missingByScript.get("kannada.json")?.has("ಇ")).toBe(false);
     expect(affected.get("ಇ") ?? 0).toBe(0);
+    const kannadaU = scripts.kannada!.independentVowels!.find(
+      (entry) => entry.glyph === "ಉ",
+    )!;
+    expect(kannadaU.sound).toBe("u");
+    expect(kannadaU.penLifts).toBe(0);
+    expect(kannadaU.strokeOrder).toEqual([
+      "turn counterclockwise around the compact upper-left loop",
+      "without lifting, descend through the left shoulder and sweep around the broad lower-left bowl",
+      "without lifting, climb over the tall middle arch and descend into the lower-right bowl",
+      "without lifting, sweep around the outer-right curve and finish at the open upper terminal",
+    ]);
+    expect(kannadaU.strokeOrderSource?.citation).toMatch(
+      /Gopala Krishna A.*Kannada-alphabet-u\.gif.*ಉ.*35 frames.*3\.5 seconds.*Wikimedia Commons.*25 May 2016/i,
+    );
+    expect(kannadaU.strokeOrderSource?.variation).toMatch(
+      /CC BY-SA 4\.0.*one uninterrupted run.*upper-left loop.*lower-left bowl.*tall middle arch.*lower-right bowl.*outer-right curve.*open upper terminal.*Noto Sans Kannada.*zero-lift order/i,
+    );
+    expect(missingByScript.get("kannada.json")?.has("ಉ")).toBe(false);
+    expect(affected.get("ಉ") ?? 0).toBe(0);
     const kannadaE = scripts.kannada!.independentVowels!.find(
       (entry) => entry.glyph === "ಎ",
     )!;
@@ -178,6 +197,6 @@ export const scriptInventoryEvidence = {
     expect(affected.get("ಆ") ?? 0).toBe(0);
     expect(
       [...affected.entries()].sort((left, right) => right[1] - left[1])[0],
-    ).toEqual(["ಉ", 2]);
+    ).toEqual(["ق", 2]);
   },
 };

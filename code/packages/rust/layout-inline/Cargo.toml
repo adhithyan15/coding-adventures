@@ -1,0 +1,8 @@
+[package]
+name = "layout-inline"
+version = "0.1.0"
+edition = "2021"
+description = "Reusable inline formatting contexts with text fragmentation, line boxes, baseline alignment, and semantic wrapper fragmentation."
+
+[dependencies]
+layout-ir = { path = "../layout-ir" }

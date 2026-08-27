@@ -13,7 +13,7 @@ use layout_ir::{
     FontSpec, ImageContent, ImageFit, LayoutNode, SizeValue, TextAlign, TextContent,
 };
 
-pub const VERSION: &str = "0.2.0";
+pub const VERSION: &str = "0.3.0";
 
 /// Fully resolved visual defaults applied before a future CSS cascade exists.
 #[derive(Clone, Debug, PartialEq)]
@@ -112,9 +112,7 @@ fn convert_node(
     apply_size_hints(&mut layout, node);
     apply_spacing(&mut layout, node, theme);
     layout.ext.insert("html".into(), html_ext(node));
-    layout
-        .ext
-        .insert("block".into(), display_ext(node.display.as_str()));
+    layout.ext.insert("block".into(), block_ext(node));
     Some(layout)
 }
 
@@ -267,6 +265,14 @@ fn display_ext(display: &str) -> ExtValue {
     )]))
 }
 
+fn block_ext(node: &BrowserRenderNode) -> ExtValue {
+    let mut values = HashMap::from([("display".into(), ExtValue::Str(node.display.to_string()))]);
+    if node.role == "preformatted" {
+        values.insert("whiteSpace".into(), ExtValue::Str("pre".into()));
+    }
+    ExtValue::Map(values)
+}
+
 fn background_ext(color: Color) -> ExtValue {
     ExtValue::Map(HashMap::from([(
         "backgroundColor".into(),
@@ -304,6 +310,7 @@ mod tests {
             MeasureResult {
                 width: max_width.map_or(width, |limit| width.min(limit)),
                 height: font.size * font.line_height,
+                baseline: font.size * 0.8,
                 line_count: 1,
             }
         }
@@ -359,6 +366,18 @@ mod tests {
         let layout = html_render_tree_to_layout(&render, &mosaic_html_theme());
         let text = all_text(&layout);
         assert_eq!(text, vec!["shown", "visual"]);
+    }
+
+    #[test]
+    fn preformatted_content_projects_shared_white_space_policy() {
+        let render = parse_browser_render_tree("<pre>one  two\nthree</pre>").unwrap();
+        let layout = html_render_tree_to_layout(&render, &mosaic_html_theme());
+        let pre = find_by_html_role(&layout, "preformatted").unwrap();
+        assert!(matches!(
+            pre.ext.get("block"),
+            Some(ExtValue::Map(values))
+                if values.get("whiteSpace") == Some(&ExtValue::Str("pre".into()))
+        ));
     }
 
     #[test]
