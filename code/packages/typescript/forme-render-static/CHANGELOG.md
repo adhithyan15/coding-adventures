@@ -14,12 +14,16 @@
   feed discovery, and a project-page-safe header link.
 - `renderHtmlDocument` accepts an escaped header destination and trusted
   generated head tags; the fallback theme styles chronological indexes.
+- Rendered pages carry the input node's logical and revision IDs through
+  deterministic `OutputProvenance`; the legacy single `source` remains as a
+  compatibility hint during the RenderedPage v1.1 migration.
 
 ### Tests
 
 - Added coverage for canonical routed input and the unrouted-input diagnostic.
 - Added coverage for deployment-prefix composition, metadata escaping, feed
   discovery, and custom header links.
+- Added coverage for revision-aware single-source provenance.
 
 ## 0.1.0 — 2026-05-15
 

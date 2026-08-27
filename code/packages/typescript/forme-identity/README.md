@@ -16,6 +16,7 @@ See [code/specs/FM01-forme-kernel.md](../../../specs/FM01-forme-kernel.md) §7 f
 | `generateLogicalId()`   | Fresh UUIDv7 from current time + crypto-RNG.                            |
 | `buildLogicalIdFrom(t, r)` | UUIDv7 from caller-supplied timestamp + random tail (deterministic). |
 | `isLogicalIdShape(s)`   | Predicate — does `s` match the UUIDv7 format?                           |
+| `createOutputProvenance(contributors)` | Validate, normalize, and hash a revision-aware contributor set. |
 
 ## Quick reference
 
@@ -42,6 +43,10 @@ generateLogicalId();                  // → "01952c0d-7e63-7xxx-8xxx-..."
 - **`RevisionId` format:** `blake2b:<64-hex-chars>`. The `<algo>:` prefix is forward-compatible — a future migration to BLAKE3 (when the monorepo gains a from-scratch implementation) just changes the prefix without breaking the consumer contract.
 - **`LogicalId` format:** UUIDv7. 48-bit unix-millis timestamp prefix gives lexicographic-equals-chronological ordering; 74 random bits give cryptographically-safe collision resistance.
 - **No ambient I/O.** Reads `Date.now()` and `globalThis.crypto.getRandomValues` only — both standard platform APIs available in Node 19+, browsers, Deno, Bun, and Workers. For deterministic builds, use `buildLogicalIdFrom` instead.
+- **Aggregate provenance is order-independent.** Contributor pairs are validated,
+  deduplicated by logical identity, sorted, and hashed with a domain separator.
+  Conflicting revisions for one identity fail with a field-specific diagnostic;
+  an empty contributor set is a valid deterministic aggregate.
 
 ## Spec divergences from FM01 §7
 

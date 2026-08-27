@@ -246,20 +246,53 @@ export interface PageMeta {
   readonly extra: ReadonlyRecord<string, string>;
 }
 
+/** One exact input revision that contributed to a derived output. */
+export interface ProvenanceContributor {
+  readonly identity: LogicalId;
+  readonly revision: RevisionId;
+}
+
+/**
+ * Canonical provenance for a rendered output. `contributors` is sorted by
+ * logical identity and contains at most one revision per identity. `revision`
+ * hashes that normalized set, so diagnostics and caches can compare aggregate
+ * inputs without depending on collection iteration order.
+ */
+export interface OutputProvenance {
+  readonly contributors: readonly ProvenanceContributor[];
+  readonly revision: RevisionId;
+}
+
 /**
  * The output of a web-backend renderer, before bundling and per-page
  * code-splitting.  The `usedStyle` and `usedIslands` arrays drive the
  * AOT compiler's "smallest artifact" decision (FM06).
+ *
+ * New producers attach revision-aware `provenance`. During the v1 migration,
+ * a legacy producer may still provide only `source`; a revision-aware producer
+ * may retain `source` as a compatibility hint for a single-source page. An
+ * aggregate page does not invent a single source and omits that field.
  */
-export interface RenderedPage {
+export interface RenderedPageFields {
   readonly route: string;
   readonly html: string;
   readonly usedStyle: readonly StyleRuleId[];
   readonly usedIslands: readonly IslandId[];
   readonly usedAssets: readonly LogicalId[];
   readonly meta: PageMeta;
-  readonly source: LogicalId;
 }
+
+export type RenderedPage = RenderedPageFields & (
+  | {
+      readonly provenance: OutputProvenance;
+      readonly source?: LogicalId;
+    }
+  | {
+      /** @deprecated Attach revision-aware `provenance` in new producers. */
+      readonly source: LogicalId;
+      readonly provenance?: never;
+    }
+);
 
 // ─── PrintForme ───────────────────────────────────────────────────────────
 

@@ -162,7 +162,7 @@ export const Kinds = Object.freeze({
   Collection:     Object.freeze({ name: "Collection",     version: "1.0" }),
   Asset:          Object.freeze({ name: "Asset",          version: "1.0" }),
   Document:       Object.freeze({ name: "Document",       version: "1.0" }),
-  RenderedPage:   Object.freeze({ name: "RenderedPage",   version: "1.0" }),
+  RenderedPage:   Object.freeze({ name: "RenderedPage",   version: "1.1" }),
   PrintForme:     Object.freeze({ name: "PrintForme",     version: "1.0" }),
   RequestHandler: Object.freeze({ name: "RequestHandler", version: "1.0" }),
   SearchIndex:    Object.freeze({ name: "SearchIndex",    version: "1.0" }),

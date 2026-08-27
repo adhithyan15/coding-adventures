@@ -5,11 +5,12 @@ import {
   streamOf,
   type Collection,
   type CollectionEntry,
-  type LogicalId,
+  type OutputProvenance,
   type PageMeta,
   type RenderedPage,
 } from "@coding-adventures/forme-types";
 import { defineStage } from "@coding-adventures/forme-stage";
+import { createOutputProvenance } from "@coding-adventures/forme-identity";
 import { renderIndexPage, type IndexItem } from "@coding-adventures/forme-index-renderer";
 import { generateRssFeed, generateAtomFeed, type FeedItem } from "@coding-adventures/forme-feeds";
 import { generateSitemap } from "@coding-adventures/forme-aot-sitemap-emitter";
@@ -26,8 +27,6 @@ export interface BlogSurfaceConfig {
   readonly atomRoute: string;
   readonly sitemapRoute: string;
 }
-
-const AGGREGATE_SOURCE = "00000000-0000-7000-8000-000000000000" as LogicalId;
 
 const blogSurface = defineStage({
   name: "@coding-adventures/blog-surface",
@@ -58,6 +57,7 @@ const blogSurface = defineStage({
     const collection = rawInput as Collection;
     const config = rawConfig as unknown as BlogSurfaceConfig;
     const posts = collection.entries.map((entry) => postFromEntry(entry, config.siteUrl));
+    const provenance = createOutputProvenance(collection.entries);
     const latestDate = posts[0]?.dateTime ?? "1970-01-01T00:00:00Z";
     const indexUrl = publicUrl(config.siteUrl, config.indexRoute);
     const rssUrl = publicUrl(config.siteUrl, config.rssRoute);
@@ -108,6 +108,7 @@ const blogSurface = defineStage({
         bodyHtml: indexBody,
       }),
       meta(config.siteTitle, config.siteDescription, indexUrl),
+      provenance,
     ) as never;
 
     yield page(
@@ -120,6 +121,7 @@ const blogSurface = defineStage({
         lastBuildDate: latestDate,
       }, feedItems),
       meta(`${config.siteTitle} RSS`, config.siteDescription, rssUrl),
+      provenance,
     ) as never;
 
     yield page(
@@ -132,6 +134,7 @@ const blogSurface = defineStage({
         subtitle: config.siteDescription,
       }, feedItems),
       meta(`${config.siteTitle} Atom`, config.siteDescription, atomUrl),
+      provenance,
     ) as never;
 
     yield page(
@@ -146,6 +149,7 @@ const blogSurface = defineStage({
         })),
       ], config.siteUrl),
       meta(`${config.siteTitle} sitemap`, null, publicUrl(config.siteUrl, config.sitemapRoute)),
+      provenance,
     ) as never;
 
     ctx.logger.debug("blog-surface: rendered collection outputs", {
@@ -184,7 +188,12 @@ function postFromEntry(entry: CollectionEntry, siteUrl: string): SurfacePost {
   };
 }
 
-function page(route: string, html: string, pageMeta: PageMeta): RenderedPage {
+function page(
+  route: string,
+  html: string,
+  pageMeta: PageMeta,
+  provenance: OutputProvenance,
+): RenderedPage {
   return {
     route,
     html,
@@ -192,9 +201,7 @@ function page(route: string, html: string, pageMeta: PageMeta): RenderedPage {
     usedIslands: [],
     usedAssets: [],
     meta: pageMeta,
-    // The current RenderedPage contract models one source. Collection-derived
-    // artifacts need aggregate provenance; FM-B021 tracks that kernel gap.
-    source: AGGREGATE_SOURCE,
+    provenance,
   };
 }
 

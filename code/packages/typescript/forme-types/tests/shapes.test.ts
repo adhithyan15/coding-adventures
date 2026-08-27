@@ -22,7 +22,7 @@ import type {
   DeployArtifact, DeployManifest,
   Document, Feed,
   IslandId, LogicalId,
-  PrintForme, RenderedPage, RequestHandler, RevisionId,
+  OutputProvenance, PrintForme, RenderedPage, RequestHandler, RevisionId,
   SearchIndex, Stream,
   StyleRuleId,
 } from "../src/index.js";
@@ -216,7 +216,11 @@ describe("Document", () => {
 });
 
 describe("RenderedPage", () => {
-  it("carries html, used-style/island/asset arrays, and source provenance", () => {
+  it("carries html, dependency arrays, and revision-aware provenance", () => {
+    const provenance: OutputProvenance = {
+      contributors: [{ identity: SAMPLE_ID, revision: SAMPLE_REV }],
+      revision: SAMPLE_REV,
+    };
     const page: RenderedPage = {
       route: "/posts/hello",
       html: "<!doctype html><html><body>hi</body></html>",
@@ -231,10 +235,32 @@ describe("RenderedPage", () => {
         structured: [],
         extra: {},
       },
+      provenance,
       source: SAMPLE_ID,
     };
     expect(page.usedStyle.length).toBe(1);
     expect(page.usedIslands.length).toBe(1);
+    expect(page.provenance.contributors[0]?.revision).toBe(SAMPLE_REV);
+  });
+
+  it("keeps the legacy single-source producer shape during migration", () => {
+    const page: RenderedPage = {
+      route: "/legacy",
+      html: "<!doctype html>",
+      usedStyle: [],
+      usedIslands: [],
+      usedAssets: [],
+      meta: {
+        title: "Legacy",
+        description: null,
+        canonicalUrl: null,
+        openGraph: {},
+        structured: [],
+        extra: {},
+      },
+      source: SAMPLE_ID,
+    };
+    expect(page.source).toBe(SAMPLE_ID);
   });
 });
 

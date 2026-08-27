@@ -13,6 +13,7 @@
   "license": "MIT",
   "dependencies": {
     "@coding-adventures/forme-types": "file:../forme-types",
+    "@coding-adventures/forme-identity": "file:../forme-identity",
     "@coding-adventures/forme-stage": "file:../forme-stage",
     "@coding-adventures/document-ast-to-html": "file:../document-ast-to-html",
     "@coding-adventures/document-ast": "file:../document-ast",

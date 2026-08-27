@@ -55,11 +55,15 @@ describe("KINDS", () => {
 });
 
 describe("Kinds canonical descriptors", () => {
-  it("provides a v1.0 descriptor for every built-in non-Stream kind", () => {
+  it("provides a canonical descriptor for every built-in non-Stream kind", () => {
     // Stream is built via streamOf(); every other kind has an entry.
     const expectedKeys = KINDS.filter(k => k !== "Stream");
     const actualKeys = Object.keys(Kinds);
     expect(new Set(actualKeys)).toEqual(new Set(expectedKeys));
+  });
+
+  it("advertises revision-aware RenderedPage provenance as v1.1", () => {
+    expect(Kinds.RenderedPage.version).toBe("1.1");
   });
 
   it("uses semver-compatible version strings", () => {

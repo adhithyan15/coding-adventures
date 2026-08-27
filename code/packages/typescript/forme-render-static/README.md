@@ -33,8 +33,9 @@ For each input `ContentNode`:
    canonical URL, project-page-safe site navigation, and RSS/Atom discovery.
 5. **Wrap** the body in a self-contained HTML5 document with the
    classless theme CSS inlined in `<style>`.
-6. **Emit** a `RenderedPage` carrying the route, full HTML, derived
-   title, and a `source` reference back to the input node's identity.
+6. **Emit** a `RenderedPage` carrying the route, full HTML, derived title,
+   and revision-aware provenance for the input node. The legacy `source`
+   identity is retained temporarily for v1.0 consumers.
 
 ## Routing contract
 
@@ -108,6 +109,7 @@ interface RenderStaticConfig {
 - `@coding-adventures/forme-types` — `Kinds`, `streamOf`,
   `ContentNode`, `RenderedPage`, `PageMeta`.
 - `@coding-adventures/forme-stage` — `defineStage`, `StageContext`.
+- `@coding-adventures/forme-identity` — deterministic output provenance.
 - `@coding-adventures/document-ast-to-html` — `toHtml`.
 - `@coding-adventures/document-ast` — `DocumentNode` type only.
 - `@coding-adventures/forme-aot-meta-link-tags` — description and canonical
