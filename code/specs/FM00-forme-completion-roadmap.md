@@ -124,6 +124,7 @@ work.
 | 2026-08-27 | The separate `forme-hello-world` demo remains routerless, which requires renderer/collector compatibility fallbacks to keep duplicate route formatting policy alive. | Added FM-B020 after FM-B004; it does not block the complete blog surface. |
 | 2026-08-27 | Portable file routes such as `/blog/post.html` become broken root-relative links on a GitHub Pages project site unless the public deployment prefix is composed separately. | Resolved in FM-B004 by keeping file routes portable and using absolute project-page URLs in headers, canonical links, indexes, feeds, and sitemap. |
 | 2026-08-27 | `RenderedPage.source` accepts only one `LogicalId`, but indexes, feeds, and sitemaps aggregate a collection. | Added FM-B021; FM-B004 uses one documented deterministic synthetic ID until aggregate provenance is modeled. |
+| 2026-08-27 | Adding renderer metadata dependencies left its own and `forme-hello-world`'s standalone BUILD prerequisite lists incomplete. | Resolved in FM-B004 after CodeQL's BUILD/CI validator identified both transitive gaps. |
 
 ## Loop protocol
 
