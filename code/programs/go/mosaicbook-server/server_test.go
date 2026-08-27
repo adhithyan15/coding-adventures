@@ -263,9 +263,10 @@ func TestApiBackendsHandler(t *testing.T) {
 
 	var body struct {
 		Backends []struct {
-			ID        string `json:"id"`
-			Tier      int    `json:"tier"`
-			Available bool   `json:"available"`
+			ID       string `json:"id"`
+			Tier     int    `json:"tier"`
+			Rendered bool   `json:"rendered"`
+			Analysis bool   `json:"analysis"`
 		} `json:"backends"`
 	}
 	if err := json.NewDecoder(rec.Body).Decode(&body); err != nil {
@@ -273,9 +274,13 @@ func TestApiBackendsHandler(t *testing.T) {
 	}
 
 	// Build a map for easy lookup.
-	byID := make(map[string]struct{ Tier int; Available bool })
+	type info struct {
+		Tier               int
+		Rendered, Analysis bool
+	}
+	byID := make(map[string]info)
 	for _, b := range body.Backends {
-		byID[b.ID] = struct{ Tier int; Available bool }{b.Tier, b.Available}
+		byID[b.ID] = info{b.Tier, b.Rendered, b.Analysis}
 	}
 
 	for _, id := range []string{"html", "webcomponent", "react"} {
@@ -284,20 +289,31 @@ func TestApiBackendsHandler(t *testing.T) {
 			t.Errorf("backend %q missing from response", id)
 			continue
 		}
-		if !b.Available {
-			t.Errorf("backend %q should be available", id)
+		if !b.Rendered {
+			t.Errorf("backend %q should be rendered (Tier 1 iframe preview)", id)
 		}
 		if b.Tier != 1 {
 			t.Errorf("backend %q tier: got %d, want 1", id, b.Tier)
 		}
 	}
 
-	// Qt should be listed but unavailable.
-	qt, ok := byID["qt"]
-	if !ok {
-		t.Error("qt backend missing from response")
-	} else if qt.Available {
-		t.Error("qt backend should not be available in Phase 1")
+	// Native backends have no render daemon yet, but degradation analysis
+	// works for all of them without one (UI19-mosaicbook.md §13).
+	for _, id := range []string{"xaml", "swiftui", "qt", "flutter", "compose"} {
+		b, ok := byID[id]
+		if !ok {
+			t.Errorf("backend %q missing from response", id)
+			continue
+		}
+		if b.Rendered {
+			t.Errorf("backend %q should not be rendered — no daemon exists yet", id)
+		}
+		if !b.Analysis {
+			t.Errorf("backend %q should support degradation analysis", id)
+		}
+		if b.Tier != 3 {
+			t.Errorf("backend %q tier: got %d, want 3", id, b.Tier)
+		}
 	}
 }
 

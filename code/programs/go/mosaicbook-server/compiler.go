@@ -23,7 +23,9 @@
 package main
 
 import (
+	"errors"
 	"fmt"
+	"io/fs"
 	"os"
 	"os/exec"
 )
@@ -169,11 +171,34 @@ func backendExtension(backend string) string {
 	}
 }
 
-// isNotFound reports whether err is the "executable not found" error produced
-// by exec.LookPath (wrapped inside *exec.Error).
+// isNotFound reports whether err means the compiler binary itself could not
+// be found — as opposed to it being found but failing (a syntax error, a
+// non-zero exit, etc.) — regardless of whether s.compilerPath is a bare
+// name resolved via PATH or an absolute/relative path with a directory
+// separator.
+//
+// Those two forms fail through different layers of os/exec, wrapped
+// differently:
+//   - A bare name that LookPath can't resolve fails at Command() construction
+//     time; the resulting *exec.Error (sentinel exec.ErrNotFound) is stashed
+//     in Cmd.Err and returned as-is by Start().
+//   - A path containing a separator skips LookPath entirely (Command() only
+//     searches PATH when filepath.Base(name) == name) and instead fails when
+//     Start() invokes the OS directly via os.StartProcess. That failure comes
+//     back as a plain *os.PathError (Op "fork/exec" on Unix) — NOT wrapped in
+//     *exec.Error at all — so an earlier version of this function, which only
+//     matched by first type-asserting *exec.Error, never saw it: on Windows
+//     an absolute nonexistent path apparently still resolves through
+//     something PATH-like and DOES produce exec.ErrNotFound, but on Linux it
+//     surfaces raw ENOENT instead, uncaught (a real cross-platform gap, only
+//     visible on the Linux CI job).
+//
+// errors.Is walks the full Unwrap() chain regardless of which shape wraps
+// it, so checking directly against err (rather than manually unwrapping
+// *exec.Error first) covers both: *exec.Error.Unwrap() surfaces
+// exec.ErrNotFound, and *os.PathError.Unwrap() surfaces a syscall.Errno that
+// satisfies fs.ErrNotExist on every platform Go supports (ENOENT on Unix,
+// ERROR_FILE_NOT_FOUND on Windows).
 func isNotFound(err error) bool {
-	if execErr, ok := err.(*exec.Error); ok {
-		return execErr.Err == exec.ErrNotFound
-	}
-	return false
+	return errors.Is(err, exec.ErrNotFound) || errors.Is(err, fs.ErrNotExist)
 }
