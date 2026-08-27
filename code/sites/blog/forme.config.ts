@@ -1,7 +1,7 @@
 /**
  * forme.config.ts — pipeline config for the Coding Adventures blog.
  *
- * Five stages, linear, default IDs.  See `build.ts` for the driver
+ * Four stages, linear, default IDs.  See `build.ts` for the driver
  * that loads this config and runs it.
  *
  * Roll call:
