@@ -4,7 +4,7 @@
   moves `A1 -> A2`. This is the second level any of the 24 tracks has ever held,
   and criterion 4 (§3.1: every atom at or below the level revisited at least
   twice) was the last of the five to close.
-- Author **ten `review` lessons** carrying the 59 atoms the wiring pass could not
+- Author **eleven `review` lessons** carrying the 59 atoms the wiring pass could not
   reach. Reinforcement at or below A1 goes **60 -> 0**.
 
 #### The count that mattered was slots, not atoms
@@ -58,7 +58,7 @@ matching rather than the teaching, on the standard the wiring pass set.
 Every lesson lands inside an **existing** chapter, at chapters 81 through 345 and
 never past 345. Appending would have made `ES-LEX-BORRAR` and `ES-LEX-GRITAR`
 measurable and **manufactured** two blockers while closing others; inserting
-before them shifts their positions and the track's last position by the same ten,
+before them shifts their positions and the track's last position by the same eleven,
 so their windows stay out of range. Verified rather than assumed: both still
 produce zero reinforcement defects.
 
