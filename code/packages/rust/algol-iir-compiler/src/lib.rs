@@ -2576,8 +2576,7 @@ impl Compiler {
                 }
             }
             let (base, exponents) = operands.split_first()?;
-            let exponent =
-                literal_nonnegative_checked_integer_arithmetic_power_chain(exponents)?;
+            let exponent = self.static_nonnegative_integer_power_chain(exponents)?;
             return self
                 .static_integer_scalar_value(base)?
                 .checked_pow(exponent);
@@ -2624,6 +2623,35 @@ impl Compiler {
             index += 2;
         }
         Some(value)
+    }
+
+    /// Evaluate a right-associative exponent chain through the same static
+    /// integer evaluator used for snapshots, but only when every operand is
+    /// variable-free. This admits implemented integer-valued standard
+    /// functions without turning tracked runtime variables into unrolled
+    /// exponent constants.
+    fn static_nonnegative_integer_power_chain(
+        &self,
+        nodes: &[&GrammarASTNode],
+    ) -> Option<u32> {
+        let (last, prefix) = nodes.split_last()?;
+        let operand_value = |node: &GrammarASTNode| {
+            self.static_predicate_dependencies(node)
+                .filter(HashSet::is_empty)?;
+            let value = self.static_integer_scalar_value(node)?;
+            (value >= 0 && value <= MAX_POW_UNROLL_EXPONENT as i64).then_some(value as u32)
+        };
+        let mut value = operand_value(last)? as u64;
+
+        for node in prefix.iter().rev() {
+            let base = operand_value(node)? as u64;
+            value = base.checked_pow(value.try_into().ok()?)?;
+            if value > MAX_POW_UNROLL_EXPONENT as u64 {
+                return None;
+            }
+        }
+
+        Some(value as u32)
     }
 
     fn static_standard_integer_value(&self, node: &GrammarASTNode) -> Option<i64> {
@@ -7132,8 +7160,7 @@ impl Compiler {
 
         // When the complete right-hand exponent chain is a small nonnegative
         // checked integer constant, preserve the integer/real fast path.
-        if let Some(k) = literal_nonnegative_checked_integer_arithmetic_power_chain(exponent_nodes)
-        {
+        if let Some(k) = self.static_nonnegative_integer_power_chain(exponent_nodes) {
             return Ok(self.emit_pow_unroll(base, k));
         }
 
@@ -9846,6 +9873,33 @@ mod tests {
             instr.op == "str_const"
                 && matches!(instr.srcs.first(), Some(Operand::Str(text)) if text == "42.5")
         }));
+    }
+
+    #[test]
+    fn al4_print_static_integer_function_exponent_snapshot_in_real_expression() {
+        let module = compile_source(
+            "begin integer n, saved; n := 6 ^ (abs(-2) div entier(2.9)) + 36; saved := n; n := 9; output(saved + 0.5) end",
+            "test",
+        )
+        .expect("integer-valued standard functions participate in static exponents");
+        let main = module.get_function("main").expect("has main");
+        assert!(main.instructions.iter().any(|instr| {
+            instr.op == "str_const"
+                && matches!(instr.srcs.first(), Some(Operand::Str(text)) if text == "42.5")
+        }));
+    }
+
+    #[test]
+    fn al4_static_integer_function_exponent_respects_user_override() {
+        let err = compile_source(
+            "begin integer procedure abs(x); value x; integer x; abs := 1; integer n; n := 6 ^ abs(-2) + 36; output(n + 0.5) end",
+            "test",
+        )
+        .expect_err("a user procedure must not become a static exponent builtin");
+        assert!(
+            format!("{err:?}").contains("cannot use real where integer is required"),
+            "{err:?}"
+        );
     }
 
     #[test]
