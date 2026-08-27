@@ -13,6 +13,7 @@ export const scriptInventoryEvidence = {
     affected,
     missingByScript,
   }: ScriptEvidenceContext): void {
+    const urduMissing = missingByScript.get("urdu-nastaliq.json") ?? new Set<string>();
     const urduDal = scripts["urdu-nastaliq"]!.letters.find(
       (letter) => letter.glyph === "د",
     )!;
@@ -46,6 +47,25 @@ export const scriptInventoryEvidence = {
     );
     expect(urduWaw.strokeOrderSource?.variation).toMatch(
       /one uninterrupted stroke.*head as a loop.*tail without lifting.*nonconnector.*v\/w.*o, au, and ū.*Noto Naskh fallback.*Nastaliq.*Urdu-specific/i,
+    );
+    const urduZe = scripts["urdu-nastaliq"]!.letters.find(
+      (letter) => letter.glyph === "ز",
+    )!;
+    expect(urduZe.sound).toBe("z");
+    expect(urduZe.penLifts).toBe(1);
+    expect(urduZe.strokeOrder).toEqual([
+      "draw the independent ze downward",
+      "continue curving to the left without lifting",
+      "after one lift, place the dot above",
+    ]);
+    expect(urduZe.strokeOrderSource?.url).toBe(
+      "https://openbooks.library.northwestern.edu/zerozabar/chapter/khe-ze-zal-swad-and-zwad/",
+    );
+    expect(urduZe.strokeOrderSource?.citation).toMatch(
+      /Zer o Zabar.*independent ز.*calligraphic and handwriting animations.*Ze instructions.*Northwestern/i,
+    );
+    expect(urduZe.strokeOrderSource?.variation).toMatch(
+      /body first.*downward line.*curving left.*dot above.*one pen lift.*nonconnector.*exactly like re.*most common.*farther left.*Noto Naskh fallback.*Nastaliq/i,
     );
     const urduFe = scripts["urdu-nastaliq"]!.letters.find(
       (letter) => letter.glyph === "ف",
@@ -172,20 +192,20 @@ export const scriptInventoryEvidence = {
     expect(urduTte.strokeOrderSource?.variation).toMatch(
       /be-series body.*upper retroflex mark.*two pen-down runs.*dental te.*small to'e-shaped mark.*down.*back up.*down again.*loop.*body-first.*one-lift.*Noto Naskh fallback.*Nastaliq.*Urdu retroflex/i,
     );
-    expect(missingByScript.get("urdu-nastaliq.json")?.has("د")).toBe(false);
-    expect(missingByScript.get("urdu-nastaliq.json")?.has("و")).toBe(false);
+    expect(urduMissing.has("د")).toBe(false);
+    expect(urduMissing.has("و")).toBe(false);
     expect(affected.get("و") ?? 0).toBe(0);
     expect(affected.get("د") ?? 0).toBe(0);
-    expect(missingByScript.get("urdu-nastaliq.json")?.has("پ")).toBe(false);
+    expect(urduMissing.has("پ")).toBe(false);
     expect(affected.get("پ") ?? 0).toBe(0);
-    expect(missingByScript.get("urdu-nastaliq.json")?.has("ھ")).toBe(false);
+    expect(urduMissing.has("ھ")).toBe(false);
     expect(affected.get("ھ") ?? 0).toBe(0);
-    expect(missingByScript.get("urdu-nastaliq.json")?.has("چ")).toBe(false);
+    expect(urduMissing.has("چ")).toBe(false);
     expect(affected.get("چ") ?? 0).toBe(0);
-    expect(missingByScript.get("urdu-nastaliq.json")?.has("ٓ")).toBe(false);
+    expect(urduMissing.has("ٓ")).toBe(false);
     expect(affected.get("ٓ") ?? 0).toBe(0);
-    expect(missingByScript.get("urdu-nastaliq.json")?.has("خ")).toBe(false);
-    expect(missingByScript.get("urdu-nastaliq.json")?.has("ف")).toBe(false);
+    expect(urduMissing.has("خ")).toBe(false);
+    expect(urduMissing.has("ف")).toBe(false);
     expect(affected.get("ف") ?? 0).toBe(0);
     const urduGaf = scripts["urdu-nastaliq"]!.letters.find(
       (entry) => entry.glyph === "گ",
@@ -204,8 +224,10 @@ export const scriptInventoryEvidence = {
     expect(urduGaf.strokeOrderSource?.variation).toMatch(
       /kāf-family main-line body first.*long downward slash.*shorter floating slash.*two pen lifts.*three-run order.*Noto Naskh.*Nastaliq/i,
     );
-    expect(missingByScript.get("urdu-nastaliq.json")?.has("گ")).toBe(false);
+    expect(urduMissing.has("گ")).toBe(false);
     expect(affected.get("گ") ?? 0).toBe(0);
+    expect(urduMissing.has("ز")).toBe(false);
+    expect(affected.get("ز") ?? 0).toBe(0);
     const urduTe = scripts["urdu-nastaliq"]!.letters.find(
       (entry) => entry.glyph === "ت",
     )!;
@@ -222,7 +244,7 @@ export const scriptInventoryEvidence = {
     expect(urduTe.strokeOrderSource?.variation).toMatch(
       /be-series bowl first.*right-to-left.*left dot.*right dot.*two pen lifts.*two dots side by side.*squiggle or horizontal line.*Noto Naskh.*Nastaliq.*Urdu-specific/i,
     );
-    expect(missingByScript.get("urdu-nastaliq.json")?.has("ت")).toBe(false);
+    expect(urduMissing.has("ت")).toBe(false);
     expect(affected.get("ت") ?? 0).toBe(0);
     const urduHamzaAbove = scripts["urdu-nastaliq"]!.marks!.find(
       (entry) => entry.mark === "ٔ",
@@ -240,20 +262,20 @@ export const scriptInventoryEvidence = {
     expect(urduHamzaAbove.compositionSource?.variation).toMatch(
       /vowel-separator.*بھائی.*carrier-plus-mark.*U\+0626.*U\+064A.*U\+0654.*U\+06CC/i,
     );
-    expect(missingByScript.get("urdu-nastaliq.json")?.has("ي")).toBe(false);
-    expect(missingByScript.get("urdu-nastaliq.json")?.has("ٔ")).toBe(false);
+    expect(urduMissing.has("ي")).toBe(false);
+    expect(urduMissing.has("ٔ")).toBe(false);
     expect(affected.get("ي") ?? 0).toBe(0);
-    expect(missingByScript.get("urdu-nastaliq.json")?.has("ح")).toBe(false);
+    expect(urduMissing.has("ح")).toBe(false);
     expect(affected.get("ح") ?? 0).toBe(0);
-    expect(missingByScript.get("urdu-nastaliq.json")?.has("ٹ")).toBe(false);
+    expect(urduMissing.has("ٹ")).toBe(false);
     expect(affected.get("ٹ") ?? 0).toBe(0);
-    expect(missingByScript.get("urdu-nastaliq.json")?.has("ظ")).toBe(false);
+    expect(urduMissing.has("ظ")).toBe(false);
     expect(affected.get("ظ") ?? 0).toBe(0);
-    expect(missingByScript.get("urdu-nastaliq.json")?.has("ب")).toBe(false);
+    expect(urduMissing.has("ب")).toBe(false);
     expect(affected.get("ب") ?? 0).toBe(0);
-    expect(missingByScript.get("urdu-nastaliq.json")?.has("ق")).toBe(false);
+    expect(urduMissing.has("ق")).toBe(false);
     expect(affected.get("ق") ?? 0).toBe(0);
-    expect(missingByScript.get("urdu-nastaliq.json")?.has("ط")).toBe(false);
+    expect(urduMissing.has("ط")).toBe(false);
     expect(affected.get("ط") ?? 0).toBe(0);
   },
 };

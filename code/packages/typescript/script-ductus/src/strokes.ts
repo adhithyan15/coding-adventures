@@ -16890,3 +16890,35 @@ DUCTUS[ductusKey("perso-arabic", "گ")] = {
   ],
   source: persianAlphabetSource("گ"),
 };
+
+// Persian Online and Zer o Zabar independently demonstrate ز body-first and
+// dot-second. Share only the already fitted Arabic Noto Naskh geometry.
+const [sharedZayBody, sharedZayDot] = DUCTUS[ductusKey("arabic", "ز")].strokes;
+DUCTUS[ductusKey("perso-arabic", "ز")] = {
+  script: "perso-arabic",
+  glyph: "ز",
+  strokes: [
+    {
+      segments: [
+        { ...sharedZayBody.segments[0], label: "begin at the upper tip and descend through the short stroke" },
+        { ...sharedZayBody.segments[1], label: "without lifting, sweep left through the lower curve" },
+      ],
+    },
+    { segments: [{ ...sharedZayDot.segments[0], label: "lift once, then place the dot above" }] },
+  ],
+  source: persianAlphabetSource("ز"),
+};
+DUCTUS[ductusKey("urdu-nastaliq", "ز")] = {
+  script: "urdu-nastaliq",
+  glyph: "ز",
+  strokes: [
+    {
+      segments: [
+        { ...sharedZayBody.segments[0], label: "draw the independent ze downward" },
+        { ...sharedZayBody.segments[1], label: "continue curving to the left without lifting" },
+      ],
+    },
+    { segments: [{ ...sharedZayDot.segments[0], label: "after one lift, place the dot above" }] },
+  ],
+  source: urduAlphabetSource("ز"),
+};

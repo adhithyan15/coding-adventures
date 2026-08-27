@@ -613,6 +613,10 @@ const PERSIAN_TAH = ductusFor("ط", "perso-arabic")!;
 const persianTahOutline = naskhOutline("ط");
 const PERSIAN_GAF = ductusFor("گ", "perso-arabic")!;
 const persianGafOutline = naskhOutline("گ");
+const PERSIAN_ZAY = ductusFor("ز", "perso-arabic")!;
+const persianZayOutline = naskhOutline("ز");
+const URDU_ZE = ductusFor("ز", "urdu-nastaliq")!;
+const urduZeOutline = naskhOutline("ز");
 const PERSIAN_LAM = DUCTUS["ل"];
 const persianLamOutline = naskhOutline("ل");
 const PERSIAN_MIM = DUCTUS["م"];
@@ -7406,6 +7410,23 @@ describe("Persian گ — the scoped kāf-family body followed by two slashes", (
     expect(strip.penLifts).toBe(2);
     expect(strip.summary).toBe("3 strokes · 2 pen lifts · 4 movements");
   });
+});
+
+describe("Persian and Urdu ز — a joined re-series body before the lifted dot", () => {
+  for (const [name, ductus, glyphOutline] of [
+    ["Persian", PERSIAN_ZAY, persianZayOutline],
+    ["Urdu", URDU_ZE, urduZeOutline],
+  ] as const) {
+    it(`${name} renders two joined body movements before the lifted dot`, () => {
+      const steps = ductusSteps(ductus);
+      const strip = ductusFilmstrip(ductus, glyphOutline);
+      expect(steps.map((step) => step.startsAfterLift)).toEqual([false, false, true]);
+      expect(steps.map((step) => step.strokeIndex)).toEqual([0, 0, 1]);
+      expect(strip.frames).toHaveLength(3);
+      expect(strip.penLifts).toBe(1);
+      expect(strip.summary).toBe("2 strokes · 1 pen lift · 3 movements");
+    });
+  }
 });
 
 describe("Urdu ل — its upright continues through a below-baseline bowl", () => {

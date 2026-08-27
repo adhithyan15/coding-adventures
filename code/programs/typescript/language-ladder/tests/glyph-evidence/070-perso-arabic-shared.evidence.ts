@@ -195,4 +195,27 @@ export default [
       expect(persian.strokeOrderSource?.url).not.toBe(urdu.strokeOrderSource?.url);
     },
   },
+  {
+    suite: "shared Perso-Arabic letters retain script-owned provenance",
+    suiteOrder: 50,
+    caseOrder: 250,
+    name: "keeps Persian and Urdu ز as independently sourced body-and-dot letters",
+    verify: ({ SCRIPTS }) => {
+      const persian = SCRIPTS.find((script) => script.script === "perso-arabic")!
+        .letters.find((entry) => entry.glyph === "ز")!;
+      const urdu = SCRIPTS.find((script) => script.script === "urdu-nastaliq")!
+        .letters.find((entry) => entry.glyph === "ز")!;
+      for (const entry of [persian, urdu]) {
+        expect(entry.sound).toBe("z");
+        expect(entry.role).toBe("consonant");
+        expect(entry.penLifts).toBe(1);
+        expect(entry.strokeOrder).toHaveLength(3);
+        expect(entry.strokeOrder[1]).toMatch(
+          /(?:curv.*left.*without lifting|without lifting.*left.*curve)/i,
+        );
+        expect(entry.strokeOrder[2]).toMatch(/lift.*dot above/i);
+      }
+      expect(persian.strokeOrderSource?.url).not.toBe(urdu.strokeOrderSource?.url);
+    },
+  },
 ] satisfies readonly GlyphEvidence[];
