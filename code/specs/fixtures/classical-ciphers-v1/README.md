@@ -11,6 +11,10 @@ any cipher implementation.
 - `schema.json` defines the closed fixture envelope and operation shapes.
 - `cases.json` is the normative corpus.
 - `CHANGELOG.md` records contract changes.
+- `code/scripts/generate_scytale_fixture_consumers.py` renders the Scytale
+  subset into dependency-free native tests for every established
+  implementation lane. Its `--check` mode is the corpus-to-consumer drift
+  gate.
 
 The repository test
 `code/scripts/tests/test_classical_cipher_fixtures.py` validates the schema,
@@ -18,6 +22,15 @@ case IDs, file and case-count bounds, Unicode scalar safety, stable errors, and
 every expected result with a dependency-free semantic oracle. A schema-only
 pass is not conformance: consumers must execute the operations and compare the
 full expected object.
+
+The generated Scytale consumers are derived only from the bounded, strictly
+decoded fixture. Every output records the source SHA-256 digest and all case
+IDs, constructs repeat descriptors at test runtime, normalizes public API
+results to the closed `{text}`, `{error_id}`, or ordered `{candidates}` shape,
+and compares every field. Production packages do not read fixture files and do
+not gain filesystem or JSON-parser authority. A changed fixture, changed
+established-lane roster, missing output, or hand-edited output makes
+`--check` fail closed.
 
 Consumers must reject the encoded schema or fixture above 131,072 bytes and
 scan both raw JSON inputs for bounded nesting before parsing. After the bounded

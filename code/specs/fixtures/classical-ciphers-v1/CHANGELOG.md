@@ -1,5 +1,12 @@
 # Changelog
 
+## 1.0.2 - 2026-08-26
+
+- Add dependency-free generated Scytale consumers for every established lane.
+- Bind all 18 native test adapters to the exact corpus digest, complete expected
+  objects, and the current implementation-language roster with a fail-closed
+  regeneration check.
+
 ## 1.0.1 - 2026-08-26
 
 - Add Scytale encrypt/decrypt vectors for a decomposed combining sequence so
