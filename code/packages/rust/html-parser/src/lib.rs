@@ -7636,6 +7636,7 @@ impl HtmlParser {
                     || is_subscript_or_superscript_element(name)
                     || is_non_formatting_text_semantic_element(name)
                     || is_media_element(name)
+                    || is_form_semantic_element(name)
                     || matches!(name, "canvas" | "map" | "picture");
                 self.diagnostics.push(if should_position {
                     diagnostic.at_emission(self.current_token_emission_position)
@@ -8416,6 +8417,7 @@ impl HtmlParser {
             || is_subscript_or_superscript_element(name)
             || is_non_formatting_text_semantic_element(name)
             || is_media_element(name)
+            || is_form_semantic_element(name)
             || is_formatting_marker_element(name)
             || matches!(name, "canvas" | "map" | "picture")
             || matches!(
@@ -12858,6 +12860,13 @@ fn is_non_formatting_text_semantic_element(name: &str) -> bool {
 
 fn is_media_element(name: &str) -> bool {
     matches!(name, "audio" | "video")
+}
+
+fn is_form_semantic_element(name: &str) -> bool {
+    matches!(
+        name,
+        "datalist" | "label" | "legend" | "meter" | "output" | "progress"
+    )
 }
 
 fn is_formatting_marker_element(name: &str) -> bool {
@@ -28267,6 +28276,18 @@ mod tests {
             "end tag `</picture>` did not match an open element",
         )
         .at_emission(Some(end_tag_position_at(source, "picture", occurrence)))
+    }
+
+    fn unmatched_form_semantic_end_tag(
+        source: &str,
+        name: &str,
+        occurrence: usize,
+    ) -> ParserDiagnostic {
+        ParserDiagnostic::new(
+            "unexpected-end-tag",
+            format!("end tag `</{name}>` did not match an open element"),
+        )
+        .at_emission(Some(end_tag_position_at(source, name, occurrence)))
     }
 
     fn unexpected_non_current_end_tag(
@@ -45293,6 +45314,102 @@ mod tests {
             .diagnostics()
             .iter()
             .all(|diagnostic| diagnostic.position.is_none()));
+    }
+
+    #[test]
+    fn positions_unmatched_form_semantic_end_tags_at_token_emission() {
+        let names = ["datalist", "label", "legend", "meter", "output", "progress"];
+        let source = "<!doctype html></datalist></label></legend></meter></output></progress><!--é-->\r\n</datalist>";
+        let output = parse_html_with_diagnostics(source).unwrap();
+        assert!(source.len() > source.chars().count());
+        let expected = names
+            .into_iter()
+            .map(|name| unmatched_form_semantic_end_tag(source, name, 0))
+            .chain(std::iter::once(unmatched_form_semantic_end_tag(
+                source, "datalist", 1,
+            )))
+            .collect::<Vec<_>>();
+        assert_eq!(
+            output
+                .parser_diagnostics
+                .iter()
+                .filter(|diagnostic| diagnostic.code == "unexpected-end-tag")
+                .cloned()
+                .collect::<Vec<_>>(),
+            expected
+        );
+
+        let fragment_source = "</datalist></label></legend></meter></output></progress>";
+        let fragment = parse_html_fragment_with_diagnostics(fragment_source).unwrap();
+        assert_eq!(
+            fragment.parser_diagnostics,
+            names
+                .into_iter()
+                .map(|name| unmatched_form_semantic_end_tag(fragment_source, name, 0))
+                .collect::<Vec<_>>()
+        );
+
+        for name in names {
+            let matched_source = format!("<!doctype html><{name}>X</{name}>");
+            let matched = parse_html_with_diagnostics(&matched_source).unwrap();
+            assert!(matched
+                .parser_diagnostics
+                .iter()
+                .all(|diagnostic| diagnostic.code != "unexpected-end-tag"));
+
+            let foreign_source = format!(
+                "<!doctype html><svg><foreignObject></{name}>X</foreignObject></svg>"
+            );
+            let foreign = parse_html_with_diagnostics(&foreign_source).unwrap();
+            assert_eq!(
+                foreign.parser_diagnostics,
+                vec![
+                    generic_foreign_end_tag_mismatch(&foreign_source, name),
+                    unmatched_form_semantic_end_tag(&foreign_source, name, 0),
+                ]
+            );
+
+            let mut direct = HtmlParser::with_body_fragment_options(HtmlParseOptions::default());
+            direct.process_token(Token::EndTag {
+                name: name.to_string(),
+            });
+            direct.process_token(Token::Eof);
+            assert!(direct
+                .diagnostics()
+                .iter()
+                .all(|diagnostic| diagnostic.position.is_none()));
+
+            let mut foreign_direct =
+                HtmlParser::with_body_fragment_options(HtmlParseOptions::default());
+            for token in [
+                Token::StartTag {
+                    name: "svg".to_string(),
+                    attributes: Vec::new(),
+                    self_closing: false,
+                },
+                Token::StartTag {
+                    name: "foreignObject".to_string(),
+                    attributes: Vec::new(),
+                    self_closing: false,
+                },
+                Token::EndTag {
+                    name: name.to_string(),
+                },
+                Token::Eof,
+            ] {
+                foreign_direct.process_token(token);
+            }
+            assert!(foreign_direct
+                .diagnostics()
+                .iter()
+                .all(|diagnostic| diagnostic.position.is_none()));
+        }
+
+        let incomplete = parse_html_with_diagnostics("<!doctype html></datalist").unwrap();
+        assert!(incomplete
+            .parser_diagnostics
+            .iter()
+            .all(|diagnostic| diagnostic.code != "unexpected-end-tag"));
     }
 
     #[test]
