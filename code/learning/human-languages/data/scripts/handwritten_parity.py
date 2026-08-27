@@ -57,10 +57,11 @@ prose is carried across -- at which point the number for that track is zero and
 staying zero is a real promise.
 """
 
-import json
 import os
 import re
 import sys
+
+from sharded_ledger import load_book_generation
 
 HERE = os.path.dirname(os.path.abspath(__file__))
 HL = os.path.normpath(os.path.join(HERE, "..", ".."))
@@ -94,7 +95,7 @@ def lessons_by_chapter(track):
 
 
 def main():
-    config = json.load(open(os.path.join(HL, "core/book-generation.json"), encoding="utf-8"))
+    config = load_book_generation(HL)
     total = 0
     print("Prose blocks a handwritten chapter holds, against what its lessons would")
     print("produce if it were generated. A positive gap is prose that would be LOST.\n")

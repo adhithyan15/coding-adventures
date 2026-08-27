@@ -1,4 +1,5 @@
 import { combineChapterHash } from "@coding-adventures/human-language-data/src/hash.ts";
+import { chapterLoaders } from "virtual:human-language-ledgers";
 import type { Lesson } from "./lessons.ts";
 
 interface BookHashEntry {
@@ -22,10 +23,10 @@ interface BookHashManifest {
  * chunk in the app, and the one that broke the ceiling. Like the manifest,
  * they exist only to compute a diagnostic label, so they load after the app.
  */
-const CHAPTER_LEDGER_LOADERS = import.meta.glob(
-  "../../../../learning/human-languages/*/chapters.json",
-  { import: "default" },
-) as Record<string, () => Promise<{ language: string; chapters: ChapterCapabilityEntry[] }>>;
+const CHAPTER_LEDGER_LOADERS = chapterLoaders as Record<
+  string,
+  () => Promise<{ language: string; chapters: ChapterCapabilityEntry[] }>
+>;
 
 interface ChapterCapabilityEntry {
   chapter: number;

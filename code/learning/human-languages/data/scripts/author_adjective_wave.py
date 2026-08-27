@@ -88,6 +88,15 @@ import os
 import re
 import unicodedata
 
+from sharded_ledger import (
+    load_book_generation,
+    load_chapters,
+    load_curriculum,
+    write_book_generation_language,
+    write_chapters,
+    write_curriculum,
+)
+
 HERE = os.path.dirname(os.path.abspath(__file__))
 HL = os.path.normpath(os.path.join(HERE, "..", ".."))
 
@@ -463,8 +472,7 @@ def register(cfg, chapter, ids, seqs):
     # two of them mutated and the third stale -- and the seven lessons already
     # on disk. This one can raise: a track with no existing book target has no
     # sibling to copy script keys from.
-    book_path = os.path.join(HL, "core/book-generation.json")
-    book = json.load(open(book_path, encoding="utf-8"))
+    book = load_book_generation(HL)
     siblings = [t for t in book["targets"] if t["language"] == cfg["track"]]
     if not siblings:
         raise SystemExit(f"{cfg['track']}: no existing book target to copy script "
@@ -473,8 +481,7 @@ def register(cfg, chapter, ids, seqs):
                    if k not in ("language", "chapter", "output")}
 
     # -- curriculum: path node + extension + spine ledger --------------------
-    p = os.path.join(HL, cfg["track"], "curriculum.json")
-    doc = json.load(open(p, encoding="utf-8"))
+    doc = load_curriculum(HL, cfg["track"])
     path_id, ext_id = f"{pfx}-PATH-201", f"{pfx}-EXT-201-ADJ"
     doc["path"] = [n for n in doc["path"] if n["id"] != path_id]
     doc["extensions"] = [e for e in doc.get("extensions", []) if e["id"] != ext_id]
@@ -488,12 +495,10 @@ def register(cfg, chapter, ids, seqs):
     realization = doc.setdefault("spine", {}).setdefault("SPINE-DEFINITE-REFERENCE", {})
     realization["segments"] = [n["id"] for n in doc["path"]
                                if n["spine_node"] == "SPINE-DEFINITE-REFERENCE"]
-    with open(p, "w", encoding="utf-8") as f:
-        json.dump(doc, f, ensure_ascii=False, indent=2); f.write("\n")
+    write_curriculum(HL, cfg["track"], doc)
 
     # -- chapters.json: the promise, and the lesson that pays it off ---------
-    p = os.path.join(HL, cfg["track"], "chapters.json")
-    doc = json.load(open(p, encoding="utf-8"))
+    doc = load_chapters(HL, cfg["track"])
     # Remove only a chapter THIS script wrote, matched by its label rather than
     # its number. `chapter` is max(lesson chapters) + 1, computed from lesson
     # frontmatter, while the entry being removed lives in chapters.json -- two
@@ -522,8 +527,7 @@ def register(cfg, chapter, ids, seqs):
             assesses=[f"{pfx}-LEX-C{chapter}-ADJ-{n:02d}" for n in range(1, len(CONCEPTS) + 1)]
                      + [f"{pfx}-GRAMMAR-C{chapter}-ADJ-SYSTEM"])))
     doc["chapters"].sort(key=lambda c: c["chapter"])
-    with open(p, "w", encoding="utf-8") as f:
-        json.dump(doc, f, ensure_ascii=False, indent=2); f.write("\n")
+    write_chapters(HL, cfg["track"], doc)
 
     # -- book-generation.json: or the chapter never reaches a page ----------
     # `script_keys` was copied from a sibling above rather than assuming a key
@@ -537,8 +541,7 @@ def register(cfg, chapter, ids, seqs):
         output=f"{cfg['track']}/book/chapters/ch{chapter}-describing-things.tex",
         **script_keys))
     book["targets"].sort(key=lambda t: (t["language"], t["chapter"]))
-    with open(book_path, "w", encoding="utf-8") as f:
-        json.dump(book, f, ensure_ascii=False, indent=2); f.write("\n")
+    write_book_generation_language(HL, cfg["track"], book)
 
 
 if __name__ == "__main__":

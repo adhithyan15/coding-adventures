@@ -141,7 +141,7 @@ function manifestPath(language: string): string {
   return `${BOOK_HASH_MANIFEST_DIR}/${language}.json`;
 }
 
-function loadConfig(root: string): BookGenerationConfig {
+export function loadBookGenerationConfig(root: string): BookGenerationConfig {
   // Through the shard reader, not a bare `readFileSync`. This was the only
   // non-loader read of any of the three HL21 ledgers left in `src/`, and once
   // `core/book-generation.d/` became the source of truth a direct read of the
@@ -229,7 +229,7 @@ function safeMarkdownSource(root: string, relative: string): string {
 export function handwrittenBookChapters(
   root = defaultCurriculumRoot(),
 ): HandwrittenBookChapter[] {
-  const handwritten = loadConfig(root).handwritten ?? [];
+  const handwritten = loadBookGenerationConfig(root).handwritten ?? [];
   const capabilities = chapterCapabilityIndex(root);
   // Nothing here is written today, only read — but `output` is still a path, and the
   // containment rule it has to satisfy is exactly the one `targets[]` already obeys.
@@ -389,12 +389,12 @@ function assertHandwrittenLessonCoverageFrom(
 
 /** Public audit entry point used by focused tests and maintenance tooling. */
 export function assertHandwrittenLessonCoverage(root = defaultCurriculumRoot()): void {
-  assertHandwrittenLessonCoverageFrom(root, loadConfig(root), loadLessons(root));
+  assertHandwrittenLessonCoverageFrom(root, loadBookGenerationConfig(root), loadLessons(root));
 }
 
 export function generatedBookOutputs(root = defaultCurriculumRoot()): Map<string, string> {
   const capabilities = chapterCapabilityIndex(root);
-  const config = loadConfig(root);
+  const config = loadBookGenerationConfig(root);
   if (config.version !== 1 || config.targets.length === 0) {
     throw new Error("book-generation.json must declare version 1 and at least one target");
   }

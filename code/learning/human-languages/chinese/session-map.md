@@ -2,8 +2,8 @@
 
 This is the fixed review ledger for Chapter 1's seven-lesson spoken greeting
 slice. It is **not** the authoritative inventory or schedule for the whole
-Mandarin track; [`curriculum.json`](./curriculum.json) and
-[`chapters.json`](./chapters.json) carry that growing machine-readable order.
+Mandarin track; [`curriculum.d/`](./curriculum.d/) and
+[`chapters.d/`](./chapters.d/) carry that growing machine-readable order.
 Every lesson here is an independent, prerequisite-safe step of three or four
 minutes. A study session may combine the new step with the reviews shown here,
 but it never turns the combined session into one indivisible lesson.

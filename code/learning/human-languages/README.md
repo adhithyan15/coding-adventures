@@ -40,7 +40,8 @@ Every track shares the same shape:
 <language>/
   README.md                  what this track is, how to use it, current progress
   CHANGELOG.md                per-chapter content additions
-  curriculum.json            ordered shared-spine realization path + local extensions
+  curriculum.d/              ordered shared-spine path + extensions, sharded by entry
+  chapters.d/                authored chapter can-dos and payoffs, one file per chapter
   roadmap.md                  themed-chapter skeleton
   session-map.md              how lessons compose into commute sessions + review schedule
   pronunciation-reference.md   the sounds, to look up on demand (never a gate)
@@ -53,7 +54,7 @@ The machine-readable layer alongside the tracks is:
 ```text
 core/languages.json             complete active-language registry and default mix order
 core/spine.d/*.json             ordered, language-independent can-do spine: one file per node
-core/spine.json                 generated from core/spine.d/ — do not hand-edit (see below)
+core/book-generation.d/*.json  per-language generated-book declarations
 core/latex-warning-baseline.json  per-track LaTeX warning debt the book gate holds the line on
 core/lesson-modality/*.json     generated per-language voice/sight/pen and chapter prefixes
 core/generated-book-hashes/*.json generated per-language book source-hash ledgers
@@ -86,16 +87,17 @@ the spine is a ladder from pre-A1 to C2 and is not alphabetical. Ordinals are
 spaced by ten so a node can be inserted as `0015` without renaming its
 neighbours, which would be its own merge conflict.
 
-`core/spine.json` still exists, as a GENERATED artifact. It survives only because
-Language Ladder's browser bundle statically imports it and a browser cannot read
-a directory. Edit the shards, then:
+`core/spine.json` no longer exists. Language Ladder's Vite plugin folds the
+canonical shards into a virtual browser module at build time, with a key table
+bounded by tracks rather than authored elements. The same is true for every
+track's `curriculum.d/` and `chapters.d/`. Validate the shard-only corpus with:
 
 ```sh
-npm run unshard core/spine.json    # rebuild the monolith
-npm run check:shards               # what CI runs; fails on a stale monolith
+npm run check:shards    # rebuilds in memory; fails if an aggregate returns
 ```
 
-Never hand-edit `core/spine.json`, and never hand-merge it — regenerate it.
+Edit only the owning shard. A resurrected monolith is ignored by readers and
+therefore fails CI.
 
 Generated Class-B figures live beside the book that consumes them under
 `<language>/book/figures/`. The data package renders them from canonical lesson
@@ -105,7 +107,7 @@ generate:figures` or `npm run check:figures` in
 `code/packages/typescript/human-language-data`; authored image paths are restricted
 to relative `figures/*` targets and cannot escape a track.
 
-Every registered track has one `curriculum.json`. Its ordered path can revisit a
+Every registered track has one `curriculum.d/`. Its ordered path can revisit a
 shared spine node, attaches required/supporting/reference extensions before,
 inline with, or after a local segment, and explicitly records canonical concepts
 that the track omits or deliberately teaches elsewhere. The data-package gate

@@ -103,6 +103,8 @@ import re
 import sys
 import unicodedata
 
+from sharded_ledger import load_curriculum, write_curriculum
+
 HERE = os.path.dirname(os.path.abspath(__file__))
 HL = os.path.normpath(os.path.join(HERE, "..", ".."))
 
@@ -653,8 +655,7 @@ def register(cfg, script, segs):
     capability the route delivers. The extension's `canDo` is authored -- it is a
     promise about the reader, and no generator can make one of those.
     """
-    p = os.path.join(HL, cfg["track"], "curriculum.json")
-    doc = json.load(open(p, encoding="utf-8"))
+    doc = load_curriculum(HL, cfg["track"])
     ids = [f"{cfg['prefix']}-S{s['n']:02d}-{s['slug']}" for s in segs]
     path_id = f"{cfg['prefix']}-PATH-100"
     ext_id = f"{cfg['prefix']}-EXT-100-SCRIPT-RECOGNITION"
@@ -704,9 +705,7 @@ def register(cfg, script, segs):
     realization["segments"] = [n["id"] for n in doc["path"]
                                if n["spine_node"] == SCRIPT_SPINE_NODE]
 
-    with open(p, "w", encoding="utf-8") as f:
-        json.dump(doc, f, ensure_ascii=False, indent=2)
-        f.write("\n")
+    write_curriculum(HL, cfg["track"], doc)
 
 
 if __name__ == "__main__":

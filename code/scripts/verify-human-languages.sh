@@ -84,6 +84,8 @@ if [ "$MODE" != "books" ]; then
   ( cd "$ROOT" && run "pytest" "$PY" -m pytest \
       code/scripts/tests/test_build_human_language_book_catalog.py \
       code/scripts/tests/test_scan_latex_log_warnings.py -q )
+  ( cd "$ROOT" && run "sharded ledger safety" "$PY" \
+      code/learning/human-languages/data/scripts/test_sharded_ledger.py -v )
 fi
 
 if [ "$MODE" != "fast" ]; then

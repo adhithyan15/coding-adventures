@@ -1,5 +1,6 @@
 import { defineConfig } from "vite";
 import path from "node:path";
+import { humanLanguageLedgerPlugin } from "./human-language-ledger-plugin.ts";
 // How lesson batches are grouped lives in ONE module, imported by both this
 // config and scripts/check-bundle.mjs. The gate used to recover the band width
 // by regex-ing this file, which a comment mentioning the constant could shadow.
@@ -11,8 +12,10 @@ import { bandChunkNameForModuleId } from "./lesson-bands.mjs";
 // can never drift from the curriculum. They live outside this package's folder,
 // so the dev server must be told the repo root is a legal place to read from.
 const repoRoot = path.resolve(__dirname, "../../../..");
+const curriculumRoot = path.join(repoRoot, "code", "learning", "human-languages");
 
 export default defineConfig({
+  plugins: [humanLanguageLedgerPlugin({ curriculumRoot })],
   // Relative base → the built index.html works when opened from any path
   // (local file, GitHub Pages sub-path, etc.) without a deploy-specific prefix.
   base: "./",
@@ -107,7 +110,7 @@ export default defineConfig({
               // spine nodes. Small, and it grows by a line per new TRACK rather
               // than per lesson, so it is safe to keep on the eager path.
               name: "curriculum-core",
-              test: /core[\\/](?:languages|spine)\.json$/,
+              test: /core[\\/]languages\.json$/,
             },
             {
               // One chunk per track's authored plan, all of them lazy (see the
@@ -127,13 +130,13 @@ export default defineConfig({
               // shared half-megabyte blob on every corpus commit.
               name(moduleId) {
                 const normalized = moduleId.replaceAll("\\", "/");
-                const match = /human-languages\/([^/]+)\/curriculum\.json$/.exec(normalized);
+                const match = /human-language-ledger\/curriculum\/([^/]+)$/.exec(normalized);
                 return match?.[1] ? `curriculum-${match[1]}` : null;
               },
             },
             {
               name: "book-ledgers",
-              test: /(?:chapters\.json|generated-book-hashes[\\/][^/\\]+\.json)$/,
+              test: /(?:human-language-ledger[\\/]chapters|generated-book-hashes[\\/][^/\\]+\.json)$/,
             },
             {
               // Handwriting grows one cited path at a time. Keep its model,

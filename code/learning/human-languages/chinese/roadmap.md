@@ -8,7 +8,7 @@ gated character list, and unfamiliar meanings arrive orally before dense new
 forms whenever combining both would make a cliff.
 
 This file is a design and dependency roadmap, not the authored inventory.
-[`chapters.json`](./chapters.json) and [`curriculum.json`](./curriculum.json) are
+[`chapters.d/`](./chapters.d/) and [`curriculum.d/`](./curriculum.d/) are
 authoritative for what has shipped; chapter shards become the authoring source
 when the HL21 migration lands. The long horizon is the program contract in
 [`HL16`](../../../specs/HL16-exam-ready-books-and-writing-ramp.md): cumulative reading,

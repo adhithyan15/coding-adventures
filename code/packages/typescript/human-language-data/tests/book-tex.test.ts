@@ -9,13 +9,11 @@ import {
   renderBookTex,
   splitBookTex,
 } from "../src/book-tex.js";
-import { generatedBookOutputs } from "../src/book-cli.js";
+import { generatedBookOutputs, loadBookGenerationConfig } from "../src/book-cli.js";
 import { defaultCurriculumRoot } from "../src/loader.js";
 
 const ROOT = defaultCurriculumRoot();
-const config = JSON.parse(
-  readFileSync(join(ROOT, "core", "book-generation.json"), "utf8"),
-) as Parameters<typeof chapterInputsFor>[0];
+const config = loadBookGenerationConfig(ROOT) as Parameters<typeof chapterInputsFor>[0];
 
 /** Every track that has a book. */
 const tracks = readdirSync(ROOT, { withFileTypes: true })

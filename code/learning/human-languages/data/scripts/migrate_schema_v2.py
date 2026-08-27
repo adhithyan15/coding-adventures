@@ -53,6 +53,8 @@ import os
 import re
 import sys
 
+from sharded_ledger import load_curriculum
+
 HERE = os.path.dirname(os.path.abspath(__file__))
 HL = os.path.normpath(os.path.join(HERE, "..", ".."))
 
@@ -90,7 +92,7 @@ ATOM_KIND = {"word": "LEX", "phrase": "LEX", "writing": "SCRIPT",
 
 
 def spine_nodes(track):
-    doc = json.load(open(os.path.join(HL, track, "curriculum.json"), encoding="utf-8"))
+    doc = load_curriculum(HL, track)
     out = {}
     for node in doc.get("path", []):
         for lid in node.get("lessons", []):

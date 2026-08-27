@@ -2,14 +2,17 @@
 // the source of truth shared with validators and future book generators.
 
 import registryJson from "../../../../learning/human-languages/core/languages.json";
-import spineJson from "../../../../learning/human-languages/core/spine.json";
+import {
+  curriculumLoaders,
+  spine,
+} from "virtual:human-language-ledgers";
 import {
   mixedCurriculumFrontier as buildMixedCurriculumFrontier,
   type MixedCurriculumFrontier,
 } from "@coding-adventures/human-language-data/src/plans.ts";
 import type { LanguageCurriculum } from "@coding-adventures/human-language-data/src/types.ts";
 
-// The per-track plans are LAZY, and one chunk per track.
+// The per-track plans are LAZY, and one virtual chunk per track.
 //
 // They used to be `{ eager: true }`, which welded all 22 tracks' plans into the
 // module graph the browser must download and parse BEFORE first paint. Nothing
@@ -20,18 +23,18 @@ import type { LanguageCurriculum } from "@coding-adventures/human-language-data/
 // and growing by a tranche a day, which is what finally pushed the eager
 // budget in scripts/check-bundle.mjs over 500 kB.
 //
-// Lazy also means per-track: rolldown gives each `curriculum.json` its own
+// Lazy also means per-track: rolldown gives each build-time shard rollup its own
 // chunk (see the `curriculum-<track>` group in vite.config.ts), so adding a
 // Telugu chapter re-downloads Telugu's plan and nothing else, instead of
 // invalidating one shared half-megabyte blob on every corpus commit.
 //
-// `import.meta.glob`'s KEYS are still available synchronously — they are file
-// paths, not file contents — so "which tracks have an authored plan" costs
-// nothing and stays eager. Only the plan bodies are deferred.
-const CURRICULUM_LOADERS = import.meta.glob(
-  "../../../../learning/human-languages/*/curriculum.json",
-  { import: "default" },
-) as Record<string, () => Promise<LanguageCurriculum>>;
+// The virtual index contains one key per TRACK, not one per shard. Adding a
+// path segment or spine realization therefore changes a lazy track module but
+// never grows the eager lookup table (HL21 §4.4).
+const CURRICULUM_LOADERS = curriculumLoaders as Record<
+  string,
+  () => Promise<LanguageCurriculum>
+>;
 
 export interface LanguageDefinition {
   id: string;
@@ -54,20 +57,16 @@ export const LANGUAGE_REGISTRY = registryJson.languages as LanguageDefinition[];
 export const LANGUAGE_ORDER: string[] = LANGUAGE_REGISTRY
   .filter((language) => language.status === "active")
   .map((language) => language.id);
-export const SPINE_NODES = spineJson.nodes as SpineNode[];
+export const SPINE_NODES = (spine as { nodes: SpineNode[] }).nodes;
 export const SPINE_CONCEPTS: string[] = SPINE_NODES.flatMap((node) => node.concepts);
 
 /**
- * Which tracks have an authored plan, read from the glob's KEYS.
+ * Which tracks have an authored plan, read from the bounded virtual index.
  *
- * A track's directory name is its registry id (`.../telugu/curriculum.json` is
- * the `telugu` track), so the answer to "is this track mapped?" is in the file
- * path and needs none of the file. This is what lets the language picker and
- * the stored selection stay synchronous while the plans themselves load.
+ * A key is the registry id itself. This lets the language picker and stored
+ * selection stay synchronous while the plan bodies remain lazy.
  */
 export const MAPPED_LANGUAGE_IDS: string[] = Object.keys(CURRICULUM_LOADERS)
-  .map((file) => /([^/]+)\/curriculum\.json$/.exec(file.replaceAll("\\", "/"))?.[1] ?? "")
-  .filter((id) => id.length > 0)
   .sort((left, right) => LANGUAGE_ORDER.indexOf(left) - LANGUAGE_ORDER.indexOf(right));
 
 /**

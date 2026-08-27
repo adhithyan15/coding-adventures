@@ -26,8 +26,11 @@ chunk budget.
 
 The spine of the app is [HL03](../../../specs/HL03-unified-language-learning-app.md)
 plus the stricter [HL04](../../../specs/HL04-shared-spine-and-content-pipeline.md)
-progression contract. `curriculum.ts` loads every active `curriculum.json` map and
-the pure frontier planner returns exactly one safe next lesson per selected
+progression contract. A build-time virtual module folds every active
+`curriculum.d/` map into one lazy module per track, and `curriculum.ts` loads
+those bounded rollups. The shared spine is folded eagerly from `core/spine.d/`;
+the browser never enumerates one module per authored shard. The pure frontier
+planner returns exactly one safe next lesson per selected
 language. A language advances independently; paths are grouped only when their
 current lessons share a spine ability. The picker includes every track,
 including Russian, Persian, and Urdu, and reports the exact mapped lesson and
