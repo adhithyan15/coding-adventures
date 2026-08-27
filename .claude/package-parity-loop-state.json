@@ -11,14 +11,19 @@
     "selection_rule": "host-security, credential, native-runtime, and external-approval work may inform classification but is never selected by this parity loop",
     "excluded_delivery_classes": ["onvif", "host-security-hardening", "native-runtime", "external-approval"]
   },
-  "active_pr": null,
+  "active_pr": {
+    "number": 13252,
+    "url": "https://github.com/adhithyan15/coding-adventures/pull/13252",
+    "branch": "codex/atbash-neutral-fixture-consumers",
+    "status": "open"
+  },
   "last_ci_action": {
-    "observed_at": "2026-08-27T16:18:19Z",
-    "pr_number": 13224,
-    "run_id": 33083706568,
+    "observed_at": "2026-08-27T17:24:21Z",
+    "pr_number": 13252,
+    "run_id": 33098227037,
     "attempt": 1,
-    "status": "auto-merge-enabled-and-merged",
-    "notes": "Final head b7e1dcd82e980fd5e441eb487ce3f97e6060d015 completed all 41 reported checks acceptably: 39 successes and two expected skips, with no failure or pending check. GitHub reported MERGEABLE/CLEAN; the loop enabled squash auto-merge, and GitHub merged PR #13224 as 0302e4e8f35a6e79d7bd385ae91fde710176a53c at 2026-08-27T16:18:19Z without a manual merge command."
+    "status": "checks-pending",
+    "notes": "Ready-for-review PR #13252 is non-draft and MERGEABLE, but required checks are queued and mergeStateStatus is BLOCKED. Per the parity loop, auto-merge remains disabled and the next run is monitor-only while checks are pending."
   },
   "last_inventory": {
     "revision": "a45a88e98a50fb363eb68d441926e59a523a9106",
@@ -2374,14 +2379,18 @@
     {
       "id": "atbash-language-neutral-fixture-established-lane-consumers",
       "title": "Execute the normative Atbash corpus in every established lane",
-      "status": "in-progress",
+      "status": "pr-open",
       "depends_on": ["classical-cipher-language-neutral-fixtures-and-analysis-contract"],
       "branch": "codex/atbash-neutral-fixture-consumers",
-      "pr_number": null,
+      "pr_number": 13252,
+      "pr_url": "https://github.com/adhithyan15/coding-adventures/pull/13252",
+      "opened_at": "2026-08-27T17:24:17Z",
+      "implementation_revision": "0706144dd19da3d34a0059f0c5b7e5cf1501407b",
       "selection_revision": "0302e4e8f35a6e79d7bd385ae91fde710176a53c",
       "selection_notes": "Selected after PR #13224 completed all 41 terminal acceptable checks and squash auto-merge merged its final head as 0302e4e8f35a6e79d7bd385ae91fde710176a53c without a manual merge command. The exact-main schema-3 inventory is unchanged at 15 established lanes, 1,375 implementation identities, 4,585 slots, 1,414 all-reported identities, bands 175/266, 123/934, 167/2,100, and 910/12,740, 722 Rust singletons, zero OCaml packages, zero collisions, and zero unknown buckets; no inventory-driven gap is newly unowned. This dependency-ready owner reaches all 15 established lanes with the six complete CR01 objects through the bounded dependency-free generated-consumer pattern already proven for Scytale and Vigenere. It is selected ahead of disconnected single-package contracts while the now dependency-complete five-front Vigenere BUILD hardening remains the immediate operational sibling. OCaml remains collision-blocked by open PR #12149 on required Go validator and entry-point paths, and the newly specific Forme family owner remains path-blocked by open PR #13244. A live open-PR scan found zero exact overlap with Atbash packages, CR01, the classical-cipher fixture, prospective generator/CI surfaces, state, roadmap, or root changelog.",
       "rebase_notes": "Rebased conflict-free twice before publication, finally onto exact origin/main a45a88e98a50fb363eb68d441926e59a523a9106. Intervening Persian, Japanese, and Spanish curriculum work, ALGOL negative-exponent folding, merged Forme PR #13244, Venture navigation convergence, HTML parser recovery, Mermaid Gantt calendar formats, and Language Ladder ownership sharding have no exact overlap with the Atbash package, fixture, generator, CI, state, roadmap, or changelog implementation surfaces. The refreshed collision-checked schema-3 inventory records 15 established lanes, 1,376 implementation identities, 4,586 slots, 1,415 all-reported identities, bands 175/266, 123/934, 167/2,100, and 911/12,754, 723 Rust singletons, zero OCaml packages, zero collisions, and zero unknown buckets. The newly exposed Rust-only browser-navigation identity has a dedicated pending classification owner; live PR #13251 now collision-blocks the registered Forme owner without overlapping this Atbash tranche.",
       "validation_notes": "A dependency-free bounded generator validates the exact classical-ciphers-v1 profile and ordered six-object Atbash roster, strict UTF-8/JSON, duplicate keys, non-finite numbers, surrogates, closed case shapes, source-safe IDs, fixture SHA-256, 131,072-byte/depth-8/8,193-scalar ceilings, and renders one native consumer for every established lane. Thirteen generator tests cover all renderers, hostile interpolation-like text, complete expected-object projection, bounded stale-output reads, and fail-closed drift of F# and Haskell's explicit package-test registrations; generator check, Ruff check/format, Bandit, credential/diff checks, and the central parity/fixture/state suites pass. Native suites pass in C# (7/7; 100% line/branch/method), Dart (9 plus analyze/format/coverage), Elixir (36; 100% coverage), F# (7/7; 86.66% line, 75% branch, 100% method), Go (all six generated; 100% coverage plus vet/format), Haskell (17 examples), Java (19), Kotlin (25), Lua (30), Perl (99 assertions), Python (34; 100% coverage), Ruby (31 runs/96 assertions), Rust (27 unit, six generated assertions, four doctests plus format), Swift (29), and TypeScript (30; 100% coverage plus typecheck). The exact Windows diff plan evaluates 45 Starlark files, discovers 5,093 packages, validates five orphan exceptions, selects 15 changed Atbash roots and 27 affected packages; 26 pass in the full plan and the sole environment-only Elixir miss passes after exposing the installed Erlang/Elixir toolchain. NuGet vulnerability checks and the production TypeScript audit report no vulnerabilities; cargo audit reports no vulnerabilities and two allowed workspace-wide unmaintained warnings; Python exports no runtime dependency beyond the editable package itself. Independent correctness review found and drove fail-closed registration drift checks plus validation-artifact cleanup; final security/authority review reports no actionable finding and no production authority or dependency expansion. The exact rebased schema-3 report is collision-clean with the inventory recorded above.",
+      "publication_notes": "Opened ready-for-review PR #13252 at 2026-08-27T17:24:17Z from fully validated implementation head 0706144dd19da3d34a0059f0c5b7e5cf1501407b after a normal first push and confirmation that no parity PR was active. GitHub reports the PR non-draft and MERGEABLE; required checks are queued and mergeStateStatus is BLOCKED, so auto-merge remains disabled until every required check is terminal and acceptable and GitHub reports no conflict.",
       "notes": "Discovered during the post-#13172 fixture-consumer audit before successor selection. The neutral classical-ciphers-v1 corpus pins six complete Atbash objects, but no established Atbash lane currently references the corpus or compares every complete expected object. Add bounded dependency-free generated consumers or test-only adapters across all 15 established packages, preserving empty production capability profiles and the fixture README's rule that schema validation alone is not conformance."
     },
     {
