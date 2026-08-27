@@ -4,6 +4,31 @@ All notable changes to this package will be documented in this file.
 
 ## [Unreleased]
 
+### Added - native radio-group mutual exclusion (#13007)
+
+`emit_host_radio_qml`'s `group:` prop was preserved only as a
+`// group: ...` line comment — no actual QtQuick.Controls `ButtonGroup`
+wiring. A literal `group: "..."` value shared by 2+ `HostRadio`s
+anywhere in the component now gets real exclusivity: `from_pipeline`
+pre-scans the whole tree (`collect_radio_group_counts`) before emission
+begins, synthesizes one `ButtonGroup { id: ... }` per qualifying group
+value as an extra non-visual child of the root `Item`, and each member
+radio's own block attaches `ButtonGroup.group: <id>` to it — no
+restructuring of the visual tree, since QML object `id`s are file-
+scoped (a `ButtonGroup` doesn't need to be a visual sibling of the
+radios it governs). Threaded via a new `EmitCtx.radio_group_slugs`
+field, computed once and inherited unchanged through every recursive
+call. A `slot:`-bound group, or a literal value with only one member,
+keeps the pre-#13007 comment-only behavior.
+
+New `pub fn radio_groups_with_native_semantics` lets
+`mosaic-package-artifact-builder`'s degradation analyzer stop reporting
+`property.radio-group-ignored` wherever this lowering actually applies.
+
+Verified with a real `qmllint` pass over a regenerated
+`mosaic-pkg-deck-options` project (the real multi-radio usage this
+targets) — zero errors, zero `ButtonGroup`-related warnings.
+
 ### Security - validate HostLink.href's URI scheme before Qt.openUrlExternally (#13052)
 
 Follow-up to #12038, which fixed the identical gap in the XAML backend and

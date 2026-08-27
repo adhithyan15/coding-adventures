@@ -47,7 +47,14 @@ fn package_root() -> PathBuf {
 /// (backend, component, degradation code) — every entry must reference
 /// its tracking issue in the comment beside it.
 const ALLOWED_DEGRADATIONS: &[(Backend, &str, &str)] = &[
-    // #13007 — native radio-group mutual exclusion not implemented.
+    // #13007 — Compose/Flutter/Qt now apply real native mutual-
+    // exclusion wiring for a literal `group:` shared by 2+ resolvable
+    // sibling HostRadios (e.g. mosaic-pkg-deck-options's leech-action
+    // radios) — but the toolkit's own `Radio` component (`Radio.mll`)
+    // is a 1:1 HostRadio wrapper with no sibling of its own, so it
+    // never qualifies and stays degraded on all four backends here.
+    // SwiftUI has no idiomatic ancestor-grouping widget at all and
+    // remains degraded even for a real multi-radio group.
     (Backend::SwiftUI, "Radio", "property.radio-group-ignored"),
     (Backend::Qt, "Radio", "property.radio-group-ignored"),
     (Backend::Flutter, "Radio", "property.radio-group-ignored"),

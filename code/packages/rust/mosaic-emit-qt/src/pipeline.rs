@@ -780,6 +780,11 @@ struct EmitCtx<'a> {
     /// generated Qt shell. Only canonical dynamic HostTable shapes consume an
     /// index; unsupported shapes retain the structural fallback.
     next_table_id: Rc<Cell<usize>>,
+    /// Literal `group:` value → synthesized `ButtonGroup` QML id
+    /// (`#13007`), for every group value shared by 2+ `HostRadio`s
+    /// anywhere in the component. Computed once in `from_pipeline` via
+    /// [`collect_radio_group_counts`] before the tree walk begins.
+    radio_group_slugs: &'a HashMap<String, String>,
 }
 
 /// Table-level style defaults that cascade down to cells (the `sheet`
@@ -1646,6 +1651,18 @@ fn from_pipeline_with_runtime_policy(
     // walker's context so styled `Box [part]` containers can inline their
     // mosstyle properties (geometry, border, background, text styling).
     let part_styles = build_part_style_map(style);
+    // #13007: a literal `group:` value shared by 2+ HostRadios anywhere
+    // in the component gets a synthesized `ButtonGroup`. Computed once,
+    // up front, so `emit_host_radio_qml` (deep in the recursive walk)
+    // can look up its own group's id with no tree-shape awareness of
+    // its own.
+    let mut radio_group_counts: HashMap<String, usize> = HashMap::new();
+    collect_radio_group_counts(&layout.root, &mut radio_group_counts);
+    let radio_group_slugs: HashMap<String, String> = radio_group_counts
+        .into_iter()
+        .filter(|(_, count)| *count >= 2)
+        .map(|(group, _)| (group.clone(), qml_radio_group_id(&group)))
+        .collect();
     let ctx = EmitCtx {
         emits: &interface.emits,
         signal_names: &signal_names,
@@ -1658,9 +1675,23 @@ fn from_pipeline_with_runtime_policy(
         cell_fill_children: false,
         next_drag_id: Rc::new(Cell::new(0)),
         next_table_id: Rc::new(Cell::new(0)),
+        radio_group_slugs: &radio_group_slugs,
     };
     writeln!(out).unwrap();
     out.push_str(&emit_qml_tree(&layout.root, 1, &ctx)?);
+
+    // One `ButtonGroup { id: ... }` per qualifying group (#13007) — a
+    // non-visual object, so declaring it as an extra child of the root
+    // `Item` (after the real visual tree) is valid QML and doesn't
+    // affect layout. Sorted for deterministic output.
+    if !radio_group_slugs.is_empty() {
+        let mut ids: Vec<&str> = radio_group_slugs.values().map(String::as_str).collect();
+        ids.sort_unstable();
+        ids.dedup();
+        for id in ids {
+            writeln!(out, "    ButtonGroup {{ id: {id} }}").unwrap();
+        }
+    }
 
     // 7. Close the root `Item`.
     writeln!(out, "}}").unwrap();
@@ -3628,15 +3659,20 @@ fn emit_host_checkbox_qml(
 /// we gate the dispatch on `if (checked)` so a sibling-radio-caused
 /// deselect doesn't dispatch.
 ///
-/// ## Group coordination — v1 limitation
+/// ## Group coordination (`#13007`)
 ///
-/// QtQuick.Controls provides `ButtonGroup` for true radio-group
-/// behavior, but wiring it requires synthesising a `ButtonGroup { id: ... }`
-/// element at the enclosing scope and attaching every radio's
-/// `ButtonGroup.group: …` reference to it. That structural pass is
-/// reserved for UI29-2.1's `RadioGroup` userland component; v1
-/// preserves the `group:` prop as a `// group: ...` comment, identical
-/// to the SwiftUI backend's choice, so the metadata stays visible.
+/// A literal `group: "..."` shared by 2+ `HostRadio`s anywhere in the
+/// component gets real `ButtonGroup` exclusivity: `from_pipeline`
+/// pre-scans the whole tree (see [`collect_radio_group_counts`]),
+/// synthesises one `ButtonGroup { id: ... }` per qualifying group value
+/// as an extra (non-visual) child of the root `Item`, and each member
+/// radio attaches `ButtonGroup.group: <id>` to it — no restructuring of
+/// the visual tree needed, since QML object `id`s are file-scoped (a
+/// `ButtonGroup` doesn't need to be a visual sibling of the radios it
+/// governs). A `slot:`-bound group, or a literal value with only one
+/// member, keeps the pre-#13007 `// group: ...` comment-only behavior —
+/// dynamic group membership isn't knowable at compile time, and a
+/// single-member group has nothing to be exclusive with.
 fn emit_host_radio_qml(
     node: &LayoutNode,
     depth: usize,
@@ -3659,6 +3695,8 @@ fn emit_host_radio_qml(
         }
         escaped
     }
+    let button_group_id: Option<&str> = find_string_prop(node, "group")
+        .and_then(|g| ctx.radio_group_slugs.get(g).map(String::as_str));
     if let Some(g) = find_string_prop(node, "group") {
         writeln!(out, "{pad}// group: {}", escape_for_line_comment(g)).unwrap();
     } else if let Some(slot) = find_slot_ref_prop(node, "group") {
@@ -3685,6 +3723,12 @@ fn emit_host_radio_qml(
     };
 
     writeln!(out, "{pad}RadioButton {{").unwrap();
+
+    // ButtonGroup.group: <id> — real exclusivity for a shared literal
+    // group with 2+ members (#13007).
+    if let Some(id) = button_group_id {
+        writeln!(out, "{inner_pad}ButtonGroup.group: {id}").unwrap();
+    }
 
     // text: <label>.
     if let Some(line) = build_label_attribute(node) {
@@ -4242,6 +4286,47 @@ fn build_dialog_title_text_line(node: &LayoutNode) -> Option<String> {
 /// `Label`. `HostLink` is intentionally
 /// NOT here because it lowers to a plain `Text` element with rich-
 /// text + onLinkActivated, not a QtQuick.Controls widget.
+/// Walks the whole component tree tallying how many `HostRadio` nodes
+/// share each literal `group: "..."` value (`#13007`). A `slot:`-bound
+/// group can't be bucketed at compile time and is never counted here.
+fn collect_radio_group_counts(node: &LayoutNode, counts: &mut HashMap<String, usize>) {
+    if node.tag == "HostRadio" {
+        if let Some(g) = find_string_prop(node, "group") {
+            *counts.entry(g.to_string()).or_insert(0) += 1;
+        }
+    }
+    for child in &node.children {
+        collect_radio_group_counts(child, counts);
+    }
+}
+
+/// The set of literal `group:` values that get real `ButtonGroup`
+/// wiring anywhere in this component (`#13007`) — i.e. every key with
+/// 2+ members per [`collect_radio_group_counts`]. Package capability
+/// analysis calls this so strict-profile reporting cannot drift from
+/// `emit_host_radio_qml`'s actual lowering.
+pub fn radio_groups_with_native_semantics(root: &LayoutNode) -> HashSet<String> {
+    let mut counts: HashMap<String, usize> = HashMap::new();
+    collect_radio_group_counts(root, &mut counts);
+    counts
+        .into_iter()
+        .filter(|(_, count)| *count >= 2)
+        .map(|(group, _)| group)
+        .collect()
+}
+
+/// A stable, valid QML object id for a literal radio `group:` value —
+/// non-identifier characters become `_`, and a `g_` prefix guarantees a
+/// leading letter even when the raw value starts with a digit.
+fn qml_radio_group_id(value: &str) -> String {
+    let mut id = String::with_capacity(value.len() + 2);
+    id.push_str("g_");
+    for c in value.chars() {
+        id.push(if c.is_ascii_alphanumeric() { c } else { '_' });
+    }
+    id
+}
+
 fn tree_needs_controls_import(node: &LayoutNode) -> bool {
     if node.tag == "HostTable" && host_table_has_native_semantics(node) {
         return true;
@@ -9409,6 +9494,29 @@ mod tests {
         }
     }
 
+    /// Helper: a one-component layout def with N sibling `HostRadio`
+    /// nodes under a `Row` root (#13007 — real usage's shape, e.g.
+    /// `mosaic-pkg-deck-options`'s leech-action radios).
+    fn radios_layout(radios: Vec<Vec<LayoutProp>>) -> LayoutDef {
+        LayoutDef {
+            component_name: "X".to_string(),
+            root: LayoutNode {
+                tag: "Row".to_string(),
+                part_name: None,
+                props: Vec::new(),
+                children: radios
+                    .into_iter()
+                    .map(|props| LayoutNode {
+                        tag: "HostRadio".to_string(),
+                        part_name: None,
+                        props,
+                        children: Vec::new(),
+                    })
+                    .collect(),
+            },
+        }
+    }
+
     /// UI29-2 Qt test 1 — bare `HostCheckbox` emits a `CheckBox { }`
     /// block. No checked/label/disabled lines because none are bound.
     #[test]
@@ -9566,6 +9674,107 @@ mod tests {
             result.output.contains("// group: flavor"),
             "expected `// group: flavor` comment, got:\n{}",
             result.output
+        );
+    }
+
+    /// #13007 — 2 sibling `HostRadio`s sharing a literal `group:` value
+    /// get real `ButtonGroup` wiring: one `ButtonGroup { id: ... }`
+    /// object, and each radio's own block attaches
+    /// `ButtonGroup.group: <id>` to it.
+    #[test]
+    fn host_radio_shared_group_gets_real_button_group_wiring() {
+        let m = component("X", vec![], vec![]);
+        let l = radios_layout(vec![
+            vec![LayoutProp {
+                name: "group".to_string(),
+                value: LayoutPropValue::String("flavor".to_string()),
+            }],
+            vec![LayoutProp {
+                name: "group".to_string(),
+                value: LayoutPropValue::String("flavor".to_string()),
+            }],
+        ]);
+        let out = from_pipeline(&m, &l, &empty_style("X")).unwrap().output;
+        assert!(
+            out.contains("ButtonGroup { id: g_flavor }"),
+            "expected a synthesized ButtonGroup, got:\n{out}"
+        );
+        assert_eq!(
+            out.matches("ButtonGroup.group: g_flavor").count(),
+            2,
+            "expected both radios to attach to the group, got:\n{out}"
+        );
+        // The comment stays too — it documents the authored value even
+        // though it's now backed by real behavior.
+        assert!(out.contains("// group: flavor"));
+    }
+
+    /// #13007 — a lone `HostRadio` (no same-group sibling) keeps the
+    /// pre-#13007 comment-only behavior: nothing to be exclusive with.
+    #[test]
+    fn host_radio_lone_group_member_gets_no_button_group() {
+        let m = component("X", vec![], vec![]);
+        let l = radios_layout(vec![vec![LayoutProp {
+            name: "group".to_string(),
+            value: LayoutPropValue::String("flavor".to_string()),
+        }]]);
+        let out = from_pipeline(&m, &l, &empty_style("X")).unwrap().output;
+        assert!(
+            !out.contains("ButtonGroup"),
+            "expected no ButtonGroup for a lone radio, got:\n{out}"
+        );
+    }
+
+    /// #13007 — two radios with *different* literal `group:` values
+    /// each get their own `ButtonGroup`, not one shared group.
+    #[test]
+    fn host_radio_two_distinct_groups_get_separate_button_groups() {
+        let m = component("X", vec![], vec![]);
+        let l = radios_layout(vec![
+            vec![LayoutProp {
+                name: "group".to_string(),
+                value: LayoutPropValue::String("a".to_string()),
+            }],
+            vec![LayoutProp {
+                name: "group".to_string(),
+                value: LayoutPropValue::String("a".to_string()),
+            }],
+            vec![LayoutProp {
+                name: "group".to_string(),
+                value: LayoutPropValue::String("b".to_string()),
+            }],
+            vec![LayoutProp {
+                name: "group".to_string(),
+                value: LayoutPropValue::String("b".to_string()),
+            }],
+        ]);
+        let out = from_pipeline(&m, &l, &empty_style("X")).unwrap().output;
+        assert!(out.contains("ButtonGroup { id: g_a }"), "got:\n{out}");
+        assert!(out.contains("ButtonGroup { id: g_b }"), "got:\n{out}");
+        assert_eq!(out.matches("ButtonGroup.group: g_a").count(), 2);
+        assert_eq!(out.matches("ButtonGroup.group: g_b").count(), 2);
+    }
+
+    /// #13007 — a `slot:`-bound group can't be bucketed at compile
+    /// time, so it keeps the pre-#13007 comment-only behavior even with
+    /// a sibling present.
+    #[test]
+    fn host_radio_slot_bound_group_never_gets_button_group() {
+        let m = component("X", vec![slot("g", SlotType::Text, true)], vec![]);
+        let l = radios_layout(vec![
+            vec![LayoutProp {
+                name: "group".to_string(),
+                value: LayoutPropValue::SlotRef("g".to_string()),
+            }],
+            vec![LayoutProp {
+                name: "group".to_string(),
+                value: LayoutPropValue::SlotRef("g".to_string()),
+            }],
+        ]);
+        let out = from_pipeline(&m, &l, &empty_style("X")).unwrap().output;
+        assert!(
+            !out.contains("ButtonGroup"),
+            "expected no ButtonGroup for a slot-bound group, got:\n{out}"
         );
     }
 
