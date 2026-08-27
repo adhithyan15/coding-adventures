@@ -39,5 +39,7 @@ Civil-day arithmetic remains backend-neutral across month and daylight-saving
 boundaries; source section/task order is retained during row layout.
 Axis ticks preserve millisecond, second, minute, hour, day, week, month, and year
 interval units, with time fields formatted before Paint lowering.
+Weekly ticks align to the configured weekday, while month and year ticks use
+civil calendar boundaries instead of fixed-duration approximations.
 
 **Git**: Branch lanes (horizontal rows), commits as circles on lanes, merges as bezier arcs.
