@@ -14,6 +14,7 @@
 
   <ItemGroup>
     <ProjectReference Include="../../CodingAdventures.ScytaleCipher.fsproj" />
+    <Compile Include="GeneratedClassicalCipherFixtureTests.fs" />
     <Compile Include="ScytaleCipherTests.fs" />
   </ItemGroup>
 </Project>

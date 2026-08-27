@@ -172,6 +172,14 @@ The corpus is static data with no runtime authority. Its schema, bounded
 limits, and semantic oracle are validated by
 `code/scripts/tests/test_classical_cipher_fixtures.py`.
 
+All established package tests consume the complete Scytale subset through
+dependency-free generated native adapters. Run
+`python code/scripts/generate_scytale_fixture_consumers.py --check` to prove
+the 15 tracked consumers still match the exact bounded fixture bytes and the
+current established-lane roster. The adapters execute public APIs, normalize
+results to the fixture's closed expected-object shapes, and compare all 18
+cases without adding production filesystem or JSON dependencies.
+
 ## Package Matrix
 
 | Language | Package Directory | Module/Namespace |
