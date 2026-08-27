@@ -91,6 +91,8 @@ accessibility, task-tag, callback-argument, prototype-like ID, millisecond,
 multi-reference dependency, and forward cross-section dependency cases.
 Three-digit years under the default date format follow Mermaid's bounded
 non-strict fallback without accepting malformed or oversized compact years.
+Explicit calendar includes and excludes retain their authored values in typed IR
+and resolve through the configured date format during temporal layout.
 
 Each supported family lowers into the shared Diagram IR and can continue
 through its family layout package:
