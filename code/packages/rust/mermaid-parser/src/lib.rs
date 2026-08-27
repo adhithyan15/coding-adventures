@@ -6457,7 +6457,9 @@ fn parse_gantt_task_start(token: &Token, value: &str, date_format: &GanttDateFor
             return Err(token_error(token, "Gantt after requires at least one task id"));
         }
         Ok(TaskStart::After(dependencies))
-    } else if gantt_date_matches_format(value, date_format) {
+    } else if gantt_date_matches_format(value, date_format)
+        || gantt_date_matches_three_digit_year_fallback(value, date_format)
+    {
         Ok(TaskStart::Date(value.to_string()))
     } else {
         Err(token_error(token, "Gantt task start does not match dateFormat"))
@@ -6475,7 +6477,9 @@ fn parse_gantt_task_end(
             return Err(token_error(token, "Gantt until requires at least one task id"));
         }
         Ok((GanttDuration::default(), Some(TaskEnd::Until(dependencies))))
-    } else if gantt_date_matches_format(value, date_format) {
+    } else if gantt_date_matches_format(value, date_format)
+        || gantt_date_matches_three_digit_year_fallback(value, date_format)
+    {
         Ok((GanttDuration::default(), Some(TaskEnd::Date(value.to_string()))))
     } else if let Some(duration) = parse_duration(value).filter(|duration| duration.value >= 0.0) {
         Ok((duration, None))
@@ -6490,6 +6494,34 @@ fn gantt_dependency_ids(value: &str) -> Vec<String> {
         .filter(|id| !id.is_empty())
         .map(str::to_string)
         .collect()
+}
+
+fn gantt_date_matches_three_digit_year_fallback(
+    value: &str,
+    format: &GanttDateFormat,
+) -> bool {
+    if format.parts != GanttDateFormat::default().parts {
+        return false;
+    }
+    let bytes = value.as_bytes();
+    if bytes.len() != 9 || bytes[3] != b'-' || bytes[6] != b'-' {
+        return false;
+    }
+    if !bytes[..3].iter().chain(&bytes[4..6]).chain(&bytes[7..]).all(u8::is_ascii_digit) {
+        return false;
+    }
+    let year = value[..3].parse::<i64>().ok();
+    let month = value[4..6].parse::<i64>().ok();
+    let day = value[7..].parse::<i64>().ok();
+    let (Some(year), Some(month), Some(day)) = (year, month, day) else { return false };
+    let maximum_day = match month {
+        4 | 6 | 9 | 11 => 30,
+        2 if year % 4 == 0 && (year % 100 != 0 || year % 400 == 0) => 29,
+        2 => 28,
+        1 | 3 | 5 | 7 | 8 | 10 | 12 => 31,
+        _ => return false,
+    };
+    (1..=maximum_day).contains(&day)
 }
 
 fn parse_duration(s: &str) -> Option<GanttDuration> {
@@ -7197,6 +7229,16 @@ Rel(customer, web, \"Uses\", \"HTTPS\")";
         assert!(diagram.date_format.parts.contains(&GanttDateFormatPart::YearSigned));
         assert!(parse_gantt("gantt\ndateFormat Y-MM-DD\nAncient :a, -1-03-01, 1d").is_ok());
         assert!(parse_gantt("gantt\ndateFormat Y-MM-DD\nBad :b, +-03-01, 1d").is_err());
+    }
+
+    #[test]
+    fn gantt_accepts_upstream_three_digit_year_fallback() {
+        let diagram = parse_gantt(
+            "gantt\ndateFormat YYYY-MM-DD\nVacation :trip, 202-12-01, 7d",
+        )
+        .unwrap();
+        assert_eq!(diagram.sections[0].tasks[0].start, TaskStart::Date("202-12-01".into()));
+        assert!(parse_gantt("gantt\ndateFormat YYYYMMDD\nBad :b, 202304, 1d").is_err());
     }
 
     #[test]
