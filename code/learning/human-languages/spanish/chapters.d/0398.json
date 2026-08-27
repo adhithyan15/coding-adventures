@@ -1,0 +1,21 @@
+{
+  "chapter": 398,
+  "title": "Five Words for What a Thing Is Worth",
+  "label": "ch:importante-y-facil",
+  "canDo": "I can say importante, interesante, favorito, fácil and difícil, and say what I think of something.",
+  "spineNodes": [
+    "SPINE-DESCRIBE-QUALITIES"
+  ],
+  "payoff": {
+    "lesson": "ES-C398-dificil",
+    "kind": "production",
+    "summary": "Complete ES-C398-dificil: say what you think of five things, and why.",
+    "assesses": [
+      "ES-LEX-IMPORTANTE",
+      "ES-LEX-INTERESANTE",
+      "ES-LEX-FAVORITO",
+      "ES-LEX-FACIL",
+      "ES-LEX-DIFICIL"
+    ]
+  }
+}

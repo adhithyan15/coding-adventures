@@ -1,0 +1,947 @@
+{
+  "version": 1,
+  "language": "spanish",
+  "chapter": 397,
+  "title": "Five Words for Weighing One Thing Against Another",
+  "drivablePrefix": 2,
+  "sourceHash": "fnv1a64:a9797578410b4bba",
+  "lessons": [
+    {
+      "id": "ES-C397-barato",
+      "sequence": 8650,
+      "title": "barato — a price that started out as a shady deal",
+      "headword": "barato",
+      "romanization": "barato",
+      "gloss": "cheap — from the old verb baratar, to trade or haggle; Corominas calls the ultimate origin uncertain, probably pre-Roman and possibly Celtic, and English barter is very likely the same family",
+      "script": "latin",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:0a8fe2cbd8243607",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Say to work, to run, then to repair. (Funcionar; reparar.)"
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know first",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "el precio — what this word is about."
+            },
+            {
+              "kind": "speech",
+              "text": "el dinero — what you hand over."
+            },
+            {
+              "kind": "speech",
+              "text": "comprar — what you are doing when the price matters."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "pronunciation",
+          "title": "Sounds you'll need",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ba-RA-to, three beats with the weight on the middle one. The r is one quick tap, and the b between two vowels is soft — lips close only halfway. see pronunciation reference."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "barato — \"cheap.\""
+            },
+            {
+              "kind": "speech",
+              "text": "Behind it sits an old verb, baratar, \"to trade, to haggle, to do a deal.\" The Academy's dictionary gives that verb four words: de origen incierto — of uncertain origin. Corominas adds what can be added and no more: the verb turns up across Spanish, French and Italian alike, and is probably pre-Roman, and perhaps Celtic. That is where the trail stops, and this lesson stops there too."
+            },
+            {
+              "kind": "speech",
+              "text": "What is not uncertain is the direction the meaning came from. Corominas is explicit that barato in the sense \"low-priced\" was born attached to the idea of a shady bargain — cheap because of the circumstances of the deal, not because of anything measurable about the thing. The price was a comment on the dealing."
+            },
+            {
+              "kind": "speech",
+              "text": "English has a word from the same guess, reached from the same direction: barter. Old French barater meant \"to barter, to cheat, to haggle,\" and the dictionaries that hunt its origin land on the same Celtic hypothesis Corominas lands on. So barato and barter are relatives at the level of the family — not a line anyone has traced end to end, which is why this says family and not ancestor."
+            },
+            {
+              "kind": "speech",
+              "text": "One story you will meet and should not repeat: that barato comes from Greek prattein, \"to do business,\" carried by Greek merchants. Corominas rejects it on the sounds alone, and there were no Greek merchants in medieval Spain to carry it. It is tidy, it is everywhere, and it is not true."
+            },
+            {
+              "kind": "speech",
+              "text": "un hotel barato — a cheap hotel;"
+            },
+            {
+              "kind": "speech",
+              "text": "muy barato — very cheap."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "You can now price a thing low: barato. And you have met a word whose origin the best dictionary in the language declines to give — which is itself worth seeing."
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "barato",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *barato*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "un hotel barato",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *un hotel barato*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "muy barato",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *muy barato*]"
+            }
+          ]
+        },
+        {
+          "index": 6,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What did baratar mean? (To trade, to haggle.) And what does the dictionary say about where it came from? (That it is uncertain — probably pre-Roman, perhaps Celtic.)"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "ES-C397-caro",
+      "sequence": 8660,
+      "title": "caro — the word English keeps saying as \"dear\"",
+      "headword": "caro",
+      "romanization": "caro",
+      "gloss": "expensive — Latin cārus already meant both dear-and-beloved and dear-and-costly, exactly as English dear still does, and charity, cherish and caress all come from it",
+      "script": "latin",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:978afbaed4f755a2",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Say to repair, then cheap. (Reparar; barato.)"
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know first",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "barato — the other end of the same scale."
+            },
+            {
+              "kind": "speech",
+              "text": "la cara — a different word you already own. Hold on to it."
+            },
+            {
+              "kind": "speech",
+              "text": "cero — and this one too."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "pronunciation",
+          "title": "Sounds you'll need",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "CA-ro, two beats with the weight on the first. The c before a is a hard k, and the r is one tap. see pronunciation reference."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "caro — \"expensive.\""
+            },
+            {
+              "kind": "speech",
+              "text": "Latin cārus meant beloved — and it also meant costly. Both, from the start. Nothing had to move."
+            },
+            {
+              "kind": "speech",
+              "text": "English does the same thing today and nobody notices. My dear friend. That coat is a bit dear. One word, both jobs, exactly as in Spanish — and this is a coincidence of habit, not of ancestry: English dear is a Germanic word and is not related to cārus at all. Spanish keeps both jobs too, and caro amigo is still readable, though it now sounds bookish."
+            },
+            {
+              "kind": "speech",
+              "text": "Three ordinary English words are from cārus, all of them arriving through Romance:"
+            },
+            {
+              "kind": "speech",
+              "text": "charity — from cāritās, \"costliness, esteem, affection\";"
+            },
+            {
+              "kind": "speech",
+              "text": "cherish — from Old French chierir;"
+            },
+            {
+              "kind": "speech",
+              "text": "caress — through Italian carezza, whose Spanish sibling is caricia."
+            },
+            {
+              "kind": "speech",
+              "text": "Now the two words that look like this one and are not this one."
+            },
+            {
+              "kind": "speech",
+              "text": "La cara is a face. Cara is also what caro becomes before a feminine noun. So the same four letters do two unrelated jobs, and what tells you which is what comes before it:"
+            },
+            {
+              "kind": "speech",
+              "text": "la cara — the face; a noun with la in front;"
+            },
+            {
+              "kind": "speech",
+              "text": "una casa cara — an expensive house; cara sitting after the thing it describes."
+            },
+            {
+              "kind": "speech",
+              "text": "And cero is not this word either. Cero is the number nought. One vowel apart, and it is the only vowel doing any work:"
+            },
+            {
+              "kind": "speech",
+              "text": "caro — expensive;"
+            },
+            {
+              "kind": "speech",
+              "text": "cero — zero."
+            },
+            {
+              "kind": "speech",
+              "text": "Say the pair aloud twice and the a stops being optional."
+            },
+            {
+              "kind": "speech",
+              "text": "Finally, one trap from the dictionary shelf. Latin has a second caro — caro, carnis, \"flesh\" — which gives Spanish carne and English carnival. Same spelling in an index, different word entirely."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "You can now price a thing high: caro. And you can keep caro, cara and cero apart by what stands in front of them and by one vowel."
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "caro",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *caro*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "una casa cara",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *una casa cara*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "barato, caro",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *barato, caro*]"
+            }
+          ]
+        },
+        {
+          "index": 6,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Which two things did Latin cārus mean at once? (Beloved, and costly.) In la cara, what tells you this is a face and not a price? (La — it is a noun here.)"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "ES-C397-gratis",
+      "sequence": 8670,
+      "title": "gratis — a Latin word that never unpacked",
+      "headword": "gratis",
+      "romanization": "gratis",
+      "gloss": "free of charge — a whole Latin word swallowed unchanged, grātīs contracted from grātiīs, \"for thanks\", which is why it never grows an -o or an -a",
+      "script": "latin",
+      "modality": "sight",
+      "derivedModality": "sight",
+      "modalityReasons": [
+        "sight-cue"
+      ],
+      "sourceHash": "fnv1a64:7fddadce3b8c5fea",
+      "notice": {
+        "modality": "sight",
+        "needs": [
+          "your eyes, because the lesson points at something written down"
+        ],
+        "waitUntilStopped": [],
+        "text": "Before we start: this one needs your eyes, so it is not fully a driving lesson. You will want your eyes, because the lesson points at something written down. You can listen to all of it now and come back to the parts that need looking at once you have stopped."
+      },
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Say cheap, then expensive. (Barato; caro.)"
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know first",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "gracias — the word this one is built out of."
+            },
+            {
+              "kind": "speech",
+              "text": "el precio — what gratis says there isn't one of."
+            },
+            {
+              "kind": "speech",
+              "text": "pagar — what you do not do."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "pronunciation",
+          "title": "Sounds you'll need",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "GRA-tis, two beats with the weight on the first. The g is hard, the r is one tap, and the final s is clear. see pronunciation reference."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "gratis — \"free of charge.\""
+            },
+            {
+              "kind": "speech",
+              "text": "You already own the root. Gracias is grātia, \"favour, thanks.\" And gratis is the same noun in a case form — Latin grātiīs, squeezed down to grātīs — which the Romans used to mean \"for thanks.\""
+            },
+            {
+              "kind": "speech",
+              "text": "That is the whole idea. You are not paying money for it. You are paying in gratitude."
+            },
+            {
+              "kind": "speech",
+              "text": "Look at what that history left behind. Barato and caro bend to fit the noun they sit beside:"
+            },
+            {
+              "kind": "speech",
+              "text": "un hotel barato, una casa cara;"
+            },
+            {
+              "kind": "speech",
+              "text": "and gratis does not:"
+            },
+            {
+              "kind": "speech",
+              "text": "un café gratis, una entrada gratis."
+            },
+            {
+              "kind": "speech",
+              "text": "It arrived in Spanish as a finished Latin word rather than growing up inside the language, so it never learned the endings. The same fossil is sitting in English, which borrowed gratis in the 1400s and left it alone in exactly the same way."
+            },
+            {
+              "kind": "speech",
+              "text": "The rest of the family is large and mostly English:"
+            },
+            {
+              "kind": "speech",
+              "text": "grace, gracious, grateful, gratitude;"
+            },
+            {
+              "kind": "speech",
+              "text": "gratuity — a tip, money given for thanks;"
+            },
+            {
+              "kind": "speech",
+              "text": "gratuitous — which still does both jobs, meaning free of charge and also uncalled-for, because both are \"given for nothing.\""
+            },
+            {
+              "kind": "speech",
+              "text": "(Grammarians file grātiīs as dative-or-ablative, since Latin ran the two together in the plural; it is read as ablative here.)"
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "You can now say a thing costs nothing: gratis. And you can hear it as gracias wearing a Latin ending — which is why it never changes shape."
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "gratis",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *gratis*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "un café gratis",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *un café gratis*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "una entrada gratis",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *una entrada gratis*]"
+            }
+          ]
+        },
+        {
+          "index": 6,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does gratis literally say you are paying with? (Thanks — it is gracias in a Latin case form.) So why is there no gratisa? (It came in as a finished Latin word and never took Spanish endings.)"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "ES-C397-mayor",
+      "sequence": 8680,
+      "title": "mayor — the greater one, and the man at the town hall",
+      "headword": "mayor",
+      "romanization": "mayor",
+      "gloss": "bigger, older — Latin maior, the comparative of magnus, \"great\"; English took the same word twice, as major and as the mayor of a town, though Spanish calls that official something else entirely",
+      "script": "latin",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:1cca8485c5ed3873",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Say expensive, then free of charge. (Caro; gratis.)"
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know first",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "grande — the plain word this one is the step above."
+            },
+            {
+              "kind": "speech",
+              "text": "el hermano, la hermana — who you will use it about."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "pronunciation",
+          "title": "Sounds you'll need",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ma-YOR, two beats with the weight on the second. The y is the same sound Spanish writes with ll, and the final r is one tap. see pronunciation reference."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "mayor — \"bigger,\" \"older.\""
+            },
+            {
+              "kind": "speech",
+              "text": "Latin maior is the comparative of magnus, \"great.\" Not bigger as a separate word — great, with the comparison built in. Greater."
+            },
+            {
+              "kind": "speech",
+              "text": "Spanish runs it two ways, and the exam will want both:"
+            },
+            {
+              "kind": "speech",
+              "text": "mi hermano mayor — my older brother;"
+            },
+            {
+              "kind": "speech",
+              "text": "personas mayores — older people;"
+            },
+            {
+              "kind": "speech",
+              "text": "la plaza mayor — the main square, the greater one."
+            },
+            {
+              "kind": "speech",
+              "text": "English carries the same Latin word twice. Major is the obvious one. The other is mayor — the head of a town, who is, quite literally, the greater man. Beside them sit majority, majesty, and the wider magnus family: magnify, magnificent, maximum."
+            },
+            {
+              "kind": "speech",
+              "text": "And here is the part worth keeping. English put that word to work at the town hall. Spanish did not. The Spanish official is el alcalde — from Arabic al-qāḍī, \"the judge.\" Two languages inherited one Latin word, and only one of them handed it the job."
+            },
+            {
+              "kind": "speech",
+              "text": "One story to leave alone: that the month mayo is maior as well, named for the elders. Dictionaries derive Maius from the goddess Maia, and the elders-and-youngers tale is an old guess repeated ever since. Mayo and mayor are not the same word, whatever the four shared letters suggest."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "You can now say a thing is bigger, or a person older: mayor. And you know one job English gives it that Spanish gives to an Arabic word instead."
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "mayor",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *mayor*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "mi hermano mayor",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *mi hermano mayor*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "personas mayores",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *personas mayores*]"
+            }
+          ]
+        },
+        {
+          "index": 6,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Mayor is the comparative of which Latin word? (Magnus, \"great\" — so it means greater.) What does Spanish call the mayor of a town, and where is that word from? (El alcalde, from Arabic al-qāḍī, \"the judge.\")"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "ES-C397-menor",
+      "sequence": 8690,
+      "title": "menor — and the minister Latin built to face the master",
+      "headword": "menor",
+      "romanization": "menor",
+      "gloss": "smaller, younger — Latin minor, the partner of minus; Latin built minister out of minus to stand opposite magister, so mayor and menor give you master and minister as a matched pair",
+      "script": "latin",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:898c976f3da8ab05",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Say free of charge, then bigger, older. (Gratis; mayor.)"
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know first",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "mayor — the one this answers."
+            },
+            {
+              "kind": "speech",
+              "text": "pequeño — the plain word it steps above."
+            },
+            {
+              "kind": "speech",
+              "text": "menos — you own this already. Keep it close; it is not this word."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "pronunciation",
+          "title": "Sounds you'll need",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "me-NOR, two beats with the weight on the second. The final r is one tap. see pronunciation reference."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "menor — \"smaller,\" \"younger.\""
+            },
+            {
+              "kind": "speech",
+              "text": "Latin minor is the partner of minus, which you already have. Minus is the neuter; minor is the one you use of people and things."
+            },
+            {
+              "kind": "speech",
+              "text": "mi hermana menor — my younger sister;"
+            },
+            {
+              "kind": "speech",
+              "text": "menor de edad — under age, a minor."
+            },
+            {
+              "kind": "speech",
+              "text": "Now hold it against the word you already own. Menos and menor are one letter apart at the end, and that letter is the whole difference:"
+            },
+            {
+              "kind": "speech",
+              "text": "menos — less, the amount. Menos dinero."
+            },
+            {
+              "kind": "speech",
+              "text": "menor — smaller, younger, said of a thing or a person. Mi hermana menor."
+            },
+            {
+              "kind": "speech",
+              "text": "Same root, two jobs. Say them as a pair — menos, menor — and the ending starts doing the work."
+            },
+            {
+              "kind": "speech",
+              "text": "Now the shape of the pair with mayor. Menor serves as the step above pequeño, and mayor as the step above grande — but neither is built from the word it serves. Latin took them from somewhere else entirely, the way English reaches for better instead of gooder."
+            },
+            {
+              "kind": "speech",
+              "text": "And Latin did something deliberate with this root. Minister is minus plus the ending -ter — and it was made that way to stand opposite magister, which is magis (\"more\") plus the same -ter. The lesser one and the greater one, built as a matched pair. English holds both: minister and master."
+            },
+            {
+              "kind": "speech",
+              "text": "The rest of the family is everywhere once you look: minus, minute (both the small kind and the sixty-second kind), diminish, minimum, mince, and menu — a small list."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "You can now say a thing is smaller, or a person younger: menor. You have five words for weighing one thing against another — barato, caro, gratis, mayor, menor — and you can keep menor apart from menos by its last letter."
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "menor",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *menor*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "mi hermana menor",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *mi hermana menor*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "menos, menor",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *menos, menor*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "barato, caro, gratis, mayor, menor",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *barato, caro, gratis, mayor, menor*]"
+            }
+          ]
+        },
+        {
+          "index": 6,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Which of menos and menor would you use for my younger sister? (Menor — mi hermana menor.) And which two English words did Latin build as a deliberate pair from minus and magis? (Minister and master.)"
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "findings": []
+}

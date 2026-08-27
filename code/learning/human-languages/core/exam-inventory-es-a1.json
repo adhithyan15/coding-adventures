@@ -1534,8 +1534,11 @@
       "id": "A1-NG6-03",
       "category": "Nociones evaluativas",
       "label": "attractiveness: guapo, feo, bonito",
-      "probe": null,
-      "note": "The source's A1 exponents are guapo, feo and bonito. The corpus introduces none of them; the physical-description vocabulary it does teach is about build rather than attractiveness."
+      "probe": [
+        "ES-LEX-GUAPO",
+        "ES-LEX-BONITO",
+        "ES-LEX-C380-COUNT-38"
+      ]
     },
     {
       "id": "A1-NG6-04",
@@ -1578,22 +1581,27 @@
       "id": "A1-NG6-08",
       "category": "Nociones evaluativas",
       "label": "interest",
-      "probe": null,
-      "note": "The source's single A1 exponent is interesante, which the corpus never introduces as an atom."
+      "probe": [
+        "ES-LEX-INTERESANTE"
+      ]
     },
     {
       "id": "A1-NG6-09",
       "category": "Nociones evaluativas",
       "label": "capacity and competence with saber",
-      "probe": null,
-      "note": "The source's A1 exponent is saber plus a noun or an infinitive. The corpus never introduces saber as a verb, only the fixed phrase no se."
+      "probe": [
+        "ES-LEX-SABER",
+        "ES-GRAMMAR-SABER-INFINITIVO"
+      ]
     },
     {
       "id": "A1-NG6-10",
       "category": "Nociones evaluativas",
       "label": "ease and difficulty",
-      "probe": null,
-      "note": "The source's A1 exponents are facil and dificil. Neither is introduced anywhere in the corpus."
+      "probe": [
+        "ES-LEX-FACIL",
+        "ES-LEX-DIFICIL"
+      ]
     },
     {
       "id": "A1-NG7-01",

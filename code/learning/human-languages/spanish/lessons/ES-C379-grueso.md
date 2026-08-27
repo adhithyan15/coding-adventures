@@ -1,7 +1,7 @@
 ---
 schema_version: 2
 id: ES-C379-grueso
-spine_node: SPINE-COUNT-ONE-TO-FIVE
+spine_node: SPINE-DESCRIBE-QUALITIES
 sequence: 7910
 chapter: 379
 type: word

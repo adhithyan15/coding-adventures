@@ -651,6 +651,11 @@
       ],
       "relocates": {}
     },
+    "SPINE-DESCRIBE-QUALITIES": {
+      "segments": [],
+      "omits": [],
+      "relocates": {}
+    },
     "SPINE-SAY-WHAT-I-HAVE-AND-CAN-DO": {
       "segments": [
         "FR-PATH-A1-AVOIR"

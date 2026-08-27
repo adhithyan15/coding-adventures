@@ -1,0 +1,21 @@
+{
+  "chapter": 397,
+  "title": "Five Words for Weighing One Thing Against Another",
+  "label": "ch:barato-y-caro",
+  "canDo": "I can say barato, caro, gratis, mayor and menor, and say how one thing compares with another.",
+  "spineNodes": [
+    "SPINE-DESCRIBE-QUALITIES"
+  ],
+  "payoff": {
+    "lesson": "ES-C397-menor",
+    "kind": "production",
+    "summary": "Complete ES-C397-menor: weigh one thing against another, and say why.",
+    "assesses": [
+      "ES-LEX-BARATO",
+      "ES-LEX-CARO",
+      "ES-LEX-GRATIS",
+      "ES-LEX-MAYOR",
+      "ES-LEX-MENOR"
+    ]
+  }
+}

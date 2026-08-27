@@ -4,7 +4,7 @@
   "chapter": 365,
   "title": "How Tall, How Long, How Full",
   "drivablePrefix": 5,
-  "sourceHash": "fnv1a64:b8fbae0bb863a7e0",
+  "sourceHash": "fnv1a64:9d7e61912bd991d4",
   "lessons": [
     {
       "id": "ES-C365-alto",
@@ -19,7 +19,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:ed3e6ad1aba155f5",
+      "sourceHash": "fnv1a64:d4663a2d61dfecf3",
       "notice": null,
       "blocks": [
         {
@@ -191,7 +191,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:7b9927247a7aee70",
+      "sourceHash": "fnv1a64:0bc1ee7bea87a8f8",
       "notice": null,
       "blocks": [
         {
@@ -355,7 +355,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:3f5d54eb228fbaac",
+      "sourceHash": "fnv1a64:12b23a381df42fa4",
       "notice": null,
       "blocks": [
         {
@@ -515,7 +515,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:c39e76b35afbc1d4",
+      "sourceHash": "fnv1a64:9234460622e1206c",
       "notice": null,
       "blocks": [
         {
@@ -679,7 +679,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:4398e8584ad1047a",
+      "sourceHash": "fnv1a64:b862f4c0f871eda2",
       "notice": null,
       "blocks": [
         {

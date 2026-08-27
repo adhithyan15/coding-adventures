@@ -1,7 +1,7 @@
 ---
 schema_version: 2
 id: ES-C371-dulce
-spine_node: SPINE-COUNT-ONE-TO-FIVE
+spine_node: SPINE-DESCRIBE-QUALITIES
 sequence: 7510
 chapter: 371
 type: word

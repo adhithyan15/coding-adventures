@@ -1,7 +1,7 @@
 ---
 schema_version: 2
 id: ES-C365-alto
-spine_node: SPINE-COUNT-ONE-TO-FIVE
+spine_node: SPINE-DESCRIBE-QUALITIES
 sequence: 7170
 chapter: 365
 type: word

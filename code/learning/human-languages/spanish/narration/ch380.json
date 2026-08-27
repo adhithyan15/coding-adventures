@@ -4,7 +4,7 @@
   "chapter": 380,
   "title": "Five Words for What Something Is Like",
   "drivablePrefix": 5,
-  "sourceHash": "fnv1a64:1faed5095ee19c3e",
+  "sourceHash": "fnv1a64:c263dd847126d2b5",
   "lessons": [
     {
       "id": "ES-C380-simpatico",
@@ -19,7 +19,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:170bef7c02a815c9",
+      "sourceHash": "fnv1a64:5c4df703a4b6ec6f",
       "notice": null,
       "blocks": [
         {
@@ -179,7 +179,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:d75b0d4ffa9403ea",
+      "sourceHash": "fnv1a64:ba81e0c3106b66b2",
       "notice": null,
       "blocks": [
         {
@@ -343,7 +343,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:f71b9d508fce972b",
+      "sourceHash": "fnv1a64:de8ebc930de26f31",
       "notice": null,
       "blocks": [
         {
@@ -507,7 +507,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:e03f8db55e7abd4b",
+      "sourceHash": "fnv1a64:2a9ddf70f0dc2c41",
       "notice": null,
       "blocks": [
         {
@@ -679,7 +679,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:edc2110d3c6773c6",
+      "sourceHash": "fnv1a64:769e1eccbe8ecede",
       "notice": null,
       "blocks": [
         {

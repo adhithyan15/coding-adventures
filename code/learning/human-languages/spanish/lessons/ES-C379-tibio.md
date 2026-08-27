@@ -1,7 +1,7 @@
 ---
 schema_version: 2
 id: ES-C379-tibio
-spine_node: SPINE-COUNT-ONE-TO-FIVE
+spine_node: SPINE-DESCRIBE-QUALITIES
 sequence: 7900
 chapter: 379
 type: word

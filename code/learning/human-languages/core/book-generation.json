@@ -5873,6 +5873,21 @@
       "output": "spanish/book/chapters/ch396-aprender-y-cocinar.tex"
     },
     {
+      "language": "spanish",
+      "chapter": 397,
+      "output": "spanish/book/chapters/ch397-barato-y-caro.tex"
+    },
+    {
+      "language": "spanish",
+      "chapter": 398,
+      "output": "spanish/book/chapters/ch398-importante-y-facil.tex"
+    },
+    {
+      "language": "spanish",
+      "chapter": 399,
+      "output": "spanish/book/chapters/ch399-bonito-y-guapo.tex"
+    },
+    {
       "language": "tamil",
       "chapter": 6,
       "output": "tamil/book/chapters/ch06-dative-case.tex",

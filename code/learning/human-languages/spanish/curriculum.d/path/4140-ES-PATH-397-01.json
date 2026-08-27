@@ -1,0 +1,16 @@
+{
+  "id": "ES-PATH-397-01",
+  "spine_node": "SPINE-DESCRIBE-QUALITIES",
+  "lessons": [
+    "ES-C397-barato",
+    "ES-C397-caro",
+    "ES-C397-gratis",
+    "ES-C397-mayor",
+    "ES-C397-menor"
+  ],
+  "before": [],
+  "inline": [
+    "ES-EXT-397-QUALITY"
+  ],
+  "after": []
+}

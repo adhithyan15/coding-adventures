@@ -1,7 +1,7 @@
 ---
 schema_version: 2
 id: ES-C365-lleno
-spine_node: SPINE-COUNT-ONE-TO-FIVE
+spine_node: SPINE-DESCRIBE-QUALITIES
 sequence: 7210
 chapter: 365
 type: word

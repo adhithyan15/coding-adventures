@@ -4,7 +4,7 @@
   "chapter": 371,
   "title": "Small, Fat, Young, Slow, Sweet",
   "drivablePrefix": 5,
-  "sourceHash": "fnv1a64:4590f010f0afe454",
+  "sourceHash": "fnv1a64:753e758554ebb86e",
   "lessons": [
     {
       "id": "ES-C371-pequeno",
@@ -19,7 +19,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:a352837c66eaf1f6",
+      "sourceHash": "fnv1a64:02775322d8b1f83e",
       "notice": null,
       "blocks": [
         {
@@ -179,7 +179,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:9543c3a5d1319f43",
+      "sourceHash": "fnv1a64:cd656dd2aa87f591",
       "notice": null,
       "blocks": [
         {
@@ -339,7 +339,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:6354393a1fec7917",
+      "sourceHash": "fnv1a64:4ef42a0e8df9471d",
       "notice": null,
       "blocks": [
         {
@@ -503,7 +503,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:b8bd5a2c55162e97",
+      "sourceHash": "fnv1a64:56fccccebf19b97d",
       "notice": null,
       "blocks": [
         {
@@ -663,7 +663,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:a59cdafd95cd9e2d",
+      "sourceHash": "fnv1a64:b3309ad273443513",
       "notice": null,
       "blocks": [
         {

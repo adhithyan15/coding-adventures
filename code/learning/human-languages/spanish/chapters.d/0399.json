@@ -1,0 +1,18 @@
+{
+  "chapter": 399,
+  "title": "Two Words for How Something Looks",
+  "label": "ch:bonito-y-guapo",
+  "canDo": "I can say bonito and guapo, and say how something or someone looks.",
+  "spineNodes": [
+    "SPINE-DESCRIBE-QUALITIES"
+  ],
+  "payoff": {
+    "lesson": "ES-C399-guapo",
+    "kind": "production",
+    "summary": "Complete ES-C399-guapo: say how two things look, and say which you prefer.",
+    "assesses": [
+      "ES-LEX-BONITO",
+      "ES-LEX-GUAPO"
+    ]
+  }
+}

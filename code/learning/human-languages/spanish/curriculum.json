@@ -5009,7 +5009,7 @@
     },
     {
       "id": "ES-PATH-365-01",
-      "spine_node": "SPINE-COUNT-ONE-TO-FIVE",
+      "spine_node": "SPINE-DESCRIBE-QUALITIES",
       "lessons": [
         "ES-C365-alto",
         "ES-C365-largo",
@@ -5105,7 +5105,7 @@
     },
     {
       "id": "ES-PATH-371-01",
-      "spine_node": "SPINE-COUNT-ONE-TO-FIVE",
+      "spine_node": "SPINE-DESCRIBE-QUALITIES",
       "lessons": [
         "ES-C371-pequeno",
         "ES-C371-gordo",
@@ -5233,7 +5233,7 @@
     },
     {
       "id": "ES-PATH-379-01",
-      "spine_node": "SPINE-COUNT-ONE-TO-FIVE",
+      "spine_node": "SPINE-DESCRIBE-QUALITIES",
       "lessons": [
         "ES-C379-seco",
         "ES-C379-mojado",
@@ -5249,7 +5249,7 @@
     },
     {
       "id": "ES-PATH-380-01",
-      "spine_node": "SPINE-COUNT-ONE-TO-FIVE",
+      "spine_node": "SPINE-DESCRIBE-QUALITIES",
       "lessons": [
         "ES-C380-simpatico",
         "ES-C380-alegre",
@@ -5504,6 +5504,51 @@
       "before": [],
       "inline": [
         "ES-EXT-396-VERB"
+      ],
+      "after": []
+    },
+    {
+      "id": "ES-PATH-397-01",
+      "spine_node": "SPINE-DESCRIBE-QUALITIES",
+      "lessons": [
+        "ES-C397-barato",
+        "ES-C397-caro",
+        "ES-C397-gratis",
+        "ES-C397-mayor",
+        "ES-C397-menor"
+      ],
+      "before": [],
+      "inline": [
+        "ES-EXT-397-QUALITY"
+      ],
+      "after": []
+    },
+    {
+      "id": "ES-PATH-398-01",
+      "spine_node": "SPINE-DESCRIBE-QUALITIES",
+      "lessons": [
+        "ES-C398-importante",
+        "ES-C398-interesante",
+        "ES-C398-favorito",
+        "ES-C398-facil",
+        "ES-C398-dificil"
+      ],
+      "before": [],
+      "inline": [
+        "ES-EXT-398-QUALITY"
+      ],
+      "after": []
+    },
+    {
+      "id": "ES-PATH-399-01",
+      "spine_node": "SPINE-DESCRIBE-QUALITIES",
+      "lessons": [
+        "ES-C399-bonito",
+        "ES-C399-guapo"
+      ],
+      "before": [],
+      "inline": [
+        "ES-EXT-399-QUALITY"
       ],
       "after": []
     }
@@ -5814,11 +5859,7 @@
         "ES-PATH-344-01",
         "ES-PATH-351-01",
         "ES-PATH-352-01",
-        "ES-PATH-359-01",
-        "ES-PATH-365-01",
-        "ES-PATH-371-01",
-        "ES-PATH-379-01",
-        "ES-PATH-380-01"
+        "ES-PATH-359-01"
       ],
       "omits": [],
       "relocates": {}
@@ -5863,6 +5904,19 @@
         "ES-PATH-392-01",
         "ES-PATH-393-01",
         "ES-PATH-394-01"
+      ],
+      "omits": [],
+      "relocates": {}
+    },
+    "SPINE-DESCRIBE-QUALITIES": {
+      "segments": [
+        "ES-PATH-365-01",
+        "ES-PATH-371-01",
+        "ES-PATH-379-01",
+        "ES-PATH-380-01",
+        "ES-PATH-397-01",
+        "ES-PATH-398-01",
+        "ES-PATH-399-01"
       ],
       "omits": [],
       "relocates": {}
@@ -11039,6 +11093,48 @@
         "ES-C396-preferir",
         "ES-C396-funcionar",
         "ES-C396-reparar"
+      ]
+    },
+    {
+      "id": "ES-EXT-397-QUALITY",
+      "stage": "A1",
+      "kind": "required",
+      "category": "vocabulary",
+      "canDo": "I can say barato, caro, gratis, mayor and menor.",
+      "prerequisites": [],
+      "lessons": [
+        "ES-C397-barato",
+        "ES-C397-caro",
+        "ES-C397-gratis",
+        "ES-C397-mayor",
+        "ES-C397-menor"
+      ]
+    },
+    {
+      "id": "ES-EXT-398-QUALITY",
+      "stage": "A1",
+      "kind": "required",
+      "category": "vocabulary",
+      "canDo": "I can say importante, interesante, favorito, fácil and difícil.",
+      "prerequisites": [],
+      "lessons": [
+        "ES-C398-importante",
+        "ES-C398-interesante",
+        "ES-C398-favorito",
+        "ES-C398-facil",
+        "ES-C398-dificil"
+      ]
+    },
+    {
+      "id": "ES-EXT-399-QUALITY",
+      "stage": "A1",
+      "kind": "required",
+      "category": "vocabulary",
+      "canDo": "I can say bonito and guapo.",
+      "prerequisites": [],
+      "lessons": [
+        "ES-C399-bonito",
+        "ES-C399-guapo"
       ]
     }
   ],

@@ -1,7 +1,7 @@
 ---
 schema_version: 2
 id: ES-C371-pequeno
-spine_node: SPINE-COUNT-ONE-TO-FIVE
+spine_node: SPINE-DESCRIBE-QUALITIES
 sequence: 7470
 chapter: 371
 type: word

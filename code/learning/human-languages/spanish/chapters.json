@@ -7199,7 +7199,7 @@
       "label": "ch:alto-y-largo",
       "canDo": "I can say alto, largo, ancho, corto and lleno, and put a measurement on a thing in words rather than numbers.",
       "spineNodes": [
-        "SPINE-COUNT-ONE-TO-FIVE"
+        "SPINE-DESCRIBE-QUALITIES"
       ],
       "payoff": {
         "lesson": "ES-C365-lleno",
@@ -7325,7 +7325,7 @@
       "label": "ch:pequeno-y-gordo",
       "canDo": "I can say pequeño, gordo, joven, lento and dulce, and put five more judgements on a thing without reaching for a number.",
       "spineNodes": [
-        "SPINE-COUNT-ONE-TO-FIVE"
+        "SPINE-DESCRIBE-QUALITIES"
       ],
       "payoff": {
         "lesson": "ES-C371-dulce",
@@ -7493,7 +7493,7 @@
       "label": "ch:seco-y-mojado",
       "canDo": "I can say seco, mojado, fresco, tibio and grueso, and count five things and say how each one feels.",
       "spineNodes": [
-        "SPINE-COUNT-ONE-TO-FIVE"
+        "SPINE-DESCRIBE-QUALITIES"
       ],
       "payoff": {
         "lesson": "ES-C379-grueso",
@@ -7514,7 +7514,7 @@
       "label": "ch:simpatico-y-alegre",
       "canDo": "I can say simpático, alegre, feo, último and necesario, and count five people or things and say what each is like.",
       "spineNodes": [
-        "SPINE-COUNT-ONE-TO-FIVE"
+        "SPINE-DESCRIBE-QUALITIES"
       ],
       "payoff": {
         "lesson": "ES-C380-necesario",
@@ -7852,6 +7852,66 @@
           "ES-LEX-PREFERIR",
           "ES-LEX-FUNCIONAR",
           "ES-LEX-REPARAR"
+        ]
+      }
+    },
+    {
+      "chapter": 397,
+      "title": "Five Words for Weighing One Thing Against Another",
+      "label": "ch:barato-y-caro",
+      "canDo": "I can say barato, caro, gratis, mayor and menor, and say how one thing compares with another.",
+      "spineNodes": [
+        "SPINE-DESCRIBE-QUALITIES"
+      ],
+      "payoff": {
+        "lesson": "ES-C397-menor",
+        "kind": "production",
+        "summary": "Complete ES-C397-menor: weigh one thing against another, and say why.",
+        "assesses": [
+          "ES-LEX-BARATO",
+          "ES-LEX-CARO",
+          "ES-LEX-GRATIS",
+          "ES-LEX-MAYOR",
+          "ES-LEX-MENOR"
+        ]
+      }
+    },
+    {
+      "chapter": 398,
+      "title": "Five Words for What a Thing Is Worth",
+      "label": "ch:importante-y-facil",
+      "canDo": "I can say importante, interesante, favorito, fácil and difícil, and say what I think of something.",
+      "spineNodes": [
+        "SPINE-DESCRIBE-QUALITIES"
+      ],
+      "payoff": {
+        "lesson": "ES-C398-dificil",
+        "kind": "production",
+        "summary": "Complete ES-C398-dificil: say what you think of five things, and why.",
+        "assesses": [
+          "ES-LEX-IMPORTANTE",
+          "ES-LEX-INTERESANTE",
+          "ES-LEX-FAVORITO",
+          "ES-LEX-FACIL",
+          "ES-LEX-DIFICIL"
+        ]
+      }
+    },
+    {
+      "chapter": 399,
+      "title": "Two Words for How Something Looks",
+      "label": "ch:bonito-y-guapo",
+      "canDo": "I can say bonito and guapo, and say how something or someone looks.",
+      "spineNodes": [
+        "SPINE-DESCRIBE-QUALITIES"
+      ],
+      "payoff": {
+        "lesson": "ES-C399-guapo",
+        "kind": "production",
+        "summary": "Complete ES-C399-guapo: say how two things look, and say which you prefer.",
+        "assesses": [
+          "ES-LEX-BONITO",
+          "ES-LEX-GUAPO"
         ]
       }
     }

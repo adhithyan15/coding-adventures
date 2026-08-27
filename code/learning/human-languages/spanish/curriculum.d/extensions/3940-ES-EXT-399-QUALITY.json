@@ -1,0 +1,12 @@
+{
+  "id": "ES-EXT-399-QUALITY",
+  "stage": "A1",
+  "kind": "required",
+  "category": "vocabulary",
+  "canDo": "I can say bonito and guapo.",
+  "prerequisites": [],
+  "lessons": [
+    "ES-C399-bonito",
+    "ES-C399-guapo"
+  ]
+}

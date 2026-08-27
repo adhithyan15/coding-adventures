@@ -1199,3 +1199,182 @@ fragment counts as ownership; *will a learner conflate this?* takes the **narrow
 whole displayed headword forms, because a fragment was never presented as a word. Conflating
 them produced a false drop on `menor` against `mejor`, which occurs only inside the idiom
 *pasar a mejor vida*.
+---
+
+## 13. Amendment — the qualities rung, and a refusal that was written forward-looking *(added at the second authoring tranche)*
+
+§12.2 decided that an A1 rung for qualities would be built, justified by three unmapped
+inventory points rather than by convenience. This section records what building it cost,
+what it closed, and the thing it found on the way — which is worth more than the rung.
+
+### 13.1 The bundle proof, re-run, and the fourth consecutive exact prediction
+
+Harness as §10.6, byte-identical to the copies both prior slices used, mocks and keys
+untouched. Baseline reproduces §12's published post-tranche-7 state exactly — mock 1
+Grupo 1 **26,33**, mock 2 **20,33**, 52 objective items failed — and the corpus census
+reproduces **304 / 673 / 68** two independent ways.
+
+| granted | m1 G1 | m1 G2 | m2 G1 | m2 G2 | | failed |
+|---|---|---|---|---|---|---|
+| baseline | 26,33 | 22,25 | 20,33 | 15,33 | NO APTO | 52 |
+| the seven qualities alone | 27,33 | 24,25 | 24,33 | 15,33 | NO APTO | 45 |
+| **all 68 authorable** | **31,33** | **34,25** | **32,33** | **34,00** | **APTO** | **6** |
+| all 68 − the seven qualities | 30,33 | 32,25 | **25,33** | 33,00 | NO APTO | 17 |
+| all 68 − the nine confusability flags | 30,33 | 31,25 | **28,33** | 29,00 | NO APTO | 19 |
+
+**Both §12 decisions are independently load-bearing**, and the proof now says so with the
+qualities actually authored rather than merely granted. Dropping them returns mock 2 to
+25,33; dropping the nine flagged candidates returns it to 28,33; the bar is 30,00.
+
+The strongest evidence that the pool is right is arithmetic rather than argument: tranche 7
+authored **35** and this document's remaining pool is **68**, and granting all 68 on top of
+those 35 returns **31,33 / 32,33** — the row §12.1 published for "all 103", to the cent.
+
+### 13.2 The node
+
+| | |
+|---|---|
+| id | `SPINE-DESCRIBE-QUALITIES` |
+| stage | A1 |
+| strand | LEXICON |
+| `canDo` | **I can say what something is like.** |
+| prerequisites | `SPINE-NAME-EVERYDAY-THINGS` |
+| concepts | **empty** |
+
+**It is the first node in the corpus with no canonical concept, and that is the point.**
+A node's `concepts` list is where it makes a claim on all 23 tracks; minting `QUALITY-CHEAP`
+would ask twenty-two tracks to answer for a concept nobody asked them for. This rung is
+justified by the *Spanish* A1 syllabus, so it asks nothing of anyone else, and its lessons
+carry namespaced `ES-QUALITY-*` tags exactly as tranche 7's did. `validateCurriculum` permits
+this; no node had simply needed it before.
+
+The §10.1 test — not "is the `canDo` one clause" but "could a later concept be filed here for
+convenience" — is met: a quality adjective belongs, and a noun, a verb or a speech act does not.
+
+**What is explicitly not done:** §12.2's refused shortcut of filing adjectives under
+`SPINE-COUNT-ONE-TO-FIVE`. See §13.4, which is about discovering that it had already happened.
+
+### 13.3 The price nobody had priced: 575 renames
+
+Shard filenames are **positional** — element *i* is named `(i+1)*10`. Inserting an A1 node into
+the middle of the ladder therefore renumbers every shard after it, in `core/spine.d/` and in all
+23 tracks' `curriculum.d/spine/`. That is **575 renames**, plus one hand-edit for `marwadi`,
+which is unsharded by design.
+
+§11.1 minted three nodes and paid this silently; it is recorded here because the alternative is
+tempting and wrong. Appending the node after the C2 nodes costs nothing structurally and
+`check:shards` would pass — but the shard module's own contract says the spine's keys "follow the
+pre-A1 → C2 ladder in all 23 tracks", so appending buys a permanent lie about the curriculum's
+shape to avoid a one-off mechanical cost. Git renders the whole thing as pure renames.
+
+One trap for whoever does this next: `marwadi/curriculum.json` is a monolith, so a new node has
+to be inserted **at its ladder position**, not appended to the object. Appending it passes
+`check:shards` — which never reads marwadi — and fails `curriculum-shards` with a key-order
+diff forty lines long.
+
+### 13.4 The finding: a refusal written forward-looking, and twenty-two instances already behind it
+
+§12.2 closed with a warning:
+
+> **What is explicitly refused:** tranche 6's option of filing adjectives under
+> `SPINE-COUNT-ONE-TO-FIVE` … Recorded here so that the next tranche does not rediscover it
+> as a shortcut.
+
+**It had already happened, at scale.** When that paragraph was written, the numbers node — *"I
+can understand and produce the cardinal numbers one through five"* — was carrying **twenty-two
+quality adjectives**: `alto`, `largo`, `ancho`, `corto`, `lleno`, `pequeño`, `gordo`, `joven`,
+`lento`, `dulce`, `seco`, `mojado`, `fresco`, `tibio`, `grueso`, `simpático`, `alegre`, `feo`,
+`último`, `necesario`, `entero`, `escaso`. Chapters 365, 371, 379 and 380 are adjectives and
+nothing else.
+
+The refusal was phrased about the future, so nobody looked backwards. **A rule adopted after a
+defect exists protects only the future unless the same change sweeps the past** — and the rule's
+own existence is evidence the defect was attractive enough to commit at least once.
+
+So this slice relocates chapters **365, 371, 379 and 380** onto the new rung. All four are wholly
+adjectival, so each is §11.2's cheapest class — a one-line segment retarget, no lesson moves, no
+splits, no extension splits — and the move is score-neutral because both nodes are A1. It makes
+**both** nodes' `canDo` true: the numbers node stops claiming `alegre` and `necesario`.
+
+Chapters 344, 351 and 352 are **mixed** and are left alone; `entero` and `escaso` sit inside
+`ES-PATH-352-01` beside three quantity nouns, so moving them needs a segment split and therefore
+— per §11.3 — an extension split. That is a different job and is in `BACKLOG.d`.
+`ES-PATH-359-01` (`metro`, `gramo`, `kilo`, `litro`, `peso`) was examined and left on purpose.
+
+**This is the second instance of the shape in this programme.** §11.1 found
+`SPINE-SAY-WHAT-I-WANT` mis-staged at A2 by an unchecked prerequisite — right contents, wrong
+place; this is right place, wrong contents. Both were found while doing something else. A
+one-off audit asking *which nodes hold content their `canDo` does not describe* is in `BACKLOG.d`.
+
+### 13.5 Four inventory points, one of which cost no authoring at all
+
+| point | closed by |
+|---|---|
+| `A1-NG6-03` attractiveness | `guapo`, `bonito` — and `feo`, which the corpus **already had** |
+| `A1-NG6-08` interest | `interesante` |
+| `A1-NG6-10` ease and difficulty | `fácil`, `difícil` |
+| `A1-NG6-09` capacity with *saber* | **nothing — its note had gone stale** |
+
+Unmapped points **48 → 44**; A1 coverage **225 → 229 of 273**, 82% → **84%**.
+
+`A1-NG6-09` is the one to read twice. Its note said *"the corpus never introduces saber as a
+verb, only the fixed phrase no se"* — which stopped being true the moment §10.3 authored `saber`
+for `A1-F2-16`/`A1-F2-17`. The atom `ES-LEX-SABER` had existed since #13154 and nothing pointed
+at it. **A justification that silently expires is a live hazard, not a tidy-up**, because the
+`note` field is exactly what the inventory test trusts as proof that a null was considered.
+
+`feo` deserves its own line: it was to have been authored here, and it is the one word of the
+thirteen that was **already taught** — under `ES-COUNT-UGLY`, on the numbers rung, which is how
+§13.4 was found at all.
+
+### 13.6 The screen missed `feo`, and arithmetic caught it
+
+The screen ran over the **76 exam-derived candidates** and reproduced §12.3's ten confusability
+pairs and all five §12.4 duplicate miss-modes exactly, including `amigo` inside *falsos amigos*.
+It then missed a duplicate, for two reasons worth separating:
+
+- **It was never pointed at the word.** Six exponents were added by this slice to close the
+  inventory points, and the screen was run over the exam-derived pool only. **Anything a tranche
+  will author is a candidate**, including words added to satisfy a coverage target.
+- **Re-running it after authoring cannot help**, because the screen then reports the tranche to
+  itself: every new word comes back `already owned`, owned by the tranche's own files. A duplicate
+  screen must read the corpus **as it stood before the tranche**.
+
+`feo` was caught because the headword count came out **685** where twelve new lessons predicted
+686. A corpus-wide duplicate-headword invariant — one line, case-folded, no set to be pointed at
+— is now in the pre-commit sweep, and it is worth more than the bespoke screen it backstops.
+
+One new confusability flag also appeared that no earlier screen could have seen:
+**`llevar`/`llegar`**, because tranche 7 authored `llegar`. **Authoring manufactures
+confusability**, so the pair check has to re-run against the corpus as it now stands rather than
+against the candidate list as it was drawn.
+
+### 13.7 The counts
+
+| | before | after |
+|---|---|---|
+| headwords ≤ **pre-A1** | 304 | **304** |
+| headwords ≤ **A1** | 673 | **685** |
+| verbs ≤ **A1** | 68 | **68** |
+| lessons on the qualities rung | — | **32** (20 relocated, 12 new) |
+| unmapped inventory points | 48 | **44** |
+
+The pre-A1 floor is untouched, which it must be; no verb was authored, so the verb count does not
+move; and the twelve new headwords are twelve, not thirteen, because of `feo`.
+
+### 13.8 The re-sat result
+
+| | Grupo 1 | Grupo 2 | |
+|---|---|---|---|
+| mock 1, before → after | 26,33 → **27,33** | 22,25 → **24,25** | NO APTO |
+| mock 2, before → after | 20,33 → **24,33** | 15,33 → 15,33 | NO APTO |
+
+Objective items failed: 52 → **45**.
+
+`NO APTO`, and exactly the figures §13.1's own table projected for the qualities alone — 27,33
+and 24,33, to the cent, the fourth consecutive slice where the bundle proof predicted the outcome
+before the prose was written. Mock 2's Grupo 1 moves **+4,00**, the largest single-slice movement
+on that paper in the series, which is what §12.2 meant by *"no quantity of noun authoring passes
+mock 2."*
+
+Tranches B and C — the remaining 56 lexemes — are what close the rest.

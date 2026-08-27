@@ -4,7 +4,7 @@
   "label": "ch:pequeno-y-gordo",
   "canDo": "I can say pequeño, gordo, joven, lento and dulce, and put five more judgements on a thing without reaching for a number.",
   "spineNodes": [
-    "SPINE-COUNT-ONE-TO-FIVE"
+    "SPINE-DESCRIBE-QUALITIES"
   ],
   "payoff": {
     "lesson": "ES-C371-dulce",

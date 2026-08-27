@@ -1,0 +1,13 @@
+{
+  "id": "ES-PATH-399-01",
+  "spine_node": "SPINE-DESCRIBE-QUALITIES",
+  "lessons": [
+    "ES-C399-bonito",
+    "ES-C399-guapo"
+  ],
+  "before": [],
+  "inline": [
+    "ES-EXT-399-QUALITY"
+  ],
+  "after": []
+}

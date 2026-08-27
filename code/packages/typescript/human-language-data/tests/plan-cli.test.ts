@@ -115,7 +115,11 @@ describe("the plan CLI", () => {
     // and `A1-F2-17`, the two PCIC ability points, onto it. The backlog falls
     // because two points were CLOSED, not because an inventory shrank — the
     // Spanish denominator is still 273.
-    expect(out).toMatch(/194 uncovered point\(s\) across 4 written/);
+    // 194 -> 190. HL23 §13 maps four `Nociones evaluativas` points: A1-NG6-03, -08
+    // and -10 are closed by the qualities rung's own lessons, and -09 needed no
+    // authoring at all — its note claimed the corpus never introduces `saber`, which
+    // stopped being true when chapter 389 authored it two slices earlier.
+    expect(out).toMatch(/190 uncovered point\(s\) across 4 written/);
     expect(out).toMatch(/0 complete and 4 partial of 138/);
     expect(out).toMatch(/the other 20 track\(s\)/);
   }, 120_000);
