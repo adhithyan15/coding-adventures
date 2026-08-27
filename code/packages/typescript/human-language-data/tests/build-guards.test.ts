@@ -1,4 +1,13 @@
-import { chmodSync, cpSync, existsSync, mkdirSync, mkdtempSync, rmSync, writeFileSync } from "node:fs";
+import {
+  chmodSync,
+  cpSync,
+  existsSync,
+  mkdirSync,
+  mkdtempSync,
+  readFileSync,
+  rmSync,
+  writeFileSync,
+} from "node:fs";
 import { tmpdir } from "node:os";
 import { delimiter, dirname, join } from "node:path";
 import { fileURLToPath } from "node:url";
@@ -77,6 +86,15 @@ function runBuild(
 }
 
 describe("human-language-data BUILD guards", () => {
+  it("keeps every executable BUILD command on one physical line", () => {
+    const commands = readFileSync(realBuild, "utf8")
+      .split(/\r?\n/u)
+      .map((line) => line.trim())
+      .filter((line) => line !== "" && !line.startsWith("#"));
+
+    expect(commands.some((line) => line.endsWith("\\"))).toBe(false);
+  });
+
   it("stops immediately when a prerequisite install fails", () => {
     const test = fixture();
     const result = runBuild(test, { FAKE_NPM_STATUS: "17" });
