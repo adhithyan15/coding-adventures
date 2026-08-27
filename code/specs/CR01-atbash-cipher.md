@@ -101,6 +101,15 @@ property, empty input, and exact scalar-sequence preservation for punctuation,
 control characters, and non-ASCII Unicode scalar values. Implementations must
 consume the `atbash-transform` cases without normalizing the input.
 
+Every established implementation lane must execute the complete six-case
+Atbash roster in its native package test suite. Generated consumers must pin
+the fixture SHA-256 digest and exact ordered case IDs, compare each complete
+expected result, and fail the repository drift gate when the fixture, lane
+roster, generated source, or package-test registration changes independently.
+The generator may read and validate the corpus at development and CI time, but
+the emitted native tests must embed bounded data so production packages remain
+free of filesystem and JSON-parser authority.
+
 The corpus is static data with no runtime authority. Its schema, bounded
 limits, and semantic oracle are validated by
 `code/scripts/tests/test_classical_cipher_fixtures.py`.

@@ -28,3 +28,9 @@ dart format --output=none --set-exit-if-changed lib test
 dart analyze --fatal-infos
 dart run coverage:test_with_coverage --branch-coverage --function-coverage --fail-under=90
 ```
+## Language-neutral conformance
+
+The test suite executes all six normative `atbash-transform` objects from the
+`classical-ciphers-v1` fixture. Generated dependency-free test source pins the
+corpus digest and exact case roster; production code does not read the fixture
+or gain filesystem or JSON-parser authority.

@@ -9415,6 +9415,83 @@ resource-limit, portability, and applicability review. The resulting complete
 acyclic graph has 539 owners and 795 dependency edges: 161 merged, 377 pending,
 and exactly one in-progress owner, with no active parity PR.
 
+## Post-#13224 Refresh and Atbash Fixture-Consumer Selection
+
+Final state-recording head `b7e1dcd82e980fd5e441eb487ce3f97e6060d015`
+completed all 41 reported checks: 39 succeeded and two were expected skips,
+with no failure or pending check. GitHub reported `MERGEABLE/CLEAN`; the loop
+enabled squash auto-merge, and GitHub merged PR #13224 as
+`0302e4e8f35a6e79d7bd385ae91fde710176a53c` at
+2026-08-27T16:18:19Z without a manual merge command.
+
+The collision-checked schema-3 inventory on exact merged `origin/main` is
+topology-identical to the pre-publication report: 15 established lanes, 1,375
+implementation identities, 4,585 package slots, and 1,414 all-reported
+identities. The four bands remain 175/266, 123/934, 167/2,100, and 910/12,740;
+Rust has 722 singletons, OCaml remains emerging at zero packages, and canonical
+collisions and unknown buckets remain zero. No package-directory addition,
+removal, lane move, or normalized-identity change creates a new inventory-
+driven owner.
+
+The late-main review does make the roadmap's broad TypeScript-led Forme family
+actionable as a narrower pending owner,
+`forme-portable-core-family-classification`. It must separate deterministic
+graph, routing, content-model, and rendering kernels from browser, Vite,
+filesystem, and UI hosts before any port. PR #13244 subsequently merged as
+`f7d0b913d3175096197b1d325863012dff90741b`, clearing the temporary path block
+without changing package topology. Live PR #13251 now owns overlapping
+`forme-collect-chronological`, `forme-render-static`, and Forme-roadmap paths,
+so that owner is again registered but collision-blocked. The Vigenere
+BUILD-front owner now explicitly depends on the merged neutral-consumer
+tranche: its five false-green or incomplete front doors remain a bounded
+operational sibling.
+
+The dependency/leverage pass selects
+`atbash-language-neutral-fixture-established-lane-consumers` on branch
+`codex/atbash-neutral-fixture-consumers`. Its sole neutral-contract dependency
+is merged; six complete CR01 objects exist; all 15 established Atbash packages
+exist; and none executes the full corpus. Reusing the strict bounded,
+dependency-free generated-consumer and digest/ID drift-gate pattern proven by
+Scytale and Vigenere closes executable all-lane evidence without adding
+production filesystem, JSON, process, environment, or network authority. A
+live open-PR scan found zero exact overlap with Atbash packages, CR01, the
+classical-cipher fixture, generator and CI surfaces, state, roadmap, or the root
+changelog.
+
+Before publication the branch rebased conflict-free twice, finally onto exact
+`origin/main` `a45a88e98a50fb363eb68d441926e59a523a9106`. Intervening
+curriculum, ALGOL, Forme, Venture, HTML-parser, Mermaid, and Language Ladder
+changes have no exact implementation overlap. The refreshed collision-checked
+schema-3 inventory records 1,376 implementation identities and 4,586 slots;
+the bands are 175/266, 123/934, 167/2,100, and 911/12,754, with 723 Rust
+singletons, zero OCaml packages, zero collisions, and zero unknown buckets.
+
+Merged PR #13209 added the Rust-only `browser-navigation` identity. New pending
+owner `browser-navigation-singleton-classification` records its evidently
+portable, host-neutral in-memory history and canonical visited-link contract,
+its `url-parser` dependency order, and the need for neutral fixtures before an
+applicable-lane rollout. Browser fetch, storage, rendering, windows, and native
+paint remain outside that owner.
+
+PR #13252's first hosted-Windows diff build then exposed an operational gap:
+the workflow intentionally does not install Erlang/Elixir on newer Windows
+runner images, but Elixir Atbash lacked a `BUILD_windows` override and invoked
+the fallback Mix command. The focused repair records the same truthful Windows
+platform skip used by Scytale and Vigenere while retaining real native Mix
+evidence on Linux and supported local hosts. New pending owner
+`elixir-windows-build-front-toolchain-classification` audits the wider build
+front, pins supported-platform semantics, and requires either a validated
+Windows toolchain or consistent narrow fail-closed exceptions.
+
+The strategic OCaml process-free substrate still has every declared dependency
+merged but remains collision-unsafe while open PR #12149 owns the required Go
+validator and entry-point paths. Native Dart and JVM build tools remain blocked
+behind the pending execution-semantics and trusted-platform isolation chain.
+After reconciliation and selection, the complete acyclic graph has 542 owners
+and 797 dependency edges: 162 merged, 379 pending, and exactly one pr-open
+owner, with active parity PR #13252. The fresh worktree and branch start from
+exact `origin/main` `0302e4e8f35a6e79d7bd385ae91fde710176a53c`.
+
 ## Autonomous Loop Protocol
 
 Only one parity PR should be active at a time.

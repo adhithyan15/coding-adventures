@@ -98,6 +98,11 @@ The implementation converts the string to a charlist (list of integer codepoints
 mix test --cover
 ```
 
+The native suite runs on supported Erlang/Elixir hosts. Hosted Windows CI does
+not install that toolchain, so `BUILD_windows` records a truthful platform skip
+instead of invoking a missing `mix`; Linux and direct local validation remain
+the executable package evidence.
+
 The test suite covers:
 - Known encryption pairs (HELLO -> SVOOL, etc.)
 - Case preservation for upper and lowercase
@@ -112,3 +117,10 @@ The test suite covers:
 ## License
 
 MIT
+
+## Language-neutral conformance
+
+The test suite executes all six normative `atbash-transform` objects from the
+`classical-ciphers-v1` fixture. Generated dependency-free test source pins the
+corpus digest and exact case roster; production code does not read the fixture
+or gain filesystem or JSON-parser authority.
