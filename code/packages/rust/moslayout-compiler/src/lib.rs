@@ -194,6 +194,16 @@ const PRIMITIVES: &[&str] = &[
     // `code/specs/UI35-host-drag-drop.md`.
     "HostDraggable",
     "HostDropTarget",
+    // UI39 — the kernel drawing primitive. Before this, nothing in the
+    // kernel could draw an actual shape: `Icon` is a catalog lookup
+    // (FontIcon/SF Symbols/Material Icons/a CSS icon-font class), never
+    // real geometry. `Path` fills that gap with four parametric shape
+    // kinds (`circle`/`line`/`curve`/`arc`, selected by a `kind:` prop) —
+    // deliberately not an arbitrary SVG path-data string or a structured
+    // path-command list; see UI39 §3.1 for why. It reuses the existing
+    // `background`/`border-color`/`border-width` style props for
+    // fill/stroke rather than adding new ones (UI39 §3.2).
+    "Path",
 ];
 
 #[allow(dead_code)] // retained as API surface / scaffolding
@@ -2903,6 +2913,58 @@ layout Notifications {
         let output = compile(source, None).expect("HostSwitch layout must compile");
         assert_eq!(output.def.root.tag, "HostSwitch");
         assert_eq!(output.def.root.props.len(), 4);
+    }
+
+    #[test]
+    fn path_registered_as_a_kernel_primitive() {
+        assert!(
+            PRIMITIVES.contains(&"Path"),
+            "UI39 registered Path as the kernel drawing primitive"
+        );
+    }
+
+    #[test]
+    fn path_circle_compiles_as_a_kernel_primitive() {
+        let source = r#"
+layout MoonIcon {
+  Path [ moon-disc ] (
+    kind: circle,
+    cx: 17,
+    cy: 17,
+    r: 17
+  )
+}
+"#;
+        let output = compile(source, None).expect("Path circle layout must compile");
+        assert_eq!(output.def.root.tag, "Path");
+        assert_eq!(output.def.root.props.len(), 4);
+    }
+
+    #[test]
+    fn path_curve_compiles_with_slot_bound_endpoints() {
+        // UI39 §3.1 — coordinate props accept the same Number | SlotRef |
+        // Expr three-way binding every other numeric prop already has, so a
+        // connector between two data-dependent points (a Gantt dependency
+        // arrow, say) needs no new binding mechanism.
+        let interface = mosmodel_compiler::compile(
+            "component Connector { slot end-x : number ; slot end-y : number ; }",
+        )
+        .expect("compile interface");
+        let source = r#"
+layout Connector {
+  Path [ dependency-arrow ] (
+    kind: curve,
+    x1: 0,
+    y1: 0,
+    cx: 10,
+    cy: 0,
+    x2: slot: end-x,
+    y2: slot: end-y
+  )
+}
+"#;
+        compile(source, Some(&interface.descriptor_json))
+            .expect("Path curve must accept slot-bound coordinate props");
     }
 
     #[test]

@@ -942,6 +942,10 @@ struct PartStyleEntry {
     /// lowering (see `mosaic-emit-xaml.md` §3.1) reads them here instead,
     /// straight off the raw mosstyle props.
     flex: FlexHints,
+    /// A non-`inset` `box-shadow` was authored (issue #12028 item 1) —
+    /// like `flex`, has no 1:1 XAML setter and is read straight off the
+    /// raw mosstyle props rather than surviving into `base_fragment`.
+    wants_theme_shadow: bool,
 }
 
 /// Layout hints a `Row`/`Column`'s `<Grid>` lowering needs but that have no
@@ -1067,6 +1071,26 @@ fn extract_flex_hints(props: &[StyleProp]) -> FlexHints {
             "width" if value == "100%" => hints.width_full = true,
             "height" if value == "100%" => hints.height_full = true,
             "align-items" if value == "center" => hints.align_items = Some(value.to_string()),
+            // `align` (not `align-items`) is not a real mosstyle property
+            // — per `UI15-mosstyle.md` §1/§11, alignment belongs in
+            // `.mll`, and mosstyle's grammar has no property whitelist to
+            // reject it (a separate, filed gap: issue TBD). It reached
+            // real `.msl` files anyway (TaskApp, VentureChrome, Calendar,
+            // ProjectNav — 30+ occurrences), always as `center-vertical`
+            // on a `Row` (one `center` on a `Column`), always meaning
+            // "center the cross axis" — exactly `align-items: center`'s
+            // existing meaning. Recognising it here (rather than
+            // rejecting it, which would just re-silently-drop it) fixes
+            // the real, currently-broken rendering with the same
+            // reasoning `align-items: center` already applies: this
+            // conflates "vertical" with "cross-axis", which only holds
+            // because every current author of `center-vertical` puts it
+            // on a Row — a hypothetical future `center-vertical` on a
+            // Column is out of scope, same "don't guess" policy as the
+            // rest of this table.
+            "align" if value == "center-vertical" || value == "center" => {
+                hints.align_items = Some("center".to_string());
+            }
             "justify-content" if value == "space-between" => {
                 hints.justify_content = Some(value.to_string());
             }
@@ -1074,6 +1098,54 @@ fn extract_flex_hints(props: &[StyleProp]) -> FlexHints {
         }
     }
     hints
+}
+
+/// A fixed Z-depth (effective pixels) for every `ThemeShadow` this
+/// emitter generates — see [`part_wants_theme_shadow`]'s doc comment
+/// for why this is a single constant rather than derived from the
+/// authored value. `4` matches Microsoft's own "Cards: 4–8px" elevation
+/// guidance (learn.microsoft.com/windows/apps/develop/ui/shadows).
+const THEME_SHADOW_TRANSLATION_Z: &str = "4";
+
+/// Whether a part's raw mosstyle props author a non-`inset` `box-shadow`
+/// (issue #12028 item 1) — the signal that this element wants elevation.
+///
+/// WinUI's `ThemeShadow` is a fixed, system-composited shadow with no
+/// CSS-shaped blur/spread/color/opacity controls — Microsoft's own
+/// guidance is a Z-*depth* value, not shadow parameters. So unlike
+/// every other property this emitter translates, this doesn't attempt
+/// to reproduce the authored numbers (TaskApp's shadows only ever vary
+/// by opacity/color between light/dark themes and one "stronger" tier —
+/// none of which `ThemeShadow` can express anyway): it recognizes "this
+/// element should look raised" and applies WinUI's own consistent
+/// elevation treatment at one fixed depth.
+///
+/// A value containing `inset` (e.g. `"5px -5px 0 0 #f1ebe1 inset"`) is
+/// a fundamentally different technique — a shape cutout used to fake a
+/// crescent-moon icon or a status dot, not elevation (issue #12028 item
+/// 3, a kernel drawing primitive) — and is deliberately excluded here,
+/// staying a genuine drop.
+fn part_wants_theme_shadow(props: &[mosstyle_compiler::StyleProp]) -> bool {
+    props
+        .iter()
+        .any(|p| p.name == "box-shadow" && !p.value.to_ascii_lowercase().contains("inset"))
+}
+
+/// The `Translation="0,0,{z}"` attribute plus the `<{tag}.Shadow>`
+/// child-element block that gives `tag` a real `ThemeShadow`, or a pair
+/// of empty strings when `wants_shadow` is false. `tag` must match
+/// whatever element name the caller already opened (`Border`, `Grid`,
+/// `StackPanel`, …) — `Shadow` is a property every `UIElement` has.
+fn theme_shadow_attr_and_child(wants_shadow: bool, tag: &str, indent: usize) -> (String, String) {
+    if !wants_shadow {
+        return (String::new(), String::new());
+    }
+    let pad = " ".repeat(indent);
+    let attr = format!(" Translation=\"0,0,{THEME_SHADOW_TRANSLATION_Z}\"");
+    let child = format!(
+        "{pad}<{tag}.Shadow>\n{pad}    <ThemeShadow/>\n{pad}</{tag}.Shadow>\n"
+    );
+    (attr, child)
 }
 
 type PartStyleMap = std::collections::HashMap<String, PartStyleEntry>;
@@ -1110,6 +1182,7 @@ fn build_part_style_map(style: &StyleDef) -> PartStyleMap {
     for part in &style.parts {
         let base_fragment = build_style_fragment(&part.base);
         let flex = extract_flex_hints(&part.base);
+        let wants_theme_shadow = part_wants_theme_shadow(&part.base);
         let states = part
             .states
             .iter()
@@ -1132,6 +1205,7 @@ fn build_part_style_map(style: &StyleDef) -> PartStyleMap {
             || !part.transitions.is_empty()
             || !part.states.is_empty()
             || has_flex_hints
+            || wants_theme_shadow
         {
             out.insert(
                 part.name.clone(),
@@ -1140,6 +1214,7 @@ fn build_part_style_map(style: &StyleDef) -> PartStyleMap {
                     transitions: part.transitions.clone(),
                     states,
                     flex,
+                    wants_theme_shadow,
                 },
             );
         }
@@ -1743,7 +1818,16 @@ pub fn dropped_style_properties(style: &mosstyle_compiler::StyleDef) -> Vec<Drop
             let consumed_via_flex_hints = match drop.name.as_str() {
                 "flex-grow" => true,
                 "align-items" => drop.value.trim() == "center",
+                "align" => {
+                    let v = drop.value.trim();
+                    v == "center-vertical" || v == "center"
+                }
                 "justify-content" => drop.value.trim() == "space-between",
+                // #12028 item 1: a non-inset box-shadow is consumed via
+                // the ThemeShadow side channel (`part_wants_theme_shadow`);
+                // an `inset` one is a drawing-primitive hack (item 3) and
+                // stays a genuine drop.
+                "box-shadow" => !drop.value.to_ascii_lowercase().contains("inset"),
                 _ => false,
             };
             if consumed_via_flex_hints {
@@ -2214,8 +2298,17 @@ fn css_property_to_xaml_setter(name: &str) -> Option<String> {
         //                     property with a different value shape;
         //                     not wired yet, so drop rather than emit
         //                     an invalid literal.
-        //   box-shadow      â€” WinUI shadows use `<ThemeShadow>` /
-        //                     translation Z, not a CSS-shaped property.
+        //   box-shadow      — not a 1:1 XAML setter either way: a
+        //                     non-inset value IS handled, but as a
+        //                     `Translation`/`<Element.Shadow>` side
+        //                     channel (`part_wants_theme_shadow`,
+        //                     issue #12028 item 1), not through this
+        //                     table — WinUI's ThemeShadow takes no
+        //                     CSS-shaped blur/spread/color parameters,
+        //                     so there is no `value` to translate here.
+        //                     An `inset` value (the moon/status-dot
+        //                     drawing hack) is genuinely unsupported
+        //                     and stays dropped.
         //   align-items     — no 1:1 XAML setter (it becomes per-child
         //                     Horizontal/VerticalAlignment, not one
         //                     attribute on the container). `emit_flex_grid`
@@ -2258,10 +2351,13 @@ fn unsupported_property_reason(name: &str) -> &'static str {
         "text-decoration" => {
             "TextBlock's TextDecorations property has a different value shape; not wired yet"
         }
-        "box-shadow" => "WinUI shadows use <ThemeShadow> / translation Z, not a CSS-shaped property",
+        "box-shadow" => "an inset box-shadow is a shape-cutout drawing hack (issue #12028 item 3), not elevation — WinUI's <ThemeShadow>/Translation treatment (item 1) only applies to a non-inset value",
         "flex-wrap" => "WinUI 3 has no built-in WrapPanel",
         "align-items" => {
             "this value isn't one FlexHints recognises (only \"center\" is); no per-child alignment was applied"
+        }
+        "align" => {
+            "this value isn't one FlexHints recognises (only \"center-vertical\"/\"center\" are); no per-child alignment was applied"
         }
         "justify-content" => {
             "this value isn't one FlexHints recognises (only \"space-between\" is); no distribution was applied"
@@ -2643,6 +2739,12 @@ fn emit_xaml_node(
         "Spacer" => emit_spacer(node, indent, part_styles),
         "Divider" => emit_divider(node, indent, part_styles),
         "Icon" => emit_icon(node, indent, part_styles, ctx),
+        // UI39: the kernel drawing primitive. `circle`/`line`/`curve` land
+        // here; `arc` is a stretch goal not yet implemented (falls through
+        // to the "not yet supported" error inside emit_path itself, not the
+        // generic UnsupportedPrimitive fallback below, so the message names
+        // the kind specifically).
+        "Path" => emit_path(node, indent, part_styles),
 
         // PR-2: For lowering.
         "For" => emit_for(node, indent, part_styles, ctx),
@@ -3379,9 +3481,19 @@ fn emit_container(
     // + Badge demo (#4548).
     let (container_attrs, text_setters) =
         partition_box_style(node.part_name.as_deref(), part_styles);
+    // #12028 item 1: a non-inset box-shadow (any value) means this
+    // element wants elevation — see `part_wants_theme_shadow`.
+    let wants_shadow = node
+        .part_name
+        .as_deref()
+        .and_then(|p| part_styles.get(p))
+        .is_some_and(|entry| entry.wants_theme_shadow);
 
     if element != "Border" && (!container_attrs.is_empty() || !text_setters.is_empty()) {
-        let mut out = format!("{pad}<Border{container_attrs}>\n");
+        let (shadow_attr, shadow_child) =
+            theme_shadow_attr_and_child(wants_shadow, "Border", indent + 4);
+        let mut out = format!("{pad}<Border{container_attrs}{shadow_attr}>\n");
+        out.push_str(&shadow_child);
         emit_text_style_resources(&mut out, "Border", indent + 4, &text_setters);
         writeln!(out, "{inner_pad}<{element}>").unwrap();
         out.push_str(&emit_xaml_children(
@@ -3395,7 +3507,9 @@ fn emit_container(
         return Ok(out);
     }
 
-    let mut out = format!("{pad}<{element}{container_attrs}>\n");
+    let (shadow_attr, shadow_child) = theme_shadow_attr_and_child(wants_shadow, element, indent + 4);
+    let mut out = format!("{pad}<{element}{container_attrs}{shadow_attr}>\n");
+    out.push_str(&shadow_child);
 
     emit_text_style_resources(&mut out, element, indent + 4, &text_setters);
 
@@ -3754,6 +3868,149 @@ fn semantic_glyph_xaml_element(name: &str) -> Option<&'static str> {
     match name {
         "spinner" => Some("ProgressRing IsActive=\"True\""),
         _ => None,
+    }
+}
+
+/// `Path`'s `.msl` paint properties — `Fill`/`Stroke`/`StrokeThickness`,
+/// remapped from the same `background`/`border-color`/`border-width` every
+/// other primitive already authors (UI39 §3.2: deliberately zero new style
+/// properties).
+///
+/// `part_style_attr` cannot be reused directly here: it splices
+/// `base_fragment` verbatim, and `css_property_to_xaml_setter` maps those
+/// three CSS properties to `Background`/`BorderBrush`/`BorderThickness` —
+/// real dependency properties on `Border`/`Panel`/`Control`, but `Ellipse`/
+/// `Line`/`Path` are `Shape`-derived and have none of the three; XamlCompiler
+/// would reject the attribute outright. This mirrors
+/// `content_control_style_attr`'s selective-remap pattern (that one renames
+/// a single setter, `TextAlignment` → `HorizontalContentAlignment`; this one
+/// renames three) rather than `part_style_attr`'s splice-everything-through.
+///
+/// Anything else present in the fragment (an authored `width`/`height`, say —
+/// unusual on a `Path` part, since its size comes from geometry props in the
+/// `.mll`, not style, but nothing stops an author from adding one) is
+/// intentionally dropped here rather than spliced through unremapped, since
+/// splicing an unrelated setter onto a shape element risks a duplicate
+/// attribute with the geometry-computed `Margin`/`Width`/`Height` `emit_path`
+/// itself emits — silently ignored is the deliberate tradeoff for this one
+/// primitive's unusual style surface, not the general policy.
+fn path_paint_attr(node: &LayoutNode, part_styles: &PartStyleMap) -> String {
+    let Some(fragment) = node
+        .part_name
+        .as_deref()
+        .and_then(|part| part_styles.get(part))
+        .map(|entry| entry.base_fragment.as_str())
+    else {
+        return String::new();
+    };
+    parse_style_fragment(fragment)
+        .into_iter()
+        .filter_map(|(setter, value)| {
+            let remapped = match setter.as_str() {
+                "Background" => "Fill",
+                "BorderBrush" => "Stroke",
+                "BorderThickness" => "StrokeThickness",
+                _ => return None,
+            };
+            Some(format!(" {remapped}=\"{value}\""))
+        })
+        .collect()
+}
+
+/// Read a required `Number`-valued prop, e.g. `cx`/`cy`/`r`. `Path`'s
+/// geometry props don't yet support the `SlotRef`/`Expr` bindings every
+/// other numeric prop in the kernel has (UI39 §3.1 documents that as a
+/// kernel-level capability; wiring it through to real `x:Bind` XAML is
+/// XAML's own not-yet-landed UI36 work, tracked separately) — a bound
+/// coordinate is therefore a clear compile error here, not a silent 0.
+fn required_path_number(node: &LayoutNode, prop_name: &str) -> Result<f64, PipelineEmitError> {
+    match find_prop_value(node, prop_name) {
+        Some(LayoutPropValue::Number(n)) => Ok(*n),
+        Some(LayoutPropValue::SlotRef(_)) | Some(LayoutPropValue::Expr(_)) => {
+            Err(PipelineEmitError::UnsupportedPrimitive(format!(
+                "Path prop '{prop_name}' is bound to a slot or expression, but the WinUI 3 / XAML emitter only supports a literal number for Path geometry props today"
+            )))
+        }
+        _ => Err(PipelineEmitError::UnsupportedPrimitive(format!(
+            "Path missing required numeric prop '{prop_name}:'"
+        ))),
+    }
+}
+
+/// `Path [name] (kind: circle|line|curve, ...)` → real WinUI vector
+/// geometry. UI39 §3.1's four shape kinds; `arc` is a stretch goal not
+/// implemented in this PR (falls through to a named "not yet supported"
+/// error below, same posture `Icon`'s glyph lowering already has for
+/// unrecognized semantic names).
+///
+/// Every kind places its element as a direct `<Grid>`/`<Stack>` child using
+/// `Margin`/`HorizontalAlignment="Left"`/`VerticalAlignment="Top"` rather
+/// than `Canvas.Left`/`Canvas.Top` — `Stack` lowers to `<Grid>`
+/// (`emit_stack`), not `<Canvas>`, and `Canvas.*` attached properties are
+/// inert outside an actual `Canvas` parent, where `Margin`-based
+/// positioning already works in any panel (the same mechanism
+/// `absolute_position_style_attrs`, #12028 item 4, established for
+/// `position: absolute`). Verified empirically via a real `dotnet build`
+/// probe project before writing this function — two overlapping `Ellipse`s
+/// positioned this way inside a plain `<Grid>` render as the intended
+/// crescent-moon shape, matching UI39 §3's worked example.
+fn emit_path(
+    node: &LayoutNode,
+    indent: usize,
+    part_styles: &PartStyleMap,
+) -> Result<String, PipelineEmitError> {
+    let pad = " ".repeat(indent);
+    let paint = path_paint_attr(node, part_styles);
+    let kind = find_prop_keyword(node, "kind").ok_or_else(|| {
+        PipelineEmitError::UnsupportedPrimitive("Path missing required prop 'kind:'".to_string())
+    })?;
+
+    match kind {
+        "circle" => {
+            let cx = required_path_number(node, "cx")?;
+            let cy = required_path_number(node, "cy")?;
+            let r = required_path_number(node, "r")?;
+            let d = 2.0 * r;
+            let (left, top) = (cx - r, cy - r);
+            Ok(format!(
+                "{pad}<Ellipse Width=\"{d}\" Height=\"{d}\" Margin=\"{left},{top},0,0\" HorizontalAlignment=\"Left\" VerticalAlignment=\"Top\"{paint}/>\n"
+            ))
+        }
+        "line" => {
+            let x1 = required_path_number(node, "x1")?;
+            let y1 = required_path_number(node, "y1")?;
+            let x2 = required_path_number(node, "x2")?;
+            let y2 = required_path_number(node, "y2")?;
+            Ok(format!(
+                "{pad}<Line X1=\"{x1}\" Y1=\"{y1}\" X2=\"{x2}\" Y2=\"{y2}\" HorizontalAlignment=\"Left\" VerticalAlignment=\"Top\"{paint}/>\n"
+            ))
+        }
+        "curve" => {
+            let x1 = required_path_number(node, "x1")?;
+            let y1 = required_path_number(node, "y1")?;
+            let cx = required_path_number(node, "cx")?;
+            let cy = required_path_number(node, "cy")?;
+            let x2 = required_path_number(node, "x2")?;
+            let y2 = required_path_number(node, "y2")?;
+            let inner_pad = " ".repeat(indent + 4);
+            Ok(format!(
+                "{pad}<Path HorizontalAlignment=\"Left\" VerticalAlignment=\"Top\"{paint}>\n\
+                 {inner_pad}<Path.Data>\n\
+                 {inner_pad}    <PathGeometry>\n\
+                 {inner_pad}        <PathFigure StartPoint=\"{x1},{y1}\">\n\
+                 {inner_pad}            <QuadraticBezierSegment Point1=\"{cx},{cy}\" Point2=\"{x2},{y2}\"/>\n\
+                 {inner_pad}        </PathFigure>\n\
+                 {inner_pad}    </PathGeometry>\n\
+                 {inner_pad}</Path.Data>\n\
+                 {pad}</Path>\n"
+            ))
+        }
+        "arc" => Err(PipelineEmitError::UnsupportedPrimitive(
+            "Path kind 'arc' is not yet supported by the WinUI 3 / XAML emitter (deferred per spec PR sequence)".to_string(),
+        )),
+        other => Err(PipelineEmitError::UnsupportedPrimitive(format!(
+            "Path kind '{other}' is not a recognized shape kind (expected circle, line, curve, or arc)"
+        ))),
     }
 }
 
@@ -8038,9 +8295,23 @@ fn emit_host_button(
         attrs.push_str(&format!(" Click=\"{handler}\""));
     }
 
-    Ok(format!(
-        "{pad}<Button x:Name=\"{x_name}\"{attrs}{style}/>\n"
-    ))
+    // #12028 item 1: a non-inset box-shadow (real usage: the "pill"
+    // project toggle buttons) — same treatment as `emit_container`.
+    let wants_shadow = node
+        .part_name
+        .as_deref()
+        .and_then(|p| part_styles.get(p))
+        .is_some_and(|entry| entry.wants_theme_shadow);
+    let (shadow_attr, shadow_child) = theme_shadow_attr_and_child(wants_shadow, "Button", indent + 4);
+    if shadow_child.is_empty() {
+        Ok(format!(
+            "{pad}<Button x:Name=\"{x_name}\"{attrs}{style}{shadow_attr}/>\n"
+        ))
+    } else {
+        Ok(format!(
+            "{pad}<Button x:Name=\"{x_name}\"{attrs}{style}{shadow_attr}>\n{shadow_child}{pad}</Button>\n"
+        ))
+    }
 }
 
 fn host_button_click_payload_expr(emit_name: &str, ctx: &EmitContext<'_>) -> Option<String> {
@@ -11734,6 +12005,198 @@ mod tests {
         );
     }
 
+    // â”€â”€ UI39: Path kernel drawing primitive â”€â”€
+
+    fn path_node(part: &str, kind: &str, coords: &[(&str, f64)]) -> LayoutNode {
+        let mut props = vec![LayoutProp {
+            name: "kind".to_string(),
+            value: LayoutPropValue::Keyword(kind.to_string()),
+        }];
+        for (name, value) in coords {
+            props.push(LayoutProp {
+                name: name.to_string(),
+                value: LayoutPropValue::Number(*value),
+            });
+        }
+        LayoutNode {
+            tag: "Path".to_string(),
+            part_name: Some(part.to_string()),
+            props,
+            children: Vec::new(),
+        }
+    }
+
+    #[test]
+    fn path_circle_emits_ellipse_with_margin_offset() {
+        let c = component("Foo", vec![], vec![]);
+        let l = layout_with_root(
+            "Foo",
+            path_node("moon-disc", "circle", &[("cx", 17.0), ("cy", 17.0), ("r", 17.0)]),
+        );
+        let s = style_for_box(
+            "moon-disc",
+            vec![("background", "#b3a99c"), ("border-color", "#1a1714"), ("border-width", "1")],
+        );
+        let r = compile(&c, &l, &s);
+        assert!(r.xaml.contains("<Ellipse"), "got:\n{}", r.xaml);
+        assert!(r.xaml.contains("Width=\"34\""), "got:\n{}", r.xaml);
+        assert!(r.xaml.contains("Height=\"34\""), "got:\n{}", r.xaml);
+        assert!(r.xaml.contains("Margin=\"0,0,0,0\""), "got:\n{}", r.xaml);
+        assert!(
+            r.xaml.contains("HorizontalAlignment=\"Left\"") && r.xaml.contains("VerticalAlignment=\"Top\""),
+            "got:\n{}",
+            r.xaml
+        );
+        // Fill/Stroke/StrokeThickness, remapped from background/border-color/
+        // border-width -- NOT Background/BorderBrush/BorderThickness, which
+        // Ellipse has no dependency property for.
+        assert!(r.xaml.contains("Fill=\"#b3a99c\""), "got:\n{}", r.xaml);
+        assert!(r.xaml.contains("Stroke=\"#1a1714\""), "got:\n{}", r.xaml);
+        assert!(r.xaml.contains("StrokeThickness=\"1\""), "got:\n{}", r.xaml);
+        assert!(!r.xaml.contains("Background="), "got:\n{}", r.xaml);
+        assert!(!r.xaml.contains("BorderBrush="), "got:\n{}", r.xaml);
+    }
+
+    #[test]
+    fn path_circle_offset_center_computes_margin_from_radius() {
+        let c = component("Foo", vec![], vec![]);
+        let l = layout_with_root(
+            "Foo",
+            path_node("moon-bite", "circle", &[("cx", 22.0), ("cy", 12.0), ("r", 17.0)]),
+        );
+        let r = compile(&c, &l, &empty_style("Foo"));
+        // left = cx - r = 5, top = cy - r = -5
+        assert!(r.xaml.contains("Margin=\"5,-5,0,0\""), "got:\n{}", r.xaml);
+    }
+
+    #[test]
+    fn path_line_emits_line_element() {
+        let c = component("Foo", vec![], vec![]);
+        let l = layout_with_root(
+            "Foo",
+            path_node("bar-icon-1", "line", &[("x1", 0.0), ("y1", 4.0), ("x2", 12.0), ("y2", 4.0)]),
+        );
+        let r = compile(&c, &l, &empty_style("Foo"));
+        assert!(r.xaml.contains("<Line"), "got:\n{}", r.xaml);
+        assert!(r.xaml.contains("X1=\"0\""), "got:\n{}", r.xaml);
+        assert!(r.xaml.contains("Y1=\"4\""), "got:\n{}", r.xaml);
+        assert!(r.xaml.contains("X2=\"12\""), "got:\n{}", r.xaml);
+        assert!(r.xaml.contains("Y2=\"4\""), "got:\n{}", r.xaml);
+    }
+
+    #[test]
+    fn path_curve_emits_quadratic_bezier_geometry() {
+        let c = component("Foo", vec![], vec![]);
+        let l = layout_with_root(
+            "Foo",
+            path_node(
+                "dependency-arrow",
+                "curve",
+                &[("x1", 0.0), ("y1", 0.0), ("cx", 10.0), ("cy", -8.0), ("x2", 20.0), ("y2", 0.0)],
+            ),
+        );
+        let r = compile(&c, &l, &empty_style("Foo"));
+        assert!(r.xaml.contains("<Path.Data>"), "got:\n{}", r.xaml);
+        assert!(r.xaml.contains("<PathGeometry>"), "got:\n{}", r.xaml);
+        assert!(
+            r.xaml.contains("<PathFigure StartPoint=\"0,0\">"),
+            "got:\n{}",
+            r.xaml
+        );
+        assert!(
+            r.xaml.contains("<QuadraticBezierSegment Point1=\"10,-8\" Point2=\"20,0\"/>"),
+            "got:\n{}",
+            r.xaml
+        );
+    }
+
+    #[test]
+    fn path_missing_kind_is_a_clear_error() {
+        let c = component("Foo", vec![], vec![]);
+        let l = layout_with_root(
+            "Foo",
+            LayoutNode {
+                tag: "Path".to_string(),
+                part_name: None,
+                props: Vec::new(),
+                children: Vec::new(),
+            },
+        );
+        let err = from_pipeline(&c, &l, &empty_style("Foo"), None, &opts()).unwrap_err();
+        assert!(
+            matches!(err, PipelineEmitError::UnsupportedPrimitive(ref t) if t.contains("kind")),
+            "{err:?}"
+        );
+    }
+
+    #[test]
+    fn path_missing_coordinate_is_a_clear_error_not_a_default() {
+        let c = component("Foo", vec![], vec![]);
+        let l = layout_with_root(
+            "Foo",
+            path_node("moon-disc", "circle", &[("cx", 17.0), ("cy", 17.0)]), // no r
+        );
+        let err = from_pipeline(&c, &l, &empty_style("Foo"), None, &opts()).unwrap_err();
+        assert!(
+            matches!(err, PipelineEmitError::UnsupportedPrimitive(ref t) if t.contains('r')),
+            "{err:?}"
+        );
+    }
+
+    #[test]
+    fn path_slot_bound_coordinate_is_a_clear_error_not_a_silent_drop() {
+        let c = component("Foo", vec![], vec![]);
+        let l = layout_with_root(
+            "Foo",
+            LayoutNode {
+                tag: "Path".to_string(),
+                part_name: None,
+                props: vec![
+                    LayoutProp {
+                        name: "kind".to_string(),
+                        value: LayoutPropValue::Keyword("circle".to_string()),
+                    },
+                    LayoutProp {
+                        name: "cx".to_string(),
+                        value: LayoutPropValue::SlotRef("moon-x".to_string()),
+                    },
+                    LayoutProp {
+                        name: "cy".to_string(),
+                        value: LayoutPropValue::Number(17.0),
+                    },
+                    LayoutProp {
+                        name: "r".to_string(),
+                        value: LayoutPropValue::Number(17.0),
+                    },
+                ],
+                children: Vec::new(),
+            },
+        );
+        let err = from_pipeline(&c, &l, &empty_style("Foo"), None, &opts()).unwrap_err();
+        assert!(
+            matches!(err, PipelineEmitError::UnsupportedPrimitive(ref t) if t.contains("cx") && t.contains("literal")),
+            "{err:?}"
+        );
+    }
+
+    #[test]
+    fn path_arc_kind_is_a_named_stretch_goal_not_a_generic_error() {
+        let c = component("Foo", vec![], vec![]);
+        let l = layout_with_root(
+            "Foo",
+            path_node(
+                "ring-segment",
+                "arc",
+                &[("cx", 10.0), ("cy", 10.0), ("r", 8.0), ("start-angle", 0.0), ("end-angle", 90.0)],
+            ),
+        );
+        let err = from_pipeline(&c, &l, &empty_style("Foo"), None, &opts()).unwrap_err();
+        assert!(
+            matches!(err, PipelineEmitError::UnsupportedPrimitive(ref t) if t.contains("arc") && t.contains("not yet supported")),
+            "{err:?}"
+        );
+    }
+
     // â”€â”€ unsupported primitives surface clearly â”€â”€
 
     /// PR-3 lowers HostInput. The PR-1 version of this test expected
@@ -13425,6 +13888,41 @@ mod tests {
             r.code_behind.contains("internal bool Not(bool b) => !b;"),
             "got:\n{}",
             r.code_behind
+        );
+    }
+
+    /// `HostButton [name]` (→ `<Button>`) with a non-`inset` box-shadow
+    /// gets the same `Translation`/`<Button.Shadow>` treatment as a
+    /// `Box` — matches the real "pill" project-toggle buttons
+    /// (`mosaic-pkg-project-nav`'s `project-on`/`project-off`).
+    /// `Button` normally self-closes; a `<Button.Shadow>` child forces
+    /// the open/close form instead.
+    #[test]
+    fn host_button_with_box_shadow_emits_theme_shadow_and_opens_close_tag() {
+        let c = component("Foo", vec![], vec![]);
+        let l = layout_with_root("Foo", host_button_node(Some("project-on"), vec![]));
+        let s = style_for_box(
+            "project-on",
+            vec![(
+                "box-shadow",
+                "0 1px 2px rgba(0,0,0,.3), 0 4px 14px rgba(0,0,0,.28)",
+            )],
+        );
+        let r = compile(&c, &l, &s);
+        assert!(
+            r.xaml.contains("Translation=\"0,0,4\""),
+            "got:\n{}",
+            r.xaml
+        );
+        assert!(
+            r.xaml.contains("<Button.Shadow>") && r.xaml.contains("<ThemeShadow/>"),
+            "got:\n{}",
+            r.xaml
+        );
+        assert!(
+            r.xaml.contains("</Button>"),
+            "expected an open/close Button (not self-closed) once it has a Shadow child, got:\n{}",
+            r.xaml
         );
     }
 
@@ -16468,20 +16966,47 @@ mod tests {
 
     // ── issue #12022: dropped_style_properties ──
 
-    /// A genuinely-unexpressible property (`box-shadow`) is reported, with
-    /// a real reason, tagged with its part name.
+    /// An `inset` `box-shadow` (the moon/status-dot drawing hack, issue
+    /// #12028 item 3 — a shape cutout, not elevation) is genuinely
+    /// unexpressible and is reported, with a real reason, tagged with
+    /// its part name. A non-`inset` value is NOT reported — see
+    /// `dropped_style_properties_excludes_non_inset_box_shadow` — since
+    /// #12028 item 1 taught the emitter to treat it as an elevation
+    /// request instead of dropping it.
     #[test]
-    fn dropped_style_properties_reports_box_shadow() {
-        let style = style_for_box("card", vec![("box-shadow", "0 1px 2px #000")]);
+    fn dropped_style_properties_reports_inset_box_shadow() {
+        let style = style_for_box("card", vec![("box-shadow", "5px -5px 0 0 #000 inset")]);
         let dropped = dropped_style_properties(&style);
         assert_eq!(dropped.len(), 1, "got: {dropped:?}");
         assert_eq!(dropped[0].part, "card");
         assert_eq!(dropped[0].name, "box-shadow");
-        assert_eq!(dropped[0].value, "0 1px 2px #000");
+        assert_eq!(dropped[0].value, "5px -5px 0 0 #000 inset");
         assert!(
             dropped[0].reason.contains("ThemeShadow"),
             "got: {}",
             dropped[0].reason
+        );
+    }
+
+    /// A non-`inset` `box-shadow` (any value — real usage: two comma-
+    /// separated layers, differing only by opacity/color between light/
+    /// dark themes) is consumed by the `ThemeShadow` side channel
+    /// (issue #12028 item 1) and must never surface in the #12022
+    /// dropped-properties report — reporting it would be a false
+    /// positive on a now-real feature.
+    #[test]
+    fn dropped_style_properties_excludes_non_inset_box_shadow() {
+        let style = style_for_box(
+            "brand-mark",
+            vec![(
+                "box-shadow",
+                "0 1px 2px rgba(0,0,0,.3), 0 4px 14px rgba(0,0,0,.28)",
+            )],
+        );
+        assert!(
+            dropped_style_properties(&style).is_empty(),
+            "got: {:?}",
+            dropped_style_properties(&style)
         );
     }
 
@@ -16859,6 +17384,150 @@ mod tests {
                 r.xaml
             );
         }
+    }
+
+    /// `align: "center-vertical"` (a non-standard mosstyle property that
+    /// reached real `.msl` files — TaskApp, VentureChrome, Calendar,
+    /// ProjectNav — but was never lowered by anything) produces the
+    /// same `VerticalAlignment="Center"` per-child attribute
+    /// `align-items: center` already does, since every real author of
+    /// `center-vertical` puts it on a `Row` (where "vertical" IS the
+    /// cross axis).
+    #[test]
+    fn row_align_center_vertical_lowers_to_same_cross_axis_attribute_as_align_items() {
+        let c = component("Foo", vec![], vec![]);
+        let l = layout_with_root(
+            "Foo",
+            LayoutNode {
+                tag: "Row".to_string(),
+                part_name: Some("brand".to_string()),
+                props: Vec::new(),
+                children: vec![LayoutNode {
+                    tag: "Text".to_string(),
+                    part_name: None,
+                    props: vec![LayoutProp {
+                        name: "content".to_string(),
+                        value: LayoutPropValue::String("Trestle".to_string()),
+                    }],
+                    children: Vec::new(),
+                }],
+            },
+        );
+        let s = style_for_box("brand", vec![("align", "center-vertical"), ("gap", "10")]);
+        let r = compile(&c, &l, &s);
+        assert!(
+            r.xaml
+                .contains("Text=\"Trestle\" Grid.Column=\"0\" VerticalAlignment=\"Center\""),
+            "got:\n{}",
+            r.xaml
+        );
+        assert!(
+            !r.xaml.contains("Property=\"Align\""),
+            "align must never leak into a fake WinUI setter, got:\n{}",
+            r.xaml
+        );
+    }
+
+    /// `align: "center-vertical"`/`align: "center"` are consumed by the
+    /// same `FlexHints` side channel as `align-items: center` and must
+    /// never surface in the #12022 dropped-properties report.
+    #[test]
+    fn dropped_style_properties_excludes_recognised_align_values() {
+        let style = style_for_box(
+            "brand",
+            vec![("align", "center-vertical")],
+        );
+        assert!(
+            dropped_style_properties(&style).is_empty(),
+            "got: {:?}",
+            dropped_style_properties(&style)
+        );
+        let style_center = style_for_box("notes-empty", vec![("align", "center")]);
+        assert!(
+            dropped_style_properties(&style_center).is_empty(),
+            "got: {:?}",
+            dropped_style_properties(&style_center)
+        );
+    }
+
+    /// An `align` value FlexHints doesn't recognise is a genuine drop —
+    /// no per-child alignment is applied for it anywhere, matching
+    /// `align-items`'s identical unrecognised-value treatment.
+    #[test]
+    fn dropped_style_properties_reports_unrecognised_align_value() {
+        let style = style_for_box("brand", vec![("align", "flex-end")]);
+        let dropped = dropped_style_properties(&style);
+        assert_eq!(dropped.len(), 1, "got: {dropped:?}");
+        assert_eq!(dropped[0].name, "align");
+        assert!(
+            dropped[0].reason.contains("FlexHints"),
+            "got: {}",
+            dropped[0].reason
+        );
+    }
+
+    /// `Box [name]` (→ `<Border>`) with a non-`inset` `box-shadow` gets
+    /// `Translation="0,0,4"` on the opening tag plus a `<Border.Shadow>`
+    /// child — matching the real `mosaic-pkg-*`/`task-app` "raised
+    /// card" usage (`brand-mark`, `project-on`).
+    #[test]
+    fn box_with_box_shadow_emits_theme_shadow_and_translation() {
+        let c = component("Foo", vec![], vec![]);
+        let l = layout_with_root(
+            "Foo",
+            LayoutNode {
+                tag: "Box".to_string(),
+                part_name: Some("card".to_string()),
+                props: Vec::new(),
+                children: Vec::new(),
+            },
+        );
+        let s = style_for_box(
+            "card",
+            vec![
+                ("background", "#1a1714"),
+                (
+                    "box-shadow",
+                    "0 1px 2px rgba(0,0,0,.3), 0 4px 14px rgba(0,0,0,.28)",
+                ),
+            ],
+        );
+        let r = compile(&c, &l, &s);
+        assert!(
+            r.xaml.contains("Translation=\"0,0,4\""),
+            "got:\n{}",
+            r.xaml
+        );
+        assert!(
+            r.xaml.contains("<Border.Shadow>") && r.xaml.contains("<ThemeShadow/>"),
+            "got:\n{}",
+            r.xaml
+        );
+        assert!(
+            !r.xaml.contains("Property=\"BoxShadow\""),
+            "box-shadow must never leak into a fake WinUI setter, got:\n{}",
+            r.xaml
+        );
+    }
+
+    /// An `inset` `box-shadow` gets no `Translation`/`ThemeShadow` at
+    /// all — it's a drawing hack (item 3), not elevation (item 1).
+    #[test]
+    fn box_with_inset_box_shadow_gets_no_theme_shadow() {
+        let c = component("Foo", vec![], vec![]);
+        let l = layout_with_root(
+            "Foo",
+            LayoutNode {
+                tag: "Box".to_string(),
+                part_name: Some("moon".to_string()),
+                props: Vec::new(),
+                children: Vec::new(),
+            },
+        );
+        let s = style_for_box("moon", vec![("box-shadow", "5px -5px 0 0 #1a1714 inset")]);
+        let r = compile(&c, &l, &s);
+        assert!(!r.xaml.contains("Translation"), "got:\n{}", r.xaml);
+        assert!(!r.xaml.contains("ThemeShadow"), "got:\n{}", r.xaml);
     }
 
     #[test]

@@ -194,6 +194,17 @@ need no attribute — `Stretch` is both WinUI's and flexbox's default.
 authored source needs them rather than guessing at the XAML shape
 unverified.
 
+`align: "center-vertical"` / `align: "center"` (not `align-items`) are
+also recognized here, mapped to the identical `center` treatment
+(issue #13164). `align` is not a real mosstyle property — per
+`UI15-mosstyle.md` §1/§11 alignment belongs in `.mll`, and mosstyle's
+grammar has no property whitelist to reject it — but it reached 30+
+real `.msl` declarations anyway (TaskApp, VentureChrome, Calendar,
+ProjectNav), always on a `Row`, always meaning exactly what
+`align-items: center` means. Recognizing the value that's actually
+authored fixes the real dropped-centering bug; the underlying
+mosstyle-grammar gap stays open, tracked in #13164.
+
 **Main-axis distribution (`justify-content`).** Only `space-between`
 is authored today. It inserts a `"*"`-sized spacer definition
 *between* each pair of children — `N` children get `N − 1` spacers, no
@@ -238,14 +249,16 @@ surfaces the results as `styleDegradations` in `mosaic-degradations.json`
 from `degradations` (non-gating) rather than folded in.
 
 **Exclusions**, so the report doesn't false-positive on properties §3.1
-already handles through a side channel: `align-items`/`justify-content`
-are excluded only when their value is one `FlexHints` actually consumes
-(`"center"` / `"space-between"` respectively — any other value IS
-reported, since nothing consumes it); `flex-grow` is excluded
-unconditionally (fully boolean-handled today, nothing recognisable as
-"lost"); `position`/`top`/`left` are excluded only when `position` is
-literally `"absolute"` (see §3.3) — `top`/`left` authored without it
-are meaningless in CSS too and stay reported as before.
+already handles through a side channel: `align-items`/`align`/
+`justify-content` are excluded only when their value is one `FlexHints`
+actually consumes (`"center"` for `align-items`/`align`, or
+`"center-vertical"` for `align`; `"space-between"` for
+`justify-content` — any other value IS reported, since nothing consumes
+it); `flex-grow` is excluded unconditionally (fully boolean-handled
+today, nothing recognisable as "lost"); `position`/`top`/`left` are
+excluded only when `position` is literally `"absolute"` (see §3.3) —
+`top`/`left` authored without it are meaningless in CSS too and stay
+reported as before.
 
 ### 3.3 `position: "absolute"` → pinned `Margin` (issue #12028 item 4)
 
@@ -276,6 +289,43 @@ Real usage: `mosaic/programs/task-app`'s bridge-arc brand mark
 (`brand-post-left`/`brand-post-right`/`brand-arc`, three `Box`es
 absolutely positioned inside one `Stack`) and its inline status-dot
 icon compositions.
+
+### 3.4 `box-shadow` → `ThemeShadow` elevation (issue #12028 item 1)
+
+A non-`inset` `box-shadow` (any value) signals the author wants
+elevation. Unlike every other property translation in this file, this
+does not attempt to reproduce the authored numbers — WinUI's
+`ThemeShadow` is a fixed, system-composited shadow with no CSS-shaped
+blur/spread/color/opacity controls; Microsoft's own guidance
+([learn.microsoft.com/windows/apps/develop/ui/shadows](https://learn.microsoft.com/en-us/windows/apps/develop/ui/shadows))
+is a Z-*depth* value, not shadow parameters. `part_wants_theme_shadow`
+recognizes "this element should look raised" and every qualifying
+element gets the identical treatment: `Translation="0,0,4"` (4
+effective pixels — Microsoft's own "Cards: 4–8px" guidance) on the
+opening tag, plus a `<{Element}.Shadow><ThemeShadow/></{Element}.Shadow>`
+child forcing an open/close tag even for elements (`Button`) that
+would otherwise self-close. `Shadow`/`Translation` work on any
+`UIElement`, so this applies uniformly across `emit_container`'s three
+element kinds (`Border`/`Grid`/`StackPanel`) and `emit_host_button`'s
+`<Button>` — verified empirically with a real `dotnet build` (both
+`<Border.Shadow>` and `<Button.Shadow>` compile with zero errors under
+the pinned Windows App SDK; `Translation` is settable as a direct XAML
+attribute despite not being a `DependencyProperty` settable via
+`<Setter>`).
+
+A value containing `inset` (e.g. `"5px -5px 0 0 #f1ebe1 inset"`) is a
+fundamentally different technique — a shape cutout used to fake a
+crescent-moon icon or a status dot (issue #12028 item 3, a kernel
+drawing primitive) — and is deliberately excluded, staying a genuine
+drop with its own specific reason text.
+
+Real usage: `task-app`'s brand-mark icon and every "active" pill/
+segmented-switch button (`project-on`, `seg-tl-on`, `seg-board-on`,
+…) — 9 elements in the real app. TaskApp's authored shadows vary by
+opacity/color between light/dark themes and one "stronger" tier, none
+of which `ThemeShadow` can express anyway, so collapsing every
+non-inset value to one fixed treatment loses no distinction the
+platform could show in the first place.
 
 ## 4. Host* primitives
 

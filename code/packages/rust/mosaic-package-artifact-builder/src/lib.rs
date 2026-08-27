@@ -1201,6 +1201,23 @@ fn collect_native_degradations(
             "primitive.switch-unimplemented",
             "the backend does not yet lower HostSwitch to its native on/off control",
         )),
+        // UI39 — the kernel drawing primitive. XAML and Qt lower `circle`/
+        // `line`/`curve` (not yet `arc` — a real build attempting
+        // `kind: arc` on either still hard-errors with a named "not yet
+        // supported" message from the emitter itself, same as any other
+        // unimplemented shape kind would; this coarse per-primitive flag
+        // doesn't distinguish kinds, matching how HostSlider's arm below
+        // doesn't distinguish authored prop combinations either). Narrow
+        // further as each remaining backend's PR merges.
+        "Path"
+            if backend.is_native()
+                && !matches!(backend, Backend::Xaml | Backend::Qt | Backend::Flutter) =>
+        {
+            Some((
+                "primitive.path-unimplemented",
+                "the backend does not yet lower Path to real vector geometry",
+            ))
+        }
         "HostLink" if backend == Backend::Flutter && flutter_link_requires_url_host(node) => Some((
             "effect.url-host-missing",
             "the Flutter emitter cannot open URLs without an application-supplied effect host",
@@ -4949,6 +4966,166 @@ layout Settings {
     }
 
     #[test]
+    fn path_is_explicitly_incomplete_until_native_lowerings_land() {
+        let pkg = make_package("mosaic-pkg-icons", &["MoonIcon"]);
+        fs::write(
+            pkg.path().join("src/MoonIcon.mll"),
+            r#"
+layout MoonIcon {
+  Path [ root ] (
+    kind: circle,
+    cx: 17,
+    cy: 17,
+    r: 17
+  )
+}
+"#,
+        )
+        .unwrap();
+
+        // XAML, Qt, and Flutter land their Path lowerings (circle/line/
+        // curve) in separate PRs — see path_xaml_now_has_a_native_lowering,
+        // path_qt_now_has_a_native_lowering, and
+        // path_flutter_now_has_a_native_lowering below. The remaining two
+        // still have no lowering at all.
+        for backend in [Backend::Compose, Backend::SwiftUI] {
+            let out = TempDir::new().unwrap();
+            let report = analyze_package_degradations(
+                &BuildOptions {
+                    package_root: pkg.path().to_path_buf(),
+                    output_root: out.path().to_path_buf(),
+                    backend,
+                    emit_project: false,
+                    theme: None,
+                },
+                BuildProfile::NativeComplete,
+            )
+            .expect("Path capability analysis");
+
+            assert!(!report.native_complete, "{backend:?} must remain honest");
+            assert_eq!(
+                report.degradations.len(),
+                1,
+                "unexpected {backend:?} report"
+            );
+            assert_eq!(report.degradations[0].code, "primitive.path-unimplemented");
+            assert_eq!(report.degradations[0].layout_path, "root");
+            assert_eq!(report.degradations[0].primitive.as_deref(), Some("Path"));
+        }
+    }
+
+    #[test]
+    fn path_xaml_now_has_a_native_lowering() {
+        let pkg = make_package("mosaic-pkg-icons-xaml", &["MoonIcon"]);
+        fs::write(
+            pkg.path().join("src/MoonIcon.mll"),
+            r#"
+layout MoonIcon {
+  Path [ root ] (
+    kind: circle,
+    cx: 17,
+    cy: 17,
+    r: 17
+  )
+}
+"#,
+        )
+        .unwrap();
+
+        let out = TempDir::new().unwrap();
+        let report = analyze_package_degradations(
+            &BuildOptions {
+                package_root: pkg.path().to_path_buf(),
+                output_root: out.path().to_path_buf(),
+                backend: Backend::Xaml,
+                emit_project: false,
+                theme: None,
+            },
+            BuildProfile::NativeComplete,
+        )
+        .expect("XAML Path capability analysis");
+        assert!(
+            report.native_complete,
+            "XAML now has a native Path (circle/line/curve) lowering: {:?}",
+            report.degradations
+        );
+    }
+
+    #[test]
+    fn path_qt_now_has_a_native_lowering() {
+        let pkg = make_package("mosaic-pkg-icons-qt", &["MoonIcon"]);
+        fs::write(
+            pkg.path().join("src/MoonIcon.mll"),
+            r#"
+layout MoonIcon {
+  Path [ root ] (
+    kind: circle,
+    cx: 17,
+    cy: 17,
+    r: 17
+  )
+}
+"#,
+        )
+        .unwrap();
+
+        let out = TempDir::new().unwrap();
+        let report = analyze_package_degradations(
+            &BuildOptions {
+                package_root: pkg.path().to_path_buf(),
+                output_root: out.path().to_path_buf(),
+                backend: Backend::Qt,
+                emit_project: false,
+                theme: None,
+            },
+            BuildProfile::NativeComplete,
+        )
+        .expect("Qt Path capability analysis");
+        assert!(
+            report.native_complete,
+            "Qt now has a native Path (circle/line/curve) lowering: {:?}",
+            report.degradations
+        );
+    }
+
+    #[test]
+    fn path_flutter_now_has_a_native_lowering() {
+        let pkg = make_package("mosaic-pkg-icons-flutter", &["MoonIcon"]);
+        fs::write(
+            pkg.path().join("src/MoonIcon.mll"),
+            r#"
+layout MoonIcon {
+  Path [ root ] (
+    kind: circle,
+    cx: 17,
+    cy: 17,
+    r: 17
+  )
+}
+"#,
+        )
+        .unwrap();
+
+        let out = TempDir::new().unwrap();
+        let report = analyze_package_degradations(
+            &BuildOptions {
+                package_root: pkg.path().to_path_buf(),
+                output_root: out.path().to_path_buf(),
+                backend: Backend::Flutter,
+                emit_project: false,
+                theme: None,
+            },
+            BuildProfile::NativeComplete,
+        )
+        .expect("Flutter Path capability analysis");
+        assert!(
+            report.native_complete,
+            "Flutter now has a native Path (circle/line/curve) lowering: {:?}",
+            report.degradations
+        );
+    }
+
+    #[test]
     fn native_drag_drop_backends_are_not_reported_as_inert() {
         let pkg = make_package("mosaic-pkg-board", &["Board"]);
         fs::write(
@@ -6346,10 +6523,15 @@ layout NativeEvents {
     /// `DegradationReport::style_degradations` doc comment for why.
     #[test]
     fn xaml_style_drop_is_reported_but_not_gating() {
+        // #12028 item 1: a non-inset box-shadow is no longer an
+        // unexpressible property — it now lowers to a real ThemeShadow
+        // (see mosaic-emit-xaml's `part_wants_theme_shadow`). An
+        // `inset` value (the moon/status-dot drawing hack, item 3)
+        // stays genuinely dropped and keeps testing this mechanism.
         let pkg = make_package("mosaic-pkg-card", &["Card"]);
         fs::write(
             pkg.path().join("src/Card.msl"),
-            "style Card { part root { box-shadow: \"0 1px 2px #000\" ; } }\n",
+            "style Card { part root { box-shadow: \"5px -5px 0 0 #000 inset\" ; } }\n",
         )
         .unwrap();
         let out = TempDir::new().unwrap();

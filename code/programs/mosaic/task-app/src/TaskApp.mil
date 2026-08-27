@@ -42,8 +42,18 @@ component TaskApp {
   // one value in this whole component bound through UI36's `background`
   // property rather than a size — see the spec's "the one real gap" section);
   // `ring-percent` is the same number pre-formatted for the caption ("25%").
-  slot ring-gradient : text ;
-  slot ring-percent  : text ;
+  // `ring-percent-value` (#12028 item 2, first half) is the raw 0..100
+  // number itself — every host already computed this number internally to
+  // build `ring-gradient`/`ring-percent`, but never exposed it as typed
+  // data. Native hosts previously received `ring-gradient: ""` (the web
+  // host's CSS trick is web-only; nothing else can consume a CSS string)
+  // with no numeric fallback to render *anything* from — this closes that
+  // gap. Native *rendering* of the ring from this number is a separate,
+  // still-open follow-up (see #12028 item 2's tracking comment) — this
+  // slot only stops the data from leaking.
+  slot ring-gradient       : text ;
+  slot ring-percent        : text ;
+  slot ring-percent-value  : number ;
 
   // The theme toggle (task-app-icon-assets-v1.md) — moved into the topbar
   // from a `position: fixed` button main.tsx used to render entirely outside

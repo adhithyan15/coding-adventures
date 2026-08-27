@@ -295,6 +295,8 @@ const JAPANESE_TE = DUCTUS[ductusKey("japanese", "て")];
 const JAPANESE_NA = DUCTUS[ductusKey("japanese", "な")];
 const JAPANESE_SMALL_TSU = DUCTUS[ductusKey("japanese", "っ")];
 const JAPANESE_MO = DUCTUS[ductusKey("japanese", "も")];
+const JAPANESE_WA = DUCTUS[ductusKey("japanese", "わ")];
+const JAPANESE_YU = DUCTUS[ductusKey("japanese", "ゆ")];
 
 const fontForDuctus = (letter: LetterDuctus) => {
   const script = SCRIPTS.find((candidate) => candidate.script === letter.script);
@@ -644,8 +646,9 @@ describe("handwriting ductus", () => {
           // lower-loop return, plus Kannada ಆ's loop-to-bowl and loop-to-bar
           // joins, while Malayalam ആ circles its right loop and descender in
           // one uninterrupted run across Noto's separated print contours.
-          // Japanese ね likewise keeps the source's continuous second run as
-          // it crosses Noto's separated bar, diagonal return, and loop shapes.
+          // Japanese ね and わ likewise keep each source's continuous second
+          // run as it crosses Noto's separated bar, diagonal return, and loop
+          // shapes.
           // Permit only those documented bridges; every other authored path
           // retains the stricter general-purpose floor.
           const minimumInkFit = letter.script === "gujarati" && letter.glyph === "હ"
@@ -660,7 +663,7 @@ describe("handwriting ductus", () => {
                 ? 0.89
               : letter.script === "kannada" && letter.glyph === "ಆ"
                 ? 0.92
-              : letter.script === "japanese" && letter.glyph === "ね"
+              : letter.script === "japanese" && ["ね", "わ"].includes(letter.glyph)
                 ? 0.88
               : 0.97;
           expect(frac, `stroke ${s} strays off the glyph`).toBeGreaterThan(minimumInkFit);
@@ -863,6 +866,43 @@ describe("handwriting ductus", () => {
     expect(JAPANESE_MO.source.url).toBe(
       "https://commons.wikimedia.org/wiki/File:Hiragana_%E3%82%82_stroke_order_animation.gif",
     );
+  });
+
+  it("Japanese わ draws the vertical before the crossing hook and broad loop", () => {
+    expect(penLifts(JAPANESE_WA)).toBe(1);
+    expect(JAPANESE_WA.strokes).toHaveLength(2);
+    expect(JAPANESE_WA.strokes.map((stroke) => stroke.segments.map((segment) => segment.label))).toEqual([
+      ["descend through the long left vertical"],
+      [
+        "sweep right from the upper left across the vertical",
+        "hook down and left, then return through the central crossing",
+        "continue clockwise around the broad right loop",
+      ],
+    ]);
+    expect(JAPANESE_WA.source.url).toBe(
+      "https://commons.wikimedia.org/wiki/File:Hiragana_%E3%82%8F_stroke_order_animation.gif",
+    );
+    expect(JAPANESE_WA.source.citation).toMatch(/Sirgazil.*わ.*30 frames.*3\.0 seconds/i);
+  });
+
+  it("Japanese ゆ draws its broad loop before the central descending curve", () => {
+    expect(penLifts(JAPANESE_YU)).toBe(1);
+    expect(JAPANESE_YU.strokes).toHaveLength(2);
+    expect(JAPANESE_YU.strokes.map((stroke) => stroke.segments.map((segment) => segment.label))).toEqual([
+      [
+        "descend through the left stem and turn up across the high shoulder",
+        "continue clockwise around the broad loop",
+        "curve left to the inner finish",
+      ],
+      [
+        "descend through the center of the loop",
+        "curve down and left to the finish",
+      ],
+    ]);
+    expect(JAPANESE_YU.source.url).toBe(
+      "https://commons.wikimedia.org/wiki/File:Hiragana_%E3%82%86_stroke_order_animation.gif",
+    );
+    expect(JAPANESE_YU.source.citation).toMatch(/Sirgazil.*ゆ.*30 frames.*3\.0 seconds/i);
   });
 
   it("ப descends, crosses the bottom, and rises without lifting", () => {

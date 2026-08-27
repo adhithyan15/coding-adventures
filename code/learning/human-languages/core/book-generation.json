@@ -6857,11 +6857,10 @@
       "language": "german",
       "chapter": 1,
       "output": "german/book/chapters/ch01-greetings.tex",
-      "omittedLessonIds": [
+      "embeddedLessonIds": [
         "GE-C01-hallo",
         "GE-W01-hallo-guided-copy"
-      ],
-      "omissionIssue": 13117
+      ]
     },
     {
       "language": "german",
@@ -6942,11 +6941,10 @@
       "language": "italian",
       "chapter": 1,
       "output": "italian/book/chapters/ch01-greetings.tex",
-      "omittedLessonIds": [
+      "embeddedLessonIds": [
         "IT-C01-ciao",
         "IT-W01-ciao-guided-copy"
-      ],
-      "omissionIssue": 13117
+      ]
     },
     {
       "language": "kannada",
@@ -7040,22 +7038,20 @@
       "language": "persian",
       "chapter": 1,
       "output": "persian/book/chapters/ch01-greetings-and-responses.tex",
-      "omittedLessonIds": [
+      "embeddedLessonIds": [
         "FA-C01-salam",
         "FA-W00-alef-guided-copy",
         "FA-C01-practice"
-      ],
-      "omissionIssue": 13117
+      ]
     },
     {
       "language": "portuguese",
       "chapter": 1,
       "output": "portuguese/book/chapters/ch01-greetings.tex",
-      "omittedLessonIds": [
+      "embeddedLessonIds": [
         "PT-C01-ola",
         "PT-W01-ola-guided-copy"
-      ],
-      "omissionIssue": 13117
+      ]
     },
     {
       "language": "punjabi",

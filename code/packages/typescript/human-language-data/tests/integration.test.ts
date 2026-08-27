@@ -1348,6 +1348,36 @@ describe("real curriculum", () => {
     expect(affected.get("ٹ") ?? 0).toBe(0);
     expect(missingByScript.get("japanese.json")?.has("っ")).toBe(false);
     expect(affected.get("っ") ?? 0).toBe(0);
+    const japaneseWa = scripts.japanese!.letters.find((entry) => entry.glyph === "わ")!;
+    expect(japaneseWa.sound).toBe("wa");
+    expect(japaneseWa.penLifts).toBe(1);
+    expect(japaneseWa.strokeOrder).toEqual([
+      "descend through the long left vertical",
+      "lift, then begin at the upper left, sweep right across the vertical, hook down and left, turn back through the central crossing, and continue clockwise around the broad right loop",
+    ]);
+    expect(japaneseWa.strokeOrderSource?.citation).toMatch(
+      /Sirgazil.*わ.*30 frames.*3\.0 seconds.*Wikimedia Commons.*1 October 2009/i,
+    );
+    expect(japaneseWa.strokeOrderSource?.variation).toMatch(
+      /CC0.*two pen-down runs.*long left vertical.*cross right.*hook down and left.*central crossing.*clockwise.*right loop.*Noto Sans JP.*two-run order/i,
+    );
+    expect(missingByScript.get("japanese.json")?.has("わ")).toBe(false);
+    expect(affected.get("わ") ?? 0).toBe(0);
+    const japaneseYu = scripts.japanese!.letters.find((entry) => entry.glyph === "ゆ")!;
+    expect(japaneseYu.sound).toBe("yu");
+    expect(japaneseYu.penLifts).toBe(1);
+    expect(japaneseYu.strokeOrder).toEqual([
+      "descend through the left stem, turn up and right across the high shoulder, then continue clockwise around the broad loop and curve left to the inner finish",
+      "lift, begin high above the loop, descend through its center, and curve down and left to the finish",
+    ]);
+    expect(japaneseYu.strokeOrderSource?.citation).toMatch(
+      /Sirgazil.*ゆ.*30 frames.*3\.0 seconds.*Wikimedia Commons.*1 October 2009/i,
+    );
+    expect(japaneseYu.strokeOrderSource?.variation).toMatch(
+      /CC0.*two pen-down runs.*left stem.*high shoulder.*clockwise.*broad loop.*inner finish.*above the loop.*center.*down-left curve.*Noto Sans JP.*two-run order/i,
+    );
+    expect(missingByScript.get("japanese.json")?.has("ゆ")).toBe(false);
+    expect(affected.get("ゆ") ?? 0).toBe(0);
     expect(missingByScript.get("perso-arabic.json")?.has("ظ")).toBe(false);
     expect(missingByScript.get("urdu-nastaliq.json")?.has("ظ")).toBe(false);
     expect(affected.get("ظ") ?? 0).toBe(0);
@@ -1357,7 +1387,7 @@ describe("real curriculum", () => {
     expect(affected.get("ب") ?? 0).toBe(0);
     expect(
       [...affected.entries()].sort((left, right) => right[1] - left[1])[0],
-    ).toEqual(["わ", 2]);
+    ).toEqual(["ಉ", 2]);
   });
 
   it("loaded every track (17+ and growing)", () => {

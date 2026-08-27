@@ -1,5 +1,50 @@
 # Changelog
 
+## [Unreleased] - narrow the `Path` degradation to also exclude Flutter (#12028 item 3, UI39)
+
+Flutter now lowers `Path`'s `circle`/`line`/`curve` kinds to real Dart
+widget/`CustomPaint` geometry (`mosaic-emit-flutter`). Narrowed the
+`("Path", ...)` arm in `collect_native_degradations` from
+`!matches!(backend, Backend::Xaml | Backend::Qt)` to
+`!matches!(backend, Backend::Xaml | Backend::Qt | Backend::Flutter)`,
+matching `HostSlider`'s per-backend narrowing pattern. Same
+primitive-level (not per-kind) caveat as the XAML/Qt narrowings: a real
+build using `kind: arc` on Flutter still hard-errors from the emitter
+itself.
+
+## [Unreleased] - narrow the `Path` degradation to also exclude Qt (#12028 item 3, UI39)
+
+Qt now lowers `Path`'s `circle`/`line`/`curve` kinds to real QML vector
+geometry (`mosaic-emit-qt`). Narrowed the `("Path", ...)` arm in
+`collect_native_degradations` from `backend != Backend::Xaml` to
+`!matches!(backend, Backend::Xaml | Backend::Qt)`, matching
+`HostSlider`'s per-backend narrowing pattern. Same primitive-level
+(not per-kind) caveat as the XAML narrowing: a real build using
+`kind: arc` on Qt still hard-errors from the emitter itself.
+
+## [Unreleased] - narrow the `Path` degradation to exclude XAML (#12028 item 3, UI39)
+
+XAML now lowers `Path`'s `circle`/`line`/`curve` kinds to real vector
+geometry (`mosaic-emit-xaml`). Narrowed the `("Path", ...)` arm in
+`collect_native_degradations` with `backend != Backend::Xaml`, matching
+`HostSlider`'s per-backend narrowing pattern exactly. This is a
+primitive-level flag, not per-kind — a real build using the
+not-yet-implemented `arc` kind on XAML still hard-errors from the
+emitter itself with a named message, it just isn't reflected as a
+separate degradation code (matching how `HostSlider`'s own arm doesn't
+distinguish authored prop combinations either).
+
+## [Unreleased] - degradation plumbing for the `Path` kernel drawing primitive (#12028 item 3)
+
+Added the `("Path", ...)` arm to `collect_native_degradations`, following
+`HostSwitch`'s lifecycle exactly: unconditionally degraded (code
+`primitive.path-unimplemented`) on every native backend the moment the
+primitive is registered, since none renders it yet. As each backend lands a
+real lowering (XAML first, immediately following this), narrow the arm's
+`is_native()` guard with a `!matches!(backend, ...)` exclusion the same way
+the existing `HostSlider` arm already does. See
+`code/specs/UI39-mosaic-drawing-primitive.md`.
+
 ## [Unreleased] - gate the radio-group degradation on actual native support (#13007)
 
 `mosaic-emit-compose`/`-flutter`/`-qt` now apply real mutual-exclusion

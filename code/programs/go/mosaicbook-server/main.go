@@ -58,6 +58,10 @@ func main() {
 	// any .mosaic or .stories.json file changes.
 	go srv.watchFiles()
 
-	// Serve HTTP.  log.Fatal terminates on bind error (e.g. port in use).
-	log.Fatal(http.ListenAndServe(addr, srv.mux))
+	// Serve HTTP, wrapped in requireLocalOrigin (security.go, #13178) so a
+	// page from any other origin that reaches this port — including via DNS
+	// rebinding, which defeats the localhost bind alone — gets rejected
+	// before any route runs.  log.Fatal terminates on bind error (e.g. port
+	// in use).
+	log.Fatal(http.ListenAndServe(addr, requireLocalOrigin(srv.mux)))
 }

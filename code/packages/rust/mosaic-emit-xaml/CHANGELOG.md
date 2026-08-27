@@ -1,5 +1,124 @@
 # Changelog — mosaic-emit-xaml
 
+## [Unreleased] — lower `Path` to real WinUI vector geometry (#12028 item 3, UI39)
+
+XAML is the first backend to render the new kernel drawing primitive
+(`Path`, registered in the prior PR). `circle`/`line`/`curve` are
+implemented; `arc` is a stretch goal not included here — a real build
+using `kind: arc` still hard-errors with a named "not yet supported"
+message, same posture any other unimplemented shape kind gets.
+
+New `emit_path`, dispatched from the primitive-tag match alongside every
+other leaf primitive:
+- `circle` → `<Ellipse Width="{2r}" Height="{2r}" Margin="{cx-r},{cy-r},0,0" HorizontalAlignment="Left" VerticalAlignment="Top" .../>`.
+- `line` → `<Line X1="{x1}" Y1="{y1}" X2="{x2}" Y2="{y2}" .../>`.
+- `curve` → `<Path><Path.Data><PathGeometry><PathFigure StartPoint="{x1},{y1}"><QuadraticBezierSegment Point1="{cx},{cy}" Point2="{x2},{y2}"/></PathFigure></PathGeometry></Path.Data></Path>`.
+
+Positioning uses `Margin`/`HorizontalAlignment="Left"`/
+`VerticalAlignment="Top"`, not `Canvas.Left`/`Canvas.Top` — `Stack`
+lowers to `<Grid>` (`emit_stack`), not `<Canvas>`, and `Canvas.*`
+attached properties are inert outside an actual `Canvas` parent. This
+is the same mechanism `absolute_position_style_attrs` (#12028 item 4)
+already established for `position: absolute`, and was verified
+empirically via a real `dotnet build` probe project — confirmed
+overlapping `Ellipse`s inside a plain `<Grid>` render as the intended
+crescent-moon shape — before writing `emit_path`, catching that the
+plan's original `Canvas.Left`/`Canvas.Top` assumption was wrong before
+any code was written on it.
+
+New `path_paint_attr`: `Fill`/`Stroke`/`StrokeThickness`, remapped from
+the same `background`/`border-color`/`border-width` every other
+primitive already authors (UI39 §3.2's zero-new-style-properties design).
+Deliberately does NOT reuse `part_style_attr` — that splices
+`Background`/`BorderBrush`/`BorderThickness` verbatim (real dependency
+properties on `Border`/`Panel`/`Control`, but `Ellipse`/`Line`/`Path`
+are `Shape`-derived and have none of the three; XamlCompiler would
+reject the attribute). Mirrors `content_control_style_attr`'s
+selective-remap pattern instead.
+
+Coordinate props (`cx`/`cy`/`r`/`x1`/`y1`/etc.) accept only a literal
+`Number` for now — `SlotRef`/`Expr` produce a clear compile error
+naming the unsupported prop, not a silent 0 or a dropped binding.
+Kernel-level bindability (UI39 §3.1) is real, but wiring it to actual
+`x:Bind` XAML is XAML's own not-yet-landed UI36 (data-driven sizing)
+work, tracked separately — implementing a one-off binding path just for
+`Path` ahead of that would duplicate work UI36 already owns.
+
+`mosaic-package-artifact-builder`'s `("Path", ...)` degradation arm
+narrowed to exclude `Backend::Xaml` (`HostSlider`'s per-backend
+narrowing pattern). SwiftUI/Qt/Flutter/Compose remain fully degraded.
+
+Verified against the real toolchain: the exact XAML syntax above was
+confirmed via a throwaway `dotnet build` probe project *before* writing
+`emit_path` (catching the `Canvas.Left` mistake, see above); a real
+`mosaic-compile pkg --backend xaml` build of a package authoring the
+actual crescent-moon shape (two overlapping `Path` circles) produces
+`nativeComplete: true, degradations: []`; a real `--emit-project` +
+`dotnet build` + launch of that same package succeeds cleanly (0
+errors, 0 warnings) and the window stays running. (Along the way, found
+and filed #13184 — the `--emit-project` scaffold breaks for a component
+with zero declared `emit`s, unrelated to `Path`, sidestepped in this
+verification by adding one unused `emit`.)
+
+## [Unreleased] — lower `box-shadow` to a `ThemeShadow` elevation token (#12028 item 1)
+
+30 `box-shadow` declarations across `task-app`'s stylesheet — its
+entire elevation system — were silently dropped, the single largest
+contributor to the flat, unfinished look the epic's original writeup
+flagged.
+
+New `part_wants_theme_shadow`: a non-`inset` `box-shadow` (any value)
+now gets `Translation="0,0,4"` plus a `<{Element}.Shadow><ThemeShadow/>
+</{Element}.Shadow>` child — WinUI's own consistent elevation
+treatment. Deliberately does NOT attempt to reproduce the authored
+blur/spread/color/opacity: `ThemeShadow` is a fixed, system-composited
+shadow with no CSS-shaped parameters, so every qualifying value
+collapses to the same one Z-depth (Microsoft's own "Cards: 4–8px"
+guidance) — a value an author might reasonably expect to vary in
+*intensity* can't, on this platform, regardless of what this emitter
+does. Applies uniformly to `emit_container`'s `Border`/`Grid`/
+`StackPanel` shapes and `emit_host_button`'s `<Button>` (which
+self-closes unless a `Shadow` child forces the open/close form).
+
+An `inset` value (the crescent-moon/status-dot drawing hack, item 3 —
+a shape cutout, not elevation) is a fundamentally different technique
+and stays a genuine, reported drop.
+
+Verified empirically against the real WinUI3 `dotnet build` toolchain
+before implementing (confirming `<Border.Shadow>`/`Translation="0,0,N"`
+both compile as direct XAML, despite `Translation` not being settable
+via `<Setter>`), then against a real regenerated `task-app` XAML
+project: 9 real elements (the brand-mark icon, every "active" pill/
+segmented-switch button) now carry `ThemeShadow`, the degradation
+report's only remaining `box-shadow` entry is the one genuinely-
+unsupported `inset` moon hack, and `dotnet build` succeeds with 0
+errors (same 98 pre-existing, unrelated warnings).
+
+## [Unreleased] — recognize mosstyle's `align: "center-vertical"` (#13164)
+
+Found while auditing TaskApp's remaining `styleDegradations` after
+#13160: `align: "center-vertical"` (and one `align: "center"`) is
+authored 30+ times across real `.msl` files (TaskApp, VentureChrome,
+Calendar, ProjectNav) — always on a `Row`, always meaning "center the
+cross axis" — but nothing lowered it, so every one of those rows
+rendered top-aligned instead of vertically centered.
+
+`align` is not a real mosstyle property (per `UI15-mosstyle.md`
+§1/§11, alignment belongs in `.mll`; mosstyle's grammar has no property
+whitelist to reject it — a separate gap, tracked in #13164 rather than
+fixed here). Given every real occurrence is semantically identical to
+`align-items: center`, `extract_flex_hints` now also recognizes
+`align: "center-vertical"` / `align: "center"`, mapping to the exact
+same `align_items = Some("center")` FlexHints slot — reusing 100% of
+the existing, tested per-child `VerticalAlignment`/`HorizontalAlignment`
+injection, no new mechanism.
+
+Verified against a real regenerated `task-app` XAML project: 60
+`VerticalAlignment="Center"` attributes now appear (versus rows
+rendering top-aligned before), the degradation report no longer lists
+`align` for any part, and `dotnet build` succeeds with 0 errors (same
+98 pre-existing unrelated warnings).
+
 ## [Unreleased] — lower `position: "absolute"` to a pinned Margin (#12028 item 4)
 
 `position: "absolute"`/`top`/`left` had no XAML setter at all and were
