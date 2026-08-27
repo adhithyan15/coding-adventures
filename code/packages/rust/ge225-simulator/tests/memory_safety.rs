@@ -1,5 +1,5 @@
 use coding_adventures_ge225_simulator::{
-    assemble_fixed, assemble_shift, encode_instruction, Simulator,
+    assemble_card_io, assemble_fixed, assemble_shift, encode_instruction, Simulator,
 };
 
 const MASK_20: i32 = (1 << 20) - 1;
@@ -220,22 +220,23 @@ fn card_read_is_atomic_and_keeps_the_record_after_a_range_error() {
     simulator
         .queue_card_reader_record(&[0x11111, 0x22222])
         .unwrap();
+    simulator.write_word(1, 2048).unwrap();
     simulator
-        .load_words(&[instruction(0o25, 4095, 0)], 4)
+        .load_words(&[assemble_card_io("RCD", 0, 1).unwrap()], 64)
         .unwrap();
-    simulator.set_program_counter(4).unwrap();
+    simulator.set_program_counter(64).unwrap();
 
     let error = simulator.step().unwrap_err();
-    assert!(error.contains("address range out of range"));
-    assert_eq!(simulator.read_word(4095).unwrap(), 0);
+    assert!(error.contains("card I/O base"));
+    assert_eq!(simulator.read_word(128).unwrap(), 0);
 
     simulator
-        .load_words(&[instruction(0o25, 10, 0)], 4)
+        .load_words(&[assemble_card_io("RCD", 128, 0).unwrap()], 64)
         .unwrap();
-    simulator.set_program_counter(4).unwrap();
+    simulator.set_program_counter(64).unwrap();
     simulator.step().unwrap();
-    assert_eq!(simulator.read_word(10).unwrap(), 0x11111);
-    assert_eq!(simulator.read_word(11).unwrap(), 0x22222);
+    assert_eq!(simulator.read_word(128).unwrap(), 0x11111);
+    assert_eq!(simulator.read_word(129).unwrap(), 0x22222);
 }
 
 #[test]

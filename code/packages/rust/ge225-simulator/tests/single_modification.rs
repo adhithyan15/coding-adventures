@@ -163,7 +163,7 @@ fn manual_single_shift_and_compare_vectors_match() {
 fn n_input_shifts_fail_closed_when_n_is_not_ready() {
     for mnemonic in ["SNA", "NAQ", "ANQ"] {
         let mut simulator = simulator_with_program(&[
-            assemble_fixed("HPT").unwrap(),
+            assemble_fixed("OFF").unwrap(),
             assemble_shift(mnemonic, 1).unwrap(),
         ]);
         simulator.step().unwrap();
@@ -217,7 +217,7 @@ fn register_branch_tests_follow_the_manual_skip_rule() {
 
     for (mnemonic, condition) in [("BNR", false), ("BNN", true)] {
         let mut simulator = simulator_with_program(&[
-            assemble_fixed("HPT").unwrap(),
+            assemble_fixed("OFF").unwrap(),
             assemble_fixed(mnemonic).unwrap(),
         ]);
         simulator.run(2).unwrap();
