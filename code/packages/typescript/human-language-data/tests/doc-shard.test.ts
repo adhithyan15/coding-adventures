@@ -17,21 +17,26 @@ import {
   type DocShardPlan,
   isAbsentErrno,
   isDocSharded,
+  isValidDocShardName,
   docShardContents,
   docShardDirectoryFor,
   docShardFilename,
   docSlug,
   headingDigest,
   joinDocShards,
+  readDocShards,
   splitDocument,
 } from "../src/doc-shard.js";
 import {
   DOC_SHARD_PLANS,
   defaultRepoRoot,
+  runDocShardCli,
   safeDocumentPath,
+  shardDocument,
   unshardDocContents,
   unshardDocument,
 } from "../src/doc-shard-cli.js";
+import { LEGACY_DOC_SHARD_SHA256 } from "../src/doc-shard-legacy.js";
 
 const PLAN: DocShardPlan = { path: "x/DOC.md", headingLevel: 2, newestFirst: true };
 const OLDEST_FIRST: DocShardPlan = { ...PLAN, newestFirst: false };
@@ -212,6 +217,140 @@ describe("docShardFilename", () => {
     // reproducing document order — and `--check` cannot see it, because both
     // directions use the same broken order.
     expect(() => docShardFilename(100000, "A", "0f0f0f0f")).toThrow(/outgrown the shard numbering/);
+  });
+});
+
+describe("Markdown shard filename grammar", () => {
+  it("accepts metadata and positive rank/slug/digest section names", () => {
+    expect(isValidDocShardName(DOC_META_SHARD)).toBe(true);
+    expect(isValidDocShardName("00010-A-0f0f0f0f.md")).toBe(true);
+    expect(isValidDocShardName("00020-AGENT-A-11111111.md")).toBe(true);
+    expect(isValidDocShardName("00020-AGENT-B-22222222.md")).toBe(true);
+  });
+
+  it.each([
+    "A-0f0f0f0f.md", // missing rank
+    "00000-A-0f0f0f0f.md", // zero is not an ordering rank
+    "00010-A-0f0f0f0.md", // short digest
+    "00010-A-0f0f0f0g.md", // non-hex digest
+    "00010-A-0F0F0F0F.md", // digest must be lowercase
+    "00010-AGENT--A-0f0f0f0f.md", // empty slug component
+    "_notes.md", // _meta.md is the sole reserved metadata name
+  ])("rejects malformed section name %s", (name) => {
+    expect(isValidDocShardName(name)).toBe(false);
+  });
+
+  it("refuses a malformed file before reading or rendering any shard", () => {
+    const root = mkdtempSync(join(tmpdir(), "doc-shard-malformed-"));
+    const plan = DOC_SHARD_PLANS[0];
+    const document = join(root, ...plan.path.split("/"));
+    const dir = docShardDirectoryFor(document);
+    mkdirSync(dir, { recursive: true });
+    writeFileSync(join(dir, DOC_META_SHARD), "# T\n\n");
+    writeFileSync(join(dir, "MISSING-RANK-deadbeef.md"), "## hidden\n");
+
+    try {
+      expect(() => runDocShardCli(["--check", plan.path], root)).toThrow(/malformed filename/);
+    } finally {
+      rmSync(root, { recursive: true, force: true });
+    }
+  });
+
+  it("renders valid same-rank parallel fragments deterministically", () => {
+    const root = mkdtempSync(join(tmpdir(), "doc-shard-parallel-"));
+    const document = join(root, "x", "DOC.md");
+    const dir = docShardDirectoryFor(document);
+    const headingA = "## AGENT-A";
+    const headingB = "## AGENT-B";
+    const nameA = docShardFilename(20, docSlug(headingA), headingDigest(headingA));
+    const nameB = docShardFilename(20, docSlug(headingB), headingDigest(headingB));
+    mkdirSync(dir, { recursive: true });
+    writeFileSync(join(dir, DOC_META_SHARD), "# T\n\n");
+    writeFileSync(join(dir, nameA), `${headingA}\n\na\n\n`);
+    writeFileSync(join(dir, nameB), `${headingB}\n\nb\n\n`);
+
+    try {
+      const shards = readDocShards(document, PLAN);
+      expect(shards).not.toBeNull();
+      expect(joinDocShards(shards!, PLAN)).toBe(
+        "# T\n\n## AGENT-B\n\nb\n\n## AGENT-A\n\na\n\n",
+      );
+    } finally {
+      rmSync(root, { recursive: true, force: true });
+    }
+  });
+
+  it("accepts only the exact content-pinned legacy corpus", () => {
+    const root = mkdtempSync(join(tmpdir(), "doc-shard-legacy-"));
+    const plan = DOC_SHARD_PLANS[0];
+    const legacyName = Object.keys(LEGACY_DOC_SHARD_SHA256[plan.path])[0];
+    const document = join(root, ...plan.path.split("/"));
+    const dir = docShardDirectoryFor(document);
+    const source = join(
+      defaultRepoRoot(),
+      ...docShardDirectoryFor(plan.path).split("/"),
+      legacyName,
+    );
+    const body = readFileSync(source, "utf8");
+    mkdirSync(dir, { recursive: true });
+    writeFileSync(join(dir, DOC_META_SHARD), "# T\n\n");
+    writeFileSync(join(dir, legacyName), body);
+
+    try {
+      expect(readDocShards(document, plan)?.get(legacyName)).toBe(body);
+      writeFileSync(join(dir, legacyName), `${body}\nchanged\n`);
+      expect(() => readDocShards(document, plan)).toThrow(/grandfathered content changed/);
+    } finally {
+      rmSync(root, { recursive: true, force: true });
+    }
+  });
+
+  it("rejects a new legacy-shaped name even when its body is old", () => {
+    const root = mkdtempSync(join(tmpdir(), "doc-shard-new-legacy-"));
+    const plan = DOC_SHARD_PLANS[0];
+    const legacyName = Object.keys(LEGACY_DOC_SHARD_SHA256[plan.path])[0];
+    const document = join(root, ...plan.path.split("/"));
+    const dir = docShardDirectoryFor(document);
+    const source = join(
+      defaultRepoRoot(),
+      ...docShardDirectoryFor(plan.path).split("/"),
+      legacyName,
+    );
+    mkdirSync(dir, { recursive: true });
+    writeFileSync(join(dir, DOC_META_SHARD), "# T\n\n");
+    writeFileSync(join(dir, "00010-UNKNOWN-LEGACY.md"), readFileSync(source, "utf8"));
+
+    try {
+      expect(() => readDocShards(document, plan)).toThrow(/malformed filename/);
+    } finally {
+      rmSync(root, { recursive: true, force: true });
+    }
+  });
+
+  it("refuses to reshard a grandfathered append-only document", () => {
+    const root = mkdtempSync(join(tmpdir(), "doc-shard-legacy-write-"));
+    const plan = DOC_SHARD_PLANS[0];
+    const legacyName = Object.keys(LEGACY_DOC_SHARD_SHA256[plan.path])[0];
+    const document = join(root, ...plan.path.split("/"));
+    const dir = docShardDirectoryFor(document);
+    const source = join(
+      defaultRepoRoot(),
+      ...docShardDirectoryFor(plan.path).split("/"),
+      legacyName,
+    );
+    const body = readFileSync(source, "utf8");
+    mkdirSync(dir, { recursive: true });
+    mkdirSync(join(document, ".."), { recursive: true });
+    writeFileSync(document, `# T\n\n${body}`);
+    writeFileSync(join(dir, DOC_META_SHARD), "# T\n\n");
+    writeFileSync(join(dir, legacyName), body);
+
+    try {
+      expect(() => shardDocument(root, plan)).toThrow(/cannot reshard.*append-only legacy/);
+      expect(readFileSync(join(dir, legacyName), "utf8")).toBe(body);
+    } finally {
+      rmSync(root, { recursive: true, force: true });
+    }
   });
 });
 

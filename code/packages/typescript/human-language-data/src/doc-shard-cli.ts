@@ -70,6 +70,7 @@ import {
   docShardContents,
   docShardDirectoryFor,
   isDocSharded,
+  isValidDocShardName,
   joinDocShards,
   listDocShardNames,
   readDocShards,
@@ -238,7 +239,7 @@ export function safeDocumentPath(root: string, relative: string): string {
  */
 export function unshardDocContents(root: string, plan: DocShardPlan): string {
   const monolith = safeDocumentPath(root, plan.path);
-  const shards = readDocShards(monolith);
+  const shards = readDocShards(monolith, plan);
   if (shards === null) {
     throw new Error(`${plan.path}: no ${docShardDirectoryFor(plan.path)} to rebuild from`);
   }
@@ -273,7 +274,15 @@ export function shardDocument(root: string, plan: DocShardPlan): string[] {
   // make the next `--check` fail with an entry nobody can find in the source —
   // the "unexpected stale shard" case `modality-cli` already guards.
   if (isDocSharded(monolith)) {
-    for (const name of listDocShardNames(monolith)) rmSync(join(dir, name));
+    const existing = listDocShardNames(monolith, plan);
+    const legacy = existing.filter((name) => !isValidDocShardName(name));
+    if (legacy.length > 0) {
+      throw new Error(
+        `${plan.path}: cannot reshard ${legacy.length} append-only legacy fragment(s); ` +
+          `add a strict rank/slug/digest shard instead`,
+      );
+    }
+    for (const name of existing) rmSync(join(dir, name));
   } else if (statIfPresent(dir) !== undefined) {
     // `isDocSharded` returned false for a reason other than "absent" only if
     // something that is not a directory is squatting on the name. Refuse it
@@ -370,7 +379,7 @@ export function runDocShardCli(
       continue;
     }
     const expected = unshardDocContents(root, plan);
-    const shardCount = listDocShardNames(monolith).length - 1; // `_meta.md`
+    const shardCount = listDocShardNames(monolith, plan).length - 1; // `_meta.md`
     const sectionCount = docShardContents(expected, plan).size - 1;
     if (sectionCount !== shardCount) {
       process.stderr.write(
