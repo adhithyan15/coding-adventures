@@ -12,6 +12,7 @@ import argparse
 import hashlib
 import json
 import math
+import re
 import sys
 from collections.abc import Callable, Iterable
 from pathlib import Path
@@ -28,6 +29,7 @@ SCYTALE_OPERATIONS = {
     "scytale-decrypt",
     "scytale-brute-force",
 }
+IDENTIFIER_PATTERN = re.compile(r"[a-z0-9]+(?:-[a-z0-9]+)*")
 
 TARGETS = {
     "csharp": Path(
@@ -180,7 +182,11 @@ def load_cases_bytes(raw: bytes) -> tuple[list[dict[str, Any]], str]:
             raise ValueError("fixture-invalid-case")
         case_id = case.get("id")
         operation = case.get("operation")
-        if not isinstance(case_id, str) or case_id in seen_ids:
+        if (
+            not isinstance(case_id, str)
+            or IDENTIFIER_PATTERN.fullmatch(case_id) is None
+            or case_id in seen_ids
+        ):
             raise ValueError("fixture-invalid-case")
         seen_ids.add(case_id)
         if operation not in SCYTALE_OPERATIONS:
@@ -237,17 +243,101 @@ def _validate_scytale_case(case: dict[str, Any]) -> None:
             raise ValueError("fixture-invalid-case")
     if "text" in expected and not isinstance(expected["text"], str):
         raise ValueError("fixture-invalid-case")
-    if "error_id" in expected and not isinstance(expected["error_id"], str):
+    if "error_id" in expected and (
+        not isinstance(expected["error_id"], str)
+        or IDENTIFIER_PATTERN.fullmatch(expected["error_id"]) is None
+    ):
         raise ValueError("fixture-invalid-case")
 
 
 def load_cases(path: Path) -> tuple[list[dict[str, Any]], str]:
-    raw = path.read_bytes()
+    with path.open("rb") as stream:
+        raw = stream.read(MAX_FIXTURE_BYTES + 1)
     return load_cases_bytes(raw)
 
 
-def _quote(value: str) -> str:
-    return json.dumps(value, ensure_ascii=False)
+def _scalar_values(value: str) -> str:
+    return ", ".join(str(ord(character)) for character in value)
+
+
+def _quote_csharp(value: str) -> str:
+    return f"Scalars({_scalar_values(value)})"
+
+
+def _quote_dart(value: str) -> str:
+    return json.dumps(value, ensure_ascii=False).replace("$", r"\$")
+
+
+def _quote_elixir(value: str) -> str:
+    return f"List.to_string([{_scalar_values(value)}])"
+
+
+def _quote_fsharp(value: str) -> str:
+    return f"(scalars [{_scalar_values(value).replace(',', ';')}])"
+
+
+def _quote_go(value: str) -> str:
+    return f"string([]rune{{{_scalar_values(value)}}})"
+
+
+def _quote_haskell(value: str) -> str:
+    return f"(map chr [{_scalar_values(value)}])"
+
+
+def _quote_java(value: str) -> str:
+    values = _scalar_values(value)
+    return f"new String(new int[] {{{values}}}, 0, {len(value)})"
+
+
+def _quote_kotlin(value: str) -> str:
+    return f"scalars({_scalar_values(value)})"
+
+
+def _quote_lua(value: str) -> str:
+    return f"utf8.char({_scalar_values(value)})"
+
+
+def _quote_perl(value: str) -> str:
+    scalars = _scalar_values(value)
+    suffix = f", {scalars}" if scalars else ""
+    return f'pack("U*"{suffix})'
+
+
+def _quote_ruby(value: str) -> str:
+    return f'[{_scalar_values(value)}].pack("U*")'
+
+
+def _quote_python(value: str) -> str:
+    values = _scalar_values(value)
+    if len(value) == 1:
+        values += ","
+    return f'"".join(map(chr, ({values})))'
+
+
+def _quote_rust(value: str) -> str:
+    escaped = "".join(f"\\u{{{ord(character):x}}}" for character in value)
+    return f'"{escaped}"'
+
+
+def _rust_assignment(name: str, value: str) -> list[str]:
+    literal = _quote_rust(value)
+    compact = f"    let {name} = {literal};"
+    if len(compact) <= 100:
+        return [compact]
+    return [f"    let {name} =", f"        {literal};"]
+
+
+def _quote_swift(value: str) -> str:
+    return f"scalars([{_scalar_values(value)}])"
+
+
+def _quote_typescript(value: str) -> str:
+    return f"String.fromCodePoint({_scalar_values(value)})"
+
+
+def _repeat_descriptor(case: dict[str, Any]) -> tuple[str, int]:
+    input_value = case["input"]
+    return input_value["repeat_scalar"], input_value["repeat_count"]
 
 
 def _header(prefix: str, digest: str) -> str:
@@ -266,7 +356,8 @@ def _invalid_cases(cases: Iterable[dict[str, Any]]) -> Iterable[dict[str, Any]]:
     return (
         case
         for case in cases
-        if case["expected"].get("error_id") == "scytale-invalid-key"
+        if case["operation"] in {"scytale-encrypt", "scytale-decrypt"}
+        and "error_id" in case["expected"]
     )
 
 
@@ -279,6 +370,7 @@ def render_csharp(cases: list[dict[str, Any]], digest: str) -> str:
         _header("//", digest),
         "namespace CodingAdventures.ScytaleCipher.Tests;\n",
         "public sealed class GeneratedClassicalCipherFixtureTests\n{",
+        "    private static string Scalars(params int[] values) => string.Concat(values.Select(char.ConvertFromUtf32));\n",
         "    [Fact]",
         "    public void MatchesAllNormativeScytaleCases()\n    {",
     ]
@@ -286,30 +378,33 @@ def render_csharp(cases: list[dict[str, Any]], digest: str) -> str:
         fn = "Encrypt" if case["operation"].endswith("encrypt") else "Decrypt"
         lines += [
             f"        // {case['id']}",
-            f"        Assert.Equal({_quote(case['expected']['text'])}, ScytaleCipher.{fn}({_quote(case['input']['text'])}, {case['input']['key']}));",
+            f"        Assert.Equal({_quote_csharp(case['expected']['text'])}, ScytaleCipher.{fn}({_quote_csharp(case['input']['text'])}, {case['input']['key']}));",
         ]
-    for case in _invalid_cases(cases):
+    for index, case in enumerate(_invalid_cases(cases)):
         fn = "Encrypt" if case["operation"].endswith("encrypt") else "Decrypt"
         lines += [
             f"        // {case['id']}",
-            f"        Assert.Throws<ArgumentOutOfRangeException>(() => ScytaleCipher.{fn}({_quote(case['input']['text'])}, {case['input']['key']}));",
+            f"        var invalidError{index} = Assert.Throws<ArgumentOutOfRangeException>(() => ScytaleCipher.{fn}({_quote_csharp(case['input']['text'])}, {case['input']['key']}));",
+            f"        Assert.Equal({_quote_csharp(case['expected']['error_id'])}, invalidError{index}.Message.Contains({_quote_csharp('Key must')}, StringComparison.Ordinal) ? {_quote_csharp('scytale-invalid-key')} : {_quote_csharp('unexpected-error')});",
         ]
     brute = _brute_case(cases, "brute-force-ascending")
     candidates = ", ".join(
-        f"new BruteForceResult({c['key']}, {_quote(c['text'])})"
+        f"new BruteForceResult({c['key']}, {_quote_csharp(c['text'])})"
         for c in brute["expected"]["candidates"]
     )
     lines += [
         f"        // {brute['id']}",
-        f"        Assert.Equal(new[] {{ {candidates} }}, ScytaleCipher.BruteForce({_quote(brute['input']['text'])}));",
+        f"        Assert.Equal(new[] {{ {candidates} }}, ScytaleCipher.BruteForce({_quote_csharp(brute['input']['text'])}));",
     ]
     short = _brute_case(cases, "brute-force-short")
     limit = _brute_case(cases, "brute-force-preflight-limit")
+    repeat_scalar, repeat_count = _repeat_descriptor(limit)
     lines += [
         f"        // {short['id']}",
-        f"        Assert.Empty(ScytaleCipher.BruteForce({_quote(short['input']['text'])}));",
+        f"        Assert.Empty(ScytaleCipher.BruteForce({_quote_csharp(short['input']['text'])}));",
         f"        // {limit['id']}",
-        "        Assert.Throws<ArgumentOutOfRangeException>(() => ScytaleCipher.BruteForce(new string('A', 4097)));",
+        f"        var limitError = Assert.Throws<ArgumentOutOfRangeException>(() => ScytaleCipher.BruteForce(string.Concat(Enumerable.Repeat({_quote_csharp(repeat_scalar)}, {repeat_count}))));",
+        f"        Assert.Equal({_quote_csharp(limit['expected']['error_id'])}, limitError.GetType() == typeof(ArgumentOutOfRangeException) ? {_quote_csharp('scytale-brute-force-limit')} : {_quote_csharp('unexpected-error')});",
         "    }",
         "}",
     ]
@@ -328,33 +423,43 @@ def render_dart(cases: list[dict[str, Any]], digest: str) -> str:
         fn = "encrypt" if case["operation"].endswith("encrypt") else "decrypt"
         lines += [
             f"    // {case['id']}",
-            f"    expect({fn}({_quote(case['input']['text'])}, {case['input']['key']}), {_quote(case['expected']['text'])});",
+            f"    expect({fn}({_quote_dart(case['input']['text'])}, {case['input']['key']}), {_quote_dart(case['expected']['text'])});",
         ]
     for case in _invalid_cases(cases):
         fn = "encrypt" if case["operation"].endswith("encrypt") else "decrypt"
         lines += [
             f"    // {case['id']}",
-            f"    expect(() => {fn}({_quote(case['input']['text'])}, {case['input']['key']}), throwsArgumentError);",
+            "    expect(",
+            f"        () => {fn}({_quote_dart(case['input']['text'])}, {case['input']['key']}),",
+            "        throwsA(isA<ArgumentError>().having(",
+            f"            (error) => error.message.toString().startsWith({_quote_dart('key must')}),",
+            "            'message',",
+            "            isTrue)));",
+            f"    expect({_quote_dart('scytale-invalid-key')}, {_quote_dart(case['expected']['error_id'])});",
         ]
     brute = _brute_case(cases, "brute-force-ascending")
     expected = [
-        f"      [{candidate['key']}, {_quote(candidate['text'])}]"
+        f"      [{candidate['key']}, {_quote_dart(candidate['text'])}]"
         for candidate in brute["expected"]["candidates"]
     ]
     lines += [
         f"    // {brute['id']}",
-        f"    expect(bruteForce({_quote(brute['input']['text'])}).map((c) => [c.key, c.text]).toList(), [",
+        f"    expect(bruteForce({_quote_dart(brute['input']['text'])}).map((c) => [c.key, c.text]).toList(), [",
         *[f"{line}," for line in expected[:-1]],
         expected[-1],
         "    ]);",
     ]
     short = _brute_case(cases, "brute-force-short")
     limit = _brute_case(cases, "brute-force-preflight-limit")
+    repeat_scalar, repeat_count = _repeat_descriptor(limit)
     lines += [
         f"    // {short['id']}",
-        f"    expect(bruteForce({_quote(short['input']['text'])}), isEmpty);",
+        f"    expect(bruteForce({_quote_dart(short['input']['text'])}), isEmpty);",
         f"    // {limit['id']}",
-        "    expect(() => bruteForce(List.filled(4097, 'A').join()), throwsRangeError);",
+        "    expect(",
+        f"        () => bruteForce(List.filled({repeat_count}, {_quote_dart(repeat_scalar)}).join()),",
+        "        throwsA(isA<RangeError>().having(",
+        f"            (error) => error.message, 'message', {_quote_dart(limit['expected']['error_id'])})));",
         "  });",
         "}",
     ]
@@ -373,31 +478,34 @@ def render_elixir(cases: list[dict[str, Any]], digest: str) -> str:
         fn = "encrypt" if case["operation"].endswith("encrypt") else "decrypt"
         lines += [
             f"    # {case['id']}",
-            f"    assert ScytaleCipher.{fn}({_quote(case['input']['text'])}, {case['input']['key']}) == {_quote(case['expected']['text'])}",
+            f"    assert ScytaleCipher.{fn}({_quote_elixir(case['input']['text'])}, {case['input']['key']}) == {_quote_elixir(case['expected']['text'])}",
         ]
-    for case in _invalid_cases(cases):
+    for index, case in enumerate(_invalid_cases(cases)):
         fn = "encrypt" if case["operation"].endswith("encrypt") else "decrypt"
         lines += [
             f"    # {case['id']}",
-            f"    assert_raise ArgumentError, fn -> ScytaleCipher.{fn}({_quote(case['input']['text'])}, {case['input']['key']}) end",
+            f"    invalid_error_{index} = assert_raise ArgumentError, fn -> ScytaleCipher.{fn}({_quote_elixir(case['input']['text'])}, {case['input']['key']}) end",
+            f"    assert String.starts_with?(Exception.message(invalid_error_{index}), {_quote_elixir('Key must')})",
+            f"    assert {_quote_elixir('scytale-invalid-key')} == {_quote_elixir(case['expected']['error_id'])}",
         ]
     brute = _brute_case(cases, "brute-force-ascending")
     expected = ", ".join(
-        f"%{{key: {c['key']}, text: {_quote(c['text'])}}}"
+        f"%{{key: {c['key']}, text: {_quote_elixir(c['text'])}}}"
         for c in brute["expected"]["candidates"]
     )
     lines += [
         f"    # {brute['id']}",
-        f"    assert ScytaleCipher.brute_force({_quote(brute['input']['text'])}) == [{expected}]",
+        f"    assert ScytaleCipher.brute_force({_quote_elixir(brute['input']['text'])}) == [{expected}]",
     ]
     short = _brute_case(cases, "brute-force-short")
     limit = _brute_case(cases, "brute-force-preflight-limit")
+    repeat_scalar, repeat_count = _repeat_descriptor(limit)
     lines += [
         f"    # {short['id']}",
-        f"    assert ScytaleCipher.brute_force({_quote(short['input']['text'])}) == []",
+        f"    assert ScytaleCipher.brute_force({_quote_elixir(short['input']['text'])}) == []",
         f"    # {limit['id']}",
-        '    assert_raise ArgumentError, "scytale-brute-force-limit", fn ->',
-        '      ScytaleCipher.brute_force(String.duplicate("A", 4097))',
+        f"    assert_raise ArgumentError, {_quote_elixir(limit['expected']['error_id'])}, fn ->",
+        f"      ScytaleCipher.brute_force(String.duplicate({_quote_elixir(repeat_scalar)}, {repeat_count}))",
         "    end",
         "  end",
         "end",
@@ -415,35 +523,39 @@ def render_fsharp(cases: list[dict[str, Any]], digest: str) -> str:
         "type GeneratedClassicalCipherFixtureTests() =",
         "    [<Fact>]",
         "    member _.``all normative Scytale cases``() =",
+        '        let scalars values = values |> List.map Char.ConvertFromUtf32 |> String.concat ""',
     ]
     for case in _text_cases(cases):
         fn = "encrypt" if case["operation"].endswith("encrypt") else "decrypt"
         lines += [
             f"        // {case['id']}",
-            f"        Assert.Equal({_quote(case['expected']['text'])}, ScytaleCipher.{fn} {_quote(case['input']['text'])} {case['input']['key']})",
+            f"        Assert.Equal({_quote_fsharp(case['expected']['text'])}, ScytaleCipher.{fn} {_quote_fsharp(case['input']['text'])} {case['input']['key']})",
         ]
-    for case in _invalid_cases(cases):
+    for index, case in enumerate(_invalid_cases(cases)):
         fn = "encrypt" if case["operation"].endswith("encrypt") else "decrypt"
         lines += [
             f"        // {case['id']}",
-            f"        Assert.Throws<ArgumentException>(fun () -> ScytaleCipher.{fn} {_quote(case['input']['text'])} {case['input']['key']} |> ignore) |> ignore",
+            f"        let invalidError{index} = Assert.Throws<ArgumentException>(fun () -> ScytaleCipher.{fn} {_quote_fsharp(case['input']['text'])} {case['input']['key']} |> ignore)",
+            f"        Assert.Equal({_quote_fsharp(case['expected']['error_id'])}, if invalidError{index}.Message.Contains({_quote_fsharp('Key must')}, StringComparison.Ordinal) then {_quote_fsharp('scytale-invalid-key')} else {_quote_fsharp('unexpected-error')})",
         ]
     brute = _brute_case(cases, "brute-force-ascending")
     expected = "; ".join(
-        f"{{ Key = {c['key']}; Text = {_quote(c['text'])} }}"
+        f"{{ Key = {c['key']}; Text = {_quote_fsharp(c['text'])} }}"
         for c in brute["expected"]["candidates"]
     )
     lines += [
         f"        // {brute['id']}",
-        f"        Assert.Equal<BruteForceResult list>([ {expected} ], ScytaleCipher.bruteForce {_quote(brute['input']['text'])})",
+        f"        Assert.Equal<BruteForceResult list>([ {expected} ], ScytaleCipher.bruteForce {_quote_fsharp(brute['input']['text'])})",
     ]
     short = _brute_case(cases, "brute-force-short")
     limit = _brute_case(cases, "brute-force-preflight-limit")
+    repeat_scalar, repeat_count = _repeat_descriptor(limit)
     lines += [
         f"        // {short['id']}",
-        f"        Assert.Empty(ScytaleCipher.bruteForce {_quote(short['input']['text'])})",
+        f"        Assert.Empty(ScytaleCipher.bruteForce {_quote_fsharp(short['input']['text'])})",
         f"        // {limit['id']}",
-        "        Assert.Throws<ArgumentException>(fun () -> ScytaleCipher.bruteForce (String('A', 4097)) |> ignore) |> ignore",
+        f"        let limitError = Assert.Throws<ArgumentException>(fun () -> ScytaleCipher.bruteForce (String.replicate {repeat_count} {_quote_fsharp(repeat_scalar)}) |> ignore)",
+        f"        Assert.Equal({_quote_fsharp(limit['expected']['error_id'])}, if limitError.GetType() = typeof<ArgumentException> then {_quote_fsharp('scytale-brute-force-limit')} else {_quote_fsharp('unexpected-error')})",
     ]
     return "\n".join(lines) + "\n"
 
@@ -464,8 +576,8 @@ def render_go(cases: list[dict[str, Any]], digest: str) -> str:
         fn = "Encrypt" if case["operation"].endswith("encrypt") else "Decrypt"
         lines += [
             f"\t// {case['id']}",
-            f"\tgot{index}, err{index} := {fn}({_quote(case['input']['text'])}, {case['input']['key']})",
-            f"\tif err{index} != nil || got{index} != {_quote(case['expected']['text'])} {{",
+            f"\tgot{index}, err{index} := {fn}({_quote_go(case['input']['text'])}, {case['input']['key']})",
+            f"\tif err{index} != nil || got{index} != {_quote_go(case['expected']['text'])} {{",
             f'\t\tt.Fatalf("{case["id"]}: got %q, %v", got{index}, err{index})',
             "\t}",
         ]
@@ -473,34 +585,39 @@ def render_go(cases: list[dict[str, Any]], digest: str) -> str:
         fn = "Encrypt" if case["operation"].endswith("encrypt") else "Decrypt"
         lines += [
             f"\t// {case['id']}",
-            f"\t_, invalidErr{index} := {fn}({_quote(case['input']['text'])}, {case['input']['key']})",
-            f"\tif !errors.Is(invalidErr{index}, ErrInvalidKey) {{",
-            f'\t\tt.Fatalf("{case["id"]}: %v", invalidErr{index})',
+            f"\t_, invalidErr{index} := {fn}({_quote_go(case['input']['text'])}, {case['input']['key']})",
+            f"\tinvalidID{index} := {_quote_go('unexpected-error')}",
+            f"\tif errors.Is(invalidErr{index}, ErrInvalidKey) {{",
+            f"\t\tinvalidID{index} = {_quote_go('scytale-invalid-key')}",
+            "\t}",
+            f"\tif invalidID{index} != {_quote_go(case['expected']['error_id'])} {{",
+            f'\t\tt.Fatalf("{case["id"]}: %s, %v", invalidID{index}, invalidErr{index})',
             "\t}",
         ]
     brute = _brute_case(cases, "brute-force-ascending")
     expected = ", ".join(
-        f"{{Key: {c['key']}, Text: {_quote(c['text'])}}}"
+        f"{{Key: {c['key']}, Text: {_quote_go(c['text'])}}}"
         for c in brute["expected"]["candidates"]
     )
     lines += [
         f"\t// {brute['id']}",
-        f"\tbrute, err := BruteForce({_quote(brute['input']['text'])})",
+        f"\tbrute, err := BruteForce({_quote_go(brute['input']['text'])})",
         f"\tif err != nil || !reflect.DeepEqual(brute, []BruteForceResult{{{expected}}}) {{",
         f'\t\tt.Fatalf("{brute["id"]}: %#v, %v", brute, err)',
         "\t}",
     ]
     short = _brute_case(cases, "brute-force-short")
     limit = _brute_case(cases, "brute-force-preflight-limit")
+    repeat_scalar, repeat_count = _repeat_descriptor(limit)
     lines += [
         f"\t// {short['id']}",
-        f"\tshort, err := BruteForce({_quote(short['input']['text'])})",
+        f"\tshort, err := BruteForce({_quote_go(short['input']['text'])})",
         "\tif err != nil || len(short) != 0 {",
         f'\t\tt.Fatalf("{short["id"]}: %#v, %v", short, err)',
         "\t}",
         f"\t// {limit['id']}",
-        '\t_, limitErr := BruteForce(strings.Repeat("A", 4097))',
-        "\tif !errors.Is(limitErr, ErrBruteForceLimit) {",
+        f"\t_, limitErr := BruteForce(strings.Repeat({_quote_go(repeat_scalar)}, {repeat_count}))",
+        f"\tif !errors.Is(limitErr, ErrBruteForceLimit) || limitErr.Error() != {_quote_go(limit['expected']['error_id'])} {{",
         f'\t\tt.Fatalf("{limit["id"]}: %v", limitErr)',
         "\t}",
         "}",
@@ -512,6 +629,8 @@ def render_haskell(cases: list[dict[str, Any]], digest: str) -> str:
     lines = [
         _header("--", digest),
         "module GeneratedClassicalCipherFixtureSpec (spec) where\n",
+        "import Data.Char (chr)",
+        "import Data.List (isPrefixOf)",
         "import ScytaleCipher",
         "import Test.Hspec\n",
         "spec :: Spec",
@@ -521,30 +640,31 @@ def render_haskell(cases: list[dict[str, Any]], digest: str) -> str:
         fn = "encrypt" if case["operation"].endswith("encrypt") else "decrypt"
         lines += [
             f"    -- {case['id']}",
-            f"    it {_quote(case['id'])} $ {fn} {_quote(case['input']['text'])} ({case['input']['key']}) `shouldBe` Right {_quote(case['expected']['text'])}",
+            f"    it {_quote_haskell(case['id'])} $ {fn} {_quote_haskell(case['input']['text'])} ({case['input']['key']}) `shouldBe` Right {_quote_haskell(case['expected']['text'])}",
         ]
     for case in _invalid_cases(cases):
         fn = "encrypt" if case["operation"].endswith("encrypt") else "decrypt"
         lines += [
             f"    -- {case['id']}",
-            f"    it {_quote(case['id'])} $ {fn} {_quote(case['input']['text'])} ({case['input']['key']}) `shouldSatisfy` either (const True) (const False)",
+            f"    it {_quote_haskell(case['id'])} $ either (\\err -> if {_quote_haskell('Key must')} `isPrefixOf` err then {_quote_haskell('scytale-invalid-key')} else {_quote_haskell('unexpected-error')}) (const {_quote_haskell('unexpected-success')}) ({fn} {_quote_haskell(case['input']['text'])} ({case['input']['key']})) `shouldBe` {_quote_haskell(case['expected']['error_id'])}",
         ]
     brute = _brute_case(cases, "brute-force-ascending")
     expected = ", ".join(
-        f"BruteForceResult {c['key']} {_quote(c['text'])}"
+        f"BruteForceResult {c['key']} {_quote_haskell(c['text'])}"
         for c in brute["expected"]["candidates"]
     )
     lines += [
         f"    -- {brute['id']}",
-        f"    it {_quote(brute['id'])} $ bruteForce {_quote(brute['input']['text'])} `shouldBe` Right [{expected}]",
+        f"    it {_quote_haskell(brute['id'])} $ bruteForce {_quote_haskell(brute['input']['text'])} `shouldBe` Right [{expected}]",
     ]
     short = _brute_case(cases, "brute-force-short")
     limit = _brute_case(cases, "brute-force-preflight-limit")
+    repeat_scalar, repeat_count = _repeat_descriptor(limit)
     lines += [
         f"    -- {short['id']}",
-        f"    it {_quote(short['id'])} $ bruteForce {_quote(short['input']['text'])} `shouldBe` Right []",
+        f"    it {_quote_haskell(short['id'])} $ bruteForce {_quote_haskell(short['input']['text'])} `shouldBe` Right []",
         f"    -- {limit['id']}",
-        f"    it {_quote(limit['id'])} $ bruteForce (replicate 4097 'A') `shouldBe` Left \"scytale-brute-force-limit\"",
+        f"    it {_quote_haskell(limit['id'])} $ bruteForce (concat (replicate {repeat_count} {_quote_haskell(repeat_scalar)})) `shouldBe` Left {_quote_haskell(limit['expected']['error_id'])}",
     ]
     return "\n".join(lines) + "\n"
 
@@ -564,30 +684,33 @@ def render_java(cases: list[dict[str, Any]], digest: str) -> str:
         fn = "encrypt" if case["operation"].endswith("encrypt") else "decrypt"
         lines += [
             f"        // {case['id']}",
-            f"        assertEquals({_quote(case['expected']['text'])}, ScytaleCipher.{fn}({_quote(case['input']['text'])}, {case['input']['key']}));",
+            f"        assertEquals({_quote_java(case['expected']['text'])}, ScytaleCipher.{fn}({_quote_java(case['input']['text'])}, {case['input']['key']}));",
         ]
-    for case in _invalid_cases(cases):
+    for index, case in enumerate(_invalid_cases(cases)):
         fn = "encrypt" if case["operation"].endswith("encrypt") else "decrypt"
         lines += [
             f"        // {case['id']}",
-            f"        assertThrows(IllegalArgumentException.class, () -> ScytaleCipher.{fn}({_quote(case['input']['text'])}, {case['input']['key']}));",
+            f"        var invalidError{index} = assertThrows(IllegalArgumentException.class, () -> ScytaleCipher.{fn}({_quote_java(case['input']['text'])}, {case['input']['key']}));",
+            f"        assertEquals({_quote_java(case['expected']['error_id'])}, invalidError{index}.getMessage().startsWith({_quote_java('key')}) && invalidError{index}.getMessage().contains({_quote_java('must')}) ? {_quote_java('scytale-invalid-key')} : {_quote_java('unexpected-error')});",
         ]
     brute = _brute_case(cases, "brute-force-ascending")
     keys = ", ".join(str(c["key"]) for c in brute["expected"]["candidates"])
-    texts = ", ".join(_quote(c["text"]) for c in brute["expected"]["candidates"])
+    texts = ", ".join(_quote_java(c["text"]) for c in brute["expected"]["candidates"])
     lines += [
         f"        // {brute['id']}",
-        f"        var brute = ScytaleCipher.bruteForce({_quote(brute['input']['text'])});",
+        f"        var brute = ScytaleCipher.bruteForce({_quote_java(brute['input']['text'])});",
         f"        assertEquals(List.of({keys}), brute.stream().map(result -> result.key).toList());",
         f"        assertEquals(List.of({texts}), brute.stream().map(result -> result.text).toList());",
     ]
     short = _brute_case(cases, "brute-force-short")
     limit = _brute_case(cases, "brute-force-preflight-limit")
+    repeat_scalar, repeat_count = _repeat_descriptor(limit)
     lines += [
         f"        // {short['id']}",
-        f"        assertTrue(ScytaleCipher.bruteForce({_quote(short['input']['text'])}).isEmpty());",
+        f"        assertTrue(ScytaleCipher.bruteForce({_quote_java(short['input']['text'])}).isEmpty());",
         f"        // {limit['id']}",
-        '        assertThrows(IllegalArgumentException.class, () -> ScytaleCipher.bruteForce("A".repeat(4097)));',
+        f"        var limitError = assertThrows(IllegalArgumentException.class, () -> ScytaleCipher.bruteForce({_quote_java(repeat_scalar)}.repeat({repeat_count})));",
+        f"        assertEquals({_quote_java(limit['expected']['error_id'])}, limitError.getMessage());",
         "    }",
         "}",
     ]
@@ -602,6 +725,7 @@ def render_kotlin(cases: list[dict[str, Any]], digest: str) -> str:
         "import org.junit.jupiter.api.assertThrows",
         "import kotlin.test.assertEquals\n",
         "class GeneratedClassicalCipherFixtureTest {",
+        '    private fun scalars(vararg values: Int): String = values.joinToString("") { String(java.lang.Character.toChars(it)) }\n',
         "    @Test",
         "    fun matchesAllNormativeScytaleCases() {",
     ]
@@ -609,30 +733,33 @@ def render_kotlin(cases: list[dict[str, Any]], digest: str) -> str:
         fn = "encrypt" if case["operation"].endswith("encrypt") else "decrypt"
         lines += [
             f"        // {case['id']}",
-            f"        assertEquals({_quote(case['expected']['text'])}, ScytaleCipher.{fn}({_quote(case['input']['text'])}, {case['input']['key']}))",
+            f"        assertEquals({_quote_kotlin(case['expected']['text'])}, ScytaleCipher.{fn}({_quote_kotlin(case['input']['text'])}, {case['input']['key']}))",
         ]
-    for case in _invalid_cases(cases):
+    for index, case in enumerate(_invalid_cases(cases)):
         fn = "encrypt" if case["operation"].endswith("encrypt") else "decrypt"
         lines += [
             f"        // {case['id']}",
-            f"        assertThrows<IllegalArgumentException> {{ ScytaleCipher.{fn}({_quote(case['input']['text'])}, {case['input']['key']}) }}",
+            f"        val invalidError{index} = assertThrows<IllegalArgumentException> {{ ScytaleCipher.{fn}({_quote_kotlin(case['input']['text'])}, {case['input']['key']}) }}",
+            f"        assertEquals({_quote_kotlin(case['expected']['error_id'])}, if (invalidError{index}.message?.let {{ it.startsWith({_quote_kotlin('key')}) && it.contains({_quote_kotlin('must')}) }} == true) {_quote_kotlin('scytale-invalid-key')} else {_quote_kotlin('unexpected-error')})",
         ]
     brute = _brute_case(cases, "brute-force-ascending")
     expected = ", ".join(
-        f"ScytaleCipher.BruteForceResult({c['key']}, {_quote(c['text'])})"
+        f"ScytaleCipher.BruteForceResult({c['key']}, {_quote_kotlin(c['text'])})"
         for c in brute["expected"]["candidates"]
     )
     lines += [
         f"        // {brute['id']}",
-        f"        assertEquals(listOf({expected}), ScytaleCipher.bruteForce({_quote(brute['input']['text'])}))",
+        f"        assertEquals(listOf({expected}), ScytaleCipher.bruteForce({_quote_kotlin(brute['input']['text'])}))",
     ]
     short = _brute_case(cases, "brute-force-short")
     limit = _brute_case(cases, "brute-force-preflight-limit")
+    repeat_scalar, repeat_count = _repeat_descriptor(limit)
     lines += [
         f"        // {short['id']}",
-        f"        assertEquals(emptyList(), ScytaleCipher.bruteForce({_quote(short['input']['text'])}))",
+        f"        assertEquals(emptyList(), ScytaleCipher.bruteForce({_quote_kotlin(short['input']['text'])}))",
         f"        // {limit['id']}",
-        '        assertThrows<IllegalArgumentException> { ScytaleCipher.bruteForce("A".repeat(4097)) }',
+        f"        val limitError = assertThrows<IllegalArgumentException> {{ ScytaleCipher.bruteForce({_quote_kotlin(repeat_scalar)}.repeat({repeat_count})) }}",
+        f"        assertEquals({_quote_kotlin(limit['expected']['error_id'])}, limitError.message)",
         "    }",
         "}",
     ]
@@ -651,31 +778,34 @@ def render_lua(cases: list[dict[str, Any]], digest: str) -> str:
         fn = "encrypt" if case["operation"].endswith("encrypt") else "decrypt"
         lines += [
             f"        -- {case['id']}",
-            f"        assert.equals({_quote(case['expected']['text'])}, scytale.{fn}({_quote(case['input']['text'])}, {case['input']['key']}))",
+            f"        assert.equals({_quote_lua(case['expected']['text'])}, scytale.{fn}({_quote_lua(case['input']['text'])}, {case['input']['key']}))",
         ]
-    for case in _invalid_cases(cases):
+    for index, case in enumerate(_invalid_cases(cases)):
         fn = "encrypt" if case["operation"].endswith("encrypt") else "decrypt"
         lines += [
             f"        -- {case['id']}",
-            f"        assert.has_error(function() scytale.{fn}({_quote(case['input']['text'])}, {case['input']['key']}) end)",
+            f"        local invalid_ok{index}, invalid_error{index} = pcall(function() scytale.{fn}({_quote_lua(case['input']['text'])}, {case['input']['key']}) end)",
+            f"        local invalid_id{index} = not invalid_ok{index} and tostring(invalid_error{index}):find({_quote_lua('Key must be')}, 1, true) and {_quote_lua('scytale-invalid-key')} or {_quote_lua('unexpected-error')}",
+            f"        assert.equals({_quote_lua(case['expected']['error_id'])}, invalid_id{index})",
         ]
     brute = _brute_case(cases, "brute-force-ascending")
     lines += [
         f"        -- {brute['id']}",
-        f"        local brute = scytale.brute_force({_quote(brute['input']['text'])})",
+        f"        local brute = scytale.brute_force({_quote_lua(brute['input']['text'])})",
         f"        assert.equals({len(brute['expected']['candidates'])}, #brute)",
     ]
     for index, candidate in enumerate(brute["expected"]["candidates"], 1):
         lines += [
-            f"        assert.same({{ key = {candidate['key']}, text = {_quote(candidate['text'])} }}, brute[{index}])"
+            f"        assert.same({{ key = {candidate['key']}, text = {_quote_lua(candidate['text'])} }}, brute[{index}])"
         ]
     short = _brute_case(cases, "brute-force-short")
     limit = _brute_case(cases, "brute-force-preflight-limit")
+    repeat_scalar, repeat_count = _repeat_descriptor(limit)
     lines += [
         f"        -- {short['id']}",
-        f"        assert.equals(0, #scytale.brute_force({_quote(short['input']['text'])}))",
+        f"        assert.equals(0, #scytale.brute_force({_quote_lua(short['input']['text'])}))",
         f"        -- {limit['id']}",
-        '        assert.has_error(function() scytale.brute_force(string.rep("A", 4097)) end, "scytale-brute-force-limit")',
+        f"        assert.has_error(function() scytale.brute_force(string.rep({_quote_lua(repeat_scalar)}, {repeat_count})) end, {_quote_lua(limit['expected']['error_id'])})",
         "    end)",
         "end)",
     ]
@@ -693,30 +823,33 @@ def render_perl(cases: list[dict[str, Any]], digest: str) -> str:
         fn = "encrypt" if case["operation"].endswith("encrypt") else "decrypt"
         lines += [
             f"# {case['id']}",
-            f"is({fn}({_quote(case['input']['text'])}, {case['input']['key']}), {_quote(case['expected']['text'])}, {_quote(case['id'])});",
+            f"is({fn}({_quote_perl(case['input']['text'])}, {case['input']['key']}), {_quote_perl(case['expected']['text'])}, {_quote_perl(case['id'])});",
         ]
-    for case in _invalid_cases(cases):
+    for index, case in enumerate(_invalid_cases(cases)):
         fn = "encrypt" if case["operation"].endswith("encrypt") else "decrypt"
         lines += [
             f"# {case['id']}",
-            f"like(dies {{ {fn}({_quote(case['input']['text'])}, {case['input']['key']}) }}, qr/Key must be/, {_quote(case['id'])});",
+            f"my $invalid_error_{index} = dies {{ {fn}({_quote_perl(case['input']['text'])}, {case['input']['key']}) }};",
+            f"like($invalid_error_{index}, qr/Key must be/, {_quote_perl(case['id'])});",
+            f"is($invalid_error_{index} =~ /Key must be/ ? {_quote_perl('scytale-invalid-key')} : {_quote_perl('unexpected-error')}, {_quote_perl(case['expected']['error_id'])}, {_quote_perl(case['id'] + '-error-id')});",
         ]
     brute = _brute_case(cases, "brute-force-ascending")
     expected = ", ".join(
-        f"{{ key => {c['key']}, text => {_quote(c['text'])} }}"
+        f"{{ key => {c['key']}, text => {_quote_perl(c['text'])} }}"
         for c in brute["expected"]["candidates"]
     )
     lines += [
         f"# {brute['id']}",
-        f"is([brute_force({_quote(brute['input']['text'])})], [{expected}], {_quote(brute['id'])});",
+        f"is([brute_force({_quote_perl(brute['input']['text'])})], [{expected}], {_quote_perl(brute['id'])});",
     ]
     short = _brute_case(cases, "brute-force-short")
     limit = _brute_case(cases, "brute-force-preflight-limit")
+    repeat_scalar, repeat_count = _repeat_descriptor(limit)
     lines += [
         f"# {short['id']}",
-        f"is([brute_force({_quote(short['input']['text'])})], [], {_quote(short['id'])});",
+        f"is([brute_force({_quote_perl(short['input']['text'])})], [], {_quote_perl(short['id'])});",
         f"# {limit['id']}",
-        f'like(dies {{ brute_force("A" x 4097) }}, qr/scytale-brute-force-limit/, {_quote(limit["id"])});',
+        f"like(dies {{ brute_force({_quote_perl(repeat_scalar)} x {repeat_count}) }}, qr/{limit['expected']['error_id']}/, {_quote_perl(limit['id'])});",
         "done_testing;",
     ]
     return "\n".join(lines) + "\n"
@@ -736,32 +869,34 @@ def render_python(cases: list[dict[str, Any]], digest: str) -> str:
         fn = "encrypt" if case["operation"].endswith("encrypt") else "decrypt"
         lines += [
             f"    # {case['id']}",
-            f"    assert {fn}({_quote(case['input']['text'])}, {case['input']['key']}) == {_quote(case['expected']['text'])}",
+            f"    assert {fn}({_quote_python(case['input']['text'])}, {case['input']['key']}) == {_quote_python(case['expected']['text'])}",
         ]
-    for case in _invalid_cases(cases):
+    for index, case in enumerate(_invalid_cases(cases)):
         fn = "encrypt" if case["operation"].endswith("encrypt") else "decrypt"
         lines += [
             f"    # {case['id']}",
-            "    with pytest.raises(ValueError):",
-            f"        {fn}({_quote(case['input']['text'])}, {case['input']['key']})",
+            f"    with pytest.raises(ValueError) as invalid_error{index}:",
+            f"        {fn}({_quote_python(case['input']['text'])}, {case['input']['key']})",
+            f"    assert ({_quote_python('scytale-invalid-key')} if str(invalid_error{index}.value).startswith({_quote_python('Key must')}) else {_quote_python('unexpected-error')}) == {_quote_python(case['expected']['error_id'])}",
         ]
     brute = _brute_case(cases, "brute-force-ascending")
     expected = ", ".join(
-        f'{{"key": {c["key"]}, "text": {_quote(c["text"])}}}'
+        f'{{"key": {c["key"]}, "text": {_quote_python(c["text"])}}}'
         for c in brute["expected"]["candidates"]
     )
     lines += [
         f"    # {brute['id']}",
-        f"    assert brute_force({_quote(brute['input']['text'])}) == [{expected}]",
+        f"    assert brute_force({_quote_python(brute['input']['text'])}) == [{expected}]",
     ]
     short = _brute_case(cases, "brute-force-short")
     limit = _brute_case(cases, "brute-force-preflight-limit")
+    repeat_scalar, repeat_count = _repeat_descriptor(limit)
     lines += [
         f"    # {short['id']}",
-        f"    assert brute_force({_quote(short['input']['text'])}) == []",
+        f"    assert brute_force({_quote_python(short['input']['text'])}) == []",
         f"    # {limit['id']}",
-        '    with pytest.raises(ValueError, match="scytale-brute-force-limit"):',
-        '        brute_force("A" * 4097)',
+        f"    with pytest.raises(ValueError, match={_quote_python(limit['expected']['error_id'])}):",
+        f"        brute_force({_quote_python(repeat_scalar)} * {repeat_count})",
         "# fmt: on",
     ]
     return "\n".join(lines) + "\n"
@@ -781,31 +916,33 @@ def render_ruby(cases: list[dict[str, Any]], digest: str) -> str:
         fn = "encrypt" if case["operation"].endswith("encrypt") else "decrypt"
         lines += [
             f"    # {case['id']}",
-            f"    assert_equal {_quote(case['expected']['text'])}, cipher.{fn}({_quote(case['input']['text'])}, {case['input']['key']})",
+            f"    assert_equal {_quote_ruby(case['expected']['text'])}, cipher.{fn}({_quote_ruby(case['input']['text'])}, {case['input']['key']})",
         ]
-    for case in _invalid_cases(cases):
+    for index, case in enumerate(_invalid_cases(cases)):
         fn = "encrypt" if case["operation"].endswith("encrypt") else "decrypt"
         lines += [
             f"    # {case['id']}",
-            f"    assert_raises(ArgumentError) {{ cipher.{fn}({_quote(case['input']['text'])}, {case['input']['key']}) }}",
+            f"    invalid_error_{index} = assert_raises(ArgumentError) {{ cipher.{fn}({_quote_ruby(case['input']['text'])}, {case['input']['key']}) }}",
+            f"    assert_equal {_quote_ruby(case['expected']['error_id'])}, invalid_error_{index}.message.start_with?({_quote_ruby('Key must')}) ? {_quote_ruby('scytale-invalid-key')} : {_quote_ruby('unexpected-error')}",
         ]
     brute = _brute_case(cases, "brute-force-ascending")
     expected = ", ".join(
-        f"{{ key: {c['key']}, text: {_quote(c['text'])} }}"
+        f"{{ key: {c['key']}, text: {_quote_ruby(c['text'])} }}"
         for c in brute["expected"]["candidates"]
     )
     lines += [
         f"    # {brute['id']}",
-        f"    assert_equal [{expected}], cipher.brute_force({_quote(brute['input']['text'])})",
+        f"    assert_equal [{expected}], cipher.brute_force({_quote_ruby(brute['input']['text'])})",
     ]
     short = _brute_case(cases, "brute-force-short")
     limit = _brute_case(cases, "brute-force-preflight-limit")
+    repeat_scalar, repeat_count = _repeat_descriptor(limit)
     lines += [
         f"    # {short['id']}",
-        f"    assert_equal [], cipher.brute_force({_quote(short['input']['text'])})",
+        f"    assert_equal [], cipher.brute_force({_quote_ruby(short['input']['text'])})",
         f"    # {limit['id']}",
-        '    error = assert_raises(ArgumentError) { cipher.brute_force("A" * 4097) }',
-        '    assert_equal "scytale-brute-force-limit", error.message',
+        f"    error = assert_raises(ArgumentError) {{ cipher.brute_force({_quote_ruby(repeat_scalar)} * {repeat_count}) }}",
+        f"    assert_equal {_quote_ruby(limit['expected']['error_id'])}, error.message",
         "  end",
         "end",
     ]
@@ -819,31 +956,39 @@ def render_rust(cases: list[dict[str, Any]], digest: str) -> str:
         "#[test]",
         "fn generated_classical_cipher_scytale_cases() {",
     ]
-    for case in _text_cases(cases):
+    for index, case in enumerate(_text_cases(cases)):
         fn = "encrypt" if case["operation"].endswith("encrypt") else "decrypt"
         lines += [
             f"    // {case['id']}",
-            f"    assert_eq!({fn}({_quote(case['input']['text'])}, {case['input']['key']}).unwrap(), {_quote(case['expected']['text'])});",
+            *_rust_assignment(f"text_input_{index}", case["input"]["text"]),
+            *_rust_assignment(f"text_expected_{index}", case["expected"]["text"]),
+            f"    assert_eq!({fn}(text_input_{index}, {case['input']['key']}).unwrap(), text_expected_{index});",
         ]
-    for case in _invalid_cases(cases):
+    for index, case in enumerate(_invalid_cases(cases)):
         fn = "encrypt" if case["operation"].endswith("encrypt") else "decrypt"
         lines += [
             f"    // {case['id']}",
-            f"    assert!({fn}({_quote(case['input']['text'])}, {case['input']['key']}).is_err());",
+            f"    let invalid_id_{index} = match {fn}({_quote_rust(case['input']['text'])}, {case['input']['key']}) {{",
+            f"        Err(error) if error.starts_with({_quote_rust('Key must be')}) => {_quote_rust('scytale-invalid-key')},",
+            f"        _ => {_quote_rust('unexpected-error')},",
+            "    };",
+            f"    assert_eq!(invalid_id_{index}, {_quote_rust(case['expected']['error_id'])});",
         ]
     brute = _brute_case(cases, "brute-force-ascending")
     expected: list[str] = []
-    for candidate in brute["expected"]["candidates"]:
+    for index, candidate in enumerate(brute["expected"]["candidates"]):
+        lines += _rust_assignment(f"brute_text_{index}", candidate["text"])
         expected += [
             "            BruteForceResult {",
             f"                key: {candidate['key']},",
-            f"                text: {_quote(candidate['text'])}.to_string()",
+            f"                text: brute_text_{index}.to_string()",
             "            },",
         ]
     lines += [
         f"    // {brute['id']}",
+        *_rust_assignment("brute_input", brute["input"]["text"]),
         "    assert_eq!(",
-        f"        brute_force({_quote(brute['input']['text'])}).unwrap(),",
+        "        brute_force(brute_input).unwrap(),",
         "        vec![",
         *expected,
         "        ]",
@@ -851,13 +996,14 @@ def render_rust(cases: list[dict[str, Any]], digest: str) -> str:
     ]
     short = _brute_case(cases, "brute-force-short")
     limit = _brute_case(cases, "brute-force-preflight-limit")
+    repeat_scalar, repeat_count = _repeat_descriptor(limit)
     lines += [
         f"    // {short['id']}",
-        f"    assert!(brute_force({_quote(short['input']['text'])}).unwrap().is_empty());",
+        f"    assert!(brute_force({_quote_rust(short['input']['text'])}).unwrap().is_empty());",
         f"    // {limit['id']}",
         "    assert_eq!(",
-        '        brute_force(&"A".repeat(4097)),',
-        '        Err("scytale-brute-force-limit".to_string())',
+        f"        brute_force(&{_quote_rust(repeat_scalar)}.repeat({repeat_count})),",
+        f"        Err({_quote_rust(limit['expected']['error_id'])}.to_string())",
         "    );",
         "}",
     ]
@@ -870,36 +1016,50 @@ def render_swift(cases: list[dict[str, Any]], digest: str) -> str:
         "import XCTest",
         "@testable import ScytaleCipher\n",
         "final class GeneratedClassicalCipherFixtureTests: XCTestCase {",
+        "    private func scalars(_ values: [UInt32]) -> String { String(values.compactMap(UnicodeScalar.init).map(Character.init)) }\n",
         "    func testAllNormativeScytaleCases() throws {",
     ]
     for case in _text_cases(cases):
         fn = "encrypt" if case["operation"].endswith("encrypt") else "decrypt"
         lines += [
             f"        // {case['id']}",
-            f"        XCTAssertEqual(try ScytaleCipher.{fn}({_quote(case['input']['text'])}, key: {case['input']['key']}), {_quote(case['expected']['text'])})",
+            f"        XCTAssertEqual(try ScytaleCipher.{fn}({_quote_swift(case['input']['text'])}, key: {case['input']['key']}), {_quote_swift(case['expected']['text'])})",
         ]
     for case in _invalid_cases(cases):
         fn = "encrypt" if case["operation"].endswith("encrypt") else "decrypt"
         lines += [
             f"        // {case['id']}",
-            f"        XCTAssertThrowsError(try ScytaleCipher.{fn}({_quote(case['input']['text'])}, key: {case['input']['key']}))",
+            f"        XCTAssertThrowsError(try ScytaleCipher.{fn}({_quote_swift(case['input']['text'])}, key: {case['input']['key']})) {{ error in",
+            "            let actualID: String",
+            "            switch error {",
+            f"            case ScytaleCipherError.keyTooSmall(_), ScytaleCipherError.keyTooLarge(_, textLength: _): actualID = {_quote_swift('scytale-invalid-key')}",
+            f"            default: actualID = {_quote_swift('unexpected-error')}",
+            "            }",
+            f"            XCTAssertEqual(actualID, {_quote_swift(case['expected']['error_id'])})",
+            "        }",
         ]
     brute = _brute_case(cases, "brute-force-ascending")
     keys = ", ".join(str(c["key"]) for c in brute["expected"]["candidates"])
-    texts = ", ".join(_quote(c["text"]) for c in brute["expected"]["candidates"])
+    texts = ", ".join(_quote_swift(c["text"]) for c in brute["expected"]["candidates"])
     lines += [
         f"        // {brute['id']}",
-        f"        let brute = try ScytaleCipher.bruteForce({_quote(brute['input']['text'])})",
+        f"        let brute = try ScytaleCipher.bruteForce({_quote_swift(brute['input']['text'])})",
         f"        XCTAssertEqual(brute.map(\\.key), [{keys}])",
         f"        XCTAssertEqual(brute.map(\\.text), [{texts}])",
     ]
     short = _brute_case(cases, "brute-force-short")
     limit = _brute_case(cases, "brute-force-preflight-limit")
+    repeat_scalar, repeat_count = _repeat_descriptor(limit)
     lines += [
         f"        // {short['id']}",
-        f"        XCTAssertTrue(try ScytaleCipher.bruteForce({_quote(short['input']['text'])}).isEmpty)",
+        f"        XCTAssertTrue(try ScytaleCipher.bruteForce({_quote_swift(short['input']['text'])}).isEmpty)",
         f"        // {limit['id']}",
-        '        XCTAssertThrowsError(try ScytaleCipher.bruteForce(String(repeating: "A", count: 4097)))',
+        f"        XCTAssertThrowsError(try ScytaleCipher.bruteForce(String(repeating: {_quote_swift(repeat_scalar)}, count: {repeat_count}))) {{ error in",
+        "            guard case ScytaleCipherError.bruteForceLimit = error else {",
+        f"                return XCTFail({_quote_swift('expected ' + limit['expected']['error_id'])})",
+        "            }",
+        f"            XCTAssertEqual({_quote_swift('scytale-brute-force-limit')}, {_quote_swift(limit['expected']['error_id'])})",
+        "        }",
         "    }",
         "}",
     ]
@@ -918,30 +1078,35 @@ def render_typescript(cases: list[dict[str, Any]], digest: str) -> str:
         fn = "encrypt" if case["operation"].endswith("encrypt") else "decrypt"
         lines += [
             f"    // {case['id']}",
-            f"    expect({fn}({_quote(case['input']['text'])}, {case['input']['key']})).toBe({_quote(case['expected']['text'])});",
+            f"    expect({fn}({_quote_typescript(case['input']['text'])}, {case['input']['key']})).toBe({_quote_typescript(case['expected']['text'])});",
         ]
-    for case in _invalid_cases(cases):
+    for index, case in enumerate(_invalid_cases(cases)):
         fn = "encrypt" if case["operation"].endswith("encrypt") else "decrypt"
         lines += [
             f"    // {case['id']}",
-            f"    expect(() => {fn}({_quote(case['input']['text'])}, {case['input']['key']})).toThrow();",
+            f"    let invalidID{index} = {_quote_typescript('unexpected-error')};",
+            f"    try {{ {fn}({_quote_typescript(case['input']['text'])}, {case['input']['key']}); }} catch (error) {{",
+            f"      if (error instanceof Error && error.message.startsWith({_quote_typescript('Key must be')})) invalidID{index} = {_quote_typescript('scytale-invalid-key')};",
+            "    }",
+            f"    expect(invalidID{index}).toBe({_quote_typescript(case['expected']['error_id'])});",
         ]
     brute = _brute_case(cases, "brute-force-ascending")
     expected = ", ".join(
-        f"{{ key: {c['key']}, text: {_quote(c['text'])} }}"
+        f"{{ key: {c['key']}, text: {_quote_typescript(c['text'])} }}"
         for c in brute["expected"]["candidates"]
     )
     lines += [
         f"    // {brute['id']}",
-        f"    expect(bruteForce({_quote(brute['input']['text'])})).toEqual([{expected}]);",
+        f"    expect(bruteForce({_quote_typescript(brute['input']['text'])})).toEqual([{expected}]);",
     ]
     short = _brute_case(cases, "brute-force-short")
     limit = _brute_case(cases, "brute-force-preflight-limit")
+    repeat_scalar, repeat_count = _repeat_descriptor(limit)
     lines += [
         f"    // {short['id']}",
-        f"    expect(bruteForce({_quote(short['input']['text'])})).toEqual([]);",
+        f"    expect(bruteForce({_quote_typescript(short['input']['text'])})).toEqual([]);",
         f"    // {limit['id']}",
-        '    expect(() => bruteForce("A".repeat(4097))).toThrow("scytale-brute-force-limit");',
+        f"    expect(() => bruteForce({_quote_typescript(repeat_scalar)}.repeat({repeat_count}))).toThrow({_quote_typescript(limit['expected']['error_id'])});",
         "  });",
         "});",
     ]
@@ -980,11 +1145,16 @@ def check_outputs(outputs: dict[Path, str], root: Path = REPO_ROOT) -> list[str]
     failures: list[str] = []
     for relative_path, expected in outputs.items():
         path = root / relative_path
+        expected_bytes = expected.encode("utf-8")
         try:
-            actual = path.read_text(encoding="utf-8")
-        except FileNotFoundError:
+            if path.stat().st_size != len(expected_bytes):
+                failures.append(relative_path.as_posix())
+                continue
+            with path.open("rb") as stream:
+                actual = stream.read(len(expected_bytes) + 1)
+        except (FileNotFoundError, OSError):
             actual = None
-        if actual != expected:
+        if actual != expected_bytes:
             failures.append(relative_path.as_posix())
     return failures
 

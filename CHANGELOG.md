@@ -12,6 +12,9 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/).
   Scytale objects into native tests for every established implementation lane.
   The generated tests compare complete text, error, and ordered-candidate
   results without adding production dependencies or runtime capabilities.
+- Hardened the generator's source boundary with safe identifiers, bounded
+  fixture and output reads, interpolation-safe native string construction, and
+  fixture-derived resource-limit inputs and normalized error assertions.
 
 ### Security — the books workflow ran `latexmk` unhardened, and its compile gate was never wired up
 

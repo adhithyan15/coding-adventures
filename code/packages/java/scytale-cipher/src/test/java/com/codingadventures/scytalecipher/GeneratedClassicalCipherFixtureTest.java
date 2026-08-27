@@ -12,42 +12,45 @@ class GeneratedClassicalCipherFixtureTest {
     @Test
     void matchesAllNormativeScytaleCases() {
         // classical-ciphers-v1-scytale-worked-encrypt
-        assertEquals("HLWLEOODL R ", ScytaleCipher.encrypt("HELLO WORLD", 3));
+        assertEquals(new String(new int[] {72, 76, 87, 76, 69, 79, 79, 68, 76, 32, 82, 32}, 0, 12), ScytaleCipher.encrypt(new String(new int[] {72, 69, 76, 76, 79, 32, 87, 79, 82, 76, 68}, 0, 11), 3));
         // classical-ciphers-v1-scytale-worked-decrypt
-        assertEquals("HELLO WORLD", ScytaleCipher.decrypt("HLWLEOODL R ", 3));
+        assertEquals(new String(new int[] {72, 69, 76, 76, 79, 32, 87, 79, 82, 76, 68}, 0, 11), ScytaleCipher.decrypt(new String(new int[] {72, 76, 87, 76, 69, 79, 79, 68, 76, 32, 82, 32}, 0, 12), 3));
         // classical-ciphers-v1-scytale-ragged-decrypt
-        assertEquals("ACEFBD", ScytaleCipher.decrypt("ABCDEF", 4));
+        assertEquals(new String(new int[] {65, 67, 69, 70, 66, 68}, 0, 6), ScytaleCipher.decrypt(new String(new int[] {65, 66, 67, 68, 69, 70}, 0, 6), 4));
         // classical-ciphers-v1-scytale-unicode-encrypt
-        assertEquals("Aé😀 B ", ScytaleCipher.encrypt("A😀Bé", 3));
+        assertEquals(new String(new int[] {65, 233, 128512, 32, 66, 32}, 0, 6), ScytaleCipher.encrypt(new String(new int[] {65, 128512, 66, 233}, 0, 4), 3));
         // classical-ciphers-v1-scytale-unicode-decrypt
-        assertEquals("A😀Bé", ScytaleCipher.decrypt("Aé😀 B ", 3));
+        assertEquals(new String(new int[] {65, 128512, 66, 233}, 0, 4), ScytaleCipher.decrypt(new String(new int[] {65, 233, 128512, 32, 66, 32}, 0, 6), 3));
         // classical-ciphers-v1-scytale-combining-scalar-encrypt
-        assertEquals("ABe ́ ", ScytaleCipher.encrypt("AéB", 3));
+        assertEquals(new String(new int[] {65, 66, 101, 32, 769, 32}, 0, 6), ScytaleCipher.encrypt(new String(new int[] {65, 101, 769, 66}, 0, 4), 3));
         // classical-ciphers-v1-scytale-combining-scalar-decrypt
-        assertEquals("AéB", ScytaleCipher.decrypt("ABe ́ ", 3));
+        assertEquals(new String(new int[] {65, 101, 769, 66}, 0, 4), ScytaleCipher.decrypt(new String(new int[] {65, 66, 101, 32, 769, 32}, 0, 6), 3));
         // classical-ciphers-v1-scytale-genuine-trailing-space-encrypt
-        assertEquals("E N D ", ScytaleCipher.encrypt("END ", 3));
+        assertEquals(new String(new int[] {69, 32, 78, 32, 68, 32}, 0, 6), ScytaleCipher.encrypt(new String(new int[] {69, 78, 68, 32}, 0, 4), 3));
         // classical-ciphers-v1-scytale-genuine-trailing-space-loss
-        assertEquals("END", ScytaleCipher.decrypt("E N D ", 3));
+        assertEquals(new String(new int[] {69, 78, 68}, 0, 3), ScytaleCipher.decrypt(new String(new int[] {69, 32, 78, 32, 68, 32}, 0, 6), 3));
         // classical-ciphers-v1-scytale-trailing-tab-retained
-        assertEquals("AB\t", ScytaleCipher.decrypt("A\tB ", 2));
+        assertEquals(new String(new int[] {65, 66, 9}, 0, 3), ScytaleCipher.decrypt(new String(new int[] {65, 9, 66, 32}, 0, 4), 2));
         // classical-ciphers-v1-scytale-newline-nbsp-retained
-        assertEquals("A\t\n ", ScytaleCipher.decrypt("A \t \n ", 3));
+        assertEquals(new String(new int[] {65, 9, 10, 160}, 0, 4), ScytaleCipher.decrypt(new String(new int[] {65, 160, 9, 32, 10, 32}, 0, 6), 3));
         // classical-ciphers-v1-scytale-empty-before-low-key
-        assertEquals("", ScytaleCipher.encrypt("", -1));
+        assertEquals(new String(new int[] {}, 0, 0), ScytaleCipher.encrypt(new String(new int[] {}, 0, 0), -1));
         // classical-ciphers-v1-scytale-empty-before-high-key
-        assertEquals("", ScytaleCipher.decrypt("", 8194));
+        assertEquals(new String(new int[] {}, 0, 0), ScytaleCipher.decrypt(new String(new int[] {}, 0, 0), 8194));
         // classical-ciphers-v1-scytale-invalid-low-key
-        assertThrows(IllegalArgumentException.class, () -> ScytaleCipher.encrypt("A", 1));
+        var invalidError0 = assertThrows(IllegalArgumentException.class, () -> ScytaleCipher.encrypt(new String(new int[] {65}, 0, 1), 1));
+        assertEquals(new String(new int[] {115, 99, 121, 116, 97, 108, 101, 45, 105, 110, 118, 97, 108, 105, 100, 45, 107, 101, 121}, 0, 19), invalidError0.getMessage().startsWith(new String(new int[] {107, 101, 121}, 0, 3)) && invalidError0.getMessage().contains(new String(new int[] {109, 117, 115, 116}, 0, 4)) ? new String(new int[] {115, 99, 121, 116, 97, 108, 101, 45, 105, 110, 118, 97, 108, 105, 100, 45, 107, 101, 121}, 0, 19) : new String(new int[] {117, 110, 101, 120, 112, 101, 99, 116, 101, 100, 45, 101, 114, 114, 111, 114}, 0, 16));
         // classical-ciphers-v1-scytale-invalid-high-key
-        assertThrows(IllegalArgumentException.class, () -> ScytaleCipher.decrypt("ABC", 4));
+        var invalidError1 = assertThrows(IllegalArgumentException.class, () -> ScytaleCipher.decrypt(new String(new int[] {65, 66, 67}, 0, 3), 4));
+        assertEquals(new String(new int[] {115, 99, 121, 116, 97, 108, 101, 45, 105, 110, 118, 97, 108, 105, 100, 45, 107, 101, 121}, 0, 19), invalidError1.getMessage().startsWith(new String(new int[] {107, 101, 121}, 0, 3)) && invalidError1.getMessage().contains(new String(new int[] {109, 117, 115, 116}, 0, 4)) ? new String(new int[] {115, 99, 121, 116, 97, 108, 101, 45, 105, 110, 118, 97, 108, 105, 100, 45, 107, 101, 121}, 0, 19) : new String(new int[] {117, 110, 101, 120, 112, 101, 99, 116, 101, 100, 45, 101, 114, 114, 111, 114}, 0, 16));
         // classical-ciphers-v1-scytale-brute-force-ascending
-        var brute = ScytaleCipher.bruteForce("HLWLEOODL R ");
+        var brute = ScytaleCipher.bruteForce(new String(new int[] {72, 76, 87, 76, 69, 79, 79, 68, 76, 32, 82, 32}, 0, 12));
         assertEquals(List.of(2, 3, 4, 5, 6), brute.stream().map(result -> result.key).toList());
-        assertEquals(List.of("HOLDWLL ERO", "HELLO WORLD", "HLO LEDRWOL", "HLOLRLED  WO", "HWEOLRLLOD"), brute.stream().map(result -> result.text).toList());
+        assertEquals(List.of(new String(new int[] {72, 79, 76, 68, 87, 76, 76, 32, 69, 82, 79}, 0, 11), new String(new int[] {72, 69, 76, 76, 79, 32, 87, 79, 82, 76, 68}, 0, 11), new String(new int[] {72, 76, 79, 32, 76, 69, 68, 82, 87, 79, 76}, 0, 11), new String(new int[] {72, 76, 79, 76, 82, 76, 69, 68, 32, 32, 87, 79}, 0, 12), new String(new int[] {72, 87, 69, 79, 76, 82, 76, 76, 79, 68}, 0, 10)), brute.stream().map(result -> result.text).toList());
         // classical-ciphers-v1-scytale-brute-force-short
-        assertTrue(ScytaleCipher.bruteForce("ABC").isEmpty());
+        assertTrue(ScytaleCipher.bruteForce(new String(new int[] {65, 66, 67}, 0, 3)).isEmpty());
         // classical-ciphers-v1-scytale-brute-force-preflight-limit
-        assertThrows(IllegalArgumentException.class, () -> ScytaleCipher.bruteForce("A".repeat(4097)));
+        var limitError = assertThrows(IllegalArgumentException.class, () -> ScytaleCipher.bruteForce(new String(new int[] {65}, 0, 1).repeat(4097)));
+        assertEquals(new String(new int[] {115, 99, 121, 116, 97, 108, 101, 45, 98, 114, 117, 116, 101, 45, 102, 111, 114, 99, 101, 45, 108, 105, 109, 105, 116}, 0, 25), limitError.getMessage());
     }
 }

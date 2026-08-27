@@ -11,39 +11,43 @@ open CodingAdventures.ScytaleCipher
 type GeneratedClassicalCipherFixtureTests() =
     [<Fact>]
     member _.``all normative Scytale cases``() =
+        let scalars values = values |> List.map Char.ConvertFromUtf32 |> String.concat ""
         // classical-ciphers-v1-scytale-worked-encrypt
-        Assert.Equal("HLWLEOODL R ", ScytaleCipher.encrypt "HELLO WORLD" 3)
+        Assert.Equal((scalars [72; 76; 87; 76; 69; 79; 79; 68; 76; 32; 82; 32]), ScytaleCipher.encrypt (scalars [72; 69; 76; 76; 79; 32; 87; 79; 82; 76; 68]) 3)
         // classical-ciphers-v1-scytale-worked-decrypt
-        Assert.Equal("HELLO WORLD", ScytaleCipher.decrypt "HLWLEOODL R " 3)
+        Assert.Equal((scalars [72; 69; 76; 76; 79; 32; 87; 79; 82; 76; 68]), ScytaleCipher.decrypt (scalars [72; 76; 87; 76; 69; 79; 79; 68; 76; 32; 82; 32]) 3)
         // classical-ciphers-v1-scytale-ragged-decrypt
-        Assert.Equal("ACEFBD", ScytaleCipher.decrypt "ABCDEF" 4)
+        Assert.Equal((scalars [65; 67; 69; 70; 66; 68]), ScytaleCipher.decrypt (scalars [65; 66; 67; 68; 69; 70]) 4)
         // classical-ciphers-v1-scytale-unicode-encrypt
-        Assert.Equal("Aé😀 B ", ScytaleCipher.encrypt "A😀Bé" 3)
+        Assert.Equal((scalars [65; 233; 128512; 32; 66; 32]), ScytaleCipher.encrypt (scalars [65; 128512; 66; 233]) 3)
         // classical-ciphers-v1-scytale-unicode-decrypt
-        Assert.Equal("A😀Bé", ScytaleCipher.decrypt "Aé😀 B " 3)
+        Assert.Equal((scalars [65; 128512; 66; 233]), ScytaleCipher.decrypt (scalars [65; 233; 128512; 32; 66; 32]) 3)
         // classical-ciphers-v1-scytale-combining-scalar-encrypt
-        Assert.Equal("ABe ́ ", ScytaleCipher.encrypt "AéB" 3)
+        Assert.Equal((scalars [65; 66; 101; 32; 769; 32]), ScytaleCipher.encrypt (scalars [65; 101; 769; 66]) 3)
         // classical-ciphers-v1-scytale-combining-scalar-decrypt
-        Assert.Equal("AéB", ScytaleCipher.decrypt "ABe ́ " 3)
+        Assert.Equal((scalars [65; 101; 769; 66]), ScytaleCipher.decrypt (scalars [65; 66; 101; 32; 769; 32]) 3)
         // classical-ciphers-v1-scytale-genuine-trailing-space-encrypt
-        Assert.Equal("E N D ", ScytaleCipher.encrypt "END " 3)
+        Assert.Equal((scalars [69; 32; 78; 32; 68; 32]), ScytaleCipher.encrypt (scalars [69; 78; 68; 32]) 3)
         // classical-ciphers-v1-scytale-genuine-trailing-space-loss
-        Assert.Equal("END", ScytaleCipher.decrypt "E N D " 3)
+        Assert.Equal((scalars [69; 78; 68]), ScytaleCipher.decrypt (scalars [69; 32; 78; 32; 68; 32]) 3)
         // classical-ciphers-v1-scytale-trailing-tab-retained
-        Assert.Equal("AB\t", ScytaleCipher.decrypt "A\tB " 2)
+        Assert.Equal((scalars [65; 66; 9]), ScytaleCipher.decrypt (scalars [65; 9; 66; 32]) 2)
         // classical-ciphers-v1-scytale-newline-nbsp-retained
-        Assert.Equal("A\t\n ", ScytaleCipher.decrypt "A \t \n " 3)
+        Assert.Equal((scalars [65; 9; 10; 160]), ScytaleCipher.decrypt (scalars [65; 160; 9; 32; 10; 32]) 3)
         // classical-ciphers-v1-scytale-empty-before-low-key
-        Assert.Equal("", ScytaleCipher.encrypt "" -1)
+        Assert.Equal((scalars []), ScytaleCipher.encrypt (scalars []) -1)
         // classical-ciphers-v1-scytale-empty-before-high-key
-        Assert.Equal("", ScytaleCipher.decrypt "" 8194)
+        Assert.Equal((scalars []), ScytaleCipher.decrypt (scalars []) 8194)
         // classical-ciphers-v1-scytale-invalid-low-key
-        Assert.Throws<ArgumentException>(fun () -> ScytaleCipher.encrypt "A" 1 |> ignore) |> ignore
+        let invalidError0 = Assert.Throws<ArgumentException>(fun () -> ScytaleCipher.encrypt (scalars [65]) 1 |> ignore)
+        Assert.Equal((scalars [115; 99; 121; 116; 97; 108; 101; 45; 105; 110; 118; 97; 108; 105; 100; 45; 107; 101; 121]), if invalidError0.Message.Contains((scalars [75; 101; 121; 32; 109; 117; 115; 116]), StringComparison.Ordinal) then (scalars [115; 99; 121; 116; 97; 108; 101; 45; 105; 110; 118; 97; 108; 105; 100; 45; 107; 101; 121]) else (scalars [117; 110; 101; 120; 112; 101; 99; 116; 101; 100; 45; 101; 114; 114; 111; 114]))
         // classical-ciphers-v1-scytale-invalid-high-key
-        Assert.Throws<ArgumentException>(fun () -> ScytaleCipher.decrypt "ABC" 4 |> ignore) |> ignore
+        let invalidError1 = Assert.Throws<ArgumentException>(fun () -> ScytaleCipher.decrypt (scalars [65; 66; 67]) 4 |> ignore)
+        Assert.Equal((scalars [115; 99; 121; 116; 97; 108; 101; 45; 105; 110; 118; 97; 108; 105; 100; 45; 107; 101; 121]), if invalidError1.Message.Contains((scalars [75; 101; 121; 32; 109; 117; 115; 116]), StringComparison.Ordinal) then (scalars [115; 99; 121; 116; 97; 108; 101; 45; 105; 110; 118; 97; 108; 105; 100; 45; 107; 101; 121]) else (scalars [117; 110; 101; 120; 112; 101; 99; 116; 101; 100; 45; 101; 114; 114; 111; 114]))
         // classical-ciphers-v1-scytale-brute-force-ascending
-        Assert.Equal<BruteForceResult list>([ { Key = 2; Text = "HOLDWLL ERO" }; { Key = 3; Text = "HELLO WORLD" }; { Key = 4; Text = "HLO LEDRWOL" }; { Key = 5; Text = "HLOLRLED  WO" }; { Key = 6; Text = "HWEOLRLLOD" } ], ScytaleCipher.bruteForce "HLWLEOODL R ")
+        Assert.Equal<BruteForceResult list>([ { Key = 2; Text = (scalars [72; 79; 76; 68; 87; 76; 76; 32; 69; 82; 79]) }; { Key = 3; Text = (scalars [72; 69; 76; 76; 79; 32; 87; 79; 82; 76; 68]) }; { Key = 4; Text = (scalars [72; 76; 79; 32; 76; 69; 68; 82; 87; 79; 76]) }; { Key = 5; Text = (scalars [72; 76; 79; 76; 82; 76; 69; 68; 32; 32; 87; 79]) }; { Key = 6; Text = (scalars [72; 87; 69; 79; 76; 82; 76; 76; 79; 68]) } ], ScytaleCipher.bruteForce (scalars [72; 76; 87; 76; 69; 79; 79; 68; 76; 32; 82; 32]))
         // classical-ciphers-v1-scytale-brute-force-short
-        Assert.Empty(ScytaleCipher.bruteForce "ABC")
+        Assert.Empty(ScytaleCipher.bruteForce (scalars [65; 66; 67]))
         // classical-ciphers-v1-scytale-brute-force-preflight-limit
-        Assert.Throws<ArgumentException>(fun () -> ScytaleCipher.bruteForce (String('A', 4097)) |> ignore) |> ignore
+        let limitError = Assert.Throws<ArgumentException>(fun () -> ScytaleCipher.bruteForce (String.replicate 4097 (scalars [65])) |> ignore)
+        Assert.Equal((scalars [115; 99; 121; 116; 97; 108; 101; 45; 98; 114; 117; 116; 101; 45; 102; 111; 114; 99; 101; 45; 108; 105; 109; 105; 116]), if limitError.GetType() = typeof<ArgumentException> then (scalars [115; 99; 121; 116; 97; 108; 101; 45; 98; 114; 117; 116; 101; 45; 102; 111; 114; 99; 101; 45; 108; 105; 109; 105; 116]) else (scalars [117; 110; 101; 120; 112; 101; 99; 116; 101; 100; 45; 101; 114; 114; 111; 114]))

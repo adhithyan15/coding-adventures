@@ -9,43 +9,48 @@ import org.junit.jupiter.api.assertThrows
 import kotlin.test.assertEquals
 
 class GeneratedClassicalCipherFixtureTest {
+    private fun scalars(vararg values: Int): String = values.joinToString("") { String(java.lang.Character.toChars(it)) }
+
     @Test
     fun matchesAllNormativeScytaleCases() {
         // classical-ciphers-v1-scytale-worked-encrypt
-        assertEquals("HLWLEOODL R ", ScytaleCipher.encrypt("HELLO WORLD", 3))
+        assertEquals(scalars(72, 76, 87, 76, 69, 79, 79, 68, 76, 32, 82, 32), ScytaleCipher.encrypt(scalars(72, 69, 76, 76, 79, 32, 87, 79, 82, 76, 68), 3))
         // classical-ciphers-v1-scytale-worked-decrypt
-        assertEquals("HELLO WORLD", ScytaleCipher.decrypt("HLWLEOODL R ", 3))
+        assertEquals(scalars(72, 69, 76, 76, 79, 32, 87, 79, 82, 76, 68), ScytaleCipher.decrypt(scalars(72, 76, 87, 76, 69, 79, 79, 68, 76, 32, 82, 32), 3))
         // classical-ciphers-v1-scytale-ragged-decrypt
-        assertEquals("ACEFBD", ScytaleCipher.decrypt("ABCDEF", 4))
+        assertEquals(scalars(65, 67, 69, 70, 66, 68), ScytaleCipher.decrypt(scalars(65, 66, 67, 68, 69, 70), 4))
         // classical-ciphers-v1-scytale-unicode-encrypt
-        assertEquals("Aé😀 B ", ScytaleCipher.encrypt("A😀Bé", 3))
+        assertEquals(scalars(65, 233, 128512, 32, 66, 32), ScytaleCipher.encrypt(scalars(65, 128512, 66, 233), 3))
         // classical-ciphers-v1-scytale-unicode-decrypt
-        assertEquals("A😀Bé", ScytaleCipher.decrypt("Aé😀 B ", 3))
+        assertEquals(scalars(65, 128512, 66, 233), ScytaleCipher.decrypt(scalars(65, 233, 128512, 32, 66, 32), 3))
         // classical-ciphers-v1-scytale-combining-scalar-encrypt
-        assertEquals("ABe ́ ", ScytaleCipher.encrypt("AéB", 3))
+        assertEquals(scalars(65, 66, 101, 32, 769, 32), ScytaleCipher.encrypt(scalars(65, 101, 769, 66), 3))
         // classical-ciphers-v1-scytale-combining-scalar-decrypt
-        assertEquals("AéB", ScytaleCipher.decrypt("ABe ́ ", 3))
+        assertEquals(scalars(65, 101, 769, 66), ScytaleCipher.decrypt(scalars(65, 66, 101, 32, 769, 32), 3))
         // classical-ciphers-v1-scytale-genuine-trailing-space-encrypt
-        assertEquals("E N D ", ScytaleCipher.encrypt("END ", 3))
+        assertEquals(scalars(69, 32, 78, 32, 68, 32), ScytaleCipher.encrypt(scalars(69, 78, 68, 32), 3))
         // classical-ciphers-v1-scytale-genuine-trailing-space-loss
-        assertEquals("END", ScytaleCipher.decrypt("E N D ", 3))
+        assertEquals(scalars(69, 78, 68), ScytaleCipher.decrypt(scalars(69, 32, 78, 32, 68, 32), 3))
         // classical-ciphers-v1-scytale-trailing-tab-retained
-        assertEquals("AB\t", ScytaleCipher.decrypt("A\tB ", 2))
+        assertEquals(scalars(65, 66, 9), ScytaleCipher.decrypt(scalars(65, 9, 66, 32), 2))
         // classical-ciphers-v1-scytale-newline-nbsp-retained
-        assertEquals("A\t\n ", ScytaleCipher.decrypt("A \t \n ", 3))
+        assertEquals(scalars(65, 9, 10, 160), ScytaleCipher.decrypt(scalars(65, 160, 9, 32, 10, 32), 3))
         // classical-ciphers-v1-scytale-empty-before-low-key
-        assertEquals("", ScytaleCipher.encrypt("", -1))
+        assertEquals(scalars(), ScytaleCipher.encrypt(scalars(), -1))
         // classical-ciphers-v1-scytale-empty-before-high-key
-        assertEquals("", ScytaleCipher.decrypt("", 8194))
+        assertEquals(scalars(), ScytaleCipher.decrypt(scalars(), 8194))
         // classical-ciphers-v1-scytale-invalid-low-key
-        assertThrows<IllegalArgumentException> { ScytaleCipher.encrypt("A", 1) }
+        val invalidError0 = assertThrows<IllegalArgumentException> { ScytaleCipher.encrypt(scalars(65), 1) }
+        assertEquals(scalars(115, 99, 121, 116, 97, 108, 101, 45, 105, 110, 118, 97, 108, 105, 100, 45, 107, 101, 121), if (invalidError0.message?.let { it.startsWith(scalars(107, 101, 121)) && it.contains(scalars(109, 117, 115, 116)) } == true) scalars(115, 99, 121, 116, 97, 108, 101, 45, 105, 110, 118, 97, 108, 105, 100, 45, 107, 101, 121) else scalars(117, 110, 101, 120, 112, 101, 99, 116, 101, 100, 45, 101, 114, 114, 111, 114))
         // classical-ciphers-v1-scytale-invalid-high-key
-        assertThrows<IllegalArgumentException> { ScytaleCipher.decrypt("ABC", 4) }
+        val invalidError1 = assertThrows<IllegalArgumentException> { ScytaleCipher.decrypt(scalars(65, 66, 67), 4) }
+        assertEquals(scalars(115, 99, 121, 116, 97, 108, 101, 45, 105, 110, 118, 97, 108, 105, 100, 45, 107, 101, 121), if (invalidError1.message?.let { it.startsWith(scalars(107, 101, 121)) && it.contains(scalars(109, 117, 115, 116)) } == true) scalars(115, 99, 121, 116, 97, 108, 101, 45, 105, 110, 118, 97, 108, 105, 100, 45, 107, 101, 121) else scalars(117, 110, 101, 120, 112, 101, 99, 116, 101, 100, 45, 101, 114, 114, 111, 114))
         // classical-ciphers-v1-scytale-brute-force-ascending
-        assertEquals(listOf(ScytaleCipher.BruteForceResult(2, "HOLDWLL ERO"), ScytaleCipher.BruteForceResult(3, "HELLO WORLD"), ScytaleCipher.BruteForceResult(4, "HLO LEDRWOL"), ScytaleCipher.BruteForceResult(5, "HLOLRLED  WO"), ScytaleCipher.BruteForceResult(6, "HWEOLRLLOD")), ScytaleCipher.bruteForce("HLWLEOODL R "))
+        assertEquals(listOf(ScytaleCipher.BruteForceResult(2, scalars(72, 79, 76, 68, 87, 76, 76, 32, 69, 82, 79)), ScytaleCipher.BruteForceResult(3, scalars(72, 69, 76, 76, 79, 32, 87, 79, 82, 76, 68)), ScytaleCipher.BruteForceResult(4, scalars(72, 76, 79, 32, 76, 69, 68, 82, 87, 79, 76)), ScytaleCipher.BruteForceResult(5, scalars(72, 76, 79, 76, 82, 76, 69, 68, 32, 32, 87, 79)), ScytaleCipher.BruteForceResult(6, scalars(72, 87, 69, 79, 76, 82, 76, 76, 79, 68))), ScytaleCipher.bruteForce(scalars(72, 76, 87, 76, 69, 79, 79, 68, 76, 32, 82, 32)))
         // classical-ciphers-v1-scytale-brute-force-short
-        assertEquals(emptyList(), ScytaleCipher.bruteForce("ABC"))
+        assertEquals(emptyList(), ScytaleCipher.bruteForce(scalars(65, 66, 67)))
         // classical-ciphers-v1-scytale-brute-force-preflight-limit
-        assertThrows<IllegalArgumentException> { ScytaleCipher.bruteForce("A".repeat(4097)) }
+        val limitError = assertThrows<IllegalArgumentException> { ScytaleCipher.bruteForce(scalars(65).repeat(4097)) }
+        assertEquals(scalars(115, 99, 121, 116, 97, 108, 101, 45, 98, 114, 117, 116, 101, 45, 102, 111, 114, 99, 101, 45, 108, 105, 109, 105, 116), limitError.message)
     }
 }

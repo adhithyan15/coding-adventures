@@ -6,44 +6,49 @@ namespace CodingAdventures.ScytaleCipher.Tests;
 
 public sealed class GeneratedClassicalCipherFixtureTests
 {
+    private static string Scalars(params int[] values) => string.Concat(values.Select(char.ConvertFromUtf32));
+
     [Fact]
     public void MatchesAllNormativeScytaleCases()
     {
         // classical-ciphers-v1-scytale-worked-encrypt
-        Assert.Equal("HLWLEOODL R ", ScytaleCipher.Encrypt("HELLO WORLD", 3));
+        Assert.Equal(Scalars(72, 76, 87, 76, 69, 79, 79, 68, 76, 32, 82, 32), ScytaleCipher.Encrypt(Scalars(72, 69, 76, 76, 79, 32, 87, 79, 82, 76, 68), 3));
         // classical-ciphers-v1-scytale-worked-decrypt
-        Assert.Equal("HELLO WORLD", ScytaleCipher.Decrypt("HLWLEOODL R ", 3));
+        Assert.Equal(Scalars(72, 69, 76, 76, 79, 32, 87, 79, 82, 76, 68), ScytaleCipher.Decrypt(Scalars(72, 76, 87, 76, 69, 79, 79, 68, 76, 32, 82, 32), 3));
         // classical-ciphers-v1-scytale-ragged-decrypt
-        Assert.Equal("ACEFBD", ScytaleCipher.Decrypt("ABCDEF", 4));
+        Assert.Equal(Scalars(65, 67, 69, 70, 66, 68), ScytaleCipher.Decrypt(Scalars(65, 66, 67, 68, 69, 70), 4));
         // classical-ciphers-v1-scytale-unicode-encrypt
-        Assert.Equal("Aé😀 B ", ScytaleCipher.Encrypt("A😀Bé", 3));
+        Assert.Equal(Scalars(65, 233, 128512, 32, 66, 32), ScytaleCipher.Encrypt(Scalars(65, 128512, 66, 233), 3));
         // classical-ciphers-v1-scytale-unicode-decrypt
-        Assert.Equal("A😀Bé", ScytaleCipher.Decrypt("Aé😀 B ", 3));
+        Assert.Equal(Scalars(65, 128512, 66, 233), ScytaleCipher.Decrypt(Scalars(65, 233, 128512, 32, 66, 32), 3));
         // classical-ciphers-v1-scytale-combining-scalar-encrypt
-        Assert.Equal("ABe ́ ", ScytaleCipher.Encrypt("AéB", 3));
+        Assert.Equal(Scalars(65, 66, 101, 32, 769, 32), ScytaleCipher.Encrypt(Scalars(65, 101, 769, 66), 3));
         // classical-ciphers-v1-scytale-combining-scalar-decrypt
-        Assert.Equal("AéB", ScytaleCipher.Decrypt("ABe ́ ", 3));
+        Assert.Equal(Scalars(65, 101, 769, 66), ScytaleCipher.Decrypt(Scalars(65, 66, 101, 32, 769, 32), 3));
         // classical-ciphers-v1-scytale-genuine-trailing-space-encrypt
-        Assert.Equal("E N D ", ScytaleCipher.Encrypt("END ", 3));
+        Assert.Equal(Scalars(69, 32, 78, 32, 68, 32), ScytaleCipher.Encrypt(Scalars(69, 78, 68, 32), 3));
         // classical-ciphers-v1-scytale-genuine-trailing-space-loss
-        Assert.Equal("END", ScytaleCipher.Decrypt("E N D ", 3));
+        Assert.Equal(Scalars(69, 78, 68), ScytaleCipher.Decrypt(Scalars(69, 32, 78, 32, 68, 32), 3));
         // classical-ciphers-v1-scytale-trailing-tab-retained
-        Assert.Equal("AB\t", ScytaleCipher.Decrypt("A\tB ", 2));
+        Assert.Equal(Scalars(65, 66, 9), ScytaleCipher.Decrypt(Scalars(65, 9, 66, 32), 2));
         // classical-ciphers-v1-scytale-newline-nbsp-retained
-        Assert.Equal("A\t\n ", ScytaleCipher.Decrypt("A \t \n ", 3));
+        Assert.Equal(Scalars(65, 9, 10, 160), ScytaleCipher.Decrypt(Scalars(65, 160, 9, 32, 10, 32), 3));
         // classical-ciphers-v1-scytale-empty-before-low-key
-        Assert.Equal("", ScytaleCipher.Encrypt("", -1));
+        Assert.Equal(Scalars(), ScytaleCipher.Encrypt(Scalars(), -1));
         // classical-ciphers-v1-scytale-empty-before-high-key
-        Assert.Equal("", ScytaleCipher.Decrypt("", 8194));
+        Assert.Equal(Scalars(), ScytaleCipher.Decrypt(Scalars(), 8194));
         // classical-ciphers-v1-scytale-invalid-low-key
-        Assert.Throws<ArgumentOutOfRangeException>(() => ScytaleCipher.Encrypt("A", 1));
+        var invalidError0 = Assert.Throws<ArgumentOutOfRangeException>(() => ScytaleCipher.Encrypt(Scalars(65), 1));
+        Assert.Equal(Scalars(115, 99, 121, 116, 97, 108, 101, 45, 105, 110, 118, 97, 108, 105, 100, 45, 107, 101, 121), invalidError0.Message.Contains(Scalars(75, 101, 121, 32, 109, 117, 115, 116), StringComparison.Ordinal) ? Scalars(115, 99, 121, 116, 97, 108, 101, 45, 105, 110, 118, 97, 108, 105, 100, 45, 107, 101, 121) : Scalars(117, 110, 101, 120, 112, 101, 99, 116, 101, 100, 45, 101, 114, 114, 111, 114));
         // classical-ciphers-v1-scytale-invalid-high-key
-        Assert.Throws<ArgumentOutOfRangeException>(() => ScytaleCipher.Decrypt("ABC", 4));
+        var invalidError1 = Assert.Throws<ArgumentOutOfRangeException>(() => ScytaleCipher.Decrypt(Scalars(65, 66, 67), 4));
+        Assert.Equal(Scalars(115, 99, 121, 116, 97, 108, 101, 45, 105, 110, 118, 97, 108, 105, 100, 45, 107, 101, 121), invalidError1.Message.Contains(Scalars(75, 101, 121, 32, 109, 117, 115, 116), StringComparison.Ordinal) ? Scalars(115, 99, 121, 116, 97, 108, 101, 45, 105, 110, 118, 97, 108, 105, 100, 45, 107, 101, 121) : Scalars(117, 110, 101, 120, 112, 101, 99, 116, 101, 100, 45, 101, 114, 114, 111, 114));
         // classical-ciphers-v1-scytale-brute-force-ascending
-        Assert.Equal(new[] { new BruteForceResult(2, "HOLDWLL ERO"), new BruteForceResult(3, "HELLO WORLD"), new BruteForceResult(4, "HLO LEDRWOL"), new BruteForceResult(5, "HLOLRLED  WO"), new BruteForceResult(6, "HWEOLRLLOD") }, ScytaleCipher.BruteForce("HLWLEOODL R "));
+        Assert.Equal(new[] { new BruteForceResult(2, Scalars(72, 79, 76, 68, 87, 76, 76, 32, 69, 82, 79)), new BruteForceResult(3, Scalars(72, 69, 76, 76, 79, 32, 87, 79, 82, 76, 68)), new BruteForceResult(4, Scalars(72, 76, 79, 32, 76, 69, 68, 82, 87, 79, 76)), new BruteForceResult(5, Scalars(72, 76, 79, 76, 82, 76, 69, 68, 32, 32, 87, 79)), new BruteForceResult(6, Scalars(72, 87, 69, 79, 76, 82, 76, 76, 79, 68)) }, ScytaleCipher.BruteForce(Scalars(72, 76, 87, 76, 69, 79, 79, 68, 76, 32, 82, 32)));
         // classical-ciphers-v1-scytale-brute-force-short
-        Assert.Empty(ScytaleCipher.BruteForce("ABC"));
+        Assert.Empty(ScytaleCipher.BruteForce(Scalars(65, 66, 67)));
         // classical-ciphers-v1-scytale-brute-force-preflight-limit
-        Assert.Throws<ArgumentOutOfRangeException>(() => ScytaleCipher.BruteForce(new string('A', 4097)));
+        var limitError = Assert.Throws<ArgumentOutOfRangeException>(() => ScytaleCipher.BruteForce(string.Concat(Enumerable.Repeat(Scalars(65), 4097))));
+        Assert.Equal(Scalars(115, 99, 121, 116, 97, 108, 101, 45, 98, 114, 117, 116, 101, 45, 102, 111, 114, 99, 101, 45, 108, 105, 109, 105, 116), limitError.GetType() == typeof(ArgumentOutOfRangeException) ? Scalars(115, 99, 121, 116, 97, 108, 101, 45, 98, 114, 117, 116, 101, 45, 102, 111, 114, 99, 101, 45, 108, 105, 109, 105, 116) : Scalars(117, 110, 101, 120, 112, 101, 99, 116, 101, 100, 45, 101, 114, 114, 111, 114));
     }
 }

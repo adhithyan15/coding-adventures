@@ -6,44 +6,65 @@ import XCTest
 @testable import ScytaleCipher
 
 final class GeneratedClassicalCipherFixtureTests: XCTestCase {
+    private func scalars(_ values: [UInt32]) -> String { String(values.compactMap(UnicodeScalar.init).map(Character.init)) }
+
     func testAllNormativeScytaleCases() throws {
         // classical-ciphers-v1-scytale-worked-encrypt
-        XCTAssertEqual(try ScytaleCipher.encrypt("HELLO WORLD", key: 3), "HLWLEOODL R ")
+        XCTAssertEqual(try ScytaleCipher.encrypt(scalars([72, 69, 76, 76, 79, 32, 87, 79, 82, 76, 68]), key: 3), scalars([72, 76, 87, 76, 69, 79, 79, 68, 76, 32, 82, 32]))
         // classical-ciphers-v1-scytale-worked-decrypt
-        XCTAssertEqual(try ScytaleCipher.decrypt("HLWLEOODL R ", key: 3), "HELLO WORLD")
+        XCTAssertEqual(try ScytaleCipher.decrypt(scalars([72, 76, 87, 76, 69, 79, 79, 68, 76, 32, 82, 32]), key: 3), scalars([72, 69, 76, 76, 79, 32, 87, 79, 82, 76, 68]))
         // classical-ciphers-v1-scytale-ragged-decrypt
-        XCTAssertEqual(try ScytaleCipher.decrypt("ABCDEF", key: 4), "ACEFBD")
+        XCTAssertEqual(try ScytaleCipher.decrypt(scalars([65, 66, 67, 68, 69, 70]), key: 4), scalars([65, 67, 69, 70, 66, 68]))
         // classical-ciphers-v1-scytale-unicode-encrypt
-        XCTAssertEqual(try ScytaleCipher.encrypt("A😀Bé", key: 3), "Aé😀 B ")
+        XCTAssertEqual(try ScytaleCipher.encrypt(scalars([65, 128512, 66, 233]), key: 3), scalars([65, 233, 128512, 32, 66, 32]))
         // classical-ciphers-v1-scytale-unicode-decrypt
-        XCTAssertEqual(try ScytaleCipher.decrypt("Aé😀 B ", key: 3), "A😀Bé")
+        XCTAssertEqual(try ScytaleCipher.decrypt(scalars([65, 233, 128512, 32, 66, 32]), key: 3), scalars([65, 128512, 66, 233]))
         // classical-ciphers-v1-scytale-combining-scalar-encrypt
-        XCTAssertEqual(try ScytaleCipher.encrypt("AéB", key: 3), "ABe ́ ")
+        XCTAssertEqual(try ScytaleCipher.encrypt(scalars([65, 101, 769, 66]), key: 3), scalars([65, 66, 101, 32, 769, 32]))
         // classical-ciphers-v1-scytale-combining-scalar-decrypt
-        XCTAssertEqual(try ScytaleCipher.decrypt("ABe ́ ", key: 3), "AéB")
+        XCTAssertEqual(try ScytaleCipher.decrypt(scalars([65, 66, 101, 32, 769, 32]), key: 3), scalars([65, 101, 769, 66]))
         // classical-ciphers-v1-scytale-genuine-trailing-space-encrypt
-        XCTAssertEqual(try ScytaleCipher.encrypt("END ", key: 3), "E N D ")
+        XCTAssertEqual(try ScytaleCipher.encrypt(scalars([69, 78, 68, 32]), key: 3), scalars([69, 32, 78, 32, 68, 32]))
         // classical-ciphers-v1-scytale-genuine-trailing-space-loss
-        XCTAssertEqual(try ScytaleCipher.decrypt("E N D ", key: 3), "END")
+        XCTAssertEqual(try ScytaleCipher.decrypt(scalars([69, 32, 78, 32, 68, 32]), key: 3), scalars([69, 78, 68]))
         // classical-ciphers-v1-scytale-trailing-tab-retained
-        XCTAssertEqual(try ScytaleCipher.decrypt("A\tB ", key: 2), "AB\t")
+        XCTAssertEqual(try ScytaleCipher.decrypt(scalars([65, 9, 66, 32]), key: 2), scalars([65, 66, 9]))
         // classical-ciphers-v1-scytale-newline-nbsp-retained
-        XCTAssertEqual(try ScytaleCipher.decrypt("A \t \n ", key: 3), "A\t\n ")
+        XCTAssertEqual(try ScytaleCipher.decrypt(scalars([65, 160, 9, 32, 10, 32]), key: 3), scalars([65, 9, 10, 160]))
         // classical-ciphers-v1-scytale-empty-before-low-key
-        XCTAssertEqual(try ScytaleCipher.encrypt("", key: -1), "")
+        XCTAssertEqual(try ScytaleCipher.encrypt(scalars([]), key: -1), scalars([]))
         // classical-ciphers-v1-scytale-empty-before-high-key
-        XCTAssertEqual(try ScytaleCipher.decrypt("", key: 8194), "")
+        XCTAssertEqual(try ScytaleCipher.decrypt(scalars([]), key: 8194), scalars([]))
         // classical-ciphers-v1-scytale-invalid-low-key
-        XCTAssertThrowsError(try ScytaleCipher.encrypt("A", key: 1))
+        XCTAssertThrowsError(try ScytaleCipher.encrypt(scalars([65]), key: 1)) { error in
+            let actualID: String
+            switch error {
+            case ScytaleCipherError.keyTooSmall(_), ScytaleCipherError.keyTooLarge(_, textLength: _): actualID = scalars([115, 99, 121, 116, 97, 108, 101, 45, 105, 110, 118, 97, 108, 105, 100, 45, 107, 101, 121])
+            default: actualID = scalars([117, 110, 101, 120, 112, 101, 99, 116, 101, 100, 45, 101, 114, 114, 111, 114])
+            }
+            XCTAssertEqual(actualID, scalars([115, 99, 121, 116, 97, 108, 101, 45, 105, 110, 118, 97, 108, 105, 100, 45, 107, 101, 121]))
+        }
         // classical-ciphers-v1-scytale-invalid-high-key
-        XCTAssertThrowsError(try ScytaleCipher.decrypt("ABC", key: 4))
+        XCTAssertThrowsError(try ScytaleCipher.decrypt(scalars([65, 66, 67]), key: 4)) { error in
+            let actualID: String
+            switch error {
+            case ScytaleCipherError.keyTooSmall(_), ScytaleCipherError.keyTooLarge(_, textLength: _): actualID = scalars([115, 99, 121, 116, 97, 108, 101, 45, 105, 110, 118, 97, 108, 105, 100, 45, 107, 101, 121])
+            default: actualID = scalars([117, 110, 101, 120, 112, 101, 99, 116, 101, 100, 45, 101, 114, 114, 111, 114])
+            }
+            XCTAssertEqual(actualID, scalars([115, 99, 121, 116, 97, 108, 101, 45, 105, 110, 118, 97, 108, 105, 100, 45, 107, 101, 121]))
+        }
         // classical-ciphers-v1-scytale-brute-force-ascending
-        let brute = try ScytaleCipher.bruteForce("HLWLEOODL R ")
+        let brute = try ScytaleCipher.bruteForce(scalars([72, 76, 87, 76, 69, 79, 79, 68, 76, 32, 82, 32]))
         XCTAssertEqual(brute.map(\.key), [2, 3, 4, 5, 6])
-        XCTAssertEqual(brute.map(\.text), ["HOLDWLL ERO", "HELLO WORLD", "HLO LEDRWOL", "HLOLRLED  WO", "HWEOLRLLOD"])
+        XCTAssertEqual(brute.map(\.text), [scalars([72, 79, 76, 68, 87, 76, 76, 32, 69, 82, 79]), scalars([72, 69, 76, 76, 79, 32, 87, 79, 82, 76, 68]), scalars([72, 76, 79, 32, 76, 69, 68, 82, 87, 79, 76]), scalars([72, 76, 79, 76, 82, 76, 69, 68, 32, 32, 87, 79]), scalars([72, 87, 69, 79, 76, 82, 76, 76, 79, 68])])
         // classical-ciphers-v1-scytale-brute-force-short
-        XCTAssertTrue(try ScytaleCipher.bruteForce("ABC").isEmpty)
+        XCTAssertTrue(try ScytaleCipher.bruteForce(scalars([65, 66, 67])).isEmpty)
         // classical-ciphers-v1-scytale-brute-force-preflight-limit
-        XCTAssertThrowsError(try ScytaleCipher.bruteForce(String(repeating: "A", count: 4097)))
+        XCTAssertThrowsError(try ScytaleCipher.bruteForce(String(repeating: scalars([65]), count: 4097))) { error in
+            guard case ScytaleCipherError.bruteForceLimit = error else {
+                return XCTFail(scalars([101, 120, 112, 101, 99, 116, 101, 100, 32, 115, 99, 121, 116, 97, 108, 101, 45, 98, 114, 117, 116, 101, 45, 102, 111, 114, 99, 101, 45, 108, 105, 109, 105, 116]))
+            }
+            XCTAssertEqual(scalars([115, 99, 121, 116, 97, 108, 101, 45, 98, 114, 117, 116, 101, 45, 102, 111, 114, 99, 101, 45, 108, 105, 109, 105, 116]), scalars([115, 99, 121, 116, 97, 108, 101, 45, 98, 114, 117, 116, 101, 45, 102, 111, 114, 99, 101, 45, 108, 105, 109, 105, 116]))
+        }
     }
 }

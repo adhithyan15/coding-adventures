@@ -8,46 +8,50 @@ local scytale = require("coding_adventures.scytale_cipher")
 describe("generated classical-cipher Scytale fixtures", function()
     it("matches every normative case", function()
         -- classical-ciphers-v1-scytale-worked-encrypt
-        assert.equals("HLWLEOODL R ", scytale.encrypt("HELLO WORLD", 3))
+        assert.equals(utf8.char(72, 76, 87, 76, 69, 79, 79, 68, 76, 32, 82, 32), scytale.encrypt(utf8.char(72, 69, 76, 76, 79, 32, 87, 79, 82, 76, 68), 3))
         -- classical-ciphers-v1-scytale-worked-decrypt
-        assert.equals("HELLO WORLD", scytale.decrypt("HLWLEOODL R ", 3))
+        assert.equals(utf8.char(72, 69, 76, 76, 79, 32, 87, 79, 82, 76, 68), scytale.decrypt(utf8.char(72, 76, 87, 76, 69, 79, 79, 68, 76, 32, 82, 32), 3))
         -- classical-ciphers-v1-scytale-ragged-decrypt
-        assert.equals("ACEFBD", scytale.decrypt("ABCDEF", 4))
+        assert.equals(utf8.char(65, 67, 69, 70, 66, 68), scytale.decrypt(utf8.char(65, 66, 67, 68, 69, 70), 4))
         -- classical-ciphers-v1-scytale-unicode-encrypt
-        assert.equals("Aé😀 B ", scytale.encrypt("A😀Bé", 3))
+        assert.equals(utf8.char(65, 233, 128512, 32, 66, 32), scytale.encrypt(utf8.char(65, 128512, 66, 233), 3))
         -- classical-ciphers-v1-scytale-unicode-decrypt
-        assert.equals("A😀Bé", scytale.decrypt("Aé😀 B ", 3))
+        assert.equals(utf8.char(65, 128512, 66, 233), scytale.decrypt(utf8.char(65, 233, 128512, 32, 66, 32), 3))
         -- classical-ciphers-v1-scytale-combining-scalar-encrypt
-        assert.equals("ABe ́ ", scytale.encrypt("AéB", 3))
+        assert.equals(utf8.char(65, 66, 101, 32, 769, 32), scytale.encrypt(utf8.char(65, 101, 769, 66), 3))
         -- classical-ciphers-v1-scytale-combining-scalar-decrypt
-        assert.equals("AéB", scytale.decrypt("ABe ́ ", 3))
+        assert.equals(utf8.char(65, 101, 769, 66), scytale.decrypt(utf8.char(65, 66, 101, 32, 769, 32), 3))
         -- classical-ciphers-v1-scytale-genuine-trailing-space-encrypt
-        assert.equals("E N D ", scytale.encrypt("END ", 3))
+        assert.equals(utf8.char(69, 32, 78, 32, 68, 32), scytale.encrypt(utf8.char(69, 78, 68, 32), 3))
         -- classical-ciphers-v1-scytale-genuine-trailing-space-loss
-        assert.equals("END", scytale.decrypt("E N D ", 3))
+        assert.equals(utf8.char(69, 78, 68), scytale.decrypt(utf8.char(69, 32, 78, 32, 68, 32), 3))
         -- classical-ciphers-v1-scytale-trailing-tab-retained
-        assert.equals("AB\t", scytale.decrypt("A\tB ", 2))
+        assert.equals(utf8.char(65, 66, 9), scytale.decrypt(utf8.char(65, 9, 66, 32), 2))
         -- classical-ciphers-v1-scytale-newline-nbsp-retained
-        assert.equals("A\t\n ", scytale.decrypt("A \t \n ", 3))
+        assert.equals(utf8.char(65, 9, 10, 160), scytale.decrypt(utf8.char(65, 160, 9, 32, 10, 32), 3))
         -- classical-ciphers-v1-scytale-empty-before-low-key
-        assert.equals("", scytale.encrypt("", -1))
+        assert.equals(utf8.char(), scytale.encrypt(utf8.char(), -1))
         -- classical-ciphers-v1-scytale-empty-before-high-key
-        assert.equals("", scytale.decrypt("", 8194))
+        assert.equals(utf8.char(), scytale.decrypt(utf8.char(), 8194))
         -- classical-ciphers-v1-scytale-invalid-low-key
-        assert.has_error(function() scytale.encrypt("A", 1) end)
+        local invalid_ok0, invalid_error0 = pcall(function() scytale.encrypt(utf8.char(65), 1) end)
+        local invalid_id0 = not invalid_ok0 and tostring(invalid_error0):find(utf8.char(75, 101, 121, 32, 109, 117, 115, 116, 32, 98, 101), 1, true) and utf8.char(115, 99, 121, 116, 97, 108, 101, 45, 105, 110, 118, 97, 108, 105, 100, 45, 107, 101, 121) or utf8.char(117, 110, 101, 120, 112, 101, 99, 116, 101, 100, 45, 101, 114, 114, 111, 114)
+        assert.equals(utf8.char(115, 99, 121, 116, 97, 108, 101, 45, 105, 110, 118, 97, 108, 105, 100, 45, 107, 101, 121), invalid_id0)
         -- classical-ciphers-v1-scytale-invalid-high-key
-        assert.has_error(function() scytale.decrypt("ABC", 4) end)
+        local invalid_ok1, invalid_error1 = pcall(function() scytale.decrypt(utf8.char(65, 66, 67), 4) end)
+        local invalid_id1 = not invalid_ok1 and tostring(invalid_error1):find(utf8.char(75, 101, 121, 32, 109, 117, 115, 116, 32, 98, 101), 1, true) and utf8.char(115, 99, 121, 116, 97, 108, 101, 45, 105, 110, 118, 97, 108, 105, 100, 45, 107, 101, 121) or utf8.char(117, 110, 101, 120, 112, 101, 99, 116, 101, 100, 45, 101, 114, 114, 111, 114)
+        assert.equals(utf8.char(115, 99, 121, 116, 97, 108, 101, 45, 105, 110, 118, 97, 108, 105, 100, 45, 107, 101, 121), invalid_id1)
         -- classical-ciphers-v1-scytale-brute-force-ascending
-        local brute = scytale.brute_force("HLWLEOODL R ")
+        local brute = scytale.brute_force(utf8.char(72, 76, 87, 76, 69, 79, 79, 68, 76, 32, 82, 32))
         assert.equals(5, #brute)
-        assert.same({ key = 2, text = "HOLDWLL ERO" }, brute[1])
-        assert.same({ key = 3, text = "HELLO WORLD" }, brute[2])
-        assert.same({ key = 4, text = "HLO LEDRWOL" }, brute[3])
-        assert.same({ key = 5, text = "HLOLRLED  WO" }, brute[4])
-        assert.same({ key = 6, text = "HWEOLRLLOD" }, brute[5])
+        assert.same({ key = 2, text = utf8.char(72, 79, 76, 68, 87, 76, 76, 32, 69, 82, 79) }, brute[1])
+        assert.same({ key = 3, text = utf8.char(72, 69, 76, 76, 79, 32, 87, 79, 82, 76, 68) }, brute[2])
+        assert.same({ key = 4, text = utf8.char(72, 76, 79, 32, 76, 69, 68, 82, 87, 79, 76) }, brute[3])
+        assert.same({ key = 5, text = utf8.char(72, 76, 79, 76, 82, 76, 69, 68, 32, 32, 87, 79) }, brute[4])
+        assert.same({ key = 6, text = utf8.char(72, 87, 69, 79, 76, 82, 76, 76, 79, 68) }, brute[5])
         -- classical-ciphers-v1-scytale-brute-force-short
-        assert.equals(0, #scytale.brute_force("ABC"))
+        assert.equals(0, #scytale.brute_force(utf8.char(65, 66, 67)))
         -- classical-ciphers-v1-scytale-brute-force-preflight-limit
-        assert.has_error(function() scytale.brute_force(string.rep("A", 4097)) end, "scytale-brute-force-limit")
+        assert.has_error(function() scytale.brute_force(string.rep(utf8.char(65), 4097)) end, utf8.char(115, 99, 121, 116, 97, 108, 101, 45, 98, 114, 117, 116, 101, 45, 102, 111, 114, 99, 101, 45, 108, 105, 109, 105, 116))
     end)
 end)

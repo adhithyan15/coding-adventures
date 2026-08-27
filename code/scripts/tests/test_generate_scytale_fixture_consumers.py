@@ -79,6 +79,88 @@ class ScytaleFixtureConsumerGeneratorTests(unittest.TestCase):
         with self.assertRaisesRegex(ValueError, "fixture-size-limit"):
             generator.load_cases_bytes(too_large)
 
+    def test_file_loader_bounds_the_read_before_parsing(self) -> None:
+        with tempfile.TemporaryDirectory() as directory:
+            path = Path(directory) / "oversized.json"
+            with path.open("wb") as stream:
+                stream.seek(generator.MAX_FIXTURE_BYTES)
+                stream.write(b"x")
+
+            with self.assertRaisesRegex(ValueError, "fixture-size-limit"):
+                generator.load_cases(path)
+
+    def test_rejects_source_unsafe_identifiers(self) -> None:
+        document = json.loads(generator.FIXTURE_PATH.read_text(encoding="utf-8"))
+        document["cases"][0]["id"] += "\nSystem.exit(1)"
+
+        with self.assertRaisesRegex(ValueError, "fixture-invalid-case"):
+            generator.load_cases_bytes(
+                json.dumps(document, ensure_ascii=False).encode("utf-8")
+            )
+
+    def test_all_lanes_encode_fixture_text_as_scalars(self) -> None:
+        cases, digest = generator.load_cases(generator.FIXTURE_PATH)
+        hostile = (
+            '\x00\x01"\\${System.getenv("SECRET")} '
+            '#{System.cmd("env", [])} $ENV{SECRET}'
+        )
+        cases = copy.deepcopy(cases)
+        cases[0]["input"]["text"] = hostile
+        outputs = generator.render_all(cases, digest)
+
+        for language in generator.TARGETS:
+            source = outputs[generator.TARGETS[language]]
+            self.assertNotIn(hostile, source, language)
+            if language == "dart":
+                self.assertIn(r"\u0000", source, language)
+                self.assertIn(r"\$", source, language)
+            elif language == "rust":
+                self.assertIn(r"\u{0}", source, language)
+                self.assertIn(r"\u{24}", source, language)
+            else:
+                self.assertNotIn(r"\u0000", source, language)
+                self.assertIn(str(ord("$")), source, language)
+
+    def test_limit_descriptor_is_rendered_from_the_fixture(self) -> None:
+        cases, digest = generator.load_cases(generator.FIXTURE_PATH)
+        cases = copy.deepcopy(cases)
+        limit = next(
+            case for case in cases if case["id"].endswith("brute-force-preflight-limit")
+        )
+        baseline = generator.render_all(cases, digest)
+        limit["input"] = {"repeat_scalar": "\U0010ffff", "repeat_count": 4098}
+
+        outputs = generator.render_all(cases, digest)
+
+        for relative_path, source in outputs.items():
+            self.assertNotEqual(baseline[relative_path], source, relative_path)
+            self.assertIn("4098", source, relative_path)
+            self.assertTrue(
+                "\U0010ffff" in source
+                or "1114111" in source
+                or r"\u{10ffff}" in source,
+                relative_path,
+            )
+
+        limit["expected"]["error_id"] = "scytale-brute-force-limit-mutated"
+        error_outputs = generator.render_all(cases, digest)
+        for relative_path, source in error_outputs.items():
+            self.assertNotEqual(outputs[relative_path], source, relative_path)
+
+    def test_invalid_key_error_id_is_rendered_from_the_fixture(self) -> None:
+        cases, digest = generator.load_cases(generator.FIXTURE_PATH)
+        baseline = generator.render_all(cases, digest)
+        cases = copy.deepcopy(cases)
+        invalid = next(
+            case for case in cases if case["id"].endswith("scytale-invalid-low-key")
+        )
+        invalid["expected"]["error_id"] = "scytale-invalid-key-mutated"
+
+        outputs = generator.render_all(cases, digest)
+
+        for relative_path, source in outputs.items():
+            self.assertNotEqual(baseline[relative_path], source, relative_path)
+
     def test_check_reports_missing_and_changed_outputs_without_writing(self) -> None:
         cases, digest = generator.load_cases(generator.FIXTURE_PATH)
         outputs = generator.render_all(cases, digest)
@@ -87,7 +169,8 @@ class ScytaleFixtureConsumerGeneratorTests(unittest.TestCase):
             first_path = next(iter(outputs))
             target = root / first_path
             target.parent.mkdir(parents=True)
-            target.write_text("stale\n", encoding="utf-8")
+            with target.open("wb") as stream:
+                stream.truncate(len(outputs[first_path].encode("utf-8")) + 1)
 
             failures = generator.check_outputs(outputs, root)
 

@@ -11,42 +11,44 @@ from scytale_cipher import brute_force, decrypt, encrypt
 
 def test_generated_classical_cipher_scytale_cases() -> None:
     # classical-ciphers-v1-scytale-worked-encrypt
-    assert encrypt("HELLO WORLD", 3) == "HLWLEOODL R "
+    assert encrypt("".join(map(chr, (72, 69, 76, 76, 79, 32, 87, 79, 82, 76, 68))), 3) == "".join(map(chr, (72, 76, 87, 76, 69, 79, 79, 68, 76, 32, 82, 32)))
     # classical-ciphers-v1-scytale-worked-decrypt
-    assert decrypt("HLWLEOODL R ", 3) == "HELLO WORLD"
+    assert decrypt("".join(map(chr, (72, 76, 87, 76, 69, 79, 79, 68, 76, 32, 82, 32))), 3) == "".join(map(chr, (72, 69, 76, 76, 79, 32, 87, 79, 82, 76, 68)))
     # classical-ciphers-v1-scytale-ragged-decrypt
-    assert decrypt("ABCDEF", 4) == "ACEFBD"
+    assert decrypt("".join(map(chr, (65, 66, 67, 68, 69, 70))), 4) == "".join(map(chr, (65, 67, 69, 70, 66, 68)))
     # classical-ciphers-v1-scytale-unicode-encrypt
-    assert encrypt("A😀Bé", 3) == "Aé😀 B "
+    assert encrypt("".join(map(chr, (65, 128512, 66, 233))), 3) == "".join(map(chr, (65, 233, 128512, 32, 66, 32)))
     # classical-ciphers-v1-scytale-unicode-decrypt
-    assert decrypt("Aé😀 B ", 3) == "A😀Bé"
+    assert decrypt("".join(map(chr, (65, 233, 128512, 32, 66, 32))), 3) == "".join(map(chr, (65, 128512, 66, 233)))
     # classical-ciphers-v1-scytale-combining-scalar-encrypt
-    assert encrypt("AéB", 3) == "ABe ́ "
+    assert encrypt("".join(map(chr, (65, 101, 769, 66))), 3) == "".join(map(chr, (65, 66, 101, 32, 769, 32)))
     # classical-ciphers-v1-scytale-combining-scalar-decrypt
-    assert decrypt("ABe ́ ", 3) == "AéB"
+    assert decrypt("".join(map(chr, (65, 66, 101, 32, 769, 32))), 3) == "".join(map(chr, (65, 101, 769, 66)))
     # classical-ciphers-v1-scytale-genuine-trailing-space-encrypt
-    assert encrypt("END ", 3) == "E N D "
+    assert encrypt("".join(map(chr, (69, 78, 68, 32))), 3) == "".join(map(chr, (69, 32, 78, 32, 68, 32)))
     # classical-ciphers-v1-scytale-genuine-trailing-space-loss
-    assert decrypt("E N D ", 3) == "END"
+    assert decrypt("".join(map(chr, (69, 32, 78, 32, 68, 32))), 3) == "".join(map(chr, (69, 78, 68)))
     # classical-ciphers-v1-scytale-trailing-tab-retained
-    assert decrypt("A\tB ", 2) == "AB\t"
+    assert decrypt("".join(map(chr, (65, 9, 66, 32))), 2) == "".join(map(chr, (65, 66, 9)))
     # classical-ciphers-v1-scytale-newline-nbsp-retained
-    assert decrypt("A \t \n ", 3) == "A\t\n "
+    assert decrypt("".join(map(chr, (65, 160, 9, 32, 10, 32))), 3) == "".join(map(chr, (65, 9, 10, 160)))
     # classical-ciphers-v1-scytale-empty-before-low-key
-    assert encrypt("", -1) == ""
+    assert encrypt("".join(map(chr, ())), -1) == "".join(map(chr, ()))
     # classical-ciphers-v1-scytale-empty-before-high-key
-    assert decrypt("", 8194) == ""
+    assert decrypt("".join(map(chr, ())), 8194) == "".join(map(chr, ()))
     # classical-ciphers-v1-scytale-invalid-low-key
-    with pytest.raises(ValueError):
-        encrypt("A", 1)
+    with pytest.raises(ValueError) as invalid_error0:
+        encrypt("".join(map(chr, (65,))), 1)
+    assert ("".join(map(chr, (115, 99, 121, 116, 97, 108, 101, 45, 105, 110, 118, 97, 108, 105, 100, 45, 107, 101, 121))) if str(invalid_error0.value).startswith("".join(map(chr, (75, 101, 121, 32, 109, 117, 115, 116)))) else "".join(map(chr, (117, 110, 101, 120, 112, 101, 99, 116, 101, 100, 45, 101, 114, 114, 111, 114)))) == "".join(map(chr, (115, 99, 121, 116, 97, 108, 101, 45, 105, 110, 118, 97, 108, 105, 100, 45, 107, 101, 121)))
     # classical-ciphers-v1-scytale-invalid-high-key
-    with pytest.raises(ValueError):
-        decrypt("ABC", 4)
+    with pytest.raises(ValueError) as invalid_error1:
+        decrypt("".join(map(chr, (65, 66, 67))), 4)
+    assert ("".join(map(chr, (115, 99, 121, 116, 97, 108, 101, 45, 105, 110, 118, 97, 108, 105, 100, 45, 107, 101, 121))) if str(invalid_error1.value).startswith("".join(map(chr, (75, 101, 121, 32, 109, 117, 115, 116)))) else "".join(map(chr, (117, 110, 101, 120, 112, 101, 99, 116, 101, 100, 45, 101, 114, 114, 111, 114)))) == "".join(map(chr, (115, 99, 121, 116, 97, 108, 101, 45, 105, 110, 118, 97, 108, 105, 100, 45, 107, 101, 121)))
     # classical-ciphers-v1-scytale-brute-force-ascending
-    assert brute_force("HLWLEOODL R ") == [{"key": 2, "text": "HOLDWLL ERO"}, {"key": 3, "text": "HELLO WORLD"}, {"key": 4, "text": "HLO LEDRWOL"}, {"key": 5, "text": "HLOLRLED  WO"}, {"key": 6, "text": "HWEOLRLLOD"}]
+    assert brute_force("".join(map(chr, (72, 76, 87, 76, 69, 79, 79, 68, 76, 32, 82, 32)))) == [{"key": 2, "text": "".join(map(chr, (72, 79, 76, 68, 87, 76, 76, 32, 69, 82, 79)))}, {"key": 3, "text": "".join(map(chr, (72, 69, 76, 76, 79, 32, 87, 79, 82, 76, 68)))}, {"key": 4, "text": "".join(map(chr, (72, 76, 79, 32, 76, 69, 68, 82, 87, 79, 76)))}, {"key": 5, "text": "".join(map(chr, (72, 76, 79, 76, 82, 76, 69, 68, 32, 32, 87, 79)))}, {"key": 6, "text": "".join(map(chr, (72, 87, 69, 79, 76, 82, 76, 76, 79, 68)))}]
     # classical-ciphers-v1-scytale-brute-force-short
-    assert brute_force("ABC") == []
+    assert brute_force("".join(map(chr, (65, 66, 67)))) == []
     # classical-ciphers-v1-scytale-brute-force-preflight-limit
-    with pytest.raises(ValueError, match="scytale-brute-force-limit"):
-        brute_force("A" * 4097)
+    with pytest.raises(ValueError, match="".join(map(chr, (115, 99, 121, 116, 97, 108, 101, 45, 98, 114, 117, 116, 101, 45, 102, 111, 114, 99, 101, 45, 108, 105, 109, 105, 116)))):
+        brute_force("".join(map(chr, (65,))) * 4097)
 # fmt: on

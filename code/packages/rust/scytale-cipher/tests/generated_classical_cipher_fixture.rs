@@ -7,66 +7,107 @@ use scytale_cipher::{brute_force, decrypt, encrypt, BruteForceResult};
 #[test]
 fn generated_classical_cipher_scytale_cases() {
     // classical-ciphers-v1-scytale-worked-encrypt
-    assert_eq!(encrypt("HELLO WORLD", 3).unwrap(), "HLWLEOODL R ");
+    let text_input_0 = "\u{48}\u{45}\u{4c}\u{4c}\u{4f}\u{20}\u{57}\u{4f}\u{52}\u{4c}\u{44}";
+    let text_expected_0 =
+        "\u{48}\u{4c}\u{57}\u{4c}\u{45}\u{4f}\u{4f}\u{44}\u{4c}\u{20}\u{52}\u{20}";
+    assert_eq!(encrypt(text_input_0, 3).unwrap(), text_expected_0);
     // classical-ciphers-v1-scytale-worked-decrypt
-    assert_eq!(decrypt("HLWLEOODL R ", 3).unwrap(), "HELLO WORLD");
+    let text_input_1 = "\u{48}\u{4c}\u{57}\u{4c}\u{45}\u{4f}\u{4f}\u{44}\u{4c}\u{20}\u{52}\u{20}";
+    let text_expected_1 = "\u{48}\u{45}\u{4c}\u{4c}\u{4f}\u{20}\u{57}\u{4f}\u{52}\u{4c}\u{44}";
+    assert_eq!(decrypt(text_input_1, 3).unwrap(), text_expected_1);
     // classical-ciphers-v1-scytale-ragged-decrypt
-    assert_eq!(decrypt("ABCDEF", 4).unwrap(), "ACEFBD");
+    let text_input_2 = "\u{41}\u{42}\u{43}\u{44}\u{45}\u{46}";
+    let text_expected_2 = "\u{41}\u{43}\u{45}\u{46}\u{42}\u{44}";
+    assert_eq!(decrypt(text_input_2, 4).unwrap(), text_expected_2);
     // classical-ciphers-v1-scytale-unicode-encrypt
-    assert_eq!(encrypt("A😀Bé", 3).unwrap(), "Aé😀 B ");
+    let text_input_3 = "\u{41}\u{1f600}\u{42}\u{e9}";
+    let text_expected_3 = "\u{41}\u{e9}\u{1f600}\u{20}\u{42}\u{20}";
+    assert_eq!(encrypt(text_input_3, 3).unwrap(), text_expected_3);
     // classical-ciphers-v1-scytale-unicode-decrypt
-    assert_eq!(decrypt("Aé😀 B ", 3).unwrap(), "A😀Bé");
+    let text_input_4 = "\u{41}\u{e9}\u{1f600}\u{20}\u{42}\u{20}";
+    let text_expected_4 = "\u{41}\u{1f600}\u{42}\u{e9}";
+    assert_eq!(decrypt(text_input_4, 3).unwrap(), text_expected_4);
     // classical-ciphers-v1-scytale-combining-scalar-encrypt
-    assert_eq!(encrypt("AéB", 3).unwrap(), "ABe ́ ");
+    let text_input_5 = "\u{41}\u{65}\u{301}\u{42}";
+    let text_expected_5 = "\u{41}\u{42}\u{65}\u{20}\u{301}\u{20}";
+    assert_eq!(encrypt(text_input_5, 3).unwrap(), text_expected_5);
     // classical-ciphers-v1-scytale-combining-scalar-decrypt
-    assert_eq!(decrypt("ABe ́ ", 3).unwrap(), "AéB");
+    let text_input_6 = "\u{41}\u{42}\u{65}\u{20}\u{301}\u{20}";
+    let text_expected_6 = "\u{41}\u{65}\u{301}\u{42}";
+    assert_eq!(decrypt(text_input_6, 3).unwrap(), text_expected_6);
     // classical-ciphers-v1-scytale-genuine-trailing-space-encrypt
-    assert_eq!(encrypt("END ", 3).unwrap(), "E N D ");
+    let text_input_7 = "\u{45}\u{4e}\u{44}\u{20}";
+    let text_expected_7 = "\u{45}\u{20}\u{4e}\u{20}\u{44}\u{20}";
+    assert_eq!(encrypt(text_input_7, 3).unwrap(), text_expected_7);
     // classical-ciphers-v1-scytale-genuine-trailing-space-loss
-    assert_eq!(decrypt("E N D ", 3).unwrap(), "END");
+    let text_input_8 = "\u{45}\u{20}\u{4e}\u{20}\u{44}\u{20}";
+    let text_expected_8 = "\u{45}\u{4e}\u{44}";
+    assert_eq!(decrypt(text_input_8, 3).unwrap(), text_expected_8);
     // classical-ciphers-v1-scytale-trailing-tab-retained
-    assert_eq!(decrypt("A\tB ", 2).unwrap(), "AB\t");
+    let text_input_9 = "\u{41}\u{9}\u{42}\u{20}";
+    let text_expected_9 = "\u{41}\u{42}\u{9}";
+    assert_eq!(decrypt(text_input_9, 2).unwrap(), text_expected_9);
     // classical-ciphers-v1-scytale-newline-nbsp-retained
-    assert_eq!(decrypt("A \t \n ", 3).unwrap(), "A\t\n ");
+    let text_input_10 = "\u{41}\u{a0}\u{9}\u{20}\u{a}\u{20}";
+    let text_expected_10 = "\u{41}\u{9}\u{a}\u{a0}";
+    assert_eq!(decrypt(text_input_10, 3).unwrap(), text_expected_10);
     // classical-ciphers-v1-scytale-empty-before-low-key
-    assert_eq!(encrypt("", -1).unwrap(), "");
+    let text_input_11 = "";
+    let text_expected_11 = "";
+    assert_eq!(encrypt(text_input_11, -1).unwrap(), text_expected_11);
     // classical-ciphers-v1-scytale-empty-before-high-key
-    assert_eq!(decrypt("", 8194).unwrap(), "");
+    let text_input_12 = "";
+    let text_expected_12 = "";
+    assert_eq!(decrypt(text_input_12, 8194).unwrap(), text_expected_12);
     // classical-ciphers-v1-scytale-invalid-low-key
-    assert!(encrypt("A", 1).is_err());
+    let invalid_id_0 = match encrypt("\u{41}", 1) {
+        Err(error) if error.starts_with("\u{4b}\u{65}\u{79}\u{20}\u{6d}\u{75}\u{73}\u{74}\u{20}\u{62}\u{65}") => "\u{73}\u{63}\u{79}\u{74}\u{61}\u{6c}\u{65}\u{2d}\u{69}\u{6e}\u{76}\u{61}\u{6c}\u{69}\u{64}\u{2d}\u{6b}\u{65}\u{79}",
+        _ => "\u{75}\u{6e}\u{65}\u{78}\u{70}\u{65}\u{63}\u{74}\u{65}\u{64}\u{2d}\u{65}\u{72}\u{72}\u{6f}\u{72}",
+    };
+    assert_eq!(invalid_id_0, "\u{73}\u{63}\u{79}\u{74}\u{61}\u{6c}\u{65}\u{2d}\u{69}\u{6e}\u{76}\u{61}\u{6c}\u{69}\u{64}\u{2d}\u{6b}\u{65}\u{79}");
     // classical-ciphers-v1-scytale-invalid-high-key
-    assert!(decrypt("ABC", 4).is_err());
+    let invalid_id_1 = match decrypt("\u{41}\u{42}\u{43}", 4) {
+        Err(error) if error.starts_with("\u{4b}\u{65}\u{79}\u{20}\u{6d}\u{75}\u{73}\u{74}\u{20}\u{62}\u{65}") => "\u{73}\u{63}\u{79}\u{74}\u{61}\u{6c}\u{65}\u{2d}\u{69}\u{6e}\u{76}\u{61}\u{6c}\u{69}\u{64}\u{2d}\u{6b}\u{65}\u{79}",
+        _ => "\u{75}\u{6e}\u{65}\u{78}\u{70}\u{65}\u{63}\u{74}\u{65}\u{64}\u{2d}\u{65}\u{72}\u{72}\u{6f}\u{72}",
+    };
+    assert_eq!(invalid_id_1, "\u{73}\u{63}\u{79}\u{74}\u{61}\u{6c}\u{65}\u{2d}\u{69}\u{6e}\u{76}\u{61}\u{6c}\u{69}\u{64}\u{2d}\u{6b}\u{65}\u{79}");
+    let brute_text_0 = "\u{48}\u{4f}\u{4c}\u{44}\u{57}\u{4c}\u{4c}\u{20}\u{45}\u{52}\u{4f}";
+    let brute_text_1 = "\u{48}\u{45}\u{4c}\u{4c}\u{4f}\u{20}\u{57}\u{4f}\u{52}\u{4c}\u{44}";
+    let brute_text_2 = "\u{48}\u{4c}\u{4f}\u{20}\u{4c}\u{45}\u{44}\u{52}\u{57}\u{4f}\u{4c}";
+    let brute_text_3 = "\u{48}\u{4c}\u{4f}\u{4c}\u{52}\u{4c}\u{45}\u{44}\u{20}\u{20}\u{57}\u{4f}";
+    let brute_text_4 = "\u{48}\u{57}\u{45}\u{4f}\u{4c}\u{52}\u{4c}\u{4c}\u{4f}\u{44}";
     // classical-ciphers-v1-scytale-brute-force-ascending
+    let brute_input = "\u{48}\u{4c}\u{57}\u{4c}\u{45}\u{4f}\u{4f}\u{44}\u{4c}\u{20}\u{52}\u{20}";
     assert_eq!(
-        brute_force("HLWLEOODL R ").unwrap(),
+        brute_force(brute_input).unwrap(),
         vec![
             BruteForceResult {
                 key: 2,
-                text: "HOLDWLL ERO".to_string()
+                text: brute_text_0.to_string()
             },
             BruteForceResult {
                 key: 3,
-                text: "HELLO WORLD".to_string()
+                text: brute_text_1.to_string()
             },
             BruteForceResult {
                 key: 4,
-                text: "HLO LEDRWOL".to_string()
+                text: brute_text_2.to_string()
             },
             BruteForceResult {
                 key: 5,
-                text: "HLOLRLED  WO".to_string()
+                text: brute_text_3.to_string()
             },
             BruteForceResult {
                 key: 6,
-                text: "HWEOLRLLOD".to_string()
+                text: brute_text_4.to_string()
             },
         ]
     );
     // classical-ciphers-v1-scytale-brute-force-short
-    assert!(brute_force("ABC").unwrap().is_empty());
+    assert!(brute_force("\u{41}\u{42}\u{43}").unwrap().is_empty());
     // classical-ciphers-v1-scytale-brute-force-preflight-limit
     assert_eq!(
-        brute_force(&"A".repeat(4097)),
-        Err("scytale-brute-force-limit".to_string())
+        brute_force(&"\u{41}".repeat(4097)),
+        Err("\u{73}\u{63}\u{79}\u{74}\u{61}\u{6c}\u{65}\u{2d}\u{62}\u{72}\u{75}\u{74}\u{65}\u{2d}\u{66}\u{6f}\u{72}\u{63}\u{65}\u{2d}\u{6c}\u{69}\u{6d}\u{69}\u{74}".to_string())
     );
 }

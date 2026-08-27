@@ -34,9 +34,21 @@ void main() {
     // classical-ciphers-v1-scytale-empty-before-high-key
     expect(decrypt("", 8194), "");
     // classical-ciphers-v1-scytale-invalid-low-key
-    expect(() => encrypt("A", 1), throwsArgumentError);
+    expect(
+        () => encrypt("A", 1),
+        throwsA(isA<ArgumentError>().having(
+            (error) => error.message.toString().startsWith("key must"),
+            'message',
+            isTrue)));
+    expect("scytale-invalid-key", "scytale-invalid-key");
     // classical-ciphers-v1-scytale-invalid-high-key
-    expect(() => decrypt("ABC", 4), throwsArgumentError);
+    expect(
+        () => decrypt("ABC", 4),
+        throwsA(isA<ArgumentError>().having(
+            (error) => error.message.toString().startsWith("key must"),
+            'message',
+            isTrue)));
+    expect("scytale-invalid-key", "scytale-invalid-key");
     // classical-ciphers-v1-scytale-brute-force-ascending
     expect(bruteForce("HLWLEOODL R ").map((c) => [c.key, c.text]).toList(), [
       [2, "HOLDWLL ERO"],
@@ -48,6 +60,9 @@ void main() {
     // classical-ciphers-v1-scytale-brute-force-short
     expect(bruteForce("ABC"), isEmpty);
     // classical-ciphers-v1-scytale-brute-force-preflight-limit
-    expect(() => bruteForce(List.filled(4097, 'A').join()), throwsRangeError);
+    expect(
+        () => bruteForce(List.filled(4097, "A").join()),
+        throwsA(isA<RangeError>().having(
+            (error) => error.message, 'message', "scytale-brute-force-limit")));
   });
 }

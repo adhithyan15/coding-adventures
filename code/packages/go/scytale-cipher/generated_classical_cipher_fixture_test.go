@@ -13,93 +13,101 @@ import (
 
 func TestGeneratedClassicalCipherFixture(t *testing.T) {
 	// classical-ciphers-v1-scytale-worked-encrypt
-	got0, err0 := Encrypt("HELLO WORLD", 3)
-	if err0 != nil || got0 != "HLWLEOODL R " {
+	got0, err0 := Encrypt(string([]rune{72, 69, 76, 76, 79, 32, 87, 79, 82, 76, 68}), 3)
+	if err0 != nil || got0 != string([]rune{72, 76, 87, 76, 69, 79, 79, 68, 76, 32, 82, 32}) {
 		t.Fatalf("classical-ciphers-v1-scytale-worked-encrypt: got %q, %v", got0, err0)
 	}
 	// classical-ciphers-v1-scytale-worked-decrypt
-	got1, err1 := Decrypt("HLWLEOODL R ", 3)
-	if err1 != nil || got1 != "HELLO WORLD" {
+	got1, err1 := Decrypt(string([]rune{72, 76, 87, 76, 69, 79, 79, 68, 76, 32, 82, 32}), 3)
+	if err1 != nil || got1 != string([]rune{72, 69, 76, 76, 79, 32, 87, 79, 82, 76, 68}) {
 		t.Fatalf("classical-ciphers-v1-scytale-worked-decrypt: got %q, %v", got1, err1)
 	}
 	// classical-ciphers-v1-scytale-ragged-decrypt
-	got2, err2 := Decrypt("ABCDEF", 4)
-	if err2 != nil || got2 != "ACEFBD" {
+	got2, err2 := Decrypt(string([]rune{65, 66, 67, 68, 69, 70}), 4)
+	if err2 != nil || got2 != string([]rune{65, 67, 69, 70, 66, 68}) {
 		t.Fatalf("classical-ciphers-v1-scytale-ragged-decrypt: got %q, %v", got2, err2)
 	}
 	// classical-ciphers-v1-scytale-unicode-encrypt
-	got3, err3 := Encrypt("A😀Bé", 3)
-	if err3 != nil || got3 != "Aé😀 B " {
+	got3, err3 := Encrypt(string([]rune{65, 128512, 66, 233}), 3)
+	if err3 != nil || got3 != string([]rune{65, 233, 128512, 32, 66, 32}) {
 		t.Fatalf("classical-ciphers-v1-scytale-unicode-encrypt: got %q, %v", got3, err3)
 	}
 	// classical-ciphers-v1-scytale-unicode-decrypt
-	got4, err4 := Decrypt("Aé😀 B ", 3)
-	if err4 != nil || got4 != "A😀Bé" {
+	got4, err4 := Decrypt(string([]rune{65, 233, 128512, 32, 66, 32}), 3)
+	if err4 != nil || got4 != string([]rune{65, 128512, 66, 233}) {
 		t.Fatalf("classical-ciphers-v1-scytale-unicode-decrypt: got %q, %v", got4, err4)
 	}
 	// classical-ciphers-v1-scytale-combining-scalar-encrypt
-	got5, err5 := Encrypt("AéB", 3)
-	if err5 != nil || got5 != "ABe ́ " {
+	got5, err5 := Encrypt(string([]rune{65, 101, 769, 66}), 3)
+	if err5 != nil || got5 != string([]rune{65, 66, 101, 32, 769, 32}) {
 		t.Fatalf("classical-ciphers-v1-scytale-combining-scalar-encrypt: got %q, %v", got5, err5)
 	}
 	// classical-ciphers-v1-scytale-combining-scalar-decrypt
-	got6, err6 := Decrypt("ABe ́ ", 3)
-	if err6 != nil || got6 != "AéB" {
+	got6, err6 := Decrypt(string([]rune{65, 66, 101, 32, 769, 32}), 3)
+	if err6 != nil || got6 != string([]rune{65, 101, 769, 66}) {
 		t.Fatalf("classical-ciphers-v1-scytale-combining-scalar-decrypt: got %q, %v", got6, err6)
 	}
 	// classical-ciphers-v1-scytale-genuine-trailing-space-encrypt
-	got7, err7 := Encrypt("END ", 3)
-	if err7 != nil || got7 != "E N D " {
+	got7, err7 := Encrypt(string([]rune{69, 78, 68, 32}), 3)
+	if err7 != nil || got7 != string([]rune{69, 32, 78, 32, 68, 32}) {
 		t.Fatalf("classical-ciphers-v1-scytale-genuine-trailing-space-encrypt: got %q, %v", got7, err7)
 	}
 	// classical-ciphers-v1-scytale-genuine-trailing-space-loss
-	got8, err8 := Decrypt("E N D ", 3)
-	if err8 != nil || got8 != "END" {
+	got8, err8 := Decrypt(string([]rune{69, 32, 78, 32, 68, 32}), 3)
+	if err8 != nil || got8 != string([]rune{69, 78, 68}) {
 		t.Fatalf("classical-ciphers-v1-scytale-genuine-trailing-space-loss: got %q, %v", got8, err8)
 	}
 	// classical-ciphers-v1-scytale-trailing-tab-retained
-	got9, err9 := Decrypt("A\tB ", 2)
-	if err9 != nil || got9 != "AB\t" {
+	got9, err9 := Decrypt(string([]rune{65, 9, 66, 32}), 2)
+	if err9 != nil || got9 != string([]rune{65, 66, 9}) {
 		t.Fatalf("classical-ciphers-v1-scytale-trailing-tab-retained: got %q, %v", got9, err9)
 	}
 	// classical-ciphers-v1-scytale-newline-nbsp-retained
-	got10, err10 := Decrypt("A \t \n ", 3)
-	if err10 != nil || got10 != "A\t\n " {
+	got10, err10 := Decrypt(string([]rune{65, 160, 9, 32, 10, 32}), 3)
+	if err10 != nil || got10 != string([]rune{65, 9, 10, 160}) {
 		t.Fatalf("classical-ciphers-v1-scytale-newline-nbsp-retained: got %q, %v", got10, err10)
 	}
 	// classical-ciphers-v1-scytale-empty-before-low-key
-	got11, err11 := Encrypt("", -1)
-	if err11 != nil || got11 != "" {
+	got11, err11 := Encrypt(string([]rune{}), -1)
+	if err11 != nil || got11 != string([]rune{}) {
 		t.Fatalf("classical-ciphers-v1-scytale-empty-before-low-key: got %q, %v", got11, err11)
 	}
 	// classical-ciphers-v1-scytale-empty-before-high-key
-	got12, err12 := Decrypt("", 8194)
-	if err12 != nil || got12 != "" {
+	got12, err12 := Decrypt(string([]rune{}), 8194)
+	if err12 != nil || got12 != string([]rune{}) {
 		t.Fatalf("classical-ciphers-v1-scytale-empty-before-high-key: got %q, %v", got12, err12)
 	}
 	// classical-ciphers-v1-scytale-invalid-low-key
-	_, invalidErr0 := Encrypt("A", 1)
-	if !errors.Is(invalidErr0, ErrInvalidKey) {
-		t.Fatalf("classical-ciphers-v1-scytale-invalid-low-key: %v", invalidErr0)
+	_, invalidErr0 := Encrypt(string([]rune{65}), 1)
+	invalidID0 := string([]rune{117, 110, 101, 120, 112, 101, 99, 116, 101, 100, 45, 101, 114, 114, 111, 114})
+	if errors.Is(invalidErr0, ErrInvalidKey) {
+		invalidID0 = string([]rune{115, 99, 121, 116, 97, 108, 101, 45, 105, 110, 118, 97, 108, 105, 100, 45, 107, 101, 121})
+	}
+	if invalidID0 != string([]rune{115, 99, 121, 116, 97, 108, 101, 45, 105, 110, 118, 97, 108, 105, 100, 45, 107, 101, 121}) {
+		t.Fatalf("classical-ciphers-v1-scytale-invalid-low-key: %s, %v", invalidID0, invalidErr0)
 	}
 	// classical-ciphers-v1-scytale-invalid-high-key
-	_, invalidErr1 := Decrypt("ABC", 4)
-	if !errors.Is(invalidErr1, ErrInvalidKey) {
-		t.Fatalf("classical-ciphers-v1-scytale-invalid-high-key: %v", invalidErr1)
+	_, invalidErr1 := Decrypt(string([]rune{65, 66, 67}), 4)
+	invalidID1 := string([]rune{117, 110, 101, 120, 112, 101, 99, 116, 101, 100, 45, 101, 114, 114, 111, 114})
+	if errors.Is(invalidErr1, ErrInvalidKey) {
+		invalidID1 = string([]rune{115, 99, 121, 116, 97, 108, 101, 45, 105, 110, 118, 97, 108, 105, 100, 45, 107, 101, 121})
+	}
+	if invalidID1 != string([]rune{115, 99, 121, 116, 97, 108, 101, 45, 105, 110, 118, 97, 108, 105, 100, 45, 107, 101, 121}) {
+		t.Fatalf("classical-ciphers-v1-scytale-invalid-high-key: %s, %v", invalidID1, invalidErr1)
 	}
 	// classical-ciphers-v1-scytale-brute-force-ascending
-	brute, err := BruteForce("HLWLEOODL R ")
-	if err != nil || !reflect.DeepEqual(brute, []BruteForceResult{{Key: 2, Text: "HOLDWLL ERO"}, {Key: 3, Text: "HELLO WORLD"}, {Key: 4, Text: "HLO LEDRWOL"}, {Key: 5, Text: "HLOLRLED  WO"}, {Key: 6, Text: "HWEOLRLLOD"}}) {
+	brute, err := BruteForce(string([]rune{72, 76, 87, 76, 69, 79, 79, 68, 76, 32, 82, 32}))
+	if err != nil || !reflect.DeepEqual(brute, []BruteForceResult{{Key: 2, Text: string([]rune{72, 79, 76, 68, 87, 76, 76, 32, 69, 82, 79})}, {Key: 3, Text: string([]rune{72, 69, 76, 76, 79, 32, 87, 79, 82, 76, 68})}, {Key: 4, Text: string([]rune{72, 76, 79, 32, 76, 69, 68, 82, 87, 79, 76})}, {Key: 5, Text: string([]rune{72, 76, 79, 76, 82, 76, 69, 68, 32, 32, 87, 79})}, {Key: 6, Text: string([]rune{72, 87, 69, 79, 76, 82, 76, 76, 79, 68})}}) {
 		t.Fatalf("classical-ciphers-v1-scytale-brute-force-ascending: %#v, %v", brute, err)
 	}
 	// classical-ciphers-v1-scytale-brute-force-short
-	short, err := BruteForce("ABC")
+	short, err := BruteForce(string([]rune{65, 66, 67}))
 	if err != nil || len(short) != 0 {
 		t.Fatalf("classical-ciphers-v1-scytale-brute-force-short: %#v, %v", short, err)
 	}
 	// classical-ciphers-v1-scytale-brute-force-preflight-limit
-	_, limitErr := BruteForce(strings.Repeat("A", 4097))
-	if !errors.Is(limitErr, ErrBruteForceLimit) {
+	_, limitErr := BruteForce(strings.Repeat(string([]rune{65}), 4097))
+	if !errors.Is(limitErr, ErrBruteForceLimit) || limitErr.Error() != string([]rune{115, 99, 121, 116, 97, 108, 101, 45, 98, 114, 117, 116, 101, 45, 102, 111, 114, 99, 101, 45, 108, 105, 109, 105, 116}) {
 		t.Fatalf("classical-ciphers-v1-scytale-brute-force-preflight-limit: %v", limitErr)
 	}
 }

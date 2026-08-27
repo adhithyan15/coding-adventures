@@ -9273,6 +9273,26 @@ every required check is terminal and acceptable and the PR is conflict-free.
 The state graph now has 159 merged, 373 pending, and exactly one `pr-open`
 owner across 533 owners and 792 dependency edges.
 
+The initial PR head later completed every reported check successfully without a
+merge conflict, but the final independent exact-diff security audit found four
+in-scope generator gaps. Fixture text could be emitted into interpolation-aware
+source literals, file reads were not bounded before allocation, the limit case
+duplicated its scalar and count instead of consuming the fixture descriptor,
+and six lanes accepted only a broad exception class instead of the normalized
+`scytale-brute-force-limit` failure. Auto-merge was deliberately withheld while
+the same branch received the focused repair.
+
+The repaired generator now admits only source-safe case and error identifiers,
+uses escaped Dart literals or Unicode-scalar constructors for Elixir, Kotlin,
+Perl, and Ruby, bounds fixture and generated-output reads before allocation,
+and derives every lane's limit scalar, count, and normalized failure from the
+fixture. Eleven generator regressions cover the new boundaries, including
+hostile control, quote, backslash, and interpolation scalars in all 15 lanes,
+plus fixture-owned limit and invalid-key error identifiers. All 13 locally
+available native suites pass again, including exact limit-error assertions in
+C#, Dart, F#, Java, Kotlin, and Swift; Elixir and Perl remain delegated to the
+fresh Linux CI cycle because their reviewed Windows toolchains are absent.
+
 ## Autonomous Loop Protocol
 
 Only one parity PR should be active at a time.

@@ -4,44 +4,46 @@
 
 module GeneratedClassicalCipherFixtureSpec (spec) where
 
+import Data.Char (chr)
+import Data.List (isPrefixOf)
 import ScytaleCipher
 import Test.Hspec
 
 spec :: Spec
 spec = describe "generated classical-cipher Scytale fixtures" $ do
     -- classical-ciphers-v1-scytale-worked-encrypt
-    it "classical-ciphers-v1-scytale-worked-encrypt" $ encrypt "HELLO WORLD" (3) `shouldBe` Right "HLWLEOODL R "
+    it (map chr [99, 108, 97, 115, 115, 105, 99, 97, 108, 45, 99, 105, 112, 104, 101, 114, 115, 45, 118, 49, 45, 115, 99, 121, 116, 97, 108, 101, 45, 119, 111, 114, 107, 101, 100, 45, 101, 110, 99, 114, 121, 112, 116]) $ encrypt (map chr [72, 69, 76, 76, 79, 32, 87, 79, 82, 76, 68]) (3) `shouldBe` Right (map chr [72, 76, 87, 76, 69, 79, 79, 68, 76, 32, 82, 32])
     -- classical-ciphers-v1-scytale-worked-decrypt
-    it "classical-ciphers-v1-scytale-worked-decrypt" $ decrypt "HLWLEOODL R " (3) `shouldBe` Right "HELLO WORLD"
+    it (map chr [99, 108, 97, 115, 115, 105, 99, 97, 108, 45, 99, 105, 112, 104, 101, 114, 115, 45, 118, 49, 45, 115, 99, 121, 116, 97, 108, 101, 45, 119, 111, 114, 107, 101, 100, 45, 100, 101, 99, 114, 121, 112, 116]) $ decrypt (map chr [72, 76, 87, 76, 69, 79, 79, 68, 76, 32, 82, 32]) (3) `shouldBe` Right (map chr [72, 69, 76, 76, 79, 32, 87, 79, 82, 76, 68])
     -- classical-ciphers-v1-scytale-ragged-decrypt
-    it "classical-ciphers-v1-scytale-ragged-decrypt" $ decrypt "ABCDEF" (4) `shouldBe` Right "ACEFBD"
+    it (map chr [99, 108, 97, 115, 115, 105, 99, 97, 108, 45, 99, 105, 112, 104, 101, 114, 115, 45, 118, 49, 45, 115, 99, 121, 116, 97, 108, 101, 45, 114, 97, 103, 103, 101, 100, 45, 100, 101, 99, 114, 121, 112, 116]) $ decrypt (map chr [65, 66, 67, 68, 69, 70]) (4) `shouldBe` Right (map chr [65, 67, 69, 70, 66, 68])
     -- classical-ciphers-v1-scytale-unicode-encrypt
-    it "classical-ciphers-v1-scytale-unicode-encrypt" $ encrypt "A😀Bé" (3) `shouldBe` Right "Aé😀 B "
+    it (map chr [99, 108, 97, 115, 115, 105, 99, 97, 108, 45, 99, 105, 112, 104, 101, 114, 115, 45, 118, 49, 45, 115, 99, 121, 116, 97, 108, 101, 45, 117, 110, 105, 99, 111, 100, 101, 45, 101, 110, 99, 114, 121, 112, 116]) $ encrypt (map chr [65, 128512, 66, 233]) (3) `shouldBe` Right (map chr [65, 233, 128512, 32, 66, 32])
     -- classical-ciphers-v1-scytale-unicode-decrypt
-    it "classical-ciphers-v1-scytale-unicode-decrypt" $ decrypt "Aé😀 B " (3) `shouldBe` Right "A😀Bé"
+    it (map chr [99, 108, 97, 115, 115, 105, 99, 97, 108, 45, 99, 105, 112, 104, 101, 114, 115, 45, 118, 49, 45, 115, 99, 121, 116, 97, 108, 101, 45, 117, 110, 105, 99, 111, 100, 101, 45, 100, 101, 99, 114, 121, 112, 116]) $ decrypt (map chr [65, 233, 128512, 32, 66, 32]) (3) `shouldBe` Right (map chr [65, 128512, 66, 233])
     -- classical-ciphers-v1-scytale-combining-scalar-encrypt
-    it "classical-ciphers-v1-scytale-combining-scalar-encrypt" $ encrypt "AéB" (3) `shouldBe` Right "ABe ́ "
+    it (map chr [99, 108, 97, 115, 115, 105, 99, 97, 108, 45, 99, 105, 112, 104, 101, 114, 115, 45, 118, 49, 45, 115, 99, 121, 116, 97, 108, 101, 45, 99, 111, 109, 98, 105, 110, 105, 110, 103, 45, 115, 99, 97, 108, 97, 114, 45, 101, 110, 99, 114, 121, 112, 116]) $ encrypt (map chr [65, 101, 769, 66]) (3) `shouldBe` Right (map chr [65, 66, 101, 32, 769, 32])
     -- classical-ciphers-v1-scytale-combining-scalar-decrypt
-    it "classical-ciphers-v1-scytale-combining-scalar-decrypt" $ decrypt "ABe ́ " (3) `shouldBe` Right "AéB"
+    it (map chr [99, 108, 97, 115, 115, 105, 99, 97, 108, 45, 99, 105, 112, 104, 101, 114, 115, 45, 118, 49, 45, 115, 99, 121, 116, 97, 108, 101, 45, 99, 111, 109, 98, 105, 110, 105, 110, 103, 45, 115, 99, 97, 108, 97, 114, 45, 100, 101, 99, 114, 121, 112, 116]) $ decrypt (map chr [65, 66, 101, 32, 769, 32]) (3) `shouldBe` Right (map chr [65, 101, 769, 66])
     -- classical-ciphers-v1-scytale-genuine-trailing-space-encrypt
-    it "classical-ciphers-v1-scytale-genuine-trailing-space-encrypt" $ encrypt "END " (3) `shouldBe` Right "E N D "
+    it (map chr [99, 108, 97, 115, 115, 105, 99, 97, 108, 45, 99, 105, 112, 104, 101, 114, 115, 45, 118, 49, 45, 115, 99, 121, 116, 97, 108, 101, 45, 103, 101, 110, 117, 105, 110, 101, 45, 116, 114, 97, 105, 108, 105, 110, 103, 45, 115, 112, 97, 99, 101, 45, 101, 110, 99, 114, 121, 112, 116]) $ encrypt (map chr [69, 78, 68, 32]) (3) `shouldBe` Right (map chr [69, 32, 78, 32, 68, 32])
     -- classical-ciphers-v1-scytale-genuine-trailing-space-loss
-    it "classical-ciphers-v1-scytale-genuine-trailing-space-loss" $ decrypt "E N D " (3) `shouldBe` Right "END"
+    it (map chr [99, 108, 97, 115, 115, 105, 99, 97, 108, 45, 99, 105, 112, 104, 101, 114, 115, 45, 118, 49, 45, 115, 99, 121, 116, 97, 108, 101, 45, 103, 101, 110, 117, 105, 110, 101, 45, 116, 114, 97, 105, 108, 105, 110, 103, 45, 115, 112, 97, 99, 101, 45, 108, 111, 115, 115]) $ decrypt (map chr [69, 32, 78, 32, 68, 32]) (3) `shouldBe` Right (map chr [69, 78, 68])
     -- classical-ciphers-v1-scytale-trailing-tab-retained
-    it "classical-ciphers-v1-scytale-trailing-tab-retained" $ decrypt "A\tB " (2) `shouldBe` Right "AB\t"
+    it (map chr [99, 108, 97, 115, 115, 105, 99, 97, 108, 45, 99, 105, 112, 104, 101, 114, 115, 45, 118, 49, 45, 115, 99, 121, 116, 97, 108, 101, 45, 116, 114, 97, 105, 108, 105, 110, 103, 45, 116, 97, 98, 45, 114, 101, 116, 97, 105, 110, 101, 100]) $ decrypt (map chr [65, 9, 66, 32]) (2) `shouldBe` Right (map chr [65, 66, 9])
     -- classical-ciphers-v1-scytale-newline-nbsp-retained
-    it "classical-ciphers-v1-scytale-newline-nbsp-retained" $ decrypt "A \t \n " (3) `shouldBe` Right "A\t\n "
+    it (map chr [99, 108, 97, 115, 115, 105, 99, 97, 108, 45, 99, 105, 112, 104, 101, 114, 115, 45, 118, 49, 45, 115, 99, 121, 116, 97, 108, 101, 45, 110, 101, 119, 108, 105, 110, 101, 45, 110, 98, 115, 112, 45, 114, 101, 116, 97, 105, 110, 101, 100]) $ decrypt (map chr [65, 160, 9, 32, 10, 32]) (3) `shouldBe` Right (map chr [65, 9, 10, 160])
     -- classical-ciphers-v1-scytale-empty-before-low-key
-    it "classical-ciphers-v1-scytale-empty-before-low-key" $ encrypt "" (-1) `shouldBe` Right ""
+    it (map chr [99, 108, 97, 115, 115, 105, 99, 97, 108, 45, 99, 105, 112, 104, 101, 114, 115, 45, 118, 49, 45, 115, 99, 121, 116, 97, 108, 101, 45, 101, 109, 112, 116, 121, 45, 98, 101, 102, 111, 114, 101, 45, 108, 111, 119, 45, 107, 101, 121]) $ encrypt (map chr []) (-1) `shouldBe` Right (map chr [])
     -- classical-ciphers-v1-scytale-empty-before-high-key
-    it "classical-ciphers-v1-scytale-empty-before-high-key" $ decrypt "" (8194) `shouldBe` Right ""
+    it (map chr [99, 108, 97, 115, 115, 105, 99, 97, 108, 45, 99, 105, 112, 104, 101, 114, 115, 45, 118, 49, 45, 115, 99, 121, 116, 97, 108, 101, 45, 101, 109, 112, 116, 121, 45, 98, 101, 102, 111, 114, 101, 45, 104, 105, 103, 104, 45, 107, 101, 121]) $ decrypt (map chr []) (8194) `shouldBe` Right (map chr [])
     -- classical-ciphers-v1-scytale-invalid-low-key
-    it "classical-ciphers-v1-scytale-invalid-low-key" $ encrypt "A" (1) `shouldSatisfy` either (const True) (const False)
+    it (map chr [99, 108, 97, 115, 115, 105, 99, 97, 108, 45, 99, 105, 112, 104, 101, 114, 115, 45, 118, 49, 45, 115, 99, 121, 116, 97, 108, 101, 45, 105, 110, 118, 97, 108, 105, 100, 45, 108, 111, 119, 45, 107, 101, 121]) $ either (\err -> if (map chr [75, 101, 121, 32, 109, 117, 115, 116]) `isPrefixOf` err then (map chr [115, 99, 121, 116, 97, 108, 101, 45, 105, 110, 118, 97, 108, 105, 100, 45, 107, 101, 121]) else (map chr [117, 110, 101, 120, 112, 101, 99, 116, 101, 100, 45, 101, 114, 114, 111, 114])) (const (map chr [117, 110, 101, 120, 112, 101, 99, 116, 101, 100, 45, 115, 117, 99, 99, 101, 115, 115])) (encrypt (map chr [65]) (1)) `shouldBe` (map chr [115, 99, 121, 116, 97, 108, 101, 45, 105, 110, 118, 97, 108, 105, 100, 45, 107, 101, 121])
     -- classical-ciphers-v1-scytale-invalid-high-key
-    it "classical-ciphers-v1-scytale-invalid-high-key" $ decrypt "ABC" (4) `shouldSatisfy` either (const True) (const False)
+    it (map chr [99, 108, 97, 115, 115, 105, 99, 97, 108, 45, 99, 105, 112, 104, 101, 114, 115, 45, 118, 49, 45, 115, 99, 121, 116, 97, 108, 101, 45, 105, 110, 118, 97, 108, 105, 100, 45, 104, 105, 103, 104, 45, 107, 101, 121]) $ either (\err -> if (map chr [75, 101, 121, 32, 109, 117, 115, 116]) `isPrefixOf` err then (map chr [115, 99, 121, 116, 97, 108, 101, 45, 105, 110, 118, 97, 108, 105, 100, 45, 107, 101, 121]) else (map chr [117, 110, 101, 120, 112, 101, 99, 116, 101, 100, 45, 101, 114, 114, 111, 114])) (const (map chr [117, 110, 101, 120, 112, 101, 99, 116, 101, 100, 45, 115, 117, 99, 99, 101, 115, 115])) (decrypt (map chr [65, 66, 67]) (4)) `shouldBe` (map chr [115, 99, 121, 116, 97, 108, 101, 45, 105, 110, 118, 97, 108, 105, 100, 45, 107, 101, 121])
     -- classical-ciphers-v1-scytale-brute-force-ascending
-    it "classical-ciphers-v1-scytale-brute-force-ascending" $ bruteForce "HLWLEOODL R " `shouldBe` Right [BruteForceResult 2 "HOLDWLL ERO", BruteForceResult 3 "HELLO WORLD", BruteForceResult 4 "HLO LEDRWOL", BruteForceResult 5 "HLOLRLED  WO", BruteForceResult 6 "HWEOLRLLOD"]
+    it (map chr [99, 108, 97, 115, 115, 105, 99, 97, 108, 45, 99, 105, 112, 104, 101, 114, 115, 45, 118, 49, 45, 115, 99, 121, 116, 97, 108, 101, 45, 98, 114, 117, 116, 101, 45, 102, 111, 114, 99, 101, 45, 97, 115, 99, 101, 110, 100, 105, 110, 103]) $ bruteForce (map chr [72, 76, 87, 76, 69, 79, 79, 68, 76, 32, 82, 32]) `shouldBe` Right [BruteForceResult 2 (map chr [72, 79, 76, 68, 87, 76, 76, 32, 69, 82, 79]), BruteForceResult 3 (map chr [72, 69, 76, 76, 79, 32, 87, 79, 82, 76, 68]), BruteForceResult 4 (map chr [72, 76, 79, 32, 76, 69, 68, 82, 87, 79, 76]), BruteForceResult 5 (map chr [72, 76, 79, 76, 82, 76, 69, 68, 32, 32, 87, 79]), BruteForceResult 6 (map chr [72, 87, 69, 79, 76, 82, 76, 76, 79, 68])]
     -- classical-ciphers-v1-scytale-brute-force-short
-    it "classical-ciphers-v1-scytale-brute-force-short" $ bruteForce "ABC" `shouldBe` Right []
+    it (map chr [99, 108, 97, 115, 115, 105, 99, 97, 108, 45, 99, 105, 112, 104, 101, 114, 115, 45, 118, 49, 45, 115, 99, 121, 116, 97, 108, 101, 45, 98, 114, 117, 116, 101, 45, 102, 111, 114, 99, 101, 45, 115, 104, 111, 114, 116]) $ bruteForce (map chr [65, 66, 67]) `shouldBe` Right []
     -- classical-ciphers-v1-scytale-brute-force-preflight-limit
-    it "classical-ciphers-v1-scytale-brute-force-preflight-limit" $ bruteForce (replicate 4097 'A') `shouldBe` Left "scytale-brute-force-limit"
+    it (map chr [99, 108, 97, 115, 115, 105, 99, 97, 108, 45, 99, 105, 112, 104, 101, 114, 115, 45, 118, 49, 45, 115, 99, 121, 116, 97, 108, 101, 45, 98, 114, 117, 116, 101, 45, 102, 111, 114, 99, 101, 45, 112, 114, 101, 102, 108, 105, 103, 104, 116, 45, 108, 105, 109, 105, 116]) $ bruteForce (concat (replicate 4097 (map chr [65]))) `shouldBe` Left (map chr [115, 99, 121, 116, 97, 108, 101, 45, 98, 114, 117, 116, 101, 45, 102, 111, 114, 99, 101, 45, 108, 105, 109, 105, 116])

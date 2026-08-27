@@ -11,41 +11,43 @@ class TestGeneratedClassicalCipherFixture < Minitest::Test
   def test_all_normative_scytale_cases
     cipher = CodingAdventures::ScytaleCipher
     # classical-ciphers-v1-scytale-worked-encrypt
-    assert_equal "HLWLEOODL R ", cipher.encrypt("HELLO WORLD", 3)
+    assert_equal [72, 76, 87, 76, 69, 79, 79, 68, 76, 32, 82, 32].pack("U*"), cipher.encrypt([72, 69, 76, 76, 79, 32, 87, 79, 82, 76, 68].pack("U*"), 3)
     # classical-ciphers-v1-scytale-worked-decrypt
-    assert_equal "HELLO WORLD", cipher.decrypt("HLWLEOODL R ", 3)
+    assert_equal [72, 69, 76, 76, 79, 32, 87, 79, 82, 76, 68].pack("U*"), cipher.decrypt([72, 76, 87, 76, 69, 79, 79, 68, 76, 32, 82, 32].pack("U*"), 3)
     # classical-ciphers-v1-scytale-ragged-decrypt
-    assert_equal "ACEFBD", cipher.decrypt("ABCDEF", 4)
+    assert_equal [65, 67, 69, 70, 66, 68].pack("U*"), cipher.decrypt([65, 66, 67, 68, 69, 70].pack("U*"), 4)
     # classical-ciphers-v1-scytale-unicode-encrypt
-    assert_equal "Aé😀 B ", cipher.encrypt("A😀Bé", 3)
+    assert_equal [65, 233, 128512, 32, 66, 32].pack("U*"), cipher.encrypt([65, 128512, 66, 233].pack("U*"), 3)
     # classical-ciphers-v1-scytale-unicode-decrypt
-    assert_equal "A😀Bé", cipher.decrypt("Aé😀 B ", 3)
+    assert_equal [65, 128512, 66, 233].pack("U*"), cipher.decrypt([65, 233, 128512, 32, 66, 32].pack("U*"), 3)
     # classical-ciphers-v1-scytale-combining-scalar-encrypt
-    assert_equal "ABe ́ ", cipher.encrypt("AéB", 3)
+    assert_equal [65, 66, 101, 32, 769, 32].pack("U*"), cipher.encrypt([65, 101, 769, 66].pack("U*"), 3)
     # classical-ciphers-v1-scytale-combining-scalar-decrypt
-    assert_equal "AéB", cipher.decrypt("ABe ́ ", 3)
+    assert_equal [65, 101, 769, 66].pack("U*"), cipher.decrypt([65, 66, 101, 32, 769, 32].pack("U*"), 3)
     # classical-ciphers-v1-scytale-genuine-trailing-space-encrypt
-    assert_equal "E N D ", cipher.encrypt("END ", 3)
+    assert_equal [69, 32, 78, 32, 68, 32].pack("U*"), cipher.encrypt([69, 78, 68, 32].pack("U*"), 3)
     # classical-ciphers-v1-scytale-genuine-trailing-space-loss
-    assert_equal "END", cipher.decrypt("E N D ", 3)
+    assert_equal [69, 78, 68].pack("U*"), cipher.decrypt([69, 32, 78, 32, 68, 32].pack("U*"), 3)
     # classical-ciphers-v1-scytale-trailing-tab-retained
-    assert_equal "AB\t", cipher.decrypt("A\tB ", 2)
+    assert_equal [65, 66, 9].pack("U*"), cipher.decrypt([65, 9, 66, 32].pack("U*"), 2)
     # classical-ciphers-v1-scytale-newline-nbsp-retained
-    assert_equal "A\t\n ", cipher.decrypt("A \t \n ", 3)
+    assert_equal [65, 9, 10, 160].pack("U*"), cipher.decrypt([65, 160, 9, 32, 10, 32].pack("U*"), 3)
     # classical-ciphers-v1-scytale-empty-before-low-key
-    assert_equal "", cipher.encrypt("", -1)
+    assert_equal [].pack("U*"), cipher.encrypt([].pack("U*"), -1)
     # classical-ciphers-v1-scytale-empty-before-high-key
-    assert_equal "", cipher.decrypt("", 8194)
+    assert_equal [].pack("U*"), cipher.decrypt([].pack("U*"), 8194)
     # classical-ciphers-v1-scytale-invalid-low-key
-    assert_raises(ArgumentError) { cipher.encrypt("A", 1) }
+    invalid_error_0 = assert_raises(ArgumentError) { cipher.encrypt([65].pack("U*"), 1) }
+    assert_equal [115, 99, 121, 116, 97, 108, 101, 45, 105, 110, 118, 97, 108, 105, 100, 45, 107, 101, 121].pack("U*"), invalid_error_0.message.start_with?([75, 101, 121, 32, 109, 117, 115, 116].pack("U*")) ? [115, 99, 121, 116, 97, 108, 101, 45, 105, 110, 118, 97, 108, 105, 100, 45, 107, 101, 121].pack("U*") : [117, 110, 101, 120, 112, 101, 99, 116, 101, 100, 45, 101, 114, 114, 111, 114].pack("U*")
     # classical-ciphers-v1-scytale-invalid-high-key
-    assert_raises(ArgumentError) { cipher.decrypt("ABC", 4) }
+    invalid_error_1 = assert_raises(ArgumentError) { cipher.decrypt([65, 66, 67].pack("U*"), 4) }
+    assert_equal [115, 99, 121, 116, 97, 108, 101, 45, 105, 110, 118, 97, 108, 105, 100, 45, 107, 101, 121].pack("U*"), invalid_error_1.message.start_with?([75, 101, 121, 32, 109, 117, 115, 116].pack("U*")) ? [115, 99, 121, 116, 97, 108, 101, 45, 105, 110, 118, 97, 108, 105, 100, 45, 107, 101, 121].pack("U*") : [117, 110, 101, 120, 112, 101, 99, 116, 101, 100, 45, 101, 114, 114, 111, 114].pack("U*")
     # classical-ciphers-v1-scytale-brute-force-ascending
-    assert_equal [{ key: 2, text: "HOLDWLL ERO" }, { key: 3, text: "HELLO WORLD" }, { key: 4, text: "HLO LEDRWOL" }, { key: 5, text: "HLOLRLED  WO" }, { key: 6, text: "HWEOLRLLOD" }], cipher.brute_force("HLWLEOODL R ")
+    assert_equal [{ key: 2, text: [72, 79, 76, 68, 87, 76, 76, 32, 69, 82, 79].pack("U*") }, { key: 3, text: [72, 69, 76, 76, 79, 32, 87, 79, 82, 76, 68].pack("U*") }, { key: 4, text: [72, 76, 79, 32, 76, 69, 68, 82, 87, 79, 76].pack("U*") }, { key: 5, text: [72, 76, 79, 76, 82, 76, 69, 68, 32, 32, 87, 79].pack("U*") }, { key: 6, text: [72, 87, 69, 79, 76, 82, 76, 76, 79, 68].pack("U*") }], cipher.brute_force([72, 76, 87, 76, 69, 79, 79, 68, 76, 32, 82, 32].pack("U*"))
     # classical-ciphers-v1-scytale-brute-force-short
-    assert_equal [], cipher.brute_force("ABC")
+    assert_equal [], cipher.brute_force([65, 66, 67].pack("U*"))
     # classical-ciphers-v1-scytale-brute-force-preflight-limit
-    error = assert_raises(ArgumentError) { cipher.brute_force("A" * 4097) }
-    assert_equal "scytale-brute-force-limit", error.message
+    error = assert_raises(ArgumentError) { cipher.brute_force([65].pack("U*") * 4097) }
+    assert_equal [115, 99, 121, 116, 97, 108, 101, 45, 98, 114, 117, 116, 101, 45, 102, 111, 114, 99, 101, 45, 108, 105, 109, 105, 116].pack("U*"), error.message
   end
 end

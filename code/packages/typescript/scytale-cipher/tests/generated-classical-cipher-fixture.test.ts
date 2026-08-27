@@ -8,40 +8,48 @@ import { bruteForce, decrypt, encrypt } from "../src/index.js";
 describe("generated classical-cipher Scytale fixtures", () => {
   it("matches every normative case", () => {
     // classical-ciphers-v1-scytale-worked-encrypt
-    expect(encrypt("HELLO WORLD", 3)).toBe("HLWLEOODL R ");
+    expect(encrypt(String.fromCodePoint(72, 69, 76, 76, 79, 32, 87, 79, 82, 76, 68), 3)).toBe(String.fromCodePoint(72, 76, 87, 76, 69, 79, 79, 68, 76, 32, 82, 32));
     // classical-ciphers-v1-scytale-worked-decrypt
-    expect(decrypt("HLWLEOODL R ", 3)).toBe("HELLO WORLD");
+    expect(decrypt(String.fromCodePoint(72, 76, 87, 76, 69, 79, 79, 68, 76, 32, 82, 32), 3)).toBe(String.fromCodePoint(72, 69, 76, 76, 79, 32, 87, 79, 82, 76, 68));
     // classical-ciphers-v1-scytale-ragged-decrypt
-    expect(decrypt("ABCDEF", 4)).toBe("ACEFBD");
+    expect(decrypt(String.fromCodePoint(65, 66, 67, 68, 69, 70), 4)).toBe(String.fromCodePoint(65, 67, 69, 70, 66, 68));
     // classical-ciphers-v1-scytale-unicode-encrypt
-    expect(encrypt("A😀Bé", 3)).toBe("Aé😀 B ");
+    expect(encrypt(String.fromCodePoint(65, 128512, 66, 233), 3)).toBe(String.fromCodePoint(65, 233, 128512, 32, 66, 32));
     // classical-ciphers-v1-scytale-unicode-decrypt
-    expect(decrypt("Aé😀 B ", 3)).toBe("A😀Bé");
+    expect(decrypt(String.fromCodePoint(65, 233, 128512, 32, 66, 32), 3)).toBe(String.fromCodePoint(65, 128512, 66, 233));
     // classical-ciphers-v1-scytale-combining-scalar-encrypt
-    expect(encrypt("AéB", 3)).toBe("ABe ́ ");
+    expect(encrypt(String.fromCodePoint(65, 101, 769, 66), 3)).toBe(String.fromCodePoint(65, 66, 101, 32, 769, 32));
     // classical-ciphers-v1-scytale-combining-scalar-decrypt
-    expect(decrypt("ABe ́ ", 3)).toBe("AéB");
+    expect(decrypt(String.fromCodePoint(65, 66, 101, 32, 769, 32), 3)).toBe(String.fromCodePoint(65, 101, 769, 66));
     // classical-ciphers-v1-scytale-genuine-trailing-space-encrypt
-    expect(encrypt("END ", 3)).toBe("E N D ");
+    expect(encrypt(String.fromCodePoint(69, 78, 68, 32), 3)).toBe(String.fromCodePoint(69, 32, 78, 32, 68, 32));
     // classical-ciphers-v1-scytale-genuine-trailing-space-loss
-    expect(decrypt("E N D ", 3)).toBe("END");
+    expect(decrypt(String.fromCodePoint(69, 32, 78, 32, 68, 32), 3)).toBe(String.fromCodePoint(69, 78, 68));
     // classical-ciphers-v1-scytale-trailing-tab-retained
-    expect(decrypt("A\tB ", 2)).toBe("AB\t");
+    expect(decrypt(String.fromCodePoint(65, 9, 66, 32), 2)).toBe(String.fromCodePoint(65, 66, 9));
     // classical-ciphers-v1-scytale-newline-nbsp-retained
-    expect(decrypt("A \t \n ", 3)).toBe("A\t\n ");
+    expect(decrypt(String.fromCodePoint(65, 160, 9, 32, 10, 32), 3)).toBe(String.fromCodePoint(65, 9, 10, 160));
     // classical-ciphers-v1-scytale-empty-before-low-key
-    expect(encrypt("", -1)).toBe("");
+    expect(encrypt(String.fromCodePoint(), -1)).toBe(String.fromCodePoint());
     // classical-ciphers-v1-scytale-empty-before-high-key
-    expect(decrypt("", 8194)).toBe("");
+    expect(decrypt(String.fromCodePoint(), 8194)).toBe(String.fromCodePoint());
     // classical-ciphers-v1-scytale-invalid-low-key
-    expect(() => encrypt("A", 1)).toThrow();
+    let invalidID0 = String.fromCodePoint(117, 110, 101, 120, 112, 101, 99, 116, 101, 100, 45, 101, 114, 114, 111, 114);
+    try { encrypt(String.fromCodePoint(65), 1); } catch (error) {
+      if (error instanceof Error && error.message.startsWith(String.fromCodePoint(75, 101, 121, 32, 109, 117, 115, 116, 32, 98, 101))) invalidID0 = String.fromCodePoint(115, 99, 121, 116, 97, 108, 101, 45, 105, 110, 118, 97, 108, 105, 100, 45, 107, 101, 121);
+    }
+    expect(invalidID0).toBe(String.fromCodePoint(115, 99, 121, 116, 97, 108, 101, 45, 105, 110, 118, 97, 108, 105, 100, 45, 107, 101, 121));
     // classical-ciphers-v1-scytale-invalid-high-key
-    expect(() => decrypt("ABC", 4)).toThrow();
+    let invalidID1 = String.fromCodePoint(117, 110, 101, 120, 112, 101, 99, 116, 101, 100, 45, 101, 114, 114, 111, 114);
+    try { decrypt(String.fromCodePoint(65, 66, 67), 4); } catch (error) {
+      if (error instanceof Error && error.message.startsWith(String.fromCodePoint(75, 101, 121, 32, 109, 117, 115, 116, 32, 98, 101))) invalidID1 = String.fromCodePoint(115, 99, 121, 116, 97, 108, 101, 45, 105, 110, 118, 97, 108, 105, 100, 45, 107, 101, 121);
+    }
+    expect(invalidID1).toBe(String.fromCodePoint(115, 99, 121, 116, 97, 108, 101, 45, 105, 110, 118, 97, 108, 105, 100, 45, 107, 101, 121));
     // classical-ciphers-v1-scytale-brute-force-ascending
-    expect(bruteForce("HLWLEOODL R ")).toEqual([{ key: 2, text: "HOLDWLL ERO" }, { key: 3, text: "HELLO WORLD" }, { key: 4, text: "HLO LEDRWOL" }, { key: 5, text: "HLOLRLED  WO" }, { key: 6, text: "HWEOLRLLOD" }]);
+    expect(bruteForce(String.fromCodePoint(72, 76, 87, 76, 69, 79, 79, 68, 76, 32, 82, 32))).toEqual([{ key: 2, text: String.fromCodePoint(72, 79, 76, 68, 87, 76, 76, 32, 69, 82, 79) }, { key: 3, text: String.fromCodePoint(72, 69, 76, 76, 79, 32, 87, 79, 82, 76, 68) }, { key: 4, text: String.fromCodePoint(72, 76, 79, 32, 76, 69, 68, 82, 87, 79, 76) }, { key: 5, text: String.fromCodePoint(72, 76, 79, 76, 82, 76, 69, 68, 32, 32, 87, 79) }, { key: 6, text: String.fromCodePoint(72, 87, 69, 79, 76, 82, 76, 76, 79, 68) }]);
     // classical-ciphers-v1-scytale-brute-force-short
-    expect(bruteForce("ABC")).toEqual([]);
+    expect(bruteForce(String.fromCodePoint(65, 66, 67))).toEqual([]);
     // classical-ciphers-v1-scytale-brute-force-preflight-limit
-    expect(() => bruteForce("A".repeat(4097))).toThrow("scytale-brute-force-limit");
+    expect(() => bruteForce(String.fromCodePoint(65).repeat(4097))).toThrow(String.fromCodePoint(115, 99, 121, 116, 97, 108, 101, 45, 98, 114, 117, 116, 101, 45, 102, 111, 114, 99, 101, 45, 108, 105, 109, 105, 116));
   });
 });
