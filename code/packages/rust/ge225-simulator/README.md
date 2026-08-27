@@ -38,8 +38,18 @@ or shift instruction carrying an X selector adds the selected X word to its
 operand field before execution, with modified shift counts rejected above the
 architectural 31-place limit. Overflow from single-length arithmetic and left
 shifts remains latched until `BOV` or `BNO` tests it. The current core has
-82.64% line coverage (719/870); the completion floor must be rechecked after
+83.44% line coverage (902/1,081); the completion floor must be rechecked after
 the remaining optional CPU, controller, and AAU instruction families land.
+
+The optional central-processor arithmetic path models decimal words as the
+manual's three BCD digits plus sign and end-of-field flag. In decimal mode,
+`ADD`, `SUB`, `DAD`, `DSU`, `ADO`, and `SBO` use ten's-complement signed
+fields, preserve a carry or borrow across unflagged lower fields, and turn a
+flagged-field carry into latched overflow. Invalid BCD nibbles are rejected
+instead of being treated as binary. The optional 19-bit real-time clock is
+host-advanced in deterministic sixth-second ticks; `LAC` and `LCA` implement
+the documented C-register transfers and 24-hour wrap. Opcode 24 is spelled
+`MOV`, matching the corrected manual.
 
 The current card reader is intentionally a deterministic development abstraction,
 not a completed GE-225 controller model: callers may queue at most 64 records of

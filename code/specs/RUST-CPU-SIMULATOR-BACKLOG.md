@@ -91,13 +91,14 @@ according to the current prioritization run.
 | RCPU-047 / RCPU-048 | 2011 | AArch64 (ARMv8-A) | Missing | Missing |
 | RCPU-049 / RCPU-050 | 2020 | Apple M1 (AArch64 + NEON) | Missing | Missing |
 
-Current selection: **RCPU-P004**, the GE-225 single-length indicator, shift,
-and automatic-modification prerequisite. The slice corrects the `2506YY3` SXG
-encoding and encoded group selection, applies core-resident X words to fixed
-and shift instruction operands, enforces the 31-place shift limit and N-ready
-precondition, preserves latched single-length overflow, and raises current core
-coverage to 82.64%. RCPU-005 remains open for optional CPU and I/O, AAU, and a
-final completion-coverage audit after those families land.
+Current selection: **RCPU-P005A**, the GE-225 optional central-processor slice.
+It makes decimal mode execute the manual's BCD `ADD`, `SUB`, `DAD`, `DSU`,
+`ADO`, and `SBO` semantics with carried lower fields and flagged-field
+overflow; adds deterministic real-time-clock state for `LAC` and `LCA`; and
+corrects opcode 24's mnemonic from `MOY` to canonical `MOV`. RCPU-005 remains
+open for direct I/O (RCPU-P005B), controller-selector I/O (RCPU-P005C), AAU,
+and a final completion-coverage audit after those families land. Current core
+coverage is 83.44% (902/1,081), above the 80% completion floor.
 
 ## Cross-language wave
 
@@ -125,6 +126,9 @@ queue:
 
 | Date | Item | Priority | Disposition |
 |---|---|---|---|
+| 2026-08-27 | The GE-200 punched-card and GE-225 paper-tape subsystem manuals make RCPU-P005B larger and more exact than the current host-record abstraction. Cards require `RCD`/`RCB` continuous modes, `RCF` single-card mode, `HCR`, `WCD`/`WCB`/`WCF`, reader/punch ready branches, fixed data and synchronization-word layouts, and fail-closed not-ready behavior. Paper tape is a streaming N-register peripheral: `RON`/`PON` select mutually exclusive power paths, `RPT` streams frames and asserts N-ready, `HPT` stops motion, `WPT` emits one frame, and `OFF` powers the path down; unread frames can overrun N. The same `2500006` word means `TYP`, `RPT`, or `WPT` according to the powered N-register device, and `HPT` also enables the optional typewriter keyboard-input path. | P0, architecture and peripheral correctness, blocks RCPU-005 | Make those public contracts the acceptance boundary of RCPU-P005B. Preserve deterministic bounded host queues and output capture, decode the shared command from explicit device-selection state, model timing as explicit readiness/events rather than wall-clock sleeps, and pin all six card data layouts plus synchronization/status words, power switching, readiness branches, atomic memory failures, paper-tape overrun, typewriter input, and output bounds before selecting RCPU-P005C. |
+| 2026-08-27 | The RCPU-P005A reprioritization audit found that the corrected programming manual treats direct M/N-register devices separately from controller-selector peripherals, delegates full punched-card and paper-tape behavior to subsystem manuals, and gives controller operations their own selection, three-word command, status, and interrupt model. A single combined I/O item would conceal two independently testable public contracts. | P0, scope clarity, blocks RCPU-005 | Split the remaining I/O work chronologically into RCPU-P005B for deterministic direct card/paper-tape/typewriter contracts and RCPU-P005C for controller-selector selection, status, command-block, interrupt, and generic device-controller contracts. Keep both ahead of AAU and the final functional audit. |
+| 2026-08-27 | RCPU-P005A audit found that `SET DECMODE` only toggled exposed state: `ADD`, `SUB`, `DAD`, `DSU`, `ADO`, and `SBO` continued to execute binary arithmetic. The optional real-time-clock `LAC`/`LCA` instructions were absent, and opcode 24 was exposed as noncanonical `MOY` despite the corrected manual's `MOV` definition. | P0, architecture correctness, blocks RCPU-005 | Implement the documented three-digit-per-word BCD layout, ten's-complement signed fields, end-of-field overflow and carried lower fields; expose bounded deterministic clock control with exact `LAC`/`LCA` transfers; rename opcode 24 and its diagnostics to `MOV`; pin the manual's single/double arithmetic and clock examples. |
 | 2026-08-27 | RCPU-P004 manual audit found that `SXG` was hard-coded as `2506013` and selected a group from A, while General Electric's corrected manual specifies the variable `2506YY3` form and selects encoded group Y. Fixed/shift automatic modification was not decoded, the I register retained the unmodified operand, invalid modified targets advanced P, non-overflowing single operations cleared the latched overflow indicator, and N-input shifts ignored N readiness. | P0, architecture correctness, blocks RCPU-005 | Implement encoded SXG groups 00-31, operand-field modification through selected core X words with the 31-place shift bound and modified I value, fail-closed target preflight, latched single overflow through `BOV`/`BNO`, N-ready preflight, corrected-manual regressions, and an above-floor coverage audit. |
 | 2026-08-27 | RCPU-P003 manual audit found that A/Q was combined as a conventional signed 40-bit integer even though the GE-225 uses one sign plus two 19-bit data fields and ignores or replaces Q's duplicated sign. This corrupted DAD, DSU, DCB, MPY, DVD, and SRD; zero-count double shifts skipped required sign transfers; NOR/DNO wrote their remainder into the selected X group instead of absolute location 0000. | P0, architecture correctness, blocks RCPU-005 | Implement the 39-bit architectural conversion, correct arithmetic/divide-overflow and A/Q shift/normalize semantics, and pin the manual's published octal examples before continuing the remaining integer/automatic-modification audit. |
 | 2026-08-27 | RCPU-004 fidelity audit found that an initial floating implementation delegated FAD/FSB/FMP/FDH/FDP results to host `f64`, violating the gate-level completion contract even though simple differential tests passed. | P0, gate-level fidelity, blocks RCPU-004 | Replaced it before PR with exact bit-vector alignment, gate add/multiply/restoring divide, 53-bit round-to-nearest-even intermediates, and 512 seeded oracle comparisons including divide remainders. |
