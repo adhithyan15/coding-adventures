@@ -19,11 +19,21 @@ const scriptInventoryModules = import.meta.glob<ScriptInventoryEvidenceModule>(
   { eager: true },
 );
 
-const { taxonomy, registry, spine, curricula, books, lessons, scripts, dataset } = loadEverything();
+const { taxonomy, registry, spine, curricula, books, lessons, scripts, soundTags, dataset } = loadEverything();
 
 describe("real curriculum", () => {
+  it("registers a sound-tag vocabulary for every language track", () => {
+    expect(Object.keys(soundTags.tracks).sort()).toEqual(
+      registry.languages.map((language) => language.id).sort(),
+    );
+    // Spanish already teaches esdrújulas. Naming this legitimate extension in
+    // the registry keeps the next lesson from having to masquerade as the
+    // broader `accent-acute` tag merely to satisfy the closed vocabulary.
+    expect(soundTags.tracks.spanish).toContain("stress-antepenultimate");
+  });
+
   it("has zero validation errors", () => {
-    const issues = validate({ taxonomy, lessons, scripts });
+    const issues = validate({ taxonomy, lessons, scripts, soundTags });
     const errors = issues.filter((i) => i.level === "error");
     // Surface any error messages so a failure is self-explaining.
     expect(errors.map((e) => e.message)).toEqual([]);

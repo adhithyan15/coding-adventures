@@ -66,6 +66,10 @@ import {
 } from "./assessment.js";
 import { artifactExists } from "./artifact-presence.js";
 import type { LedgerLetter, LetterLedger } from "./letter-ledger.js";
+import {
+  parseSoundTagRegistry,
+  type SoundTagRegistry,
+} from "./sound-tags.js";
 import type {
   BookChapter,
   BookCorpus,
@@ -141,6 +145,11 @@ export function loadTaxonomy(root = defaultCurriculumRoot()): Taxonomy {
 
 export function loadLanguageRegistry(root = defaultCurriculumRoot()): LanguageRegistry {
   return readLedgerFile<LanguageRegistry>(join(root, "core", "languages.json"));
+}
+
+/** The reviewed, per-track vocabulary accepted in lesson `sounds:` fields. */
+export function loadSoundTagRegistry(root = defaultCurriculumRoot()): SoundTagRegistry {
+  return parseSoundTagRegistry(readLedgerFile(join(root, "core", "sound-tags.json")));
 }
 
 /** HL16: the universal five-minute, four-skill and writing-ramp contract. */
@@ -760,6 +769,7 @@ export function loadEverything(root = defaultCurriculumRoot()): {
   books: BookCorpus;
   lessons: ParsedLesson[];
   scripts: Record<string, ScriptData>;
+  soundTags: SoundTagRegistry;
   letterLedgers: LetterLedger[];
   dataset: Dataset;
 } {
@@ -770,6 +780,7 @@ export function loadEverything(root = defaultCurriculumRoot()): {
   const books = loadBookCorpus(root);
   const lessons = loadLessons(root);
   const scripts = loadScripts(root);
+  const soundTags = loadSoundTagRegistry(root);
   const letterLedgers = loadLetterLedgers(root);
   return {
     taxonomy,
@@ -779,6 +790,7 @@ export function loadEverything(root = defaultCurriculumRoot()): {
     books,
     lessons,
     scripts,
+    soundTags,
     letterLedgers,
     dataset: buildDataset(taxonomy, lessons),
   };

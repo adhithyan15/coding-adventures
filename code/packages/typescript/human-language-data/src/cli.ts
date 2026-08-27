@@ -8,9 +8,9 @@ import { validateCurriculum } from "./curriculum.js";
 import { coverageByLanguage } from "./queries.js";
 
 export function runValidate(root?: string): number {
-  const { taxonomy, registry, spine, curricula, books, lessons, scripts, dataset } = loadEverything(root);
+  const { taxonomy, registry, spine, curricula, books, lessons, scripts, soundTags, dataset } = loadEverything(root);
   const issues = [
-    ...validate({ taxonomy, lessons, scripts }),
+    ...validate({ taxonomy, lessons, scripts, soundTags }),
     ...validateCurriculum({ registry, spine, curricula, taxonomy, lessons, books }),
   ];
 
