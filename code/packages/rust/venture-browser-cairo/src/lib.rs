@@ -734,6 +734,7 @@ mod tests {
     use super::*;
     use std::fs;
     use std::time::{SystemTime, UNIX_EPOCH};
+    use venture_browser_visual_fixtures::{fixture_response, probe_rgba, FIXTURE_PATH};
 
     fn page(url: &str, title: &str, body: &str) -> BrowserFetchResponse {
         BrowserFetchResponse::new(
@@ -791,6 +792,44 @@ mod tests {
         assert!(host.resize(240.0, 120.0));
         let (width, height, _) = host.render_rgba().expect("resized page renders");
         assert_eq!((width, height), (240, 120));
+    }
+
+    #[test]
+    fn production_cairo_bridge_renders_the_real_page_visual_fixture() {
+        let origin = "http://venture.test";
+        let start_url = format!("{origin}{FIXTURE_PATH}");
+        let fetcher = move |url: &str| fixture_response(origin, url);
+        let mut host =
+            CairoBrowserHost::new_with_fetcher(&start_url, 240.0, 120.0, Box::new(fetcher))
+                .expect("visual fixture loads through the production Cairo bridge");
+
+        let metrics = host
+            .scroll_metrics()
+            .expect("fixture should project scroll metrics");
+        assert!(metrics.content_height > metrics.viewport_height * 2.0);
+        let mut saw_link = false;
+        let mut saw_image = false;
+        let mut distinct_hashes = std::collections::BTreeSet::new();
+        let mut offset = 0.0;
+        loop {
+            host.scroll_to(offset);
+            let (width, height, rgba) = host.render_rgba().expect("Cairo frame renders");
+            let probe = probe_rgba(width, height, &rgba).expect("valid Cairo RGBA frame");
+            distinct_hashes.insert(probe.hash);
+            saw_link |= probe.blue_pixels > 0;
+            saw_image |= probe.magenta_pixels > 0 && probe.cyan_pixels > 0;
+            if offset >= metrics.max_offset_y {
+                break;
+            }
+            offset = (offset + 48.0).min(metrics.max_offset_y);
+        }
+
+        assert!(saw_link, "native Cairo frames lost wrapped-link paint");
+        assert!(saw_image, "native Cairo frames lost decoded image paint");
+        assert!(
+            distinct_hashes.len() >= 3,
+            "scrolling should expose distinct frames"
+        );
     }
 
     #[test]

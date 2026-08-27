@@ -20,3 +20,4 @@ paint-vm-direct2d = { path = "../paint-vm-direct2d" }
 
 [target.'cfg(target_os = "windows")'.dev-dependencies]
 mosaic-package-artifact-builder = { path = "../mosaic-package-artifact-builder" }
+venture-browser-visual-fixtures = { path = "../venture-browser-visual-fixtures" }
