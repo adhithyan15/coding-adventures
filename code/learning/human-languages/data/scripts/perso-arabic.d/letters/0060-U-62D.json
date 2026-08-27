@@ -1,0 +1,27 @@
+{
+  "glyph": "ح",
+  "sound": "h",
+  "role": "consonant",
+  "forms": {
+    "isolated": "ح",
+    "initial": "حـ",
+    "medial": "ـحـ",
+    "final": "ـح"
+  },
+  "components": [
+    "hooked upper head",
+    "deep lower bowl"
+  ],
+  "strokeOrder": [
+    "draw the short upper head from left to right",
+    "continue down and around the deep bowl without lifting"
+  ],
+  "strokeOrderNote": "source-verified freehand order",
+  "penLifts": 0,
+  "strokeOrderSource": {
+    "citation": "Persian Online, How to Write Persian Characters, ح demonstration at 00:42–00:46 (Liberal Arts Instructional Technology Services, Univ. of Texas at Austin)",
+    "url": "https://laits.utexas.edu/persian_grammar/video/gr/kooroshalphabet",
+    "variation": "The cited freehand lesson demonstrates isolated ح body-first in one continuous Naskh motion: the short upper head travels left to right, then the same pen-down run turns through the hooked descent and deep lower bowl without lifting. Contextual joins reshape the head; this isolated learner path fits the vendored Noto Naskh outline and records Persian-scoped provenance rather than borrowing the separately sourced Arabic or Urdu ح order."
+  },
+  "notes": "Used mainly in Arabic-derived Persian words; shares its dotless body with the ج and خ family."
+}

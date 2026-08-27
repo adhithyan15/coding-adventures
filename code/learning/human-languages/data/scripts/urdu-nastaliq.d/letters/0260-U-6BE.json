@@ -1,0 +1,29 @@
+{
+  "glyph": "ھ",
+  "sound": "aspirates the preceding consonant",
+  "role": "other",
+  "forms": {
+    "isolated": "ھ",
+    "initial": "ھـ",
+    "medial": "ـھـ",
+    "final": "ـھ"
+  },
+  "components": [
+    "two joined eyes",
+    "low leftward finish"
+  ],
+  "strokeOrder": [
+    "begin near the upper center and circle the right eye clockwise",
+    "continue down and left along the baseline without lifting",
+    "reverse at the left edge and rise around the left eye",
+    "close the left eye at the center, then finish with the low leftward sweep without lifting"
+  ],
+  "strokeOrderNote": "source-verified independent calligraphic and handwriting animations and prose",
+  "penLifts": 0,
+  "strokeOrderSource": {
+    "citation": "Zer o Zabar, Chhoṭī he, do-chashmī he, chhoṭī ye, baṛī ye, and punctuation, independent ھ calligraphic and handwriting animations and Aspiration with do-chashmī he instructions (Northwestern University Libraries Open Textbook, 2026)",
+    "url": "https://openbooks.library.northwestern.edu/zerozabar/chapter/chhoti-he-do-chashmi-he-chhoti-ye-bari-ye/",
+    "variation": "Both independent-form animations draw the two-eyed body in one uninterrupted stroke: begin near the upper center, circle the right eye clockwise, continue down and left along the baseline, reverse at the left edge, rise around the left eye, close it at the center, and finish with a low leftward sweep without lifting. The lesson names the letter for its two eyes, uses it after a consonant to mark aspiration, and explicitly warns that the pen stops and reverses direction in the medial and final forms. This learner path covers the independent form and fits the continuous zero-lift order to the course's vendored Noto Naskh fallback; Urdu is conventionally printed in Nastaliq, and the app's true Nastaliq face remains separate from this canonical script-data fallback."
+  },
+  "notes": "Do-chashmī he normally marks aspiration after a consonant rather than a separate h sound."
+}

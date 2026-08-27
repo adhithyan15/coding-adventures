@@ -1,0 +1,27 @@
+{
+  "glyph": "د",
+  "sound": "d",
+  "role": "consonant",
+  "forms": {
+    "isolated": "د",
+    "initial": "د",
+    "medial": "ـد",
+    "final": "ـد"
+  },
+  "components": [
+    "folded shoulder",
+    "leftward baseline"
+  ],
+  "strokeOrder": [
+    "begin at the upper tip and descend through the folded shoulder",
+    "without lifting, turn left along the baseline"
+  ],
+  "strokeOrderNote": "source-verified freehand order",
+  "penLifts": 0,
+  "strokeOrderSource": {
+    "citation": "Persian Online, How to Write Persian Characters, د demonstration at 01:04–01:06 (Liberal Arts Instructional Technology Services, Univ. of Texas at Austin)",
+    "url": "https://laits.utexas.edu/persian_grammar/video/gr/kooroshalphabet",
+    "variation": "The cited freehand lesson demonstrates isolated د as one continuous Naskh motion: it begins at the upper tip, folds through the shoulder, and turns left along the baseline without lifting. This non-connector does not join to a following letter; the learner path fits the vendored Noto Naskh outline and records Persian-scoped provenance rather than borrowing the separate Arabic or Urdu د sources."
+  },
+  "notes": "Does not join to the following letter."
+}

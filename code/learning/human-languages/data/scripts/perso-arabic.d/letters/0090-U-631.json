@@ -1,0 +1,27 @@
+{
+  "glyph": "ر",
+  "sound": "r",
+  "role": "consonant",
+  "forms": {
+    "isolated": "ر",
+    "initial": "ر",
+    "medial": "ـر",
+    "final": "ـر"
+  },
+  "components": [
+    "short descending stroke",
+    "leftward lower curve"
+  ],
+  "strokeOrder": [
+    "begin at the upper tip and descend through the short stroke",
+    "without lifting, sweep left through the lower curve"
+  ],
+  "strokeOrderNote": "source-verified freehand order",
+  "penLifts": 0,
+  "strokeOrderSource": {
+    "citation": "Persian Online, How to Write Persian Characters, ر demonstration at 01:10–01:12 (Liberal Arts Instructional Technology Services, Univ. of Texas at Austin)",
+    "url": "https://laits.utexas.edu/persian_grammar/video/gr/kooroshalphabet",
+    "variation": "The cited freehand lesson demonstrates isolated ر as one continuous Naskh motion: it begins at the upper tip, descends through the short stroke, and sweeps left through the lower curve without lifting. This non-connector does not join to a following letter; the learner path fits the vendored Noto Naskh outline and records Persian-scoped provenance rather than borrowing the separate Arabic or Urdu ر sources for the same Unicode glyph."
+  },
+  "notes": "Does not join to the following letter."
+}

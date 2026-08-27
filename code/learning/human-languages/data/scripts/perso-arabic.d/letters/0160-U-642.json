@@ -1,0 +1,29 @@
+{
+  "glyph": "ق",
+  "sound": "gh / q",
+  "role": "consonant",
+  "forms": {
+    "isolated": "ق",
+    "initial": "قـ",
+    "medial": "ـقـ",
+    "final": "ـق"
+  },
+  "components": [
+    "small closed head flowing into a deep leftward bowl",
+    "two dots above"
+  ],
+  "strokeOrder": [
+    "loop counterclockwise around the small closed head",
+    "continue down and left through the deep bowl without lifting",
+    "lift once, then place the upper-right dot",
+    "lift again, then place the upper-left dot"
+  ],
+  "strokeOrderNote": "source-verified freehand order",
+  "penLifts": 2,
+  "strokeOrderSource": {
+    "citation": "Persian Online, How to Write Persian Characters, ق demonstration at 02:14–02:18 (Liberal Arts Instructional Technology Services, Univ. of Texas at Austin)",
+    "url": "https://laits.utexas.edu/persian_grammar/video/gr/kooroshalphabet",
+    "variation": "The cited freehand lesson demonstrates isolated ق body-first: loop counterclockwise around the small closed head, continue down and left through the deep bowl without lifting, then lift for the upper-right dot and lift again for the upper-left dot. Contextual joins shorten the bowl; this isolated learner path fits the vendored Noto Naskh outline and records Persian-scoped provenance rather than borrowing the independently verified Arabic or Urdu ق sources."
+  },
+  "notes": "Qāf is commonly pronounced like gheyn غ in modern Persian, though q remains in some dialects and loanword conventions."
+}

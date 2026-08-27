@@ -1,0 +1,25 @@
+{
+  "glyph": "ے",
+  "sound": "e / ai",
+  "role": "letter",
+  "forms": {
+    "isolated": "ے",
+    "final": "ـے"
+  },
+  "components": [
+    "broad folded bowl"
+  ],
+  "strokeOrder": [
+    "descend from the independent form's upper right and sweep left across the broad bowl",
+    "curl back underneath at the far left",
+    "continue right along the lower fold without lifting"
+  ],
+  "strokeOrderNote": "source-verified instructional animations and prose",
+  "penLifts": 0,
+  "strokeOrderSource": {
+    "citation": "Zer o Zabar, Chhoṭī he, do-chashmī he, chhoṭī ye, baṛī ye, and punctuation, independent ے calligraphic and handwriting animations and Baṛī ye instructions (Northwestern University Libraries Open Textbook, 2026)",
+    "url": "https://openbooks.library.northwestern.edu/zerozabar/chapter/chhoti-he-do-chashmi-he-chhoti-ye-bari-ye/",
+    "variation": "Both independent-form animations draw one uninterrupted folded bowl: start at the upper right, descend and sweep left across the upper edge, curl back underneath at the far left, then continue right along the lower fold without lifting. The lesson says independent and final baṛī ye represents e, ai, and y and folds backward underneath the preceding letters. Initial and medial ye instead use the be-series tooth with two dots below and can represent either chhoṭī or baṛī ye. This learner path covers independent baṛī ye and fits the continuous zero-lift motion to the course's vendored Noto Naskh fallback; Urdu is conventionally printed in Nastaliq, and the app's true Nastaliq face remains separate from this canonical script-data fallback."
+  },
+  "notes": "Baṛī ye usually occurs at the end of a word; its independent and final forms are dotless."
+}

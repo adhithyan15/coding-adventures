@@ -1,0 +1,26 @@
+{
+  "glyph": "ل",
+  "sound": "l",
+  "role": "consonant",
+  "forms": {
+    "isolated": "ل",
+    "initial": "لـ",
+    "medial": "ـلـ",
+    "final": "ـل"
+  },
+  "components": [
+    "tall upright",
+    "base curve"
+  ],
+  "strokeOrder": [
+    "draw the upright downward",
+    "turn into the base curve without lifting"
+  ],
+  "strokeOrderNote": "source-verified freehand order",
+  "penLifts": 0,
+  "strokeOrderSource": {
+    "citation": "Persian Online, How to Write Persian Characters, ل demonstration at 02:29–02:32 (Liberal Arts Instructional Technology Services, Univ. of Texas at Austin)",
+    "url": "https://laits.utexas.edu/persian_grammar/video/gr/kooroshalphabet",
+    "variation": "The source shows isolated ل as one continuous Naskh stroke: the upright descends into the base curve with no pen lift. This path fits the vendored Noto Naskh outline."
+  }
+}

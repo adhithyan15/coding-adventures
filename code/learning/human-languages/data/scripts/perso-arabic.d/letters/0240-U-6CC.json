@@ -1,0 +1,25 @@
+{
+  "glyph": "ی",
+  "sound": "y / i",
+  "role": "letter",
+  "forms": {
+    "isolated": "ی",
+    "initial": "یـ",
+    "medial": "ـیـ",
+    "final": "ـی"
+  },
+  "components": [
+    "dotless independent S-shaped body"
+  ],
+  "strokeOrder": [
+    "sweep left from the upper right and descend through the S curve",
+    "continue around the below-baseline bowl and finish at its rising tip without lifting"
+  ],
+  "strokeOrderNote": "source-verified freehand order",
+  "penLifts": 0,
+  "strokeOrderSource": {
+    "citation": "Persian Online, How to Write Persian Characters, closing ی demonstration at 02:55–02:58 (Liberal Arts Instructional Technology Services, Univ. of Texas at Austin)",
+    "url": "https://laits.utexas.edu/persian_grammar/video/gr/kooroshalphabet",
+    "variation": "The cited freehand lesson demonstrates isolated Persian ی as one uninterrupted dotless S-shaped run: begin at the upper right, sweep left into the upper curve, descend through the central turn, then continue around the below-baseline bowl to its rising tip without lifting. Initial and medial forms use a joined be-series tooth rather than this broad independent body. The learner path fits the vendored Noto Naskh outline and keeps Persian-scoped provenance separate from the independently verified Urdu ی record."
+  }
+}

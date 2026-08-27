@@ -1,0 +1,27 @@
+{
+  "glyph": "خ",
+  "sound": "kh",
+  "role": "consonant",
+  "forms": {
+    "isolated": "خ",
+    "initial": "خـ",
+    "medial": "ـخـ",
+    "final": "ـخ"
+  },
+  "components": [
+    "pointed hooked head and deep bowl",
+    "one dot above"
+  ],
+  "strokeOrder": [
+    "sweep left through the pointed upper head",
+    "continue down and around the deep bowl without lifting",
+    "lift once, then place the dot above"
+  ],
+  "strokeOrderNote": "source-verified instructional animation and prose",
+  "penLifts": 1,
+  "strokeOrderSource": {
+    "citation": "Zer o Zabar, Ḳhe, ze, zāl, swād, and zwād, independent خ handwriting animation and Ḳhe instructions (Northwestern University Libraries Open Textbook, 2026)",
+    "url": "https://openbooks.library.northwestern.edu/zerozabar/chapter/khe-ze-zal-swad-and-zwad/",
+    "variation": "The independent-form animation draws the pointed hooked head, descent, and deep bowl in one uninterrupted body-first stroke, then lifts once and places the single dot above. The adjacent prose identifies ḳhe as the jīm shape with its dot above, and the chapter presents separate independent, initial, medial, and final forms. This learner path covers the independent form and fits the course's vendored Noto Naskh fallback; Urdu is conventionally printed in Nastaliq, and the app's true Nastaliq face remains separate from this canonical script-data fallback. The provenance remains Urdu-specific rather than borrowing the separate Persian or Arabic خ sources."
+  }
+}

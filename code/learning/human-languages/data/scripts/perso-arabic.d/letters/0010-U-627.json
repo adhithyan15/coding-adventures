@@ -1,0 +1,25 @@
+{
+  "glyph": "ا",
+  "sound": "â / vowel carrier",
+  "role": "letter",
+  "forms": {
+    "isolated": "ا",
+    "initial": "ا",
+    "medial": "ـا",
+    "final": "ـا"
+  },
+  "components": [
+    "one tall vertical stroke"
+  ],
+  "strokeOrder": [
+    "draw the tall stem downward in one unbroken movement"
+  ],
+  "strokeOrderNote": "source-verified freehand order",
+  "penLifts": 0,
+  "strokeOrderSource": {
+    "citation": "Persian Online, How to Write Persian Characters, opening ا demonstration at 00:08–00:11 (Liberal Arts Instructional Technology Services, Univ. of Texas at Austin)",
+    "url": "https://laits.utexas.edu/persian_grammar/video/gr/kooroshalphabet",
+    "variation": "The cited freehand lesson demonstrates isolated ا as one top-to-bottom Naskh stroke while presenting the alphabet right-to-left. Contextual joins change neighbouring ink, but the isolated non-connector remains the same one-stroke stem; this path fits the vendored Noto Naskh outline."
+  },
+  "notes": "Does not join to the following letter."
+}

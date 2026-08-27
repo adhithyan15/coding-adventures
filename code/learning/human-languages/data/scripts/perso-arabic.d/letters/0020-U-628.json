@@ -1,0 +1,26 @@
+{
+  "glyph": "ب",
+  "sound": "b",
+  "role": "consonant",
+  "forms": {
+    "isolated": "ب",
+    "initial": "بـ",
+    "medial": "ـبـ",
+    "final": "ـب"
+  },
+  "components": [
+    "shallow bowl",
+    "one dot below"
+  ],
+  "strokeOrder": [
+    "sweep the shallow bowl from right to left",
+    "lift, then place the dot below"
+  ],
+  "strokeOrderNote": "source-verified freehand order",
+  "penLifts": 1,
+  "strokeOrderSource": {
+    "citation": "Persian Online, How to Write Persian Characters, opening ب demonstration at 00:11–00:15 (Liberal Arts Instructional Technology Services, Univ. of Texas at Austin)",
+    "url": "https://laits.utexas.edu/persian_grammar/video/gr/kooroshalphabet",
+    "variation": "The cited freehand lesson demonstrates isolated ب as a shallow right-to-left Naskh bowl, followed by one pen lift and the separate dot below. Contextual joins reshape the bowl in connected text; this isolated learner path fits the vendored Noto Naskh outline."
+  }
+}

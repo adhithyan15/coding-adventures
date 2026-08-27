@@ -1,0 +1,20 @@
+{
+  "mark": "ٓ",
+  "sound": "ā / long aa",
+  "role": "diacritic",
+  "attachesAs": "maddah ABOVE an alif carrier",
+  "example": {
+    "base": "ا",
+    "combined": "آ",
+    "sound": "ā"
+  },
+  "compositionOrder": [
+    "write the source-verified Urdu alif carrier downward according to its normal positional rule",
+    "add maddah above as a short horizontal wave"
+  ],
+  "compositionSource": {
+    "citation": "The Unicode Consortium, The Unicode Standard, Version 17.0, Arabic Core Specification §9.2 and Arabic names list, U+0622 ARABIC LETTER ALEF WITH MADDA ABOVE = U+0627 ALEF + U+0653 ARABIC MADDAH ABOVE (2025)",
+    "url": "https://www.unicode.org/versions/Unicode17.0.0/core-spec/chapter-9/",
+    "variation": "Unicode identifies maddah as a special harakat mark and canonically decomposes precomposed آ into the alef carrier followed by U+0653 ARABIC MADDAH ABOVE. The Urdu curriculum composes its separately source-verified top-to-bottom alif path with the wave-shaped mark instead of inventing a duplicate letter ductus; the presentation remains in the app's Nastaliq face while the canonical path uses its Naskh fallback. Unicode specifies encoded composition and placement, not a universal handwriting sequence or stroke direction; carrier-first is an explicit learner convention."
+  }
+}

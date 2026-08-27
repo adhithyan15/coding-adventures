@@ -20,9 +20,13 @@ GROUPED_KEYS = (
     "handwritten",
 )
 SAFE_TRACK = re.compile(r"^[a-z][a-z0-9-]*$")
+SAFE_SCRIPT = re.compile(r"^[a-z][a-z0-9-]*$")
 SAFE_CURRICULUM_ID = re.compile(r"^[A-Z][A-Z0-9-]*$")
 SECTION_NAME = re.compile(r"^(\d+)-([A-Z][A-Z0-9-]*)\.json$")
 CHAPTER_NAME = re.compile(r"^(\d{4})\.json$")
+SCRIPT_ENTRY_NAME = re.compile(
+    r"^(\d{4})-(U-[0-9A-F]+(?:-U-[0-9A-F]+)*)\.json$"
+)
 NOFOLLOW = getattr(os, "O_NOFOLLOW", 0)
 DIRECTORY = getattr(os, "O_DIRECTORY", 0)
 
@@ -31,6 +35,18 @@ def _safe_track(track):
     if not isinstance(track, str) or not SAFE_TRACK.fullmatch(track):
         raise ValueError(f"unsafe track id: {track!r}")
     return track
+
+
+def _safe_script(script):
+    if not isinstance(script, str) or not SAFE_SCRIPT.fullmatch(script):
+        raise ValueError(f"unsafe script id: {script!r}")
+    return script
+
+
+def _script_entry_id(glyph):
+    if not isinstance(glyph, str) or not glyph:
+        raise ValueError(f"script shard entry has no non-empty glyph: {glyph!r}")
+    return "-".join(f"U-{ord(character):X}" for character in glyph)
 
 
 def _root(root):
@@ -150,6 +166,50 @@ def _files(root, *parts):
                 raise ValueError(f"refusing non-file ledger shard: {entry.path}")
             names.append(entry.name)
     return sorted(names)
+
+
+def _script_entries(root, script, section, glyph_key, glyph_owners):
+    entries = []
+    ordinals = set()
+    directory_parts = ("data", "scripts", f"{script}.d", section)
+    for name in _files(root, *directory_parts):
+        match = SCRIPT_ENTRY_NAME.fullmatch(name)
+        if match is None:
+            raise ValueError(f"malformed {section} script shard name: {name}")
+        ordinal, entry_id = match.groups()
+        if ordinal in ordinals:
+            raise ValueError(f"duplicate {section} ordinal: {ordinal}")
+        ordinals.add(ordinal)
+        value = _read(root, *directory_parts, name)
+        glyph = value.get(glyph_key) if isinstance(value, dict) else None
+        expected = _script_entry_id(glyph)
+        if entry_id != expected:
+            raise ValueError(f"{section} identity does not match shard name: {name}")
+        if glyph in glyph_owners:
+            raise ValueError(
+                f"script glyph {glyph!r} is owned by both {glyph_owners[glyph]} and {name}"
+            )
+        glyph_owners[glyph] = name
+        entries.append(value)
+    return entries
+
+
+def load_script_inventory(root, script):
+    """Load one canonical script inventory without a compatibility aggregate."""
+    script = _safe_script(script)
+    meta = _read(root, "data", "scripts", f"{script}.d", "_meta.json")
+    if not isinstance(meta, dict) or meta.get("script") != script:
+        raise ValueError(f"{script}: script metadata id mismatch")
+    if "letters" in meta or "marks" in meta:
+        raise ValueError(f"{script}: script metadata must not carry letters or marks")
+    glyph_owners = {}
+    return {
+        **meta,
+        "letters": _script_entries(
+            root, script, "letters", "glyph", glyph_owners
+        ),
+        "marks": _script_entries(root, script, "marks", "mark", glyph_owners),
+    }
 
 
 def _chapter_entries(root, track):

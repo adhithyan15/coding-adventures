@@ -1,0 +1,11 @@
+{
+  "script": "urdu-nastaliq",
+  "name": "Urdu alphabet (Nastaliq)",
+  "font": "_fonts/NotoNaskhArabic-Static.ttf",
+  "direction": "rtl",
+  "system": "abjad",
+  "signature": "Right-to-left words descend diagonally in calligraphic Nastaliq, with dense joins and carefully placed dots.",
+  "complete": false,
+  "combination": "Letters join right-to-left and change shape by position. Urdu is conventionally printed in Nastaliq; the bundled Naskh font is currently a readable fallback while the course data records Nastaliq structure. Short vowels are normally omitted.",
+  "notes": "Starter inventory for the first Urdu shared-spine lessons, grounded in Zer o Zabar. This canonical script-data file keeps Noto Naskh as its readable path-checking fallback; the book and Language Ladder presentation use the separately vendored Noto Nastaliq Urdu family. The full letter inventory remains explicit next-track work."
+}

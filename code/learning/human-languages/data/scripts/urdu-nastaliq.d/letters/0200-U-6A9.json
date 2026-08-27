@@ -1,0 +1,28 @@
+{
+  "glyph": "ک",
+  "sound": "k",
+  "role": "consonant",
+  "forms": {
+    "isolated": "ک",
+    "initial": "کـ",
+    "medial": "ـکـ",
+    "final": "ـک"
+  },
+  "components": [
+    "main-line stem, flatter bowl, and final hook",
+    "long downward slash"
+  ],
+  "strokeOrder": [
+    "draw the independent stem downward",
+    "flow right to left through the flatter bowl and finish with the pronounced hook without lifting",
+    "after one lift, draw the long slash down from the upper right toward the stem"
+  ],
+  "strokeOrderNote": "source-verified instructional animations and prose",
+  "penLifts": 1,
+  "strokeOrderSource": {
+    "citation": "Zer o Zabar, Be, kāf, and short vowels, independent ک calligraphic and handwriting animations and Kāf instructions (Northwestern University Libraries Open Textbook, 2026)",
+    "url": "https://openbooks.library.northwestern.edu/zerozabar/chapter/be-kaf-and-short-vowels/",
+    "variation": "Both independent-form animations and the adjacent prose show two separate pen strokes. First draw the stem as part of the main line, continuing right to left through the flatter bowl and pronounced final hook without lifting. Then lift once, return to the upper right, and draw the long downward slash toward the stem; the lesson explicitly says not to write kāf in one penstroke. Final and independent kāf are often flatter than be and have a more pronounced hook at the end. This learner path fits that order to the course's vendored Noto Naskh fallback; Urdu uses ک rather than Arabic ك, is conventionally printed in Nastaliq, and the app's true Nastaliq face remains separate from this canonical script-data fallback."
+  },
+  "notes": "Urdu uses this kaf shape rather than Arabic ك."
+}

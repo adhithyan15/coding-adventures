@@ -1,0 +1,26 @@
+{
+  "glyph": "م",
+  "sound": "m",
+  "role": "consonant",
+  "forms": {
+    "isolated": "م",
+    "initial": "مـ",
+    "medial": "ـمـ",
+    "final": "ـم"
+  },
+  "components": [
+    "round head",
+    "descending tail when final"
+  ],
+  "strokeOrder": [
+    "shape the round head",
+    "continue down the tail without lifting"
+  ],
+  "strokeOrderNote": "source-verified freehand order",
+  "penLifts": 0,
+  "strokeOrderSource": {
+    "citation": "Persian Online, How to Write Persian Characters, م demonstration at 02:33–02:36 (Liberal Arts Instructional Technology Services, Univ. of Texas at Austin)",
+    "url": "https://laits.utexas.edu/persian_grammar/video/gr/kooroshalphabet",
+    "variation": "The source shows isolated م as one continuous Naskh stroke: its round head flows into the descending tail with no pen lift. This path fits the vendored Noto Naskh outline."
+  }
+}

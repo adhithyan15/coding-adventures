@@ -1,0 +1,27 @@
+{
+  "glyph": "ط",
+  "sound": "t",
+  "role": "consonant",
+  "forms": {
+    "isolated": "ط",
+    "initial": "طـ",
+    "medial": "ـطـ",
+    "final": "ـط"
+  },
+  "components": [
+    "closed to-series oval and leftward baseline",
+    "tall upright"
+  ],
+  "strokeOrder": [
+    "loop counterclockwise around the closed oval and finish left along the baseline",
+    "lift once, then draw the tall upright top-to-bottom"
+  ],
+  "strokeOrderNote": "source-verified freehand order",
+  "penLifts": 1,
+  "strokeOrderSource": {
+    "citation": "Persian Online, How to Write Persian Characters, ط demonstration at 01:54–01:56 (Liberal Arts Instructional Technology Services, Univ. of Texas at Austin)",
+    "url": "https://laits.utexas.edu/persian_grammar/video/gr/kooroshalphabet",
+    "variation": "The cited freehand lesson demonstrates isolated Persian ط body-first: loop counterclockwise around the closed to-series oval, finish left along the baseline without lifting, then lift once and draw the tall upright top-to-bottom into the body's right junction. The path fits the vendored Noto Naskh outline and records Persian-scoped provenance rather than borrowing the independently verified Arabic or Urdu ط sources."
+  },
+  "notes": "Used mainly in Arabic-derived Persian words; pronounced t in modern Persian."
+}

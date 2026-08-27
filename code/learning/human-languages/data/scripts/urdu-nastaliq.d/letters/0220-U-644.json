@@ -1,0 +1,26 @@
+{
+  "glyph": "ل",
+  "sound": "l",
+  "role": "consonant",
+  "forms": {
+    "isolated": "ل",
+    "initial": "لـ",
+    "medial": "ـلـ",
+    "final": "ـل"
+  },
+  "components": [
+    "tall upright",
+    "below-baseline leftward bowl"
+  ],
+  "strokeOrder": [
+    "draw the tall independent upright downward",
+    "continue below the baseline through the leftward bowl and back up without lifting"
+  ],
+  "strokeOrderNote": "source-verified instructional animations and prose",
+  "penLifts": 0,
+  "strokeOrderSource": {
+    "citation": "Zer o Zabar, Pe, gāf, alif, and lām, independent ل calligraphic and handwriting animations and Lām instructions (Northwestern University Libraries Open Textbook, 2026)",
+    "url": "https://openbooks.library.northwestern.edu/zerozabar/chapter/pe-gaf-alif-lam/",
+    "variation": "Both independent-form animations show one uninterrupted stroke: begin at the top, descend the tall upright, continue below the baseline through the leftward bowl, and turn back up its outer side without lifting. The adjacent prose identifies lām as a connector and separately calls out the below-baseline bowl in the final form. This learner path covers the independent form and fits the course's vendored Noto Naskh fallback; Urdu is conventionally printed in Nastaliq, and the app's true Nastaliq face remains separate from this canonical script-data fallback."
+  }
+}

@@ -1,0 +1,28 @@
+{
+  "glyph": "ف",
+  "sound": "f",
+  "role": "consonant",
+  "forms": {
+    "isolated": "ف",
+    "initial": "فـ",
+    "medial": "ـفـ",
+    "final": "ـف"
+  },
+  "components": [
+    "small closed head flowing into a broad leftward bowl",
+    "one dot above"
+  ],
+  "strokeOrder": [
+    "loop clockwise around the small closed head",
+    "continue left through the broad bowl without lifting",
+    "lift once, then place the upper dot"
+  ],
+  "strokeOrderNote": "source-verified freehand order",
+  "penLifts": 1,
+  "strokeOrderSource": {
+    "citation": "Persian Online, How to Write Persian Characters, ف demonstration at 02:09–02:13 (Liberal Arts Instructional Technology Services, Univ. of Texas at Austin)",
+    "url": "https://laits.utexas.edu/persian_grammar/video/gr/kooroshalphabet",
+    "variation": "The cited freehand lesson demonstrates isolated ف body-first: loop clockwise around the small closed head, continue left through the broad bowl without lifting, then lift once and place the single dot above. Contextual joins shorten the bowl; this isolated learner path fits the vendored Noto Naskh outline and records Persian-scoped provenance rather than borrowing the independently verified Arabic or Urdu ف sources."
+  },
+  "notes": "Fā carries one dot above; its isolated bowl is shallower than qāf ق."
+}

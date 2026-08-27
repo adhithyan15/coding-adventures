@@ -1,0 +1,27 @@
+{
+  "glyph": "د",
+  "sound": "d",
+  "role": "consonant",
+  "forms": {
+    "isolated": "د",
+    "initial": "د",
+    "medial": "ـد",
+    "final": "ـد"
+  },
+  "components": [
+    "folded shoulder",
+    "leftward baseline"
+  ],
+  "strokeOrder": [
+    "begin at the independent form's upper tip and descend through the folded shoulder",
+    "without lifting, turn left along the baseline"
+  ],
+  "strokeOrderNote": "source-verified instructional animation and prose",
+  "penLifts": 0,
+  "strokeOrderSource": {
+    "citation": "Zer o Zabar, Dāl, re, and wāw, independent د handwriting animation and Dāl instructions (Northwestern University Libraries Open Textbook, 2026)",
+    "url": "https://openbooks.library.northwestern.edu/zerozabar/chapter/dal-re-and-waw/",
+    "variation": "The independent-form animation shows one uninterrupted stroke from the upper tip through the folded shoulder and leftward baseline. The adjacent prose says independent dāl folds over itself, or forms at most a 90-degree angle, and does not drop below the line; final dāl rises before descending. Naskh folds both forms more sharply than Nastaliq. This learner path covers the independent form and fits the course's vendored Noto Naskh fallback; Urdu is conventionally printed in Nastaliq, and the app's true Nastaliq face remains separate from this canonical script-data fallback. The provenance remains Urdu-specific rather than borrowing the separate Persian or Arabic د sources."
+  },
+  "notes": "Does not join to the following letter."
+}

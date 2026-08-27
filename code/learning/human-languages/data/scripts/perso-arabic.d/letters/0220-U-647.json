@@ -1,0 +1,25 @@
+{
+  "glyph": "ه",
+  "sound": "h / final e",
+  "role": "consonant",
+  "forms": {
+    "isolated": "ه",
+    "initial": "هـ",
+    "medial": "ـهـ",
+    "final": "ـه"
+  },
+  "components": [
+    "looping body"
+  ],
+  "strokeOrder": [
+    "loop the isolated body and finish left without lifting"
+  ],
+  "strokeOrderNote": "source-verified freehand order",
+  "penLifts": 0,
+  "strokeOrderSource": {
+    "citation": "Persian Online, How to Write Persian Characters, ه demonstration at 02:47–02:50 (Liberal Arts Instructional Technology Services, Univ. of Texas at Austin)",
+    "url": "https://laits.utexas.edu/persian_grammar/video/gr/kooroshalphabet",
+    "variation": "The cited freehand lesson demonstrates isolated ه as one simple closed handwritten loop with no pen lift. The vendored Noto Naskh isolated form is wider and has two counters plus a leftward baseline finish, so this learner path preserves the source's single pen-down run while fitting that typographic outline. Contextual joins use visibly different forms."
+  },
+  "notes": "A final he can help write the vowel e."
+}

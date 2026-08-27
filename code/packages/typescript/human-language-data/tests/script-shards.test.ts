@@ -1,5 +1,5 @@
 import { createHash } from "node:crypto";
-import { readFileSync } from "node:fs";
+import { existsSync } from "node:fs";
 import { join } from "node:path";
 import { describe, expect, it } from "vitest";
 import { defaultCurriculumRoot, loadScripts } from "../src/loader.js";
@@ -71,20 +71,6 @@ describe("Japanese script inventory shards", () => {
     expect(() => scriptEntryId("")).toThrow(/non-empty glyph/);
   });
 
-  it("reassembles every committed Japanese entry exactly", () => {
-    const root = defaultCurriculumRoot();
-    const monolithPath = join(root, "data", "scripts", "japanese.json");
-    const monolith = JSON.parse(readFileSync(monolithPath, "utf8")) as unknown;
-    const shards = readShards(monolithPath);
-    expect(shards).not.toBeNull();
-    const assembled = mergeScriptInventoryShards(shards!);
-    expect(assembled).toEqual(monolith);
-    expect(assembled.letters).toHaveLength(46);
-    expect(assembled.marks).toHaveLength(3);
-    expect(loadScripts(root).japanese).toEqual(monolith);
-    expect(runShardCli(["--check", JAPANESE_SCRIPT_PLAN.path], root)).toBe(0);
-  });
-
   it("rejects a filename id that does not match its glyph", () => {
     expect(() => mergeScriptInventoryShards([
       meta,
@@ -141,15 +127,15 @@ describe("shard-native script inventories", () => {
   }) => {
     const root = defaultCurriculumRoot();
     const monolithPath = join(root, "data", "scripts", `${name}.json`);
-    const monolith = JSON.parse(readFileSync(monolithPath, "utf8")) as unknown;
+    expect(existsSync(monolithPath)).toBe(false);
     const shards = readShards(monolithPath);
     expect(shards).not.toBeNull();
     const assembled = mergeScriptInventoryShards(shards!);
-    expect(assembled).toEqual(monolith);
     expect(assembled.letters).toHaveLength(letters);
     expect(assembled.marks).toHaveLength(marks);
     expect(createHash("sha256").update(JSON.stringify(assembled)).digest("hex")).toBe(digest);
-    expect(loadScripts(root)[name]).toEqual(monolith);
+    expect(loadScripts(root)[name]).toEqual(assembled);
     expect(plan.monolith).toBe("removed");
+    expect(runShardCli(["--check", plan.path], root)).toBe(0);
   });
 });

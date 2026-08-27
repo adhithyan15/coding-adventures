@@ -1,0 +1,27 @@
+{
+  "glyph": "ت",
+  "sound": "t",
+  "role": "consonant",
+  "forms": {
+    "isolated": "ت",
+    "initial": "تـ",
+    "medial": "ـتـ",
+    "final": "ـت"
+  },
+  "components": [
+    "shallow bowl",
+    "two dots above"
+  ],
+  "strokeOrder": [
+    "sweep the shallow bowl from right to left",
+    "lift, then place the left dot above",
+    "lift again and place the right dot"
+  ],
+  "strokeOrderNote": "source-verified freehand order",
+  "penLifts": 2,
+  "strokeOrderSource": {
+    "citation": "Persian Online, How to Write Persian Characters, ت demonstration at 00:22–00:27 (Liberal Arts Instructional Technology Services, Univ. of Texas at Austin)",
+    "url": "https://laits.utexas.edu/persian_grammar/video/gr/kooroshalphabet",
+    "variation": "The cited freehand lesson demonstrates isolated ت as a shallow right-to-left Naskh bowl, followed by one lift to the left dot above and another lift to the right dot. Contextual joins reshape the bowl; this isolated learner path fits the vendored Noto Naskh outline."
+  }
+}

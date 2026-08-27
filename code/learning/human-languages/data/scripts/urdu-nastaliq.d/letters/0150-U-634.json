@@ -1,0 +1,29 @@
+{
+  "glyph": "ش",
+  "sound": "sh",
+  "role": "consonant",
+  "forms": {
+    "isolated": "ش",
+    "initial": "شـ",
+    "medial": "ـشـ",
+    "final": "ـش"
+  },
+  "components": [
+    "three close teeth and final bowl",
+    "two lower dots and one centered upper dot"
+  ],
+  "strokeOrder": [
+    "shape the three close teeth from right to left",
+    "flow directly into the final bowl without lifting",
+    "after one lift, place the lower-left dot",
+    "after another lift, place the lower-right dot",
+    "after a third lift, place the centered upper dot"
+  ],
+  "strokeOrderNote": "source-verified instructional animations and prose",
+  "penLifts": 3,
+  "strokeOrderSource": {
+    "citation": "Zer o Zabar, Sīn, shīn, baṛī he, nūn, and nūn-e ġhunna, independent ش calligraphic and handwriting animations and Shīn instructions (Northwestern University Libraries Open Textbook, 2026)",
+    "url": "https://openbooks.library.northwestern.edu/zerozabar/chapter/sin-shin-bari-he-nun-nun-ghunna/",
+    "variation": "The independent-form animations draw the full standard toothed sīn body first in one uninterrupted stroke, then place the lower-left dot, the lower-right dot, and finally the centered upper dot: four strokes separated by three pen lifts. The lesson arranges the dots as two below with one nestled between them above. As with sīn, an optional long gentle curve may replace the teeth, especially in handwriting, while the three dots stay centered over either form. This learner path covers the standard toothed independent form and fits the course's vendored Noto Naskh fallback; Urdu is conventionally printed in Nastaliq, and the app's true Nastaliq face remains separate from this canonical script-data fallback."
+  }
+}

@@ -1,0 +1,28 @@
+{
+  "glyph": "ز",
+  "sound": "z",
+  "role": "consonant",
+  "forms": {
+    "isolated": "ز",
+    "initial": "ز",
+    "medial": "ـز",
+    "final": "ـز"
+  },
+  "components": [
+    "re-series downward line curving left",
+    "one dot above"
+  ],
+  "strokeOrder": [
+    "draw the independent ze downward",
+    "continue curving to the left without lifting",
+    "after one lift, place the dot above"
+  ],
+  "strokeOrderNote": "source-verified independent calligraphic and handwriting animations and prose",
+  "penLifts": 1,
+  "strokeOrderSource": {
+    "citation": "Zer o Zabar, Ḳhe, ze, zāl, swād, and zwād, independent ز calligraphic and handwriting animations and Ze instructions (Northwestern University Libraries Open Textbook, 2026)",
+    "url": "https://openbooks.library.northwestern.edu/zerozabar/chapter/khe-ze-zal-swad-and-zwad/",
+    "variation": "Both independent-form animations write the re-series body first as one downward line curving left, then add the single dot above after one pen lift. The lesson identifies ze as a nonconnector that looks exactly like re with that dot, calls it the most common Urdu letter for z, and notes that its dot usually sits farther left when compact writing might resemble nūn plus re. This learner path fits the two-run order to the course's vendored Noto Naskh fallback; Urdu is conventionally printed in Nastaliq, and the app's true Nastaliq face remains separate from this canonical script-data fallback."
+  },
+  "notes": "Ze is the most common Urdu spelling of z and differs from re by one upper dot."
+}

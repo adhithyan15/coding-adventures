@@ -1,0 +1,27 @@
+{
+  "glyph": "ج",
+  "sound": "j",
+  "role": "consonant",
+  "forms": {
+    "isolated": "ج",
+    "initial": "جـ",
+    "medial": "ـجـ",
+    "final": "ـج"
+  },
+  "components": [
+    "pointed hooked head and bowl",
+    "one dot below"
+  ],
+  "strokeOrder": [
+    "place the dot below",
+    "after one lift, sweep left through the pointed hooked head",
+    "continue down and around the bowl without lifting"
+  ],
+  "strokeOrderNote": "source-verified instructional animation",
+  "penLifts": 1,
+  "strokeOrderSource": {
+    "citation": "Zer o Zabar, Te, mim, jim, che, and more diacritics, independent ج handwriting animation and flat-head insight (Northwestern University Libraries Open Textbook, 2026)",
+    "url": "https://openbooks.library.northwestern.edu/zerozabar/chapter/te-mim-jim-che/",
+    "variation": "The independent-form animation places the dot below first, lifts once, then draws the pointed hooked head, descent, and bowl in one continuous stroke. The lesson says the back corner should be pointed rather than rounded and documents a flat-head alternative as purely aesthetic. This learner path covers the pointed independent form and fits the course's vendored Noto Naskh fallback; Urdu is conventionally printed in Nastaliq, and the app's true Nastaliq face remains separate from this canonical script-data fallback."
+  }
+}

@@ -1,0 +1,26 @@
+{
+  "glyph": "م",
+  "sound": "m",
+  "role": "consonant",
+  "forms": {
+    "isolated": "م",
+    "initial": "مـ",
+    "medial": "ـمـ",
+    "final": "ـم"
+  },
+  "components": [
+    "round head",
+    "descending tail"
+  ],
+  "strokeOrder": [
+    "shape the round head",
+    "continue down the tail below the baseline without lifting"
+  ],
+  "strokeOrderNote": "source-verified instructional animations and prose",
+  "penLifts": 0,
+  "strokeOrderSource": {
+    "citation": "Zer o Zabar, Te, mīm, jīm, che, and more diacritics, independent م calligraphic and handwriting animations and Mīm instructions (Northwestern University Libraries Open Textbook, 2026)",
+    "url": "https://openbooks.library.northwestern.edu/zerozabar/chapter/te-mim-jim-che/",
+    "variation": "Both independent-form animations keep the round head and descending tail in one uninterrupted stroke. The lesson says calligraphic and handwritten mīm look different: an ordinary constant-width pen typically draws the handwritten head as a counterclockwise loop, while the tail of independent or final mīm drops below the baseline. This learner path fits the same head-to-tail, zero-lift order to the course's vendored Noto Naskh fallback; Urdu is conventionally printed in Nastaliq, and the app's true Nastaliq face remains separate from this canonical script-data fallback."
+  }
+}

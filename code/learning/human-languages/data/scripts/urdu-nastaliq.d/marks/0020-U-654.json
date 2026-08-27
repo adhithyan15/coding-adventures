@@ -1,0 +1,23 @@
+{
+  "mark": "ٔ",
+  "sound": "vowel separator / brief pause",
+  "role": "other",
+  "attachesAs": "hamza ABOVE a tooth carrier, added after the word's main line",
+  "examples": [
+    {
+      "base": "ي",
+      "combined": "ئ",
+      "sound": "separates adjacent vowels",
+      "carrier": "dotless ye tooth"
+    }
+  ],
+  "compositionOrder": [
+    "write the tooth carrier as part of the word's right-to-left main line",
+    "after lifting, add the small hamza above the carrier as its ain-head shape or accepted diagonal squiggle"
+  ],
+  "compositionSource": {
+    "citation": "Zer o Zabar, Ain and hamza, initial and medial ئ handwriting animations and Hamza instructions (Northwestern University Libraries Open Textbook, 2026)",
+    "url": "https://openbooks.library.northwestern.edu/zerozabar/chapter/ain-hamza/",
+    "variation": "The lesson prints initial ئـ and medial ـئـ, shows separate handwriting animations for both, and explains that Urdu hamza uses a be-series tooth carrier in these positions. Its prose identifies hamza's vowel-separator role with بھائی among the examples and permits the small ain-head mark to be smoothed into a diagonal squiggle. The course therefore models ئ as a source-backed carrier-plus-mark composition rather than inventing a standalone Arabic ي row: write the right-to-left main-line carrier first, then return after a lift to add hamza. Unicode canonically decomposes U+0626 into U+064A plus U+0654; those code points identify the encoded composition and do not conflate Urdu ی U+06CC with Arabic ي U+064A."
+  }
+}

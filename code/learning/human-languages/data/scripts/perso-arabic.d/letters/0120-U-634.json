@@ -1,0 +1,30 @@
+{
+  "glyph": "ش",
+  "sound": "sh",
+  "role": "consonant",
+  "forms": {
+    "isolated": "ش",
+    "initial": "شـ",
+    "medial": "ـشـ",
+    "final": "ـش"
+  },
+  "components": [
+    "three teeth",
+    "final bowl",
+    "two lower dots and one centered upper dot"
+  ],
+  "strokeOrder": [
+    "form the three teeth from right to left",
+    "flow into the final bowl without lifting",
+    "lift, then place the lower-left dot",
+    "lift again and place the lower-right dot",
+    "lift again and place the centered upper dot"
+  ],
+  "strokeOrderNote": "source-verified freehand order",
+  "penLifts": 3,
+  "strokeOrderSource": {
+    "citation": "Persian Online, How to Write Persian Characters, ش demonstration at 01:29–01:35 (Liberal Arts Instructional Technology Services, Univ. of Texas at Austin)",
+    "url": "https://laits.utexas.edu/persian_grammar/video/gr/kooroshalphabet",
+    "variation": "The cited freehand lesson demonstrates isolated ش body-first: one continuous right-to-left Naskh movement shapes three teeth and flows directly into the final bowl. The writer then lifts for three separate dots above in lower-left, lower-right, then centered-upper order. Contextual joins shorten the final bowl before following letters; this four-stroke Persian learner path fits the vendored Noto Naskh outline and preserves Persian-scoped provenance rather than borrowing the independently verified Arabic or Urdu ش sources."
+  }
+}

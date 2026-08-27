@@ -1,0 +1,27 @@
+{
+  "glyph": "ح",
+  "sound": "h",
+  "role": "consonant",
+  "forms": {
+    "isolated": "ح",
+    "initial": "حـ",
+    "medial": "ـحـ",
+    "final": "ـح"
+  },
+  "components": [
+    "pointed hooked upper head",
+    "deep lower bowl"
+  ],
+  "strokeOrder": [
+    "sweep left through the pointed hooked head",
+    "continue down and around the deep bowl without lifting"
+  ],
+  "strokeOrderNote": "source-verified independent handwriting animation and prose",
+  "penLifts": 0,
+  "strokeOrderSource": {
+    "citation": "Zer o Zabar, Sīn, shīn, baṛī he, nūn, and nūn-e ġhunna, independent ح handwriting animation and Baṛī he instructions (Northwestern University Libraries Open Textbook, 2026)",
+    "url": "https://openbooks.library.northwestern.edu/zerozabar/chapter/sin-shin-bari-he-nun-nun-ghunna/",
+    "variation": "The independent-form handwriting animation draws the pointed hooked head, descent, and deep bowl in one uninterrupted body-first stroke. The adjacent prose identifies baṛī he as the dotless jīm-series shape, says it occurs only in Arabic-derived words, and prints independent, initial, medial, and final forms. This learner path covers the independent form and fits its zero-lift order to the course's vendored Noto Naskh fallback; Urdu is conventionally printed in Nastaliq, and the app's true Nastaliq face remains separate from this canonical script-data fallback. The provenance remains Urdu-specific rather than borrowing the separate Persian or Arabic ح sources."
+  },
+  "notes": "Urdu baṛī he occurs in Arabic-derived words and is distinct from chhoṭī he ہ and do-chashmī he ھ."
+}

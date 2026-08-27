@@ -1,0 +1,29 @@
+{
+  "glyph": "ظ",
+  "sound": "z",
+  "role": "consonant",
+  "forms": {
+    "isolated": "ظ",
+    "initial": "ظـ",
+    "medial": "ـظـ",
+    "final": "ـظ"
+  },
+  "components": [
+    "closed to-series oval and leftward baseline",
+    "tall upright",
+    "one dot above"
+  ],
+  "strokeOrder": [
+    "loop counterclockwise around the closed oval and finish left along the baseline",
+    "lift once, then draw the tall upright top-to-bottom",
+    "lift again, then place the upper dot"
+  ],
+  "strokeOrderNote": "source-verified freehand order",
+  "penLifts": 2,
+  "strokeOrderSource": {
+    "citation": "Persian Online, How to Write Persian Characters, ظ demonstration at 01:57–01:59 (Liberal Arts Instructional Technology Services, Univ. of Texas at Austin)",
+    "url": "https://laits.utexas.edu/persian_grammar/video/gr/kooroshalphabet",
+    "variation": "The cited freehand lesson demonstrates isolated Persian ظ as a closed to-series body flowing left along the baseline, followed after one lift by the tall upright and after a second lift by the single dot above. The body matches the vendored Noto Naskh outline; this scoped record preserves Persian provenance rather than borrowing the independently verified Arabic or Urdu ظ source."
+  },
+  "notes": "Used mainly in Arabic-derived Persian words; pronounced z in modern Persian."
+}
