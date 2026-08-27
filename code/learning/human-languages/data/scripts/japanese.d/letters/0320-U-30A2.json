@@ -1,0 +1,15 @@
+{
+  "glyph": "ア",
+  "sound": "a",
+  "role": "katakana",
+  "components": [
+    "a horizontal",
+    "a left-falling stroke"
+  ],
+  "strokeOrder": [
+    "horizontal with hook",
+    "left-falling"
+  ],
+  "strokeOrderNote": "authoritative",
+  "notes": "Opens アルバイト, from German Arbeit."
+}

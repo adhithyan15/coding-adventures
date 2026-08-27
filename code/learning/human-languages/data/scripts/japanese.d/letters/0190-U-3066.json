@@ -1,0 +1,23 @@
+{
+  "glyph": "て",
+  "sound": "te",
+  "role": "hiragana",
+  "components": [
+    "a high horizontal",
+    "a returning diagonal",
+    "a broad lower curve"
+  ],
+  "strokeOrder": [
+    "draw the high horizontal from left to right",
+    "without lifting, turn back down and left through the diagonal",
+    "without lifting, round the broad lower curve and sweep right to the finish"
+  ],
+  "strokeOrderNote": "Sirgazil's 28-frame animation writes all three visible movements in one uninterrupted pen-down run.",
+  "penLifts": 0,
+  "strokeOrderSource": {
+    "url": "https://commons.wikimedia.org/wiki/File:Hiragana_%E3%81%A6_stroke_order_animation.gif",
+    "citation": "Sirgazil, Hiragana て stroke order animation.gif, hiragana て, 28 frames, 2.8 seconds (Wikimedia Commons, 1 October 2009)",
+    "variation": "The CC0 animation draws て in one uninterrupted run: carry the high horizontal from left to right, turn back down and left through the diagonal, then round the broad lower curve and sweep right to the finish. The learner path is fitted to the bundled Noto Sans JP subset; handwritten top-bar angle and curve width vary, but the zero-lift order remains the same."
+  },
+  "notes": "The te of て; one mora, pronounced as a short, even beat."
+}

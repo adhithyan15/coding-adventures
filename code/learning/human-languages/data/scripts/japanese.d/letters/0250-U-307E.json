@@ -1,0 +1,16 @@
+{
+  "glyph": "ま",
+  "sound": "ma",
+  "role": "hiragana",
+  "components": [
+    "two horizontals",
+    "a looping vertical"
+  ],
+  "strokeOrder": [
+    "upper horizontal",
+    "lower horizontal",
+    "looping vertical"
+  ],
+  "strokeOrderNote": "authoritative",
+  "notes": "Fourth sign of ございます."
+}

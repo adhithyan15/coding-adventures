@@ -1,0 +1,21 @@
+{
+  "glyph": "ね",
+  "sound": "ne",
+  "role": "hiragana",
+  "components": [
+    "a short left vertical",
+    "a crossing hooked sweep with a lower-right loop"
+  ],
+  "strokeOrder": [
+    "descend through the short left vertical",
+    "lift, then begin at the upper right, sweep left across the vertical, hook down along the diagonal and return to the crossing, then finish clockwise around the lower-right loop"
+  ],
+  "strokeOrderNote": "Sirgazil's 35-frame animation writes ね in two separate pen-down runs: the short vertical first, then the crossing hook, diagonal return, and lower-right loop.",
+  "penLifts": 1,
+  "strokeOrderSource": {
+    "url": "https://commons.wikimedia.org/wiki/File:Hiragana_%E3%81%AD_stroke_order_animation.gif",
+    "citation": "Sirgazil, Hiragana ね stroke order animation.gif, hiragana ね, 35 frames, 3.5 seconds (Wikimedia Commons, 1 October 2009)",
+    "variation": "The CC0 animation draws ね in two pen-down runs with one lift: descend through the short left vertical, restart at the upper right, cross left through the vertical, hook down along the diagonal and return to the crossing, then continue clockwise around the lower-right loop. The learner path is fitted to the bundled Noto Sans JP subset; handwritten hook depth and loop roundness vary, but the two-run order remains the same."
+  },
+  "notes": "The ne of おねがいします and あね; one mora, pronounced as a short, even beat."
+}

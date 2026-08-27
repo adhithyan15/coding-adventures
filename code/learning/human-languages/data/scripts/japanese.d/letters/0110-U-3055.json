@@ -1,0 +1,17 @@
+{
+  "glyph": "さ",
+  "sound": "sa",
+  "role": "hiragana",
+  "components": [
+    "a horizontal",
+    "a short curving stroke below it",
+    "a detached curve at the foot"
+  ],
+  "strokeOrder": [
+    "horizontal",
+    "short curve",
+    "detached foot curve"
+  ],
+  "strokeOrderNote": "authoritative",
+  "notes": "Base of ざ."
+}

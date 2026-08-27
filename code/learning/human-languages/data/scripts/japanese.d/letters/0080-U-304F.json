@@ -1,0 +1,21 @@
+{
+  "glyph": "く",
+  "sound": "ku",
+  "role": "hiragana",
+  "components": [
+    "an upper-left falling curve",
+    "a lower-right falling curve"
+  ],
+  "strokeOrder": [
+    "sweep down and left from the upper right into the central turn",
+    "without lifting, sweep down and right to the lower tip"
+  ],
+  "strokeOrderNote": "Sirgazil's 20-frame animation writes both visible movements in one uninterrupted pen-down run.",
+  "penLifts": 0,
+  "strokeOrderSource": {
+    "url": "https://commons.wikimedia.org/wiki/File:Hiragana_%E3%81%8F_stroke_order_animation.gif",
+    "citation": "Sirgazil, Hiragana く stroke order animation.gif, hiragana く, 20 frames, 2.0 seconds (Wikimedia Commons, 8 March 2010)",
+    "variation": "The CC0 animation draws く in one uninterrupted run: sweep down and left from the upper right into the sharp central turn, then continue down and right to the lower tip. The path is fitted to the bundled Noto Sans JP subset; handwritten curvature and turn sharpness vary, but the zero-lift order remains the same."
+  },
+  "notes": "The ku of ください; one mora, with the u often lightly voiced."
+}

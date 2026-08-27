@@ -1,0 +1,21 @@
+{
+  "glyph": "し",
+  "sound": "shi",
+  "role": "hiragana",
+  "components": [
+    "a descending stem",
+    "a broad lower curve sweeping upward right"
+  ],
+  "strokeOrder": [
+    "descend nearly straight from the top",
+    "without lifting, turn around the broad lower curve and sweep upward to the right"
+  ],
+  "strokeOrderNote": "Sirgazil's 23-frame animation writes both visible movements in one uninterrupted pen-down run.",
+  "penLifts": 0,
+  "strokeOrderSource": {
+    "url": "https://commons.wikimedia.org/wiki/File:Hiragana_%E3%81%97_stroke_order_animation.gif",
+    "citation": "Sirgazil, Hiragana し stroke order animation.gif, hiragana し, 23 frames, 2.3 seconds (Wikimedia Commons, 1 October 2009)",
+    "variation": "The CC0 animation draws し in one uninterrupted run: descend from the top, turn around the broad lower curve, and sweep upward to the right. The path is fitted to the bundled Noto Sans JP subset; handwritten curvature and finish height vary, but the zero-lift order remains the same."
+  },
+  "notes": "The shi of します and でした; one mora, pronounced like English she but shorter."
+}

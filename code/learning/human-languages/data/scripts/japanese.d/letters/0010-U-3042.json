@@ -1,0 +1,17 @@
+{
+  "glyph": "あ",
+  "sound": "a",
+  "role": "hiragana",
+  "components": [
+    "a horizontal",
+    "a vertical crossing it",
+    "a looping curve"
+  ],
+  "strokeOrder": [
+    "horizontal",
+    "vertical",
+    "loop"
+  ],
+  "strokeOrderNote": "authoritative",
+  "notes": "First sign of ありがとう."
+}

@@ -1,0 +1,15 @@
+{
+  "glyph": "ル",
+  "sound": "ru",
+  "role": "katakana",
+  "components": [
+    "a short left stroke",
+    "a hooked right stroke"
+  ],
+  "strokeOrder": [
+    "left stroke",
+    "hooked stroke"
+  ],
+  "strokeOrderNote": "authoritative",
+  "notes": "Second sign of アルバイト."
+}

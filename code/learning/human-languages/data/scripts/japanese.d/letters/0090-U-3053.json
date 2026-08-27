@@ -1,0 +1,15 @@
+{
+  "glyph": "こ",
+  "sound": "ko",
+  "role": "hiragana",
+  "components": [
+    "a short upper horizontal",
+    "a longer lower curve"
+  ],
+  "strokeOrder": [
+    "upper stroke",
+    "lower curve"
+  ],
+  "strokeOrderNote": "authoritative",
+  "notes": "Opens こんにちは; shares an ancestor with katakana コ."
+}

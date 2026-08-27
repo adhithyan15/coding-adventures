@@ -1,0 +1,25 @@
+{
+  "glyph": "な",
+  "sound": "na",
+  "role": "hiragana",
+  "components": [
+    "an upper-left horizontal",
+    "a crossing left-falling stem",
+    "an upper-right diagonal",
+    "a lower-right looping stroke"
+  ],
+  "strokeOrder": [
+    "draw the upper-left horizontal from left to right",
+    "lift and descend through the crossing left-falling stem",
+    "lift and draw the short upper-right diagonal down and right",
+    "lift, descend through the lower-right stem, turn around the loop, and sweep right to the finish"
+  ],
+  "strokeOrderNote": "Sirgazil's 32-frame animation writes な in four separate pen-down runs: horizontal, crossing left-falling stem, upper-right diagonal, then the lower-right stem, loop, and outward sweep.",
+  "penLifts": 3,
+  "strokeOrderSource": {
+    "url": "https://commons.wikimedia.org/wiki/File:Hiragana_%E3%81%AA_stroke_order_animation.gif",
+    "citation": "Sirgazil, Hiragana な stroke order animation.gif, hiragana な, 32 frames, 3.2 seconds (Wikimedia Commons, 1 October 2009)",
+    "variation": "The CC0 animation draws な in four pen-down runs with three lifts: the upper-left horizontal, crossing left-falling stem, short upper-right diagonal, then the lower-right stem continuing around the loop and out to the right. The learner path is fitted to the bundled Noto Sans JP subset; handwritten diagonal angle and loop size vary, but the four-run order remains the same."
+  },
+  "notes": "The na of なまえ; one mora, pronounced as a short, even beat."
+}

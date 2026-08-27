@@ -1,0 +1,16 @@
+{
+  "glyph": "今",
+  "sound": "kon / kin / ima",
+  "role": "logograph",
+  "components": [
+    "a roof-like top",
+    "a short hook below"
+  ],
+  "strokeOrder": [
+    "left-falling",
+    "right-falling",
+    "hook"
+  ],
+  "strokeOrderNote": "authoritative",
+  "notes": "Now. With 日 it forms 今日 konnichi, this day — the fossil inside こんにちは."
+}

@@ -1,0 +1,15 @@
+{
+  "glyph": "ヒ",
+  "sound": "hi",
+  "role": "katakana",
+  "components": [
+    "a short left stroke",
+    "an L-shaped base"
+  ],
+  "strokeOrder": [
+    "left stroke",
+    "base"
+  ],
+  "strokeOrderNote": "authoritative",
+  "notes": "Third sign of コーヒー."
+}

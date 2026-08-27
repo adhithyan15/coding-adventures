@@ -58,6 +58,7 @@ import {
   readMaybeSharded,
 } from "./shard.js";
 import { CEFR_LEVELS, type CefrLevel } from "./levels.js";
+import { mergeScriptInventoryShards } from "./script-shards.js";
 import {
   parseAssessmentContract,
   parseAssessmentPolicy,
@@ -702,7 +703,10 @@ export function loadScripts(root = defaultCurriculumRoot()): Record<string, Scri
     // Same reasoning as `loadModalityManifest`: `data/scripts/` is a plain
     // directory of authored files, not an `X.d/`, so the enumeration stays and
     // only the READ moves behind the guards.
-    const sd = readLedgerFile<ScriptData>(join(dir, file));
+    const sd = readMaybeSharded<ScriptData>(
+      join(dir, file),
+      mergeScriptInventoryShards,
+    );
     out[sd.script] = sd;
   }
   return out;

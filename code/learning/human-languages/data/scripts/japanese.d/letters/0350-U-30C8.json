@@ -1,0 +1,15 @@
+{
+  "glyph": "ト",
+  "sound": "to",
+  "role": "katakana",
+  "components": [
+    "a vertical",
+    "a short right tick"
+  ],
+  "strokeOrder": [
+    "vertical",
+    "tick"
+  ],
+  "strokeOrderNote": "authoritative",
+  "notes": "Closes アルバイト."
+}

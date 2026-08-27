@@ -1,0 +1,15 @@
+{
+  "glyph": "ざ",
+  "sound": "za",
+  "role": "hiragana",
+  "components": [
+    "さ",
+    "the dakuten ゛"
+  ],
+  "strokeOrder": [
+    "さ in full",
+    "two short strokes at the upper right"
+  ],
+  "strokeOrderNote": "authoritative",
+  "notes": "Second sign of ございます."
+}

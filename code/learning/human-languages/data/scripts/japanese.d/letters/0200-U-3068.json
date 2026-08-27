@@ -1,0 +1,15 @@
+{
+  "glyph": "と",
+  "sound": "to",
+  "role": "hiragana",
+  "components": [
+    "a short vertical",
+    "a long sweeping stroke"
+  ],
+  "strokeOrder": [
+    "vertical with dot",
+    "sweep"
+  ],
+  "strokeOrderNote": "authoritative",
+  "notes": "Fourth sign of ありがとう."
+}

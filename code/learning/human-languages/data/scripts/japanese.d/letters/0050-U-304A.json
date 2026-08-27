@@ -1,0 +1,17 @@
+{
+  "glyph": "お",
+  "sound": "o",
+  "role": "hiragana",
+  "components": [
+    "a horizontal",
+    "a hooked vertical",
+    "a right dot"
+  ],
+  "strokeOrder": [
+    "horizontal",
+    "hooked vertical",
+    "dot"
+  ],
+  "strokeOrderNote": "authoritative",
+  "notes": "Completes the five-vowel row a-i-u-e-o."
+}

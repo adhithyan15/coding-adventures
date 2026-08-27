@@ -1,0 +1,15 @@
+{
+  "glyph": "ン",
+  "sound": "n",
+  "role": "katakana",
+  "components": [
+    "a short upper tick",
+    "a rising sweep"
+  ],
+  "strokeOrder": [
+    "tick",
+    "rising sweep"
+  ],
+  "strokeOrderNote": "authoritative",
+  "notes": "The katakana twin of ん; closes パン."
+}

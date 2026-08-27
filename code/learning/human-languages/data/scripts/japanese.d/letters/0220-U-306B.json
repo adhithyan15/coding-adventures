@@ -1,0 +1,16 @@
+{
+  "glyph": "に",
+  "sound": "ni",
+  "role": "hiragana",
+  "components": [
+    "a left vertical",
+    "two right horizontals"
+  ],
+  "strokeOrder": [
+    "vertical",
+    "upper horizontal",
+    "lower horizontal"
+  ],
+  "strokeOrderNote": "authoritative",
+  "notes": "Third sign of こんにちは."
+}

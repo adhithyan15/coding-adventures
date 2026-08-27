@@ -1,0 +1,20 @@
+{
+  "glyph": "っ",
+  "sound": "one mora of closure that doubles the following consonant",
+  "role": "hiragana",
+  "components": [
+    "a small つ-shaped continuous curve"
+  ],
+  "strokeOrder": [
+    "begin at the upper left and sweep right across the high shoulder",
+    "without lifting, round down the right side and finish by sweeping left along the lower curve"
+  ],
+  "strokeOrderNote": "Sirgazil's 24-frame つ animation supplies the one-run order; Unicode 17 identifies U+3063 as the small-tsu letter, so the same movement is fitted to its smaller bundled glyph.",
+  "penLifts": 0,
+  "strokeOrderSource": {
+    "url": "https://commons.wikimedia.org/wiki/File:Hiragana_%E3%81%A4_stroke_order_animation.gif",
+    "citation": "Sirgazil, Hiragana つ stroke order animation.gif, hiragana つ, 24 frames, 2.4 seconds (Wikimedia Commons, 1 October 2009); Unicode Standard 17.0 names U+3063 HIRAGANA LETTER SMALL TU, alias small tsu",
+    "variation": "The CC0 animation draws full-size つ in one uninterrupted run from the upper left, right across the high shoulder, around the descending right side, and back left along the lower curve. Unicode 17 separately identifies U+3063 as small tsu. This learner path therefore preserves the source's zero-lift movement while scaling and fitting it to the bundled Noto Sans JP small っ outline; the cited animation demonstrates つ rather than a separately animated っ, so the size adaptation is explicit rather than presented as independent handwriting evidence."
+  },
+  "notes": "The sokuon counts as one mora and marks closure before a doubled following consonant, as in ちょっと chotto."
+}

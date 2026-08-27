@@ -1,0 +1,15 @@
+{
+  "glyph": "ち",
+  "sound": "chi",
+  "role": "hiragana",
+  "components": [
+    "a short horizontal",
+    "a body curving left"
+  ],
+  "strokeOrder": [
+    "horizontal",
+    "curving body"
+  ],
+  "strokeOrderNote": "authoritative",
+  "notes": "Fourth sign of こんにちは. The t-row reads chi, not ti."
+}

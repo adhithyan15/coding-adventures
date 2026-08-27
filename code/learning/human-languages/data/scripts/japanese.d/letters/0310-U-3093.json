@@ -1,0 +1,15 @@
+{
+  "glyph": "ん",
+  "sound": "n",
+  "role": "hiragana",
+  "components": [
+    "a short entry tick",
+    "a single sweeping curve"
+  ],
+  "strokeOrder": [
+    "entry tick",
+    "sweep"
+  ],
+  "strokeOrderNote": "authoritative",
+  "notes": "The only hiragana that is a bare consonant, and it still takes a full beat of its own."
+}

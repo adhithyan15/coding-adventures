@@ -1,0 +1,15 @@
+{
+  "glyph": "え",
+  "sound": "e",
+  "role": "hiragana",
+  "components": [
+    "a short top tick",
+    "a zigzag body"
+  ],
+  "strokeOrder": [
+    "top tick",
+    "body"
+  ],
+  "strokeOrderNote": "authoritative",
+  "notes": "Final sign of いいえ."
+}

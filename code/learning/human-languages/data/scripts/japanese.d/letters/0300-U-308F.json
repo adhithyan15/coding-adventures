@@ -1,0 +1,21 @@
+{
+  "glyph": "わ",
+  "sound": "wa",
+  "role": "hiragana",
+  "components": [
+    "a long left vertical",
+    "a crossing hook that returns into a broad right loop"
+  ],
+  "strokeOrder": [
+    "descend through the long left vertical",
+    "lift, then begin at the upper left, sweep right across the vertical, hook down and left, turn back through the central crossing, and continue clockwise around the broad right loop"
+  ],
+  "strokeOrderNote": "Sirgazil's 30-frame animation writes わ in two separate pen-down runs: the long left vertical first, then the crossing sweep, down-left hook, central return, and broad right loop.",
+  "penLifts": 1,
+  "strokeOrderSource": {
+    "url": "https://commons.wikimedia.org/wiki/File:Hiragana_%E3%82%8F_stroke_order_animation.gif",
+    "citation": "Sirgazil, Hiragana わ stroke order animation.gif, hiragana わ, 30 frames, 3.0 seconds (Wikimedia Commons, 1 October 2009)",
+    "variation": "The CC0 animation draws わ in two pen-down runs with one lift: descend through the long left vertical, restart at the upper left, cross right through the vertical, hook down and left, return through the central crossing, then continue clockwise around the broad right loop. The learner path is fitted to the bundled Noto Sans JP subset; handwritten hook depth and loop roundness vary, but the two-run order remains the same."
+  },
+  "notes": "The wa of わたし and the topic particle は when pronounced wa; one mora, pronounced as a short, even beat."
+}

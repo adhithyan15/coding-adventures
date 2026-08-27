@@ -75,6 +75,24 @@ holds the structured tone (`"1"`–`"4"` | `"neutral"`). No `forms`, no `marks`.
 }
 ```
 
+### Authoring a sharded script inventory
+
+Japanese is canonical in `japanese.d/`: `_meta.json` owns document metadata,
+while `letters/` and `marks/` own one entry per file. Each filename combines a
+spaced ordering number with a stable code-point id (`0010-U-3042.json`), so two
+authors can verify different glyphs without editing the same source file.
+
+Put glyph-specific stroke-order citations, variation notes, and teaching notes
+in that glyph's shard. Do not copy an evidence diary into this shared README;
+the entry is the reviewable source of truth. `japanese.json` remains only as a
+generated browser compatibility view. After editing a shard, rebuild and check
+it from `code/packages/typescript/human-language-data`:
+
+```bash
+npm run unshard -- data/scripts/japanese.json
+npm run check:shards -- data/scripts/japanese.json
+```
+
 ## The letter ledger — what order to teach them in
 
 A `<script>.json` says what the letters ARE. A `<script>-ledger.json` says what
@@ -265,25 +283,7 @@ right bowl, and the detached lower hook. Noto Sans Tamil simplifies the
 manual's looped left body and high bar to a retraced upright with a low
 crossbar, so the font-fitted path preserves the source's run boundaries rather
 than copying its display geometry literally. The Tamil starter inventory is
-now fully verified. Japanese hiragana **し** follows Sirgazil's 23-frame CC0
-animation in one uninterrupted run: descend nearly straight from the top,
-turn around the broad lower curve, and sweep upward to the right. Its two-frame
-Noto Sans JP filmstrip preserves that zero-lift order while fitting the heavier
-printed outline; handwritten curvature and finish height remain explicit
-variation. Hiragana **く** follows Sirgazil's 20-frame CC0 animation in one
-uninterrupted run: sweep down and left from the upper right into the sharp
-central turn, then continue down and right to the lower tip. Its two-frame Noto
-Sans JP filmstrip preserves that zero-lift order while recording handwritten
-curvature and turn sharpness as variation. Hiragana **た** follows Sirgazil's
-31-frame CC0 animation in four pen-down runs: the upper horizontal, crossing
-left-falling stem, short right horizontal, and lower-right bowl. Its four-frame
-Noto Sans JP filmstrip preserves the source's three lifts while recording stem
-curvature and bowl width as variation. Hiragana **も** follows Sirgazil's
-28-frame CC0 animation in three
-pen-down runs: the descending stem turns around the broad lower bowl, then the
-upper and lower bars cross it from left to right after two lifts. Its
-three-frame Noto Sans JP filmstrip keeps that order while recording handwritten
-bar-length and bowl-curvature variation. Persian **ا** adds the first
+now fully verified. Persian **ا** adds the first
 right-to-left-script ductus: UT Austin's freehand lesson shows one top-to-bottom
 Naskh stem at 00:08–00:11, with no lift. The adjacent **ب** demonstration at
 00:11–00:15 sweeps its shallow bowl right-to-left, then lifts once for the dot

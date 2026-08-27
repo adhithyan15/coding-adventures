@@ -1,0 +1,11 @@
+{
+  "mark": "゛",
+  "sound": "voicing",
+  "role": "diacritic",
+  "attachesAs": "two short strokes at the upper right of a kana",
+  "example": {
+    "base": "か",
+    "combined": "が",
+    "sound": "ka to ga"
+  }
+}

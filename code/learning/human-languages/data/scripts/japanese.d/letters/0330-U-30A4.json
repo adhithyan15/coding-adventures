@@ -1,0 +1,15 @@
+{
+  "glyph": "イ",
+  "sound": "i",
+  "role": "katakana",
+  "components": [
+    "a short left-falling stroke",
+    "a vertical"
+  ],
+  "strokeOrder": [
+    "left-falling",
+    "vertical"
+  ],
+  "strokeOrderNote": "authoritative",
+  "notes": "The katakana twin of hiragana い."
+}

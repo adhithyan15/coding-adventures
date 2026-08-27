@@ -1,0 +1,15 @@
+{
+  "glyph": "が",
+  "sound": "ga",
+  "role": "hiragana",
+  "components": [
+    "か",
+    "the dakuten ゛"
+  ],
+  "strokeOrder": [
+    "か in full",
+    "two short strokes at the upper right"
+  ],
+  "strokeOrderNote": "authoritative",
+  "notes": "Third sign of ありがとう."
+}

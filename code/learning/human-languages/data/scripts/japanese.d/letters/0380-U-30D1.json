@@ -1,0 +1,15 @@
+{
+  "glyph": "パ",
+  "sound": "pa",
+  "role": "katakana",
+  "components": [
+    "ハ",
+    "the handakuten ゜"
+  ],
+  "strokeOrder": [
+    "ハ in full",
+    "a small circle at the upper right"
+  ],
+  "strokeOrderNote": "authoritative",
+  "notes": "Opens パン bread, from Portuguese pão. The circle is the handakuten, used only on the h-row."
+}
