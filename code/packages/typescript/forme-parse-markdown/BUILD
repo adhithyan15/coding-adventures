@@ -9,4 +9,4 @@ cd ../document-ast-to-html && npm install --silent
 cd ../directed-graph && npm install --silent
 cd ../state-machine && npm install --silent
 cd ../gfm-parser && npm install --silent
-npm install --silent && npx vitest run --coverage
+npm install --silent && npm run build && npx vitest run --coverage

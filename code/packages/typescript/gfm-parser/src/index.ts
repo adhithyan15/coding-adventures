@@ -63,12 +63,10 @@ export function parse(markdown: string, _options?: ParseOptions): DocumentNode {
   // Phase 1: Block parsing — builds the structural skeleton
   const { document: mutableDoc, linkRefs } = parseBlocks(markdown);
   const { document, rawInlineContent } = convertToAst(mutableDoc, linkRefs);
-  applyGfmBlockExtensions(document, rawInlineContent);
+  const extendedDocument = applyGfmBlockExtensions(document, rawInlineContent);
 
   // Phase 2: Inline parsing — fills in emphasis, links, code spans, etc.
-  resolveInlineContent(document, rawInlineContent, linkRefs);
-
-  return document;
+  return resolveInlineContent(extendedDocument, rawInlineContent, linkRefs);
 }
 
 // ─── Version ──────────────────────────────────────────────────────────────────

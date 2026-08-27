@@ -108,8 +108,11 @@ break.
 ## Tests
 
 ```
+npm run build
 npx vitest run --coverage
 ```
 
-Coverage target: 90%+ line.  See `tests/frontmatter.test.ts` for the
+The package `BUILD` gate runs both commands, so a passing test suite cannot
+hide a TypeScript error in this package or its bootstrapped local dependency
+closure. Coverage target: 90%+ line. See `tests/frontmatter.test.ts` for the
 edge-case matrix and `tests/stage.test.ts` for the integration suite.

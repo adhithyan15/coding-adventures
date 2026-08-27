@@ -73,7 +73,8 @@ import { PushdownAutomaton } from "@coding-adventures/state-machine";
 import type {
   InlineNode, TextNode, EmphasisNode, StrongNode, StrikethroughNode, CodeSpanNode,
   LinkNode, ImageNode, AutolinkNode, RawInlineNode, HardBreakNode,
-  SoftBreakNode, BlockNode, DocumentNode,
+  SoftBreakNode, BlockNode, DocumentNode, HeadingNode, ParagraphNode,
+  TableCellNode, ListChildNode,
 } from "@coding-adventures/document-ast";
 import type { LinkRefMap } from "./types.js";
 import {
@@ -1173,10 +1174,11 @@ function extractPlainText(nodes: readonly InlineNode[]): string {
  * nodes instead of populating their `children` arrays — because the block
  * parser does not know about inline syntax. This function uses those symbols
  * as keys into `rawInlineContent` to retrieve the raw strings, parses them,
- * and writes the resulting `InlineNode[]` back into the node's `children`.
+ * and returns a new tree whose text-bearing nodes contain the parsed
+ * `InlineNode[]` values.
  *
- * After this function returns, the AST is complete and the `_rawId`
- * properties are removed.
+ * The input tree is never mutated. The returned AST is complete and does not
+ * expose the parser-internal `_rawId` properties.
  *
  * @param document          Root of the block AST.
  * @param rawInlineContent  Symbol → raw inline string map from convertToAst.
@@ -1186,26 +1188,92 @@ export function resolveInlineContent(
   document: DocumentNode,
   rawInlineContent: Map<symbol, string>,
   linkRefs: LinkRefMap,
-): void {
-  function walk(block: BlockNode): void {
-    // Cast to a mutable version so we can fill in children and remove _rawId.
-    const b = block as BlockNode & { _rawId?: symbol; children?: InlineNode[] | BlockNode[] };
+): DocumentNode {
+  type InlineContainer = HeadingNode | ParagraphNode | TableCellNode;
 
-    if ((b.type === "heading" || b.type === "paragraph" || b.type === "table_cell") && b._rawId !== undefined) {
-      const raw = rawInlineContent.get(b._rawId);
-      if (raw !== undefined) {
-        (b as { children: InlineNode[] }).children = parseInline(raw, linkRefs);
-      }
-      delete b._rawId;
+  function rawInlineId(block: InlineContainer): symbol | undefined {
+    if (!("_rawId" in block)) {
+      return undefined;
     }
+    return typeof block._rawId === "symbol" ? block._rawId : undefined;
+  }
 
-    // Recurse into container blocks
-    if ("children" in block && Array.isArray((block as { children: readonly unknown[] }).children)) {
-      for (const child of (block as { children: readonly BlockNode[] }).children) {
-        walk(child);
-      }
+  function resolveInlineContainer(block: HeadingNode): HeadingNode;
+  function resolveInlineContainer(block: ParagraphNode): ParagraphNode;
+  function resolveInlineContainer(block: TableCellNode): TableCellNode;
+  function resolveInlineContainer(block: InlineContainer): InlineContainer;
+  function resolveInlineContainer(block: InlineContainer): InlineContainer {
+    const rawId = rawInlineId(block);
+    const raw = rawId === undefined ? undefined : rawInlineContent.get(rawId);
+    const children = raw === undefined ? block.children : parseInline(raw, linkRefs);
+
+    switch (block.type) {
+      case "heading":
+        return { type: "heading", level: block.level, children };
+      case "paragraph":
+        return { type: "paragraph", children };
+      case "table_cell":
+        return { type: "table_cell", children };
     }
   }
 
-  walk(document);
+  function resolveListChild(child: ListChildNode): ListChildNode {
+    const children = child.children.map(resolveBlock);
+    return child.type === "task_item"
+      ? { type: "task_item", checked: child.checked, children }
+      : { type: "list_item", children };
+  }
+
+  function resolveBlock(block: BlockNode): BlockNode {
+    switch (block.type) {
+      case "document":
+        return resolveDocument(block);
+      case "heading":
+      case "paragraph":
+      case "table_cell":
+        return resolveInlineContainer(block);
+      case "blockquote":
+        return { type: "blockquote", children: block.children.map(resolveBlock) };
+      case "list":
+        return {
+          type: "list",
+          ordered: block.ordered,
+          start: block.start,
+          tight: block.tight,
+          children: block.children.map(resolveListChild),
+        };
+      case "list_item":
+        return { type: "list_item", children: block.children.map(resolveBlock) };
+      case "task_item":
+        return {
+          type: "task_item",
+          checked: block.checked,
+          children: block.children.map(resolveBlock),
+        };
+      case "table":
+        return {
+          type: "table",
+          align: block.align,
+          children: block.children.map((row) => ({
+            type: "table_row",
+            isHeader: row.isHeader,
+            children: row.children.map((cell) => resolveInlineContainer(cell)),
+          })),
+        };
+      case "table_row":
+        return {
+          type: "table_row",
+          isHeader: block.isHeader,
+          children: block.children.map((cell) => resolveInlineContainer(cell)),
+        };
+      default:
+        return block;
+    }
+  }
+
+  function resolveDocument(root: DocumentNode): DocumentNode {
+    return { type: "document", children: root.children.map(resolveBlock) };
+  }
+
+  return resolveDocument(document);
 }
