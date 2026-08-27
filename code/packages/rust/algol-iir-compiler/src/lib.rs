@@ -8422,15 +8422,30 @@ where
             }
         }
         let (base, exponents) = operands.split_first()?;
-        let exponent = literal_nonnegative_integral_arithmetic_power_chain(exponents)
-            .map(|value| value as i32)
-            .or_else(|| {
-                if exponents.len() == 1 {
-                    literal_bounded_integral_arithmetic_exponent(exponents[0])
-                } else {
-                    None
+        let bounded_integral_exponent = |node: &GrammarASTNode| {
+            literal_bounded_integral_arithmetic_exponent(node).or_else(|| {
+                let value =
+                    expr_static_real_arithmetic_value_with(node, static_call_value)?;
+                (value.fract() == 0.0
+                    && value >= -(MAX_POW_UNROLL_EXPONENT as f64)
+                    && value <= MAX_POW_UNROLL_EXPONENT as f64)
+                    .then_some(value as i32)
+            })
+        };
+        let exponent = if exponents.len() == 1 {
+            bounded_integral_exponent(exponents[0])?
+        } else {
+            let (last, prefix) = exponents.split_last()?;
+            let mut value = u64::try_from(bounded_integral_exponent(last)?).ok()?;
+            for node in prefix.iter().rev() {
+                let base = u64::try_from(bounded_integral_exponent(node)?).ok()?;
+                value = base.checked_pow(value.try_into().ok()?)?;
+                if value > MAX_POW_UNROLL_EXPONENT as u64 {
+                    return None;
                 }
-            })?;
+            }
+            value as i32
+        };
         let base = expr_static_real_arithmetic_value_with(base, static_call_value)?;
         let mut value = 1.0;
         if exponent < 0 && base == 0.0 {
@@ -10182,13 +10197,28 @@ mod tests {
     }
 
     #[test]
+    fn al4_tracks_integer_exponents_for_real_snapshot_metadata_only() {
+        let module = compile_source(
+            "begin integer exponent; real saved; exponent := 2; saved := 6.0 ^ exponent + 6.0; exponent := 3; output(saved + 0.5) end",
+            "test",
+        )
+        .expect("an exact integer exponent may contribute to real snapshot metadata");
+        let main = module.get_function("main").expect("has main");
+        assert!(main.instructions.iter().any(|instr| instr.op == "f64_pow"));
+        assert!(main.instructions.iter().any(|instr| {
+            instr.op == "str_const"
+                && matches!(instr.srcs.first(), Some(Operand::Str(text)) if text == "42.5")
+        }));
+    }
+
+    #[test]
     fn al4_print_static_real_arithmetic_exponents_fail_closed() {
         for source in [
             "begin print(2.0 ^ (1.0 / 2.0)) end",
             "begin print(2.0 ^ (1 div 0)) end",
             "begin print(2.0 ^ (9223372036854775807 + 1)) end",
             "begin print(2.0 ^ (64 + 1)) end",
-            "begin integer n; n := 2; print(2.0 ^ n) end",
+            "begin integer n; n := 65; print(2.0 ^ n) end",
         ] {
             let err = compile_source(source, "test")
                 .expect_err("unsafe arithmetic exponents must require runtime formatting");
@@ -10223,7 +10253,7 @@ mod tests {
             "begin print(2.0 ^ (0 - 65)) end",
             "begin print(2.0 ^ (0 - 9223372036854775807 - 2)) end",
             "begin print(0.0 ^ (0 - 1)) end",
-            "begin integer n; n := 3; print(2.0 ^ (0 - n)) end",
+            "begin integer n; n := 65; print(2.0 ^ (0 - n)) end",
         ] {
             let err = compile_source(source, "test")
                 .expect_err("unsafe negative arithmetic exponents must require runtime formatting");
