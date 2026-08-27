@@ -175,6 +175,8 @@ const JAPANESE_MO = DUCTUS[ductusKey("japanese", "も")];
 const japaneseMoOutline = japaneseOutline("も");
 const JAPANESE_WA = DUCTUS[ductusKey("japanese", "わ")];
 const japaneseWaOutline = japaneseOutline("わ");
+const JAPANESE_YU = DUCTUS[ductusKey("japanese", "ゆ")];
+const japaneseYuOutline = japaneseOutline("ゆ");
 const CA = DUCTUS["ச"];
 const caOutline = tamilOutline("ச");
 const TTA = DUCTUS["ட"];
@@ -1861,6 +1863,30 @@ describe("わ — a vertical followed by one continuous hooked loop", () => {
     const pen = byTag(last, "path").find((node) => node.attrs.class === "ductus__pen")!;
     expect(done.map((path) => path.attrs.d)).toEqual([penPathD(JAPANESE_WA.strokes[0], 1)]);
     expect(pen.attrs.d).toBe(penPathD(JAPANESE_WA.strokes[1], 1));
+  });
+});
+
+describe("ゆ — a broad loop followed by a central descending curve", () => {
+  const steps = ductusSteps(JAPANESE_YU);
+  const strip = ductusFilmstrip(JAPANESE_YU, japaneseYuOutline);
+
+  it("keeps the three loop movements joined before lifting for the central curve", () => {
+    expect(steps.map((step) => step.strokeIndex)).toEqual([0, 0, 0, 1, 1]);
+    expect(steps.map((step) => step.startsAfterLift)).toEqual([false, false, false, true, false]);
+  });
+
+  it("reports a five-frame one-lift filmstrip", () => {
+    expect(strip.frames).toHaveLength(5);
+    expect(strip.penLifts).toBe(1);
+    expect(strip.summary).toBe("2 strokes · 1 pen lift · 5 movements");
+  });
+
+  it("keeps the completed loop visible while the central curve finishes", () => {
+    const last = strip.frames.at(-1)!;
+    const done = byTag(last, "path").filter((node) => node.attrs.class === "ductus__done");
+    const pen = byTag(last, "path").find((node) => node.attrs.class === "ductus__pen")!;
+    expect(done.map((path) => path.attrs.d)).toEqual([penPathD(JAPANESE_YU.strokes[0], 1)]);
+    expect(pen.attrs.d).toBe(penPathD(JAPANESE_YU.strokes[1], 1));
   });
 });
 

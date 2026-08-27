@@ -296,6 +296,7 @@ const JAPANESE_NA = DUCTUS[ductusKey("japanese", "な")];
 const JAPANESE_SMALL_TSU = DUCTUS[ductusKey("japanese", "っ")];
 const JAPANESE_MO = DUCTUS[ductusKey("japanese", "も")];
 const JAPANESE_WA = DUCTUS[ductusKey("japanese", "わ")];
+const JAPANESE_YU = DUCTUS[ductusKey("japanese", "ゆ")];
 
 const fontForDuctus = (letter: LetterDuctus) => {
   const script = SCRIPTS.find((candidate) => candidate.script === letter.script);
@@ -882,6 +883,26 @@ describe("handwriting ductus", () => {
       "https://commons.wikimedia.org/wiki/File:Hiragana_%E3%82%8F_stroke_order_animation.gif",
     );
     expect(JAPANESE_WA.source.citation).toMatch(/Sirgazil.*わ.*30 frames.*3\.0 seconds/i);
+  });
+
+  it("Japanese ゆ draws its broad loop before the central descending curve", () => {
+    expect(penLifts(JAPANESE_YU)).toBe(1);
+    expect(JAPANESE_YU.strokes).toHaveLength(2);
+    expect(JAPANESE_YU.strokes.map((stroke) => stroke.segments.map((segment) => segment.label))).toEqual([
+      [
+        "descend through the left stem and turn up across the high shoulder",
+        "continue clockwise around the broad loop",
+        "curve left to the inner finish",
+      ],
+      [
+        "descend through the center of the loop",
+        "curve down and left to the finish",
+      ],
+    ]);
+    expect(JAPANESE_YU.source.url).toBe(
+      "https://commons.wikimedia.org/wiki/File:Hiragana_%E3%82%86_stroke_order_animation.gif",
+    );
+    expect(JAPANESE_YU.source.citation).toMatch(/Sirgazil.*ゆ.*30 frames.*3\.0 seconds/i);
   });
 
   it("ப descends, crosses the bottom, and rises without lifting", () => {
