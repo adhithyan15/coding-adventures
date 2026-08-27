@@ -4,7 +4,7 @@
   "chapter": 17,
   "title": "Head and Hand",
   "drivablePrefix": 3,
-  "sourceHash": "fnv1a64:7a8a652337163960",
+  "sourceHash": "fnv1a64:58c4ffb2df0e7c2a",
   "lessons": [
     {
       "id": "GE-C17-kopf",
@@ -19,7 +19,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:3efd11634f5e8898",
+      "sourceHash": "fnv1a64:98293b151494f443",
       "notice": null,
       "blocks": [
         {
@@ -184,7 +184,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:a043450fec40dee2",
+      "sourceHash": "fnv1a64:93ea44c73b29e77a",
       "notice": null,
       "blocks": [
         {
@@ -368,7 +368,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:f183755d890cccc6",
+      "sourceHash": "fnv1a64:a9a7088caa413b0f",
       "notice": null,
       "blocks": [
         {

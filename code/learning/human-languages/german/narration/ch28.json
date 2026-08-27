@@ -4,7 +4,7 @@
   "chapter": 28,
   "title": "Coffee, Tea, and Milk",
   "drivablePrefix": 3,
-  "sourceHash": "fnv1a64:72138ddefaa606ae",
+  "sourceHash": "fnv1a64:74baa8a044d4bf4f",
   "lessons": [
     {
       "id": "GE-C28-kaffee",
@@ -19,7 +19,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:3fbab8899748712a",
+      "sourceHash": "fnv1a64:800b47f03f9b2037",
       "notice": null,
       "blocks": [
         {
@@ -156,7 +156,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:3cd28c752f5508c0",
+      "sourceHash": "fnv1a64:938eba3155e0975d",
       "notice": null,
       "blocks": [
         {
@@ -289,7 +289,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:f229c9f1440a16e1",
+      "sourceHash": "fnv1a64:b632083c015ee168",
       "notice": null,
       "blocks": [
         {

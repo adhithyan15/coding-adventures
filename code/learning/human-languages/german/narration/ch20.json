@@ -4,7 +4,7 @@
   "chapter": 20,
   "title": "Sorry",
   "drivablePrefix": 1,
-  "sourceHash": "fnv1a64:2949289880ce15c7",
+  "sourceHash": "fnv1a64:2aa6820c1005aba9",
   "lessons": [
     {
       "id": "GE-C20-entschuldigung",
@@ -19,7 +19,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:7aa6cd0b1c17a61e",
+      "sourceHash": "fnv1a64:fe978410d8e86afe",
       "notice": null,
       "blocks": [
         {

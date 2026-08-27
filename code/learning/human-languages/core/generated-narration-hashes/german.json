@@ -6,7 +6,7 @@
     {
       "language": "german",
       "chapter": 1,
-      "sourceHash": "fnv1a64:fbdf9f56aa0bf130",
+      "sourceHash": "fnv1a64:df73d98be014894e",
       "lessonIds": [
         "GE-C01-hallo",
         "GE-W01-hallo-guided-copy",
@@ -27,7 +27,7 @@
       "text": "german/narration/ch01.txt",
       "json": "german/narration/ch01.json",
       "textHash": "fnv1a64:f37ed25e0596bf8f",
-      "jsonHash": "fnv1a64:e29da4d8c2238dd9"
+      "jsonHash": "fnv1a64:ebbbfb429ee5c120"
     },
     {
       "language": "german",
@@ -281,7 +281,7 @@
     {
       "language": "german",
       "chapter": 17,
-      "sourceHash": "fnv1a64:7a8a652337163960",
+      "sourceHash": "fnv1a64:58c4ffb2df0e7c2a",
       "lessonIds": [
         "GE-C17-kopf",
         "GE-C17-kopf-haupt",
@@ -292,12 +292,12 @@
       "text": "german/narration/ch17.txt",
       "json": "german/narration/ch17.json",
       "textHash": "fnv1a64:0f6cf37951ace1c7",
-      "jsonHash": "fnv1a64:3dd66b31f9fb575c"
+      "jsonHash": "fnv1a64:a6e8471870bd73fc"
     },
     {
       "language": "german",
       "chapter": 18,
-      "sourceHash": "fnv1a64:9ee7c138518419ac",
+      "sourceHash": "fnv1a64:65b9a357c444bf22",
       "lessonIds": [
         "GE-C18-ja",
         "GE-C18-nein"
@@ -307,12 +307,12 @@
       "text": "german/narration/ch18.txt",
       "json": "german/narration/ch18.json",
       "textHash": "fnv1a64:3c95657affbf0a3b",
-      "jsonHash": "fnv1a64:449d3e4358046d09"
+      "jsonHash": "fnv1a64:a33a5b0fff9dd9b9"
     },
     {
       "language": "german",
       "chapter": 19,
-      "sourceHash": "fnv1a64:56d533c514140e42",
+      "sourceHash": "fnv1a64:01e79cb23f947ddb",
       "lessonIds": [
         "GE-C19-bitte-requests"
       ],
@@ -321,12 +321,12 @@
       "text": "german/narration/ch19.txt",
       "json": "german/narration/ch19.json",
       "textHash": "fnv1a64:e3922081d4606042",
-      "jsonHash": "fnv1a64:b263695e7f706b27"
+      "jsonHash": "fnv1a64:0576022fa2b81ce9"
     },
     {
       "language": "german",
       "chapter": 20,
-      "sourceHash": "fnv1a64:2949289880ce15c7",
+      "sourceHash": "fnv1a64:2aa6820c1005aba9",
       "lessonIds": [
         "GE-C20-entschuldigung"
       ],
@@ -335,12 +335,12 @@
       "text": "german/narration/ch20.txt",
       "json": "german/narration/ch20.json",
       "textHash": "fnv1a64:9ce079dca9cb122b",
-      "jsonHash": "fnv1a64:eaca86acc09df447"
+      "jsonHash": "fnv1a64:3a618a1a6f0a9426"
     },
     {
       "language": "german",
       "chapter": 21,
-      "sourceHash": "fnv1a64:e773a690ba617e60",
+      "sourceHash": "fnv1a64:389516e718676981",
       "lessonIds": [
         "GE-C21-das-wetter"
       ],
@@ -349,12 +349,12 @@
       "text": "german/narration/ch21.txt",
       "json": "german/narration/ch21.json",
       "textHash": "fnv1a64:e1313c12976293f9",
-      "jsonHash": "fnv1a64:2bbf778609a34dd7"
+      "jsonHash": "fnv1a64:eb177c839bf90f32"
     },
     {
       "language": "german",
       "chapter": 22,
-      "sourceHash": "fnv1a64:d7f81c59cce27f45",
+      "sourceHash": "fnv1a64:aeba7c3ecb9a7a16",
       "lessonIds": [
         "GE-C22-hund-katze"
       ],
@@ -363,12 +363,12 @@
       "text": "german/narration/ch22.txt",
       "json": "german/narration/ch22.json",
       "textHash": "fnv1a64:015dca0f2ba368b5",
-      "jsonHash": "fnv1a64:bcba654e694a4eca"
+      "jsonHash": "fnv1a64:0e037f26c07cb9b6"
     },
     {
       "language": "german",
       "chapter": 23,
-      "sourceHash": "fnv1a64:6fb7a16474f85d3e",
+      "sourceHash": "fnv1a64:eb1b6a770268bde7",
       "lessonIds": [
         "GE-C23-gruen-gelb"
       ],
@@ -377,12 +377,12 @@
       "text": "german/narration/ch23.txt",
       "json": "german/narration/ch23.json",
       "textHash": "fnv1a64:96af6b0d067f021c",
-      "jsonHash": "fnv1a64:f25b61bea2d51d71"
+      "jsonHash": "fnv1a64:5156c6eb8b58d39e"
     },
     {
       "language": "german",
       "chapter": 24,
-      "sourceHash": "fnv1a64:6e4c9c2332ab32bb",
+      "sourceHash": "fnv1a64:dce4cbbb92786bf7",
       "lessonIds": [
         "GE-C24-denken",
         "GE-C24-verstehen",
@@ -394,12 +394,12 @@
       "text": "german/narration/ch24.txt",
       "json": "german/narration/ch24.json",
       "textHash": "fnv1a64:ac105e0ff17b46e8",
-      "jsonHash": "fnv1a64:f18c08c5b772a039"
+      "jsonHash": "fnv1a64:1d2523ebee1887f7"
     },
     {
       "language": "german",
       "chapter": 25,
-      "sourceHash": "fnv1a64:aadd35c97d644082",
+      "sourceHash": "fnv1a64:e3890990049fc9d8",
       "lessonIds": [
         "GE-C25-nehmen",
         "GE-C25-fragen",
@@ -411,12 +411,12 @@
       "text": "german/narration/ch25.txt",
       "json": "german/narration/ch25.json",
       "textHash": "fnv1a64:88ef7d723c403055",
-      "jsonHash": "fnv1a64:7ae1c15c355eee23"
+      "jsonHash": "fnv1a64:3f0efdf9714ec094"
     },
     {
       "language": "german",
       "chapter": 26,
-      "sourceHash": "fnv1a64:0c8ea134c853cf3a",
+      "sourceHash": "fnv1a64:fccaf6f5902135ae",
       "lessonIds": [
         "GE-C26-sitzen",
         "GE-C26-stehen",
@@ -428,12 +428,12 @@
       "text": "german/narration/ch26.txt",
       "json": "german/narration/ch26.json",
       "textHash": "fnv1a64:85ffccdf04545476",
-      "jsonHash": "fnv1a64:15262fc63ade9092"
+      "jsonHash": "fnv1a64:ed08af6ae69ff5f1"
     },
     {
       "language": "german",
       "chapter": 27,
-      "sourceHash": "fnv1a64:8e3a06fb3371a95a",
+      "sourceHash": "fnv1a64:1a0cda01f714b52a",
       "lessonIds": [
         "GE-C27-gehen",
         "GE-C27-laufen",
@@ -445,12 +445,12 @@
       "text": "german/narration/ch27.txt",
       "json": "german/narration/ch27.json",
       "textHash": "fnv1a64:70899409818d857b",
-      "jsonHash": "fnv1a64:c2e5fdce8a5a519b"
+      "jsonHash": "fnv1a64:0880cea61ae9af5f"
     },
     {
       "language": "german",
       "chapter": 28,
-      "sourceHash": "fnv1a64:72138ddefaa606ae",
+      "sourceHash": "fnv1a64:74baa8a044d4bf4f",
       "lessonIds": [
         "GE-C28-kaffee",
         "GE-C28-tee",
@@ -461,12 +461,12 @@
       "text": "german/narration/ch28.txt",
       "json": "german/narration/ch28.json",
       "textHash": "fnv1a64:de539fb4ff0d3752",
-      "jsonHash": "fnv1a64:50b299ea302a3540"
+      "jsonHash": "fnv1a64:adcecd3072c40651"
     },
     {
       "language": "german",
       "chapter": 29,
-      "sourceHash": "fnv1a64:9235ee0c6650b4d7",
+      "sourceHash": "fnv1a64:dc4ef69bf8fa4c8e",
       "lessonIds": [
         "GE-C29-freund",
         "GE-C29-freundin",
@@ -477,12 +477,12 @@
       "text": "german/narration/ch29.txt",
       "json": "german/narration/ch29.json",
       "textHash": "fnv1a64:db0443b188232973",
-      "jsonHash": "fnv1a64:e234a59397ad2f76"
+      "jsonHash": "fnv1a64:f4ec0cd9bc5d72ff"
     },
     {
       "language": "german",
       "chapter": 30,
-      "sourceHash": "fnv1a64:3d76ed21c25da698",
+      "sourceHash": "fnv1a64:37a192c1c28d6006",
       "lessonIds": [
         "GE-C30-auge",
         "GE-C30-ohr",
@@ -494,12 +494,12 @@
       "text": "german/narration/ch30.txt",
       "json": "german/narration/ch30.json",
       "textHash": "fnv1a64:21ca7448e9ca583a",
-      "jsonHash": "fnv1a64:946e736c1e37337f"
+      "jsonHash": "fnv1a64:e7e103d6f10050b7"
     },
     {
       "language": "german",
       "chapter": 31,
-      "sourceHash": "fnv1a64:a016d74815f78532",
+      "sourceHash": "fnv1a64:ce32c5ddfd94daaf",
       "lessonIds": [
         "GE-C31-arm",
         "GE-C31-finger",
@@ -511,7 +511,7 @@
       "text": "german/narration/ch31.txt",
       "json": "german/narration/ch31.json",
       "textHash": "fnv1a64:d94003c2bce0d255",
-      "jsonHash": "fnv1a64:00dff966fd9cac7b"
+      "jsonHash": "fnv1a64:06f1588eda30f848"
     }
   ],
   "findings": []

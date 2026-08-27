@@ -4,7 +4,7 @@
   "chapter": 24,
   "title": "Verbs of the Mind",
   "drivablePrefix": 4,
-  "sourceHash": "fnv1a64:6e4c9c2332ab32bb",
+  "sourceHash": "fnv1a64:dce4cbbb92786bf7",
   "lessons": [
     {
       "id": "GE-C24-denken",
@@ -19,7 +19,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:952056daa67f2430",
+      "sourceHash": "fnv1a64:3c88e62f1ee1a63d",
       "notice": null,
       "blocks": [
         {
@@ -218,7 +218,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:73fbcc1325631e99",
+      "sourceHash": "fnv1a64:a6873235c1e8a29e",
       "notice": null,
       "blocks": [
         {
@@ -402,7 +402,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:a035960a81dead44",
+      "sourceHash": "fnv1a64:639dafccc43805e3",
       "notice": null,
       "blocks": [
         {
@@ -597,7 +597,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:82ad7baeb935d3cc",
+      "sourceHash": "fnv1a64:f7565a476cd02a0d",
       "notice": null,
       "blocks": [
         {
