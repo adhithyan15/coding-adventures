@@ -5,7 +5,7 @@
     {
       "language": "russian",
       "chapter": 1,
-      "sourceHash": "fnv1a64:669e4e27345d266a",
+      "sourceHash": "fnv1a64:df815778928d8e13",
       "lessonIds": [
         "RU-C01-privet",
         "RU-C01-zdravstvuyte",
@@ -29,7 +29,7 @@
     {
       "language": "russian",
       "chapter": 2,
-      "sourceHash": "fnv1a64:96db0b007be2e9be",
+      "sourceHash": "fnv1a64:3ddabaef514b7038",
       "lessonIds": [
         "RU-C02-ya",
         "RU-C02-ty-vy",
@@ -47,7 +47,7 @@
     {
       "language": "russian",
       "chapter": 3,
-      "sourceHash": "fnv1a64:6a03e1748b9526c7",
+      "sourceHash": "fnv1a64:3236e694033d85e2",
       "lessonIds": [
         "RU-C03-byt",
         "RU-C03-zhit",
@@ -61,7 +61,7 @@
     {
       "language": "russian",
       "chapter": 4,
-      "sourceHash": "fnv1a64:2afde76dda876ff9",
+      "sourceHash": "fnv1a64:c9d35de6063a5291",
       "lessonIds": [
         "RU-C04-dumat",
         "RU-C04-ponimat",
@@ -73,7 +73,7 @@
     {
       "language": "russian",
       "chapter": 5,
-      "sourceHash": "fnv1a64:e88a6cfed865c7aa",
+      "sourceHash": "fnv1a64:f07f8ed31bd43613",
       "lessonIds": [
         "RU-C05-brat",
         "RU-C05-sprashivat",
@@ -85,7 +85,7 @@
     {
       "language": "russian",
       "chapter": 6,
-      "sourceHash": "fnv1a64:896543a12c8506d1",
+      "sourceHash": "fnv1a64:a9a85a28eba881aa",
       "lessonIds": [
         "RU-C06-voda",
         "RU-C06-kofe",
@@ -97,7 +97,7 @@
     {
       "language": "russian",
       "chapter": 7,
-      "sourceHash": "fnv1a64:53daed5cc988927d",
+      "sourceHash": "fnv1a64:94bc11314fa848ef",
       "lessonIds": [
         "RU-C07-drug",
         "RU-C07-podruga",
@@ -109,7 +109,7 @@
     {
       "language": "russian",
       "chapter": 8,
-      "sourceHash": "fnv1a64:a507b3027bf31936",
+      "sourceHash": "fnv1a64:b784d2ec9d3ea874",
       "lessonIds": [
         "RU-C08-semya"
       ],
@@ -118,7 +118,7 @@
     {
       "language": "russian",
       "chapter": 9,
-      "sourceHash": "fnv1a64:0f760ae1f9ef22ca",
+      "sourceHash": "fnv1a64:8372c8233a0c08e3",
       "lessonIds": [
         "RU-C09-ukho",
         "RU-C09-nos",
@@ -130,7 +130,7 @@
     {
       "language": "russian",
       "chapter": 10,
-      "sourceHash": "fnv1a64:6aa8e32cac18bf78",
+      "sourceHash": "fnv1a64:33ab0d5a6161125a",
       "lessonIds": [
         "RU-C10-serdtse"
       ],
@@ -139,7 +139,7 @@
     {
       "language": "russian",
       "chapter": 11,
-      "sourceHash": "fnv1a64:db2e96809a7ffd4b",
+      "sourceHash": "fnv1a64:001c7137d504713a",
       "lessonIds": [
         "RU-C11-do-svidaniya",
         "RU-C11-poka",
@@ -153,7 +153,7 @@
     {
       "language": "russian",
       "chapter": 12,
-      "sourceHash": "fnv1a64:3071c43e143a8294",
+      "sourceHash": "fnv1a64:c00077be294e0d3a",
       "lessonIds": [
         "RU-C12-mama",
         "RU-C12-papa",
@@ -165,7 +165,7 @@
     {
       "language": "russian",
       "chapter": 13,
-      "sourceHash": "fnv1a64:75e5bba8e91c4f6e",
+      "sourceHash": "fnv1a64:1ab14437abfd3438",
       "lessonIds": [
         "RU-C13-moloko",
         "RU-C13-syr",
@@ -177,7 +177,7 @@
     {
       "language": "russian",
       "chapter": 14,
-      "sourceHash": "fnv1a64:135dfa0e539af049",
+      "sourceHash": "fnv1a64:d8c4a2361f3045bd",
       "lessonIds": [
         "RU-W06-u",
         "RU-W06-z",
@@ -196,7 +196,7 @@
     {
       "language": "russian",
       "chapter": 15,
-      "sourceHash": "fnv1a64:16aa4ad297a16db0",
+      "sourceHash": "fnv1a64:50aa86b40b0730cb",
       "lessonIds": [
         "RU-W07-a",
         "RU-W07-o",
