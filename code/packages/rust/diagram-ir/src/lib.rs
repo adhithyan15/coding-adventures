@@ -1358,6 +1358,7 @@ pub enum LayoutedTemporalItem {
         stroke: String,
         stroke_width: f64,
         stroke_dash: Option<Vec<f64>>,
+        opacity: f64,
     },
     BranchLane {
         x1: f64,

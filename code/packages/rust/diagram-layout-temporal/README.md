@@ -41,5 +41,6 @@ Axis ticks preserve millisecond, second, minute, hour, day, week, month, and yea
 interval units, with time fields formatted before Paint lowering.
 Weekly ticks align to the configured weekday, while month and year ticks use
 civil calendar boundaries instead of fixed-duration approximations.
+Styled today markers preserve stroke opacity as backend-neutral paint semantics.
 
 **Git**: Branch lanes (horizontal rows), commits as circles on lanes, merges as bezier arcs.

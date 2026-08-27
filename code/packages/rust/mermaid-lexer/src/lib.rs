@@ -364,6 +364,17 @@ mod tests {
     }
 
     #[test]
+    fn tokenizes_gantt_today_marker_hex_colors() {
+        let tokens = try_tokenize_mermaid_gantt(
+            "gantt\ntodayMarker stroke-width:5px,stroke:#00f,opacity:0.5\n",
+        ).unwrap();
+        assert!(tokens.iter().any(|token| {
+            token.type_name.as_deref() == Some("TODAY_MARKER_STATEMENT")
+                && token.value.ends_with("stroke:#00f,opacity:0.5")
+        }));
+    }
+
+    #[test]
     fn journey_tokenizes_sections_and_scored_tasks() {
         let tokens = try_tokenize_mermaid_journey(
             "JoUrNeY\naccTitle: Checkout\naccDescr {\nNative journey\n}\ntitle Checkout\nsection Payment<br/>Flow\nPay: 2: Alice, Bob",

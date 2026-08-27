@@ -41,6 +41,7 @@
     { "id": "excludes-weekdays-and-date", "source": "gantt\ndateFormat yyyy-mm-dd\ntitle Adding gantt diagram functionality to mermaid\nexcludes weekdays 2019-02-01" },
     { "id": "repeated-excludes", "source": "gantt\ndateFormat DD-MM-YYYY\nexcludes weekends\n%% week 7 is winter break\nexcludes 10-02-2025 11-02-2025 12-02-2025\n%% workers holiday 1 maj\nexcludes 01-05-2025" },
     { "id": "today-marker-off", "source": "gantt\ndateFormat yyyy-mm-dd\ntitle Adding gantt diagram functionality to mermaid\nexcludes weekdays 2019-02-01\ntodayMarker off" },
+    { "id": "styled-today-marker", "source": "gantt\ntitle Styled today marker\ndateFormat YYYY-MM-DD\naxisFormat %Y\ntickInterval 10year\ntodayMarker stroke-width:5px,stroke:#00f,opacity:0.5\nsection Window\nCoverage :span, 2000-01-01, 36525d" },
     { "id": "weekday-monday", "source": "gantt\nweekday monday" },
     { "id": "weekday-tuesday", "source": "gantt\nweekday tuesday" },
     { "id": "weekday-wednesday", "source": "gantt\nweekday wednesday" },
