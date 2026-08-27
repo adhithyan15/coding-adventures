@@ -6076,6 +6076,7 @@ fn parse_gantt_date_format(token: &Token, source: &str) -> Result<GanttDateForma
             ("m", GanttDateFormatPart::MinuteUnpadded),
             ("s", GanttDateFormatPart::SecondUnpadded),
             ("Q", GanttDateFormatPart::Quarter),
+            ("Y", GanttDateFormatPart::YearSigned),
             ("A", GanttDateFormatPart::MeridiemUpper),
             ("a", GanttDateFormatPart::MeridiemLower),
             ("Z", GanttDateFormatPart::TimezoneOffsetColon),
@@ -6114,6 +6115,7 @@ fn gantt_date_matches_format(value: &str, format: &GanttDateFormat) -> bool {
                 rest = next;
                 continue;
             }
+            GanttDateFormatPart::YearSigned => consume_signed_digits(rest),
             GanttDateFormatPart::Year4 => consume_digits(rest, 4, 4),
             GanttDateFormatPart::Year2 => consume_digits(rest, 2, 2),
             GanttDateFormatPart::Quarter => consume_quarter(rest),
@@ -7184,6 +7186,17 @@ Rel(customer, web, \"Uses\", \"HTTPS\")";
         let diagram = parse_gantt("gantt\ndateFormat YYYY-Q\nPlanning :p1, 2026-2, 1d").unwrap();
         assert!(diagram.date_format.parts.contains(&GanttDateFormatPart::Quarter));
         assert!(parse_gantt("gantt\ndateFormat YYYY-Q\nBad :b, 2026-5, 1d").is_err());
+    }
+
+    #[test]
+    fn gantt_compiles_signed_variable_width_year_formats() {
+        let diagram = parse_gantt(
+            "gantt\ndateFormat Y-MM-DD\nPlanning :p1, +2026-03-01, 1d",
+        )
+        .unwrap();
+        assert!(diagram.date_format.parts.contains(&GanttDateFormatPart::YearSigned));
+        assert!(parse_gantt("gantt\ndateFormat Y-MM-DD\nAncient :a, -1-03-01, 1d").is_ok());
+        assert!(parse_gantt("gantt\ndateFormat Y-MM-DD\nBad :b, +-03-01, 1d").is_err());
     }
 
     #[test]

@@ -56,6 +56,34 @@ func TestShellCommandForOSWindows(t *testing.T) {
 	}
 }
 
+// TestShellCommandPreservesEmbeddedQuotesOnWindows is a regression test for
+// a real bug: Go's os/exec re-escapes embedded double quotes when building
+// the native Windows command line from Args, as if each Args element were a
+// single literal argument. That corrupts any BUILD command that itself
+// relies on shell-style quoting (e.g. `uv pip install -e ".[dev]"`), which
+// arrives at the target program as the literal text `-e \".[dev]\"` instead
+// of `-e .[dev]` -- see executor_windows.go's setRawWindowsCmdLine. This
+// only exercises real behavior when actually running on Windows (the fix is
+// a no-op on other platforms, matching how the bug itself is Windows-only).
+func TestShellCommandPreservesEmbeddedQuotesOnWindows(t *testing.T) {
+	if runtime.GOOS != "windows" {
+		t.Skip("this regression only manifests in a real Windows process launch")
+	}
+
+	cmd := shellCommand(`echo before ".[dev]" after`)
+	out, err := cmd.CombinedOutput()
+	if err != nil {
+		t.Fatalf("command failed: %v (output: %q)", err, out)
+	}
+
+	if strings.Contains(string(out), `\"`) {
+		t.Fatalf("embedded quotes were escaped with a backslash, output: %q", out)
+	}
+	if !strings.Contains(string(out), `".[dev]"`) {
+		t.Fatalf("expected literal quoted .[dev] in output, got: %q", out)
+	}
+}
+
 func TestShellCommandUsesCurrentOS(t *testing.T) {
 	// shellCommand (no OS parameter) should use the current platform.
 	cmd := shellCommand("echo test")

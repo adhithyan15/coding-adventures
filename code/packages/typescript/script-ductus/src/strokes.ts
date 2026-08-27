@@ -15229,6 +15229,60 @@ export const DUCTUS: Record<string, LetterDuctus> = {
     ],
     source: kannadaIndependentVowelSource("ಇ"),
   },
+  // Gopala Krishna A's 35-frame animation writes independent vowel ಉ in one
+  // run: compact upper-left loop, broad lower-left bowl, tall middle arch,
+  // lower-right bowl, and the open upper terminal. These four medians fit that
+  // zero-lift order to the bundled Noto Sans Kannada outline.
+  [ductusKey("kannada", "ಉ")]: {
+    script: "kannada",
+    glyph: "ಉ",
+    strokes: [
+      {
+        segments: [
+          {
+            label: "turn counterclockwise around the compact upper-left loop",
+            path: [
+              { x: 85, y: 375 }, { x: 140, y: 335 }, { x: 200, y: 313 },
+              { x: 260, y: 315 }, { x: 315, y: 345 }, { x: 345, y: 390 },
+              { x: 345, y: 440 }, { x: 280, y: 500 }, { x: 220, y: 530 },
+              { x: 155, y: 525 }, { x: 105, y: 470 }, { x: 75, y: 410 },
+              { x: 85, y: 375 },
+            ],
+          },
+          {
+            label: "descend through the left shoulder and sweep around the broad lower-left bowl",
+            path: [
+              { x: 85, y: 375 }, { x: 75, y: 315 }, { x: 80, y: 255 },
+              { x: 100, y: 190 }, { x: 140, y: 125 }, { x: 205, y: 75 },
+              { x: 275, y: 35 }, { x: 345, y: 28 }, { x: 410, y: 55 },
+              { x: 465, y: 105 }, { x: 505, y: 170 }, { x: 518, y: 220 },
+            ],
+          },
+          {
+            label: "climb over the tall middle arch and descend into the lower-right bowl",
+            path: [
+              { x: 518, y: 220 }, { x: 510, y: 300 }, { x: 510, y: 375 },
+              { x: 525, y: 440 }, { x: 570, y: 500 }, { x: 635, y: 525 },
+              { x: 700, y: 515 }, { x: 750, y: 475 }, { x: 780, y: 410 },
+              { x: 783, y: 335 }, { x: 783, y: 260 }, { x: 790, y: 190 },
+              { x: 815, y: 125 }, { x: 860, y: 75 }, { x: 915, y: 35 },
+              { x: 970, y: 28 },
+            ],
+          },
+          {
+            label: "sweep around the outer-right curve and finish at the open upper terminal",
+            path: [
+              { x: 970, y: 28 }, { x: 1025, y: 35 }, { x: 1080, y: 70 },
+              { x: 1120, y: 125 }, { x: 1145, y: 190 }, { x: 1145, y: 250 },
+              { x: 1125, y: 320 }, { x: 1090, y: 390 }, { x: 1045, y: 450 },
+              { x: 975, y: 530 },
+            ],
+          },
+        ],
+      },
+    ],
+    source: kannadaIndependentVowelSource("ಉ"),
+  },
   // Gopala Krishna A's 30-frame animation writes independent vowel ಎ in one
   // run: compact left loop, joined lower curves, rising right side, then the
   // tall outer arch finishing left. These four medians fit that zero-lift

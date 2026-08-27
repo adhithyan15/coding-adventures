@@ -595,7 +595,7 @@ class TestPrologVMRuntime:
             encoding="utf-8",
         )
         app_path = tmp_path / "app.pl"
-        app_path.write_text(":- consult(facts).\n", encoding="utf-8")
+        app_path.write_text(":- consult(facts).\n", encoding="utf-8", newline="")
 
         runtime = create_swi_prolog_project_file_runtime(app_path)
 
@@ -614,7 +614,7 @@ class TestPrologVMRuntime:
             encoding="utf-8",
         )
         app_path = tmp_path / "app.pl"
-        app_path.write_text(":- consult(facts).\n", encoding="utf-8")
+        app_path.write_text(":- consult(facts).\n", encoding="utf-8", newline="")
 
         runtime = create_swi_prolog_project_file_bytecode_vm_runtime(app_path)
 

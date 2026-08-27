@@ -241,6 +241,7 @@ fn date_to_days(source: &str, format: &GanttDateFormat) -> Option<f64> {
     for part in &format.parts {
         match part {
             GanttDateFormatPart::Literal(literal) => rest = rest.strip_prefix(literal)?,
+            GanttDateFormatPart::YearSigned => (year, rest) = take_signed_number(rest)?,
             GanttDateFormatPart::Year4 => (year, rest) = take_number(rest, 4, 4)?,
             GanttDateFormatPart::Year2 => {
                 let (short_year, next) = take_number(rest, 2, 2)?;
@@ -386,6 +387,14 @@ fn take_timezone_offset(source: &str, colon: bool) -> Option<(i64, &str)> {
 fn take_number(source: &str, minimum: usize, maximum: usize) -> Option<(i64, &str)> {
     let length = source.bytes().take(maximum).take_while(u8::is_ascii_digit).count();
     if length < minimum { return None; }
+    Some((source[..length].parse().ok()?, &source[length..]))
+}
+
+fn take_signed_number(source: &str) -> Option<(i64, &str)> {
+    let sign = usize::from(source.starts_with(['+', '-']));
+    let digits = source[sign..].bytes().take_while(u8::is_ascii_digit).count();
+    if digits == 0 { return None; }
+    let length = sign + digits;
     Some((source[..length].parse().ok()?, &source[length..]))
 }
 
@@ -1252,6 +1261,25 @@ mod tests {
         let q2 = date_to_days("2026-2", &format).expect("valid second quarter");
         assert_eq!(q2 - q1, 90.0);
         assert!(date_to_days("2026-5", &format).is_none());
+    }
+
+    #[test]
+    fn gantt_layout_resolves_signed_variable_width_years() {
+        let format = GanttDateFormat {
+            source: "Y-MM-DD".into(),
+            parts: vec![
+                GanttDateFormatPart::YearSigned,
+                GanttDateFormatPart::Literal("-".into()),
+                GanttDateFormatPart::Month2,
+                GanttDateFormatPart::Literal("-".into()),
+                GanttDateFormatPart::Day2,
+            ],
+        };
+        let unsigned = date_to_days("2026-03-01", &format).expect("valid unsigned year");
+        let positive = date_to_days("+2026-03-01", &format).expect("valid signed year");
+        assert_eq!(positive, unsigned);
+        assert!(date_to_days("-1-03-01", &format).is_some());
+        assert!(date_to_days("+-03-01", &format).is_none());
     }
 
     #[test]

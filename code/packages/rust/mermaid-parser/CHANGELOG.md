@@ -1,5 +1,9 @@
 # Changelog
 
+## 0.155.0
+
+- Compile Mermaid Gantt `Y` signed variable-width year tokens into typed semantic date formats.
+
 ## 0.154.0
 
 - Compile Mermaid Gantt `Q` quarter tokens into typed semantic date formats.

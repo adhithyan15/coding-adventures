@@ -23,6 +23,7 @@
     { "id": "compact-weekdays", "source": "gantt\ndateFormat dd YYYY-MM-DD\nRelease :r1, Su 2026-03-01, 1d" },
     { "id": "unpadded-time", "source": "gantt\ndateFormat YYYY-MM-DD H:m:s\nRequest :r1, 2026-03-01 4:5:6, 1s" },
     { "id": "quarter-dates", "source": "gantt\ndateFormat YYYY-Q\nPlanning :p1, 2026-2, 1d" },
+    { "id": "signed-variable-year", "source": "gantt\ndateFormat Y-MM-DD\nPlanning :p1, +2026-03-01, 1d" },
     { "id": "calendar-controls", "source": "gantt\ndateFormat DD-MM-YYYY\nexcludes weekends\nexcludes 10-02-2025 11-02-2025\nincludes 12-02-2025\nweekday monday\nweekend friday" },
     { "id": "fixed-dates", "source": "gantt\ndateFormat YYYY-MM-DD\nsection Documentation\nDesign grammar :des1, 2014-01-01, 2014-01-04" },
     { "id": "relative-ranges", "source": "gantt\nA :a, 2024-01-27, 2024-01-28\nB :b, after a, 2024-01-30\nC :c, 2024-01-20, until a\nD :d, after c, until b" },
