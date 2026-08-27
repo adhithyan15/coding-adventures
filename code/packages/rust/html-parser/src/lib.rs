@@ -7629,8 +7629,9 @@ impl HtmlParser {
                     )
                 };
                 let diagnostic = ParserDiagnostic::new(code, message);
-                let should_position =
-                    code == "unexpected-non-current-end-tag" || is_custom_element_name(name);
+                let should_position = code == "unexpected-non-current-end-tag"
+                    || is_custom_element_name(name)
+                    || is_formatting_element(name);
                 self.diagnostics.push(if should_position {
                     diagnostic.at_emission(self.current_token_emission_position)
                 } else {
@@ -8405,6 +8406,7 @@ impl HtmlParser {
             format!("end tag `</{name}>` did not match an open element"),
         );
         let should_position = is_custom_element_name(name)
+            || is_formatting_element(name)
             || matches!(
                 name,
                 "button"
@@ -28124,6 +28126,18 @@ mod tests {
         .at_emission(Some(end_tag_position_at(source, name, occurrence)))
     }
 
+    fn unmatched_formatting_end_tag(
+        source: &str,
+        name: &str,
+        occurrence: usize,
+    ) -> ParserDiagnostic {
+        ParserDiagnostic::new(
+            "unexpected-end-tag",
+            format!("end tag `</{name}>` did not match an open element"),
+        )
+        .at_emission(Some(end_tag_position_at(source, name, occurrence)))
+    }
+
     fn unexpected_non_current_end_tag(
         source: &str,
         name: &str,
@@ -44138,9 +44152,10 @@ mod tests {
         let ordinary = parse_html_with_diagnostics("<!doctype html><div></a></div>").unwrap();
         assert_eq!(
             ordinary.parser_diagnostics,
-            vec![ParserDiagnostic::new(
-                "unexpected-end-tag",
-                "end tag `</a>` did not match an open element",
+            vec![unmatched_formatting_end_tag(
+                "<!doctype html><div></a></div>",
+                "a",
+                0,
             )]
         );
     }
@@ -44248,7 +44263,10 @@ mod tests {
             .iter()
             .find(|diagnostic| diagnostic.code == "unexpected-end-tag")
             .unwrap();
-        assert_eq!(ordinary_diagnostic.position, None);
+        assert_eq!(
+            ordinary_diagnostic,
+            &unmatched_formatting_end_tag(ordinary_source, "a", 0)
+        );
 
         let mut direct = HtmlParser::with_body_fragment_options(HtmlParseOptions::default());
         for token in [
@@ -44273,6 +44291,93 @@ mod tests {
             .diagnostics()
             .iter()
             .all(|diagnostic| diagnostic.position.is_none()));
+    }
+
+    #[test]
+    fn positions_unmatched_formatting_end_tags_at_token_emission() {
+        let source = "<!doctype html></a><!--é-->\r\n</a></b></big></code></em></font></i></nobr></s></small></span></strike></strong></tt></u>";
+        let output = parse_html_with_diagnostics(source).unwrap();
+        let names = [
+            "a", "b", "big", "code", "em", "font", "i", "nobr", "s", "small", "span",
+            "strike", "strong", "tt", "u",
+        ];
+        let expected = std::iter::once(unmatched_formatting_end_tag(source, "a", 0))
+            .chain(names.into_iter().map(|name| {
+                unmatched_formatting_end_tag(source, name, usize::from(name == "a"))
+            }))
+            .collect::<Vec<_>>();
+        assert!(source.len() > source.chars().count());
+        assert_eq!(
+            output
+                .parser_diagnostics
+                .iter()
+                .filter(|diagnostic| diagnostic.code == "unexpected-end-tag")
+                .cloned()
+                .collect::<Vec<_>>(),
+            expected
+        );
+
+        let fragment_source = "X</a></span></strong>";
+        let fragment = parse_html_fragment_with_diagnostics(fragment_source).unwrap();
+        assert_eq!(
+            fragment.parser_diagnostics,
+            vec![
+                unmatched_formatting_end_tag(fragment_source, "a", 0),
+                unmatched_formatting_end_tag(fragment_source, "span", 0),
+                unmatched_formatting_end_tag(fragment_source, "strong", 0),
+            ]
+        );
+
+        for name in names {
+            let matched_source = format!("<!doctype html><{name}>X</{name}>");
+            let matched = parse_html_with_diagnostics(&matched_source).unwrap();
+            assert!(matched
+                .parser_diagnostics
+                .iter()
+                .all(|diagnostic| diagnostic.code != "unexpected-end-tag"));
+
+            let incomplete_source = format!("<!doctype html></{name}");
+            let incomplete = parse_html_with_diagnostics(&incomplete_source).unwrap();
+            assert!(incomplete
+                .parser_diagnostics
+                .iter()
+                .all(|diagnostic| diagnostic.code != "unexpected-end-tag"));
+
+            let foreign_source = format!(
+                "<!doctype html><svg><foreignObject></{name}>X</foreignObject></svg>"
+            );
+            let foreign = parse_html_with_diagnostics(&foreign_source).unwrap();
+            if name == "span" {
+                assert_eq!(
+                    foreign.parser_diagnostics,
+                    vec![
+                        generic_foreign_end_tag_mismatch(&foreign_source, name),
+                        unmatched_formatting_end_tag(&foreign_source, name, 0),
+                    ]
+                );
+            } else {
+                assert!(foreign
+                    .parser_diagnostics
+                    .iter()
+                    .all(|diagnostic| diagnostic.code != "unexpected-end-tag"));
+            }
+
+            let mut direct =
+                HtmlParser::with_body_fragment_options(HtmlParseOptions::default());
+            direct.process_token(Token::EndTag {
+                name: name.to_string(),
+            });
+            direct.process_token(Token::Eof);
+            assert_eq!(
+                direct
+                    .diagnostics()
+                    .iter()
+                    .find(|diagnostic| diagnostic.code == "unexpected-end-tag")
+                    .unwrap()
+                    .position,
+                None
+            );
+        }
     }
 
     #[test]
